@@ -1,0 +1,52 @@
+<!-- ##### SECTION Title ##### -->
+GdaServer
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaServerPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_server_new ##### -->
+<para>
+
+</para>
+
+@factory_iid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_register_component ##### -->
+<para>
+
+</para>
+
+@server: 
+@iid: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_server_unregister_component ##### -->
+<para>
+
+</para>
+
+@server: 
+@iid: 
+
+

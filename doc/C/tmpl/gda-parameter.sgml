@@ -1,0 +1,145 @@
+<!-- ##### SECTION Title ##### -->
+gda-parameter
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaParameter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_parameter_new ##### -->
+<para>
+
+</para>
+
+@name: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_free ##### -->
+<para>
+
+</para>
+
+@param: 
+
+
+<!-- ##### FUNCTION gda_parameter_get_name ##### -->
+<para>
+
+</para>
+
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_set_name ##### -->
+<para>
+
+</para>
+
+@param: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_parameter_get_value ##### -->
+<para>
+
+</para>
+
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_set_value ##### -->
+<para>
+
+</para>
+
+@param: 
+@value: 
+
+
+<!-- ##### STRUCT GdaParameterList ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_parameter_list_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_free ##### -->
+<para>
+
+</para>
+
+@plist: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_add_parameter ##### -->
+<para>
+
+</para>
+
+@plist: 
+@param: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_find ##### -->
+<para>
+
+</para>
+
+@plist: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_clear ##### -->
+<para>
+
+</para>
+
+@plist: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_get_length ##### -->
+<para>
+
+</para>
+
+@plist: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_to_corba ##### -->
+<para>
+
+</para>
+
+@plist: 
+@Returns: 
+
+

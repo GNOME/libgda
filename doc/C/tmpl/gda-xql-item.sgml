@@ -1,0 +1,173 @@
+<!-- ##### SECTION Title ##### -->
+GdaXqlItem
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TO_DOM ##### -->
+<para>
+
+</para>
+
+@_o_: 
+@_n_: 
+
+
+<!-- ##### MACRO GDA_XQL_ITEM_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GdaXqlItemPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xql_item_set_attrib ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@attrib: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_xql_item_get_parent ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_item_set_parent ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@parent: 
+
+
+<!-- ##### FUNCTION gda_xql_item_get_attrib ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@attrib: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_item_to_dom ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@parent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_item_add ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@child: 
+
+
+<!-- ##### FUNCTION gda_xql_item_set_tag ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@tag: 
+
+
+<!-- ##### FUNCTION gda_xql_item_get_tag ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_item_find_root ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_item_find_id ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_item_find_ref ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@ref: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_item_add_id ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@id: 
+
+
+<!-- ##### FUNCTION gda_xql_item_add_ref ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@ref: 
+
+
+<!-- ##### FUNCTION gda_xql_item_get_ref ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@ref: 
+@Returns: 
+
+

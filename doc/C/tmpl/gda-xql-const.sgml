@@ -1,0 +1,46 @@
+<!-- ##### SECTION Title ##### -->
+GdaXqlConst
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_XQL_CONST_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### FUNCTION gda_xql_const_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_const_new_with_data ##### -->
+<para>
+
+</para>
+
+@value: 
+@alias: 
+@type: 
+@null: 
+@Returns: 
+
+

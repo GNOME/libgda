@@ -1,0 +1,85 @@
+<!-- ##### SECTION Title ##### -->
+gda-log
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_log_enable ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_log_disable ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_log_is_enabled ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_log_message ##### -->
+<para>
+
+</para>
+
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gda_log_error ##### -->
+<para>
+
+</para>
+
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gda_log_clean_all ##### -->
+<para>
+
+</para>
+
+@prgname: 
+
+
+<!-- ##### FUNCTION gda_log_clean_between ##### -->
+<para>
+
+</para>
+
+@prgname: 
+@from: 
+@to: 
+
+
+<!-- ##### FUNCTION gda_log_clean_entry ##### -->
+<para>
+
+</para>
+
+@prgname: 
+@entry: 
+
+

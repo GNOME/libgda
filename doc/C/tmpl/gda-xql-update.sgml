@@ -1,0 +1,34 @@
+<!-- ##### SECTION Title ##### -->
+GdaXqlUpdate
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_XQL_UPDATE_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### FUNCTION gda_xql_update_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

@@ -1,0 +1,128 @@
+<!-- ##### SECTION Title ##### -->
+GdaExport
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaExportPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GdaExportFlags ##### -->
+<para>
+
+</para>
+
+@GDA_EXPORT_FLAGS_TABLE_DATA: 
+
+<!-- ##### FUNCTION gda_export_new ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_export_free ##### -->
+<para>
+
+</para>
+
+@exp: 
+
+
+<!-- ##### FUNCTION gda_export_get_tables ##### -->
+<para>
+
+</para>
+
+@exp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_export_get_selected_tables ##### -->
+<para>
+
+</para>
+
+@exp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_export_select_table ##### -->
+<para>
+
+</para>
+
+@exp: 
+@table: 
+
+
+<!-- ##### FUNCTION gda_export_select_table_list ##### -->
+<para>
+
+</para>
+
+@exp: 
+@tables: 
+
+
+<!-- ##### FUNCTION gda_export_unselect_table ##### -->
+<para>
+
+</para>
+
+@exp: 
+@table: 
+
+
+<!-- ##### FUNCTION gda_export_run ##### -->
+<para>
+
+</para>
+
+@exp: 
+@flags: 
+
+
+<!-- ##### FUNCTION gda_export_stop ##### -->
+<para>
+
+</para>
+
+@exp: 
+
+
+<!-- ##### FUNCTION gda_export_get_connection ##### -->
+<para>
+
+</para>
+
+@exp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_export_set_connection ##### -->
+<para>
+
+</para>
+
+@exp: 
+@cnc: 
+
+

@@ -1,0 +1,67 @@
+<!-- ##### SECTION Title ##### -->
+GdaXqlFunc
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_XQL_FUNC_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### FUNCTION gda_xql_func_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_func_new_with_data ##### -->
+<para>
+
+</para>
+
+@name: 
+@alias: 
+@aggregate: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_func_add_const_from_text ##### -->
+<para>
+
+</para>
+
+@xqlfunc: 
+@value: 
+@type: 
+@null: 
+
+
+<!-- ##### FUNCTION gda_xql_func_add_field_from_text ##### -->
+<para>
+
+</para>
+
+@xqlfunc: 
+@id: 
+@name: 
+@alias: 
+
+

@@ -1,0 +1,89 @@
+<!-- ##### SECTION Title ##### -->
+gda-command
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaCommand ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GdaCommandType ##### -->
+<para>
+
+</para>
+
+@GDA_COMMAND_TYPE_SQL: 
+@GDA_COMMAND_TYPE_XML: 
+@GDA_COMMAND_TYPE_PROCEDURE: 
+@GDA_COMMAND_TYPE_TABLE: 
+@GDA_COMMAND_TYPE_INVALID: 
+
+<!-- ##### FUNCTION gda_command_new ##### -->
+<para>
+
+</para>
+
+@text: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_command_free ##### -->
+<para>
+
+</para>
+
+@cmd: 
+
+
+<!-- ##### FUNCTION gda_command_get_text ##### -->
+<para>
+
+</para>
+
+@cmd: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_command_set_text ##### -->
+<para>
+
+</para>
+
+@cmd: 
+@text: 
+
+
+<!-- ##### FUNCTION gda_command_get_command_type ##### -->
+<para>
+
+</para>
+
+@cmd: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_command_set_command_type ##### -->
+<para>
+
+</para>
+
+@cmd: 
+@type: 
+
+

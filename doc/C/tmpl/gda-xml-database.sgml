@@ -1,0 +1,290 @@
+<!-- ##### SECTION Title ##### -->
+GdaXmlDatabase
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaXmlDatabasePrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xml_database_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_new_from_file ##### -->
+<para>
+
+</para>
+
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_free ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+
+
+<!-- ##### FUNCTION gda_xml_database_save ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_changed ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+
+
+<!-- ##### TYPEDEF GdaXmlDatabaseTable ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xml_database_get_tables ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_new ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_remove ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_find ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_get_name ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_set_name ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_get_owner ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_set_owner ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@owner: 
+
+
+<!-- ##### TYPEDEF GdaXmlDatabaseField ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xml_database_table_field_count ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_add_field ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@fname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_remove_field ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@fname: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_get_field ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@pos: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_table_find_field ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@table: 
+@fname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_field_get_name ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_field_set_name ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@field: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_xml_database_field_get_gdatype ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_field_set_gdatype ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@field: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_xml_database_field_get_size ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_field_set_size ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@field: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_xml_database_field_get_scale ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_field_set_scale ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@field: 
+@scale: 
+
+

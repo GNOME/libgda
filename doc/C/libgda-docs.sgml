@@ -1,0 +1,666 @@
+<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+
+<!ENTITY LIBGDA          "<application>libgda</application>">
+<!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
+<!ENTITY FDL-INC         SYSTEM "fdl-appendix.sgml">
+<!ENTITY API             "<acronym>API</acronym>">
+<!ENTITY DBMS            "<acronym>DBMS</acronym>">
+<!ENTITY DSN             "<acronym>DSN</acronym>">
+<!ENTITY ODBC            "<acronym>ODBC</acronym>">
+<!ENTITY GDA             "<acronym>GDA</acronym>">
+<!ENTITY LDAP            "<acronym>LDAP</acronym>">
+<!ENTITY CORBA           "<acronym>CORBA</acronym>">
+<!ENTITY IDL             "<acronym>IDL</acronym>">
+<!ENTITY ORB             "<acronym>ORB</acronym>">
+<!ENTITY SQL             "<acronym>SQL</acronym>">
+<!ENTITY RPM             "<acronym>RPM</acronym>">
+<!ENTITY XML             "<acronym>XML</acronym>">
+<!ENTITY PGSQL           "<application>PostgreSQL</application>">
+<!ENTITY MYSQL           "<application>MySQL</application>">
+<!ENTITY ORAC            "<application>Oracle</application>">
+<!ENTITY INTERB          "<application>Interbase</application>">
+<!ENTITY SYBASE          "<application>Sybase</application>">
+<!ENTITY MSACC           "<application>MS Access</application>">
+<!ENTITY INFOR           "<application>Informix</application>">
+<!ENTITY libgda-batch SYSTEM "sgml/gda-batch.sgml">
+<!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
+<!ENTITY libgda-command SYSTEM "sgml/gda-command.sgml">
+<!ENTITY libgda-config SYSTEM "sgml/gda-config.sgml">
+<!ENTITY libgda-connection SYSTEM "sgml/gda-connection.sgml">
+<!ENTITY libgda-data-model-array SYSTEM "sgml/gda-data-model-array.sgml">
+<!ENTITY libgda-data-model-list SYSTEM "sgml/gda-data-model-list.sgml">
+<!ENTITY libgda-data-model SYSTEM "sgml/gda-data-model.sgml">
+<!ENTITY libgda-error SYSTEM "sgml/gda-error.sgml">
+<!ENTITY libgda-export SYSTEM "sgml/gda-export.sgml">
+<!ENTITY libgda-log SYSTEM "sgml/gda-log.sgml">
+<!ENTITY libgda-parameter SYSTEM "sgml/gda-parameter.sgml">
+<!ENTITY libgda-quark-list SYSTEM "sgml/gda-quark-list.sgml">
+<!ENTITY libgda-recordset SYSTEM "sgml/gda-recordset.sgml">
+<!ENTITY libgda-row SYSTEM "sgml/gda-row.sgml">
+<!ENTITY libgda-server-connection SYSTEM "sgml/gda-server-connection.sgml">
+<!ENTITY libgda-server-provider SYSTEM "sgml/gda-server-provider.sgml">
+<!ENTITY libgda-server-recordset SYSTEM "sgml/gda-server-recordset.sgml">
+<!ENTITY libgda-server SYSTEM "sgml/gda-server.sgml">
+<!ENTITY libgda-value SYSTEM "sgml/gda-value.sgml">
+<!ENTITY libgda-xml-database SYSTEM "sgml/gda-xml-database.sgml">
+<!ENTITY libgda-xml-document SYSTEM "sgml/gda-xml-document.sgml">
+<!ENTITY libgda-xql-atom SYSTEM "sgml/gda-xql-atom.sgml">
+<!ENTITY libgda-xql-bin SYSTEM "sgml/gda-xql-bin.sgml">
+<!ENTITY libgda-xql-column SYSTEM "sgml/gda-xql-column.sgml">
+<!ENTITY libgda-xql-const SYSTEM "sgml/gda-xql-const.sgml">
+<!ENTITY libgda-xql-delete SYSTEM "sgml/gda-xql-delete.sgml">
+<!ENTITY libgda-xql-dml SYSTEM "sgml/gda-xql-dml.sgml">
+<!ENTITY libgda-xql-dual SYSTEM "sgml/gda-xql-dual.sgml">
+<!ENTITY libgda-xql-field SYSTEM "sgml/gda-xql-field.sgml">
+<!ENTITY libgda-xql-func SYSTEM "sgml/gda-xql-func.sgml">
+<!ENTITY libgda-xql-insert SYSTEM "sgml/gda-xql-insert.sgml">
+<!ENTITY libgda-xql-item SYSTEM "sgml/gda-xql-item.sgml">
+<!ENTITY libgda-xql-join SYSTEM "sgml/gda-xql-join.sgml">
+<!ENTITY libgda-xql-list SYSTEM "sgml/gda-xql-list.sgml">
+<!ENTITY libgda-xql-query SYSTEM "sgml/gda-xql-query.sgml">
+<!ENTITY libgda-xql-select SYSTEM "sgml/gda-xql-select.sgml">
+<!ENTITY libgda-xql-stack SYSTEM "sgml/gda-xql-stack.sgml">
+<!ENTITY libgda-xql-target SYSTEM "sgml/gda-xql-target.sgml">
+<!ENTITY libgda-xql-update SYSTEM "sgml/gda-xql-update.sgml">
+<!ENTITY libgda-xql-utils SYSTEM "sgml/gda-xql-utils.sgml">
+<!ENTITY libgda-xql-value SYSTEM "sgml/gda-xql-value.sgml">
+<!ENTITY libgda-xql-valueref SYSTEM "sgml/gda-xql-valueref.sgml">
+]>
+
+<book id="index">
+  <bookinfo>
+    <title>GNOME Data Access manual</title>
+    <authorgroup>
+      <author>
+        <firstname>Michael</firstname>
+        <surname>Lausch</surname>
+        <affiliation>
+          <address><email>michael.lausch@1012surf.net</email></address>
+        </affiliation>
+      </author>
+      <author>
+        <firstname>Rodrigo</firstname>
+        <surname>Moya</surname>
+        <affiliation>
+          <address><email>rodrigo@gnome-db.org</email></address>
+        </affiliation>
+      </author>
+      <author>
+        <firstname>Vivien</firstname>
+        <surname>Malerba</surname>
+        <affiliation>
+          <address><email>malerba@linuxave.net</email></address>
+        </affiliation>
+      </author>
+      <author role="clean up">
+	<firstname>Sean</firstname>
+	<surname>Allen</surname>
+	<affiliation>
+	  <address><email>zeroone@worldonline.co.za</email></address>
+	</affiliation>
+	<contrib>GDP compliancy, FDL, added markup, English and syntax
+        </contrib>
+      </author>
+    </authorgroup>
+    <date>1999 February</date>
+    <copyright>
+      <year>1999-2002</year>
+      <holder>The GNOME Foundation</holder>
+    </copyright>
+    <abstract>
+      <para>
+        GNOME Data Access (&GDA;) is an architecture whose 
+        purpose is to provide universal access to many different kinds and
+        types of data sources. This goes from traditional relational database
+        systems, to any imaginable kind of data source such as a mail server,
+        a &LDAP; directory...
+      </para>
+      <para>
+        This universality is obtained through the use of
+        &CORBA; as the mechanism for communication between
+        the different components in the architecture.
+      </para>
+    </abstract>
+    <legalnotice id="legalnotice">
+      <para>
+        Permission is granted to copy, distribute and/or modify this document
+        under the terms of the <link linkend="fdl"><citetitle>GNU
+        Free Documentation License</citetitle></link>, Version 1.1 or any later
+        version published by the Free Software Foundation with no Invariant
+        Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the
+        license can be found in <xref linkend="fdl">.
+      </para>
+      <para>
+        Many of the names used by companies to distinguish their products and
+        services are claimed as trademarks. Where those names appear in any
+        GNOME documentation, and those trademarks are made aware to the members
+        of the GNOME Documentation Project, the names have been printed in caps
+        or initial caps.
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <chapter id="introduction">
+    <title>Introduction</title>
+    <para>
+      &ODBC; and &SQL; are established standards. The problem is, that &ODBC;
+      doesn't specify the wire protocol and for some databases no &ODBC; driver
+      exists. You might use <acronym>RPC</acronym>, <acronym>TCP/IP</acronym>,
+      or shared memory and signals to pass the request from the client to the
+      server. So you have to use the database specific &ODBC; library. This 
+      library might not be available for the <acronym>CPU</acronym> or 
+      operating system on which the client is running. 
+    </para>
+    <para>
+      &SQL; itself is also not standardized enough, so that source
+      compatibility can not be assured for all database servers. And for some
+      sort of servers, &SQL; is not even feasable (think about &LDAP;).
+    </para>
+    <para>
+      &GDA; tries to tackle the &ODBC; problem and help you with the &SQL;
+      problem. It's a sort of middleware (or can be blown up to be a middleware
+      layer) to access different data sources. It offers a high level view of
+      data sources and has some places where you can plug in low level access
+      to the database for special tasks.
+    </para>
+    <para>
+      GNOME Data Access (&GDA;) is defined as a set of &CORBA; &IDL; interfaces.
+      The level of abstraction provided by &GDA; makes it possible to access
+      any kind of data source, provided that a &CORBA; server implementing 
+      those &IDL; interfaces and accessing this particular data source is
+      written.
+    </para>
+    <para>
+      &LIBGDA; is an implementation of the &GDA; &CORBA; interfaces, using
+      <ulink url="http://www.labs.redhat.com/orbit/" type="http">ORBit</ulink>
+      as the &CORBA; implementation. So, in theory, it would be possible to 
+      implement &LIBGDA; for another &CORBA; &ORB; or operating system, 
+      provided that &CORBA; support is present on that system.
+    </para>
+    <para>
+      It offers a wrapper around the &CORBA; internals, thus making it easier
+      for programmers to make use of all the power provided by &CORBA; without
+      even knowing about it. It comes along with several libraries, for both
+      clients and servers, as a C implementation of this wrapper. This level of
+      abstraction would make possible to, at a later time, change all the
+      internals without having to modify applications using the libraries, as
+      well as, most importantly, keeps application developers away from the
+      continous changes in the different &CORBA;-related &API;s being used,
+      such as <systemitem class="resource">Bonobo</systemitem>,
+      <systemitem class="resource">GConf</systemitem>...
+    </para>
+    <para>
+      Along with these libraries (and associated header files and language 
+      bindings for development), &LIBGDA; includes several tools and utilities
+      to help you with the task of developing applications based on &LIBGDA;,
+      as well as for automating some database-related tasks.
+    </para>
+    <para>
+      &LIBGDA; is implemented for <systemitem class="osname">UNIX
+      </systemitem>-like operating systems (including <systemitem 
+      class="osname">Linux</systemitem>), and does not depend on other 
+      libraries apart from <systemitem class="resource">ORBit</systemitem>, 
+      <systemitem class="resource">GConf</systemitem>, 
+      <systemitem class="resource">Bonobo</systemitem> and 
+      <systemitem class="resource">Glib</systemitem>, which makes it a very
+      lightweight system also ideal for applications to be run on 
+      hardware-limited systems. It was once part of the &GNOMEDB; project, and
+      is still used as the basis for it, but it's been separated from it to
+      remove all GNOME dependencies and thus allow non-GNOME applications to
+      be developed based on it.
+    </para>
+  </chapter>
+  
+  <chapter id="architecture">
+    <title>&LIBGDA; architecture</title>
+    <para>
+      &LIBGDA; is composed of three independant layers. The lower level is
+      covered by the &GDA; providers, which are &CORBA; servers whose task is
+      to map the <acronym>RDBMS</acronym>-specific &API; to the &GDA; model.
+      That is, they are &CORBA; objects implementing the &GDA; &CORBA;
+      interfaces.
+    </para>
+    <para>
+      Then, in a midlle layer, are the client libraries: a &CORBA; client
+      library, which hides all the &CORBA; complexity to client applications,
+      also including several utility functions to help you on the development
+      of applications based on &GDA;.
+    </para>
+    <para>
+      Finally, at the upper level sit all the client applications provided in
+      the suite, as well as any application that may make use of the client
+      libraries.
+    </para>
+    <para>
+      &LIBGDA; is &CORBA; based and uses
+      <ulink url="http://www.labs.redhat.com/orbit/" type="http">ORBit</ulink>
+      as the &CORBA; implementation. Basically the system provides an &IDL;
+      file as the interface to the client. For every different data source type
+      (&ODBC;,&SYBASE;, &INFOR;, &MYSQL;, &LDAP;, ...) a server must be
+       written. This server ideally is a shared library which is linked with a
+      small driver program to form a standalone &CORBA; server. The shared
+      driver approach makes it possible to use the server as a library for the
+      client, reducing round trip time (no sockets and context switches
+      required).
+    </para>
+    <para>
+      The advantage of using a &CORBA; server is, that the
+      server may run on another machine, balancing the load. This is possible
+      because <systemitem class="resource">ORBit</systemitem> is small and
+      fast. You can use the same server from a &CORBA; aware scripting language
+      and you might do tracing and transaction control in the server, without
+      needing to change the client. The drawback is that if such a provider
+      crashes all the clients are disconnected from the database. To overcome
+      this problem it is possible for each client to request a new copy of the 
+      provider (although the client &API; doesn't yet provide this flag).
+    </para>
+    <para>
+      The other type of providers are <emphasis>shared library</emphasis>
+      providers. These providers are linked to the client when the client
+      requests something from the provider. The disadvantage is that the
+      server is hosted on the same machine as the client. But a server crash
+      only affects one client. The startup cost is comparable to an executable
+      provider. The big advantage of this sort of providers is that debugging
+      the provider code is simpler, since you must not attach &GDA; to a 
+      running provider and you also can catch errors during server
+      initialization.
+    </para>
+    <para>
+      Per default every &GDA; provider is available as an
+      executable and as a shared library. The build process and the conventions
+      used to implement the provider make sure that the executable and the
+      shared library are made and installed. Thus, &GDA;
+      providers are implemented in shared libraries, which are then linked with
+      a small program which just acts as a driver for the shared library.
+    </para>
+  </chapter>
+  
+  <chapter id="installation">
+    <title>Installation</title>
+    <sect1 id="installation-introduction">
+      <title>Introduction</title>
+      <para>
+        On our web site, <ulink url="http://www.redhat.com" type="http">RedHat
+        </ulink> and <ulink url="http://www.debian.org" type="http">Debian
+        </ulink> packages are available, so you shouldn't have any problem
+        installing it. For a standard installation, there is are no further
+        steps, but, you'd better know all the &CORBA; and &GDA; configuration
+        options, just in case you come across a non-standard installation, or 
+        in case of problems during a standard installation.
+      </para>
+    </sect1>
+    <sect1 id="installation-installing">
+      <title>Installing</title>
+      <para>
+        Installation depends on which format you choose to download. If
+        you've got a package such as &RPM; or <acronym>DEB</acronym>, check
+        your package manager documentation for how to install new packages.
+      </para>
+      <para>
+        If you downloaded the source code (in a tarball), you must
+        compile the software. For doing so, once you have unpacked
+        the source tree, you must:
+        <screen>
+          <prompt>$</prompt><userinput>./configure</userinput>
+          <prompt>$</prompt><userinput>make</userinput>
+          <prompt>$</prompt><userinput>make install</userinput>
+        </screen>
+      </para>
+      <para>
+        This will generate the makefiles for your specific platform,
+        compile all the source tree, and install the binaries and
+        documentation in your system.
+      </para>
+      <para>
+        If you don't find a file named <filename>configure</filename>, there
+        should be one called <filename>autogen.sh</filename>. In this case,
+        run <filename>autogen.sh</filename>, which will create and run the
+        generated <filename>configure</filename> file.
+      </para>
+      <para>
+        You can specify several arguments to <filename>configure</filename> (or
+        <filename>autogen.sh</filename>). The most significant are (you can
+        check all the available arguments by running
+        <command>configure --help</command>):
+      </para>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+            <userinput>--prefix=&lt;directory&gt;</userinput>: Prefix where
+             package will be installed
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-mysql=&lt;directory&gt;</userinput>: Specify
+            directory where &MYSQL; libraries are installed
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-postgres=&lt;directory&gt;</userinput>:
+            Specify directory where &PGSQL; libraries are installed
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-sybase=&lt;directory&gt;</userinput>: Specify
+            directory where &SYBASE; libraries are installed
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-ldap=&lt;directory&gt;</userinput>: Specify
+             directory where &LDAP; libraries are installed
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-oracle=&lt;directory&gt;</userinput>: Specify
+            directory where &ORAC; libraries are installed
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-interbase=&lt;directory&gt;</userinput>: Specify
+            directory where &INTERB; libraries are installed
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-mdb=&lt;directory&gt;</userinput>: Specify
+            directory where the MDB libraries (for accessing &MSACC; files)
+            are installed
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        Providers are not installed by default, so you must specifically add
+        those arguments when running <filename>configure</filename>.
+      </para>
+      <para>
+        If you find any problem during the configuration, compilation or
+        installation process, do not hesitate in contacting the
+        &GNOMEDB; mailing list (<email>gnome-db-list@gnome.org</email>, first
+        send an email to <email>gnome-db-list-request@gnome.org</email> with 
+        the subject SUBSCRIBE, if you are not already subscribed).
+      </para>
+    </sect1>
+    <sect1 id="installation-configuring">
+      <title>Configuring</title>
+      <para>
+        Depending on the use you're going to get out of &LIBGDA;, you may have
+        to dig deep into its internals, but don't be afraid, things have been
+        implemented to be easy to use.
+      </para>
+      <sect2 id="installation-development">
+        <title>Configuration for development</title>
+        <para>
+          If you want to develop applications using &LIBGDA;, you should 
+          install the libgda-dev[el] package if you do a &RPM; or Debian-based
+          installation. If you compiled the source code, development files are
+          installed in your system.
+        </para>
+        <para>
+          The only step you need to do to make sure everything is well 
+          installed, is to check that &LIBGDA; libraries and binaries are seen
+          by your system. That is, make sure that the &LIBGDA; 
+          <filename class="directory">bin/</filename> directory is in your
+          <envar>PATH</envar> environment variable, as well as the
+          <filename class="directory">lib/</filename> in your 
+          <envar>LD_LIBRARY_PATH</envar> (or 
+          <filename>/etc/ld.so.conf</filename> file).
+        </para>
+      </sect2>
+      <sect2 id="installation-client">
+        <title>Configuration for accessing a database</title>
+        <para>
+          If you want to access a data source through a &GDA;
+          provider, you must first of all have access to this provider, and
+          most importantly, this provider should have access to its specific
+          data source. So, first have your database up and running.
+          For this, you'll have to check your specific data source
+          documentation, or see the &LIBGDA; providers' specific documentation.
+        </para>
+        <para>
+          Once you've got your &GDA; provider installed,
+          whether on your machine or on another one on the network, you must
+          configure your local system to have access to it. If you're on a
+          local installation, once you have installed the &GDA; provider (by 
+          compiling it or by installing its &RPM; or Debian package), the 
+          provider is visible in your machine. This is because the provider
+          package provides an <filename>.oafinfo</filename> file in which it
+          specifies the location and other information about itself.
+        </para>
+        <para>
+          If, on the orher hand, your provider is on another machine, you'll 
+          have to create the <filename>.server</filename> yourself. For this,
+          you'll need to check the <systemitem class="resource">OAF
+          </systemitem> installation documentation.
+        </para>
+        <para>
+          Then, the next step is to configure the data sources you want
+          available on your system. For doing this, you should, as for now, use
+          &GNOMEDB;, which is a frontend to &LIBGDA; for the 
+          <ulink url="http://www.gnome.org" type="http">GNOME project</ulink>.
+          <footnote>
+	    <para>
+	      It would be a good idea to add a command-line tool for managing
+              the configuration, as now, using <systemitem class="resource">
+              GConf</systemitem>, is not a matter of hacking on a config text
+              file, as it was befofe with <function>gnome_config</function>.
+              The &API; for doing so is already available in the <filename>
+              libgda-common</filename>library, so it would be really easy.
+              Volunteers?
+	    </para>
+	  </footnote>
+	</para>
+	<para>
+	  Command-line tools will be provided in &LIBGDA; for doing so in a
+          not-too-distant future, so you may want to know what information
+          you need to setup a data source.
+	</para>
+	<para>
+	  One of the problem &GDA; solves is the naming of
+          data sources. Every database system has it's own way of defining
+	  names for it's databases. For example &MYSQL; uses the hostname, 
+          port number, and the name of the database. Other databases, like
+          Solid use the hostname and port number only. There is no support
+          for multiple databases per server. Because the client does not
+          need all these details, the &LIBGDA; configuration defines all the
+	  properties of such a data source, so that the correct data base
+          server can be contacted. This information is accessed by the
+          client library and sent to the provider, which in turn will parse
+          the string to decide which database must be connected to. The
+          data stored for each data source is as follows:
+	  
+	  <programlistingco>
+	    <areaspec>
+	      <area id="provider" coords="2"/>
+	      <area id="dsn" coords="3"/>
+              <area id="description" coords="4"/>
+            </areaspec>
+	    <programlisting>
+	      [sales]
+	      Provider=OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory
+              DSN=DATABASE=test;HOST=localhost;PORT=1111
+	      Description=MySQL Test Database in native mode
+	      Configurator=None
+	    </programlisting>
+	    <calloutlist>
+	      <callout arearefs="provider">
+		<para>
+    		  The provider for this database is the gda-mysql
+		  provider. The value of this entry is used as the
+		  object ID for the OAF activation.
+		</para>
+	      </callout>
+	      <callout arearefs="dsn">
+		<para>
+		  This is the most important entry. The value of
+		  this entry is the string sent to the provider so
+		  that it knows which datasouce to access. How this
+		  entry is interpreted by the providers is described 
+		  in the provider section.
+		</para>
+	      </callout>
+	      <callout arearefs="description">
+		<para>
+		  The value of this entry is a short description of
+		  the datasource. It is here for convenience only
+		  and it is not used for any purpose.
+		</para>
+	      </callout>
+	    </calloutlist>
+	  </programlistingco>
+	</para>
+      </sect2>
+      <sect2 id="installation-provider">
+        <title>Provider's specific information</title>
+        <para>
+          This section provides information specific to each of the available
+          &LIBGDA; providers.
+        </para>
+	<sect3 id="installation-provider-default">
+	  <title>Default provider</title>
+	  <para>
+	    The &GDA; default provider is always installed 
+            with &LIBGDA, which means that you've got always a default
+	    database system available for you. To connect to a default 
+            provider's database, you only need to specify, in the &DSN; string,
+            a string of the form "DIRECTORY=/directory/for/the/database". When
+            you	first connect to the new data source, the &GDA; default 
+            provider will create the database, in the directory you specified
+            in the &DSN; string, if it does not exist.
+	  </para>
+	</sect3>
+	<sect3 id="installation-provider-odbc">
+	  <title>&ODBC; Provider</title>
+	  <para>
+	    The &ODBC; provider is a special case, since &ODBC; is itself a 
+            data access layer, the same as &LIBGDA;, So, in the case of the
+            &GDA; &ODBC; provider, the &DSN; string is completely up to the
+            &ODBC; driver manager. That is, the &GDA; &ODBC; provider does not
+            parse it all, nor does it try to understand what it means; it
+            simply passes it over to the &ODBC; library.
+	  </para>
+	  <para>
+	    So, if you want to use &LIBGDA; with &ODBC;, you should first know
+            how to set up an &ODBC; data source, and then just specify the
+            &DSN; string you would pass to the &ODBC; library in the &DSN;
+            string of the &GDA; data sources.
+	  </para>
+	  <para>
+	    There is a project called
+	    <ulink url="http://www.unixodbc.org">unixODBC</ulink>,
+            which provides some graphical tools to help you in
+	    setting up &ODBC; data sources. You may find it
+	    interesting to give it a try.
+	  </para>
+	</sect3>
+	<sect3 id="installation-provider-postgres">
+	  <title>&PGSQL; Provider</title>
+	  <para>
+	    To use the &GDA; &PGSQL; provider, you'll need
+	    the <application>gda-postgres</application> package.	
+	  </para>
+	  <para>
+	    The &PGSQL; provider accepts the following
+	    arguments in the &GDA; data source's &DSN; string:
+	     <itemizedlist>
+	       <listitem>
+	         <para>
+	           HOST: name of the host where
+		   the database server is running
+		 </para>
+               </listitem>
+	       <listitem>
+		 <para>
+		   DATABASE: name of the database
+		   you want to access
+		 </para>
+	       </listitem>
+	     </itemizedlist>
+	   </para>
+	 </sect3>
+        <sect3 id="installation-provider-mysql">
+          <title>&MYSQL; Provider</title>
+          <para>
+	    To configure a data source to access a &MYSQL; database,
+	    you'll need to install the &GDA; &MYSQL; provider (package
+	    <filename>gda-mysql</filename>).
+          </para>
+	  <para>
+	    It accepts the following arguments in the &DSN;
+	    string:	
+	  </para>
+        </sect3>
+      </sect2>
+    </sect1>
+  </chapter>
+  
+  <chapter id="libgda-api">
+    <title>&LIBGDA; API Reference</title>
+    <para>
+      The following sections describe the API available for &GDA applications.
+    </para>
+    &libgda-batch;
+    &libgda-client;
+    &libgda-command;
+    &libgda-config;
+    &libgda-connection;
+    &libgda-data-model-array;
+    &libgda-data-model-list;
+    &libgda-data-model;
+    &libgda-error;
+    &libgda-export;
+    &libgda-log;
+    &libgda-parameter;
+    &libgda-quark-list;
+    &libgda-recordset;
+    &libgda-row;
+    &libgda-server-connection;
+    &libgda-server-provider;
+    &libgda-server-recordset;
+    &libgda-server;
+    &libgda-value;
+    &libgda-xml-database;
+    &libgda-xml-document;
+  </chapter>
+
+  <chapter id="libgda-xql">
+    <title>XML Queries</title>
+    <para>
+    </para>
+    &libgda-xql-atom;
+    &libgda-xql-bin;
+    &libgda-xql-column;
+    &libgda-xql-const;
+    &libgda-xql-delete;
+    &libgda-xql-dml;
+    &libgda-xql-dual;
+    &libgda-xql-field;
+    &libgda-xql-func;
+    &libgda-xql-insert;
+    &libgda-xql-item;
+    &libgda-xql-join;
+    &libgda-xql-list;
+    &libgda-xql-query;
+    &libgda-xql-select;
+    &libgda-xql-stack;
+    &libgda-xql-target;
+    &libgda-xql-update;
+    &libgda-xql-utils;
+    &libgda-xql-value;
+    &libgda-xql-valueref;
+  </chapter>
+
+  <chapter id="libgda-reports">
+    <title>&GDA; Report Engine</title>
+    <para>
+    </para>
+  </chapter>
+  
+  &FDL-INC;
+</book>
+

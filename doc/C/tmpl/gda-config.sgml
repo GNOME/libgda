@@ -1,0 +1,298 @@
+<!-- ##### SECTION Title ##### -->
+gda-config
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_config_get_string ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_int ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_float ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_boolean ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_set_string ##### -->
+<para>
+
+</para>
+
+@path: 
+@new_value: 
+
+
+<!-- ##### FUNCTION gda_config_set_int ##### -->
+<para>
+
+</para>
+
+@path: 
+@new_value: 
+
+
+<!-- ##### FUNCTION gda_config_set_float ##### -->
+<para>
+
+</para>
+
+@path: 
+@new_value: 
+
+
+<!-- ##### FUNCTION gda_config_set_boolean ##### -->
+<para>
+
+</para>
+
+@path: 
+@new_value: 
+
+
+<!-- ##### FUNCTION gda_config_remove_section ##### -->
+<para>
+
+</para>
+
+@path: 
+
+
+<!-- ##### FUNCTION gda_config_remove_key ##### -->
+<para>
+
+</para>
+
+@path: 
+
+
+<!-- ##### FUNCTION gda_config_has_section ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_has_key ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_list_sections ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_list_keys ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_free_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### USER_FUNCTION GdaConfigListenerFunc ##### -->
+<para>
+
+</para>
+
+@path: 
+@user_data: 
+
+
+<!-- ##### FUNCTION gda_config_add_listener ##### -->
+<para>
+
+</para>
+
+@path: 
+@func: 
+@user_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_remove_listener ##### -->
+<para>
+
+</para>
+
+@id: 
+
+
+<!-- ##### ENUM GdaComponentType ##### -->
+<para>
+
+</para>
+
+@GDA_COMPONENT_TYPE_INVALID: 
+@GDA_COMPONENT_TYPE_EXE: 
+@GDA_COMPONENT_TYPE_SHLIB: 
+@GDA_COMPONENT_TYPE_FACTORY: 
+
+<!-- ##### TYPEDEF GdaComponentInfo ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_config_get_component_list ##### -->
+<para>
+
+</para>
+
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_free_component_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION gda_config_get_component_data_model ##### -->
+<para>
+
+</para>
+
+@query: 
+@Returns: 
+
+
+<!-- ##### TYPEDEF GdaProviderInfo ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_config_get_provider_list ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_free_provider_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### TYPEDEF GdaDataSourceInfo ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_config_get_data_source_list ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_find_data_source ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_copy_data_source_info ##### -->
+<para>
+
+</para>
+
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_free_data_source_info ##### -->
+<para>
+
+</para>
+
+@info: 
+
+
+<!-- ##### FUNCTION gda_config_free_data_source_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION gda_config_get_data_source_model ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

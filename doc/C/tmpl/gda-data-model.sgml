@@ -1,0 +1,97 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModel
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaDataModelPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_model_changed ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION gda_data_model_freeze ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION gda_data_model_thaw ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_n_rows ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_n_columns ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_column_title ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_set_column_title ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@title: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_value_at ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@row: 
+@Returns: 
+
+

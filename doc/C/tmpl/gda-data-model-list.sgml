@@ -1,0 +1,69 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelList
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaDataModelListPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_model_list_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_list_new_from_string_list ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_list_append_value ##### -->
+<para>
+
+</para>
+
+@model: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_data_model_list_prepend_value ##### -->
+<para>
+
+</para>
+
+@model: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_data_model_list_insert_value ##### -->
+<para>
+
+</para>
+
+@model: 
+@value: 
+@row: 
+
+

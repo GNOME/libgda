@@ -1,0 +1,481 @@
+<!-- ##### SECTION Title ##### -->
+gda-value
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaValue ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaValueType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_NULL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_BIGINT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_BINARY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_BOOLEAN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_DATE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_DOUBLE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_INTEGER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_SINGLE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_SMALLINT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_STRING ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_TIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_TIMESTAMP ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_TINYINT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_value_new_null ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_bigint ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_binary ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_boolean ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_date ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_double ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_integer ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_single ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_smallint ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_string ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_time ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_timestamp ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_tinyint ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_free ##### -->
+<para>
+
+</para>
+
+@value: 
+
+
+<!-- ##### FUNCTION gda_value_isa ##### -->
+<para>
+
+</para>
+
+@value: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_copy ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_bigint ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_binary ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_binary ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_value_get_boolean ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_boolean ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_date ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_date ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_double ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_double ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_integer ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_integer ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_single ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_single ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_smallint ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_smallint ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_string ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_string ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_time ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_time ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_timestamp ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_timestamp ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_tinyint ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_tinyint ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_stringify ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+

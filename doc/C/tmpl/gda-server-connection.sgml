@@ -1,0 +1,104 @@
+<!-- ##### SECTION Title ##### -->
+GdaServerConnection
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaServerConnectionPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaServerProvider ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### FUNCTION gda_server_connection_new ##### -->
+<para>
+
+</para>
+
+@provider: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_connection_get_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_connection_get_username ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_connection_get_password ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_connection_notify_action ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@action: 
+@params: 
+
+
+<!-- ##### FUNCTION gda_server_connection_add_error ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@error: 
+
+
+<!-- ##### FUNCTION gda_server_connection_add_error_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@msg: 
+
+
+<!-- ##### FUNCTION gda_server_connection_free_error_list ##### -->
+<para>
+
+</para>
+
+@cnc: 
+
+

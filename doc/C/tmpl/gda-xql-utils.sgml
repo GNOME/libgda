@@ -1,0 +1,78 @@
+<!-- ##### SECTION Title ##### -->
+gda-xql-utils
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xql_gensym ##### -->
+<para>
+
+</para>
+
+@sym: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_destroy_hash_pair ##### -->
+<para>
+
+</para>
+
+@key: 
+@value: 
+@func: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_dom_to_xml ##### -->
+<para>
+
+</para>
+
+@node: 
+@freedoc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_dom_to_sql ##### -->
+<para>
+
+</para>
+
+@node: 
+@freedoc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_new_node ##### -->
+<para>
+
+</para>
+
+@tag: 
+@parNode: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_new_attr ##### -->
+<para>
+
+</para>
+
+@key: 
+@value: 
+@node: 
+
+

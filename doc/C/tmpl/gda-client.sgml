@@ -1,0 +1,65 @@
+<!-- ##### SECTION Title ##### -->
+GdaClient
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaClientPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_client_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_open_connection ##### -->
+<para>
+
+</para>
+
+@client: 
+@dsn: 
+@username: 
+@password: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_get_connection_list ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_find_connection ##### -->
+<para>
+
+</para>
+
+@client: 
+@dsn: 
+@username: 
+@password: 
+@Returns: 
+
+

@@ -1,0 +1,614 @@
+<!-- ##### SECTION Title ##### -->
+gda-row
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaRow ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaRowAttributes ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaFieldAttributes ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaField ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_TYPE_NULL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_BIGINT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_BINARY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_BOOLEAN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_DATE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_TIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_TIMESTAMP ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_DOUBLE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_INTEGER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_SINGLE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_SMALLINT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_STRING ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_TINYINT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_TYPE_UNKNOWN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_row_new ##### -->
+<para>
+
+</para>
+
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_row_free ##### -->
+<para>
+
+</para>
+
+@row: 
+
+
+<!-- ##### FUNCTION gda_row_get_field ##### -->
+<para>
+
+</para>
+
+@row: 
+@num: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_row_attributes_new ##### -->
+<para>
+
+</para>
+
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_row_attributes_free ##### -->
+<para>
+
+</para>
+
+@attrs: 
+
+
+<!-- ##### FUNCTION gda_row_attributes_get_field ##### -->
+<para>
+
+</para>
+
+@attrs: 
+@num: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_defined_size ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_defined_size ##### -->
+<para>
+
+</para>
+
+@fs: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_name ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_name ##### -->
+<para>
+
+</para>
+
+@fa: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_scale ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_scale ##### -->
+<para>
+
+</para>
+
+@fa: 
+@scale: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_gdatype ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_gdatype ##### -->
+<para>
+
+</para>
+
+@fa: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_field_get_actual_size ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_actual_size ##### -->
+<para>
+
+</para>
+
+@field: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_field_get_defined_size ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_defined_size ##### -->
+<para>
+
+</para>
+
+@field: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_field_get_name ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_name ##### -->
+<para>
+
+</para>
+
+@field: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_field_get_scale ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_scale ##### -->
+<para>
+
+</para>
+
+@field: 
+@scale: 
+
+
+<!-- ##### FUNCTION gda_field_get_gdatype ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_gdatype ##### -->
+<para>
+
+</para>
+
+@field: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_field_is_null ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_get_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_set_bigint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_binary_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_binary_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_field_get_boolean_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_boolean_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_date_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_date_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@date: 
+
+
+<!-- ##### FUNCTION gda_field_get_double_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_double_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_integer_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_integer_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_set_null_value ##### -->
+<para>
+
+</para>
+
+@field: 
+
+
+<!-- ##### FUNCTION gda_field_get_single_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_single_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_smallint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_smallint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_string_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_string_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_time_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_time_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_timestamp_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_timestamp_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_tinyint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_tinyint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_stringify ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+

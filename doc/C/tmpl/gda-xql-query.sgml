@@ -1,0 +1,43 @@
+<!-- ##### SECTION Title ##### -->
+GdaXqlQuery
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_XQL_QUERY_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### FUNCTION gda_xql_query_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_query_new_with_data ##### -->
+<para>
+
+</para>
+
+@xqlitem: 
+@Returns: 
+
+

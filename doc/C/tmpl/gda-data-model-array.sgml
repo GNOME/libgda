@@ -1,0 +1,59 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelArray
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaDataModelArrayPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_model_array_new ##### -->
+<para>
+
+</para>
+
+@cols: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_array_set_n_columns ##### -->
+<para>
+
+</para>
+
+@model: 
+@cols: 
+
+
+<!-- ##### FUNCTION gda_data_model_array_clear ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION gda_data_model_array_append_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@values: 
+
+

@@ -1,0 +1,92 @@
+<!-- ##### SECTION Title ##### -->
+GdaServerProvider
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaServerProviderPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_server_provider_open_connection ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@params: 
+@username: 
+@password: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_close_connection ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_execute_command ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@cmd: 
+@params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_begin_transaction ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@trans_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_commit_transaction ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@trans_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_rollback_transaction ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@trans_id: 
+@Returns: 
+
+

@@ -1,0 +1,158 @@
+<!-- ##### SECTION Title ##### -->
+GdaConnection
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaConnectionPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaClient ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### FUNCTION gda_connection_new ##### -->
+<para>
+
+</para>
+
+@client: 
+@corba_cnc: 
+@cnc_string: 
+@username: 
+@password: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_close ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_client ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_set_client ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@client: 
+
+
+<!-- ##### FUNCTION gda_connection_get_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_username ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_password ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_add_error ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@error: 
+
+
+<!-- ##### FUNCTION gda_connection_add_error_list ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@error_list: 
+
+
+<!-- ##### FUNCTION gda_connection_execute_command ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@cmd: 
+@params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_begin_transaction ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_commit_transaction ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_rollback_transaction ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@id: 
+@Returns: 
+
+
