@@ -23,7 +23,7 @@ gda_test_SOURCES = \
 	ibmdb2-test.h
 
 gda_test_LDADD = \
-	$(top_builddir)/libgda/libgda-2.la \
+	$(top_builddir)/libgda/libgda-3.la \
 	$(LIBGDA_LIBS)
 
 EXTRA_DIST = sample_database.xml

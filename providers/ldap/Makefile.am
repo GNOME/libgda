@@ -1,4 +1,4 @@
-providerdir=$(libdir)/libgda/providers
+providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-ldap.la
 
 AM_CPPFLAGS = \
@@ -18,7 +18,7 @@ libgda_ldap_la_SOURCES = \
 	utils.c
 libgda_ldap_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_ldap_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-2.la \
+	$(top_builddir)/libgda/libgda-3.la \
 	$(LIBGDA_LIBS) \
 	$(LDAP_LIBS)
 

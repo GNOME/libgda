@@ -30,7 +30,7 @@ IGNORE_HFILES= config.h acconfig.h gda-intl.h gda-marshal.h
 INCLUDES = -I$(top_srcdir) \
         -I$(top_builddir) \
         $(LIBGDA_CFLAGS)
-GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-2.la \
+GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.la \
         $(LIBGDA_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb

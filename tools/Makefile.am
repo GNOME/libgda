@@ -22,12 +22,12 @@ AM_CPPFLAGS = \
 
 gda_run_SOURCES = gda-run.c
 gda_run_LDADD = \
-	$(top_builddir)/libgda/libgda-2.la \
+	$(top_builddir)/libgda/libgda-3.la \
 	$(LIBGDA_LIBS)
 
 gda_config_tool_SOURCES = gda-config-tool.c
 gda_config_tool_LDADD = \
-	$(top_builddir)/libgda/libgda-2.la \
+	$(top_builddir)/libgda/libgda-3.la \
 	$(READLINE_LIB) \
 	$(HISTORY_LIB) \
 	$(POPT_LIB) \

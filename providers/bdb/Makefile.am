@@ -1,4 +1,4 @@
-providerdir=$(libdir)/libgda/providers
+providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-bdb.la
 
 AM_CPPFLAGS = \
@@ -18,12 +18,12 @@ libgda_bdb_la_SOURCES = \
 libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_bdb_la_LIBADD = \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-2.la \
+	$(top_builddir)/libgda/libgda-3.la \
 	$(BDB_LIBS)
 
 #bin_PROGRAMS = gda-bdb-test
 #gda_bdb_test_SOURCES = gda-bdb-test.c
 #gda_bdb_test_LDADD = \
 #	$(LIBGDA_LIBS) \
-#	$(top_builddir)/libgda/libgda-2.la \
+#	$(top_builddir)/libgda/libgda-3.la \
 #	$(BDB_LIBS)

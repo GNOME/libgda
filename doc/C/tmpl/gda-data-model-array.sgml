@@ -19,8 +19,6 @@ An implementation of #GdaDataModel based on an array
 
 </para>
 
-@model: 
-@priv: 
 
 <!-- ##### FUNCTION gda_data_model_array_new ##### -->
 <para>

@@ -14,3 +14,135 @@ Management of #GdaDataModel column index attributes
 
 </para>
 
+<!-- ##### STRUCT GdaDataModelColumnIndexAttributes ##### -->
+<para>
+
+</para>
+
+@column_name: 
+@defined_size: 
+@sorting: 
+@references: 
+
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_COLUMN_INDEX_ATTRIBUTES ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_copy ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_free ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_equal ##### -->
+<para>
+
+</para>
+
+@lhs: 
+@rhs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_get_column_name ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_set_column_name ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@column_name: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_get_defined_size ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_set_defined_size ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_get_sorting ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_set_sorting ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@sorting: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_get_references ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_index_attributes_set_references ##### -->
+<para>
+
+</para>
+
+@dmcia: 
+@ref: 
+
+

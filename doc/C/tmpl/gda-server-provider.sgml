@@ -19,8 +19,6 @@ Base class for implementing new providers
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>
@@ -115,11 +113,11 @@ Base class for implementing new providers
 @provider: 
 @cnc: 
 @table_name: 
-@attributes: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @attributes_list: 
 @index_list: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@attributes: 
 
 
 <!-- ##### FUNCTION gda_server_provider_drop_table ##### -->
@@ -129,6 +127,31 @@ Base class for implementing new providers
 
 @provider: 
 @cnc: 
+@table_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_create_index ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@index: 
+@table_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_drop_index ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@index_name: 
+@primary_key: 
 @table_name: 
 @Returns: 
 

@@ -136,3 +136,23 @@ Row for a #GdaDataModel object
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_row_set_is_default ##### -->
+<para>
+
+</para>
+
+@row: 
+@num: 
+@is_default: 
+
+
+<!-- ##### FUNCTION gda_row_get_is_default ##### -->
+<para>
+
+</para>
+
+@row: 
+@num: 
+@Returns: 
+
+

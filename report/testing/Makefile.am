@@ -11,6 +11,6 @@ gda_report_test_SOURCES = \
         gda-report-test.c
 
 gda_report_test_LDADD = \
-        $(top_builddir)/libgda/libgda-2.la \
-        $(top_builddir)/report/libgda-report/libgda-report-2.la \
+        $(top_builddir)/libgda/libgda-3.la \
+        $(top_builddir)/report/libgda-report/libgda-report-3.la \
         $(LIBGDA_LIBS)

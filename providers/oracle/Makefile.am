@@ -1,4 +1,4 @@
-providerdir=$(libdir)/libgda/providers
+providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-oracle.la
 
 AM_CPPFLAGS = \
@@ -18,5 +18,5 @@ libgda_oracle_la_SOURCES = \
 libgda_oracle_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_oracle_la_LIBADD = \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-2.la \
+	$(top_builddir)/libgda/libgda-3.la \
 	$(ORACLE_LIBS)
