@@ -21,9 +21,9 @@
 
 
 enum {
-  REPORTSTREAM_ERROR,
-  REPORTSTREAM_WARNING,
-  LAST_SIGNAL
+	REPORTSTREAM_ERROR,
+	REPORTSTREAM_WARNING,
+	LAST_SIGNAL
 };
 
 static gint
@@ -31,10 +31,10 @@ gda_report_stream_signals[LAST_SIGNAL] = {0, };
 
 
 #ifdef HAVE_GOBJECT
-static void    gda_report_stream_class_init  (Gda_ReportStreamClass *klass,
-                                             gpointer data);
-static void    gda_report_stream_init        (Gda_ReportStream *object,
-                                             Gda_ReportStreamClass *klass);
+static void    gda_report_stream_class_init    (Gda_ReportStreamClass *klass,
+						gpointer data);
+static void    gda_report_stream_init          (Gda_ReportStream *object,
+						Gda_ReportStreamClass *klass);
 #else
 static void    gda_report_stream_class_init    (Gda_ReportStreamClass* klass);
 static void    gda_report_stream_init          (Gda_ReportStream* object);
@@ -46,63 +46,59 @@ static void    gda_report_stream_real_warning  (Gda_ReportStream* object, GList*
 static void
 gda_report_stream_real_error (Gda_ReportStream* object, GList* errors)
 {
-  g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
-  object->errors_head = g_list_concat(object->errors_head, errors);
+	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+	object->errors_head = g_list_concat(object->errors_head, errors);
 }
 
 static void
 gda_report_stream_real_warning (Gda_ReportStream* object, GList* warnings)
 {
-  g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
 }
 
 #ifdef HAVE_GOBJECT
 GType
 gda_report_stream_get_type (void)
 {
-  static GType type = 0;
+	static GType type = 0;
 
-  if (!type)
-    {
-      GTypeInfo info =
-      {
-       sizeof (Gda_ReportStreamClass),               /* class_size */
-        NULL,                                        /* base_init */
-        NULL,                                        /* base_finalize */
-       (GClassInitFunc) gda_report_stream_class_init, /* class_init */
-        NULL,                                        /* class_finalize */
-        NULL,                                        /* class_data */
-       sizeof (Gda_ReportStream),                    /* instance_size */
-        0,                                           /* n_preallocs */
-       (GInstanceInitFunc) gda_report_stream_init,    /* instance_init */
-        NULL,                                        /* value_table */
-      };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_ReportStream", &info);
-    }
-  return type;
+	if (!type) {
+		GTypeInfo info = {
+			sizeof (Gda_ReportStreamClass),			/* class_size */
+			NULL,						/* base_init */
+			NULL,						/* base_finalize */
+			(GClassInitFunc) gda_report_stream_class_init,	/* class_init */
+			NULL,						/* class_finalize */
+			NULL,						/* class_data */
+			sizeof (Gda_ReportStream),			/* instance_size */
+			0,						/* n_preallocs */
+			(GInstanceInitFunc) gda_report_stream_init,	/* instance_init */
+			NULL,						/* value_table */
+		};
+		type = g_type_register_static (G_TYPE_OBJECT, "Gda_ReportStream", &info);
+	}
+	return type;
 }
 #else
 GtkType
 gda_report_stream_get_type (void)
 {
-  static guint gda_report_stream_type = 0;
+	static guint gda_report_stream_type = 0;
 
-  if (!gda_report_stream_type)
-    {
-      GtkTypeInfo gda_report_stream_info =
-      {
-        "Gda_ReportStream",
-        sizeof (Gda_ReportStream),
-        sizeof (Gda_ReportStreamClass),
-        (GtkClassInitFunc) gda_report_stream_class_init,
-        (GtkObjectInitFunc) gda_report_stream_init,
-        (GtkArgSetFunc)NULL,
-        (GtkArgSetFunc)NULL,
-      };
-      gda_report_stream_type = gtk_type_unique(gtk_object_get_type(),
-                                            &gda_report_stream_info);
-    }
-  return gda_report_stream_type;
+	if (!gda_report_stream_type) {
+		GtkTypeInfo gda_report_stream_info = {
+			"Gda_ReportStream",
+			sizeof (Gda_ReportStream),
+			sizeof (Gda_ReportStreamClass),
+			(GtkClassInitFunc) gda_report_stream_class_init,
+			(GtkObjectInitFunc) gda_report_stream_init,
+			(GtkArgSetFunc)NULL,
+			(GtkArgSetFunc)NULL,
+		};
+		gda_report_stream_type = gtk_type_unique(gtk_object_get_type(),
+							 &gda_report_stream_info);
+	}
+	return gda_report_stream_type;
 }
 #endif
 
@@ -113,7 +109,6 @@ gda_report_stream_class_init (Gda_ReportStreamClass *klass, gpointer data)
 	/* FIXME: No GObject signals yet */
 	klass->error = gda_report_stream_real_error;
 	klass->warning = gda_report_stream_real_warning;
-  
 }
 #else
 static void
@@ -121,18 +116,20 @@ gda_report_stream_class_init (Gda_ReportStreamClass* klass)
 {
 	GtkObjectClass*   object_class = GTK_OBJECT_CLASS(klass);
   
-	gda_report_stream_signals[REPORTSTREAM_ERROR] = gtk_signal_new("error",
-							    GTK_RUN_FIRST,
-							    object_class->type,
-							    GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, error),
-							    gtk_marshal_NONE__POINTER,
-							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-	gda_report_stream_signals[REPORTSTREAM_WARNING] = gtk_signal_new("warning",
-							    GTK_RUN_LAST,
-							    object_class->type,
-							    GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, warning),
-							    gtk_marshal_NONE__POINTER,
-							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+	gda_report_stream_signals[REPORTSTREAM_ERROR] = \
+				gtk_signal_new("error",
+						GTK_RUN_FIRST,
+						object_class->type,
+						GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, error),
+						gtk_marshal_NONE__POINTER,
+						GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+	gda_report_stream_signals[REPORTSTREAM_WARNING] = \
+				gtk_signal_new("warning",
+						GTK_RUN_LAST,
+						object_class->type,
+						GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, warning),
+						gtk_marshal_NONE__POINTER,
+						GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
 	gtk_object_class_add_signals(object_class, gda_report_stream_signals, LAST_SIGNAL);
 	klass->error   = gda_report_stream_real_error;
 	klass->warning = gda_report_stream_real_warning;

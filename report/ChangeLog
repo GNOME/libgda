@@ -1,3 +1,7 @@
+2001-01-30	Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda-report*.[ch]: Modified to the GNOME codify style
+
 2001-01-15	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* fixed header files issue

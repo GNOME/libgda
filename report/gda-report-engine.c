@@ -21,38 +21,38 @@
 #include <gda-report-engine.h>
 
 enum {
-  REPORTENGINE_ERROR,
-  REPORTENGINE_WARNING,
-  LAST_SIGNAL
+	REPORTENGINE_ERROR,
+	REPORTENGINE_WARNING,
+	LAST_SIGNAL
 };
 
 static gint
 gda_report_engine_signals[LAST_SIGNAL] = {0, };
 
 #ifdef HAVE_GOBJECT
-static void    gda_report_engine_class_init  (Gda_ReportEngineClass *klass,
-                                             gpointer data);
-static void    gda_report_engine_init        (Gda_ReportEngine *object,
-                                             Gda_ReportEngineClass *klass);
+static void    gda_report_engine_class_init	(Gda_ReportEngineClass *klass,
+						 gpointer data);
+static void    gda_report_engine_init		(Gda_ReportEngine *object,
+						 Gda_ReportEngineClass *klass);
 #else
-static void    gda_report_engine_class_init   (Gda_ReportEngineClass* klass);
-static void    gda_report_engine_init          (Gda_ReportEngine* object);
+static void    gda_report_engine_class_init	(Gda_ReportEngineClass* klass);
+static void    gda_report_engine_init		(Gda_ReportEngine* object);
 #endif
 
-static void    gda_report_engine_real_error    (Gda_ReportEngine* object, GList* errors);
-static void    gda_report_engine_real_warning  (Gda_ReportEngine* object, GList* errors);
+static void    gda_report_engine_real_error	(Gda_ReportEngine* object, GList* errors);
+static void    gda_report_engine_real_warning	(Gda_ReportEngine* object, GList* errors);
 
 static void
 gda_report_engine_real_error (Gda_ReportEngine* object, GList* errors)
 {
-  g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
-  object->errors_head = g_list_concat(object->errors_head, errors);
+	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+	object->errors_head = g_list_concat(object->errors_head, errors);
 }
 
 static void
 gda_report_engine_real_warning (Gda_ReportEngine* object, GList* warnings)
 {
-  g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
 }
 
 #ifdef HAVE_GOBJECT
@@ -63,16 +63,16 @@ gda_report_engine_get_type (void)
 
 	if (!type) {
 		GTypeInfo info = {
-			sizeof (Gda_ReportEngineClass),               /* class_size */
-			NULL,                                        /* base_init */
-			NULL,                                        /* base_finalize */
-			(GClassInitFunc) gda_report_engine_class_init, /* class_init */
-			NULL,                                        /* class_finalize */
-			NULL,                                        /* class_data */
-			sizeof (Gda_ReportEngine),                    /* instance_size */
-			0,                                           /* n_preallocs */
-			(GInstanceInitFunc) gda_report_engine_init,    /* instance_init */
-			NULL,                                        /* value_table */
+			sizeof (Gda_ReportEngineClass),			/* class_size */
+			NULL,						/* base_init */
+			NULL,						/* base_finalize */
+			(GClassInitFunc) gda_report_engine_class_init,	/* class_init */
+			NULL,						/* class_finalize */
+			NULL,						/* class_data */
+			sizeof (Gda_ReportEngine),			/* instance_size */
+			0,						/* n_preallocs */
+			(GInstanceInitFunc) gda_report_engine_init,	/* instance_init */
+			NULL,						/* value_table */
 		};
 		type = g_type_register_static (G_TYPE_OBJECT, "Gda_ReportEngine", &info);
 	}
@@ -115,18 +115,20 @@ gda_report_engine_class_init (Gda_ReportEngineClass* klass)
 {
 	GtkObjectClass*   object_class = GTK_OBJECT_CLASS(klass);
 
-	gda_report_engine_signals[REPORTENGINE_ERROR] = gtk_signal_new("error",
-							    GTK_RUN_FIRST,
-							    object_class->type,
-							    GTK_SIGNAL_OFFSET(Gda_ReportEngineClass, error),
-							    gtk_marshal_NONE__POINTER,
-							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-	gda_report_engine_signals[REPORTENGINE_WARNING] = gtk_signal_new("warning",
-							    GTK_RUN_LAST,
-							    object_class->type,
-							    GTK_SIGNAL_OFFSET(Gda_ReportEngineClass, warning),
-							    gtk_marshal_NONE__POINTER,
-							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+	gda_report_engine_signals[REPORTENGINE_ERROR] = \
+					gtk_signal_new("error",
+							GTK_RUN_FIRST,
+							object_class->type,
+							GTK_SIGNAL_OFFSET(Gda_ReportEngineClass, error),
+							gtk_marshal_NONE__POINTER,
+							GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+	gda_report_engine_signals[REPORTENGINE_WARNING] = \
+					gtk_signal_new("warning",
+							GTK_RUN_LAST,
+							object_class->type,
+							GTK_SIGNAL_OFFSET(Gda_ReportEngineClass, warning),
+							gtk_marshal_NONE__POINTER,
+							GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
 	gtk_object_class_add_signals(object_class, gda_report_engine_signals, LAST_SIGNAL);
 	klass->error   = gda_report_engine_real_error;
 	klass->warning = gda_report_engine_real_warning;
@@ -222,20 +224,20 @@ gda_report_engine_free (Gda_ReportEngine *engine)
 GList *
 gda_report_engine_query_reports (Gda_ReportEngine *engine, const gchar *condition, Gda_ReportFlags flags)
 {
-  GList*            list = NULL;
-  CORBA_Environment ev;
-  GDA_ReportList*   report_list;
+	GList*            list = NULL;
+	CORBA_Environment ev;
+	GDA_ReportList*   report_list;
 
-  g_return_val_if_fail(engine != NULL, NULL);
-  
-  CORBA_exception_init(&ev);
-  report_list = GDA_ReportEngine_queryReports(engine->corba_engine,
-                                              (CORBA_char *) condition,
-                                              flags,
-                                              &ev);
-  if (gda_corba_handle_exception(&ev))
-    {
-    }
-  CORBA_exception_free(&ev);
-  return list;
+	g_return_val_if_fail(engine != NULL, NULL);
+
+	CORBA_exception_init(&ev);
+	report_list = GDA_ReportEngine_queryReports(engine->corba_engine,
+						    (CORBA_char *) condition,
+						    flags,
+						    &ev);
+	if (gda_corba_handle_exception(&ev)) {
+
+	}
+	CORBA_exception_free(&ev);
+	return list;
 }
