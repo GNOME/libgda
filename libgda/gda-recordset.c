@@ -24,22 +24,54 @@
 #include <config.h>
 #include <libgda/gda-recordset.h>
 #include <glib-object.h>
+#include <bonobo/bonobo-exception.h>
+
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
+
+struct _GdaRecordsetPrivate {
+	GdaConnection *cnc;
+	GNOME_Database_Recordset corba_recset;
+	GNOME_Database_RowAttributes *attributes;
+};
+
+static void gda_recordset_class_init (GdaRecordsetClass *klass);
+static void gda_recordset_init       (GdaRecordset *recset, GdaRecordsetClass *klass);
+static void gda_recordset_finalize   (GObject *object);
 
 enum {
 	LAST_SIGNAL
 };
 
 static gint gda_recordset_signals[LAST_SIGNAL] = { 0, };
-
-static void gda_recordset_class_init (GdaRecordsetClass *);
-static void gda_recordset_init       (GdaRecordset *, GdaRecordsetClass *);
-static void gda_recordset_finalize   (GObject *object);
-
 static GObjectClass *parent_class = NULL;
 
 /*
  * GdaRecordset class implementation
  */
+
+static gint
+gda_recordset_get_n_rows (GdaDataModel *model)
+{
+	g_return_val_if_fail (parent_class != NULL, -1);
+	GDA_DATA_MODEL_CLASS (parent_class)->get_n_rows (model);
+}
+
+static gint
+gda_recordset_get_n_columns (GdaDataModel *model)
+{
+	GdaRecordset *recset = (GdaRecordset *) model;
+
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), -1);
+
+	return recset->priv->attributes->_length;
+}
+
+static const GdaValue *
+gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
+{
+	g_return_val_if_fail (parent_class != NULL, NULL);
+	return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
+}
 
 GType
 gda_recordset_get_type (void)
@@ -58,44 +90,91 @@ gda_recordset_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_recordset_init
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaRecordset", &info, 0);
+		type = g_type_register_static (PARENT_TYPE, "GdaRecordset", &info, 0);
 	}
 	return type;
 }
 
 static void
-gda_recordset_class_init (GdaRecordsetClass * klass)
+gda_recordset_class_init (GdaRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_recordset_finalize;
+	model_class->get_n_rows = gda_recordset_get_n_rows;
+	model_class->get_n_columns = gda_recordset_get_n_columns;
+	model_class->get_value_at = gda_recordset_get_value_at;
 }
 
 static void
-gda_recordset_init (GdaRecordset *rs, GdaRecordsetClass *klass)
+gda_recordset_init (GdaRecordset *recset, GdaRecordsetClass *klass)
 {
+	g_return_if_fail (GDA_IS_RECORDSET (recset));
+
+	recset->priv = g_new0 (GdaRecordsetPrivate, 1);
+
+	recset->priv->cnc = NULL;
+	recset->priv->corba_recset = CORBA_OBJECT_NIL;
+	recset->priv->attributes = NULL;
 }
 
 static void
 gda_recordset_finalize (GObject * object)
 {
-	GdaRecordset *rs = (GdaRecordset *) object;
+	GdaRecordset *recset = (GdaRecordset *) object;
+
+	/* free memory */
+	if (recset->priv->corba_recset != CORBA_OBJECT_NIL) {
+		CORBA_Environment ev;
+
+		CORBA_exception_init (&ev);
+		CORBA_Object_release (recset->priv->corba_recset, &ev);
+		CORBA_exception_free (&ev);
+	}
+	if (recset->priv->attributes != NULL)
+		CORBA_free (recset->priv->attributes);
+
+	g_free (recset->priv);
+	recset->priv = NULL;
 
 	parent_class->finalize (object);
 }
 
 /**
  * gda_recordset_new:
+ * @corba_recset: a GNOME_Database_Recordset object
  *
  * Allocates space for a new recordset.
  *
  * Returns: the allocated recordset object
  */
 GdaRecordset *
-gda_recordset_new (void)
+gda_recordset_new (GdaConnection *cnc, GNOME_Database_Recordset corba_recset)
 {
-	return GDA_RECORDSET (g_object_new (GDA_TYPE_RECORDSET, NULL));
+	GdaRecordset *recset;
+	CORBA_Environment ev;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (corba_recset != CORBA_OBJECT_NIL, NULL);
+
+	recset = g_object_new (GDA_TYPE_RECORDSET, NULL);
+
+	recset->priv->cnc = cnc;
+	recset->priv->corba_recset = corba_recset;
+
+	/* get recordset description */
+	CORBA_exception_init (&ev);
+
+	recset->priv->attributes = GNOME_Database_Recordset_describe (
+		recset->priv->corba_recset, &ev);
+	if (BONOBO_EX (&ev)) {
+		g_object_unref (G_OBJECT (recset));
+		return NULL;
+	}
+
+	return recset;
 }
 

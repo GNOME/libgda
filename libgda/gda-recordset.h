@@ -25,7 +25,9 @@
 #  define __gda_recordset_h__
 
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-connection.h>
 #include <libgda/gda-field.h>
+#include <libgda/GNOME_Database.h>
 
 G_BEGIN_DECLS
 
@@ -49,7 +51,8 @@ struct _GdaRecordsetClass {
 };
 
 GType         gda_recordset_get_type (void);
-GdaRecordset *gda_recordset_new (void);
+GdaRecordset *gda_recordset_new (GdaConnection *cnc,
+				 GNOME_Database_Recordset corba_recset);
 
 G_END_DECLS
 

@@ -206,3 +206,23 @@ gda_parameter_list_get_length (GdaParameterList *plist)
 	g_return_val_if_fail (plist != NULL, -0);
 	return g_hash_table_size (plist->hash);
 }
+
+/**
+ * gda_parameter_list_to_corba
+ */
+GNOME_Database_ParameterList *
+gda_parameter_list_to_corba (GdaParameterList *plist)
+{
+	GNOME_Database_ParameterList *corba_list;
+	gint length;
+
+	length = gda_parameter_list_get_length (plist);
+
+	corba_list = GNOME_Database_ParameterList__alloc ();
+	CORBA_sequence_set_release (corba_list, TRUE);
+	corba_list->_buffer = GNOME_Database_ParameterList_allocbuf (length);
+
+	/* FIXME: put all parameters in 'params' into the CORBA sequence */
+
+	return corba_list;
+}

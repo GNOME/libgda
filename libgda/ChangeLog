@@ -1,3 +1,17 @@
+2001-12-13  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-parameter.c (gda_parameter_list_to_corba): new function
+
+	* gda-server-connection.c (gda_server_connection_notify_action):
+	don't build the CORBA sequence by hand, but use the new
+	gda_parameter_list_to_corba function
+
+	* gda-recordset (gda_recordset_new): added a GNOME_Database_Recordset
+	parameter, since GdaRecordset's shouldn't be created without a
+	valid CORBA object
+
+	* gda-connection.c (gda_connection_execute_command): implemented
+
 2001-12-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-parameter.c (gda_parameter_list_get_length): return 0 instead

@@ -23,6 +23,7 @@
 
 #include <libgda/gda-client.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-recordset.h>
 #include <bonobo/bonobo-exception.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
@@ -35,6 +36,7 @@ struct _GdaConnectionPrivate {
 	gchar *password;
 	gboolean is_open;
 	GList *error_list;
+	GList *recset_list;
 };
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
@@ -52,6 +54,18 @@ static GObjectClass *parent_class = NULL;
 /*
  * Callbacks
  */
+
+static void
+recset_finalized_cb (GObject *object, gpointer user_data)
+{
+	GdaRecordset *recset = (GdaRecordset *) object;
+	GdaConnection *cnc = (GdaConnection *) user_data;
+
+	g_return_if_fail (GDA_IS_RECORDSET (recset));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	cnc->priv->recset_list = g_list_remove (cnc->priv->recset_list, recset);
+}
 
 /*
  * GdaConnection class implementation
@@ -89,6 +103,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->password = NULL;
 	cnc->priv->is_open = FALSE;
 	cnc->priv->error_list = NULL;
+	cnc->priv->recset_list = NULL;
 }
 
 static void
@@ -117,6 +132,8 @@ gda_connection_finalize (GObject *object)
 
 	g_list_foreach (cnc->priv->error_list, (GFunc) gda_error_free, NULL);
 	g_list_free (cnc->priv->error_list);
+
+	g_list_foreach (cnc->priv->recset_list, (GFunc) g_object_unref, NULL);
 
 	g_free (cnc->priv);
 	cnc->priv = NULL;
@@ -309,8 +326,48 @@ gda_connection_execute_command (GdaConnection *cnc,
 				GdaCommand *cmd,
 				GdaParameterList *params)
 {
+	GNOME_Database_RecordsetList *corba_reclist;
+	GNOME_Database_ParameterList *corba_params;
+	CORBA_Environment ev;
+	GList *reclist = NULL;
+	gint n;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
+
+	corba_params = gda_parameter_list_to_corba (params);
+
+	/* call the CORBA method */
+	CORBA_exception_init (&ev);
+
+	corba_reclist = GNOME_Database_Connection_executeCommand (
+		cnc->priv->corba_cnc, cmd, corba_params, &ev);
+
+	CORBA_free (corba_params);
+
+	if (BONOBO_EX (&ev)) {
+		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
+		CORBA_exception_free (&ev);
+
+		return NULL;
+	}
+
+	/* convert the RecordsetList in a GList of GdaRecordset objects */
+	for (n = 0; n < corba_reclist->_length; n++) {
+		GdaRecordset *recset;
+
+		recset = gda_recordset_new (cnc, corba_reclist->_buffer[n]);
+		if (!GDA_IS_RECORDSET (recset))
+			continue;
+
+		reclist = g_list_append (reclist, recset);
+
+		cnc->priv->recset_list = g_list_append (cnc->priv->recset_list, recset);
+		g_signal_connect (G_OBJECT (recset), "finalize",
+				  G_CALLBACK (recset_finalized_cb), cnc);
+	}
+
+	return reclist;
 }
 
 /**
