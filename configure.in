@@ -110,89 +110,103 @@ dnl Checks for providers
 dnl ******************************
 
 dnl Test for ODBC
+try_odbc=true
 AC_ARG_WITH(odbc,
 [  --with-odbc=<directory>	use ODBC libraries in <directory>],[
-if test $withval != yes
+if test $withval = no
 then
-	dir=$withval
-else
+	try_odbc=false
+elif test $withval = yes
+then
 	dir="/usr/local"
+else
+	dir=$withval
 fi
 odbcdir=""
-AC_MSG_CHECKING(for ODBC files)
-for d in $dir /usr /usr/local
-do
-	if test -f $d/lib/libodbc.so
-	then
-		AC_MSG_RESULT(found ODBC in $d)
-		odbclib="-lodbc"
-		odbcdir=$d
-		break
-	fi
-	if test -f $d/lib/libiodbc.so
-	then
-		AC_MSG_RESULT(found iODBC in $d)
-		odbclib="-liodbc"
-		odbcdir=$d
-		break
-	fi
-done
-if test x$odbcdir = x
+if test $try_odbc = true
 then
-	AC_MSG_WARN(ODBC backend not used)
-else
-	AC_DEFINE(HAVE_ODBC)
-	ODBC_CFLAGS="-I${odbcdir}/include"
-	ODBC_LIBS="-L${odbcdir}/lib ${odbclib}"
+	AC_MSG_CHECKING(for ODBC files)
+	for d in $dir /usr /usr/local
+	do
+		if test -f $d/lib/libodbc.so
+		then
+			AC_MSG_RESULT(found ODBC in $d)
+			odbclib="-lodbc"
+			odbcdir=$d
+			break
+		fi
+		if test -f $d/lib/libiodbc.so
+		then
+			AC_MSG_RESULT(found iODBC in $d)
+			odbclib="-liodbc"
+			odbcdir=$d
+			break
+		fi
+	done
+	if test x$odbcdir = x
+	then
+		AC_MSG_WARN(ODBC backend not used)
+	else
+		AC_DEFINE(HAVE_ODBC)
+		ODBC_CFLAGS="-I${odbcdir}/include"
+		ODBC_LIBS="-L${odbcdir}/lib ${odbclib}"
+	fi
 fi
 ])
 
 AM_CONDITIONAL(ODBC, test x$odbcdir != x)
 
 dnl Test for MySQL
+try_mysql=true
 AC_ARG_WITH(mysql,
 [  --with-mysql=<directory>	use mysql backend in <directory>],[
-if test $withval != yes
+if test $withval = no
 then
-	dir=$withval
-else
+	try_mysql=false
+elif test $withval = yes
+then
 	dir="/usr/local"
+else
+	dir=$withval
 fi
 mysqldir=""
-AC_MSG_CHECKING(for MySQL files)
-for d in $dir /usr /usr/local /usr/local/mysql /opt/mysql /opt/packages/mysql
-do
-	if test -f $d/include/mysql/mysql.h
-	then
-		mysqldir_suffix=/mysql
-	else
-		mysqldir_suffix=
-	fi
-	if test -f $d/lib/mysql/libmysqlclient.a -o -f $d/lib/libmysqlclient.so
-	then
-		AC_MSG_RESULT(found mysql in $d)
-		mysqldir=$d
-		mysqllibdir_suffix=/mysql
-		break
-	fi
-	if test -f $d/lib/libmysqlclient.a -o -f $d/lib/libmysqlclient.so
-	then
-		AC_MSG_RESULT(found mysql in $d)
-		mysqldir=$d
-		mysqllibdir_suffix=
-		break
-	fi
-done
-if test x$mysqldir = x
+if test $try_mysql = true
 then
-	AC_MSG_WARN(MySQL backend not used)
-else
-	AC_DEFINE(HAVE_MYSQL)
-	MYSQL_CFLAGS="-I${mysqldir}/include${mysqldir_suffix}"
-	MYSQL_LIBS="-L${mysqldir}/lib${mysqllibdir_suffix} -lmysqlclient"
-	if test -f ${mysqldir}/lib${mysqllibdir_suffix}/libmystrings.a
+	AC_MSG_CHECKING(for MySQL files)
+	for d in $dir /usr /usr/local /usr/local/mysql /opt/mysql /opt/packages/mysql
+	do
+		if test -f $d/include/mysql/mysql.h
+		then
+			mysqldir_suffix=/mysql
+		else
+			mysqldir_suffix=
+		fi
+		if test -f $d/lib/mysql/libmysqlclient.a -o -f $d/lib/libmysqlclient.so
+		then
+			AC_MSG_RESULT(found mysql in $d)
+			mysqldir=$d
+			mysqllibdir_suffix=/mysql
+			break
+		fi
+		if test -f $d/lib/libmysqlclient.a -o -f $d/lib/libmysqlclient.so
+		then
+			AC_MSG_RESULT(found mysql in $d)
+			mysqldir=$d
+			mysqllibdir_suffix=
+			break
+		fi
+	done
+	if test x$mysqldir = x
 	then
-		MYSQL_LIBS="${MYSQL_LIBS} -lmystrings"
+		AC_MSG_WARN(MySQL backend not used)
+	else
+		AC_DEFINE(HAVE_MYSQL)
+		MYSQL_CFLAGS="-I${mysqldir}/include${mysqldir_suffix}"
+		MYSQL_LIBS="-L${mysqldir}/lib${mysqllibdir_suffix} -lmysqlclient"
+		if test -f ${mysqldir}/lib${mysqllibdir_suffix}/libmystrings.a
+		then
+			MYSQL_LIBS="${MYSQL_LIBS} -lmystrings"
+		fi
 	fi
 fi
 ])
@@ -200,119 +214,140 @@ fi
 AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
 
 dnl Test for PostgreSQL
+try_postgres=true
 AC_ARG_WITH(postgres,
 [  --with-postgres=<directory>	use postgres backend in <directory>],[
-if test $withval != yes
+if test $withval = no
 then
-	dir=$withval
-else
+	try_postgres=false
+elif test $withval = yes
+then
 	dir="/usr/local"
-fi
-AC_MSG_CHECKING(for Postgres files)
-postgresdir=""
-for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
-do
-	if test -f $d/lib/libpq.so
-	then
-		AC_MSG_RESULT(found Postgres in $d)
-		postgresdir=$d
-		break
-	fi
-done
-if test x$postgresdir = x
-then
-	AC_MSG_WARN(Postgres backend not used)
 else
-	if test -f ${postgresdir}/include/libpq-fe.h
+	dir=$withval
+fi
+postgresdir=""
+if test $try_postgres = true
+then
+	AC_MSG_CHECKING(for Postgres files)
+	for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
+	do
+		if test -f $d/lib/libpq.so
+		then
+			AC_MSG_RESULT(found Postgres in $d)
+			postgresdir=$d
+			break
+		fi
+	done
+	if test x$postgresdir = x
 	then
-		POSTGRES_CFLAGS=-I${postgresdir}/include
-	elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
-	then
-		POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
-	elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
-	then
-		POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
+		AC_MSG_WARN(Postgres backend not used)
 	else
-		AC_MSG_WARN(Postgres include files not found, backend not used)
-		postgresdir=""
+		if test -f ${postgresdir}/include/libpq-fe.h
+		then
+			POSTGRES_CFLAGS=-I${postgresdir}/include
+		elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
+		then
+			POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
+		elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
+		then
+			POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
+		else
+			AC_MSG_WARN(Postgres include files not found, backend not used)
+			postgresdir=""
+		fi
+		POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
+		AC_DEFINE(HAVE_POSTGRES)
 	fi
-	POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
-	AC_DEFINE(HAVE_POSTGRES)
 fi
 ])
 
 AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
 dnl Test for freetds provider
+try_freetds=true
 AC_ARG_WITH(tds,
 [  --with-tds=<directory>	use freetds library in <directory>],[
-if test $withval != yes
+if test $withval = no
 then
-	dir=$withval
-else
+	try_freetds=false
+elif test $withval = yes
+then
 	dir="/usr/local/freetds"
-fi
-AC_MSG_CHECKING(for freetds files)
-freetdsdir=""
-for d in $dir /usr/local/freetds /opt/freetds /opt/packages/freetds /opt/freetds-0.50
-do
-	if test -f $d/include/ctpublic.h
-	then
-		AC_MSG_RESULT(found freetds in $d)
-		freetdsdir=$d
-		break
-	fi
-done
-if test x$freetdsdir = x
-then
-	AC_MSG_WARN(tds backend not used)
 else
-	TDS_CFLAGS=-I${freetdsdir}/include
-	TDS_LIBS="-L${freetdsdir}/lib -lct"
-	AC_DEFINE(HAVE_TDS)
+	dir=$withval
+fi
+freetdsdir=""
+if test $try_freetds = true
+then
+	AC_MSG_CHECKING(for freetds files)
+	for d in $dir /usr/local/freetds /opt/freetds /opt/packages/freetds /opt/freetds-0.50
+	do
+		if test -f $d/include/ctpublic.h
+		then
+			AC_MSG_RESULT(found freetds in $d)
+			freetdsdir=$d
+			break
+		fi
+	done
+	if test x$freetdsdir = x
+	then
+		AC_MSG_WARN(tds backend not used)
+	else
+		TDS_CFLAGS=-I${freetdsdir}/include
+		TDS_LIBS="-L${freetdsdir}/lib -lct"
+		AC_DEFINE(HAVE_TDS)
+	fi
 fi
 ])
 
 AM_CONDITIONAL(TDS, test x$freetdsdir != x)
 
 dnl Test for Sybase
+try_sybase=false
 AC_ARG_WITH(sybase,
 [  --with-sybase=<directory>	use Sybase backend in <directory>],[
 AC_MSG_CHECKING(for Sybase files)
-if test $withval != yes
+if test $withval = no
 then
-	dir=$withval
-else
+	try_sybase=false
+elif test $withval = yes
+then
 	dir="/opt2/sybase"
+else
+	dir=$withval
 fi
 sybasedir=""
-for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase
-do
-	if test -f "$d/include/ctpublic.h"
-	then
-		AC_MSG_RESULT(found Sybase in $d)
-		sybasedir="$d"
-		break
-	fi
-	for v in 11.9.2 11.0.3.3
+if test $try_sybase = true
+then
+	AC_MSG_CHECKING(for Sybase files)
+	for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase
 	do
-		if test -f "$d-$v/include/ctpublic.h"
+		if test -f "$d/include/ctpublic.h"
 		then
-			AC_MSG_RESULT(found Sybase in $d-$v)
-			sybasedir="$d-$v"
+			AC_MSG_RESULT(found Sybase in $d)
+			sybasedir="$d"
 			break
 		fi
+		for v in 11.9.2 11.0.3.3
+		do
+			if test -f "$d-$v/include/ctpublic.h"
+			then
+				AC_MSG_RESULT(found Sybase in $d-$v)
+				sybasedir="$d-$v"
+				break
+			fi
+		done
 	done
-done
-if test x$sybasedir = x
-then
-	AC_MSG_WARN(Sybase backend not used)
-else
-	SYBASE_CFLAGS="-I${sybasedir}/include"
-	SYBASE_LIBS="-lnsl -ldl -lm -L${sybasedir}/lib"
-	AC_MSG_CHECKING(for Sybase host system type)
-	AC_MSG_RESULT($host)
-	case "$host" in
+	if test x$sybasedir = x
+	then
+		AC_MSG_WARN(Sybase backend not used)
+	else
+		SYBASE_CFLAGS="-I${sybasedir}/include"
+		SYBASE_LIBS="-lnsl -ldl -lm -L${sybasedir}/lib"
+		AC_MSG_CHECKING(for Sybase host system type)
+		AC_MSG_RESULT($host)
+		case "$host" in
 		*linux*) sybase_ctlibs="-lct -lcs -lsybtcl -lcomn -lintl"
 			sybase_blklibs="-lblk ${sybase_ctlibs}"
 			SYBASE_LIBS="${SYBASE_LIBS} ${sybase_ctlibs} ${sybase_blklibs}"
@@ -321,7 +356,8 @@ else
 		*) AC_MSG_WARN(this host type is unsupported; sybase backend not used)
 			sybasedir=""
 			;;
-	esac
+		esac
+	fi
 fi
 ])
 
@@ -365,97 +401,118 @@ else
 fi
 
 dnl test for ORACLE
+try_oracle=false
 AC_ARG_WITH(oracle,
 [  --with-oracle=<directory>	use ORACLE backend in <directoty>],[
-if test $withval != yes
+if test $withval = no
 then
-	dir=$withval
-else
+	try_oracle=false
+elif test $withval = yes
+then
 	dir="/usr/local"
-fi
-AC_MSG_CHECKING(for ORACLE installation)
-for d in $dir $ORACLE_HOME /opt/oracle
-do
-	if test -f $d/lib/libclntsh.so
-	then
-		AC_MSG_RESULT(found ORACLE in $d)
-		oracledir=$d
-		break
-	fi
-done
-if test x$oracledir = x
-then
-	AC_MSG_WARN(ORACLE backend not used)
 else
-	AC_DEFINE(HAVE_ORACLE)
-	ORACLE_CFLAGS="-I${ORACLE_HOME}/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I${ORACLE_HOME}/network/public"
-	ORACLE_LIBS="-L${ORACLE_HOME}/lib -lm -ldl -lserver8 -lclient8 \
+	dir=$withval
+fi
+if test $try_oracle = true
+then
+	AC_MSG_CHECKING(for ORACLE installation)
+	for d in $dir $ORACLE_HOME /opt/oracle
+	do
+		if test -f $d/lib/libclntsh.so
+		then
+			AC_MSG_RESULT(found ORACLE in $d)
+			oracledir=$d
+			break
+		fi
+	done
+	if test x$oracledir = x
+	then
+		AC_MSG_WARN(ORACLE backend not used)
+	else
+		AC_DEFINE(HAVE_ORACLE)
+		ORACLE_CFLAGS="-I${ORACLE_HOME}/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I${ORACLE_HOME}/network/public"
+		ORACLE_LIBS="-L${ORACLE_HOME}/lib -lm -ldl -lserver8 -lclient8 \
 		-lgeneric8 -lcommon8 -lvsn8 -lagent8 -lmm -lclntst8 \
             	-lslax8 -lsql8 -lcore8 -lnls8 -lplc8 -lplp8 -lpls8 \
                	-lpsa8"
+	fi
 fi
 ])
 
 AM_CONDITIONAL(ORACLE, test x$oracledir != x)
 
 dnl test for INTERBASE
+try_interbase=true
 AC_ARG_WITH(interbase,
 [  --with-interbase=<directory>	use INTERBASE backend in <directoty>],[
-if test $withval != yes
+if test $withval = no
 then
-	dir=$withval
-else
+	try_interbase=false
+elif test $withval = yes
+then
 	dir="/usr/local"
-fi
-AC_MSG_CHECKING(for INTERBASE installation)
-for d in $dir /usr/local/interbase /usr/local /usr /opt/interbase
-do
-	if test -f $d/include/ibase.h
-	then
-		AC_MSG_RESULT(found INTERBASE in $d)
-		interbasedir=$d
-		break
-	fi
-done
-if test x$interbasedir = x
-then
-	AC_MSG_WARN(INTERBASE backend not used)
 else
-	AC_DEFINE(HAVE_INTERBASE)
-	INTERBASE_CFLAGS="-I${interbasedir}/include"
-	INTERBASE_LIBS="-L${interbasedir}/lib -lgds -ldl -lcrypt"
+	dir=$withval
+fi
+if test $try_interbase = true
+then
+	AC_MSG_CHECKING(for INTERBASE installation)
+	for d in $dir /usr/local/interbase /usr/local /usr /opt/interbase
+	do
+		if test -f $d/include/ibase.h
+		then
+			AC_MSG_RESULT(found INTERBASE in $d)
+			interbasedir=$d
+			break
+		fi
+	done
+	if test x$interbasedir = x
+	then
+		AC_MSG_WARN(INTERBASE backend not used)
+	else
+		AC_DEFINE(HAVE_INTERBASE)
+		INTERBASE_CFLAGS="-I${interbasedir}/include"
+		INTERBASE_LIBS="-L${interbasedir}/lib -lgds -ldl -lcrypt"
+	fi
 fi
 ])
 
 AM_CONDITIONAL(INTERBASE, test x$interbasedir != x)
 
 dnl Test for sqlite
+try_sqlite=true
 AC_ARG_WITH(sqlite,
 [  --with-sqlite=<directory>     use sqlite backend in <directory>],[
-if test $withval != yes
+if test $withval = no
 then
-        dir=$withval
+	try_sqlite=false
+elif test $withval = yes
+then
+	dir="/usr/local"
 else
-        dir="/usr/local"
+	dir=$withval
 fi
-AC_MSG_CHECKING(for sqlite files)
-sqlitedir=""
-for d in $dir /usr /opt/sqlite
-do
-        if test -f $d/include/sqlite.h
-        then
-                AC_MSG_RESULT(found sqlite in $d)
-                sqlitedir=$d
-                break
-        fi
-done
-if test x$sqlitedir = x
+if test $try_sqlite = true
 then
-        AC_MSG_WARN(sqlite backend not used)
-else
-	SQLITE_CFLAGS=-I${sqlitedir}/include
-	SQLITE_LIBS="-L${sqlite}/lib -lsqlite"
-	AC_DEFINE(HAVE_SQLITE)
+	AC_MSG_CHECKING(for sqlite files)
+	sqlitedir=""
+	for d in $dir /usr /opt/sqlite
+	do
+		if test -f $d/include/sqlite.h
+		then
+			AC_MSG_RESULT(found sqlite in $d)
+			sqlitedir=$d
+			break
+		fi
+	done
+	if test x$sqlitedir = x
+	then
+		AC_MSG_WARN(sqlite backend not used)
+	else
+		SQLITE_CFLAGS=-I${sqlitedir}/include
+		SQLITE_LIBS="-L${sqlite}/lib -lsqlite"
+		AC_DEFINE(HAVE_SQLITE)
+	fi
 fi
 ])
 

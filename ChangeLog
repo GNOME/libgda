@@ -1,3 +1,8 @@
+2002-02-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: don't look for DBMS libraries if --without is given.
+	Fixes #70264
+
 2002-01-30  Frederic.Devernay@sophia.inria.fr
 
 	* providers/mysql/gda-mysql-recordset.h: don't include mysql/mysql.h,
