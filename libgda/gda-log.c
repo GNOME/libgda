@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <syslog.h>
 #include <time.h>
+#include <glib/gmem.h>
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
 #include <glib/gutils.h>

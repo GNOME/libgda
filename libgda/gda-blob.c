@@ -158,9 +158,9 @@ gda_blob_remove (GdaBlob *blob)
 void 
 gda_blob_free_data (GdaBlob *blob)
 {
-	g_return_val_if_fail (blob != NULL, -1);
+	g_return_if_fail (blob != NULL);
 	g_return_if_fail (blob->free_data != NULL);
 
-	return blob->free_data (blob);
+	blob->free_data (blob);
 }
 

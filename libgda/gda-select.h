@@ -48,7 +48,7 @@ struct _GdaSelectClass {
 
 GType         gda_select_get_type (void);
 GdaDataModel *gda_select_new (void);
-void          gda_select_add_source (GdaSelect *sel, const gchar *name, const GdaDataModel *source);
+void          gda_select_add_source (GdaSelect *sel, const gchar *name, GdaDataModel *source);
 void          gda_select_set_sql (GdaSelect *sel, const gchar *sql);
 gboolean      gda_select_run (GdaSelect *sel);
 

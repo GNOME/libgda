@@ -555,7 +555,9 @@ gda_data_model_is_editable (GdaDataModel *model)
 /**
  * gda_data_model_append_row
  * @model: a #GdaDataModel object.
- * @values: the row to add.
+ * @values: #GList of #GdaValue* representing the row to add.  The
+ *          length must match model's column count.  These #GdaValue
+ *	    are value-copied.  The user is still responsible for freeing them.
  *
  * Appends a row to the given data model.
  *
@@ -634,29 +636,20 @@ gda_data_model_foreach (GdaDataModel *model,
 			GdaDataModelForeachFunc func,
 			gpointer user_data)
 {
-	gint cols;
 	gint rows;
-	gint c, r;
+	gint r;
 	GdaRow *row;
+	gboolean more;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	g_return_if_fail (func != NULL);
 
 	rows = gda_data_model_get_n_rows (model);
-	cols = gda_data_model_get_n_columns (model);
-
-	for (r = 0; r < rows; r++) {
-		row = gda_row_new (model, cols);
-		for (c = 0; c < cols; c++) {
-			GdaValue *value;
-			value = gda_value_copy (gda_data_model_get_value_at (model, c, r));
-			memcpy (gda_row_get_value (row, c), value, sizeof (GdaValue));
-		}
-
+	more = TRUE;
+	for (r = 0; more && r < rows ; r++) {
+		row = gda_data_model_get_row (model, r);
 		/* call the callback function */
-		func (model, row, user_data);
-
-		gda_row_free (row);
+		more = func (model, row, user_data);
 	}
 }
 

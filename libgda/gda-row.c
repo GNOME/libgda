@@ -74,7 +74,8 @@ gda_row_new (GdaDataModel *model, gint count)
  * @model: a #GdaDataModel.
  * @values: a list of #GdaValue's.
  *
- * Creates a #GdaRow from a list of #GdaValue's.
+ * Creates a #GdaRow from a list of #GdaValue's.  These GdaValue's are
+ * value-copied and the user are still resposible for freeing them.
  *
  * Returns: the newly created row.
  */

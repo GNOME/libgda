@@ -206,8 +206,8 @@ gda_connection_new (GdaClient *client,
 	GdaConnection *cnc;
 	GdaDataSourceInfo *dsn_info;
 	GdaQuarkList *params;
-	const char *real_username = NULL;
-	const char *real_password = NULL;
+	char *real_username = NULL;
+	char *real_password = NULL;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
@@ -228,7 +228,7 @@ gda_connection_new (GdaClient *client,
 		if (dsn_info->username)
 			real_username = g_strdup (dsn_info->username);
 		else {
-			gchar *s;
+			const gchar *s;
 			s = gda_quark_list_find (params, "USER");
 			if (s) {
 				real_username = g_strdup (s);
@@ -243,7 +243,7 @@ gda_connection_new (GdaClient *client,
 		if (dsn_info->password)
 			real_password = g_strdup (dsn_info->password);
 		else {
-			gchar *s;
+			const gchar *s;
 			s = gda_quark_list_find (params, "PASSWORD");
 			if (s) {
 				real_password = g_strdup (s);

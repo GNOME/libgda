@@ -233,7 +233,7 @@ gda_select_new (void)
  * and get the required data from the source data models.
  */
 void
-gda_select_add_source (GdaSelect *sel, const gchar *name, const GdaDataModel *source)
+gda_select_add_source (GdaSelect *sel, const gchar *name, GdaDataModel *source)
 {
 	gpointer key, value;
 

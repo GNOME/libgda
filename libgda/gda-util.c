@@ -143,7 +143,6 @@ gda_string_hash_to_list (GHashTable *hash_table)
 gchar *
 gda_sql_replace_placeholders (const gchar *sql, GdaParameterList *params)
 {
-	GString *str;
 	sql_statement *sql_stmt;
 
 	g_return_val_if_fail (sql != NULL, NULL);
