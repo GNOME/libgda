@@ -8,34 +8,34 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-01-03 22:29+0100\n"
-"PO-Revision-Date: 2003-01-03 22:29+0100\n"
+"POT-Creation-Date: 2003-01-11 13:44+0100\n"
+"PO-Revision-Date: 2003-01-11 13:44+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:255 libgda/gda-client.c:453 libgda/gda-connection.c:217
+#: libgda/gda-client.c:292 libgda/gda-client.c:493 libgda/gda-connection.c:217
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakällan %s hittades inte i konfigurationen"
 
-#: libgda/gda-client.c:279
+#: libgda/gda-client.c:316
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Kunde inte hitta i %s-leverantören i den aktuella konfigurationen"
 
-#: libgda/gda-client.c:306
+#: libgda/gda-client.c:345
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "%s-leverantören implementerar inte postfunktion"
 
-#: libgda/gda-client.c:316
+#: libgda/gda-client.c:355
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Kunde inte skapa GdaServerProvider-objekt från insticksmodul"
 
-#: libgda/gda-client.c:380
+#: libgda/gda-client.c:420
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 
@@ -43,11 +43,11 @@ msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 #: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
-#: providers/mdb/gda-mdb-provider.c:370 providers/mdb/gda-mdb-provider.c:430
-#: providers/mysql/gda-mysql-provider.c:663
-#: providers/mysql/gda-mysql-provider.c:847
-#: providers/oracle/gda-oracle-provider.c:1031
-#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/mdb/gda-mdb-provider.c:418 providers/mdb/gda-mdb-provider.c:478
+#: providers/mysql/gda-mysql-provider.c:699
+#: providers/mysql/gda-mysql-provider.c:883
+#: providers/oracle/gda-oracle-provider.c:1046
+#: providers/oracle/gda-oracle-provider.c:1545
 msgid "Name"
 msgstr "Namn"
 
@@ -194,66 +194,66 @@ msgid "Not Implemented"
 msgstr "Inte implementerat"
 
 #: providers/default/gda-default-provider.c:455
-#: providers/mysql/gda-mysql-provider.c:1027
-#: providers/oracle/gda-oracle-provider.c:1088
+#: providers/mysql/gda-mysql-provider.c:1063
+#: providers/oracle/gda-oracle-provider.c:1103
 #: providers/postgres/gda-postgres-provider.c:1346
-#: providers/sqlite/gda-sqlite-provider.c:617
+#: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Field name"
 msgstr "Fältnamn"
 
 #: providers/default/gda-default-provider.c:456
-#: providers/mysql/gda-mysql-provider.c:1028
-#: providers/oracle/gda-oracle-provider.c:1089
+#: providers/mysql/gda-mysql-provider.c:1064
+#: providers/oracle/gda-oracle-provider.c:1104
 #: providers/postgres/gda-postgres-provider.c:1347
-#: providers/sqlite/gda-sqlite-provider.c:618
+#: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Data type"
 msgstr "Datatyp"
 
 #: providers/default/gda-default-provider.c:457
-#: providers/mysql/gda-mysql-provider.c:1029
-#: providers/oracle/gda-oracle-provider.c:1090
+#: providers/mysql/gda-mysql-provider.c:1065
+#: providers/oracle/gda-oracle-provider.c:1105
 #: providers/postgres/gda-postgres-provider.c:1348
-#: providers/sqlite/gda-sqlite-provider.c:619
+#: providers/sqlite/gda-sqlite-provider.c:624
 msgid "Size"
 msgstr "Storlek"
 
 #: providers/default/gda-default-provider.c:458
-#: providers/mysql/gda-mysql-provider.c:1030
-#: providers/oracle/gda-oracle-provider.c:1091
+#: providers/mysql/gda-mysql-provider.c:1066
+#: providers/oracle/gda-oracle-provider.c:1106
 #: providers/postgres/gda-postgres-provider.c:1349
-#: providers/sqlite/gda-sqlite-provider.c:620
+#: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Scale"
 msgstr "Skala"
 
 #: providers/default/gda-default-provider.c:459
-#: providers/mysql/gda-mysql-provider.c:1031
-#: providers/oracle/gda-oracle-provider.c:1092
+#: providers/mysql/gda-mysql-provider.c:1067
+#: providers/oracle/gda-oracle-provider.c:1107
 #: providers/postgres/gda-postgres-provider.c:1350
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/sqlite/gda-sqlite-provider.c:626
 msgid "Not null?"
 msgstr "Inte null?"
 
 #: providers/default/gda-default-provider.c:460
-#: providers/mysql/gda-mysql-provider.c:1032
-#: providers/oracle/gda-oracle-provider.c:1093
+#: providers/mysql/gda-mysql-provider.c:1068
+#: providers/oracle/gda-oracle-provider.c:1108
 #: providers/postgres/gda-postgres-provider.c:1351
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:627
 msgid "Primary key?"
 msgstr "Primärnyckel?"
 
 #: providers/default/gda-default-provider.c:461
-#: providers/mysql/gda-mysql-provider.c:1033
-#: providers/oracle/gda-oracle-provider.c:1094
+#: providers/mysql/gda-mysql-provider.c:1069
+#: providers/oracle/gda-oracle-provider.c:1109
 #: providers/postgres/gda-postgres-provider.c:1352
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:628
 msgid "Unique index?"
 msgstr "Unikt index?"
 
 #: providers/default/gda-default-provider.c:462
-#: providers/mysql/gda-mysql-provider.c:1034
-#: providers/oracle/gda-oracle-provider.c:1095
+#: providers/mysql/gda-mysql-provider.c:1070
+#: providers/oracle/gda-oracle-provider.c:1110
 #: providers/postgres/gda-postgres-provider.c:1353
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:629
 msgid "References"
 msgstr "Referenser"
 
@@ -332,22 +332,22 @@ msgstr "Etablering av anslutning misslyckades."
 msgid "Failed getting connection info."
 msgstr "Misslyckades vid försök att hämta anslutningsinformation."
 
-#: providers/freetds/gda-freetds-provider.c:759
-#: providers/freetds/gda-freetds-provider.c:760
+#: providers/freetds/gda-freetds-provider.c:767
+#: providers/freetds/gda-freetds-provider.c:768
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Fråga lyckades inte i execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:769
-#: providers/freetds/gda-freetds-provider.c:771
+#: providers/freetds/gda-freetds-provider.c:777
+#: providers/freetds/gda-freetds-provider.c:779
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Oväntade resultatelement i execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:779
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:787
+#: providers/freetds/gda-freetds-provider.c:788
 msgid "Unexpected return in execute_cmd()."
 msgstr "Oväntad retur i execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:1014
+#: providers/freetds/gda-freetds-provider.c:1022
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -356,7 +356,7 @@ msgstr ""
 "Meddelande %d, nivå %d, tillstånd %d, server %s, rad %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1033 providers/freetds/utils.c:45
+#: providers/freetds/gda-freetds-provider.c:1041 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
 #: providers/sybase/utils.c:172
 msgid "Not available"
@@ -426,88 +426,122 @@ msgid "Could not open file %s"
 msgstr "Kunde inte öppna filen %s"
 
 #: providers/mdb/gda-mdb-provider.c:236 providers/mdb/gda-mdb-provider.c:266
-#: providers/mdb/gda-mdb-provider.c:466
+#: providers/mdb/gda-mdb-provider.c:514
 msgid "Invalid MDB handle"
 msgstr "Ogiltigt MDB-handtag"
 
-#: providers/mdb/gda-mdb-provider.c:371 providers/mdb/gda-mdb-provider.c:431
-#: providers/mysql/gda-mysql-provider.c:848
-#: providers/mysql/gda-mysql-provider.c:930
-#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/mdb/gda-mdb-provider.c:370
+#: providers/postgres/gda-postgres-provider.c:828
+msgid "Procedure"
+msgstr "Procedur"
+
+#: providers/mdb/gda-mdb-provider.c:371
+msgid "ID"
+msgstr "ID"
+
+#: providers/mdb/gda-mdb-provider.c:372 providers/mdb/gda-mdb-provider.c:419
+#: providers/mdb/gda-mdb-provider.c:479
+#: providers/mysql/gda-mysql-provider.c:884
+#: providers/mysql/gda-mysql-provider.c:966
+#: providers/oracle/gda-oracle-provider.c:1545
 #: providers/postgres/gda-postgres-provider.c:830
 #: providers/postgres/gda-postgres-provider.c:1100
 #: providers/postgres/gda-postgres-provider.c:1119
 #: providers/postgres/gda-postgres-provider.c:1179
 #: providers/postgres/gda-postgres-provider.c:1296
 #: providers/postgres/gda-postgres-provider.c:1840
-#: providers/sqlite/gda-sqlite-provider.c:747
+#: providers/sqlite/gda-sqlite-provider.c:752
 #: providers/sybase/gda-sybase-provider.c:906
 msgid "Owner"
 msgstr "Ägare"
 
-#: providers/mdb/gda-mdb-provider.c:372 providers/mdb/gda-mdb-provider.c:432
-#: providers/mysql/gda-mysql-provider.c:849
-#: providers/mysql/gda-mysql-provider.c:931
-#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/mdb/gda-mdb-provider.c:373 providers/mdb/gda-mdb-provider.c:420
+#: providers/mdb/gda-mdb-provider.c:480
+#: providers/mysql/gda-mysql-provider.c:885
+#: providers/mysql/gda-mysql-provider.c:967
+#: providers/oracle/gda-oracle-provider.c:1545
 #: providers/postgres/gda-postgres-provider.c:831
 #: providers/postgres/gda-postgres-provider.c:1120
 #: providers/postgres/gda-postgres-provider.c:1180
 #: providers/postgres/gda-postgres-provider.c:1297
 #: providers/postgres/gda-postgres-provider.c:1841
-#: providers/sqlite/gda-sqlite-provider.c:748
+#: providers/sqlite/gda-sqlite-provider.c:753
 #: providers/sybase/gda-sybase-provider.c:908
 msgid "Comments"
 msgstr "Kommentarer"
 
-#: providers/mdb/gda-mdb-provider.c:433
+#: providers/mdb/gda-mdb-provider.c:374
+#: providers/postgres/gda-postgres-provider.c:832
+msgid "Return type"
+msgstr "Returtyp"
+
+#: providers/mdb/gda-mdb-provider.c:375
+msgid "# of args"
+msgstr "Antal argument"
+
+#: providers/mdb/gda-mdb-provider.c:376
+#: providers/postgres/gda-postgres-provider.c:834
+msgid "Args types"
+msgstr "Argumenttyper"
+
+#: providers/mdb/gda-mdb-provider.c:377
+#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:1102
+#: providers/postgres/gda-postgres-provider.c:1181
+#: providers/postgres/gda-postgres-provider.c:1300
+#: providers/postgres/gda-postgres-provider.c:1842
+msgid "Definition"
+msgstr "Definition"
+
+#: providers/mdb/gda-mdb-provider.c:481
 msgid "GDA Type"
 msgstr "GDA-typ"
 
-#: providers/mdb/gda-mdb-provider.c:435
+#: providers/mdb/gda-mdb-provider.c:483
 msgid "Boolean type"
 msgstr "Boolesk typ"
 
-#: providers/mdb/gda-mdb-provider.c:436
+#: providers/mdb/gda-mdb-provider.c:484
 msgid "1-byte integers"
 msgstr "1-byteheltal"
 
-#: providers/mdb/gda-mdb-provider.c:437
+#: providers/mdb/gda-mdb-provider.c:485
 msgid "Double precision values"
 msgstr "Dubbelprecisionsvärden"
 
-#: providers/mdb/gda-mdb-provider.c:438
+#: providers/mdb/gda-mdb-provider.c:486
 msgid "Single precision values"
 msgstr "Enkelprecisionsvärden"
 
-#: providers/mdb/gda-mdb-provider.c:439
+#: providers/mdb/gda-mdb-provider.c:487
 msgid "32-bit integers"
 msgstr "32-bitars heltal"
 
-#: providers/mdb/gda-mdb-provider.c:440
+#: providers/mdb/gda-mdb-provider.c:488
 msgid "64-bit integers"
 msgstr "64-bitars heltal"
 
-#: providers/mdb/gda-mdb-provider.c:441
+#: providers/mdb/gda-mdb-provider.c:489
 msgid "Variable length character strings"
 msgstr "Teckensträngar av variabel längd"
 
-#: providers/mdb/gda-mdb-provider.c:442
+#: providers/mdb/gda-mdb-provider.c:490
 msgid "Money amounts"
 msgstr "Valutamängder"
 
-#: providers/mdb/gda-mdb-provider.c:443
+#: providers/mdb/gda-mdb-provider.c:491
 msgid "OLE object"
 msgstr "OLE-objekt"
 
-#: providers/mdb/gda-mdb-provider.c:444
+#: providers/mdb/gda-mdb-provider.c:492
 msgid "FIXME"
 msgstr "FIXME"
 
-#: providers/mdb/gda-mdb-provider.c:445
+#: providers/mdb/gda-mdb-provider.c:493
 msgid "Date/time value"
 msgstr "Datum-/tidsvärde"
 
-#: providers/mdb/gda-mdb-provider.c:446
+#: providers/mdb/gda-mdb-provider.c:494
 msgid "Character strings"
 msgstr "Teckensträngar"
 
@@ -523,46 +557,56 @@ msgstr ""
 "PORT."
 
 #: providers/mysql/gda-mysql-provider.c:291
-#: providers/mysql/gda-mysql-provider.c:1043
+#: providers/mysql/gda-mysql-provider.c:1079
 #: providers/mysql/gda-mysql-recordset.c:59
 #: providers/mysql/gda-mysql-recordset.c:175
 msgid "Invalid MySQL handle"
 msgstr "Ogiltigt MySQL-handtag"
 
-#: providers/mysql/gda-mysql-provider.c:306
-#: providers/mysql/gda-mysql-provider.c:356
-#: providers/mysql/gda-mysql-provider.c:379
-#: providers/mysql/gda-mysql-provider.c:410
-#: providers/mysql/gda-mysql-provider.c:442
-#: providers/mysql/gda-mysql-provider.c:510
-#: providers/mysql/gda-mysql-provider.c:562
-#: providers/mysql/gda-mysql-provider.c:590
+#: providers/mysql/gda-mysql-provider.c:307
+#: providers/mysql/gda-mysql-provider.c:377
+#: providers/mysql/gda-mysql-provider.c:400
+#: providers/mysql/gda-mysql-provider.c:431
+#: providers/mysql/gda-mysql-provider.c:463
+#: providers/mysql/gda-mysql-provider.c:531
+#: providers/mysql/gda-mysql-provider.c:588
+#: providers/mysql/gda-mysql-provider.c:621
 msgid "Invalid MYSQL handle"
 msgstr "Ogiltigt MYSQL-handtag"
 
-#: providers/mysql/gda-mysql-provider.c:929
-#: providers/oracle/gda-oracle-provider.c:1629
+#: providers/mysql/gda-mysql-provider.c:536
+#: providers/mysql/gda-mysql-provider.c:593
+#: providers/mysql/gda-mysql-provider.c:626
+#: providers/oracle/gda-oracle-provider.c:823
+#: providers/oracle/gda-oracle-provider.c:905
+#: providers/oracle/gda-oracle-provider.c:966
+#: providers/sqlite/gda-sqlite-provider.c:472
+msgid "Transactions are not supported in read-only mode"
+msgstr "Transaktioner stöds inte i skrivskyddat läge"
+
+#: providers/mysql/gda-mysql-provider.c:965
+#: providers/oracle/gda-oracle-provider.c:1644
 #: providers/postgres/gda-postgres-provider.c:1118
-#: providers/sqlite/gda-sqlite-provider.c:746
+#: providers/sqlite/gda-sqlite-provider.c:751
 #: providers/sybase/gda-sybase-provider.c:904
 msgid "Type"
 msgstr "Typ"
 
-#: providers/mysql/gda-mysql-provider.c:932
+#: providers/mysql/gda-mysql-provider.c:968
 #: providers/postgres/gda-postgres-provider.c:1121
-#: providers/sqlite/gda-sqlite-provider.c:749
+#: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:910
 msgid "GDA type"
 msgstr "GDA-typ"
 
-#: providers/mysql/gda-mysql-provider.c:1035
+#: providers/mysql/gda-mysql-provider.c:1071
 #: providers/postgres/gda-postgres-provider.c:1354
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
 msgstr "Standardvärde"
 
-#: providers/mysql/gda-mysql-provider.c:1052
-#: providers/mysql/gda-mysql-provider.c:1060
+#: providers/mysql/gda-mysql-provider.c:1088
+#: providers/mysql/gda-mysql-provider.c:1096
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Tabellnamnet behövs men inget är angivet i parameterlistan"
 
@@ -652,9 +696,9 @@ msgstr "Kunde inte ställa in Oracle-sessionsattributet i tjänstesammanhanget"
 #: providers/oracle/gda-oracle-provider.c:711
 #: providers/oracle/gda-oracle-provider.c:734
 #: providers/oracle/gda-oracle-provider.c:764
-#: providers/oracle/gda-oracle-provider.c:820
-#: providers/oracle/gda-oracle-provider.c:895
-#: providers/oracle/gda-oracle-provider.c:951
+#: providers/oracle/gda-oracle-provider.c:818
+#: providers/oracle/gda-oracle-provider.c:900
+#: providers/oracle/gda-oracle-provider.c:961
 #: providers/oracle/gda-oracle-recordset.c:166
 #: providers/oracle/gda-oracle-recordset.c:388
 #: providers/oracle/gda-oracle-recordset.c:589
@@ -694,107 +738,107 @@ msgid "Could not get the column name in the result set"
 msgstr "Kunde inte få tag i kolumnamnet i resultatmängden"
 
 #: providers/oracle/gda-oracle-provider.c:781
-#: providers/oracle/gda-oracle-provider.c:857
-#: providers/oracle/gda-oracle-provider.c:907
-#: providers/oracle/gda-oracle-provider.c:963
+#: providers/oracle/gda-oracle-provider.c:862
+#: providers/oracle/gda-oracle-provider.c:917
+#: providers/oracle/gda-oracle-provider.c:978
 msgid "Could not attach the transaction to the service context"
 msgstr "Kunde inte fästa transaktionen vid tjänstesammanhanget"
 
-#: providers/oracle/gda-oracle-provider.c:831
+#: providers/oracle/gda-oracle-provider.c:836
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "Kunde inte allokera Oracle-transaktionshandtaget"
 
-#: providers/oracle/gda-oracle-provider.c:843
+#: providers/oracle/gda-oracle-provider.c:848
 msgid "Could not set the Oracle transaction name"
 msgstr "Kunde inte få tag i Oracle-transaktionsnamnet"
 
-#: providers/oracle/gda-oracle-provider.c:868
+#: providers/oracle/gda-oracle-provider.c:873
 msgid "Could not start the Oracle transaction"
 msgstr "Kunde inte starta Oracle-transaktionen"
 
-#: providers/oracle/gda-oracle-provider.c:916
+#: providers/oracle/gda-oracle-provider.c:926
 msgid "Could not prepare the transaction to commit"
 msgstr "Kunde inte förbereda transaktionen att verkställa"
 
-#: providers/oracle/gda-oracle-provider.c:924
+#: providers/oracle/gda-oracle-provider.c:934
 msgid "Could not commit the Oracle transaction"
 msgstr "Kunde inte verkställa Oracle-transaktionen"
 
-#: providers/oracle/gda-oracle-provider.c:970
+#: providers/oracle/gda-oracle-provider.c:985
 msgid "Could not rollback the Oracle transaction"
 msgstr "Kunde inte rulla tillbaka Oracle-transaktionen"
 
-#: providers/oracle/gda-oracle-provider.c:1259
+#: providers/oracle/gda-oracle-provider.c:1274
 msgid "Could not allocate the Oracle describe handle"
 msgstr "Kunde inte allokera Oracle-beskrivningshandtaget"
 
-#: providers/oracle/gda-oracle-provider.c:1272
+#: providers/oracle/gda-oracle-provider.c:1287
 msgid "Could not describe the Oracle table"
 msgstr "Kunde inte beskriva Oracle-tabellen"
 
-#: providers/oracle/gda-oracle-provider.c:1285
+#: providers/oracle/gda-oracle-provider.c:1300
 msgid "Could not get the Oracle parameter handle"
 msgstr "Kunde inte få tag i Oracle-parameterhandtaget"
 
-#: providers/oracle/gda-oracle-provider.c:1298
+#: providers/oracle/gda-oracle-provider.c:1313
 msgid "Could not get the number of columns in the table"
 msgstr "Kunde inte få tag i antalet kolumner i tabellen"
 
-#: providers/oracle/gda-oracle-provider.c:1310
+#: providers/oracle/gda-oracle-provider.c:1325
 msgid "Could not get the column list"
 msgstr "Kunde inte få tag i kolumnlistan"
 
-#: providers/oracle/gda-oracle-provider.c:1339
+#: providers/oracle/gda-oracle-provider.c:1354
 msgid "Could not get the Oracle column handle"
 msgstr "Kunde inte få tag i Oracle-kolumnhandtaget"
 
-#: providers/oracle/gda-oracle-provider.c:1352
+#: providers/oracle/gda-oracle-provider.c:1367
 msgid "Could not get the Oracle field name"
 msgstr "Kunde inte få tag i Oracle-fältnamnet"
 
-#: providers/oracle/gda-oracle-provider.c:1373
+#: providers/oracle/gda-oracle-provider.c:1388
 msgid "Could not get the Oracle field data type"
 msgstr "Kunde inte få tag i Oracle-fältdatatypen"
 
-#: providers/oracle/gda-oracle-provider.c:1391
+#: providers/oracle/gda-oracle-provider.c:1406
 msgid "Could not get the Oracle field defined size"
 msgstr "Kunde inte få tag i definierad storlek för Oracle-fält"
 
-#: providers/oracle/gda-oracle-provider.c:1408
+#: providers/oracle/gda-oracle-provider.c:1423
 msgid "Could not get the Oracle field scale"
 msgstr "Kunde inte få tag i Oracle-fältskalan"
 
-#: providers/oracle/gda-oracle-provider.c:1425
+#: providers/oracle/gda-oracle-provider.c:1440
 msgid "Could not get the Oracle field nullable attribute"
 msgstr "Kunde inte få tag i nullbart attribut för Oracle-fält"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1491
+#: providers/oracle/gda-oracle-provider.c:1506
 #: providers/postgres/gda-postgres-provider.c:1798 testing/client.c:133
 msgid "Users"
 msgstr "Användare"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1717
+#: providers/oracle/gda-oracle-provider.c:1732
 #: providers/postgres/gda-postgres-provider.c:1218 testing/client.c:131
 msgid "Indexes"
 msgstr "Index"
 
-#: providers/oracle/gda-oracle-provider.c:1721
+#: providers/oracle/gda-oracle-provider.c:1736
 msgid "Procedures"
 msgstr "Procedurer"
 
-#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:1740 testing/client.c:134
 msgid "Sequences"
 msgstr "Sekvenser"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1732
+#: providers/oracle/gda-oracle-provider.c:1747
 #: providers/postgres/gda-postgres-provider.c:1335 testing/client.c:135
 msgid "Triggers"
 msgstr "Utlösare"
 
-#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:1751 testing/client.c:130
 msgid "Views"
 msgstr "Vyer"
 
@@ -861,34 +905,14 @@ msgstr "GDA-leverantör för Oracle-databaser"
 msgid "Invalid PostgreSQL handle"
 msgstr "Ogiltigt PostgreSQL-handtag"
 
-#: providers/postgres/gda-postgres-provider.c:828
-msgid "Procedure"
-msgstr "Procedur"
-
 #: providers/postgres/gda-postgres-provider.c:829
 #: providers/postgres/gda-postgres-provider.c:1295
 msgid "Id"
 msgstr "Id"
 
-#: providers/postgres/gda-postgres-provider.c:832
-msgid "Return type"
-msgstr "Returtyp"
-
 #: providers/postgres/gda-postgres-provider.c:833
 msgid "Nb args"
 msgstr "Nb-argument"
-
-#: providers/postgres/gda-postgres-provider.c:834
-msgid "Args types"
-msgstr "Argumenttyper"
-
-#: providers/postgres/gda-postgres-provider.c:835
-#: providers/postgres/gda-postgres-provider.c:1102
-#: providers/postgres/gda-postgres-provider.c:1181
-#: providers/postgres/gda-postgres-provider.c:1300
-#: providers/postgres/gda-postgres-provider.c:1842
-msgid "Definition"
-msgstr "Definition"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1099
@@ -942,8 +966,8 @@ msgstr "GDA-leverantör för PostgreSQL-databaser"
 
 #: providers/sqlite/gda-sqlite-provider.c:242
 #: providers/sqlite/gda-sqlite-provider.c:343
-#: providers/sqlite/gda-sqlite-provider.c:549
-#: providers/sqlite/gda-sqlite-provider.c:714
+#: providers/sqlite/gda-sqlite-provider.c:554
+#: providers/sqlite/gda-sqlite-provider.c:719
 #: providers/sqlite/gda-sqlite-recordset.c:157
 #: providers/sqlite/gda-sqlite-recordset.c:196
 #: providers/sqlite/gda-sqlite-recordset.c:237
@@ -963,7 +987,7 @@ msgstr "Endast en databas per anslutning är tillåten"
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "För att ta bort en SQLite-databas bör du ta bort databasfilen för hand"
 
-#: providers/sqlite/gda-sqlite-provider.c:659
+#: providers/sqlite/gda-sqlite-provider.c:664
 msgid "Could not retrieve information for field"
 msgstr "Kunde inte hämta information för fält"
 
