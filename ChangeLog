@@ -1,3 +1,8 @@
+2003-11-30  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-data-model.c:
+	(gda_data_model_foreach): backported from HEAD.
+
 2003-11-30  Laurent Sansonetti <lrz@gnome.org>
 
 	* libgda/gda-parameter.c (gda_parameter_list_clear):
