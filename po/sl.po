@@ -451,7 +451,7 @@ msgstr "Ni nadalnjih rezultatov, ukaz uspe¹no zakljuèen."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:260
 msgid "An error occured during command execution."
-msgstr "Ob izvajanju ukaza se je zgudila napaka"
+msgstr "Ob izvajanju ukaza se je zgudila napaka."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:267
 msgid "Cmd execution returned unknown result, may be an error"
@@ -835,7 +835,7 @@ msgstr "Izjema CORBA med spro¹èanjem ustvarjalca poroèil: %s"
 #: report/server/gda-report-server-main.c:48
 #, c-format
 msgid "Received signal %d, shutting down."
-msgstr "Prejel signal %d, ustavljam se"
+msgstr "Prejel signal %d, ustavljam se."
 
 #: report/server/gda-report-server-main.c:52
 #, c-format
