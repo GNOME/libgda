@@ -1,4 +1,4 @@
-/* GDA common library
+/* GDA library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -24,7 +24,7 @@
 #  define __gda_parameter_h__
 
 #include <glib/gmacros.h>
-#include <gda-value.h>
+#include <libgda/gda-value.h>
 
 G_BEGIN_DECLS
 

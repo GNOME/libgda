@@ -25,7 +25,7 @@
 #  define __gda_value_h__
 
 #include <glib/gmacros.h>
-#include <GNOME_Database.h>
+#include <libgda/GNOME_Database.h>
 
 G_BEGIN_DECLS
 
@@ -33,6 +33,8 @@ typedef GNOME_Database_Value GdaValue;
 
 GdaValue     *gda_value_new (void);
 void          gda_value_free (GdaValue *value);
+
+GdaValue     *gda_value_copy (GdaValue *value);
 
 long long     gda_value_get_bigint (GdaValue *value);
 void          gda_value_set_bigint (GdaValue *value, long long val);

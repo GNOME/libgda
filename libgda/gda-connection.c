@@ -21,8 +21,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-client.h"
-#include "gda-connection.h"
+#include <libgda/gda-client.h>
+#include <libgda/gda-connection.h>
+#include <bonobo/bonobo-exception.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 

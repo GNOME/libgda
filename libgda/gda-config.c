@@ -22,7 +22,7 @@
 
 #include "gda-config.h"
 #include <bonobo-activation/bonobo-activation.h>
-#include <bonobo-activation/Bonobo_Activation_types.h>
+#include <bonobo-activation/bonobo-activation-server-info.h>
 #include <bonobo/bonobo-exception.h>
 #include <gconf/gconf.h>
 #include <string.h>
@@ -448,6 +448,7 @@ gda_config_get_component_list (const gchar *query)
 		comp_info->id = g_strdup (bonobo_info->iid);
 		comp_info->location = g_strdup (bonobo_info->location_info);
 		comp_info->description = activation_property_to_string (
+			(Bonobo_ActivationProperty *)
 			bonono_server_info_prop_find (bonobo_info, "description"));
 		comp_info->repo_ids = activation_property_to_list (
 			bonobo_server_info_prop_find (bonobo_info, "repo_ids"));
@@ -502,7 +503,7 @@ gda_config_free_component_list (GList *list)
 			g_free (comp_info->hostname);
 			g_free (comp_info->domain);
 
-			g_list_foreach (comp_info->repo_ids, g_free, NULL);
+			g_list_foreach (comp_info->repo_ids, (GFunc) g_free, NULL);
 			g_list_free (comp_info->repo_ids);
 			gda_parameter_list_free (comp_info->properties);
 
@@ -551,6 +552,7 @@ gda_config_get_provider_list (void)
 		provider_info->id = g_strdup (bonobo_info->iid);
 		provider_info->location = g_strdup (bonobo_info->location_info);
 		provider_info->description = activation_property_to_string (
+			(Bonobo_ActivationProperty *)
 			bonono_server_info_prop_find (bonobo_info, "description"));
 		provider_info->repo_ids = activation_property_to_list (
 			bonobo_server_info_prop_find (bonobo_info, "repo_ids"));
@@ -597,9 +599,9 @@ gda_config_free_provider_list (GList *list)
 			g_free (provider_info->hostname);
 			g_free (provider_info->domain);
 
-			g_list_foreach (provider_info->repo_ids, g_free, NULL);
+			g_list_foreach (provider_info->repo_ids, (GFunc) g_free, NULL);
 			g_list_free (provider_info->repo_ids);
-			g_list_foreach (provider_info->gda_params, g_free, NULL);
+			g_list_foreach (provider_info->gda_params, (GFunc) g_free, NULL);
 			g_list_free (provider_info->gda_params);
 
 			g_free (provider_info);

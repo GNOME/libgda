@@ -83,7 +83,7 @@ gda_client_class_init (GdaClientClass *klass)
 
 	/* set the epv */
 	epv = &klass->epv;
-	epv->notifyAction = impl_Client_notifyAction;
+	epv->notifyAction = (gpointer) impl_Client_notifyAction;
 }
 
 static void
@@ -108,11 +108,16 @@ gda_client_finalize (GObject *object)
 	if (client->priv->iid != NULL)
 		g_free (client->priv->iid);
 	if (client->priv->corba_provider != NULL) {
-		CORBA_object_release (client->priv->corba_provider);
+		CORBA_Environment ev;
+
+		CORBA_exception_init (&ev);
+		CORBA_Object_release (client->priv->corba_provider, &ev);
+		CORBA_exception_free (&ev);
+
 		client->priv->corba_provider = NULL;
 	}
 
-	g_list_foreach (client->priv->connections, gda_connection_close, NULL);
+	g_list_foreach (client->priv->connections, (GFunc) gda_connection_close, NULL);
 	g_list_free (client->priv->connections);
 	client->priv->connections = NULL;
 
@@ -177,7 +182,7 @@ gda_client_open_connection (GdaClient *client,
 
 	/* search for the connection in our private list */
 	for (l = client->priv->connections; l; l = l->next) {
-		gchar *tmp_str, *tmp_usr, *tmp_pwd;
+		const gchar *tmp_str, *tmp_usr, *tmp_pwd;
 
 		cnc = GDA_CONNECTION (l->data);
 		tmp_str = gda_connection_get_string (cnc);

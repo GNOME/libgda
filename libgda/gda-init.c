@@ -43,7 +43,7 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	g_set_prgname (app_id);
 
 	bonobo_activation_init (nargs, args);
-	if (!bonobo_init (gda_corba_get_orb (), NULL, NULL))
+	if (!bonobo_init (bonobo_activation_get_orb (), NULL, NULL))
 		g_error (_("Could not initialize Bonobo"));
 
 	bonobo_activate ();

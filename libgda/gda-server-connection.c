@@ -23,6 +23,7 @@
 #include <libgda/gda-server-connection.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-server-recordset.h>
+#include <bonobo/bonobo-exception.h>
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
 
@@ -150,8 +151,8 @@ impl_Connection_executeCommand (PortableServer_Servant servant,
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
-	recset_list = gda_server_provider_execute_command (cnc->priv->provider,
-							   cnc, cmd, param_list);
+	recset_list = gda_server_provider_execute_command (cnc->priv->provider, cnc,
+							   (GdaCommand *) cmd, param_list);
 	if (!recset_list) {
 		gda_error_list_to_exception (cnc->priv->errors, ev);
 		gda_server_connection_free_error_list (cnc);
@@ -264,12 +265,12 @@ gda_server_connection_class_init (GdaServerConnectionClass *klass)
 
 	/* set the epv */
 	epv = &klass->epv;
-	epv->open = impl_Connection_open;
-	epv->close = impl_Connection_close;
-	epv->executeCommand = impl_Connection_executeCommand;
-	epv->beginTransaction = impl_Connection_beginTransaction;
-	epv->commitTransaction = impl_Connection_commitTransaction;
-	epv->rollbackTransaction = impl_Connection_rollbackTransaction;
+	epv->open = (gpointer) impl_Connection_open;
+	epv->close = (gpointer) impl_Connection_close;
+	epv->executeCommand = (gpointer) impl_Connection_executeCommand;
+	epv->beginTransaction = (gpointer) impl_Connection_beginTransaction;
+	epv->commitTransaction = (gpointer) impl_Connection_commitTransaction;
+	epv->rollbackTransaction = (gpointer) impl_Connection_rollbackTransaction;
 }
 
 static void

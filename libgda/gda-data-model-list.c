@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-data-model-list.h"
+#include <libgda/gda-data-model-list.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL
 
@@ -67,7 +67,7 @@ gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 	if (row > count)
 		return NULL;
 
-	value = g_list_nth (GDA_DATA_MODEL_LIST (model)->priv->value_list, row);
+	value = (GdaValue *) g_list_nth (GDA_DATA_MODEL_LIST (model)->priv->value_list, row);
 	return value;
 }
 
@@ -101,7 +101,7 @@ gda_data_model_list_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
 
 	/* free memory */
-	g_list_foreach (model->priv->value_list, gda_value_free, NULL);
+	g_list_foreach (model->priv->value_list, (GFunc) gda_value_free, NULL);
 	g_list_free (model->priv->value_list);
 
 	g_free (model->priv);
@@ -158,14 +158,14 @@ gda_data_model_list_new_from_string_list (const GList *list)
 
 	model = gda_data_model_list_new ();
 
-	for (l = list; l; l = l->next) {
+	for (l = (GList *) list; l; l = l->next) {
 		gchar *str = (gchar *) l->data;
 		if (str) {
 			GdaValue *value;
 
 			value = gda_value_new ();
 			gda_value_set_string (value, (const gchar *) str);
-			gda_data_model_append_value (GDA_DATA_MODEL_LIST (model), value);
+			gda_data_model_list_append_value (GDA_DATA_MODEL_LIST (model), value);
 			gda_value_free (value);
 		}
 	}
@@ -184,7 +184,7 @@ gda_data_model_list_append_value (GdaDataModelList *model, const GdaValue *value
 	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
 	g_return_if_fail (value != NULL);
 
-	new_value = gda_value_copy (value);
+	new_value = gda_value_copy ((GdaValue *) value);
 	model->priv->value_list = g_list_append (model->priv->value_list, new_value);
 	gda_data_model_changed (GDA_DATA_MODEL (model));
 }
@@ -200,7 +200,7 @@ gda_data_model_list_prepend_value (GdaDataModelList *model, const GdaValue *valu
 	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
 	g_return_if_fail (value != NULL);
 
-	new_value = gda_value_copy (value);
+	new_value = gda_value_copy ((GdaValue *) value);
 	model->priv->value_list = g_list_prepend (model->priv->value_list, new_value);
 	gda_data_model_changed (GDA_DATA_MODEL (model));
 }

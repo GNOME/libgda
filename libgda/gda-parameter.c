@@ -143,3 +143,12 @@ gda_parameter_list_free (GdaParameterList *plist)
 
 	g_free (plist);
 }
+
+/**
+ * gda_parameter_list_add_parameter
+ */
+void
+gda_parameter_list_add_parameter (GdaParameterList *plist, GdaParameter *param)
+{
+	g_return_if_fail (plist != NULL);
+}

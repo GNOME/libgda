@@ -53,6 +53,23 @@ gda_value_free (GdaValue *value)
 }
 
 /**
+ * gda_value_copy
+ */
+GdaValue *
+gda_value_copy (GdaValue *value)
+{
+	GdaValue *new_value;
+
+	g_return_val_if_fail (value != NULL, NULL);
+
+	new_value = gda_value_new ();
+	new_value->_type = value->_type;
+	new_value->_value = ORBit_copy_value (value->_value, value->_type);
+
+	return new_value;
+}
+
+/**
  * gda_value_get_bigint
  */
 long long
@@ -340,7 +357,7 @@ gda_value_set_timestamp (GdaValue *value, time_t val)
 
 	g_return_if_fail (value != NULL);
 
-	stm = localtime (&value);
+	stm = localtime ((const time_t *) &val);
 	if (!stm)
 		return;
 

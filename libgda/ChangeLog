@@ -10,12 +10,15 @@
 	* gda-row.[ch]: new files
 
 	* gda-parameter.c (free_hash_param): added function body
+	(gda_parameter_list_add_parameter): added missing function
 
 	* gda-server-recordset.c (impl_Recordset_moveFirst):
 	(impl_Recordset_moveNext):
 	(impl_Recordset_movePrevious):
 	(impl_Recordset_moveLast):
 	(impl_Recordset_fetch): implemented
+
+	* gda-value.c (gda_value_copy): new function
 
 2001-11-01  Rodrigo Moya <rodrigo@gnome-db.org>
 

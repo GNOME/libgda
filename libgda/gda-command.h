@@ -23,7 +23,7 @@
 #if !defined(__gda_command_h__)
 #  define __gda_command_h__
 
-#include <GNOME_Database.h>
+#include <libgda/GNOME_Database.h>
 #include <glib/gmacros.h>
 
 G_BEGIN_DECLS

@@ -23,6 +23,7 @@
 #include <gobject/gsignal.h>
 #include <config.h>
 #include <libgda/gda-xml-database.h>
+#include <bonobo/bonobo-i18n.h>
 
 struct _GdaXmlDatabasePrivate {
 	xmlNodePtr tables;
