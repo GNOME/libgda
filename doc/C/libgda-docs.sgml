@@ -760,9 +760,9 @@
             with &LIBGDA, which means that you've got always a default
 	    database system available for you. To connect to a default 
             provider's database, you only need to specify, in the &DSN; string,
-            a string of the form "FILENAME=/directory/for/the/database". When
+            a string of the form "URI=/path/to/the/database/file". When
             you	first connect to the new data source, the &GDA; default 
-            provider will create the database, in the directory you specified
+            provider will create the database, in the path you specified
             in the &DSN; string, if it does not exist. This default provider
 	    uses XML as the format for that file.
 	  </para>

@@ -1,3 +1,8 @@
+2002-08-23  Richard Campbell <richard.campbell@oarcorp.com>
+
+	* doc/C/Makefile.am: fixed connection string description for the
+	default provider (FILENAME->URI).
+	
 2002-08-23  Margus Väli <mvali@hot.ee>
 
 	* report/libgda-report/Makefile.am: link libgda-report with libgda-2,
