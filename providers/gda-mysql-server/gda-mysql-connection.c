@@ -159,7 +159,7 @@ gda_mysql_connection_open (Gda_ServerConnection *cnc,
 	  if (!t_host) t_host = g_strdup("localhost");
 	}
 
-      gda_log_message(_("Opening connection with user=%s, password=%s, host=%s"
+      gda_log_message(_("Opening connection with user=%s, password=%s, "
 			"host=%s, port=%s, unix_socket=%s"), t_user, t_password,
 		      t_host, t_port, t_unix_socket);
       mysql_cnc->mysql = g_new0(MYSQL, 1);
