@@ -14,7 +14,8 @@ EXTRA_DIST = \
 	libgda.spec \
 	intltool-extract.in \
 	intltool-merge.in \
-	intltool-update.in
+	intltool-update.in \
+	mkinstalldirs
 
 pkgconfigdir=$(libdir)/pkgconfig
 pkgconfig_DATA = libgda.pc

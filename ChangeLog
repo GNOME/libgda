@@ -1,4 +1,9 @@
+2004-07-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: EXTRA_DIST mkinstalldirs :(
+
 2004-07-11  Vivien Malerba <malerba@gnome-db.org>
+
 	* providers/postgres/gda-postgres-recordset.c: bug fixed for annoying
 	  warning message
 
@@ -8,13 +13,17 @@
 	Do not read past the end of the type_data array. Found by valgrind.
 
 2004-06-25  Vivien Malerba <malerba@gnome-db.org>
-	* providers/odbc/gda-odbc-provider.c: fixed a recordset column for bug #144923
+
+	* providers/odbc/gda-odbc-provider.c: fixed a recordset column fori
+	bug #144923
 
 2004-06-24  Vivien Malerba <malerba@gnome-db.org>
-	* libsql/*: improved parsing of condition operators (added regex operators such as "~",
-	  "~*", etc and "SIMILAR TO", and modified the sql_condition structure to add a "negated"
-	  attributes for negated conditions and the sql_condition_operator enum for the new
-	  recognized operators.
+
+	* libsql/*: improved parsing of condition operators (added regex
+	operators such as "~", "~*", etc and "SIMILAR TO", and modified the
+	sql_condition structure to add a "negated" attributes for negated
+	conditions and the sql_condition_operator enum for the new recognized
+	operators.
 
 2004-06-10  Murray Cumming  <murrayc@murrayc.com>
 
