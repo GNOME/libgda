@@ -195,9 +195,6 @@ gda_postgres_set_value (GdaValue *value,
 		make_point (&point, thevalue);
 		gda_value_set_geometric_point (value, &point);
 		break;
-	case GDA_VALUE_TYPE_NULL :
-		gda_value_set_null (value);
-		break;
 	case GDA_VALUE_TYPE_TIMESTAMP :
 		make_timestamp (&timestamp, thevalue);
 		gda_value_set_timestamp (value, &timestamp);
