@@ -6,5 +6,6 @@ gda-sybase-test
 gda-tds-test
 gda-test
 gda-primebase-test
+gda-xmldb-test
 .deps
 .libs

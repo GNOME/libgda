@@ -22,6 +22,7 @@
 
 #include <config.h>
 #include <gda-report-common.h>
+#include <bonobo/bonobo-generic-factory.h>
 
 static void setup_factory (void);
 
@@ -30,9 +31,6 @@ static GList *object_list = NULL;
 int
 main (int argc, char *argv[])
 {
-	struct sigaction act;
-	sigset_t empty_mask;
-
 	bindtextdomain (PACKAGE, GDA_LOCALEDIR);
 	textdomain (PACKAGE);
 	
@@ -73,7 +71,7 @@ factory_callback (BonoboGenericFactory *factory,
 
 	if (BONOBO_IS_OBJECT (object)) {
 		object_list = g_list_append (object_list, object);
-		g_signal_connect (G_OBJECT (object), "finalize"
+		g_signal_connect (G_OBJECT (object), "finalize",
 				  G_CALLBACK (object_finalized_cb), NULL);
 	}
 }

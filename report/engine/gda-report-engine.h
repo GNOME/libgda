@@ -24,6 +24,7 @@
 
 #include <bonobo/bonobo-object.h>
 #include <gda-common-defs.h>
+#include <GNOME_Database_Report.h>
 
 G_BEGIN_DECLS
 
@@ -48,7 +49,8 @@ struct _GdaReportEngineClass {
 	POA_GNOME_Database_Report_Engine__epv epv;
 };
 
-GType gda_report_engine_get_type (void);
+GType            gda_report_engine_get_type (void);
+GdaReportEngine *gda_report_engine_new (void);
 
 G_END_DECLS
 

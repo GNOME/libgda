@@ -38,7 +38,7 @@ namespace gda
 
 		void setProvider (gchar * name);
 		const gchar *getProvider ();
-		gboolean supports (GDA_Connection_Feature feature);
+		gboolean supports (GNOME_Database_Connection_Feature feature);
 		void setDefaultDB (gchar * dsn);
 		gint open (gchar * dsn, gchar * user, gchar * pwd);
 		void close ();

@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA library C++ bindings
  * Copyright (C) 2000 Chris Wiegand
  *
  * This library is free software; you can redistribute it and/or
@@ -38,11 +38,11 @@ namespace gda
 		gint setConnection (Connection * a);
 		gchar *getText ();
 		void setText (gchar * text);
-		GDA_CommandType getCmdType ();
-		void setCmdType (GDA_CommandType type);
+		GNOME_Database_CommandType getCmdType ();
+		void setCmdType (GNOME_Database_CommandType type);
 		Recordset *execute (gulong * reccount, gulong flags);
 		void createParameter (gchar * name,
-				      GDA_ParameterDirection inout,
+				      GNOME_Database_ParameterDirection inout,
 				      Value * value);
 
 	      private:

@@ -39,7 +39,7 @@ namespace gda
 		// What's shadowValue for? FIXME
 
 		bool isNull ();
-		GDA_ValueType typeCode ();
+		GNOME_Database_ValueType typeCode ();
 		gchar *typeCodeString ();
 
 		gchar getTinyint ();

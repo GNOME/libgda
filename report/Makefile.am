@@ -3,6 +3,7 @@ SUBDIRS = idl common engine
 INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-client \
+	-I$(top_builddir)/report/common \
 	$(GDA_CLIENT_CFLAGS)
 
 lib_LTLIBRARIES = libgda-report.la

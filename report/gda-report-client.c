@@ -24,7 +24,7 @@
 #include "gda-report-common.h"
 
 struct _GdaReportClientPrivate {
-	GNOME_Database_Report_DocumentFactory corba_engine;
+	GNOME_Database_Report_Engine corba_engine;
 	gchar *engine_id;
 };
 
@@ -76,14 +76,14 @@ gda_report_client_finalize (GObject *object)
 	g_free (client->priv);
 	client->priv = NULL;
 
-	parent_class = g_type_class_peek (BONOBO_TYPE_OBJECT);
+	parent_class = g_type_class_peek (BONOBO_OBJECT_TYPE);
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }
 
 BONOBO_TYPE_FUNC_FULL (GdaReportClient,
 		       GNOME_Database_Report_Client,
-		       BONOBO_TYPE_OBJECT,
+		       BONOBO_OBJECT_TYPE,
 		       gda_report_client);
 
 /**
@@ -94,7 +94,7 @@ gda_report_client_construct (GdaReportClient *client, const gchar *engine_id)
 {
 	CORBA_Environment ev;
 
-	g_return_val_if_fail (GDA_IS_REPORT_CLIENT (client));
+	g_return_val_if_fail (GDA_IS_REPORT_CLIENT (client), NULL);
 
 	CORBA_exception_init (&ev);
 
@@ -104,7 +104,7 @@ gda_report_client_construct (GdaReportClient *client, const gchar *engine_id)
 			engine_id, "IDL:GNOME/Database/Report/Engine:1.0", &ev);
 	}
 	else {
-		client->priv->corba_engine bonobo_get_object (
+		client->priv->corba_engine = bonobo_get_object (
 			GDA_COMPONENT_ID_REPORT,
 			"IDL:GNOME/Database/Report/Engine:1.0",
 			&ev);
