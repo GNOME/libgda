@@ -223,26 +223,32 @@ gda_connection_new (GdaClient *client,
 
 	/* retrieve correct username/password */
 	if (username)
-		real_username = username;
+		real_username = g_strdup (username);
 	else {
 		if (dsn_info->username)
-			real_username = dsn_info->username;
+			real_username = g_strdup (dsn_info->username);
 		else {
-			real_username = gda_quark_list_find (params, "USER");
-			if (real_username)
+			gchar *s;
+			s = gda_quark_list_find (params, "USER");
+			if (s) {
+				real_username = g_strdup (s);
 				gda_quark_list_remove (params, "USER");
+			}
 		}
 	}
 
 	if (password)
-		real_password = password;
+		real_password = g_strdup (password);
 	else {
 		if (dsn_info->password)
-			real_password = dsn_info->password;
+			real_password = g_strdup (dsn_info->password);
 		else {
-			real_password = gda_quark_list_find (params, "PASSWORD");
-			if (real_password)
+			gchar *s;
+			s = gda_quark_list_find (params, "PASSWORD");
+			if (s) {
+				real_password = g_strdup (s);
 				gda_quark_list_remove (params, "PASSWORD");
+			}
 		}
 	}
 
@@ -255,8 +261,8 @@ gda_connection_new (GdaClient *client,
 	cnc->priv->dsn = g_strdup (dsn);
 	cnc->priv->cnc_string = g_strdup (dsn_info->cnc_string);
 	cnc->priv->provider = g_strdup (dsn_info->provider);
-	cnc->priv->username = g_strdup (real_username);
-	cnc->priv->password = g_strdup (real_password);
+	cnc->priv->username = real_username;
+	cnc->priv->password = real_password;
 	cnc->priv->options = options;
 
 	gda_config_free_data_source_info (dsn_info);
