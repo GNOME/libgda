@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-10-23 22:48+0200\n"
-"PO-Revision-Date: 2002-08-25 23:05+0200\n"
+"POT-Creation-Date: 2002-10-24 01:42+0200\n"
+"PO-Revision-Date: 2002-10-24 01:46+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,19 +22,18 @@ msgid "Data source %s not found in configuration"
 msgstr "Datakällan %s hittades inte i konfigurationen"
 
 #: libgda/gda-client.c:272
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find provider %s in the current setup"
-msgstr "Kunde inte få tag i parameterdeskriptorn i resultatmängden"
+msgstr "Kunde inte hitta i %s-leverantören i den aktuella konfigurationen"
 
 #: libgda/gda-client.c:299
-#, fuzzy, c-format
+#, c-format
 msgid "Provider %s does not implement entry function"
-msgstr "%s-leverantören implementerar inte startpunkt"
+msgstr "%s-leverantören implementerar inte postfunktion"
 
 #: libgda/gda-client.c:309
-#, fuzzy
 msgid "Could not create GdaServerProvider object from plugin"
-msgstr "Kunde inte skapa BonoboStreamMem-objekt"
+msgstr "Kunde inte skapa GdaServerProvider-objekt från insticksmodul"
 
 #: libgda/gda-client.c:372
 msgid "Temporary data source created by libgda. Don't remove it"
@@ -97,14 +96,14 @@ msgid "ERROR: %s"
 msgstr "FEL: %s"
 
 #: libgda/gda-select.c:315
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse SQL string '%s'"
-msgstr "Kunde inte tolka filen vid %s"
+msgstr "Kunde inte tolka SQL-strängen \"%s\""
 
 #: libgda/gda-select.c:319
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
-msgstr ""
+msgstr "SQL-kommandot är inte ett SELECT (är \"%s\""
 
 #: libgda/gda-table.c:234
 #, c-format
@@ -112,9 +111,9 @@ msgid "There is already a field called %s"
 msgstr "Det finns redan ett fält med namnet %s"
 
 #: libgda/gda-util.c:144
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse SQL command '%s'"
-msgstr "Kunde inte tolka filen vid %s"
+msgstr "Kunde inte tolka SQL-kommandot \"%s\""
 
 #: libgda/gda-util.c:177
 #, c-format
@@ -297,9 +296,8 @@ msgstr "Fel vid skapande av felbehållare."
 
 #: providers/freetds/gda-freetds-provider.c:246
 #: providers/freetds/gda-freetds-provider.c:248
-#, fuzzy
 msgid "Allocating tds context failed."
-msgstr "Allokering av postsamling misslyckades"
+msgstr "Allokering av tds-sammanhang misslyckades."
 
 #: providers/freetds/gda-freetds-provider.c:264
 #: providers/freetds/gda-freetds-provider.c:266
@@ -340,18 +338,17 @@ msgstr "Vyer"
 #: providers/freetds/gda-freetds-provider.c:688
 #: providers/freetds/gda-freetds-provider.c:689
 msgid "Query did not succeed in execute_cmd()."
-msgstr ""
+msgstr "Fråga lyckades inte i execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:698
 #: providers/freetds/gda-freetds-provider.c:700
 msgid "Unexpected result tokens in execute_cmd()."
-msgstr ""
+msgstr "Oväntade resultatelement i execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:708
 #: providers/freetds/gda-freetds-provider.c:709
-#, fuzzy
 msgid "Unexpected return in execute_cmd()."
-msgstr "Oväntat strängvärde"
+msgstr "Oväntad retur i execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:787
 msgid "Field Name"
@@ -447,6 +444,32 @@ msgstr "SQLGetFunctions gav oväntad retur. Anslutning avbruten.\n"
 #: providers/ibmdb2/libmain.c:39
 msgid "GDA provider for IBMDB2"
 msgstr "GDA-leverantör för IBMDB2"
+
+#: providers/interbase/gda-interbase-provider.c:186
+msgid "No database specified"
+msgstr "Ingen databas angiven"
+
+#: providers/interbase/gda-interbase-provider.c:209
+msgid "Could not attach to database"
+msgstr "Kunde inte ansluta till databasen"
+
+#: providers/interbase/gda-interbase-provider.c:233
+#: providers/interbase/gda-interbase-provider.c:260
+#: providers/interbase/gda-interbase-provider.c:278
+#: providers/interbase/gda-interbase-provider.c:347
+#: providers/interbase/gda-interbase-provider.c:381
+#: providers/interbase/gda-interbase-provider.c:419
+msgid "Invalid Interbase handle"
+msgstr "Ogiltigt Interbase-handtag"
+
+#: providers/interbase/gda-interbase-provider.c:387
+#: providers/interbase/gda-interbase-provider.c:425
+msgid "Invalid transaction handle"
+msgstr "Ogiltigt transaktionshandtag"
+
+#: providers/interbase/libmain.c:39
+msgid "GDA provider for Interbase/Firebird databases"
+msgstr "GDA-leverantör för Interbase/Firebird-databaser"
 
 #: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
