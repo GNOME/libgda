@@ -1,3 +1,7 @@
+2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GNOME_Database.idl: added getRowCount method to ::Recordset
+
 2001-12-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GNOME_Database.idl: s/ValueType/Type, and removed unused Type's

@@ -94,6 +94,7 @@ module GNOME {
 
 		interface Recordset : Bonobo::Unknown {
 			RowAttributes describe () raises (DriverError);
+			long getRowCount ();
 
 			boolean moveFirst () raises (DriverError);
 			boolean moveNext () raises (DriverError);
