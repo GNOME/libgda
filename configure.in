@@ -458,6 +458,7 @@ idl/Makefile
 libgda/Makefile
 providers/Makefile
 providers/default/Makefile
+providers/default/sqlite/Makefile
 providers/mysql/Makefile
 tools/Makefile
 tools/gda-buildserver
