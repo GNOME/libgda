@@ -118,6 +118,13 @@ module GNOME {
 		 * The Command struct contains information about a
 		 * command to be executed on the server
 		 */
+		typedef long CommandOptions;
+		const CommandOptions IGNORE_ERRORS = 1;
+		const CommandOptions STOP_ON_ERRORS = 1 << 1;
+		const CommandOptions BAD_OPTION = 1 << 2;
+		const CommandOptions DEFAULT_OPTION = 1 << 1;
+
+		
 		enum CommandType {
 			COMMAND_TYPE_SQL,
 			COMMAND_TYPE_XML,
@@ -129,6 +136,7 @@ module GNOME {
 		struct Command {
 			string text;
 			CommandType type;
+			CommandOptions options;
 		};
 
 		/*
