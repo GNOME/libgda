@@ -247,7 +247,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	if (t_port)
 		tds_set_port(tds_cnc->login, atoi(t_port));
 	
-	tds_set_charset(tds_cnc->login, "iso_1");
+	tds_set_client_charset(tds_cnc->login, "iso_1");
 	tds_set_language(tds_cnc->login, "us_english");
 	tds_set_packet(tds_cnc->login, 512);
 

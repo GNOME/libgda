@@ -1,3 +1,9 @@
+2004-04-22  Robert Davis <rdavis@unico.com>
+
+	* providers/freetds/gda-freetds-provider.c
+	(gda_freetds_provider_open_connection): use tds_set_client_charset
+	instead of tds_set_charset.
+
 2004-04-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model.c (gda_data_model_update_column): fixed c/p
