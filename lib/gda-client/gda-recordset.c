@@ -43,6 +43,7 @@ static void   gda_recordset_init       (GdaRecordset *rs,
 #else
 static void   gda_recordset_class_init (GdaRecordsetClass *);
 static void   gda_recordset_init       (GdaRecordset *);
+static void   gda_recordset_destroy    (GtkObject *object, gpointer user_data);
 #endif
 
 static void   gda_recordset_real_error (GdaRecordset *, GList *);
@@ -133,7 +134,7 @@ static void
 gda_recordset_class_init (GdaRecordsetClass *klass)
 {
 	GtkObjectClass* object_class = (GtkObjectClass *) klass;
-	
+
 	gda_recordset_signals[RECORDSET_ERROR] =
 		gtk_signal_new("error",
 		               GTK_RUN_LAST,
@@ -171,6 +172,7 @@ gda_recordset_class_init (GdaRecordsetClass *klass)
 	klass->eof = NULL;
 	klass->bof = NULL;
 	klass->row_changed = NULL;
+	object_class->destroy = gda_recordset_destroy;
 }
 #endif
 
@@ -201,6 +203,27 @@ gda_recordset_init (GdaRecordset *rs) {
 	rs->cursor_type      = GDA_OPEN_FWDONLY;
 	rs->name             = 0;
 }
+
+#ifndef HAVE_GOBJECT
+static void
+gda_recordset_destroy (GtkObject *object, gpointer user_data)
+{
+	GdaRecordset *rs = (GdaRecordset *) object;
+	GtkObjectClass *parent_class;
+
+	g_return_if_fail(IS_GDA_RECORDSET(rs));
+
+	if (rs->open)
+		gda_recordset_close(rs);
+	if (rs->internal_cmd) {
+		gda_command_free(rs->internal_cmd);
+	}
+
+	parent_class = gtk_type_class(gtk_object_get_type());
+	if (parent_class && parent_class->destroy)
+		parent_class->destroy(object);
+}
+#endif
 
 static void
 free_chunks (GList* chunks)
@@ -257,12 +280,7 @@ void
 gda_recordset_free (GdaRecordset* rs)
 {
 	g_return_if_fail(IS_GDA_RECORDSET(rs));
-	
-	if (rs->open)
-		gda_recordset_close(rs);
-	if (rs->internal_cmd) {
-		gda_command_free(rs->internal_cmd);
-	}
+
 #ifdef HAVE_GOBJECT
 	g_object_unref (G_OBJECT (rs));
 #else

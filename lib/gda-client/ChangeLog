@@ -1,3 +1,8 @@
+2001-05-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection.c (gda_recordset_destroy): add function to
+	properly destroy GtkObject-derived class
+
 2001-05-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-connection-pool.c (gda_connection_pool_foreach): add
