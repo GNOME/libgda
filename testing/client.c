@@ -34,7 +34,7 @@ show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
 	model = gda_connection_get_schema (cnc, schema, NULL);
 	if (!GDA_IS_DATA_MODEL (model)) {
 		g_print ("\t%s\n", label);
-		g_print ("\t\tNONE\n");
+		g_print (_("\t\tNONE\n"));
 		return;
 	}
 
@@ -73,38 +73,39 @@ open_connection (GdaClient *client,
 
 	cnc = gda_client_open_connection (client, name, username, password);
 	if (!GDA_IS_CONNECTION (cnc)) {
-		g_print ("** ERROR: could not open connection to %s\n", name);
+		g_print (_("** ERROR: could not open connection to %s\n"), name);
 		return;
 	}
 
 	/* show provider features */
-	g_print ("\tProvider capabilities...\n");
-	g_print ("\t\tTransactions: %s\n",
+	g_print (_("\tProvider capabilities...\n"));
+	g_print (_("\t\tTransactions: %s\n"),
 		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_TRANSACTIONS) ?
 		 _("Supported") : _("Not supported"));
 
 	/* show connection schemas */
-	show_schema (cnc, GDA_CONNECTION_SCHEMA_PROCEDURES, "Stored procedures");
-	show_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, "Connection Tables");
-	show_schema (cnc, GDA_CONNECTION_SCHEMA_TYPES, "Available types");
-	show_schema (cnc, GDA_CONNECTION_SCHEMA_VIEWS, "Views");
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_PROCEDURES, _("Stored procedures"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, _("Connection Tables"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_TYPES, _("Available types"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_VIEWS, _("Views"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_INDEXES, _("Indexes"));
 
 	/* test transactions */
-	g_print ("\tStarting transaction...");
+	g_print (_("\tStarting transaction..."));
 	res = gda_connection_begin_transaction (cnc, NULL);
-	g_print ("%s\n", res ? "OK" : "Error");
+	g_print ("%s\n", res ? "OK" : _("Error"));
 
-	g_print ("\tFinishing transaction...");
+	g_print (_("\tFinishing transaction..."));
 	res = gda_connection_commit_transaction (cnc, NULL);
-	g_print ("%s\n", res ? "OK" : "Error");
+	g_print ("%s\n", res ? "OK" : _("Error"));
 
-	g_print ("\tStarting transaction...");
+	g_print (_("\tStarting transaction..."));
 	res = gda_connection_begin_transaction (cnc, NULL);
-	g_print ("%s\n", res ? "OK" : "Error");
+	g_print ("%s\n", res ? "OK" : _("Error"));
 
-	g_print ("\tRolling back transaction...");
+	g_print (_("\tRolling back transaction..."));
 	res = gda_connection_rollback_transaction (cnc, NULL);
-	g_print ("%s\n", res ? "OK" : "Error");
+	g_print ("%s\n", res ? "OK" : _("Error"));
 
 	dsn_info = gda_config_find_data_source (name);
 	/* Postgres own tests */
@@ -123,7 +124,7 @@ test_client (void)
 	GList *dsnlist;
 	GList *l;
 
-	DISPLAY_MESSAGE ("Testing GDA client API");
+	DISPLAY_MESSAGE (_("Testing GDA client API"));
 
 	client = gda_client_new ();
 
@@ -132,11 +133,11 @@ test_client (void)
 		GdaDataSourceInfo *info = (GdaDataSourceInfo *) l->data;
 
 		if (!info) {
-			g_print ("** ERROR: gda_config_get_data_source_list returned a NULL item\n");
+			g_print (_("** ERROR: gda_config_get_data_source_list returned a NULL item\n"));
 			gda_main_quit ();
 		}
 
-		g_print (" Data source = %s, User = %s\n", info->name, info->username);
+		g_print (_(" Data source = %s, User = %s\n"), info->name, info->username);
 		open_connection (client, info->name, info->username, "");
 	}
 
