@@ -29,3 +29,43 @@ gda_reportstream_signals[LAST_SIGNAL] = {0, };
 
 static void    gda_reportstream_class_init    (Gda_ReportStreamClass* klass);
 static void    gda_reportstream_init          (Gda_ReportStream* rs);
+
+guint
+gda_reportstream_get_type (void)
+{
+  static guint gda_reportstream_type = 0;
+
+  if (!gda_reportstream_type)
+    {
+      GtkTypeInfo gda_reportstream_info =
+      {
+        "Gda_ReportStream",
+        sizeof (Gda_ReportStream),
+        sizeof (Gda_ReportStreamClass),
+        (GtkClassInitFunc) gda_reportstream_class_init,
+        (GtkObjectInitFunc) gda_reportstream_init,
+        (GtkArgSetFunc)NULL,
+        (GtkArgSetFunc)NULL,
+      };
+      gda_reportstream_type = gtk_type_unique(gtk_object_get_type(),
+                                            &gda_reportstream_info);
+    }
+  return gda_reportstream_type;
+}
+
+
+static void
+gda_reportstream_class_init (Gda_ReportStreamClass* klass)
+{
+  GtkObjectClass*   object_class;
+
+  object_class = (GtkObjectClass*) klass;
+  
+  gtk_object_class_add_signals(object_class, gda_reportstream_signals, LAST_SIGNAL);
+}
+
+static void
+gda_reportstream_init (Gda_ReportStream* rs)
+{
+	g_return_if_fail(GDA_REPORTSTREAM_IS_OBJECT(rs));
+}
