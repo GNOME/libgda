@@ -19,14 +19,8 @@ An in-memory representation of a database table
 
 </para>
 
-
-<!-- ##### SIGNAL GdaTable::name-changed ##### -->
-<para>
-
-</para>
-
-@gdatable: the object which received the signal.
-@arg1: 
+@model: 
+@priv: 
 
 <!-- ##### FUNCTION gda_table_new ##### -->
 <para>

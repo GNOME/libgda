@@ -19,6 +19,8 @@ Filtering data from #GdaDataModel
 
 </para>
 
+@model: 
+@priv: 
 
 <!-- ##### FUNCTION gda_select_new ##### -->
 <para>

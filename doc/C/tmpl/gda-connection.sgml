@@ -219,9 +219,11 @@ Management of connections to data sources
 
 @cnc: 
 @table_name: 
+@attributes: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @attributes_list: 
 @index_list: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_drop_table ##### -->
@@ -230,31 +232,6 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@table_name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_create_index ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@index: 
-@table_name: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@table: 
-
-
-<!-- ##### FUNCTION gda_connection_drop_index ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@index_name: 
-@primary_key: 
 @table_name: 
 @Returns: 
 

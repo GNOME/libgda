@@ -53,7 +53,7 @@ struct _GdaDataModelColumnAttributes {
 	GdaValue    *default_value;
 };
 
-#define GDA_TYPE_DATA_MODEL_COLUMN_ATTRIVUTES (gda_data_model_column_attributes_get_type ())
+#define GDA_TYPE_DATA_MODEL_COLUMN_ATTRIBUTES (gda_data_model_column_attributes_get_type ())
 
 GType               gda_data_model_column_attributes_get_type (void);
 GdaDataModelColumnAttributes *gda_data_model_column_attributes_new (void);

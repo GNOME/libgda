@@ -19,6 +19,8 @@ Management of transactions
 
 </para>
 
+@object: 
+@priv: 
 
 <!-- ##### FUNCTION gda_transaction_new ##### -->
 <para>

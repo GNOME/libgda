@@ -1,3 +1,9 @@
+2005-02-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #167573
+
+	* libgda/gda-column-attributes.h: fixed typo.
+
 2005-02-11  Vivien Malerba <malerba@gnome-db.org>
 	
 	* libgda/gda-row.[ch]: added gda_row_set_is_default() and gda_row_get_is_default()
