@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2003-03-08 19:56+0100\n"
-"PO-Revision-Date: 2003-03-05 18:30+0100\n"
+"POT-Creation-Date: 2003-03-21 16:32+0100\n"
+"PO-Revision-Date: 2003-03-21 16:31+0100\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -340,7 +340,7 @@ msgstr "Ungültiger Transaktionshandle"
 msgid "Provider for FireBird databases"
 msgstr "Treiber für FireBird-Datenbanken"
 
-#: providers/freetds/gda-freetds-provider.c:195
+#: providers/freetds/gda-freetds-provider.c:197
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -348,45 +348,45 @@ msgstr ""
 "Verbindung abgebrochen. Sie müssen mindestens einen Rechner, einen "
 "Benutzernamen und ein Passwort mittels »DSM 'QUERY=;USER=;PASSWORT'« angeben."
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
 msgstr "Fehler beim Erstellen des Meldungs-Containers."
 
-#: providers/freetds/gda-freetds-provider.c:215
+#: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
 msgstr "Fehler beim Erstellen des Fehler-Containers."
 
-#: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
+#: providers/freetds/gda-freetds-provider.c:257
 msgid "Allocating tds context failed."
 msgstr "Bereitstellen des TDS-Kontexts fehlgeschlagen."
 
-#: providers/freetds/gda-freetds-provider.c:271
-#: providers/freetds/gda-freetds-provider.c:273
+#: providers/freetds/gda-freetds-provider.c:275
+#: providers/freetds/gda-freetds-provider.c:277
 msgid "Establishing connection failed."
 msgstr "Verbindungsaufbau gescheitert."
 
-#: providers/freetds/gda-freetds-provider.c:285
-#: providers/freetds/gda-freetds-provider.c:286
+#: providers/freetds/gda-freetds-provider.c:291
+#: providers/freetds/gda-freetds-provider.c:292
 msgid "Failed getting connection info."
 msgstr "Verbindungsinformationen konnten nicht empfangen werden."
 
-#: providers/freetds/gda-freetds-provider.c:768
-#: providers/freetds/gda-freetds-provider.c:769
+#: providers/freetds/gda-freetds-provider.c:781
+#: providers/freetds/gda-freetds-provider.c:782
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Abfrage in »execute_cmd()« fehlgeschlagen."
 
-#: providers/freetds/gda-freetds-provider.c:778
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Unerwartete Rückgabewerte in »execute_cmd()«."
 
-#: providers/freetds/gda-freetds-provider.c:788
-#: providers/freetds/gda-freetds-provider.c:789
+#: providers/freetds/gda-freetds-provider.c:805
+#: providers/freetds/gda-freetds-provider.c:806
 msgid "Unexpected return in execute_cmd()."
 msgstr "Unerwarteter Rückgabewert in »execute_cmd()«."
 
-#: providers/freetds/gda-freetds-provider.c:1024
+#: providers/freetds/gda-freetds-provider.c:1043
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -395,25 +395,25 @@ msgstr ""
 "Meldung %d, Ebene %d, Zustand %d, Server %s, Zeile %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1043 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
 #: providers/sybase/utils.c:171
 msgid "Not available"
 msgstr "Nicht verfügbar"
 
-#: providers/freetds/gda-freetds-recordset.c:362
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Fehler beim Verarbeiten der Ergebniszeilen.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:369
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Unerwarteter FreeTDS-Rückgabecode in tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:379
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Fehler beim Verarbeiten der Ergebnisse.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:386
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Unerwarteter FreeTDS-Rückgabecode in tds_process_result_tokens\n"
 
@@ -1531,8 +1531,8 @@ msgid "Invalid Xbase handle"
 msgstr "Ungültiger Xbase-Handle"
 
 #: providers/xbase/libmain.c:39
-msgid "Provider for Xbase databases"
-msgstr "Treiber für Xbase-Datenbanken"
+msgid "Provider for Xbase (dBase, FoxPro, etc) files"
+msgstr "Treiber für Xbase-Dateien (dBase, FoxPro, usw.)"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
