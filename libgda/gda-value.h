@@ -137,6 +137,7 @@ void          gda_value_free (GdaValue *value);
 
 gboolean      gda_value_is_null (GdaValue *value);
 GdaValue     *gda_value_copy (const GdaValue *value);
+GdaValueType  gda_value_get_vtype (GdaValue *value);
 
 gint64        gda_value_get_bigint (GdaValue *value);
 void          gda_value_set_bigint (GdaValue *value, gint64 val);

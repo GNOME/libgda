@@ -685,6 +685,19 @@ gda_value_copy (const GdaValue *value)
 }
 
 /**
+ * gda_value_get_vtype
+ * @value: a #GdaValue.
+ *
+ * Get the value type of the given #GdaValue.
+ */
+GdaValueType
+gda_value_get_vtype (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, GDA_VALUE_TYPE_UNKNOWN);
+	return value->type;
+}
+
+/**
  * gda_value_get_bigint
  * @value: a #GdaValue whose value we want to get.
  *
