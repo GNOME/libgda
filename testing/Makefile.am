@@ -1,13 +1,7 @@
-## -------------------------------------------------------------------------
-## Makefile.am for gda test programs
-## -------------------------------------------------------------------------
-
 INCLUDES = \
 	-I$(top_builddir)/libgda \
 	-I$(top_srcdir)/libgda \
 	$(LIBGDA_CFLAGS)
-
-## -------------------------------------------------------------------------
 
 bin_PROGRAMS = gda-test 
 
@@ -21,7 +15,7 @@ gda_test_LDADD = \
 
 gda_xmldb_test_SOURCES = gda-xmldb-test.c
 gda_xmldb_test_LDADD = \
-	$(top_builddir)/lib/gda-common/libgda-common-2.la \
+	$(top_builddir)/libgda/libgda-2.la \
 	$(LIBGDA_LIBS)
 
 EXTRA_DIST = sample_database.xml

@@ -24,7 +24,7 @@
 #include <time.h>
 #include <bonobo/bonobo-arg.h>
 #include <bonobo/bonobo-i18n.h>
-#include "gda-value.h"
+#include <libgda/gda-value.h>
 
 /**
  * gda_value_new

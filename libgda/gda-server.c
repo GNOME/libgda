@@ -20,7 +20,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-server.h"
+#include <libgda/gda-log.h>
+#include <libgda/gda-server.h>
+#include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-generic-factory.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT

@@ -23,6 +23,8 @@
 #include <libgda/gda-quark-list.h>
 #include <glib/ghash.h>
 #include <glib/gmem.h>
+#include <glib/gmessages.h>
+#include <glib/gstrfuncs.h>
 
 struct _GdaQuarkList {
 	GHashTable *hash_table;

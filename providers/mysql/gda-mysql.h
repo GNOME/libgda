@@ -26,6 +26,7 @@
 #  define __gda_mysql_h__
 
 #include <glib/gmacros.h>
+#include <bonobo/bonobo-i18n.h>
 #include <config.h>
 #include <libgda/gda-server.h>
 #include <gda-mysql-provider.h>

@@ -1,4 +1,4 @@
-/* GDA Common Library
+/* GDA - XML database test program
  * Copyright (C) 2001, The Free Software Foundation
  *
  * Authors:
@@ -21,8 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
-#include <gda-common.h>
+#include <config.h>
+#include <libgda/libgda.h>
 
 static void
 list_tables (GdaXmlDatabase *xmldb)
@@ -36,7 +36,7 @@ list_tables (GdaXmlDatabase *xmldb)
 		g_print ("Found table: %s\n", tname);
 	}
 
-	g_list_foreach (list, g_free, NULL);
+	g_list_foreach (list, (GFunc) g_free, NULL);
 	g_list_free (list);
 }
 

@@ -19,12 +19,15 @@
 
 #include <bonobo-activation/bonobo-activation.h>
 #include <bonobo/bonobo-i18n.h>
+#include <bonobo/bonobo-main.h>
 #include <libgda/libgda.h>
 
 /* Include the marshalers here */
 #include "gda-marshal.h"
 #include "gda-marshal.c"
 /* end of marshalers */
+
+static CORBA_ORB global_orb = CORBA_OBJECT_NIL;
 
 /**
  * gda_init
@@ -42,8 +45,8 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	g_type_init ();
 	g_set_prgname (app_id);
 
-	bonobo_activation_init (nargs, args);
-	if (!bonobo_init (bonobo_activation_get_orb (), NULL, NULL))
+	global_orb = bonobo_activation_init (nargs, args);
+	if (!bonobo_init (&nargs, args))
 		g_error (_("Could not initialize Bonobo"));
 
 	bonobo_activate ();

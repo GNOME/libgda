@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-command.h"
+#include <libgda/gda-command.h>
 
 /**
  * gda_command_new
@@ -32,7 +32,7 @@ gda_command_new (const gchar *text, GdaCommandType type)
 
 	cmd = GNOME_Database_Command__alloc ();
 	gda_command_set_text (cmd, text);
-	gda_command_set_type (cmd, type);
+	gda_command_set_command_type (cmd, type);
 
 	return cmd;
 }

@@ -21,7 +21,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-client.h"
+#include <libgda/gda-client.h>
+#include <libgda/gda-log.h>
+#include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-moniker-util.h>
 
@@ -51,8 +53,6 @@ connection_finalized_cb (GObject *object, gpointer user_data)
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_CLIENT (client));
-
-	gda_client_remove_connection (client, cnc);
 }
 
 /*

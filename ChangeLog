@@ -1,3 +1,8 @@
+2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: removed report from SUBDIRS, until we've got time
+	to make it build without errors
+
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: bumped version to 0.9.0

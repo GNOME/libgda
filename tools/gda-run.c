@@ -17,57 +17,8 @@
  */
 
 #include <config.h>
-#include <gda-client.h>
+#include <libgda/libgda.h>
 #include <popt.h>
-
-#define _(s)  (s)
-#define N_(s) (s)
-
-static CORBA_Environment ev;
-static GdaConnection*    cnc;
-static gchar*            datasource = 0;
-static gchar*            username = 0;
-static gchar*            password = 0;
-static gchar*            file = 0;
-//static struct poptOption options[] = {
-//  { "dsn", 'd', POPT_ARG_STRING, &datasource, 0, N_("database name"), N_("DATABASE")},
-//  { "user",     'u', POPT_ARG_STRING, &username, 0, N_("user name"), N_("USER-NAME")},
-//  { "password", 'p', POPT_ARG_STRING, &password, 0, N_("password"), N_("PASSWORD")},
-//  { "file",     'f', POPT_ARG_STRING, &file,     0, N_("file name"), N_("FILE-NAME")},
-//  {0, 0, 0, 0, 0, 0, 0}
-//};
-
-void
-Exception (CORBA_Environment *ev)
-{
-	switch(ev->_major) {
-	case CORBA_SYSTEM_EXCEPTION :
-		fprintf(stderr, "CORBA system exception %s.\n", CORBA_exception_id(ev));
-		exit(1);
-	case CORBA_USER_EXCEPTION :
-		fprintf(stderr, "CORBA user exception: %s.\n", CORBA_exception_id(ev));
-		exit(1);
-	default :
-		break;
-	}
-}
-
-static void
-cnc_error_cb (GdaConnection *cnc, GList *errors, gpointer data)
-{
-	GList* node;
-
-	g_return_if_fail(GDA_IS_CONNECTION(cnc));
-
-	node = g_list_first(errors);
-	while (node) {
-		GdaError* err = GDA_ERROR(node->data);
-		if (err) {
-			fprintf(stderr, "%s: error: %s\n", g_get_prgname(), gda_error_get_description(err));
-		}
-		node = g_list_next(node);
-	}
-}
 
 static void
 usage (void)
@@ -79,67 +30,5 @@ usage (void)
 int
 main (int argc, char *argv[])
 {
-	GdaBatch* job;
-	GList*     list, *node;
-	gboolean   found = FALSE;
-	gchar*     real_dsn = 0;
-
-	/* initialization */
-	gda_init("gda-run", VERSION, &argc, argv);
-
-	/* check parameters */
-	if (!datasource || !file)
-		usage();
-
-	cnc = gda_connection_new (gda_corba_get_orb ());
-	list = node = gda_dsn_list();
-
-	while (node) {
-		if (!g_strcasecmp(datasource, GDA_DSN_GDA_NAME((GdaDsn *) node->data))) {
-			gda_connection_set_provider(cnc, GDA_DSN_PROVIDER((GdaDsn *) node->data));
-			real_dsn = g_strdup(GDA_DSN_DSN((GdaDsn *) node->data));
-			if (!real_dsn) {
-				fprintf(stderr, _("%s: misconfigured DSN entry"), argv[0]);
-				exit(-1);
-			}
-			if (!username)
-				username = g_strdup(GDA_DSN_USERNAME((GdaDsn *) node->data));
-			if (!password)
-				password = g_strdup("");
-			found = TRUE;
-			break;
-		}
-		node = g_list_next(node);
-	}
-	gda_dsn_free_list(list);
-	if (!found) {
-		fprintf(stderr, _("%s: data source '%s' not found\n"), argv[0], datasource);
-		exit(-1);
-	}
-
-	/* open the connection */
-	if (gda_connection_open(cnc, real_dsn, username, password) < 0) {
-		fprintf(stderr, "%s: error: open connection failed\n", argv[0]);
-		return -1;
-	}
-	g_print("Connected to '%s'", datasource);
-	g_signal_connect (G_OBJECT(cnc), "error",
-			  G_CALLBACK (cnc_error_cb), 0);
-
-	/* prepare the batch job object */
-	job = gda_batch_new();
-	gda_batch_set_connection(job, cnc);
-	if (gda_batch_load_file(job, file, TRUE)) {
-		/* run batch job */
-		if (!gda_batch_start(job))
-			fprintf("%s: there were errors running transaction\n", argv[0]);
-	}
-	else fprintf(stderr, "%s: error loading file %s\n", argv[0], file);
-
-	/* close the connection */
-	gda_batch_free(job);
-	if (gda_connection_is_open(cnc))
-		gda_connection_close(cnc);
-	gda_connection_free(cnc);
 	return 0;
 }

@@ -17,78 +17,15 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
-#include "gda-log.h"
+#include <config.h>
+#include <libgda/gda-log.h>
 #include <time.h>
-#include <gda-config.h>
-
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough.  */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 static gboolean log_enabled = TRUE;
 
 /*
  * Private functions
  */
-static gboolean
-save_log_cb (gpointer user_data)
-{
-	g_print (_("Saving log...x"));
-	return TRUE;
-}
-
-static void
-write_to_log (const gchar * str, gboolean error)
-{
-	gchar *msg;
-	static gboolean initialized = FALSE;
-
-	g_return_if_fail (str != NULL);
-
-	/* initialize log */
-	if (!initialized) {
-		g_timeout_add (30000, (GSourceFunc) save_log_cb, NULL);
-		initialized = TRUE;
-	}
-
-	/* compose message */
-	msg = g_strdup_printf ("%s%s", error ? _("ERROR: ") : _("MESSAGE: "),
-			       str);
-	if (log_enabled) {
-		time_t t;
-		struct tm *now;
-		gchar *config_entry;
-
-		/* retrieve current date */
-		t = time (NULL);
-		now = localtime (&t);
-		if (now) {
-			config_entry =
-				g_strdup_printf
-				("%s/%s/%04d-%02d-%02d/%02d:%02d:%02d.%ld",
-				 GDA_CONFIG_SECTION_LOG, g_get_prgname (),
-				 now->tm_year + 1900, now->tm_mon + 1,
-				 now->tm_mday, now->tm_hour, now->tm_min,
-				 now->tm_sec, clock ());
-			gda_config_set_string (config_entry, msg);
-			g_free ((gpointer) config_entry);
-		}
-	}
-	g_warning (msg);
-	g_free ((gpointer) msg);
-}
 
 /**
  * gda_log_enable
@@ -128,16 +65,6 @@ gda_log_is_enabled (void)
 void
 gda_log_message (const gchar * format, ...)
 {
-	va_list args;
-	gchar buffer[512];
-
-	g_return_if_fail (format != NULL);
-
-	va_start (args, format);
-	vsprintf (buffer, format, args);
-	va_end (args);
-
-	write_to_log (buffer, FALSE);
 }
 
 /**
@@ -146,16 +73,6 @@ gda_log_message (const gchar * format, ...)
 void
 gda_log_error (const gchar * format, ...)
 {
-	va_list args;
-	gchar buffer[512];
-
-	g_return_if_fail (format != NULL);
-
-	va_start (args, format);
-	vsprintf (buffer, format, args);
-	va_end (args);
-
-	write_to_log (buffer, TRUE);
 }
 
 /**

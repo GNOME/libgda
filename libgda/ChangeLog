@@ -1,5 +1,8 @@
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-command.c (gda_command_new): s/gda_command_get_type/
+	gda_command_set_gdatype
+
 	* Makefile.am: added gda-log.[ch] to list of SOURCES
 
 	* gda-server.c (factory_callback): add all created componentes to

@@ -20,9 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-config.h"
+#include <libgda/gda-config.h>
+#include <libgda/gda-log.h>
 #include <bonobo-activation/bonobo-activation.h>
 #include <bonobo-activation/bonobo-activation-server-info.h>
+#include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-exception.h>
 #include <gconf/gconf.h>
 #include <string.h>
@@ -449,7 +451,7 @@ gda_config_get_component_list (const gchar *query)
 		comp_info->location = g_strdup (bonobo_info->location_info);
 		comp_info->description = activation_property_to_string (
 			(Bonobo_ActivationProperty *)
-			bonono_server_info_prop_find (bonobo_info, "description"));
+			bonobo_server_info_prop_find (bonobo_info, "description"));
 		comp_info->repo_ids = activation_property_to_list (
 			bonobo_server_info_prop_find (bonobo_info, "repo_ids"));
 		comp_info->username = g_strdup (bonobo_info->username);
@@ -553,7 +555,7 @@ gda_config_get_provider_list (void)
 		provider_info->location = g_strdup (bonobo_info->location_info);
 		provider_info->description = activation_property_to_string (
 			(Bonobo_ActivationProperty *)
-			bonono_server_info_prop_find (bonobo_info, "description"));
+			bonobo_server_info_prop_find (bonobo_info, "description"));
 		provider_info->repo_ids = activation_property_to_list (
 			bonobo_server_info_prop_find (bonobo_info, "repo_ids"));
 		provider_info->username = g_strdup (bonobo_info->username);

@@ -42,7 +42,7 @@ void           gda_command_free (GdaCommand *cmd);
 
 const gchar   *gda_command_get_text (GdaCommand *cmd);
 void           gda_command_set_text (GdaCommand *cmd, const gchar *text);
-GdaCommandType gda_command_get_comamnd_type (GdaCommand *cmd);
+GdaCommandType gda_command_get_command_type (GdaCommand *cmd);
 void           gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type);
 
 G_END_DECLS
