@@ -1,5 +1,8 @@
 2002-03-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-util.c (gda_file_save): use gnome_vfs_create_uri, or
+	it will only work if the file already exists.
+
 	* providers/mysql/gda-mysql-recordset.c (fetch_func): make sure
 	we don't pass over NULL or unitialized pointers to ORBit.
 

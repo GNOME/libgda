@@ -90,7 +90,7 @@ gda_file_load (const gchar *uristr)
 
 /**
  * gda_file_save
- * @uri: URI for the file to be saved.
+ * @uristr: URI for the file to be saved.
  * @buffer: contents of the file.
  * @len: size of @buffer.
  *
@@ -101,16 +101,22 @@ gda_file_load (const gchar *uristr)
  * Returns: TRUE if successful, FALSE on error.
  */
 gboolean
-gda_file_save (const gchar *uri, const gchar *buffer, gint len)
+gda_file_save (const gchar *uristr, const gchar *buffer, gint len)
 {
 	GnomeVFSHandle *handle;
 	GnomeVFSResult result;
 	GnomeVFSFileSize size;
+	GnomeVFSURI *uri;
 
-	g_return_val_if_fail (uri != NULL, FALSE);
+	g_return_val_if_fail (uristr != NULL, FALSE);
+
+	uri = gnome_vfs_uri_new (uristr);
+	if (!uri)
+		return FALSE;
 
 	/* open the file */
-	result = gnome_vfs_open (&handle, uri, GNOME_VFS_OPEN_WRITE);
+	result = gnome_vfs_create_uri (&handle, uri, GNOME_VFS_OPEN_WRITE, FALSE,
+				       S_IRUSR | S_IWUSR);
 	if (result != GNOME_VFS_OK)
 		return FALSE;
 
