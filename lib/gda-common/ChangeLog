@@ -1,3 +1,10 @@
+2001-05-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am, gda-xml-query/Makefile.am,
+	gda-xml-query/testing/Makefile.am: converted the libxmlquery
+	to a libtool static library (noinst_LTLIBRARIES)
+	(fixes bug #54979)
+
 2001-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-config.c: added gtk-doc documentation
