@@ -48,7 +48,7 @@ struct _GdaServerClass {
 	GObjectClass parent_class;
 
 	/* signals */
-	void (* last_component_gone) (GdaServer *server);
+	void (* last_component_unregistered) (GdaServer *server);
 	void (* last_client_gone) (GdaServer *server);
 };
 

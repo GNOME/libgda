@@ -39,7 +39,7 @@ static void gda_server_init       (GdaServer *server, GdaServerClass *klass);
 static void gda_server_finalize   (GObject *object);
 
 enum {
-	LAST_COMPONENT_GONE,
+	LAST_COMPONENT_UNREGISTERED,
 	LAST_CLIENT_GONE,
 	LAST_SIGNAL
 };
@@ -133,8 +133,25 @@ gda_server_class_init (GdaServerClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	gda_server_signals[LAST_COMPONENT_UNREGISTERED] =
+		g_signal_new ("last_component_unregistered",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaServerClass, last_component_unregistered),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+	gda_server_signals[LAST_CLIENT_GONE] =
+		g_signal_new ("last_client_gone",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaServerClass, last_client_gone),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+
 	object_class->finalize = gda_server_finalize;
-	klass->last_component_gone = NULL;
+	klass->last_component_unregistered = NULL;
 	klass->last_client_gone = NULL;
 }
 
@@ -297,7 +314,7 @@ gda_server_unregister_component (GdaServer *server, const char *iid)
 
 		if (g_hash_table_size (server->priv->components) <= 0)
 			g_signal_emit (G_OBJECT (server),
-				       gda_server_signals[LAST_COMPONENT_GONE],
+				       gda_server_signals[LAST_COMPONENT_UNREGISTERED],
 				       0);
 	}
 }

@@ -571,6 +571,8 @@ gda_config_get_component_list (const gchar *query)
 					comp_info->properties, param);
 			}
 		}
+
+		list = g_list_append (list, comp_info);
 	}
 
 	CORBA_free (server_list);
