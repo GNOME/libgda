@@ -97,6 +97,7 @@ void gda_recordset_get_name (GdaRecordset * rs, gchar * name);
 void gda_recordset_close (GdaRecordset * rs);
 GdaField *gda_recordset_field_name (GdaRecordset * rs, gchar * name);
 GdaField *gda_recordset_field_idx (GdaRecordset * rs, gint idx);
+GPtrArray *gda_recordset_to_arrat (GdaRecordset *rs);
 gboolean gda_recordset_bof (GdaRecordset * rs);
 gboolean gda_recordset_eof (GdaRecordset * rs);
 gulong gda_recordset_move (GdaRecordset * rs,

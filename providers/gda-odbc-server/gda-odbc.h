@@ -27,21 +27,6 @@
 #include <sqlext.h>
 #include <gda-server.h>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough.  */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
 #ifndef SQL_SUCCEEDED
 #define SQL_SUCCEEDED(x) (x == SQL_SUCCESS)
 #endif
@@ -49,21 +34,18 @@
 /*
  * Per-object specific structures
  */
-typedef struct
-{
+typedef struct {
 	SQLHENV henv;
 	SQLHDBC hdbc;
 	int connected;
 }
 ODBC_Connection;
 
-typedef struct
-{
+typedef struct {
 }
 ODBC_Command;
 
-typedef struct
-{
+typedef struct {
 	SQLHSTMT hstmt;
 	int allocated;
 	SQLSMALLINT ncols;
@@ -86,25 +68,25 @@ gint gda_odbc_connection_commit_transaction (GdaServerConnection * cnc);
 gint gda_odbc_connection_rollback_transaction (GdaServerConnection * cnc);
 GdaServerRecordset *gda_odbc_connection_open_schema (GdaServerConnection *
 						     cnc, GdaError * error,
-						     GDA_Connection_QType t,
-						     GDA_Connection_Constraint
+						     GNOME_Database_Connection_QType t,
+						     GNOME_Database_Connection_Constraint
 						     * constraints,
 						     gint length);
 glong gda_odbc_connection_modify_schema (GdaServerConnection * cnc,
-					 GDA_Connection_QType t,
-					 GDA_Connection_Constraint *
+					 GNOME_Database_Connection_QType t,
+					 GNOME_Database_Connection_Constraint *
 					 constraints, gint length);
 gint gda_odbc_connection_start_logging (GdaServerConnection * cnc,
 					const gchar * filename);
 gint gda_odbc_connection_stop_logging (GdaServerConnection * cnc);
 gchar *gda_odbc_connection_create_table (GdaServerConnection * cnc,
-					 GDA_RowAttributes * columns);
+					 GNOME_Database_RowAttributes * columns);
 gboolean gda_odbc_connection_supports (GdaServerConnection * cnc,
-				       GDA_Connection_Feature feature);
-GDA_ValueType gda_odbc_connection_get_gda_type (GdaServerConnection * cnc,
+				       GNOME_Database_Connection_Feature feature);
+GNOME_Database_ValueType gda_odbc_connection_get_gda_type (GdaServerConnection * cnc,
 						gulong sql_type);
 gshort gda_odbc_connection_get_c_type (GdaServerConnection * cnc,
-				       GDA_ValueType type);
+				       GNOME_Database_ValueType type);
 gchar *gda_odbc_connection_sql2xml (GdaServerConnection * cnc,
 				    const gchar * sql);
 gchar *gda_odbc_connection_xml2sql (GdaServerConnection * cnc,
@@ -114,7 +96,7 @@ void gda_odbc_connection_free (GdaServerConnection * cnc);
 gboolean gda_odbc_command_new (GdaServerCommand * cmd);
 GdaServerRecordset *gda_odbc_command_execute (GdaServerCommand * cmd,
 					      GdaError * error,
-					      const GDA_CmdParameterSeq *
+					      const GNOME_Database_CmdParameterSeq *
 					      params, gulong * affected,
 					      gulong options);
 void gda_odbc_command_free (GdaServerCommand * cmd);

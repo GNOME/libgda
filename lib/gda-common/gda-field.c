@@ -650,11 +650,11 @@ gda_field_copy_to_corba (GdaField *field, GNOME_Database_Field *corba_field)
 	g_return_if_fail (corba_field != NULL);
 
 	corba_field->attributes.definedSize = field->priv->corba_field->attributes.definedSize;
-	corba_field->attributes->name = CORBA_string_dup (field->priv->corba_field->attributes.name);
-	corba_field->attributes->scale = field->priv->corba_field->attributes.scale;
-	corba_field->attributes->gdaType = field->priv->corba_field->attributes.gdaType;
-	corba_field->attributes->cType = field->priv->corba_field->attributes.cType;
-	corba_field->attributes->nativeType = field->priv->corba_field->attributes.nativeType;
+	corba_field->attributes.name = CORBA_string_dup (field->priv->corba_field->attributes.name);
+	corba_field->attributes.scale = field->priv->corba_field->attributes.scale;
+	corba_field->attributes.gdaType = field->priv->corba_field->attributes.gdaType;
+	corba_field->attributes.cType = field->priv->corba_field->attributes.cType;
+	corba_field->attributes.nativeType = field->priv->corba_field->attributes.nativeType;
 
 	corba_field->actualSize = field->priv->corba_field->actualSize;
 	corba_field->value._type = field->priv->corba_field->value._type;

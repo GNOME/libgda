@@ -609,6 +609,48 @@ gda_recordset_field_idx (GdaRecordset * rs, gint idx)
 }
 
 /**
+ * gda_recordset_to_array:
+ * @rs: the recordset
+ *
+ * Returns a pointer array containing the whole recordset. Each node in
+ * the returned array is a GPtrArray, which in turn contains GdaField's
+ * as its nodes. 
+ **/
+
+GPtrArray *
+gda_recordset_to_array (GdaRecordset *rs)
+{
+        GPtrArray *array, *row;
+        GdaField *rc;
+        gint fields, j;
+        gulong position;
+
+        g_return_val_if_fail (GDA_IS_RECORDSET(rs), 0);
+        g_return_val_if_fail (rs->open, 0);
+
+        position = gda_recordset_move_first (rs);
+        fields = gda_recordset_rowsize (rs);
+
+        array = g_ptr_array_new();
+
+        while (position != GDA_RECORDSET_INVALID_POSITION &&
+               !gda_recordset_eof (rs)) {
+                row = g_ptr_array_new();
+
+                for (j = 0; j < fields; j++) {
+                        rc = gda_recordset_field_idx(rs, j);
+                        g_ptr_array_add(row, rc);
+                }
+
+                g_ptr_array_add(array, row);
+
+                position = gda_recordset_move_next (rs);
+        }
+
+        return array;
+}
+
+/**
  * gda_recordset_field_name:
  * @rs: the recordset
  * @idx: the name of the field in the current row

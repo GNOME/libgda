@@ -23,176 +23,18 @@
  */
 
 static void *
-value_2_ptr (GDA_Value * v)
+value_2_ptr (GNOME_Database_Value * v)
 {
+	g_return_val_if_fail (v != NULL, NULL);
 
-	switch (v->_d) {
-	case GDA_TypeNull:
-		g_warning ("GOT GDA_TYPE_NULL");
-		abort ();
-		break;
-	case GDA_TypeBigint:
-		return v->_u.lvc;	/* unsigned char */
-		break;
-	case GDA_TypeBinary:
-		return v->_u.lvb._buffer;	/* unsigned char*  */
-		break;
-	case GDA_TypeBoolean:	/* unsigned char */
-		return &v->_u.b;
-		break;
-	case GDA_TypeBstr:
-		return v->_u.lvb._buffer;	/* unsigned char* */
-		break;
-	case GDA_TypeChar:
-		return v->_u.lvc;	/* unsigned char*  */
-		break;
-	case GDA_TypeCurrency:
-		return v->_u.lvc;	/* unsigned char* */
-		break;
-	case GDA_TypeDate:
-		return &v->_u.d;	/* struct SQLDATE */
-		break;
-	case GDA_TypeDbDate:
-		return &v->_u.dbd;	/* struct SQLDATE */
-		break;
-	case GDA_TypeDbTime:
-		return &v->_u.dbt;	/* struct SQLTIME */
-		break;
-	case GDA_TypeDbTimestamp:
-		return &v->_u.dbtstamp;	/* struct SQLTIMESTAMP */
-		break;
-	case GDA_TypeDecimal:
-		return v->_u.lvc;	/* unsigned char* */
-		break;
-	case GDA_TypeDouble:
-		return &v->_u.dp;	/* double */
-	case GDA_TypeError:
-		return &v->_u.lvc;	/* unsigned char* */
-		break;
-	case GDA_TypeInteger:
-		return &v->_u.i;	/* CORBA_long */
-	case GDA_TypeLongvarbin:
-		return v->_u.lvb._buffer;	/* unsigned char* */
-	case GDA_TypeLongvarchar:
-		return v->_u.lvc;	/* unsigned char* */
-	case GDA_TypeLongvarwchar:
-		return v->_u.lvc;	/* unsigned char* */
-	case GDA_TypeNumeric:
-		return v->_u.lvc;	/* unsigned char* */
-	case GDA_TypeSingle:
-		return &v->_u.f;	/* float */
-	case GDA_TypeSmallint:
-		return &v->_u.si;	/* short */
-	case GDA_TypeTinyint:
-		return &v->_u.c;	/* unsigned char */
-	case GDA_TypeUBigint:
-		return v->_u.lvc;	/* unsigned char* */
-	case GDA_TypeUSmallint:
-		return &v->_u.us;	/* unsigned short */
-	case GDA_TypeVarchar:
-		return v->_u.lvc;	/* unsigned char* */
-	case GDA_TypeVarbin:
-		return v->_u.lvb._buffer;	/* unsigned char* */
-	case GDA_TypeVarwchar:
-		return v->_u.lvc;	/* unsigned char* */
-	case GDA_TypeFixchar:
-		return v->_u.lvc;	/* unsigned char* */
-	case GDA_TypeFixbin:
-		return v->_u.lvb._buffer;	/* unsigned char* */
-	case GDA_TypeFixwchar:
-		return v->_u.lvc;	/* unsigned char* */
-	default:
-		g_warning
-			("value_2_ptr: reached end of function, no matching GDA type found\n");
-		abort ();
-	}
-	return (void *) 0;
+	return v->_value;
 }
 
 static long
-value_2_inputsize (GDA_Value * v)
+value_2_inputsize (GNOME_Database_Value * v)
 {
 
-	switch (v->_d) {
-	case GDA_TypeNull:
-		g_warning ("GOT GDA_TYPE_NULL");
-		abort ();
-		break;
-	case GDA_TypeBigint:
-		return SQL_NTS;	/* unsigned char */
-		break;
-	case GDA_TypeBinary:
-		return v->_u.lvb._length;	/* unsigned char*  */
-		break;
-	case GDA_TypeBoolean:	/* unsigned char */
-		return sizeof (v->_u.b);
-		break;
-	case GDA_TypeBstr:
-		return v->_u.lvb._length;	/* unsigned char* */
-		break;
-	case GDA_TypeChar:
-		return SQL_NTS;	/* unsigned char*  */
-		break;
-	case GDA_TypeCurrency:
-		return SQL_NTS;	/* unsigned char* */
-		break;
-	case GDA_TypeDate:
-		return sizeof (v->_u.d);	/* struct SQLDATE */
-		break;
-	case GDA_TypeDbDate:
-		return sizeof (v->_u.dbd);	/* struct SQLDATE */
-		break;
-	case GDA_TypeDbTime:
-		return sizeof (v->_u.dbt);	/* struct SQLTIME */
-		break;
-	case GDA_TypeDbTimestamp:
-		return sizeof (v->_u.dbtstamp);	/* struct SQLTIMESTAMP */
-		break;
-	case GDA_TypeDecimal:
-		return SQL_NTS;	/* unsigned char* */
-		break;
-	case GDA_TypeDouble:
-		return sizeof (v->_u.dp);	/* double */
-	case GDA_TypeError:
-		return SQL_NTS;	/* unsigned char* */
-		break;
-	case GDA_TypeInteger:
-		return sizeof (v->_u.i);	/* CORBA_long */
-	case GDA_TypeLongvarbin:
-		return v->_u.lvb._length;	/* unsigned char* */
-	case GDA_TypeLongvarchar:
-		return SQL_NTS;	/* unsigned char* */
-	case GDA_TypeLongvarwchar:
-		return SQL_NTS;	/* unsigned char* */
-	case GDA_TypeNumeric:
-		return SQL_NTS;	/* unsigned char* */
-	case GDA_TypeSingle:
-		return sizeof (v->_u.f);	/* float */
-	case GDA_TypeSmallint:
-		return sizeof (v->_u.si);	/* short */
-	case GDA_TypeTinyint:
-		return sizeof (v->_u.c);	/* unsigned char */
-	case GDA_TypeUBigint:
-		return SQL_NTS;	/* unsigned char* */
-	case GDA_TypeUSmallint:
-		return sizeof (v->_u.us);	/* unsigned short */
-	case GDA_TypeVarchar:
-		return SQL_NTS;	/* unsigned char* */
-	case GDA_TypeVarbin:
-		return v->_u.lvb._length;	/* unsigned char* */
-	case GDA_TypeVarwchar:
-		return SQL_NTS;	/* unsigned char* */
-	case GDA_TypeFixchar:
-		return SQL_NTS;	/* unsigned char* */
-	case GDA_TypeFixbin:
-		return v->_u.lvb._length;	/* unsigned char* */
-	case GDA_TypeFixwchar:
-		return SQL_NTS;	/* unsigned char* */
-	default:
-		g_warning
-			("value_2_inputsize: reached end of function, no matching GDA type found\n");
-		abort ();
-	}
+	/* FIXME: */
 	return 0;
 }
 
@@ -208,7 +50,7 @@ gda_odbc_command_new (GdaServerCommand * cmd)
 GdaServerRecordset *
 gda_odbc_command_execute (GdaServerCommand * cmd,
 			  GdaError * error,
-			  const GDA_CmdParameterSeq * params,
+			  const GNOME_Database_CmdParameterSeq * params,
 			  gulong * affected, gulong options)
 {
 	GdaServerRecordset *recset = NULL;
@@ -218,7 +60,7 @@ gda_odbc_command_execute (GdaServerCommand * cmd,
 	SQLRETURN rc;
 	gchar *cmd_string;
 	SQLSMALLINT nparams;
-	GDA_CmdParameter *current_parameter;
+	GNOME_Database_CmdParameter *current_parameter;
 
 	g_return_val_if_fail (cmd != NULL, NULL);
 
@@ -273,7 +115,7 @@ gda_odbc_command_execute (GdaServerCommand * cmd,
 							   &nparams);
 					if (!SQL_SUCCEEDED (rc)) {
 						error = gda_error_new ();
-						gda_server_error_make (error,
+						gda_server_connection_make_error (error,
 								       recset,
 								       cnc,
 								       __PRETTY_FUNCTION__);

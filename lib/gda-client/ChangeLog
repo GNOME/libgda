@@ -1,3 +1,8 @@
+2001-08-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-recordset.c (gda_recordset_to_array): add this function from
+	the gnome-1-x branch
+
 2001-08-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-field.[ch]: removed, since they'll be moved to gda-common
