@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-01-27 01:13+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 2002-01-23 05:47+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Bahasa Melayu <gabai-penyumbang@lists.sourceforge.net>\n"
@@ -71,6 +71,16 @@ msgstr "Cuba menginitialisasikan klient yang telah diinitialisasi"
 msgid "Could not initialize Bonobo"
 msgstr "Gagal menjanakan Bonobo"
 
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr "Tidak tahu bagaimana untuk mencipta komponen dengan IID %s"
+
+#: libgda/gda-server.c:122
+#, c-format
+msgid "Could not create component of type %s"
+msgstr "Tak dapat mencipta komponen bagi jenis %s"
+
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr "Tak dapat menduakan objek klien. Klien tidak akan dapat notifikasi"
@@ -83,16 +93,6 @@ msgstr "Tak dapat memberitahu klien tentang aksi %d"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Tiada implementasi bagi kaedah fetch() dijumpai"
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr "Tidak tahu bagaimana untuk mencipta komponen dengan IID %s"
-
-#: libgda/gda-server.c:122
-#, c-format
-msgid "Could not create component of type %s"
-msgstr "Tak dapat mencipta komponen bagi jenis %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -127,15 +127,8 @@ msgstr "Jadual %s telah wujud"
 msgid "%p is not a valid table"
 msgstr "%p bukan jadual yang sah"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr "Kilang komponen defaul"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr "Akses sumber sata default GDA"
-
 #: providers/default/gda-default-provider.c:141
+#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -150,6 +143,7 @@ msgstr "Pengendali DEFAUL tidak sah"
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Baris diluar julat"
 
@@ -157,17 +151,17 @@ msgstr "Baris diluar julat"
 msgid "Invalid Default handle"
 msgstr "Pengandeli default yang tak sah"
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr "Kilang komponen defaul"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "Akses sumber sata default GDA"
+
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
 msgstr "Gagal menginitialisasikan kilang komponen default"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "Akses sumber data GDA bagi MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr "Kilang komponen MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:175
 msgid ""
@@ -183,8 +177,8 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Pengendali MyQL tidak sah"
 
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
 msgstr "Jenis"
 
@@ -193,17 +187,32 @@ msgstr "Jenis"
 msgid "Invalid MySQL handle"
 msgstr "Pengendali MySQL tidak sah"
 
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "Akses sumber data GDA bagi MySQL"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr "Kilang komponen MySQL"
+
 #: providers/mysql/main.c:49
 msgid "Could not initiate MySQL component factory"
 msgstr "Gagal menginitialisasilan kilang komponen MySQL"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for ODBC"
 msgstr "Akses Sumber sata GDA bagi Oracle"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle component factory"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
+#, fuzzy
+msgid "ODBC component factory"
 msgstr "Kilang komponen Oracle"
+
+#: providers/odbc/main.c:49
+#, fuzzy
+msgid "Could not initiate ODBC component factory"
+msgstr "Gagal menginitialisasikan kilang komponen Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:77
 msgid "Could not initialize Oracle environment"
@@ -221,6 +230,14 @@ msgstr "Gagal menginitialisasikan pengendali pelayan Oracle"
 msgid "Could not initialize Oracle service context"
 msgstr "Gagal menginitialisasikan ikonteks servis Oracle"
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "Akses Sumber sata GDA bagi Oracle"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+msgid "Oracle component factory"
+msgstr "Kilang komponen Oracle"
+
 #: providers/oracle/main.c:46
 msgid "Could not initiate Oracle component factory"
 msgstr "Gagal menginitialisasikan kilang komponen Oracle"
@@ -229,6 +246,13 @@ msgstr "Gagal menginitialisasikan kilang komponen Oracle"
 msgid "Could not initialize OCI library"
 msgstr "Gagal menginitialisasikan pustaka OCI"
 
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr "Pengendali PostgreSQL tidak sah"
+
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "Akses sumber data GDA bagi Postgres"
@@ -236,13 +260,6 @@ msgstr "Akses sumber data GDA bagi Postgres"
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
 msgid "Postgres component factory"
 msgstr "Kilang komponen Postgres"
-
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
-msgstr "Pengendali PostgreSQL tidak sah"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
@@ -256,13 +273,31 @@ msgstr "TIADA HURAIAN"
 msgid "Not available"
 msgstr "Tidak ada"
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "Akses sumber data GDA bagi Sybase"
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+#, fuzzy
+msgid "Invalid SQLITE handle"
+msgstr "Pengendali MyQL tidak sah"
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
-msgstr "Kilang komponen Sybase"
+#: providers/sqlite/gda-sqlite-recordset.c:114
+#, fuzzy
+msgid "Invalid Sqlite handle"
+msgstr "Pengandeli default yang tak sah"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+#, fuzzy
+msgid "GDA SQLite Datasource Access"
+msgstr "Akses sumber sata default GDA"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+#, fuzzy
+msgid "SQLite component factory"
+msgstr "Kilang komponen MySQL"
+
+#: providers/sqlite/main.c:54
+#, fuzzy
+msgid "Could not initiate Sqlite component factory"
+msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
@@ -340,17 +375,17 @@ msgstr ""
 "\tRalat Sistem PEngoperasian nombor (%ld):\n"
 "\t%s"
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "Akses sumber data GDA bagi Sybase"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr "Kilang komponen Sybase"
+
 #: providers/sybase/main.c:50
 msgid "Could not initiate Sybase component factory"
 msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr "Jentera pelaporan GDA"
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr "Kilang Jentera pelaporan GDA"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -361,6 +396,14 @@ msgstr "Pengecualian CORBA: %s"
 #: report/gda-report-engine.c:105
 msgid "Could not create global GDA client"
 msgstr "Tak dapat mencipta klien GDA global"
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr "Jentera pelaporan GDA"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr "Kilang Jentera pelaporan GDA"
 
 #: report/job.c:43
 msgid "Could not parse XML report"

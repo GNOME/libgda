@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-31 20:49+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 2002-01-31 16:06+0100\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -78,6 +78,16 @@ msgstr "Forsøg på at klargøre en allerede klargjort klient"
 msgid "Could not initialize Bonobo"
 msgstr "Kunne ikke klargøre Bonobo"
 
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr "Ved ikke hvordan komponenter med IID %s skal oprettes"
+
+#: libgda/gda-server.c:122
+#, c-format
+msgid "Could not create component of type %s"
+msgstr "Kunne ikke oprette komponent af typen %s"
+
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr "Kunne ikke kopiere klientobjekt. Klient vil ikke modtage beskeder"
@@ -90,16 +100,6 @@ msgstr "Kunne ikke informere klient om handling %d"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation til fetch()-metoden fundet"
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr "Ved ikke hvordan komponenter med IID %s skal oprettes"
-
-#: libgda/gda-server.c:122
-#, c-format
-msgid "Could not create component of type %s"
-msgstr "Kunne ikke oprette komponent af typen %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -134,14 +134,6 @@ msgstr "tabel %s eksisterer allerede"
 msgid "%p is not a valid table"
 msgstr "%p er ikke en gyldig tabel"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr "Standardkomponentfabrik"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr "GDA-standarddatakildetilgang"
-
 #: providers/default/gda-default-provider.c:141
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
@@ -165,17 +157,17 @@ msgstr "Rækkenummer uden for det gyldige interval"
 msgid "Invalid Default handle"
 msgstr "Ugyldigt standardhåndtag"
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr "Standardkomponentfabrik"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "GDA-standarddatakildetilgang"
+
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
 msgstr "Kunne ikke klargøre standardkomponentfabrik"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "GDA-datakildetilgang til MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr "MySQL-komponentfabrik"
 
 #: providers/mysql/gda-mysql-provider.c:175
 msgid ""
@@ -191,8 +183,8 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Ugyldigt MySQL-håndtag"
 
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
 msgstr "Type"
 
@@ -201,17 +193,32 @@ msgstr "Type"
 msgid "Invalid MySQL handle"
 msgstr "Ugyldigt MySQL-håndtag"
 
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "GDA-datakildetilgang til MySQL"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr "MySQL-komponentfabrik"
+
 #: providers/mysql/main.c:49
 msgid "Could not initiate MySQL component factory"
 msgstr "Kunne ikke klargøre MySQL-komponentfabrik"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for ODBC"
 msgstr "GDA-datakildetilgang til Oracle"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle component factory"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
+#, fuzzy
+msgid "ODBC component factory"
 msgstr "Oracle-komponentfabrik"
+
+#: providers/odbc/main.c:49
+#, fuzzy
+msgid "Could not initiate ODBC component factory"
+msgstr "Kunne ikke klargøre Oracle-komponentfabrik"
 
 #: providers/oracle/gda-oracle-connection.c:77
 msgid "Could not initialize Oracle environment"
@@ -229,6 +236,14 @@ msgstr "Kunne ikke klargøre Oracle-serverhåndtag"
 msgid "Could not initialize Oracle service context"
 msgstr "Kunne ikke klargøre Oracle-tjenestekontekst"
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "GDA-datakildetilgang til Oracle"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+msgid "Oracle component factory"
+msgstr "Oracle-komponentfabrik"
+
 #: providers/oracle/main.c:46
 msgid "Could not initiate Oracle component factory"
 msgstr "Kunne ikke klargøre Oracle-komponentfabrik"
@@ -237,6 +252,13 @@ msgstr "Kunne ikke klargøre Oracle-komponentfabrik"
 msgid "Could not initialize OCI library"
 msgstr "Kunne ikke klargøre OCI-bibliotek"
 
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr "Ugyldigt PostgreSQL-håndtag"
+
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "GDA-datakildetilgang til Postgres"
@@ -244,13 +266,6 @@ msgstr "GDA-datakildetilgang til Postgres"
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
 msgid "Postgres component factory"
 msgstr "Postgres-komponentfabrik"
-
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
-msgstr "Ugyldigt PostgreSQL-håndtag"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
@@ -264,14 +279,6 @@ msgstr "INGEN BESKRIVELSE"
 msgid "Not available"
 msgstr "Ikke tilgængelig"
 
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "GDA SQLite Datasource Access"
-msgstr "GDA-datakildetilgang til SQLite"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-msgid "SQLite component factory"
-msgstr "SQLite-komponentfabrik"
-
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
@@ -281,17 +288,17 @@ msgstr "Ugyldigt SQLite-håndtag"
 msgid "Invalid Sqlite handle"
 msgstr "Ugyldigt SQLite-håndtag"
 
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+msgid "GDA SQLite Datasource Access"
+msgstr "GDA-datakildetilgang til SQLite"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+msgid "SQLite component factory"
+msgstr "SQLite-komponentfabrik"
+
 #: providers/sqlite/main.c:54
 msgid "Could not initiate Sqlite component factory"
 msgstr "Kunne ikke klargøre SQLite-komponentfabrik"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "GDA-datakildetilgang til Sybase"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
-msgstr "Sybase-komponentfabrik"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
@@ -369,17 +376,17 @@ msgstr ""
 "\tStyresystemsfejl nr. (%ld):\n"
 "\t%s"
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "GDA-datakildetilgang til Sybase"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr "Sybase-komponentfabrik"
+
 #: providers/sybase/main.c:50
 msgid "Could not initiate Sybase component factory"
 msgstr "Kunne ikke klargøre Sybase-komponentfabrik"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr "GDA-rapporteringsmotor"
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr "GDA-rapporteringsmotorfabrik"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -390,6 +397,14 @@ msgstr "CORBA-undtagelse: %s"
 #: report/gda-report-engine.c:105
 msgid "Could not create global GDA client"
 msgstr "Kunne ikke oprette global GDA-klient"
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr "GDA-rapporteringsmotor"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr "GDA-rapporteringsmotorfabrik"
 
 #: report/job.c:43
 msgid "Could not parse XML report"

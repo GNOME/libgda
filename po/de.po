@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-0.2.3-cvs\n"
-"POT-Creation-Date: 2002-01-27 01:13+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 2001-04-29 03:52+0200\n"
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -79,6 +79,16 @@ msgstr "Versuch, einen bereits initialisierten Client zu initialisieren"
 msgid "Could not initialize Bonobo"
 msgstr "ct_diag() konnte nicht initialisiert werden"
 
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr ""
+
+#: libgda/gda-server.c:122
+#, fuzzy, c-format
+msgid "Could not create component of type %s"
+msgstr "Das Feld konnte nicht erreicht werden"
+
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -91,16 +101,6 @@ msgstr "Die Client-Meldungen %d konnte nicht empfangen werden"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr ""
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr ""
-
-#: libgda/gda-server.c:122
-#, fuzzy, c-format
-msgid "Could not create component of type %s"
-msgstr "Das Feld konnte nicht erreicht werden"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -135,17 +135,8 @@ msgstr "Tabelle %s existiert schon"
 msgid "%p is not a valid table"
 msgstr "%p ist keine gültige Tabelle"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-#, fuzzy
-msgid "Default component factory"
-msgstr "Vebindung zu %s konnte nicht geöffnet werden"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-#, fuzzy
-msgid "GDA Default Datasource Access"
-msgstr "GDA-Datasource-Access für ODBC"
-
 #: providers/default/gda-default-provider.c:141
+#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -158,6 +149,7 @@ msgstr ""
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
 
@@ -165,18 +157,20 @@ msgstr ""
 msgid "Invalid Default handle"
 msgstr ""
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+#, fuzzy
+msgid "Default component factory"
+msgstr "Vebindung zu %s konnte nicht geöffnet werden"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+#, fuzzy
+msgid "GDA Default Datasource Access"
+msgstr "GDA-Datasource-Access für ODBC"
+
 #: providers/default/main.c:48
 #, fuzzy
 msgid "Could not initiate Default component factory"
 msgstr "Die Mail-Anbieter-Implementierung konnte nicht registriert werden"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "GDA-Datasource-Access für MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:175
 #, fuzzy
@@ -194,8 +188,8 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
 msgstr ""
 
@@ -204,19 +198,32 @@ msgstr ""
 msgid "Invalid MySQL handle"
 msgstr ""
 
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "GDA-Datasource-Access für MySQL"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr ""
+
 #: providers/mysql/main.c:49
 #, fuzzy
 msgid "Could not initiate MySQL component factory"
 msgstr "Die MySQL-Anbieter-Implementierung kann nicht registriert werden"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "GDA-Datasource-Access für Oracle"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr "GDA-Datasource-Access für ODBC"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
 #, fuzzy
-msgid "Oracle component factory"
+msgid "ODBC component factory"
 msgstr "Vebindung zu %s konnte nicht geöffnet werden"
+
+#: providers/odbc/main.c:49
+#, fuzzy
+msgid "Could not initiate ODBC component factory"
+msgstr "CORBA-Einheit konnte nicht geöffnet werden"
 
 #: providers/oracle/gda-oracle-connection.c:77
 #, fuzzy
@@ -238,6 +245,15 @@ msgstr "cs_diag() konnte nicht initialisiert werden"
 msgid "Could not initialize Oracle service context"
 msgstr "cs_diag() konnte nicht initialisiert werden"
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "GDA-Datasource-Access für Oracle"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#, fuzzy
+msgid "Oracle component factory"
+msgstr "Vebindung zu %s konnte nicht geöffnet werden"
+
 #: providers/oracle/main.c:46
 #, fuzzy
 msgid "Could not initiate Oracle component factory"
@@ -248,6 +264,13 @@ msgstr "CORBA-Einheit konnte nicht geöffnet werden"
 msgid "Could not initialize OCI library"
 msgstr "ct_diag() konnte nicht initialisiert werden"
 
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "GDA-Datasource-Access für Postgres"
@@ -256,13 +279,6 @@ msgstr "GDA-Datasource-Access für Postgres"
 #, fuzzy
 msgid "Postgres component factory"
 msgstr "Vebindung zu %s konnte nicht geöffnet werden"
-
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
-msgstr ""
 
 #: providers/postgres/main.c:49
 #, fuzzy
@@ -277,13 +293,29 @@ msgstr ""
 msgid "Not available"
 msgstr "Nicht verfügbar"
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "GDA-Datasource-Access für Sybase"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+msgid "Invalid SQLITE handle"
 msgstr ""
+
+#: providers/sqlite/gda-sqlite-recordset.c:114
+msgid "Invalid Sqlite handle"
+msgstr ""
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+#, fuzzy
+msgid "GDA SQLite Datasource Access"
+msgstr "GDA-Datasource-Access für ODBC"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+#, fuzzy
+msgid "SQLite component factory"
+msgstr "Vebindung zu %s konnte nicht geöffnet werden"
+
+#: providers/sqlite/main.c:54
+#, fuzzy
+msgid "Could not initiate Sqlite component factory"
+msgstr "CORBA-Einheit konnte nicht geöffnet werden"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
@@ -362,19 +394,18 @@ msgid ""
 "\t%s"
 msgstr ""
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "GDA-Datasource-Access für Sybase"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr ""
+
 #: providers/sybase/main.c:50
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "CORBA-Einheit konnte nicht geöffnet werden"
-
-#: report/GNOME_Database_Report.server.in.h:1
-#, fuzzy
-msgid "GDA Report engine"
-msgstr "GDA-Distributed-Report-Engine"
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr ""
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -386,6 +417,15 @@ msgstr "CORBA Anwenderfehler: %s"
 #, fuzzy
 msgid "Could not create global GDA client"
 msgstr "Vebindung zu %s konnte nicht geöffnet werden"
+
+#: report/GNOME_Database_Report.server.in.h:1
+#, fuzzy
+msgid "GDA Report engine"
+msgstr "GDA-Distributed-Report-Engine"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr ""
 
 #: report/job.c:43
 #, fuzzy
@@ -665,9 +705,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Verbindung mit Benutzer=%s, Passwort=%s, Rechner=%s, Port=%s, Unix_Socket="
 #~ "%s wird geöffnet"
-
-#~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "GDA-Datasource-Access für ODBC"
 
 #~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 #~ msgstr "gda_odbc_connection_open_schema: Unhebandelter SCHEMA_QTYPE %d\n"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-27 01:13+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 1999-11-17 10:06+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -72,6 +72,16 @@ msgstr "Спроба ініціалізувати вже ініціалізов�
 msgid "Could not initialize Bonobo"
 msgstr "Не вдалося ініціалізувати Bonobo"
 
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr "Невідомо як створити компоненти з IID %s"
+
+#: libgda/gda-server.c:122
+#, c-format
+msgid "Could not create component of type %s"
+msgstr "Не вдалося створити компонент типу %s"
+
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -85,16 +95,6 @@ msgstr "Не вдалося сповістити клієнта про дію %d
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Не знайдено реалізації метода fetch()"
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr "Невідомо як створити компоненти з IID %s"
-
-#: libgda/gda-server.c:122
-#, c-format
-msgid "Could not create component of type %s"
-msgstr "Не вдалося створити компонент типу %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -129,16 +129,8 @@ msgstr "таблиця %s вже існує"
 msgid "%p is not a valid table"
 msgstr "%p не є вірною таблицею"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-#, fuzzy
-msgid "Default component factory"
-msgstr "Не вдалося ініціювати типову фабрику компонентів"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr ""
-
 #: providers/default/gda-default-provider.c:141
+#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -152,6 +144,7 @@ msgstr ""
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
 
@@ -159,18 +152,18 @@ msgstr ""
 msgid "Invalid Default handle"
 msgstr ""
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+#, fuzzy
+msgid "Default component factory"
+msgstr "Не вдалося ініціювати типову фабрику компонентів"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr ""
+
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
 msgstr "Не вдалося ініціювати типову фабрику компонентів"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr ""
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-#, fuzzy
-msgid "MySQL component factory"
-msgstr "Не вдалося ініціювати фабрику копонентів MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:175
 msgid ""
@@ -184,8 +177,8 @@ msgstr "Ви не можете вказати UNIX_SOCKET, якщо ви вже 
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
 msgstr ""
 
@@ -194,17 +187,31 @@ msgstr ""
 msgid "Invalid MySQL handle"
 msgstr ""
 
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr ""
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+#, fuzzy
+msgid "MySQL component factory"
+msgstr "Не вдалося ініціювати фабрику копонентів MySQL"
+
 #: providers/mysql/main.c:49
 msgid "Could not initiate MySQL component factory"
 msgstr "Не вдалося ініціювати фабрику копонентів MySQL"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+msgid "GDA Datasource Access for ODBC"
 msgstr ""
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
 #, fuzzy
-msgid "Oracle component factory"
+msgid "ODBC component factory"
+msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
+
+#: providers/odbc/main.c:49
+#, fuzzy
+msgid "Could not initiate ODBC component factory"
 msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
 
 #: providers/oracle/gda-oracle-connection.c:77
@@ -227,6 +234,15 @@ msgstr "Не вдалося ініціалізувати Bonobo"
 msgid "Could not initialize Oracle service context"
 msgstr "Не вдалося ініціалізувати Bonobo"
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr ""
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#, fuzzy
+msgid "Oracle component factory"
+msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
+
 #: providers/oracle/main.c:46
 #, fuzzy
 msgid "Could not initiate Oracle component factory"
@@ -237,6 +253,13 @@ msgstr "Не вдалося ініціювати фабрику копонент
 msgid "Could not initialize OCI library"
 msgstr "Не вдалося ініціалізувати Bonobo"
 
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr ""
@@ -245,13 +268,6 @@ msgstr ""
 #, fuzzy
 msgid "Postgres component factory"
 msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
-
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
-msgstr ""
 
 #: providers/postgres/main.c:49
 #, fuzzy
@@ -267,13 +283,27 @@ msgstr ""
 msgid "Not available"
 msgstr "%p не є вірною таблицею"
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+msgid "Invalid SQLITE handle"
 msgstr ""
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+#: providers/sqlite/gda-sqlite-recordset.c:114
+msgid "Invalid Sqlite handle"
+msgstr ""
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+msgid "GDA SQLite Datasource Access"
+msgstr ""
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
 #, fuzzy
-msgid "Sybase component factory"
+msgid "SQLite component factory"
+msgstr "Не вдалося ініціювати фабрику копонентів MySQL"
+
+#: providers/sqlite/main.c:54
+#, fuzzy
+msgid "Could not initiate Sqlite component factory"
 msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
 
 #: providers/sybase/gda-sybase-error.c:137
@@ -352,17 +382,18 @@ msgstr ""
 "\tНомер помилка операційної системи (%ld):\n"
 "\t%s"
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr ""
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+#, fuzzy
+msgid "Sybase component factory"
+msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
+
 #: providers/sybase/main.c:50
 msgid "Could not initiate Sybase component factory"
 msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr ""
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr ""
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -374,6 +405,14 @@ msgstr ""
 #, fuzzy
 msgid "Could not create global GDA client"
 msgstr "Не вдалося створити компонент з'єднання"
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr ""
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr ""
 
 #: report/job.c:43
 #, fuzzy

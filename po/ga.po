@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2002-01-27 01:13+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 2000-03-13 18:23+0000\n"
 "Last-Translator:  Alastair McKinstry <mckinstry@computer.org>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -72,6 +72,16 @@ msgstr ""
 msgid "Could not initialize Bonobo"
 msgstr ""
 
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr ""
+
+#: libgda/gda-server.c:122
+#, c-format
+msgid "Could not create component of type %s"
+msgstr ""
+
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -83,16 +93,6 @@ msgstr ""
 
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
-msgstr ""
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr ""
-
-#: libgda/gda-server.c:122
-#, c-format
-msgid "Could not create component of type %s"
 msgstr ""
 
 #: libgda/gda-value.c:926
@@ -128,15 +128,8 @@ msgstr ""
 msgid "%p is not a valid table"
 msgstr ""
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr ""
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr ""
-
 #: providers/default/gda-default-provider.c:141
+#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -149,6 +142,7 @@ msgstr ""
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
 
@@ -156,16 +150,16 @@ msgstr ""
 msgid "Invalid Default handle"
 msgstr ""
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr ""
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr ""
+
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
-msgstr ""
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr ""
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
 msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:175
@@ -180,8 +174,8 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
 msgstr ""
 
@@ -190,16 +184,28 @@ msgstr ""
 msgid "Invalid MySQL handle"
 msgstr ""
 
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr ""
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr ""
+
 #: providers/mysql/main.c:49
 msgid "Could not initiate MySQL component factory"
 msgstr ""
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+msgid "GDA Datasource Access for ODBC"
 msgstr ""
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle component factory"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
+msgid "ODBC component factory"
+msgstr ""
+
+#: providers/odbc/main.c:49
+msgid "Could not initiate ODBC component factory"
 msgstr ""
 
 #: providers/oracle/gda-oracle-connection.c:77
@@ -218,6 +224,14 @@ msgstr ""
 msgid "Could not initialize Oracle service context"
 msgstr ""
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr ""
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+msgid "Oracle component factory"
+msgstr ""
+
 #: providers/oracle/main.c:46
 msgid "Could not initiate Oracle component factory"
 msgstr ""
@@ -226,19 +240,19 @@ msgstr ""
 msgid "Could not initialize OCI library"
 msgstr ""
 
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr ""
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
 msgid "Postgres component factory"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
 msgstr ""
 
 #: providers/postgres/main.c:49
@@ -253,12 +267,25 @@ msgstr ""
 msgid "Not available"
 msgstr ""
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+msgid "Invalid SQLITE handle"
 msgstr ""
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
+#: providers/sqlite/gda-sqlite-recordset.c:114
+msgid "Invalid Sqlite handle"
+msgstr ""
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+msgid "GDA SQLite Datasource Access"
+msgstr ""
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+msgid "SQLite component factory"
+msgstr ""
+
+#: providers/sqlite/main.c:54
+msgid "Could not initiate Sqlite component factory"
 msgstr ""
 
 #: providers/sybase/gda-sybase-error.c:137
@@ -335,16 +362,16 @@ msgid ""
 "\t%s"
 msgstr ""
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr ""
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr ""
+
 #: providers/sybase/main.c:50
 msgid "Could not initiate Sybase component factory"
-msgstr ""
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr ""
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
 msgstr ""
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
@@ -355,6 +382,14 @@ msgstr ""
 
 #: report/gda-report-engine.c:105
 msgid "Could not create global GDA client"
+msgstr ""
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr ""
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
 msgstr ""
 
 #: report/job.c:43

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-01-30 16:32+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 2002-01-30 16:33CET\n"
 "Last-Translator: Stanislav Višňovský <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -73,19 +73,6 @@ msgstr "Pokus o inicializáciu už inicializovaného klienta"
 msgid "Could not initialize Bonobo"
 msgstr "Nie je možné inicializovať Bonobo"
 
-#: libgda/gda-server-connection.c:90
-msgid "Could not duplicate client object. Client won't get notifications"
-msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
-
-#: libgda/gda-server-connection.c:440
-#, c-format
-msgid "Could not notify client about action %d"
-msgstr "Nie je možné informovať klienta o akcii %d"
-
-#: libgda/gda-server-recordset.c:207
-msgid "No implementation for the fetch() method found"
-msgstr "Nenájdená implementácia metódy fetch()"
-
 #: libgda/gda-server.c:108
 #, c-format
 msgid "Don't know how to create components with IID %s"
@@ -95,6 +82,20 @@ msgstr "Neviem, ako vytvoriť komponenty s IID %s"
 #, c-format
 msgid "Could not create component of type %s"
 msgstr "Nie je možné vytvoriť komponent typu %s"
+
+#: libgda/gda-server-connection.c:90
+msgid "Could not duplicate client object. Client won't get notifications"
+msgstr ""
+"Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
+
+#: libgda/gda-server-connection.c:440
+#, c-format
+msgid "Could not notify client about action %d"
+msgstr "Nie je možné informovať klienta o akcii %d"
+
+#: libgda/gda-server-recordset.c:207
+msgid "No implementation for the fetch() method found"
+msgstr "Nenájdená implementácia metódy fetch()"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -129,17 +130,10 @@ msgstr "tabuľka %s už existuje"
 msgid "%p is not a valid table"
 msgstr "%p nie je platná tabuľka"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr "Vytváracie rozhranie pre štandardný komponent"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr "GDA štandardný prístup k zdroju dát"
-
 #: providers/default/gda-default-provider.c:141
 #: providers/sqlite/gda-sqlite-provider.c:152
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/gda-default-provider.c:199
@@ -158,9 +152,41 @@ msgstr "Neplatný počet riadkov"
 msgid "Invalid Default handle"
 msgstr "Neplatný handle Default"
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr "Vytváracie rozhranie pre štandardný komponent"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "GDA štandardný prístup k zdroju dát"
+
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+
+#: providers/mysql/gda-mysql-provider.c:175
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+
+#: providers/mysql/gda-mysql-provider.c:246
+#: providers/mysql/gda-mysql-provider.c:326
+#: providers/mysql/gda-mysql-provider.c:355
+#: providers/mysql/gda-mysql-provider.c:384
+msgid "Invalid MYSQL handle"
+msgstr "Neplatný handle MYSQL"
+
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
+msgid "Type"
+msgstr "Typ"
+
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:170
+msgid "Invalid MySQL handle"
+msgstr "Neplatný handle MySQL"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -170,38 +196,24 @@ msgstr "GDA prístup k zdroju dát pre MySQL"
 msgid "MySQL component factory"
 msgstr "Vytváracie rozhranie komponentu pre MySQL"
 
-#: providers/mysql/gda-mysql-provider.c:175
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
-
-#: providers/mysql/gda-mysql-provider.c:246
-#: providers/mysql/gda-mysql-provider.c:326
-#: providers/mysql/gda-mysql-provider.c:355
-#: providers/mysql/gda-mysql-provider.c:384
-msgid "Invalid MYSQL handle"
-msgstr "Neplatný handle MYSQL"
-
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
-msgid "Type"
-msgstr "Typ"
-
-#: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:170
-msgid "Invalid MySQL handle"
-msgstr "Neplatný handle MySQL"
-
 #: providers/mysql/main.c:49
 msgid "Could not initiate MySQL component factory"
 msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent MySQL"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for ODBC"
 msgstr "GDA prístup k zdroju dát pre Oracle"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle component factory"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
+#, fuzzy
+msgid "ODBC component factory"
 msgstr "Vytváracie rozhranie komponentu pre Oracle"
+
+#: providers/odbc/main.c:49
+#, fuzzy
+msgid "Could not initiate ODBC component factory"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:77
 msgid "Could not initialize Oracle environment"
@@ -219,6 +231,14 @@ msgstr "Nie je možné inicializovať handle pre server Oracle"
 msgid "Could not initialize Oracle service context"
 msgstr "Nie je možné inicializovať kontext služby Oracle"
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "GDA prístup k zdroju dát pre Oracle"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+msgid "Oracle component factory"
+msgstr "Vytváracie rozhranie komponentu pre Oracle"
+
 #: providers/oracle/main.c:46
 msgid "Could not initiate Oracle component factory"
 msgstr "Nie je možné inicializovať vytváracie rozhranie pre Oracle"
@@ -226,6 +246,13 @@ msgstr "Nie je možné inicializovať vytváracie rozhranie pre Oracle"
 #: providers/oracle/main.c:70
 msgid "Could not initialize OCI library"
 msgstr "Nie je možné inicializovať knižnicu OCI"
+
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr "Neplatný handle PostgreSQL"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
@@ -235,16 +262,10 @@ msgstr "GDA prístup k zdroju dát pre Postgres"
 msgid "Postgres component factory"
 msgstr "Vytváracie rozhranie komponentu pre Postgres"
 
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
-msgstr "Neplatný handle PostgreSQL"
-
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
@@ -253,14 +274,6 @@ msgstr "ŽIADNY POPIS"
 #: providers/postgres/utils.c:44
 msgid "Not available"
 msgstr "Nie je k dispozícii"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "GDA SQLite Datasource Access"
-msgstr "GDA prístup k zdroju dát SQLite"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-msgid "SQLite component factory"
-msgstr "Vytváracie rozhranie komponentu pre SQLite"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
@@ -271,17 +284,17 @@ msgstr "Neplatný handle SQLite"
 msgid "Invalid Sqlite handle"
 msgstr "Neplatný handle SQLite"
 
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+msgid "GDA SQLite Datasource Access"
+msgstr "GDA prístup k zdroju dát SQLite"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+msgid "SQLite component factory"
+msgstr "Vytváracie rozhranie komponentu pre SQLite"
+
 #: providers/sqlite/main.c:54
 msgid "Could not initiate Sqlite component factory"
 msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent SQLite"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "GDA prístup k zdroju dát pre Sybase"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
-msgstr "Vytváracie rozhranie komponentu pre Sybase"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
@@ -359,17 +372,17 @@ msgstr ""
 "\tČíslo chyby operačného systému (%ld):\n"
 "\t%s"
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "GDA prístup k zdroju dát pre Sybase"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr "Vytváracie rozhranie komponentu pre Sybase"
+
 #: providers/sybase/main.c:50
 msgid "Could not initiate Sybase component factory"
 msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent Sybase"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr "GDA stroj pre reporty"
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr "Vytváracie rozhranie pre GDA stroj pre reporty"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -380,6 +393,14 @@ msgstr "Výnimka CORBA: %s"
 #: report/gda-report-engine.c:105
 msgid "Could not create global GDA client"
 msgstr "Nie je možné vytvoriť globálneho klienta GDA"
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr "GDA stroj pre reporty"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr "Vytváracie rozhranie pre GDA stroj pre reporty"
 
 #: report/job.c:43
 msgid "Could not parse XML report"
@@ -404,7 +425,8 @@ msgstr "Nie je možné získať súbor z %s"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
@@ -531,4 +553,3 @@ msgstr "\tdoména = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-

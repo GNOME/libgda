@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-27 01:13+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -77,6 +77,16 @@ msgstr "Poskus inicializacije ¾e inicializiranega odjemalca"
 msgid "Could not initialize Bonobo"
 msgstr "Nisem mogel inicializirati Bonoba"
 
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr ""
+
+#: libgda/gda-server.c:122
+#, fuzzy, c-format
+msgid "Could not create component of type %s"
+msgstr "Nisem mogel ustvariti datoteke %s"
+
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -89,16 +99,6 @@ msgstr "Nisem mogel dobiti odjemalèevega sporoèila ¹tevilka %d"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr ""
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr ""
-
-#: libgda/gda-server.c:122
-#, fuzzy, c-format
-msgid "Could not create component of type %s"
-msgstr "Nisem mogel ustvariti datoteke %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -133,17 +133,8 @@ msgstr "tabela %s ¾e obstaja"
 msgid "%p is not a valid table"
 msgstr "%p ni veljavna tabela"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-#, fuzzy
-msgid "Default component factory"
-msgstr "Ne morem odpreti CORBA tovarne"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-#, fuzzy
-msgid "GDA Default Datasource Access"
-msgstr "Dostop GDA do vira podatkov za ODBC"
-
 #: providers/default/gda-default-provider.c:141
+#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -156,6 +147,7 @@ msgstr ""
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
 
@@ -163,19 +155,20 @@ msgstr ""
 msgid "Invalid Default handle"
 msgstr ""
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+#, fuzzy
+msgid "Default component factory"
+msgstr "Ne morem odpreti CORBA tovarne"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+#, fuzzy
+msgid "GDA Default Datasource Access"
+msgstr "Dostop GDA do vira podatkov za ODBC"
+
 #: providers/default/main.c:48
 #, fuzzy
 msgid "Could not initiate Default component factory"
 msgstr "Nisem mogel registrirati privzete implementacije nuditelja"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "Dostop GDA do vira podatkov za MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-#, fuzzy
-msgid "MySQL component factory"
-msgstr "Tovarna povezav nuditelja MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:175
 #, fuzzy
@@ -192,8 +185,8 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
 msgstr ""
 
@@ -202,19 +195,34 @@ msgstr ""
 msgid "Invalid MySQL handle"
 msgstr ""
 
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "Dostop GDA do vira podatkov za MySQL"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+#, fuzzy
+msgid "MySQL component factory"
+msgstr "Tovarna povezav nuditelja MySQL"
+
 #: providers/mysql/main.c:49
 #, fuzzy
 msgid "Could not initiate MySQL component factory"
 msgstr "Nisem mogel registrirati implementacije nuditelja MySQL"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "Dostop GDA do vira podatkov za Oracle"
-
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
 #, fuzzy
-msgid "Oracle component factory"
+msgid "GDA Datasource Access for ODBC"
+msgstr "Dostop GDA do vira podatkov za LDAP"
+
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
+#, fuzzy
+msgid "ODBC component factory"
 msgstr "Tovarna povezav nuditelja Oracle"
+
+#: providers/odbc/main.c:49
+#, fuzzy
+msgid "Could not initiate ODBC component factory"
+msgstr "Nisem mogel inicializirati Bonoba"
 
 #: providers/oracle/gda-oracle-connection.c:77
 #, fuzzy
@@ -236,6 +244,15 @@ msgstr "Nisem mogel inicializirati cs_diag()"
 msgid "Could not initialize Oracle service context"
 msgstr "Nisem mogel inicializirati cs_diag()"
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "Dostop GDA do vira podatkov za Oracle"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#, fuzzy
+msgid "Oracle component factory"
+msgstr "Tovarna povezav nuditelja Oracle"
+
 #: providers/oracle/main.c:46
 #, fuzzy
 msgid "Could not initiate Oracle component factory"
@@ -246,6 +263,13 @@ msgstr "Nisem mogel inicializirati Bonoba"
 msgid "Could not initialize OCI library"
 msgstr "Nisem mogel inicializirati Bonoba"
 
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "Dostop GDA do vira podatkov za Postgres"
@@ -254,13 +278,6 @@ msgstr "Dostop GDA do vira podatkov za Postgres"
 #, fuzzy
 msgid "Postgres component factory"
 msgstr "Tovarna povezav nuditelja Postgres"
-
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
-msgstr ""
 
 #: providers/postgres/main.c:49
 #, fuzzy
@@ -275,14 +292,29 @@ msgstr ""
 msgid "Not available"
 msgstr "Ni na voljo"
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "Dostop GDA do vira podatkov Sybase"
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+msgid "Invalid SQLITE handle"
+msgstr ""
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+#: providers/sqlite/gda-sqlite-recordset.c:114
+msgid "Invalid Sqlite handle"
+msgstr ""
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
 #, fuzzy
-msgid "Sybase component factory"
-msgstr "Tovarna povezav nuditelja Sybase"
+msgid "GDA SQLite Datasource Access"
+msgstr "Dostop GDA do vira podatkov za ODBC"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+#, fuzzy
+msgid "SQLite component factory"
+msgstr "Tovarna povezav nuditelja MySQL"
+
+#: providers/sqlite/main.c:54
+#, fuzzy
+msgid "Could not initiate Sqlite component factory"
+msgstr "Ne morem odpreti CORBA tovarne"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
@@ -361,20 +393,19 @@ msgid ""
 "\t%s"
 msgstr ""
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "Dostop GDA do vira podatkov Sybase"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+#, fuzzy
+msgid "Sybase component factory"
+msgstr "Tovarna povezav nuditelja Sybase"
+
 #: providers/sybase/main.c:50
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "Ne morem odpreti CORBA tovarne"
-
-#: report/GNOME_Database_Report.server.in.h:1
-#, fuzzy
-msgid "GDA Report engine"
-msgstr "Distribuirano orodje GDA za poroèila"
-
-#: report/GNOME_Database_Report.server.in.h:2
-#, fuzzy
-msgid "GDA Report engine factory"
-msgstr "Tovarna povezav LDAP"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -386,6 +417,16 @@ msgstr "Izjema v sistemu CORBA: %s"
 #, fuzzy
 msgid "Could not create global GDA client"
 msgstr "Nisem mogel ustvariti datoteke %s"
+
+#: report/GNOME_Database_Report.server.in.h:1
+#, fuzzy
+msgid "GDA Report engine"
+msgstr "Distribuirano orodje GDA za poroèila"
+
+#: report/GNOME_Database_Report.server.in.h:2
+#, fuzzy
+msgid "GDA Report engine factory"
+msgstr "Tovarna povezav LDAP"
 
 #: report/job.c:43
 #, fuzzy
@@ -603,9 +644,6 @@ msgstr ""
 
 #~ msgid "Unknown schema type"
 #~ msgstr "Neznana vrsta sheme"
-
-#~ msgid "GDA Datasource Access for LDAP"
-#~ msgstr "Dostop GDA do vira podatkov za LDAP"
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "napaka '%s' pri %s"

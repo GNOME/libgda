@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20010407\n"
-"POT-Creation-Date: 2002-01-27 01:13+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 2001-04-07 12:45+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -78,6 +78,16 @@ msgstr "初期化を試みましたがすでにクライアントは初期化されています"
 msgid "Could not initialize Bonobo"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr ""
+
+#: libgda/gda-server.c:122
+#, fuzzy, c-format
+msgid "Could not create component of type %s"
+msgstr "フィールドを割り当てることが出来ませんでした"
+
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -90,16 +100,6 @@ msgstr "クライアントメッセージ番号 %d を取得することが出来ませんでした"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr ""
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr ""
-
-#: libgda/gda-server.c:122
-#, fuzzy, c-format
-msgid "Could not create component of type %s"
-msgstr "フィールドを割り当てることが出来ませんでした"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -134,17 +134,8 @@ msgstr "テーブル %s はすでに存在しています"
 msgid "%p is not a valid table"
 msgstr "%p は有効なテーブルではありません"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-#, fuzzy
-msgid "Default component factory"
-msgstr "%s へ接続することが出来ませんでした"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-#, fuzzy
-msgid "GDA Default Datasource Access"
-msgstr "ODBC用のGDAデータソースアクセス"
-
 #: providers/default/gda-default-provider.c:141
+#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -157,6 +148,7 @@ msgstr ""
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
 
@@ -164,18 +156,20 @@ msgstr ""
 msgid "Invalid Default handle"
 msgstr ""
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+#, fuzzy
+msgid "Default component factory"
+msgstr "%s へ接続することが出来ませんでした"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+#, fuzzy
+msgid "GDA Default Datasource Access"
+msgstr "ODBC用のGDAデータソースアクセス"
+
 #: providers/default/main.c:48
 #, fuzzy
 msgid "Could not initiate Default component factory"
 msgstr "メールプロバイダの実装を登録することが出来ませんでした"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "MySQL用のGDAデータソースアクセス"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:175
 #, fuzzy
@@ -193,8 +187,8 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
 msgstr ""
 
@@ -203,19 +197,32 @@ msgstr ""
 msgid "Invalid MySQL handle"
 msgstr ""
 
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "MySQL用のGDAデータソースアクセス"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr ""
+
 #: providers/mysql/main.c:49
 #, fuzzy
 msgid "Could not initiate MySQL component factory"
 msgstr "MySQL プロバイダの実装を登録することが出来ませんでした"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "Oracle用のGDAデータソースアクセス"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr "ODBC用のGDAデータソースアクセス"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
 #, fuzzy
-msgid "Oracle component factory"
+msgid "ODBC component factory"
 msgstr "%s へ接続することが出来ませんでした"
+
+#: providers/odbc/main.c:49
+#, fuzzy
+msgid "Could not initiate ODBC component factory"
+msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
 #: providers/oracle/gda-oracle-connection.c:77
 #, fuzzy
@@ -237,6 +244,15 @@ msgstr "cs_diag() を初期化することが出来ませんでした"
 msgid "Could not initialize Oracle service context"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "Oracle用のGDAデータソースアクセス"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#, fuzzy
+msgid "Oracle component factory"
+msgstr "%s へ接続することが出来ませんでした"
+
 #: providers/oracle/main.c:46
 #, fuzzy
 msgid "Could not initiate Oracle component factory"
@@ -247,6 +263,13 @@ msgstr "CORBA ファクトリを開くことが出来ませんでした"
 msgid "Could not initialize OCI library"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "Postgres用のGDAデータソースアクセス"
@@ -255,13 +278,6 @@ msgstr "Postgres用のGDAデータソースアクセス"
 #, fuzzy
 msgid "Postgres component factory"
 msgstr "%s へ接続することが出来ませんでした"
-
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
-msgstr ""
 
 #: providers/postgres/main.c:49
 #, fuzzy
@@ -276,13 +292,29 @@ msgstr ""
 msgid "Not available"
 msgstr "利用できません"
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "Sybase用のGDAデータソースアクセス"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+msgid "Invalid SQLITE handle"
 msgstr ""
+
+#: providers/sqlite/gda-sqlite-recordset.c:114
+msgid "Invalid Sqlite handle"
+msgstr ""
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+#, fuzzy
+msgid "GDA SQLite Datasource Access"
+msgstr "ODBC用のGDAデータソースアクセス"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+#, fuzzy
+msgid "SQLite component factory"
+msgstr "%s へ接続することが出来ませんでした"
+
+#: providers/sqlite/main.c:54
+#, fuzzy
+msgid "Could not initiate Sqlite component factory"
+msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
@@ -361,19 +393,18 @@ msgid ""
 "\t%s"
 msgstr ""
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "Sybase用のGDAデータソースアクセス"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr ""
+
 #: providers/sybase/main.c:50
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
-
-#: report/GNOME_Database_Report.server.in.h:1
-#, fuzzy
-msgid "GDA Report engine"
-msgstr "GDA分配レポートエンジン"
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr ""
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -385,6 +416,15 @@ msgstr "CORBA ユーザ例外: %s"
 #, fuzzy
 msgid "Could not create global GDA client"
 msgstr "%s へ接続することが出来ませんでした"
+
+#: report/GNOME_Database_Report.server.in.h:1
+#, fuzzy
+msgid "GDA Report engine"
+msgstr "GDA分配レポートエンジン"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr ""
 
 #: report/job.c:43
 #, fuzzy
@@ -664,9 +704,6 @@ msgstr ""
 #~ msgstr ""
 #~ "ユーザ=%s, パスワード=%s, ホスト=%s, ポート=%s, unix ソケット=%s で接続を"
 #~ "開いています"
-
-#~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "ODBC用のGDAデータソースアクセス"
 
 #~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 #~ msgstr "gda_odbc_connection_open_schema: SCHEMA_QTYPE %d は扱えません\n"

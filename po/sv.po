@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-27 01:13+0100\n"
+"POT-Creation-Date: 2002-02-10 20:00+0100\n"
 "PO-Revision-Date: 2002-01-27 01:39+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -75,6 +75,16 @@ msgstr "Försök att initiera en redan initierad klient"
 msgid "Could not initialize Bonobo"
 msgstr "Kunde inte initiera Bonobo"
 
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr "Vet inte hur man skapar komponenter med IID %s"
+
+#: libgda/gda-server.c:122
+#, c-format
+msgid "Could not create component of type %s"
+msgstr "Kunde inte skapa komponent av typen %s"
+
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -88,16 +98,6 @@ msgstr "Kunde inte notifiera klienten om åtgärden %d"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation för fetch()-metoden hittades"
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr "Vet inte hur man skapar komponenter med IID %s"
-
-#: libgda/gda-server.c:122
-#, c-format
-msgid "Could not create component of type %s"
-msgstr "Kunde inte skapa komponent av typen %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -132,15 +132,8 @@ msgstr "tabellen %s finns redan"
 msgid "%p is not a valid table"
 msgstr "%p är ingen giltig tabell"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr "Standardkomponentfabrik"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr "Standardåtkomst för GDA-datakällor"
-
 #: providers/default/gda-default-provider.c:141
+#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -155,6 +148,7 @@ msgstr "Ogiltigt DEFAULT-handtag"
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Radnummer utanför intervallet"
 
@@ -162,17 +156,17 @@ msgstr "Radnummer utanför intervallet"
 msgid "Invalid Default handle"
 msgstr "Ogiltigt standardhandtag"
 
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr "Standardkomponentfabrik"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "Standardåtkomst för GDA-datakällor"
+
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
 msgstr "Kunde inte initiera standardkomponentfabrik"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "GDA-datakälleåtkomst för MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr "MySQL-komponentfabrik"
 
 #: providers/mysql/gda-mysql-provider.c:175
 msgid ""
@@ -188,8 +182,8 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Ogiltigt MYSQL-handtag"
 
-#: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
 msgstr "Typ"
 
@@ -198,17 +192,31 @@ msgstr "Typ"
 msgid "Invalid MySQL handle"
 msgstr "Ogiltigt MySQL-handtag"
 
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "GDA-datakälleåtkomst för MySQL"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr "MySQL-komponentfabrik"
+
 #: providers/mysql/main.c:49
 msgid "Could not initiate MySQL component factory"
 msgstr "Kunde inte initiera MySQL-komponentfabrik"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "GDA-datakälleåtkomst för Oracle"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr "GDA-datakälleåtkomst för ODBC"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle component factory"
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
+#, fuzzy
+msgid "ODBC component factory"
 msgstr "Oracle-komponentfabrik"
+
+#: providers/odbc/main.c:49
+#, fuzzy
+msgid "Could not initiate ODBC component factory"
+msgstr "Kunde inte initiera Oracle-komponentfabrik"
 
 #: providers/oracle/gda-oracle-connection.c:77
 msgid "Could not initialize Oracle environment"
@@ -226,6 +234,14 @@ msgstr "Kunde inte initiera Oracle-serverhandtag"
 msgid "Could not initialize Oracle service context"
 msgstr "Kunde inte initiera Oracle-tjänstesammanhang"
 
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "GDA-datakälleåtkomst för Oracle"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+msgid "Oracle component factory"
+msgstr "Oracle-komponentfabrik"
+
 #: providers/oracle/main.c:46
 msgid "Could not initiate Oracle component factory"
 msgstr "Kunde inte initiera Oracle-komponentfabrik"
@@ -234,6 +250,13 @@ msgstr "Kunde inte initiera Oracle-komponentfabrik"
 msgid "Could not initialize OCI library"
 msgstr "Kunde inte initiera OCI-bibliotek"
 
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr "Ogiltigt PostgreSQL-handtag"
+
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "GDA-datakälleåtkomst för Postgres"
@@ -241,13 +264,6 @@ msgstr "GDA-datakälleåtkomst för Postgres"
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
 msgid "Postgres component factory"
 msgstr "Postgres-komponentfabrik"
-
-#: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:455
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
-msgid "Invalid PostgreSQL handle"
-msgstr "Ogiltigt PostgreSQL-handtag"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
@@ -261,13 +277,26 @@ msgstr "INGEN BESKRIVNING"
 msgid "Not available"
 msgstr "Inte tillgänglig"
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "GDA-datakälleåtkomst för Sybase"
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+msgid "Invalid SQLITE handle"
+msgstr "Ogiltigt SQLITE-handtag"
 
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
-msgstr "Sybase-komponentfabrik"
+#: providers/sqlite/gda-sqlite-recordset.c:114
+msgid "Invalid Sqlite handle"
+msgstr "Ogiltigt Sqlite-handtag"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+msgid "GDA SQLite Datasource Access"
+msgstr "Åtkomst för GDA SQLite-datakällor"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+msgid "SQLite component factory"
+msgstr "SQLite-komponentfabrik"
+
+#: providers/sqlite/main.c:54
+msgid "Could not initiate Sqlite component factory"
+msgstr "Kunde inte initiera Sqlite-komponentfabrik"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
@@ -345,17 +374,17 @@ msgstr ""
 "\tOperativsystemsfel nummer (%ld):\n"
 "\t%s"
 
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "GDA-datakälleåtkomst för Sybase"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr "Sybase-komponentfabrik"
+
 #: providers/sybase/main.c:50
 msgid "Could not initiate Sybase component factory"
 msgstr "Kunde inte initiera Sybase-komponentfabrik"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr "GDA-rapportmotor"
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr "GDA-rapportmotorfabrik"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -366,6 +395,14 @@ msgstr "CORBA-undantag: %s"
 #: report/gda-report-engine.c:105
 msgid "Could not create global GDA client"
 msgstr "Kunde inte skapa global GDA-klient"
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr "GDA-rapportmotor"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr "GDA-rapportmotorfabrik"
 
 #: report/job.c:43
 msgid "Could not parse XML report"
@@ -517,21 +554,6 @@ msgstr "\tdomän = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-
-#~ msgid "GDA SQLite Datasource Access"
-#~ msgstr "Åtkomst för GDA SQLite-datakällor"
-
-#~ msgid "SQLite component factory"
-#~ msgstr "SQLite-komponentfabrik"
-
-#~ msgid "Invalid SQLITE handle"
-#~ msgstr "Ogiltigt SQLITE-handtag"
-
-#~ msgid "Invalid Sqlite handle"
-#~ msgstr "Ogiltigt Sqlite-handtag"
-
-#~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Kunde inte initiera Sqlite-komponentfabrik"
 
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[GDA-klientbibliotek]"
@@ -686,9 +708,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "No MYSQL_Connection for GdaServerConnection"
 #~ msgstr "Ingen MYSQL_Connection för GdaServerConnection"
-
-#~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "GDA-datakälleåtkomst för ODBC"
 
 #~ msgid "ODBC provider connection factory"
 #~ msgstr "Fabrik för ODBC-leverantörsåtkomst"

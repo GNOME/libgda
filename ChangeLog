@@ -1,3 +1,7 @@
+2002-02-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 0.8.103 version.
+
 2002-02-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* idl/GNOME_Database.idl: added more FEATURE's, and added TRIGGERS
