@@ -77,6 +77,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	object_class->finalize = gda_server_provider_finalize;
 	klass->open_connection = NULL;
 	klass->close_connection = NULL;
+	klass->execute_command = NULL;
 	klass->begin_transaction = NULL;
 	klass->commit_transaction = NULL;
 	klass->rollback_transaction = NULL;
@@ -172,6 +173,23 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaServerConn
 	provider->priv->connections = g_list_remove (provider->priv->connections, cnc);
 
 	return retcode;
+}
+
+/**
+ * gda_server_provider_execute_command
+ */
+GList *
+gda_server_provider_execute_command (GdaServerProvider *provider,
+				     GdaServerConnection *cnc,
+				     GdaCommand *cmd,
+				     GdaParameterList *params)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+	g_return_val_if_fail (CLASS (provider)->execute_command != NULL, NULL);
+
+	return CLASS (provider)->execute_command (provider, cnc, cmd, params);
 }
 
 /**

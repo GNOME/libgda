@@ -135,14 +135,43 @@ impl_Connection_close (PortableServer_Servant servant,
 	return result;
 }
 
-static GNOME_Database_RecordsetList
+static GNOME_Database_RecordsetList *
 impl_Connection_executeCommand (PortableServer_Servant servant,
-				GNOME_Database_Command *cmd,
-				GNOME_Database_ParameterList *params)
+				const GNOME_Database_Command *cmd,
+				const GNOME_Database_ParameterList *params,
+				CORBA_Environment *ev)
 {
+	GList *recset_list;
+	GList *l;
+	gint count;
+	GNOME_Database_RecordsetList *seq;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	recset_list = gda_server_provider_execute_command (cnc->priv->provider,
+							   cnc, cmd);
+	if (!recset_list) {
+		gda_error_list_to_exception (cnc->priv->errors, ev);
+		gda_server_connection_free_error_list (cnc);
+		return NULL;
+	}
+
+	seq = GNOME_Database_RecordsetList__alloc ();
+	CORBA_sequence_set_release (seq, TRUE);
+	count = g_list_length (recset_list);
+	seq->_length = count;
+	seq->_buffer = GNOME_Database_RecordsetList_allocbuf (count);
+
+	for (count = 0, l = recset_list; l; count++, l = l->next) {
+		GdaServerRecordset *recset = GDA_SERVER_RECORDSET (l->data);
+
+		seq->_buffer[count] = bonobo_object_corba_objref (BONOBO_OBJECT (recset));
+	}
+
+	g_list_free (recset_list);
+
+	return seq;
 }
 
 static CORBA_boolean

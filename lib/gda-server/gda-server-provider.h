@@ -29,6 +29,12 @@
 
 G_BEGIN_DECLS
 
+#define GDA_TYPE_SERVER_PROVIDER            (gda_server_provider_get_type())
+#define GDA_SERVER_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER_PROVIDER, GdaServerProvider))
+#define GDA_SERVER_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER_PROVIDER, GdaServerProviderClass))
+#define GDA_IS_SERVER_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_SERVER_PROVIDER))
+#define GDA_IS_SERVER_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_PROVIDER))
+
 typedef struct _GdaServerProvider        GdaServerProvider;
 typedef struct _GdaServerProviderClass   GdaServerProviderClass;
 typedef struct _GdaServerProviderPrivate GdaServerProviderPrivate;
@@ -53,6 +59,10 @@ struct _GdaServerProviderClass {
 				      const gchar *password);
 	gboolean (* close_connection) (GdaServerProvider *provider,
 				       GdaServerConnection *cnc);
+
+	GList * (* execute_command) (GdaServerProvider *provider,
+				     GdaServerConnection *cnc,
+				     GdaCommand *cmd);
 
 	gboolean (* begin_transaction) (GdaServerProvider *provider,
 					GdaServerConnection *cnc,
