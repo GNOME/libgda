@@ -74,8 +74,8 @@ connection_destroyed_cb (GtkObject *object, gpointer user_data)
 	GdaConnection* cnc = (GdaConnection *) object;
 	GdaConnectionPool* pool = (GdaConnectionPool *) user_data;
 
-	g_return_if_fail(IS_GDA_CONNECTION(cnc));
-	g_return_if_fail(IS_GDA_CONNECTION_POOL(pool));
+	g_return_if_fail(GDA_IS_CONNECTION(cnc));
+	g_return_if_fail(GDA_IS_CONNECTION_POOL(pool));
 
 	pool->connections = g_list_remove(pool->connections, (gpointer) cnc);
 }
@@ -85,8 +85,8 @@ connection_error_cb (GdaConnection *cnc, GList *errors, gpointer user_data)
 {
 	GdaConnectionPool *pool = (GdaConnectionPool *) user_data;
 
-	g_return_if_fail(IS_GDA_CONNECTION(cnc));
-	g_return_if_fail(IS_GDA_CONNECTION_POOL(pool));
+	g_return_if_fail(GDA_IS_CONNECTION(cnc));
+	g_return_if_fail(GDA_IS_CONNECTION_POOL(pool));
 
 #ifndef HAVE_GOBJECT
 	gtk_signal_emit(GTK_OBJECT(pool), gda_connection_pool_signals[ERROR], cnc);
@@ -98,8 +98,8 @@ connection_opened_cb (GdaConnection *cnc, gpointer user_data)
 {
 	GdaConnectionPool *pool = (GdaConnectionPool *) user_data;
 
-	g_return_if_fail(IS_GDA_CONNECTION(cnc));
-	g_return_if_fail(IS_GDA_CONNECTION_POOL(pool));
+	g_return_if_fail(GDA_IS_CONNECTION(cnc));
+	g_return_if_fail(GDA_IS_CONNECTION_POOL(pool));
 
 #ifndef HAVE_GOBJECT /* FIXME */
 	gtk_signal_emit(GTK_OBJECT(pool),
@@ -159,7 +159,7 @@ gda_connection_pool_init (GdaConnectionPool *pool,
 gda_connection_pool_init (GdaConnectionPool *pool)
 #endif
 {
-	g_return_if_fail(IS_GDA_CONNECTION_POOL(pool));
+	g_return_if_fail(GDA_IS_CONNECTION_POOL(pool));
 
 	pool->connections = NULL;
 }
@@ -253,7 +253,7 @@ gda_connection_pool_destroy (GdaConnectionPool *pool)
 void
 gda_connection_pool_free (GdaConnectionPool *pool)
 {
-	g_return_if_fail (IS_GDA_CONNECTION_POOL (pool));
+	g_return_if_fail (GDA_IS_CONNECTION_POOL (pool));
 #ifdef HAVE_GOBJECT
 	g_object_unref (G_OBJECT (pool));
 #else
@@ -278,13 +278,13 @@ gda_connection_pool_open_connection (GdaConnectionPool *pool,
 	GdaConnection* cnc;
 	GList*          node;
 
-	g_return_val_if_fail(IS_GDA_CONNECTION_POOL(pool), NULL);
+	g_return_val_if_fail(GDA_IS_CONNECTION_POOL(pool), NULL);
 	g_return_val_if_fail(gda_name != NULL, NULL);
 
 	/* look for the connection already open */
 	for (node = g_list_first(pool->connections); node; node = g_list_next(node)) {
 		cnc = GDA_CONNECTION(node->data);
-		if (IS_GDA_CONNECTION(cnc)) {
+		if (GDA_IS_CONNECTION(cnc)) {
 #ifndef HAVE_GOBJECT
 			dsn = (GdaDsn *) gtk_object_get_data(GTK_OBJECT(cnc), "GDA_ConnectionPool_DSN");
 #endif
@@ -368,8 +368,8 @@ gda_connection_pool_close_connection (GdaConnectionPool *pool, GdaConnection *cn
 {
 	GList* node;
 
-	g_return_if_fail(IS_GDA_CONNECTION_POOL(pool));
-	g_return_if_fail(IS_GDA_CONNECTION(cnc));
+	g_return_if_fail(GDA_IS_CONNECTION_POOL(pool));
+	g_return_if_fail(GDA_IS_CONNECTION(cnc));
 
 	/* look for the given connection in our list */
 	for (node = g_list_first(pool->connections); node != NULL; node = g_list_next(node)) {
@@ -396,7 +396,7 @@ gda_connection_pool_close_all (GdaConnectionPool *pool)
 {
 	GList* node;
 
-	g_return_if_fail(IS_GDA_CONNECTION_POOL(pool));
+	g_return_if_fail(GDA_IS_CONNECTION_POOL(pool));
 
 	/* close all open connections */
 	while ((node = g_list_first(pool->connections))) {
@@ -404,7 +404,7 @@ gda_connection_pool_close_all (GdaConnectionPool *pool)
 		GdaConnection* cnc = GDA_CONNECTION(node->data);
 
 		pool->connections = g_list_remove(pool->connections, (gpointer) cnc);
-		if (IS_GDA_CONNECTION(cnc)) {
+		if (GDA_IS_CONNECTION(cnc)) {
 #ifndef HAVE_GOBJECT
 			dsn = (GdaDsn *) gtk_object_get_data(GTK_OBJECT(cnc), "GDA_ConnectionPool_DSN");
 #endif
@@ -425,13 +425,13 @@ gda_connection_pool_foreach (GdaConnectionPool *pool,
 {
 	GList *l;
 
-	g_return_if_fail(IS_GDA_CONNECTION_POOL(pool));
+	g_return_if_fail(GDA_IS_CONNECTION_POOL(pool));
 	g_return_if_fail(func != NULL);
 
 	for (l = g_list_first(pool->connections); l != NULL; l = g_list_next(l)) {
 		GdaConnection *cnc = (GdaConnection *) l->data;
 
-		if (IS_GDA_CONNECTION(cnc)) {
+		if (GDA_IS_CONNECTION(cnc)) {
 			GdaDsn *dsn;
 
 #ifndef HAVE_GOBJECT

@@ -43,7 +43,8 @@ Connection *Command::getConnection() {
 
 gint Command::setConnection(Connection *a) {
 	cnc = a;
-	return gda_command_set_connection(_gda_command,cnc->getCStruct());
+	gda_command_set_connection(_gda_command,cnc->getCStruct());
+	return 0;
 }
 
 gchar* Command::getText() {

@@ -37,22 +37,6 @@ Database backend errors representation
 @klass: 
 
 
-<!-- ##### MACRO IS_GDA_ERROR ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO IS_GDA_ERROR_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### FUNCTION gda_error_get_type ##### -->
 <para>
 

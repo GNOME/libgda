@@ -49,15 +49,15 @@ typedef struct _GdaErrorClass  GdaErrorClass;
             G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_ERROR, GdaError)
 #  define GDA_ERROR_CLASS(klass) \
             G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_ERROR, GdaErrorClass)
-#  define IS_GDA_ERROR(obj) \
+#  define GDA_IS_ERROR(obj) \
             G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_ERROR)
-#  define IS_GDA_ERROR_CLASS(klass) \
+#  define GDA_IS_ERROR_CLASS(klass) \
             G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_ERROR)
 #else
 #  define GDA_ERROR(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_ERROR, GdaError)
 #  define GDA_ERROR_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_ERROR, GdaErrorClass)
-#  define IS_GDA_ERROR(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_ERROR)
-#  define IS_GDA_ERROR_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_ERROR))
+#  define GDA_IS_ERROR(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_ERROR)
+#  define GDA_IS_ERROR_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_ERROR))
 #endif
 
 struct _GdaError

@@ -1,0 +1,98 @@
+<!-- ##### MACRO IS_GDA_BATCH ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO IS_GDA_BATCH_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+<!-- ##### MACRO IS_GDA_COMMAND ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO IS_GDA_COMMAND_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+<!-- ##### MACRO IS_GDA_CONNECTION ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO IS_GDA_CONNECTION_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+<!-- ##### MACRO IS_GDA_CONNECTION_POOL ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO IS_GDA_CONNECTION_POOL_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+<!-- ##### MACRO IS_GDA_ERROR ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO IS_GDA_ERROR_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+<!-- ##### MACRO IS_GDA_FIELD ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO IS_GDA_FIELD_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+<!-- ##### MACRO IS_GDA_RECORDSET ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO IS_GDA_RECORDSET_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+

@@ -37,22 +37,6 @@ Connection management
 @klass: 
 
 
-<!-- ##### MACRO IS_GDA_CONNECTION ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO IS_GDA_CONNECTION_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### FUNCTION gda_connection_get_type ##### -->
 <para>
 

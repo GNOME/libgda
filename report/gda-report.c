@@ -194,7 +194,7 @@ gda_report_free (GdaReport* object)
 {
 	CORBA_Environment ev;
 	
-	g_return_if_fail(IS_GDA_REPORT(object));
+	g_return_if_fail(GDA_IS_REPORT(object));
 	
 	if (object->corba_report != CORBA_OBJECT_NIL) {
 		CORBA_exception_init(&ev);
@@ -228,7 +228,7 @@ gchar*
 gda_report_get_name (GdaReport* object)
 {
 
-	g_return_if_fail(IS_GDA_REPORT(object));
+	g_return_if_fail(GDA_IS_REPORT(object));
 	
 	g_return_val_if_fail(object->rep_name != NULL, NULL);
 
@@ -248,7 +248,7 @@ gda_report_set_name (GdaReport* object, gchar* name)
 {
 	CORBA_Environment ev;
 	
-	g_return_val_if_fail(IS_GDA_REPORT(object), -1);
+	g_return_val_if_fail(GDA_IS_REPORT(object), -1);
 	g_return_val_if_fail(name != NULL, -1);
 
 	if (object->rep_name) {
@@ -278,7 +278,7 @@ gchar*
 gda_report_get_description (GdaReport* object)
 {
 
-	g_return_if_fail(IS_GDA_REPORT(object));
+	g_return_if_fail(GDA_IS_REPORT(object));
 	
 	g_return_val_if_fail(object->description != NULL, NULL);
 
@@ -298,7 +298,7 @@ gda_report_set_description (GdaReport* object, gchar* description)
 {
 	CORBA_Environment ev;
 	
-	g_return_val_if_fail(IS_GDA_REPORT(object), -1);
+	g_return_val_if_fail(GDA_IS_REPORT(object), -1);
 	g_return_val_if_fail(description != NULL, -1);
 
 	if (object->description) {
@@ -331,7 +331,7 @@ gda_report_get_elements (GdaReport* object)
 	GdaReportElement *element;
 	gchar* elementName;
 	
-	g_return_val_if_fail(IS_GDA_REPORT(object), NULL);
+	g_return_val_if_fail(GDA_IS_REPORT(object), NULL);
 
 	element = gda_report_element_new("");
 	
@@ -364,8 +364,8 @@ gda_report_set_elements (GdaReport* object, GdaReportElement* element)
 {
 	CORBA_Environment ev;
 	
-	g_return_val_if_fail(IS_GDA_REPORT(object), -1);
-	g_return_val_if_fail(IS_GDA_REPORT_ELEMENT(element), -1);
+	g_return_val_if_fail(GDA_IS_REPORT(object), -1);
+	g_return_val_if_fail(GDA_IS_REPORT_ELEMENT(element), -1);
 
 	CORBA_exception_init(&ev);
 	GDA_Report__set_elements(object->corba_report, element->corba_report_element, &ev);
@@ -404,7 +404,7 @@ gda_report_isLocked (GdaReport* object)
 	CORBA_Environment ev;
 	gboolean locked;
 	
-	g_return_val_if_fail(IS_GDA_REPORT(object), FALSE);
+	g_return_val_if_fail(GDA_IS_REPORT(object), FALSE);
 
 	CORBA_exception_init(&ev);
 	locked = GDA_Report__get_isLocked(object->corba_report, &ev);
@@ -443,7 +443,7 @@ gda_report_lock (GdaReport* object)
 {
 	CORBA_Environment ev;
 	
-	g_return_if_fail(IS_GDA_REPORT(object));
+	g_return_if_fail(GDA_IS_REPORT(object));
 
 	CORBA_exception_init(&ev);
 	GDA_Report_lock(object->corba_report, &ev);
@@ -464,7 +464,7 @@ gda_report_unlock (GdaReport* object)
 {
 	CORBA_Environment ev;
 	
-	g_return_if_fail(IS_GDA_REPORT(object));
+	g_return_if_fail(GDA_IS_REPORT(object));
 
 	CORBA_exception_init(&ev);
 	GDA_Report_unlock(object->corba_report, &ev);

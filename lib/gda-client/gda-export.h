@@ -48,8 +48,8 @@ typedef struct _GdaExportPrivate GdaExportPrivate;
 #define GDA_TYPE_EXPORT (gda_export_get_type())
 #define GDA_EXPORT(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_EXPORT, GdaExport)
 #define GDA_EXPORT_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_EXPORT, GdaExportClass)
-#define IS_GDA_EXPORT(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_EXPORT)
-#define IS_GDA_EXPORT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_EXPORT))
+#define GDA_IS_EXPORT(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_EXPORT)
+#define GDA_IS_EXPORT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_EXPORT))
 
 struct _GdaExport {
 #ifdef HAVE_GOBJECT

@@ -55,15 +55,15 @@ typedef struct _GdaConnectionClass  GdaConnectionClass;
 #  define GDA_CONNECTION_CLASS(klass) \
             G_TYPE_CHECK_CLASS_CAST (obj, GDA_TYPE_CONNECTION, \
                                      GdaConnectionClass)
-#  define IS_GDA_CONNECTION(obj) \
+#  define GDA_IS_CONNECTION(obj) \
             G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION)
-#  define IS_GDA_CONNECTION_CLASS(klass) \
+#  define GDA_IS_CONNECTION_CLASS(klass) \
             G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION)
 #else
 #  define GDA_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION, GdaConnection)
 #  define GDA_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION, GdaConnectionClass)
-#  define IS_GDA_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION)
-#  define IS_GDA_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
+#  define GDA_IS_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION)
+#  define GDA_IS_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 #endif
 
 struct _GdaConnection {

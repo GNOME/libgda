@@ -45,15 +45,15 @@ typedef struct _GdaFieldClass GdaFieldClass;
             G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FIELD, GdaField)
 #  define GDA_FIELD_CLASS(klass) \
             G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_FIELD, GdaFieldClass)
-#  define IS_GDA_FIELD(obj) \
+#  define GDA_IS_FIELD(obj) \
             G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_FIELD)
-#  define IS_GDA_FIELD_CLASS(klass) \
+#  define GDA_IS_FIELD_CLASS(klass) \
             G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_FIELD)
 #else
 #  define GDA_FIELD(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_FIELD, GdaField)
 #  define GDA_FIELD_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_FIELD, GdaFieldClass)
-#  define IS_GDA_FIELD(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_FIELD)
-#  define IS_GDA_FIELD_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_FIELD))
+#  define GDA_IS_FIELD(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_FIELD)
+#  define GDA_IS_FIELD_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_FIELD))
 #endif
 
 struct _GdaField

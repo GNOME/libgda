@@ -236,7 +236,7 @@ gda_stringify_value(gchar* bfr, gint maxlen, GdaField* f)
   gchar      tmp[40];
   struct tm  stm;
 
-  g_return_val_if_fail(IS_GDA_FIELD(f), 0);
+  g_return_val_if_fail(GDA_IS_FIELD(f), 0);
   
   if (bfr)
     retval = bfr;
@@ -452,7 +452,7 @@ gda_field_new (void)
 void
 gda_field_free (GdaField* f)
 {
-  g_return_if_fail(IS_GDA_FIELD(f));
+  g_return_if_fail(GDA_IS_FIELD(f));
 #ifdef HAVE_GOBJECT
   g_object_unref (G_OBJECT (f));
 #else
@@ -472,7 +472,7 @@ gda_field_free (GdaField* f)
 gint
 gda_field_actual_size (GdaField* f)
 {
-  g_return_val_if_fail(IS_GDA_FIELD(f), 0);
+  g_return_val_if_fail(GDA_IS_FIELD(f), 0);
   
   if (gda_field_isnull(f)) return 0;
   

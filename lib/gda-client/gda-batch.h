@@ -51,15 +51,15 @@ typedef struct _GdaBatchClass GdaBatchClass;
             G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_BATCH, GdaBatch)
 #  define GDA_BATCH_CLASS(klass) \
             G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_BATCH, GdaBatchClass)
-#  define IS_GDA_BATCH(obj) \
+#  define GDA_IS_BATCH(obj) \
             G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_BATCH)
-#  define IS_GDA_BATCH_CLASS(klass) \
+#  define GDA_IS_BATCH_CLASS(klass) \
             G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_BATCH)
 #else
 #define GDA_BATCH(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_BATCH, GdaBatch)
 #define GDA_BATCH_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_BATCH, GdaBatchClass)
-#define IS_GDA_BATCH(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_BATCH)
-#define IS_GDA_BATCH_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_BATCH))
+#define GDA_IS_BATCH(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_BATCH)
+#define GDA_IS_BATCH_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_BATCH))
 #endif
 
 struct _GdaBatch

@@ -37,22 +37,6 @@ Command management
 @klass: 
 
 
-<!-- ##### MACRO IS_GDA_COMMAND ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO IS_GDA_COMMAND_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### FUNCTION gda_command_get_type ##### -->
 <para>
 
@@ -93,6 +77,7 @@ Command management
 
 @cmd: 
 @cnc: 
+<!-- # Unused Parameters # -->
 @Returns: 
 
 

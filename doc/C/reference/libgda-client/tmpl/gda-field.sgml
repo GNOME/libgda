@@ -37,22 +37,6 @@ Access to individual fields in recordsets
 @klass: 
 
 
-<!-- ##### MACRO IS_GDA_FIELD ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO IS_GDA_FIELD_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### MACRO gda_field_isnull ##### -->
 <para>
 

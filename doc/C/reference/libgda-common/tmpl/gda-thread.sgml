@@ -36,14 +36,6 @@ implementation available on your system.
 @obj: 
 
 
-<!-- ##### MACRO IS_GDA_THREAD ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
 <!-- ##### USER_FUNCTION GdaThreadFunc ##### -->
 <para>
 

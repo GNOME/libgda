@@ -37,22 +37,6 @@ Connection pools
 @klass: 
 
 
-<!-- ##### MACRO IS_GDA_CONNECTION_POOL ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO IS_GDA_CONNECTION_POOL_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### FUNCTION gda_connection_pool_get_type ##### -->
 <para>
 

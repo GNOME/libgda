@@ -79,7 +79,7 @@ static void
 gda_server_impl_init (GdaServerImpl *server_impl)
 #endif
 {
-	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
+	g_return_if_fail(GDA_IS_SERVER_IMPL(server_impl));
 	
 	server_impl->name = NULL;
 	memset((void *) &server_impl->functions, 0, sizeof(GdaServerImplFunctions));
@@ -102,7 +102,7 @@ gda_server_impl_finalize (GObject *object)
 static void
 gda_server_impl_destroy (GdaServerImpl *server_impl)
 {
-	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
+	g_return_if_fail(GDA_IS_SERVER_IMPL(server_impl));
 	
 	server_list = g_list_remove(server_list, (gpointer) server_impl);
 	if (server_impl->name) g_free((gpointer) server_impl->name);
@@ -291,7 +291,7 @@ gda_server_impl_start (GdaServerImpl *server_impl)
 void
 gda_server_impl_stop (GdaServerImpl *server_impl)
 {
-	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
+	g_return_if_fail(GDA_IS_SERVER_IMPL(server_impl));
 	g_return_if_fail(server_impl->is_running);
 	
 	CORBA_ORB_shutdown(oaf_orb_get(), TRUE, server_impl->ev);

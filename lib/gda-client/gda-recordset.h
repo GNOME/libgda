@@ -56,15 +56,15 @@ typedef struct _GdaRecordsetClass GdaRecordsetClass;
 #  define GDA_RECORDSET_CLASS(klass) \
             G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_RECORDSET, \
                                      GdaRecordsetClass)
-#  define IS_GDA_RECORDSET(obj) \
+#  define GDA_IS_RECORDSET(obj) \
             G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_RECORDSET)
-#  define IS_GDA_RECORDSET_CLASS(klass) \
+#  define GDA_IS_RECORDSET_CLASS(klass) \
             G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_RECORDSET)
 #else
 #  define GDA_RECORDSET(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_RECORDSET, GdaRecordset)
 #  define GDA_RECORDSET_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_RECORDSET, GdaRecordsetClass)
-#  define IS_GDA_RECORDSET(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_RECORDSET)
-#  define IS_GDA_RECORDSET_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_RECORDSET))
+#  define GDA_IS_RECORDSET(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_RECORDSET)
+#  define GDA_IS_RECORDSET_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_RECORDSET))
 #endif
 
 #define GDA_RECORDSET_INVALID_POSITION 0xffffffff

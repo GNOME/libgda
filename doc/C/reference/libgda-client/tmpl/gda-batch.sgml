@@ -39,22 +39,6 @@ unique entity (a batch job).
 @klass: 
 
 
-<!-- ##### MACRO IS_GDA_BATCH ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO IS_GDA_BATCH_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### FUNCTION gda_batch_get_type ##### -->
 <para>
 

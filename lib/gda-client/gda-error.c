@@ -124,7 +124,7 @@ gda_error_init (GdaError *error, GdaErrorClass *klass)
 gda_error_init (GdaError* error)
 #endif
 {
-  g_return_if_fail(IS_GDA_ERROR(error));
+  g_return_if_fail(GDA_IS_ERROR(error));
   
   error->description = 0;
   error->number = 0;
@@ -237,7 +237,7 @@ gda_errors_from_exception (CORBA_Environment* ev)
 void
 gda_error_free (GdaError* error)
 {
-  g_return_if_fail(IS_GDA_ERROR(error));
+  g_return_if_fail(GDA_IS_ERROR(error));
   
   if (error->description)
     g_free(error->description);
@@ -289,48 +289,48 @@ gda_error_list_free (GList* errors)
 const gchar*
 gda_error_description (GdaError* error)
 {
-  g_return_val_if_fail(IS_GDA_ERROR(error), 0);
+  g_return_val_if_fail(GDA_IS_ERROR(error), 0);
   return error->description;
 }
 
 const glong
 gda_error_number (GdaError* error)
 {
-  g_return_val_if_fail(IS_GDA_ERROR(error), 0);
+  g_return_val_if_fail(GDA_IS_ERROR(error), 0);
   return error->number;
 }
 
 const gchar*
 gda_error_source (GdaError* error)
 {
-  g_return_val_if_fail(IS_GDA_ERROR(error), 0);
+  g_return_val_if_fail(GDA_IS_ERROR(error), 0);
   return error->source;
 }
 
 const gchar*
 gda_error_helpurl (GdaError* error)
 {
-  g_return_val_if_fail(IS_GDA_ERROR(error), 0);
+  g_return_val_if_fail(GDA_IS_ERROR(error), 0);
   return error->helpurl;
 }
 
 const gchar*
 gda_error_sqlstate (GdaError* error)
 {
-  g_return_val_if_fail(IS_GDA_ERROR(error), 0);
+  g_return_val_if_fail(GDA_IS_ERROR(error), 0);
   return error->sqlstate;
 }
 
 const gchar*
 gda_error_nativeMsg (GdaError* error)
 {
-  g_return_val_if_fail(IS_GDA_ERROR(error), 0);
+  g_return_val_if_fail(GDA_IS_ERROR(error), 0);
   return error->nativeMsg;
 }
 
 const gchar*
 gda_error_realcommand (GdaError* error)
 {
-  g_return_val_if_fail(IS_GDA_ERROR(error), 0);
+  g_return_val_if_fail(GDA_IS_ERROR(error), 0);
   return error->realcommand;
 }

@@ -36,11 +36,11 @@ extern "C" {
 #ifdef HAVE_GOBJECT
 #  define GDA_THREAD(obj) \
           G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_THREAD, GdaThread)
-#  define IS_GDA_THREAD(obj) \
+#  define GDA_IS_THREAD(obj) \
           G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_THREAD)
 #else
 #  define GDA_THREAD(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_THREAD, GdaThread)
-#  define IS_GDA_THREAD(obj) GTK_CHECK_TYPE(obj, GDA_TYPE_THREAD)
+#  define GDA_IS_THREAD(obj) GTK_CHECK_TYPE(obj, GDA_TYPE_THREAD)
 #endif
 
 typedef struct _GdaThread      GdaThread;

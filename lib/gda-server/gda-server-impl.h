@@ -46,15 +46,15 @@ typedef struct _GdaServerImplClass GdaServerImplClass;
          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER_IMPL, GdaServerImpl)
 #  define GDA_SERVER_IMPL_CLASS(klass) \
      G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER_IMPL, GdaServerImplClass)
-#  define IS_GDA_SERVER_IMPL(obj) \
+#  define GDA_IS_SERVER_IMPL(obj) \
           G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SERVER_IMPL)
-#  define IS_GDA_SERVER_IMPL_CLASS(klass) \
+#  define GDA_IS_SERVER_IMPL_CLASS(klass) \
           G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_SERVER_IMPL)
 #else
 #  define GDA_SERVER_IMPL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_SERVER_IMPL, GdaServerImpl)
 #  define GDA_SERVER_IMPL_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_SERVER_IMPL, GdaServerImplClass)
-#  define IS_GDA_SERVER_IMPL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_IMPL)
-#  define IS_GDA_SERVER_IMPL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_IMPL))
+#  define GDA_IS_SERVER_IMPL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_IMPL)
+#  define GDA_IS_SERVER_IMPL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_IMPL))
 #endif
 
 typedef struct _GdaServerImplFunctions GdaServerImplFunctions;

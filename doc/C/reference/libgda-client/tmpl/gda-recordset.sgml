@@ -37,22 +37,6 @@ Recordset (set of rows returned by providers) management
 @klass: 
 
 
-<!-- ##### MACRO IS_GDA_RECORDSET ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO IS_GDA_RECORDSET_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### MACRO GDA_RECORDSET_INVALID_POSITION ##### -->
 <para>
 

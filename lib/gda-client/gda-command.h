@@ -53,15 +53,15 @@ typedef struct _GdaCommandClass GdaCommandClass;
             G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_COMMAND, GdaCommand)
 #  define GDA_COMMAND_CLASS(klass) \
             G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_COMMAND, GdaCommandClass)
-#  define IS_GDA_COMMAND(obj) \
+#  define GDA_IS_COMMAND(obj) \
             G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_COMMAND)
-#  define IS_GDA_COMMAND_CLASS(klass) \
+#  define GDA_IS_COMMAND_CLASS(klass) \
             G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_COMMAND)
 #else
 #  define GDA_COMMAND(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_COMMAND, GdaCommand)
 #  define GDA_COMMAND_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_COMMAND, GdaCommandClass)
-#  define IS_GDA_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_COMMAND)
-#  define IS_GDA_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
+#  define GDA_IS_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_COMMAND)
+#  define GDA_IS_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
 #endif
 
 struct _GdaCommand {

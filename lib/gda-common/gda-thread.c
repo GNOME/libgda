@@ -94,7 +94,7 @@ gda_thread_init (GdaThread *thr, GdaThreadClass *klass)
 gda_thread_init (GdaThread *thr)
 #endif
 {
-  g_return_if_fail(IS_GDA_THREAD(thr));
+  g_return_if_fail(GDA_IS_THREAD(thr));
   thr->func = NULL;
   thr->is_running = FALSE;
 }
@@ -179,7 +179,7 @@ gda_thread_new (GdaThreadFunc func)
 void
 gda_thread_free (GdaThread *thr)
 {
-  g_return_if_fail(IS_GDA_THREAD(thr));
+  g_return_if_fail(GDA_IS_THREAD(thr));
 
   if (gda_thread_is_running(thr)) gda_thread_stop(thr);
 
@@ -198,7 +198,7 @@ gda_thread_free (GdaThread *thr)
 void
 gda_thread_start (GdaThread *thr, gpointer user_data)
 {
-  g_return_if_fail(IS_GDA_THREAD(thr));
+  g_return_if_fail(GDA_IS_THREAD(thr));
   
   if (!gda_thread_is_running(thr))
     {
@@ -217,7 +217,7 @@ gda_thread_start (GdaThread *thr, gpointer user_data)
 void
 gda_thread_stop (GdaThread *thr)
 {
-  g_return_if_fail(IS_GDA_THREAD(thr));
+  g_return_if_fail(GDA_IS_THREAD(thr));
   g_return_if_fail(gda_thread_is_running(thr));
 
   pthread_cancel(thr->tid);
@@ -233,7 +233,7 @@ gda_thread_stop (GdaThread *thr)
 gboolean
 gda_thread_is_running (GdaThread *thr)
 {
-  g_return_val_if_fail(IS_GDA_THREAD(thr), FALSE);
+  g_return_val_if_fail(GDA_IS_THREAD(thr), FALSE);
   return thr->is_running;
 }
 

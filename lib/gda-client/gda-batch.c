@@ -155,7 +155,7 @@ gda_batch_init (GdaBatch *job, GdaBatchClass *klass)
 gda_batch_init (GdaBatch *job)
 #endif
 {
-  g_return_if_fail(IS_GDA_BATCH(job));
+  g_return_if_fail(GDA_IS_BATCH(job));
 
   job->cnc = 0;
   job->transaction_mode = TRUE;
@@ -197,7 +197,7 @@ gda_batch_new (void)
 void
 gda_batch_free (GdaBatch *job)
 {
-  g_return_if_fail(IS_GDA_BATCH(job));
+  g_return_if_fail(GDA_IS_BATCH(job));
 
   gda_batch_clear(job);
 #ifdef HAVE_GOBJECT
@@ -224,7 +224,7 @@ gda_batch_load_file (GdaBatch *job, const gchar *filename, gboolean clean)
 {
   FILE* fp;
 
-  g_return_val_if_fail(IS_GDA_BATCH(job), FALSE);
+  g_return_val_if_fail(GDA_IS_BATCH(job), FALSE);
   g_return_val_if_fail(filename != 0, FALSE);
 
   /* clean up object if specified */
@@ -280,7 +280,7 @@ gda_batch_add_command (GdaBatch *job, const gchar *cmd)
 {
   gchar* str;
 
-  g_return_if_fail(IS_GDA_BATCH(job));
+  g_return_if_fail(GDA_IS_BATCH(job));
   g_return_if_fail(cmd != 0);
 
   str = g_strdup(cmd);
@@ -297,7 +297,7 @@ gda_batch_add_command (GdaBatch *job, const gchar *cmd)
 void
 gda_batch_clear (GdaBatch *job)
 {
-  g_return_if_fail(IS_GDA_BATCH(job));
+  g_return_if_fail(GDA_IS_BATCH(job));
 
   job->cnc = 0;
   job->is_running = FALSE;
@@ -321,9 +321,9 @@ gda_batch_start (GdaBatch *job)
 {
   GList* node;
 
-  g_return_val_if_fail(IS_GDA_BATCH(job), FALSE);
+  g_return_val_if_fail(GDA_IS_BATCH(job), FALSE);
   g_return_val_if_fail(!job->is_running, FALSE);
-  g_return_val_if_fail(IS_GDA_CONNECTION(job->cnc), FALSE);
+  g_return_val_if_fail(GDA_IS_CONNECTION(job->cnc), FALSE);
   g_return_val_if_fail(gda_connection_is_open(job->cnc), FALSE);
 
   node = g_list_first(job->commands);
@@ -415,7 +415,7 @@ gda_batch_start (GdaBatch *job)
 void
 gda_batch_stop (GdaBatch *job)
 {
-  g_return_if_fail(IS_GDA_BATCH(job));
+  g_return_if_fail(GDA_IS_BATCH(job));
 
   if (job->is_running)
     {
@@ -430,7 +430,7 @@ gda_batch_stop (GdaBatch *job)
 gboolean
 gda_batch_is_running (GdaBatch *job)
 {
-  g_return_val_if_fail(IS_GDA_BATCH(job), FALSE);
+  g_return_val_if_fail(GDA_IS_BATCH(job), FALSE);
   return job->is_running;
 }
 
@@ -444,7 +444,7 @@ gda_batch_is_running (GdaBatch *job)
 GdaConnection *
 gda_batch_get_connection (GdaBatch *job)
 {
-  g_return_val_if_fail(IS_GDA_BATCH(job), 0);
+  g_return_val_if_fail(GDA_IS_BATCH(job), 0);
   return job->cnc;
 }
 
@@ -458,7 +458,7 @@ gda_batch_get_connection (GdaBatch *job)
 void
 gda_batch_set_connection (GdaBatch *job, GdaConnection *cnc)
 {
-  g_return_if_fail(IS_GDA_BATCH(job));
+  g_return_if_fail(GDA_IS_BATCH(job));
   job->cnc = cnc;
 }
 
@@ -478,7 +478,7 @@ gda_batch_set_connection (GdaBatch *job, GdaConnection *cnc)
 gboolean
 gda_batch_get_transaction_mode (GdaBatch *job)
 {
-  g_return_val_if_fail(IS_GDA_BATCH(job), FALSE);
+  g_return_val_if_fail(GDA_IS_BATCH(job), FALSE);
   return job->transaction_mode;
 }
 
@@ -493,6 +493,6 @@ gda_batch_get_transaction_mode (GdaBatch *job)
 void
 gda_batch_set_transaction_mode (GdaBatch *job, gboolean mode)
 {
-  g_return_if_fail(IS_GDA_BATCH(job));
+  g_return_if_fail(GDA_IS_BATCH(job));
   job->transaction_mode = mode;
 }

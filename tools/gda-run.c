@@ -59,7 +59,7 @@ cnc_error_cb (GdaConnection *cnc, GList *errors, gpointer data)
 {
   GList* node;
 
-  g_return_if_fail(IS_GDA_CONNECTION(cnc));
+  g_return_if_fail(GDA_IS_CONNECTION(cnc));
 
   node = g_list_first(errors);
   while (node)
