@@ -983,46 +983,53 @@
         LINKEND="gda-main-quit">gda_main_quit()</LINK> in order to finish the program.
       </para>
       <PROGRAMLISTING>
-      void
-      do_stuff ()
-      {
-        GdaClient *client;
-        GdaConnection *connection;
-      
-        list_providers ();
-        list_datasources ();
-      
-        client = gda_client_new ();
-      
-        g_print ("CONNECTING\n");
-        connection = gda_client_open_connection (client, "calvaris", NULL, NULL);
-        g_print ("CONNECTED\n");
-      
-        proving_errors (connection);
-      
-        process_accounts(connection);
-      
-        process_accounts2(connection);
-      
-        gda_client_close_all_connections (client);
-      
-        gda_main_quit();
-      }
-      
-      
-      int
-      main (int argc, char **argv)
-      {
-      
-        g_print ("STARTING\n");
-        gda_init ("TestGDA", "0.1", argc, argv);
-      
-        save_ds ();
-        //  remove_ds();
-      
-        gda_main_run ((GdaInitFunc) do_stuff, (gpointer) NULL);
-        //  do_stuff();
-      }
+    void
+    do_stuff ()
+    {
+      GdaClient *client;
+      GdaConnection *connection;
+    
+      list_providers ();
+      list_datasources ();
+    
+      client = gda_client_new ();
+    
+      g_print ("CONNECTING\n");
+      connection = gda_client_open_connection (client, "calvaris", NULL, NULL,
+					       GDA_CONNECTION_OPTIONS_READ_ONLY);
+
+      g_print ("CONNECTED\n");
+    
+      execute_some_queries (connection);
+
+      g_print ("ERRORS PROVED!\n");
+    
+      process_accounts(connection);
+    
+      gda_client_close_all_connections (client);
+
+      g_object_unref(G_OBJECT(client));
+
+      play_with_parameters();
+
+      gda_main_quit();
+    }
+    
+    
+    int
+    main (int argc, char **argv)
+    {
+    
+      g_print ("STARTING\n");
+      gda_init ("TestGDA", "0.1", argc, argv);
+    
+      save_ds ();
+    
+      gda_main_run ((GdaInitFunc) do_stuff, (gpointer) NULL);
+      /* do_stuff(); */
+      g_print("ENDING\n");
+    
+    }
       </PROGRAMLISTING>
     </sect1>
     <sect1 ID="connections">
@@ -1038,31 +1045,41 @@
         <AREASPEC UNITS="LINECOLUMN">
           <AREA ID="connecting-1" COORDS="10 1">
           <AREA ID="connecting-2" COORDS="13 1">
-          <AREA ID="connecting-3" COORDS="20 1">
-        </AREASPEC>
+	  <AREA ID="connecting-3" COORDS="24 1">
+	  <AREA ID="connecting-4" COORDS="26 1">
+</AREASPEC>
         <programlisting>
-        void
-        do_stuff ()
-        {
-          GdaClient *client;
-          GdaConnection *connection;
-        
-          list_providers ();
-          list_datasources ();
-        
-          client = gda_client_new ();
-        
-          g_print ("CONNECTING\n");
-          connection = gda_client_open_connection (client, "calvaris", NULL, NULL);
-          g_print ("CONNECTED\n");
-        
-          proving_errors (connection);
-        
-          process_accounts(connection);
-        
-          gda_client_close_all_connections (client);
-        
-        }
+          void
+          do_stuff ()
+          {
+            GdaClient *client;
+            GdaConnection *connection;
+          
+            list_providers ();
+            list_datasources ();
+          
+            client = gda_client_new ();
+          
+            g_print ("CONNECTING\n");
+            connection = gda_client_open_connection (client, "calvaris", NULL, NULL,
+                                                     GDA_CONNECTION_OPTIONS_READ_ONLY);
+      
+            g_print ("CONNECTED\n");
+          
+            execute_some_queries (connection);
+      
+            g_print ("ERRORS PROVED!\n");
+          
+            process_accounts(connection);
+          
+            gda_client_close_all_connections (client);
+      
+            g_object_unref(G_OBJECT(client));
+      
+            play_with_parameters();
+      
+            gda_main_quit();
+          }
         </programlisting>
         <CALLOUTLIST>
           <CALLOUT AREAREFS="connecting-1">
@@ -1081,7 +1098,13 @@
               It's a good practice to close connections when you finish using them. It
               doesn't mean that you must close them each time you use them. It's better
               open the connections when program starts and use them during the whole
-              execution.
+              execution. This function frees the <LINK LINKEND="libgda-GdaConnection">GdaConnection</LINK>
+              objects attached to the <LINK LINKEND="libgda-GdaClient">GdaClient</LINK>.
+            </para>
+          </callout>
+          <CALLOUT AREAREFS="connecting-4">
+            <para>
+              When finishing with the client, I have to free it.
             </para>
           </callout>
         </CALLOUTLIST>
@@ -1427,7 +1450,6 @@
                 for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
                      column_id++)
                   {
-		    /* We don't need to free this value! */
                     value = gda_row_get_value (row, column_id);
                     string=gda_value_stringify (value);
                     g_print ("%s\t", string);
@@ -1458,9 +1480,9 @@
                 LINKEND="gda-row-get-value">gda_row_get_value ()
                 </LINK>. Notice that <LINK
                 LINKEND="gda-row-get-value">gda_row_get_value ()</LINK>
-                doesn't return a <EMPHASIS>const <LINK
+                returns a <EMPHASIS>const <LINK
                 LINKEND="libgda-gda-value">GdaValue</LINK></EMPHASIS>, so we
-                have to free it. 
+                do not have to free it. 
               </PARA>
             </CALLOUT>
           </CALLOUTLIST>
@@ -1542,7 +1564,6 @@
                   value = gda_row_get_value (row, column_id);
                   string=gda_value_stringify (value);
                   g_print ("%s\t", string);
-                  gda_value_free(value);
                   g_free(string);
                 }
               g_print ("\n");
@@ -1621,6 +1642,7 @@
       </para>
       <ORDEREDLIST NUMERATION="arabic">
         <LISTITEM><para>Create transaction</para></LISTITEM>
+        <LISTITEM><para>Change, if needed, the isolation level</para></LISTITEM>
         <LISTITEM><para>Link transaction to a connection</para></LISTITEM>
         <LISTITEM>
           <para>For each command you want to execute:</para>
@@ -1640,11 +1662,12 @@
       <PROGRAMLISTINGCO>
         <AREASPEC UNITS="LINECOLUMN">
           <AREA ID="transactions-1" COORDS="6 1">
-          <AREA ID="transactions-2" COORDS="7 1">
-          <AREA ID="transactions-3" COORDS="14 1">
-          <AREA ID="transactions-4" COORDS="27 1">
-          <AREA ID="transactions-5" COORDS="28 1">
-          <AREA ID="transactions-6" COORDS="51 1">
+          <AREA ID="transactions-1a" COORDS="7 1">
+          <AREA ID="transactions-2" COORDS="9 1">
+          <AREA ID="transactions-3" COORDS="16 1">
+          <AREA ID="transactions-4" COORDS="29 1">
+          <AREA ID="transactions-5" COORDS="30 1">
+          <AREA ID="transactions-6" COORDS="55 1">
         </AREASPEC>
         <programlisting>
         void process_accounts(GdaConnection *connection)
@@ -1653,6 +1676,8 @@
           GdaCommand *command;
         
           transaction_one=gda_transaction_new("accounts1");
+          gda_transaction_set_isolation_level(transaction_one,
+                   GDA_TRANSACTION_ISOLATION_SERIALIZABLE);
           gda_connection_begin_transaction(connection,transaction_one);
         
           command=gda_command_new (
@@ -1677,6 +1702,8 @@
           g_object_unref(transaction_one);
         
           transaction_two=gda_transaction_new("accounts2");
+          gda_transaction_set_isolation_level(transaction_two,
+                   GDA_TRANSACTION_ISOLATION_SERIALIZABLE);
           gda_connection_begin_transaction(connection,transaction_two);
         
           command=gda_command_new (
@@ -1707,6 +1734,11 @@
           <CALLOUT AREAREFS="transactions-1">
             <PARA>
               Creates first transaction.
+            </PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="transactions-1a">
+            <PARA>
+              Changes the isolation level.
             </PARA>
           </CALLOUT>
           <CALLOUT AREAREFS="transactions-2">

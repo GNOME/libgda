@@ -201,7 +201,7 @@ gda_row_set_id (GdaRow *row, const gchar *id)
  * 
  * Returns: a pointer to the #GdaValue in the position @num of @row.
  */
-GdaValue *
+G_CONST_RETURN GdaValue *
 gda_row_get_value (GdaRow *row, gint num)
 {
 	g_return_val_if_fail (row != NULL, NULL);

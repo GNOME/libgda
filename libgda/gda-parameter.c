@@ -42,9 +42,9 @@ free_hash_param (gpointer key, gpointer value, gpointer user_data)
 }
 
 /**
- * gda_parameter_new
+ * gda_parameter_new_from_value
  * @name: name for the parameter being created.
- * @type: GDA value type for this parameter.
+ * @value: GDA value for this parameter.
  *
  * Create a new #GdaParameter object, which is usually used
  * with #GdaParameterList.
@@ -52,14 +52,16 @@ free_hash_param (gpointer key, gpointer value, gpointer user_data)
  * Returns: the newly created #GdaParameter.
  */
 GdaParameter *
-gda_parameter_new (const gchar *name, GdaValueType type)
+gda_parameter_new_from_value (const gchar *name, GdaValue *value)
 {
 	GdaParameter *param;
 
+	g_return_val_if_fail (name != NULL, NULL);
+	g_return_val_if_fail (value != NULL, NULL);
+
 	param = g_new0 (GdaParameter, 1);
 	param->name = g_strdup (name);
-	param->value = gda_value_new_null ();
-	param->value->type = type;
+	param->value = gda_value_copy (value);
 
 	return param;
 }

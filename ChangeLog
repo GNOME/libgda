@@ -1,4 +1,17 @@
+2003-05-13  Xabier Rodríguez Calvar <xrcalvar@igalia.com>
+
+	* doc/C: some changes to make it more solid
+
+	* libgda/gda-row.*: introduced G_CONST_RETURN in
+	gda_row_get_value() to have the const in the doc but not in the
+	real version
+
+	* libgda/gda-parameter.*: removed gda_parameter_new(), adding
+	gda_parameter_new_from_value() to make the API more solid and
+	removed some checkings for null because they were not necessary.
+
 2003-05-12 Sergey N. Belinsky <sergey_be@mail.ru>
+
 	* gda-ibmdb2-provider.c:
 	* gda-ibmdb2-recordset.c:
 	* gda-ibmdb2-types.c: fix for compile problem.

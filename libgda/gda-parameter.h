@@ -33,7 +33,7 @@ typedef struct {
 	GdaValue *value;
 } GdaParameter;
 
-GdaParameter   *gda_parameter_new (const gchar *name, GdaValueType type);
+GdaParameter   *gda_parameter_new_from_value (const gchar *name, GdaValue *value);
 GdaParameter   *gda_parameter_new_gobject (const gchar *name, const GObject *value);
 GdaParameter   *gda_parameter_new_string (const gchar *name, const gchar *value);
 void            gda_parameter_free (GdaParameter *param);

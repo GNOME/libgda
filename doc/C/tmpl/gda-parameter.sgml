@@ -20,16 +20,6 @@ Functions to manage parameters
 </para>
 
 
-<!-- ##### FUNCTION gda_parameter_new ##### -->
-<para>
-
-</para>
-
-@name: 
-@type: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_parameter_new_gobject ##### -->
 <para>
 
