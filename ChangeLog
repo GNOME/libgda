@@ -1,3 +1,7 @@
+2002-03-12  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* configure.in: don't check for the version of intltool.
+
 2002-03-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model.[ch]: added "describe_column" virtual method.
