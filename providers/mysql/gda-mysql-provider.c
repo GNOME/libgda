@@ -217,7 +217,7 @@ static GList *
 process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
 {
 	MYSQL *mysql;
-	gchar *arr;
+	gchar **arr;
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
