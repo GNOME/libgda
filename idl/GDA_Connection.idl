@@ -91,7 +91,6 @@ module GDA {
 			string         value;
 		};
 		typedef sequence<Constraint> ConstraintSeq;
-		typedef sequence<string>     DSNlist;
 
 		readonly attribute string    version;
 		readonly attribute ErrorSeq  errors;
@@ -116,6 +115,10 @@ module GDA {
 		/* conversion routines */
 		string      sql2xml (in string sql);
 		string      xml2sql (in string xml);
+
+		/* client listeners */
+		void        addListener (in Listener listener);
+		void        removeListener (in Listener listener);
 	};
 };
 

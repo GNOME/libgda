@@ -10,7 +10,8 @@ module GDA {
          */
         enum ListenerAction {
 		LISTENER_ACTION_DATABASE,
-		LISTENER_ACTION_ERROR
+		LISTENER_ACTION_ERROR,
+		LISTENER_ACTION_SHUTDOWN
 	};
 
 	interface Listener : Bonobo::Unknown {
