@@ -1,6 +1,9 @@
 # Makefile for cross compiling.
 # This file just sets up the enviroment variables.
-# Then calls Makefile.w32.shared to do all the compiling (which in turn calls all the Makefile.w32 files.
+# It is included when you type make -f Makefile.w32 cross
+# 
+# modify to suit your enviroment
+
 
 
 # where the mingw root is..
@@ -9,7 +12,7 @@ export ROOT = /usr/src/win32mingw
 #where are the binaries to build stuff 
 export BIN = $(ROOT)/cross-tools/bin
 
-#where is gcc..
+#where is gcc.. and others..
 export CC = $(BIN)/i386-mingw32msvc-gcc -g3
 export DLLTOOL = $(BIN)/i386-mingw32msvc-dlltool
 export BISON = `which bison`
@@ -18,85 +21,35 @@ export GLIBMKENUMS = `which glib-mkenums`
 export GLIBGENMARSHAL = `which glib-genmarshal`
 # the -I include paths.
 
-export IPATHS = -I. -I.. \
-	-I$(ROOT)/include -I$(ROOT)/include/glib-2.0  \
+export IPATHS = \
+	-I. \
+	-I.. \
+	-I$(ROOT)/include \
+	-I$(ROOT)/include/glib-2.0  \
 	-I$(ROOT)/lib/glib-2.0/include \
 	-I$(ROOT)/libxml2-2.6.13.win32/include \
 	-I$(ROOT)/libxslt-1.1.10.win32/include \
 	-I$(ROOT)/zlib-1.2.1.win32/include \
 	-I$(ROOT)/cross-tools/include/
-	
-	
-export DVALUES = -DPACKAGE_NAME=\"GNU\ Data\ Access\" \
-	-DPACKAGE_TARNAME=\"\" \
-	-DPACKAGE_VERSION=\"\" \
-	-DPACKAGE_STRING=\"\" \
-	-DPACKAGE_BUGREPORT=\"\" \
-	-DPACKAGE=\"libgda\" \
-	-DVERSION=\"1.1.6\" \
-	-DBONOBO_EXPLICIT_TRANSLATION_DOMAIN=\"libgda-2\" \
-	-DSTDC_HEADERS=1 \
-	-DHAVE_SYS_TYPES_H=1 \
-	-DHAVE_SYS_STAT_H=1 \
-	-DHAVE_STDLIB_H=1 \
-	-DHAVE_STRING_H=1 \
-	-DHAVE_MEMORY_H=1 \
-	-DHAVE_STRINGS_H=1 \
-	-DHAVE_INTTYPES_H=1 \
-	-DHAVE_STDINT_H=1 \
-	-DHAVE_UNISTD_H=1 \
-	-DHAVE_DLFCN_H=1 \
-	-DYYTEXT_POINTER=1 \
-	-DGETTEXT_PACKAGE=\"libgda-2\" \
-	-DHAVE_LOCALE_H=1 \
-	-DHAVE_LC_MESSAGES=1 \
-	-DHAVE_BIND_TEXTDOMAIN_CODESET=1 \
-	-DHAVE_GETTEXT=1 \
-	-DHAVE_DCGETTEXT=1 \
-	-DENABLE_NLS=1 \
-	-DHAVE_BDB=1 \
-	-DHAVE_POPT_H=1 \
-	-DLIBGDA_PLUGINDIR=\"C:/libgda/providers\" \
-	-DLIBGDA_LOCALEDIR=\"/usr/local/share/locale\" \
-	-DLIBGDA_GLOBAL_CONFIG_FILE=\"C:/libgda/config\" \
-	-DPIC	\
-	-DLIBGDA_WIN32
-	
-export LIBS = -llibglib-2.0-0 \
-	-llibgmodule-2.0-0 \
-	-llibgobject-2.0-0 \
-	-llibgthread-2.0-0 \
-	-llibxml2 \
-	-liconv \
-	-lintl \
-	-llibxslt
-	
-	
-export LIBDIRS = -L$(ROOT)/bin \
+
+export LIBDIRS = \
+	-L$(ROOT)/bin \
 	-L$(ROOT)/lib \
 	-L$(ROOT)/libxml2-2.6.13.win32/bin \
 	-L$(ROOT)/libxslt-1.1.10.win32/bin \
 	-L$(ROOT)/zlib-1.2.1.win32/bin \
 	-L$(ROOT)/cross-tools\bin 
 
-export WFLAGS = -Wall -Wmissing-prototypes -Wnested-externs -Wpointer-arith -Wno-sign-compare
+export DVALUES += \
+	-DLIBGDA_PLUGINDIR=\"C:/libgda/providers\" \
+	-DLIBGDA_LOCALEDIR=\"/usr/local/share/locale\" \
+	-DLIBGDA_GLOBAL_CONFIG_FILE=\"C:/libgda/config\" \
+
+	
+	
+	
 
 
-
-
-SUBDIRS = libsql libgda
-
-.PHONY: subdirs $(SUBDIRS)
-
-subdirs: $(SUBDIRS)
-
-$(SUBDIRS):
-	$(MAKE) -e -C $@ -f Makefile.w32
-
-
-clean:
-	$(MAKE) -e -C libsql -f Makefile.w32 clean; \
-	$(MAKE) -e -C libgda -f Makefile.w32 clean
 
 
 

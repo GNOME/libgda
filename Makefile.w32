@@ -1,0 +1,106 @@
+#this is the common makefile for all Win32 builds
+#
+# All the build specific settings are set in Makefile.w32.cross & Makefile.w32.win32
+# if you need to change paths - modify those..
+#
+#
+#
+# usage: 
+#     (for cross compiling - mingw on linux)
+# make -f Makefile.w32 cross 
+#
+#     (for mingw on win32)
+# make -f Makefile.w32 win32
+#
+#     (for downloading dependancies)
+# make -f Makefile.w32 download
+#
+#     (for cleaning files)
+# make -f Makefile.w32 clean
+#
+#
+# AUTHORS:
+#  Alan Knowles <alan@akbkhome.com>
+##
+# TODO
+#    include makefile.win32.cross|win32 based on OS detection.
+#    implement download of dependant files into deps/*
+#
+
+
+
+
+#These should be global general variables..
+#
+export DVALUES = -DPACKAGE_NAME=\"GNU\ Data\ Access\" \
+	-DPACKAGE_TARNAME=\"\" \
+	-DPACKAGE_VERSION=\"\" \
+	-DPACKAGE_STRING=\"\" \
+	-DPACKAGE_BUGREPORT=\"\" \
+	-DPACKAGE=\"libgda\" \
+	-DVERSION=\"1.1.6\" \
+	-DBONOBO_EXPLICIT_TRANSLATION_DOMAIN=\"libgda-2\" \
+	-DSTDC_HEADERS=1 \
+	-DHAVE_SYS_TYPES_H=1 \
+	-DHAVE_SYS_STAT_H=1 \
+	-DHAVE_STDLIB_H=1 \
+	-DHAVE_STRING_H=1 \
+	-DHAVE_MEMORY_H=1 \
+	-DHAVE_STRINGS_H=1 \
+	-DHAVE_INTTYPES_H=1 \
+	-DHAVE_STDINT_H=1 \
+	-DHAVE_UNISTD_H=1 \
+	-DHAVE_DLFCN_H=1 \
+	-DYYTEXT_POINTER=1 \
+	-DGETTEXT_PACKAGE=\"libgda-2\" \
+	-DHAVE_LOCALE_H=1 \
+	-DHAVE_LC_MESSAGES=1 \
+	-DHAVE_BIND_TEXTDOMAIN_CODESET=1 \
+	-DHAVE_GETTEXT=1 \
+	-DHAVE_DCGETTEXT=1 \
+	-DENABLE_NLS=1 \
+	-DHAVE_BDB=1 \
+	-DHAVE_POPT_H=1 \
+	-DPIC	\
+	-DLIBGDA_WIN32
+	
+	
+export LIBS = \
+	-llibglib-2.0-0 \
+	-llibgmodule-2.0-0 \
+	-llibgobject-2.0-0 \
+	-llibgthread-2.0-0 \
+	-llibxml2 \
+	-liconv \
+	-lintl \
+	-llibxslt
+	
+export WFLAGS = -Wall -Wmissing-prototypes -Wnested-externs -Wpointer-arith -Wno-sign-compare
+
+#special trick to include variables specific to each make platform..
+#** change this so it does it by using OS detection?
+ifeq ($(MAKECMDGOALS),cross)
+include Makefile.w32.cross
+endif
+
+ifeq ($(MAKECMDGOALS),win32)
+include Makefile.w32.win32
+endif
+
+
+#list of phoney targets (eg. files that dont exists?)
+.PHONY: all clean
+ 
+cross: all
+
+win32: all
+
+all:
+	$(MAKE) -C libsql -f Makefile.w32; \
+	$(MAKE) -C libgda -f Makefile.w32
+
+
+
+clean:
+	$(MAKE) -C libsql -f Makefile.w32 clean; \
+	$(MAKE) -C libgda -f Makefile.w32 clean
