@@ -1,5 +1,22 @@
 2003-01-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-parameter.[ch] (gda_parameter_new_gobject): new function.
+
+	* libgda/gda-client.h: updated argument names for events. Removed
+	"error" signal, now obsoleted by "event_notification".
+
+	* libgda/gda-client.c (connection_error_cb): pass a GdaError object as
+	the parameter for the GDA_CLIENT_EVENT_ERROR event. Don't emit "error"
+	signal.
+	(gda_client_open_connection): no parameters for CONNECTION_OPENED
+	event.
+	(gda_client_class_init): don't create "error" signal.
+
+	* libgda/gda-connection.c (gda_connection_finalize, gda_connection_new):
+	no parameters for CONNECTION_OPENED/CONNECTION_CLOSED events.
+.
+2003-01-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-value.h: added GDA_VALUE_TYPE_GOBJECT type.
 
 	* libgda/gda-value.c (gda_value_new_gobject, gda_value_get_gobject,

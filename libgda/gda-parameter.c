@@ -65,6 +65,29 @@ gda_parameter_new (const gchar *name, GdaValueType type)
 }
 
 /**
+ * gda_parameter_new_gobject
+ * @name: name for the parameter being created.
+ * @value: a GObject value.
+ *
+ * Create a new #GdaParameter from a GObject.
+ * Returns: the newly created #GdaParameter.
+ */
+GdaParameter *
+gda_parameter_new_gobject (const gchar *name, const GObject *value)
+{
+	GdaParameter *param;
+
+	g_return_val_if_fail (name != NULL, NULL);
+	g_return_val_if_fail (value != NULL, NULL);
+
+	param = g_new0 (GdaParameter, 1);
+	param->name = g_strdup (name);
+	param->value = gda_value_new_gobject (value);
+
+	return param;
+}
+ 
+/**
  * gda_parameter_new_string
  * @name: name for the parameter being created.
  * @value: string value.

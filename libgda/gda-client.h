@@ -41,9 +41,9 @@ typedef enum {
 	   should notify on very special cases (like a transaction being started
 	   or committed via a BEGIN/COMMIT command directly sent to the
 	   execute_command method on the provider */
-	GDA_CLIENT_EVENT_ERROR,             /* params: "description" */
-	GDA_CLIENT_EVENT_CONNECTION_OPENED, /* params: "dsn", "username" */
-	GDA_CLIENT_EVENT_CONNECTION_CLOSED  /* params: "dsn" */
+	GDA_CLIENT_EVENT_ERROR,             /* params: "error" */
+	GDA_CLIENT_EVENT_CONNECTION_OPENED, /* params: */
+	GDA_CLIENT_EVENT_CONNECTION_CLOSED  /* */
 } GdaClientEvent;
 
 typedef struct _GdaClientClass   GdaClientClass;
@@ -58,7 +58,6 @@ struct _GdaClientClass {
 	GObjectClass parent_class;
 
 	/* signals */
-	void (* error) (GdaClient *client, GdaConnection *cnc, GList *error_list);
 	void (* event_notification) (GdaClient *client,
 				     GdaConnection *cnc,
 				     GdaClientEvent event,
