@@ -1,5 +1,7 @@
 2001-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-default-connection.c, gda-default-command.c: better
+	error handling
 	* sqlite/NO-AUTO-GEN: added this file to avoid the execution of
 	auto* in this directory (fixed by mvali@hot.ee and
 	Jon.Hellan@clustra.com)

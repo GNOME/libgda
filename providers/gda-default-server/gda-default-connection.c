@@ -325,6 +325,13 @@ gda_default_error_make (GdaServerError *error,
 						GdaServerConnection *cnc,
 						gchar *where)
 {
+	g_return_if_fail(error != NULL);
+
+	gda_server_error_set_source(error, "[gda-default]");
+	gda_server_error_set_help_file(error, "(null)");
+	gda_server_error_set_help_context(error, "(null)");
+	gda_server_error_set_sqlstate(error, where);
+	gda_server_error_set_native(error, where);
 }
 
 /*
