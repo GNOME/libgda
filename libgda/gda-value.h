@@ -161,56 +161,56 @@ GdaValue     *gda_value_new_from_xml (const xmlNodePtr node);
 
 void          gda_value_free (GdaValue *value);
 
-GdaValueType  gda_value_get_type (GdaValue *value);
+GdaValueType  gda_value_get_type (const GdaValue *value);
 #define       gda_value_isa(value,type) (gda_value_get_type (value) == type)
-gboolean      gda_value_is_null (GdaValue *value);
-gboolean      gda_value_is_number (GdaValue *value);
+gboolean      gda_value_is_null (const GdaValue *value);
+gboolean      gda_value_is_number (const GdaValue *value);
 GdaValue     *gda_value_copy (const GdaValue *value);
 
-gint64        gda_value_get_bigint (GdaValue *value);
+gint64        gda_value_get_bigint (const GdaValue *value);
 void          gda_value_set_bigint (GdaValue *value, gint64 val);
-guint64       gda_value_get_biguint (GdaValue *value);
+guint64       gda_value_get_biguint (const GdaValue *value);
 void          gda_value_set_biguint (GdaValue *value, guint64 val);
-gconstpointer gda_value_get_binary (GdaValue *value, glong *size);
+G_CONST_RETURN gpointer gda_value_get_binary (const GdaValue *value, glong *size);
 void          gda_value_set_binary (GdaValue *value, gconstpointer val, glong size);
-gboolean      gda_value_get_boolean (GdaValue *value);
+gboolean      gda_value_get_boolean (const GdaValue *value);
 void          gda_value_set_boolean (GdaValue *value, gboolean val);
-const GdaDate *gda_value_get_date (GdaValue *value);
+G_CONST_RETURN GdaDate *gda_value_get_date (const GdaValue *value);
 void          gda_value_set_date (GdaValue *value, const GdaDate *val);
-gdouble       gda_value_get_double (GdaValue *value);
+gdouble       gda_value_get_double (const GdaValue *value);
 void          gda_value_set_double (GdaValue *value, gdouble val);
-const GdaGeometricPoint *gda_value_get_geometric_point (GdaValue *value);
+G_CONST_RETURN GdaGeometricPoint *gda_value_get_geometric_point (const GdaValue *value);
 void          gda_value_set_geometric_point (GdaValue *value, const GdaGeometricPoint *val);
-const GObject *gda_value_get_gobject (GdaValue *value);
+G_CONST_RETURN GObject *gda_value_get_gobject (const GdaValue *value);
 void          gda_value_set_gobject (GdaValue *value, const GObject *val);
-gint          gda_value_get_integer (GdaValue *value);
+gint          gda_value_get_integer (const GdaValue *value);
 void          gda_value_set_integer (GdaValue *value, gint val);
-const GdaValueList *gda_value_get_list (GdaValue *value);
+G_CONST_RETURN GdaValueList *gda_value_get_list (const GdaValue *value);
 void          gda_value_set_list (GdaValue *value, const GdaValueList *val);
 void          gda_value_set_null (GdaValue *value);
-const GdaMoney *gda_value_get_money (GdaValue *value);
+G_CONST_RETURN GdaMoney *gda_value_get_money (const GdaValue *value);
 void          gda_value_set_money (GdaValue *value, const GdaMoney *val);
-const GdaNumeric *gda_value_get_numeric (GdaValue *value);
+G_CONST_RETURN GdaNumeric *gda_value_get_numeric (const GdaValue *value);
 void          gda_value_set_numeric (GdaValue *value, const GdaNumeric *val);
-gfloat        gda_value_get_single (GdaValue *value);
+gfloat        gda_value_get_single (const GdaValue *value);
 void          gda_value_set_single (GdaValue *value, gfloat val);
-gshort        gda_value_get_smallint (GdaValue *value);
+gshort        gda_value_get_smallint (const GdaValue *value);
 void          gda_value_set_smallint (GdaValue *value, gshort val);
-gushort       gda_value_get_smalluint (GdaValue *value);
+gushort       gda_value_get_smalluint (const GdaValue *value);
 void          gda_value_set_smalluint (GdaValue *value, gushort val);
-const gchar  *gda_value_get_string (GdaValue *value);
+G_CONST_RETURN gchar  *gda_value_get_string (const GdaValue *value);
 void          gda_value_set_string (GdaValue *value, const gchar *val);
-const GdaTime *gda_value_get_time (GdaValue *value);
+G_CONST_RETURN GdaTime *gda_value_get_time (const GdaValue *value);
 void          gda_value_set_time (GdaValue *value, const GdaTime *val);
-const GdaTimestamp *gda_value_get_timestamp (GdaValue *value);
+G_CONST_RETURN GdaTimestamp *gda_value_get_timestamp (const GdaValue *value);
 void          gda_value_set_timestamp (GdaValue *value, const GdaTimestamp *val);
-gchar         gda_value_get_tinyint (GdaValue *value);
+gchar         gda_value_get_tinyint (const GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
-guchar        gda_value_get_tinyuint (GdaValue *value);
+guchar        gda_value_get_tinyuint (const GdaValue *value);
 void          gda_value_set_tinyuint (GdaValue *value, guchar val);
-guint         gda_value_get_uinteger (GdaValue *value);
+guint         gda_value_get_uinteger (const GdaValue *value);
 void          gda_value_set_uinteger (GdaValue *value, guint val);
-GdaValueType  gda_value_get_vtype (GdaValue *value);
+GdaValueType  gda_value_get_vtype (const GdaValue *value);
 void          gda_value_set_vtype (GdaValue *value, GdaValueType type);
 gboolean      gda_value_set_from_string (GdaValue *value, 
 					 const gchar *as_string,
@@ -220,8 +220,8 @@ gboolean      gda_value_set_from_value (GdaValue *value, const GdaValue *from);
 
 gint          gda_value_compare (const GdaValue *value1,
 				 const GdaValue *value2);
-gchar        *gda_value_stringify (GdaValue *value);
-xmlNodePtr    gda_value_to_xml (GdaValue *value);
+gchar        *gda_value_stringify (const GdaValue *value);
+xmlNodePtr    gda_value_to_xml (const GdaValue *value);
 
 G_END_DECLS
 

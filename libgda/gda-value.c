@@ -825,7 +825,7 @@ gda_value_free (GdaValue *value)
  * Returns: the #GdaValueType of the value.
  */
 GdaValueType
-gda_value_get_type (GdaValue *value)
+gda_value_get_type (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, GDA_VALUE_TYPE_UNKNOWN);
 	return value->type;
@@ -841,7 +841,7 @@ gda_value_get_type (GdaValue *value)
  * #GDA_VALUE_TYPE_NULL.
  */
 gboolean
-gda_value_is_null (GdaValue *value)
+gda_value_is_null (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
 	return value->type == GDA_VALUE_TYPE_NULL;
@@ -857,7 +857,7 @@ gda_value_is_null (GdaValue *value)
  * Returns: TRUE if a number, FALSE otherwise.
  */
 gboolean
-gda_value_is_number (GdaValue *value)
+gda_value_is_number (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
 
@@ -994,7 +994,7 @@ gda_value_copy (const GdaValue *value)
  * Returns: the value contained in @value.
  */
 gint64
-gda_value_get_bigint (GdaValue *value)
+gda_value_get_bigint (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BIGINT), -1);
@@ -1027,7 +1027,7 @@ gda_value_set_bigint (GdaValue *value, gint64 val)
  * Returns: the value contained in @value.
  */
 guint64
-gda_value_get_biguint (GdaValue *value)
+gda_value_get_biguint (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BIGUINT), -1);
@@ -1060,10 +1060,10 @@ gda_value_set_biguint (GdaValue *value, guint64 val)
  * 
  * Returns: the value contained in @value.
  */
-gconstpointer
-gda_value_get_binary (GdaValue *value, glong *size)
+G_CONST_RETURN gpointer
+gda_value_get_binary (const GdaValue *value, glong *size)
 {
-	gconstpointer val;
+	gpointer val;
 
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BINARY), NULL);
@@ -1104,7 +1104,7 @@ gda_value_set_binary (GdaValue *value, gconstpointer val, glong size)
  * Returns: the value contained in @value.
  */
 gboolean
-gda_value_get_boolean (GdaValue *value)
+gda_value_get_boolean (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN), FALSE);
@@ -1136,8 +1136,8 @@ gda_value_set_boolean (GdaValue *value, gboolean val)
  * 
  * Returns: the value contained in @value.
  */
-const GdaDate *
-gda_value_get_date (GdaValue *value)
+G_CONST_RETURN GdaDate *
+gda_value_get_date (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_DATE), NULL);
@@ -1173,7 +1173,7 @@ gda_value_set_date (GdaValue *value, const GdaDate *val)
  * Returns: the value contained in @value.
  */
 gdouble
-gda_value_get_double (GdaValue *value)
+gda_value_get_double (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_DOUBLE), -1);
@@ -1205,8 +1205,8 @@ gda_value_set_double (GdaValue *value, gdouble val)
  * 
  * Returns: the value contained in @value.
  */
-const GdaGeometricPoint *
-gda_value_get_geometric_point (GdaValue *value)
+G_CONST_RETURN GdaGeometricPoint *
+gda_value_get_geometric_point (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_GEOMETRIC_POINT), NULL);
@@ -1238,8 +1238,8 @@ gda_value_set_geometric_point (GdaValue *value, const GdaGeometricPoint *val)
  *
  * Gets the value stored in @value.
  */
-const GObject *
-gda_value_get_gobject (GdaValue *value)
+G_CONST_RETURN GObject *
+gda_value_get_gobject (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_GOBJECT), NULL);
@@ -1274,7 +1274,7 @@ gda_value_set_gobject (GdaValue *value, const GObject *val)
  * Returns: the value contained in @value.
  */
 gint
-gda_value_get_integer (GdaValue *value)
+gda_value_get_integer (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_INTEGER), -1);
@@ -1306,8 +1306,8 @@ gda_value_set_integer (GdaValue *value, gint val)
  * 
  * Returns: the value contained in @value.
  */
-const GdaValueList *
-gda_value_get_list (GdaValue *value)
+G_CONST_RETURN GdaValueList *
+gda_value_get_list (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_LIST), NULL);
@@ -1338,8 +1338,8 @@ gda_value_set_list (GdaValue *value, const GdaValueList *val)
  * 
  * Returns: the value contained in @value.
  */
-const GdaMoney *
-gda_value_get_money (GdaValue *value)
+G_CONST_RETURN GdaMoney *
+gda_value_get_money (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_MONEY), NULL);
@@ -1388,8 +1388,8 @@ gda_value_set_null (GdaValue *value)
  * 
  * Returns: the value contained in @value.
  */
-const GdaNumeric *
-gda_value_get_numeric (GdaValue *value)
+G_CONST_RETURN GdaNumeric *
+gda_value_get_numeric (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_NUMERIC), NULL);
@@ -1425,7 +1425,7 @@ gda_value_set_numeric (GdaValue *value, const GdaNumeric *val)
  * Returns: the value contained in @value.
  */
 gfloat
-gda_value_get_single (GdaValue *value)
+gda_value_get_single (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SINGLE), -1);
@@ -1458,7 +1458,7 @@ gda_value_set_single (GdaValue *value, gfloat val)
  * Returns: the value contained in @value.
  */
 gshort
-gda_value_get_smallint (GdaValue *value)
+gda_value_get_smallint (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SMALLINT), -1);
@@ -1491,7 +1491,7 @@ gda_value_set_smallint (GdaValue *value, gshort val)
  * Returns: the value contained in @value.
  */
 gushort
-gda_value_get_smalluint (GdaValue *value)
+gda_value_get_smalluint (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SMALLUINT), -1);
@@ -1524,7 +1524,7 @@ gda_value_set_smalluint (GdaValue *value, gushort val)
  * Returns: the value contained in @value.
  */
 const gchar *
-gda_value_get_string (GdaValue *value)
+gda_value_get_string (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_STRING), NULL);
@@ -1557,7 +1557,7 @@ gda_value_set_string (GdaValue *value, const gchar *val)
  * Returns: the value contained in @value.
  */
 const GdaTime *
-gda_value_get_time (GdaValue *value)
+gda_value_get_time (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TIME), NULL);
@@ -1594,7 +1594,7 @@ gda_value_set_time (GdaValue *value, const GdaTime *val)
  * Returns: the value contained in @value.
  */
 const GdaTimestamp *
-gda_value_get_timestamp (GdaValue *value)
+gda_value_get_timestamp (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TIMESTAMP), NULL);
@@ -1635,7 +1635,7 @@ gda_value_set_timestamp (GdaValue *value, const GdaTimestamp *val)
  * Returns: the value contained in @value.
  */
 gchar
-gda_value_get_tinyint (GdaValue *value)
+gda_value_get_tinyint (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TINYINT), -1);
@@ -1668,7 +1668,7 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
  * Returns: the value contained in @value.
  */
 guchar
-gda_value_get_tinyuint (GdaValue *value)
+gda_value_get_tinyuint (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TINYUINT), -1);
@@ -1701,7 +1701,7 @@ gda_value_set_tinyuint (GdaValue *value, guchar val)
  * Returns: the value contained in @value.
  */
 guint
-gda_value_get_uinteger (GdaValue *value)
+gda_value_get_uinteger (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_UINTEGER), -1);
@@ -1734,7 +1734,7 @@ gda_value_set_uinteger (GdaValue *value, guint val)
  * Returns: the value contained in @value.
  **/
 GdaValueType
-gda_value_get_vtype (GdaValue *value)
+gda_value_get_vtype (const GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, GDA_VALUE_TYPE_UNKNOWN);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TYPE), GDA_VALUE_TYPE_UNKNOWN);
@@ -1891,7 +1891,7 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
  * the preceding table.
  */
 gchar *
-gda_value_stringify (GdaValue *value)
+gda_value_stringify (const GdaValue *value)
 {
 	const GdaTime *gdatime;
 	const GdaDate *gdadate;
@@ -1910,7 +1910,7 @@ gda_value_stringify (GdaValue *value)
 		retval = g_strdup_printf ("%lld", gda_value_get_bigint (value));
 		break;
         case GDA_VALUE_TYPE_BIGUINT:
-                retval = g_strdup_printf ("%lud", gda_value_get_biguint (value));
+                retval = g_strdup_printf ("%llu", gda_value_get_biguint (value));
                 break;
 	case GDA_VALUE_TYPE_BINARY :
 		retval = g_malloc0 (value->binary_length + 1);
@@ -1957,7 +1957,7 @@ gda_value_stringify (GdaValue *value)
 					  gdatime->hour,
 					  gdatime->minute,
 					  gdatime->second,
-					  gdatime->timezone / 3600);
+					  (int) gdatime->timezone / 3600);
 		break;
 	case GDA_VALUE_TYPE_DATE:
 		gdadate = gda_value_get_date (value);
@@ -1977,8 +1977,8 @@ gda_value_stringify (GdaValue *value)
 					  timestamp->hour,
 					  timestamp->minute,
 					  timestamp->second,
-					  timestamp->fraction,
-					  timestamp->timezone/3600);
+					  (int) timestamp->fraction,
+					  (int) timestamp->timezone/3600);
 		break;
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT:
 		point = gda_value_get_geometric_point (value);
@@ -2169,16 +2169,8 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
  * because of some localization with gda_value_stingify ().
  */
 static gchar *
-to_string (GdaValue *value)
+to_string (const GdaValue *value)
 {
-	const GdaTime *gdatime;
-	const GdaDate *gdadate;
-	const GdaTimestamp *timestamp;
-	const GdaGeometricPoint *point;
-	const GdaValueList *list;
-	const GdaNumeric *numeric;
-	GList *l;
-	GString *str = NULL;
 	gchar *retval = NULL;
 
 	g_return_val_if_fail (value != NULL, NULL);
@@ -2208,7 +2200,7 @@ to_string (GdaValue *value)
  * needed anymore, you should free it.
  */
 xmlNodePtr
-gda_value_to_xml (GdaValue *value)
+gda_value_to_xml (const GdaValue *value)
 {
 	gchar *valstr;
 	xmlNodePtr retval;

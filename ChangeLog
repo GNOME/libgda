@@ -1,5 +1,9 @@
 2003-07-24  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* libgda/gda-value.[ch]: const'ified. Removed some warnings.
+
+2003-07-24  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* lexer.l:
 	* parser.y:
 	* sql_display.c:
