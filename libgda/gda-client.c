@@ -316,7 +316,8 @@ gda_client_open_connection (GdaClient *client,
 	/* search for the connection in our private list */
 	if (! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
 		cnc = gda_client_find_connection (client, dsn, username, password);
-		if (cnc) {
+		if (cnc &&
+		    ! (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
 			g_object_ref (G_OBJECT (cnc));
 			gda_client_notify_connection_opened_event (client, cnc);
 			return cnc;
