@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-07 01:58+0100\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-07 01:57+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -98,11 +98,6 @@ msgstr "Kunde inte notifiera klienten om åtgärden %d"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation för fetch()-metoden hittades"
-
-#: libgda/gda-table.c:229
-#, c-format
-msgid "There is already a field called %s"
-msgstr "Det finns redan ett fält med namnet %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -487,6 +482,9 @@ msgstr "\tdomän = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "There is already a field called %s"
+#~ msgstr "Det finns redan ett fält med namnet %s"
 
 #~ msgid "Bad formed document at %s"
 #~ msgstr "Felaktigt dokument vid %s"

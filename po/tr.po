@@ -19,6 +19,7 @@ msgid "Data source %s not found in configuration"
 msgstr "Sistemde %s veritabaný bulunmadý"
 
 #: libgda/gda-client.c:237
+#, c-format
 msgid "Could not activate object %s"
 msgstr "%s nesnesi etkinleþtirilemedi"
 
@@ -26,9 +27,11 @@ msgstr "%s nesnesi etkinleþtirilemedi"
 msgid "Could not create connection component"
 msgstr "Baðlantý bileþeni oluþturulamadý"
 
+#: libgda/gda-config.c:512
 msgid "Could not query CORBA components"
 msgstr "CORBA bileþenleri üzerinde tarama yapýlamadý"
 
+#: libgda/gda-config.c:619
 msgid "Could not query CORBA providers"
 msgstr "CORBA factory açýlamadý"
 
@@ -75,6 +78,7 @@ msgid "Don't know how to create components with IID %s"
 msgstr ""
 
 #: libgda/gda-server.c:122
+#, c-format
 msgid "Could not create component of type %s"
 msgstr "%s türünde bir bileþen oluþturulamadý"
 
@@ -99,20 +103,23 @@ msgstr "DOÐRU"
 msgid "FALSE"
 msgstr "YANLIÞ"
 
+#: libgda/gda-xml-database.c:214
+#, c-format
 msgid "Could not load file at %s"
 msgstr "%s adresindeki dosya yüklenemedi"
 
+#: libgda/gda-xml-database.c:223
+#, c-format
 msgid "Could not parse file at %s"
 msgstr "%s adresindeki dosya ayrýþtýrýlamadý"
 
-msgid "table %s already exists"
-msgstr "%s tablosu zaten var"
-
-#: libgda/gda-xml-database.c:442
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
-msgid "%p is not a valid table"
-msgstr "%p geçersiz bir tablo"
+msgid "Invalid XML database file '%s'"
+msgstr ""
 
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#, c-format
 msgid "Table %s already exists"
 msgstr "%s tablosu zaten var"
 
@@ -287,79 +294,6 @@ msgstr "SQLite bileþen mimarisi"
 msgid "Could not initiate Sqlite component factory"
 msgstr "CORBA factory açýlamadý"
 
-#: providers/sybase/gda-sybase-error.c:137
-msgid "ct_diag 1 failed in sybase_check_clientmsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:159
-#: providers/sybase/gda-sybase-error.c:197
-msgid "ct_diag 2 failed in sybase_check_clientmsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:167
-#: providers/sybase/gda-sybase-error.c:376
-msgid "Client Message: "
-msgstr "Ýstemci Mesajý: "
-
-#: providers/sybase/gda-sybase-error.c:178
-#: providers/sybase/gda-sybase-error.c:387
-msgid "Informational Client  Message: "
-msgstr "Ýstemci Bilgi Mesajý:"
-
-#: providers/sybase/gda-sybase-error.c:239
-msgid "ct_diag 1 failed in sybase_check_servermsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:261
-#: providers/sybase/gda-sybase-error.c:304
-msgid "ct_diag 2 failed in sybase_check_servermsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:274
-msgid "Server Message: "
-msgstr "Sunucu Mesajý: "
-
-#: providers/sybase/gda-sybase-error.c:285
-msgid "Informational Server  Message: "
-msgstr "Sunucu Bilgi Mesajý: "
-
-#: providers/sybase/gda-sybase-error.c:346
-msgid "cs_diag 1 failed in sybase_check_clientmsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:368
-#: providers/sybase/gda-sybase-error.c:406
-msgid "cs_diag 2 failed in sybase_check_clientmsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:429
-msgid "SYB"
-msgstr "SYB"
-
-#: providers/sybase/gda-sybase-error.c:431
-msgid "severity"
-msgstr "önem"
-
-#: providers/sybase/gda-sybase-error.c:433
-msgid "number"
-msgstr "sayý"
-
-#: providers/sybase/gda-sybase-error.c:435
-msgid "origin"
-msgstr "kaynak"
-
-#: providers/sybase/gda-sybase-error.c:437
-msgid "layer"
-msgstr "katman"
-
-#: providers/sybase/gda-sybase-error.c:444
-#, c-format
-msgid ""
-"\n"
-"\tOperating system error number(%ld):\n"
-"\t%s"
-msgstr ""
-
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
 msgstr ""
@@ -411,6 +345,7 @@ msgid "Could not parse XML document"
 msgstr "XML belgesi ayrýþtýrýlamadý"
 
 #: report/libgda-report/gda-report-document.c:162
+#, c-format
 msgid "Could not get file from %s"
 msgstr "%s adresinden dosya alýnamadý"
 
@@ -474,6 +409,8 @@ msgstr ""
 msgid "Triggers"
 msgstr ""
 
+#. test transactions
+#: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
 msgstr "\tÝletiþime baþlanýyor.."
 
@@ -550,3 +487,35 @@ msgstr ""
 msgid "\tgda_params ="
 msgstr ""
 
+#~ msgid "table %s already exists"
+#~ msgstr "%s tablosu zaten var"
+
+#~ msgid "%p is not a valid table"
+#~ msgstr "%p geçersiz bir tablo"
+
+#~ msgid "Client Message: "
+#~ msgstr "Ýstemci Mesajý: "
+
+#~ msgid "Informational Client  Message: "
+#~ msgstr "Ýstemci Bilgi Mesajý:"
+
+#~ msgid "Server Message: "
+#~ msgstr "Sunucu Mesajý: "
+
+#~ msgid "Informational Server  Message: "
+#~ msgstr "Sunucu Bilgi Mesajý: "
+
+#~ msgid "SYB"
+#~ msgstr "SYB"
+
+#~ msgid "severity"
+#~ msgstr "önem"
+
+#~ msgid "number"
+#~ msgstr "sayý"
+
+#~ msgid "origin"
+#~ msgstr "kaynak"
+
+#~ msgid "layer"
+#~ msgstr "katman"

@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-07 22:45+0100\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-07 22:46+0100\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -100,11 +100,6 @@ msgstr "Kunne ikke informere klient om handling %d"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation til fetch()-metoden fundet"
-
-#: libgda/gda-table.c:229
-#, c-format
-msgid "There is already a field called %s"
-msgstr "Der eksisterer allerede et felt ved navn %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -489,6 +484,9 @@ msgstr "\tdomæne = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "There is already a field called %s"
+#~ msgstr "Der eksisterer allerede et felt ved navn %s"
 
 #~ msgid "Bad formed document at %s"
 #~ msgstr "Forkert udformet dokument ved %s"

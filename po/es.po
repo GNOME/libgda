@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db \n"
-"POT-Creation-Date: 2002-03-07 12:32+0100\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-06 23:55GMT\n"
 "Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
 "Language-Team: español <traductores@es.gnome.org>\n"
@@ -101,11 +101,6 @@ msgstr "No se pudo notificar al cliente acerca de la acción %d"
 msgid "No implementation for the fetch() method found"
 msgstr "No se encontró la implementación para el método fetch"
 
-#: libgda/gda-table.c:229
-#, c-format
-msgid "There is already a field called %s"
-msgstr "Ya hay un campo con el nombre %s"
-
 #: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "SI"
@@ -148,7 +143,7 @@ msgid "Invalid XML node"
 msgstr "Nodo XML inválido"
 
 #: providers/default/gda-default-provider.c:139
-#: providers/sqlite/gda-sqlite-provider.c:153
+#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -279,7 +274,7 @@ msgstr "SIN DESCRIPCIÓN"
 msgid "Not available"
 msgstr "No está disponible"
 
-#: providers/sqlite/gda-sqlite-provider.c:212
+#: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
 msgstr "Manejador SQLITE inválido"
@@ -488,3 +483,6 @@ msgstr "\tdominio = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "There is already a field called %s"
+#~ msgstr "Ya hay un campo con el nombre %s"

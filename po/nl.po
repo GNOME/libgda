@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Libgda CVS\n"
-"POT-Creation-Date: 2002-03-05 16:51-0500\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-05 20:11+0100\n"
 "Last-Translator: Arjan Timmerman Arjan@kwando-tech.nl\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -105,54 +105,48 @@ msgstr "WAAR"
 msgid "FALSE"
 msgstr "ONWAAR"
 
-#: libgda/gda-xml-database.c:164
+#: libgda/gda-xml-database.c:214
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Kon bestand niet laden op '%s'"
 
-#: libgda/gda-xml-database.c:175
+#: libgda/gda-xml-database.c:223
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "Kon file niet onleden op  '%s'"
 
-#: libgda/gda-xml-database.c:185
-#, c-format
-msgid "Bad formed document at %s"
-msgstr "Slecht gevormd document op %s"
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
+#, fuzzy, c-format
+msgid "Invalid XML database file '%s'"
+msgstr "Geselecteerde databank '%s'"
 
-#: libgda/gda-xml-database.c:260
-#, c-format
-msgid "table %s already exists"
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#, fuzzy, c-format
+msgid "Table %s already exists"
 msgstr "tabel %s bestaat al"
 
-#: libgda/gda-xml-database.c:442
-#, c-format
-msgid "%p is not a valid table"
-msgstr "%p is geen geldige tabel"
+#: libgda/gda-xml-database.c:327
+#, fuzzy
+msgid "Invalid node"
+msgstr "Ongeldige MYSQL handeling"
 
-#: providers/default/gda-default-provider.c:141
+#: libgda/gda-xml-database.c:358
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:365
+#, fuzzy
+msgid "Invalid XML node"
+msgstr "Ongeldige MYSQL handeling"
+
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Een volledige pad moet gespecificeerd worden op de connectie string om een "
 "database te openen."
-
-#: providers/default/gda-default-provider.c:199
-#: providers/default/gda-default-recordset.c:59
-msgid "Invalid DEFAULT handle"
-msgstr "Ongeldig STANDAARD handeling"
-
-#: providers/default/gda-default-recordset.c:70
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
-msgid "Row number out of range"
-msgstr "Rij nummer buiten bereik"
-
-#: providers/default/gda-default-recordset.c:110
-msgid "Invalid Default handle"
-msgstr "Ongeldig Standaard handeling"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 #, fuzzy
@@ -193,6 +187,12 @@ msgstr "Type"
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
 msgstr "Ongeldige MySQL handeling"
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
+msgstr "Rij nummer buiten bereik"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 #, fuzzy
@@ -532,6 +532,18 @@ msgstr "\tdomein = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
+#~ msgid "Bad formed document at %s"
+#~ msgstr "Slecht gevormd document op %s"
+
+#~ msgid "%p is not a valid table"
+#~ msgstr "%p is geen geldige tabel"
+
+#~ msgid "Invalid DEFAULT handle"
+#~ msgstr "Ongeldig STANDAARD handeling"
+
+#~ msgid "Invalid Default handle"
+#~ msgstr "Ongeldig Standaard handeling"
+
 #, fuzzy
 #~ msgid "Client Message: "
 #~ msgstr "Client bericht:"
@@ -794,9 +806,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "Connected to %s"
 #~ msgstr "Verbonden met %s"
-
-#~ msgid "Selected database '%s'"
-#~ msgstr "Geselecteerde databank '%s'"
 
 #~ msgid "%s: Could not allocate cmd structure"
 #~ msgstr "%s: Kon cmd structuur niet toewijzen"
