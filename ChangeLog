@@ -1,3 +1,10 @@
+2003-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #121403
+
+	* libgda/gda-connection.c (gda_connection_new): duplicate
+	real_username and real_password strings before they are freed.
+
 2003-10-07  Laurent Sansonetti <laurent@datarescue.be>
 
 	* libgda/gda-quark-list.c:
