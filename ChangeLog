@@ -1,3 +1,7 @@
+2002-11-05  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c: avoid "no DTD" message from libxml.
+
 2002-11-05  Holger Thon <holger.thon@gnome-db.org>
 
 	* configure.in: Added check for sybase OCli in OCS subdir
@@ -51,6 +55,7 @@
 	* providers/freetds/gda-tds-schemas.h: added query for server
 	version
 
+>>>>>>> 1.403
 2002-10-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.[ch] (gda_connection_new): added
