@@ -30,6 +30,18 @@ else
 	AC_MSG_ERROR(not found)
 fi
 
+dnl Check for GConf
+AC_MSG_CHECKING(for GConf)
+if gconf-config --libs gconf > /dev/null 2>&1
+then
+     AC_MSG_RESULT(found)
+     AC_DEFINE(USING_GCONF)
+     gda_gconf_libs=`gconf-config --libs gconf`
+     gda_gconf_cflags=`gconf-config --cflags gconf`
+else
+	AC_MSG_ERROR(not found)
+fi
+
 dnl Check for OAF
 AC_MSG_CHECKING(for OAF)
 if oaf-config --libs > /dev/null 2>&1
@@ -436,17 +448,17 @@ dnl Translations
 dnl
 ALL_LINGUAS="es"
 
-AM_GNU_GETTEXT
+AM_GNOME_GETTEXT
 
 dnl
 dnl Variables
 dnl
 gda_base_libs=`glib-config --libs gthread`
 gda_base_cflags=`glib-config --cflags gthread`
-GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_oaf_libs `gnome-config --libs gnomeui gnorba`"
-GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
-GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_oaf_libs `gnome-config --libs gnomeui gnorba`"
-GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
+GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs `gnome-config --libs gnomeui gnorba`"
+GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
+GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs `gnome-config --libs gnomeui gnorba`"
+GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)
