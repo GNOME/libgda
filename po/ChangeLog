@@ -1,3 +1,8 @@
+2003-06-10  Abel Cheung  <maddog@linux.org.hk>
+
+	* zh_TW.po: New traditional Chinese translation.
+	* fr.po: Mark wrong entry as fuzzy (msgfmt check failed).
+
 2003-06-08  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* no.po: Updated Norwegian (bokmal) translation.

@@ -1,16 +1,14 @@
-# French translation of libgda.
-# Copyright (C) 2000-2003 Free Software Foundation, Inc.
-# Christophe Merlet (RedFox) <redfox@redfoxcenter.org>, 2000-2003.
-# Frederic Riss <frederic.riss@laposte.net>, 2002.
+# traditional Chinese translation of libgda-2.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Abel Cheung <maddog@linux.org.hk>, 2003.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda 0.11.1\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-08 20:20+0200\n"
-"PO-Revision-Date: 2003-05-03 17:25+0200\n"
-"Last-Translator: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
-"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
+"Project-Id-Version: libgda-2 0.12.1\n"
+"POT-Creation-Date: 2003-06-05 18:24+0800\n"
+"PO-Revision-Date: 2003-06-05 18:24+0800\n"
+"Last-Translator: Abel Cheung <maddog@linux.org.hk>\n"
+"Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,30 +16,30 @@ msgstr ""
 #: libgda/gda-client.c:309 libgda/gda-client.c:511 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "La source de données « %s » n'a pas été trouvé dans la configuration"
+msgstr ""
 
 #: libgda/gda-client.c:334
 #, c-format
 msgid "Could not find provider %s in the current setup"
-msgstr "Fournisseur « %s » introuvable"
+msgstr ""
 
 #: libgda/gda-client.c:363
 #, c-format
 msgid "Provider %s does not implement entry function"
-msgstr "Le fournisseur %s n'implémente pas de fonction d'entrée"
+msgstr ""
 
 #: libgda/gda-client.c:373
 msgid "Could not create GdaServerProvider object from plugin"
-msgstr "Impossible de créer l'objet GdaServerProvider depuis le greffon"
+msgstr ""
 
 #: libgda/gda-client.c:438
 msgid "Temporary data source created by libgda. Don't remove it"
-msgstr "Source de données temporaire créée par libgda. Ne pas supprimer"
+msgstr ""
 
 #: libgda/gda-config.c:1073
 #, c-format
 msgid "Error: %s"
-msgstr "Erreur: %s"
+msgstr "錯誤：%s"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1323 providers/default/gda-default-provider.c:557
@@ -59,15 +57,15 @@ msgstr "Erreur: %s"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
 msgid "Name"
-msgstr "Nom"
+msgstr "名稱"
 
 #: libgda/gda-config.c:1324
 msgid "Provider"
-msgstr "Fournisseur"
+msgstr ""
 
 #: libgda/gda-config.c:1325
 msgid "Connection string"
-msgstr "Chaîne de connexion"
+msgstr "連線字串"
 
 #: libgda/gda-config.c:1326 providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
@@ -77,138 +75,134 @@ msgstr "Chaîne de connexion"
 #: providers/odbc/gda-odbc-provider.c:1298
 #: providers/postgres/gda-postgres-provider.c:1107
 msgid "Description"
-msgstr "Description"
+msgstr "說明"
 
 #: libgda/gda-config.c:1327
 msgid "Username"
-msgstr "Nom d'Utilisateur"
+msgstr "用戶名稱"
 
 #: libgda/gda-config.c:1328
 msgid "Password"
-msgstr "Mot de passe"
+msgstr "密碼"
 
 #: libgda/gda-data-model.c:686
 #, c-format
 msgid "Data model %p is not editable"
-msgstr "Le modèle de données %p n'est pas éditable"
+msgstr ""
 
 #: libgda/gda-init.c:48
 msgid "Attempt to initialize an already initialized client"
-msgstr "Tentative d'initialiser un client déjà initialisé"
+msgstr ""
 
 #: libgda/gda-init.c:59
 msgid "libgda needs GModule. Finishing..."
-msgstr "libgda nécessite GModule. Fin..."
+msgstr ""
 
 #: libgda/gda-select.c:315
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse SQL string '%s'"
-msgstr "Impossible d'analyser la chaîne SQL '%s'"
+msgstr "無法以 SQL 字串的方式解析‘%s’"
 
 #: libgda/gda-select.c:319
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
-msgstr "La commande SQL n'est pas un SELECT (c'est '%s'"
+msgstr ""
 
 #: libgda/gda-table.c:286
 #, c-format
 msgid "There is already a field called %s"
-msgstr "Il y a déjà un champ nommé %s"
+msgstr ""
 
 #: libgda/gda-util.c:144
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse SQL command '%s'"
-msgstr "Ne peut analyser le fichier à %s"
+msgstr "無法以 SQL 指令的方式解析‘%s’"
 
 #: libgda/gda-util.c:177
 #, c-format
 msgid "Error while reading %s: %s"
-msgstr "Erreur de lecture de %s: %s"
+msgstr "讀取 %s 時發生錯誤：%s"
 
 #: libgda/gda-util.c:203
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create file %s"
-msgstr "Impossible de créer le fichier %s"
+msgstr "無法產生檔案 %s"
 
 #: libgda/gda-value.c:1650
 msgid "TRUE"
-msgstr "VRAI"
+msgstr "TRUE"
 
 #: libgda/gda-value.c:1652
 msgid "FALSE"
-msgstr "FAUX"
+msgstr "FALSE"
 
 #: libgda/gda-value.c:1712
-#, fuzzy, c-format
+#, c-format
 msgid "(GObject of type '%s'"
-msgstr "(GObject de type '%'"
+msgstr ""
 
 #: libgda/gda-value.c:1715
 msgid "NULL GObject"
-msgstr ""
+msgstr "NULL GObject"
 
 #: libgda/gda-xml-database.c:235
 #, c-format
 msgid "Could not load file at %s"
-msgstr "Impossible de charger le fichier %s"
+msgstr ""
 
 #: libgda/gda-xml-database.c:244
 #, c-format
 msgid "Could not parse file at %s"
-msgstr "Impossible d'analyser le fichier  %s"
+msgstr ""
 
 #: libgda/gda-xml-database.c:254
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Fichier XML de base de données « %s » non valide"
+msgstr "檔案‘%s’是無效的 XML 數據庫"
 
 #: libgda/gda-xml-database.c:436
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create a XML node from table %s"
-msgstr "Impossible de créer un noeud XML depuis la table %s"
+msgstr ""
 
 #: libgda/gda-xml-database.c:454
-#, fuzzy
 msgid "Could not dump XML file to memory"
-msgstr "Impossible de créer le fichier XML en mémoire"
+msgstr "無法將 XML 檔案傾印至記憶體中"
 
 #: libgda/gda-xml-database.c:547 libgda/gda-xml-database.c:583
 #: libgda/gda-xml-database.c:626
 #, c-format
 msgid "Table %s already exists"
-msgstr "La table %s existe déjà"
+msgstr ""
 
 #: libgda/gda-xml-database.c:619
 msgid "Invalid node"
-msgstr "Noeud invalide"
+msgstr "節點無效"
 
 #: libgda/gda-xml-database.c:661
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr "Noeud <data> dupliqué pour la table %s"
+msgstr ""
 
 #: libgda/gda-xml-database.c:668
 msgid "Invalid XML node"
-msgstr "Noeud XML invalide"
+msgstr "XML 節點無效"
 
 #: providers/default/gda-default-provider.c:190
 #: providers/sqlite/gda-sqlite-provider.c:198
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
-"Un chemin complet doit être spécifié sur la chaîne de connexion pour ouvrir "
-"une base de données."
 
 #: providers/default/gda-default-provider.c:252
 #: providers/default/gda-default-provider.c:267
 #: providers/default/gda-default-provider.c:294
-#, fuzzy
 msgid "Invalid internal handle"
-msgstr "Gestionnaire interne invalide"
+msgstr ""
 
 #: providers/default/gda-default-provider.c:333
 msgid "Not Implemented"
-msgstr "Non implémenté"
+msgstr "未完成功能"
 
 #: providers/default/gda-default-provider.c:454
 #: providers/mdb/gda-mdb-provider.c:490
@@ -218,7 +212,7 @@ msgstr "Non implémenté"
 #: providers/postgres/gda-postgres-provider.c:1352
 #: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Field name"
-msgstr "Nom du champ"
+msgstr ""
 
 #: providers/default/gda-default-provider.c:455
 #: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:535
@@ -228,7 +222,7 @@ msgstr "Nom du champ"
 #: providers/postgres/gda-postgres-provider.c:1353
 #: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Data type"
-msgstr "Type de donnée"
+msgstr "數據類型"
 
 #: providers/default/gda-default-provider.c:456
 #: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:536
@@ -238,7 +232,7 @@ msgstr "Type de donnée"
 #: providers/postgres/gda-postgres-provider.c:1354
 #: providers/sqlite/gda-sqlite-provider.c:624
 msgid "Size"
-msgstr "Taille"
+msgstr "大小"
 
 #: providers/default/gda-default-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:537
@@ -248,7 +242,7 @@ msgstr "Taille"
 #: providers/postgres/gda-postgres-provider.c:1355
 #: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Scale"
-msgstr "Echelle"
+msgstr ""
 
 #: providers/default/gda-default-provider.c:458
 #: providers/mdb/gda-mdb-provider.c:494
@@ -258,7 +252,7 @@ msgstr "Echelle"
 #: providers/postgres/gda-postgres-provider.c:1356
 #: providers/sqlite/gda-sqlite-provider.c:626
 msgid "Not null?"
-msgstr "Non null ?"
+msgstr ""
 
 #: providers/default/gda-default-provider.c:459
 #: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:539
@@ -268,7 +262,7 @@ msgstr "Non null ?"
 #: providers/postgres/gda-postgres-provider.c:1357
 #: providers/sqlite/gda-sqlite-provider.c:627
 msgid "Primary key?"
-msgstr "Clé primaire ?"
+msgstr ""
 
 #: providers/default/gda-default-provider.c:460
 #: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:540
@@ -278,7 +272,7 @@ msgstr "Clé primaire ?"
 #: providers/postgres/gda-postgres-provider.c:1358
 #: providers/sqlite/gda-sqlite-provider.c:628
 msgid "Unique index?"
-msgstr "Index unique ?"
+msgstr ""
 
 #: providers/default/gda-default-provider.c:461
 #: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:541
@@ -288,34 +282,34 @@ msgstr "Index unique ?"
 #: providers/postgres/gda-postgres-provider.c:1359
 #: providers/sqlite/gda-sqlite-provider.c:629
 msgid "References"
-msgstr "Références"
+msgstr ""
 
 #: providers/default/gda-default-provider.c:471
 #: providers/default/gda-default-provider.c:477
 msgid "Invalid argument"
-msgstr "Argument invalide"
+msgstr "參數無效"
 
 #: providers/default/gda-default-provider.c:484
 #: providers/mdb/gda-mdb-table.c:48
 #, c-format
 msgid "Table %s not found"
-msgstr "Table %s non trouvée"
+msgstr ""
 
 #: providers/default/gda-default-provider.c:511
 msgid "Could not get description for column"
-msgstr "Ne peut obtenir la description pour la colonne"
+msgstr "無法獲取該欄位的說明"
 
 #: providers/default/libmain.c:33
 msgid "Default"
-msgstr "Défaut"
+msgstr "預設"
 
 #: providers/default/libmain.c:39
 msgid "Default provider, based on XML"
-msgstr "Fournisseur par défaut, basé sur XML"
+msgstr ""
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
-msgstr "Aucune base de données spécifiée"
+msgstr "未指定數據庫"
 
 #: providers/firebird/gda-firebird-provider.c:234
 #: providers/firebird/gda-firebird-provider.c:261
@@ -326,55 +320,51 @@ msgstr "Aucune base de données spécifiée"
 #: providers/firebird/gda-firebird-provider.c:447
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
-#, fuzzy
 msgid "Invalid Firebird handle"
-msgstr "Gestionnaire Firebird invalide"
+msgstr ""
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
-#, fuzzy
 msgid "Invalid transaction handle"
-msgstr "Gestionnaire de transaction invalide"
+msgstr ""
 
 #: providers/firebird/libmain.c:39
 msgid "Provider for FireBird databases"
-msgstr "Fournisseur de bases de données Firebird"
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:197
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"Connection interrompue. Vous devez fournir au moins un hôte, un nom "
-"d'utilisateur et un mot de passe en utilisant DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
-msgstr "Erreur lors de la création du conteneur de message"
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
-msgstr "Erreur lors de la création du conteneur d'erreur"
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:255
 #: providers/freetds/gda-freetds-provider.c:257
 msgid "Allocating tds context failed."
-msgstr "Echec de l'allocation de contexte tds."
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
 msgid "Establishing connection failed."
-msgstr "Echec de l'établissement de connexion."
+msgstr "無法建立連線。"
 
 #: providers/freetds/gda-freetds-provider.c:291
 #: providers/freetds/gda-freetds-provider.c:292
 msgid "Failed getting connection info."
-msgstr "Echec de réception de l'information de connection."
+msgstr "無法獲取有關連線的資訊。"
 
 #: providers/freetds/gda-freetds-provider.c:781
 #: providers/freetds/gda-freetds-provider.c:782
 msgid "Query did not succeed in execute_cmd()."
-msgstr "La requète à échoué dans execute_cmd()."
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:795
 #: providers/freetds/gda-freetds-provider.c:797
@@ -407,7 +397,7 @@ msgstr ""
 #: providers/sybase/utils.c:489 providers/sybase/utils.c:505
 #: providers/sybase/utils.c:543
 msgid "Not available"
-msgstr "Non disponible"
+msgstr "無法提供"
 
 #: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
@@ -419,7 +409,7 @@ msgstr ""
 
 #: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
-msgstr ""
+msgstr "處理結果時出現錯誤。\n"
 
 #: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
@@ -432,12 +422,11 @@ msgstr ""
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:46 providers/sybase/utils.c:538
 msgid "NO DESCRIPTION"
-msgstr "AUCUNE DESCRIPTION"
+msgstr "沒有說明"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:152
-#, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -449,13 +438,12 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
 #: providers/ibmdb2/gda-ibmdb2-provider.c:688
 #: providers/ibmdb2/gda-ibmdb2-provider.c:763
-#, fuzzy
 msgid "Invalid IBM DB2 handle"
-msgstr "Gestionnaire MySQL invalide"
+msgstr ""
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
-msgstr "Fonction"
+msgstr ""
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 #: providers/ibmdb2/gda-ibmdb2-provider.c:832
@@ -491,15 +479,15 @@ msgstr "Fonction"
 #: providers/sqlite/gda-sqlite-provider.c:752
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
-msgstr "Propriétaire"
+msgstr "擁有者"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
 msgid "Database"
-msgstr "Base de données"
+msgstr "數據庫"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:831
 msgid "Index"
-msgstr "Index"
+msgstr "索引"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:833
@@ -509,31 +497,31 @@ msgstr "Index"
 #: providers/postgres/gda-postgres-provider.c:1105
 #: providers/postgres/gda-postgres-provider.c:1989
 msgid "Table"
-msgstr "Table"
+msgstr ""
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1030
 #: providers/postgres/gda-postgres-provider.c:834
 msgid "Procedure"
-msgstr "Procédure"
+msgstr ""
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:862
 msgid "Language"
-msgstr "Langage"
+msgstr "語言"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:893
 #: providers/ibmdb2/gda-ibmdb2-provider.c:921
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1002
 msgid "SQL Definition"
-msgstr "Définition SQL"
+msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
 #: providers/postgres/gda-postgres-provider.c:1341 testing/client.c:135
 msgid "Triggers"
-msgstr "Triggers"
+msgstr ""
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/ibmdb2/gda-ibmdb2-provider.c:946
@@ -545,7 +533,7 @@ msgstr "Triggers"
 #: providers/sqlite/gda-sqlite-provider.c:751
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
-msgstr "Type"
+msgstr ""
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:948
 #: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
@@ -572,7 +560,7 @@ msgstr "Type"
 #: providers/sqlite/gda-sqlite-provider.c:753
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
-msgstr "Commentaires"
+msgstr "備註"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
 #: providers/msql/gda-msql-provider.c:486
@@ -583,14 +571,14 @@ msgstr "Commentaires"
 #: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
-msgstr "Type GDA"
+msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
 #: providers/postgres/gda-postgres-provider.c:1893 testing/client.c:133
 msgid "Users"
-msgstr "Utilisateurs"
+msgstr "用戶"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -603,9 +591,8 @@ msgstr ""
 #: providers/ldap/gda-ldap-provider.c:587
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
-#, fuzzy
 msgid "Invalid LDAP handle"
-msgstr "Gestionnaire MySQL invalide"
+msgstr ""
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
@@ -614,7 +601,7 @@ msgstr "Gestionnaire MySQL invalide"
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 msgid "Row number out of range"
-msgstr "Numéro d'enregistrements hors limite"
+msgstr ""
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:219
@@ -628,39 +615,34 @@ msgstr ""
 #: providers/mysql/gda-mysql-recordset.c:303
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
-msgstr ""
+msgstr "無法擷取有關該欄位的資訊"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:245
 #: providers/mysql/gda-mysql-recordset.c:321
 #: providers/oracle/gda-oracle-recordset.c:502
-#, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/ldap/libmain.c:42
 msgid "Provider for LDAP directory"
 msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:205
-#, fuzzy
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr ""
-"Un chemin complet doit être spécifié sur la chaîne de connexion pour ouvrir "
-"une base de données."
+msgstr "必須在 connection_string 中指定數據庫檔案名稱"
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open file %s"
-msgstr "Ne peut analyser le fichier à %s"
+msgstr "無法開啟 %s 檔案"
 
 #: providers/mdb/gda-mdb-provider.c:238 providers/mdb/gda-mdb-provider.c:268
 #: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
 #: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
-#, fuzzy
 msgid "Invalid MDB handle"
-msgstr "Gestionnaire MySQL invalide"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
@@ -674,32 +656,30 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1360
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
-msgstr "Valeur par défaut"
+msgstr "預設值"
 
 #: providers/mdb/gda-mdb-provider.c:547
 #: providers/mysql/gda-mysql-provider.c:702
 msgid "ID"
-msgstr "ID"
+msgstr "識別碼"
 
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
 #: providers/odbc/gda-odbc-provider.c:1034
 #: providers/postgres/gda-postgres-provider.c:838
-#, fuzzy
 msgid "Return type"
-msgstr "Type de donnée"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
-msgstr ""
+msgstr "參數數目"
 
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1036
 #: providers/postgres/gda-postgres-provider.c:840
-#, fuzzy
 msgid "Args types"
-msgstr "Aggrégations"
+msgstr "參數類型"
 
 #: providers/mdb/gda-mdb-provider.c:553
 #: providers/odbc/gda-odbc-provider.c:1037
@@ -713,39 +693,39 @@ msgstr "Aggrégations"
 #: providers/postgres/gda-postgres-provider.c:1306
 #: providers/postgres/gda-postgres-provider.c:1937
 msgid "Definition"
-msgstr "Définition"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:657
 msgid "GDA Type"
-msgstr "Type GDA"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:659
 msgid "Boolean type"
-msgstr "Type booléen"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:660
 msgid "1-byte integers"
-msgstr ""
+msgstr "1 位元組整數"
 
 #: providers/mdb/gda-mdb-provider.c:661
 msgid "Double precision values"
-msgstr ""
+msgstr "雙精準度浮點數"
 
 #: providers/mdb/gda-mdb-provider.c:662
 msgid "Single precision values"
-msgstr ""
+msgstr "單精準度浮點數"
 
 #: providers/mdb/gda-mdb-provider.c:663
 msgid "32-bit integers"
-msgstr ""
+msgstr "32 位元整數"
 
 #: providers/mdb/gda-mdb-provider.c:664
 msgid "64-bit integers"
-msgstr ""
+msgstr "64 位元整數"
 
 #: providers/mdb/gda-mdb-provider.c:665
 msgid "Variable length character strings"
-msgstr ""
+msgstr "可變長度字串"
 
 #: providers/mdb/gda-mdb-provider.c:666
 msgid "Money amounts"
@@ -753,34 +733,33 @@ msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:667
 msgid "OLE object"
-msgstr ""
+msgstr "OLE 物件"
 
 #: providers/mdb/gda-mdb-provider.c:668
 msgid "FIXME"
-msgstr "FIXME"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:669
 msgid "Date/time value"
-msgstr ""
+msgstr "日期/時間"
 
 #: providers/mdb/gda-mdb-provider.c:670
 msgid "Character strings"
-msgstr ""
+msgstr "字串"
 
 #. end unsafe
 #: providers/mdb/gda-mdb-provider.c:737
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse '%s' command"
-msgstr "Ne peut analyser le fichier à %s"
+msgstr "無法以指令方式解析‘%s’"
 
 #: providers/mdb/libmain.c:36
 msgid "Provider for Microsoft Access files"
 msgstr ""
 
 #: providers/msql/gda-msql-libmain.c:41
-#, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Fournisseur de bases de données Firebird"
+msgstr ""
 
 #: providers/msql/gda-msql-provider.c:228
 #: providers/msql/gda-msql-provider.c:270
@@ -788,9 +767,8 @@ msgstr "Fournisseur de bases de données Firebird"
 #: providers/msql/gda-msql-provider.c:549
 #: providers/msql/gda-msql-recordset.c:67
 #: providers/msql/gda-msql-recordset.c:130
-#, fuzzy
 msgid "Invalid mSQL handle"
-msgstr "Gestionnaire MySQL invalide"
+msgstr ""
 
 #: providers/msql/gda-msql-provider.c:315
 msgid "mSQL allows database creation only through the msqladmin tool."
@@ -807,19 +785,16 @@ msgid "mSQL doesn't support transactions."
 msgstr ""
 
 #: providers/msql/gda-msql-provider.c:483
-#, fuzzy
 msgid "Title"
-msgstr "Table"
+msgstr "標題"
 
 #: providers/msql/gda-msql-provider.c:534
-#, fuzzy
 msgid "Field Name"
-msgstr "Nom du champ"
+msgstr "欄位名稱"
 
 #: providers/msql/gda-msql-provider.c:538
-#, fuzzy
 msgid "Not null"
-msgstr "Non null ?"
+msgstr ""
 
 #: providers/msql/gda-msql-provider.c:555
 #: providers/msql/gda-msql-provider.c:561
@@ -829,23 +804,20 @@ msgid "Table name is needed but none specified in parameter list"
 msgstr ""
 
 #: providers/msql/gda-msql-recordset.c:74
-#, fuzzy
 msgid "Row number out of bounds"
-msgstr "Numéro d'enregistrements hors limite"
+msgstr "列數超出範圍"
 
 #: providers/mysql/gda-mysql-provider.c:218
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"Vous ne pouvez fournir un UNIX_SOCKET si vous fournissez aussi un HOTE ou un "
-"PORT."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
-msgstr "Gestionnaire MySQL invalide"
+msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:310
 #: providers/mysql/gda-mysql-provider.c:380
@@ -856,7 +828,7 @@ msgstr "Gestionnaire MySQL invalide"
 #: providers/mysql/gda-mysql-provider.c:591
 #: providers/mysql/gda-mysql-provider.c:624
 msgid "Invalid MYSQL handle"
-msgstr "Gestionnaire MySQL invalide"
+msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:539
 #: providers/mysql/gda-mysql-provider.c:596
@@ -872,7 +844,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
-msgstr ""
+msgstr "SQL"
 
 #: providers/mysql/libmain.c:41
 msgid "Provider for MySQL databases"
@@ -880,7 +852,7 @@ msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
-msgstr ""
+msgstr "無法進行 SQLAllocEnv()..."
 
 #: providers/odbc/gda-odbc-provider.c:433
 #: providers/odbc/gda-odbc-provider.c:453
@@ -888,16 +860,15 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:513
 #: providers/odbc/gda-odbc-provider.c:544
 #: providers/odbc/gda-odbc-provider.c:574
-#, fuzzy
 msgid "Invalid Odbc handle"
-msgstr "Gestionnaire SQLITE invalide"
+msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1153
 #: providers/postgres/gda-postgres-provider.c:835
 #: providers/postgres/gda-postgres-provider.c:1301
 msgid "Id"
-msgstr ""
+msgstr "識別碼"
 
 #: providers/odbc/gda-odbc-provider.c:1035
 #: providers/postgres/gda-postgres-provider.c:839
@@ -907,14 +878,14 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:1296
 #: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:130
 msgid "Views"
-msgstr "Vues"
+msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1348
 #: providers/postgres/gda-postgres-provider.c:1934
 #: providers/postgres/gda-postgres-provider.c:1990
 msgid "Sequence"
-msgstr "Séquence"
+msgstr ""
 
 #: providers/odbc/libmain.c:41
 msgid "Provider for ODBC data sources"
@@ -925,64 +896,52 @@ msgid "No TNS name supplied"
 msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:212
-#, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr "無法初始化 Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:223
-#, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr "無法初始化 Oracle 環境"
 
 #: providers/oracle/gda-oracle-provider.c:234
-#, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:244
-#, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Ne peut initialiser le gestionnaire d'erreur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:256
-#, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:269
-#, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Ne peut initialiser le gestionnaire d'erreur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:299
-#, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:315
-#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Ne peut initialiser le service de contexte Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:331
-#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr "無法指定 Oracle 用戶名稱屬性"
 
 #: providers/oracle/gda-oracle-provider.c:347
-#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr "無法指定 Oracle 密碼屬性"
 
 #: providers/oracle/gda-oracle-provider.c:362
-#, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:380
-#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Ne peut initialiser le service de contexte Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:466
 #: providers/oracle/gda-oracle-provider.c:498
@@ -998,39 +957,32 @@ msgstr "Ne peut initialiser le service de contexte Oracle"
 #: providers/oracle/gda-oracle-recordset.c:167
 #: providers/oracle/gda-oracle-recordset.c:390
 #: providers/oracle/gda-oracle-recordset.c:591
-#, fuzzy
 msgid "Invalid Oracle handle"
-msgstr "Gestionnaire SQLITE invalide"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:509
-#, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:520
-#, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:552
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:598
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:610
-#, fuzzy
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:627
-#, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
@@ -1041,142 +993,117 @@ msgid "Could not get the parameter descripter in the result set"
 msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:669
-#, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
 #: providers/oracle/gda-oracle-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1012
-#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Ne peut initialiser le service de contexte Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:870
-#, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Ne peut initialiser le gestionnaire d'erreur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:882
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:907
-#, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:960
-#, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Ne peut obtenir la description pour la colonne"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:968
-#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1019
-#, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
 #: providers/postgres/gda-postgres-provider.c:1300
 msgid "Aggregate"
-msgstr "Aggrégation"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1156
 #: providers/postgres/gda-postgres-provider.c:1304
-#, fuzzy
 msgid "OutType"
-msgstr "Type"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1157
 #: providers/postgres/gda-postgres-provider.c:1305
-#, fuzzy
 msgid "InType"
-msgstr "Type"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1441
-#, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1451
-#, fuzzy
 msgid "Could not set describe handle attribute"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1478
 #: providers/oracle/gda-oracle-provider.c:1583
-#, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1493
 #: providers/oracle/gda-oracle-provider.c:1596
-#, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1508
-#, fuzzy
 msgid "Could not get described object type"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1523
-#, fuzzy
 msgid "Could not get synonym referred-to schema"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1536
-#, fuzzy
 msgid "Could not get synonym referred-to name"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1549
-#, fuzzy
 msgid "Could not get synonym referred-to dblink"
-msgstr "Ne peut obtenir la description pour la colonne"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1611
-#, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1625
-#, fuzzy
 msgid "Could not get the column list"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1656
-#, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "Ne peut initialiser le gestionnaire d'erreur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1671
-#, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1693
-#, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1713
-#, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1732
-#, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
@@ -1186,77 +1113,64 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:2177
 #: providers/postgres/gda-postgres-provider.c:1224 testing/client.c:131
 msgid "Indexes"
-msgstr "Index"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:2180
-#, fuzzy
 msgid "Procedures"
-msgstr "Procédures stockées"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:134
 msgid "Sequences"
-msgstr "Séquences"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:72
-#, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Ne peut initialiser l'environnement Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:82
-#, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Ne peut analyser le fichier à %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:95
-#, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:128
-#, fuzzy
 msgid "Could not define by position"
-msgstr "Ne peut charger le fichier à %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:173
 #: providers/postgres/gda-postgres-recordset.c:264
-#, fuzzy
 msgid "Column out of range"
-msgstr "Numéro d'enregistrements hors limite"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:185
-#, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:195
-#, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:210
-#, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:222
-#, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:234
-#, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Ne peut initialiser la fabrique de composant Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:246
-#, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:355
-#, fuzzy
 msgid "Could not fetch a row"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/oracle/libmain.c:34
 msgid "Provider for Oracle databases"
@@ -1270,24 +1184,23 @@ msgstr ""
 #: providers/postgres/gda-postgres-recordset.c:216
 #: providers/postgres/gda-postgres-recordset.c:258
 msgid "Invalid PostgreSQL handle"
-msgstr "Gestionnaire PostgreSQL invalide"
+msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1184
 msgid "View"
-msgstr "Vue"
+msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1858 testing/client.c:126
 msgid "Databases"
-msgstr "Bases de données"
+msgstr "數據庫"
 
 #: providers/postgres/gda-postgres-recordset.c:231
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
-#, fuzzy
 msgid "Column number out of range"
-msgstr "Numéro d'enregistrements hors limite"
+msgstr ""
 
 #: providers/postgres/gda-postgres-recordset.c:354
 #, c-format
@@ -1309,27 +1222,25 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
-#, fuzzy
 msgid "Invalid SQLite handle"
-msgstr "Gestionnaire SQLITE invalide"
+msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:265
 msgid "Invalid SQLITE handle"
-msgstr "Gestionnaire SQLITE invalide"
+msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:361
 #: providers/sqlite/gda-sqlite-provider.c:376
 msgid "Only one database per connection is allowed"
-msgstr ""
+msgstr "同一時間只允許連接至數據庫一次"
 
 #: providers/sqlite/gda-sqlite-provider.c:390
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr ""
+msgstr "如果想移除 SQLite 數據庫，請您自行移除數據庫檔案"
 
 #: providers/sqlite/gda-sqlite-provider.c:664
-#, fuzzy
 msgid "Could not retrieve information for field"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/sqlite/libmain.c:41
 msgid "Provider for SQLite databases"
@@ -1337,12 +1248,12 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr ""
+msgstr "記憶體耗盡。無法分配連線所需的記憶結構。"
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
 msgid "Locale set to '%s'."
-msgstr ""
+msgstr "將地區設定指定為‘%s’。"
 
 #: providers/sybase/gda-sybase-provider.c:642
 msgid ""
@@ -1356,9 +1267,8 @@ msgid "Failed allocating a command structure in %s()"
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:670
-#, fuzzy
 msgid "Could not prepare command structure."
-msgstr "Ne peut analyser le fichier à %s"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
@@ -1369,14 +1279,14 @@ msgstr ""
 #: providers/sybase/gda-sybase-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:811
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
-msgstr ""
+msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
 
 #. when you execute a stored procedure through openclient, this
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712
 msgid "CS_STATUS_RESULT!"
-msgstr ""
+msgstr "CS_STATUS_RESULT!"
 
 #: providers/sybase/gda-sybase-provider.c:734
 msgid "Hit unsupported result type"
@@ -1391,7 +1301,7 @@ msgstr ""
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
 msgid "%s returned %s"
-msgstr ""
+msgstr "%s 回傳了 %s"
 
 #: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
@@ -1403,14 +1313,13 @@ msgid "Command structure already in use. %s failed."
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:858
-#, fuzzy
 msgid "Could not allocate command structure."
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:867
-#, fuzzy, c-format
+#, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Ne peut analyser le fichier à %s"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
@@ -1421,27 +1330,23 @@ msgstr ""
 #: providers/sybase/gda-sybase-provider.c:930
 #, c-format
 msgid "%s: %s failed"
-msgstr ""
+msgstr "%s：%s 失敗"
 
 #: providers/sybase/gda-sybase-provider.c:974
-#, fuzzy
 msgid "could not allocate cmd structure to find current database."
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:985
-#, fuzzy
 msgid "could not execute command to get current database."
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:993
-#, fuzzy
 msgid "could not send command to get current database."
-msgstr "Ne peut analyser le fichier à %s"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:1016
-#, fuzzy
 msgid "could not bind variable to get current database."
-msgstr "Fournisseur « %s » introuvable"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
@@ -1449,18 +1354,16 @@ msgid "could not fetch data to find current database."
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:1058
-#, fuzzy
 msgid "could not drop cmd structure to find current database."
-msgstr "Ne peut analyser le fichier à %s"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:315
-#, fuzzy
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
-msgstr ""
+msgstr "ct_cancel() 失敗。"
 
 #: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
@@ -1470,35 +1373,34 @@ msgstr ""
 #: providers/sybase/gda-sybase-recordset.c:339
 #, c-format
 msgid "%s returned <= 0 columns."
-msgstr ""
+msgstr "%s 回傳 0 個欄位或更少。"
 
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
-#, fuzzy
 msgid "Could not allocate structure for column metainformation."
-msgstr "Ne peut initialiser le gestionnaire d'erreur Oracle"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
-#, fuzzy, c-format
+#, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s on column %d"
-msgstr "Ne peut analyser le fichier à %s"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:391
-#, fuzzy, c-format
+#, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "Ne peut initialiser le gestionnaire d'erreur Oracle"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:422
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1508,7 +1410,7 @@ msgstr ""
 #: providers/sybase/gda-sybase-recordset.c:465
 #, c-format
 msgid "%s terminated with unexpected return code."
-msgstr ""
+msgstr "%s 不正常終止。"
 
 #: providers/sybase/gda-sybase-recordset.c:509
 msgid ""
@@ -1551,7 +1453,7 @@ msgstr ""
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
-msgstr "Ne peut ouvrir la fabrique de composant SyBase"
+msgstr ""
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -1568,7 +1470,7 @@ msgstr ""
 #: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
-msgstr ""
+msgstr "作業系統錯誤：%s"
 
 #: providers/sybase/utils.c:70
 msgid "Call: Client callback."
@@ -1594,14 +1496,14 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/utils.c:100
-#, fuzzy, c-format
+#, c-format
 msgid "\tServer name: %s\n"
-msgstr "Séquences"
+msgstr "\t伺服器名稱：%s\n"
 
 #: providers/sybase/utils.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "Procédures stockées"
+msgstr ""
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
@@ -1617,9 +1519,8 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/utils.c:230
-#, fuzzy
 msgid "OS_Error:("
-msgstr "Erreur"
+msgstr ""
 
 #: providers/sybase/utils.c:232
 msgid ") Message: "
@@ -1656,12 +1557,11 @@ msgstr ""
 
 #: providers/sybase/utils.c:346
 msgid "Server:"
-msgstr ""
+msgstr "伺服器"
 
 #: providers/sybase/utils.c:350
-#, fuzzy
 msgid "Stored Procedure:"
-msgstr "Procédures stockées"
+msgstr ""
 
 #: providers/sybase/utils.c:354
 msgid "Number"
@@ -1669,11 +1569,11 @@ msgstr ""
 
 #: providers/sybase/utils.c:357 providers/sybase/utils.c:474
 msgid "Severity"
-msgstr ""
+msgstr "嚴重性"
 
 #: providers/sybase/utils.c:360
 msgid "State"
-msgstr ""
+msgstr "狀態"
 
 #: providers/sybase/utils.c:363
 msgid "Line"
@@ -1713,17 +1613,13 @@ msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
-#, fuzzy
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr ""
-"Un chemin complet doit être spécifié sur la chaîne de connexion pour ouvrir "
-"une base de données."
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
-#, fuzzy
 msgid "Invalid Xbase handle"
-msgstr "Gestionnaire SQLITE invalide"
+msgstr ""
 
 #: providers/xbase/libmain.c:39
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
@@ -1731,16 +1627,16 @@ msgstr ""
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
-msgstr "Ne peut analyser le document XML"
+msgstr "無法解析 XML 文件"
 
 #: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
-msgstr ""
+msgstr "XML 文件無效"
 
 #: report/libgda-report/gda-report-document.c:208
 #, c-format
 msgid "Could not get file from %s"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr "無法從 %s 取得檔案"
 
 #: report/libgda-report/gda-report-item-detail.c:160
 #: report/libgda-report/gda-report-item-pagefooter.c:171
@@ -1782,9 +1678,9 @@ msgid "Error setting value %s to attribute %s of item %s"
 msgstr ""
 
 #: report/libgda-report/gda-report-valid.c:130
-#, fuzzy, c-format
+#, c-format
 msgid "could not get DTD from %s"
-msgstr "Ne peut obtenir le fichier depuis %s"
+msgstr "無法從 %s 取得 DTD"
 
 #: report/libgda-report/gda-report-valid.c:231
 #, c-format
@@ -1803,46 +1699,46 @@ msgstr ""
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"
-msgstr "\t\tAUCUN\n"
+msgstr ""
 
 #: testing/client.c:82
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** ERREUR : ne peut ouvrir de connexion vers %s\n"
+msgstr ""
 
 #. show provider features
 #: testing/client.c:87
 msgid "\tProvider capabilities...\n"
-msgstr "\tCapacités du fournisseur...\n"
+msgstr ""
 
 #: testing/client.c:88
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tAggregates: %s\n"
-msgstr "Aggrégations"
+msgstr ""
 
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
 #: testing/client.c:117 testing/client.c:120
 msgid "Supported"
-msgstr "Supporté"
+msgstr "支援"
 
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
 #: testing/client.c:117 testing/client.c:120
 msgid "Not supported"
-msgstr "Non supporté"
+msgstr "不支援"
 
 #: testing/client.c:91
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tIndexes: %s\n"
-msgstr "Index"
+msgstr ""
 
 #: testing/client.c:94
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tNamespaces: %s\n"
-msgstr "\t\tTransaction : %s\n"
+msgstr ""
 
 #: testing/client.c:97
 #, c-format
@@ -1850,24 +1746,24 @@ msgid "\t\tProcedures: %s\n"
 msgstr ""
 
 #: testing/client.c:100
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tSequences: %s\n"
-msgstr "Séquences"
+msgstr ""
 
 #: testing/client.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tSQL: %s\n"
-msgstr "Séquences"
+msgstr "\t\tSQL：%s\n"
 
 #: testing/client.c:106
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr "\t\tTransactions : %s\n"
+msgstr ""
 
 #: testing/client.c:109
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tTriggers: %s\n"
-msgstr "Triggers"
+msgstr ""
 
 #: testing/client.c:112
 #, c-format
@@ -1895,173 +1791,77 @@ msgstr ""
 
 #: testing/client.c:125
 msgid "Namespaces"
-msgstr "Espaces de noms"
+msgstr ""
 
 #: testing/client.c:127
 msgid "Stored procedures"
-msgstr "Procédures stockées"
+msgstr ""
 
 #: testing/client.c:128
 msgid "Connection Tables"
-msgstr "Tables de connexion"
+msgstr ""
 
 #: testing/client.c:129
 msgid "Available types"
-msgstr "Types disponibles"
+msgstr ""
 
 #: testing/client.c:132
 msgid "Aggregates"
-msgstr "Aggrégations"
+msgstr ""
 
 #: testing/client.c:136
 msgid "Languages"
-msgstr "Langues"
+msgstr "語言"
 
 #: testing/client.c:141 testing/client.c:149
 msgid "\tStarting transaction..."
-msgstr "\tDémarrage de la transaction..."
+msgstr ""
 
 #: testing/client.c:143 testing/client.c:147 testing/client.c:151
 #: testing/client.c:155
 msgid "Error"
-msgstr "Erreur"
+msgstr "錯誤"
 
 #: testing/client.c:145
 msgid "\tFinishing transaction..."
-msgstr "\tFin de la transaction..."
+msgstr ""
 
 #: testing/client.c:153
 msgid "\tRolling back transaction..."
-msgstr "\tRolling back de la transaction..."
+msgstr ""
 
 #: testing/client.c:184
 msgid "Testing GDA client API"
-msgstr "Test de l'API GDA client"
+msgstr ""
 
 #: testing/client.c:193
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
-"** ERREUR : gda_config_get_data_source_list a retourné un élément NULL\n"
 
 #: testing/client.c:197
 #, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr "Source de données = %s, Utilisateur = %s\n"
+msgstr ""
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** ERREUR : gda_config_get_provider_list a retourné un élément NULL\n"
+msgstr ""
 
 #: testing/config.c:88
 #, c-format
 msgid " Provider = %s\n"
-msgstr " Fournisseur = %s\n"
+msgstr ""
 
 #: testing/config.c:89
 #, c-format
 msgid "\tlocation = %s\n"
-msgstr "\templacement = %s\n"
+msgstr ""
 
 #: testing/config.c:90
 #, c-format
 msgid "\tdescription = %s\n"
-msgstr "\tdescription = %s\n"
+msgstr ""
 
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-
-#, fuzzy
-#~ msgid "about to open connection"
-#~ msgstr "** ERREUR : ne peut ouvrir de connexion vers %s\n"
-
-#, fuzzy
-#~ msgid "Could not initialize cslib callback"
-#~ msgstr "Ne peut initialiser la bibliothèque OCI"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-client callback"
-#~ msgstr "Ne peut initialiser l'environnement Oracle"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "Ne peut initialiser l'environnement Oracle"
-
-#, fuzzy
-#~ msgid "Connection allocated."
-#~ msgstr "Tables de connexion"
-
-#, fuzzy
-#~ msgid "Username set."
-#~ msgstr "Nom d'Utilisateur"
-
-#~ msgid "Connected."
-#~ msgstr "Connecté."
-
-#~ msgid "Finally connected."
-#~ msgstr "Finalement connecté."
-
-#, fuzzy
-#~ msgid "Could not allocate environment handle."
-#~ msgstr "Ne peut initialiser le gestionnaire de serveur Oracle"
-
-#, fuzzy
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "Ne peut obtenir le fichier depuis %s"
-
-#, fuzzy
-#~ msgid "Types"
-#~ msgstr "Type"
-
-#, fuzzy
-#~ msgid "Data Type"
-#~ msgstr "Type de donnée"
-
-#, fuzzy
-#~ msgid "Precision"
-#~ msgstr "Description"
-
-#~ msgid "Provider %s is not installed"
-#~ msgstr "Le fourniseur %s n'est pas installé"
-
-#~ msgid "Could not load %s provider"
-#~ msgstr "Ne peut charger le fournisseur %s"
-
-#~ msgid "Creation of GdaServerProvider failed"
-#~ msgstr "La création de GdaServerProvider a échoué"
-
-#, fuzzy
-#~ msgid "Could not load report file at %s"
-#~ msgstr "Ne peut charger le fichier à %s"
-
-#, fuzzy
-#~ msgid "Could not parse report file at %s"
-#~ msgstr "Ne peut analyser le fichier à %s"
-
-#, fuzzy
-#~ msgid "Invalid report file '%s'"
-#~ msgstr "Fichier XML de base de données sélectionnée « %s » non valide"
-
-#~ msgid "You need to specify the name of the table"
-#~ msgstr "Vous devez spécifier le nom de la table"
-
-#~ msgid "CORBA exception: %s"
-#~ msgstr "Exception CORBA : %s"
-
-#~ msgid "Could not create global GDA client"
-#~ msgstr "Ne peut créer le client GDA global"
-
-#~ msgid "GDA Report engine"
-#~ msgstr "Moteur de rapport GDA"
-
-#~ msgid "GDA Report engine factory"
-#~ msgstr "Fabrique de moteur de rapport GDA"
-
-#~ msgid "Could not parse XML report"
-#~ msgstr "Ne peut analyser le rapport XML"
-
-#~ msgid "Could not activate report engine"
-#~ msgstr "Ne peut activer le moteur de rapport"
-
-#~ msgid "Could not initiate Report component factory"
-#~ msgstr "Ne peut initialiser le composant de fabrique de rapport"
