@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-12-13 02:58+0100\n"
-"PO-Revision-Date: 2002-12-13 02:58+0100\n"
+"POT-Creation-Date: 2002-12-17 01:32+0100\n"
+"PO-Revision-Date: 2002-12-17 01:33+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,7 @@ msgstr "Leverantör"
 msgid "Connection string"
 msgstr "Anslutningssträng"
 
-#: libgda/gda-config.c:1325 providers/postgres/gda-postgres-provider.c:903
+#: libgda/gda-config.c:1325 providers/postgres/gda-postgres-provider.c:997
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -195,7 +195,7 @@ msgstr "Inte implementerat"
 #: providers/default/gda-default-provider.c:455
 #: providers/mysql/gda-mysql-provider.c:1027
 #: providers/oracle/gda-oracle-provider.c:1088
-#: providers/postgres/gda-postgres-provider.c:1065
+#: providers/postgres/gda-postgres-provider.c:1198
 #: providers/sqlite/gda-sqlite-provider.c:617
 msgid "Field name"
 msgstr "Fältnamn"
@@ -203,7 +203,7 @@ msgstr "Fältnamn"
 #: providers/default/gda-default-provider.c:456
 #: providers/mysql/gda-mysql-provider.c:1028
 #: providers/oracle/gda-oracle-provider.c:1089
-#: providers/postgres/gda-postgres-provider.c:1066
+#: providers/postgres/gda-postgres-provider.c:1199
 #: providers/sqlite/gda-sqlite-provider.c:618
 msgid "Data type"
 msgstr "Datatyp"
@@ -211,7 +211,7 @@ msgstr "Datatyp"
 #: providers/default/gda-default-provider.c:457
 #: providers/mysql/gda-mysql-provider.c:1029
 #: providers/oracle/gda-oracle-provider.c:1090
-#: providers/postgres/gda-postgres-provider.c:1067
+#: providers/postgres/gda-postgres-provider.c:1200
 #: providers/sqlite/gda-sqlite-provider.c:619
 msgid "Size"
 msgstr "Storlek"
@@ -219,7 +219,7 @@ msgstr "Storlek"
 #: providers/default/gda-default-provider.c:458
 #: providers/mysql/gda-mysql-provider.c:1030
 #: providers/oracle/gda-oracle-provider.c:1091
-#: providers/postgres/gda-postgres-provider.c:1068
+#: providers/postgres/gda-postgres-provider.c:1201
 #: providers/sqlite/gda-sqlite-provider.c:620
 msgid "Scale"
 msgstr "Skala"
@@ -227,7 +227,7 @@ msgstr "Skala"
 #: providers/default/gda-default-provider.c:459
 #: providers/mysql/gda-mysql-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1092
-#: providers/postgres/gda-postgres-provider.c:1069
+#: providers/postgres/gda-postgres-provider.c:1202
 #: providers/sqlite/gda-sqlite-provider.c:621
 msgid "Not null?"
 msgstr "Inte null?"
@@ -235,7 +235,7 @@ msgstr "Inte null?"
 #: providers/default/gda-default-provider.c:460
 #: providers/mysql/gda-mysql-provider.c:1032
 #: providers/oracle/gda-oracle-provider.c:1093
-#: providers/postgres/gda-postgres-provider.c:1070
+#: providers/postgres/gda-postgres-provider.c:1203
 #: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Primary key?"
 msgstr "Primärnyckel?"
@@ -243,7 +243,7 @@ msgstr "Primärnyckel?"
 #: providers/default/gda-default-provider.c:461
 #: providers/mysql/gda-mysql-provider.c:1033
 #: providers/oracle/gda-oracle-provider.c:1094
-#: providers/postgres/gda-postgres-provider.c:1071
+#: providers/postgres/gda-postgres-provider.c:1204
 #: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Unique index?"
 msgstr "Unikt index?"
@@ -251,7 +251,7 @@ msgstr "Unikt index?"
 #: providers/default/gda-default-provider.c:462
 #: providers/mysql/gda-mysql-provider.c:1034
 #: providers/oracle/gda-oracle-provider.c:1095
-#: providers/postgres/gda-postgres-provider.c:1072
+#: providers/postgres/gda-postgres-provider.c:1205
 #: providers/sqlite/gda-sqlite-provider.c:624
 msgid "References"
 msgstr "Referenser"
@@ -331,7 +331,7 @@ msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:1007 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
-#: providers/sybase/utils.c:171
+#: providers/sybase/utils.c:172
 msgid "Not available"
 msgstr "Inte tillgänglig"
 
@@ -356,7 +356,7 @@ msgid "GDA provider for TDS-based databases (using FreeTDS)"
 msgstr "GDA-leverantör för TDS-baserade databaser (använder FreeTDS)"
 
 #: providers/freetds/utils.c:41 providers/oracle/utils.c:67
-#: providers/postgres/utils.c:47 providers/sybase/utils.c:166
+#: providers/postgres/utils.c:47 providers/sybase/utils.c:167
 msgid "NO DESCRIPTION"
 msgstr "INGEN BESKRIVNING"
 
@@ -463,47 +463,47 @@ msgstr "Ogiltigt MYSQL-handtag"
 #: providers/mysql/gda-mysql-provider.c:848
 #: providers/mysql/gda-mysql-provider.c:930
 #: providers/oracle/gda-oracle-provider.c:1530
-#: providers/postgres/gda-postgres-provider.c:688
-#: providers/postgres/gda-postgres-provider.c:902
-#: providers/postgres/gda-postgres-provider.c:921
-#: providers/postgres/gda-postgres-provider.c:967
-#: providers/postgres/gda-postgres-provider.c:1025
-#: providers/postgres/gda-postgres-provider.c:1475
+#: providers/postgres/gda-postgres-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:996
+#: providers/postgres/gda-postgres-provider.c:1015
+#: providers/postgres/gda-postgres-provider.c:1061
+#: providers/postgres/gda-postgres-provider.c:1158
+#: providers/postgres/gda-postgres-provider.c:1608
 #: providers/sqlite/gda-sqlite-provider.c:747
-#: providers/sybase/gda-sybase-provider.c:901
+#: providers/sybase/gda-sybase-provider.c:906
 msgid "Owner"
 msgstr "Ägare"
 
 #: providers/mysql/gda-mysql-provider.c:849
 #: providers/mysql/gda-mysql-provider.c:931
 #: providers/oracle/gda-oracle-provider.c:1530
-#: providers/postgres/gda-postgres-provider.c:689
-#: providers/postgres/gda-postgres-provider.c:922
-#: providers/postgres/gda-postgres-provider.c:968
-#: providers/postgres/gda-postgres-provider.c:1026
-#: providers/postgres/gda-postgres-provider.c:1476
+#: providers/postgres/gda-postgres-provider.c:745
+#: providers/postgres/gda-postgres-provider.c:1016
+#: providers/postgres/gda-postgres-provider.c:1062
+#: providers/postgres/gda-postgres-provider.c:1159
+#: providers/postgres/gda-postgres-provider.c:1609
 #: providers/sqlite/gda-sqlite-provider.c:748
-#: providers/sybase/gda-sybase-provider.c:903
+#: providers/sybase/gda-sybase-provider.c:908
 msgid "Comments"
 msgstr "Kommentarer"
 
 #: providers/mysql/gda-mysql-provider.c:929
 #: providers/oracle/gda-oracle-provider.c:1629
-#: providers/postgres/gda-postgres-provider.c:920
+#: providers/postgres/gda-postgres-provider.c:1014
 #: providers/sqlite/gda-sqlite-provider.c:746
-#: providers/sybase/gda-sybase-provider.c:899
+#: providers/sybase/gda-sybase-provider.c:904
 msgid "Type"
 msgstr "Typ"
 
 #: providers/mysql/gda-mysql-provider.c:932
-#: providers/postgres/gda-postgres-provider.c:923
+#: providers/postgres/gda-postgres-provider.c:1017
 #: providers/sqlite/gda-sqlite-provider.c:749
-#: providers/sybase/gda-sybase-provider.c:905
+#: providers/sybase/gda-sybase-provider.c:910
 msgid "GDA type"
 msgstr "GDA-typ"
 
 #: providers/mysql/gda-mysql-provider.c:1035
-#: providers/postgres/gda-postgres-provider.c:1073
+#: providers/postgres/gda-postgres-provider.c:1206
 #: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Default value"
 msgstr "Standardvärde"
@@ -717,13 +717,13 @@ msgstr "Kunde inte få tag i nullbart attribut för Oracle-fält"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1491
-#: providers/postgres/gda-postgres-provider.c:1448 testing/client.c:129
+#: providers/postgres/gda-postgres-provider.c:1581 testing/client.c:129
 msgid "Users"
 msgstr "Användare"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1717
-#: providers/postgres/gda-postgres-provider.c:994 testing/client.c:127
+#: providers/postgres/gda-postgres-provider.c:1088 testing/client.c:127
 msgid "Indexes"
 msgstr "Index"
 
@@ -737,7 +737,7 @@ msgstr "Sekvenser"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1732
-#: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:131
+#: providers/postgres/gda-postgres-provider.c:1187 testing/client.c:131
 msgid "Triggers"
 msgstr "Utlösare"
 
@@ -798,77 +798,77 @@ msgstr "Kunde inte hämta en rad"
 msgid "GDA provider for Oracle databases"
 msgstr "GDA-leverantör för Oracle-databaser"
 
-#: providers/postgres/gda-postgres-provider.c:413
-#: providers/postgres/gda-postgres-provider.c:430
-#: providers/postgres/gda-postgres-provider.c:501
-#: providers/postgres/gda-postgres-provider.c:635
+#: providers/postgres/gda-postgres-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:481
+#: providers/postgres/gda-postgres-provider.c:552
+#: providers/postgres/gda-postgres-provider.c:686
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "Ogiltigt PostgreSQL-handtag"
 
-#: providers/postgres/gda-postgres-provider.c:686
+#: providers/postgres/gda-postgres-provider.c:742
 msgid "Procedure"
 msgstr "Procedur"
 
-#: providers/postgres/gda-postgres-provider.c:687
-#: providers/postgres/gda-postgres-provider.c:1024
+#: providers/postgres/gda-postgres-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:1157
 msgid "Id"
 msgstr "Id"
 
-#: providers/postgres/gda-postgres-provider.c:690
+#: providers/postgres/gda-postgres-provider.c:746
 msgid "Return type"
 msgstr "Returtyp"
 
-#: providers/postgres/gda-postgres-provider.c:691
+#: providers/postgres/gda-postgres-provider.c:747
 msgid "Nb args"
 msgstr "Nb-argument"
 
-#: providers/postgres/gda-postgres-provider.c:692
+#: providers/postgres/gda-postgres-provider.c:748
 msgid "Args types"
 msgstr "Argumenttyper"
 
-#: providers/postgres/gda-postgres-provider.c:693
-#: providers/postgres/gda-postgres-provider.c:904
-#: providers/postgres/gda-postgres-provider.c:969
-#: providers/postgres/gda-postgres-provider.c:1029
-#: providers/postgres/gda-postgres-provider.c:1477
+#: providers/postgres/gda-postgres-provider.c:749
+#: providers/postgres/gda-postgres-provider.c:998
+#: providers/postgres/gda-postgres-provider.c:1063
+#: providers/postgres/gda-postgres-provider.c:1162
+#: providers/postgres/gda-postgres-provider.c:1610
 msgid "Definition"
 msgstr "Definition"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:901
-#: providers/postgres/gda-postgres-provider.c:1514
+#: providers/postgres/gda-postgres-provider.c:995
+#: providers/postgres/gda-postgres-provider.c:1647
 msgid "Table"
 msgstr "Tabell"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:966
+#: providers/postgres/gda-postgres-provider.c:1060
 msgid "View"
 msgstr "Vy"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1023
+#: providers/postgres/gda-postgres-provider.c:1156
 msgid "Aggregate"
 msgstr "Aggregat"
 
-#: providers/postgres/gda-postgres-provider.c:1027
+#: providers/postgres/gda-postgres-provider.c:1160
 msgid "OutType"
 msgstr "Uttyp"
 
-#: providers/postgres/gda-postgres-provider.c:1028
+#: providers/postgres/gda-postgres-provider.c:1161
 msgid "InType"
 msgstr "Intyp"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1423 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:1556 testing/client.c:122
 msgid "Databases"
 msgstr "Databaser"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1474
-#: providers/postgres/gda-postgres-provider.c:1515
+#: providers/postgres/gda-postgres-provider.c:1607
+#: providers/postgres/gda-postgres-provider.c:1648
 msgid "Sequence"
 msgstr "Sekvens"
 
@@ -917,6 +917,11 @@ msgstr "Kunde inte hämta information för fält"
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
 msgstr "GDA-leverantör för SQLite-databaser"
+
+#. the logic to connect to the database
+#: providers/sybase/gda-sybase-provider.c:251
+msgid "about to open connection"
+msgstr "kommer att öppna anslutning"
 
 #: providers/sybase/gda-sybase-provider.c:277
 msgid "Out of memory. Allocating connection structure failed."
@@ -983,12 +988,11 @@ msgstr "Tomt lösenord inställt."
 msgid "Connected."
 msgstr "Ansluten."
 
-#. 	return TRUE;
-#: providers/sybase/gda-sybase-provider.c:478
+#: providers/sybase/gda-sybase-provider.c:477
 msgid "Finally connected."
 msgstr "Äntligen ansluten."
 
-#: providers/sybase/gda-sybase-provider.c:612
+#: providers/sybase/gda-sybase-provider.c:611
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
@@ -996,14 +1000,14 @@ msgstr ""
 "Kommandostruktur används redan. Kommandot kommer inte att köras på grund av "
 "blockerad anslutning."
 
-#: providers/sybase/gda-sybase-provider.c:626
-msgid "Failed allocating a command structure in process_sql_commands()."
-msgstr ""
-"Misslyckades med allokering av kommandostruktur i process_sql_commands()."
+#: providers/sybase/gda-sybase-provider.c:625
+#, c-format
+msgid "Failed allocating a command structure in %s()"
+msgstr "Misslyckades med allokering av kommandostruktur i %s()"
 
 #: providers/sybase/gda-sybase-provider.c:636
 msgid "Could not prepare command structure."
-msgstr "Kunde inte prepare kommandostruktur."
+msgstr "Kunde inte förbereda kommandostruktur."
 
 #: providers/sybase/gda-sybase-provider.c:645
 msgid "Sending sql-command failed."
@@ -1014,45 +1018,42 @@ msgid "Failed dropping command structure."
 msgstr "Kastande av kommandostruktur misslyckades."
 
 #: providers/sybase/gda-sybase-provider.c:744
-msgid "Command structure already in use. execute_cmd() failed."
-msgstr "Kommandostruktur används redan. execute_cmd() misslyckades."
+#, c-format
+msgid "Command structure already in use. %s failed."
+msgstr "Kommandostruktur används redan. %s misslyckades."
 
-#: providers/sybase/gda-sybase-provider.c:751
-msgid "Could not ct_cmd_alloc() command structure."
-msgstr "Kunde inte köra ct_cmd_alloc() på kommandostruktur."
-
-#: providers/sybase/gda-sybase-provider.c:759
-msgid "Could not prepare command structure with ct_command()."
-msgstr "Kunde inte förbereda kommandostruktur med ct_command()."
-
-#: providers/sybase/gda-sybase-provider.c:768
-msgid "Sending command failed."
-msgstr "Skickande av kommando misslyckades."
-
-#: providers/sybase/gda-sybase-provider.c:791
-#: providers/sybase/gda-sybase-provider.c:806
-msgid "execute_cmd(): ct_cancel failed"
-msgstr "execute_cmd(): ct_cancel misslyckades"
-
-#: providers/sybase/gda-sybase-provider.c:816
-msgid "execute_cmd(): ct_cmd_drop() failed"
-msgstr "execute_cmd(): ct_cmd_drop() misslyckades"
-
-#: providers/sybase/gda-sybase-provider.c:850
-msgid ""
-"Connection already in use. Could not allocatie command structure in "
-"'_get_database'"
-msgstr ""
-"Anslutningen används redan. Kunde inte allokera kommandostruktur i "
-"'_get_database'"
-
-#: providers/sybase/gda-sybase-provider.c:852
+#: providers/sybase/gda-sybase-provider.c:752
+#: providers/sybase/gda-sybase-provider.c:856
 msgid "Could not allocate command structure."
 msgstr "Kunde inte allokera kommandostruktur."
 
-#: providers/sybase/gda-sybase-provider.c:863
-msgid "Failed dropping command structure in get_database()."
-msgstr "Kastande av kommandostruktur misslyckades i get_database()."
+#: providers/sybase/gda-sybase-provider.c:760
+#, c-format
+msgid "Could not prepare command structure with %s."
+msgstr "Kunde inte förbereda kommandostruktur med %s."
+
+#: providers/sybase/gda-sybase-provider.c:769
+msgid "Sending command failed."
+msgstr "Skickande av kommando misslyckades."
+
+#: providers/sybase/gda-sybase-provider.c:793
+#: providers/sybase/gda-sybase-provider.c:809
+#: providers/sybase/gda-sybase-provider.c:819
+#, c-format
+msgid "%s: %s failed"
+msgstr "%s: %s misslyckades"
+
+#: providers/sybase/gda-sybase-provider.c:854
+#, c-format
+msgid ""
+"Connection already in use. Could not allocate command structure in %s()."
+msgstr ""
+"Anslutningen används redan. Kunde inte allokera kommandostruktur i %s()."
+
+#: providers/sybase/gda-sybase-provider.c:867
+#, c-format
+msgid "Failed dropping command structure in %s()."
+msgstr "Kastande av kommandostruktur i %s() misslyckades."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
@@ -1063,49 +1064,54 @@ msgid "ct_cancel() failed."
 msgstr "ct_cancel() misslyckades."
 
 #: providers/sybase/gda-sybase-recordset.c:330
-msgid "ct_res_info() failed while processing a row result."
-msgstr "ct_res_info() misslyckades vid behandling av ett radresultat."
+#, c-format
+msgid "%s failed while processing a row result."
+msgstr "%s misslyckades vid behandling av ett radresultat."
 
-#: providers/sybase/gda-sybase-recordset.c:336
-msgid "ct_res_info() returned <= 0 columns."
-msgstr "ct_res_info() returnerade <= 0 kolumner."
+#: providers/sybase/gda-sybase-recordset.c:337
+#, c-format
+msgid "%s returned <= 0 columns."
+msgstr "%s returnerade <= 0 kolumner."
 
-#: providers/sybase/gda-sybase-recordset.c:355
+#: providers/sybase/gda-sybase-recordset.c:357
 msgid "Could not allocate structure for column metainformation."
 msgstr "Kunde inte allokera struktur för kolumnmetainformation."
 
-#: providers/sybase/gda-sybase-recordset.c:359
-#: providers/sybase/gda-sybase-recordset.c:413
-msgid "Could not ct_cancel processing row resultset."
-msgstr "Kunde inte ct_cancel behandling av radresultatmängd."
-
-#: providers/sybase/gda-sybase-recordset.c:376
+#: providers/sybase/gda-sybase-recordset.c:361
 #, c-format
-msgid "Could not ct_describe column %d"
-msgstr "Kunde inte ct_describe kolumn %d"
+msgid "Could not call %s while processing row resultset."
+msgstr "Kunde inte anropa %s behandling av radresultatmängd."
 
-#: providers/sybase/gda-sybase-recordset.c:384
+#: providers/sybase/gda-sybase-recordset.c:379
+#: providers/sybase/gda-sybase-recordset.c:398
+#, c-format
+msgid "Could not run %s on column %d"
+msgstr "Kunde inte köra %s på kolumn %d"
+
+#: providers/sybase/gda-sybase-recordset.c:387
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "kunde inte allokera datahållare för kolumn %d"
 
-#: providers/sybase/gda-sybase-recordset.c:395
+#: providers/sybase/gda-sybase-recordset.c:416
 #, c-format
-msgid "Could not ct_bind() column %d"
-msgstr "Kunde inte ct_bind() kolumn %d"
+msgid "Could not run %s to cancel processing row resultset."
+msgstr "Kunde inte köra %s för att avbryta behandling av radresultatmängd."
 
-#: providers/sybase/gda-sybase-recordset.c:428
+#: providers/sybase/gda-sybase-recordset.c:431
 #, c-format
-msgid "ct_fetch() failed on row %d"
-msgstr "ct_fetch() misslyckades på rad %d"
+msgid "%s failed on row %d"
+msgstr "%s misslyckades på rad %d"
 
-#: providers/sybase/gda-sybase-recordset.c:454
-msgid "ct_fetch terminated with unexpected return code."
-msgstr "ct_fetch avslutades med oväntad slutkod."
+#: providers/sybase/gda-sybase-recordset.c:457
+#, c-format
+msgid "%s terminated with unexpected return code."
+msgstr "%s avslutades med oväntad slutkod."
 
-#: providers/sybase/gda-sybase-recordset.c:528
-msgid "ct_results() returned CS_CMD_FAIL"
-msgstr "ct_results() returnerade CS_CMD_FAIL"
+#: providers/sybase/gda-sybase-recordset.c:531
+#, c-format
+msgid "%s returned CS_CMD_FAIL"
+msgstr "%s returnerade CS_CMD_FAIL"
 
 #: providers/sybase/gda-sybase-types.c:95
 #: providers/sybase/gda-sybase-types.c:98
@@ -1188,21 +1194,16 @@ msgstr "\tServernamn: %s\n"
 msgid "\tProcedure name: %s\n"
 msgstr "\tProcedurnamn: %s\n"
 
-#: providers/sybase/utils.c:95
-#, c-format
-msgid "\t%s\n"
-msgstr "\t%s\n"
-
-#: providers/sybase/utils.c:130
+#: providers/sybase/utils.c:131
 msgid "ct_diag() failed determining # of client messages."
 msgstr "ct_diag() misslyckades med att avgöra antalet klientmeddelanden."
 
-#: providers/sybase/utils.c:138
+#: providers/sybase/utils.c:139
 #, c-format
 msgid "%d messages fetched."
 msgstr "%d meddelanden hämtades."
 
-#: providers/sybase/utils.c:152
+#: providers/sybase/utils.c:153
 msgid "Operation not possible, connection busy."
 msgstr "Åtgärden är inte möjlig, anslutningen upptagen."
 
@@ -1391,12 +1392,33 @@ msgstr "\tbeskrivning = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
+#~ msgid "Could not ct_cmd_alloc() command structure."
+#~ msgstr "Kunde inte köra ct_cmd_alloc() på kommandostruktur."
+
+#~ msgid "Could not prepare command structure with ct_command()."
+#~ msgstr "Kunde inte förbereda kommandostruktur med ct_command()."
+
+#~ msgid "execute_cmd(): ct_cancel failed"
+#~ msgstr "execute_cmd(): ct_cancel misslyckades"
+
+#~ msgid "execute_cmd(): ct_cmd_drop() failed"
+#~ msgstr "execute_cmd(): ct_cmd_drop() misslyckades"
+
 #~ msgid ""
-#~ "Connection already in use. Could not allocate command structure in "
+#~ "Connection already in use. Could not allocatie command structure in "
 #~ "'_get_database'"
 #~ msgstr ""
 #~ "Anslutningen används redan. Kunde inte allokera kommandostruktur i "
 #~ "'_get_database'"
+
+#~ msgid "Failed dropping command structure in get_database()."
+#~ msgstr "Kastande av kommandostruktur misslyckades i get_database()."
+
+#~ msgid "Could not ct_describe column %d"
+#~ msgstr "Kunde inte ct_describe kolumn %d"
+
+#~ msgid "\t%s\n"
+#~ msgstr "\t%s\n"
 
 #~ msgid "Tables"
 #~ msgstr "Tabeller"
@@ -1896,9 +1918,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "%s: selecting database failed"
 #~ msgstr "%s: val av databas misslyckades"
-
-#~ msgid "%s: use command failed"
-#~ msgstr "%s: användningskommando misslyckades"
 
 #~ msgid "Could not allocate locale structure"
 #~ msgstr "Kunde inte allokera lokalstruktur"
