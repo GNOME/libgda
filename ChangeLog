@@ -1,6 +1,6 @@
 2005-01-31  Bas Driessen <bas.driessen@xobas.com>
 
-	* providers/mysql/gda-postgres-provider.c: added functions
+	* providers/mysql/gda-mysql-provider.c: added functions
 	gda_mysql_provider_create_table(), gda_mysql_provider_drop_table().
 
 	* providers/mysql/utils.[ch]: new function
