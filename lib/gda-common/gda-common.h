@@ -25,12 +25,14 @@
  */
 
 #include <gda-corba.h>
+#include <gda-error.h>
 #include <gda-log.h>
 #include <gda-config.h>
 #include <gda-thread.h>
 #include <gda-util.h>
-#include <gda-xml-file.h>
+#include <gda-xml-document.h>
 #include <gda-xml-database.h>
+#include <gda-xml-util.h>
 
 void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
 

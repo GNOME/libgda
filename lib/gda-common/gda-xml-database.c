@@ -1,5 +1,8 @@
-/* GDA library
- * Copyright (C) 1999, 2000 Rodrigo Moya
+/* GDA common library
+ * Copyright (C) 1999-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,7 +23,6 @@
 #include "config.h"
 #include "gda-xml-database.h"
 #include <stdlib.h>
-
 #ifndef HAVE_GOBJECT
 #  include <gtk/gtksignal.h>
 #endif
@@ -58,10 +60,9 @@
 /*
  * GdaXmlDatabase object signals
  */
-enum
-{
-  GDA_XML_DATABASE_CHANGED,
-  GDA_XML_DATABASE_LAST_SIGNAL
+enum {
+	GDA_XML_DATABASE_CHANGED,
+	GDA_XML_DATABASE_LAST_SIGNAL
 };
 
 static gint xmldb_signals[GDA_XML_DATABASE_LAST_SIGNAL] = { 0, };
@@ -73,25 +74,25 @@ static gint xmldb_signals[GDA_XML_DATABASE_LAST_SIGNAL] = { 0, };
 static void
 gda_xml_database_class_init (GdaXmlDatabaseClass *klass, gpointer data)
 {
-  /* FIXME: GObject signals are not yet implemented */
-  klass->changed = NULL;
+	/* FIXME: GObject signals are not yet implemented */
+	klass->changed = NULL;
 }
 #else
 static void
 gda_xml_database_class_init (GdaXmlDatabaseClass *klass)
 {
-  GtkObjectClass* object_class = GTK_OBJECT_CLASS(klass);
+	GtkObjectClass* object_class = GTK_OBJECT_CLASS(klass);
 
-  xmldb_signals[GDA_XML_DATABASE_CHANGED] =
-    gtk_signal_new("changed",
-                   GTK_RUN_FIRST,
-                   object_class->type,
-                   GTK_SIGNAL_OFFSET(GdaXmlDatabaseClass, changed),
-                   gtk_signal_default_marshaller,
-                   GTK_TYPE_NONE, 0);
-  gtk_object_class_add_signals(object_class, xmldb_signals, GDA_XML_DATABASE_LAST_SIGNAL);
+	xmldb_signals[GDA_XML_DATABASE_CHANGED] =
+		gtk_signal_new("changed",
+			       GTK_RUN_FIRST,
+			       object_class->type,
+			       GTK_SIGNAL_OFFSET(GdaXmlDatabaseClass, changed),
+			       gtk_signal_default_marshaller,
+			       GTK_TYPE_NONE, 0);
+	gtk_object_class_add_signals(object_class, xmldb_signals, GDA_XML_DATABASE_LAST_SIGNAL);
 
-  klass->changed = NULL;
+	klass->changed = NULL;
 }
 #endif
 
@@ -102,58 +103,53 @@ gda_xml_database_init (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass)
 gda_xml_database_init (GdaXmlDatabase *xmldb)
 #endif
 {
-  xmldb->tables = NULL;
-  xmldb->views = NULL;
+	xmldb->tables = NULL;
+	xmldb->views = NULL;
 }
 
 #ifdef HAVE_GOBJECT
 GType
 gda_xml_database_get_type (void)
 {
-  static GType type = 0;
+	static GType type = 0;
 
-  if (!type)
-    {
-      GTypeInfo info =
-      {
-        sizeof (GdaXmlDatabaseClass),                /* class_size */
-        NULL,                                         /* base_init */
-        NULL,                                         /* base_finalize */
-        (GClassInitFunc) gda_xml_database_class_init, /* class_init */
-        NULL,                                         /* class_finalize */
-        NULL,                                         /* class_data */
-        sizeof (GdaXmlDatabase),                     /* instance_size */
-        0,                                            /* n_preallocs */
-        (GInstanceInitFunc) gda_xml_database_init,    /* instance_init */
-        NULL,                                         /* value_table */
-      };
-      type = g_type_register_static (GDA_TYPE_XML_FILE, "GdaXmlDatabase",
-                                     &info, 0);
-    }
-  return type;
+	if (!type) {
+		GTypeInfo info = {
+			sizeof (GdaXmlDatabaseClass),
+			NULL,
+			NULL,
+			(GClassInitFunc) gda_xml_database_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaXmlDatabase),
+			0,
+			(GInstanceInitFunc) gda_xml_database_init,
+			NULL,
+		};
+		type = g_type_register_static (GDA_TYPE_XML_DOCUMENT, "GdaXmlDatabase",
+					       &info, 0);
+	}
+	return type;
 }
 #else
 GtkType
 gda_xml_database_get_type (void)
 {
-  static GtkType xml_database_type = 0;
+	static GtkType type = 0;
 
-  if (!xml_database_type)
-    {
-      GtkTypeInfo xml_database_info =
-      {
-        "GdaXmlDatabase",
-        sizeof (GdaXmlDatabase),
-        sizeof (GdaXmlDatabaseClass),
-        (GtkClassInitFunc) gda_xml_database_class_init,
-        (GtkObjectInitFunc) gda_xml_database_init,
-        (GtkArgSetFunc) NULL,
-        (GtkArgSetFunc) NULL
-      };
-      xml_database_type = gtk_type_unique(gda_xml_file_get_type(),
-                                          &xml_database_info);
-    }
-  return xml_database_type;
+	if (!type) {
+		GtkTypeInfo info = {
+			"GdaXmlDatabase",
+			sizeof (GdaXmlDatabase),
+			sizeof (GdaXmlDatabaseClass),
+			(GtkClassInitFunc) gda_xml_database_class_init,
+			(GtkObjectInitFunc) gda_xml_database_init,
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL
+		};
+		type = gtk_type_unique(gda_xml_document_get_type(), &info);
+	}
+	return type;
 }
 #endif
 
@@ -167,21 +163,21 @@ gda_xml_database_get_type (void)
 GdaXmlDatabase *
 gda_xml_database_new (void)
 {
-  GdaXmlDatabase* xmldb;
+	GdaXmlDatabase* xmldb;
 
 #ifdef HAVE_GOBJECT
-  xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
+	xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
 #else
-  xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
+	xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
 #endif
 
-  gda_xml_file_construct(GDA_XML_FILE(xmldb), OBJECT_DATABASE);
+	gda_xml_document_construct(GDA_XML_DOCUMENT(xmldb), OBJECT_DATABASE);
 
-  /* initialize XML nodes */
-  xmldb->tables = xmlNewChild(GDA_XML_FILE(xmldb)->root, NULL, "tables", NULL);
-  xmldb->views = xmlNewChild(GDA_XML_FILE(xmldb)->root, NULL, "views", NULL);
+	/* initialize XML nodes */
+	xmldb->tables = xmlNewChild(GDA_XML_DOCUMENT(xmldb)->root, NULL, "tables", NULL);
+	xmldb->views = xmlNewChild(GDA_XML_DOCUMENT(xmldb)->root, NULL, "views", NULL);
 
-  return xmldb;
+	return xmldb;
 }
 
 /**
@@ -190,30 +186,28 @@ gda_xml_database_new (void)
 GdaXmlDatabase *
 gda_xml_database_new_from_file (const gchar *filename)
 {
-  GdaXmlDatabase* xmldb;
+	GdaXmlDatabase* xmldb;
   
 #ifdef HAVE_GOBJECT
-  xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
+	xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
 #else
-  xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
+	xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
 #endif
 
-  GDA_XML_FILE(xmldb)->doc = xmlParseFile(filename);
-  if (GDA_XML_FILE(xmldb)->doc)
-    {
-      xmlNodePtr node;
-      GDA_XML_FILE(xmldb)->root = xmlDocGetRootElement(GDA_XML_FILE(xmldb)->doc);
-      node = GDA_XML_FILE(xmldb)->root->xmlChildrenNode;
-      while (node)
-        {
-          if (!strcmp(node->name, OBJECT_TABLES_NODE))
-            xmldb->tables = node;
-          else if (!strcmp(node->name, OBJECT_VIEWS_NODE))
-            xmldb->views = node;
-          node = node->next;
-        }
-    }
-  return xmldb;
+	GDA_XML_DOCUMENT(xmldb)->doc = xmlParseFile(filename);
+	if (GDA_XML_DOCUMENT(xmldb)->doc) {
+		xmlNodePtr node;
+		GDA_XML_DOCUMENT(xmldb)->root = xmlDocGetRootElement(GDA_XML_DOCUMENT(xmldb)->doc);
+		node = GDA_XML_DOCUMENT(xmldb)->root->xmlChildrenNode;
+		while (node) {
+			if (!strcmp(node->name, OBJECT_TABLES_NODE))
+				xmldb->tables = node;
+			else if (!strcmp(node->name, OBJECT_VIEWS_NODE))
+				xmldb->views = node;
+			node = node->next;
+		}
+	}
+	return xmldb;
 }
 
 /**
@@ -225,11 +219,11 @@ gda_xml_database_new_from_file (const gchar *filename)
 void
 gda_xml_database_free (GdaXmlDatabase *xmldb)
 {
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
 #ifdef HAVE_GOBJECT
-  g_object_unref (G_OBJECT (xmldb));
+	g_object_unref (G_OBJECT (xmldb));
 #else
-  gtk_object_destroy(GTK_OBJECT(xmldb));
+	gtk_object_destroy (GTK_OBJECT (xmldb));
 #endif
 }
 
@@ -239,11 +233,10 @@ gda_xml_database_free (GdaXmlDatabase *xmldb)
 void
 gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *filename)
 {
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
   
-  if (!xmlSaveFile(filename, GDA_XML_FILE(xmldb)->doc))
-    {
-    }
+	if (!xmlSaveFile(filename, GDA_XML_DOCUMENT(xmldb)->doc)) {
+	}
 }
 
 /**
@@ -255,10 +248,10 @@ gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *filename)
 void
 gda_xml_database_changed (GdaXmlDatabase *xmldb)
 {
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
   
 #ifndef HAVE_GOBJECT  /* FIXME: signals without GTK */
-  gtk_signal_emit(GTK_OBJECT(xmldb), xmldb_signals[GDA_XML_DATABASE_CHANGED]);
+	gtk_signal_emit(GTK_OBJECT(xmldb), xmldb_signals[GDA_XML_DATABASE_CHANGED]);
 #endif
 }
 
@@ -274,25 +267,24 @@ gda_xml_database_changed (GdaXmlDatabase *xmldb)
 xmlNodePtr
 gda_xml_database_table_new (GdaXmlDatabase *xmldb, gchar *tname)
 {
-  xmlNodePtr node;
+	xmlNodePtr node;
 
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
-  g_return_val_if_fail(tname != NULL, NULL);
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+	g_return_val_if_fail(tname != NULL, NULL);
 
-  /* check if table is already present */
-  node = gda_xml_database_table_find(xmldb, tname);
-  if (node)
-    {
-      g_warning(_("table %s already exists"), tname);
-      return node;
-    }
+	/* check if table is already present */
+	node = gda_xml_database_table_find(xmldb, tname);
+	if (node) {
+		g_warning(_("table %s already exists"), tname);
+		return node;
+	}
 
-  node = xmlNewNode(NULL, OBJECT_TABLE);
-  xmlNewProp(node, PROPERTY_NAME, tname);
-  xmlAddChild(xmldb->tables, node);
-  gda_xml_database_changed(xmldb);
+	node = xmlNewNode(NULL, OBJECT_TABLE);
+	xmlNewProp(node, PROPERTY_NAME, tname);
+	xmlAddChild(xmldb->tables, node);
+	gda_xml_database_changed(xmldb);
 
-  return node;
+	return node;
 }
 
 /**
@@ -303,18 +295,17 @@ gda_xml_database_table_new (GdaXmlDatabase *xmldb, gchar *tname)
 void
 gda_xml_database_table_remove (GdaXmlDatabase *xmldb, const gchar *tname)
 {
-  xmlNodePtr table;
+	xmlNodePtr table;
+
+	g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail(tname != NULL);
   
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
-  g_return_if_fail(tname != NULL);
-  
-  table = gda_xml_database_table_find(xmldb, tname);
-  if (table)
-    {
-      xmlUnlinkNode(table);
-      xmlFreeNode(table);
-      gda_xml_database_changed(xmldb);
-    }
+	table = gda_xml_database_table_find(xmldb, tname);
+	if (table) {
+		xmlUnlinkNode(table);
+		xmlFreeNode(table);
+		gda_xml_database_changed(xmldb);
+	}
 }
 
 /**
@@ -327,17 +318,17 @@ gda_xml_database_table_remove (GdaXmlDatabase *xmldb, const gchar *tname)
 xmlNodePtr
 gda_xml_database_table_find (GdaXmlDatabase *xmldb, const gchar *tname)
 {
-  xmlNodePtr node;
+	xmlNodePtr node;
 
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
-  g_return_val_if_fail(tname != NULL, NULL);
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+	g_return_val_if_fail(tname != NULL, NULL);
 
-  for (node = xmldb->tables->xmlChildrenNode; node != NULL; node = node->next)
-    {
-      gchar* name = xmlGetProp(node, PROPERTY_NAME);
-      if (name && !strcmp(name, tname)) return node;
-    }
-  return NULL; /* not found */
+	for (node = xmldb->tables->xmlChildrenNode; node != NULL; node = node->next) {
+		gchar* name = xmlGetProp(node, PROPERTY_NAME);
+		if (name && !strcmp(name, tname))
+			return node;
+	}
+	return NULL; /* not found */
 }
 
 /**
@@ -348,9 +339,9 @@ gda_xml_database_table_find (GdaXmlDatabase *xmldb, const gchar *tname)
 const gchar *
 gda_xml_database_table_get_name (GdaXmlDatabase *xmldb, xmlNodePtr table)
 {
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
-  g_return_val_if_fail(table != NULL, NULL);
-  return xmlGetProp(table, PROPERTY_NAME);
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+	g_return_val_if_fail(table != NULL, NULL);
+	return xmlGetProp(table, PROPERTY_NAME);
 }
 
 /**
@@ -362,15 +353,14 @@ gda_xml_database_table_get_name (GdaXmlDatabase *xmldb, xmlNodePtr table)
 void
 gda_xml_database_table_set_name (GdaXmlDatabase *xmldb, xmlNodePtr table, const gchar *tname)
 {
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
-  g_return_if_fail(table != NULL);
-  g_return_if_fail(tname != NULL);
+	g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail(table != NULL);
+	g_return_if_fail(tname != NULL);
   
-  if (!gda_xml_database_table_find(xmldb, tname))
-    {
-      xmlSetProp(table, PROPERTY_NAME, tname);
-      gda_xml_database_changed(xmldb);
-    }
+	if (!gda_xml_database_table_find(xmldb, tname)) {
+		xmlSetProp(table, PROPERTY_NAME, tname);
+		gda_xml_database_changed(xmldb);
+	}
 }
 
 /**
@@ -379,9 +369,9 @@ gda_xml_database_table_set_name (GdaXmlDatabase *xmldb, xmlNodePtr table, const 
 const gchar *
 gda_xml_database_table_get_owner (GdaXmlDatabase *xmldb, xmlNodePtr table)
 {
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
-  g_return_val_if_fail(table != NULL, NULL);
-  return xmlGetProp(table, PROPERTY_OWNER);
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+	g_return_val_if_fail(table != NULL, NULL);
+	return xmlGetProp(table, PROPERTY_OWNER);
 }
 
 /**
@@ -390,14 +380,12 @@ gda_xml_database_table_get_owner (GdaXmlDatabase *xmldb, xmlNodePtr table)
 void
 gda_xml_database_table_set_owner (GdaXmlDatabase *xmldb, xmlNodePtr table, const gchar *owner)
 {
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
-  g_return_if_fail(table != NULL);
+	g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail(table != NULL);
   
-  if (owner)
-    {
-      xmlSetProp(table, PROPERTY_OWNER, owner);
-    }
-  gda_xml_database_changed(xmldb);
+	if (owner)
+		xmlSetProp(table, PROPERTY_OWNER, owner);
+	gda_xml_database_changed(xmldb);
 }
 
 /**
@@ -406,17 +394,16 @@ gda_xml_database_table_set_owner (GdaXmlDatabase *xmldb, xmlNodePtr table, const
 gint
 gda_xml_database_table_field_count (GdaXmlDatabase *xmldb, xmlNodePtr table)
 {
-  xmlNodePtr xmlnode;
-  gint       cnt = 0;
+	xmlNodePtr xmlnode;
+	gint       cnt = 0;
   
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
-  g_return_val_if_fail(table != NULL, -1);
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
+	g_return_val_if_fail(table != NULL, -1);
   
-  for (xmlnode = table->xmlChildrenNode; xmlnode != NULL; xmlnode = xmlnode->next)
-    {
-      if (!strcmp(xmlnode->name, OBJECT_FIELD)) cnt++;
-    }
-  return cnt;
+	for (xmlnode = table->xmlChildrenNode; xmlnode != NULL; xmlnode = xmlnode->next) {
+		if (!strcmp(xmlnode->name, OBJECT_FIELD)) cnt++;
+	}
+	return cnt;
 }
 
 /**
@@ -432,23 +419,21 @@ gda_xml_database_table_add_field (GdaXmlDatabase *xmldb,
                                   xmlNodePtr table,
                                   const gchar *fname)
 {
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
-  g_return_val_if_fail(table != NULL, NULL);
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+	g_return_val_if_fail(table != NULL, NULL);
   
-  /* check if 'table' is really a TABLE */
-  if (table->parent == xmldb->tables)
-    {
-      xmlNodePtr field = gda_xml_database_table_find_field(xmldb, table, fname);
-      if (!field)
-        {
-          field = xmlNewNode(NULL, OBJECT_FIELD);
-          xmlNewProp(field, PROPERTY_NAME, fname);
-          xmlAddChild(table, field);
-          gda_xml_database_changed(xmldb);
-        }
-    }
-  else g_warning(_("%p is not a valid table"), table);
-  return NULL;
+	/* check if 'table' is really a TABLE */
+	if (table->parent == xmldb->tables) {
+		xmlNodePtr field = gda_xml_database_table_find_field(xmldb, table, fname);
+		if (!field) {
+			field = xmlNewNode(NULL, OBJECT_FIELD);
+			xmlNewProp(field, PROPERTY_NAME, fname);
+			xmlAddChild(table, field);
+			gda_xml_database_changed(xmldb);
+		}
+	}
+	else g_warning(_("%p is not a valid table"), table);
+	return NULL;
 }
 
 /**
@@ -457,19 +442,18 @@ gda_xml_database_table_add_field (GdaXmlDatabase *xmldb,
 void
 gda_xml_database_table_remove_field (GdaXmlDatabase *xmldb, xmlNodePtr table, const gchar *fname)
 {
-  xmlNodePtr field;
-  
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
-  g_return_if_fail(table != NULL);
-  g_return_if_fail(fname != NULL);
-  
-  field = gda_xml_database_table_find_field(xmldb, table, fname);
-  if (field)
-    {
-      xmlUnlinkNode(field);
-      xmlFreeNode(field);
-      gda_xml_database_changed(xmldb);
-    }
+	xmlNodePtr field;
+
+	g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail(table != NULL);
+	g_return_if_fail(fname != NULL);
+
+	field = gda_xml_database_table_find_field(xmldb, table, fname);
+	if (field) {
+		xmlUnlinkNode(field);
+		xmlFreeNode(field);
+		gda_xml_database_changed(xmldb);
+	}
 }
 
 /**
@@ -478,21 +462,19 @@ gda_xml_database_table_remove_field (GdaXmlDatabase *xmldb, xmlNodePtr table, co
 xmlNodePtr
 gda_xml_database_table_get_field (GdaXmlDatabase *xmldb, xmlNodePtr table, gint pos)
 {
-  gint       cnt = 0;
-  xmlNodePtr xmlnode;
-  
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
-  g_return_val_if_fail(table != NULL, NULL);
-  
-  for (xmlnode = table->xmlChildrenNode; xmlnode != NULL; xmlnode = xmlnode->next)
-    {
-      if (!strcmp(xmlnode->name, OBJECT_FIELD))
-        {
-          if (cnt == pos) return xmlnode;
-          cnt++; /* increment field count */
-        }
-    }
-  return NULL;
+	gint       cnt = 0;
+	xmlNodePtr xmlnode;
+
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+	g_return_val_if_fail(table != NULL, NULL);
+
+	for (xmlnode = table->xmlChildrenNode; xmlnode != NULL; xmlnode = xmlnode->next) {
+		if (!strcmp(xmlnode->name, OBJECT_FIELD)) {
+			if (cnt == pos) return xmlnode;
+			cnt++; /* increment field count */
+		}
+	}
+	return NULL;
 }
 
 /**
@@ -506,21 +488,20 @@ gda_xml_database_table_get_field (GdaXmlDatabase *xmldb, xmlNodePtr table, gint 
 xmlNodePtr
 gda_xml_database_table_find_field (GdaXmlDatabase *xmldb, xmlNodePtr table, const gchar *fname)
 {
-  xmlNodePtr node;
+	xmlNodePtr node;
 
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
-  g_return_val_if_fail(table != NULL, NULL);
-  g_return_val_if_fail(fname != NULL, NULL);
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+	g_return_val_if_fail(table != NULL, NULL);
+	g_return_val_if_fail(fname != NULL, NULL);
 
-  for (node = table->xmlChildrenNode; node != NULL; node = node->next)
-    {
-      if (!strcmp(node->name, OBJECT_FIELD))
-        {
-          gchar* name = xmlGetProp(node, PROPERTY_NAME);
-          if (name && !strcmp(name, fname)) return node;
-        }
-    }
-  return NULL; /* not found */
+	for (node = table->xmlChildrenNode; node != NULL; node = node->next) {
+		if (!strcmp(node->name, OBJECT_FIELD)) {
+			gchar* name = xmlGetProp(node, PROPERTY_NAME);
+			if (name && !strcmp(name, fname))
+				return node;
+		}
+	}
+	return NULL; /* not found */
 }
 
 /**
@@ -533,8 +514,8 @@ gda_xml_database_table_find_field (GdaXmlDatabase *xmldb, xmlNodePtr table, cons
 const gchar *
 gda_xml_database_field_get_name (GdaXmlDatabase *xmldb, xmlNodePtr field)
 {
-  g_return_val_if_fail(field != NULL, NULL);
-  return xmlGetProp(field, PROPERTY_NAME);
+	g_return_val_if_fail(field != NULL, NULL);
+	return xmlGetProp(field, PROPERTY_NAME);
 }
 
 /**
@@ -543,14 +524,13 @@ gda_xml_database_field_get_name (GdaXmlDatabase *xmldb, xmlNodePtr field)
 void
 gda_xml_database_field_set_name (GdaXmlDatabase *xmldb, xmlNodePtr field, const gchar *name)
 {
-  g_return_if_fail(field != NULL);
-  g_return_if_fail(name != NULL);
+	g_return_if_fail(field != NULL);
+	g_return_if_fail(name != NULL);
   
-  if (!gda_xml_database_table_find_field(xmldb, field->parent, name))
-    {
-      xmlSetProp(field, PROPERTY_NAME, name);
-      gda_xml_database_changed(xmldb);
-    }
+	if (!gda_xml_database_table_find_field(xmldb, field->parent, name)) {
+		xmlSetProp(field, PROPERTY_NAME, name);
+		gda_xml_database_changed(xmldb);
+	}
 }
 
 /**
@@ -559,9 +539,9 @@ gda_xml_database_field_set_name (GdaXmlDatabase *xmldb, xmlNodePtr field, const 
 const gchar *
 gda_xml_database_field_get_gdatype (GdaXmlDatabase *xmldb, xmlNodePtr field)
 {
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
-  g_return_val_if_fail(field != NULL, NULL);
-  return xmlGetProp(field, PROPERTY_GDATYPE);
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+	g_return_val_if_fail(field != NULL, NULL);
+	return xmlGetProp(field, PROPERTY_GDATYPE);
 }
 
 /**
@@ -570,11 +550,11 @@ gda_xml_database_field_get_gdatype (GdaXmlDatabase *xmldb, xmlNodePtr field)
 void
 gda_xml_database_field_set_gdatype (GdaXmlDatabase *xmldb, xmlNodePtr field, const gchar *type)
 {
-  g_return_if_fail(field != NULL);
-  g_return_if_fail(type != NULL);
-  
-  xmlSetProp(field, PROPERTY_GDATYPE, type);
-  gda_xml_database_changed(xmldb);
+	g_return_if_fail(field != NULL);
+	g_return_if_fail(type != NULL);
+
+	xmlSetProp(field, PROPERTY_GDATYPE, type);
+	gda_xml_database_changed(xmldb);
 }
 
 /**
@@ -583,13 +563,13 @@ gda_xml_database_field_set_gdatype (GdaXmlDatabase *xmldb, xmlNodePtr field, con
 gint
 gda_xml_database_field_get_size (GdaXmlDatabase *xmldb, xmlNodePtr field)
 {
-  gchar* size;
-  
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
-  g_return_val_if_fail(field != NULL, -1);
-  
-  size = xmlGetProp(field, PROPERTY_SIZE);
-  return size ? atoi(size) : -1;
+	gchar* size;
+
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
+	g_return_val_if_fail(field != NULL, -1);
+
+	size = xmlGetProp(field, PROPERTY_SIZE);
+	return size ? atoi(size) : -1;
 }
 
 /**
@@ -598,15 +578,15 @@ gda_xml_database_field_get_size (GdaXmlDatabase *xmldb, xmlNodePtr field)
 void
 gda_xml_database_field_set_size (GdaXmlDatabase *xmldb, xmlNodePtr field, gint size)
 {
-  gchar* str;
+	gchar* str;
   
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
-  g_return_if_fail(field != NULL);
-  
-  str = g_strdup_printf("%d", size);
-  xmlSetProp(field, PROPERTY_SIZE, str);
-  g_free((gpointer) str);
-  gda_xml_database_changed(xmldb);
+	g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail(field != NULL);
+
+	str = g_strdup_printf("%d", size);
+	xmlSetProp(field, PROPERTY_SIZE, str);
+	g_free((gpointer) str);
+	gda_xml_database_changed(xmldb);
 }
 
 /**
@@ -615,13 +595,13 @@ gda_xml_database_field_set_size (GdaXmlDatabase *xmldb, xmlNodePtr field, gint s
 gint
 gda_xml_database_field_get_scale (GdaXmlDatabase *xmldb, xmlNodePtr field)
 {
-  gchar* scale;
-  
-  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
-  g_return_val_if_fail(field != NULL, -1);
-  
-  scale = xmlGetProp(field, PROPERTY_SCALE);
-  return scale ? atoi(scale) : -1;
+	gchar* scale;
+
+	g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
+	g_return_val_if_fail(field != NULL, -1);
+
+	scale = xmlGetProp(field, PROPERTY_SCALE);
+	return scale ? atoi(scale) : -1;
 }
 
 /**
@@ -630,13 +610,13 @@ gda_xml_database_field_get_scale (GdaXmlDatabase *xmldb, xmlNodePtr field)
 void
 gda_xml_database_field_set_scale (GdaXmlDatabase *xmldb, xmlNodePtr field, gint scale)
 {
-  gchar* str;
-  
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
-  g_return_if_fail(field != NULL);
-  
-  str = g_strdup_printf("%d", scale);
-  xmlSetProp(field, PROPERTY_SCALE, str);
-  g_free((gpointer) str);
-  gda_xml_database_changed(xmldb);
+	gchar* str;
+
+	g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+	g_return_if_fail(field != NULL);
+
+	str = g_strdup_printf("%d", scale);
+	xmlSetProp(field, PROPERTY_SCALE, str);
+	g_free((gpointer) str);
+	gda_xml_database_changed(xmldb);
 }

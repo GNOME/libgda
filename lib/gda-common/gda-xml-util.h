@@ -1,6 +1,8 @@
 /* GDA common library
- * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 1999,2000,2001 Rodrigo Moya
+ * Copyright (C) 2001, The Free Software Foundation
+ *
+ * AUTHORS:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,5 +22,25 @@
 
 #if !defined(__gda_xml_util_h__)
 #  define __gda_xml_util_h__
+
+#include <glib.h>
+#include <tree.h>
+#include <parser.h>
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+#define    gda_xml_util_get_root_element(_doc_) xmlDocGetRootElement ((_doc_))
+
+xmlNodePtr gda_xml_util_get_children (xmlNodePtr parent);
+xmlNodePtr gda_xml_util_get_root_children (xmlDocPtr doc);
+xmlNodePtr gda_xml_util_get_child_by_name (xmlNodePtr parent,
+					   const gchar *name);
+void       gda_xml_util_remove_node (xmlNodePtr node);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

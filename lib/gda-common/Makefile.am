@@ -29,7 +29,7 @@ gda_common_headers = \
 	gda-thread.h \
 	gda-util.h \
 	gda-xml-database.h \
-	gda-xml-file.h \
+	gda-xml-document.h \
 	gda-xml-util.h \
 	gda-common.h \
 	GDA.h
@@ -47,7 +47,7 @@ libgda_common_la_SOURCES = \
 	gda-thread.c \
 	gda-util.c \
 	gda-xml-database.c \
-	gda-xml-file.c \
+	gda-xml-document.c \
 	gda-xml-util.c
 
 libgda_common_la_LIBADD=\

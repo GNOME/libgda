@@ -1,3 +1,10 @@
+2001-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-xml-file.[ch]: moved to gda-xml-document.[ch]
+
+	* gda-xml-util.[ch]: new file containing several XML ulitity
+	functions
+
 2001-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-error.[ch]: moved here from the libgda-client library

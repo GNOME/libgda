@@ -1,6 +1,6 @@
 /* GDA common library
  * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 1999,2000,2001 Rodrigo Moya
+ * Copyright (C) 1999-2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -167,15 +167,15 @@ gda_error_list_from_exception (CORBA_Environment* ev)
 		CORBA_SystemException* sysexc;
 
 		sysexc = CORBA_exception_value(ev);
-		error = gda_error_new();
-		error->source = g_strdup("[CORBA System Exception]");
+		error = gda_error_new ();
+		error->source = g_strdup ("[CORBA System Exception]");
 		switch(sysexc->minor) {
 		case ex_CORBA_COMM_FAILURE:
-			error->description = g_strdup_printf(_("%s: The server didn't respond."),
-							     CORBA_exception_id(ev));
+			error->description = g_strdup_printf (_("%s: The server didn't respond."),
+							      CORBA_exception_id(ev));
 			break;
 		default:
-			error->description = g_strdup(_("%s: An Error occured in the CORBA system."));
+			error->description = g_strdup (_("%s: An Error occured in the CORBA system."));
 			break;
 		}
 		all_errors = g_list_append(all_errors, error);
@@ -237,16 +237,14 @@ void
 gda_error_list_to_exception (GList *error_list, CORBA_Environment *ev)
 {
 	GDA_DriverError* exception;
+	GDA_ErrorSeq *corba_errors;
 	gint count;
 
-	g_return_if_fail (error_list != NULL);
 	g_return_if_fail (ev != NULL);
 
-	count = g_list_length (error_list);
-
 	exception = GDA_DriverError__alloc ();
-	exception->errors._length = count;
-	exception->errors._buffer = gda_error_list_to_corba_seq (error_list);
+	corba_errors = gda_error_list_to_corba_seq (error_list);
+	memcpy (&exception->errors, corba_errors, sizeof (GDA_ErrorSeq));
 	exception->realcommand = CORBA_string_dup (g_get_prgname ());
 	CORBA_exception_set (ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
 }
@@ -272,11 +270,18 @@ gda_error_list_to_corba_seq (GList *error_list)
 		GdaError *error = GDA_ERROR (l->data);
 
 		if (GDA_IS_ERROR (error)) {
-			rc->_buffer[i].description = CORBA_string_dup (gda_error_get_description (error));
+			gchar *desc, *source, *state, *native;
+
+			desc = gda_error_get_description (error);
+			source = gda_error_get_source (error);
+			state = gda_error_get_sqlstate (error);
+			native = gda_error_get_native (error);
+
+			rc->_buffer[i].description = CORBA_string_dup (desc ? desc : "<Null>");
 			rc->_buffer[i].number = error->number;
-			rc->_buffer[i].source = CORBA_string_dup (gda_error_get_source (error));
-			rc->_buffer[i].sqlstate = CORBA_string_dup (gda_error_get_sqlstate (error));
-			rc->_buffer[i].nativeMsg = CORBA_string_dup (gda_error_get_native (error));
+			rc->_buffer[i].source = CORBA_string_dup (source ? source : "<Null>");
+			rc->_buffer[i].sqlstate = CORBA_string_dup (state ? state : "<Null>");
+			rc->_buffer[i].nativeMsg = CORBA_string_dup (native ? native : "<Null>");
 		}
 	}
 

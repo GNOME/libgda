@@ -21,13 +21,12 @@
 #  define __gda_xml_database_h__
 
 #include <glib.h>
-
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
 #  include <gtk/gtkobject.h>
 #endif
-#include <gda-xml-file.h>
+#include <gda-xml-document.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -38,30 +37,26 @@ typedef struct _GdaXmlDatabaseClass GdaXmlDatabaseClass;
 
 #define GDA_TYPE_XML_DATABASE            (gda_xml_database_get_type())
 #ifdef HAVE_GOBJECT
-#  define GDA_XML_DATABASE(obj) \
-       G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_DATABASE, GdaXmlDatabase)
-#  define GDA_XML_DATABASE_CLASS(klass) \
-   G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_DATABASE, GdaXmlDatabaseClass)
-#  define GDA_IS_XML_DATABASE(obj) \
-          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_DATABASE)
-#  define GDA_IS_XML_DATABASE_CLASS(klass) \
-          G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_DATABASE)
+#define GDA_XML_DATABASE(obj)            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_DATABASE, GdaXmlDatabase)
+#define GDA_XML_DATABASE_CLASS(klass)    G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_DATABASE, GdaXmlDatabaseClass)
+#define GDA_IS_XML_DATABASE(obj)         G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_DATABASE)
+#define GDA_IS_XML_DATABASE_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_DATABASE)
 #else
-#  define GDA_XML_DATABASE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_DATABASE, GdaXmlDatabase)
-#  define GDA_XML_DATABASE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_DATABASE, GdaXmlDatabaseClass)
-#  define GDA_IS_XML_DATABASE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_DATABASE)
-#  define GDA_IS_XML_DATABASE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DATABASE))
+#define GDA_XML_DATABASE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_DATABASE, GdaXmlDatabase)
+#define GDA_XML_DATABASE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_DATABASE, GdaXmlDatabaseClass)
+#define GDA_IS_XML_DATABASE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_DATABASE)
+#define GDA_IS_XML_DATABASE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DATABASE))
 #endif
 
 struct _GdaXmlDatabase {
-	GdaXmlFile file;
+	GdaXmlDocument document;
 
 	xmlNodePtr  tables;
 	xmlNodePtr  views;
 };
 
 struct _GdaXmlDatabaseClass {
-	GdaXmlFileClass parent_class;
+	GdaXmlDocumentClass parent_class;
 
 	/* signals */
 	void (*changed)(GdaXmlDatabase *xmldb);
