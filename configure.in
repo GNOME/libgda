@@ -30,10 +30,14 @@ then
 			gobject gthread)],
 		[AC_MSG_ERROR(glib test not available)])
 	AC_DEFINE(HAVE_GOBJECT)
+	gda_base_libs="$GLIB_LIBS"
+	gda_base_cflags="$GLIB_CFLAGS"
 else
 	AC_MSG_RESULT(no)
 	AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib test failed),gthread)
 	AM_PATH_GTK(1.0.0,,AC_MSG_ERROR(gtk+ test failed))
+	gda_base_libs="$GLIB_LIBS $GTK_LIBS"
+	gda_base_cflags="$GLIB_CFLAGS $GTK_CFLAGS"
 fi
 
 dnl Check for ORBit
@@ -507,12 +511,10 @@ AM_GNOME_GETTEXT
 dnl
 dnl Variables
 dnl
-gda_base_libs=$GLIB_LIBS
-gda_base_cflags=$GLIB_CFLAGS
-GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs `gtk-config --libs gtk`"
-GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags `gtk-config --cflags gtk`"
-GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs `gtk-config --libs gtk`"
-GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags `gtk-config --cflags gtk`"
+GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs"
+GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags"
+GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs"
+GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags"
 
 AC_SUBST(GDA_CLIENT_LIBS)
 AC_SUBST(GDA_CLIENT_CFLAGS)

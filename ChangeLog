@@ -1,3 +1,7 @@
+2000-11-04  Reinhard Müller  <reinhard@gnue.org>
+
+	* configure.in: include gtk libraries only when needed
+
 2000-10-20	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* fixed license issues:
