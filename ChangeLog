@@ -1,3 +1,7 @@
+2005-02-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.3.0
+
 2005-02-07  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-provider.c
@@ -13,11 +17,15 @@
 
 2005-02-05  Vivien Malerba <malerba@gnome-db.org>
 
-	* libgda/gda-value.c: make gda_value_stringify() return "NULL" if its argument is NULL, and fixed a bug in
-	  gda_value_compare() with strings comparison.
-	* libgda/gda-data-model-column-attributes.h: added a 'dbms_type' field to the GdaDataModelColumnAttributes
-	  structure, where a string representation of the real DBMS data type for the column should be set. Work
-	  needs to be done wherever GdaDataModelColumnAttributes structures are created and filled.
+	* libgda/gda-value.c: make gda_value_stringify() return "NULL" if
+	its argument is NULL, and fixed a bug in  gda_value_compare() with
+	strings comparison.
+
+	* libgda/gda-data-model-column-attributes.h: added a 'dbms_type'
+	field to the GdaDataModelColumnAttributes structure, where a string
+	representation of the real DBMS data type for the column should be
+	set. Work  needs to be done wherever GdaDataModelColumnAttributes
+	structures are created and filled.
 
 2005-02-05  Bas Driessen <bas.driessen@xobas.com>
 
@@ -156,7 +164,6 @@
 	attributes to attributes_list for gda_server_provider_create_table
 	entry.
 
->>>>>>> 1.746
 2005-01-25  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/gda-data-model-array.c: introduced new 
@@ -192,9 +199,12 @@
 	as arguments in the MySQL DSN string.
 
 2005-01-23  Vivien Malerba <malerba@gnome-db.org>
-	* libgda/gda-data-model.[ch]: renamed gda_data_model_append_row() to gda_data_model_append_values(), 
-	  (which is marked as deprecated), and crated a new gda_data_model_append_row() 
-	  function with a signature similar to the other gda_data_model_*_row() functions.
+	
+	* libgda/gda-data-model.[ch]: renamed gda_data_model_append_row()
+	to gda_data_model_append_values(), (which is marked as deprecated),
+	and crated a new gda_data_model_append_row() function with a
+	signature similar to the other gda_data_model_*_row() functions.
+	
 	* all other modifications: related to the above modifications
 
 2005-01-20  Bas Driessen <bas.driessen@xobas.com>
@@ -252,16 +262,18 @@
 	emit appropriate 'updated' and 'changed' signals.
 
 2005-01-09  Vivien Malerba <malerba@gnome-db.org>
-	* libgda/: Implemented GdaDataModel as an interface, and added a GdaDataModelBase class to serve
-	  as a base class in relpacement of the previous GdaDataModel
+	
+	* libgda/: Implemented GdaDataModel as an interface, and added a
+	GdaDataModelBase class to serve as a base class in relpacement
+	of the previous GdaDataModel
 
-	* libgda/gda-value.[ch]: added gda_value_compare_ext() which like gda_value_compare(), 
-	  compares two values of the same type, except that NULL values and values of type 
-	  GDA_VALUE_TYPE_NULL are considered equals, and that a NULL value can be compared to a non NULL
-	  value.
+	* libgda/gda-value.[ch]: added gda_value_compare_ext() which like
+	gda_value_compare(), compares two values of the same type, except
+	that NULL values and values of type GDA_VALUE_TYPE_NULL are considered
+	equals, and that a NULL value can be compared to a non NULL value.
 
-	* libgda/: replaced GdaField with GdaDataModelColumnAttributes which is easier to understand
-	  and avoids mis-understandings
+	* libgda/: replaced GdaField with GdaDataModelColumnAttributes which
+	is easier to understand and avoids mis-understandings
 
 	* doc/C: improved documentation
 
