@@ -22,8 +22,7 @@
 #include "gda-command.h"
 #include "gda-corba.h"
 
-enum
-{
+enum {
 	GDA_COMMAND_LAST_SIGNAL
 };
 
@@ -37,14 +36,9 @@ Parameter;
 
 static gint gda_command_signals[GDA_COMMAND_LAST_SIGNAL] = { 0, };
 
-#ifdef HAVE_GOBJECT
-static void gda_command_class_init (GdaCommandClass * klass, gpointer data);
-static void gda_command_init (GdaCommand * cmd, GdaCommandClass * klass);
-#else
 static void gda_command_class_init (GdaCommandClass * klass);
 static void gda_command_init (GdaCommand * cmd);
 static void gda_command_destroy (GtkObject * object);
-#endif
 
 static void
 release_connection_object (GdaCommand * cmd, GdaConnection * cnc)
@@ -56,31 +50,6 @@ release_connection_object (GdaCommand * cmd, GdaConnection * cnc)
 		g_list_remove (cmd->connection->commands, cmd);
 }
 
-#ifdef HAVE_GOBJECT
-GType
-gda_command_get_type (void)
-{
-	static GType type = 0;
-
-	if (!type) {
-		GTypeInfo info = {
-			sizeof (GdaCommandClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) gda_command_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaCommand),
-			0,
-			(GInstanceInitFunc) gda_command_init,
-			NULL,
-		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaCommand",
-					       &info, 0);
-	}
-	return type;
-}
-#else
 guint
 gda_command_get_type (void)
 {
@@ -102,14 +71,7 @@ gda_command_get_type (void)
 	}
 	return gda_command_type;
 }
-#endif
 
-#ifdef HAVE_GOBJECT
-static void
-gda_command_class_init (GdaCommandClass * klass, gpointer data)
-{
-}
-#else
 static void
 gda_command_class_init (GdaCommandClass * klass)
 {
@@ -117,14 +79,9 @@ gda_command_class_init (GdaCommandClass * klass)
 
 	object_class->destroy = gda_command_destroy;
 }
-#endif
 
 static void
-#ifdef HAVE_GOBJECT
-gda_command_init (GdaCommand * cmd, GdaCommandClass * klass)
-#else
 gda_command_init (GdaCommand * cmd)
-#endif
 {
 	g_return_if_fail (GDA_IS_COMMAND (cmd));
 
@@ -147,11 +104,7 @@ gda_command_init (GdaCommand * cmd)
 GdaCommand *
 gda_command_new (void)
 {
-#ifdef HAVE_GOBJECT
-	return GDA_COMMAND (g_object_new (GDA_TYPE_COMMAND, NULL));
-#else
 	return GDA_COMMAND (gtk_type_new (GDA_TYPE_COMMAND));
-#endif
 }
 
 static void
@@ -195,11 +148,7 @@ gda_command_destroy (GtkObject * object)
 void
 gda_command_free (GdaCommand * cmd)
 {
-#ifdef HAVE_GOBJECT
-	g_object_unref (G_OBJECT (cmd));
-#else
 	gtk_object_destroy (GTK_OBJECT (cmd));
-#endif
 }
 
 /**

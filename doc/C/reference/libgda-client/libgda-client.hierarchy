@@ -4,6 +4,6 @@ GtkObject
   GdaConnectionPool
   GdaConnection
   GdaError
-  Gda_Export
+  GdaExport
   GdaField
   GdaRecordset

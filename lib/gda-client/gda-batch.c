@@ -21,10 +21,7 @@
 #include "config.h"
 #include "gda-batch.h"
 #include <stdio.h>
-
-#ifndef HAVE_GOBJECT
-#  include <gtk/gtksignal.h>
-#endif
+#include <gtk/gtksignal.h>
 
 /* GdaBatch object signals */
 enum
@@ -37,39 +34,9 @@ enum
 };
 static gint gda_batch_signals[GDA_BATCH_LAST_SIGNAL] = { 0, };
 
-#ifdef HAVE_GOBJECT
-static void gda_batch_class_init (GdaBatchClass * klass, gpointer data);
-static void gda_batch_init (GdaBatch * job, GdaBatchClass * klass);
-#else
 static void gda_batch_class_init (GdaBatchClass * klass);
 static void gda_batch_init (GdaBatch * job);
-#endif
 
-#ifdef HAVE_GOBJECT
-GType
-gda_batch_get_type (void)
-{
-	static GType type = 0;
-
-	if (!type) {
-		GTypeInfo info = {
-			sizeof (GdaBatchClass),	/* class_size */
-			NULL,	/* base_init */
-			NULL,	/* base_finalize */
-			(GClassInitFunc) gda_batch_class_init,	/* class_init */
-			NULL,	/* class_finalize */
-			NULL,	/* class_data */
-			sizeof (GdaBatch),	/* instance_size */
-			0,	/* n_preallocs */
-			(GInstanceInitFunc) gda_batch_init,	/* instance_init */
-			NULL,	/* value_table */
-		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaBatch",
-					       &info, 0);
-	}
-	return type;
-}
-#else
 guint
 gda_batch_get_type (void)
 {
@@ -91,19 +58,7 @@ gda_batch_get_type (void)
 	}
 	return gda_batch_type;
 }
-#endif
 
-#ifdef HAVE_GOBJECT
-static void
-gda_batch_class_init (GdaBatchClass * klass, gpointer data)
-{
-	/* FIXME: No signals yet in GObject */
-	klass->begin_transaction = NULL;
-	klass->commit_transaction = NULL;
-	klass->rollback_transaction = NULL;
-	klass->execute_command = NULL;
-}
-#else
 static void
 gda_batch_class_init (GdaBatchClass * klass)
 {
@@ -147,14 +102,9 @@ gda_batch_class_init (GdaBatchClass * klass)
 	klass->commit_transaction = 0;
 	klass->rollback_transaction = 0;
 }
-#endif
 
 static void
-#ifdef HAVE_GOBJECT
-gda_batch_init (GdaBatch * job, GdaBatchClass * klass)
-#else
 gda_batch_init (GdaBatch * job)
-#endif
 {
 	g_return_if_fail (GDA_IS_BATCH (job));
 
@@ -182,11 +132,7 @@ gda_batch_init (GdaBatch * job)
 GdaBatch *
 gda_batch_new (void)
 {
-#ifdef HAVE_GOBJECT
-	return GDA_BATCH (g_object_new (GDA_TYPE_BATCH, NULL));
-#else
 	return GDA_BATCH (gtk_type_new (gda_batch_get_type ()));
-#endif
 }
 
 /**
@@ -201,11 +147,7 @@ gda_batch_free (GdaBatch * job)
 	g_return_if_fail (GDA_IS_BATCH (job));
 
 	gda_batch_clear (job);
-#ifdef HAVE_GOBJECT
-	g_object_unref (G_OBJECT (job));
-#else
-	gtk_object_destroy (GTK_OBJECT (job));
-#endif
+	gtk_object_unref (GTK_OBJECT (job));
 }
 
 /**
@@ -339,11 +281,9 @@ gda_batch_start (GdaBatch * job)
 			/* FIXME: emit "error" signal */
 			return FALSE;
 		}
-#ifndef HAVE_GOBJECT		/* FIXME */
 		gtk_signal_emit (GTK_OBJECT (job),
 				 gda_batch_signals
 				 [GDA_BATCH_BEGIN_TRANSACTION]);
-#endif
 	}
 
 	/* traverse list of commands */
@@ -355,11 +295,9 @@ gda_batch_start (GdaBatch * job)
 			gulong reccount;
 
 			/* execute command */
-#ifndef HAVE_GOBJECT		/* FIXME */
 			gtk_signal_emit (GTK_OBJECT (job),
 					 gda_batch_signals
 					 [GDA_BATCH_EXECUTE_COMMAND], cmd);
-#endif
 			recset = gda_connection_execute (job->cnc, cmd,
 							 &reccount, 0);
 			if (recset) {
@@ -374,11 +312,9 @@ gda_batch_start (GdaBatch * job)
 					/* rollback transaction */
 					gda_connection_rollback_transaction
 						(job->cnc);
-#ifndef HAVE_GOBJECT		/* FIXME */
 					gtk_signal_emit (GTK_OBJECT (job),
 							 gda_batch_signals
 							 [GDA_BATCH_ROLLBACK_TRANSACTION]);
-#endif
 					return FALSE;
 				}
 			}
@@ -393,11 +329,9 @@ gda_batch_start (GdaBatch * job)
 			/* FIXME: emit "error" signal */
 			return FALSE;
 		}
-#ifndef HAVE_GOBJECT		/* FIXME */
 		gtk_signal_emit (GTK_OBJECT (job),
 				 gda_batch_signals
 				 [GDA_BATCH_COMMIT_TRANSACTION]);
-#endif
 	}
 	job->is_running = FALSE;
 	return TRUE;

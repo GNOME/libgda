@@ -22,11 +22,7 @@
 #define __gda_batch_h__ 1
 
 #include <glib.h>
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#else
-#  include <gtk/gtkobject.h>
-#endif
+#include <gtk/gtkobject.h>
 
 #include <orb/orbit.h>
 #include <gda-common-defs.h>
@@ -43,29 +39,14 @@ typedef struct _GdaBatch GdaBatch;
 typedef struct _GdaBatchClass GdaBatchClass;
 
 #define GDA_TYPE_BATCH            (gda_batch_get_type())
-
-#ifdef HAVE_GOBJECT
-#  define GDA_BATCH(obj) \
-            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_BATCH, GdaBatch)
-#  define GDA_BATCH_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_BATCH, GdaBatchClass)
-#  define GDA_IS_BATCH(obj) \
-            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_BATCH)
-#  define GDA_IS_BATCH_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_BATCH)
-#else
 #define GDA_BATCH(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_BATCH, GdaBatch)
 #define GDA_BATCH_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_BATCH, GdaBatchClass)
 #define GDA_IS_BATCH(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_BATCH)
 #define GDA_IS_BATCH_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_BATCH))
-#endif
 
 struct _GdaBatch {
-#ifdef HAVE_GOBJECT
-	GObject object;
-#else
 	GtkObject object;
-#endif
+
 	GdaConnection *cnc;
 	gboolean transaction_mode;
 	gboolean is_running;
@@ -73,22 +54,15 @@ struct _GdaBatch {
 };
 
 struct _GdaBatchClass {
-#ifdef HAVE_GOBJECT
-	GObjectClass parent_class;
-#else
 	GtkObjectClass parent_class;
-#endif
+
 	void (*begin_transaction) (GdaBatch * job);
 	void (*commit_transaction) (GdaBatch * job);
 	void (*rollback_transaction) (GdaBatch * job);
 	void (*execute_command) (GdaBatch * job, const gchar * cmd);
 };
 
-#ifdef HAVE_GOBJECT
-GType gda_batch_get_type (void);
-#else
 guint gda_batch_get_type (void);
-#endif
 
 GdaBatch *gda_batch_new (void);
 void gda_batch_free (GdaBatch * job);

@@ -21,12 +21,9 @@
 #include "config.h"
 #include "gda-recordset.h"
 
-#ifndef HAVE_GOBJECT
-#  include <gtk/gtksignal.h>
-#endif
+#include <gtk/gtksignal.h>
 
-enum
-{
+enum {
 	RECORDSET_ERROR,
 	RECORDSET_EOF,
 	RECORDSET_BOF,
@@ -36,15 +33,9 @@ enum
 
 static gint gda_recordset_signals[LAST_SIGNAL] = { 0, };
 
-#ifdef HAVE_GOBJECT
-static void gda_recordset_class_init (GdaRecordsetClass * klass,
-				      gpointer data);
-static void gda_recordset_init (GdaRecordset * rs, GdaRecordsetClass * klass);
-#else
 static void gda_recordset_class_init (GdaRecordsetClass *);
 static void gda_recordset_init (GdaRecordset *);
 static void gda_recordset_destroy (GtkObject * object, gpointer user_data);
-#endif
 
 static void gda_recordset_real_error (GdaRecordset *, GList *);
 static gulong fetch_and_store (GdaRecordset * rs, gint count,
@@ -72,31 +63,6 @@ gda_recordset_real_error (GdaRecordset * rs, GList * error_list)
 	}
 }
 
-#ifdef HAVE_GOBJECT
-GType
-gda_recordset_get_type (void)
-{
-	static GType type = 0;
-
-	if (!type) {
-		GTypeInfo info = {
-			sizeof (GdaRecordsetClass),	/* class_size */
-			NULL,	/* base_init */
-			NULL,	/* base_finalize */
-			(GClassInitFunc) gda_recordset_class_init,	/* class_init */
-			NULL,	/* class_finalize */
-			NULL,	/* class_data */
-			sizeof (GdaRecordset),	/* instance_size */
-			0,	/* n_preallocs */
-			(GInstanceInitFunc) gda_recordset_init,	/* instance_init */
-			NULL,	/* value_table */
-		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaRecordset",
-					       &info, 0);
-	}
-	return type;
-}
-#else
 guint
 gda_recordset_get_type (void)
 {
@@ -118,18 +84,7 @@ gda_recordset_get_type (void)
 	}
 	return (gda_recordset_type);
 }
-#endif
 
-#ifdef HAVE_GOBJECT
-static void
-gda_recordset_class_init (GdaRecordsetClass * klass, gpointer data)
-{
-	/* FIXME: No signals in GObject yet */
-	klass->error = gda_recordset_real_error;
-	klass->eof = NULL;
-	klass->bof = NULL;
-}
-#else
 typedef void (*GtkSignal_NONE__INT_POINTER) (GtkObject,
 					     guint arg1,
 					     gpointer arg2,
@@ -179,16 +134,10 @@ gda_recordset_class_init (GdaRecordsetClass * klass)
 	klass->row_changed = NULL;
 	object_class->destroy = gda_recordset_destroy;
 }
-#endif
 
 static void
-#ifdef HAVE_GOBJECT
-gda_recordset_init (GdaRecordset * rs, GdaRecordsetClass * klass)
-{
-#else
 gda_recordset_init (GdaRecordset * rs)
 {
-#endif
 	rs->external_cmd = 0;
 	rs->internal_cmd = 0;
 	rs->corba_rs = CORBA_OBJECT_NIL;
@@ -210,7 +159,6 @@ gda_recordset_init (GdaRecordset * rs)
 	rs->name = 0;
 }
 
-#ifndef HAVE_GOBJECT
 static void
 gda_recordset_destroy (GtkObject * object, gpointer user_data)
 {
@@ -229,7 +177,6 @@ gda_recordset_destroy (GtkObject * object, gpointer user_data)
 	if (parent_class && parent_class->destroy)
 		parent_class->destroy (object);
 }
-#endif
 
 static void
 free_chunks (GList * chunks)
@@ -267,11 +214,7 @@ row_by_idx (GdaRecordset * rs, gint idx)
 GdaRecordset *
 gda_recordset_new (void)
 {
-#ifdef HAVE_GOBJECT
-	return GDA_RECORDSET (g_object_new (GDA_TYPE_RECORDSET, NULL));
-#else
 	return GDA_RECORDSET (gtk_type_new (gda_recordset_get_type ()));
-#endif
 }
 
 /**
@@ -287,11 +230,7 @@ gda_recordset_free (GdaRecordset * rs)
 {
 	g_return_if_fail (GDA_IS_RECORDSET (rs));
 
-#ifdef HAVE_GOBJECT
-	g_object_unref (G_OBJECT (rs));
-#else
 	gtk_object_unref (GTK_OBJECT (rs));
-#endif
 }
 
 /**
@@ -522,10 +461,8 @@ gda_recordset_move (GdaRecordset * rs, gint count, gpointer bookmark)
 		fetch_and_dont_store (rs, count, 0);
 
 	/* emit "row_changed" signal for data-bound widgets */
-#ifndef HAVE_GOBJECT		/* FIXME */
 	gtk_signal_emit (GTK_OBJECT (rs),
 			 gda_recordset_signals[RECORDSET_ROW_CHANGED]);
-#endif
 	return rs->current_index;
 }
 
@@ -808,11 +745,7 @@ gda_recordset_open (GdaRecordset * rs,
 	g_return_val_if_fail (GDA_IS_RECORDSET (rs), -1);
 	g_return_val_if_fail (!rs->open, -1);
 
-#ifdef HAVE_GOBJECT
-	gda_recordset_init (rs, NULL);	/* FIXME: calling the constructor here */
-#else /* is not very beautiful */
 	gda_recordset_init (rs);
-#endif
 	corba_parameters = __gda_command_get_params (cmd);
 	rs->cursor_type = cursor_type;
 	rs->lock_type = lock_type;

@@ -45,40 +45,10 @@ enum
 
 static gint gda_error_signals[GDA_ERROR_LAST_SIGNAL] = { 0, };
 
-#ifdef HAVE_GOBJECT
-static void gda_error_class_init (GdaErrorClass * klass, gpointer data);
-static void gda_error_init (GdaError * error, GdaErrorClass * klass);
-#else
 static void gda_error_class_init (GdaErrorClass * klass);
 static void gda_error_init (GdaError * error);
 static void gda_error_destroy (GtkObject * object);
-#endif
 
-#ifdef HAVE_GOBJECT
-GType
-gda_error_get_type (void)
-{
-	static GType type = 0;
-
-	if (!type) {
-		GTypeInfo info = {
-			sizeof (GdaErrorClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) gda_error_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaError),
-			0,
-			(GInstanceInitFunc) gda_error_init,
-			NULL,
-		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaError",
-					       &info, 0);
-	}
-	return type;
-}
-#else
 guint
 gda_error_get_type (void)
 {
@@ -98,14 +68,7 @@ gda_error_get_type (void)
 	}
 	return type;
 }
-#endif
 
-#ifdef HAVE_GOBJECT
-static void
-gda_error_class_init (GdaErrorClass * klass, gpointer data)
-{
-}
-#else
 static void
 gda_error_class_init (GdaErrorClass * klass)
 {
@@ -114,14 +77,9 @@ gda_error_class_init (GdaErrorClass * klass)
 	object_class = (GtkObjectClass *) klass;
 	object_class->destroy = gda_error_destroy;
 }
-#endif
 
 static void
-#ifdef HAVE_GOBJECT
-gda_error_init (GdaError * error, GdaErrorClass * klass)
-#else
 gda_error_init (GdaError * error)
-#endif
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
@@ -146,11 +104,7 @@ gda_error_new (void)
 {
 	GdaError *error;
 
-#ifdef HAVE_GOBJECT
-	error = GDA_ERROR (g_object_new (GDA_TYPE_ERROR, NULL));
-#else
 	error = GDA_ERROR (gtk_type_new (gda_error_get_type ()));
-#endif
 	return error;
 }
 
@@ -363,11 +317,7 @@ gda_error_destroy (GtkObject * object)
 void
 gda_error_free (GdaError * error)
 {
-#ifdef HAVE_GOBJECT
-	g_object_unref (G_OBJECT (error));
-#else
 	gtk_object_destroy (GTK_OBJECT (error));
-#endif
 }
 
 /**

@@ -22,11 +22,7 @@
 #define __gda_field_h__ 1
 
 #include <glib.h>
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#else
-#  include <gtk/gtkobject.h>
-#endif
+#include <gtk/gtkobject.h>
 #include <GDA.h>
 #include <gda-common-defs.h>
 
@@ -36,29 +32,14 @@ typedef struct _GdaField GdaField;
 typedef struct _GdaFieldClass GdaFieldClass;
 
 #define GDA_TYPE_FIELD            (gda_field_get_type())
-
-#ifdef HAVE_GOBJECT
-#  define GDA_FIELD(obj) \
-            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FIELD, GdaField)
-#  define GDA_FIELD_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_FIELD, GdaFieldClass)
-#  define GDA_IS_FIELD(obj) \
-            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_FIELD)
-#  define GDA_IS_FIELD_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_FIELD)
-#else
-#  define GDA_FIELD(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_FIELD, GdaField)
-#  define GDA_FIELD_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_FIELD, GdaFieldClass)
-#  define GDA_IS_FIELD(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_FIELD)
-#  define GDA_IS_FIELD_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_FIELD))
-#endif
+#define GDA_FIELD(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_FIELD, GdaField)
+#define GDA_FIELD_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_FIELD, GdaFieldClass)
+#define GDA_IS_FIELD(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_FIELD)
+#define GDA_IS_FIELD_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_FIELD))
 
 struct _GdaField {
-#ifdef HAVE_GOBJECT
-	GObject object;
-#else
 	GtkObject object;
-#endif
+
 	GDA_FieldAttributes *attributes;
 	gint actual_length;
 	GDA_FieldValue *real_value;
@@ -67,11 +48,7 @@ struct _GdaField {
 };
 
 struct _GdaFieldClass {
-#ifdef HAVE_GOBJECT
-	GObjectClass parent_class;
-#else
 	GtkObjectClass parent_class;
-#endif
 };
 
 #define gda_field_isnull(f)         (f->real_value ? (f)->real_value->_d : 1)

@@ -47,18 +47,10 @@ G_BEGIN_DECLS
  */
 
 #define GDA_TYPE_SERVER            (gda_server_get_type())
-
-#ifdef HAVE_GOBJECT
-#define GDA_SERVER(obj)            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER, GdaServer)
-#define GDA_SERVER_CLASS(klass)    G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER, GdaServerClass)
-#define GDA_IS_SERVER_(obj)        G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SERVER)
-#define GDA_IS_SERVER_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_SERVER)
-#else
 #define GDA_SERVER(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_SERVER, GdaServer)
 #define GDA_SERVER_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_SERVER, GdaServerClass)
 #define GDA_IS_SERVER(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER)
 #define GDA_IS_SERVER_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER))
-#endif
 
 struct _GdaServerImplFunctions {
 	/* Connection interface */
@@ -122,11 +114,8 @@ struct _GdaServerImplFunctions {
 };
 
 struct _GdaServer {
-#ifdef HAVE_GOBJECT
-	GObject object;
-#else
 	GtkObject object;
-#endif
+
 	BonoboGenericFactory *connection_factory;
 	gchar *name;
 	GdaServerImplFunctions functions;
@@ -135,19 +124,10 @@ struct _GdaServer {
 };
 
 struct _GdaServerClass {
-#ifdef HAVE_GOBJECT
-	GObjectClass parent_class;
-	GObjectClass *parent;
-#else
 	GtkObjectClass parent_class;
-#endif
 };
 
-#ifdef HAVE_GOBJECT
-GType gda_server_get_type (void);
-#else
 GtkType gda_server_get_type (void);
-#endif
 
 GdaServer *gda_server_new (const gchar * name,
 			   GdaServerImplFunctions * functions);

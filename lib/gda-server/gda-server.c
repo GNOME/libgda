@@ -19,32 +19,16 @@
 
 #include "gda-server.h"
 #include "gda-server-private.h"
-#ifndef HAVE_GOBJECT
-#  include <gtk/gtksignal.h>
-#endif
+#include <gtk/gtksignal.h>
 #include <liboaf/liboaf.h>
 
-#ifdef HAVE_GOBJECT
-static void gda_server_finalize (GObject * object);
-#else
 static void gda_server_destroy (GtkObject * object);
-#endif
 
 static GList *server_list = NULL;
 
 /*
  * Private functions
  */
-#ifdef HAVE_GOBJECT
-static void
-gda_server_class_init (GdaServerClass * klass, gpointer data)
-{
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	object_class->finalize = &gda_server_finalize;
-	klass->parent = g_type_class_peek_parent (klass);
-}
-#else
 static void
 gda_server_class_init (GdaServerClass * klass)
 {
@@ -52,15 +36,9 @@ gda_server_class_init (GdaServerClass * klass)
 
 	object_class->destroy = gda_server_destroy;
 }
-#endif
 
-#ifdef HAVE_GOBJECT
-static void
-gda_server_instance_init (GdaServer * server_impl, GdaServerClass * klass)
-#else
 static void
 gda_server_instance_init (GdaServer * server_impl)
-#endif
 {
 	g_return_if_fail (GDA_IS_SERVER (server_impl));
 
@@ -69,21 +47,6 @@ gda_server_instance_init (GdaServer * server_impl)
 		sizeof (GdaServerImplFunctions));
 }
 
-#ifdef HAVE_GOBJECT
-static void
-gda_server_finalize (GObject * object)
-{
-	GdaServer *server_impl = GDA_SERVER (object);
-	GdaServerClass *klass =
-		G_TYPE_INSTANCE_GET_CLASS (object, GDA_SERVER_CLASS,
-					   GdaServerClass);
-
-	server_list = g_list_remove (server_list, (gpointer) server_impl);
-	if (server_impl->name)
-		g_free ((gpointer) server_impl->name);
-	klass->parent->finalize (object);
-}
-#else
 static void
 gda_server_destroy (GtkObject * object)
 {
@@ -101,33 +64,7 @@ gda_server_destroy (GtkObject * object)
 	if (parent_class && parent_class->destroy)
 		parent_class->destroy (object);
 }
-#endif
 
-#ifdef HAVE_GOBJECT
-GType
-gda_server_get_type (void)
-{
-	static GType type = 0;
-
-	if (!type) {
-		GTypeInfo info = {
-			sizeof (GdaServerClass),
-			NULL,
-			NULL,
-			(GClassInitFunc) gda_server_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaServer),
-			0,
-			(GInstanceInitFunc) gda_server_instance_init,
-			NULL,
-		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaServer",
-					       &info, 0);
-	}
-	return (type);
-}
-#else
 GtkType
 gda_server_get_type (void)
 {
@@ -147,7 +84,6 @@ gda_server_get_type (void)
 	}
 	return type;
 }
-#endif
 
 static BonoboObject *
 factory_function (BonoboGenericFactory * factory, void *closure)
@@ -179,11 +115,7 @@ gda_server_new (const gchar * name, GdaServerImplFunctions * functions)
 		return server_impl;
 
 	/* create provider instance */
-#ifdef HAVE_GOBJECT
-	server_impl = GDA_SERVER (g_object_new (GDA_TYPE_SERVER, NULL));
-#else
 	server_impl = GDA_SERVER (gtk_type_new (gda_server_get_type ()));
-#endif
 	server_impl->name = g_strdup (name);
 	g_set_prgname (server_impl->name);
 	if (functions) {

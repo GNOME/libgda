@@ -132,10 +132,8 @@ main (int argc, char *argv[])
       return -1;
     }
   g_print("Connected to '%s'", datasource);
-#ifndef HAVE_GOBJECT /* FIXME */
   gtk_signal_connect(GTK_OBJECT(cnc), "error",
                      GTK_SIGNAL_FUNC(cnc_error_cb), 0);
-#endif
   /* prepare the batch job object */
   job = gda_batch_new();
   gda_batch_set_connection(job, cnc);

@@ -22,11 +22,7 @@
 #  define __gda_connection_pool_h__
 
 #include <glib.h>
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#else
-#  include <gtk/gtkobject.h>
-#endif
+#include <gtk/gtkobject.h>
 #include <gda-common-defs.h>
 #include <gda-connection.h>
 
@@ -36,51 +32,25 @@ typedef struct _GdaConnectionPool GdaConnectionPool;
 typedef struct _GdaConnectionPoolClass GdaConnectionPoolClass;
 
 #define GDA_TYPE_CONNECTION_POOL            (gda_connection_pool_get_type())
-
-#ifdef HAVE_GOBJECT
-#  define GDA_CONNECTION_POOL(obj) \
-            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION_POOL, \
-                                        GdaConnectionPool)
-#  define GDA_CONNECTION_POOL_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION_POOL, \
-                                     GdaConnectionPoolClass)
-#  define GDA_IS_CONNECTION_POOL(obj) \
-            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION_POOL)
-#  define GDA_IS_CONNECTION_POOL_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION_POOL)
-#else
 #  define GDA_CONNECTION_POOL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION_POOL, GdaConnectionPool)
 #  define GDA_CONNECTION_POOL_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION_POOL, GdaConnectionPoolClass)
 #  define GDA_IS_CONNECTION_POOL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION_POOL)
 #  define GDA_IS_CONNECTION_POOL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION_POOL))
-#endif
 
 struct _GdaConnectionPool {
-#ifdef HAVE_GOBJECT
-	GObject object;
-#else
 	GtkObject object;
-#endif
 	GList *connections;
 };
 
 struct _GdaConnectionPoolClass {
-#ifdef HAVE_GOBJECT
-	GObjectClass parent_class;
-	GObjectClass *parent;
-#else
 	GtkObjectClass parent_class;
-#endif
+
 	/* signals */
 	void (*open) (GdaConnectionPool * pool, GdaConnection * cnc);
 	void (*error) (GdaConnectionPool * pool, GdaConnection * cnc, GList *error_list);
 };
 
-#ifdef HAVE_GOBJECT
-GType gda_connection_pool_get_type (void);
-#else
 GtkType gda_connection_pool_get_type (void);
-#endif
 
 GdaConnectionPool *gda_connection_pool_new (void);
 void gda_connection_pool_free (GdaConnectionPool * pool);

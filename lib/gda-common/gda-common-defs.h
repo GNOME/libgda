@@ -20,13 +20,6 @@
 #if !defined(__gda_common_defs_h__)
 #  define __gda_common_defs_h__
 
-#if defined(HAVE_GOBJECT)
-#  include <glib/gmacros.h>
-#  include <gobject/gobject.h>
-#else
-#  include <gtk/gtkobject.h>
-#endif
-
 #ifdef __cplusplus
 #  if !defined(G_BEGIN_DECLS)
 #    define G_BEGIN_DECLS extern "C" {

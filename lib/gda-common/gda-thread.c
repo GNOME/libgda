@@ -76,56 +76,20 @@ thread_func (gpointer data)
 /*
  * GdaThread object implementation
  */
-#ifdef HAVE_GOBJECT
-static void
-gda_thread_class_init (GdaThreadClass * klass, gpointer data)
-{
-}
-#else
 static void
 gda_thread_class_init (GdaThreadClass * klass)
 {
 	GtkObjectClass *object_class = (GtkObjectClass *) klass;
 }
-#endif
 
 static void
-#ifdef HAVE_GOBJECT
-gda_thread_init (GdaThread * thr, GdaThreadClass * klass)
-#else
 gda_thread_init (GdaThread * thr)
-#endif
 {
 	g_return_if_fail (GDA_IS_THREAD (thr));
 	thr->func = NULL;
 	thr->is_running = FALSE;
 }
 
-#ifdef HAVE_GOBJECT
-GType
-gda_thread_get_type (void)
-{
-	static GType type = 0;
-
-	if (!type) {
-		GTypeInfo info = {
-			sizeof (GdaThreadClass),	/* class_size */
-			NULL,	/* base_init */
-			NULL,	/* base_finalize */
-			(GClassInitFunc) gda_thread_class_init,	/* class_init */
-			NULL,	/* class_finalize */
-			NULL,	/* class_data */
-			sizeof (GdaThread),	/* instance_size */
-			0,	/* n_preallocs */
-			(GInstanceInitFunc) gda_thread_init,	/* instance_init */
-			NULL,	/* value_table */
-		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaThread",
-					       &info, 0);
-	}
-	return type;
-}
-#else
 GtkType
 gda_thread_get_type (void)
 {
@@ -145,7 +109,6 @@ gda_thread_get_type (void)
 	}
 	return type;
 }
-#endif
 
 /**
  * gda_thread_new
@@ -164,11 +127,7 @@ gda_thread_new (GdaThreadFunc func)
 	if (!g_thread_supported ())
 		g_thread_init (NULL);
 
-#ifdef HAVE_GOBJECT
-	thr = GDA_THREAD (g_object_new (GDA_TYPE_THREAD, NULL));
-#else
 	thr = GDA_THREAD (gtk_type_new (GDA_TYPE_THREAD));
-#endif
 	thr->func = func;
 	return thr;
 }
@@ -184,11 +143,7 @@ gda_thread_free (GdaThread * thr)
 	if (gda_thread_is_running (thr))
 		gda_thread_stop (thr);
 
-#ifdef HAVE_GOBJECT
-	g_object_unref (G_OBJECT (thr));
-#else
-	gtk_object_destroy (GTK_OBJECT (thr));
-#endif
+	gtk_object_unref (GTK_OBJECT (thr));
 }
 
 /**

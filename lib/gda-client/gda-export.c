@@ -23,9 +23,7 @@
 #include "config.h"
 #include "gda-export.h"
 #include "gda-util.h"
-#ifndef HAVE_GOBJECT
-#  include <gtk/gtksignal.h>
-#endif
+#include <gtk/gtksignal.h>
 
 struct _GdaExportPrivate {
 	GdaConnection *cnc;
@@ -105,7 +103,7 @@ get_object_list (GdaConnection * cnc, GDA_Connection_QType qtype)
 GtkType
 gda_export_get_type (void)
 {
-	GtkType type = 0;
+	static GtkType type = 0;
 
 	if (!type) {
 		GtkTypeInfo info = {

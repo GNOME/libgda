@@ -22,11 +22,7 @@
 #  define __gda_connection_h__
 
 #include <glib.h>
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#else
-#  include <gtk/gtkobject.h>
-#endif
+#include <gtk/gtkobject.h>
 #include <orb/orbit.h>
 #include <GDA.h>
 #include <gda-common-defs.h>
@@ -45,25 +41,14 @@ typedef struct _GdaConnectionClass GdaConnectionClass;
 #include <gda-recordset.h>	/* this one needs the definitions above */
 
 #define GDA_TYPE_CONNECTION            (gda_connection_get_type())
-
-#ifdef HAVE_GOBJECT
-#define GDA_CONNECTION(obj)            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION, GdaConnection)
-#define GDA_CONNECTION_CLASS(klass)    G_TYPE_CHECK_CLASS_CAST (obj, GDA_TYPE_CONNECTION,  GdaConnectionClass)
-#define GDA_IS_CONNECTION(obj)         G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION)
-#define GDA_IS_CONNECTION_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION)
-#else
 #define GDA_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION, GdaConnection)
 #define GDA_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION, GdaConnectionClass)
 #define GDA_IS_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION)
 #define GDA_IS_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
-#endif
 
 struct _GdaConnection {
-#ifdef HAVE_GOBJECT
-	GObject object;
-#else
 	GtkObject object;
-#endif
+
 	CORBA_Object connection;
 	CORBA_ORB orb;
 	GList *commands;
@@ -78,11 +63,8 @@ struct _GdaConnection {
 };
 
 struct _GdaConnectionClass {
-#ifdef HAVE_GOBJECT
-	GObjectClass parent_class;
-#else
 	GtkObjectClass parent_class;
-#endif
+
 	void (*error) (GdaConnection *, GList *);
 	void (*warning) (GdaConnection *, GList *);
 	void (*open) (GdaConnection *);
@@ -94,11 +76,7 @@ typedef struct _GdaConstraint_Element {
 	gchar *value;
 } GdaConstraint_Element;
 
-#ifdef HAVE_GOBJECT
-GType gda_connection_get_type (void);
-#else
 guint gda_connection_get_type (void);
-#endif
 
 GdaConnection *gda_connection_new (CORBA_ORB orb);
 GdaConnection *gda_connection_new_from_dsn (const gchar * dsn_name,

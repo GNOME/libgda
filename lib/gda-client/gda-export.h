@@ -62,7 +62,7 @@ struct _GdaExportClass {
 
 GtkType        gda_export_get_type (void);
 
-GdaExport *    gda_export_new (GdaConnection * cnc);
+GdaExport     *gda_export_new (GdaConnection * cnc);
 void           gda_export_free (GdaExport * exp);
 
 GList         *gda_export_get_tables (GdaExport * exp);

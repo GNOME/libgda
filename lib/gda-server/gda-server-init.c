@@ -20,9 +20,6 @@
 #include "gda-server.h"
 #include "gda-server-private.h"
 #include <signal.h>
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#endif
 #include <popt.h>
 #include <liboaf/liboaf.h>
 

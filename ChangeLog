@@ -1,3 +1,8 @@
+2001-07-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* removed all GLib-2.0 related code, since all this code is now
+	in the gnome-2-0-branch CVS branch
+
 2001-07-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: remove glib-2.0 check until we can compile

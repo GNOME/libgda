@@ -22,11 +22,7 @@
 #  define __gda_error_h__
 
 #include <glib.h>
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#else
-#  include <gtk/gtkobject.h>
-#endif
+#include <gtk/gtkobject.h>
 #include <orb/orb.h>
 #include <GDA.h>
 #include <gda-common-defs.h>
@@ -41,25 +37,14 @@ typedef struct _GdaError GdaError;
 typedef struct _GdaErrorClass GdaErrorClass;
 
 #define GDA_TYPE_ERROR            (gda_error_get_type())
-
-#ifdef HAVE_GOBJECT
-#define GDA_ERROR(obj)            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_ERROR, GdaError)
-#define GDA_ERROR_CLASS(klass)    G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_ERROR, GdaErrorClass)
-#define GDA_IS_ERROR(obj)         G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_ERROR)
-#define GDA_IS_ERROR_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_ERROR)
-#else
 #define GDA_ERROR(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_ERROR, GdaError)
 #define GDA_ERROR_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_ERROR, GdaErrorClass)
 #define GDA_IS_ERROR(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_ERROR)
 #define GDA_IS_ERROR_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_ERROR))
-#endif
 
 struct _GdaError {
-#ifdef HAVE_GOBJECT
-	GObject object;
-#else
 	GtkObject object;
-#endif
+
 	gchar *description;
 	glong number;
 	gchar *source;
@@ -71,18 +56,10 @@ struct _GdaError {
 };
 
 struct _GdaErrorClass {
-#ifdef HAVE_GOBJECT
-	GObjectClass parent_class;
-#else
 	GtkObjectClass parent_class;
-#endif
 };
 
-#ifdef HAVE_GOBJECT
-GType gda_error_get_type (void);
-#else
 guint gda_error_get_type (void);
-#endif
 
 GdaError *gda_error_new (void);
 GList *gda_error_list_from_exception (CORBA_Environment * ev);

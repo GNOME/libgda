@@ -21,25 +21,14 @@
 #  define __gda_thread_h__
 
 #include <glib.h>
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#else
-#  include <gtk/gtkobject.h>
-#endif
+#include <gtk/gtkobject.h>
 #include <gda-common-defs.h>
 
 G_BEGIN_DECLS
 
 #define GDA_TYPE_THREAD    (gda_thread_get_type())
-#ifdef HAVE_GOBJECT
-#  define GDA_THREAD(obj) \
-          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_THREAD, GdaThread)
-#  define GDA_IS_THREAD(obj) \
-          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_THREAD)
-#else
-#  define GDA_THREAD(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_THREAD, GdaThread)
-#  define GDA_IS_THREAD(obj) GTK_CHECK_TYPE(obj, GDA_TYPE_THREAD)
-#endif
+#define GDA_THREAD(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_THREAD, GdaThread)
+#define GDA_IS_THREAD(obj) GTK_CHECK_TYPE(obj, GDA_TYPE_THREAD)
 
 typedef struct _GdaThread GdaThread;
 typedef struct _GdaThreadClass GdaThreadClass;
@@ -48,29 +37,18 @@ typedef gpointer (*GdaThreadFunc) (GdaThread * thr,
 				   gpointer user_data);
 
 struct _GdaThread {
-#ifdef HAVE_GOBJECT
-	GObject object;
-#else
 	GtkObject object;
-#endif
+
 	GdaThreadFunc func;
 	gulong tid;
 	gboolean is_running;
 };
 
 struct _GdaThreadClass {
-#ifdef HAVE_GOBJECT
-	GObjectClass parent_class;
-#else
 	GtkObjectClass parent_class;
-#endif
 };
 
-#ifdef HAVE_GOBJECT
-GType gda_thread_get_type (void);
-#else
 GtkType gda_thread_get_type (void);
-#endif
 
 GdaThread *gda_thread_new (GdaThreadFunc func);
 void gda_thread_free (GdaThread * thr);

@@ -22,12 +22,7 @@
 /* FIXME: This should really have it's own header file */
 #include "gda-common.h"
 
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#else
-#  include <gtk/gtk.h>
-#endif
-
+#include <gtk/gtk.h>
 #include <liboaf/liboaf.h>
 #include <gda-log.h>
 

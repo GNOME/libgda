@@ -22,11 +22,7 @@
 #define __gda_command_h__ 1
 
 #include <glib.h>
-#ifdef HAVE_GOBJECT
-#  include <glib-object.h>
-#else
-#  include <gtk/gtkobject.h>
-#endif
+#include <gtk/gtkobject.h>
 #include <orb/orbit.h>
 #include <GDA.h>
 #include <gda-common-defs.h>
@@ -44,25 +40,14 @@ typedef struct _GdaCommandClass GdaCommandClass;
 #include <gda-connection.h>
 
 #define GDA_TYPE_COMMAND            (gda_command_get_type())
-
-#ifdef HAVE_GOBJECT
-#define GDA_COMMAND(obj)            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_COMMAND, GdaCommand)
-#define GDA_COMMAND_CLASS(klass)    G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_COMMAND, GdaCommandClass)
-#define GDA_IS_COMMAND(obj)         G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_COMMAND)
-#define GDA_IS_COMMAND_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_COMMAND)
-#else
 #define GDA_COMMAND(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_COMMAND, GdaCommand)
 #define GDA_COMMAND_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_COMMAND, GdaCommandClass)
 #define GDA_IS_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_COMMAND)
 #define GDA_IS_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
-#endif
 
 struct _GdaCommand {
-#ifdef HAVE_GOBJECT
-	GObject object;
-#else
 	GtkObject object;
-#endif
+
 	CORBA_Object command;
 	CORBA_ORB orb;
 	GdaConnection *connection;
@@ -74,18 +59,10 @@ struct _GdaCommand {
 };
 
 struct _GdaCommandClass {
-#ifdef HAVE_GOBJECT
-	GObjectClass parent_class;
-#else
 	GtkObjectClass parent_class;
-#endif
 };
 
-#ifdef HAVE_GOBJECT
-GType gda_command_get_type (void);
-#else
 guint gda_command_get_type (void);
-#endif
 
 GdaCommand *gda_command_new (void);
 void gda_command_free (GdaCommand * cmd);
