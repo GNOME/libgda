@@ -59,17 +59,18 @@ plugin_get_connection_params (void)
 	/************************************/
 	/* environment settings for freetds */
 	// location of freetds config file
-	list = g_list_append (list, g_strdup ("FREETDSCONF"));
+	list = g_list_append (list, g_strdup ("TDS_FREETDSCONF"));
 	// Protocol version
-	list = g_list_append (list, g_strdup ("TDSVER"));
+	list = g_list_append (list, g_strdup ("TDS_MAJVER"));
+	list = g_list_append (list, g_strdup ("TDS_MINVER"));
 	// File for tds dumps
-	list = g_list_append (list, g_strdup ("TDSDUMP"));
-	list = g_list_append (list, g_strdup ("TDSDUMPCONFIG"));
+	list = g_list_append (list, g_strdup ("TDS_DUMP"));
+	list = g_list_append (list, g_strdup ("TDS_DUMPCONFIG"));
 	// Same effect like PORT
-	list = g_list_append (list, g_strdup ("TDSPORT"));
+	list = g_list_append (list, g_strdup ("TDS_PORT"));
 	// Same effect like HOST
-	list = g_list_append (list, g_strdup ("TDSHOST"));
-	list = g_list_append (list, g_strdup ("TDSQUERY"));
+	list = g_list_append (list, g_strdup ("TDS_HOST"));
+	list = g_list_append (list, g_strdup ("TDS_QUERY"));
 	
 	return list;
 }
