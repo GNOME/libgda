@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
-"PO-Revision-Date: 2002-03-06 15:50+0300\n"
+"POT-Creation-Date: 2002-03-14 08:10-0500\n"
+"PO-Revision-Date: 2002-03-15 14:00+0300\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -97,13 +97,18 @@ msgstr "Не удалось известить клиента о действии %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Не найдено реализации для метода fetch()"
 
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Уже есть поле с названием %s"
+
 # gda-clnt/gda-field.c:117
-#: libgda/gda-value.c:926
+#: libgda/gda-value.c:981
 msgid "TRUE"
 msgstr "ИСТИНА"
 
 # gda-clnt/gda-field.c:119
-#: libgda/gda-value.c:928
+#: libgda/gda-value.c:983
 msgid "FALSE"
 msgstr "ЛОЖЬ"
 
@@ -122,27 +127,25 @@ msgstr "Не удалось проанализировать файл %s"
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr ""
+msgstr "Неправильный файл базы данных XML \"%s\""
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#, c-format
 msgid "Table %s already exists"
-msgstr "таблица %s уже существует"
+msgstr "Таблица %s уже существует"
 
 #: libgda/gda-xml-database.c:327
-#, fuzzy
 msgid "Invalid node"
-msgstr "Неправильный обработчик MySQL"
+msgstr "Неправильный узел"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Дублированный узел <data> для таблицы %s"
 
 #: libgda/gda-xml-database.c:365
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Неправильный обработчик MySQL"
+msgstr "Неправильный узел XML"
 
 #: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
@@ -490,15 +493,3 @@ msgstr "\tдомен = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tпараметры gda ="
-
-#~ msgid "Bad formed document at %s"
-#~ msgstr "Плохо сформированный документ %s"
-
-#~ msgid "%p is not a valid table"
-#~ msgstr "%p не является допустимой таблицей"
-
-#~ msgid "Invalid DEFAULT handle"
-#~ msgstr "Неправильный обработчик используемый по умолчанию"
-
-#~ msgid "Invalid Default handle"
-#~ msgstr "Неправильный обработчик по умолчанию"
