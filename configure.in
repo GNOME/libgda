@@ -150,6 +150,16 @@ dnl checking for GOB (Gtk Object Builder)
 dnl
 GOB_CHECK(1.0.5)
 
+dnl ******************************
+dnl gtk-doc
+dnl ******************************
+
+AC_CHECK_PROG(GTKDOC, gtkdoc-mkdb, true, false)
+AM_CONDITIONAL(HAVE_GTK_DOC, $GTKDOC)
+AC_SUBST(HAVE_GTK_DOC)
+
+AM_CONDITIONAL(ENABLE_GTK_DOC, $GTKDOC)
+
 dnl
 dnl Checks for providers
 dnl
@@ -629,7 +639,7 @@ dnl Translations
 dnl
 ALL_LINGUAS="ca da de el es fi fr ga gl hu it ja nl no pl pt_BR ru sk sl sv uk"
 
-AM_GNU_GETTEXT
+AM_GNOME_GETTEXT
 
 dnl
 dnl Variables
@@ -682,6 +692,9 @@ macros/Makefile
 po/Makefile.in
 doc/Makefile
 doc/C/Makefile
+doc/C/reference/Makefile
+doc/C/reference/libgda-common/Makefile
+doc/C/reference/libgda-client/Makefile
 doc/pt_BR/Makefile
 intl/Makefile
 idl/Makefile
