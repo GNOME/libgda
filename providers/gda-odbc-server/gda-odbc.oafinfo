@@ -8,8 +8,6 @@
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
 	               value="GDA Datasource Access for ODBC"/>
-	<oaf_attribute name="gda-main-config" type="string"
-	               value="OAFIID:control:gda-odbc-config:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f"/>
 </oaf_server>
 
 </oaf_info>
