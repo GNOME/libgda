@@ -319,7 +319,7 @@ then
 					;;
 				*v0.60) AC_MSG_RESULT($freetdsvercheck - using v0.60 api)
 					AC_DEFINE(HAVE_FREETDS_VER0_60)
-					FREETDS_CFLAGS="-l${freetds_incdir}"
+					FREETDS_CFLAGS="-I${freetds_incdir}"
 					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
 					AC_DEFINE(HAVE_FREETDS)
 					;;

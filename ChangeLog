@@ -1,3 +1,7 @@
+2003-03-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: fixed typo in FreeTDS CFLAGS.
+
 2003-03-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: check for ODBC header files also.
