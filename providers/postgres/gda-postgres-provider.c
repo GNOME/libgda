@@ -100,7 +100,8 @@ typedef enum {
 } IdxType;
 
 typedef struct {
-	gchar *colname;
+	gchar *colname;  /* used for PG < 7.3 */
+	guint  colnum;   /* used for PG >= 7.3 */
 	gchar *reference;
 } GdaPostgresRefData;
 
@@ -1457,6 +1458,52 @@ gda_postgres_index_type (gint colnum, GList *idx_list, IdxType type)
 	return FALSE;
 }
 
+
+/* Converts a single dimension array in the form of '{AA,BB,CC}' to a list of
+ * strings (here ->"AA"->"BB"->"CC) which must be freed by the caller
+ */
+static GSList *
+gda_postgres_itemize_simple_array (const gchar *array)
+{
+	GSList *list = NULL;
+	gchar *str, *ptr, *tok;
+
+	g_return_val_if_fail (array, NULL);
+
+	str = g_strdup (array);
+	ptr = str;
+
+	/* stripping { and } */
+	if (*str == '{')
+		ptr++;
+	if (str [strlen (str)-1] == '}')
+		str [strlen (str)-1] = 0;
+
+	/* splitting */
+	ptr = strtok_r (ptr, ",", &tok);
+	while (ptr && *ptr) {
+		list = g_slist_append (list, g_strdup (ptr));
+		ptr = strtok_r (NULL, ",", &tok);
+	}
+	
+	g_free (str);
+
+	return list;
+}
+
+static void
+gda_postgres_itemize_simple_array_free (GSList *list)
+{
+	GSList *list2;
+
+	list2 = list;
+	while (list2) {
+		g_free (list2->data);
+		list2 = g_slist_next (list2);
+	}
+	g_slist_free (list);
+}
+
 static GList *
 gda_postgres_get_ref_data (GdaPostgresConnectionData *priv_data, const gchar *tblname)
 {
@@ -1465,10 +1512,6 @@ gda_postgres_get_ref_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 	GdaPostgresRefData *ref_data;
 	gchar *query;
 	PGresult *pg_ref;
-	gint lentblname;
-
-	/* WARNING: don't know a better way to get references :-( */
-	lentblname = strlen (tblname);
 
 	if (priv_data->version_float < 7.3) 
 		query = g_strdup_printf ("SELECT tr.tgargs "
@@ -1476,11 +1519,13 @@ gda_postgres_get_ref_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 					 "WHERE c.relname = '%s' AND c.oid = tr.tgrelid AND "
 					 "tr.tgisconstraint = true AND tr.tgnargs = 6", tblname);
 	else
-		/* FIXME using the pg_constraint table */
-		query = g_strdup_printf ("SELECT tr.tgargs "
-					 "FROM pg_class c, pg_trigger tr "
-					 "WHERE c.relname = '%s' AND c.oid = tr.tgrelid AND "
-					 "tr.tgisconstraint = true AND tr.tgnargs = 6", tblname);
+		query = g_strdup_printf ("SELECT o.conkey, o.confkey, fc.relname "
+					 "FROM pg_catalog.pg_class c "
+					 "INNER JOIN pg_catalog.pg_constraint o ON (o.conrelid = c.oid) "
+					 "LEFT JOIN pg_catalog.pg_class fc ON (fc.oid=o.confrelid) "
+					 "WHERE c.relname = '%s' AND contype = 'f' "
+					 "AND pg_catalog.pg_table_is_visible (c.oid) "
+					 "AND pg_catalog.pg_table_is_visible (fc.oid)", tblname);
 
 	pg_ref = PQexec(priv_data->pconn, query);
 	g_free (query);
@@ -1489,24 +1534,69 @@ gda_postgres_get_ref_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 
 	nref = PQntuples (pg_ref);
 
-	ref_data = g_new (GdaPostgresRefData, nref);
 	for (i = 0; i < nref; i++){
-		gchar **arr;
-		gchar *value;
-
-		value = PQgetvalue (pg_ref, i, 0);
-		arr = g_strsplit (value, "\\000", 0);
-		if (!strncmp (tblname, arr[1], lentblname)) {
-			ref_data[i].colname = g_strdup (arr[4]);
-			ref_data[i].reference = g_strdup_printf ("%s.%s", arr[2], arr[5]);
-			ref_list = g_list_append (ref_list, &ref_data[i]);
+		if (priv_data->version_float < 7.3) {
+			gint lentblname;
+			gchar **arr;
+			gchar *value;
+			
+			lentblname = strlen (tblname);
+			ref_data = g_new0 (GdaPostgresRefData, 1);
+			value = PQgetvalue (pg_ref, i, 0);
+			arr = g_strsplit (value, "\\000", 0);
+			if (!strncmp (tblname, arr[1], lentblname)) {
+				ref_data->colname = g_strdup (arr[4]);
+				ref_data->reference = g_strdup_printf ("%s.%s", arr[2], arr[5]);
+				ref_list = g_list_append (ref_list, ref_data);
+			}
+			
+			g_strfreev (arr);
 		}
+		else {
+			gchar *value;
+			GSList *itemf, *listf;
+			GSList *itemp, *listp;
+			
+			value = PQgetvalue (pg_ref, i, 0);
+			listf = gda_postgres_itemize_simple_array (value);
+			itemf = listf;
 
-		g_strfreev (arr);
+			value = PQgetvalue (pg_ref, i, 1);
+			listp = gda_postgres_itemize_simple_array (value);
+			itemp = listp;
+
+			g_assert (g_slist_length (listf) == g_slist_length (listp));
+			while (itemp && itemf) {
+				PGresult *pg_res;
+				query = g_strdup_printf ("SELECT a.attname FROM pg_catalog.pg_class c "
+							 "LEFT JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid) "
+							 "WHERE c.relname = '%s' AND pg_catalog.pg_table_is_visible (c.oid) "
+							 "AND a.attnum = %d AND NOT a.attisdropped", 
+							 PQgetvalue (pg_ref, i, 2), atoi (itemp->data));
+				pg_res = PQexec(priv_data->pconn, query);
+				/*g_print ("Query: %s\n", query);*/
+				g_free (query);
+				if (pg_res == NULL)
+					return NULL;
+				
+				g_assert (PQntuples (pg_res) == 1);
+
+				ref_data = g_new0 (GdaPostgresRefData, 1);
+				ref_data->colname = NULL;
+				ref_data->colnum = atoi (itemf->data);
+				ref_data->reference = g_strdup_printf ("%s.%s", 
+								       PQgetvalue (pg_ref, i, 2), PQgetvalue (pg_res, 0, 0));
+				PQclear (pg_res);
+				ref_list = g_list_append (ref_list, ref_data);
+				itemp = g_slist_next (itemp);
+				itemf = g_slist_next (itemf);
+			}
+			gda_postgres_itemize_simple_array_free (listf);
+			gda_postgres_itemize_simple_array_free (listp);
+		}
 	}
-
 	PQclear (pg_ref);
-
+		
 	return ref_list;
 }
 
@@ -1523,10 +1613,13 @@ free_ref_data (gpointer data, gpointer user_data)
 {
 	GdaPostgresRefData *ref_data = (GdaPostgresRefData *) data;
 
-	g_free (ref_data->colname);
+	if (ref_data->colname)
+		g_free (ref_data->colname);
 	g_free (ref_data->reference);
+	g_free (ref_data);
 }
 
+/* FIXME: a and b are of the same type! */
 static gint
 ref_custom_compare (gconstpointer a, gconstpointer b)
 {
@@ -1564,28 +1657,13 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 			tblname, tblname);
 	else 
 		query = g_strdup_printf (
-			"(SELECT a.attname, t.typname, a.atttypmod, t.typlen, not a.attnotnull, d.adsrc, a.attnum "
-			"FROM pg_catalog.pg_class c INNER JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid) "
-			"INNER JOIN pg_catalog.pg_attrdef d ON (a.attnum = d.adnum AND d.adrelid=c.oid), "
-			"pg_catalog.pg_type t "
-			"WHERE c.relname = '%s' "
-			"AND pg_catalog.pg_table_is_visible (c.oid) "
-			"AND a.attnum > 0 "
-			"AND t.oid = a.atttypid "
-			"AND NOT a.attisdropped "
-			"AND a.atthasdef) "
-			"UNION "
-			"(SELECT a.attname, t.typname, a.atttypmod, t.typlen, not a.attnotnull, NULL, a.attnum "
-			"FROM pg_catalog.pg_class c INNER JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid), "
-			"pg_catalog.pg_type t "
-			"WHERE c.relname = '%s' "
-			"AND pg_catalog.pg_table_is_visible (c.oid) "
-			"AND a.attnum > 0 "
-			"AND t.oid = a.atttypid "
-			"AND NOT a.attisdropped "
-			"AND NOT a.atthasdef) "
-			"ORDER BY 7 ",
-			tblname, tblname);
+			"SELECT a.attname, t.typname, a.atttypmod, t.typlen, not a.attnotnull, d.adsrc, a.attnum "
+			"FROM pg_catalog.pg_class c "
+			"LEFT JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid) "
+			"FULL JOIN pg_catalog.pg_attrdef d ON (a.attnum = d.adnum AND d.adrelid=c.oid) "
+			"LEFT JOIN pg_catalog.pg_type t ON (t.oid = a.atttypid) "
+			"WHERE c.relname = '%s' AND pg_catalog.pg_table_is_visible (c.oid) AND a.attnum > 0 "
+			"AND NOT a.attisdropped ORDER BY 7", tblname);
 
 	pg_res = PQexec(priv_data->pconn, query);
 	g_free (query);
@@ -1656,11 +1734,25 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 		rowlist = g_list_append (rowlist, value);
 
 		/* References */
-		rlist = g_list_find_custom (ref_list, colname, ref_custom_compare); 
-		if (rlist)
-			ref = ((GdaPostgresRefData *) rlist->data)->reference;
-		else
-			ref = "";
+		if (priv_data->version_float < 7.3) {
+			rlist = g_list_find_custom (ref_list, colname, ref_custom_compare); 
+			if (rlist)
+				ref = ((GdaPostgresRefData *) rlist->data)->reference;
+			else
+				ref = "";
+		}
+		else {
+			GList *plist = ref_list;
+			ref = NULL;
+			
+			while (plist && !ref) {
+				if (((GdaPostgresRefData *) plist->data)->colnum == atoi (PQgetvalue(pg_res, i, 6)))
+					ref = ((GdaPostgresRefData *) plist->data)->reference;
+				plist = g_list_next (plist);
+			}
+			if (!ref)
+				ref = "";
+		}
 		value = gda_value_new_string (ref);
 		rowlist = g_list_append (rowlist, value);
 
@@ -1685,10 +1777,8 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 		g_free (idx_list->data);
 	}
 
-	if (ref_list && ref_list->data) {
+	if (ref_list && ref_list->data) 
 		g_list_foreach (ref_list, free_ref_data, NULL);
-		g_free (ref_list->data);
-	}
 
 	g_list_free (ref_list);
 	g_list_free (idx_list);
