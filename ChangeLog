@@ -1,5 +1,15 @@
 2002-08-16  Holger Thon <holger.thon@gnome-db.org>
 
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/mysql/gda-mysql-recordset.c: added string.h to includes
+	* providers/mysql/libmain.c: fixed compile warnings
+
+	* providers/ibmdb2/gda-ibmdb2-provider.c
+	* (gda_ibmdb2_provider_open_connection): fixed cleanup on error
+	fixed passing connection data to GdaConnection object
+
+2002-08-16  Holger Thon <holger.thon@gnome-db.org>
+
 	* ChangeLog: added missing entries
 
 2002-08-15  Holger Thon <holger.thon@gnome-db.org>
