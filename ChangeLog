@@ -1,3 +1,10 @@
+2005-02-28   Jorge Bernal "Koke" <koke@amedias.org>
+
+	Fixes 162856
+
+	* providers/freetds/libmain.c (plugin_get_connection_params): fixed
+	typo.
+
 2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #160666
