@@ -56,6 +56,9 @@ static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider
 						     GdaConnection *cnc,
 						     GdaCommand *cmd,
 						     GdaParameterList *params);
+static gchar *gda_postgres_provider_get_last_insert_id (GdaServerProvider *provider,
+							GdaConnection *cnc,
+							GdaDataModel *recset);
 
 static gboolean gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 							 GdaConnection *cnc,
@@ -131,6 +134,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->create_database = gda_postgres_provider_create_database;
 	provider_class->drop_database = gda_postgres_provider_drop_database;
 	provider_class->execute_command = gda_postgres_provider_execute_command;
+	provider_class->get_last_insert_id = gda_postgres_provider_get_last_insert_id;
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
 	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
@@ -730,6 +734,37 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 	}
 
 	return reclist;
+}
+
+static gchar *
+gda_postgres_provider_get_last_insert_id (GdaServerProvider *provider,
+					  GdaConnection *cnc,
+					  GdaDataModel *recset)
+{
+	Oid oid;
+	PGresult *pgres;
+	GdaPostgresConnectionData *priv_data;
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		return NULL;
+	}
+
+	/* get the PQresult from the recordset */
+	pgres = gda_postgres_recordset_get_pgresult (GDA_POSTGRES_RECORDSET (recset));
+	if (pgres) {
+		oid = PQoidValue (pgres);
+		if (oid != InvalidOid)
+			return g_strdup_printf ("%d", oid);
+	}
+
+	return NULL;
 }
 
 static gboolean 

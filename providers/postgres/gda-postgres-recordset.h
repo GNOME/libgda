@@ -51,8 +51,10 @@ struct _GdaPostgresRecordsetClass {
 	GdaDataModelHashClass parent_class;
 };
 
-GType          gda_postgres_recordset_get_type (void);
+GType         gda_postgres_recordset_get_type (void);
 GdaDataModel *gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pgres);
+
+PGresult     *gda_postgres_recordset_get_pgresult (GdaPostgresRecordset *recset);
 
 G_END_DECLS
 

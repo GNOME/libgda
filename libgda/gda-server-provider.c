@@ -67,6 +67,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->create_database = NULL;
 	klass->drop_database = NULL;
 	klass->execute_command = NULL;
+	klass->get_last_insert_id = NULL;
 	klass->begin_transaction = NULL;
 	klass->commit_transaction = NULL;
 	klass->rollback_transaction = NULL;
@@ -338,6 +339,30 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 	g_return_val_if_fail (CLASS (provider)->execute_command != NULL, NULL);
 
 	return CLASS (provider)->execute_command (provider, cnc, cmd, params);
+}
+
+/**
+ * gda_server_provider_get_last_insert_id
+ * @provider: a #GdaServerProvider object.
+ * @cnc: connection to act upon.
+ * @model: resultset to get the last insert ID from.
+ *
+ * Retrieve from the given #GdaServerProvider the ID of the last inserted row.
+ * A connection must be specified, and, optionally, a result set. If not NULL,
+ * the provider should try to get the last insert ID for the given result set.
+ *
+ * Returns: a string representing the ID of the last inserted row, or NULL
+ * if an error occurred or no row has been inserted. It is the caller's
+ * reponsibility to free the returned string.
+ */
+gchar *
+gda_server_provider_get_last_insert_id (GdaServerProvider *provider, GdaConnection *cnc, GdaDataModel *recset)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (CLASS (provider)->get_last_insert_id != NULL, NULL);
+
+	return CLASS (provider)->get_last_insert_id (provider, cnc, recset);
 }
 
 /**

@@ -1,3 +1,22 @@
+2004-05-01  Rodrigo Moya <rodrigo@ximian.com>
+
+	* libgda/gda-server-provider.[ch]: added 'get_last_insert_id' virtual
+	method.
+	(gda_server_provider_get_last_insert_id): new function.
+	(gda_server_provider_class_init): initialize new virtual method.
+
+	* libgda/gda-connection.[ch] (gda_connection_get_last_insert_id): new
+	function.
+
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_get_last_insert_id): implemented new method.
+
+	* providers/postgres/gda-postgres-recordset.[ch]
+	(gda_postgres_recordset_get_pgresult): new function.
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_get_last_insert_id): implemented new method.
+
 2004-04-28  Murray Cumming  <murrayc@murrayc.com>
  
  	* libgda/gda-field.[h|c]: Added gda_field_attribute_equal().

@@ -97,6 +97,7 @@ gboolean             gda_connection_drop_database (GdaConnection *cnc, const gch
 GList               *gda_connection_execute_command (GdaConnection *cnc,
 						     GdaCommand *cmd,
 						     GdaParameterList *params);
+gchar               *gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset);
 GdaDataModel        *gda_connection_execute_single_command (GdaConnection *cnc,
 							    GdaCommand *cmd,
 							    GdaParameterList *params);

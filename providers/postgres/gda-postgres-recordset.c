@@ -588,3 +588,10 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	return GDA_DATA_MODEL (model);
 }
 
+PGresult *
+gda_postgres_recordset_get_pgresult (GdaPostgresRecordset *recset)
+{
+	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
+
+	return recset->priv->pg_res;
+}

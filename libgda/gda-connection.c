@@ -681,6 +681,27 @@ gda_connection_execute_command (GdaConnection *cnc,
 }
 
 /**
+ * gda_connection_get_last_insert_id
+ * @cnc: a #GdaConnection object.
+ * @recset: recordset.
+ *
+ * Retrieve from the given #GdaConnection the ID of the last inserted row.
+ * A connection must be specified, and, optionally, a result set. If not NULL,
+ * the underlying provider should try to get the last insert ID for the given result set.
+ *
+ * Returns: a string representing the ID of the last inserted row, or NULL
+ * if an error occurred or no row has been inserted. It is the caller's
+ * reponsibility to free the returned string.
+ */
+gchar *
+gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	return gda_server_provider_get_last_insert_id (cnc->priv->provider_obj, cnc, recset);
+}
+
+/**
  * gda_connection_execute_single_command
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.

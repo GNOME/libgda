@@ -80,6 +80,9 @@ struct _GdaServerProviderClass {
 				     GdaConnection *cnc,
 				     GdaCommand *cmd,
 				     GdaParameterList *params);
+	char * (* get_last_insert_id) (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       GdaDataModel *recset);
 
 	gboolean (* begin_transaction) (GdaServerProvider *provider,
 					GdaConnection *cnc,
@@ -133,6 +136,9 @@ GList   *gda_server_provider_execute_command (GdaServerProvider *provider,
 					      GdaConnection *cnc,
 					      GdaCommand *cmd,
 					      GdaParameterList *params);
+gchar   *gda_server_provider_get_last_insert_id (GdaServerProvider *provider,
+						 GdaConnection *cnc,
+						 GdaDataModel *recset);
 
 gboolean gda_server_provider_begin_transaction (GdaServerProvider *provider,
 						GdaConnection *cnc,

@@ -64,6 +64,9 @@ static GList *gda_mysql_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
 						  GdaParameterList *params);
+static gchar *gda_mysql_provider_get_last_insert_id (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     GdaDataModel *recset);
 static gboolean gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      GdaTransaction *xaction);
@@ -105,6 +108,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->create_database = gda_mysql_provider_create_database;
 	provider_class->drop_database = gda_mysql_provider_drop_database;
 	provider_class->execute_command = gda_mysql_provider_execute_command;
+	provider_class->get_last_insert_id = gda_mysql_provider_get_last_insert_id;
 	provider_class->begin_transaction = gda_mysql_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mysql_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_mysql_provider_rollback_transaction;
@@ -514,6 +518,27 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 	}
 
 	return reclist;
+}
+
+/* get_last_insert_id handler for the GdaMysqlProvider class */
+static gchar *
+gda_mysql_provider_get_last_insert_id (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       GdaDataModel *recset)
+{
+	MYSQL *mysql;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return NULL;
+	}
+
+	return g_strdup_printf ("%ul", mysql_insert_id (mysql));
 }
 
 /* begin_transaction handler for the GdaMysqlProvider class */
