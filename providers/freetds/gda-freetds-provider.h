@@ -52,6 +52,7 @@ typedef struct _GdaFreeTDSConnectionData GdaFreeTDSConnectionData;
 struct _GdaFreeTDSConnectionData {
 	gint          rc;
 	GPtrArray     *msg_arr;
+	GPtrArray     *err_arr;
 	TDSLOGIN      *login;
 	TDSSOCKET     *tds;
 	TDSCONFIGINFO *config;
