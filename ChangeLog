@@ -1,3 +1,7 @@
+2001-02-22  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* libgda.spec.in: Updated to reflect the .oafinfo --> .oaf change
+
 2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* AUTHORS: Updated my email.
