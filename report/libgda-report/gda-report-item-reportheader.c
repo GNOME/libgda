@@ -25,6 +25,7 @@
 #include <libgda/gda-util.h>
 #include <libgda-report/gda-report-valid.h>
 #include <libgda-report/gda-report-item-label.h>
+#include <libgda-report/gda-report-item-repfield.h>
 #include <libgda-report/gda-report-item-reportheader.h>
 
 static void gda_report_item_reportheader_class_init (GdaReportItemReportHeaderClass *klass);
@@ -157,7 +158,8 @@ gda_report_item_reportheader_add_element (GdaReportItem *reportheader,
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORTHEADER(reportheader), FALSE);
 	
 	/* News kinds of elements should be added here */
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_LABEL(element), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_LABEL(element) || 
+			      GDA_REPORT_IS_ITEM_REPFIELD(element), FALSE);
 	
 	/* Child elements are only allowed when parent element belongs to a report document */
 	g_return_val_if_fail (gda_report_item_belongs_to_report_document(reportheader), FALSE);
@@ -188,7 +190,43 @@ gda_report_item_reportheader_get_label_by_id (GdaReportItem *reportheader,
 	
 	label = gda_report_item_get_child_by_id (reportheader, id);
 	if (label != NULL)
-		return gda_report_item_label_new_from_dom (label->priv->node);
+	{
+		if (g_ascii_strcasecmp(gda_report_item_get_item_type(label), ITEM_LABEL_NAME) != 0)
+		{
+			gda_log_error (_("Item with ID %s is not a label"), id);
+			return NULL;
+		}
+		else		
+			return gda_report_item_label_new_from_dom (label->priv->node);
+	}
+	else
+		return NULL;
+}
+
+
+/*
+ * gda_report_item_reportheader_get_repfield_by_id
+ */
+GdaReportItem *
+gda_report_item_reportheader_get_repfield_by_id (GdaReportItem *reportheader,
+				                 const gchar *id)
+{
+	GdaReportItem *repfield;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORTHEADER (reportheader), NULL);
+	g_return_val_if_fail (id != NULL, NULL);
+	
+	repfield = gda_report_item_get_child_by_id (reportheader, id);
+	if (repfield != NULL)
+	{
+		if (g_ascii_strcasecmp(gda_report_item_get_item_type(repfield), ITEM_REPFIELD_NAME) != 0)
+		{
+			gda_log_error (_("Item with ID %s is not a repfield"), id);
+			return NULL;
+		}
+		else		
+			return gda_report_item_repfield_new_from_dom (repfield->priv->node);
+	}
 	else
 		return NULL;
 }

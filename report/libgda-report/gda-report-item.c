@@ -220,6 +220,8 @@ gda_report_item_add_previous (GdaReportItem *item,
 	new_node = new_item->priv->node;
 
 	new_node = xmlAddPrevSibling (cur_node, new_node);
+	xmlAddNextSibling (new_node, xmlNewText("\n"));
+
 	return (new_node != NULL);
 }
 
@@ -247,6 +249,8 @@ gda_report_item_add_next (GdaReportItem *item,
 	new_node = new_item->priv->node;
 
 	new_node = xmlAddNextSibling (cur_node, new_node);
+	xmlAddNextSibling (new_node, xmlNewText("\n"));
+
 	return (new_node != NULL);
 }
 
@@ -272,6 +276,7 @@ gda_report_item_add_child (GdaReportItem *parent,
 		gda_log_error (_("Error setting parent -> child relation"));
 		return FALSE;
 	}	
+	xmlAddNextSibling (child->priv->node, xmlNewText("\n"));
 	return TRUE;
 }
 
@@ -320,6 +325,20 @@ gda_report_item_to_dom (GdaReportItem *item)
 {
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), NULL);
 	return item->priv->node;
+}
+
+
+/**
+ * gda_report_item_get_item_type
+ * @item: a #GdaReportItem object
+ *
+ * Returns: the type of the item 
+ **/
+gchar * 
+gda_report_item_get_item_type (GdaReportItem *item)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), NULL);
+	return (gchar *) item->priv->node->name;
 }
 
 
@@ -415,6 +434,30 @@ gda_report_item_get_inherit_attribute (GdaReportItem *item,
 		node = node->parent;
 	}	
 	return NULL;
+}
+
+
+/**
+ * gda_report_item_set_content
+ **/
+gboolean 
+gda_report_item_set_content (GdaReportItem *item,
+	 		     const gchar *content)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
+	xmlNodeSetContent(item->priv->node, content);
+	return TRUE;
+}
+
+
+/**
+ * gda_report_item_get_content
+ **/
+gchar *
+gda_report_item_get_content (GdaReportItem *item)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), NULL);
+	return xmlNodeGetContent(item->priv->node);
 }
 
 

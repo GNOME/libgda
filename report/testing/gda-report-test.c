@@ -307,12 +307,17 @@ test_7 (void)
 	GdaReportItem *pageheader;
 	GdaReportItem *pagefooter;
 	GdaReportItem *label;
+	GdaReportItem *repfield;
+	GdaReportItem *sqlquery1;
+	GdaReportItem *sqlquery2;
 	GdaReportColor *color;
 	GdaReportNumber *width;
 	GdaReportNumber *height;
  
 	validator = gda_report_valid_load ();
 	document = gda_report_document_new_from_uri ("valid-example.xml", validator);
+	sqlquery1 = gda_report_item_sqlquery_new (validator, "sqlquery1", "select * from some_table");
+	sqlquery2 = gda_report_item_sqlquery_new (validator, "sqlquery2", "select * from another_table");
 
 	report = gda_report_document_get_root_item (document);
 	if (report == NULL) 
@@ -358,10 +363,34 @@ test_7 (void)
 	if (!gda_report_item_pagefooter_set_height (pagefooter, height)) 
 		g_print ("TEST: Error during set\n");	
 
+	g_print ("TEST: Removing l_publishing field\n"); 
+	repfield = gda_report_item_report_get_repfield_by_id (report, "l_publishing");
+	if (repfield != NULL)
+		gda_report_item_repfield_remove (repfield);
+	else g_print("TEST: repfield not found\n");
+
 	g_print ("TEST: Removing l_publishing label\n"); 
 	label = gda_report_item_report_get_label_by_id (report, "l_publishing");
 	if (label != NULL)
 		gda_report_item_label_remove (label);
+	else g_print("TEST: label not found\n");
+
+	g_print ("TEST: Removing f_isbn field\n"); 
+	repfield = gda_report_item_report_get_repfield_by_id (report, "f_isbn");
+	if (repfield != NULL)
+		gda_report_item_repfield_remove (repfield);
+	else g_print("TEST: repfield not found\n");
+
+	g_print ("TEST: Adding a new sqlquery\n");
+	if (!gda_report_item_report_add_sqlquery (report, sqlquery1))
+		g_print ("TEST: Error during set\n");	
+
+	g_print ("TEST: Adding another sqlquery\n");
+	if (!gda_report_item_report_add_sqlquery (report, sqlquery2))
+		g_print ("TEST: Error during set\n");	
+	
+	sqlquery1 = gda_report_item_report_get_sqlquery (report, "sqlquery1");
+	gda_report_item_sqlquery_set_sql (sqlquery1, "select * from dual");
 	
 	g_print ("TEST: Saving results to test-7-result.xml\n");
 	gda_report_document_save_file ("test-7-result.xml", document);

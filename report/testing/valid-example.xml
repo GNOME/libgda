@@ -54,7 +54,7 @@
   <datalist>
     <reportdata>
       <detail>
-        <repfield query="gfoundation-library" value="isbn" x="0" y="0" width="70" height="20"
+        <repfield id="f_isbn" query="gfoundation-library" value="isbn" x="0" y="0" width="70" height="20"
                   datatype="integer" borderstyle="none" fontsize="10" fontweight="normal"/>
         <repfield query="gfoundation-library" value="title" x="74" y="0" width="176" height="20"
                   datatype="string" borderstyle="none" fontsize="10" fontweight="normal"/>

@@ -15,11 +15,14 @@ gda_report_headers = \
 	gda-report-types.h \
 	gda-report-item.h \
 	gda-report-item-report.h \
+	gda-report-item-sqlquery.h \
 	gda-report-item-reportheader.h \
 	gda-report-item-reportfooter.h \
 	gda-report-item-pageheader.h \
 	gda-report-item-pagefooter.h \
+	gda-report-item-detail.h \
 	gda-report-item-label.h \
+	gda-report-item-repfield.h \
 	gda-report.h
 
 libgda_report_2_la_SOURCES =	\
@@ -29,11 +32,14 @@ libgda_report_2_la_SOURCES =	\
 	gda-report-types.c	\
 	gda-report-item.c	\
 	gda-report-item-report.c \
+	gda-report-item-sqlquery.c \
 	gda-report-item-reportheader.c \
 	gda-report-item-reportfooter.c  \
 	gda-report-item-pageheader.c \
 	gda-report-item-pagefooter.c \
-	gda-report-item-label.c 
+	gda-report-item-detail.c \
+	gda-report-item-label.c \
+	gda-report-item-repfield.c 
 	
 
 libgda_report_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)

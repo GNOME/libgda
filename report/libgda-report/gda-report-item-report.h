@@ -53,6 +53,12 @@ GdaReportItem *gda_report_item_report_new (GdaReportValid *valid);
 
 GdaReportItem *gda_report_item_report_new_from_dom (xmlNodePtr node);
 
+gboolean gda_report_item_report_add_sqlquery (GdaReportItem *report,
+					      GdaReportItem *sqlquery);
+
+GdaReportItem *gda_report_item_report_get_sqlquery (GdaReportItem *report,
+						    const char *id);
+
 gboolean gda_report_item_report_set_reportheader (GdaReportItem *report,
 						  GdaReportItem *header);
 
@@ -81,11 +87,19 @@ gboolean gda_report_item_report_add_nth_pagefooter (GdaReportItem *report,
 GdaReportItem *gda_report_item_report_get_nth_pagefooter (GdaReportItem *report,
 							  gint position);
 
-gboolean gda_report_item_report_set_reportstyle (GdaReportItem *item, 
-						const gchar *value);
+gboolean gda_report_item_report_set_detail (GdaReportItem *report,
+					    GdaReportItem *footer);
+
+GdaReportItem *gda_report_item_report_get_detail (GdaReportItem *item);
 
 GdaReportItem *gda_report_item_report_get_label_by_id (GdaReportItem *report,
 						       const gchar *id);
+
+GdaReportItem *gda_report_item_report_get_repfield_by_id (GdaReportItem *report,
+						          const gchar *id);
+
+gboolean gda_report_item_report_set_reportstyle (GdaReportItem *item, 
+						const gchar *value);
 
 gchar *gda_report_item_report_get_reportstyle (GdaReportItem *item);
 

@@ -24,11 +24,14 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda-report/gda-report-valid.h>
+#include <libgda-report/gda-report-item-sqlquery.h>
 #include <libgda-report/gda-report-item-reportheader.h>
 #include <libgda-report/gda-report-item-reportfooter.h>
 #include <libgda-report/gda-report-item-pageheader.h>
 #include <libgda-report/gda-report-item-pagefooter.h>
+#include <libgda-report/gda-report-item-detail.h>
 #include <libgda-report/gda-report-item-label.h>
+#include <libgda-report/gda-report-item-repfield.h>
 #include <libgda-report/gda-report-item-report.h>
 
 
@@ -127,6 +130,66 @@ gda_report_item_report_new_from_dom (xmlNodePtr node)
 	GDA_REPORT_ITEM (item)->priv->node = node;
 
 	return GDA_REPORT_ITEM(item);
+}
+
+
+/*
+ * gda_report_item_report_add_sqlquery
+ */
+gboolean 
+gda_report_item_report_add_sqlquery (GdaReportItem *report,
+				     GdaReportItem *sqlquery)
+{
+	xmlNodePtr node;
+	gchar *id;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_SQLQUERY (sqlquery), FALSE);
+	
+	/* Child elements are only allowed when parent element belongs to a report document */
+	g_return_val_if_fail (gda_report_item_belongs_to_report_document(report), FALSE);
+	
+	id = gda_report_item_get_attribute (sqlquery, "id");
+	if (gda_report_item_get_child_by_id (report, id) != NULL)
+	{
+		gda_log_error (_("An element with ID %s already exists in the report"), id);
+		return FALSE;
+	}	
+
+	node = report->priv->node->children;
+	while (node != NULL) 
+	{
+		if (!xmlNodeIsText (node))
+		{		
+			if (g_ascii_strcasecmp (node->name, ITEM_QUERYLIST_NAME) != 0) 
+				/* There is no querylist (should be the first), we will create it */
+				node = xmlAddPrevSibling (node, xmlNewNode (NULL, ITEM_QUERYLIST_NAME));
+
+			return gda_report_item_add_child (gda_report_item_new_from_dom (node), sqlquery);
+		}
+		node = node->next;
+	}
+	return FALSE;	
+}
+
+
+/*
+ * gda_report_item_report_get_sqlquery
+ */
+GdaReportItem *
+gda_report_item_report_get_sqlquery (GdaReportItem *report,
+				     const char *id)
+{
+	GdaReportItem *item;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (id != NULL, NULL);
+	
+	item = gda_report_item_get_child_by_id (report, id);
+	if (item != NULL)
+		return gda_report_item_sqlquery_new_from_dom (item->priv->node);
+	else
+		return NULL;
 }
 
 
@@ -545,6 +608,90 @@ gda_report_item_report_get_nth_pagefooter (GdaReportItem *report,
 
 
 /*
+ * gda_report_item_report_set_detail
+ */
+gboolean
+gda_report_item_report_set_detail (GdaReportItem *report,
+				   GdaReportItem *detail)
+{
+	xmlNodePtr node;
+	xmlNodePtr list;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_DETAIL (detail), FALSE);
+	
+	/* Child elements are only allowed when parent element belongs to a report document */
+	g_return_val_if_fail (gda_report_item_belongs_to_report_document(report), FALSE);
+
+	node    = report->priv->node->children;	
+	while (node != NULL) 
+	{
+		if (!xmlNodeIsText (node))
+		{		
+			if (g_ascii_strcasecmp (node->name, ITEM_DATALIST_NAME) == 0) 
+			{
+				list = node;
+				node = list->children;
+				while (node != NULL) 
+				{
+					if (g_ascii_strcasecmp (node->name, ITEM_DETAIL_NAME) == 0) 
+					{
+						return gda_report_item_replace (
+							gda_report_item_new_from_dom (node), detail);
+					}
+					node = node->next;
+				}
+				
+				return gda_report_item_add_child (gda_report_item_new_from_dom (list), detail);
+			}
+			
+			if ((g_ascii_strcasecmp (node->name, ITEM_QUERYLIST_NAME) != 0) &&
+			    (g_ascii_strcasecmp (node->name, ITEM_REPORTHEADER_NAME) != 0) &&
+			    (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADERLIST_NAME) != 0))
+			{
+				/* There is no datalist, we will create it here */
+				node = xmlAddPrevSibling (node, xmlNewNode (NULL, ITEM_DATALIST_NAME));
+				return gda_report_item_add_child (gda_report_item_new_from_dom (node), detail);
+			}			
+		}
+		node = node->next;
+	}
+	return FALSE;
+}
+
+
+/*
+ * gda_report_item_report_get_detail
+ */
+GdaReportItem *
+gda_report_item_report_get_detail (GdaReportItem *report)
+{
+	xmlNodePtr node;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), NULL);
+	
+	node = report->priv->node->children;
+	while (node != NULL) 
+	{
+		if (g_ascii_strcasecmp (node->name, ITEM_DATALIST_NAME) == 0) 
+		{
+			node = node->children;
+			while (node != NULL) 
+			{
+				if (g_ascii_strcasecmp (node->name, ITEM_DETAIL_NAME) == 0) 
+					return gda_report_item_detail_new_from_dom (node);
+				
+				node = node->next;
+			}
+			return NULL;
+		}
+		node = node->next;
+	}
+	return NULL;
+}
+
+
+/*
  * gda_report_item_report_get_label_by_id
  */
 GdaReportItem *
@@ -558,7 +705,43 @@ gda_report_item_report_get_label_by_id (GdaReportItem *report,
 	
 	label = gda_report_item_get_child_by_id (report, id);
 	if (label != NULL)
-		return gda_report_item_label_new_from_dom (label->priv->node);
+	{
+		if (g_ascii_strcasecmp(gda_report_item_get_item_type(label), ITEM_LABEL_NAME) != 0)
+		{
+			gda_log_error (_("Item with ID %s is not a label"), id);
+			return NULL;
+		}
+		else		
+			return gda_report_item_label_new_from_dom (label->priv->node);
+	}
+	else
+		return NULL;
+}
+
+
+/*
+ * gda_report_item_report_get_repfield_by_id
+ */
+GdaReportItem *
+gda_report_item_report_get_repfield_by_id (GdaReportItem *report,
+				           const gchar *id)
+{
+	GdaReportItem *repfield;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), NULL);
+	g_return_val_if_fail (id != NULL, NULL);
+	
+	repfield = gda_report_item_get_child_by_id (report, id);
+	if (repfield != NULL)
+	{
+		if (g_ascii_strcasecmp(gda_report_item_get_item_type(repfield), ITEM_REPFIELD_NAME) != 0)
+		{
+			gda_log_error (_("Item with ID %s is not a repfield"), id);
+			return NULL;
+		}
+		else		
+			return gda_report_item_repfield_new_from_dom (repfield->priv->node);
+	}
 	else
 		return NULL;
 }

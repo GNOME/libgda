@@ -64,6 +64,9 @@ gboolean gda_report_item_pageheader_add_element (GdaReportItem *pageheader,
 GdaReportItem *gda_report_item_pageheader_get_label_by_id (GdaReportItem *pageheader,
 							   const gchar *id);
 
+GdaReportItem *gda_report_item_pageheader_get_repfield_by_id (GdaReportItem *pageheader,
+							      const gchar *id);
+
 gboolean gda_report_item_pageheader_set_active (GdaReportItem *item,
 						  const gchar *value);
 

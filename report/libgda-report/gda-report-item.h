@@ -82,6 +82,8 @@ gboolean gda_report_item_replace (GdaReportItem *item,
 
 xmlNodePtr gda_report_item_to_dom (GdaReportItem *item);
 
+gchar *gda_report_item_get_item_type (GdaReportItem *item); 
+
 gboolean gda_report_item_set_attribute (GdaReportItem *item,
 	 			        const gchar *name,
 				        const gchar *value);
@@ -95,6 +97,11 @@ gchar *gda_report_item_get_inherit_attribute (GdaReportItem *item,
 GdaReportItem *gda_report_item_get_child_by_id (GdaReportItem *parent,
 						const gchar *id);
 						
+gboolean gda_report_item_set_content (GdaReportItem *item,
+	 			      const gchar *content);
+
+gchar *gda_report_item_get_content (GdaReportItem *item);
+
 gboolean gda_report_item_belongs_to_report_document (GdaReportItem *item);						
 
 GdaReportItem *gda_report_item_get_report (GdaReportItem *item);

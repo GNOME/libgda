@@ -64,6 +64,9 @@ gboolean gda_report_item_reportfooter_add_element (GdaReportItem *reportfooter,
 GdaReportItem *gda_report_item_reportfooter_get_label_by_id (GdaReportItem *reportfooter,
 							     const gchar *id);
 
+GdaReportItem *gda_report_item_reportfooter_get_repfield_by_id (GdaReportItem *reportfooter,
+							        const gchar *id);
+
 gboolean gda_report_item_reportfooter_set_active (GdaReportItem *item,
 						  const gchar *value);
 

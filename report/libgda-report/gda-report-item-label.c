@@ -165,7 +165,7 @@ gchar *
 gda_report_item_label_get_id (GdaReportItem *item)
 {
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM_LABEL(item), NULL);
-	return gda_report_item_get_attribute (item, "active");
+	return gda_report_item_get_attribute (item, "id");
 }
 
 

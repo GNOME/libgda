@@ -29,10 +29,13 @@
 #include <libgda-report/gda-report-types.h>
 #include <libgda-report/gda-report-item.h>
 #include <libgda-report/gda-report-item-report.h>
+#include <libgda-report/gda-report-item-sqlquery.h>
 #include <libgda-report/gda-report-item-reportheader.h>
 #include <libgda-report/gda-report-item-reportfooter.h>
 #include <libgda-report/gda-report-item-pageheader.h>
 #include <libgda-report/gda-report-item-pagefooter.h>
+#include <libgda-report/gda-report-item-detail.h>
 #include <libgda-report/gda-report-item-label.h>
+#include <libgda-report/gda-report-item-repfield.h>
 
 #endif

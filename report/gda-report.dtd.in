@@ -18,6 +18,7 @@
 <!ENTITY % fontweight      "light|normal|semibold|bold|black">
 <!ENTITY % halignment      "standard|left|center|right">
 <!ENTITY % valignment      "top|center|bottom">
+<!ENTITY % datatype        "string|numeric|date">
 
 <!ELEMENT report (querylist?, reportheader?, pageheaderlist?, dataheader?,  datalist?, 
                   datafooter?,   pagefooterlist?, reportfooter?)>
@@ -402,7 +403,7 @@
   y               NMTOKEN           #REQUIRED
   width           NMTOKEN           #REQUIRED
   height          NMTOKEN           #REQUIRED
-  datatype        NMTOKEN           #REQUIRED
+  datatype        (%datatype;)      #REQUIRED
   bgcolor         NMTOKENS          #IMPLIED
   fgcolor         NMTOKENS          #IMPLIED
   bordercolor     NMTOKENS          #IMPLIED

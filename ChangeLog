@@ -1,3 +1,27 @@
+2003-01-27  Santi Camps <santi@gnome-db.org>
+
+	* libgda/report/libgda-report/Makefile.am: 
+	* libgda/report/libgda-report/gda-report.h: 
+	  new sources added
+
+	* libgda/report/testing/gda-report-test.c: some new tests added
+	* libgda/report/libgda-report/gda-report-item.[ch]: new generical functions 
+	  needed to manage the internal structure
+	* libgda/report/libgda-report/gda-report-types.c: new constant ITEM_SQLQUERY_NAME
+	* libgda/report/libgda-report/gda-report-item-report.c: allow set/get 
+	  sqlqueries, detail and repfields
+
+	* libgda/report/libgda-report/gda-report-item-pagefooter.[ch]:
+	* libgda/report/libgda-report/gda-report-item-pageheader.[ch]:
+	* libgda/report/libgda-report/gda-report-item-reportfooter.[ch]:
+	* libgda/report/libgda-report/gda-report-item-reportheader.[ch]:
+	  allow to work with repfields	  
+
+	* libgda/report/libgda-report/gda-report-item-sqlquery.[ch]:
+	* libgda/report/libgda-report/gda-report-item-detail.[ch]:
+	* libgda/report/libgda-report/gda-report-item-repfield.[ch]:
+	  All attributes implemented	  
+
 2003-01-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-value.c (gda_value_stringify): use a fixed number of
