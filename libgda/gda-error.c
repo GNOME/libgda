@@ -23,6 +23,7 @@
 
 #include <libgda/gda-error.h>
 #include <libgda/GNOME_Database.h>
+#include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-i18n.h>
 
 struct _GdaErrorPrivate {
@@ -118,22 +119,27 @@ gda_error_list_from_exception (CORBA_Environment *ev)
 	case CORBA_NO_EXCEPTION:
 		return NULL;
 	case CORBA_SYSTEM_EXCEPTION: {
-		CORBA_SystemException *sysexc;
+		gchar *corba_message;
+		gchar *bonobo_message;
 
-		sysexc = CORBA_exception_value (ev);
+		bonobo_message = bonobo_exception_get_text (ev);
+		corba_message = g_strdup_printf (
+				_("%s: An Error occured in the CORBA system."),
+				bonobo_message);
 		error = gda_error_new ();
 		gda_error_set_source (error, "[CORBA System Exception]");
-		gda_error_set_description (
-			error, _("%s: An Error occured in the CORBA system."));
+		gda_error_set_description (error, corba_message);
 		all_errors = g_list_append (all_errors, error);
+		g_free (bonobo_message);
+		g_free (corba_message);
 		break;
 	}
-	case CORBA_USER_EXCEPTION:{
+	case CORBA_USER_EXCEPTION: {
 		if (strcmp (CORBA_exception_id (ev), ex_GNOME_Database_DriverError) == 0) {
 			GNOME_Database_ErrorSeq *error_sequence;
 			gint idx;
 
-			error_sequence = &((GNOME_Database_DriverError *) &ev->_any._value)->errors;
+			error_sequence = CORBA_exception_value (ev);
 			for (idx = 0; idx < error_sequence->_length; idx++) {
 				GNOME_Database_Error *gda_error;
 
@@ -196,6 +202,7 @@ gda_error_list_to_exception (GList *error_list, CORBA_Environment *ev)
 	exception->realcommand = CORBA_string_dup (g_get_prgname ());
 
 	exception->errors._buffer = CORBA_sequence_GNOME_Database_Error_allocbuf (corba_errors->_length);
+	exception->errors._length = corba_errors->_length;
 	CORBA_sequence_set_release (&exception->errors, TRUE);
 	for (i = 0; i < corba_errors->_length; i++) {
 		exception->errors._buffer[i].description = CORBA_string_dup (corba_errors->_buffer[i].description);

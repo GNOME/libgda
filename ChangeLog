@@ -1,5 +1,16 @@
 2002-03-29  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* libgda/gda-error.c (gda_error_list_from_exception): corrected corba
+	system error message.
+	(gda_error_list_to_exception): set the number of errors in _length.
+
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/gda-postgres.h:
+	* providers/postgres/utils.c: gda_postgres_make_error () now also uses
+	the PGresult (if available) to set the error message.
+
+2002-03-29  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* providers/postgres/gda-postgres-provider.c (process_sql_commands):
 	One-liner to solve bug #74404.
 

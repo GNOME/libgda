@@ -43,7 +43,7 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError *gda_postgres_make_error (PGconn *cnc);
+GdaError *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
 void gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 				GdaType type, const gchar *value, 
 				gint dbsize, gboolean isNull);

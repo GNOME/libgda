@@ -27,19 +27,26 @@
 #include "gda-postgres.h"
 
 GdaError *
-gda_postgres_make_error (PGconn *handle)
+gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 {
 	GdaError *error;
 
 	error = gda_error_new ();
-	if (handle != NULL) {
-		gda_error_set_description (error, PQerrorMessage (handle));
-		gda_error_set_number (error, -1);
+	if (pconn != NULL) {
+		gchar *message;
+		
+		if (pg_res != NULL)
+			message = g_strdup (PQresultErrorMessage (pg_res));
+		else
+			message = g_strdup (PQerrorMessage (pconn));
+
+		gda_error_set_description (error, message);
+		g_free (message);
 	} else {
 		gda_error_set_description (error, _("NO DESCRIPTION"));
-		gda_error_set_number (error, -1);
 	}
 
+	gda_error_set_number (error, -1);
 	gda_error_set_source (error, "gda-postgres");
 	gda_error_set_sqlstate (error, _("Not available"));
 

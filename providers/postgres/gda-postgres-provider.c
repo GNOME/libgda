@@ -293,7 +293,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 
 	if (PQstatus (pconn) != CONNECTION_OK) {
 		gda_server_connection_add_error (
-			cnc, gda_postgres_make_error (pconn));
+			cnc, gda_postgres_make_error (pconn, NULL));
 		PQfinish(pconn);
 		return FALSE;
 	}
@@ -308,7 +308,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	priv_data->pconn = pconn;
 	if (get_connection_type_list (priv_data) != 0) {
 		gda_server_connection_add_error (
-				cnc, gda_postgres_make_error (pconn));
+				cnc, gda_postgres_make_error (pconn, NULL));
 		PQfinish(pconn);
 		g_free (priv_data);
 		return FALSE;
@@ -375,7 +375,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 			pg_res = PQexec(pconn, arr[n]);
 			if (pg_res == NULL) {
 				gda_server_connection_add_error (
-					cnc, gda_postgres_make_error (pconn));
+					cnc, gda_postgres_make_error (pconn, NULL));
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
 				reclist = NULL;
@@ -395,7 +395,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 				}
 			} else {
 				gda_server_connection_add_error (
-					cnc, gda_postgres_make_error (pconn));
+					cnc, gda_postgres_make_error (pconn, pg_res));
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
 				reclist = NULL;
@@ -510,7 +510,7 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 
 	if (result == FALSE)
 		gda_server_connection_add_error (
-			cnc, gda_postgres_make_error (pconn));
+			cnc, gda_postgres_make_error (pconn, pg_res));
 
 	return result;
 }
