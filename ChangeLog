@@ -1,3 +1,8 @@
+2004-10-13  Alan Knowles <alan@akbkhome.com>
+
+	* libgda/gda-config.c:
+	* testing/client.c: Win32 build fixes.
+
 2004-10-13  David Hollis <dhollis@davehollis.com>
 
 	* libgda.spec.in: fixed for correct building on RH.
