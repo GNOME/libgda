@@ -1,5 +1,7 @@
 2001-11-07  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* models.c (test_array_model): GdaDataModelArray test
+
 	* value.c: GdaValue tests
 
 2001-11-04  Rodrigo Moya <rodrigo@gnome-db.org>

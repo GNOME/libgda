@@ -86,10 +86,45 @@ test_list_model (void)
 	setup_data_model (GDA_DATA_MODEL (model));
 }
 
+/* Tests the array data model */
+static void
+test_array_model (void)
+{
+	gint i;
+	GdaDataModelArray *model;
+
+	g_print (" Testing array model...\n");
+
+	model = gda_data_model_array_new (6);
+	if (!GDA_IS_DATA_MODEL_ARRAY (model)) {
+		g_print ("** ERROR: Could not create GdaDataModelArray\n");
+		gda_main_quit ();
+	}
+
+	for (i = 0; i < 50; i++) {
+		GList *values = NULL;
+
+		values = g_list_append (values, gda_value_new_string ("This is a string"));
+		values = g_list_append (values, gda_value_new_integer (200));
+		values = g_list_append (values, gda_value_new_boolean (FALSE));
+		values = g_list_append (values, gda_value_new_single (3.1416));
+		values = g_list_append (values, gda_value_new_string ("Another string"));
+		values = g_list_append (values, gda_value_new_double (4560.45672113323093));
+
+		gda_data_model_array_append_row (model, values);
+
+		g_list_foreach (values, gda_value_free, NULL);
+		g_list_free (values);
+	}
+
+	setup_data_model (GDA_DATA_MODEL (model));
+}
+
 /* Main entry point for the data models test suite */
 void
 test_models (void)
 {
 	DISPLAY_MESSAGE ("Testing data models");
 	test_list_model ();
+	test_array_model ();
 }
