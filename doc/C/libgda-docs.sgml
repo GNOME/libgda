@@ -2202,6 +2202,12 @@
 	    </thead>
 	    <tbody>
 	      <row>
+		<entry>Databases</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_DATABASES</parameter></entry>
+		<entry></entry>
+		<entry>name</entry>
+	      </row>
+	      <row>
 		<entry>Tables</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_TABLES</parameter></entry>
 		<entry>"name" (name of table, optional)</entry>
