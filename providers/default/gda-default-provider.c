@@ -438,6 +438,7 @@ static GdaDataModel *
 get_databases (GdaConnection *cnc, GdaXmlDatabase *xmldb)
 {
 	GdaDataModelArray *recset;
+	const gchar *dbname;
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
 	//gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
@@ -445,7 +446,9 @@ get_databases (GdaConnection *cnc, GdaXmlDatabase *xmldb)
 	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
 	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
 
-	add_string_row (recset, gda_xml_database_get_name (xmldb));
+	dbname = gda_xml_database_get_name (xmldb);
+	if (dbname != NULL)
+		add_string_row (recset, dbname);
 
 	return GDA_DATA_MODEL (recset);
 }

@@ -22,10 +22,15 @@
 #include <libgda/gda-intl.h>
 #include "gda-default-provider.h"
 
+const gchar *plugin_get_name (void);
+const gchar *plugin_get_description (void);
+GList *plugin_get_connection_params (void);
+GdaServerProvider *plugin_create_provider (void);
+
 const gchar *
 plugin_get_name (void)
 {
-	return "default";
+	return "Default";
 }
 
 const gchar *

@@ -1,3 +1,15 @@
+2002-05-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* data/config: added URI= to the DSN entry.
+
+	* providers/default/gda-default-provider.c:
+	(get_databases): check for NULL.
+
+	* providers/default/libmain.c: added function prototypes.
+	(plugin_get_name): changed "default" to "Default"
+
+	* providers/postgres/libmain.c: added function prototypes.
+
 2002-05-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: GnomeVFS is no longer a dependency.
