@@ -1,3 +1,7 @@
+2001-08-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-value.h: moved to gda-common
+
 2001-08-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-recordset.[ch]:
