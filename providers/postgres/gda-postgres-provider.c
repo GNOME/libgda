@@ -41,21 +41,35 @@ static gboolean gda_postgres_provider_open_connection (GdaServerProvider *provid
 
 static gboolean gda_postgres_provider_close_connection (GdaServerProvider *provider,
 							GdaConnection *cnc);
+
 static const gchar *gda_postgres_provider_get_server_version (GdaServerProvider *provider,
 							      GdaConnection *cnc);
+
 static const gchar *gda_postgres_provider_get_database (GdaServerProvider *provider,
 							GdaConnection *cnc);
+
 static gboolean gda_postgres_provider_create_database (GdaServerProvider *provider,
 						       GdaConnection *cnc,
 						       const gchar *name);
+
 static gboolean gda_postgres_provider_drop_database (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     const gchar *name);
+
+static gboolean gda_postgres_provider_create_table (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    const gchar *table_name,
+						    const GdaDataModelColumnAttributes *attributes[]);
+
+static gboolean gda_postgres_provider_drop_table (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     const gchar *table_name);
 
 static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     GdaCommand *cmd,
 						     GdaParameterList *params);
+
 static gchar *gda_postgres_provider_get_last_insert_id (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							GdaDataModel *recset);
@@ -88,6 +102,7 @@ static GdaDataModel *gda_postgres_provider_get_schema (GdaServerProvider *provid
 static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
 						   GdaConnection *cnc,
 						   GdaBlob *blob);
+
 static gboolean gda_postgres_provider_escape_string (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     const gchar *from,
@@ -137,6 +152,8 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->get_database = gda_postgres_provider_get_database;
 	provider_class->create_database = gda_postgres_provider_create_database;
 	provider_class->drop_database = gda_postgres_provider_drop_database;
+	provider_class->create_table = gda_postgres_provider_create_table;
+	provider_class->drop_table = gda_postgres_provider_drop_table;
 	provider_class->execute_command = gda_postgres_provider_execute_command;
 	provider_class->get_last_insert_id = gda_postgres_provider_get_last_insert_id;
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
@@ -716,6 +733,39 @@ gda_postgres_provider_drop_database (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	sql = g_strdup_printf ("DROP DATABASE %s", name);
+	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
+	g_free (sql);
+
+	return retval;
+}
+
+/* create_table handler for the GdaPostgresProvider class */
+static gboolean
+gda_postgres_provider_create_table (GdaServerProvider *provider,
+				    GdaConnection *cnc,
+				    const gchar *table_name,
+				    const GdaDataModelColumnAttributes *attributes[])
+{
+
+	return FALSE;
+}
+
+/* drop_table handler for the GdaPostgresProvider class */
+static gboolean
+gda_postgres_provider_drop_table (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  const gchar *table_name)
+{
+	gboolean retval;
+	gchar *sql;
+
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	sql = g_strdup_printf ("DROP TABLE %s", table_name);
+
 	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
 	g_free (sql);
 

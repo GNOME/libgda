@@ -426,24 +426,11 @@ gda_data_model_base_append_values (GdaDataModel *model, const GList *values)
 static gboolean
 gda_data_model_base_append_row (GdaDataModel *model, GdaRow *row)
 {
-	GList *values = NULL;
-	gint i, length;
-	const GdaRow *newrow;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
-	g_return_val_if_fail (CLASS (model)->append_values != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
+	g_return_val_if_fail (CLASS (model)->append_row != NULL, FALSE);
 
-	length = gda_row_get_length (row);
-	for (i=length-1; i>=0; i--) 
-		values = g_list_prepend (values, gda_row_get_value (row, i));
-	newrow = gda_data_model_base_append_values (model, values);
-	g_list_free (values);
-	if (newrow) {
-		gda_row_set_number (row, gda_row_get_number (newrow));
-	}
-	else
-		return FALSE;
+	return CLASS (model)->append_row (GDA_DATA_MODEL_BASE (model), row);
 }
 
 static gboolean

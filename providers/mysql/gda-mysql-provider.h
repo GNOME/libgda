@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -34,6 +34,8 @@ G_BEGIN_DECLS
 #define GDA_MYSQL_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_MYSQL_PROVIDER, GdaMysqlProviderClass))
 #define GDA_IS_MYSQL_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MYSQL_PROVIDER))
 #define GDA_IS_MYSQL_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MYSQL_PROVIDER))
+
+#define OBJECT_DATA_MYSQL_HANDLE "GDA_Mysql_MysqlHandle"
 
 typedef struct _GdaMysqlProvider      GdaMysqlProvider;
 typedef struct _GdaMysqlProviderClass GdaMysqlProviderClass;

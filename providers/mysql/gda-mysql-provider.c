@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998-2004 The GNOME Foundation.
+ * Copyright (C) 1998-2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -31,8 +31,6 @@
 #include "gda-mysql-recordset.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
-
-#define OBJECT_DATA_MYSQL_HANDLE "GDA_Mysql_MysqlHandle"
 
 static void gda_mysql_provider_class_init (GdaMysqlProviderClass *klass);
 static void gda_mysql_provider_init       (GdaMysqlProvider *provider,

@@ -1,10 +1,11 @@
 /* GDA MySQL provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,9 +26,7 @@
 #if !defined(__gda_mysql_recordset_h__)
 #  define __gda_mysql_recordset_h__
 
-#include <libgda/gda-connection.h>
-#include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-base.h>
+#include <libgda/gda-data-model-array.h>
 
 G_BEGIN_DECLS
 
@@ -39,17 +38,15 @@ G_BEGIN_DECLS
 
 typedef struct _GdaMysqlRecordset      GdaMysqlRecordset;
 typedef struct _GdaMysqlRecordsetClass GdaMysqlRecordsetClass;
+typedef struct _GdaMysqlRecordsetPrivate GdaMysqlRecordsetPrivate;
 
 struct _GdaMysqlRecordset {
-	GdaDataModelBase model;
-	GPtrArray *rows;
-	GdaConnection *cnc;
-	MYSQL_RES *mysql_res;
-	gint affected_rows; /* when mysql_res is NULL, get_n_rows returns this number */
+	GdaDataModelArray model;
+	GdaMysqlRecordsetPrivate *priv;
 };
 
 struct _GdaMysqlRecordsetClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelArrayClass parent_class;
 };
 
 GType              gda_mysql_recordset_get_type (void);

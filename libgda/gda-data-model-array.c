@@ -123,11 +123,27 @@ gda_data_model_array_append_values (GdaDataModelBase *model, const GList *values
 	if (row) {
 		g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 		gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
+		gda_data_model_changed (GDA_DATA_MODEL (model));
 		gda_data_model_row_inserted (GDA_DATA_MODEL (model), 
 					     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 	}
 
 	return (const GdaRow *) row;
+}
+
+static gboolean
+gda_data_model_array_append_row (GdaDataModelBase *model, GdaRow *row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
+
+	g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, (GdaRow *) row);
+	gda_row_set_number ((GdaRow *) row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
+	gda_data_model_changed (GDA_DATA_MODEL (model));
+	gda_data_model_row_inserted (GDA_DATA_MODEL (model), 
+				     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
+
+	return TRUE;
 }
 
 static gboolean
@@ -137,7 +153,8 @@ gda_data_model_array_remove_row (GdaDataModelBase *model, const GdaRow *row)
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	if (g_ptr_array_remove (GDA_DATA_MODEL_ARRAY (model)->priv->rows, (gpointer) row)) {
-		gda_data_model_row_removed (GDA_DATA_MODEL (model), gda_row_get_number (row));
+		gda_data_model_changed (GDA_DATA_MODEL (model));
+		gda_data_model_row_removed (GDA_DATA_MODEL (model), gda_row_get_number ((GdaRow *) row));
 		return TRUE;
 	}
 
@@ -159,6 +176,7 @@ gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
 		if (priv->rows->pdata[i] == row) {
 			gda_row_free (priv->rows->pdata[i]);
 			priv->rows->pdata[i] = gda_row_copy ((GdaRow *) row);
+			gda_data_model_changed (GDA_DATA_MODEL (model));
 			gda_data_model_row_updated (GDA_DATA_MODEL (model), i);
 
 			return TRUE;
@@ -210,6 +228,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->get_value_at = gda_data_model_array_get_value_at;
 	model_class->is_updatable = gda_data_model_array_is_updatable;
 	model_class->append_values = gda_data_model_array_append_values;
+	model_class->append_row = gda_data_model_array_append_row;
 	model_class->remove_row = gda_data_model_array_remove_row;
 	model_class->update_row = gda_data_model_array_update_row;
 	model_class->append_column = gda_data_model_array_append_column;

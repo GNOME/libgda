@@ -1,3 +1,30 @@
+2005-01-25  Bas Driessen <bas.driessen@xobas.com>
+
+	* libgda/gda-data-model-array.c: introduced new 
+	gda_data_model_append_row() method and added
+	gda_data_model_changed() signal to all functions
+	that change the contents of the data-model.
+
+	* libgda/gda-data-model-base.c
+	(gda_data_model_base_append_row): Use provider
+	dependent implementation.
+
+	* libgda/gda-data-model-hash.c: introduced
+	new gda_data_model_hash_append_row() method.
+		
+	* providers/mysql/gda-mysql-provider.[ch]: change 
+	recordset implementation to GDA_TYPE_DATA_MODEL_ARRAY.
+
+	* providers/mysql/gda-mysql-recordset.[ch]: introduced
+	new methods gda_mysql_recordset_append_row(), 
+	gda_mysql_recordset_remove_row, gda_mysql_recordset_update_row
+
+	* providers/postgres/gda-postgres-recordset.c: changed
+	gda_postgres_recordset_append_values() to 
+	gda_postgres_recordset_append_row() method.
+	(gda_postgres_recordset_update_row):
+	Fixed updating of an appended row.
+
 2005-01-24  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/mysql/gda-mysql-provider.c

@@ -112,46 +112,40 @@ gda_data_model_hash_is_updatable (GdaDataModelBase *model)
 	return TRUE;
 }
 
-static const GdaRow *
-gda_data_model_hash_append_values (GdaDataModelBase *model, const GList *values)
+static gboolean
+gda_data_model_hash_append_row (GdaDataModelBase *model, GdaRow *row)
 {
-	GdaRow *row;
 	gint cols, rownum_hash_new, rownum_array_new;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
-	g_return_val_if_fail (values != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
 
-	cols = g_list_length ((GList *) values);
+	cols = gda_row_get_length (row);
 	if (cols != GDA_DATA_MODEL_HASH (model)->priv->number_of_columns)
-		return NULL;
-
-	/* create the GdaRow to add */
-	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
+		return FALSE;
 
 	/* get the new hash and array row number */
 	rownum_hash_new = GDA_DATA_MODEL_HASH (model)->priv->number_of_hash_table_rows;
 	rownum_array_new = GDA_DATA_MODEL_HASH (model)->priv->row_map->len;
 
-	if (row) {
-		gda_data_model_hash_insert_row (
-			GDA_DATA_MODEL_HASH (model),
-			rownum_hash_new,
-			row);
+	gda_data_model_hash_insert_row (
+		GDA_DATA_MODEL_HASH (model),
+		rownum_hash_new,
+		row);
 
-		gda_row_set_number (row, rownum_array_new);
+	gda_row_set_number (row, rownum_array_new);
 
-		/* Append row number in row mapping array */
-		g_array_append_val (GDA_DATA_MODEL_HASH (model)->priv->row_map, rownum_hash_new);
+	/* Append row number in row mapping array */
+	g_array_append_val (GDA_DATA_MODEL_HASH (model)->priv->row_map, rownum_hash_new);
 
-		/* emit update signals */
-		gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum_array_new);
-		gda_data_model_changed (GDA_DATA_MODEL (model));
+	/* emit update signals */
+	gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum_array_new);
+	gda_data_model_changed (GDA_DATA_MODEL (model));
 
-		/* increment the number of entries in the hash table */
-		GDA_DATA_MODEL_HASH (model)->priv->number_of_hash_table_rows++;
-	}
+	/* increment the number of entries in the hash table */
+	GDA_DATA_MODEL_HASH (model)->priv->number_of_hash_table_rows++;
 
-	return row;
+	return TRUE;
 }
 
 static gboolean
@@ -211,7 +205,7 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	model_class->get_row = gda_data_model_hash_get_row;
 	model_class->get_value_at = gda_data_model_hash_get_value_at;
 	model_class->is_updatable = gda_data_model_hash_is_updatable;
-	model_class->append_values = gda_data_model_hash_append_values;
+	model_class->append_row = gda_data_model_hash_append_row;
 	model_class->remove_row = gda_data_model_hash_remove_row;
 }
 
