@@ -23,6 +23,34 @@
 #if !defined(__gda_report_datasource_h__)
 #  define __gda_report_datasource_h__
 
+#include <bonobo/bonobo-xobject.h>
 #include <libgda-report/GNOME_Database_Report.h>
+
+G_BEGIN_DECLS
+
+#define GDA_TYPE_REPORT_DATASOURCE            (gda_report_datasource_get_type())
+#define GDA_REPORT_DATASOURCE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_DATASOURCE, GdaReportDatasource))
+#define GDA_REPORT_DATASOURCE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_DATASOURCE, GdaReportDatasourceClass))
+#define GDA_IS_REPORT_DATASOURCE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_REPORT_DATASOURCE))
+#define GDA_IS_REPORT_DATASOURCE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT_DATASOURCE))
+
+typedef struct _GdaReportDatasource        GdaReportDatasource;
+typedef struct _GdaReportDatasourceClass   GdaReportDatasourceClass;
+typedef struct _GdaReportDatasourcePrivate GdaReportDatasourcePrivate;
+
+struct _GdaReportDatasource {
+	BonoboXObject object;
+	GdaReportDatasourcePrivate *priv;
+};
+
+struct _GdaReportDatasourceClass {
+	BonoboXObjectClass parent_class;
+	POA_GNOME_Database_Report_DataSource__epv epv;
+};
+
+GType                gda_report_datasource_get_type (void);
+GdaReportDatasource *gda_report_datasource_new (void);
+
+G_END_DECLS
 
 #endif

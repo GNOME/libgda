@@ -25,6 +25,7 @@
 #  define __gda_report_engine_h__
 
 #include <bonobo/bonobo-xobject.h>
+#include <libgda/gda-client.h>
 #include <libgda-report/GNOME_Database_Report.h>
 
 G_BEGIN_DECLS
@@ -51,6 +52,8 @@ struct _GdaReportEngineClass {
 
 GType            gda_report_engine_get_type (void);
 GdaReportEngine *gda_report_engine_new (void);
+
+GdaClient       *gda_report_engine_get_gda_client (void);
 
 G_END_DECLS
 

@@ -21,6 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <bonobo/bonobo-exception.h>
+#include <bonobo/bonobo-i18n.h>
 #include "gda-report-engine.h"
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
@@ -32,17 +34,22 @@ static void gda_report_engine_class_init (GdaReportEngineClass *klass);
 static void gda_report_engine_init       (GdaReportEngine *engine, GdaReportEngineClass *klass);
 static void gda_report_engine_finalize   (GObject *object);
 
-static GObjectClass *parent_class;
+static GObjectClass *parent_class = NULL;
+static GdaClient *db_client = NULL;
 
 /*
  * CORBA methods implementation
  */
 
-static CORBA_char *
+static Bonobo_Stream
 impl_ReportEngine_runDocument (PortableServer_Servant servant,
-			       const CORBA_char *xml,
+			       const Bonobo_Stream xml,
+			       const GNOME_Database_ParameterList *params,
 			       CORBA_Environment *ev)
 {
+	GdaReportEngine *engine = bonobo_x_object (servant);
+
+	bonobo_return_val_if_fail (GDA_IS_REPORT_ENGINE (engine), CORBA_OBJECT_NIL, ev);
 }
 
 /*
@@ -62,6 +69,15 @@ gda_report_engine_class_init (GdaReportEngineClass *klass)
 	/* set the epv */
 	epv = &klass->epv;
 	epv->runDocument = impl_ReportEngine_runDocument;
+
+	/* create the global GDA client */
+	if (!db_client) {
+		db_client = gda_client_new ();
+		if (!GDA_IS_CLIENT (db_client)) {
+			gda_log_error (_("Could not create global GDA client"));
+			exit (-1);
+		}
+	}
 }
 
 static void
@@ -100,4 +116,10 @@ gda_report_engine_new (void)
 
 	engine = g_object_new (GDA_TYPE_REPORT_ENGINE, NULL);
 	return engine;
+}
+
+GdaClient *
+gda_report_engine_get_gda_client (void)
+{
+	return db_client;
 }

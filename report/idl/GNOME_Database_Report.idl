@@ -23,7 +23,7 @@ module GNOME {
 			interface DataSource : Bonobo::Unknown {
 				GNOME::Database::Recordset runQuery (
 					in string query,
-					GNOME::Database::ParameterList params);
+					in GNOME::Database::ParameterList params);
 			};
 
 			/*
