@@ -47,11 +47,11 @@ plugin_get_connection_params (void)
 	GList *list = NULL;
 
 	list = g_list_append (list, g_strdup ("DATABASE"));
-	list = g_list_append (list, g_strdup ("FLAGS"));
 	list = g_list_append (list, g_strdup ("HOST"));
 	list = g_list_append (list, g_strdup ("PASSWORD"));
 	list = g_list_append (list, g_strdup ("PORT"));
 	list = g_list_append (list, g_strdup ("UNIX_SOCKET"));
+	list = g_list_append (list, g_strdup ("USE_SSL"));
 	list = g_list_append (list, g_strdup ("USERNAME"));
 
 	return list;

@@ -592,7 +592,7 @@ then
 	xbasedir=""
 	for d in $dir /usr /usr/local /opt/xbase
 	do
-		if test -f $d/include/xbase.h
+		if test -f $d/include/xdb/xbase.h
 		then
 			AC_MSG_RESULT(found Xbase in $d)
 			xbasedir=$d

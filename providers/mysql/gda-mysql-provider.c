@@ -183,7 +183,8 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
         const gchar *t_password = NULL;
         const gchar *t_port = NULL;
         const gchar *t_unix_socket = NULL;
-        const gchar *t_flags = NULL;
+        const gchar *t_use_ssl = NULL;
+	unsigned int mysqlflags = 0;
 	MYSQL *mysql;
 #if MYSQL_VERSION_ID < 32200
         gint err;
@@ -201,12 +202,15 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_port = gda_quark_list_find (params, "PORT");
 	t_unix_socket = gda_quark_list_find (params, "UNIX_SOCKET");
-	t_flags = gda_quark_list_find (params, "FLAGS");
+	t_use_ssl = gda_quark_list_find (params, "USE_SSL");
 
 	if (username)
 		t_user = username;
 	if (password)
 		t_password = password;
+
+	if (t_use_ssl && atoi (t_use_ssl) == 1)
+		mysqlflags |= CLIENT_SSL;
 
 	/* we can't have both a host/pair AND a unix_socket */
 	if ((t_host || t_port) && t_unix_socket) {
@@ -218,10 +222,10 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 
 	/* provide the default of localhost:3306 if neither is provided */
 	if (!t_unix_socket) {
-		if (!t_port)
-			t_port = "3306";
 		if (!t_host)
 			t_host = "localhost";
+		else if (!t_port)
+			t_port = "3306";
 	}
 	
 	mysql = g_new0 (MYSQL, 1);
@@ -232,7 +236,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 #endif
 				    t_port ? atoi (t_port) : 0,
 				    t_unix_socket,
-				    t_flags ? atoi (t_flags) : 0);
+				    mysqlflags);
 	if (!mysql) {
 		error = gda_mysql_make_error (mysql);
 		gda_connection_add_error (cnc, error);

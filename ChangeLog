@@ -1,3 +1,13 @@
+2003-01-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/mysql/libmain.c (plugin_get_connection_params): added
+	USE_SSL parameter for the MySQL provider. Also, removed unused FLAGS
+	parameter.
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_open_connection): added support for SSL
+	connections and fixed #93925.
+
 2003-01-18  Santi Camps <santi@gnome-db.org>
 
 	* configure.in: added libgda/report/testing/Makefile
