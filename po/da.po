@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
-"POT-Creation-Date: 2001-05-27 14:38+0200\n"
+"POT-Creation-Date: 2001-06-03 23:56+0200\n"
 "PO-Revision-Date: 2001-04-21 01:50+02:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -202,10 +202,6 @@ msgstr "Modtog signal %d. Ignorerer"
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Forsøg på at initiere en allerede initieret udbyder"
 
-#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
-msgid "GDA Datasource Access for LDAP"
-msgstr "GDA datakildeadgang for LDAP"
-
 #: providers/gda-interbase-server/gda-interbase-connection.c:273
 #: providers/gda-ldap-server/gda-ldap-connection.c:284
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
@@ -261,10 +257,6 @@ msgstr "fejl"
 msgid "Could not register LDAP provider implementation"
 msgstr "Kunne ikke registrere LDAP-udbyder implementation"
 
-#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
-msgid "GDA Datasource Access for Interbase"
-msgstr "GDA datakildeadgang for Interbase"
-
 #: providers/gda-interbase-server/gda-interbase-connection.c:272
 #, c-format
 msgid "Error code %ld"
@@ -273,10 +265,6 @@ msgstr "Fejlkode %ld"
 #: providers/gda-interbase-server/main-interbase.c:72
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Kunne ikke registrere INTERBASE-udbyder implementation"
-
-#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
-msgid "GDA Datasource Access for Mail"
-msgstr "GDA datakildeadgang for post"
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -292,10 +280,6 @@ msgstr "Uhåndteret SCHEMA_QTYPE %d"
 #: providers/gda-mail-server/main-mail.c:72
 msgid "Could not register Mail provider implementation"
 msgstr "Kunne ikke registrere Mail udbyderimplementation"
-
-#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
-msgid "GDA Datasource Access for MDB (MS Access) files"
-msgstr "GDA datakildeadgang for MDB (MS Access) filer"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -351,10 +335,6 @@ msgstr "Intet tabelnavn opgivet for SCHEMA_COLS"
 msgid "Could not register MySQL provider implementation"
 msgstr "Kunne ikke registrere MySQL-udbyder implementation"
 
-#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "GDA datakildeadgang for MySQL"
-
 #: providers/gda-mysql-server/gda-mysql-connection.c:153
 #, c-format
 msgid ""
@@ -362,10 +342,6 @@ msgid ""
 "s"
 msgstr ""
 "Åbner forbindelse med user=%s, password=%s, host=%s, port=%s, unix_socket=%s"
-
-#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr "GDA datakildeadgang for ODBC"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -384,10 +360,6 @@ msgstr "ingen tekst"
 #: providers/gda-odbc-server/main-odbc.c:71
 msgid "Could not register ODBC provider implementation"
 msgstr "Kunne ikke registrere ODBC udbyderimplementation"
-
-#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "GDA datakildeadgang for Oracle"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
@@ -431,10 +403,6 @@ msgstr "postobjektet oprettes uden associeret forbindelse"
 msgid "Could not register ORACLE provider implementation"
 msgstr "Kunne ikke registrere ORACLE udbyderimplementation"
 
-#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr "GDA datakildeadgang for Postgres"
-
 #: providers/gda-postgres-server/gda-postgres-connection.c:849
 #: providers/gda-postgres-server/gda-postgres-connection.c:957
 msgid "postgres_recset is NULL"
@@ -443,10 +411,6 @@ msgstr "postgres_recset er NULL"
 #: providers/gda-postgres-server/main-postgres.c:71
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Kunne ikke registrere PostgreSQL udbyderimplementation"
-
-#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "GDA datakildeadgang for Sybase"
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:127
@@ -899,10 +863,6 @@ msgstr "Kunne ikke allokere felt"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Kunne ikke registrere gda-sybase udbyderimplementation"
 
-#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
-msgid "GDA Datasource Access for primebase"
-msgstr "GDA datakildeadgang for primebase"
-
 #: providers/gda-primebase-server/gda-primebase-connection.c:158
 #, c-format
 msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
@@ -935,10 +895,6 @@ msgstr "%2ld: FEJL: %ld (%ld) : %s.\n"
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "Kunne ikke registrere PRIMEBASE-udbyder implementation"
 
-#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
-msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr "GDA datakildeadgang for Sybase/MS SQL"
-
 #: providers/gda-tds-server/gda-tds-connection.c:167
 msgid "Not enough memory for tds_Connection"
 msgstr "Ikke nok hukommelse for tds_Connection"
@@ -962,10 +918,6 @@ msgstr "Kunne ikke registrere gda-tds udbyderimplementation"
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "CORBA undtagelse ved lukning af rapportmaskine: %s"
-
-#: report/server/GNOME_GDA_Report.oaf.in.h:1
-msgid "GDA Distributed Report Engine"
-msgstr "GDA distribueret rapportmotor"
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48
@@ -1014,6 +966,42 @@ msgstr "%s: fejlkonfigureret DSN indgang"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datakilde '%s' ikke fundet\n"
+
+#~ msgid "GDA Datasource Access for LDAP"
+#~ msgstr "GDA datakildeadgang for LDAP"
+
+#~ msgid "GDA Datasource Access for Interbase"
+#~ msgstr "GDA datakildeadgang for Interbase"
+
+#~ msgid "GDA Datasource Access for Mail"
+#~ msgstr "GDA datakildeadgang for post"
+
+#~ msgid "GDA Datasource Access for MDB (MS Access) files"
+#~ msgstr "GDA datakildeadgang for MDB (MS Access) filer"
+
+#~ msgid "GDA Datasource Access for MySQL"
+#~ msgstr "GDA datakildeadgang for MySQL"
+
+#~ msgid "GDA Datasource Access for ODBC"
+#~ msgstr "GDA datakildeadgang for ODBC"
+
+#~ msgid "GDA Datasource Access for Oracle"
+#~ msgstr "GDA datakildeadgang for Oracle"
+
+#~ msgid "GDA Datasource Access for Postgres"
+#~ msgstr "GDA datakildeadgang for Postgres"
+
+#~ msgid "GDA Datasource Access for Sybase"
+#~ msgstr "GDA datakildeadgang for Sybase"
+
+#~ msgid "GDA Datasource Access for primebase"
+#~ msgstr "GDA datakildeadgang for primebase"
+
+#~ msgid "GDA Datasource Access for Sybase/MS SQL"
+#~ msgstr "GDA datakildeadgang for Sybase/MS SQL"
+
+#~ msgid "GDA Distributed Report Engine"
+#~ msgstr "GDA distribueret rapportmotor"
 
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: længde = %d"

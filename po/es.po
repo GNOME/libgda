@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db \n"
-"POT-Creation-Date: 2001-05-27 14:38+0200\n"
+"POT-Creation-Date: 2001-06-03 23:56+0200\n"
 "PO-Revision-Date: 2001-03-14 01:06+0100\n"
 "Last-Translator: Antonio de la Torre <adltorre@terra.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -203,10 +203,6 @@ msgstr "Recibida la señal %d. Ignorándola"
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Se ha intentado inicializar un proveedor que ya se había inicializado"
 
-#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
-msgid "GDA Datasource Access for LDAP"
-msgstr "Fuente de datos GDA para LDAP"
-
 #: providers/gda-interbase-server/gda-interbase-connection.c:273
 #: providers/gda-ldap-server/gda-ldap-connection.c:284
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
@@ -262,10 +258,6 @@ msgstr "error"
 msgid "Could not register LDAP provider implementation"
 msgstr "No se ha podido registrar la implementación del proveedor LDAP"
 
-#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
-msgid "GDA Datasource Access for Interbase"
-msgstr "Fuente de datos GDA para Interbase"
-
 #: providers/gda-interbase-server/gda-interbase-connection.c:272
 #, c-format
 msgid "Error code %ld"
@@ -274,10 +266,6 @@ msgstr "Código de error %ld"
 #: providers/gda-interbase-server/main-interbase.c:72
 msgid "Could not register INTERBASE provider implementation"
 msgstr "No se ha podido registrar la implementación del proveedor INTERBASE"
-
-#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
-msgid "GDA Datasource Access for Mail"
-msgstr "Fuente de datos GDA para Correo"
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -293,10 +281,6 @@ msgstr "SCHEMA_QTYPE %d no manejado"
 #: providers/gda-mail-server/main-mail.c:72
 msgid "Could not register Mail provider implementation"
 msgstr "No se ha podido registrar la implementación del proveedor de Correo"
-
-#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
-msgid "GDA Datasource Access for MDB (MS Access) files"
-msgstr "Fuente de datos GDA para archivos MDB (MS Access)"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -353,10 +337,6 @@ msgstr "No ha se ha dado el nombre de una tabla para SCHEMA_COLS"
 msgid "Could not register MySQL provider implementation"
 msgstr "No se ha podido registrar la implementación del proveedor MySQL"
 
-#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "Fuente de datos GDA para MySQL"
-
 #: providers/gda-mysql-server/gda-mysql-connection.c:153
 #, c-format
 msgid ""
@@ -365,10 +345,6 @@ msgid ""
 msgstr ""
 "Abriendo conexión con el usuario=%s, contraseña=%s, sistema=%s, puerto=%s, "
 "unix_socket=%s"
-
-#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr "Acceso de Fuente de datos GDA para ODBC"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -387,10 +363,6 @@ msgstr "ningún texto"
 #: providers/gda-odbc-server/main-odbc.c:71
 msgid "Could not register ODBC provider implementation"
 msgstr "No pudo registrase la implementación del proveedor ODBC"
-
-#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "Fuente de datos GDA para Oracle"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
@@ -434,10 +406,6 @@ msgstr "Objeto recordset creándose sin conexión asociada"
 msgid "Could not register ORACLE provider implementation"
 msgstr "No pudo registrarse la implementación del proveedor de Oracle"
 
-#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr "Acceso de la Fuente de Datos GDA para Postgres"
-
 #: providers/gda-postgres-server/gda-postgres-connection.c:849
 #: providers/gda-postgres-server/gda-postgres-connection.c:957
 msgid "postgres_recset is NULL"
@@ -446,10 +414,6 @@ msgstr "postgres_recset está VACÍO"
 #: providers/gda-postgres-server/main-postgres.c:71
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "No pudo registrarse la implementación del proveedor PostgreSQL"
-
-#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "Acceso de la Fuente de Datos GDA para Sybase"
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:127
@@ -906,10 +870,6 @@ msgstr "No pudo asignarse campo"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "No pudo registrarse implementación de proveedor gda-sybase"
 
-#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
-msgid "GDA Datasource Access for primebase"
-msgstr "Acceso de Fuente de datos GDA para primebase"
-
 #: providers/gda-primebase-server/gda-primebase-connection.c:158
 #, c-format
 msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
@@ -942,10 +902,6 @@ msgstr "%2ld: ERROR: %ld (%ld) : %s.\n"
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "No se pudo registrarse implementación de proveedor PRIMEBASE"
 
-#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
-msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr "Acceso a la Fuente de Datos GDA para Sybase/MS SQL"
-
 #: providers/gda-tds-server/gda-tds-connection.c:167
 #, fuzzy
 msgid "Not enough memory for tds_Connection"
@@ -970,10 +926,6 @@ msgstr "No se pudo registrar la implementación del proveedor gda-tds"
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "Motor de informe de descarga de excepción CORBA: %s"
-
-#: report/server/GNOME_GDA_Report.oaf.in.h:1
-msgid "GDA Distributed Report Engine"
-msgstr "Motor de Informe Distribuido GDA"
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48
@@ -1021,6 +973,42 @@ msgstr "%s: Entrada DSN desconfigurada"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: fuente de datos '%s' no encontrada\n"
+
+#~ msgid "GDA Datasource Access for LDAP"
+#~ msgstr "Fuente de datos GDA para LDAP"
+
+#~ msgid "GDA Datasource Access for Interbase"
+#~ msgstr "Fuente de datos GDA para Interbase"
+
+#~ msgid "GDA Datasource Access for Mail"
+#~ msgstr "Fuente de datos GDA para Correo"
+
+#~ msgid "GDA Datasource Access for MDB (MS Access) files"
+#~ msgstr "Fuente de datos GDA para archivos MDB (MS Access)"
+
+#~ msgid "GDA Datasource Access for MySQL"
+#~ msgstr "Fuente de datos GDA para MySQL"
+
+#~ msgid "GDA Datasource Access for ODBC"
+#~ msgstr "Acceso de Fuente de datos GDA para ODBC"
+
+#~ msgid "GDA Datasource Access for Oracle"
+#~ msgstr "Fuente de datos GDA para Oracle"
+
+#~ msgid "GDA Datasource Access for Postgres"
+#~ msgstr "Acceso de la Fuente de Datos GDA para Postgres"
+
+#~ msgid "GDA Datasource Access for Sybase"
+#~ msgstr "Acceso de la Fuente de Datos GDA para Sybase"
+
+#~ msgid "GDA Datasource Access for primebase"
+#~ msgstr "Acceso de Fuente de datos GDA para primebase"
+
+#~ msgid "GDA Datasource Access for Sybase/MS SQL"
+#~ msgstr "Acceso a la Fuente de Datos GDA para Sybase/MS SQL"
+
+#~ msgid "GDA Distributed Report Engine"
+#~ msgstr "Motor de Informe Distribuido GDA"
 
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: longitud = %d"

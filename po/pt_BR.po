@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2001-05-27 14:38+0200\n"
+"POT-Creation-Date: 2001-06-03 23:56+0200\n"
 "PO-Revision-Date: 2000-11-21 17:44-00:03\n"
 "Last-Translator: Ariel Bressan da Silva <ariel@conectiva.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -205,10 +205,6 @@ msgstr "Sinal recebido %d. Ignorando"
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Tentativa de inicializar um provedor já inicializado"
 
-#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
-msgid "GDA Datasource Access for LDAP"
-msgstr ""
-
 #: providers/gda-interbase-server/gda-interbase-connection.c:273
 #: providers/gda-ldap-server/gda-ldap-connection.c:284
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
@@ -264,10 +260,6 @@ msgstr "erro"
 msgid "Could not register LDAP provider implementation"
 msgstr "Não pôde registrar implementação de provedor LDAP"
 
-#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
-msgid "GDA Datasource Access for Interbase"
-msgstr ""
-
 #: providers/gda-interbase-server/gda-interbase-connection.c:272
 #, c-format
 msgid "Error code %ld"
@@ -276,10 +268,6 @@ msgstr "Erro de código %ld"
 #: providers/gda-interbase-server/main-interbase.c:72
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Não pôde registrar implementação de provedor INTERBASE"
-
-#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
-msgid "GDA Datasource Access for Mail"
-msgstr ""
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -295,10 +283,6 @@ msgstr "SCHEMA_QTYPE %d não-manipulada"
 #: providers/gda-mail-server/main-mail.c:72
 msgid "Could not register Mail provider implementation"
 msgstr "Não pôde registrar implementação de provedor de mensagens"
-
-#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
-msgid "GDA Datasource Access for MDB (MS Access) files"
-msgstr ""
 
 # fe/fe_editor.c:185
 #. execute command
@@ -357,10 +341,6 @@ msgstr "Nome de tabela não dado para SCHEMA_COLS"
 msgid "Could not register MySQL provider implementation"
 msgstr "Não pôde registrar implementação de provedor MySQL"
 
-#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr ""
-
 #: providers/gda-mysql-server/gda-mysql-connection.c:153
 #, c-format
 msgid ""
@@ -369,10 +349,6 @@ msgid ""
 msgstr ""
 "Abrindo conexão com usuário=%s, senha=%s, máquina=%s, porta=%s, unix_socket=%"
 "s"
-
-#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr ""
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -391,10 +367,6 @@ msgstr "sem texto"
 #: providers/gda-odbc-server/main-odbc.c:71
 msgid "Could not register ODBC provider implementation"
 msgstr "Não pôde registrar implementação de provedor ODBC"
-
-#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr ""
 
 # fe/fe_log.c:92
 #: providers/gda-oracle-server/gda-oracle-command.c:185
@@ -440,10 +412,6 @@ msgstr "objeto de registro sendo criado sem conexão associada"
 msgid "Could not register ORACLE provider implementation"
 msgstr "Não pôde registrar implementação de provedor ORACLE"
 
-#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr ""
-
 #: providers/gda-postgres-server/gda-postgres-connection.c:849
 #: providers/gda-postgres-server/gda-postgres-connection.c:957
 msgid "postgres_recset is NULL"
@@ -452,10 +420,6 @@ msgstr "postgres_recset é NULL"
 #: providers/gda-postgres-server/main-postgres.c:71
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Não pôde registrar implementação do provedor PostgreSQL"
-
-#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr ""
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:127
@@ -911,10 +875,6 @@ msgstr "não pôde alocar campo"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Não pôde registrar implementação de provedor gda-sybase"
 
-#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
-msgid "GDA Datasource Access for primebase"
-msgstr ""
-
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/gda-primebase-server/gda-primebase-connection.c:158
 #, fuzzy, c-format
@@ -950,10 +910,6 @@ msgstr ""
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "Não pôde registrar implementação de provedor INTERBASE"
 
-#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
-msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr ""
-
 #: providers/gda-tds-server/gda-tds-connection.c:167
 #, fuzzy
 msgid "Not enough memory for tds_Connection"
@@ -979,10 +935,6 @@ msgstr "Não pôde registrar implementação de provedor gda-sybase"
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "Exceção CORBA descarregando mecanismo de relatório: %s"
-
-#: report/server/GNOME_GDA_Report.oaf.in.h:1
-msgid "GDA Distributed Report Engine"
-msgstr ""
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48

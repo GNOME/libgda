@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-05-27 14:38+0200\n"
+"POT-Creation-Date: 2001-06-03 23:56+0200\n"
 "PO-Revision-Date: 1999-11-17 10:06+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -198,10 +198,6 @@ msgstr "Отримано си╜нал %d. Про╕╜норовано."
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Спроба ╕н╕ц╕ал╕зувати вже ╕н╕ц╕ал╕зованого постачальника"
 
-#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
-msgid "GDA Datasource Access for LDAP"
-msgstr ""
-
 #: providers/gda-interbase-server/gda-interbase-connection.c:273
 #: providers/gda-ldap-server/gda-ldap-connection.c:284
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
@@ -257,10 +253,6 @@ msgstr "помилка"
 msgid "Could not register LDAP provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника LDAP"
 
-#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
-msgid "GDA Datasource Access for Interbase"
-msgstr ""
-
 #: providers/gda-interbase-server/gda-interbase-connection.c:272
 #, c-format
 msgid "Error code %ld"
@@ -269,10 +261,6 @@ msgstr "Код помилки %ld"
 #: providers/gda-interbase-server/main-interbase.c:72
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника INTERBASE"
-
-#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
-msgid "GDA Datasource Access for Mail"
-msgstr ""
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -287,10 +275,6 @@ msgstr "Необроблене значення SCHEMA_QTYPE %d"
 
 #: providers/gda-mail-server/main-mail.c:72
 msgid "Could not register Mail provider implementation"
-msgstr ""
-
-#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
-msgid "GDA Datasource Access for MDB (MS Access) files"
 msgstr ""
 
 #. execute command
@@ -344,10 +328,6 @@ msgstr "Не вказано назви таблиц╕ для SCHEMA_COLS"
 msgid "Could not register MySQL provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника MySQL"
 
-#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr ""
-
 #: providers/gda-mysql-server/gda-mysql-connection.c:153
 #, c-format
 msgid ""
@@ -356,10 +336,6 @@ msgid ""
 msgstr ""
 "В╕дкривання з'╓днання (користувач: %s, пароль: %s, хост: %s, порт: %s, "
 "сокет: %s"
-
-#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr ""
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -379,10 +355,6 @@ msgstr "нема╓ тексту"
 #: providers/gda-odbc-server/main-odbc.c:71
 msgid "Could not register ODBC provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника ODBC"
-
-#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr ""
 
 #: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
@@ -426,10 +398,6 @@ msgstr ""
 msgid "Could not register ORACLE provider implementation"
 msgstr "Не вдалося розм╕стити реал╕зац╕ю постачальника Oracle"
 
-#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr ""
-
 #: providers/gda-postgres-server/gda-postgres-connection.c:849
 #: providers/gda-postgres-server/gda-postgres-connection.c:957
 msgid "postgres_recset is NULL"
@@ -438,10 +406,6 @@ msgstr "postgres_recset -- порожн╕й"
 #: providers/gda-postgres-server/main-postgres.c:71
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника PostgreSQL"
-
-#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr ""
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:127
@@ -906,10 +870,6 @@ msgstr "не вдалося вид╕лити поле"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника gda-sybase"
 
-#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
-msgid "GDA Datasource Access for primebase"
-msgstr ""
-
 #: providers/gda-primebase-server/gda-primebase-connection.c:158
 #, fuzzy, c-format
 msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
@@ -944,10 +904,6 @@ msgstr ""
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника INTERBASE"
 
-#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
-msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr ""
-
 #: providers/gda-tds-server/gda-tds-connection.c:167
 msgid "Not enough memory for tds_Connection"
 msgstr "Не вистача╓ пам'ят╕ для tds_Connection"
@@ -971,10 +927,6 @@ msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника gda-sybase"
 #: report/gda-report-engine.c:209
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
-msgstr ""
-
-#: report/server/GNOME_GDA_Report.oaf.in.h:1
-msgid "GDA Distributed Report Engine"
 msgstr ""
 
 #: report/server/gda-report-server-main.c:41
