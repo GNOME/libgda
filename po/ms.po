@@ -4,9 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-06 00:17+0200\n"
-"PO-Revision-Date: 2002-11-24 23:05+0800\n"
+"POT-Creation-Date: 2003-08-07 06:21+0800\n"
+"PO-Revision-Date: 2003-08-07 06:21+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Bahasa Melayu <gabai-penyumbang@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -37,9 +36,9 @@ msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Sumber data sementara dicipta oleg libgda. Jangan buang ia"
 
 #: libgda/gda-config.c:1073
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
-msgstr "Ralat"
+msgstr "Ralat: %s"
 
 #: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
@@ -137,11 +136,11 @@ msgstr "PALSU"
 #: libgda/gda-value.c:1993
 #, c-format
 msgid "(GObject of type '%s'"
-msgstr ""
+msgstr "(GObject bagi jenis '%s'"
 
 #: libgda/gda-value.c:1996
 msgid "NULL GObject"
-msgstr ""
+msgstr "GObject NULL"
 
 #: libgda/gda-xml-database.c:263
 #, c-format
@@ -199,9 +198,8 @@ msgstr "Tiada pangkalandata dinyatakan"
 #: providers/firebird/gda-firebird-provider.c:447
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
-#, fuzzy
 msgid "Invalid Firebird handle"
-msgstr "Pengendali dalaman tidak sah"
+msgstr "Pengendali Firebird tidak sah"
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
@@ -209,9 +207,8 @@ msgid "Invalid transaction handle"
 msgstr "Pengendali transaksi tidak sah"
 
 #: providers/firebird/libmain.c:39
-#, fuzzy
 msgid "Provider for FireBird databases"
-msgstr "Pembekal GDA bagi pangkalandata Interbase/Firebird"
+msgstr "Pembekal GDA bagi pangkalandata Firebird"
 
 #: providers/freetds/gda-freetds-provider.c:197
 msgid ""
@@ -290,7 +287,7 @@ msgstr "Ralat memproses baris hasil.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
-msgstr ""
+msgstr "Kod kembalian freetds luardugaan pada tds_process_row_tokens().\n"
 
 #: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
@@ -301,9 +298,8 @@ msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "kod pemulangan fretds luar dugaan pada tds_oricess_result_token\n"
 
 #: providers/freetds/libmain.c:39
-#, fuzzy
 msgid "Provider for TDS-based databases (using FreeTDS)"
-msgstr "Pembekal GDA bagi pangkalandata berasaskan-TDS (menggunakan FreeTDS)"
+msgstr "Pembekal bagi pangkalandata berasaskan-TDS (menggunakan FreeTDS)"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:46 providers/sybase/utils.c:538
@@ -325,13 +321,12 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
 #: providers/ibmdb2/gda-ibmdb2-provider.c:688
 #: providers/ibmdb2/gda-ibmdb2-provider.c:763
-#, fuzzy
 msgid "Invalid IBM DB2 handle"
-msgstr "Pengendali MDB tidak sah"
+msgstr "Pengendali IBM MDB tidak sah"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
-msgstr ""
+msgstr "Fungsi"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 #: providers/ibmdb2/gda-ibmdb2-provider.c:832
@@ -370,12 +365,10 @@ msgid "Owner"
 msgstr "Pemilik"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
-#, fuzzy
 msgid "Database"
-msgstr "PangkalanData"
+msgstr "Pangkalan Data"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:831
-#, fuzzy
 msgid "Index"
 msgstr "Indeks"
 
@@ -398,14 +391,13 @@ msgstr "Prosedur"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:862
 msgid "Language"
-msgstr ""
+msgstr "Bahasa"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:893
 #: providers/ibmdb2/gda-ibmdb2-provider.c:921
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1002
-#, fuzzy
 msgid "SQL Definition"
-msgstr "Definisi"
+msgstr "Definisi SQL"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
@@ -472,9 +464,8 @@ msgid "Users"
 msgstr "Pengguna"
 
 #: providers/ibmdb2/libmain.c:39
-#, fuzzy
 msgid "Provider for IBMDB2 databases"
-msgstr "Pembekal GDA bagi pangkalandata MySQL"
+msgstr "Pembekal GDA bagi pangkalandata IBMDB2"
 
 #: providers/ldap/gda-ldap-provider.c:257
 #: providers/ldap/gda-ldap-provider.c:490
@@ -483,9 +474,8 @@ msgstr "Pembekal GDA bagi pangkalandata MySQL"
 #: providers/ldap/gda-ldap-provider.c:587
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
-#, fuzzy
 msgid "Invalid LDAP handle"
-msgstr "Pengendali MDB tidak sah"
+msgstr "Pengendali LDAP tidak sah"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
@@ -519,7 +509,7 @@ msgstr "Tak dapat memperolehi nilai kolum"
 
 #: providers/ldap/libmain.c:42
 msgid "Provider for LDAP directory"
-msgstr ""
+msgstr "Pembekal bagi direktori LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
@@ -540,7 +530,7 @@ msgstr "Pengendali MDB tidak sah"
 #: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
 msgid "Transactions not supported in MDB provider"
-msgstr ""
+msgstr "Transaksi tak disokong pada pembekal MDB"
 
 #: providers/mdb/gda-mdb-provider.c:490
 #: providers/mysql/gda-mysql-provider.c:1069
@@ -634,7 +624,7 @@ msgstr "Nilai Default"
 #: providers/mdb/gda-mdb-provider.c:547
 #: providers/mysql/gda-mysql-provider.c:702
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
@@ -645,7 +635,7 @@ msgstr "Jenis pemulangan"
 
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
-msgstr ""
+msgstr "# hujah"
 
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
@@ -669,18 +659,16 @@ msgid "Definition"
 msgstr "Definisi"
 
 #: providers/mdb/gda-mdb-provider.c:657
-#, fuzzy
 msgid "GDA Type"
 msgstr "Jenis GDA"
 
 #: providers/mdb/gda-mdb-provider.c:659
-#, fuzzy
 msgid "Boolean type"
-msgstr "Jenis pemulangan"
+msgstr "Jenis boolean"
 
 #: providers/mdb/gda-mdb-provider.c:660
 msgid "1-byte integers"
-msgstr ""
+msgstr "integer 1-byte"
 
 #: providers/mdb/gda-mdb-provider.c:661
 msgid "Double precision values"
@@ -692,42 +680,41 @@ msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:663
 msgid "32-bit integers"
-msgstr ""
+msgstr "integer 32-bit"
 
 #: providers/mdb/gda-mdb-provider.c:664
 msgid "64-bit integers"
-msgstr ""
+msgstr "integer 64-bit"
 
 #: providers/mdb/gda-mdb-provider.c:665
 msgid "Variable length character strings"
-msgstr ""
+msgstr "Rantaikata aksara kepanjangan berubah"
 
 #: providers/mdb/gda-mdb-provider.c:666
 msgid "Money amounts"
-msgstr ""
+msgstr "Jumlah wang"
 
 #: providers/mdb/gda-mdb-provider.c:667
 msgid "OLE object"
-msgstr ""
+msgstr "Objek OLE"
 
 #: providers/mdb/gda-mdb-provider.c:668
 msgid "FIXME"
-msgstr ""
+msgstr "PERBETULKAN_DAKU"
 
 #: providers/mdb/gda-mdb-provider.c:669
-#, fuzzy
 msgid "Date/time value"
-msgstr "Nilai Default"
+msgstr "Nilai tarikh/masa"
 
 #: providers/mdb/gda-mdb-provider.c:670
 msgid "Character strings"
-msgstr ""
+msgstr "Rantaikata aksara"
 
 #. end unsafe
 #: providers/mdb/gda-mdb-provider.c:737
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse '%s' command"
-msgstr "Tak dapat menghantar arahan SQL '%s'"
+msgstr "Tak dapat menghantar arahan '%s'"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:494
 #, c-format
@@ -735,14 +722,12 @@ msgid "Table %s not found"
 msgstr "Jadual %s tidak dijumpai"
 
 #: providers/mdb/libmain.c:36
-#, fuzzy
 msgid "Provider for Microsoft Access files"
-msgstr "Pembekal GDA bagi fail MS Access"
+msgstr "Pembekal bagi fail MS Access"
 
 #: providers/msql/gda-msql-libmain.c:41
-#, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Pembekal GDA bagi pangkalandata PostgreSQL"
+msgstr "Pembekal bagi pangkalandata Hughes Technologies mSQL"
 
 #: providers/msql/gda-msql-provider.c:230
 #: providers/msql/gda-msql-provider.c:273
@@ -750,37 +735,35 @@ msgstr "Pembekal GDA bagi pangkalandata PostgreSQL"
 #: providers/msql/gda-msql-provider.c:551
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:138
-#, fuzzy
 msgid "Invalid mSQL handle"
-msgstr "Pengendali MySQL tidak sah"
+msgstr "Pengendali mSQL tidak sah"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL mengizinkan penciptaan pangkalan data hanya drpd radas msqladmin."
 
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr ""
+"mSQL mengizinkan pengguguran pangkalan data hanya drpd radas msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
 #: providers/msql/gda-msql-provider.c:389
 #: providers/msql/gda-msql-provider.c:402
 msgid "mSQL doesn't support transactions."
-msgstr ""
+msgstr "mSQL tak menyokong transaksi."
 
 #: providers/msql/gda-msql-provider.c:486
-#, fuzzy
 msgid "Title"
-msgstr "Jadual"
+msgstr "Tajuk"
 
 #: providers/msql/gda-msql-provider.c:536
 msgid "Field Name"
 msgstr "Nama Medan"
 
 #: providers/msql/gda-msql-provider.c:540
-#, fuzzy
 msgid "Not null"
-msgstr "Tidak null?"
+msgstr "Tidak null"
 
 #: providers/msql/gda-msql-provider.c:557
 #: providers/msql/gda-msql-provider.c:563
@@ -790,9 +773,8 @@ msgid "Table name is needed but none specified in parameter list"
 msgstr "Nama jadual diperlukan tetapi tidak dinyatakan pada senarai paramete"
 
 #: providers/msql/gda-msql-recordset.c:57
-#, fuzzy
 msgid "Row number out of bounds"
-msgstr "Baris diluar julat"
+msgstr "Bilangan baris diluar julat"
 
 #: providers/mysql/gda-mysql-provider.c:218
 msgid ""
@@ -827,22 +809,21 @@ msgstr "Pengendali MyQL tidak sah"
 #: providers/oracle/gda-oracle-provider.c:1000
 #: providers/sqlite/gda-sqlite-provider.c:472
 msgid "Transactions are not supported in read-only mode"
-msgstr ""
+msgstr "Transaksi tak disokong pada mod baca-sahaja"
 
 #: providers/mysql/gda-mysql-provider.c:707
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
-msgstr ""
+msgstr "SQL"
 
 #: providers/mysql/libmain.c:41
-#, fuzzy
 msgid "Provider for MySQL databases"
-msgstr "Pembekal GDA bagi pangkalandata MySQL"
+msgstr "Pembekal bagi pangkalandata MySQL"
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
-msgstr ""
+msgstr "Tak dapat SQLAllocEnv()..."
 
 #: providers/odbc/gda-odbc-provider.c:433
 #: providers/odbc/gda-odbc-provider.c:453
@@ -850,9 +831,8 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:513
 #: providers/odbc/gda-odbc-provider.c:544
 #: providers/odbc/gda-odbc-provider.c:574
-#, fuzzy
 msgid "Invalid Odbc handle"
-msgstr "Pengendali Oracle tidak sah"
+msgstr "Pengendali Odbc tidak sah"
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1153
@@ -879,13 +859,12 @@ msgid "Sequence"
 msgstr "Jujukan"
 
 #: providers/odbc/libmain.c:41
-#, fuzzy
 msgid "Provider for ODBC data sources"
-msgstr "Jambatan GBA ke data sumber ODBC"
+msgstr "Pembekal bagi sumber data ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
-msgstr ""
+msgstr "Tiada nama TNS dibekalkan"
 
 #: providers/oracle/gda-oracle-provider.c:212
 msgid "Could not initialize Oracle"
@@ -969,9 +948,8 @@ msgid "Could not get the Oracle statement type"
 msgstr "Gagal memperolehi jenis kenyataan Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:610
-#, fuzzy
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "Gagal memperolehi jenis kenyataan Oracle"
+msgstr "Tak dapat menetapkan kenyataan Oracle pre-fetch row count"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
@@ -983,7 +961,7 @@ msgstr "Tak dapat memperolehi bilangan kolum pada set hasil"
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "Tak dapat deskcripter parameter pada set hasil"
 
 #: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
@@ -993,9 +971,8 @@ msgstr "Gagal mendapatkan nama kolum pada set hasil"
 #: providers/oracle/gda-oracle-provider.c:896
 #: providers/oracle/gda-oracle-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1012
-#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Gagal menginitialisasikan ikonteks servis Oracle"
+msgstr "Tak dapat melampirkan transaksi ke konteks servis"
 
 #: providers/oracle/gda-oracle-provider.c:870
 msgid "Could not allocate the Oracle transaction handle"
@@ -1030,15 +1007,13 @@ msgstr "Agregat"
 
 #: providers/oracle/gda-oracle-provider.c:1156
 #: providers/postgres/gda-postgres-provider.c:1304
-#, fuzzy
 msgid "OutType"
-msgstr "Jenis"
+msgstr "OutType"
 
 #: providers/oracle/gda-oracle-provider.c:1157
 #: providers/postgres/gda-postgres-provider.c:1305
-#, fuzzy
 msgid "InType"
-msgstr "Jenis"
+msgstr "InType"
 
 #: providers/oracle/gda-oracle-provider.c:1441
 msgid "Could not allocate the Oracle describe handle"
@@ -1109,7 +1084,7 @@ msgstr "Gagal mendapatkan skala medan Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
-msgstr ""
+msgstr "Tak dapat perolehi atribut bolehnull medan Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
@@ -1177,9 +1152,8 @@ msgid "Could not fetch a row"
 msgstr "Gagal mendapatkan fail daripada %s"
 
 #: providers/oracle/libmain.c:34
-#, fuzzy
 msgid "Provider for Oracle databases"
-msgstr "Pembekal GDA bagi pangkalandata Oracle"
+msgstr "Pembekal bagi pangkalandata Oracle"
 
 #: providers/postgres/gda-postgres-provider.c:554
 #: providers/postgres/gda-postgres-provider.c:571
@@ -1213,9 +1187,8 @@ msgid "Tuples:\"%s\""
 msgstr ""
 
 #: providers/postgres/libmain.c:41
-#, fuzzy
 msgid "Provider for PostgreSQL databases"
-msgstr "Pembekal GDA bagi pangkalandata PostgreSQL"
+msgstr "Pembekal bagi pangkalandata PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:198
 msgid ""
@@ -1226,7 +1199,7 @@ msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:220
 msgid "Could not set empty_result_callbacks SQLite option"
-msgstr ""
+msgstr "Tak dapat menetapkan opsyen SQLite empty_result_callbacks"
 
 #: providers/sqlite/gda-sqlite-provider.c:243
 #: providers/sqlite/gda-sqlite-provider.c:343
@@ -1258,128 +1231,127 @@ msgid "Could not retrieve information for field"
 msgstr "Tak dapat perolehi maklumat bagi medan"
 
 #: providers/sqlite/libmain.c:41
-#, fuzzy
 msgid "Provider for SQLite databases"
-msgstr "Pembekal GDA bagi pangkalandata SQLite"
+msgstr "Pembekal bagi pangkalandata SQLite"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr ""
+msgstr "Kehabisan memori. Peruntukan struktur sambungan gagal."
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
 msgid "Locale set to '%s'."
-msgstr ""
+msgstr "Lokaliti ditetapkan ke '%s'."
 
 #: providers/sybase/gda-sybase-provider.c:642
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
+"Struktur Cmd sedang digunakan. Arahan tidak akan dilaksanakan kerana "
+"sambungan diblok."
 
 #: providers/sybase/gda-sybase-provider.c:656
 #, c-format
 msgid "Failed allocating a command structure in %s()"
-msgstr ""
+msgstr "Gagal memperuntukkan struktur arahan pada %s()"
 
 #: providers/sybase/gda-sybase-provider.c:670
-#, fuzzy
 msgid "Could not prepare command structure."
-msgstr "Tak dapat menghantar arahan SQL '%s'"
+msgstr "Tak dapat menyediakan struktur arahan."
 
 #: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
-msgstr ""
+msgstr "Penghantaran sql-command gagal."
 
 #: providers/sybase/gda-sybase-provider.c:706
 #: providers/sybase/gda-sybase-provider.c:724
 #: providers/sybase/gda-sybase-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:811
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
-msgstr ""
+msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
 
 #. when you execute a stored procedure through openclient, this
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712
 msgid "CS_STATUS_RESULT!"
-msgstr ""
+msgstr "CS_STATUS_RESULT!"
 
 #: providers/sybase/gda-sybase-provider.c:734
 msgid "Hit unsupported result type"
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:762
+#, fuzzy
 msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
 msgstr ""
+"ralat berlaku bila memanggil ct_diag attempting to test if there is a server "
+"message for resultset"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
 msgid "%s returned %s"
-msgstr ""
+msgstr "%s mengembalikan %s"
 
 #: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
-msgstr ""
+msgstr "Struktur arahan pengguran gagal."
 
 #: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
-msgstr ""
+msgstr "Struktur arahan sedang digunakan. %s gagal."
 
 #: providers/sybase/gda-sybase-provider.c:858
-#, fuzzy
 msgid "Could not allocate command structure."
-msgstr "Gagal memperuntukkan pengendali persekitaran."
+msgstr "Tak dapat memperuntukkan struktur arahan."
 
 #: providers/sybase/gda-sybase-provider.c:867
-#, fuzzy, c-format
+#, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Tak dapat menghantar arahan SQL '%s'"
+msgstr "Tak dapat menyediakan struktur arahan dengan %s."
 
 #: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
-msgstr ""
+msgstr "Arahan penghantaran gagal."
 
 #: providers/sybase/gda-sybase-provider.c:902
 #: providers/sybase/gda-sybase-provider.c:919
 #: providers/sybase/gda-sybase-provider.c:930
 #, c-format
 msgid "%s: %s failed"
-msgstr ""
+msgstr "%s: %s gagal"
 
 #: providers/sybase/gda-sybase-provider.c:974
-#, fuzzy
 msgid "could not allocate cmd structure to find current database."
-msgstr "Gagal memperuntukkan pengendali persekitaran."
+msgstr ""
+"tak dapat memperuntukkan struktur arahan untuk mencari di pangkalandata "
+"semasa."
 
 #: providers/sybase/gda-sybase-provider.c:985
-#, fuzzy
 msgid "could not execute command to get current database."
-msgstr "Gagal memperuntukkan pengendali persekitaran."
+msgstr "tak dapat melaksanakan arahan untuk mendapatkan pangkalan data semasa."
 
 #: providers/sybase/gda-sybase-provider.c:993
-#, fuzzy
 msgid "could not send command to get current database."
-msgstr "Tak dapat menghantar arahan SQL '%s'"
+msgstr "Tak dapat menghantar arahan untuk mendapatkan pangkalandata semasa."
 
 #: providers/sybase/gda-sybase-provider.c:1016
-#, fuzzy
 msgid "could not bind variable to get current database."
-msgstr "Tak dapat menjumpai pembekal %s pada tetapan semasa"
+msgstr "Tak dapat ikat pembolehubah untuk mendapatkan pangkalandata semasa."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
-#, fuzzy
 msgid "could not fetch data to find current database."
-msgstr "Gagal memaut ke pelayan Oracle"
+msgstr "tak dapat menarik data untuk mencari di pangkalandata semasa."
 
 #: providers/sybase/gda-sybase-provider.c:1058
-#, fuzzy
 msgid "could not drop cmd structure to find current database."
-msgstr "Tak dapat menghantar arahan SQL '%s'"
+msgstr ""
+"tak dapat menggugurkan struktur arahan untuk mencari di pangkalandata semasa."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 #, fuzzy
@@ -1388,17 +1360,17 @@ msgstr "Gagal memperuntukkan pengendali pelayan Oracle"
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
-msgstr ""
+msgstr "ct_cancel() gagal."
 
 #: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
 msgid "%s failed while processing a row result."
-msgstr ""
+msgstr "%s gagal bila memproses hasil baris."
 
 #: providers/sybase/gda-sybase-recordset.c:339
 #, c-format
 msgid "%s returned <= 0 columns."
-msgstr ""
+msgstr "%s memulangkan <= 0 kolum."
 
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
@@ -1414,9 +1386,9 @@ msgstr "Tak dapat memperolehi bilangan kolum pada set hasil"
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s on column %d"
-msgstr "Tak dapat menghantar arahan SQL '%s'"
+msgstr "Tak dapat melaksana %s pada kolum %d"
 
 #: providers/sybase/gda-sybase-recordset.c:391
 #, fuzzy, c-format
@@ -1431,12 +1403,12 @@ msgstr "Tak dapat memperolehi bilangan kolum pada set hasil"
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
 msgid "%s failed on row %d"
-msgstr ""
+msgstr "%s gagal pada baris %d"
 
 #: providers/sybase/gda-sybase-recordset.c:465
 #, c-format
 msgid "%s terminated with unexpected return code."
-msgstr ""
+msgstr "%s ditamatkan dengan kod kembalian luardugaan."
 
 #: providers/sybase/gda-sybase-recordset.c:509
 msgid ""
@@ -1466,17 +1438,16 @@ msgstr ""
 #: providers/sybase/gda-sybase-types.c:208
 #, c-format
 msgid "cslib cannot convert type %d"
-msgstr ""
+msgstr "cslib tak dapat tukar jenis %d"
 
 #: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
-msgstr ""
+msgstr "penukaran data gagal bagi jenis %d"
 
 #: providers/sybase/libmain.c:40
-#, fuzzy
 msgid "GDA provider for sybase databases (using OpenClient)"
-msgstr "Pembekal GDA bagi pangkalandata berasaskan-TDS (menggunakan FreeTDS)"
+msgstr "Pembekal GDA bagi pangkalandata sybase (menggunakan OpenClient)"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
@@ -1484,7 +1455,7 @@ msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
-msgstr ""
+msgstr "Panggil: panggilbalik csmsg"
 
 #: providers/sybase/utils.c:53
 #, c-format
@@ -1493,15 +1464,18 @@ msgid ""
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
 msgstr ""
+"Ralat CS-Library:\n"
+"\tkeparahan(%ld) lapisan(%ld) asalan (%ld) nombor(%ld)\n"
+"\t%s"
 
 #: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
-msgstr ""
+msgstr "Ralat OS: %s"
 
 #: providers/sybase/utils.c:70
 msgid "Call: Client callback."
-msgstr ""
+msgstr "Panggil: panggilbalik klien."
 
 #: providers/sybase/utils.c:75
 #, c-format
@@ -1510,10 +1484,13 @@ msgid ""
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
 msgstr ""
+"Ralat CT-Client:\n"
+"\tkeparahan(%ld) lapisan(%ld) asalan (%ld) nombor(%ld)\n"
+"\t%s"
 
 #: providers/sybase/utils.c:90
 msgid "Call: server callback"
-msgstr ""
+msgstr "Panggil: panggilbalik pelayan"
 
 #: providers/sybase/utils.c:95
 #, c-format
@@ -1521,24 +1498,26 @@ msgid ""
 "CT-Server message:\n"
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 msgstr ""
+"Mesej CT-Server:\n"
+"\tnombor(%ld) keparahan(%ld) keadaan(%ld) baris(%ld)"
 
 #: providers/sybase/utils.c:100
-#, fuzzy, c-format
+#, c-format
 msgid "\tServer name: %s\n"
-msgstr "\t\tJujukan: %s\n"
+msgstr "\t\tNama pelayan: %s\n"
 
 #: providers/sybase/utils.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "\t\tProsedur: %s\n"
+msgstr "\t\tNama prosedur: %s\n"
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
-msgstr ""
+msgstr "ct_diag() gagal menentukan bilangan mesej klien."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr ""
+msgstr "panggilan ke cs_diag gagal bila cuba to the amount of client messages"
 
 #: providers/sybase/utils.c:220
 msgid ""
@@ -1546,29 +1525,28 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/utils.c:230
-#, fuzzy
 msgid "OS_Error:("
-msgstr "Ralat"
+msgstr "Ralat_OS:("
 
 #: providers/sybase/utils.c:232
 msgid ") Message: "
-msgstr ""
+msgstr ") Mesej: "
 
 #: providers/sybase/utils.c:245
 msgid "Sybase OpenClient Msg: severity("
-msgstr ""
+msgstr "Msg Sybase OpenClient: keparahan("
 
 #: providers/sybase/utils.c:247
 msgid "), number("
-msgstr ""
+msgstr "), nombor("
 
 #: providers/sybase/utils.c:249
 msgid "), origin("
-msgstr ""
+msgstr "), asalan("
 
 #: providers/sybase/utils.c:251
 msgid "), layer("
-msgstr ""
+msgstr "), lapisan("
 
 #: providers/sybase/utils.c:276
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1585,30 +1563,27 @@ msgstr ""
 
 #: providers/sybase/utils.c:346
 msgid "Server:"
-msgstr ""
+msgstr "Pelayan:"
 
 #: providers/sybase/utils.c:350
-#, fuzzy
 msgid "Stored Procedure:"
-msgstr "Prosedur Tersimpan"
+msgstr "Prosedur Tersimpan:"
 
 #: providers/sybase/utils.c:354
-#, fuzzy
 msgid "Number"
-msgstr "Nama"
+msgstr "Nombor"
 
 #: providers/sybase/utils.c:357 providers/sybase/utils.c:474
 msgid "Severity"
-msgstr ""
+msgstr "Keparahan"
 
 #: providers/sybase/utils.c:360
-#, fuzzy
 msgid "State"
-msgstr "Skala"
+msgstr "Keadaan"
 
 #: providers/sybase/utils.c:363
 msgid "Line"
-msgstr ""
+msgstr "Baris"
 
 #: providers/sybase/utils.c:446
 msgid "call to ct_diag failed when attempting to the amount of client messages"
@@ -1621,15 +1596,15 @@ msgstr ""
 
 #: providers/sybase/utils.c:476
 msgid "Layer"
-msgstr ""
+msgstr "Lapisan"
 
 #: providers/sybase/utils.c:478
 msgid "Origin"
-msgstr ""
+msgstr "Asalan"
 
 #: providers/sybase/utils.c:480
 msgid "Message Number"
-msgstr ""
+msgstr "Nombor Mesej"
 
 #: providers/sybase/utils.c:502
 msgid "call to ct_diag failed when attempting to clear the client messages"
@@ -1637,41 +1612,39 @@ msgstr ""
 
 #: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
-msgstr ""
+msgstr "Operasi mustahil, sambungan sibuk."
 
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
+"Samada NAMAFAIL atau DIREKTORI boleh dinyatakan, tapi bukan kedua-dua atau "
+"tiada langsung"
 
 #: providers/xbase/gda-xbase-provider.c:232
-#, fuzzy
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr "NAMAFAIL pangkalandata mestilah dinyatakan pada connection_string"
+msgstr ""
+"Samada NAMAFAIL atau DIREKTORI mestilah dinyatakan pada rantaikata sambungan"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
-#, fuzzy
 msgid "Invalid Xbase handle"
-msgstr "Pengendali Interbase tidak sah"
+msgstr "Pengendali Xbase tidak sah"
 
 #: providers/xbase/libmain.c:39
-#, fuzzy
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
-msgstr "Pembekal GDA bagi pangkalandata Oracle"
+msgstr "Pembekal bagi fail Xbase (dBase, Foxpro, dll)"
 
 #: providers/xml/gda-xml-provider.c:190
-#, fuzzy
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
 msgstr ""
-"Path penuh mesti dinyatakan pada rentetan sambungan untuk membua "
-"pangkalandata"
+"Laluan penuh mesti dinyatakan pada rantaikata sambungan untuk membuka "
+"pangkalandata pada pembekal XML."
 
 #: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
-#, fuzzy
 msgid "Invalid XML handle"
-msgstr "Pengendali MySQL tidak sah"
+msgstr "Pengendali XML tidak sah"
 
 #: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
 #: providers/xml/gda-xml-provider.c:304
@@ -1692,11 +1665,11 @@ msgstr "Tak memperolehi huraian bagi kolum"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
-msgstr ""
+msgstr "XML"
 
 #: providers/xml/libmain.c:39
 msgid "XML provider, based on the libgda XML database format"
-msgstr ""
+msgstr "Pembekal XML, berdasarkan format pangkalan data XML libgda"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
@@ -1704,7 +1677,7 @@ msgstr "Tak dapat menghantar dokumen XML"
 
 #: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
-msgstr ""
+msgstr "Dokumen XML tidak sah"
 
 #: report/libgda-report/gda-report-document.c:208
 #, c-format
@@ -1719,7 +1692,7 @@ msgstr "Gagal mendapatkan fail daripada %s"
 #: report/libgda-report/gda-report-item-reportheader.c:171
 #, c-format
 msgid "An element with ID %s already exists in the report"
-msgstr ""
+msgstr "Unsur dengan ID %s sudah wujud pada laporan"
 
 #: report/libgda-report/gda-report-item-detail.c:185
 #: report/libgda-report/gda-report-item-pagefooter.c:196
@@ -1729,7 +1702,7 @@ msgstr ""
 #: report/libgda-report/gda-report-item-reportheader.c:196
 #, c-format
 msgid "Item with ID %s is not a label"
-msgstr ""
+msgstr "Item dengan ID %s adalah bukan satu label"
 
 #: report/libgda-report/gda-report-item-detail.c:214
 #: report/libgda-report/gda-report-item-pagefooter.c:224
@@ -1739,31 +1712,31 @@ msgstr ""
 #: report/libgda-report/gda-report-item-reportheader.c:224
 #, c-format
 msgid "Item with ID %s is not a repfield"
-msgstr ""
+msgstr "Item dengan ID %s adalah bukan repfield"
 
 #: report/libgda-report/gda-report-item.c:276
 msgid "Error setting parent -> child relation"
-msgstr ""
+msgstr "Ralat menetapkan kaitan ibubapa -> anak"
 
 #: report/libgda-report/gda-report-item.c:375
 #, c-format
 msgid "Error setting value %s to attribute %s of item %s"
-msgstr ""
+msgstr "Ralat menetapkan nilai tetapan %s ke atribut %s bagi item %s"
 
 #: report/libgda-report/gda-report-valid.c:130
-#, fuzzy, c-format
+#, c-format
 msgid "could not get DTD from %s"
-msgstr "Gagal mendapatkan fail daripada %s"
+msgstr "Gagal mendapatkan DTD daripada %s"
 
 #: report/libgda-report/gda-report-valid.c:231
 #, c-format
 msgid "Error validating element %s"
-msgstr ""
+msgstr "Ralat mengedahkan unsur %s"
 
 #: report/libgda-report/gda-report-valid.c:269
 #, c-format
 msgid "No declaration for attribute %s of element %s\n"
-msgstr ""
+msgstr "Tiada pengistiharan bagi atribut %s bagi unsue %s\n"
 
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
@@ -1809,9 +1782,9 @@ msgid "\t\tIndexes: %s\n"
 msgstr "\t\tIndeks: %s\n"
 
 #: testing/client.c:94
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tNamespaces: %s\n"
-msgstr "\t\tPengguna: %s\n"
+msgstr "\t\tRuangnama: %s\n"
 
 #: testing/client.c:97
 #, c-format
@@ -1887,7 +1860,7 @@ msgstr "Agregat"
 
 #: testing/client.c:136
 msgid "Languages"
-msgstr ""
+msgstr "Bahasa"
 
 #: testing/client.c:141 testing/client.c:149
 msgid "\tStarting transaction..."
@@ -1941,86 +1914,3 @@ msgstr "\thuraian = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-
-#, fuzzy
-#~ msgid "Default"
-#~ msgstr "Nilai Default"
-
-#, fuzzy
-#~ msgid "Default provider, based on XML"
-#~ msgstr "Pembekal default GDA, berdasarkan format XML libgda"
-
-#, fuzzy
-#~ msgid "about to open connection"
-#~ msgstr "** RALAT: tak dapat membuka sambungan ke %s\n"
-
-#, fuzzy
-#~ msgid "Could not initialize cslib callback"
-#~ msgstr "Gagal menginitialisasikan Oracle"
-
-#, fuzzy
-#~ msgid "CS-lib callback initialized."
-#~ msgstr "libgda berjaya diinitialisasi"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-client callback"
-#~ msgstr "Gagal menginitialisasikan Oracle"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "Gagal menginitialisasikan Oracle"
-
-#, fuzzy
-#~ msgid "Connection allocated."
-#~ msgstr "Jadual Sambungan"
-
-#, fuzzy
-#~ msgid "Username set."
-#~ msgstr "Namapengguna"
-
-#, fuzzy
-#~ msgid "Password set."
-#~ msgstr "Katalaluan"
-
-#~ msgid "Could not allocate environment handle."
-#~ msgstr "Gagal memperuntukkan pengendali persekitaran."
-
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "Gagal menetapkan autosanggup ke off\n"
-
-#~ msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-#~ msgstr ""
-#~ "SQLGetFunctions memberi pemulangan diluar dugaan. Sambungan ditamatkan.\n"
-
-#~ msgid "MESSAGE: %s"
-#~ msgstr "MESEJ: %s"
-
-#~ msgid "ERROR: %s"
-#~ msgstr "RALAT: %s"
-
-#~ msgid "Tables"
-#~ msgstr "Jadual"
-
-#~ msgid "Types"
-#~ msgstr "Jenis"
-
-#~ msgid "Data Type"
-#~ msgstr "Jenis Data"
-
-#~ msgid "Precision"
-#~ msgstr "Ketepatan"
-
-#~ msgid "Identity"
-#~ msgstr "Indentiti"
-
-#~ msgid "Domain"
-#~ msgstr "Domain"
-
-#~ msgid "Printfmt"
-#~ msgstr "Printfmt"
-
-#~ msgid "GDA provider for IBMDB2"
-#~ msgstr "Pembekal GDA bagi pangkalandata IBMDB2"
-
-#~ msgid "Table Name"
-#~ msgstr "Nama Jadual"
