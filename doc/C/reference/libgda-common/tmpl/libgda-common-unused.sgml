@@ -31,6 +31,39 @@
 @freedoc: 
 @Returns: 
 
+<!-- ##### FUNCTION gda_xml_file_construct ##### -->
+<para>
+
+</para>
+
+@xmlfile: 
+@root_doc: 
+
+<!-- ##### FUNCTION gda_xml_file_new ##### -->
+<para>
+
+</para>
+
+@root_doc: 
+@Returns: 
+
+<!-- ##### FUNCTION gda_xml_file_stringify ##### -->
+<para>
+
+</para>
+
+@f: 
+@Returns: 
+
+<!-- ##### FUNCTION gda_xml_file_to_file ##### -->
+<para>
+
+</para>
+
+@f: 
+@filename: 
+@Returns: 
+
 <!-- ##### FUNCTION xml_query_item_get_sqlfmt ##### -->
 <para>
 

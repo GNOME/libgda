@@ -177,7 +177,6 @@ gda_connection_class_init (GdaConnectionClass* klass)
 			       GTK_SIGNAL_OFFSET(GdaConnectionClass, close),
 			       gtk_signal_default_marshaller,
 			       GTK_TYPE_NONE, 0);
-
 	gtk_object_class_add_signals(object_class, gda_connection_signals, LAST_SIGNAL);
 
 	object_class->destroy = gda_connection_destroy;

@@ -381,6 +381,7 @@ gda_server_connection_get_type (void)
                         GTK_STRUCT_OFFSET (GdaServerConnectionClass, epv),
                         &info);
         }
+
         return type;
 }
 
