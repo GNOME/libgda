@@ -29,6 +29,7 @@
 #  define __gda_sybase_types_h__
 
 #if defined(HAVE_CONFIG_H)
+#  include <config.h>
 #endif
 #include <string.h>
 #include "gda-sybase.h"
@@ -44,7 +45,7 @@ typedef struct _sybase_Types {
   gchar            *name;
   CS_INT           sql_type;
   GdaValueType     gda_type;
-/*  sybase_conv_Func conv_sql2gda; */
+//  sybase_conv_Func conv_sql2gda;
 } sybase_Types;
 
 #define GDA_SYBASE_TYPE_CNT 23

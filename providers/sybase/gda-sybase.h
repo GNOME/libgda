@@ -29,37 +29,20 @@
 #  define __gda_sybase_h__
 
 #if defined(HAVE_CONFIG_H)
+#  include <config.h>
 #endif
 
 #include <glib/gmacros.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-server-provider.h>
-
 #include <ctpublic.h>
 #include <cspublic.h>
-
 #include "gda-sybase-provider.h"
-
-/* share schema queries with freetds provider */
-/* #include "../freetds/gda-tds-schemas.h" */
 #include "gda-sybase-schemas.h"
 
 #define GDA_SYBASE_PROVIDER_ID		"GDA sybase provider"
 
 G_BEGIN_DECLS
-
-typedef struct _sybaseError
-{
-		gchar *error_msg;
-} sybase_error;
-
-
-typedef struct _sybaseConnection
-{
-		CS_CONTEXT    *context;
-		CS_CONNECTION *connection;
-		sybase_error err;
-} sybase_connection; 
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 #define OBJECT_DATA_SYBASE_HANDLE "GDA_Sybase_SybaseHandle"
@@ -68,24 +51,6 @@ typedef struct _sybaseConnection
 /*
  * Utility functions
  */
-
-/*
-GdaError *gda_sybase_make_error (sybase_connection *);
-
-gboolean sybase_check_messages(GdaServerConnection *);
-
-gboolean sybase_check_clientmsg(GdaServerConnection *);
-
-gboolean sybase_check_servermsg(GdaServerConnection *);
-
-gboolean sybase_check_cmsg(GdaServerConnection *);
-
-gchar *sprintf_clientmsg(const gchar *, 
-																									CS_CLIENTMSG *);
-
-gchar *sprintf_servermsg(const gchar *,
-																									CS_SERVERMSG *);
-*/
 
 gboolean sybase_check_messages(GdaConnection *cnc);
 
@@ -102,7 +67,6 @@ GdaError *gda_sybase_make_error (GdaSybaseConnectionData *scnc, gchar *fmt, ...)
 
 void sybase_debug_msg(gchar *fmt, ...);
 void sybase_error_msg(gchar *fmt, ...);
-
 
 G_END_DECLS
 

@@ -22,6 +22,7 @@
 #  define __gda_sybase_schemas_h__
 
 #if defined(HAVE_CONFIG_H)
+#  include <config.h>
 #endif
 
 #include <libgda/gda-data-model-array.h>
@@ -30,7 +31,7 @@
 G_BEGIN_DECLS
 
 #define TDS_QUERY_CURRENT_DATABASE \
-	"SELECT db_name() AS database"
+	"SELECT db_name()"
 #define TDS_QUERY_SERVER_VERSION \
 	"SELECT (@@version) AS version"
 
@@ -206,6 +207,32 @@ G_BEGIN_DECLS
 	" ORDER BY name"
 
 G_END_DECLS
+
+
+#define TDS_SCHEMA_INDEXES \
+ "SELECT name from sysindexes " \
+ "order by name"
+
+
+#define TDS_FIXMODEL_SCHEMA_INDEXES(model) \
+	if (model) { \
+		gda_data_model_set_column_title (GDA_DATA_MODEL (model),  0, \
+		                                 _("Indexes")); \
+	}
+
+#define TDS_SCHEMA_TRIGGERS \
+ "SELECT name " \
+ "from sysobjects " \
+ "where type = 'TR' "\
+ "order by name"
+
+#define TDS_FIXMODEL_SCHEMA_TRIGGERS(model) \
+	if (model) { \
+		gda_data_model_set_column_title (GDA_DATA_MODEL (model),  0, \
+		                                 _("Triggers")); \
+	}
+
+
 
 #endif
 

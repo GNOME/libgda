@@ -22,6 +22,7 @@
  */
 
 #if defined(HAVE_CONFIG_H)
+#  include <config.h>
 #endif
 
 #include <libgda/gda-intl.h>
@@ -85,7 +86,7 @@ gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
 
 	memcpy (name, colinfo->name,
 	        colinfo->namelen);
-	/* name[colinfo->namelen + 1] = '\0'; */
+	//name[colinfo->namelen + 1] = '\0';
 
 	gda_field_attributes_set_name (attribs, name);
 	gda_field_attributes_set_scale (attribs, colinfo->scale);
@@ -93,12 +94,11 @@ gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
 	         gda_sybase_get_value_type (colinfo->datatype));
 	gda_field_attributes_set_defined_size (attribs, colinfo->maxlength);
 
-	/* FIXME: */
+	// FIXME:
 	gda_field_attributes_set_references (attribs, "");
 	gda_field_attributes_set_primary_key (attribs, FALSE);
-	/* gda_field_attributes_set_primary_key (attribs,
-	 *         (colinfo->status & CS_KEY) == CS_KEY);
-	 */
+	//gda_field_attributes_set_primary_key (attribs,
+	//         (colinfo->status & CS_KEY) == CS_KEY);
 	gda_field_attributes_set_unique_key (attribs, FALSE);
 	
 	gda_field_attributes_set_allow_null (attribs,
@@ -241,7 +241,7 @@ gda_sybase_create_current_row (GdaSybaseRecordset *recset)
 	g_return_val_if_fail (recset->priv != NULL, NULL);
 	g_return_val_if_fail (recset->priv != NULL, NULL);
 
-	row = gda_row_new (recset->priv->columns->len);
+	row = gda_row_new (GDA_DATA_MODEL(recset),recset->priv->columns->len);
 	g_return_val_if_fail (row != NULL, NULL);
 
 	for (i = 0; i < recset->priv->columns->len; i++) {
@@ -281,7 +281,7 @@ gda_sybase_recordset_get_type (void)
 	return type;
 }
 
-static GdaSybaseRecordset *
+GdaSybaseRecordset *
 gda_sybase_process_row_result (GdaConnection           *cnc,
                                GdaSybaseConnectionData *scnc,
                                gboolean                fetchall)
@@ -296,9 +296,8 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 	CS_INT             rows_read = 0;
 	gint               row_cnt = 0;
 
-	/* called within gda_sybase_recordset_new
-	 * scnc->cmd != NULL, cnc != NULL
-	 */
+	// called within gda_sybase_recordset_new
+	// scnc->cmd != NULL, cnc != NULL
 	
 	srecset = g_object_new (GDA_TYPE_SYBASE_RECORDSET, NULL);
 	if ((srecset != NULL) && (srecset->priv != NULL)
@@ -307,9 +306,8 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		srecset->priv->cnc = cnc;
 		srecset->priv->scnc = scnc;
 	} else {
-		/* most probably a lack of ram failure,
-		 * so don't alloc e.g. an instance of GdaError
-		 */
+		// most probably a lack of ram failure, 
+		// so don't alloc e.g. an instance of GdaError
 		if (srecset) {
 			g_object_unref (srecset);
 			srecset = NULL;
@@ -318,13 +316,14 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		scnc->ret = ct_cancel (NULL, scnc->cmd, CS_CANCEL_CURRENT);
 		if (scnc->ret != CS_SUCCEED) {
 			sybase_error_msg (_("ct_cancel() failed."));
+			sybase_check_messages(cnc);
 		}
 		return NULL;
 	}
 
-/*	g_object_unref (srecset); */
+//	g_object_unref (srecset);
 
-	/* step 1: determine count of columns */
+	// step 1: determine count of columns
 	scnc->ret = ct_res_info(scnc->cmd, CS_NUMDATA,
 	                        &srecset->priv->colcnt, CS_UNUSED, NULL);
 	if (scnc->ret != CS_SUCCEED) {
@@ -332,6 +331,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		                               _("%s failed while processing a row result."),
 		                               "ct_res_info()");
 		gda_connection_add_error (cnc, error);
+		sybase_check_messages(cnc);
 		return NULL;
 	}
 	if (srecset->priv->colcnt <= 0) {
@@ -342,7 +342,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		return NULL;
 	}
 
-	/* step 2: allocate memory for column metainfo */
+	// step 2: allocate memory for column metainfo
 	for (i = 0; i < srecset->priv->colcnt; i++) {
 		sfield = g_new0 (GdaSybaseField, 1);
 		if (sfield != NULL) {
@@ -352,7 +352,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		}
 	}
 
-	/* out of memory? fatal, just log and cancel all */
+	// out of memory? fatal, just log and cancel all
 	if (!sfields_allocated) {
 		g_object_unref (srecset);
 		srecset = NULL;
@@ -362,18 +362,16 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		if (scnc->ret != CS_SUCCEED) {
 			sybase_error_msg (_("Could not call %s while processing row resultset."),
 			                  "ct_cancel()");
+			sybase_check_messages(cnc);
 		}
 		return srecset;
 	}
 
-/*
-	sybase_debug_msg (_("Counted %d columns, allocated metainf for %d"),
-	                  srecset->priv->colcnt, srecset->priv->columns->len);
-*/
+//	sybase_debug_msg (_("Counted %d columns, allocated metainf for %d"),
+//	                  srecset->priv->colcnt, srecset->priv->columns->len);
 	
-	/* step 3: collect information for each column,
-	 *         allocate a buffer for data and ct_bind it
-	 */
+	// step 3: collect information for each column,
+	//         allocate a buffer for data and ct_bind it
 	for (i = 0; i < srecset->priv->colcnt; i++) {
 		sfield = (GdaSybaseField *) g_ptr_array_index (srecset->priv->columns, i);
 		memset (&sfield->fmt, 0, sizeof(sfield->fmt));
@@ -383,6 +381,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 			error = gda_sybase_make_error (scnc, 
 			                               _("Could not run %s on column %d"), "ct_describe()", i);
 			gda_connection_add_error (cnc, error);
+			sybase_check_messages(cnc);
 			break;
 		}
 
@@ -391,6 +390,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 			error = gda_sybase_make_error (scnc,
 			                               _("Could not allocate data placeholder for column %d"), i);
 			gda_connection_add_error (cnc, error);
+			sybase_check_messages(cnc);
 			break;
 		}
 
@@ -402,6 +402,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 			error = gda_sybase_make_error (scnc,
 			                               _("Could not run %s on column %d"), "ct_bind()", i);
 			gda_connection_add_error (cnc, error);
+			sybase_check_messages(cnc);
 			break;
 		}
 
@@ -411,7 +412,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		}
 	}
 
-	/* catch error: ct_describe or g_new0 or ct_bind failed */
+	// catch error: ct_describe or g_new0 or ct_bind failed
 	if ((scnc->ret != CS_SUCCEED) || (sfield->data == NULL)) {
 		g_object_unref (srecset);
 		srecset = NULL;
@@ -420,13 +421,14 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		if (scnc->ret != CS_SUCCEED) {
 			error = gda_sybase_make_error (scnc, _("Could not run %s to cancel processing row resultset."), "ct_cancel");
 			gda_connection_add_error (cnc, error);
+			sybase_check_messages(cnc);
 		}
 		
 		return srecset;
 	}
 	columns_set = TRUE;
 
-	/* step 4: now proceed with fetching the data */
+	// step 4: now proceed with fetching the data
 	while ((scnc->ret = ct_fetch (scnc->cmd, CS_UNUSED, CS_UNUSED,
 	                              CS_UNUSED, &rows_read) == CS_SUCCEED)
 	       || (scnc->ret == CS_ROW_FAIL)) {
@@ -435,11 +437,11 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		if (scnc->ret == CS_ROW_FAIL) {
 			error = gda_sybase_make_error (scnc, _("%s failed on row %d"), "ct_fetch()", row_cnt);
 			gda_connection_add_error (cnc, error);
+			sybase_check_messages(cnc);
 		}
 		
-		/* srecset->columns contains the data;
-		 * make a row out of it
-		 */
+		// srecset->columns contains the data;
+		// make a row out of it
 		row = gda_sybase_create_current_row (srecset);
 		if (row) {
 			g_ptr_array_add(srecset->priv->rows, row);
@@ -447,103 +449,152 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		}
 	}
 
-/*	sybase_debug_msg (_("Got %d of %d rows"), srecset->priv->rowcnt, row_cnt); */
-	/* step 5: verify ct_fetch's last return code */
+//	sybase_debug_msg (_("Got %d of %d rows"), srecset->priv->rowcnt, row_cnt);
+	// step 5: verify ct_fetch's last return code
 	switch (scnc->ret) {
 		case CS_END_DATA:
-/*			sybase_debug_msg (_("Row processing succeeded.")); */
+//			sybase_debug_msg (_("Row processing succeeded."));
 			break;
 		case CS_CANCELED:
-/*			sybase_debug_msg (_("Row processing canceled.")); */
+//			sybase_debug_msg (_("Row processing canceled."));
 			break;
 		case CS_FAIL:
-/*			sybase_debug_msg (_("%s returned CS_FAIL. Probably o.k."), "ct_fetch()"); */
+//			sybase_debug_msg (_("%s returned CS_FAIL. Probably o.k."), "ct_fetch()");
 			break;
 		default:
 			error = gda_sybase_make_error (scnc, _("%s terminated with unexpected return code."), "ct_fetch()");
 			gda_connection_add_error (cnc, error);
+			sybase_check_messages(cnc);
 	}
 	
 	return srecset;
 }
 
-/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * gda_sybase_recordset_new is a general result-processing routine
- * for processing a single ct_results() step.
- * 
- * Therefore it may also return no result, e.g. if the resulttype is
- * CS_CMD_DONE, i.e. we finished processing a command.
- * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- */
-GdaDataModel *
-gda_sybase_recordset_new (GdaConnection *cnc,
-                          gboolean fetchall)
+
+GdaSybaseRecordset *
+gda_sybase_process_msg_result(GdaConnection *cnc,
+															GdaSybaseConnectionData *scnc)
 {
-	GdaSybaseConnectionData *scnc = NULL;
-	GdaSybaseRecordset      *srecset = NULL;
-/*	GdaSybaseField          *sfield = NULL; */
-/*	GdaRow                  *row = NULL; */
-	GdaError                *error = NULL;
-/*	gboolean                columns_set = FALSE; */
-/*	gint                    i = 0; */
-
-	g_return_val_if_fail (GDA_IS_CONNECTION(cnc), NULL);
-	scnc = (GdaSybaseConnectionData *) g_object_get_data (G_OBJECT (cnc),
-	                                           OBJECT_DATA_SYBASE_HANDLE);
-	g_return_val_if_fail (scnc != NULL, NULL);
-	g_return_val_if_fail (scnc->cmd != NULL, NULL);
-
-	/* now nothing may fail;
-	 * a result not processed may block the entire connection
-	 * each process_* routine must check if recset is valid,
-	 * otherwise alt. a) too process the results (eventually discard)
-	 *           alt. b) call ct_cancel, dropping _all_ results of
-	 *                   the entire query
-	 */
 	
-	
-	/* we are within the resultset processing loop,
-	 * ct_results (scnc->cmd, &scnc->res_type) = CS_SUCCEED
-	 */
+	// in ASE when a stored procedure uses the print statement, it 
+	// generates a CS_MSG_RESULT result code, treat it like another result set.
 
-	switch (scnc->res_type) {
-		case CS_ROW_RESULT:
-			srecset = gda_sybase_process_row_result (cnc, scnc,
-			                                         TRUE);
-			break;
-	/* FIXME: implement CS_CURSOR_RESULT .. CS_COMPUTEFMT_RESULT */
-		case CS_CURSOR_RESULT:
-		case CS_PARAM_RESULT:
-		case CS_STATUS_RESULT:
-		case CS_COMPUTE_RESULT:
-		case CS_MSG_RESULT:
-		case CS_DESCRIBE_RESULT:
-		case CS_ROWFMT_RESULT:
-		case CS_COMPUTEFMT_RESULT:
-			scnc->ret = ct_cancel (NULL, scnc->cmd,
-			                       CS_CANCEL_CURRENT);
-			break;
-		case CS_CMD_DONE:
-/*			sybase_debug_msg (_("Done with resultset.")); */
-			break;
-		case CS_CMD_SUCCEED:
-/*			sybase_debug_msg (_("Command returned no rows.")); */
-			srecset = g_object_new (GDA_TYPE_SYBASE_RECORDSET, NULL);
-			if ((srecset != NULL) && (srecset->priv != NULL)
-			    && (srecset->priv->columns != NULL) 
-			    && (srecset->priv->rows != NULL)) {
-				srecset->priv->cnc = cnc;
-				srecset->priv->scnc = scnc;
-			}
-			break;
-		case CS_CMD_FAIL:
-			sybase_debug_msg (_("%s returned %s"),
-			                  "ct_results()", "CS_CMD_FAIL");
-			break;
+	GdaSybaseRecordset *srecset = NULL;
+	GdaSybaseField *sfield = NULL;
+	//	gboolean sfields_allocated = TRUE;
+	GdaRow *row = NULL;
+	GdaValue *val = NULL;
+	gchar *message;
+	CS_INT msgcnt = 0;
+	GdaError *error;
+	CS_SERVERMSG msg; 
+	CS_RETCODE ret;
+
+	// called within gda_sybase_recordset_new
+	srecset = g_object_new (GDA_TYPE_SYBASE_RECORDSET, NULL);
+
+	srecset->priv->cnc = cnc;
+	srecset->priv->scnc = scnc;
+
+	// see if there is a message
+	ret = ct_diag (scnc->connection,
+								 CS_STATUS, 
+								 CS_ALLMSG_TYPE, 
+								 CS_UNUSED,
+								 &msgcnt);
+	
+	if ( ret != CS_SUCCEED ) {
+		error = gda_error_new();
+		g_return_val_if_fail (error != NULL, FALSE);
+		gda_error_set_description (error, _("an error occured when calling ct_diag attempting to retrieve a server message count for resultset"));
+		gda_error_set_number (error, -1);
+		gda_error_set_source (error, "gda-sybase");
+		gda_error_set_sqlstate (error, _("Not available"));					
+		gda_connection_add_error (cnc, error);		
+		return NULL;
 	}
 
-	if (srecset) 
-		return GDA_DATA_MODEL (srecset);
-	else
-		return NULL;
+	if ( msgcnt < 1 ){
+			sybase_debug_msg (_("attempting to make recordset and msg count != 1 !"));
+			return NULL;
+	}
+
+	ret = ct_diag (scnc->connection, 
+																CS_GET, 
+																CS_SERVERMSG_TYPE, 
+																1, 
+																&msg); 
+	if ( ret != CS_SUCCEED ) { 
+		error = gda_error_new();
+		g_return_val_if_fail (error != NULL, FALSE);
+		gda_error_set_description (error,
+															 _("an error occured when calling ct_diag attempting to retrieve a server message for recordset"));
+		gda_error_set_number (error, -1);
+		gda_error_set_source (error, "gda-sybase");
+		gda_error_set_sqlstate (error, _("Not available"));					
+		gda_connection_add_error (cnc, error);
+		return NULL;					
+	} 	
+
+	srecset->priv->colcnt = 1;
+
+	sfield = g_new0 (GdaSybaseField, 1);
+
+	if (sfield != NULL) {
+		g_ptr_array_add (srecset->priv->columns, sfield);
+	} 
+	else {
+		g_object_unref (srecset);
+		srecset = NULL;
+		sybase_error_msg (_("Could not allocate structure for column metainformation."));
+		
+		scnc->ret = ct_cancel (NULL, scnc->cmd, CS_CANCEL_ALL);
+		if (scnc->ret != CS_SUCCEED) {
+			sybase_error_msg (_("Could not call %s while processing row resultset."),
+			                  "ct_cancel()");
+			sybase_check_messages(cnc);
+		}
+		return srecset;
+	}		
+
+	memset (&sfield->fmt, 0, sizeof(sfield->fmt));
+	sfield->fmt.namelen = 0;
+	sfield->fmt.datatype = CS_CHAR_TYPE;
+	sfield->fmt.scale = 0;
+	sfield->fmt.precision = 0;
+	sfield->fmt.status = CS_CANBENULL;
+	sfield->fmt.count = 1;
+	sfield->fmt.locale = NULL;
+
+	row = gda_row_new(GDA_DATA_MODEL(srecset), 1);
+	val = gda_row_get_value(row,0);
+
+	message = g_strdup_printf("%s",
+																											(msg.text) ? msg.text : "");
+
+	sfield->fmt.maxlength = strlen(message);
+
+	srecset->priv->rowcnt = 1;	
+ gda_value_set_string(val,(gchar *)message);
+	g_ptr_array_add(srecset->priv->rows, row);
+
+	// clear the message so we don't get bugged by it later
+	ret = ct_diag (scnc->connection, 
+																CS_CLEAR, 
+																CS_SERVERMSG_TYPE, 
+																CS_UNUSED, 
+																NULL);   
+	if ( ret != CS_SUCCEED ) { 
+			error = gda_error_new();
+			g_return_val_if_fail (error != NULL, FALSE);
+			gda_error_set_description (error, _("call to ct_diag failed when attempting to clear the server messages"));
+			gda_error_set_number (error, -1);
+			gda_error_set_source (error, "gda-sybase");
+			gda_error_set_sqlstate (error, _("Not available"));					
+			gda_connection_add_error (cnc, error);
+			return NULL;
+		} 	
+
+	return srecset;
 }
+																														

@@ -74,8 +74,17 @@ struct _GdaSybaseRecordsetPrivate {
 };
 
 GType           gda_sybase_recordset_get_type (void);
-GdaDataModel   *gda_sybase_recordset_new (GdaConnection *cnc,
-                                          gboolean fetchall);
+
+GdaSybaseRecordset *
+gda_sybase_process_row_result (GdaConnection           *cnc,
+                               GdaSybaseConnectionData *scnc,
+                               gboolean                fetchall);
+
+
+GdaSybaseRecordset *
+gda_sybase_process_msg_result(GdaConnection *cnc,
+																														GdaSybaseConnectionData *scnc);
+
 
 G_END_DECLS
 
