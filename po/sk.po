@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-11-18 18:46+0100\n"
+"POT-Creation-Date: 2001-11-22 14:07+0100\n"
 "PO-Revision-Date: 2001-11-11 12:58CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -24,16 +24,16 @@ msgstr "nie je možné otvoriť spojenie s %s"
 msgid "Data source %s not found"
 msgstr "Zdroj dát %s nenájdený"
 
-#: lib/gda-client/gda-connection.c:448
+#: lib/gda-client/gda-connection.c:449
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databáza '%s' nebola nájdená v systémovej konfigurácii"
 
-#: lib/gda-client/gda-connection.c:452 lib/gda-client/gda-connection.c:469
+#: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
 msgid "[GDA Client Library]"
 msgstr "[klientská knižnice GDA]"
 
-#: lib/gda-client/gda-connection.c:468
+#: lib/gda-client/gda-connection.c:469
 msgid "Could not open CORBA factory"
 msgstr "Nie je možné otvoriť CORBA factory"
 
@@ -228,13 +228,13 @@ msgstr "Vytváracie rozhranie spojenia pre poskytovateľa LDAP"
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:479
 #: providers/gda-postgres-server/gda-postgres-connection.c:767
-#: providers/gda-sybase-server/gda-sybase-error.c:132
+#: providers/gda-sybase-server/gda-sybase-error.c:100
+#: providers/gda-sybase-server/gda-sybase-error.c:118
 #: providers/gda-tds-server/gda-tds-error.c:128
 #, c-format
 msgid "error '%s' at %s"
 msgstr "chyba '%s' v %s"
 
-#. gda_error_set_help_file (error, _("Not available"));
 #: providers/gda-interbase-server/gda-interbase-connection.c:337
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
@@ -251,7 +251,7 @@ msgstr "chyba '%s' v %s"
 #: providers/gda-postgres-server/gda-postgres-connection.c:776
 #: providers/gda-primebase-server/gda-primebase-connection.c:375
 #: providers/gda-primebase-server/gda-primebase-connection.c:376
-#: providers/gda-sybase-server/gda-sybase-error.c:142
+#: providers/gda-sybase-server/gda-sybase-error.c:112
 #: providers/gda-tds-server/gda-tds-error.c:137
 #: providers/gda-tds-server/gda-tds-error.c:138
 msgid "Not available"
@@ -264,7 +264,7 @@ msgstr "Nie je k dispozícii"
 #: providers/gda-oracle-server/gda-oracle-connection.c:486
 #: providers/gda-postgres-server/gda-postgres-connection.c:777
 #: providers/gda-primebase-server/gda-primebase-connection.c:377
-#: providers/gda-sybase-server/gda-sybase-error.c:143
+#: providers/gda-sybase-server/gda-sybase-error.c:113
 #: providers/gda-tds-server/gda-tds-error.c:139
 msgid "error"
 msgstr "chyba"
@@ -300,7 +300,7 @@ msgstr "Vytváracie rozhranie spojenia pre poskytovateľa pošty"
 
 #: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
-#: providers/gda-sybase-server/gda-sybase-connection.c:290
+#: providers/gda-sybase-server/gda-sybase-connection.c:313
 #: providers/gda-tds-server/gda-tds-connection.c:283
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
@@ -321,7 +321,7 @@ msgstr "Vytváracie rozhranie spojenia pre poskytovateľa MDB"
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:144
-#: providers/gda-sybase-server/gda-sybase-command.c:141
+#: providers/gda-sybase-server/gda-sybase-command.c:167
 #: providers/gda-tds-server/gda-tds-command.c:125
 #, c-format
 msgid "executing command '%s'"
@@ -360,7 +360,7 @@ msgstr "mysql_recset je NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:469
 #: providers/gda-mysql-server/gda-mysql-connection.c:845
-#: providers/gda-sybase-server/gda-sybase-connection.c:469
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
 #: providers/gda-tds-server/gda-tds-connection.c:453
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Nezadané meno tabuľky pre SCHEMA_COLS"
@@ -505,450 +505,389 @@ msgid "Sybase provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa Sybase"
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
-#: providers/gda-sybase-server/gda-sybase-command.c:136
+#: providers/gda-sybase-server/gda-sybase-command.c:160
 #: providers/gda-tds-server/gda-tds-command.c:121
 msgid "Connection seems to be dead"
 msgstr "Spojenie asi spadlo"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:153
-#: providers/gda-tds-server/gda-tds-command.c:135
-msgid "Filling command structure failed\n"
-msgstr "Vyplnenie štruktúry príkazu zlyhalo\n"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:162
-#: providers/gda-tds-server/gda-tds-command.c:142
-msgid "sending cmd failed"
-msgstr "odoslanie príkazu zlyhalo"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:169
+#: providers/gda-sybase-server/gda-sybase-command.c:244
 #: providers/gda-tds-server/gda-tds-command.c:149
 msgid "Allocating recordset failed"
 msgstr "Alokovanie recordset zlyhalo"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:181
+#: providers/gda-sybase-server/gda-sybase-command.c:262
 #: providers/gda-tds-server/gda-tds-command.c:158
 msgid "Getting recordset userdata failed"
 msgstr "Získanie dát z recordset zlyhalo"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:241
-#: providers/gda-tds-server/gda-tds-command.c:215
-msgid "Command execution finished, all results processed"
-msgstr "Vykonanie príkazu dokončené, všetky výsledky spracované"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:245
-#: providers/gda-tds-server/gda-tds-command.c:219
-msgid "Command failed"
-msgstr "Príkaz zlyhal"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:250
-#: providers/gda-tds-server/gda-tds-command.c:224
-msgid "Execution of resultless command succeeded"
-msgstr "Vykonanie príkazu bez výsledku úspešné"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:268
+#: providers/gda-sybase-server/gda-sybase-command.c:400
 #: providers/gda-tds-server/gda-tds-command.c:242
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() vrátila %x"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:280
-#: providers/gda-tds-server/gda-tds-command.c:254
-msgid "No further results, command completly succeeded."
-msgstr "Žiadne ďalšie výsledky, príkaz bol úplne úspešný."
-
-#: providers/gda-sybase-server/gda-sybase-command.c:285
-#: providers/gda-tds-server/gda-tds-command.c:259
-msgid "An error occured during command execution."
-msgstr "Nastala chyba počas vykonávania príkazu."
-
-#: providers/gda-sybase-server/gda-sybase-command.c:291
-#: providers/gda-tds-server/gda-tds-command.c:263
-msgid "Cmd execution returned unknown result, may be an error"
-msgstr "Vykonávanie príkazu vrátilo neznámy výsledok, je to možno chyba"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:304
-#: providers/gda-tds-server/gda-tds-command.c:274
-msgid "No data returned, freeing recordset structure"
-msgstr "Nevrátené žiadne dáta, uvoľňujem štruktúru recordset"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:336
-#: providers/gda-sybase-server/gda-sybase-command.c:348
+#. if (SYB_CHK (NULL,
+#. ct_cmd_drop (scmd->cmd),
+#. NULL, NULL, cnc, cmd) != CS_SUCCEED) {
+#: providers/gda-sybase-server/gda-sybase-command.c:499
+#: providers/gda-sybase-server/gda-sybase-command.c:520
 #: providers/gda-tds-server/gda-tds-command.c:305
 #: providers/gda-tds-server/gda-tds-command.c:315
 msgid "Freeing command structure failed"
 msgstr "Príkaz pre uvoľnenie štruktúry zlyhal"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:176
+#: providers/gda-sybase-server/gda-sybase-connection.c:182
 msgid "Not enough memory for sybase_Connection"
 msgstr "Nedostatok pamäti pre sybase_Connection"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:458
+#: providers/gda-sybase-server/gda-sybase-connection.c:483
 #: providers/gda-tds-server/gda-tds-connection.c:442
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:475
+#: providers/gda-sybase-server/gda-sybase-connection.c:500
 #: providers/gda-tds-server/gda-tds-connection.c:459
 msgid "Could not allocate command structure"
 msgstr "Nie je možné alokovať štruktúru pre príkaz"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:498
+#: providers/gda-sybase-server/gda-sybase-connection.c:523
 #: providers/gda-tds-server/gda-tds-connection.c:482
 msgid "Could not allocate enough memory for query"
 msgstr "Nie je možné alokovať dostatok pamäti pre otázku"
 
 #.          gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
-#: providers/gda-sybase-server/gda-sybase-connection.c:513
+#: providers/gda-sybase-server/gda-sybase-connection.c:538
 #: providers/gda-tds-server/gda-tds-connection.c:497
 msgid "Could not get recordset in schema_cols"
 msgstr "Nie je možné získať recordset v schema_cols"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:562
+#: providers/gda-sybase-server/gda-sybase-connection.c:587
 #: providers/gda-tds-server/gda-tds-connection.c:546
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: neplatný typ obmedzenia %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:572
+#: providers/gda-sybase-server/gda-sybase-connection.c:597
 #: providers/gda-tds-server/gda-tds-connection.c:556
 msgid "Could not allocate cmd structure"
 msgstr "Nie je možné alokovať štruktúru pre príkaz"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:638
+#: providers/gda-sybase-server/gda-sybase-connection.c:663
 #: providers/gda-tds-server/gda-tds-connection.c:622
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: neplatný typ obmedzenia %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:700
+#: providers/gda-sybase-server/gda-sybase-connection.c:725
 #: providers/gda-tds-server/gda-tds-connection.c:684
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Neplatný alebo nepodporovaný typ obmedzenia: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:743
+#: providers/gda-sybase-server/gda-sybase-connection.c:768
 #: providers/gda-tds-server/gda-tds-connection.c:727
 msgid "Could not allocate GdaServerCommand"
 msgstr "Nie je možné alokovať GdaServerCommand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:774
-#: providers/gda-sybase-server/gda-sybase-connection.c:779
+#: providers/gda-sybase-server/gda-sybase-connection.c:799
+#: providers/gda-sybase-server/gda-sybase-connection.c:804
 #: providers/gda-tds-server/gda-tds-connection.c:757
 #: providers/gda-tds-server/gda-tds-connection.c:762
 #, c-format
 msgid "connection status: %x"
 msgstr "stav spojenia: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:775
+#: providers/gda-sybase-server/gda-sybase-connection.c:800
 #: providers/gda-tds-server/gda-tds-connection.c:758
 #, c-format
 msgid "return code: %x"
 msgstr "návratový kód: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:813
+#: providers/gda-sybase-server/gda-sybase-connection.c:840
 #: providers/gda-tds-server/gda-tds-connection.c:793
 msgid "attempting reconnection"
 msgstr "pokus o znovu-spojenie"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:943
+#: providers/gda-sybase-server/gda-sybase-connection.c:1030
 #, c-format
 msgid "Reconnected to '%s'"
 msgstr "Znovu-spojený s '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:945
+#: providers/gda-sybase-server/gda-sybase-connection.c:1032
 #: providers/gda-tds-server/gda-tds-connection.c:895
 #, c-format
 msgid "Connected to %s"
 msgstr "Spojený s %s"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:957
+#: providers/gda-sybase-server/gda-sybase-connection.c:1044
 #: providers/gda-tds-server/gda-tds-connection.c:909
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Vybraná databáza '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:986
+#: providers/gda-sybase-server/gda-sybase-connection.c:1080
 #: providers/gda-tds-server/gda-tds-connection.c:935
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Nie je možné alokovať štruktúru pre príkaz"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:995
+#: providers/gda-sybase-server/gda-sybase-connection.c:1090
 #: providers/gda-tds-server/gda-tds-connection.c:944
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Nie je možné alokovať pamäť pre reťazec príkazu"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1004
+#: providers/gda-sybase-server/gda-sybase-connection.c:1115
 #: providers/gda-tds-server/gda-tds-connection.c:952
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command zlyhal"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1015
+#: providers/gda-sybase-server/gda-sybase-connection.c:1135
 #: providers/gda-tds-server/gda-tds-connection.c:962
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: odoslanie príkazu zlyhalo"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1026
+#: providers/gda-sybase-server/gda-sybase-connection.c:1160
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: výber databáze zlyhal"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1043
+#: providers/gda-sybase-server/gda-sybase-connection.c:1180
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: príkaz use zlyhal"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1071
+#: providers/gda-sybase-server/gda-sybase-connection.c:1214
 #: providers/gda-tds-server/gda-tds-connection.c:1025
 msgid "Could not allocate locale structure"
 msgstr "Nie je možné alokovať štruktúru pre locale"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1077
+#: providers/gda-sybase-server/gda-sybase-connection.c:1233
 #: providers/gda-tds-server/gda-tds-connection.c:1031
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Nie je možné nastaviť locale na '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1084
+#: providers/gda-sybase-server/gda-sybase-connection.c:1253
 #: providers/gda-tds-server/gda-tds-connection.c:1038
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Nie je možné nastaviť locale na '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1090
+#: providers/gda-sybase-server/gda-sybase-connection.c:1266
 #: providers/gda-tds-server/gda-tds-connection.c:1044
 msgid "Could not drop locale structure"
 msgstr "Nie je možné zahodiť štruktúru pre locale"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1104
+#: providers/gda-sybase-server/gda-sybase-connection.c:1281
 #: providers/gda-tds-server/gda-tds-connection.c:1057
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Kritická chyba: %s\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:78
-#, c-format
-msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:90
-#: providers/gda-tds-server/gda-tds-error.c:86
-#, c-format
-msgid "No error flag ist set, though %s is called. This may be a bug."
-msgstr ""
-"Nie je nastavený žiadny príznak chyby, ale bola zavolaná %s. To je možno "
-"chyba."
-
-#: providers/gda-sybase-server/gda-sybase-error.c:166
+#: providers/gda-sybase-server/gda-sybase-error.c:161
 msgid "cs_diag() initialized"
 msgstr "cs_diag() inicializovaná"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:170
+#: providers/gda-sybase-server/gda-sybase-error.c:168
 msgid "Could not initialize cs_diag()"
 msgstr "Nie je možné inicializovať cs_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:180
+#: providers/gda-sybase-server/gda-sybase-error.c:185
 msgid "ct_diag() initialized"
 msgstr "ct_diag() inicializovaná"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:184
+#: providers/gda-sybase-server/gda-sybase-error.c:193
 msgid "Could not initialize ct_diag()"
 msgstr "Nie je možné inicializovať ct_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:220
+#: providers/gda-sybase-server/gda-sybase-error.c:238
 #, c-format
 msgid "%s could not find server implementation"
 msgstr "%s nie je možné nájsť implementáciu serveru"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:227
+#: providers/gda-sybase-server/gda-sybase-error.c:246
 #, c-format
 msgid "%s could not get cnc userdata"
 msgstr "%s nie je možné získať dáta cnc"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:239
+#: providers/gda-sybase-server/gda-sybase-error.c:264
 msgid "Could not get # of messages"
 msgstr "Nie je možné získať počet správ"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:246
-#, c-format
-msgid "%d ctlib messages to fetch"
-msgstr "%d ctlib správ pre získanie"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:251
-#, c-format
-msgid "%d ctlib message to fetch"
-msgstr "%d ctlib správa pre získanie"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:289
-msgid "error is nullpointer in gda_sybase_messages_handle"
-msgstr "chyba je null v gda_sybase_messages_handle"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:315
-#: providers/gda-sybase-server/gda-sybase-error.c:387
-#: providers/gda-sybase-server/gda-sybase-error.c:434
-msgid "Could not get # of server messages"
-msgstr "Nie je možné získať počet správ serveru"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:323
-#, c-format
-msgid "Fetching %d client messages"
-msgstr "Získavam %d správ klienta"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:326
-#, c-format
-msgid "Fetching %d client message"
-msgstr "Získavam %d správu klienta"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:335
-#, c-format
-msgid "Could not get client msg # %d"
-msgstr "Nie je možné získať počet správ klienta %d"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:354
-msgid "Could not get # of client messages"
+#: providers/gda-sybase-server/gda-sybase-error.c:356
+#, fuzzy
+msgid "ct_diag failed, Could not get # of client messages(1)"
 msgstr "Nie je možné získať počet správ klienta"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:362
+#: providers/gda-sybase-server/gda-sybase-error.c:381
+#, fuzzy
+msgid "Could not get client msg #"
+msgstr "Nie je možné získať počet správ klienta %d"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:394
+#: providers/gda-sybase-server/gda-sybase-error.c:396
+#: providers/gda-sybase-server/gda-sybase-error.c:688
+#: providers/gda-sybase-server/gda-sybase-error.c:690
+#, fuzzy
+msgid "Client Message:"
+msgstr "Správa klienta:"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:424
+#, fuzzy
+msgid "ct_diag failed, Could not get # of client messages(2)"
+msgstr "Nie je možné získať počet správ klienta"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Nie je možné vymazať správy klienta"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:395
-#, c-format
-msgid "Fetching %d server messages"
-msgstr "Získavam %d správ serveru"
+#: providers/gda-sybase-server/gda-sybase-error.c:486
+#, fuzzy
+msgid "Could not get # of server messages(1)"
+msgstr "Nie je možné získať počet správ serveru"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:398
-#, c-format
-msgid "Fetching %d server message"
-msgstr "Získavam %d správu serveru"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:407
-#, c-format
-msgid "Could not get server msg # %d"
+#: providers/gda-sybase-server/gda-sybase-error.c:510
+#, fuzzy
+msgid "Could not get server msg #"
 msgstr "Nie je možné získať počet správ serveru %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:442
+#: providers/gda-sybase-server/gda-sybase-error.c:570
+msgid "Could not get # of server messages"
+msgstr "Nie je možné získať počet správ serveru"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:592
 msgid "Could not clear server messages"
 msgstr "Nie je možné vymazať správy serveru"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:464
-#: providers/gda-sybase-server/gda-sybase-error.c:504
+#: providers/gda-sybase-server/gda-sybase-error.c:634
 msgid "Could not get # of cslib messages"
 msgstr "Nie je možné získať počet správ cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:472
+#: providers/gda-sybase-server/gda-sybase-error.c:650
 #, c-format
 msgid "Fetching %d cslib messages"
 msgstr "Získavam %d správ cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:475
+#: providers/gda-sybase-server/gda-sybase-error.c:653
 #, c-format
 msgid "Fetching %d cslib message"
 msgstr "Získavam %d správu cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:485
-#, c-format
-msgid "Could not get cslib msg # %d"
+#: providers/gda-sybase-server/gda-sybase-error.c:672
+#, fuzzy
+msgid "Could not get cslib msg #"
 msgstr "Nie je možné získať počet správ cslib %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:512
+#: providers/gda-sybase-server/gda-sybase-error.c:711
+#, fuzzy
+msgid "Could not get # of cslib messages(2)"
+msgstr "Nie je možné získať počet správ cslib"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
 msgstr "Nie je možné vymazať správy cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:646
-#: providers/gda-tds-server/gda-tds-error.c:274
-msgid "Server message:"
-msgstr "Správa serveru:"
+#: providers/gda-sybase-server/gda-sybase-error.c:761
+msgid "SYB"
+msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:654
-#: providers/gda-tds-server/gda-tds-error.c:282
-msgid "Client message:"
-msgstr "Správa klienta:"
+#: providers/gda-sybase-server/gda-sybase-error.c:763
+msgid "severity"
+msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:661
-#: providers/gda-tds-server/gda-tds-error.c:289
-msgid "CS-Library error:"
-msgstr "Chyba Knižnice CS:"
+#: providers/gda-sybase-server/gda-sybase-error.c:765
+msgid "number"
+msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:203
+#: providers/gda-sybase-server/gda-sybase-error.c:767
+msgid "origin"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:769
+msgid "layer"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:776
+#, c-format
+msgid ""
+"\n"
+"\tOperating system error number(%ld):\n"
+"\t%s"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
 #, c-format
 msgid "fetch error at row %d"
 msgstr "chyba pri získavaní na riadku %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:210
+#: providers/gda-sybase-server/gda-sybase-recordset.c:226
 #: providers/gda-tds-server/gda-tds-recordset.c:206
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr "CS_END_DATA na riadku %d; ruším akciu"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:218
+#: providers/gda-sybase-server/gda-sybase-recordset.c:251
 #: providers/gda-tds-server/gda-tds-recordset.c:213
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: Chyba (%d)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:391
+#: providers/gda-sybase-server/gda-sybase-recordset.c:473
 #: providers/gda-tds-server/gda-tds-recordset.c:387
 msgid "Failed fetching # of columns"
 msgstr "Zlyhalo získanie počtu stĺpcov"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:398
-#: providers/gda-tds-server/gda-tds-recordset.c:395
-#, c-format
-msgid "Counted %d columns"
-msgstr "Spočítaných %d stĺpcov"
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:405
+#: providers/gda-sybase-server/gda-sybase-recordset.c:494
 #: providers/gda-tds-server/gda-tds-recordset.c:402
 #, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "%s nie je možné alokovať datafmt informácie"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:415
+#: providers/gda-sybase-server/gda-sybase-recordset.c:507
 #: providers/gda-tds-server/gda-tds-recordset.c:412
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s nie je možné alokovať dátové polia"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:433
+#: providers/gda-sybase-server/gda-sybase-recordset.c:525
 #: providers/gda-tds-server/gda-tds-recordset.c:430
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe na stĺpci # %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:440
+#: providers/gda-sybase-server/gda-sybase-recordset.c:532
 #: providers/gda-tds-server/gda-tds-recordset.c:437
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "ct_describe na stĺpci %d zlyhala"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:447
+#: providers/gda-sybase-server/gda-sybase-recordset.c:539
 #: providers/gda-tds-server/gda-tds-recordset.c:444
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): '%s', %d (%s)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:459
+#: providers/gda-sybase-server/gda-sybase-recordset.c:551
 #: providers/gda-tds-server/gda-tds-recordset.c:455
 msgid "could not allocate data holder"
 msgstr "nie je možné alokovať priestor pre dáta"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:472
+#: providers/gda-sybase-server/gda-sybase-recordset.c:564
 #: providers/gda-tds-server/gda-tds-recordset.c:468
 msgid "could not ct_bind data holder to column"
 msgstr "nie je možné ct_bind priestor pre dáta k stĺpcu"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:479
+#: providers/gda-sybase-server/gda-sybase-recordset.c:571
 #: providers/gda-tds-server/gda-tds-recordset.c:475
 msgid "illegal type detected, aborting"
 msgstr "detekovaný neplatný typ, končím"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:486
+#: providers/gda-sybase-server/gda-sybase-recordset.c:578
 #: providers/gda-tds-server/gda-tds-recordset.c:482
 msgid "could not allocate field"
 msgstr "nie je možné alokovať pole"
@@ -1001,6 +940,42 @@ msgstr "GDA prístup k zdroju dát pre Sybase/MS SQL"
 msgid "TDS provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa TDS"
 
+#: providers/gda-tds-server/gda-tds-command.c:135
+msgid "Filling command structure failed\n"
+msgstr "Vyplnenie štruktúry príkazu zlyhalo\n"
+
+#: providers/gda-tds-server/gda-tds-command.c:142
+msgid "sending cmd failed"
+msgstr "odoslanie príkazu zlyhalo"
+
+#: providers/gda-tds-server/gda-tds-command.c:215
+msgid "Command execution finished, all results processed"
+msgstr "Vykonanie príkazu dokončené, všetky výsledky spracované"
+
+#: providers/gda-tds-server/gda-tds-command.c:219
+msgid "Command failed"
+msgstr "Príkaz zlyhal"
+
+#: providers/gda-tds-server/gda-tds-command.c:224
+msgid "Execution of resultless command succeeded"
+msgstr "Vykonanie príkazu bez výsledku úspešné"
+
+#: providers/gda-tds-server/gda-tds-command.c:254
+msgid "No further results, command completly succeeded."
+msgstr "Žiadne ďalšie výsledky, príkaz bol úplne úspešný."
+
+#: providers/gda-tds-server/gda-tds-command.c:259
+msgid "An error occured during command execution."
+msgstr "Nastala chyba počas vykonávania príkazu."
+
+#: providers/gda-tds-server/gda-tds-command.c:263
+msgid "Cmd execution returned unknown result, may be an error"
+msgstr "Vykonávanie príkazu vrátilo neznámy výsledok, je to možno chyba"
+
+#: providers/gda-tds-server/gda-tds-command.c:274
+msgid "No data returned, freeing recordset structure"
+msgstr "Nevrátené žiadne dáta, uvoľňujem štruktúru recordset"
+
 #: providers/gda-tds-server/gda-tds-connection.c:165
 msgid "Not enough memory for tds_Connection"
 msgstr "Nedostatok pamäti pre tds_Connection"
@@ -1015,6 +990,30 @@ msgstr "Znovu-spojený s %s"
 #, c-format
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
 msgstr "gda_tds_error_make(%p,%p,%p,%p)"
+
+#: providers/gda-tds-server/gda-tds-error.c:86
+#, c-format
+msgid "No error flag ist set, though %s is called. This may be a bug."
+msgstr ""
+"Nie je nastavený žiadny príznak chyby, ale bola zavolaná %s. To je možno "
+"chyba."
+
+#: providers/gda-tds-server/gda-tds-error.c:274
+msgid "Server message:"
+msgstr "Správa serveru:"
+
+#: providers/gda-tds-server/gda-tds-error.c:282
+msgid "Client message:"
+msgstr "Správa klienta:"
+
+#: providers/gda-tds-server/gda-tds-error.c:289
+msgid "CS-Library error:"
+msgstr "Chyba Knižnice CS:"
+
+#: providers/gda-tds-server/gda-tds-recordset.c:395
+#, c-format
+msgid "Counted %d columns"
+msgstr "Spočítaných %d stĺpcov"
 
 #: providers/gda-tds-server/main-tds.c:78
 msgid "Could not register gda-tds provider implementation"
@@ -1033,3 +1032,27 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
+
+#~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
+#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
+
+#~ msgid "%d ctlib messages to fetch"
+#~ msgstr "%d ctlib správ pre získanie"
+
+#~ msgid "%d ctlib message to fetch"
+#~ msgstr "%d ctlib správa pre získanie"
+
+#~ msgid "error is nullpointer in gda_sybase_messages_handle"
+#~ msgstr "chyba je null v gda_sybase_messages_handle"
+
+#~ msgid "Fetching %d client messages"
+#~ msgstr "Získavam %d správ klienta"
+
+#~ msgid "Fetching %d client message"
+#~ msgstr "Získavam %d správu klienta"
+
+#~ msgid "Fetching %d server messages"
+#~ msgstr "Získavam %d správ serveru"
+
+#~ msgid "Fetching %d server message"
+#~ msgstr "Získavam %d správu serveru"

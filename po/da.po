@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
-"POT-Creation-Date: 2001-11-18 18:46+0100\n"
+"POT-Creation-Date: 2001-11-22 14:07+0100\n"
 "PO-Revision-Date: 2001-11-11 11:50+01:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -24,16 +24,16 @@ msgstr "Kunne ikke åbne forbindelse til '%s'"
 msgid "Data source %s not found"
 msgstr "Datakilde %s ikke fundet"
 
-#: lib/gda-client/gda-connection.c:448
+#: lib/gda-client/gda-connection.c:449
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Database '%s' ikke fundet i systemkonfiguration"
 
-#: lib/gda-client/gda-connection.c:452 lib/gda-client/gda-connection.c:469
+#: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
 msgid "[GDA Client Library]"
 msgstr "[GDA klientbibliotek]"
 
-#: lib/gda-client/gda-connection.c:468
+#: lib/gda-client/gda-connection.c:469
 msgid "Could not open CORBA factory"
 msgstr "Kunne ikke åbne CORBA fabrik"
 
@@ -228,13 +228,13 @@ msgstr "LDAP-udbyder opkoblingsfabrik"
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:479
 #: providers/gda-postgres-server/gda-postgres-connection.c:767
-#: providers/gda-sybase-server/gda-sybase-error.c:132
+#: providers/gda-sybase-server/gda-sybase-error.c:100
+#: providers/gda-sybase-server/gda-sybase-error.c:118
 #: providers/gda-tds-server/gda-tds-error.c:128
 #, c-format
 msgid "error '%s' at %s"
 msgstr "Fejl %s ved %s"
 
-#. gda_error_set_help_file (error, _("Not available"));
 #: providers/gda-interbase-server/gda-interbase-connection.c:337
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
@@ -251,7 +251,7 @@ msgstr "Fejl %s ved %s"
 #: providers/gda-postgres-server/gda-postgres-connection.c:776
 #: providers/gda-primebase-server/gda-primebase-connection.c:375
 #: providers/gda-primebase-server/gda-primebase-connection.c:376
-#: providers/gda-sybase-server/gda-sybase-error.c:142
+#: providers/gda-sybase-server/gda-sybase-error.c:112
 #: providers/gda-tds-server/gda-tds-error.c:137
 #: providers/gda-tds-server/gda-tds-error.c:138
 msgid "Not available"
@@ -264,7 +264,7 @@ msgstr "Ikke tilgængelig"
 #: providers/gda-oracle-server/gda-oracle-connection.c:486
 #: providers/gda-postgres-server/gda-postgres-connection.c:777
 #: providers/gda-primebase-server/gda-primebase-connection.c:377
-#: providers/gda-sybase-server/gda-sybase-error.c:143
+#: providers/gda-sybase-server/gda-sybase-error.c:113
 #: providers/gda-tds-server/gda-tds-error.c:139
 msgid "error"
 msgstr "fejl"
@@ -300,7 +300,7 @@ msgstr "E-post-udbyder opkoblingsfabrik"
 
 #: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
-#: providers/gda-sybase-server/gda-sybase-connection.c:290
+#: providers/gda-sybase-server/gda-sybase-connection.c:313
 #: providers/gda-tds-server/gda-tds-connection.c:283
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
@@ -321,7 +321,7 @@ msgstr "MDB-udbyder opkoblingsfabrik"
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:144
-#: providers/gda-sybase-server/gda-sybase-command.c:141
+#: providers/gda-sybase-server/gda-sybase-command.c:167
 #: providers/gda-tds-server/gda-tds-command.c:125
 #, c-format
 msgid "executing command '%s'"
@@ -360,7 +360,7 @@ msgstr "mysql_recent er NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:469
 #: providers/gda-mysql-server/gda-mysql-connection.c:845
-#: providers/gda-sybase-server/gda-sybase-connection.c:469
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
 #: providers/gda-tds-server/gda-tds-connection.c:453
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Intet tabelnavn opgivet for SCHEMA_COLS"
@@ -505,448 +505,389 @@ msgid "Sybase provider connection factory"
 msgstr "Sybase-udbyder opkoblingsfabrik"
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
-#: providers/gda-sybase-server/gda-sybase-command.c:136
+#: providers/gda-sybase-server/gda-sybase-command.c:160
 #: providers/gda-tds-server/gda-tds-command.c:121
 msgid "Connection seems to be dead"
 msgstr "Forbindelsen ser ud til at være død"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:153
-#: providers/gda-tds-server/gda-tds-command.c:135
-msgid "Filling command structure failed\n"
-msgstr "Udfyldelse af kommandostruktur mislykkedes\n"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:162
-#: providers/gda-tds-server/gda-tds-command.c:142
-msgid "sending cmd failed"
-msgstr "Sender cmd mislykkedes"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:169
+#: providers/gda-sybase-server/gda-sybase-command.c:244
 #: providers/gda-tds-server/gda-tds-command.c:149
 msgid "Allocating recordset failed"
 msgstr "Allokering af postsæt mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:181
+#: providers/gda-sybase-server/gda-sybase-command.c:262
 #: providers/gda-tds-server/gda-tds-command.c:158
 msgid "Getting recordset userdata failed"
 msgstr "Hentning af postsæt brugerdata mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:241
-#: providers/gda-tds-server/gda-tds-command.c:215
-msgid "Command execution finished, all results processed"
-msgstr "Kommandoudførsel afsluttet, alle resultater behandlet"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:245
-#: providers/gda-tds-server/gda-tds-command.c:219
-msgid "Command failed"
-msgstr "Kommando mislykkedes"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:250
-#: providers/gda-tds-server/gda-tds-command.c:224
-msgid "Execution of resultless command succeeded"
-msgstr "Udførsel af resultatløs kommando lykkedes"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:268
+#: providers/gda-sybase-server/gda-sybase-command.c:400
 #: providers/gda-tds-server/gda-tds-command.c:242
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() returnerede %x"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:280
-#: providers/gda-tds-server/gda-tds-command.c:254
-msgid "No further results, command completly succeeded."
-msgstr "Ingen yderligere resultater, kommando lykkedes helt."
-
-#: providers/gda-sybase-server/gda-sybase-command.c:285
-#: providers/gda-tds-server/gda-tds-command.c:259
-msgid "An error occured during command execution."
-msgstr "En fejl skete ved udførsel af kommando."
-
-#: providers/gda-sybase-server/gda-sybase-command.c:291
-#: providers/gda-tds-server/gda-tds-command.c:263
-msgid "Cmd execution returned unknown result, may be an error"
-msgstr "Kommandoudførsel returnerede ukendt resultat, kan være en fejl"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:304
-#: providers/gda-tds-server/gda-tds-command.c:274
-msgid "No data returned, freeing recordset structure"
-msgstr "Ingen data returneret, frigiver postsæt-struktur"
-
-#: providers/gda-sybase-server/gda-sybase-command.c:336
-#: providers/gda-sybase-server/gda-sybase-command.c:348
+#. if (SYB_CHK (NULL,
+#. ct_cmd_drop (scmd->cmd),
+#. NULL, NULL, cnc, cmd) != CS_SUCCEED) {
+#: providers/gda-sybase-server/gda-sybase-command.c:499
+#: providers/gda-sybase-server/gda-sybase-command.c:520
 #: providers/gda-tds-server/gda-tds-command.c:305
 #: providers/gda-tds-server/gda-tds-command.c:315
 msgid "Freeing command structure failed"
 msgstr "Frigivning af postsæt-struktur mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:176
+#: providers/gda-sybase-server/gda-sybase-connection.c:182
 msgid "Not enough memory for sybase_Connection"
 msgstr "Ikke nok hukommelse for sybase_Connection"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:458
+#: providers/gda-sybase-server/gda-sybase-connection.c:483
 #: providers/gda-tds-server/gda-tds-connection.c:442
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:475
+#: providers/gda-sybase-server/gda-sybase-connection.c:500
 #: providers/gda-tds-server/gda-tds-connection.c:459
 msgid "Could not allocate command structure"
 msgstr "Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:498
+#: providers/gda-sybase-server/gda-sybase-connection.c:523
 #: providers/gda-tds-server/gda-tds-connection.c:482
 msgid "Could not allocate enough memory for query"
 msgstr "Kunne ikke allokere nok hukommelse for forespørgsel"
 
 #.          gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
-#: providers/gda-sybase-server/gda-sybase-connection.c:513
+#: providers/gda-sybase-server/gda-sybase-connection.c:538
 #: providers/gda-tds-server/gda-tds-connection.c:497
 msgid "Could not get recordset in schema_cols"
 msgstr "Kunne ikke hente postsæt i schema_cols"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:562
+#: providers/gda-sybase-server/gda-sybase-connection.c:587
 #: providers/gda-tds-server/gda-tds-connection.c:546
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: ugyldig begrænsningstype %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:572
+#: providers/gda-sybase-server/gda-sybase-connection.c:597
 #: providers/gda-tds-server/gda-tds-connection.c:556
 msgid "Could not allocate cmd structure"
 msgstr "Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:638
+#: providers/gda-sybase-server/gda-sybase-connection.c:663
 #: providers/gda-tds-server/gda-tds-connection.c:622
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: ugyldig begrænsningstype %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:700
+#: providers/gda-sybase-server/gda-sybase-connection.c:725
 #: providers/gda-tds-server/gda-tds-connection.c:684
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Ugyldig eller ikke støttet begrænsningstype: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:743
+#: providers/gda-sybase-server/gda-sybase-connection.c:768
 #: providers/gda-tds-server/gda-tds-connection.c:727
 msgid "Could not allocate GdaServerCommand"
 msgstr "Kunne ikke allokere GdaServerCommand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:774
-#: providers/gda-sybase-server/gda-sybase-connection.c:779
+#: providers/gda-sybase-server/gda-sybase-connection.c:799
+#: providers/gda-sybase-server/gda-sybase-connection.c:804
 #: providers/gda-tds-server/gda-tds-connection.c:757
 #: providers/gda-tds-server/gda-tds-connection.c:762
 #, c-format
 msgid "connection status: %x"
 msgstr "opkoblingsstatus: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:775
+#: providers/gda-sybase-server/gda-sybase-connection.c:800
 #: providers/gda-tds-server/gda-tds-connection.c:758
 #, c-format
 msgid "return code: %x"
 msgstr "returkode: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:813
+#: providers/gda-sybase-server/gda-sybase-connection.c:840
 #: providers/gda-tds-server/gda-tds-connection.c:793
 msgid "attempting reconnection"
 msgstr "forsøger opkobling på nyt"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:943
+#: providers/gda-sybase-server/gda-sybase-connection.c:1030
 #, c-format
 msgid "Reconnected to '%s'"
 msgstr "Genopkoblet til '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:945
+#: providers/gda-sybase-server/gda-sybase-connection.c:1032
 #: providers/gda-tds-server/gda-tds-connection.c:895
 #, c-format
 msgid "Connected to %s"
 msgstr "Forbundet med %s"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:957
+#: providers/gda-sybase-server/gda-sybase-connection.c:1044
 #: providers/gda-tds-server/gda-tds-connection.c:909
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Valgt database '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:986
+#: providers/gda-sybase-server/gda-sybase-connection.c:1080
 #: providers/gda-tds-server/gda-tds-connection.c:935
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:995
+#: providers/gda-sybase-server/gda-sybase-connection.c:1090
 #: providers/gda-tds-server/gda-tds-connection.c:944
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Kunne ikke allokere hukommelse for kommandostreng"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1004
+#: providers/gda-sybase-server/gda-sybase-connection.c:1115
 #: providers/gda-tds-server/gda-tds-connection.c:952
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1015
+#: providers/gda-sybase-server/gda-sybase-connection.c:1135
 #: providers/gda-tds-server/gda-tds-connection.c:962
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: sendingskommando mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1026
+#: providers/gda-sybase-server/gda-sybase-connection.c:1160
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: valg af database mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1043
+#: providers/gda-sybase-server/gda-sybase-connection.c:1180
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: brugskommando mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1071
+#: providers/gda-sybase-server/gda-sybase-connection.c:1214
 #: providers/gda-tds-server/gda-tds-connection.c:1025
 msgid "Could not allocate locale structure"
 msgstr "Kunne ikke allokere locale-struktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1077
+#: providers/gda-sybase-server/gda-sybase-connection.c:1233
 #: providers/gda-tds-server/gda-tds-connection.c:1031
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Kunne ikke sætte locale til '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1084
+#: providers/gda-sybase-server/gda-sybase-connection.c:1253
 #: providers/gda-tds-server/gda-tds-connection.c:1038
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Kunne ikke konfigurere locale til at være '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1090
+#: providers/gda-sybase-server/gda-sybase-connection.c:1266
 #: providers/gda-tds-server/gda-tds-connection.c:1044
 msgid "Could not drop locale structure"
 msgstr "Kunne ikke overspringe locale-struktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1104
+#: providers/gda-sybase-server/gda-sybase-connection.c:1281
 #: providers/gda-tds-server/gda-tds-connection.c:1057
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Fatal fejl: %s\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:78
-#, c-format
-msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:90
-#: providers/gda-tds-server/gda-tds-error.c:86
-#, c-format
-msgid "No error flag ist set, though %s is called. This may be a bug."
-msgstr "Ingen fejlflag er sat, selv om %s blev kaldt. Dette kan være en fejl."
-
-#: providers/gda-sybase-server/gda-sybase-error.c:166
+#: providers/gda-sybase-server/gda-sybase-error.c:161
 msgid "cs_diag() initialized"
 msgstr "cs_dialog() initieret"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:170
+#: providers/gda-sybase-server/gda-sybase-error.c:168
 msgid "Could not initialize cs_diag()"
 msgstr "Kunne ikke initiere cs_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:180
+#: providers/gda-sybase-server/gda-sybase-error.c:185
 msgid "ct_diag() initialized"
 msgstr "ct_diag() initieret"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:184
+#: providers/gda-sybase-server/gda-sybase-error.c:193
 msgid "Could not initialize ct_diag()"
 msgstr "Kunne ikke initiere ct_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:220
+#: providers/gda-sybase-server/gda-sybase-error.c:238
 #, c-format
 msgid "%s could not find server implementation"
 msgstr "%s kunne ikke finde tjenerimplementation"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:227
+#: providers/gda-sybase-server/gda-sybase-error.c:246
 #, c-format
 msgid "%s could not get cnc userdata"
 msgstr "%s kunne ikke finde cnc brugerdata"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:239
+#: providers/gda-sybase-server/gda-sybase-error.c:264
 msgid "Could not get # of messages"
 msgstr "Kunne ikke finde antal beskeder"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:246
-#, c-format
-msgid "%d ctlib messages to fetch"
-msgstr "%d ctlib-beskeder at hente"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:251
-#, c-format
-msgid "%d ctlib message to fetch"
-msgstr "%d ctlib-besked at hente"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:289
-msgid "error is nullpointer in gda_sybase_messages_handle"
-msgstr "fejlen er en nulpeger i gda_sybase_messages_handle"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:315
-#: providers/gda-sybase-server/gda-sybase-error.c:387
-#: providers/gda-sybase-server/gda-sybase-error.c:434
-msgid "Could not get # of server messages"
-msgstr "Kunne ikke hente antal tjenerbeskeder"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:323
-#, c-format
-msgid "Fetching %d client messages"
-msgstr "Henter %d klientbeskeder"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:326
-#, c-format
-msgid "Fetching %d client message"
-msgstr "Henter %d klientbesked"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:335
-#, c-format
-msgid "Could not get client msg # %d"
-msgstr "Kunne ikke hente klientbesked # %d"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:354
-msgid "Could not get # of client messages"
+#: providers/gda-sybase-server/gda-sybase-error.c:356
+#, fuzzy
+msgid "ct_diag failed, Could not get # of client messages(1)"
 msgstr "Kunne ikke hente antal klientbeskeder"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:362
+#: providers/gda-sybase-server/gda-sybase-error.c:381
+#, fuzzy
+msgid "Could not get client msg #"
+msgstr "Kunne ikke hente klientbesked # %d"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:394
+#: providers/gda-sybase-server/gda-sybase-error.c:396
+#: providers/gda-sybase-server/gda-sybase-error.c:688
+#: providers/gda-sybase-server/gda-sybase-error.c:690
+#, fuzzy
+msgid "Client Message:"
+msgstr "Klientbesked:"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:424
+#, fuzzy
+msgid "ct_diag failed, Could not get # of client messages(2)"
+msgstr "Kunne ikke hente antal klientbeskeder"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Kunne ikke tømme klientbeskeder"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:395
-#, c-format
-msgid "Fetching %d server messages"
-msgstr "Henter %d tjenerbeskeder"
+#: providers/gda-sybase-server/gda-sybase-error.c:486
+#, fuzzy
+msgid "Could not get # of server messages(1)"
+msgstr "Kunne ikke hente antal tjenerbeskeder"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:398
-#, c-format
-msgid "Fetching %d server message"
-msgstr "Henter %d tjenerbesked"
-
-#: providers/gda-sybase-server/gda-sybase-error.c:407
-#, c-format
-msgid "Could not get server msg # %d"
+#: providers/gda-sybase-server/gda-sybase-error.c:510
+#, fuzzy
+msgid "Could not get server msg #"
 msgstr "Kunne ikke hente tjenerbesked nummer %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:442
+#: providers/gda-sybase-server/gda-sybase-error.c:570
+msgid "Could not get # of server messages"
+msgstr "Kunne ikke hente antal tjenerbeskeder"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:592
 msgid "Could not clear server messages"
 msgstr "Kunne ikke fjerne tjenerbeskeder"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:464
-#: providers/gda-sybase-server/gda-sybase-error.c:504
+#: providers/gda-sybase-server/gda-sybase-error.c:634
 msgid "Could not get # of cslib messages"
 msgstr "Kunne ikke hente antal cslib-beskeder"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:472
+#: providers/gda-sybase-server/gda-sybase-error.c:650
 #, c-format
 msgid "Fetching %d cslib messages"
 msgstr "Henter %d cslib-beskeder"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:475
+#: providers/gda-sybase-server/gda-sybase-error.c:653
 #, c-format
 msgid "Fetching %d cslib message"
 msgstr "Henter %d cslib-besked"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:485
-#, c-format
-msgid "Could not get cslib msg # %d"
+#: providers/gda-sybase-server/gda-sybase-error.c:672
+#, fuzzy
+msgid "Could not get cslib msg #"
 msgstr "Kunne ikke hente cslib-besked nummer %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:512
+#: providers/gda-sybase-server/gda-sybase-error.c:711
+#, fuzzy
+msgid "Could not get # of cslib messages(2)"
+msgstr "Kunne ikke hente antal cslib-beskeder"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
 msgstr "Kunne ikke fjerne cslib-beskeder"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:646
-#: providers/gda-tds-server/gda-tds-error.c:274
-msgid "Server message:"
-msgstr "Tjenerbesked:"
+#: providers/gda-sybase-server/gda-sybase-error.c:761
+msgid "SYB"
+msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:654
-#: providers/gda-tds-server/gda-tds-error.c:282
-msgid "Client message:"
-msgstr "Klientbesked:"
+#: providers/gda-sybase-server/gda-sybase-error.c:763
+msgid "severity"
+msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:661
-#: providers/gda-tds-server/gda-tds-error.c:289
-msgid "CS-Library error:"
-msgstr "CS-bibliotek fejl:"
+#: providers/gda-sybase-server/gda-sybase-error.c:765
+msgid "number"
+msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:203
+#: providers/gda-sybase-server/gda-sybase-error.c:767
+msgid "origin"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:769
+msgid "layer"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:776
+#, c-format
+msgid ""
+"\n"
+"\tOperating system error number(%ld):\n"
+"\t%s"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
 #, c-format
 msgid "fetch error at row %d"
 msgstr "fejl i henting ved række %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:210
+#: providers/gda-sybase-server/gda-sybase-recordset.c:226
 #: providers/gda-tds-server/gda-tds-recordset.c:206
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr "CS_END_DATA på række %d; afbryder"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:218
+#: providers/gda-sybase-server/gda-sybase-recordset.c:251
 #: providers/gda-tds-server/gda-tds-recordset.c:213
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: Fejl (%d)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:391
+#: providers/gda-sybase-server/gda-sybase-recordset.c:473
 #: providers/gda-tds-server/gda-tds-recordset.c:387
 msgid "Failed fetching # of columns"
 msgstr "Henting af antal kolonner mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:398
-#: providers/gda-tds-server/gda-tds-recordset.c:395
-#, c-format
-msgid "Counted %d columns"
-msgstr "Talt %d kolonner"
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:405
+#: providers/gda-sybase-server/gda-sybase-recordset.c:494
 #: providers/gda-tds-server/gda-tds-recordset.c:402
 #, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "%s kunne ikke allokere info om dataformat"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:415
+#: providers/gda-sybase-server/gda-sybase-recordset.c:507
 #: providers/gda-tds-server/gda-tds-recordset.c:412
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s kunne ikke allokere datafelt"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:433
+#: providers/gda-sybase-server/gda-sybase-recordset.c:525
 #: providers/gda-tds-server/gda-tds-recordset.c:430
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe ved kolonne nummer %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:440
+#: providers/gda-sybase-server/gda-sybase-recordset.c:532
 #: providers/gda-tds-server/gda-tds-recordset.c:437
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "ct_describe ved kolonne nummer %d mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:447
+#: providers/gda-sybase-server/gda-sybase-recordset.c:539
 #: providers/gda-tds-server/gda-tds-recordset.c:444
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): '%s', %d (%s)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:459
+#: providers/gda-sybase-server/gda-sybase-recordset.c:551
 #: providers/gda-tds-server/gda-tds-recordset.c:455
 msgid "could not allocate data holder"
 msgstr "Kunne ikke allokere databeholder"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:472
+#: providers/gda-sybase-server/gda-sybase-recordset.c:564
 #: providers/gda-tds-server/gda-tds-recordset.c:468
 msgid "could not ct_bind data holder to column"
 msgstr "kunne ikke ct_bind() databeholder til kolonne"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:479
+#: providers/gda-sybase-server/gda-sybase-recordset.c:571
 #: providers/gda-tds-server/gda-tds-recordset.c:475
 msgid "illegal type detected, aborting"
 msgstr "ugyldig type fundet, afbryder"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:486
+#: providers/gda-sybase-server/gda-sybase-recordset.c:578
 #: providers/gda-tds-server/gda-tds-recordset.c:482
 msgid "could not allocate field"
 msgstr "Kunne ikke allokere felt"
@@ -999,6 +940,42 @@ msgstr "GDA datakildeadgang for Sybase/MS SQL"
 msgid "TDS provider connection factory"
 msgstr "TDS-udbyder opkoblingsfabrik"
 
+#: providers/gda-tds-server/gda-tds-command.c:135
+msgid "Filling command structure failed\n"
+msgstr "Udfyldelse af kommandostruktur mislykkedes\n"
+
+#: providers/gda-tds-server/gda-tds-command.c:142
+msgid "sending cmd failed"
+msgstr "Sender cmd mislykkedes"
+
+#: providers/gda-tds-server/gda-tds-command.c:215
+msgid "Command execution finished, all results processed"
+msgstr "Kommandoudførsel afsluttet, alle resultater behandlet"
+
+#: providers/gda-tds-server/gda-tds-command.c:219
+msgid "Command failed"
+msgstr "Kommando mislykkedes"
+
+#: providers/gda-tds-server/gda-tds-command.c:224
+msgid "Execution of resultless command succeeded"
+msgstr "Udførsel af resultatløs kommando lykkedes"
+
+#: providers/gda-tds-server/gda-tds-command.c:254
+msgid "No further results, command completly succeeded."
+msgstr "Ingen yderligere resultater, kommando lykkedes helt."
+
+#: providers/gda-tds-server/gda-tds-command.c:259
+msgid "An error occured during command execution."
+msgstr "En fejl skete ved udførsel af kommando."
+
+#: providers/gda-tds-server/gda-tds-command.c:263
+msgid "Cmd execution returned unknown result, may be an error"
+msgstr "Kommandoudførsel returnerede ukendt resultat, kan være en fejl"
+
+#: providers/gda-tds-server/gda-tds-command.c:274
+msgid "No data returned, freeing recordset structure"
+msgstr "Ingen data returneret, frigiver postsæt-struktur"
+
 #: providers/gda-tds-server/gda-tds-connection.c:165
 msgid "Not enough memory for tds_Connection"
 msgstr "Ikke nok hukommelse for tds_Connection"
@@ -1013,6 +990,28 @@ msgstr "Genopkoblet til %s"
 #, c-format
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
 msgstr "gda_tds_error_make(%p,%p,%p,%p)"
+
+#: providers/gda-tds-server/gda-tds-error.c:86
+#, c-format
+msgid "No error flag ist set, though %s is called. This may be a bug."
+msgstr "Ingen fejlflag er sat, selv om %s blev kaldt. Dette kan være en fejl."
+
+#: providers/gda-tds-server/gda-tds-error.c:274
+msgid "Server message:"
+msgstr "Tjenerbesked:"
+
+#: providers/gda-tds-server/gda-tds-error.c:282
+msgid "Client message:"
+msgstr "Klientbesked:"
+
+#: providers/gda-tds-server/gda-tds-error.c:289
+msgid "CS-Library error:"
+msgstr "CS-bibliotek fejl:"
+
+#: providers/gda-tds-server/gda-tds-recordset.c:395
+#, c-format
+msgid "Counted %d columns"
+msgstr "Talt %d kolonner"
 
 #: providers/gda-tds-server/main-tds.c:78
 msgid "Could not register gda-tds provider implementation"
@@ -1031,6 +1030,30 @@ msgstr "%s: datakilde '%s' ikke fundet\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Kunne ikke registrere <UDBYDER-NAVN> udbyderimplementation"
+
+#~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
+#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
+
+#~ msgid "%d ctlib messages to fetch"
+#~ msgstr "%d ctlib-beskeder at hente"
+
+#~ msgid "%d ctlib message to fetch"
+#~ msgstr "%d ctlib-besked at hente"
+
+#~ msgid "error is nullpointer in gda_sybase_messages_handle"
+#~ msgstr "fejlen er en nulpeger i gda_sybase_messages_handle"
+
+#~ msgid "Fetching %d client messages"
+#~ msgstr "Henter %d klientbeskeder"
+
+#~ msgid "Fetching %d client message"
+#~ msgstr "Henter %d klientbesked"
+
+#~ msgid "Fetching %d server messages"
+#~ msgstr "Henter %d tjenerbeskeder"
+
+#~ msgid "Fetching %d server message"
+#~ msgstr "Henter %d tjenerbesked"
 
 #~ msgid "TRUE"
 #~ msgstr "TRUE"
