@@ -1,3 +1,7 @@
+2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: install headers in version-based directory
+
 2001-07-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-connection.c (impl_GDA_Connection_open): unref the

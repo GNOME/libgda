@@ -28,7 +28,7 @@ libgda_server_la_SOURCES = \
 	gda-server.c 
 libgda_server_la_LIBADD = -lpopt
 
-gdaincludedir=$(includedir)/gda
+gdaincludedir=$(includedir)/libgda-$(VERSION)/gda
 gdainclude_HEADERS=$(gda_server_headers)
 
 dist-hook:

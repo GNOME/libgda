@@ -1,3 +1,7 @@
+2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: install headers in version-based directory
+
 2001-07-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-xml-database.c (gda_xml_database_table_find): check for NULL

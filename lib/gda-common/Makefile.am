@@ -67,7 +67,7 @@ libgda_common_la_LIBADD=\
 	$(GDA_CLIENT_LIBS) 
 #	$(top_builddir)/lib/gda-common/gda-xml-query/libxmlquery.a
 
-gdaincludedir=$(includedir)/gda
+gdaincludedir=$(includedir)/libgda-$(VERSION)/gda
 gdainclude_HEADERS=$(gda_common_headers)
 
 dist-hook:

@@ -28,6 +28,6 @@ libgda_client_la_SOURCES = \
 	gda-recordset.c 
 libgda_client_la_LIBADD =
 
-gdaincludedir=$(includedir)/gda
+gdaincludedir=$(includedir)/libgda-$(VERSION)/gda
 gdainclude_HEADERS=$(gda_client_headers)
 
