@@ -30,7 +30,7 @@ namespace gda
 	class Recordset;
 	class Value;
 };
-
+*/
 extern "C" {
 
 // hack to remove nasty compiler warnings
