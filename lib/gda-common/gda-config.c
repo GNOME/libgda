@@ -371,6 +371,7 @@ gda_provider_list (void)
                   cnt++;
                 }
               g_strfreev(arr);
+              g_free((gpointer) dsn_params);
             }
 
           retval = g_list_append(retval, (gpointer) provider);
