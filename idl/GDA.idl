@@ -155,7 +155,7 @@ module GDA {
 		Value v;
 	};
 
-#include "gda-error.idl"	
+#include "GDA_Error.idl"	
 	exception DriverError {
 		ErrorSeq errors;
 		string   realcommand;
@@ -164,7 +164,7 @@ module GDA {
 		string errormsg;
 	};
 	
-#include "gda-fieldx.idl"
+#include "GDA_Fieldx.idl"
 	struct Field {
 		long       actualSize;
 		FieldValue originalValue;
@@ -188,13 +188,13 @@ module GDA {
 	};
 	typedef sequence<Field>           Row;
 	typedef sequence<FieldAttributes> RowAttributes;
-#include "gda-parameter.idl"
+#include "GDA_Parameter.idl"
 	typedef sequence<CmdParameter> CmdParameterSeq;
-#include "gda-command.idl"	
-#include "gda-error.idl"
-#include "gda-connection.idl"
+#include "GDA_Command.idl"	
+#include "GDA_Error.idl"
+#include "GDA_Connection.idl"
 
-#include "gda-recordset.idl" 
+#include "GDA_Recordset.idl" 
 
 	interface ConnectionFactory : GNOME::ObjectFactory {
 		Object create_connection(in string goad_id) raises (CannotActivate);

@@ -1,0 +1,4 @@
+2000-11-05	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* renamed all IDL files from gda* to GDA* to avoid confusion with
+	installed headers

@@ -1,12 +1,12 @@
 IDL_FILES = \
-	gda.idl \
-	gda-connection.idl \
-	gda-command.idl \
-	gda-parameter.idl \
-	gda-recordset.idl \
-	gda-field.idl \
-	gda-fieldx.idl \
-	gda-error.idl
+	GDA.idl \
+	GDA_Connection.idl \
+	GDA_Command.idl \
+	GDA_Parameter.idl \
+	GDA_Recordset.idl \
+	GDA_Field.idl \
+	GDA_Fieldx.idl \
+	GDA_Error.idl
 
 EXTRA_DIST = \
 	$(IDL_FILES)
