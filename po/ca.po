@@ -5,8 +5,11 @@
 #
 msgid ""
 msgstr ""
+"Project-Id-Version: libgda 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-08-31 21:49+0200\n"
+"PO-Revision-Date: 2003-08-31 21:50+0200\n"
 "Last-Translator: Aleix Badia i Bosch <abadia@ica.es>\n"
-"PO-Revision-Date: 2003-08-31 19:39+0200\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,7 +221,9 @@ msgstr "Proveïdor per les bases de dades de FireBird"
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
-msgstr "Connexió avortada. Cal que almenys introduïu un ordinador central, un usuari i una contrasenya utilitzant el DSN 'QUERY=;USER=;PASSWORD='."
+msgstr ""
+"Connexió avortada. Cal que almenys introduïu un ordinador central, un usuari "
+"i una contrasenya utilitzant el DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
@@ -289,7 +294,8 @@ msgstr "S'ha produït un error al processar les files del resultat.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
-msgstr "La funció td_process_row_tokens() ha retornat un codi de freetds inesperat.\n"
+msgstr ""
+"La funció td_process_row_tokens() ha retornat un codi de freetds inesperat.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
@@ -297,7 +303,8 @@ msgstr "S'ha produït un error al processar els resultats.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
-msgstr "La funció td_process_result_tokens ha retornat un codi de freetds inesperat\n"
+msgstr ""
+"La funció td_process_result_tokens ha retornat un codi de freetds inesperat\n"
 
 #: providers/freetds/libmain.c:39
 msgid "Provider for TDS-based databases (using FreeTDS)"
@@ -316,7 +323,9 @@ msgstr "No s'ha pogut assignar el gestor d'entorn.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "La funció SQLGetInfo no està suportada. El proveïdor de IBM DB2 no funciona.\n"
+msgstr ""
+"La funció SQLGetInfo no està suportada. El proveïdor de IBM DB2 no "
+"funciona.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:450
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
@@ -514,7 +523,8 @@ msgstr "Proveïdor pel directori de LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr "En la cadena de connexió s'ha d'especificar un NOM DE FITXER de la base dades"
+msgstr ""
+"En la cadena de connexió s'ha d'especificar un NOM DE FITXER de la base dades"
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
@@ -770,15 +780,20 @@ msgstr "No és nul"
 #: providers/mysql/gda-mysql-provider.c:1094
 #: providers/mysql/gda-mysql-provider.c:1102
 msgid "Table name is needed but none specified in parameter list"
-msgstr "Es precisa el nom de la taula però no s'ha especificat en la llista de paràmetres"
+msgstr ""
+"Es precisa el nom de la taula però no s'ha especificat en la llista de "
+"paràmetres"
 
 #: providers/msql/gda-msql-recordset.c:57
 msgid "Row number out of bounds"
 msgstr "El número de fila està fora de rang"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "No es pot proveir un UNIX_SOCKET si a la vegada s'està proveint un HOST o un PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"No es pot proveir un UNIX_SOCKET si a la vegada s'està proveint un HOST o un "
+"PORT."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -894,8 +909,7 @@ msgstr "No s'ha pogut adjuntar el servidor d'Oracle"
 #: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr ""
-"No s'ha pogut definir l'atribut de servidor Oracle en el context del "
-"servei"
+"No s'ha pogut definir l'atribut de servidor Oracle en el context del servei"
 
 #: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
@@ -948,7 +962,9 @@ msgstr "No s'ha pogut obtenir el tipus de declaració d'Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:610
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "No s'ha pogut especificar el comptatge de files de pre-recollida de la declaració d'Oracle"
+msgstr ""
+"No s'ha pogut especificar el comptatge de files de pre-recollida de la "
+"declaració d'Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
@@ -961,8 +977,7 @@ msgstr "No s'ha pogut obtenir el número de columnes del conjunt de resultats"
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
 msgstr ""
-"No s'ha pogut obtenir el descriptor de paràmetres del conjunt de "
-"resultats"
+"No s'ha pogut obtenir el descriptor de paràmetres del conjunt de resultats"
 
 #: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
@@ -1047,7 +1062,9 @@ msgstr "No s'ha pogut obtenir el nom del sinònim al qual es fa referència"
 
 #: providers/oracle/gda-oracle-provider.c:1549
 msgid "Could not get synonym referred-to dblink"
-msgstr "No s'ha pogut obtenir l'enllaç de base de dades del sinònim al qual es fa referència"
+msgstr ""
+"No s'ha pogut obtenir l'enllaç de base de dades del sinònim al qual es fa "
+"referència"
 
 #: providers/oracle/gda-oracle-provider.c:1611
 msgid "Could not get the number of columns in the table"
@@ -1134,7 +1151,8 @@ msgstr "No s'ha pogut obtenir l'escala de la columna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:234
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "No s'ha pogut obtenir l'atribut de nul·labilitat de la columna d'Oracle"
+msgstr ""
+"No s'ha pogut obtenir l'atribut de nul·labilitat de la columna d'Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:246
 msgid "Could not get the Oracle defined size"
@@ -1185,7 +1203,8 @@ msgid "Provider for PostgreSQL databases"
 msgstr "Proveïdor per bases de dades PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr ""
 "Per obrir una base de dades cal especificar un camí complert a la cadena de "
 "connexió."
@@ -1215,7 +1234,8 @@ msgstr "Només està permesa una base de dades per connexió"
 
 #: providers/sqlite/gda-sqlite-provider.c:390
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr "Per eliminar una base de dades SQLite s'ha de borrar el fitxer manualment"
+msgstr ""
+"Per eliminar una base de dades SQLite s'ha de borrar el fitxer manualment"
 
 #: providers/sqlite/gda-sqlite-provider.c:664
 msgid "Could not retrieve information for field"
@@ -1238,7 +1258,9 @@ msgstr "Local definit a '%s'."
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
-msgstr "L'estructura cmd ja s'està utilitzant. L'ordre no s'executa degut al bloqueig de la connexió."
+msgstr ""
+"L'estructura cmd ja s'està utilitzant. L'ordre no s'executa degut al "
+"bloqueig de la connexió."
 
 #: providers/sybase/gda-sybase-provider.c:656
 #, c-format
@@ -1275,7 +1297,9 @@ msgstr "Premeu el tipus de resultat no suportat"
 msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
-msgstr "s'ha produït error al cridar la funció ct_diag a l'intentar provar si hi havia una missatge del servidor pel conjunt de resultats"
+msgstr ""
+"s'ha produït error al cridar la funció ct_diag a l'intentar provar si hi "
+"havia una missatge del servidor pel conjunt de resultats"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1313,7 +1337,9 @@ msgstr "%s: ha fallat %s"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr "no s'ha pogut assignar l'estructura d'ordre per localitzar la base de dades actual."
+msgstr ""
+"no s'ha pogut assignar l'estructura d'ordre per localitzar la base de dades "
+"actual."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
@@ -1325,16 +1351,20 @@ msgstr "no s'ha pogut enviar l'ordre per obtenir la base de dades actual."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr "no s'ha pogut vincular la variable per obtenir la base de dades actual."
+msgstr ""
+"no s'ha pogut vincular la variable per obtenir la base de dades actual."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
 msgid "could not fetch data to find current database."
-msgstr "no s'ha pogut recollir les de dades per localitzar la base de dades actual."
+msgstr ""
+"no s'ha pogut recollir les de dades per localitzar la base de dades actual."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr "no s'ha pogut eliminar l'estructura d'ordre per localitzar la base de dades actual."
+msgstr ""
+"no s'ha pogut eliminar l'estructura d'ordre per localitzar la base de dades "
+"actual."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
@@ -1357,13 +1387,16 @@ msgstr "retorna %s <= 0 columnes."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr "No s'ha pogut assignar una estructura per la metainformació de la columna."
+msgstr ""
+"No s'ha pogut assignar una estructura per la metainformació de la columna."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "No s'ha pogut cridar a %s mentre es processava el conjunt de resultats de la fila"
+msgstr ""
+"No s'ha pogut cridar a %s mentre es processava el conjunt de resultats de la "
+"fila"
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
@@ -1379,7 +1412,9 @@ msgstr "No s'ha pogut assignar el comodí de dades per la columna %d"
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "No s'ha pogut executar %s per cancelar el processament del conjunt de dades de la fila."
+msgstr ""
+"No s'ha pogut executar %s per cancelar el processament del conjunt de dades "
+"de la fila."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1395,7 +1430,9 @@ msgstr "%s ha fallat amb una codi de retorn inesperat."
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
-msgstr "s'ha produït un error al cridar la funció ct_diag a l'intentar rebre un comptatge de missatge del conjunt de resultats"
+msgstr ""
+"s'ha produït un error al cridar la funció ct_diag a l'intentar rebre un "
+"comptatge de missatge del conjunt de resultats"
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
@@ -1405,11 +1442,15 @@ msgstr "s'intenta que el conjunt de registres i missatges sigui != 1 !"
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message for recordset"
-msgstr "s'ha produït un error al cridar la funció ct_diag a l'intentar rebre una missatge del conjunt de registres"
+msgstr ""
+"s'ha produït un error al cridar la funció ct_diag a l'intentar rebre una "
+"missatge del conjunt de registres"
 
 #: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
 msgid "call to ct_diag failed when attempting to clear the server messages"
-msgstr "s'ha produït un error al cridar la funció ct_diag a l'intentar eliminar els missatges del servidor"
+msgstr ""
+"s'ha produït un error al cridar la funció ct_diag a l'intentar eliminar els "
+"missatges del servidor"
 
 #: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
@@ -1494,15 +1535,20 @@ msgstr "\tNom del procediment: %s\n"
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
-msgstr "la funció ct_diag() ha fallat al determinar el # de missatges de client."
+msgstr ""
+"la funció ct_diag() ha fallat al determinar el # de missatges de client."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr "la crida a la funció cs_diag ha fallat a l'intentar a la quantitat de missatges de client"
+msgstr ""
+"la crida a la funció cs_diag ha fallat a l'intentar a la quantitat de "
+"missatges de client"
 
 #: providers/sybase/utils.c:220
-msgid "an error occured when calling cs_diag attempting to retrieve a client message"
-msgstr "la funció cs_diag ha fallat a l'intentar obtenir un missatge del client"
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
+msgstr ""
+"la funció cs_diag ha fallat a l'intentar obtenir un missatge del client"
 
 #: providers/sybase/utils.c:230
 msgid "OS_Error:("
@@ -1530,15 +1576,22 @@ msgstr "), capa("
 
 #: providers/sybase/utils.c:276
 msgid "call to cs_diag failed when attempting to clear the client messages"
-msgstr "la crida a la funció cs_diag ha fallat a l'intentar netejar els missatges de client"
+msgstr ""
+"la crida a la funció cs_diag ha fallat a l'intentar netejar els missatges de "
+"client"
 
 #: providers/sybase/utils.c:317
 msgid "call to ct_diag failed when attempting to the amount of server messages"
-msgstr "la crida a la funció cs_diag ha fallat a l'intentar a la quantitat de missatges del servidor"
+msgstr ""
+"la crida a la funció cs_diag ha fallat a l'intentar a la quantitat de "
+"missatges del servidor"
 
 #: providers/sybase/utils.c:334
-msgid "an error occured when calling ct_diag attempting to retrieve a server message"
-msgstr "la crida a la funció cs_diag ha fallat a l'intentar obtenir un missatge del servidor"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
+msgstr ""
+"la crida a la funció cs_diag ha fallat a l'intentar obtenir un missatge del "
+"servidor"
 
 #: providers/sybase/utils.c:346
 msgid "Server:"
@@ -1566,11 +1619,15 @@ msgstr "Línia"
 
 #: providers/sybase/utils.c:446
 msgid "call to ct_diag failed when attempting to the amount of client messages"
-msgstr "la crida a la funció ct_diag ha fallat a l'intentar a la quantitat de missatges de client"
+msgstr ""
+"la crida a la funció ct_diag ha fallat a l'intentar a la quantitat de "
+"missatges de client"
 
 #: providers/sybase/utils.c:463
-msgid "an error occured when calling ct_diag attempting to retrieve a client message"
-msgstr "la funció ct_diag ha fallat a l'intentar obtenir un missatge del client"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
+msgstr ""
+"la funció ct_diag ha fallat a l'intentar obtenir un missatge del client"
 
 #: providers/sybase/utils.c:476
 msgid "Layer"
@@ -1586,7 +1643,8 @@ msgstr "Número de missatge"
 
 #: providers/sybase/utils.c:502
 msgid "call to ct_diag failed when attempting to clear the client messages"
-msgstr "la funció ct_diag ha fallat a l'intentar netejar els missatges de client"
+msgstr ""
+"la funció ct_diag ha fallat a l'intentar netejar els missatges de client"
 
 #: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
@@ -1594,11 +1652,14 @@ msgstr "L'operació no és possible ja que la connexió està ocupada"
 
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
-msgstr "Es pot especificar EL NOM DEL FITXER o EL DIRECTORI, però no tots dos o cap dels dos"
+msgstr ""
+"Es pot especificar EL NOM DEL FITXER o EL DIRECTORI, però no tots dos o cap "
+"dels dos"
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr "Cal especificar EL NOM DE FITXER o EL DIRECTORI a la cadena de connexió"
+msgstr ""
+"Cal especificar EL NOM DE FITXER o EL DIRECTORI a la cadena de connexió"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1614,8 +1675,8 @@ msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
 msgstr ""
-"Per obrir una base de dades en el proveidor de XML cal especificar un camí complert a la cadena de "
-"connexió."
+"Per obrir una base de dades en el proveidor de XML cal especificar un camí "
+"complert a la cadena de connexió."
 
 #: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
 msgid "Invalid XML handle"
@@ -1696,7 +1757,8 @@ msgstr "S'ha produït un error a l'especificar la relació pare->fill"
 #: report/libgda-report/gda-report-item.c:375
 #, c-format
 msgid "Error setting value %s to attribute %s of item %s"
-msgstr "S'ha produït un error al definir el valor %s de l'atribut %s de l'element %s"
+msgstr ""
+"S'ha produït un error al definir el valor %s de l'atribut %s de l'element %s"
 
 #: report/libgda-report/gda-report-valid.c:130
 #, c-format
@@ -1716,7 +1778,8 @@ msgstr "No hi ha cap declaració de l'atribut %s de l'element %s\n"
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr "El valor %s de l'atribut %s de %s no està en el conjunt dels enumerats\n"
+msgstr ""
+"El valor %s de l'atribut %s de %s no està en el conjunt dels enumerats\n"
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"
@@ -1894,4 +1957,3 @@ msgstr "\tdescripció = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-
