@@ -1,3 +1,8 @@
+2001-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-recordset.c (fetch_func): don't use mysql_fetch_lengths,
+	but the MYSQL_RES 's lengths member. Also, call mysql_fetch_row!
+
 2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-mysql-provider.c (gda_mysql_provider_supports): new method

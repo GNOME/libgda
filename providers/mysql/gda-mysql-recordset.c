@@ -50,6 +50,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	unsigned long *lengths;
 	MYSQL_FIELD *mysql_fields;
 	MYSQL_RES *mysql_res;
+	MYSQL_ROW mysql_row;
 
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 
@@ -75,8 +76,12 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	mysql_data_seek (mysql_res, rownum);
 	row = gda_row_new (field_count);
 
-	lengths = mysql_fetch_lengths (mysql_res);
+	lengths = mysql_res->lengths;
 	mysql_fields = mysql_fetch_fields (mysql_res);
+
+	mysql_row = mysql_fetch_row (mysql_res);
+	if (!mysql_row)
+		return NULL;
 
 	for (i = 0; i < field_count; i++) {
 		GdaField *field;
@@ -89,7 +94,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		gda_field_set_scale (field, mysql_fields[i].decimals);
 		gda_field_set_gdatype (field, gda_mysql_type_to_gda (mysql_fields[i].type));
 
-		thevalue = mysql_res->current_row[i];
+		thevalue = mysql_row[i];
 
 		switch (mysql_fields[i].type) {
 		case FIELD_TYPE_DATE : /* FIXME */
