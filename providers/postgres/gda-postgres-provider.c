@@ -62,6 +62,9 @@ static gboolean gda_postgres_provider_single_command (const GdaPostgresProvider 
 						      GdaServerConnection *cnc,
 						      const gchar *command);
 
+static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
+						GdaServerConnection *cnc,
+						GNOME_Database_Feature feature);
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -82,6 +85,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
 	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
+	provider_class->supports = gda_postgres_provider_supports;
 }
 
 static void
@@ -163,7 +167,9 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 		      pq_login, pq_pwd);
 
 	if (PQstatus (pconn) != CONNECTION_OK) {
-		gda_postgres_make_error (pconn);
+		gda_server_connection_add_error (
+			cnc, gda_postgres_make_error (pconn));
+		PQfinish(pconn);
 		return FALSE;
 	}
 
@@ -197,11 +203,7 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaServerCo
 	if (!pconn)
 		return FALSE;
 
-	/* check connection status */
-	if (PQstatus (pconn) == CONNECTION_OK) {
 		PQfinish (pconn);
-		pconn = NULL;
-	}
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, NULL);
 	return TRUE;
@@ -337,12 +339,34 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 		return FALSE;
 	}
 
+	result = FALSE;
 	pg_res = PQexec(pconn, command);
+	if (pg_res != NULL){
 	result = PQresultStatus(pg_res) == PGRES_COMMAND_OK;
 	PQclear (pg_res);
+	}
+
 	if (result == FALSE)
-		gda_postgres_make_error (pconn);
+		gda_server_connection_add_error (
+			cnc, gda_postgres_make_error (pconn));
 
 	return result;
+}
+
+static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
+						GdaServerConnection *cnc,
+						GNOME_Database_Feature feature)
+{
+	GdaPostgresProvider *pgprv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pgprv), FALSE);
+
+	switch (feature) {
+	case GNOME_Database_FEATURE_TRANSACTIONS :
+		return TRUE;
+	default :
+	}
+ 
+	return FALSE;
 }
 

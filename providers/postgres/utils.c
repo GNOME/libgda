@@ -22,6 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <postgres.h>
+#include <catalog/pg_type.h>
 #include "gda-postgres.h"
 
 GdaError *
@@ -44,49 +46,88 @@ gda_postgres_make_error (PGconn *handle)
 	return error;
 }
 
-//TODO: This one just copied from MySQL provider!
-//Should be converted to PostgreSQL types!
 GdaType
-gda_postgres_type_to_gda (int postgres_type)
+gda_postgres_type_to_gda (Oid postgres_type)
 {
-/*	switch (postgres_type) {
-	case FIELD_TYPE_DATE :
-		return GDA_TYPE_DATE;
-	case FIELD_TYPE_DECIMAL :
-	case FIELD_TYPE_DOUBLE :
-		return GDA_TYPE_DOUBLE;
-	case FIELD_TYPE_FLOAT :
-		return GDA_TYPE_SINGLE;
-	case FIELD_TYPE_LONG :
-	case FIELD_TYPE_YEAR :
-		return GDA_TYPE_INTEGER;
-	case FIELD_TYPE_LONGLONG :
-	case FIELD_TYPE_INT24 :
-		return GDA_TYPE_BIGINT;
-	case FIELD_TYPE_SHORT :
-		return GDA_TYPE_SMALLINT;
-	case FIELD_TYPE_TIME :
-		return GDA_TYPE_TIME;
-	case FIELD_TYPE_TIMESTAMP :
-	case FIELD_TYPE_DATETIME :
-		return GDA_TYPE_TIMESTAMP;
-	case FIELD_TYPE_TINY :
-		return GDA_TYPE_TINYINT;
-	case FIELD_TYPE_TINY_BLOB :
-	case FIELD_TYPE_MEDIUM_BLOB :
-	case FIELD_TYPE_LONG_BLOB :
-	case FIELD_TYPE_BLOB :
-		return GDA_TYPE_BINARY;
-	case FIELD_TYPE_VAR_STRING :
-	case FIELD_TYPE_STRING :
+	switch (postgres_type) {
+	case BOOLOID :
+		return GDA_TYPE_BOOLEAN;
+	case BYTEAOID :
+	case CHAROID :
+	case TEXTOID :
+	case BPCHAROID :
+	case VARCHAROID :
 		return GDA_TYPE_STRING;
-	case FIELD_TYPE_NULL :
-	case FIELD_TYPE_NEWDATE :
-	case FIELD_TYPE_ENUM :
-	case FIELD_TYPE_SET :
-		break;
+	case INT8OID :
+		return GDA_TYPE_BIGINT;
+	case INT4OID :
+	case RELTIMEOID :
+		return GDA_TYPE_INTEGER;
+	case INT2OID :
+		return GDA_TYPE_SMALLINT;
+	case FLOAT4OID :
+		return GDA_TYPE_SINGLE;
+	case FLOAT8OID :
+	case NUMERICOID :
+		return GDA_TYPE_DOUBLE;
+	case ABSTIMEOID :
+	case TIMESTAMPOID :
+		return GDA_TYPE_TIMESTAMP;
+	case DATEOID :
+		return GDA_TYPE_DATE;
+	case TIMEOID :
+	case TIMETZOID :
+		return GDA_TYPE_TIME;
+	case VARBITOID :
+		return GDA_TYPE_BINARY;
 	}
-*/
+
 	return GDA_TYPE_UNKNOWN;
+}
+
+void 
+gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
+{
+	switch (type) {
+	case GDA_TYPE_BOOLEAN :
+		gda_field_set_gdatype (field, type);
+		gda_field_set_boolean_value (field, atoi (value));
+		break;
+	case GDA_TYPE_STRING :
+		gda_field_set_gdatype (field, type);
+		gda_field_set_string_value (field, value);
+		break;
+	case GDA_TYPE_BIGINT :
+		gda_field_set_gdatype (field, type);
+		gda_field_set_bigint_value (field, atoll (value));
+		break;
+	case GDA_TYPE_INTEGER :
+		gda_field_set_gdatype (field, type);
+		gda_field_set_integer_value (field, atol (value));
+		break;
+	case GDA_TYPE_SMALLINT :
+		gda_field_set_gdatype (field, type);
+		gda_field_set_smallint_value (field, atoi (value));
+		break;
+	case GDA_TYPE_SINGLE :
+		gda_field_set_gdatype (field, type);
+		gda_field_set_single_value (field, atof (value));
+		break;
+	case GDA_TYPE_DOUBLE :
+		gda_field_set_gdatype (field, type);
+		gda_field_set_double_value (field, atof (value));
+		break;
+	case GDA_TYPE_TIMESTAMP : //FIXME
+		break;
+	case GDA_TYPE_DATE : //FIXME
+		break;
+	case GDA_TYPE_TIME : //FIXME
+		break;
+	case GDA_TYPE_BINARY : //FIXME
+		break;
+	default :
+		gda_field_set_string_value (field, value);
+		gda_field_set_gdatype (field, GDA_TYPE_UNKNOWN);
+	}
 }
 

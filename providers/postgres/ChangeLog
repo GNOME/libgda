@@ -1,3 +1,15 @@
+2001-12-26  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-postgres-provider.c: added the call to
+	gda_server_connection_add_error() where I forgot to put it.
+	Added gda_postgres_provider_supports().
+	Call PQfinish() if PQsetdbLogin() fails.
+	Always call PQfinish() in close_connection() to avoid memory leaks.
+	Handle the possible NULL return value in PQexec().
+
+	* utils.c: First version of a working gda_postgres_type_to_gda().
+	Added gda_postgres_set_type_value().
+
 2001-12-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-postgres-provider.c: some cosmetic changes, implementation of

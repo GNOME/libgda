@@ -45,8 +45,10 @@ G_BEGIN_DECLS
  */
 
 GdaError *gda_postgres_make_error (PGconn *cnc);
-//TODO: see utils.c
-GdaType gda_postgres_type_to_gda (int postgres_type);//(enum enum_field_types postgres_type);
+GdaType gda_postgres_type_to_gda (Oid postgres_type);
+void gda_postgres_set_type_value (GdaField *field,
+				GdaType type, 
+				const gchar *value);
 
 G_END_DECLS
 

@@ -76,7 +76,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	for (i = 0; i < field_count; i++) {
 		GdaField *field;
 		gchar *thevalue;
-		Oid ftype;
+		GdaType ftype;
 
 		field = gda_row_get_field (row, i);
 		//TODO: What do I do when PQfsize() returns -1 to show that the
@@ -94,57 +94,8 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		//gda_field_set_scale (field, mysql_fields[i].decimals);
 		gda_field_set_scale (field, 0);
 		ftype = gda_postgres_type_to_gda (PQftype (pg_res, i));
-		gda_field_set_gdatype (field, ftype);
-
 		thevalue = PQgetvalue(pg_res, rownum, i);
-
-		//switch (ftype) {
-		//case FIELD_TYPE_DATE : /* FIXME */
-	/*		break;
-		case FIELD_TYPE_DECIMAL :
-		case FIELD_TYPE_DOUBLE :
-			gda_field_set_double_value (field, atof (thevalue));
-			break;
-		case FIELD_TYPE_FLOAT :
-			gda_field_set_single_value (field, atof (thevalue));
-			break;
-		case FIELD_TYPE_LONG :
-		case FIELD_TYPE_YEAR :
-			gda_field_set_integer_value (field, atol (thevalue));
-			break;
-		case FIELD_TYPE_LONGLONG :
-		case FIELD_TYPE_INT24 :
-			gda_field_set_bigint_value (field, atoll (thevalue));
-			break;
-		case FIELD_TYPE_SHORT :
-			gda_field_set_smallint_value (field, atoi (thevalue));
-			break;
-			*/
-		//case FIELD_TYPE_TIME : /* FIXME */
-		//	break;
-		//case FIELD_TYPE_TIMESTAMP :
-		//case FIELD_TYPE_DATETIME : /* FIXME */
-	//		break;
-//		case FIELD_TYPE_TINY :
-//			gda_field_set_tinyint_value (field, atoi (thevalue));
-//			break;
-//		case FIELD_TYPE_TINY_BLOB :
-//		case FIELD_TYPE_MEDIUM_BLOB :
-//		case FIELD_TYPE_LONG_BLOB :
-//		case FIELD_TYPE_BLOB :
-//			gda_field_set_binary_value (field, thevalue, PQgetlength(pg_res, rownum, i));
-//			break;
-//		case FIELD_TYPE_VAR_STRING :
-//		case FIELD_TYPE_STRING :
-//			gda_field_set_string_value (field, thevalue);
-//			break;
-//		case FIELD_TYPE_NULL :
-//		case FIELD_TYPE_NEWDATE :
-//		case FIELD_TYPE_ENUM :
-//		case FIELD_TYPE_SET : /* FIXME */
-//			gda_field_set_string_value (field, thevalue);
-//			break;
-//		}
+		gda_postgres_set_type_value(field, ftype, thevalue);
 	}
 
 	return row;
