@@ -187,7 +187,7 @@ msgstr "Registriran z ID = %s"
 #: lib/gda-server/gda-server-impl.c:296
 #, c-format
 msgid "CORBA system exception %s"
-msgstr "Sistemska CORBA izjema: %s"
+msgstr "Izjema v sistemu CORBA: %s"
 
 #: lib/gda-server/gda-server-impl.c:299
 #, c-format
