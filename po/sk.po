@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-01-27 01:13+0100\n"
-"PO-Revision-Date: 2002-01-22 19:09CET\n"
-"Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
+"POT-Creation-Date: 2002-01-30 16:32+0100\n"
+"PO-Revision-Date: 2002-01-30 16:33CET\n"
+"Last-Translator: Stanislav Višňovský <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,8 +75,7 @@ msgstr "Nie je možné inicializovať Bonobo"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
-"Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
+msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
 
 #: libgda/gda-server-connection.c:440
 #, c-format
@@ -139,8 +138,8 @@ msgid "GDA Default Datasource Access"
 msgstr "GDA štandardný prístup k zdroju dát"
 
 #: providers/default/gda-default-provider.c:141
-msgid ""
-"A full path must be specified on the connection string to open a database."
+#: providers/sqlite/gda-sqlite-provider.c:152
+msgid "A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/gda-default-provider.c:199
@@ -151,6 +150,7 @@ msgstr "Neplatný handle DEFAULT"
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Neplatný počet riadkov"
 
@@ -160,8 +160,7 @@ msgstr "Neplatný handle Default"
 
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -172,10 +171,8 @@ msgid "MySQL component factory"
 msgstr "Vytváracie rozhranie komponentu pre MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:175
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
@@ -247,8 +244,7 @@ msgstr "Neplatný handle PostgreSQL"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
@@ -257,6 +253,27 @@ msgstr "ŽIADNY POPIS"
 #: providers/postgres/utils.c:44
 msgid "Not available"
 msgstr "Nie je k dispozícii"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+msgid "GDA SQLite Datasource Access"
+msgstr "GDA prístup k zdroju dát SQLite"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+msgid "SQLite component factory"
+msgstr "Vytváracie rozhranie komponentu pre SQLite"
+
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+msgid "Invalid SQLITE handle"
+msgstr "Neplatný handle SQLite"
+
+#: providers/sqlite/gda-sqlite-recordset.c:114
+msgid "Invalid Sqlite handle"
+msgstr "Neplatný handle SQLite"
+
+#: providers/sqlite/main.c:54
+msgid "Could not initiate Sqlite component factory"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent SQLite"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -377,9 +394,8 @@ msgid "Could not create BonoboStreamMem object"
 msgstr "Nie je možné vytvoriť objekt BonoboStreamMem"
 
 #: report/libgda-report/gda-report-document.c:137
-#, fuzzy
 msgid "Could not parse XML document"
-msgstr "Nie je možné spracovať XML report"
+msgstr "Nie je možné spracovať XML dokument"
 
 #: report/libgda-report/gda-report-document.c:162
 #, c-format
@@ -388,8 +404,7 @@ msgstr "Nie je možné získať súbor z %s"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
@@ -516,3 +531,4 @@ msgstr "\tdoména = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
