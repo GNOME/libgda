@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *  Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
+ *  Holger Thon <holger.thon@gnome-db.org>
  *      based on the MySQL provider by
  *         Michael Lausch <michael@lausch.at>
  *	        Rodrigo Moya <rodrigo@gnome-db.org>
@@ -27,9 +28,30 @@
 #if !defined(__gda_sybase_provider_h__)
 #  define __gda_sybase_provider_h__
 
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include <libgda/gda-server-provider.h>
 
+#include <ctpublic.h>
+#include <cspublic.h>
+
 G_BEGIN_DECLS
+
+/* Set used client version in CS_GDA_VERSION to latest available */
+#if defined (CS_CURRENT_VERSION)
+#  define CS_GDA_VERSION CS_CURRENT_VERSION
+#elif defined (CS_VERSION_125)
+#  define CS_GDA_VERSION CS_VERSION_125
+#elif defined (CS_VERSION_120)
+#  define CS_GDA_VERSION CS_VERSION_120
+#elif defined(CS_VERSION_110)
+#  define CS_GDA_VERSION CS_VERSION_110
+#else
+#  define CS_GDA_VERSION CS_VERSION_100
+#endif
+
 
 #define GDA_TYPE_SYBASE_PROVIDER            (gda_sybase_provider_get_type())
 #define GDA_SYBASE_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SYBASE_PROVIDER, GdaSybaseProvider))
@@ -48,7 +70,26 @@ struct _GdaSybaseProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType gda_sybase_provider_get_type (void);
+typedef struct _GdaSybaseConnectionData {
+	GdaConnection  *gda_cnc; // "parent"
+	gchar          *server_version;
+	
+	CS_CONTEXT     *context;
+	CS_COMMAND     *cmd;
+	CS_CONNECTION  *connection;
+	CS_CHAR        *mempool;
+
+	CS_RETCODE     ret;      // for client operations
+	CS_RETCODE     rret;     // for ct_result operations
+	CS_RETCODE     mret;     // for message operations(cs_diag/ct_diag)
+	CS_INT         res_type; // resulttype of query in progress
+} GdaSybaseConnectionData;
+
+GType              gda_sybase_provider_get_type (void);
+GdaServerProvider *gda_sybase_provider_new (void);
+
+GdaSybaseConnectionData *gda_sybase_connection_data_new(void);
+void gda_sybase_connection_data_free(GdaSybaseConnectionData *);
 
 G_END_DECLS
 
