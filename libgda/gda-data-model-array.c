@@ -72,8 +72,11 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
 	if (fields != NULL) {
 		gint len = g_list_length (fields);
 
-		if (col < len)
-			return (GdaValue *) g_list_nth (fields, col);
+		if (col < len) {
+			GList *node = g_list_nth (fields, col);
+			if (node != NULL)
+				return (GdaValue *) node->data;
+		}
 	}
 
 	return NULL;
@@ -175,4 +178,37 @@ gda_data_model_array_clear (GdaDataModelArray *model)
 		g_ptr_array_remove_index (model->priv->rows, 0);
 		g_list_free (cols);
 	}
+}
+
+/**
+ * gda_data_model_array_append_row
+ */
+void
+gda_data_model_array_append_row (GdaDataModelArray *model, const GList *values)
+{
+	gint len;
+	gint i;
+	GList *list = NULL;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
+	g_return_if_fail (values != NULL);
+
+	len = g_list_length (values);
+	if (len != model->priv->number_of_columns)
+		return;
+
+	for (i = 0; i < len; i++) {
+		GList *l;
+		GdaValue *new_value;
+
+		l = g_list_nth (values, i);
+		if (!l)
+			return;
+
+		new_value = gda_value_copy ((GdaValue *) l->data);
+		list = g_list_append (list, new_value);
+	}
+
+	g_ptr_array_add (model->priv->rows, list);
+	gda_data_model_changed (GDA_DATA_MODEL (model));
 }
