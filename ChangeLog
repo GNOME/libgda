@@ -1,3 +1,9 @@
+2005-03-23  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-recordset.c
+	(gda_postgres_recordset_update_row):
+	use " for column names in 'WHERE' part of query.
+
 2005-03-21  Alan Knowles <alan@akbkhome.com>
 	* providers/mysql/gda-mysql-recordset.c prevent segfault when
 	running insert or update queries.

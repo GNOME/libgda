@@ -474,7 +474,7 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 			    	continue;
 
 			/* fills the 'where' part of the update command */
-			tmp = g_strdup_printf ("AND %s = '%s' ",
+			tmp = g_strdup_printf ("AND \"%s\" = '%s' ",
 					       column_name,
 					       newval);
 			query_where = g_strconcat (query_where, tmp, NULL);
