@@ -2,7 +2,6 @@
 
 <!ENTITY LIBGDA          "<application>libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
-<!ENTITY FDL-INC         SYSTEM "fdl-appendix.sgml">
 <!ENTITY API             "<acronym>API</acronym>">
 <!ENTITY DBMS            "<acronym>DBMS</acronym>">
 <!ENTITY DSN             "<acronym>DSN</acronym>">
@@ -65,6 +64,7 @@
 <!ENTITY libgda-xql-utils SYSTEM "sgml/gda-xql-utils.sgml">
 <!ENTITY libgda-xql-value SYSTEM "sgml/gda-xql-value.sgml">
 <!ENTITY libgda-xql-valueref SYSTEM "sgml/gda-xql-valueref.sgml">
+<!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 ]>
 
 <book id="index">
@@ -661,6 +661,6 @@
     </para>
   </chapter>
   
-  &FDL-INC;
+  &fdl-appendix;
 </book>
 
