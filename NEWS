@@ -1,3 +1,25 @@
+libgda 1.2.1, 2005-03-03
+------------------------
+
+ - Fixed includedir in spec file (Aaron)
+ - Set row number in appended row for GdaDataModelHash (Bas)
+ - Fixes in 'update_row'/'remove_row' methods for PostgreSQL provider (Bas)
+ - Fixed intltool detection (Rodrigo)
+ - Fixed deletion of rows in GdaDataModelHash (Bas)
+ - Improve table name guessing in PostgreSQL updates (Bas)
+ - Allow USER and PASSWORD parameters in MySQL connection string (Bas)
+ - Removed extra emission of signals in data model base class (Álvaro)
+ - Renumber rows after deletion in GdaDataModelHash (Álvaro)
+ - Added "name_changed" signal in GdaTable class (Álvaro)
+ - Fixed #167700 (Caolan)
+ - Fixed #160666 (Rodrigo)
+ - Fixed #162856 (Jorge)
+ - Fixed #166286 (Caolan)
+ - Fixed #166288 (Caolan)
+ - Fixed #129153 (Rodrigo)
+ - Fixed #167500 (Denis)
+ - Fixed #168641 (Loïc)
+
 libgda 1.2.0, 2004-12-28
 ------------------------
 
