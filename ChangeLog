@@ -1,5 +1,14 @@
 2002-02-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* idl/GNOME_Database.idl: added more FEATURE's, and added TRIGGERS
+	schema.
+
+	* providers/sqlite/gda-sqlite-provider.c
+	(gda_sqlite_provider_supports):
+	* providers/mysql/gda-mysql-provider.c (gda_mysql_provider_supports):
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_supports): support FEATURE_SQL.
+
 	* providers/odbc/gda-odbc-provider.c
 	(gda_odbc_provider_execute_command): implemented.
 

@@ -165,7 +165,9 @@ module GNOME {
 		typedef string TransactionId;
 
 		enum Feature {
-			FEATURE_TRANSACTIONS
+			FEATURE_SQL,
+			FEATURE_TRANSACTIONS,
+			FEATURE_XML_QUERIES
 		};
 
 		interface Connection : Bonobo::Unknown {
@@ -194,6 +196,7 @@ module GNOME {
 				SCHEMA_INDEXES,
 				SCHEMA_PROCEDURES,
 				SCHEMA_TABLES,
+				SCHEMA_TRIGGERS,
 				SCHEMA_TYPES,
 				SCHEMA_VIEWS
 			};

@@ -406,6 +406,7 @@ gda_mysql_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 
 	switch (feature) {
+	case GNOME_Database_FEATURE_SQL :
 	case GNOME_Database_FEATURE_TRANSACTIONS :
 		return TRUE;
 	default :

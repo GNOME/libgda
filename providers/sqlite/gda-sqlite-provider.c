@@ -355,11 +355,11 @@ gda_sqlite_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
 
 	switch (feature) {
-		case GNOME_Database_FEATURE_TRANSACTIONS :
-			/* FIXME: Change it when we implement the transactions */
-			return FALSE;
-			break;
-		default:
+	case GNOME_Database_FEATURE_SQL :
+		//case GNOME_Database_FEATURE_TRANSACTIONS :
+		/* FIXME: Change it when we implement the transactions */
+		return TRUE;
+	default:
 	}
 
 	return FALSE;
