@@ -439,8 +439,8 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 		sconn->ret = ct_con_props (sconn->connection, 
 		                           CS_SET, 
 		                           CS_PASSWORD, 
-		                           (CS_CHAR *) NULL,
-		                           CS_NULLTERM, 
+		                           (CS_CHAR *) "",
+		                           CS_NULLTERM,
 		                           NULL);
 		if (sconn->ret != CS_SUCCEED) {
 			gda_sybase_connection_data_free (sconn);

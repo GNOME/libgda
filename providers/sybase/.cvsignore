@@ -1,8 +1,7 @@
-Makefile
-Makefile.in
-GNOME_Database_Provider_Sybase.server
-*.o
+*.la
 *.lo
-gda-sybase-srv
+*.o
 .deps
 .libs
+Makefile
+Makefile.in
