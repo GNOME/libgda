@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD.nl\n"
-"POT-Creation-Date: 2003-03-14 05:21+0100\n"
+"POT-Creation-Date: 2003-04-25 04:08+0200\n"
 "PO-Revision-Date: 2003-03-14 19:15+0100\n"
 "Last-Translator: Jan-Willem Harmanny <jwharmanny@hotmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -54,11 +54,11 @@ msgstr "Fout: %s"
 #: providers/mysql/gda-mysql-provider.c:889
 #: providers/odbc/gda-odbc-provider.c:733
 #: providers/odbc/gda-odbc-provider.c:789
-#: providers/oracle/gda-oracle-provider.c:1068
-#: providers/oracle/gda-oracle-provider.c:1830
-#: providers/oracle/gda-oracle-provider.c:1847
-#: providers/oracle/gda-oracle-provider.c:1895
-#: providers/oracle/gda-oracle-provider.c:1912
+#: providers/oracle/gda-oracle-provider.c:1074
+#: providers/oracle/gda-oracle-provider.c:1840
+#: providers/oracle/gda-oracle-provider.c:1857
+#: providers/oracle/gda-oracle-provider.c:1902
+#: providers/oracle/gda-oracle-provider.c:1919
 msgid "Name"
 msgstr "Naam"
 
@@ -213,7 +213,7 @@ msgstr "Niet geïmplementeerd"
 #: providers/mdb/gda-mdb-provider.c:490
 #: providers/mysql/gda-mysql-provider.c:1069
 #: providers/odbc/gda-odbc-provider.c:914
-#: providers/oracle/gda-oracle-provider.c:1192
+#: providers/oracle/gda-oracle-provider.c:1198
 #: providers/postgres/gda-postgres-provider.c:1351
 #: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Field name"
@@ -223,7 +223,7 @@ msgstr "Veld naam"
 #: providers/mdb/gda-mdb-provider.c:491
 #: providers/mysql/gda-mysql-provider.c:1070
 #: providers/odbc/gda-odbc-provider.c:915
-#: providers/oracle/gda-oracle-provider.c:1193
+#: providers/oracle/gda-oracle-provider.c:1199
 #: providers/postgres/gda-postgres-provider.c:1352
 #: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Data type"
@@ -233,7 +233,7 @@ msgstr "Gegevens type"
 #: providers/mdb/gda-mdb-provider.c:492
 #: providers/mysql/gda-mysql-provider.c:1071
 #: providers/odbc/gda-odbc-provider.c:916
-#: providers/oracle/gda-oracle-provider.c:1194
+#: providers/oracle/gda-oracle-provider.c:1200
 #: providers/postgres/gda-postgres-provider.c:1353
 #: providers/sqlite/gda-sqlite-provider.c:624
 msgid "Size"
@@ -243,7 +243,7 @@ msgstr "Formaat"
 #: providers/mdb/gda-mdb-provider.c:493
 #: providers/mysql/gda-mysql-provider.c:1072
 #: providers/odbc/gda-odbc-provider.c:917
-#: providers/oracle/gda-oracle-provider.c:1195
+#: providers/oracle/gda-oracle-provider.c:1201
 #: providers/postgres/gda-postgres-provider.c:1354
 #: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Scale"
@@ -253,7 +253,7 @@ msgstr "Schaal"
 #: providers/mdb/gda-mdb-provider.c:494
 #: providers/mysql/gda-mysql-provider.c:1073
 #: providers/odbc/gda-odbc-provider.c:918
-#: providers/oracle/gda-oracle-provider.c:1196
+#: providers/oracle/gda-oracle-provider.c:1202
 #: providers/postgres/gda-postgres-provider.c:1355
 #: providers/sqlite/gda-sqlite-provider.c:626
 msgid "Not null?"
@@ -263,7 +263,7 @@ msgstr "Niet nul?"
 #: providers/mdb/gda-mdb-provider.c:495
 #: providers/mysql/gda-mysql-provider.c:1074
 #: providers/odbc/gda-odbc-provider.c:919
-#: providers/oracle/gda-oracle-provider.c:1197
+#: providers/oracle/gda-oracle-provider.c:1203
 #: providers/postgres/gda-postgres-provider.c:1356
 #: providers/sqlite/gda-sqlite-provider.c:627
 msgid "Primary key?"
@@ -273,7 +273,7 @@ msgstr "Primaire sleutel?"
 #: providers/mdb/gda-mdb-provider.c:496
 #: providers/mysql/gda-mysql-provider.c:1075
 #: providers/odbc/gda-odbc-provider.c:920
-#: providers/oracle/gda-oracle-provider.c:1198
+#: providers/oracle/gda-oracle-provider.c:1204
 #: providers/postgres/gda-postgres-provider.c:1357
 #: providers/sqlite/gda-sqlite-provider.c:628
 msgid "Unique index?"
@@ -283,7 +283,7 @@ msgstr "Unieke index?"
 #: providers/mdb/gda-mdb-provider.c:497
 #: providers/mysql/gda-mysql-provider.c:1076
 #: providers/odbc/gda-odbc-provider.c:921
-#: providers/oracle/gda-oracle-provider.c:1199
+#: providers/oracle/gda-oracle-provider.c:1205
 #: providers/postgres/gda-postgres-provider.c:1358
 #: providers/sqlite/gda-sqlite-provider.c:629
 msgid "References"
@@ -393,8 +393,18 @@ msgstr ""
 "%s\n"
 
 #: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
-#: providers/oracle/utils.c:71 providers/postgres/utils.c:51
-#: providers/sybase/utils.c:171
+#: providers/oracle/utils.c:74 providers/postgres/utils.c:51
+#: providers/sybase/gda-sybase-provider.c:765
+#: providers/sybase/gda-sybase-recordset.c:512
+#: providers/sybase/gda-sybase-recordset.c:534
+#: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
+#: providers/sybase/utils.c:223 providers/sybase/utils.c:239
+#: providers/sybase/utils.c:259 providers/sybase/utils.c:279
+#: providers/sybase/utils.c:320 providers/sybase/utils.c:337
+#: providers/sybase/utils.c:389 providers/sybase/utils.c:415
+#: providers/sybase/utils.c:449 providers/sybase/utils.c:466
+#: providers/sybase/utils.c:489 providers/sybase/utils.c:505
+#: providers/sybase/utils.c:543
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
@@ -418,8 +428,8 @@ msgstr "Onverwachte freetds return code in tds_process_result_tokens\n"
 msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Leverancier voor TDS-gebaseerde databases (gebruikmakend van FreeTDS)"
 
-#: providers/freetds/utils.c:40 providers/oracle/utils.c:66
-#: providers/postgres/utils.c:46 providers/sybase/utils.c:166
+#: providers/freetds/utils.c:40 providers/oracle/utils.c:67
+#: providers/postgres/utils.c:46 providers/sybase/utils.c:538
 msgid "NO DESCRIPTION"
 msgstr "GEEN OMSCHRIJVING"
 
@@ -463,10 +473,11 @@ msgstr "Functie"
 #: providers/odbc/gda-odbc-provider.c:1255
 #: providers/odbc/gda-odbc-provider.c:1297
 #: providers/odbc/gda-odbc-provider.c:1349
-#: providers/oracle/gda-oracle-provider.c:1830
-#: providers/oracle/gda-oracle-provider.c:1848
-#: providers/oracle/gda-oracle-provider.c:1895
-#: providers/oracle/gda-oracle-provider.c:1913
+#: providers/oracle/gda-oracle-provider.c:1840
+#: providers/oracle/gda-oracle-provider.c:1858
+#: providers/oracle/gda-oracle-provider.c:1902
+#: providers/oracle/gda-oracle-provider.c:1920
+#: providers/oracle/gda-oracle-provider.c:2043
 #: providers/postgres/gda-postgres-provider.c:835
 #: providers/postgres/gda-postgres-provider.c:1105
 #: providers/postgres/gda-postgres-provider.c:1124
@@ -474,7 +485,7 @@ msgstr "Functie"
 #: providers/postgres/gda-postgres-provider.c:1301
 #: providers/postgres/gda-postgres-provider.c:1845
 #: providers/sqlite/gda-sqlite-provider.c:752
-#: providers/sybase/gda-sybase-provider.c:909
+#: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Eigenaar"
 
@@ -515,7 +526,7 @@ msgstr "SQL definitie"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:919
-#: providers/oracle/gda-oracle-provider.c:2115
+#: providers/oracle/gda-oracle-provider.c:2137
 #: providers/postgres/gda-postgres-provider.c:1340 testing/client.c:135
 msgid "Triggers"
 msgstr "Triggers"
@@ -525,10 +536,10 @@ msgstr "Triggers"
 #: providers/ldap/gda-ldap-provider.c:423
 #: providers/mysql/gda-mysql-provider.c:971
 #: providers/odbc/gda-odbc-provider.c:1254
-#: providers/oracle/gda-oracle-provider.c:2012
+#: providers/oracle/gda-oracle-provider.c:2042
 #: providers/postgres/gda-postgres-provider.c:1123
 #: providers/sqlite/gda-sqlite-provider.c:751
-#: providers/sybase/gda-sybase-provider.c:907
+#: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Type"
 
@@ -541,32 +552,34 @@ msgstr "Type"
 #: providers/odbc/gda-odbc-provider.c:1033
 #: providers/odbc/gda-odbc-provider.c:1256
 #: providers/odbc/gda-odbc-provider.c:1350
-#: providers/oracle/gda-oracle-provider.c:1830
-#: providers/oracle/gda-oracle-provider.c:1849
-#: providers/oracle/gda-oracle-provider.c:1895
-#: providers/oracle/gda-oracle-provider.c:1914
+#: providers/oracle/gda-oracle-provider.c:1840
+#: providers/oracle/gda-oracle-provider.c:1859
+#: providers/oracle/gda-oracle-provider.c:1902
+#: providers/oracle/gda-oracle-provider.c:1921
+#: providers/oracle/gda-oracle-provider.c:2044
 #: providers/postgres/gda-postgres-provider.c:836
 #: providers/postgres/gda-postgres-provider.c:1125
 #: providers/postgres/gda-postgres-provider.c:1185
 #: providers/postgres/gda-postgres-provider.c:1302
 #: providers/postgres/gda-postgres-provider.c:1846
 #: providers/sqlite/gda-sqlite-provider.c:753
-#: providers/sybase/gda-sybase-provider.c:911
+#: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Commentaar"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:950
 #: providers/mysql/gda-mysql-provider.c:974
 #: providers/odbc/gda-odbc-provider.c:1257
+#: providers/oracle/gda-oracle-provider.c:2044
 #: providers/postgres/gda-postgres-provider.c:1126
 #: providers/sqlite/gda-sqlite-provider.c:754
-#: providers/sybase/gda-sybase-provider.c:913
+#: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "GDA type"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:975
-#: providers/oracle/gda-oracle-provider.c:1761
+#: providers/oracle/gda-oracle-provider.c:1772
 #: providers/postgres/gda-postgres-provider.c:1803 testing/client.c:133
 msgid "Users"
 msgstr "Gebruikers"
@@ -641,7 +654,7 @@ msgstr "Transacties worden niet ondersteund in de MDB leverancier"
 #: providers/mdb/gda-mdb-provider.c:498
 #: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:922
-#: providers/oracle/gda-oracle-provider.c:1200
+#: providers/oracle/gda-oracle-provider.c:1206
 #: providers/postgres/gda-postgres-provider.c:1359
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
@@ -772,16 +785,16 @@ msgstr "Ongeldige MYSQL handeling"
 #: providers/mysql/gda-mysql-provider.c:539
 #: providers/mysql/gda-mysql-provider.c:596
 #: providers/mysql/gda-mysql-provider.c:629
-#: providers/oracle/gda-oracle-provider.c:845
-#: providers/oracle/gda-oracle-provider.c:927
-#: providers/oracle/gda-oracle-provider.c:988
+#: providers/oracle/gda-oracle-provider.c:851
+#: providers/oracle/gda-oracle-provider.c:933
+#: providers/oracle/gda-oracle-provider.c:994
 #: providers/sqlite/gda-sqlite-provider.c:472
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transacties worden niet ondersteund in alleen-lezen modus"
 
 #: providers/mysql/gda-mysql-provider.c:707
-#: providers/oracle/gda-oracle-provider.c:1850
-#: providers/oracle/gda-oracle-provider.c:1915
+#: providers/oracle/gda-oracle-provider.c:1860
+#: providers/oracle/gda-oracle-provider.c:1922
 msgid "SQL"
 msgstr "SQL"
 
@@ -819,7 +832,7 @@ msgid "Nb args"
 msgstr "Nb args"
 
 #: providers/odbc/gda-odbc-provider.c:1296
-#: providers/oracle/gda-oracle-provider.c:2119 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:2141 testing/client.c:130
 msgid "Views"
 msgstr "Aanzichten"
 
@@ -834,214 +847,218 @@ msgstr "Rij"
 msgid "Provider for ODBC data sources"
 msgstr "Leverancier voor ODBC gegevensbronnen"
 
-#: providers/oracle/gda-oracle-provider.c:205
+#: providers/oracle/gda-oracle-provider.c:196
+msgid "No TNS name supplied"
+msgstr "Geen TNS naam gegeven"
+
+#: providers/oracle/gda-oracle-provider.c:212
 msgid "Could not initialize Oracle"
 msgstr "Kan Oracle niet initializeren"
 
-#: providers/oracle/gda-oracle-provider.c:216
+#: providers/oracle/gda-oracle-provider.c:223
 msgid "Could not initialize the Oracle environment"
 msgstr "Kan de Oracle omgeving niet initializeren"
 
-#: providers/oracle/gda-oracle-provider.c:228
+#: providers/oracle/gda-oracle-provider.c:234
 msgid "Could not allocate the Oracle service handle"
 msgstr "Kan de Oracle service handle niet toewijzen"
 
-#: providers/oracle/gda-oracle-provider.c:238
+#: providers/oracle/gda-oracle-provider.c:244
 msgid "Could not allocate the Oracle error handle"
 msgstr "Kan de Oracle foutafhandeling niet toewijzen"
 
-#: providers/oracle/gda-oracle-provider.c:250
+#: providers/oracle/gda-oracle-provider.c:256
 msgid "Could not allocate the Oracle server handle"
 msgstr "Kan de Oracle server handle niet toewijzen"
 
-#: providers/oracle/gda-oracle-provider.c:263
+#: providers/oracle/gda-oracle-provider.c:269
 msgid "Could not allocate the Oracle session handle"
 msgstr "Kon de Oracle sessie handle niet toewijzen"
 
-#: providers/oracle/gda-oracle-provider.c:293
+#: providers/oracle/gda-oracle-provider.c:299
 msgid "Could not attach to the Oracle server"
 msgstr "Kon de Oracle server niet aankoppelen"
 
-#: providers/oracle/gda-oracle-provider.c:309
+#: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr "Kan het Oracle server attribuut niet in de service context instellen"
 
-#: providers/oracle/gda-oracle-provider.c:325
+#: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
 msgstr "Kan het Oracle gebruikersnaam attribuut niet instellen"
 
-#: providers/oracle/gda-oracle-provider.c:341
+#: providers/oracle/gda-oracle-provider.c:347
 msgid "Could not set the Oracle password attribute"
 msgstr "Kan het Oracle wachtwoord attribuut niet instellen"
 
-#: providers/oracle/gda-oracle-provider.c:356
+#: providers/oracle/gda-oracle-provider.c:362
 msgid "Could not begin the Oracle session"
 msgstr "Kan de Oracle sessie niet beginnen"
 
-#: providers/oracle/gda-oracle-provider.c:374
+#: providers/oracle/gda-oracle-provider.c:380
 msgid "Could not set the Oracle session attribute in the service context"
 msgstr "Kan het Oracle sessie attribuut niet in de service context instellen"
 
-#: providers/oracle/gda-oracle-provider.c:454
-#: providers/oracle/gda-oracle-provider.c:486
-#: providers/oracle/gda-oracle-provider.c:561
-#: providers/oracle/gda-oracle-provider.c:710
-#: providers/oracle/gda-oracle-provider.c:733
-#: providers/oracle/gda-oracle-provider.c:756
-#: providers/oracle/gda-oracle-provider.c:786
-#: providers/oracle/gda-oracle-provider.c:840
-#: providers/oracle/gda-oracle-provider.c:922
-#: providers/oracle/gda-oracle-provider.c:983
+#: providers/oracle/gda-oracle-provider.c:460
+#: providers/oracle/gda-oracle-provider.c:492
+#: providers/oracle/gda-oracle-provider.c:567
+#: providers/oracle/gda-oracle-provider.c:716
+#: providers/oracle/gda-oracle-provider.c:739
+#: providers/oracle/gda-oracle-provider.c:762
+#: providers/oracle/gda-oracle-provider.c:792
+#: providers/oracle/gda-oracle-provider.c:846
+#: providers/oracle/gda-oracle-provider.c:928
+#: providers/oracle/gda-oracle-provider.c:989
 #: providers/oracle/gda-oracle-recordset.c:167
 #: providers/oracle/gda-oracle-recordset.c:390
 #: providers/oracle/gda-oracle-recordset.c:591
 msgid "Invalid Oracle handle"
 msgstr "Ongeldige Oracle handeling"
 
-#: providers/oracle/gda-oracle-provider.c:497
+#: providers/oracle/gda-oracle-provider.c:503
 msgid "Could not allocate the Oracle statement handle"
 msgstr "Kan de Oracle statement handle niet toewijzen"
 
-#: providers/oracle/gda-oracle-provider.c:508
+#: providers/oracle/gda-oracle-provider.c:514
 msgid "Could not prepare the Oracle statement"
 msgstr "Kan het Oracle statement niet klaarmaken"
 
-#: providers/oracle/gda-oracle-provider.c:540
+#: providers/oracle/gda-oracle-provider.c:546
 msgid "Could not bind the Oracle statement parameter"
 msgstr "Kan de Oracle statement parameter niet binden"
 
-#: providers/oracle/gda-oracle-provider.c:586
+#: providers/oracle/gda-oracle-provider.c:592
 msgid "Could not get the Oracle statement type"
 msgstr "Kan het Oracle statement type niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:598
+#: providers/oracle/gda-oracle-provider.c:604
 msgid "Could not set the Oracle statement pre-fetch row count"
 msgstr "Kan de Oracle statement pre-fetch rijenaantal niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:615
+#: providers/oracle/gda-oracle-provider.c:621
 msgid "Could not execute the Oracle statement"
 msgstr "Kan het Oracle statement niet uitvoeren"
 
-#: providers/oracle/gda-oracle-provider.c:628
+#: providers/oracle/gda-oracle-provider.c:634
 msgid "Could not get the number of columns in the result set"
 msgstr "Kan het aantal kolommen van het resultaat niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:645
+#: providers/oracle/gda-oracle-provider.c:651
 msgid "Could not get the parameter descripter in the result set"
 msgstr "Kan de parameter omschrijving niet uit het resultaat verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:657
+#: providers/oracle/gda-oracle-provider.c:663
 msgid "Could not get the column name in the result set"
 msgstr "Kan de kolomnaam niet uit het resultaat verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:803
-#: providers/oracle/gda-oracle-provider.c:884
-#: providers/oracle/gda-oracle-provider.c:939
-#: providers/oracle/gda-oracle-provider.c:1000
+#: providers/oracle/gda-oracle-provider.c:809
+#: providers/oracle/gda-oracle-provider.c:890
+#: providers/oracle/gda-oracle-provider.c:945
+#: providers/oracle/gda-oracle-provider.c:1006
 msgid "Could not attach the transaction to the service context"
 msgstr "Kan de transactie niet aan de service-context koppelen"
 
-#: providers/oracle/gda-oracle-provider.c:858
+#: providers/oracle/gda-oracle-provider.c:864
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "Kan de Oracle transactie handle niet toewijzen"
 
-#: providers/oracle/gda-oracle-provider.c:870
+#: providers/oracle/gda-oracle-provider.c:876
 msgid "Could not set the Oracle transaction name"
 msgstr "Kan de Oracle transactie naam niet instellen"
 
-#: providers/oracle/gda-oracle-provider.c:895
+#: providers/oracle/gda-oracle-provider.c:901
 msgid "Could not start the Oracle transaction"
 msgstr "Kan de Oracle transactie niet starten"
 
-#: providers/oracle/gda-oracle-provider.c:948
+#: providers/oracle/gda-oracle-provider.c:954
 msgid "Could not prepare the transaction to commit"
 msgstr "Kan de transactie niet klaarmaken voor versturen"
 
-#: providers/oracle/gda-oracle-provider.c:956
+#: providers/oracle/gda-oracle-provider.c:962
 msgid "Could not commit the Oracle transaction"
 msgstr "Kan de Oracle transactie niet versturen"
 
-#: providers/oracle/gda-oracle-provider.c:1007
+#: providers/oracle/gda-oracle-provider.c:1013
 msgid "Could not rollback the Oracle transaction"
 msgstr "Kan de Oracle transactie niet terugdraaien"
 
-#: providers/oracle/gda-oracle-provider.c:1378
+#: providers/oracle/gda-oracle-provider.c:1388
 msgid "Could not allocate the Oracle describe handle"
 msgstr "Kan de Oracle omschrijving handle niet toewijzen"
 
-#: providers/oracle/gda-oracle-provider.c:1388
+#: providers/oracle/gda-oracle-provider.c:1398
 msgid "Could not set describe handle attribute"
 msgstr "Kan het handle omschrijving attribuut niet instellen"
 
-#: providers/oracle/gda-oracle-provider.c:1414
-#: providers/oracle/gda-oracle-provider.c:1519
+#: providers/oracle/gda-oracle-provider.c:1425
+#: providers/oracle/gda-oracle-provider.c:1530
 msgid "Could not describe the Oracle table"
 msgstr "Kan de Oracle tabel niet omschrijven"
 
-#: providers/oracle/gda-oracle-provider.c:1429
-#: providers/oracle/gda-oracle-provider.c:1532
+#: providers/oracle/gda-oracle-provider.c:1440
+#: providers/oracle/gda-oracle-provider.c:1543
 msgid "Could not get the Oracle parameter handle"
 msgstr "Kan de Oracle parameter handle niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1444
+#: providers/oracle/gda-oracle-provider.c:1455
 msgid "Could not get described object type"
 msgstr "Kan het omschreven objecttype niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1459
+#: providers/oracle/gda-oracle-provider.c:1470
 msgid "Could not get synonym referred-to schema"
 msgstr "Kan het synoniem verwijst-naar schema niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1472
+#: providers/oracle/gda-oracle-provider.c:1483
 msgid "Could not get synonym referred-to name"
 msgstr "Kan het synoniem verwijst-naar naam niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1485
+#: providers/oracle/gda-oracle-provider.c:1496
 msgid "Could not get synonym referred-to dblink"
 msgstr "Kan het synoniem verwijst-naar dblink niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1547
+#: providers/oracle/gda-oracle-provider.c:1558
 msgid "Could not get the number of columns in the table"
 msgstr "Kan het aantal kolommen van de tabel niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1561
+#: providers/oracle/gda-oracle-provider.c:1572
 msgid "Could not get the column list"
 msgstr "Kan de kolommenlijst niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1592
+#: providers/oracle/gda-oracle-provider.c:1603
 msgid "Could not get the Oracle column handle"
 msgstr "Kan de Oracle kolom handle niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1607
+#: providers/oracle/gda-oracle-provider.c:1618
 msgid "Could not get the Oracle field name"
 msgstr "Kan de Oracle veldnaam niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1629
+#: providers/oracle/gda-oracle-provider.c:1640
 msgid "Could not get the Oracle field data type"
 msgstr "Kan het datatype van het Oracle veld niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1649
+#: providers/oracle/gda-oracle-provider.c:1660
 msgid "Could not get the Oracle field defined size"
 msgstr "Kan het gedefinieerde formaat van het Oracle veld niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1668
+#: providers/oracle/gda-oracle-provider.c:1679
 msgid "Could not get the Oracle field scale"
 msgstr "Kan de Oracle veld schaal niet verkrijgen"
 
-#: providers/oracle/gda-oracle-provider.c:1687
+#: providers/oracle/gda-oracle-provider.c:1698
 msgid "Could not get the Oracle field nullable attribute"
 msgstr "Kan het nul-attribuut van het Oracle veld niet verkrijgen"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:2100
+#: providers/oracle/gda-oracle-provider.c:2125
 #: providers/postgres/gda-postgres-provider.c:1223 testing/client.c:131
 msgid "Indexes"
 msgstr "Indexen"
 
-#: providers/oracle/gda-oracle-provider.c:2104
+#: providers/oracle/gda-oracle-provider.c:2128
 msgid "Procedures"
 msgstr "Procedures"
 
-#: providers/oracle/gda-oracle-provider.c:2108 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2131 testing/client.c:134
 msgid "Sequences"
 msgstr "Rijen"
 
@@ -1183,81 +1200,16 @@ msgstr "Kan veldinformatie niet verkrijgen"
 msgid "Provider for SQLite databases"
 msgstr "Leverancier voor SQLite databases"
 
-#. the logic to connect to the database
-#: providers/sybase/gda-sybase-provider.c:251
-msgid "about to open connection"
-msgstr "bezig met voorbereiden van de verbinding"
-
-#: providers/sybase/gda-sybase-provider.c:277
+#: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
 msgstr "Geheugen is vol. Toewijzen van verbindingsstructuur is mislukt."
 
-#: providers/sybase/gda-sybase-provider.c:289
-msgid "Context allocated."
-msgstr "Context toegewezen."
-
-#: providers/sybase/gda-sybase-provider.c:296
-msgid "Client library initialized."
-msgstr "Client bibliotheek geïnitialiseerd."
-
-#: providers/sybase/gda-sybase-provider.c:322
+#: providers/sybase/gda-sybase-provider.c:336
 #, c-format
 msgid "Locale set to '%s'."
 msgstr "Taaldefinitie ingesteld op '%s'."
 
-#: providers/sybase/gda-sybase-provider.c:337
-msgid "Could not initialize cslib callback"
-msgstr "Kan cslib callback niet initialiseren"
-
-#: providers/sybase/gda-sybase-provider.c:341
-msgid "CS-lib callback initialized."
-msgstr "CS-lib callback geïnitialiseerd."
-
-#: providers/sybase/gda-sybase-provider.c:347
-msgid "Could not initialize ct-client callback"
-msgstr "Kan ct-client callback niet initialiseren"
-
-#: providers/sybase/gda-sybase-provider.c:351
-msgid "CT-Client callback initialized."
-msgstr "CT-Client callback geïnitialiseerd."
-
-#: providers/sybase/gda-sybase-provider.c:358
-msgid "Could not initialize ct-server callback"
-msgstr "Kan ct-server callback niet initialiseren"
-
-#: providers/sybase/gda-sybase-provider.c:362
-msgid "CT-Server callback initialized."
-msgstr "CT-Server callback geïnitialiseerd."
-
-#: providers/sybase/gda-sybase-provider.c:370
-msgid "Connection allocated."
-msgstr "Verbinding toegewezen."
-
-#: providers/sybase/gda-sybase-provider.c:410
-msgid "Appname set."
-msgstr "Appname ingesteld."
-
-#: providers/sybase/gda-sybase-provider.c:423
-msgid "Username set."
-msgstr "Gebruikersnaam ingesteld."
-
-#: providers/sybase/gda-sybase-provider.c:437
-msgid "Password set."
-msgstr "Wachtwoord ingesteld."
-
-#: providers/sybase/gda-sybase-provider.c:449
-msgid "Empty password set."
-msgstr "Leeg wachtwoord ingesteld."
-
-#: providers/sybase/gda-sybase-provider.c:459
-msgid "Connected."
-msgstr "Verbonden."
-
-#: providers/sybase/gda-sybase-provider.c:477
-msgid "Finally connected."
-msgstr "Eindelijk verbonden."
-
-#: providers/sybase/gda-sybase-provider.c:611
+#: providers/sybase/gda-sybase-provider.c:642
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
@@ -1265,71 +1217,114 @@ msgstr ""
 "Cmd structuur is al in gebruik. Commando zal niet worden uitgevoerd omdat de "
 "verbinding is geblokkeerd."
 
-#: providers/sybase/gda-sybase-provider.c:626
+#: providers/sybase/gda-sybase-provider.c:656
 #, c-format
 msgid "Failed allocating a command structure in %s()"
 msgstr "Commando structuur toewijzen mislukt in %s()"
 
-#: providers/sybase/gda-sybase-provider.c:637
+#: providers/sybase/gda-sybase-provider.c:670
 msgid "Could not prepare command structure."
 msgstr "Kan de commando structuur niet klaarmaken."
 
-#: providers/sybase/gda-sybase-provider.c:646
+#: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
 msgstr "Verzenden van sql-commando mislukt."
 
-#: providers/sybase/gda-sybase-provider.c:717
+#: providers/sybase/gda-sybase-provider.c:706
+#: providers/sybase/gda-sybase-provider.c:724
+#: providers/sybase/gda-sybase-provider.c:790
+#: providers/sybase/gda-sybase-provider.c:811
+msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
+msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
+
+#. when you execute a stored procedure through openclient, this
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#: providers/sybase/gda-sybase-provider.c:712
+msgid "CS_STATUS_RESULT!"
+msgstr "CS_STATUS_RESULT!"
+
+#: providers/sybase/gda-sybase-provider.c:734
+msgid "Hit unsupported result type"
+msgstr "Niet ondersteund resultaattype gevonden"
+
+#: providers/sybase/gda-sybase-provider.c:762
+msgid ""
+"an error occured when calling ct_diag attempting to test if there is a "
+"server message for resultset"
+msgstr ""
+"Er is een fout opgetreden bij de aanroep van ct_diag tijdens de test of er "
+"een server bericht voor de resultaatset is."
+
+#: providers/sybase/gda-sybase-provider.c:793
+#, c-format
+msgid "%s returned %s"
+msgstr "%s leverde %s"
+
+#: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
 msgstr "Verwijderen van commando structuur is mislukt."
 
-#: providers/sybase/gda-sybase-provider.c:747
+#: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
 msgstr "Commando structuur is al in gebruik. %s mislukt."
 
-#: providers/sybase/gda-sybase-provider.c:755
-#: providers/sybase/gda-sybase-provider.c:859
+#: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
 msgstr "Kan commandostructuur niet toewijzen."
 
-#: providers/sybase/gda-sybase-provider.c:763
+#: providers/sybase/gda-sybase-provider.c:867
 #, c-format
 msgid "Could not prepare command structure with %s."
 msgstr "Kan commando structuur niet klaarmaken met %s."
 
-#: providers/sybase/gda-sybase-provider.c:772
+#: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
 msgstr "Verzenden van commando is mislukt."
 
-#: providers/sybase/gda-sybase-provider.c:796
-#: providers/sybase/gda-sybase-provider.c:812
-#: providers/sybase/gda-sybase-provider.c:822
+#: providers/sybase/gda-sybase-provider.c:902
+#: providers/sybase/gda-sybase-provider.c:919
+#: providers/sybase/gda-sybase-provider.c:930
 #, c-format
 msgid "%s: %s failed"
 msgstr "%s: %s mislukt"
 
-#: providers/sybase/gda-sybase-provider.c:857
-#, c-format
-msgid ""
-"Connection already in use. Could not allocate command structure in %s()."
-msgstr ""
-"Verbinding al in gebruik. Kan commando structuur niet toewijzen in %s()."
+#: providers/sybase/gda-sybase-provider.c:974
+msgid "could not allocate cmd structure to find current database."
+msgstr "Kan cmd-structuur niet toewijzen om huidige database te vinden."
 
-#: providers/sybase/gda-sybase-provider.c:870
-#, c-format
-msgid "Failed dropping command structure in %s()."
-msgstr "Verwijderen van commando structuur in %s() is mislukt."
+#: providers/sybase/gda-sybase-provider.c:985
+msgid "could not execute command to get current database."
+msgstr "Kan commando om huidige database op te halen niet uitvoeren."
 
-#: providers/sybase/gda-sybase-recordset.c:317
+#: providers/sybase/gda-sybase-provider.c:993
+msgid "could not send command to get current database."
+msgstr "Kan commando om huidige database op te halen niet verzenden."
+
+#: providers/sybase/gda-sybase-provider.c:1016
+msgid "could not bind variable to get current database."
+msgstr "Kan variabele niet binden om de huidige database op te halen."
+
+#: providers/sybase/gda-sybase-provider.c:1029
+#: providers/sybase/gda-sybase-provider.c:1044
+msgid "could not fetch data to find current database."
+msgstr "Kan de gegevens om de huidige database te vinden niet binnenhalen."
+
+#: providers/sybase/gda-sybase-provider.c:1058
+msgid "could not drop cmd structure to find current database."
+msgstr "Kan cmd-structuur niet verwijderen om de huidige database te vinden."
+
+#: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
 msgstr ""
 "Kan gegevensmodel niet toewijzen. Er zullen geen resultaten worden geleverd."
 
-#: providers/sybase/gda-sybase-recordset.c:320
+#: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
 msgstr "ct_cancel() mislukt."
 
-#: providers/sybase/gda-sybase-recordset.c:332
+#: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
 msgid "%s failed while processing a row result."
 msgstr "%s mislukt tijdens verwerken van een rij resultaat."
@@ -1340,74 +1335,96 @@ msgid "%s returned <= 0 columns."
 msgstr "%s leverde <= 0 kolommen op."
 
 #: providers/sybase/gda-sybase-recordset.c:359
+#: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
 msgstr "Kan de structuur voor kolom metainformatie niet toewijzen."
 
 #: providers/sybase/gda-sybase-recordset.c:363
+#: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
 msgstr "Kan %s niet aanroepen tijdens het verwerken van rij resultaten."
 
-#: providers/sybase/gda-sybase-recordset.c:384
+#: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
 #, c-format
 msgid "Could not run %s on column %d"
 msgstr "Kan %s niet uitvoeren op kolom %d"
 
-#: providers/sybase/gda-sybase-recordset.c:392
+#: providers/sybase/gda-sybase-recordset.c:391
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "Kan gegevens plaatshouder niet toewijzen voor kolom %d"
 
-#: providers/sybase/gda-sybase-recordset.c:421
+#: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
 msgstr ""
 "Kan %s niet uitvoeren om de verwerking van rij resultaten te annuleren."
 
-#: providers/sybase/gda-sybase-recordset.c:436
+#: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
 msgid "%s failed on row %d"
 msgstr "%s mislukt op rij %d"
 
-#: providers/sybase/gda-sybase-recordset.c:463
+#: providers/sybase/gda-sybase-recordset.c:465
 #, c-format
 msgid "%s terminated with unexpected return code."
 msgstr "%s afgebroken met onverwachte return code."
 
-#: providers/sybase/gda-sybase-recordset.c:540
-#, c-format
-msgid "%s returned %s"
-msgstr "%s leverde %s"
+#: providers/sybase/gda-sybase-recordset.c:509
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message count for resultset"
+msgstr ""
+"Er is een fout opgetreden bij de aanroep van ct_diag tijdens het binnenhalen "
+"van een server bericht voor de resultaatset."
 
+#: providers/sybase/gda-sybase-recordset.c:518
+msgid "attempting to make recordset and msg count != 1 !"
+msgstr "Bezig te proberen om recordset en msg count != 1 te maken!"
+
+#: providers/sybase/gda-sybase-recordset.c:531
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message for recordset"
+msgstr ""
+"Er is een fout opgetreden bij de aanroep van ct_diag tijdens het binnenhalen "
+"van een server bericht voor de recordset."
+
+#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
+msgid "call to ct_diag failed when attempting to clear the server messages"
+msgstr ""
+"Aanroep van ct_diag() mislukt tijdens verwijderen van client berichten."
+
+#: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
-#: providers/sybase/gda-sybase-types.c:100
 msgid "Attempt setting a nonnullable field to null."
-msgstr "Probeert een nonnullable veld op null te zetten."
+msgstr "Probeer een nonnullable veld op null te zetten."
 
-#: providers/sybase/gda-sybase-types.c:217
+#: providers/sybase/gda-sybase-types.c:208
 #, c-format
 msgid "cslib cannot convert type %d"
 msgstr "cslib kan type %d niet converteren"
 
-#: providers/sybase/gda-sybase-types.c:232
+#: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
 msgstr "gegevens conversie mislukt voor type %d"
 
 #: providers/sybase/libmain.c:40
-msgid "Provider for sybase databases (using OpenClient)"
-msgstr "Leverancier voor Sybase databases (gebruikmakend van OpenClient)"
+msgid "GDA provider for sybase databases (using OpenClient)"
+msgstr "GDA leverancier voor Sybase databases (gebruikmakend van OpenClient)"
 
-#: providers/sybase/main.c:51
+#: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Kan Sybase component factory niet initialiseren"
 
-#: providers/sybase/utils.c:37
+#: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
 msgstr "Call: csmsg callback"
 
-#: providers/sybase/utils.c:42
+#: providers/sybase/utils.c:53
 #, c-format
 msgid ""
 "CS-Library error:\n"
@@ -1418,16 +1435,16 @@ msgstr ""
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
 
-#: providers/sybase/utils.c:49
+#: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
 msgstr "OS fout: %s"
 
-#: providers/sybase/utils.c:59
+#: providers/sybase/utils.c:70
 msgid "Call: Client callback."
 msgstr "Call: Client callback."
 
-#: providers/sybase/utils.c:64
+#: providers/sybase/utils.c:75
 #, c-format
 msgid ""
 "CT-Client error:\n"
@@ -1438,11 +1455,11 @@ msgstr ""
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
 
-#: providers/sybase/utils.c:79
+#: providers/sybase/utils.c:90
 msgid "Call: server callback"
 msgstr "Call: server callback."
 
-#: providers/sybase/utils.c:84
+#: providers/sybase/utils.c:95
 #, c-format
 msgid ""
 "CT-Server message:\n"
@@ -1451,26 +1468,125 @@ msgstr ""
 "CT-Server bericht:\n"
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 
-#: providers/sybase/utils.c:89
+#: providers/sybase/utils.c:100
 #, c-format
 msgid "\tServer name: %s\n"
 msgstr "\tGebruikersnaam: %s\n"
 
-#: providers/sybase/utils.c:92
+#: providers/sybase/utils.c:103
 #, c-format
 msgid "\tProcedure name: %s\n"
 msgstr "Procedurenaam: %s\n"
 
-#: providers/sybase/utils.c:130
+#: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
 msgstr "ct_diag() mislukt bij bepalen van het aantal client berichten."
 
-#: providers/sybase/utils.c:138
-#, c-format
-msgid "%d messages fetched."
-msgstr "%d berichten opgehaald."
+#: providers/sybase/utils.c:202
+msgid "call to cs_diag failed when attempting to the amount of client messages"
+msgstr ""
+"Aanroep van cs_diag() mislukt bij bepalen van het aantal client berichten."
 
-#: providers/sybase/utils.c:152
+#: providers/sybase/utils.c:220
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
+msgstr ""
+"Er is een fout opgetreden bij het aanroepen van cs_diag bij het binnenhalen "
+"van een client bericht."
+
+#: providers/sybase/utils.c:230
+msgid "OS_Error:("
+msgstr "OS_Fout:("
+
+#: providers/sybase/utils.c:232
+msgid ") Message: "
+msgstr ") Bericht:"
+
+#: providers/sybase/utils.c:245
+msgid "Sybase OpenClient Msg: severity("
+msgstr "Sybase OpenClient Msg: severity("
+
+#: providers/sybase/utils.c:247
+msgid "), number("
+msgstr "), nummer("
+
+#: providers/sybase/utils.c:249
+msgid "), origin("
+msgstr "), afkomst("
+
+#: providers/sybase/utils.c:251
+msgid "), layer("
+msgstr "), laag("
+
+#: providers/sybase/utils.c:276
+msgid "call to cs_diag failed when attempting to clear the client messages"
+msgstr "Aanroep van cs_diag() mislukt bij verwijderen van de client berichten."
+
+#: providers/sybase/utils.c:317
+msgid "call to ct_diag failed when attempting to the amount of server messages"
+msgstr ""
+"Aanroep van ct_diag() mislukt bij bepalen van het aantal client berichten."
+
+#: providers/sybase/utils.c:334
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
+msgstr ""
+"Er is een fout opgetreden bij het aanroepen van ct_diag om een server "
+"bericht binnen te halen."
+
+#: providers/sybase/utils.c:346
+msgid "Server:"
+msgstr "Server:"
+
+#: providers/sybase/utils.c:350
+msgid "Stored Procedure:"
+msgstr "Opgeslagen procedure:"
+
+#: providers/sybase/utils.c:354
+msgid "Number"
+msgstr "Nummer"
+
+#: providers/sybase/utils.c:357 providers/sybase/utils.c:474
+msgid "Severity"
+msgstr "Severity"
+
+#: providers/sybase/utils.c:360
+msgid "State"
+msgstr "Schatus"
+
+#: providers/sybase/utils.c:363
+msgid "Line"
+msgstr "Regel"
+
+#: providers/sybase/utils.c:446
+msgid "call to ct_diag failed when attempting to the amount of client messages"
+msgstr ""
+"Aanroep van ct_diag() mislukt bij bepalen van het aantal client berichten."
+
+#: providers/sybase/utils.c:463
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
+msgstr ""
+"Er is een fout opgetreden bij het aanroepen van ct_diag om een client "
+"bericht binnen te halen."
+
+#: providers/sybase/utils.c:476
+msgid "Layer"
+msgstr "Laag"
+
+#: providers/sybase/utils.c:478
+msgid "Origin"
+msgstr "Afkomst"
+
+#: providers/sybase/utils.c:480
+msgid "Message Number"
+msgstr "Bericht nummer"
+
+#: providers/sybase/utils.c:502
+msgid "call to ct_diag failed when attempting to clear the client messages"
+msgstr "Aanroep van ct_diag() mislukt bij verwijderen van de client berichten."
+
+#: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
 msgstr "Bewerking niet mogelijk, verbinding is bezig."
 
@@ -1738,6 +1854,65 @@ msgstr "Item met ID %s is geen label"
 #, c-format
 msgid "Item with ID %s is not a repfield"
 msgstr "Item met ID %s is geen repfield"
+
+#~ msgid "about to open connection"
+#~ msgstr "bezig met voorbereiden van de verbinding"
+
+#~ msgid "Context allocated."
+#~ msgstr "Context toegewezen."
+
+#~ msgid "Client library initialized."
+#~ msgstr "Client bibliotheek geïnitialiseerd."
+
+#~ msgid "Could not initialize cslib callback"
+#~ msgstr "Kan cslib callback niet initialiseren"
+
+#~ msgid "CS-lib callback initialized."
+#~ msgstr "CS-lib callback geïnitialiseerd."
+
+#~ msgid "Could not initialize ct-client callback"
+#~ msgstr "Kan ct-client callback niet initialiseren"
+
+#~ msgid "CT-Client callback initialized."
+#~ msgstr "CT-Client callback geïnitialiseerd."
+
+#~ msgid "Could not initialize ct-server callback"
+#~ msgstr "Kan ct-server callback niet initialiseren"
+
+#~ msgid "CT-Server callback initialized."
+#~ msgstr "CT-Server callback geïnitialiseerd."
+
+#~ msgid "Connection allocated."
+#~ msgstr "Verbinding toegewezen."
+
+#~ msgid "Appname set."
+#~ msgstr "Appname ingesteld."
+
+#~ msgid "Username set."
+#~ msgstr "Gebruikersnaam ingesteld."
+
+#~ msgid "Password set."
+#~ msgstr "Wachtwoord ingesteld."
+
+#~ msgid "Empty password set."
+#~ msgstr "Leeg wachtwoord ingesteld."
+
+#~ msgid "Connected."
+#~ msgstr "Verbonden."
+
+#~ msgid "Finally connected."
+#~ msgstr "Eindelijk verbonden."
+
+#~ msgid ""
+#~ "Connection already in use. Could not allocate command structure in %s()."
+#~ msgstr ""
+#~ "Verbinding al in gebruik. Kan commando structuur niet toewijzen in %s()."
+
+#~ msgid "Failed dropping command structure in %s()."
+#~ msgstr "Verwijderen van commando structuur in %s() is mislukt."
+
+#~ msgid "%d messages fetched."
+#~ msgstr "%d berichten opgehaald."
 
 #~ msgid "Could not allocate environment handle."
 #~ msgstr "Kan omgeving handle niet toewijzen."
