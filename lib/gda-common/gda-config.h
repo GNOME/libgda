@@ -44,6 +44,7 @@ void     gda_config_remove_section (const gchar *path);
 void     gda_config_remove_key     (const gchar *path);
 
 gboolean gda_config_has_section    (const gchar *path);
+gboolean gda_config_has_key        (const gchar *path);
 void     gda_config_commit         (void);
 void     gda_config_rollback       (void);
 

@@ -165,6 +165,28 @@ gda_config_has_section (const gchar *path)
 }
 
 /**
+ * gda_config_has_key
+ * @path: path to the configuration key
+ *
+ * Check whether the given key exists in the configuration system
+ */
+gboolean
+gda_config_has_key (const gchar *path)
+{
+  GConfValue* value;
+  
+  g_return_val_if_fail(path != NULL, FALSE);
+  
+  value = gconf_engine_get(get_conf_engine(), path, NULL);
+  if (value)
+    {
+      gconf_value_free(value);
+      return TRUE;
+    }
+  return FALSE;
+}
+
+/**
  * gda_config_commit
  *
  * Commits all changes made to the configuration system

@@ -1,3 +1,8 @@
+2000-11-12	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* gda-config.[ch]: added gda_config_has_key function, for
+	checking for the existence of a given key
+
 2000-11-01  Reinhard Müller  <reinhard.mueller@bitsmart.com>
 
 	* gda-xml-file.h: removed directory part from gnome-xml includes
