@@ -23,10 +23,10 @@
 #if !defined(__gda_data_model_list_h__)
 #  define __gda_data_model_list_h__
 
-#include <gda-common-defs.h>
 #include <gda-data-model.h>
 
 G_BEGIN_DECLS
+
 #define GDA_TYPE_DATA_MODEL_LIST            (gda_data_model_list_get_type())
 #define GDA_DATA_MODEL_LIST(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL_LIST, GdaDataModelList))
 #define GDA_DATA_MODEL_LIST_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_MODEL_LIST, GdaDataModelListClass))
@@ -48,7 +48,15 @@ struct _GdaDataModelListClass {
 
 GType         gda_data_model_list_get_type (void);
 GdaDataModel *gda_data_model_list_new (void);
-GdaDataModel *gda_data_model_list_new_with_list (GList *list);
+GdaDataModel *gda_data_model_list_new_from_string_list (const GList *list);
+
+void          gda_data_model_list_append_value (GdaDataModelList *model,
+						const GdaValue *value);
+void          gda_data_model_list_prepend_value (GdaDataModelList *model,
+						 const GdaValue *value);
+void          gda_data_model_list_insert_value (GdaDataModelList *model,
+						const GdaValue *value,
+						gint row);
 
 G_END_DECLS
 

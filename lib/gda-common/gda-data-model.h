@@ -29,35 +29,29 @@ G_BEGIN_DECLS
 
 typedef struct _GdaDataModel        GdaDataModel;
 typedef struct _GdaDataModelClass   GdaDataModelClass;
-typedef struct _GdaDataModelPrivate GdaDataModelPrivate;
 
 struct _GdaDataModel {
 	GObject object;
-	GdaDataModelPrivate *priv;
 };
 
 struct _GdaDataModelClass {
 	GObjectClass parent_class;
 
+	/* signals */
+	void (* changed) (GdaDataModel *model);
+
 	/* virtual methods */
+	gint (* get_n_rows) (GdaDataModel *model);
+	gint (* get_n_columns) (GdaDataModel *model);
 	GdaValue * (* get_value_at) (GdaDataModel *model, gint col, gint row);
 };
 
-GType               gda_data_model_get_type (void);
+GType     gda_data_model_get_type (void);
 
-gint                gda_data_model_get_n_columns (GdaDataModel *model);
-void                gda_data_model_add_column (GdaDataModel *model, GdaFieldAttributes *attr);
-void                gda_data_model_insert_column (GdaDataModel *model,
-						  GdaFieldAttributes *attr,
-						  gint pos);
-void                gda_data_model_remove_column_by_pos (GdaDataModel *model, gint pos);
-void                gda_data_model_remove_column_by_name (GdaDataModel *model,
-							  const gchar *name);
-GdaFieldAttributes *gda_data_model_describe_column_by_pos (GdaDataModel *model, gint pos);
-GdaFieldAttributes *gda_data_model_describe_column_by_name (GdaDataModel *model,
-							    const gchar *name);
-
-GdaValue           *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
+void      gda_data_model_changed (GdaDataModel *model);
+gint      gda_data_model_get_n_rows (GdaDataModel *model);
+gint      gda_data_model_get_n_columns (GdaDataModel *model);
+GdaValue *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
 
 G_END_DECLS
 

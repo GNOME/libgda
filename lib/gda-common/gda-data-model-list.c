@@ -22,6 +22,8 @@
 
 #include "gda-data-model-list.h"
 
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+
 struct _GdaDataModelListPrivate {
 	GList *value_list;
 };
@@ -31,16 +33,55 @@ static void gda_data_model_list_init       (GdaDataModelList *model,
 					    GdaDataModelListClass *klass);
 static void gda_data_model_list_finalize   (GObject *object);
 
+static GObjectClass *parent_class = NULL;
+
 /*
  * GdaDataModelList class implementation
  */
+
+static gint
+gda_data_model_list_get_n_rows (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), -1);
+	return g_list_length (GDA_DATA_MODEL_LIST (model)->priv->value_list);
+}
+
+static gint
+gda_data_model_list_get_n_columns (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), -1);
+	return 1;
+}
+
+static GdaValue *
+gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
+{
+	gint count;
+	GdaValue *value;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
+	g_return_val_if_fail (col != 0, NULL);
+
+	count = g_list_length (model->priv->value_list);
+	if (row > count)
+		return NULL;
+
+	value = g_list_nth (model->priv->value_list, row);
+	return gda_value_copy (value);
+}
 
 static void
 gda_data_model_list_class_init (GdaDataModelListClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+
+	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_data_model_list_finalize;
+	model_class->get_n_rows = gda_data_model_list_get_n_rows;
+	model_class->get_n_columns = gda_data_model_list_get_n_columns;
+	model_class->get_value_at = gda_data_model_list_get_value_at;
 }
 
 static void
@@ -48,6 +89,7 @@ gda_data_model_list_init (GdaDataModelList *list, GdaDataModelListClass *klass)
 {
 	/* allocate internal structure */
 	list->priv = g_new0 (GdaDataModelListPrivate, 1);
+	list->priv->value_list = NULL;
 }
 
 static void
@@ -65,9 +107,8 @@ gda_data_model_list_finalize (GObject *object)
 	g_free (model->priv);
 	model->priv = NULL;
 
-	parent_class = g_type_class_peek (GDA_TYPE_DATA_MODEL);
-	if (parent_class && parent_class->finalize)
-		parent_class->finalize (object);
+	/* chain to parent class */
+	parent_class->finalize (object);
 }
 
 GType
@@ -107,9 +148,59 @@ gda_data_model_list_new (void)
 }
 
 /**
- * gda_data_model_list_new_with_list
+ * gda_data_model_list_new_from_string_list
  */
 GdaDataModel *
-gda_data_model_list_new_with_list (GList *list)
+gda_data_model_list_new_from_string_list (const GList *list)
 {
+	GdaDataModel *model;
+	GList *l;
+
+	model = gda_data_model_list_new ();
+
+	for (l = list; l; l = l->next) {
+		gchar *str = (gchar *) l->data;
+		if (str) {
+			GdaValue *value;
+
+			value = gda_value_new ();
+			gda_value_set_string (value, (const gchar *) str);
+			gda_data_model_append_value (GDA_DATA_MODEL_LIST (model), value);
+			gda_value_free (value);
+		}
+	}
+
+	return model;
+}
+
+/**
+ * gda_data_model_list_append_value
+ */
+void
+gda_data_model_list_append_value (GdaDataModelList *model, const GdaValue *value)
+{
+	GdaValue *new_value;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
+	g_return_if_fail (value != NULL);
+
+	new_value = gda_value_copy (value);
+	model->priv->value_list = g_list_append (model->priv->value_list, new_value);
+	gda_data_model_changed (GDA_DATA_MODEL (model));
+}
+
+/**
+ * gda_data_model_list_prepend_value
+ */
+void
+gda_data_model_list_prepend_value (GdaDataModelList *model, const GdaValue *value)
+{
+	GdaValue *new_value;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
+	g_return_if_fail (value != NULL);
+
+	new_value = gda_value_copy (value);
+	model->priv->value_list = g_list_prepend (model->priv->value_list, new_value);
+	gda_data_model_changed (GDA_DATA_MODEL (model));
 }

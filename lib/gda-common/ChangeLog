@@ -1,3 +1,10 @@
+2001-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-data-model.[ch]: some minor tweaks, and removed some
+	unneeded functions that I added last time
+
+	* gda-data-model-list.[ch]: adapted to changes in GdaDataModel
+
 2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am: use the BONOBO_IDL_DIR variable for orbit-idl
