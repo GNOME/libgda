@@ -329,6 +329,8 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 {
 	GdaPostgresRecordset *model;
 	GdaPostgresConnectionData *cnc_priv_data;
+	gchar *cmd_tuples;
+	gchar *endptr [1];
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (pg_res != NULL, NULL);
@@ -342,7 +344,15 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	model->priv->type_data = cnc_priv_data->type_data;
 	model->priv->h_table = cnc_priv_data->h_table;
 	model->priv->ncolumns = PQnfields (pg_res);
-	model->priv->nrows = PQntuples (pg_res);
+	cmd_tuples = PQcmdTuples (pg_res);
+	if (cmd_tuples == NULL || *cmd_tuples == '\0'){
+		model->priv->nrows = PQntuples (pg_res);
+	} else {
+		model->priv->nrows = strtol (cmd_tuples, endptr, 10);
+		if (**endptr != '\0')
+			g_warning (_("Tuples:\"%s\""), cmd_tuples);
+
+	}
 	model->priv->column_types = get_column_types (model->priv);
 	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
 					    model->priv->ncolumns);
