@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.2\n"
-"POT-Creation-Date: 2003-03-30 20:53+0100\n"
-"PO-Revision-Date: 2003-03-30 21:09+0100\n"
+"POT-Creation-Date: 2003-04-05 20:52+0100\n"
+"PO-Revision-Date: 2003-04-05 20:59+0100\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1245,8 +1245,8 @@ msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
 msgstr ""
-"ocorreu um erro ao chamar ct_diag a tentar testar se existe uma mensagem "
-"de servidor para o conjunto resultados (resultset)"
+"ocorreu um erro ao chamar ct_diag a tentar testar se existe uma mensagem de "
+"servidor para o conjunto resultados (resultset)"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1284,7 +1284,8 @@ msgstr "%s: %s falhou"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr "incapaz de alocar estrutura de comando para encontrar base de dados actual."
+msgstr ""
+"incapaz de alocar estrutura de comando para encontrar base de dados actual."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
@@ -1368,8 +1369,8 @@ msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
 msgstr ""
-"ocorreu um erro ao chamar ct_diag ao tentar obter contagem de mensagens "
-"de servidor para conjunto resultados (resultset)"
+"ocorreu um erro ao chamar ct_diag ao tentar obter contagem de mensagens de "
+"servidor para conjunto resultados (resultset)"
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
@@ -1518,7 +1519,7 @@ msgstr "falha ao chamar ct_diag ao determinar nº de mensagens de servidor"
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
-"ocorreu um erro ao chamar ct_diag ao tentar obter uma mensagem de cliente"
+"ocorreu um erro ao chamar ct_diag ao tentar obter uma mensagem de servidor"
 
 #: providers/sybase/utils.c:346
 msgid "Server:"
