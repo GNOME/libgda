@@ -1,3 +1,12 @@
+2002-05-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: GnomeVFS is no longer a dependency.
+
+	* libgda/gda-init.c (gda_init): don't call gnome_vfs_init.
+
+	* libgda/gda-util.c (gda_file_save):
+	(gda_file_load): changed to not use GnomeVFS.
+
 2002-05-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-client.c: fixed SIGSEGV when freeing the provider hash.

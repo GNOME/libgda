@@ -38,8 +38,8 @@ GList       *gda_string_hash_to_list (GHashTable *hash_table);
  * File management utility functions
  */
 
-gchar    *gda_file_load (const gchar *uri);
-gboolean  gda_file_save (const gchar *uri, const gchar *buffer, gint len);
+gchar    *gda_file_load (const gchar *filename);
+gboolean  gda_file_save (const gchar *filename, const gchar *buffer, gint len);
 
 G_END_DECLS
 

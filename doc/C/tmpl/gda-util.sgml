@@ -46,8 +46,10 @@ gda-util
 
 </para>
 
-@uri: 
+@filename: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@uri: 
 
 
 <!-- ##### FUNCTION gda_file_save ##### -->
@@ -55,9 +57,11 @@ gda-util
 
 </para>
 
-@uri: 
+@filename: 
 @buffer: 
 @len: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@uri: 
 
 

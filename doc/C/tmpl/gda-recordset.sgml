@@ -28,6 +28,7 @@ GdaRecordset
 @cnc: 
 @fetch_func: 
 @desc_func: 
+@user_data: 
 @Returns: 
 <!-- # Unused Parameters # -->
 @corba_recset: 

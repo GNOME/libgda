@@ -20,8 +20,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <glib/gfileutils.h>
+#include <glib/gmessages.h>
+#include <glib/gstrfuncs.h>
+#include <libgda/gda-intl.h>
+#include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
-#include <libgnomevfs/gnome-vfs.h>
 
 /**
  * gda_type_to_string
@@ -110,12 +118,10 @@ gda_string_hash_to_list (GHashTable *hash_table)
 
 /**
  * gda_file_load
- * @uri: URI for the file to be loaded.
+ * @filename: path for the file to be loaded.
  *
  * Loads a file, specified by the given @uri, and returns the file
- * contents as a string. The @uri argument can specify any transfer
- * method (file:, http:, ftp:, etc) supported by GnomeVFS on your
- * system.
+ * contents as a string.
  *
  * It is the caller's responsibility to free the returned value.
  *
@@ -123,90 +129,49 @@ gda_string_hash_to_list (GHashTable *hash_table)
  * if there is an error.
  */
 gchar *
-gda_file_load (const gchar *uristr)
+gda_file_load (const gchar *filename)
 {
-	GnomeVFSHandle *handle;
-	GnomeVFSURI *uri;
-	GnomeVFSResult result;
-	GnomeVFSFileSize size;
-	GString *str = NULL;
 	gchar *retval = NULL;
-	gchar buffer[8193];
+	gsize length = 0;
+	GError *error = NULL;
 
-	g_return_val_if_fail (uristr != NULL, NULL);
+	g_return_val_if_fail (filename != NULL, NULL);
 
-	uri = gnome_vfs_uri_new (uristr);
-	if (!uri)
-		return FALSE;
+	if (g_file_get_contents (filename, &retval, &length, &error))
+		return retval;
 
-	/* open the file */
-	result = gnome_vfs_open_uri (&handle, uri, GNOME_VFS_OPEN_READ);
-	gnome_vfs_uri_unref (uri);
-	if (result != GNOME_VFS_OK)
-		return NULL;
+	gda_log_error (_("Error while reading %s: %s"), filename, error->message);
+	g_error_free (error);
 
-	memset (buffer, 0, sizeof (buffer));
-	result = gnome_vfs_read (handle, (gpointer) buffer, sizeof (buffer) - 1, &size);
-	while (result == GNOME_VFS_OK) {
-		if (!str)
-			str = g_string_new (buffer);
-		else
-			str = g_string_append (str, buffer);
-
-		memset (buffer, 0, sizeof (buffer));
-		result = gnome_vfs_read (handle, (gpointer) buffer,
-					 sizeof (buffer) - 1, &size);
-	}
-
-	if (result == GNOME_VFS_ERROR_EOF) {
-		retval = str->str;
-		g_string_free (str, FALSE);
-	}
-	else {
-		retval = NULL;
-		g_string_free (str, TRUE);
-	}
-
-	/* close file */
-	gnome_vfs_close (handle);
-
-	return retval;
+	return NULL;
 }
 
 /**
  * gda_file_save
- * @uristr: URI for the file to be saved.
+ * @filename: path for the file to be saved.
  * @buffer: contents of the file.
  * @len: size of @buffer.
  *
- * Saves a chunk of data into a file. As libgda uses GnomeVFS for
- * all its file access, this function allows you to save both
- * to local files and to any other target supported by GnomeVFS.
+ * Saves a chunk of data into a file.
  *
  * Returns: TRUE if successful, FALSE on error.
  */
 gboolean
-gda_file_save (const gchar *uristr, const gchar *buffer, gint len)
+gda_file_save (const gchar *filename, const gchar *buffer, gint len)
 {
-	GnomeVFSHandle *handle;
-	GnomeVFSResult result;
-	GnomeVFSFileSize size;
-	GnomeVFSURI *uri;
+	gint fd;
+	gint res;
+	
+	g_return_val_if_fail (filename != NULL, FALSE);
 
-	g_return_val_if_fail (uristr != NULL, FALSE);
-
-	uri = gnome_vfs_uri_new (uristr);
-	if (!uri)
+	fd = open (filename, O_RDWR | O_CREAT);
+	if (fd == -1) {
+		gda_log_error (_("Could not create file %s"), filename);
 		return FALSE;
+	}
 
-	/* open the file */
-	result = gnome_vfs_create_uri (&handle, uri, GNOME_VFS_OPEN_WRITE, FALSE,
-				       S_IRUSR | S_IWUSR);
-	if (result != GNOME_VFS_OK)
-		return FALSE;
+	res = write (fd, (const void *) buffer, len);
+	close (fd);
 
-	result = gnome_vfs_write (handle, (gconstpointer) buffer, len, &size);
-	gnome_vfs_close (handle);
-
-	return result == GNOME_VFS_OK ? TRUE : FALSE;
+	return res == -1 ? FALSE : TRUE;
 }
