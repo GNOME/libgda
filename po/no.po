@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-03-27 00:18+0100\n"
-"PO-Revision-Date: 2002-03-12 19:03+0100\n"
+"POT-Creation-Date: 2002-03-28 20:44+0100\n"
+"PO-Revision-Date: 2002-03-28 20:46+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -153,65 +153,63 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:717
 #: providers/postgres/gda-postgres-provider.c:724
 msgid "Field name"
-msgstr ""
+msgstr "Feltnavn"
 
 #: providers/default/gda-default-provider.c:334
 #: providers/mysql/gda-mysql-provider.c:718
 #: providers/postgres/gda-postgres-provider.c:725
 msgid "Data type"
-msgstr ""
+msgstr "Datatype"
 
 #: providers/default/gda-default-provider.c:335
 #: providers/mysql/gda-mysql-provider.c:719
 #: providers/postgres/gda-postgres-provider.c:726
 msgid "Size"
-msgstr ""
+msgstr "Størrelse"
 
 #: providers/default/gda-default-provider.c:336
 #: providers/mysql/gda-mysql-provider.c:720
 #: providers/postgres/gda-postgres-provider.c:727
 msgid "Scale"
-msgstr ""
+msgstr "Skala"
 
 #: providers/default/gda-default-provider.c:337
 #: providers/mysql/gda-mysql-provider.c:721
 #: providers/postgres/gda-postgres-provider.c:728
 msgid "Not null?"
-msgstr ""
+msgstr "Ikke null"
 
 #: providers/default/gda-default-provider.c:338
 #: providers/mysql/gda-mysql-provider.c:722
 #: providers/postgres/gda-postgres-provider.c:729
 msgid "Primary key?"
-msgstr ""
+msgstr "Primærnøkkel"
 
 #: providers/default/gda-default-provider.c:339
 #: providers/mysql/gda-mysql-provider.c:723
 #: providers/postgres/gda-postgres-provider.c:730
 msgid "Unique index?"
-msgstr ""
+msgstr "Unik indeks"
 
 #: providers/default/gda-default-provider.c:340
 #: providers/mysql/gda-mysql-provider.c:724
 #: providers/postgres/gda-postgres-provider.c:731
 msgid "References"
-msgstr ""
+msgstr "Referanser"
 
 #: providers/default/gda-default-provider.c:350
 #: providers/default/gda-default-provider.c:356
-#, fuzzy
 msgid "Invalid argument"
-msgstr "Ugyldig node"
+msgstr "Ugyldig argument"
 
 #: providers/default/gda-default-provider.c:363
 #, c-format
 msgid "Table %s not found"
-msgstr ""
+msgstr "Tabell %s ikke funnet"
 
 #: providers/default/gda-default-provider.c:388
-#, fuzzy
 msgid "Could not get description for column"
-msgstr "kunne ikke opprette forbindelseskomponent"
+msgstr "Kunne ikke hente beskrivelse for kolonne"
 
 #: providers/default/gda-default-provider.c:472
 #: providers/mysql/gda-mysql-provider.c:619
@@ -341,72 +339,71 @@ msgstr "Ikke tilgjengelig"
 
 #: providers/postgres/utils.c:240
 msgid "NULL"
-msgstr ""
+msgstr "NULL"
 
 #: providers/postgres/utils.c:243
 msgid "big integer"
-msgstr ""
+msgstr "stort heltall"
 
 #: providers/postgres/utils.c:246
 msgid "binary"
-msgstr ""
+msgstr "binær"
 
 #: providers/postgres/utils.c:249
 msgid "boolean"
-msgstr ""
+msgstr "boolean"
 
 #: providers/postgres/utils.c:252
 msgid "date"
-msgstr ""
+msgstr "dato"
 
 #: providers/postgres/utils.c:255
 msgid "double precision"
-msgstr ""
+msgstr "dobbel presisjon"
 
 #: providers/postgres/utils.c:258
 msgid "geometric point"
-msgstr ""
+msgstr "geometrisk punkt"
 
 #: providers/postgres/utils.c:261
 msgid "integer"
-msgstr ""
+msgstr "heltall"
 
 #: providers/postgres/utils.c:264
 msgid "list of values"
-msgstr ""
+msgstr "liste med verdier"
 
 #: providers/postgres/utils.c:267
-#, fuzzy
 msgid "numeric"
-msgstr "antall"
+msgstr "numerisk"
 
 #: providers/postgres/utils.c:270
 msgid "single precision"
-msgstr ""
+msgstr "enkel presisjon"
 
 #: providers/postgres/utils.c:273
 msgid "small integer"
-msgstr ""
+msgstr "lite heltall"
 
 #: providers/postgres/utils.c:276
 msgid "string"
-msgstr ""
+msgstr "streng"
 
 #: providers/postgres/utils.c:279
 msgid "time"
-msgstr ""
+msgstr "tid"
 
 #: providers/postgres/utils.c:282
 msgid "timestamp"
-msgstr ""
+msgstr "tidsstempel"
 
 #: providers/postgres/utils.c:285
 msgid "tiny integer"
-msgstr ""
+msgstr "veldig lite heltall"
 
 #: providers/postgres/utils.c:288
 msgid "Unknown type"
-msgstr ""
+msgstr "Ukjent type"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
@@ -618,66 +615,3 @@ msgstr "\tdomene = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_parametere ="
-
-#~ msgid "Bad formed document at %s"
-#~ msgstr "Dokument på ugyldig form ved %s"
-
-#~ msgid "%p is not a valid table"
-#~ msgstr "%p er ikke en gyldig tabell"
-
-#~ msgid "Invalid DEFAULT handle"
-#~ msgstr "Ugyldig FORVALGT håndtak"
-
-#~ msgid "Invalid Default handle"
-#~ msgstr "Ugyldig forvalgt håndtak"
-
-#~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
-#~ msgstr "ct_diag 1 feilet i sybase_check_clientmsg"
-
-#~ msgid "ct_diag 2 failed in sybase_check_clientmsg"
-#~ msgstr "ct_diag 2 feilet i sybase_check_clientmsg"
-
-#~ msgid "Client Message: "
-#~ msgstr "Klientmelding: "
-
-#~ msgid "Informational Client  Message: "
-#~ msgstr "Informativ klientmelding: "
-
-#~ msgid "ct_diag 1 failed in sybase_check_servermsg"
-#~ msgstr "ct_diag 1 feilet i sybase_check_servermsg"
-
-#~ msgid "ct_diag 2 failed in sybase_check_servermsg"
-#~ msgstr "ct_diag 2 feilet i sybase_check_servermsg"
-
-#~ msgid "Server Message: "
-#~ msgstr "Tjenermelding: "
-
-#~ msgid "Informational Server  Message: "
-#~ msgstr "Informativ tjenermelding: "
-
-#~ msgid "cs_diag 1 failed in sybase_check_clientmsg"
-#~ msgstr "cs_diag 1 feilet i sybase_check_clientmsg"
-
-#~ msgid "cs_diag 2 failed in sybase_check_clientmsg"
-#~ msgstr "cs_diag 2 feilet i sybase_check_clientmsg"
-
-#~ msgid "SYB"
-#~ msgstr "SYB"
-
-#~ msgid "severity"
-#~ msgstr "kritikalitet"
-
-#~ msgid "origin"
-#~ msgstr "opprinnelse"
-
-#~ msgid "layer"
-#~ msgstr "lag"
-
-#~ msgid ""
-#~ "\n"
-#~ "\tOperating system error number(%ld):\n"
-#~ "\t%s"
-#~ msgstr ""
-#~ "\n"
-#~ "\tFeilnummer fra operativsystemet(%ld):\n"
-#~ "\t%s"
