@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20010407\n"
-"POT-Creation-Date: 2002-09-11 13:17+0200\n"
+"POT-Creation-Date: 2002-10-23 22:48+0200\n"
 "PO-Revision-Date: 2001-04-07 12:45+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -13,62 +13,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
+#: libgda/gda-client.c:253 libgda/gda-client.c:444 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "データベース '%s' はシステム設定から見つかりませんでした"
 
-#: libgda/gda-client.c:245
-#, c-format
-msgid "Provider %s is not installed"
-msgstr ""
-
-#: libgda/gda-client.c:254
+#: libgda/gda-client.c:272
 #, fuzzy, c-format
-msgid "Could not load %s provider"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgid "Could not find provider %s in the current setup"
+msgstr "クライアントメッセージ数を取得することが出来ませんでした"
 
-#: libgda/gda-client.c:270
+#: libgda/gda-client.c:299
 #, fuzzy, c-format
-msgid "Provider %s does not implement entry point"
+msgid "Provider %s does not implement entry function"
 msgstr "未実装の機能をプロバイダ %s で開始しています"
 
-#: libgda/gda-client.c:279
-msgid "Creation of GdaServerProvider failed"
-msgstr ""
+#: libgda/gda-client.c:309
+#, fuzzy
+msgid "Could not create GdaServerProvider object from plugin"
+msgstr "GdaServerCommand の割り当てることが出来ませんでした"
 
-#: libgda/gda-client.c:342
+#: libgda/gda-client.c:372
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:557
-#: providers/default/gda-default-provider.c:579
-#: providers/default/gda-default-provider.c:616
-#: providers/mysql/gda-mysql-provider.c:651
-#: providers/oracle/gda-oracle-provider.c:999
+#: libgda/gda-config.c:1269 providers/default/gda-default-provider.c:556
+#: providers/default/gda-default-provider.c:576
+#: providers/default/gda-default-provider.c:613
+#: providers/mysql/gda-mysql-provider.c:662
+#: providers/oracle/gda-oracle-provider.c:1031
 msgid "Name"
 msgstr ""
 
-#: libgda/gda-config.c:1269
+#: libgda/gda-config.c:1270
 msgid "Provider"
 msgstr ""
 
-#: libgda/gda-config.c:1270
+#: libgda/gda-config.c:1271
 #, fuzzy
 msgid "Connection string"
 msgstr "接続は切れたようです"
 
-#: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
+#: libgda/gda-config.c:1272 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
 msgstr ""
 
-#: libgda/gda-config.c:1272
+#: libgda/gda-config.c:1273
 #, fuzzy
 msgid "Username"
 msgstr "ユーザ名"
 
-#: libgda/gda-config.c:1273
+#: libgda/gda-config.c:1274
 #, fuzzy
 msgid "Password"
 msgstr "パスワード"
@@ -100,36 +96,14 @@ msgstr "メッセージ: "
 msgid "ERROR: %s"
 msgstr "エラー: "
 
-#: libgda/gda-select.c:120 libgda/gda-select.c:143 libgda/gda-select.c:202
-msgid "Unexpected integer value"
-msgstr ""
+#: libgda/gda-select.c:315
+#, fuzzy, c-format
+msgid "Could not parse SQL string '%s'"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: libgda/gda-select.c:132 libgda/gda-select.c:212
-msgid "Unexpected float value"
-msgstr ""
-
-#: libgda/gda-select.c:155
-msgid "Unexpected string value"
-msgstr ""
-
-#: libgda/gda-select.c:166
-msgid "Unexpected symbol '='"
-msgstr ""
-
-#: libgda/gda-select.c:177
-msgid "Unexpected symbol '<'"
-msgstr ""
-
-#: libgda/gda-select.c:188
-msgid "Unexpected symbol '>'"
-msgstr ""
-
-#: libgda/gda-select.c:216
-msgid "Found a non-numeric value after a '-' sign"
-msgstr ""
-
-#: libgda/gda-select.c:232
-msgid "Unexpected identifier"
+#: libgda/gda-select.c:319
+#, c-format
+msgid "SQL command is not a SELECT (is '%s'"
 msgstr ""
 
 #: libgda/gda-table.c:234
@@ -137,21 +111,26 @@ msgstr ""
 msgid "There is already a field called %s"
 msgstr ""
 
-#: libgda/gda-util.c:143
+#: libgda/gda-util.c:144
+#, fuzzy, c-format
+msgid "Could not parse SQL command '%s'"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
+
+#: libgda/gda-util.c:177
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr ""
 
-#: libgda/gda-util.c:169
+#: libgda/gda-util.c:203
 #, fuzzy, c-format
 msgid "Could not create file %s"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: libgda/gda-value.c:1454
+#: libgda/gda-value.c:1488
 msgid "TRUE"
 msgstr "TRUE"
 
-#: libgda/gda-value.c:1456
+#: libgda/gda-value.c:1490
 msgid "FALSE"
 msgstr "FALSE"
 
@@ -200,7 +179,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:183
+#: providers/sqlite/gda-sqlite-provider.c:200
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -217,62 +196,70 @@ msgid "Not Implemented"
 msgstr "%s は実装されていません"
 
 #: providers/default/gda-default-provider.c:455
-#: providers/mysql/gda-mysql-provider.c:1011
-#: providers/oracle/gda-oracle-provider.c:1056
+#: providers/mysql/gda-mysql-provider.c:1022
+#: providers/oracle/gda-oracle-provider.c:1088
 #: providers/postgres/gda-postgres-provider.c:1065
+#: providers/sqlite/gda-sqlite-provider.c:617
 #, fuzzy
 msgid "Field name"
 msgstr "ファイル名"
 
 #: providers/default/gda-default-provider.c:456
-#: providers/mysql/gda-mysql-provider.c:1012
-#: providers/oracle/gda-oracle-provider.c:1057
+#: providers/mysql/gda-mysql-provider.c:1023
+#: providers/oracle/gda-oracle-provider.c:1089
 #: providers/postgres/gda-postgres-provider.c:1066
+#: providers/sqlite/gda-sqlite-provider.c:618
 msgid "Data type"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:457
-#: providers/freetds/gda-freetds-provider.c:649
-#: providers/mysql/gda-mysql-provider.c:1013
-#: providers/oracle/gda-oracle-provider.c:1058
+#: providers/freetds/gda-freetds-provider.c:791
+#: providers/mysql/gda-mysql-provider.c:1024
+#: providers/oracle/gda-oracle-provider.c:1090
 #: providers/postgres/gda-postgres-provider.c:1067
+#: providers/sqlite/gda-sqlite-provider.c:619
 msgid "Size"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:458
-#: providers/freetds/gda-freetds-provider.c:653
-#: providers/mysql/gda-mysql-provider.c:1014
-#: providers/oracle/gda-oracle-provider.c:1059
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/mysql/gda-mysql-provider.c:1025
+#: providers/oracle/gda-oracle-provider.c:1091
 #: providers/postgres/gda-postgres-provider.c:1068
+#: providers/sqlite/gda-sqlite-provider.c:620
 #, fuzzy
 msgid "Scale"
 msgstr "False"
 
 #: providers/default/gda-default-provider.c:459
-#: providers/mysql/gda-mysql-provider.c:1015
-#: providers/oracle/gda-oracle-provider.c:1060
+#: providers/mysql/gda-mysql-provider.c:1026
+#: providers/oracle/gda-oracle-provider.c:1092
 #: providers/postgres/gda-postgres-provider.c:1069
+#: providers/sqlite/gda-sqlite-provider.c:621
 msgid "Not null?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:460
-#: providers/mysql/gda-mysql-provider.c:1016
-#: providers/oracle/gda-oracle-provider.c:1061
+#: providers/mysql/gda-mysql-provider.c:1027
+#: providers/oracle/gda-oracle-provider.c:1093
 #: providers/postgres/gda-postgres-provider.c:1070
+#: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Primary key?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:461
-#: providers/mysql/gda-mysql-provider.c:1017
-#: providers/oracle/gda-oracle-provider.c:1062
+#: providers/mysql/gda-mysql-provider.c:1028
+#: providers/oracle/gda-oracle-provider.c:1094
 #: providers/postgres/gda-postgres-provider.c:1071
+#: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Unique index?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:462
-#: providers/mysql/gda-mysql-provider.c:1018
-#: providers/oracle/gda-oracle-provider.c:1063
+#: providers/mysql/gda-mysql-provider.c:1029
+#: providers/oracle/gda-oracle-provider.c:1095
 #: providers/postgres/gda-postgres-provider.c:1072
+#: providers/sqlite/gda-sqlite-provider.c:624
 msgid "References"
 msgstr ""
 
@@ -295,111 +282,133 @@ msgstr "%s へ接続することが出来ませんでした"
 msgid "GDA default provider, based on the libgda XML format"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:174
+#: providers/freetds/gda-freetds-provider.c:188
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:187
+#: providers/freetds/gda-freetds-provider.c:201
 msgid "Error creating message container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:194
+#: providers/freetds/gda-freetds-provider.c:208
 msgid "Error creating error container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:229
+#: providers/freetds/gda-freetds-provider.c:246
+#: providers/freetds/gda-freetds-provider.c:248
+#, fuzzy
+msgid "Allocating tds context failed."
+msgstr "レコードセットの割り当てに失敗しました"
+
+#: providers/freetds/gda-freetds-provider.c:264
+#: providers/freetds/gda-freetds-provider.c:266
 msgid "Establishing connection failed."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:237
+#: providers/freetds/gda-freetds-provider.c:278
+#: providers/freetds/gda-freetds-provider.c:279
 #, fuzzy
 msgid "Failed getting connection info."
 msgstr "再接続を試みています"
 
-#: providers/freetds/gda-freetds-provider.c:542
-#: providers/oracle/gda-oracle-provider.c:1655
+#: providers/freetds/gda-freetds-provider.c:622
+#: providers/oracle/gda-oracle-provider.c:1687
 msgid "Procedures"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:550
-#: providers/oracle/gda-oracle-provider.c:1663
+#: providers/freetds/gda-freetds-provider.c:631
+#: providers/oracle/gda-oracle-provider.c:1695
 msgid "Tables"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:556
-#: providers/postgres/gda-postgres-provider.c:920
+#: providers/freetds/gda-freetds-provider.c:639
 msgid "Types"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/freetds/gda-freetds-provider.c:562
-#: providers/oracle/gda-oracle-provider.c:1459
-#: providers/postgres/gda-postgres-provider.c:1444 testing/client.c:128
+#: providers/freetds/gda-freetds-provider.c:647
+#: providers/oracle/gda-oracle-provider.c:1491
+#: providers/postgres/gda-postgres-provider.c:1448 testing/client.c:128
 #, fuzzy
 msgid "Users"
 msgstr "ユーザ名"
 
-#: providers/freetds/gda-freetds-provider.c:568
-#: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
+#: providers/freetds/gda-freetds-provider.c:655
+#: providers/oracle/gda-oracle-provider.c:1703 testing/client.c:125
 msgid "Views"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:645
+#: providers/freetds/gda-freetds-provider.c:688
+#: providers/freetds/gda-freetds-provider.c:689
+msgid "Query did not succeed in execute_cmd()."
+msgstr ""
+
+#: providers/freetds/gda-freetds-provider.c:698
+#: providers/freetds/gda-freetds-provider.c:700
+msgid "Unexpected result tokens in execute_cmd()."
+msgstr ""
+
+#: providers/freetds/gda-freetds-provider.c:708
+#: providers/freetds/gda-freetds-provider.c:709
+msgid "Unexpected return in execute_cmd()."
+msgstr ""
+
+#: providers/freetds/gda-freetds-provider.c:787
 #, fuzzy
 msgid "Field Name"
 msgstr "ファイル名"
 
-#: providers/freetds/gda-freetds-provider.c:647
+#: providers/freetds/gda-freetds-provider.c:789
 msgid "Data Type"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:651
+#: providers/freetds/gda-freetds-provider.c:793
 msgid "Precision"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:655
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Identity"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:657
+#: providers/freetds/gda-freetds-provider.c:799
 msgid "Nullable"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:659
+#: providers/freetds/gda-freetds-provider.c:801
 msgid "Domain"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:661
+#: providers/freetds/gda-freetds-provider.c:803
 msgid "Printfmt"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:929
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:798 providers/freetds/utils.c:45
+#: providers/freetds/gda-freetds-provider.c:948 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
 msgid "Not available"
 msgstr "利用できません"
 
-#: providers/freetds/gda-freetds-recordset.c:356
+#: providers/freetds/gda-freetds-recordset.c:357
 msgid "Error processing result rows.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:364
+#: providers/freetds/gda-freetds-recordset.c:365
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:373
+#: providers/freetds/gda-freetds-recordset.c:374
 msgid "Error processing results.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:380
+#: providers/freetds/gda-freetds-recordset.c:381
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr ""
 
@@ -477,7 +486,7 @@ msgstr ""
 "してください"
 
 #: providers/mysql/gda-mysql-provider.c:290
-#: providers/mysql/gda-mysql-provider.c:1027
+#: providers/mysql/gda-mysql-provider.c:1038
 #: providers/mysql/gda-mysql-recordset.c:59
 #: providers/mysql/gda-mysql-recordset.c:175
 msgid "Invalid MySQL handle"
@@ -494,50 +503,56 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:913
-#: providers/oracle/gda-oracle-provider.c:1563
+#: providers/mysql/gda-mysql-provider.c:924
+#: providers/oracle/gda-oracle-provider.c:1595
+#: providers/postgres/gda-postgres-provider.c:920
+#: providers/sqlite/gda-sqlite-provider.c:746
 msgid "Type"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:914
+#: providers/mysql/gda-mysql-provider.c:925
 #: providers/postgres/gda-postgres-provider.c:688
 #: providers/postgres/gda-postgres-provider.c:902
 #: providers/postgres/gda-postgres-provider.c:921
 #: providers/postgres/gda-postgres-provider.c:967
 #: providers/postgres/gda-postgres-provider.c:1025
-#: providers/postgres/gda-postgres-provider.c:1471
+#: providers/postgres/gda-postgres-provider.c:1475
+#: providers/sqlite/gda-sqlite-provider.c:747
 msgid "Owner"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:915
+#: providers/mysql/gda-mysql-provider.c:926
 #: providers/postgres/gda-postgres-provider.c:689
 #: providers/postgres/gda-postgres-provider.c:922
 #: providers/postgres/gda-postgres-provider.c:968
 #: providers/postgres/gda-postgres-provider.c:1026
-#: providers/postgres/gda-postgres-provider.c:1472
+#: providers/postgres/gda-postgres-provider.c:1476
+#: providers/sqlite/gda-sqlite-provider.c:748
 msgid "Comments"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:916
+#: providers/mysql/gda-mysql-provider.c:927
 #: providers/postgres/gda-postgres-provider.c:923
+#: providers/sqlite/gda-sqlite-provider.c:749
 msgid "GDA type"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:1019
+#: providers/mysql/gda-mysql-provider.c:1030
 #: providers/postgres/gda-postgres-provider.c:1073
+#: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Default value"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:1036
-#: providers/mysql/gda-mysql-provider.c:1044
+#: providers/mysql/gda-mysql-provider.c:1047
+#: providers/mysql/gda-mysql-provider.c:1055
 msgid "Table name is needed but none specified in parameter list"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:70
 #: providers/postgres/gda-postgres-recordset.c:184
 #: providers/postgres/gda-postgres-recordset.c:224
-#: providers/sqlite/gda-sqlite-recordset.c:168
-#: providers/sqlite/gda-sqlite-recordset.c:207
+#: providers/sqlite/gda-sqlite-recordset.c:166
+#: providers/sqlite/gda-sqlite-recordset.c:205
 msgid "Row number out of range"
 msgstr ""
 
@@ -567,224 +582,225 @@ msgstr ""
 msgid "GDA bridge to ODBC data sources"
 msgstr "ODBC用のGDAデータソースアクセス"
 
-#: providers/oracle/gda-oracle-provider.c:193
+#: providers/oracle/gda-oracle-provider.c:205
 #, fuzzy
 msgid "Could not initialize Oracle"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:204
+#: providers/oracle/gda-oracle-provider.c:216
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:216
+#: providers/oracle/gda-oracle-provider.c:228
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:226
+#: providers/oracle/gda-oracle-provider.c:238
 #, fuzzy
 msgid "Could not allocate the Oracle error handle"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:238
+#: providers/oracle/gda-oracle-provider.c:250
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:251
+#: providers/oracle/gda-oracle-provider.c:263
 #, fuzzy
 msgid "Could not allocate the Oracle session handle"
 msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:281
+#: providers/oracle/gda-oracle-provider.c:293
 #, fuzzy
 msgid "Could not attach to the Oracle server"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:297
+#: providers/oracle/gda-oracle-provider.c:309
 #, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:313
+#: providers/oracle/gda-oracle-provider.c:325
 #, fuzzy
 msgid "Could not set the Oracle username attribute"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:329
+#: providers/oracle/gda-oracle-provider.c:341
 #, fuzzy
 msgid "Could not set the Oracle password attribute"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:344
+#: providers/oracle/gda-oracle-provider.c:356
 #, fuzzy
 msgid "Could not begin the Oracle session"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:362
+#: providers/oracle/gda-oracle-provider.c:374
 #, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:444
-#: providers/oracle/gda-oracle-provider.c:518
-#: providers/oracle/gda-oracle-provider.c:656
-#: providers/oracle/gda-oracle-provider.c:679
-#: providers/oracle/gda-oracle-provider.c:702
-#: providers/oracle/gda-oracle-provider.c:732
-#: providers/oracle/gda-oracle-provider.c:788
-#: providers/oracle/gda-oracle-provider.c:863
-#: providers/oracle/gda-oracle-provider.c:919
+#: providers/oracle/gda-oracle-provider.c:476
+#: providers/oracle/gda-oracle-provider.c:550
+#: providers/oracle/gda-oracle-provider.c:688
+#: providers/oracle/gda-oracle-provider.c:711
+#: providers/oracle/gda-oracle-provider.c:734
+#: providers/oracle/gda-oracle-provider.c:764
+#: providers/oracle/gda-oracle-provider.c:820
+#: providers/oracle/gda-oracle-provider.c:895
+#: providers/oracle/gda-oracle-provider.c:951
 #: providers/oracle/gda-oracle-recordset.c:166
 #: providers/oracle/gda-oracle-recordset.c:388
 #: providers/oracle/gda-oracle-recordset.c:589
 msgid "Invalid Oracle handle"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:455
+#: providers/oracle/gda-oracle-provider.c:487
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
 msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:466
+#: providers/oracle/gda-oracle-provider.c:498
 #, fuzzy
 msgid "Could not prepare the Oracle statement"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:498
+#: providers/oracle/gda-oracle-provider.c:530
 #, fuzzy
 msgid "Could not bind the Oracle statement parameter"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:543
+#: providers/oracle/gda-oracle-provider.c:575
 #, fuzzy
 msgid "Could not get the Oracle statement type"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:561
+#: providers/oracle/gda-oracle-provider.c:593
 #, fuzzy
 msgid "Could not execute the Oracle statement"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:574
+#: providers/oracle/gda-oracle-provider.c:606
 #, fuzzy
 msgid "Could not get the number of columns in the result set"
 msgstr "クライアントメッセージ数を取得することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:591
+#: providers/oracle/gda-oracle-provider.c:623
 msgid "Could not get the parameter descripter in the result set"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:603
+#: providers/oracle/gda-oracle-provider.c:635
 #, fuzzy
 msgid "Could not get the column name in the result set"
 msgstr "クライアントメッセージ数を取得することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:749
-#: providers/oracle/gda-oracle-provider.c:825
-#: providers/oracle/gda-oracle-provider.c:875
-#: providers/oracle/gda-oracle-provider.c:931
+#: providers/oracle/gda-oracle-provider.c:781
+#: providers/oracle/gda-oracle-provider.c:857
+#: providers/oracle/gda-oracle-provider.c:907
+#: providers/oracle/gda-oracle-provider.c:963
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:799
+#: providers/oracle/gda-oracle-provider.c:831
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:811
+#: providers/oracle/gda-oracle-provider.c:843
 #, fuzzy
 msgid "Could not set the Oracle transaction name"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:836
+#: providers/oracle/gda-oracle-provider.c:868
 #, fuzzy
 msgid "Could not start the Oracle transaction"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:884
+#: providers/oracle/gda-oracle-provider.c:916
 #, fuzzy
 msgid "Could not prepare the transaction to commit"
 msgstr "%s へ接続することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:892
+#: providers/oracle/gda-oracle-provider.c:924
 #, fuzzy
 msgid "Could not commit the Oracle transaction"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:938
+#: providers/oracle/gda-oracle-provider.c:970
 #, fuzzy
 msgid "Could not rollback the Oracle transaction"
 msgstr "ロケール構造体を割り当てることが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1227
+#: providers/oracle/gda-oracle-provider.c:1259
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
 msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1240
+#: providers/oracle/gda-oracle-provider.c:1272
 #, fuzzy
 msgid "Could not describe the Oracle table"
 msgstr "サーバメッセージを消去することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1253
+#: providers/oracle/gda-oracle-provider.c:1285
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
 msgstr "cs_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1266
+#: providers/oracle/gda-oracle-provider.c:1298
 #, fuzzy
 msgid "Could not get the number of columns in the table"
 msgstr "サーバメッセージを消去することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1278
+#: providers/oracle/gda-oracle-provider.c:1310
 #, fuzzy
 msgid "Could not get the column list"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1307
+#: providers/oracle/gda-oracle-provider.c:1339
 #, fuzzy
 msgid "Could not get the Oracle column handle"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1320
+#: providers/oracle/gda-oracle-provider.c:1352
 #, fuzzy
 msgid "Could not get the Oracle field name"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1341
+#: providers/oracle/gda-oracle-provider.c:1373
 #, fuzzy
 msgid "Could not get the Oracle field data type"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1359
+#: providers/oracle/gda-oracle-provider.c:1391
 #, fuzzy
 msgid "Could not get the Oracle field defined size"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1376
+#: providers/oracle/gda-oracle-provider.c:1408
 #, fuzzy
 msgid "Could not get the Oracle field scale"
 msgstr "クライアントメッセージ数を取得することが出来ませんでした"
 
-#: providers/oracle/gda-oracle-provider.c:1393
+#: providers/oracle/gda-oracle-provider.c:1425
 msgid "Could not get the Oracle field nullable attribute"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1651
+#: providers/oracle/gda-oracle-provider.c:1683
 #: providers/postgres/gda-postgres-provider.c:994 testing/client.c:126
 msgid "Indexes"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:1659 testing/client.c:129
+#: providers/oracle/gda-oracle-provider.c:1691 testing/client.c:129
 msgid "Sequences"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1667
+#: providers/oracle/gda-oracle-provider.c:1699
 #: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:130
 msgid "Triggers"
 msgstr ""
@@ -889,13 +905,13 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:904
 #: providers/postgres/gda-postgres-provider.c:969
 #: providers/postgres/gda-postgres-provider.c:1029
-#: providers/postgres/gda-postgres-provider.c:1473
+#: providers/postgres/gda-postgres-provider.c:1477
 msgid "Definition"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:901
-#: providers/postgres/gda-postgres-provider.c:1510
+#: providers/postgres/gda-postgres-provider.c:1514
 #, fuzzy
 msgid "Table"
 msgstr "ファイル名"
@@ -919,20 +935,20 @@ msgid "InType"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1419 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:1423 testing/client.c:121
 #, fuzzy
 msgid "Databases"
 msgstr "データベース名"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1470
-#: providers/postgres/gda-postgres-provider.c:1511
+#: providers/postgres/gda-postgres-provider.c:1474
+#: providers/postgres/gda-postgres-provider.c:1515
 msgid "Sequence"
 msgstr ""
 
 #: providers/postgres/gda-postgres-recordset.c:230
-#: providers/sqlite/gda-sqlite-recordset.c:213
-#: providers/sqlite/gda-sqlite-recordset.c:245
+#: providers/sqlite/gda-sqlite-recordset.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:243
 msgid "Column number out of range"
 msgstr ""
 
@@ -945,33 +961,33 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:243
-#: providers/sqlite/gda-sqlite-provider.c:266
-#: providers/sqlite/gda-sqlite-provider.c:289
-#: providers/sqlite/gda-sqlite-provider.c:311
-#: providers/sqlite/gda-sqlite-recordset.c:159
-#: providers/sqlite/gda-sqlite-recordset.c:198
-#: providers/sqlite/gda-sqlite-recordset.c:239
+#: providers/sqlite/gda-sqlite-provider.c:242
+#: providers/sqlite/gda-sqlite-provider.c:343
+#: providers/sqlite/gda-sqlite-provider.c:549
+#: providers/sqlite/gda-sqlite-provider.c:714
+#: providers/sqlite/gda-sqlite-recordset.c:157
+#: providers/sqlite/gda-sqlite-recordset.c:196
+#: providers/sqlite/gda-sqlite-recordset.c:237
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:270
-msgid ""
-"To change a SQLite database you should close the actual database and open a "
-"new one"
+#: providers/sqlite/gda-sqlite-provider.c:264
+msgid "Invalid SQLITE handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:293
+#: providers/sqlite/gda-sqlite-provider.c:361
+#: providers/sqlite/gda-sqlite-provider.c:376
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:315
+#: providers/sqlite/gda-sqlite-provider.c:390
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:329
-msgid "Invalid SQLITE handle"
-msgstr ""
+#: providers/sqlite/gda-sqlite-provider.c:659
+#, fuzzy
+msgid "Could not retrieve information for field"
+msgstr "%s へ接続することが出来ませんでした"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -982,20 +998,15 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: report/libgda-report/gda-report-document.c:158
-#, fuzzy, c-format
-msgid "Could not load report file at %s"
+#: report/libgda-report/gda-report-document.c:166
+#, fuzzy
+msgid "Could not parse XML document"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: report/libgda-report/gda-report-document.c:167
+#: report/libgda-report/gda-report-document.c:191
 #, fuzzy, c-format
-msgid "Could not parse report file at %s"
+msgid "Could not get file from %s"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
-
-#: report/libgda-report/gda-report-document.c:177
-#, fuzzy, c-format
-msgid "Invalid report file '%s'"
-msgstr "データベース '%s' を選択しました"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1156,12 +1167,20 @@ msgid "\tgda_params ="
 msgstr ""
 
 #, fuzzy
-#~ msgid "Could not parse XML document"
+#~ msgid "Could not load %s provider"
+#~ msgstr "CORBA ファクトリを開くことが出来ませんでした"
+
+#, fuzzy
+#~ msgid "Could not load report file at %s"
 #~ msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #, fuzzy
-#~ msgid "Could not get file from %s"
+#~ msgid "Could not parse report file at %s"
 #~ msgstr "'%s' にロケールを設定することが出来ませんでした"
+
+#, fuzzy
+#~ msgid "Invalid report file '%s'"
+#~ msgstr "データベース '%s' を選択しました"
 
 #, fuzzy
 #~ msgid "An error occurred during fetch"
@@ -1448,9 +1467,6 @@ msgstr ""
 #~ msgid "sending cmd failed"
 #~ msgstr "コマンドの送信に失敗しました"
 
-#~ msgid "Allocating recordset failed"
-#~ msgstr "レコードセットの割り当てに失敗しました"
-
 #~ msgid "Getting recordset userdata failed"
 #~ msgstr "レコードセットのユーザデータの取得に失敗しました"
 
@@ -1505,9 +1521,6 @@ msgstr ""
 
 #~ msgid "Invalid or unsupported constraint type: %d"
 #~ msgstr "制約タイプは無効またはサポートしていません: %d"
-
-#~ msgid "Could not allocate GdaServerCommand"
-#~ msgstr "GdaServerCommand の割り当てることが出来ませんでした"
 
 #~ msgid "connection status: %x"
 #~ msgstr "接続状況: %x"

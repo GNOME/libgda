@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-10-14 06:15+0200\n"
+"POT-Creation-Date: 2002-10-23 22:48+0200\n"
 "PO-Revision-Date: 2002-10-14 18:01GMT\n"
 "Last-Translator: Michal Bukovjan <bukm@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -43,7 +43,7 @@ msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
 #: providers/mysql/gda-mysql-provider.c:662
-#: providers/oracle/gda-oracle-provider.c:999
+#: providers/oracle/gda-oracle-provider.c:1031
 msgid "Name"
 msgstr "Název"
 
@@ -177,7 +177,8 @@ msgstr "Neplatný uzel XML"
 
 #: providers/default/gda-default-provider.c:191
 #: providers/sqlite/gda-sqlite-provider.c:200
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr ""
 "Pro otevření databáze musí být v připojovacím řetězci zadaná úplná cesta k "
 "databázi"
@@ -194,7 +195,7 @@ msgstr "Neimplementováno"
 
 #: providers/default/gda-default-provider.c:455
 #: providers/mysql/gda-mysql-provider.c:1022
-#: providers/oracle/gda-oracle-provider.c:1056
+#: providers/oracle/gda-oracle-provider.c:1088
 #: providers/postgres/gda-postgres-provider.c:1065
 #: providers/sqlite/gda-sqlite-provider.c:617
 msgid "Field name"
@@ -202,25 +203,25 @@ msgstr "Název pole"
 
 #: providers/default/gda-default-provider.c:456
 #: providers/mysql/gda-mysql-provider.c:1023
-#: providers/oracle/gda-oracle-provider.c:1057
+#: providers/oracle/gda-oracle-provider.c:1089
 #: providers/postgres/gda-postgres-provider.c:1066
 #: providers/sqlite/gda-sqlite-provider.c:618
 msgid "Data type"
 msgstr "Datový typ"
 
 #: providers/default/gda-default-provider.c:457
-#: providers/freetds/gda-freetds-provider.c:774
+#: providers/freetds/gda-freetds-provider.c:791
 #: providers/mysql/gda-mysql-provider.c:1024
-#: providers/oracle/gda-oracle-provider.c:1058
+#: providers/oracle/gda-oracle-provider.c:1090
 #: providers/postgres/gda-postgres-provider.c:1067
 #: providers/sqlite/gda-sqlite-provider.c:619
 msgid "Size"
 msgstr "Velikost"
 
 #: providers/default/gda-default-provider.c:458
-#: providers/freetds/gda-freetds-provider.c:778
+#: providers/freetds/gda-freetds-provider.c:795
 #: providers/mysql/gda-mysql-provider.c:1025
-#: providers/oracle/gda-oracle-provider.c:1059
+#: providers/oracle/gda-oracle-provider.c:1091
 #: providers/postgres/gda-postgres-provider.c:1068
 #: providers/sqlite/gda-sqlite-provider.c:620
 msgid "Scale"
@@ -228,7 +229,7 @@ msgstr "Škála"
 
 #: providers/default/gda-default-provider.c:459
 #: providers/mysql/gda-mysql-provider.c:1026
-#: providers/oracle/gda-oracle-provider.c:1060
+#: providers/oracle/gda-oracle-provider.c:1092
 #: providers/postgres/gda-postgres-provider.c:1069
 #: providers/sqlite/gda-sqlite-provider.c:621
 msgid "Not null?"
@@ -236,7 +237,7 @@ msgstr "Nenulový?"
 
 #: providers/default/gda-default-provider.c:460
 #: providers/mysql/gda-mysql-provider.c:1027
-#: providers/oracle/gda-oracle-provider.c:1061
+#: providers/oracle/gda-oracle-provider.c:1093
 #: providers/postgres/gda-postgres-provider.c:1070
 #: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Primary key?"
@@ -244,7 +245,7 @@ msgstr "Primární klíč?"
 
 #: providers/default/gda-default-provider.c:461
 #: providers/mysql/gda-mysql-provider.c:1028
-#: providers/oracle/gda-oracle-provider.c:1062
+#: providers/oracle/gda-oracle-provider.c:1094
 #: providers/postgres/gda-postgres-provider.c:1071
 #: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Unique index?"
@@ -252,7 +253,7 @@ msgstr "Unikátní index?"
 
 #: providers/default/gda-default-provider.c:462
 #: providers/mysql/gda-mysql-provider.c:1029
-#: providers/oracle/gda-oracle-provider.c:1063
+#: providers/oracle/gda-oracle-provider.c:1095
 #: providers/postgres/gda-postgres-provider.c:1072
 #: providers/sqlite/gda-sqlite-provider.c:624
 msgid "References"
@@ -276,7 +277,7 @@ msgstr "Nelze získat popis pro sloupec"
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "Výchozí poskytovatel GDA, založený na formátu libgda XML"
 
-#: providers/freetds/gda-freetds-provider.c:177
+#: providers/freetds/gda-freetds-provider.c:188
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -284,99 +285,99 @@ msgstr ""
 "Spojení přerušeno. Musíte zadat alespoň název počítače, uživatelské jméno a "
 "heslo pomocí DSN 'QUERY=;USER=;PASSWORD='"
 
-#: providers/freetds/gda-freetds-provider.c:190
+#: providers/freetds/gda-freetds-provider.c:201
 msgid "Error creating message container."
 msgstr "Chyba při vytváření kontejneru zprávy."
 
-#: providers/freetds/gda-freetds-provider.c:197
+#: providers/freetds/gda-freetds-provider.c:208
 msgid "Error creating error container."
 msgstr "Chyba při vytváření kontejneru chyby."
 
-#: providers/freetds/gda-freetds-provider.c:235
-#: providers/freetds/gda-freetds-provider.c:237
+#: providers/freetds/gda-freetds-provider.c:246
+#: providers/freetds/gda-freetds-provider.c:248
 msgid "Allocating tds context failed."
 msgstr "Alokace kontextu tds selhala."
 
-#: providers/freetds/gda-freetds-provider.c:250
-#: providers/freetds/gda-freetds-provider.c:252
+#: providers/freetds/gda-freetds-provider.c:264
+#: providers/freetds/gda-freetds-provider.c:266
 msgid "Establishing connection failed."
 msgstr "Vytváření spojení selhalo."
 
-#: providers/freetds/gda-freetds-provider.c:264
-#: providers/freetds/gda-freetds-provider.c:265
+#: providers/freetds/gda-freetds-provider.c:278
+#: providers/freetds/gda-freetds-provider.c:279
 msgid "Failed getting connection info."
 msgstr "Selhalo získání informací o spojení."
 
-#: providers/freetds/gda-freetds-provider.c:605
-#: providers/oracle/gda-oracle-provider.c:1655
+#: providers/freetds/gda-freetds-provider.c:622
+#: providers/oracle/gda-oracle-provider.c:1687
 msgid "Procedures"
 msgstr "Procedury"
 
-#: providers/freetds/gda-freetds-provider.c:614
-#: providers/oracle/gda-oracle-provider.c:1663
+#: providers/freetds/gda-freetds-provider.c:631
+#: providers/oracle/gda-oracle-provider.c:1695
 msgid "Tables"
 msgstr "Tabulky"
 
-#: providers/freetds/gda-freetds-provider.c:622
+#: providers/freetds/gda-freetds-provider.c:639
 msgid "Types"
 msgstr "Typy"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/freetds/gda-freetds-provider.c:630
-#: providers/oracle/gda-oracle-provider.c:1459
+#: providers/freetds/gda-freetds-provider.c:647
+#: providers/oracle/gda-oracle-provider.c:1491
 #: providers/postgres/gda-postgres-provider.c:1448 testing/client.c:128
 msgid "Users"
 msgstr "Uživatelé"
 
-#: providers/freetds/gda-freetds-provider.c:638
-#: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
+#: providers/freetds/gda-freetds-provider.c:655
+#: providers/oracle/gda-oracle-provider.c:1703 testing/client.c:125
 msgid "Views"
 msgstr "Náhledy"
 
-#: providers/freetds/gda-freetds-provider.c:671
-#: providers/freetds/gda-freetds-provider.c:672
+#: providers/freetds/gda-freetds-provider.c:688
+#: providers/freetds/gda-freetds-provider.c:689
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Dotaz neuspěl při volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:681
-#: providers/freetds/gda-freetds-provider.c:683
+#: providers/freetds/gda-freetds-provider.c:698
+#: providers/freetds/gda-freetds-provider.c:700
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Neočekávané symboly s výsledkem při volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:691
-#: providers/freetds/gda-freetds-provider.c:692
+#: providers/freetds/gda-freetds-provider.c:708
+#: providers/freetds/gda-freetds-provider.c:709
 msgid "Unexpected return in execute_cmd()."
 msgstr "Neočekávaný návrat z volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:770
+#: providers/freetds/gda-freetds-provider.c:787
 msgid "Field Name"
 msgstr "Název pole"
 
-#: providers/freetds/gda-freetds-provider.c:772
+#: providers/freetds/gda-freetds-provider.c:789
 msgid "Data Type"
 msgstr "Datový typ"
 
-#: providers/freetds/gda-freetds-provider.c:776
+#: providers/freetds/gda-freetds-provider.c:793
 msgid "Precision"
 msgstr "Přesnost"
 
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Identity"
 msgstr "Identita"
 
-#: providers/freetds/gda-freetds-provider.c:782
+#: providers/freetds/gda-freetds-provider.c:799
 msgid "Nullable"
 msgstr "Nulovatelný"
 
-#: providers/freetds/gda-freetds-provider.c:784
+#: providers/freetds/gda-freetds-provider.c:801
 msgid "Domain"
 msgstr "Doména"
 
-#: providers/freetds/gda-freetds-provider.c:786
+#: providers/freetds/gda-freetds-provider.c:803
 msgid "Printfmt"
 msgstr "Printfmt"
 
-#: providers/freetds/gda-freetds-provider.c:905
+#: providers/freetds/gda-freetds-provider.c:929
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -385,7 +386,7 @@ msgstr ""
 "Zpráva %d, Úroveň %d, Stav %d, Server %s, Řádek %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:923 providers/freetds/utils.c:45
+#: providers/freetds/gda-freetds-provider.c:948 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
 msgid "Not available"
 msgstr "Není k dispozici"
@@ -432,11 +433,13 @@ msgstr "Nelze alokovat handle prostředí.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:191
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "SQLGetInfo není podporované. Poskytovatel IBM DB2 tudíž nebude fungovat.\n"
+msgstr ""
+"SQLGetInfo není podporované. Poskytovatel IBM DB2 tudíž nebude fungovat.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:205
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-msgstr "SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
+msgstr ""
+"SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "GDA provider for IBMDB2"
@@ -465,7 +468,8 @@ msgid "GDA provider for MS Access files"
 msgstr "Poskytovatel GDA pro soubory MS Access"
 
 #: providers/mysql/gda-mysql-provider.c:215
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr "Nelze zadat UNIX_SOCKET pokud jste také zadali HOST nebo PORT."
 
 #: providers/mysql/gda-mysql-provider.c:290
@@ -487,7 +491,7 @@ msgid "Invalid MYSQL handle"
 msgstr "Neplatný handle MYSQL"
 
 #: providers/mysql/gda-mysql-provider.c:924
-#: providers/oracle/gda-oracle-provider.c:1563
+#: providers/oracle/gda-oracle-provider.c:1595
 #: providers/postgres/gda-postgres-provider.c:920
 #: providers/sqlite/gda-sqlite-provider.c:746
 msgid "Type"
@@ -562,188 +566,189 @@ msgstr "Poskytovatel GDA pro databáze MySQL"
 msgid "GDA bridge to ODBC data sources"
 msgstr "Přemostění GDA pro datové zdroje ODBC"
 
-#: providers/oracle/gda-oracle-provider.c:193
+#: providers/oracle/gda-oracle-provider.c:205
 msgid "Could not initialize Oracle"
 msgstr "Nelze inicializovat Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:204
+#: providers/oracle/gda-oracle-provider.c:216
 msgid "Could not initialize the Oracle environment"
 msgstr "Nelze inicializovat prostředí Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:216
+#: providers/oracle/gda-oracle-provider.c:228
 msgid "Could not allocate the Oracle service handle"
 msgstr "Nelze alokovat handle služby Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:226
+#: providers/oracle/gda-oracle-provider.c:238
 msgid "Could not allocate the Oracle error handle"
 msgstr "Nelze alokovat handle chyby Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:238
+#: providers/oracle/gda-oracle-provider.c:250
 msgid "Could not allocate the Oracle server handle"
 msgstr "Nelze alokovat handle serveru Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:251
+#: providers/oracle/gda-oracle-provider.c:263
 msgid "Could not allocate the Oracle session handle"
 msgstr "Nelze alokovat handle sezení Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:281
+#: providers/oracle/gda-oracle-provider.c:293
 msgid "Could not attach to the Oracle server"
 msgstr "Nelze se připojit k serveru Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:297
+#: providers/oracle/gda-oracle-provider.c:309
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr "Nelze nastavit atribut serveru Oracle v kontextu služby"
 
-#: providers/oracle/gda-oracle-provider.c:313
+#: providers/oracle/gda-oracle-provider.c:325
 msgid "Could not set the Oracle username attribute"
 msgstr "Nelze nastavit atribut uživatelského jména pro Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:329
+#: providers/oracle/gda-oracle-provider.c:341
 msgid "Could not set the Oracle password attribute"
 msgstr "Nelze nastavit atribut hesla pro Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:344
+#: providers/oracle/gda-oracle-provider.c:356
 msgid "Could not begin the Oracle session"
 msgstr "Nelze zahájit sezení Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:362
+#: providers/oracle/gda-oracle-provider.c:374
 msgid "Could not set the Oracle session attribute in the service context"
 msgstr "Nelze nastavit atribut sezení Oracle v kontextu služby"
 
 #: providers/oracle/gda-oracle-provider.c:444
-#: providers/oracle/gda-oracle-provider.c:518
-#: providers/oracle/gda-oracle-provider.c:656
-#: providers/oracle/gda-oracle-provider.c:679
-#: providers/oracle/gda-oracle-provider.c:702
-#: providers/oracle/gda-oracle-provider.c:732
-#: providers/oracle/gda-oracle-provider.c:788
-#: providers/oracle/gda-oracle-provider.c:863
-#: providers/oracle/gda-oracle-provider.c:919
+#: providers/oracle/gda-oracle-provider.c:476
+#: providers/oracle/gda-oracle-provider.c:550
+#: providers/oracle/gda-oracle-provider.c:688
+#: providers/oracle/gda-oracle-provider.c:711
+#: providers/oracle/gda-oracle-provider.c:734
+#: providers/oracle/gda-oracle-provider.c:764
+#: providers/oracle/gda-oracle-provider.c:820
+#: providers/oracle/gda-oracle-provider.c:895
+#: providers/oracle/gda-oracle-provider.c:951
 #: providers/oracle/gda-oracle-recordset.c:166
 #: providers/oracle/gda-oracle-recordset.c:388
 #: providers/oracle/gda-oracle-recordset.c:589
 msgid "Invalid Oracle handle"
 msgstr "Neplatný handle Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:455
+#: providers/oracle/gda-oracle-provider.c:487
 msgid "Could not allocate the Oracle statement handle"
 msgstr "Nelze alokovat handle příkazu Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:466
+#: providers/oracle/gda-oracle-provider.c:498
 msgid "Could not prepare the Oracle statement"
 msgstr "Nelze připravit příkaz pro Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:498
+#: providers/oracle/gda-oracle-provider.c:530
 msgid "Could not bind the Oracle statement parameter"
 msgstr "Nelze svázat parametry příkazu pro Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:543
+#: providers/oracle/gda-oracle-provider.c:575
 msgid "Could not get the Oracle statement type"
 msgstr "Nelze zjistit typ příkazu pro Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:561
+#: providers/oracle/gda-oracle-provider.c:593
 msgid "Could not execute the Oracle statement"
 msgstr "Nelze vykonat příkaz pro Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:574
+#: providers/oracle/gda-oracle-provider.c:606
 msgid "Could not get the number of columns in the result set"
 msgstr "Nelze zjistit počet sloupců ve výsledku"
 
-#: providers/oracle/gda-oracle-provider.c:591
+#: providers/oracle/gda-oracle-provider.c:623
 msgid "Could not get the parameter descripter in the result set"
 msgstr "Nelze získat popisy parametrů ve výsledku"
 
-#: providers/oracle/gda-oracle-provider.c:603
+#: providers/oracle/gda-oracle-provider.c:635
 msgid "Could not get the column name in the result set"
 msgstr "Nelze získat název sloupce ve výsledku"
 
-#: providers/oracle/gda-oracle-provider.c:749
-#: providers/oracle/gda-oracle-provider.c:825
-#: providers/oracle/gda-oracle-provider.c:875
-#: providers/oracle/gda-oracle-provider.c:931
+#: providers/oracle/gda-oracle-provider.c:781
+#: providers/oracle/gda-oracle-provider.c:857
+#: providers/oracle/gda-oracle-provider.c:907
+#: providers/oracle/gda-oracle-provider.c:963
 msgid "Could not attach the transaction to the service context"
 msgstr "Nelze připojit transakci ke kontextu služby"
 
-#: providers/oracle/gda-oracle-provider.c:799
+#: providers/oracle/gda-oracle-provider.c:831
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "Nelze alokovat handle transakce Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:811
+#: providers/oracle/gda-oracle-provider.c:843
 msgid "Could not set the Oracle transaction name"
 msgstr "Nelze nastavit název transakce Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:836
+#: providers/oracle/gda-oracle-provider.c:868
 msgid "Could not start the Oracle transaction"
 msgstr "Nelze zahájit transakci Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:884
+#: providers/oracle/gda-oracle-provider.c:916
 msgid "Could not prepare the transaction to commit"
 msgstr "Nelze připravit transakci ke commitu"
 
-#: providers/oracle/gda-oracle-provider.c:892
+#: providers/oracle/gda-oracle-provider.c:924
 msgid "Could not commit the Oracle transaction"
 msgstr "Nelze provést commit transakce Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:938
+#: providers/oracle/gda-oracle-provider.c:970
 msgid "Could not rollback the Oracle transaction"
 msgstr "Nelze provést rollback transakce Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1227
+#: providers/oracle/gda-oracle-provider.c:1259
 msgid "Could not allocate the Oracle describe handle"
 msgstr "Nelze alokovat handle Oracle describe"
 
-#: providers/oracle/gda-oracle-provider.c:1240
+#: providers/oracle/gda-oracle-provider.c:1272
 msgid "Could not describe the Oracle table"
 msgstr "Nelze popsat tabulku Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1253
+#: providers/oracle/gda-oracle-provider.c:1285
 msgid "Could not get the Oracle parameter handle"
 msgstr "Nelze získat handle pro parametr Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1266
+#: providers/oracle/gda-oracle-provider.c:1298
 msgid "Could not get the number of columns in the table"
 msgstr "Nelze zjistit počet sloupců v tabulce"
 
-#: providers/oracle/gda-oracle-provider.c:1278
+#: providers/oracle/gda-oracle-provider.c:1310
 msgid "Could not get the column list"
 msgstr "Nelze získat seznam sloupců"
 
-#: providers/oracle/gda-oracle-provider.c:1307
+#: providers/oracle/gda-oracle-provider.c:1339
 msgid "Could not get the Oracle column handle"
 msgstr "Nelze získat handle na sloupec Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1320
+#: providers/oracle/gda-oracle-provider.c:1352
 msgid "Could not get the Oracle field name"
 msgstr "Nelze zjistit název pole Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1341
+#: providers/oracle/gda-oracle-provider.c:1373
 msgid "Could not get the Oracle field data type"
 msgstr "Nelze zjistit datový typ pole Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1359
+#: providers/oracle/gda-oracle-provider.c:1391
 msgid "Could not get the Oracle field defined size"
 msgstr "Nelze zjistit definovanou velikost pole Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1376
+#: providers/oracle/gda-oracle-provider.c:1408
 msgid "Could not get the Oracle field scale"
 msgstr "Nelze zjistit škálu pole Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1393
+#: providers/oracle/gda-oracle-provider.c:1425
 msgid "Could not get the Oracle field nullable attribute"
 msgstr "Nelze zjistit nulovatelný atribut pole Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1651
+#: providers/oracle/gda-oracle-provider.c:1683
 #: providers/postgres/gda-postgres-provider.c:994 testing/client.c:126
 msgid "Indexes"
 msgstr "Indexy"
 
-#: providers/oracle/gda-oracle-provider.c:1659 testing/client.c:129
+#: providers/oracle/gda-oracle-provider.c:1691 testing/client.c:129
 msgid "Sequences"
 msgstr "Sekvence"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1667
+#: providers/oracle/gda-oracle-provider.c:1699
 #: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:130
 msgid "Triggers"
 msgstr "Triggery"
@@ -1065,7 +1070,8 @@ msgstr "Testovací API pro klienta GDA"
 
 #: testing/client.c:182
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr "** CHYBA: gda_config_get_data_source_list vrátilo prázdnou (NULL) položku\n"
+msgstr ""
+"** CHYBA: gda_config_get_data_source_list vrátilo prázdnou (NULL) položku\n"
 
 #: testing/client.c:186
 #, c-format
@@ -1074,7 +1080,8 @@ msgstr " Zdroj dat = %s, Uživatel = %s\n"
 
 #: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** CHYBA: gda_config_get_provider_list vrátilo prázdnou (NULL) položku\n"
+msgstr ""
+"** CHYBA: gda_config_get_provider_list vrátilo prázdnou (NULL) položku\n"
 
 #: testing/config.c:89
 #, c-format
@@ -1115,4 +1122,3 @@ msgstr "\tgda_params ="
 
 #~ msgid "Unexpected identifier"
 #~ msgstr "Neočekávaný identifikátor"
-

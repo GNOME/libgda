@@ -1,3 +1,27 @@
+libgda 0.8.199, 2002-10-23
+--------------------------
+
+ - GdaValue API additions (rodrigo, vivien)
+ - Improved MySQL schemas information (rodrigo)
+ - Improvements in FreeTDS provider (holger)
+ - Updated documentation (xavier)
+ - i18n/UTF8 fixes (carlos)
+ - Fixed leaks in configuration API (gonzalo)
+ - Added missing implementation for SQLite provider (rodrigo)
+ - Added OMF setup (rodrigo, frederic)
+ - Added support for error notification on connection opening (rodrigo)
+ - Fixed SQLite auto-detection (gonzalo, vladimir)
+ - Added man page for gda-config-tool (gonzalo)
+ - Added initial support for connection stacks (rodrigo)
+ - Added missing methods to Oracle provider (rodrigo)
+ - Updated translations:
+        - cs (utx)
+        - da (olau)
+        - de (cneumair)
+        - es (pablodc)
+	- pl (chyla)
+	- sv (menthos)
+
 libgda 0.8.193, 2002-09-09
 --------------------------
 
