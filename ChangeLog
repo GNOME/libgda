@@ -1,3 +1,11 @@
+2004-04-15  Benjamin Otte <in7y118@public.uni-hamburg.de>
+
+	Fixes #140113
+
+	* providers/sqlite/gda-sqlite-provider.c (sql_split): new function to
+	correctly split multiple SQL commands.
+	(process_sql_commands): use the new function instead of g_strsplit.
+
 2004-04-08  Adam Weinberger  <adamw@gnome.org>
 
 	* configure.in: Added en_CA to ALL_LINGUAS.
