@@ -89,6 +89,7 @@ const gchar         *gda_connection_get_password (GdaConnection *cnc);
 void                 gda_connection_add_error (GdaConnection *cnc, GdaError *error);
 void                 gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...);
 void                 gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
+void                 gda_connection_clear_error_list (GdaConnection *cnc);
 
 gboolean             gda_connection_change_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_create_database (GdaConnection *cnc, const gchar *name);

@@ -1,5 +1,8 @@
 2004-08-18  José María Casanova Crespo <jmcasanova@igalia.com>
 
+	* libgda/gda-connection.[ch] (gda_connection_clear_error_list):
+	new function.
+
 	* providers/postgres/gda-postgres-provider.c
 	(gda_postgres_provider_begin_transaction): improved support of
 	transaction modes.

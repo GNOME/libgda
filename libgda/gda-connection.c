@@ -593,6 +593,31 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 }
 
 /**
+ * gda_connection_clear_error_list
+ * @cnc: a #GdaConnection object.
+ *
+ * This function lets you clear the list of #GdaError's of the
+ * given connection. This is usefull to reuse a #GdaConnection 
+ * because next uses of #gda_connection_errors will return an empty
+ * list.
+ */
+void
+gda_connection_clear_error_list (GdaConnection *cnc)
+{
+	GList *l;
+
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	if (cnc->priv->error_list != NULL) {
+		l = cnc->priv->error_list;
+		gda_error_list_free (l);
+	  
+		cnc->priv->error_list =  NULL;
+	}
+}
+
+
+/**
  * gda_connection_change_database
  * @cnc: a #GdaConnection object.
  * @name: name of database to switch to.
