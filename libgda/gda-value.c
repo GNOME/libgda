@@ -447,7 +447,7 @@ gda_value_set_boolean (GdaValue *value, gboolean val)
 
 	if (!gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN)) {
 		clear_value (value);
-		value->_type = (CORBA_TypeCode) ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BOOLEAN);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BOOLEAN);
 	}
 	else if (value->_value);
 		CORBA_free (value->_value);

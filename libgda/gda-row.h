@@ -63,7 +63,7 @@ void                gda_row_attributes_free (GdaRowAttributes *attrs);
 GdaFieldAttributes *gda_row_attributes_get_field (GdaRowAttributes *attrs, gint num);
 
 glong               gda_field_attributes_get_defined_size (GdaFieldAttributes *fa);
-void                gda_field_attributes_set_defined_size (GdaFieldAttributes *fs, glong size);
+void                gda_field_attributes_set_defined_size (GdaFieldAttributes *fa, glong size);
 const gchar        *gda_field_attributes_get_name (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_name (GdaFieldAttributes *fa, const gchar *name);
 glong               gda_field_attributes_get_scale (GdaFieldAttributes *fa);

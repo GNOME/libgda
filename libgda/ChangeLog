@@ -3,9 +3,17 @@
 	* gda-value.c: added documentation. Corrected changed parameter value
 	in *_list().
 
+	* gda-row.c: added documentation.
+	(gda_field_get_gdatype): changed GNOME_Database_TYPE_NULL to
+	GDA_TYPE_NULL.
+
+	* gda-row.h: changed parameter name for 
+	gda_field_attributes_set_defined_size(): so as gtk-doc doesn't
+	complains about it.
+
 	* gda-value.[ch]:
 	* gda-row.[ch]: changed 'long long' by 'gint64'. Removed all warnings.
-	Added some missing const to *value_new_*
+	Added some missing const to *value_new_*.
 	
 2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
