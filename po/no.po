@@ -5,14 +5,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-08 20:20+0200\n"
-"PO-Revision-Date: 2003-01-24 22:48+0100\n"
+"POT-Creation-Date: 2003-06-08 23:13+0200\n"
+"PO-Revision-Date: 2003-06-08 23:20+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: libgda/gda-client.c:309 libgda/gda-client.c:511 libgda/gda-connection.c:218
 #, c-format
@@ -302,9 +302,8 @@ msgid "Could not get description for column"
 msgstr "Kunne ikke hente beskrivelse for kolonne"
 
 #: providers/default/libmain.c:33
-#, fuzzy
 msgid "Default"
-msgstr "Forvalgt verdi"
+msgstr "Forvalg"
 
 #: providers/default/libmain.c:39
 msgid "Default provider, based on XML"
@@ -441,13 +440,12 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
 #: providers/ibmdb2/gda-ibmdb2-provider.c:688
 #: providers/ibmdb2/gda-ibmdb2-provider.c:763
-#, fuzzy
 msgid "Invalid IBM DB2 handle"
-msgstr "Ugyldig MDB-håndtak"
+msgstr "Ugyldig IBM DB2-håndtak"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
-msgstr ""
+msgstr "Funksjon"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 #: providers/ibmdb2/gda-ibmdb2-provider.c:832
@@ -486,14 +484,12 @@ msgid "Owner"
 msgstr "Eier"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
-#, fuzzy
 msgid "Database"
-msgstr "Databaser"
+msgstr "Database"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:831
-#, fuzzy
 msgid "Index"
-msgstr "Indekser"
+msgstr "Indeks"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:833
@@ -514,14 +510,13 @@ msgstr "Prosedyre"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:862
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:893
 #: providers/ibmdb2/gda-ibmdb2-provider.c:921
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1002
-#, fuzzy
 msgid "SQL Definition"
-msgstr "Definisjon"
+msgstr "SQL-definisjon"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
@@ -775,9 +770,8 @@ msgstr "Tilbyder for PostgreSQL-databaser"
 #: providers/msql/gda-msql-provider.c:549
 #: providers/msql/gda-msql-recordset.c:67
 #: providers/msql/gda-msql-recordset.c:130
-#, fuzzy
 msgid "Invalid mSQL handle"
-msgstr "Ugyldig MYSQL-håndtak"
+msgstr "Ugyldig mSQL-håndtak"
 
 #: providers/msql/gda-msql-provider.c:315
 msgid "mSQL allows database creation only through the msqladmin tool."
@@ -794,17 +788,14 @@ msgid "mSQL doesn't support transactions."
 msgstr ""
 
 #: providers/msql/gda-msql-provider.c:483
-#, fuzzy
 msgid "Title"
-msgstr "Tabell"
+msgstr "Tittel"
 
 #: providers/msql/gda-msql-provider.c:534
-#, fuzzy
 msgid "Field Name"
 msgstr "Feltnavn"
 
 #: providers/msql/gda-msql-provider.c:538
-#, fuzzy
 msgid "Not null"
 msgstr "Ikke null"
 
@@ -816,7 +807,6 @@ msgid "Table name is needed but none specified in parameter list"
 msgstr ""
 
 #: providers/msql/gda-msql-recordset.c:74
-#, fuzzy
 msgid "Row number out of bounds"
 msgstr "Radnummer utenfor område"
 
@@ -859,7 +849,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
-msgstr ""
+msgstr "SQL"
 
 #: providers/mysql/libmain.c:41
 msgid "Provider for MySQL databases"
@@ -1503,7 +1493,7 @@ msgstr ""
 #: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
-msgstr ""
+msgstr "OS-feil: %s"
 
 #: providers/sybase/utils.c:70
 msgid "Call: Client callback."
@@ -1552,13 +1542,12 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/utils.c:230
-#, fuzzy
 msgid "OS_Error:("
-msgstr "Feil"
+msgstr "OS-feil:("
 
 #: providers/sybase/utils.c:232
 msgid ") Message: "
-msgstr ""
+msgstr ") melding: "
 
 #: providers/sybase/utils.c:245
 msgid "Sybase OpenClient Msg: severity("
@@ -1591,7 +1580,7 @@ msgstr ""
 
 #: providers/sybase/utils.c:346
 msgid "Server:"
-msgstr ""
+msgstr "Tjener:"
 
 #: providers/sybase/utils.c:350
 #, fuzzy
@@ -1605,16 +1594,15 @@ msgstr "numerisk"
 
 #: providers/sybase/utils.c:357 providers/sybase/utils.c:474
 msgid "Severity"
-msgstr ""
+msgstr "Alvorlighet"
 
 #: providers/sybase/utils.c:360
-#, fuzzy
 msgid "State"
-msgstr "dato"
+msgstr "Tilstand"
 
 #: providers/sybase/utils.c:363
 msgid "Line"
-msgstr ""
+msgstr "Linje"
 
 #: providers/sybase/utils.c:446
 msgid "call to ct_diag failed when attempting to the amount of client messages"
@@ -1627,15 +1615,15 @@ msgstr ""
 
 #: providers/sybase/utils.c:476
 msgid "Layer"
-msgstr ""
+msgstr "Lag"
 
 #: providers/sybase/utils.c:478
 msgid "Origin"
-msgstr ""
+msgstr "Opprinnelse"
 
 #: providers/sybase/utils.c:480
 msgid "Message Number"
-msgstr ""
+msgstr "Meldingsnummer"
 
 #: providers/sybase/utils.c:502
 msgid "call to ct_diag failed when attempting to clear the client messages"
@@ -1849,7 +1837,7 @@ msgstr "Aggregater"
 
 #: testing/client.c:136
 msgid "Languages"
-msgstr ""
+msgstr "Språk"
 
 #: testing/client.c:141 testing/client.c:149
 msgid "\tStarting transaction..."
@@ -1916,10 +1904,6 @@ msgstr "\tgda_parametere ="
 
 #~ msgid "Could not initialize ct-client callback"
 #~ msgstr "Kunne ikke initiere ct-client-tilbakekall"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "Kunne ikke initiere Oracle"
 
 #~ msgid "Connection allocated."
 #~ msgstr "Tilkobling allokert."
