@@ -7,7 +7,6 @@ SUBDIRS = \
 	bindings \
 	providers \
 	tools \
-	report \
 	testing
 
 dist-hook: libgda.spec
