@@ -388,7 +388,7 @@ gda_default_provider_supports (GdaServerProvider *provider,
 			       GdaConnectionFeature feature)
 {
 	if (feature == GDA_CONNECTION_FEATURE_TRANSACTIONS
-	    && feature == GDA_CONNECTION_FEATURE_XML_QUERIES)
+	    || feature == GDA_CONNECTION_FEATURE_XML_QUERIES)
 		return TRUE;
 
 	return FALSE;
