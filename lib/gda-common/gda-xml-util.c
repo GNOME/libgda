@@ -70,7 +70,7 @@ gda_xml_util_new_node (const gchar *tag, xmlNodePtr parent_node)
 {
 	xmlNodePtr node;
 	xmlDocPtr doc;
-	xmlParseInputBuffer *input;
+	xmlParserInputBuffer *input;
 
 	if (parent_node == NULL) {
 		doc = xmlNewDoc ("1.0");
