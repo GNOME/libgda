@@ -71,7 +71,7 @@ dnl ******************************
 dnl GConf schemas
 dnl ******************************
 AC_PATH_PROG(GCONFTOOL, gconftool-2)
-AM_GCONF_SOURCE2
+AM_GCONF_SOURCE_2
 
 dnl ******************************
 dnl Checks for libraries
