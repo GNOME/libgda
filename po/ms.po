@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-01-19 13:46+0800\n"
-"PO-Revision-Date: 2002-01-19 13:28+0800\n"
+"POT-Creation-Date: 2002-01-23 05:46+0800\n"
+"PO-Revision-Date: 2002-01-23 05:47+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Bahasa Melayu <gabai-penyumbang@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -80,7 +80,7 @@ msgstr "Tak dapat menduakan objek klien. Klien tidak akan dapat notifikasi"
 msgid "Could not notify client about action %d"
 msgstr "Tak dapat memberitahu klien tentang aksi %d"
 
-#: libgda/gda-server-recordset.c:204
+#: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Tiada implementasi bagi kaedah fetch() dijumpai"
 
@@ -184,7 +184,7 @@ msgid "Invalid MYSQL handle"
 msgstr "Pengendali MyQL tidak sah"
 
 #: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:565
+#: providers/postgres/gda-postgres-provider.c:568
 msgid "Type"
 msgstr "Jenis"
 
@@ -238,7 +238,7 @@ msgid "Postgres component factory"
 msgstr "Kilang komponen Postgres"
 
 #: providers/postgres/gda-postgres-provider.c:317
-#: providers/postgres/gda-postgres-provider.c:452
+#: providers/postgres/gda-postgres-provider.c:455
 #: providers/postgres/gda-postgres-recordset.c:59
 #: providers/postgres/gda-postgres-recordset.c:110
 msgid "Invalid PostgreSQL handle"
@@ -383,6 +383,25 @@ msgstr "Gagal mendapatkan fail daripada %s"
 msgid "Could not initiate Report component factory"
 msgstr "Gagal menginitialisasikan kilang komponen Laporan"
 
+#: testing/client.c:37
+msgid "\t\tNONE\n"
+msgstr "\t\tTIADA\n"
+
+#: testing/client.c:76
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr "** RALAT: tak dapat membuka sambungan ke %s\n"
+
+#. show provider features
+#: testing/client.c:81
+msgid "\tProvider capabilities...\n"
+msgstr "\tKebolehan Pembekal...\n"
+
+#: testing/client.c:82
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "\t\tTransaksi: %s\n"
+
 #: testing/client.c:84
 msgid "Supported"
 msgstr "Disokong"
@@ -390,6 +409,58 @@ msgstr "Disokong"
 #: testing/client.c:84
 msgid "Not supported"
 msgstr "Tidak disokong"
+
+#. show connection schemas
+#: testing/client.c:87
+msgid "Stored procedures"
+msgstr "Prosedur Tersimpan"
+
+#: testing/client.c:88
+msgid "Connection Tables"
+msgstr "Jadual Sambungan"
+
+#: testing/client.c:89
+msgid "Available types"
+msgstr "Jenis yang ada"
+
+#: testing/client.c:90
+msgid "Views"
+msgstr "Paparan"
+
+#: testing/client.c:91
+msgid "Indexes"
+msgstr "Indeks"
+
+#. test transactions
+#: testing/client.c:94 testing/client.c:102
+msgid "\tStarting transaction..."
+msgstr "\tMemulakan transaksi..."
+
+#: testing/client.c:96 testing/client.c:100 testing/client.c:104
+#: testing/client.c:108
+msgid "Error"
+msgstr "Ralat"
+
+#: testing/client.c:98
+msgid "\tFinishing transaction..."
+msgstr "\tMenamatkan transaksi..."
+
+#: testing/client.c:106
+msgid "\tRolling back transaction..."
+msgstr "\tRollback transaksi..."
+
+#: testing/client.c:127
+msgid "Testing GDA client API"
+msgstr "Uji API klien GDA"
+
+#: testing/client.c:136
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr "** RALAT: gda_config_get_source_list memulangkan item NULL\n"
+
+#: testing/client.c:140
+#, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr " Sumber data =  %s, Pengguna = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
@@ -437,3 +508,4 @@ msgstr "\tdomain = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
