@@ -22,6 +22,9 @@
  */
 
 // $Log$
+// Revision 1.3  2000/10/04 08:43:14  rodrigo
+// Fixed untranslatable strings
+//
 // Revision 1.2  2000/10/04 08:40:05  rodrigo
 // Fixed untranslatable strings
 //
@@ -872,9 +875,10 @@ gda_sybase_connection_reopen(Gda_ServerConnection *cnc)
 		       "Could not request servername");
     return FALSE;
   } else {
-    gda_log_message(_("%s to '%s'"),
-		    (first_connection == FALSE) ? "Reconnected" : "Connected",
-		    buf);
+    if (first_connection == FALSE)
+      gda_log_message(_("Reconnected to '%s'"), buf);
+    else
+      gda_log_message(_("Connected to %s"), buf);
     if (scnc->database) {
       scnc->ret = gda_sybase_connection_select_database(cnc, scnc->database);
       if (scnc->ret != CS_SUCCEED) {
