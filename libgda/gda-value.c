@@ -45,6 +45,11 @@ clear_value (GdaValue *value)
 	g_return_if_fail (value != NULL);
 
 	switch (value->type) {
+	case GDA_VALUE_TYPE_GOBJECT :
+		if (value->value.v_gobj)
+			g_object_unref (value->value.v_gobj);
+		value->value.v_gobj = NULL;
+		break;
 	case GDA_VALUE_TYPE_LIST :
 		g_list_foreach (value->value.v_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value->value.v_list);
@@ -201,6 +206,9 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		//FIXME: add more checks to make_point
 		make_point (&point, as_string);
 		gda_value_set_geometric_point (value, &point);
+		break;
+	case GDA_VALUE_TYPE_GOBJECT :
+		/* FIXME */
 		break;
 	case GDA_VALUE_TYPE_NULL :
 		gda_value_set_null (value);
@@ -360,6 +368,25 @@ gda_value_new_geometric_point (const GdaGeometricPoint *val)
 
 	value = g_new0 (GdaValue, 1);
 	gda_value_set_geometric_point (value, val);
+
+	return value;
+}
+
+/**
+ * gda_value_new_gobject
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_GOBJECT with value @val.
+ *
+ * Returns: the newly created #GdaValue.
+ */
+GdaValue *
+gda_value_new_gobject (const GObject *val)
+{
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_gobject (value, val);
 
 	return value;
 }
@@ -727,6 +754,10 @@ gda_value_copy (const GdaValue *value)
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
 		memcpy (&copy->value.v_point, &value->value.v_point, sizeof (GdaGeometricPoint));
 		break;
+	case GDA_VALUE_TYPE_GOBJECT :
+		copy->value.v_gobj = value->value.v_gobj;
+		g_object_ref (copy->value.v_gobj);
+		break;
 	case GDA_VALUE_TYPE_INTEGER :
 		copy->value.v_integer = value->value.v_integer;
 		break;
@@ -983,6 +1014,39 @@ gda_value_set_geometric_point (GdaValue *value, const GdaGeometricPoint *val)
 	value->type = GDA_VALUE_TYPE_GEOMETRIC_POINT;
 	value->value.v_point.x = val->x;
 	value->value.v_point.y = val->y;
+}
+
+/**
+ * gda_value_get_gobject
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ */
+const GObject *
+gda_value_get_gobject (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, NULL);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_GOBJECT), NULL);
+	return (const GObject *) value->value.v_gobj;
+}
+
+/**
+ * gda_value_set_gobject
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_gobject (GdaValue *value, const GObject *val)
+{
+	g_return_if_fail (value != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_GOBJECT;
+	value->value.v_gobj = (GObject *) val;
+	if (G_IS_OBJECT (val))
+		g_object_ref (value->value.v_gobj);
 }
 
 /**
@@ -1409,6 +1473,9 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
 		gda_value_set_geometric_point (value, gda_value_get_geometric_point ((GdaValue *) from));
 		break;
+	case GDA_VALUE_TYPE_GOBJECT :
+		gda_value_set_gobject (value, gda_value_get_gobject ((GdaValue *) from));
+		break;
 	case GDA_VALUE_TYPE_INTEGER :
 		gda_value_set_integer (value, gda_value_get_integer ((GdaValue *) from));
 		break;
@@ -1544,6 +1611,13 @@ gda_value_stringify (GdaValue *value)
 					  DBL_DIG,
 					  point->y);
 		break;
+	case GDA_VALUE_TYPE_GOBJECT :
+		if (value->value.v_gobj) {
+			retval = g_strdup_printf (_("(GObject of type '%s'"),
+						  g_type_name (G_TYPE_FROM_INSTANCE (value->value.v_gobj)));
+		} else
+			retval = g_strdup_printf (_("NULL GObject"));
+		break;
 	case GDA_VALUE_TYPE_LIST:
 		list = gda_value_get_list (value);
 		for (l = (GList *) list; l != NULL; l = l->next) {
@@ -1629,6 +1703,12 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
 		retval = memcmp (&value1->value.v_point, &value2->value.v_point,
 				 sizeof (GdaGeometricPoint));
+		break;
+	case GDA_VALUE_TYPE_GOBJECT :
+		if (value1->value.v_gobj == value2->value.v_gobj)
+			retval = 0;
+		else
+			retval = (gint) value1->value.v_gobj - (gint) value2->value.v_gobj;
 		break;
 	case GDA_VALUE_TYPE_INTEGER :
 		retval = value1->value.v_integer - value2->value.v_integer;

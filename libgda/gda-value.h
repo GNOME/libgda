@@ -26,6 +26,7 @@
 
 #include <glib/glist.h>
 #include <glib/gmacros.h>
+#include <glib-object.h>
 #include <libxml/tree.h>
 
 G_BEGIN_DECLS
@@ -40,6 +41,7 @@ typedef enum {
 	GDA_VALUE_TYPE_DATE,
 	GDA_VALUE_TYPE_DOUBLE,
 	GDA_VALUE_TYPE_GEOMETRIC_POINT,
+	GDA_VALUE_TYPE_GOBJECT,
 	GDA_VALUE_TYPE_INTEGER,
 	GDA_VALUE_TYPE_LIST,
 	GDA_VALUE_TYPE_NUMERIC,
@@ -98,6 +100,7 @@ typedef struct {
 		GdaDate v_date;
 		gdouble v_double;
 		GdaGeometricPoint v_point;
+		GObject *v_gobj;
 		gint v_integer;
 		GdaValueList *v_list;
 		GdaNumeric v_numeric;
@@ -119,6 +122,7 @@ GdaValue     *gda_value_new_boolean (gboolean val);
 GdaValue     *gda_value_new_date (const GdaDate *val);
 GdaValue     *gda_value_new_double (gdouble val);
 GdaValue     *gda_value_new_geometric_point (const GdaGeometricPoint *val);
+GdaValue     *gda_value_new_gobject (const GObject *val);
 GdaValue     *gda_value_new_integer (gint val);
 GdaValue     *gda_value_new_list (const GdaValueList *val);
 GdaValue     *gda_value_new_numeric (const GdaNumeric *val);
@@ -153,6 +157,8 @@ gdouble       gda_value_get_double (GdaValue *value);
 void          gda_value_set_double (GdaValue *value, gdouble val);
 const GdaGeometricPoint *gda_value_get_geometric_point (GdaValue *value);
 void          gda_value_set_geometric_point (GdaValue *value, const GdaGeometricPoint *val);
+const GObject *gda_value_get_gobject (GdaValue *value);
+void          gda_value_set_gobject (GdaValue *value, const GObject *val);
 gint          gda_value_get_integer (GdaValue *value);
 void          gda_value_set_integer (GdaValue *value, gint val);
 const GdaValueList *gda_value_get_list (GdaValue *value);

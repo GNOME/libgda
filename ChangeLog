@@ -1,5 +1,16 @@
 2003-01-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-value.h: added GDA_VALUE_TYPE_GOBJECT type.
+
+	* libgda/gda-value.c (gda_value_new_gobject, gda_value_get_gobject,
+	gda_value_set_gobject): new functions.
+	(clear_value, gda_value_copy, gda_value_set_from_value,
+	gda_value_stringify, gda_value_compare): take into account the new type.
+
+	* providers/xbase/gda-xbase-database.cpp: fixed xbase header file.
+
+2003-01-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-data-model.c (gda_data_model_to_xml_node): added the
 	model data to the returned XML node.
 
