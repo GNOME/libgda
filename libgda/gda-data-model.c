@@ -782,7 +782,11 @@ export_to_separated (GdaDataModel *model, gchar sep)
 			gchar *txt;
 
 			value = gda_data_model_get_value_at (model, c, r);
-			txt = gda_value_stringify ((GdaValue *) value);
+			if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
+				txt = g_strdup (gda_value_get_boolean ((GdaValue *) value) ? "TRUE" : "FALSE");
+			else
+				txt = gda_value_stringify ((GdaValue *) value);
+
 			if (c > 0)
 				str = g_string_append_c (str, sep);
 			str = g_string_append_c (str, '"');
@@ -957,7 +961,11 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 				gchar *str;
 
 				value = gda_data_model_get_value_at (model, c, r);
-				str = gda_value_stringify (value);
+				if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
+					str = g_strdup (gda_value_get_boolean (value) ? "TRUE" : "FALSE");
+				else
+					str = gda_value_stringify (value);
+
 				field = xmlNewChild (row, NULL, "value", str);
 				xml_set_int (field, "position", c);
 				xmlSetProp (field, "gdatype", gda_type_to_string (gda_value_get_type (value)));

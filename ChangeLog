@@ -1,3 +1,9 @@
+2004-04-28  Alvaro Peña  <apg@esware.com>
+
+	* libgda/gda-data-model.c: (export_to_separated),
+	(gda_data_model_to_xml_node): don't use gda_value_stringify
+	for boolean values
+
 2004-04-23  Murray Cumming  <murrayc@murrayc.com>
                                                                                     
 	* libgda/gda-command.h, gda-config.h, gda-field.h, gda-parameter.h:
