@@ -1,3 +1,7 @@
+2004-02-28  Vivien Malerba <malerba@gnome-db.org>
+	* libsql/lexer.l: bug fixed
+	* libsql/Makefile.am: make sure sql_parser.h is installed in libgda/sql directory
+
 2004-02-18  Sergey N. Belinsky <sergey_be@mail.ru>
 	* gda-ibmdb2-recordset.c: Fixed size of data. Clean up data after use.
 	* gda-ibmdb2-types.[ch]: Fixed NUMERIC datatype. Message for unsupported datatypes.

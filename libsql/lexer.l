@@ -65,7 +65,7 @@ char *string_buf_ptr;
 "*"		{return L_TIMES;}
 "/"		{return L_DIV;}
 
-[a-zA-Z0-9]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
+[a-zA-Z0-9_]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
 [ \t\n\r]	{;}
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}
 <STRING>\'		{BEGIN(INITIAL);
