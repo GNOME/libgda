@@ -157,25 +157,31 @@ fi
 bdbdir=""
 if test $try_bdb = true
 then
-	AC_MSG_CHECKING(for Berkeley DB files)
-	for d in $dir /usr /usr/local
-	do
-		if test -f $d/$lib/libdb.so -a -f $d/include/db.h
-		then
-			AC_MSG_RESULT(found Berkeley DB in $d)
-			bdblib="-ldb"
-			bdbdir=$d
-			break
-		fi
-		dnl FIXME: check for db1 (non-sleepycat implementation)
-	done
-	if test x$bdbdir = x
-	then
-		AC_MSG_WARN(Berkeley DB backend not used)
+	AC_CHECK_HEADER(db.h, bdb_ok=yes, bdb_ok=no, [])
+	if test $bdb_ok = yes ; then
+		bdbdir=yes
+		BDB_LIBS="-ldb"
 	else
-		AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
-		BDB_CFLAGS="-I${bdbdir}/include"
-		BDB_LIBS="-L${bdbdir}/lib ${bdblib}"
+		AC_MSG_CHECKING(for Berkeley DB files)
+		for d in $dir /usr /usr/local
+		do
+			if test -f $d/$lib/libdb.so -a -f $d/include/db.h
+			then
+				AC_MSG_RESULT(found Berkeley DB in $d)
+				bdblib="-ldb"
+				bdbdir=$d
+				break
+			fi
+			dnl FIXME: check for db1 (non-sleepycat implementation)
+		done
+		if test x$bdbdir = x
+		then
+			AC_MSG_WARN(Berkeley DB backend not used)
+		else
+			AC_DEFINE(HAVE_BDB, 1, [Have Berkeley DB])
+			BDB_CFLAGS="-I${bdbdir}/include"
+			BDB_LIBS="-L${bdbdir}/lib ${bdblib}"
+		fi
 	fi
 fi
 
