@@ -44,6 +44,8 @@ gda_row_new (gint count)
 	row->_buffer = CORBA_sequence_GNOME_Database_Field_allocbuf (count);
 
 	for (i = 0; i < count; i++) {
+		row->_buffer[i].attributes.name = CORBA_string_dup ("");
+		row->_buffer[i].attributes.references = CORBA_string_dup ("");
 		row->_buffer[i].value._type = CORBA_OBJECT_NIL;
 		row->_buffer[i].value._value = NULL;
 	}
@@ -95,6 +97,7 @@ GdaRowAttributes *
 gda_row_attributes_new (gint count)
 {
 	GdaRowAttributes *attrs;
+	gint i;
 
 	g_return_val_if_fail (count >= 0, NULL);
 
@@ -102,6 +105,11 @@ gda_row_attributes_new (gint count)
 	CORBA_sequence_set_release (attrs, TRUE);
 	attrs->_length = count;
 	attrs->_buffer = CORBA_sequence_GNOME_Database_FieldAttributes_allocbuf (count);
+
+	for (i = 0; i < count; i++) {
+		attrs->_buffer[i].name = CORBA_string_dup ("");
+		attrs->_buffer[i].references = CORBA_string_dup ("");
+	}
 
 	return attrs;
 }
@@ -300,6 +308,74 @@ gda_field_attributes_set_allow_null (GdaFieldAttributes *fa, gboolean allow)
 }
 
 /**
+ * gda_field_attributes_get_primary_key
+ * @fa: a #GdaFieldAttributes.
+ */
+gboolean
+gda_field_attributes_get_primary_key (GdaFieldAttributes *fa)
+{
+	g_return_val_if_fail (fa != NULL, FALSE);
+	return fa->primaryKey;
+}
+
+/**
+ * gda_field_attributes_set_primary_key
+ */
+void
+gda_field_attributes_set_primary_key (GdaFieldAttributes *fa, gboolean pk)
+{
+	g_return_if_fail (fa != NULL);
+	fa->primaryKey = pk;
+}
+
+/**
+ * gda_field_attributes_get_unique_key
+ */
+gboolean
+gda_field_attributes_get_unique_key (GdaFieldAttributes *fa)
+{
+	g_return_val_if_fail (fa != NULL, FALSE);
+	return fa->primaryKey;
+}
+
+/**
+ * gda_field_attributes_set_unique_key
+ */
+void
+gda_field_attributes_set_unique_key (GdaFieldAttributes *fa, gboolean uk)
+{
+	g_return_if_fail (fa != NULL);
+	fa->uniqueKey = uk;
+}
+
+/**
+ * gda_field_attributes_get_references
+ */
+const gchar *
+gda_field_attributes_get_references (GdaFieldAttributes *fa)
+{
+	g_return_val_if_fail (fa != NULL, NULL);
+	return (const gchar *) fa->references;
+}
+
+/**
+ * gda_field_attributes_set_references
+ */
+void
+gda_field_attributes_set_references (GdaFieldAttributes *fa, const gchar *ref)
+{
+	g_return_if_fail (fa != NULL);
+
+	if (fa->references != NULL)
+		CORBA_free (fa->references);
+
+	if (ref)
+		fa->references = CORBA_string_dup (ref);
+	else
+		fa->references = CORBA_string_dup ("");
+}
+
+/**
  * gda_field_get_actual_size
  * @field: a #GdaField
  *
@@ -460,6 +536,66 @@ gda_field_set_allow_null (GdaField *field, gboolean allow)
 {
 	g_return_if_fail (field != NULL);
 	field->attributes.allowNull = allow;
+}
+
+/**
+ * gda_field_get_primary_key
+ */
+gboolean
+gda_field_get_primary_key (GdaField *field)
+{
+	g_return_val_if_fail (field != NULL, FALSE);
+	return field->attributes.primaryKey;
+}
+
+/**
+ * gda_field_set_primary_key
+ */
+void
+gda_field_set_primary_key (GdaField *field, gboolean pk)
+{
+	g_return_if_fail (field != NULL);
+	field->attributes.primaryKey = pk;
+}
+
+/**
+ * gda_field_get_unique_key
+ */
+gboolean
+gda_field_get_unique_key (GdaField *field)
+{
+	g_return_val_if_fail (field != NULL, FALSE);
+	return field->attributes.uniqueKey;
+}
+
+/**
+ * gda_field_set_unique_key
+ */
+void
+gda_field_set_unique_key (GdaField *field, gboolean uk)
+{
+	g_return_if_fail (field != NULL);
+	field->attributes.uniqueKey = uk;
+}
+
+/**
+ * gda_field_get_references
+ */
+const gchar *
+gda_field_get_references (GdaField *field)
+{
+	g_return_val_if_fail (field != NULL, NULL);
+	return (const gchar *) field->attributes.references;
+}
+
+/**
+ * gda_field_set_references
+ */
+void
+gda_field_set_references (GdaField *field, const gchar *ref)
+{
+	g_return_if_fail (field != NULL);
+	gda_field_attributes_set_references (&field->attributes, ref);
 }
 
 /**

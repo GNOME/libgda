@@ -118,6 +118,9 @@ module GNOME {
 			long    scale;
 			Type    gdaType;
 			boolean allowNull;
+			boolean primaryKey;
+			boolean uniqueKey;
+			string  references;
 			boolean autoIncrement;
 			long    autoIncrementStart;
 			long    autoIncrementStep;

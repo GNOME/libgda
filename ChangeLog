@@ -1,3 +1,21 @@
+2002-03-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* idl/GNOME_Database.idl: added primaryKey, uniqueKey and
+	references fields to the FieldAttributes structure.
+
+	* libgda/gda-row.[ch] (gda_field_attribute_get_primary_key):
+	(gda_field_attribute_set_primary_key):
+	(gda_field_attributes_get_unique_key):
+	(gda_field_attributes_set_unique_key):
+	(gda_field_attributes_get_references):
+	(gda_field_attributes_set_references):
+	(gda_field_get_primary_key):
+	(gda_field_set_primary_key):
+	(gda_field_get_unique_key):
+	(gda_field_set_unique_key):
+	(gda_field_get_references):
+	(gda_field_set_references): new functions.
+
 2002-03-29  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-error.c (gda_error_list_from_exception): corrected corba
