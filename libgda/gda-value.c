@@ -167,7 +167,7 @@ gda_value_free (GdaValue *value)
  * gda_value_isa
  */
 gboolean
-gda_value_isa (GdaValue *value, GdaValueType type)
+gda_value_isa (const GdaValue *value, GdaValueType type)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
 	return bonobo_arg_type_is_equal (type, value->_type, NULL);
@@ -625,7 +625,7 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
  * gda_value_stringify
  */
 gchar *
-gda_value_stringify (GdaValue *value)
+gda_value_stringify (const GdaValue *value)
 {
 	gchar *retval = NULL;
 

@@ -664,7 +664,7 @@ gda_field_set_tinyint_value (GdaField *field, gchar value)
  * gda_field_stringify
  */
 gchar *
-gda_field_stringify (GdaField *field)
+gda_field_stringify (const GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
 	return gda_value_stringify (&field->value);

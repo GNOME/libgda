@@ -33,24 +33,26 @@ G_BEGIN_DECLS
 typedef GNOME_Database_Row             GdaRow;
 typedef GNOME_Database_RowAttributes   GdaRowAttributes;
 typedef GNOME_Database_FieldAttributes GdaFieldAttributes;
-typedef GNOME_Database_Type            GdaType;
 typedef GNOME_Database_Field           GdaField;
-
-#define GDA_TYPE_NULL GNOME_Database_TYPE_NULL
-#define GDA_TYPE_BIGINT GNOME_Database_TYPE_BIGINT
-#define GDA_TYPE_BINARY GNOME_Database_TYPE_BINARY
-#define GDA_TYPE_BOOLEAN GNOME_Database_TYPE_BOOLEAN
-#define GDA_TYPE_DATE GNOME_Database_TYPE_DATE
-#define GDA_TYPE_GEOMETRIC_POINT GNOME_Database_TYPE_GEOMETRIC_POINT
-#define GDA_TYPE_TIME GNOME_Database_TYPE_TIME
-#define GDA_TYPE_TIMESTAMP GNOME_Database_TYPE_TIMESTAMP
-#define GDA_TYPE_DOUBLE GNOME_Database_TYPE_DOUBLE
-#define GDA_TYPE_INTEGER GNOME_Database_TYPE_INTEGER
-#define GDA_TYPE_SINGLE GNOME_Database_TYPE_SINGLE
-#define GDA_TYPE_SMALLINT GNOME_Database_TYPE_SMALLINT
-#define GDA_TYPE_STRING GNOME_Database_TYPE_STRING
-#define GDA_TYPE_TINYINT GNOME_Database_TYPE_TINYINT
-#define GDA_TYPE_UNKNOWN GNOME_Database_TYPE_UNKNOWN
+typedef enum
+{
+	GDA_TYPE_NULL = GNOME_Database_TYPE_NULL,
+	GDA_TYPE_BIGINT = GNOME_Database_TYPE_BIGINT,
+	GDA_TYPE_BINARY = GNOME_Database_TYPE_BINARY,
+	GDA_TYPE_BOOLEAN = GNOME_Database_TYPE_BOOLEAN,
+	GDA_TYPE_DATE = GNOME_Database_TYPE_DATE,
+	GDA_TYPE_GEOMETRIC_POINT = GNOME_Database_TYPE_GEOMETRIC_POINT,
+	GDA_TYPE_TIME = GNOME_Database_TYPE_TIME,
+	GDA_TYPE_TIMESTAMP = GNOME_Database_TYPE_TIMESTAMP,
+	GDA_TYPE_DOUBLE = GNOME_Database_TYPE_DOUBLE,
+	GDA_TYPE_INTEGER = GNOME_Database_TYPE_INTEGER,
+	GDA_TYPE_SINGLE = GNOME_Database_TYPE_SINGLE,
+	GDA_TYPE_SMALLINT = GNOME_Database_TYPE_SMALLINT,
+	GDA_TYPE_TINYINT = GNOME_Database_TYPE_TINYINT,
+	GDA_TYPE_STRING = GNOME_Database_TYPE_STRING,
+	GDA_TYPE_UNKNOWN = GNOME_Database_TYPE_UNKNOWN
+}
+GdaType;
 
 GdaRow             *gda_row_new (gint count);
 void                gda_row_free (GdaRow *row);
@@ -110,7 +112,7 @@ void                gda_field_set_timestamp_value (GdaField *field, time_t value
 gchar               gda_field_get_tinyint_value (GdaField *field);
 void                gda_field_set_tinyint_value (GdaField *field, gchar value);
 
-gchar              *gda_field_stringify (GdaField *field);
+gchar              *gda_field_stringify (const GdaField *field);
 
 G_END_DECLS
 

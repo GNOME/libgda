@@ -65,7 +65,7 @@ GdaValue     *gda_value_new_tinyint (gchar val);
 
 void          gda_value_free (GdaValue *value);
 
-gboolean      gda_value_isa (GdaValue *value, GdaValueType type);
+gboolean      gda_value_isa (const GdaValue *value, GdaValueType type);
 gboolean      gda_value_is_null (GdaValue *value);
 GdaValue     *gda_value_copy (GdaValue *value);
 
@@ -97,7 +97,7 @@ void          gda_value_set_timestamp (GdaValue *value, time_t val);
 gchar         gda_value_get_tinyint (GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
 
-gchar        *gda_value_stringify (GdaValue *value);
+gchar        *gda_value_stringify (const GdaValue *value);
 
 G_END_DECLS
 

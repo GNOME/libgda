@@ -1,3 +1,12 @@
+2002-01-08  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-row.h: define GdaType as an enumeration.
+
+	* gda-row.[ch]: stringify receives a const argument.
+
+	* gda-value.[ch]: stringify receives a const argument. So does
+	gda_value_isa(). We should talk about constness in the list.
+
 2002-01-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-value.[ch] (gda_value_is_null): new function
