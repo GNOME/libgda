@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-03-09 19:39+0100\n"
-"PO-Revision-Date: 2003-02-26 22:48+0100\n"
+"POT-Creation-Date: 2003-03-27 02:29+0100\n"
+"PO-Revision-Date: 2003-03-27 02:30+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1483,8 +1483,8 @@ msgid "Invalid Xbase handle"
 msgstr "Ogiltigt Xbase-handtag"
 
 #: providers/xbase/libmain.c:39
-msgid "Provider for Xbase databases"
-msgstr "Leverantör för Xbase-databaser"
+msgid "Provider for Xbase (dBase, FoxPro, etc) files"
+msgstr "Leverantör för Xbase-filer (dBase, FoxPro, osv)"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
