@@ -1009,7 +1009,7 @@ gda_config_get_provider_list (void)
 		ext = g_strrstr (name, ".");
 		if (!ext)
 			continue;
-		if (strcmp (ext, ".so"))
+		if (strcmp (ext + 1, G_MODULE_SUFFIX))
 			continue;
 
 		path = g_build_path (G_DIR_SEPARATOR_S, LIBGDA_PLUGINDIR,

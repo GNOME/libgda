@@ -1,3 +1,8 @@
+2002-09-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.c (gda_config_get_provider_list): use
+	G_MODULE_SUFFIX instead of using ".so" directly.
+
 2002-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-xml-database.c (gda_xml_database_save): implemented.
