@@ -2,66 +2,63 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # Rodrigo Moya <rmoya@chez.com>, 1999.
 # Ismael Olea <olea@hispafuentes.com>, 2000
-# Carlos PerellÛ MarÌn <carlos@gnome-db.org>, 2001
+# Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>, 2001
 # Antonio de la Torre <adltorre@terra.es>, 2001
+# Pablo Gonzalo del Campo <pablodc@bigfoot.com>,2002
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db \n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
-"PO-Revision-Date: 2001-03-14 01:06+0100\n"
-"Last-Translator: Antonio de la Torre <adltorre@terra.es>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"POT-Creation-Date: 2002-03-07 12:32+0100\n"
+"PO-Revision-Date: 2002-03-06 23:55GMT\n"
+"Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
+"Language-Team: espa√±ol <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.9.5\n"
 
 #: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
-#, fuzzy, c-format
+#, c-format
 msgid "Data source %s not found in configuration"
-msgstr "La base de datos '%s' no se ha encontrado en el sistema"
+msgstr "Origen de datos %s no encontrado en la configuraci√≥n"
 
 #: libgda/gda-client.c:237
-#, fuzzy, c-format
+#, c-format
 msgid "Could not activate object %s"
-msgstr "No pudo activarse el motor de informe"
+msgstr "No se pudo activar el objeto %s"
 
 #: libgda/gda-client.c:255
-#, fuzzy
 msgid "Could not create connection component"
-msgstr "No se pudo abrir la conexiÛn con %s"
+msgstr "No se pudo crear el componentes de conexi√≥n"
 
 #: libgda/gda-config.c:512
-#, fuzzy
 msgid "Could not query CORBA components"
-msgstr "No se ha podido abrir la \"factory\" de CORBA"
+msgstr "No se pudo consultar los componentes CORBA"
 
 #: libgda/gda-config.c:619
-#, fuzzy
 msgid "Could not query CORBA providers"
-msgstr "No se ha podido abrir la \"factory\" de CORBA"
+msgstr "No se pudo consultar los proveedores CORBA"
 
 #: libgda/gda-config.c:869
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: libgda/gda-config.c:870
 msgid "Provider"
-msgstr ""
+msgstr "Proveedor"
 
 #: libgda/gda-config.c:871
-#, fuzzy
 msgid "Connection string"
-msgstr "La conexiÛn parece que ha terminado"
+msgstr "Cadena de conexi√≥n"
 
 #: libgda/gda-config.c:872
 msgid "Description"
-msgstr ""
+msgstr "Descripci√≥n"
 
 #: libgda/gda-config.c:873
-#, fuzzy
 msgid "Username"
-msgstr "nombre de usuario"
+msgstr "Usuario"
 
 #: libgda/gda-error.c:127
 #, c-format
@@ -70,39 +67,44 @@ msgstr "%s: Ha ocurrido un error en el sistema CORBA."
 
 #: libgda/gda-error.c:156
 msgid "Unknown CORBA exception for connection"
-msgstr ""
+msgstr "Excepci√≥n CORBA desconocida durante la conexi√≥n"
 
 #: libgda/gda-init.c:44
 msgid "Attempt to initialize an already initialized client"
 msgstr "Se ha intentado inicializar un cliente que ya lo estaba"
 
 #: libgda/gda-init.c:56
-#, fuzzy
 msgid "Could not initialize Bonobo"
-msgstr "No pudo iniciarse ct_diag()"
+msgstr "No se pudo inicializar Bonobo"
 
 #: libgda/gda-server.c:108
 #, c-format
 msgid "Don't know how to create components with IID %s"
-msgstr ""
+msgstr "No s√© como crear componentes con ID %s"
 
 #: libgda/gda-server.c:122
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create component of type %s"
-msgstr "No pudo asignarse campo"
+msgstr "No se pudo crear un componente de tipo %s"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
+"No se pudo duplicar el objeto cliente. El Cliente no obtendr√° notificaciones"
 
 #: libgda/gda-server-connection.c:440
-#, fuzzy, c-format
+#, c-format
 msgid "Could not notify client about action %d"
-msgstr "No pudo obtenerse mensaje # %d del cliente"
+msgstr "No se pudo notificar al cliente acerca de la acci√≥n %d"
 
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
-msgstr ""
+msgstr "No se encontr√≥ la implementaci√≥n para el m√©todo fetch"
+
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Ya hay un campo con el nombre %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -113,89 +115,86 @@ msgid "FALSE"
 msgstr "NO"
 
 #: libgda/gda-xml-database.c:214
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load file at %s"
-msgstr "No pudo ubicar local para '%s'"
+msgstr "No se pudo cargar el archivo en %s"
 
 #: libgda/gda-xml-database.c:223
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse file at %s"
-msgstr "No pudo ubicar local para '%s'"
+msgstr "No se pudo pasar el archivo a %s"
 
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Base de datos '%s'seleccionada"
+msgstr "Archivo de base de datos XML inv√°lido '%s'"
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#, c-format
 msgid "Table %s already exists"
-msgstr "la tabla %s ya existe"
+msgstr "La tabla %s ya existe"
 
 #: libgda/gda-xml-database.c:327
 msgid "Invalid node"
-msgstr ""
+msgstr "Nodo inv√°lido"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Nodo <data> duplicado en la tabla %s"
 
 #: libgda/gda-xml-database.c:365
 msgid "Invalid XML node"
-msgstr ""
+msgstr "Nodo XML inv√°lido"
 
 #: providers/default/gda-default-provider.c:139
-#: providers/sqlite/gda-sqlite-provider.c:152
+#: providers/sqlite/gda-sqlite-provider.c:153
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
+"Una ruta completa debe ser especificada en la cadena de conexi√≥n para abrir "
+"la base de datos."
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-#, fuzzy
 msgid "Default component factory"
-msgstr "No se pudo abrir la conexiÛn con %s"
+msgstr "Origen de componente por omisi√≥n"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-#, fuzzy
 msgid "GDA Default Datasource Access"
-msgstr "Acceso de Fuente de datos GDA para ODBC"
+msgstr "Acceso de Fuente de datos GDA por omisi√≥n"
 
 #: providers/default/main.c:48
-#, fuzzy
 msgid "Could not initiate Default component factory"
-msgstr "No se ha podido registrar la implementaciÛn del proveedor de Correo"
+msgstr "No se pudo inicializar el origen de componente por omisi√≥n"
 
 #: providers/mysql/gda-mysql-provider.c:175
-#, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"%s:%d: No puede facilitar un UNIX_SOCKET si tambiÈn da un HOST o un PORT. "
-"Elimine el UNIX_SOCKET, o elimine las opciones HOST y el PORT"
+"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
 #: providers/mysql/gda-mysql-provider.c:355
 #: providers/mysql/gda-mysql-provider.c:384
 msgid "Invalid MYSQL handle"
-msgstr ""
+msgstr "Manejador MYSQL inv√°lido"
 
 #: providers/mysql/gda-mysql-provider.c:464
 #: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: providers/mysql/gda-mysql-recordset.c:63
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
-msgstr ""
+msgstr "Manejador MySQL inv√°lido"
 
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
-msgstr ""
+msgstr "N√∫mero de fila fuera de rango"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -203,118 +202,103 @@ msgstr "Fuente de datos GDA para MySQL"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
 msgid "MySQL component factory"
-msgstr ""
+msgstr "Origen de componente MySQL"
 
 #: providers/mysql/main.c:49
-#, fuzzy
 msgid "Could not initiate MySQL component factory"
-msgstr "No se ha podido registrar la implementaciÛn del proveedor MySQL"
+msgstr "No se pudo inicializar el origen de componente MySQL"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
 msgid "GDA Datasource Access for ODBC"
 msgstr "Acceso de Fuente de datos GDA para ODBC"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-#, fuzzy
 msgid "ODBC component factory"
-msgstr "No se pudo abrir la conexiÛn con %s"
+msgstr "Origen de componente ODBC"
 
 #: providers/odbc/main.c:49
-#, fuzzy
 msgid "Could not initiate ODBC component factory"
-msgstr "No se ha podido abrir la \"factory\" de CORBA"
+msgstr "No se pudo inicializar el origen de componente ODBC"
 
 #: providers/oracle/gda-oracle-connection.c:77
-#, fuzzy
 msgid "Could not initialize Oracle environment"
-msgstr "No pudo iniciarse ct_diag()"
+msgstr "No se pudo inicializar el ambiente Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:87
-#, fuzzy
 msgid "Could not initialize Oracle error handler"
-msgstr "No pudo iniciarse ct_diag()"
+msgstr "No se pudo inicializar el manejador de errores de Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:98
-#, fuzzy
 msgid "Could not initialize Oracle server handle"
-msgstr "No pudo iniciarse cs_diag()"
+msgstr "No se pudo inicializar el manejador de servidor Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:109
-#, fuzzy
 msgid "Could not initialize Oracle service context"
-msgstr "No pudo iniciarse cs_diag()"
+msgstr "No se pudo inicializar el servicio de contexto Oracle"
 
 #: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
 msgid "GDA Datasource Access for Oracle"
 msgstr "Fuente de datos GDA para Oracle"
 
 #: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-#, fuzzy
 msgid "Oracle component factory"
-msgstr "No se pudo abrir la conexiÛn con %s"
+msgstr "Origen de componente Oracle"
 
 #: providers/oracle/main.c:46
-#, fuzzy
 msgid "Could not initiate Oracle component factory"
-msgstr "No se ha podido abrir la \"factory\" de CORBA"
+msgstr "No se pudo inicializar el origen de componente Oracle"
 
 #: providers/oracle/main.c:70
-#, fuzzy
 msgid "Could not initialize OCI library"
-msgstr "No pudo iniciarse ct_diag()"
+msgstr "No se pudo inicializar la librer√≠a OCI"
 
 #: providers/postgres/gda-postgres-provider.c:318
 #: providers/postgres/gda-postgres-provider.c:456
 #: providers/postgres/gda-postgres-recordset.c:59
 #: providers/postgres/gda-postgres-recordset.c:110
 msgid "Invalid PostgreSQL handle"
-msgstr ""
+msgstr "Manejador PostgresSQL inv√°lido"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "Acceso de la Fuente de Datos GDA para Postgres"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
-#, fuzzy
 msgid "Postgres component factory"
-msgstr "No se pudo abrir la conexiÛn con %s"
+msgstr "Origen de componente Postgres"
 
 #: providers/postgres/main.c:49
-#, fuzzy
 msgid "Could not initiate PostgreSQL component factory"
-msgstr "No se ha podido registrar la implementaciÛn del proveedor MySQL"
+msgstr "No se pudo inicializar el origen de componente PostgresSQL"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
-msgstr ""
+msgstr "SIN DESCRIPCI√ìN"
 
 #: providers/postgres/utils.c:44
 msgid "Not available"
-msgstr "No est· disponible"
+msgstr "No est√° disponible"
 
-#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-provider.c:212
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
-msgstr ""
+msgstr "Manejador SQLITE inv√°lido"
 
 #: providers/sqlite/gda-sqlite-recordset.c:114
 msgid "Invalid Sqlite handle"
-msgstr ""
+msgstr "Manejador Sqlite inv√°lido"
 
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-#, fuzzy
 msgid "GDA SQLite Datasource Access"
-msgstr "Acceso de Fuente de datos GDA para ODBC"
+msgstr "Acceso de Fuente de datos GDA SQLite"
 
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-#, fuzzy
 msgid "SQLite component factory"
-msgstr "No se pudo abrir la conexiÛn con %s"
+msgstr "Origen de componente SQLite"
 
 #: providers/sqlite/main.c:54
-#, fuzzy
 msgid "Could not initiate Sqlite component factory"
-msgstr "No se ha podido abrir la \"factory\" de CORBA"
+msgstr "No se pudo inicializar el origen de componente Sqlite"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -322,775 +306,185 @@ msgstr "Acceso de la Fuente de Datos GDA para Sybase"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
 msgid "Sybase component factory"
-msgstr ""
+msgstr "Origen de componente Sybase"
 
 #: providers/sybase/main.c:50
-#, fuzzy
 msgid "Could not initiate Sybase component factory"
-msgstr "No se ha podido abrir la \"factory\" de CORBA"
+msgstr "No se pudo inicializar el origen de componente Sybase"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
-#, fuzzy, c-format
+#, c-format
 msgid "CORBA exception: %s"
-msgstr "ExcepciÛn CORBA de usuario: %s"
+msgstr "Excepci√≥n CORBA: %s"
 
 #: report/gda-report-engine.c:105
-#, fuzzy
 msgid "Could not create global GDA client"
-msgstr "No se pudo abrir la conexiÛn con %s"
+msgstr "No se pudo crear el cliente global-GDA"
 
 #: report/GNOME_Database_Report.server.in.h:1
-#, fuzzy
 msgid "GDA Report engine"
-msgstr "Motor de Informe Distribuido GDA"
+msgstr "Motor de Reporte GDA"
 
 #: report/GNOME_Database_Report.server.in.h:2
 msgid "GDA Report engine factory"
-msgstr ""
+msgstr "Origen de motor de GDA-Report"
 
 #: report/job.c:43
-#, fuzzy
 msgid "Could not parse XML report"
-msgstr "No pudo ubicar local para '%s'"
+msgstr "No se pudo analizar el reporte XML"
 
 #: report/libgda-report/gda-report-client.c:141
-#, fuzzy
 msgid "Could not activate report engine"
-msgstr "No pudo activarse el motor de informe"
+msgstr "No se pudo activar el motor de reporte"
 
 #: report/libgda-report/gda-report-client.c:182
-#, fuzzy
 msgid "Could not create BonoboStreamMem object"
-msgstr "No se pudo abrir la conexiÛn con %s"
+msgstr "No se pudo crear el objeto BonoboStreamMem"
 
 #: report/libgda-report/gda-report-document.c:137
-#, fuzzy
 msgid "Could not parse XML document"
-msgstr "No pudo ubicar local para '%s'"
+msgstr "No se pudo analizar el documento XML"
 
 #: report/libgda-report/gda-report-document.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get file from %s"
-msgstr "No pudo ubicar local para '%s'"
+msgstr "No se pudo obtener el archivo desde %s"
 
 #: report/main.c:47
-#, fuzzy
 msgid "Could not initiate Report component factory"
-msgstr "No se ha podido registrar la implementaciÛn del proveedor de Correo"
+msgstr "No se pudo inicializar el origen de componente Report"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
-msgstr ""
+msgstr "\t\tNINGUNO\n"
 
 #: testing/client.c:76
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr ""
+msgstr "** ERROR: no se pudo abrir la conexi√≥n hacia %s\n"
 
 #. show provider features
 #: testing/client.c:81
 msgid "\tProvider capabilities...\n"
-msgstr ""
+msgstr "\tCapacidades del proveedor...\n"
 
 #: testing/client.c:82
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr ""
+msgstr "\t\tTransacciones:%s\n"
 
 #: testing/client.c:84
 msgid "Supported"
-msgstr ""
+msgstr "Soportado"
 
 #: testing/client.c:84
 msgid "Not supported"
-msgstr ""
+msgstr "No soportado"
 
 #. show connection schemas
 #: testing/client.c:87
 msgid "Stored procedures"
-msgstr ""
+msgstr "Procedimientos almacenados"
 
 #: testing/client.c:88
-#, fuzzy
 msgid "Connection Tables"
-msgstr "La conexiÛn parece que ha terminado"
+msgstr "Tablas de Conexiones"
 
 #: testing/client.c:89
 msgid "Available types"
-msgstr ""
+msgstr "Tipos disponibles"
 
 #: testing/client.c:90
 msgid "Views"
-msgstr ""
+msgstr "Vistas"
 
 #: testing/client.c:91
 msgid "Indexes"
-msgstr ""
+msgstr "√çndices"
 
 #: testing/client.c:92
 msgid "Aggregates"
-msgstr ""
+msgstr "Agregados"
 
 #: testing/client.c:93
 msgid "Triggers"
-msgstr ""
+msgstr "Disparadores"
 
 #. test transactions
 #: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
-msgstr ""
+msgstr "\tIniciando transacci√≥n..."
 
 #: testing/client.c:98 testing/client.c:102 testing/client.c:106
 #: testing/client.c:110
-#, fuzzy
 msgid "Error"
-msgstr "error"
+msgstr "Error"
 
 #: testing/client.c:100
 msgid "\tFinishing transaction..."
-msgstr ""
+msgstr "\tTerminando transacci√≥n..."
 
 #: testing/client.c:108
 msgid "\tRolling back transaction..."
-msgstr ""
+msgstr "\tDeshaciendo transacci√≥n..."
 
 #: testing/client.c:129
 msgid "Testing GDA client API"
-msgstr ""
+msgstr "Probando la API del cliente GDI"
 
 #: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr ""
+msgstr "** ERROR: gda_config_get_data_source_list devolvi√≥ un elemento NULL\n"
 
 #: testing/client.c:142
-#, fuzzy, c-format
+#, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr "No se encontrÛ la fuentes de datos %s"
+msgstr " Origen de datos = %s, Usuario = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr ""
+msgstr "** ERROR: gda_config_get_provider_list devolvi√≥ un elemento NULL\n"
 
 #: testing/config.c:88
 #, c-format
 msgid " Provider = %s\n"
-msgstr ""
+msgstr " Proveedor =%s\n"
 
 #: testing/config.c:89
 #, c-format
 msgid "\tlocation = %s\n"
-msgstr ""
+msgstr "\tdirecci√≥n = %s\n"
 
 #: testing/config.c:90
 #, c-format
 msgid "\ttype = %s\n"
-msgstr ""
+msgstr "\ttipo = %s\n"
 
 #: testing/config.c:93
 #, c-format
 msgid "\tdescription = %s\n"
-msgstr ""
+msgstr "\tdescripci√≥n = %s\n"
 
 #: testing/config.c:95
 msgid "\trepo_ids ="
-msgstr ""
+msgstr "\trepo_ids ="
 
 #: testing/config.c:102
-#, fuzzy, c-format
+#, c-format
 msgid "\tusername = %s\n"
-msgstr "nombre de usuario"
+msgstr "\tusuario = %s\n"
 
 #: testing/config.c:103
 #, c-format
 msgid "\thostname = %s\n"
-msgstr ""
+msgstr "\tequipo = %s\n"
 
 #: testing/config.c:104
 #, c-format
 msgid "\tdomain = %s\n"
-msgstr ""
+msgstr "\tdominio = %s\n"
 
 #: testing/config.c:106
 msgid "\tgda_params ="
-msgstr ""
-
-#~ msgid "%p is not a valid table"
-#~ msgstr "%p no es una tabla v·lida"
-
-#, fuzzy
-#~ msgid "Client Message: "
-#~ msgstr "Mensaje del cliente:"
-
-#, fuzzy
-#~ msgid "Informational Client  Message: "
-#~ msgstr "Mensaje del cliente:"
-
-#, fuzzy
-#~ msgid "Server Message: "
-#~ msgstr "Mensaje del servidor:"
-
-#, fuzzy
-#~ msgid "Informational Server  Message: "
-#~ msgstr "Mensaje del servidor:"
-
-#~ msgid "CORBA System exception: %s"
-#~ msgstr "ExcepciÛn CORBA del sistema: %s"
-
-#~ msgid "True"
-#~ msgstr "Verdad"
-
-#~ msgid "False"
-#~ msgstr "Falso"
-
-#, fuzzy
-#~ msgid "[CORBA User Exception]"
-#~ msgstr "ExcepciÛn CORBA de usuario: %s"
-
-#~ msgid "<NULL>"
-#~ msgstr "<VACÕO>"
-
-#~ msgid "<Unknown GDA Type(NULL)>"
-#~ msgstr "<Tipo GDA desconocido (VACÕO)>"
-
-#~ msgid "Saving log...x"
-#~ msgstr "Guardando el log...x"
-
-#~ msgid "ERROR: "
-#~ msgstr "ERROR: "
-
-#~ msgid "MESSAGE: "
-#~ msgstr "MENSAJE: "
-
-#, fuzzy
-#~ msgid "Item with id %s not found"
-#~ msgstr "No se encontrÛ la fuentes de datos %s"
-
-#~ msgid "Could not get pointer to server implementation"
-#~ msgstr "No se puede obtener un puntero a la implementaciÛn del servidor"
-
-#~ msgid "Received signal %d, shutting down"
-#~ msgstr "Recibida la seÒal %d, cerrando"
-
-#~ msgid "Received signal %d. Ignoring"
-#~ msgstr "Recibida la seÒal %d. Ignor·ndola"
-
-#~ msgid "Attempt to initialize an already initialized provider"
-#~ msgstr ""
-#~ "Se ha intentado inicializar un proveedor que ya se habÌa inicializado"
-
-#~ msgid "%s not implemented"
-#~ msgstr "%s no est· implementado"
-
-#~ msgid "Starting provider %s with no implementation functions"
-#~ msgstr "Iniciando el proveedor %s sin funciones de implementaciÛn"
-
-#~ msgid "CORBA system exception %s"
-#~ msgstr "ExcepciÛn CORBA del sistema %s"
-
-#, fuzzy
-#~ msgid "Unknown schema type"
-#~ msgstr "Tipo Oracle %ld desconocido"
-
-#~ msgid "GDA Datasource Access for LDAP"
-#~ msgstr "Fuente de datos GDA para LDAP"
-
-#~ msgid "error '%s' at %s"
-#~ msgstr "error '%s' en %s"
-
-#~ msgid "Could not register LDAP provider implementation"
-#~ msgstr "No se ha podido registrar la implementaciÛn del proveedor LDAP"
-
-#~ msgid "GDA Datasource Access for Interbase"
-#~ msgstr "Fuente de datos GDA para Interbase"
-
-#~ msgid "Error code %ld"
-#~ msgstr "CÛdigo de error %ld"
-
-#~ msgid "Could not register INTERBASE provider implementation"
-#~ msgstr "No se ha podido registrar la implementaciÛn del proveedor INTERBASE"
-
-#~ msgid "GDA Datasource Access for Mail"
-#~ msgstr "Fuente de datos GDA para Correo"
-
-#~ msgid "Unhandled SCHEMA_QTYPE %d"
-#~ msgstr "SCHEMA_QTYPE %d no manejado"
-
-#~ msgid "Could not register Mail provider implementation"
-#~ msgstr "No se ha podido registrar la implementaciÛn del proveedor de Correo"
-
-#~ msgid "GDA Datasource Access for MDB (MS Access) files"
-#~ msgstr "Fuente de datos GDA para archivos MDB (MS Access)"
-
-#~ msgid "executing command '%s'"
-#~ msgstr "ejecutando el comando '%s'"
-
-#~ msgid "info '%s'"
-#~ msgstr "info '%s'"
-
-#~ msgid ""
-#~ "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST "
-#~ "or a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and "
-#~ "PORT options"
-#~ msgstr ""
-#~ "%s:%d: No puede facilitar un UNIX_SOCKET si tambiÈn da un HOST o un PORT. "
-#~ "Elimine el UNIX_SOCKET, o elimine las opciones HOST y el PORT"
-
-#~ msgid "%s:%d: You must  provide the filename with the MS Access database"
-#~ msgstr ""
-#~ "%s:%d: Debe de facilitar el nombre del archivo de la base de datos de MS "
-#~ "Access"
-
-#~ msgid "Opening connection with filename=%s, user=%s, password=%s"
-#~ msgstr "Abriendo conexiÛn con  archivo=%s, usuario=%s, contraseÒa=%s"
-
-#~ msgid "mysql_recset is NULL"
-#~ msgstr "mysql_recset est· VACÕO"
-
-#~ msgid "No table name given for SCHEMA_COLS"
-#~ msgstr "No ha se ha dado el nombre de una tabla para SCHEMA_COLS"
-
-#~ msgid ""
-#~ "Opening connection with user=%s, password=%s, host=%s, port=%s, "
-#~ "unix_socket=%s"
-#~ msgstr ""
-#~ "Abriendo conexiÛn con el usuario=%s, contraseÒa=%s, sistema=%s, puerto=%"
-#~ "s, unix_socket=%s"
-
-#~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
-#~ msgstr "gda_odbc_connection_open_schema: SCHEMA_QTYPE %d no manejado\n"
-
-#~ msgid "no text"
-#~ msgstr "ning˙n texto"
-
-#~ msgid "Could not register ODBC provider implementation"
-#~ msgstr "No pudo registrase la implementaciÛn del proveedor ODBC"
-
-#~ msgid "Could not allocate statement handle"
-#~ msgstr "No pudo localizarse el manejador de orden"
-
-#~ msgid "command object being created without associated connection"
-#~ msgstr "objeto comando cre·ndose sin conexiÛn asociada"
-
-#~ msgid "Executing command '%s'"
-#~ msgstr "Ejecutando comando '%s'"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
-#~ msgstr "error en OCIHandleAlloc() HTYPE_SVCCTX"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_SERVER"
-#~ msgstr "error en OCIHandleAlloc() HTYPE_SERVER"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_ERROR"
-#~ msgstr "error en OCIHandleAlloc() HTYPE_ERROR"
-
-#~ msgid "Unknown ORACLE type %ld"
-#~ msgstr "Tipo Oracle %ld desconocido"
-
-#~ msgid "Unknown ORACLE data type in fill_field_values"
-#~ msgstr "Tipo de datos Oracle desconocido en fill_field_values"
-
-#~ msgid "recordset object being created without associated connection"
-#~ msgstr "Objeto recordset cre·ndose sin conexiÛn asociada"
-
-#~ msgid "Could not register ORACLE provider implementation"
-#~ msgstr "No pudo registrarse la implementaciÛn del proveedor de Oracle"
-
-#~ msgid "postgres_recset is NULL"
-#~ msgstr "postgres_recset est· VACÕO"
-
-#~ msgid "Could not register PostgreSQL provider implementation"
-#~ msgstr "No pudo registrarse la implementaciÛn del proveedor PostgreSQL"
-
-#~ msgid "Connection seems to be dead"
-#~ msgstr "La conexiÛn parece que ha terminado"
-
-#~ msgid "Filling command structure failed\n"
-#~ msgstr "Error al rellenar la estructura de comando\n"
-
-#~ msgid "sending cmd failed"
-#~ msgstr "error al enviar cmd"
-
-#~ msgid "Allocating recordset failed"
-#~ msgstr "Error al adjudicar recordset"
-
-#~ msgid "Getting recordset userdata failed"
-#~ msgstr "Error al obtener datos de usuario de recordset"
-
-#~ msgid "Command execution finished, all results processed"
-#~ msgstr "EjecuciÛn de comando finalizada. todos los resultados procesados"
-
-#~ msgid "Command failed"
-#~ msgstr "Comando fallido"
-
-#~ msgid "Execution of resultless command succeeded"
-#~ msgstr "EjecuciÛn correcta de comando resultless"
-
-#~ msgid "ct_results() returned %x"
-#~ msgstr "ct_results() devolviÛ %x"
-
-#~ msgid "No further results, command completly succeeded."
-#~ msgstr "No m·s resultados, comando correcto"
-
-#~ msgid "An error occured during command execution."
-#~ msgstr "Un error ha ocurrido durante la ejecuciÛn del comando."
-
-#~ msgid "Cmd execution returned unknown result, may be an error"
-#~ msgstr ""
-#~ "La ejecuciÛn de Cmd devolviÛ un resultado desconocido, puede ser un error"
-
-#~ msgid "No data returned, freeing recordset structure"
-#~ msgstr "No hay datos devueltos, liberando estructura recordset"
-
-#~ msgid "Freeing command structure failed"
-#~ msgstr "Error al liberar la estructura de comando"
-
-#, fuzzy
-#~ msgid "Not enough memory for sybase_Connection"
-#~ msgstr "No hay suficiente memoria para primebase_Error structure."
-
-#~ msgid "schema_cols: table_name '%s'"
-#~ msgstr "schema_cols: table_name '%s'"
-
-#~ msgid "Could not allocate command structure"
-#~ msgstr "No pudo asignarse estructura de comando"
-
-#~ msgid "Could not allocate enough memory for query"
-#~ msgstr "No pudo asignarse suficiente memoria para la b˙squeda"
-
-#~ msgid "Could not get recordset in schema_cols"
-#~ msgstr "No pudo obtenerse recordset en schema_cols"
-
-#~ msgid "schema_procs: invalid constraint type %d"
-#~ msgstr "schema_procs: restricciÛn no v·lida tipo %d"
-
-#~ msgid "Could not allocate cmd structure"
-#~ msgstr "No pudo asignarse estructura cmd"
-
-#~ msgid "schema_tables: invalid constraint type %d"
-#~ msgstr "schema_tables: restricciÛn no v·lida tipo %d"
-
-#~ msgid "Invalid or unsupported constraint type: %d"
-#~ msgstr "Tipo de restricciÛn no v·lida o no soportada: %d"
-
-#~ msgid "Could not allocate GdaServerCommand"
-#~ msgstr "No pudo asignarse GdaServerCommand"
-
-#~ msgid "connection status: %x"
-#~ msgstr "Estado de conexiÛn: %x"
-
-#~ msgid "return code: %x"
-#~ msgstr "cÛdigo devuelto: %x"
-
-#~ msgid "attempting reconnection"
-#~ msgstr "intentando reconexiÛn"
-
-#~ msgid "Reconnected to '%s'"
-#~ msgstr "Reconectado a '%s'"
-
-#~ msgid "Connected to %s"
-#~ msgstr "Conectado a %s"
-
-#~ msgid "%s: Could not allocate cmd structure"
-#~ msgstr "%s: No pudo asignarse estructura cmd"
-
-#~ msgid "%s: Could not allocate memory for cmd string"
-#~ msgstr "%s: No pudo asignarse memoria para la serie cmd"
-
-#~ msgid "%s: ct_command failed"
-#~ msgstr "%s: ct_command fallido"
-
-#~ msgid "%s: sending command failed"
-#~ msgstr "%s: error al enviar comando"
-
-#~ msgid "%s: selecting database failed"
-#~ msgstr "%s: error al seleccionar base de datos"
-
-#~ msgid "%s: use command failed"
-#~ msgstr "%s: error de comando uso"
-
-#~ msgid "Could not allocate locale structure"
-#~ msgstr "No pudo asignarse estructura local"
-
-#~ msgid "Could not set locale to '%s'"
-#~ msgstr "No pudo ubicar local para '%s'"
-
-#~ msgid "Could not configure locale to be '%s'"
-#~ msgstr "No pudo configurar local para ser '%s'"
-
-#~ msgid "Could not drop locale structure"
-#~ msgstr "No pudo darse de baja la estructura local"
-
-#~ msgid "Fatal error: %s\n"
-#~ msgstr "Error fatal: %s\n"
-
-#~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#~ msgid "No error flag ist set, though %s is called. This may be a bug."
-#~ msgstr ""
-#~ "Ninguna seÒal de error est· fijada, sin embargo %s est· llamado. Esto "
-#~ "puede ser una fallo"
-
-#~ msgid "cs_diag() initialized"
-#~ msgstr "cs_diag() iniciado"
-
-#~ msgid "ct_diag() initialized"
-#~ msgstr "ct_diag() iniciado"
-
-#~ msgid "Could not initialize ct_diag()"
-#~ msgstr "No pudo iniciarse ct_diag()"
-
-#~ msgid "%s could not find server implementation"
-#~ msgstr "%s no pudo encontrar la implementaciÛn del servidor"
-
-#~ msgid "%s could not get cnc userdata"
-#~ msgstr "%s no pudo obtener datos de usuario cnc"
-
-#~ msgid "Could not get # of messages"
-#~ msgstr "No pudo obtener # de mensajes"
-
-#~ msgid "%d ctlib messages to fetch"
-#~ msgstr "%d mensajes ctlib para retomar"
-
-#~ msgid "%d ctlib message to fetch"
-#~ msgstr "%d mensaje ctlib para retomar"
-
-#~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "el error no tiene indicador en gda_sybase_messages_handle"
-
-#~ msgid "Could not get # of server messages"
-#~ msgstr "No pudo obtenerse # mensajes del servidor"
-
-#~ msgid "Fetching %d client messages"
-#~ msgstr "Retomando %d mensajes del cliente"
-
-#~ msgid "Fetching %d client message"
-#~ msgstr "Retomando %d mensaje del cliente"
-
-#~ msgid "Could not get # of client messages"
-#~ msgstr "No pudo obtenerse # mensajes del cliente"
-
-#~ msgid "Could not clear client messages"
-#~ msgstr "No pudo vaciarse los mensajes del cliente"
-
-#~ msgid "Fetching %d server messages"
-#~ msgstr "Retomando %d mensajes del servidor"
-
-#~ msgid "Fetching %d server message"
-#~ msgstr "Retomando %d mensajes del servidor"
-
-#~ msgid "Could not get server msg # %d"
-#~ msgstr "No pudo obtenerse mensaje # %d del servidor"
-
-#~ msgid "Could not clear server messages"
-#~ msgstr "No pudo vaciarse los mensajes del servidor"
-
-#~ msgid "Could not get # of cslib messages"
-#~ msgstr "No pudo obtenerse # mensajes cslib"
-
-#~ msgid "Fetching %d cslib messages"
-#~ msgstr "Retomando %d mensajes cslib"
-
-#~ msgid "Fetching %d cslib message"
-#~ msgstr "Retomando %d mensaje cslib"
-
-#~ msgid "Could not get cslib msg # %d"
-#~ msgstr "No pudo obtenerse mensaje # %d cslib"
-
-#~ msgid "Could not clear cslib messages"
-#~ msgstr "No pudo vaciarse los mensajes cslib"
-
-#~ msgid "CS-Library error:"
-#~ msgstr "Error CS-Library:"
-
-#~ msgid "fetch error at row %d"
-#~ msgstr "Retomar error en la fila %d"
-
-#~ msgid "CS_END_DATA on row %d; canceling"
-#~ msgstr "CS_END_DATA en la fila %d; cancelando"
-
-#~ msgid "%s: Error (%d)"
-#~ msgstr "%s: Error (%d)"
-
-#~ msgid "Failed fetching # of columns"
-#~ msgstr "Error retomando # de columnas"
-
-#~ msgid "Counted %d columns"
-#~ msgstr "contadas %d columnas"
-
-#~ msgid "%s could not allocate datafmt info"
-#~ msgstr "%s no pudo asignar informaciÛn datafmt"
-
-#~ msgid "%s could not allocate data fields"
-#~ msgstr "%s no pudo asignar campos de datos"
-
-#~ msgid "ct_describe on col # %d"
-#~ msgstr "ct_describe en la columna # %d"
-
-#~ msgid "ct_describe on col # %d failed"
-#~ msgstr "Error ct_describe en la columna # %d"
-
-#~ msgid "ct_describe(%d): '%s', %d (%s)"
-#~ msgstr "ct_describe(%d): '%s', %d (%s)"
-
-#~ msgid "could not allocate data holder"
-#~ msgstr "no pudo asignarse sustento de datos"
-
-#~ msgid "could not ct_bind data holder to column"
-#~ msgstr "no pudo asignarse sustento de datos ct_bind para la columna"
-
-#~ msgid "illegal type detected, aborting"
-#~ msgstr "tipo ilegal detectado, abortando"
-
-#~ msgid "could not allocate field"
-#~ msgstr "No pudo asignarse campo"
-
-#~ msgid "Could not register gda-sybase provider implementation"
-#~ msgstr "No pudo registrarse implementaciÛn de proveedor gda-sybase"
-
-#~ msgid "GDA Datasource Access for primebase"
-#~ msgstr "Acceso de Fuente de datos GDA para primebase"
-
-#~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-#~ msgstr "No se pudo conectar a '%s@%s:%s' con connparm: '%s'"
-
-#~ msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
-#~ msgstr "%2ld: Conectado a '%s@%s:%s' con connparm: '%s'"
-
-#~ msgid "Could not get PBIConnectionInfo(), disconnecting"
-#~ msgstr "No se pudo obtener PBIConnectionInfo(), desconectando"
-
-#~ msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
-#~ msgstr "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
-
-#~ msgid "Not enough memory for primebase_Error structure."
-#~ msgstr "No hay suficiente memoria para primebase_Error structure."
-
-#~ msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
-#~ msgstr "%2ld: ERROR: %ld (%ld) : %s.\n"
-
-#~ msgid "Could not register PRIMEBASE provider implementation"
-#~ msgstr "No se pudo registrarse implementaciÛn de proveedor PRIMEBASE"
-
-#~ msgid "GDA Datasource Access for Sybase/MS SQL"
-#~ msgstr "Acceso a la Fuente de Datos GDA para Sybase/MS SQL"
-
-#, fuzzy
-#~ msgid "Not enough memory for tds_Connection"
-#~ msgstr "No hay suficiente memoria para primebase_Error structure."
-
-#~ msgid "Reconnected to %s"
-#~ msgstr "Reconectado a %s"
-
-#~ msgid "gda_tds_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_tds_error_make(%p,%p,%p,%p)"
-
-#~ msgid "Could not register gda-tds provider implementation"
-#~ msgstr "No se pudo registrar la implementaciÛn del proveedor gda-tds"
-
-#~ msgid "%s: misconfigured DSN entry"
-#~ msgstr "%s: Entrada DSN desconfigurada"
-
-#~ msgid "%s: data source '%s' not found\n"
-#~ msgstr "%s: fuente de datos '%s' no encontrada\n"
-
-#, fuzzy
-#~ msgid "Could not register <PROVIDER-NAME> provider implementation"
-#~ msgstr "No se pudo registrarse implementaciÛn de proveedor PRIMEBASE"
-
-#~ msgid "%s: The server didn't respond."
-#~ msgstr "%s: El servidor no contesta."
-
-#~ msgid "thread is already running"
-#~ msgstr "el hilo ya se est· ejecutando"
-
-#~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: abriendo una conexiÛn con DSN: %s"
-
-#~ msgid "%s: an error ocurred while fetching data"
-#~ msgstr "%s: ha ocurrido un error mientras se obtenÌan datos"
-
-#~ msgid ""
-#~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
-#~ msgstr ""
-#~ "OAF no conoce nuestro IID; indica que la instalaciÛn es incorrecta. "
-#~ "Saliendo..."
-
-#~ msgid ""
-#~ "Another instance of this provider is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "Este proveedor ya ha sido registrado previamente en OAF. Saliendo..."
-
-#~ msgid "Unknown error registering this provider with OAF. Exiting"
-#~ msgstr "Error desconocido al registrar este proveedor en OAF. Saliendo"
-
-#~ msgid "Registered with ID = %s"
-#~ msgstr "Registrado con ID = %s"
-
-#~ msgid "CORBA exception unloading report engine: %s"
-#~ msgstr "Motor de informe de descarga de excepciÛn CORBA: %s"
-
-#~ msgid "Received signal %d, shutting down."
-#~ msgstr "Recibida seÒal %d, cerrando"
-
-#~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "Recibida seÒal %d, cerrando limpiamente"
-
-#~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-#~ msgstr ""
-#~ "Error a iniciar OAF: por favor, envÌa un mensaje de fallo a los "
-#~ "mantenedores de OAF"
-
-#~ msgid ""
-#~ "Another instance of the report engine is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "Otra instancia de motor de informe ha sido ya registrada con OAF. "
-#~ "Saliendo..."
-
-#~ msgid "Unknown error registering report engine with OAF. Exiting"
-#~ msgstr "Error desconocido registrando motor de informe con OAF. Saliendo"
-
-#~ msgid "Registered report engine with ID = %s"
-#~ msgstr "Motor de informe registrado con ID = %s"
-
-#~ msgid "%s: length = %d"
-#~ msgstr "%s: longitud = %d"
-
-#~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: enviando la descripciÛn del campo '%s'"
-
-#~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: nombre de tabla = '%s'"
-
-#~ msgid "schema_tables: table_schema = '%s'"
-#~ msgstr "schema_tables: table_schema = '%s'"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = °'%s' NO USADO!\n"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = °'%s' NO USADO!"
-
-#~ msgid "database name"
-#~ msgstr "nombre de base de datos"
-
-#~ msgid "DATABASE"
-#~ msgstr "DATABASE"
-
-#~ msgid "USER-NAME"
-#~ msgstr "NOMBRE-DE-USUARIO"
-
-#~ msgid "password"
-#~ msgstr "contraseÒa"
-
-#~ msgid "PASSWORD"
-#~ msgstr "CONTRASE—A"
-
-#~ msgid "file name"
-#~ msgstr "nombre de archivo"
-
-#~ msgid "FILE-NAME"
-#~ msgstr "NOMBRE-DE-ARCHIVO"
+msgstr "\tgda_params ="
