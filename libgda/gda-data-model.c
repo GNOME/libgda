@@ -38,8 +38,8 @@ struct _GdaDataModelPrivate {
 	gchar *cmd_text;
 	GdaCommandType cmd_type;
 
-	/* edition mode */
-	gboolean editing;
+	/* update mode */
+	gboolean updating;
 };
 
 static void gda_data_model_class_init (GdaDataModelClass *klass);
@@ -51,9 +51,12 @@ enum {
 	ROW_INSERTED,
 	ROW_UPDATED,
 	ROW_REMOVED,
-	BEGIN_EDIT,
-	CANCEL_EDIT,
-	END_EDIT,
+	COLUMN_INSERTED,
+	COLUMN_UPDATED,
+	COLUMN_REMOVED,
+	BEGIN_UPDATE,
+	CANCEL_UPDATE,
+	END_UPDATE,
 	LAST_SIGNAL
 };
 
@@ -103,45 +106,72 @@ gda_data_model_class_init (GdaDataModelClass *klass)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__INT,
                               G_TYPE_NONE, 1, G_TYPE_INT);
-	gda_data_model_signals[BEGIN_EDIT] =
-		g_signal_new ("begin_edit",
+	gda_data_model_signals[COLUMN_INSERTED] =
+		g_signal_new ("column_inserted",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, begin_edit),
+                              G_STRUCT_OFFSET (GdaDataModelClass, column_inserted),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__INT,
+                              G_TYPE_NONE, 1, G_TYPE_INT);
+	gda_data_model_signals[COLUMN_UPDATED] =
+		g_signal_new ("column_updated",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, column_updated),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__INT,
+                              G_TYPE_NONE, 1, G_TYPE_INT);
+	gda_data_model_signals[COLUMN_REMOVED] =
+		g_signal_new ("column_removed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, column_removed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__INT,
+                              G_TYPE_NONE, 1, G_TYPE_INT);
+	gda_data_model_signals[BEGIN_UPDATE] =
+		g_signal_new ("begin_update",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, begin_update),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
-	gda_data_model_signals[CANCEL_EDIT] =
-		g_signal_new ("cancel_edit",
+	gda_data_model_signals[CANCEL_UPDATE] =
+		g_signal_new ("cancel_update",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, cancel_edit),
+                              G_STRUCT_OFFSET (GdaDataModelClass, cancel_update),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
-	gda_data_model_signals[END_EDIT] =
-		g_signal_new ("end_edit",
+	gda_data_model_signals[END_UPDATE] =
+		g_signal_new ("end_update",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, end_edit),
+                              G_STRUCT_OFFSET (GdaDataModelClass, end_update),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 
 	object_class->finalize = gda_data_model_finalize;
 	klass->changed = NULL;
-	klass->begin_edit = NULL;
-	klass->cancel_edit = NULL;
-	klass->end_edit = NULL;
+	klass->begin_update = NULL;
+	klass->cancel_update = NULL;
+	klass->end_update = NULL;
 	klass->get_n_rows = NULL;
 	klass->get_n_columns = NULL;
 	klass->describe_column = NULL;
 	klass->get_row = NULL;
 	klass->get_value_at = NULL;
-	klass->is_editable = NULL;
+	klass->is_updatable = NULL;
 	klass->append_row = NULL;
 	klass->remove_row = NULL;
 	klass->update_row = NULL;
+	klass->append_column = NULL;
+	klass->remove_column = NULL;
+	klass->update_column = NULL;
 }
 
 static void
@@ -153,7 +183,7 @@ gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
 	model->priv->notify_changes = TRUE;
 	model->priv->column_titles = g_hash_table_new (g_direct_hash,
 						       g_direct_equal);
-	model->priv->editing = FALSE;
+	model->priv->updating = FALSE;
 	model->priv->cmd_text = NULL;
 	model->priv->cmd_type = GDA_COMMAND_TYPE_INVALID;
 }
@@ -290,6 +320,69 @@ gda_data_model_row_removed (GdaDataModel *model, gint row)
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_REMOVED],
 			       0, row);
+
+		gda_data_model_changed (model);
+	}
+}
+
+/**
+ * gda_data_model_column_inserted
+ * @model: a #GdaDataModel object.
+ * @col: column number.
+ *
+ * Emits the 'column_inserted' and 'changed' signals on @model.
+ */
+void
+gda_data_model_column_inserted (GdaDataModel *model, gint col)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	if (model->priv->notify_changes) {
+		g_signal_emit (G_OBJECT (model),
+			       gda_data_model_signals[COLUMN_INSERTED],
+			       0, col);
+
+		gda_data_model_changed (model);
+	}
+}
+
+/**
+ * gda_data_model_column_updated
+ * @model: a #GdaDataModel object.
+ * @col: column number.
+ *
+ * Emits the 'column_updated' and 'changed' signals on @model.
+ */
+void
+gda_data_model_column_updated (GdaDataModel *model, gint col)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	if (model->priv->notify_changes) {
+		g_signal_emit (G_OBJECT (model),
+			       gda_data_model_signals[COLUMN_UPDATED],
+			       0, col);
+
+		gda_data_model_changed (model);
+	}
+}
+
+/**
+ * gda_data_model_column_removed
+ * @model: a #GdaDataModel object.
+ * @col: column number.
+ *
+ * Emits the 'column_removed' and 'changed' signal on @model.
+ */
+void
+gda_data_model_column_removed (GdaDataModel *model, gint col)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	if (model->priv->notify_changes) {
+		g_signal_emit (G_OBJECT (model),
+			       gda_data_model_signals[COLUMN_REMOVED],
+			       0, col);
 
 		gda_data_model_changed (model);
 	}
@@ -542,20 +635,20 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 /**
- * gda_data_model_is_editable
+ * gda_data_model_is_updatable
  * @model: a #GdaDataModel object.
  *
- * Checks whether the given data model can be edited or not.
+ * Checks whether the given data model can be updated or not.
  *
- * Returns: %TRUE if it can be edited, %FALSE if not.
+ * Returns: %TRUE if it can be updated, %FALSE if not.
  */
 gboolean
-gda_data_model_is_editable (GdaDataModel *model)
+gda_data_model_is_updatable (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (CLASS (model)->is_editable != NULL, FALSE);
+	g_return_val_if_fail (CLASS (model)->is_updatable != NULL, FALSE);
 
-	return CLASS (model)->is_editable (model);
+	return CLASS (model)->is_updatable (model);
 }
 
 /**
@@ -636,6 +729,88 @@ gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
 }
 
 /**
+ * gda_data_model_append_column
+ * @model: a #GdaDataModel object.
+ * @col: a #GdaFieldAttributes describing the column to add.
+ *
+ * Appends a column to the given data model.  If successful, the position of
+ * the new column in the data model is set on @col, and you can grab it using
+ * @gda_field_attributes_get_position.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_data_model_append_column (GdaDataModel *model, GdaFieldAttributes *col)
+{
+	gboolean result;
+	
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (CLASS (model)->append_column != NULL, FALSE);
+	g_return_val_if_fail (col != NULL, FALSE);
+
+	result = CLASS (model)->append_column (model, col);
+	if (result) {
+		gda_data_model_column_inserted (model,
+						gda_field_attributes_get_position (col));
+	}
+
+	return result;
+}
+
+/**
+ * gda_data_model_remove_column
+ * @model: a #GdaDataModel object.
+ * @col: the column to be removed.
+ *
+ * Removes a column from the data model. This means that all values attached to this
+ * column in the data model will be destroyed in the underlying database.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_data_model_remove_column (GdaDataModel *model, const GdaFieldAttributes *col)
+{
+	gboolean result;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (CLASS (model)->remove_column != NULL, FALSE);
+	g_return_val_if_fail (col != NULL, FALSE);
+
+	result = CLASS (model)->remove_column (model, col);
+	if (result) {
+		gda_data_model_column_removed (model, gda_field_attributes_get_position (col));
+	}
+
+	return result;
+}
+
+/**
+ * gda_data_model_update_column
+ * @model: a #GdaDataModel object.
+ * @col: the column to be updated.
+ *
+ * Updates a column in the given data model. This results in the underlying
+ * database row's values being changed.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_data_model_update_column (GdaDataModel *model, const GdaFieldAttributes *col)
+{
+	gboolean result;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
+	g_return_val_if_fail (col != NULL, FALSE);
+
+	result = CLASS (model)->update_column (model, col);
+	if (result) {
+		gda_data_model_column_updated (model, gda_field_attributes_get_position (col));
+	}
+	return result;
+}
+
+/**
  * gda_data_model_foreach
  * @model: a #GdaDataModel object.
  * @func: callback function.
@@ -677,73 +852,75 @@ gda_data_model_foreach (GdaDataModel *model,
 }
 
 /**
- * gda_data_model_is_editing
+ * gda_data_model_has_changed
  * @model: a #GdaDataModel object.
  *
- * Checks whether this data model is in editing mode or not. Editing
- * mode is set to %TRUE when @gda_data_model_begin_edit has been
+ * Checks whether this data model is in updating mode or not. Updating
+ * mode is set to %TRUE when @gda_data_model_begin_update has been
  * called successfully, and is not set back to %FALSE until either
- * @gda_data_model_cancel_edit or @gda_data_model_end_edit have
+ * @gda_data_model_cancel_updating or @gda_data_model_end_update have
  * been called.
  *
- * Returns: %TRUE if editing mode, %FALSE otherwise.
+ * Returns: %TRUE if updating mode, %FALSE otherwise.
  */
 gboolean
-gda_data_model_is_editing (GdaDataModel *model)
+gda_data_model_has_changed (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	return model->priv->editing;
+	return model->priv->updating;
 }
 
 /**
- * gda_data_model_begin_edit
+ * gda_data_model_begin_update
  * @model: a #GdaDataModel object.
  *
- * Starts edition of this data model. This function should be the
+ * Starts update of this data model. This function should be the
  * first called when modifying the data model.
  *
  * Returns: %TRUE on success, %FALSE if there was an error.
  */
 gboolean
-gda_data_model_begin_edit (GdaDataModel *model)
+gda_data_model_begin_update (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (model->priv->editing == FALSE, FALSE);
+	g_return_val_if_fail (model->priv->updating == FALSE, FALSE);
 
-	if (!gda_data_model_is_editable (model)) {
-		gda_log_error (_("Data model %p is not editable"), model);
+	if (!gda_data_model_is_updatable (model)) {
+		gda_log_error (_("Data model %p is not updatable"), model);
 		return FALSE;
 	}
 
-	model->priv->editing = TRUE;
-	g_signal_emit (G_OBJECT (model), gda_data_model_signals[BEGIN_EDIT], 0);
+	model->priv->updating = TRUE;
+	g_signal_emit (G_OBJECT (model),
+		       gda_data_model_signals[BEGIN_UPDATE], 0);
 
-	return model->priv->editing;
+	return model->priv->updating;
 }
 
 /**
- * gda_data_model_cancel_edit
+ * gda_data_model_cancel_update
  * @model: a #GdaDataModel object.
  *
- * Cancels edition of this data model. This means that all changes
+ * Cancels update of this data model. This means that all changes
  * will be discarded, and the old data put back in the model.
  *
  * Returns: %TRUE on success, %FALSE if there was an error.
  */
 gboolean
-gda_data_model_cancel_edit (GdaDataModel *model)
+gda_data_model_cancel_update (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (model->priv->editing, FALSE);
+	g_return_val_if_fail (model->priv->updating, FALSE);
 
-	g_signal_emit (G_OBJECT (model), gda_data_model_signals[CANCEL_EDIT], 0);
-	model->priv->editing = FALSE;
+	g_signal_emit (G_OBJECT (model),
+		       gda_data_model_signals[CANCEL_UPDATE], 0);
+	model->priv->updating = FALSE;
 
 	return TRUE;
 }
 
 /**
- * gda_data_model_end_edit
+ * gda_data_model_end_update
  * @model: a #GdaDataModel object.
  *
  * Approves all modifications and send them to the underlying
@@ -752,13 +929,13 @@ gda_data_model_cancel_edit (GdaDataModel *model)
  * Returns: %TRUE on success, %FALSE if there was an error.
  */
 gboolean
-gda_data_model_end_edit (GdaDataModel *model)
+gda_data_model_end_update (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (model->priv->editing, FALSE);
+	g_return_val_if_fail (model->priv->updating, FALSE);
 
-	g_signal_emit (G_OBJECT (model), gda_data_model_signals[END_EDIT], 0);
-	model->priv->editing = FALSE;
+	g_signal_emit (G_OBJECT (model), gda_data_model_signals[END_UPDATE], 0);
+	model->priv->updating = FALSE;
 
 	return TRUE;
 }

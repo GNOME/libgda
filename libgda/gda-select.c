@@ -91,7 +91,7 @@ gda_select_get_row (GdaDataModel *model, gint row)
 }
 
 static gboolean
-gda_select_is_editable (GdaDataModel *model)
+gda_select_is_updatable (GdaDataModel *model)
 {
 	GdaSelect *sel = (GdaSelect *) model;
 
@@ -123,7 +123,7 @@ gda_select_class_init (GdaSelectClass *klass)
 	model_class->describe_column = gda_select_describe_column;
 	model_class->get_row = gda_select_get_row;
 	/* we use the get_value_at of the base class */
-	model_class->is_editable = gda_select_is_editable;
+	model_class->is_updatable = gda_select_is_updatable;
 	model_class->append_row = gda_select_append_row;
 }
 

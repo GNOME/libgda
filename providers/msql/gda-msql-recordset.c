@@ -200,7 +200,7 @@ static const GdaValue
   return (fields) ? gda_row_get_value((GdaRow*)fields,col) : NULL;
 }
 
-static gboolean gda_msql_recordset_is_editable(GdaDataModel *model) {
+static gboolean gda_msql_recordset_is_updatable(GdaDataModel *model) {
   GdaCommandType    cmd_type;
   GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
@@ -219,8 +219,8 @@ static const GdaRow
   GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
   if ((!GDA_IS_MSQL_RECORDSET(rs)) ||
-      (!values) || (!gda_data_model_is_editable(model)) ||
-      (!gda_data_model_is_editing(model))) {
+      (!values) || (!gda_data_model_is_updatable(model)) ||
+      (!gda_data_model_has_changed(model))) {
     return NULL;
   }
   cols=msqlNumFields(rs->res);
@@ -294,7 +294,7 @@ static void gda_msql_recordset_class_init(GdaMsqlRecordsetClass *cl) {
   mdl_class->describe_column=gda_msql_recordset_describe_column;
   mdl_class->get_row=gda_msql_recordset_get_row;
   mdl_class->get_value_at=gda_msql_recordset_get_value_at;
-  mdl_class->is_editable=gda_msql_recordset_is_editable;
+  mdl_class->is_updatable=gda_msql_recordset_is_updatable;
   mdl_class->append_row=gda_msql_recordset_append_row;
   mdl_class->remove_row=gda_msql_recordset_remove_row;
   mdl_class->update_row=gda_msql_recordset_update_row;

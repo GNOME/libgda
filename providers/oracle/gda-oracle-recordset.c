@@ -433,7 +433,7 @@ gda_oracle_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static gboolean
-gda_oracle_recordset_is_editable (GdaDataModel *model)
+gda_oracle_recordset_is_updatable (GdaDataModel *model)
 {
 	GdaCommandType cmd_type;
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
@@ -457,8 +457,8 @@ gda_oracle_recordset_append_row (GdaDataModel *model, const GList *values)
 
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
-	g_return_val_if_fail (gda_data_model_is_editable (model), NULL);
-	g_return_val_if_fail (gda_data_model_is_editing (model), NULL);
+	g_return_val_if_fail (gda_data_model_is_updatable (model), NULL);
+	g_return_val_if_fail (gda_data_model_has_changed (model), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
 	priv_data = recset->priv;
@@ -562,7 +562,7 @@ gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 	model_class->describe_column = gda_oracle_recordset_describe_column;
 	model_class->get_row = gda_oracle_recordset_get_row;
 	model_class->get_value_at = gda_oracle_recordset_get_value_at;
-	model_class->is_editable = gda_oracle_recordset_is_editable;
+	model_class->is_updatable = gda_oracle_recordset_is_updatable;
 	model_class->append_row = gda_oracle_recordset_append_row;
 	model_class->remove_row = gda_oracle_recordset_remove_row;
 	model_class->update_row = gda_oracle_recordset_update_row;

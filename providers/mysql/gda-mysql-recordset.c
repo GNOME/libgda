@@ -275,7 +275,7 @@ gda_mysql_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static gboolean
-gda_mysql_recordset_is_editable (GdaDataModel *model)
+gda_mysql_recordset_is_updatable (GdaDataModel *model)
 {
 	GdaCommandType cmd_type;
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
@@ -299,8 +299,8 @@ gda_mysql_recordset_append_row (GdaDataModel *model, const GList *values)
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
-	g_return_val_if_fail (gda_data_model_is_editable (model), NULL);
-	g_return_val_if_fail (gda_data_model_is_editing (model), NULL);
+	g_return_val_if_fail (gda_data_model_is_updatable (model), NULL);
+	g_return_val_if_fail (gda_data_model_has_changed (model), NULL);
 
 	cols = mysql_num_fields (recset->mysql_res);
 	if (cols != g_list_length ((GList *) values)) {
@@ -395,7 +395,7 @@ gda_mysql_recordset_class_init (GdaMysqlRecordsetClass *klass)
 	model_class->describe_column = gda_mysql_recordset_describe_column;
 	model_class->get_row = gda_mysql_recordset_get_row;
 	model_class->get_value_at = gda_mysql_recordset_get_value_at;
-	model_class->is_editable = gda_mysql_recordset_is_editable;
+	model_class->is_updatable = gda_mysql_recordset_is_updatable;
 	model_class->append_row = gda_mysql_recordset_append_row;
 	model_class->remove_row = gda_mysql_recordset_remove_row;
 	model_class->update_row = gda_mysql_recordset_update_row;

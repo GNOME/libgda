@@ -99,7 +99,7 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static gboolean
-gda_data_model_array_is_editable (GdaDataModel *model)
+gda_data_model_array_is_updatable (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	return TRUE;
@@ -156,7 +156,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->describe_column = gda_data_model_array_describe_column;
 	model_class->get_row = gda_data_model_array_get_row;
 	model_class->get_value_at = gda_data_model_array_get_value_at;
-	model_class->is_editable = gda_data_model_array_is_editable;
+	model_class->is_updatable = gda_data_model_array_is_updatable;
 	model_class->append_row = gda_data_model_array_append_row;
 	model_class->remove_row = gda_data_model_array_remove_row;
 	model_class->update_row = NULL;

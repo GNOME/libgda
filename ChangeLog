@@ -1,3 +1,35 @@
+2003-12-03  Laurent Sansonetti <lrz@gnome.org>
+
+	* libgda/gda-data-model.[ch]:
+	- Renamed some methods:
+	    gda_data_model_is_editable -> gda_data_model_is_updatable ;
+	    gda_data_model_begin_edit -> gda_data_model_begin_update ;
+	    gda_data_model_cancel_edit -> gda_data_model_cancel_update ;
+	    gda_data_model_end_edit -> gda_data_model_end_update ;
+	    gda_data_model_is_editing -> gda_data_model_has_changed.
+	- Renamed some signals:
+	    "begin_edit" -> "begin_update" ;
+	    "cancel_edit" -> "cancel_update" ;
+	    "end_edit" -> "end_update".
+	- Added some methods:
+    	    gda_data_model_append_column ;
+	    gda_data_model_update_column ;
+	    gda_data_model_remove_column.
+	- Added some signals:
+	    "column_inserted" ;
+	    "column_updated" ;
+	    "column_removed".
+
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-data-model-hash.c:
+	* libgda/gda-data-model-list.c:
+	* libgda/gda-select.c:
+	* providers/ldap/gda-ldap-recordset.c:
+	* providers/msql/gda-msql-recordset.c:
+	* providers/mysql/gda-mysql-recordset.c:
+	* providers/oracle/gda-oracle-recordset.c:
+	Follows GdaDataModel changes (updatable interface).
+
 2003-11-30  Laurent Sansonetti <lrz@gnome.org>
 
 	* libgda/gda-parameter.c (gda_parameter_list_clear):

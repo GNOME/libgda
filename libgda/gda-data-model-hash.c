@@ -61,7 +61,7 @@ gda_data_model_hash_describe_column (GdaDataModel *model, gint col)
 }
 
 static gboolean
-gda_data_model_hash_is_editable (GdaDataModel *model)
+gda_data_model_hash_is_updatable (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
 	return TRUE;
@@ -120,7 +120,7 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	model_class->describe_column = gda_data_model_hash_describe_column;
 	model_class->get_row = gda_data_model_hash_get_row;
 	model_class->get_value_at = gda_data_model_hash_get_value_at;
-	model_class->is_editable = gda_data_model_hash_is_editable;
+	model_class->is_updatable = gda_data_model_hash_is_updatable;
 	model_class->append_row = gda_data_model_hash_append_row;
 	model_class->remove_row = gda_data_model_hash_remove_row;
 }
