@@ -34,6 +34,8 @@ typedef struct {
 } GdaParameter;
 
 GdaParameter   *gda_parameter_new_from_value (const gchar *name, GdaValue *value);
+GdaParameter   *gda_parameter_new_boolean (const gchar *name, gboolean value);
+GdaParameter   *gda_parameter_new_double (const gchar *name, gdouble value);
 GdaParameter   *gda_parameter_new_gobject (const gchar *name, const GObject *value);
 GdaParameter   *gda_parameter_new_string (const gchar *name, const gchar *value);
 void            gda_parameter_free (GdaParameter *param);

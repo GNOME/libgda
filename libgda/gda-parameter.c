@@ -67,6 +67,51 @@ gda_parameter_new_from_value (const gchar *name, GdaValue *value)
 }
 
 /**
+ * gda_parameter_new_boolean
+ * @name: name for the parameter being created.
+ * @value: a boolean value.
+ *
+ * Create a new #GdaParameter from a gboolean value.
+ *
+ * Returns: the newly created #GdaParameter.
+ */
+GdaParameter *
+gda_parameter_new_boolean (const gchar *name, gboolean value)
+{
+	GdaParameter *param;
+
+	g_return_val_if_fail (name != NULL, NULL);
+
+	param = g_new0 (GdaParameter, 1);
+	param->name = g_strdup (name);
+	param->value = gda_value_new_boolean (value);
+
+	return param;
+}
+
+/** gda_parameter_new_double
+ * @name: name for the parameter being created.
+ * @value: a gdouble value.
+ *
+ * Create a new #GdaParameter from a gdouble value.
+ *
+ * Returns: the newly created #GdaParameter.
+ */
+GdaParameter *
+gda_parameter_new_double (const gchar *name, gdouble value)
+{
+	GdaParameter *param;
+
+	g_return_val_if_fail (name != NULL, NULL);
+
+	param = g_new0 (GdaParameter, 1);
+	param->name = g_strdup (name);
+	param->value = gda_value_new_double (value);
+
+	return param;
+}
+
+/**
  * gda_parameter_new_gobject
  * @name: name for the parameter being created.
  * @value: a GObject value.
