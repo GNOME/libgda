@@ -231,7 +231,7 @@ module GDA {
 			attribute LineStyle style;
 		};
 
-		interface Object : Element {
+		interface RObject : Element {
 			exception InvalidPosition {};
 			exception InvalidGeometry {};
 			
@@ -252,7 +252,7 @@ module GDA {
 			     raises (InvalidPosition);
 		};
 
-		interface TextObject : Object {
+		interface TextObject : RObject {
 			attribute string fontfamily;
 			attribute short fontsize;
 			attribute FontWeight fontweight;
@@ -375,5 +375,4 @@ module GDA {
 			DocumentList getDocuments ();
 		};
 	};
-};
 };
