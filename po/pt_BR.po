@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2001-01-22 18:36+0100\n"
+"POT-Creation-Date: 2001-02-13 01:38+0100\n"
 "PO-Revision-Date: 2000-11-21 17:44-00:03\n"
 "Last-Translator: Ariel Bressan da Silva <ariel@conectiva.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -215,6 +215,10 @@ msgstr "Sinal recebido %d. Ignorando"
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Tentativa de inicializar um provedor já inicializado"
 
+#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
+msgid "GDA Datasource Access for LDAP"
+msgstr ""
+
 #: providers/gda-interbase-server/gda-interbase-connection.c:261
 #: providers/gda-ldap-server/gda-ldap-connection.c:272
 #: providers/gda-mdb-server/gda-mdb-connection.c:360
@@ -224,6 +228,7 @@ msgstr "Tentativa de inicializar um provedor já inicializado"
 #: providers/gda-oracle-server/gda-oracle-connection.c:426
 #: providers/gda-postgres-server/gda-postgres-connection.c:779
 #: providers/gda-sybase-server/gda-sybase-error.c:109
+#: providers/gda-tds-server/gda-tds-error.c:108
 #, c-format
 msgid "error '%s' at %s"
 msgstr "erro '%s' em %s"
@@ -244,8 +249,12 @@ msgstr "erro '%s' em %s"
 #: providers/gda-oracle-server/gda-oracle-connection.c:432
 #: providers/gda-postgres-server/gda-postgres-connection.c:786
 #: providers/gda-postgres-server/gda-postgres-connection.c:787
+#: providers/gda-primebase-server/gda-primebase-connection.c:302
+#: providers/gda-primebase-server/gda-primebase-connection.c:303
 #: providers/gda-sybase-server/gda-sybase-error.c:118
 #: providers/gda-sybase-server/gda-sybase-error.c:119
+#: providers/gda-tds-server/gda-tds-error.c:117
+#: providers/gda-tds-server/gda-tds-error.c:118
 msgid "Not available"
 msgstr "Não disponível"
 
@@ -255,13 +264,19 @@ msgstr "Não disponível"
 #: providers/gda-mysql-server/gda-mysql-connection.c:393
 #: providers/gda-oracle-server/gda-oracle-connection.c:433
 #: providers/gda-postgres-server/gda-postgres-connection.c:788
+#: providers/gda-primebase-server/gda-primebase-connection.c:304
 #: providers/gda-sybase-server/gda-sybase-error.c:120
+#: providers/gda-tds-server/gda-tds-error.c:119
 msgid "error"
 msgstr "erro"
 
 #: providers/gda-ldap-server/main-ldap.c:69
 msgid "Could not register LDAP provider implementation"
 msgstr "Não pôde registrar implementação de provedor LDAP"
+
+#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
+msgid "GDA Datasource Access for Interbase"
+msgstr ""
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:260
 #, c-format
@@ -272,12 +287,17 @@ msgstr "Erro de código %ld"
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Não pôde registrar implementação de provedor INTERBASE"
 
+#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
+msgid "GDA Datasource Access for Mail"
+msgstr ""
+
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
 #: providers/gda-sybase-server/gda-sybase-connection.c:269
+#: providers/gda-tds-server/gda-tds-connection.c:266
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "SCHEMA_QTYPE %d não-manipulada"
@@ -286,11 +306,16 @@ msgstr "SCHEMA_QTYPE %d não-manipulada"
 msgid "Could not register Mail provider implementation"
 msgstr "Não pôde registrar implementação de provedor de mensagens"
 
+#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
+msgid "GDA Datasource Access for MDB (MS Access) files"
+msgstr ""
+
 # fe/fe_editor.c:185
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:87
 #: providers/gda-sybase-server/gda-sybase-command.c:120
+#: providers/gda-tds-server/gda-tds-command.c:114
 #, c-format
 msgid "executing command '%s'"
 msgstr "executando comando '%s'"
@@ -333,6 +358,7 @@ msgstr "mysql_recset é NULL"
 #: providers/gda-mdb-server/gda-mdb-connection.c:457
 #: providers/gda-mysql-server/gda-mysql-connection.c:484
 #: providers/gda-sybase-server/gda-sybase-connection.c:432
+#: providers/gda-tds-server/gda-tds-connection.c:423
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Nome de tabela não dado para SCHEMA_COLS"
 
@@ -340,6 +366,10 @@ msgstr "Nome de tabela não dado para SCHEMA_COLS"
 #: providers/gda-mysql-server/main-mysql.c:70
 msgid "Could not register MySQL provider implementation"
 msgstr "Não pôde registrar implementação de provedor MySQL"
+
+#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr ""
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
@@ -349,6 +379,10 @@ msgid ""
 msgstr ""
 "Abrindo conexão com usuário=%s, senha=%s, máquina=%s, porta=%s, "
 "unix_socket=%s"
+
+#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr ""
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -367,6 +401,10 @@ msgstr "sem texto"
 #: providers/gda-odbc-server/main-odbc.c:69
 msgid "Could not register ODBC provider implementation"
 msgstr "Não pôde registrar implementação de provedor ODBC"
+
+#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr ""
 
 # fe/fe_log.c:92
 #: providers/gda-oracle-server/gda-oracle-command.c:185
@@ -412,6 +450,10 @@ msgstr "objeto de registro sendo criado sem conexão associada"
 msgid "Could not register ORACLE provider implementation"
 msgstr "Não pôde registrar implementação de provedor ORACLE"
 
+#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr ""
+
 #: providers/gda-postgres-server/gda-postgres-connection.c:888
 #: providers/gda-postgres-server/gda-postgres-connection.c:1000
 msgid "postgres_recset is NULL"
@@ -421,66 +463,88 @@ msgstr "postgres_recset é NULL"
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Não pôde registrar implementação do provedor PostgreSQL"
 
+#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr ""
+
 #: providers/gda-sybase-server/gda-sybase-command.c:115
+#: providers/gda-tds-server/gda-tds-command.c:110
 msgid "Connection seems to be dead"
 msgstr "Conexão parece estar morta"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:135
+#: providers/gda-tds-server/gda-tds-command.c:125
 msgid "Filling command structure failed\n"
 msgstr "Preenchimento de estrutura de comando falhou\n"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:147
+#: providers/gda-tds-server/gda-tds-command.c:133
 msgid "sending cmd failed"
 msgstr "enviando cmd falhou"
 
+#: providers/gda-primebase-server/gda-primebase-command.c:110
 #: providers/gda-sybase-server/gda-sybase-command.c:154
+#: providers/gda-tds-server/gda-tds-command.c:140
 msgid "Allocating recordset failed"
 msgstr "Alocação de registro falhou"
 
+#: providers/gda-primebase-server/gda-primebase-command.c:117
 #: providers/gda-sybase-server/gda-sybase-command.c:164
+#: providers/gda-tds-server/gda-tds-command.c:148
 msgid "Getting recordset userdata failed"
 msgstr "Obtenção de dados de usuário de registro falhou"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:222
+#: providers/gda-tds-server/gda-tds-command.c:201
 msgid "Command execution finished, all results processed"
 msgstr "Execução de comando completa, todos os resultados processados"
 
 # fe/fe_editor.c:138
 #: providers/gda-sybase-server/gda-sybase-command.c:226
+#: providers/gda-tds-server/gda-tds-command.c:205
 msgid "Command failed"
 msgstr "Comando falhou"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:230
+#: providers/gda-tds-server/gda-tds-command.c:209
 msgid "Execution of resultless command succeeded"
 msgstr "Execução de comando sem resultados bem sucedida"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:246
+#: providers/gda-tds-server/gda-tds-command.c:225
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() retornados %x"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:256
+#: providers/gda-tds-server/gda-tds-command.c:235
 msgid "No further results, command completly succeeded."
 msgstr "Sem mais resultados, comando completamente bem sucedido"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:260
+#: providers/gda-tds-server/gda-tds-command.c:239
 msgid "An error occured during command execution."
 msgstr "Ocorreu um erro durante a execução do comando."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:267
+#: providers/gda-tds-server/gda-tds-command.c:243
 msgid "Cmd execution returned unknown result, may be an error"
 msgstr "Execução do comando retornou resultado desconhecido, podeser um erro"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:280
+#: providers/gda-tds-server/gda-tds-command.c:253
 msgid "No data returned, freeing recordset structure"
 msgstr "Sem dados retornados, liberando estrutura de gravação"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:311
 #: providers/gda-sybase-server/gda-sybase-command.c:323
+#: providers/gda-tds-server/gda-tds-command.c:283
+#: providers/gda-tds-server/gda-tds-command.c:291
 msgid "Freeing command structure failed"
 msgstr "Falhou ao liberar estrutura de comando"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:149
+#: providers/gda-tds-server/gda-tds-connection.c:137
 msgid "Error allocating error structure"
 msgstr "Erro ao alocar estrutura de erro"
 
@@ -489,79 +553,98 @@ msgid "Not enough memory for sybase_Connection"
 msgstr "Sem memória suficiente para conexão com o sybase"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:422
+#: providers/gda-tds-server/gda-tds-connection.c:413
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: tabela_nome '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:438
+#: providers/gda-tds-server/gda-tds-connection.c:429
 msgid "Could not allocate command structure"
 msgstr "Não pôde alocar estrutura de comando"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:460
+#: providers/gda-tds-server/gda-tds-connection.c:451
 msgid "Could not allocate enough memory for query"
 msgstr "Não pôde alocar memória suficiente para consulta"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:474
+#: providers/gda-tds-server/gda-tds-connection.c:465
 msgid "Could not get recordset in schema_cols"
 msgstr "Não pôde obter registro em schema_cols"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:506
 #: providers/gda-sybase-server/gda-sybase-connection.c:583
+#: providers/gda-tds-server/gda-tds-connection.c:497
+#: providers/gda-tds-server/gda-tds-connection.c:574
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: nome de tabela = '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:514
 #: providers/gda-sybase-server/gda-sybase-connection.c:591
+#: providers/gda-tds-server/gda-tds-connection.c:505
+#: providers/gda-tds-server/gda-tds-connection.c:582
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "schema_tables: tabela_esquema = '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:519
+#: providers/gda-tds-server/gda-tds-connection.c:510
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "chema_procedures: proc_catalog = '%s' NÃO USADO!\n"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:523
+#: providers/gda-tds-server/gda-tds-connection.c:514
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: limite inválido, digite %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:533
+#: providers/gda-tds-server/gda-tds-connection.c:524
 msgid "Could not allocate cmd structure"
 msgstr "Não pôde alocar estrutura de comando"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:596
+#: providers/gda-tds-server/gda-tds-connection.c:587
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = '%s' NÃO USADO!"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:600
+#: providers/gda-tds-server/gda-tds-connection.c:591
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: limite inválido, digite %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:661
+#: providers/gda-tds-server/gda-tds-connection.c:652
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Limite inválido ou não suportado, digite: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
+#: providers/gda-tds-server/gda-tds-connection.c:693
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Não pôde alocar comando Gda_Server"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737
+#: providers/gda-tds-server/gda-tds-connection.c:723
+#: providers/gda-tds-server/gda-tds-connection.c:728
 #, c-format
 msgid "connection status: %x"
 msgstr "status da conexão: %x"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:733
+#: providers/gda-tds-server/gda-tds-connection.c:724
 #, c-format
 msgid "return code: %x"
 msgstr "código de retorno: %x"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:770
+#: providers/gda-tds-server/gda-tds-connection.c:759
 msgid "attempting reconnection"
 msgstr "tentando reconectar"
 
@@ -572,31 +655,37 @@ msgstr "Reconectado para '%s'"
 
 # fe/fe_connection.c:46
 #: providers/gda-sybase-server/gda-sybase-connection.c:911
+#: providers/gda-tds-server/gda-tds-connection.c:864
 #, c-format
 msgid "Connected to %s"
 msgstr "Conectado em %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:919
+#: providers/gda-tds-server/gda-tds-connection.c:874
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Base da dos selecionada '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:948
+#: providers/gda-tds-server/gda-tds-connection.c:899
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Não pôde alocar estrutura de comando"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:957
+#: providers/gda-tds-server/gda-tds-connection.c:908
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Não pôde alocar memória para cadeia de comando"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:970
+#: providers/gda-tds-server/gda-tds-connection.c:918
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command falhou"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:979
+#: providers/gda-tds-server/gda-tds-connection.c:927
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: envio de comando falhou"
@@ -612,24 +701,29 @@ msgid "%s: use command failed"
 msgstr "%s: uso de comando falhou"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1035
+#: providers/gda-tds-server/gda-tds-connection.c:989
 msgid "Could not allocate locale structure"
 msgstr "Não pôde alocar estrutura local"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1041
+#: providers/gda-tds-server/gda-tds-connection.c:995
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Não pôde definir local para '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1047
+#: providers/gda-tds-server/gda-tds-connection.c:1001
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Não pôde configurar local para ser '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1052
+#: providers/gda-tds-server/gda-tds-connection.c:1006
 msgid "Could not drop locale structure"
 msgstr "Não pôde deixar estrutura local"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1065
+#: providers/gda-tds-server/gda-tds-connection.c:1019
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Erro fatal: %s\n"
@@ -640,6 +734,7 @@ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:74
+#: providers/gda-tds-server/gda-tds-error.c:72
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
@@ -762,79 +857,96 @@ msgid "Could not clear cslib messages"
 msgstr "Não pôde apagar mensagens da cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:587
+#: providers/gda-tds-server/gda-tds-error.c:251
 msgid "Server message:"
 msgstr "Mensagem de servidor:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:596
+#: providers/gda-tds-server/gda-tds-error.c:260
 msgid "Client message:"
 msgstr "Mensagem de cliente:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:603
+#: providers/gda-tds-server/gda-tds-error.c:267
 msgid "CS-Library error:"
 msgstr "Erro da CS-Library:"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:152
+#: providers/gda-tds-server/gda-tds-recordset.c:149
 #, c-format
 msgid "fetch error at row %d"
 msgstr "recuperar erro na fila %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:159
+#: providers/gda-tds-server/gda-tds-recordset.c:156
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr "CS_END_DATA na fila %d; cancelando"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:168
+#: providers/gda-tds-server/gda-tds-recordset.c:163
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: Erro (%d)"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:343
+#: providers/gda-tds-server/gda-tds-recordset.c:336
 msgid "Failed fetching # of columns"
 msgstr "Falhou ao recuperar # de colunas"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:349
+#: providers/gda-tds-server/gda-tds-recordset.c:343
 #, c-format
 msgid "Counted %d columns"
 msgstr "Contadas %d colunas"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:356
+#: providers/gda-tds-server/gda-tds-recordset.c:350
 #, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "%s não pôde alocar informação datafmt"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:366
+#: providers/gda-tds-server/gda-tds-recordset.c:360
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s não pôde alocar campos de dados"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:384
+#: providers/gda-tds-server/gda-tds-recordset.c:378
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe na coluna 3 %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:391
+#: providers/gda-tds-server/gda-tds-recordset.c:385
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "ct_describe na coluna # %d falhou"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:397
+#: providers/gda-tds-server/gda-tds-recordset.c:391
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): '%s', %d (%s)"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:406
+#: providers/gda-tds-server/gda-tds-recordset.c:400
 msgid "could not allocate data holder"
 msgstr "não pôde alocar detentor de dados"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:416
+#: providers/gda-tds-server/gda-tds-recordset.c:410
 msgid "could not ct_bind data holder to column"
 msgstr "não pôde ct_bind detentor de dados para coluna"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:423
+#: providers/gda-tds-server/gda-tds-recordset.c:417
 msgid "illegal type detected, aborting"
 msgstr "tipo ilegal detectado, abortando"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:429
+#: providers/gda-tds-server/gda-tds-recordset.c:423
 msgid "could not allocate field"
 msgstr "não pôde alocar campo"
 
@@ -842,10 +954,81 @@ msgstr "não pôde alocar campo"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Não pôde registrar implementação de provedor gda-sybase"
 
-#: report/gda-report-engine.c:207
+#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
+msgid "GDA Datasource Access for primebase"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-command.c:128
+msgid "An error occured."
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:137
+#, c-format
+msgid "%2ld: Connected to '%s@%s' with connparm: '%s'"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:142
+#, c-format
+msgid "%2ld: ConInfo: %s@%s, Client API v%x, status: %x"
+msgstr ""
+
+# fe/fe_editor.c:175 fe/fe_editor.c:212
+#: providers/gda-primebase-server/gda-primebase-connection.c:145
+#, fuzzy, c-format
+msgid "Could not connect to '%s'"
+msgstr "não pôde abrir conexão para %s"
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:316
+#, fuzzy
+msgid "Not enough memory for primebase_Error structure."
+msgstr "Sem memória suficiente para conexão com o sybase"
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:324
+#, c-format
+msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-recordset.c:190
+msgid "No according field found"
+msgstr ""
+
+#: providers/gda-primebase-server/main-primebase.c:68
+#, fuzzy
+msgid "Could not register PRIMEBASE provider implementation"
+msgstr "Não pôde registrar implementação de provedor INTERBASE"
+
+#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase/MS SQL"
+msgstr ""
+
+#: providers/gda-tds-server/gda-tds-connection.c:145
+#, fuzzy
+msgid "Not enough memory for tds_Connection"
+msgstr "Sem memória suficiente para conexão com o sybase"
+
+#: providers/gda-tds-server/gda-tds-connection.c:862
+#, fuzzy, c-format
+msgid "Reconnected to %s"
+msgstr "Reconectado para '%s'"
+
+#: providers/gda-tds-server/gda-tds-error.c:63
+#, fuzzy, c-format
+msgid "gda_tds_error_make(%p,%p,%p,%p)"
+msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
+
+#: providers/gda-tds-server/main-tds.c:74
+#, fuzzy
+msgid "Could not register gda-tds provider implementation"
+msgstr "Não pôde registrar implementação de provedor gda-sybase"
+
+#: report/gda-report-engine.c:209
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "Exceção CORBA descarregando mecanismo de relatório: %s"
+
+#: report/server/GNOME_GDA_Report.oaf.in.h:1
+msgid "GDA Distributed Report Engine"
+msgstr ""
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48

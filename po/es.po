@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2001-01-22 19:10+0100\n"
+"POT-Creation-Date: 2001-02-13 01:38+0100\n"
 "PO-Revision-Date: 2001-01-22 19:50+0100\n"
 "Last-Translator: Carlos Perelló Marín <carlos@gnome-db.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -171,13 +171,13 @@ msgstr "Iniciando el proveedor %s sin funciones de implementación"
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
-"OAF no conoce nuestro IID; indica que la instalación es incorrecta. Saliendo..."
+"OAF no conoce nuestro IID; indica que la instalación es incorrecta. "
+"Saliendo..."
 
 #: lib/gda-server/gda-server-impl.c:213
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
-msgstr ""
-"Este proveedor ya ha sido registrado previamente en OAF. Saliendo..."
+msgstr "Este proveedor ya ha sido registrado previamente en OAF. Saliendo..."
 
 #: lib/gda-server/gda-server-impl.c:216
 msgid "Unknown error registering this provider with OAF. Exiting"
@@ -294,7 +294,7 @@ msgstr "Fuente de datos GDA para Correo"
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
 #: providers/gda-sybase-server/gda-sybase-connection.c:269
-#: providers/gda-tds-server/gda-tds-connection.c:258
+#: providers/gda-tds-server/gda-tds-connection.c:266
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "SCHEMA_QTYPE %d no manejado"
@@ -336,7 +336,9 @@ msgstr ""
 #: providers/gda-mdb-server/gda-mdb-connection.c:147
 #, c-format
 msgid "%s:%d: You must  provide the filename with the MS Access database"
-msgstr "%s:%d: Debe de facilitar el nombre del archivo de la base de datos de MS Access"
+msgstr ""
+"%s:%d: Debe de facilitar el nombre del archivo de la base de datos de MS "
+"Access"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:152
 #, c-format
@@ -351,7 +353,7 @@ msgstr "mysql_recset es NULL"
 #: providers/gda-mdb-server/gda-mdb-connection.c:457
 #: providers/gda-mysql-server/gda-mysql-connection.c:484
 #: providers/gda-sybase-server/gda-sybase-connection.c:432
-#: providers/gda-tds-server/gda-tds-connection.c:415
+#: providers/gda-tds-server/gda-tds-connection.c:423
 msgid "No table name given for SCHEMA_COLS"
 msgstr "No ha se ha dado el nombre de una tabla para SCHEMA_COLS"
 
@@ -536,7 +538,7 @@ msgid "Freeing command structure failed"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:149
-#: providers/gda-tds-server/gda-tds-connection.c:129
+#: providers/gda-tds-server/gda-tds-connection.c:137
 msgid "Error allocating error structure"
 msgstr ""
 
@@ -545,100 +547,100 @@ msgid "Not enough memory for sybase_Connection"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:422
-#: providers/gda-tds-server/gda-tds-connection.c:405
+#: providers/gda-tds-server/gda-tds-connection.c:413
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:438
-#: providers/gda-tds-server/gda-tds-connection.c:421
+#: providers/gda-tds-server/gda-tds-connection.c:429
 #, fuzzy
 msgid "Could not allocate command structure"
 msgstr "No pudo vaciarse el fichero %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:460
-#: providers/gda-tds-server/gda-tds-connection.c:443
+#: providers/gda-tds-server/gda-tds-connection.c:451
 msgid "Could not allocate enough memory for query"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:474
-#: providers/gda-tds-server/gda-tds-connection.c:457
+#: providers/gda-tds-server/gda-tds-connection.c:465
 msgid "Could not get recordset in schema_cols"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:506
 #: providers/gda-sybase-server/gda-sybase-connection.c:583
-#: providers/gda-tds-server/gda-tds-connection.c:489
-#: providers/gda-tds-server/gda-tds-connection.c:566
+#: providers/gda-tds-server/gda-tds-connection.c:497
+#: providers/gda-tds-server/gda-tds-connection.c:574
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:514
 #: providers/gda-sybase-server/gda-sybase-connection.c:591
-#: providers/gda-tds-server/gda-tds-connection.c:497
-#: providers/gda-tds-server/gda-tds-connection.c:574
+#: providers/gda-tds-server/gda-tds-connection.c:505
+#: providers/gda-tds-server/gda-tds-connection.c:582
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:519
-#: providers/gda-tds-server/gda-tds-connection.c:502
+#: providers/gda-tds-server/gda-tds-connection.c:510
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:523
-#: providers/gda-tds-server/gda-tds-connection.c:506
+#: providers/gda-tds-server/gda-tds-connection.c:514
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:533
-#: providers/gda-tds-server/gda-tds-connection.c:516
+#: providers/gda-tds-server/gda-tds-connection.c:524
 #, fuzzy
 msgid "Could not allocate cmd structure"
 msgstr "No pudo vaciarse el fichero %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:596
-#: providers/gda-tds-server/gda-tds-connection.c:579
+#: providers/gda-tds-server/gda-tds-connection.c:587
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:600
-#: providers/gda-tds-server/gda-tds-connection.c:583
+#: providers/gda-tds-server/gda-tds-connection.c:591
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:661
-#: providers/gda-tds-server/gda-tds-connection.c:644
+#: providers/gda-tds-server/gda-tds-connection.c:652
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
-#: providers/gda-tds-server/gda-tds-connection.c:685
+#: providers/gda-tds-server/gda-tds-connection.c:693
 msgid "Could not allocate Gda_ServerCommand"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737
-#: providers/gda-tds-server/gda-tds-connection.c:715
-#: providers/gda-tds-server/gda-tds-connection.c:720
+#: providers/gda-tds-server/gda-tds-connection.c:723
+#: providers/gda-tds-server/gda-tds-connection.c:728
 #, c-format
 msgid "connection status: %x"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:733
-#: providers/gda-tds-server/gda-tds-connection.c:716
+#: providers/gda-tds-server/gda-tds-connection.c:724
 #, c-format
 msgid "return code: %x"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:770
-#: providers/gda-tds-server/gda-tds-connection.c:751
+#: providers/gda-tds-server/gda-tds-connection.c:759
 #, fuzzy
 msgid "attempting reconnection"
 msgstr "Abrir Conexión"
@@ -649,37 +651,37 @@ msgid "Reconnected to '%s'"
 msgstr "Conectado a %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:911
-#: providers/gda-tds-server/gda-tds-connection.c:856
+#: providers/gda-tds-server/gda-tds-connection.c:864
 #, c-format
 msgid "Connected to %s"
 msgstr "Conectado a %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:919
-#: providers/gda-tds-server/gda-tds-connection.c:866
+#: providers/gda-tds-server/gda-tds-connection.c:874
 #, fuzzy, c-format
 msgid "Selected database '%s'"
 msgstr "Guardar diseño a disco"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:948
-#: providers/gda-tds-server/gda-tds-connection.c:891
+#: providers/gda-tds-server/gda-tds-connection.c:899
 #, fuzzy, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "No pudo vaciarse el fichero %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:957
-#: providers/gda-tds-server/gda-tds-connection.c:900
+#: providers/gda-tds-server/gda-tds-connection.c:908
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:970
-#: providers/gda-tds-server/gda-tds-connection.c:910
+#: providers/gda-tds-server/gda-tds-connection.c:918
 #, fuzzy, c-format
 msgid "%s: ct_command failed"
 msgstr "Comando"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:979
-#: providers/gda-tds-server/gda-tds-connection.c:919
+#: providers/gda-tds-server/gda-tds-connection.c:927
 #, fuzzy, c-format
 msgid "%s: sending command failed"
 msgstr "Comando"
@@ -695,31 +697,31 @@ msgid "%s: use command failed"
 msgstr "Comando"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1035
-#: providers/gda-tds-server/gda-tds-connection.c:981
+#: providers/gda-tds-server/gda-tds-connection.c:989
 #, fuzzy
 msgid "Could not allocate locale structure"
 msgstr "No pudo vaciarse el fichero %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1041
-#: providers/gda-tds-server/gda-tds-connection.c:987
+#: providers/gda-tds-server/gda-tds-connection.c:995
 #, fuzzy, c-format
 msgid "Could not set locale to '%s'"
 msgstr "No pudo cargarse el fichero %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1047
-#: providers/gda-tds-server/gda-tds-connection.c:993
+#: providers/gda-tds-server/gda-tds-connection.c:1001
 #, fuzzy, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "No pudo cargarse el fichero %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1052
-#: providers/gda-tds-server/gda-tds-connection.c:998
+#: providers/gda-tds-server/gda-tds-connection.c:1006
 #, fuzzy
 msgid "Could not drop locale structure"
 msgstr "No pudo cargarse el fichero %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1065
-#: providers/gda-tds-server/gda-tds-connection.c:1011
+#: providers/gda-tds-server/gda-tds-connection.c:1019
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr ""
@@ -1000,11 +1002,11 @@ msgstr "No se pudo cambiar al directorio '%s'"
 msgid "GDA Datasource Access for Sybase/MS SQL"
 msgstr ""
 
-#: providers/gda-tds-server/gda-tds-connection.c:137
+#: providers/gda-tds-server/gda-tds-connection.c:145
 msgid "Not enough memory for tds_Connection"
 msgstr ""
 
-#: providers/gda-tds-server/gda-tds-connection.c:854
+#: providers/gda-tds-server/gda-tds-connection.c:862
 #, fuzzy, c-format
 msgid "Reconnected to %s"
 msgstr "Conectado a %s"
@@ -1019,7 +1021,7 @@ msgstr ""
 msgid "Could not register gda-tds provider implementation"
 msgstr "No se pudo cambiar al directorio '%s'"
 
-#: report/gda-report-engine.c:207
+#: report/gda-report-engine.c:209
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr ""
