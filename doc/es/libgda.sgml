@@ -1,0 +1,1515 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
+<!ENTITY LIBGDA          "<application>libgda</application>">
+<!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
+<!ENTITY GDA-GDA-COMMON  SYSTEM "gda-common.sgml">
+<!ENTITY GDA-GDA-CLNT    SYSTEM "gda-clnt.sgml">
+<!ENTITY GDA-GDA-CLNT-UI SYSTEM "gda-clnt-ui.sgml">
+<!ENTITY GDA-GDA-SRV     SYSTEM "gda-srv.sgml">
+<!ENTITY FDL-INC         SYSTEM "fdl-appendix.sgml">
+<!ENTITY API             "<acronym>API</acronym>">
+<!ENTITY DBMS            "<acronym>DBMS</acronym>">
+<!ENTITY DSN             "<acronym>DSN</acronym>">
+<!ENTITY ODBC            "<acronym>ODBC</acronym>">
+<!ENTITY GDA             "<acronym>GDA</acronym>">
+<!ENTITY LDAP            "<acronym>LDAP</acronym>">
+<!ENTITY CORBA           "<acronym>CORBA</acronym>">
+<!ENTITY IDL             "<acronym>IDL</acronym>">
+<!ENTITY ORB             "<acronym>ORB</acronym>">
+<!ENTITY SQL             "<acronym>SQL</acronym>">
+<!ENTITY RPM             "<acronym>RPM</acronym>">
+<!ENTITY XML             "<acronym>XML</acronym>">
+<!ENTITY PGSQL           "<application>PostgreSQL</application>">
+<!ENTITY MYSQL           "<application>MySQL</application>">
+<!ENTITY ORAC            "<application>Oracle</application>">
+<!ENTITY INTERB          "<application>Interbase</application>">
+<!ENTITY SYBASE          "<application>Sybase</application>">
+<!ENTITY MSACC           "<application>MS Access</application>">
+<!ENTITY INFOR           "<application>Informix</application>">
+]>
+
+
+
+<book id="index" lang="es">
+  <bookinfo>
+    <title>Manual de la GNU Data Access </title>
+    <authorgroup>
+      <author>
+        <firstname>Michael</firstname>
+        <surname>Lausch</surname>
+        <affiliation>
+          <address><email>michael.lausch@1012surf.net</email></address>
+        </affiliation>
+      </author>
+      <author>
+        <firstname>Rodrigo</firstname>
+        <surname>Moya</surname>
+        <affiliation>
+          <address><email>rodrigo@gnome-db.org</email></address>
+        </affiliation>
+      </author>
+      <author>
+        <firstname>Vivien</firstname>
+        <surname>Malerba</surname>
+        <affiliation>
+          <address><email>malerba@linuxave.net</email></address>
+        </affiliation>
+      </author>
+      <author role="clean up">
+	<firstname>Sean</firstname>
+	<surname>Allen</surname>
+	<affiliation>
+	  <address><email>zeroone@worldonline.co.za</email></address>
+	</affiliation>
+	<contrib>GDP compliancy, FDL, added markup, English and syntax
+        </contrib>
+      </author>
+      <author role="Spanish translation">
+        <firstname>David</firstname>
+        <surname>Vaquero</surname>
+        <affiliation>
+          <address><email>cncsal@bigfoot.com</email></address>
+        </affiliation>
+        <contrib>Spanish translation</contrib>
+      </author>
+    </authorgroup>
+    <date>1999 February</date>
+    <copyright>
+      <year>1999-2001</year>
+      <holder>The Free Software Foundation</holder>
+    </copyright>
+
+    <abstract>
+      <para>
+        GNU Data Access (&GDA;) es una arquitectura que se propone dar acceso 
+	universal a muchos tipos diferentes de fuentes de datos. Que van desde
+	una base de datos relacional, hasta cualquier fuente de 
+	datos imaginable como: un servidor de correo, un directorio &LDAP;, etc.
+      </para>
+      <para>
+        Esta universalización se obtiene a través del uso de
+        &CORBA; como mecanismo de intercomunicación entre los
+	diferentes componentes de la arquitectura.
+      </para>
+    </abstract>
+    <legalnotice id="legalnotice">
+      <para>
+      
+       Esta licencia asegura la copia, distribución y/o modificación de este 
+       documento bajo las normas de la <link linkend="fdl"><citetitle>GNU
+       Free Documentation License</citetitle></link>, Version 1.1 o cualquier
+       otra version versión posterior publicada por la Free Software Foundation
+       contando variaciones
+       en las Secciones, Portada y Contraportada. Se puede encontrar una
+       copia de la licencia en <ulink url="fdl-apendix.html" type="http">
+       Licencia FDL </ulink>
+      </para>
+      <para>
+      Muchos de los nombres usados por compañías para distinguir sus productos
+      y servicios están asumidos como trademarks.
+      Cuando estos nombre aparezcan en cualquier parte de la documentación de
+      GNOME, y esas trademarks están adcritas a los miembros
+      del Projecto de Documentation de GNOME,
+      los nombres o acrónimos estarán impresos en mayúsculas.
+      </para>
+    </legalnotice>
+  </bookinfo>
+  
+  <chapter id="introduction">
+    <title>Introdución</title>
+    <para>
+      &ODBC; y &SQL; estandares de hecho. Los problemas son que, &ODBC;
+      no especifica un protocolo de conexión y no hay controladores &ODBC;
+      para algunas Bases de Datos. Usted debe usar <acronym>RPC</acronym>, 
+      <acronym>TCP/IP</acronym>, o memoria compartida y se¤ales para pasar 
+      la consulta desde el cliente al servidor. Así que usted tiene que usar 
+      la biblioteca &ODBC; específica para su Base de Datos. Y esta
+      biblioteca puede no estar disponible para la <acronym>CPU</acronym> o
+      el Sistema Operativo en el que el cliente se está ejecutando.
+    </para>
+    <para>
+      &SQL; no está lo suficientemente estandarizado, así que no se asegura
+      la compatibilidad con todas las Bases de Datos. Y &SQL; no se 
+      adapta a otro tipo de servidores (piense por ejemplo en &LDAP;).
+    </para>
+    <para>
+      &GDA; intenta solucionar los problemas del &ODBC; y ayudarle con los del
+      &SQL;. Es una especie de capa intermedia para acceder a diferentes 
+      fuentes de datos. Ofrece una vista a alto nivel de las fuentes de datos
+      y en algunas partes permite actuar a bajo nivel para aquellas tareas 
+      específicas de la base de datos.
+    </para>
+    <para>
+      GNU Data Access (&GDA;) se define como un conjunto de interfaces &CORBA; 
+      &IDL;. El nivel de abstracción que da la &GDA; hace posible acceder a 
+      diferentes tipos de fuentes de datos, mediante el servidor de &CORBA;
+      implementando estos interfaces &IDL; y acceder a una fuente de datos dada.
+    </para>
+    <para>
+      &LIBGDA; es una implementación de los interfaces &GDA; &CORBA; 
+      utilizando <ulink url="http://www.labs.redhat.com/orbit/" type="http">
+      ORBit</ulink> como implementación de &CORBA;. De todas maneras, en 
+      teoría, sería posible implementar &LIBGDA; en otro &CORBA; &ORB; o
+      sistema operativo, dando así soporte al &CORBA; que tenga ese sistema.
+    </para>
+    <para>
+      Así se ofrece un interfaz sobre las tecnologías de &CORBA;, que hacen más
+      fácil a los programadores el uso de todo el poder que nos da &CORBA; sin
+      saber cómo funciona internamente. Viene con varias librerías, tanto para
+      clientes como para servidores, como una implementación en C de este 
+      interfaz. Este nivel de abstracción permitiría, en un tiempo record, 
+      cambiar todos aquellos componentes internos ( el sistema de gestión de 
+      bases de datos) sin necesidad de cambiar las aplicaciones cliente que 
+      utilicen estas bibliotecas, y también, lo más importante, mantener a los
+      desarrolladores de la aplicación al margen de los contínuos cambios en 
+      las diferentes &API;s relacionadas con &CORBA; que se estén utilizando,
+      como <systemitem class="resource">OAF</systemitem>,
+      <systemitem class="resource">GConf</systemitem>, etc.
+    </para>
+    <para>
+      En estas bibliotecas ( y en los ficheros de cabecera y en los enlaces con
+      otros lenguajes que se pueden utilizar para el desarrollo), &LIBGDA; 
+      incluye varias herramientas y utilidades con el fin de ayudarle en la
+      tarea de desarrollar aplicaciones basadas en &LIBGDA;, así como en
+      la automatización de tareas relacionadas con bases de datos.
+    </para>
+    <para>
+      &LIBGDA; se ha implementado para los sistemas operativos del tipo
+      <systemitem class="osname">UNIX</systemitem> (incluendo por supuesto
+      <systemitem class="osname">Linux</systemitem>), y depende de las
+      bibliotecas: <systemitem class="resource">ORBit</systemitem>, 
+      <systemitem class="resource">GConf</systemitem>, 
+      <systemitem class="resource">OAF</systemitem> y 
+      <systemitem class="resource">Glib</systemitem>, que dan un sistema muy 
+      ligero, incluso ideal para aquellas aplicaciones que se tienen que 
+      ejecutar en sistemas limitados en prestaciones. Es parte también del
+      proyecto &GNOMEDB;, y todavía se usa como base se él, pero se está 
+      separando para eliminar todas aquellas dependencias de GNOME para permitir
+      el desarrollo de aplicaciones basadas en &GNOMEDB; para otros entornos 
+      que no sean GNOME.
+    </para>
+  </chapter>
+  
+  <chapter id="architecture">
+    <title>La Arquitectura de &LIBGDA;</title>
+    <para>
+      &LIBGDA; se compone de tres capas independientes. La de más bajo nivel es 
+      la que conforman los proveedores &GDA;, que son servidores &CORBA; cuya 
+      tarea es mapear el &API; de un <acronym>RDBMS</acronym> específico al
+      modelo &GDA;. Esto es, son objetos &CORBA; que implementan interfaces 
+      &GDA; &CORBA;.
+    </para>
+    <para>
+      En la capa intermedia, está la biblioteca cliente: una biblioteca 
+      cliente &CORBA;, que oculta toda la complejidad de &CORBA; a las 
+      aplicaciones cliente, que incluye varias funciones que ayudan en el
+      desarrollo de aplicaciones basadas en &GDA;.
+    </para>
+    <para>
+      Y finalmente, el la capa superior residen todas las aplicaciones cliente
+      incluidas en la suite, así como cualquier aplicación que haga uso de las
+      bibliotecas cliente.
+    </para>
+    <para>
+      &LIBGDA; se basa en &CORBA; y utiliza 
+      <ulink url="http://www.labs.redhat.com/orbit/" type="http">ORBit</ulink>
+      como implementación de &CORBA;. El sistema provee básicamente un fichero 
+      &IDL; como interfaz al cliente. Debe ser escrito un servidor para cada 
+      tipo diferente de fuente de datos
+      (&ODBC;,&SYBASE;, &INFOR;, &MYSQL;, &LDAP;, ...). 
+      Idealmente este servidor es una biblioteca compartida que se enlaza con
+      un pequeño programa controlador para formar un servidor &CORBA; 
+      independiente. El programa controlador hace posible usar el servidor como 
+      biblioteca del cliente, reduciendo así el tiempo de configuración de 
+      interconexión (sin sockets ni conmutadores de contexto).
+    </para>
+    <para>
+      La ventaja principal del uso de un servidor &CORBA; es que el servidor 
+      puede ser ejecutado en otra máquina, para balancear la carga. Es posible
+      ya que <systemitem class="resource">ORBit</systemitem> es pequeño y rápido.
+      Usted puede utilizar el mismo servidor &CORBA; desde su lenguaje 
+      interpretado y puede hacer control del transacciones y enrutado, sin 
+      necesidad de cambiar el cliente. El problema es que si el proveedor cae, 
+      todos los clientes se desconectarán de la base de datos. Para solucionar 
+      esta problema es posible que cada cliente solicite una nueva copia del 
+      proveedor (aunque esta funcionalidad no está incluida todavía en el 
+      &API; cliente).
+    </para>
+    <para>
+      Otro tipo de proveedores son los de <emphasis>biblioteca compartida
+      </emphasis>. Éstos son enlazados al cliente cuando éste solicita algo 
+      del proveedor. La desventaja es que el servidor tiene que ser alojado 
+      en la misma máquina que el cliente. Pero así si el servidor falla sólo
+      afecta a un cliente. El coste de inicialización es similar a ejecutar un
+      proveedor. La gran ventaja es que este tipo de proveedores son más fáciles
+      de depurar, porque no es necesario adosar &GDA; a un proveedor que se 
+      esté ejecutando y que pueda capturar errores durante la inicialización 
+      del servidor.
+    </para>
+    <para>
+      De serie, cada proveedor &GDA; está disponible como ejecutable y como 
+      biblioteca compartida. El proceso de compilación y la convenciones usadas 
+      para implementar el proveedor aseguran que tanto el ejecutable como la
+      biblioteca compartida estarán compiladas e instaladas. También, los 
+      proveedores &GDA; están disponibles como bibliotecas compartidas, que son 
+      enlazadas con un pequeño programa que actua como controlador de la 
+      biblioteca compartida.
+    </para>
+  </chapter>
+  
+  <chapter id="installation">
+    <title>Instalación</title>
+    <sect1 id="installation-introduction">
+      <title>Introducción</title>
+      <para>
+        En nuestro <ulink url="http://www.gnome-db.org" type="http">sitio web
+	</ulink>, están disponibles los paquetes para <ulink 
+	url="http://www.redhat.com" type="http">RedHat</ulink> y 
+	<ulink url="http://www.debian.org" type="http">Debian
+        </ulink>, así que no tendrá ningún problema en instalarlos.
+	Para una instalación estándar, no hay más pasos que seguir, pero, 
+	si usted conoce todas las opciones de configuración de &CORBA; y &GDA;
+	o ha tenido problemas con la instación estándar, puede pasarse a la 
+	instalación no estándar.
+      </para>
+    </sect1>
+    <sect1 id="installation-installing">
+      <title>Cómo instalar</title>
+      <para>
+        La instalación depende obviamente de en qué formato elige bajarse los 
+	paquetes. Si elige &RPM; o <acronym>DEB</acronym>, compruebe su 
+	documentación de manejo de paquetes para saber cómo instalar nuevos
+	paquetes.
+      </para>
+      <para>
+        Si se ha bajado el código fuente (en un tarball), debe 
+	compilar el software. Para hacer esto, una vez que haya 
+	descomprimido el árbol de directorios, debe hacer:
+        <screen>
+          <prompt>$</prompt><userinput>./configure</userinput>
+          <prompt>$</prompt><userinput>make</userinput>
+          <prompt>$</prompt><userinput>make install</userinput>
+        </screen>
+      </para>
+      <para>
+        Esto generará los makefiles para su plataforma específica, 
+	compilará el árbol de fuentes, e instalará los binarios y 
+	la documentación en su sistema.
+      </para>
+      <para>
+        Si no encuentra un fichero llamado <filename>configure</filename>,
+	debiera haber uno llamado <filename>autogen.sh</filename>. En este 
+	caso, ejecute el <filename>autogen.sh</filename>, que creará y 
+	ejecutará el fichero <filename>configure</filename> generado.
+      </para>
+      <para>
+        Usted puede especificar varios argumentos al ejecutar el 
+	<filename>configure</filename> (o
+        <filename>autogen.sh</filename>). Los más importantes son (puede 
+	comprobar todos los argumentos disponibles ejecutando 
+	<command>./configure --help</command>):
+      </para>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+            <userinput>--prefix=&lt;directorio&gt;</userinput>: 
+	    Prefijo que indica donde se instalará el paquete
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-mysql=&lt;directorio&gt;</userinput>: Especifica
+            el directorio donde están instaladas las bibliotecas de &MYSQL;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-postgres=&lt;directory&gt;</userinput>:
+	     Especifica el directorio donde están instaladas las bibliotecas de
+             &PGSQL;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-sybase=&lt;directory&gt;</userinput>:
+	      Especifica el directorio donde están instaladas las bibliotecas de 
+	      &SYBASE;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-ldap=&lt;directory&gt;</userinput>: 
+	     Especifica
+            el directorio donde están instaladas las bibliotecas de &LDAP;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-oracle=&lt;directory&gt;</userinput>: 
+	     Especifica
+            el directorio donde están instaladas las bibliotecas de &ORAC;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-interbase=&lt;directory&gt;</userinput>: 
+	     Especifica
+            el directorio donde están instaladas las bibliotecas de &INTERB;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <userinput>--with-mdb=&lt;directory&gt;</userinput>: 
+	     Especifica
+            el directorio donde están instaladas las bibliotecas de MDB 
+	    (para acceder a los ficheros de &MSACC;)
+            
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        Los proveedores no se instalan de serie, así que tienen que especificar
+	estos argumentos cuando ejecute <filename>configure</filename>.
+      </para>
+      <para>
+        Si encuentra algún problema durante la configuración, compilación o
+	instación del software, no dude en contactar con la lista de correo de 
+	&GNOMEDB; (<email>gnome-db-list@gnome.org</email>, primero mande un 
+	correo a <email>gnome-db-list-request@gnome.org</email> con el asunto 
+	SUBSCRIBE, si todavía no estaba subscrito).
+      </para>
+    </sect1>
+    <sect1 id="installation-configuring">
+      <title>Configuración</title>
+      <para>
+        Dependiendo del uso que se le vaya a dar a &LIBGDA; tendrá que 
+	adentrarse más o menos en las interioridades de la misma, pero no tema,
+	se ha implementado para que sea fácil de usar..
+      </para>
+      <sect2 id="installation-development">
+        <title>Configuración para el desarrollo</title>
+        <para>
+          Si desea desarrollar aplicaciones usando &LIBGDA;, 
+	  debiera instalar el paquete libgda-dev[el], si realizó una 
+	  instalación basada en Debian o &RPM;. Si compiló el ostfware desde su 
+	  código fuente, no se preocupe los ficheros de desarrollo ya están 
+	  instalados en su sistema.
+        </para>
+        <para>
+          El único paso que debe dar para estar seguro que todo se ha instalado
+	  correctamente, es comprobar que las bibliotecas y los binarios de 
+	  &LIBGDA; se vean por su sistema. Esto es, asegurarse de que el 
+	  directorio <filename class="directory">bin/</filename> de la &LIBGDA;
+	  esté incluido dentro de su variable de entorno <envar>PATH</envar>,
+	  así como <filename class="directory">lib/</filename> en su
+	  <envar>LD_LIBRARY_PATH</envar> (o en su fichero  
+          <filename>/etc/ld.so.conf</filename>).
+        </para>
+      </sect2>
+      <sect2 id="installation-client">
+        <title>Configuración para acceder a la base de datos</title>
+        <para>
+          Si desea acceder a una fuente de datos mediante  un proveedor &GDA;,
+	  debe tener acceso a este proveedor, y lo más importante de todo, este
+	  proveedor debe tener acceso a la fuente de datos. Primero debe 
+	  tener su base de datos arriba y ejecutándose. Para esto debe comprobar
+	  la documentación de su fuente de datos específica, o ver la
+	  documentación del proveedor &LIBGDA; específico.
+        </para>
+        <para>
+          Una vez que tiene instalado su proveedor &GDA;, bien sea en su máquina
+	  o en otra conectada a la red, debe configurar su sistema local para 
+	  poder acceder a él. Si es una instalacción local, una vez instalado
+	  el proveedor &GDA;, éste es visible en su máquina. Esto ocurre porque
+	  el paquete del proveedor ofrece un fichero <filename>.oafinfo
+	  </filename> en el que espcifica la localización y cualquier otra
+	  información acerca de sí mismo.
+        </para>
+        <para>
+          Si, por el contrario, su proveedor se encuentra en otra máquina,
+	  tendrá que crear usted mismo el fichero <filename>.oafinfo
+	  </filename>. Para ésto, necesitará leer la documentación sobre la 
+	  instalación de <systemitem class="resource">OAF
+          </systemitem>.
+        </para>
+        <para>
+          El siguiente paso es configurar las fuentes de datos que desee tener
+	  disponibles en su sistema. Para esto, debiera usar &GNOMEDB;, el
+	  front-end de &LIBGDA; para el 
+	  <ulink url="http://www.gnome.org" type="http">proyecto  GNOME</ulink>.
+          <footnote>
+	    <para>
+	      Sería una buena idea añadir una herramienta de línea de comandos
+	      para manejar la configuración, hasta ahora, usando 
+	      <systemitem class="resource">GConf</systemitem>, en la que no es 
+	      necesario configurar ningún fichero de texto, como se hacía 
+	      antes con <function>gnome_config</function>.
+              El &API; para realizar esto también está disponible en la 
+	      biblioteca <filename>libgda-common</filename>, en la que será 
+	      realmente fácil de configurar.
+              Algún Voluntario?
+	    </para>
+	  </footnote>
+	</para>
+	<para>
+	  Las herramientas en línea de comandos que se darán con &LIBGDA; 
+	  no se harán esperar mucho, así que si quiere saber qué 
+	  información será necesaria para configurar una fuente de datos...
+	</para>
+	<para>
+	  Uno de los problemas que &GDA; resuelve es el de los nombres
+	  de las fuentes de datos. Cada sistema de bases de datos tiene
+	  su propia manera para definir los nombres de sus bases de datos.
+	  Por ejemplo &MYSQL; usa el nombre de la maquina local, el número 
+	  de puerto y el nombre de la base de datos. Otras bases de datos, 
+	  como Solid, usan como nombre el de la maquina local y el 
+	  número del puerto. No hay soporte para varias bases de datos en 
+	  por servidor. Porque el cliente no necesita saber todos estos 
+	  detalles. La configuración de &LIBGDA; define todas las 
+	  propiedades de cada una de las fuentes de datos, para que la 
+	  base de datos correcta pueda ser contactada. Esta información 
+	  es acesible desde la biblioteca cliente y enviada al proveedor, 
+	  que procesa la cadena de caracteres para decidir a qué base de 
+	  datos debe ser conectada. Los datos almacenados para cada fuente 
+	  de datos son los siguientes:
+	  
+	  <programlistingco>
+	    <areaspec>
+	      <area id="provider" coords="2"/>
+	      <area id="dsn" coords="3"/>
+              <area id="description" coords="4"/>
+            </areaspec>
+	    <programlisting>
+	      [sales]
+	      Provider=OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory
+              DSN=DATABASE=test;HOST=localhost;PORT=1111
+	      Description=MySQL Test Database in native mode
+	      Configurator=None
+	    </programlisting>
+	    <calloutlist>
+	      <callout arearefs="provider">
+		<para>
+    		  El proveedor para esta base de datos es el gda-mysql.
+		  El valor usado para esta entrada es como el objeto ID 
+		  para la activación OAF. 
+		</para>
+	      </callout>
+	      <callout arearefs="dsn">
+		<para>
+		  Esta es la entrada más importante. El valor de 
+		  esta entrada es la cadena de caracteres que se 
+		  manda al proveedor. La manera en la que se interpreta
+		  esta entrada por los proveedores se describe en la 
+		  sección Proveedores.
+		</para>
+	      </callout>
+	      <callout arearefs="description">
+		<para>
+		  El valor de esta entrada es una descripción corta de
+		  la fuente de datos. Esto se deja a su conveniencia ya 
+		  que no es usado para ningún propósito.
+		</para>
+	      </callout>
+	    </calloutlist>
+	  </programlistingco>
+	</para>
+      </sect2>
+      <sect2 id="installation-provider">
+        <title>Información específica de los Proveedores</title>
+        <para>
+          Esta sección da información específica de cada uno de los proveedores
+	  &LIBGDA; disponibles.
+        </para>
+	<sect3 id="installation-provider-default">
+	  <title>Proveedor por Defecto</title>
+	  <para>
+	    El proveedor por defecto se instala siempre con la &LIBGDA;,
+	    lo que significa que siempre dispondrá de un sistema de bases de 
+	    datos. Para conectar al proveedor por defecto de bases de datos,
+	    sólo necesitará especificar, en la cadena de caracteres &DSN;, 
+	    una cadena de caracteres de la forma 
+	    "DIRECTORY=/directory/for/the/database". Cuando conecte por 
+	    primera vez a la nueva fuente de datos, el proveedor por defecto
+	    &GDA; creará la base de datos, el el directorio que especificó 
+	    en la cadena de caracteres &DSN;, si ésta (la base de datos) 
+	    no existe.
+	  </para>
+	</sect3>
+	<sect3 id="installation-provider-odbc">
+	  <title> Proveedor &ODBC;</title>
+	  <para>
+	    El proveedor &ODBC; es un caso especial, ya que &ODBC; en sí 
+	    mismo es una capa de acceso a datos, como &LIBGDA;. Así que en 
+	    el caso del proveedor &GDA; &ODBC;, la cadena de caracteres se 
+	    le pasa directamente al manejador del controlador &ODBC;. Esto
+	    es, el proveedor &GDA; &ODBC; no procesa esa cadena de 
+	    caracteres, ni siquiera intentará comprender lo que significa; 
+	    simplemente se lo pasará a la biblioteca &ODBC;.
+	  </para>
+	  <para>
+	    Así que, si desea usar &LIBGDA; con &ODBC;, primero debiera saber
+	    cómo configurar una fuente de datos &ODBC; y después especificar 
+	    la cadena de caraceres &DSN; para pasarle a la biblioteca &ODBC; 
+	    en la cadena de caracteres de las fuentes de datos de &GDA;.
+	  </para>
+	  <para>
+	    Hay un proyecto llamado
+	    <ulink url="http://www.unixodbc.org">unixODBC</ulink>,
+            que provee algunas herramientas gráficas para ayudarle en
+	    las configuración de las fuentes de datos &ODBC;. Puede 
+	    resultarle interesante para hacer una prueba.
+	  </para>
+	</sect3>
+	<sect3 id="installation-provider-postgres">
+	  <title> Proveedor &PGSQL;</title>
+	  <para>
+	    Para utilizar el proveedor &GDA; &PGSQL;, necesitará instalar 
+	    el paquete <application>gda-postgres</application>.	
+	  </para>
+	  <para>
+	    El proveedor &PGSQL; acepta los siguientes argumentos en la
+	    cadena de caracteres &DSN; delas fuentes de datos &GDA;:
+	     <itemizedlist>
+	       <listitem>
+	         <para>
+	           HOST: el nombre de la máquina donde el servidor de 
+		   bases de datos se está ejecutando.
+		 </para>
+               </listitem>
+	       <listitem>
+		 <para>
+		   DATABASE: el nombre de base de datos a la que quiere 
+		   acceder
+		 </para>
+	       </listitem>
+	     </itemizedlist>
+	   </para>
+	 </sect3>
+        <sect3 id="installation-provider-mysql">
+          <title> Proveedor &MYSQL; </title>
+          <para>
+	    Para configurar una fuente de datos que acceda a una base 
+	    de datos &MYSQL;, necesitará instalar el proveedor 
+	    &GDA; &MYSQL; ( paquete <filename>gda-mysql</filename>).
+          </para>
+	  <para>
+	    Acepta los siguientes argumentos en la cadena de caracteres
+	     &DSN;:	
+	  </para>
+        </sect3>
+      </sect2>
+    </sect1>
+  </chapter>
+  
+  <chapter id="gda-common">
+    <title>Biblioteca Common &GDA;</title>
+    <para>
+      La biblioteca common &GDA; contiene un amplio conjunto de funciones 
+      útiles que son comunes tanto para los clientes y servidores &GDA;, y
+      que pueden ser usadas fácilmente en sus aplicaciones.
+    </para>
+    <sect1 id="gda-common-corba">
+      <title>Funciones &CORBA;</title>
+      <para>
+        Como otra manera de ocultar todo el código &CORBA;, la
+	<filename>libgda-common</filename> incluye una serie de funciones que 
+	ofrecen un acceso a bajo nivel al tema &CORBA;, por si pueda 
+	necesitar hacer algo especial con ello.
+      </para>
+    </sect1>
+    <sect1 id="gda-common-logs">
+      <title>Logs</title>
+      <para>
+        La herramienta creadora de logs de la biblioteca common de &GDA; 
+	usa un formato especial de ficheros que permite una fácil 
+	recepción de todos los mensajes log. Puedes ver los logs ordenados
+	por fecha, tiempo , eliminar entradas, etc.
+      </para>
+    </sect1>
+    <sect1 id="gda-common-xml-queries">
+      <title>Consultas &XML; </title>
+      <para>
+      </para>
+    </sect1>
+    <sect1 id="gda-common-xml-databases">
+      <title>Bases de datos basadas en &XML; </title>
+      <para>
+        &LIBGDA; ofrece un tipo especial de formato de fichero &XML; que 
+	pretende representar la estructura completa de una fuente de datos
+	Este formato de fichero se usa para importar/exportar datos desde/hacia
+	una fuente de datos dada. También es usado por el proveedor &XML; (que 
+	no se ha implementado todavía), que simula un sistema de bases de datos 
+	almacenado en uno es de estos ficheros.
+      </para>
+      <para>
+        La biblioteca <filename>gda-common</filename> incluye una clase llamada 
+	<classname>GdaXmlDatabase</classname>, que ofrece una manera 
+	implementable de leer o modificar uno de estos ficheros &XML;.
+      </para>
+    </sect1>
+  </chapter>
+
+  <chapter id="gda-client">
+    <title>Biblioteca Cliente &GDA;</title>    
+    <sect1 id="gda-client-introduction">
+      <title>Introducción</title>
+      <para>
+        La biblioteca cliente es un ligero wrapper sobre el interfaz &CORBA;. 
+	Tiene sobre todo cuidado sobre como solicitar y liberar memoria cuando
+	no necesita nunca más los resultados de una consulta o cierra una 
+	conexión con una base de datos. También hace de caché de peticiones, 
+	así que es posible navegar hacia delante y hacia atrás a través de 
+	los resultados de una consulta, incluso si la base de datos no soporta 
+	esta funcionalidad. Por supuesto las comprobaciones de consistenca y 
+	las estrategias de bloqueos de la base de datos ya no están soportados, 
+	pero espero encontrar alguna solución a este problema.
+      </para>
+      <para>
+        También hay soporte para manejar diferentes fuentes de datos con 
+	diferentes servidores y características de conexión. Para ésto se usa 
+	el sistema de configuración <systemitem class="resource">GConf
+	</systemitem>.
+      </para>
+      <para>
+        También tiene funciones de utilidad para ayudar a realizar 
+	diferentes tareas relacionadas con las bases de datos. Incluye 
+	también ejecuciones batch de comandos (transacciones), &GDA;, 
+	proveer acceso, etc.
+      </para>
+      <para>
+        El concepto principal de la biblioteca cliente es que un proveedor 
+	le permita conectarse a varias fuentes de datos. Como un proveedor 
+	es un servidor &CORBA; implementado con 
+	<systemitem class="resource">ORBit</systemitem>. Un proveedor provee
+	un interfaz de conexión que permite al cliente solicitar conexiones 
+	no inicializadas desde el proveedor. La activación del proveedor se
+	realiza a través del sistema de activación 
+	<systemitem class="resource">OAF</systemitem>.
+	<systemitem class="resource">OAF</systemitem> maneja la 
+	identificación del nombre del servidor y del registro del servidor
+	&CORBA; (el proveedor &GDA;), una vez que éste esté activo.
+	<systemitem class="resource">OAF</systemitem> permite también 
+	al cliente elegir si se debe comenzar un nuevo servidor para cada 
+	instancia de la factory, o si se debe usar un servidor que se esté 
+	ejecutando actualmente. Esto tiene implicaciones en el tiempo de 
+	inicialización y el numero de procesos conectados al servidor de la 
+	bases de datos ( por lo tanto el número de licencias usadas).
+      </para>
+      <para>
+	Para poder obtener una conexión a una fuentes de datos, el cliente 
+	normalmente debe mandar alguna información al proveedor. Primero 
+	debe pasarle una cadena de caracteres al proveedor. Entoces éste 
+	utiliza esta cadena de una manera específica para encontrar las piezas
+	perdidas requeridas para establecer una conexión al servidor de bases
+	de datos real. Esta puede ser un nombre de máquina y un número de 
+	puerto ,el nombre del una biblioteca compartida que cargar, cualquier 
+	cosa que sea necesaria para que sea accesible el sistema de bases de
+	datos o la fuente de datos. El cliente adicionalmente puede pasarle 
+	un nombre de usuario y contraseña para ser autorizado por el servidor 
+	de fuente de datos. El proveedor por sí mismo no puede comprobar 
+	ningún tipo de autentificación. Tenga también en cuenta que la 
+	conexión entre el cliente y el servidor no está encriptada, así 
+	que los datos se mandan como texto abierto. Esto cambiará cuando 
+	<systemitem class="resource">ORBit</systemitem> soporte comunicación
+	encriptada entre el servidor &CORBA;  y sus clientes. Si este 
+	comportamiento no es el deseado, use el proveedor como una 
+	biblioteca compartida.
+      </para>
+      <para>
+        Después de que la conexión se haya abierto, el cliente debiera 
+	solicitar la información del diccionario del datos a la fuente de 
+	datos. La semantica de los datos devueltos por muchas consultas 
+	es altamente dependiente del proveedor y normalmente no será portable 
+	entre diferentes fuentes de datos. Si los proveedores son de la misma
+	clase (bases de datos, por ejemplo), la información será 
+	intercambiable, pero no espere tener el mismo programa cliente 
+	consulando a un proveedor &LDAP; o a un proveedor &ODBC; sin 
+	realizar cambios en el código fuente del cliente.
+      </para>
+      <para>
+        Entonces el cliente puede crear objetos <classname>GdaCommand
+	</classname> que se usan para hacer consultas actuales a los
+	proveedores. Para proveedores del tipo &SQL;, la consulta es el 
+	estado actual &SQL;. Por supuesto el proveedor es libre de cambiar 
+	el estado (conversión entre dialectos &SQL;) y algunos proveedores 
+	pueden especificar su propio lenguaje de consulta (el proveedor 
+	&LDAP; así lo hará). También es posible que ocurra esto para 
+	llamar a procedimientos almacenados. Estos procedimientos pueden
+	estar almacenados en el actual backend (el sistema de bases de 
+	datos) o implementados por el servidor.
+      </para>
+      <para>
+	El resultado de una consulta se accede a través de un objeto 
+	del tipo <classname>GdaRecordset</classname>. Las actuales filas 
+	de datos pueden estar almacenadas del lado del cliente, del proveedor 
+	o del servidor de bases de datos. Esto depende de varias banderas y 
+	opciones se usan cuando se cre el recordset. Las posiciones en un 
+	recordset se definen a través de bookmarks, que son tipos de datos 
+	opacos. Un bookmark puede ser usado para posicionar el actual 
+	puntero de acceso en un recordset. Algunas bases de datos no 
+	permiten la posicion arbitraria del puntero de acceso en el resultado 
+	de una consulta, el proveedor almacena y hace cache de todas las 
+	filas de datos recibidas. Si el recordset está configurado para 
+	almacenar los datos en el lado del cliente el bookmark es simplemente 
+	un puntero a las filas. Puede leer más acerca del almacenamiento de 
+	las filas de datos, su caché y la ransacción en la sección 
+	correspondiente a los recodsets.
+      </para>
+    </sect1>
+    <sect1 id="gda-client-objects">
+      <title>Vista previa de los Objetos &GDA;</title>
+      <para>
+        La clase principal de &GDA; es la clase <classname>GdaConnection
+	</classname>. Los objetos de esta clase establecen la conexión al
+	servidor &CORBA; y son necesarios para realizar toda la actividad 
+	en el lado del cliente. Cada objeto tiene un puntero directo o 
+	indirecto a un objeto de conexión.
+      </para>
+      <para>
+	Otra clase muy importante es la <classname>GdaCommand</classname>.
+	Se usa para almacenar una cadena de comandos y para ejecutar este 
+	comando en un servidor &CORBA;. Tiene una referencia a un objeto de 
+	conexión. La función <function>execute</function> devuelve un objeto 
+	de la clase <classname>GdaRecordset</classname>. Esta clase es la 
+	responsable de hacer de buffer, caché y manejo de memoria para los 
+	objetos de datos devueltos por el servidor.
+      </para>
+    </sect1>
+    <sect1 id="gda-client-types">
+      <title>Tipos de Datos</title>
+      <para>
+	Un problema que &GDA; intenta esconder al usuario es la diferencia 
+	entre los tipos de datos que están almacenados en la base de datos y 
+	los que son utilizados por la aplicación. Un ejemplo sencillo es la 
+	representación de los precios. Son números de coma flotante arreglados
+	con dos dígitos después del coma decimal. En la mayor parte de las 
+	bases de datos le permiten especificar un tipo de datos DECIMAL con 
+	una longitud y precisión. En C no existe este tipo de datos. Puede 
+	querer almacenar el valor como una cadena de caracteres , que es 
+	conveniente para la presentación gráfica de los datos, pero no para 
+	el procesamiento de impuestos y cosas por el estilo. &GDA;
+	de todas maneras duplica el tipo de almacenamiento de una columna desde 
+	el tipo que el usuario quiere. Esto lo hace mediante el 
+	<classname>GDA_Type</classname> de un valor. Las posibilidades de 
+	conversión entre diferentes tipos de datos se utilizan, eso sí, si 
+	están disponibles. De otra forma las conversiones de tipos se 
+	realizan en el cliente. La conversión de datos en el servidor pueden 
+	tener resultados impredecibles cuando el servidor es una máquina 
+	de 64bit y el cliente es una máquina a 32bit.
+      </para>
+      <sect2 id="gda-client-data-types">
+        <title>Tipos de Datos Disponibles</title>
+        <para>
+          Aqui tiene una lista de los tipos de datos &GDA;, sus equivalentes 
+	  en C y &SQL; y las conversiones permitidas.
+           <table frame="all" pgwide="1">
+             <title>Tipos de Datos &GDA</title>
+	     <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+	       <thead>
+		 <row>
+		   <entry>tipo en &GDA;</entry>
+		   <entry>tipo en C </entry>
+		   <entry>tipo en &SQL</entry>
+		   <entry>Descripción</entry>
+		 </row>
+	       </thead>
+	       <tbody>
+		<row>
+		  <entry>FIXME</entry>
+		  <entry>FIXME</entry>
+		  <entry>FIXME</entry>
+		  <entry>FIXME</entry>
+		</row>
+	       </tbody>
+	     </tgroup>
+           </table>
+        </para>
+          
+      </sect2>
+    </sect1> 
+    <sect1 id="gda-client-meta">
+      <title>Meta-Información de las Fuentes de Datos</title>
+      <para>
+	Todas la fuentes de datos deben proveer funciones para acceder a su 
+	meta-información. Si las fuentes de datos son bases de datos, la 
+	metainformación son: los nombre de las tablas, columnas, derechos 
+	de los usuarios, y demás. Los resultados de una consulta 
+	de metainformación se representan como un <classname>GdaRecordset
+	</classname>. El problema es que gran parte del tiempo el cliente 
+	solo está interesado en alguna parte de esta información. Por 
+	ejemplo, el cliente quiere consultar a la fuente de datos sobre 
+	el indice de una tabla no sobre el de todas la tablas. De todas 
+	maneras es posible pasarle concrecciones a una consulta de 
+	metainformación. Pero de hecho es bastante más complicado, puede 
+	ser que cada consulta necesite tener diferentes concrecciones. La 
+	siguiente tabla muestra que tipos de consulta están implementados 
+	y qué concrecciones son válidas para cada consulta. La 
+	concrección se pasa como pares nombre-valor. El nombre es un enum y 
+	el valor es una cadena de caracteres. Las función consulta es una 
+	función variable y la lista de argumentos debe cerrarse con un enum 
+	de valor 0.
+      </para>
+      <para>
+        La tabla siguiente muestra las concrecciones más usadas y cuando 
+	usarlas. Algunos de los esquemas pueden requerir que diera usted 
+	una concrección.
+      </para>
+      <table frame="all">
+	<title>Significado de las Principales Concrecciones Estandard</title>
+        <tgroup cols="3" colsep="1" rowsep="1" align="left">
+          <colspec colname="c1" colwidth="160pt">
+          <colspec colname="c2">
+          <colspec colname="c3">
+          <thead>
+            <row>
+              <entry>Concrección</entry>
+              <entry>Uso</entry>
+              <entry>Observaciones</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><function>GDA_Connection_OBJECT_CATALOG</function></entry>
+              <entry>Usada para especificar la Base de Datos</entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><function>GDA_Connection_OBJECT_SCHEMA</function></entry>
+              <entry>Usada para especificar el propietario</entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><function>GDA_Connection_OBJECT_NAME</function></entry>
+              <entry>Usada para especificar el nombre del objeto a consultar 
+                     (tabla, ...)</entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><function>GDA_Connection_EXTRA_INFO</function></entry>
+              <entry>Configurable para obtener más información del 
+	      proveedor</entry>
+              <entry>Pónga a una cadena de caracteres no nula 
+	      (i.e "")</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para>
+        La siguiente tabla muestra los esquemas "estandar" que deben estar 
+	soportados por cada proveedor &GDA;, además un proveedor específico 
+	no tiene porque soportar uno de éstos. Para comprobar que cualquier 
+	esquema está soportado, vea la función 
+	<function>gda_connection_supports()</function>.
+      </para>
+      <!-- fix tables -->
+      <table frame="all">
+      <title>Esquemas Estardar y Concrecciones Soportadas</title>
+        <tgroup cols="5" colsep="1" rowsep="1" align="justify">
+          <colspec colname="c1" colwidth="50pt">
+          <colspec colname="c2" colwidth="4*">
+          <colspec colname="c3" colwidth="2*">
+          <colspec colname="c4">
+          <colspec colname="c5" colwidth="50pt">
+          <thead>
+            <row>
+              <entry>Tipo de Objecto</entry>
+              <entry>Identificador GDA</entry>
+              <entry>Concrecciones Soportadas</entry>
+              <entry>Campos Devueltos</entry>
+              <entry>Información Extra</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>Tables</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_TABLES
+              </function></entry>
+              <entry><function>GDA_Connection
+                     _OBJECT_NAME</function>,
+                     <function>GDA_Connection
+                     _OBJECT_CATALOG</function>,
+                     <function>GDA_Connection
+                     _OBJECT_SCHEMA</function>,
+                     <function>GDA_Connection
+                     _EXTRA_INFO</function></entry>
+              <entry>name, comments</entry>
+              <entry>name, owner, comments, SQL definition</entry>
+            </row>
+            <row>
+              <entry>Tables' parents (para proveedores que soporten herencia de 
+	      tablas)</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_TAB_PARENTS
+              </function></entry>
+              <entry><function>GDA_Connection
+                               _OBJECT_NAME</function>
+                               (requirido),
+                     <function>GDA_Connection
+                               _OBJECT_CATALOG</function></entry>
+              <entry>name, order of inheritance</entry>
+              <entry>No Soportado</entry>
+            </row>
+            <row>
+              <entry>Views</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_VIEWS
+              </function></entry>
+              <entry><function>GDA_Connection
+                               _OBJECT_NAME</function>,
+                     <function>GDA_Connection
+                               _OBJECT_CATALOG</function>,
+                     <function>GDA_Connection
+                               _OBJECT_SCHEMA</function>,
+                     <function>GDA_Connection
+                               _EXTRA_INFO</function></entry>
+              <entry>name, comments</entry>
+              <entry>name, owner, comments, SQL definition</entry>
+            </row>
+            <row>
+              <entry>Table (o views) columns</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_COLUMNS
+              </function></entry>
+              <entry><function>GDA_Connection
+                               _OBJECT_NAME</function>
+                     (required),
+                     <function>GDA_Connection
+                               _OBJECT_CATALOG</function>,
+                     <function>GDA_Connection
+                               _OBJECT_SCHEMA</function>,
+                     <function>GDA_Connection
+                               _COLUMN_NAME</function></entry>
+              <entry>name, type, size, precision, 
+                     nullable, is key, default value, comments</entry>
+              <entry>No soportado</entry>
+            </row>
+            <row>
+              <entry>Sequences</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_SEQUENCES
+              </function></entry>
+              <entry><function>GDA_Connection
+                               _OBJECT_NAME</function>,
+                     <function>GDA_Connection
+                               _OBJECT_CATALOG</function>,
+                     <function>GDA_Connection
+                               _OBJECT_SCHEMA</function>,
+                     <function>GDA_Connection
+                               _EXTRA_INFO</function></entry>
+              <entry>name, comments</entry>
+              <entry>name, owner, comments, SQL definition</entry>
+            </row>
+            <row>
+              <entry>Procedures</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_PROCS
+              </function></entry>
+              <entry><function>GDA_Connection
+                               _OBJECT_NAME</function>,
+                     <function>GDA_Connection
+                               _OBJECT_CATALOG</function>,
+                     <function>GDA_Connection
+                               _OBJECT_SCHEMA</function>,
+                     <function>GDA_Connection
+                               _EXTRA_INFO</function></entry>
+              <entry>name, object Id, comments</entry>
+              <entry>name, object Id, owner, comments, number of arguments, 
+                     SQL definition</entry>
+            </row>
+            <row>
+              <entry>Procedures' parameters</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_PROC_PARAMS
+              </function></entry>
+              <entry><function>GDA_Connection
+                               _OBJECT_NAME</function>
+              (required)</entry>
+              <entry>Usage(in, out or inout), type</entry>
+              <entry>No Soportado</entry>
+            </row>
+            <row>
+              <entry>Aggregates</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_AGGREGATES
+              </function></entry>
+              <entry><function>GDA_Connection
+                               _OBJECT_NAME</function>,
+                     <function>GDA_Connection
+                               _OBJECT_CATALOG</function>,
+                     <function>GDA_Connection
+                               _OBJECT_SCHEMA</function>,
+                     <function>GDA_Connection
+                               _EXTRA_INFO</function></entry>
+              <entry>name, object Id, In type, comments</entry>
+              <entry>name, object Id, In type, owner, comments, 
+                     &SQL; definition</entry>
+            </row>
+            <row>
+              <entry>Types</entry>
+              <entry><function>GDA_Connection_GDCN_SCHEMA_PROV_TYPES
+              </function></entry>
+              <entry><function>GDA_Connection
+                               _OBJECT_NAME</function>,
+                     <function>GDA_Connection
+                               _OBJECT_CATALOG</function>,
+                     <function>GDA_Connection
+                               _OBJECT_SCHEMA</function>,
+                     <function>GDA_Connection
+                               _EXTRA_INFO</function></entry>
+              <entry>name, owner, comments, Gda type, provider type</entry>
+              <entry>name, comments</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+      <para>
+        Debe prestar especial atención a las concrecciones usadas ( tanto 
+	en el cliente como en el servidor), porque se necesitan para que los 
+	proveedores devuelvan un error si se le pasa una concrección no
+	válida al servidor. Esto es especialmente importante, desde que hay 
+	esquemas que pueden significar diferentes cosas dependiendo del 
+	conjunto de concrecciones usadas. Como usted se puede imaginar, esto 
+	podría significar que el cliente reciba datos que no han sido 
+	solicitados.
+      </para>
+    </sect1>
+    <sect1 id="gda-client-batch">
+      <title>Trabajos de proceso serie (Batch)</title>
+      <para>
+        La biblioteca cliente incluye un objeto muy interesante: el objeto 
+	<classname>GdaBatch</classname>, que es una clase abstracta que le 
+	permite tratar una serie de comando como una única entidad. Ésto 
+	ofrece esta funcionalidad hará que se tenga un soporte real de 
+	transacciones (si la base de datos que este por debajo lo soporta).
+	Todos los cambios son enviados a la base de datos si no se encuentran 
+	errores, si no es así, se cancela la ejecución ( y todos los cambios 
+	realizados hasta el momento son descartados) y se devuelve un error 
+	desde la base de datos. Este modelo le permite disponer de un soporte 
+	similar al transaccional en sus aplicaciones simplemente con unas 
+	pocas líneas de código.
+      </para>
+      <para>
+        El objeto <classname>GdaBatch</classname> es también lo 
+	suficientemente para ser usado como un simple trabajo en serie, 
+	que ignora los errores si esto eslo que desea y desabilita las 
+	transacciones de la base de datos. En esta caso, la mejor manera de 
+	usar este objeto es conectarlo a sus diferentes señales, que le 
+	permiten saber en cualquier momento el estado de cada coando en 
+	ejecución.
+      </para>
+    </sect1>
+  </chapter>
+  
+  <chapter id="clients">
+    <title>&GDA; Clients</title>
+    <sect1 id="clients-introduction">
+      <title>Introducción</title>
+      <para>
+        Las aplicaciones cliente &GDA; pueden ser de dos tipos:
+        <itemizedlist>
+          <listitem>
+            <para>
+              <ulink url="http://www.gnome-db.org/apps.php" type="http">
+              Aplicaciones</ulink> que hacen uso de la biblioteca cliente 
+	      &LIBGDA;. Éstas son las más comunes, y es a lo que se tenderá, 
+	      desde que ocultan toda la compejidad de &CORBA; con un &API; 
+	      completa y fácil de utilizar.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Los clientes de &CORBA;. Usted puede querer desarrollar una 
+	      aplicación cliente &GDA; en otro lenguaje o en otra plataforma 
+	      donde haya una implementación diferente de &CORBA; &ORB;. En 
+	      este caso, necesitará generar la comunicación cliente de 
+	      &CORBA; usando su compilador &IDL; con los ficheros que vienen 
+	      con &GNOMEDB;. Si realiza algo parecido, por favor pongase en 
+	      contacto con los desarrolladores de &GNOMEDB; ya que sabemos 
+	      cómo funciona bajo estas circunstancias.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </sect1>
+    <sect1 id="clients-building">
+      <title>Compilando Clientes &GDA;</title>
+      <para>
+        Hay un script llamado <filename>gda-buildclient</filename> que se 
+	encarga de todas la bibliotecas necesarias para una aplicación cliente 
+	&GDA;. Ésto es todo lo que hace, así que no encontrará complicado su 
+	uso,pero se ha incluido por su simplicidad.
+      </para>
+      <para>
+        Una llamada típica a este script debiera tener una salida como esta:
+	<screen>
+    
+          gda-buildclient --o client
+                          --f &lt;list of .o files&gt;
+                          [--l &lt;list of additional libs&gt;]
+                          [--L &lt;list of directories to search libs for&gt;]
+         
+       </screen>
+      </para>
+      <para>
+        También hay un script llamado <filename>gda-config</filename> que 
+	puede usar para conseguir las banderas de enlazado y compilación para 
+	los clientes &GDA;, en este caso puede integrar &GDA en sus Makefiles.
+	Su sintaxis es:
+        <!-- this needs to be properly marked up -->
+        <screen>
+        
+          Usage: gda-config [OPTIONS] [LIBRARIES]
+          Options:
+          	[--prefix[=DIR]]
+          	[--exec-prefix[=DIR]]
+          	[--version]
+          	[--libs]
+          	[--cflags]
+          Libraries:
+          	client
+          	server
+          	cpp
+       
+       </screen>
+        Como puede ver, <filename>gda-config</filename> puede ser usado para 
+	obtener toda la información que quiera sobre &GDA;. Las dos más 
+	interesantes son <command>--libs</command> y <command>--cflags
+	</command>, que devuelven, respectivamente, las banderas de enlazado 
+	y compilación necesarias para un programa que haga uso de las 
+	bibliotecas &LIBGDA;. Como hay varias maneras de usar &LIBGDA;, 
+	este script ofrece la posibilidad de pasarle diferentes parámentros.
+	Así, si usa el parámetro LIBRARIES, quepuede tomar uno de estos 
+	valores: <userinput>client server cpp</userinput> (para C++).
+      </para>
+    </sect1>
+    <sect1 id="clients-building-corba">
+      <title>Compilando Clientes &GDA; &CORBA;</title>
+      <para>
+        Para mostrarle como hacelo, se pondrá el ejemplo el ompilador 
+	&IDL; de JAVA. Como sabrá si desea escribir un cliente &CORBA;, 
+	se debe usar un fichero &IDL; para definir el interfaz que provee 
+	un servidor &CORBA;. Entonces un programa llamado "IDL Compiler" 
+	usa ese fichero &IDL; para generar la base del cliente y el 
+	esqueleto del servidor que implementan el interfaz &ORB;. 
+	&LIBGDA; provee el fichero &IDL; que definen todos los 
+	interfaces &CORBA; exportados. Este fichero se llama 
+	<filename>gda.idl</filename> y se distribuye con &GNOMEDB;.
+      </para>
+      <para>
+        Este compilador &IDL; es lo que necesita para generar, en este caso,
+	la base del cliente. Así que, por ejemplo, usa el compilador &IDL; de
+	JAVA, tendría que ejecutar:
+        <screen>
+         <prompt>$</prompt><command>java-idl</command> <filename>gda.idl
+         </filename>
+        </screen>
+        Esto debiera generar una lista de ficheros 
+	<filename>.java</filename>.
+      </para>
+    </sect1>
+  </chapter>
+
+  <chapter id="providers">
+    <title>Proveedores &GDA;</title>
+    <sect1 id="providers-introduction">
+      <title>Introducción</title>
+      <para>
+        Hay ejecutables o bibliotecas compartidas que realizan el trabajo 
+	de conversión. Éstos mapean las llamadas &CORBA; a las llamadas 
+	específicas de la fuente de datos. Por lo tanto, puede utilizar:
+	&ODBC;, una biblioteca nativa de la base de datos, generadores y 
+	parser &XML;, &LDAP;, <acronym>POP3</acronym> o cualquier otra 
+	cosa que se pueda imaginar.
+        imagine
+.     </para>
+      <para>
+        Hay mucho trabajo relacionado con los proveedores &GDA; , 
+	especialmente son el backend que se usa no es una base de datos. En 
+	este caso, aparte del mapeado del &API; de lo que resida por debajo 
+	( por ejemplo la base de datos) al modelo de &GDA;, se debe prestar 
+	especial atención al mapeado de una estructura parecida a las 
+	bases de datos a una estructura queno lo sea. Esta es la parte más 
+	compleja de la arquitectura de &GDA;.
+      </para>
+      <para>
+        Con &LIBGDA; se provee un servidor framework para facilitar el 
+	proceso de añadir un nuevo servidor. Esto se hace a través de un 
+	conjunto de ficheros plantilla un script llamado 
+	<filename>gda-buildserver</filename>, que se puede usar para crear
+	tanto la estructura básica de un nuevo servidor como la 
+	compilación del mismo servidor.Si lo hace así, por favor 
+	póngase en contacto con los desarrolladores de &LIBGDA; para 
+	hablar sobre su inclusión en el árbol de fuentes de &LIBGDA;.
+      </para>
+      <para>
+        Otra manera de añadir un proveedor &GDA;, sería usar los ficheros 
+	&IDL; psra generar una implementación del servidor. Así, usted puede 
+	codificar el servidor en su lenguaje &CORBA; &ORB; preferido. Si 
+	le interesa algo parecido a esto, por favor póngase en contacto con 
+	los desarrolladores de &LIBGDA;.
+      </para>
+    </sect1>
+    <sect1 id="providers-implementation">
+      <title>La Implementación de Proveedores &GDA;</title>
+      <para>
+        El propósito de la biblioteca <filename>gda-server</filename> 
+	es esconder todos los detalles de &CORBA; a los programadores de 
+	proveedores y evitar la duplicación de trabajo y que así depurar 
+	el código sea mucho más fácil. La biblioteca se mantiene al mismo
+	nivel que la biblioteca <filename>gda-client</filename> desde el 
+	punto de vista de &CORBA;.
+      </para>
+      <para>
+        La biblioteca <filename>gda-server</filename> impone un 
+	framework para que el proveedor sea implementado de una manera 
+	predeterminada, pero permite una personalización específica.
+      </para>
+      <sect2>
+        <title>Objectos de la Biblioteca</title>
+        <para>
+          Cada uno de los objetos tiene un objeto espejo desde la 
+	  biblioteca <filename>gda-client</filename> desde el lado 
+	  del servidor del framework &LIBGDA; &CORBA;. Éstos son los 
+	  objetos:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              El objeto <classname>GdaServerConnection</classname>: este es 
+	      el objeto principal que pmaneja todo lo corespondiente a las 
+	      conexiones a los &DBMS; (dando el nombre de la base de datos, 
+	      el nombre de usuario, la contraseña, etc.). Normalmente el 
+	      cliente sólo usará un objeto de este tipo.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              El objeto <classname>GdaServerCommand</classname>: este 
+	      objeto se usa para preparar una consulta para que se ejecute.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              El objeto <classname>GdaServerRecordset</classname>: cada vez 
+	      que se ejecuta un comando, se devuelve un objeto de este tipo,
+	      y entones se pueden examinar para ver los resultados que nos 
+	      han sido devueltos tras el comando. Bajo &LIBGDA;, el recordset 
+	      examina de una manera secuencial, fila tras fila (para algunos
+	      &DBMS; esta es la manera noral de uso, mientras en otras es 
+	      posible el acceso aleatorio).
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              El objeto <classname>GdaServerField</classname>: para cada 
+	      columna, se usa un objeto de este tipo. Se describe el nombre 
+	      de la columna, el tipo de datos y us contenidos. Cada objeto 
+	      <classname>GdaServerField</classname> se inicializará cuando 
+	      se crea un recordset y se almacenará un nuevo valor cada vez 
+	      que se examina una fila. El <filename>gda-server</filename>
+	      se usará entonces esos obketos para mandar los contenidos al 
+	      lado &CORBA; del client.
+              will then use these objects to send the contents to the client
+              &CORBA; side.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </sect2>
+      <sect2 id="providers-query">
+        <title>Cómo se procesa una consulta</title>
+        <para>
+          Cuando un cliente hace una consulta, lo que sucede en el lado 
+	  del servidor es lo siguiente:
+        </para>
+        <orderedlist>
+          <listitem>
+            <para>
+              Se crea un <classname>GdaServerConnection</classname>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Se abre la connexión
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Se crea un <classname>GdaServerCommand</classname>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              El comando actual se inserta dentro de un objeto 
+	      <classname>GdaServerCommand</classname>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Se ejecuta el comando, y si no ocurre ningún error, se crea 
+	      y se devuelve un <classname>GdaServerRecordset</classname>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              El <classname>GdaServerCommand</classname> se puede destruir 
+	      de un modo seguro
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Se examina la primera fila del recordset, luego la segunda, etc
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Se destruye el <classname>GdaServerRecordset</classname>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Sepuede cerrar la conexión y el 
+	      <classname>GdaServerConnection</classname> se destruye
+            </para>
+          </listitem>
+	</orderedlist>
+      </sect2>
+      <sect2 id="providers-customization">
+        <title>Trabajo Actual de personalización del &DBMS;</title>
+        <para>
+          Todos los pasos descritos arriba se imponen en el framework &LIBGDA;.
+	  El trabajo de escribir un proveedor para un &DBMS; específico está 
+	  en escribir la partes específicas que realicen estas operaciones 
+	  que se describen arriba. 
+        </para>
+        <para>
+          Así como la biblioteca C para los &DBMS; usa estructura específicas 
+	  para manejar referencias a conexiones, etc., es posible adosar alguna 
+	  información a los objetos de la biblioteca <filename>gda-server
+	  </filename>. Normalmente el programador de proveedores define las 
+	  siguientes estructuras (substituya aquí &DBMS; por el nombre del 
+	  actual &DBMS; como por ejemplo MYSQL o POSTGRES):
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              una estructura de conexión normalmente llamada DBMS_Connection
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              una estructura de comandos normalmente llamada DBMS_Command
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              una estructura recordset normalmente llamada DBMS_Recordset
+            </para>
+          </listitem>
+        </itemizedlist>
+      </sect2>
+    </sect1>
+    <sect1 id="providers-actual-implementation">
+      <title>Implementation Actual de &DBMS; </title>
+      <para>
+        En esta sección se dan algunas recomendaciones sobre cómo 
+	manejar algunos objetos específicos de cada &DBMS;.
+      </para>
+      <sect2 id="providers-data-type-handling">
+        <title>Manejor de Tipos de Datos</title>
+        <para>
+          &LIBGDA; tiene definidos algunos tipos de datos, que cubren todos 
+	  los tipos normales de datos ( cadenas de caracteres, números, 
+	  fechas, binarios, etc.). De todas maneras, porque cada &DBMS; tiene 
+	  algunos tipos de datos específicos ( como por ejemplo vectores, 
+	  direcciones IP), y esposible algunas veces crear algunos tipos 
+	  de datos definidos por el usuario, perono todos estos tipos de 
+	  datos puede ser predefinidos por &LIBGDA;.
+        </para>
+        <para>
+          Pero la mayor parte de los tipos de datos existen ya en &LIBGDA;, 
+	  y se utilizarán, de todas maneras, el <classname>GdaTypeUnknown
+	  </classname> se usará ( para todos aquellos programadores de 
+	  aplicaciones que usen &LIBGDA; para cuidar esta información).
+        </para>
+      </sect2>
+      <sect2 id="providers-schema-requests">
+        <title>Solicitud de Esquemas</title>
+        <para>
+          Bajo &LIBGDA;, la aplicación cliente no puede saber el &DBMS; al 
+	  que se conecta, pero si puede saber si el &DBMS; soporta algunas 
+	  funcionalidades y qué tablas, secuencias, índices, etc. están en la 
+	  base de datos.
+        </para>
+        <para>
+          Uno de los trabajos que llevan más tiempo es escribir las 
+	  funciones que devuelven las respuestas a todas las solicitudes de 
+	  los clientes.
+        </para>
+      </sect2>
+      <sect2 id="providers-functions">
+        <title>Funciones a implementar</title>
+        <para>
+          El trabajo básico a hacer es implementar un conjunto de funciones 
+	  necesarias para la biblioteca <filename>gda-server</filename> 
+	  para manipular el proveedor. Cuando un proveedor quiere arrancar, 
+	  tienen que dar punteros a estas funciones en una estructura (para 
+	  esto lea el fichero <filename>main-DBMS.c</filename>).
+        </para>
+        <para>
+          El otro conjunto de funciones a implementar son las funciones de 
+	  solicitud de esquemas. Las funciones que DEBE implementar es una 
+	  función que solicite esquemas. La función puede ser implementada 
+	  de la manera que usted quiera, pero una práctica común (utilizada 
+	  en todos los proveedores 'estandar' de &LIBGDA;), es tener una 
+	  función que llama a otras funciones dependiendo del tipo de esquema 
+	  solicitado por la aplicación cliente.
+        </para>
+      </sect2>
+    </sect1>
+    <sect1 id="providers-examples">
+      <title>Ficheros y Ejemplos</title>
+      <sect2 id="providers-examples-headers">
+        <title>Cabeceras</title>
+        <para>
+          Normalmente un proveedor tiene sólo una cabecera 
+	  (<filename>gda-DBMS.h</filename>) que contiene todas las definiciones 
+	  de estructuras y las declaraciones de la función principal. Esta 
+	  cabecera tiene que incluir el fichero de cabecera  
+          <filename>gda-server.h</filename>.
+        </para>
+        <para>
+          El proveedor también necesita los elementos comunes de la 
+	  biblioteca <filename>gda-common</filename> (para el tema del  &XML;,
+	  etc. cuando se complete).
+        </para>
+      </sect2>
+      <sect2 id="providers-examples-c-files">
+        <title>ficheros .c</title>
+        <para>
+          Normalmente hay un fichero .c para la implementación de las 
+	  diferentes estructuras &DBMS; mencionadas arriba, excepto el 
+	  objeto <classname>GdaServerField</classname>, que se maneja 
+	  enteramente desde la biblioteca <filename>gda-server</filename>,
+	  y uno para el programa en sí mismo.
+        </para>
+      </sect2>
+      <sect2 id="providers-examples-sample">
+        <title>Implementaciones de ejemplo</title>
+        <para>
+          Usted puede echar un vistazo a los proveedores distribuidos con 
+	  &LIBGDA;, que hacen uso de esta biblioteca. Es especialmente 
+	  interesante fijarse en el proveedor &PGSQL;, que se puede tomar como 
+	  un buen ejemplo de personalización de un proveedor. También incluye 
+	  algunas funcionalidades extra.que no estñan presentes en otros 
+	  proveedores, como los recordsets incorporados, que se usan para 
+	  obtener datos de una caja, sin ser un valor devulto directamente por 
+	  &PGSQL;.
+        </para>
+      </sect2>
+    </sect1>
+  </chapter>
+  
+  <chapter id="reports">
+    <title>Motor de Informes de &GDA;</title>
+    <para>
+    </para>
+  </chapter>
+  
+  &FDL-INC;
+</book>
+
+
+
