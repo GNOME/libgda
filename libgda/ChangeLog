@@ -1,3 +1,15 @@
+2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-value.[ch]: added declarations for new GdaValueList type
+	(gda_value_new_list): new function
+	(gda_value_get_list): new function
+	(gda_value_set_list): new function
+	(gda_value_stringify): added support for ValueList type
+
+	* gda-row.[ch]: added support for new GdaValueList type
+	(gda_field_get_list_value): new function
+	(gda_field_set_list_value): new function
+
 2002-01-14  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-client.c:

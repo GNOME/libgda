@@ -500,6 +500,31 @@ gda_field_set_integer_value (GdaField *field, gint value)
 }
 
 /**
+ * gda_field_get_list_value
+ */
+GdaValueList *
+gda_field_get_list_value (GdaField *field)
+{
+	g_return_val_if_fail (field != NULL, NULL);
+	return gda_value_get_list (&field->value);
+}
+
+/**
+ * gda_field_set_list_value
+ */
+void
+gda_field_set_list_value (GdaField *field, GdaValueList *value)
+{
+	g_return_if_fail (field != NULL);
+	g_return_if_fail (value != NULL);
+
+	field->attributes.gdaType = GDA_TYPE_GEOMETRIC_POINT;
+	field->actualSize = sizeof (GdaValueList) * value->_length;
+
+	gda_value_set_list (&field->value, value);
+}
+
+/**
  * gda_field_set_null_value
  */
 void

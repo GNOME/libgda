@@ -22,6 +22,7 @@
  */
 
 #include <time.h>
+#include <orbit/orb-core/orbit-object.h>
 #include <bonobo/bonobo-arg.h>
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-value.h>
@@ -39,7 +40,7 @@ clear_value (GdaValue *value)
 
 	if (value->_type) {
 		CORBA_exception_init (&ev);
-		CORBA_Object_release (value->_type, &ev);
+		CORBA_Object_release ((CORBA_Object) value->_type, &ev);
 		CORBA_exception_free (&ev);
 	}
 
@@ -110,6 +111,13 @@ gda_value_new_integer (gint val)
 {
 	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_INTEGER,
 						(gconstpointer) &val);
+}
+
+GdaValue *
+gda_value_new_list (GdaValueList *list)
+{
+	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_LIST,
+						 (gconstpointer) list);
 }
 
 GdaValue *
@@ -219,8 +227,7 @@ gda_value_set_bigint (GdaValue *value, long long val)
 
 	if (!gda_value_isa (value, GDA_VALUE_TYPE_BIGINT)) {
 		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (
-					GDA_VALUE_TYPE_BIGINT);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BIGINT);
 	}
 	else if (value->_value);
 		CORBA_free (value->_value);
@@ -234,6 +241,7 @@ gda_value_set_bigint (GdaValue *value, long long val)
 gconstpointer
 gda_value_get_binary (GdaValue *value)
 {
+	return NULL;
 }
 
 /**
@@ -390,6 +398,38 @@ gda_value_set_integer (GdaValue *value, gint val)
 		CORBA_free (value->_value);
 
 	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_INTEGER);
+}
+
+/**
+ * gda_value_get_list
+ */
+GdaValueList *
+gda_value_get_list (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, NULL);
+	g_return_val_if_fail (gda_value_isa (value, 
+					     GDA_VALUE_TYPE_LIST), NULL);
+
+	return (const GdaValueList *) value->_value;
+}
+
+/**
+ * gda_value_set_list
+ */
+void
+gda_value_set_list (GdaValue *value, GdaValueList *val)
+{
+	g_return_if_fail (value != NULL);
+	g_return_if_fail (val != NULL);
+
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_LIST)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_LIST);
+	}
+	else if (value->_value)
+		CORBA_free (value->_value);
+
+	value->_value = ORBit_copy_value (val, GDA_VALUE_TYPE_LIST);
 }
 
 /**
@@ -595,7 +635,7 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
  * Returns: a string formatted according to the preceding table.
  */
 gchar *
-gda_value_stringify (const GdaValue *value)
+gda_value_stringify (GdaValue *value)
 {
 	gchar *retval = NULL;
 
@@ -659,10 +699,47 @@ gda_value_stringify (const GdaValue *value)
 		GdaGeometricPoint *point;
 
 		point = gda_value_get_geometric_point (value);
-		retval = g_strdup_printf ("(%.*lg,%.*lg)", DBL_DIG,
-							point->x,
-							DBL_DIG,
-							point->y);
+		retval = g_strdup_printf ("(%.*lg,%.*lg)",
+					  DBL_DIG,
+					  point->x,
+					  DBL_DIG,
+					  point->y);
+	}
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_LIST)) {
+		GdaValueList *list;
+
+		list = gda_value_get_list (value);
+		if (list) {
+			gint i;
+			GString *str = NULL;
+
+			for (i = 0; i < list->_length; i++) {
+				gchar *s;
+
+				s = gda_value_stringify (&list->_buffer[i]);
+				if (!str) {
+					str = g_string_new ("{ \"");
+					str = g_string_append (str, s);
+					str = g_string_append (str, "\"");
+				}
+				else {
+					str = g_string_append (str, ", \"");
+					str = g_string_append (str, s);
+					str = g_string_append (str, "\"");
+				}
+				g_free (s);
+			}
+
+			if (str) {
+				str = g_string_append (str, " }");
+				retval = str->str;
+				g_string_free (str, FALSE);
+			}
+			else
+				retval = g_strdup ("");
+		}
+		else
+			retval = g_strdup ("");
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_NULL))
 		retval = g_strdup ("NULL");

@@ -34,22 +34,22 @@ typedef GNOME_Database_Row             GdaRow;
 typedef GNOME_Database_RowAttributes   GdaRowAttributes;
 typedef GNOME_Database_FieldAttributes GdaFieldAttributes;
 typedef GNOME_Database_Field           GdaField;
-typedef enum
-{
+typedef enum {
 	GDA_TYPE_NULL = GNOME_Database_TYPE_NULL,
 	GDA_TYPE_BIGINT = GNOME_Database_TYPE_BIGINT,
 	GDA_TYPE_BINARY = GNOME_Database_TYPE_BINARY,
 	GDA_TYPE_BOOLEAN = GNOME_Database_TYPE_BOOLEAN,
 	GDA_TYPE_DATE = GNOME_Database_TYPE_DATE,
-	GDA_TYPE_GEOMETRIC_POINT = GNOME_Database_TYPE_GEOMETRIC_POINT,
-	GDA_TYPE_TIME = GNOME_Database_TYPE_TIME,
-	GDA_TYPE_TIMESTAMP = GNOME_Database_TYPE_TIMESTAMP,
 	GDA_TYPE_DOUBLE = GNOME_Database_TYPE_DOUBLE,
+	GDA_TYPE_GEOMETRIC_POINT = GNOME_Database_TYPE_GEOMETRIC_POINT,
 	GDA_TYPE_INTEGER = GNOME_Database_TYPE_INTEGER,
+	GDA_TYPE_LIST = GNOME_Database_TYPE_LIST,
 	GDA_TYPE_SINGLE = GNOME_Database_TYPE_SINGLE,
 	GDA_TYPE_SMALLINT = GNOME_Database_TYPE_SMALLINT,
-	GDA_TYPE_TINYINT = GNOME_Database_TYPE_TINYINT,
 	GDA_TYPE_STRING = GNOME_Database_TYPE_STRING,
+	GDA_TYPE_TIME = GNOME_Database_TYPE_TIME,
+	GDA_TYPE_TIMESTAMP = GNOME_Database_TYPE_TIMESTAMP,
+	GDA_TYPE_TINYINT = GNOME_Database_TYPE_TINYINT,
 	GDA_TYPE_UNKNOWN = GNOME_Database_TYPE_UNKNOWN
 }
 GdaType;
@@ -98,6 +98,8 @@ const GdaGeometricPoint  *gda_field_get_geometric_point_value (GdaField *field);
 void                gda_field_set_geometric_point_value (GdaField *field, GdaGeometricPoint *value);
 gint                gda_field_get_integer_value (GdaField *field);
 void                gda_field_set_integer_value (GdaField *field, gint value);
+GdaValueList       *gda_field_get_list_value (GdaField *field);
+void                gda_field_set_list_value (GdaField *field, GdaValueList *value);
 void                gda_field_set_null_value (GdaField *field);
 gfloat              gda_field_get_single_value (GdaField *field);
 void                gda_field_set_single_value (GdaField *field, gfloat value);
