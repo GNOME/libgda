@@ -176,6 +176,13 @@ gda_client_get_type (void)
 
 /**
  * gda_client_new
+ *
+ * Create a new #GdaClient object, which is the entry point for libgda
+ * client applications. This object, once created, can be used for
+ * opening new database connections and activating other services
+ * available to GDA clients.
+ *
+ * Returns: the newly created object.
  */
 GdaClient *
 gda_client_new (void)
@@ -188,6 +195,18 @@ gda_client_new (void)
 
 /**
  * gda_client_open_connection
+ * @client: a #GdaClient object.
+ * @dsn: data source name.
+ * @username: user name.
+ * @password: password for @username.
+ *
+ * Establish a connection to a data source.
+ *
+ * This function is the most common way of opening database connections with
+ * libgda.
+ *
+ * Returns: the opened connection if successful, NULL if there is
+ * an error.
  */
 GdaConnection *
 gda_client_open_connection (GdaClient *client,
@@ -289,7 +308,39 @@ gda_client_open_connection (GdaClient *client,
 }
 
 /**
+ * gda_client_open_connection_from_string
+ * @client: a #GdaClient object.
+ * @provider_id: provider ID to connect to.
+ * @cnc_string: connection string.
+ *
+ * Open a connection given a provider ID and a connection string. This
+ * allows applications to open connections without having to create
+ * a data source in the configuration.
+ *
+ * Returns: the opened connection if successful, NULL if there is
+ * an error.
+ */
+GdaConnection *
+gda_client_open_connection_from_string (GdaClient *client,
+					const gchar *provider_id,
+					const gchar *cnc_string)
+{
+	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
+	g_return_val_if_fail (provider_id != NULL, NULL);
+
+	// FIXME ------
+	return NULL;
+}
+
+/**
  * gda_client_get_connection_list
+ * @client: a #GdaClient object.
+ *
+ * Get the list of all open connections in the given #GdaClient.
+ * The GList returned is an internal pointer, so DON'T TRY TO
+ * FREE IT.
+ *
+ * Returns: a GList of #GdaConnection objects.
  */
 const GList *
 gda_client_get_connection_list (GdaClient *client)
@@ -300,6 +351,20 @@ gda_client_get_connection_list (GdaClient *client)
 
 /**
  * gda_client_find_connection
+ * @client: a #GdaClient object.
+ * @dsn: data source name.
+ * @username: user name.
+ * @password: password for @username.
+ *
+ * Look for an open connection given a data source name (per libgda
+ * configuration), a username and a password.
+ *
+ * This function iterates over the list of open connections in the
+ * given #GdaClient and looks for one that matches the given data source
+ * name, username and password.
+ *
+ * Returns: a pointer to the found connection, or NULL if it could not
+ * be found.
  */
 GdaConnection *
 gda_client_find_connection (GdaClient *client,
@@ -343,6 +408,9 @@ gda_client_find_connection (GdaClient *client,
 
 /**
  * gda_client_close_all_connections
+ * @client: a #GdaClient object.
+ *
+ * Close all connections opened by the given #GdaClient object.
  */
 void
 gda_client_close_all_connections (GdaClient *client)
