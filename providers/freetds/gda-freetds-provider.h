@@ -65,7 +65,11 @@ struct _GdaFreeTDSConnectionData {
 #endif
 	TDSSOCKET     *tds;       // connection handle
 	TDSCONFIGINFO *config;    // tds config struct
-	gchar         *server_version; // Server identifier string
+
+	// Data just got at connection beginning
+	gchar         *server_id; // Server identifier/version string
+	gboolean      is_sybase;  // true if cnc to ASE, false for mssql
+	gulong        srv_ver;    // Server version
 };
 
 GType              gda_freetds_provider_get_type (void);

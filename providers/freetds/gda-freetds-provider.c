@@ -307,6 +307,11 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		gda_freetds_free_connection_data (tds_cnc);
 		return FALSE;
 	}
+
+	// fixme: these have been removed in debian sid
+	// 
+	// tds_cnc->is_sybase = TDS_IS_SYBASE (tds_cnc->tds);
+	// tds_cnc->srv_ver = tds_cnc->tds->product_version;
 	
 	tds_cnc->rc = TDS_SUCCEED;
 
@@ -320,9 +325,9 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 
 	g_return_if_fail (tds_cnc != NULL);
 
-	if (tds_cnc->server_version) {
-		g_free (tds_cnc->server_version);
-		tds_cnc->server_version = NULL;
+	if (tds_cnc->server_id) {
+		g_free (tds_cnc->server_id);
+		tds_cnc->server_id = NULL;
 	}
 	if (tds_cnc->database) {
 		g_free (tds_cnc->database);
@@ -381,6 +386,9 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 		tds_cnc->msg_arr = NULL;
 	}
 	
+	tds_cnc->is_sybase = FALSE;
+	tds_cnc->srv_ver = 0;
+		
 	g_free(tds_cnc);
 	tds_cnc = NULL;
 }
@@ -595,7 +603,7 @@ static const gchar
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
 
-	if (!tds_cnc->server_version) {
+	if (!tds_cnc->server_id) {
 		model = gda_freetds_execute_query (cnc, TDS_QUERY_SERVER_VERSION);
 		if (model) {
 			if ((gda_data_model_get_n_columns (model) == 1)
@@ -604,13 +612,13 @@ static const gchar
 
 				value = (GdaValue *) gda_data_model_get_value_at
 				                             (model, 0, 0);
-				tds_cnc->server_version = gda_value_stringify ((GdaValue *) value);
+				tds_cnc->server_id = gda_value_stringify ((GdaValue *) value);
 			}
 			g_object_unref (model);
 		}
 	}
 
-	return (const gchar *) tds_cnc->server_version;
+	return (const gchar *) tds_cnc->server_id;
 }
 
 static const gchar
