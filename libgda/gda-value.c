@@ -2150,7 +2150,8 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 				  sizeof (GdaDate));
 		break;
 	case GDA_VALUE_TYPE_DOUBLE :
-		retval = (gint) value1->value.v_double - value2->value.v_double;
+		retval = value1->value.v_double == value2->value.v_double ? 0 : 
+			(gint) value1->value.v_double - value2->value.v_double;
 		break;
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
 		retval = memcmp (&value1->value.v_point, &value2->value.v_point,
@@ -2179,7 +2180,8 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	case GDA_VALUE_TYPE_MONEY :
 		if (!strcmp (value1->value.v_money.currency ? value1->value.v_money.currency : "",
 			     value2->value.v_money.currency ? value2->value.v_money.currency : "")) {
-			retval = (gint) value1->value.v_double - value2->value.v_double;
+			retval = value1->value.v_double == value2->value.v_double ? 0 : 
+				(gint) value1->value.v_double - value2->value.v_double;
 		} else
 			retval = -1; /* FIXME: do currency conversions to compare? */
 		break;
