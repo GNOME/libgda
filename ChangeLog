@@ -1,3 +1,8 @@
+2002-11-08  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c: save/restore previous memory management functions
+	in libxml.
+
 2002-11-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c:

@@ -122,26 +122,31 @@ gda_config_read_entries (xmlNodePtr cur)
 static GList *
 gda_config_parse_config_file (gchar *buffer, gint len)
 {
-	static gboolean memsetup_done = FALSE;
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 	GList *list = NULL;
 	gda_config_section *section;
 	gint sp_len;
 	const gchar *section_path = GDA_CONFIG_SECTION_DATASOURCES;
+	xmlFreeFunc old_free;
+	xmlMallocFunc old_malloc;
+	xmlReallocFunc old_realloc;
+	xmlStrdupFunc old_strdup;
 
 	g_return_val_if_fail (buffer != NULL, NULL);
 	g_return_val_if_fail (len != 0, NULL);
 
 	sp_len = strlen (section_path);
 
-	if (memsetup_done == FALSE) {
-		memsetup_done = TRUE;
-		xmlMemSetup (g_free,
-			     (xmlMallocFunc) g_malloc,
-			     (xmlReallocFunc) g_realloc,
-			     g_strdup);
-	}
+	xmlMemGet (&old_free,
+		   &old_malloc,
+		   &old_realloc,
+		   &old_strdup);
+
+	xmlMemSetup (g_free,
+		     (xmlMallocFunc) g_malloc,
+		     (xmlReallocFunc) g_realloc,
+		     g_strdup);
 
 	xmlDoValidityCheckingDefaultValue = FALSE;
 	xmlKeepBlanksDefault(0);
@@ -149,6 +154,10 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 	doc = xmlParseMemory (buffer, len);
 	if (doc == NULL){
 		g_warning ("File empty or not well-formed.");
+		xmlMemSetup (old_free,
+			     old_malloc,
+			     old_realloc,
+			     old_strdup);
 		return NULL;
 	}
 
@@ -156,12 +165,20 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 	if (cur == NULL){
 		g_warning ("Cannot get root element!");
 		xmlFreeDoc (doc);
+		xmlMemSetup (old_free,
+			     old_malloc,
+			     old_realloc,
+			     old_strdup);
 		return NULL;
 	}
 
 	if (strcmp (cur->name, "libgda-config") != 0){
 		g_warning ("root node != 'libgda-config' -> '%s'", cur->name);
 		xmlFreeDoc (doc);
+		xmlMemSetup (old_free,
+			     old_malloc,
+			     old_realloc,
+			     old_strdup);
 		return NULL;
 	}
 
@@ -191,6 +208,10 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 	}
 
 	xmlFreeDoc (doc);
+	xmlMemSetup (old_free,
+		     old_malloc,
+		     old_realloc,
+		     old_strdup);
 	return list;
 }
 
