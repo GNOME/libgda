@@ -553,6 +553,7 @@ providers/gda-postgres-server/gda-postgres.spec
 providers/gda-sybase-server/Makefile
 providers/gda-ldap-server/Makefile
 providers/gda-oracle-server/Makefile
+providers/gda-oracle-server/gda-oracle.spec
 providers/gda-interbase-server/Makefile
 providers/gda-mdb-server/Makefile
 providers/gda-mail-server/Makefile
