@@ -136,6 +136,38 @@ gda_parameter_list_new (void)
 }
 
 /**
+ * gda_parameter_list_new_from_corba
+ * @corba_list: a #GNOME_Database_ParameterList.
+ *
+ * Create a new #GdaParameterList from a CORBA sequence
+ * (#GNOME_Database_ParameterList)
+ */
+GdaParameterList *
+gda_parameter_list_new_from_corba (GNOME_Database_ParameterList *corba_list)
+{
+	GdaParameterList *plist;
+	gint n;
+
+	g_return_val_if_fail (corba_list != NULL, NULL);
+
+	plist = gda_parameter_list_new ();
+
+	for (n = 0; n < corba_list->_length; n++) {
+		GdaParameter *param;
+
+		param = gda_parameter_new (corba_list->_buffer[n].name,
+					   corba_list->_buffer[n].value._type);
+		param->value._value = ORBit_copy_value (
+			corba_list->_buffer[n].value._value,
+			corba_list->_buffer[n].value._type);
+
+		gda_parameter_list_add_parameter (plist, param);
+	}
+
+	return plist;
+}
+
+/**
  * gda_parameter_list_free
  */
 void

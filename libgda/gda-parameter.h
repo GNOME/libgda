@@ -40,6 +40,7 @@ void          gda_parameter_set_value (GdaParameter *param, GdaValue *value);
 typedef struct _GdaParameterList GdaParameterList;
 
 GdaParameterList             *gda_parameter_list_new (void);
+GdaParameterList             *gda_parameter_list_new_from_corba (GNOME_Database_ParameterList *corba_list);
 void                          gda_parameter_list_free (GdaParameterList *plist);
 void                          gda_parameter_list_add_parameter (GdaParameterList *plist,
 								GdaParameter *param);

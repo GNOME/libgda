@@ -1,3 +1,7 @@
+2001-12-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-parameter.[ch] (gda_parameter_list_new_from_corba): new function
+
 2001-12-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-connection.c (gda_server_connection_class_init): also
