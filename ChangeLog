@@ -1,5 +1,10 @@
 2004-05-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-server-provider.[ch]: added 'create_table' and 'drop_table'
+	virtual methods.
+	(gda_server_provider_create_table, gda_server_provider_drop_table): new
+	functions.
+
 	* libgda/gda-connection.c (gda_connection_get_schema): added information
 	about what to do with the returned value.
 

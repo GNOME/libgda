@@ -66,6 +66,8 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->change_database = NULL;
 	klass->create_database = NULL;
 	klass->drop_database = NULL;
+	klass->create_table = NULL;
+	klass->drop_table = NULL;
 	klass->execute_command = NULL;
 	klass->get_last_insert_id = NULL;
 	klass->begin_transaction = NULL;
@@ -322,6 +324,57 @@ gda_server_provider_drop_database (GdaServerProvider *provider,
 	g_return_val_if_fail (CLASS (provider)->drop_database != NULL, FALSE);
 
 	return CLASS (provider)->drop_database (provider, cnc, name);
+}
+
+/**
+ * gda_server_provider_create_table:
+ * @provider: a #GdaServerProvider object.
+ * @cnc: a #GdaConnection object.
+ * @table_name: name of the table to create.
+ * @attributes: list of attributes for all fields in the table.
+ *
+ * Proxy the call to the create_table method on the #GdaServerProvider class
+ * to the corresponding provider.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_server_provider_create_table (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  const gchar *table_name,
+				  const GdaFieldAttributes *attributes[])
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+	g_return_val_if_fail (attributes != NULL, FALSE);
+	g_return_val_if_fail (CLASS (provider)->create_table != NULL, FALSE);
+
+	return CLASS (provider)->create_table (provider, cnc, table_name, attributes);
+}
+
+/**
+ * gda_server_provider_drop_table:
+ * @provider: a #GdaServerProvider object.
+ * @cnc: a #GdaConnection object.
+ * @table_name: name of the table to remove.
+ *
+ * Proxy the call to the drop_table method on the #GdaServerProvider class
+ * to the corresponding provider.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_server_provider_drop_table (GdaServerProvider *provider,
+				GdaConnection *cnc,
+				const gchar *table_name)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+	g_return_val_if_fail (CLASS (provider)->drop_table != NULL, FALSE);
+
+	return CLASS (provider)->drop_table (provider, cnc, table_name);
 }
 
 /**

@@ -75,6 +75,13 @@ struct _GdaServerProviderClass {
 	gboolean (* drop_database) (GdaServerProvider *provider,
 				    GdaConnection *cnc,
 				    const gchar *name);
+	gboolean (* create_table) (GdaServerProvider *provider,
+				   GdaConnection *cnc,
+				   const gchar *table_name,
+				   const GdaFieldAttributes *attributes[]);
+	gboolean (* drop_table) (GdaServerProvider *provider,
+				 GdaConnection *cnc,
+				 const gchar *table_name);
 
 	GList * (* execute_command) (GdaServerProvider *provider,
 				     GdaConnection *cnc,
@@ -131,6 +138,13 @@ gboolean gda_server_provider_create_database (GdaServerProvider *provider,
 gboolean gda_server_provider_drop_database (GdaServerProvider *provider,
 					    GdaConnection *cnc,
 					    const gchar *name);
+gboolean gda_server_provider_create_table (GdaServerProvider *provider,
+					   GdaConnection *cnc,
+					   const gchar *table_name,
+					   const GdaFieldAttributes *attributes[]);
+gboolean gda_server_provider_drop_table (GdaServerProvider *provider,
+					 GdaConnection *cnc,
+					 const gchar *table_name);
 
 GList   *gda_server_provider_execute_command (GdaServerProvider *provider,
 					      GdaConnection *cnc,
