@@ -1560,46 +1560,53 @@ get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
  * see any use for any user passed parameters at this point.
  */
 static GdaDataModel *
-get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionSchema schema)
+get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionSchema schema, gint nargs)
 {
 	GList *reclist;
 	GdaDataModel *recset;
+	gint cnt;
 	GdaParameterList *query_params = gda_parameter_list_new ();
-        gchar *sql = g_strdup ("SELECT OBJECT_NAME FROM USER_OBJECTS WHERE OBJECT_TYPE=:OBJ_TYPE");
+        GString *sql;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	sql = g_string_new ("SELECT OBJECT_NAME");
+	for (cnt = 1; cnt < nargs; cnt++)
+		sql = g_string_append (sql, ", NULL");
+
+	sql = g_string_append (sql, " FROM USER_OBJECTS WHERE OBJECT_TYPE=:OBJ_TYPE");
 
 	/* add the object type parameter */
 	switch (schema) {
 	case GDA_CONNECTION_SCHEMA_INDEXES:
 		gda_parameter_list_add_parameter (query_params, 
-			gda_parameter_new_string (":OBJ_TYPE", "INDEX"));
+						  gda_parameter_new_string (":OBJ_TYPE", "INDEX"));
 		break;
 	case GDA_CONNECTION_SCHEMA_PROCEDURES:
 		gda_parameter_list_add_parameter (query_params, 
-			gda_parameter_new_string (":OBJ_TYPE", "PROCEDURE"));
+						  gda_parameter_new_string (":OBJ_TYPE", "PROCEDURE"));
 		break;
 	case GDA_CONNECTION_SCHEMA_SEQUENCES:
 		gda_parameter_list_add_parameter (query_params, 
-			gda_parameter_new_string (":OBJ_TYPE", "SEQUENCE"));
+						  gda_parameter_new_string (":OBJ_TYPE", "SEQUENCE"));
 		break;
 	case GDA_CONNECTION_SCHEMA_TRIGGERS:
 		gda_parameter_list_add_parameter (query_params, 
-			gda_parameter_new_string (":OBJ_TYPE", "TRIGGER"));
+						  gda_parameter_new_string (":OBJ_TYPE", "TRIGGER"));
 		break;
 	case GDA_CONNECTION_SCHEMA_VIEWS:
 		gda_parameter_list_add_parameter (query_params, 
-			gda_parameter_new_string (":OBJ_TYPE", "VIEW"));
+						  gda_parameter_new_string (":OBJ_TYPE", "VIEW"));
 		break;
 	default:
 		return NULL;
 	}
 
-	reclist = process_sql_commands (NULL, cnc, sql, query_params,
+	reclist = process_sql_commands (NULL, cnc, sql->str, query_params,
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	gda_parameter_list_free (query_params);
-	g_free (sql);
+	g_string_free (sql, TRUE);
 
 	if (!reclist)
 		return NULL;
@@ -1706,26 +1713,26 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
 		recset = get_oracle_databases (cnc, params);
 		break;
 	case GDA_CONNECTION_SCHEMA_INDEXES :
-		recset = get_oracle_objects (cnc, params, schema);
+		recset = get_oracle_objects (cnc, params, schema, 1);
 		gda_data_model_set_column_title (recset, 0, _("Indexes"));
 		break;
 	case GDA_CONNECTION_SCHEMA_PROCEDURES :
-		recset = get_oracle_objects (cnc, params, schema);
+		recset = get_oracle_objects (cnc, params, schema, 8);
 		gda_data_model_set_column_title (recset, 0, _("Procedures"));
 		break;
 	case GDA_CONNECTION_SCHEMA_SEQUENCES :
-		recset = get_oracle_objects (cnc, params, schema);
+		recset = get_oracle_objects (cnc, params, schema, 4);
 		gda_data_model_set_column_title (recset, 0, _("Sequences"));
 		break;
 	case GDA_CONNECTION_SCHEMA_TABLES :
 		recset = get_oracle_tables (cnc, params);
 		break;
 	case GDA_CONNECTION_SCHEMA_TRIGGERS :
-		recset = get_oracle_objects (cnc, params, schema);
+		recset = get_oracle_objects (cnc, params, schema, 1);
 		gda_data_model_set_column_title (recset, 0, _("Triggers"));
 		break;
 	case GDA_CONNECTION_SCHEMA_VIEWS :
-		recset = get_oracle_objects (cnc, params, schema);
+		recset = get_oracle_objects (cnc, params, schema, 4);
 		gda_data_model_set_column_title (recset, 0, _("Views"));
 		break;
 	default :

@@ -1,3 +1,14 @@
+2002-12-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #97669 (Oracle part)
+
+	* gda-oracle-connection.c (get_oracle_objects): added a 'nargs'
+	argument to get the number of fields that are expected to be returned
+	in the data model, so that we always return the correct number
+	(very temporary fix until we really implement all schemas).
+	(gda_oracle_provider_get_schema): use new argument in
+	get_oracle_objects().
+
 2002-12-10  Holger Thon <holger.thon@gnome-db.org>
 
 	Fixes #97669
