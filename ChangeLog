@@ -1,3 +1,7 @@
+2000-12-20  Stanislav Visnovsky  <visnovsky@nenya.ms.mff.cuni.cz>
+
+	* configure.in: Added Slovak [sk] to ALL_LINGUAS.
+
 2000-12-13	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* added HACKING file, copied from Miguel's HACKING file
