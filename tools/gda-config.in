@@ -16,11 +16,8 @@ Options:
 	[--cflags]
 Libraries:
 	client
-	clientui
 	server
-	gnome
 	cpp
-	component
 EOF
 	exit $1
 }
@@ -65,20 +62,11 @@ while test $# -gt 0; do
     client)
       lib_client="yes"
       ;;
-    clientui)
-      lib_clientui="yes"
-      ;;
     server)
       lib_server="yes"
       ;;
-    gnome)
-      lib_gnome="yes"
-      ;;
     cpp)
       lib_cpp="yes"
-      ;;
-    component)
-      lib_component="yes"
       ;;
     *)
       usage 1 1>&2
@@ -95,17 +83,11 @@ if test "$echo_exec_prefix" = "yes"; then
 fi
 if test "$echo_cflags" = "yes"; then
 	cflags="-I@prefix@/include/gda"
-	if test "$lib_clientui" = "yes"; then
-		cflags="$cflags -I@prefix@/include/gnome-db"
-	fi
 	if test "$lib_gnome" = "yes"; then
 		cflags="$cflags @GNOME_INCLUDEDIR@"
 	fi
 	if test "$lib_cpp" = "yes"; then
 		cflags="$cflags -I@prefix@/include/gda++"
-	fi
-	if test "$lib_component" = "yes"; then
-		cflags="$cflags @BONOBO_CFLAGS@"
 	fi
 	echo $cflags
 fi
@@ -114,20 +96,11 @@ if test "$echo_libs" = "yes"; then
 	if test "$lib_client" = "yes"; then
 		libs="$libs -lgda-client"
 	fi
-	if test "$lib_clientui" = "yes"; then
-		libs="$libs -lgda-client -lgnomedb -lgnomeprint"
-	fi
 	if test "$lib_server" = "yes"; then
 		libs="$libs -lgda-server"
 	fi
-	if test "$lib_gnome" = "yes"; then
-		libs="$libs @GNORBA_LIBS@"
-	fi
 	if test "$lib_cpp" = "yes"; then
 		libs="$libs -lgda-clientcpp"
-	fi
-	if test "$lib_component" = "yes"; then
-		libs="$libs @BONOBO_LIBS@ -lgnomedbcomponents"
 	fi
 	echo @INTLLIBS@ -L@prefix@/lib $libs
 fi
