@@ -90,6 +90,7 @@ GdaServerConnection
 
 @cnc: 
 @msg: 
+@Varargs: 
 
 
 <!-- ##### FUNCTION gda_server_connection_free_error_list ##### -->

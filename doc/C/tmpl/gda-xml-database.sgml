@@ -100,6 +100,16 @@ GdaXmlDatabase
 @list: 
 
 
+<!-- ##### FUNCTION gda_xml_database_find_table ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_xml_database_new_table ##### -->
 <para>
 

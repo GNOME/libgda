@@ -14,6 +14,24 @@ gda-util
 
 </para>
 
+<!-- ##### FUNCTION gda_type_to_string ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_type_from_string ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_file_load ##### -->
 <para>
 
