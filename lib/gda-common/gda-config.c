@@ -233,7 +233,7 @@ gda_config_list_keys (const gchar *path)
 
   g_return_val_if_fail(path != NULL, NULL);
   
-  slist = gconf_engine_all_entries(get_conf_engine(), path, &error);
+  slist = gconf_engine_all_entries(get_conf_engine(), path, NULL);
   if (slist)
     {
       GSList* node;
