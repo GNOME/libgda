@@ -1,5 +1,11 @@
 2002-06-18  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* configure.in: use AC_PROG_YACC instead of AM_PROG_YACC
+
+	* libsql/Makefile.am: changed $(include) by $(includedir)
+
+2002-06-18  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* libgda/gda-config.c: create configuration dir and file if they don't
 	exist.
 

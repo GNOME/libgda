@@ -44,9 +44,8 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_STDC_HEADERS
 AM_PROG_LIBTOOL
-AM_PROG_YACC
-AC_CHECK_PROGS(YACC, 'bison -y' byacc, yacc)
 AM_PROG_LEX
+AC_PROG_YACC
 
 dnl ******************************
 dnl glib-genmarshal

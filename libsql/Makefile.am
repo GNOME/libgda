@@ -16,7 +16,7 @@ lib_LTLIBRARIES = libgdasql.la
 
 libgdasql_la_SOURCES = parser.c lexer.c sql_parser.c mem.c sql_display.c \
 		sql_tree.c 
-libgdasqlincdir = $(include)/bond
+libgdasqlincdir = $(includedir)/bond
 libgdasqlinc_HEADERS = 
 libgdasql_la_LDFLAGS = `glib-config --libs`
 
