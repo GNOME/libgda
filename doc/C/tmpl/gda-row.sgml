@@ -32,114 +32,31 @@ gda-row
 </para>
 
 
-<!-- ##### TYPEDEF GdaType ##### -->
+<!-- ##### ENUM GdaType ##### -->
 <para>
 
 </para>
 
+@GDA_TYPE_NULL: 
+@GDA_TYPE_BIGINT: 
+@GDA_TYPE_BINARY: 
+@GDA_TYPE_BOOLEAN: 
+@GDA_TYPE_DATE: 
+@GDA_TYPE_GEOMETRIC_POINT: 
+@GDA_TYPE_TIME: 
+@GDA_TYPE_TIMESTAMP: 
+@GDA_TYPE_DOUBLE: 
+@GDA_TYPE_INTEGER: 
+@GDA_TYPE_SINGLE: 
+@GDA_TYPE_SMALLINT: 
+@GDA_TYPE_TINYINT: 
+@GDA_TYPE_STRING: 
+@GDA_TYPE_UNKNOWN: 
 
 <!-- ##### TYPEDEF GdaField ##### -->
 <para>
 
 </para>
-
-
-<!-- ##### MACRO GDA_TYPE_NULL ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_BIGINT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_BINARY ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_BOOLEAN ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_DATE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_TIME ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_TIMESTAMP ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_DOUBLE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_INTEGER ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_SINGLE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_SMALLINT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_STRING ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_TINYINT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_TYPE_UNKNOWN ##### -->
-<para>
-
-</para>
-
 
 
 <!-- ##### FUNCTION gda_row_new ##### -->
