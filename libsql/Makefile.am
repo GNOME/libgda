@@ -32,7 +32,7 @@ libgdasql_la_LDFLAGS = $(LIBGDA_LIBS)
 sql_parser_test_SOURCES=sql_parser_test.c
 sql_parser_test_LDFLAGS = $(LIBGDA_LIBS)
 sql_parser_test_DEPENDENCIES =
-sql_parser_test_LDADD = $(top_builddir)/libsql/libgdasql.la
+sql_parser_test_LDADD = libgdasql.la
 
 tests: sql_parser_test
 

@@ -7,8 +7,8 @@ test -z "$srcdir" && srcdir=.
 PKG_NAME="GNOME Data Access"
 AUTOCONF=autoconf
 REQUIRED_AUTOCONF_VERSION=2.59
-AUTOMAKE=automake-1.8
-REQUIRED_AUTOMAKE_VERSION=1.8
+AUTOMAKE=automake-1.9
+REQUIRED_AUTOMAKE_VERSION=1.9
 
 (test -f $srcdir/configure.in \
   && test -d $srcdir/idl \

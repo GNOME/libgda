@@ -209,7 +209,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 	mdb_cnc = g_new0 (GdaMdbConnection, 1);
 	mdb_cnc->cnc = cnc;
 	mdb_cnc->server_version = NULL;
-	mdb_cnc->mdb = mdb_open (filename);
+	mdb_cnc->mdb = mdb_open (filename, MDB_WRITABLE);
 	if (!mdb_cnc->mdb) {
 		gda_connection_add_error_string (cnc, _("Could not open file %s"), filename);
 		g_free (mdb_cnc);
