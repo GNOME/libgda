@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-03-06 00:58+0000\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-06 01:00+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -103,54 +103,48 @@ msgstr "VERDADEIRO"
 msgid "FALSE"
 msgstr "FALSO"
 
-#: libgda/gda-xml-database.c:164
+#: libgda/gda-xml-database.c:214
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Incapaz de ler ficheiro em %s"
 
-#: libgda/gda-xml-database.c:175
+#: libgda/gda-xml-database.c:223
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Incapaz de parsear ficheiro em %s"
 
-#: libgda/gda-xml-database.c:185
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
-msgid "Bad formed document at %s"
-msgstr "Documento mal formado em %s"
+msgid "Invalid XML database file '%s'"
+msgstr ""
 
-#: libgda/gda-xml-database.c:260
-#, c-format
-msgid "table %s already exists"
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#, fuzzy, c-format
+msgid "Table %s already exists"
 msgstr "tabela %s já existe"
 
-#: libgda/gda-xml-database.c:442
-#, c-format
-msgid "%p is not a valid table"
-msgstr "%p não é uma tabela válida"
+#: libgda/gda-xml-database.c:327
+#, fuzzy
+msgid "Invalid node"
+msgstr "Handle MYSQL inválida"
 
-#: providers/default/gda-default-provider.c:141
+#: libgda/gda-xml-database.c:358
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:365
+#, fuzzy
+msgid "Invalid XML node"
+msgstr "Handle MYSQL inválida"
+
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Tem de ser indicado um caminho completo na expressão de ligação para abrir "
 "uma base de dados."
-
-#: providers/default/gda-default-provider.c:199
-#: providers/default/gda-default-recordset.c:59
-msgid "Invalid DEFAULT handle"
-msgstr "Handle DEFEITO inválida"
-
-#: providers/default/gda-default-recordset.c:70
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
-msgid "Row number out of range"
-msgstr "Número de linha fora do limite"
-
-#: providers/default/gda-default-recordset.c:110
-msgid "Invalid Default handle"
-msgstr "Handle Defeito inválida"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -186,6 +180,12 @@ msgstr "Tipo"
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
 msgstr "Handle MySQL inválida"
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
+msgstr "Número de linha fora do limite"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -479,6 +479,18 @@ msgstr "\tdomínio = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Bad formed document at %s"
+#~ msgstr "Documento mal formado em %s"
+
+#~ msgid "%p is not a valid table"
+#~ msgstr "%p não é uma tabela válida"
+
+#~ msgid "Invalid DEFAULT handle"
+#~ msgstr "Handle DEFEITO inválida"
+
+#~ msgid "Invalid Default handle"
+#~ msgstr "Handle Defeito inválida"
 
 #~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
 #~ msgstr "ct_diag 1 falhou em sybase_check_clientmsg"

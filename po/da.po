@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-02-28 21:49+0100\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-02-28 21:49+0100\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -33,31 +33,31 @@ msgstr "Kunne ikke aktivere objektet %s"
 msgid "Could not create connection component"
 msgstr "Kunne ikke oprette forbindelseskomponent"
 
-#: libgda/gda-config.c:511
+#: libgda/gda-config.c:512
 msgid "Could not query CORBA components"
 msgstr "Kunne ikke forespørge CORBA-komponenter"
 
-#: libgda/gda-config.c:618
+#: libgda/gda-config.c:619
 msgid "Could not query CORBA providers"
 msgstr "Kunne ikke forespørge CORBA-udbydere"
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:869
 msgid "Name"
 msgstr "Navn"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:870
 msgid "Provider"
 msgstr "Udbyder"
 
-#: libgda/gda-config.c:870
+#: libgda/gda-config.c:871
 msgid "Connection string"
 msgstr "Forbindelsesstreng"
 
-#: libgda/gda-config.c:871
+#: libgda/gda-config.c:872
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: libgda/gda-config.c:872
+#: libgda/gda-config.c:873
 msgid "Username"
 msgstr "Brugernavn"
 
@@ -109,53 +109,47 @@ msgstr "SAND"
 msgid "FALSE"
 msgstr "FALSK"
 
-#: libgda/gda-xml-database.c:164
+#: libgda/gda-xml-database.c:214
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Kunne ikke åbne fil ved %s"
 
-#: libgda/gda-xml-database.c:175
+#: libgda/gda-xml-database.c:223
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Kunne ikke fortolke fil ved %s"
 
-#: libgda/gda-xml-database.c:185
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
-msgid "Bad formed document at %s"
-msgstr "Forkert udformet dokument ved %s"
+msgid "Invalid XML database file '%s'"
+msgstr ""
 
-#: libgda/gda-xml-database.c:260
-#, c-format
-msgid "table %s already exists"
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#, fuzzy, c-format
+msgid "Table %s already exists"
 msgstr "tabel %s eksisterer allerede"
 
-#: libgda/gda-xml-database.c:442
-#, c-format
-msgid "%p is not a valid table"
-msgstr "%p er ikke en gyldig tabel"
+#: libgda/gda-xml-database.c:327
+#, fuzzy
+msgid "Invalid node"
+msgstr "Ugyldigt MySQL-håndtag"
 
-#: providers/default/gda-default-provider.c:141
+#: libgda/gda-xml-database.c:358
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:365
+#, fuzzy
+msgid "Invalid XML node"
+msgstr "Ugyldigt MySQL-håndtag"
+
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "En komplet sti skal angives som forbindelsesstreng til at åbne en database."
-
-#: providers/default/gda-default-provider.c:199
-#: providers/default/gda-default-recordset.c:59
-msgid "Invalid DEFAULT handle"
-msgstr "Ugyldigt standardhåndtag"
-
-#: providers/default/gda-default-recordset.c:70
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
-msgid "Row number out of range"
-msgstr "Rækkenummer uden for det gyldige interval"
-
-#: providers/default/gda-default-recordset.c:110
-msgid "Invalid Default handle"
-msgstr "Ugyldigt standardhåndtag"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -192,6 +186,12 @@ msgstr "Type"
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
 msgstr "Ugyldigt MySQL-håndtag"
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
+msgstr "Rækkenummer uden for det gyldige interval"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -296,82 +296,6 @@ msgstr "SQLite-komponentfabrik"
 #: providers/sqlite/main.c:54
 msgid "Could not initiate Sqlite component factory"
 msgstr "Kunne ikke klargøre SQLite-komponentfabrik"
-
-#: providers/sybase/gda-sybase-error.c:137
-msgid "ct_diag 1 failed in sybase_check_clientmsg"
-msgstr "ct_diag 1 mislykkedes i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:159
-#: providers/sybase/gda-sybase-error.c:197
-msgid "ct_diag 2 failed in sybase_check_clientmsg"
-msgstr "ct_diag 2 mislykkedes i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:167
-#: providers/sybase/gda-sybase-error.c:376
-msgid "Client Message: "
-msgstr "Klientbesked: "
-
-#: providers/sybase/gda-sybase-error.c:178
-#: providers/sybase/gda-sybase-error.c:387
-msgid "Informational Client  Message: "
-msgstr "Informerende klientbesked: "
-
-#: providers/sybase/gda-sybase-error.c:239
-msgid "ct_diag 1 failed in sybase_check_servermsg"
-msgstr "ct_diag 1 mislykkedes i sybase_check_servermsg"
-
-#: providers/sybase/gda-sybase-error.c:261
-#: providers/sybase/gda-sybase-error.c:304
-msgid "ct_diag 2 failed in sybase_check_servermsg"
-msgstr "ct_diag 2 mislykkedes i sybase_check_servermsg"
-
-#: providers/sybase/gda-sybase-error.c:274
-msgid "Server Message: "
-msgstr "Serverbesked: "
-
-#: providers/sybase/gda-sybase-error.c:285
-msgid "Informational Server  Message: "
-msgstr "Informerende serverbesked: "
-
-#: providers/sybase/gda-sybase-error.c:346
-msgid "cs_diag 1 failed in sybase_check_clientmsg"
-msgstr "cs_diag 1 mislykkedes sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:368
-#: providers/sybase/gda-sybase-error.c:406
-msgid "cs_diag 2 failed in sybase_check_clientmsg"
-msgstr "cs_diag 2 mislykkedes sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:429
-msgid "SYB"
-msgstr "SYB"
-
-#: providers/sybase/gda-sybase-error.c:431
-msgid "severity"
-msgstr "grad"
-
-#: providers/sybase/gda-sybase-error.c:433
-msgid "number"
-msgstr "nummer"
-
-#: providers/sybase/gda-sybase-error.c:435
-msgid "origin"
-msgstr "kilde"
-
-#: providers/sybase/gda-sybase-error.c:437
-msgid "layer"
-msgstr "lag"
-
-#: providers/sybase/gda-sybase-error.c:444
-#, c-format
-msgid ""
-"\n"
-"\tOperating system error number(%ld):\n"
-"\t%s"
-msgstr ""
-"\n"
-"\tStyresystemsfejl nr. (%ld):\n"
-"\t%s"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -562,3 +486,69 @@ msgstr "\tdomæne = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Bad formed document at %s"
+#~ msgstr "Forkert udformet dokument ved %s"
+
+#~ msgid "%p is not a valid table"
+#~ msgstr "%p er ikke en gyldig tabel"
+
+#~ msgid "Invalid DEFAULT handle"
+#~ msgstr "Ugyldigt standardhåndtag"
+
+#~ msgid "Invalid Default handle"
+#~ msgstr "Ugyldigt standardhåndtag"
+
+#~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
+#~ msgstr "ct_diag 1 mislykkedes i sybase_check_clientmsg"
+
+#~ msgid "ct_diag 2 failed in sybase_check_clientmsg"
+#~ msgstr "ct_diag 2 mislykkedes i sybase_check_clientmsg"
+
+#~ msgid "Client Message: "
+#~ msgstr "Klientbesked: "
+
+#~ msgid "Informational Client  Message: "
+#~ msgstr "Informerende klientbesked: "
+
+#~ msgid "ct_diag 1 failed in sybase_check_servermsg"
+#~ msgstr "ct_diag 1 mislykkedes i sybase_check_servermsg"
+
+#~ msgid "ct_diag 2 failed in sybase_check_servermsg"
+#~ msgstr "ct_diag 2 mislykkedes i sybase_check_servermsg"
+
+#~ msgid "Server Message: "
+#~ msgstr "Serverbesked: "
+
+#~ msgid "Informational Server  Message: "
+#~ msgstr "Informerende serverbesked: "
+
+#~ msgid "cs_diag 1 failed in sybase_check_clientmsg"
+#~ msgstr "cs_diag 1 mislykkedes sybase_check_clientmsg"
+
+#~ msgid "cs_diag 2 failed in sybase_check_clientmsg"
+#~ msgstr "cs_diag 2 mislykkedes sybase_check_clientmsg"
+
+#~ msgid "SYB"
+#~ msgstr "SYB"
+
+#~ msgid "severity"
+#~ msgstr "grad"
+
+#~ msgid "number"
+#~ msgstr "nummer"
+
+#~ msgid "origin"
+#~ msgstr "kilde"
+
+#~ msgid "layer"
+#~ msgstr "lag"
+
+#~ msgid ""
+#~ "\n"
+#~ "\tOperating system error number(%ld):\n"
+#~ "\t%s"
+#~ msgstr ""
+#~ "\n"
+#~ "\tStyresystemsfejl nr. (%ld):\n"
+#~ "\t%s"

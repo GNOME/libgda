@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-02-10 20:00+0100\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2001-11-05 19:40+0200\n"
 "Last-Translator: Görkem Çetin <gorkem@gelecek.com.tr>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
@@ -28,33 +28,33 @@ msgstr "%s'e baðlantý kurulamadý"
 msgid "Could not create connection component"
 msgstr "%s'e baðlantý kurulamadý"
 
-#: libgda/gda-config.c:508
+#: libgda/gda-config.c:512
 #, fuzzy
 msgid "Could not query CORBA components"
 msgstr "CORBA factory açýlamadý"
 
-#: libgda/gda-config.c:615
+#: libgda/gda-config.c:619
 #, fuzzy
 msgid "Could not query CORBA providers"
 msgstr "CORBA factory açýlamadý"
 
-#: libgda/gda-config.c:865
+#: libgda/gda-config.c:869
 msgid "Name"
 msgstr ""
 
-#: libgda/gda-config.c:866
+#: libgda/gda-config.c:870
 msgid "Provider"
 msgstr ""
 
-#: libgda/gda-config.c:867
+#: libgda/gda-config.c:871
 msgid "Connection string"
 msgstr ""
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:872
 msgid "Description"
 msgstr ""
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:873
 msgid "Username"
 msgstr ""
 
@@ -106,51 +106,43 @@ msgstr ""
 msgid "FALSE"
 msgstr ""
 
-#: libgda/gda-xml-database.c:164
+#: libgda/gda-xml-database.c:214
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "%s'e baðlantý kurulamadý"
 
-#: libgda/gda-xml-database.c:175
+#: libgda/gda-xml-database.c:223
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "%s'e baðlantý kurulamadý"
 
-#: libgda/gda-xml-database.c:185
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
-msgid "Bad formed document at %s"
+msgid "Invalid XML database file '%s'"
 msgstr ""
 
-#: libgda/gda-xml-database.c:260
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
 #, c-format
-msgid "table %s already exists"
+msgid "Table %s already exists"
 msgstr ""
 
-#: libgda/gda-xml-database.c:442
-#, c-format
-msgid "%p is not a valid table"
+#: libgda/gda-xml-database.c:327
+msgid "Invalid node"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:141
+#: libgda/gda-xml-database.c:358
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:365
+msgid "Invalid XML node"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr ""
-
-#: providers/default/gda-default-provider.c:199
-#: providers/default/gda-default-recordset.c:59
-msgid "Invalid DEFAULT handle"
-msgstr ""
-
-#: providers/default/gda-default-recordset.c:70
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
-msgid "Row number out of range"
-msgstr ""
-
-#: providers/default/gda-default-recordset.c:110
-msgid "Invalid Default handle"
 msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
@@ -187,6 +179,12 @@ msgstr ""
 #: providers/mysql/gda-mysql-recordset.c:63
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
 msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
@@ -304,79 +302,6 @@ msgstr "CORBA factory açýlamadý"
 msgid "Could not initiate Sqlite component factory"
 msgstr "CORBA factory açýlamadý"
 
-#: providers/sybase/gda-sybase-error.c:137
-msgid "ct_diag 1 failed in sybase_check_clientmsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:159
-#: providers/sybase/gda-sybase-error.c:197
-msgid "ct_diag 2 failed in sybase_check_clientmsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:167
-#: providers/sybase/gda-sybase-error.c:376
-msgid "Client Message: "
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:178
-#: providers/sybase/gda-sybase-error.c:387
-msgid "Informational Client  Message: "
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:239
-msgid "ct_diag 1 failed in sybase_check_servermsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:261
-#: providers/sybase/gda-sybase-error.c:304
-msgid "ct_diag 2 failed in sybase_check_servermsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:274
-msgid "Server Message: "
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:285
-msgid "Informational Server  Message: "
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:346
-msgid "cs_diag 1 failed in sybase_check_clientmsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:368
-#: providers/sybase/gda-sybase-error.c:406
-msgid "cs_diag 2 failed in sybase_check_clientmsg"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:429
-msgid "SYB"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:431
-msgid "severity"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:433
-msgid "number"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:435
-msgid "origin"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:437
-msgid "layer"
-msgstr ""
-
-#: providers/sybase/gda-sybase-error.c:444
-#, c-format
-msgid ""
-"\n"
-"\tOperating system error number(%ld):\n"
-"\t%s"
-msgstr ""
-
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
 msgstr ""
@@ -487,33 +412,41 @@ msgstr ""
 msgid "Indexes"
 msgstr ""
 
+#: testing/client.c:92
+msgid "Aggregates"
+msgstr ""
+
+#: testing/client.c:93
+msgid "Triggers"
+msgstr ""
+
 #. test transactions
-#: testing/client.c:94 testing/client.c:102
+#: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
 msgstr ""
 
-#: testing/client.c:96 testing/client.c:100 testing/client.c:104
-#: testing/client.c:108
+#: testing/client.c:98 testing/client.c:102 testing/client.c:106
+#: testing/client.c:110
 msgid "Error"
 msgstr ""
 
-#: testing/client.c:98
+#: testing/client.c:100
 msgid "\tFinishing transaction..."
 msgstr ""
 
-#: testing/client.c:106
+#: testing/client.c:108
 msgid "\tRolling back transaction..."
 msgstr ""
 
-#: testing/client.c:127
+#: testing/client.c:129
 msgid "Testing GDA client API"
 msgstr ""
 
-#: testing/client.c:136
+#: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 
-#: testing/client.c:140
+#: testing/client.c:142
 #, fuzzy, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr "%s veri kaynaðý bulunamadý"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-0.2.3-cvs\n"
-"POT-Creation-Date: 2002-03-05 13:23+0100\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-05 13:45+01:00\n"
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -76,7 +76,8 @@ msgstr "Bonobo konnte nicht initialisiert werden"
 #: libgda/gda-server.c:108
 #, c-format
 msgid "Don't know how to create components with IID %s"
-msgstr "Es ist nicht bekannt, wie Komponenten mit der IID %s erzeugt werden sollen"
+msgstr ""
+"Es ist nicht bekannt, wie Komponenten mit der IID %s erzeugt werden sollen"
 
 #: libgda/gda-server.c:122
 #, c-format
@@ -85,7 +86,9 @@ msgstr "Komponenten vom Typ %s konnte nicht erzeugt werden"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr "Client-Objekt konnte nicht dupliziert werden. Client wird keine Benachrichtigung erhalten"
+msgstr ""
+"Client-Objekt konnte nicht dupliziert werden. Client wird keine "
+"Benachrichtigung erhalten"
 
 #: libgda/gda-server-connection.c:440
 #, c-format
@@ -104,52 +107,48 @@ msgstr "WAHR"
 msgid "FALSE"
 msgstr "FALSCH"
 
-#: libgda/gda-xml-database.c:164
+#: libgda/gda-xml-database.c:214
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Datei bei %s konnte nicht geladen werden"
 
-#: libgda/gda-xml-database.c:175
+#: libgda/gda-xml-database.c:223
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Datei bei %s konnte nicht interpretiert werden"
 
-#: libgda/gda-xml-database.c:185
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
-msgid "Bad formed document at %s"
-msgstr "Formal ungültiges Dokument bei %s"
+msgid "Invalid XML database file '%s'"
+msgstr ""
 
-#: libgda/gda-xml-database.c:260
-#, c-format
-msgid "table %s already exists"
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#, fuzzy, c-format
+msgid "Table %s already exists"
 msgstr "Tabelle %s existiert schon"
 
-#: libgda/gda-xml-database.c:442
-#, c-format
-msgid "%p is not a valid table"
-msgstr "%p ist keine gültige Tabelle"
+#: libgda/gda-xml-database.c:327
+#, fuzzy
+msgid "Invalid node"
+msgstr "Ungültiger MYSQL-Handle"
 
-#: providers/default/gda-default-provider.c:141
+#: libgda/gda-xml-database.c:358
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:365
+#, fuzzy
+msgid "Invalid XML node"
+msgstr "Ungültiger MYSQL-Handle"
+
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr "Um eine Datenbank zu öffnen, muss in der Verbindungszeichenkette ein voller Pfad angegeben werden."
-
-#: providers/default/gda-default-provider.c:199
-#: providers/default/gda-default-recordset.c:59
-msgid "Invalid DEFAULT handle"
-msgstr "Ungültiger DEFAULT-Handle"
-
-#: providers/default/gda-default-recordset.c:70
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
-msgid "Row number out of range"
-msgstr "Zeilennummer außerhalb des Erlaubten"
-
-#: providers/default/gda-default-recordset.c:110
-msgid "Invalid Default handle"
-msgstr "Ungültiger Vorgabe-Handle"
+msgstr ""
+"Um eine Datenbank zu öffnen, muss in der Verbindungszeichenkette ein voller "
+"Pfad angegeben werden."
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -166,7 +165,9 @@ msgstr "Vorgabe-Komponentenfabrik konnte nicht angestoßen werden"
 #: providers/mysql/gda-mysql-provider.c:175
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Sie können keinen UNIX_SOCKET anbieten, wenn Sie auch einen PORT oder einen HOST angeben."
+msgstr ""
+"Sie können keinen UNIX_SOCKET anbieten, wenn Sie auch einen PORT oder einen "
+"HOST angeben."
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
@@ -184,6 +185,12 @@ msgstr "Typ"
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
 msgstr "Ungültiger MySQL-Handle"
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
+msgstr "Zeilennummer außerhalb des Erlaubten"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -424,7 +431,9 @@ msgstr "Testen der GDA-Client-API"
 
 #: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr "** FEHLER: gda_config_get_data_source_list hat einen NULL-Eintrag zurückgegeben\n"
+msgstr ""
+"** FEHLER: gda_config_get_data_source_list hat einen NULL-Eintrag "
+"zurückgegeben\n"
 
 #: testing/client.c:142
 #, c-format
@@ -433,7 +442,9 @@ msgstr " Datenquelle = %s, Benutzer = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** FEHLER: gda_config_get_provider_list hat einen NULL-Eintrag zurückgegeben\n"
+msgstr ""
+"** FEHLER: gda_config_get_provider_list hat einen NULL-Eintrag "
+"zurückgegeben\n"
 
 #: testing/config.c:88
 #, c-format
@@ -477,3 +488,15 @@ msgstr "\tDomain = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tGDA_Parameter ="
+
+#~ msgid "Bad formed document at %s"
+#~ msgstr "Formal ungültiges Dokument bei %s"
+
+#~ msgid "%p is not a valid table"
+#~ msgstr "%p ist keine gültige Tabelle"
+
+#~ msgid "Invalid DEFAULT handle"
+#~ msgstr "Ungültiger DEFAULT-Handle"
+
+#~ msgid "Invalid Default handle"
+#~ msgstr "Ungültiger Vorgabe-Handle"

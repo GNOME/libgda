@@ -16,6 +16,7 @@ libgda/gda-server.c
 libgda/gda-server-connection.c
 libgda/gda-server-provider.c
 libgda/gda-server-recordset.c
+libgda/gda-table.c
 libgda/gda-value.c
 libgda/gda-xml-database.c
 libgda/gda-xml-document.c

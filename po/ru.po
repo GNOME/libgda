@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
-"POT-Creation-Date: 2002-03-06 15:26+0300\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-06 15:50+0300\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
@@ -108,53 +108,48 @@ msgid "FALSE"
 msgstr "ЛОЖЬ"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: libgda/gda-xml-database.c:164
+#: libgda/gda-xml-database.c:214
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Не удалось загрузить файл %s"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: libgda/gda-xml-database.c:175
+#: libgda/gda-xml-database.c:223
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Не удалось проанализировать файл %s"
 
-#: libgda/gda-xml-database.c:185
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
-msgid "Bad formed document at %s"
-msgstr "Плохо сформированный документ %s"
+msgid "Invalid XML database file '%s'"
+msgstr ""
 
-#: libgda/gda-xml-database.c:260
-#, c-format
-msgid "table %s already exists"
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#, fuzzy, c-format
+msgid "Table %s already exists"
 msgstr "таблица %s уже существует"
 
-#: libgda/gda-xml-database.c:442
-#, c-format
-msgid "%p is not a valid table"
-msgstr "%p не является допустимой таблицей"
+#: libgda/gda-xml-database.c:327
+#, fuzzy
+msgid "Invalid node"
+msgstr "Неправильный обработчик MySQL"
 
-#: providers/default/gda-default-provider.c:141
+#: libgda/gda-xml-database.c:358
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:365
+#, fuzzy
+msgid "Invalid XML node"
+msgstr "Неправильный обработчик MySQL"
+
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr "В строке соединения должен быть указан полный путь для открытия базы данных."
-
-#: providers/default/gda-default-provider.c:199
-#: providers/default/gda-default-recordset.c:59
-msgid "Invalid DEFAULT handle"
-msgstr "Неправильный обработчик используемый по умолчанию"
-
-#: providers/default/gda-default-recordset.c:70
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
-msgid "Row number out of range"
-msgstr "Номер строки вне диапазона"
-
-#: providers/default/gda-default-recordset.c:110
-msgid "Invalid Default handle"
-msgstr "Неправильный обработчик по умолчанию"
+msgstr ""
+"В строке соединения должен быть указан полный путь для открытия базы данных."
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -189,6 +184,12 @@ msgstr "Тип"
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
 msgstr "Неправильный обработчик MySQL"
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
+msgstr "Номер строки вне диапазона"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -489,3 +490,15 @@ msgstr "\tдомен = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tпараметры gda ="
+
+#~ msgid "Bad formed document at %s"
+#~ msgstr "Плохо сформированный документ %s"
+
+#~ msgid "%p is not a valid table"
+#~ msgstr "%p не является допустимой таблицей"
+
+#~ msgid "Invalid DEFAULT handle"
+#~ msgstr "Неправильный обработчик используемый по умолчанию"
+
+#~ msgid "Invalid Default handle"
+#~ msgstr "Неправильный обработчик по умолчанию"

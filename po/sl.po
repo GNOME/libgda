@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-03 15:12+0100\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -28,34 +28,34 @@ msgstr "Nisem uspel aktivirati ustvarjalca poroèil"
 msgid "Could not create connection component"
 msgstr "ne morem odpreti povezave z %s"
 
-#: libgda/gda-config.c:511
+#: libgda/gda-config.c:512
 #, fuzzy
 msgid "Could not query CORBA components"
 msgstr "Ne morem odpreti CORBA tovarne"
 
-#: libgda/gda-config.c:618
+#: libgda/gda-config.c:619
 #, fuzzy
 msgid "Could not query CORBA providers"
 msgstr "Ne morem odpreti CORBA tovarne"
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:869
 msgid "Name"
 msgstr ""
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:870
 msgid "Provider"
 msgstr ""
 
-#: libgda/gda-config.c:870
+#: libgda/gda-config.c:871
 #, fuzzy
 msgid "Connection string"
 msgstr "Povezava se zapira"
 
-#: libgda/gda-config.c:871
+#: libgda/gda-config.c:872
 msgid "Description"
 msgstr ""
 
-#: libgda/gda-config.c:872
+#: libgda/gda-config.c:873
 #, fuzzy
 msgid "Username"
 msgstr "uporabni¹ko ime"
@@ -108,51 +108,43 @@ msgstr "RESNIÈNO"
 msgid "FALSE"
 msgstr "NERESNIÈNO"
 
-#: libgda/gda-xml-database.c:164
+#: libgda/gda-xml-database.c:214
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "Nisem mogel odpreti datoteke %s"
 
-#: libgda/gda-xml-database.c:175
+#: libgda/gda-xml-database.c:223
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "Nisem mogel odpreti datoteke %s"
 
-#: libgda/gda-xml-database.c:185
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, fuzzy, c-format
-msgid "Bad formed document at %s"
-msgstr "slabo oblikovan dokument"
+msgid "Invalid XML database file '%s'"
+msgstr "Izbrana zbirka podatkov '%s'"
 
-#: libgda/gda-xml-database.c:260
-#, c-format
-msgid "table %s already exists"
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#, fuzzy, c-format
+msgid "Table %s already exists"
 msgstr "tabela %s ¾e obstaja"
 
-#: libgda/gda-xml-database.c:442
-#, c-format
-msgid "%p is not a valid table"
-msgstr "%p ni veljavna tabela"
+#: libgda/gda-xml-database.c:327
+msgid "Invalid node"
+msgstr ""
 
-#: providers/default/gda-default-provider.c:141
+#: libgda/gda-xml-database.c:358
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:365
+msgid "Invalid XML node"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr ""
-
-#: providers/default/gda-default-provider.c:199
-#: providers/default/gda-default-recordset.c:59
-msgid "Invalid DEFAULT handle"
-msgstr ""
-
-#: providers/default/gda-default-recordset.c:70
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
-msgid "Row number out of range"
-msgstr ""
-
-#: providers/default/gda-default-recordset.c:110
-msgid "Invalid Default handle"
 msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
@@ -193,6 +185,12 @@ msgstr ""
 #: providers/mysql/gda-mysql-recordset.c:63
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
 msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
@@ -515,6 +513,13 @@ msgstr ""
 msgid "\tgda_params ="
 msgstr ""
 
+#, fuzzy
+#~ msgid "Bad formed document at %s"
+#~ msgstr "slabo oblikovan dokument"
+
+#~ msgid "%p is not a valid table"
+#~ msgstr "%p ni veljavna tabela"
+
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[Knji¾njica odjemalca GDA]"
 
@@ -778,9 +783,6 @@ msgstr ""
 
 #~ msgid "Connected to %s"
 #~ msgstr "Povezan z %s"
-
-#~ msgid "Selected database '%s'"
-#~ msgstr "Izbrana zbirka podatkov '%s'"
 
 #~ msgid "%s: Could not allocate cmd structure"
 #~ msgstr "%s: Nisem mogel rezervirati ukazne strukture"

@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-02 00:15+0100\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-02 00:15+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -30,31 +30,31 @@ msgstr "Kunde inte aktivera objektet %s"
 msgid "Could not create connection component"
 msgstr "Kunde inte skapa anslutningskomponent"
 
-#: libgda/gda-config.c:511
+#: libgda/gda-config.c:512
 msgid "Could not query CORBA components"
 msgstr "Kunde inte fråga CORBA-komponenter"
 
-#: libgda/gda-config.c:618
+#: libgda/gda-config.c:619
 msgid "Could not query CORBA providers"
 msgstr "Kunde inte fråga CORBA-leverantörer"
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:869
 msgid "Name"
 msgstr "Namn"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:870
 msgid "Provider"
 msgstr "Leverantör"
 
-#: libgda/gda-config.c:870
+#: libgda/gda-config.c:871
 msgid "Connection string"
 msgstr "Anslutningssträng"
 
-#: libgda/gda-config.c:871
+#: libgda/gda-config.c:872
 msgid "Description"
 msgstr "Beskrivning"
 
-#: libgda/gda-config.c:872
+#: libgda/gda-config.c:873
 msgid "Username"
 msgstr "Användarnamn"
 
@@ -107,54 +107,48 @@ msgstr "SANT"
 msgid "FALSE"
 msgstr "FALSKT"
 
-#: libgda/gda-xml-database.c:164
+#: libgda/gda-xml-database.c:214
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Kunde inte läsa in filen vid %s"
 
-#: libgda/gda-xml-database.c:175
+#: libgda/gda-xml-database.c:223
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Kunde inte tolka filen vid %s"
 
-#: libgda/gda-xml-database.c:185
-#, c-format
-msgid "Bad formed document at %s"
-msgstr "Felaktigt dokument vid %s"
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
+#, fuzzy, c-format
+msgid "Invalid XML database file '%s'"
+msgstr "Valde databasen \"%s\""
 
-#: libgda/gda-xml-database.c:260
-#, c-format
-msgid "table %s already exists"
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#, fuzzy, c-format
+msgid "Table %s already exists"
 msgstr "tabellen %s finns redan"
 
-#: libgda/gda-xml-database.c:442
-#, c-format
-msgid "%p is not a valid table"
-msgstr "%p är ingen giltig tabell"
+#: libgda/gda-xml-database.c:327
+#, fuzzy
+msgid "Invalid node"
+msgstr "Ogiltigt MYSQL-handtag"
 
-#: providers/default/gda-default-provider.c:141
+#: libgda/gda-xml-database.c:358
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:365
+#, fuzzy
+msgid "Invalid XML node"
+msgstr "Ogiltigt MYSQL-handtag"
+
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "En fullständig sökväg måste anges i anslutningssträngen för att öppna en "
 "databas."
-
-#: providers/default/gda-default-provider.c:199
-#: providers/default/gda-default-recordset.c:59
-msgid "Invalid DEFAULT handle"
-msgstr "Ogiltigt DEFAULT-handtag"
-
-#: providers/default/gda-default-recordset.c:70
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
-msgid "Row number out of range"
-msgstr "Radnummer utanför intervallet"
-
-#: providers/default/gda-default-recordset.c:110
-msgid "Invalid Default handle"
-msgstr "Ogiltigt standardhandtag"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -191,6 +185,12 @@ msgstr "Typ"
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
 msgstr "Ogiltigt MySQL-handtag"
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
+msgstr "Radnummer utanför intervallet"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -295,82 +295,6 @@ msgstr "SQLite-komponentfabrik"
 #: providers/sqlite/main.c:54
 msgid "Could not initiate Sqlite component factory"
 msgstr "Kunde inte initiera Sqlite-komponentfabrik"
-
-#: providers/sybase/gda-sybase-error.c:137
-msgid "ct_diag 1 failed in sybase_check_clientmsg"
-msgstr "ct_diag 1 misslyckades i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:159
-#: providers/sybase/gda-sybase-error.c:197
-msgid "ct_diag 2 failed in sybase_check_clientmsg"
-msgstr "ct_diag 2 misslyckades i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:167
-#: providers/sybase/gda-sybase-error.c:376
-msgid "Client Message: "
-msgstr "Klientmeddelande: "
-
-#: providers/sybase/gda-sybase-error.c:178
-#: providers/sybase/gda-sybase-error.c:387
-msgid "Informational Client  Message: "
-msgstr "Informativt klientmeddelande: "
-
-#: providers/sybase/gda-sybase-error.c:239
-msgid "ct_diag 1 failed in sybase_check_servermsg"
-msgstr "ct_diag 1 misslyckades i sybase_check_servermsg"
-
-#: providers/sybase/gda-sybase-error.c:261
-#: providers/sybase/gda-sybase-error.c:304
-msgid "ct_diag 2 failed in sybase_check_servermsg"
-msgstr "ct_diag 2 misslyckades i sybase_check_servermsg"
-
-#: providers/sybase/gda-sybase-error.c:274
-msgid "Server Message: "
-msgstr "Servermeddelande: "
-
-#: providers/sybase/gda-sybase-error.c:285
-msgid "Informational Server  Message: "
-msgstr "Informativt servermeddelande: "
-
-#: providers/sybase/gda-sybase-error.c:346
-msgid "cs_diag 1 failed in sybase_check_clientmsg"
-msgstr "cs_diag 1 misslyckades i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:368
-#: providers/sybase/gda-sybase-error.c:406
-msgid "cs_diag 2 failed in sybase_check_clientmsg"
-msgstr "cs_diag 2 misslyckades i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:429
-msgid "SYB"
-msgstr "SYB"
-
-#: providers/sybase/gda-sybase-error.c:431
-msgid "severity"
-msgstr "allvarlighet"
-
-#: providers/sybase/gda-sybase-error.c:433
-msgid "number"
-msgstr "nummer"
-
-#: providers/sybase/gda-sybase-error.c:435
-msgid "origin"
-msgstr "ursprung"
-
-#: providers/sybase/gda-sybase-error.c:437
-msgid "layer"
-msgstr "lager"
-
-#: providers/sybase/gda-sybase-error.c:444
-#, c-format
-msgid ""
-"\n"
-"\tOperating system error number(%ld):\n"
-"\t%s"
-msgstr ""
-"\n"
-"\tOperativsystemsfel nummer (%ld):\n"
-"\t%s"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -560,6 +484,72 @@ msgstr "\tdomän = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Bad formed document at %s"
+#~ msgstr "Felaktigt dokument vid %s"
+
+#~ msgid "%p is not a valid table"
+#~ msgstr "%p är ingen giltig tabell"
+
+#~ msgid "Invalid DEFAULT handle"
+#~ msgstr "Ogiltigt DEFAULT-handtag"
+
+#~ msgid "Invalid Default handle"
+#~ msgstr "Ogiltigt standardhandtag"
+
+#~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
+#~ msgstr "ct_diag 1 misslyckades i sybase_check_clientmsg"
+
+#~ msgid "ct_diag 2 failed in sybase_check_clientmsg"
+#~ msgstr "ct_diag 2 misslyckades i sybase_check_clientmsg"
+
+#~ msgid "Client Message: "
+#~ msgstr "Klientmeddelande: "
+
+#~ msgid "Informational Client  Message: "
+#~ msgstr "Informativt klientmeddelande: "
+
+#~ msgid "ct_diag 1 failed in sybase_check_servermsg"
+#~ msgstr "ct_diag 1 misslyckades i sybase_check_servermsg"
+
+#~ msgid "ct_diag 2 failed in sybase_check_servermsg"
+#~ msgstr "ct_diag 2 misslyckades i sybase_check_servermsg"
+
+#~ msgid "Server Message: "
+#~ msgstr "Servermeddelande: "
+
+#~ msgid "Informational Server  Message: "
+#~ msgstr "Informativt servermeddelande: "
+
+#~ msgid "cs_diag 1 failed in sybase_check_clientmsg"
+#~ msgstr "cs_diag 1 misslyckades i sybase_check_clientmsg"
+
+#~ msgid "cs_diag 2 failed in sybase_check_clientmsg"
+#~ msgstr "cs_diag 2 misslyckades i sybase_check_clientmsg"
+
+#~ msgid "SYB"
+#~ msgstr "SYB"
+
+#~ msgid "severity"
+#~ msgstr "allvarlighet"
+
+#~ msgid "number"
+#~ msgstr "nummer"
+
+#~ msgid "origin"
+#~ msgstr "ursprung"
+
+#~ msgid "layer"
+#~ msgstr "lager"
+
+#~ msgid ""
+#~ "\n"
+#~ "\tOperating system error number(%ld):\n"
+#~ "\t%s"
+#~ msgstr ""
+#~ "\n"
+#~ "\tOperativsystemsfel nummer (%ld):\n"
+#~ "\t%s"
 
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[GDA-klientbibliotek]"
@@ -831,9 +821,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "Connected to %s"
 #~ msgstr "Anslöt till %s"
-
-#~ msgid "Selected database '%s'"
-#~ msgstr "Valde databasen \"%s\""
 
 #~ msgid "%s: Could not allocate cmd structure"
 #~ msgstr "%s: Kunde inte allokera kommandostruktur"

@@ -1,3 +1,27 @@
+libgda 0.8.104, 2002-03-07
+--------------------------
+
+ - Added more information to the GdaFieldAttributes structure (rodrigo)
+ - Added SCHEMA_FIELDS, SCHEMA_AGGREGATES and SCHEMA_TRIGGERS schemas (rodrigo)
+ - Implemented SCHEMA_AGGREGATES and SCHEMA_TRIGGERS in PostgreSQL
+   provider (gonzalo, rodrigo)
+ - Replaced our custom ParameterList with Bonobo::PropertySet's (rodrigo)
+ - Fixed GConf notifications (rodrigo)
+ - New spec files, with optional compilation of providers (chris)
+ - Added GdaTable, new class which implements an in-memory table (rodrigo)
+ - Added "describe_column" method to GdaDataModel class and
+   derivates (rodrigo)
+ - Updated translations:
+ 	- da (olau)
+	- de (mawarkus)
+ 	- no (kmaraas)
+	- pl (chyla)
+ 	- pt (dnloreto)
+	- ru (frob)
+	- sk (stano)
+	- sl (minmax)
+	- sv (menthos)
+
 libgda 0.8.103, 2002-02-10
 --------------------------
 
