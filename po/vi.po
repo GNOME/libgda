@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2002-05-07 01:05+0200\n"
+"POT-Creation-Date: 2002-05-25 00:31+0200\n"
 "PO-Revision-Date: 2002-05-09 11:10-0400\n"
 "Last-Translator: pclouds <pclouds@gmx.net>\n"
 "Language-Team: GnomeVI <gnomevi-list@lists.sourceforge.net>\n"
@@ -12,53 +12,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
+#: libgda/gda-client.c:226 libgda/gda-client.c:384 libgda/gda-connection.c:206
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Không tìm thấy nguồn dữ liệu %s trong cấu hình"
 
-#: libgda/gda-client.c:225
+#: libgda/gda-client.c:244
 #, c-format
 msgid "Provider %s is not installed"
 msgstr "Chưa cài đặt bộ cung cấp %s"
 
-#: libgda/gda-client.c:234
+#: libgda/gda-client.c:253
 #, c-format
 msgid "Could not load %s provider"
 msgstr "Không thể nạp bộ cung cấp %s"
 
-#: libgda/gda-client.c:250
+#: libgda/gda-client.c:269
 #, c-format
 msgid "Provider %s does not implement entry point"
 msgstr "Bộ cung cấp %s chưa thi công điểm vào (entry point)"
 
-#: libgda/gda-client.c:259
+#: libgda/gda-client.c:278
 msgid "Creation of GdaServerProvider failed"
 msgstr "Việc tạo GdaServerProvider thất bại"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
-#: providers/default/gda-default-provider.c:467
-#: providers/default/gda-default-provider.c:503
-#: providers/mysql/gda-mysql-provider.c:450
+#: libgda/gda-config.c:1189 providers/default/gda-default-provider.c:463
+#: providers/default/gda-default-provider.c:485
+#: providers/default/gda-default-provider.c:522
+#: providers/mysql/gda-mysql-provider.c:535
 msgid "Name"
 msgstr "Tên"
 
-#: libgda/gda-config.c:1106
+#: libgda/gda-config.c:1190
 msgid "Provider"
 msgstr "Bộ cung cấp"
 
-#: libgda/gda-config.c:1107
+#: libgda/gda-config.c:1191
 msgid "Connection string"
 msgstr "Chuỗi kết nối"
 
-#: libgda/gda-config.c:1108
+#: libgda/gda-config.c:1192
 msgid "Description"
 msgstr "Mô tả"
 
-#: libgda/gda-config.c:1109
+#: libgda/gda-config.c:1193
 msgid "Username"
 msgstr "Tên người dùng"
+
+#: libgda/gda-data-model.c:583
+#, fuzzy, c-format
+msgid "Data model %p is not editable"
+msgstr "Chưa cài đặt bộ cung cấp %s"
 
 #: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
@@ -68,155 +73,263 @@ msgstr "Thử khởi động một client đã khởi động rồi"
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda cần GModule. Đang kết thúc..."
 
-#: libgda/gda-table.c:233
+#: libgda/gda-log.c:82
+#, c-format
+msgid "MESSAGE: %s"
+msgstr ""
+
+#: libgda/gda-log.c:101
+#, c-format
+msgid "ERROR: %s"
+msgstr ""
+
+#: libgda/gda-select.c:119 libgda/gda-select.c:142 libgda/gda-select.c:201
+msgid "Unexpected integer value"
+msgstr ""
+
+#: libgda/gda-select.c:131 libgda/gda-select.c:211
+msgid "Unexpected float value"
+msgstr ""
+
+#: libgda/gda-select.c:154
+msgid "Unexpected string value"
+msgstr ""
+
+#: libgda/gda-select.c:165
+msgid "Unexpected symbol '='"
+msgstr ""
+
+#: libgda/gda-select.c:176
+msgid "Unexpected symbol '<'"
+msgstr ""
+
+#: libgda/gda-select.c:187
+msgid "Unexpected symbol '>'"
+msgstr ""
+
+#: libgda/gda-select.c:215
+msgid "Found a non-numeric value after a '-' sign"
+msgstr ""
+
+#: libgda/gda-select.c:231
+msgid "Unexpected identifier"
+msgstr ""
+
+#: libgda/gda-table.c:234
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Đã có trường tên là %s rồi"
 
-#: libgda/gda-value.c:1030
+#: libgda/gda-util.c:143
+#, c-format
+msgid "Error while reading %s: %s"
+msgstr ""
+
+#: libgda/gda-util.c:169
+#, fuzzy, c-format
+msgid "Could not create file %s"
+msgstr "Không thể phân tích tập tin tại %s"
+
+#: libgda/gda-value.c:1321
 msgid "TRUE"
 msgstr "ĐÚNG"
 
-#: libgda/gda-value.c:1032
+#: libgda/gda-value.c:1323
 msgid "FALSE"
 msgstr "SAI"
 
-#: libgda/gda-xml-database.c:228
+#: libgda/gda-xml-database.c:229
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Không thể nạp tập tin tại %s"
 
-#: libgda/gda-xml-database.c:237
+#: libgda/gda-xml-database.c:238
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Không thể phân tích tập tin tại %s"
 
-#: libgda/gda-xml-database.c:247
+#: libgda/gda-xml-database.c:248
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Tập tin cơ sở dữ liệu XML không hợp lệ '%s'"
 
-#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
-#: libgda/gda-xml-database.c:543
+#: libgda/gda-xml-database.c:467 libgda/gda-xml-database.c:503
+#: libgda/gda-xml-database.c:544
 #, c-format
 msgid "Table %s already exists"
 msgstr "Bảng %s đã có rồi"
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:537
 msgid "Invalid node"
 msgstr "Nút không hợp lệ"
 
-#: libgda/gda-xml-database.c:568
+#: libgda/gda-xml-database.c:569
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Nút <data> lặp trong bảng %s"
 
-#: libgda/gda-xml-database.c:575
+#: libgda/gda-xml-database.c:576
 msgid "Invalid XML node"
 msgstr "Nút XML không hợp lệ"
 
-#: providers/default/gda-default-provider.c:169
-#: providers/sqlite/gda-sqlite-provider.c:162
+#: providers/default/gda-default-provider.c:173
+#: providers/sqlite/gda-sqlite-provider.c:166
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr "Phải xác định đường dẫn đầy đủ của chuỗi kết nối để mở cơ sở dữ liệu."
 
-#: providers/default/gda-default-provider.c:343
-#: providers/mysql/gda-mysql-provider.c:739
-#: providers/postgres/gda-postgres-provider.c:737
+#: providers/default/gda-default-provider.c:242
+msgid "Not Implemented"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:824
+#: providers/postgres/gda-postgres-provider.c:807
 msgid "Field name"
 msgstr "Tên trường"
 
-#: providers/default/gda-default-provider.c:344
-#: providers/mysql/gda-mysql-provider.c:740
-#: providers/postgres/gda-postgres-provider.c:738
+#: providers/default/gda-default-provider.c:362
+#: providers/mysql/gda-mysql-provider.c:825
+#: providers/postgres/gda-postgres-provider.c:808
 msgid "Data type"
 msgstr "Kiểu dữ liệu"
 
-#: providers/default/gda-default-provider.c:345
-#: providers/mysql/gda-mysql-provider.c:741
-#: providers/postgres/gda-postgres-provider.c:739
+#: providers/default/gda-default-provider.c:363
+#: providers/mysql/gda-mysql-provider.c:826
+#: providers/postgres/gda-postgres-provider.c:809
 msgid "Size"
 msgstr "Kích thước"
 
-#: providers/default/gda-default-provider.c:346
-#: providers/mysql/gda-mysql-provider.c:742
-#: providers/postgres/gda-postgres-provider.c:740
+#: providers/default/gda-default-provider.c:364
+#: providers/mysql/gda-mysql-provider.c:827
+#: providers/postgres/gda-postgres-provider.c:810
 msgid "Scale"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:347
-#: providers/mysql/gda-mysql-provider.c:743
-#: providers/postgres/gda-postgres-provider.c:741
+#: providers/default/gda-default-provider.c:365
+#: providers/mysql/gda-mysql-provider.c:828
+#: providers/postgres/gda-postgres-provider.c:811
 msgid "Not null?"
 msgstr "Không null?"
 
-#: providers/default/gda-default-provider.c:348
-#: providers/mysql/gda-mysql-provider.c:744
-#: providers/postgres/gda-postgres-provider.c:742
+#: providers/default/gda-default-provider.c:366
+#: providers/mysql/gda-mysql-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:812
 msgid "Primary key?"
 msgstr "Khóa chính?"
 
-#: providers/default/gda-default-provider.c:349
-#: providers/mysql/gda-mysql-provider.c:745
-#: providers/postgres/gda-postgres-provider.c:743
+#: providers/default/gda-default-provider.c:367
+#: providers/mysql/gda-mysql-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:813
 msgid "Unique index?"
 msgstr "Index duy nhất?"
 
-#: providers/default/gda-default-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:746
-#: providers/postgres/gda-postgres-provider.c:744
+#: providers/default/gda-default-provider.c:368
+#: providers/mysql/gda-mysql-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:814
 msgid "References"
 msgstr "Tham chiếu"
 
-#: providers/default/gda-default-provider.c:360
-#: providers/default/gda-default-provider.c:366
+#: providers/default/gda-default-provider.c:378
+#: providers/default/gda-default-provider.c:384
 msgid "Invalid argument"
 msgstr "Đối số không hợp lệ"
 
-#: providers/default/gda-default-provider.c:373
+#: providers/default/gda-default-provider.c:391
 #, c-format
 msgid "Table %s not found"
 msgstr "Không tìm thấy bảng %s"
 
-#: providers/default/gda-default-provider.c:398
+#: providers/default/gda-default-provider.c:416
 msgid "Could not get description for column"
 msgstr "Không thể lấy mô tả cột"
 
-#: providers/mysql/gda-mysql-provider.c:183
+#: providers/default/libmain.c:39
+msgid "GDA default provider, based on the libgda XML format"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:176
+#, fuzzy
+msgid "A database FILENAME must be specified in the connection_string"
+msgstr "Phải xác định đường dẫn đầy đủ của chuỗi kết nối để mở cơ sở dữ liệu."
+
+#: providers/mdb/gda-mdb-provider.c:184
+#, fuzzy, c-format
+msgid "Could not open file %s"
+msgstr "Không thể phân tích tập tin tại %s"
+
+#: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
+#, fuzzy
+msgid "Invalid MDB handle"
+msgstr "Handle MySQL không hợp lệ"
+
+#: providers/mdb/gda-mdb-provider.c:273
+msgid "Table Name"
+msgstr ""
+
+#: providers/mdb/libmain.c:34
+msgid "GDA provider for MS Access files"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:191
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Bạn không thể dùng UNIX_SOCKET nếu đã cung cấp hoặc là máy chủ hoặc là số cổng."
+msgstr ""
+"Bạn không thể dùng UNIX_SOCKET nếu đã cung cấp hoặc là máy chủ hoặc là số "
+"cổng."
 
-#: providers/mysql/gda-mysql-provider.c:254
-#: providers/mysql/gda-mysql-provider.c:333
-#: providers/mysql/gda-mysql-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:389
+#: providers/mysql/gda-mysql-provider.c:262
+#: providers/mysql/gda-mysql-provider.c:316
+#: providers/mysql/gda-mysql-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:445
+#: providers/mysql/gda-mysql-provider.c:473
 msgid "Invalid MYSQL handle"
 msgstr "Handle MYSQL không hợp lệ"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:641
-#: providers/postgres/gda-postgres-provider.c:623
+#: providers/mysql/gda-mysql-provider.c:726
 msgid "Type"
 msgstr "Kiểu"
 
-#: providers/mysql/gda-mysql-provider.c:754
-#: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:166
+#: providers/mysql/gda-mysql-provider.c:839
+#: providers/mysql/gda-mysql-recordset.c:58
+#: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "Handle MySQL không hợp lệ"
 
-#: providers/mysql/gda-mysql-provider.c:763
-#: providers/mysql/gda-mysql-provider.c:771
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:856
 msgid "You need to specify the name of the table"
 msgstr "Bạn cần cho biết tên bảng"
 
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:85
-#: providers/sqlite/gda-sqlite-recordset.c:74
+#: providers/mysql/gda-mysql-recordset.c:69
+#: providers/postgres/gda-postgres-recordset.c:184
+#: providers/postgres/gda-postgres-recordset.c:222
+#: providers/sqlite/gda-sqlite-recordset.c:64
 msgid "Row number out of range"
 msgstr "Số hàng vượt ngoài phạm vi"
+
+#: providers/mysql/gda-mysql-recordset.c:281
+msgid "Attempt to insert a row with an invalid number of columns"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:296
+msgid "Could not retrieve column's information"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:314
+#, fuzzy
+msgid "Could not retrieve column's value"
+msgstr "Không thể lấy tập tin từ %s"
+
+#: providers/mysql/libmain.c:36
+msgid "GDA provider for MySQL databases"
+msgstr ""
+
+#: providers/odbc/libmain.c:36
+msgid "GDA bridge to ODBC data sources"
+msgstr ""
 
 #: providers/oracle/gda-oracle-connection.c:79
 msgid "Could not initialize Oracle environment"
@@ -242,12 +355,72 @@ msgstr "Không thể khởi động Oracle component factory"
 msgid "Could not initialize OCI library"
 msgstr "Không thể khởi động thư viện OCI"
 
-#: providers/postgres/gda-postgres-provider.c:370
-#: providers/postgres/gda-postgres-provider.c:508
-#: providers/postgres/gda-postgres-recordset.c:72
-#: providers/postgres/gda-postgres-recordset.c:128
+#: providers/postgres/gda-postgres-provider.c:380
+#: providers/postgres/gda-postgres-provider.c:565
+#: providers/postgres/gda-postgres-recordset.c:175
+#: providers/postgres/gda-postgres-recordset.c:213
+#: providers/postgres/gda-postgres-recordset.c:255
 msgid "Invalid PostgreSQL handle"
 msgstr "Handle PostgreSQL không hợp lệ"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:650
+msgid "Tables"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:689
+#, fuzzy
+msgid "Types"
+msgstr "Kiểu"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:720 testing/client.c:120
+msgid "Views"
+msgstr "View"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:745 testing/client.c:121
+msgid "Indexes"
+msgstr "Index"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:771 testing/client.c:122
+msgid "Aggregates"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:796 testing/client.c:125
+msgid "Triggers"
+msgstr "Trigger"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1150 testing/client.c:116
+msgid "Databases"
+msgstr "Cơ sở dữ liệu"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1175 testing/client.c:123
+msgid "Users"
+msgstr "Người dùng"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:124
+msgid "Sequences"
+msgstr "Sequence"
+
+#: providers/postgres/gda-postgres-recordset.c:228
+#, fuzzy
+msgid "Column number out of range"
+msgstr "Số hàng vượt ngoài phạm vi"
+
+#: providers/postgres/gda-postgres-recordset.c:261
+#, fuzzy
+msgid "Column out of range"
+msgstr "Số hàng vượt ngoài phạm vi"
+
+#: providers/postgres/libmain.c:41
+msgid "GDA provider for PostgreSQL databases"
+msgstr ""
 
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
@@ -257,48 +430,22 @@ msgstr "KHÔNG CÓ MÔ TẢ"
 msgid "Not available"
 msgstr "Chưa sẵn sàng"
 
-#: providers/sqlite/gda-sqlite-provider.c:220
-#: providers/sqlite/gda-sqlite-recordset.c:63
+#: providers/sqlite/gda-sqlite-provider.c:224
+#: providers/sqlite/gda-sqlite-recordset.c:54
 msgid "Invalid SQLITE handle"
 msgstr "Handle SQLITE không hợp lệ"
 
-#: providers/sqlite/gda-sqlite-recordset.c:113
-msgid "Invalid Sqlite handle"
-msgstr "Handle Sqlite không hợp lệ"
+#: providers/sqlite/gda-sqlite-provider.c:286
+msgid "Only one database per connection is allowed"
+msgstr ""
+
+#: providers/sqlite/libmain.c:36
+msgid "GDA provider for SQLite databases"
+msgstr ""
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Không thể khởi động Sybase component factory"
-
-#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
-#: report/libgda-report/gda-report-client.c:210
-#, c-format
-msgid "CORBA exception: %s"
-msgstr "Lỗi ngoại lệ CORBA: %s"
-
-#: report/gda-report-engine.c:106
-msgid "Could not create global GDA client"
-msgstr "Không thể tạo client GDA toàn cục"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr "Máy báo cáo GDA"
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr "Factory máy báo cáo GDA"
-
-#: report/job.c:44
-msgid "Could not parse XML report"
-msgstr "Không thể phân tích bản báo cáo XML"
-
-#: report/libgda-report/gda-report-client.c:142
-msgid "Could not activate report engine"
-msgstr "Không thể kích hoạt máy báo cáo"
-
-#: report/libgda-report/gda-report-client.c:183
-msgid "Could not create BonoboStreamMem object"
-msgstr "Không thể tạo đối tượng BonoboStreamMem"
 
 #: report/libgda-report/gda-report-document.c:138
 msgid "Could not parse XML document"
@@ -308,10 +455,6 @@ msgstr "Không thể phân tích tài liệu XML"
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Không thể lấy tập tin từ %s"
-
-#: report/main.c:47
-msgid "Could not initiate Report component factory"
-msgstr "Không thể khởi động Report component factory"
 
 #: testing/client.c:39
 msgid "\t\tNONE\n"
@@ -328,86 +471,108 @@ msgid "\tProvider capabilities...\n"
 msgstr "\tTính năng bộ cung cấp...\n"
 
 #: testing/client.c:84
+#, fuzzy, c-format
+msgid "\t\tAggregates: %s\n"
+msgstr "\t\tGiao dịch: %s\n"
+
+#: testing/client.c:86 testing/client.c:89 testing/client.c:92
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113
+msgid "Supported"
+msgstr "Hỗ trợ"
+
+#: testing/client.c:86 testing/client.c:89 testing/client.c:92
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113
+msgid "Not supported"
+msgstr "Không hỗ trợ"
+
+#: testing/client.c:87
+#, fuzzy, c-format
+msgid "\t\tIndexes: %s\n"
+msgstr "Index"
+
+#: testing/client.c:90
+#, c-format
+msgid "\t\tProcedures: %s\n"
+msgstr ""
+
+#: testing/client.c:93
+#, fuzzy, c-format
+msgid "\t\tSequences: %s\n"
+msgstr "Sequence"
+
+#: testing/client.c:96
+#, c-format
+msgid "\t\tSQL language: %s\n"
+msgstr ""
+
+#: testing/client.c:99
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tGiao dịch: %s\n"
 
-#: testing/client.c:86
-msgid "Supported"
-msgstr "Hỗ trợ"
+#: testing/client.c:102
+#, fuzzy, c-format
+msgid "\t\tTriggers: %s\n"
+msgstr "Trigger"
 
-#: testing/client.c:86
-msgid "Not supported"
-msgstr "Không hỗ trợ"
+#: testing/client.c:105
+#, c-format
+msgid "\t\tUsers: %s\n"
+msgstr ""
 
-#. show connection schemas
-#: testing/client.c:89
-msgid "Databases"
-msgstr "Cơ sở dữ liệu"
+#: testing/client.c:108
+#, c-format
+msgid "\t\tViews: %s\n"
+msgstr ""
 
-#: testing/client.c:90
+#: testing/client.c:111
+#, c-format
+msgid "\t\tXML queries: %s\n"
+msgstr ""
+
+#: testing/client.c:117
 msgid "Stored procedures"
 msgstr ""
 
-#: testing/client.c:91
+#: testing/client.c:118
 msgid "Connection Tables"
 msgstr "Bảng kết nối"
 
-#: testing/client.c:92
+#: testing/client.c:119
 msgid "Available types"
 msgstr "Kiểu có sẵn"
 
-#: testing/client.c:93
-msgid "Views"
-msgstr "View"
-
-#: testing/client.c:94
-msgid "Indexes"
-msgstr "Index"
-
-#: testing/client.c:95
-msgid "Aggregates"
-msgstr ""
-
-#: testing/client.c:96
-msgid "Users"
-msgstr "Người dùng"
-
-#: testing/client.c:97
-msgid "Sequences"
-msgstr "Sequence"
-
-#: testing/client.c:98
-msgid "Triggers"
-msgstr "Trigger"
-
 #. test transactions
-#: testing/client.c:101 testing/client.c:109
+#: testing/client.c:128 testing/client.c:136
 msgid "\tStarting transaction..."
 msgstr "\tĐang bắt đầu phiên giao dịch..."
 
-#: testing/client.c:103 testing/client.c:107 testing/client.c:111
-#: testing/client.c:115
+#: testing/client.c:130 testing/client.c:134 testing/client.c:138
+#: testing/client.c:142
 msgid "Error"
 msgstr "Lỗi"
 
-#: testing/client.c:105
+#: testing/client.c:132
 msgid "\tFinishing transaction..."
 msgstr "\tĐang kết thúc phiên giao dịch.."
 
-#: testing/client.c:113
+#: testing/client.c:140
 msgid "\tRolling back transaction..."
 msgstr "\tĐang hoàn nguyên phiên giao dịch..."
 
-#: testing/client.c:134
+#: testing/client.c:162
 msgid "Testing GDA client API"
 msgstr "Đang kiểm tra GDA client API"
 
-#: testing/client.c:143
+#: testing/client.c:171
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** LỖI: gda_config_get_data_source_list trả về NULL\n"
 
-#: testing/client.c:147
+#: testing/client.c:175
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Nguồn dữ liệu = %s, Người dùng = %s\n"
@@ -434,3 +599,30 @@ msgstr "\tmô tả = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Invalid Sqlite handle"
+#~ msgstr "Handle Sqlite không hợp lệ"
+
+#~ msgid "CORBA exception: %s"
+#~ msgstr "Lỗi ngoại lệ CORBA: %s"
+
+#~ msgid "Could not create global GDA client"
+#~ msgstr "Không thể tạo client GDA toàn cục"
+
+#~ msgid "GDA Report engine"
+#~ msgstr "Máy báo cáo GDA"
+
+#~ msgid "GDA Report engine factory"
+#~ msgstr "Factory máy báo cáo GDA"
+
+#~ msgid "Could not parse XML report"
+#~ msgstr "Không thể phân tích bản báo cáo XML"
+
+#~ msgid "Could not activate report engine"
+#~ msgstr "Không thể kích hoạt máy báo cáo"
+
+#~ msgid "Could not create BonoboStreamMem object"
+#~ msgstr "Không thể tạo đối tượng BonoboStreamMem"
+
+#~ msgid "Could not initiate Report component factory"
+#~ msgstr "Không thể khởi động Report component factory"

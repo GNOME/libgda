@@ -1,5 +1,9 @@
 2002-05-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Released 0.8.191
+
+2002-05-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-client.[ch] (gda_client_open_connection_from_string):
 	added new stub with a big FIXME on it.
 	Added some documentation.

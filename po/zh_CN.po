@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-05-03 02:43+0200\n"
+"POT-Creation-Date: 2002-05-25 00:31+0200\n"
 "PO-Revision-Date: 2002-03-26 23:52+0800\n"
 "Last-Translator: He Qiangqiang <carton@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -13,53 +13,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
+#: libgda/gda-client.c:226 libgda/gda-client.c:384 libgda/gda-connection.c:206
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "无法在配置中找到数据源 %s"
 
-#: libgda/gda-client.c:225
+#: libgda/gda-client.c:244
 #, c-format
 msgid "Provider %s is not installed"
 msgstr ""
 
-#: libgda/gda-client.c:234
+#: libgda/gda-client.c:253
 #, fuzzy, c-format
 msgid "Could not load %s provider"
 msgstr "无法查询 CORBA 提供者"
 
-#: libgda/gda-client.c:250
+#: libgda/gda-client.c:269
 #, c-format
 msgid "Provider %s does not implement entry point"
 msgstr ""
 
-#: libgda/gda-client.c:259
+#: libgda/gda-client.c:278
 msgid "Creation of GdaServerProvider failed"
 msgstr ""
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
-#: providers/default/gda-default-provider.c:467
-#: providers/default/gda-default-provider.c:503
-#: providers/mysql/gda-mysql-provider.c:450
+#: libgda/gda-config.c:1189 providers/default/gda-default-provider.c:463
+#: providers/default/gda-default-provider.c:485
+#: providers/default/gda-default-provider.c:522
+#: providers/mysql/gda-mysql-provider.c:535
 msgid "Name"
 msgstr "名称"
 
-#: libgda/gda-config.c:1106
+#: libgda/gda-config.c:1190
 msgid "Provider"
 msgstr "提供者"
 
-#: libgda/gda-config.c:1107
+#: libgda/gda-config.c:1191
 msgid "Connection string"
 msgstr "连接字符串"
 
-#: libgda/gda-config.c:1108
+#: libgda/gda-config.c:1192
 msgid "Description"
 msgstr "描述"
 
-#: libgda/gda-config.c:1109
+#: libgda/gda-config.c:1193
 msgid "Username"
 msgstr "用户名"
+
+#: libgda/gda-data-model.c:583
+#, c-format
+msgid "Data model %p is not editable"
+msgstr ""
 
 #: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
@@ -69,155 +74,263 @@ msgstr "试图初始化一个已初始化的客户端"
 msgid "libgda needs GModule. Finishing..."
 msgstr ""
 
-#: libgda/gda-table.c:233
+#: libgda/gda-log.c:82
+#, c-format
+msgid "MESSAGE: %s"
+msgstr ""
+
+#: libgda/gda-log.c:101
+#, c-format
+msgid "ERROR: %s"
+msgstr ""
+
+#: libgda/gda-select.c:119 libgda/gda-select.c:142 libgda/gda-select.c:201
+msgid "Unexpected integer value"
+msgstr ""
+
+#: libgda/gda-select.c:131 libgda/gda-select.c:211
+msgid "Unexpected float value"
+msgstr ""
+
+#: libgda/gda-select.c:154
+msgid "Unexpected string value"
+msgstr ""
+
+#: libgda/gda-select.c:165
+msgid "Unexpected symbol '='"
+msgstr ""
+
+#: libgda/gda-select.c:176
+msgid "Unexpected symbol '<'"
+msgstr ""
+
+#: libgda/gda-select.c:187
+msgid "Unexpected symbol '>'"
+msgstr ""
+
+#: libgda/gda-select.c:215
+msgid "Found a non-numeric value after a '-' sign"
+msgstr ""
+
+#: libgda/gda-select.c:231
+msgid "Unexpected identifier"
+msgstr ""
+
+#: libgda/gda-table.c:234
 #, c-format
 msgid "There is already a field called %s"
 msgstr "已有一个名为 %s 的字段"
 
-#: libgda/gda-value.c:1030
+#: libgda/gda-util.c:143
+#, c-format
+msgid "Error while reading %s: %s"
+msgstr ""
+
+#: libgda/gda-util.c:169
+#, fuzzy, c-format
+msgid "Could not create file %s"
+msgstr "无法解析文件于 %s"
+
+#: libgda/gda-value.c:1321
 msgid "TRUE"
 msgstr "真"
 
-#: libgda/gda-value.c:1032
+#: libgda/gda-value.c:1323
 msgid "FALSE"
 msgstr "假"
 
-#: libgda/gda-xml-database.c:228
+#: libgda/gda-xml-database.c:229
 #, c-format
 msgid "Could not load file at %s"
 msgstr "无法加载文件于 %s"
 
-#: libgda/gda-xml-database.c:237
+#: libgda/gda-xml-database.c:238
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "无法解析文件于 %s"
 
-#: libgda/gda-xml-database.c:247
+#: libgda/gda-xml-database.c:248
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "无效的 XML 数据库文件“%s”"
 
-#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
-#: libgda/gda-xml-database.c:543
+#: libgda/gda-xml-database.c:467 libgda/gda-xml-database.c:503
+#: libgda/gda-xml-database.c:544
 #, c-format
 msgid "Table %s already exists"
 msgstr "已经存在表 %s "
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:537
 msgid "Invalid node"
 msgstr "无效节点"
 
-#: libgda/gda-xml-database.c:568
+#: libgda/gda-xml-database.c:569
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "表 %s 中存在重复的 <data> 节点"
 
-#: libgda/gda-xml-database.c:575
+#: libgda/gda-xml-database.c:576
 msgid "Invalid XML node"
 msgstr "无效的 XML 节点"
 
-#: providers/default/gda-default-provider.c:169
-#: providers/sqlite/gda-sqlite-provider.c:162
+#: providers/default/gda-default-provider.c:173
+#: providers/sqlite/gda-sqlite-provider.c:166
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr "要打开一个数据库，必须在连接字符串中指定完整路径。"
 
-#: providers/default/gda-default-provider.c:343
-#: providers/mysql/gda-mysql-provider.c:739
-#: providers/postgres/gda-postgres-provider.c:737
+#: providers/default/gda-default-provider.c:242
+msgid "Not Implemented"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:824
+#: providers/postgres/gda-postgres-provider.c:807
 msgid "Field name"
 msgstr "字段名"
 
-#: providers/default/gda-default-provider.c:344
-#: providers/mysql/gda-mysql-provider.c:740
-#: providers/postgres/gda-postgres-provider.c:738
+#: providers/default/gda-default-provider.c:362
+#: providers/mysql/gda-mysql-provider.c:825
+#: providers/postgres/gda-postgres-provider.c:808
 msgid "Data type"
 msgstr "数据类型"
 
-#: providers/default/gda-default-provider.c:345
-#: providers/mysql/gda-mysql-provider.c:741
-#: providers/postgres/gda-postgres-provider.c:739
+#: providers/default/gda-default-provider.c:363
+#: providers/mysql/gda-mysql-provider.c:826
+#: providers/postgres/gda-postgres-provider.c:809
 msgid "Size"
 msgstr "大小"
 
-#: providers/default/gda-default-provider.c:346
-#: providers/mysql/gda-mysql-provider.c:742
-#: providers/postgres/gda-postgres-provider.c:740
+#: providers/default/gda-default-provider.c:364
+#: providers/mysql/gda-mysql-provider.c:827
+#: providers/postgres/gda-postgres-provider.c:810
 msgid "Scale"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:347
-#: providers/mysql/gda-mysql-provider.c:743
-#: providers/postgres/gda-postgres-provider.c:741
+#: providers/default/gda-default-provider.c:365
+#: providers/mysql/gda-mysql-provider.c:828
+#: providers/postgres/gda-postgres-provider.c:811
 msgid "Not null?"
 msgstr "非空？"
 
-#: providers/default/gda-default-provider.c:348
-#: providers/mysql/gda-mysql-provider.c:744
-#: providers/postgres/gda-postgres-provider.c:742
+#: providers/default/gda-default-provider.c:366
+#: providers/mysql/gda-mysql-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:812
 msgid "Primary key?"
 msgstr "主键？"
 
-#: providers/default/gda-default-provider.c:349
-#: providers/mysql/gda-mysql-provider.c:745
-#: providers/postgres/gda-postgres-provider.c:743
+#: providers/default/gda-default-provider.c:367
+#: providers/mysql/gda-mysql-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:813
 msgid "Unique index?"
 msgstr "唯一索引？"
 
-#: providers/default/gda-default-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:746
-#: providers/postgres/gda-postgres-provider.c:744
+#: providers/default/gda-default-provider.c:368
+#: providers/mysql/gda-mysql-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:814
 msgid "References"
 msgstr "引用"
 
-#: providers/default/gda-default-provider.c:360
-#: providers/default/gda-default-provider.c:366
+#: providers/default/gda-default-provider.c:378
+#: providers/default/gda-default-provider.c:384
 msgid "Invalid argument"
 msgstr "无效参数"
 
-#: providers/default/gda-default-provider.c:373
+#: providers/default/gda-default-provider.c:391
 #, c-format
 msgid "Table %s not found"
 msgstr "没有找到表 %s"
 
-#: providers/default/gda-default-provider.c:398
+#: providers/default/gda-default-provider.c:416
 msgid "Could not get description for column"
 msgstr "无法获取列描述"
 
-#: providers/mysql/gda-mysql-provider.c:183
+#: providers/default/libmain.c:39
+msgid "GDA default provider, based on the libgda XML format"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:176
+#, fuzzy
+msgid "A database FILENAME must be specified in the connection_string"
+msgstr "要打开一个数据库，必须在连接字符串中指定完整路径。"
+
+#: providers/mdb/gda-mdb-provider.c:184
+#, fuzzy, c-format
+msgid "Could not open file %s"
+msgstr "无法解析文件于 %s"
+
+#: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
+#, fuzzy
+msgid "Invalid MDB handle"
+msgstr "无效的 MySQL 句柄"
+
+#: providers/mdb/gda-mdb-provider.c:273
+msgid "Table Name"
+msgstr ""
+
+#: providers/mdb/libmain.c:34
+msgid "GDA provider for MS Access files"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:191
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr "如果您已经给出了主机或端口，您就无法再给出 UNIX_SOCKET。"
 
-#: providers/mysql/gda-mysql-provider.c:254
-#: providers/mysql/gda-mysql-provider.c:333
-#: providers/mysql/gda-mysql-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:389
+#: providers/mysql/gda-mysql-provider.c:262
+#: providers/mysql/gda-mysql-provider.c:316
+#: providers/mysql/gda-mysql-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:445
+#: providers/mysql/gda-mysql-provider.c:473
 msgid "Invalid MYSQL handle"
 msgstr "无效的 MYSQL 句柄"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:641
-#: providers/postgres/gda-postgres-provider.c:623
+#: providers/mysql/gda-mysql-provider.c:726
 msgid "Type"
 msgstr "类型"
 
-#: providers/mysql/gda-mysql-provider.c:754
-#: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:166
+#: providers/mysql/gda-mysql-provider.c:839
+#: providers/mysql/gda-mysql-recordset.c:58
+#: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "无效的 MySQL 句柄"
 
-#: providers/mysql/gda-mysql-provider.c:763
-#: providers/mysql/gda-mysql-provider.c:771
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:856
 msgid "You need to specify the name of the table"
 msgstr ""
 
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:85
-#: providers/sqlite/gda-sqlite-recordset.c:74
+#: providers/mysql/gda-mysql-recordset.c:69
+#: providers/postgres/gda-postgres-recordset.c:184
+#: providers/postgres/gda-postgres-recordset.c:222
+#: providers/sqlite/gda-sqlite-recordset.c:64
 msgid "Row number out of range"
 msgstr "行数超出范围"
+
+#: providers/mysql/gda-mysql-recordset.c:281
+msgid "Attempt to insert a row with an invalid number of columns"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:296
+#, fuzzy
+msgid "Could not retrieve column's information"
+msgstr "无法创建连接组件"
+
+#: providers/mysql/gda-mysql-recordset.c:314
+#, fuzzy
+msgid "Could not retrieve column's value"
+msgstr "无法从 %s 中获得文件"
+
+#: providers/mysql/libmain.c:36
+msgid "GDA provider for MySQL databases"
+msgstr ""
+
+#: providers/odbc/libmain.c:36
+#, fuzzy
+msgid "GDA bridge to ODBC data sources"
+msgstr "SQLite 的 GDA  数据源访问"
 
 #: providers/oracle/gda-oracle-connection.c:79
 msgid "Could not initialize Oracle environment"
@@ -243,12 +356,74 @@ msgstr "无法初始化 Oracle 组件工厂"
 msgid "Could not initialize OCI library"
 msgstr "无法初始化 OCI 库"
 
-#: providers/postgres/gda-postgres-provider.c:370
-#: providers/postgres/gda-postgres-provider.c:508
-#: providers/postgres/gda-postgres-recordset.c:72
-#: providers/postgres/gda-postgres-recordset.c:128
+#: providers/postgres/gda-postgres-provider.c:380
+#: providers/postgres/gda-postgres-provider.c:565
+#: providers/postgres/gda-postgres-recordset.c:175
+#: providers/postgres/gda-postgres-recordset.c:213
+#: providers/postgres/gda-postgres-recordset.c:255
 msgid "Invalid PostgreSQL handle"
 msgstr "无效的 PostgreSQL 句柄"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:650
+msgid "Tables"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:689
+#, fuzzy
+msgid "Types"
+msgstr "类型"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:720 testing/client.c:120
+msgid "Views"
+msgstr "视图"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:745 testing/client.c:121
+msgid "Indexes"
+msgstr "索引"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:771 testing/client.c:122
+msgid "Aggregates"
+msgstr "聚合"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:796 testing/client.c:125
+msgid "Triggers"
+msgstr "触发器"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1150 testing/client.c:116
+msgid "Databases"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1175 testing/client.c:123
+#, fuzzy
+msgid "Users"
+msgstr "用户名"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:124
+#, fuzzy
+msgid "Sequences"
+msgstr "引用"
+
+#: providers/postgres/gda-postgres-recordset.c:228
+#, fuzzy
+msgid "Column number out of range"
+msgstr "行数超出范围"
+
+#: providers/postgres/gda-postgres-recordset.c:261
+#, fuzzy
+msgid "Column out of range"
+msgstr "行数超出范围"
+
+#: providers/postgres/libmain.c:41
+msgid "GDA provider for PostgreSQL databases"
+msgstr ""
 
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
@@ -258,48 +433,22 @@ msgstr "没有描述"
 msgid "Not available"
 msgstr "不可用"
 
-#: providers/sqlite/gda-sqlite-provider.c:220
-#: providers/sqlite/gda-sqlite-recordset.c:63
+#: providers/sqlite/gda-sqlite-provider.c:224
+#: providers/sqlite/gda-sqlite-recordset.c:54
 msgid "Invalid SQLITE handle"
 msgstr "无效的 SQLITE 句柄"
 
-#: providers/sqlite/gda-sqlite-recordset.c:113
-msgid "Invalid Sqlite handle"
-msgstr "无效的 Sqlite 句柄"
+#: providers/sqlite/gda-sqlite-provider.c:286
+msgid "Only one database per connection is allowed"
+msgstr ""
+
+#: providers/sqlite/libmain.c:36
+msgid "GDA provider for SQLite databases"
+msgstr ""
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "无法初始化 Sybase 组件工厂"
-
-#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
-#: report/libgda-report/gda-report-client.c:210
-#, c-format
-msgid "CORBA exception: %s"
-msgstr "CORBA 异常：%s"
-
-#: report/gda-report-engine.c:106
-msgid "Could not create global GDA client"
-msgstr "无法创建全局 GDA 客户程序"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr "GDA 报告引擎"
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr "GDA 报告引擎工厂"
-
-#: report/job.c:44
-msgid "Could not parse XML report"
-msgstr "无法解析 XML 报告"
-
-#: report/libgda-report/gda-report-client.c:142
-msgid "Could not activate report engine"
-msgstr "无法激活报告引擎"
-
-#: report/libgda-report/gda-report-client.c:183
-msgid "Could not create BonoboStreamMem object"
-msgstr "无法创建 BonoboStreamMem 对象"
 
 #: report/libgda-report/gda-report-document.c:138
 msgid "Could not parse XML document"
@@ -309,10 +458,6 @@ msgstr "无法解析 XML 文档"
 #, c-format
 msgid "Could not get file from %s"
 msgstr "无法从 %s 中获得文件"
-
-#: report/main.c:47
-msgid "Could not initiate Report component factory"
-msgstr "无法初始化报告组件工厂"
 
 #: testing/client.c:39
 msgid "\t\tNONE\n"
@@ -329,88 +474,108 @@ msgid "\tProvider capabilities...\n"
 msgstr "\t提供者能力...\n"
 
 #: testing/client.c:84
+#, fuzzy, c-format
+msgid "\t\tAggregates: %s\n"
+msgstr "聚合"
+
+#: testing/client.c:86 testing/client.c:89 testing/client.c:92
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113
+msgid "Supported"
+msgstr "支持"
+
+#: testing/client.c:86 testing/client.c:89 testing/client.c:92
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113
+msgid "Not supported"
+msgstr "不支持"
+
+#: testing/client.c:87
+#, fuzzy, c-format
+msgid "\t\tIndexes: %s\n"
+msgstr "索引"
+
+#: testing/client.c:90
+#, c-format
+msgid "\t\tProcedures: %s\n"
+msgstr ""
+
+#: testing/client.c:93
+#, fuzzy, c-format
+msgid "\t\tSequences: %s\n"
+msgstr "引用"
+
+#: testing/client.c:96
+#, c-format
+msgid "\t\tSQL language: %s\n"
+msgstr ""
+
+#: testing/client.c:99
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\t事务：%s\n"
 
-#: testing/client.c:86
-msgid "Supported"
-msgstr "支持"
+#: testing/client.c:102
+#, fuzzy, c-format
+msgid "\t\tTriggers: %s\n"
+msgstr "触发器"
 
-#: testing/client.c:86
-msgid "Not supported"
-msgstr "不支持"
-
-#. show connection schemas
-#: testing/client.c:89
-msgid "Databases"
+#: testing/client.c:105
+#, c-format
+msgid "\t\tUsers: %s\n"
 msgstr ""
 
-#: testing/client.c:90
+#: testing/client.c:108
+#, c-format
+msgid "\t\tViews: %s\n"
+msgstr ""
+
+#: testing/client.c:111
+#, c-format
+msgid "\t\tXML queries: %s\n"
+msgstr ""
+
+#: testing/client.c:117
 msgid "Stored procedures"
 msgstr "存储过程"
 
-#: testing/client.c:91
+#: testing/client.c:118
 msgid "Connection Tables"
 msgstr "连接表"
 
-#: testing/client.c:92
+#: testing/client.c:119
 msgid "Available types"
 msgstr "可用类型"
 
-#: testing/client.c:93
-msgid "Views"
-msgstr "视图"
-
-#: testing/client.c:94
-msgid "Indexes"
-msgstr "索引"
-
-#: testing/client.c:95
-msgid "Aggregates"
-msgstr "聚合"
-
-#: testing/client.c:96
-#, fuzzy
-msgid "Users"
-msgstr "用户名"
-
-#: testing/client.c:97
-#, fuzzy
-msgid "Sequences"
-msgstr "引用"
-
-#: testing/client.c:98
-msgid "Triggers"
-msgstr "触发器"
-
 #. test transactions
-#: testing/client.c:101 testing/client.c:109
+#: testing/client.c:128 testing/client.c:136
 msgid "\tStarting transaction..."
 msgstr "\t开始事务..."
 
-#: testing/client.c:103 testing/client.c:107 testing/client.c:111
-#: testing/client.c:115
+#: testing/client.c:130 testing/client.c:134 testing/client.c:138
+#: testing/client.c:142
 msgid "Error"
 msgstr "错误"
 
-#: testing/client.c:105
+#: testing/client.c:132
 msgid "\tFinishing transaction..."
 msgstr "\t结束事务..."
 
-#: testing/client.c:113
+#: testing/client.c:140
 msgid "\tRolling back transaction..."
 msgstr "\t回滚事务..."
 
-#: testing/client.c:134
+#: testing/client.c:162
 msgid "Testing GDA client API"
 msgstr "正在测试 GDA 客户程序 API"
 
-#: testing/client.c:143
+#: testing/client.c:171
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** 错误：gda_config_get_data_source_list 返回 NULL 项\n"
 
-#: testing/client.c:147
+#: testing/client.c:175
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " 数据源 = %s，用户 = %s\n"
@@ -438,11 +603,35 @@ msgstr "\t描述 = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
+#~ msgid "Invalid Sqlite handle"
+#~ msgstr "无效的 Sqlite 句柄"
+
+#~ msgid "CORBA exception: %s"
+#~ msgstr "CORBA 异常：%s"
+
+#~ msgid "Could not create global GDA client"
+#~ msgstr "无法创建全局 GDA 客户程序"
+
+#~ msgid "GDA Report engine"
+#~ msgstr "GDA 报告引擎"
+
+#~ msgid "GDA Report engine factory"
+#~ msgstr "GDA 报告引擎工厂"
+
+#~ msgid "Could not parse XML report"
+#~ msgstr "无法解析 XML 报告"
+
+#~ msgid "Could not activate report engine"
+#~ msgstr "无法激活报告引擎"
+
+#~ msgid "Could not create BonoboStreamMem object"
+#~ msgstr "无法创建 BonoboStreamMem 对象"
+
+#~ msgid "Could not initiate Report component factory"
+#~ msgstr "无法初始化报告组件工厂"
+
 #~ msgid "Could not activate object %s"
 #~ msgstr "无法激活对象 %s"
-
-#~ msgid "Could not create connection component"
-#~ msgstr "无法创建连接组件"
 
 #~ msgid "Could not query CORBA components"
 #~ msgstr "无法查询 CORBA 组件"
@@ -563,9 +752,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "Unknown type"
 #~ msgstr "未知类型"
-
-#~ msgid "GDA SQLite Datasource Access"
-#~ msgstr "SQLite 的 GDA  数据源访问"
 
 #~ msgid "SQLite component factory"
 #~ msgstr "SQLite 组件工厂"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-05-20 01:21+0200\n"
+"POT-Creation-Date: 2002-05-25 00:31+0200\n"
 "PO-Revision-Date: 2002-05-20 01:25+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
@@ -13,27 +13,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:206
+#: libgda/gda-client.c:226 libgda/gda-client.c:384 libgda/gda-connection.c:206
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakilde «%s» ble ikke funnet i konfigurasjonen"
 
-#: libgda/gda-client.c:225
+#: libgda/gda-client.c:244
 #, c-format
 msgid "Provider %s is not installed"
 msgstr ""
 
-#: libgda/gda-client.c:234
+#: libgda/gda-client.c:253
 #, c-format
 msgid "Could not load %s provider"
 msgstr "Kunne ikke laste %s-tilbyder"
 
-#: libgda/gda-client.c:250
+#: libgda/gda-client.c:269
 #, c-format
 msgid "Provider %s does not implement entry point"
 msgstr ""
 
-#: libgda/gda-client.c:259
+#: libgda/gda-client.c:278
 msgid "Creation of GdaServerProvider failed"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 #: libgda/gda-config.c:1189 providers/default/gda-default-provider.c:463
 #: providers/default/gda-default-provider.c:485
 #: providers/default/gda-default-provider.c:522
-#: providers/mysql/gda-mysql-provider.c:498
+#: providers/mysql/gda-mysql-provider.c:535
 msgid "Name"
 msgstr "Navn"
 
@@ -139,37 +139,37 @@ msgstr "SANN"
 msgid "FALSE"
 msgstr "USANN"
 
-#: libgda/gda-xml-database.c:228
+#: libgda/gda-xml-database.c:229
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Kunne ikke laste fil ved %s"
 
-#: libgda/gda-xml-database.c:237
+#: libgda/gda-xml-database.c:238
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Kunne ikke tolke fil ved %s"
 
-#: libgda/gda-xml-database.c:247
+#: libgda/gda-xml-database.c:248
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Ugyldig XML-databasefil «%s»"
 
-#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
-#: libgda/gda-xml-database.c:543
+#: libgda/gda-xml-database.c:467 libgda/gda-xml-database.c:503
+#: libgda/gda-xml-database.c:544
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabell %s eksisterer allerede"
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:537
 msgid "Invalid node"
 msgstr "Ugyldig node"
 
-#: libgda/gda-xml-database.c:568
+#: libgda/gda-xml-database.c:569
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplisert <data>-node for tabell %s"
 
-#: libgda/gda-xml-database.c:575
+#: libgda/gda-xml-database.c:576
 msgid "Invalid XML node"
 msgstr "Ugyldig XML-node"
 
@@ -185,50 +185,50 @@ msgid "Not Implemented"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:787
-#: providers/postgres/gda-postgres-provider.c:781
+#: providers/mysql/gda-mysql-provider.c:824
+#: providers/postgres/gda-postgres-provider.c:807
 msgid "Field name"
 msgstr "Feltnavn"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:788
-#: providers/postgres/gda-postgres-provider.c:782
+#: providers/mysql/gda-mysql-provider.c:825
+#: providers/postgres/gda-postgres-provider.c:808
 msgid "Data type"
 msgstr "Datatype"
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:789
-#: providers/postgres/gda-postgres-provider.c:783
+#: providers/mysql/gda-mysql-provider.c:826
+#: providers/postgres/gda-postgres-provider.c:809
 msgid "Size"
 msgstr "Størrelse"
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:790
-#: providers/postgres/gda-postgres-provider.c:784
+#: providers/mysql/gda-mysql-provider.c:827
+#: providers/postgres/gda-postgres-provider.c:810
 msgid "Scale"
 msgstr "Skala"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:791
-#: providers/postgres/gda-postgres-provider.c:785
+#: providers/mysql/gda-mysql-provider.c:828
+#: providers/postgres/gda-postgres-provider.c:811
 msgid "Not null?"
 msgstr "Ikke null"
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:792
-#: providers/postgres/gda-postgres-provider.c:786
+#: providers/mysql/gda-mysql-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:812
 msgid "Primary key?"
 msgstr "Primærnøkkel"
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:793
-#: providers/postgres/gda-postgres-provider.c:787
+#: providers/mysql/gda-mysql-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:813
 msgid "Unique index?"
 msgstr "Unik indeks"
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:794
-#: providers/postgres/gda-postgres-provider.c:788
+#: providers/mysql/gda-mysql-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:814
 msgid "References"
 msgstr "Referanser"
 
@@ -271,34 +271,35 @@ msgstr "Tabellnavn"
 msgid "GDA provider for MS Access files"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:187
+#: providers/mysql/gda-mysql-provider.c:191
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Du kan ikke tilby en UNIX_SOCKET hvis du også tilbyr enten en VERT eller en "
 "PORT."
 
-#: providers/mysql/gda-mysql-provider.c:258
-#: providers/mysql/gda-mysql-provider.c:312
-#: providers/mysql/gda-mysql-provider.c:380
-#: providers/mysql/gda-mysql-provider.c:408
-#: providers/mysql/gda-mysql-provider.c:436
+#: providers/mysql/gda-mysql-provider.c:262
+#: providers/mysql/gda-mysql-provider.c:316
+#: providers/mysql/gda-mysql-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:445
+#: providers/mysql/gda-mysql-provider.c:473
 msgid "Invalid MYSQL handle"
 msgstr "Ugyldig MYSQL-håndtak"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:689
+#: providers/mysql/gda-mysql-provider.c:726
 msgid "Type"
 msgstr "Type"
 
-#: providers/mysql/gda-mysql-provider.c:802
+#: providers/mysql/gda-mysql-provider.c:839
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "Ugyldig MYSQL-håndtak"
 
-#: providers/mysql/gda-mysql-provider.c:811
-#: providers/mysql/gda-mysql-provider.c:819
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:856
 msgid "You need to specify the name of the table"
 msgstr "Du må spesifisere navnet på tabellen"
 
@@ -353,8 +354,8 @@ msgstr "Kunne ikke initiere Oracle komponentfactory"
 msgid "Could not initialize OCI library"
 msgstr "Kunne ikke initiere OCI-bibliotek"
 
-#: providers/postgres/gda-postgres-provider.c:376
-#: providers/postgres/gda-postgres-provider.c:540
+#: providers/postgres/gda-postgres-provider.c:380
+#: providers/postgres/gda-postgres-provider.c:565
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:213
 #: providers/postgres/gda-postgres-recordset.c:255
@@ -362,46 +363,46 @@ msgid "Invalid PostgreSQL handle"
 msgstr "Ugyldig PostgreSQL-håndtak"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:624
+#: providers/postgres/gda-postgres-provider.c:650
 msgid "Tables"
 msgstr "Tabeller"
 
-#: providers/postgres/gda-postgres-provider.c:663
+#: providers/postgres/gda-postgres-provider.c:689
 msgid "Types"
 msgstr "Typer"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:694 testing/client.c:120
+#: providers/postgres/gda-postgres-provider.c:720 testing/client.c:120
 msgid "Views"
 msgstr "Visninger"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:719 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:745 testing/client.c:121
 msgid "Indexes"
 msgstr "Indekser"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:745 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:771 testing/client.c:122
 msgid "Aggregates"
 msgstr "Aggregater"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:770 testing/client.c:125
+#: providers/postgres/gda-postgres-provider.c:796 testing/client.c:125
 msgid "Triggers"
 msgstr "Utløsere"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1124 testing/client.c:116
+#: providers/postgres/gda-postgres-provider.c:1150 testing/client.c:116
 msgid "Databases"
 msgstr "Databaser"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1149 testing/client.c:123
+#: providers/postgres/gda-postgres-provider.c:1175 testing/client.c:123
 msgid "Users"
 msgstr "Brukere"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1177 testing/client.c:124
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:124
 msgid "Sequences"
 msgstr "Sekvenser"
 

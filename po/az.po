@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2002-05-14 13:41+0200\n"
+"POT-Creation-Date: 2002-05-25 00:31+0200\n"
 "PO-Revision-Date: 2001-12-14 16:37GMT+0200\n"
 "Last-Translator: Vasif İsmayıloğlu MD <azerb_linux@hotmail.com>\n"
 "Language-Team: Azerbaijani Turkic <linuxaz@azerimail.net>\n"
@@ -14,35 +14,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.5\n"
 
-#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:206
+#: libgda/gda-client.c:226 libgda/gda-client.c:384 libgda/gda-connection.c:206
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "%s verilən mənbəyi qurğuda tapıla bilmədi"
 
-#: libgda/gda-client.c:225
+#: libgda/gda-client.c:244
 #, c-format
 msgid "Provider %s is not installed"
 msgstr ""
 
-#: libgda/gda-client.c:234
+#: libgda/gda-client.c:253
 #, fuzzy, c-format
 msgid "Could not load %s provider"
 msgstr "CORBA cidmətçiləri soraqlana bilmədi"
 
-#: libgda/gda-client.c:250
+#: libgda/gda-client.c:269
 #, c-format
 msgid "Provider %s does not implement entry point"
 msgstr ""
 
-#: libgda/gda-client.c:259
+#: libgda/gda-client.c:278
 msgid "Creation of GdaServerProvider failed"
 msgstr ""
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1189 providers/default/gda-default-provider.c:445
-#: providers/default/gda-default-provider.c:467
-#: providers/default/gda-default-provider.c:504
-#: providers/mysql/gda-mysql-provider.c:450
+#: libgda/gda-config.c:1189 providers/default/gda-default-provider.c:463
+#: providers/default/gda-default-provider.c:485
+#: providers/default/gda-default-provider.c:522
+#: providers/mysql/gda-mysql-provider.c:535
 msgid "Name"
 msgstr ""
 
@@ -62,6 +62,11 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
+#: libgda/gda-data-model.c:583
+#, c-format
+msgid "Data model %p is not editable"
+msgstr ""
+
 #: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
 msgstr "Onsuz da hazırlanmış alıcını hazırlamağa cəhd et"
@@ -70,159 +75,268 @@ msgstr "Onsuz da hazırlanmış alıcını hazırlamağa cəhd et"
 msgid "libgda needs GModule. Finishing..."
 msgstr ""
 
+#: libgda/gda-log.c:82
+#, c-format
+msgid "MESSAGE: %s"
+msgstr ""
+
+#: libgda/gda-log.c:101
+#, c-format
+msgid "ERROR: %s"
+msgstr ""
+
+#: libgda/gda-select.c:119 libgda/gda-select.c:142 libgda/gda-select.c:201
+msgid "Unexpected integer value"
+msgstr ""
+
+#: libgda/gda-select.c:131 libgda/gda-select.c:211
+msgid "Unexpected float value"
+msgstr ""
+
+#: libgda/gda-select.c:154
+msgid "Unexpected string value"
+msgstr ""
+
+#: libgda/gda-select.c:165
+msgid "Unexpected symbol '='"
+msgstr ""
+
+#: libgda/gda-select.c:176
+msgid "Unexpected symbol '<'"
+msgstr ""
+
+#: libgda/gda-select.c:187
+msgid "Unexpected symbol '>'"
+msgstr ""
+
+#: libgda/gda-select.c:215
+msgid "Found a non-numeric value after a '-' sign"
+msgstr ""
+
+#: libgda/gda-select.c:231
+msgid "Unexpected identifier"
+msgstr ""
+
 #: libgda/gda-table.c:234
 #, c-format
 msgid "There is already a field called %s"
 msgstr ""
 
-#: libgda/gda-value.c:1030
+#: libgda/gda-util.c:143
+#, c-format
+msgid "Error while reading %s: %s"
+msgstr ""
+
+#: libgda/gda-util.c:169
+#, fuzzy, c-format
+msgid "Could not create file %s"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: libgda/gda-value.c:1321
 msgid "TRUE"
 msgstr "DOĞRU"
 
-#: libgda/gda-value.c:1032
+#: libgda/gda-value.c:1323
 msgid "FALSE"
 msgstr "YANLIŞ"
 
-#: libgda/gda-xml-database.c:228
+#: libgda/gda-xml-database.c:229
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: libgda/gda-xml-database.c:237
+#: libgda/gda-xml-database.c:238
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: libgda/gda-xml-database.c:247
+#: libgda/gda-xml-database.c:248
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr ""
 
-#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
-#: libgda/gda-xml-database.c:543
+#: libgda/gda-xml-database.c:467 libgda/gda-xml-database.c:503
+#: libgda/gda-xml-database.c:544
 #, fuzzy, c-format
 msgid "Table %s already exists"
 msgstr "%s cədvəli onsuz da mövcuddur"
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:537
 msgid "Invalid node"
 msgstr ""
 
-#: libgda/gda-xml-database.c:568
+#: libgda/gda-xml-database.c:569
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:575
+#: libgda/gda-xml-database.c:576
 msgid "Invalid XML node"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:169
-#: providers/sqlite/gda-sqlite-provider.c:162
+#: providers/default/gda-default-provider.c:173
+#: providers/sqlite/gda-sqlite-provider.c:166
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Verilənlər bazasının açılmağı üçün bağlantı qatarı tam cığır adı "
 "müəyyənləşdirilməlidir."
 
-#: providers/default/gda-default-provider.c:343
-#: providers/mysql/gda-mysql-provider.c:739
-#: providers/postgres/gda-postgres-provider.c:748
+#: providers/default/gda-default-provider.c:242
+msgid "Not Implemented"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:824
+#: providers/postgres/gda-postgres-provider.c:807
 msgid "Field name"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:344
-#: providers/mysql/gda-mysql-provider.c:740
-#: providers/postgres/gda-postgres-provider.c:749
+#: providers/default/gda-default-provider.c:362
+#: providers/mysql/gda-mysql-provider.c:825
+#: providers/postgres/gda-postgres-provider.c:808
 msgid "Data type"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:345
-#: providers/mysql/gda-mysql-provider.c:741
-#: providers/postgres/gda-postgres-provider.c:750
+#: providers/default/gda-default-provider.c:363
+#: providers/mysql/gda-mysql-provider.c:826
+#: providers/postgres/gda-postgres-provider.c:809
 msgid "Size"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:346
-#: providers/mysql/gda-mysql-provider.c:742
-#: providers/postgres/gda-postgres-provider.c:751
+#: providers/default/gda-default-provider.c:364
+#: providers/mysql/gda-mysql-provider.c:827
+#: providers/postgres/gda-postgres-provider.c:810
 msgid "Scale"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:347
-#: providers/mysql/gda-mysql-provider.c:743
-#: providers/postgres/gda-postgres-provider.c:752
+#: providers/default/gda-default-provider.c:365
+#: providers/mysql/gda-mysql-provider.c:828
+#: providers/postgres/gda-postgres-provider.c:811
 msgid "Not null?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:348
-#: providers/mysql/gda-mysql-provider.c:744
-#: providers/postgres/gda-postgres-provider.c:753
+#: providers/default/gda-default-provider.c:366
+#: providers/mysql/gda-mysql-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:812
 msgid "Primary key?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:349
-#: providers/mysql/gda-mysql-provider.c:745
-#: providers/postgres/gda-postgres-provider.c:754
+#: providers/default/gda-default-provider.c:367
+#: providers/mysql/gda-mysql-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:813
 msgid "Unique index?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:746
-#: providers/postgres/gda-postgres-provider.c:755
+#: providers/default/gda-default-provider.c:368
+#: providers/mysql/gda-mysql-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:814
 msgid "References"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:360
-#: providers/default/gda-default-provider.c:366
+#: providers/default/gda-default-provider.c:378
+#: providers/default/gda-default-provider.c:384
 msgid "Invalid argument"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:373
+#: providers/default/gda-default-provider.c:391
 #, c-format
 msgid "Table %s not found"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:398
+#: providers/default/gda-default-provider.c:416
 #, fuzzy
 msgid "Could not get description for column"
 msgstr "Bağlantı komponenti yaradıla bimədi"
 
-#: providers/mysql/gda-mysql-provider.c:183
+#: providers/default/libmain.c:39
+msgid "GDA default provider, based on the libgda XML format"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:176
+#, fuzzy
+msgid "A database FILENAME must be specified in the connection_string"
+msgstr ""
+"Verilənlər bazasının açılmağı üçün bağlantı qatarı tam cığır adı "
+"müəyyənləşdirilməlidir."
+
+#: providers/mdb/gda-mdb-provider.c:184
+#, fuzzy, c-format
+msgid "Could not open file %s"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
+msgid "Invalid MDB handle"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:273
+msgid "Table Name"
+msgstr ""
+
+#: providers/mdb/libmain.c:34
+msgid "GDA provider for MS Access files"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:191
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Ya QOVŞAQ ya da QAPI müəyyənləşdirirsinizsə UNIX_SOCKET müəyyənləşdirə "
 "bilməzsiniz"
 
-#: providers/mysql/gda-mysql-provider.c:254
-#: providers/mysql/gda-mysql-provider.c:333
-#: providers/mysql/gda-mysql-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:389
+#: providers/mysql/gda-mysql-provider.c:262
+#: providers/mysql/gda-mysql-provider.c:316
+#: providers/mysql/gda-mysql-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:445
+#: providers/mysql/gda-mysql-provider.c:473
 msgid "Invalid MYSQL handle"
 msgstr ""
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:641
+#: providers/mysql/gda-mysql-provider.c:726
 msgid "Type"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:754
+#: providers/mysql/gda-mysql-provider.c:839
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:763
-#: providers/mysql/gda-mysql-provider.c:771
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:856
 msgid "You need to specify the name of the table"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:69
-#: providers/postgres/gda-postgres-recordset.c:183
+#: providers/postgres/gda-postgres-recordset.c:184
+#: providers/postgres/gda-postgres-recordset.c:222
 #: providers/sqlite/gda-sqlite-recordset.c:64
 msgid "Row number out of range"
 msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:281
+msgid "Attempt to insert a row with an invalid number of columns"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:296
+msgid "Could not retrieve column's information"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:314
+#, fuzzy
+msgid "Could not retrieve column's value"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/mysql/libmain.c:36
+msgid "GDA provider for MySQL databases"
+msgstr ""
+
+#: providers/odbc/libmain.c:36
+#, fuzzy
+msgid "GDA bridge to ODBC data sources"
+msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
 
 #: providers/oracle/gda-oracle-connection.c:79
 #, fuzzy
@@ -254,63 +368,68 @@ msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 msgid "Could not initialize OCI library"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/postgres/gda-postgres-provider.c:371
-#: providers/postgres/gda-postgres-provider.c:514
-#: providers/postgres/gda-postgres-recordset.c:172
-#: providers/postgres/gda-postgres-recordset.c:215
+#: providers/postgres/gda-postgres-provider.c:380
+#: providers/postgres/gda-postgres-provider.c:565
+#: providers/postgres/gda-postgres-recordset.c:175
+#: providers/postgres/gda-postgres-recordset.c:213
+#: providers/postgres/gda-postgres-recordset.c:255
 msgid "Invalid PostgreSQL handle"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:591
+#: providers/postgres/gda-postgres-provider.c:650
 msgid "Tables"
 msgstr ""
 
-#: providers/postgres/gda-postgres-provider.c:630
+#: providers/postgres/gda-postgres-provider.c:689
 msgid "Types"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:661 testing/client.c:93
+#: providers/postgres/gda-postgres-provider.c:720 testing/client.c:120
 msgid "Views"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:686 testing/client.c:94
+#: providers/postgres/gda-postgres-provider.c:745 testing/client.c:121
 msgid "Indexes"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:712 testing/client.c:95
+#: providers/postgres/gda-postgres-provider.c:771 testing/client.c:122
 msgid "Aggregates"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:737 testing/client.c:98
+#: providers/postgres/gda-postgres-provider.c:796 testing/client.c:125
 msgid "Triggers"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1091 testing/client.c:89
+#: providers/postgres/gda-postgres-provider.c:1150 testing/client.c:116
 msgid "Databases"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1116 testing/client.c:96
+#: providers/postgres/gda-postgres-provider.c:1175 testing/client.c:123
 msgid "Users"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1144 testing/client.c:97
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:124
 msgid "Sequences"
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:189
+#: providers/postgres/gda-postgres-recordset.c:228
 msgid "Column number out of range"
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:221
+#: providers/postgres/gda-postgres-recordset.c:261
 msgid "Column out of range"
+msgstr ""
+
+#: providers/postgres/libmain.c:41
+msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
 #: providers/postgres/utils.c:47
@@ -322,48 +441,23 @@ msgstr ""
 msgid "Not available"
 msgstr "%p hökmlü cədvəl deyildir"
 
-#: providers/sqlite/gda-sqlite-provider.c:220
+#: providers/sqlite/gda-sqlite-provider.c:224
 #: providers/sqlite/gda-sqlite-recordset.c:54
 msgid "Invalid SQLITE handle"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:286
+msgid "Only one database per connection is allowed"
+msgstr ""
+
+#: providers/sqlite/libmain.c:36
+msgid "GDA provider for SQLite databases"
 msgstr ""
 
 #: providers/sybase/main.c:52
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "MySQL komponent emalatxanası hazırlana bilmədi"
-
-#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
-#: report/libgda-report/gda-report-client.c:210
-#, c-format
-msgid "CORBA exception: %s"
-msgstr ""
-
-#: report/gda-report-engine.c:106
-#, fuzzy
-msgid "Could not create global GDA client"
-msgstr "Bağlantı komponenti yaradıla bimədi"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr ""
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr ""
-
-#: report/job.c:44
-msgid "Could not parse XML report"
-msgstr ""
-
-#: report/libgda-report/gda-report-client.c:142
-#, fuzzy
-msgid "Could not activate report engine"
-msgstr "%s cismi fəallaşdırıla bilmədi"
-
-#: report/libgda-report/gda-report-client.c:183
-#, fuzzy
-msgid "Could not create BonoboStreamMem object"
-msgstr "Bağlantı komponenti yaradıla bimədi"
 
 #: report/libgda-report/gda-report-document.c:138
 #, fuzzy
@@ -374,11 +468,6 @@ msgstr "MySQL komponent emalatxanası hazırlana bilmədi"
 #, fuzzy, c-format
 msgid "Could not get file from %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
-
-#: report/main.c:47
-#, fuzzy
-msgid "Could not initiate Report component factory"
-msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
 #: testing/client.c:39
 msgid "\t\tNONE\n"
@@ -396,56 +485,107 @@ msgstr ""
 
 #: testing/client.c:84
 #, c-format
-msgid "\t\tTransactions: %s\n"
+msgid "\t\tAggregates: %s\n"
 msgstr ""
 
-#: testing/client.c:86
+#: testing/client.c:86 testing/client.c:89 testing/client.c:92
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113
 msgid "Supported"
 msgstr ""
 
-#: testing/client.c:86
+#: testing/client.c:86 testing/client.c:89 testing/client.c:92
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113
 msgid "Not supported"
 msgstr ""
 
+#: testing/client.c:87
+#, c-format
+msgid "\t\tIndexes: %s\n"
+msgstr ""
+
 #: testing/client.c:90
+#, c-format
+msgid "\t\tProcedures: %s\n"
+msgstr ""
+
+#: testing/client.c:93
+#, c-format
+msgid "\t\tSequences: %s\n"
+msgstr ""
+
+#: testing/client.c:96
+#, c-format
+msgid "\t\tSQL language: %s\n"
+msgstr ""
+
+#: testing/client.c:99
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr ""
+
+#: testing/client.c:102
+#, c-format
+msgid "\t\tTriggers: %s\n"
+msgstr ""
+
+#: testing/client.c:105
+#, c-format
+msgid "\t\tUsers: %s\n"
+msgstr ""
+
+#: testing/client.c:108
+#, c-format
+msgid "\t\tViews: %s\n"
+msgstr ""
+
+#: testing/client.c:111
+#, c-format
+msgid "\t\tXML queries: %s\n"
+msgstr ""
+
+#: testing/client.c:117
 msgid "Stored procedures"
 msgstr ""
 
-#: testing/client.c:91
+#: testing/client.c:118
 msgid "Connection Tables"
 msgstr ""
 
-#: testing/client.c:92
+#: testing/client.c:119
 msgid "Available types"
 msgstr ""
 
 #. test transactions
-#: testing/client.c:101 testing/client.c:109
+#: testing/client.c:128 testing/client.c:136
 msgid "\tStarting transaction..."
 msgstr ""
 
-#: testing/client.c:103 testing/client.c:107 testing/client.c:111
-#: testing/client.c:115
+#: testing/client.c:130 testing/client.c:134 testing/client.c:138
+#: testing/client.c:142
 msgid "Error"
 msgstr ""
 
-#: testing/client.c:105
+#: testing/client.c:132
 msgid "\tFinishing transaction..."
 msgstr ""
 
-#: testing/client.c:113
+#: testing/client.c:140
 msgid "\tRolling back transaction..."
 msgstr ""
 
-#: testing/client.c:135
+#: testing/client.c:162
 msgid "Testing GDA client API"
 msgstr ""
 
-#: testing/client.c:144
+#: testing/client.c:171
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 
-#: testing/client.c:148
+#: testing/client.c:175
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr ""
@@ -473,6 +613,22 @@ msgstr ""
 msgid "\tgda_params ="
 msgstr ""
 
+#, fuzzy
+#~ msgid "Could not create global GDA client"
+#~ msgstr "Bağlantı komponenti yaradıla bimədi"
+
+#, fuzzy
+#~ msgid "Could not activate report engine"
+#~ msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#, fuzzy
+#~ msgid "Could not create BonoboStreamMem object"
+#~ msgstr "Bağlantı komponenti yaradıla bimədi"
+
+#, fuzzy
+#~ msgid "Could not initiate Report component factory"
+#~ msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
+
 #~ msgid "Could not query CORBA components"
 #~ msgstr "CORBA komponenetləri soraqlana bilmədi"
 
@@ -499,9 +655,6 @@ msgstr ""
 
 #~ msgid "Default component factory"
 #~ msgstr "Əsas komponent emalatxanası"
-
-#~ msgid "GDA Default Datasource Access"
-#~ msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
 
 #~ msgid "GDA Datasource Access for MySQL"
 #~ msgstr "MySQL üçün GDA Verilənlər Mənbəyi Yetişilməsi"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-05-03 02:43+0200\n"
+"POT-Creation-Date: 2002-05-25 00:31+0200\n"
 "PO-Revision-Date: 2000-02-12 19:29+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -14,60 +14,65 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #
-#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
+#: libgda/gda-client.c:226 libgda/gda-client.c:384 libgda/gda-connection.c:206
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Πηγές Δεδομένων"
 
-#: libgda/gda-client.c:225
+#: libgda/gda-client.c:244
 #, c-format
 msgid "Provider %s is not installed"
 msgstr ""
 
 #
-#: libgda/gda-client.c:234
+#: libgda/gda-client.c:253
 #, fuzzy, c-format
 msgid "Could not load %s provider"
 msgstr "Αδυναμία φόρτωσης γραμματοσειράς πλέγματος"
 
-#: libgda/gda-client.c:250
+#: libgda/gda-client.c:269
 #, c-format
 msgid "Provider %s does not implement entry point"
 msgstr ""
 
-#: libgda/gda-client.c:259
+#: libgda/gda-client.c:278
 msgid "Creation of GdaServerProvider failed"
 msgstr ""
 
 #
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
-#: providers/default/gda-default-provider.c:467
-#: providers/default/gda-default-provider.c:503
-#: providers/mysql/gda-mysql-provider.c:450
+#: libgda/gda-config.c:1189 providers/default/gda-default-provider.c:463
+#: providers/default/gda-default-provider.c:485
+#: providers/default/gda-default-provider.c:522
+#: providers/mysql/gda-mysql-provider.c:535
 msgid "Name"
 msgstr "Όνομα"
 
 #
-#: libgda/gda-config.c:1106
+#: libgda/gda-config.c:1190
 msgid "Provider"
 msgstr "Παροχεύς"
 
 #
-#: libgda/gda-config.c:1107
+#: libgda/gda-config.c:1191
 #, fuzzy
 msgid "Connection string"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: libgda/gda-config.c:1108
+#: libgda/gda-config.c:1192
 msgid "Description"
 msgstr "Περιγραφή"
 
 #
-#: libgda/gda-config.c:1109
+#: libgda/gda-config.c:1193
 msgid "Username"
 msgstr "Όνομα χρήστη"
+
+#: libgda/gda-data-model.c:583
+#, c-format
+msgid "Data model %p is not editable"
+msgstr ""
 
 #: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
@@ -77,23 +82,83 @@ msgstr ""
 msgid "libgda needs GModule. Finishing..."
 msgstr ""
 
-#: libgda/gda-table.c:233
+#: libgda/gda-log.c:82
+#, c-format
+msgid "MESSAGE: %s"
+msgstr ""
+
+#: libgda/gda-log.c:101
+#, c-format
+msgid "ERROR: %s"
+msgstr ""
+
+#: libgda/gda-select.c:119 libgda/gda-select.c:142 libgda/gda-select.c:201
+msgid "Unexpected integer value"
+msgstr ""
+
+#: libgda/gda-select.c:131 libgda/gda-select.c:211
+msgid "Unexpected float value"
+msgstr ""
+
+#: libgda/gda-select.c:154
+msgid "Unexpected string value"
+msgstr ""
+
+#: libgda/gda-select.c:165
+msgid "Unexpected symbol '='"
+msgstr ""
+
+#: libgda/gda-select.c:176
+msgid "Unexpected symbol '<'"
+msgstr ""
+
+#: libgda/gda-select.c:187
+msgid "Unexpected symbol '>'"
+msgstr ""
+
+#: libgda/gda-select.c:215
+msgid "Found a non-numeric value after a '-' sign"
+msgstr ""
+
+#
+#: libgda/gda-select.c:231
+#, fuzzy
+msgid "Unexpected identifier"
+msgstr "Ταυτότητες Αντικειμένου"
+
+#: libgda/gda-table.c:234
 #, c-format
 msgid "There is already a field called %s"
 msgstr ""
 
 #
-#: libgda/gda-value.c:1030
+#: libgda/gda-util.c:143
+#, fuzzy, c-format
+msgid "Error while reading %s: %s"
+msgstr ""
+"Σφάλμα ανάγνωσης αρχείου\n"
+" %s"
+
+#
+#: libgda/gda-util.c:169
+#, fuzzy, c-format
+msgid "Could not create file %s"
+msgstr ""
+"Αδυναμία φόρτωσης αρχείου\n"
+" %s"
+
+#
+#: libgda/gda-value.c:1321
 msgid "TRUE"
 msgstr "ΑΛΗΘΕΣ"
 
 #
-#: libgda/gda-value.c:1032
+#: libgda/gda-value.c:1323
 msgid "FALSE"
 msgstr "ΨΕΥΔΕΣ"
 
 #
-#: libgda/gda-xml-database.c:228
+#: libgda/gda-xml-database.c:229
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr ""
@@ -101,151 +166,211 @@ msgstr ""
 " %s"
 
 #
-#: libgda/gda-xml-database.c:237
+#: libgda/gda-xml-database.c:238
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#: libgda/gda-xml-database.c:247
+#: libgda/gda-xml-database.c:248
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr ""
 
-#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
-#: libgda/gda-xml-database.c:543
+#: libgda/gda-xml-database.c:467 libgda/gda-xml-database.c:503
+#: libgda/gda-xml-database.c:544
 #, c-format
 msgid "Table %s already exists"
 msgstr ""
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:537
 msgid "Invalid node"
 msgstr ""
 
-#: libgda/gda-xml-database.c:568
+#: libgda/gda-xml-database.c:569
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:575
+#: libgda/gda-xml-database.c:576
 msgid "Invalid XML node"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:169
-#: providers/sqlite/gda-sqlite-provider.c:162
+#: providers/default/gda-default-provider.c:173
+#: providers/sqlite/gda-sqlite-provider.c:166
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 
+#: providers/default/gda-default-provider.c:242
+msgid "Not Implemented"
+msgstr ""
+
 #
-#: providers/default/gda-default-provider.c:343
-#: providers/mysql/gda-mysql-provider.c:739
-#: providers/postgres/gda-postgres-provider.c:737
+#: providers/default/gda-default-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:824
+#: providers/postgres/gda-postgres-provider.c:807
 #, fuzzy
 msgid "Field name"
 msgstr "Όνομα αρχείου"
 
 #
-#: providers/default/gda-default-provider.c:344
-#: providers/mysql/gda-mysql-provider.c:740
-#: providers/postgres/gda-postgres-provider.c:738
+#: providers/default/gda-default-provider.c:362
+#: providers/mysql/gda-mysql-provider.c:825
+#: providers/postgres/gda-postgres-provider.c:808
 #, fuzzy
 msgid "Data type"
 msgstr "Δεδομένα"
 
-#: providers/default/gda-default-provider.c:345
-#: providers/mysql/gda-mysql-provider.c:741
-#: providers/postgres/gda-postgres-provider.c:739
+#: providers/default/gda-default-provider.c:363
+#: providers/mysql/gda-mysql-provider.c:826
+#: providers/postgres/gda-postgres-provider.c:809
 msgid "Size"
 msgstr ""
 
 #
-#: providers/default/gda-default-provider.c:346
-#: providers/mysql/gda-mysql-provider.c:742
-#: providers/postgres/gda-postgres-provider.c:740
+#: providers/default/gda-default-provider.c:364
+#: providers/mysql/gda-mysql-provider.c:827
+#: providers/postgres/gda-postgres-provider.c:810
 #, fuzzy
 msgid "Scale"
 msgstr "Αποθήκευση"
 
-#: providers/default/gda-default-provider.c:347
-#: providers/mysql/gda-mysql-provider.c:743
-#: providers/postgres/gda-postgres-provider.c:741
+#: providers/default/gda-default-provider.c:365
+#: providers/mysql/gda-mysql-provider.c:828
+#: providers/postgres/gda-postgres-provider.c:811
 msgid "Not null?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:348
-#: providers/mysql/gda-mysql-provider.c:744
-#: providers/postgres/gda-postgres-provider.c:742
+#: providers/default/gda-default-provider.c:366
+#: providers/mysql/gda-mysql-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:812
 msgid "Primary key?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:349
-#: providers/mysql/gda-mysql-provider.c:745
-#: providers/postgres/gda-postgres-provider.c:743
+#: providers/default/gda-default-provider.c:367
+#: providers/mysql/gda-mysql-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:813
 msgid "Unique index?"
 msgstr ""
 
 #
-#: providers/default/gda-default-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:746
-#: providers/postgres/gda-postgres-provider.c:744
+#: providers/default/gda-default-provider.c:368
+#: providers/mysql/gda-mysql-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:814
 #, fuzzy
 msgid "References"
 msgstr "Προτιμίσεις"
 
-#: providers/default/gda-default-provider.c:360
-#: providers/default/gda-default-provider.c:366
+#: providers/default/gda-default-provider.c:378
+#: providers/default/gda-default-provider.c:384
 msgid "Invalid argument"
 msgstr ""
 
 #
-#: providers/default/gda-default-provider.c:373
+#: providers/default/gda-default-provider.c:391
 #, fuzzy, c-format
 msgid "Table %s not found"
 msgstr "Πηγές Δεδομένων"
 
 #
-#: providers/default/gda-default-provider.c:398
+#: providers/default/gda-default-provider.c:416
 #, fuzzy
 msgid "Could not get description for column"
 msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
 
-#: providers/mysql/gda-mysql-provider.c:183
+#: providers/default/libmain.c:39
+msgid "GDA default provider, based on the libgda XML format"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:176
+msgid "A database FILENAME must be specified in the connection_string"
+msgstr ""
+
+#
+#: providers/mdb/gda-mdb-provider.c:184
+#, fuzzy, c-format
+msgid "Could not open file %s"
+msgstr ""
+"Αδυναμία φόρτωσης αρχείου\n"
+" %s"
+
+#: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
+msgid "Invalid MDB handle"
+msgstr ""
+
+#
+#: providers/mdb/gda-mdb-provider.c:273
+#, fuzzy
+msgid "Table Name"
+msgstr "Όνομα Αντικειμένου"
+
+#: providers/mdb/libmain.c:34
+msgid "GDA provider for MS Access files"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:191
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:254
-#: providers/mysql/gda-mysql-provider.c:333
-#: providers/mysql/gda-mysql-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:389
+#: providers/mysql/gda-mysql-provider.c:262
+#: providers/mysql/gda-mysql-provider.c:316
+#: providers/mysql/gda-mysql-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:445
+#: providers/mysql/gda-mysql-provider.c:473
 msgid "Invalid MYSQL handle"
 msgstr ""
 
 #
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:641
-#: providers/postgres/gda-postgres-provider.c:623
+#: providers/mysql/gda-mysql-provider.c:726
 #, fuzzy
 msgid "Type"
 msgstr "Τύποι"
 
-#: providers/mysql/gda-mysql-provider.c:754
-#: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:166
+#: providers/mysql/gda-mysql-provider.c:839
+#: providers/mysql/gda-mysql-recordset.c:58
+#: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:763
-#: providers/mysql/gda-mysql-provider.c:771
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:856
 msgid "You need to specify the name of the table"
 msgstr ""
 
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:85
-#: providers/sqlite/gda-sqlite-recordset.c:74
+#: providers/mysql/gda-mysql-recordset.c:69
+#: providers/postgres/gda-postgres-recordset.c:184
+#: providers/postgres/gda-postgres-recordset.c:222
+#: providers/sqlite/gda-sqlite-recordset.c:64
 msgid "Row number out of range"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:281
+msgid "Attempt to insert a row with an invalid number of columns"
+msgstr ""
+
+#
+#: providers/mysql/gda-mysql-recordset.c:296
+#, fuzzy
+msgid "Could not retrieve column's information"
+msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#: providers/mysql/gda-mysql-recordset.c:314
+#, fuzzy
+msgid "Could not retrieve column's value"
+msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#: providers/mysql/libmain.c:36
+msgid "GDA provider for MySQL databases"
+msgstr ""
+
+#: providers/odbc/libmain.c:36
+msgid "GDA bridge to ODBC data sources"
 msgstr ""
 
 #
@@ -284,11 +409,78 @@ msgstr "Αδυναμία περικοπής αρχείου %s"
 msgid "Could not initialize OCI library"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: providers/postgres/gda-postgres-provider.c:370
-#: providers/postgres/gda-postgres-provider.c:508
-#: providers/postgres/gda-postgres-recordset.c:72
-#: providers/postgres/gda-postgres-recordset.c:128
+#: providers/postgres/gda-postgres-provider.c:380
+#: providers/postgres/gda-postgres-provider.c:565
+#: providers/postgres/gda-postgres-recordset.c:175
+#: providers/postgres/gda-postgres-recordset.c:213
+#: providers/postgres/gda-postgres-recordset.c:255
 msgid "Invalid PostgreSQL handle"
+msgstr ""
+
+#
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:650
+msgid "Tables"
+msgstr "Πίνακες"
+
+#
+#: providers/postgres/gda-postgres-provider.c:689
+#, fuzzy
+msgid "Types"
+msgstr "Τύποι"
+
+#
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:720 testing/client.c:120
+msgid "Views"
+msgstr "Προβολές"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:745 testing/client.c:121
+msgid "Indexes"
+msgstr ""
+
+#
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:771 testing/client.c:122
+msgid "Aggregates"
+msgstr "Ενοποιήσεις"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:796 testing/client.c:125
+msgid "Triggers"
+msgstr ""
+
+#
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1150 testing/client.c:116
+#, fuzzy
+msgid "Databases"
+msgstr "Βάση"
+
+#
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1175 testing/client.c:123
+#, fuzzy
+msgid "Users"
+msgstr "Όνομα χρήστη"
+
+#
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:124
+msgid "Sequences"
+msgstr "Ακολουθίες"
+
+#: providers/postgres/gda-postgres-recordset.c:228
+msgid "Column number out of range"
+msgstr ""
+
+#: providers/postgres/gda-postgres-recordset.c:261
+msgid "Column out of range"
+msgstr ""
+
+#: providers/postgres/libmain.c:41
+msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
 #: providers/postgres/utils.c:47
@@ -299,13 +491,17 @@ msgstr ""
 msgid "Not available"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:220
-#: providers/sqlite/gda-sqlite-recordset.c:63
+#: providers/sqlite/gda-sqlite-provider.c:224
+#: providers/sqlite/gda-sqlite-recordset.c:54
 msgid "Invalid SQLITE handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-recordset.c:113
-msgid "Invalid Sqlite handle"
+#: providers/sqlite/gda-sqlite-provider.c:286
+msgid "Only one database per connection is allowed"
+msgstr ""
+
+#: providers/sqlite/libmain.c:36
+msgid "GDA provider for SQLite databases"
 msgstr ""
 
 #
@@ -313,48 +509,6 @@ msgstr ""
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "Αδυναμία περικοπής αρχείου %s"
-
-#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
-#: report/libgda-report/gda-report-client.c:210
-#, c-format
-msgid "CORBA exception: %s"
-msgstr ""
-
-#
-#: report/gda-report-engine.c:106
-#, fuzzy
-msgid "Could not create global GDA client"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#: report/GNOME_Database_Report.server.in.h:1
-msgid "GDA Report engine"
-msgstr ""
-
-#: report/GNOME_Database_Report.server.in.h:2
-msgid "GDA Report engine factory"
-msgstr ""
-
-#
-#: report/job.c:44
-#, fuzzy
-msgid "Could not parse XML report"
-msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
-" %s"
-
-#
-#: report/libgda-report/gda-report-client.c:142
-#, fuzzy
-msgid "Could not activate report engine"
-msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
-" %s"
-
-#
-#: report/libgda-report/gda-report-client.c:183
-#, fuzzy
-msgid "Could not create BonoboStreamMem object"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
 
 #
 #: report/libgda-report/gda-report-document.c:138
@@ -372,12 +526,6 @@ msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#
-#: report/main.c:47
-#, fuzzy
-msgid "Could not initiate Report component factory"
-msgstr "Αδυναμία περικοπής αρχείου %s"
-
 #: testing/client.c:39
 msgid "\t\tNONE\n"
 msgstr ""
@@ -394,106 +542,125 @@ msgstr ""
 msgid "\tProvider capabilities...\n"
 msgstr "Χαρακτηριστικά Παροχέα"
 
+#
 #: testing/client.c:84
 #, fuzzy, c-format
-msgid "\t\tTransactions: %s\n"
-msgstr "Διενέργειες"
+msgid "\t\tAggregates: %s\n"
+msgstr "Ενοποιήσεις"
 
-#: testing/client.c:86
+#: testing/client.c:86 testing/client.c:89 testing/client.c:92
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113
 msgid "Supported"
 msgstr ""
 
 #
-#: testing/client.c:86
+#: testing/client.c:86 testing/client.c:89 testing/client.c:92
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113
 #, fuzzy
 msgid "Not supported"
 msgstr "Δεν υποστηρίζονται διενέργειες"
 
-#
-#. show connection schemas
-#: testing/client.c:89
-#, fuzzy
-msgid "Databases"
-msgstr "Βάση"
+#: testing/client.c:87
+#, c-format
+msgid "\t\tIndexes: %s\n"
+msgstr ""
 
 #
 #: testing/client.c:90
+#, fuzzy, c-format
+msgid "\t\tProcedures: %s\n"
+msgstr "Διαδικασίες"
+
+#
+#: testing/client.c:93
+#, fuzzy, c-format
+msgid "\t\tSequences: %s\n"
+msgstr "Ακολουθίες"
+
+#: testing/client.c:96
+#, c-format
+msgid "\t\tSQL language: %s\n"
+msgstr ""
+
+#: testing/client.c:99
+#, fuzzy, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "Διενέργειες"
+
+#: testing/client.c:102
+#, fuzzy, c-format
+msgid "\t\tTriggers: %s\n"
+msgstr "Διενέργειες"
+
+#: testing/client.c:105
+#, c-format
+msgid "\t\tUsers: %s\n"
+msgstr ""
+
+#: testing/client.c:108
+#, c-format
+msgid "\t\tViews: %s\n"
+msgstr ""
+
+#
+#: testing/client.c:111
+#, fuzzy, c-format
+msgid "\t\tXML queries: %s\n"
+msgstr "Ερωτήσεις XML"
+
+#
+#: testing/client.c:117
 #, fuzzy
 msgid "Stored procedures"
 msgstr "Αποθηκευμένες Διαδικασίες"
 
 #
-#: testing/client.c:91
+#: testing/client.c:118
 #, fuzzy
 msgid "Connection Tables"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
-#: testing/client.c:92
+#: testing/client.c:119
 msgid "Available types"
 msgstr ""
 
 #
-#: testing/client.c:93
-msgid "Views"
-msgstr "Προβολές"
-
-#: testing/client.c:94
-msgid "Indexes"
-msgstr ""
-
-#
-#: testing/client.c:95
-msgid "Aggregates"
-msgstr "Ενοποιήσεις"
-
-#
-#: testing/client.c:96
-#, fuzzy
-msgid "Users"
-msgstr "Όνομα χρήστη"
-
-#
-#: testing/client.c:97
-msgid "Sequences"
-msgstr "Ακολουθίες"
-
-#: testing/client.c:98
-msgid "Triggers"
-msgstr ""
-
-#
 #. test transactions
-#: testing/client.c:101 testing/client.c:109
+#: testing/client.c:128 testing/client.c:136
 #, fuzzy
 msgid "\tStarting transaction..."
 msgstr "Εκκίνηση Διενέργειας"
 
-#: testing/client.c:103 testing/client.c:107 testing/client.c:111
-#: testing/client.c:115
+#: testing/client.c:130 testing/client.c:134 testing/client.c:138
+#: testing/client.c:142
 msgid "Error"
 msgstr ""
 
 #
-#: testing/client.c:105
+#: testing/client.c:132
 #, fuzzy
 msgid "\tFinishing transaction..."
 msgstr "Εκκίνηση νέας διενέργειας"
 
 #
-#: testing/client.c:113
+#: testing/client.c:140
 #, fuzzy
 msgid "\tRolling back transaction..."
 msgstr "Εκκίνηση νέας διενέργειας"
 
-#: testing/client.c:134
+#: testing/client.c:162
 msgid "Testing GDA client API"
 msgstr ""
 
-#: testing/client.c:143
+#: testing/client.c:171
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 
-#: testing/client.c:147
+#: testing/client.c:175
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr ""
@@ -525,15 +692,39 @@ msgstr ""
 
 #
 #, fuzzy
-#~ msgid "Could not activate object %s"
+#~ msgid "Could not create global GDA client"
+#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#, fuzzy
+#~ msgid "Could not parse XML report"
 #~ msgstr ""
 #~ "Αδυναμία φόρτωσης αρχείου\n"
 #~ " %s"
 
 #
 #, fuzzy
-#~ msgid "Could not create connection component"
+#~ msgid "Could not activate report engine"
+#~ msgstr ""
+#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ " %s"
+
+#
+#, fuzzy
+#~ msgid "Could not create BonoboStreamMem object"
 #~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#, fuzzy
+#~ msgid "Could not initiate Report component factory"
+#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+
+#
+#, fuzzy
+#~ msgid "Could not activate object %s"
+#~ msgstr ""
+#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ " %s"
 
 #
 #, fuzzy
@@ -738,11 +929,6 @@ msgstr ""
 
 #
 #, fuzzy
-#~ msgid "Could not get server msg # %d"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#
-#, fuzzy
 #~ msgid "Could not clear cslib messages"
 #~ msgstr ""
 #~ "Αδυναμία φόρτωσης αρχείου\n"
@@ -907,16 +1093,8 @@ msgstr ""
 #~ msgstr "Παρατηρητής Σφαλμάτων"
 
 #
-#~ msgid "Object Identifiers"
-#~ msgstr "Ταυτότητες Αντικειμένου"
-
-#
 #~ msgid "Object Inheritance"
 #~ msgstr "Κληρονομικότητα Αντικειμένου"
-
-#
-#~ msgid "XML Queries"
-#~ msgstr "Ερωτήσεις XML"
 
 #
 #~ msgid "Open Connection"
@@ -1573,14 +1751,6 @@ msgstr ""
 #~ msgstr "Η παρακολούθηση εξυπηρετητή είναι ανενεργή για αυτή τη σύνδεση"
 
 #
-#~ msgid ""
-#~ "Error reading file\n"
-#~ " %s"
-#~ msgstr ""
-#~ "Σφάλμα ανάγνωσης αρχείου\n"
-#~ " %s"
-
-#
 #~ msgid "File %s inserted"
 #~ msgstr "Το αρχείο %s εισήχθηκε"
 
@@ -1641,20 +1811,8 @@ msgstr ""
 #~ msgstr "Εκτύπωση ενταμιευτή"
 
 #
-#~ msgid "Object Name"
-#~ msgstr "Όνομα Αντικειμένου"
-
-#
 #~ msgid "0 rows"
 #~ msgstr "0 γραμμές"
-
-#
-#~ msgid "Tables"
-#~ msgstr "Πίνακες"
-
-#
-#~ msgid "Procedures"
-#~ msgstr "Διαδικασίες"
 
 #
 #~ msgid "Extra Info"
