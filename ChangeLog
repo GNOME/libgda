@@ -1,7 +1,7 @@
 2002-04-11  Akira TAGOH  <tagoh@gnome-db.org>
 
 	* data/libgda.schemas: remove Datasources schema. it had an invalid
-	schema type.
+	schema type. and we shouldn't need this anymore.
 
 2002-04-10  Zbigniew Chyla  <cyba@gnome.pl>
 
