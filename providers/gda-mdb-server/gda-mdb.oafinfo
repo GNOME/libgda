@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-mdb:b7df028e-fb20-44c5-a47b-e98167c5720e"
+<oaf_server iid="OAFIID:gda-mdb:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f"
             type="exe"
             location="gda-mdb-srv">
 	<oaf_attribute name="repo_ids" type="stringv">

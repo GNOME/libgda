@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-odbc:b0d1eb1f-73d4-441c-a5b7-3bd5fc0ff7f3"
+<oaf_server iid="OAFIID:gda-odbc:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f"
             type="exe"
             location="gda-odbc-srv">
 	<oaf_attribute name="repo_ids" type="stringv">
@@ -9,7 +9,7 @@
 	<oaf_attribute name="description" type="string"
 	               value="GDA Datasource Access for ODBC"/>
 	<oaf_attribute name="gda-main-config" type="string"
-	               value="OAFIID:control:gda-odbc-config:e602b8ba-1cff-4cc1-a814-138adf2ec5a7"/>
+	               value="OAFIID:control:gda-odbc-config:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f"/>
 </oaf_server>
 
 </oaf_info>
