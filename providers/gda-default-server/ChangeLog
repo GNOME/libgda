@@ -1,3 +1,7 @@
+2001-10-26  Akira TAGOH <tagoh@gnome-db.org>
+
+	* sqlite/lemon.c: Fixed 64 bit pointer issues again
+
 2001-10-11  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* sqlite/*
