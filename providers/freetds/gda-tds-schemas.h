@@ -27,6 +27,10 @@
 
 G_BEGIN_DECLS
 
+
+#define TDS_QUERY_SERVER_VERSION \
+	"SELECT (@@version) AS version"
+
 #define TDS_SCHEMA_DATABASES \
 	"SELECT name " \
 	"  FROM master..sysdatabases " \

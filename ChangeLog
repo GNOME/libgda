@@ -11,6 +11,12 @@
 	* providers/sybase/gda-sybase.h,
 	providers/sybase/utils.c: added sybase_debug_msg()
 
+	* providers/freetds/*.{c,h}: fixed include of config.h depend on
+	HAVE_CONFIG_H define
+
+	* providers/freetds/gda-tds-schemas.h: added query for server
+	version
+
 2002-10-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.[ch] (gda_connection_new): added

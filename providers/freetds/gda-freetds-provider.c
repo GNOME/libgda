@@ -19,7 +19,10 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <config.h>
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
@@ -574,11 +577,14 @@ static const gchar
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
+	GdaDataModel *recset = NULL;
 	
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
+
+//	recset = gda_freetds_execute_query (cnc, TDS_QUERY_SERVER_VERSION);
 
 	// FIXME:
 	return NULL;
