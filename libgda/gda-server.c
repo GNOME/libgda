@@ -63,28 +63,18 @@ remove_component_hash (gpointer key, gpointer value, gpointer user_data)
  */
 
 static void
-component_destroyed_cb (GObject *object, gpointer user_data)
+component_destroyed_cb (BonoboObject *object, gpointer user_data)
 {
 	GList *l;
-	BonoboObject *comp;
 	GdaServer *server = (GdaServer *) user_data;
 
 	g_return_if_fail (GDA_IS_SERVER (server));
 
-	comp = BONOBO_OBJECT (object);
-
-	for (l = g_list_first (server->priv->clients); l; l = l->next) {
-		BonoboObject *lcomp = BONOBO_OBJECT (l->data);
-
-		if (lcomp == comp) {
-			server->priv->clients = g_list_remove (server->priv->clients, lcomp);
-			if (!server->priv->clients) {
-				g_signal_emit (G_OBJECT (server),
-					       gda_server_signals[LAST_CLIENT_GONE],
-					       0);
-			}
-			break;
-		}
+	server->priv->clients = g_list_remove (server->priv->clients, object);
+	if (!server->priv->clients) {
+		g_signal_emit (G_OBJECT (server),
+			       gda_server_signals[LAST_CLIENT_GONE],
+			       0);
 	}
 }
 
