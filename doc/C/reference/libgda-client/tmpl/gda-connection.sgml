@@ -139,6 +139,8 @@ Connection management
 @t: 
 @Param3: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@Param2: 
 
 
 <!-- ##### FUNCTION gda_connection_modify_schema ##### -->

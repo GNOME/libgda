@@ -45,6 +45,6 @@ G_BEGIN_DECLS
 void gda_init (const gchar * app_id, const gchar * version, gint nargs,
 	       gchar * args[]);
 
-G_BEGIN_DECLS
+G_END_DECLS
 
 #endif

@@ -73,7 +73,6 @@ struct _GdaBatch {
 };
 
 struct _GdaBatchClass {
-{
 #ifdef HAVE_GOBJECT
 	GObjectClass parent_class;
 #else

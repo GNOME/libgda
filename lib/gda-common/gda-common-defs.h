@@ -21,11 +21,19 @@
 #  define __gda_common_defs_h__
 
 #ifdef __cplusplus
-#define G_BEGIN_DECLS extern "C" {
-#define G_END_DECLS }
+#  if !defined(G_BEGIN_DECLS)
+#    define G_BEGIN_DECLS extern "C" {
+#  endif
+#  if !defined(G_END_DECLS)
+#    define G_END_DECLS }
+#  endif
 #else
-#define BEGIN_GNOME_DECLS
-#define END_GNOME_DECLS
+#  if !defined(G_BEGIN_DECLS)
+#    define G_BEGIN_DECLS
+#  endif
+#  if !defined(G_END_DECLS)
+#    define G_END_DECLS
+#  endif
 #endif
 
 #endif

@@ -29,7 +29,6 @@ namespace gda
 };
 
 #include "gda-client.h"
-
 #include "gda-batch.h"
 #include "gda-command.h"
 #include "gda-connection.h"

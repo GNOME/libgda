@@ -27,7 +27,6 @@
 #else
 #  include <gtk/gtkobject.h>
 #endif
-
 #include <orb/orbit.h>
 #include <GDA.h>
 #include <gda-common-defs.h>

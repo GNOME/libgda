@@ -18,17 +18,17 @@
  */
 
 #include "config.h"
-#include "gda-config.h"
 
 /* GConf declares some types in gconf/gconf-glib-public.h that are
  * already defined in glib.h, if we use glib 1.3. The next 3 lines
  * are needed to prevent this. */
-#ifdef HAVE_GOBJECT
+#if defined(HAVE_GOBJECT)
 #  define GCONF_GCONF_GLIB_PUBLIC_H
 #endif
 
 #include <gconf/gconf.h>
 #include <liboaf/liboaf.h>
+#include "gda-config.h"
 #include "gda-corba.h"
 
 static GConfEngine *conf_engine = NULL;

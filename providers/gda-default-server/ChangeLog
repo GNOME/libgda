@@ -1,3 +1,7 @@
+2001-07-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-default-connection.c (schema_aggregates): new schema function
+
 2001-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-default-connection.c (gda_default_connection_open_schema): return

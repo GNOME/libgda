@@ -128,4 +128,5 @@ Connection pools
 
 @gdaconnectionpool: the object which received the signal.
 @arg1: 
+@arg2: 
 

@@ -19,6 +19,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "GDA.h"
 #include "gda-server-private.h"
 #include "gda-default.h"
 #include <ctype.h>
@@ -199,17 +200,17 @@ gda_default_connection_rollback_transaction (GdaServerConnection *cnc)
 
 	g_return_val_if_fail(cnc != NULL, -1);
 
-	default_cnc = (DEFAULT_Connection *) gda_server_connection_get_user_data(cnc);
+	default_cnc = (DEFAULT_Connection *) gda_server_connection_get_user_data (cnc);
 	if (default_cnc) {
 		gchar *errmsg = NULL;
 
-		if (sqlite_exec(default_cnc->sqlite, "ROLLBACK", NULL, NULL, &errmsg) == SQLITE_OK)
+		if (sqlite_exec (default_cnc->sqlite, "ROLLBACK", NULL, NULL, &errmsg) == SQLITE_OK)
 			retval = 0;
 		else
-			gda_server_connection_add_error_string(cnc, errmsg);
+			gda_server_connection_add_error_string (cnc, errmsg);
 
 		if (errmsg)
-			free(errmsg);
+			free (errmsg);
 	}
 	return retval;
 }

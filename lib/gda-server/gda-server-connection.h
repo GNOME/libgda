@@ -90,7 +90,7 @@ void gda_server_connection_close (GdaServerConnection * cnc);
 gint gda_server_connection_begin_transaction (GdaServerConnection *cnc);
 gint gda_server_connection_commit_transaction (GdaServerConnection *cnc);
 gint gda_server_connection_rollback_transaction (GdaServerConnection *cnc);
-GdaServerRecordeset *gda_server_connection_open_schema (GdaServerConnection * cnc,
+GdaServerRecordset *gda_server_connection_open_schema (GdaServerConnection * cnc,
 					    GdaError * error,
 					    GDA_Connection_QType t,
 					    GDA_Connection_Constraint *constraints,
