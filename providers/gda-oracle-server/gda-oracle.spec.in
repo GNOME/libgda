@@ -86,5 +86,5 @@ fi
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{prefix}/bin/gda-oracle-srv
 %{prefix}/lib/libgda-oracle.so*
-%config %{oafinfodir}/gda-oracle.oafinfo
+%{prefix}/share/oaf/gda-oracle.oafinfo
 

@@ -86,5 +86,5 @@ fi
 %doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{prefix}/bin/gda-odbc-srv
 %{prefix}/lib/libgda-odbc.so*
-%config %{oafinfodir}/gda-odbc.oafinfo
+%{prefix}/share/oaf/gda-odbc.oafinfo
 
