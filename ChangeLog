@@ -1,3 +1,16 @@
+2004-09-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: removed obsolete GNOME_COMPILE_WARNINGS macro.
+
+	* libgda/gda-connection.[ch] (gda_connection_escape_string):
+	* libgda/gda-server-provider.[ch] (gda_server_provider_escape_string):
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_escape_string):
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_escape_string): improved the escape_string method,
+	by setting correctly the const'ness of the arguments and removing the
+	'length' argument, since strings should be now NULL terminated.
+	
 2004-09-25  Caolan McNamara <caolanm@redhat.com>
 
 	Fixes #150231

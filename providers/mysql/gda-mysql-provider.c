@@ -85,9 +85,8 @@ static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
 						    GdaParameterList *params);
 static gboolean gda_mysql_provider_escape_string (GdaServerProvider *provider,
 						  GdaConnection *cnc,
-						  gchar *from,
-						  gchar *to,
-						  unsigned long length);
+						  const gchar *from,
+						  gchar *to);
 				 		 
 static GObjectClass *parent_class = NULL;
 
@@ -1236,10 +1235,9 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 
 gboolean
 gda_mysql_provider_escape_string (GdaServerProvider *provider,
-				 GdaConnection *cnc,
-				 gchar *from,
-				 gchar *to,
-				 unsigned long length)
+				  GdaConnection *cnc,
+				  const gchar *from,
+				  gchar *to)
 {
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
@@ -1254,5 +1252,5 @@ gda_mysql_provider_escape_string (GdaServerProvider *provider,
 		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
 		return 0;
 	}
-	return mysql_real_escape_string (mysql, to, from, length);
+	return mysql_real_escape_string (mysql, to, from, strlen (from));
 }

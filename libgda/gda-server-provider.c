@@ -568,9 +568,8 @@ gda_server_provider_create_blob (GdaServerProvider *provider,
  * gda_server_provider_escape_string
  * @provider: a server provider.
  * @cnc: a #GdaConnection object.
- * @gchar: to
- * @gchar: from
- * @unsigned long: length (of from string)
+ * @from: String to be escaped.
+ * @to: Buffer to place the resulting escaped string.
  *
  * Natively escapes string with \ slashes etc.
  *
@@ -579,14 +578,13 @@ gda_server_provider_create_blob (GdaServerProvider *provider,
 gboolean
 gda_server_provider_escape_string (GdaServerProvider *provider,
 				   GdaConnection *cnc,
-				   gchar *from,
-				   const gchar *to,
-				   unsigned long length)
+				   const gchar *from,
+				   gchar *to)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);
 	g_return_val_if_fail (to != NULL, FALSE);
 
-	return CLASS (provider)->escape_string (provider, cnc, from, to, length);
+	return CLASS (provider)->escape_string (provider, cnc, from, to);
 }

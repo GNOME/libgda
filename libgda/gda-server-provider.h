@@ -116,9 +116,8 @@ struct _GdaServerProviderClass {
 	
 	gboolean (* escape_string) (GdaServerProvider *provider,
 				    GdaConnection *cnc,
-				    gchar *to,
 				    const gchar *from,
-				    unsigned long length);
+				    gchar *to);
 				  
 				  
 };
@@ -187,9 +186,8 @@ gboolean gda_server_provider_create_blob (GdaServerProvider *provider,
 
 gboolean gda_server_provider_escape_string (GdaServerProvider *provider,
 					    GdaConnection *cnc,
-					    gchar *to,
 					    const gchar *from,
-					    unsigned long length);			  
+					    gchar *to);
 	
 
 G_END_DECLS
