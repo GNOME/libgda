@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-01-13 02:32+0100\n"
-"PO-Revision-Date: 2001-12-17 17:19+0100\n"
+"POT-Creation-Date: 2002-01-13 20:42+0100\n"
+"PO-Revision-Date: 2002-01-13 20:42+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -93,7 +93,7 @@ msgstr "Kunne ikke gi melding til klient om handling %d"
 
 #: libgda/gda-server-recordset.c:204
 msgid "No implementation for the fetch() method found"
-msgstr ""
+msgstr "Ingen implementasjon for fetch()-metoden funnet"
 
 #: libgda/gda-value.c:602
 msgid "TRUE"
@@ -104,19 +104,19 @@ msgid "FALSE"
 msgstr "USANN"
 
 #: libgda/gda-xml-database.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load file at %s"
-msgstr "Kunne ikke sette locale til '%s'"
+msgstr "Kunne ikke laste fil ved %s"
 
 #: libgda/gda-xml-database.c:173
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse file at %s"
-msgstr "Kunne ikke sette locale til '%s'"
+msgstr "Kunne ikke tolke fil ved %s"
 
 #: libgda/gda-xml-database.c:183
-#, fuzzy, c-format
+#, c-format
 msgid "Bad formed document at %s"
-msgstr "dokument på ugyldig form"
+msgstr "Dokument på ugyldig form ved %s"
 
 #: libgda/gda-xml-database.c:258
 #, c-format
@@ -136,7 +136,7 @@ msgstr ""
 
 #: providers/default/gda-default-provider.c:199
 msgid "Invalid DEFAULT handle"
-msgstr ""
+msgstr "Ugyldig FORVALGT håndtak"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -162,11 +162,11 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:352
 #: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
-msgstr ""
+msgstr "Ugyldig MYSQL-håndtak"
 
 #: providers/mysql/gda-mysql-provider.c:460
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
