@@ -806,7 +806,7 @@ gda_value_new_from_xml (const xmlNodePtr node)
 	value = g_new0 (GdaValue, 1);
 	if (!gda_value_set_from_string (value,
 					xmlNodeGetContent (node),
-					gda_type_from_string (xmlGetProp (node, "type")))) {
+					gda_type_from_string (xmlGetProp (node, "gdatype")))) {
 		g_free (value);
 		value = NULL;
 	}
