@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2003-02-20 15:08+0100\n"
-"PO-Revision-Date: 2003-02-20 20:08+0100\n"
+"POT-Creation-Date: 2003-02-25 20:22+0100\n"
+"PO-Revision-Date: 2003-02-23 00:24+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -305,7 +305,7 @@ msgstr "Nelze získat popis pro sloupec"
 
 #: providers/default/libmain.c:33
 msgid "Default"
-msgstr "Výchozí"
+msgstr "Implicitní"
 
 #: providers/default/libmain.c:39
 msgid "Default provider, based on XML"
@@ -1484,15 +1484,15 @@ msgstr "Neplatný handle Xbase"
 msgid "Provider for Xbase databases"
 msgstr "Poskytovatel pro databáze Xbase"
 
-#: report/libgda-report/gda-report-document.c:161
+#: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
 msgstr "Nelze zpracovat dokument XML"
 
-#: report/libgda-report/gda-report-document.c:171
+#: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
 msgstr "Dokument XML není platný"
 
-#: report/libgda-report/gda-report-document.c:195
+#: report/libgda-report/gda-report-document.c:208
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Nelze získat soubor z %s"
@@ -1730,69 +1730,69 @@ msgstr "Položka s ID %s není label"
 msgid "Item with ID %s is not a repfield"
 msgstr "Položka s ID %s není repfield"
 
-#~ msgid "Could not allocate environment handle."
-#~ msgstr "Nelze alokovat handle prostředí."
+msgid "Could not allocate environment handle."
+msgstr "Nelze alokovat handle prostředí."
 
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "Nelze vypnout autocommit.\n"
+msgid "Could not set autocommit to off.\n"
+msgstr "Nelze vypnout autocommit.\n"
 
-#~ msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-#~ msgstr ""
-#~ "SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
+msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
+msgstr ""
+"SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
 
-#~ msgid "MESSAGE: %s"
-#~ msgstr "ZPRÁVA: %s"
+msgid "MESSAGE: %s"
+msgstr "ZPRÁVA: %s"
 
-#~ msgid "ERROR: %s"
-#~ msgstr "CHYBA: %s"
+msgid "ERROR: %s"
+msgstr "CHYBA: %s"
 
-#~ msgid "Table Name"
-#~ msgstr "Název tabulky"
+msgid "Table Name"
+msgstr "Název tabulky"
 
-#~ msgid "Tables"
-#~ msgstr "Tabulky"
+msgid "Tables"
+msgstr "Tabulky"
 
-#~ msgid "Types"
-#~ msgstr "Typy"
+msgid "Types"
+msgstr "Typy"
 
-#~ msgid "Field Name"
-#~ msgstr "Název pole"
+msgid "Field Name"
+msgstr "Název pole"
 
-#~ msgid "Data Type"
-#~ msgstr "Datový typ"
+msgid "Data Type"
+msgstr "Datový typ"
 
-#~ msgid "Precision"
-#~ msgstr "Přesnost"
+msgid "Precision"
+msgstr "Přesnost"
 
-#~ msgid "Identity"
-#~ msgstr "Identita"
+msgid "Identity"
+msgstr "Identita"
 
-#~ msgid "Nullable"
-#~ msgstr "Nulovatelný"
+msgid "Nullable"
+msgstr "Nulovatelný"
 
-#~ msgid "Domain"
-#~ msgstr "Doména"
+msgid "Domain"
+msgstr "Doména"
 
-#~ msgid "Could not attach to database"
-#~ msgstr "Nelze se připojit k databázi"
+msgid "Could not attach to database"
+msgstr "Nelze se připojit k databázi"
 
-#~ msgid "Unexpected integer value"
-#~ msgstr "Neočekávaná celočíselná hodnota"
+msgid "Unexpected integer value"
+msgstr "Neočekávaná celočíselná hodnota"
 
-#~ msgid "Unexpected float value"
-#~ msgstr "Neočekávaná reálná hodnota"
+msgid "Unexpected float value"
+msgstr "Neočekávaná reálná hodnota"
 
-#~ msgid "Unexpected symbol '='"
-#~ msgstr "Neočekávaný symbol '='"
+msgid "Unexpected symbol '='"
+msgstr "Neočekávaný symbol '='"
 
-#~ msgid "Unexpected symbol '<'"
-#~ msgstr "Neočekávaný symbol '<'"
+msgid "Unexpected symbol '<'"
+msgstr "Neočekávaný symbol '<'"
 
-#~ msgid "Unexpected symbol '>'"
-#~ msgstr "Neočekávaný symbol '>'"
+msgid "Unexpected symbol '>'"
+msgstr "Neočekávaný symbol '>'"
 
-#~ msgid "Found a non-numeric value after a '-' sign"
-#~ msgstr "Nalezena nenumerická hodnota po znaménku '-'"
+msgid "Found a non-numeric value after a '-' sign"
+msgstr "Nalezena nenumerická hodnota po znaménku '-'"
 
-#~ msgid "Unexpected identifier"
-#~ msgstr "Neočekávaný identifikátor"
+msgid "Unexpected identifier"
+msgstr "Neočekávaný identifikátor"
