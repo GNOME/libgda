@@ -1073,6 +1073,12 @@ gda_value_stringify (GdaValue *value)
 		else
 			retval = g_strdup ("");
 	}
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_NUMERIC)) {
+		const GdaNumeric *numeric;
+
+		numeric = gda_value_get_numeric (value);
+		retval = g_strdup (numeric->number);
+	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_NULL))
 		retval = g_strdup ("NULL");
 	else

@@ -22,6 +22,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
 
@@ -85,6 +86,11 @@ typedef enum {
 	IDX_PRIMARY,
 	IDX_UNIQUE
 } IdxType;
+
+typedef struct {
+	gchar *colname;
+	gchar *reference;
+} GdaPostgresRefData;
 
 static GObjectClass *parent_class = NULL;
 
@@ -785,6 +791,79 @@ gda_postgres_index_type (gint colnum, GList *idx_list, IdxType type)
 }
 
 static GList *
+gda_postgres_get_ref_data (PGconn *pconn, const gchar *tblname)
+{
+	gint nref, i;
+	GList *ref_list = NULL;
+	GdaPostgresRefData *ref_data;
+	gchar *query;
+	PGresult *pg_ref;
+	gint lentblname;
+
+	// WARNING: don't know a better way to get references :-(
+	lentblname = strlen (tblname);
+	query = g_strdup_printf (
+			"SELECT tr.tgargs "
+			"FROM pg_class c, pg_trigger tr "
+			"WHERE c.relname = '%s' AND c.oid = tr.tgrelid AND "
+			"tr.tgisconstraint = true AND tr.tgnargs = 6", tblname);
+
+	pg_ref = PQexec(pconn, query);
+	g_free (query);
+	if (pg_ref == NULL)
+		return NULL;
+
+	nref = PQntuples (pg_ref);
+
+	ref_data = g_new0 (GdaPostgresRefData, nref);
+	for (i = 0; i < nref; i++){
+		gchar **arr;
+		gchar *value;
+
+		value = PQgetvalue (pg_ref, i, 0);
+		arr = g_strsplit (value, "\\000", 0);
+		if (!strncmp (tblname, arr[1], lentblname)) {
+			ref_data[i].colname = g_strdup (arr[4]);
+			ref_data[i].reference = g_strdup_printf ("%s.%s", arr[2], arr[5]);
+			ref_list = g_list_append (ref_list, &ref_data[i]);
+		}
+	}
+
+	PQclear (pg_ref);
+
+	return ref_list;
+}
+
+static void
+free_idx_data (gpointer data, gpointer user_data)
+{
+	GdaPostgresIdxData *idx_data = (GdaPostgresIdxData *) data;
+
+	g_free (idx_data->columns);
+}
+
+static void
+free_ref_data (gpointer data, gpointer user_data)
+{
+	GdaPostgresRefData *ref_data = (GdaPostgresRefData *) data;
+
+	g_free (ref_data->colname);
+	g_free (ref_data->reference);
+}
+
+static gint
+ref_custom_compare (gconstpointer a, gconstpointer b)
+{
+	GdaPostgresRefData *ref_data = (GdaPostgresRefData *) a;
+	gchar *colname = (gchar *) b;
+
+	if (!strcmp (ref_data->colname, colname))
+		return 0;
+
+	return 1;
+}
+
+static GList *
 gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset,
 			  GdaPostgresConnectionData *priv_data)
 {
@@ -792,7 +871,8 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 	PGresult *pg_res;
 	gint row_count, i;
 	GList *list = NULL;
-	GList *idx_data;
+	GList *idx_list;
+	GList *ref_list;
 
 	query = g_strdup_printf (
 			"SELECT a.attname, b.typname, a.atttypmod, b.typlen, a.attnotnull "
@@ -806,18 +886,20 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 	if (pg_res == NULL)
 		return NULL;
 
-	idx_data = gda_postgres_get_idx_data (priv_data->pconn, tblname);
+	idx_list = gda_postgres_get_idx_data (priv_data->pconn, tblname);
+	ref_list = gda_postgres_get_ref_data (priv_data->pconn, tblname);
 
 	row_count = PQntuples (pg_res);
 	for (i = 0; i < row_count; i++) {
 		GdaValue *value;
-		gchar *thevalue;
+		gchar *thevalue, *colname, *ref = NULL;
 		GdaType type;
 		gint32 integer;
 		GList *rowlist = NULL;
+		GList *rlist;
 
 		/* Field name */
-		thevalue = PQgetvalue(pg_res, i, 0);
+		colname = thevalue = PQgetvalue(pg_res, i, 0);
 		value = gda_value_new_string (thevalue);
 		rowlist = g_list_append (rowlist, value);
 
@@ -849,16 +931,22 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 
 		/* Primary key? */
 		value = gda_value_new_boolean (
-				gda_postgres_index_type (i, idx_data, IDX_PRIMARY));
+				gda_postgres_index_type (i, idx_list, IDX_PRIMARY));
 		rowlist = g_list_append (rowlist, value);
 
 		/* Unique index? */
 		value = gda_value_new_boolean (
-				gda_postgres_index_type (i, idx_data, IDX_UNIQUE));
+				gda_postgres_index_type (i, idx_list, IDX_UNIQUE));
 		rowlist = g_list_append (rowlist, value);
 
 		/* References */
-		value = gda_value_new_string (""); // TODO: don't get this info yet
+		rlist = g_list_find_custom (ref_list, colname, ref_custom_compare); 
+		if (rlist)
+			ref = ((GdaPostgresRefData *) rlist->data)->reference;
+		else
+			ref = "";
+
+		value = gda_value_new_string (ref);
 		rowlist = g_list_append (rowlist, value);
 
 		list = g_list_append (list, rowlist);
@@ -866,10 +954,19 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 	}
 
 	PQclear (pg_res);
-	if (idx_data && idx_data->data)
-		g_free (idx_data->data);
 
-	g_list_free (idx_data);
+	if (idx_list && idx_list->data) {
+		g_list_foreach (idx_list, free_idx_data, NULL);
+		g_free (idx_list->data);
+	}
+
+	if (ref_list && ref_list->data) {
+		g_list_foreach (ref_list, free_ref_data, NULL);
+		g_free (ref_list->data);
+	}
+
+	g_list_free (ref_list);
+	g_list_free (idx_list);
 
 	return list;
 }

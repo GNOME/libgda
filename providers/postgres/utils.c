@@ -59,9 +59,10 @@ gda_postgres_type_name_to_gda (const gchar *name)
 		return GDA_TYPE_SMALLINT;
 	if (!strcmp (name, "float4"))
 		return GDA_TYPE_SINGLE;
-	//TODO: numeric handling
-	if (!strcmp (name, "float8") || !strcmp (name, "numeric"))
+	if (!strcmp (name, "float8"))
 		return GDA_TYPE_DOUBLE;
+	if (!strcmp (name, "numeric"))
+		return GDA_TYPE_NUMERIC;
 	if (!strncmp (name, "timestamp", 9))
 		return GDA_TYPE_TIMESTAMP;
 	if (!strcmp (name, "date"))
@@ -94,71 +95,36 @@ gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid po
 }
 
 /* Makes a point from a string like "(3.2,5.6)" */
-static GdaGeometricPoint *
-make_point (const gchar *value)
+static void
+make_point (GdaGeometricPoint *point, const gchar *value)
 {
-	GdaGeometricPoint *point;
-
-	g_return_val_if_fail (value != NULL, NULL);
-	
-	point = g_new (GdaGeometricPoint, 1);
 	value++;
 	point->x = atof (value);
 	value = strchr (value, ',');
 	value++;
 	point->y = atof (value);
-
-	return point;
-}
-
-static void
-delete_point (GdaGeometricPoint *point)
-{
-	g_return_if_fail (point != NULL);
-	
-	g_free (point);
 }
 
 /* Makes a GdaTime from a string like "12:30:15+01" */
-static GdaTime *
-make_time (const gchar *value)
+static void
+make_time (GdaTime *timegda, const gchar *value)
 {
-	GdaTime *time;
-
-	g_return_val_if_fail (value != NULL, NULL);
-	
-	time = g_new (GdaTime, 1);
-	time->hour = atoi (value);
+	timegda->hour = atoi (value);
 	value += 3;
-	time->minute = atoi (value);
+	timegda->minute = atoi (value);
 	value += 3;
-	time->second = atoi (value);
+	timegda->second = atoi (value);
 	value += 2;
 	if (*value)
-		time->timezone = atoi (value);
+		timegda->timezone = atoi (value);
 	else
-		time->timezone = TIMEZONE_INVALID;
-
-	return time;
-}
-
-static void
-delete_time (GdaTime *time)
-{
-	g_return_if_fail (time != NULL);
-	
-	g_free (time);
+		timegda->timezone = TIMEZONE_INVALID;
 }
 
 /* Makes a GdaTimestamp from a string like "2003-12-13 13:12:01.12+01" */
-static GdaTimestamp *
-make_timestamp (const gchar *value)
+static void
+make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 {
-	GdaTimestamp *timestamp;
-
-	g_return_val_if_fail (value != NULL, NULL);
-	
-	timestamp = g_new (GdaTimestamp, 1);
 	timestamp->year = atoi (value);
 	value += 5;
 	timestamp->month = atoi (value);
@@ -174,16 +140,6 @@ make_timestamp (const gchar *value)
 	timestamp->fraction = atol (value) * 10; // I have only hundredths of second
 	value += 3;
 	timestamp->timezone = atol (value) * 60 * 60;
-
-	return timestamp;
-}
-
-static void
-delete_timestamp (GdaTimestamp *timestamp)
-{
-	g_return_if_fail (timestamp != NULL);
-	
-	g_free (timestamp);
 }
 
 void 
@@ -192,10 +148,11 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 				gint dbsize, gboolean isNull)
 {
 	GDate *gdate;
-	GdaDate *date;
-	GdaTime *time;
-	GdaTimestamp *timestamp;
-	GdaGeometricPoint *point;
+	GdaDate date;
+	GdaTime timegda;
+	GdaTimestamp timestamp;
+	GdaGeometricPoint point;
+	GdaNumeric numeric;
 	gint scale;
 
 	g_return_if_fail (field != NULL);
@@ -219,37 +176,38 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 		gda_field_set_gdatype (field, type);
 		gda_field_set_boolean_value (field, 
 				(*value == 't') ? TRUE : FALSE);
-		gda_field_set_actual_size (field, sizeof (gboolean));
 		break;
 	case GDA_TYPE_STRING :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_string_value (field, value);
-		gda_field_set_actual_size (field, strlen (value));
 		break;
 	case GDA_TYPE_BIGINT :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_bigint_value (field, atoll (value));
-		gda_field_set_actual_size (field, sizeof (gint64));
 		break;
 	case GDA_TYPE_INTEGER :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_integer_value (field, atol (value));
-		gda_field_set_actual_size (field, sizeof (gint32));
 		break;
 	case GDA_TYPE_SMALLINT :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_smallint_value (field, atoi (value));
-		gda_field_set_actual_size (field, sizeof (gint16));
 		break;
 	case GDA_TYPE_SINGLE :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_single_value (field, atof (value));
-		gda_field_set_actual_size (field, sizeof (gfloat));
 		break;
 	case GDA_TYPE_DOUBLE :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_double_value (field, atof (value));
-		gda_field_set_actual_size (field, sizeof (gdouble));
+		break;
+	case GDA_TYPE_NUMERIC :
+		numeric.number = g_strdup (value);
+		numeric.decimalPrecision = 0; //FIXME
+		numeric.width = 0; //FIXME
+		gda_field_set_gdatype (field, type);
+		gda_field_set_numeric_value (field, &numeric);
+		g_free (numeric.number);
 		break;
 	case GDA_TYPE_DATE :
 		gda_field_set_gdatype (field, type);
@@ -261,46 +219,35 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 			g_date_clear (gdate, 1);
 			g_date_set_dmy (gdate, 1, 1, 1);
 		}
-		date = g_new (GdaDate, 1);
-		date->day = g_date_get_day (gdate);
-		date->month = g_date_get_month (gdate);
-		date->year = g_date_get_year (gdate);
-		gda_field_set_date_value (field, date);
-		g_free (date);
+		date.day = g_date_get_day (gdate);
+		date.month = g_date_get_month (gdate);
+		date.year = g_date_get_year (gdate);
+		gda_field_set_date_value (field, &date);
 		g_date_free (gdate);
-		gda_field_set_actual_size (field, sizeof (GdaDate));
 		break;
 	case GDA_TYPE_GEOMETRIC_POINT :
-		point = make_point (value);
-		gda_field_set_geometric_point_value (field, point);
+		make_point (&point, value);
+		gda_field_set_geometric_point_value (field, &point);
 		gda_field_set_gdatype (field, type);
-		delete_point (point);
-		gda_field_set_actual_size (field, sizeof (GdaGeometricPoint));
 		break;
 	case GDA_TYPE_NULL :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_null_value (field);
-		gda_field_set_actual_size (field, 0);
 		break;
 	case GDA_TYPE_TIMESTAMP :
-		timestamp = make_timestamp (value);
-		gda_field_set_timestamp_value (field, timestamp);
+		make_timestamp (&timestamp, value);
+		gda_field_set_timestamp_value (field, &timestamp);
 		gda_field_set_gdatype (field, type);
-		delete_timestamp (timestamp);
-		gda_field_set_actual_size (field, sizeof (GdaTimestamp));
 		break;
 	case GDA_TYPE_TIME :
-		time = make_time (value);
-		gda_field_set_time_value (field, time);
+		make_time (&timegda, value);
+		gda_field_set_time_value (field, &timegda);
 		gda_field_set_gdatype (field, type);
-		delete_time (time);
-		gda_field_set_actual_size (field, sizeof (GdaTime));
 		break;
 	case GDA_TYPE_BINARY : //FIXME
 	default :
 		gda_field_set_string_value (field, value);
 		gda_field_set_gdatype (field, GDA_TYPE_STRING);
-		gda_field_set_actual_size (field, strlen (value));
 	}
 }
 
