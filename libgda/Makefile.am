@@ -35,6 +35,7 @@ gda_headers = \
 	gda-select.h \
 	gda-server-provider.h \
 	gda-table.h \
+	gda-transaction.h \
 	gda-util.h \
 	gda-value.h \
 	gda-xml-connection.h \
@@ -87,6 +88,7 @@ libgda_2_la_SOURCES = \
 	gda-select.c \
 	gda-server-provider.c \
 	gda-table.c \
+	gda-transaction.c \
 	gda-util.c \
 	gda-value.c \
 	gda-xml-connection.c \

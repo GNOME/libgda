@@ -45,6 +45,7 @@
 <!ENTITY libgda-select SYSTEM "sgml/gda-select.sgml">
 <!ENTITY libgda-server-provider SYSTEM "sgml/gda-server-provider.sgml">
 <!ENTITY libgda-table SYSTEM "sgml/gda-table.sgml">
+<!ENTITY libgda-transaction SYSTEM "sgml/gda-transaction.sgml">
 <!ENTITY libgda-util SYSTEM "sgml/gda-util.sgml">
 <!ENTITY libgda-value SYSTEM "sgml/gda-value.sgml">
 <!ENTITY libgda-xml-connection SYSTEM "sgml/gda-xml-connection.sgml">
@@ -734,6 +735,7 @@
     &libgda-row;
     &libgda-select;
     &libgda-table;
+    &libgda-transaction;
     &libgda-util;
     &libgda-value;
     &libgda-xml-connection;

@@ -1,0 +1,51 @@
+<!-- ##### SECTION Title ##### -->
+GdaTransaction
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaTransactionPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_transaction_new ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_transaction_get_name ##### -->
+<para>
+
+</para>
+
+@xaction: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_transaction_set_name ##### -->
+<para>
+
+</para>
+
+@xaction: 
+@name: 
+
+
