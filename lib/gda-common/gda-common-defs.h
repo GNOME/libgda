@@ -1,8 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 2001, The Free Software Foundation
- *
- * Authors:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
+ * Copyright (C) 2000 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,26 +17,15 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_quark_list_h__)
-#  define __gda_quark_list_h__
+#if !defined(__gda_common_defs_h__)
+#  define __gda_common_defs_h__
 
-#include <glib.h>
-#include <gda-common-defs.h>
-
-G_BEGIN_DECLS
-
-typedef struct _GdaQuarkList GdaQuarkList;
-
-GdaQuarkList *gda_quark_list_new (void);
-GdaQuarkList *gda_quark_list_new_from_string (const gchar * string);
-void gda_quark_list_free (GdaQuarkList * qlist);
-
-void gda_quark_list_add_from_string (GdaQuarkList * qlist,
-				     const gchar * string,
-				     gboolean cleanup);
-const gchar *gda_quark_list_find (GdaQuarkList * qlist,
-				  const gchar * name);
-
-G_END_DECLS
+#ifdef __cplusplus
+#define G_BEGIN_DECLS extern "C" {
+#define G_END_DECLS }
+#else
+#define BEGIN_GNOME_DECLS
+#define END_GNOME_DECLS
+#endif
 
 #endif

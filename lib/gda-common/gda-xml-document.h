@@ -30,17 +30,15 @@
 #else
 #  include <gtk/gtkobject.h>
 #endif
+#include <gda-common-defs.h>
 #include <tree.h>
 #include <parser.h>
 #include <valid.h>
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
-	typedef struct _GdaXmlDocument GdaXmlDocument;
-	typedef struct _GdaXmlDocumentClass GdaXmlDocumentClass;
+typedef struct _GdaXmlDocument GdaXmlDocument;
+typedef struct _GdaXmlDocumentClass GdaXmlDocumentClass;
 
 #define GDA_TYPE_XML_DOCUMENT            (gda_xml_document_get_type())
 #ifdef HAVE_GOBJECT
@@ -55,50 +53,46 @@ extern "C"
 #define GDA_IS_XML_DOCUMENT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DOCUMENT))
 #endif
 
-	struct _GdaXmlDocument
-	{
+struct _GdaXmlDocument {
 #ifdef HAVE_GOBJECT
-		GObject object;
+	GObject object;
 #else
-		GtkObject object;
+	GtkObject object;
 #endif
-		xmlDocPtr doc;
-		xmlDtdPtr dtd;
-		xmlNodePtr root;
-		xmlValidCtxtPtr context;
-	};
+	xmlDocPtr doc;
+	xmlDtdPtr dtd;
+	xmlNodePtr root;
+	xmlValidCtxtPtr context;
+};
 
-	struct _GdaXmlDocumentClass
-	{
+struct _GdaXmlDocumentClass {
 #ifdef HAVE_GOBJECT
-		GObjectClass parent_class;
-		GObjectClass *parent;
+	GObjectClass parent_class;
+	GObjectClass *parent;
 #else
-		GtkObjectClass parent_class;
+	GtkObjectClass parent_class;
 #endif
 
-		void (*warning) (GdaXmlDocument * q, const char *msg);
-		void (*error) (GdaXmlDocument * q, const char *msg);
-	};
+	void (*warning) (GdaXmlDocument * q, const char *msg);
+	void (*error) (GdaXmlDocument * q, const char *msg);
+};
 
 #ifdef HAVE_GOBJECT
-	GType gda_xml_document_get_type (void);
+GType gda_xml_document_get_type (void);
 #else
-	GtkType gda_xml_document_get_type (void);
+GtkType gda_xml_document_get_type (void);
 #endif
 
-	GdaXmlDocument *gda_xml_document_new (const gchar * root_doc);
-	void gda_xml_document_construct (GdaXmlDocument * xmlfile,
-					 const gchar * root_doc);
+GdaXmlDocument *gda_xml_document_new (const gchar * root_doc);
+void gda_xml_document_construct (GdaXmlDocument * xmlfile,
+				 const gchar * root_doc);
 /*GdaXmlDocument* gda_xml_document_new_from_file (const gchar *filename);*/
 
 /* output the structure */
-	gint gda_xml_document_to_file (GdaXmlDocument * xmldoc,
-				       const gchar * filename);
-	gchar *gda_xml_document_stringify (GdaXmlDocument * xmldoc);
+gint gda_xml_document_to_file (GdaXmlDocument * xmldoc,
+			       const gchar * filename);
+gchar *gda_xml_document_stringify (GdaXmlDocument * xmldoc);
 
-#if defined(__cplusplus)
-}
-#endif
+G_END_DECLS
 
 #endif

@@ -26,15 +26,13 @@
 #include <glib.h>
 #include <bonobo/bonobo-xobject.h>
 #include <GDA.h>
+#include <gda-common-defs.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
-	typedef struct _GdaListener GdaListener;
-	typedef struct _GdaListenerClass GdaListenerClass;
-	typedef struct _GdaListenerPrivate GdaListenerPrivate;
+typedef struct _GdaListener GdaListener;
+typedef struct _GdaListenerClass GdaListenerClass;
+typedef struct _GdaListenerPrivate GdaListenerPrivate;
 
 #define GDA_TYPE_LISTENER            (gda_listener_get_type ())
 #define GDA_LISTENER(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_LISTENER, GdaListener)
@@ -42,34 +40,30 @@ extern "C"
 #define GDA_IS_LISTENER(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_LISTENER)
 #define GDA_IS_LISTENER_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_LISTENER))
 
-	struct _GdaListener
-	{
-		BonoboXObject object;
-		GdaListenerPrivate *priv;
-	};
+struct _GdaListener {
+	BonoboXObject object;
+	GdaListenerPrivate *priv;
+};
 
-	struct _GdaListenerClass
-	{
-		BonoboXObjectClass parent_class;
-		POA_GDA_Listener__epv epv;
+struct _GdaListenerClass {
+	BonoboXObjectClass parent_class;
+	POA_GDA_Listener__epv epv;
 
-		/* signals */
-		void (*notify_action) (GdaListener * listener,
-				       const gchar * message,
-				       GDA_ListenerAction action,
-				       const gchar * description);
-	};
+	/* signals */
+	void (*notify_action) (GdaListener * listener,
+			       const gchar * message,
+			       GDA_ListenerAction action,
+			       const gchar * description);
+};
 
-	GtkType gda_listener_get_type (void);
-	GdaListener *gda_listener_new (void);
+GtkType gda_listener_get_type (void);
+GdaListener *gda_listener_new (void);
 
-	void gda_listener_notify_action (GdaListener * listener,
-					 const gchar * message,
-					 GDA_ListenerAction action,
-					 const gchar * description);
+void gda_listener_notify_action (GdaListener * listener,
+				 const gchar * message,
+				 GDA_ListenerAction action,
+				 const gchar * description);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif

@@ -26,10 +26,7 @@
 
 #include <gda-xml-item.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
 #define GDA_TYPE_XQL_DML            (gda_xql_dml_get_type ())
 #define GDA_XQL_DML(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XQL_DML, GdaXqlDml)
@@ -37,79 +34,75 @@ extern "C"
 #define GDA_IS_XQL_DML(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XMLATOM)
 #define GDA_IS_XQL_DML_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XQL_DML))
 
-	typedef struct _GdaXqlDml GdaXqlDml;
-	typedef struct _GdaXqlDmlClass GdaXqlDmlClass;
-	typedef struct _GdaXqlDmlPrivate GdaXqlDmlPrivate;
+typedef struct _GdaXqlDml GdaXqlDml;
+typedef struct _GdaXqlDmlClass GdaXqlDmlClass;
+typedef struct _GdaXqlDmlPrivate GdaXqlDmlPrivate;
 
-	typedef struct _GdaXqlDml
-	{
-		GdaXmlItem item;
-		GdaXqlDmlPrivate *priv;
-	};
+struct _GdaXqlDml {
+	GdaXmlItem item;
+	GdaXqlDmlPrivate *priv;
+};
 
-	typedef struct _GdaXqlDmlClass
-	{
-		GdaXmlItemClass parent_class;
+struct _GdaXqlDmlClass {
+	GdaXmlItemClass parent_class;
 
-		/* virtual methods */
-		gchar *(*add_target_from_text) (GdaXqlDml * dml,
-						const gchar * name,
-						GdaXmlItem * join);
-		GdaXmlItem *(*add_field_from_text) (GdaXqlDml * dml,
-						    const gchar * id,
-						    const gchar * name,
-						    const gchar * alias,
-						    gboolean group);
-		GdaXmlItem *(*add_const_from_text) (GdaXqlDml * dml,
-						    const gchar * value,
-						    const gchar * type,
-						    gboolean null);
-		void (*add_func) (GdaXqlDml * dml, GdaXmlItem * item);
-		void (*add_query) (GdaXqlDml * dml, GdaXmlItem * item);
-		void (*add_row_condition) (GdaXqlDml * dml, GdaXmlItem * cond,
-					   const gchar * type);
-		void (*add_group_condition) (GdaXqlDml * dml,
-					     GdaXmlItem * cond,
-					     const gchar * type);
-		void (*add_order) (GdaXqlDml * dml, gint column,
-				   gboolean asc);
-		void (*add_set) (GdaXqlDml * dml, GdaXmlItem * item);
-		void (*add_set_const) (GdaXqlDml * dml, const gchar * filed,
-				       const gchar * value,
-				       const gchar * type, gboolean null);
-	};
+	/* virtual methods */
+	gchar *(*add_target_from_text) (GdaXqlDml * dml,
+					const gchar * name,
+					GdaXmlItem * join);
+	GdaXmlItem *(*add_field_from_text) (GdaXqlDml * dml,
+					    const gchar * id,
+					    const gchar * name,
+					    const gchar * alias,
+					    gboolean group);
+	GdaXmlItem *(*add_const_from_text) (GdaXqlDml * dml,
+					    const gchar * value,
+					    const gchar * type,
+					    gboolean null);
+	void (*add_func) (GdaXqlDml * dml, GdaXmlItem * item);
+	void (*add_query) (GdaXqlDml * dml, GdaXmlItem * item);
+	void (*add_row_condition) (GdaXqlDml * dml, GdaXmlItem * cond,
+				   const gchar * type);
+	void (*add_group_condition) (GdaXqlDml * dml,
+				     GdaXmlItem * cond,
+				     const gchar * type);
+	void (*add_order) (GdaXqlDml * dml, gint column,
+			   gboolean asc);
+	void (*add_set) (GdaXqlDml * dml, GdaXmlItem * item);
+	void (*add_set_const) (GdaXqlDml * dml, const gchar * filed,
+			       const gchar * value,
+			       const gchar * type, gboolean null);
+};
 
-	GtkType gda_xql_dml_get_type (void);
+GtkType gda_xql_dml_get_type (void);
 
-	gchar *gda_xql_dml_add_target_from_text (GdaXqlDml * dml,
-						 const gchar * name,
-						 GdaXmlItem * join);
-	GdaXmlItem *gda_xql_dml_add_field_from_text (GdaXqlDml * dml,
-						     const gchar * id,
-						     const gchar * name,
-						     const gchar * alias,
-						     gboolean group);
-	GdaXmlItem *gda_xql_dml_add_const_from_text (GdaXqlDml * dml,
-						     const gchar * value,
-						     const gchar * type,
-						     gboolean null);
-	void gda_xql_dml_add_func (GdaXqlDml * dml, GdaXmlItem * item);
-	void gda_xql_dml_add_query (GdaXqlDml * dml, GdaXmlItem * item);
-	void gda_xql_dml_add_row_condition (GdaXqlDml * dml,
-					    GdaXmlItem * cond,
-					    const gchar * type);
-	void gda_xql_dml_add_group_condition (GdaXqlDml * dml,
-					      GdaXmlItem * cond,
-					      const gchar * type);
-	void gda_xql_dml_add_order (GdaXqlDml * dml, gint column,
-				    gboolean asc);
-	void gda_xql_dml_add_set (GdaXqlDml * dml, GdaXmlItem * item);
-	void gda_xql_dml_add_set_const (GdaXqlDml * dml, const gchar * field,
-					const gchar * value,
-					const gchar * type, gboolean null);
+gchar *gda_xql_dml_add_target_from_text (GdaXqlDml * dml,
+					 const gchar * name,
+					 GdaXmlItem * join);
+GdaXmlItem *gda_xql_dml_add_field_from_text (GdaXqlDml * dml,
+					     const gchar * id,
+					     const gchar * name,
+					     const gchar * alias,
+					     gboolean group);
+GdaXmlItem *gda_xql_dml_add_const_from_text (GdaXqlDml * dml,
+					     const gchar * value,
+					     const gchar * type,
+					     gboolean null);
+void gda_xql_dml_add_func (GdaXqlDml * dml, GdaXmlItem * item);
+void gda_xql_dml_add_query (GdaXqlDml * dml, GdaXmlItem * item);
+void gda_xql_dml_add_row_condition (GdaXqlDml * dml,
+				    GdaXmlItem * cond,
+				    const gchar * type);
+void gda_xql_dml_add_group_condition (GdaXqlDml * dml,
+				      GdaXmlItem * cond,
+				      const gchar * type);
+void gda_xql_dml_add_order (GdaXqlDml * dml, gint column,
+			    gboolean asc);
+void gda_xql_dml_add_set (GdaXqlDml * dml, GdaXmlItem * item);
+void gda_xql_dml_add_set_const (GdaXqlDml * dml, const gchar * field,
+				const gchar * value,
+				const gchar * type, gboolean null);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif

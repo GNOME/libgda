@@ -21,6 +21,7 @@ GDA-skels.c GDA-stubs.c GDA-common.c GDA.h: $(IDLFILES) $(ORBIT_IDL)
 	$(ORBIT_IDL) -I$(top_sourcedir)/idl -I`oaf-config --prefix`/share/idl $(top_builddir)/idl/GDA.idl
 
 gda_common_headers = \
+	gda-common-defs.h \
 	gda-config.h \
 	gda-corba.h \
 	gda-error.h \

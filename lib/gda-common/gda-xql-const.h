@@ -24,9 +24,9 @@
 #if !defined(__gda_xql_const_h__)
 #  define __gda_xql_const_h__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <gda-common-defs.h>
+
+G_BEGIN_DECLS
 
 #define GDA_TYPE_XQL_CONST_ITEM            (gda_xql_const_item_get_type ())
 #define GDA_XQL_CONST_ITEM(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XQL_CONST_ITEM, GdaXqlConstItem)
@@ -51,5 +51,7 @@ GdaXmlITem *gda_xql_const_new_with_data (const gchar *value,
 					 const gchar *alias,
 					 const gchar *type,
 					 const gchar *null);
+
+G_END_DECLS
 
 #endif

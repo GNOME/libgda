@@ -29,10 +29,7 @@
 #include <gda-xml-item.h>
 #include <gda-xql-column.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
 /*
  * Convenience functions for creating XML nodes
@@ -64,8 +61,6 @@ extern "C"
 #define gda_xql_item_new_or()                     gda_xml_list_item_new("or")
 #define gda_xql_item_new_group()                  gda_xml_list_item_new("group")
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif

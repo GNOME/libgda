@@ -26,23 +26,19 @@
 #include <glib.h>
 #include <tree.h>
 #include <parser.h>
+#include <gda-common-defs.h>
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
-	gchar *gda_xml_util_gensym (const gchar * sym);
-	gchar *gda_xml_util_dom_to_xml (xmlNodePtr node, gboolean freedoc);
-	gchar *gda_xml_util_dom_to_sql (xmlNodePtr node, gboolean freedoc);
+gchar *gda_xml_util_gensym (const gchar * sym);
+gchar *gda_xml_util_dom_to_xml (xmlNodePtr node, gboolean freedoc);
+gchar *gda_xml_util_dom_to_sql (xmlNodePtr node, gboolean freedoc);
 
-	xmlNodePtr gda_xml_util_new_node (const gchar * tag,
-					  xmlNodePtr parent_node);
-	void gda_xml_util_new_attr (gchar * key, gchar * value,
-				    xmlNodePtr node);
+xmlNodePtr gda_xml_util_new_node (const gchar * tag,
+				  xmlNodePtr parent_node);
+void gda_xml_util_new_attr (gchar * key, gchar * value,
+			    xmlNodePtr node);
 
-#if defined(__cplusplus)
-}
-#endif
+G_END_DECLS
 
 #endif

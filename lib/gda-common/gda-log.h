@@ -21,32 +21,28 @@
 #  define __gda_log_h__
 
 #include <glib.h>
+#include <gda-common-defs.h>
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
 /*
  * For application generating logs
  */
-	void gda_log_enable (void);
-	void gda_log_disable (void);
-	gboolean gda_log_is_enabled (void);
+void gda_log_enable (void);
+void gda_log_disable (void);
+gboolean gda_log_is_enabled (void);
 
-	void gda_log_message (const gchar * format, ...);
-	void gda_log_error (const gchar * format, ...);
+void gda_log_message (const gchar * format, ...);
+void gda_log_error (const gchar * format, ...);
 
 /*
  * For application viewing the logs
  */
-	void gda_log_clean_all (const gchar * prgname);
-	void gda_log_clean_between (const gchar * prgname, const gchar * from,
-				    const gchar * to);
-	void gda_log_clean_entry (const gchar * prgname, const gchar * entry);
+void gda_log_clean_all (const gchar * prgname);
+void gda_log_clean_between (const gchar * prgname, const gchar * from,
+			    const gchar * to);
+void gda_log_clean_entry (const gchar * prgname, const gchar * entry);
 
-#if defined(__cplusplus)
-}
-#endif
+G_END_DECLS
 
 #endif

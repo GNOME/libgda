@@ -1,3 +1,10 @@
+2001-07-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-common-defs.h: new file containing some #define's needed
+	all over
+
+	* *.h: s/#if defined(__cplusplus).../G_BEGIN_END_DECLS
+
 2001-07-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-quark-list.c (gda_quark_list_add_from_string): g_strdup

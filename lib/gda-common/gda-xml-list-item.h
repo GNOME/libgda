@@ -26,10 +26,7 @@
 
 #include <gda-xml-item.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
 #define GDA_TYPE_XML_LIST_ITEM            (gda_xml_list_item_get_type ())
 #define GDA_XML_LIST_ITEM(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_LIST_ITEM, GdaXmlListItem)
@@ -37,32 +34,28 @@ extern "C"
 #define GDA_IS_XML_LIST_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_LIST_ITEM)
 #define GDA_IS_XML_LIST_ITEM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_LIST_ITEM))
 
-	typedef struct _GdaXmlListItem GdaXmlListItem;
-	typedef struct _GdaXmlListItemClass GdaXmlListItemClass;
-	typedef struct _GdaXmlListItemPrivate GdaXmlListItemPrivate;
+typedef struct _GdaXmlListItem GdaXmlListItem;
+typedef struct _GdaXmlListItemClass GdaXmlListItemClass;
+typedef struct _GdaXmlListItemPrivate GdaXmlListItemPrivate;
 
-	struct _GdaXmlListItem
-	{
-		GdaXmlItem item;
-		GdaXmlListItemPrivate *priv;
-	};
+struct _GdaXmlListItem {
+	GdaXmlItem item;
+	GdaXmlListItemPrivate *priv;
+};
 
-	struct _GdaXmlListItemClass
-	{
-		GdaXmlItemClass parent_class;
-	};
+struct _GdaXmlListItemClass {
+	GdaXmlItemClass parent_class;
+};
 
-	GtkType gda_xml_list_item_get_type (void);
-	GdaXmlItem *gda_xml_list_item_new (const gchar * tag);
+GtkType gda_xml_list_item_get_type (void);
+GdaXmlItem *gda_xml_list_item_new (const gchar * tag);
 
-	void gda_xml_list_item_add (GdaXmlItem * item, GdaXmlItem * child);
-	xmlNodePtr gda_xml_list_item_to_dom (GdaXmlItem * item,
-					     xmlNodePtr parent_node);
-	GdaXmlItem *gda_xml_list_item_find_id (GdaXmlItem * item,
-					       const gchar * id);
+void gda_xml_list_item_add (GdaXmlItem * item, GdaXmlItem * child);
+xmlNodePtr gda_xml_list_item_to_dom (GdaXmlItem * item,
+				     xmlNodePtr parent_node);
+GdaXmlItem *gda_xml_list_item_find_id (GdaXmlItem * item,
+				       const gchar * id);
 
-#if defined(__cplusplus)
-}
-#endif
+G_END_DECLS
 
 #endif

@@ -23,22 +23,18 @@
 #include <glib.h>
 #include <orb/orb.h>
 #include <liboaf/liboaf.h>
+#include <gda-common-defs.h>
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
-	CORBA_ORB gda_corba_get_orb (void);
-	CORBA_Object gda_corba_get_name_service (void);
-	gboolean gda_corba_handle_exception (CORBA_Environment * ev);
+CORBA_ORB gda_corba_get_orb (void);
+CORBA_Object gda_corba_get_name_service (void);
+gboolean gda_corba_handle_exception (CORBA_Environment * ev);
 
-	gchar *gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props,
-					    const gchar * name);
-	gboolean gda_corba_oafiid_is_active (const gchar * oafiid);
+gchar *gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props,
+				    const gchar * name);
+gboolean gda_corba_oafiid_is_active (const gchar * oafiid);
 
-#if defined(__cplusplus)
-}
-#endif
+G_END_DECLS
 
 #endif

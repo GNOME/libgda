@@ -29,13 +29,22 @@
 #include <gda-error.h>
 #include <gda-listener.h>
 #include <gda-log.h>
+#include <gda-quark-list.h>
 #include <gda-thread.h>
 #include <gda-util.h>
 #include <gda-xml-document.h>
 #include <gda-xml-database.h>
+#include <gda-xml-atom-item.h>
+#include <gda-xml-bin-item.h>
+#include <gda-xml-item.h>
+#include <gda-xml-list-item.h>
 #include <gda-xml-util.h>
+
+G_BEGIN_DECLS
 
 void gda_init (const gchar * app_id, const gchar * version, gint nargs,
 	       gchar * args[]);
+
+G_BEGIN_DECLS
 
 #endif

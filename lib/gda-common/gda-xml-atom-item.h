@@ -24,12 +24,10 @@
 #if !defined(__gda_xml_atom_item_h__)
 #  define __gda_xml_atom_item_h__
 
+#include <gda-common-defs.h>
 #include <gda-xml-item.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
 #define GDA_TYPE_XML_ATOM_ITEM            (gda_xml_atom_item_get_type ())
 #define GDA_XML_ATOM_ITEM(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_ATOM_ITEM, GdaXmlAtomItem)
@@ -37,24 +35,20 @@ extern "C"
 #define GDA_IS_XML_ATOM_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XMLATOM)
 #define GDA_IS_XML_ATOM_ITEM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_ATOM_ITEM))
 
-	typedef struct _GdaXmlAtomItem GdaXmlAtomItem;
-	typedef struct _GdaXmlAtomItemClass GdaXmlAtomItemClass;
+typedef struct _GdaXmlAtomItem GdaXmlAtomItem;
+typedef struct _GdaXmlAtomItemClass GdaXmlAtomItemClass;
 
-	typedef struct _GdaXmlAtomItem
-	{
-		GdaXmlItem item;
-	};
+struct _GdaXmlAtomItem {
+	GdaXmlItem item;
+};
 
-	typedef struct _GdaXmlAtomItemClass
-	{
-		GdaXmlItemClass parent_class;
-	};
+struct _GdaXmlAtomItemClass {
+	GdaXmlItemClass parent_class;
+};
 
-	GtkType gda_xml_atom_item_get_type (void);
-	GdaXmlItem *gda_xml_atom_item_new (const gchar * tag);
+GtkType gda_xml_atom_item_get_type (void);
+GdaXmlItem *gda_xml_atom_item_new (const gchar * tag);
 
-#if defined(__cplusplus)
-}
-#endif
+G_END_DECLS
 
 #endif
