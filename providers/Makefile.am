@@ -30,8 +30,8 @@ if SYBASE
 GDA_SYBASE_SERVER=sybase
 endif
 
-if TDS
-GDA_TDS_SERVER=freetds
+if FREETDS
+GDA_FREETDS_SERVER=freetds
 endif
 
 SUBDIRS = \
@@ -43,5 +43,5 @@ SUBDIRS = \
 	$(GDA_POSTGRES_SERVER) \
 	$(GDA_SQLITE_SERVER) \
 	$(GDA_SYBASE_SERVER) \
-	$(GDA_TDS_SERVER) \
+	$(GDA_FREETDS_SERVER) \
 	default
