@@ -42,6 +42,7 @@ gda_headers = \
 	gda-data-model-list.h \
 	gda-error.h \
 	gda-log.h \
+	gda-marshal.h \
 	gda-parameter.h \
 	gda-quark-list.h \
 	gda-recordset.h \
