@@ -22,6 +22,6 @@ gda_test_LDADD = \
 gda_xmldb_test_SOURCES = gda-xmldb-test.c
 gda_xmldb_test_LDADD = \
 	$(top_builddir)/lib/gda-common/libgda-common-2.la \
-	$(GDA_CLIENT_LIBS)
+	$(LIBGDA_LIBS)
 
 EXTRA_DIST = sample_database.xml

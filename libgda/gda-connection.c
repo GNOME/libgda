@@ -276,7 +276,8 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 		gda_connection_add_error (cnc, error);
 	}
 
-	gda_client_notify_errors (cnc->priv->client, cnc, error_list);
+	/* FIXME: notify errors */
+	//gda_client_notify_errors (cnc->priv->client, cnc, error_list);
 	g_list_free (error_list);
 }
 
