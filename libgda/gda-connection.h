@@ -49,6 +49,9 @@ struct _GdaConnection {
 
 struct _GdaConnectionClass {
 	GObjectClass object_class;
+
+	/* signals */
+	void (* error) (GdaConnection *cnc, GList *error_list);
 };
 
 GType          gda_connection_get_type (void);

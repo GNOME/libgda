@@ -1,5 +1,9 @@
 2001-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-client.[ch]: added "error" signal to GdaClient class
+
+	* gda-connection.[ch]: added "error" signal to GdaConnection class
+
 	* gda-error.c (gda_error_list_from_exception):
 	(gda_error_list_to_exception): fixed crashes
 

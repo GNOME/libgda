@@ -27,6 +27,7 @@
 #include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-moniker-util.h>
+#include "gda-marshal.h"
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
 
@@ -39,11 +40,26 @@ static void gda_client_class_init (GdaClientClass *klass);
 static void gda_client_init       (GdaClient *client, GdaClientClass *klass);
 static void gda_client_finalize   (GObject *object);
 
+enum {
+	ERROR,
+	LAST_SIGNAL
+};
+
+static gint gda_client_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 /*
  * Callbacks
  */
+
+static void
+connection_error_cb (GdaConnection *cnc, GList *error_list, gpointer user_data)
+{
+	GdaClient *client = (GdaClient *) user_data;
+
+	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_signal_emit (G_OBJECT (client), gda_client_signals[ERROR], 0, cnc, error_list);
+}
 
 static void
 connection_finalized_cb (GObject *object, gpointer user_data)
@@ -80,6 +96,15 @@ gda_client_class_init (GdaClientClass *klass)
 	POA_GNOME_Database_Client__epv *epv;
 
 	parent_class = g_type_class_peek_parent (klass);
+
+	gda_client_signals[ERROR] =
+		g_signal_new ("error",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaClientClass, error),
+			      NULL, NULL,
+			      gda_marshal_VOID__POINTER_POINTER,
+			      G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
 
 	object_class->finalize = gda_client_finalize;
 
@@ -230,6 +255,8 @@ gda_client_open_connection (GdaClient *client,
 	client->priv->connections = g_list_append (client->priv->connections, cnc);
 	g_signal_connect (G_OBJECT (cnc), "finalize",
 			  G_CALLBACK (connection_finalized_cb), client);
+	g_signal_connect (G_OBJECT (cnc), "error",
+			  G_CALLBACK (connection_error_cb), client);
 
 	/* free memory */
 	gda_config_free_data_source_info (dsn_info);

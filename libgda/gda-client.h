@@ -49,6 +49,7 @@ struct _GdaClientClass {
 	POA_GNOME_Database_Client__epv epv;
 
 	/* signals */
+	void (* error) (GdaClient *client, GdaConnection *cnc, GList *error_list);
 	void (* action_notified) (GdaClient *client,
 				  GNOME_Database_ActionId action,
 				  GdaParameterList *params);

@@ -41,6 +41,12 @@ static void gda_connection_class_init (GdaConnectionClass *klass);
 static void gda_connection_init       (GdaConnection *cnc, GdaConnectionClass *klass);
 static void gda_connection_finalize   (GObject *object);
 
+enum {
+	ERROR,
+	LAST_SIGNAL
+};
+
+static gint gda_connection_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -57,6 +63,15 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
+
+	gda_connection_signals[ERROR] =
+		g_signal_new ("error",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaConnectionClass, error),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1, G_TYPE_POINTER);
 
 	object_class->finalize = gda_connection_finalize;
 }
@@ -258,6 +273,9 @@ gda_connection_add_error (GdaConnection *cnc, GdaError *error)
 	g_return_if_fail (GDA_IS_ERROR (error));
 
 	cnc->priv->error_list = g_list_append (cnc->priv->error_list, error);
+
+	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, cnc->priv->error_list);
+	cnc->priv->error_list = NULL;
 }
 
 /**
@@ -273,11 +291,13 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 
 	for (l = error_list; l; l = l->next) {
 		GdaError *error = GDA_ERROR (l->data);
-		gda_connection_add_error (cnc, error);
+		cnc->priv->error_list = g_list_append (cnc->priv->error_list, error);
 	}
 
-	/* FIXME: notify errors */
-	//gda_client_notify_errors (cnc->priv->client, cnc, error_list);
+	/* notify errors */
+	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, cnc->priv->error_list);
+	cnc->priv->error_list = NULL;
+
 	g_list_free (error_list);
 }
 
