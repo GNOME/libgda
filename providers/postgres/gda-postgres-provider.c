@@ -264,7 +264,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 	
-	priv_data = g_new (GdaPostgresConnectionPrivate, 1);
+	priv_data = g_new0 (GdaPostgresConnectionPrivate, 1);
 	priv_data->pconn = pconn;
 	priv_data->type_list = type_list;
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, priv_data);
@@ -299,6 +299,7 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaServerCo
 	PQfinish (priv_data->pconn);
 	g_list_foreach (priv_data->type_list, free_type_list, NULL);
 	g_list_free (priv_data->type_list);
+	g_free (priv_data);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, NULL);
 	return TRUE;

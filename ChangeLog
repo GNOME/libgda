@@ -1,3 +1,18 @@
+2002-02-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/odbc/main.c:
+	* providers/odbc/gda-odbc-provider.[ch]:
+	* providers/odbc/GNOME_Database_Provider_ODBC.server.in: started port
+	from GNOME 1.x branch
+
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_open_connection): use g_new0 for creating
+	the private structure.
+	(gda_postgres_provider_close_connection): don't leak the private
+	data.
+
+	* providers/postgres/main.c: use '<..>' for library header files.
+
 2002-02-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: don't look for DBMS libraries if --without is given.
