@@ -20,6 +20,13 @@
 #if !defined(__gda_client_h__)
 #  define __gda_client_h__
 
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+#include <orb/orb.h>
+#include <gnome.h>
+#include <liboaf/liboaf.h>
+
 #include <gda.h>
 #include <gda-common.h>
 #include <gda-connection.h>

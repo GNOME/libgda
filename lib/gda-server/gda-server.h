@@ -22,6 +22,11 @@
 /*
  * This is the main header file for the libgda-server library
  */
+
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include <orb/orbit.h>
 #include <gnome.h>
 #include <liboaf/liboaf.h>

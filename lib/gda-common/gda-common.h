@@ -23,9 +23,11 @@
  * This is the main header file for the libgda-common library
  */
 
+/* FIXME: remove next 8 lines */
 #if defined(HAVE_CONFIG_H)
 #  include <config.h>
 #endif
+
 #include <orb/orb.h>
 #include <gnome.h>
 #include <liboaf/liboaf.h>

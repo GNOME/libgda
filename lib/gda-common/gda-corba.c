@@ -16,7 +16,23 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "gda-common.h"
+#include "config.h"
+#include "gda-corba.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
+#else
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 /**
  * gda_corba_get_orb

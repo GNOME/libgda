@@ -18,7 +18,19 @@ AC_PROG_CXX
 dnl
 dnl Checks for libraries
 dnl
-AM_PATH_GLIB
+
+dnl We need either glib 1.3 (GObject) or gtk+ (GtkObject)
+AC_MSG_CHECKING(whether glib 1.3 or newer should be used)
+if glib-config-2.0 --version > /dev/null 2>&1
+then
+	AC_MSG_RESULT(yes)
+	AM_PATH_GLIB_2_0(1.3.0,,AC_MSG_ERROR(glib test failed),gobject gthread)
+	AC_DEFINE(HAVE_GOBJECT)
+else
+	AC_MSG_RESULT(no)
+	AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib test failed),gthread)
+	AM_PATH_GTK(1.0.0,,AC_MSG_ERROR(gtk+ test failed))
+fi
 
 dnl Check for ORBit
 AC_MSG_CHECKING(for ORBit)
@@ -491,17 +503,13 @@ AM_GNOME_GETTEXT
 dnl
 dnl Variables
 dnl
-gda_base_libs=`glib-config --libs gthread`
-gda_base_cflags=`glib-config --cflags gthread`
+gda_base_libs=$GLIB_LIBS
+gda_base_cflags=$GLIB_CFLAGS
 GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs `gnome-config --libs gnomeui gnorba`"
 GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
 GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs `gnome-config --libs gnomeui gnorba`"
 GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
 
-AC_SUBST(CFLAGS)
-AC_SUBST(CXXFLAGS)
-AC_SUBST(CPPFLAGS)
-AC_SUBST(LDFLAGS)
 AC_SUBST(GDA_CLIENT_LIBS)
 AC_SUBST(GDA_CLIENT_CFLAGS)
 AC_SUBST(GDA_PROVIDER_LIBS)

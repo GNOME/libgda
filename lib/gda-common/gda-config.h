@@ -20,7 +20,6 @@
 #  define __gda_config_h__
 
 #include <glib.h>
-#include <liboaf/liboaf.h>
 
 #if defined(__cplusplus)
 extern "C" {

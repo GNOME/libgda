@@ -16,8 +16,34 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
  
-#include "gda-common.h"
+#include "config.h"
+/* FIXME: This should really have it's own header file */
+include "gda-common.h"
 #include <gnome.h> // rremove!!!!!
+
+#ifdef HAVE_GOBJECT
+#  include <glib-object.h>
+#else
+#  include <gnome.h> // rremove!!!!!
+#endif
+
+#include <liboaf/liboaf.h>
+#include <gda-log.h>
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
+#else
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 /**
  * gda_init
@@ -33,8 +59,13 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
       return;
     }
 
+#ifdef HAVE_GOBJECT
+  g_set_prgname (app_id);
+  g_type_init ();
+#else
   /* FIXME: replace the GNOME call */
   gnome_init_with_popt_table(app_id, version, nargs, args, oaf_popt_options, 0, NULL);
+#endif
   oaf_init(nargs, args);
   initialized = TRUE;
 }

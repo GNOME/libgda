@@ -20,7 +20,6 @@
 #  define __gda_log_h__
 
 #include <glib.h>
-#include <gnome.h>
 
 #if defined(__cplusplus)
 extern "C" {

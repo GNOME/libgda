@@ -16,8 +16,24 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <gda-common.h>
+#include "config.h"
+#include "gda-xml-database.h"
 #include <stdlib.h>
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
+#else
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 #define OBJECT_DATABASE    "database"
 #define OBJECT_DATA        "data"
@@ -34,11 +50,6 @@
 #define PROPERTY_SCALE   "scale"
 #define PROPERTY_SIZE    "size"
 
-static void gda_xml_database_init       (Gda_XmlDatabase *xmldb);
-static void gda_xml_database_class_init (Gda_XmlDatabaseClass *klass);
-
-static void gda_xml_database_destroy    (Gda_XmlDatabase *xmldb);
-
 /*
  * Gda_XmlDatabase object signals
  */
@@ -53,6 +64,14 @@ static gint xmldb_signals[GDA_XML_DATABASE_LAST_SIGNAL] = { 0, };
 /*
  * Gda_XmlDatabase class interface
  */
+#ifdef HAVE_GOBJECT
+static void
+gda_xml_database_class_init (Gda_XmlDatabaseClass *klass, gpointer data)
+{
+  /* FIXME: GObject signals are not yet implemented */
+  klass->changed = NULL;
+}
+#else
 static void
 gda_xml_database_class_init (Gda_XmlDatabaseClass *klass)
 {
@@ -69,14 +88,46 @@ gda_xml_database_class_init (Gda_XmlDatabaseClass *klass)
 
   klass->changed = NULL;
 }
+#endif
 
 static void
+#ifdef HAVE_GOBJECT
+gda_xml_database_init (Gda_XmlDatabase *xmldb, Gda_XmlDatabaseClass *klass)
+#else
 gda_xml_database_init (Gda_XmlDatabase *xmldb)
+#endif
 {
   xmldb->tables = NULL;
   xmldb->views = NULL;
 }
 
+#ifdef HAVE_GOBJECT
+GType
+gda_xml_database_get_type (void)
+{
+  static GType type = 0;
+
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+        sizeof (Gda_XmlDatabaseClass),                /* class_size */
+        NULL,                                         /* base_init */
+        NULL,                                         /* base_finalize */
+        (GClassInitFunc) gda_xml_database_class_init, /* class_init */
+        NULL,                                         /* class_finalize */
+        NULL,                                         /* class_data */
+        sizeof (Gda_XmlDatabase),                     /* instance_size */
+        0,                                            /* n_preallocs */
+        (GInstanceInitFunc) gda_xml_database_init,    /* instance_init */
+        NULL,                                         /* value_table */
+      };
+      type = g_type_register_static (GDA_TYPE_XML_FILE, "Gda_XmlDatabase",
+                                     &info);
+    }
+  return type;
+}
+#else
 GtkType
 gda_xml_database_get_type (void)
 {
@@ -99,6 +150,7 @@ gda_xml_database_get_type (void)
     }
   return xml_database_type;
 }
+#endif
 
 /**
  * gda_xml_database_new
@@ -112,7 +164,12 @@ gda_xml_database_new (void)
 {
   Gda_XmlDatabase* xmldb;
 
+#ifdef HAVE_GOBJECT
+  xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
+#else
   xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
+#endif
+
   gda_xml_file_construct(GDA_XML_FILE(xmldb), OBJECT_DATABASE);
 
   /* initialize XML nodes */
@@ -130,7 +187,12 @@ gda_xml_database_new_from_file (const gchar *filename)
 {
   Gda_XmlDatabase* xmldb;
   
+#ifdef HAVE_GOBJECT
+  xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
+#else
   xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
+#endif
+
   GDA_XML_FILE(xmldb)->doc = xmlParseFile(filename);
   if (GDA_XML_FILE(xmldb)->doc)
     {
@@ -149,18 +211,6 @@ gda_xml_database_new_from_file (const gchar *filename)
   return xmldb;
 }
 
-static void
-gda_xml_database_destroy (Gda_XmlDatabase *xmldb)
-{
-  GtkObjectClass* parent_class;
-
-  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
-
-  parent_class = gtk_type_class(gtk_object_get_type());
-  if (parent_class && parent_class->destroy)
-    parent_class->destroy(GTK_OBJECT(xmldb));
-}
-
 /**
  * gda_xml_database_free
  * @xmldb: XML database
@@ -171,7 +221,11 @@ void
 gda_xml_database_free (Gda_XmlDatabase *xmldb)
 {
   g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+#ifdef HAVE_GOBJECT
+  g_object_unref (G_OBJECT (xmldb));
+#else
   gtk_object_destroy(GTK_OBJECT(xmldb));
+#endif
 }
 
 /**
@@ -197,7 +251,10 @@ void
 gda_xml_database_changed (Gda_XmlDatabase *xmldb)
 {
   g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+  
+#ifndef HAVE_GOBJECT  /* FIXME: signals without GTK */
   gtk_signal_emit(GTK_OBJECT(xmldb), xmldb_signals[GDA_XML_DATABASE_CHANGED]);
+#endif
 }
 
 
@@ -263,7 +320,7 @@ gda_xml_database_table_remove (Gda_XmlDatabase *xmldb, const gchar *tname)
  * Looks for the specified table in a XML database
  */
 xmlNodePtr
-gda_xml_database_table_find (Gda_XmlDatabase *xmldb, gchar *tname)
+gda_xml_database_table_find (Gda_XmlDatabase *xmldb, const gchar *tname)
 {
   xmlNodePtr node;
 

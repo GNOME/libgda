@@ -16,7 +16,25 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "gda-common.h"
+#include "config.h"
+#include "gda-log.h"
+#include <time.h>
+#include <gda-config.h>
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
+#else
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 static gboolean log_enabled = TRUE;
 
@@ -42,7 +60,7 @@ write_to_log (const gchar *str, gboolean error)
   /* initialize log */
   if (!initialized)
     {
-      gtk_timeout_add(30000, (GtkFunction) save_log_cb, NULL);
+      g_timeout_add (30000, (GSourceFunc) save_log_cb, NULL);
       initialized = TRUE;
     }
 

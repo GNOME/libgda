@@ -19,6 +19,9 @@
 #if !defined(__gda_corba_h__)
 #  define __gda_corba_h__
 
+#include <orb/orb.h>
+#include <liboaf/liboaf.h>
+
 #if defined(__cplusplus)
 extern "C" {
 #endif

@@ -16,7 +16,16 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "gda-common.h"
+#include "config.h"
+#include "gda-config.h"
+
+/* GConf declares some types in gconf/gconf-glib-public.h that are
+ * already defined in glib.h, if we use glib 1.3. The next 3 lines
+ * are needed to prevent this. */
+#ifdef HAVE_GOBJECT
+#  define GCONF_GCONF_GLIB_PUBLIC_H 
+#endif
+
 #include <gconf/gconf.h>
 
 static GConfEngine* conf_engine = NULL;
@@ -150,7 +159,7 @@ gda_config_remove_key (const gchar *path)
 gboolean
 gda_config_has_section (const gchar *path)
 {
-  return gconf_engine_dir_exists(get_conf_engine, path, NULL);
+  return gconf_engine_dir_exists(get_conf_engine(), path, NULL);
 }
 
 /**

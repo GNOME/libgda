@@ -22,12 +22,10 @@
  * xmlValidateElement()
  */
 
-#include <gda-common.h>
+#include "config.h"
+#include "gda-xml-query.h"
 
 #define GDA_XML_QUERY_DTD_FILE DTDINSTALLDIR"/gda-xml-query.dtd"
-
-static void gda_xml_query_class_init (Gda_XmlQueryClass *klass);
-static void gda_xml_query_init       (Gda_XmlQuery *object);
 
 /*
  * XmlQuery object signals
@@ -39,9 +37,23 @@ enum
 
 static gint gda_xml_query_signals[GDA_XML_QUERY_LAST_SIGNAL] = { 0 };
 
+#ifdef HAVE_GOBJECT
+static void gda_xml_query_finalize (GObject *object);
+#endif
+
 /*
  * XmlQuery object interface
  */
+#ifdef HAVE_GOBJECT
+static void
+gda_xml_query_class_init (Gda_XmlQueryClass *klass, gpointer data)
+{
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+  object_class->finalize = &gda_xml_query_finalize;
+  klass->parent = g_type_class_peek_parent (klass);
+}
+#else
 static void
 gda_xml_query_class_init (Gda_XmlQueryClass *klass)
 {
@@ -49,9 +61,14 @@ gda_xml_query_class_init (Gda_XmlQueryClass *klass)
 
   object_class->destroy = (void (*)(GtkObject *)) gda_xml_query_destroy;
 }
+#endif
 
 static void
+#ifdef HAVE_GOBJECT
+gda_xml_query_init (Gda_XmlQuery *object, Gda_XmlQueryClass *klass)
+#else
 gda_xml_query_init (Gda_XmlQuery *object)
+#endif
 {
   g_return_if_fail(GDA_XML_QUERY_IS_OBJECT(object));
 
@@ -63,6 +80,32 @@ gda_xml_query_init (Gda_XmlQuery *object)
   object->sql_txt = NULL;
 }
 
+#ifdef HAVE_GOBJECT
+GType
+gda_xml_query_get_type (void)
+{
+  static GType type = 0;
+
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+       sizeof (Gda_XmlQueryClass),                /* class_size */
+        NULL,                                      /* base_init */
+        NULL,                                      /* base_finalize */
+       (GClassInitFunc) gda_xml_query_class_init, /* class_init */
+        NULL,                                      /* class_finalize */
+        NULL,                                      /* class_data */
+       sizeof (Gda_XmlQuery),                     /* instance_size */
+        0,                                         /* n_preallocs */
+       (GInstanceInitFunc) gda_xml_query_init,    /* instance_init */
+        NULL,                                      /* value_table */
+      };
+      type = g_type_register_static (GDA_TYPE_XML_FILE, "Gda_XmlQuery", &info);
+    }
+  return type;
+}
+#else
 GtkType
 gda_xml_query_get_type (void)
 {
@@ -85,6 +128,7 @@ gda_xml_query_get_type (void)
     }
   return gda_xml_query_object_type;
 }
+#endif
 
 /**
  * gda_xml_query_new
@@ -96,7 +140,12 @@ gda_xml_query_new (const gchar *id, Gda_XmlQueryOperation op)
   xmlNodePtr root;
   Gda_XmlFile* xmlfile;
 
+#ifdef HAVE_GOBJECT
+  object = GDA_XML_QUERY (g_object_new (GDA_TYPE_XML_QUERY, NULL));
+#else
   object = GDA_XML_QUERY(gtk_type_new(gda_xml_query_get_type()));
+#endif
+
   xmlfile = GDA_XML_FILE(object);
 
   /* object->doc = xmlNewDoc("1.0"); */
@@ -145,7 +194,11 @@ Gda_XmlQuery*  gda_xml_query_new_from_file(const gchar *filename)
   Gda_XmlQuery* object;
   gchar *str;
 
+#ifdef HAVE_GOBJECT
+  object = GDA_XML_QUERY (g_object_new (GDA_TYPE_XML_QUERY, NULL));
+#else
   object = GDA_XML_QUERY(gtk_type_new(gda_xml_query_get_type()));
+#endif
 
   /* DTD already done while loading. */
   GDA_XML_FILE(object)->doc = xmlParseFile(filename);
@@ -200,7 +253,11 @@ Gda_XmlQuery*  gda_xml_query_new_from_node(const xmlNodePtr node)
   xmlChar *str;
   gint i;
 
+#ifdef HAVE_GOBJECT
+  object = GDA_XML_QUERY (g_object_new (GDA_TYPE_XML_QUERY, NULL));
+#else
   object = GDA_XML_QUERY(gtk_type_new(gda_xml_query_get_type()));
+#endif
   
   doc = xmlNewDoc("1.0");
   xmlCreateIntSubset(doc, "query", NULL, GDA_XML_QUERY_DTD_FILE);
@@ -254,6 +311,26 @@ Gda_XmlQuery*  gda_xml_query_new_from_node(const xmlNodePtr node)
   return object;
 }
 
+#ifdef HAVE_GOBJECT
+void
+gda_xml_query_destroy (Gda_XmlQuery *object)
+{
+  g_return_if_fail (GDA_XML_QUERY_IS_OBJECT (object));
+  g_object_unref (G_OBJECT (object));
+}
+
+void
+gda_xml_query_finalize (GObject *object)
+{
+  Gda_XmlQuery *query = GDA_XML_QUERY (object);
+  Gda_XmlQueryClass *klass =
+    G_TYPE_INSTANCE_GET_CLASS (object, GDA_XML_QUERY_CLASS, Gda_XmlQueryClass);
+
+  if (query->id)
+    g_free(query->id);
+  klass->parent->finalize (object);
+}
+#else
 void
 gda_xml_query_destroy (Gda_XmlQuery *object)
 {
@@ -269,7 +346,7 @@ gda_xml_query_destroy (Gda_XmlQuery *object)
   if (GTK_OBJECT_CLASS (parent_class)->destroy)
     (* GTK_OBJECT_CLASS (parent_class)->destroy) (GTK_OBJECT(object));
 }
-
+#endif
 
 xmlNodePtr gda_xml_query_add(Gda_XmlQuery *q, Gda_XmlQueryTag op, ...)
 {

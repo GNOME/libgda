@@ -19,6 +19,13 @@
 #if !defined(__gda_xml_database_h__)
 #  define __gda_xml_database_h__
 
+#include <glib.h>
+
+#ifdef HAVE_GOBJECT
+#  include <glib-object.h>
+#else
+#  include <gtk/gtk.h>
+#endif
 #include <gda-xml-file.h>
 
 #if defined(__cplusplus)
@@ -29,10 +36,21 @@ typedef struct _Gda_XmlDatabase      Gda_XmlDatabase;
 typedef struct _Gda_XmlDatabaseClass Gda_XmlDatabaseClass;
 
 #define GDA_TYPE_XML_DATABASE            (gda_xml_database_get_type())
-#define GDA_XML_DATABASE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_DATABASE, Gda_XmlDatabase)
-#define GDA_XML_DATABASE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_DATABASE, Gda_XmlDatabaseClass)
-#define GDA_IS_XML_DATABASE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_DATABASE)
-#define GDA_IS_XML_DATABASE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DATABASE))
+#ifdef HAVE_GOBJECT
+#  define GDA_XML_DATABASE(obj) \
+       G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_DATABASE, Gda_XmlDatabase)
+#  define GDA_XML_DATABASE_CLASS(klass) \
+   G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_DATABASE, Gda_XmlDatabaseClass)
+#  define GDA_IS_XML_DATABASE(obj) \
+          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_DATABASE)
+#  define GDA_IS_XML_DATABASE_CLASS(klass) \
+          G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_DATABASE)
+#else
+#  define GDA_XML_DATABASE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_DATABASE, Gda_XmlDatabase)
+#  define GDA_XML_DATABASE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_DATABASE, Gda_XmlDatabaseClass)
+#  define GDA_IS_XML_DATABASE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_DATABASE)
+#  define GDA_IS_XML_DATABASE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DATABASE))
+#endif
 
 struct _Gda_XmlDatabase
 {
@@ -50,7 +68,11 @@ struct _Gda_XmlDatabaseClass
   void (*changed)(Gda_XmlDatabase *xmldb);
 };
 
-GtkType          gda_xml_database_get_type         (void);
+#ifdef HAVE_GOBJECT
+GType            gda_xml_database_get_type         (void);
+#else
+GtkType          gda_xml_database_get_type         (void);
+#endif
 
 Gda_XmlDatabase* gda_xml_database_new              (void);
 Gda_XmlDatabase* gda_xml_database_new_from_file    (const gchar *filename);
@@ -67,7 +89,7 @@ void             gda_xml_database_changed          (Gda_XmlDatabase *xmldb);
  */
 xmlNodePtr   gda_xml_database_table_new            (Gda_XmlDatabase *xmldb, gchar *tname);
 void         gda_xml_database_table_remove         (Gda_XmlDatabase *xmldb, const gchar *tname);
-xmlNodePtr   gda_xml_database_table_find           (Gda_XmlDatabase *xmldb, gchar *tname);
+xmlNodePtr   gda_xml_database_table_find           (Gda_XmlDatabase *xmldb, const gchar *tname);
 const gchar* gda_xml_database_table_get_name       (Gda_XmlDatabase *xmldb, xmlNodePtr table);
 void         gda_xml_database_table_set_name       (Gda_XmlDatabase *xmldb,
                                                     xmlNodePtr table,
