@@ -755,7 +755,6 @@
     &libgda-quark-list;
     &libgda-row;
     &libgda-select;
-    &libgda-server-provider;
     &libgda-table;
     &libgda-util;
     &libgda-value;
@@ -902,6 +901,7 @@
 	</listitem>
       </itemizedlist>
     </sect1>
+    &libgda-server-provider;
   </chapter>
 
   <chapter id="libgda-xql">

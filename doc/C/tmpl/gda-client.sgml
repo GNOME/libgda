@@ -41,6 +41,17 @@ Database client access
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_client_open_connection_from_string ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider_id: 
+@cnc_string: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_client_get_connection_list ##### -->
 <para>
 
