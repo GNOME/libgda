@@ -1,3 +1,7 @@
+2001-02-24  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* libgda.spec.in: Updated the oafinfo --> oaf change
+
 2001-02-11	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/gda-primebase-server/gda-primebase-connection.c,
