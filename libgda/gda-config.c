@@ -382,8 +382,6 @@ write_config_file ()
 	gchar *user_config;
 
 	cfg_client = get_config_client ();
-	g_return_if_fail (cfg_client->user != NULL);
-
 	doc = xmlNewDoc ("1.0");
 	g_return_if_fail (doc != NULL);
 	root = xmlNewDocNode (doc, NULL, "libgda-config", NULL);
