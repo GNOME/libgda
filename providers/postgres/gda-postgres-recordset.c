@@ -140,9 +140,7 @@ get_row (GdaPostgresRecordsetPrivate *priv, gint row)
 		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, row, i);
 		value = gda_value_new_null ();
 
-		gda_postgres_set_value (value, ftype, thevalue,
-					PQfsize (priv->pg_res, i),
-					isNull);
+		gda_postgres_set_value (value, ftype, thevalue, isNull);
 
 		row_list = g_list_append (row_list, value);
 	}
