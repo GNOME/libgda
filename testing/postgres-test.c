@@ -22,6 +22,9 @@
 
 #include "postgres-test.h"
 
+#define IGNORE_ERR	GDA_COMMAND_OPTION_IGNORE_ERRORS
+#define STOP_ON_ERR	GDA_COMMAND_OPTION_STOP_ON_ERRORS
+
 static gboolean
 create_table (GdaConnection *cnc)
 {
@@ -46,9 +49,10 @@ create_table (GdaConnection *cnc)
 				"timestamp_value timestamp, "
 				"null_value char(1) "
 				")",
-				GDA_COMMAND_TYPE_SQL);
+				GDA_COMMAND_TYPE_SQL, STOP_ON_ERR);
 
-	list = gda_connection_execute_command (cnc, create_command, NULL);
+	list = gda_connection_execute_command (cnc, create_command, 
+						NULL);
 	retval = list == NULL ? FALSE : TRUE;
 	g_list_foreach (list, (GFunc) g_object_unref, NULL);
 	g_list_free (list);
@@ -65,7 +69,7 @@ drop_table (GdaConnection *cnc)
 	GList *list;
 
 	drop_command = gda_command_new ( "drop table gda_postgres_test",
-					GDA_COMMAND_TYPE_SQL);
+					GDA_COMMAND_TYPE_SQL, IGNORE_ERR);
 
 	list = gda_connection_execute_command (cnc, drop_command, NULL);
 	retval = list == NULL ? FALSE : TRUE;
@@ -113,7 +117,7 @@ insert_data (GdaConnection *cnc)
 				"'2004-02-29 14:00:11.31', "
 				"'(1,0)' "
 				")",
-				GDA_COMMAND_TYPE_SQL);
+				GDA_COMMAND_TYPE_SQL, STOP_ON_ERR);
 
 	list = gda_connection_execute_command (cnc, insert_command, NULL);
 	gda_command_free (insert_command);
@@ -128,9 +132,10 @@ select_data (GdaConnection *cnc)
 	GList *list;
 
 	select_command = gda_command_new ( "select * from gda_postgres_test",
-					GDA_COMMAND_TYPE_SQL);
+					GDA_COMMAND_TYPE_SQL, STOP_ON_ERR);
 
-	list = gda_connection_execute_command (cnc, select_command, NULL);
+	list = gda_connection_execute_command (cnc, select_command,
+						NULL);
 	gda_command_free (select_command);
 
 	return list;
