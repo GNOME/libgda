@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-08-21 05:40+0200\n"
+"POT-Creation-Date: 2002-08-23 06:00+0200\n"
 "PO-Revision-Date: 2002-06-05 22:51GMT -03:00\n"
 "Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
 "Language-Team: español <traductores@es.gnome.org>\n"
@@ -63,7 +63,7 @@ msgstr "Proveedor"
 msgid "Connection string"
 msgstr "Cadena de conexión"
 
-#: libgda/gda-config.c:1271
+#: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
 msgstr "Descripción"
 
@@ -149,11 +149,11 @@ msgstr "Error leyendo %s: %s"
 msgid "Could not create file %s"
 msgstr "No se ha podido crear el archivo %s"
 
-#: libgda/gda-value.c:1360
+#: libgda/gda-value.c:1397
 msgid "TRUE"
 msgstr "VERDADERO"
 
-#: libgda/gda-value.c:1362
+#: libgda/gda-value.c:1399
 msgid "FALSE"
 msgstr "FALSO"
 
@@ -209,14 +209,14 @@ msgstr "No implementado"
 #: providers/default/gda-default-provider.c:410
 #: providers/mysql/gda-mysql-provider.c:977
 #: providers/oracle/gda-oracle-provider.c:1056
-#: providers/postgres/gda-postgres-provider.c:874
+#: providers/postgres/gda-postgres-provider.c:1065
 msgid "Field name"
 msgstr "Nombre del campo"
 
 #: providers/default/gda-default-provider.c:411
 #: providers/mysql/gda-mysql-provider.c:978
 #: providers/oracle/gda-oracle-provider.c:1057
-#: providers/postgres/gda-postgres-provider.c:875
+#: providers/postgres/gda-postgres-provider.c:1066
 msgid "Data type"
 msgstr "Tipo de dato"
 
@@ -224,7 +224,7 @@ msgstr "Tipo de dato"
 #: providers/freetds/gda-freetds-provider.c:649
 #: providers/mysql/gda-mysql-provider.c:979
 #: providers/oracle/gda-oracle-provider.c:1058
-#: providers/postgres/gda-postgres-provider.c:876
+#: providers/postgres/gda-postgres-provider.c:1067
 msgid "Size"
 msgstr "Tamaño"
 
@@ -232,35 +232,35 @@ msgstr "Tamaño"
 #: providers/freetds/gda-freetds-provider.c:653
 #: providers/mysql/gda-mysql-provider.c:980
 #: providers/oracle/gda-oracle-provider.c:1059
-#: providers/postgres/gda-postgres-provider.c:877
+#: providers/postgres/gda-postgres-provider.c:1068
 msgid "Scale"
 msgstr "Escala"
 
 #: providers/default/gda-default-provider.c:414
 #: providers/mysql/gda-mysql-provider.c:981
 #: providers/oracle/gda-oracle-provider.c:1060
-#: providers/postgres/gda-postgres-provider.c:878
+#: providers/postgres/gda-postgres-provider.c:1069
 msgid "Not null?"
 msgstr "¿No nulo?"
 
 #: providers/default/gda-default-provider.c:415
 #: providers/mysql/gda-mysql-provider.c:982
 #: providers/oracle/gda-oracle-provider.c:1061
-#: providers/postgres/gda-postgres-provider.c:879
+#: providers/postgres/gda-postgres-provider.c:1070
 msgid "Primary key?"
 msgstr "¿Clave primaria?"
 
 #: providers/default/gda-default-provider.c:416
 #: providers/mysql/gda-mysql-provider.c:983
 #: providers/oracle/gda-oracle-provider.c:1062
-#: providers/postgres/gda-postgres-provider.c:880
+#: providers/postgres/gda-postgres-provider.c:1071
 msgid "Unique index?"
 msgstr "¿Índice Único?"
 
 #: providers/default/gda-default-provider.c:417
 #: providers/mysql/gda-mysql-provider.c:984
 #: providers/oracle/gda-oracle-provider.c:1063
-#: providers/postgres/gda-postgres-provider.c:881
+#: providers/postgres/gda-postgres-provider.c:1072
 msgid "References"
 msgstr "Referencias"
 
@@ -287,8 +287,8 @@ msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"Conexión abortada. Debe proveer al menos un equipo, usuario y contraseña  "
-"al utilizar DSN «QUERY=;USER=;PASSWORD=»."
+"Conexión abortada. Debe proveer al menos un equipo, usuario y contraseña  al "
+"utilizar DSN «QUERY=;USER=;PASSWORD=»."
 
 #: providers/freetds/gda-freetds-provider.c:187
 msgid "Error creating message container."
@@ -311,29 +311,25 @@ msgstr "Ha fallado la obtención de la información de la conexión."
 msgid "Procedures"
 msgstr "Procedimientos"
 
-#. Set it here instead of the SQL query to allow i18n
 #: providers/freetds/gda-freetds-provider.c:550
 #: providers/oracle/gda-oracle-provider.c:1663
-#: providers/postgres/gda-postgres-provider.c:717
 msgid "Tables"
 msgstr "Tablas"
 
 #: providers/freetds/gda-freetds-provider.c:556
-#: providers/postgres/gda-postgres-provider.c:756
+#: providers/postgres/gda-postgres-provider.c:920
 msgid "Types"
 msgstr "Tipos"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/freetds/gda-freetds-provider.c:562
 #: providers/oracle/gda-oracle-provider.c:1459
-#: providers/postgres/gda-postgres-provider.c:1242 testing/client.c:127
+#: providers/postgres/gda-postgres-provider.c:1444 testing/client.c:127
 msgid "Users"
 msgstr "Usuarios"
 
-#. Set it here instead of the SQL query to allow i18n
 #: providers/freetds/gda-freetds-provider.c:568
-#: providers/oracle/gda-oracle-provider.c:1671
-#: providers/postgres/gda-postgres-provider.c:787 testing/client.c:124
+#: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:124
 msgid "Views"
 msgstr "Vistas"
 
@@ -421,7 +417,9 @@ msgstr "No se ha podido asignar el manejador de ambiente.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:191
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "SQLGetInfo no esta soportado. Debido a esto el proveedor IBM DB2 no funcionará.\n"
+msgstr ""
+"SQLGetInfo no esta soportado. Debido a esto el proveedor IBM DB2 no "
+"funcionará.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:205
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
@@ -487,14 +485,26 @@ msgid "Type"
 msgstr "Tipo"
 
 #: providers/mysql/gda-mysql-provider.c:883
+#: providers/postgres/gda-postgres-provider.c:688
+#: providers/postgres/gda-postgres-provider.c:902
+#: providers/postgres/gda-postgres-provider.c:921
+#: providers/postgres/gda-postgres-provider.c:967
+#: providers/postgres/gda-postgres-provider.c:1025
+#: providers/postgres/gda-postgres-provider.c:1471
 msgid "Owner"
 msgstr "Propietario"
 
 #: providers/mysql/gda-mysql-provider.c:884
+#: providers/postgres/gda-postgres-provider.c:689
+#: providers/postgres/gda-postgres-provider.c:922
+#: providers/postgres/gda-postgres-provider.c:968
+#: providers/postgres/gda-postgres-provider.c:1026
+#: providers/postgres/gda-postgres-provider.c:1472
 msgid "Comments"
 msgstr "Comentarios"
 
 #: providers/mysql/gda-mysql-provider.c:885
+#: providers/postgres/gda-postgres-provider.c:923
 msgid "GDA type"
 msgstr "Tipo de GDA"
 
@@ -712,19 +722,17 @@ msgstr "No se ha podido obtener el atributo de nulidad del campo Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1651
-#: providers/postgres/gda-postgres-provider.c:812 testing/client.c:125
+#: providers/postgres/gda-postgres-provider.c:994 testing/client.c:125
 msgid "Indexes"
 msgstr "Índices"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1659
-#: providers/postgres/gda-postgres-provider.c:1270 testing/client.c:128
+#: providers/oracle/gda-oracle-provider.c:1659 testing/client.c:128
 msgid "Sequences"
 msgstr "Secuencias"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
-#: providers/postgres/gda-postgres-provider.c:863 testing/client.c:129
+#: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:129
 msgid "Triggers"
 msgstr "Disparadores"
 
@@ -781,31 +789,81 @@ msgstr "No se ha podido obtener un fila"
 msgid "GDA provider for Oracle databases"
 msgstr "Proveedor GDA para bases de datos Oracle"
 
-#: providers/postgres/gda-postgres-provider.c:410
-#: providers/postgres/gda-postgres-provider.c:427
-#: providers/postgres/gda-postgres-provider.c:498
-#: providers/postgres/gda-postgres-provider.c:632
+#: providers/postgres/gda-postgres-provider.c:413
+#: providers/postgres/gda-postgres-provider.c:430
+#: providers/postgres/gda-postgres-provider.c:501
+#: providers/postgres/gda-postgres-provider.c:635
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "Manejador PostgresSQL inválido"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:838 testing/client.c:126
-msgid "Aggregates"
-msgstr "Agregados"
+#: providers/postgres/gda-postgres-provider.c:686
+msgid "Procedure"
+msgstr "Procedimiento"
+
+#: providers/postgres/gda-postgres-provider.c:687
+#: providers/postgres/gda-postgres-provider.c:1024
+msgid "Id"
+msgstr "Id"
+
+#: providers/postgres/gda-postgres-provider.c:690
+msgid "Return type"
+msgstr "Tipo de retorno"
+
+#: providers/postgres/gda-postgres-provider.c:691
+msgid "Nb args"
+msgstr "Args nb"
+
+#: providers/postgres/gda-postgres-provider.c:692
+msgid "Args types"
+msgstr "Tipos de args"
+
+#: providers/postgres/gda-postgres-provider.c:693
+#: providers/postgres/gda-postgres-provider.c:904
+#: providers/postgres/gda-postgres-provider.c:969
+#: providers/postgres/gda-postgres-provider.c:1029
+#: providers/postgres/gda-postgres-provider.c:1473
+msgid "Definition"
+msgstr "Definición"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1217 testing/client.c:120
+#: providers/postgres/gda-postgres-provider.c:901
+#: providers/postgres/gda-postgres-provider.c:1510
+msgid "Table"
+msgstr "Tabla"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:966
+msgid "View"
+msgstr "Vista"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1023
+msgid "Aggregate"
+msgstr "Agregado"
+
+#: providers/postgres/gda-postgres-provider.c:1027
+msgid "OutType"
+msgstr "Tipo de salida"
+
+#: providers/postgres/gda-postgres-provider.c:1028
+msgid "InType"
+msgstr "Tipo de entrada"
+
+#: providers/postgres/gda-postgres-provider.c:1073
+msgid "Default value"
+msgstr "Valor predeterminado"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1419 testing/client.c:120
 msgid "Databases"
 msgstr "Bases de datos"
 
-#: providers/postgres/gda-postgres-provider.c:1310
-msgid "Table name"
-msgstr "Nombre de la tabla"
-
-#: providers/postgres/gda-postgres-provider.c:1311
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1470
+#: providers/postgres/gda-postgres-provider.c:1511
 msgid "Sequence"
 msgstr "Secuencia"
 
@@ -965,6 +1023,10 @@ msgstr "Tablas de Conexiones"
 msgid "Available types"
 msgstr "Tipos disponibles"
 
+#: testing/client.c:126
+msgid "Aggregates"
+msgstr "Agregados"
+
 #. test transactions
 #: testing/client.c:132 testing/client.c:140
 msgid "\tStarting transaction..."
@@ -1018,6 +1080,9 @@ msgstr "\tdescripción = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Table name"
+#~ msgstr "Nombre de la tabla"
 
 #~ msgid "An error occurred during fetch"
 #~ msgstr "Ha ocurrido un error durante la obtención de datos"
