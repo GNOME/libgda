@@ -27,6 +27,7 @@
 #include <gda-config.h>
 #include <gda-corba.h>
 #include <gda-error.h>
+#include <gda-field.h>
 #include <gda-listener.h>
 #include <gda-log.h>
 #include <gda-quark-list.h>

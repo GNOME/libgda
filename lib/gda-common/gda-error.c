@@ -229,20 +229,16 @@ gda_error_list_to_corba_seq (GList * error_list)
 		if (GDA_IS_ERROR (error)) {
 			gchar *desc, *source, *state, *native;
 
-			desc = gda_error_get_description (error);
-			source = gda_error_get_source (error);
-			state = gda_error_get_sqlstate (error);
-			native = gda_error_get_native (error);
+			desc = (gchar *) gda_error_get_description (error);
+			source = (gchar *) gda_error_get_source (error);
+			state = (gchar *) gda_error_get_sqlstate (error);
+			native = (gchar *) gda_error_get_native (error);
 
-			rc->_buffer[i].description =
-				CORBA_string_dup (desc ? desc : "<Null>");
+			rc->_buffer[i].description = CORBA_string_dup (desc ? desc : "<Null>");
 			rc->_buffer[i].number = error->priv->number;
-			rc->_buffer[i].source =
-				CORBA_string_dup (source ? source : "<Null>");
-			rc->_buffer[i].sqlstate =
-				CORBA_string_dup (state ? state : "<Null>");
-			rc->_buffer[i].nativeMsg =
-				CORBA_string_dup (native ? native : "<Null>");
+			rc->_buffer[i].source = CORBA_string_dup (source ? source : "<Null>");
+			rc->_buffer[i].sqlstate = CORBA_string_dup (state ? state : "<Null>");
+			rc->_buffer[i].nativeMsg = CORBA_string_dup (native ? native : "<Null>");
 		}
 	}
 

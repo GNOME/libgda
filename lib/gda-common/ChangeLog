@@ -1,5 +1,12 @@
 2001-08-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-listener.[ch]: switched to GObject
+
+	* gda-error.[ch]: switched to GObject
+
+	* gda-field.[ch]: merged the libgda-client's GdaField and the
+	libgda-server's GdaServerField into a unique class
+
 	* gda-config.c (gda_config_add_listener, gda_config_remove_listener):
 	new functions for adding/removing configuration listeners
 

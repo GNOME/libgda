@@ -28,6 +28,7 @@ gda_common_headers = \
 	gda-config.h \
 	gda-corba.h \
 	gda-error.h \
+	gda-field.h \
 	gda-listener.h \
 	gda-log.h \
 	gda-quark-list.h \
@@ -52,6 +53,7 @@ libgda_common_2_la_SOURCES = \
 	gda-config.c \
 	gda-corba.c \
 	gda-error.c \
+	gda-field.c \
 	gda-init.c \
 	gda-listener.c \
 	gda-log.c \

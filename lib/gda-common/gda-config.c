@@ -313,8 +313,8 @@ gda_config_add_listener (GdaConfigListenerFunc func, gpointer user_data)
 	cb_data->user_data = user_data;
 
 	CORBA_exception_init (&ev);
-	cb_data->listener_id = bonobo_event_source_client_add_listener (
-		get_conf_engine (), config_changed_cb, NULL, &ev, cb_data);
+	//cb_data->listener_id = bonobo_event_source_client_add_listener (
+	//	get_conf_engine (), config_changed_cb, NULL, &ev, cb_data);
 
 	if (BONOBO_EX (&ev)) {
 		g_free (cb_data);

@@ -49,7 +49,7 @@ struct _GdaErrorClass {
 	GObjectClass parent_class;
 };
 
-GType gda_error_get_type (void);
+GType         gda_error_get_type (void);
 
 GdaError     *gda_error_new (void);
 GList        *gda_error_list_from_exception (CORBA_Environment * ev);

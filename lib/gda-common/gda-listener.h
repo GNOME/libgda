@@ -45,22 +45,22 @@ struct _GdaListener {
 
 struct _GdaListenerClass {
 	BonoboXObjectClass parent_class;
-	POA_GDA_Listener__epv epv;
+	POA_GNOME_Database_Listener__epv epv;
 
 	/* signals */
 	void (*notify_action) (GdaListener * listener,
 			       const gchar * message,
-			       GDA_ListenerAction action,
+			       GNOME_Database_ListenerAction action,
 			       const gchar * description);
 };
 
-GtkType gda_listener_get_type (void);
+GType        gda_listener_get_type (void);
 GdaListener *gda_listener_new (void);
 
-void gda_listener_notify_action (GdaListener * listener,
-				 const gchar * message,
-				 GDA_ListenerAction action,
-				 const gchar * description);
+void         gda_listener_notify_action (GdaListener * listener,
+					 const gchar * message,
+					 GNOME_Database_ListenerAction action,
+					 const gchar * description);
 
 G_END_DECLS
 

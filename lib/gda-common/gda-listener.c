@@ -20,7 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <gobject/gsignal.h>
+#include <gobject/gmarshal.h>
 #include "gda-listener.h"
+
+#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
 
 struct _GdaListenerPrivate {
 };
@@ -40,11 +44,11 @@ static gint gda_listener_signals[LAST_SIGNAL] = { 0, };
  * Stub implementations
  */
 static void
-impl_GDA_Listener_notifyAction (PortableServer_Servant servant,
-				const CORBA_char * message,
-				GDA_ListenerAction action,
-				const CORBA_char * description,
-				CORBA_Environment * ev)
+impl_Listener_notifyAction (PortableServer_Servant servant,
+			    const CORBA_char * message,
+			    GNOME_Database_ListenerAction action,
+			    const CORBA_char * description,
+			    CORBA_Environment * ev)
 {
 	GdaListener *listener = (GdaListener *) bonobo_x_object (servant);
 
@@ -55,35 +59,39 @@ impl_GDA_Listener_notifyAction (PortableServer_Servant servant,
 /*
  * GdaListener class implementation
  */
+
+BONOBO_TYPE_FUNC_FULL (GdaListener,
+		       GNOME_Database_Listener,
+		       PARENT_TYPE,
+		       gda_listener);
+
 static void
 gda_listener_class_init (GdaListenerClass * klass)
 {
-	POA_GDA_Listener__epv *epv;
-	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+	POA_GNOME_Database_Listener__epv *epv;
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	/* set class signals */
 	gda_listener_signals[NOTIFY_ACTION] =
-		gtk_signal_new ("notify_action",
-				GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaListenerClass,
-						   notify_action),
-				gtk_marshal_NONE__POINTER_INT_POINTER,
-				GTK_TYPE_NONE, 3, GTK_TYPE_INT,
-				GTK_TYPE_POINTER, GTK_TYPE_POINTER);
-	gtk_object_class_add_signals (object_class, gda_listener_signals,
-				      LAST_SIGNAL);
+		g_signal_new ("notify_action",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaListenerClass, notify_action),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER_INT_POINTER,
+			      G_TYPE_NONE, 3, G_TYPE_INT,
+			      G_TYPE_POINTER, G_TYPE_POINTER);
 
-	object_class->destroy = gda_listener_destroy;
+	object_class->finalize = gda_listener_finalize;
 	klass->notify_action = NULL;
 
 	/* set the epv */
 	epv = &klass->epv;
-	epv->notifyAction = impl_GDA_Listener_notifyAction;
+	epv->notifyAction = impl_Listener_notifyAction;
 }
 
 static void
-gda_listener_init (GdaListener * listener)
+gda_listener_init (GdaListener *listener, GdaListenerClass *klass)
 {
 	listener->priv = g_new (GdaListenerPrivate, 1);
 }
@@ -104,29 +112,6 @@ gda_listener_finalize (GObject * object)
 		parent_class->finalize (object);
 }
 
-GtkType
-gda_listener_get_type (void)
-{
-	static GtkType type = 0;
-
-	if (!type) {
-		GtkTypeInfo info = {
-			"GdaListener",
-			sizeof (GdaListener),
-			sizeof (GdaListenerClass),
-			(GtkClassInitFunc) gda_listener_class_init,
-			(GtkObjectInitFunc) gda_listener_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL
-		};
-		type = bonobo_x_type_unique (BONOBO_X_OBJECT_TYPE,
-					     POA_GDA_Listener__init, NULL,
-					     GTK_STRUCT_OFFSET
-					     (GdaListenerClass, epv), &info);
-	}
-
-	return type;
-}
 
 /**
  * gda_listener_new
@@ -136,7 +121,7 @@ gda_listener_new (void)
 {
 	GdaListener *listener;
 
-	listener = GDA_LISTENER (gtk_type_new (GDA_TYPE_LISTENER));
+	listener = GDA_LISTENER (g_object_new (GDA_TYPE_LISTENER, NULL));
 	return listener;
 }
 
@@ -144,13 +129,14 @@ gda_listener_new (void)
  * gda_listener_notify_action
  */
 void
-gda_listener_notify_action (GdaListener * listener,
-			    const gchar * message,
-			    GDA_ListenerAction action,
-			    const gchar * description)
+gda_listener_notify_action (GdaListener *listener,
+			    const gchar *message,
+			    GNOME_Database_ListenerAction action,
+			    const gchar *description)
 {
 	g_return_if_fail (GDA_IS_LISTENER (listener));
-	gtk_signal_emit_by_name (GTK_OBJECT (listener),
-				 "notify_action",
-				 action, message, description);
+
+	g_signal_emit (G_OBJECT (listener),
+		       gda_listener_signals[NOTIFY_ACTION],
+		       action, message, description);
 }
