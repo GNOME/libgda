@@ -58,7 +58,7 @@ static const GdaValue *
 gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	gint count;
-	GdaValue *value;
+	GList *l;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	g_return_val_if_fail (col == 0, NULL);
@@ -67,8 +67,8 @@ gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 	if (row > count)
 		return NULL;
 
-	value = (GdaValue *) g_list_nth (GDA_DATA_MODEL_LIST (model)->priv->value_list, row);
-	return value;
+	l = g_list_nth (GDA_DATA_MODEL_LIST (model)->priv->value_list, row);
+	return l ? (GdaValue *) l->data : NULL;
 }
 
 static void
@@ -155,14 +155,13 @@ gda_data_model_list_new_from_string_list (const GList *list)
 {
 	GdaDataModel *model;
 	GList *l;
+	GdaValue *value;
 
 	model = gda_data_model_list_new ();
 
 	for (l = (GList *) list; l; l = l->next) {
 		gchar *str = (gchar *) l->data;
 		if (str) {
-			GdaValue *value;
-
 			value = gda_value_new_string ((const gchar *) str);
 			gda_data_model_list_append_value (GDA_DATA_MODEL_LIST (model), value);
 			gda_value_free (value);

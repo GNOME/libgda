@@ -133,13 +133,23 @@ gda_value_free (GdaValue *value)
 }
 
 /**
+ * gda_value_isa
+ */
+gboolean
+gda_value_isa (GdaValue *value, GdaValueType type)
+{
+	g_return_val_if_fail (value != NULL, FALSE);
+	return bonobo_arg_type_is_equal (type, value->_type, NULL);
+}
+
+/**
  * gda_value_copy
  */
 GdaValue *
 gda_value_copy (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
-	return bonobo_arg_copy ((const BonoboArg *) value);
+	return bonobo_arg_copy (value);
 }
 
 /**

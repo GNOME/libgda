@@ -1,3 +1,10 @@
+2001-11-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-value.c (gda_value_isa): new function
+
+	* gda-data-model-list.c (gda_data_model_list_get_value_at): I'm
+	stupid, g_list_nth returns a GList *, not the data element!
+
 2001-11-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-value.h: added GdaValueType enumeration, which wraps the
