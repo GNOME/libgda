@@ -1,4 +1,4 @@
-idl_files=gda-report.idl
+idl_files=GDA_Report.idl
 
 EXTRA_DIST = $(idl_files)
 

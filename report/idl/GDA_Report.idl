@@ -19,8 +19,6 @@
 #ifndef __gda_report_idl__
 #define __gda_report_idl__
 
-#include <oaf-factory.idl>
-
 module GDA {
 	
 	/*
@@ -112,7 +110,7 @@ module GDA {
 	/*
 	 * The report engine
 	 */
-	interface ReportEngine : GNOME::ObjectFactory {
+	interface ReportEngine {
 		ReportList queryReports (in string condition, in long flags);
 		Report     openReport (in string rep_name);
 		

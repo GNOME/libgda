@@ -16,10 +16,10 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_report_server_h__)
-#  define __gda_report_server_h__
+#include <gda-report-server.h>
 
-#include <gda-common.h>
-#include <GDA_Report.h>
-
-#endif
+int
+main (int argc, char *argv[])
+{
+  return 0;
+}
