@@ -1,3 +1,27 @@
+libgda 0.91.0, 2003-08-06
+-------------------------
+
+ - Renamed default provider to XML and added some missing things (rodrigo)
+ - Fixed #116758 (rodrigo)
+ - Fixed x86-64 bits compilation problems (fcrozat)
+ - Made basic SQL work in GdaSelect class (rodrigo)
+ - Added missing LDAP flags (juergen)
+ - Initial 'delete' support in the SQL parser library (gonzalo)
+ - Removed compilation warnings (gonzalo)
+ - Improved changes management in GdaXmlDatabase (rodrigo)
+ - More API documentation (rodrigo)
+ - Fixed permissions problem in gda_file_save (philippe)
+ - Fixed lexer compilation problems (gonzalo)
+ - Updated translations:
+        - cs (mitr)
+	- de (cneumair)
+	- es (pablodc)
+	- it (marcoc)
+	- nl (adrighem)
+	- pl (aflinta)
+	- pt (dnloreto)
+        - sv (menthos)
+
 libgda 0.90.0, 2003-07-03
 -------------------------
 

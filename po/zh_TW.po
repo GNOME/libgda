@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2 0.12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-07-03 16:39+0200\n"
+"POT-Creation-Date: 2003-08-06 00:17+0200\n"
 "PO-Revision-Date: 2003-06-05 18:24+0800\n"
 "Last-Translator: Abel Cheung <maddog@linux.org.hk>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -42,13 +42,9 @@ msgstr ""
 msgid "Error: %s"
 msgstr "錯誤：%s"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1323 providers/default/gda-default-provider.c:557
-#: providers/default/gda-default-provider.c:577
-#: providers/default/gda-default-provider.c:616
-#: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
-#: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
-#: providers/msql/gda-msql-provider.c:448
+#: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
+#: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
+#: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
 #: providers/mysql/gda-mysql-provider.c:701
 #: providers/mysql/gda-mysql-provider.c:889
 #: providers/odbc/gda-odbc-provider.c:733
@@ -57,6 +53,8 @@ msgstr "錯誤：%s"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
+#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:586
+#: providers/xml/gda-xml-provider.c:620
 msgid "Name"
 msgstr "名稱"
 
@@ -99,12 +97,12 @@ msgstr ""
 msgid "libgda needs GModule. Finishing..."
 msgstr ""
 
-#: libgda/gda-select.c:315
+#: libgda/gda-select.c:393
 #, c-format
 msgid "Could not parse SQL string '%s'"
 msgstr "無法以 SQL 字串的方式解析‘%s’"
 
-#: libgda/gda-select.c:319
+#: libgda/gda-select.c:397
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr ""
@@ -146,167 +144,48 @@ msgstr ""
 msgid "NULL GObject"
 msgstr "NULL GObject"
 
-#: libgda/gda-xml-database.c:235
+#: libgda/gda-xml-database.c:263
 #, c-format
 msgid "Could not load file at %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:244
+#: libgda/gda-xml-database.c:272
 #, c-format
 msgid "Could not parse file at %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:254
+#: libgda/gda-xml-database.c:282
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "檔案‘%s’是無效的 XML 數據庫"
 
-#: libgda/gda-xml-database.c:436
+#: libgda/gda-xml-database.c:508
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:454
+#: libgda/gda-xml-database.c:526
 msgid "Could not dump XML file to memory"
 msgstr "無法將 XML 檔案傾印至記憶體中"
 
-#: libgda/gda-xml-database.c:547 libgda/gda-xml-database.c:583
-#: libgda/gda-xml-database.c:626
+#: libgda/gda-xml-database.c:619 libgda/gda-xml-database.c:656
+#: libgda/gda-xml-database.c:700
 #, c-format
 msgid "Table %s already exists"
 msgstr ""
 
-#: libgda/gda-xml-database.c:619
+#: libgda/gda-xml-database.c:693
 msgid "Invalid node"
 msgstr "節點無效"
 
-#: libgda/gda-xml-database.c:661
+#: libgda/gda-xml-database.c:735
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:668
+#: libgda/gda-xml-database.c:742
 msgid "Invalid XML node"
 msgstr "XML 節點無效"
-
-#: providers/default/gda-default-provider.c:190
-#: providers/sqlite/gda-sqlite-provider.c:198
-msgid ""
-"A full path must be specified on the connection string to open a database."
-msgstr ""
-
-#: providers/default/gda-default-provider.c:252
-#: providers/default/gda-default-provider.c:267
-#: providers/default/gda-default-provider.c:294
-msgid "Invalid internal handle"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:333
-msgid "Not Implemented"
-msgstr "未完成功能"
-
-#: providers/default/gda-default-provider.c:454
-#: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1069
-#: providers/odbc/gda-odbc-provider.c:914
-#: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1352
-#: providers/sqlite/gda-sqlite-provider.c:622
-msgid "Field name"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:455
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1070
-#: providers/odbc/gda-odbc-provider.c:915
-#: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1353
-#: providers/sqlite/gda-sqlite-provider.c:623
-msgid "Data type"
-msgstr "數據類型"
-
-#: providers/default/gda-default-provider.c:456
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1071
-#: providers/odbc/gda-odbc-provider.c:916
-#: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1354
-#: providers/sqlite/gda-sqlite-provider.c:624
-msgid "Size"
-msgstr "大小"
-
-#: providers/default/gda-default-provider.c:457
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1072
-#: providers/odbc/gda-odbc-provider.c:917
-#: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1355
-#: providers/sqlite/gda-sqlite-provider.c:625
-msgid "Scale"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:458
-#: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1073
-#: providers/odbc/gda-odbc-provider.c:918
-#: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1356
-#: providers/sqlite/gda-sqlite-provider.c:626
-msgid "Not null?"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:459
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1074
-#: providers/odbc/gda-odbc-provider.c:919
-#: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1357
-#: providers/sqlite/gda-sqlite-provider.c:627
-msgid "Primary key?"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:460
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1075
-#: providers/odbc/gda-odbc-provider.c:920
-#: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1358
-#: providers/sqlite/gda-sqlite-provider.c:628
-msgid "Unique index?"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:461
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1076
-#: providers/odbc/gda-odbc-provider.c:921
-#: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1359
-#: providers/sqlite/gda-sqlite-provider.c:629
-msgid "References"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:471
-#: providers/default/gda-default-provider.c:477
-msgid "Invalid argument"
-msgstr "參數無效"
-
-#: providers/default/gda-default-provider.c:484
-#: providers/mdb/gda-mdb-table.c:48
-#, c-format
-msgid "Table %s not found"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:511
-msgid "Could not get description for column"
-msgstr "無法獲取該欄位的說明"
-
-#: providers/default/libmain.c:33
-msgid "Default"
-msgstr "預設"
-
-#: providers/default/libmain.c:39
-msgid "Default provider, based on XML"
-msgstr ""
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -650,6 +529,86 @@ msgstr ""
 msgid "Transactions not supported in MDB provider"
 msgstr ""
 
+#: providers/mdb/gda-mdb-provider.c:490
+#: providers/mysql/gda-mysql-provider.c:1069
+#: providers/odbc/gda-odbc-provider.c:914
+#: providers/oracle/gda-oracle-provider.c:1248
+#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/xml/gda-xml-provider.c:464
+msgid "Field name"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
+#: providers/mysql/gda-mysql-provider.c:1070
+#: providers/odbc/gda-odbc-provider.c:915
+#: providers/oracle/gda-oracle-provider.c:1249
+#: providers/postgres/gda-postgres-provider.c:1353
+#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/xml/gda-xml-provider.c:465
+msgid "Data type"
+msgstr "數據類型"
+
+#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
+#: providers/mysql/gda-mysql-provider.c:1071
+#: providers/odbc/gda-odbc-provider.c:916
+#: providers/oracle/gda-oracle-provider.c:1250
+#: providers/postgres/gda-postgres-provider.c:1354
+#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/xml/gda-xml-provider.c:466
+msgid "Size"
+msgstr "大小"
+
+#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
+#: providers/mysql/gda-mysql-provider.c:1072
+#: providers/odbc/gda-odbc-provider.c:917
+#: providers/oracle/gda-oracle-provider.c:1251
+#: providers/postgres/gda-postgres-provider.c:1355
+#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/xml/gda-xml-provider.c:467
+msgid "Scale"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:1073
+#: providers/odbc/gda-odbc-provider.c:918
+#: providers/oracle/gda-oracle-provider.c:1252
+#: providers/postgres/gda-postgres-provider.c:1356
+#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/xml/gda-xml-provider.c:468
+msgid "Not null?"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
+#: providers/mysql/gda-mysql-provider.c:1074
+#: providers/odbc/gda-odbc-provider.c:919
+#: providers/oracle/gda-oracle-provider.c:1253
+#: providers/postgres/gda-postgres-provider.c:1357
+#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/xml/gda-xml-provider.c:469
+msgid "Primary key?"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
+#: providers/mysql/gda-mysql-provider.c:1075
+#: providers/odbc/gda-odbc-provider.c:920
+#: providers/oracle/gda-oracle-provider.c:1254
+#: providers/postgres/gda-postgres-provider.c:1358
+#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/xml/gda-xml-provider.c:470
+msgid "Unique index?"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
+#: providers/mysql/gda-mysql-provider.c:1076
+#: providers/odbc/gda-odbc-provider.c:921
+#: providers/oracle/gda-oracle-provider.c:1255
+#: providers/postgres/gda-postgres-provider.c:1359
+#: providers/sqlite/gda-sqlite-provider.c:629
+#: providers/xml/gda-xml-provider.c:471
+msgid "References"
+msgstr ""
+
 #: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
 #: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:922
@@ -753,6 +712,11 @@ msgstr "字串"
 #, c-format
 msgid "Could not parse '%s' command"
 msgstr "無法以指令方式解析‘%s’"
+
+#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:494
+#, c-format
+msgid "Table %s not found"
+msgstr ""
 
 #: providers/mdb/libmain.c:36
 msgid "Provider for Microsoft Access files"
@@ -1212,6 +1176,11 @@ msgstr ""
 msgid "Provider for PostgreSQL databases"
 msgstr ""
 
+#: providers/sqlite/gda-sqlite-provider.c:198
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+
 #: providers/sqlite/gda-sqlite-provider.c:220
 msgid "Could not set empty_result_callbacks SQLite option"
 msgstr ""
@@ -1626,6 +1595,42 @@ msgstr ""
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr ""
 
+#: providers/xml/gda-xml-provider.c:190
+msgid ""
+"A full path must be specified on the connection string to open a database on "
+"the XML provider."
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
+#, fuzzy
+msgid "Invalid XML handle"
+msgstr "XML 節點無效"
+
+#: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
+#: providers/xml/gda-xml-provider.c:304
+msgid "Invalid internal handle"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:343
+msgid "Not Implemented"
+msgstr "未完成功能"
+
+#: providers/xml/gda-xml-provider.c:481 providers/xml/gda-xml-provider.c:487
+msgid "Invalid argument"
+msgstr "參數無效"
+
+#: providers/xml/gda-xml-provider.c:521
+msgid "Could not get description for column"
+msgstr "無法獲取該欄位的說明"
+
+#: providers/xml/libmain.c:33
+msgid "XML"
+msgstr ""
+
+#: providers/xml/libmain.c:39
+msgid "XML provider, based on the libgda XML database format"
+msgstr ""
+
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
 msgstr "無法解析 XML 文件"
@@ -1866,3 +1871,6 @@ msgstr ""
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Default"
+#~ msgstr "預設"

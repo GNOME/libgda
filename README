@@ -6,15 +6,15 @@ different kinds
 of data sources (databases, information servers, mail spools, etc).
 It is a complete architecture that provides all you need to access
 your data.
-It is defined by a set of CORBA interfaces as generic as possible
+It is defined by a set of plugin APIs as generic as possible
 (but very powerful at the same time) so that any kind of data source
 can be accessed through them.
 
 libgda is an interface to the GDA architecture, providing a nice
-wrapper around the CORBA interfaces, for both the client and the server
+wrapper around the GDA interfaces, for both the client and the server
 parts. It also provides a bunch of tools to help you both in the
 development and management of your data sources, all done through
-the GDA model's set of CORBA interfaces.
+the GDA model's interfaces.
 
 libgda was part of the GNOME-DB project (http://www.gnome.org/projects/gnome-db),
 but has been separated from it to allow non-GNOME applications to be
@@ -24,27 +24,21 @@ libgda is released under the terms of the GPL and LGPL licenses. The specific
 parts of the architecture are licensed under one of them: executables, such as
 the command-line tools and the database providers are licensed under the
 GPL license, which means that any work derived from it must also adhere to the
-terms of the GPL license. Libraries (libgda-common, libgda-client, libgda-server,
+terms of the GPL license. Libraries (libgda, libgda-sql,
 libgda-report) are, on the other hand, licensed under the LGPL license, which
 allows for commercial applications to be developed based on libgda.
 
 Dependencies
 ------------
 To compile libgda, you must have the following packages installed:
-glib 1.2.1 or newer
-gtk+ 1.0 or newer (if you have glib 1.3 or newer, you don't need gtk+)
+glib 2.0 or newer
 gnome-xml
-ORBit 0.5.1 or newer
-oaf 0.4.0 or newer
-GConf 0.9 or newer
 You can get all these packages from ftp.gnome.org.
 
 Subdirectories
 --------------
 doc: the libgda api documentation
-idl: CORBA idl files
-intl: the gettext package needed for internationalization
-lib: the actual libgda library
+libgda: the actual libgda library
 po: translation files for other languages than English
 providers: some GDA service providers
 tools: useful helper programs

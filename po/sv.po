@@ -8,14 +8,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-07-08 07:20+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-08-06 00:17+0200\n"
 "PO-Revision-Date: 2003-07-08 07:21+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
 #, c-format
@@ -45,7 +45,6 @@ msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 msgid "Error: %s"
 msgstr "Fel: %s"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
@@ -57,8 +56,8 @@ msgstr "Fel: %s"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
-#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:587
-#: providers/xml/gda-xml-provider.c:626
+#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:586
+#: providers/xml/gda-xml-provider.c:620
 msgid "Name"
 msgstr "Namn"
 
@@ -101,12 +100,12 @@ msgstr "Försök att initiera en redan initierad klient"
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda behöver GModule. Avslutar..."
 
-#: libgda/gda-select.c:315
+#: libgda/gda-select.c:393
 #, c-format
 msgid "Could not parse SQL string '%s'"
 msgstr "Kunde inte tolka SQL-strängen \"%s\""
 
-#: libgda/gda-select.c:319
+#: libgda/gda-select.c:397
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "SQL-kommandot är inte ett SELECT (är \"%s\""
@@ -148,46 +147,46 @@ msgstr "(GObject av typen \"%s\""
 msgid "NULL GObject"
 msgstr "NULL-GObject"
 
-#: libgda/gda-xml-database.c:248
+#: libgda/gda-xml-database.c:263
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Kunde inte läsa in filen vid %s"
 
-#: libgda/gda-xml-database.c:257
+#: libgda/gda-xml-database.c:272
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Kunde inte tolka filen vid %s"
 
-#: libgda/gda-xml-database.c:267
+#: libgda/gda-xml-database.c:282
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Ogiltig XML-databasfil \"%s\""
 
-#: libgda/gda-xml-database.c:493
+#: libgda/gda-xml-database.c:508
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Kunde inte skapa en XML-nod från tabellen %s"
 
-#: libgda/gda-xml-database.c:511
+#: libgda/gda-xml-database.c:526
 msgid "Could not dump XML file to memory"
 msgstr "Kunde inte dumpa XML-filen till minnet"
 
-#: libgda/gda-xml-database.c:604 libgda/gda-xml-database.c:640
-#: libgda/gda-xml-database.c:683
+#: libgda/gda-xml-database.c:619 libgda/gda-xml-database.c:656
+#: libgda/gda-xml-database.c:700
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabellen %s finns redan"
 
-#: libgda/gda-xml-database.c:676
+#: libgda/gda-xml-database.c:693
 msgid "Invalid node"
 msgstr "Ogiltig nod"
 
-#: libgda/gda-xml-database.c:718
+#: libgda/gda-xml-database.c:735
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplicerad <data>-nod för tabellen %s"
 
-#: libgda/gda-xml-database.c:725
+#: libgda/gda-xml-database.c:742
 msgid "Invalid XML node"
 msgstr "Ogiltig XML-nod"
 
