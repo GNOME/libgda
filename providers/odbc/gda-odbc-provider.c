@@ -44,6 +44,10 @@ static gboolean gda_odbc_provider_open_connection (GdaServerProvider *provider,
 						   const gchar *password);
 static gboolean gda_odbc_provider_close_connection (GdaServerProvider *provider,
 						    GdaServerConnection *cnc);
+static GList *gda_odbc_provider_execute_command (GdaServerProvider *provider,
+						 GdaServerConnection *cnc,
+						 GdaCommand *cmd,
+						 GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
 
@@ -62,6 +66,7 @@ gda_odbc_provider_class_init (GdaOdbcProviderClass *klass)
 	object_class->finalize = gda_odbc_provider_finalize;
 	provider_class->open_connection = gda_odbc_provider_open_connection;
 	provider_class->close_connection = gda_odbc_provider_close_connection;
+	provider_class->execute_command = gda_odbc_provider_execute_command;
 }
 
 static void
@@ -180,4 +185,45 @@ gda_odbc_provider_close_connection (GdaServerProvider *provider,
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE, NULL);
 
 	return TRUE;
+}
+
+static GList *
+process_sql_commands (GList *reclist, GdaServerConnection *cnc, GdaCommand *cmd)
+{
+	GdaOdbcConnectionPrivate *priv_data;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+        if (!priv_data)
+                return NULL;
+
+	return reclist;
+}
+
+/* execute_command handler for the GdaOdbcProvider class */
+static GList *
+gda_odbc_provider_execute_command (GdaServerProvider *provider,
+				   GdaServerConnection *cnc,
+				   GdaCommand *cmd,
+				   GdaParameterList *params)
+{
+	GList *reclist = NULL;
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+
+
+	/* execute command */
+	switch (gda_command_get_command_type (cmd)) {
+	case GDA_COMMAND_TYPE_SQL :
+	case GDA_COMMAND_TYPE_TABLE :
+		reclist = process_sql_commands (reclist, cnc, cmd);
+		break;
+	default :
+	}
+
+	return reclist;
 }

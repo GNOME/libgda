@@ -27,34 +27,34 @@
 
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
-					   GdaPostgresProviderClass *klass);
+					      GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_finalize   (GObject *object);
 
 static gboolean gda_postgres_provider_open_connection (GdaServerProvider *provider,
-						    GdaServerConnection *cnc,
-						    GdaQuarkList *params,
-						    const gchar *username,
-						    const gchar *password);
+						       GdaServerConnection *cnc,
+						       GdaQuarkList *params,
+						       const gchar *username,
+						       const gchar *password);
 
 static gboolean gda_postgres_provider_close_connection (GdaServerProvider *provider,
-						     GdaServerConnection *cnc);
+							GdaServerConnection *cnc);
 
 static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider,
-						  GdaServerConnection *cnc,
-						  GdaCommand *cmd,
-						  GdaParameterList *params);
+						     GdaServerConnection *cnc,
+						     GdaCommand *cmd,
+						     GdaParameterList *params);
 
 static gboolean gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
-						     GdaServerConnection *cnc,
-						     const gchar *trans_id);
+							 GdaServerConnection *cnc,
+							 const gchar *trans_id);
 
 static gboolean gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
-						     GdaServerConnection *cnc,
-						     const gchar *trans_id);
+							  GdaServerConnection *cnc,
+							  const gchar *trans_id);
 
 static gboolean gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
-						     GdaServerConnection *cnc,
-						     const gchar *trans_id);
+							    GdaServerConnection *cnc,
+							    const gchar *trans_id);
 
 static gboolean gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 						      GdaServerConnection *cnc,
@@ -65,9 +65,9 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 						GNOME_Database_Feature feature);
 
 static GdaServerRecordset *gda_postgres_provider_get_schema (GdaServerProvider *provider,
-							  GdaServerConnection *cnc,
-							  GNOME_Database_Connection_Schema schema,
-							  GdaParameterList *params);
+							     GdaServerConnection *cnc,
+							     GNOME_Database_Connection_Schema schema,
+							     GdaParameterList *params);
 
 typedef struct {
 	Oid oid;

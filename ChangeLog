@@ -1,5 +1,10 @@
 2002-02-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/odbc/gda-odbc-provider.c
+	(gda_odbc_provider_execute_command): implemented.
+
+2002-02-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/odbc/main.c:
 	* providers/odbc/gda-odbc-provider.[ch]:
 	* providers/odbc/GNOME_Database_Provider_ODBC.server.in: started port
