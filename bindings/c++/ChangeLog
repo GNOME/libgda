@@ -1,3 +1,7 @@
+2001-09-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gdaField.cpp: adapted to new GdaField API
+
 2001-09-02  Liam Girdwood <liam@novalinux.com>
 
 	* gdaRecordset.cpp (getRow, getRowAsString): new methods

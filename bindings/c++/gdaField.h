@@ -45,18 +45,15 @@ namespace gda
 		gchar getTinyint ();
 		glong getBigint ();
 		bool getBoolean ();
-		GDA_Date getDate ();
-		GDA_DbDate getDBdate ();
-		GDA_DbTime getDBtime ();
-		GDA_DbTimestamp getDBtstamp ();
+		GDate *getDate ();
+		time_t getTime ();
+		time_t getTimestamp ();
 		gdouble getDouble ();
 		glong getInteger ();
-		//      GDA_VarBinString getVarLenString();
-		//      GDA_VarBinString getFixLenString();
-		gchar *getLongVarChar ();
-		gfloat getFloat ();
+		gchar *getString ();
+		gfloat getSingle ();
 		gint getSmallInt ();
-		gulong getULongLongInt ();
+		gulong getUBigInt ();
 		guint getUSmallInt ();
 
 		//      gchar *getText();
@@ -67,7 +64,7 @@ namespace gda
 		glong definedSize ();
 		gchar *name ();
 		glong scale ();
-		GDA_ValueType type ();
+		GDA_ValueType gdaType ();
 		glong cType ();
 		glong nativeType ();
 
