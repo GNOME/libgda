@@ -210,6 +210,21 @@ gda_client_open_connection (GdaClient *client,
 
 	/* try to find provider in our hash table */
 	corba_provider = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
+	if (corba_provider) {
+		/* ping the provider object */
+		if (!bonobo_unknown_ping (corba_provider, NULL)) {
+			gpointer orig_key, orig_data;
+
+			if (g_hash_table_lookup_extended (client->priv->providers,
+							  dsn_info->provider,
+							  &orig_key, &orig_data)) {
+				free_hash_provider (orig_key, orig_data, NULL);
+			}
+
+			corba_provider = CORBA_OBJECT_NIL;
+		}
+	}
+
 	if (!corba_provider) {
 		/* not found, so load the new provider */
 		CORBA_exception_init (&ev);
