@@ -1,3 +1,7 @@
+2003-01-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda.spec.in: removed idl directory.
+
 2003-01-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 0,10.0

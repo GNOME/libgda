@@ -204,7 +204,6 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/libgda
 %config(noreplace) %{_sysconfdir}/libgda/config
 %{_bindir}/*
-%{_datadir}/idl/libgda
 %{_datadir}/libgda
 %{_libdir}/*.so.*
 %dir %{_libdir}/libgda
