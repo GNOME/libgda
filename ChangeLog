@@ -1,3 +1,8 @@
+2001-07-02  Akira TAGOH <tagoh@gnome-db.org>
+
+	* configure.in: since gettextize was not used, "sed -e ..." was
+	removed from AC_OUTPUT.
+
 2001-06-21  Bob Jones <bobjones68@yahoo.com>
 
 	* configure.in: change (again) ORACLE_LIBS and ORACLE_CFLAGS. It
@@ -95,15 +100,15 @@
 	* libgda.spec.in: removed provider's libraries, which are
 	not installed anymore as part of the packages
 
-2001-04-25  Carlos Perelló Marín <carlos@gnome-db.org>
+2001-04-25  Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
 	* Makefile.am: Disabled the report build.
 
-2001-04-02  Carlos Perelló Marín <carlos@gnome-db.org>
+2001-04-02  Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
 	* .cvsignore: Shhhh!!!
 
-2001-03-28  Reinhard Müller  <reinhard.mueller@bytewise.at>
+2001-03-28  Reinhard M)Büller  <reinhard.mueller@bytewise.at>
 
 	* include gtk/gtksignal.h only when gtk is used.
 	* added new parameter to g_type_register_static
@@ -115,15 +120,15 @@
 	* replaced all gtk/gtk.h with gtkobject.h, since it's the only
 	file needed. Now, should compile much faster
 
-2001-02-22  Carlos Perelló Marín <carlos@gnome-db.org>
+2001-02-22  Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
 	* libgda.spec.in: Updated to reflect the .oafinfo --> .oaf change
 
-2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
+2001-02-18  Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
 	* AUTHORS: Updated my email.
 
-2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
+2001-02-18  Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
 	* configure.in: Added a version check for GOB, I don't know
 	  if we must have the 1.0.5 version, perhaps an old one could
@@ -147,21 +152,21 @@
 
 	* libgda.spec.in: moved gda-run from libgda-devel to libgda
 
-2001-02-06	Carlos Perelló Marín <carlos@gnome-db.org>
+2001-02-06	Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
 	* .cvsignore, Makefile.am: Updated to the new xml-i18n-tools
 
-2001-01-22	Carlos Perelló Marín <carlos@gnome-db.org>
+2001-01-22	Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
 	* .cvsignore: I forget it!!
 
-2001-01-22      Carlos Perelló Marín <carlos@gnome-db.org>
+2001-01-22      Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
         * Added total xml-i18n-tools support, at this moment
           you will need install the xml-i18n-tools package to
           translate this module from CVS but not from tar.gz.
 
-2001-01-20      Carlos Perelló Marín <carlos@gnome-db.org>
+2001-01-20      Carlos Perell)Bó Marín <carlos@gnome-db.org>
 
         * Added partial xml-i18n-tools support
 
@@ -223,7 +228,7 @@
 	CORBA IDL methods.
 	* Cleanup IDL files
 
-2000-11-04  Reinhard Müller  <reinhard@gnue.org>
+2000-11-04  Reinhard M)Büller  <reinhard@gnue.org>
 
 	* configure.in: include gtk libraries only when needed
 
@@ -274,14 +279,14 @@
 
 	* lib/gda-client/gda-report.dtd.in: Modified a path prefix.
 
-2000-09-09	Carlos Perelló Marín <carlos@hispalinux.es>
+2000-09-09	Carlos Perell)Bó Marín <carlos@hispalinux.es>
 
 	* integrated the gda-report.dtd with autoconf (but it
 	  does not work as well as it should.
 
 	* updated to the gda-report.[ch]
  
-2000-09-03	Carlos Perelló Marín <carlos@hispalinux.es>
+2000-09-03	Carlos Perell)Bó Marín <carlos@hispalinux.es>
 
 	* updated the gda-report.[ch] for the new DTD
 

@@ -737,4 +737,4 @@ doc/C/reference/Makefile
 doc/C/reference/libgda-common/Makefile
 doc/C/reference/libgda-client/Makefile
 doc/pt_BR/Makefile
-stamp.h],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
+stamp.h])
