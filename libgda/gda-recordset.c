@@ -125,6 +125,8 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 			return NULL;
 		}
 
+		CORBA_exception_free (&ev);
+
 		if (row_data) {
 			GList *value_list = NULL;
 
@@ -142,6 +144,11 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 
 			gda_row_free (row_data);
 			g_list_free (value_list);
+
+			/* move to next row */
+			CORBA_exception_init (&ev);
+			GNOME_Database_Recordset_moveNext (recset->priv->corba_recset, &ev);
+			CORBA_exception_free (&ev);
 		}
 	}
 

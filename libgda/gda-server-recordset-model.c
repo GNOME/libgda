@@ -250,6 +250,7 @@ gda_server_recordset_model_set_field_name (GdaServerRecordsetModel *recset,
 
 	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
 
+	gda_data_model_set_column_title (recset->priv->model, col, name);
 	fa = gda_row_attributes_get_field (recset->priv->row_attrs, col);
 	if (fa != NULL)
 		gda_field_attributes_set_name (fa, name);
