@@ -1,2 +1,4 @@
 Makefile
 Makefile.in
+GNOME_Database_Provider_Default.server
+gda-default-srv

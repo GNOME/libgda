@@ -1,3 +1,8 @@
+2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda-default-provider.[ch]:
+	* gda-default.h, main.c: Started the implementation for GNOME 2
+
 2001-11-03  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* sqlite/lemon.c: Applied the patch from Akira TAGOH
