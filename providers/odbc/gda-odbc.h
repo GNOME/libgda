@@ -26,18 +26,24 @@
 #  define __gda_odbc_h__
 
 #if defined(HAVE_CONFIG_H)
+#  include <config.h>
 #endif
 
 #include <glib/gmacros.h>
+#include <glib-object.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-server-provider.h>
 #include <sql.h>
 #include <sqlext.h>
+#include <sqlucode.h>
 #include "gda-odbc-provider.h"
 
 #define GDA_ODBC_PROVIDER_ID "GDA ODBC Provider"
 
 G_BEGIN_DECLS
+
+void gda_odbc_emit_error ( GdaConnection *cnc, SQLHANDLE env, SQLHANDLE con, SQLHANDLE stmt );
+GdaValueType odbc_to_gda_type ( int odbc_type );
 
 G_END_DECLS
 

@@ -22,32 +22,62 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+#include <stdlib.h>
+#include <string.h>
+#include <libgda/gda-data-model-array.h>
 #include "gda-odbc.h"
+#include "gda-odbc-provider.h"
 
-#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
-#define OBJECT_DATA_ODBC_HANDLE "GDA_ODBC_ODBCHandle"
-
-typedef struct {
-	SQLHENV henv;
-        SQLHDBC hdbc;
-} GdaOdbcConnectionPrivate;
 
 static void gda_odbc_provider_class_init (GdaOdbcProviderClass *klass);
 static void gda_odbc_provider_init       (GdaOdbcProvider *provider,
 					  GdaOdbcProviderClass *klass);
 static void gda_odbc_provider_finalize   (GObject *object);
 
+
+static const gchar *gda_odbc_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_odbc_provider_open_connection (GdaServerProvider *provider,
-						   GdaConnection *cnc,
-						   GdaQuarkList *params,
-						   const gchar *username,
-						   const gchar *password);
+						       GdaConnection *cnc,
+						       GdaQuarkList *params,
+						       const gchar *username,
+						       const gchar *password);
+
 static gboolean gda_odbc_provider_close_connection (GdaServerProvider *provider,
-						    GdaConnection *cnc);
+							GdaConnection *cnc);
+static const gchar *gda_odbc_provider_get_server_version (GdaServerProvider *provider,
+							      GdaConnection *cnc);
+static const gchar *gda_odbc_provider_get_database (GdaServerProvider *provider,
+							GdaConnection *cnc);
+static gboolean gda_odbc_provider_change_database (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       const gchar *name);
 static GList *gda_odbc_provider_execute_command (GdaServerProvider *provider,
-						 GdaConnection *cnc,
-						 GdaCommand *cmd,
-						 GdaParameterList *params);
+						     GdaConnection *cnc,
+						     GdaCommand *cmd,
+						     GdaParameterList *params);
+
+static gboolean gda_odbc_provider_begin_transaction (GdaServerProvider *provider,
+							 GdaConnection *cnc,
+							 GdaTransaction *xaction);
+
+static gboolean gda_odbc_provider_commit_transaction (GdaServerProvider *provider,
+							  GdaConnection *cnc,
+							  GdaTransaction *xaction);
+
+static gboolean gda_odbc_provider_rollback_transaction (GdaServerProvider *provider,
+							    GdaConnection *cnc,
+							    GdaTransaction *xaction);
+
+static gboolean gda_odbc_provider_supports (GdaServerProvider *provider,
+						GdaConnection *cnc,
+						GdaConnectionFeature feature);
+
+static GdaDataModel *gda_odbc_provider_get_schema (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       GdaConnectionSchema schema,
+						       GdaParameterList *params);
+
 
 static GObjectClass *parent_class = NULL;
 
@@ -64,9 +94,18 @@ gda_odbc_provider_class_init (GdaOdbcProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_odbc_provider_finalize;
+	provider_class->get_version = gda_odbc_provider_get_version;
 	provider_class->open_connection = gda_odbc_provider_open_connection;
 	provider_class->close_connection = gda_odbc_provider_close_connection;
+	provider_class->get_server_version = gda_odbc_provider_get_server_version;
+	provider_class->get_database = gda_odbc_provider_get_database;
+	provider_class->change_database = gda_odbc_provider_change_database;
 	provider_class->execute_command = gda_odbc_provider_execute_command;
+	provider_class->begin_transaction = gda_odbc_provider_begin_transaction;
+	provider_class->commit_transaction = gda_odbc_provider_commit_transaction;
+	provider_class->rollback_transaction = gda_odbc_provider_rollback_transaction;
+	provider_class->supports = gda_odbc_provider_supports;
+	provider_class->get_schema = gda_odbc_provider_get_schema;
 }
 
 static void
@@ -124,7 +163,7 @@ gda_odbc_provider_open_connection (GdaServerProvider *provider,
 				   const gchar *username,
 				   const gchar *password)
 {
-	GdaOdbcConnectionPrivate *priv_data;
+	GdaOdbcConnectionData *priv_data;
 	const gchar *odbc_string;
 	SQLRETURN rc;
 
@@ -133,18 +172,24 @@ gda_odbc_provider_open_connection (GdaServerProvider *provider,
 
 	odbc_string = gda_quark_list_find (params, "STRING");
 
-	/* allocate needed structures & handles */
-	priv_data = g_new0 (GdaOdbcConnectionPrivate, 1);
+	/* allocate needed structures & handles 
+	 * the use of SQLAllocEnv will cause ODBC 2 operation
+	 * we will see if thats ok, and maybe change to use ODBC 3 if
+	 * needed 
+	 */
+	priv_data = g_new0 (GdaOdbcConnectionData, 1);
 	rc = SQLAllocEnv (&priv_data->henv);
 	if (!SQL_SUCCEEDED (rc)) {
-		/* FIXME: error management */
+		gda_connection_add_error_string ( cnc,
+					_("Unable to SQLAllocEnv()..."));
 		g_free (priv_data);
 		return FALSE;
 	}
 
 	rc = SQLAllocConnect (priv_data->henv, &priv_data->hdbc);
 	if (!SQL_SUCCEEDED (rc)) {
-		/* FIXME: error management */
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+						SQL_NULL_HANDLE, SQL_NULL_HANDLE );
 		SQLFreeEnv (priv_data->henv);
 		g_free (priv_data);
 		return FALSE;
@@ -156,11 +201,33 @@ gda_odbc_provider_open_connection (GdaServerProvider *provider,
 			 (SQLCHAR *) username, SQL_NTS,
 			 (SQLCHAR *) password, SQL_NTS);
 	if (!SQL_SUCCEEDED (rc)) {
-		/* FIXME: error management */
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+						priv_data->hdbc, SQL_NULL_HANDLE );
 		SQLFreeConnect (priv_data->hdbc);
 		SQLFreeEnv (priv_data->henv);
 		g_free (priv_data);
 		return FALSE;
+	}
+
+	/* get a working statement handle */
+	rc = SQLAllocStmt (priv_data->hdbc, &priv_data->hstmt);
+	if (!SQL_SUCCEEDED (rc)) {
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+						SQL_NULL_HANDLE, SQL_NULL_HANDLE );
+		SQLDisconnect ( priv_data->hdbc);
+		SQLFreeConnect (priv_data->hdbc);
+		SQLFreeEnv (priv_data->henv);
+		g_free (priv_data);
+		return FALSE;
+	}
+
+	/* get version info */
+
+	rc = SQLGetInfo ( priv_data->hdbc, SQL_DRIVER_VER,
+			priv_data->version, sizeof( priv_data->version ), NULL );
+
+	if ( !SQL_SUCCEEDED( rc )) {
+		strcpy( priv_data->version, "Unable to get version" );
 	}
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE, priv_data);
@@ -173,7 +240,7 @@ static gboolean
 gda_odbc_provider_close_connection (GdaServerProvider *provider,
 				    GdaConnection *cnc)
 {
-	GdaOdbcConnectionPrivate *priv_data;
+	GdaOdbcConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -197,7 +264,13 @@ gda_odbc_provider_close_connection (GdaServerProvider *provider,
 static GList *
 process_sql_commands (GList *reclist, GdaConnection *cnc, GdaCommand *cmd)
 {
-	GdaOdbcConnectionPrivate *priv_data;
+	GdaOdbcConnectionData *priv_data;
+	GdaDataModelArray *recset;
+	GdaCommandOptions opts;
+	SQLCHAR *sql;
+	SQLSMALLINT ncols;
+	SQLRETURN rc;
+	int i;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
@@ -205,6 +278,101 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, GdaCommand *cmd)
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
         if (!priv_data)
                 return NULL;
+
+	sql = (SQLCHAR*) gda_command_get_text ( cmd );
+	opts = gda_command_get_options ( cmd );
+
+	rc = SQLExecDirect ( priv_data->hstmt, sql, SQL_NTS );
+	if ( SQL_SUCCEEDED( rc )) {
+		do
+		{
+			recset = NULL;
+			rc = SQLNumResultCols ( priv_data->hstmt, &ncols );
+			if ( SQL_SUCCEEDED( rc ) && ncols > 0 ) {
+				/* result set */
+				recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new ( ncols ));
+				for ( i = 1; i <= ncols; i ++ ) {
+					SQLCHAR name[ 256 ];
+					SQLSMALLINT nlen;
+					rc = SQLDescribeCol( priv_data->hstmt, 1,
+							name, sizeof( name ), &nlen, NULL, 
+							NULL, NULL, NULL );
+					if ( !SQL_SUCCEEDED( rc )) {
+						if ( opts & GDA_COMMAND_OPTION_IGNORE_ERRORS ) {
+							rc = SQLMoreResults( priv_data->hstmt );
+							continue;
+						}
+						gda_odbc_emit_error ( cnc, priv_data->henv,
+								priv_data->hdbc, priv_data->hstmt );
+						SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+						g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+						g_list_free (reclist);
+						return NULL;
+					}
+					if ( nlen > 0 ) {
+						gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i - 1, name );
+					}
+					else
+					{
+						char nn[ 256 ];
+
+						sprintf( nn, "expr%d", i );
+						gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i - 1, nn );
+					}
+				}
+
+				/* get rows */
+				while( SQL_SUCCEEDED(( rc = SQLFetch ( priv_data->hstmt)))) {
+					GList *value_list = NULL;
+					SQLCHAR value[ 256 ];
+					SQLINTEGER ind;
+
+					for ( i = 1; i <= ncols; i ++ ) {
+						rc = SQLGetData ( priv_data->hstmt, i, SQL_C_CHAR,
+								value, sizeof( value ), &ind );
+
+						if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+							value_list = g_list_append (value_list, gda_value_new_string ( value ));
+						}
+						else {
+							value_list = g_list_append (value_list, gda_value_new_string (""));
+						}
+					}
+
+					gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+					g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+					g_list_free (value_list);
+				}
+
+				/* close result set */
+				SQLFreeStmt ( priv_data->hstmt, SQL_CLOSE );
+			}
+			else if ( SQL_SUCCEEDED( rc )) {
+				/* no result set */
+			}
+			else {
+				if ( opts & GDA_COMMAND_OPTION_IGNORE_ERRORS ) {
+					rc = SQLMoreResults( priv_data->hstmt );
+					continue;
+				}
+				gda_odbc_emit_error ( cnc, priv_data->henv,
+							priv_data->hdbc, priv_data->hstmt );
+				SQLFreeStmt ( priv_data->hstmt, SQL_CLOSE );
+				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+				g_list_free (reclist);
+				return NULL;
+			}
+			reclist = g_list_append (reclist, recset);
+			rc = SQLMoreResults( priv_data->hstmt );
+		}
+		while( SQL_SUCCEEDED( rc ));
+	}
+	else {
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+					priv_data->hdbc, priv_data->hstmt );
+		return NULL;
+	}
 
 	return reclist;
 }
@@ -222,15 +390,1000 @@ gda_odbc_provider_execute_command (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
-
 	/* execute command */
 	switch (gda_command_get_command_type (cmd)) {
 	case GDA_COMMAND_TYPE_SQL :
-	case GDA_COMMAND_TYPE_TABLE :
 		reclist = process_sql_commands (reclist, cnc, cmd);
 		break;
+
+	/* FIXME: do these types */
+	case GDA_COMMAND_TYPE_TABLE :
+	case GDA_COMMAND_TYPE_PROCEDURE:
+	case GDA_COMMAND_TYPE_SCHEMA:
+		break;
+
 	default :
+		break;
 	}
 
 	return reclist;
+}
+
+static const gchar *
+gda_odbc_provider_get_version (GdaServerProvider *provider)
+{
+	GdaOdbcProvider *pg_prv = (GdaOdbcProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (pg_prv), NULL);
+
+	return VERSION;
+}
+
+static const gchar *
+gda_odbc_provider_get_server_version (GdaServerProvider *provider,
+							      GdaConnection *cnc)
+{
+	GdaOdbcProvider *pg_prv = (GdaOdbcProvider *) provider;
+	GdaOdbcConnectionData *priv_data;
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (pg_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		return NULL;
+	}
+
+	return priv_data -> version;
+}
+
+static const gchar *
+gda_odbc_provider_get_database (GdaServerProvider *provider,
+							GdaConnection *cnc)
+{
+	GdaOdbcProvider *pg_prv = (GdaOdbcProvider *) provider;
+	GdaOdbcConnectionData *priv_data;
+	SQLRETURN rc;
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (pg_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		return NULL;
+	}
+
+	rc = SQLGetConnectOption( priv_data->hdbc, SQL_CURRENT_QUALIFIER, priv_data->db );
+
+	if ( SQL_SUCCEEDED( rc )) {
+		return priv_data->db;
+	}
+	else {
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+					priv_data->hdbc, NULL );
+		return NULL;
+	}
+}
+
+static gboolean 
+gda_odbc_provider_change_database (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       const gchar *name)
+{
+	GdaOdbcProvider *prv = (GdaOdbcProvider *) provider;
+	GdaOdbcConnectionData *priv_data;
+	SQLRETURN rc;
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		return FALSE;
+	}
+
+	rc = SQLSetConnectOption( priv_data->hdbc, SQL_CURRENT_QUALIFIER, (UDWORD) name );
+
+	if ( SQL_SUCCEEDED( rc )) {
+		return TRUE;
+	}
+	else {
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+					priv_data->hdbc, NULL );
+		return FALSE;
+	}
+}
+
+static gboolean 
+gda_odbc_provider_begin_transaction (GdaServerProvider *provider,
+							 GdaConnection *cnc,
+							 GdaTransaction *xaction)
+{
+	GdaOdbcProvider *prv = (GdaOdbcProvider *) provider;
+	GdaOdbcConnectionData *priv_data;
+	SQLRETURN rc;
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		return FALSE;
+	}
+
+	rc = SQLSetConnectOption( priv_data->hdbc, SQL_AUTOCOMMIT, 
+		       SQL_AUTOCOMMIT_OFF );
+
+	if ( SQL_SUCCEEDED( rc )) {
+		return TRUE;
+	}
+	else {
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+					priv_data->hdbc, NULL );
+		return FALSE;
+	}
+}
+
+static gboolean 
+gda_odbc_provider_commit_transaction (GdaServerProvider *provider,
+							  GdaConnection *cnc,
+							  GdaTransaction *xaction)
+{
+	GdaOdbcProvider *prv = (GdaOdbcProvider *) provider;
+	GdaOdbcConnectionData *priv_data;
+	SQLRETURN rc;
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		return FALSE;
+	}
+
+	rc = SQLTransact( priv_data->henv, priv_data->hdbc, SQL_COMMIT );
+
+	if ( SQL_SUCCEEDED( rc )) {
+		return TRUE;
+	}
+	else {
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+					priv_data->hdbc, NULL );
+		return FALSE;
+	}
+}
+
+static gboolean 
+gda_odbc_provider_rollback_transaction (GdaServerProvider *provider,
+							    GdaConnection *cnc,
+							    GdaTransaction *xaction)
+{
+	GdaOdbcProvider *prv = (GdaOdbcProvider *) provider;
+	GdaOdbcConnectionData *priv_data;
+	SQLRETURN rc;
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		return FALSE;
+	}
+
+	rc = SQLTransact( priv_data->henv, priv_data->hdbc, SQL_ROLLBACK );
+
+	if ( SQL_SUCCEEDED( rc )) {
+		return TRUE;
+	}
+	else {
+		gda_odbc_emit_error ( cnc, priv_data->henv,
+					priv_data->hdbc, NULL );
+		return FALSE;
+	}
+}
+
+static gboolean 
+gda_odbc_provider_supports (GdaServerProvider *provider,
+						GdaConnection *cnc,
+						GdaConnectionFeature feature)
+{
+	GdaOdbcConnectionData *priv_data;
+	SQLRETURN rc;
+	SQLINTEGER ival;
+	SQLSMALLINT sval;
+	SQLCHAR yn[ 2 ];
+
+	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+        if (!priv_data) 
+                return FALSE;
+
+	switch (feature) {
+	case GDA_CONNECTION_FEATURE_INDEXES :
+		rc = SQLGetInfo( priv_data -> hdbc, SQL_DDL_INDEX, 
+				&ival, sizeof( ival ), NULL );
+
+		if ( SQL_SUCCEEDED( rc )) {
+			if ( ival & SQL_DI_CREATE_INDEX ) {
+				return TRUE;
+			}
+			else {
+				return FALSE;
+			}
+		}
+		else {
+			return FALSE;
+		}
+		break;
+
+	case GDA_CONNECTION_FEATURE_PROCEDURES :
+		rc = SQLGetInfo( priv_data -> hdbc, SQL_PROCEDURES, 
+				yn, sizeof( yn ), NULL );
+
+		if ( SQL_SUCCEEDED( rc )) {
+			if ( yn[ 0 ] == 'Y' ) {
+				return TRUE;
+			}
+			else {
+				return FALSE;
+			}
+		}
+		else {
+			return FALSE;
+		}
+		break;
+
+	case GDA_CONNECTION_FEATURE_SQL :
+		return TRUE;
+
+	case GDA_CONNECTION_FEATURE_TRANSACTIONS :
+		rc = SQLGetInfo( priv_data -> hdbc, SQL_TXN_CAPABLE, 
+				&sval, sizeof( sval ), NULL );
+
+		if ( SQL_SUCCEEDED( rc )) {
+			if ( sval != 0 ) {
+				return TRUE;
+			}
+			else {
+				return FALSE;
+			}
+		}
+		else {
+			return FALSE;
+		}
+		break;
+
+	case GDA_CONNECTION_FEATURE_VIEWS :
+		rc = SQLGetInfo( priv_data -> hdbc, SQL_CREATE_VIEW, 
+				&ival, sizeof( ival ), NULL );
+
+		if ( SQL_SUCCEEDED( rc )) {
+			if ( ival ) {
+				return TRUE;
+			}
+			else {
+				return FALSE;
+			}
+		}
+		else {
+			return FALSE;
+		}
+		break;
+
+	/* we don't do these, but mergent crashes if we don't say this */
+	case GDA_CONNECTION_FEATURE_SEQUENCES :
+		return TRUE;
+		break;
+
+	default :
+		return FALSE;
+	}
+}
+
+static SQLRETURN 
+get_databases_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
+{
+	SQLRETURN rc;
+
+	while( SQL_SUCCEEDED(( rc = SQLFetch ( priv_data->hstmt)))) {
+		GList *value_list = NULL;
+		SQLCHAR value[ 256 ];
+		SQLINTEGER ind;
+
+		/* name */
+		rc = SQLGetData ( priv_data->hstmt, 1, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	return rc;
+}
+
+static GdaDataModel *
+get_odbc_databases (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+	GdaOdbcConnectionData *priv_data;
+	GdaParameter *par;
+	SQLRETURN rc;
+	const gchar *tblname;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+
+	/* fill the recordset */
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	/* any parameters */
+	if ( params && ( par = gda_parameter_list_find (params, "name")) ) {
+		tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	}
+	else {
+		tblname = NULL;
+	}
+		
+	/* generate the results */
+	rc = SQLTables ( priv_data->hstmt, "%", SQL_NTS,
+						NULL, 0,
+						NULL, 0,
+						NULL, 0 );
+
+	if ( SQL_SUCCEEDED( rc ))
+	{
+		rc = get_databases_rs( priv_data, recset );
+
+		if ( rc != SQL_NO_DATA )
+		{
+			gda_odbc_emit_error ( cnc, priv_data->henv,
+						priv_data->hdbc, priv_data->hstmt );
+			SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+			return NULL;
+		}
+	}
+
+	SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+
+	return GDA_DATA_MODEL (recset);
+}
+
+static GdaDataModel *
+get_odbc_indexes (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaOdbcConnectionData *priv_data;
+	GdaDataModelArray *recset;
+
+	/* FIXME: make this do something useful */
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (params != NULL, NULL);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+
+	/* FIXME: Find if this is correct, it was copied from the PG provider */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+
+	return GDA_DATA_MODEL (recset);
+}
+
+static SQLRETURN 
+get_columns_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
+{
+	SQLRETURN rc;
+
+	while( SQL_SUCCEEDED(( rc = SQLFetch ( priv_data->hstmt)))) {
+		GList *value_list = NULL;
+		SQLCHAR value[ 256 ];
+		SQLINTEGER ind, ival;
+
+		/* name */
+		rc = SQLGetData ( priv_data->hstmt, 4, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		/* type */	
+		rc = SQLGetData ( priv_data->hstmt, 6, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		/* size */
+		rc = SQLGetData ( priv_data->hstmt, 7, SQL_C_LONG,
+					&ival, sizeof( ival ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_integer ( ival ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_integer ( 0 ));
+		}
+
+		/* scale */
+		rc = SQLGetData ( priv_data->hstmt, 9, SQL_C_LONG,
+					&ival, sizeof( ival ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_integer ( ival ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_integer ( 0 ));
+		}
+
+		/* not nullable */
+		rc = SQLGetData ( priv_data->hstmt, 11, SQL_C_LONG,
+					&ival, sizeof( ival ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_boolean ( ival != 0 ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_boolean ( FALSE ));
+		}
+
+		/* FIXME: find just what these three fields should be and make it happen */
+
+		/* primary key */
+		value_list = g_list_append (value_list, gda_value_new_boolean ( FALSE ));
+
+		/* unique index */
+		value_list = g_list_append (value_list, gda_value_new_boolean ( FALSE ));
+
+		/* references */
+		value_list = g_list_append (value_list, gda_value_new_string ( "" ));
+
+		/* default value */
+		rc = SQLGetData ( priv_data->hstmt, 13, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	return rc;
+}
+
+static GdaDataModel *
+get_odbc_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaOdbcConnectionData *priv_data;
+	GdaDataModelArray *recset;
+	GdaParameter *par;
+	const gchar *tblname;
+	SQLRETURN rc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (params != NULL, NULL);
+
+	par = gda_parameter_list_find (params, "name");
+	g_return_val_if_fail (par != NULL, NULL);
+
+	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	g_return_val_if_fail (tblname != NULL, NULL);
+	
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (9));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Field name"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Data type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Size"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Scale"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Not null?"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("Primary key?"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 6, _("Unique index?"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 7, _("References"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 8, _("Default value"));
+
+	/* generate the results */
+	rc = SQLColumns ( priv_data->hstmt, NULL, 0,
+						NULL, 0,
+						(SQLCHAR*) tblname, SQL_NTS,
+						NULL, 0  );
+
+	if ( SQL_SUCCEEDED( rc ))
+	{
+		rc = get_columns_rs( priv_data, recset );
+
+		if ( rc != SQL_NO_DATA )
+		{
+			gda_odbc_emit_error ( cnc, priv_data->henv,
+						priv_data->hdbc, priv_data->hstmt );
+			SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+			return NULL;
+		}
+	}
+
+	SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+
+	return GDA_DATA_MODEL (recset);
+}
+
+static SQLRETURN 
+get_procedure_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
+{
+	SQLRETURN rc;
+
+	/* FIXME: try and get the number and types of parameters */
+
+	while( SQL_SUCCEEDED(( rc = SQLFetch ( priv_data->hstmt)))) {
+		GList *value_list = NULL;
+		SQLCHAR value[ 256 ];
+		SQLINTEGER ind;
+
+		/* Procedure */
+		rc = SQLGetData ( priv_data->hstmt, 3, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		/* id */
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+	
+		/* owner */
+		rc = SQLGetData ( priv_data->hstmt, 2, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		/* Comments */
+		rc = SQLGetData ( priv_data->hstmt, 7, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		/* Return type */
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+
+		/* Nb args */
+		value_list = g_list_append (value_list, gda_value_new_integer ( 0 ));
+
+		/* Args types */
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+
+		/* Definition */
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	return rc;
+}
+
+static GdaDataModel *
+get_odbc_procedures (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+	GdaOdbcConnectionData *priv_data;
+	GdaParameter *par;
+	const gchar *procname;
+	SQLRETURN rc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (8));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Procedure"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Id"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Return type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("Nb args"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 6, _("Args types"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 7, _("Definition"));
+
+	/* fill the recordset */
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	/* any parameters */
+	if ( params && ( par = gda_parameter_list_find (params, "name")) ) {
+		procname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	}
+	else {
+		procname = NULL;
+	}
+		
+	/* generate the results */
+	rc = SQLProcedures ( priv_data->hstmt, NULL, 0,
+						NULL, 0,
+						(SQLCHAR*) procname, SQL_NTS );
+
+	if ( SQL_SUCCEEDED( rc ))
+	{
+		rc = get_procedure_rs( priv_data, recset );
+
+		if ( rc != SQL_NO_DATA )
+		{
+			gda_odbc_emit_error ( cnc, priv_data->henv,
+						priv_data->hdbc, priv_data->hstmt );
+			SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+			return NULL;
+		}
+	}
+
+	SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+
+	return GDA_DATA_MODEL (recset);
+}
+
+static SQLRETURN 
+get_tables_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
+{
+	SQLRETURN rc;
+
+	while( SQL_SUCCEEDED(( rc = SQLFetch ( priv_data->hstmt)))) {
+		GList *value_list = NULL;
+		SQLCHAR value[ 256 ];
+		SQLINTEGER ind;
+
+		/* name */
+		rc = SQLGetData ( priv_data->hstmt, 3, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+	
+		/* owner */
+		rc = SQLGetData ( priv_data->hstmt, 2, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		/* remarks */
+		rc = SQLGetData ( priv_data->hstmt, 5, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	return rc;
+}
+
+static GdaDataModel *
+get_odbc_tables (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+	GdaOdbcConnectionData *priv_data;
+	GdaParameter *par;
+	SQLRETURN rc;
+	const gchar *tblname;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Table"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Description"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Definition"));
+
+	/* fill the recordset */
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	/* any parameters */
+	if ( params && ( par = gda_parameter_list_find (params, "name")) ) {
+		tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	}
+	else {
+		tblname = NULL;
+	}
+		
+	/* generate the results */
+	rc = SQLTables ( priv_data->hstmt, NULL, 0,
+						NULL, 0,
+						(SQLCHAR*) tblname, SQL_NTS,
+						(SQLCHAR*) "TABLE", SQL_NTS );
+
+	if ( SQL_SUCCEEDED( rc ))
+	{
+		rc = get_tables_rs( priv_data, recset );
+
+		if ( rc != SQL_NO_DATA )
+		{
+			gda_odbc_emit_error ( cnc, priv_data->henv,
+						priv_data->hdbc, priv_data->hstmt );
+			SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+			return NULL;
+		}
+	}
+
+	SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+
+	return GDA_DATA_MODEL (recset);
+}
+
+static SQLRETURN 
+get_types_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset, const gchar *typname )
+{
+	SQLRETURN rc;
+
+	while( SQL_SUCCEEDED(( rc = SQLFetch ( priv_data->hstmt)))) {
+		GList *value_list = NULL;
+		SQLCHAR value[ 256 ];
+		SQLINTEGER ind, ival;
+
+		/* name */
+		rc = SQLGetData ( priv_data->hstmt, 1, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		/* filter out unwanted types */
+		if ( typname && strcmp( typname, value ))
+		{
+			continue;
+		}
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+		/* Owner */
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+		/* Comment */
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+
+		/* GDA Type */
+		rc = SQLGetData ( priv_data->hstmt, 1, SQL_C_LONG,
+					&ival, sizeof( ival ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_type ( odbc_to_gda_type( ival )));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_type ( GDA_VALUE_TYPE_UNKNOWN ));
+		}
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	return rc;
+}
+
+static GdaDataModel *
+get_odbc_types (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+	GdaOdbcConnectionData *priv_data;
+	GdaParameter *par;
+	const gchar *typname;
+	SQLRETURN rc;
+
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* any parameters */
+	if ( params && ( par = gda_parameter_list_find (params, "name")) ) {
+		typname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	}
+	else {
+		typname = NULL;
+	}
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
+
+	/* fill the recordset */
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	/* generate the results */
+	rc = SQLGetTypeInfo ( priv_data->hstmt, SQL_ALL_TYPES );
+
+	if ( SQL_SUCCEEDED( rc ))
+	{
+		rc = get_types_rs( priv_data, recset, typname );
+
+		if ( rc != SQL_NO_DATA )
+		{
+			gda_odbc_emit_error ( cnc, priv_data->henv,
+						priv_data->hdbc, priv_data->hstmt );
+			SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+			return NULL;
+		}
+	}
+
+	SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+
+	return GDA_DATA_MODEL (recset);
+}
+
+static GdaDataModel *
+get_odbc_views (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+	GdaOdbcConnectionData *priv_data;
+	GdaParameter *par;
+	SQLRETURN rc;
+	const gchar *tblname;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Views"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Description"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Definition"));
+
+	/* fill the recordset */
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	/* any parameters */
+	if ( params && ( par = gda_parameter_list_find (params, "name")) ) {
+		tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	}
+	else {
+		tblname = NULL;
+	}
+
+	/* generate the results */
+	rc = SQLTables ( priv_data->hstmt, NULL, 0,
+						NULL, 0,
+						(SQLCHAR*) tblname, SQL_NTS,
+						(SQLCHAR*) "VIEW", SQL_NTS );
+
+	if ( SQL_SUCCEEDED( rc ))
+	{
+		rc = get_tables_rs( priv_data, recset );
+
+		if ( rc != SQL_NO_DATA )
+		{
+			gda_odbc_emit_error ( cnc, priv_data->henv,
+						priv_data->hdbc, priv_data->hstmt );
+			SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+			return NULL;
+		}
+	}
+
+	SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+
+	return GDA_DATA_MODEL (recset);
+}
+
+/* We shouldn't need this, but mergent doesn't seem to work otherwise */
+
+static GdaDataModel *
+get_odbc_sequence (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+	GdaOdbcConnectionData *priv_data;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+	gda_data_model_set_column_title ( GDA_DATA_MODEL (recset), 0, _("Sequence"));
+	gda_data_model_set_column_title ( GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title ( GDA_DATA_MODEL (recset), 2, _("Comments"));
+        gda_data_model_set_column_title ( GDA_DATA_MODEL (recset), 3, _("Definition"));
+
+	/* fill the recordset */
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	return GDA_DATA_MODEL (recset);
+}
+
+static GdaDataModel *
+gda_odbc_provider_get_schema (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       GdaConnectionSchema schema,
+						       GdaParameterList *params)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	switch (schema) {
+	case GDA_CONNECTION_SCHEMA_DATABASES:
+		return get_odbc_databases (cnc, params);
+	case GDA_CONNECTION_SCHEMA_INDEXES:
+		return get_odbc_indexes (cnc, params);
+	case GDA_CONNECTION_SCHEMA_FIELDS:
+		return get_odbc_fields_metadata (cnc, params);
+	case GDA_CONNECTION_SCHEMA_PROCEDURES:
+		return get_odbc_procedures (cnc, params);
+	case GDA_CONNECTION_SCHEMA_TABLES:
+		return get_odbc_tables (cnc, params);
+	case GDA_CONNECTION_SCHEMA_TYPES:
+		return get_odbc_types (cnc, params);
+	case GDA_CONNECTION_SCHEMA_VIEWS:
+		return get_odbc_views (cnc, params);
+	case GDA_CONNECTION_SCHEMA_SEQUENCES:
+		return get_odbc_sequence (cnc, params);
+	default:
+		return NULL;
+	}
 }

@@ -26,6 +26,8 @@
 #  define __gda_odbc_provider_h__
 
 #include <libgda/gda-server-provider.h>
+#include <sql.h>
+#include <sqlext.h>
 
 G_BEGIN_DECLS
 
@@ -34,6 +36,9 @@ G_BEGIN_DECLS
 #define GDA_ODBC_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_ODBC_PROVIDER, GdaOdbcProviderClass))
 #define GDA_IS_ODBC_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_ODBC_PROVIDER))
 #define GDA_IS_ODBC_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_ODBC_PROVIDER))
+
+#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
+#define OBJECT_DATA_ODBC_HANDLE "GDA_ODBC_ODBCHandle"
 
 typedef struct _GdaOdbcProvider      GdaOdbcProvider;
 typedef struct _GdaOdbcProviderClass GdaOdbcProviderClass;
@@ -45,6 +50,18 @@ struct _GdaOdbcProvider {
 struct _GdaOdbcProviderClass {
 	GdaServerProviderClass parent_class;
 };
+
+/* 
+ * Connection data
+ */
+
+typedef struct {
+	SQLHANDLE henv;
+        SQLHANDLE hdbc;
+	SQLHANDLE hstmt;		/* used for metadata calls only */
+	SQLCHAR version[ 128 ];
+	SQLCHAR db[ 256 ];
+} GdaOdbcConnectionData;
 
 GType              gda_odbc_provider_get_type (void);
 GdaServerProvider *gda_odbc_provider_new (void);
