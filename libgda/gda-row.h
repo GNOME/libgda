@@ -33,6 +33,8 @@ typedef struct _GdaRow GdaRow;
 GdaRow      *gda_row_new (gint count);
 GdaRow      *gda_row_new_from_list (const GList *values);
 void         gda_row_free (GdaRow *row);
+gint         gda_row_get_number (GdaRow *row);
+void         gda_row_set_number (GdaRow *row, gint number);
 const gchar *gda_row_get_id (GdaRow *row);
 void         gda_row_set_id (GdaRow *row, const gchar *id);
 GdaValue    *gda_row_get_value (GdaRow *row, gint num);

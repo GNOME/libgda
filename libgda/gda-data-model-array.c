@@ -121,7 +121,8 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 	row = gda_row_new_from_list (values);
 	if (row) {
 		g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
-		gda_data_model_changed (model);
+		gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
+		gda_data_model_row_inserted (model, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len);
 	}
 
 	return (const GdaRow *) row;
@@ -134,7 +135,7 @@ gda_data_model_array_remove_row (GdaDataModel *model, const GdaRow *row)
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	if (g_ptr_array_remove (GDA_DATA_MODEL_ARRAY (model)->priv->rows, (gpointer) row)) {
-		gda_data_model_changed (model);
+		gda_data_model_row_removed (model, gda_row_get_number (row));
 		return TRUE;
 	}
 

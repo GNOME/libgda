@@ -1,4 +1,26 @@
+2002-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-row.[ch] (gda_row_get_number, gda_row_set_number): new
+	functions.
+
+	* libgda/gda-data-model.[ch]: added "row_inserted", "row_removed" and
+	"row_updated" signals.
+	(gda_data_model_row_inserted):
+	(gda_data_model_row_updated):
+	(gda_data_model_row_removed): new functions to emit the new signals.
+
+	* libgda/gda-data-model-array.c (gda_data_model_array_append_row,
+	gda_data_model_remove_row): emit more fine-grained modification
+	signals.
+
+	* libgda/gda-data-model-list.c (gda_data_model_list_init): connect to
+	signals on the internal data model.
+	(proxy_changed_cb, proxy_row_inserted_cb, proxy_row_updated_cb,
+	proxy_row_removed_cb): callbacks for proxying the internal data
+	model's signals.
+
 2002-12-18  Vivien Malerba <malerba@gnome-db.org>
+
 	* providers/postgres/libmain.c: added a connection parameter to specify a "search_path" (which is a list
 	of Postgres's 7.3 schemas separated by a comma where database objects can be found). This parameter
 	has no effect when connecting to postgres versions prior to 7.3.

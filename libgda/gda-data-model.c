@@ -46,6 +46,9 @@ static void gda_data_model_finalize   (GObject *object);
 
 enum {
 	CHANGED,
+	ROW_INSERTED,
+	ROW_UPDATED,
+	ROW_REMOVED,
 	BEGIN_EDIT,
 	CANCEL_EDIT,
 	END_EDIT,
@@ -74,6 +77,30 @@ gda_data_model_class_init (GdaDataModelClass *klass)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
+	gda_data_model_signals[ROW_INSERTED] =
+		g_signal_new ("row_inserted",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, row_inserted),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__INT,
+                              G_TYPE_NONE, 1, G_TYPE_INT);
+	gda_data_model_signals[ROW_UPDATED] =
+		g_signal_new ("row_updated",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, row_updated),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__INT,
+                              G_TYPE_NONE, 1, G_TYPE_INT);
+	gda_data_model_signals[ROW_REMOVED] =
+		g_signal_new ("row_removed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, row_removed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__INT,
+                              G_TYPE_NONE, 1, G_TYPE_INT);
 	gda_data_model_signals[BEGIN_EDIT] =
 		g_signal_new ("begin_edit",
                               G_TYPE_FROM_CLASS (object_class),
@@ -200,6 +227,54 @@ gda_data_model_changed (GdaDataModel *model)
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[CHANGED],
 			       0);
+	}
+}
+
+/**
+ * gda_data_model_row_inserted
+ * model: a #GdaDataModel object.
+ */
+void
+gda_data_model_row_inserted (GdaDataModel *model, gint row)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	if (model->priv->notify_changes) {
+		g_signal_emit (G_OBJECT (model),
+			       gda_data_model_signals[ROW_INSERTED],
+			       0, row);
+	}
+}
+
+/**
+ * gda_data_model_row_updated
+ * model: a #GdaDataModel object.
+ */
+void
+gda_data_model_row_updated (GdaDataModel *model, gint row)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	if (model->priv->notify_changes) {
+		g_signal_emit (G_OBJECT (model),
+			       gda_data_model_signals[ROW_UPDATED],
+			       0, row);
+	}
+}
+
+/**
+ * gda_data_model_row_removed
+ * model: a #GdaDataModel object.
+ */
+void
+gda_data_model_row_removed (GdaDataModel *model, gint row)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	if (model->priv->notify_changes) {
+		g_signal_emit (G_OBJECT (model),
+			       gda_data_model_signals[ROW_REMOVED],
+			       0, row);
 	}
 }
 

@@ -52,6 +52,9 @@ struct _GdaDataModelClass {
 
 	/* signals */
 	void (* changed) (GdaDataModel *model);
+	void (* row_inserted) (GdaDataModel *model, gint row);
+	void (* row_updated) (GdaDataModel *model, gint row);
+	void (* row_removed) (GdaDataModel *model, gint row);
 
 	void (* begin_edit) (GdaDataModel *model);
 	void (* cancel_edit) (GdaDataModel *model);
@@ -73,6 +76,9 @@ struct _GdaDataModelClass {
 GType               gda_data_model_get_type (void);
 
 void                gda_data_model_changed (GdaDataModel *model);
+void                gda_data_model_row_inserted (GdaDataModel *model, gint row);
+void                gda_data_model_row_updated (GdaDataModel *model, gint row);
+void                gda_data_model_row_removed (GdaDataModel *model, gint row);
 void                gda_data_model_freeze (GdaDataModel *model);
 void                gda_data_model_thaw (GdaDataModel *model);
 

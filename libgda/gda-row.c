@@ -25,6 +25,7 @@
 #include <libgda/gda-row.h>
 
 struct _GdaRow {
+	gint number;
 	gchar *id;
 	GdaValue *fields;
 	gint nfields;
@@ -46,6 +47,7 @@ gda_row_new (gint count)
 	g_return_val_if_fail (count >= 0, NULL);
 
 	row = g_new0 (GdaRow, 1);
+	row->number = -1;
 	row->id = NULL;
 	row->nfields = count;
 	row->fields = g_new0 (GdaValue, count);
@@ -99,6 +101,36 @@ gda_row_free (GdaRow *row)
 		gda_value_set_null (&row->fields [i]);
 	g_free (row->fields);
 	g_free (row);
+}
+
+/**
+ * gda_row_get_number
+ * @row: a #GdaRow.
+ *
+ * Get the number of the given row, that is, its position in its containing
+ * data model.
+ *
+ * Returns: the row number, or -1 if there was an error.
+ */
+gint
+gda_row_get_number (GdaRow *row)
+{
+	g_return_val_if_fail (row != NULL, -1);
+	return row->number;
+}
+
+/**
+ * gda_row_set_number
+ * @row: a #GdaRow.
+ * @number: the new row number.
+ *
+ * Set the row number for the given row.
+ */
+void
+gda_row_set_number (GdaRow *row, gint number)
+{
+	g_return_if_fail (row != NULL);
+	row->number = 0;
 }
 
 /**

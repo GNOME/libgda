@@ -117,11 +117,60 @@ gda_data_model_list_class_init (GdaDataModelListClass *klass)
 }
 
 static void
+proxy_changed_cb (GdaDataModel *model, gpointer user_data)
+{
+	GdaDataModelList *list = (GdaDataModelList *) user_data;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (list));
+
+	gda_data_model_changed (GDA_DATA_MODEL (list));
+}
+
+static void
+proxy_row_inserted_cb (GdaDataModel *model, gint row, gpointer user_data)
+{
+	GdaDataModelList *list = (GdaDataModelList *) user_data;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (list));
+
+	gda_data_model_row_inserted (GDA_DATA_MODEL (list), row);
+}
+
+static void
+proxy_row_updated_cb (GdaDataModel *model, gint row, gpointer user_data)
+{
+	GdaDataModelList *list = (GdaDataModelList *) user_data;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (list));
+
+	gda_data_model_row_updated (GDA_DATA_MODEL (list), row);
+}
+
+static void
+proxy_row_removed_cb (GdaDataModel *model, gint row, gpointer user_data)
+{
+	GdaDataModelList *list = (GdaDataModelList *) user_data;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (list));
+
+	gda_data_model_row_removed (GDA_DATA_MODEL (list), row);
+}
+
+static void
 gda_data_model_list_init (GdaDataModelList *list, GdaDataModelListClass *klass)
 {
 	/* allocate internal structure */
 	list->priv = g_new0 (GdaDataModelListPrivate, 1);
 	list->priv->rows = (GdaDataModelArray *) gda_data_model_array_new (1);
+
+	g_signal_connect (G_OBJECT (list->priv->rows), "changed",
+			  G_CALLBACK (proxy_changed_cb), list);
+	g_signal_connect (G_OBJECT (list->priv->rows), "row_inserted",
+			  G_CALLBACK (proxy_row_inserted_cb), list);
+	g_signal_connect (G_OBJECT (list->priv->rows), "row_updated",
+			  G_CALLBACK (proxy_row_updated_cb), list);
+	g_signal_connect (G_OBJECT (list->priv->rows), "row_removed",
+			  G_CALLBACK (proxy_row_removed_cb), list);
 }
 
 static void
