@@ -1,3 +1,8 @@
+2001-01-03	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-recordset.*: added "row_changed" signal to Gda_Recordset
+	object, because it will be needed by the new data-bound widgets
+
 2000-11-24	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* added correct license notices (LGPL) to source files
