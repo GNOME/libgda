@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-11-13 08:51-0200\n"
-"PO-Revision-Date: 2002-11-11 23:15-0300\n"
+"POT-Creation-Date: 2002-11-17 20:32-0200\n"
+"PO-Revision-Date: 2002-11-15 16:15-0300\n"
 "Last-Translator: Alexandre Folle de Menezes <afmenez@terra.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
@@ -22,14 +22,14 @@ msgid "Data source %s not found in configuration"
 msgstr "Fonte de dados %s não encontrada na configuração"
 
 #: libgda/gda-client.c:277
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find provider %s in the current setup"
-msgstr "Impossível carregar provedor %s"
+msgstr "Impossível encontrar o provedor %s na configuração atual"
 
 #: libgda/gda-client.c:304
-#, fuzzy, c-format
+#, c-format
 msgid "Provider %s does not implement entry function"
-msgstr "Provedor %s não implementa o ponto de entrada"
+msgstr "O provedor %s não implementa a função de entrada"
 
 #: libgda/gda-client.c:314
 msgid "Could not create GdaServerProvider object from plugin"
@@ -100,12 +100,12 @@ msgstr "ERRO: %s"
 #: libgda/gda-select.c:315
 #, c-format
 msgid "Could not parse SQL string '%s'"
-msgstr ""
+msgstr "Impossível analisar a string SQL '%s'"
 
 #: libgda/gda-select.c:319
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
-msgstr ""
+msgstr "O comando SQL não é um SELECT (é '%s'"
 
 #: libgda/gda-table.c:234
 #, c-format
@@ -115,7 +115,7 @@ msgstr "Já existe um campo chamado %s"
 #: libgda/gda-util.c:144
 #, c-format
 msgid "Could not parse SQL command '%s'"
-msgstr ""
+msgstr "Impossível analisar o comando SQL '%s'"
 
 #: libgda/gda-util.c:177
 #, c-format
@@ -153,11 +153,11 @@ msgstr "Arquivo de banco de dados XML '%s' inválido"
 #: libgda/gda-xml-database.c:407
 #, c-format
 msgid "Could not create a XML node from table %s"
-msgstr ""
+msgstr "Impossível criar um nó XML a partir da tabela %s"
 
 #: libgda/gda-xml-database.c:425
 msgid "Could not dump XML file to memory"
-msgstr ""
+msgstr "Impossível despejar o arquivo XML para a memória"
 
 #: libgda/gda-xml-database.c:518 libgda/gda-xml-database.c:554
 #: libgda/gda-xml-database.c:597
@@ -301,7 +301,7 @@ msgstr "Erro ao criar contentor de erro."
 #: providers/freetds/gda-freetds-provider.c:246
 #: providers/freetds/gda-freetds-provider.c:248
 msgid "Allocating tds context failed."
-msgstr ""
+msgstr "A alocação do contexto tds falhou."
 
 #: providers/freetds/gda-freetds-provider.c:264
 #: providers/freetds/gda-freetds-provider.c:266
@@ -341,17 +341,17 @@ msgstr "Vistas"
 #: providers/freetds/gda-freetds-provider.c:688
 #: providers/freetds/gda-freetds-provider.c:689
 msgid "Query did not succeed in execute_cmd()."
-msgstr ""
+msgstr "A consulta não teve sucesso em execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:698
 #: providers/freetds/gda-freetds-provider.c:700
 msgid "Unexpected result tokens in execute_cmd()."
-msgstr ""
+msgstr "Palavras-chave de resultado inesperados em execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:708
 #: providers/freetds/gda-freetds-provider.c:709
 msgid "Unexpected return in execute_cmd()."
-msgstr ""
+msgstr "Retorno inesperado em  execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:787
 msgid "Field Name"
@@ -450,11 +450,11 @@ msgstr "Provedor GDA para IBMDB2"
 
 #: providers/interbase/gda-interbase-provider.c:186
 msgid "No database specified"
-msgstr ""
+msgstr "Nenhum banco de dados especificado"
 
 #: providers/interbase/gda-interbase-provider.c:209
 msgid "Could not attach to database"
-msgstr ""
+msgstr "Impossível atrelar ao banco de dados"
 
 #: providers/interbase/gda-interbase-provider.c:233
 #: providers/interbase/gda-interbase-provider.c:260
@@ -463,16 +463,16 @@ msgstr ""
 #: providers/interbase/gda-interbase-provider.c:381
 #: providers/interbase/gda-interbase-provider.c:419
 msgid "Invalid Interbase handle"
-msgstr ""
+msgstr "Handle Interbase inválido"
 
 #: providers/interbase/gda-interbase-provider.c:387
 #: providers/interbase/gda-interbase-provider.c:425
 msgid "Invalid transaction handle"
-msgstr ""
+msgstr "Handle de transação inválido"
 
 #: providers/interbase/libmain.c:39
 msgid "GDA provider for Interbase/Firebird databases"
-msgstr ""
+msgstr "Provedor GDA para bancos de dados Interbase/Firebird"
 
 #: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
@@ -551,7 +551,7 @@ msgstr "Comentários"
 #: providers/postgres/gda-postgres-provider.c:920
 #: providers/sqlite/gda-sqlite-provider.c:746
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: providers/mysql/gda-mysql-provider.c:932
 #: providers/postgres/gda-postgres-provider.c:923
@@ -960,7 +960,7 @@ msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:659
 msgid "Could not retrieve information for field"
-msgstr ""
+msgstr "Não pôde recuperar a informação para o campo"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -1137,27 +1137,3 @@ msgstr "\tdescrição = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-
-#~ msgid "Unexpected integer value"
-#~ msgstr "Valor inteiro inesperado"
-
-#~ msgid "Unexpected float value"
-#~ msgstr "Valor ponto flutuante inesperado"
-
-#~ msgid "Unexpected string value"
-#~ msgstr "Valor string inesperado"
-
-#~ msgid "Unexpected symbol '='"
-#~ msgstr "Símbolo '=' inesperado"
-
-#~ msgid "Unexpected symbol '<'"
-#~ msgstr "Símbolo '<' inesperado"
-
-#~ msgid "Unexpected symbol '>'"
-#~ msgstr "Símbolo '>' inesperado"
-
-#~ msgid "Found a non-numeric value after a '-' sign"
-#~ msgstr "Encontrado um valor não-numérico após um sinal '-'"
-
-#~ msgid "Unexpected identifier"
-#~ msgstr "Identificador inesperado"
