@@ -1224,7 +1224,7 @@ gda_config_free_provider_info (GdaProviderInfo *provider_info)
  *
  * Returns a list of all data sources currently configured in the system.
  * Each of the nodes in the returned GList is a #GdaDataSourceInfo.
- * To free the returned list, call the #gda_config_free_data_source_info
+ * To free the returned list, call the #gda_config_free_data_source_list
  * function.
  *
  * Returns: a GList of #GdaDataSourceInfo structures.
