@@ -1,3 +1,7 @@
+2002-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* POTFILES.in: s/interbase/firebird.
+
 2002-12-29  Christian Neumair  <chris@gnome-de.org>
 
 	* de.po: Updated German translation.

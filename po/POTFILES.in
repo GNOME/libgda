@@ -17,8 +17,8 @@ providers/freetds/libmain.c
 providers/freetds/utils.c
 providers/ibmdb2/gda-ibmdb2-provider.c
 providers/ibmdb2/libmain.c
-providers/interbase/gda-interbase-provider.c
-providers/interbase/libmain.c
+providers/firebird/gda-firebird-provider.c
+providers/firebird/libmain.c
 providers/mdb/gda-mdb-provider.c
 providers/mdb/libmain.c
 providers/mysql/gda-mysql-provider.c
