@@ -24,19 +24,19 @@
 #include "config.h"
 #include "gda-xql-const.h"
 
-static void gda_xql_const_class_init (GdaXqlConstClass *klass);
-static void gda_xql_const_init       (GdaXqlConst *xc);
+static void gda_xql_const_class_init (GdaXqlConstClass * klass);
+static void gda_xql_const_init (GdaXqlConst * xc);
 
 /*
  * GdaXqlConst class implementation
  */
 static void
-gda_xql_const_class_init (GdaXqlConstClass *klass)
+gda_xql_const_class_init (GdaXqlConstClass * klass)
 {
 }
 
 static void
-gda_xql_const_init (GdaXqlConst *xc)
+gda_xql_const_init (GdaXqlConst * xc)
 {
 }
 
@@ -52,8 +52,8 @@ gda_xql_const_get_type (void)
 			sizeof (GdaXqlConstClass),
 			(GtkClassInitFunc) gda_xql_const_item_class_init,
 			(GtkObjectInitFunc) gda_xql_const_item_init,
-			(GtkArgSetFunc)NULL,
-			(GtkArgSetFunc)NULL
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL
 		};
 		type = gtk_type_unique (gda_xml_atom_item_get_type (), &info);
 	}
@@ -79,10 +79,9 @@ gda_xql_const_new (void)
  * gda_xql_const_new_with_data
  */
 GdaXmlItem *
-gda_xql_const_new_with_data (const gchar *value,
-			     const gchar *alias,
-			     const gchar *type,
-			     const gchar *null)
+gda_xql_const_new_with_data (const gchar * value,
+			     const gchar * alias,
+			     const gchar * type, const gchar * null)
 {
 	GdaXqlConst *xc;
 

@@ -19,7 +19,7 @@
 #ifndef _READ_H_
 #define _READ_H_
 
-extern XmlQueryItem *proc_file(gchar *filename);
+extern XmlQueryItem *proc_file (gchar * filename);
 extern int xmlDoValidityCheckingDefaultValue;
 
 

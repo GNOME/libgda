@@ -29,7 +29,8 @@
 #include "gda-xql-join.h"
 #include "gda-xql-target.h"
 
-struct _GdaXqlDmlPrivate {
+struct _GdaXqlDmlPrivate
+{
 	GdaXmlItem *target;
 	GdaXmlItem *valuelist;
 	GdaXmlItem *where;
@@ -41,15 +42,15 @@ struct _GdaXqlDmlPrivate {
 	GdaXmlItem *setlist;
 };
 
-static void gda_xql_dml_class_init (GdaXqlDmlClass *klass);
-static void gda_xql_dml_init       (GdaXqlDml *dml);
-static void gda_xql_dml_destroy    (GtkObject *object);
+static void gda_xql_dml_class_init (GdaXqlDmlClass * klass);
+static void gda_xql_dml_init (GdaXqlDml * dml);
+static void gda_xql_dml_destroy (GtkObject * object);
 
 /*
  * GdaXqlDml class implementation
  */
 static void
-gda_xql_dml_class_init (GdaXqlDmlClass *klass)
+gda_xql_dml_class_init (GdaXqlDmlClass * klass)
 {
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
 	GdaXmlItemClass *item_class = GDA_XML_ITEM_CLASS (klass);
@@ -70,7 +71,7 @@ gda_xql_dml_class_init (GdaXqlDmlClass *klass)
 }
 
 static void
-gda_xql_dml_init (GdaXqlDml *dml)
+gda_xql_dml_init (GdaXqlDml * dml)
 {
 	dml->priv = g_new (GdaXqlDmlPrivate, 1);
 	dml->priv->target = NULL;
@@ -85,7 +86,7 @@ gda_xql_dml_init (GdaXqlDml *dml)
 }
 
 static void
-gda_xql_dml_destroy (GtkObject *object)
+gda_xql_dml_destroy (GtkObject * object)
 {
 	GtkObjectClass *parent_class;
 	GdaXqlDml *dml = (GdaXqlDml *) object;
@@ -122,8 +123,8 @@ gda_xql_dml_get_type (void)
 			sizeof (GdaXqlDmlClass),
 			(GtkClassInitFunc) gda_xql_dml_class_init,
 			(GtkObjectInitFunc) gda_xql_dml_init,
-			(GtkArgSetFunc)NULL,
-			(GtkArgSetFunc)NULL
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL
 		};
 		type = gtk_type_unique (gda_xml_item_get_type (), &info);
 	}
@@ -135,9 +136,8 @@ gda_xql_dml_get_type (void)
  * gda_xql_dml_add_target_from_text
  */
 gchar *
-gda_xql_dml_add_target_from_text (GdaXqlDml *dml,
-				  const gchar *name,
-				  GdaXmlItem *join)
+gda_xql_dml_add_target_from_text (GdaXqlDml * dml,
+				  const gchar * name, GdaXmlItem * join)
 {
 	GdaXqlDmlClass *dml_class;
 
@@ -152,17 +152,17 @@ gda_xql_dml_add_target_from_text (GdaXqlDml *dml,
  * gda_xql_dml_add_field_from_text
  */
 GdaXmlItem *
-gda_xql_dml_add_field_from_text (GdaXqlDml *dml,
-				 const gchar *id,
-				 const gchar *name,
-				 const gchar *alias,
-				 gboolean group)
+gda_xql_dml_add_field_from_text (GdaXqlDml * dml,
+				 const gchar * id,
+				 const gchar * name,
+				 const gchar * alias, gboolean group)
 {
 	GdaXqlDmlClass *dml_class;
 
 	dml_class = gtk_type_class (gda_xql_dml_get_type ());
 	if (dml_class && dml_class->add_field_from_text)
-		return dml_class->add_field_from_text (dml, id, name, alias, group);
+		return dml_class->add_field_from_text (dml, id, name, alias,
+						       group);
 
 	return NULL;
 }
@@ -171,16 +171,16 @@ gda_xql_dml_add_field_from_text (GdaXqlDml *dml,
  * gda_xql_dml_add_const_from_text
  */
 GdaXmlItem *
-gda_xql_dml_add_const_from_text (GdaXqlDml *dml,
-				 const gchar *value,
-				 const gchar *type,
-				 gboolean null)
+gda_xql_dml_add_const_from_text (GdaXqlDml * dml,
+				 const gchar * value,
+				 const gchar * type, gboolean null)
 {
 	GdaXqlDmlClass *dml_class;
 
 	dml_class = gtk_type_class (gda_xql_dml_get_type ());
 	if (dml_class && dml_class->add_const_from_text)
-		return dml_class->add_const_from_text (dml, value, type, null);
+		return dml_class->add_const_from_text (dml, value, type,
+						       null);
 
 	return NULL;
 }

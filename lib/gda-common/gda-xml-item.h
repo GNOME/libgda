@@ -34,7 +34,8 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #define GDA_TYPE_XML_ITEM (gda_xml_item_get_type ())
@@ -43,45 +44,52 @@ extern "C" {
 #define GDA_IS_XML_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_ITEM)
 #define GDA_IS_XML_ITEM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_ITEM))
 
-typedef struct _GdaXmlItem        GdaXmlItem;
-typedef struct _GdaXmlItemClass   GdaXmlItemClass;
-typedef struct _GdaXmlItemPrivate GdaXmlItemPrivate;
+	typedef struct _GdaXmlItem GdaXmlItem;
+	typedef struct _GdaXmlItemClass GdaXmlItemClass;
+	typedef struct _GdaXmlItemPrivate GdaXmlItemPrivate;
 
-struct _GdaXmlItem {
-	GtkObject object;
-	GdaXmlItemPrivate *priv;
-};
+	struct _GdaXmlItem
+	{
+		GtkObject object;
+		GdaXmlItemPrivate *priv;
+	};
 
-struct _GdaXmlItemClass {
-	GtkObjectClass *object_class;
+	struct _GdaXmlItemClass
+	{
+		GtkObjectClass *object_class;
 
-	/* virtual methods */
-	void        (* add) (GdaXmlItem *item, GdaXmlItem *child);
-	xmlNodePtr  (* to_dom) (GdaXmlItem *item, xmlNodePtr parent_node);
-	GdaXmlItem* (* find_id) (GdaXmlItem *item, const gchar *id);
-};
+		/* virtual methods */
+		void (*add) (GdaXmlItem * item, GdaXmlItem * child);
+		  xmlNodePtr (*to_dom) (GdaXmlItem * item,
+					xmlNodePtr parent_node);
+		GdaXmlItem *(*find_id) (GdaXmlItem * item, const gchar * id);
+	};
 
-GtkType      gda_xml_item_get_type      (void);
-void         gda_xml_item_free          (GdaXmlItem *item);
+	GtkType gda_xml_item_get_type (void);
+	void gda_xml_item_free (GdaXmlItem * item);
 
-void         gda_xml_item_add           (GdaXmlItem *item, GdaXmlItem *child);
-xmlNodePtr   gda_xml_item_to_dom        (GdaXmlItem *item, xmlNodePtr parent_node);
+	void gda_xml_item_add (GdaXmlItem * item, GdaXmlItem * child);
+	xmlNodePtr gda_xml_item_to_dom (GdaXmlItem * item,
+					xmlNodePtr parent_node);
 
-const gchar* gda_xml_item_get_attribute (GdaXmlItem *item, const gchar *attrib);
-void         gda_xml_item_set_attribute (GdaXmlItem *item,
-					 const gchar *attrib,
-					 const gchar *value);
-const gchar* gda_xml_item_get_tag       (GdaXmlItem *item);
-void         gda_xml_item_set_tag       (GdaXmlItem *item, const gchar *tag);
-GdaXmlItem*  gda_xml_item_get_parent    (GdaXmlItem *item);
-void         gda_xml_item_set_parent    (GdaXmlItem *item, GdaXmlItem *parent);
+	const gchar *gda_xml_item_get_attribute (GdaXmlItem * item,
+						 const gchar * attrib);
+	void gda_xml_item_set_attribute (GdaXmlItem * item,
+					 const gchar * attrib,
+					 const gchar * value);
+	const gchar *gda_xml_item_get_tag (GdaXmlItem * item);
+	void gda_xml_item_set_tag (GdaXmlItem * item, const gchar * tag);
+	GdaXmlItem *gda_xml_item_get_parent (GdaXmlItem * item);
+	void gda_xml_item_set_parent (GdaXmlItem * item, GdaXmlItem * parent);
 
-GdaXmlItem*  gda_xml_item_find_root     (GdaXmlItem *item);
-GdaXmlItem*  gda_xml_item_find_id       (GdaXmlItem *item, const gchar *id);
-GdaXmlItem*  gda_xml_item_find_ref      (GdaXmlItem *item, const gchar *ref);
+	GdaXmlItem *gda_xml_item_find_root (GdaXmlItem * item);
+	GdaXmlItem *gda_xml_item_find_id (GdaXmlItem * item,
+					  const gchar * id);
+	GdaXmlItem *gda_xml_item_find_ref (GdaXmlItem * item,
+					   const gchar * ref);
 
-void         gda_xml_item_add_id        (GdaXmlItem *item, const gchar *id);
-void         gda_xml_item_add_ref       (GdaXmlItem *item, const gchar *ref);
+	void gda_xml_item_add_id (GdaXmlItem * item, const gchar * id);
+	void gda_xml_item_add_ref (GdaXmlItem * item, const gchar * ref);
 
 #ifdef __cplusplus
 }

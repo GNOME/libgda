@@ -18,58 +18,59 @@
 
 #include "gda-interbase.h"
 
-static GdaServer*             server_impl = NULL;
-static GdaServerImplFunctions server_impl_functions =
-{
-  gda_interbase_connection_new,
-  gda_interbase_connection_open,
-  gda_interbase_connection_close,
-  gda_interbase_connection_begin_transaction,
-  gda_interbase_connection_commit_transaction,
-  gda_interbase_connection_rollback_transaction,
-  gda_interbase_connection_open_schema,
-  gda_interbase_connection_modify_schema,
-  gda_interbase_connection_start_logging,
-  gda_interbase_connection_stop_logging,
-  gda_interbase_connection_create_table,
-  gda_interbase_connection_supports,
-  gda_interbase_connection_get_gda_type,
-  gda_interbase_connection_get_c_type,
-  gda_interbase_connection_sql2xml,
-  gda_interbase_connection_xml2sql,
-  gda_interbase_connection_free,
+static GdaServer *server_impl = NULL;
+static GdaServerImplFunctions server_impl_functions = {
+	gda_interbase_connection_new,
+	gda_interbase_connection_open,
+	gda_interbase_connection_close,
+	gda_interbase_connection_begin_transaction,
+	gda_interbase_connection_commit_transaction,
+	gda_interbase_connection_rollback_transaction,
+	gda_interbase_connection_open_schema,
+	gda_interbase_connection_modify_schema,
+	gda_interbase_connection_start_logging,
+	gda_interbase_connection_stop_logging,
+	gda_interbase_connection_create_table,
+	gda_interbase_connection_supports,
+	gda_interbase_connection_get_gda_type,
+	gda_interbase_connection_get_c_type,
+	gda_interbase_connection_sql2xml,
+	gda_interbase_connection_xml2sql,
+	gda_interbase_connection_free,
 
-  gda_interbase_command_new,
-  gda_interbase_command_execute,
-  gda_interbase_command_free,
+	gda_interbase_command_new,
+	gda_interbase_command_execute,
+	gda_interbase_command_free,
 
-  gda_interbase_recordset_new,
-  gda_interbase_recordset_move_next,
-  gda_interbase_recordset_move_prev,
-  gda_interbase_recordset_close,
-  gda_interbase_recordset_free,
+	gda_interbase_recordset_new,
+	gda_interbase_recordset_move_next,
+	gda_interbase_recordset_move_prev,
+	gda_interbase_recordset_close,
+	gda_interbase_recordset_free,
 
-  gda_interbase_error_make
+	gda_interbase_error_make
 };
 
 gint
-main (gint argc, gchar *argv[])
+main (gint argc, gchar * argv[])
 {
-  CORBA_Environment ev;
-  CORBA_ORB         orb;
+	CORBA_Environment ev;
+	CORBA_ORB orb;
 
-  /* initialize CORBA stuff */
-  CORBA_exception_init(&ev);
-  gda_server_init("gda-interbase-srv", VERSION, argc, argv);
+	/* initialize CORBA stuff */
+	CORBA_exception_init (&ev);
+	gda_server_init ("gda-interbase-srv", VERSION, argc, argv);
 
-  /* register the server implementation */
-  server_impl = gda_server_new("OAFIID:GNOME_GDA_Provider_InterBase_ConnectionFactory",
-                                    &server_impl_functions);
-  if (server_impl)
-    {
-      gda_server_start(server_impl);
-    }
-  else gda_log_error(_("Could not register INTERBASE provider implementation"));
-  return 0;
+	/* register the server implementation */
+	server_impl =
+		gda_server_new
+		("OAFIID:GNOME_GDA_Provider_InterBase_ConnectionFactory",
+		 &server_impl_functions);
+	if (server_impl) {
+		gda_server_start (server_impl);
+	}
+	else
+		gda_log_error (_
+			       ("Could not register INTERBASE provider implementation"));
+	return 0;
 }
-

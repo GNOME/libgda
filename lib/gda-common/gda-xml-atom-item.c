@@ -24,20 +24,20 @@
 #include "config.h"
 #include "gda-xml-atom-item.h"
 
-static void gda_xml_atom_item_class_init (GdaXmlAtomItemClass *klass);
-static void gda_xml_atom_item_init       (GdaXmlAtomItem *atom_item);
+static void gda_xml_atom_item_class_init (GdaXmlAtomItemClass * klass);
+static void gda_xml_atom_item_init (GdaXmlAtomItem * atom_item);
 
 /*
  * GdaXmlAtomItem class implementation
  */
 static void
-gda_xml_atom_item_class_init (GdaXmlAtomItemClass *klass)
+gda_xml_atom_item_class_init (GdaXmlAtomItemClass * klass)
 {
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
 }
 
 static void
-gda_xml_atom_item_init (GdaXmlAtomItem *atom_item)
+gda_xml_atom_item_init (GdaXmlAtomItem * atom_item)
 {
 }
 
@@ -53,8 +53,8 @@ gda_xml_atom_item_get_type (void)
 			sizeof (GdaXmlAtomItemClass),
 			(GtkClassInitFunc) gda_xml_atom_item_class_init,
 			(GtkObjectInitFunc) gda_xml_atom_item_init,
-			(GtkArgSetFunc)NULL,
-			(GtkArgSetFunc)NULL
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL
 		};
 		type = gtk_type_unique (gda_xml_item_get_type (), &info);
 	}
@@ -66,7 +66,7 @@ gda_xml_atom_item_get_type (void)
  * gda_xml_atom_item_new
  */
 GdaXmlItem *
-gda_xml_atom_item_new (const gchar *tag)
+gda_xml_atom_item_new (const gchar * tag)
 {
 	GdaXmlAtomItem *atom_item;
 

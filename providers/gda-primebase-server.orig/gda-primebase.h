@@ -50,99 +50,110 @@
  */
 typedef struct
 {
-  long perr, serr;
-  long snum;
-  char  msg[256];
-} primebase_Error;
+	long perr, serr;
+	long snum;
+	char msg[256];
+}
+primebase_Error;
 
 typedef struct
 {
-  long sid;   // The connections' session id
-  long snum;  // The current session number active of the connection
+	long sid;		// The connections' session id
+	long snum;		// The current session number active of the connection
 
-  gint state;
+	gint state;
 
-  gchar *host;
-  gchar *db;
-  gchar *connparm;
-  primebase_Error *err;
-} primebase_Connection;
-
-typedef struct
-{
-} primebase_Command;
+	gchar *host;
+	gchar *db;
+	gchar *connparm;
+	primebase_Error *err;
+}
+primebase_Connection;
 
 typedef struct
 {
-  gboolean initialized;
-  gshort   type, len, places, flags;
-  gint     col_cnt;
-  gchar    *buffer;
-} primebase_Recordset;
+}
+primebase_Command;
 
 typedef struct
 {
-  gchar         *name;
-  short         sql_type;
-  GDA_ValueType gda_type;
-} primebase_Types;
+	gboolean initialized;
+	gshort type, len, places, flags;
+	gint col_cnt;
+	gchar *buffer;
+}
+primebase_Recordset;
+
+typedef struct
+{
+	gchar *name;
+	short sql_type;
+	GDA_ValueType gda_type;
+}
+primebase_Types;
 
 /*
  * Server implementation prototypes
  */
-gboolean gda_primebase_connection_new (GdaServerConnection *cnc);
-gint gda_primebase_connection_open (GdaServerConnection *cnc,
-				    const gchar *dsn,
-				    const gchar *user,
-				    const gchar *password);
-void gda_primebase_connection_close (GdaServerConnection *cnc);
-gint gda_primebase_connection_begin_transaction (GdaServerConnection *cnc);
-gint gda_primebase_connection_commit_transaction (GdaServerConnection *cnc);
-gint gda_primebase_connection_rollback_transaction (GdaServerConnection *cnc);
-GdaServerRecordset* gda_primebase_connection_open_schema (GdaServerConnection *cnc,
-							       GdaServerError *error,
-							       GDA_Connection_QType t,
-							       GDA_Connection_Constraint *constraints,
-							       gint length);
-glong gda_primebase_connection_modify_schema (GdaServerConnection *cnc,
-                                   GDA_Connection_QType t,
-                                   GDA_Connection_Constraint *constraints,
-                                   gint length);
-gint gda_primebase_connection_start_logging (GdaServerConnection *cnc,
-					     const gchar *filename);
-gint gda_primebase_connection_stop_logging (GdaServerConnection *cnc);
-gchar* gda_primebase_connection_create_table (GdaServerConnection *cnc,
-					      GDA_RowAttributes *columns);
-gboolean gda_primebase_connection_supports (GdaServerConnection *cnc,
+gboolean gda_primebase_connection_new (GdaServerConnection * cnc);
+gint gda_primebase_connection_open (GdaServerConnection * cnc,
+				    const gchar * dsn,
+				    const gchar * user,
+				    const gchar * password);
+void gda_primebase_connection_close (GdaServerConnection * cnc);
+gint gda_primebase_connection_begin_transaction (GdaServerConnection * cnc);
+gint gda_primebase_connection_commit_transaction (GdaServerConnection * cnc);
+gint gda_primebase_connection_rollback_transaction (GdaServerConnection *
+						    cnc);
+GdaServerRecordset *gda_primebase_connection_open_schema (GdaServerConnection
+							  * cnc,
+							  GdaServerError *
+							  error,
+							  GDA_Connection_QType
+							  t,
+							  GDA_Connection_Constraint
+							  * constraints,
+							  gint length);
+glong gda_primebase_connection_modify_schema (GdaServerConnection * cnc,
+					      GDA_Connection_QType t,
+					      GDA_Connection_Constraint *
+					      constraints, gint length);
+gint gda_primebase_connection_start_logging (GdaServerConnection * cnc,
+					     const gchar * filename);
+gint gda_primebase_connection_stop_logging (GdaServerConnection * cnc);
+gchar *gda_primebase_connection_create_table (GdaServerConnection * cnc,
+					      GDA_RowAttributes * columns);
+gboolean gda_primebase_connection_supports (GdaServerConnection * cnc,
 					    GDA_Connection_Feature feature);
-GDA_ValueType gda_primebase_connection_get_gda_type (GdaServerConnection *cnc,
-						     gulong sql_type);
-gshort gda_primebase_connection_get_c_type (GdaServerConnection *cnc,
+GDA_ValueType gda_primebase_connection_get_gda_type (GdaServerConnection *
+						     cnc, gulong sql_type);
+gshort gda_primebase_connection_get_c_type (GdaServerConnection * cnc,
 					    GDA_ValueType type);
-gchar* gda_primebase_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql);
-gchar* gda_primebase_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml);
-void gda_primebase_connection_free (GdaServerConnection *cnc);
+gchar *gda_primebase_connection_sql2xml (GdaServerConnection * cnc,
+					 const gchar * sql);
+gchar *gda_primebase_connection_xml2sql (GdaServerConnection * cnc,
+					 const gchar * xml);
+void gda_primebase_connection_free (GdaServerConnection * cnc);
 
-gboolean gda_primebase_command_new (GdaServerCommand *cmd);
-GdaServerRecordset* gda_primebase_command_execute (GdaServerCommand *cmd,
-							GdaServerError *error,
-							const GDA_CmdParameterSeq *params,
-							gulong *affected,
-							gulong options);
-void gda_primebase_command_free (GdaServerCommand *cmd);
+gboolean gda_primebase_command_new (GdaServerCommand * cmd);
+GdaServerRecordset *gda_primebase_command_execute (GdaServerCommand * cmd,
+						   GdaServerError * error,
+						   const GDA_CmdParameterSeq *
+						   params, gulong * affected,
+						   gulong options);
+void gda_primebase_command_free (GdaServerCommand * cmd);
 
-gboolean gda_primebase_recordset_new       (GdaServerRecordset *recset);
-gint     gda_primebase_recordset_move_next (GdaServerRecordset *recset);
-gint     gda_primebase_recordset_move_prev (GdaServerRecordset *recset);
-gint     gda_primebase_recordset_close     (GdaServerRecordset *recset);
-void     gda_primebase_recordset_free      (GdaServerRecordset *recset);
+gboolean gda_primebase_recordset_new (GdaServerRecordset * recset);
+gint gda_primebase_recordset_move_next (GdaServerRecordset * recset);
+gint gda_primebase_recordset_move_prev (GdaServerRecordset * recset);
+gint gda_primebase_recordset_close (GdaServerRecordset * recset);
+void gda_primebase_recordset_free (GdaServerRecordset * recset);
 
-primebase_Error *gda_primebase_get_error(long, gboolean);
-void gda_primebase_free_error(primebase_Error *);
+primebase_Error *gda_primebase_get_error (long, gboolean);
+void gda_primebase_free_error (primebase_Error *);
 
-void gda_primebase_error_make (GdaServerError *error,
-			       GdaServerRecordset *recset,
-			       GdaServerConnection *cnc,
-			       gchar *where);
+void gda_primebase_error_make (GdaServerError * error,
+			       GdaServerRecordset * recset,
+			       GdaServerConnection * cnc, gchar * where);
 
 #endif

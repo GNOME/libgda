@@ -31,7 +31,8 @@ typedef struct _GdaServerConnection GdaServerConnection;
 #include <gda-server-error.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
 #define GDA_TYPE_SERVER_CONNECTION            (gda_server_connection_get_type())
@@ -40,83 +41,97 @@ extern "C" {
 #define GDA_IS_SERVER_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_CONNECTION)
 #define GDA_IS_SERVER_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_CONNECTION))
 
-typedef struct _GdaServerConnectionClass GdaServerConnectionClass;
+	typedef struct _GdaServerConnectionClass GdaServerConnectionClass;
 
-struct _GdaServerConnection {
-	BonoboXObject object;
+	struct _GdaServerConnection
+	{
+		BonoboXObject object;
 
-	/* data */
-	GdaServer*    server_impl;
-	gchar*        dsn;
-	gchar*        username;
-	gchar*        password;
-	GList*        commands;
-	GList*        errors;
-	GList*        listeners;
+		/* data */
+		GdaServer *server_impl;
+		gchar *dsn;
+		gchar *username;
+		gchar *password;
+		GList *commands;
+		GList *errors;
+		GList *listeners;
 
-	gpointer      user_data;
-};
+		gpointer user_data;
+	};
 
-struct _GdaServerConnectionClass {
-	BonoboXObjectClass parent_class;
+	struct _GdaServerConnectionClass
+	{
+		BonoboXObjectClass parent_class;
 
-	POA_GDA_Connection__epv epv;
-};
+		POA_GDA_Connection__epv epv;
+	};
 
-GtkType              gda_server_connection_get_type (void);
-GdaServerConnection* gda_server_connection_new  (GdaServer *server_impl);
-gchar*               gda_server_connection_get_dsn (GdaServerConnection *cnc);
-void                 gda_server_connection_set_dsn (GdaServerConnection *cnc, const gchar *dsn);
-gchar*               gda_server_connection_get_username (GdaServerConnection *cnc);
-void                 gda_server_connection_set_username (GdaServerConnection *cnc,
-							 const gchar *username);
-gchar*               gda_server_connection_get_password (GdaServerConnection *cnc);
-void                 gda_server_connection_set_password (GdaServerConnection *cnc,
-                                                          const gchar *password);
-void                 gda_server_connection_add_error (GdaServerConnection *cnc,
-						      GdaError *error);
-void                 gda_server_connection_add_error_string (GdaServerConnection *cnc,
-                                                              const gchar *msg);
-gpointer             gda_server_connection_get_user_data (GdaServerConnection *cnc);
-void                 gda_server_connection_set_user_data (GdaServerConnection *cnc, gpointer user_data);
-void                 gda_server_connection_free (GdaServerConnection *cnc);
+	GtkType gda_server_connection_get_type (void);
+	GdaServerConnection *gda_server_connection_new (GdaServer *
+							server_impl);
+	gchar *gda_server_connection_get_dsn (GdaServerConnection * cnc);
+	void gda_server_connection_set_dsn (GdaServerConnection * cnc,
+					    const gchar * dsn);
+	gchar *gda_server_connection_get_username (GdaServerConnection * cnc);
+	void gda_server_connection_set_username (GdaServerConnection * cnc,
+						 const gchar * username);
+	gchar *gda_server_connection_get_password (GdaServerConnection * cnc);
+	void gda_server_connection_set_password (GdaServerConnection * cnc,
+						 const gchar * password);
+	void gda_server_connection_add_error (GdaServerConnection * cnc,
+					      GdaError * error);
+	void gda_server_connection_add_error_string (GdaServerConnection *
+						     cnc, const gchar * msg);
+	gpointer gda_server_connection_get_user_data (GdaServerConnection *
+						      cnc);
+	void gda_server_connection_set_user_data (GdaServerConnection * cnc,
+						  gpointer user_data);
+	void gda_server_connection_free (GdaServerConnection * cnc);
 
-gint                 gda_server_connection_open (GdaServerConnection *cnc,
-                                                  const gchar *dsn,
-                                                  const gchar *user,
-                                                  const gchar *password);
-void                 gda_server_connection_close (GdaServerConnection *cnc);
-gint                 gda_server_connection_begin_transaction (GdaServerConnection *cnc);
-gint                 gda_server_connection_commit_transaction (GdaServerConnection *cnc);
-gint                 gda_server_connection_rollback_transaction (GdaServerConnection *cnc);
-GdaServerRecordset*  gda_server_connection_open_schema (GdaServerConnection *cnc,
-                                                         GdaError *error,
-                                                         GDA_Connection_QType t,
-                                                         GDA_Connection_Constraint *constraints,
-                                                         gint length);
-glong                gda_server_connection_modify_schema (GdaServerConnection *cnc,
-							  GDA_Connection_QType t,
-							  GDA_Connection_Constraint *constraints,
-							  gint length);
-gint                 gda_server_connection_start_logging (GdaServerConnection *cnc,
-                                                           const gchar *filename);
-gint                 gda_server_connection_stop_logging (GdaServerConnection *cnc);
-gchar*               gda_server_connection_create_table (GdaServerConnection *cnc,
-                                                          GDA_RowAttributes *columns);
-gboolean             gda_server_connection_supports (GdaServerConnection *cnc,
-                                                      GDA_Connection_Feature feature);
-GDA_ValueType        gda_server_connection_get_gda_type (GdaServerConnection *cnc,
-                                                          gulong sql_type);
-gshort               gda_server_connection_get_c_type (GdaServerConnection *cnc,
-                                                        GDA_ValueType type);
-gchar*               gda_server_connection_sql2xml (GdaServerConnection *cnc,
-                                                     const gchar *sql);
-gchar*               gda_server_connection_xml2sql (GdaServerConnection *cnc,
-                                                     const gchar *xml);
-void                 gda_server_connection_add_listener (GdaServerConnection *cnc,
-							 GDA_Listener listener);
-void                 gda_server_connection_remove_listener (GdaServerConnection *cnc,
-							    GDA_Listener listener);
+	gint gda_server_connection_open (GdaServerConnection * cnc,
+					 const gchar * dsn,
+					 const gchar * user,
+					 const gchar * password);
+	void gda_server_connection_close (GdaServerConnection * cnc);
+	gint gda_server_connection_begin_transaction (GdaServerConnection *
+						      cnc);
+	gint gda_server_connection_commit_transaction (GdaServerConnection *
+						       cnc);
+	gint gda_server_connection_rollback_transaction (GdaServerConnection *
+							 cnc);
+	GdaServerRecordset
+		*gda_server_connection_open_schema (GdaServerConnection * cnc,
+						    GdaError * error,
+						    GDA_Connection_QType t,
+						    GDA_Connection_Constraint
+						    * constraints,
+						    gint length);
+	glong gda_server_connection_modify_schema (GdaServerConnection * cnc,
+						   GDA_Connection_QType t,
+						   GDA_Connection_Constraint *
+						   constraints, gint length);
+	gint gda_server_connection_start_logging (GdaServerConnection * cnc,
+						  const gchar * filename);
+	gint gda_server_connection_stop_logging (GdaServerConnection * cnc);
+	gchar *gda_server_connection_create_table (GdaServerConnection * cnc,
+						   GDA_RowAttributes *
+						   columns);
+	gboolean gda_server_connection_supports (GdaServerConnection * cnc,
+						 GDA_Connection_Feature
+						 feature);
+	GDA_ValueType gda_server_connection_get_gda_type (GdaServerConnection
+							  * cnc,
+							  gulong sql_type);
+	gshort gda_server_connection_get_c_type (GdaServerConnection * cnc,
+						 GDA_ValueType type);
+	gchar *gda_server_connection_sql2xml (GdaServerConnection * cnc,
+					      const gchar * sql);
+	gchar *gda_server_connection_xml2sql (GdaServerConnection * cnc,
+					      const gchar * xml);
+	void gda_server_connection_add_listener (GdaServerConnection * cnc,
+						 GDA_Listener listener);
+	void gda_server_connection_remove_listener (GdaServerConnection * cnc,
+						    GDA_Listener listener);
 
 #if defined(__cplusplus)
 }

@@ -21,56 +21,78 @@
 
 using namespace gda;
 
-Command::Command() {
-	_gda_command = gda_command_new();
+Command::Command ()
+{
+	_gda_command = gda_command_new ();
 }
 
-Command::~Command() {
-	if (_gda_command) gda_command_free(_gda_command);
+Command::~Command ()
+{
+	if (_gda_command)
+		gda_command_free (_gda_command);
 }
 
-GdaCommand *Command::getCStruct() {
+GdaCommand *
+Command::getCStruct ()
+{
 	return _gda_command;
 }
 
-void Command::setCStruct(GdaCommand *cmd) {
+void
+Command::setCStruct (GdaCommand * cmd)
+{
 	_gda_command = cmd;
 }
-		
-Connection *Command::getConnection() {
+
+Connection *
+Command::getConnection ()
+{
 	return cnc;
 }
 
-gint Command::setConnection(Connection *a) {
+gint
+Command::setConnection (Connection * a)
+{
 	cnc = a;
-	gda_command_set_connection(_gda_command,cnc->getCStruct());
+	gda_command_set_connection (_gda_command, cnc->getCStruct ());
 	return 0;
 }
 
-gchar* Command::getText() {
-	return gda_command_get_text(_gda_command);
+gchar *
+Command::getText ()
+{
+	return gda_command_get_text (_gda_command);
 }
 
-void Command::setText(gchar *text) {
-	gda_command_set_text(_gda_command,text);
+void
+Command::setText (gchar * text)
+{
+	gda_command_set_text (_gda_command, text);
 }
 
-GDA_CommandType Command::getCmdType() {
-	return gda_command_get_cmd_type(_gda_command);
+GDA_CommandType
+Command::getCmdType ()
+{
+	return gda_command_get_cmd_type (_gda_command);
 }
 
-void Command::setCmdType(GDA_CommandType type) {
-	gda_command_set_cmd_type(_gda_command, type);
+void
+Command::setCmdType (GDA_CommandType type)
+{
+	gda_command_set_cmd_type (_gda_command, type);
 }
 
-Recordset* Command::execute(gulong* reccount, gulong flags) {
+Recordset *
+Command::execute (gulong * reccount, gulong flags)
+{
 	GdaRecordset *pGdaRecordset = NULL;
-	pGdaRecordset = gda_command_execute(_gda_command, reccount, flags);
+	pGdaRecordset = gda_command_execute (_gda_command, reccount, flags);
 
 	Recordset *pRecordset = NULL;
 	if (pGdaRecordset != NULL) {
 		pRecordset = new Recordset (pGdaRecordset, cnc);
-	} else {
+	}
+	else {
 		pRecordset = new Recordset ();
 	}
 
@@ -79,7 +101,6 @@ Recordset* Command::execute(gulong* reccount, gulong flags) {
 
 //void Command::createParameter(gchar* name, GDA_ParameterDirection inout, Value *value) {
 // FIXME If we don't use GDA_Value, how do use use the c function gda_command_create_parameter?
-//	GDA_Value v(value->getCValue());
-//	gda_command_create_parameter(_gda_command,name,inout,&v);
+//      GDA_Value v(value->getCValue());
+//      gda_command_create_parameter(_gda_command,name,inout,&v);
 //}
-

@@ -27,7 +27,8 @@
 #include <gda-xml-atom-item.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
 #define GDA_TYPE_XQL_COLUMN            (gda_xql_column_get_type ())
@@ -36,20 +37,22 @@ extern "C" {
 #define GDA_IS_XQL_COLUMN(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XMLATOM)
 #define GDA_IS_XQL_COLUMN_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XQL_COLUMN))
 
-typedef struct _GdaXqlColumn      GdaXqlColumn;
-typedef struct _GdaXqlColumnClass GdaXqlColumnClass;
+	typedef struct _GdaXqlColumn GdaXqlColumn;
+	typedef struct _GdaXqlColumnClass GdaXqlColumnClass;
 
-typedef struct _GdaXqlColumn {
-	GdaXmlAtomItem item;
-};
+	typedef struct _GdaXqlColumn
+	{
+		GdaXmlAtomItem item;
+	};
 
-typedef struct _GdaXqlColumnClass {
-	GdaXmlAtomItemClass parent_class;
-};
+	typedef struct _GdaXqlColumnClass
+	{
+		GdaXmlAtomItemClass parent_class;
+	};
 
-GtkType     gda_xql_column_get_type      (void);
-GdaXmlItem* gda_xql_column_new           (void);
-GdaXmlItem* gda_xql_column_new_with_data (gint num, gboolean asc);
+	GtkType gda_xql_column_get_type (void);
+	GdaXmlItem *gda_xql_column_new (void);
+	GdaXmlItem *gda_xql_column_new_with_data (gint num, gboolean asc);
 
 #if defined(__cplusplus)
 }

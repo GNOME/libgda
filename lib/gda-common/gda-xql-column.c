@@ -24,19 +24,19 @@
 #include "config.h"
 #include "gda-xql-column.h"
 
-static void gda_xql_column_class_init (GdaXqlColumnClass *klass);
-static void gda_xql_column_init       (GdaXqlColumn *col);
+static void gda_xql_column_class_init (GdaXqlColumnClass * klass);
+static void gda_xql_column_init (GdaXqlColumn * col);
 
 /*
  * GdaXqlColumn class implementation
  */
 static void
-gda_xql_column_class_init (GdaXqlColumnClass *klass)
+gda_xql_column_class_init (GdaXqlColumnClass * klass)
 {
 }
 
 static void
-gda_xql_column_init (GdaXqlColumn *col)
+gda_xql_column_init (GdaXqlColumn * col)
 {
 }
 
@@ -52,8 +52,8 @@ gda_xql_column_get_type (void)
 			sizeof (GdaXmlAtomItemClass),
 			(GtkClassInitFunc) gda_xql_column_class_init,
 			(GtkObjectInitFunc) gda_xql_column_init,
-			(GtkArgSetFunc)NULL,
-			(GtkArgSetFunc)NULL
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL
 		};
 		type = gtk_type_unique (gda_xml_atom_item_get_type (), &info);
 	}

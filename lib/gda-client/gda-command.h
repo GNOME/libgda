@@ -33,17 +33,18 @@
 #include <GDA.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
 /* The command object. Holds and executes an SQL query or other,
  * datasource specific operations.
  */
 
-typedef struct _GdaCommand      GdaCommand;
-typedef struct _GdaCommandClass GdaCommandClass;
+	typedef struct _GdaCommand GdaCommand;
+	typedef struct _GdaCommandClass GdaCommandClass;
 
-#include <gda-recordset.h>   /* these two need the definitions above */
+#include <gda-recordset.h>	/* these two need the definitions above */
 #include <gda-connection.h>
 
 #define GDA_TYPE_COMMAND            (gda_command_get_type())
@@ -60,49 +61,53 @@ typedef struct _GdaCommandClass GdaCommandClass;
 #define GDA_IS_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
 #endif
 
-struct _GdaCommand {
+	struct _GdaCommand
+	{
 #ifdef HAVE_GOBJECT
-	GObject         object;
+		GObject object;
 #else
-	GtkObject       object;
+		GtkObject object;
 #endif
-	CORBA_Object    command;
-	CORBA_ORB       orb;
-	GdaConnection*  connection;
-	gchar*          text;
-	GDA_CommandType type;
-	GList*          parameters;
-	gboolean        text_pending;
-	gboolean        type_pending;
-};
+		CORBA_Object command;
+		CORBA_ORB orb;
+		GdaConnection *connection;
+		gchar *text;
+		GDA_CommandType type;
+		GList *parameters;
+		gboolean text_pending;
+		gboolean type_pending;
+	};
 
-struct _GdaCommandClass {
+	struct _GdaCommandClass
+	{
 #ifdef HAVE_GOBJECT
-	GObjectClass   parent_class;
+		GObjectClass parent_class;
 #else
-	GtkObjectClass parent_class;
+		GtkObjectClass parent_class;
 #endif
-};
+	};
 
 #ifdef HAVE_GOBJECT
-GType           gda_command_get_type         (void);
+	GType gda_command_get_type (void);
 #else
-guint           gda_command_get_type         (void);
+	guint gda_command_get_type (void);
 #endif
 
-GdaCommand*     gda_command_new              (void);
-void            gda_command_free             (GdaCommand* cmd);
-GdaConnection*  gda_command_get_connection   (GdaCommand* cmd);
-void            gda_command_set_connection   (GdaCommand* cmd, GdaConnection* cnc);
-gchar*          gda_command_get_text         (GdaCommand* cmd);
-void            gda_command_set_text         (GdaCommand* cmd, gchar* text);
-GDA_CommandType gda_command_get_cmd_type     (GdaCommand* cmd);
-void            gda_command_set_cmd_type     (GdaCommand* cmd, GDA_CommandType type);
-GdaRecordset*   gda_command_execute          (GdaCommand* cmd, gulong* reccount, gulong flags);
-void            gda_command_create_parameter (GdaCommand* cmd,
-                                              gchar* name,
-                                              GDA_ParameterDirection inout,
-                                              GDA_Value* value);
+	GdaCommand *gda_command_new (void);
+	void gda_command_free (GdaCommand * cmd);
+	GdaConnection *gda_command_get_connection (GdaCommand * cmd);
+	void gda_command_set_connection (GdaCommand * cmd,
+					 GdaConnection * cnc);
+	gchar *gda_command_get_text (GdaCommand * cmd);
+	void gda_command_set_text (GdaCommand * cmd, gchar * text);
+	GDA_CommandType gda_command_get_cmd_type (GdaCommand * cmd);
+	void gda_command_set_cmd_type (GdaCommand * cmd,
+				       GDA_CommandType type);
+	GdaRecordset *gda_command_execute (GdaCommand * cmd,
+					   gulong * reccount, gulong flags);
+	void gda_command_create_parameter (GdaCommand * cmd, gchar * name,
+					   GDA_ParameterDirection inout,
+					   GDA_Value * value);
 
 #if defined(__cplusplus)
 }

@@ -21,23 +21,24 @@
 
 #include "gdaIncludes.h"
 
-namespace gda {
+namespace gda
+{
 
-class ErrorList {
-	public:
-		ErrorList(CORBA_Environment* ev);
-		ErrorList(GList *errorList);
-		~ErrorList();
-		
-		GList *getCStruct();
-		void setCStruct(GList *errorList);
-		GList* errors();
+	class ErrorList
+	{
+	      public:
+		ErrorList (CORBA_Environment * ev);
+		ErrorList (GList * errorList);
+		~ErrorList ();
 
-	private:
-		GList* _errors;
+		GList *getCStruct ();
+		void setCStruct (GList * errorList);
+		GList *errors ();
+
+	      private:
+		  GList * _errors;
+	};
+
 };
 
-};
-
-#endif  
-  
+#endif

@@ -19,10 +19,10 @@
 #include "gda-primebase.h"
 
 gboolean
-gda_primebase_update_cell (GdaServerField *field, primebase_Recordset *prset,
-                           gpointer *data)
+gda_primebase_update_cell (GdaServerField * field,
+			   primebase_Recordset * prset, gpointer * data)
 {
-  return FALSE;
+	return FALSE;
 
 /*
   DALDatePtr      ddate = NULL;
@@ -81,38 +81,41 @@ gda_primebase_update_cell (GdaServerField *field, primebase_Recordset *prset,
 }
 
 gboolean
-gda_primebase_recordset_new (GdaServerRecordset *recset)
+gda_primebase_recordset_new (GdaServerRecordset * recset)
 {
-  primebase_Recordset *precset = NULL;
+	primebase_Recordset *precset = NULL;
 
-  g_return_val_if_fail(recset != NULL, FALSE);
+	g_return_val_if_fail (recset != NULL, FALSE);
 
-  precset = g_new0(primebase_Recordset, 1);
-  if (precset) {
-    gda_server_recordset_set_user_data(recset, (gpointer) precset);
-    return TRUE;
-  }
-  return FALSE;
+	precset = g_new0 (primebase_Recordset, 1);
+	if (precset) {
+		gda_server_recordset_set_user_data (recset,
+						    (gpointer) precset);
+		return TRUE;
+	}
+	return FALSE;
 }
 
 gint
-gda_primebase_recordset_move_next (GdaServerRecordset *recset)
+gda_primebase_recordset_move_next (GdaServerRecordset * recset)
 {
-  primebase_Recordset  *prset = NULL;
-  GdaServerConnection *cnc  = NULL;
-  primebase_Connection *pcnc = NULL;
-  GdaServerField      *field = NULL;
-  gint                 col = 0;
+	primebase_Recordset *prset = NULL;
+	GdaServerConnection *cnc = NULL;
+	primebase_Connection *pcnc = NULL;
+	GdaServerField *field = NULL;
+	gint col = 0;
 
-  g_return_val_if_fail(recset != NULL, -1);
-  prset = (primebase_Recordset *) gda_server_recordset_get_user_data(recset);
-  g_return_val_if_fail(prset != NULL, -1);
-  cnc = gda_server_recordset_get_connection(recset);
-  g_return_val_if_fail(cnc != NULL, -1);
-  pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(pcnc != NULL, -1);
+	g_return_val_if_fail (recset != NULL, -1);
+	prset = (primebase_Recordset *)
+		gda_server_recordset_get_user_data (recset);
+	g_return_val_if_fail (prset != NULL, -1);
+	cnc = gda_server_recordset_get_connection (recset);
+	g_return_val_if_fail (cnc != NULL, -1);
+	pcnc = (primebase_Connection *)
+		gda_server_connection_get_user_data (cnc);
+	g_return_val_if_fail (pcnc != NULL, -1);
 
-  return -1;
+	return -1;
 
 /*
   if (!prset->initialized) {
@@ -217,28 +220,28 @@ gda_primebase_recordset_move_next (GdaServerRecordset *recset)
 }
 
 gint
-gda_primebase_recordset_move_prev (GdaServerRecordset *recset)
+gda_primebase_recordset_move_prev (GdaServerRecordset * recset)
 {
-  return -1;
+	return -1;
 }
 
 gint
-gda_primebase_recordset_close (GdaServerRecordset *recset)
+gda_primebase_recordset_close (GdaServerRecordset * recset)
 {
-  return -1;
+	return -1;
 }
 
 void
-gda_primebase_recordset_free (GdaServerRecordset *recset)
+gda_primebase_recordset_free (GdaServerRecordset * recset)
 {
-  primebase_Recordset *precset = NULL;
+	primebase_Recordset *precset = NULL;
 
-  g_return_if_fail(recset != NULL);
-  precset = (primebase_Recordset *) gda_server_recordset_get_user_data(recset);
-  if (precset) {
-    g_free((gpointer) precset);
-    gda_server_recordset_set_user_data(recset, (gpointer) NULL);
-  }
+	g_return_if_fail (recset != NULL);
+	precset =
+		(primebase_Recordset *)
+		gda_server_recordset_get_user_data (recset);
+	if (precset) {
+		g_free ((gpointer) precset);
+		gda_server_recordset_set_user_data (recset, (gpointer) NULL);
+	}
 }
-
-

@@ -39,22 +39,21 @@
 #define TDS_ERR_USERDEF   4
 #define TDS_ERR_UNDEFINED 5
 
-gint gda_tds_install_error_handlers(GdaServerConnection *);
+gint gda_tds_install_error_handlers (GdaServerConnection *);
 
-void gda_tds_error_make (GdaServerError *error,
-                         GdaServerRecordset *recset,
-                         GdaServerConnection *cnc,
-                         gchar *where);
+void gda_tds_error_make (GdaServerError * error,
+			 GdaServerRecordset * recset,
+			 GdaServerConnection * cnc, gchar * where);
 
-void     gda_tds_cleanup(tds_Connection *, CS_RETCODE, const gchar *);
+void gda_tds_cleanup (tds_Connection *, CS_RETCODE, const gchar *);
 
 // Don't forget to FREE the results :-)
-gchar *g_sprintf_clientmsg(const gchar*, CS_CLIENTMSG *);
-gchar *g_sprintf_servermsg(const gchar*, CS_SERVERMSG *);
+gchar *g_sprintf_clientmsg (const gchar *, CS_CLIENTMSG *);
+gchar *g_sprintf_servermsg (const gchar *, CS_SERVERMSG *);
 
-void     gda_tds_log_clientmsg(const gchar *, CS_CLIENTMSG *);
-void     gda_tds_log_servermsg(const gchar *, CS_SERVERMSG *);
+void gda_tds_log_clientmsg (const gchar *, CS_CLIENTMSG *);
+void gda_tds_log_servermsg (const gchar *, CS_SERVERMSG *);
 
-void     gda_tds_debug_msg(gint, const gchar *);
+void gda_tds_debug_msg (gint, const gchar *);
 
 #endif

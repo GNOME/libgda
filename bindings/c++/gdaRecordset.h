@@ -21,51 +21,55 @@
 
 #include "gdaIncludes.h"
 
-namespace gda {
+namespace gda
+{
 
-class Recordset {
-	public:
-		Recordset();
-		Recordset(GdaRecordset *rst, Connection *cnc); // convenience functions!
-		Recordset(GdaRecordset *rst, GdaConnection *cnc); // convenience functions!
-		~Recordset();
+	class Recordset
+	{
+	      public:
+		Recordset ();
+		Recordset (GdaRecordset * rst, Connection * cnc);	// convenience functions!
+		Recordset (GdaRecordset * rst, GdaConnection * cnc);	// convenience functions!
+		~Recordset ();
 
-		GdaRecordset* getCStruct();
-		void setCStruct(GdaRecordset *rst);
+		GdaRecordset *getCStruct ();
+		void setCStruct (GdaRecordset * rst);
 
-		void setName(gchar* name);
-		void getName(gchar* name);
-		void close();
-		Field* field(gchar* name);
+		void setName (gchar * name);
+		void getName (gchar * name);
+		void close ();
+		Field *field (gchar * name);
 		// FIXME: possibly add a fieldText() func?
-		Field* field(gint idx);
-		gint bof();
-		gint eof();
+		Field *field (gint idx);
+		gint bof ();
+		gint eof ();
 		gulong move (gint count, gpointer bookmark);
-		gulong moveFirst();
-		gulong moveLast();
-		gulong moveNext();
-		gulong movePrev();
-		gint rowsize();
-		gulong affectedRows();
-		gint open(Command* cmd, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options); // FIXME: defaults
-		gint open(gchar* txt, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);
-		gint open(Command* cmd, Connection *cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options); // FIXME: defaults
-		gint open(gchar* txt, Connection *cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);
-		gint setConnection(Connection *cnc);
-		Connection *getConnection();
-		gint addField(GdaField* field);
-		GDA_CursorLocation getCursorloc();
-		void setCursorloc(GDA_CursorLocation loc );
-		GDA_CursorType getCursortype();
-		void setCursortype(GDA_CursorType type);
+		gulong moveFirst ();
+		gulong moveLast ();
+		gulong moveNext ();
+		gulong movePrev ();
+		gint rowsize ();
+		gulong affectedRows ();
+		gint open (Command * cmd, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);	// FIXME: defaults
+		gint open (gchar * txt, GDA_CursorType cursor_type,
+			   GDA_LockType lock_type, gulong options);
+		gint open (Command * cmd, Connection * cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);	// FIXME: defaults
+		gint open (gchar * txt, Connection * cnc,
+			   GDA_CursorType cursor_type, GDA_LockType lock_type,
+			   gulong options);
+		gint setConnection (Connection * cnc);
+		Connection *getConnection ();
+		gint addField (GdaField * field);
+		GDA_CursorLocation getCursorloc ();
+		void setCursorloc (GDA_CursorLocation loc);
+		GDA_CursorType getCursortype ();
+		void setCursortype (GDA_CursorType type);
 
-	private:
-		Connection *cnc;
-		GdaRecordset* _gda_recordset;
-};
+	      private:
+		  Connection * cnc;
+		GdaRecordset *_gda_recordset;
+	};
 
 };
 
 #endif // __gda_bindings_cpp_gdaRecordsetH
-

@@ -21,55 +21,73 @@
 
 using namespace gda;
 
-Error::Error() {
-	_gda_error = gda_error_new();
+Error::Error ()
+{
+	_gda_error = gda_error_new ();
 }
 
-Error::Error(GdaError *e) {
+Error::Error (GdaError * e)
+{
 	_gda_error = e;
 }
 
-Error::~Error() {
-	if (_gda_error) gda_error_free(_gda_error);
+Error::~Error ()
+{
+	if (_gda_error)
+		gda_error_free (_gda_error);
 }
 
-GdaError *Error::getCStruct() {
+GdaError *
+Error::getCStruct ()
+{
 	return _gda_error;
 }
 
-void Error::setCStruct(GdaError *e) {
+void
+Error::setCStruct (GdaError * e)
+{
 	_gda_error = e;
 }
 
 
-const gchar* Error::description() {
-	return gda_error_get_description(_gda_error);
+const gchar *
+Error::description ()
+{
+	return gda_error_get_description (_gda_error);
 }
 
-const glong Error::number() {
-	return gda_error_get_number(_gda_error);
+const glong
+Error::number ()
+{
+	return gda_error_get_number (_gda_error);
 }
 
-const gchar* Error::source() {
-	return gda_error_get_source(_gda_error);
+const gchar *
+Error::source ()
+{
+	return gda_error_get_source (_gda_error);
 }
 
-const gchar* Error::helpurl() {
-	return gda_error_get_help_url(_gda_error);
+const gchar *
+Error::helpurl ()
+{
+	return gda_error_get_help_url (_gda_error);
 }
 
-const gchar* Error::sqlstate() {
-	return gda_error_get_sqlstate(_gda_error);
+const gchar *
+Error::sqlstate ()
+{
+	return gda_error_get_sqlstate (_gda_error);
 }
 
-const gchar* Error::nativeMsg() {
-	return gda_error_get_native(_gda_error);
+const gchar *
+Error::nativeMsg ()
+{
+	return gda_error_get_native (_gda_error);
 }
 
-const gchar* Error::realcommand() {
-	return gda_error_get_real_command(_gda_error);
+const gchar *
+Error::realcommand ()
+{
+	return gda_error_get_real_command (_gda_error);
 }
-
-							     
-  
-  

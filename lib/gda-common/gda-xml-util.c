@@ -26,7 +26,7 @@
  * gda_xml_util_gensym
  */
 gchar *
-gda_xml_util_gensym (const gchar *sym)
+gda_xml_util_gensym (const gchar * sym)
 {
 	static gint count = 0;
 
@@ -46,7 +46,7 @@ gda_xml_util_dom_to_xml (xmlNodePtr node, gboolean freedoc)
 	g_return_val_if_fail (node != NULL, NULL);
 
 	doc = node->doc;
-	xmlDocDumpMemory (doc, (xmlChar **) &buffer, &size);
+	xmlDocDumpMemory (doc, (xmlChar **) & buffer, &size);
 	if (freedoc)
 		xmlFreeDoc (doc);
 
@@ -66,7 +66,7 @@ gda_xml_util_dom_to_sql (xmlNodePtr node, gboolean freedoc)
  * gda_xml_util_new_node
  */
 xmlNodePtr
-gda_xml_util_new_node (const gchar *tag, xmlNodePtr parent_node)
+gda_xml_util_new_node (const gchar * tag, xmlNodePtr parent_node)
 {
 	xmlNodePtr node;
 	xmlDocPtr doc;
@@ -75,7 +75,8 @@ gda_xml_util_new_node (const gchar *tag, xmlNodePtr parent_node)
 	if (parent_node == NULL) {
 		doc = xmlNewDoc ("1.0");
 #if 0
-		doc->extSubset = xmlIOParseDTD (NULL, input, XML_CHAR_ENCODING_NONE);
+		doc->extSubset =
+			xmlIOParseDTD (NULL, input, XML_CHAR_ENCODING_NONE);
 #endif
 
 		node = xmlNewDocNode (doc, NULL, (xmlChar *) tag, NULL);
@@ -91,7 +92,7 @@ gda_xml_util_new_node (const gchar *tag, xmlNodePtr parent_node)
  * gda_xml_util_new_attr
  */
 void
-gda_xml_util_new_attr (gchar *key, gchar *value, xmlNodePtr node)
+gda_xml_util_new_attr (gchar * key, gchar * value, xmlNodePtr node)
 {
 	xmlAttr *attr;
 	xmlDocPtr doc;

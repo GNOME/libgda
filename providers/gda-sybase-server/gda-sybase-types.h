@@ -34,25 +34,26 @@
  * Per-object specific structures
  */
 
-typedef struct _sybase_Types {
-  gchar         *name;
-  CS_INT        sql_type;
-  GDA_ValueType gda_type;
-} sybase_Types;
+typedef struct _sybase_Types
+{
+	gchar *name;
+	CS_INT sql_type;
+	GDA_ValueType gda_type;
+}
+sybase_Types;
 
 #define GDA_SYBASE_TYPE_CNT 23
 extern const sybase_Types gda_sybase_type_list[GDA_SYBASE_TYPE_CNT];
 
-const gshort        sybase_get_c_type(const GDA_ValueType);
-const GDA_ValueType sybase_get_gda_type(const CS_INT);
-const CS_INT        sybase_get_sql_type(const GDA_ValueType);
-const gchar         *sybase_get_type_name(const CS_INT);
+const gshort sybase_get_c_type (const GDA_ValueType);
+const GDA_ValueType sybase_get_gda_type (const CS_INT);
+const CS_INT sybase_get_sql_type (const GDA_ValueType);
+const gchar *sybase_get_type_name (const CS_INT);
 
-void gda_sybase_field_set_datetime(GdaServerField *, CS_DATETIME *);
-void gda_sybase_field_set_datetime4(GdaServerField *, CS_DATETIME4 *);
-void gda_sybase_field_set_general(GdaServerField       *,
-                                  sybase_Field          *,
-                                  sybase_Connection     *);
+void gda_sybase_field_set_datetime (GdaServerField *, CS_DATETIME *);
+void gda_sybase_field_set_datetime4 (GdaServerField *, CS_DATETIME4 *);
+void gda_sybase_field_set_general (GdaServerField *,
+				   sybase_Field *, sybase_Connection *);
 
 
 #endif

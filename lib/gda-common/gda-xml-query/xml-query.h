@@ -52,4 +52,3 @@
 #include "xml-query-stack.h"
 
 #endif /* _XML_QUERY_H_ */
-

@@ -35,6 +35,7 @@
 #include <gda-xml-database.h>
 #include <gda-xml-util.h>
 
-void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
+void gda_init (const gchar * app_id, const gchar * version, gint nargs,
+	       gchar * args[]);
 
 #endif

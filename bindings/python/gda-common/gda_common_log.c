@@ -17,57 +17,49 @@
  */
 
 static PyObject *
-_wrap_gda_log_enable (PyObject *dummy, PyObject *args) {
-    gda_log_enable();
-    Py_INCREF (Py_None);
-    return Py_None;
+_wrap_gda_log_enable (PyObject * dummy, PyObject * args)
+{
+	gda_log_enable ();
+	Py_INCREF (Py_None);
+	return Py_None;
 }
 
 static PyObject *
-_wrap_gda_log_disable (PyObject *dummy, PyObject *args) {
-    gda_log_disable();
-    Py_INCREF (Py_None);
-    return Py_None;
+_wrap_gda_log_disable (PyObject * dummy, PyObject * args)
+{
+	gda_log_disable ();
+	Py_INCREF (Py_None);
+	return Py_None;
 }
 
 static PyObject *
-_wrap_gda_log_is_enabled (PyObject *dummy, PyObject *args) {
-    return PyInt_FromLong (gda_log_is_enabled());
+_wrap_gda_log_is_enabled (PyObject * dummy, PyObject * args)
+{
+	return PyInt_FromLong (gda_log_is_enabled ());
 }
 
 static PyObject *
-_wrap_gda_log_message (PyObject *dummy, PyObject *args) {
-    gchar *msg;
+_wrap_gda_log_message (PyObject * dummy, PyObject * args)
+{
+	gchar *msg;
 
-    if (!PyArg_ParseTuple (args, "s!:gda_log_is_enable", &msg))
-        return NULL;
+	if (!PyArg_ParseTuple (args, "s!:gda_log_is_enable", &msg))
+		return NULL;
 
-    gda_log_message("%s", msg);
-    Py_INCREF (Py_None);
-    return Py_None;
+	gda_log_message ("%s", msg);
+	Py_INCREF (Py_None);
+	return Py_None;
 }
 
 static PyObject *
-_wrap_gda_log_error (PyObject *dummy, PyObject *args) {
-    gchar *msg;
+_wrap_gda_log_error (PyObject * dummy, PyObject * args)
+{
+	gchar *msg;
 
-    if (!PyArg_ParseTuple (args, "s!:gda_log_is_enable", &msg))
-        return NULL;
+	if (!PyArg_ParseTuple (args, "s!:gda_log_is_enable", &msg))
+		return NULL;
 
-    gda_log_error("%s", msg);
-    Py_INCREF (Py_None);
-    return Py_None;
+	gda_log_error ("%s", msg);
+	Py_INCREF (Py_None);
+	return Py_None;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

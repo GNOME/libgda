@@ -37,20 +37,22 @@
  * Per-object specific structures
  */
 
-typedef struct _tds_Command {
-  CS_COMMAND               *cmd;
-} tds_Command;
+typedef struct _tds_Command
+{
+	CS_COMMAND *cmd;
+}
+tds_Command;
 
 /*
  * Server implementation prototypes
  */
 
-gboolean gda_tds_command_new (GdaServerCommand *cmd);
-GdaServerRecordset* gda_tds_command_execute (GdaServerCommand *cmd,
-                                              GdaServerError *error,
-                                              const GDA_CmdParameterSeq *params,
-                                              gulong *affected,
-                                              gulong options);
-void gda_tds_command_free (GdaServerCommand *cmd);
+gboolean gda_tds_command_new (GdaServerCommand * cmd);
+GdaServerRecordset *gda_tds_command_execute (GdaServerCommand * cmd,
+					     GdaServerError * error,
+					     const GDA_CmdParameterSeq *
+					     params, gulong * affected,
+					     gulong options);
+void gda_tds_command_free (GdaServerCommand * cmd);
 
 #endif

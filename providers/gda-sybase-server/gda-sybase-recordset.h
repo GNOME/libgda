@@ -37,44 +37,45 @@
  * Per-object specific structures
  */
 
-typedef struct _sybase_Field {
-  CS_INT     indicator;
-  gchar      *data;
-  CS_INT     datalen;
-  CS_DATAFMT *fmt;
-} sybase_Field;
+typedef struct _sybase_Field
+{
+	CS_INT indicator;
+	gchar *data;
+	CS_INT datalen;
+	CS_DATAFMT *fmt;
+}
+sybase_Field;
 
-typedef struct _sybase_Recordset {
-  GdaServerConnection *cnc;
-  GdaServerCommand    *cmd;
-  sybase_Connection *scnc;
-  sybase_Command    *scmd;
-	
-  CS_RETCODE   ret;
-  CS_RETCODE   result_type;
-  CS_INT       rows_cnt;
-  gboolean     failed;
-  CS_INT       colscnt;
-  CS_DATAFMT   *datafmt;
-  sybase_Field *data;
-} sybase_Recordset;
+typedef struct _sybase_Recordset
+{
+	GdaServerConnection *cnc;
+	GdaServerCommand *cmd;
+	sybase_Connection *scnc;
+	sybase_Command *scmd;
 
-gboolean gda_sybase_recordset_new       (GdaServerRecordset *);
-gint     gda_sybase_recordset_move_next (GdaServerRecordset *);
-gint     gda_sybase_recordset_move_prev (GdaServerRecordset *);
-gint     gda_sybase_recordset_close     (GdaServerRecordset *);
-void     gda_sybase_recordset_free      (GdaServerRecordset *);
+	CS_RETCODE ret;
+	CS_RETCODE result_type;
+	CS_INT rows_cnt;
+	gboolean failed;
+	CS_INT colscnt;
+	CS_DATAFMT *datafmt;
+	sybase_Field *data;
+}
+sybase_Recordset;
 
-void     gda_sybase_init_recset_fields (GdaServerError *,
-                                        GdaServerRecordset *,
-                                        sybase_Recordset *,
-                                        CS_RETCODE);
+gboolean gda_sybase_recordset_new (GdaServerRecordset *);
+gint gda_sybase_recordset_move_next (GdaServerRecordset *);
+gint gda_sybase_recordset_move_prev (GdaServerRecordset *);
+gint gda_sybase_recordset_close (GdaServerRecordset *);
+void gda_sybase_recordset_free (GdaServerRecordset *);
 
-void gda_sybase_field_fill_values(GdaServerRecordset *,
-                                  sybase_Recordset *);
-gint gda_sybase_row_result(gboolean forward,
-                           GdaServerRecordset *,
-                           sybase_Recordset *,
-                           CS_COMMAND *);
+void gda_sybase_init_recset_fields (GdaServerError *,
+				    GdaServerRecordset *,
+				    sybase_Recordset *, CS_RETCODE);
+
+void gda_sybase_field_fill_values (GdaServerRecordset *, sybase_Recordset *);
+gint gda_sybase_row_result (gboolean forward,
+			    GdaServerRecordset *,
+			    sybase_Recordset *, CS_COMMAND *);
 
 #endif

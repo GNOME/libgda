@@ -32,11 +32,12 @@
 #include <GDA.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef struct _GdaField      GdaField;
-typedef struct _GdaFieldClass GdaFieldClass;
+	typedef struct _GdaField GdaField;
+	typedef struct _GdaFieldClass GdaFieldClass;
 
 #define GDA_TYPE_FIELD            (gda_field_get_type())
 
@@ -56,28 +57,28 @@ typedef struct _GdaFieldClass GdaFieldClass;
 #  define GDA_IS_FIELD_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_FIELD))
 #endif
 
-struct _GdaField
-{
+	struct _GdaField
+	{
 #ifdef HAVE_GOBJECT
-  GObject              object;
+		GObject object;
 #else
-  GtkObject            object;
+		GtkObject object;
 #endif
-  GDA_FieldAttributes* attributes;
-  gint                 actual_length;
-  GDA_FieldValue*      real_value;
-  GDA_FieldValue*      shadow_value;
-  GDA_FieldValue*      original_value;
-};
+		GDA_FieldAttributes *attributes;
+		gint actual_length;
+		GDA_FieldValue *real_value;
+		GDA_FieldValue *shadow_value;
+		GDA_FieldValue *original_value;
+	};
 
-struct _GdaFieldClass
-{
+	struct _GdaFieldClass
+	{
 #ifdef HAVE_GOBJECT
-  GObjectClass parent_class;
+		GObjectClass parent_class;
 #else
-  GtkObjectClass parent_class;
+		GtkObjectClass parent_class;
 #endif
-};
+	};
 
 #define gda_field_isnull(f)         (f->real_value ? (f)->real_value->_d : 1)
 #define gda_field_typecode(f)       ((f)->real_value->_u._d)
@@ -103,13 +104,14 @@ struct _GdaFieldClass
 #define gda_field_ubingint(f)       ((f)->real_value->_u.v._u.ull)
 #define gda_field_usmallint(f)      ((f)->real_value->_u.v._u.us)
 
-guint         gda_field_get_type        (void);
-GdaField*    gda_field_new             (void);
-gchar*        gda_fieldtype_2_string    (gchar* bfr, gint length, GDA_ValueType type);
-GDA_ValueType gda_string_2_fieldtype    (gchar *type);
-gchar*        gda_stringify_value       (gchar* bfr, gint length, GdaField* f);
+	guint gda_field_get_type (void);
+	GdaField *gda_field_new (void);
+	gchar *gda_fieldtype_2_string (gchar * bfr, gint length,
+				       GDA_ValueType type);
+	GDA_ValueType gda_string_2_fieldtype (gchar * type);
+	gchar *gda_stringify_value (gchar * bfr, gint length, GdaField * f);
 
-gint          gda_field_actual_size     (GdaField* f);
+	gint gda_field_actual_size (GdaField * f);
 #define       gda_field_defined_size(f) (f->attributes->definedSize)
 #define       gda_field_name(f)         (f->attributes->name)
 #define       gda_field_scale(f)        (f->attributes->scale)

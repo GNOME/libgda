@@ -20,16 +20,16 @@
 #ifndef __gda_value_h__
 #define __gda_value_h__ 1
 
-GDA_Value* gda_value_new             (void);
-void       gda_value_free            (GDA_Value* val);
+GDA_Value *gda_value_new (void);
+void gda_value_free (GDA_Value * val);
 
-void       gda_value_set_gint        (GDA_Value* val, gint i);
-void       gda_value_set_guint       (GDA_Value* val, guint ui);
-void       gda_value_set_glong       (GDA_Value* val, glong l);
-void       gda_value_set_gulong      (GDA_Value* val, gulong ul);
-void       gda_value_set_gshort      (GDA_Value* val, gshort s);
-void       gda_value_set_gushort     (GDA_Value* val, gushort us);
-void       gda_value_set_glong_long  (GDA_Value* val, glonglong ll);
-void       gda_value_set_gulong_long (GDA_Value* val, gulonglong ull);
+void gda_value_set_gint (GDA_Value * val, gint i);
+void gda_value_set_guint (GDA_Value * val, guint ui);
+void gda_value_set_glong (GDA_Value * val, glong l);
+void gda_value_set_gulong (GDA_Value * val, gulong ul);
+void gda_value_set_gshort (GDA_Value * val, gshort s);
+void gda_value_set_gushort (GDA_Value * val, gushort us);
+void gda_value_set_glong_long (GDA_Value * val, glonglong ll);
+void gda_value_set_gulong_long (GDA_Value * val, gulonglong ull);
 
 #endif

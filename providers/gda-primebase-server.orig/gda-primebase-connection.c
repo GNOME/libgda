@@ -18,397 +18,420 @@
 
 #include "gda-primebase.h"
 
-typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
-                                              GdaServerConnection *,
-                                              GDA_Connection_Constraint *,
-                                              gint);
+typedef GdaServerRecordset *(*schema_ops_fn) (GdaError *,
+					      GdaServerConnection *,
+					      GDA_Connection_Constraint *,
+					      gint);
 
 schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = {
-  NULL,
+	NULL,
 };
 
-static gchar*
-  get_value (gchar* ptr);
+static gchar *get_value (gchar * ptr);
 
 static void
-  gda_primebase_update_dsn_parameters(GdaServerConnection *cnc,
-                                      const gchar *dsn);
+gda_primebase_update_dsn_parameters (GdaServerConnection * cnc,
+				     const gchar * dsn);
 
 static const primebase_Types gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT] = {
-  { "TINYINT",    A_TINYINT,   GDA_TypeSmallint }, //  8-bit
-  { "SMALLINT",   A_SMINT,     GDA_TypeSmallint }, // 16-bit
-  { "SMINT",      A_SMINT,     GDA_TypeSmallint }, // 16-bit
-  { "INTEGER",    A_INTEGER,   GDA_TypeInteger  }, // 32-bit
-  { "INT",        A_INTEGER,   GDA_TypeInteger  }, // 32-bit   ( 5)
-  
-  { "DECIMAL",    A_DECIMAL,   GDA_TypeDecimal     },
-  { "MONEY",      A_MONEY,     GDA_TypeCurrency    },
+	{"TINYINT", A_TINYINT, GDA_TypeSmallint},	//  8-bit
+	{"SMALLINT", A_SMINT, GDA_TypeSmallint},	// 16-bit
+	{"SMINT", A_SMINT, GDA_TypeSmallint},	// 16-bit
+	{"INTEGER", A_INTEGER, GDA_TypeInteger},	// 32-bit
+	{"INT", A_INTEGER, GDA_TypeInteger},	// 32-bit   ( 5)
 
-  { "SMALLFLOAT", A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
-  { "SMFLOAT",    A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
-  { "REAL",       A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte  (10)
-  { "FLOAT",      A_FLOAT,     GDA_TypeDouble      }, //  8-byte
-  /* Just on 68k macs */
-  { "REAL10",     A_FLOAT10,   GDA_TypeDouble      }, // 10-byte
-  { "REAL12",     A_FLOAT12,   GDA_TypeDouble      }, // 12-byte
+	{"DECIMAL", A_DECIMAL, GDA_TypeDecimal},
+	{"MONEY", A_MONEY, GDA_TypeCurrency},
 
-  /* What's on $maybe? */
-  { "BOOLEAN",    A_BOOLEAN,   GDA_TypeBoolean     },
-  
-  { "DATE",       A_DATE,      GDA_TypeDbDate      }, //          (15)
-  { "TIME",       A_TIME,      GDA_TypeDbTime      },
-  { "TIMESTAMP",  A_TIMESTAMP, GDA_TypeDbTimestamp },
-  { "DATETIME",   A_TIMESTAMP, GDA_TypeDbTimestamp },
+	{"SMALLFLOAT", A_SMFLOAT, GDA_TypeSingle},	//  4-byte
+	{"SMFLOAT", A_SMFLOAT, GDA_TypeSingle},	//  4-byte
+	{"REAL", A_SMFLOAT, GDA_TypeSingle},	//  4-byte  (10)
+	{"FLOAT", A_FLOAT, GDA_TypeDouble},	//  8-byte
+	/* Just on 68k macs */
+	{"REAL10", A_FLOAT10, GDA_TypeDouble},	// 10-byte
+	{"REAL12", A_FLOAT12, GDA_TypeDouble},	// 12-byte
 
-  { "CHAR",       A_CHAR,      GDA_TypeChar        },
-  { "VARCHAR",    A_VARCHAR,   GDA_TypeVarchar     }, //          (20)
-  
-  { "BINARY",     A_BIN,       GDA_TypeVarbin      },
-  { "BIN",        A_BIN,       GDA_TypeVarbin      },
-  { "VARBINARY",  A_VARBIN,    GDA_TypeVarbin      },
-  { "VARBIN",     A_VARBIN,    GDA_TypeVarbin      },
+	/* What's on $maybe? */
+	{"BOOLEAN", A_BOOLEAN, GDA_TypeBoolean},
 
-  { "GENERIC",    A_GENERIC,   GDA_TypeVarchar     },
-  { "OBJNAME",    A_OBJNAME,   GDA_TypeVarchar     },
-  
-  // This should ALWAYS be the LAST entry
-  { NULL,         A_GENERIC,   GDA_TypeNull        }
+	{"DATE", A_DATE, GDA_TypeDbDate},	//          (15)
+	{"TIME", A_TIME, GDA_TypeDbTime},
+	{"TIMESTAMP", A_TIMESTAMP, GDA_TypeDbTimestamp},
+	{"DATETIME", A_TIMESTAMP, GDA_TypeDbTimestamp},
+
+	{"CHAR", A_CHAR, GDA_TypeChar},
+	{"VARCHAR", A_VARCHAR, GDA_TypeVarchar},	//          (20)
+
+	{"BINARY", A_BIN, GDA_TypeVarbin},
+	{"BIN", A_BIN, GDA_TypeVarbin},
+	{"VARBINARY", A_VARBIN, GDA_TypeVarbin},
+	{"VARBIN", A_VARBIN, GDA_TypeVarbin},
+
+	{"GENERIC", A_GENERIC, GDA_TypeVarchar},
+	{"OBJNAME", A_OBJNAME, GDA_TypeVarchar},
+
+	// This should ALWAYS be the LAST entry
+	{NULL, A_GENERIC, GDA_TypeNull}
 };
 
 
 gboolean
-gda_primebase_connection_new (GdaServerConnection *cnc)
+gda_primebase_connection_new (GdaServerConnection * cnc)
 {
-  static gboolean initialized;
-  gint   i = 0;
-  primebase_Connection *pcnc = NULL;
-  
-  if (!initialized) {
-    for (i=GDA_Connection_GDCN_SCHEMA_AGGREGATES;
-         i<= GDA_Connection_GDCN_SCHEMA_LAST;
-         i++) {
-      schema_ops[i] = NULL;
-    }
-  }
-  
-  pcnc = g_new0(primebase_Connection, 1);
-  g_return_val_if_fail(pcnc != NULL, FALSE);
-  gda_server_connection_set_user_data(cnc, (gpointer) pcnc);
-  
-  return TRUE;
+	static gboolean initialized;
+	gint i = 0;
+	primebase_Connection *pcnc = NULL;
+
+	if (!initialized) {
+		for (i = GDA_Connection_GDCN_SCHEMA_AGGREGATES;
+		     i <= GDA_Connection_GDCN_SCHEMA_LAST; i++) {
+			schema_ops[i] = NULL;
+		}
+	}
+
+	pcnc = g_new0 (primebase_Connection, 1);
+	g_return_val_if_fail (pcnc != NULL, FALSE);
+	gda_server_connection_set_user_data (cnc, (gpointer) pcnc);
+
+	return TRUE;
 }
 
 gint
-gda_primebase_connection_open (GdaServerConnection *cnc,
-                               const gchar *dsn,
-                               const gchar *user,
-                               const gchar *password)
+gda_primebase_connection_open (GdaServerConnection * cnc,
+			       const gchar * dsn,
+			       const gchar * user, const gchar * password)
 {
-  primebase_Connection *pcnc = NULL;
-  primebase_Error      *perr = NULL;
-  long                  psid = 0;
-  gchar                *t_user = NULL; // DSN user override
-  gchar                *t_pass = NULL; // DSN pass override
-  gchar                *t_copt = NULL; // DSN connection options
-  gchar                *c_user = NULL; // CONINFO user
-  gchar                *c_pass = NULL; // CONINFO pass
-  gchar                *c_copt = NULL; // CONINFO connection options
-  int                  status;
-  long                 s_num, s_id, vid, start, state;
-  char                 network[255];
+	primebase_Connection *pcnc = NULL;
+	primebase_Error *perr = NULL;
+	long psid = 0;
+	gchar *t_user = NULL;	// DSN user override
+	gchar *t_pass = NULL;	// DSN pass override
+	gchar *t_copt = NULL;	// DSN connection options
+	gchar *c_user = NULL;	// CONINFO user
+	gchar *c_pass = NULL;	// CONINFO pass
+	gchar *c_copt = NULL;	// CONINFO connection options
+	int status;
+	long s_num, s_id, vid, start, state;
+	char network[255];
 
 
-  g_return_val_if_fail(cnc != NULL, -1);
-  gda_server_connection_set_username(cnc, user);
-  gda_server_connection_set_password(cnc, password);
-  gda_server_connection_set_dsn(cnc, dsn);
-  pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(pcnc != NULL, -1);
+	g_return_val_if_fail (cnc != NULL, -1);
+	gda_server_connection_set_username (cnc, user);
+	gda_server_connection_set_password (cnc, password);
+	gda_server_connection_set_dsn (cnc, dsn);
+	pcnc = (primebase_Connection *)
+		gda_server_connection_get_user_data (cnc);
+	g_return_val_if_fail (pcnc != NULL, -1);
 
-  gda_primebase_update_dsn_parameters(cnc, dsn);
-  t_user = (gchar *) gda_server_connection_get_username(cnc);
-  t_pass = (gchar *) gda_server_connection_get_password(cnc);
-  
-  if (CLInit(&pcnc->sid, pcnc->host,
-             t_user, t_pass, pcnc->connparm
-            ) == A_OK
-     ) {
-    pcnc->snum = CLGetSn(pcnc->sid);
-    gda_log_message(_("%2ld: Connected to '%s@%s' with connparm: '%s'"),
-                    pcnc->sid, t_user, pcnc->host, pcnc->connparm);
-	 status = CLConInfo(0, pcnc->snum, &s_id, &vid,
-                       pcnc->host, c_user, network, pcnc->connparm,
-                       &start, &state);
-    gda_log_message(_("%2ld: ConInfo: %s@%s, Client API v%x, status: %x"),
-                    pcnc->sid, t_user, pcnc->host, vid, status);
-  } else {
-    gda_log_error(_("Could not connect to '%s'"), pcnc->host);
-	 perr = gda_primebase_get_error(pcnc->sid, TRUE);
-	 gda_primebase_free_error(perr);
-	 CLEnd(pcnc->sid);
-	 return -1;
-  }
-  return 0;
+	gda_primebase_update_dsn_parameters (cnc, dsn);
+	t_user = (gchar *) gda_server_connection_get_username (cnc);
+	t_pass = (gchar *) gda_server_connection_get_password (cnc);
+
+	if (CLInit (&pcnc->sid, pcnc->host,
+		    t_user, t_pass, pcnc->connparm) == A_OK) {
+		pcnc->snum = CLGetSn (pcnc->sid);
+		gda_log_message (_
+				 ("%2ld: Connected to '%s@%s' with connparm: '%s'"),
+				 pcnc->sid, t_user, pcnc->host,
+				 pcnc->connparm);
+		status = CLConInfo (0, pcnc->snum, &s_id, &vid, pcnc->host,
+				    c_user, network, pcnc->connparm, &start,
+				    &state);
+		gda_log_message (_
+				 ("%2ld: ConInfo: %s@%s, Client API v%x, status: %x"),
+				 pcnc->sid, t_user, pcnc->host, vid, status);
+	}
+	else {
+		gda_log_error (_("Could not connect to '%s'"), pcnc->host);
+		perr = gda_primebase_get_error (pcnc->sid, TRUE);
+		gda_primebase_free_error (perr);
+		CLEnd (pcnc->sid);
+		return -1;
+	}
+	return 0;
 }
 
 void
-gda_primebase_connection_close (GdaServerConnection *cnc)
+gda_primebase_connection_close (GdaServerConnection * cnc)
 {
-  primebase_Connection *pcnc = NULL;
-  
-  g_return_if_fail(cnc != NULL);
-  pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_if_fail(pcnc != NULL);
-  
-  CLEnd(pcnc->sid);
+	primebase_Connection *pcnc = NULL;
+
+	g_return_if_fail (cnc != NULL);
+	pcnc = (primebase_Connection *)
+		gda_server_connection_get_user_data (cnc);
+	g_return_if_fail (pcnc != NULL);
+
+	CLEnd (pcnc->sid);
 }
 
 gint
-gda_primebase_connection_begin_transaction (GdaServerConnection *cnc)
+gda_primebase_connection_begin_transaction (GdaServerConnection * cnc)
 {
-  return -1;
+	return -1;
 }
 
 gint
-gda_primebase_connection_commit_transaction (GdaServerConnection *cnc)
+gda_primebase_connection_commit_transaction (GdaServerConnection * cnc)
 {
-  return -1;
+	return -1;
 }
 
 gint
-gda_primebase_connection_rollback_transaction (GdaServerConnection *cnc)
+gda_primebase_connection_rollback_transaction (GdaServerConnection * cnc)
 {
-  return -1;
+	return -1;
 }
 
 GdaServerRecordset *
-gda_primebase_connection_open_schema (GdaServerConnection *cnc,
-				 GdaError *error,
-				 GDA_Connection_QType t,
-				 GDA_Connection_Constraint *constraints,
-				 gint length)
+gda_primebase_connection_open_schema (GdaServerConnection * cnc,
+				      GdaError * error,
+				      GDA_Connection_QType t,
+				      GDA_Connection_Constraint * constraints,
+				      gint length)
 {
-  return NULL;
+	return NULL;
 }
 
 glong
-gda_primebase_connection_modify_schema (GdaServerConnection *cnc,
-                                        GDA_Connection_QType t,
-                                        GDA_Connection_Constraint *constraints,
-                                        gint length)
+gda_primebase_connection_modify_schema (GdaServerConnection * cnc,
+					GDA_Connection_QType t,
+					GDA_Connection_Constraint *
+					constraints, gint length)
 {
-  return -1;
+	return -1;
 }
 
 gint
-gda_primebase_connection_start_logging (GdaServerConnection *cnc,
-				   const gchar *filename)
+gda_primebase_connection_start_logging (GdaServerConnection * cnc,
+					const gchar * filename)
 {
-  return -1;
+	return -1;
 }
 
 gint
-gda_primebase_connection_stop_logging (GdaServerConnection *cnc)
+gda_primebase_connection_stop_logging (GdaServerConnection * cnc)
 {
-  return -1;
+	return -1;
 }
 
 gchar *
-gda_primebase_connection_create_table (GdaServerConnection *cnc,
-				       GDA_RowAttributes *columns)
+gda_primebase_connection_create_table (GdaServerConnection * cnc,
+				       GDA_RowAttributes * columns)
 {
 }
 
 gboolean
-gda_primebase_connection_supports (GdaServerConnection *cnc,
+gda_primebase_connection_supports (GdaServerConnection * cnc,
 				   GDA_Connection_Feature feature)
 {
-  g_return_val_if_fail(cnc != NULL, FALSE);
+	g_return_val_if_fail (cnc != NULL, FALSE);
 
-  switch (feature) {
-  case GDA_Connection_FEATURE_SQL:
-    return TRUE;
-  case GDA_Connection_FEATURE_FOREIGN_KEYS:
-  case GDA_Connection_FEATURE_INHERITANCE:
-  case GDA_Connection_FEATURE_OBJECT_ID:
-  case GDA_Connection_FEATURE_PROCS:
-  case GDA_Connection_FEATURE_SEQUENCES:
-  case GDA_Connection_FEATURE_SQL_SUBSELECT:
-  case GDA_Connection_FEATURE_TRANSACTIONS:
-  case GDA_Connection_FEATURE_TRIGGERS:
-  case GDA_Connection_FEATURE_VIEWS:
-  case GDA_Connection_FEATURE_XML_QUERIES:
-  default:
-    return FALSE;
-  }
-  
-  return FALSE;
+	switch (feature) {
+	case GDA_Connection_FEATURE_SQL:
+		return TRUE;
+	case GDA_Connection_FEATURE_FOREIGN_KEYS:
+	case GDA_Connection_FEATURE_INHERITANCE:
+	case GDA_Connection_FEATURE_OBJECT_ID:
+	case GDA_Connection_FEATURE_PROCS:
+	case GDA_Connection_FEATURE_SEQUENCES:
+	case GDA_Connection_FEATURE_SQL_SUBSELECT:
+	case GDA_Connection_FEATURE_TRANSACTIONS:
+	case GDA_Connection_FEATURE_TRIGGERS:
+	case GDA_Connection_FEATURE_VIEWS:
+	case GDA_Connection_FEATURE_XML_QUERIES:
+	default:
+		return FALSE;
+	}
+
+	return FALSE;
 }
 
 GDA_ValueType
-gda_primebase_connection_get_gda_type (GdaServerConnection *cnc, gulong sql_type)
+gda_primebase_connection_get_gda_type (GdaServerConnection * cnc,
+				       gulong sql_type)
 {
-  gint i = 0;
-        
-  while ((i < GDA_PRIMEBASE_TYPE_CNT)) {
-    if (gda_primebase_type_list[i].sql_type == sql_type) {
-      return gda_primebase_type_list[i].gda_type;
-    }
-    i++;
-  }
-        
-  return gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT - 1].gda_type;
+	gint i = 0;
+
+	while ((i < GDA_PRIMEBASE_TYPE_CNT)) {
+		if (gda_primebase_type_list[i].sql_type == sql_type) {
+			return gda_primebase_type_list[i].gda_type;
+		}
+		i++;
+	}
+
+	return gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT - 1].gda_type;
 }
 
 gshort
-gda_primebase_connection_get_c_type (GdaServerConnection *cnc, GDA_ValueType type)
+gda_primebase_connection_get_c_type (GdaServerConnection * cnc,
+				     GDA_ValueType type)
 {
-  return -1;
+	return -1;
 }
 
 gchar *
-gda_primebase_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
+gda_primebase_connection_sql2xml (GdaServerConnection * cnc,
+				  const gchar * sql)
 {
-  return NULL;
+	return NULL;
 }
 
 gchar *
-gda_primebase_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
+gda_primebase_connection_xml2sql (GdaServerConnection * cnc,
+				  const gchar * xml)
 {
-  return NULL;
+	return NULL;
 }
 
 void
-gda_primebase_connection_free (GdaServerConnection *cnc)
+gda_primebase_connection_free (GdaServerConnection * cnc)
 {
 }
 
 void
-gda_primebase_error_make (GdaError *error,
-                          GdaServerRecordset *recset,
-                          GdaServerConnection *cnc,
-                          gchar *where)
+gda_primebase_error_make (GdaError * error,
+			  GdaServerRecordset * recset,
+			  GdaServerConnection * cnc, gchar * where)
 {
-  primebase_Connection *pcnc  = NULL;
-  primebase_Recordset  *prset = NULL;
-  long perr, serr, snum;
-  gchar msg[256];
-  gchar *errtxt;
+	primebase_Connection *pcnc = NULL;
+	primebase_Recordset *prset = NULL;
+	long perr, serr, snum;
+	gchar msg[256];
+	gchar *errtxt;
 
-  pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
+	pcnc = (primebase_Connection *)
+		gda_server_connection_get_user_data (cnc);
 
-  if (pcnc) {
+	if (pcnc) {
 //    prset = gda_server_recordset_get_user_data(recset);
-    if (CLGetErr(pcnc->sid, &perr, &serr, NULL, NULL, msg) == A_OK)	{
-      snum = CLGetSn(pcnc->sid);
-      errtxt = g_strdup_printf("%2ld: ERROR: %ld (%ld) : %s.",
-                               snum, perr, serr, msg);
-		if (errtxt) {
-        gda_error_set_description(error, errtxt);
-		  g_free((gpointer) errtxt);
-		} else {
-        gda_error_set_description(error, msg);
-      }
-		gda_error_set_number(error, perr);
-      gda_error_set_source(error, "[gda-primebase]");
-      gda_error_set_help_url(error, _("Not available"));
-      gda_error_set_help_context(error, _("Not available"));
-      gda_error_set_sqlstate(error, _("error"));
-      gda_error_set_native(error, gda_server_error_get_description(error));
-    }
-  }
+		if (CLGetErr (pcnc->sid, &perr, &serr, NULL, NULL, msg) ==
+		    A_OK) {
+			snum = CLGetSn (pcnc->sid);
+			errtxt = g_strdup_printf
+				("%2ld: ERROR: %ld (%ld) : %s.", snum, perr,
+				 serr, msg);
+			if (errtxt) {
+				gda_error_set_description (error, errtxt);
+				g_free ((gpointer) errtxt);
+			}
+			else {
+				gda_error_set_description (error, msg);
+			}
+			gda_error_set_number (error, perr);
+			gda_error_set_source (error, "[gda-primebase]");
+			gda_error_set_help_url (error, _("Not available"));
+			gda_error_set_help_context (error,
+						    _("Not available"));
+			gda_error_set_sqlstate (error, _("error"));
+			gda_error_set_native (error,
+					      gda_server_error_get_description
+					      (error));
+		}
+	}
 }
 
 primebase_Error *
-gda_primebase_get_error(long sid, gboolean log)
+gda_primebase_get_error (long sid, gboolean log)
 {
-  primebase_Error *perr = g_new0(primebase_Error, 1);
-  
-  if (perr == NULL) {
-    gda_log_message(_("Not enough memory for primebase_Error structure."));
-	 return NULL;
-  }
-  if (CLGetErr(sid, &perr->perr, &perr->serr, NULL, NULL, perr->msg
-              ) == A_OK
-     ) {
-    perr->snum = CLGetSn(sid);
-	 if (log) {
-      gda_log_message(_("%2ld: ERROR: %ld (%ld) : %s.\n"),
-                      perr->snum, perr->perr, perr->serr, perr->msg);
-    }
-	 return perr;
-  }
-  gda_primebase_free_error(perr);
-  return NULL;
-}
+	primebase_Error *perr = g_new0 (primebase_Error, 1);
 
-void gda_primebase_free_error(primebase_Error *perr)
-{
-  if (perr) {
-    g_free((gpointer) perr);
-	 perr = NULL;
-  }
+	if (perr == NULL) {
+		gda_log_message (_
+				 ("Not enough memory for primebase_Error structure."));
+		return NULL;
+	}
+	if (CLGetErr (sid, &perr->perr, &perr->serr, NULL, NULL, perr->msg) ==
+	    A_OK) {
+		perr->snum = CLGetSn (sid);
+		if (log) {
+			gda_log_message (_("%2ld: ERROR: %ld (%ld) : %s.\n"),
+					 perr->snum, perr->perr, perr->serr,
+					 perr->msg);
+		}
+		return perr;
+	}
+	gda_primebase_free_error (perr);
+	return NULL;
 }
 
 void
-gda_primebase_update_dsn_parameters(GdaServerConnection *cnc,
-                                    const gchar *dsn)
+gda_primebase_free_error (primebase_Error * perr)
 {
-  primebase_Connection *pcnc = NULL;
-  gchar *user                = NULL;
-  gchar *password            = NULL;
-  gchar *ptr_s = NULL, *ptr_e = NULL;
-  
-  g_return_if_fail(cnc != NULL);
-  pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_if_fail(pcnc != NULL);
-  gda_server_connection_set_dsn(cnc, dsn);
-  
-  ptr_s = (gchar *) dsn;
-  while (ptr_s && *ptr_s) {
-    ptr_e = strchr(ptr_s, ';');
-          
-    if (ptr_e)
-      *ptr_e = '\0';
-    if (strncasecmp(ptr_s, "HOST", strlen("HOST")) == 0) {
-      if (pcnc->host) g_free((gpointer) pcnc->host);
-      pcnc->host = get_value(ptr_s);
-    } else if (strncasecmp(ptr_s, "DATABASE", strlen("DATABASE")) == 0) {
-      if (pcnc->db) g_free((gpointer) pcnc->db);
-      pcnc->db = get_value(ptr_s);
-	 } else if (strncasecmp(ptr_s, "USERNAME", strlen("USERNAME")) == 0) {
-      user = get_value(ptr_s);
-	 } else if (strncasecmp(ptr_s, "PASSWORD", strlen("PASSWORD")) == 0) {
-      password = get_value(ptr_s);
-    }
-
-    ptr_s = ptr_e;
-    if (ptr_s)
-      ptr_s++;
-  }
-
-  if (user) {
-    gda_server_connection_set_username(cnc, user);
-  }
-  if (password) {
-    gda_server_connection_set_password(cnc, password);
-  }
+	if (perr) {
+		g_free ((gpointer) perr);
+		perr = NULL;
+	}
 }
 
-gchar*
-get_value (gchar* ptr) {
-  while (*ptr && *ptr != '=')
-    ptr++;
-  
-  if (!*ptr)
-    return NULL;
+void
+gda_primebase_update_dsn_parameters (GdaServerConnection * cnc,
+				     const gchar * dsn)
+{
+	primebase_Connection *pcnc = NULL;
+	gchar *user = NULL;
+	gchar *password = NULL;
+	gchar *ptr_s = NULL, *ptr_e = NULL;
 
-  ptr++;
-  if (!*ptr)
-    return NULL;
+	g_return_if_fail (cnc != NULL);
+	pcnc = (primebase_Connection *)
+		gda_server_connection_get_user_data (cnc);
+	g_return_if_fail (pcnc != NULL);
+	gda_server_connection_set_dsn (cnc, dsn);
 
-  while (*ptr && isspace(*ptr))
-    ptr++;
+	ptr_s = (gchar *) dsn;
+	while (ptr_s && *ptr_s) {
+		ptr_e = strchr (ptr_s, ';');
 
-  return (g_strdup(ptr));
+		if (ptr_e)
+			*ptr_e = '\0';
+		if (strncasecmp (ptr_s, "HOST", strlen ("HOST")) == 0) {
+			if (pcnc->host)
+				g_free ((gpointer) pcnc->host);
+			pcnc->host = get_value (ptr_s);
+		}
+		else if (strncasecmp (ptr_s, "DATABASE", strlen ("DATABASE"))
+			 == 0) {
+			if (pcnc->db)
+				g_free ((gpointer) pcnc->db);
+			pcnc->db = get_value (ptr_s);
+		}
+		else if (strncasecmp (ptr_s, "USERNAME", strlen ("USERNAME"))
+			 == 0) {
+			user = get_value (ptr_s);
+		}
+		else if (strncasecmp (ptr_s, "PASSWORD", strlen ("PASSWORD"))
+			 == 0) {
+			password = get_value (ptr_s);
+		}
+
+		ptr_s = ptr_e;
+		if (ptr_s)
+			ptr_s++;
+	}
+
+	if (user) {
+		gda_server_connection_set_username (cnc, user);
+	}
+	if (password) {
+		gda_server_connection_set_password (cnc, password);
+	}
+}
+
+gchar *
+get_value (gchar * ptr)
+{
+	while (*ptr && *ptr != '=')
+		ptr++;
+
+	if (!*ptr)
+		return NULL;
+
+	ptr++;
+	if (!*ptr)
+		return NULL;
+
+	while (*ptr && isspace (*ptr))
+		ptr++;
+
+	return (g_strdup (ptr));
 }

@@ -35,27 +35,28 @@ signal_handler (int signo)
 	static gint in_fatal = 0;
 
 	/* avoid loops */
-	if (in_fatal > 0) return;
+	if (in_fatal > 0)
+		return;
 	++in_fatal;
 
 	switch (signo) {
-	case SIGSEGV : /* fast cleanup only */
-	case SIGBUS :
-	case SIGILL :
-		gda_log_error(_("Received signal %d, shutting down"), signo);
-		abort();
+	case SIGSEGV:		/* fast cleanup only */
+	case SIGBUS:
+	case SIGILL:
+		gda_log_error (_("Received signal %d, shutting down"), signo);
+		abort ();
 		break;
-	case SIGFPE : /* clean up more */
-	case SIGPIPE :
-	case SIGTERM :
-		gda_log_error(_("Received signal %d, shutting down"), signo);
-		exit(1);
+	case SIGFPE:		/* clean up more */
+	case SIGPIPE:
+	case SIGTERM:
+		gda_log_error (_("Received signal %d, shutting down"), signo);
+		exit (1);
 		break;
-	case SIGHUP :
-		gda_log_message(_("Received signal %d. Ignoring"), signo);
+	case SIGHUP:
+		gda_log_message (_("Received signal %d. Ignoring"), signo);
 		--in_fatal;
 		break;
-	default :
+	default:
 		break;
 	}
 }
@@ -64,23 +65,23 @@ static void
 initialize_signals (void)
 {
 	struct sigaction act;
-	sigset_t         empty_mask;
+	sigset_t empty_mask;
 
 	/* session setup */
-	sigemptyset(&empty_mask);
+	sigemptyset (&empty_mask);
 	act.sa_handler = signal_handler;
 	act.sa_mask = empty_mask;
 	act.sa_flags = 0;
-	sigaction(SIGTERM, &act, 0);
-	sigaction(SIGILL, &act, 0);
-	sigaction(SIGBUS, &act, 0);
-	sigaction(SIGFPE, &act, 0);
-	sigaction(SIGHUP, &act, 0);
-	sigaction(SIGSEGV, &act, 0);
-	sigaction(SIGABRT, &act, 0);
+	sigaction (SIGTERM, &act, 0);
+	sigaction (SIGILL, &act, 0);
+	sigaction (SIGBUS, &act, 0);
+	sigaction (SIGFPE, &act, 0);
+	sigaction (SIGHUP, &act, 0);
+	sigaction (SIGSEGV, &act, 0);
+	sigaction (SIGABRT, &act, 0);
 
 	act.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &act, 0);
+	sigaction (SIGINT, &act, 0);
 }
 
 /**
@@ -94,27 +95,29 @@ initialize_signals (void)
  * the object type system and the CORBA stuff
  */
 void
-gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
+gda_server_init (const gchar * app_id, const gchar * version, gint nargs,
+		 gchar * args[])
 {
 	extern struct poptOption oaf_popt_options[];
-	static gboolean          initialized = FALSE;
-	poptContext              pctx;
+	static gboolean initialized = FALSE;
+	poptContext pctx;
 
 	if (initialized) {
-		gda_log_error(_("Attempt to initialize an already initialized provider"));
+		gda_log_error (_
+			       ("Attempt to initialize an already initialized provider"));
 		return;
 	}
 
-	initialize_signals();
+	initialize_signals ();
 	gtk_type_init ();
 	g_set_prgname (app_id);
 
 	oaf_init (nargs, args);
-  
+
 	/* process commands */
-	pctx = poptGetContext(app_id, nargs, args, oaf_popt_options, 0);
-	while (poptGetNextOpt(pctx) >= 0) ;
-	poptFreeContext(pctx);
+	pctx = poptGetContext (app_id, nargs, args, oaf_popt_options, 0);
+	while (poptGetNextOpt (pctx) >= 0);
+	poptFreeContext (pctx);
 
 	/* initialize Bonobo */
 	if (!bonobo_init (gda_corba_get_orb (), NULL, NULL))

@@ -51,84 +51,93 @@
 /*
  * Per-object specific structures
  */
-typedef struct {
-	OCIEnv*     henv;
-	OCIError*   herr;
-	OCIServer*  hserver;
-	OCISvcCtx*  hservice;
-	OCISession* hsession;
-} ORACLE_Connection;
+typedef struct
+{
+	OCIEnv *henv;
+	OCIError *herr;
+	OCIServer *hserver;
+	OCISvcCtx *hservice;
+	OCISession *hsession;
+}
+ORACLE_Connection;
 
-typedef struct {
-	ORACLE_Connection* ora_cnc;
-	OCIStmt*           hstmt;
-	sword              stmt_type;
-} ORACLE_Command;
+typedef struct
+{
+	ORACLE_Connection *ora_cnc;
+	OCIStmt *hstmt;
+	sword stmt_type;
+}
+ORACLE_Command;
 
-typedef struct {
-	ORACLE_Connection* ora_cnc;
-	OCIStmt*           hstmt;      /* shared with the ORACLE_Command struct */
-} ORACLE_Recordset;
+typedef struct
+{
+	ORACLE_Connection *ora_cnc;
+	OCIStmt *hstmt;		/* shared with the ORACLE_Command struct */
+}
+ORACLE_Recordset;
 
-typedef struct {
-	OCIDefine* hdef;
-	sb2        indicator;
-	gpointer   real_value;
-} ORACLE_Field;
+typedef struct
+{
+	OCIDefine *hdef;
+	sb2 indicator;
+	gpointer real_value;
+}
+ORACLE_Field;
 
 /*
  * Server implementation prototypes
  */
-gboolean gda_oracle_connection_new (GdaServerConnection *cnc);
-gint gda_oracle_connection_open (GdaServerConnection *cnc,
-				 const gchar *dsn,
-				 const gchar *user,
-				 const gchar *password);
-void gda_oracle_connection_close (GdaServerConnection *cnc);
-gint gda_oracle_connection_begin_transaction (GdaServerConnection *cnc);
-gint gda_oracle_connection_commit_transaction (GdaServerConnection *cnc);
-gint gda_oracle_connection_rollback_transaction (GdaServerConnection *cnc);
-GdaServerRecordset* gda_oracle_connection_open_schema (GdaServerConnection *cnc,
-							GdaError *error,
-							GDA_Connection_QType t,
-							GDA_Connection_Constraint *constraints,
-							       gint length);
-glong gda_oracle_connection_modify_schema (GdaServerConnection *cnc,
-                                   GDA_Connection_QType t,
-                                   GDA_Connection_Constraint *constraints,
-                                   gint length);
-gint gda_oracle_connection_start_logging (GdaServerConnection *cnc,
-					  const gchar *filename);
-gint gda_oracle_connection_stop_logging (GdaServerConnection *cnc);
-gchar* gda_oracle_connection_create_table (GdaServerConnection *cnc,
-					   GDA_RowAttributes *columns);
-gboolean gda_oracle_connection_supports (GdaServerConnection *cnc,
+gboolean gda_oracle_connection_new (GdaServerConnection * cnc);
+gint gda_oracle_connection_open (GdaServerConnection * cnc,
+				 const gchar * dsn,
+				 const gchar * user, const gchar * password);
+void gda_oracle_connection_close (GdaServerConnection * cnc);
+gint gda_oracle_connection_begin_transaction (GdaServerConnection * cnc);
+gint gda_oracle_connection_commit_transaction (GdaServerConnection * cnc);
+gint gda_oracle_connection_rollback_transaction (GdaServerConnection * cnc);
+GdaServerRecordset *gda_oracle_connection_open_schema (GdaServerConnection *
+						       cnc, GdaError * error,
+						       GDA_Connection_QType t,
+						       GDA_Connection_Constraint
+						       * constraints,
+						       gint length);
+glong gda_oracle_connection_modify_schema (GdaServerConnection * cnc,
+					   GDA_Connection_QType t,
+					   GDA_Connection_Constraint *
+					   constraints, gint length);
+gint gda_oracle_connection_start_logging (GdaServerConnection * cnc,
+					  const gchar * filename);
+gint gda_oracle_connection_stop_logging (GdaServerConnection * cnc);
+gchar *gda_oracle_connection_create_table (GdaServerConnection * cnc,
+					   GDA_RowAttributes * columns);
+gboolean gda_oracle_connection_supports (GdaServerConnection * cnc,
 					 GDA_Connection_Feature feature);
-GDA_ValueType gda_oracle_connection_get_gda_type (GdaServerConnection *cnc,
+GDA_ValueType gda_oracle_connection_get_gda_type (GdaServerConnection * cnc,
 						  gulong sql_type);
-gshort gda_oracle_connection_get_c_type (GdaServerConnection *cnc,
+gshort gda_oracle_connection_get_c_type (GdaServerConnection * cnc,
 					 GDA_ValueType type);
-gchar* gda_oracle_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql);
-gchar* gda_oracle_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml);
-void gda_oracle_connection_free (GdaServerConnection *cnc);
+gchar *gda_oracle_connection_sql2xml (GdaServerConnection * cnc,
+				      const gchar * sql);
+gchar *gda_oracle_connection_xml2sql (GdaServerConnection * cnc,
+				      const gchar * xml);
+void gda_oracle_connection_free (GdaServerConnection * cnc);
 
-gboolean gda_oracle_command_new (GdaServerCommand *cmd);
-GdaServerRecordset* gda_oracle_command_execute (GdaServerCommand *cmd,
-						 GdaError *error,
-						 const GDA_CmdParameterSeq *params,
-						 gulong *affected,
-						 gulong options);
-void gda_oracle_command_free (GdaServerCommand *cmd);
+gboolean gda_oracle_command_new (GdaServerCommand * cmd);
+GdaServerRecordset *gda_oracle_command_execute (GdaServerCommand * cmd,
+						GdaError * error,
+						const GDA_CmdParameterSeq *
+						params, gulong * affected,
+						gulong options);
+void gda_oracle_command_free (GdaServerCommand * cmd);
 
-gboolean gda_oracle_recordset_new       (GdaServerRecordset *recset);
-gint     gda_oracle_recordset_move_next (GdaServerRecordset *recset);
-gint     gda_oracle_recordset_move_prev (GdaServerRecordset *recset);
-gint     gda_oracle_recordset_close     (GdaServerRecordset *recset);
-void     gda_oracle_recordset_free      (GdaServerRecordset *recset);
+gboolean gda_oracle_recordset_new (GdaServerRecordset * recset);
+gint gda_oracle_recordset_move_next (GdaServerRecordset * recset);
+gint gda_oracle_recordset_move_prev (GdaServerRecordset * recset);
+gint gda_oracle_recordset_close (GdaServerRecordset * recset);
+void gda_oracle_recordset_free (GdaServerRecordset * recset);
 
-void gda_oracle_error_make (GdaError *error,
-			    GdaServerRecordset *recset,
-			    GdaServerConnection *cnc,
-			    gchar *where);
+void gda_oracle_error_make (GdaError * error,
+			    GdaServerRecordset * recset,
+			    GdaServerConnection * cnc, gchar * where);
 
 #endif

@@ -50,19 +50,21 @@
  * gda_init
  */
 void
-gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
+gda_init (const gchar * app_id, const gchar * version, gint nargs,
+	  gchar * args[])
 {
 	static gboolean initialized = FALSE;
 
 	if (initialized) {
-		gda_log_error(_("Attempt to initialize an already initialized client"));
+		gda_log_error (_
+			       ("Attempt to initialize an already initialized client"));
 		return;
 	}
 
 	gtk_type_init ();
 	g_set_prgname (app_id);
 
-	oaf_init(nargs, args);
+	oaf_init (nargs, args);
 	if (!bonobo_init (gda_corba_get_orb (), NULL, NULL))
 		g_error (_("Could not initialize Bonobo"));
 

@@ -46,73 +46,79 @@
  */
 typedef struct
 {
-  isc_db_handle db;
-  isc_tr_handle trans;
-  long          status[20];
-} INTERBASE_Connection;
+	isc_db_handle db;
+	isc_tr_handle trans;
+	long status[20];
+}
+INTERBASE_Connection;
 
 typedef isc_stmt_handle INTERBASE_Command;
 typedef struct
 {
-  INTERBASE_Command ib_cmd;
-  XSQLDA*           sqlda;
-} INTERBASE_Recordset;
+	INTERBASE_Command ib_cmd;
+	XSQLDA *sqlda;
+}
+INTERBASE_Recordset;
 
 /*
  * Server implementation prototypes
  */
-gboolean gda_interbase_connection_new (GdaServerConnection *cnc);
-gint gda_interbase_connection_open (GdaServerConnection *cnc,
-				    const gchar *dsn,
-				    const gchar *user,
-				    const gchar *password);
-void gda_interbase_connection_close (GdaServerConnection *cnc);
-gint gda_interbase_connection_begin_transaction (GdaServerConnection *cnc);
-gint gda_interbase_connection_commit_transaction (GdaServerConnection *cnc);
-gint gda_interbase_connection_rollback_transaction (GdaServerConnection *cnc);
-GdaServerRecordset* gda_interbase_connection_open_schema (GdaServerConnection *cnc,
-							                               GdaServerError *error,
-							                               GDA_Connection_QType t,
-							                               GDA_Connection_Constraint *constraints,
-							                               gint length);
-glong gda_interbase_connection_modify_schema (GdaServerConnection *cnc,
-							                  GDA_Connection_QType t,
-							                  GDA_Connection_Constraint *constraints,
-							                  gint length);
-gint gda_interbase_connection_start_logging (GdaServerConnection *cnc,
-					     const gchar *filename);
-gint gda_interbase_connection_stop_logging (GdaServerConnection *cnc);
-gchar* gda_interbase_connection_create_table (GdaServerConnection *cnc,
-					      GDA_RowAttributes *columns);
-gboolean gda_interbase_connection_supports (GdaServerConnection *cnc,
+gboolean gda_interbase_connection_new (GdaServerConnection * cnc);
+gint gda_interbase_connection_open (GdaServerConnection * cnc,
+				    const gchar * dsn,
+				    const gchar * user,
+				    const gchar * password);
+void gda_interbase_connection_close (GdaServerConnection * cnc);
+gint gda_interbase_connection_begin_transaction (GdaServerConnection * cnc);
+gint gda_interbase_connection_commit_transaction (GdaServerConnection * cnc);
+gint gda_interbase_connection_rollback_transaction (GdaServerConnection *
+						    cnc);
+GdaServerRecordset *gda_interbase_connection_open_schema (GdaServerConnection
+							  * cnc,
+							  GdaServerError *
+							  error,
+							  GDA_Connection_QType
+							  t,
+							  GDA_Connection_Constraint
+							  * constraints,
+							  gint length);
+glong gda_interbase_connection_modify_schema (GdaServerConnection * cnc,
+					      GDA_Connection_QType t,
+					      GDA_Connection_Constraint *
+					      constraints, gint length);
+gint gda_interbase_connection_start_logging (GdaServerConnection * cnc,
+					     const gchar * filename);
+gint gda_interbase_connection_stop_logging (GdaServerConnection * cnc);
+gchar *gda_interbase_connection_create_table (GdaServerConnection * cnc,
+					      GDA_RowAttributes * columns);
+gboolean gda_interbase_connection_supports (GdaServerConnection * cnc,
 					    GDA_Connection_Feature feature);
-GDA_ValueType gda_interbase_connection_get_gda_type (GdaServerConnection *cnc,
-						     gulong sql_type);
-gshort gda_interbase_connection_get_c_type (GdaServerConnection *cnc,
+GDA_ValueType gda_interbase_connection_get_gda_type (GdaServerConnection *
+						     cnc, gulong sql_type);
+gshort gda_interbase_connection_get_c_type (GdaServerConnection * cnc,
 					    GDA_ValueType type);
-gchar* gda_interbase_connection_sql2xml (GdaServerConnection *cnc,
-                                         const gchar *sql);
-gchar* gda_interbase_connection_xml2sql (GdaServerConnection *cnc,
-                                         const gchar *xml);
-void gda_interbase_connection_free (GdaServerConnection *cnc);
+gchar *gda_interbase_connection_sql2xml (GdaServerConnection * cnc,
+					 const gchar * sql);
+gchar *gda_interbase_connection_xml2sql (GdaServerConnection * cnc,
+					 const gchar * xml);
+void gda_interbase_connection_free (GdaServerConnection * cnc);
 
-gboolean gda_interbase_command_new (GdaServerCommand *cmd);
-GdaServerRecordset* gda_interbase_command_execute (GdaServerCommand *cmd,
-							GdaServerError *error,
-							const GDA_CmdParameterSeq *params,
-							gulong *affected,
-							gulong options);
-void gda_interbase_command_free (GdaServerCommand *cmd);
+gboolean gda_interbase_command_new (GdaServerCommand * cmd);
+GdaServerRecordset *gda_interbase_command_execute (GdaServerCommand * cmd,
+						   GdaServerError * error,
+						   const GDA_CmdParameterSeq *
+						   params, gulong * affected,
+						   gulong options);
+void gda_interbase_command_free (GdaServerCommand * cmd);
 
-gboolean gda_interbase_recordset_new       (GdaServerRecordset *recset);
-gint     gda_interbase_recordset_move_next (GdaServerRecordset *recset);
-gint     gda_interbase_recordset_move_prev (GdaServerRecordset *recset);
-gint     gda_interbase_recordset_close     (GdaServerRecordset *recset);
-void     gda_interbase_recordset_free      (GdaServerRecordset *recset);
+gboolean gda_interbase_recordset_new (GdaServerRecordset * recset);
+gint gda_interbase_recordset_move_next (GdaServerRecordset * recset);
+gint gda_interbase_recordset_move_prev (GdaServerRecordset * recset);
+gint gda_interbase_recordset_close (GdaServerRecordset * recset);
+void gda_interbase_recordset_free (GdaServerRecordset * recset);
 
-void gda_interbase_error_make (GdaServerError *error,
-			       GdaServerRecordset *recset,
-			       GdaServerConnection *cnc,
-			       gchar *where);
+void gda_interbase_error_make (GdaServerError * error,
+			       GdaServerRecordset * recset,
+			       GdaServerConnection * cnc, gchar * where);
 
 #endif

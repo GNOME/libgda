@@ -27,30 +27,36 @@
 
 using namespace gda;
 
-ErrorList::ErrorList(CORBA_Environment* ev) {
-	_errors = gda_error_list_from_exception(ev);
+ErrorList::ErrorList (CORBA_Environment * ev)
+{
+	_errors = gda_error_list_from_exception (ev);
 }
 
-ErrorList::ErrorList(GList *errorList) {
+ErrorList::ErrorList (GList * errorList)
+{
 	_errors = errorList;
 }
 
-ErrorList::~ErrorList() {
-	if (_errors) gda_error_list_free(_errors);
+ErrorList::~ErrorList ()
+{
+	if (_errors)
+		gda_error_list_free (_errors);
 }
 
-GList* ErrorList::getCStruct() {
+GList *
+ErrorList::getCStruct ()
+{
 	return _errors;
 }
 
-GList *ErrorList::errors() {
+GList *
+ErrorList::errors ()
+{
 	return _errors;
 }
 
-void ErrorList::setCStruct(GList *errorList) {
+void
+ErrorList::setCStruct (GList * errorList)
+{
 	_errors = errorList;
 }
-
-
-  
-  

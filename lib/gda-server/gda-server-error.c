@@ -23,14 +23,13 @@
  * gda_server_error_make
  */
 void
-gda_server_error_make (GdaError *error,
-		       GdaServerRecordset *recset,
-		       GdaServerConnection *cnc,
-		       gchar *where)
+gda_server_error_make (GdaError * error,
+		       GdaServerRecordset * recset,
+		       GdaServerConnection * cnc, gchar * where)
 {
-	GdaServerConnection* cnc_to_use = NULL;
+	GdaServerConnection *cnc_to_use = NULL;
 
-	g_return_if_fail(error != NULL);
+	g_return_if_fail (error != NULL);
 
 	if (cnc)
 		cnc_to_use = cnc;
@@ -38,14 +37,17 @@ gda_server_error_make (GdaError *error,
 		cnc_to_use = recset->cnc;
 
 	if (!cnc_to_use) {
-		gda_log_message(_("Could not get pointer to server implementation"));
+		gda_log_message (_
+				 ("Could not get pointer to server implementation"));
 		return;
 	}
 
-	g_return_if_fail(cnc_to_use->server_impl != NULL);
-	g_return_if_fail(cnc_to_use->server_impl->functions.error_make != NULL);
+	g_return_if_fail (cnc_to_use->server_impl != NULL);
+	g_return_if_fail (cnc_to_use->server_impl->functions.error_make !=
+			  NULL);
 
-	cnc_to_use->server_impl->functions.error_make(error, recset, cnc, where);
+	cnc_to_use->server_impl->functions.error_make (error, recset, cnc,
+						       where);
 
-	gda_server_connection_add_error(cnc_to_use, error);
+	gda_server_connection_add_error (cnc_to_use, error);
 }

@@ -23,13 +23,13 @@
 #include <glib.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
-void gda_server_error_make (GdaError *error,
-			    GdaServerRecordset *recset,
-			    GdaServerConnection *cnc,
-			    gchar *where);
+	void gda_server_error_make (GdaError * error,
+				    GdaServerRecordset * recset,
+				    GdaServerConnection * cnc, gchar * where);
 
 #if defined(__cplusplus)
 }

@@ -22,34 +22,38 @@
 #include "gda-command.h"
 #include "gda-corba.h"
 
-enum {
+enum
+{
 	GDA_COMMAND_LAST_SIGNAL
 };
 
-typedef struct _Parameter {
-	gchar* name;
-	GDA_Value* value;
+typedef struct _Parameter
+{
+	gchar *name;
+	GDA_Value *value;
 	GDA_ParameterDirection inout;
-} Parameter;
+}
+Parameter;
 
 static gint gda_command_signals[GDA_COMMAND_LAST_SIGNAL] = { 0, };
 
 #ifdef HAVE_GOBJECT
-static void gda_command_class_init (GdaCommandClass *klass, gpointer data);
-static void gda_command_init       (GdaCommand *cmd, GdaCommandClass *klass);
+static void gda_command_class_init (GdaCommandClass * klass, gpointer data);
+static void gda_command_init (GdaCommand * cmd, GdaCommandClass * klass);
 #else
-static void gda_command_class_init (GdaCommandClass *klass);
-static void gda_command_init       (GdaCommand *cmd);
-static void gda_command_destroy    (GtkObject *object);
+static void gda_command_class_init (GdaCommandClass * klass);
+static void gda_command_init (GdaCommand * cmd);
+static void gda_command_destroy (GtkObject * object);
 #endif
 
 static void
-release_connection_object (GdaCommand* cmd, GdaConnection* cnc)
+release_connection_object (GdaCommand * cmd, GdaConnection * cnc)
 {
 	g_return_if_fail (GDA_IS_COMMAND (cmd));
 	g_return_if_fail (GDA_IS_CONNECTION (cmd->connection));
 
-	cmd->connection->commands = g_list_remove(cmd->connection->commands, cmd);
+	cmd->connection->commands =
+		g_list_remove (cmd->connection->commands, cmd);
 }
 
 #ifdef HAVE_GOBJECT
@@ -57,7 +61,7 @@ GType
 gda_command_get_type (void)
 {
 	static GType type = 0;
-	
+
 	if (!type) {
 		GTypeInfo info = {
 			sizeof (GdaCommandClass),
@@ -71,15 +75,17 @@ gda_command_get_type (void)
 			(GInstanceInitFunc) gda_command_init,
 			NULL,
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaCommand", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaCommand",
+					       &info, 0);
 	}
 	return type;
 }
 #else
 guint
-gda_command_get_type (void) {
+gda_command_get_type (void)
+{
 	static guint gda_command_type = 0;
-	
+
 	if (!gda_command_type) {
 		GtkTypeInfo gda_command_info = {
 			"GdaCommand",
@@ -87,10 +93,12 @@ gda_command_get_type (void) {
 			sizeof (GdaCommandClass),
 			(GtkClassInitFunc) gda_command_class_init,
 			(GtkObjectInitFunc) gda_command_init,
-			(GtkArgSetFunc)NULL,
-			(GtkArgSetFunc)NULL,
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL,
 		};
-		gda_command_type = gtk_type_unique (gtk_object_get_type (), &gda_command_info);
+		gda_command_type =
+			gtk_type_unique (gtk_object_get_type (),
+					 &gda_command_info);
 	}
 	return gda_command_type;
 }
@@ -98,14 +106,14 @@ gda_command_get_type (void) {
 
 #ifdef HAVE_GOBJECT
 static void
-gda_command_class_init (GdaCommandClass *klass, gpointer data)
+gda_command_class_init (GdaCommandClass * klass, gpointer data)
 {
 }
 #else
 static void
-gda_command_class_init (GdaCommandClass* klass)
+gda_command_class_init (GdaCommandClass * klass)
 {
-	GtkObjectClass* object_class = (GtkObjectClass*) klass;
+	GtkObjectClass *object_class = (GtkObjectClass *) klass;
 
 	object_class->destroy = gda_command_destroy;
 }
@@ -113,12 +121,12 @@ gda_command_class_init (GdaCommandClass* klass)
 
 static void
 #ifdef HAVE_GOBJECT
-gda_command_init (GdaCommand *cmd, GdaCommandClass *klass)
+gda_command_init (GdaCommand * cmd, GdaCommandClass * klass)
 #else
-gda_command_init (GdaCommand* cmd)
+gda_command_init (GdaCommand * cmd)
 #endif
 {
-	g_return_if_fail(GDA_IS_COMMAND(cmd));
+	g_return_if_fail (GDA_IS_COMMAND (cmd));
 
 	cmd->command = CORBA_OBJECT_NIL;
 	cmd->orb = gda_corba_get_orb ();
@@ -147,27 +155,28 @@ gda_command_new (void)
 }
 
 static void
-gda_command_destroy (GtkObject *object)
+gda_command_destroy (GtkObject * object)
 {
 	CORBA_Environment ev;
 	GtkObjectClass *parent_class;
 	GdaCommand *cmd = (GdaCommand *) object;
 
-	g_return_if_fail(GDA_IS_COMMAND(cmd));
-	
+	g_return_if_fail (GDA_IS_COMMAND (cmd));
+
 	if (cmd->connection && cmd->connection->commands)
-		release_connection_object(cmd, cmd->connection);
+		release_connection_object (cmd, cmd->connection);
 	else {
 		if (cmd->connection && !cmd->connection->commands)
-			g_error("gda_command_free: connection object has no command list");
+			g_error ("gda_command_free: connection object has no command list");
 	}
 	if (cmd->text)
-		g_free(cmd->text);
-	
-	CORBA_exception_init(&ev);
-	if (!CORBA_Object_is_nil(cmd->command, &ev)) {
+		g_free (cmd->text);
+
+	CORBA_exception_init (&ev);
+	if (!CORBA_Object_is_nil (cmd->command, &ev)) {
 		CORBA_Object_release (cmd->command, &ev);
-		gda_connection_corba_exception (gda_command_get_connection(cmd), &ev);
+		gda_connection_corba_exception (gda_command_get_connection
+						(cmd), &ev);
 	}
 	CORBA_exception_free (&ev);
 
@@ -184,7 +193,7 @@ gda_command_destroy (GtkObject *object)
  * cuts the association with its connection object.
  */
 void
-gda_command_free (GdaCommand *cmd)
+gda_command_free (GdaCommand * cmd)
 {
 #ifdef HAVE_GOBJECT
 	g_object_unref (G_OBJECT (cmd));
@@ -206,12 +215,12 @@ gda_command_free (GdaCommand *cmd)
  * Returns: -1 on error, 0 on success
  */
 void
-gda_command_set_connection (GdaCommand* cmd, GdaConnection* cnc)
+gda_command_set_connection (GdaCommand * cmd, GdaConnection * cnc)
 {
 	CORBA_Environment ev;
-	
-	g_return_if_fail (GDA_IS_COMMAND(cmd));
-	g_return_if_fail (GDA_IS_CONNECTION(cnc));
+
+	g_return_if_fail (GDA_IS_COMMAND (cmd));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (cnc->connection != 0);
 
 	/* clean up */
@@ -229,19 +238,22 @@ gda_command_set_connection (GdaCommand* cmd, GdaConnection* cnc)
 
 	/* get a new GDA::Command object */
 	cmd->command = GDA_Connection_createCommand (cnc->connection, &ev);
-	if (gda_connection_corba_exception (gda_command_get_connection(cmd), &ev) < 0) {
+	if (gda_connection_corba_exception
+	    (gda_command_get_connection (cmd), &ev) < 0) {
 		cmd->connection = NULL;
 		cmd->command = CORBA_OBJECT_NIL;
 		return;
 	}
-	cmd->connection->commands = g_list_append (cmd->connection->commands, cmd);
+	cmd->connection->commands =
+		g_list_append (cmd->connection->commands, cmd);
 	if (cmd->text_pending) {
 		GDA_Command__set_text (cmd->command, cmd->text, &ev);
-		gda_connection_corba_exception (gda_command_get_connection (cmd), &ev);
+		gda_connection_corba_exception (gda_command_get_connection
+						(cmd), &ev);
 		cmd->text_pending = 0;
 	}
 }
-  
+
 /**
  * gda_command_get_connection:
  * @cmd: the command object
@@ -251,9 +263,9 @@ gda_command_set_connection (GdaCommand* cmd, GdaConnection* cnc)
  * Returns: a pointer to the #gda_Connection object
  */
 GdaConnection *
-gda_command_get_connection (GdaCommand* cmd)
+gda_command_get_connection (GdaCommand * cmd)
 {
-	g_return_val_if_fail(GDA_IS_COMMAND(cmd), NULL);
+	g_return_val_if_fail (GDA_IS_COMMAND (cmd), NULL);
 	return cmd->connection;
 }
 
@@ -269,12 +281,12 @@ gda_command_get_connection (GdaCommand* cmd)
  *
  */
 void
-gda_command_set_text (GdaCommand* cmd, gchar* text)
+gda_command_set_text (GdaCommand * cmd, gchar * text)
 {
 	CORBA_Environment ev;
-	
+
 	g_return_if_fail (GDA_IS_COMMAND (cmd));
-	
+
 	if (cmd->text)
 		g_free (cmd->text);
 	cmd->text = g_strdup (text);
@@ -285,7 +297,8 @@ gda_command_set_text (GdaCommand* cmd, gchar* text)
 	else {
 		CORBA_exception_init (&ev);
 		GDA_Command__set_text (cmd->command, text, &ev);
-		gda_connection_corba_exception (gda_command_get_connection(cmd), &ev);
+		gda_connection_corba_exception (gda_command_get_connection
+						(cmd), &ev);
 	}
 }
 
@@ -299,19 +312,19 @@ gda_command_set_text (GdaCommand* cmd, gchar* text)
  * Returns: a reference to the command string.
  */
 gchar *
-gda_command_get_text (GdaCommand* cmd)
+gda_command_get_text (GdaCommand * cmd)
 {
-	gchar* txt;
+	gchar *txt;
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_COMMAND(cmd), 0);
-	
+
+	g_return_val_if_fail (GDA_IS_COMMAND (cmd), 0);
+
 	if (!cmd->command) {
-		g_print("No CORBA command_yet allocated, using pending value\n");
+		g_print ("No CORBA command_yet allocated, using pending value\n");
 		return cmd->text;
 	}
-	CORBA_exception_init(&ev);
-	txt = GDA_Command__get_text(cmd->command, &ev);
+	CORBA_exception_init (&ev);
+	txt = GDA_Command__get_text (cmd->command, &ev);
 	return txt;
 }
 
@@ -327,21 +340,22 @@ gda_command_get_text (GdaCommand* cmd)
  *
  */
 void
-gda_command_set_cmd_type (GdaCommand* cmd, GDA_CommandType type)
+gda_command_set_cmd_type (GdaCommand * cmd, GDA_CommandType type)
 {
 	CORBA_Environment ev;
-	
-	g_return_if_fail(GDA_IS_COMMAND(cmd));
-	
+
+	g_return_if_fail (GDA_IS_COMMAND (cmd));
+
 	if (!cmd->command) {
-		g_print("No CORBA command yet allocated, setting to pending");
+		g_print ("No CORBA command yet allocated, setting to pending");
 		cmd->type_pending = 1;
 		cmd->type = type;
 	}
 	else {
-		CORBA_exception_init(&ev);
-		GDA_Command__set_type(cmd->command, type, &ev);
-		gda_connection_corba_exception(gda_command_get_connection(cmd), &ev);
+		CORBA_exception_init (&ev);
+		GDA_Command__set_type (cmd->command, type, &ev);
+		gda_connection_corba_exception (gda_command_get_connection
+						(cmd), &ev);
 	}
 }
 
@@ -354,63 +368,69 @@ gda_command_set_cmd_type (GdaCommand* cmd, GDA_CommandType type)
  * Returns: the type of the command
  */
 GDA_CommandType
-gda_command_get_cmd_type (GdaCommand* cmd)
+gda_command_get_cmd_type (GdaCommand * cmd)
 {
 	GDA_CommandType type;
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_COMMAND(cmd), 0);
-	
+
+	g_return_val_if_fail (GDA_IS_COMMAND (cmd), 0);
+
 	if (!cmd->command) {
-		g_print("No CORBA command_yet allocated, using pending value\n");
+		g_print ("No CORBA command_yet allocated, using pending value\n");
 		return cmd->type;
 	}
 	CORBA_exception_init (&ev);
 	type = GDA_Command__get_type (cmd->command, &ev);
-	gda_connection_corba_exception (gda_command_get_connection (cmd), &ev);
+	gda_connection_corba_exception (gda_command_get_connection (cmd),
+					&ev);
 	CORBA_exception_free (&ev);
 
 	return type;
 }
 
 
-GDA_CmdParameterSeq*
-__gda_command_get_params (GdaCommand* cmd)
+GDA_CmdParameterSeq *
+__gda_command_get_params (GdaCommand * cmd)
 {
-	GDA_CmdParameterSeq*      corba_parameters;
-	gint                      parameter_count;
-	GList*                    ptr;
-	GDA_CmdParameter*         corba_parameter;
-	gint                      idx;
-	
-	corba_parameters = GDA_CmdParameterSeq__alloc();
-	parameter_count = cmd->parameters ? g_list_length(cmd->parameters) : 0;
-	corba_parameters->_buffer = CORBA_sequence_GDA_CmdParameter_allocbuf(parameter_count);
+	GDA_CmdParameterSeq *corba_parameters;
+	gint parameter_count;
+	GList *ptr;
+	GDA_CmdParameter *corba_parameter;
+	gint idx;
+
+	corba_parameters = GDA_CmdParameterSeq__alloc ();
+	parameter_count =
+		cmd->parameters ? g_list_length (cmd->parameters) : 0;
+	corba_parameters->_buffer =
+		CORBA_sequence_GDA_CmdParameter_allocbuf (parameter_count);
 	corba_parameters->_length = parameter_count;
-	
+
 	if (parameter_count) {
 		ptr = cmd->parameters;
 		idx = 0;
-		while(ptr) {
-			GDA_Value* value;
-			Parameter* parameter;
-			
+		while (ptr) {
+			GDA_Value *value;
+			Parameter *parameter;
+
 			parameter = ptr->data;
 			corba_parameter = &(corba_parameters->_buffer[idx]);
 			corba_parameter->dir = parameter->inout;
 			if (parameter->name) {
-				corba_parameter->name = CORBA_string_dup(parameter->name);
+				corba_parameter->name =
+					CORBA_string_dup (parameter->name);
 			}
-			else corba_parameter->name = 0;
-			
+			else
+				corba_parameter->name = 0;
+
 			value = parameter->value;
 			if (!(corba_parameter->value._d = value ? 0 : 1)) {
-				corba_parameter->value._u.v = *((*parameter).value);
+				corba_parameter->value._u.v =
+					*((*parameter).value);
 			}
 			else {
-				g_print("Got NULL param value\n");
+				g_print ("Got NULL param value\n");
 			}
-			ptr = g_list_next(ptr);
+			ptr = g_list_next (ptr);
 			idx++;
 		}
 	}
@@ -432,19 +452,20 @@ __gda_command_get_params (GdaCommand* cmd)
  * Returns: a pointer to a recordset or a NULL pointer if there was an error.
  */
 GdaRecordset *
-gda_command_execute (GdaCommand* cmd, gulong* reccount, gulong flags)
+gda_command_execute (GdaCommand * cmd, gulong * reccount, gulong flags)
 {
 	gint rc;
-	GdaRecordset* rs;
-	
-	g_return_val_if_fail(GDA_IS_COMMAND(cmd), 0);
-	g_return_val_if_fail(reccount != NULL, 0);
-	g_return_val_if_fail(cmd->connection != NULL, 0);
-	
-	rs = GDA_RECORDSET(gda_recordset_new());
-	rc = gda_recordset_open(rs, cmd, GDA_OPEN_FWDONLY, GDA_LOCK_OPTIMISTIC, flags);
+	GdaRecordset *rs;
+
+	g_return_val_if_fail (GDA_IS_COMMAND (cmd), 0);
+	g_return_val_if_fail (reccount != NULL, 0);
+	g_return_val_if_fail (cmd->connection != NULL, 0);
+
+	rs = GDA_RECORDSET (gda_recordset_new ());
+	rc = gda_recordset_open (rs, cmd, GDA_OPEN_FWDONLY,
+				 GDA_LOCK_OPTIMISTIC, flags);
 	if (rc < 0) {
-		gda_recordset_free(rs);
+		gda_recordset_free (rs);
 		return NULL;
 	}
 	*reccount = rs->affected_rows;
@@ -482,19 +503,18 @@ gda_command_execute (GdaCommand* cmd, gulong* reccount, gulong flags)
  * value parameter if it's not a simple data type (integer, float, ...)
  */
 void
-gda_command_create_parameter (GdaCommand* cmd,
-                              gchar* name,
-                              GDA_ParameterDirection inout,
-                              GDA_Value* value)
+gda_command_create_parameter (GdaCommand * cmd,
+			      gchar * name,
+			      GDA_ParameterDirection inout, GDA_Value * value)
 {
-	Parameter* param;
-	
-	g_return_if_fail(GDA_IS_COMMAND(cmd));
-	
-	param = g_new0(Parameter, 1);
-	param->name = g_strdup(name);
+	Parameter *param;
+
+	g_return_if_fail (GDA_IS_COMMAND (cmd));
+
+	param = g_new0 (Parameter, 1);
+	param->name = g_strdup (name);
 	param->inout = inout;
 	param->value = value;
-	
-	cmd->parameters = g_list_append(cmd->parameters, param);
+
+	cmd->parameters = g_list_append (cmd->parameters, param);
 }

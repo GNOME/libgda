@@ -38,14 +38,15 @@
 
 typedef struct
 {
-  GdaThread* thr;
-  gpointer    user_data;
-} thread_data_t;
+	GdaThread *thr;
+	gpointer user_data;
+}
+thread_data_t;
 
 /* GdaThread object signals */
 enum
 {
-  LAST_SIGNAL
+	LAST_SIGNAL
 };
 
 static gint gda_thread_singals[LAST_SIGNAL] = { 0, };
@@ -56,19 +57,20 @@ static gint gda_thread_singals[LAST_SIGNAL] = { 0, };
 gpointer
 thread_func (gpointer data)
 {
-  gpointer       ret = NULL;
-  thread_data_t* thr_data = (thread_data_t *) data;
+	gpointer ret = NULL;
+	thread_data_t *thr_data = (thread_data_t *) data;
 
-  if (thr_data != NULL && thr_data->thr != NULL && thr_data->thr->func != NULL)
-    {
-      thr_data->thr->is_running = TRUE;
-      ret = thr_data->thr->func(thr_data->thr, thr_data->user_data);
-    }
+	if (thr_data != NULL && thr_data->thr != NULL
+	    && thr_data->thr->func != NULL) {
+		thr_data->thr->is_running = TRUE;
+		ret = thr_data->thr->func (thr_data->thr,
+					   thr_data->user_data);
+	}
 
-  /* free memory allocated when calling the thread function */
-  thr_data->thr->is_running = FALSE;
-  g_free((gpointer) thr_data);
-  pthread_exit(ret);
+	/* free memory allocated when calling the thread function */
+	thr_data->thr->is_running = FALSE;
+	g_free ((gpointer) thr_data);
+	pthread_exit (ret);
 }
 
 /*
@@ -76,75 +78,72 @@ thread_func (gpointer data)
  */
 #ifdef HAVE_GOBJECT
 static void
-gda_thread_class_init (GdaThreadClass *klass, gpointer data)
+gda_thread_class_init (GdaThreadClass * klass, gpointer data)
 {
 }
 #else
 static void
-gda_thread_class_init (GdaThreadClass *klass)
+gda_thread_class_init (GdaThreadClass * klass)
 {
-   GtkObjectClass* object_class = (GtkObjectClass *) klass;
+	GtkObjectClass *object_class = (GtkObjectClass *) klass;
 }
 #endif
 
 static void
 #ifdef HAVE_GOBJECT
-gda_thread_init (GdaThread *thr, GdaThreadClass *klass)
+gda_thread_init (GdaThread * thr, GdaThreadClass * klass)
 #else
-gda_thread_init (GdaThread *thr)
+gda_thread_init (GdaThread * thr)
 #endif
 {
-  g_return_if_fail(GDA_IS_THREAD(thr));
-  thr->func = NULL;
-  thr->is_running = FALSE;
+	g_return_if_fail (GDA_IS_THREAD (thr));
+	thr->func = NULL;
+	thr->is_running = FALSE;
 }
 
 #ifdef HAVE_GOBJECT
 GType
 gda_thread_get_type (void)
 {
-  static GType type = 0;
+	static GType type = 0;
 
-  if (!type)
-    {
-      GTypeInfo info =
-      {
-        sizeof (GdaThreadClass),               /* class_size */
-        NULL,                                   /* base_init */
-        NULL,                                   /* base_finalize */
-        (GClassInitFunc) gda_thread_class_init, /* class_init */
-        NULL,                                   /* class_finalize */
-        NULL,                                   /* class_data */
-        sizeof (GdaThread),                    /* instance_size */
-        0,                                      /* n_preallocs */
-        (GInstanceInitFunc) gda_thread_init,    /* instance_init */
-        NULL,                                   /* value_table */
-      };
-      type = g_type_register_static (G_TYPE_OBJECT, "GdaThread", &info, 0);
-    }
-  return type;
+	if (!type) {
+		GTypeInfo info = {
+			sizeof (GdaThreadClass),	/* class_size */
+			NULL,	/* base_init */
+			NULL,	/* base_finalize */
+			(GClassInitFunc) gda_thread_class_init,	/* class_init */
+			NULL,	/* class_finalize */
+			NULL,	/* class_data */
+			sizeof (GdaThread),	/* instance_size */
+			0,	/* n_preallocs */
+			(GInstanceInitFunc) gda_thread_init,	/* instance_init */
+			NULL,	/* value_table */
+		};
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaThread",
+					       &info, 0);
+	}
+	return type;
 }
 #else
 GtkType
 gda_thread_get_type (void)
 {
-  static guint type = 0;
+	static guint type = 0;
 
-  if (!type)
-    {
-      GtkTypeInfo info =
-      {
-        "GdaThread",
-        sizeof (GdaThread),
-        sizeof (GdaThreadClass),
-        (GtkClassInitFunc) gda_thread_class_init,
-        (GtkObjectInitFunc) gda_thread_init,
-        (GtkArgSetFunc) NULL,
-        (GtkArgSetFunc) NULL,
-      };
-      type = gtk_type_unique(gtk_object_get_type(), &info);
-    }
-  return type;
+	if (!type) {
+		GtkTypeInfo info = {
+			"GdaThread",
+			sizeof (GdaThread),
+			sizeof (GdaThreadClass),
+			(GtkClassInitFunc) gda_thread_class_init,
+			(GtkObjectInitFunc) gda_thread_init,
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL,
+		};
+		type = gtk_type_unique (gtk_object_get_type (), &info);
+	}
+	return type;
 }
 #endif
 
@@ -159,34 +158,36 @@ gda_thread_get_type (void)
 GdaThread *
 gda_thread_new (GdaThreadFunc func)
 {
-  GdaThread* thr;
+	GdaThread *thr;
 
-  /* initialize GLib threads */
-  if (!g_thread_supported()) g_thread_init(NULL);
+	/* initialize GLib threads */
+	if (!g_thread_supported ())
+		g_thread_init (NULL);
 
 #ifdef HAVE_GOBJECT
-  thr = GDA_THREAD (g_object_new (GDA_TYPE_THREAD, NULL));
+	thr = GDA_THREAD (g_object_new (GDA_TYPE_THREAD, NULL));
 #else
-  thr = GDA_THREAD(gtk_type_new(GDA_TYPE_THREAD));
+	thr = GDA_THREAD (gtk_type_new (GDA_TYPE_THREAD));
 #endif
-  thr->func = func;
-  return thr;
+	thr->func = func;
+	return thr;
 }
 
 /**
  * gda_thread_free
  */
 void
-gda_thread_free (GdaThread *thr)
+gda_thread_free (GdaThread * thr)
 {
-  g_return_if_fail(GDA_IS_THREAD(thr));
+	g_return_if_fail (GDA_IS_THREAD (thr));
 
-  if (gda_thread_is_running(thr)) gda_thread_stop(thr);
+	if (gda_thread_is_running (thr))
+		gda_thread_stop (thr);
 
 #ifdef HAVE_GOBJECT
-  g_object_unref (G_OBJECT (thr));
+	g_object_unref (G_OBJECT (thr));
 #else
-  gtk_object_destroy(GTK_OBJECT(thr));
+	gtk_object_destroy (GTK_OBJECT (thr));
 #endif
 }
 
@@ -196,32 +197,33 @@ gda_thread_free (GdaThread *thr)
  * @user_data: data to pass to signals
  */
 void
-gda_thread_start (GdaThread *thr, gpointer user_data)
+gda_thread_start (GdaThread * thr, gpointer user_data)
 {
-  g_return_if_fail(GDA_IS_THREAD(thr));
-  
-  if (!gda_thread_is_running(thr))
-    {
-      thread_data_t* thr_data = g_new0(thread_data_t, 1);
-      thr_data->thr = thr;
-      thr_data->user_data = user_data;
-      pthread_create(&thr->tid, NULL, thread_func, (gpointer) thr_data);
-      thr->is_running = TRUE;
-    }
-  else gda_log_error(_("thread is already running"));
+	g_return_if_fail (GDA_IS_THREAD (thr));
+
+	if (!gda_thread_is_running (thr)) {
+		thread_data_t *thr_data = g_new0 (thread_data_t, 1);
+		thr_data->thr = thr;
+		thr_data->user_data = user_data;
+		pthread_create (&thr->tid, NULL, thread_func,
+				(gpointer) thr_data);
+		thr->is_running = TRUE;
+	}
+	else
+		gda_log_error (_("thread is already running"));
 }
 
 /**
  * gda_thread_stop
  */
 void
-gda_thread_stop (GdaThread *thr)
+gda_thread_stop (GdaThread * thr)
 {
-  g_return_if_fail(GDA_IS_THREAD(thr));
-  g_return_if_fail(gda_thread_is_running(thr));
+	g_return_if_fail (GDA_IS_THREAD (thr));
+	g_return_if_fail (gda_thread_is_running (thr));
 
-  pthread_cancel(thr->tid);
-  thr->is_running = FALSE;
+	pthread_cancel (thr->tid);
+	thr->is_running = FALSE;
 }
 
 /**
@@ -231,9 +233,8 @@ gda_thread_stop (GdaThread *thr)
  * Checks whether the given thread object is running or not
  */
 gboolean
-gda_thread_is_running (GdaThread *thr)
+gda_thread_is_running (GdaThread * thr)
 {
-  g_return_val_if_fail(GDA_IS_THREAD(thr), FALSE);
-  return thr->is_running;
+	g_return_val_if_fail (GDA_IS_THREAD (thr), FALSE);
+	return thr->is_running;
 }
-

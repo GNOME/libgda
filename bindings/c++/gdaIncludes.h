@@ -16,7 +16,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-namespace gda {
+namespace gda
+{
 	class Batch;
 	class Command;
 	class Connection;
@@ -27,7 +28,8 @@ namespace gda {
 	class Value;
 };
 
-extern "C" {
+extern "C"
+{
 #include "glib.h"
 #include "gda-client.h"
 

@@ -18,7 +18,7 @@
 
 #include "gda-oracle.h"
 
-static GdaServer*             server_impl = NULL;
+static GdaServer *server_impl = NULL;
 static GdaServerImplFunctions server_impl_functions = {
 	gda_oracle_connection_new,
 	gda_oracle_connection_open,
@@ -52,18 +52,20 @@ static GdaServerImplFunctions server_impl_functions = {
 };
 
 gint
-main (gint argc, gchar *argv[])
+main (gint argc, gchar * argv[])
 {
 	/* initialize libgda */
-	gda_server_init("gda-oracle-srv", VERSION, argc, argv);
+	gda_server_init ("gda-oracle-srv", VERSION, argc, argv);
 
 	/* register the server implementation */
-	server_impl = gda_server_new("OAFIID:GNOME_GDA_Provider_Oracle_ConnectionFactory",
-				     &server_impl_functions);
+	server_impl =
+		gda_server_new
+		("OAFIID:GNOME_GDA_Provider_Oracle_ConnectionFactory",
+		 &server_impl_functions);
 	if (server_impl)
-		gda_server_start(server_impl);
+		gda_server_start (server_impl);
 	else
-		gda_log_error(_("Could not register ORACLE provider implementation"));
+		gda_log_error (_
+			       ("Could not register ORACLE provider implementation"));
 	return 0;
 }
-

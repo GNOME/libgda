@@ -24,19 +24,20 @@
 #include "config.h"
 #include "gda-xml-list-item.h"
 
-struct _GdaXmlListItemPrivate {
+struct _GdaXmlListItemPrivate
+{
 	GSList *list;
 };
 
-static void gda_xml_list_item_class_init (GdaXmlListItemClass *klass);
-static void gda_xml_list_item_init       (GdaXmlListItem *list_item);
-static void gda_xml_list_item_destroy    (GtkObject *object);
+static void gda_xml_list_item_class_init (GdaXmlListItemClass * klass);
+static void gda_xml_list_item_init (GdaXmlListItem * list_item);
+static void gda_xml_list_item_destroy (GtkObject * object);
 
 /*
  * Private functions
  */
 static void
-unref_list (GSList *list)
+unref_list (GSList * list)
 {
 	g_slist_foreach (list, (GFunc) gtk_object_unref, NULL);
 	g_slist_free (list);
@@ -46,7 +47,7 @@ unref_list (GSList *list)
  * GdaXmlListItem class implementation
  */
 static void
-gda_xml_list_item_class_init (GdaXmlListItemClass *klass)
+gda_xml_list_item_class_init (GdaXmlListItemClass * klass)
 {
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
 	GdaXmlItemClass *item_class = GDA_XML_ITEM_CLASS (klass);
@@ -58,14 +59,14 @@ gda_xml_list_item_class_init (GdaXmlListItemClass *klass)
 }
 
 static void
-gda_xml_list_item_init (GdaXmlListItem *list_item)
+gda_xml_list_item_init (GdaXmlListItem * list_item)
 {
 	list_item->priv = g_new (GdaXmlListItemPrivate, 1);
 	list_item->priv->list = NULL;
 }
 
 static void
-gda_xml_list_item_destroy (GtkObject *object)
+gda_xml_list_item_destroy (GtkObject * object)
 {
 	GtkObjectClass *parent_class;
 	GdaXmlListItem *list_item = (GdaXmlListItem *) object;
@@ -93,8 +94,8 @@ gda_xml_list_item_get_type (void)
 			sizeof (GdaXmlListItemClass),
 			(GtkClassInitFunc) gda_xml_list_item_class_init,
 			(GtkObjectInitFunc) gda_xml_list_item_init,
-			(GtkArgSetFunc)NULL,
-			(GtkArgSetFunc)NULL
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL
 		};
 		type = gtk_type_unique (gda_xml_item_get_type (), &info);
 	}
@@ -106,7 +107,7 @@ gda_xml_list_item_get_type (void)
  * gda_xml_list_item_new
  */
 GdaXmlItem *
-gda_xml_list_item_new (const gchar *tag)
+gda_xml_list_item_new (const gchar * tag)
 {
 	GdaXmlListItem *list_item;
 
@@ -120,7 +121,7 @@ gda_xml_list_item_new (const gchar *tag)
  * gda_xml_list_item_add
  */
 void
-gda_xml_list_item_add (GdaXmlItem *item, GdaXmlItem *child)
+gda_xml_list_item_add (GdaXmlItem * item, GdaXmlItem * child)
 {
 	GdaXmlListItem *list_item = (GdaXmlListItem *) item;
 
@@ -135,7 +136,7 @@ gda_xml_list_item_add (GdaXmlItem *item, GdaXmlItem *child)
  * gda_xml_list_item_to_dom
  */
 xmlNodePtr
-gda_xml_list_item_to_dom (GdaXmlItem *item, xmlNodePtr parent_node)
+gda_xml_list_item_to_dom (GdaXmlItem * item, xmlNodePtr parent_node)
 {
 	xmlNodePtr node = NULL;
 	GdaXmlItemClass *item_class;
@@ -147,8 +148,7 @@ gda_xml_list_item_to_dom (GdaXmlItem *item, xmlNodePtr parent_node)
 	if (item_class && item_class->to_dom) {
 		node = item_class->to_dom (item, parent_node);
 		g_slist_foreach (list_item->priv->list,
-				 (GFunc) gda_xml_item_to_dom,
-				 node);
+				 (GFunc) gda_xml_item_to_dom, node);
 	}
 
 	return node;
@@ -158,7 +158,7 @@ gda_xml_list_item_to_dom (GdaXmlItem *item, xmlNodePtr parent_node)
  * gda_xml_list_item_find_id
  */
 GdaXmlItem *
-gda_xml_list_item_find_id (GdaXmlItem *item, const gchar *id)
+gda_xml_list_item_find_id (GdaXmlItem * item, const gchar * id)
 {
 	GdaXmlItem *id_item;
 	GdaXmlItemClass *item_class;

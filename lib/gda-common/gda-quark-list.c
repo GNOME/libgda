@@ -23,7 +23,8 @@
 #include "gda-quark-list.h"
 #include "gda-util.h"
 
-struct _GdaQuarkList {
+struct _GdaQuarkList
+{
 	GHashTable *hash_table;
 };
 
@@ -45,7 +46,7 @@ gda_quark_list_new (void)
  * gda_quark_list_new_from_string
  */
 GdaQuarkList *
-gda_quark_list_new_from_string (const gchar *string)
+gda_quark_list_new_from_string (const gchar * string)
 {
 	GdaQuarkList *qlist;
 
@@ -59,7 +60,7 @@ gda_quark_list_new_from_string (const gchar *string)
  * gda_quark_list_free
  */
 void
-gda_quark_list_free (GdaQuarkList *qlist)
+gda_quark_list_free (GdaQuarkList * qlist)
 {
 	g_return_if_fail (qlist != NULL);
 
@@ -75,9 +76,8 @@ gda_quark_list_free (GdaQuarkList *qlist)
  * gda_quark_list_add_from_string
  */
 void
-gda_quark_list_add_from_string (GdaQuarkList *qlist,
-				const gchar *string,
-				gboolean cleanup)
+gda_quark_list_add_from_string (GdaQuarkList * qlist,
+				const gchar * string, gboolean cleanup)
 {
 	gchar **arr;
 
@@ -97,10 +97,11 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist,
 			if (pair) {
 				gchar *name = pair[0];
 				gchar *value = pair[1];
-				g_hash_table_insert (
-					qlist->hash_table,
-					(gpointer) g_strdup (name),
-					(gpointer) g_strdup (value));
+				g_hash_table_insert (qlist->hash_table,
+						     (gpointer)
+						     g_strdup (name),
+						     (gpointer)
+						     g_strdup (value));
 				g_strfreev (pair);
 			}
 			n++;
@@ -113,7 +114,7 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist,
  * gda_quark_list_find
  */
 const gchar *
-gda_quark_list_find (GdaQuarkList *qlist, const gchar *name)
+gda_quark_list_find (GdaQuarkList * qlist, const gchar * name)
 {
 	gchar *value;
 

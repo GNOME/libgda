@@ -26,7 +26,8 @@
 #include <gda-server-field.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
 #define GDA_TYPE_SERVER_RECORDSET            (gda_server_recordset_get_type())
@@ -35,48 +36,55 @@ extern "C" {
 #define GDA_IS_SERVER_RECORDSET(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_RECORDSET)
 #define GDA_IS_SERVER_RECORDSET_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_RECORDSET))
 
-typedef struct _GdaServerRecordset      GdaServerRecordset;
-typedef struct _GdaServerRecordsetClass GdaServerRecordsetClass;
+	typedef struct _GdaServerRecordset GdaServerRecordset;
+	typedef struct _GdaServerRecordsetClass GdaServerRecordsetClass;
 
-struct _GdaServerRecordset {
-	BonoboXObject        object;
+	struct _GdaServerRecordset
+	{
+		BonoboXObject object;
 
-	/* data */
-	GdaServerConnection* cnc;
-	GList*               fields;
-	gulong               position;
-	gboolean             at_begin;
-	gboolean             at_end;
+		/* data */
+		GdaServerConnection *cnc;
+		GList *fields;
+		gulong position;
+		gboolean at_begin;
+		gboolean at_end;
 
-	gpointer             user_data;
-};
+		gpointer user_data;
+	};
 
-struct _GdaServerRecordsetClass {
-	BonoboXObjectClass parent_class;
+	struct _GdaServerRecordsetClass
+	{
+		BonoboXObjectClass parent_class;
 
-	POA_GDA_Recordset__epv epv;
-};
+		POA_GDA_Recordset__epv epv;
+	};
 
-GtkType              gda_server_recordset_get_type (void);
-GdaServerRecordset*  gda_server_recordset_new  (GdaServerConnection *cnc);
-GdaServerConnection* gda_server_recordset_get_connection (GdaServerRecordset *recset);
-void                 gda_server_recordset_add_field (GdaServerRecordset *recset,
-                                                      GdaServerField *field);
-GList*               gda_server_recordset_get_fields (GdaServerRecordset *recset);
-gboolean             gda_server_recordset_is_at_begin (GdaServerRecordset *recset);
-void                 gda_server_recordset_set_at_begin (GdaServerRecordset *recset,
-                                                         gboolean at_begin);
-gboolean             gda_server_recordset_is_at_end (GdaServerRecordset *recset);
-void                 gda_server_recordset_set_at_end (GdaServerRecordset *recset,
-                                                       gboolean at_end);
-gpointer             gda_server_recordset_get_user_data (GdaServerRecordset *recset);
-void                 gda_server_recordset_set_user_data (GdaServerRecordset *recset,
-                                                          gpointer user_data);
-void                 gda_server_recordset_free (GdaServerRecordset *recset);
+	GtkType gda_server_recordset_get_type (void);
+	GdaServerRecordset *gda_server_recordset_new (GdaServerConnection *
+						      cnc);
+	GdaServerConnection
+		*gda_server_recordset_get_connection (GdaServerRecordset *
+						      recset);
+	void gda_server_recordset_add_field (GdaServerRecordset * recset,
+					     GdaServerField * field);
+	GList *gda_server_recordset_get_fields (GdaServerRecordset * recset);
+	gboolean gda_server_recordset_is_at_begin (GdaServerRecordset *
+						   recset);
+	void gda_server_recordset_set_at_begin (GdaServerRecordset * recset,
+						gboolean at_begin);
+	gboolean gda_server_recordset_is_at_end (GdaServerRecordset * recset);
+	void gda_server_recordset_set_at_end (GdaServerRecordset * recset,
+					      gboolean at_end);
+	gpointer gda_server_recordset_get_user_data (GdaServerRecordset *
+						     recset);
+	void gda_server_recordset_set_user_data (GdaServerRecordset * recset,
+						 gpointer user_data);
+	void gda_server_recordset_free (GdaServerRecordset * recset);
 
-gint                 gda_server_recordset_move_next (GdaServerRecordset *recset);
-gint                 gda_server_recordset_move_prev (GdaServerRecordset *recset);
-gint                 gda_server_recordset_close (GdaServerRecordset *recset);
+	gint gda_server_recordset_move_next (GdaServerRecordset * recset);
+	gint gda_server_recordset_move_prev (GdaServerRecordset * recset);
+	gint gda_server_recordset_close (GdaServerRecordset * recset);
 
 #if defined(__cplusplus)
 }

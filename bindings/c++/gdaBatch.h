@@ -21,35 +21,37 @@
 
 #include "gdaIncludes.h"
 
-namespace gda {
+namespace gda
+{
 
-class Batch {
-	public:
-		Batch();
-		Batch(GdaBatch *a);
-		~Batch();
+	class Batch
+	{
+	      public:
+		Batch ();
+		Batch (GdaBatch * a);
+		~Batch ();
 
-		GdaBatch *getCStruct();
-		void setCStruct(GdaBatch *job);
+		GdaBatch *getCStruct ();
+		void setCStruct (GdaBatch * job);
 
-		gboolean loadFile(const gchar *filename, gboolean clean);
-		void addCommand(const gchar *cmd);
-		void clear();
+		gboolean loadFile (const gchar * filename, gboolean clean);
+		void addCommand (const gchar * cmd);
+		void clear ();
 
-		gboolean start();
-		void stop();
-		gboolean isRunning();
+		gboolean start ();
+		void stop ();
+		gboolean isRunning ();
 
-		Connection* getConnection();
-		void setConnection(Connection *cnc);
-		gboolean getTransactionMode();
-		void setTransactionMode(gboolean mode);
+		Connection *getConnection ();
+		void setConnection (Connection * cnc);
+		gboolean getTransactionMode ();
+		void setTransactionMode (gboolean mode);
 
-	private:
-		GdaBatch* _gda_batch;
+	      private:
+		  GdaBatch * _gda_batch;
 		Connection *cnc;
 
-};
+	};
 
 };
 

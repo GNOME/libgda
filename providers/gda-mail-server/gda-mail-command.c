@@ -27,26 +27,28 @@
  * Public functions
  */
 gboolean
-gda_mail_command_new (GdaServerCommand * cmd) {
+gda_mail_command_new (GdaServerCommand * cmd)
+{
 	return TRUE;
 }
 
 GdaServerRecordset *
 gda_mail_command_execute (GdaServerCommand * cmd,
-						  GdaServerError * error,
-						  const GDA_CmdParameterSeq * params,
-						  gulong * affected,
-						  gulong options) {
-	GdaServerRecordset * recset = NULL;
+			  GdaServerError * error,
+			  const GDA_CmdParameterSeq * params,
+			  gulong * affected, gulong options)
+{
+	GdaServerRecordset *recset = NULL;
 
-	switch (gda_server_command_get_cmd_type(cmd)) {
-		case GDA_COMMAND_TYPE_TEXT :
-		case GDA_COMMAND_TYPE_TABLE :
-		case GDA_COMMAND_TYPE_STOREDPROCEDURE :
+	switch (gda_server_command_get_cmd_type (cmd)) {
+	case GDA_COMMAND_TYPE_TEXT:
+	case GDA_COMMAND_TYPE_TABLE:
+	case GDA_COMMAND_TYPE_STOREDPROCEDURE:
 	}
 	return recset;
 }
 
 void
-gda_mail_command_free (GdaServerCommand * cmd) {
+gda_mail_command_free (GdaServerCommand * cmd)
+{
 }

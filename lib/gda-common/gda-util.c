@@ -58,7 +58,7 @@ add_key_to_list (gpointer key, gpointer value, gpointer user_data)
  * Returns: the newly created #GList
  */
 GList *
-gda_util_hash_to_list (GHashTable *hash_table)
+gda_util_hash_to_list (GHashTable * hash_table)
 {
 	GList *list = NULL;
 
@@ -72,7 +72,7 @@ gda_util_hash_to_list (GHashTable *hash_table)
  * gda_util_destroy_hash_pair
  */
 gboolean
-gda_util_destroy_hash_pair (gchar *key, gpointer value, GFreeFunc free_func)
+gda_util_destroy_hash_pair (gchar * key, gpointer value, GFreeFunc free_func)
 {
 	g_free (key);
 	if ((free_func != NULL) && (value != NULL))
@@ -88,31 +88,30 @@ gda_util_destroy_hash_pair (gchar *key, gpointer value, GFreeFunc free_func)
  * string. You must then free it yourself when no longer needed
  */
 gchar *
-gda_util_load_file (const gchar *filename)
+gda_util_load_file (const gchar * filename)
 {
-  GString* str;
-  FILE*    fp;
-  gchar*   ret;
-  gchar    buffer[2049];
-  
-  g_return_val_if_fail(filename != NULL, NULL);
-  
-  if ((fp = fopen(filename, "r")))
-    {
-      str = g_string_new("");
-      while (!feof(fp))
-        {
-          memset(buffer, 0, sizeof(buffer));
-          fread((void *) buffer, sizeof(buffer) - 1, 1, fp);
-          str = g_string_append(str, buffer);
-        }
-      fclose(fp);
-      ret = g_strdup(str->str);
-      g_string_free(str, TRUE);
-      return ret;
-    }
-  else g_warning(_("Could not open file %s"), filename);
-  return NULL;
+	GString *str;
+	FILE *fp;
+	gchar *ret;
+	gchar buffer[2049];
+
+	g_return_val_if_fail (filename != NULL, NULL);
+
+	if ((fp = fopen (filename, "r"))) {
+		str = g_string_new ("");
+		while (!feof (fp)) {
+			memset (buffer, 0, sizeof (buffer));
+			fread ((void *) buffer, sizeof (buffer) - 1, 1, fp);
+			str = g_string_append (str, buffer);
+		}
+		fclose (fp);
+		ret = g_strdup (str->str);
+		g_string_free (str, TRUE);
+		return ret;
+	}
+	else
+		g_warning (_("Could not open file %s"), filename);
+	return NULL;
 }
 
 /**
@@ -123,19 +122,19 @@ gda_util_load_file (const gchar *filename)
  * Save the given text into a file
  */
 gboolean
-gda_util_save_file (const gchar *filename, const gchar *text)
+gda_util_save_file (const gchar * filename, const gchar * text)
 {
-  FILE* fp;
-  
-  g_return_val_if_fail(filename != NULL, FALSE);
-  g_return_val_if_fail(text != NULL, FALSE);
-  
-  if ((fp = fopen(filename, "w")))
-    {
-      fwrite((void *) text, strlen(text), 1, fp);
-      fclose(fp);
-      return TRUE;
-    }
-  else g_warning(_("Could not create file %s"), filename);
-  return FALSE;
+	FILE *fp;
+
+	g_return_val_if_fail (filename != NULL, FALSE);
+	g_return_val_if_fail (text != NULL, FALSE);
+
+	if ((fp = fopen (filename, "w"))) {
+		fwrite ((void *) text, strlen (text), 1, fp);
+		fclose (fp);
+		return TRUE;
+	}
+	else
+		g_warning (_("Could not create file %s"), filename);
+	return FALSE;
 }

@@ -24,73 +24,70 @@
 
 typedef struct _GdaBuiltin_Res_AttDesc
 {
-  char         *name;	          	/* field name */
-  gulong       typid;    		/* type id */  
-  int          typlen;   		/* type size */
-} GdaBuiltin_Res_AttDesc;
+	char *name;		/* field name */
+	gulong typid;		/* type id */
+	int typlen;		/* type size */
+}
+GdaBuiltin_Res_AttDesc;
 
 
 /* We use char* for Attribute values.
    The value pointer always points to a null-terminated area; we add a
    null (zero) byte after whatever the backend sends us.  
 */
-   
+
 typedef struct _GdaBuiltin_Res_AttValue
 {
-  int	    len;       /* length in bytes of the value */
-  char      *value;    /* actual value, plus terminating zero byte */
-} GdaBuiltin_Res_AttValue;
+	int len;		/* length in bytes of the value */
+	char *value;		/* actual value, plus terminating zero byte */
+}
+GdaBuiltin_Res_AttValue;
 
 
 typedef struct _GdaBuiltin_Result
 {
-  int                      ntuples;
-  int                      numcols;
-  GdaBuiltin_Res_AttDesc  *attDescs;
-  GdaBuiltin_Res_AttValue **tuples;
+	int ntuples;
+	int numcols;
+	GdaBuiltin_Res_AttDesc *attDescs;
+	GdaBuiltin_Res_AttValue **tuples;
 
-  gulong                  default_typid;
-} GdaBuiltin_Result;
+	gulong default_typid;
+}
+GdaBuiltin_Result;
 
 /* returns an empty GdaBuiltin_Result */
-GdaBuiltin_Result* GdaBuiltin_Result_new(guint ncols, 
-					   gchar *default_name,
-					   gulong default_typid, 
-					   int default_typlen);
+GdaBuiltin_Result *GdaBuiltin_Result_new (guint ncols,
+					  gchar * default_name,
+					  gulong default_typid,
+					  int default_typlen);
 
 /* frees ALL the GdaBuiltin_Result* */
-void                GdaBuiltin_Result_free(GdaBuiltin_Result* res);
+void GdaBuiltin_Result_free (GdaBuiltin_Result * res);
 
 /* sets the attributes for one column */
-void                GdaBuiltin_Result_set_att(GdaBuiltin_Result* res,
-					       guint col,
-					       gchar *fieldname,
-					       gulong typid, 
-					       int typlen);
+void GdaBuiltin_Result_set_att (GdaBuiltin_Result * res,
+				guint col,
+				gchar * fieldname, gulong typid, int typlen);
 
 /* add a new row to the result and returns the row number */
-guint               GdaBuiltin_Result_add_row(GdaBuiltin_Result* res,
-					       gchar **row);
+guint GdaBuiltin_Result_add_row (GdaBuiltin_Result * res, gchar ** row);
 
 /* information about the types */
-gchar*              GdaBuiltin_Result_get_fname(GdaBuiltin_Result* res,
-						 guint col);
-gulong              GdaBuiltin_Result_get_ftype(GdaBuiltin_Result* res,
-						 guint col);
-gint                GdaBuiltin_Result_get_fsize(GdaBuiltin_Result* res,
-						 guint col);
+gchar *GdaBuiltin_Result_get_fname (GdaBuiltin_Result * res, guint col);
+gulong GdaBuiltin_Result_get_ftype (GdaBuiltin_Result * res, guint col);
+gint GdaBuiltin_Result_get_fsize (GdaBuiltin_Result * res, guint col);
 
-guint               GdaBuiltin_Result_get_nbtuples(GdaBuiltin_Result* res);
-guint               GdaBuiltin_Result_get_nbfields(GdaBuiltin_Result* res);
+guint GdaBuiltin_Result_get_nbtuples (GdaBuiltin_Result * res);
+guint GdaBuiltin_Result_get_nbfields (GdaBuiltin_Result * res);
 
 /* returns a non allocated string => do not modify or deallocated it */
-gchar*              GdaBuiltin_Result_get_value(GdaBuiltin_Result* res,
-						 guint row, guint col);
+gchar *GdaBuiltin_Result_get_value (GdaBuiltin_Result * res,
+				    guint row, guint col);
 
-gint                GdaBuiltin_Result_get_length(GdaBuiltin_Result* res,
-						  guint row, guint col);
+gint GdaBuiltin_Result_get_length (GdaBuiltin_Result * res,
+				   guint row, guint col);
 
 
 /* debug function */
-void                GdaBuiltin_Result_dump(GdaBuiltin_Result* res);
+void GdaBuiltin_Result_dump (GdaBuiltin_Result * res);
 #endif

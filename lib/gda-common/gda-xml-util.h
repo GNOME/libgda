@@ -28,15 +28,18 @@
 #include <parser.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
-gchar* gda_xml_util_gensym (const gchar *sym);
-gchar* gda_xml_util_dom_to_xml (xmlNodePtr node, gboolean freedoc);
-gchar* gda_xml_util_dom_to_sql (xmlNodePtr node, gboolean freedoc);
+	gchar *gda_xml_util_gensym (const gchar * sym);
+	gchar *gda_xml_util_dom_to_xml (xmlNodePtr node, gboolean freedoc);
+	gchar *gda_xml_util_dom_to_sql (xmlNodePtr node, gboolean freedoc);
 
-xmlNodePtr gda_xml_util_new_node (const gchar *tag, xmlNodePtr parent_node);
-void       gda_xml_util_new_attr (gchar *key, gchar *value, xmlNodePtr node);
+	xmlNodePtr gda_xml_util_new_node (const gchar * tag,
+					  xmlNodePtr parent_node);
+	void gda_xml_util_new_attr (gchar * key, gchar * value,
+				    xmlNodePtr node);
 
 #if defined(__cplusplus)
 }

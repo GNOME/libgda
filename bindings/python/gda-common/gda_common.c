@@ -30,96 +30,54 @@
 
 static PyMethodDef _gda_common_methods[] = {
 
-    /* Gda-Log
-     */
-    {"gda_log_enable",     _wrap_gda_log_enable,     1},
-    {"gda_log_disable",    _wrap_gda_log_disable,    1},
-    {"gda_log_is_enabled", _wrap_gda_log_is_enabled, 1},
+	/* Gda-Log
+	 */
+	{"gda_log_enable", _wrap_gda_log_enable, 1},
+	{"gda_log_disable", _wrap_gda_log_disable, 1},
+	{"gda_log_is_enabled", _wrap_gda_log_is_enabled, 1},
 
-    {"gda_log_message",    _wrap_gda_log_message,    1},
-    {"gda_log_error",      _wrap_gda_log_error,      1},
+	{"gda_log_message", _wrap_gda_log_message, 1},
+	{"gda_log_error", _wrap_gda_log_error, 1},
 
-    /* Gda-Dsn
-     */
-    {"gda_dsn_new",             _wrap_gda_dsn_new,             1},
-    {"gda_dsn_find_by_name",    _wrap_gda_dsn_find_by_name,    1},
+	/* Gda-Dsn
+	 */
+	{"gda_dsn_new", _wrap_gda_dsn_new, 1},
+	{"gda_dsn_find_by_name", _wrap_gda_dsn_find_by_name, 1},
 
-    {"gda_dsn_set_name",        _wrap_gda_dsn_set_name,        1},
-    {"gda_dsn_set_provider",    _wrap_gda_dsn_set_provider,    1},
-    {"gda_dsn_set_dsn",         _wrap_gda_dsn_set_dsn,         1},
-    {"gda_dsn_set_description", _wrap_gda_dsn_set_description, 1},
-    {"gda_dsn_set_username",    _wrap_gda_dsn_set_username,    1},
-    {"gda_dsn_set_config",      _wrap_gda_dsn_set_config,      1},
-    {"gda_dsn_set_global",      _wrap_gda_dsn_set_global,      1},
+	{"gda_dsn_set_name", _wrap_gda_dsn_set_name, 1},
+	{"gda_dsn_set_provider", _wrap_gda_dsn_set_provider, 1},
+	{"gda_dsn_set_dsn", _wrap_gda_dsn_set_dsn, 1},
+	{"gda_dsn_set_description", _wrap_gda_dsn_set_description, 1},
+	{"gda_dsn_set_username", _wrap_gda_dsn_set_username, 1},
+	{"gda_dsn_set_config", _wrap_gda_dsn_set_config, 1},
+	{"gda_dsn_set_global", _wrap_gda_dsn_set_global, 1},
 
-    {"gda_dsn_get_is_global",   _wrap_gda_dsn_get_is_global,   1},
-    {"gda_dsn_get_provider",    _wrap_gda_dsn_get_provider,    1},
-    {"gda_dsn_get_description", _wrap_gda_dsn_get_description, 1},
-    {"gda_dsn_get_username",    _wrap_gda_dsn_get_username,    1},
-    {"gda_dsn_get_config",      _wrap_gda_dsn_get_config,      1},
-    {"gda_dsn_get_dsn",         _wrap_gda_dsn_get_dsn,         1},
+	{"gda_dsn_get_is_global", _wrap_gda_dsn_get_is_global, 1},
+	{"gda_dsn_get_provider", _wrap_gda_dsn_get_provider, 1},
+	{"gda_dsn_get_description", _wrap_gda_dsn_get_description, 1},
+	{"gda_dsn_get_username", _wrap_gda_dsn_get_username, 1},
+	{"gda_dsn_get_config", _wrap_gda_dsn_get_config, 1},
+	{"gda_dsn_get_dsn", _wrap_gda_dsn_get_dsn, 1},
 
-    /* Gda-Server
-     */
-    {"gda_server_new",          _wrap_gda_server_new,          1},
-    {"gda_server_list",         _wrap_gda_server_list,         1},
-    {"gda_server_find_by_name", _wrap_gda_server_find_by_name, 1},
+	/* Gda-Server
+	 */
+	{"gda_server_new", _wrap_gda_server_new, 1},
+	{"gda_server_list", _wrap_gda_server_list, 1},
+	{"gda_server_find_by_name", _wrap_gda_server_find_by_name, 1},
 
-    {NULL, NULL, 0}
+	{NULL, NULL, 0}
 };
 
 
 void
 init_gda_common ()
 {
-    PyObject *dict, *module;
- 
-    module = Py_InitModule ("_gda_common", _gda_common_methods); 
-    dict = PyModule_GetDict (module);
+	PyObject *dict, *module;
+
+	module = Py_InitModule ("_gda_common", _gda_common_methods);
+	dict = PyModule_GetDict (module);
 
 
-    if (PyErr_Occurred())
-      Py_FatalError ("Can't inicitialice module");
+	if (PyErr_Occurred ())
+		Py_FatalError ("Can't inicitialice module");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

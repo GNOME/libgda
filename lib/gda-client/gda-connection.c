@@ -45,7 +45,8 @@
 
 static GtkObjectClass *parent_class = NULL;
 
-enum {
+enum
+{
 	CONNECTION_ERROR,
 	CONNECTION_WARNING,
 	CONNECTION_OPEN,
@@ -53,35 +54,36 @@ enum {
 	LAST_SIGNAL
 };
 
-static gint
-gda_connection_signals[LAST_SIGNAL] = {0, };
+static gint gda_connection_signals[LAST_SIGNAL] = { 0, };
 
 #ifdef HAVE_GOBJECT
-static void    gda_connection_class_init    (GdaConnectionClass *klass,
-                                             gpointer data);
-static void    gda_connection_init          (GdaConnection *cnc,
-                                             GdaConnectionClass *klass);
+static void gda_connection_class_init (GdaConnectionClass * klass,
+				       gpointer data);
+static void gda_connection_init (GdaConnection * cnc,
+				 GdaConnectionClass * klass);
 #else
-static void    gda_connection_class_init    (GdaConnectionClass* klass);
-static void    gda_connection_init          (GdaConnection* cnc);
-static void    gda_connection_destroy       (GtkObject *object, gpointer user_data);
+static void gda_connection_class_init (GdaConnectionClass * klass);
+static void gda_connection_init (GdaConnection * cnc);
+static void gda_connection_destroy (GtkObject * object, gpointer user_data);
 #endif
 
-static void    gda_connection_real_error    (GdaConnection* cnc, GList*);
-static void    gda_connection_real_warning  (GdaConnection* cnc, GList*);
-static int     get_corba_connection         (GdaConnection* cnc);
+static void gda_connection_real_error (GdaConnection * cnc, GList *);
+static void gda_connection_real_warning (GdaConnection * cnc, GList *);
+static int get_corba_connection (GdaConnection * cnc);
 
 static void
-gda_connection_real_error (GdaConnection* cnc, GList* errors)
+gda_connection_real_error (GdaConnection * cnc, GList * errors)
 {
-	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
-	cnc->errors_head = g_list_concat(cnc->errors_head, errors);
+	g_print ("%s: %d: %s called\n", __FILE__, __LINE__,
+		 __PRETTY_FUNCTION__);
+	cnc->errors_head = g_list_concat (cnc->errors_head, errors);
 }
 
 static void
-gda_connection_real_warning (GdaConnection* cnc, GList* warnings)
+gda_connection_real_warning (GdaConnection * cnc, GList * warnings)
 {
-	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+	g_print ("%s: %d: %s called\n", __FILE__, __LINE__,
+		 __PRETTY_FUNCTION__);
 }
 
 #ifdef HAVE_GOBJECT
@@ -89,7 +91,7 @@ GType
 gda_connection_get_type (void)
 {
 	static GType type = 0;
-	
+
 	if (!type) {
 		GTypeInfo info = {
 			sizeof (GdaConnectionClass),
@@ -103,7 +105,8 @@ gda_connection_get_type (void)
 			(GInstanceInitFunc) gda_connection_init,
 			NULL,
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaConnection", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaConnection",
+					       &info, 0);
 	}
 	return type;
 }
@@ -112,7 +115,7 @@ GtkType
 gda_connection_get_type (void)
 {
 	static GtkType type = 0;
-	
+
 	if (!type) {
 		GtkTypeInfo info = {
 			"GdaConnection",
@@ -120,8 +123,8 @@ gda_connection_get_type (void)
 			sizeof (GdaConnectionClass),
 			(GtkClassInitFunc) gda_connection_class_init,
 			(GtkObjectInitFunc) gda_connection_init,
-			(GtkArgSetFunc)NULL,
-			(GtkArgSetFunc)NULL,
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL,
 		};
 		type = gtk_type_unique (gtk_object_get_type (), &info);
 	}
@@ -132,7 +135,7 @@ gda_connection_get_type (void)
 
 #ifdef HAVE_GOBJECT
 static void
-gda_connection_class_init (GdaConnectionClass *klass, gpointer data)
+gda_connection_class_init (GdaConnectionClass * klass, gpointer data)
 {
 	/* FIXME: No GObject signals yet */
 	klass->error = gda_connection_real_error;
@@ -142,57 +145,55 @@ gda_connection_class_init (GdaConnectionClass *klass, gpointer data)
 }
 #else
 static void
-gda_connection_class_init (GdaConnectionClass* klass)
+gda_connection_class_init (GdaConnectionClass * klass)
 {
-	GtkObjectClass*   object_class;
+	GtkObjectClass *object_class;
 
-	parent_class = gtk_type_class(gtk_object_get_type());
+	parent_class = gtk_type_class (gtk_object_get_type ());
 
-	object_class = (GtkObjectClass*) klass;
-	
+	object_class = (GtkObjectClass *) klass;
+
 	gda_connection_signals[CONNECTION_ERROR] =
-		gtk_signal_new("error",
-			       GTK_RUN_FIRST,
-			       object_class->type,
-			       GTK_SIGNAL_OFFSET(GdaConnectionClass, error),
-			       gtk_marshal_NONE__POINTER,
-			       GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+		gtk_signal_new ("error",
+				GTK_RUN_FIRST,
+				object_class->type,
+				GTK_SIGNAL_OFFSET (GdaConnectionClass, error),
+				gtk_marshal_NONE__POINTER,
+				GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
 	gda_connection_signals[CONNECTION_WARNING] =
-		gtk_signal_new("warning",
-			       GTK_RUN_LAST,
-			       object_class->type,
-			       GTK_SIGNAL_OFFSET(GdaConnectionClass, warning),
-			       gtk_marshal_NONE__POINTER,
-			       GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+		gtk_signal_new ("warning",
+				GTK_RUN_LAST,
+				object_class->type,
+				GTK_SIGNAL_OFFSET (GdaConnectionClass,
+						   warning),
+				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1,
+				GTK_TYPE_POINTER);
 	gda_connection_signals[CONNECTION_OPEN] =
-		gtk_signal_new("open",
-			       GTK_RUN_LAST,
-			       object_class->type,
-			       GTK_SIGNAL_OFFSET(GdaConnectionClass, open),
-			       gtk_signal_default_marshaller,
-			       GTK_TYPE_NONE, 0);
+		gtk_signal_new ("open", GTK_RUN_LAST, object_class->type,
+				GTK_SIGNAL_OFFSET (GdaConnectionClass, open),
+				gtk_signal_default_marshaller, GTK_TYPE_NONE,
+				0);
 	gda_connection_signals[CONNECTION_CLOSE] =
-		gtk_signal_new("close",
-			       GTK_RUN_LAST,
-			       object_class->type,
-			       GTK_SIGNAL_OFFSET(GdaConnectionClass, close),
-			       gtk_signal_default_marshaller,
-			       GTK_TYPE_NONE, 0);
-	gtk_object_class_add_signals(object_class, gda_connection_signals, LAST_SIGNAL);
+		gtk_signal_new ("close", GTK_RUN_LAST, object_class->type,
+				GTK_SIGNAL_OFFSET (GdaConnectionClass, close),
+				gtk_signal_default_marshaller, GTK_TYPE_NONE,
+				0);
+	gtk_object_class_add_signals (object_class, gda_connection_signals,
+				      LAST_SIGNAL);
 
 	object_class->destroy = gda_connection_destroy;
-	klass->error   = gda_connection_real_error;
+	klass->error = gda_connection_real_error;
 	klass->warning = gda_connection_real_warning;
-	klass->close   = NULL;
-	klass->open    = NULL;
+	klass->close = NULL;
+	klass->open = NULL;
 }
 #endif
 
 static void
 #ifdef HAVE_GOBJECT
-gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
+gda_connection_init (GdaConnection * cnc, GdaConnectionClass * klass)
 #else
-gda_connection_init (GdaConnection* cnc)
+gda_connection_init (GdaConnection * cnc)
 #endif
 {
 	cnc->connection = CORBA_OBJECT_NIL;
@@ -208,7 +209,7 @@ gda_connection_init (GdaConnection* cnc)
 }
 
 gint
-gda_connection_corba_exception (GdaConnection* cnc, CORBA_Environment* ev)
+gda_connection_corba_exception (GdaConnection * cnc, CORBA_Environment * ev)
 {
 	GList *error_list;
 
@@ -225,11 +226,11 @@ gda_connection_corba_exception (GdaConnection* cnc, CORBA_Environment* ev)
 }
 
 static int
-get_corba_connection (GdaConnection* cnc)
+get_corba_connection (GdaConnection * cnc)
 {
 	CORBA_Environment ev;
 	CORBA_Object corba_cnc;
-	CORBA_exception_init(&ev);
+	CORBA_exception_init (&ev);
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
 	g_return_val_if_fail (cnc->provider != NULL, -1);
@@ -237,8 +238,10 @@ get_corba_connection (GdaConnection* cnc)
 	CORBA_exception_init (&ev);
 
 	/* get the connection factory */
-	corba_cnc = bonobo_get_object (cnc->provider, "IDL:GDA/Connection:1.0", &ev);
-	if (gda_connection_corba_exception(cnc, &ev)) {
+	corba_cnc =
+		bonobo_get_object (cnc->provider, "IDL:GDA/Connection:1.0",
+				   &ev);
+	if (gda_connection_corba_exception (cnc, &ev)) {
 		CORBA_exception_free (&ev);
 		return -1;
 	}
@@ -260,17 +263,17 @@ get_corba_connection (GdaConnection* cnc)
  *
  * Returns: the pointer to the allocated object
  */
-GdaConnection*
+GdaConnection *
 gda_connection_new (CORBA_ORB orb)
 {
-	GdaConnection* cnc;
-	
-	g_return_val_if_fail(orb != NULL, 0);
+	GdaConnection *cnc;
+
+	g_return_val_if_fail (orb != NULL, 0);
 
 #ifdef HAVE_GOBJECT
 	cnc = GDA_CONNECTION (g_object_new (GDA_TYPE_CONNECTION, NULL));
 #else
-	cnc = gtk_type_new (gda_connection_get_type());
+	cnc = gtk_type_new (gda_connection_get_type ());
 #endif
 	cnc->orb = orb;
 	return cnc;
@@ -289,9 +292,8 @@ gda_connection_new (CORBA_ORB orb)
  * database.
  */
 GdaConnection *
-gda_connection_new_from_dsn (const gchar *dsn_name,
-                             const gchar *username,
-                             const gchar *password)
+gda_connection_new_from_dsn (const gchar * dsn_name,
+			     const gchar * username, const gchar * password)
 {
 	GdaDsn *dsn;
 	GdaConnection *cnc;
@@ -306,9 +308,9 @@ gda_connection_new_from_dsn (const gchar *dsn_name,
 	cnc = gda_connection_new (gda_corba_get_orb ());
 	gda_connection_set_provider (cnc, GDA_DSN_PROVIDER (dsn));
 	if (gda_connection_open (cnc,
-	                         GDA_DSN_DSN (dsn),
-	                         username ? username : GDA_DSN_USERNAME (dsn),
-                                 password) != 0) {
+				 GDA_DSN_DSN (dsn),
+				 username ? username : GDA_DSN_USERNAME (dsn),
+				 password) != 0) {
 		gda_connection_free (cnc);
 		cnc = NULL;
 	}
@@ -320,39 +322,43 @@ gda_connection_new_from_dsn (const gchar *dsn_name,
 
 #ifndef HAVE_GOBJECT
 static void
-gda_connection_destroy (GtkObject *object, gpointer user_data)
+gda_connection_destroy (GtkObject * object, gpointer user_data)
 {
 	GdaConnection *cnc = (GdaConnection *) object;
 
-	g_return_if_fail(GDA_IS_CONNECTION(cnc));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
 	/* be sure to emit "close" signal for listeners */
-	if (gda_connection_is_open(cnc)) {
+	if (gda_connection_is_open (cnc)) {
 		if (cnc->commands)
-			g_warning("Commands still associated with gda_connection");
+			g_warning
+				("Commands still associated with gda_connection");
 		if (cnc->recordsets)
-			g_warning("Recordsets still associated with gda_connection");
+			g_warning
+				("Recordsets still associated with gda_connection");
 		if (cnc->errors_head)
-			g_warning("Errors still associated with gda_connection");
-		gda_connection_close(cnc);
+			g_warning
+				("Errors still associated with gda_connection");
+		gda_connection_close (cnc);
 	}
 	else
-		gtk_signal_emit(GTK_OBJECT(cnc), gda_connection_signals[CONNECTION_CLOSE]);
+		gtk_signal_emit (GTK_OBJECT (cnc),
+				 gda_connection_signals[CONNECTION_CLOSE]);
 
 	/* free all memory */
 	if (cnc->provider)
-		g_free(cnc->provider);
+		g_free (cnc->provider);
 	if (cnc->default_db)
-		g_free(cnc->default_db);
+		g_free (cnc->default_db);
 	if (cnc->database)
-		g_free(cnc->database);
+		g_free (cnc->database);
 	if (cnc->user)
-		g_free(cnc->user);
+		g_free (cnc->user);
 	if (cnc->passwd)
-		g_free(cnc->passwd);
+		g_free (cnc->passwd);
 
-	if (GTK_OBJECT_CLASS(parent_class)->destroy)
-		GTK_OBJECT_CLASS(parent_class)->destroy(object);
+	if (GTK_OBJECT_CLASS (parent_class)->destroy)
+		GTK_OBJECT_CLASS (parent_class)->destroy (object);
 }
 #endif
 
@@ -366,14 +372,14 @@ gda_connection_destroy (GtkObject *object, gpointer user_data)
  *
  */
 void
-gda_connection_free (GdaConnection* cnc)
+gda_connection_free (GdaConnection * cnc)
 {
 #ifdef HAVE_GOBJECT
 	g_object_unref (G_OBJECT (cnc));
 #else
 	gtk_object_unref (GTK_OBJECT (cnc));
 #endif
-}  
+}
 
 /**
  * gda_connection_set_provider:
@@ -386,13 +392,14 @@ gda_connection_free (GdaConnection* cnc)
  *
  */
 void
-gda_connection_set_provider (GdaConnection* cnc, gchar* name)
+gda_connection_set_provider (GdaConnection * cnc, gchar * name)
 {
-	g_return_if_fail(GDA_IS_CONNECTION(cnc));
-	g_return_if_fail(name != 0);
-	
-	if (cnc->provider) g_free(cnc->provider);
-	cnc->provider = g_strdup(name);
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (name != 0);
+
+	if (cnc->provider)
+		g_free (cnc->provider);
+	cnc->provider = g_strdup (name);
 }
 
 /**
@@ -403,12 +410,12 @@ gda_connection_set_provider (GdaConnection* cnc, gchar* name)
  *
  * Returns: a reference to the provider name
  */
- 
-const gchar*
-gda_connection_get_provider (GdaConnection* cnc)
+
+const gchar *
+gda_connection_get_provider (GdaConnection * cnc)
 {
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), 0);
-	return (g_strdup(cnc->provider));
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
+	return (g_strdup (cnc->provider));
 }
 
 /**
@@ -422,16 +429,16 @@ gda_connection_get_provider (GdaConnection* cnc)
  * Returns: whether the requested feature is supported or not
  */
 gboolean
-gda_connection_supports (GdaConnection *cnc, GDA_Connection_Feature feature)
+gda_connection_supports (GdaConnection * cnc, GDA_Connection_Feature feature)
 {
 	CORBA_Environment ev;
-	gboolean          rc;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), FALSE);
-	
-	CORBA_exception_init(&ev);
-	rc = GDA_Connection_supports(cnc->connection, feature, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) < 0)
+	gboolean rc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	CORBA_exception_init (&ev);
+	rc = GDA_Connection_supports (cnc->connection, feature, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) < 0)
 		return FALSE;
 
 	return rc;
@@ -447,14 +454,14 @@ gda_connection_supports (GdaConnection *cnc, GDA_Connection_Feature feature)
  *
  */
 void
-gda_connection_set_default_db (GdaConnection* cnc, gchar* dsn)
+gda_connection_set_default_db (GdaConnection * cnc, gchar * dsn)
 {
-	g_return_if_fail(GDA_IS_CONNECTION(cnc));
-	g_return_if_fail(dsn != 0);
-	
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (dsn != 0);
+
 	if (cnc->default_db)
-		g_free(cnc->default_db);
-	cnc->default_db = g_strdup(dsn);
+		g_free (cnc->default_db);
+	cnc->default_db = g_strdup (dsn);
 }
 
 /**
@@ -476,55 +483,60 @@ gda_connection_set_default_db (GdaConnection* cnc, gchar* dsn)
  * Returns: 0 on success, -1 on error
  */
 gint
-gda_connection_open (GdaConnection* cnc, const gchar* dsn, const gchar* user, const gchar* pwd)
+gda_connection_open (GdaConnection * cnc, const gchar * dsn,
+		     const gchar * user, const gchar * pwd)
 {
-	gchar*            db_to_use;
-	gint              rc;
+	gchar *db_to_use;
+	gint rc;
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), -1);
-	g_return_val_if_fail(cnc->connection == CORBA_OBJECT_NIL, -1);
-	g_return_val_if_fail(cnc->is_open == 0, -1);
-	
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (cnc->connection == CORBA_OBJECT_NIL, -1);
+	g_return_val_if_fail (cnc->is_open == 0, -1);
+
 	if (!dsn)
 		db_to_use = cnc->default_db;
 	else
 		db_to_use = (gchar *) dsn;
 	if (!db_to_use) {
 		gchar *str;
-		GdaError* e = gda_error_new();
-		
-		str = g_strdup_printf (_("Database '%s' not found in system configuration"), dsn);
+		GdaError *e = gda_error_new ();
+
+		str = g_strdup_printf (_
+				       ("Database '%s' not found in system configuration"),
+				       dsn);
 		gda_error_set_description (e, str);
 
 		gda_error_set_source (e, _("[GDA Client Library]"));
 		gda_error_set_native (e, str);
-		gda_connection_add_single_error(cnc, e);
+		gda_connection_add_single_error (cnc, e);
 		g_free (str);
 		return -1;
 	}
 
-	cnc->database = g_strdup(db_to_use);
-	cnc->user = g_strdup(user);
-	cnc->passwd = g_strdup(pwd);
+	cnc->database = g_strdup (db_to_use);
+	cnc->user = g_strdup (user);
+	cnc->passwd = g_strdup (pwd);
 
 	/* start CORBA connection */
-	if (get_corba_connection(cnc) < 0) {
-		GdaError* e = gda_error_new();
-		
-		gda_error_set_description (e, _("Could not open CORBA factory"));
+	if (get_corba_connection (cnc) < 0) {
+		GdaError *e = gda_error_new ();
+
+		gda_error_set_description (e,
+					   _("Could not open CORBA factory"));
 		gda_error_set_source (e, _("[GDA Client Library]"));
 		gda_error_set_native (e, e->description);
-		gda_connection_add_single_error(cnc, e);
+		gda_connection_add_single_error (cnc, e);
 		return -1;
 	}
-	
-	CORBA_exception_init(&ev);
-	
-	rc = GDA_Connection_open(cnc->connection, cnc->database, cnc->user, cnc->passwd, &ev);
-	g_print("GDA_Connection_open returns %d\n", rc);
-	if (gda_connection_corba_exception(cnc, &ev) < 0 || rc < 0) {
-		CORBA_SystemException* sysexc = CORBA_exception_value(&ev);
+
+	CORBA_exception_init (&ev);
+
+	rc = GDA_Connection_open (cnc->connection, cnc->database, cnc->user,
+				  cnc->passwd, &ev);
+	g_print ("GDA_Connection_open returns %d\n", rc);
+	if (gda_connection_corba_exception (cnc, &ev) < 0 || rc < 0) {
+		CORBA_SystemException *sysexc = CORBA_exception_value (&ev);
 		if (sysexc && sysexc->completed != CORBA_COMPLETED_NO) {
 			GDA_Connection_close (cnc->connection, &ev);
 		}
@@ -535,8 +547,9 @@ gda_connection_open (GdaConnection* cnc, const gchar* dsn, const gchar* user, co
 	}
 
 	cnc->is_open = 1;
-#ifndef HAVE_GOBJECT /* FIXME */
-	gtk_signal_emit(GTK_OBJECT(cnc), gda_connection_signals[CONNECTION_OPEN]);
+#ifndef HAVE_GOBJECT		/* FIXME */
+	gtk_signal_emit (GTK_OBJECT (cnc),
+			 gda_connection_signals[CONNECTION_OPEN]);
 #endif
 
 	return 0;
@@ -553,42 +566,45 @@ gda_connection_open (GdaConnection* cnc, const gchar* dsn, const gchar* user, co
  * Returns: 0 on success, -1 on error
  */
 void
-gda_connection_close (GdaConnection* cnc)
+gda_connection_close (GdaConnection * cnc)
 {
-	CORBA_Environment     ev;
-	
-	g_return_if_fail(cnc != NULL);
-	g_return_if_fail(gda_connection_is_open(cnc));
-	g_return_if_fail(cnc->connection != NULL);
-	
-	CORBA_exception_init(&ev);
-	GDA_Connection_close(cnc->connection, &ev);
-	gda_connection_corba_exception(cnc, &ev);
-	CORBA_Object_release(cnc->connection, &ev);
+	CORBA_Environment ev;
+
+	g_return_if_fail (cnc != NULL);
+	g_return_if_fail (gda_connection_is_open (cnc));
+	g_return_if_fail (cnc->connection != NULL);
+
+	CORBA_exception_init (&ev);
+	GDA_Connection_close (cnc->connection, &ev);
+	gda_connection_corba_exception (cnc, &ev);
+	CORBA_Object_release (cnc->connection, &ev);
 	cnc->is_open = 0;
 	cnc->connection = CORBA_OBJECT_NIL;
 
-#ifndef HAVE_GOBJECT /* FIXME */
-	gtk_signal_emit(GTK_OBJECT(cnc), gda_connection_signals[CONNECTION_CLOSE]);
+#ifndef HAVE_GOBJECT		/* FIXME */
+	gtk_signal_emit (GTK_OBJECT (cnc),
+			 gda_connection_signals[CONNECTION_CLOSE]);
 #endif
 }
 
 
-static GdaRecordset*
-open_schema (GdaConnection* cnc,
-             GDA_Connection_QType t,
-             GDA_Connection_ConstraintSeq* constraints)
+static GdaRecordset *
+open_schema (GdaConnection * cnc,
+	     GDA_Connection_QType t,
+	     GDA_Connection_ConstraintSeq * constraints)
 {
 	CORBA_Environment ev;
-	CORBA_Object      corba_rs;
-	GdaRecordset*     rs;
-	gint              rc;
+	CORBA_Object corba_rs;
+	GdaRecordset *rs;
+	gint rc;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	CORBA_exception_init(&ev);
-	
-	corba_rs = GDA_Connection_openSchema (cnc->connection, t, constraints, &ev);
+	CORBA_exception_init (&ev);
+
+	corba_rs =
+		GDA_Connection_openSchema (cnc->connection, t, constraints,
+					   &ev);
 	if (gda_connection_corba_exception (cnc, &ev) < 0
 	    || CORBA_Object_is_nil (corba_rs, &ev))
 		return NULL;
@@ -623,22 +639,22 @@ open_schema (GdaConnection* cnc,
  *
  * Returns: The recordset which holds the results.
  */
-GdaRecordset*
-gda_connection_open_schema_array (GdaConnection* cnc,
-                                  GDA_Connection_QType t,
-                                  GdaConstraint_Element* elems)
+GdaRecordset *
+gda_connection_open_schema_array (GdaConnection * cnc,
+				  GDA_Connection_QType t,
+				  GdaConstraint_Element * elems)
 {
-	CORBA_Environment             ev;
-	GDA_Connection_ConstraintSeq* constraints;
-	gint                          count = 0;
-	gint                          index;
-	GdaConstraint_Element*       current;
-	GdaRecordset*                rc;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), NULL);
-	g_return_val_if_fail(gda_connection_is_open(cnc), NULL);
-	g_return_val_if_fail(cnc->connection != NULL, NULL);
-	
+	CORBA_Environment ev;
+	GDA_Connection_ConstraintSeq *constraints;
+	gint count = 0;
+	gint index;
+	GdaConstraint_Element *current;
+	GdaRecordset *rc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (gda_connection_is_open (cnc), NULL);
+	g_return_val_if_fail (cnc->connection != NULL, NULL);
+
 	count = 0;
 	current = elems;
 	while (current) {
@@ -647,26 +663,28 @@ gda_connection_open_schema_array (GdaConnection* cnc,
 		current++;
 		count++;
 	}
-	constraints =  GDA_Connection_ConstraintSeq__alloc();
-	constraints->_buffer = CORBA_sequence_GDA_Connection_Constraint_allocbuf(count);
+	constraints = GDA_Connection_ConstraintSeq__alloc ();
+	constraints->_buffer =
+		CORBA_sequence_GDA_Connection_Constraint_allocbuf (count);
 	constraints->_length = count;
-	
+
 	index = 0;
 	current = elems;
 	while (count) {
 		constraints->_buffer[index].ctype = current->type;
-		constraints->_buffer[index].value = CORBA_string_dup(current->value);
+		constraints->_buffer[index].value =
+			CORBA_string_dup (current->value);
 		index++;
 		count--;
 		current++;
 	}
-	CORBA_exception_init(&ev);
+	CORBA_exception_init (&ev);
 	g_print ("client: gda_connection_open_schema: constraints._maximum = %d\n", constraints->_maximum);
 	g_print ("                                    constraints._length  = %d\n", constraints->_length);
 
-	rc = open_schema(cnc, t, constraints);
-	CORBA_free(constraints);
-	
+	rc = open_schema (cnc, t, constraints);
+	CORBA_free (constraints);
+
 	return rc;
 }
 
@@ -684,59 +702,62 @@ gda_connection_open_schema_array (GdaConnection* cnc,
  *
  * Returns: The recordset which holds the results.
  */
-GdaRecordset*
-gda_connection_open_schema (GdaConnection* cnc, GDA_Connection_QType t, ...)
+GdaRecordset *
+gda_connection_open_schema (GdaConnection * cnc, GDA_Connection_QType t, ...)
 {
 	va_list ap;
-	GDA_Connection_ConstraintSeq* constraints;
+	GDA_Connection_ConstraintSeq *constraints;
 	GDA_Connection_ConstraintType constraint_type;
-	GDA_Connection_Constraint*    c;
-	GList*                        tmp_constraints = 0;
-	GList*                        ptr;
-	gint                          count = 0;
-	gint                          index;
-	GdaRecordset*                rc;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), NULL);
-	g_return_val_if_fail(gda_connection_is_open(cnc), NULL);
-	g_return_val_if_fail(cnc->connection != NULL, NULL);
-	
-	va_start(ap, t);
+	GDA_Connection_Constraint *c;
+	GList *tmp_constraints = 0;
+	GList *ptr;
+	gint count = 0;
+	gint index;
+	GdaRecordset *rc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (gda_connection_is_open (cnc), NULL);
+	g_return_val_if_fail (cnc->connection != NULL, NULL);
+
+	va_start (ap, t);
 	while (1) {
-		gchar* constraint_value;
-		
-		constraint_type = va_arg(ap, int);
+		gchar *constraint_value;
+
+		constraint_type = va_arg (ap, int);
 		if (constraint_type == GDA_Connection_no_CONSTRAINT)
 			break;
-		constraint_value = va_arg(ap, char*);
-		g_print("gda_connection_open_schema: constraint value = '%s'\n", constraint_value);
-		c = g_new0(GDA_Connection_Constraint, 1);
+		constraint_value = va_arg (ap, char *);
+		g_print ("gda_connection_open_schema: constraint value = '%s'\n", constraint_value);
+		c = g_new0 (GDA_Connection_Constraint, 1);
 		c->ctype = constraint_type;
-		c->value = CORBA_string_dup(constraint_value);
-		tmp_constraints = g_list_append(tmp_constraints, c);
+		c->value = CORBA_string_dup (constraint_value);
+		tmp_constraints = g_list_append (tmp_constraints, c);
 		count++;
 	}
-	
-	constraints =  GDA_Connection_ConstraintSeq__alloc();
-	constraints->_buffer = CORBA_sequence_GDA_Connection_Constraint_allocbuf(count);
+
+	constraints = GDA_Connection_ConstraintSeq__alloc ();
+	constraints->_buffer =
+		CORBA_sequence_GDA_Connection_Constraint_allocbuf (count);
 	constraints->_length = count;
-	
+
 	ptr = tmp_constraints;
 	index = 0;
-	
+
 	while (count) {
-		memcpy(&constraints->_buffer[index], ptr->data, sizeof(GDA_Connection_Constraint));
-		g_print("CORBA seq: constraint->value = '%s'\n", constraints->_buffer[index].value);
+		memcpy (&constraints->_buffer[index], ptr->data,
+			sizeof (GDA_Connection_Constraint));
+		g_print ("CORBA seq: constraint->value = '%s'\n",
+			 constraints->_buffer[index].value);
 		index++;
 		count--;
 		c = ptr->data;
-		g_free(c);
-		ptr = g_list_next(ptr);
+		g_free (c);
+		ptr = g_list_next (ptr);
 	}
-	g_list_free(tmp_constraints);
+	g_list_free (tmp_constraints);
 
-	rc = open_schema(cnc, t, constraints);
-	CORBA_free(constraints);
+	rc = open_schema (cnc, t, constraints);
+	CORBA_free (constraints);
 
 	return rc;
 }
@@ -745,11 +766,12 @@ gda_connection_open_schema (GdaConnection* cnc, GDA_Connection_QType t, ...)
  * gda_connection_modify_schema
  */
 glong
-gda_connection_modify_schema (GdaConnection *cnc, GDA_Connection_QType t, ...)
+gda_connection_modify_schema (GdaConnection * cnc, GDA_Connection_QType t,
+			      ...)
 {
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), -1);
-	g_return_val_if_fail(gda_connection_is_open(cnc), -1);
-	g_return_val_if_fail(cnc->connection != NULL, -1);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (gda_connection_is_open (cnc), -1);
+	g_return_val_if_fail (cnc->connection != NULL, -1);
 }
 
 /**
@@ -769,34 +791,45 @@ gda_connection_modify_schema (GdaConnection *cnc, GDA_Connection_QType t, ...)
  *
  * Returns: a #Glist holding the error objects.
  */
-GList*
-gda_connection_get_errors (GdaConnection* cnc)
+GList *
+gda_connection_get_errors (GdaConnection * cnc)
 {
-	GList*             retval;
-	GDA_ErrorSeq*      remote_errors;
-	CORBA_Environment  ev;
-	gint               idx;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), 0);
-	CORBA_exception_init(&ev);
-	
-	if (cnc->connection) {
-		remote_errors = GDA_Connection__get_errors(cnc->connection, &ev);
-		gda_connection_corba_exception(cnc, &ev);
-		for (idx = 0; idx < remote_errors->_length; idx++) {
-			GdaError* e;
+	GList *retval;
+	GDA_ErrorSeq *remote_errors;
+	CORBA_Environment ev;
+	gint idx;
 
-			e = gda_error_new();
-			gda_error_set_description (e, remote_errors->_buffer[idx].description);
-			gda_error_set_number (e, remote_errors->_buffer[idx].number);
-			gda_error_set_source (e, remote_errors->_buffer[idx].source);
-			gda_error_set_sqlstate (e, remote_errors->_buffer[idx].sqlstate);
-			gda_error_set_native (e, remote_errors->_buffer[idx].nativeMsg);
-			gda_connection_add_single_error(cnc, e);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
+	CORBA_exception_init (&ev);
+
+	if (cnc->connection) {
+		remote_errors =
+			GDA_Connection__get_errors (cnc->connection, &ev);
+		gda_connection_corba_exception (cnc, &ev);
+		for (idx = 0; idx < remote_errors->_length; idx++) {
+			GdaError *e;
+
+			e = gda_error_new ();
+			gda_error_set_description (e,
+						   remote_errors->
+						   _buffer[idx].description);
+			gda_error_set_number (e,
+					      remote_errors->_buffer[idx].
+					      number);
+			gda_error_set_source (e,
+					      remote_errors->_buffer[idx].
+					      source);
+			gda_error_set_sqlstate (e,
+						remote_errors->_buffer[idx].
+						sqlstate);
+			gda_error_set_native (e,
+					      remote_errors->_buffer[idx].
+					      nativeMsg);
+			gda_connection_add_single_error (cnc, e);
 		}
-		CORBA_free(remote_errors);
+		CORBA_free (remote_errors);
 	}
-	
+
 	retval = cnc->errors_head;
 	cnc->errors_head = 0;
 	return retval;
@@ -811,17 +844,17 @@ gda_connection_get_errors (GdaConnection* cnc)
  * Returns: 0 if everything is okay, -1 on error
  */
 gint
-gda_connection_begin_transaction (GdaConnection* cnc)
+gda_connection_begin_transaction (GdaConnection * cnc)
 {
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), -1);
-	g_return_val_if_fail(gda_connection_is_open(cnc), -1);
-	
-	CORBA_exception_init(&ev);
-	
-	GDA_Connection_beginTransaction(cnc->connection, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) < 0)
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (gda_connection_is_open (cnc), -1);
+
+	CORBA_exception_init (&ev);
+
+	GDA_Connection_beginTransaction (cnc->connection, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) < 0)
 		return -1;
 	return 0;
 }
@@ -835,17 +868,17 @@ gda_connection_begin_transaction (GdaConnection* cnc)
  * Returns: 0 if everything is okay, -1 on error
  */
 gint
-gda_connection_commit_transaction (GdaConnection* cnc)
+gda_connection_commit_transaction (GdaConnection * cnc)
 {
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), -1);
-	g_return_val_if_fail(gda_connection_is_open(cnc), -1);
-	
-	CORBA_exception_init(&ev);
-	
-	GDA_Connection_commitTransaction(cnc->connection, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) < 0)
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (gda_connection_is_open (cnc), -1);
+
+	CORBA_exception_init (&ev);
+
+	GDA_Connection_commitTransaction (cnc->connection, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) < 0)
 		return -1;
 	return 0;
 }
@@ -859,17 +892,17 @@ gda_connection_commit_transaction (GdaConnection* cnc)
  * Returns: 0 if everything is okay, -1 on error
  */
 gint
-gda_connection_rollback_transaction (GdaConnection* cnc)
+gda_connection_rollback_transaction (GdaConnection * cnc)
 {
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), -1);
-	g_return_val_if_fail(gda_connection_is_open(cnc), -1);
-	
-	CORBA_exception_init(&ev);
-	
-	GDA_Connection_rollbackTransaction(cnc->connection, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) < 0)
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (gda_connection_is_open (cnc), -1);
+
+	CORBA_exception_init (&ev);
+
+	GDA_Connection_rollbackTransaction (cnc->connection, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) < 0)
 		return -1;
 	return 0;
 }
@@ -888,21 +921,22 @@ gda_connection_rollback_transaction (GdaConnection* cnc)
  *
  * Returns: a recordset on success or NULL on error.
  */
-GdaRecordset*
-gda_connection_execute (GdaConnection* cnc, gchar* txt, gulong* reccount, gulong flags)
+GdaRecordset *
+gda_connection_execute (GdaConnection * cnc, gchar * txt, gulong * reccount,
+			gulong flags)
 {
-	GdaCommand*   cmd;
-	GdaRecordset* rs;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), 0);
-	g_return_val_if_fail(gda_connection_is_open(cnc), 0);
-	g_return_val_if_fail(txt != 0, 0);
-	
-	cmd = gda_command_new();
-	gda_command_set_connection(cmd, cnc);
-	gda_command_set_text(cmd, txt);
-	rs = gda_command_execute(cmd, reccount, flags);
-	gda_command_free(cmd);
+	GdaCommand *cmd;
+	GdaRecordset *rs;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
+	g_return_val_if_fail (gda_connection_is_open (cnc), 0);
+	g_return_val_if_fail (txt != 0, 0);
+
+	cmd = gda_command_new ();
+	gda_command_set_connection (cmd, cnc);
+	gda_command_set_text (cmd, txt);
+	rs = gda_command_execute (cmd, reccount, flags);
+	gda_command_free (cmd);
 	return rs;
 }
 
@@ -917,19 +951,19 @@ gda_connection_execute (GdaConnection* cnc, gchar* txt, gulong* reccount, gulong
  * Returns: -1 on error and 0 if everything is okay
  */
 gint
-gda_connection_start_logging (GdaConnection* cnc, gchar* filename)
+gda_connection_start_logging (GdaConnection * cnc, gchar * filename)
 {
 	CORBA_Environment ev;
-	gint              rc;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), -1);
-	g_return_val_if_fail(gda_connection_is_open(cnc), -1);
-	g_return_val_if_fail(filename, -1);
-	g_return_val_if_fail(cnc->connection != 0, -1);
-	
-	CORBA_exception_init(&ev);
-	rc = GDA_Connection_startLogging(cnc->connection, filename, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) || rc < 0) {
+	gint rc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (gda_connection_is_open (cnc), -1);
+	g_return_val_if_fail (filename, -1);
+	g_return_val_if_fail (cnc->connection != 0, -1);
+
+	CORBA_exception_init (&ev);
+	rc = GDA_Connection_startLogging (cnc->connection, filename, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) || rc < 0) {
 		return -1;
 	}
 	return 0;
@@ -944,39 +978,38 @@ gda_connection_start_logging (GdaConnection* cnc, gchar* filename)
  * Returns: -1 on error and 0 if everything is okay
  */
 gint
-gda_connection_stop_logging (GdaConnection* cnc)
+gda_connection_stop_logging (GdaConnection * cnc)
 {
 	CORBA_Environment ev;
-	gint              rc;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), -1);
-	g_return_val_if_fail(gda_connection_is_open(cnc), -1);
-	g_return_val_if_fail(cnc->connection != 0, -1);
-	
-	CORBA_exception_init(&ev);
-	rc = GDA_Connection_stopLogging(cnc->connection, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) || rc < 0) {
+	gint rc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (gda_connection_is_open (cnc), -1);
+	g_return_val_if_fail (cnc->connection != 0, -1);
+
+	CORBA_exception_init (&ev);
+	rc = GDA_Connection_stopLogging (cnc->connection, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) || rc < 0) {
 		return -1;
 	}
 	return 0;
 }
-   
-gchar*
-gda_connection_create_recordset (GdaConnection* cnc, GdaRecordset* rs)
+
+gchar *
+gda_connection_create_recordset (GdaConnection * cnc, GdaRecordset * rs)
 {
-	gchar*            retval;
+	gchar *retval;
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), 0);
-	g_return_val_if_fail(gda_connection_is_open(cnc), 0);
-	g_return_val_if_fail(GDA_IS_RECORDSET(rs), 0);
-	
-	CORBA_exception_init(&ev);
-	retval = GDA_Connection_createTable(cnc->connection,
-	                                    rs->name,
-	                                    rs->field_attributes,
-	                                    &ev);
-	if (gda_connection_corba_exception(cnc, &ev))
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
+	g_return_val_if_fail (gda_connection_is_open (cnc), 0);
+	g_return_val_if_fail (GDA_IS_RECORDSET (rs), 0);
+
+	CORBA_exception_init (&ev);
+	retval = GDA_Connection_createTable (cnc->connection,
+					     rs->name,
+					     rs->field_attributes, &ev);
+	if (gda_connection_corba_exception (cnc, &ev))
 		return 0;
 	return retval;
 }
@@ -987,28 +1020,30 @@ gda_connection_create_recordset (GdaConnection* cnc, GdaRecordset* rs)
  * @error: error object
  */
 void
-gda_connection_add_single_error (GdaConnection* cnc, GdaError* error)
+gda_connection_add_single_error (GdaConnection * cnc, GdaError * error)
 {
-	GList* error_list = 0;
-	
-	g_return_if_fail(GDA_IS_CONNECTION(cnc));
-	g_return_if_fail(error != 0);
-	
-	error_list = g_list_append(error_list, error);
-#ifndef HAVE_GOBJECT /* FIXME */
-	gtk_signal_emit(GTK_OBJECT(cnc),
-	                gda_connection_signals[CONNECTION_ERROR], error_list);
+	GList *error_list = 0;
+
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (error != 0);
+
+	error_list = g_list_append (error_list, error);
+#ifndef HAVE_GOBJECT		/* FIXME */
+	gtk_signal_emit (GTK_OBJECT (cnc),
+			 gda_connection_signals[CONNECTION_ERROR],
+			 error_list);
 #endif
 }
 
 void
-gda_connection_add_error_list (GdaConnection* cnc, GList* errors)
+gda_connection_add_error_list (GdaConnection * cnc, GList * errors)
 {
-	g_return_if_fail(GDA_IS_CONNECTION(cnc));
-	g_return_if_fail(errors != 0);
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (errors != 0);
 
-#ifndef HAVE_GOBJECT /* FIXME */
-	gtk_signal_emit(GTK_OBJECT(cnc), gda_connection_signals[CONNECTION_ERROR], errors);
+#ifndef HAVE_GOBJECT		/* FIXME */
+	gtk_signal_emit (GTK_OBJECT (cnc),
+			 gda_connection_signals[CONNECTION_ERROR], errors);
 #endif
 }
 
@@ -1019,16 +1054,16 @@ gda_connection_add_error_list (GdaConnection* cnc, GList* errors)
  * Get the version number of the underlying provider
  */
 gchar *
-gda_connection_get_version (GdaConnection *cnc)
+gda_connection_get_version (GdaConnection * cnc)
 {
-	CORBA_char*       version;
+	CORBA_char *version;
 	CORBA_Environment ev;
 
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), 0);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
 
-	CORBA_exception_init(&ev);
-	version = GDA_Connection__get_version(cnc->connection, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) == 0)
+	CORBA_exception_init (&ev);
+	version = GDA_Connection__get_version (cnc->connection, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) == 0)
 		return (gchar *) version;
 	return NULL;
 }
@@ -1041,16 +1076,16 @@ gda_connection_get_version (GdaConnection *cnc)
  * Converts the given SQL command to a #GdaXmlQuery
  */
 gchar *
-gda_connection_sql2xml (GdaConnection *cnc, const gchar *sql)
+gda_connection_sql2xml (GdaConnection * cnc, const gchar * sql)
 {
-	CORBA_char* xml;
+	CORBA_char *xml;
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), 0);
-	
-	CORBA_exception_init(&ev);
-	xml = GDA_Connection_sql2xml(cnc->connection, sql, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) == 0)
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
+
+	CORBA_exception_init (&ev);
+	xml = GDA_Connection_sql2xml (cnc->connection, sql, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) == 0)
 		return (gchar *) xml;
 	return NULL;
 }
@@ -1063,16 +1098,16 @@ gda_connection_sql2xml (GdaConnection *cnc, const gchar *sql)
  * Converts the given #GdaXmlQuery to a SQL string for the underlying provider
  */
 gchar *
-gda_connection_xml2sql (GdaConnection *cnc, const gchar *xml)
+gda_connection_xml2sql (GdaConnection * cnc, const gchar * xml)
 {
-	CORBA_char* sql;
+	CORBA_char *sql;
 	CORBA_Environment ev;
-	
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc), 0);
-	
-	CORBA_exception_init(&ev);
-	sql = GDA_Connection_xml2sql(cnc->connection, xml, &ev);
-	if (gda_connection_corba_exception(cnc, &ev) == 0)
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
+
+	CORBA_exception_init (&ev);
+	sql = GDA_Connection_xml2sql (cnc->connection, xml, &ev);
+	if (gda_connection_corba_exception (cnc, &ev) == 0)
 		return (gchar *) sql;
 	return NULL;
 }
@@ -1081,7 +1116,7 @@ gda_connection_xml2sql (GdaConnection *cnc, const gchar *xml)
  * gda_connection_add_listener
  */
 void
-gda_connection_add_listener (GdaConnection *cnc, GdaListener *listener)
+gda_connection_add_listener (GdaConnection * cnc, GdaListener * listener)
 {
 	CORBA_Environment ev;
 
@@ -1090,7 +1125,8 @@ gda_connection_add_listener (GdaConnection *cnc, GdaListener *listener)
 
 	CORBA_exception_init (&ev);
 	GDA_Connection_addListener (cnc->connection,
-				    bonobo_object_corba_objref (BONOBO_OBJECT (listener)),
+				    bonobo_object_corba_objref (BONOBO_OBJECT
+								(listener)),
 				    &ev);
 	CORBA_exception_free (&ev);
 }
@@ -1099,7 +1135,7 @@ gda_connection_add_listener (GdaConnection *cnc, GdaListener *listener)
  * gda_connection_remove_listener
  */
 void
-gda_connection_remove_listener (GdaConnection *cnc, GdaListener *listener)
+gda_connection_remove_listener (GdaConnection * cnc, GdaListener * listener)
 {
 	CORBA_Environment ev;
 
@@ -1108,7 +1144,7 @@ gda_connection_remove_listener (GdaConnection *cnc, GdaListener *listener)
 
 	CORBA_exception_init (&ev);
 	GDA_Connection_removeListener (cnc->connection,
-				       bonobo_object_corba_objref (BONOBO_OBJECT (listener)),
-				       &ev);
+				       bonobo_object_corba_objref
+				       (BONOBO_OBJECT (listener)), &ev);
 	CORBA_exception_free (&ev);
 }

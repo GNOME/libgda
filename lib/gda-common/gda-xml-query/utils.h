@@ -30,25 +30,19 @@
 #include <libxslt/xsltutils.h>
 
 
-extern gchar
-*xml_query_gensym(gchar *sym);
+extern gchar * xml_query_gensym (gchar * sym);
 
 extern gboolean
-xml_query_destroy_hash_pair(gchar *key, gpointer *value, GFreeFunc func);
+xml_query_destroy_hash_pair (gchar * key, gpointer * value, GFreeFunc func);
 
-extern gchar *
-xml_query_dom_to_xml(xmlNode *node, gboolean freedoc);
+extern gchar *xml_query_dom_to_xml (xmlNode * node, gboolean freedoc);
 
-extern gchar *
-xml_query_dom_to_sql(xmlNode *node, gboolean freedoc);
+extern gchar *xml_query_dom_to_sql (xmlNode * node, gboolean freedoc);
 
-xmlNode *
-xml_query_new_node(gchar *tag, xmlNode *parNode);
+xmlNode *xml_query_new_node (gchar * tag, xmlNode * parNode);
 
 
-void
-xml_query_new_attr(gchar *key, gchar *value, xmlNode *node);
+void xml_query_new_attr (gchar * key, gchar * value, xmlNode * node);
 
 
 #endif /* _UTILS_H_ */
-

@@ -27,7 +27,8 @@
 #include <gda-xml-item.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #define GDA_TYPE_XML_BIN_ITEM            (gda_xml_bin_item_get_type ())
@@ -36,28 +37,34 @@ extern "C" {
 #define GDA_IS_XML_BIN_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_BIN_ITEM)
 #define GDA_IS_XML_BIN_ITEM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_BIN_ITEM))
 
-typedef struct _GdaXmlBinItem        GdaXmlBinItem;
-typedef struct _GdaXmlBinItemClass   GdaXmlBinItemClass;
-typedef struct _GdaXmlBinItemPrivate GdaXmlBinItemPrivate;
+	typedef struct _GdaXmlBinItem GdaXmlBinItem;
+	typedef struct _GdaXmlBinItemClass GdaXmlBinItemClass;
+	typedef struct _GdaXmlBinItemPrivate GdaXmlBinItemPrivate;
 
-struct _GdaXmlBinItem {
-	GdaXmlItem item;
-	GdaXmlBinItemPrivate *priv;
-};
+	struct _GdaXmlBinItem
+	{
+		GdaXmlItem item;
+		GdaXmlBinItemPrivate *priv;
+	};
 
-struct _GdaXmlBinItemClass {
-	GdaXmlItemClass parent_class;
-};
+	struct _GdaXmlBinItemClass
+	{
+		GdaXmlItemClass parent_class;
+	};
 
-GtkType     gda_xml_bin_item_get_type      (void);
-GdaXmlItem* gda_xml_bin_item_new           (const gchar *tag);
-GdaXmlItem* gda_xml_bin_item_new_with_data (const gchar *tag, GdaXmlItem *child);
+	GtkType gda_xml_bin_item_get_type (void);
+	GdaXmlItem *gda_xml_bin_item_new (const gchar * tag);
+	GdaXmlItem *gda_xml_bin_item_new_with_data (const gchar * tag,
+						    GdaXmlItem * child);
 
-GdaXmlItem* gda_xml_bin_item_get_child     (GdaXmlBinItem *bin);
-void        gda_xml_bin_item_set_child     (GdaXmlBinItem *bin, GdaXmlItem *child);
-void        gda_xml_bin_item_add           (GdaXmlItem *item, GdaXmlItem *child);
-xmlNodePtr  gda_xml_bin_item_to_dom        (GdaXmlItem *item, xmlNodePtr parent_node);
-GdaXmlItem* gda_xml_bin_item_find_id       (GdaXmlItem *item, const gchar *id);
+	GdaXmlItem *gda_xml_bin_item_get_child (GdaXmlBinItem * bin);
+	void gda_xml_bin_item_set_child (GdaXmlBinItem * bin,
+					 GdaXmlItem * child);
+	void gda_xml_bin_item_add (GdaXmlItem * item, GdaXmlItem * child);
+	xmlNodePtr gda_xml_bin_item_to_dom (GdaXmlItem * item,
+					    xmlNodePtr parent_node);
+	GdaXmlItem *gda_xml_bin_item_find_id (GdaXmlItem * item,
+					      const gchar * id);
 
 #if defined(__cplusplus)
 }

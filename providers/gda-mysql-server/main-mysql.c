@@ -19,57 +19,58 @@
 
 #include "gda-mysql.h"
 
-static GdaServer*             server_impl = NULL;
-static GdaServerImplFunctions server_impl_functions =
-{
-  gda_mysql_connection_new,
-  gda_mysql_connection_open,
-  gda_mysql_connection_close,
-  gda_mysql_connection_begin_transaction,
-  gda_mysql_connection_commit_transaction,
-  gda_mysql_connection_rollback_transaction,
-  gda_mysql_connection_open_schema,
-  gda_mysql_connection_modify_schema,
-  gda_mysql_connection_start_logging,
-  gda_mysql_connection_stop_logging,
-  gda_mysql_connection_create_table,
-  gda_mysql_connection_supports,
-  gda_mysql_connection_get_gda_type,
-  gda_mysql_connection_get_c_type,
-  gda_mysql_connection_sql2xml,
-  gda_mysql_connection_xml2sql,
-  gda_mysql_connection_free,
+static GdaServer *server_impl = NULL;
+static GdaServerImplFunctions server_impl_functions = {
+	gda_mysql_connection_new,
+	gda_mysql_connection_open,
+	gda_mysql_connection_close,
+	gda_mysql_connection_begin_transaction,
+	gda_mysql_connection_commit_transaction,
+	gda_mysql_connection_rollback_transaction,
+	gda_mysql_connection_open_schema,
+	gda_mysql_connection_modify_schema,
+	gda_mysql_connection_start_logging,
+	gda_mysql_connection_stop_logging,
+	gda_mysql_connection_create_table,
+	gda_mysql_connection_supports,
+	gda_mysql_connection_get_gda_type,
+	gda_mysql_connection_get_c_type,
+	gda_mysql_connection_sql2xml,
+	gda_mysql_connection_xml2sql,
+	gda_mysql_connection_free,
 
-  gda_mysql_command_new,
-  gda_mysql_command_execute,
-  gda_mysql_command_free,
+	gda_mysql_command_new,
+	gda_mysql_command_execute,
+	gda_mysql_command_free,
 
-  gda_mysql_recordset_new,
-  gda_mysql_recordset_move_next,
-  gda_mysql_recordset_move_prev,
-  gda_mysql_recordset_close,
-  gda_mysql_recordset_free,
+	gda_mysql_recordset_new,
+	gda_mysql_recordset_move_next,
+	gda_mysql_recordset_move_prev,
+	gda_mysql_recordset_close,
+	gda_mysql_recordset_free,
 
-  gda_mysql_error_make
+	gda_mysql_error_make
 };
 
 gint
-main (gint argc, gchar *argv[])
+main (gint argc, gchar * argv[])
 {
-  CORBA_Environment ev;
-  CORBA_ORB         orb;
+	CORBA_Environment ev;
+	CORBA_ORB orb;
 
-  /* initialize CORBA stuff */
-  gda_server_init("gda-mysql-srv", VERSION, argc, argv);
+	/* initialize CORBA stuff */
+	gda_server_init ("gda-mysql-srv", VERSION, argc, argv);
 
-  /* register the server implementation */
-  server_impl = gda_server_new("OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory",
-                                    &server_impl_functions);
-  if (server_impl)
-    {
-      gda_server_start(server_impl);
-    }
-  else gda_log_error(_("Could not register MySQL provider implementation"));
-  return 0;
+	/* register the server implementation */
+	server_impl =
+		gda_server_new
+		("OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory",
+		 &server_impl_functions);
+	if (server_impl) {
+		gda_server_start (server_impl);
+	}
+	else
+		gda_log_error (_
+			       ("Could not register MySQL provider implementation"));
+	return 0;
 }
-

@@ -18,7 +18,7 @@
 
 #include "gda-postgres.h"
 
-static GdaServer*             server_impl = NULL;
+static GdaServer *server_impl = NULL;
 static GdaServerImplFunctions server_impl_functions = {
 	gda_postgres_connection_new,
 	gda_postgres_connection_open,
@@ -52,23 +52,23 @@ static GdaServerImplFunctions server_impl_functions = {
 };
 
 int
-main(int argc, char* argv[])
+main (int argc, char *argv[])
 {
 	CORBA_Environment ev;
 
 	/* initialize CORBA stuff */
-	gda_server_init("gda-postgres-srv", VERSION, argc, argv);
+	gda_server_init ("gda-postgres-srv", VERSION, argc, argv);
 
 	/* register the server implementation */
-	server_impl = gda_server_new("OAFIID:GNOME_GDA_Provider_Postgres_ConnectionFactory",
-				     &server_impl_functions);
+	server_impl =
+		gda_server_new
+		("OAFIID:GNOME_GDA_Provider_Postgres_ConnectionFactory",
+		 &server_impl_functions);
 	if (server_impl)
-		gda_server_start(server_impl);
+		gda_server_start (server_impl);
 	else
-		gda_log_error(_("Could not register PostgreSQL provider implementation"));
+		gda_log_error (_
+			       ("Could not register PostgreSQL provider implementation"));
 
 	return 0;
 }
-
-
-

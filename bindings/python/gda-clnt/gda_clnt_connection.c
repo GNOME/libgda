@@ -17,20 +17,18 @@
  */
 
 static PyObject *
-_wrap_gda_connection_new (PyObject *dummy, PyObject *args) {
-    PyObject *orb;
+_wrap_gda_connection_new (PyObject * dummy, PyObject * args)
+{
+	PyObject *orb;
 
-    if (!PyArg_ParseTuple (args, "O!:gda_connection_new",
-			   &GtkObject_Type, &orb))
-        return NULL;
+	if (!PyArg_ParseTuple (args, "O!:gda_connection_new",
+			       &GtkObject_Type, &orb))
+		return NULL;
 
-    return PyGtk_New ((GtkObject *)gda_connection_new ((gkt_get(orb))));
+	return PyGtk_New ((GtkObject *) gda_connection_new ((gkt_get (orb))));
 }
 
 //static PyObject *
 //_wrap_gda_connection_list_providers (PyObject *dummy, PyObject *args) {
-  
+
 //}
-
-
-

@@ -37,20 +37,22 @@
  * Per-object specific structures
  */
 
-typedef struct _sybase_Command {
-  CS_COMMAND               *cmd;
-} sybase_Command;
+typedef struct _sybase_Command
+{
+	CS_COMMAND *cmd;
+}
+sybase_Command;
 
 /*
  * Server implementation prototypes
  */
 
-gboolean gda_sybase_command_new (GdaServerCommand *cmd);
-GdaServerRecordset* gda_sybase_command_execute (GdaServerCommand *cmd,
-						 GdaServerError *error,
-						 const GDA_CmdParameterSeq *params,
-						 gulong *affected,
-						 gulong options);
-void gda_sybase_command_free (GdaServerCommand *cmd);
+gboolean gda_sybase_command_new (GdaServerCommand * cmd);
+GdaServerRecordset *gda_sybase_command_execute (GdaServerCommand * cmd,
+						GdaServerError * error,
+						const GDA_CmdParameterSeq *
+						params, gulong * affected,
+						gulong options);
+void gda_sybase_command_free (GdaServerCommand * cmd);
 
 #endif

@@ -17,15 +17,17 @@
  */
 
 static PyObject *
-_wrap_gda_server_new (PyObject *dummy, PyObject *args) {
-    return PyGtk_New ((GtkObject *)gda_server_new());
+_wrap_gda_server_new (PyObject * dummy, PyObject * args)
+{
+	return PyGtk_New ((GtkObject *) gda_server_new ());
 }
 
 static PyObject *
-_wrap_gda_server_list (PyObject *dummy, PyObject *args) {
-    /* FIXME: TODO.. :)
-     */
-    return NULL;
+_wrap_gda_server_list (PyObject * dummy, PyObject * args)
+{
+	/* FIXME: TODO.. :)
+	 */
+	return NULL;
 }
 
 
@@ -33,25 +35,12 @@ _wrap_gda_server_list (PyObject *dummy, PyObject *args) {
 /* function, not method..
  */
 static PyObject *
-_wrap_gda_server_find_by_name (PyObject *dummy, PyObject *args) {
-    gchar *name;
+_wrap_gda_server_find_by_name (PyObject * dummy, PyObject * args)
+{
+	gchar *name;
 
-    if (!PyArg_ParseTuple (args, "s:gda_server_find_by_name", &name))
-	return NULL;
-    
-    return PyGtk_New ((GtkObject *)gda_server_find_by_name(name));    
+	if (!PyArg_ParseTuple (args, "s:gda_server_find_by_name", &name))
+		return NULL;
+
+	return PyGtk_New ((GtkObject *) gda_server_find_by_name (name));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

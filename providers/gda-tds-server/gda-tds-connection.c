@@ -22,46 +22,49 @@
  */
 
 // $Log$
+// Revision 1.7  2001/07/18 23:05:43  vivien
+// Ran indent -br -i8 on the files
+//
 // Revision 1.6  2001/04/07 08:49:34  rodrigo
 // 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
 //
-// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
-// 	naming standards
+//      * objects renaming (Gda_* to Gda*) to conform to the GNOME
+//      naming standards
 //
 // Revision 1.5  2001/02/14 17:32:00  rodrigo
-// 2001-02-14	Rodrigo Moya <rodrigo@gnome-db.org>
+// 2001-02-14   Rodrigo Moya <rodrigo@gnome-db.org>
 //
-// 	* idl/GDA_Connection.idl: added new conversion methods
-// 	(xml2sql and sql2xml)
-// 	* lib/gda-client/gda-connection.[ch],
-// 	lib/gda-server/*, providers/*: added new IDL methods
+//      * idl/GDA_Connection.idl: added new conversion methods
+//      (xml2sql and sql2xml)
+//      * lib/gda-client/gda-connection.[ch],
+//      lib/gda-server/*, providers/*: added new IDL methods
 //
 // Revision 1.4  2001/02/12 21:58:35  rodrigo
-// 2001-02-11	Rodrigo Moya <rodrigo@gnome-db.org>
+// 2001-02-11   Rodrigo Moya <rodrigo@gnome-db.org>
 //
-// 	* providers/gda-primebase-server/gda-primebase-connection.c,
-// 	providers/gda-tds-server/gda-tds-connection.c: removed some C++
-// 	comments, as the ones containing the ' character makes xgettext
-// 	complain (from Christian Rose's patch)
+//      * providers/gda-primebase-server/gda-primebase-connection.c,
+//      providers/gda-tds-server/gda-tds-connection.c: removed some C++
+//      comments, as the ones containing the ' character makes xgettext
+//      complain (from Christian Rose's patch)
 //
 // Revision 1.3.2.1  2001/02/12 21:56:43  rodrigo
-// 2001-02-11	Rodrigo Moya <rodrigo@gnome-db.org>
+// 2001-02-11   Rodrigo Moya <rodrigo@gnome-db.org>
 //
-// 	* providers/gda-primebase-server/gda-primebase-connection.c,
-// 	providers/gda-tds-server/gda-tds-connection.c: removed some C++
-// 	comments, as the ones containing the ' character makes xgettext
-// 	complain (from Christian Rose's patch)
+//      * providers/gda-primebase-server/gda-primebase-connection.c,
+//      providers/gda-tds-server/gda-tds-connection.c: removed some C++
+//      comments, as the ones containing the ' character makes xgettext
+//      complain (from Christian Rose's patch)
 //
 // Revision 1.3  2000/11/27 17:50:28  rodrigo
-// 2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
+// 2000-11-27   Rodrigo Moya <rodrigo@gnome-db.org>
 //
-// 	* added modifySchema method to GDA::Connection interface
+//      * added modifySchema method to GDA::Connection interface
 //
 // Revision 1.2  2000/11/21 19:57:14  holger
 // 2000-11-21 Holger Thon <holger@gidayu.max.uni-duisburg.de>
 //
-// 	- Fixed missing parameter in gda-sybase-server
-// 	- Removed ct_diag/cs_diag stuff completly from tds server
+//      - Fixed missing parameter in gda-sybase-server
+//      - Removed ct_diag/cs_diag stuff completly from tds server
 //
 // Revision 1.1  2000/11/04 23:42:17  holger
 // 2000-11-05  Holger Thon <gnome-dms@users.sourceforge.net>
@@ -72,349 +75,337 @@
 #include "gda-tds.h"
 #include "ctype.h"
 
-typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
-                                              GdaServerConnection *,
-                                              GDA_Connection_Constraint *,
-                                              gint);
+typedef GdaServerRecordset *(*schema_ops_fn) (GdaServerError *,
+					      GdaServerConnection *,
+					      GDA_Connection_Constraint *,
+					      gint);
 
 schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = {
-  NULL,
+	NULL,
 };
 
 // schema definitions
-static GdaServerRecordset*
-schema_cols (GdaServerError *,
-             GdaServerConnection *,
-             GDA_Connection_Constraint *,
-             gint);
-static GdaServerRecordset*
-schema_procs(GdaServerError *,
-             GdaServerConnection *,
-             GDA_Connection_Constraint *,
-             gint);
-static GdaServerRecordset*
-schema_tables (GdaServerError *,
-               GdaServerConnection *,
-               GDA_Connection_Constraint *,
-               gint);
-static GdaServerRecordset*
-schema_types (GdaServerError *,
-              GdaServerConnection *,
-              GDA_Connection_Constraint *,
-              gint);
+static GdaServerRecordset *schema_cols (GdaServerError *,
+					GdaServerConnection *,
+					GDA_Connection_Constraint *, gint);
+static GdaServerRecordset *schema_procs (GdaServerError *,
+					 GdaServerConnection *,
+					 GDA_Connection_Constraint *, gint);
+static GdaServerRecordset *schema_tables (GdaServerError *,
+					  GdaServerConnection *,
+					  GDA_Connection_Constraint *, gint);
+static GdaServerRecordset *schema_types (GdaServerError *,
+					 GdaServerConnection *,
+					 GDA_Connection_Constraint *, gint);
 
 
 
 // Further non-public definitions
 static gint
-gda_tds_init_dsn_properties(GdaServerConnection *, const gchar *);
-static gboolean
-gda_tds_set_locale(GdaServerConnection *, const gchar *);
+gda_tds_init_dsn_properties (GdaServerConnection *, const gchar *);
+static gboolean gda_tds_set_locale (GdaServerConnection *, const gchar *);
 
 //  utility functions
-static gchar *
-get_value(gchar *ptr);
-static gchar *
-get_option(const gchar *dsn, const gchar *opt_name);
+static gchar *get_value (gchar * ptr);
+static gchar *get_option (const gchar * dsn, const gchar * opt_name);
 
 
 gboolean
-gda_tds_connection_new(GdaServerConnection *cnc)
+gda_tds_connection_new (GdaServerConnection * cnc)
 {
-  static gboolean initialized;
-  tds_Connection *tcnc = NULL;
-  gint              i;
-  
-  if (!initialized) {
-    for (i=GDA_Connection_GDCN_SCHEMA_AGGREGATES;
-         i<= GDA_Connection_GDCN_SCHEMA_LAST;
-         i++) {
-      schema_ops[i] = NULL;
-    }
-   
-    schema_ops[GDA_Connection_GDCN_SCHEMA_COLS]       = schema_cols;
-    schema_ops[GDA_Connection_GDCN_SCHEMA_PROCS]      = schema_procs;
-    schema_ops[GDA_Connection_GDCN_SCHEMA_TABLES]     = schema_tables;
-    schema_ops[GDA_Connection_GDCN_SCHEMA_PROV_TYPES] = schema_types;
-  }
-  initialized = TRUE;
-  
-  tcnc = g_new0(tds_Connection, 1);
-  g_return_val_if_fail(tcnc != NULL, FALSE);
-  
-  if (tcnc) {
-    // Initialize connection struct
-	 //   Context and connection
-    tcnc->ctx      = (CS_CONTEXT *)NULL;
-    tcnc->cnc      = (CS_CONNECTION *)NULL;
-	 //   Error handling
-    tcnc->ret              = CS_SUCCEED;
-    tcnc->serr.udeferr_msg = (gchar *) NULL;
-    tcnc->database         = (gchar *) NULL;
-    
-    // Further initialization, bail out on error
-    //   tcnc->error = gda_server_error_new();
-    //   if (!tcnc->error) {
-    //      g_free((gpointer) tcnc);
-    //      gda_log_error(_("Error allocating error structure"));
-    //      return FALSE;
-    //   }
-    
-    // Succeeded
-    gda_server_connection_set_user_data(cnc, (gpointer) tcnc);
-    return TRUE;
-  } else {
-    gda_log_error(_("Not enough memory for tds_Connection"));
-    return FALSE;
-  }
-  
-  return FALSE;
+	static gboolean initialized;
+	tds_Connection *tcnc = NULL;
+	gint i;
+
+	if (!initialized) {
+		for (i = GDA_Connection_GDCN_SCHEMA_AGGREGATES;
+		     i <= GDA_Connection_GDCN_SCHEMA_LAST; i++) {
+			schema_ops[i] = NULL;
+		}
+
+		schema_ops[GDA_Connection_GDCN_SCHEMA_COLS] = schema_cols;
+		schema_ops[GDA_Connection_GDCN_SCHEMA_PROCS] = schema_procs;
+		schema_ops[GDA_Connection_GDCN_SCHEMA_TABLES] = schema_tables;
+		schema_ops[GDA_Connection_GDCN_SCHEMA_PROV_TYPES] =
+			schema_types;
+	}
+	initialized = TRUE;
+
+	tcnc = g_new0 (tds_Connection, 1);
+	g_return_val_if_fail (tcnc != NULL, FALSE);
+
+	if (tcnc) {
+		// Initialize connection struct
+		//   Context and connection
+		tcnc->ctx = (CS_CONTEXT *) NULL;
+		tcnc->cnc = (CS_CONNECTION *) NULL;
+		//   Error handling
+		tcnc->ret = CS_SUCCEED;
+		tcnc->serr.udeferr_msg = (gchar *) NULL;
+		tcnc->database = (gchar *) NULL;
+
+		// Further initialization, bail out on error
+		//   tcnc->error = gda_server_error_new();
+		//   if (!tcnc->error) {
+		//      g_free((gpointer) tcnc);
+		//      gda_log_error(_("Error allocating error structure"));
+		//      return FALSE;
+		//   }
+
+		// Succeeded
+		gda_server_connection_set_user_data (cnc, (gpointer) tcnc);
+		return TRUE;
+	}
+	else {
+		gda_log_error (_("Not enough memory for tds_Connection"));
+		return FALSE;
+	}
+
+	return FALSE;
 }
 
 gint
-gda_tds_connection_open(GdaServerConnection *cnc,
-                        const gchar* dsn,
-                        const gchar* user,
-                        const gchar* passwd)
+gda_tds_connection_open (GdaServerConnection * cnc,
+			 const gchar * dsn,
+			 const gchar * user, const gchar * passwd)
 {
-  tds_Connection *tcnc = NULL;
-  
-  g_return_val_if_fail(cnc != NULL, -1);
-  gda_server_connection_set_username(cnc, user);
-  gda_server_connection_set_password(cnc, passwd);
-  gda_server_connection_set_dsn(cnc, dsn);
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(tcnc != NULL, -1);
-  
-  // Free any error messages left in user defined connection struct
-  if (tcnc->serr.udeferr_msg) {
-    g_free((gpointer) tcnc->serr.udeferr_msg);
-  }
-  if (tcnc->database) {
-    g_free((gpointer) tcnc->database);
-  }
+	tds_Connection *tcnc = NULL;
 
-  // Establish connection
-  if (gda_tds_connection_reopen(cnc) != TRUE) {
-    return -1;
-  }
+	g_return_val_if_fail (cnc != NULL, -1);
+	gda_server_connection_set_username (cnc, user);
+	gda_server_connection_set_password (cnc, passwd);
+	gda_server_connection_set_dsn (cnc, dsn);
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+	g_return_val_if_fail (tcnc != NULL, -1);
 
-  return 0;
+	// Free any error messages left in user defined connection struct
+	if (tcnc->serr.udeferr_msg) {
+		g_free ((gpointer) tcnc->serr.udeferr_msg);
+	}
+	if (tcnc->database) {
+		g_free ((gpointer) tcnc->database);
+	}
+
+	// Establish connection
+	if (gda_tds_connection_reopen (cnc) != TRUE) {
+		return -1;
+	}
+
+	return 0;
 }
 
 void
-gda_tds_connection_close(GdaServerConnection *cnc)
+gda_tds_connection_close (GdaServerConnection * cnc)
 {
-  tds_Connection *tcnc;
-  
-  g_return_if_fail(cnc != NULL);
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_if_fail(tcnc != NULL);
-  
-  // Close connection
-  if (tcnc->cnc) {
-    if ((tcnc->ret = ct_close(tcnc->cnc, CS_UNUSED)
-        ) != CS_SUCCEED
-       ) {
-      gda_tds_cleanup(tcnc, tcnc->ret,
-                      "Could not close connection\n");
-      return;
-    }
-    if ((tcnc->ret = ct_con_drop(tcnc->cnc)
-        ) != CS_SUCCEED
-       ) {
-      gda_tds_cleanup(tcnc, tcnc->ret,
-                      "Could not drop connection structure\n");
-      return;
-    }
-    tcnc->cnc = (CS_CONNECTION *) NULL;
-  }
-  
-  if (tcnc->ctx) {
-    // Exit client library and drop context structure
-    if ((tcnc->ret = ct_exit(tcnc->ctx, CS_UNUSED)
-        ) != CS_SUCCEED
-       ) {
-      gda_tds_cleanup(tcnc, tcnc->ret, "ct_exit failed");
-      return;
-    }
-    
-    if ((tcnc->ret = cs_ctx_drop(tcnc->ctx)
-        ) != CS_SUCCEED
-       ) {
-      gda_tds_cleanup(tcnc, tcnc->ret, "cs_ctx_drop failed");
-      return;
-    }
-    tcnc->ctx = (CS_CONTEXT *) NULL;
-  }
+	tds_Connection *tcnc;
+
+	g_return_if_fail (cnc != NULL);
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+	g_return_if_fail (tcnc != NULL);
+
+	// Close connection
+	if (tcnc->cnc) {
+		if ((tcnc->ret = ct_close (tcnc->cnc, CS_UNUSED)
+		    ) != CS_SUCCEED) {
+			gda_tds_cleanup (tcnc, tcnc->ret,
+					 "Could not close connection\n");
+			return;
+		}
+		if ((tcnc->ret = ct_con_drop (tcnc->cnc)
+		    ) != CS_SUCCEED) {
+			gda_tds_cleanup (tcnc, tcnc->ret,
+					 "Could not drop connection structure\n");
+			return;
+		}
+		tcnc->cnc = (CS_CONNECTION *) NULL;
+	}
+
+	if (tcnc->ctx) {
+		// Exit client library and drop context structure
+		if ((tcnc->ret = ct_exit (tcnc->ctx, CS_UNUSED)
+		    ) != CS_SUCCEED) {
+			gda_tds_cleanup (tcnc, tcnc->ret, "ct_exit failed");
+			return;
+		}
+
+		if ((tcnc->ret = cs_ctx_drop (tcnc->ctx)
+		    ) != CS_SUCCEED) {
+			gda_tds_cleanup (tcnc, tcnc->ret,
+					 "cs_ctx_drop failed");
+			return;
+		}
+		tcnc->ctx = (CS_CONTEXT *) NULL;
+	}
 }
 
 gint
-gda_tds_connection_begin_transaction(GdaServerConnection *cnc)
+gda_tds_connection_begin_transaction (GdaServerConnection * cnc)
 {
-  // FIXME: Implement transaction code
-  return -1;
+	// FIXME: Implement transaction code
+	return -1;
 }
 
 gint
-gda_tds_connection_commit_transaction(GdaServerConnection *cnc)
+gda_tds_connection_commit_transaction (GdaServerConnection * cnc)
 {
-  // FIXME: Implement transaction code
-  return -1;
+	// FIXME: Implement transaction code
+	return -1;
 }
 
 gint
-gda_tds_connection_rollback_transaction(GdaServerConnection *cnc)
+gda_tds_connection_rollback_transaction (GdaServerConnection * cnc)
 {
-  // FIXME: Implement transaction code
-  return -1;
+	// FIXME: Implement transaction code
+	return -1;
 }
 
 GdaServerRecordset *
-gda_tds_connection_open_schema (GdaServerConnection *cnc,
-                                GdaServerError *error,
-                                GDA_Connection_QType t,
-                                GDA_Connection_Constraint *constraints,
-                                gint length)
+gda_tds_connection_open_schema (GdaServerConnection * cnc,
+				GdaServerError * error,
+				GDA_Connection_QType t,
+				GDA_Connection_Constraint * constraints,
+				gint length)
 {
-  schema_ops_fn fn;
-  
-  g_return_val_if_fail(cnc != NULL, NULL);
-  
-  fn = schema_ops[(gint) t];
-  if (fn) {
-    return fn(error, cnc, constraints, length);
-  } else {
-    gda_log_error(_("Unhandled SCHEMA_QTYPE %d"), (gint) t);
-  }
-  
-  return NULL;
+	schema_ops_fn fn;
+
+	g_return_val_if_fail (cnc != NULL, NULL);
+
+	fn = schema_ops[(gint) t];
+	if (fn) {
+		return fn (error, cnc, constraints, length);
+	}
+	else {
+		gda_log_error (_("Unhandled SCHEMA_QTYPE %d"), (gint) t);
+	}
+
+	return NULL;
 }
 
 glong
-gda_tds_connection_modify_schema (GdaServerConnection *cnc,
-                                   GDA_Connection_QType t,
-                                   GDA_Connection_Constraint *constraints,
-                                   gint length)
+gda_tds_connection_modify_schema (GdaServerConnection * cnc,
+				  GDA_Connection_QType t,
+				  GDA_Connection_Constraint * constraints,
+				  gint length)
 {
-  return -1;
+	return -1;
 }
 
 gint
-gda_tds_connection_start_logging(GdaServerConnection *cnc,
-                                    const gchar *filename)
+gda_tds_connection_start_logging (GdaServerConnection * cnc,
+				  const gchar * filename)
 {
-  // FIXME: Implement gda logging facility
-  return -1;
+	// FIXME: Implement gda logging facility
+	return -1;
 }
 
 gint
-gda_tds_connection_stop_logging(GdaServerConnection *cnc)
+gda_tds_connection_stop_logging (GdaServerConnection * cnc)
 {
-  // FIXME: Implement gda logging facility
-  return -1;
+	// FIXME: Implement gda logging facility
+	return -1;
 }
 
 gchar *
-gda_tds_connection_create_table (GdaServerConnection *cnc,
-                                   GDA_RowAttributes *columns)
+gda_tds_connection_create_table (GdaServerConnection * cnc,
+				 GDA_RowAttributes * columns)
 {
-  // FIXME: Implement creation of tables
-  return NULL;
+	// FIXME: Implement creation of tables
+	return NULL;
 }
 
 gboolean
-gda_tds_connection_supports(GdaServerConnection *cnc,
-                               GDA_Connection_Feature feature)
+gda_tds_connection_supports (GdaServerConnection * cnc,
+			     GDA_Connection_Feature feature)
 {
-  g_return_val_if_fail(cnc != NULL, FALSE);
+	g_return_val_if_fail (cnc != NULL, FALSE);
 
-  switch (feature) {
-  case GDA_Connection_FEATURE_SQL:
-    return TRUE;
-  case GDA_Connection_FEATURE_FOREIGN_KEYS:
-  case GDA_Connection_FEATURE_INHERITANCE:
-  case GDA_Connection_FEATURE_OBJECT_ID:
-  case GDA_Connection_FEATURE_PROCS:
-  case GDA_Connection_FEATURE_SEQUENCES:
-  case GDA_Connection_FEATURE_SQL_SUBSELECT:
-  case GDA_Connection_FEATURE_TRANSACTIONS:
-  case GDA_Connection_FEATURE_TRIGGERS:
-  case GDA_Connection_FEATURE_VIEWS:
-  case GDA_Connection_FEATURE_XML_QUERIES:
-  default:
-    return FALSE;
-  }
-  
-  return FALSE;
+	switch (feature) {
+	case GDA_Connection_FEATURE_SQL:
+		return TRUE;
+	case GDA_Connection_FEATURE_FOREIGN_KEYS:
+	case GDA_Connection_FEATURE_INHERITANCE:
+	case GDA_Connection_FEATURE_OBJECT_ID:
+	case GDA_Connection_FEATURE_PROCS:
+	case GDA_Connection_FEATURE_SEQUENCES:
+	case GDA_Connection_FEATURE_SQL_SUBSELECT:
+	case GDA_Connection_FEATURE_TRANSACTIONS:
+	case GDA_Connection_FEATURE_TRIGGERS:
+	case GDA_Connection_FEATURE_VIEWS:
+	case GDA_Connection_FEATURE_XML_QUERIES:
+	default:
+		return FALSE;
+	}
+
+	return FALSE;
 }
 
 const GDA_ValueType
-gda_tds_connection_get_gda_type(GdaServerConnection *cnc,
-                                   gulong sql_type)
+gda_tds_connection_get_gda_type (GdaServerConnection * cnc, gulong sql_type)
 {
-  return tds_get_gda_type((CS_INT) sql_type);
+	return tds_get_gda_type ((CS_INT) sql_type);
 }
 
 const CS_INT
-gda_tds_connection_get_sql_type (GdaServerConnection *cnc,
-                                    GDA_ValueType gda_type)
+gda_tds_connection_get_sql_type (GdaServerConnection * cnc,
+				 GDA_ValueType gda_type)
 {
-  return tds_get_sql_type(gda_type);
+	return tds_get_sql_type (gda_type);
 }
 
 const gshort
-gda_tds_connection_get_c_type (GdaServerConnection *cnc,
-                                  GDA_ValueType gda_type)
+gda_tds_connection_get_c_type (GdaServerConnection * cnc,
+			       GDA_ValueType gda_type)
 {
-  return tds_get_c_type(gda_type);
+	return tds_get_c_type (gda_type);
 }
 
 gchar *
-gda_tds_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
+gda_tds_connection_sql2xml (GdaServerConnection * cnc, const gchar * sql)
 {
-  return NULL;
+	return NULL;
 }
 
 gchar *
-gda_tds_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
+gda_tds_connection_xml2sql (GdaServerConnection * cnc, const gchar * xml)
 {
-  return NULL;
+	return NULL;
 }
 
 void
-gda_tds_connection_free (GdaServerConnection *cnc)
+gda_tds_connection_free (GdaServerConnection * cnc)
 {
-  tds_Connection* tcnc;
-  
-  g_return_if_fail(cnc != NULL);
-  
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  if (tcnc) {
-    gda_tds_connection_clear_user_data(cnc, FALSE);
-    g_free((gpointer) tcnc);
-    gda_server_connection_set_user_data(cnc, (gpointer) NULL);
-  }
+	tds_Connection *tcnc;
+
+	g_return_if_fail (cnc != NULL);
+
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+	if (tcnc) {
+		gda_tds_connection_clear_user_data (cnc, FALSE);
+		g_free ((gpointer) tcnc);
+		gda_server_connection_set_user_data (cnc, (gpointer) NULL);
+	}
 }
 
 void
-gda_tds_connection_clear_user_data(GdaServerConnection *cnc,
-                                   gboolean force_set_null_pointers) {
-  tds_Connection *tcnc = NULL;
+gda_tds_connection_clear_user_data (GdaServerConnection * cnc,
+				    gboolean force_set_null_pointers)
+{
+	tds_Connection *tcnc = NULL;
 
-  g_return_if_fail(cnc != NULL);
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_if_fail(tcnc != NULL);
-  
-  // we do not touch CS_* variables and *_diag variables,
-  // as they are essential for the connection
-  
-  tcnc->serr.err_type = TDS_ERR_NONE;
-  if (force_set_null_pointers) {
-    tcnc->serr.udeferr_msg = (gchar *) NULL;
-    tcnc->database = (gchar *) NULL;
-  } else {
-      }
+	g_return_if_fail (cnc != NULL);
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+	g_return_if_fail (tcnc != NULL);
+
+	// we do not touch CS_* variables and *_diag variables,
+	// as they are essential for the connection
+
+	tcnc->serr.err_type = TDS_ERR_NONE;
+	if (force_set_null_pointers) {
+		tcnc->serr.udeferr_msg = (gchar *) NULL;
+		tcnc->database = (gchar *) NULL;
+	}
+	else {
+	}
 }
 
 /*
@@ -422,313 +413,317 @@ gda_tds_connection_clear_user_data(GdaServerConnection *cnc,
  */
 
 static GdaServerRecordset *
-schema_cols (GdaServerError *error,
-             GdaServerConnection *cnc,
-             GDA_Connection_Constraint *constraints,
-             gint length)
+schema_cols (GdaServerError * error,
+	     GdaServerConnection * cnc,
+	     GDA_Connection_Constraint * constraints, gint length)
 {
-  gchar*                     query = NULL;
-  GdaServerCommand*         cmd = NULL;
-  GdaServerRecordset*       recset = NULL;
-  GDA_Connection_Constraint* ptr = NULL;
-  gint                       cnt;
-  gulong                     affected = 0;
-  gchar                      *table_name = NULL;
-  
-  /* process constraints */
-  ptr = constraints;
-  for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
-    switch (ptr->ctype) {
-    case GDA_Connection_OBJECT_NAME:
-      if (table_name) {
-        g_free((gpointer) table_name);
-      }
-#ifdef TDS_DEBUG
-      gda_log_message(_("schema_cols: table_name '%s'"), ptr->value);
-#endif
-      table_name = g_strdup_printf("%s", ptr->value);
-      break;
-    default :
-    }
-  }
+	gchar *query = NULL;
+	GdaServerCommand *cmd = NULL;
+	GdaServerRecordset *recset = NULL;
+	GDA_Connection_Constraint *ptr = NULL;
+	gint cnt;
+	gulong affected = 0;
+	gchar *table_name = NULL;
 
-  /* build command object and query */
-  if (!table_name) {
-    gda_log_error(_("No table name given for SCHEMA_COLS"));
-    return NULL;
-  }
-  cmd = gda_server_command_new(cnc);
-  if (!cmd) {
-    g_free((gpointer) table_name);
-    gda_log_error(_("Could not allocate command structure"));
-    return NULL;
-  }
-  query = g_strdup_printf("SELECT c.name AS \"Name\", "
+	/* process constraints */
+	ptr = constraints;
+	for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
+		switch (ptr->ctype) {
+		case GDA_Connection_OBJECT_NAME:
+			if (table_name) {
+				g_free ((gpointer) table_name);
+			}
 #ifdef TDS_DEBUG
-                          "       c.colid, "
+			gda_log_message (_("schema_cols: table_name '%s'"),
+					 ptr->value);
 #endif
-                          "       t.name AS \"Type\", "
-                          "       c.length AS \"Size\", "
-                          "       c.prec AS \"Precision\", "
-                          "       t.allownulls AS \"Nullable\", "
-                          "       null AS \"Comments\", "
-                          "       c.domain, "
-                          "       c.printfmt "
-                          "  FROM syscolumns c, sysobjects o "
-                          "       ,systypes t "
-                          "    WHERE c.id = o.id "
-                          "      AND c.usertype = t.usertype "
-                          "    HAVING o.name = '%s' "
-                          "  ORDER BY c.colid ASC", table_name);
-  
-  if (!query) {
-    gda_log_error(_("Could not allocate enough memory for query"));
-    gda_server_command_free(cmd);
-    g_free((gpointer) table_name);
-    return NULL;
-  }
-  gda_server_command_set_text(cmd, query);
-  recset = gda_server_command_execute(cmd, error, NULL, &affected, 0);
-  g_free((gpointer) query);
-  g_free((gpointer) table_name);
-  
-  if (recset) {
-    return recset;
-  } else {
+			table_name = g_strdup_printf ("%s", ptr->value);
+			break;
+		default:
+		}
+	}
+
+	/* build command object and query */
+	if (!table_name) {
+		gda_log_error (_("No table name given for SCHEMA_COLS"));
+		return NULL;
+	}
+	cmd = gda_server_command_new (cnc);
+	if (!cmd) {
+		g_free ((gpointer) table_name);
+		gda_log_error (_("Could not allocate command structure"));
+		return NULL;
+	}
+	query = g_strdup_printf ("SELECT c.name AS \"Name\", "
+#ifdef TDS_DEBUG
+				 "       c.colid, "
+#endif
+				 "       t.name AS \"Type\", "
+				 "       c.length AS \"Size\", "
+				 "       c.prec AS \"Precision\", "
+				 "       t.allownulls AS \"Nullable\", "
+				 "       null AS \"Comments\", "
+				 "       c.domain, "
+				 "       c.printfmt "
+				 "  FROM syscolumns c, sysobjects o "
+				 "       ,systypes t "
+				 "    WHERE c.id = o.id "
+				 "      AND c.usertype = t.usertype "
+				 "    HAVING o.name = '%s' "
+				 "  ORDER BY c.colid ASC", table_name);
+
+	if (!query) {
+		gda_log_error (_
+			       ("Could not allocate enough memory for query"));
+		gda_server_command_free (cmd);
+		g_free ((gpointer) table_name);
+		return NULL;
+	}
+	gda_server_command_set_text (cmd, query);
+	recset = gda_server_command_execute (cmd, error, NULL, &affected, 0);
+	g_free ((gpointer) query);
+	g_free ((gpointer) table_name);
+
+	if (recset) {
+		return recset;
+	}
+	else {
 //    gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
-    gda_log_error(_("Could not get recordset in schema_cols"));
-  }
-  
-  return NULL;
+		gda_log_error (_("Could not get recordset in schema_cols"));
+	}
+
+	return NULL;
 }
 
 static GdaServerRecordset *
-schema_procs (GdaServerError *error,
-              GdaServerConnection *cnc,
-              GDA_Connection_Constraint *constraints,
-              gint length)
+schema_procs (GdaServerError * error,
+	      GdaServerConnection * cnc,
+	      GDA_Connection_Constraint * constraints, gint length)
 {
-  GString*                   query = NULL;
-  GdaServerCommand*         cmd = NULL;
-  GdaServerRecordset*       recset = NULL;
-  GDA_Connection_Constraint* ptr = NULL;
-  gboolean                   extra_info = FALSE;
-  gint                       cnt;
-  GString*                   condition = NULL;
-  gulong                     affected = 0;
+	GString *query = NULL;
+	GdaServerCommand *cmd = NULL;
+	GdaServerRecordset *recset = NULL;
+	GDA_Connection_Constraint *ptr = NULL;
+	gboolean extra_info = FALSE;
+	gint cnt;
+	GString *condition = NULL;
+	gulong affected = 0;
 
-  /* process constraints */
-  ptr = constraints;
-  for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
-    switch (ptr->ctype) {
-      //   case GDA_Connection_EXTRA_INFO :
-      //               extra_info = TRUE;
-      //            break;
-      //         case GDA_Connection_OBJECT_NAME :
-      //               if (!condition) condition = g_string_new("");
-      //               g_string_sprintfa(condition, "AND a.relname='%s' ", ptr->value);
-      //#ifdef TDS_DEBUG
-      //               gda_log_message(_("schema_tables: table name = '%s'"),
-      //                               ptr->value);
-      //#endif
-      //            break;
-      //         case GDA_Connection_OBJECT_SCHEMA :
-      //               if (!condition) condition = g_string_new("");
-      //               g_string_sprintfa(condition, "AND b.usename='%s' ", ptr->value);
-      //#ifdef TDS_DEBUG
-      //               gda_log_message(_("schema_tables: table_schema = '%s'"),
-      //                               ptr->value);
-      //#endif
-      //            break;
-      //         case GDA_Connection_OBJECT_CATALOG :
-      //               gda_log_error(_("schema_procedures: proc_catalog = '%s' UNUSED!\n"), 
-      //                       ptr->value);
-      //            break;
-    default :
-      gda_log_error(_("schema_procs: invalid constraint type %d"), 
-                    ptr->ctype);
-      g_string_free(condition, TRUE);
-      return NULL;
-    }
-    ptr++;
-  }
-  
-  cmd = gda_server_command_new(cnc);
-  if (!cmd) {
-    gda_log_error(_("Could not allocate cmd structure"));
-    return NULL;
-  }
-  
-  // Get all usertables and systables
-  query = g_string_new("SELECT o.name AS \"Name\" "
+	/* process constraints */
+	ptr = constraints;
+	for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
+		switch (ptr->ctype) {
+			//   case GDA_Connection_EXTRA_INFO :
+			//               extra_info = TRUE;
+			//            break;
+			//         case GDA_Connection_OBJECT_NAME :
+			//               if (!condition) condition = g_string_new("");
+			//               g_string_sprintfa(condition, "AND a.relname='%s' ", ptr->value);
+			//#ifdef TDS_DEBUG
+			//               gda_log_message(_("schema_tables: table name = '%s'"),
+			//                               ptr->value);
+			//#endif
+			//            break;
+			//         case GDA_Connection_OBJECT_SCHEMA :
+			//               if (!condition) condition = g_string_new("");
+			//               g_string_sprintfa(condition, "AND b.usename='%s' ", ptr->value);
+			//#ifdef TDS_DEBUG
+			//               gda_log_message(_("schema_tables: table_schema = '%s'"),
+			//                               ptr->value);
+			//#endif
+			//            break;
+			//         case GDA_Connection_OBJECT_CATALOG :
+			//               gda_log_error(_("schema_procedures: proc_catalog = '%s' UNUSED!\n"), 
+			//                       ptr->value);
+			//            break;
+		default:
+			gda_log_error (_
+				       ("schema_procs: invalid constraint type %d"),
+				       ptr->ctype);
+			g_string_free (condition, TRUE);
+			return NULL;
+		}
+		ptr++;
+	}
+
+	cmd = gda_server_command_new (cnc);
+	if (!cmd) {
+		gda_log_error (_("Could not allocate cmd structure"));
+		return NULL;
+	}
+
+	// Get all usertables and systables
+	query = g_string_new ("SELECT o.name AS \"Name\" "
 //                       "       null   AS \"Comment\" "
-                       "FROM sysobjects o "
-                       "  WHERE o.type = \"P\" "
-                       "ORDER BY o.type DESC, "
-                       "         o.name ASC");
-  
-  if (!query) {
-    gda_server_command_free(cmd);
-    return NULL;
-  }
-  gda_server_command_set_text(cmd, query->str);
-  recset = gda_server_command_execute(cmd, error, NULL, &affected, 0);
-  g_string_free(query, TRUE);
+			      "FROM sysobjects o "
+			      "  WHERE o.type = \"P\" "
+			      "ORDER BY o.type DESC, " "         o.name ASC");
+
+	if (!query) {
+		gda_server_command_free (cmd);
+		return NULL;
+	}
+	gda_server_command_set_text (cmd, query->str);
+	recset = gda_server_command_execute (cmd, error, NULL, &affected, 0);
+	g_string_free (query, TRUE);
 //  gda_server_command_free(cmd);
-  
-  return recset; 
+
+	return recset;
 }
 
 static GdaServerRecordset *
-schema_tables (GdaServerError *error,
-               GdaServerConnection *cnc,
-               GDA_Connection_Constraint *constraints,
-               gint length)
+schema_tables (GdaServerError * error,
+	       GdaServerConnection * cnc,
+	       GDA_Connection_Constraint * constraints, gint length)
 {
-  GString*                   query = NULL;
-  GdaServerCommand*         cmd = NULL;
-  GdaServerRecordset*       recset = NULL;
-  GDA_Connection_Constraint* ptr = NULL;
-  gboolean                   extra_info = FALSE;
-  gint                       cnt;
-  GString*                   condition = NULL;
-  gulong                     affected = 0;
-  
-  /* process constraints */
-  ptr = constraints;
-  for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
-    switch (ptr->ctype) {
-      //         case GDA_Connection_EXTRA_INFO :
-      //               extra_info = TRUE;
-      //            break;
-      //         case GDA_Connection_OBJECT_NAME :
-      //               if (!condition) condition = g_string_new("");
-      //               g_string_sprintfa(condition, "AND a.relname='%s' ", ptr->value);
-      //#ifdef TDS_DEBUG
-      //               gda_log_message(_("schema_tables: table name = '%s'"),
-      //                               ptr->value);
-      //#endif
-      //            break;
-      //         case GDA_Connection_OBJECT_SCHEMA :
-      //               if (!condition) condition = g_string_new("");
-      //               g_string_sprintfa(condition, "AND b.usename='%s' ", ptr->value);
-      //#ifdef TDS_DEBUG
-      //               gda_log_message(_("schema_tables: table_schema = '%s'"),
-      //                               ptr->value);
-      //#endif
-      //            break;
-      //         case GDA_Connection_OBJECT_CATALOG :
-      //               gda_log_error(_("schema_procedures: proc_catalog = '%s' UNUSED!"), 
-      //                             ptr->value);
-      //            break;
-    default :
-      gda_log_error(_("schema_tables: invalid constraint type %d"), 
-          ptr->ctype);
-      g_string_free(condition, TRUE);
-      return NULL;
-    }
-    ptr++;
-  }
-  
-  cmd = gda_server_command_new(cnc);
-  if (!cmd) {
-    return NULL;
-  }
-  
-  // Get all usertables and systables
-  query = g_string_new("SELECT o.name AS \"Name\" "
-             //                        "       null   AS \"Comment\" "
-             "FROM sysobjects o "
-             "  WHERE o.type = \"U\" "
-             "     OR o.type = \"S\" "
-             "ORDER BY o.type DESC, "
-             "         o.name ASC");
-  
-  if (!query) {
-    gda_server_command_free(cmd);
-    return NULL;
-  }
-  gda_server_command_set_text(cmd, query->str);
-  recset = gda_server_command_execute(cmd, error, NULL, &affected, 0);
-  g_string_free(query, TRUE);
-  //   gda_server_command_free(cmd);
-  
-  return recset; 
+	GString *query = NULL;
+	GdaServerCommand *cmd = NULL;
+	GdaServerRecordset *recset = NULL;
+	GDA_Connection_Constraint *ptr = NULL;
+	gboolean extra_info = FALSE;
+	gint cnt;
+	GString *condition = NULL;
+	gulong affected = 0;
+
+	/* process constraints */
+	ptr = constraints;
+	for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
+		switch (ptr->ctype) {
+			//         case GDA_Connection_EXTRA_INFO :
+			//               extra_info = TRUE;
+			//            break;
+			//         case GDA_Connection_OBJECT_NAME :
+			//               if (!condition) condition = g_string_new("");
+			//               g_string_sprintfa(condition, "AND a.relname='%s' ", ptr->value);
+			//#ifdef TDS_DEBUG
+			//               gda_log_message(_("schema_tables: table name = '%s'"),
+			//                               ptr->value);
+			//#endif
+			//            break;
+			//         case GDA_Connection_OBJECT_SCHEMA :
+			//               if (!condition) condition = g_string_new("");
+			//               g_string_sprintfa(condition, "AND b.usename='%s' ", ptr->value);
+			//#ifdef TDS_DEBUG
+			//               gda_log_message(_("schema_tables: table_schema = '%s'"),
+			//                               ptr->value);
+			//#endif
+			//            break;
+			//         case GDA_Connection_OBJECT_CATALOG :
+			//               gda_log_error(_("schema_procedures: proc_catalog = '%s' UNUSED!"), 
+			//                             ptr->value);
+			//            break;
+		default:
+			gda_log_error (_
+				       ("schema_tables: invalid constraint type %d"),
+				       ptr->ctype);
+			g_string_free (condition, TRUE);
+			return NULL;
+		}
+		ptr++;
+	}
+
+	cmd = gda_server_command_new (cnc);
+	if (!cmd) {
+		return NULL;
+	}
+
+	// Get all usertables and systables
+	query = g_string_new ("SELECT o.name AS \"Name\" "
+			      //                        "       null   AS \"Comment\" "
+			      "FROM sysobjects o "
+			      "  WHERE o.type = \"U\" "
+			      "     OR o.type = \"S\" "
+			      "ORDER BY o.type DESC, " "         o.name ASC");
+
+	if (!query) {
+		gda_server_command_free (cmd);
+		return NULL;
+	}
+	gda_server_command_set_text (cmd, query->str);
+	recset = gda_server_command_execute (cmd, error, NULL, &affected, 0);
+	g_string_free (query, TRUE);
+	//   gda_server_command_free(cmd);
+
+	return recset;
 }
 
 static GdaServerRecordset *
-schema_types(GdaServerError *error,
-             GdaServerConnection *cnc,
-             GDA_Connection_Constraint *constraints,
-             gint length)
+schema_types (GdaServerError * error,
+	      GdaServerConnection * cnc,
+	      GDA_Connection_Constraint * constraints, gint length)
 {
-  GdaServerCommand         *cmd = NULL;
-  GdaServerRecordset       *rec = NULL;
-  GDA_Connection_Constraint *ptr = NULL;
-  gint                      i   = 0;
-  GString                   *query = NULL;
-  GString                   *condition = NULL;
-  gulong                    affected = 0;
-  
-  ptr = constraints;
-  
-  for (i = 0; i < length && ptr != NULL; i++) {
-    switch (ptr->ctype) {
-    case GDA_Connection_OBJECT_NAME:
-      if (!condition) {
-   condition = g_string_new("  WHERE ");
-      } else {
-   g_string_sprintfa(condition, "    AND ");
-      }
-      g_string_sprintfa(condition, "a.name='%s' ", ptr->value);
-      break;
-    default:
-      gda_log_error(_("Invalid or unsupported constraint type: %d"),
-          ptr->ctype);
-      break;
-    }
-    ptr++;
-  }
-  
-  cmd = gda_server_command_new(cnc);
-  if (!cmd) {
-    g_string_free(condition, TRUE);
-    return NULL;
-  }
-  
-  query = g_string_new("SELECT a.name"
-             //                        "       a.usertype,"
-             //                        "       a.variable,"
-             //                        "       a.allownulls,"
-             //                        "       a.type,"
-             //                        "       a.length,"
-             //                        "       a.tdefault,"
-             //                        "       a.domain,"
-             //                        "       a.printfmt"
-             "  FROM systypes a ");
-  
-  if (!query) {
-    gda_server_command_free(cmd);
-    g_string_free(condition, TRUE);
-    return NULL;
-  }
-  
-  if (condition) {
-    g_string_free(condition, TRUE);
-  }
-  g_string_append(query, "  ORDER BY a.name");
-  cmd = gda_server_command_new(cnc);
-  if (cmd) {
-    gda_server_command_set_text(cmd, query->str);
-    g_string_free(query, TRUE);
-    rec = gda_server_command_execute(cmd, error, NULL, &affected, 0);
-    return rec;
-  } else {
-    gda_log_error(_("Could not allocate GdaServerCommand"));
-    g_string_free(query, TRUE);
-  }
-  
-  return rec;
+	GdaServerCommand *cmd = NULL;
+	GdaServerRecordset *rec = NULL;
+	GDA_Connection_Constraint *ptr = NULL;
+	gint i = 0;
+	GString *query = NULL;
+	GString *condition = NULL;
+	gulong affected = 0;
+
+	ptr = constraints;
+
+	for (i = 0; i < length && ptr != NULL; i++) {
+		switch (ptr->ctype) {
+		case GDA_Connection_OBJECT_NAME:
+			if (!condition) {
+				condition = g_string_new ("  WHERE ");
+			}
+			else {
+				g_string_sprintfa (condition, "    AND ");
+			}
+			g_string_sprintfa (condition, "a.name='%s' ",
+					   ptr->value);
+			break;
+		default:
+			gda_log_error (_
+				       ("Invalid or unsupported constraint type: %d"),
+				       ptr->ctype);
+			break;
+		}
+		ptr++;
+	}
+
+	cmd = gda_server_command_new (cnc);
+	if (!cmd) {
+		g_string_free (condition, TRUE);
+		return NULL;
+	}
+
+	query = g_string_new ("SELECT a.name"
+			      //                        "       a.usertype,"
+			      //                        "       a.variable,"
+			      //                        "       a.allownulls,"
+			      //                        "       a.type,"
+			      //                        "       a.length,"
+			      //                        "       a.tdefault,"
+			      //                        "       a.domain,"
+			      //                        "       a.printfmt"
+			      "  FROM systypes a ");
+
+	if (!query) {
+		gda_server_command_free (cmd);
+		g_string_free (condition, TRUE);
+		return NULL;
+	}
+
+	if (condition) {
+		g_string_free (condition, TRUE);
+	}
+	g_string_append (query, "  ORDER BY a.name");
+	cmd = gda_server_command_new (cnc);
+	if (cmd) {
+		gda_server_command_set_text (cmd, query->str);
+		g_string_free (query, TRUE);
+		rec = gda_server_command_execute (cmd, error, NULL, &affected,
+						  0);
+		return rec;
+	}
+	else {
+		gda_log_error (_("Could not allocate GdaServerCommand"));
+		g_string_free (query, TRUE);
+	}
+
+	return rec;
 }
 
 /*
@@ -741,147 +736,144 @@ where o.type = 'V'
 */
 
 gboolean
-gda_tds_connection_dead(GdaServerConnection *cnc)
+gda_tds_connection_dead (GdaServerConnection * cnc)
 {
-  tds_Connection *tcnc;
-  CS_INT            con_status = 0;
-  
-  g_return_val_if_fail(cnc != NULL, FALSE);
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(tcnc != NULL, FALSE);
-  g_return_val_if_fail(tcnc->cnc != NULL, FALSE);
-  
-  if((tcnc->ret = ct_con_props(tcnc->cnc, CS_GET, CS_CON_STATUS,
-                &con_status, CS_UNUSED,
-                NULL)) != CS_SUCCEED) {
-    gda_log_message(_("connection status: %x"), con_status);
-    gda_log_message(_("return code: %x"), tcnc->ret);
-    return TRUE;
-  }
-  
-  gda_log_message(_("connection status: %x"), con_status);
-  
-  // check for CS_CONSTAT_CONNECTED bit
-  if ((con_status && CS_CONSTAT_CONNECTED) == CS_CONSTAT_CONNECTED) {
-    return FALSE;
-  }
-  
-  return TRUE;
+	tds_Connection *tcnc;
+	CS_INT con_status = 0;
+
+	g_return_val_if_fail (cnc != NULL, FALSE);
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+	g_return_val_if_fail (tcnc != NULL, FALSE);
+	g_return_val_if_fail (tcnc->cnc != NULL, FALSE);
+
+	if ((tcnc->ret = ct_con_props (tcnc->cnc, CS_GET, CS_CON_STATUS,
+				       &con_status, CS_UNUSED,
+				       NULL)) != CS_SUCCEED) {
+		gda_log_message (_("connection status: %x"), con_status);
+		gda_log_message (_("return code: %x"), tcnc->ret);
+		return TRUE;
+	}
+
+	gda_log_message (_("connection status: %x"), con_status);
+
+	// check for CS_CONSTAT_CONNECTED bit
+	if ((con_status && CS_CONSTAT_CONNECTED) == CS_CONSTAT_CONNECTED) {
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 // do NOT call this before having freed GdaServerCommand structures
 // associated to the given connection
 gboolean
-gda_tds_connection_reopen(GdaServerConnection *cnc)
+gda_tds_connection_reopen (GdaServerConnection * cnc)
 {
-  tds_Connection    *tcnc;
-  gboolean             first_connection = TRUE;
-  CS_CHAR              buf[CS_MAX_CHAR];
-  gchar                *dsn;
-  
-  // At least we need valid connection structs
-  g_return_val_if_fail(cnc != NULL, FALSE);
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(tcnc != NULL, FALSE);
-  
-  ////////////////////////////////////////////////////////
-  // Drop old connection data, if any
-  ////////////////////////////////////////////////////////
-  
-  if (tcnc->cnc) {
-    first_connection = FALSE;
-    gda_log_error(_("attempting reconnection"));
-    gda_tds_connection_close(cnc);
-  }
-  
-  ////////////////////////////////////////////////////////
-  // Initialize connection
-  ////////////////////////////////////////////////////////
-  
-  // Create context info and initialize ctlib
-  if ((tcnc->ret = cs_ctx_alloc(CS_VERSION_100, &tcnc->ctx)) != CS_SUCCEED) {
-    gda_tds_cleanup(tcnc, tcnc->ret, "Could not allocate context");
-    return FALSE;
-  }
-  if ((tcnc->ret = ct_init(tcnc->ctx, CS_VERSION_100)) != CS_SUCCEED) {
-    gda_tds_cleanup(tcnc, tcnc->ret, "Could not initialize client library");
-    return FALSE;
-  }
-  
-  // locales must be set up before we have any connection,
-  // so get dsn and initialize locale if given
-  dsn = gda_server_connection_get_dsn(cnc);
-  if ((gda_tds_set_locale(cnc, dsn)) != TRUE) {
-    gda_tds_cleanup(tcnc, tcnc->ret, "Could not set locale");
-    return FALSE;
-  }
-  
-  // Initialize connection
-  if ((tcnc->ret = ct_con_alloc(tcnc->ctx, &tcnc->cnc)) != CS_SUCCEED) {
-    gda_tds_cleanup(tcnc, tcnc->ret,
-             "Could not allocate connection info");
-    return FALSE;
-  }
-  
-  /* Now we've got an initialized CS_CONTEXT and an allocated CS_COMMAND
-     and maybe setup the locale, so we can setup error handling */
-  
-  if (gda_tds_install_error_handlers(cnc) != 0) {
-    return FALSE;
-  }
-  
-  
-  // We go on proceeding connection properties and dsn arguments
-  // set up application name, username and password
-  if ((tcnc->ret = ct_con_props(tcnc->cnc, CS_SET, CS_APPNAME,
-                                (CS_CHAR *) GDA_TDS_DEFAULT_APPNAME,
-                                CS_NULLTERM, NULL
-                               )
-      ) != CS_SUCCEED
-     ) {
-    gda_tds_cleanup(tcnc, tcnc->ret, "Could not set application name");
-    return FALSE;
-  }
-  if ((tcnc->ret = ct_con_props(tcnc->cnc, CS_SET, CS_USERNAME,
-                           (CS_CHAR*) gda_server_connection_get_username(cnc),
-                                CS_NULLTERM, NULL
-                               )
-      ) != CS_SUCCEED
-     ) {
-    gda_tds_cleanup(tcnc, tcnc->ret, "Could not set user name");
-    return FALSE;
-  }
-  if ((tcnc->ret = ct_con_props(tcnc->cnc, CS_SET, CS_PASSWORD,
-                           (CS_CHAR *) gda_server_connection_get_password(cnc),
-                                CS_NULLTERM, NULL
-                               )
-      ) != CS_SUCCEED
-     ) {
-    gda_tds_cleanup(tcnc, tcnc->ret, "Could not set password");
-    return FALSE;
-  }
-  
-  // Proceed further parameters given in dsn
-  if (((dsn = gda_server_connection_get_dsn(cnc)) != NULL) &&
-      (gda_tds_init_dsn_properties(cnc, dsn) != 0)) {
-    return FALSE;
-  }
-  
-  // Connect
-  if ((tcnc->ret = ct_connect(tcnc->cnc, (CS_CHAR *) NULL, 0)
-      ) != CS_SUCCEED
-     ) {
-    gda_tds_cleanup(tcnc, tcnc->ret, 
-             (first_connection == FALSE)
-             ? "Could not reconnect"
-             : "Could not connect"
-             );
-    return FALSE;
-  }
+	tds_Connection *tcnc;
+	gboolean first_connection = TRUE;
+	CS_CHAR buf[CS_MAX_CHAR];
+	gchar *dsn;
 
-  
-  // To test the connection, we ask for the servers name
-  // FIXME: freetds unimplemented con_props: (CS_INT)9146 = CS_SERVERNAME
+	// At least we need valid connection structs
+	g_return_val_if_fail (cnc != NULL, FALSE);
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+	g_return_val_if_fail (tcnc != NULL, FALSE);
+
+	////////////////////////////////////////////////////////
+	// Drop old connection data, if any
+	////////////////////////////////////////////////////////
+
+	if (tcnc->cnc) {
+		first_connection = FALSE;
+		gda_log_error (_("attempting reconnection"));
+		gda_tds_connection_close (cnc);
+	}
+
+	////////////////////////////////////////////////////////
+	// Initialize connection
+	////////////////////////////////////////////////////////
+
+	// Create context info and initialize ctlib
+	if ((tcnc->ret =
+	     cs_ctx_alloc (CS_VERSION_100, &tcnc->ctx)) != CS_SUCCEED) {
+		gda_tds_cleanup (tcnc, tcnc->ret,
+				 "Could not allocate context");
+		return FALSE;
+	}
+	if ((tcnc->ret = ct_init (tcnc->ctx, CS_VERSION_100)) != CS_SUCCEED) {
+		gda_tds_cleanup (tcnc, tcnc->ret,
+				 "Could not initialize client library");
+		return FALSE;
+	}
+
+	// locales must be set up before we have any connection,
+	// so get dsn and initialize locale if given
+	dsn = gda_server_connection_get_dsn (cnc);
+	if ((gda_tds_set_locale (cnc, dsn)) != TRUE) {
+		gda_tds_cleanup (tcnc, tcnc->ret, "Could not set locale");
+		return FALSE;
+	}
+
+	// Initialize connection
+	if ((tcnc->ret = ct_con_alloc (tcnc->ctx, &tcnc->cnc)) != CS_SUCCEED) {
+		gda_tds_cleanup (tcnc, tcnc->ret,
+				 "Could not allocate connection info");
+		return FALSE;
+	}
+
+	/* Now we've got an initialized CS_CONTEXT and an allocated CS_COMMAND
+	   and maybe setup the locale, so we can setup error handling */
+
+	if (gda_tds_install_error_handlers (cnc) != 0) {
+		return FALSE;
+	}
+
+
+	// We go on proceeding connection properties and dsn arguments
+	// set up application name, username and password
+	if ((tcnc->ret = ct_con_props (tcnc->cnc, CS_SET, CS_APPNAME,
+				       (CS_CHAR *) GDA_TDS_DEFAULT_APPNAME,
+				       CS_NULLTERM, NULL)
+	    ) != CS_SUCCEED) {
+		gda_tds_cleanup (tcnc, tcnc->ret,
+				 "Could not set application name");
+		return FALSE;
+	}
+	if ((tcnc->ret = ct_con_props (tcnc->cnc, CS_SET, CS_USERNAME,
+				       (CS_CHAR *)
+				       gda_server_connection_get_username
+				       (cnc), CS_NULLTERM, NULL)
+	    ) != CS_SUCCEED) {
+		gda_tds_cleanup (tcnc, tcnc->ret, "Could not set user name");
+		return FALSE;
+	}
+	if ((tcnc->ret = ct_con_props (tcnc->cnc, CS_SET, CS_PASSWORD,
+				       (CS_CHAR *)
+				       gda_server_connection_get_password
+				       (cnc), CS_NULLTERM, NULL)
+	    ) != CS_SUCCEED) {
+		gda_tds_cleanup (tcnc, tcnc->ret, "Could not set password");
+		return FALSE;
+	}
+
+	// Proceed further parameters given in dsn
+	if (((dsn = gda_server_connection_get_dsn (cnc)) != NULL) &&
+	    (gda_tds_init_dsn_properties (cnc, dsn) != 0)) {
+		return FALSE;
+	}
+
+	// Connect
+	if ((tcnc->ret = ct_connect (tcnc->cnc, (CS_CHAR *) NULL, 0)
+	    ) != CS_SUCCEED) {
+		gda_tds_cleanup (tcnc, tcnc->ret, (first_connection == FALSE)
+				 ? "Could not reconnect"
+				 : "Could not connect");
+		return FALSE;
+	}
+
+
+	// To test the connection, we ask for the servers name
+	// FIXME: freetds unimplemented con_props: (CS_INT)9146 = CS_SERVERNAME
 //  if ((tcnc->ret = ct_con_props(tcnc->cnc, CS_GET, (CS_INT)9146,
 //                                &buf, CS_MAX_CHAR, NULL
 //                               )
@@ -891,77 +883,82 @@ gda_tds_connection_reopen(GdaServerConnection *cnc)
 //             "Could not request servername");
 //    return FALSE;
 //  } else {
-    if (first_connection == FALSE)
-      // Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
-      gda_log_message(_("Reconnected to %s"), "dummy");
-    else
-      gda_log_message(_("Connected to %s"), "dummy");
+	if (first_connection == FALSE)
+		// Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
+		gda_log_message (_("Reconnected to %s"), "dummy");
+	else
+		gda_log_message (_("Connected to %s"), "dummy");
 
-	 gda_tds_connection_select_database(cnc, "pubs2");
-	 gda_tds_connection_select_database(cnc, "pubs3");
-    if (tcnc->database) {
-      tcnc->ret = gda_tds_connection_select_database(cnc, tcnc->database);
-      if (tcnc->ret != CS_SUCCEED) {
-        gda_tds_cleanup(tcnc, tcnc->ret, "Could not select database");
-        return FALSE;
-      } else {
-        gda_log_message(_("Selected database '%s'"), tcnc->database);
-      }
-    }
+	gda_tds_connection_select_database (cnc, "pubs2");
+	gda_tds_connection_select_database (cnc, "pubs3");
+	if (tcnc->database) {
+		tcnc->ret =
+			gda_tds_connection_select_database (cnc,
+							    tcnc->database);
+		if (tcnc->ret != CS_SUCCEED) {
+			gda_tds_cleanup (tcnc, tcnc->ret,
+					 "Could not select database");
+			return FALSE;
+		}
+		else {
+			gda_log_message (_("Selected database '%s'"),
+					 tcnc->database);
+		}
+	}
 //  }
 
-  // We have connected successfully
-  return TRUE;
+	// We have connected successfully
+	return TRUE;
 }
 
 CS_RETCODE
-gda_tds_connection_select_database(GdaServerConnection *cnc,
-                                   const gchar *database)
+gda_tds_connection_select_database (GdaServerConnection * cnc,
+				    const gchar * database)
 {
-  tds_Connection *tcnc = NULL;
-  CS_COMMAND        *cmd = NULL;
-  gchar             *sqlcmd = NULL;
-  CS_INT            result_type;
-  gboolean          okay = FALSE;
-  
-  g_return_val_if_fail(cnc != NULL, CS_FAIL);
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(tcnc != NULL, CS_FAIL);
-  g_return_val_if_fail(tcnc->cnc != NULL, CS_FAIL);
-  
-  if (ct_cmd_alloc(tcnc->cnc, &cmd) != CS_SUCCEED) {
-    gda_log_error(_("%s: Could not allocate cmd structure"),
-        __PRETTY_FUNCTION__
-        );
-    return CS_FAIL;
-  }
-  
-  // Prepare cmd string
-  sqlcmd = g_strdup_printf("use %s", database);
-  if (!sqlcmd) {
-    gda_log_error(_("%s: Could not allocate memory for cmd string"),
-        __PRETTY_FUNCTION__
-        );
-    ct_cmd_drop(cmd);
-    return CS_FAIL;
-  }
-  // Pass cmd string to CS_COMMAND structure
-  if (ct_command(cmd, CS_LANG_CMD, sqlcmd, CS_NULLTERM, CS_UNUSED
-                ) != CS_SUCCEED
-     ) {
-    gda_log_error(_("%s: ct_command failed"), __PRETTY_FUNCTION__);
-    g_free((gpointer) sqlcmd);
-    ct_cmd_drop(cmd);
-    return CS_FAIL;
-  }
-  g_free((gpointer) sqlcmd);
-  
-  // Send the command
-  if (ct_send(cmd) != CS_SUCCEED) {
-    gda_log_error(_("%s: sending command failed"), __PRETTY_FUNCTION__);
-    ct_cmd_drop(cmd);
-    return CS_FAIL;
-  }
+	tds_Connection *tcnc = NULL;
+	CS_COMMAND *cmd = NULL;
+	gchar *sqlcmd = NULL;
+	CS_INT result_type;
+	gboolean okay = FALSE;
+
+	g_return_val_if_fail (cnc != NULL, CS_FAIL);
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+	g_return_val_if_fail (tcnc != NULL, CS_FAIL);
+	g_return_val_if_fail (tcnc->cnc != NULL, CS_FAIL);
+
+	if (ct_cmd_alloc (tcnc->cnc, &cmd) != CS_SUCCEED) {
+		gda_log_error (_("%s: Could not allocate cmd structure"),
+			       __PRETTY_FUNCTION__);
+		return CS_FAIL;
+	}
+
+	// Prepare cmd string
+	sqlcmd = g_strdup_printf ("use %s", database);
+	if (!sqlcmd) {
+		gda_log_error (_
+			       ("%s: Could not allocate memory for cmd string"),
+			       __PRETTY_FUNCTION__);
+		ct_cmd_drop (cmd);
+		return CS_FAIL;
+	}
+	// Pass cmd string to CS_COMMAND structure
+	if (ct_command (cmd, CS_LANG_CMD, sqlcmd, CS_NULLTERM, CS_UNUSED) !=
+	    CS_SUCCEED) {
+		gda_log_error (_("%s: ct_command failed"),
+			       __PRETTY_FUNCTION__);
+		g_free ((gpointer) sqlcmd);
+		ct_cmd_drop (cmd);
+		return CS_FAIL;
+	}
+	g_free ((gpointer) sqlcmd);
+
+	// Send the command
+	if (ct_send (cmd) != CS_SUCCEED) {
+		gda_log_error (_("%s: sending command failed"),
+			       __PRETTY_FUNCTION__);
+		ct_cmd_drop (cmd);
+		return CS_FAIL;
+	}
 
 /*
  * freetds bug: no ct_results() after non-result query
@@ -986,7 +983,7 @@ gda_tds_connection_select_database(GdaServerConnection *cnc,
   
   if (okay) {
 */
-    return CS_SUCCEED;
+	return CS_SUCCEED;
 
 
 /* freetds bug: no ct_results() after non-result query
@@ -999,69 +996,71 @@ gda_tds_connection_select_database(GdaServerConnection *cnc,
 
 // Select locale for connection; we just need a CS_CONTEXT at this time
 static gboolean
-gda_tds_set_locale(GdaServerConnection *cnc, const gchar *dsn)
+gda_tds_set_locale (GdaServerConnection * cnc, const gchar * dsn)
 {
-  tds_Connection *tcnc;
-  CS_LOCALE         *locale;
-  CS_RETCODE        ret = CS_FAIL;
-  gchar             *targ_locale = NULL;
-  
-  g_return_val_if_fail(cnc != NULL, FALSE);
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(tcnc != NULL, FALSE);
-  g_return_val_if_fail(tcnc->ctx != NULL, FALSE);
-  
-  if ((targ_locale = get_option(dsn, "LOCALE=")) == NULL) {
-    return TRUE;
-  }
-  
+	tds_Connection *tcnc;
+	CS_LOCALE *locale;
+	CS_RETCODE ret = CS_FAIL;
+	gchar *targ_locale = NULL;
+
+	g_return_val_if_fail (cnc != NULL, FALSE);
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+	g_return_val_if_fail (tcnc != NULL, FALSE);
+	g_return_val_if_fail (tcnc->ctx != NULL, FALSE);
+
+	if ((targ_locale = get_option (dsn, "LOCALE=")) == NULL) {
+		return TRUE;
+	}
+
 #ifdef TDS_DEBUG
-  gda_log_message("locale = '%s'", targ_locale);
+	gda_log_message ("locale = '%s'", targ_locale);
 #endif
 
-  if ((ret = cs_loc_alloc(tcnc->ctx, &locale)) != CS_SUCCEED) {
-    gda_log_error(_("Could not allocate locale structure"));
-    return FALSE;
-  }
-  if ((ret = cs_locale(tcnc->ctx, CS_SET, locale, CS_LC_ALL,
-             (CS_CHAR *) targ_locale, CS_NULLTERM, NULL))
-      != CS_SUCCEED) {
-    gda_log_error(_("Could not set locale to '%s'"), targ_locale);
-    cs_loc_drop(tcnc->ctx, locale);
-    return FALSE;
-  }
-  if ((ret = cs_config(tcnc->ctx, CS_SET, CS_LOC_PROP, locale,
-             CS_UNUSED, NULL)) != CS_SUCCEED) {
-    gda_log_error(_("Could not configure locale to be '%s'"), targ_locale);
-    cs_loc_drop(tcnc->ctx, locale);
-    return FALSE;
-  }
-  if ((ret = cs_loc_drop(tcnc->ctx, locale)) != CS_SUCCEED) {
-    gda_log_error(_("Could not drop locale structure"));
-    return FALSE;
-  }
-  gda_log_message("Selected locale '%s'", targ_locale);
-  return TRUE;
+	if ((ret = cs_loc_alloc (tcnc->ctx, &locale)) != CS_SUCCEED) {
+		gda_log_error (_("Could not allocate locale structure"));
+		return FALSE;
+	}
+	if ((ret = cs_locale (tcnc->ctx, CS_SET, locale, CS_LC_ALL,
+			      (CS_CHAR *) targ_locale, CS_NULLTERM, NULL))
+	    != CS_SUCCEED) {
+		gda_log_error (_("Could not set locale to '%s'"),
+			       targ_locale);
+		cs_loc_drop (tcnc->ctx, locale);
+		return FALSE;
+	}
+	if ((ret = cs_config (tcnc->ctx, CS_SET, CS_LOC_PROP, locale,
+			      CS_UNUSED, NULL)) != CS_SUCCEED) {
+		gda_log_error (_("Could not configure locale to be '%s'"),
+			       targ_locale);
+		cs_loc_drop (tcnc->ctx, locale);
+		return FALSE;
+	}
+	if ((ret = cs_loc_drop (tcnc->ctx, locale)) != CS_SUCCEED) {
+		gda_log_error (_("Could not drop locale structure"));
+		return FALSE;
+	}
+	gda_log_message ("Selected locale '%s'", targ_locale);
+	return TRUE;
 }
 
 // drop remaining cs/ctlib structures and exit
 void
-gda_tds_cleanup(tds_Connection *tcnc, CS_RETCODE ret, const gchar *msg)
+gda_tds_cleanup (tds_Connection * tcnc, CS_RETCODE ret, const gchar * msg)
 {
-  g_return_if_fail(tcnc != NULL);
-  
-  gda_log_error(_("Fatal error: %s\n"), msg);
-  
-  if (tcnc->cnc != NULL) {
-    ct_con_drop(tcnc->cnc);
-    tcnc->cnc = NULL;
-  }
-  
-  if (tcnc->ctx != NULL) {
-    ct_exit(tcnc->ctx, CS_FORCE_EXIT);
-    cs_ctx_drop(tcnc->ctx);
-    tcnc->ctx = NULL;
-  }
+	g_return_if_fail (tcnc != NULL);
+
+	gda_log_error (_("Fatal error: %s\n"), msg);
+
+	if (tcnc->cnc != NULL) {
+		ct_con_drop (tcnc->cnc);
+		tcnc->cnc = NULL;
+	}
+
+	if (tcnc->ctx != NULL) {
+		ct_exit (tcnc->ctx, CS_FORCE_EXIT);
+		cs_ctx_drop (tcnc->ctx);
+		tcnc->ctx = NULL;
+	}
 }
 
 /*
@@ -1071,60 +1070,82 @@ gda_tds_cleanup(tds_Connection *tcnc, CS_RETCODE ret, const gchar *msg)
  */
 
 static gint
-gda_tds_init_dsn_properties(GdaServerConnection *cnc, const gchar *dsn)
+gda_tds_init_dsn_properties (GdaServerConnection * cnc, const gchar * dsn)
 {
-  tds_Connection *tcnc;
-  gchar             *ptr_s, *ptr_e;
-  
-  g_return_val_if_fail(cnc != NULL, -1);
-  tcnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  
-  if (tcnc) {
-    /* parse connection string */
-    ptr_s = (gchar *) dsn;
-    while (ptr_s && *ptr_s)   {
-      ptr_e = strchr(ptr_s, ';');
-      
-      if (ptr_e)
-   *ptr_e = '\0';
-      
-      // HOST implies HOSTNAME ;-)
-      if (strncasecmp(ptr_s, "HOST", strlen("HOST")) == 0)
-        tcnc->ret = ct_con_props(tcnc->cnc, CS_SET, CS_HOSTNAME,
-                                 (CS_CHAR *) get_value(ptr_s),
-                                 CS_NULLTERM, NULL);
-      else if (strncasecmp(ptr_s, "USERNAME", strlen("USERNAME")) == 0)
-        tcnc->ret = ct_con_props(tcnc->cnc, CS_SET, CS_USERNAME,
-                                 (CS_CHAR *) get_value(ptr_s),
-                                 CS_NULLTERM, NULL);
-      else if (strncasecmp(ptr_s, "APPNAME", strlen("APPNAME")) == 0)
-        tcnc->ret = ct_con_props(tcnc->cnc, CS_SET, CS_APPNAME,
-                                 (CS_CHAR *) get_value(ptr_s),
-                                 CS_NULLTERM, NULL);
-      else if (strncasecmp(ptr_s, "PASSWORD", strlen("PASSWORD")) == 0)
-        tcnc->ret = ct_con_props(tcnc->cnc, CS_SET, CS_PASSWORD,
-                                 (CS_CHAR *) get_value(ptr_s),
-                                 CS_NULLTERM, NULL);
-      else if (strncasecmp(ptr_s, "DATABASE", strlen("DATABASE")) == 0) {
-        tcnc->ret = CS_SUCCEED;
-        if (tcnc->database) {
-          g_free((gpointer) tcnc->database);
-        }
-        tcnc->database = g_strdup_printf("%s", get_value(ptr_s));
-      }
-      
-      if (tcnc->ret != CS_SUCCEED) {
-        gda_tds_cleanup(tcnc, tcnc->ret, "Could not proceed dsn settings.\n");
-        return -1;
-      }
-      
-      ptr_s = ptr_e;
-      if (ptr_s)
-        ptr_s++;
-    }
-  }
-  
-  return 0;
+	tds_Connection *tcnc;
+	gchar *ptr_s, *ptr_e;
+
+	g_return_val_if_fail (cnc != NULL, -1);
+	tcnc = (tds_Connection *) gda_server_connection_get_user_data (cnc);
+
+	if (tcnc) {
+		/* parse connection string */
+		ptr_s = (gchar *) dsn;
+		while (ptr_s && *ptr_s) {
+			ptr_e = strchr (ptr_s, ';');
+
+			if (ptr_e)
+				*ptr_e = '\0';
+
+			// HOST implies HOSTNAME ;-)
+			if (strncasecmp (ptr_s, "HOST", strlen ("HOST")) == 0)
+				tcnc->ret =
+					ct_con_props (tcnc->cnc, CS_SET,
+						      CS_HOSTNAME,
+						      (CS_CHAR *)
+						      get_value (ptr_s),
+						      CS_NULLTERM, NULL);
+			else if (strncasecmp
+				 (ptr_s, "USERNAME",
+				  strlen ("USERNAME")) == 0)
+				tcnc->ret =
+					ct_con_props (tcnc->cnc, CS_SET,
+						      CS_USERNAME,
+						      (CS_CHAR *)
+						      get_value (ptr_s),
+						      CS_NULLTERM, NULL);
+			else if (strncasecmp
+				 (ptr_s, "APPNAME", strlen ("APPNAME")) == 0)
+				tcnc->ret =
+					ct_con_props (tcnc->cnc, CS_SET,
+						      CS_APPNAME,
+						      (CS_CHAR *)
+						      get_value (ptr_s),
+						      CS_NULLTERM, NULL);
+			else if (strncasecmp
+				 (ptr_s, "PASSWORD",
+				  strlen ("PASSWORD")) == 0)
+				tcnc->ret =
+					ct_con_props (tcnc->cnc, CS_SET,
+						      CS_PASSWORD,
+						      (CS_CHAR *)
+						      get_value (ptr_s),
+						      CS_NULLTERM, NULL);
+			else if (strncasecmp
+				 (ptr_s, "DATABASE",
+				  strlen ("DATABASE")) == 0) {
+				tcnc->ret = CS_SUCCEED;
+				if (tcnc->database) {
+					g_free ((gpointer) tcnc->database);
+				}
+				tcnc->database =
+					g_strdup_printf ("%s",
+							 get_value (ptr_s));
+			}
+
+			if (tcnc->ret != CS_SUCCEED) {
+				gda_tds_cleanup (tcnc, tcnc->ret,
+						 "Could not proceed dsn settings.\n");
+				return -1;
+			}
+
+			ptr_s = ptr_e;
+			if (ptr_s)
+				ptr_s++;
+		}
+	}
+
+	return 0;
 }
 
 /*
@@ -1132,38 +1153,38 @@ gda_tds_init_dsn_properties(GdaServerConnection *cnc, const gchar *dsn)
  */
 
 static gchar *
-get_value(gchar* ptr)
+get_value (gchar * ptr)
 {
-  while (*ptr && (*ptr != '='))
-    ptr++;
-   
-  if (!*ptr) {
-    return NULL;
-  }
-  ptr++;
-  if (!*ptr) {
-    return NULL;
-  }
-  while (*ptr && isspace(*ptr))
-    ptr++;
-  
-  return (g_strdup(ptr));
+	while (*ptr && (*ptr != '='))
+		ptr++;
+
+	if (!*ptr) {
+		return NULL;
+	}
+	ptr++;
+	if (!*ptr) {
+		return NULL;
+	}
+	while (*ptr && isspace (*ptr))
+		ptr++;
+
+	return (g_strdup (ptr));
 }
 
 static gchar *
-get_option(const gchar *dsn, const gchar *opt_name)
+get_option (const gchar * dsn, const gchar * opt_name)
 {
-  gchar *ptr = NULL;
-  gchar *opt = NULL;
-  
-  if (!(opt = strstr(dsn, opt_name))) {
-    return NULL;
-  }
-  opt += strlen(opt_name);
-  ptr = strchr(opt, ';');
-  
-  if (ptr)
-    *ptr = '\0';
-  
-  return (g_strdup(opt));
+	gchar *ptr = NULL;
+	gchar *opt = NULL;
+
+	if (!(opt = strstr (dsn, opt_name))) {
+		return NULL;
+	}
+	opt += strlen (opt_name);
+	ptr = strchr (opt, ';');
+
+	if (ptr)
+		*ptr = '\0';
+
+	return (g_strdup (opt));
 }

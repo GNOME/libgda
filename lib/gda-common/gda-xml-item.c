@@ -40,32 +40,35 @@
 #  define N_(String) (String)
 #endif
 
-struct _GdaXmlItemPrivate {
-	gchar*      tag;
-	GHashTable* attrlist;
-	GHashTable* idlist;
-	GHashTable* reflist;
-	GdaXmlItem* parent;
+struct _GdaXmlItemPrivate
+{
+	gchar *tag;
+	GHashTable *attrlist;
+	GHashTable *idlist;
+	GHashTable *reflist;
+	GdaXmlItem *parent;
 };
 
-static void gda_xml_item_class_init (GdaXmlItemClass *klass);
-static void gda_xml_item_init       (GdaXmlItem *item);
-static void gda_xml_item_destroy    (GtkObject *object);
+static void gda_xml_item_class_init (GdaXmlItemClass * klass);
+static void gda_xml_item_init (GdaXmlItem * item);
+static void gda_xml_item_destroy (GtkObject * object);
 
-static GdaXmlItem *gda_xml_item_class_find_id (GdaXmlItem *item, const gchar *id);
-static xmlNodePtr gda_xml_item_class_to_dom (GdaXmlItem *item, xmlNodePtr parent_node);
+static GdaXmlItem *gda_xml_item_class_find_id (GdaXmlItem * item,
+					       const gchar * id);
+static xmlNodePtr gda_xml_item_class_to_dom (GdaXmlItem * item,
+					     xmlNodePtr parent_node);
 
 /**
  * Private functions
  */
 static void
-attr_to_dom (gchar *key, gchar *value, xmlNodePtr node)
+attr_to_dom (gchar * key, gchar * value, xmlNodePtr node)
 {
 	gda_xml_util_new_attr (key, value, node);
 }
 
 static void
-destroy_attrlist (GHashTable *hashtab)
+destroy_attrlist (GHashTable * hashtab)
 {
 	g_hash_table_foreach_remove (hashtab,
 				     (GHRFunc) gda_util_destroy_hash_pair,
@@ -75,7 +78,7 @@ destroy_attrlist (GHashTable *hashtab)
 
 
 static void
-destroy_idlist (GHashTable *hashtab)
+destroy_idlist (GHashTable * hashtab)
 {
 	g_hash_table_foreach_remove (hashtab,
 				     (GHRFunc) gda_util_destroy_hash_pair,
@@ -85,7 +88,7 @@ destroy_idlist (GHashTable *hashtab)
 
 
 static void
-destroy_reflist (GHashTable *hashtab)
+destroy_reflist (GHashTable * hashtab)
 {
 	g_hash_table_foreach_remove (hashtab,
 				     (GHRFunc) gda_util_destroy_hash_pair,
@@ -98,7 +101,7 @@ destroy_reflist (GHashTable *hashtab)
  * GdaXmlItem class implementation
  */
 static void
-gda_xml_item_class_init (GdaXmlItemClass *klass)
+gda_xml_item_class_init (GdaXmlItemClass * klass)
 {
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
 
@@ -109,14 +112,14 @@ gda_xml_item_class_init (GdaXmlItemClass *klass)
 }
 
 static void
-gda_xml_item_init (GdaXmlItem *item)
+gda_xml_item_init (GdaXmlItem * item)
 {
 	item->priv = g_new (GdaXmlItemPrivate, 1);
 	item->priv->attrlist = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 static void
-gda_xml_item_destroy (GtkObject *object)
+gda_xml_item_destroy (GtkObject * object)
 {
 	GtkObjectClass *parent_class;
 	GdaXmlItem *item = (GdaXmlItem *) object;
@@ -149,8 +152,8 @@ gda_xml_item_get_type (void)
 			sizeof (GdaXmlItemClass),
 			(GtkClassInitFunc) gda_xml_item_class_init,
 			(GtkObjectInitFunc) gda_xml_item_init,
-			(GtkArgSetFunc)NULL,
-			(GtkArgSetFunc)NULL
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL
 		};
 		type = gtk_type_unique (gtk_object_get_type (), &info);
 	}
@@ -162,7 +165,7 @@ gda_xml_item_get_type (void)
  * gda_xml_item_free
  */
 void
-gda_xml_item_free (GdaXmlItem *item)
+gda_xml_item_free (GdaXmlItem * item)
 {
 	g_return_if_fail (GDA_IS_XML_ITEM (item));
 	gtk_object_unref (GTK_OBJECT (item));
@@ -172,7 +175,7 @@ gda_xml_item_free (GdaXmlItem *item)
  * gda_xml_item_add
  */
 void
-gda_xml_item_add (GdaXmlItem *item, GdaXmlItem *child)
+gda_xml_item_add (GdaXmlItem * item, GdaXmlItem * child)
 {
 	GdaXmlItemClass *item_class;
 
@@ -182,14 +185,15 @@ gda_xml_item_add (GdaXmlItem *item, GdaXmlItem *child)
 }
 
 static xmlNodePtr
-gda_xml_item_class_to_dom (GdaXmlItem *item, xmlNodePtr parent_node)
+gda_xml_item_class_to_dom (GdaXmlItem * item, xmlNodePtr parent_node)
 {
 	xmlNodePtr node;
 
 	g_return_val_if_fail (GDA_IS_XML_ITEM (item), NULL);
 
 	node = gda_xml_util_new_node (item->priv->tag, parent_node);
-	g_hash_table_foreach (item->priv->attrlist, (GHFunc) attr_to_dom, node);
+	g_hash_table_foreach (item->priv->attrlist, (GHFunc) attr_to_dom,
+			      node);
 
 	return node;
 }
@@ -198,7 +202,7 @@ gda_xml_item_class_to_dom (GdaXmlItem *item, xmlNodePtr parent_node)
  * gda_xml_item_to_dom
  */
 xmlNodePtr
-gda_xml_item_to_dom (GdaXmlItem *item, xmlNodePtr parent_node)
+gda_xml_item_to_dom (GdaXmlItem * item, xmlNodePtr parent_node)
 {
 	GdaXmlItemClass *item_class;
 
@@ -213,7 +217,7 @@ gda_xml_item_to_dom (GdaXmlItem *item, xmlNodePtr parent_node)
  * gda_xml_item_get_attribute
  */
 const gchar *
-gda_xml_item_get_attribute (GdaXmlItem *item, const gchar *attrib)
+gda_xml_item_get_attribute (GdaXmlItem * item, const gchar * attrib)
 {
 	gchar *value;
 
@@ -230,9 +234,8 @@ gda_xml_item_get_attribute (GdaXmlItem *item, const gchar *attrib)
  * gda_xml_item_set_attribute
  */
 void
-gda_xml_item_set_attribute (GdaXmlItem *item,
-			    const gchar *attrib,
-			    const gchar *value)
+gda_xml_item_set_attribute (GdaXmlItem * item,
+			    const gchar * attrib, const gchar * value)
 {
 	gchar *oldval, *oldkey;
 
@@ -240,22 +243,21 @@ gda_xml_item_set_attribute (GdaXmlItem *item,
 
 	if (g_hash_table_lookup_extended (item->priv->attrlist,
 					  attrib,
-					  (gpointer) &oldkey,
-					  (gpointer) &oldval)) {
+					  (gpointer) & oldkey,
+					  (gpointer) & oldval)) {
 		g_hash_table_remove (item->priv->attrlist, attrib);
 		g_free (oldval);
 		g_free (oldkey);
 	}
 	g_hash_table_insert (item->priv->attrlist,
-			     g_strdup (attrib),
-			     g_strdup (value));
+			     g_strdup (attrib), g_strdup (value));
 }
 
 /**
  * gda_xml_item_get_tag
  */
 const gchar *
-gda_xml_item_get_tag (GdaXmlItem *item)
+gda_xml_item_get_tag (GdaXmlItem * item)
 {
 	g_return_val_if_fail (GDA_IS_XML_ITEM (item), NULL);
 	return (const gchar *) item->priv->tag;
@@ -265,7 +267,7 @@ gda_xml_item_get_tag (GdaXmlItem *item)
  * gda_xml_item_set_tag
  */
 void
-gda_xml_item_set_tag (GdaXmlItem *item, const gchar *tag)
+gda_xml_item_set_tag (GdaXmlItem * item, const gchar * tag)
 {
 	g_return_if_fail (GDA_IS_XML_ITEM (item));
 
@@ -277,7 +279,7 @@ gda_xml_item_set_tag (GdaXmlItem *item, const gchar *tag)
  * gda_xml_item_get_parent
  */
 GdaXmlItem *
-gda_xml_item_get_parent (GdaXmlItem *item)
+gda_xml_item_get_parent (GdaXmlItem * item)
 {
 	g_return_val_if_fail (GDA_IS_XML_ITEM (item), NULL);
 	return item->priv->parent;
@@ -287,7 +289,7 @@ gda_xml_item_get_parent (GdaXmlItem *item)
  * gda_xml_item_set_parent
  */
 void
-gda_xml_item_set_parent (GdaXmlItem *item, GdaXmlItem *parent)
+gda_xml_item_set_parent (GdaXmlItem * item, GdaXmlItem * parent)
 {
 	g_return_if_fail (GDA_IS_XML_ITEM (item));
 
@@ -301,7 +303,7 @@ gda_xml_item_set_parent (GdaXmlItem *item, GdaXmlItem *parent)
  * gda_xml_item_find_root
  */
 GdaXmlItem *
-gda_xml_item_find_root (GdaXmlItem *item)
+gda_xml_item_find_root (GdaXmlItem * item)
 {
 	GdaXmlItem *parent;
 
@@ -314,7 +316,7 @@ gda_xml_item_find_root (GdaXmlItem *item)
 }
 
 static GdaXmlItem *
-gda_xml_item_class_find_id (GdaXmlItem *item, const gchar *id)
+gda_xml_item_class_find_id (GdaXmlItem * item, const gchar * id)
 {
 	g_return_val_if_fail (GDA_IS_XML_ITEM (item), NULL);
 
@@ -327,7 +329,7 @@ gda_xml_item_class_find_id (GdaXmlItem *item, const gchar *id)
  * gda_xml_item_find_id
  */
 GdaXmlItem *
-gda_xml_item_find_id (GdaXmlItem *item, const gchar *id)
+gda_xml_item_find_id (GdaXmlItem * item, const gchar * id)
 {
 	GdaXmlItemClass *item_class;
 
@@ -342,7 +344,7 @@ gda_xml_item_find_id (GdaXmlItem *item, const gchar *id)
  * gda_xml_item_find_ref
  */
 GdaXmlItem *
-gda_xml_item_find_ref (GdaXmlItem *item, const gchar *ref)
+gda_xml_item_find_ref (GdaXmlItem * item, const gchar * ref)
 {
 	g_return_val_if_fail (GDA_IS_XML_ITEM (item), NULL);
 
@@ -355,7 +357,7 @@ gda_xml_item_find_ref (GdaXmlItem *item, const gchar *ref)
  * gda_xml_item_add_id
  */
 void
-gda_xml_item_add_id (GdaXmlItem *item, const gchar *id)
+gda_xml_item_add_id (GdaXmlItem * item, const gchar * id)
 {
 	GdaXmlItem *root;
 
@@ -364,7 +366,8 @@ gda_xml_item_add_id (GdaXmlItem *item, const gchar *id)
 
 	root = gda_xml_item_find_root (item);
 	if (root->priv->idlist == NULL)
-		root->priv->idlist = g_hash_table_new (g_str_hash, g_str_equal);
+		root->priv->idlist =
+			g_hash_table_new (g_str_hash, g_str_equal);
 	g_hash_table_insert (item->priv->idlist, g_strdup (id), item);
 }
 
@@ -372,7 +375,7 @@ gda_xml_item_add_id (GdaXmlItem *item, const gchar *id)
  * gda_xml_item_add_ref
  */
 void
-gda_xml_item_add_ref (GdaXmlItem *item, const gchar *ref)
+gda_xml_item_add_ref (GdaXmlItem * item, const gchar * ref)
 {
 	GdaXmlItem *root, *ref_node;
 
@@ -384,7 +387,8 @@ gda_xml_item_add_ref (GdaXmlItem *item, const gchar *ref)
 	}
 
 	if (item->priv->reflist == NULL)
-		item->priv->reflist = g_hash_table_new (g_str_hash, g_str_equal);
+		item->priv->reflist =
+			g_hash_table_new (g_str_hash, g_str_equal);
 	g_hash_table_insert (item->priv->reflist, g_strdup (ref), ref_node);
 	gtk_object_ref (GTK_OBJECT (ref_node));
 }

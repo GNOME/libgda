@@ -37,44 +37,44 @@
  * Per-object specific structures
  */
 
-typedef struct _tds_Field {
-  CS_INT     indicator;
-  gchar      *data;
-  CS_INT     datalen;
-  CS_DATAFMT *fmt;
-} tds_Field;
+typedef struct _tds_Field
+{
+	CS_INT indicator;
+	gchar *data;
+	CS_INT datalen;
+	CS_DATAFMT *fmt;
+}
+tds_Field;
 
-typedef struct _tds_Recordset {
-  GdaServerConnection *cnc;
-  GdaServerCommand    *cmd;
-  tds_Connection *tcnc;
-  tds_Command    *tcmd;
-	
-  CS_RETCODE   ret;
-  CS_RETCODE   result_type;
-  CS_INT       rows_cnt;
-  gboolean     failed;
-  CS_INT       colscnt;
-  CS_DATAFMT   *datafmt;
-  tds_Field *data;
-} tds_Recordset;
+typedef struct _tds_Recordset
+{
+	GdaServerConnection *cnc;
+	GdaServerCommand *cmd;
+	tds_Connection *tcnc;
+	tds_Command *tcmd;
 
-gboolean gda_tds_recordset_new       (GdaServerRecordset *);
-gint     gda_tds_recordset_move_next (GdaServerRecordset *);
-gint     gda_tds_recordset_move_prev (GdaServerRecordset *);
-gint     gda_tds_recordset_close     (GdaServerRecordset *);
-void     gda_tds_recordset_free      (GdaServerRecordset *);
+	CS_RETCODE ret;
+	CS_RETCODE result_type;
+	CS_INT rows_cnt;
+	gboolean failed;
+	CS_INT colscnt;
+	CS_DATAFMT *datafmt;
+	tds_Field *data;
+}
+tds_Recordset;
 
-void     gda_tds_init_recset_fields (GdaServerError *,
-                                     GdaServerRecordset *,
-                                     tds_Recordset *,
-                                     CS_RETCODE);
+gboolean gda_tds_recordset_new (GdaServerRecordset *);
+gint gda_tds_recordset_move_next (GdaServerRecordset *);
+gint gda_tds_recordset_move_prev (GdaServerRecordset *);
+gint gda_tds_recordset_close (GdaServerRecordset *);
+void gda_tds_recordset_free (GdaServerRecordset *);
 
-void gda_tds_field_fill_values(GdaServerRecordset *,
-                               tds_Recordset *);
-gint gda_tds_row_result(gboolean forward,
-                        GdaServerRecordset *,
-                        tds_Recordset *,
-                        CS_COMMAND *);
+void gda_tds_init_recset_fields (GdaServerError *,
+				 GdaServerRecordset *,
+				 tds_Recordset *, CS_RETCODE);
+
+void gda_tds_field_fill_values (GdaServerRecordset *, tds_Recordset *);
+gint gda_tds_row_result (gboolean forward,
+			 GdaServerRecordset *, tds_Recordset *, CS_COMMAND *);
 
 #endif

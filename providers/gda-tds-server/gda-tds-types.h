@@ -34,25 +34,26 @@
  * Per-object specific structures
  */
 
-typedef struct _tds_Types {
-  gchar         *name;
-  CS_INT        sql_type;
-  GDA_ValueType gda_type;
-} tds_Types;
+typedef struct _tds_Types
+{
+	gchar *name;
+	CS_INT sql_type;
+	GDA_ValueType gda_type;
+}
+tds_Types;
 
 #define GDA_TDS_TYPE_CNT 23
 extern const tds_Types gda_tds_type_list[GDA_TDS_TYPE_CNT];
 
-const gshort        tds_get_c_type(const GDA_ValueType);
-const GDA_ValueType tds_get_gda_type(const CS_INT);
-const CS_INT        tds_get_sql_type(const GDA_ValueType);
-const gchar         *tds_get_type_name(const CS_INT);
+const gshort tds_get_c_type (const GDA_ValueType);
+const GDA_ValueType tds_get_gda_type (const CS_INT);
+const CS_INT tds_get_sql_type (const GDA_ValueType);
+const gchar *tds_get_type_name (const CS_INT);
 
-void gda_tds_field_set_datetime(GdaServerField *, CS_DATETIME *);
-void gda_tds_field_set_datetime4(GdaServerField *, CS_DATETIME4 *);
-void gda_tds_field_set_general(GdaServerField    *,
-                               tds_Field          *,
-                               tds_Connection     *);
+void gda_tds_field_set_datetime (GdaServerField *, CS_DATETIME *);
+void gda_tds_field_set_datetime4 (GdaServerField *, CS_DATETIME4 *);
+void gda_tds_field_set_general (GdaServerField *,
+				tds_Field *, tds_Connection *);
 
 
 #endif

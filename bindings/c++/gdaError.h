@@ -21,32 +21,31 @@
 
 #include "gdaIncludes.h"
 
-namespace gda {
+namespace gda
+{
 
-class Error {
-	public:
-		Error();
-		Error(GdaError *e);
-		~Error();
+	class Error
+	{
+	      public:
+		Error ();
+		Error (GdaError * e);
+		~Error ();
 
-		GdaError *getCStruct();
-		void setCStruct(GdaError *e);
-		
-		const gchar* description();
-		const glong number();
-		const gchar* source();
-		const gchar* helpurl();
-		const gchar* sqlstate();
-		const gchar* nativeMsg();
-		const gchar* realcommand();
+		GdaError *getCStruct ();
+		void setCStruct (GdaError * e);
 
-	private:
-		GdaError* _gda_error;
-};
+		const gchar *description ();
+		const glong number ();
+		const gchar *source ();
+		const gchar *helpurl ();
+		const gchar *sqlstate ();
+		const gchar *nativeMsg ();
+		const gchar *realcommand ();
+
+	      private:
+		  GdaError * _gda_error;
+	};
 
 };
 
 #endif
-							     
-  
-  

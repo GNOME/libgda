@@ -23,29 +23,31 @@
 #include <gtk/gtksignal.h>
 #include "gda-listener.h"
 
-struct _GdaListenerPrivate {
+struct _GdaListenerPrivate
+{
 };
 
-static void gda_listener_class_init (GdaListenerClass *klass);
-static void gda_listener_init       (GdaListener *listener);
-static void gda_listener_destroy    (GtkObject *object);
+static void gda_listener_class_init (GdaListenerClass * klass);
+static void gda_listener_init (GdaListener * listener);
+static void gda_listener_destroy (GtkObject * object);
 
-enum {
+enum
+{
 	NOTIFY_ACTION,
 	LAST_SIGNAL
 };
 
-static gint gda_listener_signals [LAST_SIGNAL] = { 0, };
+static gint gda_listener_signals[LAST_SIGNAL] = { 0, };
 
 /*
  * Stub implementations
  */
 static void
 impl_GDA_Listener_notifyAction (PortableServer_Servant servant,
-				const CORBA_char *message,
+				const CORBA_char * message,
 				GDA_ListenerAction action,
-				const CORBA_char *description,
-				CORBA_Environment *ev)
+				const CORBA_char * description,
+				CORBA_Environment * ev)
 {
 	GdaListener *listener = (GdaListener *) bonobo_x_object (servant);
 
@@ -57,7 +59,7 @@ impl_GDA_Listener_notifyAction (PortableServer_Servant servant,
  * GdaListener class implementation
  */
 static void
-gda_listener_class_init (GdaListenerClass *klass)
+gda_listener_class_init (GdaListenerClass * klass)
 {
 	POA_GDA_Listener__epv *epv;
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
@@ -67,11 +69,13 @@ gda_listener_class_init (GdaListenerClass *klass)
 		gtk_signal_new ("notify_action",
 				GTK_RUN_LAST,
 				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaListenerClass, notify_action),
+				GTK_SIGNAL_OFFSET (GdaListenerClass,
+						   notify_action),
 				gtk_marshal_NONE__POINTER_INT_POINTER,
-				GTK_TYPE_NONE, 3,
-				GTK_TYPE_INT, GTK_TYPE_POINTER, GTK_TYPE_POINTER);
-	gtk_object_class_add_signals (object_class, gda_listener_signals, LAST_SIGNAL);
+				GTK_TYPE_NONE, 3, GTK_TYPE_INT,
+				GTK_TYPE_POINTER, GTK_TYPE_POINTER);
+	gtk_object_class_add_signals (object_class, gda_listener_signals,
+				      LAST_SIGNAL);
 
 	object_class->destroy = gda_listener_destroy;
 	klass->notify_action = NULL;
@@ -82,13 +86,13 @@ gda_listener_class_init (GdaListenerClass *klass)
 }
 
 static void
-gda_listener_init (GdaListener *listener)
+gda_listener_init (GdaListener * listener)
 {
 	listener->priv = g_new (GdaListenerPrivate, 1);
 }
 
 static void
-gda_listener_destroy (GtkObject *object)
+gda_listener_destroy (GtkObject * object)
 {
 	GtkObjectClass *parent_class;
 	GdaListener *listener = (GdaListener *) object;
@@ -114,15 +118,14 @@ gda_listener_get_type (void)
 			sizeof (GdaListener),
 			sizeof (GdaListenerClass),
 			(GtkClassInitFunc) gda_listener_class_init,
-                        (GtkObjectInitFunc) gda_listener_init,
-                        (GtkArgSetFunc) NULL,
-                        (GtkArgSetFunc) NULL
+			(GtkObjectInitFunc) gda_listener_init,
+			(GtkArgSetFunc) NULL,
+			(GtkArgSetFunc) NULL
 		};
-		type = bonobo_x_type_unique (
-			BONOBO_X_OBJECT_TYPE,
-			POA_GDA_Listener__init, NULL,
-			GTK_STRUCT_OFFSET (GdaListenerClass, epv),
-			&info);
+		type = bonobo_x_type_unique (BONOBO_X_OBJECT_TYPE,
+					     POA_GDA_Listener__init, NULL,
+					     GTK_STRUCT_OFFSET
+					     (GdaListenerClass, epv), &info);
 	}
 
 	return type;
@@ -144,15 +147,13 @@ gda_listener_new (void)
  * gda_listener_notify_action
  */
 void
-gda_listener_notify_action (GdaListener *listener,
-			    const gchar *message,
+gda_listener_notify_action (GdaListener * listener,
+			    const gchar * message,
 			    GDA_ListenerAction action,
-			    const gchar *description)
+			    const gchar * description)
 {
 	g_return_if_fail (GDA_IS_LISTENER (listener));
 	gtk_signal_emit_by_name (GTK_OBJECT (listener),
 				 "notify_action",
-				 action,
-				 message,
-				 description);
+				 action, message, description);
 }

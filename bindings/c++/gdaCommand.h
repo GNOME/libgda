@@ -21,30 +21,34 @@
 
 #include "gdaIncludes.h"
 
-namespace gda {
+namespace gda
+{
 
-class Command {
-	public:
-		Command();
-		Command(GdaCommand *cmd);
-		~Command();
+	class Command
+	{
+	      public:
+		Command ();
+		Command (GdaCommand * cmd);
+		~Command ();
 
-		GdaCommand *getCStruct();
-		void setCStruct(GdaCommand *cmd);
-		
-		Connection *getConnection();
-		gint setConnection(Connection *a);
-		gchar *getText();
-		void setText(gchar *text);
-		GDA_CommandType getCmdType();
-		void setCmdType(GDA_CommandType type);
-		Recordset *execute(gulong* reccount, gulong flags);
-		void createParameter(gchar* name, GDA_ParameterDirection inout, Value *value);
+		GdaCommand *getCStruct ();
+		void setCStruct (GdaCommand * cmd);
 
-	private:
-		Connection *cnc;
-		GdaCommand* _gda_command;
-};
+		Connection *getConnection ();
+		gint setConnection (Connection * a);
+		gchar *getText ();
+		void setText (gchar * text);
+		GDA_CommandType getCmdType ();
+		void setCmdType (GDA_CommandType type);
+		Recordset *execute (gulong * reccount, gulong flags);
+		void createParameter (gchar * name,
+				      GDA_ParameterDirection inout,
+				      Value * value);
+
+	      private:
+		  Connection * cnc;
+		GdaCommand *_gda_command;
+	};
 
 };
 

@@ -26,19 +26,21 @@
 #include <glib.h>
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef struct _GdaQuarkList GdaQuarkList;
+	typedef struct _GdaQuarkList GdaQuarkList;
 
-GdaQuarkList *gda_quark_list_new (void);
-GdaQuarkList *gda_quark_list_new_from_string (const gchar *string);
-void          gda_quark_list_free (GdaQuarkList *qlist);
+	GdaQuarkList *gda_quark_list_new (void);
+	GdaQuarkList *gda_quark_list_new_from_string (const gchar * string);
+	void gda_quark_list_free (GdaQuarkList * qlist);
 
-void          gda_quark_list_add_from_string (GdaQuarkList *qlist,
-					      const gchar *string,
-					      gboolean cleanup);
-const gchar  *gda_quark_list_find (GdaQuarkList *qlist, const gchar *name);
+	void gda_quark_list_add_from_string (GdaQuarkList * qlist,
+					     const gchar * string,
+					     gboolean cleanup);
+	const gchar *gda_quark_list_find (GdaQuarkList * qlist,
+					  const gchar * name);
 
 #if defined(__cplusplus)
 }

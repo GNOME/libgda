@@ -19,32 +19,30 @@
 #include "gda-ldap.h"
 
 gboolean
-gda_ldap_recordset_new (GdaServerRecordset *recset)
+gda_ldap_recordset_new (GdaServerRecordset * recset)
 {
-  return TRUE;
+	return TRUE;
 }
 
 gint
-gda_ldap_recordset_move_next (GdaServerRecordset *recset)
+gda_ldap_recordset_move_next (GdaServerRecordset * recset)
 {
-  return -1;
+	return -1;
 }
 
 gint
-gda_ldap_recordset_move_prev (GdaServerRecordset *recset)
+gda_ldap_recordset_move_prev (GdaServerRecordset * recset)
 {
-  return -1;
+	return -1;
 }
 
 gint
-gda_ldap_recordset_close (GdaServerRecordset *recset)
+gda_ldap_recordset_close (GdaServerRecordset * recset)
 {
-  return -1;
+	return -1;
 }
 
 void
-gda_ldap_recordset_free (GdaServerRecordset *recset)
+gda_ldap_recordset_free (GdaServerRecordset * recset)
 {
 }
-
-

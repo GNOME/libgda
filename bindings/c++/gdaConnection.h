@@ -22,44 +22,47 @@
 
 #include "gdaIncludes.h"
 
-namespace gda {
+namespace gda
+{
 
-class Connection {
-	public:
-		Connection();
-		Connection(GdaConnection *a);
-		Connection(CORBA_ORB orb);
-		~Connection();
-		
-		GdaConnection* getCStruct();
-		void setCStruct(GdaConnection *cnc);
-		
-		void setProvider(gchar* name);
-		const gchar* getProvider();
-		gboolean supports(GDA_Connection_Feature feature);
-		void setDefaultDB(gchar* dsn);
-		gint open(gchar* dsn, gchar* user,gchar* pwd);	
-		void close();
-		ErrorList *getErrors();
-		gint beginTransaction();
-		gint commitTransaction();
-		gint rollbackTransaction();
-		Recordset* execute(gchar* txt, gulong* reccount, gulong flags);
-		gint startLogging(gchar* filename);
-		gint stopLogging();
-	
-		void addSingleError(Error* error);
-		void addErrorlist(ErrorList* list);
+	class Connection
+	{
+	      public:
+		Connection ();
+		Connection (GdaConnection * a);
+		Connection (CORBA_ORB orb);
+		~Connection ();
 
-		gboolean isOpen();
-		gchar* getDSN();
-		gchar* getUser();
+		GdaConnection *getCStruct ();
+		void setCStruct (GdaConnection * cnc);
 
-		gchar* getVersion();
-			
-	private:
-		GdaConnection* _gda_connection;
-};
+		void setProvider (gchar * name);
+		const gchar *getProvider ();
+		gboolean supports (GDA_Connection_Feature feature);
+		void setDefaultDB (gchar * dsn);
+		gint open (gchar * dsn, gchar * user, gchar * pwd);
+		void close ();
+		ErrorList *getErrors ();
+		gint beginTransaction ();
+		gint commitTransaction ();
+		gint rollbackTransaction ();
+		Recordset *execute (gchar * txt, gulong * reccount,
+				    gulong flags);
+		gint startLogging (gchar * filename);
+		gint stopLogging ();
+
+		void addSingleError (Error * error);
+		void addErrorlist (ErrorList * list);
+
+		gboolean isOpen ();
+		gchar *getDSN ();
+		gchar *getUser ();
+
+		gchar *getVersion ();
+
+	      private:
+		  GdaConnection * _gda_connection;
+	};
 
 };
 

@@ -21,155 +21,219 @@
 
 using namespace gda;
 
-Value::Value() {
+Value::Value ()
+{
 	_gda_fieldvalue = NULL;
 }
 
-Value::Value(GDA_FieldValue *fv) {
+Value::Value (GDA_FieldValue * fv)
+{
 	_gda_fieldvalue = fv;
 }
 
-Value::~Value() {
+Value::~Value ()
+{
 	// no free function!
 }
-		
-GDA_FieldValue *Value::getCStruct() {
+
+GDA_FieldValue *
+Value::getCStruct ()
+{
 	return _gda_fieldvalue;
 }
 
 //GDA_Value Value::getCValue() {
-//	return _gda_fieldvalue->_u.v;
+//      return _gda_fieldvalue->_u.v;
 //}
 
-void Value::setCStruct(GDA_FieldValue *v) {
+void
+Value::setCStruct (GDA_FieldValue * v)
+{
 	_gda_fieldvalue = v;
 }
 
-gchar Value::getTinyint() {
+gchar
+Value::getTinyint ()
+{
 	return _gda_fieldvalue->_u.v._u.c;
 }
 
-glong Value::getBigint() {
+glong
+Value::getBigint ()
+{
 	return _gda_fieldvalue->_u.v._u.ll;
 }
 
-bool Value::getBoolean() {
+bool
+Value::getBoolean ()
+{
 	return _gda_fieldvalue->_u.v._u.b;
 }
 
-GDA_Date Value::getDate() {
+GDA_Date
+Value::getDate ()
+{
 	return _gda_fieldvalue->_u.v._u.d;
 }
 
-GDA_DbDate Value::getDBdate() {
+GDA_DbDate
+Value::getDBdate ()
+{
 	return _gda_fieldvalue->_u.v._u.dbd;
 }
 
-GDA_DbTime Value::getDBtime() {
+GDA_DbTime
+Value::getDBtime ()
+{
 	return _gda_fieldvalue->_u.v._u.dbt;
 }
 
-GDA_DbTimestamp Value::getDBtstamp() {
+GDA_DbTimestamp
+Value::getDBtstamp ()
+{
 	return _gda_fieldvalue->_u.v._u.dbtstamp;
 }
 
-gdouble Value::getDouble() {
+gdouble
+Value::getDouble ()
+{
 	return _gda_fieldvalue->_u.v._u.dp;
 }
 
-glong Value::getInteger() {
+glong
+Value::getInteger ()
+{
 	return _gda_fieldvalue->_u.v._u.i;
 }
 
-GDA_VarBinString Value::getVarLenString() {
+GDA_VarBinString
+Value::getVarLenString ()
+{
 	return _gda_fieldvalue->_u.v._u.lvb;
 }
 
-GDA_VarBinString Value::getFixLenString() {
+GDA_VarBinString
+Value::getFixLenString ()
+{
 	return _gda_fieldvalue->_u.v._u.fb;
 }
 
-gchar *Value::getLongVarChar() {
-	return g_strdup(_gda_fieldvalue->_u.v._u.lvc);
+gchar *
+Value::getLongVarChar ()
+{
+	return g_strdup (_gda_fieldvalue->_u.v._u.lvc);
 }
 
-gfloat Value::getFloat() {
+gfloat
+Value::getFloat ()
+{
 	return _gda_fieldvalue->_u.v._u.f;
 }
 
-gint Value::getSmallInt() {
+gint
+Value::getSmallInt ()
+{
 	return _gda_fieldvalue->_u.v._u.si;
 }
 
-gulong Value::getULongLongInt() {
+gulong
+Value::getULongLongInt ()
+{
 	return _gda_fieldvalue->_u.v._u.ull;
 }
 
-guint Value::getUSmallInt() {
+guint
+Value::getUSmallInt ()
+{
 	return _gda_fieldvalue->_u.v._u.us;
 }
 
-void Value::set(gchar a) {
+void
+Value::set (gchar a)
+{
 	_gda_fieldvalue->_u.v._u.c = a;
 }
 
 //void Value::set(glong a) {
-//	_gda_fieldvalue->_u.v._u.ll = a;
+//      _gda_fieldvalue->_u.v._u.ll = a;
 //}
 
-void Value::set(bool a) {
+void
+Value::set (bool a)
+{
 	_gda_fieldvalue->_u.v._u.b = a;
 }
 
-void Value::set(GDA_Date a) {
+void
+Value::set (GDA_Date a)
+{
 	_gda_fieldvalue->_u.v._u.d = a;
 }
 
-void Value::set(GDA_DbDate a) {
+void
+Value::set (GDA_DbDate a)
+{
 	_gda_fieldvalue->_u.v._u.dbd = a;
 }
 
-void Value::set(GDA_DbTime a) {
+void
+Value::set (GDA_DbTime a)
+{
 	_gda_fieldvalue->_u.v._u.dbt = a;
 }
 
-void Value::set(GDA_DbTimestamp a) {
+void
+Value::set (GDA_DbTimestamp a)
+{
 	_gda_fieldvalue->_u.v._u.dbtstamp = a;
 }
 
-void Value::set(gdouble a) {
+void
+Value::set (gdouble a)
+{
 	_gda_fieldvalue->_u.v._u.dp = a;
 }
 
-void Value::set(glong a) {
+void
+Value::set (glong a)
+{
 	_gda_fieldvalue->_u.v._u.i = a;
 }
 
-void Value::set(GDA_VarBinString a) {
+void
+Value::set (GDA_VarBinString a)
+{
 	_gda_fieldvalue->_u.v._u.lvb = a;
 }
 
 // void Value::set(GDA_VarBinString a) {
-// 	_gda_fieldvalue->_u.v._u.fb = a;
+//      _gda_fieldvalue->_u.v._u.fb = a;
 // }
 
-void Value::set(gchar *a) {
-	_gda_fieldvalue->_u.v._u.lvc = g_strdup(a);
+void
+Value::set (gchar * a)
+{
+	_gda_fieldvalue->_u.v._u.lvc = g_strdup (a);
 }
 
-void Value::set(gfloat a) {
+void
+Value::set (gfloat a)
+{
 	_gda_fieldvalue->_u.v._u.f = a;
 }
 
 // void Value::set(gint a) {
-// 	_gda_fieldvalue->_u.v._u.ull = a;
+//      _gda_fieldvalue->_u.v._u.ull = a;
 // }
 
-void Value::set(gulong a) {
+void
+Value::set (gulong a)
+{
 	_gda_fieldvalue->_u.v._u.us = a;
 }
 
-void Value::set(guint a) {
+void
+Value::set (guint a)
+{
 	_gda_fieldvalue->_u.v._u.c = a;
 }
-

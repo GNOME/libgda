@@ -21,57 +21,59 @@
 
 #include "gdaIncludes.h"
 
-namespace gda {
+namespace gda
+{
 
-class Field {
-	public:
-		Field();
-		Field(GdaField *f);
-		~Field();
+	class Field
+	{
+	      public:
+		Field ();
+		Field (GdaField * f);
+		~Field ();
 
-		GdaField *getCStruct();
-		void setCStruct(GdaField *f);
+		GdaField *getCStruct ();
+		void setCStruct (GdaField * f);
 
-		Value *realValue();
-		Value *origValue();
+		Value *realValue ();
+		Value *origValue ();
 		// What's shadowValue for? FIXME
-		
-		bool isNull();
-		GDA_ValueType typeCode();
-		gchar *typeCodeString();
 
-		gchar getTinyint();
-		glong getBigint();
-		bool getBoolean();
-		GDA_Date getDate();
-		GDA_DbDate getDBdate();
-		GDA_DbTime getDBtime();
-		GDA_DbTimestamp getDBtstamp();
-		gdouble getDouble();
-		glong getInteger(); 
-	//	GDA_VarBinString getVarLenString();
-	//	GDA_VarBinString getFixLenString();
-		gchar *getLongVarChar();
-		gfloat getFloat();
-		gint getSmallInt();
-		gulong getULongLongInt();
-		guint getUSmallInt();
+		bool isNull ();
+		GDA_ValueType typeCode ();
+		gchar *typeCodeString ();
 
-	//	gchar *getText();
-	//	gchar *getNewString();
-		gchar *putInString(gchar *bfr, gint maxLength);
+		gchar getTinyint ();
+		glong getBigint ();
+		bool getBoolean ();
+		GDA_Date getDate ();
+		GDA_DbDate getDBdate ();
+		GDA_DbTime getDBtime ();
+		GDA_DbTimestamp getDBtstamp ();
+		gdouble getDouble ();
+		glong getInteger ();
+		//      GDA_VarBinString getVarLenString();
+		//      GDA_VarBinString getFixLenString();
+		gchar *getLongVarChar ();
+		gfloat getFloat ();
+		gint getSmallInt ();
+		gulong getULongLongInt ();
+		guint getUSmallInt ();
 
-		gint actualSize();
-		glong definedSize();
-		gchar *name();
-		glong scale();
-		GDA_ValueType type();
-		glong cType();
-		glong nativeType();
+		//      gchar *getText();
+		//      gchar *getNewString();
+		gchar *putInString (gchar * bfr, gint maxLength);
 
-	private:
-		GdaField *_gda_field;
-};
+		gint actualSize ();
+		glong definedSize ();
+		gchar *name ();
+		glong scale ();
+		GDA_ValueType type ();
+		glong cType ();
+		glong nativeType ();
+
+	      private:
+		  GdaField * _gda_field;
+	};
 
 };
 

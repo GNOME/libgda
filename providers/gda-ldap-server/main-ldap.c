@@ -18,57 +18,58 @@
 
 #include "gda-ldap.h"
 
-static GdaServer*             server_impl = NULL;
-static GdaServerImplFunctions server_impl_functions =
-{
-  gda_ldap_connection_new,
-  gda_ldap_connection_open,
-  gda_ldap_connection_close,
-  gda_ldap_connection_begin_transaction,
-  gda_ldap_connection_commit_transaction,
-  gda_ldap_connection_rollback_transaction,
-  gda_ldap_connection_open_schema,
-  gda_ldap_connection_modify_schema,
-  gda_ldap_connection_start_logging,
-  gda_ldap_connection_stop_logging,
-  gda_ldap_connection_create_table,
-  gda_ldap_connection_supports,
-  gda_ldap_connection_get_gda_type,
-  gda_ldap_connection_get_c_type,
-  gda_ldap_connection_sql2xml,
-  gda_ldap_connection_xml2sql,
-  gda_ldap_connection_free,
+static GdaServer *server_impl = NULL;
+static GdaServerImplFunctions server_impl_functions = {
+	gda_ldap_connection_new,
+	gda_ldap_connection_open,
+	gda_ldap_connection_close,
+	gda_ldap_connection_begin_transaction,
+	gda_ldap_connection_commit_transaction,
+	gda_ldap_connection_rollback_transaction,
+	gda_ldap_connection_open_schema,
+	gda_ldap_connection_modify_schema,
+	gda_ldap_connection_start_logging,
+	gda_ldap_connection_stop_logging,
+	gda_ldap_connection_create_table,
+	gda_ldap_connection_supports,
+	gda_ldap_connection_get_gda_type,
+	gda_ldap_connection_get_c_type,
+	gda_ldap_connection_sql2xml,
+	gda_ldap_connection_xml2sql,
+	gda_ldap_connection_free,
 
-  gda_ldap_command_new,
-  gda_ldap_command_execute,
-  gda_ldap_command_free,
+	gda_ldap_command_new,
+	gda_ldap_command_execute,
+	gda_ldap_command_free,
 
-  gda_ldap_recordset_new,
-  gda_ldap_recordset_move_next,
-  gda_ldap_recordset_move_prev,
-  gda_ldap_recordset_close,
-  gda_ldap_recordset_free,
+	gda_ldap_recordset_new,
+	gda_ldap_recordset_move_next,
+	gda_ldap_recordset_move_prev,
+	gda_ldap_recordset_close,
+	gda_ldap_recordset_free,
 
-  gda_ldap_error_make
+	gda_ldap_error_make
 };
 
 gint
-main (gint argc, gchar *argv[])
+main (gint argc, gchar * argv[])
 {
-  CORBA_Environment ev;
-  CORBA_ORB         orb;
+	CORBA_Environment ev;
+	CORBA_ORB orb;
 
-  /* initialize CORBA stuff */
-  gda_server_init("gda-ldap-srv", VERSION, argc, argv);
+	/* initialize CORBA stuff */
+	gda_server_init ("gda-ldap-srv", VERSION, argc, argv);
 
-  /* register the server implementation */
-  server_impl = gda_server_new("OAFIID:GNOME_GDA_Provider_LDAP_ConnectionFactory",
-                                    &server_impl_functions);
-  if (server_impl)
-    {
-      gda_server_start(server_impl);
-    }
-  else gda_log_error(_("Could not register LDAP provider implementation"));
-  return 0;
+	/* register the server implementation */
+	server_impl =
+		gda_server_new
+		("OAFIID:GNOME_GDA_Provider_LDAP_ConnectionFactory",
+		 &server_impl_functions);
+	if (server_impl) {
+		gda_server_start (server_impl);
+	}
+	else
+		gda_log_error (_
+			       ("Could not register LDAP provider implementation"));
+	return 0;
 }
-

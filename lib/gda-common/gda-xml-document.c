@@ -28,15 +28,16 @@
 #endif
 
 #ifdef HAVE_GOBJECT
-static void gda_xml_document_finalize   (GObject *object);
+static void gda_xml_document_finalize (GObject * object);
 #else
-static void gda_xml_document_destroy    (GtkObject *object);
+static void gda_xml_document_destroy (GtkObject * object);
 #endif
 
 /* errors handling */
 static void (gda_xml_document_error_def) (void *ctx, const char *msg, ...);
 static void (gda_xml_document_warn_def) (void *ctx, const char *msg, ...);
-enum {
+enum
+{
 	GDA_XML_DOCUMENT_WARNING,
 	GDA_XML_DOCUMENT_ERROR,
 	GDA_XML_DOCUMENT_LAST_SIGNAL
@@ -49,7 +50,7 @@ static gint gda_xml_document_signals[GDA_XML_DOCUMENT_LAST_SIGNAL] = { 0, 0 };
  */
 #ifdef HAVE_GOBJECT
 static void
-gda_xml_document_class_init (GdaXmlDocumentClass *klass, gpointer data)
+gda_xml_document_class_init (GdaXmlDocumentClass * klass, gpointer data)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
@@ -61,40 +62,41 @@ gda_xml_document_class_init (GdaXmlDocumentClass *klass, gpointer data)
 }
 #else
 static void
-gda_xml_document_class_init (GdaXmlDocumentClass *klass)
+gda_xml_document_class_init (GdaXmlDocumentClass * klass)
 {
-	GtkObjectClass* object_class = GTK_OBJECT_CLASS(klass);
+	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
 
 	gda_xml_document_signals[GDA_XML_DOCUMENT_WARNING] =
 		gtk_signal_new ("warning",
 				GTK_RUN_FIRST,
 				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaXmlDocumentClass, warning),
-				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1, 
+				GTK_SIGNAL_OFFSET (GdaXmlDocumentClass,
+						   warning),
+				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1,
 				GTK_TYPE_POINTER);
 	gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR] =
-		gtk_signal_new ("error",
-				GTK_RUN_FIRST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaXmlDocumentClass, error),
-				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1, 
+		gtk_signal_new ("error", GTK_RUN_FIRST, object_class->type,
+				GTK_SIGNAL_OFFSET (GdaXmlDocumentClass,
+						   error),
+				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1,
 				GTK_TYPE_POINTER);
 
-	gtk_object_class_add_signals (object_class, gda_xml_document_signals, 
+	gtk_object_class_add_signals (object_class, gda_xml_document_signals,
 				      GDA_XML_DOCUMENT_LAST_SIGNAL);
 
 	klass->warning = NULL;
 	klass->error = NULL;
 
-	object_class->destroy = (void (*)(GtkObject *)) gda_xml_document_destroy;
+	object_class->destroy =
+		(void (*)(GtkObject *)) gda_xml_document_destroy;
 }
 #endif
 
 static void
 #ifdef HAVE_GOBJECT
-gda_xml_document_init (GdaXmlDocument *xmldoc, GdaXmlDocumentClass* klass)
+gda_xml_document_init (GdaXmlDocument * xmldoc, GdaXmlDocumentClass * klass)
 #else
-gda_xml_document_init (GdaXmlDocument *xmldoc)
+gda_xml_document_init (GdaXmlDocument * xmldoc)
 #endif
 {
 	/* might change in future versions of libxml */
@@ -128,7 +130,8 @@ gda_xml_document_get_type (void)
 			(GInstanceInitFunc) gda_xml_document_init,
 			NULL,
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaXmlDocument", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT,
+					       "GdaXmlDocument", &info, 0);
 	}
 	return (type);
 }
@@ -161,22 +164,23 @@ gda_xml_document_get_type (void)
  * Create a new #GdaXmlDocument object, with a root document of type @root_doc
  */
 GdaXmlDocument *
-gda_xml_document_new (const gchar *root_doc)
+gda_xml_document_new (const gchar * root_doc)
 {
-	GdaXmlDocument* xmldoc;
+	GdaXmlDocument *xmldoc;
 
 #ifdef HAVE_GOBJECT
-	xmldoc = GDA_XML_DOCUMENT (g_object_new (GDA_TYPE_XML_DOCUMENT, NULL));
+	xmldoc = GDA_XML_DOCUMENT (g_object_new
+				   (GDA_TYPE_XML_DOCUMENT, NULL));
 #else
 	xmldoc = GDA_XML_DOCUMENT (gtk_type_new (GDA_TYPE_XML_DOCUMENT));
 #endif
-	gda_xml_document_construct(xmldoc, root_doc);
+	gda_xml_document_construct (xmldoc, root_doc);
 
 	return xmldoc;
 }
 
 void
-gda_xml_document_construct(GdaXmlDocument *xmldoc, const gchar *root_doc)
+gda_xml_document_construct (GdaXmlDocument * xmldoc, const gchar * root_doc)
 {
 	/* initialize XML document */
 	xmldoc->doc = xmlNewDoc ("1.0");
@@ -191,18 +195,19 @@ gda_xml_document_construct(GdaXmlDocument *xmldoc, const gchar *root_doc)
 
 #ifdef HAVE_GOBJECT
 static void
-gda_xml_document_finalize (GObject *object)
+gda_xml_document_finalize (GObject * object)
 {
 	GdaXmlDocument *xmldocument = GDA_XML_DOCUMENT (object);
 	GdaXmlDocumentClass *klass =
-		G_TYPE_INSTANCE_GET_CLASS (object, GDA_XML_DOCUMENT_CLASS, GdaXmlDocumentClass);
+		G_TYPE_INSTANCE_GET_CLASS (object, GDA_XML_DOCUMENT_CLASS,
+					   GdaXmlDocumentClass);
 
 	xmlFreeDoc (xmldocument->doc);
 	klass->parent->finalize (object);
 }
 #else
 static void
-gda_xml_document_destroy (GtkObject *object)
+gda_xml_document_destroy (GtkObject * object)
 {
 	GtkObjectClass *parent_class;
 	GdaXmlDocument *xmldoc = (GdaXmlDocument *) object;
@@ -231,7 +236,7 @@ gda_xml_document_destroy (GtkObject *object)
 
 /*   xmldocument = GDA_XML_DOCUMENT(gtk_type_new(gda_xml_document_get_type())); */
 
-   /* DTD already done while loading */ 
+   /* DTD already done while loading */
 /*   xmldocument->doc = xmlParseFile(filename); */
 /*   if (xmldocument->doc) */
 /*     { */
@@ -242,19 +247,19 @@ gda_xml_document_destroy (GtkObject *object)
 /* } */
 
 gchar *
-gda_xml_document_stringify (GdaXmlDocument *xmldoc)
+gda_xml_document_stringify (GdaXmlDocument * xmldoc)
 {
 	xmlChar *str;
 	gint i;
 
 	g_return_val_if_fail (GDA_IS_XML_DOCUMENT (xmldoc), NULL);
 
-	xmlDocDumpMemory(xmldoc->doc, &str, &i);
+	xmlDocDumpMemory (xmldoc->doc, &str, &i);
 	return str;
 }
 
 gint
-gda_xml_document_to_file (GdaXmlDocument *xmldoc, const gchar *filename)
+gda_xml_document_to_file (GdaXmlDocument * xmldoc, const gchar * filename)
 {
 	g_return_val_if_fail (GDA_IS_XML_DOCUMENT (xmldoc), -1);
 	g_return_val_if_fail ((filename != NULL), -1);
@@ -264,23 +269,22 @@ gda_xml_document_to_file (GdaXmlDocument *xmldoc, const gchar *filename)
 
 /* FIXME: signals in preparation for future use. Will work when I understand 
    how validation is done with libxml. */
-static void
-(gda_xml_document_error_def) (void *ctx, const char *msg, ...)
+static void (gda_xml_document_error_def) (void *ctx, const char *msg, ...)
 {
-	g_print("ERR SIG\n");
-#ifndef HAVE_GOBJECT /* FIXME */
-	gtk_signal_emit (GTK_OBJECT (((xmlValidCtxtPtr) ctx)->userData), 
-			 gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR], msg);
+	g_print ("ERR SIG\n");
+#ifndef HAVE_GOBJECT		/* FIXME */
+	gtk_signal_emit (GTK_OBJECT (((xmlValidCtxtPtr) ctx)->userData),
+			 gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR],
+			 msg);
 #endif
 }
 
-static void 
-(gda_xml_document_warn_def) (void *ctx, const char *msg, ...)
+static void (gda_xml_document_warn_def) (void *ctx, const char *msg, ...)
 {
-	g_print("WARN SIG\n");
-#ifndef HAVE_GOBJECT /* FIXME */
-	gtk_signal_emit (GTK_OBJECT (((xmlValidCtxtPtr) ctx)->userData), 
-			 gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR], msg);
+	g_print ("WARN SIG\n");
+#ifndef HAVE_GOBJECT		/* FIXME */
+	gtk_signal_emit (GTK_OBJECT (((xmlValidCtxtPtr) ctx)->userData),
+			 gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR],
+			 msg);
 #endif
 }
-
