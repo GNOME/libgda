@@ -1,3 +1,7 @@
+2002-09-15  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/gda-freetds-provider.c: fixed compile error
+
 2002-09-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-init.c:

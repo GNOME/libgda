@@ -872,9 +872,6 @@ gda_freetds_provider_tds_handle_err_msg (void *aStruct)
 	return gda_freetds_provider_tds_handle_message (aStruct, TRUE);
 }
 
-static
-gda_freetds_provider_
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Public functions                                                       
