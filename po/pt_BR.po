@@ -1,23 +1,23 @@
-# Brazilian Portuguese translation of libgda.
-# Copyright (C) 2001-2004 Free Software Foundation, Inc.
+# libgda: translation to Brazilian Portuguese (pt_BR)
+# Copyright (C) 2001-2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
-# Alexandre Folle de Menezes <afmenez@terra.com.br>, 2002-2004.
-# Afonso Celso Medina <medina@maua.br>, 2004.
-# Raphaael Higino <raphaelh@uai.com.br>, 2004.
+# Alexandre Folle de Menezes <afmenez@terra.com.br>, 2002-2003.
 # based on the translation to Portuguese (pt) by
 # Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002
-#
+# Alexandre Folle de Menezes <afmenez@terra.com.br>, 2004.
+# Afonso Celso Medina <medina@maua.br>, 2004.
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda\n"
+"Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-26 20:08+0200\n"
-"PO-Revision-Date: 2004-09-03 21:10+0000\n"
-"Last-Translator: Raphael Higino <raphaelh@uai.com.br>\n"
+"POT-Creation-Date: 2004-07-07 04:45+0200\n"
+"PO-Revision-Date: 2004-07-07 12:56-0300\n"
+"Last-Translator: Afonso Celso Medina <medina@maua.br>\n"
 "Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
@@ -49,8 +49,8 @@ msgstr "Erro: %s"
 
 #: libgda/gda-config.c:1194 providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:946
-#: providers/postgres/gda-postgres-provider.c:1413
+#: providers/postgres/gda-postgres-provider.c:881
+#: providers/postgres/gda-postgres-provider.c:1347
 msgid "Id"
 msgstr "Id"
 
@@ -59,23 +59,21 @@ msgid "Location"
 msgstr "Localização"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
-#: providers/firebird/gda-firebird-provider.c:320
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1248
 #: providers/odbc/gda-odbc-provider.c:1404
-#: providers/postgres/gda-postgres-provider.c:1218
+#: providers/postgres/gda-postgres-provider.c:1153
 msgid "Description"
 msgstr "Descrição"
 
-#: libgda/gda-config.c:1452 providers/firebird/gda-firebird-provider.c:728
-#: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
-#: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
-#: providers/msql/gda-msql-provider.c:448
-#: providers/mysql/gda-mysql-provider.c:732
-#: providers/mysql/gda-mysql-provider.c:920
+#: libgda/gda-config.c:1452 providers/ldap/gda-ldap-provider.c:327
+#: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
+#: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
+#: providers/mysql/gda-mysql-provider.c:726
+#: providers/mysql/gda-mysql-provider.c:914
 #: providers/odbc/gda-odbc-provider.c:768
 #: providers/odbc/gda-odbc-provider.c:824
 #: providers/oracle/gda-oracle-provider.c:1893
@@ -219,327 +217,33 @@ msgstr "Erro de processamento próximo a `%s'"
 msgid "Syntax error near `%s'"
 msgstr "Erro de sintaxe próximo a `%s'"
 
-#: libsql/sql_parser.c:371
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
 msgstr "Pesquisa vazia para realizar o processamento"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/firebird/gda-firebird-provider.c:229
-#: providers/ibmdb2/gda-ibmdb2-provider.c:946
-#: providers/ldap/gda-ldap-provider.c:423
-#: providers/mysql/gda-mysql-provider.c:1002
-#: providers/odbc/gda-odbc-provider.c:1360
-#: providers/oracle/gda-oracle-provider.c:2095
-#: providers/postgres/gda-postgres-provider.c:1235
-#: providers/sqlite/gda-sqlite-provider.c:787
-#: providers/sybase/gda-sybase-provider.c:1096
-#: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:679
-msgid "Type"
-msgstr "Tipo"
-
-#: providers/firebird/gda-firebird-provider.c:230
-#: providers/firebird/gda-firebird-provider.c:319
-#: providers/firebird/gda-firebird-provider.c:730
-#: providers/ibmdb2/gda-ibmdb2-provider.c:742
-#: providers/ibmdb2/gda-ibmdb2-provider.c:832
-#: providers/ibmdb2/gda-ibmdb2-provider.c:861
-#: providers/ibmdb2/gda-ibmdb2-provider.c:891
-#: providers/ibmdb2/gda-ibmdb2-provider.c:919
-#: providers/ibmdb2/gda-ibmdb2-provider.c:947
-#: providers/ibmdb2/gda-ibmdb2-provider.c:1000
-#: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
-#: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
-#: providers/msql/gda-msql-provider.c:449
-#: providers/msql/gda-msql-provider.c:487
-#: providers/mysql/gda-mysql-provider.c:734
-#: providers/mysql/gda-mysql-provider.c:921
-#: providers/mysql/gda-mysql-provider.c:1003
-#: providers/odbc/gda-odbc-provider.c:1025
-#: providers/odbc/gda-odbc-provider.c:1138
-#: providers/odbc/gda-odbc-provider.c:1247
-#: providers/odbc/gda-odbc-provider.c:1361
-#: providers/odbc/gda-odbc-provider.c:1403
-#: providers/odbc/gda-odbc-provider.c:1455
-#: providers/oracle/gda-oracle-provider.c:1154
-#: providers/oracle/gda-oracle-provider.c:1893
-#: providers/oracle/gda-oracle-provider.c:1911
-#: providers/oracle/gda-oracle-provider.c:1955
-#: providers/oracle/gda-oracle-provider.c:1973
-#: providers/oracle/gda-oracle-provider.c:2096
-#: providers/postgres/gda-postgres-provider.c:947
-#: providers/postgres/gda-postgres-provider.c:1217
-#: providers/postgres/gda-postgres-provider.c:1236
-#: providers/postgres/gda-postgres-provider.c:1296
-#: providers/postgres/gda-postgres-provider.c:1414
-#: providers/postgres/gda-postgres-provider.c:2047
-#: providers/sqlite/gda-sqlite-provider.c:788
-#: providers/sybase/gda-sybase-provider.c:1098
-#: providers/xml/gda-xml-provider.c:655
-msgid "Owner"
-msgstr "Proprietário"
-
-#: providers/firebird/gda-firebird-provider.c:231
-#: providers/firebird/gda-firebird-provider.c:731
-#: providers/ibmdb2/gda-ibmdb2-provider.c:948
-#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
-#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
-#: providers/msql/gda-msql-provider.c:450
-#: providers/msql/gda-msql-provider.c:488
-#: providers/mysql/gda-mysql-provider.c:735
-#: providers/mysql/gda-mysql-provider.c:922
-#: providers/mysql/gda-mysql-provider.c:1004
-#: providers/odbc/gda-odbc-provider.c:1139
-#: providers/odbc/gda-odbc-provider.c:1362
-#: providers/odbc/gda-odbc-provider.c:1456
-#: providers/oracle/gda-oracle-provider.c:1155
-#: providers/oracle/gda-oracle-provider.c:1893
-#: providers/oracle/gda-oracle-provider.c:1912
-#: providers/oracle/gda-oracle-provider.c:1955
-#: providers/oracle/gda-oracle-provider.c:1974
-#: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:948
-#: providers/postgres/gda-postgres-provider.c:1237
-#: providers/postgres/gda-postgres-provider.c:1297
-#: providers/postgres/gda-postgres-provider.c:1415
-#: providers/postgres/gda-postgres-provider.c:2048
-#: providers/sqlite/gda-sqlite-provider.c:789
-#: providers/sybase/gda-sybase-provider.c:1100
-#: providers/xml/gda-xml-provider.c:656
-msgid "Comments"
-msgstr "Comentários"
-
-#: providers/firebird/gda-firebird-provider.c:232
-#: providers/ibmdb2/gda-ibmdb2-provider.c:949
-#: providers/msql/gda-msql-provider.c:489
-#: providers/mysql/gda-mysql-provider.c:1005
-#: providers/odbc/gda-odbc-provider.c:1363
-#: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:1238
-#: providers/sqlite/gda-sqlite-provider.c:790
-#: providers/sybase/gda-sybase-provider.c:1102
-#: providers/xml/gda-xml-provider.c:657
-msgid "GDA type"
-msgstr "Tipo GDA"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/firebird/gda-firebird-provider.c:318
-#: providers/ibmdb2/gda-ibmdb2-provider.c:833
-#: providers/ibmdb2/gda-ibmdb2-provider.c:890
-#: providers/ibmdb2/gda-ibmdb2-provider.c:999
-#: providers/odbc/gda-odbc-provider.c:1246
-#: providers/postgres/gda-postgres-provider.c:1216
-#: providers/postgres/gda-postgres-provider.c:2101
-msgid "Table"
-msgstr "Tabela"
-
-#: providers/firebird/gda-firebird-provider.c:321
-#: providers/mdb/gda-mdb-provider.c:553
-#: providers/odbc/gda-odbc-provider.c:1143
-#: providers/odbc/gda-odbc-provider.c:1249
-#: providers/odbc/gda-odbc-provider.c:1405
-#: providers/odbc/gda-odbc-provider.c:1457
-#: providers/oracle/gda-oracle-provider.c:1158
-#: providers/postgres/gda-postgres-provider.c:952
-#: providers/postgres/gda-postgres-provider.c:1219
-#: providers/postgres/gda-postgres-provider.c:1298
-#: providers/postgres/gda-postgres-provider.c:1418
-#: providers/postgres/gda-postgres-provider.c:2049
-msgid "Definition"
-msgstr "Definição"
-
-# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
-# gda-clnt-ui/gnome-db-browser.c:217
-#: providers/firebird/gda-firebird-provider.c:613
-#: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1100
-#: providers/odbc/gda-odbc-provider.c:949
-#: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1464
-#: providers/sqlite/gda-sqlite-provider.c:658
-#: providers/xml/gda-xml-provider.c:489
-msgid "Field name"
-msgstr "Nome do campo"
-
-#: providers/firebird/gda-firebird-provider.c:614
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1101
-#: providers/odbc/gda-odbc-provider.c:950
-#: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1465
-#: providers/sqlite/gda-sqlite-provider.c:659
-#: providers/xml/gda-xml-provider.c:490
-msgid "Data type"
-msgstr "Tipo de dados"
-
-#: providers/firebird/gda-firebird-provider.c:615
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1102
-#: providers/odbc/gda-odbc-provider.c:951
-#: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1466
-#: providers/sqlite/gda-sqlite-provider.c:660
-#: providers/xml/gda-xml-provider.c:491
-msgid "Size"
-msgstr "Tamanho"
-
-#: providers/firebird/gda-firebird-provider.c:616
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1103
-#: providers/odbc/gda-odbc-provider.c:952
-#: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1467
-#: providers/sqlite/gda-sqlite-provider.c:661
-#: providers/xml/gda-xml-provider.c:492
-msgid "Scale"
-msgstr "Escala"
-
-#: providers/firebird/gda-firebird-provider.c:617
-#: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1104
-#: providers/odbc/gda-odbc-provider.c:953
-#: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1468
-#: providers/sqlite/gda-sqlite-provider.c:662
-#: providers/xml/gda-xml-provider.c:493
-msgid "Not null?"
-msgstr "Não nulo?"
-
-#: providers/firebird/gda-firebird-provider.c:618
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1105
-#: providers/odbc/gda-odbc-provider.c:954
-#: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1469
-#: providers/sqlite/gda-sqlite-provider.c:663
-#: providers/xml/gda-xml-provider.c:494
-msgid "Primary key?"
-msgstr "Chave primária?"
-
-#: providers/firebird/gda-firebird-provider.c:619
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1106
-#: providers/odbc/gda-odbc-provider.c:955
-#: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1470
-#: providers/sqlite/gda-sqlite-provider.c:664
-#: providers/xml/gda-xml-provider.c:495
-msgid "Unique index?"
-msgstr "Índice único?"
-
-#: providers/firebird/gda-firebird-provider.c:620
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1107
-#: providers/odbc/gda-odbc-provider.c:956
-#: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1471
-#: providers/sqlite/gda-sqlite-provider.c:665
-#: providers/xml/gda-xml-provider.c:496
-msgid "References"
-msgstr "Referências"
-
-#: providers/firebird/gda-firebird-provider.c:621
-#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
-#: providers/mysql/gda-mysql-provider.c:1108
-#: providers/odbc/gda-odbc-provider.c:957
-#: providers/oracle/gda-oracle-provider.c:1256
-#: providers/postgres/gda-postgres-provider.c:1472
-#: providers/sqlite/gda-sqlite-provider.c:666
-msgid "Default value"
-msgstr "Valor padrão"
-
-#: providers/firebird/gda-firebird-provider.c:630
-#: providers/firebird/gda-firebird-provider.c:637
-#: providers/msql/gda-msql-provider.c:557
-#: providers/msql/gda-msql-provider.c:563
-#: providers/mysql/gda-mysql-provider.c:1125
-#: providers/mysql/gda-mysql-provider.c:1133
-msgid "Table name is needed but none specified in parameter list"
-msgstr ""
-"O nome da tabela é necessário mas nenhum foi especificado na lista de "
-"parâmetros"
-
-#. 5th the return type
-#. 6th the argument type
-#: providers/firebird/gda-firebird-provider.c:706
-#: providers/firebird/gda-firebird-provider.c:708
-msgid "UNKNOWN"
-msgstr "DESCONHECIDO"
-
-#: providers/firebird/gda-firebird-provider.c:729
-#: providers/mdb/gda-mdb-provider.c:547
-#: providers/mysql/gda-mysql-provider.c:733
-msgid "ID"
-msgstr "ID"
-
-#: providers/firebird/gda-firebird-provider.c:732
-#: providers/mdb/gda-mdb-provider.c:550
-#: providers/mysql/gda-mysql-provider.c:736
-#: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:949
-msgid "Return type"
-msgstr "Tipo de retorno"
-
-#: providers/firebird/gda-firebird-provider.c:733
-#: providers/mdb/gda-mdb-provider.c:552
-#: providers/mysql/gda-mysql-provider.c:737
-#: providers/odbc/gda-odbc-provider.c:1142
-#: providers/postgres/gda-postgres-provider.c:951
-msgid "Args types"
-msgstr "Tipo de args"
-
-#: providers/firebird/gda-firebird-provider.c:734
-#: providers/mysql/gda-mysql-provider.c:738
-#: providers/oracle/gda-oracle-provider.c:1913
-#: providers/oracle/gda-oracle-provider.c:1975
-msgid "SQL"
-msgstr "SQL"
-
-#: providers/firebird/gda-firebird-provider.c:818
-#: providers/firebird/gda-firebird-provider.c:935
-#: providers/firebird/gda-firebird-provider.c:962
-#: providers/firebird/gda-firebird-provider.c:981
-#: providers/firebird/gda-firebird-provider.c:1033
-#: providers/firebird/gda-firebird-provider.c:1126
-#: providers/firebird/gda-firebird-provider.c:1195
-#: providers/firebird/gda-firebird-provider.c:1229
-#: providers/firebird/gda-firebird-provider.c:1267
-#: providers/firebird/gda-firebird-recordset.c:730
-#: providers/firebird/gda-firebird-recordset.c:932
-msgid "Invalid Firebird handle"
-msgstr "Handle do Firebird inválida"
-
-#: providers/firebird/gda-firebird-provider.c:856
+#: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
 msgstr "Nenhum banco de dados especificado"
 
-#: providers/firebird/gda-firebird-provider.c:1235
-#: providers/firebird/gda-firebird-provider.c:1273
+#: providers/firebird/gda-firebird-provider.c:234
+#: providers/firebird/gda-firebird-provider.c:261
+#: providers/firebird/gda-firebird-provider.c:279
+#: providers/firebird/gda-firebird-provider.c:313
+#: providers/firebird/gda-firebird-provider.c:368
+#: providers/firebird/gda-firebird-provider.c:413
+#: providers/firebird/gda-firebird-provider.c:447
+#: providers/firebird/gda-firebird-provider.c:485
+#: providers/firebird/gda-firebird-provider.c:539
+msgid "Invalid Firebird handle"
+msgstr "Handle do Firebird inválida"
+
+#: providers/firebird/gda-firebird-provider.c:453
+#: providers/firebird/gda-firebird-provider.c:491
 msgid "Invalid transaction handle"
 msgstr "Handle de transação inválido"
 
-#: providers/firebird/gda-firebird-recordset.c:384
-#: providers/firebird/gda-firebird-recordset.c:424
-msgid "Statement already prepared."
-msgstr "Sentença já preparada."
-
-#: providers/firebird/gda-firebird-recordset.c:388
-msgid "Transaction not initialized."
-msgstr "Transação não inicializado."
-
-#: providers/firebird/gda-firebird-recordset.c:493
-msgid "Firebird's ARRAY datatype not supported yet!\n"
-msgstr "Tipo de dados ARRAY do Firebird ainda não suportado!\n"
-
-#: providers/firebird/gda-firebird-recordset.c:498
-msgid "Firebird's BLOB datatype not supported yet!\n"
-msgstr "Tipo de dados BLOB do Firebird ainda não suportado!\n"
-
-#: providers/firebird/gda-firebird-recordset.c:601
-msgid "Unknown Firebird's field value!\n"
-msgstr "Valor do campo do Firebird desconhecido!\n"
-
-#: providers/firebird/libmain.c:40
-msgid "Provider for Firebird databases"
+#: providers/firebird/libmain.c:39
+msgid "Provider for FireBird databases"
 msgstr "Provedor para bancos de dados Firebird"
 
 #: providers/freetds/gda-freetds-provider.c:197
@@ -654,8 +358,7 @@ msgstr "Impossível alocar handle de ambiente.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr ""
-"SQLGetInfo não é suportado. Assim o Provedor IBM DB2 não irá funcionar.\n"
+msgstr "SQLGetInfo não é suportado. Assim o Provedor IBM DB2 não irá funcionar.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:450
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
@@ -668,6 +371,44 @@ msgstr "handle para IBM DB2 inválido"
 msgid "Function"
 msgstr "Função"
 
+#: providers/ibmdb2/gda-ibmdb2-provider.c:742
+#: providers/ibmdb2/gda-ibmdb2-provider.c:832
+#: providers/ibmdb2/gda-ibmdb2-provider.c:861
+#: providers/ibmdb2/gda-ibmdb2-provider.c:891
+#: providers/ibmdb2/gda-ibmdb2-provider.c:919
+#: providers/ibmdb2/gda-ibmdb2-provider.c:947
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1000
+#: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
+#: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
+#: providers/msql/gda-msql-provider.c:449
+#: providers/msql/gda-msql-provider.c:487
+#: providers/mysql/gda-mysql-provider.c:728
+#: providers/mysql/gda-mysql-provider.c:915
+#: providers/mysql/gda-mysql-provider.c:997
+#: providers/odbc/gda-odbc-provider.c:1025
+#: providers/odbc/gda-odbc-provider.c:1138
+#: providers/odbc/gda-odbc-provider.c:1247
+#: providers/odbc/gda-odbc-provider.c:1361
+#: providers/odbc/gda-odbc-provider.c:1403
+#: providers/odbc/gda-odbc-provider.c:1455
+#: providers/oracle/gda-oracle-provider.c:1154
+#: providers/oracle/gda-oracle-provider.c:1893
+#: providers/oracle/gda-oracle-provider.c:1911
+#: providers/oracle/gda-oracle-provider.c:1955
+#: providers/oracle/gda-oracle-provider.c:1973
+#: providers/oracle/gda-oracle-provider.c:2096
+#: providers/postgres/gda-postgres-provider.c:882
+#: providers/postgres/gda-postgres-provider.c:1152
+#: providers/postgres/gda-postgres-provider.c:1171
+#: providers/postgres/gda-postgres-provider.c:1231
+#: providers/postgres/gda-postgres-provider.c:1348
+#: providers/postgres/gda-postgres-provider.c:1981
+#: providers/sqlite/gda-sqlite-provider.c:788
+#: providers/sybase/gda-sybase-provider.c:1098
+#: providers/xml/gda-xml-provider.c:656
+msgid "Owner"
+msgstr "Proprietário"
+
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
 msgid "Database"
 msgstr "Banco de Dados"
@@ -676,10 +417,20 @@ msgstr "Banco de Dados"
 msgid "Index"
 msgstr "Índice"
 
+#. Set it here instead of the SQL query to allow i18n
+#: providers/ibmdb2/gda-ibmdb2-provider.c:833
+#: providers/ibmdb2/gda-ibmdb2-provider.c:890
+#: providers/ibmdb2/gda-ibmdb2-provider.c:999
+#: providers/odbc/gda-odbc-provider.c:1246
+#: providers/postgres/gda-postgres-provider.c:1151
+#: providers/postgres/gda-postgres-provider.c:2035
+msgid "Table"
+msgstr "Tabela"
+
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1136
-#: providers/postgres/gda-postgres-provider.c:945
+#: providers/postgres/gda-postgres-provider.c:880
 msgid "Procedure"
 msgstr "Procedimento"
 
@@ -696,14 +447,68 @@ msgstr "Definição SQL"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1453 testing/client.c:139
+#: providers/postgres/gda-postgres-provider.c:1387 testing/client.c:139
 msgid "Triggers"
 msgstr "Triggers"
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/ibmdb2/gda-ibmdb2-provider.c:946
+#: providers/ldap/gda-ldap-provider.c:423
+#: providers/mysql/gda-mysql-provider.c:996
+#: providers/odbc/gda-odbc-provider.c:1360
+#: providers/oracle/gda-oracle-provider.c:2095
+#: providers/postgres/gda-postgres-provider.c:1170
+#: providers/sqlite/gda-sqlite-provider.c:787
+#: providers/sybase/gda-sybase-provider.c:1096
+#: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:655
+#: providers/xml/gda-xml-provider.c:680
+msgid "Type"
+msgstr "Tipo"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:948
+#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
+#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
+#: providers/msql/gda-msql-provider.c:450
+#: providers/msql/gda-msql-provider.c:488
+#: providers/mysql/gda-mysql-provider.c:729
+#: providers/mysql/gda-mysql-provider.c:916
+#: providers/mysql/gda-mysql-provider.c:998
+#: providers/odbc/gda-odbc-provider.c:1139
+#: providers/odbc/gda-odbc-provider.c:1362
+#: providers/odbc/gda-odbc-provider.c:1456
+#: providers/oracle/gda-oracle-provider.c:1155
+#: providers/oracle/gda-oracle-provider.c:1893
+#: providers/oracle/gda-oracle-provider.c:1912
+#: providers/oracle/gda-oracle-provider.c:1955
+#: providers/oracle/gda-oracle-provider.c:1974
+#: providers/oracle/gda-oracle-provider.c:2097
+#: providers/postgres/gda-postgres-provider.c:883
+#: providers/postgres/gda-postgres-provider.c:1172
+#: providers/postgres/gda-postgres-provider.c:1232
+#: providers/postgres/gda-postgres-provider.c:1349
+#: providers/postgres/gda-postgres-provider.c:1982
+#: providers/sqlite/gda-sqlite-provider.c:789
+#: providers/sybase/gda-sybase-provider.c:1100
+#: providers/xml/gda-xml-provider.c:657
+msgid "Comments"
+msgstr "Comentários"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:949
+#: providers/msql/gda-msql-provider.c:489
+#: providers/mysql/gda-mysql-provider.c:999
+#: providers/odbc/gda-odbc-provider.c:1363
+#: providers/oracle/gda-oracle-provider.c:2097
+#: providers/postgres/gda-postgres-provider.c:1173
+#: providers/sqlite/gda-sqlite-provider.c:790
+#: providers/sybase/gda-sybase-provider.c:1102
+#: providers/xml/gda-xml-provider.c:658
+msgid "GDA type"
+msgstr "Tipo GDA"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:2005 testing/client.c:137
+#: providers/postgres/gda-postgres-provider.c:1939 testing/client.c:137
 msgid "Users"
 msgstr "Usuários"
 
@@ -785,9 +590,133 @@ msgstr "Handle MDB inválida"
 msgid "Transactions not supported in MDB provider"
 msgstr "Transações não são suportadas no provedor MDB"
 
+# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
+# gda-clnt-ui/gnome-db-browser.c:217
+#: providers/mdb/gda-mdb-provider.c:490
+#: providers/mysql/gda-mysql-provider.c:1094
+#: providers/odbc/gda-odbc-provider.c:949
+#: providers/oracle/gda-oracle-provider.c:1248
+#: providers/postgres/gda-postgres-provider.c:1398
+#: providers/sqlite/gda-sqlite-provider.c:658
+#: providers/xml/gda-xml-provider.c:489
+msgid "Field name"
+msgstr "Nome do campo"
+
+#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
+#: providers/mysql/gda-mysql-provider.c:1095
+#: providers/odbc/gda-odbc-provider.c:950
+#: providers/oracle/gda-oracle-provider.c:1249
+#: providers/postgres/gda-postgres-provider.c:1399
+#: providers/sqlite/gda-sqlite-provider.c:659
+#: providers/xml/gda-xml-provider.c:490
+msgid "Data type"
+msgstr "Tipo de dados"
+
+#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
+#: providers/mysql/gda-mysql-provider.c:1096
+#: providers/odbc/gda-odbc-provider.c:951
+#: providers/oracle/gda-oracle-provider.c:1250
+#: providers/postgres/gda-postgres-provider.c:1400
+#: providers/sqlite/gda-sqlite-provider.c:660
+#: providers/xml/gda-xml-provider.c:491
+msgid "Size"
+msgstr "Tamanho"
+
+#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
+#: providers/mysql/gda-mysql-provider.c:1097
+#: providers/odbc/gda-odbc-provider.c:952
+#: providers/oracle/gda-oracle-provider.c:1251
+#: providers/postgres/gda-postgres-provider.c:1401
+#: providers/sqlite/gda-sqlite-provider.c:661
+#: providers/xml/gda-xml-provider.c:492
+msgid "Scale"
+msgstr "Escala"
+
+#: providers/mdb/gda-mdb-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:1098
+#: providers/odbc/gda-odbc-provider.c:953
+#: providers/oracle/gda-oracle-provider.c:1252
+#: providers/postgres/gda-postgres-provider.c:1402
+#: providers/sqlite/gda-sqlite-provider.c:662
+#: providers/xml/gda-xml-provider.c:493
+msgid "Not null?"
+msgstr "Não nulo?"
+
+#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
+#: providers/mysql/gda-mysql-provider.c:1099
+#: providers/odbc/gda-odbc-provider.c:954
+#: providers/oracle/gda-oracle-provider.c:1253
+#: providers/postgres/gda-postgres-provider.c:1403
+#: providers/sqlite/gda-sqlite-provider.c:663
+#: providers/xml/gda-xml-provider.c:494
+msgid "Primary key?"
+msgstr "Chave primária?"
+
+#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
+#: providers/mysql/gda-mysql-provider.c:1100
+#: providers/odbc/gda-odbc-provider.c:955
+#: providers/oracle/gda-oracle-provider.c:1254
+#: providers/postgres/gda-postgres-provider.c:1404
+#: providers/sqlite/gda-sqlite-provider.c:664
+#: providers/xml/gda-xml-provider.c:495
+msgid "Unique index?"
+msgstr "Índice único?"
+
+#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
+#: providers/mysql/gda-mysql-provider.c:1101
+#: providers/odbc/gda-odbc-provider.c:956
+#: providers/oracle/gda-oracle-provider.c:1255
+#: providers/postgres/gda-postgres-provider.c:1405
+#: providers/sqlite/gda-sqlite-provider.c:665
+#: providers/xml/gda-xml-provider.c:496
+msgid "References"
+msgstr "Referências"
+
+#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
+#: providers/mysql/gda-mysql-provider.c:1102
+#: providers/odbc/gda-odbc-provider.c:957
+#: providers/oracle/gda-oracle-provider.c:1256
+#: providers/postgres/gda-postgres-provider.c:1406
+#: providers/sqlite/gda-sqlite-provider.c:666
+msgid "Default value"
+msgstr "Valor padrão"
+
+#: providers/mdb/gda-mdb-provider.c:547
+#: providers/mysql/gda-mysql-provider.c:727
+msgid "ID"
+msgstr "ID"
+
+#: providers/mdb/gda-mdb-provider.c:550
+#: providers/mysql/gda-mysql-provider.c:730
+#: providers/odbc/gda-odbc-provider.c:1140
+#: providers/postgres/gda-postgres-provider.c:884
+msgid "Return type"
+msgstr "Tipo de retorno"
+
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
 msgstr "Nº de args"
+
+#: providers/mdb/gda-mdb-provider.c:552
+#: providers/mysql/gda-mysql-provider.c:731
+#: providers/odbc/gda-odbc-provider.c:1142
+#: providers/postgres/gda-postgres-provider.c:886
+msgid "Args types"
+msgstr "Tipo de args"
+
+#: providers/mdb/gda-mdb-provider.c:553
+#: providers/odbc/gda-odbc-provider.c:1143
+#: providers/odbc/gda-odbc-provider.c:1249
+#: providers/odbc/gda-odbc-provider.c:1405
+#: providers/odbc/gda-odbc-provider.c:1457
+#: providers/oracle/gda-oracle-provider.c:1158
+#: providers/postgres/gda-postgres-provider.c:887
+#: providers/postgres/gda-postgres-provider.c:1154
+#: providers/postgres/gda-postgres-provider.c:1233
+#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/postgres/gda-postgres-provider.c:1983
+msgid "Definition"
+msgstr "Definição"
 
 #: providers/mdb/gda-mdb-provider.c:657
 msgid "GDA Type"
@@ -878,14 +807,12 @@ msgstr "Handle mSQL inválida"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr ""
-"O mSQL permite a criação de banco de dados somente através da ferramenta "
+msgstr "O mSQL permite a criação de banco de dados somente através da ferramenta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr ""
-"O mSQL permite o abandono do banco de dados somente através da ferramenta "
+msgstr "O mSQL permite o abandono do banco de dados somente através da ferramenta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
@@ -906,47 +833,59 @@ msgstr "Nome do Campo"
 msgid "Not null"
 msgstr "Não nulo"
 
+#: providers/msql/gda-msql-provider.c:557
+#: providers/msql/gda-msql-provider.c:563
+#: providers/mysql/gda-mysql-provider.c:1119
+#: providers/mysql/gda-mysql-provider.c:1127
+msgid "Table name is needed but none specified in parameter list"
+msgstr "O nome da tabela é necessário mas nenhum foi especificado na lista de "
+"parâmetros"
+
 #: providers/msql/gda-msql-recordset.c:57
 msgid "Row number out of bounds"
 msgstr "Número da linha fora do limite"
 
-#: providers/mysql/gda-mysql-provider.c:229
+#: providers/mysql/gda-mysql-provider.c:223
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"Você não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR ou uma "
-"PORTA."
+"Você não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR "
+"ou uma PORTA."
 
-#: providers/mysql/gda-mysql-provider.c:305
-#: providers/mysql/gda-mysql-provider.c:1116
+#: providers/mysql/gda-mysql-provider.c:299
+#: providers/mysql/gda-mysql-provider.c:1110
 #: providers/mysql/gda-mysql-recordset.c:128
 #: providers/mysql/gda-mysql-recordset.c:202
 msgid "Invalid MySQL handle"
 msgstr "Handle MySQL inválida"
 
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:391
-#: providers/mysql/gda-mysql-provider.c:414
-#: providers/mysql/gda-mysql-provider.c:445
-#: providers/mysql/gda-mysql-provider.c:477
-#: providers/mysql/gda-mysql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:566
-#: providers/mysql/gda-mysql-provider.c:623
-#: providers/mysql/gda-mysql-provider.c:656
-#: providers/mysql/gda-mysql-provider.c:1244
+#: providers/mysql/gda-mysql-provider.c:315
+#: providers/mysql/gda-mysql-provider.c:385
+#: providers/mysql/gda-mysql-provider.c:408
+#: providers/mysql/gda-mysql-provider.c:439
+#: providers/mysql/gda-mysql-provider.c:471
+#: providers/mysql/gda-mysql-provider.c:537
+#: providers/mysql/gda-mysql-provider.c:560
+#: providers/mysql/gda-mysql-provider.c:617
+#: providers/mysql/gda-mysql-provider.c:650
 msgid "Invalid MYSQL handle"
 msgstr "Handle MYSQL inválida"
 
-#: providers/mysql/gda-mysql-provider.c:571
-#: providers/mysql/gda-mysql-provider.c:628
-#: providers/mysql/gda-mysql-provider.c:661
+#: providers/mysql/gda-mysql-provider.c:565
+#: providers/mysql/gda-mysql-provider.c:622
+#: providers/mysql/gda-mysql-provider.c:655
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/postgres/gda-postgres-provider.c:814
 #: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transações não são suportadas no modo de apenas leitura"
+
+#: providers/mysql/gda-mysql-provider.c:732
+#: providers/oracle/gda-oracle-provider.c:1913
+#: providers/oracle/gda-oracle-provider.c:1975
+msgid "SQL"
+msgstr "SQL"
 
 #: providers/mysql/libmain.c:41
 msgid "Provider for MySQL databases"
@@ -966,19 +905,19 @@ msgid "Invalid Odbc handle"
 msgstr "Handle ODBC inválido"
 
 #: providers/odbc/gda-odbc-provider.c:1141
-#: providers/postgres/gda-postgres-provider.c:950
+#: providers/postgres/gda-postgres-provider.c:885
 msgid "Nb args"
 msgstr "Nº args"
 
 #: providers/odbc/gda-odbc-provider.c:1402
 #: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
 msgid "Views"
-msgstr "Visões"
+msgstr "Vistas"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1454
-#: providers/postgres/gda-postgres-provider.c:2046
-#: providers/postgres/gda-postgres-provider.c:2102
+#: providers/postgres/gda-postgres-provider.c:1980
+#: providers/postgres/gda-postgres-provider.c:2036
 msgid "Sequence"
 msgstr "Seqüência"
 
@@ -1020,8 +959,7 @@ msgstr "Impossível se ligar ao servidor Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr ""
-"Impossível definir o atributo de servidor Oracle no contexto do serviço"
+msgstr "Impossível definir o atributo de servidor Oracle no contexto do serviço"
 
 #: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
@@ -1125,17 +1063,17 @@ msgstr "Impossível executar o rollback da transação Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1412
+#: providers/postgres/gda-postgres-provider.c:1346
 msgid "Aggregate"
 msgstr "Agregado"
 
 #: providers/oracle/gda-oracle-provider.c:1156
-#: providers/postgres/gda-postgres-provider.c:1416
+#: providers/postgres/gda-postgres-provider.c:1350
 msgid "OutType"
 msgstr "OutType"
 
 #: providers/oracle/gda-oracle-provider.c:1157
-#: providers/postgres/gda-postgres-provider.c:1417
+#: providers/postgres/gda-postgres-provider.c:1351
 msgid "InType"
 msgstr "InType"
 
@@ -1207,7 +1145,7 @@ msgstr "Impossível obter atributo de nulificação de campo Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1335 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1270 testing/client.c:135
 msgid "Indexes"
 msgstr "Índices"
 
@@ -1272,11 +1210,11 @@ msgstr "Impossível obter uma linha"
 msgid "Provider for Oracle databases"
 msgstr "Provedor para bancos de dados Oracle"
 
-#: providers/postgres/gda-postgres-provider.c:589
-#: providers/postgres/gda-postgres-provider.c:606
-#: providers/postgres/gda-postgres-provider.c:677
-#: providers/postgres/gda-postgres-provider.c:776
-#: providers/postgres/gda-postgres-provider.c:887
+#: providers/postgres/gda-postgres-provider.c:568
+#: providers/postgres/gda-postgres-provider.c:585
+#: providers/postgres/gda-postgres-provider.c:656
+#: providers/postgres/gda-postgres-provider.c:755
+#: providers/postgres/gda-postgres-provider.c:822
 #: providers/postgres/gda-postgres-recordset.c:184
 #: providers/postgres/gda-postgres-recordset.c:348
 #: providers/postgres/gda-postgres-recordset.c:470
@@ -1284,21 +1222,13 @@ msgstr "Provedor para bancos de dados Oracle"
 msgid "Invalid PostgreSQL handle"
 msgstr "Handle PostgreSQL inválida"
 
-#: providers/postgres/gda-postgres-provider.c:824
-msgid "Transactions are not supported in read uncommitted isolation level"
-msgstr "Transações não são suportadas no nível de isolação de leitura sem commit"
-
-#: providers/postgres/gda-postgres-provider.c:827
-msgid "Transactions are not supported in repeatable read isolation level"
-msgstr "Transações não são suportadas no nível de isolação de leitura que pode ser repetida"
-
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1295
+#: providers/postgres/gda-postgres-provider.c:1230
 msgid "View"
-msgstr "Visão"
+msgstr "Vista"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1970 testing/client.c:130
+#: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:130
 msgid "Databases"
 msgstr "Bancos de dados"
 
@@ -1325,7 +1255,7 @@ msgstr "O modelo não possui nenhum valor não único para atualizar."
 msgid "Column number out of range"
 msgstr "Número de coluna fora do limite"
 
-#: providers/postgres/gda-postgres-recordset.c:584
+#: providers/postgres/gda-postgres-recordset.c:581
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tuplas:\"%s\""
@@ -1366,8 +1296,7 @@ msgstr "É permitido apenas um banco de dados por conexão"
 
 #: providers/sqlite/gda-sqlite-provider.c:426
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr ""
-"Para remover um banco de dados SQLite é necessário remover manualmente o "
+msgstr "Para remover um banco de dados SQLite é necessário remover manualmente o "
 "arquivo de banco de dados"
 
 #: providers/sqlite/gda-sqlite-provider.c:700
@@ -1392,8 +1321,8 @@ msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
-"Estrutura cmd já está em uso. O comando não será executado devido a conexão "
-"bloqueada."
+"Estrutura cmd já está em uso. O comando não será executado devido a "
+"conexão bloqueada."
 
 #: providers/sybase/gda-sybase-provider.c:656
 #, c-format
@@ -1431,8 +1360,8 @@ msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
 msgstr ""
-"ocorreu um erro chamando ct_diag ao testar a existência de uma mensagem de "
-"servidor para o conjunto resultados (resultset)"
+"ocorreu um erro chamando ct_diag ao testar a existência de uma "
+"mensagem de servidor para o conjunto resultados (resultset)"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1470,8 +1399,7 @@ msgstr "%s: %s falhou"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr ""
-"impossível alocar estrutura de comandos para encontrar o banco de dados "
+msgstr "impossível alocar estrutura de comandos para encontrar o banco de dados "
 "atual."
 
 #: providers/sybase/gda-sybase-provider.c:985
@@ -1493,8 +1421,7 @@ msgstr "impossível buscar dados para encontrar o banco de dados atual."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr ""
-"impossível descartar estrutura de comandos para encontrar o banco de dados "
+msgstr "impossível descartar estrutura de comandos para encontrar o banco de dados "
 "atual."
 
 #: providers/sybase/gda-sybase-recordset.c:315
@@ -1540,8 +1467,7 @@ msgstr "Impossível alocar reserva de espaço para coluna %d"
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr ""
-"Impossível rodar %s para cancelar o processamento do resultset de linha."
+msgstr "Impossível rodar %s para cancelar o processamento do resultset de linha."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1664,9 +1590,7 @@ msgstr "ct_diag() falhou determinando o número de mensagens dos clientes."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr ""
-"chamada ao ct_diag() falhou ao determinar a quantidade de mensagens dos "
-"clientes"
+msgstr "chamada ao ct_diag() falhou ao determinar a quantidade de mensagens dos clientes"
 
 #: providers/sybase/utils.c:220
 msgid ""
@@ -1688,8 +1612,8 @@ msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"Sybase OpenClient Msg: severidade(%ld), número(%ld), origem(%ld), camada(%"
-"ld): %s"
+"Sybase OpenClient Msg: severidade(%ld), número(%ld), origem(%ld), camada(%ld): %"
+"s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1732,9 +1656,7 @@ msgstr "Linha"
 
 #: providers/sybase/utils.c:442
 msgid "call to ct_diag failed when attempting to the amount of client messages"
-msgstr ""
-"chamada ao ct_diag falhou ao determinar a quantidade de mensagens dos "
-"clientes"
+msgstr "chamada ao ct_diag falhou ao determinar a quantidade de mensagens dos clientes"
 
 #: providers/sybase/utils.c:459
 msgid ""
@@ -1765,11 +1687,13 @@ msgstr "Operação impossível, conexão ocupada."
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
-"FILENAME ou DIRECTORY podem ser especificados, mas não os dois ou nenhum"
+"FILENAME ou DIRECTORY podem ser especificados, mas não os dois ou "
+"nenhum"
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr "Um FILENAME ou DIRECTORY deve ser especificado na string de conexão"
+msgstr ""
+"Um FILENAME ou DIRECTORY deve ser especificado na string de conexão"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1810,83 +1734,83 @@ msgid "Could not get description for column"
 msgstr "Impossível obter descrição para coluna"
 
 #. fill the recordset
-#: providers/xml/gda-xml-provider.c:660
+#: providers/xml/gda-xml-provider.c:661
 msgid "Big integer"
 msgstr "Inteiro grande"
 
-#: providers/xml/gda-xml-provider.c:661
+#: providers/xml/gda-xml-provider.c:662
 msgid "Big unsigned integer"
 msgstr "Inteiro sem sinal grande"
 
-#: providers/xml/gda-xml-provider.c:662
+#: providers/xml/gda-xml-provider.c:663
 msgid "Binary"
 msgstr "Binário"
 
-#: providers/xml/gda-xml-provider.c:663
+#: providers/xml/gda-xml-provider.c:664
 msgid "Boolean"
 msgstr "Booleano"
 
-#: providers/xml/gda-xml-provider.c:664
+#: providers/xml/gda-xml-provider.c:665
 msgid "Date"
 msgstr "Data"
 
-#: providers/xml/gda-xml-provider.c:665
+#: providers/xml/gda-xml-provider.c:666
 msgid "Double precision"
 msgstr "Precisão dupla"
 
-#: providers/xml/gda-xml-provider.c:666
+#: providers/xml/gda-xml-provider.c:667
 msgid "Integer"
 msgstr "Inteiro"
 
-#: providers/xml/gda-xml-provider.c:667
+#: providers/xml/gda-xml-provider.c:668
 msgid "List"
 msgstr "Lista"
 
-#: providers/xml/gda-xml-provider.c:668
+#: providers/xml/gda-xml-provider.c:669
 msgid "Money"
 msgstr "Dinheiro"
 
-#: providers/xml/gda-xml-provider.c:669
+#: providers/xml/gda-xml-provider.c:670
 msgid "Numeric"
 msgstr "Numérico"
 
-#: providers/xml/gda-xml-provider.c:670
+#: providers/xml/gda-xml-provider.c:671
 msgid "Point"
 msgstr "Ponto"
 
-#: providers/xml/gda-xml-provider.c:671
+#: providers/xml/gda-xml-provider.c:672
 msgid "Single precision"
 msgstr "Precisão simples"
 
-#: providers/xml/gda-xml-provider.c:672
+#: providers/xml/gda-xml-provider.c:673
 msgid "Small integer"
 msgstr "Inteiro pequeno"
 
-#: providers/xml/gda-xml-provider.c:673
+#: providers/xml/gda-xml-provider.c:674
 msgid "Small unsigned integer"
 msgstr "Inteiro sem sinal pequeno"
 
-#: providers/xml/gda-xml-provider.c:674
+#: providers/xml/gda-xml-provider.c:675
 msgid "String"
 msgstr "Texto"
 
-#: providers/xml/gda-xml-provider.c:675
+#: providers/xml/gda-xml-provider.c:676
 msgid "Time"
 msgstr "Tempo"
 
-#: providers/xml/gda-xml-provider.c:676
+#: providers/xml/gda-xml-provider.c:677
 msgid "Timestamp"
 msgstr "Marca de tempo"
 
-#: providers/xml/gda-xml-provider.c:677
+#: providers/xml/gda-xml-provider.c:678
 msgid "Tiny integer"
 msgstr "Inteiro tiny"
 
-#: providers/xml/gda-xml-provider.c:678
+#: providers/xml/gda-xml-provider.c:679
 msgid "Tiny unsigned integer"
 msgstr "Inteiro sem sinal tiny"
 
-#: providers/xml/gda-xml-provider.c:680
+#: providers/xml/gda-xml-provider.c:681
 msgid "Unsigned integer"
 msgstr "Inteiro sem sinal"
 
@@ -1898,15 +1822,15 @@ msgstr "XML"
 msgid "XML provider, based on the libgda XML database format"
 msgstr "Provedor XML, baseado no formato de banco de dados XML do libgda"
 
-#: report/libgda-report/gda-report-document.c:178
+#: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
 msgstr "Impossível analisar o documento XML"
 
-#: report/libgda-report/gda-report-document.c:188
+#: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
 msgstr "Documento XML inválido"
 
-#: report/libgda-report/gda-report-document.c:220
+#: report/libgda-report/gda-report-document.c:208
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Impossível obter arquivo a partir de %s"
@@ -1968,8 +1892,7 @@ msgstr "Sem declaração para o atributo %s do elemento %s\n"
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr ""
-"Valor \"%s\" para o atributo %s de %s não está detro do conjunto enumerado\n"
+msgstr "Valor \"%s\" para o atributo %s de %s não está detro do conjunto enumerado\n"
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"
@@ -2047,7 +1970,7 @@ msgstr "\t\tUsuários: %s\n"
 #: testing/client.c:116
 #, c-format
 msgid "\t\tViews: %s\n"
-msgstr "\t\tVisões: %s\n"
+msgstr "\t\tVistas: %s\n"
 
 #: testing/client.c:119
 #, c-format
@@ -2210,6 +2133,9 @@ msgstr "Provedor para bancos de dados Berkeley"
 
 #~ msgid "Could not initialize ct-server callback"
 #~ msgstr "Impossível inicializar ct-server callback"
+
+#~ msgid "CT-Server callback initialized."
+#~ msgstr "Callback ct-server inicializado com sucesso."
 
 #~ msgid "Connection allocated."
 #~ msgstr "Conexão alocada."
