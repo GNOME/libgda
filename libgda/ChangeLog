@@ -1,3 +1,14 @@
+2001-11-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-provider.c (gda_server_provider_open_connection):
+	added support for the POOLING parameter included in the connection
+	string, so that clients not using the client library (python, perl,
+	etc) have access to the connection pooling feature
+
+	* gda-server-connection.[ch] (gda_server_connection_get_string): new
+	(gda_server_connection_get_username): new function
+	(gda_server_connection_get_password): new function
+
 2001-11-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server.c (gda_server_register_component): if I use

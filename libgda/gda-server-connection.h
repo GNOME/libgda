@@ -55,6 +55,10 @@ struct _GdaServerConnectionClass {
 GType                gda_server_connection_get_type (void);
 GdaServerConnection *gda_server_connection_new (GdaServerProvider *provider);
 
+const gchar         *gda_server_connection_get_string (GdaServerConnection *cnc);
+const gchar         *gda_server_connection_get_username (GdaServerConnection *cnc);
+const gchar         *gda_server_connection_get_password (GdaServerConnection *cnc);
+
 void                 gda_server_connection_notify_action (GdaServerConnection *cnc,
 							  GNOME_Database_ActionId action,
 							  GdaParameterList *params);

@@ -31,6 +31,9 @@
 
 struct _GdaServerConnectionPrivate {
 	GdaServerProvider *provider;
+	gchar *cnc_string;
+	gchar *username;
+	gchar *password;
 	GList *errors;
 	GList *clients;
 	gboolean is_open;
@@ -75,6 +78,9 @@ impl_Connection_open (PortableServer_Servant servant,
 			return FALSE;
 		}
 		cnc->priv->is_open = TRUE;
+		cnc->priv->cnc_string = g_strdup (cnc_string);
+		cnc->priv->username = g_strdup (username);
+		cnc->priv->password = g_strdup (password);
 	}
 
 	result = TRUE;
@@ -281,6 +287,9 @@ gda_server_connection_init (GdaServerConnection *cnc, GdaServerConnectionClass *
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 
 	cnc->priv = g_new0 (GdaServerConnectionPrivate, 1);
+	cnc->priv->cnc_string = NULL;
+	cnc->priv->username = NULL;
+	cnc->priv->password = NULL;
 	cnc->priv->provider = NULL;
 	cnc->priv->errors = NULL;
 	cnc->priv->clients = NULL;
@@ -296,6 +305,9 @@ gda_server_connection_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 
 	/* free memory */
+	g_free (cnc->priv->cnc_string);
+	g_free (cnc->priv->username);
+	g_free (cnc->priv->password);
 	gda_error_list_free (cnc->priv->errors);
 
 	for (l = g_list_first (cnc->priv->clients); l; l = l->next) {
@@ -333,6 +345,36 @@ gda_server_connection_new (GdaServerProvider *provider)
 	cnc->priv->provider = provider;
 
 	return cnc;
+}
+
+/**
+ * gda_server_connection_get_string
+ */
+const gchar *
+gda_server_connection_get_string (GdaServerConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	return (const gchar *) cnc->priv->cnc_string;
+}
+
+/**
+ * gda_server_connection_get_username
+ */
+const gchar *
+gda_server_connection_get_username (GdaServerConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	return (const gchar *) cnc->priv->username;
+}
+
+/**
+ * gda_server_connection_get_password
+ */
+const gchar *
+gda_server_connection_get_password (GdaServerConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	return (const gchar *) cnc->priv->password;
 }
 
 /**

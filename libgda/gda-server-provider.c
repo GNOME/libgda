@@ -142,9 +142,15 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 				     const gchar *password)
 {
 	gboolean retcode;
+	const gchar *pooling;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (CLASS (provider)->open_connection != NULL, FALSE);
+
+	/* check if POOLING is specified */
+	pooling = gda_quark_list_find (params, "POOLING");
+	if (pooling && !strcmp (pooling, "1")) {
+	}
 
 	retcode = CLASS (provider)->open_connection (provider, cnc, params, username, password);
 	if (retcode)
