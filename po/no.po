@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-07-10 12:58+0200\n"
-"PO-Revision-Date: 2002-07-10 13:02+0200\n"
+"POT-Creation-Date: 2002-07-28 18:36+0200\n"
+"PO-Revision-Date: 2002-07-28 18:43+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -442,65 +442,55 @@ msgid "Could not prepare the Oracle statement"
 msgstr "Kunne ikke forberede Oracle uttrykk"
 
 #: providers/oracle/gda-oracle-provider.c:498
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Kunne ikke initiere Oracle komponentfactory"
+msgstr "Kunne ikke binde parameter for Oracle uttrykk"
 
 #: providers/oracle/gda-oracle-provider.c:543
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Kunne ikke initiere Oracle komponentfactory"
+msgstr "Kunne ikke hente Oracle uttrykkstype"
 
 #: providers/oracle/gda-oracle-provider.c:561
-#, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Kunne ikke initiere Oracle-miljø"
+msgstr "Kunne ikke kjøre Oracle-uttrykk"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
-msgstr ""
+msgstr "Kunne ikke hente antall kolonner i resultatsettet"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "Kunne ikke hente parameterdeskriptor i resultatsettet"
 
 #: providers/oracle/gda-oracle-provider.c:603
-#, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Kunne ikke hente verdi fra kolonne"
+msgstr "Kunne ikke hente kolonnenavn fra resultatsettet"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
 #: providers/oracle/gda-oracle-provider.c:875
 #: providers/oracle/gda-oracle-provider.c:931
-#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Kunne ikke initiere tjenerkontekst for Oracle"
+msgstr "Kunne ikke koble transaksjonen til tjenestekonteksten"
 
 #: providers/oracle/gda-oracle-provider.c:799
-#, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Kunne ikke initiere feilhåndterer for Oracle"
+msgstr "Kunne ikke allokere Oracle-transaksjonshåndtak"
 
 #: providers/oracle/gda-oracle-provider.c:811
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Kunne ikke initiere Oracle-miljø"
+msgstr "Kunne ikke sette Oracle-transaksjonsnavn"
 
 #: providers/oracle/gda-oracle-provider.c:836
-#, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Kunne ikke initiere Oracle komponentfactory"
+msgstr "Kunne ikke starte Oracle-transaksjon"
 
 #: providers/oracle/gda-oracle-provider.c:884
-#, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Kunne ikke hente beskrivelse for kolonne"
+msgstr "Kunne ikke forberede transaksjon for innlegging"
 
 #: providers/oracle/gda-oracle-provider.c:892
-#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Kunne ikke initiere Oracle komponentfactory"
+msgstr "Kunne ikke legge inn Oracle-transaksjon"
 
 #: providers/oracle/gda-oracle-provider.c:938
 #, fuzzy
@@ -513,14 +503,12 @@ msgid "Could not allocate the Oracle describe handle"
 msgstr "Kunne ikke initiere tjenerhåndtak for Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1240
-#, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Kunne ikke hente verdi fra kolonne"
+msgstr "Kunne ikke beskrive Oracle-tabell"
 
 #: providers/oracle/gda-oracle-provider.c:1253
-#, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Kunne ikke initiere tjenerhåndtak for Oracle"
+msgstr "Kunne ikke hente Oracle-parameterhåndtak"
 
 #: providers/oracle/gda-oracle-provider.c:1266
 #, fuzzy
@@ -528,9 +516,8 @@ msgid "Could not get the number of columns in the table"
 msgstr "Kunne ikke hente verdi fra kolonne"
 
 #: providers/oracle/gda-oracle-provider.c:1278
-#, fuzzy
 msgid "Could not get the column list"
-msgstr "Kunne ikke hente fil fra %s"
+msgstr "Kunne ikke hente kolonnelisten"
 
 #: providers/oracle/gda-oracle-provider.c:1307
 #, fuzzy
@@ -602,24 +589,20 @@ msgid "Views"
 msgstr "Visninger"
 
 #: providers/oracle/gda-oracle-recordset.c:73
-#, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Kunne ikke initiere Oracle-miljø"
+msgstr "Kunne ikke hente Oracle-parameter"
 
 #: providers/oracle/gda-oracle-recordset.c:83
-#, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Kunne ikke opprette fil %s"
+msgstr "Kunne ikke hente parameterdefinert størrelse"
 
 #: providers/oracle/gda-oracle-recordset.c:96
-#, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Kunne ikke opprette komponent av type %s"
+msgstr "Kunne ikke hente datatype for parameter"
 
 #: providers/oracle/gda-oracle-recordset.c:127
-#, fuzzy
 msgid "Could not define by position"
-msgstr "Kunne ikke laste fil ved %s"
+msgstr "Kunne ikke definere etter posisjon"
 
 #: providers/oracle/gda-oracle-recordset.c:172
 #: providers/postgres/gda-postgres-recordset.c:263
@@ -627,44 +610,36 @@ msgid "Column out of range"
 msgstr "Kolonne utenfor område"
 
 #: providers/oracle/gda-oracle-recordset.c:184
-#, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Kunne ikke opprette informasjon om kolonne"
+msgstr "Kunne ikke hente Oracle-parameterinformasjon"
 
 #: providers/oracle/gda-oracle-recordset.c:194
-#, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Kunne ikke hente verdi fra kolonne"
+msgstr "Kunne ikke hente Oracle-kolonnenavn"
 
 #: providers/oracle/gda-oracle-recordset.c:209
-#, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Kunne ikke initiere Oracle komponentfactory"
+msgstr "Kunne ikke hente Oracle-kolonnedatatype"
 
 #: providers/oracle/gda-oracle-recordset.c:221
-#, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Kunne ikke hente verdi fra kolonne"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:233
-#, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Kunne ikke initiere Oracle komponentfactory"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:245
-#, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Kunne ikke hente fil fra %s"
+msgstr "Kunne ikke hente definert størrelse for Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:353
-#, fuzzy
 msgid "Could not fetch a row"
-msgstr "Kunne ikke hente fil fra %s"
+msgstr "Kunne ikke hente en rad"
 
 #: providers/oracle/libmain.c:34
-#, fuzzy
 msgid "GDA provider for Oracle databases"
-msgstr "GDA-tilbyder for SQLite-databaser"
+msgstr "GDA-tilbyder for Oracle-databaser"
 
 #: providers/oracle/utils.c:67 providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
@@ -698,14 +673,12 @@ msgid "Databases"
 msgstr "Databaser"
 
 #: providers/postgres/gda-postgres-provider.c:1271
-#, fuzzy
 msgid "Table name"
 msgstr "Tabellnavn"
 
 #: providers/postgres/gda-postgres-provider.c:1272
-#, fuzzy
 msgid "Sequence"
-msgstr "Sekvenser"
+msgstr "Sekvens"
 
 #: providers/postgres/gda-postgres-recordset.c:230
 #: providers/sqlite/gda-sqlite-recordset.c:213
@@ -740,7 +713,7 @@ msgstr "Kun en database per tilkobling er tillatt"
 
 #: providers/sqlite/gda-sqlite-provider.c:346
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr ""
+msgstr "For å fjerne SQLite-databasen må du slette databasefilene for hånd"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -808,9 +781,9 @@ msgid "\t\tSequences: %s\n"
 msgstr "\t\tSekvenser: %s\n"
 
 #: testing/client.c:96
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tSQL: %s\n"
-msgstr "\t\tSQL-språk: %s\n"
+msgstr "\t\tSQL: %s\n"
 
 #: testing/client.c:99
 #, c-format
