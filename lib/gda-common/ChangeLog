@@ -1,3 +1,8 @@
+2000-10-26	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* gda-config.[ch]: added gda_dsn_copy function
+
 2000-10-17	Rodrigo Moya <rodrigo@linuxave.net>
+
 	* added OAFIID helper functions:
 	gda_corba_oafiid_is_active()

@@ -112,6 +112,7 @@ typedef struct _Gda_Dsn
 
 #define  gda_dsn_new() g_new0(Gda_Dsn, 1)
 void     gda_dsn_free            (Gda_Dsn *dsn);
+Gda_Dsn* gda_dsn_copy            (Gda_Dsn *dsn);
 
 Gda_Dsn* gda_dsn_find_by_name    (const gchar *dsn_name);
 void     gda_dsn_set_name        (Gda_Dsn *dsn, const gchar *name);

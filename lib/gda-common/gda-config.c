@@ -587,6 +587,27 @@ gda_dsn_free (Gda_Dsn *dsn)
 }
 
 /**
+ * gda_dsn_copy
+ */
+Gda_Dsn *
+gda_dsn_copy (Gda_Dsn *dsn)
+{
+  Gda_Dsn* ret;
+
+  g_return_val_if_fail(dsn != NULL, NULL);
+
+  ret = gda_dsn_new();
+  ret->gda_name = g_strdup(dsn->gda_name);
+  ret->provider = g_strdup(dsn->provider);
+  ret->dsn_str = g_strdup(dsn->dsn_str);
+  ret->description = g_strdup(dsn->description);
+  ret->username = g_strdup(dsn->username);
+  ret->config = g_strdup(dsn->config);
+
+  return ret;
+}
+
+/**
  * gda_dsn_find_by_name
  * @dsn_name: data source name
  */
