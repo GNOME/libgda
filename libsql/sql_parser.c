@@ -435,7 +435,7 @@ sql_field_name_stringify (GList * name)
 
 	for (walk = name; walk != NULL; walk = walk->next) {
 		result = memsql_strappend_free (result, memsql_strdup (walk->data));
-		if (walk->next)
+		if (walk->next && result != NULL && result[0] != 0)
 			result = memsql_strappend_free (result, memsql_strdup ("."));
 
 	}
@@ -761,6 +761,7 @@ sql_select_stringify (sql_select_statement * select)
 	char *group;
 	char *temp;
 	GList *walk;
+   	sql_order_field *orderfield;
 
 	result = memsql_strdup ("select ");
 
@@ -803,8 +804,10 @@ sql_select_stringify (sql_select_statement * select)
 		order = memsql_strdup (" order by ");
 
 		for (walk = select->order; walk != NULL; walk = walk->next) {
-			order = memsql_strappend_free (order, sql_field_stringify (walk->data));
-			if (((sql_order_field *) walk->data)->order_type == SQL_desc)
+		   	orderfield = walk->data;
+			order = memsql_strappend_free (order, 
+			       sql_field_name_stringify (orderfield->name));
+			if (orderfield->order_type == SQL_desc)
 				order = memsql_strappend_free (order, memsql_strdup (" desc "));
 			if (walk->next)
 				order = memsql_strappend_free (order, memsql_strdup (", "));
