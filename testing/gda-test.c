@@ -24,12 +24,8 @@
 
 #include "config.h"
 #include <glib.h>
-#include <orb/orb.h>
-#include <liboaf/liboaf.h>
 #include <gda-common.h>
 #include <gda-client.h>
-
-static CORBA_ORB orb;
 
 /* ------------------------------------------------------------------------- */
 /* Print intro messages
@@ -156,9 +152,8 @@ main (int argc, char* argv[])
 
   intro ();
   g_print ("\ninitializing...\n");
-  gtk_init (&argc, &argv);
-  orb = oaf_init (argc, argv);
-  cnc = gda_connection_new (orb);
+  gda_init ("gda-test", NULL, argc, argv);
+  cnc = gda_connection_new (gda_corba_get_orb ());
   provider = list_providers ();
   g_print ("\nchoosing %s...\n", provider);
   gda_connection_set_provider (cnc, provider);
