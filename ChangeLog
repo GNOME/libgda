@@ -1,4 +1,5 @@
 2002-12-15  Vivien Malerba <malerba@gnome-db.org>
+
 	* providers/postgres/gda-postgres-provider.c: implemented the tables
 	schema list for Postgres 7.3 and started the aggregates 
 
@@ -22,6 +23,7 @@
 	don't mark function names for translation.
 
 2002-12-13  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-value.c: corrected a localization bug in the gda_value_to_xml () function.
 	* providers/postgres/gda-postgres-provider.c: started to implement the
 	  changes to handle the Postgres 7.3 "schemas" features.
