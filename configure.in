@@ -591,6 +591,7 @@ providers/postgres/Makefile
 providers/sqlite/Makefile
 providers/sybase/Makefile
 report/Makefile
+report/gda-report.dtd
 report/libgda-report/Makefile
 tools/Makefile
 testing/Makefile
