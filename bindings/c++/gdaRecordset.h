@@ -19,28 +19,28 @@
 #ifndef __gda_bindings_cpp_gdaRecordsetH
 #define __gda_bindings_cpp_gdaRecordsetH
 
-#include "gdaIncludes.h"
+namespace gda {
 
-namespace gda
-{
+class Connection;
+class Command;
+class Field;
 
-	class Recordset
-	{
+class Recordset {
 	      public:
 		Recordset ();
-		Recordset (GdaRecordset * rst, Connection * cnc);	// convenience functions!
-		Recordset (GdaRecordset * rst, GdaConnection * cnc);	// convenience functions!
+		Recordset (const Recordset& rst);
+		Recordset (GdaRecordset *rst);
 		~Recordset ();
 
-		GdaRecordset *getCStruct ();
-		void setCStruct (GdaRecordset * rst);
+		Recordset& operator=(const Recordset& rst);
 
-		void setName (gchar * name);
-		void getName (gchar * name);
+		bool isValid ();
+		void setName (const string& name);
+		string getName ();
 		void close ();
-		Field *field (gchar * name);
+		Field field (const string& name);
 		// FIXME: possibly add a fieldText() func?
-		Field *field (gint idx);
+		Field field (gint idx);
 		gint bof ();
 		gint eof ();
 		gulong move (gint count, gpointer bookmark);
@@ -50,26 +50,29 @@ namespace gda
 		gulong movePrev ();
 		gint rowsize ();
 		gulong affectedRows ();
-		gint open (Command * cmd, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);	// FIXME: defaults
-		gint open (gchar * txt, GDA_CursorType cursor_type,
-			   GDA_LockType lock_type, gulong options);
-		gint open (Command * cmd, Connection * cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);	// FIXME: defaults
-		gint open (gchar * txt, Connection * cnc,
-			   GDA_CursorType cursor_type, GDA_LockType lock_type,
-			   gulong options);
-		gint setConnection (Connection * cnc);
-		Connection *getConnection ();
+		gint open (const Command& cmd, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options); // FIXME: defaults
+		gint open (const string& txt, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);
+		gint setConnection (const Connection& cnc);
+		Connection getConnection ();
 		gint addField (GdaField * field);
 		GDA_CursorLocation getCursorloc ();
 		void setCursorloc (GDA_CursorLocation loc);
 		GDA_CursorType getCursortype ();
 		void setCursortype (GDA_CursorType type);
-		GList *getRow ();
-		gchar *getRowAsString ();
+		vector<string> getRow ();
+		string getRowAsString ();
 
 	      private:
-		  Connection * cnc;
+		// manual operations on contained C object not allowed; sorry folks!
+		//
+		GdaRecordset* getCStruct (bool refn = true) const;
+		void setCStruct (GdaRecordset *rst);
+
+		void ref () const;
+		void unref ();
+
 		GdaRecordset *_gda_recordset;
+		Connection _cnc;
 	};
 
 };

@@ -19,33 +19,45 @@
 #ifndef __gda_bindings_cpp_gdaErrorH
 #define __gda_bindings_cpp_gdaErrorH
 
-#include "gdaIncludes.h"
+namespace gda {
 
-namespace gda
-{
+class Connection;
+class ErrorList;
 
-	class Error
-	{
+class Error {
+
+	friend class Connection;
+	friend class ErrorList;
+
 	      public:
 		Error ();
+		Error (const Error& error);
 		Error (GdaError * e);
 		~Error ();
 
-		GdaError *getCStruct ();
-		void setCStruct (GdaError * e);
+		Error& operator=(const Error& error);
+		
 
-		const gchar *description ();
-		const glong number ();
-		const gchar *source ();
-		const gchar *helpurl ();
-		const gchar *sqlstate ();
-		const gchar *nativeMsg ();
-		const gchar *realcommand ();
+		string description ();
+		glong number ();
+		string source ();
+		string helpurl ();
+		string sqlstate();
+		string nativeMsg();
+		string realcommand();
 
 	      private:
+		// manual operations on contained C object not allowed; sorry folks!
+		//
+		GdaError *getCStruct (bool refn = true) const;
+		void setCStruct (GdaError *e);
+
+		void ref () const;
+		void unref ();
+
 		  GdaError * _gda_error;
 	};
 
 };
 
-#endif
+#endif // __gda_bindings_cpp_gdaErrorH

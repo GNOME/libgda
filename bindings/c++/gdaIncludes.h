@@ -18,9 +18,8 @@
 
 #ifndef __gda_bindings_cpp_gdaIncludesH
 #define __gda_bindings_cpp_gdaIncludesH
-
-namespace gda
-{
+/*
+namespace gda {
 	class Batch;
 	class Command;
 	class Connection;

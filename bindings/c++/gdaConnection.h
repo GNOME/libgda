@@ -20,47 +20,68 @@
 #ifndef __gda_bindings_cpp_gdaConnectionH
 #define __gda_bindings_cpp_gdaConnectionH
 
-#include "gdaIncludes.h"
+namespace gda {
 
-namespace gda
-{
+class Recordset;
+class Error;
+class ErrorList;
 
-	class Connection
-	{
+class Connection {
+
+	friend class Batch;
+	friend class Command;
+	friend class Recordset;
+
 	      public:
 		Connection ();
-		Connection (GdaConnection * a);
+		Connection (const Connection& cnc);
+		Connection (GdaConnection *cnc);
 		Connection (CORBA_ORB orb);
 		~Connection ();
 
-		GdaConnection *getCStruct ();
-		void setCStruct (GdaConnection * cnc);
+		Connection& operator=(const Connection& cnc);
 
-		void setProvider (gchar * name);
-		const gchar *getProvider ();
-		gboolean supports (GDA_Connection_Feature feature);
-		void setDefaultDB (gchar * dsn);
-		gint open (gchar * dsn, gchar * user, gchar * pwd);
+		void setProvider (const string& name);
+		string getProvider ();
+		bool supports (GDA_Connection_Feature feature);
+		void setDefaultDB (const string& dsn);
+		gint open (const string& dsn, const string& user, const string& pwd);
 		void close ();
-		ErrorList *getErrors ();
+		Recordset openSchema (GDA_Connection_QType t, ...);
+		Recordset openSchemaArray (GDA_Connection_QType t, GdaConstraint_Element* constraint);
+		glong modifySchema (GDA_Connection_QType t, ...);
+		ErrorList getErrors ();
 		gint beginTransaction ();
 		gint commitTransaction ();
 		gint rollbackTransaction ();
-		Recordset *execute (gchar * txt, gulong * reccount,
-				    gulong flags);
-		gint startLogging (gchar * filename);
+		Recordset execute (const string& txt, gulong& reccount, gulong flags);
+		gint startLogging (const string& filename);
 		gint stopLogging ();
 
-		void addSingleError (Error * error);
-		void addErrorlist (ErrorList * list);
+		void addSingleError (Error& xError);
+		void addErrorlist (ErrorList& xList);
 
-		gboolean isOpen ();
-		gchar *getDSN ();
-		gchar *getUser ();
+		bool isOpen ();
+		string getDSN ();
+		string getUser ();
 
-		gchar *getVersion ();
+//		glong getFlags ();
+//		void setFlags (glong flags);
+//		glong getCmdTimeout ();
+//		void setCmdTimeout (glong cmdTimeout);
+//		glong getConnectTimeout ();
+//		void setConnectTimeout (glong timeout);
+//		GDA_CursorLocation getCursorLocation ();
+//		void setCursorLocation (GDA_CursorLocation cursor);
+		string getVersion ();
 
 	      private:
+		GdaConnection* getCStruct (bool ref = true) const;
+		void setCStruct (GdaConnection *cnc);
+
+		void ref () const;
+		void unref ();
+
 		  GdaConnection * _gda_connection;
 	};
 

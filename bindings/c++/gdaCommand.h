@@ -19,37 +19,50 @@
 #ifndef __gda_bindings_cpp_gdaCommandH
 #define __gda_bindings_cpp_gdaCommandH
 
-#include "gdaIncludes.h"
+namespace gda {
 
-namespace gda
-{
+class Recordset;
+class Value;
 
-	class Command
-	{
+class Command {
+
+	friend class Recordset;
+
 	      public:
 		Command ();
+        Command (const Command& cmd);
 		Command (GdaCommand * cmd);
 		~Command ();
 
-		GdaCommand *getCStruct ();
-		void setCStruct (GdaCommand * cmd);
+        Command& operator=(const Command& cmd);
 
-		Connection *getConnection ();
-		gint setConnection (Connection * a);
-		gchar *getText ();
-		void setText (gchar * text);
+		Connection getConnection ();
+		gint setConnection (const Connection& cnc);
+		string getText ();
+		void setText (const string& text);
 		GDA_CommandType getCmdType ();
 		void setCmdType (GDA_CommandType type);
-		Recordset *execute (gulong * reccount, gulong flags);
-		void createParameter (gchar * name,
+		Recordset execute (gulong& reccount, gulong flags);
+		void createParameter (
+			const string& name,
 				      GDA_ParameterDirection inout,
-				      Value * value);
+			const Value& value);
+//		glong getTimeout ();
+//		void setTimeout (glong timeout);
 
 	      private:
-		  Connection * cnc;
+		GdaCommand *getCStruct (bool refn = true) const;
+		void setCStruct (GdaCommand *cmd);
+
+		void ref () const;
+		void unref ();
+
 		GdaCommand *_gda_command;
+		Connection _connection;
+		vector<Value> _parameters_values;
 	};
 
 };
 
-#endif
+#endif // __gda_bindings_cpp_gdaCommandH
+

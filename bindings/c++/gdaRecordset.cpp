@@ -17,57 +17,68 @@
  */
 
 #include "config.h"
-#include "gdaRecordset.h"
+#include "gdaIncludes.h"
+#include "gdaHelpers.h"
+
 
 using namespace gda;
 
 Recordset::Recordset ()
 {
-	_gda_recordset = (GdaRecordset *) gda_recordset_new ();
-	cnc = NULL;
+	_gda_recordset = NULL;
+	setCStruct (gda_recordset_new ());
 }
 
-Recordset::Recordset (GdaRecordset * rst, Connection * cnca)
+Recordset::Recordset (const Recordset& rst)
 {
-	_gda_recordset = rst;
-	cnc = cnca;
+	_gda_recordset = NULL;
+	setCStruct (rst.getCStruct ());
+
+	_cnc = rst._cnc;
 }
 
-Recordset::Recordset (GdaRecordset * rst, GdaConnection * cnca)
+// we take ownership of C object; not of contained C object
+//
+Recordset::Recordset (GdaRecordset* rst)
 {
-	_gda_recordset = rst;
-	cnc = new Connection ();
-	cnc->setCStruct (cnca);
+	_gda_recordset = NULL;
+	setCStruct (rst);
+
+	_cnc.setCStruct (gda_recordset_get_connection (rst));
+	_cnc.ref ();
 }
 
 Recordset::~Recordset ()
 {
-	if (_gda_recordset)
-		gda_recordset_free (_gda_recordset);
+	if (_gda_recordset) gda_recordset_free (_gda_recordset);
 }
 
-GdaRecordset *
-Recordset::getCStruct ()
+Recordset&
+Recordset::operator=(const Recordset& rst)
 {
-	return _gda_recordset;
+	setCStruct (rst.getCStruct ());
+	return *this;
 }
 
-void
-Recordset::setCStruct (GdaRecordset * rst)
+bool
+Recordset::isValid ()
 {
-	_gda_recordset = rst;
-}
-
-void
-Recordset::setName (gchar * name)
-{
-	gda_recordset_set_name (_gda_recordset, name);
+	return _gda_recordset != NULL;
 }
 
 void
-Recordset::getName (gchar * name)
+Recordset::setName (const string& name)
 {
-	gda_recordset_get_name (_gda_recordset, name);
+	//gda_recordset_set_name(_gda_recordset, const_cast<gchar*>(name.c_str ()));
+}
+
+string
+Recordset::getName ()
+{
+    //gchar* name;
+	//gda_recordset_get_name (_gda_recordset, name);
+	string name;
+    return name; //gda_return_string (name);
 }
 
 void
@@ -76,20 +87,19 @@ Recordset::close ()
 	gda_recordset_close (_gda_recordset);
 }
 
-Field *
-Recordset::field (gchar * name)
+Field
+Recordset::field (const string& name)
 {
-	Field *a = NULL;
-	a = new Field (gda_recordset_field_name (_gda_recordset, name));
-	return a;
+	Field field (gda_recordset_field_name (_gda_recordset, const_cast<gchar*>(name.c_str ())), _gda_recordset);
+	
+	return field;
 }
 
-Field *
+Field
 Recordset::field (gint idx)
 {
-	Field *a = NULL;
-	a = new Field (gda_recordset_field_idx (_gda_recordset, idx));
-	return a;
+	Field field (gda_recordset_field_idx (_gda_recordset, idx), _gda_recordset);
+	return field;
 }
 
 gint
@@ -147,53 +157,35 @@ Recordset::affectedRows ()
 }
 
 gint
-Recordset::open (Command * cmd, GDA_CursorType cursor_type,
-		 GDA_LockType lock_type, gulong options)
+Recordset::open (const Command& cmd, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options)
 {
-	return gda_recordset_open (_gda_recordset, cmd->getCStruct (),
-				   cursor_type, lock_type, options);
+	_cnc = cmd._connection;
+
+	// Not neccessary. Connection is copied from GdaCommand object in
+	// gda_recordset_open ()
+	//
+	//###gda_recordset_set_connection (_gda_recordset, _cnc.getCStruct (false));
+
+	return gda_recordset_open (_gda_recordset, cmd.getCStruct (false), cursor_type, lock_type, options);
 }
 
 gint
-Recordset::open (gchar * txt, GDA_CursorType cursor_type,
-		 GDA_LockType lock_type, gulong options)
+Recordset::open (const string& txt, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options)
 {
-	return gda_recordset_open_txt (_gda_recordset, txt, cursor_type,
-				       lock_type, options);
+	return gda_recordset_open_txt (_gda_recordset, const_cast<gchar*>(txt.c_str ()), cursor_type, lock_type, options);
 }
 
 gint
-Recordset::open (Command * cmd, Connection * cnac, GDA_CursorType cursor_type,
-		 GDA_LockType lock_type, gulong options)
+Recordset::setConnection (const Connection& cnc)
 {
-	if (cnac)
-		setConnection (cnac);
-	return gda_recordset_open (_gda_recordset, cmd->getCStruct (),
-				   cursor_type, lock_type, options);
+	return gda_recordset_set_connection (_gda_recordset, cnc.getCStruct (false));
+	_cnc = cnc;
 }
 
-gint
-Recordset::open (gchar * txt, Connection * cnac, GDA_CursorType cursor_type,
-		 GDA_LockType lock_type, gulong options)
-{
-	if (cnac)
-		setConnection (cnac);
-	return gda_recordset_open_txt (_gda_recordset, txt, cursor_type,
-				       lock_type, options);
-}
-
-gint
-Recordset::setConnection (Connection * a)
-{
-	cnc = a;
-	return gda_recordset_set_connection (_gda_recordset,
-					     cnc->getCStruct ());
-}
-
-Connection *
+Connection
 Recordset::getConnection ()
 {
-	return cnc;
+	return _cnc;
 }
 
 gint
@@ -226,12 +218,87 @@ Recordset::setCursortype (GDA_CursorType type)
 	gda_recordset_set_cursortype (_gda_recordset, type);
 }
 
-GList* Recordset::getRow ()
+// should be gda_recordset_get_row (), but:
+// 1. it generates memory leaks
+// 2. there is no wrapper for GList around
+//
+vector<string>
+Recordset::getRow ()
 {
-	return gda_recordset_get_row (_gda_recordset);
+	Field field;
+	vector<string> ret;
+
+	for (gint i = 0; i < rowsize (); i++) {
+		field = this->field (i);
+		ret.insert (ret.end (), field.stringifyValue ());
+	}
+
+	return ret;
 }
 
-gchar* Recordset::getRowAsString ()
+// should be gda_recordset_get_row (), but
+// it generates memory leaks
+//
+string
+Recordset::getRowAsString ()
 {
-	return gda_recordset_get_row_as_string (_gda_recordset);
+	Field field;
+	string ret;
+
+	for (gint i = 0; i < rowsize (); i++) {
+		field = this->field (i);
+		ret = ret + field.stringifyValue ();
+	}
+
+	return ret;
 }
+
+GdaRecordset*
+Recordset::getCStruct (bool refn = true) const
+{
+	if (refn) ref ();
+	return _gda_recordset;
+}
+
+void
+Recordset::setCStruct (GdaRecordset *rst)
+{
+	_gda_recordset = rst;
+}
+
+void
+Recordset::ref () const
+{
+	if (NULL == _gda_recordset) {
+		g_warning ("gda::Recordset::ref () received NULL pointer");
+	}
+	else {
+#ifdef HAVE_GOBJECT
+		g_object_ref (G_OBJECT (_gda_recordset));
+		GdaConnection* cnc = gda_recordset_get_connection (_gda_recordset);
+		if (NULL != cnc) {
+			g_object_ref (G_OBJECT (cnc));
+		}
+#else
+		gtk_object_ref (GTK_OBJECT (_gda_recordset));
+		GdaConnection* cnc = gda_recordset_get_connection (_gda_recordset);
+		if (NULL != cnc) {
+			gtk_object_ref (GTK_OBJECT (cnc));
+		}
+#endif
+	}
+}
+
+void
+Recordset::unref ()
+{
+	if (_gda_recordset != NULL) {
+		GdaConnection* cnc = gda_recordset_get_connection (_gda_recordset);
+		if (cnc != NULL) {
+			gda_connection_free (cnc);
+		}
+
+		gda_recordset_free (_gda_recordset);
+	}
+}
+

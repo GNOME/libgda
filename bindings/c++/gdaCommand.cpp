@@ -17,13 +17,35 @@
  */
 
 #include "config.h"
-#include "gdaCommand.h"
+#include "gdaIncludes.h"
+#include "gdaHelpers.h"
 
 using namespace gda;
 
 Command::Command ()
 {
-	_gda_command = gda_command_new ();
+	_gda_command = NULL;
+	setCStruct (gda_command_new ());
+}
+
+Command::Command (const Command& cmd)
+{
+	_gda_command = NULL;
+    setCStruct (cmd.getCStruct ());
+
+	_connection = cmd._connection;
+}
+
+// we take ownership of C object (GdaCommand);
+// not of contained C object (GdaConnection)
+//
+Command::Command (GdaCommand* cmd)
+{
+	_gda_command = NULL;
+    setCStruct (cmd);
+
+	_connection.setCStruct (gda_command_get_connection (cmd));
+	_connection.ref ();
 }
 
 Command::~Command ()
@@ -32,42 +54,39 @@ Command::~Command ()
 		gda_command_free (_gda_command);
 }
 
-GdaCommand *
-Command::getCStruct ()
+Command&
+Command::operator=(const Command& cmd)
 {
-	return _gda_command;
+    setCStruct (cmd.getCStruct ());
+	return *this;
 }
 
-void
-Command::setCStruct (GdaCommand * cmd)
-{
-	_gda_command = cmd;
-}
-
-Connection *
+Connection
 Command::getConnection ()
 {
-	return cnc;
+	return _connection;
 }
 
 gint
-Command::setConnection (Connection * a)
+Command::setConnection (const Connection& cnc)
 {
-	cnc = a;
-	gda_command_set_connection (_gda_command, cnc->getCStruct ());
+    gda_command_set_connection (_gda_command, cnc.getCStruct ());
+
+	_connection = cnc;
+
 	return 0;
 }
 
-gchar *
+string
 Command::getText ()
 {
-	return gda_command_get_text (_gda_command);
+	return gda_return_string (gda_command_get_text (_gda_command));
 }
 
 void
-Command::setText (gchar * text)
+Command::setText (const string& text)
 {
-	gda_command_set_text (_gda_command, text);
+	gda_command_set_text (_gda_command, const_cast<gchar*>(text.c_str ()));
 }
 
 GDA_CommandType
@@ -82,25 +101,94 @@ Command::setCmdType (GDA_CommandType type)
 	gda_command_set_cmd_type (_gda_command, type);
 }
 
-Recordset *
-Command::execute (gulong * reccount, gulong flags)
+Recordset
+Command::execute (gulong& reccount, gulong flags)
 {
-	GdaRecordset *pGdaRecordset = NULL;
-	pGdaRecordset = gda_command_execute (_gda_command, reccount, flags);
+	GdaRecordset *gdaRecordset = NULL;
+	gdaRecordset = gda_command_execute (_gda_command, &reccount, flags);
 
-	Recordset *pRecordset = NULL;
-	if (pGdaRecordset != NULL) {
-		pRecordset = new Recordset (pGdaRecordset, cnc);
-	}
-	else {
-		pRecordset = new Recordset ();
-	}
+    Recordset recordset (gdaRecordset);
 
-	return pRecordset;
+	return recordset;
 }
 
-//void Command::createParameter(gchar* name, GDA_ParameterDirection inout, Value *value) {
-// FIXME If we don't use GDA_Value, how do use use the c function gda_command_create_parameter?
-//      GDA_Value v(value->getCValue());
-//      gda_command_create_parameter(_gda_command,name,inout,&v);
-//}
+void
+Command::createParameter (
+	const string& name, GDA_ParameterDirection inout, const Value& value)
+{
+	_parameters_values.insert (_parameters_values.end (), value);
+
+	gda_command_create_parameter (
+		_gda_command,
+		const_cast<gchar*>(name.c_str ()),
+		inout,
+		_parameters_values [_parameters_values.size () - 1]._gda_value);
+}
+/*
+glong
+Command::getTimeout ()
+{
+	return gda_command_get_timeout (_gda_command);
+}
+
+void
+Command::setTimeout (glong timeout)
+{
+	gda_command_set_timeout (_gda_command, timeout);
+}
+*/
+
+GdaCommand*
+Command::getCStruct (bool refn = true) const
+{
+	if (refn)
+		ref ();
+
+	return _gda_command;
+}
+
+
+void
+Command::setCStruct (GdaCommand *cmd)
+{
+    unref ();
+	_gda_command = cmd;
+}
+
+
+void
+Command::ref () const
+{
+	if (NULL == _gda_command) {
+		g_warning ("gda::Command::ref () received NULL pointer");
+	}
+	else {
+#ifdef HAVE_GOBJECT
+		g_object_ref (G_OBJECT (_gda_command));
+		GdaConnection* cnc = gda_command_get_connection (_gda_command);
+		if (NULL != cnc) {
+			g_object_ref (G_OBJECT (cnc));
+		}
+#else
+		gtk_object_ref (GTK_OBJECT (_gda_command));
+		GdaConnection* cnc = gda_command_get_connection (_gda_command);
+		if (NULL != cnc) {
+			gtk_object_ref (GTK_OBJECT (cnc));
+		}
+#endif
+	}
+	}
+
+void
+Command::unref ()
+{
+	if (_gda_command != NULL) {
+		GdaConnection* cnc = gda_command_get_connection (_gda_command);
+		if (cnc != NULL) {
+			gda_connection_free (cnc);
+		}
+
+		gda_command_free (_gda_command);
+	}
+}
+

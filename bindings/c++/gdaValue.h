@@ -19,34 +19,55 @@
 #ifndef __gda_bindings_cpp_gdaValueH
 #define __gda_bindings_cpp_gdaValueH
 
-#include "gdaIncludes.h"
+namespace gda {
 
-namespace gda
-{
+class VarBinString {
 
-	class Value
-	{
+	public:
+		VarBinString ();
+		VarBinString (const GDA_VarBinString& varBinString);
+		VarBinString (const VarBinString& varBinString);
+		~VarBinString ();
+
+		VarBinString& operator=(const GDA_VarBinString& varBinString);
+		VarBinString& operator=(const VarBinString& varBinString);
+
+		CORBA_octet& operator[](unsigned int index);
+
+		unsigned int length ();
+
+	private:
+
+		void freeBuffers ();
+		GDA_VarBinString* _GDA_VarBinString;
+}; // class VarBinString
+
+class Value {
+	friend class Command;
+	friend class Field;
+
 	      public:
 		Value ();
+		Value (const Value& value);
 		Value (GDA_FieldValue * fv);
+		Value (GDA_Value* v);
 		~Value ();
 
-		GDA_FieldValue *getCStruct ();
-		//      GDA_Value getCValue();
-		void setCStruct (GDA_FieldValue * fv);
+		Value& operator=(const Value& value);
 
-		gchar getTinyint ();
-		glong getBigint ();
+
+		gchar getTinyInt ();
+		glong getBigInt ();
 		bool getBoolean ();
 		GDA_Date getDate ();
-		GDA_DbDate getDBdate ();
-		GDA_DbTime getDBtime ();
-		GDA_DbTimestamp getDBtstamp ();
+		GDA_DbDate getDBDate ();
+		GDA_DbTime getDBTime();
+		GDA_DbTimestamp getDBTStamp ();
 		gdouble getDouble ();
 		glong getInteger ();
-		GDA_VarBinString getVarLenString ();
-		GDA_VarBinString getFixLenString ();
-		gchar *getLongVarChar ();
+		//GDA_VarBinString getVarLenString ();
+		//GDA_VarBinString getFixLenString ();
+		string getLongVarChar ();
 		gfloat getFloat ();
 		gint getSmallInt ();
 		gulong getULongLongInt ();
@@ -61,16 +82,18 @@ namespace gda
 		void set (GDA_DbTimestamp a);
 		void set (gdouble a);
 		// void set(glong a);  // CORBA_long
-		void set (GDA_VarBinString a);
+		//void set (GDA_VarBinString a);
 		// void set(GDA_VarBinString a);  // GDA_VarBinString fb; 
-		void set (gchar * a);
+		void set (const string& a);
 		void set (gfloat a);
-		// void set(gint a); // CORBA_short
+		//void set (gint16 a); // CORBA_short
 		void set (gulong a);
 		void set (guint a);
 
 	      private:
-		  GDA_FieldValue * _gda_fieldvalue;
+		GDA_Value* _gda_value;
+
+		static void copyValue (const GDA_Value* src, GDA_Value* dst);
 	};
 
 };

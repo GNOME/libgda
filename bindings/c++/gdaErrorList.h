@@ -19,26 +19,33 @@
 #ifndef __gda_bindings_cpp_gdaErrorListH
 #define __gda_bindings_cpp_gdaErrorListH
 
-#include "gdaIncludes.h"
-
 namespace gda
 {
 
+class Error;
+
 	class ErrorList
+: public vector<Error>
 	{
+
+	friend class Connection;
+
 	      public:
+		ErrorList ();
 		ErrorList (CORBA_Environment * ev);
 		ErrorList (GList * errorList);
+		ErrorList (const ErrorList& errorList);
 		~ErrorList ();
 
-		GList *getCStruct ();
-		void setCStruct (GList * errorList);
-		GList *errors ();
+		ErrorList& operator=(const ErrorList& errorList);
 
 	      private:
-		  GList * _errors;
+		ErrorList glist2vector (GList* errorList, bool freeList = false);
+		GList* vector2glist (ErrorList& errorList);
+
+		GList* errors ();
 	};
 
 };
 
-#endif
+#endif // __gda_bindings_cpp_gdaErrorListH

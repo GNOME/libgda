@@ -19,38 +19,43 @@
 #ifndef __gda_bindings_cpp_gdaBatchH
 #define __gda_bindings_cpp_gdaBatchH
 
-#include "gdaIncludes.h"
+#include "gdaConnection.h"
+#include "gdaValue.h"
 
-namespace gda
-{
+namespace gda {
 
-	class Batch
-	{
+class Batch {
 	      public:
 		Batch ();
-		Batch (GdaBatch * a);
+        Batch (const Batch& job);
+		Batch (GdaBatch* job);
 		~Batch ();
 
-		GdaBatch *getCStruct ();
-		void setCStruct (GdaBatch * job);
+        Batch& operator=(const Batch& job);
 
-		gboolean loadFile (const gchar * filename, gboolean clean);
-		void addCommand (const gchar * cmd);
+
+		bool loadFile (const string& filename, bool clean);
+		void addCommand (const string& cmdText);
 		void clear ();
 
 		bool start ();
 		void stop ();
-		gboolean isRunning ();
+		bool isRunning ();
 
-		Connection *getConnection ();
-		void setConnection (Connection * cnc);
-		gboolean getTransactionMode ();
-		void setTransactionMode (gboolean mode);
+		Connection getConnection ();
+		void setConnection (const Connection& cnc);
+		bool getTransactionMode ();
+		void setTransactionMode (bool mode);
 
 	      private:
-		  GdaBatch * _gda_batch;
-		Connection *cnc;
+		GdaBatch* getCStruct (bool refn = true) const;
+		void setCStruct (GdaBatch* job);
 
+		void ref () const;
+		void unref ();
+
+		GdaBatch* _gda_batch;
+		Connection _connection;
 	};
 
 };

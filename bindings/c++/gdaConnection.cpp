@@ -28,62 +28,71 @@ Connection::Connection ()
 	_gda_connection = NULL;
 }
 
-Connection::Connection (GdaConnection * a)
+Connection::Connection (GdaConnection *cnc)
 {
-	_gda_connection = a;
+	_gda_connection = NULL;
+	setCStruct (cnc);
+}
+
+Connection::Connection (const Connection& cnc)
+{
+	_gda_connection = NULL;
+	setCStruct (cnc.getCStruct ());
 }
 
 Connection::Connection (CORBA_ORB orb)
 {
-	_gda_connection = gda_connection_new (orb);
+	_gda_connection = NULL;
+	setCStruct (gda_connection_new (orb));
 }
 
-Connection::~Connection ()
+Connection::~Connection()
 {
-	if (_gda_connection)
-		gda_connection_free (_gda_connection);
+	unref ();
 }
 
-GdaConnection *
-Connection::getCStruct ()
+Connection&
+Connection::operator=(const Connection& cnc)
 {
-	return _gda_connection;
+	setCStruct (cnc.getCStruct ());
+	return *this;
 }
 
 void
-Connection::setCStruct (GdaConnection * cnc)
+Connection::setProvider (const string& name)
 {
-	_gda_connection = cnc;
+	gda_connection_set_provider (
+		_gda_connection, const_cast<gchar*>(name.c_str ()));
 }
 
-void
-Connection::setProvider (gchar * name)
-{
-	gda_connection_set_provider (_gda_connection, name);
-}
-
-const gchar *
+string
 Connection::getProvider ()
 {
-	return gda_connection_get_provider (_gda_connection);
+	return gda_return_string (
+		(gchar*)gda_connection_get_provider (_gda_connection));
 }
 
-gboolean
+bool
 Connection::supports (GDA_Connection_Feature feature)
 {
 	return gda_connection_supports (_gda_connection, feature);
 }
 
 void
-Connection::setDefaultDB (gchar * dsn)
+Connection::setDefaultDB (const string& dsn)
 {
-	gda_connection_set_default_db (_gda_connection, dsn);
+	gda_connection_set_default_db (
+		_gda_connection, const_cast<gchar*>(dsn.c_str ()));
 }
 
 gint
-Connection::open (gchar * dsn, gchar * user, gchar * pwd)
+Connection::open (const string& dsn, const string& user, const string& pwd)
 {
-	return gda_connection_open (_gda_connection, dsn, user, pwd);
+	return gda_connection_open (
+		_gda_connection,
+		const_cast<gchar*>(dsn.c_str ()),
+		const_cast<gchar*>(user.c_str ()),
+		const_cast<gchar*>(pwd.c_str ()));
 }
 
 void
@@ -92,12 +101,64 @@ Connection::close ()
 	gda_connection_close (_gda_connection);
 }
 
-ErrorList *
+Recordset
+Connection::openSchema (GDA_Connection_QType t, ...)
+{
+	va_list ap;
+	GDA_Connection_ConstraintType constraint_type;
+	gint                          index;
+	Recordset					empty;
+
+	g_return_val_if_fail(isOpen (), empty);
+	g_return_val_if_fail(_gda_connection->connection != NULL, empty);
+
+	vector<GDA_Connection_ConstraintType> types;
+	vector<string> values;
+
+	va_start (ap, t);
+	while (1) {
+		constraint_type = static_cast<GDA_Connection_ConstraintType>(va_arg(ap, int));
+		if (constraint_type == GDA_Connection_no_CONSTRAINT)
+		  break;
+
+		types.insert (types.end (), constraint_type);
+		values.insert (values.end (), va_arg(ap, const char*));
+	}
+
+	GdaConstraint_Element* elements = g_new0 (GdaConstraint_Element, types.size () + 1);
+
+	index = 0;
+	while (index < types.size ()) {
+		elements [index].type = GDA_Connection_QType(types [index]); // something wrong here: conversion betwee GDA_Connection_ConstraintType and GDA_Connection_QType
+		elements [index].value = const_cast<gchar*>(values [index].c_str ());
+	}
+
+	elements [index].type = GDA_Connection_QType (GDA_Connection_no_CONSTRAINT); // something wrong here: conversion betwee GDA_Connection_ConstraintType and GDA_Connection_QType
+
+	return openSchemaArray (t, elements);
+}
+
+Recordset
+Connection::openSchemaArray (GDA_Connection_QType t, GdaConstraint_Element* elems)
+{
+	Recordset recordset (gda_connection_open_schema_array (_gda_connection, t, elems));
+
+	return recordset;
+}
+
+glong
+Connection::modifySchema (GDA_Connection_QType t, ...)
+{
+	g_return_val_if_fail(isOpen (), -1);
+	g_return_val_if_fail(_gda_connection->connection != NULL, -1);
+}
+
+ErrorList
 Connection::getErrors ()
 {
-	ErrorList *a = NULL;
-	a = new ErrorList (gda_connection_get_errors (_gda_connection));
-	return a;
+	ErrorList errorList (gda_connection_get_errors (_gda_connection));
+
+	return errorList;
 }
 
 gint
@@ -118,20 +179,27 @@ Connection::rollbackTransaction ()
 	return gda_connection_rollback_transaction (_gda_connection);
 }
 
-Recordset *
-Connection::execute (gchar * txt, gulong * reccount, gulong flags)
+Recordset
+Connection::execute (const string& txt, gulong& reccount, gulong flags)
 {
-	GdaRecordset *b = NULL;
-	Recordset *a = NULL;
-	b = gda_connection_execute (_gda_connection, txt, reccount, flags);
-	a = new Recordset (b, this);
-	return a;
+	GdaRecordset *gdaRst = NULL;
+	//Recordset *rst = NULL;
+	gdaRst = gda_connection_execute (
+		_gda_connection, const_cast<gchar*>(txt.c_str ()), &reccount, flags);
+	if (gdaRst != NULL) {
+  		ref (); // the same connection gobject is inside returned recordset
+	}
+	
+	Recordset rst (gdaRst);
+
+	return rst;
 }
 
 gint
-Connection::startLogging (gchar * filename)
+Connection::startLogging (const string& filename)
 {
-	return gda_connection_start_logging (_gda_connection, filename);
+	return gda_connection_start_logging (
+		_gda_connection, const_cast<gchar*>(filename.c_str ()));
 }
 
 gint
@@ -141,38 +209,124 @@ Connection::stopLogging ()
 }
 
 void
-Connection::addSingleError (Error * error)
+Connection::addSingleError (Error& error)
 {
-	gda_connection_add_single_error (_gda_connection,
-					 error->getCStruct ());
+	gda_connection_add_single_error (_gda_connection, error.getCStruct ());
 }
 
 void
-Connection::addErrorlist (ErrorList * list)
+Connection::addErrorlist (ErrorList& list)
 {
-	gda_connection_add_error_list (_gda_connection, list->errors ());
+	gda_connection_add_error_list (_gda_connection, list.errors ());
 }
 
-gboolean
+bool
 Connection::isOpen ()
 {
 	return gda_connection_is_open (_gda_connection);
 }
 
-gchar *
+string
 Connection::getDSN ()
 {
-	return gda_connection_get_dsn (_gda_connection);
+	return gda_return_string (gda_connection_get_dsn (_gda_connection));
 }
 
-gchar *
+string
 Connection::getUser ()
 {
-	return gda_connection_get_user (_gda_connection);
+	return gda_return_string (gda_connection_get_user (_gda_connection));
 }
 
-gchar *
+/*
+glong
+Connection::getFlags ()
+{
+	return gda_connection_get_flags (_gda_connection);
+}
+
+void
+Connection::setFlags (glong flags)
+{
+	gda_connection_set_flags (_gda_connection, flags);
+}
+
+glong
+Connection::getCmdTimeout ()
+{
+	return gda_connection_get_cmd_timeout (_gda_connection);
+}
+
+void
+Connection::setCmdTimeout (glong cmdTimeout)
+{
+	gda_connection_set_cmd_timeout (_gda_connection, cmdTimeout);
+}
+
+glong
+Connection::getConnectTimeout ()
+{
+	return gda_connection_get_connect_timeout (_gda_connection);
+}
+
+void
+Connection::setConnectTimeout (glong timeout)
+{
+	gda_connection_set_connect_timeout (_gda_connection, timeout);
+}
+
+GDA_CursorLocation
+Connection::getCursorLocation ()
+{
+	return gda_connection_get_cursor_location (_gda_connection);
+}
+
+void
+Connection::setCursorLocation (GDA_CursorLocation cursor)
+{
+	gda_connection_set_cursor_location (_gda_connection, cursor);
+}
+*/
+
+string
 Connection::getVersion ()
 {
 	return gda_connection_get_version (_gda_connection);
 }
+
+GdaConnection* Connection::getCStruct (bool refn = true) const
+{
+	if (refn) ref ();
+	return _gda_connection;
+}
+
+void Connection::setCStruct (GdaConnection *cnc)
+{
+	unref ();
+	_gda_connection = cnc;
+}
+
+
+void
+Connection::ref () const
+{
+	if (NULL == _gda_connection) {
+		g_warning ("gda::Connection::ref () received NULL pointer");
+	}
+	else {
+#ifdef HAVE_GOBJECT
+		g_object_ref (G_OBJECT (_gda_connection));
+#else
+		gtk_object_ref (GTK_OBJECT (_gda_connection));
+#endif
+	}
+}
+
+void
+Connection::unref ()
+{
+	if (_gda_connection != NULL) {
+		gda_connection_free (_gda_connection);
+	}
+}
+

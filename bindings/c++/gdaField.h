@@ -19,57 +19,90 @@
 #ifndef __gda_bindings_cpp_gdaFieldH
 #define __gda_bindings_cpp_gdaFieldH
 
-#include "gdaIncludes.h"
+namespace gda {
 
-namespace gda
-{
+class Field {
 
-	class Field
-	{
+	friend class Recordset;
+
 	      public:
 		Field ();
+		Field (const Field& field);
 		Field (GdaField * f);
 		~Field ();
 
-		GdaField *getCStruct ();
-		void setCStruct (GdaField * f);
+		Field& operator=(const Field& field);
+		
 
-		Value *realValue ();
-		Value *origValue ();
+		//Value realValue ();
+		//Value origValue ();
 		// What's shadowValue for? FIXME
+
+		// this function does not exist in C implementation; function returns
+		// true if contained GdaField object is not NULL
+		//
+		bool isValid ();
 
 		bool isNull ();
 		GDA_ValueType typeCode ();
-		gchar *typeCodeString ();
+		string typeCodeString ();
 
-		gchar getTinyint ();
-		glong getBigint ();
+		Value getValue ();
+		gchar getTinyInt ();
+		glong getBigInt ();
 		bool getBoolean ();
-		GDate *getDate ();
+		GDate getDate ();		//###
+	//	GDA_DbDate getDBDate ();	//###
+	//	GDA_DbTime getDBTime ();	//###
+	//	GDA_DbTimestamp getDBTStamp ();	//###
 		time_t getTime ();
 		time_t getTimestamp ();
 		gdouble getDouble ();
 		glong getInteger ();
-		gchar *getString ();
+		VarBinString getBinary ();
+	//	GDA_VarBinString getVarLenString();
+	//	GDA_VarBinString getFixLenString();
+	//	string getLongVarChar ();
+		string getString ();
 		gfloat getSingle ();
 		gint getSmallInt ();
-		gulong getUBigInt ();
+	//	gulong getUBigInt ();
+
 		guint getUSmallInt ();
 
-		//      gchar *getText();
+		static string fieldType2String (GDA_ValueType type);
+		static GDA_ValueType string2FieldType (const string& type);
+
+		string stringifyValue ();
+	//	gchar *getText
 		//      gchar *getNewString();
-		gchar *putInString (gchar * bfr, gint maxLength);
+	//	gchar *putInString (gchar *bfr, gint maxLength);
 
 		gint actualSize ();
 		glong definedSize ();
-		gchar *name ();
+		string name ();
 		glong scale ();
 		GDA_ValueType gdaType ();
 		glong cType ();
 		glong nativeType ();
 
 	      private:
+		Field (GdaField* f, GdaRecordset* recordset);
+
+		// manual operations on contained C object not allowed; sorry folks!
+		//
+		GdaField *getCStruct (bool refn = true) const;
+		void setCStruct (GdaField *f);
+
+		void ref () const;
+		void unref ();
+
+		void allocBuffers ();
+		void detachBuffers ();
+		void freeBuffers ();
+
 		  GdaField * _gda_field;
+		GdaRecordset* _gda_recordset;
 	};
 
 };

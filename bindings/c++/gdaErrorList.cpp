@@ -27,36 +27,83 @@
 
 using namespace gda;
 
+ErrorList::ErrorList ()
+{
+}
+
 ErrorList::ErrorList (CORBA_Environment * ev)
 {
-	_errors = gda_error_list_from_exception (ev);
+	*this = glist2vector (gda_error_list_from_exception (ev));
 }
 
 ErrorList::ErrorList (GList * errorList)
 {
-	_errors = errorList;
+	*this = glist2vector (errorList, true);
+}
+
+ErrorList::ErrorList (const ErrorList& errorList)
+{
+	operator=(errorList);
 }
 
 ErrorList::~ErrorList ()
 {
-	if (_errors)
-		gda_error_list_free (_errors);
 }
 
-GList *
-ErrorList::getCStruct ()
+ErrorList&
+ErrorList::operator=(const ErrorList& errorList)
 {
-	return _errors;
+	dynamic_cast<vector<Error>* >(this)->operator=(errorList);
+
+	return *this;
 }
 
 GList *
 ErrorList::errors ()
 {
-	return _errors;
+	return vector2glist (*this);
 }
 
-void
-ErrorList::setCStruct (GList * errorList)
+ErrorList
+ErrorList::glist2vector (GList* errorList, bool freeList)
 {
-	_errors = errorList;
+	GList* node;
+	ErrorList ret;
+	Error error;
+
+	if (NULL != errorList) {
+		for (node = g_list_first (errorList);
+			node != NULL;
+			node = g_list_next (node))
+		{
+			error.setCStruct (static_cast<GdaError*>(node->data));;
+
+			ret.insert (ret.end (), error);
+			if (false == freeList) {
+				error.ref ();
+			}
+		}
+
+		// this ain't mistake - the ownership of list's elements is taken
+		// by Error objects stored in ret vector
+		if (true == freeList) {
+			g_list_free (errorList);
+		}
+}
+
+	return ret;
+}
+
+GList*
+ErrorList::vector2glist (ErrorList& errorList)
+{
+	GList* ret = g_list_alloc ();
+	GdaError* error;
+
+	for (int i = 0; i < errorList.size (); i++) {
+		error = errorList [i].getCStruct ();
+		g_list_append (ret, error);
+	}
+
+	return ret;
 }
