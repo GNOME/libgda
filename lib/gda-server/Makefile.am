@@ -25,6 +25,7 @@ gda_server_headers = \
 	GDA.h
 
 libgda_server_la_SOURCES = \
+	GDA.h \
 	GDA-common.c \
 	GDA-skels.c \
 	gda-server-command.c \
