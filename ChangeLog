@@ -1,10 +1,13 @@
 2004-10-10  Tomasz Kłoczko <kloczek@pld.org.pl>
 
-	* configure.in: added fixes for latest autoheaders (added
-	  autoheaders prototypes).
+	* configure.in, providers/xbase/gda-xbase-database.cpp: fixes for
+	  correct detect xbase library and build backend module (fixed
+	  xbase.h header path).
+
+	* configure.in: added fixes for latest autoheaders (added autoheaders prototypes).
 
 	* po/POTFILES.in: remove providers/sybase/main.c from file (never
-	used in dist resources).
+	  used in dist resources).OA
 
 2004-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
