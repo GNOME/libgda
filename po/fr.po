@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.4\n"
-"POT-Creation-Date: 2001-09-25 23:18+0200\n"
+"POT-Creation-Date: 2001-10-04 18:53+0200\n"
 "PO-Revision-Date: 2001-02-13 12:43+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
 "Language-Team: GNOME French Team <gnomefr@gnomefr.traduc.org>\n"
@@ -37,7 +37,8 @@ msgstr ""
 msgid "Could not open CORBA factory"
 msgstr "Ne peut ouvrir l'usine CORBA"
 
-#: lib/gda-client/gda-field.c:228
+#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
+#: lib/gda-client/gda-field.c:294
 msgid "<NULL>"
 msgstr "<NUL>"
 
@@ -205,7 +206,7 @@ msgid "You must specify a directory for the database to be stored"
 msgstr ""
 
 #: providers/gda-default-server/gda-default-connection.c:235
-#: providers/gda-mysql-server/gda-mysql-connection.c:282
+#: providers/gda-mysql-server/gda-mysql-connection.c:283
 #: providers/gda-oracle-server/gda-oracle-connection.c:334
 #: providers/gda-postgres-server/gda-postgres-connection.c:486
 #, fuzzy
@@ -229,7 +230,7 @@ msgstr ""
 #: providers/gda-interbase-server/gda-interbase-connection.c:288
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
-#: providers/gda-mysql-server/gda-mysql-connection.c:486
+#: providers/gda-mysql-server/gda-mysql-connection.c:490
 #: providers/gda-odbc-server/gda-odbc-connection.c:624
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:479
@@ -245,8 +246,8 @@ msgstr "erreur « %s » à %s"
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
 #: providers/gda-mdb-server/gda-mdb-connection.c:377
-#: providers/gda-mysql-server/gda-mysql-connection.c:491
-#: providers/gda-mysql-server/gda-mysql-connection.c:492
+#: providers/gda-mysql-server/gda-mysql-connection.c:498
+#: providers/gda-mysql-server/gda-mysql-connection.c:499
 #: providers/gda-odbc-server/gda-odbc-connection.c:626
 #: providers/gda-odbc-server/gda-odbc-connection.c:628
 #: providers/gda-odbc-server/gda-odbc-connection.c:659
@@ -266,7 +267,7 @@ msgstr "Non disponible"
 #: providers/gda-interbase-server/gda-interbase-connection.c:295
 #: providers/gda-ldap-server/gda-ldap-connection.c:300
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
-#: providers/gda-mysql-server/gda-mysql-connection.c:493
+#: providers/gda-mysql-server/gda-mysql-connection.c:500
 #: providers/gda-oracle-server/gda-oracle-connection.c:486
 #: providers/gda-postgres-server/gda-postgres-connection.c:777
 #: providers/gda-primebase-server/gda-primebase-connection.c:377
@@ -370,7 +371,7 @@ msgid "mysql_recset is NULL"
 msgstr "mysql_recset est NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:469
-#: providers/gda-mysql-server/gda-mysql-connection.c:838
+#: providers/gda-mysql-server/gda-mysql-connection.c:845
 #: providers/gda-sybase-server/gda-sybase-connection.c:469
 #: providers/gda-tds-server/gda-tds-connection.c:453
 msgid "No table name given for SCHEMA_COLS"
@@ -390,7 +391,7 @@ msgstr "Propriétées du Serveur GDA"
 msgid "MySQL provider connection factory"
 msgstr ""
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:174
+#: providers/gda-mysql-server/gda-mysql-connection.c:175
 #, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
@@ -400,7 +401,7 @@ msgstr ""
 "HOTE ou un PORT. Veuillez supprimer l'UNIX_SOCKET, ou supprimer les options "
 "HOTE et PORT"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:190
+#: providers/gda-mysql-server/gda-mysql-connection.c:191
 #, c-format
 msgid ""
 "Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
@@ -409,11 +410,11 @@ msgstr ""
 "Ouverture de la connexion avec user=%s, password=%s, host=%s, port=%s, "
 "unix_socket=%s"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:616
+#: providers/gda-mysql-server/gda-mysql-connection.c:623
 msgid "Unknown"
 msgstr ""
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:649
+#: providers/gda-mysql-server/gda-mysql-connection.c:656
 msgid "No MYSQL_Connection for GdaServerConnection"
 msgstr ""
 

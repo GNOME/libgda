@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-09-25 23:18+0200\n"
+"POT-Creation-Date: 2001-10-04 18:53+0200\n"
 "PO-Revision-Date: 2001-09-21 12:46CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -37,7 +37,8 @@ msgstr "[klientská knižnice GDA]"
 msgid "Could not open CORBA factory"
 msgstr "Nie je možné otvoriť CORBA factory"
 
-#: lib/gda-client/gda-field.c:228
+#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
+#: lib/gda-client/gda-field.c:294
 msgid "<NULL>"
 msgstr "<NULL>"
 
@@ -200,7 +201,7 @@ msgid "You must specify a directory for the database to be stored"
 msgstr "Musíte zadať priečinok, kde má byť uložená databáza"
 
 #: providers/gda-default-server/gda-default-connection.c:235
-#: providers/gda-mysql-server/gda-mysql-connection.c:282
+#: providers/gda-mysql-server/gda-mysql-connection.c:283
 #: providers/gda-oracle-server/gda-oracle-connection.c:334
 #: providers/gda-postgres-server/gda-postgres-connection.c:486
 msgid "Unknown schema type"
@@ -221,7 +222,7 @@ msgstr "Vytváracie rozhranie spojenia pre poskytovateľa LDAP"
 #: providers/gda-interbase-server/gda-interbase-connection.c:288
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
-#: providers/gda-mysql-server/gda-mysql-connection.c:486
+#: providers/gda-mysql-server/gda-mysql-connection.c:490
 #: providers/gda-odbc-server/gda-odbc-connection.c:624
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:479
@@ -237,8 +238,8 @@ msgstr "chyba '%s' v %s"
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
 #: providers/gda-mdb-server/gda-mdb-connection.c:377
-#: providers/gda-mysql-server/gda-mysql-connection.c:491
-#: providers/gda-mysql-server/gda-mysql-connection.c:492
+#: providers/gda-mysql-server/gda-mysql-connection.c:498
+#: providers/gda-mysql-server/gda-mysql-connection.c:499
 #: providers/gda-odbc-server/gda-odbc-connection.c:626
 #: providers/gda-odbc-server/gda-odbc-connection.c:628
 #: providers/gda-odbc-server/gda-odbc-connection.c:659
@@ -258,7 +259,7 @@ msgstr "Nie je k dispozícii"
 #: providers/gda-interbase-server/gda-interbase-connection.c:295
 #: providers/gda-ldap-server/gda-ldap-connection.c:300
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
-#: providers/gda-mysql-server/gda-mysql-connection.c:493
+#: providers/gda-mysql-server/gda-mysql-connection.c:500
 #: providers/gda-oracle-server/gda-oracle-connection.c:486
 #: providers/gda-postgres-server/gda-postgres-connection.c:777
 #: providers/gda-primebase-server/gda-primebase-connection.c:377
@@ -357,7 +358,7 @@ msgid "mysql_recset is NULL"
 msgstr "mysql_recset je NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:469
-#: providers/gda-mysql-server/gda-mysql-connection.c:838
+#: providers/gda-mysql-server/gda-mysql-connection.c:845
 #: providers/gda-sybase-server/gda-sybase-connection.c:469
 #: providers/gda-tds-server/gda-tds-connection.c:453
 msgid "No table name given for SCHEMA_COLS"
@@ -376,7 +377,7 @@ msgstr "GDA prístup k zdroju dát pre MySQL"
 msgid "MySQL provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa MySQL"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:174
+#: providers/gda-mysql-server/gda-mysql-connection.c:175
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
@@ -384,7 +385,7 @@ msgstr ""
 "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT. "
 "Prosím, odstráňte UNIX_SOCKET, alebo odstráňte obidve voľby HOSTITEĽ a PORT"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:190
+#: providers/gda-mysql-server/gda-mysql-connection.c:191
 #, c-format
 msgid ""
 "Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
@@ -393,11 +394,11 @@ msgstr ""
 "Otváram spojenie s používateľom=%s, heslom=%s, hostiteľom=%s, portom=%s, "
 "unix_socket=%s"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:616
+#: providers/gda-mysql-server/gda-mysql-connection.c:623
 msgid "Unknown"
 msgstr "Neznámy"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:649
+#: providers/gda-mysql-server/gda-mysql-connection.c:656
 msgid "No MYSQL_Connection for GdaServerConnection"
 msgstr "Žiadne MYSQL_Connection pre GdaServerConnection"
 

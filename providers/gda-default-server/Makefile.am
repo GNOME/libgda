@@ -20,7 +20,6 @@ gda_default_srv_LDADD = \
 	-lgdbm
 
 libgda_default_a_SOURCES = \
-	sqlite.h \
 	gda-default-command.c \
 	gda-default-connection.c \
 	gda-default-recordset.c \
