@@ -1,6 +1,8 @@
 bin_PROGRAMS = gda-default-srv
 noinst_LIBRARIES = libgda-default.a
 
+BUILT_SOURCES = sqlite.h
+
 INCLUDES = \
 	$(GDA_PROVIDER_CFLAGS) \
 	-I$(top_srcdir)/lib/gda-common \
@@ -20,20 +22,22 @@ gda_default_srv_LDADD = \
 	-lgdbm
 
 libgda_default_a_SOURCES = \
+	sqlite.h \
 	gda-default-command.c \
 	gda-default-connection.c \
 	gda-default-recordset.c \
 	gda-default.h
 
-sqlite.h: $(top_srcdir)/providers/gda-default-server/libsqlite.a
+sqlite.h: libsqlite.a
 
-$(top_srcdir)/providers/gda-default-server/libsqlite.a: 
-	mkdir -p $(top_srcdir)/providers/gda-default-server/build_sqlite && \
-	cd $(top_srcdir)/providers/gda-default-server/build_sqlite && \
+libsqlite.a: 
+	mkdir -p build_sqlite && \
+	cd build_sqlite && \
 	../sqlite/configure && \
 	make && \
-	cp $(top_srcdir)/providers/gda-default-server/build_sqlite/libsqlite.a $(top_srcdir)/providers/gda-default-server/libsqlite.a && \
-	cd $(top_srcdir)/providers/gda-default-server
+	cp libsqlite.a ../libsqlite.a && \
+	cp sqlite.h ../sqlite.h && \
+	cd ..
 
 oafdir=$(DESTDIR)$(GDA_oafdir)
 

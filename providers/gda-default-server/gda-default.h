@@ -27,7 +27,7 @@
 #endif
 
 #include <gda-server.h>
-#include "build_sqlite/sqlite.h"
+#include <sqlite.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

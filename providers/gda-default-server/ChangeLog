@@ -1,3 +1,7 @@
+2001-10-10  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* Makefile.am: Fixed the sqlite.h build problem.
+
 2001-09-20  Akira TAGOH <tagoh@gnome-db.org>
 
 	* sqlite/tool/lemon.c: Fixed 64 bit pointer issue
