@@ -1,3 +1,7 @@
+2002-09-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* doc/libgda-C.omf.in: validated this file (thanks to Frederic Crozat)
+
 2002-09-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/sqlite/gda-sqlite-provider.c

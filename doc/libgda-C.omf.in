@@ -1,12 +1,10 @@
 <?xml version="1.0" standalone="no"?>
+<!DOCTYPE omf PUBLIC "-//OMF//DTD Scrollkeeper OMF Variant V1.0//EN" "http://scrollkeeper.sourceforge.net/dtds/scrollkeeper-omf-1.0/scrollkeeper-omf.dtd">
 <omf> 
   <resource>
     <creator>
       Rodrigo Moya
     </creator>
-    <maintainer>
-      rodrigo@gnome-db.org (Rodrigo Moya)
-    </maintainer>
     <title>
       libgda (GNOME/GNU Data Access) Manual
     </title>
@@ -20,6 +18,7 @@
     <format mime="text/html"/>
     <identifier url="file:/@prefix@/share/gtk-doc/html/index.html"/>
     <language code="C"/>
+    <relation seriesid="ebe4f574-a94d-11d6-8bc3-bd1f202a92f8"/>
     <rights type="GNU FDL" license.version="1.1"/>
   </resource>
 </omf>
