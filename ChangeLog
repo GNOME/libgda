@@ -1,5 +1,7 @@
 2005-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* configure.in: include version number in AC_PROG_INTLTOOL.
+
 	* libsql/Makefile.am: use GDA* for soname version. Added LIBADD
 	to fix test program compiling problem.
 	
