@@ -1,3 +1,12 @@
+2001-06-14  Robert Marz <Robert.Marz@oracle.com>
+
+	* configure.in: changed ORACLE_CFLAGS and ORACLE_LIBS to match
+	those needed for Oracle 8i. This means that we don't support
+	anymore Oracle 8.0.x (until we find a way to detect which
+	libraries are needed for each Oracle version). But, well, having
+	Oracle 9i out in a few weeks, this does not seem to be very
+	important (I hope)
+
 2001-06-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda.spec.in: remove xmlquery from list of programs to install

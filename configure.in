@@ -535,12 +535,8 @@ then
 	AC_MSG_WARN(ORACLE backend not used)
 else
 	AC_DEFINE(HAVE_ORACLE)
-	ORACLE_CFLAGS="-I${ORACLE_HOME}/rdbms/demo -I${ORACLE_HOME}/plsql/public -I${ORACLE_HOME}/network/public"
-	ORACLE_LIBS="-L${ORACLE_HOME}/lib -lm -ldl -lserver -lclient \
-                     -lgeneric -lcommon -lvsn -lagent -lmm -lclntsh -lslax \
-                     -lsql -lepc -lepcpt -lcore4 -lnlsrtl3 -lepcfe -lextp \
-                     -lplsb -lplsf -licd \
-                     -lpsd -lpsa"
+	ORACLE_CFLAGS="-I${ORACLE_HOME}/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I${ORACLE_HOME}/network/public"
+	ORACLE_LIBS="-L${ORACLE_HOME}/lib -lclntsh "
 fi
 ])
 
