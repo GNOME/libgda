@@ -119,7 +119,10 @@ gda_connection_finalize (GObject *object)
 
 		/* close the connection to the provider */
 		CORBA_exception_init (&ev);
-		GNOME_Database_Connection_close (cnc->priv->corba_cnc, &ev);
+		GNOME_Database_Connection_close (
+			cnc->priv->corba_cnc,
+			bonobo_object_corba_objref (BONOBO_OBJECT (cnc->priv->client)),
+			&ev);
 		CORBA_Object_release (cnc->priv->corba_cnc, &ev);
 		CORBA_exception_free (&ev);
 
