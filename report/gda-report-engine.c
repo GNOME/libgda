@@ -99,11 +99,18 @@ gda_report_engine_query_reports (Gda_ReportEngine *engine, const gchar *conditio
 {
   GList*            list = NULL;
   CORBA_Environment ev;
+  GDA_ReportList*   report_list;
 
   g_return_val_if_fail(engine != NULL, NULL);
   
   CORBA_exception_init(&ev);
-  
+  report_list = GDA_ReportEngine_queryReports(engine->corba_engine,
+                                              (CORBA_char *) condition,
+                                              flags,
+                                              &ev);
+  if (gda_corba_handle_exception(&ev))
+    {
+    }
   CORBA_exception_free(&ev);
   return list;
 }
