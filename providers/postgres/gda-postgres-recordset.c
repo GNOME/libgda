@@ -385,7 +385,7 @@ gda_postgres_recordset_update_row (GdaDataModel *model, const GdaRow *row)
 		/* non-unique column: update it */
 		else {
 			/* fills the 'set' part of the update command */
-			tmp = g_strdup_printf ("%s = '%s', ", 
+			tmp = g_strdup_printf ("\"%s\" = '%s', ", 
 					       column_name,
 					       newval);
 			query_set = g_strconcat (query_set, tmp, NULL);
@@ -438,8 +438,9 @@ gda_postgres_recordset_update_row (GdaDataModel *model, const GdaRow *row)
 	g_free (query_set);
 	g_free (query_where);
 
-	if (status == TRUE)
-               status = GDA_DATA_MODEL_CLASS (parent_class)->update_row (model, row);
+	/* emit update signals */
+	gda_data_model_row_updated (GDA_DATA_MODEL (model), gda_row_get_number ((GdaRow *) row));
+	gda_data_model_changed (GDA_DATA_MODEL (model));
 
 	return status;
 }
