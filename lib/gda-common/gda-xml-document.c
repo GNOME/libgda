@@ -23,21 +23,21 @@
 
 #include "config.h"
 #include "gda-xml-document.h"
-#include <gtk/gtksignal.h>
+#include <gobject/gsignal.h>
 
-static void gda_xml_document_destroy (GtkObject * object);
+static void gda_xml_document_finalize (GObject * object);
 
 /* errors handling */
 static void (gda_xml_document_error_def) (void *ctx, const char *msg, ...);
 static void (gda_xml_document_warn_def) (void *ctx, const char *msg, ...);
-enum
-{
+
+enum {
 	GDA_XML_DOCUMENT_WARNING,
 	GDA_XML_DOCUMENT_ERROR,
 	GDA_XML_DOCUMENT_LAST_SIGNAL
 };
 
-static gint gda_xml_document_signals[GDA_XML_DOCUMENT_LAST_SIGNAL] = { 0, 0 };
+static gint gda_xml_document_signals[GDA_XML_DOCUMENT_LAST_SIGNAL] = { 0, };
 
 /*
  * GdaXmlDocument object implementation
@@ -45,35 +45,35 @@ static gint gda_xml_document_signals[GDA_XML_DOCUMENT_LAST_SIGNAL] = { 0, 0 };
 static void
 gda_xml_document_class_init (GdaXmlDocumentClass * klass)
 {
-	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	gda_xml_document_signals[GDA_XML_DOCUMENT_WARNING] =
-		gtk_signal_new ("warning",
-				GTK_RUN_FIRST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaXmlDocumentClass,
-						   warning),
-				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1,
-				GTK_TYPE_POINTER);
+		g_signal_new ("warning",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaXmlDocumentClass, warning),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_POINTER);
 	gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR] =
-		gtk_signal_new ("error", GTK_RUN_FIRST, object_class->type,
-				GTK_SIGNAL_OFFSET (GdaXmlDocumentClass,
-						   error),
-				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1,
-				GTK_TYPE_POINTER);
-
-	gtk_object_class_add_signals (object_class, gda_xml_document_signals,
-				      GDA_XML_DOCUMENT_LAST_SIGNAL);
+		g_signal_new ("error",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaXmlDocumentClass, error),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1,
+			      G_TYPE_POINTER);
 
 	klass->warning = NULL;
 	klass->error = NULL;
 
-	object_class->destroy =
-		(void (*)(GtkObject *)) gda_xml_document_destroy;
+	object_class->finalize = gda_xml_document_finalize;
 }
 
 static void
-gda_xml_document_init (GdaXmlDocument * xmldoc)
+gda_xml_document_init (GdaXmlDocument *xmldoc, GdaXmlDocumentClass *klass)
 {
 	/* might change in future versions of libxml */
 	extern int xmlDoValidityCheckingDefaultValue;
@@ -87,24 +87,28 @@ gda_xml_document_init (GdaXmlDocument * xmldoc)
 	xmldoc->context = NULL;
 }
 
-GtkType
+GType
 gda_xml_document_get_type (void)
 {
-	static GtkType type = 0;
+	static GType type = 0;
 
 	if (!type) {
-		GtkTypeInfo info = {
-			"GdaXmlDocument",
-			sizeof (GdaXmlDocument),
+		static const GTypeInfo info = {
 			sizeof (GdaXmlDocumentClass),
-			(GtkClassInitFunc) gda_xml_document_class_init,
-			(GtkObjectInitFunc) gda_xml_document_init,
-			(GtkArgSetFunc) 0,
-			(GtkArgSetFunc) 0
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_xml_document_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaXmlDocument),
+			0,
+			(GInstanceInitFunc) gda_xml_document_init
 		};
-		type = gtk_type_unique (gtk_object_get_type (), &info);
+		type = g_type_register_static (G_TYPE_OBJECT,
+					       "GdaXmlDocument",
+					       &info, 0);
 	}
-	return (type);
+	return type;
 }
 
 /**
@@ -118,7 +122,7 @@ gda_xml_document_new (const gchar * root_doc)
 {
 	GdaXmlDocument *xmldoc;
 
-	xmldoc = GDA_XML_DOCUMENT (gtk_type_new (GDA_TYPE_XML_DOCUMENT));
+	xmldoc = GDA_XML_DOCUMENT (g_object_new (GDA_TYPE_XML_DOCUMENT, NULL));
 	gda_xml_document_construct (xmldoc, root_doc);
 
 	return xmldoc;
@@ -138,10 +142,20 @@ gda_xml_document_construct (GdaXmlDocument * xmldoc, const gchar * root_doc)
 	xmldoc->context->warning = gda_xml_document_warn_def;
 }
 
-static void
-gda_xml_document_destroy (GtkObject * object)
+/**
+ * gda_xml_document_free
+ */
+void
+gda_xml_document_free (GdaXmlDocument *xmldoc)
 {
-	GtkObjectClass *parent_class;
+	g_return_if_fail (GDA_IS_XML_DOCUMENT (xmldoc));
+	g_object_unref (G_OBJECT (xmldoc));
+}
+
+static void
+gda_xml_document_finalize (GObject *object)
+{
+	GObjectClass *parent_class;
 	GdaXmlDocument *xmldoc = (GdaXmlDocument *) object;
 
 	g_return_if_fail (GDA_IS_XML_DOCUMENT (xmldoc));
@@ -149,9 +163,9 @@ gda_xml_document_destroy (GtkObject * object)
 	xmlFreeDoc (xmldoc->doc);
 	xmldoc->doc = NULL;
 
-	parent_class = gtk_type_class (gtk_object_get_type ());
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
+	parent_class = g_type_peek_class_parent (GDA_TYPE_XML_DOCUMENT);
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
 /**

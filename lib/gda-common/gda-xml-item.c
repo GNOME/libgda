@@ -35,7 +35,7 @@ struct _GdaXmlItemPrivate {
 };
 
 static void gda_xml_item_class_init (GdaXmlItemClass *klass);
-static void gda_xml_item_init       (GdaXmlItem *item, GdaxmlItemClass *klass);
+static void gda_xml_item_init       (GdaXmlItem *item, GdaXmlItemClass *klass);
 static void gda_xml_item_finalize   (GObject * object);
 
 static GdaXmlItem *gda_xml_item_class_find_id (GdaXmlItem * item,
@@ -120,7 +120,7 @@ gda_xml_item_finalize (GObject *object)
 	g_free (item->priv);
 	item->priv = NULL;
 
-	parent_class = g_type_peek_class_parent (G_TYPE_OBJECT);
+	parent_class = G_OBJECT_CLASS (g_type_peek_class_parent (G_TYPE_OBJECT));
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }
@@ -162,11 +162,11 @@ gda_xml_item_free (GdaXmlItem * item)
  * gda_xml_item_add
  */
 void
-gda_xml_item_add (GdaXmlItem * item, GdaXmlItem * child)
+gda_xml_item_add (GdaXmlItem *item, GdaXmlItem *child)
 {
 	GdaXmlItemClass *item_class;
 
-	item_class = g_type_class (GDA_TYPE_XML_ITEM);
+	item_class = GDA_XML_ITEM_CLASS (g_type_class_peek (GDA_TYPE_XML_ITEM));
 	if (item_class && item_class->add)
 		item_class->add (item, child);
 }
@@ -193,7 +193,7 @@ gda_xml_item_to_dom (GdaXmlItem * item, xmlNodePtr parent_node)
 {
 	GdaXmlItemClass *item_class;
 
-	item_class = g_type_class (GDA_TYPE_XML_ITEM);
+	item_class = G_OBJECT_CLASS (g_type_class_peek (GDA_TYPE_XML_ITEM));
 	if (item_class && item_class->to_dom)
 		return item_class->to_dom (item, parent_node);
 
@@ -320,7 +320,7 @@ gda_xml_item_find_id (GdaXmlItem * item, const gchar * id)
 {
 	GdaXmlItemClass *item_class;
 
-	item_class = g_type_class (GDA_TYPE_XML_ITEM);
+	item_class = GDA_XML_ITEM_CLASS (g_type_class_peek (GDA_TYPE_XML_ITEM));
 	if (item_class && item_class->find_id)
 		return item_class->find_id (item, id);
 
@@ -353,8 +353,7 @@ gda_xml_item_add_id (GdaXmlItem * item, const gchar * id)
 
 	root = gda_xml_item_find_root (item);
 	if (root->priv->idlist == NULL)
-		root->priv->idlist =
-			g_hash_table_new (g_str_hash, g_str_equal);
+		root->priv->idlist = g_hash_table_new (g_str_hash, g_str_equal);
 	g_hash_table_insert (item->priv->idlist, g_strdup (id), item);
 }
 

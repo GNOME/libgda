@@ -24,14 +24,13 @@
 #include "config.h"
 #include "gda-xml-list-item.h"
 
-struct _GdaXmlListItemPrivate
-{
+struct _GdaXmlListItemPrivate {
 	GSList *list;
 };
 
-static void gda_xml_list_item_class_init (GdaXmlListItemClass * klass);
-static void gda_xml_list_item_init (GdaXmlListItem * list_item);
-static void gda_xml_list_item_destroy (GtkObject * object);
+static void gda_xml_list_item_class_init (GdaXmlListItemClass *klass);
+static void gda_xml_list_item_init       (GdaXmlListItem *list_item, GdaXmlListItemClass *klass);
+static void gda_xml_list_item_finalize   (GObject * object);
 
 /*
  * Private functions
@@ -39,7 +38,7 @@ static void gda_xml_list_item_destroy (GtkObject * object);
 static void
 unref_list (GSList * list)
 {
-	g_slist_foreach (list, (GFunc) gtk_object_unref, NULL);
+	g_slist_foreach (list, (GFunc) g_object_unref, NULL);
 	g_slist_free (list);
 }
 
@@ -49,26 +48,26 @@ unref_list (GSList * list)
 static void
 gda_xml_list_item_class_init (GdaXmlListItemClass * klass)
 {
-	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaXmlItemClass *item_class = GDA_XML_ITEM_CLASS (klass);
 
-	object_class->destroy = gda_xml_list_item_destroy;
+	object_class->finalize = gda_xml_list_item_finalize;
 	item_class->add = gda_xml_list_item_add;
 	item_class->to_dom = gda_xml_list_item_to_dom;
 	item_class->find_id = gda_xml_list_item_find_id;
 }
 
 static void
-gda_xml_list_item_init (GdaXmlListItem * list_item)
+gda_xml_list_item_init (GdaXmlListItem *list_item, GdaXmlListItemClass *klass)
 {
 	list_item->priv = g_new (GdaXmlListItemPrivate, 1);
 	list_item->priv->list = NULL;
 }
 
 static void
-gda_xml_list_item_destroy (GtkObject * object)
+gda_xml_list_item_finalize (GObject *object)
 {
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 	GdaXmlListItem *list_item = (GdaXmlListItem *) object;
 
 	g_return_if_fail (GDA_IS_XML_LIST_ITEM (list_item));
@@ -77,29 +76,32 @@ gda_xml_list_item_destroy (GtkObject * object)
 	unref_list (list_item->priv->list);
 	g_free (list_item->priv);
 
-	parent_class = gtk_type_class (GDA_TYPE_XML_ITEM);
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
+	parent_class = G_OBJECT_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_LIST_ITEM));
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
-GtkType
+GType
 gda_xml_list_item_get_type (void)
 {
-	static GtkType type = 0;
+	static GType type = 0;
 
 	if (!type) {
-		GtkTypeInfo info = {
-			"GdaXmlListItem",
-			sizeof (GdaXmlListItem),
+		static const GTypeInfo info = {
 			sizeof (GdaXmlListItemClass),
-			(GtkClassInitFunc) gda_xml_list_item_class_init,
-			(GtkObjectInitFunc) gda_xml_list_item_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_xml_list_item_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaXmlListItem),
+			0,
+			(GInstanceInitFunc) gda_xml_list_item_init
 		};
-		type = gtk_type_unique (gda_xml_item_get_type (), &info);
+		type = g_type_register_static (GDA_TYPE_XML_ITEM,
+					       "GdaXmlListItem",
+					       &info, 0);
 	}
-
 	return type;
 }
 
@@ -111,7 +113,7 @@ gda_xml_list_item_new (const gchar * tag)
 {
 	GdaXmlListItem *list_item;
 
-	list_item = GDA_XML_LIST_ITEM (gtk_type_new (GDA_TYPE_XML_LIST_ITEM));
+	list_item = GDA_XML_LIST_ITEM (g_object_new (GDA_TYPE_XML_LIST_ITEM, NULL));
 	gda_xml_item_set_tag (GDA_XML_ITEM (list_item), tag);
 
 	return GDA_XML_ITEM (list_item);
@@ -144,7 +146,7 @@ gda_xml_list_item_to_dom (GdaXmlItem * item, xmlNodePtr parent_node)
 
 	g_return_val_if_fail (GDA_IS_XML_LIST_ITEM (list_item), NULL);
 
-	item_class = gtk_type_class (GDA_TYPE_XML_ITEM);
+	item_class = GDA_XML_ITEM_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_LIST_ITEM));
 	if (item_class && item_class->to_dom) {
 		node = item_class->to_dom (item, parent_node);
 		g_slist_foreach (list_item->priv->list,
@@ -167,7 +169,7 @@ gda_xml_list_item_find_id (GdaXmlItem * item, const gchar * id)
 
 	g_return_val_if_fail (GDA_IS_XML_LIST_ITEM (list_item), NULL);
 
-	item_class = gtk_type_class (GDA_TYPE_XML_ITEM);
+	item_class = GDA_XML_ITEM_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_LIST_ITEM));
 	if (item_class && item_class->find_id) {
 		id_item = item_class->find_id (item, id);
 		if (id_item != NULL)

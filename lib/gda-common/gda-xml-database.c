@@ -65,7 +65,7 @@ static gint xmldb_signals[GDA_XML_DATABASE_LAST_SIGNAL] = { 0, };
 static void
 gda_xml_database_class_init (GdaXmlDatabaseClass * klass)
 {
-	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	xmldb_signals[GDA_XML_DATABASE_CHANGED] =
 		g_signal_new ("changed",
@@ -99,7 +99,7 @@ gda_xml_database_finalize (GObject *object)
 	g_free (xmldb->priv);
 	xmldb->priv = NULL;
 
-	parent_class = g_type_peek_class_parent (GDA_TYPE_XML_DATABASE);
+	parent_class = G_OBJECT_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_DATABASE));
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }
@@ -214,8 +214,9 @@ void
 gda_xml_database_changed (GdaXmlDatabase * xmldb)
 {
 	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
-	g_signal_emit (GTK_OBJECT (xmldb),
-		       xmldb_signals[GDA_XML_DATABASE_CHANGED]);
+	g_signal_emit (G_OBJECT (xmldb),
+		       xmldb_signals[GDA_XML_DATABASE_CHANGED],
+		       0);
 }
 
 /**

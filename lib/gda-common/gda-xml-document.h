@@ -24,8 +24,6 @@
 #if !defined(__gda_xml_document_h__)
 #  define __gda_xml_document_h__
 
-#include <glib.h>
-#include <gtk/gtkobject.h>
 #include <gda-common-defs.h>
 #include <tree.h>
 #include <parser.h>
@@ -33,17 +31,17 @@
 
 G_BEGIN_DECLS
 
+#define GDA_TYPE_XML_DOCUMENT            (gda_xml_document_get_type())
+#define GDA_XML_DOCUMENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_DOCUMENT, GdaXmlDocument))
+#define GDA_XML_DOCUMENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_DOCUMENT, GdaXmlDocumentClass))
+#define GDA_IS_XML_DOCUMENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_DOCUMENT))
+#define GDA_IS_XML_DOCUMENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DOCUMENT))
+
 typedef struct _GdaXmlDocument GdaXmlDocument;
 typedef struct _GdaXmlDocumentClass GdaXmlDocumentClass;
 
-#define GDA_TYPE_XML_DOCUMENT            (gda_xml_document_get_type())
-#define GDA_XML_DOCUMENT(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_DOCUMENT, GdaXmlDocument)
-#define GDA_XML_DOCUMENT_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_DOCUMENT, GdaXmlDocumentClass)
-#define GDA_IS_XML_DOCUMENT(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_DOCUMENT)
-#define GDA_IS_XML_DOCUMENT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DOCUMENT))
-
 struct _GdaXmlDocument {
-	GtkObject object;
+	GObject object;
 
 	xmlDocPtr doc;
 	xmlDtdPtr dtd;
@@ -52,18 +50,19 @@ struct _GdaXmlDocument {
 };
 
 struct _GdaXmlDocumentClass {
-	GtkObjectClass parent_class;
+	GObjectClass parent_class;
 
 	void (*warning) (GdaXmlDocument * q, const char *msg);
 	void (*error) (GdaXmlDocument * q, const char *msg);
 };
 
-GtkType         gda_xml_document_get_type (void);
+GType           gda_xml_document_get_type (void);
 
 GdaXmlDocument *gda_xml_document_new (const gchar * root_doc);
 void            gda_xml_document_construct (GdaXmlDocument * xmlfile,
 					    const gchar * root_doc);
 /*GdaXmlDocument* gda_xml_document_new_from_file (const gchar *filename);*/
+void            gda_xml_document_free (GdaXmlDocument *xmldoc);
 
 gint            gda_xml_document_get_compress_mode (GdaXmlDocument *xmldoc);
 void            gda_xml_document_set_compress_mode (GdaXmlDocument *xmldoc, gint mode);
