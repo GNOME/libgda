@@ -21,7 +21,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <libgda/gda-intl.h>

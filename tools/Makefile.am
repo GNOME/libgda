@@ -9,22 +9,22 @@ endif
 bin_PROGRAMS = gda-run $(CONFIG_TOOL)
 
 INCLUDES = \
-	-I. \
-	$(LIBGDA_CFLAGS) \
+	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	-I$(top_srcdir)
+	-I. \
+	$(LIBGDA_CFLAGS)
 
 gda_run_SOURCES = gda-run.c
 gda_run_LDADD = \
-	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-2.la 
+	$(top_builddir)/libgda/libgda-2.la \
+	$(LIBGDA_LIBS)
 
 gda_config_tool_SOURCES = gda-config-tool.c
 gda_config_tool_LDADD = \
+	$(top_builddir)/libgda/libgda-2.la \
 	$(READLINE_LIB) \
 	$(HISTORY_LIB) \
 	$(POPT_LIB) \
-	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-2.la
+	$(LIBGDA_LIBS)
 
 EXTRA_DIST = gda-config-tool.1 gda-config.5

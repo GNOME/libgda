@@ -1,7 +1,7 @@
 INCLUDES = \
+        -I$(top_srcdir) \
         -I$(top_builddir) \
         -I$(top_builddir)/report \
-        -I$(top_srcdir) \
         $(LIBGDA_CFLAGS)
 
 bin_PROGRAMS = gda-report-test 
