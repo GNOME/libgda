@@ -514,7 +514,7 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 
 		g_free (str);
 		break;
-	default:
+	default: ;
 	}
 
 	return reclist;
@@ -680,7 +680,7 @@ gda_mysql_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_SQL :
 	case GDA_CONNECTION_FEATURE_TRANSACTIONS :
 		return TRUE;
-	default :
+	default : ;
 	}
 
 	return FALSE;
@@ -1211,7 +1211,7 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 		return get_mysql_tables (cnc, params);
 	case GDA_CONNECTION_SCHEMA_TYPES :
 		return get_mysql_types (cnc, params);
-	default :
+	default : ;
 	}
 
 	return NULL;

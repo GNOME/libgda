@@ -389,7 +389,7 @@ gda_mdb_provider_execute_command (GdaServerProvider *provider,
 			g_strfreev (arr);
 		}
 		break;
-	default :
+	default : ;
 	}
 
 	return reclist;
@@ -438,7 +438,7 @@ gda_mdb_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_PROCEDURES :
 	case GDA_CONNECTION_FEATURE_SQL :
 		return TRUE;
-	default :
+	default : ;
 	}
 
 	return FALSE;

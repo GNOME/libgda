@@ -110,7 +110,7 @@ gda_oracle_handle_error(gint result, GdaConnection *cnc,
 			break;
 		case OCI_HTYPE_ENV:
 			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->henv, type, file, line));
-		default:
+		default: ;
 		}
 		break;
 	default:

@@ -71,7 +71,7 @@ gda_type_to_string (GdaValueType type)
 	case GDA_VALUE_TYPE_GOBJECT : return "gobject";
 	case GDA_VALUE_TYPE_TYPE : return "type";
 	case GDA_VALUE_TYPE_UNKNOWN : return "unknown";
-	default:
+	default: ;
 	}
 
 	return "unknown";

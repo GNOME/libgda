@@ -275,7 +275,7 @@ gda_ldap_provider_supports (GdaServerProvider *provider,
 	switch (feature) {
 	case GDA_CONNECTION_FEATURE_SQL :
 		return TRUE;
-	default :
+	default : ;
 	}
 
 	return FALSE;
@@ -466,7 +466,7 @@ gda_ldap_provider_get_schema (GdaServerProvider *provider,
 		return get_ldap_tables (cnc, params);
 	case GDA_CONNECTION_SCHEMA_TYPES :
 		return get_ldap_types (cnc, params);
-	default :
+	default : ;
 	}
 
 	return NULL;

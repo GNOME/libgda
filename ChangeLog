@@ -1,3 +1,13 @@
+2004-05-31  Jürg Billeter <j@bitron.ch>
+
+	* libgda/gda-util.c:
+	* providers/mdb/gda-mdb-provider.c:
+	* providers/ldap/gda-ldap-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/oracle/utils.c:
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/xml/gda-xml-provider.c: fixes for compilation with gcc 3.4.
+
 2004-05-10  Murray Cumming  <murrayc@murrayc@.com>
 
 	* libgda/gda-util.c (gda_type_to_string): Added case statements for 

@@ -624,7 +624,7 @@ gda_sqlite_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_TRIGGERS :
 	case GDA_CONNECTION_FEATURE_VIEWS :
 		return TRUE;
-	default:
+	default: ;
 	}
 
 	return FALSE;
@@ -810,7 +810,7 @@ gda_sqlite_provider_get_schema (GdaServerProvider *provider,
 		return get_tables (cnc);
 	case GDA_CONNECTION_SCHEMA_TYPES :
 		return get_types ();
-	default:
+	default: ;
 	}
 
 	return NULL;
