@@ -35,6 +35,8 @@ static Gda_ServerImplFunctions server_impl_functions =
   gda_odbc_connection_supports,
   gda_odbc_connection_get_gda_type,
   gda_odbc_connection_get_c_type,
+  gda_odbc_connection_sql2xml,
+  gda_odbc_connection_xml2sql,
   gda_odbc_connection_free,
 
   gda_odbc_command_new,

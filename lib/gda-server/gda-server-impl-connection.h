@@ -106,6 +106,12 @@ CORBA_char* impl_GDA_Connection_createTable (impl_POA_GDA_Connection *servant,
 CORBA_boolean impl_GDA_Connection_supports (impl_POA_GDA_Connection *servant,
                                             GDA_Connection_Feature feature,
                                             CORBA_Environment *ev);
+CORBA_char* impl_GDA_Connection_sql2xml (impl_POA_GDA_Connection *servant,
+                                         CORBA_char *sql,
+                                         CORBA_Environment *ev);
+CORBA_char* impl_GDA_Connection_xml2sql (impl_POA_GDA_Connection *servant,
+                                         CORBA_char *xml,
+                                         CORBA_Environment *ev);
 
 #endif
 

@@ -35,6 +35,8 @@ static Gda_ServerImplFunctions server_impl_functions =
   gda_interbase_connection_supports,
   gda_interbase_connection_get_gda_type,
   gda_interbase_connection_get_c_type,
+  gda_interbase_connection_sql2xml,
+  gda_interbase_connection_xml2sql,
   gda_interbase_connection_free,
 
   gda_interbase_command_new,

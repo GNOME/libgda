@@ -99,6 +99,8 @@ GDA_ValueType gda_mysql_connection_get_gda_type (Gda_ServerConnection *cnc,
 						 gulong sql_type);
 gshort gda_mysql_connection_get_c_type (Gda_ServerConnection *cnc,
 					GDA_ValueType type);
+gchar* gda_mysql_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql);
+gchar* gda_mysql_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml);
 void gda_mysql_connection_free (Gda_ServerConnection *cnc);
 
 gboolean gda_mysql_command_new (Gda_ServerCommand *cmd);

@@ -22,6 +22,14 @@
  */
 
 // $Log$
+// Revision 1.8  2001/02/14 17:31:59  rodrigo
+// 2001-02-14	Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* idl/GDA_Connection.idl: added new conversion methods
+// 	(xml2sql and sql2xml)
+// 	* lib/gda-client/gda-connection.[ch],
+// 	lib/gda-server/*, providers/*: added new IDL methods
+//
 // Revision 1.7  2000/11/27 17:50:27  rodrigo
 // 2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
 //
@@ -349,6 +357,18 @@ gda_sybase_connection_get_c_type (Gda_ServerConnection *cnc,
                                   GDA_ValueType gda_type)
 {
   return sybase_get_c_type(gda_type);
+}
+
+gchar *
+gda_sybase_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
+{
+  return NULL;
+}
+
+gchar *
+gda_sybase_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
+{
+  return NULL;
 }
 
 void

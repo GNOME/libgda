@@ -116,6 +116,10 @@ module GDA {
 		long        stopLogging();
 		string      createTable(in string name, in RowAttributes columns) raises (NotSupported, DriverError);
 		boolean     supports (in Feature feature);
+
+		/* conversion routines */
+		string      sql2xml (in string sql);
+		string      xml2sql (in string xml);
 	};
 };
 

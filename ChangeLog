@@ -1,3 +1,10 @@
+2001-02-14	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* idl/GDA_Connection.idl: added new conversion methods
+	(xml2sql and sql2xml)
+	* lib/gda-client/gda-connection.[ch],
+	lib/gda-server/*, providers/*: added new IDL methods
+
 2001-02-11	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/gda-primebase-server/gda-primebase-connection.c,

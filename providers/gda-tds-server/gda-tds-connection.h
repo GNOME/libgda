@@ -94,6 +94,8 @@ const GDA_ValueType gda_tds_connection_get_gda_type(Gda_ServerConnection *,
                                                     gulong);
 const gshort gda_tds_connection_get_c_type(Gda_ServerConnection *,
                                            GDA_ValueType type);
+gchar* gda_tds_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql);
+gchar* gda_tds_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml);
 void gda_tds_connection_free (Gda_ServerConnection *cnc);
 void gda_tds_connection_clear_user_data(Gda_ServerConnection *, gboolean);
 

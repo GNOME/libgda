@@ -98,6 +98,8 @@ GDA_ValueType gda_mdb_connection_get_gda_type (Gda_ServerConnection *cnc,
 						 gulong sql_type);
 gshort gda_mdb_connection_get_c_type (Gda_ServerConnection *cnc,
 					GDA_ValueType type);
+gchar* gda_mdb_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql);
+gchar* gda_mdb_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml);
 void gda_mdb_connection_free (Gda_ServerConnection *cnc);
 
 gboolean gda_mdb_command_new (Gda_ServerCommand *cmd);

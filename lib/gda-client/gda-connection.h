@@ -153,6 +153,12 @@ void               gda_connection_set_cursor_location (Gda_Connection* cnc, GDA_
 
 gchar*             gda_connection_get_version         (Gda_Connection *cnc);
 
+/* conversion routines */
+gchar*             gda_connection_sql2xml             (Gda_Connection *cnc,
+                                                       const gchar *sql);
+gchar*             gda_connection_xml2sql             (Gda_Connection *cnc,
+                                                       const gchar *xml);
+
 #ifdef __cplusplus
 }
 #endif

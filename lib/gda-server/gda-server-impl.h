@@ -143,6 +143,10 @@ struct _Gda_ServerImplFunctions {
 	gboolean             (*connection_supports)(Gda_ServerConnection *cnc, GDA_Connection_Feature feature);
 	GDA_ValueType        (*connection_get_gda_type)(Gda_ServerConnection *cnc, gulong sql_type);
 	gshort               (*connection_get_c_type)(Gda_ServerConnection *cnc, GDA_ValueType type);
+	gchar*               (*connection_sql2xml)(Gda_ServerConnection *cnc,
+                                                   const gchar *sql);
+	gchar*               (*connection_xml2sql)(Gda_ServerConnection *cnc,
+                                                   const gchar *xml);
 	void                 (*connection_free)(Gda_ServerConnection *cnc);
 
 	/* Command interface */
@@ -212,6 +216,10 @@ GDA_ValueType         gda_server_connection_get_gda_type (Gda_ServerConnection *
                                                           gulong sql_type);
 gshort                gda_server_connection_get_c_type (Gda_ServerConnection *cnc,
                                                         GDA_ValueType type);
+gchar*                gda_server_connection_sql2xml (Gda_ServerConnection *cnc,
+                                                     const gchar *sql);
+gchar*                gda_server_connection_xml2sql (Gda_ServerConnection *cnc,
+                                                     const gchar *xml);
 
 /*
  * Gda_ServerCommand management

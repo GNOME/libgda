@@ -146,6 +146,10 @@ GDA_ValueType gda_postgres_connection_get_gda_type (Gda_ServerConnection *cnc,
                                                     gulong sql_type);
 gshort        gda_postgres_connection_get_c_type (Gda_ServerConnection *cnc,
                                                   GDA_ValueType type);
+gchar*        gda_postgres_connection_sql2xml (Gda_ServerConnection *cnc,
+                                               const gchar *sql);
+gchar*        gda_postgres_connection_xml2sql (Gda_ServerConnection *cnc,
+                                               const gchar *xml);
 void          gda_postgres_connection_free (Gda_ServerConnection *cnc);
 
 

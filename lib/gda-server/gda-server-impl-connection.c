@@ -72,7 +72,9 @@ static POA_GDA_Connection__epv impl_GDA_Connection_epv =
   (gpointer) & impl_GDA_Connection_startLogging,
   (gpointer) & impl_GDA_Connection_stopLogging,
   (gpointer) & impl_GDA_Connection_createTable,
-  (gpointer) & impl_GDA_Connection_supports
+  (gpointer) & impl_GDA_Connection_supports,
+  (gpointer) & impl_GDA_Connection_sql2xml,
+  (gpointer) & impl_GDA_Connection_xml2sql
 };
 
 /*
@@ -416,7 +418,19 @@ impl_GDA_Connection_supports (impl_POA_GDA_Connection * servant,
   return gda_server_connection_supports(servant->cnc, feature);
 }
 
+CORBA_char *
+impl_GDA_Connection_sql2xml (impl_POA_GDA_Connection *servant,
+                             CORBA_char *sql,
+                             CORBA_Environment *ev)
+{
+  return gda_server_connection_sql2xml(servant->cnc, sql);
+}
 
-
-
+CORBA_char *
+impl_GDA_Connection_xml2sql (impl_POA_GDA_Connection *servant,
+                             CORBA_char *xml,
+                             CORBA_Environment *ev)
+{
+  return gda_server_connection_xml2sql(servant->cnc, xml);
+}
 

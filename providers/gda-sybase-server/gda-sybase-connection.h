@@ -94,6 +94,8 @@ const GDA_ValueType gda_sybase_connection_get_gda_type(Gda_ServerConnection *,
                                                        gulong);
 const gshort gda_sybase_connection_get_c_type(Gda_ServerConnection *,
                                               GDA_ValueType type);
+gchar* gda_sybase_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql);
+gchar* gda_sybase_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml);
 void gda_sybase_connection_free (Gda_ServerConnection *cnc);
 void gda_sybase_connection_clear_user_data(Gda_ServerConnection *, gboolean);
 

@@ -40,6 +40,8 @@ static Gda_ServerImplFunctions server_impl_functions =
   gda_sybase_connection_supports,
   gda_sybase_connection_get_gda_type,
   gda_sybase_connection_get_c_type,
+  gda_sybase_connection_sql2xml,
+  gda_sybase_connection_xml2sql,
   gda_sybase_connection_free,
 
   gda_sybase_command_new,
