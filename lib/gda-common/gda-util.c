@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 
-#include <config.h>
+#include "config.h"
 #include "gda-util.h"
 
 #ifdef ENABLE_NLS

@@ -26,7 +26,7 @@
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
-#  include <gtk/gtk.h>
+#  include <gtk/gtkobject.h>
 #endif
 
 #include <orb/orbit.h>
@@ -106,7 +106,7 @@ struct _Gda_RecordsetClass {
 #ifdef HAVE_GOBJECT
 	GObjectClass       parent_class;
 #else
-	GtkAdjustmentClass parent_class;
+	GtkObjectClass     parent_class;
 #endif
 	void              (*error)      (Gda_Recordset *, GList*);
 	void              (*eof)        (Gda_Recordset *);

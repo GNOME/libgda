@@ -20,6 +20,7 @@
 #include "config.h"
 #include "gda-xml-database.h"
 #include <stdlib.h>
+#include <gtk/gtksignal.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

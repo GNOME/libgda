@@ -19,6 +19,7 @@
 
 #include "config.h"
 #include "gda-xml-file.h"
+#include <gtk/gtksignal.h>
 
 enum
 {

@@ -25,7 +25,7 @@
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
-#  include <gtk/gtk.h>
+#  include <gtk/gtkobject.h>
 #endif
 #include <gda-xml-file.h>
 

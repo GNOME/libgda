@@ -20,9 +20,6 @@
 #ifndef __gda_value_h__
 #define __gda_value_h__ 1
 
-
-#include "gda.h"
-
 GDA_Value* gda_value_new             (void);
 void       gda_value_free            (GDA_Value* val);
 

@@ -21,6 +21,7 @@
 #include "config.h"
 #include "gda-batch.h"
 #include <stdio.h>
+#include <gtk/gtksignal.h>
 
 /* Gda_Batch object signals */
 enum
