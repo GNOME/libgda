@@ -51,33 +51,29 @@
 /*
  * Per-object specific structures
  */
-typedef struct
-{
-  OCIEnv*     henv;
-  OCIError*   herr;
-  OCIServer*  hserver;
-  OCISvcCtx*  hservice;
-  OCISession* hsession;
+typedef struct {
+	OCIEnv*     henv;
+	OCIError*   herr;
+	OCIServer*  hserver;
+	OCISvcCtx*  hservice;
+	OCISession* hsession;
 } ORACLE_Connection;
 
-typedef struct
-{
-  ORACLE_Connection* ora_cnc;
-  OCIStmt*           hstmt;
-  sword              stmt_type;
+typedef struct {
+	ORACLE_Connection* ora_cnc;
+	OCIStmt*           hstmt;
+	sword              stmt_type;
 } ORACLE_Command;
 
-typedef struct
-{
-  ORACLE_Connection* ora_cnc;
-  OCIStmt*           hstmt;      /* shared with the ORACLE_Command struct */
+typedef struct {
+	ORACLE_Connection* ora_cnc;
+	OCIStmt*           hstmt;      /* shared with the ORACLE_Command struct */
 } ORACLE_Recordset;
 
-typedef struct
-{
-  OCIDefine* hdef;
-  sb2        indicator;
-  gpointer   real_value;
+typedef struct {
+	OCIDefine* hdef;
+	sb2        indicator;
+	gpointer   real_value;
 } ORACLE_Field;
 
 /*
@@ -93,7 +89,7 @@ gint gda_oracle_connection_begin_transaction (GdaServerConnection *cnc);
 gint gda_oracle_connection_commit_transaction (GdaServerConnection *cnc);
 gint gda_oracle_connection_rollback_transaction (GdaServerConnection *cnc);
 GdaServerRecordset* gda_oracle_connection_open_schema (GdaServerConnection *cnc,
-							GdaServerError *error,
+							GdaError *error,
 							GDA_Connection_QType t,
 							GDA_Connection_Constraint *constraints,
 							       gint length);
@@ -118,7 +114,7 @@ void gda_oracle_connection_free (GdaServerConnection *cnc);
 
 gboolean gda_oracle_command_new (GdaServerCommand *cmd);
 GdaServerRecordset* gda_oracle_command_execute (GdaServerCommand *cmd,
-						 GdaServerError *error,
+						 GdaError *error,
 						 const GDA_CmdParameterSeq *params,
 						 gulong *affected,
 						 gulong options);
@@ -130,7 +126,7 @@ gint     gda_oracle_recordset_move_prev (GdaServerRecordset *recset);
 gint     gda_oracle_recordset_close     (GdaServerRecordset *recset);
 void     gda_oracle_recordset_free      (GdaServerRecordset *recset);
 
-void gda_oracle_error_make (GdaServerError *error,
+void gda_oracle_error_make (GdaError *error,
 			    GdaServerRecordset *recset,
 			    GdaServerConnection *cnc,
 			    gchar *where);

@@ -28,7 +28,8 @@ static GdaServerRecordset *
 init_recordset_fields (GdaServerRecordset *recset,
                        ORACLE_Recordset *ora_recset,
                        ORACLE_Command *ora_cmd,
-                       GdaError *error) {
+                       GdaError *error)
+{
 	g_return_val_if_fail(recset != NULL, recset);
 	g_return_val_if_fail(ora_recset != NULL, recset);
 	g_return_val_if_fail(ora_cmd != NULL, recset);
@@ -156,7 +157,8 @@ init_recordset_fields (GdaServerRecordset *recset,
  * Public functions
  */
 gboolean
-gda_oracle_command_new (GdaServerCommand *cmd) {
+gda_oracle_command_new (GdaServerCommand *cmd)
+{
 	ORACLE_Command*       ora_cmd;
 	GdaServerConnection* cnc;
 	ORACLE_Connection*    ora_cnc;
@@ -195,7 +197,8 @@ gda_oracle_command_execute (GdaServerCommand *cmd,
                             GdaError *error,
                             const GDA_CmdParameterSeq *params,
                             gulong *affected,
-                            gulong options) {
+                            gulong options)
+{
 	GdaServerRecordset* recset = NULL;
 	
 	/* create recordset to be returned */
@@ -210,51 +213,51 @@ gda_oracle_command_execute (GdaServerCommand *cmd,
 		ora_recset = (ORACLE_Recordset *) gda_server_recordset_get_user_data(recset);
 		if (ora_cmd && ora_recset) {
 			switch (gda_server_command_get_cmd_type(cmd)) {
-				case GDA_COMMAND_TYPE_TABLE : {
-					gchar* tmp = g_strdup_printf("SELECT * FROM %s", gda_server_command_get_text(cmd));
-					gda_server_command_set_text(cmd, tmp);
-					g_free((gpointer) tmp);
-				}
-				case GDA_COMMAND_TYPE_TEXT :
-					cmd_text = gda_server_command_get_text(cmd);
-					gda_log_message(_("Executing command '%s'"), cmd_text);
+			case GDA_COMMAND_TYPE_TABLE : {
+				gchar* tmp = g_strdup_printf("SELECT * FROM %s", gda_server_command_get_text(cmd));
+				gda_server_command_set_text(cmd, tmp);
+				g_free((gpointer) tmp);
+			}
+			case GDA_COMMAND_TYPE_TEXT :
+				cmd_text = gda_server_command_get_text(cmd);
+				gda_log_message(_("Executing command '%s'"), cmd_text);
+				
+				if (OCI_SUCCESS == OCIStmtPrepare(ora_cmd->hstmt,
+								  ora_cmd->ora_cnc->herr,
+								  (CONST text *) cmd_text,
+								  strlen(cmd_text),
+								  OCI_NTV_SYNTAX,
+								  OCI_DEFAULT)) {
+					ora_cmd->stmt_type = 0;
+					OCIAttrGet((dvoid *) ora_cmd->hstmt,
+						   OCI_HTYPE_STMT,
+						   (dvoid *) &ora_cmd->stmt_type,
+						   NULL,
+						   OCI_ATTR_STMT_TYPE,
+						   ora_cmd->ora_cnc->herr);
 					
-					if (OCI_SUCCESS == OCIStmtPrepare(ora_cmd->hstmt,
-					                                  ora_cmd->ora_cnc->herr,
-					                                  (CONST text *) cmd_text,
-					                                  strlen(cmd_text),
-					                                  OCI_NTV_SYNTAX,
-					                                  OCI_DEFAULT)) {
-						ora_cmd->stmt_type = 0;
-						OCIAttrGet((dvoid *) ora_cmd->hstmt,
-						           OCI_HTYPE_STMT,
-						           (dvoid *) &ora_cmd->stmt_type,
-						           NULL,
-						           OCI_ATTR_STMT_TYPE,
-						           ora_cmd->ora_cnc->herr);
-					
-						/* now, really execute the command */
-						if (OCI_SUCCESS == OCIStmtExecute(ora_cmd->ora_cnc->hservice,
-						                                  ora_cmd->hstmt,
-						                                  ora_cmd->ora_cnc->herr,
-						                                  (ub4)((OCI_STMT_SELECT == ora_cmd->stmt_type) ? 0 : 1),
-						                                  (ub4) 0,
-						                                  (CONST OCISnapshot *) NULL,
-						                                  (OCISnapshot *) NULL,
-						                                  OCI_DEFAULT)) {
-							ora_recset->ora_cnc = ora_cmd->ora_cnc;
-							if (OCI_STMT_SELECT == ora_cmd->stmt_type) {
-								ora_recset->hstmt = ora_cmd->hstmt;
-								return init_recordset_fields(recset, ora_recset, ora_cmd, error);
-							}
-							else return recset;
+					/* now, really execute the command */
+					if (OCI_SUCCESS == OCIStmtExecute(ora_cmd->ora_cnc->hservice,
+									  ora_cmd->hstmt,
+									  ora_cmd->ora_cnc->herr,
+									  (ub4)((OCI_STMT_SELECT == ora_cmd->stmt_type) ? 0 : 1),
+									  (ub4) 0,
+									  (CONST OCISnapshot *) NULL,
+									  (OCISnapshot *) NULL,
+									  OCI_DEFAULT)) {
+						ora_recset->ora_cnc = ora_cmd->ora_cnc;
+						if (OCI_STMT_SELECT == ora_cmd->stmt_type) {
+							ora_recset->hstmt = ora_cmd->hstmt;
+							return init_recordset_fields(recset, ora_recset, ora_cmd, error);
 						}
+						else return recset;
 					}
-					gda_server_error_make(error,
-					                      0,
-					                      gda_server_command_get_connection(cmd),
-					                      __PRETTY_FUNCTION__);
-					break;
+				}
+				gda_server_error_make(error,
+						      0,
+						      gda_server_command_get_connection(cmd),
+						      __PRETTY_FUNCTION__);
+				break;
 			}
 		}
 		
@@ -269,18 +272,15 @@ gda_oracle_command_execute (GdaServerCommand *cmd,
 void
 gda_oracle_command_free (GdaServerCommand *cmd)
 {
-  ORACLE_Command* ora_cmd;
+	ORACLE_Command* ora_cmd;
 
-  g_return_if_fail(cmd != NULL);
+	g_return_if_fail(cmd != NULL);
 
-  ora_cmd = (ORACLE_Command *) gda_server_command_get_user_data(cmd);
-  if (ora_cmd)
-    {
-      /* free Stmt handle allocated in gda_oracle_command_new() */
-      if (ora_cmd->hstmt != NULL)
-	{
-	  OCIHandleFree((dvoid *) ora_cmd->hstmt, OCI_HTYPE_STMT);
+	ora_cmd = (ORACLE_Command *) gda_server_command_get_user_data(cmd);
+	if (ora_cmd) {
+		/* free Stmt handle allocated in gda_oracle_command_new() */
+		if (ora_cmd->hstmt != NULL)
+			OCIHandleFree((dvoid *) ora_cmd->hstmt, OCI_HTYPE_STMT);
+		g_free((gpointer) ora_cmd);
 	}
-      g_free((gpointer) ora_cmd);
-    }
 }
