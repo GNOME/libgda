@@ -1,4 +1,13 @@
 2002-11-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ 
+	* libgda/gda-config.c:
+	(parse_config_file): setup libxml2 memory functions. Ignore other
+	sections than '/apps/libgda/Datasources' (they are not written again to
+	the file). Don't add empty sections.
+	(gda_config_remove_key): when removing a key, remove also the section
+	if it gets empty.
+
+2002-11-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* doc/C/libgda-docs.sgml: fixed tutorial example. Thanks to
 	calvaris and others for pointing this out.
