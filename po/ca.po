@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-24 20:06+0100\n"
+"POT-Creation-Date: 2004-04-18 21:10+0200\n"
 "PO-Revision-Date: 2004-01-25 17:42GMT\n"
 "Last-Translator: Aleix Badia i Bosch <abadia@ica.es>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
@@ -16,35 +16,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.5\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:518 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "L'origen de dades %s no s'ha trobat a la configuració "
 
-#: libgda/gda-client.c:340
+#: libgda/gda-client.c:341
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "No s'ha pogut trobar el proveïdor %s a la configuració actual"
 
-#: libgda/gda-client.c:370
+#: libgda/gda-client.c:371
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "El proveïdor %s no implementa la funció d'inserció"
 
-#: libgda/gda-client.c:380
+#: libgda/gda-client.c:381
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "No s'ha pogut crear l'objecte GdaServerProvider del connector"
 
-#: libgda/gda-client.c:445
+#: libgda/gda-client.c:461
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Font de dades temporal creada per libgda. No l'elimineu"
 
-#: libgda/gda-config.c:1073
+#: libgda/gda-config.c:1081
 #, c-format
 msgid "Error: %s"
 msgstr "Error: %s"
 
-#: libgda/gda-config.c:1400 providers/ldap/gda-ldap-provider.c:327
+#: libgda/gda-config.c:1408 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
 #: providers/mysql/gda-mysql-provider.c:702
@@ -60,15 +60,15 @@ msgstr "Error: %s"
 msgid "Name"
 msgstr "Nom"
 
-#: libgda/gda-config.c:1401
+#: libgda/gda-config.c:1409
 msgid "Provider"
 msgstr "Proveïdor"
 
-#: libgda/gda-config.c:1402
+#: libgda/gda-config.c:1410
 msgid "Connection string"
 msgstr "Cadena de connexió"
 
-#: libgda/gda-config.c:1403 providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: libgda/gda-config.c:1411 providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
@@ -78,11 +78,11 @@ msgstr "Cadena de connexió"
 msgid "Description"
 msgstr "Descripció"
 
-#: libgda/gda-config.c:1404
+#: libgda/gda-config.c:1412
 msgid "Username"
 msgstr "Nom d'usuari"
 
-#: libgda/gda-config.c:1405
+#: libgda/gda-config.c:1413
 msgid "Password"
 msgstr "Contrasenya"
 
@@ -297,20 +297,20 @@ msgstr ""
 msgid "Not available"
 msgstr "No està disponible"
 
-#: providers/freetds/gda-freetds-recordset.c:376
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
 msgstr "S'ha produït un error al processar les files del resultat.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:383
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr ""
 "La funció td_process_row_tokens() ha retornat un codi de freetds inesperat.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:393
+#: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
 msgstr "S'ha produït un error al processar els resultats.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:400
+#: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr ""
 "La funció td_process_result_tokens ha retornat un codi de freetds inesperat\n"
@@ -378,7 +378,7 @@ msgstr "Funció"
 #: providers/postgres/gda-postgres-provider.c:1196
 #: providers/postgres/gda-postgres-provider.c:1313
 #: providers/postgres/gda-postgres-provider.c:1946
-#: providers/sqlite/gda-sqlite-provider.c:750
+#: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Propietari"
@@ -432,7 +432,7 @@ msgstr "Activadors"
 #: providers/odbc/gda-odbc-provider.c:1259
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
-#: providers/sqlite/gda-sqlite-provider.c:749
+#: providers/sqlite/gda-sqlite-provider.c:786
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Tipus"
@@ -459,7 +459,7 @@ msgstr "Tipus"
 #: providers/postgres/gda-postgres-provider.c:1197
 #: providers/postgres/gda-postgres-provider.c:1314
 #: providers/postgres/gda-postgres-provider.c:1947
-#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Comentaris"
@@ -470,7 +470,7 @@ msgstr "Comentaris"
 #: providers/odbc/gda-odbc-provider.c:1262
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
-#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "Tipus del GDA"
@@ -557,7 +557,7 @@ msgstr "El proveïdor de MDB no suporta transaccions"
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
-#: providers/sqlite/gda-sqlite-provider.c:620
+#: providers/sqlite/gda-sqlite-provider.c:657
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Nom del camp"
@@ -567,7 +567,7 @@ msgstr "Nom del camp"
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Tipus de dada"
@@ -577,7 +577,7 @@ msgstr "Tipus de dada"
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Mida"
@@ -587,7 +587,7 @@ msgstr "Mida"
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Escala"
@@ -597,7 +597,7 @@ msgstr "Escala"
 #: providers/odbc/gda-odbc-provider.c:923
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "No és nul?"
@@ -607,7 +607,7 @@ msgstr "No és nul?"
 #: providers/odbc/gda-odbc-provider.c:924
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "És una clau primària?"
@@ -617,7 +617,7 @@ msgstr "És una clau primària?"
 #: providers/odbc/gda-odbc-provider.c:925
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
-#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "L'índex és exclusiu?"
@@ -627,7 +627,7 @@ msgstr "L'índex és exclusiu?"
 #: providers/odbc/gda-odbc-provider.c:926
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
-#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Referències"
@@ -637,7 +637,7 @@ msgstr "Referències"
 #: providers/odbc/gda-odbc-provider.c:927
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
-#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/sqlite/gda-sqlite-provider.c:665
 msgid "Default value"
 msgstr "Valor per defecte"
 
@@ -835,7 +835,7 @@ msgstr "El gestor de MySQL és invàlid"
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/sqlite/gda-sqlite-provider.c:470
+#: providers/sqlite/gda-sqlite-provider.c:507
 msgid "Transactions are not supported in read-only mode"
 msgstr "El mode read-only no suporta transaccions"
 
@@ -1230,30 +1230,30 @@ msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "No s'ha pogt definir l'opció empty_result_callbacks de SQLite"
 
 #: providers/sqlite/gda-sqlite-provider.c:241
-#: providers/sqlite/gda-sqlite-provider.c:341
-#: providers/sqlite/gda-sqlite-provider.c:552
-#: providers/sqlite/gda-sqlite-provider.c:717
+#: providers/sqlite/gda-sqlite-provider.c:378
+#: providers/sqlite/gda-sqlite-provider.c:589
+#: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
 msgstr "El gestor de SQLite és invàlid"
 
-#: providers/sqlite/gda-sqlite-provider.c:263
+#: providers/sqlite/gda-sqlite-provider.c:299
 msgid "Invalid SQLITE handle"
 msgstr "El gestor de SQLITE és invàlid"
 
-#: providers/sqlite/gda-sqlite-provider.c:359
-#: providers/sqlite/gda-sqlite-provider.c:374
+#: providers/sqlite/gda-sqlite-provider.c:396
+#: providers/sqlite/gda-sqlite-provider.c:411
 msgid "Only one database per connection is allowed"
 msgstr "Només està permesa una base de dades per connexió"
 
-#: providers/sqlite/gda-sqlite-provider.c:388
+#: providers/sqlite/gda-sqlite-provider.c:425
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "Per eliminar una base de dades SQLite s'ha de borrar el fitxer manualment"
 
-#: providers/sqlite/gda-sqlite-provider.c:662
+#: providers/sqlite/gda-sqlite-provider.c:699
 msgid "Could not retrieve information for field"
 msgstr "No s'ha pogut recollir la informació del camp"
 

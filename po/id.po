@@ -7,14 +7,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2004-03-10 15:28+0700\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-04-18 21:10+0200\n"
 "PO-Revision-Date: 2004-03-07 21:12+0700\n"
 "Last-Translator: Arief Mulya Utama <arief_mulya@yahoo.com>\n"
 "Language-Team: Indonesian <sukarelawan@gnome.linux.or.id>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
 #, c-format
@@ -297,21 +297,21 @@ msgstr ""
 msgid "Not available"
 msgstr "Tidak tersedia"
 
-#: providers/freetds/gda-freetds-recordset.c:376
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
 msgstr "Gagal menghasilkan baris data \n"
 
-#: providers/freetds/gda-freetds-recordset.c:383
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr ""
 "Nilai kembali freetds pada fungsi tds_process_row_tokens() tidak "
 "diharapkan.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:393
+#: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
 msgstr "Error memproses hasil.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:400
+#: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr ""
 "Nilai kembali freetds pada fungsi tds_process_result_tokens tidak "
@@ -379,7 +379,7 @@ msgstr "Fungsi"
 #: providers/postgres/gda-postgres-provider.c:1196
 #: providers/postgres/gda-postgres-provider.c:1313
 #: providers/postgres/gda-postgres-provider.c:1946
-#: providers/sqlite/gda-sqlite-provider.c:750
+#: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Pemilik"
@@ -433,7 +433,7 @@ msgstr "Pemicu"
 #: providers/odbc/gda-odbc-provider.c:1259
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
-#: providers/sqlite/gda-sqlite-provider.c:749
+#: providers/sqlite/gda-sqlite-provider.c:786
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Jenis"
@@ -460,7 +460,7 @@ msgstr "Jenis"
 #: providers/postgres/gda-postgres-provider.c:1197
 #: providers/postgres/gda-postgres-provider.c:1314
 #: providers/postgres/gda-postgres-provider.c:1947
-#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Komentar"
@@ -471,7 +471,7 @@ msgstr "Komentar"
 #: providers/odbc/gda-odbc-provider.c:1262
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
-#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "Jenis GDA"
@@ -557,7 +557,7 @@ msgstr "Layanan MDB tidak mendukung Transaksi"
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
-#: providers/sqlite/gda-sqlite-provider.c:620
+#: providers/sqlite/gda-sqlite-provider.c:657
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Nama kolom"
@@ -567,7 +567,7 @@ msgstr "Nama kolom"
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Jenis Data"
@@ -577,7 +577,7 @@ msgstr "Jenis Data"
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Ukuran"
@@ -587,7 +587,7 @@ msgstr "Ukuran"
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Skala"
@@ -597,7 +597,7 @@ msgstr "Skala"
 #: providers/odbc/gda-odbc-provider.c:923
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Bukan null?"
@@ -607,7 +607,7 @@ msgstr "Bukan null?"
 #: providers/odbc/gda-odbc-provider.c:924
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Kunci Primer?"
@@ -617,7 +617,7 @@ msgstr "Kunci Primer?"
 #: providers/odbc/gda-odbc-provider.c:925
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
-#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Indeks Unik?"
@@ -627,7 +627,7 @@ msgstr "Indeks Unik?"
 #: providers/odbc/gda-odbc-provider.c:926
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
-#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Referensi"
@@ -637,7 +637,7 @@ msgstr "Referensi"
 #: providers/odbc/gda-odbc-provider.c:927
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
-#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/sqlite/gda-sqlite-provider.c:665
 msgid "Default value"
 msgstr "Nilai Default"
 
@@ -834,7 +834,7 @@ msgstr "Pengendali MySQL tidak valid"
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/sqlite/gda-sqlite-provider.c:470
+#: providers/sqlite/gda-sqlite-provider.c:507
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transaksi tidak didukung pada mode hanya membaca"
 
@@ -1220,31 +1220,31 @@ msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "Gagal mengatur pilihan SQLite untuk empty_result_callback"
 
 #: providers/sqlite/gda-sqlite-provider.c:241
-#: providers/sqlite/gda-sqlite-provider.c:341
-#: providers/sqlite/gda-sqlite-provider.c:552
-#: providers/sqlite/gda-sqlite-provider.c:717
+#: providers/sqlite/gda-sqlite-provider.c:378
+#: providers/sqlite/gda-sqlite-provider.c:589
+#: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
 msgstr "Pengendali SQLite tidak valid"
 
-#: providers/sqlite/gda-sqlite-provider.c:263
+#: providers/sqlite/gda-sqlite-provider.c:299
 msgid "Invalid SQLITE handle"
 msgstr "Pengendali SQLITE tidak valid"
 
-#: providers/sqlite/gda-sqlite-provider.c:359
-#: providers/sqlite/gda-sqlite-provider.c:374
+#: providers/sqlite/gda-sqlite-provider.c:396
+#: providers/sqlite/gda-sqlite-provider.c:411
 msgid "Only one database per connection is allowed"
 msgstr "Hanya diijinkan satu database per koneksi"
 
-#: providers/sqlite/gda-sqlite-provider.c:388
+#: providers/sqlite/gda-sqlite-provider.c:425
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "Untuk menghapus database SQLite anda harus menghapus sendiri berkas "
 "databasenya"
 
-#: providers/sqlite/gda-sqlite-provider.c:662
+#: providers/sqlite/gda-sqlite-provider.c:699
 msgid "Could not retrieve information for field"
 msgstr "Gagal mengambil informasi isian"
 

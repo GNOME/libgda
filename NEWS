@@ -1,3 +1,27 @@
+libgda 1.0.4, 2004-04-18
+------------------------
+
+ - Fixed connection pool problems with sharing/not sharing of connections (jon, laurent)
+ - Fixed UTF-8 problems in ODBC provider (jon)
+ - Fixed setting of config entries when the type has changed (laurent)
+ - Fixed spec file (rodrigo)
+ - Fixed splitting of SQL commands in SQLite provider (benjamin)
+ - Fixed values in 'Not Null?' fields schema for PostgreSQL provider (denis)
+ - Updated FreeTDS provider to latest FreeTDS API (rodrigo)
+ - Updated translations:
+        - ca (jordi)
+	- cs (mitr)
+	- de (christian)
+	- en_CA (adam)
+	- en_GB (dave)
+	- fi (tvainika)
+	- ga (alastairmck)
+	- hr (rsedak)
+	- id (mohammad)
+	- no (kjartan)
+	- pt_BR (medina)
+	- sv (christian)
+
 libgda 1.0.3, 2004-01-16
 ------------------------
 

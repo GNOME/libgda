@@ -1,5 +1,9 @@
 2004-04-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Released 1.0.4.
+
+2004-04-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #139800
 
 	* providers/freetds/gda-freetds-provider.c (gda_freetds_execute_cmd):

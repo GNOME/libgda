@@ -4,7 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0\n"
-"POT-Creation-Date: 2004-03-18 00:07+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-04-18 21:10+0200\n"
 "PO-Revision-Date: 2004-03-18 00:07+CET\n"
 "Last-Translator: auto\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
@@ -220,8 +221,8 @@ msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"Konekcija prekinuta. Najmanje morate obezbjediti ime domaćina, korisničko ime "
-"i lozinku koristeći DSN 'QUERY=;USER=;PASSWORD='."
+"Konekcija prekinuta. Najmanje morate obezbjediti ime domaćina, korisničko "
+"ime i lozinku koristeći DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
@@ -294,19 +295,19 @@ msgstr ""
 msgid "Not available"
 msgstr "Nije dostupno"
 
-#: providers/freetds/gda-freetds-recordset.c:376
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
 msgstr "Greška pri obradi rezultata reda.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:383
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Neočekivani freetds povratni kod u tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:393
+#: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
 msgstr "Greška pri obrađivanju rezultata.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:400
+#: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Neočekivani freetds povratni kod u tds_process_result_tokens\n"
 
@@ -324,7 +325,7 @@ msgid "Could not allocate environment handle.\n"
 msgstr "Ne može dodijeliti oznaku okruženja.\n"
 
 #. GetInfo is needed for obtaining database name
-#.  is needed for tables schema
+#. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr "SQLGetInfo nije podržan. IBM DB2 Posrednik neće raditi.\n"
@@ -371,7 +372,7 @@ msgstr "Funkcija"
 #: providers/postgres/gda-postgres-provider.c:1196
 #: providers/postgres/gda-postgres-provider.c:1313
 #: providers/postgres/gda-postgres-provider.c:1946
-#: providers/sqlite/gda-sqlite-provider.c:750
+#: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Vlasnik"
@@ -425,7 +426,7 @@ msgstr "Okidači"
 #: providers/odbc/gda-odbc-provider.c:1259
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
-#: providers/sqlite/gda-sqlite-provider.c:749
+#: providers/sqlite/gda-sqlite-provider.c:786
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Tip"
@@ -452,7 +453,7 @@ msgstr "Tip"
 #: providers/postgres/gda-postgres-provider.c:1197
 #: providers/postgres/gda-postgres-provider.c:1314
 #: providers/postgres/gda-postgres-provider.c:1947
-#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Komentari"
@@ -463,7 +464,7 @@ msgstr "Komentari"
 #: providers/odbc/gda-odbc-provider.c:1262
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
-#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "GDA tip"
@@ -549,7 +550,7 @@ msgstr "Transakcija nije podržana u MDB posredniku"
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
-#: providers/sqlite/gda-sqlite-provider.c:620
+#: providers/sqlite/gda-sqlite-provider.c:657
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Naziv polja"
@@ -559,7 +560,7 @@ msgstr "Naziv polja"
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Vrsta podataka"
@@ -569,7 +570,7 @@ msgstr "Vrsta podataka"
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Veličina"
@@ -579,7 +580,7 @@ msgstr "Veličina"
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Razmjer"
@@ -589,7 +590,7 @@ msgstr "Razmjer"
 #: providers/odbc/gda-odbc-provider.c:923
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Nije null?"
@@ -599,7 +600,7 @@ msgstr "Nije null?"
 #: providers/odbc/gda-odbc-provider.c:924
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Osnovni ključ?"
@@ -609,7 +610,7 @@ msgstr "Osnovni ključ?"
 #: providers/odbc/gda-odbc-provider.c:925
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
-#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Unikatni indeks?"
@@ -619,7 +620,7 @@ msgstr "Unikatni indeks?"
 #: providers/odbc/gda-odbc-provider.c:926
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
-#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Reference"
@@ -629,7 +630,7 @@ msgstr "Reference"
 #: providers/odbc/gda-odbc-provider.c:927
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
-#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/sqlite/gda-sqlite-provider.c:665
 msgid "Default value"
 msgstr "Uobičajena vrijednost"
 
@@ -729,8 +730,9 @@ msgid "Could not parse '%s' command"
 msgstr "Ne može obraditi naredbu '%s'"
 
 #. parsing went fine, but there is no result
-#.  (e.g. because of an invalid column name)
+#. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
+#, c-format
 msgid "Got no result for '%s' command"
 msgstr "Nisam dobio rezultat naredbe '%s'"
 
@@ -794,8 +796,10 @@ msgid "Row number out of bounds"
 msgstr "Broj reda van granica"
 
 #: providers/mysql/gda-mysql-provider.c:219
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Vi ne možete osigurati UNIX_SOCKET ukoliko ne osigurate računalo ili vezu."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Vi ne možete osigurati UNIX_SOCKET ukoliko ne osigurate računalo ili vezu."
 
 #: providers/mysql/gda-mysql-provider.c:295
 #: providers/mysql/gda-mysql-provider.c:1086
@@ -821,7 +825,7 @@ msgstr "Neispravna MySQL oznaka"
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/sqlite/gda-sqlite-provider.c:470
+#: providers/sqlite/gda-sqlite-provider.c:507
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transakcije nisu podržane u modu samo za čitanje"
 
@@ -1198,8 +1202,10 @@ msgid "Provider for PostgreSQL databases"
 msgstr "Posrednik za PostgreSQL baze podataka"
 
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid "A full path must be specified on the connection string to open a database."
-msgstr """Puna putanja mora biti određena na nizu znakova konekcije da otvori bazu "
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"Puna putanja mora biti određena na nizu znakova konekcije da otvori bazu "
 "podataka."
 
 #: providers/sqlite/gda-sqlite-provider.c:222
@@ -1207,30 +1213,31 @@ msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "Nisamo mogao postaviti empty_result_callbacks SQLite opciju"
 
 #: providers/sqlite/gda-sqlite-provider.c:241
-#: providers/sqlite/gda-sqlite-provider.c:341
-#: providers/sqlite/gda-sqlite-provider.c:552
-#: providers/sqlite/gda-sqlite-provider.c:717
+#: providers/sqlite/gda-sqlite-provider.c:378
+#: providers/sqlite/gda-sqlite-provider.c:589
+#: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
 msgstr "Pogrešna SQLite ručka"
 
-#: providers/sqlite/gda-sqlite-provider.c:263
+#: providers/sqlite/gda-sqlite-provider.c:299
 msgid "Invalid SQLITE handle"
 msgstr "Pogrešna SQLITE ručka"
 
-#: providers/sqlite/gda-sqlite-provider.c:359
-#: providers/sqlite/gda-sqlite-provider.c:374
+#: providers/sqlite/gda-sqlite-provider.c:396
+#: providers/sqlite/gda-sqlite-provider.c:411
 msgid "Only one database per connection is allowed"
 msgstr "Samo jedna baza podataka je dozvoljena po konekciji"
 
-#: providers/sqlite/gda-sqlite-provider.c:388
+#: providers/sqlite/gda-sqlite-provider.c:425
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr """DA uklonite SQLite bazu podataka treba da ručno uklonite datoteke baze "
+msgstr ""
+"DA uklonite SQLite bazu podataka treba da ručno uklonite datoteke baze "
 "podataka"
 
-#: providers/sqlite/gda-sqlite-provider.c:662
+#: providers/sqlite/gda-sqlite-provider.c:699
 msgid "Could not retrieve information for field"
 msgstr "Ne može opet doći do podataka o polju"
 
@@ -1276,8 +1283,8 @@ msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != ISTINITO"
 
 #. when you execute a stored procedure through openclient, this
-#.  part of the result set loop is where you fetch the return status
-#.  of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712
 msgid "CS_STATUS_RESULT!"
 msgstr "CS_STATUS_RESULT!"
@@ -1330,7 +1337,8 @@ msgstr "%s: %s nije uspjelo"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr "Nisam mogao dodijeliti cmd strukturu za pronalaženje trenutne baze podataka."
+msgstr ""
+"Nisam mogao dodijeliti cmd strukturu za pronalaženje trenutne baze podataka."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
@@ -1351,11 +1359,13 @@ msgstr "Nisam mogao dohvatiti podatak za pronalaženje trenutne baze podataka."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr "Nisam mogao pustiti cmd strukturu da pronalaženje trenutne baze podataka."
+msgstr ""
+"Nisam mogao pustiti cmd strukturu da pronalaženje trenutne baze podataka."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Nisam mogao dodijeliti model podataka. Neće biti vraćen nijedan rezultat."
+msgstr ""
+"Nisam mogao dodijeliti model podataka. Neće biti vraćen nijedan rezultat."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1396,7 +1406,8 @@ msgstr "Ne može dodijeliti nosilac položaja podataka za stupac %d"
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Nisam mogao pokrenuti %s za zaustavljanje obrade niza podataka o redtku"
+msgstr ""
+"Nisam mogao pokrenuti %s za zaustavljanje obrade niza podataka o redtku"
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1412,7 +1423,9 @@ msgstr "%s prekinut s neočekivanim povratnim kodom."
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
-msgstr "Dogodila se greška kada poziv ct_diag pokušava dohvatiti broj poruke poslužitelja za postavljeni rezultat"
+msgstr ""
+"Dogodila se greška kada poziv ct_diag pokušava dohvatiti broj poruke "
+"poslužitelja za postavljeni rezultat"
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
@@ -1520,8 +1533,10 @@ msgid "call to cs_diag failed when attempting to the amount of client messages"
 msgstr "Poziv cs_diag nije uspio pri pokušaju da vrednuje poruke klijenta"
 
 #: providers/sybase/utils.c:220
-msgid "an error occured when calling cs_diag attempting to retrieve a client message"
-msgstr "Dogodila se greška kada poziv cs_diag pokušava da opet nađe poruku klijenta"
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
+msgstr ""
+"Dogodila se greška kada poziv cs_diag pokušava da opet nađe poruku klijenta"
 
 #: providers/sybase/utils.c:230
 msgid "OS_Error:("
@@ -1556,8 +1571,10 @@ msgid "call to ct_diag failed when attempting to the amount of server messages"
 msgstr "Poziv ct_diag nije uspio pri pokušaju da vrednuje poruke servera"
 
 #: providers/sybase/utils.c:334
-msgid "an error occured when calling ct_diag attempting to retrieve a server message"
-msgstr "Dogodila se greška kada poziv ct_diag pokušava da opet nađe poruku servera"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
+msgstr ""
+"Dogodila se greška kada poziv ct_diag pokušava da opet nađe poruku servera"
 
 #: providers/sybase/utils.c:346
 msgid "Server:"
@@ -1588,8 +1605,10 @@ msgid "call to ct_diag failed when attempting to the amount of client messages"
 msgstr "Poziv ct_diag nije uspio pri pokušaju da vrednuje poruke klijenta"
 
 #: providers/sybase/utils.c:463
-msgid "an error occured when calling ct_diag attempting to retrieve a client message"
-msgstr "Dogodila se greška kada poziv ct_diag pokušava da opet nađe poruku klijenta"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
+msgstr ""
+"Dogodila se greška kada poziv ct_diag pokušava da opet nađe poruku klijenta"
 
 #: providers/sybase/utils.c:476
 msgid "Layer"
@@ -1735,7 +1754,9 @@ msgstr "Nema definicije za atribut %s od elementa %s\n"
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr "Vrijednost \"%s\" za osobinu %s od %s nije u okviru enumerisanog postavljanja\n"
+msgstr ""
+"Vrijednost \"%s\" za osobinu %s od %s nije u okviru enumerisanog "
+"postavljanja\n"
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"
@@ -1913,4 +1934,3 @@ msgstr "\topis = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-
