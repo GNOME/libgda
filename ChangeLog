@@ -1,3 +1,9 @@
+2001-06-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: use again `oaf-config --prefix` for getting the
+	OAF files install prefix. This would break the RPM building, so
+	how other projects do this?
+
 2001-06-19  Gonzalo Odiard <gonza_asa@asatej.com.ar>
 
 	* configure.in: set ORACLE_LIBS to work with Oracle 8i

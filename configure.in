@@ -682,7 +682,7 @@ AC_SUBST(CAMEL_CFLAGS)
 AC_SUBST(XML_LIBS)
 AC_SUBST(XML_CFLAGS)
 
-GDA_oafdir=$datadir/oaf
+GDA_oafdir=`oaf-config --prefix`/share/oaf
 
 AC_SUBST(ORBIT_IDL)
 AC_SUBST(GDA_oafdir)
