@@ -1,3 +1,7 @@
+2002-05-05  Christophe Merlet  <christophe@merlet.net>
+
+	* fr.po: Updated French translation.
+
 2002-05-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* POTFILES.in: removed deleted files.
@@ -171,7 +175,7 @@
 	* no.po: Updated Norwegian (bokmål) translation.
 	* POTFILES.in: Added ODBC stuff.
 	
-2002-02-02  Christophe Merlet  <redfox@eikonex.org>
+2002-02-02  Christophe Merlet  <christophe@merlet.net>
 
 	* fr.po: Updated French translation from work of
 	Frederic Riss <frederic.riss@laposte.net> and
@@ -433,7 +437,7 @@
 
 	* ja.po: Updated Japanese translation.
 
-2001-02-13  Christophe Merlet  <redfox@eikonex.org>
+2001-02-13  Christophe Merlet  <christophe@merlet.net>
 
 	* fr.po: Updated French translation
 
@@ -487,7 +491,7 @@
 
 	* POTFILES.in: Marked more files to translate
 
-2001-01-11  Christophe Merlet  <redfox@eikonex.org>
+2001-01-11  Christophe Merlet  <christophe@merlet.net>
 
 	* fr.po: Updated French translation
 
