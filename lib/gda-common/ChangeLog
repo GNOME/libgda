@@ -1,3 +1,10 @@
+2001-07-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-quark-list.c (gda_quark_list_add_from_string): g_strdup
+	the hash table key also
+
+	(gda_quark_list_free): free the contents of the hash table
+
 2001-07-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-xql-const.[ch], gda-xql-dml.[ch]

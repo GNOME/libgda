@@ -21,6 +21,7 @@
  */
 
 #include "gda-quark-list.h"
+#include "gda-util.h"
 
 struct _GdaQuarkList {
 	GHashTable *hash_table;
@@ -62,7 +63,11 @@ gda_quark_list_free (GdaQuarkList *qlist)
 {
 	g_return_if_fail (qlist != NULL);
 
-	/* FIXME: free GHashTable */
+	g_hash_table_foreach_remove (qlist->hash_table,
+				     (GHRFunc) gda_util_destroy_hash_pair,
+				     g_free);
+	g_hash_table_destroy (qlist->hash_table);
+
 	g_free (qlist);
 }
 
@@ -90,10 +95,12 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist,
 
 			pair = (gchar **) g_strsplit (arr[n], "=", 2);
 			if (pair) {
+				gchar *name = pair[0];
+				gchar *value = pair[1];
 				g_hash_table_insert (
 					qlist->hash_table,
-					pair[0], 
-					(gpointer) g_strdup (pair[1]));
+					(gpointer) g_strdup (name),
+					(gpointer) g_strdup (value));
 				g_strfreev (pair);
 			}
 			n++;
