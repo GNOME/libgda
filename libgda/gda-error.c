@@ -130,14 +130,14 @@ gda_error_list_from_exception (CORBA_Environment *ev)
 	}
 	case CORBA_USER_EXCEPTION:{
 		if (strcmp (CORBA_exception_id (ev), ex_GNOME_Database_DriverError) == 0) {
-			GNOME_Database_ErrorSeq error_sequence =
-				((GNOME_Database_DriverError *) &ev->_any)->errors;
+			GNOME_Database_ErrorSeq *error_sequence;
 			gint idx;
 
-			for (idx = 0; idx < error_sequence._length; idx++) {
+			error_sequence = &((GNOME_Database_DriverError *) &ev->_any._value)->errors;
+			for (idx = 0; idx < error_sequence->_length; idx++) {
 				GNOME_Database_Error *gda_error;
 
-				gda_error = &error_sequence._buffer[idx];
+				gda_error = &error_sequence->_buffer[idx];
 
 				error = gda_error_new ();
 				if (gda_error->source)
@@ -187,16 +187,29 @@ gda_error_list_to_exception (GList *error_list, CORBA_Environment *ev)
 	GNOME_Database_DriverError *exception;
 	GNOME_Database_ErrorSeq *corba_errors;
 	gint count;
+	gint i;
 
 	g_return_if_fail (ev != NULL);
 
-	exception = GNOME_Database_DriverError__alloc ();
 	corba_errors = gda_error_list_to_corba_seq (error_list);
-	memcpy (&exception->errors, corba_errors, sizeof (GNOME_Database_ErrorSeq));
+
+	exception = GNOME_Database_DriverError__alloc ();
 	exception->realcommand = CORBA_string_dup (g_get_prgname ());
+
+	exception->errors._buffer = CORBA_sequence_GNOME_Database_Error_allocbuf (corba_errors->_length);
+	CORBA_sequence_set_release (&exception->errors, TRUE);
+	for (i = 0; i < corba_errors->_length; i++) {
+		exception->errors._buffer[i].description = CORBA_string_dup (corba_errors->_buffer[i].description);
+		exception->errors._buffer[i].number = corba_errors->_buffer[i].number;
+		exception->errors._buffer[i].source = CORBA_string_dup (corba_errors->_buffer[i].source);
+		exception->errors._buffer[i].sqlstate = CORBA_string_dup (corba_errors->_buffer[i].sqlstate);
+	}
+
 	CORBA_exception_set (ev, CORBA_USER_EXCEPTION,
 			     ex_GNOME_Database_DriverError,
 			     exception);
+
+	CORBA_free (corba_errors);
 }
 
 /**

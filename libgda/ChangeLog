@@ -1,5 +1,8 @@
 2001-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-error.c (gda_error_list_from_exception):
+	(gda_error_list_to_exception): fixed crashes
+
 	* gda-config.c: replaced use of GConfEngine with GConfClient to
 	avoid problems with GConfEngine/GConfClient (from libgnome) mix
 	problems
