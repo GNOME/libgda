@@ -6,64 +6,65 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-10-25 06:02+0200\n"
-"PO-Revision-Date: 2002-10-25 11:00GMT\n"
-"Last-Translator: Michal Bukovjan <bukm@centrum.cz>\n"
+"POT-Creation-Date: 2002-12-16 06:43+0100\n"
+"PO-Revision-Date: 2002-12-16 20:14+0100\n"
+"Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.6\n"
 
-#: libgda/gda-client.c:253 libgda/gda-client.c:444 libgda/gda-connection.c:214
+#: libgda/gda-client.c:255 libgda/gda-client.c:453 libgda/gda-connection.c:217
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dat %s nebyl nalezen v nastavení"
 
-#: libgda/gda-client.c:272
+#: libgda/gda-client.c:279
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Nelze nalézt poskytovatele %s v současném nastavení"
 
-#: libgda/gda-client.c:299
+#: libgda/gda-client.c:306
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Poskytovatel %s neimplementuje vstupní funkci"
 
-#: libgda/gda-client.c:309
+#: libgda/gda-client.c:316
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Ze zásuvného modulu nelze vytvořit objekt GdaServerProvider"
 
-#: libgda/gda-client.c:372
+#: libgda/gda-client.c:380
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1269 providers/default/gda-default-provider.c:556
+#: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
-#: providers/mysql/gda-mysql-provider.c:662
+#: providers/mysql/gda-mysql-provider.c:663
+#: providers/mysql/gda-mysql-provider.c:847
 #: providers/oracle/gda-oracle-provider.c:1031
+#: providers/oracle/gda-oracle-provider.c:1530
 msgid "Name"
 msgstr "Název"
 
-#: libgda/gda-config.c:1270
+#: libgda/gda-config.c:1323
 msgid "Provider"
 msgstr "Poskytovatel"
 
-#: libgda/gda-config.c:1271
+#: libgda/gda-config.c:1324
 msgid "Connection string"
 msgstr "Řetězec připojení"
 
-#: libgda/gda-config.c:1272 providers/postgres/gda-postgres-provider.c:903
+#: libgda/gda-config.c:1325 providers/postgres/gda-postgres-provider.c:997
 msgid "Description"
 msgstr "Popis"
 
-#: libgda/gda-config.c:1273
+#: libgda/gda-config.c:1326
 msgid "Username"
 msgstr "Uživatelské jméno"
 
-#: libgda/gda-config.c:1274
+#: libgda/gda-config.c:1327
 msgid "Password"
 msgstr "Heslo"
 
@@ -79,10 +80,6 @@ msgstr "Pokus o inicializaci již inicializovaného klienta"
 #: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
 msgstr "Program libgda potřebuje GModule. Končím..."
-
-#: libgda/gda-init.c:64
-msgid "libgda successfully initialized"
-msgstr "Program libgda úspěšně inicializován"
 
 #: libgda/gda-log.c:82
 #, c-format
@@ -177,7 +174,8 @@ msgstr "Neplatný uzel XML"
 
 #: providers/default/gda-default-provider.c:191
 #: providers/sqlite/gda-sqlite-provider.c:200
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr ""
 "Pro otevření databáze musí být v připojovacím řetězci zadaná úplná cesta k "
 "databázi"
@@ -193,67 +191,65 @@ msgid "Not Implemented"
 msgstr "Neimplementováno"
 
 #: providers/default/gda-default-provider.c:455
-#: providers/mysql/gda-mysql-provider.c:1022
+#: providers/mysql/gda-mysql-provider.c:1027
 #: providers/oracle/gda-oracle-provider.c:1088
-#: providers/postgres/gda-postgres-provider.c:1065
+#: providers/postgres/gda-postgres-provider.c:1198
 #: providers/sqlite/gda-sqlite-provider.c:617
 msgid "Field name"
 msgstr "Název pole"
 
 #: providers/default/gda-default-provider.c:456
-#: providers/mysql/gda-mysql-provider.c:1023
+#: providers/mysql/gda-mysql-provider.c:1028
 #: providers/oracle/gda-oracle-provider.c:1089
-#: providers/postgres/gda-postgres-provider.c:1066
+#: providers/postgres/gda-postgres-provider.c:1199
 #: providers/sqlite/gda-sqlite-provider.c:618
 msgid "Data type"
 msgstr "Datový typ"
 
 #: providers/default/gda-default-provider.c:457
-#: providers/freetds/gda-freetds-provider.c:791
-#: providers/mysql/gda-mysql-provider.c:1024
+#: providers/mysql/gda-mysql-provider.c:1029
 #: providers/oracle/gda-oracle-provider.c:1090
-#: providers/postgres/gda-postgres-provider.c:1067
+#: providers/postgres/gda-postgres-provider.c:1200
 #: providers/sqlite/gda-sqlite-provider.c:619
 msgid "Size"
 msgstr "Velikost"
 
 #: providers/default/gda-default-provider.c:458
-#: providers/freetds/gda-freetds-provider.c:795
-#: providers/mysql/gda-mysql-provider.c:1025
+#: providers/mysql/gda-mysql-provider.c:1030
 #: providers/oracle/gda-oracle-provider.c:1091
-#: providers/postgres/gda-postgres-provider.c:1068
+#: providers/postgres/gda-postgres-provider.c:1201
 #: providers/sqlite/gda-sqlite-provider.c:620
 msgid "Scale"
 msgstr "Škála"
 
 #: providers/default/gda-default-provider.c:459
-#: providers/mysql/gda-mysql-provider.c:1026
+#: providers/mysql/gda-mysql-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1092
-#: providers/postgres/gda-postgres-provider.c:1069
+#: providers/postgres/gda-postgres-provider.c:1202
 #: providers/sqlite/gda-sqlite-provider.c:621
 msgid "Not null?"
 msgstr "Nenulový?"
 
 #: providers/default/gda-default-provider.c:460
-#: providers/mysql/gda-mysql-provider.c:1027
+#: providers/mysql/gda-mysql-provider.c:1032
 #: providers/oracle/gda-oracle-provider.c:1093
-#: providers/postgres/gda-postgres-provider.c:1070
+#: providers/postgres/gda-postgres-provider.c:1203
 #: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Primary key?"
 msgstr "Primární klíč?"
 
 #: providers/default/gda-default-provider.c:461
-#: providers/mysql/gda-mysql-provider.c:1028
+#: providers/mysql/gda-mysql-provider.c:1033
 #: providers/oracle/gda-oracle-provider.c:1094
-#: providers/postgres/gda-postgres-provider.c:1071
+#: providers/postgres/gda-postgres-provider.c:1204
 #: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Unique index?"
 msgstr "Unikátní index?"
 
 #: providers/default/gda-default-provider.c:462
-#: providers/mysql/gda-mysql-provider.c:1029
+#: providers/mysql/gda-mysql-provider.c:1034
 #: providers/oracle/gda-oracle-provider.c:1095
-#: providers/postgres/gda-postgres-provider.c:1072
+#: providers/postgres/gda-postgres-provider.c:1205
 #: providers/sqlite/gda-sqlite-provider.c:624
 msgid "References"
 msgstr "Reference"
@@ -276,7 +272,7 @@ msgstr "Nelze získat popis pro sloupec"
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "Výchozí poskytovatel GDA, založený na formátu libgda XML"
 
-#: providers/freetds/gda-freetds-provider.c:188
+#: providers/freetds/gda-freetds-provider.c:191
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -284,99 +280,45 @@ msgstr ""
 "Spojení přerušeno. Musíte zadat alespoň název počítače, uživatelské jméno a "
 "heslo pomocí DSN 'QUERY=;USER=;PASSWORD='"
 
-#: providers/freetds/gda-freetds-provider.c:201
+#: providers/freetds/gda-freetds-provider.c:204
 msgid "Error creating message container."
 msgstr "Chyba při vytváření kontejneru zprávy."
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:211
 msgid "Error creating error container."
 msgstr "Chyba při vytváření kontejneru chyby."
 
-#: providers/freetds/gda-freetds-provider.c:246
-#: providers/freetds/gda-freetds-provider.c:248
+#: providers/freetds/gda-freetds-provider.c:249
+#: providers/freetds/gda-freetds-provider.c:251
 msgid "Allocating tds context failed."
 msgstr "Alokace kontextu tds selhala."
 
-#: providers/freetds/gda-freetds-provider.c:264
-#: providers/freetds/gda-freetds-provider.c:266
+#: providers/freetds/gda-freetds-provider.c:267
+#: providers/freetds/gda-freetds-provider.c:269
 msgid "Establishing connection failed."
 msgstr "Vytváření spojení selhalo."
 
-#: providers/freetds/gda-freetds-provider.c:278
-#: providers/freetds/gda-freetds-provider.c:279
+#: providers/freetds/gda-freetds-provider.c:281
+#: providers/freetds/gda-freetds-provider.c:282
 msgid "Failed getting connection info."
 msgstr "Selhalo získání informací o spojení."
 
-#: providers/freetds/gda-freetds-provider.c:622
-#: providers/oracle/gda-oracle-provider.c:1687
-msgid "Procedures"
-msgstr "Procedury"
-
-#: providers/freetds/gda-freetds-provider.c:631
-#: providers/oracle/gda-oracle-provider.c:1695
-msgid "Tables"
-msgstr "Tabulky"
-
-#: providers/freetds/gda-freetds-provider.c:639
-msgid "Types"
-msgstr "Typy"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/freetds/gda-freetds-provider.c:647
-#: providers/oracle/gda-oracle-provider.c:1491
-#: providers/postgres/gda-postgres-provider.c:1448 testing/client.c:128
-msgid "Users"
-msgstr "Uživatelé"
-
-#: providers/freetds/gda-freetds-provider.c:655
-#: providers/oracle/gda-oracle-provider.c:1703 testing/client.c:125
-msgid "Views"
-msgstr "Náhledy"
-
-#: providers/freetds/gda-freetds-provider.c:688
-#: providers/freetds/gda-freetds-provider.c:689
+#: providers/freetds/gda-freetds-provider.c:763
+#: providers/freetds/gda-freetds-provider.c:764
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Dotaz neuspěl při volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:698
-#: providers/freetds/gda-freetds-provider.c:700
+#: providers/freetds/gda-freetds-provider.c:773
+#: providers/freetds/gda-freetds-provider.c:775
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Neočekávané symboly s výsledkem při volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:708
-#: providers/freetds/gda-freetds-provider.c:709
+#: providers/freetds/gda-freetds-provider.c:783
+#: providers/freetds/gda-freetds-provider.c:784
 msgid "Unexpected return in execute_cmd()."
 msgstr "Neočekávaný návrat z volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:787
-msgid "Field Name"
-msgstr "Název pole"
-
-#: providers/freetds/gda-freetds-provider.c:789
-msgid "Data Type"
-msgstr "Datový typ"
-
-#: providers/freetds/gda-freetds-provider.c:793
-msgid "Precision"
-msgstr "Přesnost"
-
-#: providers/freetds/gda-freetds-provider.c:797
-msgid "Identity"
-msgstr "Identita"
-
-#: providers/freetds/gda-freetds-provider.c:799
-msgid "Nullable"
-msgstr "Nulovatelný"
-
-#: providers/freetds/gda-freetds-provider.c:801
-msgid "Domain"
-msgstr "Doména"
-
-#: providers/freetds/gda-freetds-provider.c:803
-msgid "Printfmt"
-msgstr "Printfmt"
-
-#: providers/freetds/gda-freetds-provider.c:929
+#: providers/freetds/gda-freetds-provider.c:988
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -385,24 +327,25 @@ msgstr ""
 "Zpráva %d, Úroveň %d, Stav %d, Server %s, Řádek %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:948 providers/freetds/utils.c:45
+#: providers/freetds/gda-freetds-provider.c:1007 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
+#: providers/sybase/utils.c:171
 msgid "Not available"
 msgstr "Není k dispozici"
 
-#: providers/freetds/gda-freetds-recordset.c:357
+#: providers/freetds/gda-freetds-recordset.c:361
 msgid "Error processing result rows.\n"
 msgstr "Chyba při zpracování řádků výsledku.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:365
+#: providers/freetds/gda-freetds-recordset.c:368
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Neočekávaný návratový kód freetds v tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:374
+#: providers/freetds/gda-freetds-recordset.c:378
 msgid "Error processing results.\n"
 msgstr "Chyba při zpracování výsledků.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:381
+#: providers/freetds/gda-freetds-recordset.c:385
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Neočekávaný návratový kód freetds v tds_process_result_tokens\n"
 
@@ -411,7 +354,7 @@ msgid "GDA provider for TDS-based databases (using FreeTDS)"
 msgstr "Poskytovatel GDA pro databáze založené na TDS (za použití FreeTDS)"
 
 #: providers/freetds/utils.c:41 providers/oracle/utils.c:67
-#: providers/postgres/utils.c:47
+#: providers/postgres/utils.c:47 providers/sybase/utils.c:166
 msgid "NO DESCRIPTION"
 msgstr "BEZ POPISU"
 
@@ -432,35 +375,36 @@ msgstr "Nelze alokovat handle prostředí.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:191
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "SQLGetInfo není podporované. Poskytovatel IBM DB2 tudíž nebude fungovat.\n"
+msgstr ""
+"SQLGetInfo není podporované. Poskytovatel IBM DB2 tudíž nebude fungovat.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:205
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-msgstr "SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
+msgstr ""
+"SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "GDA provider for IBMDB2"
 msgstr "Poskytovatel GDA pro IBMDB2"
 
-#: providers/interbase/gda-interbase-provider.c:186
+#: providers/interbase/gda-interbase-provider.c:188
 msgid "No database specified"
 msgstr "Není zadána databáze"
 
-#: providers/interbase/gda-interbase-provider.c:209
-msgid "Could not attach to database"
-msgstr "Nelze se připojit k databázi"
-
-#: providers/interbase/gda-interbase-provider.c:233
-#: providers/interbase/gda-interbase-provider.c:260
-#: providers/interbase/gda-interbase-provider.c:278
-#: providers/interbase/gda-interbase-provider.c:347
-#: providers/interbase/gda-interbase-provider.c:381
-#: providers/interbase/gda-interbase-provider.c:419
+#: providers/interbase/gda-interbase-provider.c:235
+#: providers/interbase/gda-interbase-provider.c:262
+#: providers/interbase/gda-interbase-provider.c:280
+#: providers/interbase/gda-interbase-provider.c:314
+#: providers/interbase/gda-interbase-provider.c:369
+#: providers/interbase/gda-interbase-provider.c:414
+#: providers/interbase/gda-interbase-provider.c:448
+#: providers/interbase/gda-interbase-provider.c:486
+#: providers/interbase/gda-interbase-provider.c:540
 msgid "Invalid Interbase handle"
 msgstr "Neplatný handle Interbase"
 
-#: providers/interbase/gda-interbase-provider.c:387
-#: providers/interbase/gda-interbase-provider.c:425
+#: providers/interbase/gda-interbase-provider.c:454
+#: providers/interbase/gda-interbase-provider.c:492
 msgid "Invalid transaction handle"
 msgstr "Neplatný handle transakce"
 
@@ -491,69 +435,78 @@ msgid "GDA provider for MS Access files"
 msgstr "Poskytovatel GDA pro soubory MS Access"
 
 #: providers/mysql/gda-mysql-provider.c:215
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr "Nelze zadat UNIX_SOCKET pokud jste také zadali HOST nebo PORT."
 
-#: providers/mysql/gda-mysql-provider.c:290
-#: providers/mysql/gda-mysql-provider.c:1038
+#: providers/mysql/gda-mysql-provider.c:291
+#: providers/mysql/gda-mysql-provider.c:1043
 #: providers/mysql/gda-mysql-recordset.c:59
 #: providers/mysql/gda-mysql-recordset.c:175
 msgid "Invalid MySQL handle"
 msgstr "Neplatný handle MySQL"
 
-#: providers/mysql/gda-mysql-provider.c:305
-#: providers/mysql/gda-mysql-provider.c:355
-#: providers/mysql/gda-mysql-provider.c:378
-#: providers/mysql/gda-mysql-provider.c:409
-#: providers/mysql/gda-mysql-provider.c:441
-#: providers/mysql/gda-mysql-provider.c:509
-#: providers/mysql/gda-mysql-provider.c:561
-#: providers/mysql/gda-mysql-provider.c:589
+#: providers/mysql/gda-mysql-provider.c:306
+#: providers/mysql/gda-mysql-provider.c:356
+#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:410
+#: providers/mysql/gda-mysql-provider.c:442
+#: providers/mysql/gda-mysql-provider.c:510
+#: providers/mysql/gda-mysql-provider.c:562
+#: providers/mysql/gda-mysql-provider.c:590
 msgid "Invalid MYSQL handle"
 msgstr "Neplatný handle MYSQL"
 
-#: providers/mysql/gda-mysql-provider.c:924
-#: providers/oracle/gda-oracle-provider.c:1595
-#: providers/postgres/gda-postgres-provider.c:920
-#: providers/sqlite/gda-sqlite-provider.c:746
-msgid "Type"
-msgstr "Typ"
-
-#: providers/mysql/gda-mysql-provider.c:925
-#: providers/postgres/gda-postgres-provider.c:688
-#: providers/postgres/gda-postgres-provider.c:902
-#: providers/postgres/gda-postgres-provider.c:921
-#: providers/postgres/gda-postgres-provider.c:967
-#: providers/postgres/gda-postgres-provider.c:1025
-#: providers/postgres/gda-postgres-provider.c:1475
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:930
+#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/postgres/gda-postgres-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:996
+#: providers/postgres/gda-postgres-provider.c:1015
+#: providers/postgres/gda-postgres-provider.c:1061
+#: providers/postgres/gda-postgres-provider.c:1158
+#: providers/postgres/gda-postgres-provider.c:1608
 #: providers/sqlite/gda-sqlite-provider.c:747
+#: providers/sybase/gda-sybase-provider.c:904
 msgid "Owner"
 msgstr "Vlastník"
 
-#: providers/mysql/gda-mysql-provider.c:926
-#: providers/postgres/gda-postgres-provider.c:689
-#: providers/postgres/gda-postgres-provider.c:922
-#: providers/postgres/gda-postgres-provider.c:968
-#: providers/postgres/gda-postgres-provider.c:1026
-#: providers/postgres/gda-postgres-provider.c:1476
+#: providers/mysql/gda-mysql-provider.c:849
+#: providers/mysql/gda-mysql-provider.c:931
+#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/postgres/gda-postgres-provider.c:745
+#: providers/postgres/gda-postgres-provider.c:1016
+#: providers/postgres/gda-postgres-provider.c:1062
+#: providers/postgres/gda-postgres-provider.c:1159
+#: providers/postgres/gda-postgres-provider.c:1609
 #: providers/sqlite/gda-sqlite-provider.c:748
+#: providers/sybase/gda-sybase-provider.c:906
 msgid "Comments"
 msgstr "Komentář"
 
-#: providers/mysql/gda-mysql-provider.c:927
-#: providers/postgres/gda-postgres-provider.c:923
+#: providers/mysql/gda-mysql-provider.c:929
+#: providers/oracle/gda-oracle-provider.c:1629
+#: providers/postgres/gda-postgres-provider.c:1014
+#: providers/sqlite/gda-sqlite-provider.c:746
+#: providers/sybase/gda-sybase-provider.c:902
+msgid "Type"
+msgstr "Typ"
+
+#: providers/mysql/gda-mysql-provider.c:932
+#: providers/postgres/gda-postgres-provider.c:1017
 #: providers/sqlite/gda-sqlite-provider.c:749
+#: providers/sybase/gda-sybase-provider.c:908
 msgid "GDA type"
 msgstr "Typ GDA"
 
-#: providers/mysql/gda-mysql-provider.c:1030
-#: providers/postgres/gda-postgres-provider.c:1073
+#: providers/mysql/gda-mysql-provider.c:1035
+#: providers/postgres/gda-postgres-provider.c:1206
 #: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Default value"
 msgstr "Výchozí hodnota"
 
-#: providers/mysql/gda-mysql-provider.c:1047
-#: providers/mysql/gda-mysql-provider.c:1055
+#: providers/mysql/gda-mysql-provider.c:1052
+#: providers/mysql/gda-mysql-provider.c:1060
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Je třeba název tabulky, ale v seznamu parametrů žádný není"
 
@@ -760,20 +713,34 @@ msgid "Could not get the Oracle field nullable attribute"
 msgstr "Nelze zjistit nulovatelný atribut pole Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1683
-#: providers/postgres/gda-postgres-provider.c:994 testing/client.c:126
+#: providers/oracle/gda-oracle-provider.c:1491
+#: providers/postgres/gda-postgres-provider.c:1581 testing/client.c:129
+msgid "Users"
+msgstr "Uživatelé"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1717
+#: providers/postgres/gda-postgres-provider.c:1088 testing/client.c:127
 msgid "Indexes"
 msgstr "Indexy"
 
-#: providers/oracle/gda-oracle-provider.c:1691 testing/client.c:129
+#: providers/oracle/gda-oracle-provider.c:1721
+msgid "Procedures"
+msgstr "Procedury"
+
+#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:130
 msgid "Sequences"
 msgstr "Sekvence"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1699
-#: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:1732
+#: providers/postgres/gda-postgres-provider.c:1187 testing/client.c:131
 msgid "Triggers"
 msgstr "Triggery"
+
+#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:126
+msgid "Views"
+msgstr "Náhledy"
 
 #: providers/oracle/gda-oracle-recordset.c:73
 msgid "Could not get the Oracle parameter"
@@ -828,77 +795,77 @@ msgstr "Nelze získat řádek"
 msgid "GDA provider for Oracle databases"
 msgstr "Poskytovatel GDA pro databáze Oracle"
 
-#: providers/postgres/gda-postgres-provider.c:413
-#: providers/postgres/gda-postgres-provider.c:430
-#: providers/postgres/gda-postgres-provider.c:501
-#: providers/postgres/gda-postgres-provider.c:635
+#: providers/postgres/gda-postgres-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:481
+#: providers/postgres/gda-postgres-provider.c:552
+#: providers/postgres/gda-postgres-provider.c:686
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "Neplatný handle PostgreSQL"
 
-#: providers/postgres/gda-postgres-provider.c:686
+#: providers/postgres/gda-postgres-provider.c:742
 msgid "Procedure"
 msgstr "Procedura"
 
-#: providers/postgres/gda-postgres-provider.c:687
-#: providers/postgres/gda-postgres-provider.c:1024
+#: providers/postgres/gda-postgres-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:1157
 msgid "Id"
 msgstr "Id"
 
-#: providers/postgres/gda-postgres-provider.c:690
+#: providers/postgres/gda-postgres-provider.c:746
 msgid "Return type"
 msgstr "Návratový typ"
 
-#: providers/postgres/gda-postgres-provider.c:691
+#: providers/postgres/gda-postgres-provider.c:747
 msgid "Nb args"
 msgstr "Počet parametrů"
 
-#: providers/postgres/gda-postgres-provider.c:692
+#: providers/postgres/gda-postgres-provider.c:748
 msgid "Args types"
 msgstr "Typy parametrů"
 
-#: providers/postgres/gda-postgres-provider.c:693
-#: providers/postgres/gda-postgres-provider.c:904
-#: providers/postgres/gda-postgres-provider.c:969
-#: providers/postgres/gda-postgres-provider.c:1029
-#: providers/postgres/gda-postgres-provider.c:1477
+#: providers/postgres/gda-postgres-provider.c:749
+#: providers/postgres/gda-postgres-provider.c:998
+#: providers/postgres/gda-postgres-provider.c:1063
+#: providers/postgres/gda-postgres-provider.c:1162
+#: providers/postgres/gda-postgres-provider.c:1610
 msgid "Definition"
 msgstr "Definice"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:901
-#: providers/postgres/gda-postgres-provider.c:1514
+#: providers/postgres/gda-postgres-provider.c:995
+#: providers/postgres/gda-postgres-provider.c:1647
 msgid "Table"
 msgstr "Tabulka"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:966
+#: providers/postgres/gda-postgres-provider.c:1060
 msgid "View"
 msgstr "Pohled"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1023
+#: providers/postgres/gda-postgres-provider.c:1156
 msgid "Aggregate"
 msgstr "Agregace"
 
-#: providers/postgres/gda-postgres-provider.c:1027
+#: providers/postgres/gda-postgres-provider.c:1160
 msgid "OutType"
 msgstr "OutType"
 
-#: providers/postgres/gda-postgres-provider.c:1028
+#: providers/postgres/gda-postgres-provider.c:1161
 msgid "InType"
 msgstr "InType"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1423 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:1556 testing/client.c:122
 msgid "Databases"
 msgstr "Databáze"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1474
-#: providers/postgres/gda-postgres-provider.c:1515
+#: providers/postgres/gda-postgres-provider.c:1607
+#: providers/postgres/gda-postgres-provider.c:1648
 msgid "Sequence"
 msgstr "Sekvence"
 
@@ -950,9 +917,306 @@ msgstr "Nelze získat informace o poli"
 msgid "GDA provider for SQLite databases"
 msgstr "Poskytovatel GDA pro databáze SQLite"
 
+#: providers/sybase/gda-sybase-provider.c:277
+msgid "Out of memory. Allocating connection structure failed."
+msgstr "Nedostatek paměti. Alokace struktury conection selhala."
+
+#: providers/sybase/gda-sybase-provider.c:289
+msgid "Context allocated."
+msgstr "Kontext alokován."
+
+#: providers/sybase/gda-sybase-provider.c:296
+msgid "Client library initialized."
+msgstr "Knihovna klienta inicializována."
+
+#: providers/sybase/gda-sybase-provider.c:322
+#, c-format
+msgid "Locale set to '%s'."
+msgstr "Locale nastaveno na '%s'."
+
+#: providers/sybase/gda-sybase-provider.c:337
+msgid "Could not initialize cslib callback"
+msgstr "Nelze inicializovat callback cslib"
+
+#: providers/sybase/gda-sybase-provider.c:341
+msgid "CS-lib callback initialized."
+msgstr "Callback CS-lib inicializován."
+
+#: providers/sybase/gda-sybase-provider.c:347
+msgid "Could not initialize ct-client callback"
+msgstr "Nelze inicializovat callback ct-client"
+
+#: providers/sybase/gda-sybase-provider.c:351
+msgid "CT-Client callback initialized."
+msgstr "Callback CT-Client inicializován."
+
+#: providers/sybase/gda-sybase-provider.c:358
+msgid "Could not initialize ct-server callback"
+msgstr "Nelze inicializovat callback ct-server"
+
+#: providers/sybase/gda-sybase-provider.c:362
+msgid "CT-Server callback initialized."
+msgstr "Callback CT-Server initializován."
+
+#: providers/sybase/gda-sybase-provider.c:370
+msgid "Connection allocated."
+msgstr "Spojení alokováno."
+
+#: providers/sybase/gda-sybase-provider.c:410
+msgid "Appname set."
+msgstr "Appname nastaveno."
+
+#: providers/sybase/gda-sybase-provider.c:423
+msgid "Username set."
+msgstr "Uživatelské jméno nastaveno."
+
+#: providers/sybase/gda-sybase-provider.c:437
+msgid "Password set."
+msgstr "Heslo nastaveno."
+
+#: providers/sybase/gda-sybase-provider.c:449
+msgid "Empty password set."
+msgstr "Prázdné heslo nastaveno."
+
+#: providers/sybase/gda-sybase-provider.c:459
+msgid "Connected."
+msgstr "Připojeno."
+
+#. 	return TRUE;
+#: providers/sybase/gda-sybase-provider.c:478
+msgid "Finally connected."
+msgstr "Konečně připojeno."
+
+#: providers/sybase/gda-sybase-provider.c:612
+msgid ""
+"Cmd structure already in use. Command will not be executed because of "
+"blocked connection."
+msgstr ""
+"Struktura cmd se již používá. Příkaz nebude kvůli zablokovanému spojení "
+"proveden."
+
+#: providers/sybase/gda-sybase-provider.c:626
+msgid "Failed allocating a command structure in process_sql_commands()."
+msgstr "Selhala alokace struktury command v process_sql_commands()."
+
+#: providers/sybase/gda-sybase-provider.c:636
+msgid "Could not prepare command structure."
+msgstr "Nelze připravit strukturu command."
+
+#: providers/sybase/gda-sybase-provider.c:645
+msgid "Sending sql-command failed."
+msgstr "Odesílání sql-command selhalo."
+
+#: providers/sybase/gda-sybase-provider.c:714
+msgid "Failed dropping command structure."
+msgstr "Selhalo uvolňování struktury command."
+
+#: providers/sybase/gda-sybase-provider.c:744
+msgid "Command structure already in use. execute_cmd() failed."
+msgstr "Struktura command se již používá. execute_cmd() selhalo."
+
+#: providers/sybase/gda-sybase-provider.c:751
+msgid "Could not ct_cmd_alloc() command structure."
+msgstr "Nemohu ct_cmd_alloc() strukturu command."
+
+#: providers/sybase/gda-sybase-provider.c:759
+msgid "Could not prepare command structure with ct_command()."
+msgstr "Nelze připravit strukturu command s ct_command()."
+
+#: providers/sybase/gda-sybase-provider.c:768
+msgid "Sending command failed."
+msgstr "Odesílání příkazu selhalo."
+
+#: providers/sybase/gda-sybase-provider.c:792
+#: providers/sybase/gda-sybase-provider.c:808
+#: providers/sybase/gda-sybase-provider.c:819
+#, c-format
+msgid "%s: %s failed"
+msgstr "%s: %s selhalo"
+
+#: providers/sybase/gda-sybase-provider.c:853
+msgid ""
+"Connection already in use. Could not allocate command structure in "
+"'_get_database'"
+msgstr ""
+"Spojení se již používá. Nemohu alokovat struktru command v '_get_database'"
+
+#: providers/sybase/gda-sybase-provider.c:855
+msgid "Could not allocate command structure."
+msgstr "Nelze alokovat strukturu command."
+
+#: providers/sybase/gda-sybase-provider.c:866
+msgid "Failed dropping command structure in get_database()."
+msgstr "Selhalo uvolňování struktury command v get_database()."
+
+#: providers/sybase/gda-sybase-recordset.c:315
+msgid "Could not allocate datamodel. No results will be returned."
+msgstr "Nelze alokovat datamodel. Nebudou vráceny žádné výsledky."
+
+#: providers/sybase/gda-sybase-recordset.c:318
+msgid "ct_cancel() failed."
+msgstr "ct_cancel() selhalo."
+
+#: providers/sybase/gda-sybase-recordset.c:330
+msgid "ct_res_info() failed while processing a row result."
+msgstr "ct_res_info() selhalo při zpracovávání řádku výsledku."
+
+#: providers/sybase/gda-sybase-recordset.c:336
+msgid "ct_res_info() returned <= 0 columns."
+msgstr "ct_res_info() vrátilo <= 0 sloupců."
+
+#: providers/sybase/gda-sybase-recordset.c:355
+msgid "Could not allocate structure for column metainformation."
+msgstr "Nelze alokovat strukturu pro metainformace o sloupci."
+
+#: providers/sybase/gda-sybase-recordset.c:359
+#: providers/sybase/gda-sybase-recordset.c:413
+msgid "Could not ct_cancel processing row resultset."
+msgstr "Nelze ct_cancel zpracovávání row resultset."
+
+#: providers/sybase/gda-sybase-recordset.c:376
+#, c-format
+msgid "Could not ct_describe column %d"
+msgstr "Nelze ct_describe sloupec %d"
+
+#: providers/sybase/gda-sybase-recordset.c:384
+#, c-format
+msgid "Could not allocate data placeholder for column %d"
+msgstr "Nelze alokovat placeholder dat pro sloupec %d"
+
+#: providers/sybase/gda-sybase-recordset.c:395
+#, c-format
+msgid "Could not ct_bind() column %d"
+msgstr "Nelze cd_bind() sloupec %d"
+
+#: providers/sybase/gda-sybase-recordset.c:428
+#, c-format
+msgid "ct_fetch() failed on row %d"
+msgstr "ct_fetch() selhalo na řádku %d"
+
+#: providers/sybase/gda-sybase-recordset.c:454
+msgid "ct_fetch terminated with unexpected return code."
+msgstr "ct_fetch skončilo s neočekávaným návratovým kódem."
+
+#: providers/sybase/gda-sybase-recordset.c:528
+msgid "ct_results() returned CS_CMD_FAIL"
+msgstr "ct_results() vrátilo CS_CMD_FAIL"
+
+#: providers/sybase/gda-sybase-types.c:95
+#: providers/sybase/gda-sybase-types.c:98
+msgid "Attempt setting a nonnullable field to null."
+msgstr "Pokus o nastavení nonnullable pole na null."
+
+#: providers/sybase/gda-sybase-types.c:209
+#, c-format
+msgid "cslib cannot convert type %d"
+msgstr "cslib nemůže konvertovat typ %d"
+
+#: providers/sybase/gda-sybase-types.c:224
+#, c-format
+msgid "data conversion failed for type %d"
+msgstr "konverze dat selhala pro typ %d"
+
+#: providers/sybase/libmain.c:40
+msgid "GDA provider for sybase databases (using OpenClient)"
+msgstr "Poskytovatel GDA pro databáze sybase (používající OpenClient)"
+
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Nelze inicializovat generátor komponent Sybase"
+
+#: providers/sybase/utils.c:38
+msgid "Call: csmsg callback"
+msgstr "Volání: callback csmsg"
+
+#: providers/sybase/utils.c:43
+#, c-format
+msgid ""
+"CS-Library error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+"Chyba CS-Library:\n"
+"\tdůležitost(%ld) vrstva(%ld) počátek (%ld) číslo(%ld)\n"
+"\t%s"
+
+#: providers/sybase/utils.c:50
+#, c-format
+msgid "OS error: %s"
+msgstr "Chyba OS: %s"
+
+#: providers/sybase/utils.c:60
+msgid "Call: Client callback."
+msgstr "Volání: Callback klienta."
+
+#: providers/sybase/utils.c:65
+#, c-format
+msgid ""
+"CT-Client error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+"Chyba CT-Client:\n"
+"\tdůležitost(%ld) vrstva(%ld) počátek (%ld) číslo(%ld)\n"
+"\t%s"
+
+#: providers/sybase/utils.c:80
+msgid "Call: server callback"
+msgstr "Volání: Callback serveru"
+
+#: providers/sybase/utils.c:85
+#, c-format
+msgid ""
+"CT-Server message:\n"
+"\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
+msgstr ""
+"Zpráva CT-Server:\n"
+"\tčíslo(%ld) důležitost(%ld) stav(%ld) řádek(%ld)"
+
+#: providers/sybase/utils.c:90
+#, c-format
+msgid "\tServer name: %s\n"
+msgstr "\tJméno serveru: %s\n"
+
+#: providers/sybase/utils.c:93
+#, c-format
+msgid "\tProcedure name: %s\n"
+msgstr "\tJméno procedury: %s\n"
+
+#: providers/sybase/utils.c:95
+#, c-format
+msgid "\t%s\n"
+msgstr "\t%s\n"
+
+#: providers/sybase/utils.c:130
+msgid "ct_diag() failed determining # of client messages."
+msgstr "ct_diag() selhalo při zjišťování počtu zpráv klienta"
+
+#: providers/sybase/utils.c:138
+#, c-format
+msgid "%d messages fetched."
+msgstr "získáno %d zpráv."
+
+#: providers/sybase/utils.c:152
+msgid "Operation not possible, connection busy."
+msgstr "Operace není možná, spojení se používá."
+
+#: providers/xbase/gda-xbase-provider.c:185
+msgid "Either FILENAME or DIRECTORY can be specified, but not both"
+msgstr "Může být zadáno buď JMÉNOSOUBORU nebo ADRESÁŘ, ale ne obojí"
+
+#: providers/xbase/gda-xbase-provider.c:205
+msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
+msgstr "V řetězci spojení musí být zadáno JMÉNOSOUBORU nebo ADRESÁŘ"
+
+#: providers/xbase/gda-xbase-provider.c:234
+#: providers/xbase/gda-xbase-provider.c:352
+msgid "Invalid Xbase handle"
+msgstr "Neplatný handle Xbase"
+
+#: providers/xbase/libmain.c:39
+msgid "GDA provider for Xbase databases"
+msgstr "Poskytovatel GDA pro databáze Xbase"
 
 #: report/libgda-report/gda-report-document.c:166
 msgid "Could not parse XML document"
@@ -963,86 +1227,86 @@ msgstr "Nelze zpracovat dokument XML"
 msgid "Could not get file from %s"
 msgstr "Nelze získat soubor z %s"
 
-#: testing/client.c:41
+#: testing/client.c:42
 msgid "\t\tNONE\n"
 msgstr "\t\tNIC\n"
 
-#: testing/client.c:81
+#: testing/client.c:82
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** CHYBA: nelze otevřít připojení k %s\n"
 
 #. show provider features
-#: testing/client.c:86
+#: testing/client.c:87
 msgid "\tProvider capabilities...\n"
 msgstr "\tSchopnosti poskytovatele...\n"
 
-#: testing/client.c:87
+#: testing/client.c:88
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "\t\tAgregace: %s\n"
 
-#: testing/client.c:89 testing/client.c:92 testing/client.c:95
-#: testing/client.c:98 testing/client.c:101 testing/client.c:104
-#: testing/client.c:107 testing/client.c:110 testing/client.c:113
-#: testing/client.c:116
+#: testing/client.c:90 testing/client.c:93 testing/client.c:96
+#: testing/client.c:99 testing/client.c:102 testing/client.c:105
+#: testing/client.c:108 testing/client.c:111 testing/client.c:114
+#: testing/client.c:117
 msgid "Supported"
 msgstr "Podporováno"
 
-#: testing/client.c:89 testing/client.c:92 testing/client.c:95
-#: testing/client.c:98 testing/client.c:101 testing/client.c:104
-#: testing/client.c:107 testing/client.c:110 testing/client.c:113
-#: testing/client.c:116
+#: testing/client.c:90 testing/client.c:93 testing/client.c:96
+#: testing/client.c:99 testing/client.c:102 testing/client.c:105
+#: testing/client.c:108 testing/client.c:111 testing/client.c:114
+#: testing/client.c:117
 msgid "Not supported"
 msgstr "Nepodporováno"
 
-#: testing/client.c:90
+#: testing/client.c:91
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "\t\tIndexy: %s\n"
 
-#: testing/client.c:93
+#: testing/client.c:94
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tProcedury: %s\n"
 
-#: testing/client.c:96
+#: testing/client.c:97
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tSekvence: %s\n"
 
-#: testing/client.c:99
+#: testing/client.c:100
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:102
+#: testing/client.c:103
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransakce: %s\n"
 
-#: testing/client.c:105
+#: testing/client.c:106
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tTriggery: %s\n"
 
-#: testing/client.c:108
+#: testing/client.c:109
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tUživatelé: %s\n"
 
-#: testing/client.c:111
+#: testing/client.c:112
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tPohledy: %s\n"
 
-#: testing/client.c:114
+#: testing/client.c:115
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tDotazy XML: %s\n"
 
 #. show connection schemas
-#: testing/client.c:119
+#: testing/client.c:120
 #, c-format
 msgid ""
 "\n"
@@ -1053,55 +1317,57 @@ msgstr ""
 "\tPoskytovatel hlásí verzi: %s\n"
 "\n"
 
-#: testing/client.c:122
+#: testing/client.c:123
 msgid "Stored procedures"
 msgstr "Uložené procedury"
 
-#: testing/client.c:123
+#: testing/client.c:124
 msgid "Connection Tables"
 msgstr "Tabulky připojení"
 
-#: testing/client.c:124
+#: testing/client.c:125
 msgid "Available types"
 msgstr "Dostupné typy"
 
-#: testing/client.c:127
+#: testing/client.c:128
 msgid "Aggregates"
 msgstr "Agregace"
 
-#: testing/client.c:135 testing/client.c:143
+#: testing/client.c:136 testing/client.c:144
 msgid "\tStarting transaction..."
 msgstr "\tStartuji transakci..."
 
-#: testing/client.c:137 testing/client.c:141 testing/client.c:145
-#: testing/client.c:149
+#: testing/client.c:138 testing/client.c:142 testing/client.c:146
+#: testing/client.c:150
 msgid "Error"
 msgstr "Chyba"
 
-#: testing/client.c:139
+#: testing/client.c:140
 msgid "\tFinishing transaction..."
 msgstr "\tUkončuji transakci..."
 
-#: testing/client.c:147
+#: testing/client.c:148
 msgid "\tRolling back transaction..."
 msgstr "\tVracím zpět transakci..."
 
-#: testing/client.c:173
+#: testing/client.c:176
 msgid "Testing GDA client API"
 msgstr "Testovací API pro klienta GDA"
 
-#: testing/client.c:182
+#: testing/client.c:185
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr "** CHYBA: gda_config_get_data_source_list vrátilo prázdnou (NULL) položku\n"
+msgstr ""
+"** CHYBA: gda_config_get_data_source_list vrátilo prázdnou (NULL) položku\n"
 
-#: testing/client.c:186
+#: testing/client.c:189
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Zdroj dat = %s, Uživatel = %s\n"
 
 #: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** CHYBA: gda_config_get_provider_list vrátilo prázdnou (NULL) položku\n"
+msgstr ""
+"** CHYBA: gda_config_get_provider_list vrátilo prázdnou (NULL) položku\n"
 
 #: testing/config.c:89
 #, c-format
@@ -1121,6 +1387,36 @@ msgstr "\tpopis = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Tables"
+#~ msgstr "Tabulky"
+
+#~ msgid "Types"
+#~ msgstr "Typy"
+
+#~ msgid "Field Name"
+#~ msgstr "Název pole"
+
+#~ msgid "Data Type"
+#~ msgstr "Datový typ"
+
+#~ msgid "Precision"
+#~ msgstr "Přesnost"
+
+#~ msgid "Identity"
+#~ msgstr "Identita"
+
+#~ msgid "Nullable"
+#~ msgstr "Nulovatelný"
+
+#~ msgid "Domain"
+#~ msgstr "Doména"
+
+#~ msgid "Printfmt"
+#~ msgstr "Printfmt"
+
+#~ msgid "Could not attach to database"
+#~ msgstr "Nelze se připojit k databázi"
 
 #~ msgid "Unexpected integer value"
 #~ msgstr "Neočekávaná celočíselná hodnota"
@@ -1142,4 +1438,3 @@ msgstr "\tgda_params ="
 
 #~ msgid "Unexpected identifier"
 #~ msgstr "Neočekávaný identifikátor"
-
