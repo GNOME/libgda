@@ -92,7 +92,8 @@ gda_sybase_servermsg_callback (CS_CONTEXT *context,
 	if (msg->proclen > 0)
 		sybase_debug_msg(_("\tProcedure name: %s\n"), msg->proc);
 
-	sybase_debug_msg (_("\t%s\n"), msg->text);
+	if (msg->text)
+		sybase_debug_msg ("\t%s\n", msg->text);
 
 	return CS_SUCCEED;
 }

@@ -327,13 +327,15 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 	                        &srecset->priv->colcnt, CS_UNUSED, NULL);
 	if (scnc->ret != CS_SUCCEED) {
 		error = gda_sybase_make_error (scnc,
-		                               _("ct_res_info() failed while processing a row result."));
+		                               _("%s failed while processing a row result."),
+		                               "ct_res_info()");
 		gda_connection_add_error (cnc, error);
 		return NULL;
 	}
 	if (srecset->priv->colcnt <= 0) {
 		error = gda_sybase_make_error (scnc,
-		                               _("ct_res_info() returned <= 0 columns."));
+		                               _("%s returned <= 0 columns."),
+		                               "ct_res_info()");
 		gda_connection_add_error (cnc, error);
 		return NULL;
 	}
@@ -356,7 +358,8 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 
 		scnc->ret = ct_cancel (NULL, scnc->cmd, CS_CANCEL_ALL);
 		if (scnc->ret != CS_SUCCEED) {
-			sybase_error_msg (_("Could not ct_cancel processing row resultset."));
+			sybase_error_msg (_("Could not call %s while processing row resultset."),
+			                  "ct_cancel()");
 		}
 		return srecset;
 	}
@@ -373,7 +376,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		scnc->ret = ct_describe (scnc->cmd, i + 1, &sfield->fmt);
 		if (scnc->ret != CS_SUCCEED) {
 			error = gda_sybase_make_error (scnc, 
-			                               _("Could not ct_describe column %d"), i);
+			                               _("Could not run %s on column %d"), "ct_describe()", i);
 			gda_connection_add_error (cnc, error);
 			break;
 		}
@@ -392,7 +395,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 				     &sfield->indicator);
 		if (scnc->ret != CS_SUCCEED) {
 			error = gda_sybase_make_error (scnc,
-			                               _("Could not ct_bind() column %d"), i);
+			                               _("Could not run %s on column %d"), "ct_bind()", i);
 			gda_connection_add_error (cnc, error);
 			break;
 		}
@@ -410,7 +413,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 
 		scnc->ret = ct_cancel (NULL, scnc->cmd, CS_CANCEL_ALL);
 		if (scnc->ret != CS_SUCCEED) {
-			error = gda_sybase_make_error (scnc, _("Could not ct_cancel processing row resultset."));
+			error = gda_sybase_make_error (scnc, _("Could not run %s to cancel processing row resultset."), "ct_cancel");
 			gda_connection_add_error (cnc, error);
 		}
 		
@@ -425,7 +428,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		row_cnt += rows_read;
 		
 		if (scnc->ret == CS_ROW_FAIL) {
-			error = gda_sybase_make_error (scnc, _("ct_fetch() failed on row %d"), row_cnt);
+			error = gda_sybase_make_error (scnc, _("%s failed on row %d"), "ct_fetch()", row_cnt);
 			gda_connection_add_error (cnc, error);
 		}
 		
@@ -448,10 +451,10 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 //			sybase_debug_msg (_("Row processing canceled."));
 			break;
 		case CS_FAIL:
-//			sybase_debug_msg (_("ct_fetch() returned CS_FAIL. Probably o.k."));
+//			sybase_debug_msg (_("%s returned CS_FAIL. Probably o.k."), "ct_fetch()");
 			break;
 		default:
-			error = gda_sybase_make_error (scnc, _("ct_fetch terminated with unexpected return code."));
+			error = gda_sybase_make_error (scnc, _("%s terminated with unexpected return code."), "ct_fetch()");
 			gda_connection_add_error (cnc, error);
 	}
 	
@@ -525,7 +528,8 @@ gda_sybase_recordset_new (GdaConnection *cnc,
 			}
 			break;
 		case CS_CMD_FAIL:
-			sybase_debug_msg (_("ct_results() returned CS_CMD_FAIL"));
+			sybase_debug_msg (_("%s returned CS_CMD_FAIL"),
+			                  "ct_results()");
 			break;
 	}
 

@@ -248,7 +248,7 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 		
 	/* the logic to connect to the database */
 
-	sybase_debug_msg("about to open connection");
+	sybase_debug_msg(_("about to open connection"));
 	
 	if (username)
 		t_user = g_strdup(username);
@@ -473,7 +473,6 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 		
 		return FALSE;
 	}
-//	return TRUE;
 
 	sybase_debug_msg (_("Finally connected."));
 
@@ -623,7 +622,8 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 
 			scnc->ret = ct_cmd_alloc (scnc->connection, &scnc->cmd);
 			if (scnc->ret != CS_SUCCEED) {
-				sybase_debug_msg(_("Failed allocating a command structure in process_sql_commands()."));
+				sybase_debug_msg(_("Failed allocating a command structure in %s()"),
+				                 __PRETTY_FUNCTION__);
 				return NULL;
 			}
 
@@ -741,14 +741,15 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	g_return_val_if_fail (scnc->connection != NULL, FALSE);
 	
 	if (scnc->cmd != NULL) {
-		error = gda_sybase_make_error (scnc, _("Command structure already in use. execute_cmd() failed."));
+		error = gda_sybase_make_error (scnc, _("Command structure already in use. %s failed."),
+		                               __PRETTY_FUNCTION__);
 		gda_connection_add_error (cnc, error);
 		return FALSE;
 	}
 
 	scnc->ret = ct_cmd_alloc (scnc->connection, &scnc->cmd);
 	if (scnc->ret != CS_SUCCEED) {
-		error = gda_sybase_make_error (scnc, _("Could not ct_cmd_alloc() command structure."));
+		error = gda_sybase_make_error (scnc, _("Could not allocate command structure."));
 		gda_connection_add_error (cnc, error);
 		return FALSE;
 	}
@@ -756,7 +757,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	scnc->ret = ct_command (scnc->cmd, CS_LANG_CMD, (CS_CHAR *) sql, 
 	                        CS_NULLTERM, CS_UNUSED);
 	if (scnc->ret != CS_SUCCEED) {
-		error = gda_sybase_make_error (scnc, _("Could not prepare command structure with ct_command()."));
+		error = gda_sybase_make_error (scnc, _("Could not prepare command structure with %s."), "ct_command()");
 		gda_connection_add_error (cnc, error);
 		ct_cmd_drop (scnc->cmd);
 		scnc->cmd = NULL;
@@ -814,9 +815,9 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	if (scnc->ret == CS_END_RESULTS) {
 		scnc->ret = ct_cmd_drop (scnc->cmd);
 		if (scnc->ret != CS_SUCCEED) {
-			error = gda_sybase_make_error (
-				scnc,
-				_("%s: %s failed"), __FUNCTION__, "ct_cmd_drop");
+			error = gda_sybase_make_error (scnc,
+			            _("%s: %s failed"),
+			            __PRETTY_FUNCTION__, "ct_cmd_drop()");
 			gda_connection_add_error (cnc, error);
 			ret = FALSE;
 		} else {
@@ -850,7 +851,7 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 	sconn->ret = ct_cmd_alloc (sconn->connection, &cmd);
 	if (sconn->ret != CS_SUCCEED) {
 		if (sconn->ret == CS_BUSY) {
-			sybase_debug_msg (_("Connection already in use. Could not allocate command structure in '_get_database'"));
+			sybase_debug_msg (_("Connection already in use. Could not allocatie command structure in %s()."), __PRETTY_FUNCTION__);
 		} else {
 			sybase_debug_msg (_("Could not allocate command structure."));
 		}
@@ -863,7 +864,8 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 
 	sconn->ret = ct_cmd_drop (cmd);
 	if (sconn->ret != CS_SUCCEED) {
-		sybase_debug_msg (_("Failed dropping command structure in get_database()."));
+		sybase_debug_msg (_("Failed dropping command structure in %s()."),
+		                  __PRETTY_FUNCTION__);
 		return NULL;
 	}
 	cmd = NULL;
@@ -1083,13 +1085,13 @@ gda_sybase_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_SYBASE_PROVIDER (syb_prov), FALSE);
 
 	switch (feature) {
+		case GDA_CONNECTION_FEATURE_PROCEDURES:
+		case GDA_CONNECTION_FEATURE_USERS:
+		case GDA_CONNECTION_FEATURE_VIEWS:
 		case GDA_CONNECTION_FEATURE_SQL:
 			return TRUE;
 
 	//FIXME: Implement missing 
-		case GDA_CONNECTION_FEATURE_PROCEDURES:
-		case GDA_CONNECTION_FEATURE_USERS:
-		case GDA_CONNECTION_FEATURE_VIEWS:
 		case GDA_CONNECTION_FEATURE_AGGREGATES:
 		case GDA_CONNECTION_FEATURE_INDEXES:
 		case GDA_CONNECTION_FEATURE_INHERITANCE:
