@@ -19,7 +19,7 @@ source_headers = \
 	gdaRecordset.h \
 	gdaValue.h
 
-gdaincludedir=$(includedir)/gda/gda++
+gdaincludedir=$(includedir)/libgda-$(VERSION)/gda++
 gdainclude_HEADERS=$(source_headers)
 
 libgda_clientcpp_la_SOURCES = \
