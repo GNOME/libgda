@@ -676,87 +676,205 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
-static gint get_nb_args (const gchar *args)
+
+static GdaDataModelArray *
+gda_postgres_init_procs_recset (GdaConnection *cnc)
 {
+	GdaDataModelArray *recset;
+	gint i;
+	GdaPostgresColData cols[8] = {
+		{ N_("Id")	        , GDA_VALUE_TYPE_STRING  },
+		{ N_("Procedure name")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Owner")		, GDA_VALUE_TYPE_STRING  },
+		{ N_("Comments")       	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Out type")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Nb args")	        , GDA_VALUE_TYPE_INTEGER },
+		{ N_("In types")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Definition")	, GDA_VALUE_TYPE_STRING  }
+		};
+
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++)
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
+
+	return recset;
+}
+
+static const GdaPostgresTypeOid *
+find_data_type_from_oid (GdaPostgresConnectionData *priv_data, const gchar *oid)
+{
+	GdaPostgresTypeOid *retval = NULL;
 	gint i = 0;
-	gchar *ptr = args;
-	while (*ptr) {
-		if (*ptr == ' ')
-			i++;
-		ptr++;
+
+	while ((i < priv_data->ntypes) && !retval) {
+		if (priv_data->type_data[i].oid == atoi (oid))
+			retval = &(priv_data->type_data[i]);
+		i++;
+	}
+	
+	return retval;
+}
+
+static GList *
+gda_postgres_fill_procs_data (GdaDataModelArray *recset,
+			      GdaPostgresConnectionData *priv_data)
+{
+	gchar *query;
+	PGresult *pg_res;
+	gint row_count, i;
+	GList *list = NULL;
+
+	query = g_strdup (
+			  "SELECT pg_proc.oid, proname, usename, obj_description (pg_proc.oid), typname, "
+			  "pronargs, proargtypes, prosrc "
+			  "FROM pg_proc, pg_user, pg_type "
+			  "WHERE pg_type.oid=prorettype AND usesysid=proowner AND "
+			  "pg_type.oid in (SELECT ty.oid FROM pg_type ty WHERE ty.typrelid = 0 AND "
+			  "ty.typname !~ '^_' AND  ty.typname not in ('SET', 'cid', 'int2vector', "
+			  "'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid', 'oid')) "
+			  "AND proretset = 'f' AND ((pronargs != 0 AND oidvectortypes (proargtypes)!= '') "
+			  "OR pronargs=0) "
+			  "ORDER BY proname, pronargs");
+
+	pg_res = PQexec(priv_data->pconn, query);
+	g_free (query);
+	if (pg_res == NULL)
+		return NULL;
+
+	row_count = PQntuples (pg_res);
+	for (i = 0; i < row_count; i++) {
+		GdaValue *value;
+		gchar *thevalue, *procname, *instr, *ptr;
+		GString *gstr;
+		gint nbargs, argcounter;
+		GList *rowlist = NULL;
+		gboolean insert = TRUE;
+
+		/* Proc_Id */
+		thevalue = PQgetvalue (pg_res, i, 0);
+		value = gda_value_new_string (thevalue);
+		rowlist = g_list_append (rowlist, value);
+
+		/* Proc name */
+		procname = thevalue = PQgetvalue(pg_res, i, 1);
+		value = gda_value_new_string (thevalue);
+		rowlist = g_list_append (rowlist, value);
+
+		/* Owner */
+		thevalue = PQgetvalue(pg_res, i, 2);
+		value = gda_value_new_string (thevalue);
+		rowlist = g_list_append (rowlist, value);
+
+		/* Comments */ 
+		thevalue = PQgetvalue(pg_res, i, 3);
+		value = gda_value_new_string (thevalue);
+		rowlist = g_list_append (rowlist, value);
+
+		/* Out type */ 
+		thevalue = PQgetvalue(pg_res, i, 4);
+		value = gda_value_new_string (thevalue);
+		rowlist = g_list_append (rowlist, value);
+
+		/* Number of args */
+		thevalue = PQgetvalue(pg_res, i, 5);
+		nbargs = atoi (thevalue);
+		value = gda_value_new_integer (nbargs);
+		rowlist = g_list_append (rowlist, value);
+
+		/* In types */
+		argcounter = 0;
+		gstr = NULL;
+		if (PQgetvalue(pg_res, i, 6)) {
+			instr = g_strdup (PQgetvalue(pg_res, i, 6));
+			ptr = strtok (instr, " ");
+			while (ptr && *ptr && insert) {
+				const GdaPostgresTypeOid *typeoid = NULL;
+
+				if (*ptr == '0') {
+					thevalue = "-";
+				}
+				else {
+					typeoid = find_data_type_from_oid (priv_data, ptr);
+					if (typeoid) {
+						thevalue = typeoid->name;
+					}
+					else {
+						insert = FALSE;
+					}
+				}
+
+				if (insert) {
+					if (!gstr) 
+						gstr = g_string_new (thevalue);
+					else
+						g_string_append_printf (gstr, " %s", thevalue);
+				}
+					
+				ptr = strtok (NULL, " ");
+				argcounter ++;
+			}
+			g_free (instr);
+		}
+		else 
+			insert = FALSE;
+
+		if (gstr) {
+			value = gda_value_new_string (gstr->str);
+			g_string_free (gstr, TRUE);
+		}
+		else
+			value = gda_value_new_string (NULL);
+		rowlist = g_list_append (rowlist, value);
+
+		
+		if (argcounter != nbargs)
+			insert = FALSE;
+		
+		
+		
+		/* Definition */
+		thevalue = PQgetvalue(pg_res, i, 7);
+		if (!strcmp (thevalue, procname))
+			value = gda_value_new_string (NULL);
+		else
+			value = gda_value_new_string (thevalue);
+		rowlist = g_list_append (rowlist, value);
+
+		if (insert)
+			list = g_list_append (list, rowlist);
+		else {
+			g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
+			g_list_free (rowlist);
+		}
+			
+		rowlist = NULL;
 	}
 
-	return i;
+	PQclear (pg_res);
+
+	return list;
 }
+
+/* defined later */
+static void add_g_list_row (gpointer data, gpointer user_data);
 
 static GdaDataModel *
 get_postgres_procedures (GdaConnection *cnc, GdaParameterList *params)
 {
-	GList *reclist;
-	GdaDataModel *recset;
-	GSList *removed_rows, *list;
-	gint nbrows, i;
-	const GdaValue *val1, *val2;
-	gchar *str1, *str2;
-	
+	GList *list;
+	GdaPostgresConnectionData *priv_data;
+	GdaDataModelArray *recset;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (NULL, cnc, 
-					"SELECT pg_proc.oid, proname, usename, obj_description (pg_proc.oid), typname, pronargs, oidvectortypes (proargtypes), prosrc "
-					"FROM pg_proc, pg_user, pg_type "
-					"WHERE pg_type.oid=prorettype AND usesysid=proowner AND "
-					"pg_type.oid in (SELECT ty.oid FROM pg_type ty WHERE ty.typrelid = 0 AND ty.typname !~ '^_' AND  ty.typname not in ('SET', 'cid', 'int2vector', 'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid', 'oid')) "
-					"AND proretset = 'f' AND ((pronargs != 0 AND oidvectortypes (proargtypes)!= '') OR pronargs=0) "
-					"ORDER BY proname, pronargs",
-					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
-	if (!reclist)
-		return NULL;
+	recset = gda_postgres_init_procs_recset (cnc);
+	list = gda_postgres_fill_procs_data (recset, priv_data);
+	g_list_foreach (list, add_g_list_row, recset);
+	g_list_free (list);
 
-	/* Remove some of the rows we really don't want */
-	recset = GDA_DATA_MODEL (reclist->data);
-	g_list_free (reclist);
-	removed_rows = NULL;
-	nbrows = gda_data_model_get_n_rows (recset);
-	for (i=0; i< nbrows; i++) {
-		val1 = gda_data_model_get_value_at (recset, 6, i);
-		str1 = gda_value_stringify (val1);
-		
-		if (str1) {
-			gboolean removed = FALSE;
-			
-			val2 = gda_data_model_get_value_at (recset, 5, i);
-			str2 = gda_value_stringify (val2);
-			
-			if (str2) {
-				gint nb = get_nb_args (str1);
-				if (nb != atoi (str2)) {
-					removed_rows = g_slist_append (removed_rows, gda_data_model_get_row (recset, i));
-					removed = TRUE;
-				}
-				g_free (str2);
-			}
-			
-			if (!removed &&
-			    (strstr (str1, "SET") || strstr (str1, "cid") || strstr (str1, "int2vector") || strstr (str1, "oid") ||
-			     strstr (str1, "regproc") || strstr (str1, "smgr") || strstr (str1, "tid") || strstr (str1, "unknown") || strstr (str1, "xid"))) {
-				removed_rows = g_slist_append (removed_rows, gda_data_model_get_row (recset, i));
-				removed = TRUE;
-			}
-			g_free (str1);
-		}
-	}
-	
-	if (removed_rows) {
-		list = removed_rows;
-		while (list) {
-			gda_data_model_remove_row (recset, (GdaRow *)(list->data));
-			list = g_slist_next (list);
-		}
-		g_slist_free (removed_rows);
-	}
-		
-	return recset;
+	return GDA_DATA_MODEL (recset);
 }
 
 static GdaDataModel *
@@ -1155,7 +1273,7 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 	GList *ref_list;
 
 	query = g_strdup_printf (
-			"SELECT a.attname, b.typname, a.atttypmod, b.typlen, a.attnotnull "
+			"SELECT a.attname, b.typname, a.atttypmod, b.typlen, not a.attnotnull "
 			"FROM pg_class c, pg_attribute a, pg_type b "
 			"WHERE c.relname = '%s' AND a.attnum > 0 AND "
 			"      a.attrelid = c.oid and b.oid = a.atttypid "
@@ -1195,7 +1313,7 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 		integer = atoi (thevalue);
 		if (integer == -1 && type == GDA_VALUE_TYPE_STRING) {
 			thevalue = PQgetvalue(pg_res, i, 2);
-			integer = atoi (thevalue);
+			integer = atoi (thevalue) - 4; /* don't know where the -4 comes from! */
 		}
 			
 		value = gda_value_new_integer ((integer != -1) ? integer : 0);

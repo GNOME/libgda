@@ -1,3 +1,10 @@
+2002-08-21  Vivien Malerba <malerba@gnome-db.org>
+	* gda-value.[hc]: modified the implementation of the
+	gda_value_get_vtype() function to return the type held into the value
+	and not the type of the value (there is already a gda_value_get_type()
+	macro for that), and added a gda_value_set_vtype() function.
+	* providers/postgres/gda-postgres-provider.c: improved some schemas.
+
 2002-08-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda.spec.in:

@@ -685,18 +685,6 @@ gda_value_copy (const GdaValue *value)
 	return copy;
 }
 
-/**
- * gda_value_get_vtype
- * @value: a #GdaValue.
- *
- * Get the value type of the given #GdaValue.
- */
-GdaValueType
-gda_value_get_vtype (GdaValue *value)
-{
-	g_return_val_if_fail (value != NULL, GDA_VALUE_TYPE_UNKNOWN);
-	return value->type;
-}
 
 /**
  * gda_value_get_bigint
@@ -1221,6 +1209,40 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_TINYINT;
 	value->value.v_tinyint = val;
+}
+
+/**
+ * gda_value_get_vtype
+ * @value: a #GdaValue whose value we want to get.
+ * 
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ **/
+GdaValueType
+gda_value_get_vtype (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TYPE), GDA_VALUE_TYPE_UNKNOWN);
+	return value->value.v_type;
+}
+
+
+/**
+ * gda_value_set_vtype
+ * @value: a #GdaValue that will store @type.
+ * @type: value to be stored in @value.
+ *
+ * Stores @type into @value.
+ */
+void
+gda_value_set_vtype (GdaValue *value, GdaValueType type)
+{
+	g_return_if_fail (value != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_TYPE;
+	value->value.v_type = type;
 }
 
 /**

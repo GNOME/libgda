@@ -137,7 +137,6 @@ void          gda_value_free (GdaValue *value);
 
 gboolean      gda_value_is_null (GdaValue *value);
 GdaValue     *gda_value_copy (const GdaValue *value);
-GdaValueType  gda_value_get_vtype (GdaValue *value);
 
 gint64        gda_value_get_bigint (GdaValue *value);
 void          gda_value_set_bigint (GdaValue *value, gint64 val);
@@ -170,6 +169,8 @@ const GdaTimestamp *gda_value_get_timestamp (GdaValue *value);
 void          gda_value_set_timestamp (GdaValue *value, const GdaTimestamp *val);
 gchar         gda_value_get_tinyint (GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
+GdaValueType  gda_value_get_vtype (GdaValue *value);
+void          gda_value_set_vtype (GdaValue *value, GdaValueType type);
 gboolean      gda_value_set_from_string (GdaValue *value, 
 					 const gchar *as_string,
 					 GdaValueType type);
