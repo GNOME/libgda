@@ -95,7 +95,7 @@ plugin_get_connection_params (void)
 								    GDA_VALUE_TYPE_STRING));
 	list = g_list_append (list,
 			      gda_provider_parameter_info_new_full ("TDS_DUMPCONFIG", _("Dump Configuration File"),
-								    _("File fpr TDS protocol dumps configuration"),
+								    _("File for TDS protocol dumps configuration"),
 								    GDA_VALUE_TYPE_STRING));
 	/* Same effect like PORT */
 	/* list = g_list_append (list, g_strdup ("TDS_PORT")); */
