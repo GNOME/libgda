@@ -21,7 +21,7 @@
 #  define __gda_client_h__
 
 #if defined(HAVE_CONFIG_H)
-#  include <config.h>
+#  include <config.h>
 #endif
 #include <orb/orb.h>
 #include <gnome.h>

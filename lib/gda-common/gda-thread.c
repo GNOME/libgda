@@ -21,18 +21,18 @@
 #include <pthread.h>
 
 #ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
 #else
-/* Stubs that do something close enough.  */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
 #endif
 
 typedef struct
@@ -82,7 +82,7 @@ gda_thread_class_init (Gda_ThreadClass *klass, gpointer data)
 static void
 gda_thread_class_init (Gda_ThreadClass *klass)
 {
-   GtkObjectClass* object_class = (GtkObjectClass *) klass;
+   GtkObjectClass* object_class = (GtkObjectClass *) klass;
 }
 #endif
 
@@ -102,26 +102,26 @@ gda_thread_init (Gda_Thread *thr)
 GType
 gda_thread_get_type (void)
 {
-  static GType type = 0;
+  static GType type = 0;
 
-  if (!type)
-    {
-      GTypeInfo info =
-      {
-        sizeof (Gda_ThreadClass),               /* class_size */
-        NULL,                                   /* base_init */
-        NULL,                                   /* base_finalize */
-        (GClassInitFunc) gda_thread_class_init, /* class_init */
-        NULL,                                   /* class_finalize */
-        NULL,                                   /* class_data */
-        sizeof (Gda_Thread),                    /* instance_size */
-        0,                                      /* n_preallocs */
-        (GInstanceInitFunc) gda_thread_init,    /* instance_init */
-        NULL,                                   /* value_table */
-      };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Thread", &info);
-    }
-  return type;
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+        sizeof (Gda_ThreadClass),               /* class_size */
+        NULL,                                   /* base_init */
+        NULL,                                   /* base_finalize */
+        (GClassInitFunc) gda_thread_class_init, /* class_init */
+        NULL,                                   /* class_finalize */
+        NULL,                                   /* class_data */
+        sizeof (Gda_Thread),                    /* instance_size */
+        0,                                      /* n_preallocs */
+        (GInstanceInitFunc) gda_thread_init,    /* instance_init */
+        NULL,                                   /* value_table */
+      };
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Thread", &info);
+    }
+  return type;
 }
 #else
 GtkType
@@ -164,9 +164,9 @@ gda_thread_new (Gda_ThreadFunc func)
   if (!g_thread_supported()) g_thread_init(NULL);
 
 #ifdef HAVE_GOBJECT
-  thr = GDA_THREAD (g_object_new (GDA_TYPE_THREAD, NULL));
+  thr = GDA_THREAD (g_object_new (GDA_TYPE_THREAD, NULL));
 #else
-   thr = GDA_THREAD(gtk_type_new(GDA_TYPE_THREAD));
+  thr = GDA_THREAD(gtk_type_new(GDA_TYPE_THREAD));
 #endif
   thr->func = func;
   return thr;
@@ -183,9 +183,9 @@ gda_thread_free (Gda_Thread *thr)
   if (gda_thread_is_running(thr)) gda_thread_stop(thr);
 
 #ifdef HAVE_GOBJECT
-  g_object_unref (G_OBJECT (thr));
+  g_object_unref (G_OBJECT (thr));
 #else
-   gtk_object_destroy(GTK_OBJECT(thr));
+  gtk_object_destroy(GTK_OBJECT(thr));
 #endif
 }
 

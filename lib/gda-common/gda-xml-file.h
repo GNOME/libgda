@@ -23,9 +23,9 @@
 #include <glib.h>
 
 #ifdef HAVE_GOBJECT
-#  include <glib-object.h>
+#  include <glib-object.h>
 #else
-#  include <gtk/gtk.h>
+#  include <gtk/gtk.h>
 #endif
 
 #include <gnome-xml/tree.h>
@@ -41,25 +41,25 @@ typedef struct _Gda_XmlFileClass Gda_XmlFileClass;
 
 #define GDA_TYPE_XML_FILE            (gda_xml_file_get_type())
 #ifdef HAVE_GOBJECT
-#  define GDA_XML_FILE(obj) \
-          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_FILE, Gda_XmlFile)
-#  define GDA_XML_FILE_CLASS(klass) \
-          G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_FILE, Gda_XmlFileClass)
-#  define GDA_IS_XML_FILE(obj) \
-          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_FILE)
-#  define GDA_IS_XML_FILE_CLASS(klass) \
-          GTK_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_FILE)
+#  define GDA_XML_FILE(obj) \
+          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_FILE, Gda_XmlFile)
+#  define GDA_XML_FILE_CLASS(klass) \
+          G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_FILE, Gda_XmlFileClass)
+#  define GDA_IS_XML_FILE(obj) \
+          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_FILE)
+#  define GDA_IS_XML_FILE_CLASS(klass) \
+          GTK_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_FILE)
 #else
-#  define GDA_XML_FILE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_FILE, Gda_XmlFile)
-#  define GDA_XML_FILE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_FILE, Gda_XmlFileClass)
-#  define GDA_IS_XML_FILE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_FILE)
-#  define GDA_IS_XML_FILE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_FILE))
+#  define GDA_XML_FILE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_FILE, Gda_XmlFile)
+#  define GDA_XML_FILE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_FILE, Gda_XmlFileClass)
+#  define GDA_IS_XML_FILE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_FILE)
+#  define GDA_IS_XML_FILE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_FILE))
 #endif
 
 struct _Gda_XmlFile
 {
 #ifdef HAVE_GOBJECT
-  GObject         object;
+  GObject         object;
 #else
   GtkObject       object;
 #endif
@@ -72,8 +72,8 @@ struct _Gda_XmlFile
 struct _Gda_XmlFileClass
 {
 #ifdef HAVE_GOBJECT
-  GObjectClass  parent_class;
-  GObjectClass *parent;
+  GObjectClass  parent_class;
+  GObjectClass *parent;
 #else
   GtkObjectClass parent_class;
 #endif
@@ -83,7 +83,7 @@ struct _Gda_XmlFileClass
 };
 
 #ifdef HAVE_GOBJECT
-GType        gda_xml_file_get_type      (void);
+GType        gda_xml_file_get_type      (void);
 #else
 GtkType      gda_xml_file_get_type      (void);
 #endif

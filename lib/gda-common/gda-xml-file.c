@@ -31,7 +31,7 @@ static gint gda_xml_file_signals[GDA_XML_FILE_LAST_SIGNAL] = { 0, 0 };
 #ifdef HAVE_GOBJECT
 static void gda_xml_file_finalize (GObject *object);
 #else
-static void gda_xml_file_destroy    (Gda_XmlFile *xmlfile);
+static void gda_xml_file_destroy    (Gda_XmlFile *xmlfile);
 #endif
 
 /* errors handling */
@@ -45,13 +45,13 @@ static void (gda_xml_file_warn_def) (void *ctx, const char *msg, ...);
 static void
 gda_xml_file_class_init (Gda_XmlFileClass *klass, gpointer data)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  /* FIXME: GObject signals are not yet implemented */
-  object_class->finalize = &gda_xml_file_finalize;
-  klass->parent = g_type_class_peek_parent (klass);
-  klass->warning = NULL;
-  klass->error = NULL;
+  /* FIXME: GObject signals are not yet implemented */
+  object_class->finalize = &gda_xml_file_finalize;
+  klass->parent = g_type_class_peek_parent (klass);
+  klass->warning = NULL;
+  klass->error = NULL;
 }
 #else
 static void
@@ -108,25 +108,25 @@ gda_xml_file_init (Gda_XmlFile *xmlfile)
 GType
 gda_xml_file_get_type (void)
 {
-  static GType type = 0;
-  if (!type)
-    {
-      GTypeInfo info =
-      {
-        sizeof (Gda_XmlFileClass),                /* class_size */
-        NULL,                                     /* base_init */
-        NULL,                                     /* base_finalize */
-        (GClassInitFunc) gda_xml_file_class_init, /* class_init */
-        NULL,                                     /* class_finalize */
-        NULL,                                     /* class_data */
-        sizeof (Gda_XmlFile),                     /* instance_size */
-        0,                                        /* n_preallocs */
-        (GInstanceInitFunc) gda_xml_file_init,    /* instance_init */
-        NULL,                                     /* value_table */
-      };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_XmlFile", &info);
-    }
-  return (type);
+  static GType type = 0;
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+        sizeof (Gda_XmlFileClass),                /* class_size */
+        NULL,                                     /* base_init */
+        NULL,                                     /* base_finalize */
+        (GClassInitFunc) gda_xml_file_class_init, /* class_init */
+        NULL,                                     /* class_finalize */
+        NULL,                                     /* class_data */
+        sizeof (Gda_XmlFile),                     /* instance_size */
+        0,                                        /* n_preallocs */
+        (GInstanceInitFunc) gda_xml_file_init,    /* instance_init */
+        NULL,                                     /* value_table */
+      };
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_XmlFile", &info);
+    }
+  return (type);
 }
 #else
 GtkType
@@ -163,7 +163,7 @@ gda_xml_file_new (const gchar *root_doc)
   Gda_XmlFile* xmlfile;
 
 #ifdef HAVE_GOBJECT
-  xmlfile = GDA_XML_FILE (g_object_new (GDA_TYPE_XML_FILE, NULL));
+  xmlfile = GDA_XML_FILE (g_object_new (GDA_TYPE_XML_FILE, NULL));
 #else
   xmlfile = GDA_XML_FILE(gtk_type_new(gda_xml_file_get_type()));
 #endif
@@ -190,12 +190,12 @@ void gda_xml_file_construct(Gda_XmlFile *xmlfile, const gchar *root_doc)
 static void
 gda_xml_file_finalize (GObject *object)
 {
-  Gda_XmlFile *xmlfile = GDA_XML_FILE (object);
-  Gda_XmlFileClass *klass =
-    G_TYPE_INSTANCE_GET_CLASS (object, GDA_XML_FILE_CLASS, Gda_XmlFileClass);
+  Gda_XmlFile *xmlfile = GDA_XML_FILE (object);
+  Gda_XmlFileClass *klass =
+    G_TYPE_INSTANCE_GET_CLASS (object, GDA_XML_FILE_CLASS, Gda_XmlFileClass);
 
-  xmlFreeDoc (xmlfile->doc);
-  klass->parent->finalize (object);
+  xmlFreeDoc (xmlfile->doc);
+  klass->parent->finalize (object);
 }
 #else
 static void

@@ -21,18 +21,18 @@
 #include <stdlib.h>
 
 #ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
 #else
-/* Stubs that do something close enough.  */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
 #endif
 
 #define OBJECT_DATABASE    "database"
@@ -68,8 +68,8 @@ static gint xmldb_signals[GDA_XML_DATABASE_LAST_SIGNAL] = { 0, };
 static void
 gda_xml_database_class_init (Gda_XmlDatabaseClass *klass, gpointer data)
 {
-  /* FIXME: GObject signals are not yet implemented */
-  klass->changed = NULL;
+  /* FIXME: GObject signals are not yet implemented */
+  klass->changed = NULL;
 }
 #else
 static void
@@ -105,27 +105,27 @@ gda_xml_database_init (Gda_XmlDatabase *xmldb)
 GType
 gda_xml_database_get_type (void)
 {
-  static GType type = 0;
+  static GType type = 0;
 
-  if (!type)
-    {
-      GTypeInfo info =
-      {
-        sizeof (Gda_XmlDatabaseClass),                /* class_size */
-        NULL,                                         /* base_init */
-        NULL,                                         /* base_finalize */
-        (GClassInitFunc) gda_xml_database_class_init, /* class_init */
-        NULL,                                         /* class_finalize */
-        NULL,                                         /* class_data */
-        sizeof (Gda_XmlDatabase),                     /* instance_size */
-        0,                                            /* n_preallocs */
-        (GInstanceInitFunc) gda_xml_database_init,    /* instance_init */
-        NULL,                                         /* value_table */
-      };
-      type = g_type_register_static (GDA_TYPE_XML_FILE, "Gda_XmlDatabase",
-                                     &info);
-    }
-  return type;
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+        sizeof (Gda_XmlDatabaseClass),                /* class_size */
+        NULL,                                         /* base_init */
+        NULL,                                         /* base_finalize */
+        (GClassInitFunc) gda_xml_database_class_init, /* class_init */
+        NULL,                                         /* class_finalize */
+        NULL,                                         /* class_data */
+        sizeof (Gda_XmlDatabase),                     /* instance_size */
+        0,                                            /* n_preallocs */
+        (GInstanceInitFunc) gda_xml_database_init,    /* instance_init */
+        NULL,                                         /* value_table */
+      };
+      type = g_type_register_static (GDA_TYPE_XML_FILE, "Gda_XmlDatabase",
+                                     &info);
+    }
+  return type;
 }
 #else
 GtkType
@@ -165,7 +165,7 @@ gda_xml_database_new (void)
   Gda_XmlDatabase* xmldb;
 
 #ifdef HAVE_GOBJECT
-  xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
+  xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
 #else
   xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
 #endif
@@ -188,7 +188,7 @@ gda_xml_database_new_from_file (const gchar *filename)
   Gda_XmlDatabase* xmldb;
   
 #ifdef HAVE_GOBJECT
-  xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
+  xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
 #else
   xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
 #endif
@@ -201,11 +201,11 @@ gda_xml_database_new_from_file (const gchar *filename)
       node = GDA_XML_FILE(xmldb)->root->childs;
       while (node)
         {
-        	if (!strcmp(node->name, OBJECT_TABLES_NODE))
-        	  xmldb->tables = node;
-        	else if (!strcmp(node->name, OBJECT_VIEWS_NODE))
-        	  xmldb->views = node;
-        	node = node->next;
+          if (!strcmp(node->name, OBJECT_TABLES_NODE))
+            xmldb->tables = node;
+          else if (!strcmp(node->name, OBJECT_VIEWS_NODE))
+            xmldb->views = node;
+          node = node->next;
         }
     }
   return xmldb;
@@ -222,7 +222,7 @@ gda_xml_database_free (Gda_XmlDatabase *xmldb)
 {
   g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
 #ifdef HAVE_GOBJECT
-  g_object_unref (G_OBJECT (xmldb));
+  g_object_unref (G_OBJECT (xmldb));
 #else
   gtk_object_destroy(GTK_OBJECT(xmldb));
 #endif
@@ -252,7 +252,7 @@ gda_xml_database_changed (Gda_XmlDatabase *xmldb)
 {
   g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
   
-#ifndef HAVE_GOBJECT  /* FIXME: signals without GTK */
+#ifndef HAVE_GOBJECT  /* FIXME: signals without GTK */
   gtk_signal_emit(GTK_OBJECT(xmldb), xmldb_signals[GDA_XML_DATABASE_CHANGED]);
 #endif
 }

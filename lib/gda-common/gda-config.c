@@ -23,10 +23,12 @@
  * already defined in glib.h, if we use glib 1.3. The next 3 lines
  * are needed to prevent this. */
 #ifdef HAVE_GOBJECT
-#  define GCONF_GCONF_GLIB_PUBLIC_H 
+#  define GCONF_GCONF_GLIB_PUBLIC_H 
 #endif
 
 #include <gconf/gconf.h>
+#include <liboaf/liboaf.h>
+#include "gda-corba.h"
 
 static GConfEngine* conf_engine = NULL;
 

@@ -22,9 +22,9 @@
 #include <glib.h>
 
 #ifdef HAVE_GOBJECT
-#  include <glib-object.h>
+#  include <glib-object.h>
 #else
-#  include <gtk/gtk.h>
+#  include <gtk/gtk.h>
 #endif
 
 #if defined(__cplusplus)
@@ -33,13 +33,13 @@ extern "C" {
 
 #define GDA_TYPE_THREAD    (gda_thread_get_type())
 #ifdef HAVE_GOBJECT
-#  define GDA_THREAD(obj) \
-          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_THREAD, Gda_Thread)
-#  define IS_GDA_THREAD(obj) \
-          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_THREAD)
+#  define GDA_THREAD(obj) \
+          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_THREAD, Gda_Thread)
+#  define IS_GDA_THREAD(obj) \
+          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_THREAD)
 #else
-#  define GDA_THREAD(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_THREAD, Gda_Thread)
-#  define IS_GDA_THREAD(obj) GTK_CHECK_TYPE(obj, GDA_TYPE_THREAD)
+#  define GDA_THREAD(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_THREAD, Gda_Thread)
+#  define IS_GDA_THREAD(obj) GTK_CHECK_TYPE(obj, GDA_TYPE_THREAD)
 #endif
 
 typedef struct _Gda_Thread      Gda_Thread;
@@ -62,16 +62,16 @@ struct _Gda_Thread
 struct _Gda_ThreadClass
 {
 #ifdef HAVE_GOBJECT
-  GObjectClass parent_class;
+  GObjectClass parent_class;
 #else
-   GtkObjectClass parent_class;
+  GtkObjectClass parent_class;
 #endif
 };
 
 #ifdef HAVE_GOBJECT
-GType       gda_thread_get_type   (void);
+GType       gda_thread_get_type   (void);
 #else
-GtkType     gda_thread_get_type   (void);
+GtkType     gda_thread_get_type   (void);
 #endif
 
 Gda_Thread* gda_thread_new        (Gda_ThreadFunc func);

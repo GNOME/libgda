@@ -22,9 +22,9 @@
 #include <glib.h>
 
 #ifdef HAVE_GOBJECT
-#  include <glib-object.h>
+#  include <glib-object.h>
 #else
-#  include <gtk/gtk.h>
+#  include <gtk/gtk.h>
 #endif
 
 #include <gda-xml-file.h>
@@ -34,17 +34,17 @@ extern "C" {
 #endif
 
 #ifdef HAVE_GOBJECT
-#  define GDA_TYPE_XML_QUERY (gda_xml_query_get_type ())
-#  define GDA_XML_QUERY(obj) \
-          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_QUERY, Gda_XmlQuery)
-#  define GDA_XML_QUERY_CLASS(klass) \
-          G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_QUERY, Gda_XmlQueryClass)
-#  define GDA_XML_QUERY_IS_OBJECT(obj) \
-          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_QUERY)
+#  define GDA_TYPE_XML_QUERY (gda_xml_query_get_type ())
+#  define GDA_XML_QUERY(obj) \
+          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_QUERY, Gda_XmlQuery)
+#  define GDA_XML_QUERY_CLASS(klass) \
+          G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_QUERY, Gda_XmlQueryClass)
+#  define GDA_XML_QUERY_IS_OBJECT(obj) \
+          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_QUERY)
 #else
-#  define GDA_XML_QUERY(obj)            GTK_CHECK_CAST(obj, gda_xml_query_get_type(), Gda_XmlQuery)
-#  define GDA_XML_QUERY_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, gda_xml_query_get_type(), Gda_XmlQueryClass)
-#  define GDA_XML_QUERY_IS_OBJECT(obj)  GTK_CHECK_TYPE(obj, gda_xml_query_get_type())
+#  define GDA_XML_QUERY(obj)            GTK_CHECK_CAST(obj, gda_xml_query_get_type(), Gda_XmlQuery)
+#  define GDA_XML_QUERY_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, gda_xml_query_get_type(), Gda_XmlQueryClass)
+#  define GDA_XML_QUERY_IS_OBJECT(obj)  GTK_CHECK_TYPE(obj, gda_xml_query_get_type())
 #endif
 
 typedef struct _Gda_XmlQuery      Gda_XmlQuery;
@@ -104,12 +104,12 @@ struct _Gda_XmlQueryClass
 {
   Gda_XmlFileClass parent_class;
 #ifdef HAVE_GOBJECT
-  GObjectClass    *parent;
+  GObjectClass    *parent;
 #endif
 };
 
 #ifdef HAVE_GOBJECT
-GType          gda_xml_query_get_type         (void);
+GType          gda_xml_query_get_type         (void);
 #else
 GtkType        gda_xml_query_get_type         (void);
 #endif
