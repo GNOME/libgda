@@ -1,6 +1,6 @@
 /* GDA client library
  * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2000,2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -61,39 +61,41 @@ typedef struct _Gda_ConnectionPoolClass Gda_ConnectionPoolClass;
 struct _Gda_ConnectionPool
 {
 #ifdef HAVE_GOBJECT
-  GObject   object;
+	GObject   object;
 #else
-  GtkObject object;
+	GtkObject object;
 #endif
-  GList*    connections;
+	GList*    connections;
 };
 
 struct _Gda_ConnectionPoolClass
 {
 #ifdef HAVE_GOBJECT
-  GObjectClass   parent_class;
-  GObjectClass   *parent;
+	GObjectClass   parent_class;
+	GObjectClass   *parent;
 #else
-  GtkObjectClass parent_class;
+	GtkObjectClass parent_class;
 #endif
   /* signals */
-  void (*new_connection)(Gda_ConnectionPool *pool, Gda_Connection *cnc);
+	void (*open)(Gda_ConnectionPool *pool, Gda_Connection *cnc);
 };
 
 #ifdef HAVE_GOBJECT
-GType               gda_connection_pool_get_type        (void);
+GType               gda_connection_pool_get_type (void);
 #else
-GtkType             gda_connection_pool_get_type        (void);
+GtkType             gda_connection_pool_get_type (void);
 #endif
 
-Gda_ConnectionPool* gda_connection_pool_new             (void);
-void                gda_connection_pool_free            (Gda_ConnectionPool *pool);
+Gda_ConnectionPool* gda_connection_pool_new (void);
+void                gda_connection_pool_free (Gda_ConnectionPool *pool);
 
 Gda_Connection*     gda_connection_pool_open_connection (Gda_ConnectionPool *pool,
-							 const gchar *gda_name,
-							 const gchar *username,
-							 const gchar *password);
-void                gda_connection_pool_close_all       (Gda_ConnectionPool *pool);
+														 const gchar *gda_name,
+														 const gchar *username,
+														 const gchar *password);
+void                gda_connection_pool_close_connection (Gda_ConnectionPool *pool,
+														  Gda_Connection *cnc);
+void                gda_connection_pool_close_all (Gda_ConnectionPool *pool);
 
 #if defined(__cplusplus)
 }
