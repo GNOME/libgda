@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-08-13 04:20+0200\n"
-"PO-Revision-Date: 2003-05-25 18:42-0400\n"
+"POT-Creation-Date: 2003-08-25 05:57+0200\n"
+"PO-Revision-Date: 2003-08-25 05:56+0200\n"
 "Last-Translator: Дејан Матијевић <dejan@ns.sympatico.ca>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Report-Msgid-Bugs-To: \n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:516 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Извор података %s није нађен у подешавању"
@@ -27,16 +27,16 @@ msgstr "Извор података %s није нађен у подешавањ
 msgid "Could not find provider %s in the current setup"
 msgstr "Не може да наћи посредника %s u текућем подешавању"
 
-#: libgda/gda-client.c:368
+#: libgda/gda-client.c:369
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Посредник %s не извршава улазну функцију"
 
-#: libgda/gda-client.c:378
+#: libgda/gda-client.c:379
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Немогуће направити GdaServerProvider објекат из прикључка"
 
-#: libgda/gda-client.c:442
+#: libgda/gda-client.c:443
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Привремени извор података направила libgda. Немојте га уклонити"
 
@@ -75,7 +75,7 @@ msgstr "Низ конекције"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1142
 #: providers/odbc/gda-odbc-provider.c:1298
-#: providers/postgres/gda-postgres-provider.c:1107
+#: providers/postgres/gda-postgres-provider.c:1118
 msgid "Description"
 msgstr "Опис"
 
@@ -87,7 +87,7 @@ msgstr "Корисничко име"
 msgid "Password"
 msgstr "Лозинка"
 
-#: libgda/gda-data-model.c:686
+#: libgda/gda-data-model.c:687
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Модел података %p није измењив"
@@ -115,80 +115,84 @@ msgstr "SQL команда није SELECT (is '%s'"
 msgid "There is already a field called %s"
 msgstr "Веч постоји поље звано %s"
 
-#: libgda/gda-util.c:144
+#: libgda/gda-util.c:147
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Нисам могао да обрадим SQL наредбу '%s'"
 
-#: libgda/gda-util.c:177
+#: libgda/gda-util.c:180
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Грешка при читању %s: %s"
 
-#: libgda/gda-util.c:203
+#: libgda/gda-util.c:206
 #, c-format
 msgid "Could not create file %s"
 msgstr "Не може да креира даtoteku %s"
 
-#: libgda/gda-value.c:1922
+#: libgda/gda-value.c:1982
 msgid "TRUE"
 msgstr "Јесте"
 
-#: libgda/gda-value.c:1924
+#: libgda/gda-value.c:1984
 msgid "FALSE"
 msgstr "Није"
 
-#: libgda/gda-value.c:1993
+#: libgda/gda-value.c:2053
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject типа '%s'"
 
-#: libgda/gda-value.c:1996
+#: libgda/gda-value.c:2056
 msgid "NULL GObject"
 msgstr "Непостојећи GObject"
 
-#: libgda/gda-xml-database.c:263
+#: libgda/gda-xml-database.c:271
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Не може да натовари датотеку на %s"
 
-#: libgda/gda-xml-database.c:272
+#: libgda/gda-xml-database.c:280
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Нисам могао да обрадим датотеку на %s"
 
-#: libgda/gda-xml-database.c:282
+#: libgda/gda-xml-database.c:290
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Погрешан XML датотека базе података '%s'"
 
-#: libgda/gda-xml-database.c:508
+#: libgda/gda-xml-database.c:536
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Не може да направи XML чвориште од табеле %s"
 
-#: libgda/gda-xml-database.c:526
+#: libgda/gda-xml-database.c:554
 msgid "Could not dump XML file to memory"
 msgstr "Не може да складишти XML датотеку у меморију"
 
-#: libgda/gda-xml-database.c:619 libgda/gda-xml-database.c:656
-#: libgda/gda-xml-database.c:700
+#: libgda/gda-xml-database.c:647 libgda/gda-xml-database.c:684
+#: libgda/gda-xml-database.c:728
 #, c-format
 msgid "Table %s already exists"
 msgstr "Табела %s већ постоји"
 
-#: libgda/gda-xml-database.c:693
+#: libgda/gda-xml-database.c:721
 msgid "Invalid node"
 msgstr "Погрешно чвориште"
 
-#: libgda/gda-xml-database.c:735
+#: libgda/gda-xml-database.c:763
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Дуплирано <подаци> чвориште од табеле %s"
 
-#: libgda/gda-xml-database.c:742
+#: libgda/gda-xml-database.c:770
 msgid "Invalid XML node"
 msgstr "Погрешан XML чвориште"
+
+#: libgda/gda-xml-database.c:779
+msgid "Could not add the data from the XML node"
+msgstr "Не може да дода податке из XML чвора"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -271,7 +275,7 @@ msgstr ""
 "%s\n"
 
 #: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
-#: providers/oracle/utils.c:74 providers/postgres/utils.c:51
+#: providers/oracle/utils.c:74 providers/postgres/utils.c:53
 #: providers/sybase/gda-sybase-provider.c:765
 #: providers/sybase/gda-sybase-recordset.c:512
 #: providers/sybase/gda-sybase-recordset.c:534
@@ -307,7 +311,7 @@ msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Посредник за TDS базиране базе података (користећи FreeTDS)"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
-#: providers/postgres/utils.c:46 providers/sybase/utils.c:538
+#: providers/postgres/utils.c:48 providers/sybase/utils.c:538
 msgid "NO DESCRIPTION"
 msgstr "Без описа"
 
@@ -357,12 +361,12 @@ msgstr "Функције"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1973
 #: providers/oracle/gda-oracle-provider.c:2096
-#: providers/postgres/gda-postgres-provider.c:836
-#: providers/postgres/gda-postgres-provider.c:1106
-#: providers/postgres/gda-postgres-provider.c:1125
-#: providers/postgres/gda-postgres-provider.c:1185
-#: providers/postgres/gda-postgres-provider.c:1302
-#: providers/postgres/gda-postgres-provider.c:1935
+#: providers/postgres/gda-postgres-provider.c:847
+#: providers/postgres/gda-postgres-provider.c:1117
+#: providers/postgres/gda-postgres-provider.c:1136
+#: providers/postgres/gda-postgres-provider.c:1196
+#: providers/postgres/gda-postgres-provider.c:1313
+#: providers/postgres/gda-postgres-provider.c:1946
 #: providers/sqlite/gda-sqlite-provider.c:752
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
@@ -381,15 +385,15 @@ msgstr "Индекс"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:890
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:1105
-#: providers/postgres/gda-postgres-provider.c:1989
+#: providers/postgres/gda-postgres-provider.c:1116
+#: providers/postgres/gda-postgres-provider.c:2000
 msgid "Table"
 msgstr "Табела"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1030
-#: providers/postgres/gda-postgres-provider.c:834
+#: providers/postgres/gda-postgres-provider.c:845
 msgid "Procedure"
 msgstr "Процедура"
 
@@ -406,7 +410,7 @@ msgstr "SQL дефиниција"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1341 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1352 testing/client.c:139
 msgid "Triggers"
 msgstr "Окидачи"
 
@@ -416,7 +420,7 @@ msgstr "Окидачи"
 #: providers/mysql/gda-mysql-provider.c:971
 #: providers/odbc/gda-odbc-provider.c:1254
 #: providers/oracle/gda-oracle-provider.c:2095
-#: providers/postgres/gda-postgres-provider.c:1124
+#: providers/postgres/gda-postgres-provider.c:1135
 #: providers/sqlite/gda-sqlite-provider.c:751
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
@@ -439,11 +443,11 @@ msgstr "Тип"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1974
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:837
-#: providers/postgres/gda-postgres-provider.c:1126
-#: providers/postgres/gda-postgres-provider.c:1186
-#: providers/postgres/gda-postgres-provider.c:1303
-#: providers/postgres/gda-postgres-provider.c:1936
+#: providers/postgres/gda-postgres-provider.c:848
+#: providers/postgres/gda-postgres-provider.c:1137
+#: providers/postgres/gda-postgres-provider.c:1197
+#: providers/postgres/gda-postgres-provider.c:1314
+#: providers/postgres/gda-postgres-provider.c:1947
 #: providers/sqlite/gda-sqlite-provider.c:753
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
@@ -454,7 +458,7 @@ msgstr "Коментари"
 #: providers/mysql/gda-mysql-provider.c:974
 #: providers/odbc/gda-odbc-provider.c:1257
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:1127
+#: providers/postgres/gda-postgres-provider.c:1138
 #: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
@@ -463,7 +467,7 @@ msgstr "GDA тип"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:1893 testing/client.c:133
+#: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
 msgstr "Корисници"
 
@@ -483,8 +487,8 @@ msgstr "Неисправна LDAP ознака"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
-#: providers/postgres/gda-postgres-recordset.c:185
-#: providers/postgres/gda-postgres-recordset.c:225
+#: providers/postgres/gda-postgres-recordset.c:189
+#: providers/postgres/gda-postgres-recordset.c:229
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 msgid "Row number out of range"
@@ -492,21 +496,21 @@ msgstr "Број реда изван оквира"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:227
-#: providers/mysql/gda-mysql-recordset.c:288
+#: providers/mysql/gda-mysql-recordset.c:294
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Покушај да се убаци ред са погрешним бројем колона"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:239
-#: providers/mysql/gda-mysql-recordset.c:303
+#: providers/mysql/gda-mysql-recordset.c:309
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
 msgstr "Не може да добије информације о колони"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:253
-#: providers/mysql/gda-mysql-recordset.c:321
+#: providers/mysql/gda-mysql-recordset.c:327
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
 msgstr "Не може да добије вредност колоне"
@@ -540,7 +544,7 @@ msgstr "Трансакција није подржана у MDB посредни
 #: providers/mysql/gda-mysql-provider.c:1069
 #: providers/odbc/gda-odbc-provider.c:914
 #: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/postgres/gda-postgres-provider.c:1363
 #: providers/sqlite/gda-sqlite-provider.c:622
 #: providers/xml/gda-xml-provider.c:464
 msgid "Field name"
@@ -550,7 +554,7 @@ msgstr "Назив поља"
 #: providers/mysql/gda-mysql-provider.c:1070
 #: providers/odbc/gda-odbc-provider.c:915
 #: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1353
+#: providers/postgres/gda-postgres-provider.c:1364
 #: providers/sqlite/gda-sqlite-provider.c:623
 #: providers/xml/gda-xml-provider.c:465
 msgid "Data type"
@@ -560,7 +564,7 @@ msgstr "Врста податка"
 #: providers/mysql/gda-mysql-provider.c:1071
 #: providers/odbc/gda-odbc-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1354
+#: providers/postgres/gda-postgres-provider.c:1365
 #: providers/sqlite/gda-sqlite-provider.c:624
 #: providers/xml/gda-xml-provider.c:466
 msgid "Size"
@@ -570,7 +574,7 @@ msgstr "Величина"
 #: providers/mysql/gda-mysql-provider.c:1072
 #: providers/odbc/gda-odbc-provider.c:917
 #: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1355
+#: providers/postgres/gda-postgres-provider.c:1366
 #: providers/sqlite/gda-sqlite-provider.c:625
 #: providers/xml/gda-xml-provider.c:467
 msgid "Scale"
@@ -580,7 +584,7 @@ msgstr "Размера"
 #: providers/mysql/gda-mysql-provider.c:1073
 #: providers/odbc/gda-odbc-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1356
+#: providers/postgres/gda-postgres-provider.c:1367
 #: providers/sqlite/gda-sqlite-provider.c:626
 #: providers/xml/gda-xml-provider.c:468
 msgid "Not null?"
@@ -590,7 +594,7 @@ msgstr "Није нул?"
 #: providers/mysql/gda-mysql-provider.c:1074
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1357
+#: providers/postgres/gda-postgres-provider.c:1368
 #: providers/sqlite/gda-sqlite-provider.c:627
 #: providers/xml/gda-xml-provider.c:469
 msgid "Primary key?"
@@ -600,7 +604,7 @@ msgstr "Основни кљућ?"
 #: providers/mysql/gda-mysql-provider.c:1075
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1358
+#: providers/postgres/gda-postgres-provider.c:1369
 #: providers/sqlite/gda-sqlite-provider.c:628
 #: providers/xml/gda-xml-provider.c:470
 msgid "Unique index?"
@@ -610,7 +614,7 @@ msgstr "Уникатни индекс?"
 #: providers/mysql/gda-mysql-provider.c:1076
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1359
+#: providers/postgres/gda-postgres-provider.c:1370
 #: providers/sqlite/gda-sqlite-provider.c:629
 #: providers/xml/gda-xml-provider.c:471
 msgid "References"
@@ -620,7 +624,7 @@ msgstr "Препоруке"
 #: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1256
-#: providers/postgres/gda-postgres-provider.c:1360
+#: providers/postgres/gda-postgres-provider.c:1371
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
 msgstr "Уобичајена вредност"
@@ -633,7 +637,7 @@ msgstr "ID"
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
 #: providers/odbc/gda-odbc-provider.c:1034
-#: providers/postgres/gda-postgres-provider.c:838
+#: providers/postgres/gda-postgres-provider.c:849
 msgid "Return type"
 msgstr "Повратни тип"
 
@@ -644,7 +648,7 @@ msgstr "# од args"
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1036
-#: providers/postgres/gda-postgres-provider.c:840
+#: providers/postgres/gda-postgres-provider.c:851
 msgid "Args types"
 msgstr "Args тип"
 
@@ -654,11 +658,11 @@ msgstr "Args тип"
 #: providers/odbc/gda-odbc-provider.c:1299
 #: providers/odbc/gda-odbc-provider.c:1351
 #: providers/oracle/gda-oracle-provider.c:1158
-#: providers/postgres/gda-postgres-provider.c:841
-#: providers/postgres/gda-postgres-provider.c:1108
-#: providers/postgres/gda-postgres-provider.c:1187
-#: providers/postgres/gda-postgres-provider.c:1306
-#: providers/postgres/gda-postgres-provider.c:1937
+#: providers/postgres/gda-postgres-provider.c:852
+#: providers/postgres/gda-postgres-provider.c:1119
+#: providers/postgres/gda-postgres-provider.c:1198
+#: providers/postgres/gda-postgres-provider.c:1317
+#: providers/postgres/gda-postgres-provider.c:1948
 msgid "Definition"
 msgstr "Дефиниција"
 
@@ -788,7 +792,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
 #: providers/mysql/gda-mysql-recordset.c:58
-#: providers/mysql/gda-mysql-recordset.c:174
+#: providers/mysql/gda-mysql-recordset.c:180
 msgid "Invalid MySQL handle"
 msgstr "Неисправна MySQL ознака"
 
@@ -838,25 +842,25 @@ msgstr "Неисправна Odbc ознака"
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:835
-#: providers/postgres/gda-postgres-provider.c:1301
+#: providers/postgres/gda-postgres-provider.c:846
+#: providers/postgres/gda-postgres-provider.c:1312
 msgid "Id"
 msgstr "ID"
 
 #: providers/odbc/gda-odbc-provider.c:1035
-#: providers/postgres/gda-postgres-provider.c:839
+#: providers/postgres/gda-postgres-provider.c:850
 msgid "Nb args"
 msgstr "Nb args"
 
 #: providers/odbc/gda-odbc-provider.c:1296
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
 msgid "Views"
 msgstr "Прегледи"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1348
-#: providers/postgres/gda-postgres-provider.c:1934
-#: providers/postgres/gda-postgres-provider.c:1990
+#: providers/postgres/gda-postgres-provider.c:1945
+#: providers/postgres/gda-postgres-provider.c:2001
 msgid "Sequence"
 msgstr "Секвенца"
 
@@ -1002,17 +1006,17 @@ msgstr "Не може да врати у претходно стање Oracle т
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1300
+#: providers/postgres/gda-postgres-provider.c:1311
 msgid "Aggregate"
 msgstr "Сакупити"
 
 #: providers/oracle/gda-oracle-provider.c:1156
-#: providers/postgres/gda-postgres-provider.c:1304
+#: providers/postgres/gda-postgres-provider.c:1315
 msgid "OutType"
 msgstr "Тип споља (OutType)"
 
 #: providers/oracle/gda-oracle-provider.c:1157
-#: providers/postgres/gda-postgres-provider.c:1305
+#: providers/postgres/gda-postgres-provider.c:1316
 msgid "InType"
 msgstr "Тип унутра (InType)"
 
@@ -1084,7 +1088,7 @@ msgstr "Не може да добије Oracle нул особину поља"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1224 testing/client.c:131
+#: providers/postgres/gda-postgres-provider.c:1235 testing/client.c:135
 msgid "Indexes"
 msgstr "Индекси"
 
@@ -1092,7 +1096,7 @@ msgstr "Индекси"
 msgid "Procedures"
 msgstr "Процедуре"
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:138
 msgid "Sequences"
 msgstr "Секвенце"
 
@@ -1113,7 +1117,7 @@ msgid "Could not define by position"
 msgstr "Не може да одреди из позиције"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:264
+#: providers/postgres/gda-postgres-recordset.c:268
 msgid "Column out of range"
 msgstr "Колона изван оквира"
 
@@ -1149,33 +1153,34 @@ msgstr "Не може да добави ред"
 msgid "Provider for Oracle databases"
 msgstr "Посредник за Oracle базе података"
 
-#: providers/postgres/gda-postgres-provider.c:554
-#: providers/postgres/gda-postgres-provider.c:571
-#: providers/postgres/gda-postgres-provider.c:642
-#: providers/postgres/gda-postgres-provider.c:777
-#: providers/postgres/gda-postgres-recordset.c:176
-#: providers/postgres/gda-postgres-recordset.c:216
-#: providers/postgres/gda-postgres-recordset.c:258
+#: providers/postgres/gda-postgres-provider.c:564
+#: providers/postgres/gda-postgres-provider.c:581
+#: providers/postgres/gda-postgres-provider.c:652
+#: providers/postgres/gda-postgres-provider.c:787
+#: providers/postgres/gda-postgres-recordset.c:180
+#: providers/postgres/gda-postgres-recordset.c:220
+#: providers/postgres/gda-postgres-recordset.c:262
+#: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Погрешна PostgreSQL ручка"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1184
+#: providers/postgres/gda-postgres-provider.c:1195
 msgid "View"
 msgstr "Поглед"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1858 testing/client.c:126
+#: providers/postgres/gda-postgres-provider.c:1869 testing/client.c:130
 msgid "Databases"
 msgstr "Базе података"
 
-#: providers/postgres/gda-postgres-recordset.c:231
+#: providers/postgres/gda-postgres-recordset.c:235
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 msgid "Column number out of range"
 msgstr "Број колоне изван оквира"
 
-#: providers/postgres/gda-postgres-recordset.c:354
+#: providers/postgres/gda-postgres-recordset.c:358
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Место:\"%s\""
@@ -1743,87 +1748,92 @@ msgstr ""
 msgid "\t\tNONE\n"
 msgstr "\t\tНИЈЕДАН\n"
 
-#: testing/client.c:82
+#: testing/client.c:83
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** ГРЕШКА: немогуће отворити конекцију до %s\n"
 
 #. show provider features
-#: testing/client.c:87
+#: testing/client.c:88
 msgid "\tProvider capabilities...\n"
 msgstr "\tМогућности посредника...\n"
 
-#: testing/client.c:88
+#: testing/client.c:89
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "\t\tСкупине: %s\n"
 
-#: testing/client.c:90 testing/client.c:93 testing/client.c:96
-#: testing/client.c:99 testing/client.c:102 testing/client.c:105
-#: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117 testing/client.c:120
+#: testing/client.c:91 testing/client.c:94 testing/client.c:97
+#: testing/client.c:100 testing/client.c:103 testing/client.c:106
+#: testing/client.c:109 testing/client.c:112 testing/client.c:115
+#: testing/client.c:118 testing/client.c:121 testing/client.c:124
 msgid "Supported"
 msgstr "Подржан"
 
-#: testing/client.c:90 testing/client.c:93 testing/client.c:96
-#: testing/client.c:99 testing/client.c:102 testing/client.c:105
-#: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117 testing/client.c:120
+#: testing/client.c:91 testing/client.c:94 testing/client.c:97
+#: testing/client.c:100 testing/client.c:103 testing/client.c:106
+#: testing/client.c:109 testing/client.c:112 testing/client.c:115
+#: testing/client.c:118 testing/client.c:121 testing/client.c:124
 msgid "Not supported"
 msgstr "Није подржан"
 
-#: testing/client.c:91
+#: testing/client.c:92
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "\t\tИндекси: %s\n"
 
-#: testing/client.c:94
+#: testing/client.c:95
 #, c-format
 msgid "\t\tNamespaces: %s\n"
 msgstr "\t\tПростори за име: %s\n"
 
-#: testing/client.c:97
+#: testing/client.c:98
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tПроцедуре: %s\n"
 
-#: testing/client.c:100
+#: testing/client.c:101
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tСеквенце: %s\n"
 
-#: testing/client.c:103
+#: testing/client.c:104
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:106
+#: testing/client.c:107
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tТрансакције: %s\n"
 
-#: testing/client.c:109
+#: testing/client.c:110
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tОкидачи: %s\n"
 
-#: testing/client.c:112
+#: testing/client.c:113
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tКорисници: %s\n"
 
-#: testing/client.c:115
+#: testing/client.c:116
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tПогледи: %s\n"
 
-#: testing/client.c:118
+#: testing/client.c:119
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tXML потражње: %s\n"
 
+#: testing/client.c:122
+#, c-format
+msgid "\t\tBLOBs: %s\n"
+msgstr "\t\tBLOB-ови: %s\n"
+
 #. show connection schemas
-#: testing/client.c:123
+#: testing/client.c:127
 #, c-format
 msgid ""
 "\n"
@@ -1834,56 +1844,56 @@ msgstr ""
 "\tПосредник извештава верзију: %s\n"
 "\n"
 
-#: testing/client.c:125
+#: testing/client.c:129
 msgid "Namespaces"
 msgstr "Простори за име"
 
-#: testing/client.c:127
+#: testing/client.c:131
 msgid "Stored procedures"
 msgstr "Чуване процедуре"
 
-#: testing/client.c:128
+#: testing/client.c:132
 msgid "Connection Tables"
 msgstr "Табела конекција"
 
-#: testing/client.c:129
+#: testing/client.c:133
 msgid "Available types"
 msgstr "Доступни типови"
 
-#: testing/client.c:132
+#: testing/client.c:136
 msgid "Aggregates"
 msgstr "Скупине"
 
-#: testing/client.c:136
+#: testing/client.c:140
 msgid "Languages"
 msgstr "Језици"
 
-#: testing/client.c:141 testing/client.c:149
+#: testing/client.c:145 testing/client.c:153
 msgid "\tStarting transaction..."
 msgstr "\tПочетна трансакција..."
 
-#: testing/client.c:143 testing/client.c:147 testing/client.c:151
-#: testing/client.c:155
+#: testing/client.c:147 testing/client.c:151 testing/client.c:155
+#: testing/client.c:159
 msgid "Error"
 msgstr "Грешка"
 
-#: testing/client.c:145
+#: testing/client.c:149
 msgid "\tFinishing transaction..."
 msgstr "\tЗавршна трансакција..."
 
-#: testing/client.c:153
+#: testing/client.c:157
 msgid "\tRolling back transaction..."
 msgstr "\tВратити трансакцију у претходно стање..."
 
-#: testing/client.c:184
+#: testing/client.c:188
 msgid "Testing GDA client API"
 msgstr "Тестирање GDA клијент API"
 
-#: testing/client.c:193
+#: testing/client.c:197
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** ГРЕШКА: gda_config_get_data_source_list вратио нул ставку\n"
 
-#: testing/client.c:197
+#: testing/client.c:201
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr "Извор података = %s, Корисник = %s\n"
