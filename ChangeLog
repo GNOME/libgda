@@ -1,3 +1,10 @@
+2004-01-22  Jon Willeke <willeke@users.sourceforge.net>
+
+	Fixes #132152
+
+	* libgda/gda-client.c (gda_client_find_connection): compare get_dsn()
+	to name, rather than cnc_string.
+
 2004-01-24  Paisa  Seeluangsawat <paisa@users.sf.net>
 
 	* libgda/gda-row.[ch]:
