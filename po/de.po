@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda 0.90.1\n"
+"Project-Id-Version: libgda 1.1.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-22 12:24+0200\n"
-"PO-Revision-Date: 2003-07-12 18:57+0200\n"
+"POT-Creation-Date: 2004-07-25 11:38+0200\n"
+"PO-Revision-Date: 2004-07-25 11:38+0200\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -54,9 +54,8 @@ msgid "Id"
 msgstr "Kennung"
 
 #: libgda/gda-config.c:1195
-#, fuzzy
 msgid "Location"
-msgstr "Funktion"
+msgstr "Ort"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
@@ -101,7 +100,7 @@ msgid "Password"
 msgstr "Passwort"
 
 #: libgda/gda-data-model.c:880
-#, fuzzy, c-format
+#, c-format
 msgid "Data model %p is not updatable"
 msgstr "Das Datenmodell %p ist nicht veränderbar"
 
@@ -143,7 +142,7 @@ msgstr "Beim Lesen von %s ist ein Fehler aufgetreten: %s"
 #: libgda/gda-util.c:232
 #, c-format
 msgid "Could not create file %s"
-msgstr "Das Erstellen der Datei %s ist fehlgeschlagen"
+msgstr "Das Erstellen der Datei %s ist gescheitert"
 
 #: libgda/gda-value.c:2069
 msgid "TRUE"
@@ -206,23 +205,22 @@ msgid "Invalid XML node"
 msgstr "Ungültiger XML-Node"
 
 #: libgda/gda-xml-database.c:782
-#, fuzzy
 msgid "Could not add the data from the XML node"
-msgstr "Oracle-Paramenter-Handle konnte nicht empfangen werden"
+msgstr "Die Daten des XML-Knotens konnten nicht hinzugefügt werden"
 
 #: libsql/sql_parser.c:59
 #, c-format
 msgid "Parse error near `%s'"
-msgstr ""
+msgstr "Fehler bei der Syntaxanalyse nahe »%s«"
 
 #: libsql/sql_parser.c:61
 #, c-format
 msgid "Syntax error near `%s'"
-msgstr ""
+msgstr "Syntaxfehler nahe »%s«"
 
 #: libsql/sql_parser.c:361
 msgid "Empty query to parse"
-msgstr ""
+msgstr "Leere Abfrage zur Syntaxanalyse übergeben"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -268,13 +266,12 @@ msgstr "Fehler beim Erstellen des Fehler-Containers."
 #: providers/freetds/gda-freetds-provider.c:258
 #: providers/freetds/gda-freetds-provider.c:260
 msgid "Allocating tds context failed."
-msgstr "Bereitstellen des TDS-Kontexts fehlgeschlagen."
+msgstr "Bereitstellen des TDS-Kontexts gescheitert."
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
-#, fuzzy
 msgid "Allocating tds socket failed."
-msgstr "Bereitstellen des TDS-Kontexts fehlgeschlagen."
+msgstr "Bereitstellen des TDS-Sockets gescheitert."
 
 #. gda_freetds_free_connection_data (tds_cnc);
 #: providers/freetds/gda-freetds-provider.c:283
@@ -292,7 +289,7 @@ msgstr "Verbindungsinformationen konnten nicht empfangen werden."
 #: providers/freetds/gda-freetds-provider.c:798
 #: providers/freetds/gda-freetds-provider.c:799
 msgid "Query did not succeed in execute_cmd()."
-msgstr "Abfrage in »execute_cmd()« fehlgeschlagen."
+msgstr "Abfrage in »execute_cmd()« gescheitert."
 
 #: providers/freetds/gda-freetds-provider.c:812
 #: providers/freetds/gda-freetds-provider.c:814
@@ -520,13 +517,12 @@ msgid "Users"
 msgstr "Benutzer"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:154
-#, fuzzy
 msgid "[BLOB unsupported]"
-msgstr "Nicht unterstützt"
+msgstr "[BLOBG nicht unterstützt]"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:157
 msgid "[Unsupported data]"
-msgstr ""
+msgstr "[Nichtunterstützte Daten]"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -742,7 +738,7 @@ msgstr "Ganzzahlen der Länge 1 Byte"
 
 #: providers/mdb/gda-mdb-provider.c:661
 msgid "Double precision values"
-msgstr "Werte mit zweifacher Genauigkeit"
+msgstr "Werte mit doppelter Genauigkeit"
 
 #: providers/mdb/gda-mdb-provider.c:662
 msgid "Single precision values"
@@ -791,9 +787,9 @@ msgstr "Befehl »%s« konnte nicht verarbeitet werden"
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "Befehl »%s« konnte nicht verarbeitet werden"
+msgstr "Befehl »%s« lieferte kein Ergebnis"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
@@ -907,7 +903,7 @@ msgstr "Treiber für MySQL-Datenbanken"
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
-msgstr "»SQLAllocEnv()« fehlgeschlagen..."
+msgstr "»SQLAllocEnv()« gescheitert..."
 
 #: providers/odbc/gda-odbc-provider.c:451
 #: providers/odbc/gda-odbc-provider.c:471
@@ -971,7 +967,7 @@ msgstr "Der Oracle-Sitzungs-Handle konnte nicht initialisiert werden"
 # CHECK
 #: providers/oracle/gda-oracle-provider.c:299
 msgid "Could not attach to the Oracle server"
-msgstr "Anbindung an Oracle-Server fehlgeschlagen"
+msgstr "Anbindung an Oracle-Server gescheitert"
 
 # CHECK
 #: providers/oracle/gda-oracle-provider.c:315
@@ -1267,19 +1263,20 @@ msgstr "Datenbanken"
 
 #: providers/postgres/gda-postgres-recordset.c:228
 msgid "Given row doesn't belong to the model."
-msgstr ""
+msgstr "Die übergebene Zeile gehört nicht zum Modell."
 
 #: providers/postgres/gda-postgres-recordset.c:235
 msgid "Table name could not be guessed."
-msgstr ""
+msgstr "Der Tabellenname konnte nicht erraten werden."
 
 #: providers/postgres/gda-postgres-recordset.c:287
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr ""
+msgstr "Das Modell verfügt über keinen unveränderten, eindeutigen Schlüssel."
 
 #: providers/postgres/gda-postgres-recordset.c:291
 msgid "Model doesn't have any non-unique values to update."
 msgstr ""
+"Das Modell verfügt über keine nichteindeutige, zu aktualisierenden Werte."
 
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
@@ -1343,7 +1340,7 @@ msgstr "Treiber für SQLite-Datenbanken"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr "Speicher voll. Bereitstellen der Verbindungsstruktur fehlgeschlagen."
+msgstr "Speicher voll. Bereitstellen der Verbindungsstruktur gescheitert."
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
@@ -1361,7 +1358,7 @@ msgstr ""
 #: providers/sybase/gda-sybase-provider.c:656
 #, c-format
 msgid "Failed allocating a command structure in %s()"
-msgstr "Bereitstellen einer Befehlsstruktur in %s() fehlgeschlagen."
+msgstr "Bereitstellen einer Befehlsstruktur in %s() gescheitert."
 
 #: providers/sybase/gda-sybase-provider.c:670
 msgid "Could not prepare command structure."
@@ -1369,7 +1366,7 @@ msgstr "Befehlsstruktur konnte nicht vorbereitet werden."
 
 #: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
-msgstr "Übermittlung des SQL-Befehls fehlgeschlagen"
+msgstr "Übermittlung des SQL-Befehls gescheitert"
 
 #: providers/sybase/gda-sybase-provider.c:706
 #: providers/sybase/gda-sybase-provider.c:724
@@ -1404,12 +1401,12 @@ msgstr "%s hat %s zurückgegeben"
 
 #: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
-msgstr "Verwerfen der Befehlsstruktur fehlgeschlagen."
+msgstr "Verwerfen der Befehlsstruktur gescheitert."
 
 #: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
-msgstr "Befehlsstruktur wird bereits verwendet. %s fehlgeschlagen."
+msgstr "Befehlsstruktur wird bereits verwendet. %s gescheitert."
 
 #: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
@@ -1422,14 +1419,14 @@ msgstr "Befehlsstruktur konnte nicht mit %s vorbereitet werden."
 
 #: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
-msgstr "Übermittlung des Befehls fehlgeschlagen."
+msgstr "Übermittlung des Befehls gescheitert."
 
 #: providers/sybase/gda-sybase-provider.c:902
 #: providers/sybase/gda-sybase-provider.c:919
 #: providers/sybase/gda-sybase-provider.c:930
 #, c-format
 msgid "%s: %s failed"
-msgstr "%s: %s fehlgeschlagen"
+msgstr "%s: %s gescheitert"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
@@ -1477,12 +1474,12 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
-msgstr "ct_cancel() fehlgeschlagen."
+msgstr "ct_cancel() gescheitert."
 
 #: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
 msgid "%s failed while processing a row result."
-msgstr "%s beim Verarbeiten eines Zeilenergebnisses fehlgeschlagen."
+msgstr "%s beim Verarbeiten eines Zeilenergebnisses gescheitert."
 
 #: providers/sybase/gda-sybase-recordset.c:339
 #, c-format
@@ -1524,7 +1521,7 @@ msgstr ""
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
 msgid "%s failed on row %d"
-msgstr "%s in Zeile %d fehlgeschlagen"
+msgstr "%s in Zeile %d gescheitert"
 
 #: providers/sybase/gda-sybase-recordset.c:465
 #, c-format
@@ -1557,7 +1554,7 @@ msgstr ""
 msgid "call to ct_diag failed when attempting to clear the server messages"
 msgstr ""
 "Beim Versuch, die Server-Meldungen zu entfernen, ist ein ct_diag()-Aufruf "
-"fehlgeschlagen."
+"gescheitert."
 
 #: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
@@ -1573,7 +1570,7 @@ msgstr "cslib kann Typ %d nicht umwandeln"
 #: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
-msgstr "Datenumwandlung für Typ %d fehlgeschlagen"
+msgstr "Datenumwandlung für Typ %d gescheitert"
 
 #: providers/sybase/libmain.c:40
 msgid "GDA provider for sybase databases (using OpenClient)"
@@ -1670,14 +1667,13 @@ msgid ") Message: "
 msgstr ") Meldung: "
 
 #: providers/sybase/utils.c:244
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"Fehler im CT-Client:\n"
-"\tSchweregrad(%ld) Schicht(%ld) Ursprung(%ld) Kennung(%ld)\n"
-"\t%s"
+"Sybase OpenClient-Nachricht: Schweregrad (%ld), Anzahl (%ld), Ursprung (%"
+"ld), Schicht (%ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1809,92 +1805,84 @@ msgstr "Es konnte keine Beschreibung zur Spalte empfangen werden"
 
 #. fill the recordset
 #: providers/xml/gda-xml-provider.c:661
-#, fuzzy
 msgid "Big integer"
-msgstr "Ganzzahlen der Länge 64 Bit"
+msgstr "Große Ganzzahl"
 
 #: providers/xml/gda-xml-provider.c:662
 msgid "Big unsigned integer"
-msgstr ""
+msgstr "Große, vorzeichenlose Ganzzahl"
 
 #: providers/xml/gda-xml-provider.c:663
 msgid "Binary"
-msgstr ""
+msgstr "Binär"
 
 #: providers/xml/gda-xml-provider.c:664
-#, fuzzy
 msgid "Boolean"
-msgstr "Boolescher Typ"
+msgstr "Boole'sch"
 
 #: providers/xml/gda-xml-provider.c:665
-#, fuzzy
 msgid "Date"
-msgstr "Zustand"
+msgstr "Datum"
 
 #: providers/xml/gda-xml-provider.c:666
-#, fuzzy
 msgid "Double precision"
-msgstr "Werte mit zweifacher Genauigkeit"
+msgstr "Doppelte Genauigkeit"
 
 #: providers/xml/gda-xml-provider.c:667
 msgid "Integer"
-msgstr ""
+msgstr "Ganzzahl"
 
 #: providers/xml/gda-xml-provider.c:668
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #: providers/xml/gda-xml-provider.c:669
 msgid "Money"
-msgstr ""
+msgstr "Geld"
 
 #: providers/xml/gda-xml-provider.c:670
-#, fuzzy
 msgid "Numeric"
-msgstr "Kennung"
+msgstr "Numerisch"
 
 #: providers/xml/gda-xml-provider.c:671
 msgid "Point"
-msgstr ""
+msgstr "Punkt"
 
 #: providers/xml/gda-xml-provider.c:672
-#, fuzzy
 msgid "Single precision"
-msgstr "Werte mit einfacher Genauigkeit"
+msgstr "Einfache Genauigkeit"
 
 #: providers/xml/gda-xml-provider.c:673
 msgid "Small integer"
-msgstr ""
+msgstr "Kleine Ganzzahl"
 
 #: providers/xml/gda-xml-provider.c:674
 msgid "Small unsigned integer"
-msgstr ""
+msgstr "Kleine, vorzeichenlose Ganzzahl"
 
 #: providers/xml/gda-xml-provider.c:675
 msgid "String"
-msgstr ""
+msgstr "Zeichenkette"
 
 #: providers/xml/gda-xml-provider.c:676
-#, fuzzy
 msgid "Time"
-msgstr "Titel"
+msgstr "Zeit"
 
 #: providers/xml/gda-xml-provider.c:677
 msgid "Timestamp"
-msgstr ""
+msgstr "Zeitstempel"
 
 #: providers/xml/gda-xml-provider.c:678
-#, fuzzy
 msgid "Tiny integer"
-msgstr "Ganzzahlen der Länge 64 Bit"
+msgstr "Winzige Ganzzahl"
 
 #: providers/xml/gda-xml-provider.c:679
 msgid "Tiny unsigned integer"
-msgstr ""
+msgstr "Winzige, vorzeichenlose Ganzzahl"
 
 #: providers/xml/gda-xml-provider.c:681
 msgid "Unsigned integer"
-msgstr ""
+msgstr "Vorzeichenlose Ganzzahl"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
@@ -2063,9 +2051,9 @@ msgid "\t\tXML queries: %s\n"
 msgstr "\t\tXML-Abfragen: %s\n"
 
 #: testing/client.c:122
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tBLOBs: %s\n"
-msgstr "\t\tSQL: %s\n"
+msgstr "\t\tBLOBs: %s\n"
 
 #. show connection schemas
 #: testing/client.c:127
@@ -2161,121 +2149,22 @@ msgid "\tgda_params ="
 msgstr "\tGDA-_Parameter ="
 
 #: providers/bdb/gda-bdb-provider.c:154
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
-msgstr ""
-"In der Verbindungszeichenkette muß der Dateiname einer Datenbank angegeben "
-"werden."
+msgstr "Die Verbindungszeichenkette enthält keinen FILE-Dateiparameter."
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
-#, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Ungültiger MDB-Handle"
+msgstr "Ungültiger BDB-Handle"
 
 #: providers/bdb/gda-bdb-recordset.c:242
-#, fuzzy
 msgid "Database is empty"
-msgstr "Datenbanken"
+msgstr "Die Datenbank ist leer"
 
 #: providers/bdb/libmain.c:39
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Treiber für Oracle-Datenbanken"
-
-#~ msgid "Sybase OpenClient Msg: severity("
-#~ msgstr "Sybase-OpenClient-Nachricht: Schweregrad("
-
-#~ msgid "), number("
-#~ msgstr "), Kennung("
-
-#~ msgid "), origin("
-#~ msgstr "), Ursprung("
-
-#~ msgid "), layer("
-#~ msgstr "), Ebene("
-
-#~ msgid "Default"
-#~ msgstr "Vorgabe"
-
-#~ msgid "Default provider, based on XML"
-#~ msgstr "Der voreingestellte Treiber, basierend auf dem XML-Format"
-
-#~ msgid "about to open connection"
-#~ msgstr "Verbindung wird hergestellt"
-
-#~ msgid "Context allocated."
-#~ msgstr "Kontext bereitgestellt."
-
-#~ msgid "Client library initialized."
-#~ msgstr "Client-Bibliothek initialisiert."
-
-#~ msgid "Could not initialize cslib callback"
-#~ msgstr "cslib-Callback konnte nicht initialisiert werden"
-
-#~ msgid "CS-lib callback initialized."
-#~ msgstr "CS-lib-Callback initialisiert"
-
-#~ msgid "Could not initialize ct-client callback"
-#~ msgstr "ct-client-Callback konnte nicht initialisiert werden"
-
-#~ msgid "CT-Client callback initialized."
-#~ msgstr "CT-Client-Callback initialisiert."
-
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "ct-server-Callback konnte nicht initialisiert werden"
-
-#~ msgid "CT-Server callback initialized."
-#~ msgstr "CT-Server-Callback initialisiert."
-
-#~ msgid "Connection allocated."
-#~ msgstr "Verbindung bereitgestellt."
-
-#~ msgid "Appname set."
-#~ msgstr "Anwendungsname gesetzt."
-
-#~ msgid "Username set."
-#~ msgstr "Benutzername gesetzt."
-
-#~ msgid "Password set."
-#~ msgstr "Passwort gesetzt."
-
-#~ msgid "Empty password set."
-#~ msgstr "Leeres Passwort set."
-
-#~ msgid "Connected."
-#~ msgstr "Verbunden."
-
-# CHECK
-#~ msgid "Finally connected."
-#~ msgstr "Letztendlich verbunden."
-
-#~ msgid ""
-#~ "Connection already in use. Could not allocate command structure in %s()."
-#~ msgstr ""
-#~ "Verbindung wird bereits verwendet. Befehlsstruktur in »%s()« konnte nicht "
-#~ "bereitgestellt werden."
-
-#~ msgid "Failed dropping command structure in %s()."
-#~ msgstr "Verwerfen der Befehlsstruktur in %s() fehlgeschlagen."
-
-#~ msgid "%d messages fetched."
-#~ msgstr "%d Meldungen abgerufen."
-
-#~ msgid "Could not allocate environment handle."
-#~ msgstr "Umgebungs-Handle konnte nicht zugewiesen werden."
-
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "Auto-Übermittlung konnte nicht deaktiviert werden.\n"
-
-#~ msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-#~ msgstr ""
-#~ "SQLGetFunctions gab ein unerwartetes Ergebnis zurück. Verbindung "
-#~ "abgebrochen.\n"
-
-#~ msgid "Error setting parent of new node"
-#~ msgstr "Fehler beim Einrichten des Elternobjekts des neuen Knotens"
+msgstr "Treiber für Berkeley-Datenbanken"
