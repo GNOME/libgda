@@ -60,7 +60,7 @@ show_table2 (GdaDataModel * dm)
 {
   gint row_id;
   gint column_id;
-  GdaValue *value;
+  const GdaValue *value;
   GdaRow *row;
   gchar *string;
 
@@ -301,12 +301,12 @@ play_with_parameters ()
   list = gda_parameter_list_new ();
 
   value = gda_value_new_integer (10);
-  parameter = gda_parameter_new ("p1", value);
+  parameter = gda_parameter_new_from_value ("p1", value);
   gda_parameter_list_add_parameter (list, parameter);
   gda_value_free (value);
 
   value = gda_value_new_integer (2);
-  parameter = gda_parameter_new ("p2", value);
+  parameter = gda_parameter_new_from_value ("p2", value);
   gda_parameter_list_add_parameter (list, parameter);
   gda_value_free (value);
 

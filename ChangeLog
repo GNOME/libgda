@@ -1,3 +1,8 @@
+2003-10-19  Laurent Sansonetti <laurent@datarescue.be>
+
+	* doc/C/examples/full_example.c:
+	Fixed compilation issues (was broken).
+
 2003-10-18  Laurent Sansonetti <laurent@datarescue.be>
 
 	* libgda/*.c:
