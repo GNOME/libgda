@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-06-05 21:33+0200\n"
-"PO-Revision-Date: 2002-06-05 21:33+0200\n"
+"POT-Creation-Date: 2002-06-17 10:31+0200\n"
+"PO-Revision-Date: 2002-06-17 10:31+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -45,34 +45,34 @@ msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1244 providers/default/gda-default-provider.c:463
+#: libgda/gda-config.c:1247 providers/default/gda-default-provider.c:463
 #: providers/default/gda-default-provider.c:485
 #: providers/default/gda-default-provider.c:522
-#: providers/mysql/gda-mysql-provider.c:550
+#: providers/mysql/gda-mysql-provider.c:584
 msgid "Name"
 msgstr "Namn"
 
-#: libgda/gda-config.c:1245
+#: libgda/gda-config.c:1248
 msgid "Provider"
 msgstr "Leverantör"
 
-#: libgda/gda-config.c:1246
+#: libgda/gda-config.c:1249
 msgid "Connection string"
 msgstr "Anslutningssträng"
 
-#: libgda/gda-config.c:1247
+#: libgda/gda-config.c:1250
 msgid "Description"
 msgstr "Beskrivning"
 
-#: libgda/gda-config.c:1248
+#: libgda/gda-config.c:1251
 msgid "Username"
 msgstr "Användarnamn"
 
-#: libgda/gda-config.c:1249
+#: libgda/gda-config.c:1252
 msgid "Password"
 msgstr "Lösenord"
 
-#: libgda/gda-data-model.c:583
+#: libgda/gda-data-model.c:589
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Datamodellen %p är inte redigerbar"
@@ -142,11 +142,11 @@ msgstr "Fel vid läsande av %s: %s"
 msgid "Could not create file %s"
 msgstr "Kunde inte skapa filen %s"
 
-#: libgda/gda-value.c:1321
+#: libgda/gda-value.c:1315
 msgid "TRUE"
 msgstr "SANT"
 
-#: libgda/gda-value.c:1323
+#: libgda/gda-value.c:1317
 msgid "FALSE"
 msgstr "FALSKT"
 
@@ -185,7 +185,7 @@ msgid "Invalid XML node"
 msgstr "Ogiltig XML-nod"
 
 #: providers/default/gda-default-provider.c:173
-#: providers/sqlite/gda-sqlite-provider.c:166
+#: providers/sqlite/gda-sqlite-provider.c:186
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -197,49 +197,49 @@ msgid "Not Implemented"
 msgstr "Inte implementerat"
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:839
+#: providers/mysql/gda-mysql-provider.c:873
 #: providers/postgres/gda-postgres-provider.c:829
 msgid "Field name"
 msgstr "Fältnamn"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:840
+#: providers/mysql/gda-mysql-provider.c:874
 #: providers/postgres/gda-postgres-provider.c:830
 msgid "Data type"
 msgstr "Datatyp"
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:841
+#: providers/mysql/gda-mysql-provider.c:875
 #: providers/postgres/gda-postgres-provider.c:831
 msgid "Size"
 msgstr "Storlek"
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:842
+#: providers/mysql/gda-mysql-provider.c:876
 #: providers/postgres/gda-postgres-provider.c:832
 msgid "Scale"
 msgstr "Skala"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:843
+#: providers/mysql/gda-mysql-provider.c:877
 #: providers/postgres/gda-postgres-provider.c:833
 msgid "Not null?"
 msgstr "Inte null?"
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:844
+#: providers/mysql/gda-mysql-provider.c:878
 #: providers/postgres/gda-postgres-provider.c:834
 msgid "Primary key?"
 msgstr "Primärnyckel?"
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:845
+#: providers/mysql/gda-mysql-provider.c:879
 #: providers/postgres/gda-postgres-provider.c:835
 msgid "Unique index?"
 msgstr "Unikt index?"
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:846
+#: providers/mysql/gda-mysql-provider.c:880
 #: providers/postgres/gda-postgres-provider.c:836
 msgid "References"
 msgstr "Referenser"
@@ -283,43 +283,45 @@ msgstr "Tabellnamn"
 msgid "GDA provider for MS Access files"
 msgstr "GDA-leverantör för MS Access-filer"
 
-#: providers/mysql/gda-mysql-provider.c:194
+#: providers/mysql/gda-mysql-provider.c:198
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Du kan inte ange en UNIX_SOCKET om du också anger antingen en HOST eller en "
 "PORT."
 
-#: providers/mysql/gda-mysql-provider.c:265
-#: providers/mysql/gda-mysql-provider.c:315
-#: providers/mysql/gda-mysql-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:432
-#: providers/mysql/gda-mysql-provider.c:460
-#: providers/mysql/gda-mysql-provider.c:488
+#: providers/mysql/gda-mysql-provider.c:269
+#: providers/mysql/gda-mysql-provider.c:319
+#: providers/mysql/gda-mysql-provider.c:342
+#: providers/mysql/gda-mysql-provider.c:372
+#: providers/mysql/gda-mysql-provider.c:401
+#: providers/mysql/gda-mysql-provider.c:466
+#: providers/mysql/gda-mysql-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:522
 msgid "Invalid MYSQL handle"
 msgstr "Ogiltigt MYSQL-handtag"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:741
+#: providers/mysql/gda-mysql-provider.c:775
 msgid "Type"
 msgstr "Typ"
 
-#: providers/mysql/gda-mysql-provider.c:854
+#: providers/mysql/gda-mysql-provider.c:888
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "Ogiltigt MySQL-handtag"
 
-#: providers/mysql/gda-mysql-provider.c:863
-#: providers/mysql/gda-mysql-provider.c:871
+#: providers/mysql/gda-mysql-provider.c:897
+#: providers/mysql/gda-mysql-provider.c:905
 msgid "You need to specify the name of the table"
 msgstr "Du måste ange namnet på tabellen"
 
 #: providers/mysql/gda-mysql-recordset.c:69
 #: providers/postgres/gda-postgres-recordset.c:184
 #: providers/postgres/gda-postgres-recordset.c:222
-#: providers/sqlite/gda-sqlite-recordset.c:64
+#: providers/sqlite/gda-sqlite-recordset.c:168
+#: providers/sqlite/gda-sqlite-recordset.c:207
 msgid "Row number out of range"
 msgstr "Radnummer utanför intervallet"
 
@@ -359,13 +361,9 @@ msgstr "Kunde inte initiera Oracle-serverhandtag"
 msgid "Could not initialize Oracle service context"
 msgstr "Kunde inte initiera Oracle-tjänstesammanhang"
 
-#: providers/oracle/main.c:48
-msgid "Could not initiate Oracle component factory"
-msgstr "Kunde inte initiera Oracle-komponentfabrik"
-
-#: providers/oracle/main.c:74
-msgid "Could not initialize OCI library"
-msgstr "Kunde inte initiera OCI-bibliotek"
+#: providers/oracle/libmain.c:34
+msgid "GDA provider for Oracle databases"
+msgstr "GDA-leverantör för Oracle-databaser"
 
 #: providers/postgres/gda-postgres-provider.c:382
 #: providers/postgres/gda-postgres-provider.c:453
@@ -420,7 +418,17 @@ msgstr "Användare"
 msgid "Sequences"
 msgstr "Sekvenser"
 
+#: providers/postgres/gda-postgres-provider.c:1265
+msgid "Table name"
+msgstr "Tabellnamn"
+
+#: providers/postgres/gda-postgres-provider.c:1266
+msgid "Sequence"
+msgstr "Sekvens"
+
 #: providers/postgres/gda-postgres-recordset.c:228
+#: providers/sqlite/gda-sqlite-recordset.c:213
+#: providers/sqlite/gda-sqlite-recordset.c:245
 msgid "Column number out of range"
 msgstr "Kolumnnummer utanför intervallet"
 
@@ -440,16 +448,27 @@ msgstr "INGEN BESKRIVNING"
 msgid "Not available"
 msgstr "Inte tillgänglig"
 
-#: providers/sqlite/gda-sqlite-provider.c:224
-#: providers/sqlite/gda-sqlite-recordset.c:54
+#: providers/sqlite/gda-sqlite-provider.c:246
 msgid "Invalid SQLITE handle"
 msgstr "Ogiltigt SQLITE-handtag"
 
-#: providers/sqlite/gda-sqlite-provider.c:286
+#: providers/sqlite/gda-sqlite-provider.c:314
+#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-recordset.c:159
+#: providers/sqlite/gda-sqlite-recordset.c:198
+#: providers/sqlite/gda-sqlite-recordset.c:239
+msgid "Invalid SQLite handle"
+msgstr "Ogiltigt SQLite-handtag"
+
+#: providers/sqlite/gda-sqlite-provider.c:332
 msgid "Only one database per connection is allowed"
 msgstr "Endast en databas per anslutning är tillåten"
 
-#: providers/sqlite/libmain.c:36
+#: providers/sqlite/gda-sqlite-provider.c:346
+msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr "För att ta bort en SQLite-databas bör du ta bort databasfilen för hand"
+
+#: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
 msgstr "GDA-leverantör för SQLite-databaser"
 
@@ -610,8 +629,11 @@ msgstr "\tbeskrivning = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
-#~ msgid "Invalid Sqlite handle"
-#~ msgstr "Ogiltigt Sqlite-handtag"
+#~ msgid "Could not initiate Oracle component factory"
+#~ msgstr "Kunde inte initiera Oracle-komponentfabrik"
+
+#~ msgid "Could not initialize OCI library"
+#~ msgstr "Kunde inte initiera OCI-bibliotek"
 
 #~ msgid "CORBA exception: %s"
 #~ msgstr "CORBA-undantag: %s"
