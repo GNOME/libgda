@@ -38,6 +38,8 @@
  * @type: Type to convert from.
  *
  * Returns: the string representing the given #GdaValueType.
+ * This is not necessarily the same string used to describe the column type in a SQL statement.
+ * Use gda_connection_get_schema() with GDA_CONNECTION_SCHEMA_TYPES to get the actual types supported by the provider.
  */
 const gchar *
 gda_type_to_string (GdaValueType type)
@@ -45,6 +47,7 @@ gda_type_to_string (GdaValueType type)
 	switch (type) {
 	case GDA_VALUE_TYPE_NULL : return "null";
 	case GDA_VALUE_TYPE_BIGINT : return "bigint";
+	case GDA_VALUE_TYPE_BIGUINT : return "biguint";
 	case GDA_VALUE_TYPE_BLOB : return "blob";
 	case GDA_VALUE_TYPE_BINARY : return "binary";
 	case GDA_VALUE_TYPE_BOOLEAN : return "boolean";
@@ -52,23 +55,31 @@ gda_type_to_string (GdaValueType type)
 	case GDA_VALUE_TYPE_DOUBLE : return "double";
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT : return "point";
 	case GDA_VALUE_TYPE_INTEGER : return "integer";
+	case GDA_VALUE_TYPE_UINTEGER : return "uinteger";
 	case GDA_VALUE_TYPE_LIST : return "list";
 	case GDA_VALUE_TYPE_NUMERIC : return "numeric";
+	case GDA_VALUE_TYPE_MONEY : return "money"; 
 	case GDA_VALUE_TYPE_SINGLE : return "single";
 	case GDA_VALUE_TYPE_SMALLINT : return "smallint";
+	case GDA_VALUE_TYPE_SMALLUINT : return "smalluint";
 	case GDA_VALUE_TYPE_STRING : return "string";
 	case GDA_VALUE_TYPE_TIME : return "time";
 	case GDA_VALUE_TYPE_TIMESTAMP : return "timestamp";
 	case GDA_VALUE_TYPE_TINYINT : return "tinyint";
+	case GDA_VALUE_TYPE_TINYUINT : return "tinyuint";
+    
+	case GDA_VALUE_TYPE_GOBJECT : return "gobject";
+	case GDA_VALUE_TYPE_TYPE : return "type";
+	case GDA_VALUE_TYPE_UNKNOWN : return "unknown";
 	default:
 	}
 
-	return "string";
+	return "unknown";
 }
 
 /**
  * gda_type_from_string
- * @str: the name of a #GdaValueType.
+ * @str: the name of a #GdaValueType, as returned by gda_type_to_string().
  *
  * Returns: the #GdaValueType represented by the given @str.
  */
@@ -79,6 +90,7 @@ gda_type_from_string (const gchar *str)
 
 	if (!g_strcasecmp (str, "null")) return GDA_VALUE_TYPE_NULL;
 	else if (!g_strcasecmp (str, "bigint")) return GDA_VALUE_TYPE_BIGINT;
+	else if (!g_strcasecmp (str, "biguint")) return GDA_VALUE_TYPE_BIGUINT;
 	else if (!g_strcasecmp (str, "binary")) return GDA_VALUE_TYPE_BINARY;
 	else if (!g_strcasecmp (str, "blob")) return GDA_VALUE_TYPE_BLOB;
 	else if (!g_strcasecmp (str, "boolean")) return GDA_VALUE_TYPE_BOOLEAN;
@@ -86,15 +98,23 @@ gda_type_from_string (const gchar *str)
 	else if (!g_strcasecmp (str, "double")) return GDA_VALUE_TYPE_DOUBLE;
 	else if (!g_strcasecmp (str, "point")) return GDA_VALUE_TYPE_GEOMETRIC_POINT;
 	else if (!g_strcasecmp (str, "integer")) return GDA_VALUE_TYPE_INTEGER;
+	else if (!g_strcasecmp (str, "uinteger")) return GDA_VALUE_TYPE_UINTEGER;
 	else if (!g_strcasecmp (str, "list")) return GDA_VALUE_TYPE_LIST;
 	else if (!g_strcasecmp (str, "numeric")) return GDA_VALUE_TYPE_NUMERIC;
+	else if (!g_strcasecmp (str, "money")) return GDA_VALUE_TYPE_MONEY;
 	else if (!g_strcasecmp (str, "single")) return GDA_VALUE_TYPE_SINGLE;
 	else if (!g_strcasecmp (str, "smallint")) return GDA_VALUE_TYPE_SMALLINT;
+	else if (!g_strcasecmp (str, "smalluint")) return GDA_VALUE_TYPE_SMALLUINT;  
 	else if (!g_strcasecmp (str, "string")) return GDA_VALUE_TYPE_STRING;
 	else if (!g_strcasecmp (str, "time")) return GDA_VALUE_TYPE_TIME;
 	else if (!g_strcasecmp (str, "timestamp")) return GDA_VALUE_TYPE_TIMESTAMP;
 	else if (!g_strcasecmp (str, "tinyint")) return GDA_VALUE_TYPE_TINYINT;
-
+	else if (!g_strcasecmp (str, "tinyuint")) return GDA_VALUE_TYPE_TINYUINT;
+  
+	else if (!g_strcasecmp (str, "gobject")) return GDA_VALUE_TYPE_GOBJECT;
+	else if (!g_strcasecmp (str, "type")) return GDA_VALUE_TYPE_TYPE;  
+	else if (!g_strcasecmp (str, "unknown")) return GDA_VALUE_TYPE_UNKNOWN;      
+  
 	return GDA_VALUE_TYPE_UNKNOWN;
 }
 
