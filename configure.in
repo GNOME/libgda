@@ -1,7 +1,31 @@
 AC_INIT(lib/gda-common/gda-common.h)
 
+GDA_MAJOR_VERSION=0
+GDA_MINOR_VERSION=2
+GDA_MICRO_VERSION=93
+GDA_VERSION=$GDA_MAJOR_VERSION.$GDA_MINOR_VERSION.$GDA_MICRO_VERSION
+
+AC_SUBST(GDA_MAJOR_VERSION)
+AC_SUBST(GDA_MINOR_VERSION)
+AC_SUBST(GDA_MICRO_VERSION)
+AC_SUBST(GDA_VERSION)
+
+#
+# Making releases:
+# - If interfaces have been changed or added, set GDA_CURRENT += 1 and GDA_AGE += 1, set GDA_REVISION to 0.
+# - If binary compatibility has been broken (e.g. removed or changed interfaces), set GDA_CURRENT += 1, GDA_REVISION and GDA_AGE to 0
+# - If interfaces is the same as the previous version, set GDA_REVISION += 1
+#
+GDA_CURRENT=0
+GDA_REVISION=0
+GDA_AGE=0
+
+AC_SUBST(GDA_CURRENT)
+AC_SUBST(GDA_REVISION)
+AC_SUBST(GDA_AGE)
+
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(libgda,0.2.93)
+AM_INIT_AUTOMAKE(libgda, $GDA_VERSION)
 AM_MAINTAINER_MODE
 AM_ACLOCAL_INCLUDE(macros)
 AM_PROG_XML_I18N_TOOLS

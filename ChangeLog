@@ -1,3 +1,7 @@
+2001-10-28  Akira TAGOH <tagoh@gnome-db.org>
+
+	* configure.in: Added library ages variable.
+
 2001-10-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda.spec.in: added OMF files
