@@ -107,6 +107,13 @@ factory_callback (BonoboGenericFactory *factory,
 	ptype = g_hash_table_lookup (server->priv->components, component_id);
 	if (!ptype) {
 		gda_log_error (_("Don't know how to create components with IID %s"), component_id);
+
+		/* emit the termination signals if we've got no clients */
+		if (!server->priv->clients) {
+			/* but emit it after having returned from here */
+			g_idle_add ((GSourceFunc) emit_last_client_gone_idle_cb, server);
+		}
+
 		return NULL;
 	}
 

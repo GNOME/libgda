@@ -180,6 +180,8 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaServerConn
 		retcode = TRUE;
 
 	provider->priv->connections = g_list_remove (provider->priv->connections, cnc);
+	if (!provider->priv->connections)
+		bonobo_object_idle_unref (BONOBO_OBJECT (provider));
 
 	return retcode;
 }

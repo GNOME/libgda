@@ -1,5 +1,13 @@
-2002-01-13  Rodrigo Moya <rodrigo@gnome-db.org>
+2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-server.c (factory_callback): emit termination signals on all
+	errors
+
+	* gda-server-provider.c (gda_server_provider_close_connection):
+	unref the provider when no connections remain open
+
+2002-01-13  Rodrigo Moya <rodrigo@gnome-db.org>
+	
 	* gda-server-connection.c (impl_Connection_open): use
 	bonobo_object_dup_ref, not CORBA_Object_duplicate
 
