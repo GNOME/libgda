@@ -1,8 +1,9 @@
 /* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-#ifndef __GDA_Error_idl__
-#define __GDA_Error_idl__ 1
+#ifndef __GNOME_Database_Error_idl__
+#define __GNOME_Database_Error_idl__ 1
 
-module GDA {
+module GNOME {
+module Database {
 	struct Error {
 		string description;
 		long   number;
@@ -20,6 +21,7 @@ module GDA {
 	exception NotSupported {
 		string errormsg;
 	};
+};
 };
 
 #endif

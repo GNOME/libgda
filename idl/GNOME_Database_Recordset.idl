@@ -1,9 +1,10 @@
 /* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 
-#ifndef __GDA_Recordset_idl__
-#define __GDA_Recordset_idl__ 1
+#ifndef __GNOME_Database_Recordset_idl__
+#define __GNOME_Database_Recordset_idl__ 1
 
-module GDA {
+module GNOME {
+module Database {
 
 	enum LockType {
 		LOCK_READONLY,
@@ -45,6 +46,7 @@ module GDA {
 		Chunk         fetch(in long count) raises(NotSupported, DriverError);
 		RowAttributes describe();
 	};
+};
 };
 
 #endif

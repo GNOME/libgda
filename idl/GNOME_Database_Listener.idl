@@ -1,9 +1,10 @@
 #include <Bonobo.idl>
 
-#ifndef __GDA_Listener_idl__
-#define __GDA_Listener_idl__
+#ifndef __GNOME_Database_Listener_idl__
+#define __GNOME_Database_Listener_idl__
 
-module GDA {
+module GNOME {
+module Database {
 	/*
          * Listener interface, implemented by GDA clients to
          * receive notifications from providers
@@ -20,6 +21,7 @@ module GDA {
 				   in string description);
 	};
 
+};
 };
 
 #endif

@@ -1,8 +1,9 @@
 /* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-#ifndef __GDA_Command_idl__
-#define __GDA_Command_idl__ 1
+#ifndef __GNOME_Database_Command_idl__
+#define __GNOME_Database_Command_idl__ 1
 
-module GDA {
+module GNOME {
+module Database {
 	const unsigned long CMD_NORECORDS=0x80000000;
 	enum CommandType {
 		COMMAND_TYPE_TEXT,
@@ -20,6 +21,7 @@ module GDA {
 		Recordset open (in CmdParameterSeq param, in CursorType ct, in LockType lt, out unsigned long affected)
 				  raises (DriverError);
 	};
+};
 };
 
 #endif

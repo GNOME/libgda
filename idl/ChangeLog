@@ -1,3 +1,7 @@
+2001-08-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GDA*.idl -> GNOME_Database*.idl
+
 2001-07-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GDA_Recordset.idl: removed "move" method and added "moveNext" and

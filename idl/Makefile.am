@@ -1,12 +1,12 @@
 IDL_FILES = \
-	GDA.idl \
-	GDA_Connection.idl \
-	GDA_Command.idl \
-	GDA_Error.idl \
-	GDA_Field.idl \
-	GDA_Listener.idl \
-	GDA_Recordset.idl \
-	GDA_Parameter.idl
+	GNOME_Database.idl \
+	GNOME_Database_Connection.idl \
+	GNOME_Database_Command.idl \
+	GNOME_Database_Error.idl \
+	GNOME_Database_Field.idl \
+	GNOME_Database_Listener.idl \
+	GNOME_Database_Recordset.idl \
+	GNOME_Database_Parameter.idl
 
 EXTRA_DIST = \
 	$(IDL_FILES)
