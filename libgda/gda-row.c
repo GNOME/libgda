@@ -21,3 +21,31 @@
  */
 
 #include <libgda/gda-row.h>
+
+/**
+ * gda_row_new
+ */
+GdaRow *
+gda_row_new (gint count)
+{
+	GdaRow *row;
+
+	g_return_val_if_fail (count >= 0, NULL);
+
+	row = GNOME_Database_Row__alloc ();
+	CORBA_sequence_set_release (row, TRUE);
+	row->_length = count;
+	row->_buffer = CORBA_sequence_GNOME_Database_Field_allocbuf (count);
+
+	return row;
+}
+
+/**
+ * gda_row_free
+ */
+void
+gda_row_free (GdaRow *row)
+{
+	g_return_if_fail (row != NULL);
+	CORBA_free (row);
+}

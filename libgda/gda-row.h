@@ -32,6 +32,9 @@ G_BEGIN_DECLS
 typedef GNOME_Database_Row GdaRow;
 typedef GNOME_Database_RowAttributes GdaRowAttributes;
 
+GdaRow *gda_row_new (gint count);
+void    gda_row_free (GdaRow *row);
+
 G_END_DECLS
 
 #endif

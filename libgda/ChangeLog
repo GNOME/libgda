@@ -1,5 +1,8 @@
 2001-11-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-row.[ch] (gda_row_new): new function
+	(gda_row_free): new function
+
 	* gda-xml-database.c: removed <gobject/*.h>
 
 2001-11-12  Rodrigo Moya <rodrigo@gnome-db.org>
