@@ -1,3 +1,8 @@
+2002-05-20  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* no.po: Updated Norwegian (bokmål) translation.
+	* POTFILES.in: Remove removed files.
+	
 2002-05-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* POTFILES.in: removed gda-recordset.c

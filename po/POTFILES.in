@@ -40,11 +40,7 @@ providers/sqlite/gda-sqlite-provider.c
 providers/sqlite/gda-sqlite-recordset.c
 providers/sqlite/libmain.c
 providers/sybase/main.c
-report/gda-report-engine.c
-report/job.c
-report/libgda-report/gda-report-client.c
 report/libgda-report/gda-report-document.c
-report/main.c
 testing/client.c
 testing/config.c
 tools/gda-run.c
