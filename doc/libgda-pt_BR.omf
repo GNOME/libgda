@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<omf>
+  <resource>
+    <title>
+      GNOME-DB Manual
+    </title>
+    <subject>
+      <category>GNOME|Applications</category>
+    </subject>
+    <format mime="text/sgml"/>
+    <identifier url="file:/usr/share/gnome/help/libgda/pt_BR/libgda.sgml"/>
+    <language code="pt_BR"/>
+  </resource>
+</omf>

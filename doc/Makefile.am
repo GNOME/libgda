@@ -1,6 +1,10 @@
 SUBDIRS = C es pt_BR
 
-EXTRA_DIST = NAMESPACE
+EXTRA_DIST = \
+	NAMESPACE \
+	libgda-C.omf \
+	libgda-es.omf \
+	libgda-pt_BR.omf
 
 # OMF installation
 omf_dest_dir=$(datadir)/omf/libgda

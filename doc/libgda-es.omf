@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<omf>
+  <resource>
+    <title>
+      Manual GDA
+    </title>
+    <subject>
+      <category>GNOME|Applications</category>
+    </subject>
+    <format mime="text/sgml"/>
+    <identifier url="file:/usr/share/gnome/help/libgda/es/libgda.sgml"/>
+    <language code="es"/>
+  </resource>
+</omf>
