@@ -75,12 +75,12 @@ msgstr "Försök att initiera en redan initierad klient"
 msgid "Could not initialize Bonobo"
 msgstr "Kunde inte initiera Bonobo"
 
-#: libgda/gda-server.c:95
+#: libgda/gda-server.c:109
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr "Vet inte hur man skapar komponenter med IID %s"
 
-#: libgda/gda-server.c:102
+#: libgda/gda-server.c:116
 #, c-format
 msgid "Could not create component of type %s"
 msgstr "Kunde inte skapa komponent av typen %s"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-29 00:08+0100\n"
+"POT-Creation-Date: 2002-01-06 00:04+0100\n"
 "PO-Revision-Date: 2000-11-12 19:00+0100\n"
 "Last-Translator: Markku Verkkoniemi <myv@iki.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -79,12 +79,12 @@ msgstr "Yritys alustaa jo alustettu asiakas"
 msgid "Could not initialize Bonobo"
 msgstr "ct_diag():ia ei voi alustaa"
 
-#: libgda/gda-server.c:95
+#: libgda/gda-server.c:109
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr ""
 
-#: libgda/gda-server.c:102
+#: libgda/gda-server.c:116
 #, fuzzy, c-format
 msgid "Could not create component of type %s"
 msgstr "kenttää ei voi varata"
@@ -102,11 +102,11 @@ msgstr "Asiakasilmoitusten määrää %d ei saada"
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:573
+#: libgda/gda-value.c:610
 msgid "TRUE"
 msgstr "TOSI"
 
-#: libgda/gda-value.c:575
+#: libgda/gda-value.c:612
 msgid "FALSE"
 msgstr "EPÄTOSI"
 
@@ -158,7 +158,7 @@ msgstr ""
 msgid "Could not initiate Default component factory"
 msgstr "Postituottajatoteutusta ei voi rekisteröidä"
 
-#: providers/mysql/gda-mysql-provider.c:171
+#: providers/mysql/gda-mysql-provider.c:173
 #, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
@@ -166,11 +166,15 @@ msgstr ""
 "%s:%d: UNIX_SOCKETia ei voi antaa, jos joko HOST tai PORT on jo annettu. "
 "Poista UNIX_SOCKET tai sekä HOST- että PORT-valinta"
 
-#: providers/mysql/gda-mysql-provider.c:242
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:244
+#: providers/mysql/gda-mysql-provider.c:323
+#: providers/mysql/gda-mysql-provider.c:352
+#: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:460
+msgid "Type"
 msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1

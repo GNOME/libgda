@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-29 00:08+0100\n"
+"POT-Creation-Date: 2002-01-06 00:04+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -77,12 +77,12 @@ msgstr "Poskus inicializacije ¾e inicializiranega odjemalca"
 msgid "Could not initialize Bonobo"
 msgstr "Nisem mogel inicializirati Bonoba"
 
-#: libgda/gda-server.c:95
+#: libgda/gda-server.c:109
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr ""
 
-#: libgda/gda-server.c:102
+#: libgda/gda-server.c:116
 #, fuzzy, c-format
 msgid "Could not create component of type %s"
 msgstr "Nisem mogel ustvariti datoteke %s"
@@ -100,11 +100,11 @@ msgstr "Nisem mogel dobiti odjemalèevega sporoèila ¹tevilka %d"
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:573
+#: libgda/gda-value.c:610
 msgid "TRUE"
 msgstr "RESNIÈNO"
 
-#: libgda/gda-value.c:575
+#: libgda/gda-value.c:612
 msgid "FALSE"
 msgstr "NERESNIÈNO"
 
@@ -157,7 +157,7 @@ msgstr "Dostop GDA do vira podatkov za ODBC"
 msgid "Could not initiate Default component factory"
 msgstr "Nisem mogel registrirati privzete implementacije nuditelja"
 
-#: providers/mysql/gda-mysql-provider.c:171
+#: providers/mysql/gda-mysql-provider.c:173
 #, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
@@ -165,11 +165,15 @@ msgstr ""
 "Ne morete navesti mo¾nosti UNIX_SOCKET, èe zraven navedete tudi HOST ali "
 "PORT. Prosim odstranite UNIX_SOCKET ali odstranite mo¾nosti HOST in PORT"
 
-#: providers/mysql/gda-mysql-provider.c:242
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:244
+#: providers/mysql/gda-mysql-provider.c:323
+#: providers/mysql/gda-mysql-provider.c:352
+#: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:460
+msgid "Type"
 msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1

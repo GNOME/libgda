@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-29 00:08+0100\n"
+"POT-Creation-Date: 2002-01-06 00:04+0100\n"
 "PO-Revision-Date: 2000-10-29 15:03+0100\n"
 "Last-Translator: Jesús Bravo Álvarez <jba@pobox.com>\n"
 "Language-Team: Galician <trasno@ceu.fi.udc.es>\n"
@@ -83,12 +83,12 @@ msgstr "Tentouse inicializar un cliente xa inicializado"
 msgid "Could not initialize Bonobo"
 msgstr "Non foi posible inicializar ct_diag()"
 
-#: libgda/gda-server.c:95
+#: libgda/gda-server.c:109
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr ""
 
-#: libgda/gda-server.c:102
+#: libgda/gda-server.c:116
 #, fuzzy, c-format
 msgid "Could not create component of type %s"
 msgstr "non foi posible asignar memoria para o campo"
@@ -106,11 +106,11 @@ msgstr "Non foi posible obte-la mensaxe de cliente %d"
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:573
+#: libgda/gda-value.c:610
 msgid "TRUE"
 msgstr "CERTO"
 
-#: libgda/gda-value.c:575
+#: libgda/gda-value.c:612
 msgid "FALSE"
 msgstr "FALSO"
 
@@ -162,7 +162,7 @@ msgstr ""
 msgid "Could not initiate Default component factory"
 msgstr "Non foi posible rexistra-la implementación do fornecedor de correo"
 
-#: providers/mysql/gda-mysql-provider.c:171
+#: providers/mysql/gda-mysql-provider.c:173
 #, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
@@ -170,11 +170,15 @@ msgstr ""
 "%s:%d: Non pode indicar un UNIX_SOCKET se tamén dá unha MÁQUINA ou un PORTO. "
 "Quite o UNIX_SOCKET, ou as opcións MÁQUINA e PORTO"
 
-#: providers/mysql/gda-mysql-provider.c:242
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:244
+#: providers/mysql/gda-mysql-provider.c:323
+#: providers/mysql/gda-mysql-provider.c:352
+#: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:460
+msgid "Type"
 msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1

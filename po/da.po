@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
-"POT-Creation-Date: 2001-12-29 00:08+0100\n"
+"POT-Creation-Date: 2002-01-06 00:04+0100\n"
 "PO-Revision-Date: 2001-10-08 11:50+02:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -77,12 +77,12 @@ msgstr "Forsøg på at initiere en allerede initieret klient"
 msgid "Could not initialize Bonobo"
 msgstr "Kunne ikke initiere Bonobo"
 
-#: libgda/gda-server.c:95
+#: libgda/gda-server.c:109
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr ""
 
-#: libgda/gda-server.c:102
+#: libgda/gda-server.c:116
 #, fuzzy, c-format
 msgid "Could not create component of type %s"
 msgstr "Kunne ikke oprette fil %s"
@@ -100,11 +100,11 @@ msgstr "Kunne ikke hente klientbesked # %d"
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:573
+#: libgda/gda-value.c:610
 msgid "TRUE"
 msgstr "TRUE"
 
-#: libgda/gda-value.c:575
+#: libgda/gda-value.c:612
 msgid "FALSE"
 msgstr "FALSE"
 
@@ -156,7 +156,7 @@ msgstr "GDA forvalgt datakildeadgang"
 msgid "Could not initiate Default component factory"
 msgstr "Kunne ikke registrere implementation for standard-udbyder"
 
-#: providers/mysql/gda-mysql-provider.c:171
+#: providers/mysql/gda-mysql-provider.c:173
 #, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
@@ -165,11 +165,15 @@ msgstr ""
 "en PORT. Venligst fjern UNIX_SOCKET, eller fjern både VÆRT og PORT "
 "alternativerne."
 
-#: providers/mysql/gda-mysql-provider.c:242
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:244
+#: providers/mysql/gda-mysql-provider.c:323
+#: providers/mysql/gda-mysql-provider.c:352
+#: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:460
+msgid "Type"
 msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1

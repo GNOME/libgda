@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-01-02 23:41+0000\n"
+"POT-Creation-Date: 2002-01-06 00:04+0100\n"
 "PO-Revision-Date: 2002-01-02 23:42+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <none@none.org>\n"
@@ -72,12 +72,12 @@ msgstr "Tentativa de inicializar um cliente já inicializado"
 msgid "Could not initialize Bonobo"
 msgstr "Incapaz de inicializar Bonobo"
 
-#: libgda/gda-server.c:95
+#: libgda/gda-server.c:109
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr "Criação de componentes com IID %s desconhecida"
 
-#: libgda/gda-server.c:102
+#: libgda/gda-server.c:116
 #, c-format
 msgid "Could not create component of type %s"
 msgstr "Incapaz de criar componente do tipo %s"
@@ -95,11 +95,11 @@ msgstr "Incapaz de notificar cliente sobre a acção %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Nenhuma implementação encontrada para o métido fetch()"
 
-#: libgda/gda-value.c:573
+#: libgda/gda-value.c:610
 msgid "TRUE"
 msgstr "VERDADEIRO"
 
-#: libgda/gda-value.c:575
+#: libgda/gda-value.c:612
 msgid "FALSE"
 msgstr "FALSO"
 

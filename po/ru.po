@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-29 00:08+0100\n"
+"POT-Creation-Date: 2002-01-06 00:04+0100\n"
 "PO-Revision-Date: 2001-10-13 21:14+0400\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -77,13 +77,13 @@ msgstr "Попытка инициализировать уже инициализированного клиента"
 msgid "Could not initialize Bonobo"
 msgstr "Не удалось инициализировать Bonobo"
 
-#: libgda/gda-server.c:95
+#: libgda/gda-server.c:109
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr ""
 
 # fe/fe_log.c:92
-#: libgda/gda-server.c:102
+#: libgda/gda-server.c:116
 #, fuzzy, c-format
 msgid "Could not create component of type %s"
 msgstr "Не удалось создать файл %s"
@@ -102,12 +102,12 @@ msgid "No implementation for the fetch() method found"
 msgstr ""
 
 # gda-clnt/gda-field.c:117
-#: libgda/gda-value.c:573
+#: libgda/gda-value.c:610
 msgid "TRUE"
 msgstr "ИСТИНА"
 
 # gda-clnt/gda-field.c:119
-#: libgda/gda-value.c:575
+#: libgda/gda-value.c:612
 msgid "FALSE"
 msgstr "ЛОЖЬ"
 
@@ -161,7 +161,7 @@ msgstr "GDA доступ к источнику данных по умолчанию"
 msgid "Could not initiate Default component factory"
 msgstr "Не удалось зарегистрировать реализацию провайдера по умолчанию"
 
-#: providers/mysql/gda-mysql-provider.c:171
+#: providers/mysql/gda-mysql-provider.c:173
 #, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
@@ -169,11 +169,15 @@ msgstr ""
 "Вы не можете указывать UNIX_SOCKET, если вы также указываете Хост или Порт. "
 "Пожалуйста удалите параметры Хост и Порт или UNIX_SOCKET"
 
-#: providers/mysql/gda-mysql-provider.c:242
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:244
+#: providers/mysql/gda-mysql-provider.c:323
+#: providers/mysql/gda-mysql-provider.c:352
+#: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:460
+msgid "Type"
 msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
