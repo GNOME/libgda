@@ -113,8 +113,9 @@ initialize_signals (void)
 void
 gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 {
-  static gboolean  initialized = FALSE;
-  poptContext      pctx;
+  extern struct poptOption oaf_popt_options[];
+  static gboolean          initialized = FALSE;
+  poptContext              pctx;
 
   if (initialized)
     {

@@ -185,7 +185,16 @@ gda_connection_init (Gda_Connection *cnc, Gda_ConnectionClass *klass)
 gda_connection_init (Gda_Connection* cnc)
 #endif
 {
-  g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+  cnc->connection = CORBA_OBJECT_NIL;
+  cnc->commands = NULL;
+  cnc->recordsets = NULL;
+  cnc->provider = NULL;
+  cnc->default_db = NULL;
+  cnc->database = NULL;
+  cnc->user = NULL;
+  cnc->passwd = NULL;
+  cnc->errors_head = NULL;
+  cnc->is_open = FALSE;
 }
 
 static guint
