@@ -14,6 +14,10 @@ if SYBASE
 GDA_SYBASE_SERVER=gda-sybase-server
 endif
 
+if TDS
+GDA_TDS_SERVER=gda-tds-server
+endif
+
 if LDAP
 GDA_LDAP_SERVER=gda-ldap-server
 endif
@@ -39,6 +43,7 @@ SUBDIRS = \
 	$(GDA_MYSQL_SERVER) \
 	$(GDA_POSTGRES_SERVER) \
 	$(GDA_SYBASE_SERVER) \
+	$(GDA_TDS_SERVER) \
 	$(GDA_LDAP_SERVER) \
 	$(GDA_ORACLE_SERVER) \
 	$(GDA_INTERBASE_SERVER) \
