@@ -55,6 +55,8 @@ char *string_buf_ptr;
 "and"		{return L_AND;}
 "or"		{return L_OR;}
 
+"!="            {return L_DIFF;}
+"<>"		{return L_DIFF;}
 ">="		{return L_GEQ;}
 "<="		{return L_LEQ;}
 ">"		{return L_GT;}
@@ -72,7 +74,7 @@ char *string_buf_ptr;
 "+"		{return L_PLUS;}
 "/"		{return L_DIV;}
 
-[a-zA-Z0-9]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
+[a-zA-Z0-9_]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
 [ \t\n\r]	{;}
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}
 <STRING>\\'     {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
@@ -112,4 +114,5 @@ char *string_buf_ptr;
 <TEXTUAL>\\(.|\n)        {*string_buf_ptr++=sqltext[0];}
 <TEXTUAL>.       {*string_buf_ptr++=sqltext[0];}
 
+.		 {;}
 %%

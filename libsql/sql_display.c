@@ -69,8 +69,8 @@ sql_display_condition (int indent, sql_condition * cond)
 	case SQL_is:
 		condstr = "IS";
 		break;
-	case SQL_not:
-		condstr = "NOT";
+	case SQL_isnot:
+		condstr = "IS NOT";
 		break;
 	case SQL_in:
 		condstr = "IN";
@@ -104,7 +104,7 @@ sql_display_condition (int indent, sql_condition * cond)
 	switch (cond->op) {
 	case SQL_eq:
 	case SQL_is:
-	case SQL_not:
+	case SQL_isnot:
 	case SQL_in:
 	case SQL_notin:
 	case SQL_like:

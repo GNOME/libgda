@@ -21,8 +21,7 @@ sql_statement_build (sql_statement_type type, void *statement)
 
 sql_select_statement *
 sql_select_statement_build (int distinct, GList * fields, GList * from,
-			    sql_where * where, GList * order,
-			    sql_ordertype ordertype, GList * group)
+			    sql_where * where, GList * order, GList * group)
 {
 	sql_select_statement *retval;
 
@@ -34,7 +33,6 @@ sql_select_statement_build (int distinct, GList * fields, GList * from,
 	retval->where = where;
 	retval->order = order;
 	retval->group = group;
-	retval->ordertype = ordertype;
 
 	return retval;
 }
@@ -188,8 +186,7 @@ sql_table_build (char *tablename)
 }
 
 sql_table *
-sql_table_build_join (sql_table * left, sql_table * right,
-		      sql_condition * cond)
+sql_table_build_join (sql_table * left, sql_table *right, sql_where * cond)
 {
 	sql_table *retval;
 
@@ -290,5 +287,18 @@ sql_build_condition_between (sql_field * field, sql_field * lower,
 	retval->d.between.lower = lower;
 	retval->d.between.upper = upper;
 
+	return retval;
+}
+
+sql_order_field *
+sql_order_field_build (GList * name, sql_ordertype order_type)
+{
+	sql_order_field *retval;
+
+	retval = memsql_alloc (sizeof *retval);
+
+	retval->name = name;
+	retval->order_type = order_type;
+	
 	return retval;
 }

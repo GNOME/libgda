@@ -1,4 +1,12 @@
-2003-03-08  Rodrigo Moya <rodrigo@gnome-db.org>
+2004-03-13  Vivien Malerba <malerba@gnome-db.org>
+	* libsql/*: several improvements with a change in the sql_table structure.
+		- added != symbol as WHERE condition
+		- identifiers can now contain an underscore
+		- improved ORDER BY support
+		- improved JOIN support
+		- improved WHERE conditions
+	
+2004-03-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/libgda.h:
 	* libgda/Makefile.am: don't install gda-export.h nor gda-log.h, those

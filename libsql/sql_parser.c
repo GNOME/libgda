@@ -142,7 +142,7 @@ sql_destroy_condition (sql_condition * cond)
 	switch (cond->op) {
 	case SQL_eq:
 	case SQL_is:
-	case SQL_not:
+	case SQL_isnot:
 	case SQL_in:
 	case SQL_notin:
 	case SQL_like:
@@ -179,7 +179,7 @@ sql_destroy_table (sql_table * table)
 	case SQL_join:
 		sql_destroy_table (table->d.join.left);
 		sql_destroy_table (table->d.join.right);
-		sql_destroy_condition (table->d.join.cond);
+		sql_destroy_where (table->d.join.cond);
 		break;
 
 	case SQL_nestedselect:
@@ -247,8 +247,13 @@ sql_destroy_select (sql_select_statement * select)
 	for (walk = select->from; walk != NULL; walk = walk->next)
 		sql_destroy_table (walk->data);
 
-	for (walk = select->order; walk != NULL; walk = walk->next)
-		sql_destroy_field (walk->data);
+	for (walk = select->order; walk != NULL; walk = walk->next) {
+		GList *walk2 = ((sql_order_field *) walk->data)->name;
+		
+		for (walk2; walk2 != NULL; walk2 = walk2->next)
+			memsql_free (walk2->data);
+		memsql_free (walk->data);
+	}
 
 	for (walk = select->group; walk != NULL; walk = walk->next)
 		sql_destroy_field (walk->data);
@@ -501,8 +506,8 @@ sql_condition_op_stringify (sql_condition_operator op)
 		return memsql_strdup ("=");
 	case SQL_is:
 		return memsql_strdup ("is");
-	case SQL_not:
-		return memsql_strdup ("not");
+	case SQL_isnot:
+		return memsql_strdup ("is not");
 	case SQL_like:
 		return memsql_strdup ("like");
 	case SQL_in:
@@ -525,7 +530,7 @@ sql_condition_stringify (sql_condition * cond)
 	switch (cond->op) {
 	case SQL_eq:
 	case SQL_is:
-	case SQL_not:
+	case SQL_isnot:
 	case SQL_in:
 	case SQL_notin:
 	case SQL_like:
@@ -1014,7 +1019,7 @@ sql_statement_append_where (sql_statement * statement, char *leftfield,
 		if (condopr == SQL_eq || condopr == SQL_like)
 			condopr = SQL_is;
 		else
-			condopr = SQL_not;
+			condopr = SQL_isnot; /* FIXME */
 		rightfield = memsql_strdup ("NULL");
 		freerightfield = TRUE;
 	}
