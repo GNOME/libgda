@@ -27,7 +27,7 @@
 #include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-exception.h>
 
-#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
+#define PARENT_TYPE BONOBO_OBJECT_TYPE
 
 struct _GdaServerConnectionPrivate {
 	GdaServerProvider *provider;
@@ -61,7 +61,7 @@ impl_Connection_open (PortableServer_Servant servant,
 	gboolean result;
 	GdaQuarkList *params;
 	GNOME_Database_Client client_copy;
-	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
@@ -106,7 +106,7 @@ impl_Connection_close (PortableServer_Servant servant,
 {
 	gboolean result;
 	GList *l;
-	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
@@ -150,7 +150,7 @@ impl_Connection_executeCommand (PortableServer_Servant servant,
 	gint count;
 	GNOME_Database_RecordsetList *seq;
 	GdaParameterList *param_list = NULL;
-	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL, ev);
 
@@ -185,7 +185,7 @@ impl_Connection_beginTransaction (PortableServer_Servant servant,
 				  CORBA_Environment *ev)
 {
 	gboolean result;
-	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
@@ -210,7 +210,7 @@ impl_Connection_commitTransaction (PortableServer_Servant servant,
 				   CORBA_Environment *ev)
 {
 	gboolean result;
-	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
@@ -234,7 +234,7 @@ impl_Connection_rollbackTransaction (PortableServer_Servant servant,
 				     CORBA_Environment *ev)
 {
 	gboolean result;
-	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
@@ -258,7 +258,7 @@ impl_Connection_supports (PortableServer_Servant servant,
 			  CORBA_Environment *ev)
 {
 	gboolean result;
-	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
@@ -274,7 +274,7 @@ impl_Connection_getSchema (PortableServer_Servant servant,
 {
 	GdaServerRecordset *recset;
 	GdaParameterList *plist;
-	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL, ev);
 
@@ -361,7 +361,7 @@ gda_server_connection_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-BONOBO_X_TYPE_FUNC_FULL (GdaServerConnection,
+BONOBO_TYPE_FUNC_FULL (GdaServerConnection,
 			 GNOME_Database_Connection,
 			 PARENT_TYPE,
 			 gda_server_connection)

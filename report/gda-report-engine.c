@@ -25,7 +25,7 @@
 #include <bonobo/bonobo-i18n.h>
 #include "gda-report-engine.h"
 
-#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
+#define PARENT_TYPE BONOBO_OBJECT_TYPE
 
 struct _GdaReportEnginePrivate {
 };
@@ -51,7 +51,7 @@ impl_ReportEngine_runDocument (PortableServer_Servant servant,
 	gchar *body;
 	GNOME_Database_Report_Output output;
 	GdaParameterList *plist;
-	GdaReportEngine *engine = bonobo_x_object (servant);
+	GdaReportEngine *engine = bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_REPORT_ENGINE (engine), CORBA_OBJECT_NIL, ev);
 	bonobo_return_val_if_fail (xml != CORBA_OBJECT_NIL, CORBA_OBJECT_NIL, ev);
@@ -127,7 +127,7 @@ gda_report_engine_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-BONOBO_X_TYPE_FUNC_FULL (GdaReportEngine,
+BONOBO_TYPE_FUNC_FULL (GdaReportEngine,
 			 GNOME_Database_Report_Engine,
 			 PARENT_TYPE,
 			 gda_report_engine)

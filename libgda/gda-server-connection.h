@@ -43,12 +43,12 @@ typedef struct _GdaServerConnectionPrivate GdaServerConnectionPrivate;
 typedef struct _GdaServerProvider          GdaServerProvider;
 
 struct _GdaServerConnection {
-	BonoboXObject object;
+	BonoboObject object;
 	GdaServerConnectionPrivate *priv;
 };
 
 struct _GdaServerConnectionClass {
-	BonoboXObjectClass parent_class;
+	BonoboObjectClass parent_class;
 	POA_GNOME_Database_Connection__epv epv;
 };
 

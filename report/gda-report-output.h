@@ -38,12 +38,12 @@ typedef struct _GdaReportOutputClass   GdaReportOutputClass;
 typedef struct _GdaReportOutputPrivate GdaReportOutputPrivate;
 
 struct _GdaReportOutput {
-	BonoboXObject object;
+	BonoboObject object;
 	GdaReportOutputPrivate *priv;
 };
 
 struct _GdaReportOutputClass {
-	BonoboXObjectClass parent_class;
+	BonoboObjectClass parent_class;
 	POA_GNOME_Database_Report_Output__epv epv;
 };
 

@@ -22,7 +22,7 @@
 
 #include <libgda-report/gda-report-datasource.h>
 
-#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
+#define PARENT_TYPE BONOBO_OBJECT_TYPE
 
 static void gda_report_datasource_class_init (GdaReportDatasourceClass *klass);
 static void gda_report_datasource_init       (GdaReportDatasource *source,

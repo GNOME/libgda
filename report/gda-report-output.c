@@ -23,7 +23,7 @@
 #include <bonobo/bonobo-exception.h>
 #include "gda-report-output.h"
 
-#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
+#define PARENT_TYPE BONOBO_OBJECT_TYPE
 
 struct _GdaReportOutputPrivate {
 	GdaReportDocument *input_xml;
@@ -45,7 +45,7 @@ impl_ReportOutput_convert (PortableServer_Servant servant,
 			   const CORBA_char *mime_type,
 			   CORBA_Environment *ev)
 {
-	GdaReportOutput *output = bonobo_x_object (servant);
+	GdaReportOutput *output = bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_REPORT_OUTPUT (output), CORBA_OBJECT_NIL, ev);
 }
@@ -99,7 +99,7 @@ gda_report_output_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-BONOBO_X_TYPE_FUNC_FULL (GdaReportOutput,
+BONOBO_TYPE_FUNC_FULL (GdaReportOutput,
 			 GNOME_Database_Report_Output,
 			 PARENT_TYPE,
 			 gda_report_output)

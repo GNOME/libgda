@@ -29,7 +29,7 @@
 #include <bonobo/bonobo-moniker-util.h>
 #include "gda-marshal.h"
 
-#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
+#define PARENT_TYPE BONOBO_OBJECT_TYPE
 
 struct _GdaClientPrivate {
 	GHashTable *providers;
@@ -160,7 +160,7 @@ gda_client_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-BONOBO_X_TYPE_FUNC_FULL (GdaClient,
+BONOBO_TYPE_FUNC_FULL (GdaClient,
 			 GNOME_Database_Client,
 			 PARENT_TYPE,
 			 gda_client)

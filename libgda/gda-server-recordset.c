@@ -24,7 +24,7 @@
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-server-recordset.h>
 
-#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
+#define PARENT_TYPE BONOBO_OBJECT_TYPE
 
 struct _GdaServerRecordsetPrivate {
 	GdaServerConnection *cnc;
@@ -95,7 +95,7 @@ static GNOME_Database_RowAttributes *
 impl_Recordset_describe (PortableServer_Servant servant, CORBA_Environment *ev)
 {
 	GdaRowAttributes *attrs;
-	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL, ev);
 
@@ -113,7 +113,7 @@ impl_Recordset_getRowCount (PortableServer_Servant servant, CORBA_Environment *e
 {
 	glong i;
 	GdaRow *row;
-	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), 0, ev);
 
@@ -134,7 +134,7 @@ impl_Recordset_getRowCount (PortableServer_Servant servant, CORBA_Environment *e
 static CORBA_boolean
 impl_Recordset_moveFirst (PortableServer_Servant servant, CORBA_Environment *ev)
 {
-	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE, ev);
 
@@ -145,7 +145,7 @@ impl_Recordset_moveFirst (PortableServer_Servant servant, CORBA_Environment *ev)
 static CORBA_boolean
 impl_Recordset_moveNext (PortableServer_Servant servant, CORBA_Environment *ev)
 {
-	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE, ev);
 
@@ -160,7 +160,7 @@ impl_Recordset_moveNext (PortableServer_Servant servant, CORBA_Environment *ev)
 static CORBA_boolean
 impl_Recordset_movePrevious (PortableServer_Servant servant, CORBA_Environment *ev)
 {
-	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE, ev);
 
@@ -175,7 +175,7 @@ impl_Recordset_movePrevious (PortableServer_Servant servant, CORBA_Environment *
 static CORBA_boolean
 impl_Recordset_moveLast (PortableServer_Servant servant, CORBA_Environment *ev)
 {
-	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE, ev);
 
@@ -189,7 +189,7 @@ static GNOME_Database_Row *
 impl_Recordset_fetch (PortableServer_Servant servant, CORBA_Environment *ev)
 {
 	GdaRow *row;
-	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL, ev);
 
@@ -274,7 +274,7 @@ gda_server_recordset_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-BONOBO_X_TYPE_FUNC_FULL (GdaServerRecordset,
+BONOBO_TYPE_FUNC_FULL (GdaServerRecordset,
 			 GNOME_Database_Recordset,
 			 PARENT_TYPE,
 			 gda_server_recordset)

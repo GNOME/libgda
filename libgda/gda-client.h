@@ -40,12 +40,12 @@ typedef struct _GdaClientClass   GdaClientClass;
 typedef struct _GdaClientPrivate GdaClientPrivate;
 
 struct _GdaClient {
-	BonoboXObject object;
+	BonoboObject object;
 	GdaClientPrivate *priv;
 };
 
 struct _GdaClientClass {
-	BonoboXObjectClass parent_class;
+	BonoboObjectClass parent_class;
 	POA_GNOME_Database_Client__epv epv;
 
 	/* signals */

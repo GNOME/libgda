@@ -1,3 +1,10 @@
+2002-01-14  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-report-engine.[ch]:
+	* gda-report-output.[ch]:
+	* libgda-report/gda-report-datasource.[ch]: changed BonoboXObject to
+	BonoboObject. Closes bug #67816.
+
 2002-01-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda-report/Makefile.am: fixed so that orbit-idl regenerates

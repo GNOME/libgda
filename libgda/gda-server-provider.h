@@ -41,12 +41,12 @@ typedef struct _GdaServerProviderClass   GdaServerProviderClass;
 typedef struct _GdaServerProviderPrivate GdaServerProviderPrivate;
 
 struct _GdaServerProvider {
-	BonoboXObject object;
+	BonoboObject object;
 	GdaServerProviderPrivate *priv;
 };
 
 struct _GdaServerProviderClass {
-	BonoboXObjectClass parent_class;
+	BonoboObjectClass parent_class;
 	POA_GNOME_Database_Provider__epv epv;
 
 	/* signals */

@@ -41,12 +41,12 @@ typedef struct _GdaReportEngineClass   GdaReportEngineClass;
 typedef struct _GdaReportEnginePrivate GdaReportEnginePrivate;
 
 struct _GdaReportEngine {
-	BonoboXObject object;
+	BonoboObject object;
 	GdaReportEnginePrivate *priv;
 };
 
 struct _GdaReportEngineClass {
-	BonoboXObjectClass parent_class;
+	BonoboObjectClass parent_class;
 	POA_GNOME_Database_Report_Engine__epv epv;
 };
 

@@ -39,12 +39,12 @@ typedef struct _GdaReportDatasourceClass   GdaReportDatasourceClass;
 typedef struct _GdaReportDatasourcePrivate GdaReportDatasourcePrivate;
 
 struct _GdaReportDatasource {
-	BonoboXObject object;
+	BonoboObject object;
 	GdaReportDatasourcePrivate *priv;
 };
 
 struct _GdaReportDatasourceClass {
-	BonoboXObjectClass parent_class;
+	BonoboObjectClass parent_class;
 	POA_GNOME_Database_Report_DataSource__epv epv;
 };
 

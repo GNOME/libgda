@@ -40,12 +40,12 @@ typedef struct _GdaServerRecordsetClass   GdaServerRecordsetClass;
 typedef struct _GdaServerRecordsetPrivate GdaServerRecordsetPrivate;
 
 struct _GdaServerRecordset {
-	BonoboXObject object;
+	BonoboObject object;
 	GdaServerRecordsetPrivate *priv;
 };
 
 struct _GdaServerRecordsetClass {
-	BonoboXObjectClass parent_class;
+	BonoboObjectClass parent_class;
 	POA_GNOME_Database_Recordset__epv epv;
 };
 

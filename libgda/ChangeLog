@@ -1,3 +1,15 @@
+2002-01-14  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-client.c:
+	* gda-client.h:
+	* gda-server-connection.c:
+	* gda-server-connection.h:
+	* gda-server-provider.c:
+	* gda-server-provider.h:
+	* gda-server-recordset.c:
+	* gda-server-recordset.h: changed BonoboXObject to BonoboObject.
+	Closes bug #67816.
+
 2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server.c (factory_callback): emit termination signals on all
