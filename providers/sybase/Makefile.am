@@ -1,7 +1,7 @@
 providerdir=$(prefix)/lib/libgda/providers
 provider_LTLIBRARIES = libgda-sybase.la
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	$(SYBASE_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \

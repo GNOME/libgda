@@ -15,7 +15,7 @@ DOC_SOURCE_DIR=../../libgda
 # Extra options to supply to gtkdoc-scan.
 SCAN_OPTIONS=--source-dir=../../report/libgda-report
 
-INCLUDES = -I$(top_srcdir) $(LIBGDA_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir) $(LIBGDA_CFLAGS)
 
 # Extra options to supply to gtkdoc-mkdb.
 MKDB_OPTIONS=--source-dir=../../report/libgda-report --output-format=xml

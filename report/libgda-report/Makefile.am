@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgda-report-2.la
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I$(top_builddir)/report \
 	-I$(top_srcdir)/report \
 	-I$(top_builddir) \

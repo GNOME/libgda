@@ -1,4 +1,9 @@
-2004-10-27 Alan <alan@akbkhome.com>
+2004-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* *Makefile.am: s/INCLUDES/AM_CPPFLAGS.
+
+2004-10-27  Alan <alan@akbkhome.com>
+
         * Makefile.w32
 	* libgda/Makefile.w32
 	* libsql/Makefile.w32

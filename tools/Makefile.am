@@ -14,7 +14,7 @@ endif
 
 bin_PROGRAMS = $(RUN_TOOL) $(CONFIG_TOOL)
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	-I. \

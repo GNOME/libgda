@@ -1,7 +1,7 @@
 providerdir=$(prefix)/lib/libgda/providers
 provider_LTLIBRARIES = libgda-ibmdb2.la
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	$(IBMDB2_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \

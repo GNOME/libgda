@@ -1,7 +1,7 @@
 providerdir=$(prefix)/lib/libgda/providers
 provider_LTLIBRARIES = libgda-mdb.la
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
