@@ -20,25 +20,30 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_common_h__)
-#  define __gda_common_h__
+#if !defined(__gda_command_h__)
+#  define __gda_command_h__
 
-#include <gda-command.h>
-#include <gda-config.h>
-#include <gda-data-model.h>
-#include <gda-listener.h>
-#include <gda-parameter.h>
-#include <gda-quark-list.h>
-#include <gda-value.h>
+#include <GNOME_Database.h>
+#include <glib/gmacros.h>
 
 G_BEGIN_DECLS
 
-void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
+typedef GNOME_Database_Command GdaCommand;
+typedef enum {
+	GDA_COMMAND_TYPE_SQL = GNOME_Database_COMMAND_TYPE_SQL,
+	GDA_COMMAND_TYPE_XML = GNOME_Database_COMMAND_TYPE_XML,
+	GDA_COMMAND_TYPE_PROCEDURE = GNOME_Database_COMMAND_TYPE_PROCEDURE,
+	GDA_COMMAND_TYPE_TABLE = GNOME_Database_COMMAND_TYPE_TABLE,
+	GDA_COMMAND_TYPE_INVALID = GNOME_Database_COMMAND_TYPE_INVALID
+} GdaCommandType;
 
-typedef void (* GdaInitFunc) (gpointer user_data);
+GdaCommand    *gda_command_new (const gchar *text, GdaCommandType type);
+void           gda_command_free (GdaCommand *cmd);
 
-void gda_main_run  (GdaInitFunc init_func, gpointer user_data);
-void gda_main_quit (void);
+const gchar   *gda_command_get_text (GdaCommand *cmd);
+void           gda_command_set_text (GdaCommand *cmd, const gchar *text);
+GdaCommandType gda_command_get_comamnd_type (GdaCommand *cmd);
+void           gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type);
 
 G_END_DECLS
 

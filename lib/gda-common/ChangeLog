@@ -1,3 +1,8 @@
+2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-command.[ch]: moved from the client library, as it can
+	be shared for clients and providers
+
 2001-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-listener.[ch]: small changes
