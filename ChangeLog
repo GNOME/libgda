@@ -1,3 +1,22 @@
+2002-09-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/sqlite/gda-sqlite-provider.c
+	(gda_sqlite_provider_get_version,
+	 gda_sqlite_provider_get_server_version,
+	 gda_sqlite_provider_change_database): implemented missing methods.
+	(gda_sqlite_provider_open_connection): free all memory if there are
+	errors.
+	(gda_sqlite_provider_close_connection): add an error to the connection
+	when there are errors.
+	(gda_sqlite_provider_execute_command): process correctly lists of
+	colon-separated table names for GDA_COMMAND_TYPE_TABLE.
+	(gda_sqlite_provider_begin_transaction,
+	 gda_sqlite_provider_commit_transaction,
+	 gda_sqlite_provider_rollback_transaction): implemented.
+	(gda_sqlite_provider_single_command): deal correctly with return value
+	of sqlite_exec.
+	(gda_sqlite_provider_supports): added missing features.
+
 2002-09-22  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c: fixed a couple of leaks.
