@@ -1,5 +1,7 @@
 2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* configure.in: changed translation domain.
+
 	* libgda.pc.in: use libgda-3.
 
 2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
