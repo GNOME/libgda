@@ -1,3 +1,19 @@
+2002-06-28  Tim Coleman <tim@timcoleman.com>
+
+	* providers/oracle/gda-oracle-provider.c:
+	- Added code to retrieve public/unique/foreign key information
+	  for schema purposes.
+	- Free up more Oracle memory when bad things happen
+	- Added a function to retrieve list of Oracle tablespaces
+	  for schema purposes.
+	  
+	* providers/oracle/gda-oracle-recordset.c:
+	- Free up more Oracle memory when bad things happen
+	- Clean up the get_n_rows code to work properly
+
+	* providers/oracle/utils.c:
+	- only allocate memory for the string buffer when I need it
+
 2002-07-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-connection.c:

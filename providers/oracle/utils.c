@@ -364,7 +364,7 @@ gda_oracle_set_value (GdaValue *value,
 	ub1 month;
 	ub1 day;
 
-	gchar string_buffer[ora_value->defined_size+1];
+	gchar *string_buffer;
 
 	if (-1 == (ora_value->indicator)) {
 		gda_value_set_null (value);
@@ -376,6 +376,7 @@ gda_oracle_set_value (GdaValue *value,
 		gda_value_set_boolean (value, (atoi (ora_value->value)) ? TRUE: FALSE);
 		break;
 	case GDA_VALUE_TYPE_STRING:
+		string_buffer = g_malloc0 (ora_value->defined_size+1);
 		memcpy (string_buffer, ora_value->value, ora_value->defined_size);
 		string_buffer[ora_value->defined_size] = '\0';
 		gda_value_set_string (value, string_buffer);
