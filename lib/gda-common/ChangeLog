@@ -1,3 +1,10 @@
+2001-09-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-data-model.[ch]: new abstract class to represent a data model.
+	Implementations based on this class will follow, to make the GNOME-DB
+	widgets able to get data not only from recordsets, but from anything
+	that implements the GdaDataModel class
+
 2001-08-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-field.[ch] (gda_field_get_user_data, gda_field_set_user_data):
