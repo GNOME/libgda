@@ -17,6 +17,7 @@
 <!ENTITY libgda-connection-pool-h SYSTEM "libgda-client/sgml/gda-connection-pool.sgml">
 <!ENTITY libgda-connection-h SYSTEM "libgda-client/sgml/gda-connection.sgml">
 <!ENTITY libgda-error-h SYSTEM "libgda-client/sgml/gda-error.sgml">
+<!ENTITY libgda-export-h SYSTEM "libgda-client/sgml/gda-export.sgml">
 <!ENTITY libgda-field-h SYSTEM "libgda-client/sgml/gda-field.sgml">
 <!ENTITY libgda-recordset-h SYSTEM "libgda-client/sgml/gda-recordset.sgml">
 <!ENTITY libgda-value-h SYSTEM "libgda-client/sgml/gda-value.sgml">

@@ -39,6 +39,8 @@ SOURCE_FILES = \
 	$(top_builddir)/lib/gda-client/gda-connection.h \
 	$(top_builddir)/lib/gda-client/gda-error.c \
 	$(top_builddir)/lib/gda-client/gda-error.h \
+	$(top_builddir)/lib/gda-client/gda-export.c \
+	$(top_builddir)/lib/gda-client/gda-export.h \
 	$(top_builddir)/lib/gda-client/gda-field.c \
 	$(top_builddir)/lib/gda-client/gda-field.h \
 	$(top_builddir)/lib/gda-client/gda-recordset.c \

@@ -15,6 +15,7 @@
     &libgda-connection-pool-h;
     &libgda-connection-h;
     &libgda-error-h;
+    &libgda-export-h;
     &libgda-field-h;
     &libgda-recordset-h;
     &libgda-value-h;
