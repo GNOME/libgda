@@ -11,8 +11,6 @@ libgda/gda-table.c
 libgda/gda-util.c
 libgda/gda-value.c
 libgda/gda-xml-database.c
-providers/default/gda-default-provider.c
-providers/default/libmain.c
 providers/firebird/gda-firebird-provider.c
 providers/firebird/libmain.c
 providers/freetds/gda-freetds-provider.c
@@ -54,6 +52,8 @@ providers/sybase/main.c
 providers/sybase/utils.c
 providers/xbase/gda-xbase-provider.c
 providers/xbase/libmain.c
+providers/xml/gda-xml-provider.c
+providers/xml/libmain.c
 report/libgda-report/gda-report-document.c
 report/libgda-report/gda-report-item-detail.c
 report/libgda-report/gda-report-item-pagefooter.c
