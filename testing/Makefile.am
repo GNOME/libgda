@@ -9,14 +9,23 @@ INCLUDES = \
 
 ## -------------------------------------------------------------------------
 
-bin_PROGRAMS = gda-test
+bin_PROGRAMS = gda-test gda-sybase-test gda-tds-test
 
 gda_test_SOURCES = \
 	gda-test.c
+
+gda_sybase_test_SOURCES = \
+	gda-sybase-test.c
+
+gda_tds_test_SOURCES = \
+	gda-tds-test.c
 
 gda_test_LDADD = \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-client/libgda-client.la \
 	$(GDA_CLIENT_LIBS)
+
+gda_sybase_test_LDADD = $(gda_test_LDADD)
+gda_tds_test_LDADD = $(gda_test_LDADD)
 
 EXTRA_DIST = sample_database.xml

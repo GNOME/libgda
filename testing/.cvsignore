@@ -2,6 +2,8 @@ Makefile
 Makefile.in
 *.o
 *.lo
+gda-sybase-test
+gda-tds-test
 gda-test
 .deps
 .libs
