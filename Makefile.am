@@ -5,6 +5,7 @@ SUBDIRS = \
 	bindings \
 	providers \
 	tools \
+	report \
 	testing \
 	doc
 

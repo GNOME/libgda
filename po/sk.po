@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2001-09-03 13:43+0200\n"
+"POT-Creation-Date: 2001-09-04 02:39+0200\n"
 "PO-Revision-Date: 2001-09-03 13:44CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -14,26 +14,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.5\n"
 
-#: lib/gda-client/gda-connection-pool.c:256
+#: lib/gda-client/gda-connection-pool.c:257
 #, c-format
 msgid "could not open connection to %s"
 msgstr "nie je možné otvoriť spojenie s %s"
 
-#: lib/gda-client/gda-connection-pool.c:268
+#: lib/gda-client/gda-connection-pool.c:269
 #, c-format
 msgid "Data source %s not found"
 msgstr "Zdroj dát %s nenájdený"
 
-#: lib/gda-client/gda-connection.c:427
+#: lib/gda-client/gda-connection.c:428
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databáza '%s' nebola nájdená v systémovej konfigurácii"
 
-#: lib/gda-client/gda-connection.c:430 lib/gda-client/gda-connection.c:446
+#: lib/gda-client/gda-connection.c:431 lib/gda-client/gda-connection.c:447
 msgid "[GDA Client Library]"
 msgstr "[klientská knižnice GDA]"
 
-#: lib/gda-client/gda-connection.c:445
+#: lib/gda-client/gda-connection.c:446
 msgid "Could not open CORBA factory"
 msgstr "Nie je možné otvoriť CORBA factory"
 
@@ -62,6 +62,22 @@ msgstr "[Používateľská výnimka CORBA]"
 #: lib/gda-common/gda-error.c:167
 msgid "Unknown CORBA exception for connection"
 msgstr "Neznáma výnimka CORBA pre spojenie"
+
+#: lib/gda-common/gda-field.c:640
+msgid "<NULL>"
+msgstr ""
+
+#: lib/gda-common/gda-field.c:644
+msgid "<Unknown GDA Type(NULL)>"
+msgstr ""
+
+#: lib/gda-common/gda-field.c:651
+msgid "TRUE"
+msgstr ""
+
+#: lib/gda-common/gda-field.c:653
+msgid "FALSE"
+msgstr ""
 
 #: lib/gda-common/gda-init.c:35
 msgid "Attempt to initialize an already initialized client"
@@ -162,11 +178,11 @@ msgstr "Systémová výnimka CORBA %s"
 msgid "CORBA user exception: %s"
 msgstr "Systémová výnimka CORBA %s"
 
-#: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:1
+#: providers/gda-default-server/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre štandardného poskytovateľa"
 
-#: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:2
+#: providers/gda-default-server/GNOME_Database_Provider_Default.server.in.h:2
 msgid "GDA Default Datasource Access"
 msgstr "GDA štandardný prístup k zdroju dát"
 
@@ -185,11 +201,11 @@ msgstr "Neznámy typ schémy"
 msgid "Could not register Default provider implementation"
 msgstr "Nie je možné registrovať implementáciu štandardného poskytovateľa"
 
-#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
+#: providers/gda-ldap-server/GNOME_Database_Provider_LDAP.server.in.h:1
 msgid "GDA Datasource Access for LDAP"
 msgstr "GDA prístup k zdroju dát pre LDAP"
 
-#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:2
+#: providers/gda-ldap-server/GNOME_Database_Provider_LDAP.server.in.h:2
 msgid "LDAP provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa LDAP"
 
@@ -246,11 +262,11 @@ msgstr "chyba"
 msgid "Could not register LDAP provider implementation"
 msgstr "Nie je možné registrovať implementáciu LDAP poskytovateľa"
 
-#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
+#: providers/gda-interbase-server/GNOME_Database_Provider_InterBase.server.in.h:1
 msgid "GDA Datasource Access for Interbase"
 msgstr "GDA prístup k zdroju dát pre Interbase"
 
-#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:2
+#: providers/gda-interbase-server/GNOME_Database_Provider_InterBase.server.in.h:2
 msgid "InterBase provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa InterBase"
 
@@ -263,11 +279,11 @@ msgstr "Kód chyby %ld"
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Nie je možné registrovať implementáciu INTERBASE poskytovateľa"
 
-#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
+#: providers/gda-mail-server/GNOME_Database_Provider_Mail.server.in.h:1
 msgid "GDA Datasource Access for Mail"
 msgstr "GDA prístup k zdroju dát pre Mail"
 
-#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:2
+#: providers/gda-mail-server/GNOME_Database_Provider_Mail.server.in.h:2
 msgid "Mail provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa pošty"
 
@@ -283,11 +299,11 @@ msgstr "Nespracované SCHEMA_QTYPE %d"
 msgid "Could not register Mail provider implementation"
 msgstr "Nie je možné registrovať implementáciu mail poskytovateľa"
 
-#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
+#: providers/gda-mdb-server/GNOME_Database_Provider_MDB.server.in.h:1
 msgid "GDA Datasource Access for MDB (MS Access) files"
 msgstr "GDA prístup k zdroju dát pre súbory MDB (MS Access)"
 
-#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:2
+#: providers/gda-mdb-server/GNOME_Database_Provider_MDB.server.in.h:2
 msgid "MDB provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa MDB"
 
@@ -343,11 +359,11 @@ msgstr "Nezadané meno tabuľky pre SCHEMA_COLS"
 msgid "Could not register MySQL provider implementation"
 msgstr "Nie je možné registrovať implementáciu MySQL poskytovateľa"
 
-#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
+#: providers/gda-mysql-server/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
 msgstr "GDA prístup k zdroju dát pre MySQL"
 
-#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:2
+#: providers/gda-mysql-server/GNOME_Database_Provider_MySQL.server.in.h:2
 msgid "MySQL provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa MySQL"
 
@@ -376,11 +392,11 @@ msgstr "Neznámy"
 msgid "No MYSQL_Connection for GdaServerConnection"
 msgstr "Chýba MYSQL_Connection pre GdaServerConnection"
 
-#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
+#: providers/gda-odbc-server/GNOME_Database_Provider_ODBC.server.in.h:1
 msgid "GDA Datasource Access for ODBC"
 msgstr "GDA prístup k zdroju dát pre ODBC"
 
-#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:2
+#: providers/gda-odbc-server/GNOME_Database_Provider_ODBC.server.in.h:2
 msgid "ODBC provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa ODBC"
 
@@ -402,11 +418,11 @@ msgstr "žiadny text"
 msgid "Could not register ODBC provider implementation"
 msgstr "Nie je možné registrovať implementáciu ODBC poskytovateľa"
 
-#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
+#: providers/gda-oracle-server/GNOME_Database_Provider_Oracle.server.in.h:1
 msgid "GDA Datasource Access for Oracle"
 msgstr "GDA prístup k zdroju dát pre Oracle"
 
-#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:2
+#: providers/gda-oracle-server/GNOME_Database_Provider_Oracle.server.in.h:2
 msgid "Oracle provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa Oracle"
 
@@ -452,11 +468,11 @@ msgstr "objekt recordset vytvorený bez asociovaného spojenia"
 msgid "Could not register ORACLE provider implementation"
 msgstr "Nie je možné registrovať implementáciu ORACLE poskytovateľa"
 
-#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
+#: providers/gda-postgres-server/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "GDA prístup k zdroju dát pre Postgres"
 
-#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:2
+#: providers/gda-postgres-server/GNOME_Database_Provider_Postgres.server.in.h:2
 msgid "Postgres provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa Postgres"
 
@@ -469,11 +485,11 @@ msgstr "postgres_recset je NULL"
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Nie je možné registrovať implementáciu PostgreSQL poskytovateľa"
 
-#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
+#: providers/gda-sybase-server/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
 msgstr "GDA prístup k zdroju dát pre Sybase"
 
-#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:2
+#: providers/gda-sybase-server/GNOME_Database_Provider_Sybase.server.in.h:2
 msgid "Sybase provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa Sybase"
 
@@ -930,7 +946,7 @@ msgstr "nie je možné alokovať pole"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Nie je možné registrovať implementáciu gda-sybase poskytovateľa"
 
-#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
+#: providers/gda-primebase-server/GNOME_Database_Provider_Primebase.server.in.h:1
 msgid "GDA Datasource Access for primebase"
 msgstr "GDA prístup k zdroju dát pre primebase"
 
@@ -966,11 +982,11 @@ msgstr "%2ld: CHYBA: %ld (%ld) : %s.\n"
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "Nie je možné registrovať implementáciu PRIMEBASE poskytovateľa"
 
-#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
+#: providers/gda-tds-server/GNOME_Database_Provider_TDS.server.in.h:1
 msgid "GDA Datasource Access for Sybase/MS SQL"
 msgstr "GDA prístup k zdroju dát pre Sybase/MS SQL"
 
-#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:2
+#: providers/gda-tds-server/GNOME_Database_Provider_TDS.server.in.h:2
 msgid "TDS provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa TDS"
 
@@ -993,12 +1009,12 @@ msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 msgid "Could not register gda-tds provider implementation"
 msgstr "Nie je možné registrovať implementáciu gda-tds poskytovateľa"
 
-#: tools/gda-run.c:109
+#: tools/gda-run.c:102
 #, c-format
 msgid "%s: misconfigured DSN entry"
 msgstr "%s: chyba v konfigurácii položky DSN"
 
-#: tools/gda-run.c:124
+#: tools/gda-run.c:116
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: zdroj dát '%s' nenájdený\n"
@@ -1006,4 +1022,3 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
-

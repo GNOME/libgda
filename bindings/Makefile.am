@@ -1,2 +1,1 @@
-#SUBDIRS = c++
-SUBDIRS = 
+SUBDIRS = c++

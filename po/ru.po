@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2001-06-15 22:11+0200\n"
+"POT-Creation-Date: 2001-09-04 02:39+0200\n"
 "PO-Revision-Date: 2001-02-19 12:30+03:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -13,298 +13,320 @@ msgstr ""
 "Content-Transfer-Encoding: 8-bit\n"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: lib/gda-client/gda-connection-pool.c:337
+#: lib/gda-client/gda-connection-pool.c:257
 #, c-format
 msgid "could not open connection to %s"
 msgstr "не удалось открыть соединение с %s"
 
 # fe/fe_main.c:205
-#: lib/gda-client/gda-connection-pool.c:345
+#: lib/gda-client/gda-connection-pool.c:269
 #, c-format
 msgid "Data source %s not found"
 msgstr "Не найден источник данных %s"
 
-#: lib/gda-client/gda-connection.c:228 lib/gda-client/gda-error.c:179
-#, c-format
-msgid "%s: The server didn't respond."
-msgstr "%s: Сервер не отвечает."
-
-#: lib/gda-client/gda-connection.c:232 lib/gda-client/gda-error.c:183
-#, c-format
-msgid "%s: An Error occured in the CORBA system."
-msgstr "%s: Возникла ошибка в системе CORBA."
-
-#: lib/gda-client/gda-connection.c:511
+#: lib/gda-client/gda-connection.c:428
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "База данных '%s' не найдена в конфигурации системы"
 
-#: lib/gda-client/gda-connection.c:526
+#: lib/gda-client/gda-connection.c:431 lib/gda-client/gda-connection.c:447
+msgid "[GDA Client Library]"
+msgstr ""
+
+#: lib/gda-client/gda-connection.c:446
 msgid "Could not open CORBA factory"
 msgstr ""
 
-# gda-clnt/gda-field.c:95
-#: lib/gda-client/gda-field.c:245
-msgid "<NULL>"
-msgstr "<NULL>"
-
-# gda-clnt/gda-field.c:101 gda-clnt/gda-field.c:103
-#: lib/gda-client/gda-field.c:251 lib/gda-client/gda-field.c:253
-msgid "<Unknown GDA Type(NULL)>"
-msgstr "<Неизвестный GDA тип(NULL)>"
-
-# gda-clnt/gda-field.c:117
-#: lib/gda-client/gda-field.c:266
-msgid "TRUE"
-msgstr "ИСТИНА"
-
-# gda-clnt/gda-field.c:119
-#: lib/gda-client/gda-field.c:267
-msgid "FALSE"
-msgstr "ЛОЖЬ"
-
-#: lib/gda-common/gda-corba.c:75
+#: lib/gda-common/gda-corba.c:73
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Исключение системы CORBA: %s"
 
-#: lib/gda-common/gda-corba.c:105
+#: lib/gda-common/gda-corba.c:108
 msgid "True"
 msgstr "Истина"
 
 # fe/fe_main.c:249
-#: lib/gda-common/gda-corba.c:105
+#: lib/gda-common/gda-corba.c:109
 msgid "False"
 msgstr "Ложь"
 
-#: lib/gda-common/gda-init.c:59
+#: lib/gda-common/gda-error.c:121
+#, c-format
+msgid "%s: An Error occured in the CORBA system."
+msgstr "%s: Возникла ошибка в системе CORBA."
+
+#: lib/gda-common/gda-error.c:132
+#, fuzzy
+msgid "[CORBA User Exception]"
+msgstr "Исключение пользователя CORBA %s"
+
+#: lib/gda-common/gda-error.c:167
+msgid "Unknown CORBA exception for connection"
+msgstr ""
+
+# gda-clnt/gda-field.c:95
+#: lib/gda-common/gda-field.c:640
+msgid "<NULL>"
+msgstr "<NULL>"
+
+# gda-clnt/gda-field.c:101 gda-clnt/gda-field.c:103
+#: lib/gda-common/gda-field.c:644
+msgid "<Unknown GDA Type(NULL)>"
+msgstr "<Неизвестный GDA тип(NULL)>"
+
+# gda-clnt/gda-field.c:117
+#: lib/gda-common/gda-field.c:651
+msgid "TRUE"
+msgstr "ИСТИНА"
+
+# gda-clnt/gda-field.c:119
+#: lib/gda-common/gda-field.c:653
+msgid "FALSE"
+msgstr "ЛОЖЬ"
+
+#: lib/gda-common/gda-init.c:35
 msgid "Attempt to initialize an already initialized client"
 msgstr "Попытка инициализировать уже инициализированного клиента"
+
+#: lib/gda-common/gda-init.c:44 lib/gda-server/gda-server-init.c:118
+#, fuzzy
+msgid "Could not initialize Bonobo"
+msgstr "Не удалось инициализировать ct_diag()"
 
 #: lib/gda-common/gda-log.c:48
 msgid "Saving log...x"
 msgstr "Сохранение журнала...x"
 
 #. compose message
-#: lib/gda-common/gda-log.c:69
+#: lib/gda-common/gda-log.c:67
 msgid "ERROR: "
 msgstr "ОШИБКА:"
 
-#: lib/gda-common/gda-log.c:69
+#: lib/gda-common/gda-log.c:67
 msgid "MESSAGE: "
 msgstr "СООБЩЕНИЕ:"
 
-#: lib/gda-common/gda-thread.c:211
-msgid "thread is already running"
-msgstr "thread уже запущен"
+# fe/fe_editor.c:175 fe/fe_editor.c:212
+#: lib/gda-common/gda-util.c:113
+#, fuzzy, c-format
+msgid "Could not open file %s"
+msgstr "Не удалось установить локализацию для '%s'"
 
-#: lib/gda-common/gda-xml-database.c:286
+# fe/fe_log.c:92
+#: lib/gda-common/gda-util.c:138
+#, fuzzy, c-format
+msgid "Could not create file %s"
+msgstr "не удалось получить поле"
+
+#: lib/gda-common/gda-xml-database.c:168
+msgid "bad formed document"
+msgstr ""
+
+#: lib/gda-common/gda-xml-database.c:270
 #, c-format
 msgid "table %s already exists"
 msgstr "таблица %s уже существует"
 
-#: lib/gda-common/gda-xml-database.c:450
+#: lib/gda-common/gda-xml-database.c:452
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p не является допустимой таблицей"
 
-#: lib/gda-server/gda-server-error.c:185
+# fe/fe_main.c:205
+#: lib/gda-common/gda-xml-item.c:371
+#, fuzzy, c-format
+msgid "Item with id %s not found"
+msgstr "Не найден источник данных %s"
+
+#: lib/gda-server/gda-server-connection.c:392
+#, fuzzy
+msgid "Connection being closed"
+msgstr "Видимо соединение умерло"
+
+#: lib/gda-server/gda-server-connection.c:394
+msgid "This connection is being closed, so all listeners are released"
+msgstr ""
+
+#: lib/gda-server/gda-server-connection.c:817
 msgid "Could not get pointer to server implementation"
 msgstr "Невозможно получить указатель на реализацию сервера"
 
-#: lib/gda-server/gda-server-impl-connection.c:124
-#: lib/gda-server/gda-server-impl-connection.c:133
-#: lib/gda-server/gda-server-impl-connection.c:140
-#: lib/gda-server/gda-server-impl-connection.c:149
-#: lib/gda-server/gda-server-impl-connection.c:156
-#: lib/gda-server/gda-server-impl-connection.c:165
-#: lib/gda-server/gda-server-impl-connection.c:172
-#: lib/gda-server/gda-server-impl-connection.c:181
-#: lib/gda-server/gda-server-impl-recordset.c:126
-#: lib/gda-server/gda-server-impl-recordset.c:135
-#: lib/gda-server/gda-server-impl-recordset.c:142
-#: lib/gda-server/gda-server-impl-recordset.c:157
-#: lib/gda-server/gda-server-impl-recordset.c:166
-#: lib/gda-server/gda-server-impl-recordset.c:173
-#: lib/gda-server/gda-server-impl-recordset.c:182
-#: lib/gda-server/gda-server-impl-recordset.c:189
-#: lib/gda-server/gda-server-impl-recordset.c:198
-#: lib/gda-server/gda-server-impl-recordset.c:205
-#: lib/gda-server/gda-server-impl-recordset.c:213
-#: lib/gda-server/gda-server-impl-recordset.c:222
-#: lib/gda-server/gda-server-impl-recordset.c:229
-#: lib/gda-server/gda-server-impl-recordset.c:237
-#: lib/gda-server/gda-server-impl-recordset.c:245
-#: lib/gda-server/gda-server-impl-recordset.c:273
-#: lib/gda-server/gda-server-impl-recordset.c:281
-#: lib/gda-server/gda-server-impl-recordset.c:289
-#: lib/gda-server/gda-server-impl-recordset.c:297
-#: lib/gda-server/gda-server-impl-recordset.c:305
-#: lib/gda-server/gda-server-impl-recordset.c:314
-#, c-format
-msgid "%s not implemented"
-msgstr "%s не реализовано"
-
-#: lib/gda-server/gda-server-impl-connection.c:275
-#, c-format
-msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-msgstr "impl_GDA_Connection_open: открытие соединения с DSN: %s"
-
-#: lib/gda-server/gda-server-impl-recordset.c:402
-#, c-format
-msgid "%s: an error ocurred while fetching data"
-msgstr "%s: обнаружена ошибка при получении данных"
-
-#: lib/gda-server/gda-server-impl.c:197
-#, c-format
-msgid "Starting provider %s with no implementation functions"
-msgstr "Запуск провайдера %s с не реализованными функциями"
-
-#: lib/gda-server/gda-server-impl.c:223
-#: report/server/gda-report-server-main.c:113
-msgid ""
-"OAF doesn't know about our IID; indicates broken installation. Exiting..."
-msgstr ""
-"OAF не знает о нашем IID; указывает на неправильную установку. Выход..."
-
-#: lib/gda-server/gda-server-impl.c:226
-msgid ""
-"Another instance of this provider is already registered with OAF. Exiting..."
-msgstr "Другой экземпляр этого провайдера уже зарегистрирован в OAF. Выход..."
-
-#: lib/gda-server/gda-server-impl.c:229
-msgid "Unknown error registering this provider with OAF. Exiting"
-msgstr "Неизвестная ошибка регистрации этого провайдера в OAF. Выход"
-
-#: lib/gda-server/gda-server-impl.c:233
-#, c-format
-msgid "Registered with ID = %s"
-msgstr "Зарегистрировано с идентификатором = %s"
-
-#: lib/gda-server/gda-server-impl.c:312
-#, c-format
-msgid "CORBA system exception %s"
-msgstr "Исключение системы CORBA %s"
-
-#: lib/gda-server/gda-server-impl.c:315
-#, c-format
-msgid "CORBA user exception: %s"
-msgstr "Исключение пользователя CORBA %s"
-
-#: lib/gda-server/gda-server-init.c:63 lib/gda-server/gda-server-init.c:69
+#: lib/gda-server/gda-server-init.c:43 lib/gda-server/gda-server-init.c:49
 #, c-format
 msgid "Received signal %d, shutting down"
 msgstr "Получен сигнал %d, выключение"
 
-#: lib/gda-server/gda-server-init.c:73
+#: lib/gda-server/gda-server-init.c:53
 #, c-format
 msgid "Received signal %d. Ignoring"
 msgstr "Получен сигнал %d. Игнорируется"
 
-#: lib/gda-server/gda-server-init.c:123
+#: lib/gda-server/gda-server-init.c:102
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Попытка инициализации уже инициализированного провайдера"
 
-#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
+#: lib/gda-server/gda-server-recordset.c:53
+#: lib/gda-server/gda-server-recordset.c:61
+#: lib/gda-server/gda-server-recordset.c:101
+#: lib/gda-server/gda-server-recordset.c:110
+#, c-format
+msgid "%s not implemented"
+msgstr "%s не реализовано"
+
+#: lib/gda-server/gda-server.c:130
+#, c-format
+msgid "Starting provider %s with no implementation functions"
+msgstr "Запуск провайдера %s с не реализованными функциями"
+
+#: lib/gda-server/gda-server.c:214
+#, c-format
+msgid "CORBA system exception %s"
+msgstr "Исключение системы CORBA %s"
+
+#: lib/gda-server/gda-server.c:218
+#, c-format
+msgid "CORBA user exception: %s"
+msgstr "Исключение пользователя CORBA %s"
+
+# fe/fe_editor.c:175 fe/fe_editor.c:212
+#: providers/gda-default-server/GNOME_Database_Provider_Default.server.in.h:1
+#, fuzzy
+msgid "Default provider connection factory"
+msgstr "не удалось открыть соединение с %s"
+
+#: providers/gda-default-server/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr ""
+
+#: providers/gda-default-server/gda-default-connection.c:127
+msgid "You must specify a directory for the database to be stored"
+msgstr ""
+
+#: providers/gda-default-server/gda-default-connection.c:235
+#: providers/gda-mysql-server/gda-mysql-connection.c:282
+#: providers/gda-oracle-server/gda-oracle-connection.c:334
+#: providers/gda-postgres-server/gda-postgres-connection.c:487
+#, fuzzy
+msgid "Unknown schema type"
+msgstr "Неизвестный тип ORACLE %ld"
+
+#: providers/gda-default-server/main-default.c:69
+#, fuzzy
+msgid "Could not register Default provider implementation"
+msgstr "Не удалось зарегистрировать реализацию провайдера Mail"
+
+#: providers/gda-ldap-server/GNOME_Database_Provider_LDAP.server.in.h:1
 msgid "GDA Datasource Access for LDAP"
 msgstr ""
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:273
-#: providers/gda-ldap-server/gda-ldap-connection.c:284
+#: providers/gda-ldap-server/GNOME_Database_Provider_LDAP.server.in.h:2
+msgid "LDAP provider connection factory"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:288
+#: providers/gda-ldap-server/gda-ldap-connection.c:293
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
-#: providers/gda-mysql-server/gda-mysql-connection.c:370
-#: providers/gda-odbc-server/gda-odbc-connection.c:621
-#: providers/gda-odbc-server/gda-odbc-connection.c:654
-#: providers/gda-oracle-server/gda-oracle-connection.c:438
-#: providers/gda-postgres-server/gda-postgres-connection.c:743
-#: providers/gda-sybase-server/gda-sybase-error.c:115
-#: providers/gda-tds-server/gda-tds-error.c:114
+#: providers/gda-mysql-server/gda-mysql-connection.c:486
+#: providers/gda-odbc-server/gda-odbc-connection.c:624
+#: providers/gda-odbc-server/gda-odbc-connection.c:657
+#: providers/gda-oracle-server/gda-oracle-connection.c:479
+#: providers/gda-postgres-server/gda-postgres-connection.c:768
+#: providers/gda-sybase-server/gda-sybase-error.c:127
+#: providers/gda-tds-server/gda-tds-error.c:123
 #, c-format
 msgid "error '%s' at %s"
 msgstr "ошибка '%s' в %s"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:278
-#: providers/gda-interbase-server/gda-interbase-connection.c:279
-#: providers/gda-ldap-server/gda-ldap-connection.c:289
-#: providers/gda-ldap-server/gda-ldap-connection.c:290
-#: providers/gda-mdb-server/gda-mdb-connection.c:376
+#: providers/gda-interbase-server/gda-interbase-connection.c:294
+#: providers/gda-ldap-server/gda-ldap-connection.c:298
+#: providers/gda-ldap-server/gda-ldap-connection.c:299
 #: providers/gda-mdb-server/gda-mdb-connection.c:377
-#: providers/gda-mysql-server/gda-mysql-connection.c:374
-#: providers/gda-mysql-server/gda-mysql-connection.c:375
-#: providers/gda-odbc-server/gda-odbc-connection.c:623
-#: providers/gda-odbc-server/gda-odbc-connection.c:624
-#: providers/gda-odbc-server/gda-odbc-connection.c:656
-#: providers/gda-odbc-server/gda-odbc-connection.c:657
-#: providers/gda-oracle-server/gda-oracle-connection.c:443
-#: providers/gda-oracle-server/gda-oracle-connection.c:444
-#: providers/gda-postgres-server/gda-postgres-connection.c:750
-#: providers/gda-postgres-server/gda-postgres-connection.c:751
-#: providers/gda-primebase-server/gda-primebase-connection.c:363
-#: providers/gda-primebase-server/gda-primebase-connection.c:364
-#: providers/gda-sybase-server/gda-sybase-error.c:124
-#: providers/gda-sybase-server/gda-sybase-error.c:125
-#: providers/gda-tds-server/gda-tds-error.c:123
-#: providers/gda-tds-server/gda-tds-error.c:124
+#: providers/gda-mysql-server/gda-mysql-connection.c:491
+#: providers/gda-mysql-server/gda-mysql-connection.c:492
+#: providers/gda-odbc-server/gda-odbc-connection.c:626
+#: providers/gda-odbc-server/gda-odbc-connection.c:628
+#: providers/gda-odbc-server/gda-odbc-connection.c:659
+#: providers/gda-odbc-server/gda-odbc-connection.c:661
+#: providers/gda-oracle-server/gda-oracle-connection.c:484
+#: providers/gda-oracle-server/gda-oracle-connection.c:485
+#: providers/gda-postgres-server/gda-postgres-connection.c:776
+#: providers/gda-postgres-server/gda-postgres-connection.c:777
+#: providers/gda-primebase-server/gda-primebase-connection.c:375
+#: providers/gda-primebase-server/gda-primebase-connection.c:376
+#: providers/gda-sybase-server/gda-sybase-error.c:136
+#: providers/gda-sybase-server/gda-sybase-error.c:137
+#: providers/gda-tds-server/gda-tds-error.c:132
+#: providers/gda-tds-server/gda-tds-error.c:133
 msgid "Not available"
 msgstr "Не доступно"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:280
-#: providers/gda-ldap-server/gda-ldap-connection.c:291
+#: providers/gda-interbase-server/gda-interbase-connection.c:295
+#: providers/gda-ldap-server/gda-ldap-connection.c:300
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
-#: providers/gda-mysql-server/gda-mysql-connection.c:376
-#: providers/gda-oracle-server/gda-oracle-connection.c:445
-#: providers/gda-postgres-server/gda-postgres-connection.c:752
-#: providers/gda-primebase-server/gda-primebase-connection.c:365
-#: providers/gda-sybase-server/gda-sybase-error.c:126
-#: providers/gda-tds-server/gda-tds-error.c:125
+#: providers/gda-mysql-server/gda-mysql-connection.c:493
+#: providers/gda-oracle-server/gda-oracle-connection.c:486
+#: providers/gda-postgres-server/gda-postgres-connection.c:778
+#: providers/gda-primebase-server/gda-primebase-connection.c:377
+#: providers/gda-sybase-server/gda-sybase-error.c:138
+#: providers/gda-tds-server/gda-tds-error.c:134
 msgid "error"
 msgstr "ошибка"
 
-#: providers/gda-ldap-server/main-ldap.c:71
+#: providers/gda-ldap-server/main-ldap.c:73
 msgid "Could not register LDAP provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера LDAP"
 
-#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
+#: providers/gda-interbase-server/GNOME_Database_Provider_InterBase.server.in.h:1
 msgid "GDA Datasource Access for Interbase"
 msgstr ""
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:272
+#: providers/gda-interbase-server/GNOME_Database_Provider_InterBase.server.in.h:2
+msgid "InterBase provider connection factory"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:286
 #, c-format
 msgid "Error code %ld"
 msgstr "Код ошибки %ld"
 
-#: providers/gda-interbase-server/main-interbase.c:72
+#: providers/gda-interbase-server/main-interbase.c:74
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера INTERBASE"
 
-#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
+#: providers/gda-mail-server/GNOME_Database_Provider_Mail.server.in.h:1
 msgid "GDA Datasource Access for Mail"
 msgstr ""
 
-#: providers/gda-mail-server/gda-mail-connection.c:108
+#: providers/gda-mail-server/GNOME_Database_Provider_Mail.server.in.h:2
+msgid "Mail provider connection factory"
+msgstr ""
+
+#: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
-#: providers/gda-mysql-server/gda-mysql-connection.c:239
-#: providers/gda-oracle-server/gda-oracle-connection.c:295
-#: providers/gda-postgres-server/gda-postgres-connection.c:477
-#: providers/gda-sybase-server/gda-sybase-connection.c:283
-#: providers/gda-tds-server/gda-tds-connection.c:288
+#: providers/gda-sybase-server/gda-sybase-connection.c:285
+#: providers/gda-tds-server/gda-tds-connection.c:278
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Необработанный SCHEMA_QTYPE %d"
 
-#: providers/gda-mail-server/main-mail.c:72
+#: providers/gda-mail-server/main-mail.c:74
 msgid "Could not register Mail provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера Mail"
 
-#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
+#: providers/gda-mdb-server/GNOME_Database_Provider_MDB.server.in.h:1
 msgid "GDA Datasource Access for MDB (MS Access) files"
+msgstr ""
+
+#: providers/gda-mdb-server/GNOME_Database_Provider_MDB.server.in.h:2
+msgid "MDB provider connection factory"
 msgstr ""
 
 # fe/fe_editor.c:185
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
-#: providers/gda-mysql-server/gda-mysql-command.c:103
-#: providers/gda-sybase-server/gda-sybase-command.c:132
+#: providers/gda-mysql-server/gda-mysql-command.c:126
+#: providers/gda-sybase-server/gda-sybase-command.c:141
 #: providers/gda-tds-server/gda-tds-command.c:120
 #, c-format
 msgid "executing command '%s'"
@@ -312,13 +334,12 @@ msgstr "выполнение команды \"%s\""
 
 # fe/fe_editor.c:185
 #: providers/gda-mdb-server/gda-mdb-command.c:88
-#: providers/gda-mysql-server/gda-mysql-command.c:105
+#: providers/gda-mysql-server/gda-mysql-command.c:131
 #, c-format
 msgid "info '%s'"
 msgstr "информация \"%s\""
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:137
-#: providers/gda-mysql-server/gda-mysql-connection.c:140
 #, c-format
 msgid ""
 "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST or "
@@ -340,27 +361,39 @@ msgstr ""
 "Открытие соединения с параметрами имя_файла=%s, пользователь=%s, пароль=%s"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:427
-#: providers/gda-mysql-server/gda-mysql-connection.c:421
 msgid "mysql_recset is NULL"
 msgstr "mysql_recset имеет значение NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:469
-#: providers/gda-mysql-server/gda-mysql-connection.c:460
-#: providers/gda-sybase-server/gda-sybase-connection.c:458
-#: providers/gda-tds-server/gda-tds-connection.c:457
+#: providers/gda-mysql-server/gda-mysql-connection.c:838
+#: providers/gda-sybase-server/gda-sybase-connection.c:464
+#: providers/gda-tds-server/gda-tds-connection.c:448
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Не задано название таблицы для SCHEMA_COLS"
 
 #: providers/gda-mdb-server/main-mdb.c:72
-#: providers/gda-mysql-server/main-mysql.c:72
+#: providers/gda-mysql-server/main-mysql.c:74
 msgid "Could not register MySQL provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера MySQL"
 
-#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
+#: providers/gda-mysql-server/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
 msgstr ""
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:153
+#: providers/gda-mysql-server/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL provider connection factory"
+msgstr ""
+
+#: providers/gda-mysql-server/gda-mysql-connection.c:174
+#, fuzzy
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
+"PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
+msgstr ""
+"%s:%d: Вы не можете указывать UNIX_SOCKET, если вы также указываете Хост или "
+"Порт. Пожалуйста удалить параметры Хост и Порт или UNIX_SOCKET"
+
+#: providers/gda-mysql-server/gda-mysql-connection.c:190
 #, c-format
 msgid ""
 "Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
@@ -369,82 +402,102 @@ msgstr ""
 "Открытие соединения с параметрами пользователь=%s, пароль=%s, хост=%s, порт=%"
 "s, unix_socket=%s"
 
-#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
+#: providers/gda-mysql-server/gda-mysql-connection.c:616
+msgid "Unknown"
+msgstr ""
+
+#: providers/gda-mysql-server/gda-mysql-connection.c:649
+msgid "No MYSQL_Connection for GdaServerConnection"
+msgstr ""
+
+#: providers/gda-odbc-server/GNOME_Database_Provider_ODBC.server.in.h:1
 msgid "GDA Datasource Access for ODBC"
 msgstr ""
 
-#: providers/gda-odbc-server/gda-odbc-connection.c:280
+#: providers/gda-odbc-server/GNOME_Database_Provider_ODBC.server.in.h:2
+msgid "ODBC provider connection factory"
+msgstr ""
+
+#: providers/gda-odbc-server/gda-odbc-connection.c:277
 #, c-format
 msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 msgstr "gda_odbc_connection_open_schema: необработанный SCHEMA_QTYPE %d\n"
 
-#: providers/gda-odbc-server/gda-odbc-connection.c:638
-#: providers/gda-odbc-server/gda-odbc-connection.c:639
-#: providers/gda-odbc-server/gda-odbc-connection.c:640
-#: providers/gda-odbc-server/gda-odbc-connection.c:671
-#: providers/gda-odbc-server/gda-odbc-connection.c:672
-#: providers/gda-odbc-server/gda-odbc-connection.c:673
+#: providers/gda-odbc-server/gda-odbc-connection.c:641
+#: providers/gda-odbc-server/gda-odbc-connection.c:642
+#: providers/gda-odbc-server/gda-odbc-connection.c:643
+#: providers/gda-odbc-server/gda-odbc-connection.c:674
+#: providers/gda-odbc-server/gda-odbc-connection.c:675
+#: providers/gda-odbc-server/gda-odbc-connection.c:676
 msgid "no text"
 msgstr "нет текста"
 
-#: providers/gda-odbc-server/main-odbc.c:71
+#: providers/gda-odbc-server/main-odbc.c:73
 msgid "Could not register ODBC provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера ODBC"
 
-#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
+#: providers/gda-oracle-server/GNOME_Database_Provider_Oracle.server.in.h:1
 msgid "GDA Datasource Access for Oracle"
 msgstr ""
 
+#: providers/gda-oracle-server/GNOME_Database_Provider_Oracle.server.in.h:2
+msgid "Oracle provider connection factory"
+msgstr ""
+
 # fe/fe_log.c:92
-#: providers/gda-oracle-server/gda-oracle-command.c:185
+#: providers/gda-oracle-server/gda-oracle-command.c:191
 msgid "Could not allocate statement handle"
 msgstr "Не удалось получить обработчик утверждения"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:189
+#: providers/gda-oracle-server/gda-oracle-command.c:197
 msgid "command object being created without associated connection"
 msgstr "командный объект был создан без ассоциированного соединения"
 
 # fe/fe_editor.c:185
-#: providers/gda-oracle-server/gda-oracle-command.c:220
+#: providers/gda-oracle-server/gda-oracle-command.c:238
 #, c-format
 msgid "Executing command '%s'"
 msgstr "Выполнение команды \"%s\""
 
-#: providers/gda-oracle-server/gda-oracle-connection.c:113
+#: providers/gda-oracle-server/gda-oracle-connection.c:117
 msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
 msgstr "ошибка в OCIHandleAlloc() HTYPE_SVCCTX"
 
-#: providers/gda-oracle-server/gda-oracle-connection.c:116
+#: providers/gda-oracle-server/gda-oracle-connection.c:123
 msgid "error in OCIHandleAlloc() HTYPE_SERVER"
 msgstr "ошибка в OCIHandleAlloc() HTYPE_SERVER"
 
-#: providers/gda-oracle-server/gda-oracle-connection.c:119
+#: providers/gda-oracle-server/gda-oracle-connection.c:129
 msgid "error in OCIHandleAlloc() HTYPE_ERROR"
 msgstr "ошибка в OCIHandleAlloc() HTYPE_ERROR"
 
-#: providers/gda-oracle-server/gda-oracle-connection.c:379
+#: providers/gda-oracle-server/gda-oracle-connection.c:418
 #, c-format
 msgid "Unknown ORACLE type %ld"
 msgstr "Неизвестный тип ORACLE %ld"
 
-#: providers/gda-oracle-server/gda-oracle-recordset.c:115
+#: providers/gda-oracle-server/gda-oracle-recordset.c:118
 msgid "Unknown ORACLE data type in fill_field_values"
 msgstr "Неизвестный ORACLE тип данных в fill_field_values"
 
-#: providers/gda-oracle-server/gda-oracle-recordset.c:150
+#: providers/gda-oracle-server/gda-oracle-recordset.c:156
 msgid "recordset object being created without associated connection"
 msgstr "объект recordset был создан без ассоциированного соединения"
 
-#: providers/gda-oracle-server/main-oracle.c:71
+#: providers/gda-oracle-server/main-oracle.c:69
 msgid "Could not register ORACLE provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера ORACLE"
 
-#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
+#: providers/gda-postgres-server/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr ""
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:849
-#: providers/gda-postgres-server/gda-postgres-connection.c:957
+#: providers/gda-postgres-server/GNOME_Database_Provider_Postgres.server.in.h:2
+msgid "Postgres provider connection factory"
+msgstr ""
+
+#: providers/gda-postgres-server/gda-postgres-connection.c:889
+#: providers/gda-postgres-server/gda-postgres-connection.c:1006
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset имеет значение NULL"
 
@@ -452,83 +505,87 @@ msgstr "postgres_recset имеет значение NULL"
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера PostgreSQL"
 
-#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
+#: providers/gda-sybase-server/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
 msgstr ""
 
+#: providers/gda-sybase-server/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase provider connection factory"
+msgstr ""
+
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
-#: providers/gda-sybase-server/gda-sybase-command.c:127
+#: providers/gda-sybase-server/gda-sybase-command.c:136
 #: providers/gda-tds-server/gda-tds-command.c:116
 msgid "Connection seems to be dead"
 msgstr "Видимо соединение умерло"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:146
-#: providers/gda-tds-server/gda-tds-command.c:131
+#: providers/gda-sybase-server/gda-sybase-command.c:153
+#: providers/gda-tds-server/gda-tds-command.c:130
 msgid "Filling command structure failed\n"
 msgstr "Сбой заполнения управляющей структуры\n"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:158
-#: providers/gda-tds-server/gda-tds-command.c:139
+#: providers/gda-sybase-server/gda-sybase-command.c:162
+#: providers/gda-tds-server/gda-tds-command.c:137
 msgid "sending cmd failed"
 msgstr "сбой отправки кмд"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:165
-#: providers/gda-tds-server/gda-tds-command.c:146
+#: providers/gda-sybase-server/gda-sybase-command.c:169
+#: providers/gda-tds-server/gda-tds-command.c:144
 msgid "Allocating recordset failed"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:175
-#: providers/gda-tds-server/gda-tds-command.c:154
+#: providers/gda-sybase-server/gda-sybase-command.c:181
+#: providers/gda-tds-server/gda-tds-command.c:153
 msgid "Getting recordset userdata failed"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:233
-#: providers/gda-tds-server/gda-tds-command.c:207
+#: providers/gda-sybase-server/gda-sybase-command.c:241
+#: providers/gda-tds-server/gda-tds-command.c:210
 msgid "Command execution finished, all results processed"
 msgstr "Выполнение команды завершено, все результаты обрабатываются"
 
 # fe/fe_editor.c:138
-#: providers/gda-sybase-server/gda-sybase-command.c:237
-#: providers/gda-tds-server/gda-tds-command.c:211
+#: providers/gda-sybase-server/gda-sybase-command.c:245
+#: providers/gda-tds-server/gda-tds-command.c:214
 msgid "Command failed"
 msgstr "Выполнение команды не удалось"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:241
-#: providers/gda-tds-server/gda-tds-command.c:215
+#: providers/gda-sybase-server/gda-sybase-command.c:250
+#: providers/gda-tds-server/gda-tds-command.c:219
 msgid "Execution of resultless command succeeded"
 msgstr "Выполнение \"безрезультатной\" команды прошло успешно"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:257
-#: providers/gda-tds-server/gda-tds-command.c:231
+#: providers/gda-sybase-server/gda-sybase-command.c:268
+#: providers/gda-tds-server/gda-tds-command.c:237
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() вернуло %x"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:267
-#: providers/gda-tds-server/gda-tds-command.c:241
+#: providers/gda-sybase-server/gda-sybase-command.c:280
+#: providers/gda-tds-server/gda-tds-command.c:249
 msgid "No further results, command completly succeeded."
 msgstr "Нет последующих результатов, команда выполнена успешно."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:271
-#: providers/gda-tds-server/gda-tds-command.c:245
+#: providers/gda-sybase-server/gda-sybase-command.c:285
+#: providers/gda-tds-server/gda-tds-command.c:254
 msgid "An error occured during command execution."
 msgstr "При выполнении команды возникла ошибка."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:278
-#: providers/gda-tds-server/gda-tds-command.c:249
+#: providers/gda-sybase-server/gda-sybase-command.c:291
+#: providers/gda-tds-server/gda-tds-command.c:258
 msgid "Cmd execution returned unknown result, may be an error"
 msgstr ""
 "Выполнение команды привело к неизвестному результату, возможно к ошибке"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:291
-#: providers/gda-tds-server/gda-tds-command.c:259
+#: providers/gda-sybase-server/gda-sybase-command.c:304
+#: providers/gda-tds-server/gda-tds-command.c:269
 msgid "No data returned, freeing recordset structure"
 msgstr "Данные не были возвращены, освобаждается структура записи"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:322
-#: providers/gda-sybase-server/gda-sybase-command.c:334
-#: providers/gda-tds-server/gda-tds-command.c:289
-#: providers/gda-tds-server/gda-tds-command.c:297
+#: providers/gda-sybase-server/gda-sybase-command.c:336
+#: providers/gda-sybase-server/gda-sybase-command.c:348
+#: providers/gda-tds-server/gda-tds-command.c:300
+#: providers/gda-tds-server/gda-tds-command.c:310
 msgid "Freeing command structure failed"
 msgstr "Сбой освобождения структуры команды"
 
@@ -536,525 +593,546 @@ msgstr "Сбой освобождения структуры команды"
 msgid "Not enough memory for sybase_Connection"
 msgstr "Недостаточно памяти для выполнения sybase_Соединения"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:448
-#: providers/gda-tds-server/gda-tds-connection.c:447
+#: providers/gda-sybase-server/gda-sybase-connection.c:453
+#: providers/gda-tds-server/gda-tds-connection.c:437
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: название таблицы \"%s\""
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-connection.c:464
-#: providers/gda-tds-server/gda-tds-connection.c:463
+#: providers/gda-sybase-server/gda-sybase-connection.c:470
+#: providers/gda-tds-server/gda-tds-connection.c:454
 msgid "Could not allocate command structure"
 msgstr "Не удалось получить структуру команды"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-connection.c:486
-#: providers/gda-tds-server/gda-tds-connection.c:485
+#: providers/gda-sybase-server/gda-sybase-connection.c:493
+#: providers/gda-tds-server/gda-tds-connection.c:477
 msgid "Could not allocate enough memory for query"
 msgstr "Не удалось получить достаточно памяти для запроса"
 
-#. 		gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
-#: providers/gda-sybase-server/gda-sybase-connection.c:500
-#: providers/gda-tds-server/gda-tds-connection.c:499
+#.          gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
+#: providers/gda-sybase-server/gda-sybase-connection.c:508
+#: providers/gda-tds-server/gda-tds-connection.c:492
 msgid "Could not get recordset in schema_cols"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:549
-#: providers/gda-tds-server/gda-tds-connection.c:548
+#: providers/gda-sybase-server/gda-sybase-connection.c:557
+#: providers/gda-tds-server/gda-tds-connection.c:541
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: недопустимый тип ограничения %d"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-connection.c:559
-#: providers/gda-tds-server/gda-tds-connection.c:558
+#: providers/gda-sybase-server/gda-sybase-connection.c:567
+#: providers/gda-tds-server/gda-tds-connection.c:551
 msgid "Could not allocate cmd structure"
 msgstr "Не удалось получить структуру кмд"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:626
-#: providers/gda-tds-server/gda-tds-connection.c:625
+#: providers/gda-sybase-server/gda-sybase-connection.c:633
+#: providers/gda-tds-server/gda-tds-connection.c:617
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: недопустимый тип ограничения %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:687
-#: providers/gda-tds-server/gda-tds-connection.c:686
+#: providers/gda-sybase-server/gda-sybase-connection.c:695
+#: providers/gda-tds-server/gda-tds-connection.c:679
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Неправильный или неподдерживаемый тип ограничения: %d"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-connection.c:728
-#: providers/gda-tds-server/gda-tds-connection.c:727
+#: providers/gda-sybase-server/gda-sybase-connection.c:738
+#: providers/gda-tds-server/gda-tds-connection.c:722
 msgid "Could not allocate GdaServerCommand"
 msgstr "Не удалось получить GdaServerCommand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:758
-#: providers/gda-sybase-server/gda-sybase-connection.c:763
+#: providers/gda-sybase-server/gda-sybase-connection.c:769
+#: providers/gda-sybase-server/gda-sybase-connection.c:774
+#: providers/gda-tds-server/gda-tds-connection.c:752
 #: providers/gda-tds-server/gda-tds-connection.c:757
-#: providers/gda-tds-server/gda-tds-connection.c:762
 #, c-format
 msgid "connection status: %x"
 msgstr "состояние соединения: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:759
-#: providers/gda-tds-server/gda-tds-connection.c:758
+#: providers/gda-sybase-server/gda-sybase-connection.c:770
+#: providers/gda-tds-server/gda-tds-connection.c:753
 #, c-format
 msgid "return code: %x"
 msgstr "код возврата: %x"
 
 # fe/fe_connection.c:88
-#: providers/gda-sybase-server/gda-sybase-connection.c:796
-#: providers/gda-tds-server/gda-tds-connection.c:793
+#: providers/gda-sybase-server/gda-sybase-connection.c:808
+#: providers/gda-tds-server/gda-tds-connection.c:788
 msgid "attempting reconnection"
 msgstr "попытка пересоединения"
 
 # fe/fe_connection.c:46
-#: providers/gda-sybase-server/gda-sybase-connection.c:935
+#: providers/gda-sybase-server/gda-sybase-connection.c:938
 #, c-format
 msgid "Reconnected to '%s'"
 msgstr "Пересоединение с \"%s\""
 
 # fe/fe_connection.c:46
-#: providers/gda-sybase-server/gda-sybase-connection.c:937
-#: providers/gda-tds-server/gda-tds-connection.c:898
+#: providers/gda-sybase-server/gda-sybase-connection.c:940
+#: providers/gda-tds-server/gda-tds-connection.c:890
 #, c-format
 msgid "Connected to %s"
 msgstr "Соединен с %s"
 
 # fe/fe_designer.c:40
-#: providers/gda-sybase-server/gda-sybase-connection.c:945
-#: providers/gda-tds-server/gda-tds-connection.c:908
+#: providers/gda-sybase-server/gda-sybase-connection.c:952
+#: providers/gda-tds-server/gda-tds-connection.c:904
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Выбранная база данных \"%s\""
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-connection.c:974
-#: providers/gda-tds-server/gda-tds-connection.c:933
+#: providers/gda-sybase-server/gda-sybase-connection.c:981
+#: providers/gda-tds-server/gda-tds-connection.c:930
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Не удалось получить структуру кмд"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:983
-#: providers/gda-tds-server/gda-tds-connection.c:942
+#: providers/gda-sybase-server/gda-sybase-connection.c:990
+#: providers/gda-tds-server/gda-tds-connection.c:939
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Не удалось получить память для строки кмд"
 
 # fe/fe_editor.c:138
-#: providers/gda-sybase-server/gda-sybase-connection.c:996
-#: providers/gda-tds-server/gda-tds-connection.c:952
+#: providers/gda-sybase-server/gda-sybase-connection.c:999
+#: providers/gda-tds-server/gda-tds-connection.c:947
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: сбой ct_command"
 
 # fe/fe_editor.c:138
-#: providers/gda-sybase-server/gda-sybase-connection.c:1005
-#: providers/gda-tds-server/gda-tds-connection.c:961
+#: providers/gda-sybase-server/gda-sybase-connection.c:1010
+#: providers/gda-tds-server/gda-tds-connection.c:957
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: отправка команды не удалась"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1016
+#: providers/gda-sybase-server/gda-sybase-connection.c:1021
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: сбой выбора базы данных"
 
 # fe/fe_editor.c:138
-#: providers/gda-sybase-server/gda-sybase-connection.c:1034
+#: providers/gda-sybase-server/gda-sybase-connection.c:1038
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: сбой использования команды"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-connection.c:1061
-#: providers/gda-tds-server/gda-tds-connection.c:1023
+#: providers/gda-sybase-server/gda-sybase-connection.c:1066
+#: providers/gda-tds-server/gda-tds-connection.c:1020
 msgid "Could not allocate locale structure"
 msgstr "Не удалось получить структуру locale"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: providers/gda-sybase-server/gda-sybase-connection.c:1067
-#: providers/gda-tds-server/gda-tds-connection.c:1029
+#: providers/gda-sybase-server/gda-sybase-connection.c:1072
+#: providers/gda-tds-server/gda-tds-connection.c:1026
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Не удалось установить локализацию для '%s'"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: providers/gda-sybase-server/gda-sybase-connection.c:1073
-#: providers/gda-tds-server/gda-tds-connection.c:1035
+#: providers/gda-sybase-server/gda-sybase-connection.c:1079
+#: providers/gda-tds-server/gda-tds-connection.c:1033
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Не удалось настроить локализацию на '%s'"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: providers/gda-sybase-server/gda-sybase-connection.c:1078
-#: providers/gda-tds-server/gda-tds-connection.c:1040
+#: providers/gda-sybase-server/gda-sybase-connection.c:1085
+#: providers/gda-tds-server/gda-tds-connection.c:1039
 msgid "Could not drop locale structure"
 msgstr "Не удалось сбросить структуру locale"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1091
-#: providers/gda-tds-server/gda-tds-connection.c:1053
+#: providers/gda-sybase-server/gda-sybase-connection.c:1099
+#: providers/gda-tds-server/gda-tds-connection.c:1052
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Фатальная ошибка: %s\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:71
+#: providers/gda-sybase-server/gda-sybase-error.c:73
 #, c-format
 msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:80
-#: providers/gda-tds-server/gda-tds-error.c:78
+#: providers/gda-sybase-server/gda-sybase-error.c:85
+#: providers/gda-tds-server/gda-tds-error.c:81
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:144
+#: providers/gda-sybase-server/gda-sybase-error.c:161
 msgid "cs_diag() initialized"
 msgstr "cs_diag() инициализовано"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:147
+#: providers/gda-sybase-server/gda-sybase-error.c:165
 msgid "Could not initialize cs_diag()"
 msgstr "Не удалось инициализировать cs_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:154
+#: providers/gda-sybase-server/gda-sybase-error.c:175
 msgid "ct_diag() initialized"
 msgstr "ct_diag() инициализовано"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:157
+#: providers/gda-sybase-server/gda-sybase-error.c:179
 msgid "Could not initialize ct_diag()"
 msgstr "Не удалось инициализировать ct_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:191
+#: providers/gda-sybase-server/gda-sybase-error.c:215
 #, c-format
 msgid "%s could not find server implementation"
 msgstr "%s невозможно найти реализацию сервера"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:197
+#: providers/gda-sybase-server/gda-sybase-error.c:222
 #, c-format
 msgid "%s could not get cnc userdata"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:209
+#: providers/gda-sybase-server/gda-sybase-error.c:234
 msgid "Could not get # of messages"
 msgstr "Не удалось получить число сообщений"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:214
+#: providers/gda-sybase-server/gda-sybase-error.c:241
 #, c-format
 msgid "%d ctlib messages to fetch"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:216
+#: providers/gda-sybase-server/gda-sybase-error.c:246
 #, c-format
 msgid "%d ctlib message to fetch"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:252
+#: providers/gda-sybase-server/gda-sybase-error.c:284
 msgid "error is nullpointer in gda_sybase_messages_handle"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:277
-#: providers/gda-sybase-server/gda-sybase-error.c:344
-#: providers/gda-sybase-server/gda-sybase-error.c:387
+#: providers/gda-sybase-server/gda-sybase-error.c:310
+#: providers/gda-sybase-server/gda-sybase-error.c:382
+#: providers/gda-sybase-server/gda-sybase-error.c:429
 msgid "Could not get # of server messages"
 msgstr "Невозможно получить номер сообщения сервера"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:285
+#: providers/gda-sybase-server/gda-sybase-error.c:318
 #, c-format
 msgid "Fetching %d client messages"
 msgstr "Получение %d клиентских сообщений"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:287
+#: providers/gda-sybase-server/gda-sybase-error.c:321
 #, c-format
 msgid "Fetching %d client message"
 msgstr "Получение %d клиентского сообщения"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:296
+#: providers/gda-sybase-server/gda-sybase-error.c:330
 #, c-format
 msgid "Could not get client msg # %d"
 msgstr "Не удалось получить клиентское сообщение # %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:312
+#: providers/gda-sybase-server/gda-sybase-error.c:349
 msgid "Could not get # of client messages"
 msgstr "Не удалось получить число клиентских сообщений"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: providers/gda-sybase-server/gda-sybase-error.c:320
+#: providers/gda-sybase-server/gda-sybase-error.c:357
 msgid "Could not clear client messages"
 msgstr "Не удалось очистить клиентские сообщения"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:352
+#: providers/gda-sybase-server/gda-sybase-error.c:390
 #, c-format
 msgid "Fetching %d server messages"
 msgstr "Получение %d серверных сообщений"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:354
+#: providers/gda-sybase-server/gda-sybase-error.c:393
 #, c-format
 msgid "Fetching %d server message"
 msgstr "Получение %d серверного сообщения"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-error.c:363
+#: providers/gda-sybase-server/gda-sybase-error.c:402
 #, c-format
 msgid "Could not get server msg # %d"
 msgstr "Не удалось получить серверное сообщение # %d"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-error.c:395
+#: providers/gda-sybase-server/gda-sybase-error.c:437
 msgid "Could not clear server messages"
 msgstr "Не удалось очистить серверные сообщения"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:417
-#: providers/gda-sybase-server/gda-sybase-error.c:453
+#: providers/gda-sybase-server/gda-sybase-error.c:459
+#: providers/gda-sybase-server/gda-sybase-error.c:499
 msgid "Could not get # of cslib messages"
 msgstr "Не удалось получить число сообщений cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:425
+#: providers/gda-sybase-server/gda-sybase-error.c:467
 #, c-format
 msgid "Fetching %d cslib messages"
 msgstr "Получение %d сообщений cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:427
+#: providers/gda-sybase-server/gda-sybase-error.c:470
 #, fuzzy, c-format
 msgid "Fetching %d cslib message"
 msgstr "Получение %d сообщений cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:437
+#: providers/gda-sybase-server/gda-sybase-error.c:480
 #, c-format
 msgid "Could not get cslib msg # %d"
 msgstr "Не удалось получить сообщение cslib # %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:461
+#: providers/gda-sybase-server/gda-sybase-error.c:507
 msgid "Could not clear cslib messages"
 msgstr "Не удалось очистить сообщения cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:593
-#: providers/gda-tds-server/gda-tds-error.c:257
+#: providers/gda-sybase-server/gda-sybase-error.c:641
+#: providers/gda-tds-server/gda-tds-error.c:269
 msgid "Server message:"
 msgstr "Сообщение сервера:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:602
-#: providers/gda-tds-server/gda-tds-error.c:266
+#: providers/gda-sybase-server/gda-sybase-error.c:649
+#: providers/gda-tds-server/gda-tds-error.c:277
 msgid "Client message:"
 msgstr "Сообщение клиента:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:609
-#: providers/gda-tds-server/gda-tds-error.c:273
+#: providers/gda-sybase-server/gda-sybase-error.c:656
+#: providers/gda-tds-server/gda-tds-error.c:284
 msgid "CS-Library error:"
 msgstr "Ошибка CS-библиотеки:"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:158
-#: providers/gda-tds-server/gda-tds-recordset.c:155
+#: providers/gda-sybase-server/gda-sybase-recordset.c:198
+#: providers/gda-tds-server/gda-tds-recordset.c:194
 #, c-format
 msgid "fetch error at row %d"
 msgstr "получена ошибка в строке %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:165
-#: providers/gda-tds-server/gda-tds-recordset.c:162
+#: providers/gda-sybase-server/gda-sybase-recordset.c:205
+#: providers/gda-tds-server/gda-tds-recordset.c:201
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr "CS_END_DATA в строке %d; отмена"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:174
-#: providers/gda-tds-server/gda-tds-recordset.c:169
+#: providers/gda-sybase-server/gda-sybase-recordset.c:213
+#: providers/gda-tds-server/gda-tds-recordset.c:208
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: Ошибка (%d)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:349
-#: providers/gda-tds-server/gda-tds-recordset.c:342
+#: providers/gda-sybase-server/gda-sybase-recordset.c:386
+#: providers/gda-tds-server/gda-tds-recordset.c:382
 msgid "Failed fetching # of columns"
 msgstr "Сбой получения числа столбцов"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:355
-#: providers/gda-tds-server/gda-tds-recordset.c:349
+#: providers/gda-sybase-server/gda-sybase-recordset.c:393
+#: providers/gda-tds-server/gda-tds-recordset.c:390
 #, c-format
 msgid "Counted %d columns"
 msgstr "Подсчитано %d столбцов"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-recordset.c:362
-#: providers/gda-tds-server/gda-tds-recordset.c:356
+#: providers/gda-sybase-server/gda-sybase-recordset.c:400
+#: providers/gda-tds-server/gda-tds-recordset.c:397
 #, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "%s Не удалось получить информацию о формате данных"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-recordset.c:372
-#: providers/gda-tds-server/gda-tds-recordset.c:366
+#: providers/gda-sybase-server/gda-sybase-recordset.c:410
+#: providers/gda-tds-server/gda-tds-recordset.c:407
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s Не удалось получить поля данных"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:390
-#: providers/gda-tds-server/gda-tds-recordset.c:384
+#: providers/gda-sybase-server/gda-sybase-recordset.c:428
+#: providers/gda-tds-server/gda-tds-recordset.c:425
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe на столбце # %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:397
-#: providers/gda-tds-server/gda-tds-recordset.c:391
+#: providers/gda-sybase-server/gda-sybase-recordset.c:435
+#: providers/gda-tds-server/gda-tds-recordset.c:432
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "сбой ct_describe на столбце # %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:403
-#: providers/gda-tds-server/gda-tds-recordset.c:397
+#: providers/gda-sybase-server/gda-sybase-recordset.c:442
+#: providers/gda-tds-server/gda-tds-recordset.c:439
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): \"%s\", %d (%s)"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-recordset.c:412
-#: providers/gda-tds-server/gda-tds-recordset.c:406
+#: providers/gda-sybase-server/gda-sybase-recordset.c:454
+#: providers/gda-tds-server/gda-tds-recordset.c:450
 msgid "could not allocate data holder"
 msgstr "не удалось получить место для хранения данных"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:422
-#: providers/gda-tds-server/gda-tds-recordset.c:416
+#: providers/gda-sybase-server/gda-sybase-recordset.c:467
+#: providers/gda-tds-server/gda-tds-recordset.c:463
 msgid "could not ct_bind data holder to column"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:429
-#: providers/gda-tds-server/gda-tds-recordset.c:423
+#: providers/gda-sybase-server/gda-sybase-recordset.c:474
+#: providers/gda-tds-server/gda-tds-recordset.c:470
 msgid "illegal type detected, aborting"
 msgstr "обнаружен недопустимый тип, прерывание"
 
 # fe/fe_log.c:92
-#: providers/gda-sybase-server/gda-sybase-recordset.c:435
-#: providers/gda-tds-server/gda-tds-recordset.c:429
+#: providers/gda-sybase-server/gda-sybase-recordset.c:481
+#: providers/gda-tds-server/gda-tds-recordset.c:477
 msgid "could not allocate field"
 msgstr "не удалось получить поле"
 
-#: providers/gda-sybase-server/main-sybase.c:76
+#: providers/gda-sybase-server/main-sybase.c:78
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера gda-sybase"
 
-#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
+#: providers/gda-primebase-server/GNOME_Database_Provider_Primebase.server.in.h:1
 msgid "GDA Datasource Access for primebase"
 msgstr ""
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:158
+#: providers/gda-primebase-server/gda-primebase-connection.c:157
 #, c-format
 msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
 msgstr ""
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:162
+#: providers/gda-primebase-server/gda-primebase-connection.c:163
 #, c-format
 msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
 msgstr ""
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:168
+#: providers/gda-primebase-server/gda-primebase-connection.c:171
 msgid "Could not get PBIConnectionInfo(), disconnecting"
 msgstr ""
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:172
+#: providers/gda-primebase-server/gda-primebase-connection.c:176
 #, c-format
 msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
 msgstr ""
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:376
+#: providers/gda-primebase-server/gda-primebase-connection.c:390
 #, fuzzy
 msgid "Not enough memory for primebase_Error structure."
 msgstr "Недостаточно памяти для выполнения sybase_Соединения"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:383
+#: providers/gda-primebase-server/gda-primebase-connection.c:397
 #, c-format
 msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
 msgstr ""
 
-#: providers/gda-primebase-server/main-primebase.c:70
+#: providers/gda-primebase-server/main-primebase.c:73
 #, fuzzy
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера INTERBASE"
 
-#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
+#: providers/gda-tds-server/GNOME_Database_Provider_TDS.server.in.h:1
 msgid "GDA Datasource Access for Sybase/MS SQL"
 msgstr ""
 
-#: providers/gda-tds-server/gda-tds-connection.c:167
+#: providers/gda-tds-server/GNOME_Database_Provider_TDS.server.in.h:2
+msgid "TDS provider connection factory"
+msgstr ""
+
+#: providers/gda-tds-server/gda-tds-connection.c:160
 #, fuzzy
 msgid "Not enough memory for tds_Connection"
 msgstr "Недостаточно памяти для выполнения sybase_Соединения"
 
 # fe/fe_connection.c:46
 #. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
-#: providers/gda-tds-server/gda-tds-connection.c:896
+#: providers/gda-tds-server/gda-tds-connection.c:888
 #, fuzzy, c-format
 msgid "Reconnected to %s"
 msgstr "Пересоединение с \"%s\""
 
-#: providers/gda-tds-server/gda-tds-error.c:69
+#: providers/gda-tds-server/gda-tds-error.c:70
 #, fuzzy, c-format
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
-#: providers/gda-tds-server/main-tds.c:76
+#: providers/gda-tds-server/main-tds.c:78
 #, fuzzy
 msgid "Could not register gda-tds provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера gda-sybase"
 
-#: report/gda-report-engine.c:209
-#, c-format
-msgid "CORBA exception unloading report engine: %s"
-msgstr "Исключение CORBA при выгрузке процессора отчетов: %s"
-
-#: report/server/GNOME_GDA_Report.oaf.in.h:1
-msgid "GDA Distributed Report Engine"
-msgstr ""
-
-#: report/server/gda-report-server-main.c:41
-#: report/server/gda-report-server-main.c:48
-#, c-format
-msgid "Received signal %d, shutting down."
-msgstr "Получен сигнал %d, выключение."
-
-#: report/server/gda-report-server-main.c:52
-#, c-format
-msgid "Received signal %d, shutting down cleanly"
-msgstr "Получен сигнал %d, чистое выключение"
-
-#: report/server/gda-report-server-main.c:92
-msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-msgstr ""
-"Сбой инициализации OAF: пожалуйста, отправьте сообщение об ошибке "
-"разработчикам OAF"
-
-# fe/fe_log.c:92
-#: report/server/gda-report-server-main.c:101
-msgid "Could not activate report engine"
-msgstr "Не удалось активировать процессор отчетов"
-
-#: report/server/gda-report-server-main.c:116
-msgid ""
-"Another instance of the report engine is already registered with OAF. "
-"Exiting..."
-msgstr ""
-"Другой экземпляр процессора отчетов уже зарегистрирован в OAF. \n"
-"Выход..."
-
-#: report/server/gda-report-server-main.c:119
-msgid "Unknown error registering report engine with OAF. Exiting"
-msgstr ""
-"Неизвестная ошибка регистрации процессора отчетов в OAF. \n"
-"Выход"
-
-#: report/server/gda-report-server-main.c:123
-#, c-format
-msgid "Registered report engine with ID = %s"
-msgstr "Зарегистрирован процессор отчетов с идентификатором = %s"
-
-#: tools/gda-run.c:109
+#: tools/gda-run.c:102
 #, c-format
 msgid "%s: misconfigured DSN entry"
 msgstr "%s: неверная запись DSN"
 
-#: tools/gda-run.c:124
+#: tools/gda-run.c:116
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: источник данных \"%s\" не найден\n"
+
+#: tools/templates/main-srv.c.tmpl:60
+#, fuzzy
+msgid "Could not register <PROVIDER-NAME> provider implementation"
+msgstr "Не удалось зарегистрировать реализацию провайдера INTERBASE"
+
+#~ msgid "%s: The server didn't respond."
+#~ msgstr "%s: Сервер не отвечает."
+
+#~ msgid "thread is already running"
+#~ msgstr "thread уже запущен"
+
+#~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
+#~ msgstr "impl_GDA_Connection_open: открытие соединения с DSN: %s"
+
+#~ msgid "%s: an error ocurred while fetching data"
+#~ msgstr "%s: обнаружена ошибка при получении данных"
+
+#~ msgid ""
+#~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
+#~ msgstr ""
+#~ "OAF не знает о нашем IID; указывает на неправильную установку. Выход..."
+
+#~ msgid ""
+#~ "Another instance of this provider is already registered with OAF. "
+#~ "Exiting..."
+#~ msgstr ""
+#~ "Другой экземпляр этого провайдера уже зарегистрирован в OAF. Выход..."
+
+#~ msgid "Unknown error registering this provider with OAF. Exiting"
+#~ msgstr "Неизвестная ошибка регистрации этого провайдера в OAF. Выход"
+
+#~ msgid "Registered with ID = %s"
+#~ msgstr "Зарегистрировано с идентификатором = %s"
+
+#~ msgid "CORBA exception unloading report engine: %s"
+#~ msgstr "Исключение CORBA при выгрузке процессора отчетов: %s"
+
+#~ msgid "Received signal %d, shutting down."
+#~ msgstr "Получен сигнал %d, выключение."
+
+#~ msgid "Received signal %d, shutting down cleanly"
+#~ msgstr "Получен сигнал %d, чистое выключение"
+
+#~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+#~ msgstr ""
+#~ "Сбой инициализации OAF: пожалуйста, отправьте сообщение об ошибке "
+#~ "разработчикам OAF"
+
+# fe/fe_log.c:92
+#~ msgid "Could not activate report engine"
+#~ msgstr "Не удалось активировать процессор отчетов"
+
+#~ msgid ""
+#~ "Another instance of the report engine is already registered with OAF. "
+#~ "Exiting..."
+#~ msgstr ""
+#~ "Другой экземпляр процессора отчетов уже зарегистрирован в OAF. \n"
+#~ "Выход..."
+
+#~ msgid "Unknown error registering report engine with OAF. Exiting"
+#~ msgstr ""
+#~ "Неизвестная ошибка регистрации процессора отчетов в OAF. \n"
+#~ "Выход"
+
+#~ msgid "Registered report engine with ID = %s"
+#~ msgstr "Зарегистрирован процессор отчетов с идентификатором = %s"
 
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: длина = %d"

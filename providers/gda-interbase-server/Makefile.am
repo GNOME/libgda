@@ -22,11 +22,11 @@ libgda_interbase_a_SOURCES = \
 	gda-interbase-recordset.c \
 	gda-interbase.h
 
-oafdir = $(GDA_oafdir)
+serverdir = $(libdir)/bonobo/servers
 
-oaf_in_files = GNOME_GDA_Provider_InterBase.oaf.in
-oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
+server_in_files = GNOME_Database_Provider_InterBase.server.in
+server_DATA = $(server_in_files:.server.in=.server)
 
-@XML_I18N_MERGE_OAF_RULE@
+@XML_I18N_MERGE_SERVER_RULE@
 
-EXTRA_DIST=$(oaf_in_files) $(oaf_DATA)
+EXTRA_DIST=$(server_in_files) $(server_DATA)
