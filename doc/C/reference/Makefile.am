@@ -13,6 +13,7 @@ content_files = \
 
 local_entities = \
 	libgda-common/libgda-common-docs.sgml \
+	libgda-common/sgml/GDA.sgml \
 	libgda-common/sgml/gda-common.sgml \
 	libgda-common/sgml/gda-config.sgml \
 	libgda-common/sgml/gda-corba.sgml \
@@ -22,7 +23,6 @@ local_entities = \
 	libgda-common/sgml/gda-xml-database.sgml \
 	libgda-common/sgml/gda-xml-document.sgml \
 	libgda-client/libgda-client-docs.sgml \
-	libgda-client/sgml/GDA.sgml \
 	libgda-client/sgml/gda-batch.sgml \
 	libgda-client/sgml/gda-command.sgml \
 	libgda-client/sgml/gda-connection-pool.sgml \
