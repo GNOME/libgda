@@ -1,3 +1,7 @@
+2003-03-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: check for ODBC header files also.
+
 2003-03-17  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c: small fix by David

@@ -130,14 +130,14 @@ then
 	AC_MSG_CHECKING(for ODBC files)
 	for d in $dir /usr /usr/local
 	do
-		if test -f $d/lib/libodbc.so
+		if test -f $d/lib/libodbc.so -a -f $d/include/sql.h
 		then
 			AC_MSG_RESULT(found ODBC in $d)
 			odbclib="-lodbc"
 			odbcdir=$d
 			break
 		fi
-		if test -f $d/lib/libiodbc.so
+		if test -f $d/lib/libiodbc.so -a -f $d/include/sql.h
 		then
 			AC_MSG_RESULT(found iODBC in $d)
 			odbclib="-liodbc"

@@ -28,19 +28,6 @@ Management of libgda's report format
 </para>
 
 
-<!-- ##### STRUCT GdaReportValidator ##### -->
-<para>
-
-</para>
-
-@priv: 
-
-<!-- ##### STRUCT GdaReportValidatorPrivate ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### FUNCTION gda_report_document_new ##### -->
 <para>
 
