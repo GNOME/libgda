@@ -850,7 +850,7 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 	sconn->ret = ct_cmd_alloc (sconn->connection, &cmd);
 	if (sconn->ret != CS_SUCCEED) {
 		if (sconn->ret == CS_BUSY) {
-			sybase_debug_msg (_("Connection already in use. Could not allocatie command structure in '_get_database'"));
+			sybase_debug_msg (_("Connection already in use. Could not allocate command structure in '_get_database'"));
 		} else {
 			sybase_debug_msg (_("Could not allocate command structure."));
 		}

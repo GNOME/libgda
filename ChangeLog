@@ -1,5 +1,12 @@
 2002-12-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #101085
+
+	* providers/sybase/gda-sybase-provider.c
+	(gda_sybase_provider_get_database): fixed typo.
+
+2002-12-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #101084
 
 	* providers/sybase/gda-sybase-provider.c (gda_sybase_execute_cmd):
