@@ -1531,7 +1531,7 @@ schema_aggregates (GdaError * error,
 	GdaServerRecordset *recset = 0;
 	GDA_Connection_Constraint *ptr;
 	gint cnt;
-	GString *and_condition = 0;
+	GString *and_condition = 0, *and_condition2 = 0;
 	gulong affected;
 	gboolean extra_info = FALSE;
 
@@ -1544,18 +1544,30 @@ schema_aggregates (GdaError * error,
 			break;
 		case GDA_Connection_OBJECT_NAME:
 			if (!and_condition)
+			{
 				and_condition = g_string_new ("");
-			g_string_sprintfa (and_condition, "AND a.oid='%s' ",
+				and_condition2 = g_string_new ("");
+			}
+			g_string_sprintfa (and_condition, " AND a.aggname || '(' || t.typname || ')' = '%s' ",
 					   ptr->value);
+			g_string_sprintfa (and_condition2, " AND a2.aggname || '( )' = '%s' ",
+					   ptr->value);
+
 			fprintf (stderr,
 				 "schema_tables: aggregate name = '%s'\n",
 				 ptr->value);
 			break;
 		case GDA_Connection_OBJECT_SCHEMA:
 			if (!and_condition)
+			{
 				and_condition = g_string_new ("");
+				and_condition2 = g_string_new ("");
+			}
 			g_string_sprintfa (and_condition,
-					   "AND b.usename='%s' ", ptr->value);
+					   " AND b.usename='%s' ", ptr->value);
+			g_string_sprintfa (and_condition2,
+					   " AND b2.usename='%s' ", ptr->value);
+
 			fprintf (stderr,
 				 "schema_tables: table_schema = '%s'\n",
 				 ptr->value);
@@ -1577,7 +1589,7 @@ schema_aggregates (GdaError * error,
 
 	/* build the query: no difference between postgres versions. */
 	/* 1st: aggregates that work on a particular type */
-	query = g_string_new ("SELECT a.aggname AS \"Name\", "
+	query = g_string_new ("SELECT a.aggname || '(' || t.typname || ')' AS \"Name\", "
 			      "a.oid AS \"Object Id\", "
 			      "t.typname as \"IN Type\", ");
 	if (extra_info)
@@ -1592,30 +1604,30 @@ schema_aggregates (GdaError * error,
 			 "WHERE a.aggbasetype = t.oid AND b.usesysid=a.aggowner ");
 	if (and_condition) {
 		g_string_append (query, and_condition->str);
-		g_string_free (and_condition, TRUE);
 	}
 
 	/* 2nd: aggregates that work on any type */
 	g_string_append (query, " UNION ");
-	g_string_append (query, "SELECT a.aggname AS \"Name\", "
-			 "a.oid AS \"Object Id\", " "'---' as \"IN Type\", ");
+	g_string_append (query, " SELECT a2.aggname || '( )' AS \"Name\", "
+			 "a2.oid AS \"Object Id\", " "'---' as \"IN Type\", ");
 	if (extra_info)
-		g_string_append (query, "b.usename AS \"Owner\", "
-				 "obj_description(a.oid) AS \"Comments\", "
-				 "a.oid AS \"SQL\" ");
+		g_string_append (query, "b2.usename AS \"Owner\", "
+				 "obj_description(a2.oid) AS \"Comments\", "
+				 "a2.oid AS \"SQL\" ");
 	else
 		g_string_append (query,
-				 "obj_description(a.oid) AS \"Comments\" ");
+				 "obj_description(a2.oid) AS \"Comments\" ");
 
-	g_string_append (query, "FROM pg_aggregate a, pg_user b "
-			 "WHERE a.aggbasetype = 0 AND b.usesysid=a.aggowner ");
+	g_string_append (query, "FROM pg_aggregate a2, pg_user b2 "
+			 "WHERE a2.aggbasetype = 0 AND b2.usesysid=a2.aggowner ");
 	if (and_condition) {
-		g_string_append (query, and_condition->str);
+		g_string_append (query, and_condition2->str);
 		g_string_free (and_condition, TRUE);
+		g_string_free (and_condition2, TRUE);
 	}
 
 	/* then ordering */
-	g_string_append (query, "ORDER BY aggname, typname");
+	g_string_append (query, " ORDER BY 1, 3 ");
 
 	/* build the command object */
 	cmd = gda_server_command_new (cnc);

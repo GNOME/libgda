@@ -1,3 +1,7 @@
+2002-02-19  Daniel Morgan <danmorg@sc.rr.com>
+
+	* gda-postgres-connection.c (schema_aggregates): fixed query.
+
 2001-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-postgres-connection.c (gda_postgres_connection_open_schema):
