@@ -31,7 +31,7 @@ extern char *sqltext;
 extern void sql_switch_to_buffer (void *buffer);
 extern void *sql_scan_string (const char *string);
 
-int sqlerror (char *error);
+void sqlerror (char *error);
 
 sql_statement *sql_result;
 GError **sql_error;
@@ -51,18 +51,17 @@ static char *sql_field_stringify (sql_field * field);
  * 
  * Internal function for displaying error messages used by the lexer parser.
  */
-int
+void
 sqlerror (char *string)
 {
 	if (sql_error) {
 		if (!strcmp (string, "parse error"))
-			g_set_error (sql_error, 0, 0, _("Parse error near `%s'\n"), sqltext);
+			g_set_error (sql_error, 0, 0, _("Parse error near `%s'"), sqltext);
 		if (!strcmp (string, "syntax error"))
-			g_set_error (sql_error, 0, 0, _("Syntax error near `%s'\n"), sqltext);
+			g_set_error (sql_error, 0, 0, _("Syntax error near `%s'"), sqltext);
 	}
 	else
 		fprintf (stderr, "SQL Parser error: %s near `%s'\n", string, sqltext);
-	return 0;
 }
 
 static int
@@ -141,6 +140,7 @@ sql_destroy_condition (sql_condition * cond)
 
 	switch (cond->op) {
 	case SQL_eq:
+	case SQL_diff:
 	case SQL_is:
 	case SQL_isnot:
 	case SQL_in:
@@ -349,7 +349,7 @@ sql_destroy (sql_statement * statement)
  * Returns: A generated sql_statement or %NULL on error.
  */
 sql_statement *
-sql_parse_with_error (char *sqlquery, GError ** error)
+sql_parse_with_error (const char *sqlquery, GError ** error)
 {
 	if (sqlquery == NULL) {
 		if (error)
@@ -361,7 +361,7 @@ sql_parse_with_error (char *sqlquery, GError ** error)
 	}
 
 	sql_error = error;
-	sql_switch_to_buffer (sql_scan_string (sqlquery));
+	sql_switch_to_buffer (sql_scan_string (g_strdup (sqlquery)));
 
 	if (sqlparse () == 0) {
 		sql_result->full_query = memsql_strdup (sqlquery);
@@ -388,7 +388,7 @@ sql_parse_with_error (char *sqlquery, GError ** error)
  * Returns: A generated sql_statement or %NULL on error.
  */
 sql_statement *
-sql_parse (char *sqlquery)
+sql_parse (const char *sqlquery)
 {
 	return sql_parse_with_error (sqlquery, NULL);
 }

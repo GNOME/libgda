@@ -277,8 +277,8 @@ int   sql_display (sql_statement * statement);
 int   sql_destroy (sql_statement * statement);
 char *sql_stringify (sql_statement * statement);
 
-sql_statement *sql_parse (char *sql_statement);
-sql_statement *sql_parse_with_error (char *sql_statement, GError ** error);
+sql_statement *sql_parse (const char *sql_statement);
+sql_statement *sql_parse_with_error (const char *sql_statement, GError ** error);
 
 int sql_statement_append_field (sql_statement * statement, char *tablename,
 				char *fieldname, char *as);
