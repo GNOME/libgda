@@ -24,6 +24,7 @@
 #include <libgda/gda-server-connection.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-server-recordset.h>
+#include <libgda/gda-server-recordset-model.h>
 #include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-exception.h>
 

@@ -49,8 +49,6 @@ describe_func (GdaServerRecordset *recset)
 GdaServerRecordset *
 gda_default_recordset_new (GdaServerConnection *cnc, DEFAULT_Recordset *drecset)
 {
-	GdaServerRecordset *recset;
-
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (drecset != NULL, NULL);
 

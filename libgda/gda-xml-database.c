@@ -128,11 +128,12 @@ gda_xml_database_init (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass)
 	xmldb->priv->queries = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
-static void
+static gboolean
 remove_table_hash (gpointer key, gpointer value, gpointer user_data)
 {
 	g_free (key);
 	g_object_unref (G_OBJECT (value));
+	return TRUE;
 }
 
 static void

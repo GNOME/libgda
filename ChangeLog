@@ -1,3 +1,17 @@
+2002-03-31  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-data-model.c:
+	* libgda/gda-init.c:
+	* libgda/gda-server-connection.c:
+	* libgda/gda-table.c:
+	* libgda/gda-util.c:
+	* libgda/gda-xml-database.c:
+	* providers/default/gda-default-provider.c:
+	* providers/default/gda-default-recordset.c: warnings cleanup.
+
+	* providers/postgres/utils.c (gda_postgres_make_error): don't need to
+	use g_strdup/g_free.
+
 2002-03-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* idl/GNOME_Database.idl: added primaryKey, uniqueKey and

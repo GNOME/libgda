@@ -51,6 +51,7 @@ gda_type_to_string (GdaType type)
 	case GDA_TYPE_TIME : return "time";
 	case GDA_TYPE_TIMESTAMP : return "timestamp";
 	case GDA_TYPE_TINYINT : return "tinyint";
+	default:
 	}
 
 	return "string";
@@ -109,7 +110,7 @@ gda_file_load (const gchar *uristr)
 	gchar *retval = NULL;
 	gchar buffer[8193];
 
-	g_return_val_if_fail (uri != NULL, NULL);
+	g_return_val_if_fail (uristr != NULL, NULL);
 
 	uri = gnome_vfs_uri_new (uristr);
 	if (!uri)

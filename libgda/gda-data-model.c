@@ -343,7 +343,7 @@ export_to_separated (GdaDataModel *model, gchar sep)
 			str = g_string_append_c (str, '\n');
 
 		for (c = 0; c < cols; c++) {
-			GdaValue *value;
+			const GdaValue *value;
 			gchar *txt;
 
 			value = gda_data_model_get_value_at (model, c, r);

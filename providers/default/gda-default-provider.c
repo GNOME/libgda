@@ -25,6 +25,7 @@
 #include <libgda/gda-row.h>
 #include <libgda/gda-server-recordset.h>
 #include <libgda/gda-server-recordset-model.h>
+#include <libgda/gda-util.h>
 #include "gda-default.h"
 #include "gda-default-recordset.h"
 
@@ -365,7 +366,7 @@ get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterL
 	}
 
 	/* fill in the recordset to be returned */
-	recset = gda_server_recordset_model_new (cnc, 8);
+	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 8));
 	for (i = 0; i < sizeof (fields_desc) / sizeof (fields_desc[0]); i++) {
 		gint defined_size =  (fields_desc[i].type == GDA_TYPE_STRING) ? 64 : 
 			(fields_desc[i].type == GDA_TYPE_INTEGER) ? sizeof (gint) : 1;
@@ -401,6 +402,8 @@ get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterL
 
 		gda_field_attributes_free (fa);
 	}
+
+	return GDA_SERVER_RECORDSET (recset);
 }
 
 static GdaServerRecordset *

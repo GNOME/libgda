@@ -86,11 +86,12 @@ gda_table_init (GdaTable *table, GdaTableClass *klass)
 	table->priv->fields = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
-static void
+static gboolean
 remove_field_hash (gpointer key, gpointer value, gpointer user_data)
 {
 	g_free (key);
 	gda_field_attributes_free (value);
+	return TRUE;
 }
 
 static void
@@ -220,7 +221,7 @@ gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa)
 	g_return_if_fail (GDA_IS_TABLE (table));
 	g_return_if_fail (fa != NULL);
 
-	name = gda_field_attributes_get_name (fa);
+	name = gda_field_attributes_get_name ((GdaFieldAttributes *) fa);
 	if (!name || !*name)
 		return;
 
@@ -232,11 +233,11 @@ gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa)
 
 	/* add the new field to the table */
 	new_fa = gda_field_attributes_new ();
-	gda_field_attributes_set_defined_size (new_fa, gda_field_attributes_get_defined_size (fa));
+	gda_field_attributes_set_defined_size (new_fa, gda_field_attributes_get_defined_size ((GdaFieldAttributes *) fa));
 	gda_field_attributes_set_name (new_fa, name);
-	gda_field_attributes_set_scale (new_fa, gda_field_attributes_get_scale (fa));
-	gda_field_attributes_set_gdatype (new_fa, gda_field_attributes_get_gdatype (fa));
-	gda_field_attributes_set_allow_null (new_fa, gda_field_attributes_get_allow_null (fa));
+	gda_field_attributes_set_scale (new_fa, gda_field_attributes_get_scale ((GdaFieldAttributes *) fa));
+	gda_field_attributes_set_gdatype (new_fa, gda_field_attributes_get_gdatype ((GdaFieldAttributes *) fa));
+	gda_field_attributes_set_allow_null (new_fa, gda_field_attributes_get_allow_null ((GdaFieldAttributes *) fa));
 
 	g_hash_table_insert (table->priv->fields, g_strdup (name), new_fa);
 	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (table),

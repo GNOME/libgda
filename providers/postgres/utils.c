@@ -36,12 +36,11 @@ gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 		gchar *message;
 		
 		if (pg_res != NULL)
-			message = g_strdup (PQresultErrorMessage (pg_res));
+			message = PQresultErrorMessage (pg_res);
 		else
-			message = g_strdup (PQerrorMessage (pconn));
+			message = PQerrorMessage (pconn);
 
 		gda_error_set_description (error, message);
-		g_free (message);
 	} else {
 		gda_error_set_description (error, _("NO DESCRIPTION"));
 	}

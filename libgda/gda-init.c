@@ -24,6 +24,7 @@
 #include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-main.h>
 #include <libgda/libgda.h>
+#include <libgnomevfs/gnome-vfs.h>
 
 /* Include the marshalers here */
 #include "gda-marshal.h"
