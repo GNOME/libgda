@@ -261,7 +261,9 @@ gda_postgres_recordset_append_row (GdaDataModel *model, const GList *values)
 
 		if (i != 0)
 			sql = g_string_append (sql, ", ");
+		sql = g_string_append (sql, "\"");
 		sql = g_string_append (sql, gda_field_attributes_get_name (fa));
+		sql = g_string_append (sql, "\"");
 	}
 	sql = g_string_append (sql, ") VALUES (");
 
