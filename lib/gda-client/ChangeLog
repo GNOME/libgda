@@ -1,5 +1,7 @@
 2001-07-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-recordset.c (gda_recordset_move_prev): implemented
+
 	* gda-export.c (gda_export_init): create the internal hash table
 	here
 

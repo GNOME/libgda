@@ -1,6 +1,9 @@
 /* GDA client libary
- * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 1999 Rodrigo Moya
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *	Michael Lausch <michael@lausch.at>
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -364,6 +367,7 @@ fetch_and_store (GdaRecordset * rs, gint count, gpointer bookmark)
 	rs->max_index = current_idx;
 	rs->current_index = current_idx;
 	rs->current_row = row_by_idx (rs, rs->current_index);
+
 	return rs->current_index;
 }
 
@@ -388,12 +392,12 @@ fetch_and_dont_store (GdaRecordset * rs, gint count, gpointer bookmark)
 		return GDA_RECORDSET_INVALID_POSITION;
 	}
 
-	GDA_Recordset_move (rs->corba_rs, current_idx - 1, 0, &ev);
-	error_list = gda_error_list_from_exception (&ev);
-	if (error_list) {
-		gda_connection_add_error_list (rs->cnc, error_list);
-		return GDA_RECORDSET_INVALID_POSITION;
-	}
+	//GDA_Recordset_move (rs->corba_rs, current_idx - 1, 0, &ev);
+	//error_list = gda_error_list_from_exception (&ev);
+	//if (error_list) {
+	//gda_connection_add_error_list (rs->cnc, error_list);
+	//return GDA_RECORDSET_INVALID_POSITION;
+	//}
 	chunk = GDA_Recordset_fetch (rs->corba_rs, count, &ev);
 	error_list = gda_error_list_from_exception (&ev);
 	if (error_list) {
@@ -443,10 +447,8 @@ fetch_and_dont_store (GdaRecordset * rs, gint count, gpointer bookmark)
 gulong
 gda_recordset_move (GdaRecordset * rs, gint count, gpointer bookmark)
 {
-	g_return_val_if_fail (GDA_IS_RECORDSET (rs),
-			      GDA_RECORDSET_INVALID_POSITION);
-	g_return_val_if_fail (rs->corba_rs != NULL,
-			      GDA_RECORDSET_INVALID_POSITION);
+	g_return_val_if_fail (GDA_IS_RECORDSET (rs), GDA_RECORDSET_INVALID_POSITION);
+	g_return_val_if_fail (rs->corba_rs != NULL, GDA_RECORDSET_INVALID_POSITION);
 	g_return_val_if_fail (rs->open, GDA_RECORDSET_INVALID_POSITION);
 
 	if (rs->cursor_type == GDA_OPEN_FWDONLY && count < 0)
@@ -552,8 +554,7 @@ gda_recordset_move_last (GdaRecordset * rs)
 gulong
 gda_recordset_move_next (GdaRecordset * rs)
 {
-	g_return_val_if_fail (GDA_IS_RECORDSET (rs),
-			      GDA_RECORDSET_INVALID_POSITION);
+	g_return_val_if_fail (GDA_IS_RECORDSET (rs), GDA_RECORDSET_INVALID_POSITION);
 	return gda_recordset_move (rs, 1, 0);
 }
 
@@ -564,7 +565,8 @@ gda_recordset_move_next (GdaRecordset * rs)
 gulong
 gda_recordset_move_prev (GdaRecordset * rs)
 {
-	return -1;
+	g_return_val_if_fail (GDA_IS_RECORDSET (rs), GDA_RECORDSET_INVALID_POSITION);
+	return gda_recordset_move (rs, -1, 0);
 }
 
 /**
