@@ -29,6 +29,7 @@ GdaRow *
 gda_row_new (gint count)
 {
 	GdaRow *row;
+	gint i;
 
 	g_return_val_if_fail (count >= 0, NULL);
 
@@ -36,6 +37,11 @@ gda_row_new (gint count)
 	CORBA_sequence_set_release (row, TRUE);
 	row->_length = count;
 	row->_buffer = CORBA_sequence_GNOME_Database_Field_allocbuf (count);
+
+	for (i = 0; i < count; i++) {
+		row->_buffer[i].value._type = CORBA_OBJECT_NIL;
+		row->_buffer[i].value._value = NULL;
+	}
 
 	return row;
 }

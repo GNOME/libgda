@@ -26,6 +26,30 @@
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-value.h>
 
+/*
+ * Private functions
+ */
+
+static void
+clear_value (GdaValue *value)
+{
+	CORBA_Environment ev;
+
+	g_return_if_fail (value != NULL);
+
+	if (value->_type) {
+		CORBA_exception_init (&ev);
+		CORBA_Object_release (value->_type, &ev);
+		CORBA_exception_free (&ev);
+	}
+
+	if (value->_value)
+		CORBA_free (value->_value);
+
+	value->_type = CORBA_OBJECT_NIL;
+	value->_value = NULL;
+}
+
 /**
  * gda_value_new_null
  */
@@ -169,8 +193,14 @@ void
 gda_value_set_bigint (GdaValue *value, long long val)
 {
 	g_return_if_fail (value != NULL);
-	if (value->_value)
+
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_BIGINT)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BIGINT);
+	}
+	else if (value->_value);
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_LONGLONG);
 }
 
@@ -208,8 +238,13 @@ gda_value_set_boolean (GdaValue *value, gboolean val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BOOLEAN);
+	}
+	else if (value->_value);
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_BOOLEAN);
 }
 
@@ -250,7 +285,11 @@ gda_value_set_date (GdaValue *value, GDate *val)
 		corba_date.day = g_date_get_day (val);
 	}
 
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_DATE)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_DATE);
+	}
+	else if (value->_value)
 		CORBA_free (value->_value);
 
 	value->_value = ORBit_copy_value (&corba_date, TC_GNOME_Database_Date);
@@ -274,8 +313,13 @@ gda_value_set_double (GdaValue *value, gdouble val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_DOUBLE)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_DOUBLE);
+	}
+	else if (value->_value)
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_DOUBLE);
 }
 
@@ -297,8 +341,13 @@ gda_value_set_integer (GdaValue *value, gint val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_INTEGER)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_INTEGER);
+	}
+	else if (value->_value)
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_INT);
 }
 
@@ -320,8 +369,13 @@ gda_value_set_single (GdaValue *value, gfloat val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_SINGLE)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_SINGLE);
+	}
+	else if (value->_value)
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_FLOAT);
 }
 
@@ -343,8 +397,13 @@ gda_value_set_smallint (GdaValue *value, gshort val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_SMALLINT)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_SMALLINT);
+	}
+	else if (value->_value)
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_SHORT);
 }
 
@@ -366,10 +425,13 @@ gda_value_set_string (GdaValue *value, const gchar *val)
 {
 	g_return_if_fail (value != NULL);
 
-	g_return_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_STRING));
-
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_STRING)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_STRING);
+	}
+	else if (value->_value)
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_STRING);
 }
 
@@ -456,8 +518,13 @@ gda_value_set_timestamp (GdaValue *value, time_t val)
 	corba_timet.second = stm->tm_sec;
 	corba_timet.fraction = 0;
 
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_TIMESTAMP)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_TIMESTAMP);
+	}
+	else if (value->_value)
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&corba_timet, TC_GNOME_Database_Timestamp);
 }
 
@@ -479,8 +546,13 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (value->_value)
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_TINYINT)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_TINYINT);
+	}
+	else if (value->_value)
 		CORBA_free (value->_value);
+
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_CHAR);
 }
 
@@ -494,32 +566,32 @@ gda_value_stringify (GdaValue *value)
 
 	g_return_val_if_fail (value != NULL, NULL);
 
-	if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_BIGINT, value->_type, NULL))
+	if (gda_value_isa (value, GDA_VALUE_TYPE_BIGINT))
 		retval = g_strdup_printf ("%ld", gda_value_get_bigint (value));
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_BOOLEAN, value->_type, NULL)) {
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN)) {
 		if (gda_value_get_boolean (value))
 			retval = g_strdup (_("TRUE"));
 		else
 			retval = g_strdup (_("FALSE"));
 	}
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_STRING, value->_type, NULL))
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_STRING))
 		retval = g_strdup (gda_value_get_string (value));
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_INTEGER, value->_type, NULL))
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_INTEGER))
 		retval = g_strdup_printf ("%d", gda_value_get_integer (value));
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_SMALLINT, value->_type, NULL))
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_SMALLINT))
 		retval = g_strdup_printf ("%d", gda_value_get_smallint (value));
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_SINGLE, value->_type, NULL))
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_SINGLE))
 		retval = g_strdup_printf ("%f", gda_value_get_single (value));
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_DOUBLE, value->_type, NULL))
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_DOUBLE))
 		retval = g_strdup_printf ("%f", gda_value_get_double (value));
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_TIME, value->_type, NULL)) {
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_TIME)) {
 	}
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_DATE, value->_type, NULL)) {
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_DATE)) {
 	}
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_TIMESTAMP, value->_type, NULL)) {
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_TIMESTAMP)) {
 		/* FIXME: implement, and add all missing ones */
 	}
-	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_NULL, value->_type, NULL))
+	else if (gda_value_isa (value, GDA_VALUE_TYPE_NULL))
 		retval = g_strdup ("NULL");
 	else
 		retval = g_strdup ("");

@@ -189,7 +189,6 @@ static GNOME_Database_Row *
 impl_Recordset_fetch (PortableServer_Servant servant, CORBA_Environment *ev)
 {
 	GdaRow *row;
-	GdaRow *row_dup;
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL, ev);
@@ -200,16 +199,15 @@ impl_Recordset_fetch (PortableServer_Servant servant, CORBA_Environment *ev)
 			return NULL;
 	}
 	else {
-		/* return an empty GdaRow */
 		gda_server_connection_add_error_string (
 			gda_server_recordset_get_connection (recset),
 			_("No implementation for the fetch() method found"));
-		row = gda_row_new (0);
+		row = NULL;
 	}
 
 	/* duplicate the object to be returned */
 
-	return row_dup;
+	return row;
 }
 
 /*

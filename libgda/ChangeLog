@@ -1,3 +1,19 @@
+2001-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-row.c (gda_row_new): initialize all GdaField's to be
+	a NULL value
+
+	* gda-value.c (gda_value_set_*): fixed all functions to really
+	work as expected
+
+	* gda-server-recordset.c (impl_Recordset_fetch): don't return
+	an initialized pointer!
+
+	* gda-recordset.c (gda_recordset_get_n_rows): return the number
+	of rows from the GNOME::Database::Recordset object, not the
+	underlying GdaDataModelArray, which is filled on demand
+	(gda_recordset_get_value_at): get rows on demand
+
 2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-provider.[ch] (gda_server_provider_supports): new

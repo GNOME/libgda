@@ -34,6 +34,9 @@ struct _GdaRecordsetPrivate {
 	GNOME_Database_Recordset corba_recset;
 	GNOME_Database_RowAttributes *attributes;
 	guint timeout_id;
+
+	gint row_count;
+	gboolean load_completed;
 };
 
 static void gda_recordset_class_init (GdaRecordsetClass *klass);
@@ -48,30 +51,32 @@ static gint gda_recordset_signals[LAST_SIGNAL] = { 0, };
 static GObjectClass *parent_class = NULL;
 
 /*
- * Private functions
- */
-
-static void
-get_data (GdaRecordset *recset)
-{
-	g_return_if_fail (GDA_IS_RECORDSET (recset));
-
-	/* remove timeout handler */
-	if (recset->priv->timeout_id != -1)
-		g_source_remove (recset->priv->timeout_id);
-
-	gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (recset));
-}
-
-/*
  * GdaRecordset class implementation
  */
 
 static gint
 gda_recordset_get_n_rows (GdaDataModel *model)
 {
-	g_return_val_if_fail (parent_class != NULL, -1);
-	GDA_DATA_MODEL_CLASS (parent_class)->get_n_rows (model);
+	GdaRecordset *recset = (GdaRecordset *) model;
+
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), -1);
+
+	if (recset->priv->row_count == -1) {
+		CORBA_Environment ev;
+
+		CORBA_exception_init (&ev);
+		recset->priv->row_count = GNOME_Database_Recordset_getRowCount (
+			recset->priv->corba_recset, &ev);
+		if (BONOBO_EX (&ev)) {
+			gda_connection_add_error_list (
+				recset->priv->cnc, gda_error_list_from_exception (&ev));
+			recset->priv->row_count = -1;
+		}
+
+		CORBA_exception_free (&ev);
+	}
+
+	return recset->priv->row_count;
 }
 
 static gint
@@ -80,6 +85,7 @@ gda_recordset_get_n_columns (GdaDataModel *model)
 	GdaRecordset *recset = (GdaRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), -1);
+	g_return_val_if_fail (recset->priv->attributes != NULL, -1);
 
 	return recset->priv->attributes->_length;
 }
@@ -87,7 +93,58 @@ gda_recordset_get_n_columns (GdaDataModel *model)
 static const GdaValue *
 gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 {
+	gint fetched_count;
+	gint total_count;
+	gint i;
+	GdaRecordset *recset = (GdaRecordset *) model;
+
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 	g_return_val_if_fail (parent_class != NULL, NULL);
+
+	fetched_count = GDA_DATA_MODEL_CLASS (parent_class)->get_n_rows (model);
+	if (row < fetched_count)
+		return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
+
+	/* it's not been fetched, so fetch data */
+	total_count = gda_data_model_get_n_rows (model);
+	if (row >= total_count)
+		return NULL;
+
+	for (i = fetched_count; i <= row; i++) {
+		GdaRow *row_data;
+		CORBA_Environment ev;
+		gint n;
+
+		CORBA_exception_init (&ev);
+
+		row_data = GNOME_Database_Recordset_fetch (recset->priv->corba_recset, &ev);
+		if (BONOBO_EX (&ev)) {
+			gda_connection_add_error_list (
+				recset->priv->cnc, gda_error_list_from_exception (&ev));
+			CORBA_exception_free (&ev);
+			return NULL;
+		}
+
+		if (row_data) {
+			GList *value_list = NULL;
+
+			for (n = 0; n < row_data->_length; n++) {
+				GdaValue *value;
+				GdaField *field;
+
+				field = gda_row_get_field (row_data, n);
+				value = gda_field_get_value (field);
+				value_list = g_list_append (value_list, value);
+			}
+
+			gda_data_model_array_append_row (GDA_DATA_MODEL_ARRAY (recset),
+							 (const GList *) value_list);
+
+			gda_row_free (row_data);
+			g_list_free (value_list);
+		}
+	}
+
 	return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
 }
 
@@ -138,6 +195,8 @@ gda_recordset_init (GdaRecordset *recset, GdaRecordsetClass *klass)
 	recset->priv->corba_recset = CORBA_OBJECT_NIL;
 	recset->priv->attributes = NULL;
 	recset->priv->timeout_id = -1;
+	recset->priv->row_count = -1;
+	recset->priv->load_completed = FALSE;
 }
 
 static void
@@ -197,9 +256,14 @@ gda_recordset_new (GdaConnection *cnc, GNOME_Database_Recordset corba_recset)
 	recset->priv->attributes = GNOME_Database_Recordset_describe (
 		recset->priv->corba_recset, &ev);
 	if (BONOBO_EX (&ev)) {
+		gda_connection_add_error_list (
+			cnc, gda_error_list_from_exception (&ev));
+		CORBA_exception_free (&ev);
 		g_object_unref (G_OBJECT (recset));
 		return NULL;
 	}
+
+	CORBA_exception_free (&ev);
 
 	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (recset),
 					    recset->priv->attributes->_length);
@@ -212,7 +276,18 @@ gda_recordset_new (GdaConnection *cnc, GNOME_Database_Recordset corba_recset)
 	}
 
 	/* retrieve all data from the underlying recordset */
-	get_data (recset);
+	CORBA_exception_init (&ev);
+	if (!GNOME_Database_Recordset_moveFirst (recset->priv->corba_recset, &ev)) {
+		if (BONOBO_EX (&ev)) {
+			gda_connection_add_error_list (
+				cnc, gda_error_list_from_exception (&ev));
+			CORBA_exception_free (&ev);
+			g_object_unref (G_OBJECT (recset));
+			return NULL;
+		}
+
+		recset->priv->load_completed = TRUE;
+	}
 
 	return recset;
 }
