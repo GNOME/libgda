@@ -1,3 +1,17 @@
+2005-02-10  Álvaro Peña  <alvaropg@telefonica.net>
+
+	* libgda/gda-table.c: Added the code to emit a new signal:
+	NAME_CHANGED.
+	(gda_table_get_columns): New function. Return the columns order by
+	his position.
+	(gda_table_find_column): New function. Return a
+	GdaDataModelColumnAttribute from a name.
+	* libgda/gda-table.h: Added the 2 new functions and the
+	NAME_CHANGED signal.
+	* libgda/gda-xml-database.c: Connect to NAME_CHANGED table
+	signal. When a table named change, the database hash update
+	to the new key (the new table name).
+
 2005-02-07  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.3.0

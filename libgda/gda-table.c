@@ -33,10 +33,16 @@ struct _GdaTablePrivate {
 	GHashTable *fields;
 };
 
+enum {
+	NAME_CHANGED,
+	LAST_SIGNAL
+};
+
 static void gda_table_class_init (GdaTableClass *klass);
 static void gda_table_init       (GdaTable *table, GdaTableClass *klass);
 static void gda_table_finalize   (GObject *object);
 
+static guint gda_table_signals[LAST_SIGNAL];
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -91,6 +97,15 @@ gda_table_class_init (GdaTableClass *klass)
 	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
+
+	gda_table_signals[NAME_CHANGED] =
+		g_signal_new ("name_changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaTableClass, name_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__STRING,
+			      G_TYPE_NONE, 1, G_TYPE_STRING);
 
 	object_class->finalize = gda_table_finalize;
 	model_class->describe_column = gda_table_describe_column;
@@ -252,13 +267,20 @@ gda_table_get_name (GdaTable *table)
 void
 gda_table_set_name (GdaTable *table, const gchar *name)
 {
+	gchar *old_name;
+	
 	g_return_if_fail (GDA_IS_TABLE (table));
 	g_return_if_fail (name != NULL);
 
+	old_name = g_strdup (table->priv->name);
 	if (table->priv->name)
 		g_free (table->priv->name);
 
 	table->priv->name = g_strdup (name);
+	g_signal_emit (G_OBJECT (table),
+		       gda_table_signals[NAME_CHANGED],
+		       0, old_name);
+	gda_data_model_changed (GDA_DATA_MODEL (table));
 }
 
 /**
@@ -316,4 +338,55 @@ gda_table_add_data_from_model (GdaTable *table, const GdaDataModel *model)
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
     /* FIXME: implement me */
+}
+
+static void
+add_field_to_list (gpointer key, gpointer value, gpointer user_data)
+{
+	gchar *name = (gchar *) key;
+	GList **list = (GList **) user_data;
+
+	*list = g_list_append (*list, g_strdup (name));
+}
+
+gint
+compare_columns_func (const gchar *cname_a, const gchar *cname_b, GdaTable *table)
+{
+	GdaDataModelColumnAttributes *ca_a, *ca_b;
+	gint pos_a, pos_b;
+	
+	ca_a = gda_table_find_column (table, cname_a);
+	ca_b = gda_table_find_column (table, cname_b);
+	
+	pos_a = gda_data_model_column_attributes_get_position (ca_a);
+	pos_b = gda_data_model_column_attributes_get_position (ca_b);
+
+	if (pos_a < pos_b) {
+		return -1;
+	} else if (pos_a > pos_b) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+GList *
+gda_table_get_columns (GdaTable *table)
+{
+	GList *list = NULL;
+	
+	g_return_val_if_fail (GDA_IS_TABLE (table), NULL);
+	
+	g_hash_table_foreach (table->priv->fields, (GHFunc) add_field_to_list, &list);
+	list = g_list_sort_with_data (list, compare_columns_func, table);
+	return list;
+}
+
+GdaDataModelColumnAttributes *
+gda_table_find_column (GdaTable *table, const gchar *name)
+{
+	g_return_val_if_fail (GDA_IS_TABLE (table), NULL);
+	g_return_val_if_fail (name != NULL, NULL);
+	
+	return g_hash_table_lookup (table->priv->fields, name);
 }

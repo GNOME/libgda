@@ -45,6 +45,9 @@ struct _GdaTable {
 
 struct _GdaTableClass {
 	GdaDataModelArrayClass parent_class;
+
+	/* signals */
+	void (* name_changed) (GdaTable *table, const gchar *old_name);
 };
 
 GType        gda_table_get_type (void);
@@ -58,6 +61,10 @@ void         gda_table_set_name (GdaTable *table, const gchar *name);
 
 void         gda_table_add_field (GdaTable *table, const GdaDataModelColumnAttributes *fa);
 void         gda_table_add_data_from_model (GdaTable *table, const GdaDataModel *model);
+
+GList       *gda_table_get_columns (GdaTable *table);
+
+GdaDataModelColumnAttributes *gda_table_find_column (GdaTable *table, const gchar *name);
 
 G_END_DECLS
 
