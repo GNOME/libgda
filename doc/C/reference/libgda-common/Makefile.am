@@ -41,48 +41,49 @@ SOURCE_FILES = \
 	$(top_builddir)/lib/gda-common/gda-xml-database.c \
 	$(top_builddir)/lib/gda-common/gda-xml-database.h \
 	$(top_builddir)/lib/gda-common/gda-xml-file.c \
-	$(top_builddir)/lib/gda-common/gda-xml-file.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-bin.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-bin.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-column.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-column.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-const.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-const.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-delete.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-delete.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dml.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dml.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dual.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dual.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-field.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-field.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-func.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-func.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-insert.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-insert.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-item.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-item.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-join.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-join.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-list.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-list.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-query.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-query.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-select.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-select.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-stack.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-stack.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-target.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-target.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-update.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-update.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-value.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-value.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-valueref.c \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-valueref.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query.h
+	$(top_builddir)/lib/gda-common/gda-xml-file.h
+ 
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-bin.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-bin.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-column.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-column.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-const.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-const.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-delete.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-delete.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dml.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dml.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dual.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dual.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-field.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-field.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-func.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-func.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-insert.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-insert.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-item.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-item.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-join.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-join.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-list.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-list.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-query.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-query.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-select.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-select.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-stack.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-stack.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-target.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-target.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-update.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-update.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-value.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-value.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-valueref.c \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-valueref.h \
+#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query.h
 
 IGNORED_HEADER_FILES = \
 	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom-private.h \

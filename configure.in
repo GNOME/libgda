@@ -113,7 +113,7 @@ then
 	gda_xslt_libs=`xslt-config --libs`
 	gda_xslt_cflags=`xslt-config --cflags`
 else
-	AC_MSG_ERROR(not found)
+	AC_MSG_WARN(not found)
 fi
 
 dnl
@@ -696,18 +696,12 @@ Makefile
 libgda.spec
 macros/Makefile
 po/Makefile.in
-doc/Makefile
-doc/C/Makefile
-doc/C/reference/Makefile
-doc/C/reference/libgda-common/Makefile
-doc/C/reference/libgda-client/Makefile
-doc/pt_BR/Makefile
 intl/Makefile
 idl/Makefile
 lib/Makefile
 lib/gda-common/Makefile
-lib/gda-common/gda-xml-query/Makefile
-lib/gda-common/gda-xml-query/testing/Makefile
+dnl lib/gda-common/gda-xml-query/Makefile
+dnl lib/gda-common/gda-xml-query/testing/Makefile
 lib/gda-client/Makefile
 lib/gda-server/Makefile
 bindings/Makefile
@@ -736,4 +730,11 @@ dnl report.dtd
 dnl report/idl/Makefile
 dnl report/server/Makefile
 testing/Makefile
+doc/Makefile
+doc/es/Makefile
+doc/C/Makefile
+doc/C/reference/Makefile
+doc/C/reference/libgda-common/Makefile
+doc/C/reference/libgda-client/Makefile
+doc/pt_BR/Makefile
 stamp.h],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])

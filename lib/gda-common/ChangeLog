@@ -1,3 +1,8 @@
+2001-06-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: don't build the libxmlquery until we fix the
+	libxml1/libxml2/libxslt issue
+
 2001-05-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* reverted last change, thus forcing new versions of

@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgda-common.la
 
-SUBDIRS = gda-xml-query
+#SUBDIRS = gda-xml-query
 
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
@@ -29,8 +29,8 @@ libgda_common_la_SOURCES = \
 	gda-xml-file.c
 
 libgda_common_la_LIBADD=\
-	$(GDA_CLIENT_LIBS) \
-	$(top_builddir)/lib/gda-common/gda-xml-query/libxmlquery.a
+	$(GDA_CLIENT_LIBS) 
+#	$(top_builddir)/lib/gda-common/gda-xml-query/libxmlquery.a
 
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_common_headers)

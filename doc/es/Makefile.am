@@ -1,6 +1,5 @@
 SGML_FILES = \
-	libgda.sgml \
-	fdl-appendix.sgml
+	libgda.sgml 
 
 EXTRA_DIST=$(SGML_FILES) topic.dat
 

@@ -157,7 +157,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/gda-default-srv
 %{_bindir}/gda-test
 %{_bindir}/gda-run
-%{_bindir}/xmlquery
 %{_libdir}/lib*.so.*
 %{_datadir}/gnome/html/*
 %{_datadir}/gda
