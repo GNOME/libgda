@@ -1,6 +1,6 @@
 AC_INIT(lib/gda-common/gda-common.h)
 
-AM_INIT_AUTOMAKE(libgda,0.2.11)
+AM_INIT_AUTOMAKE(libgda,0.2.90)
 
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(config.h)

@@ -40,8 +40,8 @@ SOURCE_FILES = \
 	$(top_builddir)/lib/gda-common/gda-util.h \
 	$(top_builddir)/lib/gda-common/gda-xml-database.c \
 	$(top_builddir)/lib/gda-common/gda-xml-database.h \
-	$(top_builddir)/lib/gda-common/gda-xml-file.c \
-	$(top_builddir)/lib/gda-common/gda-xml-file.h
+	$(top_builddir)/lib/gda-common/gda-xml-document.c \
+	$(top_builddir)/lib/gda-common/gda-xml-document.h
  
 #	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom.c \
 #	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom.h \

@@ -28,13 +28,13 @@ typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
                                               gint );
 
 static GdaServerRecordset* schema_tables (GdaError *error,
-                                           GdaServerConnection *cnc,
-                                           GDA_Connection_Constraint *constraints,
-                                           gint length);
+					  GdaServerConnection *cnc,
+					  GDA_Connection_Constraint *constraints,
+					  gint length);
 static GdaServerRecordset* schema_columns (GdaError *error,
-                                            GdaServerConnection *cnc,
-                                            GDA_Connection_Constraint *constraints,
-                                            gint length);
+					   GdaServerConnection *cnc,
+					   GDA_Connection_Constraint *constraints,
+					   gint length);
 
 schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = { 0, };
 
@@ -77,9 +77,9 @@ get_value (gchar *ptr)
 
 gint
 gda_default_connection_open (GdaServerConnection *cnc,
-							 const gchar *dsn,
-							 const gchar *user,
-							 const gchar *password)
+			     const gchar *dsn,
+			     const gchar *user,
+			     const gchar *password)
 {
 	DEFAULT_Connection *default_cnc;
 	gint retval = -1;
@@ -215,10 +215,10 @@ gda_default_connection_rollback_transaction (GdaServerConnection *cnc)
 
 GdaServerRecordset *
 gda_default_connection_open_schema (GdaServerConnection *cnc,
-									GdaError *error,
-									GDA_Connection_QType t,
-									GDA_Connection_Constraint *constraints,
-									gint length)
+				    GdaError *error,
+				    GDA_Connection_QType t,
+				    GDA_Connection_Constraint *constraints,
+				    gint length)
 {
 	schema_ops_fn fn;
 	
@@ -233,9 +233,9 @@ gda_default_connection_open_schema (GdaServerConnection *cnc,
 
 glong
 gda_default_connection_modify_schema (GdaServerConnection *cnc,
-									  GDA_Connection_QType t,
-									  GDA_Connection_Constraint *constraints,
-									  gint length)
+				      GDA_Connection_QType t,
+				      GDA_Connection_Constraint *constraints,
+				      gint length)
 {
 	return -1;
 }
@@ -254,14 +254,14 @@ gda_default_connection_stop_logging (GdaServerConnection *cnc)
 
 gchar *
 gda_default_connection_create_table (GdaServerConnection *cnc,
-									 GDA_RowAttributes *columns)
+				     GDA_RowAttributes *columns)
 {
-  return NULL;
+	return NULL;
 }
 
 gboolean
 gda_default_connection_supports (GdaServerConnection *cnc,
-								 GDA_Connection_Feature feature)
+				 GDA_Connection_Feature feature)
 {
 	g_return_val_if_fail(cnc != NULL, FALSE);
 	
@@ -321,9 +321,9 @@ gda_default_connection_free (GdaServerConnection *cnc)
 
 void
 gda_default_error_make (GdaError *error,
-						GdaServerRecordset *recset,
-						GdaServerConnection *cnc,
-						gchar *where)
+			GdaServerRecordset *recset,
+			GdaServerConnection *cnc,
+			gchar *where)
 {
 	g_return_if_fail(error != NULL);
 
