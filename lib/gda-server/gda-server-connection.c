@@ -138,7 +138,8 @@ impl_GDA_Connection_openSchema (PortableServer_Servant servant,
 	if ((recset = gda_server_connection_open_schema (cnc, e, t,
 							 constraints->_buffer,
 							 constraints->_length)) == 0) {
-		gda_error_to_exception (&e, ev);
+		gda_error_to_exception (e, ev);
+		gda_error_free (e);
 		return CORBA_OBJECT_NIL;
 	}
 

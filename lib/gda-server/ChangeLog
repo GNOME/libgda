@@ -1,3 +1,10 @@
+2001-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.c (impl_GDA_Connection_openSchema): removed
+	extra & in call to gda_error_to_exception, which was causing providers
+	to core dump when NULL was returned from the ::open_schema method
+	with no error attached to the connection
+
 2001-07-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-connection.[ch] (gda_server_connection_add_listener):
