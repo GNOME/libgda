@@ -1,5 +1,10 @@
 2002-03-25  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* providers/postgres/gda-postgres-provider.c: for SCHEMA_FIELDS,
+	return postgres data type names, not GDA ones.
+
+2002-03-25  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* providers/postgres/gda-postgres-provider.c:
 	* providers/postgres/gda-postgres.h:
 	* providers/postgres/utils.c: the data type column is now a string
