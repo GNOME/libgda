@@ -61,7 +61,7 @@ gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 	GdaValue *value;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
-	g_return_val_if_fail (col != 0, NULL);
+	g_return_val_if_fail (col == 0, NULL);
 
 	count = g_list_length (GDA_DATA_MODEL_LIST (model)->priv->value_list);
 	if (row > count)
@@ -128,7 +128,7 @@ gda_data_model_list_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_data_model_list_init
 		};
-		type = g_type_register_static (G_TYPE_OBJECT,
+		type = g_type_register_static (PARENT_TYPE,
 					       "GdaDataModelList",
 					       &info, 0);
 	}

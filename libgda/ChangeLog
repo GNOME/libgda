@@ -1,5 +1,13 @@
 2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-value.c (gda_value_new): return the created structure
+
+	* gda-data-model-list.c (gda_data_model_list_get_type): this class
+	derives from GdaDataModel, not GObject
+
+	* gda-data-model.c (gda_data_model_get_n_rows): removed the extra
+	'_list' in the function name
+
 	* gda-config.c (gda_config_get_provider_list): add the retrieved
 	items to the list to be returned or we'll allways return NULL!
 	(activation_property_to_list): g_strdup the string to be added to

@@ -38,8 +38,8 @@ gda_value_new (void)
 {
 	GdaValue *value;
 
-	value = GNOME_Database_Value__alloc ();
-	CORBA_any_set_release (value, TRUE);
+	value = bonobo_arg_new (TC_CORBA_string);
+	return value;
 }
 
 /**
@@ -87,6 +87,10 @@ gda_value_set_bigint (GdaValue *value, long long val)
 {
 	g_return_if_fail (value != NULL);
 
+	CORBA_Object_release ((CORBA_Object) value->_type, NULL);
+
+	value->_type = (CORBA_TypeCode) CORBA_Object_duplicate (
+		(CORBA_Object) BONOBO_ARG_LONGLONG, NULL);
 	if (value->_value)
 		CORBA_free (value->_value);
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_LONGLONG);
@@ -283,6 +287,11 @@ void
 gda_value_set_string (GdaValue *value, const gchar *val)
 {
 	g_return_if_fail (value != NULL);
+
+	CORBA_Object_release ((CORBA_Object) value->_type, NULL);
+
+	value->_type = (CORBA_TypeCode) CORBA_Object_duplicate (
+		(CORBA_Object) TC_CORBA_string, NULL);
 	BONOBO_ARG_SET_STRING (value, val);
 }
 
@@ -407,33 +416,33 @@ gda_value_stringify (GdaValue *value)
 
 	g_return_val_if_fail (value != NULL, NULL);
 
-	if (bonobo_arg_type_is_equal (value->_type, TC_null, NULL))
-		retval = g_strdup (_("<Unknown GDA Type(NULL)>"));
-	else if (bonobo_arg_type_is_equal (value->_type, TC_CORBA_long_long, NULL))
+	if (bonobo_arg_type_is_equal (BONOBO_ARG_LONGLONG, value->_type, NULL))
 		retval = g_strdup_printf ("%ld", gda_value_get_bigint (value));
-	else if (bonobo_arg_type_is_equal (value->_type, TC_CORBA_boolean, NULL)) {
+	else if (bonobo_arg_type_is_equal (BONOBO_ARG_BOOLEAN, value->_type, NULL)) {
 		if (gda_value_get_boolean (value))
 			retval = g_strdup (_("TRUE"));
 		else
 			retval = g_strdup (_("FALSE"));
 	}
-	else if (bonobo_arg_type_is_equal (value->_type, TC_CORBA_string, NULL))
+	else if (bonobo_arg_type_is_equal (BONOBO_ARG_STRING, value->_type, NULL))
 		retval = g_strdup (gda_value_get_string (value));
-	else if (bonobo_arg_type_is_equal (value->_type, TC_CORBA_long, NULL))
+	else if (bonobo_arg_type_is_equal (BONOBO_ARG_LONG, value->_type, NULL))
 		retval = g_strdup_printf ("%d", gda_value_get_integer (value));
-	else if (bonobo_arg_type_is_equal (value->_type, TC_CORBA_short, NULL))
+	else if (bonobo_arg_type_is_equal (BONOBO_ARG_SHORT, value->_type, NULL))
 		retval = g_strdup_printf ("%d", gda_value_get_smallint (value));
-	else if (bonobo_arg_type_is_equal (value->_type, TC_CORBA_float, NULL))
+	else if (bonobo_arg_type_is_equal (BONOBO_ARG_FLOAT, value->_type, NULL))
 		retval = g_strdup_printf ("%f", gda_value_get_single (value));
-	else if (bonobo_arg_type_is_equal (value->_type, TC_CORBA_double, NULL))
+	else if (bonobo_arg_type_is_equal (BONOBO_ARG_DOUBLE, value->_type, NULL))
 		retval = g_strdup_printf ("%f", gda_value_get_double (value));
-	else if (bonobo_arg_type_is_equal (value->_type, TC_GNOME_Database_Time, NULL)) {
+	else if (bonobo_arg_type_is_equal (TC_GNOME_Database_Time, value->_type, NULL)) {
 	}
-	else if (bonobo_arg_type_is_equal (value->_type, TC_GNOME_Database_Date, NULL)) {
+	else if (bonobo_arg_type_is_equal (TC_GNOME_Database_Date, value->_type, NULL)) {
 	}
-	else if (bonobo_arg_type_is_equal (value->_type, TC_GNOME_Database_Timestamp, NULL)) {
+	else if (bonobo_arg_type_is_equal (TC_GNOME_Database_Timestamp, value->_type, NULL)) {
 		/* FIXME: implement, and add all missing ones */
 	}
+	else
+		retval = g_strdup (_("<Unknown Type(NULL)>"));
         	
 	return retval;
 

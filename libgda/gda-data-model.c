@@ -127,7 +127,7 @@ gda_data_model_changed (GdaDataModel *model)
  * Return the number of rows in the given data model.
  */
 gint
-gda_data_model_list_get_n_rows (GdaDataModel *model)
+gda_data_model_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 	g_return_val_if_fail (CLASS (model)->get_n_rows != NULL, -1);
