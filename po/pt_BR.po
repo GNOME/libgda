@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2000-08-04 17:42+0000\n"
+"POT-Creation-Date: 2000-10-26 18:47-0200\n"
 "PO-Revision-Date: 2000-08-04 17:44+00:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -12,1993 +12,305 @@ msgstr ""
 "Content-Type: text/plain; charset=koi8-r\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-# fe/fe_impexp.c:381
-#: gda-clnt-ui/gnome-db-browser.c:93
-msgid "Object Name"
-msgstr ""
-
-# fe/fe_sqlwin.c:113
-#: gda-clnt-ui/gnome-db-browser.c:112
-msgid "0 rows"
-msgstr ""
-
-# fe/fe_sqlwin.c:113
-#: gda-clnt-ui/gnome-db-browser.c:137 gda-fe/gda-fe-connection.c:404
-#, c-format
-msgid "%d rows"
-msgstr ""
-
-# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
-# gda-clnt-ui/gnome-db-browser.c:217
-#: gda-clnt-ui/gnome-db-browser.c:432 gda-clnt-ui/gnome-db-designer.c:63
-#: gda-postgres-server/gda-postgres-config-ac.c:156
-msgid "Tables"
-msgstr ""
-
-# fe/fe_impexp.c:392 gda-clnt-ui/gnome-db-browser.c:225
-#: gda-clnt-ui/gnome-db-browser.c:440 gda-clnt-ui/gnome-db-designer.c:72
-#: gda-fe/gda-fe-connection.c:135
-#: gda-postgres-server/gda-postgres-config-ac.c:162
-msgid "Views"
-msgstr ""
-
-# gda-clnt-ui/gnome-db-browser.c:233
-#: gda-clnt-ui/gnome-db-browser.c:448
-msgid "Procedures"
-msgstr ""
-
-# fe/fe_designer.c:98 fe/fe_designer.c:269 gda-manager/main.c:59
-#: gda-clnt-ui/gnome-db-browser.c:456
-msgid "Types"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-browser.c:464
-msgid "Aggregates"
-msgstr ""
-
-# gda-clnt-ui/gnome-db-browser.c:245
-#: gda-clnt-ui/gnome-db-browser.c:479
-msgid "Data"
-msgstr ""
-
-# fe/fe_impexp.c:416
-#: gda-clnt-ui/gnome-db-browser.c:487 gda-fe/gda-fe-batch.c:421
-#: gda-fe/gda-fe-config.c:211 gda-fe/gda-fe-dsnconfig.c:158
-#: gda-manager/gda-mgr-gda.c:42 gda-manager/gda-mgr-providers.c:38
-msgid "Remove"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-browser.c:494
-msgid "Extra Info"
-msgstr ""
-
-# fe/fe_gdaconfig.c:306
-#: gda-clnt-ui/gnome-db-dsn-config.c:52 gda-clnt-ui/gnome-db-login.c:223
-#: gda-fe/gda-fe-connection.c:840 gda-manager/gda-mgr-gda.c:297
-#: gda-manager/gda-mgr-gda.c:407
-msgid "GDA Name"
-msgstr ""
-
-# fe/fe_gdaconfig.c:315 gda-manager/main.c:144
-#: gda-clnt-ui/gnome-db-dsn-config.c:60 gda-fe/gda-fe-connection.c:846
-#: gda-fe/gda-fe-log.c:155
-msgid "Provider"
-msgstr ""
-
-# fe/fe_gdaconfig.c:325
-#: gda-clnt-ui/gnome-db-dsn-config.c:80 gda-fe/gda-fe-connection.c:852
-msgid "DSN"
-msgstr ""
-
-# fe/fe_gdaconfig.c:333 gda-manager/main.c:96 gda-manager/main.c:173
-#: gda-clnt-ui/gnome-db-dsn-config.c:88 gda-clnt-ui/gnome-db-error.c:171
-#: gda-fe/gda-fe-service.c:294 gda-fe/gda-fe-service.c:340
-#: gda-manager/gda-mgr-gda.c:407
-msgid "Description"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:96 gda-clnt-ui/gnome-db-login.c:241
-#: gda-manager/gda-mgr-gda.c:203 gda-manager/gda-mgr-gda.c:303
-msgid "Username"
-msgstr ""
-
-# fe/fe_editor.c:288
-#: gda-clnt-ui/gnome-db-dsn-config.c:104 gda-manager/gda-mgr-gda.c:45
-msgid "Config"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:112 gda-manager/gda-mgr-gda.c:407
-msgid "Global"
-msgstr ""
-
-# fe/fe_main.c:209
-#: gda-clnt-ui/gnome-db-dsn-config.c:219
-msgid "Error while saving configuration!"
-msgstr ""
-
-# fe/fe_main.c:205
-#: gda-clnt-ui/gnome-db-dsn-config.c:222
-msgid "Data source has no name!"
-msgstr ""
-
-# fe/fe_ui.c:143 fe/fe_ui.c:183
-#: gda-clnt-ui/gnome-db-error.c:101
-#, c-format
-msgid "Error %d of %d"
-msgstr ""
-
-# fe/fe_main.c:254
-#: gda-clnt-ui/gnome-db-error.c:196
-msgid "Show Help"
-msgstr ""
-
-# fe/fe_main.c:205
-#: gda-clnt-ui/gnome-db-error.c:202
-msgid "Source"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-error.c:211
-msgid "sqlstate"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-error.c:219
-msgid "Error 0 of 0"
-msgstr ""
-
-# fe/fe_connection.c:30 fe/fe_main.c:155
-#: gda-clnt-ui/gnome-db-grid.c:147
-msgid "Record View"
-msgstr ""
-
-# fe/fe_editor.c:66 fe/fe_sqlwin.c:61 fe/fe_widget.c:235
-#: gda-clnt-ui/gnome-db-grid.c:168 gda-dev/gda-builder-main.c:114
-#: gda-fe/gda-fe-connection.c:84
-msgid "Copy"
-msgstr ""
-
-# fe/fe_editor.c:66 fe/fe_sqlwin.c:61 fe/fe_widget.c:235
-#: gda-clnt-ui/gnome-db-grid.c:168
-msgid "Copy selection to clipboard"
-msgstr ""
-
-# fe/fe_widget.c:34 fe/fe_widget.c:203 fe/fe_widget.c:222
-#: gda-clnt-ui/gnome-db-grid.c:171 gda-fe/gda-fe-connection.c:103
-msgid "Select all"
-msgstr ""
-
-# fe/fe_widget.c:34 fe/fe_widget.c:203 fe/fe_widget.c:222
-#: gda-clnt-ui/gnome-db-grid.c:171
-msgid "Select all rows"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:174
-msgid "Clear selection"
-msgstr ""
-
-# fe/fe_main.c:225
-#: gda-clnt-ui/gnome-db-grid.c:174
-msgid "Clear all selected rows"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:177
-msgid "Record view..."
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:177
-msgid "View recordset record-by-record"
-msgstr ""
-
-# fe/fe_sqlwin.c:41
-#: gda-clnt-ui/gnome-db-grid.c:181
-msgid "Refresh grid"
-msgstr ""
-
-# fe/fe_sqlwin.c:41
-#: gda-clnt-ui/gnome-db-grid.c:181
-msgid "Refresh grid contents"
-msgstr ""
-
-# fe/fe_sqlwin.c:47
-#: gda-clnt-ui/gnome-db-grid.c:184
-msgid "Print grid"
-msgstr ""
-
-# fe/fe_sqlwin.c:47
-#: gda-clnt-ui/gnome-db-grid.c:184
-msgid "Print grid contents"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:187 gda-fe/gda-fe-config.c:282
-msgid "Show columns"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:187
-msgid "Show column titles"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:190
-msgid "Hide columns"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:190
-msgid "Hide column titles"
-msgstr ""
-
-# fe/fe_ui.c:143 fe/fe_ui.c:183
-#: gda-clnt-ui/gnome-db-log-viewer.c:88
-#, c-format
-msgid "Entry %d of %d"
-msgstr ""
-
-# gda-clnt-ui/gnome-db-browser.c:245
-#. create entries
-#: gda-clnt-ui/gnome-db-log-viewer.c:154 gda-clnt-ui/gnome-db-log-viewer.c:322
-msgid "Date"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:154 gda-clnt-ui/gnome-db-log-viewer.c:328
-msgid "Time"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:154
-msgid "Message"
-msgstr ""
-
-#. create dialog
-#: gda-clnt-ui/gnome-db-log-viewer.c:307
-msgid "Log Entry"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-login.c:107 gda-clnt-ui/gnome-db-login.c:328
-#, c-format
-msgid "No datasource '%s' defined in your GDA configuration file"
-msgstr ""
-
-# fe/fe_designer.c:269
-#: gda-clnt-ui/gnome-db-login.c:223
-msgid "User Name"
-msgstr ""
-
-# fe/fe_main.c:205
-#: gda-clnt-ui/gnome-db-login.c:231
-msgid "GDA Datasource"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-login.c:250 gda-manager/gda-mgr-gda.c:207
-#: gda-manager/gda-mgr-gda.c:308
-#: gda-postgres-server/gda-postgres-config-users.c:158
-msgid "Password"
-msgstr ""
-
-# fe/fe_connection.c:88
-#: gda-clnt-ui/gnome-db-login.c:260
-msgid "Last Connections"
-msgstr ""
-
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: gda-clnt/gda-connection-pool.c:169
+#: lib/gda-client/gda-connection-pool.c:185
 #, c-format
 msgid "could not open connection to %s"
 msgstr ""
 
 # fe/fe_main.c:205
-#: gda-clnt/gda-connection-pool.c:180
+#: lib/gda-client/gda-connection-pool.c:196
 #, c-format
 msgid "Data source %s not found"
 msgstr ""
 
-#: gda-clnt/gda-connection.c:166 gda-clnt/gda-error.c:116
+#: lib/gda-client/gda-connection.c:173 lib/gda-client/gda-error.c:132
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr ""
 
-#: gda-clnt/gda-connection.c:170 gda-clnt/gda-error.c:120
+#: lib/gda-client/gda-connection.c:177 lib/gda-client/gda-error.c:136
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr ""
 
-#: gda-clnt/gda-connection.c:457
+#: lib/gda-client/gda-connection.c:460
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr ""
 
-#: gda-clnt/gda-connection.c:473
+#: lib/gda-client/gda-connection.c:476
 msgid "Could not open CORBA factory"
 msgstr ""
 
 # gda-clnt/gda-field.c:95
-#: gda-clnt/gda-field.c:187
+#: lib/gda-client/gda-field.c:204
 msgid "<NULL>"
 msgstr ""
 
 # gda-clnt/gda-field.c:101 gda-clnt/gda-field.c:103
-#: gda-clnt/gda-field.c:193 gda-clnt/gda-field.c:195
+#: lib/gda-client/gda-field.c:210 lib/gda-client/gda-field.c:212
 msgid "<Unknown GDA Type(NULL)>"
 msgstr ""
 
 # gda-clnt/gda-field.c:117
-#: gda-clnt/gda-field.c:208
+#: lib/gda-client/gda-field.c:225
 msgid "TRUE"
 msgstr ""
 
 # gda-clnt/gda-field.c:119
-#: gda-clnt/gda-field.c:209
+#: lib/gda-client/gda-field.c:226
 msgid "FALSE"
 msgstr ""
 
-#: gda-common/gda-log.c:29
+#: lib/gda-common/gda-corba.c:76
+#, c-format
+msgid "CORBA System exception: %s"
+msgstr ""
+
+#: lib/gda-common/gda-corba.c:109
+msgid "True"
+msgstr ""
+
+#: lib/gda-common/gda-corba.c:109
+msgid "False"
+msgstr ""
+
+#: lib/gda-common/gda-init.c:60
+msgid "Attempt to initialize an already initialized client"
+msgstr ""
+
+#: lib/gda-common/gda-log.c:47
 msgid "Saving log...x"
 msgstr ""
 
 #. compose message
-#: gda-common/gda-log.c:50
+#: lib/gda-common/gda-log.c:68
 msgid "ERROR: "
 msgstr ""
 
-#: gda-common/gda-log.c:50
+#: lib/gda-common/gda-log.c:68
 msgid "MESSAGE: "
 msgstr ""
 
-#: gda-common/gda-thread.c:150
+#: lib/gda-common/gda-thread.c:210
 msgid "thread is already running"
 msgstr ""
 
-#: gda-common/gda-xml-database.c:156
+#: lib/gda-common/gda-xml-database.c:281
 #, c-format
 msgid "table %s already exists"
 msgstr ""
 
-# fe/fe_main.c:205
-#: gda-components/gda-components-browser.c:54
-msgid "Data Source Name"
-msgstr ""
-
-# fe/fe_trace.c:74
-#: gda-components/gda-components-browser.c:58
-msgid "User name to use for the connection"
-msgstr ""
-
-#: gda-components/gda-components-browser.c:62
-msgid "Password to authenticate user"
-msgstr ""
-
-# fe/fe_main.c:138
-#: gda-components/gda-components-browser.c:66
-msgid "To open/close the connection"
-msgstr ""
-
-# fe/fe_connection.c:30 fe/fe_main.c:155
-#: gda-components/gda-components-connection.c:37
-#: gda-dev/gda-builder-database.c:31 gda-fe/gda-fe-connection.c:660
-msgid "Error Viewer"
-msgstr ""
-
-#: gda-components/gda-components-factory.c:62
+#: lib/gda-common/gda-xml-database.c:445
 #, c-format
-msgid "Could not initialize %s component"
+msgid "%p is not a valid table"
 msgstr ""
 
-#: gda-components/gda-components-grid.c:42
-msgid "Font to be used for the grid"
+#: lib/gda-server/gda-server-error.c:185
+msgid "Could not get pointer to server implementation"
 msgstr ""
 
-#: gda-components/gda-components-main.c:40
-#: gda-ldap-server/gda-ldap-config-main.c:43
-#: gda-mysql-server/gda-mysql-config-main.c:47
-#: gda-odbc-server/gda-odbc-config-main.c:54
-#: gda-postgres-server/gda-postgres-config-main.c:331
-msgid "Could not initialize CORBA"
-msgstr ""
-
-#: gda-components/gda-components-main.c:43
-#: gda-ldap-server/gda-ldap-config-main.c:34
-#: gda-ldap-server/gda-ldap-config-main.c:46
-#: gda-mysql-server/gda-mysql-config-main.c:53
-#: gda-odbc-server/gda-odbc-config-main.c:45
-#: gda-odbc-server/gda-odbc-config-main.c:57
-#: gda-postgres-server/gda-postgres-config-main.c:338
-msgid "Could not initialize Bonobo"
-msgstr ""
-
-#: gda-components/gnome-db-container.c:117
-msgid "View requested to be activated but there is already an active view"
-msgstr ""
-
-# fe/fe_main.c:307
-#: gda-components/gnome-db-container.c:252
-#: gda-components/gnome-db-container.c:298 gda-fe/gda-fe-callbacks.c:61
-#: gda-fe/gda-fe-connection.c:647 gda-fe/gda-fe-service.c:249
-#: gda-manager/gda-mgr-main.c:204
-msgid "Ready"
-msgstr ""
-
-# fe/fe_editor.c:175 fe/fe_editor.c:212
-#: gda-components/gnome-db-container.c:420
+#: lib/gda-server/gda-server-impl-connection.c:122
+#: lib/gda-server/gda-server-impl-connection.c:131
+#: lib/gda-server/gda-server-impl-connection.c:138
+#: lib/gda-server/gda-server-impl-connection.c:147
+#: lib/gda-server/gda-server-impl-connection.c:154
+#: lib/gda-server/gda-server-impl-connection.c:163
+#: lib/gda-server/gda-server-impl-connection.c:170
+#: lib/gda-server/gda-server-impl-connection.c:179
+#: lib/gda-server/gda-server-impl-recordset.c:130
+#: lib/gda-server/gda-server-impl-recordset.c:139
+#: lib/gda-server/gda-server-impl-recordset.c:146
+#: lib/gda-server/gda-server-impl-recordset.c:161
+#: lib/gda-server/gda-server-impl-recordset.c:170
+#: lib/gda-server/gda-server-impl-recordset.c:177
+#: lib/gda-server/gda-server-impl-recordset.c:186
+#: lib/gda-server/gda-server-impl-recordset.c:193
+#: lib/gda-server/gda-server-impl-recordset.c:202
+#: lib/gda-server/gda-server-impl-recordset.c:209
+#: lib/gda-server/gda-server-impl-recordset.c:217
+#: lib/gda-server/gda-server-impl-recordset.c:226
+#: lib/gda-server/gda-server-impl-recordset.c:233
+#: lib/gda-server/gda-server-impl-recordset.c:241
+#: lib/gda-server/gda-server-impl-recordset.c:249
+#: lib/gda-server/gda-server-impl-recordset.c:291
+#: lib/gda-server/gda-server-impl-recordset.c:301
+#: lib/gda-server/gda-server-impl-recordset.c:309
+#: lib/gda-server/gda-server-impl-recordset.c:317
+#: lib/gda-server/gda-server-impl-recordset.c:325
+#: lib/gda-server/gda-server-impl-recordset.c:333
+#: lib/gda-server/gda-server-impl-recordset.c:342
+#: lib/gda-server/gda-server-impl-recordset.c:350
+#: lib/gda-server/gda-server-impl-recordset.c:358
 #, c-format
-msgid "Could not bind object %s"
+msgid "%s not implemented"
 msgstr ""
 
-# fe/fe_editor.c:205 fe/fe_editor.c:259 fe/fe_editor.c:319
-#: gda-components/gnome-db-container.c:448
+#: lib/gda-server/gda-server-impl-connection.c:271
 #, c-format
-msgid "Unable to activate object %s"
+msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr ""
 
-#: gda-components/gnome-db-control.c:237
+#: lib/gda-server/gda-server-impl-recordset.c:257
+#: lib/gda-server/gda-server-impl-recordset.c:265
 #, c-format
-msgid "%s:%d: Could not create control widget"
+msgid "%s: not implemented"
 msgstr ""
 
-# fe/fe_editor.c:175 fe/fe_editor.c:212
-#: gda-components/gnome-db-control.c:413
-msgid "Could not register control factory"
-msgstr ""
-
-#: gda-components/gnome-db-control.c:531
-msgid "control has no property bag"
-msgstr ""
-
-#: gda-components/gnome-db-control.c:597
+#: lib/gda-server/gda-server-impl-recordset.c:451
 #, c-format
-msgid "property %s not found"
+msgid "%s: an error ocurred while fetching data"
 msgstr ""
 
-#: gda-components/gnome-db-factory.c:51
+#: lib/gda-server/gda-server-impl-recordset.c:490
 #, c-format
-msgid "Factory %s already existing"
+msgid "%s: length = %d"
 msgstr ""
 
-# fe/fe_log.c:92
-#: gda-components/gnome-db-factory.c:74
+#: lib/gda-server/gda-server-impl-recordset.c:503
 #, c-format
-msgid "Could not register %s factory"
+msgid "%s: sending field description for '%s'"
 msgstr ""
 
-#: gda-dev/gda-builder-callbacks.c:24 gda-fe/gda-fe-main.c:96
-#: gda-manager/gda-mgr-main.c:54
-msgid "GNOME-DB Builder"
-msgstr ""
-
-# fe/fe_connection.c:46
-#: gda-dev/gda-builder-database.c:58
+#: lib/gda-server/gda-server-impl.c:194
 #, c-format
-msgid "Connected to %s"
+msgid "Starting provider %s with no implementation functions"
 msgstr ""
 
-# fe/fe_connection.c:88
-#: gda-dev/gda-builder-database.c:83 gda-fe/gda-fe-callbacks.c:129
-msgid "Open Connection"
-msgstr ""
-
-# fe/fe_main.c:135 fe/fe_main.c:264 fe/fe_sqlwin.c:68
-#: gda-dev/gda-builder-database.c:119
-msgid "Disconnected from database"
-msgstr ""
-
-# fe/fe_main.c:186
-#: gda-dev/gda-builder-database.c:135
-msgid "Database Browser"
-msgstr ""
-
-# fe/fe_main.c:132 fe/fe_main.c:261
-#: gda-dev/gda-builder-database.c:144
-msgid "There are no open connections"
-msgstr ""
-
-#: gda-dev/gda-builder-help.c:25
-msgid "Back"
-msgstr ""
-
-# fe/fe_main.c:216 fe/fe_main.c:271
-#: gda-dev/gda-builder-help.c:25
-msgid "Go to previous document"
-msgstr ""
-
-#: gda-dev/gda-builder-help.c:28
-msgid "Forward"
-msgstr ""
-
-# fe/fe_main.c:219 fe/fe_main.c:274
-#: gda-dev/gda-builder-help.c:28
-msgid "Go to next document"
-msgstr ""
-
-#: gda-dev/gda-builder-help.c:31
-msgid "Home"
-msgstr ""
-
-# fe/fe_log.c:37
-#: gda-dev/gda-builder-help.c:31
-msgid "Go to table of contents"
-msgstr ""
-
-# fe/fe_main.c:254
-#: gda-dev/gda-builder-help.c:97 gda-dev/gda-builder-main.c:177
-#: gda-fe/gda-fe-main.c:132 gda-manager/gda-mgr-main.c:74
-msgid "Help"
-msgstr ""
-
-# fe/fe_editor.c:175 fe/fe_editor.c:212
-#: gda-dev/gda-builder-help.c:120
-#, c-format
-msgid "Could not load file '%s'"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:37 gda-dev/gda-builder-main.c:53
-msgid "Screen"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:37
-msgid "New screen"
-msgstr ""
-
-# fe/fe_main.c:166
-#: gda-dev/gda-builder-main.c:40 gda-dev/gda-builder-main.c:56
-msgid "Report"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:40
-msgid "New report"
-msgstr ""
-
-# fe/fe_designer.c:40 fe/fe_editor.c:50 fe/fe_sqlwin.c:54
-#: gda-dev/gda-builder-main.c:43 gda-dev/gda-builder-main.c:59
-msgid "Server"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:43
-msgid "New server"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:46 gda-dev/gda-builder-main.c:62
-msgid "Repository"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:46
-msgid "New repository"
-msgstr ""
-
-# fe/fe_editor.c:47
-#: gda-dev/gda-builder-main.c:53
-msgid "Open existing screen"
-msgstr ""
-
-# fe/fe_editor.c:47
-#: gda-dev/gda-builder-main.c:56
-msgid "Open existing report"
-msgstr ""
-
-# fe/fe_editor.c:47
-#: gda-dev/gda-builder-main.c:59
-msgid "Open existing server"
-msgstr ""
-
-# fe/fe_editor.c:47
-#: gda-dev/gda-builder-main.c:62
-msgid "Open existing repository"
-msgstr ""
-
-# fe/fe_connection.c:94
-#: gda-dev/gda-builder-main.c:69
-msgid "Connect..."
-msgstr ""
-
-# fe/fe_connection.c:46
-#: gda-dev/gda-builder-main.c:69
-msgid "Connect to database"
-msgstr ""
-
-# fe/fe_main.c:135 fe/fe_main.c:264 fe/fe_sqlwin.c:68
-#: gda-dev/gda-builder-main.c:72 gda-fe/gda-fe-connection.c:58
-#: gda-fe/gda-fe-main.c:28
-msgid "Disconnect"
-msgstr ""
-
-# fe/fe_main.c:138
-#: gda-dev/gda-builder-main.c:72
-msgid "Close database connection"
-msgstr ""
-
-# fe/fe_browser.c:105
-#: gda-dev/gda-builder-main.c:76 gda-manager/gda-mgr-gda.c:48
-msgid "Browse"
-msgstr ""
-
-# fe/fe_designer.c:37
-#: gda-dev/gda-builder-main.c:76
-msgid "Open database browser"
-msgstr ""
-
-# fe/fe_main.c:169
-#: gda-dev/gda-builder-main.c:79
-msgid "Import objects"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:79
-msgid "Import database objects into repository"
-msgstr ""
-
-# fe/fe_designer.c:34 fe/fe_designer.c:134 fe/fe_designer.c:283
-# fe/fe_editor.c:44 fe/fe_gdaconfig.c:356
-#: gda-dev/gda-builder-main.c:86 gda-dev/gda-builder-main.c:184
-#: gda-fe/gda-fe-designer.c:29 gda-fe/gda-fe-dsnconfig.c:146
-#: gda-manager/gda-mgr-providers.c:32
-#: gda-mysql-server/gda-mysql-config-db.c:62
-msgid "New"
-msgstr ""
-
-# fe/fe_designer.c:37 fe/fe_designer.c:289 fe/fe_editor.c:47
-# fe/fe_sqlwin.c:51
-#: gda-dev/gda-builder-main.c:87 gda-dev/gda-builder-main.c:187
-#: gda-fe/gda-fe-batch.c:31 gda-fe/gda-fe-connection.c:71
-#: gda-fe/gda-fe-designer.c:32
-msgid "Open"
-msgstr ""
-
-# fe/fe_browser.c:34 fe/fe_designer.c:44 fe/fe_editor.c:59 fe/fe_editor.c:73
-# fe/fe_impexp.c:76 fe/fe_log.c:44
-#: gda-dev/gda-builder-main.c:88 gda-fe/gda-fe-designer.c:42
-#: gda-fe/gda-fe-log.c:43 gda-fe/gda-fe-service.c:50
-msgid "Close"
-msgstr ""
-
-# fe/fe_editor.c:59
-#: gda-dev/gda-builder-main.c:88
-msgid "Close current window"
-msgstr ""
-
-# fe/fe_main.c:225
-#: gda-dev/gda-builder-main.c:91
-msgid "Close all"
-msgstr ""
-
-# fe/fe_main.c:225
-#: gda-dev/gda-builder-main.c:91
-msgid "Close all open windows"
-msgstr ""
-
-# fe/fe_main.c:142
-#: gda-dev/gda-builder-main.c:97 gda-dev/gda-builder-main.c:195
-#: gda-fe/gda-fe-main.c:37 gda-fe/gda-fe-main.c:148
-#: gda-manager/gda-mgr-main.c:40 gda-manager/gda-mgr-main.c:85
-msgid "Quit"
-msgstr ""
-
-# fe/fe_main.c:142 fe/fe_main.c:281
-#: gda-dev/gda-builder-main.c:97 gda-dev/gda-builder-main.c:195
-#: gda-fe/gda-fe-main.c:37 gda-manager/gda-mgr-main.c:40
-#: gda-manager/gda-mgr-main.c:85
-msgid "Exit application"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:104
-msgid "Undo"
-msgstr ""
-
-# fe/fe_main.c:173
-#: gda-dev/gda-builder-main.c:104
-msgid "Undo last action"
-msgstr ""
-
-# fe/fe_main.c:307
-#: gda-dev/gda-builder-main.c:107
-msgid "Redo"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:107
-msgid "Revert last undone action"
-msgstr ""
-
-# fe/fe_editor.c:63 fe/fe_sqlwin.c:58 fe/fe_widget.c:232
-#: gda-dev/gda-builder-main.c:111 gda-fe/gda-fe-connection.c:81
-msgid "Cut"
-msgstr ""
-
-# fe/fe_editor.c:63
-#: gda-dev/gda-builder-main.c:111
-msgid "Cut selected text/item"
-msgstr ""
-
-# fe/fe_editor.c:66 fe/fe_sqlwin.c:61 fe/fe_widget.c:235
-#: gda-dev/gda-builder-main.c:114
-msgid "Copy selected text/item to the clipboard"
-msgstr ""
-
-# fe/fe_editor.c:69 fe/fe_sqlwin.c:64 fe/fe_widget.c:238
-#: gda-dev/gda-builder-main.c:117 gda-fe/gda-fe-connection.c:87
-msgid "Paste"
-msgstr ""
-
-# fe/fe_editor.c:69
-#: gda-dev/gda-builder-main.c:117 gda-fe/gda-fe-connection.c:87
-msgid "Paste clipboard contents"
-msgstr ""
-
-# fe/fe_designer.c:139 fe/fe_gdaconfig.c:361
-#: gda-dev/gda-builder-main.c:120
-msgid "Delete"
-msgstr ""
-
-# fe/fe_editor.c:63
-#: gda-dev/gda-builder-main.c:120
-msgid "Delete selected text/item"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:127
-msgid "New project"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:127
-msgid "Create a new project"
-msgstr ""
-
-# fe/fe_connection.c:88
-#: gda-dev/gda-builder-main.c:130
-msgid "Open project"
-msgstr ""
-
-# fe/fe_editor.c:47
-#: gda-dev/gda-builder-main.c:130
-msgid "Open an existing project"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:133
-msgid "Save project"
-msgstr ""
-
-# fe/fe_editor.c:50
-#: gda-dev/gda-builder-main.c:133
-msgid "Save current project"
-msgstr ""
-
-# gda-clnt-ui/gnome-db-browser.c:233
-#: gda-dev/gda-builder-main.c:137
-msgid "Properties..."
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:137
-msgid "View project properties"
-msgstr ""
-
-# fe/fe_main.c:81
-#: gda-dev/gda-builder-main.c:145 gda-fe/gda-fe-callbacks.c:70
-#: gda-manager/gda-mgr-main.c:51
-msgid "GNOME-DB Front End"
-msgstr ""
-
-# fe/fe_main.c:81
-#: gda-dev/gda-builder-main.c:145 gda-manager/gda-mgr-main.c:51
-msgid "The GNOME-DB front end"
-msgstr ""
-
-# fe/fe_main.c:81
-#: gda-dev/gda-builder-main.c:149
-msgid "SQL Front End"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:149
-msgid "The SQL front end"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:153 gda-fe/gda-fe-main.c:93
-#: gda-manager/gda-mgr-callbacks.c:25
-msgid "GNOME-DB Manager"
-msgstr ""
-
-# fe/fe_main.c:209
-#: gda-dev/gda-builder-main.c:153 gda-fe/gda-fe-main.c:93
-msgid "The GNOME-DB configuration tool"
-msgstr ""
-
-# fe/fe_main.c:242
-#: gda-dev/gda-builder-main.c:160 gda-fe/gda-fe-main.c:117
-#: gda-manager/gda-mgr-main.c:61
-msgid "About gnome-db..."
-msgstr ""
-
-# fe/fe_main.c:242
-#: gda-dev/gda-builder-main.c:160 gda-dev/gda-builder-main.c:164
-#: gda-fe/gda-fe-main.c:117 gda-fe/gda-fe-main.c:121
-#: gda-manager/gda-mgr-main.c:61 gda-manager/gda-mgr-main.c:65
-msgid "About this program"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:164 gda-fe/gda-fe-main.c:121
-#: gda-manager/gda-mgr-main.c:65
-msgid "Submit bug report"
-msgstr ""
-
-# fe/fe_main.c:249
-#: gda-dev/gda-builder-main.c:171 gda-fe/gda-fe-batch.c:316
-#: gda-fe/gda-fe-main.c:128 gda-manager/gda-mgr-main.c:72
-msgid "File"
-msgstr ""
-
-# fe/fe_editor.c:423
-#: gda-dev/gda-builder-main.c:172 gda-fe/gda-fe-batch.c:413
-#: gda-manager/gda-mgr-gda.c:39 gda-manager/gda-mgr-providers.c:35
-msgid "Edit"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:173 gda-dev/gda-builder-main.c:175
-#: gda-dev/gda-builder-project.c:41
-msgid "Project"
-msgstr ""
-
-# fe/fe_main.c:250
-#: gda-dev/gda-builder-main.c:174 gda-fe/gda-fe-main.c:129
-#: gda-manager/gda-mgr-gda.c:321 gda-mysql-server/gda-mysql-config-main.c:82
-msgid "Database"
-msgstr ""
-
-# fe/fe_main.c:251
-#: gda-dev/gda-builder-main.c:176 gda-fe/gda-fe-main.c:130
-#: gda-manager/gda-mgr-main.c:73
-msgid "Tools"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:184
-msgid "New Screen/Report"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:187
-msgid "Open Screen/Report"
-msgstr ""
-
-# fe/fe_config.c:198 fe/fe_main.c:277
-#. create dialog
-#: gda-dev/gda-builder-main.c:191 gda-fe/gda-fe-config.c:307
-#: gda-fe/gda-fe-main.c:144 gda-manager/gda-mgr-main.c:81
-msgid "Preferences"
-msgstr ""
-
-# fe/fe_main.c:202 fe/fe_main.c:277
-#: gda-dev/gda-builder-main.c:191 gda-fe/gda-fe-main.c:103
-#: gda-fe/gda-fe-main.c:144 gda-manager/gda-mgr-main.c:81
-msgid "Configure user preferences"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:231 gda-fe/gda-fe-main.c:170
-#: gda-rolodex/gda-rolodex-main.c:125
-msgid "Could not initialize Bonobo\n"
-msgstr ""
-
-# fe/fe_editor.c:205 fe/fe_editor.c:259 fe/fe_editor.c:319
-#: gda-dev/gda-builder-main.c:256 gda-fe/gda-fe-callbacks.c:200
-#: gda-manager/gda-mgr-callbacks.c:95
-#, c-format
-msgid "Unable to execute '%s'"
-msgstr ""
-
-#: gda-dev/gda-builder-project.c:46 gda-fe/gda-fe-service.c:350
-#: gda-manager/gda-mgr-providers.c:166
-msgid "Location"
-msgstr ""
-
-# fe/fe_main.c:186
-#: gda-dev/gda-run.c:29 testing/gda-client-test1.c:31
-#: testing/gda-client-test10.c:31 testing/gda-client-test11.c:31
-#: testing/gda-client-test12.c:32 testing/gda-client-test13.c:32
-#: testing/gda-client-test14.c:31 testing/gda-client-test2.c:32
-#: testing/gda-client-test3.c:32 testing/gda-client-test4.c:30
-#: testing/gda-client-test5.c:32 testing/gda-client-test6.c:29
-#: testing/gda-client-test7.c:31 testing/gda-client-test8.c:32
-#: testing/gda-client-test9.c:31 testing/gda-ui-test1.c:33
-#: testing/gda-ui-test2.c:33 testing/gda-ui-test3.c:31
-msgid "database name"
-msgstr ""
-
-#: gda-dev/gda-run.c:29 testing/gda-client-test1.c:31
-#: testing/gda-client-test10.c:31 testing/gda-client-test11.c:31
-#: testing/gda-client-test12.c:32 testing/gda-client-test13.c:32
-#: testing/gda-client-test14.c:31 testing/gda-client-test2.c:32
-#: testing/gda-client-test3.c:32 testing/gda-client-test4.c:30
-#: testing/gda-client-test5.c:32 testing/gda-client-test6.c:29
-#: testing/gda-client-test7.c:31 testing/gda-client-test8.c:32
-#: testing/gda-client-test9.c:31 testing/gda-ui-test1.c:33
-#: testing/gda-ui-test2.c:33 testing/gda-ui-test3.c:31
-msgid "DATABASE"
-msgstr ""
-
-# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
-# gda-clnt-ui/gnome-db-browser.c:217
-#: gda-dev/gda-run.c:30 testing/gda-client-test1.c:32
-#: testing/gda-client-test10.c:32 testing/gda-client-test11.c:32
-#: testing/gda-client-test12.c:33 testing/gda-client-test13.c:33
-#: testing/gda-client-test14.c:32 testing/gda-client-test2.c:33
-#: testing/gda-client-test3.c:33 testing/gda-client-test4.c:31
-#: testing/gda-client-test5.c:33 testing/gda-client-test6.c:30
-#: testing/gda-client-test7.c:32 testing/gda-client-test8.c:33
-#: testing/gda-client-test9.c:32 testing/gda-ui-test1.c:34
-#: testing/gda-ui-test2.c:34 testing/gda-ui-test3.c:32
-msgid "user name"
-msgstr ""
-
-#: gda-dev/gda-run.c:30 testing/gda-client-test1.c:32
-#: testing/gda-client-test10.c:32 testing/gda-client-test11.c:32
-#: testing/gda-client-test12.c:33 testing/gda-client-test13.c:33
-#: testing/gda-client-test14.c:32 testing/gda-client-test2.c:33
-#: testing/gda-client-test3.c:33 testing/gda-client-test4.c:31
-#: testing/gda-client-test5.c:33 testing/gda-client-test6.c:30
-#: testing/gda-client-test7.c:32 testing/gda-client-test8.c:33
-#: testing/gda-client-test9.c:32 testing/gda-ui-test1.c:34
-#: testing/gda-ui-test2.c:34 testing/gda-ui-test3.c:32
-msgid "USER-NAME"
-msgstr ""
-
-#: gda-dev/gda-run.c:31 testing/gda-client-test1.c:33
-#: testing/gda-client-test10.c:33 testing/gda-client-test11.c:33
-#: testing/gda-client-test12.c:34 testing/gda-client-test13.c:34
-#: testing/gda-client-test14.c:33 testing/gda-client-test2.c:34
-#: testing/gda-client-test3.c:34 testing/gda-client-test4.c:32
-#: testing/gda-client-test5.c:34 testing/gda-client-test6.c:31
-#: testing/gda-client-test7.c:33 testing/gda-client-test8.c:34
-#: testing/gda-client-test9.c:33 testing/gda-ui-test1.c:35
-#: testing/gda-ui-test2.c:35 testing/gda-ui-test3.c:33
-msgid "password"
-msgstr ""
-
-#: gda-dev/gda-run.c:31 testing/gda-client-test1.c:33
-#: testing/gda-client-test10.c:33 testing/gda-client-test11.c:33
-#: testing/gda-client-test12.c:34 testing/gda-client-test13.c:34
-#: testing/gda-client-test14.c:33 testing/gda-client-test2.c:34
-#: testing/gda-client-test3.c:34 testing/gda-client-test4.c:32
-#: testing/gda-client-test5.c:34 testing/gda-client-test6.c:31
-#: testing/gda-client-test7.c:33 testing/gda-client-test8.c:34
-#: testing/gda-client-test9.c:33 testing/gda-ui-test1.c:35
-#: testing/gda-ui-test2.c:35 testing/gda-ui-test3.c:33
-msgid "PASSWORD"
-msgstr ""
-
-# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
-# gda-clnt-ui/gnome-db-browser.c:217
-#: gda-dev/gda-run.c:32
-msgid "file name"
-msgstr ""
-
-#: gda-dev/gda-run.c:32
-msgid "FILE-NAME"
-msgstr ""
-
-#: gda-dev/gda-run.c:110
-#, c-format
-msgid "%s: misconfigured DSN entry"
-msgstr ""
-
-#: gda-dev/gda-run.c:125
-#, c-format
-msgid "%s: data source '%s' not found\n"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:28 gda-fe/gda-fe-connection.c:65
-msgid "Execute"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:28
-msgid "Execute batch file"
-msgstr ""
-
-# fe/fe_editor.c:288
-#: gda-fe/gda-fe-batch.c:31
-msgid "Open file"
-msgstr ""
-
-# fe/fe_designer.c:40 fe/fe_editor.c:50 fe/fe_sqlwin.c:54
-#: gda-fe/gda-fe-batch.c:34 gda-fe/gda-fe-connection.c:74
-#: gda-fe/gda-fe-designer.c:35
-msgid "Save"
-msgstr ""
-
-# fe/fe_widget.c:245
-#: gda-fe/gda-fe-batch.c:34
-msgid "Save file"
-msgstr ""
-
-# fe/fe_designer.c:149 fe/fe_impexp.c:72 fe/fe_log.c:37 fe/fe_sqlwin.c:44
-#: gda-fe/gda-fe-batch.c:37 gda-fe/gda-fe-connection.c:90
-#: gda-fe/gda-fe-connection.c:100 gda-fe/gda-fe-designer.c:38
-#: gda-fe/gda-fe-log.c:36
-msgid "Clear"
-msgstr ""
-
-# fe/fe_editor.c:138
-#: gda-fe/gda-fe-batch.c:37
-msgid "Clear command list"
-msgstr ""
-
-# fe/fe_editor.c:175 fe/fe_editor.c:212
-#: gda-fe/gda-fe-batch.c:94 gda-fe/gda-fe-connection.c:454
-#: gda-fe/gda-fe-connection.c:522
-#, c-format
+#: lib/gda-server/gda-server-impl.c:221
+#: report/server/gda-report-server-main.c:120
 msgid ""
-"Could not open file\n"
-"'%s'"
+"OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
 
-#: gda-fe/gda-fe-batch.c:126
-msgid "No command selected"
-msgstr ""
-
-# fe/fe_editor.c:138
-#. create dialog
-#: gda-fe/gda-fe-batch.c:134
-msgid "Command"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:145
-msgid "Enter command text"
-msgstr ""
-
-# fe/fe_widget.c:242
-#: gda-fe/gda-fe-batch.c:160
-msgid "Insert at current position"
-msgstr ""
-
-# fe/fe_editor.c:288
-#. create dialog
-#: gda-fe/gda-fe-batch.c:300
-msgid "Open File"
-msgstr ""
-
-# fe/fe_editor.c:138
-#: gda-fe/gda-fe-batch.c:311
-msgid "Command separators"
-msgstr ""
-
-# fe/fe_editor.c:56
-#: gda-fe/gda-fe-batch.c:321
-msgid "Append to current file"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:340
-msgid "You must specify a file to be loaded"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:342
-msgid "You must specifiy the characters used as command separators"
-msgstr ""
-
-# fe/fe_impexp.c:412
-#: gda-fe/gda-fe-batch.c:405 gda-fe/gda-fe-config.c:204
-#: gda-manager/gda-mgr-gda.c:36
-msgid "Add"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:434
-msgid "Up"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:442
-msgid "Down"
-msgstr ""
-
-# fe/fe_main.c:252
-#. create options area
-#: gda-fe/gda-fe-batch.c:451 gda-fe/gda-fe-main.c:131
-msgid "Options"
-msgstr ""
-
-# fe/fe_connection.c:117
-#: gda-fe/gda-fe-batch.c:460
-msgid "Transaction Mode"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:465
-msgid "Send as XML"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:471 gda-fe/gda-fe-connection.c:42
-#: gda-fe/gda-fe-main.c:47
-msgid "Batch"
-msgstr ""
-
-# fe/fe_connection.c:46
-#: gda-fe/gda-fe-callbacks.c:49 gda-rolodex/gda-rolodex-callbacks.c:49
-#, c-format
-msgid "Connected to '%s'"
-msgstr ""
-
-# fe/fe_connection.c:94
-#: gda-fe/gda-fe-callbacks.c:146
-msgid "Connecting..."
-msgstr ""
-
-# fe/fe_main.c:209
-#: gda-fe/gda-fe-callbacks.c:208
-msgid "Configuration file saved"
-msgstr ""
-
-#. create the dialog box
-#: gda-fe/gda-fe-config.c:124
-msgid "Add Environment Variable"
-msgstr ""
-
-# fe/fe_designer.c:269
-#. create fields
-#: gda-fe/gda-fe-config.c:135 gda-fe/gda-fe-config.c:186
-#: gda-fe/gda-fe-service.c:294 gda-fe/gda-fe-service.c:335
-#: gda-manager/gda-mgr-providers.c:166
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:152
-msgid "Name"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:145 gda-fe/gda-fe-config.c:186
-msgid "Value"
-msgstr ""
-
-# fe/fe_config.c:77
-#: gda-fe/gda-fe-config.c:240
-msgid "Editor Font"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:245
-msgid "Tab Position"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:249
-msgid "Top"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:250
-msgid "Bottom"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:251
-msgid "Left"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:252
-msgid "Right"
-msgstr ""
-
-# fe/fe_config.c:95
-#: gda-fe/gda-fe-config.c:257
-msgid "Grid"
-msgstr ""
-
-# fe/fe_config.c:95
-#: gda-fe/gda-fe-config.c:267
-msgid "Font"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:271
-msgid "Foreground Color"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:275
-msgid "Background Color"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:280
-msgid "Show row numbers"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:301
-msgid "User Interface"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:302
-msgid "Environment"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:303
-msgid "GDA"
-msgstr ""
-
-# fe/fe_impexp.c:479
-#: gda-fe/gda-fe-connection.c:39
-msgid "SQL"
-msgstr ""
-
-# fe/fe_main.c:253
-#: gda-fe/gda-fe-connection.c:39 gda-fe/gda-fe-main.c:44
-msgid "SQL Window"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:42 gda-fe/gda-fe-main.c:47
-msgid "Batch commands window"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:45
-msgid "Queries"
-msgstr ""
-
-# fe/fe_designer.c:275
-#: gda-fe/gda-fe-connection.c:45 gda-fe/gda-fe-main.c:50
-msgid "Query designer"
-msgstr ""
-
-# fe/fe_browser.c:105
-#: gda-fe/gda-fe-connection.c:48 gda-fe/gda-fe-connection.c:190
-#: gda-fe/gda-fe-main.c:53
-msgid "Browser"
-msgstr ""
-
-# fe/fe_main.c:149
-#: gda-fe/gda-fe-connection.c:48
-msgid "Browse Database"
-msgstr ""
-
-# fe/fe_main.c:166
-#: gda-fe/gda-fe-connection.c:51 gda-fe/gda-fe-connection.c:250
-#: gda-fe/gda-fe-main.c:56
-msgid "Export"
-msgstr ""
-
-# fe/fe_impexp.c:309 fe/fe_impexp.c:310
-#: gda-fe/gda-fe-connection.c:51 gda-fe/gda-fe-main.c:56
-msgid "Export database"
-msgstr ""
-
-# fe/fe_main.c:169
-#: gda-fe/gda-fe-connection.c:54 gda-fe/gda-fe-connection.c:264
-#: gda-fe/gda-fe-main.c:59
-msgid "Import"
-msgstr ""
-
-# fe/fe_main.c:169
-#: gda-fe/gda-fe-connection.c:54 gda-fe/gda-fe-main.c:59
-msgid "Import data into current database"
-msgstr ""
-
-# fe/fe_main.c:138
-#: gda-fe/gda-fe-connection.c:58
-msgid "Close connection"
-msgstr ""
-
-# fe/fe_sqlwin.c:35
-#: gda-fe/gda-fe-connection.c:65
-msgid "Execute current command"
-msgstr ""
-
-# fe/fe_widget.c:34 fe/fe_widget.c:203 fe/fe_widget.c:222
-#: gda-fe/gda-fe-connection.c:68
-#: gda-postgres-server/gda-postgres-config-ac.c:292
-msgid "Select"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:68
-msgid "Select from previous commands"
-msgstr ""
-
-# fe/fe_widget.c:248
-#: gda-fe/gda-fe-connection.c:71
-msgid "Load file into buffer"
-msgstr ""
-
-# fe/fe_editor.c:50
-#: gda-fe/gda-fe-connection.c:74
-msgid "Save current file"
-msgstr ""
-
-# fe/fe_editor.c:63
-#: gda-fe/gda-fe-connection.c:81
-msgid "Cut selected text"
-msgstr ""
-
-# fe/fe_editor.c:63
-#: gda-fe/gda-fe-connection.c:84
-msgid "Copy selected text"
-msgstr ""
-
-# fe/fe_log.c:37
-#: gda-fe/gda-fe-connection.c:90
-msgid "Clear window contents"
-msgstr ""
-
-# fe/fe_impexp.c:69
-#: gda-fe/gda-fe-connection.c:97
-msgid "Start"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:97
-msgid "Start export"
-msgstr ""
-
-# fe/fe_main.c:225
-#: gda-fe/gda-fe-connection.c:100
-msgid "Clear all fields"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:103
-msgid "Select all objects in database"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:106
-msgid "Unselect"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:106
-msgid "Clear object selection"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:126
-msgid "Foreign keys"
-msgstr ""
-
-# fe/fe_impexp.c:398
-#: gda-fe/gda-fe-connection.c:127
-msgid "Object Identifiers"
-msgstr ""
-
-# fe/fe_impexp.c:398
-#: gda-fe/gda-fe-connection.c:128
-msgid "Object Inheritance"
-msgstr ""
-
-# fe/fe_config.c:198 fe/fe_main.c:277
-#: gda-fe/gda-fe-connection.c:129
-#: gda-postgres-server/gda-postgres-config-ac.c:168
-msgid "Sequences"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:130
-msgid "SQL (Standard)"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:131
-msgid "SQL Sub-Selects"
-msgstr ""
-
-# gda-clnt-ui/gnome-db-browser.c:233
-#: gda-fe/gda-fe-connection.c:132
-msgid "Stored Procedures"
-msgstr ""
-
-# fe/fe_connection.c:117
-#: gda-fe/gda-fe-connection.c:133
-msgid "Transactions"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:134
-msgid "Triggers"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:136
-msgid "XML Queries"
-msgstr ""
-
-# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
-# gda-clnt-ui/gnome-db-browser.c:217
-#: gda-fe/gda-fe-connection.c:226
-msgid "File name"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:414
-#, c-format
-msgid "Row %d - %d rows selected"
-msgstr ""
-
-# fe/fe_widget.c:34 fe/fe_widget.c:203 fe/fe_widget.c:222
-#: gda-fe/gda-fe-connection.c:424 gda-fe/gda-fe-connection.c:504
-msgid "Select file"
-msgstr ""
-
-# fe/fe_ui.c:143 fe/fe_ui.c:183
-#: gda-fe/gda-fe-connection.c:444
-#, c-format
+#: lib/gda-server/gda-server-impl.c:224
 msgid ""
-"Error reading from file\n"
-"'%s'"
+"Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
 
-# fe/fe_editor.c:203
-#: gda-fe/gda-fe-connection.c:485
-msgid "Command succeeded"
+#: lib/gda-server/gda-server-impl.c:227
+msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr ""
 
-# fe/fe_editor.c:138
-#: gda-fe/gda-fe-connection.c:490
-msgid "Command failed"
-msgstr ""
-
-# fe/fe_ui.c:143 fe/fe_ui.c:183
-#: gda-fe/gda-fe-connection.c:519
+#: lib/gda-server/gda-server-impl.c:231
 #, c-format
-msgid ""
-"Error writing to file\n"
-"'%s'"
+msgid "Registered with ID = %s"
 msgstr ""
 
-# fe/fe_sqlwin.c:38 fe/fe_sqlwin.c:213
-#. create dialog
-#: gda-fe/gda-fe-connection.c:543
-msgid "Select Command"
-msgstr ""
-
-# fe/fe_connection.c:117
-#: gda-fe/gda-fe-connection.c:676
-msgid "Transaction started"
-msgstr ""
-
-# fe/fe_main.c:173
-#: gda-fe/gda-fe-connection.c:681
-msgid "Begin transaction failed"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:687 gda-fe/gda-fe-connection.c:714
-#: gda-fe/gda-fe-connection.c:741
-msgid "Data source does not support transactions"
-msgstr ""
-
-# fe/fe_connection.c:128
-#: gda-fe/gda-fe-connection.c:703
-msgid "Commit executed successfully"
-msgstr ""
-
-# fe/fe_connection.c:117
-#: gda-fe/gda-fe-connection.c:708
-msgid "Commit transaction failed"
-msgstr ""
-
-# fe/fe_connection.c:139
-#: gda-fe/gda-fe-connection.c:730
-msgid "Rollback executed successfully"
-msgstr ""
-
-# fe/fe_connection.c:117
-#: gda-fe/gda-fe-connection.c:735
-msgid "Rollback transaction failed"
-msgstr ""
-
-# fe/fe_log.c:92
-#: gda-fe/gda-fe-connection.c:816 gda-manager/gda-mgr-container.c:181
+#: lib/gda-server/gda-server-impl.c:313
 #, c-format
-msgid "Could not activate module %s"
+msgid "CORBA system exception %s"
 msgstr ""
 
-#. create dialog
-#: gda-fe/gda-fe-connection.c:831 gda-fe/gda-fe-main.c:73
-msgid "Connection Properties"
-msgstr ""
-
-# gda-clnt-ui/gnome-db-browser.c:233
-#. add detail frame
-#: gda-fe/gda-fe-connection.c:834 gda-fe/gda-fe-service.c:330
-msgid "Properties"
-msgstr ""
-
-# fe/fe_editor.c:138
-#: gda-fe/gda-fe-connection.c:858
-msgid "Command Timeout"
-msgstr ""
-
-# fe/fe_impexp.c:494
-#: gda-fe/gda-fe-connection.c:865
-msgid "Connect Timeout"
-msgstr ""
-
-# fe/fe_editor.c:288
-#: gda-fe/gda-fe-connection.c:872
-msgid "Trace File"
-msgstr ""
-
-# fe/fe_impexp.c:392 gda-clnt-ui/gnome-db-browser.c:225
-#: gda-fe/gda-fe-connection.c:876 gda-fe/gda-fe-log.c:33
-#: gda-manager/gda-mgr-providers.c:45
-#: gda-postgres-server/gda-postgres-config-ac.c:1106
-msgid "View"
-msgstr ""
-
-# fe/fe_gdaconfig.c:333 gda-manager/main.c:96 gda-manager/main.c:173
-#: gda-fe/gda-fe-connection.c:879
-msgid "Version"
-msgstr ""
-
-# fe/fe_gdaconfig.c:315 gda-manager/main.c:144
-#: gda-fe/gda-fe-connection.c:885
-msgid "Provider Features"
-msgstr ""
-
-# fe/fe_designer.c:34
-#: gda-fe/gda-fe-designer.c:29
-msgid "New database design"
-msgstr ""
-
-# fe/fe_designer.c:37
-#: gda-fe/gda-fe-designer.c:32
-msgid "Open database design"
-msgstr ""
-
-# fe/fe_designer.c:40
-#: gda-fe/gda-fe-designer.c:35
-msgid "Save database design"
-msgstr ""
-
-# fe/fe_main.c:225
-#: gda-fe/gda-fe-designer.c:38
-msgid "Clear all entries"
-msgstr ""
-
-# fe/fe_main.c:222
-#: gda-fe/gda-fe-designer.c:42
-msgid "Close designer window"
-msgstr ""
-
-# fe/fe_widget.c:34 fe/fe_widget.c:203 fe/fe_widget.c:222
-#: gda-fe/gda-fe-designer.c:74
-msgid "Select XML file"
-msgstr ""
-
-# fe/fe_designer.c:275
-#: gda-fe/gda-fe-designer.c:96
-msgid "Designer"
-msgstr ""
-
-# fe/fe_main.c:205
-#. create dialog
-#: gda-fe/gda-fe-dsnconfig.c:116
-msgid "Data sources"
-msgstr ""
-
-#: gda-fe/gda-fe-dsnconfig.c:152
-msgid "Apply"
-msgstr ""
-
-# fe/fe_editor.c:63
-#: gda-fe/gda-fe-log.c:33 gda-manager/gda-mgr-providers.c:45
-msgid "View selected entry"
-msgstr ""
-
-# fe/fe_main.c:225
-#: gda-fe/gda-fe-log.c:36
-msgid "Clear log file"
-msgstr ""
-
-# fe/fe_browser.c:30 fe/fe_log.c:34 fe/fe_sqlwin.c:41
-#: gda-fe/gda-fe-log.c:39 gda-fe/gda-fe-service.c:46
-msgid "Refresh"
-msgstr ""
-
-# fe/fe_log.c:34
-#: gda-fe/gda-fe-log.c:39
-msgid "Refresh log viewer"
-msgstr ""
-
-# fe/fe_main.c:225
-#: gda-fe/gda-fe-log.c:43 gda-fe/gda-fe-service.c:50
-msgid "Close log window"
-msgstr ""
-
-# fe/fe_ui.c:143 fe/fe_ui.c:183
-#: gda-fe/gda-fe-log.c:128
+#: lib/gda-server/gda-server-impl.c:316
 #, c-format
-msgid "Error loading file '%s'"
+msgid "CORBA user exception: %s"
 msgstr ""
 
-# fe/fe_impexp.c:446
-#: gda-fe/gda-fe-log.c:169 gda-fe/gda-fe-main.c:140
-#: gda-manager/gda-mgr-providers.c:28
-msgid "Logs"
-msgstr ""
-
-# fe/fe_connection.c:88
-#: gda-fe/gda-fe-main.c:25
-msgid "Open Connection..."
-msgstr ""
-
-# fe/fe_connection.c:88
-#: gda-fe/gda-fe-main.c:25 gda-fe/gda-fe-main.c:137
-msgid "Open a connection to a data source"
-msgstr ""
-
-# fe/fe_main.c:135 fe/fe_main.c:264 fe/fe_sqlwin.c:68
-#: gda-fe/gda-fe-main.c:28
-msgid "Close current connection"
-msgstr ""
-
-# fe/fe_main.c:135 fe/fe_main.c:264 fe/fe_sqlwin.c:68
-#: gda-fe/gda-fe-main.c:31
-msgid "Disconnect all"
-msgstr ""
-
-# fe/fe_main.c:138
-#: gda-fe/gda-fe-main.c:31
-msgid "Close all connections"
-msgstr ""
-
-# fe/fe_sqlwin.c:44
-#: gda-fe/gda-fe-main.c:44
-msgid "SQL window"
-msgstr ""
-
-# fe/fe_designer.c:275
-#: gda-fe/gda-fe-main.c:50
-msgid "Query Designer"
-msgstr ""
-
-# fe/fe_main.c:149
-#: gda-fe/gda-fe-main.c:53
-msgid "Browse database"
-msgstr ""
-
-# fe/fe_main.c:173
-#: gda-fe/gda-fe-main.c:63
-msgid "Begin transaction"
-msgstr ""
-
-# fe/fe_main.c:176
-#: gda-fe/gda-fe-main.c:66
-msgid "Commit"
-msgstr ""
-
-# fe/fe_main.c:173
-#: gda-fe/gda-fe-main.c:66
-msgid "Commit transaction"
-msgstr ""
-
-# fe/fe_main.c:179
-#: gda-fe/gda-fe-main.c:69
-msgid "Rollback"
-msgstr ""
-
-# fe/fe_main.c:179
-#: gda-fe/gda-fe-main.c:69
-msgid "Discard all changes"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:73
-msgid "View connection properties"
-msgstr ""
-
-# fe/fe_editor.c:288
-#: gda-fe/gda-fe-main.c:76
-msgid "Configure"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:76 gda-manager/gda-mgr-gda.c:45
-msgid "Configure underlying database"
-msgstr ""
-
-# fe/fe_impexp.c:392 gda-clnt-ui/gnome-db-browser.c:225
-#: gda-fe/gda-fe-main.c:83 gda-fe/gda-fe-main.c:140
-msgid "View logs"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:83
-msgid "View the different logs"
-msgstr ""
-
-# fe/fe_main.c:186
-#: gda-fe/gda-fe-main.c:86
-msgid "Database designer"
-msgstr ""
-
-# fe/fe_designer.c:37
-#: gda-fe/gda-fe-main.c:86
-msgid "Open the database designer"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:89
-msgid "Service control"
-msgstr ""
-
-# fe/fe_main.c:162
-#: gda-fe/gda-fe-main.c:89
-msgid "View service activity"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:96
-msgid "The GNOME-DB Development Environment"
-msgstr ""
-
-# fe/fe_main.c:202
-#: gda-fe/gda-fe-main.c:103
-msgid "Preferences..."
-msgstr ""
-
-# fe/fe_main.c:205
-#: gda-fe/gda-fe-main.c:106
-msgid "Data sources..."
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:106 gda-manager/gda-mgr-main.c:165
-msgid "Configure GDA data sources"
-msgstr ""
-
-# fe/fe_main.c:209
-#: gda-fe/gda-fe-main.c:110
-msgid "Save options"
-msgstr ""
-
-# fe/fe_main.c:209
-#: gda-fe/gda-fe-main.c:110
-msgid "Save current configuration"
-msgstr ""
-
-# fe/fe_main.c:261
-#: gda-fe/gda-fe-main.c:137
-msgid "Connect"
-msgstr ""
-
-# fe/fe_main.c:142 fe/fe_main.c:281
-#: gda-fe/gda-fe-main.c:148
-msgid "Exit Application"
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:40
-msgid "Activate"
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:40
-msgid "Activate selected service"
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:43
-msgid "Stop"
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:43
-msgid "Stop selected service"
-msgstr ""
-
-# fe/fe_browser.c:30
-#: gda-fe/gda-fe-service.c:46
-msgid "Refresh service list"
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:96
-msgid ""
-"Could not find any installed services. Either you don't have\n"
-"any services installed or I don't know the path to find them.\n"
-"In either case, please check your GNOME-DB installation."
-msgstr ""
-
-# fe/fe_main.c:162
-#: gda-fe/gda-fe-service.c:175
+#: lib/gda-server/gda-server-init.c:65 lib/gda-server/gda-server-init.c:71
 #, c-format
-msgid "Service '%s' activated"
+msgid "Received signal %d, shutting down"
 msgstr ""
 
-# fe/fe_log.c:92
-#: gda-fe/gda-fe-service.c:178
+#: lib/gda-server/gda-server-init.c:75
 #, c-format
-msgid "Could not activate service '%s'"
+msgid "Received signal %d. Ignoring"
 msgstr ""
 
-#: gda-fe/gda-fe-service.c:295
-msgid "Repo ID"
+#: lib/gda-server/gda-server-init.c:124
+msgid "Attempt to initialize an already initialized provider"
 msgstr ""
 
-# fe/fe_designer.c:98 fe/fe_designer.c:269 gda-manager/main.c:59
-#: gda-fe/gda-fe-service.c:345 gda-manager/gda-mgr-providers.c:166
-msgid "Type"
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:363
-msgid "Service Control"
-msgstr ""
-
-#: gda-interbase-server/gda-interbase-connection.c:251
-#, c-format
-msgid "Error code %ld"
-msgstr ""
-
-#: gda-interbase-server/gda-interbase-connection.c:252
-#: gda-ldap-server/gda-ldap-connection.c:263
-#: gda-mysql-server/gda-mysql-connection.c:378
-#: gda-odbc-server/gda-odbc-connection.c:570
-#: gda-odbc-server/gda-odbc-connection.c:603
-#: gda-oracle-server/gda-oracle-connection.c:417
-#: gda-postgres-server/gda-postgres-connection.c:615
+#: providers/gda-interbase-server/gda-interbase-connection.c:252
+#: providers/gda-ldap-server/gda-ldap-connection.c:263
+#: providers/gda-mdb-server/gda-mdb-connection.c:351
+#: providers/gda-mysql-server/gda-mysql-connection.c:378
+#: providers/gda-odbc-server/gda-odbc-connection.c:600
+#: providers/gda-odbc-server/gda-odbc-connection.c:633
+#: providers/gda-oracle-server/gda-oracle-connection.c:417
+#: providers/gda-postgres-server/gda-postgres-connection.c:771
+#: providers/gda-sybase-server/gda-sybase-error.c:106
 #, c-format
 msgid "error '%s' at %s"
 msgstr ""
 
-#: gda-interbase-server/gda-interbase-connection.c:257
-#: gda-interbase-server/gda-interbase-connection.c:258
-#: gda-ldap-server/gda-ldap-connection.c:268
-#: gda-ldap-server/gda-ldap-connection.c:269
-#: gda-mysql-server/gda-mysql-connection.c:382
-#: gda-mysql-server/gda-mysql-connection.c:383
-#: gda-odbc-server/gda-odbc-connection.c:572
-#: gda-odbc-server/gda-odbc-connection.c:573
-#: gda-odbc-server/gda-odbc-connection.c:605
-#: gda-odbc-server/gda-odbc-connection.c:606
-#: gda-oracle-server/gda-oracle-connection.c:422
-#: gda-oracle-server/gda-oracle-connection.c:423
-#: gda-postgres-server/gda-postgres-connection.c:622
-#: gda-postgres-server/gda-postgres-connection.c:623
+#: providers/gda-interbase-server/gda-interbase-connection.c:257
+#: providers/gda-interbase-server/gda-interbase-connection.c:258
+#: providers/gda-ldap-server/gda-ldap-connection.c:268
+#: providers/gda-ldap-server/gda-ldap-connection.c:269
+#: providers/gda-mdb-server/gda-mdb-connection.c:355
+#: providers/gda-mdb-server/gda-mdb-connection.c:356
+#: providers/gda-mysql-server/gda-mysql-connection.c:382
+#: providers/gda-mysql-server/gda-mysql-connection.c:383
+#: providers/gda-odbc-server/gda-odbc-connection.c:602
+#: providers/gda-odbc-server/gda-odbc-connection.c:603
+#: providers/gda-odbc-server/gda-odbc-connection.c:635
+#: providers/gda-odbc-server/gda-odbc-connection.c:636
+#: providers/gda-oracle-server/gda-oracle-connection.c:422
+#: providers/gda-oracle-server/gda-oracle-connection.c:423
+#: providers/gda-postgres-server/gda-postgres-connection.c:778
+#: providers/gda-postgres-server/gda-postgres-connection.c:779
+#: providers/gda-sybase-server/gda-sybase-error.c:115
+#: providers/gda-sybase-server/gda-sybase-error.c:116
 msgid "Not available"
 msgstr ""
 
-#: gda-interbase-server/gda-interbase-connection.c:259
-#: gda-ldap-server/gda-ldap-connection.c:270
-#: gda-mysql-server/gda-mysql-connection.c:384
-#: gda-oracle-server/gda-oracle-connection.c:424
-#: gda-postgres-server/gda-postgres-connection.c:624
+#: providers/gda-interbase-server/gda-interbase-connection.c:259
+#: providers/gda-ldap-server/gda-ldap-connection.c:270
+#: providers/gda-mdb-server/gda-mdb-connection.c:357
+#: providers/gda-mysql-server/gda-mysql-connection.c:384
+#: providers/gda-oracle-server/gda-oracle-connection.c:424
+#: providers/gda-postgres-server/gda-postgres-connection.c:780
+#: providers/gda-sybase-server/gda-sybase-error.c:117
 msgid "error"
 msgstr ""
 
-#: gda-interbase-server/main-interbase.c:74
-msgid "Could not register INTERBASE provider implementation"
-msgstr ""
-
-# fe/fe_log.c:92
-#: gda-ldap-server/gda-ldap-config-main.c:60
-msgid "Could not create DSN config component"
-msgstr ""
-
-#: gda-ldap-server/main-ldap.c:74
+#: providers/gda-ldap-server/main-ldap.c:68
 msgid "Could not register LDAP provider implementation"
 msgstr ""
 
-#: gda-manager/gda-mgr-callbacks.c:65
-#: testing/controls_browser/gda-controls-browser.c:362
-msgid "Select config component"
+#: providers/gda-interbase-server/gda-interbase-connection.c:251
+#, c-format
+msgid "Error code %ld"
 msgstr ""
 
-#: gda-manager/gda-mgr-gda.c:36
-msgid "Add new data source"
+#: providers/gda-interbase-server/main-interbase.c:69
+msgid "Could not register INTERBASE provider implementation"
 msgstr ""
 
-#: gda-manager/gda-mgr-gda.c:39
-msgid "Edit selected data source"
+#: providers/gda-mail-server/gda-mail-connection.c:108
+#: providers/gda-mdb-server/gda-mdb-connection.c:224
+#: providers/gda-mysql-server/gda-mysql-connection.c:251
+#: providers/gda-oracle-server/gda-oracle-connection.c:295
+#: providers/gda-postgres-server/gda-postgres-connection.c:511
+#: providers/gda-sybase-server/gda-sybase-connection.c:253
+#, c-format
+msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr ""
 
-#: gda-manager/gda-mgr-gda.c:42
-msgid "Remove selected data source"
-msgstr ""
-
-# fe/fe_main.c:149
-#: gda-manager/gda-mgr-gda.c:48
-msgid "Browse selected data source"
-msgstr ""
-
-# fe/fe_main.c:205
-#. create the dialog
-#: gda-manager/gda-mgr-gda.c:148
-msgid "Data Source"
-msgstr ""
-
-# fe/fe_main.c:205
-#. create dialog for asking the user name and password
-#: gda-manager/gda-mgr-gda.c:193
-msgid "Browse Data Source"
-msgstr ""
-
-# fe/fe_editor.c:175 fe/fe_editor.c:212
-#: gda-manager/gda-mgr-gda.c:258
-msgid "could not load browser control"
-msgstr ""
-
-#. create the dialog
-#: gda-manager/gda-mgr-gda.c:288
-msgid "Load config component"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:313
-msgid "Module"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:324
-msgid "Users"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:328
-msgid "User access rights"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:336
-msgid "All"
-msgstr ""
-
-# fe/fe_main.c:209
-#: gda-manager/gda-mgr-gda.c:396
-msgid "Data source not found in GDA configuration"
-msgstr ""
-
-# fe/fe_main.c:205
-#: gda-manager/gda-mgr-gda.c:416 gda-manager/gda-mgr-main.c:164
-msgid "Data Sources"
-msgstr ""
-
-# fe/fe_main.c:186
-#: gda-manager/gda-mgr-main.c:47
-msgid "Database browser"
-msgstr ""
-
-# fe/fe_designer.c:37
-#: gda-manager/gda-mgr-main.c:47
-msgid "Open the database browser"
-msgstr ""
-
-#: gda-manager/gda-mgr-main.c:54
-msgid "The GNOME-DB development environment"
-msgstr ""
-
-# fe/fe_gdaconfig.c:315 gda-manager/main.c:144
-#: gda-manager/gda-mgr-main.c:170 gda-manager/gda-mgr-providers.c:174
-msgid "Providers"
-msgstr ""
-
-#: gda-manager/gda-mgr-main.c:171
-msgid "Configure GDA providers"
-msgstr ""
-
-# fe/fe_main.c:176
-#: gda-manager/gda-mgr-main.c:176
-msgid "Components"
-msgstr ""
-
-#: gda-manager/gda-mgr-main.c:177
-msgid "Configure GNOME-DB components"
-msgstr ""
-
-# fe/fe_main.c:192 fe/fe_main.c:267
-#: gda-manager/gda-mgr-providers.c:28
-msgid "View provider log"
-msgstr ""
-
-# fe/fe_main.c:186
-#: gda-manager/gda-mgr-providers.c:32
-msgid "Install a new GDA provider"
-msgstr ""
-
-#: gda-manager/gda-mgr-providers.c:35
-msgid "Edit selected provider"
-msgstr ""
-
-# fe/fe_editor.c:63
-#: gda-manager/gda-mgr-providers.c:38
-msgid "Remove selected provider"
-msgstr ""
-
-# fe/fe_main.c:176
-#: gda-manager/gda-mgr-providers.c:166
-msgid "Comments"
+#: providers/gda-mail-server/main-mail.c:69
+msgid "Could not register Mail provider implementation"
 msgstr ""
 
 # fe/fe_editor.c:185
 #. execute command
-#: gda-mysql-server/gda-mysql-command.c:87
+#: providers/gda-mdb-server/gda-mdb-command.c:86
+#: providers/gda-mysql-server/gda-mysql-command.c:87
+#: providers/gda-sybase-server/gda-sybase-command.c:116
 #, c-format
 msgid "executing command '%s'"
 msgstr ""
 
 # fe/fe_editor.c:185
-#: gda-mysql-server/gda-mysql-command.c:89
+#: providers/gda-mdb-server/gda-mdb-command.c:88
+#: providers/gda-mysql-server/gda-mysql-command.c:89
 #, c-format
 msgid "info '%s'"
 msgstr ""
 
-# fe/fe_log.c:92
-#: gda-mysql-server/gda-mysql-config-db.c:33
-#: gda-mysql-server/gda-mysql-config-main.c:63
-#: gda-odbc-server/gda-odbc-config-main.c:69
-msgid "Could not create GnomeDbControl"
-msgstr ""
-
-# fe/fe_designer.c:40
-#: gda-mysql-server/gda-mysql-config-db.c:50
-msgid "Available databases"
-msgstr ""
-
-#: gda-mysql-server/gda-mysql-config-db.c:65
-msgid "Drop"
-msgstr ""
-
-# fe/fe_main.c:186
-#. create detail fields
-#: gda-mysql-server/gda-mysql-config-db.c:70
-msgid "Database name"
-msgstr ""
-
-#: gda-mysql-server/gda-mysql-config-db.c:74
-#: gda-postgres-server/gda-postgres-config-ac.c:1100
-#: gda-postgres-server/gda-postgres-config-ac.c:1108
-#: gda-postgres-server/gda-postgres-config-ac.c:1116
-msgid "Owner"
-msgstr ""
-
-#: gda-mysql-server/gda-mysql-config-main.c:92
-#: gda-odbc-server/gda-odbc-config-main.c:89
-#, c-format
-msgid "new instance %p created"
-msgstr ""
-
-#: gda-mysql-server/gda-mysql-connection.c:148
+#: providers/gda-mdb-server/gda-mdb-connection.c:137
+#: providers/gda-mysql-server/gda-mysql-connection.c:148
 #, c-format
 msgid ""
 "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST or "
@@ -2006,473 +318,612 @@ msgid ""
 "options"
 msgstr ""
 
-#: gda-mysql-server/gda-mysql-connection.c:162
+#: providers/gda-mdb-server/gda-mdb-connection.c:147
 #, c-format
-msgid ""
-"Opening connection with user=%s, password=%s, host=%shost=%s, port=%s, "
-"unix_socket=%s"
+msgid "%s:%d: You must  provide the filename with the MS Access database"
 msgstr ""
 
-#: gda-mysql-server/gda-mysql-connection.c:251
-#: gda-oracle-server/gda-oracle-connection.c:295
-#: gda-postgres-server/gda-postgres-connection.c:379
+#: providers/gda-mdb-server/gda-mdb-connection.c:152
 #, c-format
-msgid "Unhandled SCHEMA_QTYPE %d"
+msgid "Opening connection with filename=%s, user=%s, password=%s"
 msgstr ""
 
-#: gda-mysql-server/gda-mysql-connection.c:433
+#: providers/gda-mdb-server/gda-mdb-connection.c:406
+#: providers/gda-mysql-server/gda-mysql-connection.c:433
 msgid "mysql_recset is NULL"
 msgstr ""
 
-#: gda-mysql-server/gda-mysql-connection.c:475
+#: providers/gda-mdb-server/gda-mdb-connection.c:448
+#: providers/gda-mysql-server/gda-mysql-connection.c:475
+#: providers/gda-sybase-server/gda-sybase-connection.c:407
 msgid "No table name given for SCHEMA_COLS"
 msgstr ""
 
-#: gda-mysql-server/main-mysql.c:75
+#: providers/gda-mdb-server/main-mdb.c:69
+#: providers/gda-mysql-server/main-mysql.c:69
 msgid "Could not register MySQL provider implementation"
 msgstr ""
 
-#: gda-odbc-server/gda-odbc-connection.c:276
+#: providers/gda-mysql-server/gda-mysql-connection.c:162
+#, c-format
+msgid ""
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
+"unix_socket=%s"
+msgstr ""
+
+#: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
 msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 msgstr ""
 
-#: gda-odbc-server/gda-odbc-connection.c:587
-#: gda-odbc-server/gda-odbc-connection.c:588
-#: gda-odbc-server/gda-odbc-connection.c:589
-#: gda-odbc-server/gda-odbc-connection.c:620
-#: gda-odbc-server/gda-odbc-connection.c:621
-#: gda-odbc-server/gda-odbc-connection.c:622
+#: providers/gda-odbc-server/gda-odbc-connection.c:617
+#: providers/gda-odbc-server/gda-odbc-connection.c:618
+#: providers/gda-odbc-server/gda-odbc-connection.c:619
+#: providers/gda-odbc-server/gda-odbc-connection.c:650
+#: providers/gda-odbc-server/gda-odbc-connection.c:651
+#: providers/gda-odbc-server/gda-odbc-connection.c:652
 msgid "no text"
 msgstr ""
 
-#: gda-odbc-server/gda-odbc-main.c:74
+#: providers/gda-odbc-server/main-odbc.c:68
 msgid "Could not register ODBC provider implementation"
 msgstr ""
 
 # fe/fe_log.c:92
-#: gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:195
 msgid "Could not allocate statement handle"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:199
 msgid "command object being created without associated connection"
 msgstr ""
 
 # fe/fe_editor.c:185
-#: gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:226
 #, c-format
 msgid "Executing command '%s'"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-connection.c:113
+#: providers/gda-oracle-server/gda-oracle-connection.c:113
 msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-connection.c:116
+#: providers/gda-oracle-server/gda-oracle-connection.c:116
 msgid "error in OCIHandleAlloc() HTYPE_SERVER"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-connection.c:119
+#: providers/gda-oracle-server/gda-oracle-connection.c:119
 msgid "error in OCIHandleAlloc() HTYPE_ERROR"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-connection.c:370
+#: providers/gda-oracle-server/gda-oracle-connection.c:370
 #, c-format
 msgid "Unknown ORACLE type %ld"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-recordset.c:115
+#: providers/gda-oracle-server/gda-oracle-recordset.c:115
 msgid "Unknown ORACLE data type in fill_field_values"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-recordset.c:150
+#: providers/gda-oracle-server/gda-oracle-recordset.c:150
 msgid "recordset object being created without associated connection"
 msgstr ""
 
-#: gda-oracle-server/main-oracle.c:74
+#: providers/gda-oracle-server/main-oracle.c:68
 msgid "Could not register ORACLE provider implementation"
 msgstr ""
 
-# fe/fe_main.c:138
-#: gda-postgres-server/gda-postgres-config-ac.c:94
-#: gda-postgres-server/gda-postgres-config-main.c:163
-#: gda-postgres-server/gda-postgres-config-users.c:93
-msgid "DSN for the connection"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:98
-#: gda-postgres-server/gda-postgres-config-main.c:166
-#: gda-postgres-server/gda-postgres-config-main.c:279
-#: gda-postgres-server/gda-postgres-config-users.c:96
-msgid "User identity"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:102
-#: gda-postgres-server/gda-postgres-config-main.c:169
-#: gda-postgres-server/gda-postgres-config-users.c:99
-msgid "User passord"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:106
-#: gda-postgres-server/gda-postgres-config-main.c:172
-#: gda-postgres-server/gda-postgres-config-users.c:102
-msgid "Show/hide the user id"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:110
-#: gda-postgres-server/gda-postgres-config-main.c:175
-#: gda-postgres-server/gda-postgres-config-users.c:105
-msgid "Give it TRUE to reset/start the component"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:114
-#: gda-postgres-server/gda-postgres-config-users.c:108
-msgid "User name setting"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:118
-msgid "Group name setting"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:122
-msgid "Object type setting"
-msgstr ""
-
-# fe/fe_impexp.c:381
-#: gda-postgres-server/gda-postgres-config-ac.c:126
-msgid "Object name setting"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:141
-msgid "Access rigths"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:174
-msgid "Indexes"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:206
-msgid "All users rights"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:223
-msgid "Groups rights"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:230
-msgid "Group:"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:241
-msgid "Individual users rights"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:248
-msgid "User:"
-msgstr ""
-
-# fe/fe_widget.c:242
-#: gda-postgres-server/gda-postgres-config-ac.c:298
-msgid "Insert"
-msgstr ""
-
-# fe/fe_designer.c:139 fe/fe_gdaconfig.c:361
-#: gda-postgres-server/gda-postgres-config-ac.c:304
-msgid "Update/Delete"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:310
-msgid "Rule"
-msgstr ""
-
-# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
-# gda-clnt-ui/gnome-db-browser.c:217
-#: gda-postgres-server/gda-postgres-config-ac.c:1098
-#: gda-postgres-server/gda-postgres-config-ac.c:1125
-msgid "Table"
-msgstr ""
-
-# fe/fe_config.c:198 fe/fe_main.c:277
-#: gda-postgres-server/gda-postgres-config-ac.c:1114
-msgid "Sequence"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1123
-msgid "Index"
-msgstr ""
-
-# fe/fe_designer.c:269
-#: gda-postgres-server/gda-postgres-config-main.c:285
-msgid "Name:"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-main.c:292
-msgid "Password:"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-main.c:358
-#: gda-postgres-server/gda-postgres-config-main.c:377
-#: gda-postgres-server/gda-postgres-config-main.c:397
-msgid "Could not instantiate the gnome-db-control"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:121
-msgid "Group(s)"
-msgstr ""
-
-# fe/fe_browser.c:27
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:165
-msgid "Create DB"
-msgstr ""
-
-# fe/fe_browser.c:27
-#: gda-postgres-server/gda-postgres-config-users.c:120
-#: gda-postgres-server/gda-postgres-config-users.c:171
-msgid "Create users"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:120
-#: gda-postgres-server/gda-postgres-config-users.c:177
-msgid "Valid until"
-msgstr ""
-
-# fe/fe_main.c:149
-#: gda-postgres-server/gda-postgres-config-users.c:125
-msgid "Known database users"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:208
-msgid "Save as new user"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:213
-msgid "Save modified user"
-msgstr ""
-
-# fe/fe_designer.c:139 fe/fe_gdaconfig.c:361
-#: gda-postgres-server/gda-postgres-config-users.c:218
-msgid "Delete user"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:436
-#: gda-postgres-server/gda-postgres-config-users.c:440
-msgid "Yes"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:438
-#: gda-postgres-server/gda-postgres-config-users.c:442
-msgid "No"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-connection.c:724
-#: gda-postgres-server/gda-postgres-connection.c:836
+#: providers/gda-postgres-server/gda-postgres-connection.c:880
+#: providers/gda-postgres-server/gda-postgres-connection.c:992
 msgid "postgres_recset is NULL"
 msgstr ""
 
-#: gda-postgres-server/main-postgres.c:74
+#: providers/gda-postgres-server/main-postgres.c:68
 msgid "Could not register PostgreSQL provider implementation"
 msgstr ""
 
-#: gda-rolodex/gda-rolodex-callbacks.c:28 testing/gda-ui-test3.c:52
-msgid "UI Test 3 Error"
+#: providers/gda-sybase-server/gda-sybase-command.c:111
+msgid "Connection seems to be dead"
 msgstr ""
 
-#: gda-rolodex/gda-rolodex-main.c:91
+#: providers/gda-sybase-server/gda-sybase-command.c:131
+msgid "Filling command structure failed\n"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:143
+msgid "sending cmd failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:150
+msgid "Allocating recordset failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:160
+msgid "Getting recordset userdata failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:218
+msgid "Command execution finished, all results processed"
+msgstr ""
+
+# fe/fe_editor.c:138
+#: providers/gda-sybase-server/gda-sybase-command.c:222
+msgid "Command failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:226
+msgid "Execution of resultless command succeeded"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:242
 #, c-format
-msgid "Record %8.0f"
+msgid "ct_results() returned %x"
 msgstr ""
 
-#: gda-rolodex/gda-rolodex-main.c:278
+#: providers/gda-sybase-server/gda-sybase-command.c:252
+msgid "No further results, command completly succeeded."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:256
+msgid "An error occured during command execution."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:263
+msgid "Cmd execution returned unknown result, may be an error"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:276
+msgid "No data returned, freeing recordset structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:307
+#: providers/gda-sybase-server/gda-sybase-command.c:319
+msgid "Freeing command structure failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:133
+msgid "Error allocating error structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:141
+msgid "Not enough memory for sybase_Connection"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:397
 #, c-format
-msgid "We could not load the glade interface description! (%s)"
+msgid "schema_cols: table_name '%s'"
 msgstr ""
 
-# fe/fe_editor.c:53
-#: gda-rolodex/gda-rolodex-main.c:309
-msgid "Select the table name"
+#: providers/gda-sybase-server/gda-sybase-connection.c:413
+msgid "Could not allocate command structure"
 msgstr ""
 
-#: gda-srv/gda-server-error.c:169
-msgid "Could not get pointer to server implementation"
+#: providers/gda-sybase-server/gda-sybase-connection.c:435
+msgid "Could not allocate enough memory for query"
 msgstr ""
 
-#: gda-srv/gda-server-impl-connection.c:106
-#: gda-srv/gda-server-impl-connection.c:115
-#: gda-srv/gda-server-impl-connection.c:122
-#: gda-srv/gda-server-impl-connection.c:131
-#: gda-srv/gda-server-impl-connection.c:138
-#: gda-srv/gda-server-impl-connection.c:147
-#: gda-srv/gda-server-impl-connection.c:154
-#: gda-srv/gda-server-impl-connection.c:163
-#: gda-srv/gda-server-impl-recordset.c:113
-#: gda-srv/gda-server-impl-recordset.c:122
-#: gda-srv/gda-server-impl-recordset.c:129
-#: gda-srv/gda-server-impl-recordset.c:144
-#: gda-srv/gda-server-impl-recordset.c:153
-#: gda-srv/gda-server-impl-recordset.c:160
-#: gda-srv/gda-server-impl-recordset.c:169
-#: gda-srv/gda-server-impl-recordset.c:176
-#: gda-srv/gda-server-impl-recordset.c:185
-#: gda-srv/gda-server-impl-recordset.c:192
-#: gda-srv/gda-server-impl-recordset.c:200
-#: gda-srv/gda-server-impl-recordset.c:209
-#: gda-srv/gda-server-impl-recordset.c:216
-#: gda-srv/gda-server-impl-recordset.c:224
-#: gda-srv/gda-server-impl-recordset.c:232
-#: gda-srv/gda-server-impl-recordset.c:274
-#: gda-srv/gda-server-impl-recordset.c:284
-#: gda-srv/gda-server-impl-recordset.c:292
-#: gda-srv/gda-server-impl-recordset.c:300
-#: gda-srv/gda-server-impl-recordset.c:308
-#: gda-srv/gda-server-impl-recordset.c:316
-#: gda-srv/gda-server-impl-recordset.c:325
-#: gda-srv/gda-server-impl-recordset.c:333
-#: gda-srv/gda-server-impl-recordset.c:341
+#: providers/gda-sybase-server/gda-sybase-connection.c:449
+msgid "Could not get recordset in schema_cols"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:481
+#: providers/gda-sybase-server/gda-sybase-connection.c:558
 #, c-format
-msgid "%s not implemented"
+msgid "schema_tables: table name = '%s'"
 msgstr ""
 
-#: gda-srv/gda-server-impl-connection.c:255
+#: providers/gda-sybase-server/gda-sybase-connection.c:489
+#: providers/gda-sybase-server/gda-sybase-connection.c:566
 #, c-format
-msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
+msgid "schema_tables: table_schema = '%s'"
 msgstr ""
 
-#: gda-srv/gda-server-impl-recordset.c:240
-#: gda-srv/gda-server-impl-recordset.c:248
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
 #, c-format
-msgid "%s: not implemented"
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr ""
 
-#: gda-srv/gda-server-impl-recordset.c:434
+#: providers/gda-sybase-server/gda-sybase-connection.c:498
 #, c-format
-msgid "%s: an error ocurred while fetching data"
+msgid "schema_procs: invalid constraint type %d"
 msgstr ""
 
-#: gda-srv/gda-server-impl-recordset.c:473
+#: providers/gda-sybase-server/gda-sybase-connection.c:508
+msgid "Could not allocate cmd structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:571
 #, c-format
-msgid "%s: length = %d"
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr ""
 
-#: gda-srv/gda-server-impl-recordset.c:486
+#: providers/gda-sybase-server/gda-sybase-connection.c:575
 #, c-format
-msgid "%s: sending field description for '%s'"
+msgid "schema_tables: invalid constraint type %d"
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:118
+#: providers/gda-sybase-server/gda-sybase-connection.c:636
 #, c-format
-msgid "Starting provider %s with no implementation functions"
+msgid "Invalid or unsupported constraint type: %d"
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:150
+#: providers/gda-sybase-server/gda-sybase-connection.c:677
+msgid "Could not allocate Gda_ServerCommand"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:707
+#: providers/gda-sybase-server/gda-sybase-connection.c:712
+#, c-format
+msgid "connection status: %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:708
+#, c-format
+msgid "return code: %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:745
+msgid "attempting reconnection"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:884
+#, c-format
+msgid "Reconnected to '%s'"
+msgstr ""
+
+# fe/fe_connection.c:46
+#: providers/gda-sybase-server/gda-sybase-connection.c:886
+#, c-format
+msgid "Connected to %s"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:894
+#, c-format
+msgid "Selected database '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:923
+#, c-format
+msgid "%s: Could not allocate cmd structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:932
+#, c-format
+msgid "%s: Could not allocate memory for cmd string"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:945
+#, c-format
+msgid "%s: ct_command failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:954
+#, c-format
+msgid "%s: sending command failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:965
+#, c-format
+msgid "%s: selecting database failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:983
+#, c-format
+msgid "%s: use command failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1010
+msgid "Could not allocate locale structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1016
+#, c-format
+msgid "Could not set locale to '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1022
+#, c-format
+msgid "Could not configure locale to be '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1027
+msgid "Could not drop locale structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1040
+#, c-format
+msgid "Fatal error: %s\n"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:62
+#, c-format
+msgid "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:71
+#, c-format
+msgid "No error flag ist set, though %s is called. This may be a bug."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:135
+msgid "cs_diag() initialized"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:138
+msgid "Could not initialize cs_diag()"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:145
+msgid "ct_diag() initialized"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:148
+msgid "Could not initialize ct_diag()"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:182
+#, c-format
+msgid "%s could not find server implementation"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:188
+#, c-format
+msgid "%s could not get cnc userdata"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:200
+msgid "Could not get # of messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:205
+#, c-format
+msgid "%d ctlib messages to fetch"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:207
+#, c-format
+msgid "%d ctlib message to fetch"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:243
+msgid "error is nullpointer in gda_sybase_messages_handle"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:268
+#: providers/gda-sybase-server/gda-sybase-error.c:335
+#: providers/gda-sybase-server/gda-sybase-error.c:378
+msgid "Could not get # of server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:276
+#, c-format
+msgid "Fetching %d client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:278
+#, c-format
+msgid "Fetching %d client message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:287
+#, c-format
+msgid "Could not get client msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:303
+msgid "Could not get # of client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:311
+msgid "Could not clear client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:343
+#, c-format
+msgid "Fetching %d server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:345
+#, c-format
+msgid "Fetching %d server message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:354
+#, c-format
+msgid "Could not get server msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:386
+msgid "Could not clear server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:408
+#: providers/gda-sybase-server/gda-sybase-error.c:444
+msgid "Could not get # of cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:416
+#, c-format
+msgid "Fetching %d cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:418
+#, c-format
+msgid "Fetchong %d cslib message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:428
+#, c-format
+msgid "Could not get cslib msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:452
+msgid "Could not clear cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:584
+msgid "Server message:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:593
+msgid "Client message:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:600
+msgid "CS-Library error:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:152
+#, c-format
+msgid "fetch error at row %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:159
+#, c-format
+msgid "CS_END_DATA on row %d; canceling"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:168
+#, c-format
+msgid "%s: Error (%d)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:343
+msgid "Failed fetching # of columns"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:349
+#, c-format
+msgid "Counted %d columns"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:356
+#, c-format
+msgid "%s could not allocate datafmt info"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:366
+#, c-format
+msgid "%s could not allocate data fields"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:384
+#, c-format
+msgid "ct_describe on col # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:391
+#, c-format
+msgid "ct_describe on col # %d failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:397
+#, c-format
+msgid "ct_describe(%d): '%s', %d (%s)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:406
+msgid "could not allocate data holder"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:416
+msgid "could not ct_bind data holder to column"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:423
+msgid "illegal type detected, aborting"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:429
+msgid "could not allocate field"
+msgstr ""
+
+#: providers/gda-sybase-server/main-sybase.c:73
+msgid "Could not register gda-sybase provider implementation"
+msgstr ""
+
+#: report/gda-report-engine.c:86
+#, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:43
+#: report/server/gda-report-server-main.c:50
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr ""
+
+#: report/server/gda-report-server-main.c:54
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:96
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:106
+msgid "Could not activate report engine"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:123
 msgid ""
-"OAF doesn't know about our IID; indicates broken installation. Exiting..."
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:153
-msgid ""
-"Another instance of this provider is already registered with OAF. Exiting..."
+#: report/server/gda-report-server-main.c:126
+msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:156
-msgid "Unknown error registering this provider with OAF. Exiting"
-msgstr ""
-
-#: gda-srv/gda-server-impl.c:163
-msgid "Could not get CORBA name service object"
-msgstr ""
-
-#: gda-srv/gda-server-impl.c:170
+#: report/server/gda-report-server-main.c:130
 #, c-format
-msgid "Registered with ID = %s"
-msgstr ""
-
-#: gda-srv/gda-server-impl.c:260
-#, c-format
-msgid "CORBA system exception %s"
-msgstr ""
-
-#: gda-srv/gda-server-impl.c:263
-#, c-format
-msgid "CORBA user exception: %s"
-msgstr ""
-
-# fe/fe_log.c:34
-#: testing/controls_browser/gda-controls-browser.c:272
-msgid "Refresh all"
-msgstr ""
-
-#: testing/controls_browser/gda-controls-browser.c:272
-msgid "Ok"
-msgstr ""
-
-# fe/fe_main.c:81
-#: testing/controls_browser/gda-controls-browser.c:390
-msgid "GNOME-DB Controls browser"
-msgstr ""
-
-#: testing/controls_browser/gda-controls-browser.c:410
-msgid "New control"
-msgstr ""
-
-# fe/fe_main.c:138
-#: testing/controls_browser/gda-controls-browser.c:417
-msgid "Close control"
-msgstr ""
-
-# fe/fe_main.c:251
-#: testing/controls_browser/gda-controls-browser.c:430
-msgid "Controls"
-msgstr ""
-
-#: testing/controls_browser/gda-controls-browser.c:465
-msgid "Control settings"
+msgid "Registered report engine with ID = %s"
 msgstr ""
 
 # fe/fe_main.c:186
-#: testing/gda-client-test1.c:30 testing/gda-client-test10.c:30
-#: testing/gda-client-test11.c:30 testing/gda-client-test12.c:31
-#: testing/gda-client-test13.c:31 testing/gda-client-test14.c:30
-#: testing/gda-client-test2.c:31 testing/gda-client-test3.c:31
-#: testing/gda-client-test4.c:29 testing/gda-client-test5.c:31
-#: testing/gda-client-test6.c:28 testing/gda-client-test7.c:30
-#: testing/gda-client-test8.c:31 testing/gda-client-test9.c:30
-#: testing/gda-ui-test1.c:32 testing/gda-ui-test2.c:32
-#: testing/gda-ui-test3.c:30
-msgid "database provider"
+#: tools/gda-run.c:30
+msgid "database name"
 msgstr ""
 
-#: testing/gda-client-test1.c:30 testing/gda-client-test10.c:30
-#: testing/gda-client-test11.c:30 testing/gda-client-test12.c:31
-#: testing/gda-client-test13.c:31 testing/gda-client-test14.c:30
-#: testing/gda-client-test2.c:31 testing/gda-client-test3.c:31
-#: testing/gda-client-test4.c:29 testing/gda-client-test5.c:31
-#: testing/gda-client-test6.c:28 testing/gda-client-test7.c:30
-#: testing/gda-client-test8.c:31 testing/gda-client-test9.c:30
-#: testing/gda-ui-test1.c:32 testing/gda-ui-test2.c:32
-#: testing/gda-ui-test3.c:30
-msgid "PROVIDER"
+#: tools/gda-run.c:30
+msgid "DATABASE"
 msgstr ""
 
 # fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
 # gda-clnt-ui/gnome-db-browser.c:217
-#: testing/gda-client-test12.c:35 testing/gda-client-test13.c:35
-#: testing/gda-client-test4.c:33 testing/gda-client-test5.c:35
-#: testing/gda-client-test6.c:32
-msgid "table"
+#: tools/gda-run.c:31
+msgid "user name"
 msgstr ""
 
-#: testing/gda-client-test12.c:35 testing/gda-client-test13.c:35
-#: testing/gda-client-test4.c:33 testing/gda-client-test6.c:32
-msgid "TABLENAME"
+#: tools/gda-run.c:31
+msgid "USER-NAME"
 msgstr ""
 
-#: testing/gda-client-test5.c:35
-msgid "TABLE NAME"
+#: tools/gda-run.c:32
+msgid "password"
 msgstr ""
 
-#: testing/gda-ui-test3.c:97
-msgid "Logging in"
+#: tools/gda-run.c:32
+msgid "PASSWORD"
+msgstr ""
+
+# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
+# gda-clnt-ui/gnome-db-browser.c:217
+#: tools/gda-run.c:33
+msgid "file name"
+msgstr ""
+
+#: tools/gda-run.c:33
+msgid "FILE-NAME"
+msgstr ""
+
+#: tools/gda-run.c:105
+#, c-format
+msgid "%s: misconfigured DSN entry"
+msgstr ""
+
+#: tools/gda-run.c:120
+#, c-format
+msgid "%s: data source '%s' not found\n"
 msgstr ""
