@@ -437,7 +437,8 @@ static GdaDataModel
 		case GDA_CONNECTION_SCHEMA_PROCEDURES:
 			query = g_strdup ("SELECT name "
 			                  "FROM sysobjects "
-			                    "WHERE (type = 'P') "
+			                    "WHERE (type = 'P') OR "
+			                          "(type = 'XP') "
 			                  "ORDER BY name");
 			recset = gda_freetds_execute_query (cnc, query);
 			g_free (query);
@@ -468,9 +469,17 @@ static GdaDataModel
 				                                 0, _("Types"));
 			return recset;
 		case GDA_CONNECTION_SCHEMA_USERS:
-			return gda_freetds_execute_query (cnc, "SELECT name FROM sysusers WHERE (valid_user(uid) = 1) ORDER by name");
+			recset = gda_freetds_execute_query (cnc, "SELECT name FROM syslogins ORDER by name");
+			if (recset != NULL)
+				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+				                                 0, _("Users"));
+			return recset;
 		case GDA_CONNECTION_SCHEMA_VIEWS:
-			return gda_freetds_execute_query (cnc, "SELECT name FROM sysobjects WHERE (type = 'V') ORDER BY name");
+			recset = gda_freetds_execute_query (cnc, "SELECT name FROM sysobjects WHERE (type = 'V') ORDER BY name");
+			if (recset != NULL)
+				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+				                                 0, _("Views"));
+			return recset;
 	}
 	
 	return NULL;
