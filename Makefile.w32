@@ -6,16 +6,14 @@
 #
 #
 # usage: 
-#     (for cross compiling - mingw on linux)
-# make -f Makefile.w32 cross 
-#
-#     (for mingw on win32)
-# make -f Makefile.w32 win32
-#
-#     (for downloading dependancies)
+#     FIRST - Download Dependancies
 # make -f Makefile.w32 download
 #
-#     (for cleaning files)
+#     SECOND make the thing.
+# make -f Makefile.w32 
+#
+# 
+#     To Clean up..
 # make -f Makefile.w32 clean
 #
 #
