@@ -6,34 +6,33 @@
 
 #define output(fmt,args...) fprintf (stdout, "%*s" fmt "\n" , indent * 2, "" , ##args)
 
-static int sql_display_select(int indent, sql_select_statement * statement);
-static int sql_display_field(int indent, sql_field * field);
+static int sql_display_select (int indent, sql_select_statement * statement);
+static int sql_display_field (int indent, sql_field * field);
 
 static int
-sql_display_field_item(int indent, sql_field_item * item)
-   {
-   GList *cur;
+sql_display_field_item (int indent, sql_field_item * item)
+{
+	GList *cur;
 
-   switch (item->type)
-      {
-   case SQL_name:
-      fprintf(stdout, "%*s", indent * 2, "");
-      for (cur = item->d.name; cur != NULL; cur = cur->next)
-         fprintf(stdout, "%s%s", (char *)cur->data, cur->next ? "." : "\n");
-      break;
+	switch (item->type) {
+	case SQL_name:
+		fprintf (stdout, "%*s", indent * 2, "");
+		for (cur = item->d.name; cur != NULL; cur = cur->next)
+			fprintf (stdout, "%s%s", (char *) cur->data, cur->next ? "." : "\n");
+		break;
 
-   case SQL_equation:
-      output("equation: %d", item->d.equation.op);
-      output("left:");
-      sql_display_field_item(indent + 1, item->d.equation.left);
-      output("right");
-      sql_display_field_item(indent + 1, item->d.equation.right);
-      break;
+	case SQL_equation:
+		output ("equation: %d", item->d.equation.op);
+		output ("left:");
+		sql_display_field_item (indent + 1, item->d.equation.left);
+		output ("right");
+		sql_display_field_item (indent + 1, item->d.equation.right);
+		break;
 
-   case SQL_inlineselect:
-      output("select:");
-      sql_display_select(indent + 1, item->d.select);
-      break;
+	case SQL_inlineselect:
+		output ("select:");
+		sql_display_select (indent + 1, item->d.select);
+		break;
 
 	case SQL_function:
 		output ("function: %s", item->d.function.funcname);
@@ -41,158 +40,197 @@ sql_display_field_item(int indent, sql_field_item * item)
 			sql_display_field (indent + 1, cur->data);
 		break;
 
-      }
-   return 0;
-   }
+	}
+	return 0;
+}
 
 static int
-sql_display_field(int indent, sql_field * field)
-   {
-   sql_display_field_item(indent, field->item);
+sql_display_field (int indent, sql_field * field)
+{
+	sql_display_field_item (indent, field->item);
 
-   if (field->as)
-      output("as: %s", field->as);
-   return 0;
-   }
-
-static int
-sql_display_condition(int indent, sql_condition * cond)
-   {
-   if (!cond)
-      return 0;
-
-   output("op: %d", cond->op);
-   switch (cond->op)
-      {
-   case SQL_eq:
-   case SQL_is:
-   case SQL_not:
-   case SQL_in:
-   case SQL_notin:
-   case SQL_like:
-      output("left:");
-      sql_display_field(indent + 1, cond->d.pair.left);
-      output("right:");
-      sql_display_field(indent + 1, cond->d.pair.right);
-      break;
-
-   case SQL_between:
-      output("field:");
-      sql_display_field(indent + 1, cond->d.between.field);
-      output("lower:");
-      sql_display_field(indent + 1, cond->d.between.lower);
-      output("upper:");
-      sql_display_field(indent + 1, cond->d.between.upper);
-      break;
-      }
-
-   return 0;
-   }
+	if (field->as)
+		output ("as: %s", field->as);
+	return 0;
+}
 
 static int
-sql_display_where(int indent, sql_where * where)
-   {
-   switch (where->type)
-      {
-   case SQL_single:
-      sql_display_condition(indent + 1, where->d.single);
-      break;
+sql_display_condition (int indent, sql_condition * cond)
+{
+	char *condstr;
 
-   case SQL_negated:
-      output("negated:");
-      sql_display_where(indent + 1, where->d.negated);
-      break;
+	if (!cond)
+		return 0;
 
-   case SQL_pair:
-      output("pair: %d", where->d.pair.op);
-      output("left:");
-      sql_display_where(indent + 1, where->d.pair.left);
-      output("right:");
-      sql_display_where(indent + 1, where->d.pair.right);
-      break;
-      }
+	switch (cond->op) {
+	case SQL_eq:
+		condstr = "=";
+		break;
+	case SQL_is:
+		condstr = "IS";
+		break;
+	case SQL_not:
+		condstr = "NOT";
+		break;
+	case SQL_in:
+		condstr = "IN";
+		break;
+	case SQL_notin:
+		condstr = "NOT IN";
+		break;
+	case SQL_like:
+		condstr = "LIKE";
+		break;
+	case SQL_gt:
+		condstr = ">";
+		break;
+	case SQL_lt:
+		condstr = "<";
+		break;
+	case SQL_geq:
+		condstr = ">=";
+		break;
+	case SQL_leq:
+		condstr = "<=";
+		break;
+	case SQL_between:
+		condstr = "BETWEEN";
+		break;
+	default:
+		condstr = "UNKNOWN OPERATOR! (THIS IS AN ERROR)";
+	}
 
-   return 0;
-   }
+	output ("op: %s", condstr);
+	switch (cond->op) {
+	case SQL_eq:
+	case SQL_is:
+	case SQL_not:
+	case SQL_in:
+	case SQL_notin:
+	case SQL_like:
+	case SQL_gt:
+	case SQL_lt:
+	case SQL_geq:
+	case SQL_leq:
+		output ("left:");
+		sql_display_field (indent + 1, cond->d.pair.left);
+		output ("right:");
+		sql_display_field (indent + 1, cond->d.pair.right);
+		break;
 
-static int
-sql_display_table(int indent, sql_table * table)
-   {
-   switch (table->type)
-      {
-   case SQL_simple:
-      output("table: %s", table->d.simple);
-      break;
+	case SQL_between:
+		output ("field:");
+		sql_display_field (indent + 1, cond->d.between.field);
+		output ("lower:");
+		sql_display_field (indent + 1, cond->d.between.lower);
+		output ("upper:");
+		sql_display_field (indent + 1, cond->d.between.upper);
+		break;
+	}
 
-   case SQL_join:
-      output("table:");
-      output("cond:");
-      sql_display_condition(indent + 1, table->d.join.cond);
-      output("left");
-      sql_display_table(indent + 1, table->d.join.left);
-      output("right");
-      sql_display_table(indent + 1, table->d.join.right);
-      break;
-
-   case SQL_nestedselect:
-      output("table:");
-      sql_display_select(indent + 1, table->d.select);
-      break;
-      }
-   return 0;
-   }
-
-static int
-sql_display_select(int indent, sql_select_statement * statement)
-   {
-   GList *cur;
-
-   if (statement->distinct)
-      output("distinct");
-
-   output("fields:");
-
-   for (cur = statement->fields; cur != NULL; cur = cur->next)
-      sql_display_field(indent + 1, cur->data);
-
-   output("from:");
-
-   for (cur = statement->from; cur != NULL; cur = cur->next)
-      sql_display_table(indent + 1, cur->data);
-
-   if (statement->where)
-      {
-      output("where:");
-      sql_display_where(indent + 1, statement->where);
-      }
-
-   if (statement->order)
-      output("order by:");
-   for (cur = statement->order; cur != NULL; cur = cur->next)
-      sql_display_field(indent + 1, cur->data);
-
-   if (statement->group)
-      output("group by:");
-   for (cur = statement->group; cur != NULL; cur = cur->next)
-      sql_display_field(indent + 1, cur->data);
-
-   return 0;
-   }
+	return 0;
+}
 
 static int
-sql_display_insert (int indent, sql_insert_statement *insert)
+sql_display_where (int indent, sql_where * where)
+{
+	switch (where->type) {
+	case SQL_single:
+		sql_display_condition (indent + 1, where->d.single);
+		break;
+
+	case SQL_negated:
+		output ("negated:");
+		sql_display_where (indent + 1, where->d.negated);
+		break;
+
+	case SQL_pair:
+		output ("pair: %d", where->d.pair.op);
+		output ("left:");
+		sql_display_where (indent + 1, where->d.pair.left);
+		output ("right:");
+		sql_display_where (indent + 1, where->d.pair.right);
+		break;
+	}
+
+	return 0;
+}
+
+static int
+sql_display_table (int indent, sql_table * table)
+{
+	switch (table->type) {
+	case SQL_simple:
+		output ("table: %s", table->d.simple);
+		break;
+
+	case SQL_join:
+		output ("table:");
+		output ("cond:");
+		sql_display_condition (indent + 1, table->d.join.cond);
+		output ("left");
+		sql_display_table (indent + 1, table->d.join.left);
+		output ("right");
+		sql_display_table (indent + 1, table->d.join.right);
+		break;
+
+	case SQL_nestedselect:
+		output ("table:");
+		sql_display_select (indent + 1, table->d.select);
+		break;
+	}
+	return 0;
+}
+
+static int
+sql_display_select (int indent, sql_select_statement * statement)
+{
+	GList *cur;
+
+	if (statement->distinct)
+		output ("distinct");
+
+	output ("fields:");
+
+	for (cur = statement->fields; cur != NULL; cur = cur->next)
+		sql_display_field (indent + 1, cur->data);
+
+	output ("from:");
+
+	for (cur = statement->from; cur != NULL; cur = cur->next)
+		sql_display_table (indent + 1, cur->data);
+
+	if (statement->where) {
+		output ("where:");
+		sql_display_where (indent + 1, statement->where);
+	}
+
+	if (statement->order)
+		output ("order by:");
+	for (cur = statement->order; cur != NULL; cur = cur->next)
+		sql_display_field (indent + 1, cur->data);
+
+	if (statement->group)
+		output ("group by:");
+	for (cur = statement->group; cur != NULL; cur = cur->next)
+		sql_display_field (indent + 1, cur->data);
+
+	return 0;
+}
+
+static int
+sql_display_insert (int indent, sql_insert_statement * insert)
 {
 	GList *walk;
 
 	output ("table");
 	sql_display_table (indent + 1, insert->table);
 
-	if (insert->fields)
-		{
+	if (insert->fields) {
 		output ("fields:");
 		for (walk = insert->fields; walk != NULL; walk = walk->next)
 			sql_display_field (indent + 1, walk->data);
-		}
+	}
 
 	output ("values:");
 	for (walk = insert->values; walk != NULL; walk = walk->next)
@@ -201,8 +239,8 @@ sql_display_insert (int indent, sql_insert_statement *insert)
 	return 0;
 }
 
-static int 
-sql_display_update(int indent, sql_update_statement *update)
+static int
+sql_display_update (int indent, sql_update_statement * update)
 {
 	GList *walk;
 
@@ -210,59 +248,40 @@ sql_display_update(int indent, sql_update_statement *update)
 	sql_display_table (indent + 1, update->table);
 
 	output ("set:");
-	for (walk = update->set; walk != NULL; walk = walk->next)
-		{
+	for (walk = update->set; walk != NULL; walk = walk->next) {
 		sql_display_condition (indent + 1, walk->data);
-		}
+	}
 
-	if (update->where)
-		{
+	if (update->where) {
 		output ("where:");
 		sql_display_where (indent + 1, update->where);
-		}
+	}
 
-	return 0;}
-
-static int
-sql_display_delete (int indent, sql_delete_statement *delete)
-{
-  output ("table:");
-  sql_display_table (indent + 1, delete->table);
-
-  if (delete->where)
-    {
-      output ("where:");
-      sql_display_where (indent + 1, delete->where);
-    }
-
-  return 0;
-}
+	return 0;
+	}
 
 int
-sql_display(sql_statement * statement)
-   {
-   int indent = 0;
+sql_display (sql_statement * statement)
+{
+	int indent = 0;
 
-   output("query: %s", statement->full_query);
-   switch (statement->type)
-      {
-   case SQL_select:
-      sql_display_select(indent + 1, statement->statement);
-      break;
+	output ("query: %s", statement->full_query);
+	switch (statement->type) {
+	case SQL_select:
+		sql_display_select (indent + 1, statement->statement);
+		break;
 
 	case SQL_insert:
-	   sql_display_insert (indent + 1, statement->statement);
+		sql_display_insert (indent + 1, statement->statement);
 		break;
 
 	case SQL_update:
 		sql_display_update (indent + 1, statement->statement);
 		break;
-      case SQL_delete:
-	sql_display_delete (indent + 1, statement->statement);
-	break;
-   default:
-      fprintf(stderr, "Unknown statement type: %d", statement->type);
-      }
 
-   return 0;
-   }
+	default:
+		fprintf (stderr, "Unknown statement type: %d", statement->type);
+	}
+
+	return 0;
+}

@@ -18,3 +18,4 @@ insert into foo values (a,b)
 insert into foo (a,b) values (c,d)
 UPDATE films SET kind = 'Dramatic' WHERE kind = 'Drama'
 update foo set a=b, c=d  where foo=5
+select sd.sd, sdf.wed, sdfs.sdf from asd join ses on asd=asd where aas=sd order by a

@@ -3,8 +3,6 @@
 
 #define GET_FUNC_DETAILS __FUNCTION__, __LINE__, __FILE__
 
-/*#define MEM_TEST */
-
 #ifdef MEM_TEST
 
 #define memsql_strdup_printf(fmt,args...) memsql_strdup_printf_raw(GET_FUNC_DETAILS,fmt,##args)
@@ -15,14 +13,17 @@
 #define memsql_strappend(a,b) memsql_strappend_raw (GET_FUNC_DETAILS, a, b)
 #define memsql_strappend_free(a,b) memsql_strappend_free_raw (GET_FUNC_DETAILS, a, b)
 
-char *memsql_strdup_raw(char *funcname, int linenum, char *file, char *string);
-void *memsql_alloc_raw(char *funcname, int linenum, char *file, int count);
-void *memsql_calloc_raw(char *funcname, int linenum, char *file, int count);
-void *memsql_realloc_raw(char *funcname, int linenum, char *file, void *mem, int count);
-void *memsql_strdup_printf_raw(char *funcname, int linenum, char *file,const char *fmt,...);
+char *memsql_strdup_raw (char *funcname, int linenum, char *file,
+			 char *string);
+void *memsql_alloc_raw (char *funcname, int linenum, char *file, int count);
+void *memsql_calloc_raw (char *funcname, int linenum, char *file, int count);
+void *memsql_realloc_raw (char *funcname, int linenum, char *file, void *mem,
+			  int count);
+void *memsql_strdup_printf_raw (char *funcname, int linenum, char *file,
+				const char *fmt, ...);
 
-int memsql_free(void *mem);
-int memsql_display(void);
+int memsql_free (void *mem);
+int memsql_display (void);
 
 #else
 
@@ -40,7 +41,9 @@ int memsql_display(void);
 
 #endif
 
-char *memsql_strappend_raw(char *funcname, int linenum, char *file, char *string1, char *string2);
-char *memsql_strappend_free_raw(char *funcname, int linenum, char *file, char *string1, char *string2);
+char *memsql_strappend_raw (char *funcname, int linenum, char *file,
+			    char *string1, char *string2);
+char *memsql_strappend_free_raw (char *funcname, int linenum, char *file,
+				 char *string1, char *string2);
 
 #endif /* MEM_H */
