@@ -30,10 +30,10 @@ libgdasqlincdir = $(includedir)/libgda/sql
 libgdasqlinc_HEADERS = 
 libgdasql_la_LDFLAGS = $(LIBGDA_LIBS)
 
-sql_parse_test_SOURCES=$(libgdasql_la_SOURCES) sql_parse_test.c
+sql_parse_test_SOURCES=sql_parse_test.c
 sql_parse_test_LDFLAGS = $(LIBGDA_LIBS)
 sql_parse_test_DEPENDENCIES =
-sql_parse_test_LDADD = 
+sql_parse_test_LDADD = $(top_builldir)/libsql/libgdasql.la
 
 tests: sql_parse_test
 

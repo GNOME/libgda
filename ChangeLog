@@ -1,3 +1,8 @@
+2003-04-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libsql/Makefile.am: don't use the same source files for the library
+	and the test program, link against the library instead.
+
 2003-04-12  David T Hollis <dhollis@davehollis.com>
 
 	* libgda.spec.in: made it work on RH9.
