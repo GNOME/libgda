@@ -1,15 +1,15 @@
 # libgda's Portuguese translation
-# Copyright © 1999, 2001, 2002, 2003, 2004 libgda
+# Copyright © 1999, 2001, 2002, 2003, 2004, 2005 libgda
 # Distributed under the same licence as the libgda package
 # Nuno Ferreira <nmrf@rnl.ist.utl.pt>, 1999.
-# Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002, 2003, 2004
+# Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002, 2003, 2004, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.8\n"
+"Project-Id-Version: 2.10\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-07 12:45+0100\n"
-"PO-Revision-Date: 2004-08-11 23:45+0000\n"
+"POT-Creation-Date: 2005-03-08 23:49+0000\n"
+"PO-Revision-Date: 2005-03-09 00:15+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -122,7 +122,7 @@ msgstr "Incapaz de parsear a expressão SQL '%s'"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "Comando SQL não é um SELECT (é '%s'"
 
-#: libgda/gda-table.c:286
+#: libgda/gda-table.c:308
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Já existe um campo chamado %s"
@@ -159,52 +159,57 @@ msgstr "(GObject do tipo '%s'"
 msgid "NULL GObject"
 msgstr "GObject NULL"
 
-#: libgda/gda-xml-database.c:279
+#: libgda/gda-xml-database.c:290
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Incapaz de ler o ficheiro em %s"
 
-#: libgda/gda-xml-database.c:288
+#: libgda/gda-xml-database.c:299
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Incapaz de parsear o ficheiro em %s"
 
-#: libgda/gda-xml-database.c:298
+#: libgda/gda-xml-database.c:309
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Ficheiro XML de base de dados '%s' inválido"
 
-#: libgda/gda-xml-database.c:541
+#: libgda/gda-xml-database.c:552
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Incapaz de criar um nó XML da tabela %s"
 
-#: libgda/gda-xml-database.c:559
+#: libgda/gda-xml-database.c:570
 msgid "Could not dump XML file to memory"
 msgstr "Incapaz de despejar o ficheiro XML na memória"
 
-#: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
-#: libgda/gda-xml-database.c:731
+#: libgda/gda-xml-database.c:661 libgda/gda-xml-database.c:699
+#: libgda/gda-xml-database.c:744
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabela %s já existe"
 
-#: libgda/gda-xml-database.c:724
+#: libgda/gda-xml-database.c:737
 msgid "Invalid node"
 msgstr "Nó inválido"
 
-#: libgda/gda-xml-database.c:766
+#: libgda/gda-xml-database.c:779
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Nó <data> duplicado para a tabela %s"
 
-#: libgda/gda-xml-database.c:773
+#: libgda/gda-xml-database.c:786
 msgid "Invalid XML node"
 msgstr "Nó XML inválido"
 
-#: libgda/gda-xml-database.c:782
+#: libgda/gda-xml-database.c:795
 msgid "Could not add the data from the XML node"
 msgstr "Incapaz de adicionar os dados do nó XML"
+
+#: libgda/gda-xml-database.c:817
+#, c-format
+msgid "Table %s doesn't exist"
+msgstr "Tabela %s não existe"
 
 #: libsql/sql_parser.c:60
 #, c-format
@@ -238,30 +243,28 @@ msgid "Invalid Firebird handle"
 msgstr "Manipulador Firebird inválido"
 
 #: providers/firebird/gda-firebird-blob.c:134
-#, fuzzy
 msgid "Unable to start transaction"
-msgstr "Incapaz de iniciar a transacção Oracle"
+msgstr "Incapaz de iniciar uma transacção"
 
 #: providers/firebird/gda-firebird-blob.c:145
 msgid "Blob already open"
-msgstr ""
+msgstr "Blob já se encontra aberto"
 
 #: providers/firebird/gda-firebird-blob.c:199
-#, fuzzy
 msgid "Error getting blob segment."
-msgstr "Erro ao validar o elemento %s"
+msgstr "Erro ao obter um segmento do blob."
 
 #: providers/firebird/gda-firebird-blob.c:203
 msgid "Can't read a closed Blob"
-msgstr ""
+msgstr "Incapaz de ler um Blob fechado"
 
 #: providers/firebird/gda-firebird-blob.c:240
 msgid "Unable to close blob."
-msgstr ""
+msgstr "Incapaz de fechar o blob."
 
 #: providers/firebird/gda-firebird-blob.c:243
 msgid "Blob is closed"
-msgstr ""
+msgstr "O blob está fechado"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/firebird/gda-firebird-provider.c:231
@@ -501,7 +504,7 @@ msgstr ""
 #: providers/firebird/gda-firebird-provider.c:708
 #: providers/firebird/gda-firebird-provider.c:710
 msgid "UNKNOWN"
-msgstr ""
+msgstr "DESCONHECIDO"
 
 #: providers/firebird/gda-firebird-provider.c:731
 #: providers/mdb/gda-mdb-provider.c:547
@@ -551,14 +554,12 @@ msgid "Transaction not initialized."
 msgstr "Não foi inicializada a transacção."
 
 #: providers/firebird/gda-firebird-recordset.c:457
-#, fuzzy
 msgid "Firebird's ARRAY datatype not supported yet!\n"
-msgstr "Tipo de dados ARRAY do Firebird ainda não é suportado !\n"
+msgstr "Tipo de dados ARRAY do Firebird ainda não é suportado!\n"
 
 #: providers/firebird/gda-firebird-recordset.c:566
-#, fuzzy
 msgid "Unknown Firebird's field value!\n"
-msgstr "Valor de campo do Firebird desconhecido !\n"
+msgstr "Valor de campo do Firebird desconhecido!\n"
 
 #: providers/firebird/libmain.c:40
 msgid "Provider for Firebird databases"
@@ -568,40 +569,36 @@ msgstr "Fornecedor para bases de dados Firebird"
 #: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
 #: providers/mysql/libmain.c:50 providers/postgres/libmain.c:51
 #: providers/sybase/libmain.c:49
-#, fuzzy
 msgid "Database Name"
-msgstr "Base de Dados"
+msgstr "Nome da Base de Dados"
 
 #: providers/firebird/libmain.c:50 providers/freetds/libmain.c:49
 msgid "Name of the database to be used"
-msgstr ""
+msgstr "Nome da base de dados a ser utilizada"
 
 #: providers/firebird/libmain.c:53
-#, fuzzy
 msgid "Character Set"
-msgstr "Expressões de caracteres"
+msgstr "Conjunto de Caracteres"
 
 #: providers/firebird/libmain.c:54
-#, fuzzy
 msgid "Character set to be used on the connection"
-msgstr "O parâmetro FICHEIRO não se encontra definido na connection_string."
+msgstr "O conjunto de cracteres a ser utilizado na ligação"
 
 #: providers/firebird/libmain.c:57
 msgid "SQL Dialect"
-msgstr ""
+msgstr "Dialecto SQL"
 
 #: providers/firebird/libmain.c:58
 msgid "SQL dialect to use on the connection"
-msgstr ""
+msgstr "O dialecto SQL a ser utilizado na ligação"
 
 #: providers/firebird/libmain.c:61
-#, fuzzy
 msgid "Page Size"
-msgstr "Tamanho"
+msgstr "Tamanho da Página"
 
 #: providers/firebird/libmain.c:62
 msgid "Page size to use on the database"
-msgstr ""
+msgstr "Tamanho da página a utilizar na base de dados"
 
 #: providers/freetds/gda-freetds-provider.c:197
 msgid ""
@@ -704,89 +701,87 @@ msgstr "Fornecedor para bases de dados baseadas em TDS (utilizando FreeTDS)"
 
 #: providers/freetds/libmain.c:52
 msgid "Host"
-msgstr ""
+msgstr "Máquina"
 
 #: providers/freetds/libmain.c:53
 msgid "Host name of the machine where the database is located"
-msgstr ""
+msgstr "Nome da máquina onde se encontra a base de dados"
 
 #: providers/freetds/libmain.c:56 providers/postgres/libmain.c:63
 #: providers/sybase/libmain.c:61
 msgid "Host Address"
-msgstr ""
+msgstr "Endereço da Máquina"
 
 #: providers/freetds/libmain.c:57 providers/postgres/libmain.c:64
 #: providers/sybase/libmain.c:62
 msgid "IP address of the host to connect to"
-msgstr ""
+msgstr "O endereço IP da máquina onde se ligar"
 
 #: providers/freetds/libmain.c:60
-#, fuzzy
 msgid "Connection Options"
-msgstr "Expressão de ligação"
+msgstr "Opções de Ligação"
 
 #: providers/freetds/libmain.c:61
 msgid "Extra options to use on the connection"
-msgstr ""
+msgstr "Opções adicionais a utilizar na ligação"
 
 #: providers/freetds/libmain.c:64 providers/ldap/libmain.c:64
 #: providers/mysql/libmain.c:58 providers/postgres/libmain.c:71
 #: providers/sybase/libmain.c:69
-#, fuzzy
 msgid "Port"
-msgstr "Ponto"
+msgstr "Porto"
 
 #: providers/freetds/libmain.c:65
 msgid "Port to use to connect to the database's host"
-msgstr ""
+msgstr "Porto a utilizar para se ligar à base de dados na máquina"
 
 #: providers/freetds/libmain.c:71 providers/sybase/libmain.c:76
 msgid "Enable Sybase"
-msgstr ""
+msgstr "Activar Sybase"
 
 #: providers/freetds/libmain.c:72 providers/sybase/libmain.c:77
 msgid "Enable Sybase operative mode"
-msgstr ""
+msgstr "Activar o modo operacional de Sybase"
 
 #: providers/freetds/libmain.c:79
 msgid "FreeTDS Config File"
-msgstr ""
+msgstr "Ficheiro de Configuração FreeTDS"
 
 #: providers/freetds/libmain.c:80
 msgid "Location of the FreeTDS config file"
-msgstr ""
+msgstr "Localização do ficheiro de configuração FreeTDS"
 
 #: providers/freetds/libmain.c:84
 msgid "TDS Major Version"
-msgstr ""
+msgstr "Versão TDS"
 
 #: providers/freetds/libmain.c:85
 msgid "TDS protocol major version"
-msgstr ""
+msgstr "Versão do protocolo TDS"
 
 #: providers/freetds/libmain.c:88
 msgid "TDS Minor Version"
-msgstr ""
+msgstr "Revisão TDS"
 
 #: providers/freetds/libmain.c:89
 msgid "TDS protocol minor version"
-msgstr ""
+msgstr "Revisão da versão do protocolo TDS"
 
 #: providers/freetds/libmain.c:93
 msgid "Dump File"
-msgstr ""
+msgstr "Ficheiro de despejo"
 
 #: providers/freetds/libmain.c:94
 msgid "File for TDS protocol dumps"
-msgstr ""
+msgstr "Ficheiro para os despejos de protocolo TDS"
 
 #: providers/freetds/libmain.c:97
 msgid "Dump Configuration File"
-msgstr ""
+msgstr "Ficheiro de Configuração dos Despejos"
 
 #: providers/freetds/libmain.c:98
-msgid "File fpr TDS protocol dumps configuration"
-msgstr ""
+msgid "File for TDS protocol dumps configuration"
+msgstr "Ficheiro para a configuração dos despejos do protocolo TDS"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:48 providers/sybase/utils.c:534
@@ -869,16 +864,16 @@ msgstr "Fornecedor para bases de dados IBMDB2"
 #: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
 #: providers/postgres/libmain.c:52 providers/sybase/libmain.c:50
 msgid "Name of the database to use"
-msgstr ""
+msgstr "Nome da base de dados a utilizar"
 
 #: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:67
 #: providers/sybase/libmain.c:65
 msgid "Extra Options"
-msgstr ""
+msgstr "Opções Adicionais"
 
 #: providers/ibmdb2/libmain.c:53
 msgid "Extra database options"
-msgstr ""
+msgstr "Opções adicionais da base de dados"
 
 #: providers/ldap/gda-ldap-provider.c:257
 #: providers/ldap/gda-ldap-provider.c:490
@@ -896,8 +891,8 @@ msgstr "Manipulador LDAP inválido"
 #: providers/mysql/gda-mysql-recordset.c:380
 #: providers/postgres/gda-postgres-recordset.c:200
 #: providers/postgres/gda-postgres-recordset.c:577
-#: providers/sqlite/gda-sqlite-recordset.c:166
-#: providers/sqlite/gda-sqlite-recordset.c:205
+#: providers/sqlite/gda-sqlite-recordset.c:167
+#: providers/sqlite/gda-sqlite-recordset.c:209
 #: providers/bdb/gda-bdb-recordset.c:111
 msgid "Row number out of range"
 msgstr "Número de registo fora do limite"
@@ -928,42 +923,41 @@ msgstr "Fornecedor para directório LDAP"
 
 #: providers/ldap/libmain.c:56
 msgid "LDAP Flags"
-msgstr ""
+msgstr "Parâmetros LDAP"
 
 #: providers/ldap/libmain.c:57
 msgid "LDAP flags"
-msgstr ""
+msgstr "Parâmetros LDAP"
 
 #: providers/ldap/libmain.c:60 providers/msql/gda-msql-libmain.c:60
 #: providers/mysql/libmain.c:54 providers/postgres/libmain.c:59
 #: providers/sybase/libmain.c:53 providers/sybase/libmain.c:57
-#, fuzzy
 msgid "Host Name"
-msgstr "Nome"
+msgstr "Nome da Máquina"
 
 #: providers/ldap/libmain.c:61
 msgid "Host name of the LDAP server"
-msgstr ""
+msgstr "Nome da máquina do servidor LDAP"
 
 #: providers/ldap/libmain.c:65
 msgid "Port to use for connecting to the LDAP server"
-msgstr ""
+msgstr "Porto a utilizar para se ligar ao servidor LDAP"
 
 #: providers/ldap/libmain.c:68
 msgid "Bind Domain"
-msgstr ""
+msgstr "Domínio de Ligação"
 
 #: providers/ldap/libmain.c:69
 msgid "LDAP bind domain to use for authentication"
-msgstr ""
+msgstr "Domínio de ligação LDAP a utilizar para a autenticação"
 
 #: providers/ldap/libmain.c:72
 msgid "Authentication Method"
-msgstr ""
+msgstr "Método de Autenticação"
 
 #: providers/ldap/libmain.c:73
 msgid "Authentication method to use for connecting"
-msgstr ""
+msgstr "Método de autenticação a utilizar para a ligação"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
@@ -1067,16 +1061,12 @@ msgstr "Fornecedor para ficheiros Microsoft Access"
 
 #: providers/mdb/libmain.c:45 providers/sqlite/libmain.c:50
 #: providers/xbase/libmain.c:48 providers/xml/libmain.c:48
-#, fuzzy
 msgid "File Name"
-msgstr "Nome do Campo"
+msgstr "Nome do Ficheiro"
 
 #: providers/mdb/libmain.c:46 providers/xbase/libmain.c:49
-#, fuzzy
 msgid "Full path of the file containing the database"
-msgstr ""
-"Tem de ser indicado um caminho completo na expressão de ligação para abrir "
-"uma base de dados."
+msgstr "O caminho completo para o ficheiro que contém a base de dados"
 
 #: providers/msql/gda-msql-libmain.c:45
 msgid "Provider for Hughes Technologies mSQL databases"
@@ -1086,7 +1076,7 @@ msgstr "Fornecedor para bases de dados Hughes Technologies mSQL"
 #: providers/postgres/libmain.c:60 providers/sybase/libmain.c:54
 #: providers/sybase/libmain.c:58
 msgid "Name of the host to connect to"
-msgstr ""
+msgstr "Nome da máquina a que se ligar"
 
 #: providers/msql/gda-msql-provider.c:242
 #: providers/msql/gda-msql-provider.c:286
@@ -1179,28 +1169,27 @@ msgstr "Não são suportadas transacções em modo apenas-leitura"
 
 #: providers/mysql/gda-mysql-recordset.c:386
 #: providers/postgres/gda-postgres-recordset.c:583
-#: providers/sqlite/gda-sqlite-recordset.c:211
-#: providers/sqlite/gda-sqlite-recordset.c:243
+#: providers/sqlite/gda-sqlite-recordset.c:215
+#: providers/sqlite/gda-sqlite-recordset.c:247
 #: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Número de coluna fora do limite"
 
 #: providers/mysql/gda-mysql-recordset.c:437
 #: providers/mysql/gda-mysql-recordset.c:567
-#, fuzzy
 msgid "Table name could not be guessed"
-msgstr "Incapaz de inferir nome da tabela."
+msgstr "Incapaz de inferir o nome da tabela"
 
 #: providers/mysql/gda-mysql-recordset.c:459
 #: providers/mysql/gda-mysql-recordset.c:465
 #: providers/mysql/gda-mysql-recordset.c:582
 #: providers/mysql/gda-mysql-recordset.c:588
 msgid "Can not synchronize array with MySQL result set"
-msgstr ""
+msgstr "Incapaz de sincronizar a matriz com o conjunto de resultados MySQL"
 
 #: providers/mysql/gda-mysql-recordset.c:521
 msgid "Can not append row to data model"
-msgstr ""
+msgstr "Incapaz de adicionar uma linha ao modelo de dados"
 
 #: providers/mysql/gda-mysql-recordset.c:560
 #: providers/mysql/gda-mysql-recordset.c:706
@@ -1211,13 +1200,12 @@ msgstr "Registo especificado não pertence ao modelo."
 
 #: providers/mysql/gda-mysql-recordset.c:638
 #: providers/postgres/gda-postgres-recordset.c:373
-#, fuzzy
 msgid "Model doesn't have at least one unique key."
-msgstr "Modelo não possui pelo menos uma chave úica não-alterada."
+msgstr "Modelo não possui pelo menos uma chave única."
 
 #: providers/mysql/gda-mysql-recordset.c:666
 msgid "Can not remove row from data model"
-msgstr ""
+msgstr "Incapaz de remover a linha do modelo de dados"
 
 #: providers/mysql/gda-mysql-recordset.c:713
 #: providers/postgres/gda-postgres-recordset.c:236
@@ -1227,14 +1215,12 @@ msgid "Table name could not be guessed."
 msgstr "Incapaz de inferir nome da tabela."
 
 #: providers/mysql/gda-mysql-recordset.c:787
-#, fuzzy
 msgid "Model does not have at least one non-modified unique key."
-msgstr "Modelo não possui pelo menos uma chave úica não-alterada."
+msgstr "Modelo não possui pelo menos uma chave única não-alterada."
 
 #: providers/mysql/gda-mysql-recordset.c:797
-#, fuzzy
 msgid "Model does not have any non-unique values to update."
-msgstr "Modelo não possui valores não-únicos a actualizar."
+msgstr "Modelo não possui quaisquer valores não-únicos a actualizar."
 
 #: providers/mysql/libmain.c:41
 msgid "Provider for MySQL databases"
@@ -1242,27 +1228,27 @@ msgstr "Fornecedor para bases de dados MySQL"
 
 #: providers/mysql/libmain.c:51
 msgid "Name of the database to connect to"
-msgstr ""
+msgstr "Nome da base de dados a que se ligar"
 
 #: providers/mysql/libmain.c:59
 msgid "Port number to use for connecting"
-msgstr ""
+msgstr "Número do porto a utilizar para a ligação"
 
 #: providers/mysql/libmain.c:62
 msgid "UNIX Socket"
-msgstr ""
+msgstr "Socket UNIX"
 
 #: providers/mysql/libmain.c:63
 msgid "Full path of the UNIX socket to use for connecting locally"
-msgstr ""
+msgstr "Caminho completo para o socket UNIX a utilizar para se ligar localmente"
 
 #: providers/mysql/libmain.c:66
 msgid "Use Secure Connection"
-msgstr ""
+msgstr "Utilizar Ligação Segura"
 
 #: providers/mysql/libmain.c:67
 msgid "Whether to use or not SSL for establishing the connection"
-msgstr ""
+msgstr "Se utilizar ou não SSL para estabelecer a ligação"
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
@@ -1299,14 +1285,12 @@ msgid "Provider for ODBC data sources"
 msgstr "Fornecedor para fontes de dados ODBC"
 
 #: providers/odbc/libmain.c:50
-#, fuzzy
 msgid "Connection String"
-msgstr "Expressão de ligação"
+msgstr "Expressão de Ligação"
 
 #: providers/odbc/libmain.c:51
-#, fuzzy
 msgid "ODBC connection string"
-msgstr "Expressão de ligação"
+msgstr "Expressão de ligação ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
@@ -1597,13 +1581,12 @@ msgid "Provider for Oracle databases"
 msgstr "Fornecedor para bases de dados Oracle"
 
 #: providers/oracle/libmain.c:43
-#, fuzzy
 msgid "TNS Name"
-msgstr "Nome"
+msgstr "Nome do TNS"
 
 #: providers/oracle/libmain.c:44
 msgid "Name of the TNS configuration to use for connecting"
-msgstr ""
+msgstr "Nome da configuração TNS a utilizar para a ligação"
 
 #: providers/postgres/gda-postgres-provider.c:682
 #: providers/postgres/gda-postgres-provider.c:699
@@ -1618,14 +1601,15 @@ msgid "Invalid PostgreSQL handle"
 msgstr "Manipulador PostgreSQL inválido"
 
 #: providers/postgres/gda-postgres-provider.c:1170
-#, fuzzy
 msgid "Transactions are not supported in read uncommitted isolation level"
-msgstr "Não são suportadas transacções em modo apenas-leitura"
+msgstr ""
+"Não são suportadas transacções em modo de nível de isolamento de leitura "
+"de dados por submeter"
 
 #: providers/postgres/gda-postgres-provider.c:1173
-#, fuzzy
 msgid "Transactions are not supported in repeatable read isolation level"
-msgstr "Não são suportadas transacções em modo apenas-leitura"
+msgstr ""
+"Não são suportadas transacções em modo de isolamento de leitura repetível"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1639
@@ -1639,7 +1623,7 @@ msgstr "Bases de dados"
 
 #: providers/postgres/gda-postgres-recordset.c:501
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr "Modelo não possui pelo menos uma chave úica não-alterada."
+msgstr "Modelo não possui pelo menos uma chave única não-alterada."
 
 #: providers/postgres/gda-postgres-recordset.c:505
 msgid "Model doesn't have any non-unique values to update."
@@ -1656,31 +1640,31 @@ msgstr "Fornecedor para bases de dados PostgreSQL"
 
 #: providers/postgres/libmain.c:55
 msgid "Search Path"
-msgstr ""
+msgstr "Caminho da Procura"
 
 #: providers/postgres/libmain.c:56
 msgid "Search path"
-msgstr ""
+msgstr "Caminho da procura"
 
 #: providers/postgres/libmain.c:68
 msgid "Extra PostgreSQL options to use for the connection"
-msgstr ""
+msgstr "Opções PostgreSQL adicionais a utilizar para a ligação"
 
 #: providers/postgres/libmain.c:72 providers/sybase/libmain.c:70
 msgid "Port number to use for the connection"
-msgstr ""
+msgstr "Número do porto a utilizar para a ligação"
 
 #: providers/postgres/libmain.c:75
 msgid "Require SSL"
-msgstr ""
+msgstr "Requerer SSL"
 
 #: providers/postgres/libmain.c:76
 msgid "Whether to require SSL or not when connecting"
-msgstr ""
+msgstr "Se requerer ou não SSL ao estabelecer uma ligação"
 
 #: providers/postgres/libmain.c:79 providers/postgres/libmain.c:80
 msgid "TTY"
-msgstr ""
+msgstr "TTY"
 
 #: providers/sqlite/gda-sqlite-provider.c:199
 msgid ""
@@ -1697,9 +1681,9 @@ msgstr "Incapaz de definir opção SQLite empty_result_callbacks"
 #: providers/sqlite/gda-sqlite-provider.c:379
 #: providers/sqlite/gda-sqlite-provider.c:590
 #: providers/sqlite/gda-sqlite-provider.c:755
-#: providers/sqlite/gda-sqlite-recordset.c:157
-#: providers/sqlite/gda-sqlite-recordset.c:196
-#: providers/sqlite/gda-sqlite-recordset.c:237
+#: providers/sqlite/gda-sqlite-recordset.c:158
+#: providers/sqlite/gda-sqlite-recordset.c:200
+#: providers/sqlite/gda-sqlite-recordset.c:241
 msgid "Invalid SQLite handle"
 msgstr "Manipulador SQLite inválido"
 
@@ -1727,11 +1711,8 @@ msgid "Provider for SQLite databases"
 msgstr "Fornecedor para bases de dados SQLite"
 
 #: providers/sqlite/libmain.c:51
-#, fuzzy
 msgid "Full path of the file containing the SQLite database"
-msgstr ""
-"Tem de ser indicado um caminho completo na expressão de ligação para abrir "
-"uma base de dados."
+msgstr "O caminho completo para o ficheiro que contém a base de dados SQLite"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
@@ -1952,16 +1933,15 @@ msgstr "Fornecedor GDA para bases de dados sybase (utilizando OpenClient)"
 
 #: providers/sybase/libmain.c:66
 msgid "Extra Sybase options to use for the connection"
-msgstr ""
+msgstr "Opções adicionais Sybase a utilizar para a ligação"
 
 #: providers/sybase/libmain.c:80
-#, fuzzy
 msgid "Locale"
-msgstr "Escala"
+msgstr "Local"
 
 #: providers/sybase/libmain.c:81
 msgid "Locale to use in the connection"
-msgstr ""
+msgstr "Local a utilizar na ligação"
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -2141,11 +2121,11 @@ msgstr "Fornecedor para ficheiros Xbase (dBase, FoxPro, etc)"
 
 #: providers/xbase/libmain.c:52
 msgid "Directory"
-msgstr ""
+msgstr "Directório"
 
 #: providers/xbase/libmain.c:53
 msgid "Directory containing the xBase files"
-msgstr ""
+msgstr "Directório que contém os ficheiros xBase"
 
 #: providers/xml/gda-xml-provider.c:191
 msgid ""
@@ -2266,11 +2246,8 @@ msgid "XML provider, based on the libgda XML database format"
 msgstr "Fornecedor XML, baseado no formato de base de dados XML libgda"
 
 #: providers/xml/libmain.c:49
-#, fuzzy
 msgid "Full path of the file containing the XML database"
-msgstr ""
-"Tem de ser indicado um caminho completo na expressão de ligação para abrir "
-"uma base de dados."
+msgstr "O caminho completo para o ficheiro que contém a base de dados XML"
 
 #: report/libgda-report/gda-report-document.c:179
 msgid "Could not parse XML document"
@@ -2543,25 +2520,20 @@ msgid "Provider for Berkeley databases"
 msgstr "Fornecedor para bases de dados Berkeley"
 
 #: providers/bdb/libmain.c:48
-#, fuzzy
 msgid "Database File"
-msgstr "Base de Dados"
+msgstr "Ficheiro de Base de Dados"
 
 #: providers/bdb/libmain.c:49
 msgid "Berkeley DB database file to be used"
-msgstr ""
+msgstr "Ficheiro de base de dados Berkeley DB a ser utilizado"
 
 #: providers/bdb/libmain.c:52
-#, fuzzy
 msgid "Database name"
-msgstr "Base de Dados"
+msgstr "Nome da base de dados"
 
 #: providers/bdb/libmain.c:53
-#, fuzzy
 msgid "Name of the database in the database file to be used"
-msgstr ""
-"Para remover uma base de dados SQLite deverá remover manualmente o ficheiro "
-"de base de dados"
+msgstr "Nome da base de dados no ficheiro de base de dados a ser utilizada"
 
 #~ msgid "Firebird's BLOB datatype not supported yet !\n"
 #~ msgstr "Tipo de dados BLOB do Firebird ainda não é suportado !\n"
