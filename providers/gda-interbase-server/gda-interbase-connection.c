@@ -35,9 +35,9 @@ gda_interbase_connection_new (Gda_ServerConnection *cnc)
 
 gint
 gda_interbase_connection_open (Gda_ServerConnection *cnc,
-			       const gchar *dsn,
-			       const gchar *user,
-			       const gchar *password)
+                               const gchar *dsn,
+                               const gchar *user,
+                               const gchar *password)
 {
   INTERBASE_Connection* ib_cnc;
   Gda_ServerError*  error;
@@ -48,9 +48,9 @@ gda_interbase_connection_open (Gda_ServerConnection *cnc,
   if (ib_cnc)
     {
       if (!isc_attach_database(ib_cnc->status, 0, dsn, &ib_cnc->db, 0, NULL))
-	{
-	  return 0;
-	}
+        {
+          return 0;
+        }
       
       /* return error to client */
       error = gda_server_error_new();
@@ -139,17 +139,17 @@ gda_interbase_connection_rollback_transaction (Gda_ServerConnection *cnc)
 
 Gda_ServerRecordset *
 gda_interbase_connection_open_schema (Gda_ServerConnection *cnc,
-				      Gda_ServerError *error,
-				      GDA_Connection_QType t,
-				      GDA_Connection_Constraint *constraints,
-				      gint length)
+                                      Gda_ServerError *error,
+                                      GDA_Connection_QType t,
+                                      GDA_Connection_Constraint *constraints,
+                                      gint length)
 {
   return NULL;
 }
 
 gint
 gda_interbase_connection_start_logging (Gda_ServerConnection *cnc,
-					const gchar *filename)
+                                        const gchar *filename)
 {
   return -1;
 }
@@ -162,14 +162,14 @@ gda_interbase_connection_stop_logging (Gda_ServerConnection *cnc)
 
 gchar *
 gda_interbase_connection_create_table (Gda_ServerConnection *cnc,
-				       GDA_RowAttributes *columns)
+                                       GDA_RowAttributes *columns)
 {
   return NULL;
 }
 
 gboolean
 gda_interbase_connection_supports (Gda_ServerConnection *cnc,
-				   GDA_Connection_Feature feature)
+                                   GDA_Connection_Feature feature)
 {
   g_return_val_if_fail(cnc != NULL, FALSE);
 
@@ -238,9 +238,9 @@ gda_interbase_connection_free (Gda_ServerConnection *cnc)
 
 void
 gda_interbase_error_make (Gda_ServerError *error,
-			  Gda_ServerRecordset *recset,
-			  Gda_ServerConnection *cnc,
-			  gchar *where)
+                          Gda_ServerRecordset *recset,
+                          Gda_ServerConnection *cnc,
+                          gchar *where)
 {
   gchar*                err_msg; /* FIXME: retireve error message from server */
   INTERBASE_Connection* ib_cnc;
