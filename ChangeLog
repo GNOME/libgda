@@ -1,4 +1,4 @@
-2004-08-02  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
+2004-08-18  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
 
 	* providers/firebird/gda-firebird-provider.c:
 	(gda_firebird_provider_drop_database): Corrected to drop requested
