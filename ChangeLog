@@ -1,3 +1,7 @@
+2003-08-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libsql/sql_parser.h: compilation used to fail in some cases.
+
 2003-07-30  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-xml-database.c (gda_xml_database_to_string):

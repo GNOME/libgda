@@ -2,6 +2,7 @@
 #define SQL_PARSER_H
 
 #include <glib.h>
+#define YY_NO_UNISTD_H
 
 typedef enum
 {
