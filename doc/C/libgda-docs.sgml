@@ -77,6 +77,18 @@
 <!ENTITY libgda-xql-valueref SYSTEM "sgml/gda-xql-valueref.sgml">
 <!ENTITY libgda-report-types SYSTEM "sgml/gda-report-types.sgml">
 <!ENTITY libgda-report-document SYSTEM "sgml/gda-report-document.sgml">
+<!ENTITY libgda-report-item SYSTEM "sgml/gda-report-item.sgml">
+<!ENTITY libgda-report-item-detail SYSTEM "sgml/gda-report-item-detail.sgml">
+<!ENTITY libgda-report-item-label SYSTEM "sgml/gda-report-item-label.sgml">
+<!ENTITY libgda-report-item-pagefooter SYSTEM "sgml/gda-report-item-pagefooter.sgml">
+<!ENTITY libgda-report-item-pageheader SYSTEM "sgml/gda-report-item-pageheader.sgml">
+<!ENTITY libgda-report-item-repfield SYSTEM "sgml/gda-report-item-repfield.sgml">
+<!ENTITY libgda-report-item-report SYSTEM "sgml/gda-report-item-report.sgml">
+<!ENTITY libgda-report-item-reportfooter SYSTEM "sgml/gda-report-item-reportfooter.sgml">
+<!ENTITY libgda-report-item-reportheader SYSTEM "sgml/gda-report-item-reportheader.sgml">
+<!ENTITY libgda-report-item-sqlquery SYSTEM "sgml/gda-report-item-sqlquery.sgml">
+<!ENTITY libgda-report-result SYSTEM "sgml/gda-report-result.sgml">
+<!ENTITY libgda-report-valid SYSTEM "sgml/gda-report-valid.sgml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 ]>
 
@@ -2446,9 +2458,23 @@
   <chapter id="libgda-reports">
     <title>&GDA; Report Engine</title>
     <para>
+      libgda includes a built-in reporting engine which allows applications to easily
+      create, manage and run custom reports.
     </para>
     &libgda-report-types;
     &libgda-report-document;
+    &libgda-report-item;
+    &libgda-report-item-detail;
+    &libgda-report-item-label;
+    &libgda-report-item-pagefooter;
+    &libgda-report-item-pageheader;
+    &libgda-report-item-repfield;
+    &libgda-report-item-report;
+    &libgda-report-item-reportfooter;
+    &libgda-report-item-reportheader;
+    &libgda-report-item-sqlquery;
+    &libgda-report-result;
+    &libgda-report-valid;
   </chapter>
   
   &fdl-appendix;

@@ -1,0 +1,82 @@
+<!-- ##### SECTION Title ##### -->
+GdaReportValid
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaReportValidPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_report_valid_load ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_valid_new_from_dom ##### -->
+<para>
+
+</para>
+
+@dtd: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_valid_to_dom ##### -->
+<para>
+
+</para>
+
+@valid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_valid_validate_document ##### -->
+<para>
+
+</para>
+
+@valid: 
+@document: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_valid_validate_element ##### -->
+<para>
+
+</para>
+
+@valid: 
+@element: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_valid_validate_attribute ##### -->
+<para>
+
+</para>
+
+@valid: 
+@element_name: 
+@attribute_name: 
+@value: 
+@Returns: 
+
+

@@ -1,3 +1,8 @@
+2003-06-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* doc/C/libgda-docs.sgml:
+	* doc/C/tmpl/gda-report-*.sgml: added missing libgda-report files.
+
 2003-06-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 0.12.1

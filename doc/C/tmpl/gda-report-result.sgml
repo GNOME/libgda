@@ -1,0 +1,60 @@
+<!-- ##### SECTION Title ##### -->
+GdaReportResult
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_REPORT_RESULT ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GdaReportResultPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_report_result_new_to_memory ##### -->
+<para>
+
+</para>
+
+@document: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_result_new_to_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+@document: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_result_load_from_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+

@@ -1538,6 +1538,8 @@ gda_log_clean_entry
 <FILE>gda-parameter</FILE>
 GdaParameter
 gda_parameter_new_from_value
+gda_parameter_new_boolean
+gda_parameter_new_double
 gda_parameter_new_gobject
 gda_parameter_new_string
 gda_parameter_free
