@@ -40,6 +40,7 @@
 #include <libgda/gda-recordset.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-server.h>
+#include <libgda/gda-table.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-xml-document.h>

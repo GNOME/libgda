@@ -1,3 +1,17 @@
+2002-03-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-row.[ch] (gda_field_attributes_new):
+	(gda_field_attributes_free): new functions.
+
+	* libgda/gda-table.[ch]: new class, which implements an in-memory
+	representation of a whole table.
+
+	* libgda/gda-xml-database.[ch]: rewritten to make use of the already
+	existing interfaces, and not new ones.
+
+	* doc/C/libgda-docs.sgml:
+	* doc/C/tmpl/gda-table.sgml: added new docs.
+
 2002-03-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.c (gda_config_add_listener): pass correctly the

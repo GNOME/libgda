@@ -52,6 +52,15 @@ GdaConnection
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_is_open ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_get_client ##### -->
 <para>
 
@@ -68,6 +77,33 @@ GdaConnection
 
 @cnc: 
 @client: 
+
+
+<!-- ##### FUNCTION gda_connection_get_dsn ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_cnc_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_provider ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_get_username ##### -->

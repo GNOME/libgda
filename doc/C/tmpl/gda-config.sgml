@@ -238,6 +238,23 @@ gda-config
 @list: 
 
 
+<!-- ##### FUNCTION gda_config_get_provider_by_name ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_free_provider_info ##### -->
+<para>
+
+</para>
+
+@provider_info: 
+
+
 <!-- ##### TYPEDEF GdaDataSourceInfo ##### -->
 <para>
 
@@ -304,5 +321,34 @@ gda-config
 @cnc_string: 
 @description: 
 @username: 
+
+
+<!-- ##### FUNCTION gda_config_remove_data_source ##### -->
+<para>
+
+</para>
+
+@name: 
+
+
+<!-- ##### MACRO GDA_CONFIG_SECTION_DATASOURCES ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_CONFIG_SECTION_LAST_CONNECTIONS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS ##### -->
+<para>
+
+</para>
+
 
 

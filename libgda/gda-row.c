@@ -137,6 +137,28 @@ gda_row_attributes_get_field (GdaRowAttributes *attrs, gint num)
 }
 
 /**
+ * gda_field_attributes_new
+ */
+GdaFieldAttributes *
+gda_field_attributes_new (void)
+{
+	GdaFieldAttributes *fa;
+
+	fa = GNOME_Database_FieldAttributes__alloc ();
+	return fa;
+}
+
+/**
+ * gda_field_attributes_free
+ */
+void
+gda_field_attributes_free (GdaFieldAttributes *fa)
+{
+	g_return_if_fail (fa != NULL);
+	CORBA_free (fa);
+}
+
+/**
  * gda_field_attributes_get_defined_size
  * @fa: a @GdaRowAttributes
  *

@@ -42,6 +42,7 @@
 <!ENTITY libgda-server-recordset SYSTEM "sgml/gda-server-recordset.sgml">
 <!ENTITY libgda-server-recordset-model SYSTEM "sgml/gda-server-recordset-model.sgml">
 <!ENTITY libgda-server SYSTEM "sgml/gda-server.sgml">
+<!ENTITY libgda-table SYSTEM "sgml/gda-table.sgml">
 <!ENTITY libgda-util SYSTEM "sgml/gda-util.sgml">
 <!ENTITY libgda-value SYSTEM "sgml/gda-value.sgml">
 <!ENTITY libgda-xml-database SYSTEM "sgml/gda-xml-database.sgml">
@@ -756,6 +757,7 @@
     &libgda-server-recordset;
     &libgda-server-recordset-model;
     &libgda-server;
+    &libgda-table;
     &libgda-util;
     &libgda-value;
     &libgda-xml-database;

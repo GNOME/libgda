@@ -46,9 +46,12 @@ GdaClient
 <TITLE>GdaConnection</TITLE>
 gda_connection_new
 gda_connection_close
+gda_connection_is_open
 gda_connection_get_client
 gda_connection_set_client
-gda_connection_get_string
+gda_connection_get_dsn
+gda_connection_get_cnc_string
+gda_connection_get_provider
 gda_connection_get_username
 gda_connection_get_password
 gda_connection_add_error
@@ -285,29 +288,8 @@ GdaXmlDatabasePrivate
 gda_xml_database_new
 gda_xml_database_new_from_uri
 gda_xml_database_changed
-GdaXmlDatabaseTable
-gda_xml_database_get_tables
-gda_xml_database_table_new
-gda_xml_database_table_remove
-gda_xml_database_table_find
-gda_xml_database_table_get_name
-gda_xml_database_table_set_name
-gda_xml_database_table_get_owner
-gda_xml_database_table_set_owner
-GdaXmlDatabaseField
-gda_xml_database_table_field_count
-gda_xml_database_table_add_field
-gda_xml_database_table_remove_field
-gda_xml_database_table_get_field
-gda_xml_database_table_find_field
-gda_xml_database_field_get_name
-gda_xml_database_field_set_name
-gda_xml_database_field_get_gdatype
-gda_xml_database_field_set_gdatype
-gda_xml_database_field_get_size
-gda_xml_database_field_set_size
-gda_xml_database_field_get_scale
-gda_xml_database_field_set_scale
+gda_xml_database_new_table
+gda_xml_database_new_table_from_node
 <SUBSECTION Standard>
 GDA_XML_DATABASE
 GDA_IS_XML_DATABASE
@@ -727,6 +709,20 @@ GDA_IS_SERVER_RECORDSET_MODEL_CLASS
 </SECTION>
 
 <SECTION>
+<FILE>gda-table</FILE>
+GdaTablePrivate
+<TITLE>GdaTable</TITLE>
+gda_table_new
+<SUBSECTION Standard>
+GDA_TABLE
+GDA_IS_TABLE
+GDA_TYPE_TABLE
+gda_table_get_type
+GDA_TABLE_CLASS
+GDA_IS_TABLE_CLASS
+</SECTION>
+
+<SECTION>
 <FILE>gda-report-client</FILE>
 GdaReportClientPrivate
 <TITLE>GdaReportClient</TITLE>
@@ -818,6 +814,8 @@ gda_config_get_component_data_model
 GdaProviderInfo
 gda_config_get_provider_list
 gda_config_free_provider_list
+gda_config_get_provider_by_name
+gda_config_free_provider_info
 GdaDataSourceInfo
 gda_config_get_data_source_list
 gda_config_find_data_source
@@ -826,6 +824,10 @@ gda_config_free_data_source_info
 gda_config_free_data_source_list
 gda_config_get_data_source_model
 gda_config_save_data_source
+gda_config_remove_data_source
+GDA_CONFIG_SECTION_DATASOURCES
+GDA_CONFIG_SECTION_LAST_CONNECTIONS
+GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS
 </SECTION>
 
 <SECTION>
@@ -871,6 +873,14 @@ gda_quark_list_find
 </SECTION>
 
 <SECTION>
+<FILE>libgda</FILE>
+gda_init
+GdaInitFunc
+gda_main_run
+gda_main_quit
+</SECTION>
+
+<SECTION>
 <FILE>gda-util</FILE>
 gda_file_load
 gda_file_save
@@ -897,6 +907,8 @@ gda_field_attributes_get_scale
 gda_field_attributes_set_scale
 gda_field_attributes_get_gdatype
 gda_field_attributes_set_gdatype
+gda_field_attributes_get_allow_null
+gda_field_attributes_set_allow_null
 gda_field_get_actual_size
 gda_field_set_actual_size
 gda_field_get_defined_size
@@ -907,6 +919,8 @@ gda_field_get_scale
 gda_field_set_scale
 gda_field_get_gdatype
 gda_field_set_gdatype
+gda_field_get_allow_null
+gda_field_set_allow_null
 gda_field_is_null
 gda_field_get_value
 gda_field_set_value
@@ -950,14 +964,6 @@ gda_xql_dom_to_xml
 gda_xql_dom_to_sql
 gda_xql_new_node
 gda_xql_new_attr
-</SECTION>
-
-<SECTION>
-<FILE>libgda</FILE>
-gda_init
-GdaInitFunc
-gda_main_run
-gda_main_quit
 </SECTION>
 
 <SECTION>

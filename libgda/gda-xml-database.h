@@ -23,7 +23,9 @@
 #if !defined(__gda_xml_database_h__)
 #  define __gda_xml_database_h__
 
-#include <libgda/gda-xml-document.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <libgda/gda-table.h>
 
 G_BEGIN_DECLS
 
@@ -38,12 +40,12 @@ typedef struct _GdaXmlDatabaseClass   GdaXmlDatabaseClass;
 typedef struct _GdaXmlDatabasePrivate GdaXmlDatabasePrivate;
 
 struct _GdaXmlDatabase {
-	GdaXmlDocument document;
+	GObject object;
 	GdaXmlDatabasePrivate *priv;
 };
 
 struct _GdaXmlDatabaseClass {
-	GdaXmlDocumentClass parent_class;
+	GObjectClass parent_class;
 
 	/* signals */
 	void (*changed) (GdaXmlDatabase * xmldb);
@@ -54,69 +56,11 @@ GType           gda_xml_database_get_type (void);
 GdaXmlDatabase *gda_xml_database_new (void);
 GdaXmlDatabase *gda_xml_database_new_from_uri (const gchar *uri);
 
-void            gda_xml_database_changed (GdaXmlDatabase * xmldb);
+void            gda_xml_database_changed (GdaXmlDatabase *xmldb);
 
-/*
- * Table management
- */
-typedef xmlNode GdaXmlDatabaseTable;
-
-GList               *gda_xml_database_get_tables (GdaXmlDatabase *xmldb);
-GdaXmlDatabaseTable *gda_xml_database_table_new (GdaXmlDatabase *xmldb, const gchar *name);
-void                 gda_xml_database_table_remove (GdaXmlDatabase *xmldb,
-						    GdaXmlDatabaseTable *table);
-GdaXmlDatabaseTable *gda_xml_database_table_find (GdaXmlDatabase *xmldb,
-						  const gchar *name);
-const gchar         *gda_xml_database_table_get_name (GdaXmlDatabase * xmldb,
-						      GdaXmlDatabaseTable *table);
-void                 gda_xml_database_table_set_name (GdaXmlDatabase *xmldb,
-						      GdaXmlDatabaseTable *table,
-						      const gchar *name);
-const gchar         *gda_xml_database_table_get_owner (GdaXmlDatabase *xmldb,
-						       GdaXmlDatabaseTable *table);
-void                 gda_xml_database_table_set_owner (GdaXmlDatabase *xmldb,
-						       GdaXmlDatabaseTable *table,
-						       const gchar *owner);
-
-/*
- * Table field management
- */
-typedef xmlNode GdaXmlDatabaseField;
-
-gint                 gda_xml_database_table_field_count (GdaXmlDatabase *xmldb,
-							 GdaXmlDatabaseTable *table);
-GdaXmlDatabaseField *gda_xml_database_table_add_field (GdaXmlDatabase *xmldb,
-						       GdaXmlDatabaseTable *table,
-						       const gchar *fname);
-void                 gda_xml_database_table_remove_field (GdaXmlDatabase *xmldb,
-							  GdaXmlDatabaseTable *table,
-							  const gchar *fname);
-GdaXmlDatabaseField *gda_xml_database_table_get_field (GdaXmlDatabase *xmldb,
-						       GdaXmlDatabaseTable *table,
-						       gint pos);
-GdaXmlDatabaseField *gda_xml_database_table_find_field (GdaXmlDatabase *xmldb,
-							GdaXmlDatabaseTable *table,
-							const gchar *fname);
-const gchar         *gda_xml_database_field_get_name (GdaXmlDatabase *xmldb,
-						      GdaXmlDatabaseField *field);
-void                 gda_xml_database_field_set_name (GdaXmlDatabase *xmldb,
-						      GdaXmlDatabaseField *field,
-						      const gchar *name);
-const gchar         *gda_xml_database_field_get_gdatype (GdaXmlDatabase *xmldb,
-							 GdaXmlDatabaseField *field);
-void                 gda_xml_database_field_set_gdatype (GdaXmlDatabase *xmldb,
-							 GdaXmlDatabaseField *field,
-							 const gchar *type);
-gint                 gda_xml_database_field_get_size (GdaXmlDatabase *xmldb,
-						      GdaXmlDatabaseField *field);
-void                 gda_xml_database_field_set_size (GdaXmlDatabase *xmldb,
-						      GdaXmlDatabaseField *field,
-						      gint size);
-gint                 gda_xml_database_field_get_scale (GdaXmlDatabase *xmldb,
-						       GdaXmlDatabaseField *field);
-void                 gda_xml_database_field_set_scale (GdaXmlDatabase *xmldb,
-						       GdaXmlDatabaseField *field,
-						       gint scale);
+GdaTable       *gda_xml_database_new_table (GdaXmlDatabase *xmldb, const gchar *name);
+GdaTable       *gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb,
+						      xmlNodePtr xmlnode);
 
 G_END_DECLS
 

@@ -188,6 +188,24 @@ Functions for accesing #GdaRow.
 @type: 
 
 
+<!-- ##### FUNCTION gda_field_attributes_get_allow_null ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_allow_null ##### -->
+<para>
+
+</para>
+
+@fa: 
+@allow: 
+
+
 <!-- ##### FUNCTION gda_field_get_actual_size ##### -->
 <para>
 
@@ -276,6 +294,24 @@ Functions for accesing #GdaRow.
 
 @field: 
 @type: 
+
+
+<!-- ##### FUNCTION gda_field_get_allow_null ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_allow_null ##### -->
+<para>
+
+</para>
+
+@field: 
+@allow: 
 
 
 <!-- ##### FUNCTION gda_field_is_null ##### -->
