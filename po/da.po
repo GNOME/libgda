@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
-"PO-Revision-Date: 2002-02-28 21:49+0100\n"
+"POT-Creation-Date: 2002-03-07 22:45+0100\n"
+"PO-Revision-Date: 2002-03-07 22:46+0100\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -101,6 +101,11 @@ msgstr "Kunne ikke informere klient om handling %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation til fetch()-metoden fundet"
 
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Der eksisterer allerede et felt ved navn %s"
+
 #: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "SAND"
@@ -122,27 +127,25 @@ msgstr "Kunne ikke fortolke fil ved %s"
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr ""
+msgstr "Ugyldig XML-databasefil '%s'"
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#, c-format
 msgid "Table %s already exists"
-msgstr "tabel %s eksisterer allerede"
+msgstr "Tabellen %s eksisterer allerede"
 
 #: libgda/gda-xml-database.c:327
-#, fuzzy
 msgid "Invalid node"
-msgstr "Ugyldigt MySQL-håndtag"
+msgstr "Ugyldigt punkt"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Punktet <data> optræder to gange for tabellen %s"
 
 #: libgda/gda-xml-database.c:365
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Ugyldigt MySQL-håndtag"
+msgstr "Ugyldigt XML-punkt"
 
 #: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
