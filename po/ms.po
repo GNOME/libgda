@@ -4,15 +4,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
-"PO-Revision-Date: 2002-01-23 05:47+0800\n"
+"POT-Creation-Date: 2002-03-15 00:55+0800\n"
+"PO-Revision-Date: 2002-03-15 00:56+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Bahasa Melayu <gabai-penyumbang@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
+#: libgda/gda-client.c:200
+#: libgda/gda-client.c:310
+#: libgda/gda-connection.c:213
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Sumber data &s tidak dijumpai pada konfigurasi"
@@ -94,11 +96,16 @@ msgstr "Tak dapat memberitahu klien tentang aksi %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Tiada implementasi bagi kaedah fetch() dijumpai"
 
-#: libgda/gda-value.c:926
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Terdapat medan bernama %s"
+
+#: libgda/gda-value.c:981
 msgid "TRUE"
 msgstr "BENAR"
 
-#: libgda/gda-value.c:928
+#: libgda/gda-value.c:983
 msgid "FALSE"
 msgstr "PALSU"
 
@@ -112,38 +119,35 @@ msgstr "Tak dapat memuatkan fail pada %s"
 msgid "Could not parse file at %s"
 msgstr "Tak dapat menghantar fail pada %s"
 
-#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
+#: libgda/gda-xml-database.c:232
+#: libgda/gda-xml-database.c:249
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr ""
+msgstr "Fail pangkalandata XML tidak sah"
 
-#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#: libgda/gda-xml-database.c:293
+#: libgda/gda-xml-database.c:333
+#, c-format
 msgid "Table %s already exists"
 msgstr "Jadual %s telah wujud"
 
 #: libgda/gda-xml-database.c:327
-#, fuzzy
 msgid "Invalid node"
-msgstr "Pengendali MyQL tidak sah"
+msgstr "Nod tidak sah"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "<data> bertindan bagi jadual %s"
 
 #: libgda/gda-xml-database.c:365
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Pengendali MyQL tidak sah"
+msgstr "Nod XML tidak sah"
 
 #: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
-msgid ""
-"A full path must be specified on the connection string to open a database."
-msgstr ""
-"Path penuh mesti dinyatakan pada rentetan sambungan untuk membua "
-"pangkalandata"
+msgid "A full path must be specified on the connection string to open a database."
+msgstr "Path penuh mesti dinyatakan pada rentetan sambungan untuk membua pangkalandata"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -158,11 +162,8 @@ msgid "Could not initiate Default component factory"
 msgstr "Gagal menginitialisasikan kilang komponen default"
 
 #: providers/mysql/gda-mysql-provider.c:175
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Anda tidak boleh membekalkan UNIX_SOCKET jika anda juga membekalkan samada "
-"HOST atau PORT"
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Anda tidak boleh membekalkan UNIX_SOCKET jika anda juga membekalkan samada HOST atau PORT"
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
@@ -200,19 +201,16 @@ msgid "Could not initiate MySQL component factory"
 msgstr "Gagal menginitialisasilan kilang komponen MySQL"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for ODBC"
-msgstr "Akses Sumber sata GDA bagi Oracle"
+msgstr "Akses Sumber sata GDA bagi ODBC"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-#, fuzzy
 msgid "ODBC component factory"
-msgstr "Kilang komponen Oracle"
+msgstr "Kilang komponen ODBC"
 
 #: providers/odbc/main.c:49
-#, fuzzy
 msgid "Could not initiate ODBC component factory"
-msgstr "Gagal menginitialisasikan kilang komponen Oracle"
+msgstr "Gagal menginitialisasikan kilang komponen ODBC"
 
 #: providers/oracle/gda-oracle-connection.c:77
 msgid "Could not initialize Oracle environment"
@@ -275,29 +273,24 @@ msgstr "Tidak ada"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
-#, fuzzy
 msgid "Invalid SQLITE handle"
-msgstr "Pengendali MyQL tidak sah"
+msgstr "Pengendali SQLITE tidak sah"
 
 #: providers/sqlite/gda-sqlite-recordset.c:114
-#, fuzzy
 msgid "Invalid Sqlite handle"
-msgstr "Pengandeli default yang tak sah"
+msgstr "Pengandeli Sqlite yang tak sah"
 
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-#, fuzzy
 msgid "GDA SQLite Datasource Access"
-msgstr "Akses sumber sata default GDA"
+msgstr "Akses sumber data SQLite GDA"
 
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-#, fuzzy
 msgid "SQLite component factory"
-msgstr "Kilang komponen MySQL"
+msgstr "Kilang komponen SQLite"
 
 #: providers/sqlite/main.c:54
-#, fuzzy
 msgid "Could not initiate Sqlite component factory"
-msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
+msgstr "Gagal Gagal menginitialisasikan kilang komponen Sqlite"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -311,7 +304,8 @@ msgstr "Kilang komponen Sybase"
 msgid "Could not initiate Sybase component factory"
 msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
 
-#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
+#: report/gda-report-engine.c:67
+#: report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
 #, c-format
 msgid "CORBA exception: %s"
@@ -342,9 +336,8 @@ msgid "Could not create BonoboStreamMem object"
 msgstr "Tak dapat mencipta objek BonoboStreamMem"
 
 #: report/libgda-report/gda-report-document.c:137
-#, fuzzy
 msgid "Could not parse XML document"
-msgstr "Tak dapat menghantar laporan XML"
+msgstr "Tak dapat menghantar dokumen XML"
 
 #: report/libgda-report/gda-report-document.c:162
 #, c-format
@@ -356,23 +349,39 @@ msgid "Could not initiate Report component factory"
 msgstr "Gagal menginitialisasikan kilang komponen Laporan"
 
 #: testing/client.c:37
-msgid "\t\tNONE\n"
-msgstr "\t\tTIADA\n"
+msgid ""
+"\t\tNONE\n"
+""
+msgstr ""
+"\t\tTIADA\n"
+""
 
 #: testing/client.c:76
 #, c-format
-msgid "** ERROR: could not open connection to %s\n"
-msgstr "** RALAT: tak dapat membuka sambungan ke %s\n"
+msgid ""
+"** ERROR: could not open connection to %s\n"
+""
+msgstr ""
+"** RALAT: tak dapat membuka sambungan ke %s\n"
+""
 
 #. show provider features
 #: testing/client.c:81
-msgid "\tProvider capabilities...\n"
-msgstr "\tKebolehan Pembekal...\n"
+msgid ""
+"\tProvider capabilities...\n"
+""
+msgstr ""
+"\tKebolehan Pembekal...\n"
+""
 
 #: testing/client.c:82
 #, c-format
-msgid "\t\tTransactions: %s\n"
-msgstr "\t\tTransaksi: %s\n"
+msgid ""
+"\t\tTransactions: %s\n"
+""
+msgstr ""
+"\t\tTransaksi: %s\n"
+""
 
 #: testing/client.c:84
 msgid "Supported"
@@ -405,18 +414,21 @@ msgstr "Indeks"
 
 #: testing/client.c:92
 msgid "Aggregates"
-msgstr ""
+msgstr "Agregat"
 
 #: testing/client.c:93
 msgid "Triggers"
-msgstr ""
+msgstr "Pemicu"
 
 #. test transactions
-#: testing/client.c:96 testing/client.c:104
+#: testing/client.c:96
+#: testing/client.c:104
 msgid "\tStarting transaction..."
 msgstr "\tMemulakan transaksi..."
 
-#: testing/client.c:98 testing/client.c:102 testing/client.c:106
+#: testing/client.c:98
+#: testing/client.c:102
+#: testing/client.c:106
 #: testing/client.c:110
 msgid "Error"
 msgstr "Ralat"
@@ -434,37 +446,65 @@ msgid "Testing GDA client API"
 msgstr "Uji API klien GDA"
 
 #: testing/client.c:138
-msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr "** RALAT: gda_config_get_source_list memulangkan item NULL\n"
+msgid ""
+"** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+""
+msgstr ""
+"** RALAT: gda_config_get_source_list memulangkan item NULL\n"
+""
 
 #: testing/client.c:142
 #, c-format
-msgid " Data source = %s, User = %s\n"
-msgstr " Sumber data =  %s, Pengguna = %s\n"
+msgid ""
+" Data source = %s, User = %s\n"
+""
+msgstr ""
+" Sumber data =  %s, Pengguna = %s\n"
+""
 
 #: testing/config.c:84
-msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** RALAT: gda_config_get_provider_list memulangkan item NULL\n"
+msgid ""
+"** ERROR: gda_config_get_provider_list returned a NULL item\n"
+""
+msgstr ""
+"** RALAT: gda_config_get_provider_list memulangkan item NULL\n"
+""
 
 #: testing/config.c:88
 #, c-format
-msgid " Provider = %s\n"
-msgstr " Pembekal = %s\n"
+msgid ""
+" Provider = %s\n"
+""
+msgstr ""
+" Pembekal = %s\n"
+""
 
 #: testing/config.c:89
 #, c-format
-msgid "\tlocation = %s\n"
-msgstr "\tlokasi = %s\n"
+msgid ""
+"\tlocation = %s\n"
+""
+msgstr ""
+"\tlokasi = %s\n"
+""
 
 #: testing/config.c:90
 #, c-format
-msgid "\ttype = %s\n"
-msgstr "\tjenis = %s\n"
+msgid ""
+"\ttype = %s\n"
+""
+msgstr ""
+"\tjenis = %s\n"
+""
 
 #: testing/config.c:93
 #, c-format
-msgid "\tdescription = %s\n"
-msgstr "\thuraian = %s\n"
+msgid ""
+"\tdescription = %s\n"
+""
+msgstr ""
+"\thuraian = %s\n"
+""
 
 #: testing/config.c:95
 msgid "\trepo_ids ="
@@ -472,85 +512,32 @@ msgstr "\trepo_ids ="
 
 #: testing/config.c:102
 #, c-format
-msgid "\tusername = %s\n"
-msgstr "\tnamapengguna = %s\n"
+msgid ""
+"\tusername = %s\n"
+""
+msgstr ""
+"\tnamapengguna = %s\n"
+""
 
 #: testing/config.c:103
 #, c-format
-msgid "\thostname = %s\n"
-msgstr "\tnamahos = %s\n"
+msgid ""
+"\thostname = %s\n"
+""
+msgstr ""
+"\tnamahos = %s\n"
+""
 
 #: testing/config.c:104
 #, c-format
-msgid "\tdomain = %s\n"
-msgstr "\tdomain = %s\n"
+msgid ""
+"\tdomain = %s\n"
+""
+msgstr ""
+"\tdomain = %s\n"
+""
 
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
-#~ msgid "Bad formed document at %s"
-#~ msgstr "Bentuk dokumen teruk pada %s"
-
-#~ msgid "%p is not a valid table"
-#~ msgstr "%p bukan jadual yang sah"
-
-#~ msgid "Invalid DEFAULT handle"
-#~ msgstr "Pengendali DEFAUL tidak sah"
-
-#~ msgid "Invalid Default handle"
-#~ msgstr "Pengandeli default yang tak sah"
-
-#~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
-#~ msgstr "ct_diag 1 gagal pada sybase_check_clientmsg"
-
-#~ msgid "ct_diag 2 failed in sybase_check_clientmsg"
-#~ msgstr "ct_diag 2 gagal pada sybase_check_clientmsg"
-
-#~ msgid "Client Message: "
-#~ msgstr "Mesej Klien: "
-
-#~ msgid "Informational Client  Message: "
-#~ msgstr "Mesej Klien Bermaklumat:"
-
-#~ msgid "ct_diag 1 failed in sybase_check_servermsg"
-#~ msgstr "ct_diag 1 gagal pada sybase_check_servermsg"
-
-#~ msgid "ct_diag 2 failed in sybase_check_servermsg"
-#~ msgstr "ct_diag 2 gagal pada sybase_check_servermsg"
-
-#~ msgid "Server Message: "
-#~ msgstr "Mesej Pelayan: "
-
-#~ msgid "Informational Server  Message: "
-#~ msgstr "Mesej Pelayan Bermaklumat"
-
-#~ msgid "cs_diag 1 failed in sybase_check_clientmsg"
-#~ msgstr "ct_diag 1 gagal pada sybase_check_clientmsg"
-
-#~ msgid "cs_diag 2 failed in sybase_check_clientmsg"
-#~ msgstr "ct_diag 2 gagal pada sybase_check_clientmsg"
-
-#~ msgid "SYB"
-#~ msgstr "SYB"
-
-#~ msgid "severity"
-#~ msgstr "severiti"
-
-#~ msgid "number"
-#~ msgstr "nombor"
-
-#~ msgid "origin"
-#~ msgstr "asalan"
-
-#~ msgid "layer"
-#~ msgstr "lapisan"
-
-#~ msgid ""
-#~ "\n"
-#~ "\tOperating system error number(%ld):\n"
-#~ "\t%s"
-#~ msgstr ""
-#~ "\n"
-#~ "\tRalat Sistem PEngoperasian nombor (%ld):\n"
-#~ "\t%s"
