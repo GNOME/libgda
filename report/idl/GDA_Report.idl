@@ -24,7 +24,7 @@ module GDA {
 	/*
 	 * Report I/O operations
 	 */
-	interface Stream {
+	interface ReportStream {
 		readonly attribute any contents;
 		
 		any  readChunk (in long start, in long size);
@@ -34,71 +34,72 @@ module GDA {
 	/*
 	 * Report structure
 	 */
-	struct Attribute {
+	struct ReportAttribute {
 		string name;
 		string value;
 	};
-	typedef sequence<Attribute> AttributeList;
+	typedef sequence<ReportAttribute> ReportAttributeList;
 	
-	interface Element;
-	typedef sequence<Element> ElementList;
-	enum ContentType {
+	interface ReportElement;
+	typedef sequence<ReportElement> ReportElementList;
+	enum ReportContentType {
 		AnElement,
 		PCDATA
 	};
-	union VE switch (ContentType) {
+	union VE switch (ReportContentType) {
 		case AnElement :
-			ElementList elem_list;
+			ReportElementList elem_list;
 		case PCDATA :
 			string contents;
 	};
-	interface Element {
+	interface ReportElement {
 		readonly attribute string name;
-		readonly attribute AttributeList attr_list;
+		readonly attribute ReportAttributeList attr_list;
 		readonly attribute VE contents;
 		
-		void      addAttribute (in string name, in string value);
-		void      removeAttribute (in string name);
-		Attribute getAttribute (in string name);
-		void      setAttribute (in string name, in string value);
+		void            addAttribute (in string name, in string value);
+		void            removeAttribute (in string name);
+		ReportAttribute getAttribute (in string name);
+		void            setAttribute (in string name, in string value);
 		
-		Element   addChild (in string name);
-		void      removeChild (in string name);
+		ReportElement   addChild (in string name);
+		void            removeChild (in string name);
 	};
 	
-	interface Format {
+	interface ReportFormat {
 		readonly attribute string xml;
 		
-		ElementList getStructure ();
-		Stream      getStream ();
+		ReportElementList getStructure ();
+		ReportStream      getStream ();
 	};
 	
 	/*
 	 * Report output format
 	 */
-	interface Converter {
+	interface ReportConverter {
+		readonly attribute string format;
 	};
-	typedef sequence<Converter> ConverterList;
+	typedef sequence<ReportConverter> ReportConverterList;
 	
-	interface Output : Format {
-		Stream convert (in Converter format, in long flags);
+	interface ReportOutput : ReportFormat {
+		ReportStream convert (in string format, in long flags);
 	};
 	
-	struct Param {
+	struct ReportParam {
 		string name;
 		any value;
 	};
-	typedef sequence<Param> ParamList;
+	typedef sequence<ReportParam> ReportParamList;
 	
 	interface Report {
 		attribute string   name;
 		attribute string   description;
-		readonly attribute Format format;
+		readonly attribute ReportFormat format;
 		attribute boolean  is_locked;
 		
-		void   fromStream (in Stream stream);
-		void   fromXML (in string xml);
-		Output run (in ParamList params, in long flags);
+		void         fromStream (in ReportStream stream);
+		void         fromXML (in string xml);
+		ReportOutput run (in ReportParamList params, in long flags);
 		
 		/* for shared I/O access */
 		void lock   ();
@@ -110,16 +111,17 @@ module GDA {
 	 * The report engine
 	 */
 	interface ReportEngine {
-		readonly attribute ConverterList conv_list;
+		readonly attribute ReportConverterList conv_list;
 		
-		ReportList queryReports (in string condition, in long flags);
-		Report     openReport (in string rep_name);
+		ReportList      queryReports (in string condition, in long flags);
+		Report          openReport (in string rep_name);
 		
-		Report     addReport (in string rep_name, in string description);
-		void       removeReport (in string rep_name);
+		Report          addReport (in string rep_name, in string description);
+		void            removeReport (in string rep_name);
 		
-		boolean    registerConverter (in string format, in Converter converter);
-		void       unregisterConverter (in Converter converter);
+		boolean         registerConverter (in string format, in ReportConverter converter);
+		void            unregisterConverter (in ReportConverter converter);
+		ReportConverter findConverter (in string format);
 	};
 };
 

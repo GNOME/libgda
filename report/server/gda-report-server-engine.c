@@ -18,94 +18,129 @@
 
 #include <gda-report-server.h>
 
-static PortableServer_ServantBase__epv impl_GDA_ReportEngine_base_epv = {
-  NULL,			/* _private data */
-  NULL,			/* finalize routine */
-  NULL,			/* default_POA routine */
+static PortableServer_ServantBase__epv impl_GDA_ReportEngine_base_epv =
+{
+  NULL, /* _private data */
+  (gpointer) &impl_GDA_ReportEngine__destroy, /* finalize routine */
+  NULL, /* default_POA routine */
 };
-static POA_GDA_ReportEngine__epv impl_GDA_ReportEngine_epv = {
-  NULL,			/* _private */
-  (gpointer) &server_engine_queryReports,
-  (gpointer) &server_engine_openReport,
-  (gpointer) &server_engine_addReport,
-  (gpointer) &server_engine_removeReport,
+static POA_GDA_ReportEngine__epv impl_GDA_ReportEngine_epv =
+{
+  NULL,                        /* _private */
+  (gpointer) & impl_GDA_ReportEngine__get_conv_list,
+  (gpointer) & impl_GDA_ReportEngine_queryReports,
+  (gpointer) & impl_GDA_ReportEngine_openReport,
+  (gpointer) & impl_GDA_ReportEngine_addReport,
+  (gpointer) & impl_GDA_ReportEngine_removeReport,
+  (gpointer) & impl_GDA_ReportEngine_registerConverter,
+  (gpointer) & impl_GDA_ReportEngine_unregisterConverter,
 };
-POA_GDA_ReportEngine__vepv impl_GDA_ReportEngine_vepv = {
+static POA_GDA_ReportEngine__vepv impl_GDA_ReportEngine_vepv =
+{
   &impl_GDA_ReportEngine_base_epv,
   &impl_GDA_ReportEngine_epv,
 };
 
-GDA_ReportEngine glb_engine = CORBA_OBJECT_NIL;
-
 /*
- * CORBA implementation
+ * Stub implementations
  */
 GDA_ReportEngine
-server_engine__create(PortableServer_POA poa, CORBA_Environment * ev)
+impl_GDA_ReportEngine__create (PortableServer_POA poa, CORBA_Environment * ev)
 {
-   GDA_ReportEngine retval;
-   impl_POA_GDA_ReportEngine *newservant;
-   PortableServer_ObjectId *objid;
+  GDA_ReportEngine retval;
+  impl_POA_GDA_ReportEngine *newservant;
+  PortableServer_ObjectId *objid;
 
-   newservant = g_new0(impl_POA_GDA_ReportEngine, 1);
-   newservant->servant.vepv = &impl_GDA_ReportEngine_vepv;
-   newservant->poa = poa;
-   POA_GDA_ReportEngine__init((PortableServer_Servant) newservant, ev);
-   objid = PortableServer_POA_activate_object(poa, newservant, ev);
-   CORBA_free(objid);
-   retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
+  newservant = g_new0(impl_POA_GDA_ReportEngine, 1);
+  newservant->servant.vepv = &impl_GDA_ReportEngine_vepv;
+  newservant->poa = poa;
+  POA_GDA_ReportEngine__init((PortableServer_Servant) newservant, ev);
+  objid = PortableServer_POA_activate_object(poa, newservant, ev);
+  CORBA_free(objid);
+  retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
 
-   return retval;
+  return retval;
 }
 
 void
-server_engine__destroy(impl_POA_GDA_ReportEngine * servant,
-			       CORBA_Environment * ev)
+impl_GDA_ReportEngine__destroy (impl_POA_GDA_ReportEngine *servant,
+                                CORBA_Environment * ev)
 {
-   PortableServer_ObjectId *objid;
+  PortableServer_ObjectId *objid;
 
-   objid = PortableServer_POA_servant_to_id(servant->poa, servant, ev);
-   PortableServer_POA_deactivate_object(servant->poa, objid, ev);
-   CORBA_free(objid);
+  objid = PortableServer_POA_servant_to_id(servant->poa, servant, ev);
+  PortableServer_POA_deactivate_object(servant->poa, objid, ev);
+  CORBA_free(objid);
 
-   POA_GDA_ReportEngine__fini((PortableServer_Servant) servant, ev);
-   g_free(servant);
+  POA_GDA_ReportEngine__fini((PortableServer_Servant) servant, ev);
+  g_free(servant);
+}
+
+GDA_ReportConverterList *
+impl_GDA_ReportEngine__get_conv_list (impl_POA_GDA_ReportEngine *servant,
+                                      CORBA_Environment * ev)
+{
+  GDA_ReportConverterList *retval;
+  return retval;
 }
 
 GDA_ReportList *
-server_engine_queryReports(impl_POA_GDA_ReportEngine * servant,
-				   CORBA_char * condition,
-				   CORBA_long flags, CORBA_Environment * ev)
+impl_GDA_ReportEngine_queryReports (impl_POA_GDA_ReportEngine * servant,
+                                    CORBA_char * condition,
+                                    CORBA_long flags,
+                                    CORBA_Environment * ev)
 {
-   GDA_ReportList *retval;
+  GDA_ReportList *retval;
 
-   return retval;
+  return retval;
 }
 
 GDA_Report
-server_engine_openReport(impl_POA_GDA_ReportEngine * servant,
-				 CORBA_char * rep_name,
-				 CORBA_Environment * ev)
+impl_GDA_ReportEngine_openReport (impl_POA_GDA_ReportEngine * servant,
+                                  CORBA_char * rep_name,
+                                  CORBA_Environment * ev)
 {
-   GDA_Report retval;
-
-   return retval;
+  GDA_Report retval;
+  return retval;
 }
 
 GDA_Report
-server_engine_addReport(impl_POA_GDA_ReportEngine * servant,
-				CORBA_char * rep_name,
-				CORBA_char * description,
-				CORBA_Environment * ev)
+impl_GDA_ReportEngine_addReport (impl_POA_GDA_ReportEngine * servant,
+                                 CORBA_char * rep_name,
+                                 CORBA_char * description,
+                                 CORBA_Environment * ev)
 {
-   GDA_Report retval;
-
-   return retval;
+  GDA_Report retval;
+  return retval;
 }
 
 void
-server_engine_removeReport(impl_POA_GDA_ReportEngine * servant,
-				   CORBA_char * rep_name,
-				   CORBA_Environment * ev)
+impl_GDA_ReportEngine_removeReport (impl_POA_GDA_ReportEngine * servant,
+                                    CORBA_char * rep_name,
+                                    CORBA_Environment * ev)
+{
+}
+
+CORBA_boolean
+impl_GDA_ReportEngine_registerConverter (impl_POA_GDA_ReportEngine * servant,
+                                         CORBA_char * format,
+                                         GDA_ReportConverter converter,
+                                         CORBA_Environment * ev)
+{
+  CORBA_boolean retval;
+  return retval;
+}
+
+void
+impl_GDA_ReportEngine_unregisterConverter (impl_POA_GDA_ReportEngine * servant,
+                                           GDA_ReportConverter converter,
+                                           CORBA_Environment * ev)
+{
+}
+
+GDA_ReportConverter
+impl_GDA_ReportEngine_findConverter (impl_POA_GDA_ReportEngine *servant,
+                                     CORBA_char *format,
+                                     CORBA_Environment *ev)
 {
 }

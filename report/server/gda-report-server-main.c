@@ -20,6 +20,7 @@
 #include <signal.h>
 
 PortableServer_POA glb_the_poa;
+CORBA_Object glb_engine = CORBA_OBJECT_NIL;
 
 /*
  * Static functions
@@ -68,7 +69,7 @@ main (int argc, char *argv[])
   CORBA_char*               objref;
   PortableServer_POAManager pm;
   
-  /* start report engine as a daemon */
+  /* start report engine in daemon mode */
   chdir("/");
   umask(0);
   
@@ -98,14 +99,17 @@ main (int argc, char *argv[])
   glb_the_poa = (PortableServer_POA) CORBA_ORB_resolve_initial_references(gda_corba_get_orb(),
                                                                           "RootPOA",
                                                                           &ev);
-  glb_engine = server_engine__create(glb_the_poa, &ev);
+
+  glb_engine = impl_GDA_ReportEngine__create(glb_the_poa, &ev);
   if (CORBA_Object_is_nil(glb_engine, &ev))
     {
-      gda_log_error(_("Could not initialize report engine"));
+      gda_log_error(_("Could not activate report engine"));
       exit(1);
     }
-  objref = CORBA_ORB_object_to_string(gda_corba_get_orb(), glb_engine, &ev);
-  
+  objref = CORBA_ORB_object_to_string(gda_corba_get_orb(),
+                                      glb_engine,
+                                      &ev);
+
   /* register with OAF */
   result = oaf_active_server_register(GDA_REPORT_OAFIID, glb_engine);
   if (result != OAF_REG_SUCCESS)
