@@ -1,3 +1,8 @@
+2001-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GNOME_Database.idl: added the ::Client interface, to be used by
+	providers to communicate stuff to clients
+
 2001-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am: install IDL files in $datadir/idl/libgda

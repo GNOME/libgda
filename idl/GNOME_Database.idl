@@ -87,7 +87,7 @@ module GNOME {
 		};
 
 		/*
-		 * The Recordset struct contains all information
+		 * The Recordset interface contains all information
 		 * about a set of rows returned by the underlying
 		 * provider as a result of executing a command
 		 */
@@ -105,9 +105,6 @@ module GNOME {
 		typedef sequence<FieldAttributes> RowAttributes;
 		typedef sequence<Field> Row;
 
-		/*
-		 * The Recordset interface
-		 */
 		interface Recordset : Bonobo::Unknown {
 			RowAttributes describe ();
 
@@ -138,6 +135,23 @@ module GNOME {
 		};
 
 		/*
+		 * The Client interface is implemented by GDA clients,
+		 * and is used by providers to communicate stuff to
+		 * connected clients.
+		 */
+		enum ActionId {
+			ACTION_CLIENT_CONNECTED,
+			ACTION_CLIENT_EXITED,
+			ACTION_TRANSACTION_STARTED,
+			ACTION_TRANSACTION_FINISHED,
+			ACTION_TRANSACTION_ABORTED,
+		};
+
+		interface Client : Bonobo::Unknown {
+			void notifyAction (in ActionId action, in ParameterList params);
+		};
+
+		/*
 		 * The Connection interface provides access to an
 		 * open database connection.
 		 */
@@ -145,10 +159,11 @@ module GNOME {
 
 		interface Connection : Bonobo::Unknown {
 			/* opening/closing connections */
-			boolean open (in string cnc_string,
+			boolean open (in Client client,
+				      in string cnc_string,
 				      in string username,
 				      in string password) raise DriverError;
-			boolean close () raise DriverError;
+			boolean close (in Client client) raise DriverError;
 
 			/* command execution */
 			RecordsetList executeCommand (in Command cmd,
