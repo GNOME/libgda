@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda CVS-20001008\n"
-"POT-Creation-Date: 2001-02-13 01:38+0100\n"
-"PO-Revision-Date: 2000-10-10 00:43+0900\n"
+"Project-Id-Version: libgda CVS-20010214\n"
+"POT-Creation-Date: 2001-02-14 15:26-0500\n"
+"PO-Revision-Date: 2001-02-14 15:35-0500\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -23,22 +23,22 @@ msgstr "%s へ接続することが出来ませんでした"
 msgid "Data source %s not found"
 msgstr "データソース %s は見つかりませんでした"
 
-#: lib/gda-client/gda-connection.c:234 lib/gda-client/gda-error.c:179
+#: lib/gda-client/gda-connection.c:226 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr "%s: サーバは応答しませんでした"
 
-#: lib/gda-client/gda-connection.c:238 lib/gda-client/gda-error.c:183
+#: lib/gda-client/gda-connection.c:230 lib/gda-client/gda-error.c:183
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: CORBA システムでエラーが発生しました"
 
-#: lib/gda-client/gda-connection.c:493
+#: lib/gda-client/gda-connection.c:478
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "データベース '%s' はシステム設定から見つかりませんでした"
 
-#: lib/gda-client/gda-connection.c:509
+#: lib/gda-client/gda-connection.c:493
 msgid "Could not open CORBA factory"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
@@ -106,14 +106,14 @@ msgstr "%p は有効なテーブルではありません"
 msgid "Could not get pointer to server implementation"
 msgstr "サーバの実装へのポインタを取得することが出来ませんでした"
 
-#: lib/gda-server/gda-server-impl-connection.c:123
-#: lib/gda-server/gda-server-impl-connection.c:132
-#: lib/gda-server/gda-server-impl-connection.c:139
-#: lib/gda-server/gda-server-impl-connection.c:148
-#: lib/gda-server/gda-server-impl-connection.c:155
-#: lib/gda-server/gda-server-impl-connection.c:164
-#: lib/gda-server/gda-server-impl-connection.c:171
-#: lib/gda-server/gda-server-impl-connection.c:180
+#: lib/gda-server/gda-server-impl-connection.c:125
+#: lib/gda-server/gda-server-impl-connection.c:134
+#: lib/gda-server/gda-server-impl-connection.c:141
+#: lib/gda-server/gda-server-impl-connection.c:150
+#: lib/gda-server/gda-server-impl-connection.c:157
+#: lib/gda-server/gda-server-impl-connection.c:166
+#: lib/gda-server/gda-server-impl-connection.c:173
+#: lib/gda-server/gda-server-impl-connection.c:182
 #: lib/gda-server/gda-server-impl-recordset.c:126
 #: lib/gda-server/gda-server-impl-recordset.c:135
 #: lib/gda-server/gda-server-impl-recordset.c:142
@@ -139,7 +139,7 @@ msgstr "サーバの実装へのポインタを取得することが出来ませんでした"
 msgid "%s not implemented"
 msgstr "%s は実装されていません"
 
-#: lib/gda-server/gda-server-impl-connection.c:272
+#: lib/gda-server/gda-server-impl-connection.c:274
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr "impl_GDA_Connection_open: DSN '%s' で接続を開いています"
@@ -213,40 +213,40 @@ msgstr "初期化を試みましたがすでにプロバイダは初期化されています"
 
 #: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
 msgid "GDA Datasource Access for LDAP"
-msgstr ""
+msgstr "LDAP用のGDAデータソースアクセス"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:261
-#: providers/gda-ldap-server/gda-ldap-connection.c:272
-#: providers/gda-mdb-server/gda-mdb-connection.c:360
-#: providers/gda-mysql-server/gda-mysql-connection.c:387
-#: providers/gda-odbc-server/gda-odbc-connection.c:609
-#: providers/gda-odbc-server/gda-odbc-connection.c:642
-#: providers/gda-oracle-server/gda-oracle-connection.c:426
-#: providers/gda-postgres-server/gda-postgres-connection.c:779
+#: providers/gda-interbase-server/gda-interbase-connection.c:273
+#: providers/gda-ldap-server/gda-ldap-connection.c:284
+#: providers/gda-mdb-server/gda-mdb-connection.c:372
+#: providers/gda-mysql-server/gda-mysql-connection.c:399
+#: providers/gda-odbc-server/gda-odbc-connection.c:621
+#: providers/gda-odbc-server/gda-odbc-connection.c:654
+#: providers/gda-oracle-server/gda-oracle-connection.c:438
+#: providers/gda-postgres-server/gda-postgres-connection.c:790
 #: providers/gda-sybase-server/gda-sybase-error.c:109
 #: providers/gda-tds-server/gda-tds-error.c:108
 #, c-format
 msgid "error '%s' at %s"
 msgstr "エラー '%s' が %s で発生しました"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:266
-#: providers/gda-interbase-server/gda-interbase-connection.c:267
-#: providers/gda-ldap-server/gda-ldap-connection.c:277
-#: providers/gda-ldap-server/gda-ldap-connection.c:278
-#: providers/gda-mdb-server/gda-mdb-connection.c:364
-#: providers/gda-mdb-server/gda-mdb-connection.c:365
-#: providers/gda-mysql-server/gda-mysql-connection.c:391
-#: providers/gda-mysql-server/gda-mysql-connection.c:392
-#: providers/gda-odbc-server/gda-odbc-connection.c:611
-#: providers/gda-odbc-server/gda-odbc-connection.c:612
-#: providers/gda-odbc-server/gda-odbc-connection.c:644
-#: providers/gda-odbc-server/gda-odbc-connection.c:645
-#: providers/gda-oracle-server/gda-oracle-connection.c:431
-#: providers/gda-oracle-server/gda-oracle-connection.c:432
-#: providers/gda-postgres-server/gda-postgres-connection.c:786
-#: providers/gda-postgres-server/gda-postgres-connection.c:787
-#: providers/gda-primebase-server/gda-primebase-connection.c:302
-#: providers/gda-primebase-server/gda-primebase-connection.c:303
+#: providers/gda-interbase-server/gda-interbase-connection.c:278
+#: providers/gda-interbase-server/gda-interbase-connection.c:279
+#: providers/gda-ldap-server/gda-ldap-connection.c:289
+#: providers/gda-ldap-server/gda-ldap-connection.c:290
+#: providers/gda-mdb-server/gda-mdb-connection.c:376
+#: providers/gda-mdb-server/gda-mdb-connection.c:377
+#: providers/gda-mysql-server/gda-mysql-connection.c:403
+#: providers/gda-mysql-server/gda-mysql-connection.c:404
+#: providers/gda-odbc-server/gda-odbc-connection.c:623
+#: providers/gda-odbc-server/gda-odbc-connection.c:624
+#: providers/gda-odbc-server/gda-odbc-connection.c:656
+#: providers/gda-odbc-server/gda-odbc-connection.c:657
+#: providers/gda-oracle-server/gda-oracle-connection.c:443
+#: providers/gda-oracle-server/gda-oracle-connection.c:444
+#: providers/gda-postgres-server/gda-postgres-connection.c:797
+#: providers/gda-postgres-server/gda-postgres-connection.c:798
+#: providers/gda-primebase-server/gda-primebase-connection.c:314
+#: providers/gda-primebase-server/gda-primebase-connection.c:315
 #: providers/gda-sybase-server/gda-sybase-error.c:118
 #: providers/gda-sybase-server/gda-sybase-error.c:119
 #: providers/gda-tds-server/gda-tds-error.c:117
@@ -254,57 +254,55 @@ msgstr "エラー '%s' が %s で発生しました"
 msgid "Not available"
 msgstr "利用できません"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:268
-#: providers/gda-ldap-server/gda-ldap-connection.c:279
-#: providers/gda-mdb-server/gda-mdb-connection.c:366
-#: providers/gda-mysql-server/gda-mysql-connection.c:393
-#: providers/gda-oracle-server/gda-oracle-connection.c:433
-#: providers/gda-postgres-server/gda-postgres-connection.c:788
-#: providers/gda-primebase-server/gda-primebase-connection.c:304
+#: providers/gda-interbase-server/gda-interbase-connection.c:280
+#: providers/gda-ldap-server/gda-ldap-connection.c:291
+#: providers/gda-mdb-server/gda-mdb-connection.c:378
+#: providers/gda-mysql-server/gda-mysql-connection.c:405
+#: providers/gda-oracle-server/gda-oracle-connection.c:445
+#: providers/gda-postgres-server/gda-postgres-connection.c:799
+#: providers/gda-primebase-server/gda-primebase-connection.c:316
 #: providers/gda-sybase-server/gda-sybase-error.c:120
 #: providers/gda-tds-server/gda-tds-error.c:119
 msgid "error"
 msgstr "エラー"
 
-#: providers/gda-ldap-server/main-ldap.c:69
+#: providers/gda-ldap-server/main-ldap.c:71
 msgid "Could not register LDAP provider implementation"
 msgstr "LDAP プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
 msgid "GDA Datasource Access for Interbase"
-msgstr ""
+msgstr "Interbase用のGDAデータソースアクセス"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:260
+#: providers/gda-interbase-server/gda-interbase-connection.c:272
 #, c-format
 msgid "Error code %ld"
 msgstr "エラーコード %ld"
 
-#: providers/gda-interbase-server/main-interbase.c:70
+#: providers/gda-interbase-server/main-interbase.c:72
 msgid "Could not register INTERBASE provider implementation"
 msgstr "INTERBASE プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
 msgid "GDA Datasource Access for Mail"
-msgstr ""
+msgstr "Mail用のGDAデータソースアクセス"
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
-#: providers/gda-sybase-server/gda-sybase-connection.c:269
-#: providers/gda-tds-server/gda-tds-connection.c:266
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "SCHEMA_QTYPE %d は扱えません"
 
-#: providers/gda-mail-server/main-mail.c:70
+#: providers/gda-mail-server/main-mail.c:72
 msgid "Could not register Mail provider implementation"
 msgstr "メールプロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
 msgid "GDA Datasource Access for MDB (MS Access) files"
-msgstr ""
+msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -343,26 +341,26 @@ msgstr "%s:%d: MS Access データベースのファイル名を提供しなければなりません"
 msgid "Opening connection with filename=%s, user=%s, password=%s"
 msgstr "ファイル名=%s, ユーザ=%s, パスワード=%s で接続を開いています"
 
-#: providers/gda-mdb-server/gda-mdb-connection.c:415
-#: providers/gda-mysql-server/gda-mysql-connection.c:442
+#: providers/gda-mdb-server/gda-mdb-connection.c:427
+#: providers/gda-mysql-server/gda-mysql-connection.c:454
 msgid "mysql_recset is NULL"
 msgstr "mysql_recset は NULL です"
 
-#: providers/gda-mdb-server/gda-mdb-connection.c:457
-#: providers/gda-mysql-server/gda-mysql-connection.c:484
-#: providers/gda-sybase-server/gda-sybase-connection.c:432
-#: providers/gda-tds-server/gda-tds-connection.c:423
+#: providers/gda-mdb-server/gda-mdb-connection.c:469
+#: providers/gda-mysql-server/gda-mysql-connection.c:496
+#: providers/gda-sybase-server/gda-sybase-connection.c:452
+#: providers/gda-tds-server/gda-tds-connection.c:451
 msgid "No table name given for SCHEMA_COLS"
 msgstr "SCHEMA_COLS のためのテーブル名が与えられていません"
 
-#: providers/gda-mdb-server/main-mdb.c:70
-#: providers/gda-mysql-server/main-mysql.c:70
+#: providers/gda-mdb-server/main-mdb.c:72
+#: providers/gda-mysql-server/main-mysql.c:72
 msgid "Could not register MySQL provider implementation"
 msgstr "MySQL プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
 msgid "GDA Datasource Access for MySQL"
-msgstr ""
+msgstr "MySQL用のGDAデータソースアクセス"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
@@ -375,29 +373,29 @@ msgstr ""
 
 #: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
 msgid "GDA Datasource Access for ODBC"
-msgstr ""
+msgstr "ODBC用のGDAデータソースアクセス"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
 msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 msgstr "gda_odbc_connection_open_schema: SCHEMA_QTYPE %d は扱えません\n"
 
-#: providers/gda-odbc-server/gda-odbc-connection.c:626
-#: providers/gda-odbc-server/gda-odbc-connection.c:627
-#: providers/gda-odbc-server/gda-odbc-connection.c:628
-#: providers/gda-odbc-server/gda-odbc-connection.c:659
-#: providers/gda-odbc-server/gda-odbc-connection.c:660
-#: providers/gda-odbc-server/gda-odbc-connection.c:661
+#: providers/gda-odbc-server/gda-odbc-connection.c:638
+#: providers/gda-odbc-server/gda-odbc-connection.c:639
+#: providers/gda-odbc-server/gda-odbc-connection.c:640
+#: providers/gda-odbc-server/gda-odbc-connection.c:671
+#: providers/gda-odbc-server/gda-odbc-connection.c:672
+#: providers/gda-odbc-server/gda-odbc-connection.c:673
 msgid "no text"
 msgstr "テキストがありません"
 
-#: providers/gda-odbc-server/main-odbc.c:69
+#: providers/gda-odbc-server/main-odbc.c:71
 msgid "Could not register ODBC provider implementation"
 msgstr "ODBC プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
 msgid "GDA Datasource Access for Oracle"
-msgstr ""
+msgstr "Oracle用のGDAデータソースアクセス"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
@@ -437,26 +435,26 @@ msgstr "fill_field_values に未知の ORACLE データタイプがあります"
 msgid "recordset object being created without associated connection"
 msgstr "レコードセットオブジェクトは接続なしで作成しました"
 
-#: providers/gda-oracle-server/main-oracle.c:69
+#: providers/gda-oracle-server/main-oracle.c:71
 msgid "Could not register ORACLE provider implementation"
 msgstr "ORACLE プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
 msgid "GDA Datasource Access for Postgres"
-msgstr ""
+msgstr "Postgres用のGDAデータソースアクセス"
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:888
-#: providers/gda-postgres-server/gda-postgres-connection.c:1000
+#: providers/gda-postgres-server/gda-postgres-connection.c:899
+#: providers/gda-postgres-server/gda-postgres-connection.c:1011
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset は NULL です"
 
-#: providers/gda-postgres-server/main-postgres.c:69
+#: providers/gda-postgres-server/main-postgres.c:71
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "PostgreSQL プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
 msgid "GDA Datasource Access for Sybase"
-msgstr ""
+msgstr "Sybase用のGDAデータソースアクセス"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:115
 #: providers/gda-tds-server/gda-tds-command.c:110
@@ -533,186 +531,177 @@ msgstr "データが返されません, レコードセット構造体を開放しています"
 msgid "Freeing command structure failed"
 msgstr "コマンド構造体の開放に失敗しました"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:149
-#: providers/gda-tds-server/gda-tds-connection.c:137
-msgid "Error allocating error structure"
-msgstr "エラー構造体の割り当て中にエラーが発生しました"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:157
-msgid "Not enough memory for sybase_Connection"
-msgstr "sybase_Connection のための十分なメモリがありません"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:422
-#: providers/gda-tds-server/gda-tds-connection.c:413
+#: providers/gda-sybase-server/gda-sybase-connection.c:442
+#: providers/gda-tds-server/gda-tds-connection.c:441
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:438
-#: providers/gda-tds-server/gda-tds-connection.c:429
+#: providers/gda-sybase-server/gda-sybase-connection.c:458
+#: providers/gda-tds-server/gda-tds-connection.c:457
 msgid "Could not allocate command structure"
 msgstr "コマンド構造体を割り当てることが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:460
-#: providers/gda-tds-server/gda-tds-connection.c:451
+#: providers/gda-sybase-server/gda-sybase-connection.c:480
+#: providers/gda-tds-server/gda-tds-connection.c:479
 msgid "Could not allocate enough memory for query"
 msgstr "クエリのための十分なメモリを割り当てることが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:474
-#: providers/gda-tds-server/gda-tds-connection.c:465
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
+#: providers/gda-tds-server/gda-tds-connection.c:493
 msgid "Could not get recordset in schema_cols"
 msgstr "schema_cols からレコードセットを取得することが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:506
-#: providers/gda-sybase-server/gda-sybase-connection.c:583
-#: providers/gda-tds-server/gda-tds-connection.c:497
-#: providers/gda-tds-server/gda-tds-connection.c:574
+#: providers/gda-sybase-server/gda-sybase-connection.c:526
+#: providers/gda-sybase-server/gda-sybase-connection.c:603
+#: providers/gda-tds-server/gda-tds-connection.c:525
+#: providers/gda-tds-server/gda-tds-connection.c:602
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: テーブル名 = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:514
-#: providers/gda-sybase-server/gda-sybase-connection.c:591
-#: providers/gda-tds-server/gda-tds-connection.c:505
-#: providers/gda-tds-server/gda-tds-connection.c:582
+#: providers/gda-sybase-server/gda-sybase-connection.c:534
+#: providers/gda-sybase-server/gda-sybase-connection.c:611
+#: providers/gda-tds-server/gda-tds-connection.c:533
+#: providers/gda-tds-server/gda-tds-connection.c:610
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "schema_tables: table_schema = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:519
-#: providers/gda-tds-server/gda-tds-connection.c:510
+#: providers/gda-sybase-server/gda-sybase-connection.c:539
+#: providers/gda-tds-server/gda-tds-connection.c:538
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = %s' は使っていません!\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:523
-#: providers/gda-tds-server/gda-tds-connection.c:514
+#: providers/gda-sybase-server/gda-sybase-connection.c:543
+#: providers/gda-tds-server/gda-tds-connection.c:542
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: 制約タイプ %d は無効です"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:533
-#: providers/gda-tds-server/gda-tds-connection.c:524
+#: providers/gda-sybase-server/gda-sybase-connection.c:553
+#: providers/gda-tds-server/gda-tds-connection.c:552
 msgid "Could not allocate cmd structure"
 msgstr "コマンド構造体を割り当てることが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:596
-#: providers/gda-tds-server/gda-tds-connection.c:587
+#: providers/gda-sybase-server/gda-sybase-connection.c:616
+#: providers/gda-tds-server/gda-tds-connection.c:615
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = '%s' は使っていません!"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:600
-#: providers/gda-tds-server/gda-tds-connection.c:591
+#: providers/gda-sybase-server/gda-sybase-connection.c:620
+#: providers/gda-tds-server/gda-tds-connection.c:619
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: 制約タイプ %d は無効です"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:661
-#: providers/gda-tds-server/gda-tds-connection.c:652
+#: providers/gda-sybase-server/gda-sybase-connection.c:681
+#: providers/gda-tds-server/gda-tds-connection.c:680
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "制約タイプは無効またはサポートしていません: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:702
-#: providers/gda-tds-server/gda-tds-connection.c:693
+#: providers/gda-sybase-server/gda-sybase-connection.c:722
+#: providers/gda-tds-server/gda-tds-connection.c:721
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Gda_ServerCommand の割り当てることが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:732
-#: providers/gda-sybase-server/gda-sybase-connection.c:737
-#: providers/gda-tds-server/gda-tds-connection.c:723
-#: providers/gda-tds-server/gda-tds-connection.c:728
+#: providers/gda-sybase-server/gda-sybase-connection.c:752
+#: providers/gda-sybase-server/gda-sybase-connection.c:757
+#: providers/gda-tds-server/gda-tds-connection.c:751
+#: providers/gda-tds-server/gda-tds-connection.c:756
 #, c-format
 msgid "connection status: %x"
 msgstr "接続状況: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:733
-#: providers/gda-tds-server/gda-tds-connection.c:724
+#: providers/gda-sybase-server/gda-sybase-connection.c:753
+#: providers/gda-tds-server/gda-tds-connection.c:752
 #, c-format
 msgid "return code: %x"
 msgstr "戻り値: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:770
-#: providers/gda-tds-server/gda-tds-connection.c:759
+#: providers/gda-sybase-server/gda-sybase-connection.c:790
+#: providers/gda-tds-server/gda-tds-connection.c:787
 msgid "attempting reconnection"
 msgstr "再接続を試みています"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:909
+#: providers/gda-sybase-server/gda-sybase-connection.c:929
 #, c-format
 msgid "Reconnected to '%s'"
 msgstr "'%s' へ再接続しました"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:911
-#: providers/gda-tds-server/gda-tds-connection.c:864
+#: providers/gda-sybase-server/gda-sybase-connection.c:931
+#: providers/gda-tds-server/gda-tds-connection.c:892
 #, c-format
 msgid "Connected to %s"
 msgstr "%s に接続完了"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:919
-#: providers/gda-tds-server/gda-tds-connection.c:874
+#: providers/gda-sybase-server/gda-sybase-connection.c:939
+#: providers/gda-tds-server/gda-tds-connection.c:902
 #, c-format
 msgid "Selected database '%s'"
 msgstr "データベース '%s' を選択しました"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:948
-#: providers/gda-tds-server/gda-tds-connection.c:899
+#: providers/gda-sybase-server/gda-sybase-connection.c:968
+#: providers/gda-tds-server/gda-tds-connection.c:927
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: コマンド構造体を割り当てることが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:957
-#: providers/gda-tds-server/gda-tds-connection.c:908
+#: providers/gda-sybase-server/gda-sybase-connection.c:977
+#: providers/gda-tds-server/gda-tds-connection.c:936
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: コマンド文字列のためのメモリを割り当てることが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:970
-#: providers/gda-tds-server/gda-tds-connection.c:918
+#: providers/gda-sybase-server/gda-sybase-connection.c:990
+#: providers/gda-tds-server/gda-tds-connection.c:946
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command は失敗しました"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:979
-#: providers/gda-tds-server/gda-tds-connection.c:927
+#: providers/gda-sybase-server/gda-sybase-connection.c:999
+#: providers/gda-tds-server/gda-tds-connection.c:955
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: コマンドの送信は失敗しました"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:990
+#: providers/gda-sybase-server/gda-sybase-connection.c:1010
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: データベースの選択に失敗しました"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1008
+#: providers/gda-sybase-server/gda-sybase-connection.c:1028
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: ユーザコマンドは失敗しました"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1035
-#: providers/gda-tds-server/gda-tds-connection.c:989
+#: providers/gda-sybase-server/gda-sybase-connection.c:1055
+#: providers/gda-tds-server/gda-tds-connection.c:1017
 msgid "Could not allocate locale structure"
 msgstr "ロケール構造体を割り当てることが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1041
-#: providers/gda-tds-server/gda-tds-connection.c:995
+#: providers/gda-sybase-server/gda-sybase-connection.c:1061
+#: providers/gda-tds-server/gda-tds-connection.c:1023
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1047
-#: providers/gda-tds-server/gda-tds-connection.c:1001
+#: providers/gda-sybase-server/gda-sybase-connection.c:1067
+#: providers/gda-tds-server/gda-tds-connection.c:1029
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1052
-#: providers/gda-tds-server/gda-tds-connection.c:1006
+#: providers/gda-sybase-server/gda-sybase-connection.c:1072
+#: providers/gda-tds-server/gda-tds-connection.c:1034
 msgid "Could not drop locale structure"
 msgstr "ロケール構造体をドロップすることが出来ませんでした"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1065
-#: providers/gda-tds-server/gda-tds-connection.c:1019
+#: providers/gda-sybase-server/gda-sybase-connection.c:1085
+#: providers/gda-tds-server/gda-tds-connection.c:1047
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "致命的なエラー: %s\n"
@@ -833,7 +822,7 @@ msgid "Fetching %d cslib messages"
 msgstr "%d 個の cslib メッセージを取得してします"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:421
-#, fuzzy, c-format
+#, c-format
 msgid "Fetching %d cslib message"
 msgstr "%d 個の cslib メッセージを取得してします"
 
@@ -940,75 +929,67 @@ msgstr "不当なタイプを検出しました, 中止しています"
 msgid "could not allocate field"
 msgstr "フィールドを割り当てることが出来ませんでした"
 
-#: providers/gda-sybase-server/main-sybase.c:74
+#: providers/gda-sybase-server/main-sybase.c:76
 msgid "Could not register gda-sybase provider implementation"
 msgstr "gda-sybase プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
 msgid "GDA Datasource Access for primebase"
-msgstr ""
+msgstr "primebase用のGDAデータソースアクセス"
 
 #: providers/gda-primebase-server/gda-primebase-command.c:128
 msgid "An error occured."
-msgstr ""
+msgstr "エラーが発生しました"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:137
 #, c-format
 msgid "%2ld: Connected to '%s@%s' with connparm: '%s'"
-msgstr ""
+msgstr "%2ld: '%s@%s'へ接続パラメータ '%s'で接続しました"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:142
 #, c-format
 msgid "%2ld: ConInfo: %s@%s, Client API v%x, status: %x"
-msgstr ""
+msgstr "%2ld: 接続情報: %s@%s, クライアントAPI v%x, ステータス: %x"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:145
-#, fuzzy, c-format
+#, c-format
 msgid "Could not connect to '%s'"
 msgstr "%s へ接続することが出来ませんでした"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:316
-#, fuzzy
+#: providers/gda-primebase-server/gda-primebase-connection.c:328
 msgid "Not enough memory for primebase_Error structure."
-msgstr "sybase_Connection のための十分なメモリがありません"
+msgstr "primebase_Error 構造体のための十分なメモリがありません"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:324
+#: providers/gda-primebase-server/gda-primebase-connection.c:336
 #, c-format
 msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
-msgstr ""
+msgstr "%2ld: エラー: %ld (%ld) : %s.\n"
 
 #: providers/gda-primebase-server/gda-primebase-recordset.c:190
 msgid "No according field found"
-msgstr ""
+msgstr "一致するフィールドが見つかりません"
 
-#: providers/gda-primebase-server/main-primebase.c:68
-#, fuzzy
+#: providers/gda-primebase-server/main-primebase.c:70
 msgid "Could not register PRIMEBASE provider implementation"
-msgstr "INTERBASE プロバイダの実装を登録することが出来ませんでした"
+msgstr "PRIMEBASE プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
 msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr ""
+msgstr "Sybase/MS SQL用のGDAデータソースアクセス"
 
-#: providers/gda-tds-server/gda-tds-connection.c:145
-#, fuzzy
-msgid "Not enough memory for tds_Connection"
-msgstr "sybase_Connection のための十分なメモリがありません"
-
-#: providers/gda-tds-server/gda-tds-connection.c:862
-#, fuzzy, c-format
+#: providers/gda-tds-server/gda-tds-connection.c:890
+#, c-format
 msgid "Reconnected to %s"
 msgstr "'%s' へ再接続しました"
 
 #: providers/gda-tds-server/gda-tds-error.c:63
-#, fuzzy, c-format
+#, c-format
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
-msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 
-#: providers/gda-tds-server/main-tds.c:74
-#, fuzzy
+#: providers/gda-tds-server/main-tds.c:76
 msgid "Could not register gda-tds provider implementation"
-msgstr "gda-sybase プロバイダの実装を登録することが出来ませんでした"
+msgstr "gda-tds プロバイダの実装を登録することが出来ませんでした"
 
 #: report/gda-report-engine.c:209
 #, c-format
@@ -1017,7 +998,7 @@ msgstr "CORBA 例外はレポートエンジンを取り外しています: %s"
 
 #: report/server/GNOME_GDA_Report.oaf.in.h:1
 msgid "GDA Distributed Report Engine"
-msgstr ""
+msgstr "GDA分配レポートエンジン"
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48
@@ -1096,9 +1077,3 @@ msgstr "%s: DSN エントリの設定ミスです"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: データソース '%s' は見つかりませんでした\n"
-
-#~ msgid "Fetchong %d cslib message"
-#~ msgstr "%d 個の cslib メッセージを取得しています"
-
-#~ msgid "%s: not implemented"
-#~ msgstr "%s: 実装されていません"
