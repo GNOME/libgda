@@ -61,13 +61,8 @@ clear_value (GdaValue *value)
 		value->value.v_string = NULL;
 		break;
 	case GDA_VALUE_TYPE_BLOB :
-		g_free (value->value.v_blob.priv_data);
-		value->value.v_blob.priv_data = NULL;
-		value->value.v_blob.open = NULL;
-		value->value.v_blob.read = NULL;
-		value->value.v_blob.write = NULL;
-		value->value.v_blob.lseek = NULL;
-		value->value.v_blob.close = NULL;
+		gda_blob_free_data (&value->value.v_blob);
+		memset (&value->value.v_blob, 0, sizeof (GdaBlob));
 		break;
 	default :
 		break;
@@ -2054,7 +2049,7 @@ gda_value_stringify (const GdaValue *value)
 		break;
 	case GDA_VALUE_TYPE_BLOB:
 		gdablob = gda_value_get_blob (value);
-		retval = g_strdup_printf ("%s", gdablob->stringify ());
+		retval = g_strdup_printf ("%s", gdablob->stringify ((GdaBlob *) gdablob));
 		break;
 	case GDA_VALUE_TYPE_LIST:
 		list = gda_value_get_list (value);

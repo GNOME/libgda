@@ -99,6 +99,10 @@ struct _GdaServerProviderClass {
 				       GdaConnection *cnc,
 				       GdaConnectionSchema schema,
 				       GdaParameterList *params);
+
+	gboolean (* create_blob) (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  GdaBlob *blob);
 };
 
 GType    gda_server_provider_get_type (void);
@@ -148,6 +152,10 @@ GdaDataModel *gda_server_provider_get_schema (GdaServerProvider *provider,
 					      GdaConnection *cnc,
 					      GdaConnectionSchema schema,
 					      GdaParameterList *params);
+
+gboolean gda_server_provider_create_blob (GdaServerProvider *provider,
+					  GdaConnection *cnc,
+					  GdaBlob *blob);
 
 G_END_DECLS
 

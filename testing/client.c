@@ -118,6 +118,9 @@ open_connection (GdaClient *client,
 	g_print (_("\t\tXML queries: %s\n"),
 		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_XML_QUERIES) ?
 		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tBLOBs: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_BLOBS) ?
+		 _("Supported") : _("Not supported"));
 
 	/* show connection schemas */
 	g_print (_("\n\tProvider reports version: %s\n\n"),

@@ -21,6 +21,7 @@
  */
 
 #include "postgres-test.h"
+#include <string.h>
 
 #define IGNORE_ERR	GDA_COMMAND_OPTION_IGNORE_ERRORS
 #define STOP_ON_ERR	GDA_COMMAND_OPTION_STOP_ON_ERRORS
@@ -174,9 +175,103 @@ print_errors (const GList *list)
 	GList *tmp;
 
 	tmp = (GList *) list;
-	for (tmp = (GList *) list; tmp; tmp = tmp->next)
-		if (tmp->data && *((char *) tmp->data))
-			g_print ("\t\t\t%s\n", (char *) tmp->data);
+	for (tmp = (GList *) list; tmp; tmp = tmp->next) {
+		GdaError *error = GDA_ERROR (tmp->data);
+		g_print ("\t\t\t%s\n", gda_error_get_description (error));
+	}
+}
+
+static void
+blob_tests (GdaConnection *cnc)
+{
+	GdaBlob *blob;
+	GdaTransaction *xaction;
+	gchar *str = "The string";
+	gchar copy_str [10];
+	gint nbytes;
+
+	xaction = gda_transaction_new (NULL);
+
+	gda_connection_begin_transaction (cnc, xaction);
+	blob = g_new0 (GdaBlob, 1);
+	g_print ("\t\tCreating a BLOB: ");
+	if (!gda_connection_create_blob (cnc, blob)) {
+		g_print ("FAILED\n");
+		print_errors (gda_connection_get_errors (cnc));
+	} else {
+		g_print ("OK\n");
+	}
+
+	g_print ("\t\tOpening a BLOB (read/write): ");
+	if (gda_blob_open (blob, GDA_BLOB_MODE_RDWR)) {
+		g_print ("FAILED\n");
+		print_errors (gda_connection_get_errors (cnc));
+	} else {
+		g_print ("OK\n");
+	}
+
+	g_print ("\t\tWriting to BLOB: ");
+	if (gda_blob_write (blob, str, strlen (str), &nbytes)) {
+		g_print ("FAILED\n");
+		print_errors (gda_connection_get_errors (cnc));
+	} else {
+		g_print ("OK %d\n", nbytes);
+	}
+
+	g_print ("\t\tSeeking: ");
+	if (gda_blob_lseek (blob, 2, SEEK_SET) < 0) {
+		g_print ("FAILED\n");
+		print_errors (gda_connection_get_errors (cnc));
+	} else {
+		g_print ("OK\n");
+	}
+
+	g_print ("\t\tReading from BLOB: ");
+	if (gda_blob_read (blob, copy_str, strlen (str) - 2, &nbytes)) {
+		g_print ("FAILED\n");
+		print_errors (gda_connection_get_errors (cnc));
+	} else {
+		copy_str [nbytes] = '\0';
+		if (strcmp (copy_str, str + 2)) {
+			g_print ("FAILED\n\t\tExpecting %s but was %s\n", str + 2, copy_str);
+		} else {
+			g_print ("OK %d\n", nbytes);
+		}
+	}
+
+	g_print ("\t\tClosing the BLOB: ");
+	if (gda_blob_close (blob)) {
+		g_print ("FAILED\n");
+		print_errors (gda_connection_get_errors (cnc));
+	} else {
+		g_print ("OK\n");
+	}
+
+	gda_connection_rollback_transaction (cnc, xaction);
+	
+	gda_connection_begin_transaction (cnc, xaction);
+	g_print ("\t\tCreating another BLOB: ");
+	if (!gda_connection_create_blob (cnc, blob)) {
+		g_print ("FAILED\n");
+		print_errors (gda_connection_get_errors (cnc));
+	} else {
+		g_print ("OK\n");
+	}
+
+	g_print ("\t\tRemoving the BLOB: ");
+	if (gda_blob_remove (blob)) {
+		g_print ("FAILED\n");
+		print_errors (gda_connection_get_errors (cnc));
+	} else {
+		g_print ("OK\n");
+	}
+
+	gda_connection_rollback_transaction (cnc, xaction);
+
+	gda_blob_free_data (blob);
+	g_free (blob);
+	g_object_unref (G_OBJECT (xaction));
+	g_free (blob);
 }
 
 /* Postgres provider tests */
@@ -252,5 +347,7 @@ do_postgres_test (GdaConnection *cnc)
 	g_list_free (list);
 	/* Clean up */
 	g_print ("\t\tDrop table: %s\n", drop_table (cnc) ? "OK" : "Error");
+
+	blob_tests (cnc);
 }
 

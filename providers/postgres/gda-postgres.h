@@ -30,6 +30,7 @@
 #include <glib/gmacros.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-blob.h>
 #include "gda-postgres-provider.h"
 #include "gda-postgres-recordset.h"
 
@@ -47,6 +48,9 @@ void gda_postgres_set_value (GdaValue *value,
 			     const gchar *thevalue,
 			     gboolean isNull,
 			     gint length);
+
+void gda_postgres_blob_set_connection (GdaBlob *blob, GdaConnection *cnc);
+gboolean gda_postgres_blob_create (GdaBlob *blob, GdaConnection *cnc);
 
 GdaValueType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
 					   gint ntypes,

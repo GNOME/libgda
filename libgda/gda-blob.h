@@ -28,43 +28,49 @@
 G_BEGIN_DECLS
 
 typedef enum {
-	GDA_BLOB_MODE_RDONLY,
-	GDA_BLOB_MODE_WRONLY,
-	GDA_BLOB_MODE_RDWR
+	GDA_BLOB_MODE_READ = 1,
+	GDA_BLOB_MODE_WRITE = 1 << 1,
+	GDA_BLOB_MODE_RDWR = 0x03 
 } GdaBlobMode;
 
 typedef struct _GdaBlob GdaBlob;
 
 struct _GdaBlob {
-	/* FIXME: void* -> GdaConnection* */
-	gint (* open) (gpointer connection, GdaBlob *blob,
-			GdaBlobMode mode);
+	gint (* open) (GdaBlob *blob, GdaBlobMode mode);
 
-	gint (* read) (gpointer connection, GdaBlob *blob,
-			gint size, gpointer data, gint *read_length);
+	gint (* read) (GdaBlob *blob, gpointer buf, gint size,
+			gint *bytes_read);
 
-	gint (* write) (gpointer connection, GdaBlob *blob,
-			gint size, gconstpointer data, gint *written_length);
+	gint (* write) (GdaBlob *blob, gpointer buf, gint size,
+			gint *bytes_written);
 
-	gint (* lseek) (gpointer connection, GdaBlob *blob,
-			gint offset, gint whence);
+	gint (* lseek) (GdaBlob *blob, gint offset, gint whence);
 
-	gint (* close) (gpointer connection, GdaBlob *blob);
+	gint (* close) (GdaBlob *blob);
 
-	gchar * (* stringify) (void);
+	gint (* remove) (GdaBlob *blob);
 
+	gchar * (* stringify) (GdaBlob *blob);
+
+	void (* free_data) (GdaBlob *blob);
+
+	/* Private */
 	gpointer priv_data;
+
+	/* Public */
+	gpointer user_data;
 };
 
-gint gda_blob_open (gpointer connection, GdaBlob *blob, 
-			GdaBlobMode mode);
-gint gda_blob_read (gpointer connection, GdaBlob *blob, gint size, 
-			gpointer data, gint *read_length);
-gint gda_blob_write (gpointer connection, GdaBlob *blob, gint size, 
-			gconstpointer data, gint *written_length);
-gint gda_blob_lseek (gpointer connection, GdaBlob *blob, gint offset, 
-			gint whence);
-gint gda_blob_close (gpointer connection, GdaBlob *blob);
+gint gda_blob_open (GdaBlob *blob, GdaBlobMode mode);
+gint gda_blob_read (GdaBlob *blob, gpointer buf, gint size, gint *bytes_read);
+gint gda_blob_write (GdaBlob *blob, gpointer buf, gint size,
+			gint *bytes_written);
+
+gint gda_blob_lseek (GdaBlob *blob, gint offset, gint whence);
+gint gda_blob_close (GdaBlob *blob);
+
+gint gda_blob_remove (GdaBlob *blob);
+void gda_blob_free_data (GdaBlob *blob);
 
 G_END_DECLS
 

@@ -82,6 +82,10 @@ static GdaDataModel *gda_postgres_provider_get_schema (GdaServerProvider *provid
 						       GdaConnectionSchema schema,
 						       GdaParameterList *params);
 
+static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
+						   GdaConnection *cnc,
+						   GdaBlob *blob);
+
 typedef struct {
 	gchar *col_name;
 	GdaValueType data_type;
@@ -132,6 +136,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
 	provider_class->supports = gda_postgres_provider_supports;
 	provider_class->get_schema = gda_postgres_provider_get_schema;
+	provider_class->create_blob = gda_postgres_provider_create_blob;
 }
 
 static void
@@ -814,6 +819,7 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_TRIGGERS :
 	case GDA_CONNECTION_FEATURE_USERS :
 	case GDA_CONNECTION_FEATURE_VIEWS :
+	case GDA_CONNECTION_FEATURE_BLOBS :
 		return TRUE;
 	case GDA_CONNECTION_FEATURE_NAMESPACES :
 		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -2034,5 +2040,15 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 	}
 
 	return NULL;
+}
+
+static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
+						   GdaConnection *cnc,
+						   GdaBlob *blob)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	return gda_postgres_blob_create (blob, cnc);
 }
 

@@ -108,6 +108,8 @@ gboolean             gda_connection_begin_transaction (GdaConnection *cnc, GdaTr
 gboolean             gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction);
 gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction);
 
+gboolean             gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob);
+
 const GList         *gda_connection_get_errors (GdaConnection *cnc);
 
 typedef enum {
@@ -122,7 +124,8 @@ typedef enum {
 	GDA_CONNECTION_FEATURE_TRIGGERS,
 	GDA_CONNECTION_FEATURE_USERS,
 	GDA_CONNECTION_FEATURE_VIEWS,
-	GDA_CONNECTION_FEATURE_XML_QUERIES
+	GDA_CONNECTION_FEATURE_XML_QUERIES,
+	GDA_CONNECTION_FEATURE_BLOBS
 } GdaConnectionFeature;
 
 gboolean             gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);

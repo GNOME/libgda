@@ -142,8 +142,12 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
 		length = PQgetlength (priv->pg_res, rownum, i);
 		ftype = priv->column_types [i];
 		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, rownum, i);
-		value = gda_row_get_value (row, i);
+		value = (GdaValue *) gda_row_get_value (row, i);
 		gda_postgres_set_value (value, ftype, thevalue, isNull, length);
+		if (gda_value_isa (value, GDA_VALUE_TYPE_BLOB)) {
+			GdaBlob *blob = (GdaBlob *) gda_value_get_blob (value);
+			gda_postgres_blob_set_connection (blob, priv->cnc);
+		}
 	}
 
 	id = g_strdup_printf ("%d", rownum);

@@ -894,3 +894,22 @@ gda_connection_get_errors (GdaConnection *cnc)
 	return cnc->priv->error_list;
 }
 
+/**
+ * gda_connection_create_blob
+ * @cnc: a #GdaConnection object.
+ * @blob: a user-allocated #GdaBlob structure.
+ *
+ * Creates a BLOB (Binary Large OBject).
+ *
+ * Returns: FALSE if the database does not support BLOBs. TRUE otherwise
+ * and the GdaBlob is created and ready to be used.
+ */
+gboolean
+gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (blob != NULL, FALSE);
+
+	return gda_server_provider_create_blob (cnc->priv->provider_obj, cnc, blob);
+}
+
