@@ -65,3 +65,7 @@ report/libgda-report/gda-report-item.c
 report/libgda-report/gda-report-valid.c
 testing/client.c
 testing/config.c
+providers/bdb/gda-bdb-provider.c
+providers/bdb/gda-bdb-recordset.c
+providers/bdb/libmain.c
+providers/bdb/utils.c

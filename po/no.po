@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-26 09:16+0100\n"
-"PO-Revision-Date: 2004-01-26 09:25+0100\n"
+"POT-Creation-Date: 2004-01-26 09:48+0100\n"
+"PO-Revision-Date: 2004-01-26 09:51+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -299,7 +299,7 @@ msgstr ""
 #: providers/sybase/utils.c:385 providers/sybase/utils.c:411
 #: providers/sybase/utils.c:445 providers/sybase/utils.c:462
 #: providers/sybase/utils.c:485 providers/sybase/utils.c:501
-#: providers/sybase/utils.c:539
+#: providers/sybase/utils.c:539 providers/bdb/utils.c:36
 msgid "Not available"
 msgstr "Ikke tilgjengelig"
 
@@ -505,6 +505,7 @@ msgstr "Ugyldig LDAP-håndtak"
 #: providers/postgres/gda-postgres-recordset.c:357
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
+#: providers/bdb/gda-bdb-recordset.c:111
 msgid "Row number out of range"
 msgstr "Radnummer utenfor område"
 
@@ -1214,6 +1215,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
+#: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Kolonnenummer utenfor område"
 
@@ -1331,7 +1333,7 @@ msgstr ""
 #: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
-msgstr ""
+msgstr "Kommandostruktur allerede i bruk. %s feilet."
 
 #: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
@@ -1372,7 +1374,7 @@ msgstr "kunne ikke binde variabel for å finne aktiv database."
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
 msgid "could not fetch data to find current database."
-msgstr ""
+msgstr "kunne ikke hente data for å finne aktiv database."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 #, fuzzy
@@ -1423,7 +1425,8 @@ msgstr "Kunne ikke allokere dataplassholder for kolonne %d"
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Kunne ikke kjøre %s for å avbryte prosessering av resultatsett for rad."
+msgstr ""
+"Kunne ikke kjøre %s for å avbryte prosessering av resultatsett for rad."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1643,7 +1646,9 @@ msgstr "Tilbyder for Xbase-filer (dBase, FoxPro, etc)"
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
-msgstr "En full sti må spesifiseres i tilkoblingsstrengen for å åpne en database i XML-tilbyderen."
+msgstr ""
+"En full sti må spesifiseres i tilkoblingsstrengen for å åpne en database i "
+"XML-tilbyderen."
 
 #: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
@@ -1920,3 +1925,24 @@ msgstr "\tbeskrivelse = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_parametere ="
+
+#: providers/bdb/gda-bdb-provider.c:154
+msgid "The FILE parameter is not defined in the connection string."
+msgstr "Parameteren FIL er ikke definert i tilkoblingsstrengen."
+
+#: providers/bdb/gda-bdb-provider.c:185
+msgid "-"
+msgstr "-"
+
+#: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
+#: providers/bdb/gda-bdb-provider.c:286
+msgid "Invalid BDB handle"
+msgstr "Ugyldig BDB-håndtak"
+
+#: providers/bdb/gda-bdb-recordset.c:242
+msgid "Database is empty"
+msgstr "Databasen er tom"
+
+#: providers/bdb/libmain.c:39
+msgid "Provider for Berkeley databases"
+msgstr "Tilbyder for Berkeley-databaser"
