@@ -1,3 +1,7 @@
+2004-03-16  Vivien Malerba <malerba@gnome-db.org>
+        * libsql/*: Improved the joins handling (changed the sql_table structure),
+		    and added join type (LEFT, RIGHT, FULL).
+
 2004-03-13  Vivien Malerba <malerba@gnome-db.org>
 	* libsql/*: several improvements with a change in the sql_table structure.
 		- added != symbol as WHERE condition
