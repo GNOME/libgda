@@ -1,13 +1,13 @@
 # libgda cs.po Czech translation
 # Copyright (C) 2002 Free Software Foundation
 # This file is distributed under the same license as the libgda package.
-# Michal Bukovjan <bukm@centrum.cy>, 2002.
+# Michal Bukovjan <bukm@centrum.cz>, 2002.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-09-29 06:04+0200\n"
-"PO-Revision-Date: 2002-09-29 18:08GMT\n"
+"POT-Creation-Date: 2002-10-14 06:15+0200\n"
+"PO-Revision-Date: 2002-10-14 18:01GMT\n"
 "Last-Translator: Michal Bukovjan <bukm@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,26 +15,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
-#: libgda/gda-client.c:254 libgda/gda-client.c:445 libgda/gda-connection.c:214
+#: libgda/gda-client.c:253 libgda/gda-client.c:444 libgda/gda-connection.c:214
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dat %s nebyl nalezen v nastavení"
 
-#: libgda/gda-client.c:273
+#: libgda/gda-client.c:272
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Nelze nalézt poskytovatele %s v současném nastavení"
 
-#: libgda/gda-client.c:300
+#: libgda/gda-client.c:299
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Poskytovatel %s neimplementuje vstupní funkci"
 
-#: libgda/gda-client.c:310
+#: libgda/gda-client.c:309
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Ze zásuvného modulu nelze vytvořit objekt GdaServerProvider"
 
-#: libgda/gda-client.c:373
+#: libgda/gda-client.c:372
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 
@@ -94,49 +94,32 @@ msgstr "ZPRÁVA: %s"
 msgid "ERROR: %s"
 msgstr "CHYBA: %s"
 
-#: libgda/gda-select.c:120 libgda/gda-select.c:143 libgda/gda-select.c:202
-msgid "Unexpected integer value"
-msgstr "Neočekávaná celočíselná hodnota"
+#: libgda/gda-select.c:315
+#, c-format
+msgid "Could not parse SQL string '%s'"
+msgstr "Nelze zpracovat řetězec s SQL '%s'"
 
-#: libgda/gda-select.c:132 libgda/gda-select.c:212
-msgid "Unexpected float value"
-msgstr "Neočekávaná reálná hodnota"
-
-#: libgda/gda-select.c:155
-msgid "Unexpected string value"
-msgstr "Neočekávaná hodnota typu řetězec"
-
-#: libgda/gda-select.c:166
-msgid "Unexpected symbol '='"
-msgstr "Neočekávaný symbol '='"
-
-#: libgda/gda-select.c:177
-msgid "Unexpected symbol '<'"
-msgstr "Neočekávaný symbol '<'"
-
-#: libgda/gda-select.c:188
-msgid "Unexpected symbol '>'"
-msgstr "Neočekávaný symbol '>'"
-
-#: libgda/gda-select.c:216
-msgid "Found a non-numeric value after a '-' sign"
-msgstr "Nalezena nenumerická hodnota po znaménku '-'"
-
-#: libgda/gda-select.c:232
-msgid "Unexpected identifier"
-msgstr "Neočekávaný identifikátor"
+#: libgda/gda-select.c:319
+#, c-format
+msgid "SQL command is not a SELECT (is '%s'"
+msgstr "Příkaz SQL není typu SELECT (je '%s'"
 
 #: libgda/gda-table.c:234
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Pole nazvané %s již existuje"
 
-#: libgda/gda-util.c:143
+#: libgda/gda-util.c:144
+#, c-format
+msgid "Could not parse SQL command '%s'"
+msgstr "Nelze zpracovat příkaz SQL '%s'"
+
+#: libgda/gda-util.c:177
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Chyba při čtení %s: %s"
 
-#: libgda/gda-util.c:169
+#: libgda/gda-util.c:203
 #, c-format
 msgid "Could not create file %s"
 msgstr "Nelze vytvořit soubor %s"
@@ -195,7 +178,9 @@ msgstr "Neplatný uzel XML"
 #: providers/default/gda-default-provider.c:191
 #: providers/sqlite/gda-sqlite-provider.c:200
 msgid "A full path must be specified on the connection string to open a database."
-msgstr "Pro otevření databáze musí být v připojovacím řetězci zadaná úplná cesta k databázi"
+msgstr ""
+"Pro otevření databáze musí být v připojovacím řetězci zadaná úplná cesta k "
+"databázi"
 
 #: providers/default/gda-default-provider.c:253
 #: providers/default/gda-default-provider.c:268
@@ -224,7 +209,7 @@ msgid "Data type"
 msgstr "Datový typ"
 
 #: providers/default/gda-default-provider.c:457
-#: providers/freetds/gda-freetds-provider.c:700
+#: providers/freetds/gda-freetds-provider.c:774
 #: providers/mysql/gda-mysql-provider.c:1024
 #: providers/oracle/gda-oracle-provider.c:1058
 #: providers/postgres/gda-postgres-provider.c:1067
@@ -233,7 +218,7 @@ msgid "Size"
 msgstr "Velikost"
 
 #: providers/default/gda-default-provider.c:458
-#: providers/freetds/gda-freetds-provider.c:704
+#: providers/freetds/gda-freetds-provider.c:778
 #: providers/mysql/gda-mysql-provider.c:1025
 #: providers/oracle/gda-oracle-provider.c:1059
 #: providers/postgres/gda-postgres-provider.c:1068
@@ -291,85 +276,107 @@ msgstr "Nelze získat popis pro sloupec"
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "Výchozí poskytovatel GDA, založený na formátu libgda XML"
 
-#: providers/freetds/gda-freetds-provider.c:176
+#: providers/freetds/gda-freetds-provider.c:177
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"Spojení přerušeno. Musíte zadat alespoň název počítače, uživatelské jméno a heslo "
-"pomocí DSN 'QUERY=;USER=;PASSWORD='"
+"Spojení přerušeno. Musíte zadat alespoň název počítače, uživatelské jméno a "
+"heslo pomocí DSN 'QUERY=;USER=;PASSWORD='"
 
-#: providers/freetds/gda-freetds-provider.c:189
+#: providers/freetds/gda-freetds-provider.c:190
 msgid "Error creating message container."
 msgstr "Chyba při vytváření kontejneru zprávy."
 
-#: providers/freetds/gda-freetds-provider.c:196
+#: providers/freetds/gda-freetds-provider.c:197
 msgid "Error creating error container."
 msgstr "Chyba při vytváření kontejneru chyby."
 
-#: providers/freetds/gda-freetds-provider.c:234
+#: providers/freetds/gda-freetds-provider.c:235
+#: providers/freetds/gda-freetds-provider.c:237
+msgid "Allocating tds context failed."
+msgstr "Alokace kontextu tds selhala."
+
+#: providers/freetds/gda-freetds-provider.c:250
+#: providers/freetds/gda-freetds-provider.c:252
 msgid "Establishing connection failed."
 msgstr "Vytváření spojení selhalo."
 
-#: providers/freetds/gda-freetds-provider.c:242
+#: providers/freetds/gda-freetds-provider.c:264
+#: providers/freetds/gda-freetds-provider.c:265
 msgid "Failed getting connection info."
 msgstr "Selhalo získání informací o spojení."
 
-#: providers/freetds/gda-freetds-provider.c:555
+#: providers/freetds/gda-freetds-provider.c:605
 #: providers/oracle/gda-oracle-provider.c:1655
 msgid "Procedures"
 msgstr "Procedury"
 
-#: providers/freetds/gda-freetds-provider.c:563
+#: providers/freetds/gda-freetds-provider.c:614
 #: providers/oracle/gda-oracle-provider.c:1663
 msgid "Tables"
 msgstr "Tabulky"
 
-#: providers/freetds/gda-freetds-provider.c:570
+#: providers/freetds/gda-freetds-provider.c:622
 msgid "Types"
 msgstr "Typy"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/freetds/gda-freetds-provider.c:577
+#: providers/freetds/gda-freetds-provider.c:630
 #: providers/oracle/gda-oracle-provider.c:1459
 #: providers/postgres/gda-postgres-provider.c:1448 testing/client.c:128
 msgid "Users"
 msgstr "Uživatelé"
 
-#: providers/freetds/gda-freetds-provider.c:584
+#: providers/freetds/gda-freetds-provider.c:638
 #: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
 msgid "Views"
 msgstr "Náhledy"
 
-#: providers/freetds/gda-freetds-provider.c:696
+#: providers/freetds/gda-freetds-provider.c:671
+#: providers/freetds/gda-freetds-provider.c:672
+msgid "Query did not succeed in execute_cmd()."
+msgstr "Dotaz neuspěl při volání execute_cmd()."
+
+#: providers/freetds/gda-freetds-provider.c:681
+#: providers/freetds/gda-freetds-provider.c:683
+msgid "Unexpected result tokens in execute_cmd()."
+msgstr "Neočekávané symboly s výsledkem při volání execute_cmd()."
+
+#: providers/freetds/gda-freetds-provider.c:691
+#: providers/freetds/gda-freetds-provider.c:692
+msgid "Unexpected return in execute_cmd()."
+msgstr "Neočekávaný návrat z volání execute_cmd()."
+
+#: providers/freetds/gda-freetds-provider.c:770
 msgid "Field Name"
 msgstr "Název pole"
 
-#: providers/freetds/gda-freetds-provider.c:698
+#: providers/freetds/gda-freetds-provider.c:772
 msgid "Data Type"
 msgstr "Datový typ"
 
-#: providers/freetds/gda-freetds-provider.c:702
+#: providers/freetds/gda-freetds-provider.c:776
 msgid "Precision"
 msgstr "Přesnost"
 
-#: providers/freetds/gda-freetds-provider.c:706
+#: providers/freetds/gda-freetds-provider.c:780
 msgid "Identity"
 msgstr "Identita"
 
-#: providers/freetds/gda-freetds-provider.c:708
+#: providers/freetds/gda-freetds-provider.c:782
 msgid "Nullable"
 msgstr "Nulovatelný"
 
-#: providers/freetds/gda-freetds-provider.c:710
+#: providers/freetds/gda-freetds-provider.c:784
 msgid "Domain"
 msgstr "Doména"
 
-#: providers/freetds/gda-freetds-provider.c:712
+#: providers/freetds/gda-freetds-provider.c:786
 msgid "Printfmt"
 msgstr "Printfmt"
 
-#: providers/freetds/gda-freetds-provider.c:831
+#: providers/freetds/gda-freetds-provider.c:905
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -378,24 +385,24 @@ msgstr ""
 "Zpráva %d, Úroveň %d, Stav %d, Server %s, Řádek %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:849 providers/freetds/utils.c:45
+#: providers/freetds/gda-freetds-provider.c:923 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
 msgid "Not available"
 msgstr "Není k dispozici"
 
-#: providers/freetds/gda-freetds-recordset.c:356
+#: providers/freetds/gda-freetds-recordset.c:357
 msgid "Error processing result rows.\n"
 msgstr "Chyba při zpracování řádků výsledku.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:364
+#: providers/freetds/gda-freetds-recordset.c:365
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Neočekávaný návratový kód freetds v tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:373
+#: providers/freetds/gda-freetds-recordset.c:374
 msgid "Error processing results.\n"
 msgstr "Chyba při zpracování výsledků.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:380
+#: providers/freetds/gda-freetds-recordset.c:381
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Neočekávaný návratový kód freetds v tds_process_result_tokens\n"
 
@@ -904,7 +911,9 @@ msgstr "Je povolena pouze jedna databáze na připojení"
 
 #: providers/sqlite/gda-sqlite-provider.c:390
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr "Chcete-li odstranit databázi SQLite, měl byste odstranit soubor s databází ručně"
+msgstr ""
+"Chcete-li odstranit databázi SQLite, měl byste odstranit soubor s databází "
+"ručně"
 
 #: providers/sqlite/gda-sqlite-provider.c:659
 msgid "Could not retrieve information for field"
@@ -1085,4 +1094,25 @@ msgstr "\tpopis = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Unexpected integer value"
+#~ msgstr "Neočekávaná celočíselná hodnota"
+
+#~ msgid "Unexpected float value"
+#~ msgstr "Neočekávaná reálná hodnota"
+
+#~ msgid "Unexpected symbol '='"
+#~ msgstr "Neočekávaný symbol '='"
+
+#~ msgid "Unexpected symbol '<'"
+#~ msgstr "Neočekávaný symbol '<'"
+
+#~ msgid "Unexpected symbol '>'"
+#~ msgstr "Neočekávaný symbol '>'"
+
+#~ msgid "Found a non-numeric value after a '-' sign"
+#~ msgstr "Nalezena nenumerická hodnota po znaménku '-'"
+
+#~ msgid "Unexpected identifier"
+#~ msgstr "Neočekávaný identifikátor"
 
