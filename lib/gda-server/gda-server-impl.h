@@ -305,7 +305,7 @@ void             gda_server_error_make             (Gda_ServerError *error,
                                                     gchar *where);
 
 /*
- * Gda_ServerImpl object - interface for applications
+ * Gda_ServerImpl object - interface for providers implementations
  */
 struct _Gda_ServerImpl {
 #ifdef HAVE_GOBJECT

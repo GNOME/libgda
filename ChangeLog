@@ -1,3 +1,15 @@
+2000-12-22	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/gda-interbase-server/gda-interbase-command.c,
+	providers/gda-ldap-server/gda-ldap-command.c,
+	providers/gda-mail-server/gda-mail-command.c,
+	providers/gda-mysql-server/gda-mysql-command.c,
+	providers/gda-oracle-server/gda-oracle-command.c:
+	added support for the GDA_CommandType stuff in the GDA::Command::execute
+	method, thus allowing:
+		COMMAND_TYPE_TEXT: SQL or whatever language is used by the RDBMS
+		COMMAND_TYPE_TABLE: the name of a table for which we want all rows
+		
 2000-12-21	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* added support for the GDA_CommandType stuff, which will

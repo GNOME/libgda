@@ -27,8 +27,7 @@
  * Public functions
  */
 gboolean
-gda_mail_command_new (Gda_ServerCommand * cmd)
-{
+gda_mail_command_new (Gda_ServerCommand * cmd) {
 	return TRUE;
 }
 
@@ -37,14 +36,17 @@ gda_mail_command_execute (Gda_ServerCommand * cmd,
 						  Gda_ServerError * error,
 						  const GDA_CmdParameterSeq * params,
 						  gulong * affected,
-						  gulong options)
-{
+						  gulong options) {
 	Gda_ServerRecordset * recset = NULL;
 
+	switch (gda_server_command_get_type(cmd)) {
+		case GDA_COMMAND_TYPE_TEXT :
+		case GDA_COMMAND_TYPE_TABLE :
+		case GDA_COMMAND_TYPE_STOREDPROCEDURE :
+	}
 	return recset;
 }
 
 void
-gda_mail_command_free (Gda_ServerCommand * cmd)
-{
+gda_mail_command_free (Gda_ServerCommand * cmd) {
 }
