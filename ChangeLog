@@ -1,3 +1,10 @@
+2000-10-20	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* fixed license issues:
+	AUTHORS: specify who does what
+	COPYING.LIB: added for LGPL parts
+	README: state which parts are LGPL and which GPL
+
 2000-10-17  Almer S. Tigelaar  <almer1@dds.nl>
 
 	* configure.in: Added Dutch (nl) to ALL_LINGUAS.

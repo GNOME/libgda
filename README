@@ -20,6 +20,14 @@ libgda was part of the GNOME-DB project (http://www.gnome.org/projects/gnome-db)
 but has been separated from it to allow non-GNOME applications to be
 developed based on it.
 
+libgda is released under the terms of the GPL and LGPL licenses. The specific
+parts of the architecture are licensed under one of them: executables, such as
+the command-line tools and the database providers are licensed under the
+GPL license, which means that any work derived from it must also adhere to the
+terms of the GPL license. Libraries (libgda-common, libgda-client, libgda-server,
+libgda-report) are, on the other hand, licensed under the LGPL license, which
+allows for commercial applications to be developed based on libgda.
+
 Dependencies
 ------------
 To compile libgda, you must have the following packages installed:

@@ -16,8 +16,6 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#define POPT_AUTOHELP
-
 #include "config.h"
 #include <signal.h>
 
@@ -137,3 +135,4 @@ gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *a
 #endif
   oaf_init(nargs, args);
 }
+
