@@ -1,5 +1,8 @@
-/* GDA Common Library
- * Copyright (C) 2000 Rodrigo Moya
+/* GDA common library
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,125 +23,77 @@
 #if !defined(__gda_config_h__)
 #  define __gda_config_h__
 
-#include <gda-common-defs.h>
+#include <glib/gmacros.h>
+#include <gda-parameter.h>
 
 G_BEGIN_DECLS
 
-#define GDA_CONFIG_SECTION_DATASOURCES       "/apps/gda/Datasources"
-#define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/gda/LastConnections"
-#define GDA_CONFIG_SECTION_LOG               "/apps/gda/Log"
+/*
+ * Basic configuration access
+ */
 
-#define GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS  "/apps/gda/MaxLastConnections"
+gchar   *gda_config_get_string (const gchar *path);
+gint     gda_config_get_int (const gchar *path);
+gdouble  gda_config_get_float (const gchar *path);
+gboolean gda_config_get_boolean (const gchar *path);
+void     gda_config_set_string (const gchar *path, const gchar *new_value);
+void     gda_config_set_int (const gchar *path, gint new_value);
+void     gda_config_set_float (const gchar *path, gfloat new_value);
+void     gda_config_set_boolean (const gchar *path, gboolean new_value);
+
+void     gda_config_remove_section (const gchar *path);
+void     gda_config_remove_key (const gchar *path);
+gboolean gda_config_has_section (const gchar *path);
+gboolean gda_config_has_key (const gchar *path);
+GList   *gda_config_list_sections (const gchar *path);
+GList   *gda_config_list_keys (const gchar *path);
+
+void     gda_config_free_list (GList *list);
 
 /*
- * Configuration system access
+ * CORBA components configuration
  */
-gchar   *gda_config_get_string (const gchar * path);
-glong    gda_config_get_int (const gchar * path);
-gdouble  gda_config_get_float (const gchar * path);
-gboolean gda_config_get_boolean (const gchar * path);
-void     gda_config_set_string (const gchar * path, const gchar * new_value);
-void     gda_config_set_int (const gchar * path, glong new_value);
-void     gda_config_set_float (const gchar * path, gdouble new_value);
-void     gda_config_set_boolean (const gchar * path, gboolean new_value);
 
-void     gda_config_remove_section (const gchar * path);
-void     gda_config_remove_key (const gchar * path);
+typedef enum {
+	GDA_COMPONENT_TYPE_INVALID = -1,
+	GDA_COMPONENT_TYPE_EXE,
+	GDA_COMPONENT_TYPE_SHLIB,
+	GDA_COMPONENT_TYPE_FACTORY
+} GdaComponentType;
 
-gboolean gda_config_has_section (const gchar * path);
-gboolean gda_config_has_key (const gchar * path);
-
-GList   *gda_config_list_sections (const gchar * path);
-GList   *gda_config_list_keys (const gchar * path);
-void     gda_config_free_list (GList * list);
-
-typedef void (* GdaConfigListenerFunc) (gpointer user_data);
-
-glong    gda_config_add_listener (GdaConfigListenerFunc func, gpointer user_data);
-void     gda_config_remove_listener (glong listener_id);
-
-/*
- * Providers
- */
-typedef struct _GdaProvider {
-	gchar *name;
-	gchar *comment;
+typedef struct {
+	gchar *id;
 	gchar *location;
-	gchar *repo_id;
-	gchar *type;
+	GdaComponentType type;
+	gchar *description;
+	GList *repo_ids;
 	gchar *username;
 	gchar *hostname;
 	gchar *domain;
-	GList *dsn_params;
-} GdaProvider;
+	GdaParameterList *properties;
+} GdaComponentInfo;
 
-#define GDA_PROVIDER_TYPE(srv)       ((srv) ? (srv)->type : NULL)
-#define GDA_PROVIDER_NAME(srv)       ((srv) ? (srv)->name : NULL)
-#define GDA_PROVIDER_COMMENT(srv)    ((srv) ? (srv)->comment : NULL)
-#define GDA_PROVIDER_LOCATION(srv)   ((srv) ? (srv)->location : NULL)
-#define GDA_PROVIDER_REPO_ID(srv)    ((srv) ? (srv)->repo_id : NULL)
-#define GDA_PROVIDER_USERNAME(srv)   ((srv) ? (srv)->username : NULL)
-#define GDA_PROVIDER_HOSTNAME(srv)   ((srv) ? (srv)->hostname : NULL)
-#define GDA_PROVIDER_DOMAIN(srv)     ((srv) ? (srv)->domain : NULL)
-#define GDA_PROVIDER_DSN_PARAMS(srv) ((srv) ? (srv)->dsn_params : NULL)
+GList *gda_config_get_component_list (const gchar *query);
+void   gda_config_free_component_list (GList *list);
 
-GdaProvider *gda_provider_new (void);
-GdaProvider *gda_provider_copy (GdaProvider * provider);
-void         gda_provider_free (GdaProvider * provider);
-
-GList       *gda_provider_list (void);
-void         gda_provider_free_list (GList * list);
-GdaProvider *gda_provider_find_by_name (const gchar * name);
-
-/*
- * Data sources
- */
-GList *gda_list_datasources (void);
-GList *gda_list_datasources_for_provider (gchar * name);
-
-typedef struct _GdaDsn {
-	gchar *gda_name;
-	gchar *provider;
-	gchar *dsn_str;
+typedef struct {
+	gchar *id;
+	gchar *location;
+	GdaComponentType type;
 	gchar *description;
+	GList *repo_ids;
 	gchar *username;
-	gchar *config;
-	gboolean is_global;
-} GdaDsn;
+	gchar *hostname;
+	gchar *domain;
+	GList *gda_params;
+} GdaProviderInfo;
 
-#define GDA_DSN_GDA_NAME(dsn)    ((dsn) ? (dsn)->gda_name : 0)
-#define GDA_DSN_PROVIDER(dsn)    ((dsn) ? (dsn)->provider : 0)
-#define GDA_DSN_DSN(dsn)         ((dsn) ? (dsn)->dsn_str : 0)
-#define GDA_DSN_DESCRIPTION(dsn) ((dsn) ? (dsn)->description : 0)
-#define GDA_DSN_USERNAME(dsn)    ((dsn) ? (dsn)->username : 0)
-#define GDA_DSN_CONFIG(dsn)      ((dsn) ? (dsn)->config : 0)
-#define GDA_DSN_IS_GLOBAL(dsn)   ((dsn) ? (dsn)->is_global : FALSE)
-
-#define  gda_dsn_new() g_new0(GdaDsn, 1)
-void     gda_dsn_free (GdaDsn * dsn);
-GdaDsn  *gda_dsn_copy (GdaDsn * dsn);
-
-GdaDsn  *gda_dsn_find_by_name (const gchar * dsn_name);
-void     gda_dsn_set_name (GdaDsn * dsn, const gchar * name);
-void     gda_dsn_set_provider (GdaDsn * dsn, const gchar * provider);
-void     gda_dsn_set_dsn (GdaDsn * dsn, const gchar * dsn_str);
-void     gda_dsn_set_description (GdaDsn * dsn,
-			      const gchar * description);
-void     gda_dsn_set_username (GdaDsn * dsn, const gchar * username);
-void     gda_dsn_set_config (GdaDsn * dsn, const gchar * config);
-void     gda_dsn_set_global (GdaDsn * dsn, gboolean is_global);
-
-gboolean gda_dsn_save (GdaDsn * dsn);
-gboolean gda_dsn_remove (GdaDsn * dsn);
-
-GList   *gda_dsn_list (void);
-void     gda_dsn_free_list (GList * list);
+GList *gda_config_get_provider_list (void);
+void   gda_config_free_provider_list (GList *list);
 
 /*
- * Private functions
+ * Data sources configuration
  */
-void gda_config_save_last_connection (const gchar * gda_name,
-				      const gchar * username);
 
 G_END_DECLS
 

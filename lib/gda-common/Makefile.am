@@ -31,7 +31,11 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 
 gda_common_headers = \
 	gda-common.h \
+	gda-config.h \
 	gda-data-model.h \
+	gda-error.h \
+	gda-field.h \
+	gda-parameter.h \
 	gda-quark-list.h \
 	gda-value.h \
 	GNOME_Database.h
@@ -43,8 +47,12 @@ libgda_common_2_la_SOURCES = \
 	GNOME_Database-common.c \
 	GNOME_Database-skels.c \
 	GNOME_Database-stubs.c \
+	gda-config.c \
 	gda-data-model.c \
+	gda-error.c \
+	gda-field.c \
 	gda-init.c \
+	gda-parameter.c \
 	gda-quark-list.c \
 	gda-value.c
 

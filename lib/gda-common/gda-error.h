@@ -1,6 +1,9 @@
-/* GDA common libary
- * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 2000,2001 Rodrigo Moya
+/* GDA server library
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *      Michael Lausch <michael@lausch.at>
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,19 +28,14 @@
 
 G_BEGIN_DECLS
 
-/* The error object. Holds error messages resulting from CORBA exceptions
- * or server errors. 
- */
-
-typedef struct _GdaError GdaError;
-typedef struct _GdaErrorClass GdaErrorClass;
-
 #define GDA_TYPE_ERROR            (gda_error_get_type())
 #define GDA_ERROR(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_ERROR, GdaError))
 #define GDA_ERROR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_ERROR, GdaErrorClass))
 #define GDA_IS_ERROR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_ERROR))
 #define GDA_IS_ERROR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_ERROR))
 
+typedef struct _GdaError        GdaError;
+typedef struct _GdaErrorClass   GdaErrorClass;
 typedef struct _GdaErrorPrivate GdaErrorPrivate;
 
 struct _GdaError {
@@ -62,26 +60,14 @@ GNOME_Database_ErrorSeq *
 void          gda_error_free (GdaError * error);
 void          gda_error_list_free (GList * errors);
 
-const gchar  *gda_error_get_description (GdaError * error);
-void          gda_error_set_description (GdaError * error,
-					 const gchar * description);
-const glong   gda_error_get_number (GdaError * error);
-void          gda_error_set_number (GdaError * error, glong number);
-const gchar  *gda_error_get_source (GdaError * error);
-void          gda_error_set_source (GdaError * error, const gchar * source);
-const gchar  *gda_error_get_help_url (GdaError * error);
-void          gda_error_set_help_url (GdaError * error, const gchar * helpurl);
-const gchar  *gda_error_get_help_context (GdaError * error);
-void          gda_error_set_help_context (GdaError * error,
-					  const gchar * helpctxt);
-const gchar  *gda_error_get_sqlstate (GdaError * error);
-void          gda_error_set_sqlstate (GdaError * error,
-				      const gchar * sqlstate);
-const gchar  *gda_error_get_native (GdaError * error);
-void          gda_error_set_native (GdaError * error, const gchar * native);
-const gchar  *gda_error_get_real_command (GdaError * error);
-void          gda_error_set_real_command (GdaError * error,
-					  const gchar * realcommand);
+const gchar  *gda_error_get_description (GdaError *error);
+void          gda_error_set_description (GdaError *error, const gchar *description);
+const glong   gda_error_get_number (GdaError *error);
+void          gda_error_set_number (GdaError *error, glong number);
+const gchar  *gda_error_get_source (GdaError *error);
+void          gda_error_set_source (GdaError *error, const gchar *source);
+const gchar  *gda_error_get_sqlstate (GdaError *error);
+void          gda_error_set_sqlstate (GdaError *error,<const gchar *sqlstate);
 
 G_END_DECLS
 

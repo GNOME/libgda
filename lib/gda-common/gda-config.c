@@ -1,5 +1,8 @@
-/* GDA Common Library
- * Copyright (C) 2000 Rodrigo Moya
+/* GDA common library
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -17,38 +20,115 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
-#include <string.h>
-#include <bonobo-activation/bonobo-activation.h>
-#include <bonobo-config/bonobo-config-database.h>
-#include <bonobo/bonobo-exception.h>
-#include <bonobo/bonobo-moniker-util.h>
-#include <bonobo/bonobo-listener.h>
-#include <bonobo/bonobo-property-bag-client.h>
-#include <bonobo/bonobo-event-source.h>
 #include "gda-config.h"
-#include "gda-corba.h"
+#include <bonobo-activation/bonobo-activation.h>
+#include <bonobo/bonobo-exception.h>
+#include <gconf/gconf.h>
 
-static Bonobo_ConfigDatabase conf_engine = NULL;
+#define GDA_CONFIG_SECTION_DATASOURCES       "/apps/gda/Datasources"
+#define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/gda/LastConnections"
 
-static Bonobo_ConfigDatabase
-get_conf_engine (void)
+#define GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS  "/apps/gda/MaxLastConnections"
+
+static GConfEngine *conf_engine = NULL;
+
+/*
+ * Private functions
+ */
+
+static GList *
+activation_property_to_list (Bonobo_ActivationProperty *prop)
 {
-	CORBA_Environment ev;
+	GList *list = NULL;
+	g_return_val_if_fail (prop != NULL);
 
-	if (!conf_engine) {
-		CORBA_exception_init (&ev);
+	if (prop->v._d == BONOBO_ACTIVATION_P_STRING)
+		list = g_list_append (g_strdup (prop->v._u.value_string));
+	else if (prop->v._d == BONOBO_ACTIVATION_P_STRINGV) {
+		gint j;
+		Bonobo_StringList strlist = prop->v._u.value_stringv;
 
-		conf_engine = bonobo_get_object ("config:", "Bonobo/ConfigDatabase", &ev);
-		if (!conf_engine || BONOBO_EX (&ev)) {
-			CORBA_exception_free (&ev);
-			return NULL;
-		}
-
-		bonobo_running_context_auto_exit_unref (BONOBO_OBJECT (conf_engine));
+		for (j = 0; j < strlist._length; j++)
+			list = g_list_append (list, strlist._buffer[j]);
 	}
 
-	return conf_engine;
+	return list;
+}
+
+static GdaParameter *
+activation_property_to_parameter (Bonobo_ActivationProperty *prop)
+{
+	GdaParameter *param;
+	GdaValue *value;
+	gchar *str;
+
+	g_return_val_if_fail (prop != NULL, NULL);
+
+	param = gda_parameter_new ((const gchar *) prop->name);
+	value = gda_parameter_get_value (param);
+
+	switch (prop->v._d) {
+	case BONOBO_ACTIVATION_P_STRING :
+		gda_value_set_string (value, prop->v._u.value_string);
+		break;
+	case BONOBO_ACTIVATION_P_NUMBER :
+		gda_value_set_double (value, prop->v._u.value_number);
+		break;
+	case BONOBO_ACTIVATION_P_BOOLEAN :
+		gda_value_set_boolean (value, prop->v._u.value_boolean);
+		break;
+	case BONOBO_ACTIVATION_P_STRINGV :
+		str = activation_property_to_string (prop);
+		if (str) {
+			gda_value_set_string (value, str);
+			g_free (str);
+		}
+		break;
+	}
+
+	return param;
+}
+
+static gchar *
+activation_property_to_string (Bonobo_ActivationProperty *prop)
+{
+	g_return_val_if_fail (prop != NULL, NULL);
+
+	if (prop->v._d == BONOBO_ACTIVATION_P_STRING)
+		return g_strdup (prop->v._u.value_string);
+	else if (prop->v._d == BONOBO_ACTIVATION_P_STRINGV) {
+		gint j;
+		GString *str = NULL;
+		Bonobo_StringList strlist = prop->v._u.value_stringv;
+
+		for (j = 0; j < strlist._length; j++) {
+			if (!str)
+				str = g_string_new (strlist._buffer[j]);
+			else {
+				str = g_string_append (str, ";");
+				str = g_string_append (str, strlist._buffer[j]);
+			}
+		}
+		if (str) {
+			gchar *ret = g_strdup (str->str);
+			g_string_free (str, TRUE);
+			return ret;
+		}
+	}
+
+	return NULL;
+}
+
+static GConfEngine *
+get_conf_engine (void)
+{
+        if (!conf_engine) {
+                /* initialize GConf */
+                if (!gconf_is_initialized ())
+                        gconf_init (0, NULL, NULL);
+                conf_engine = gconf_engine_get_default ();
+        }
+        return conf_engine;
 }
 
 /**
@@ -61,9 +141,9 @@ get_conf_engine (void)
  * Returns: the value stored at the given entry
  */
 gchar *
-gda_config_get_string (const gchar * path)
+gda_config_get_string (const gchar *path)
 {
-	return bonobo_pbclient_get_string (get_conf_engine (), path, NULL);
+        return gconf_engine_get_string (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -74,10 +154,10 @@ gda_config_get_string (const gchar * path)
  *
  * Returns: the value stored at the given entry
  */
-glong
-gda_config_get_int (const gchar * path)
+gint
+gda_config_get_int (const gchar *path)
 {
-	return bonobo_pbclient_get_long (get_conf_engine (), path, NULL);
+        return gconf_engine_get_int (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -89,9 +169,9 @@ gda_config_get_int (const gchar * path)
  * Returns: the value stored at the given entry
  */
 gdouble
-gda_config_get_float (const gchar * path)
+gda_config_get_float (const gchar *path)
 {
-	return bonobo_pbclient_get_float (get_conf_engine (), path, NULL);
+        return gconf_engine_get_float (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -103,9 +183,9 @@ gda_config_get_float (const gchar * path)
  * Returns: the value stored at the given entry
  */
 gboolean
-gda_config_get_boolean (const gchar * path)
+gda_config_get_boolean (const gchar *path)
 {
-	return bonobo_pbclient_get_boolean (get_conf_engine (), path, NULL);
+        return gconf_engine_get_bool (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -116,9 +196,9 @@ gda_config_get_boolean (const gchar * path)
  * Sets the given configuration entry to contain a string
  */
 void
-gda_config_set_string (const gchar * path, const gchar * new_value)
+gda_config_set_string (const gchar *path, const gchar *new_value)
 {
-	bonobo_pbclient_set_string (get_conf_engine (), path, new_value, NULL);
+        gconf_engine_set_string (get_conf_engine (), path, new_value, NULL);
 }
 
 /**
@@ -129,9 +209,9 @@ gda_config_set_string (const gchar * path, const gchar * new_value)
  * Sets the given configuration entry to contain an integer
  */
 void
-gda_config_set_int (const gchar * path, glong new_value)
+gda_config_set_int (const gchar *path, gint new_value)
 {
-	bonobo_pbclient_set_long (get_conf_engine (), path, new_value, NULL);
+        gconf_engine_set_int (get_conf_engine (), path, new_value, NULL);
 }
 
 /**
@@ -144,7 +224,7 @@ gda_config_set_int (const gchar * path, glong new_value)
 void
 gda_config_set_float (const gchar * path, gdouble new_value)
 {
-	bonobo_pbclient_set_float (get_conf_engine (), path, new_value, NULL);
+        gconf_engine_set_float (get_conf_engine (), path, new_value, NULL);
 }
 
 /**
@@ -155,10 +235,10 @@ gda_config_set_float (const gchar * path, gdouble new_value)
  * Sets the given configuration entry to contain a boolean
  */
 void
-gda_config_set_boolean (const gchar * path, gboolean new_value)
+gda_config_set_boolean (const gchar *path, gboolean new_value)
 {
-	g_return_if_fail (path != NULL);
-	bonobo_pbclient_set_boolean (get_conf_engine (), path, new_value, NULL);
+        g_return_if_fail (path != NULL);
+        gconf_engine_set_bool (get_conf_engine (), path, new_value, NULL);
 }
 
 /**
@@ -168,10 +248,10 @@ gda_config_set_boolean (const gchar * path, gboolean new_value)
  * Remove the given section from the configuration database
  */
 void
-gda_config_remove_section (const gchar * path)
+gda_config_remove_section (const gchar *path)
 {
-	g_return_if_fail (path != NULL);
-	/* FIXME: */
+        g_return_if_fail (path != NULL);
+        gconf_engine_remove_dir (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -181,9 +261,9 @@ gda_config_remove_section (const gchar * path)
  * Remove the given entry from the configuration database
  */
 void
-gda_config_remove_key (const gchar * path)
+gda_config_remove_key (const gchar *path)
 {
-	/* FIXME: */
+        gconf_engine_unset (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -196,9 +276,9 @@ gda_config_remove_key (const gchar * path)
  * Returns: TRUE if the section exists, FALSE otherwise
  */
 gboolean
-gda_config_has_section (const gchar * path)
+gda_config_has_section (const gchar *path)
 {
-	return FALSE; /* FIXME: */
+        return gconf_engine_dir_exists (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -210,12 +290,18 @@ gda_config_has_section (const gchar * path)
  * Returns: TRUE if the entry exists, FALSE otherwise
  */
 gboolean
-gda_config_has_key (const gchar * path)
+gda_config_has_key (const gchar *path)
 {
-	g_return_val_if_fail (path != NULL, FALSE);
+        GConfValue *value;
 
-	/* FIXME: */
-	return FALSE;
+        g_return_val_if_fail (path != NULL, FALSE);
+
+        value = gconf_engine_get (get_conf_engine (), path, NULL);
+        if (value) {
+                gconf_value_free (value);
+                return TRUE;
+        }
+        return FALSE;
 }
 
 /**
@@ -230,15 +316,28 @@ gda_config_has_key (const gchar * path)
  * Returns: a list containing all the section names
  */
 GList *
-gda_config_list_sections (const gchar * path)
+gda_config_list_sections (const gchar *path)
 {
-	GList *ret = NULL;
-	GSList *slist;
+        GList *ret = NULL;
+        GSList *slist;
 
-	g_return_val_if_fail (path != NULL, NULL);
+        g_return_val_if_fail (path != NULL, NULL);
 
-	/* FIXME: */
-	return ret;
+        slist = gconf_engine_all_dirs (get_conf_engine (), path, NULL);
+        if (slist) {
+                GSList *node;
+
+                for (node = slist; node != NULL; node = g_slist_next (node)) {
+                        gchar *section_name;
+
+			section_name = strrchr ((const char *) node->data, '/');
+                        if (section_name) {
+                                ret = g_list_append (ret, g_strdup (section_name + 1));
+                        }
+                }
+                g_slist_free (slist);
+        }
+        return ret;
 }
 
 /**
@@ -254,7 +353,34 @@ gda_config_list_sections (const gchar * path)
 GList *
 gda_config_list_keys (const gchar * path)
 {
-	/* FIXME: */
+        GList *ret = NULL;
+        GSList *slist;
+
+        g_return_val_if_fail (path != NULL, NULL);
+
+        slist = gconf_engine_all_entries (get_conf_engine (), path, NULL);
+        if (slist) {
+                GSList *node;
+
+                for (node = slist; node != NULL; node = g_slist_next (node)) {
+                        GConfEntry *entry = (GConfEntry *) node->data;
+                        if (entry) {
+                                gchar *entry_name;
+
+                                entry_name = strrchr (
+					(const char *) gconf_entry_get_key (entry),
+					'/');
+                                if (entry_name) {
+                                        ret = g_list_append (
+						ret,
+						g_strdup (entry_name + 1));
+                                }
+                                gconf_entry_free (entry);
+                        }
+                }
+                g_slist_free (slist);
+        }
+        return ret;
 }
 
 /**
@@ -267,866 +393,211 @@ gda_config_list_keys (const gchar * path)
 void
 gda_config_free_list (GList * list)
 {
-	while (list != NULL) {
-		gchar *str = (gchar *) list->data;
-		list = g_list_remove (list, (gpointer) str);
-		g_free ((gpointer) str);
-	}
-}
-
-typedef struct {
-	GdaConfigListenerFunc func;
-	gpointer user_data;
-	glong listener_id;
-} ConfigListenerCbData;
-
-static GList *config_listeners = NULL;
-
-static void
-config_changed_cb (BonoboListener *listener,
-		   char *event_name,
-		   CORBA_any *any,
-		   CORBA_Environment *ev,
-		   gpointer user_data)
-{
-	ConfigListenerCbData *cb_data = (ConfigListenerCbData *) user_data;
-
-	g_return_if_fail (cb_data != NULL);
-	g_return_if_fail (cb_data->func != NULL);
-
-	cb_data->func (cb_data->user_data);
+        while (list != NULL) {
+                gchar *str = (gchar *) list->data;
+                list = g_list_remove (list, (gpointer) str);
+                g_free ((gpointer) str);
+        }
 }
 
 /**
- * gda_config_add_listener
+ * gda_config_get_component_list
+ * @query: condition for components to be retrieved.
+ *
+ * Return a list of all components currently installed in
+ * the system that match the given query (see
+ * BonoboActivation documentation). Each of the nodes
+ * in the returned GList is a #GdaComponentInfo. To free
+ * the returned list, call the #gda_config_free_component_list
+ * function.
+ *
+ * Returns: a GList of #GdaComponentInfo structures.
  */
-glong
-gda_config_add_listener (GdaConfigListenerFunc func, gpointer user_data)
+GList *
+gda_config_get_component_list (const gchar *query)
 {
-	ConfigListenerCbData *cb_data;
-	glong listener_id;
 	CORBA_Environment ev;
-
-	g_return_val_if_fail (func != NULL, -1);
-
-	cb_data = g_new0 (ConfigListenerCbData, 1);
-	cb_data->func = func;
-	cb_data->user_data = user_data;
+	Bonobo_ServerInfoList *server_list;
+	gint n;
+	GList *list = NULL;
 
 	CORBA_exception_init (&ev);
-	//cb_data->listener_id = bonobo_event_source_client_add_listener (
-	//	get_conf_engine (), config_changed_cb, NULL, &ev, cb_data);
 
+	server_list = bonobo_activation_query (query, NULL, &ev);
 	if (BONOBO_EX (&ev)) {
-		g_free (cb_data);
+		gda_log_error (_("Could not query CORBA components"));
 		CORBA_exception_free (&ev);
-		return -1;
+		return NULL;
 	}
 
-	CORBA_exception_free (&ev);
+	/* create the list to be returned from the CORBA sequence */
+	for (i = 0; i < server_list->_length; i++) {
+		GdaComponentInfo *comp_info;
+		gint j;
+		Bonobo_ServerInfo *bonobo_info = &server_list->_buffer[i];
 
-	config_listeners = g_list_append (config_listeners, cb_data);
+		comp_info = g_new0 (GdaComponentInfo, 1);
 
-	return cb_data->listener_id;
+		comp_info->id = g_strdup (bonobo_info->iid);
+		comp_info->location = g_strdup (bonobo_info->location_info);
+		comp_info->description = activation_property_to_string (
+			bonono_server_info_prop_find (bonobo_info, "description"));
+		comp_info->repo_ids = activation_property_to_list (
+			bonobo_server_info_prop_find (bonobo_info, "repo_ids"));
+		comp_info->username = g_strdup (bonobo_info->username);
+		comp_info->hostname = g_strdup (bonobo_info->hostname);
+		comp_info->domain = g_strdup (bonobo_info->domain);
+
+		if (!strcmp (bonobo_info->type, "exe"))
+			comp_info->type = GDA_COMPONENT_TYPE_EXE;
+		else if (!strcmp (bonobo_info->type, "shlib"))
+			comp_info->type = GDA_COMPONENT_TYPE_SHLIB;
+		else if (!strcmp (bonobo_info->type, "factory"))
+			comp_info->type = GDA_COMPONENT_TYPE_FACTORY;
+		else
+			comp_info->type = GDA_COMPONENT_TYPE_INVALID;
+
+		/* get all properties */
+		comp_info->properties = gda_parameter_list_new ();
+		for (j = 0; j < bonobo_info->props._length; j++) {
+			GdaParameter *param;
+
+			param = activation_property_to_parameter (
+				bonobo_info->props._buffer[j]);
+			if (param != NULL) {
+				gda_parameter_list_add_parameter (
+					comp_info->properties, param);
+			}
+		}
+	}
+
+	CORBA_free (server_list);
+
+	return list;
 }
 
 /**
- * gda_config_remove_listener
+ * gda_config_free_component_list
  */
 void
-gda_config_remove_listener (glong listener_id)
+gda_config_free_component_list (GList *list)
 {
-	GList *node;
+	GList *l;
 
-	for (node = g_list_first (config_listeners); node; node = g_list_next (node)) {
-		ConfigListenerCbData *cb_data = (ConfigListenerCbData *) node->data;
+	for (l = g_list_first (list); l; l = l->next) {
+		GdaComponentInfo *comp_info = (GdaComponentInfo *) l->data;
 
-		if (cb_data && cb_data->listener_id == listener_id) {
-			CORBA_Environment ev;
+		if (comp_info != NULL) {
+			g_free (comp_info->id);
+			g_free (comp_info->location);
+			g_free (comp_info->description);
+			g_free (comp_info->username);
+			g_free (comp_info->hostname);
+			g_free (comp_info->domain);
 
-			CORBA_exception_init (&ev);
-			bonobo_event_source_client_remove_listener (
-				get_conf_engine (), cb_data->listener_id, &ev);
-			CORBA_exception_free (&ev);
+			g_list_foreach (comp_info->repo_ids, g_free, NULL);
+			g_list_free (comp_info->repo_ids);
+			gda_parameter_list_free (comp_info->properties);
 
-			config_listeners = g_list_remove (config_listeners, cb_data);
-			g_free (cb_data);
-
-			break;
-		}
-	}
-}
-
-/**
- * gda_provider_new:
- *
- * Allocates memory for a new #GdaProvider object and initializes struct 
- * members.
- *
- * Returns: a pointer to a new #GdaProvider object.
- */
-GdaProvider *
-gda_provider_new (void)
-{
-	GdaProvider *retval;
-
-	retval = g_new0 (GdaProvider, 1);
-	return retval;
-}
-
-/**
- * gda_provider_copy:
- * @provider: the provider to be copied.
- *
- * Make a deep copy of all the data needed to describe a GDA provider.
- *
- * Returns: a pointer to the newly allocated provider object
- */
-GdaProvider *
-gda_provider_copy (GdaProvider * provider)
-{
-	GdaProvider *retval;
-
-	retval = gda_provider_new ();
-
-	if (provider->name)
-		retval->name = g_strdup (provider->name);
-	if (provider->comment)
-		retval->comment = g_strdup (provider->comment);
-	if (provider->location)
-		retval->location = g_strdup (provider->location);
-	if (provider->repo_id)
-		retval->repo_id = g_strdup (provider->repo_id);
-	if (provider->type)
-		retval->type = g_strdup (provider->type);
-	if (provider->username)
-		retval->username = g_strdup (provider->username);
-	if (provider->hostname)
-		retval->hostname = g_strdup (provider->hostname);
-	if (provider->domain)
-		retval->domain = g_strdup (provider->domain);
-
-	if (provider->dsn_params) {
-		GList *node;
-
-		retval->dsn_params = NULL;
-		for (node = g_list_first (provider->dsn_params); node;
-		     node = g_list_next (node)) {
-			retval->dsn_params =
-				g_list_append (retval->dsn_params,
-					       g_strdup ((gchar *) node->
-							 data));
+			g_free (comp_info);
 		}
 	}
 
-	return retval;
+	g_list_free (list);
 }
 
 /**
- * gda_provider_free:
- * @provider: the provider to de-allocate.
+ * gda_config_get_provider_list
  *
- * Frees the memory allocated with #gda_provider_new and the memory
- * allocated to struct members.
- */
-void
-gda_provider_free (GdaProvider * provider)
-{
-	if (provider->name)
-		g_free ((gpointer) provider->name);
-	if (provider->comment)
-		g_free ((gpointer) provider->comment);
-	if (provider->location)
-		g_free ((gpointer) provider->location);
-	if (provider->repo_id)
-		g_free ((gpointer) provider->repo_id);
-	if (provider->type)
-		g_free ((gpointer) provider->type);
-	if (provider->username)
-		g_free ((gpointer) provider->username);
-	if (provider->hostname)
-		g_free ((gpointer) provider->hostname);
-	if (provider->domain)
-		g_free ((gpointer) provider->domain);
-	if (provider->dsn_params) {
-		GList *node;
-
-		while ((node = g_list_first (provider->dsn_params))) {
-			gchar *str = (gchar *) node->data;
-			provider->dsn_params =
-				g_list_remove (provider->dsn_params,
-					       (gpointer) str);
-			g_free ((gpointer) str);
-		}
-	}
-
-	g_free (provider);
-}
-
-/**
- * gda_provider_list:
+ * Return a list of all providers currently installed in
+ * the system. Each of the nodes in the returned GList
+ * is a #GdaProviderInfo. To free the returned list,
+ * call the #gda_config_free_provider_list function.
  *
- * Searches the CORBA database for GDA providers and returns a Glist of 
- * #GdaProvider structs.
- *
- * Returns: a GList of GDA providers structs
+ * Returns: a GList of #GdaProviderInfo structures.
  */
 GList *
-gda_provider_list (void)
+gda_config_get_provider_list (void)
 {
-	GList *retval = NULL;
-	Bonobo_ServerInfoList *servlist;
 	CORBA_Environment ev;
-	gint i;
-	GdaProvider *provider;
+	Bonobo_ServerInfoList *server_list;
+	gint n;
+	GList *list = NULL;
 
 	CORBA_exception_init (&ev);
-	servlist = bonobo_activation_query (
-		"repo_ids.has('IDL:GDA/Connection:1.0')", NULL, &ev);
-	if (servlist) {
-		for (i = 0; i < servlist->_length; i++) {
-			gchar *dsn_params;
 
-			provider = gda_provider_new ();
-			provider->name = g_strdup (servlist->_buffer[i].iid);
-			provider->location =
-				g_strdup (servlist->_buffer[i].location_info);
-			provider->comment = gda_corba_get_ac_attribute (
-				servlist->_buffer[i].props, "description");
-			provider->repo_id = gda_corba_get_ac_attribute (
-				servlist->_buffer[i].props, "repo_ids");
-			provider->type = g_strdup (servlist->_buffer[i].server_type);
-			provider->username = g_strdup (servlist->_buffer[i].username);
-			provider->hostname = g_strdup (servlist->_buffer[i].hostname);
-			provider->domain = g_strdup (servlist->_buffer[i].domain);
-
-			/* get list of available DSN params */
-			provider->dsn_params = NULL;
-			dsn_params = gda_corba_get_ac_attribute (
-				servlist->_buffer[i].props, "gda_params");
-			if (dsn_params) {
-				gint cnt = 0;
-				gchar **arr = g_strsplit (dsn_params, ";", 0);
-
-				if (arr) {
-					while (arr[cnt] != NULL) {
-						provider->dsn_params = g_list_append (
-							provider->dsn_params,
-							g_strdup (arr[cnt]));
-						cnt++;
-					}
-					g_strfreev (arr);
-				}
-				g_free ((gpointer) dsn_params);
-			}
-
-			retval = g_list_append (retval, (gpointer) provider);
-		}
-
-		CORBA_free (servlist);
+	server_list = bonobo_activation_query (
+		"repo_ids.has('IDL:GNOME/Database/Provider:1.0')", NULL, &ev);
+	if (BONOBO_EX (&ev)) {
+		gda_log_error (_("Could not query CORBA providers"));
+		CORBA_exception_free (&ev);
+		return NULL;
 	}
-	CORBA_exception_free (&ev);
 
-	return retval;
-}
+	/* create the list to be returned from the CORBA sequence */
+	for (i = 0; i < server_list->_length; i++) {
+		GdaProviderInfo *provider_info;
+		Bonobo_ServerInfo *bonobo_info = &server_list->_buffer[i];
 
-/**
- * gda_provider_free_list
- * @list: list of #GdaProvider structures
- *
- * Frees a list of #GdaProvider structures previously returned by
- * a call to #gda_provider_list
- */
-void
-gda_provider_free_list (GList * list)
-{
-	GList *node;
+		provider_info = g_new0 (GdaProviderInfo, 1);
 
-	while ((node = g_list_first (list))) {
-		GdaProvider *provider = (GdaProvider *) node->data;
-		list = g_list_remove (list, (gpointer) provider);
-		gda_provider_free (provider);
-	}
-}
+		provider_info->id = g_strdup (bonobo_info->iid);
+		provider_info->location = g_strdup (bonobo_info->location_info);
+		provider_info->description = activation_property_to_string (
+			bonono_server_info_prop_find (bonobo_info, "description"));
+		provider_info->repo_ids = activation_property_to_list (
+			bonobo_server_info_prop_find (bonobo_info, "repo_ids"));
+		provider_info->username = g_strdup (bonobo_info->username);
+		provider_info->hostname = g_strdup (bonobo_info->hostname);
+		provider_info->domain = g_strdup (bonobo_info->domain);
+		provider_info->gda_params = activation_property_to_list (
+			bonobo_server_info_prop_find (bonobo_info, "gda_params"));
 
-/**
- * gda_provider_find_by_name
- * @name: provider name
- *
- * Returns a #GdaProvider structure describing the given provider. This function
- * searches all the providers present on your system
- * and tries to find the specified provider.
- *
- * Returns: a pointer to the provider structure, or NULL if not found
- */
-GdaProvider *
-gda_provider_find_by_name (const gchar * name)
-{
-	GList *list;
-	GList *node;
-	GdaProvider *provider = NULL;
-
-	g_return_val_if_fail (name, NULL);
-
-	list = gda_provider_list ();
-	node = g_list_first (list);
-	while (node) {
-		if (!strcmp
-		    (name, GDA_PROVIDER_NAME ((GdaProvider *) node->data))) {
-			provider = gda_provider_copy ((GdaProvider *) node->data);
-			break;
-		}
-		node = g_list_next (node);
-	}
-	gda_provider_free_list (list);
-
-	return provider;
-}
-
-/**
- * gda_list_datasources:
- *
- * Lists all datasources configured on the system. You can then call
- * #gda_config_free_list to free the returned list
- *
- * Returns: a GList with the names of all data sources configured.
- */
-GList *
-gda_list_datasources (void)
-{
-	GList *res = 0;
-	GList *dsns;
-	GList *node;
-
-	dsns = node = gda_dsn_list ();
-	while (node) {
-		GdaDsn *dsn = (GdaDsn *) node->data;
-		if (dsn) {
-			res = g_list_append (res,
-					     g_strdup (GDA_DSN_GDA_NAME
-						       (dsn)));
-		}
-		node = g_list_next (node);
-	}
-	gda_dsn_free_list (dsns);
-
-	return res;
-}
-
-/**
- * gda_list_datasources_for_provider:
- * @provider: the provider which should be used to look for datasources
- *
- * Returns a list of the names of all data sources set up for the
- * given provider.
- *
- * Returns: a GList of all datasources available to a specific @provider.
- */
-GList *
-gda_list_datasources_for_provider (gchar * provider)
-{
-	GList *res = 0;
-	GList *dsns;
-	GList *node;
-
-	dsns = node = gda_dsn_list ();
-	while (node) {
-		GdaDsn *dsn = (GdaDsn *) node->data;
-		if (dsn && !strcmp (GDA_DSN_PROVIDER (dsn), provider)) {
-			res = g_list_append (res,
-					     g_strdup (GDA_DSN_GDA_NAME
-						       (dsn)));
-		}
-		node = g_list_next (node);
-	}
-	gda_dsn_free_list (dsns);
-
-	return res;
-}
-
-static gchar *
-get_config_string (const gchar * format, ...)
-{
-	gchar buffer[2048];
-	va_list args;
-
-	g_return_val_if_fail (format, 0);
-
-	va_start (args, format);
-	vsprintf (buffer, format, args);
-	va_end (args);
-
-	return gda_config_get_string (buffer);
-}
-
-/**
- * gda_dsn_list
- *
- * Returns a list of all available data sources. The returned value is
- * a GList of #GdaDsn structures
- *
- * Returns: a list of #GdaDsn structures
- */
-GList *
-gda_dsn_list (void)
-{
-	GList *datasources = NULL;
-	GList *ret = NULL;
-	GList *node;
-
-	datasources = gda_config_list_sections (GDA_CONFIG_SECTION_DATASOURCES);
-	for (node = datasources; node != NULL; node = g_list_next (node)) {
-		GdaDsn *dsn;
-		gchar *name;
-
-		name = (gchar *) node->data;
-		if (name) {
-			dsn = gda_dsn_new ();
-			gda_dsn_set_name (dsn, name);
-			gda_dsn_set_provider (dsn,
-					      get_config_string
-					      ("%s/%s/Provider",
-					       GDA_CONFIG_SECTION_DATASOURCES,
-					       name));
-			gda_dsn_set_dsn (dsn,
-					 get_config_string ("%s/%s/DSN",
-							    GDA_CONFIG_SECTION_DATASOURCES,
-							    name));
-			gda_dsn_set_description (dsn,
-						 get_config_string ("%s/%s/Description",
-								    GDA_CONFIG_SECTION_DATASOURCES,
-								    name));
-			gda_dsn_set_username (dsn,
-					      get_config_string ("%s/%s/Username",
-								 GDA_CONFIG_SECTION_DATASOURCES,
-								 name));
-
-			/* add datasource to return list */
-			ret = g_list_append (ret, (gpointer) dsn);
-		}
-	}
-	gda_config_free_list (datasources);
-
-	return ret;
-}
-
-/**
- * gda_dsn_free
- * @dsn: data source
- *
- * Release all memory occupied by the given #GdaDsn structure
- */
-void
-gda_dsn_free (GdaDsn * dsn)
-{
-	g_return_if_fail (dsn != NULL);
-
-	if (dsn->gda_name)
-		g_free ((gpointer) dsn->gda_name);
-	if (dsn->provider)
-		g_free ((gpointer) dsn->provider);
-	if (dsn->dsn_str)
-		g_free ((gpointer) dsn->dsn_str);
-	if (dsn->description)
-		g_free ((gpointer) dsn->description);
-	if (dsn->username)
-		g_free ((gpointer) dsn->username);
-	if (dsn->config)
-		g_free ((gpointer) dsn->config);
-	g_free ((gpointer) dsn);
-}
-
-/**
- * gda_dsn_copy
- * @dsn: #GdaDsn to copy from
- *
- * Make an exact copy of the given #GdaDsn structure.
- *
- * Returns: the newly created #GdaDsn structure
- */
-GdaDsn *
-gda_dsn_copy (GdaDsn * dsn)
-{
-	GdaDsn *ret;
-
-	g_return_val_if_fail (dsn != NULL, NULL);
-
-	ret = gda_dsn_new ();
-	ret->gda_name = g_strdup (dsn->gda_name);
-	ret->provider = g_strdup (dsn->provider);
-	ret->dsn_str = g_strdup (dsn->dsn_str);
-	ret->description = g_strdup (dsn->description);
-	ret->username = g_strdup (dsn->username);
-	ret->config = g_strdup (dsn->config);
-
-	return ret;
-}
-
-/**
- * gda_dsn_find_by_name
- * @dsn_name: data source name
- *
- * Search in the database for the given data source, and return detailed
- * information about it
- *
- * Returns: a #GdaDsn structure containing all information about the found
- * data source
- */
-GdaDsn *
-gda_dsn_find_by_name (const gchar * dsn_name)
-{
-	GList *list;
-	gboolean found = FALSE;
-	GdaDsn *rc = NULL;
-
-	g_return_val_if_fail (dsn_name != NULL, NULL);
-
-	list = gda_dsn_list ();
-	while (list) {
-		GdaDsn *dsn = (GdaDsn *) list->data;
-		if (dsn && !found) {
-			if (!g_strcasecmp (GDA_DSN_GDA_NAME (dsn), dsn_name)) {
-				rc = dsn;
-				found = TRUE;
-			}
-			else
-				gda_dsn_free (dsn);
-		}
+		if (!strcmp (bonobo_info->type, "exe"))
+			provider_info->type = GDA_COMPONENT_TYPE_EXE;
+		else if (!strcmp (bonobo_info->type, "shlib"))
+			provider_info->type = GDA_COMPONENT_TYPE_SHLIB;
+		else if (!strcmp (bonobo_info->type, "factory"))
+			provider_info->type = GDA_COMPONENT_TYPE_FACTORY;
 		else
-			gda_dsn_free (dsn);
-		list = g_list_next (list);
+			provider_info->type = GDA_COMPONENT_TYPE_INVALID;
 	}
-	g_list_free (g_list_first (list));
 
-	return rc;
+	CORBA_free (server_list);
+
+	return list;
 }
 
 /**
- * gda_dsn_set_name
- * @dsn: data source
- * @name: new data source name
+ * gda_config_free_provider_list
+ * @list: the list to be freed.
  *
- * Set the name for the given #GdaDsn structure
+ * Free a list of #GdaProviderInfo structures.
  */
 void
-gda_dsn_set_name (GdaDsn * dsn, const gchar * name)
+gda_config_free_provider_list (GList *list)
 {
-	g_return_if_fail (dsn != NULL);
-
-	if (dsn->gda_name)
-		g_free ((gpointer) dsn->gda_name);
-	dsn->gda_name = g_strdup (name);
-}
-
-/**
- * gda_dsn_set_provider
- * @dsn: data source
- * @provider: provider name
- *
- * Set the provider for the given #GdaDsn structure
- */
-void
-gda_dsn_set_provider (GdaDsn * dsn, const gchar * provider)
-{
-	g_return_if_fail (dsn != NULL);
-
-	/* FIXME: should check if the provider does exist */
-	if (dsn->provider)
-		g_free ((gpointer) dsn->provider);
-	dsn->provider = g_strdup (provider);
-}
-
-/**
- * gda_dsn_set_dsn
- * @dsn: data source
- * @dsn_str: DSN connection string
- *
- * Set the connection string for the given #GdaDsn structure. This string
- * is DBMS-independent, so you must take care when filling it in. The best
- * way to guess about the allowed parameters in this string for each
- * provider is to obtain the #GdaProvider structure for the provider
- * you want to use, and query the list of available parameters by calling
- * the #GDA_PROVIDER_DSN_PARAMS macro, which returns a GList on which
- * each node is a string containing the name of one parameter.
- *
- * For example, a connection string to connect to a PostgreSQL database
- * might look like this:
- *
- *	"DATABASE=my_database;HOST=localhost
- *
- * to connect to the database "my_database" at the local machine. On the
- * other hand, a string for connecting a gda-default's database, might
- * look like:
- *
- *	"DIRECTORY=/home/me/database"
- */
-void
-gda_dsn_set_dsn (GdaDsn * dsn, const gchar * dsn_str)
-{
-	g_return_if_fail (dsn != NULL);
-
-	if (dsn->dsn_str)
-		g_free ((gpointer) dsn->dsn_str);
-	dsn->dsn_str = g_strdup (dsn_str);
-}
-
-/**
- * gda_dsn_set_description
- * @dsn: data source
- * @description: DSN description for the given #GdaDsn structure
- *
- * Set the description string for the given #GdaDsn structure.
- */
-void
-gda_dsn_set_description (GdaDsn * dsn, const gchar * description)
-{
-	g_return_if_fail (dsn != NULL);
-
-	if (dsn->description)
-		g_free ((gpointer) dsn->description);
-	dsn->description = g_strdup (description);
-}
-
-/**
- * gda_dsn_set_username
- * @dsn: data source
- * @username: user name
- *
- * Set the username for the given #GdaDsn structure. When using this, the gda-client
- * library would use this user name when you try to connect to this data source
- * without specifying a user name in the call to #gda_connection_open
- */
-void
-gda_dsn_set_username (GdaDsn * dsn, const gchar * username)
-{
-	g_return_if_fail (dsn != NULL);
-
-	if (dsn->username)
-		g_free ((gpointer) dsn->username);
-	dsn->username = g_strdup (username);
-}
-
-/**
- * gda_dsn_set_config
- * @dsn: data source
- * @config: configurator
- */
-void
-gda_dsn_set_config (GdaDsn * dsn, const gchar * config)
-{
-	g_return_if_fail (dsn != NULL);
-
-	if (dsn->config)
-		g_free ((gpointer) dsn->config);
-	dsn->config = g_strdup (config);
-}
-
-/**
- * gda_dsn_set_global
- * @dsn: data source
- * @is_global: global flag
- */
-void
-gda_dsn_set_global (GdaDsn * dsn, gboolean is_global)
-{
-	g_return_if_fail (dsn != NULL);
-	dsn->is_global = is_global;
-}
-
-/**
- * gda_dsn_save
- * @dsn: data source
- *
- * Saves the given data source into the GDA configuration
- *
- * Returns: TRUE if it was successful, FALSE if there was an error
- */
-gboolean
-gda_dsn_save (GdaDsn * dsn)
-{
-	g_return_val_if_fail (dsn != NULL, FALSE);
-
-	if (dsn->gda_name) {
-		gchar *config_prefix;
-		gchar *tmp;
-
-		config_prefix = g_strdup (GDA_CONFIG_SECTION_DATASOURCES);
-
-		tmp = g_strdup_printf ("%s/%s", config_prefix, dsn->gda_name);
-		gda_config_set_string (tmp, GDA_DSN_GDA_NAME (dsn));
-		g_free ((gpointer) tmp);
-
-		tmp = g_strdup_printf ("%s/%s/Provider", config_prefix,
-				       dsn->gda_name);
-		if (GDA_DSN_PROVIDER (dsn))
-			gda_config_set_string (tmp, GDA_DSN_PROVIDER (dsn));
-		else
-			gda_config_set_string (tmp, "");
-		g_free ((gpointer) tmp);
-
-		tmp = g_strdup_printf ("%s/%s/DSN", config_prefix,
-				       dsn->gda_name);
-		if (GDA_DSN_DSN (dsn))
-			gda_config_set_string (tmp, GDA_DSN_DSN (dsn));
-		else
-			gda_config_set_string (tmp, "");
-		g_free ((gpointer) tmp);
-
-		tmp = g_strdup_printf ("%s/%s/Description", config_prefix,
-				       dsn->gda_name);
-		if (GDA_DSN_DESCRIPTION (dsn))
-			gda_config_set_string (tmp,
-					       GDA_DSN_DESCRIPTION (dsn));
-		else
-			gda_config_set_string (tmp, "");
-		g_free ((gpointer) tmp);
-
-		tmp = g_strdup_printf ("%s/%s/Username", config_prefix,
-				       dsn->gda_name);
-		if (GDA_DSN_USERNAME (dsn))
-			gda_config_set_string (tmp, GDA_DSN_USERNAME (dsn));
-		else
-			gda_config_set_string (tmp, "");
-		g_free ((gpointer) tmp);
-
-		tmp = g_strdup_printf ("%s/%s/Configurator", config_prefix,
-				       dsn->gda_name);
-		if (GDA_DSN_CONFIG (dsn))
-			gda_config_set_string (tmp, GDA_DSN_CONFIG (dsn));
-		else
-			gda_config_set_string (tmp, "");
-		g_free ((gpointer) tmp);
-
-		g_free ((gpointer) config_prefix);
-		return TRUE;
-	}
-	else
-		g_warning ("data source has no name");
-	return FALSE;
-}
-
-/**
- * gda_dsn_remove
- * @dsn: data source
- *
- * Remove the given data source (that is, the one described in the given
- * #GdaDsn structure) from the configuration database
- *
- * Returns: TRUE if it was successful, FALSE if there was an error
- */
-gboolean
-gda_dsn_remove (GdaDsn * dsn)
-{
-	gchar *tmp;
-
-	g_return_val_if_fail (dsn != NULL, FALSE);
-
-	tmp = g_strdup_printf ("%s/%s", GDA_CONFIG_SECTION_DATASOURCES,
-			       GDA_DSN_GDA_NAME (dsn));
-	gda_config_remove_section (tmp);
-	g_free ((gpointer) tmp);
-
-	return TRUE;
-}
-
-/**
- * gda_dsn_free_list
- * @list: the list to be freed
- *
- * Free the given list, which should be a list of #GdaDsn structures,
- * as returned by #gda_dsn_list
- */
-void
-gda_dsn_free_list (GList * list)
-{
-	GList *node;
-
-	g_return_if_fail (list);
-
-	while ((node = g_list_first (list))) {
-		GdaDsn *dsn = (GdaDsn *) node->data;
-		list = g_list_remove (list, (gpointer) dsn);
-		gda_dsn_free (dsn);
-	}
-}
-
-/**
- * gda_config_save_last_connection
- * @gda_name: GDA connection name
- * @username: user name used for the connection
- *
- * Adds an entry to the 'Last Connections' configuration section. This section
- * is read by top level clients, such as the GnomeDbLogin widget in
- * GNOME-DB to show the user a list of the last successful connections.
- */
-void
-gda_config_save_last_connection (const gchar * gda_name,
-				 const gchar * username)
-{
-	gboolean added = FALSE;
-	gint cnt;
 	GList *l;
-	GdaDsn *dsn;
-	static GList *last_connections = NULL;
 
-	g_return_if_fail (gda_name != NULL);
+	for (l = g_list_first (list); l; l = l->next) {
+		GdaProviderInfo *provider_info = (GdaProviderInfo *) l->data;
 
-	for (cnt = 1;
-	     cnt <= gda_config_get_int (GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS);
-	     cnt++) {
-		gchar *str, *data;
+		if (provider_info != NULL) {
+			g_free (provider_info->id);
+			g_free (provider_info->location);
+			g_free (provider_info->description);
+			g_free (provider_info->username);
+			g_free (provider_info->hostname);
+			g_free (provider_info->domain);
 
-		str = g_strdup_printf ("%s/Connection%d",
-				       GDA_CONFIG_SECTION_LAST_CONNECTIONS,
-				       cnt);
-		data = gda_config_get_string (str);
-		g_free (str);
-		if (data != NULL) {
-			str = g_strdup (data);
-			if (!strcmp (str, gda_name) && !added) {
-				last_connections =
-					g_list_prepend (last_connections,
-							str);
-				added = TRUE;
-			}
-			else if (!added)
-				last_connections =
-					g_list_append (last_connections, str);
+			g_list_foreach (provider_info->repo_ids, g_free, NULL);
+			g_list_free (provider_info->repo_ids);
+			g_list_foreach (provider_info->gda_params, g_free, NULL);
+			g_list_free (provider_info->gda_params);
+
+			g_free (provider_info);
 		}
 	}
 
-	/* fix the length of the saved last connections */
-	if (!added) {
-		last_connections =
-			g_list_prepend (last_connections,
-					g_strdup (gda_name));
-	}
-	if (g_list_length (last_connections) >
-	    gda_config_get_int (GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS)) {
-		gchar *str;
-
-		l = g_list_last (last_connections);
-
-		str = (gchar *) l->data;
-		last_connections = g_list_remove (last_connections, str);
-		g_free (str);
-	}
-
-	/* now, save the last connections to the configuration */
-	for (cnt = 1, l = g_list_first (last_connections);
-	     cnt <= gda_config_get_int (GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS)
-	     && l != NULL; cnt++, l = g_list_next (l)) {
-		gchar *str =
-			g_strdup_printf ("%s/Connection%d",
-					 GDA_CONFIG_SECTION_LAST_CONNECTIONS,
-					 cnt);
-
-		gda_config_set_string (str, (gchar *) l->data);
-	}
-
-	dsn = gda_dsn_find_by_name (gda_name);
-	if (dsn != NULL) {
-		gda_dsn_set_username (dsn, username);
-		gda_dsn_save (dsn);
-	}
+	g_list_free (list);
 }

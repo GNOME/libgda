@@ -1,4 +1,4 @@
-/* GDA Common Library
+/* GDA common library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -20,24 +20,29 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_common_h__)
-#  define __gda_common_h__
+#if !defined(__gda_parameter_h__)
+#  define __gda_parameter_h__
 
-#include <gda-config.h>
-#include <gda-data-model.h>
-#include <gda-listener.h>
-#include <gda-parameter.h>
-#include <gda-quark-list.h>
+#include <glib/gmacros.h>
 #include <gda-value.h>
 
 G_BEGIN_DECLS
 
-void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
+typedef GNOME_Database_Parameter GdaParameter;
 
-typedef void (* GdaInitFunc) (gpointer user_data);
+GdaParameter *gda_parameter_new (const gchar *name);
+void          gda_parameter_free (GdaParameter *param);
+const gchar  *gda_parameter_get_name (GdaParameter *param);
+void          gda_parameter_set_name (GdaParameter *param, const gchar *name);
+GdaValue     *gda_parameter_get_value (GdaParameter *param);
+void          gda_parameter_set_value (GdaParameter *param, GdaValue *value);
 
-void gda_main_run  (GdaInitFunc init_func, gpointer user_data);
-void gda_main_quit (void);
+typedef struct _GdaParameterList GdaParameterList;
+
+GdaParameterList *gda_parameter_list_new (void);
+void              gda_parameter_list_free (GdaParameterList *plist);
+void              gda_parameter_list_add_parameter (GdaParameterList *plist,
+						    GdaParameter *param);
 
 G_END_DECLS
 

@@ -1,3 +1,16 @@
+2001-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-listener.[ch]: small changes
+
+	* gda-config.[ch]: refactor, and come back to GConf. Also, add
+	convenience functions to not only get information about installed
+	providers, but about any kind of component, which will be needed
+	later for GNOME-DB
+
+	* gda-parameter.[ch]: new files
+
+	* gda-error.[ch]: removed crappy stuff
+
 2001-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-data-model.[ch]: refactored. Lots of classes will depend on this

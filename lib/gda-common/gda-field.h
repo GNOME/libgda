@@ -102,12 +102,6 @@ void                     gda_field_copy_to_corba_attributes (GdaField *field,
 							     GNOME_Database_FieldAttributes *attrs);
 gchar                   *gda_field_stringify (GdaField *field);
 
-/*
- * Backwards compatible functions. DON'T USE IN NEW CODE
- */
-gpointer                 gda_field_get_user_data (GdaField *field);
-void                     gda_field_set_user_data (GdaField *field, gpointer user_data);
-
 G_END_DECLS
 
 #endif
