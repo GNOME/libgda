@@ -1618,12 +1618,21 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 			thevalue = PQgetvalue(pg_res, i, 2);
 			integer = atoi (thevalue) - 4; /* don't know where the -4 comes from! */
 		}
+		if (integer == -1 && type == GDA_VALUE_TYPE_NUMERIC) {
+			thevalue = PQgetvalue(pg_res, i, 2);
+			integer = atoi(thevalue) / 65536;
+		}
 			
 		value = gda_value_new_integer ((integer != -1) ? integer : 0);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Scale */ 
-		value = gda_value_new_integer (0); // TODO
+		integer = 0;
+		if (type == GDA_VALUE_TYPE_NUMERIC) {
+			thevalue = PQgetvalue(pg_res, i, 2);
+			integer = (atoi(thevalue) % 65536) - 4;
+		}
+		value = gda_value_new_integer (integer);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Not null? */

@@ -1,3 +1,7 @@
+2002-12-27  Vivien Malerba <malerba@gnome-db.org>
+       * providers/postgres/gda-postgres-provider.c: merged a patch provided
+       by Santi Camps for bug #101642
+
 2002-12-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mdb/gda-mdb-provider.c (get_mdb_types): implemented TYPES
