@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
-"POT-Creation-Date: 2001-11-22 14:07+0100\n"
-"PO-Revision-Date: 2001-11-11 11:50+01:00\n"
+"POT-Creation-Date: 2001-12-20 06:17-0500\n"
+"PO-Revision-Date: 2001-12-20 11:50+01:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -719,41 +719,35 @@ msgid "Could not get # of messages"
 msgstr "Kunne ikke finde antal beskeder"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "Kunne ikke hente antal klientbeskeder"
+msgstr "ct_diag mislykkedes. Kunne ikke hente antal klientbeskeder(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:381
-#, fuzzy
 msgid "Could not get client msg #"
-msgstr "Kunne ikke hente klientbesked # %d"
+msgstr "Kunne ikke hente klientbesked nummer "
 
 #: providers/gda-sybase-server/gda-sybase-error.c:394
 #: providers/gda-sybase-server/gda-sybase-error.c:396
 #: providers/gda-sybase-server/gda-sybase-error.c:688
 #: providers/gda-sybase-server/gda-sybase-error.c:690
-#, fuzzy
 msgid "Client Message:"
 msgstr "Klientbesked:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "Kunne ikke hente antal klientbeskeder"
+msgstr "ct_diag mislykkedes. Kunne ikke hente antal klientbeskeder(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Kunne ikke tømme klientbeskeder"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:486
-#, fuzzy
 msgid "Could not get # of server messages(1)"
-msgstr "Kunne ikke hente antal tjenerbeskeder"
+msgstr "Kunne ikke hente antal tjenerbeskeder(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:510
-#, fuzzy
 msgid "Could not get server msg #"
-msgstr "Kunne ikke hente tjenerbesked nummer %d"
+msgstr "Kunne ikke hente tjenerbesked nummer "
 
 #: providers/gda-sybase-server/gda-sybase-error.c:570
 msgid "Could not get # of server messages"
@@ -778,14 +772,12 @@ msgid "Fetching %d cslib message"
 msgstr "Henter %d cslib-besked"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:672
-#, fuzzy
 msgid "Could not get cslib msg #"
-msgstr "Kunne ikke hente cslib-besked nummer %d"
+msgstr "Kunne ikke hente cslib-besked nummer "
 
 #: providers/gda-sybase-server/gda-sybase-error.c:711
-#, fuzzy
 msgid "Could not get # of cslib messages(2)"
-msgstr "Kunne ikke hente antal cslib-beskeder"
+msgstr "Kunne ikke hente antal cslib-beskeder(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
@@ -793,23 +785,23 @@ msgstr "Kunne ikke fjerne cslib-beskeder"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:761
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:763
 msgid "severity"
-msgstr ""
+msgstr "Alvorlighed"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:765
 msgid "number"
-msgstr ""
+msgstr "nummer"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:767
 msgid "origin"
-msgstr ""
+msgstr "oprindelse"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:769
 msgid "layer"
-msgstr ""
+msgstr "lag"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:776
 #, c-format
@@ -818,6 +810,9 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"\tOperativsystemfejl nummer(%ld):\n"
+"\t%s"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
