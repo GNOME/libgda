@@ -56,7 +56,9 @@ report/libgda-report/gda-report-item.c
 report/libgda-report/gda-report-valid.c
 testing/client.c
 testing/config.c
+report/libgda-report/gda-report-item-detail.c
 report/libgda-report/gda-report-item-pagefooter.c
 report/libgda-report/gda-report-item-pageheader.c
+report/libgda-report/gda-report-item-report.c
 report/libgda-report/gda-report-item-reportfooter.c
 report/libgda-report/gda-report-item-reportheader.c
