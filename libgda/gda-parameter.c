@@ -81,8 +81,7 @@ gda_parameter_new_string (const gchar *name, const gchar *value)
 	param = Bonobo_Pair__alloc ();
 	gda_parameter_set_name (param, name);
 	CORBA_any_set_release (&param->value, TRUE);
-	param->value._type = (GdaValueType) CORBA_Object_duplicate (
-		(CORBA_Object) GDA_VALUE_TYPE_STRING, NULL);
+	param->value._type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_STRING);
 	param->value._value = ORBit_copy_value (&value, GDA_VALUE_TYPE_STRING);
 
 	return param;
@@ -299,6 +298,7 @@ gda_parameter_list_to_corba (GdaParameterList *plist)
 	corba_list = Bonobo_PropertySet__alloc ();
 	CORBA_sequence_set_release (corba_list, TRUE);
 	corba_list->_buffer = Bonobo_PropertySet_allocbuf (length);
+	corba_list->_length = length;
 
 	if (length > 0) {
 		/* put all parameters into the CORBA sequence */

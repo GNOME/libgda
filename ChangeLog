@@ -1,5 +1,10 @@
 2002-03-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* libgda/gda-parameter.c: initialize corba_list->_length. Changed
+	CORBA_Object_duplicate () by ORBit_RootObject_duplicate ().
+
+2002-03-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* providers/postgres/utils.c: fix little mistake when mapping boolean
 	type from postgres to gda.
 
