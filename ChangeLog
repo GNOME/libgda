@@ -21,6 +21,9 @@
 	* testing/client.c:
 	* testing/postgres-test.h: activate postgres tests.
 
+	* data/Makefile.am:
+	* data/config: new file with default global configuration for libgda.
+
 2002-04-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-recordset.c (gda_recordset_get_n_rows): implemented.
