@@ -20,7 +20,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gobject/gsignal.h>
 #include <config.h>
 #include <libgda/gda-xml-database.h>
 #include <bonobo/bonobo-i18n.h>
