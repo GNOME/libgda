@@ -45,10 +45,10 @@ typedef struct
  */
 void impl_GDA_Recordset__destroy (impl_POA_GDA_Recordset *servant, CORBA_Environment *ev);
 CORBA_long impl_GDA_Recordset__get_currentBookmark (impl_POA_GDA_Recordset *servant,
-						    CORBA_Environment *ev);
+                                                    CORBA_Environment *ev);
 void impl_GDA_Recordset__set_currentBookmark (impl_POA_GDA_Recordset *servant,
-					      CORBA_long value,
-					      CORBA_Environment *ev);
+                                              CORBA_long value,
+                                              CORBA_Environment *ev);
 CORBA_long impl_GDA_Recordset__get_cachesize (impl_POA_GDA_Recordset *servant,
 					      CORBA_Environment *ev);
 void impl_GDA_Recordset__set_cachesize (impl_POA_GDA_Recordset *servant,
@@ -82,14 +82,8 @@ CORBA_char* impl_GDA_Recordset__get_source (impl_POA_GDA_Recordset *servant,
 					    CORBA_Environment *ev);
 CORBA_long impl_GDA_Recordset__get_status (impl_POA_GDA_Recordset *servant,
 					   CORBA_Environment *ev);
-CORBA_long impl_GDA_Recordset_cancelBatch (impl_POA_GDA_Recordset *servant,
-					   CORBA_Environment *ev);
-CORBA_long impl_GDA_Recordset_cancelUpdate (impl_POA_GDA_Recordset *servant,
-					    CORBA_Environment *ev);
 CORBA_long impl_GDA_Recordset_close (impl_POA_GDA_Recordset *servant,
 				     CORBA_Environment *ev);
-CORBA_long impl_GDA_Recordset_deleteCurrent (impl_POA_GDA_Recordset *servant,
-					     CORBA_Environment *ev);
 CORBA_long impl_GDA_Recordset_move (impl_POA_GDA_Recordset *servant,
 				    CORBA_long count,
 				    CORBA_long bookmark,
@@ -104,10 +98,6 @@ CORBA_long impl_GDA_Recordset_reSync (impl_POA_GDA_Recordset *servant,
 				      CORBA_Environment *ev);
 CORBA_boolean impl_GDA_Recordset_supports (impl_POA_GDA_Recordset *servant,
 					   GDA_Option what,
-					   CORBA_Environment *ev);
-CORBA_long impl_GDA_Recordset_update (impl_POA_GDA_Recordset *servant,
-				      CORBA_Environment *ev);
-CORBA_long impl_GDA_Recordset_updateBatch (impl_POA_GDA_Recordset *servant,
 					   CORBA_Environment *ev);
 GDA_Recordset_Chunk* impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset *servant,
 					       CORBA_long count,

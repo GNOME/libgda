@@ -4,33 +4,14 @@
 
 #include <oaf-factory.idl>
 
+#include "GDA_Error.idl"
+#include "GDA_Fieldx.idl"
+#include "GDA_Recordset.idl"
+#include "GDA_Command.idl"	
+#include "GDA_Error.idl"
+#include "GDA_Connection.idl"
+
 module GDA {
-	  enum ValueType {
-		TypeNull,    TypeBigint, TypeBinary,
-		TypeBoolean, TypeBstr,   TypeChar,
-		TypeCurrency,TypeDate,   TypeDbDate,
-		TypeDbTime,  TypeDbTimestamp, TypeDecimal,
-		TypeDouble,  TypeError,  TypeInteger,
-		TypeLongvarbin, TypeLongvarchar, TypeLongvarwchar,
-		TypeNumeric, TypeSingle, TypeSmallint,
-		TypeTinyint, TypeUBigint, TypeUSmallint,
-		TypeVarchar, TypeVarbin,  TypeVarwchar,
-		TypeFixchar, TypeFixbin,  TypeFixwchar,
-		TypeUnknown, TypeLastValue
-	  };
-	enum LockType{
-		LOCK_READONLY,
-		LOCK_PESSIMISTIC,
-		LOCK_OPTIMISTIC,
-		LOCK_BATCH
-	};
-	enum CursorType
-	{
-		OPEN_FWDONLY,
-		OPEN_KEYSET,
-		OPEN_DYNAMIC,
-		OPEN_STATIC
-	};
 
 	const unsigned long CMD_NORECORDS=0x80000000;
 	enum CommandType
@@ -42,27 +23,11 @@ module GDA {
 		CMD_FILE
 	};
 	
-	enum Option{
-		ADD_NEW,
-		APPROX_POS,
-		BOOKMARK,
-		DELETE,
-		HOLD_RECS,
-		MOVE_PREV,
-		DO_RESYNC,
-		DO_UPDATE,
-		UPDATE_BATCH
-	};
 	enum AffectedRows
 	{
 		GDR_AFFECT_CURRENT,
 		GDR_AFFECT_GROUP,
 		GDR_AFFECT_ALL
-	};
-
-	enum CursorLocation {
-		USE_CLIENT_CURSOR,
-		USE_SERVER_CURSOR
 	};
 
 	enum IsolationLevel {
@@ -74,127 +39,6 @@ module GDA {
 		IL_READ_REPEATED,
 		IL_READ_SERIALIZABLE
 	};
-	enum ParameterDirection {
-		PARAM_IN,
-		PARAM_OUT,
-		PARAM_INOUT
-	};
-	typedef long Date;
-
-	struct  DbDate{
-		short year;
-		unsigned short month;
-		unsigned short day;
-	};
-	struct DbTime {
-		unsigned short hour;
-		unsigned short minute;
-		unsigned short second;
-	};
-	struct DbTimestamp {
-		short year;
-		unsigned short month;
-		unsigned short day;
-		unsigned short hour;
-		unsigned short minute;
-		unsigned short second;
-		unsigned long  fraction;
-	};
-
-	typedef sequence<octet> VarBinString; 
-
-	union Value switch (ValueType) {
-	case TypeTinyint:
-		char c;
-	case TypeBigint:
-		long long ll;
-	case TypeBoolean:
-		boolean b;
-	case TypeDate:
-		Date d;
-	case TypeDbDate:
-		DbDate dbd;
-	case TypeDbTime:
-		DbTime dbt;
-	case TypeDbTimestamp:
-		DbTimestamp dbtstamp;
-	case TypeDouble:
-		double dp;    
-		/* case TypeError: NYI */
-	case TypeInteger:
-		long i;
-	case TypeBinary:
-	case TypeVarbin:
-	case TypeVarwchar:
-	case TypeLongvarwchar:
-	case TypeLongvarbin:
-	case TypeUnknown:
-		VarBinString lvb;
-	case TypeFixbin:
-	case TypeFixwchar:
-	case TypeFixchar:
-		VarBinString fb;
-	case TypeCurrency:
-	case TypeDecimal:
-	case TypeNumeric:
-	case TypeChar:
-	case TypeVarchar:
-	case TypeLongvarchar:
-		string  lvc;
-	case TypeSingle:
-		float  f;
-	case TypeSmallint:
-		short  si;
-	case TypeUBigint:
-		unsigned long long ull;
-	case TypeUSmallint:
-		unsigned short us;
-	};
-	union FieldValue switch (boolean) {
-	case FALSE:
-		Value v;
-	};
-
-#include "GDA_Error.idl"	
-	exception DriverError {
-		ErrorSeq errors;
-		string   realcommand;
-	};
-	exception NotSupported {
-		string errormsg;
-	};
-	
-#include "GDA_Fieldx.idl"
-	struct Field {
-		long       actualSize;
-		FieldValue originalValue;
-		FieldValue shadowValue;
-		FieldValue realValue;
-	};
-	struct FieldAttributes {
-		long       definedSize;
-		string     name;
-		long       scale;
-		ValueType  gdaType;
-		long       cType;
-		long       nativeType;
-	};
-	struct CmdParameter {
-		FieldValue         value;
-		ParameterDirection dir;
-		string             name;
-		long               precision;
-		long               scale;
-	};
-	typedef sequence<Field>           Row;
-	typedef sequence<FieldAttributes> RowAttributes;
-#include "GDA_Parameter.idl"
-	typedef sequence<CmdParameter> CmdParameterSeq;
-#include "GDA_Command.idl"	
-#include "GDA_Error.idl"
-#include "GDA_Connection.idl"
-
-#include "GDA_Recordset.idl" 
 
 	interface ConnectionFactory : GNOME::ObjectFactory {
 		Object create_connection(in string goad_id) raises (CannotActivate);

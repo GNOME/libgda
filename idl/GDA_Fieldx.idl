@@ -3,10 +3,116 @@
 #ifndef __fieldx__
 #define __fieldx__ 1
 
-interface Fieldx {
-  long             appendChunk(in VarBinString data);
-  VarBinString     getChunk   (in long amount);
-  
+module GDA {
+	enum ValueType {
+		TypeNull,    TypeBigint, TypeBinary,
+		TypeBoolean, TypeBstr,   TypeChar,
+		TypeCurrency,TypeDate,   TypeDbDate,
+		TypeDbTime,  TypeDbTimestamp, TypeDecimal,
+		TypeDouble,  TypeError,  TypeInteger,
+		TypeLongvarbin, TypeLongvarchar, TypeLongvarwchar,
+		TypeNumeric, TypeSingle, TypeSmallint,
+		TypeTinyint, TypeUBigint, TypeUSmallint,
+		TypeVarchar, TypeVarbin,  TypeVarwchar,
+		TypeFixchar, TypeFixbin,  TypeFixwchar,
+		TypeUnknown, TypeLastValue
+	};
+
+	typedef long Date;
+	struct  DbDate{
+		short year;
+		unsigned short month;
+		unsigned short day;
+	};
+	struct DbTime {
+		unsigned short hour;
+		unsigned short minute;
+		unsigned short second;
+	};
+	struct DbTimestamp {
+		short year;
+		unsigned short month;
+		unsigned short day;
+		unsigned short hour;
+		unsigned short minute;
+		unsigned short second;
+		unsigned long  fraction;
+	};
+
+	typedef sequence<octet> VarBinString; 
+	
+	union Value switch (ValueType) {
+		case TypeTinyint:
+			char c;
+		case TypeBigint:
+			long long ll;
+		case TypeBoolean:
+			boolean b;
+		case TypeDate:
+			Date d;
+		case TypeDbDate:
+			DbDate dbd;
+		case TypeDbTime:
+			DbTime dbt;
+		case TypeDbTimestamp:
+			DbTimestamp dbtstamp;
+		case TypeDouble:
+			double dp;    
+		/* case TypeError: NYI */
+		case TypeInteger:
+			long i;
+		case TypeBinary:
+		case TypeVarbin:
+		case TypeVarwchar:
+		case TypeLongvarwchar:
+		case TypeLongvarbin:
+		case TypeUnknown:
+			VarBinString lvb;
+		case TypeFixbin:
+		case TypeFixwchar:
+		case TypeFixchar:
+			VarBinString fb;
+		case TypeCurrency:
+		case TypeDecimal:
+		case TypeNumeric:
+		case TypeChar:
+		case TypeVarchar:
+		case TypeLongvarchar:
+			string  lvc;
+		case TypeSingle:
+			float  f;
+		case TypeSmallint:
+			short  si;
+		case TypeUBigint:
+			unsigned long long ull;
+		case TypeUSmallint:
+			unsigned short us;
+	};
+	union FieldValue switch (boolean) {
+		case FALSE:
+			Value v;
+	};
+	struct Field {
+		long       actualSize;
+		FieldValue originalValue;
+		FieldValue shadowValue;
+		FieldValue realValue;
+	};
+	struct FieldAttributes {
+		long       definedSize;
+		string     name;
+		long       scale;
+		ValueType  gdaType;
+		long       cType;
+		long       nativeType;
+	};
+	typedef sequence<Field>           Row;
+	typedef sequence<FieldAttributes> RowAttributes;
+
+	interface Fieldx {
+		long             appendChunk(in VarBinString data);
+		VarBinString     getChunk   (in long amount);
+	};  
 };
 
 #endif

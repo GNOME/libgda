@@ -65,18 +65,13 @@ static POA_GDA_Recordset__epv impl_GDA_Recordset_epv =
   (gpointer) & impl_GDA_Recordset__get_recCount,
   (gpointer) & impl_GDA_Recordset__get_source,
   (gpointer) & impl_GDA_Recordset__get_status,
-  (gpointer) & impl_GDA_Recordset_cancelBatch,
-  (gpointer) & impl_GDA_Recordset_cancelUpdate,
   (gpointer) & impl_GDA_Recordset_close,
-  (gpointer) & impl_GDA_Recordset_deleteCurrent,
   (gpointer) & impl_GDA_Recordset_move,
   (gpointer) & impl_GDA_Recordset_moveFirst,
   (gpointer) & impl_GDA_Recordset_moveLast,
   (gpointer) & impl_GDA_Recordset_reQuery,
   (gpointer) & impl_GDA_Recordset_reSync,
   (gpointer) & impl_GDA_Recordset_supports,
-  (gpointer) & impl_GDA_Recordset_update,
-  (gpointer) & impl_GDA_Recordset_updateBatch,
   (gpointer) & impl_GDA_Recordset_fetch,
   (gpointer) & impl_GDA_Recordset_describe,
 };
@@ -251,22 +246,6 @@ impl_GDA_Recordset__get_status (impl_POA_GDA_Recordset * servant,
 }
 
 CORBA_long
-impl_GDA_Recordset_cancelBatch (impl_POA_GDA_Recordset * servant,
-				CORBA_Environment * ev)
-{
-  gda_log_error(_("%s: not implemented"), __PRETTY_FUNCTION__);
-  return 0;
-}
-
-CORBA_long
-impl_GDA_Recordset_cancelUpdate (impl_POA_GDA_Recordset * servant,
-				 CORBA_Environment * ev)
-{
-  gda_log_error(_("%s: not implemented"), __PRETTY_FUNCTION__);
-  return 0;
-}
-
-CORBA_long
 impl_GDA_Recordset_close (impl_POA_GDA_Recordset * servant,
 			  CORBA_Environment * ev)
 {
@@ -281,14 +260,6 @@ impl_GDA_Recordset_close (impl_POA_GDA_Recordset * servant,
   impl_GDA_Recordset__destroy(servant, ev);
   if (gda_server_impl_exception(ev) < 0)
     return -1;
-  return 0;
-}
-
-CORBA_long
-impl_GDA_Recordset_deleteCurrent (impl_POA_GDA_Recordset * servant,
-				  CORBA_Environment * ev)
-{
-  gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
   return 0;
 }
 
@@ -343,26 +314,10 @@ impl_GDA_Recordset_supports (impl_POA_GDA_Recordset * servant,
   return 0;
 }
 
-CORBA_long
-impl_GDA_Recordset_update (impl_POA_GDA_Recordset * servant,
-			   CORBA_Environment * ev)
-{
-  gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-  return 0;
-}
-
-CORBA_long
-impl_GDA_Recordset_updateBatch (impl_POA_GDA_Recordset * servant,
-				CORBA_Environment * ev)
-{
-  gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-  return 0;
-}
-
 GDA_Recordset_Chunk *
 impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
-			  CORBA_long count,
-			  CORBA_Environment * ev)
+                          CORBA_long count,
+                          CORBA_Environment * ev)
 {
   Gda_ServerRecordset* rs = servant->recset;
   GDA_Row*                 row;

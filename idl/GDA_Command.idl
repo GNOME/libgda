@@ -2,19 +2,21 @@
 #ifndef __command__
 #define __command__ 1
 
-interface Recordset;
-interface Connection;
+#include "GDA_Recordset.idl"
+#include "GDA_Parameter.idl"
 
-interface Command {
+module GDA {
+	interface Command {
 
-	attribute long             cmdTimeout;
-	readonly attribute boolean prepared;
-	attribute long             state;
-	attribute string           text;
-	attribute unsigned long    type;
+		attribute long             cmdTimeout;
+		readonly attribute boolean prepared;
+		attribute long             state;
+		attribute string           text;
+		attribute unsigned long    type;
 	
-	Recordset open (in CmdParameterSeq param, in CursorType ct, in LockType lt, out unsigned long affected)
-		raises (DriverError);
+		Recordset open (in CmdParameterSeq param, in CursorType ct, in LockType lt, out unsigned long affected)
+				  raises (DriverError);
+	};
 };
 
 #endif

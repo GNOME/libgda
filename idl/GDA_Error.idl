@@ -2,15 +2,24 @@
 #ifndef __error__
 #define __error__ 1
 
-struct Error
-{
-  string description;
-  long   number;
-  string source;
-  string sqlstate;
-  string nativeMsg;
+module GDA {
+	struct Error {
+		string description;
+		long   number;
+		string source;
+		string sqlstate;
+		string nativeMsg;
+	};
+	
+	typedef sequence<Error> ErrorSeq;
+	
+	exception DriverError {
+		ErrorSeq errors;
+		string   realcommand;
+	};
+	exception NotSupported {
+		string errormsg;
+	};
 };
-
-typedef sequence<Error> ErrorSeq;
 
 #endif

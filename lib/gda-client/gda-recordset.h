@@ -4,7 +4,7 @@
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
- *  published by the Free Software Foundation; either version 2 of the
+ * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
  * The Gnome Library is distributed in the hope that it will be useful,
@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
 /* The recordset object. Holds the result from executing a
- * command object. Buffering and updateing data is done thrugh these
+ * command object. Buffering and updating data is done thrugh these
  * objects. 
  */
 

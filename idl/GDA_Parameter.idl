@@ -2,9 +2,26 @@
 #ifndef __parameter__
 #define __parameter__ 1
 
-interface Parameter {
-	typedef sequence<octet> VarBinString;
-  long     appendChunk(in VarBinString data);
+module GDA {
+	interface Parameter {
+		typedef sequence<octet> VarBinString;
+
+		long    appendChunk(in VarBinString data);
+	};
+	
+	enum ParameterDirection {
+		PARAM_IN,
+		PARAM_OUT,
+		PARAM_INOUT
+	};
+	struct CmdParameter {
+		FieldValue         value;
+		ParameterDirection dir;
+		string             name;
+		long               precision;
+		long               scale;
+	};
+	typedef sequence<CmdParameter> CmdParameterSeq;
 };
   
 #endif
