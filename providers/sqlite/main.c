@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA SQLite provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -22,46 +22,46 @@
  */
 
 #include "libgda/libgda.h"
-#include "gda-default.h"
+#include "gda-sqlite.h"
 
-GdaServer *gda_default_server = NULL;
+GdaServer *gda_sqlite_server = NULL;
 
 static void
 last_client_gone_cb (GdaServer *server, gpointer user_data)
 {
 	g_return_if_fail (GDA_IS_SERVER (server));
-	g_return_if_fail (server == gda_default_server);
+	g_return_if_fail (server == gda_sqlite_server);
 
 	/* terminate the program when no more clients are connected */
 	gda_main_quit ();
-	g_object_unref (G_OBJECT (gda_default_server));
+	g_object_unref (G_OBJECT (gda_sqlite_server));
 }
 
 static void
 setup_factory (void)
 {
-	if (gda_default_server != NULL)
+	if (gda_sqlite_server != NULL)
 		return;
 
-	gda_default_server = gda_server_new (GDA_DEFAULT_COMPONENT_FACTORY_ID);
-	if (!GDA_IS_SERVER (gda_default_server)) {
-		gda_log_error (_("Could not initiate Default component factory"));
+	gda_sqlite_server = gda_server_new (GDA_SQLITE_COMPONENT_FACTORY_ID);
+	if (!GDA_IS_SERVER (gda_sqlite_server)) {
+		gda_log_error (_("Could not initiate Sqlite component factory"));
 		exit (-1);
 	}
-	g_signal_connect (G_OBJECT (gda_default_server), "last_client_gone",
+	g_signal_connect (G_OBJECT (gda_sqlite_server), "last_client_gone",
 			  G_CALLBACK (last_client_gone_cb), NULL);
 
 	/* register the components for this server */
-	gda_server_register_component (gda_default_server,
-				       GDA_DEFAULT_PROVIDER_ID,
-				       GDA_TYPE_DEFAULT_PROVIDER);
+	gda_server_register_component (gda_sqlite_server,
+				       GDA_SQLITE_PROVIDER_ID,
+				       GDA_TYPE_SQLITE_PROVIDER);
 }
 
 int
 main (int argc, char *argv[])
 {
 	/* initialize application */
-	gda_init ("gda-default-srv", VERSION, argc, argv);
+	gda_init ("gda-sqlite-srv", VERSION, argc, argv);
 
 	setup_factory ();
 

@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA SQLite provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -22,29 +22,29 @@
  */
 
 #include <stdlib.h>
-#include "gda-default.h"
-#include "gda-default-recordset.h"
+#include "gda-sqlite.h"
+#include "gda-sqlite-recordset.h"
 #include <libgda/gda-row.h>
 #include <libgda/gda-server-recordset.h>
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
-#define OBJECT_DATA_DEFAULT_HANDLE "GDA_Default_DefaultHandle"
-#define OBJECT_DATA_DEFAULT_RECORDSET "GDA_Default_DefaultRecordset"
+#define OBJECT_DATA_SQLITE_HANDLE "GDA_Sqlite_SqliteHandle"
+#define OBJECT_DATA_SQLITE_RECORDSET "GDA_Sqlite_SqliteRecordset"
 
-static void gda_default_provider_class_init (GdaDefaultProviderClass *klass);
-static void gda_default_provider_init       (GdaDefaultProvider *provider,
-					     GdaDefaultProviderClass *klass);
-static void gda_default_provider_finalize   (GObject *object);
+static void gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass);
+static void gda_sqlite_provider_init       (GdaSqliteProvider *provider,
+					     GdaSqliteProviderClass *klass);
+static void gda_sqlite_provider_finalize   (GObject *object);
 
-static gboolean gda_default_provider_open_connection (GdaServerProvider *provider,
+static gboolean gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 						      GdaServerConnection *cnc,
 						      GdaQuarkList *params,
 						      const gchar *username,
 						      const gchar *password);
-static gboolean gda_default_provider_close_connection (GdaServerProvider *provider,
+static gboolean gda_sqlite_provider_close_connection (GdaServerProvider *provider,
 						       GdaServerConnection *cnc);
-static GList *gda_default_provider_execute_command (GdaServerProvider *provider,
+static GList *gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 						    GdaServerConnection *cnc,
 						    GdaCommand *cmd,
 						    GdaParameterList *params);
@@ -52,62 +52,62 @@ static GList *gda_default_provider_execute_command (GdaServerProvider *provider,
 static GObjectClass *parent_class = NULL;
 
 /*
- * GdaDefaultProvider class implementation
+ * GdaSqliteProvider class implementation
  */
 
 static void
-gda_default_provider_class_init (GdaDefaultProviderClass *klass)
+gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_default_provider_finalize;
-	provider_class->open_connection = gda_default_provider_open_connection;
-	provider_class->close_connection = gda_default_provider_close_connection;
-	provider_class->execute_command = gda_default_provider_execute_command;
+	object_class->finalize = gda_sqlite_provider_finalize;
+	provider_class->open_connection = gda_sqlite_provider_open_connection;
+	provider_class->close_connection = gda_sqlite_provider_close_connection;
+	provider_class->execute_command = gda_sqlite_provider_execute_command;
 	provider_class->begin_transaction = NULL;
 	provider_class->commit_transaction = NULL;
 	provider_class->rollback_transaction = NULL;
 }
 
 static void
-gda_default_provider_init (GdaDefaultProvider *myprv,
-			   GdaDefaultProviderClass *klass)
+gda_sqlite_provider_init (GdaSqliteProvider *myprv,
+			   GdaSqliteProviderClass *klass)
 {
 }
 
 static void
-gda_default_provider_finalize (GObject *object)
+gda_sqlite_provider_finalize (GObject *object)
 {
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) object;
+	GdaSqliteProvider *dfprv = (GdaSqliteProvider *) object;
 
-	g_return_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv));
+	g_return_if_fail (GDA_IS_SQLITE_PROVIDER (dfprv));
 
 	/* chain to parent class */
 	parent_class->finalize (object);
 }
 
 GType
-gda_default_provider_get_type (void)
+gda_sqlite_provider_get_type (void)
 {
 	static GType type = 0;
 
 	if (!type) {
 		if (type == 0) {
 			static GTypeInfo info = {
-				sizeof (GdaDefaultProviderClass),
+				sizeof (GdaSqliteProviderClass),
 				(GBaseInitFunc) NULL,
 				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_default_provider_class_init,
+				(GClassInitFunc) gda_sqlite_provider_class_init,
 				NULL, NULL,
-				sizeof (GdaDefaultProvider),
+				sizeof (GdaSqliteProvider),
 				0,
-				(GInstanceInitFunc) gda_default_provider_init
+				(GInstanceInitFunc) gda_sqlite_provider_init
 			};
 			type = g_type_register_static (PARENT_TYPE,
-						       "GdaDefaultProvider",
+						       "GdaSqliteProvider",
 						       &info, 0);
 		}
 	}
@@ -115,9 +115,9 @@ gda_default_provider_get_type (void)
 	return type;
 }
 
-/* open_connection handler for the GdaDefaultProvider class */
+/* open_connection handler for the GdaSqliteProvider class */
 static gboolean
-gda_default_provider_open_connection (GdaServerProvider *provider,
+gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 				      GdaServerConnection *cnc,
 				      GdaQuarkList *params,
 				      const gchar *username,
@@ -128,9 +128,9 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 
 	sqlite *sqlite;
 	
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaSqliteProvider *dfprv = (GdaSqliteProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (dfprv), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
@@ -157,31 +157,31 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 		} else {
 
 			g_object_set_data (G_OBJECT (cnc),
-					   OBJECT_DATA_DEFAULT_HANDLE, sqlite);
+					   OBJECT_DATA_SQLITE_HANDLE, sqlite);
 
 			return TRUE;
 		}
 	}
 }
 
-/* close_connection handler for the GdaDefaultProvider class */
+/* close_connection handler for the GdaSqliteProvider class */
 static gboolean
-gda_default_provider_close_connection (GdaServerProvider *provider,
+gda_sqlite_provider_close_connection (GdaServerProvider *provider,
 				       GdaServerConnection *cnc)
 {
 	sqlite *sqlite;
 	
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaSqliteProvider *dfprv = (GdaSqliteProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (dfprv), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
-	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!sqlite)
 		return FALSE;
 
 	sqlite_close (sqlite);
-	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, NULL);
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, NULL);
 
 	return TRUE;
 }
@@ -193,10 +193,10 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 	gchar  *errmsg;
 	gchar **arr;
 
-	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!sqlite) {
 		gda_server_connection_add_error_string (cnc,
-						        _("Invalid DEFAULT handle"));
+						        _("Invalid SQLITE handle"));
 		return NULL;
 	}
 
@@ -206,10 +206,10 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 		gint n = 0;
 
 		while (arr[n]) {
-			DEFAULT_Recordset *drecset;
+			SQLITE_Recordset *drecset;
 			GdaServerRecordset *recset;
 
-			drecset = g_new0 (DEFAULT_Recordset, 1);
+			drecset = g_new0 (SQLITE_Recordset, 1);
 			
 			if (sqlite_get_table (sqlite, arr[n], &drecset->data,
 					      &drecset->nrows, &drecset->ncols,
@@ -224,7 +224,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 				break;
 			}
 
-			recset = gda_default_recordset_new (cnc, drecset);
+			recset = gda_sqlite_recordset_new (cnc, drecset);
 			if (GDA_IS_SERVER_RECORDSET (recset))
 				reclist = g_list_append (reclist, recset);
 
@@ -238,9 +238,9 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 }
 
 
-/* execute_command handler for the GdaDefaultProvider class */
+/* execute_command handler for the GdaSqliteProvider class */
 static GList *
-gda_default_provider_execute_command (GdaServerProvider *provider,
+gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 				      GdaServerConnection *cnc,
 				      GdaCommand *cmd,
 				      GdaParameterList *params)
@@ -248,32 +248,32 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 	GList  *reclist = NULL;
 	gchar  *cmd_string = NULL;
 	
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaSqliteProvider *dfprv = (GdaSqliteProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (dfprv), NULL);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 	switch (gda_command_get_command_type (cmd)) {
-		case GDA_COMMAND_TYPE_SQL:
-			reclist = process_sql_commands (reclist, cnc,
-							gda_command_get_text (cmd));
-			break;
-		case GDA_COMMAND_TYPE_XML:
-			/* FIXME: Implement */
-			return NULL;
-		case GDA_COMMAND_TYPE_PROCEDURE:
-			/* FIXME: Implement */
-			return NULL;
-		case GDA_COMMAND_TYPE_TABLE:
-			cmd_string = g_strdup_printf ("SELECT * FROM %s",
-						      gda_command_get_text (cmd));
-			reclist = process_sql_commands (reclist, cnc,
-							cmd_string);
-			g_free (cmd_string);
-			break;
-		case GDA_COMMAND_TYPE_INVALID:
-			return NULL;
+	case GDA_COMMAND_TYPE_SQL:
+		reclist = process_sql_commands (reclist, cnc,
+						gda_command_get_text (cmd));
+		break;
+	case GDA_COMMAND_TYPE_XML:
+		/* FIXME: Implement */
+		return NULL;
+	case GDA_COMMAND_TYPE_PROCEDURE:
+		/* FIXME: Implement */
+		return NULL;
+	case GDA_COMMAND_TYPE_TABLE:
+		cmd_string = g_strdup_printf ("SELECT * FROM %s",
+					      gda_command_get_text (cmd));
+		reclist = process_sql_commands (reclist, cnc,
+						cmd_string);
+		g_free (cmd_string);
+		break;
+	case GDA_COMMAND_TYPE_INVALID:
+		return NULL;
 	}
 
 	return reclist;

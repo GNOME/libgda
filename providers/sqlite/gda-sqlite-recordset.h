@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA SQLite provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -21,17 +21,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_default_recordset_h__)
-#  define __gda_default_recordset_h__
+#if !defined(__gda_sqlite_recordset_h__)
+#  define __gda_sqlite_recordset_h__
 
 #include <libgda/gda-server-connection.h>
 #include <libgda/gda-server-recordset.h>
-#include "gda-default.h"
+#include "gda-sqlite.h"
 
 G_BEGIN_DECLS
 
-GdaServerRecordset *gda_default_recordset_new (GdaServerConnection *cnc,
-					       DEFAULT_Recordset *drecset);
+GdaServerRecordset *gda_sqlite_recordset_new (GdaServerConnection *cnc,
+					      SQLITE_Recordset *drecset);
 
 G_END_DECLS
 

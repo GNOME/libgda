@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA SQLite provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -22,9 +22,9 @@
  */
 
 #include <bonobo/bonobo-i18n.h>
-#include "gda-default-recordset.h"
+#include "gda-sqlite-recordset.h"
 
-#define OBJECT_DATA_RECSET_HANDLE "GDA_Default_RecsetHandle"
+#define OBJECT_DATA_RECSET_HANDLE "GDA_Sqlite_RecsetHandle"
 
 /*
  * Private functions
@@ -33,7 +33,7 @@
 static void
 free_drecset (gpointer data)
 {
-	DEFAULT_Recordset *drecset = (DEFAULT_Recordset *) data;
+	SQLITE_Recordset *drecset = (SQLITE_Recordset *) data;
 
 	g_return_if_fail (drecset != NULL);
 	sqlite_free_table(drecset->data);
@@ -48,7 +48,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	gulong rowpos;
 	gint row_count;
 	gint i;
-	DEFAULT_Recordset *drecset;
+	SQLITE_Recordset *drecset;
 
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 
@@ -56,7 +56,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	if (!drecset) {
 		gda_server_connection_add_error_string (
 			gda_server_recordset_get_connection (recset),
-			_("Invalid DEFAULT handle"));
+			_("Invalid SQLITE handle"));
 		return NULL;
 	}
 
@@ -96,7 +96,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 static GdaRowAttributes *
 describe_func (GdaServerRecordset *recset)
 {
-	DEFAULT_Recordset *drecset;
+	SQLITE_Recordset *drecset;
 	gint field_count;
 	gint i;
 	GdaRowAttributes *attrs;
@@ -107,7 +107,7 @@ describe_func (GdaServerRecordset *recset)
 	if (!drecset) {
 		gda_server_connection_add_error_string (
 			gda_server_recordset_get_connection (recset),
-			_("Invalid Default handle"));
+			_("Invalid Sqlite handle"));
 		return NULL;
 	}
 
@@ -135,7 +135,7 @@ describe_func (GdaServerRecordset *recset)
  */
 
 GdaServerRecordset *
-gda_default_recordset_new (GdaServerConnection *cnc, DEFAULT_Recordset *drecset)
+gda_sqlite_recordset_new (GdaServerConnection *cnc, SQLITE_Recordset *drecset)
 {
 	GdaServerRecordset *recset;
 
@@ -149,7 +149,7 @@ gda_default_recordset_new (GdaServerConnection *cnc, DEFAULT_Recordset *drecset)
 					drecset, (GDestroyNotify) free_drecset);
 		
 		return recset;
-	} else {
-		return NULL;
 	}
+
+	return NULL;
 }

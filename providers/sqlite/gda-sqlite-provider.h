@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA SQLite provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -21,31 +21,31 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_default_provider_h__)
-#  define __gda_default_provider_h__
+#if !defined(__gda_sqlite_provider_h__)
+#  define __gda_sqlite_provider_h__
 
 #include <libgda/gda-server-provider.h>
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_DEFAULT_PROVIDER            (gda_default_provider_get_type())
-#define GDA_DEFAULT_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DEFAULT_PROVIDER, GdaDefaultProvider))
-#define GDA_DEFAULT_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DEFAULT_PROVIDER, GdaDefaultProviderClass))
-#define GDA_IS_DEFAULT_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DEFAULT_PROVIDER))
-#define GDA_IS_DEFAULT_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_DEFAULT_PROVIDER))
+#define GDA_TYPE_SQLITE_PROVIDER            (gda_sqlite_provider_get_type())
+#define GDA_SQLITE_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SQLITE_PROVIDER, GdaSqliteProvider))
+#define GDA_SQLITE_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SQLITE_PROVIDER, GdaSqliteProviderClass))
+#define GDA_IS_SQLITE_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SQLITE_PROVIDER))
+#define GDA_IS_SQLITE_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_SQLITE_PROVIDER))
 
-typedef struct _GdaDefaultProvider      GdaDefaultProvider;
-typedef struct _GdaDefaultProviderClass GdaDefaultProviderClass;
+typedef struct _GdaSqliteProvider      GdaSqliteProvider;
+typedef struct _GdaSqliteProviderClass GdaSqliteProviderClass;
 
-struct _GdaDefaultProvider {
+struct _GdaSqliteProvider {
 	GdaServerProvider provider;
 };
 
-struct _GdaDefaultProviderClass {
+struct _GdaSqliteProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType gda_default_provider_get_type (void);
+GType gda_sqlite_provider_get_type (void);
 
 G_END_DECLS
 

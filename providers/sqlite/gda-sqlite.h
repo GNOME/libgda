@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA SQLite provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -21,23 +21,23 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_default_h__)
-#  define __gda_default_h__
+#if !defined(__gda_sqlite_h__)
+#  define __gda_sqlite_h__
 
 #include <glib/gmacros.h>
 #include <bonobo/bonobo-i18n.h>
 #include <config.h>
 #include <libgda/gda-server.h>
-#include <gda-default-provider.h>
+#include <gda-sqlite-provider.h>
 #include <sqlite.h>
 
-#define GDA_DEFAULT_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Default_ComponentFactory"
-#define GDA_DEFAULT_PROVIDER_ID          "OAFIID:GNOME_Database_Default_Provider"
+#define GDA_SQLITE_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_SQLite_ComponentFactory"
+#define GDA_SQLITE_PROVIDER_ID          "OAFIID:GNOME_Database_SQLite_Provider"
 
 typedef struct {
 	gint ncols;
 	gint nrows;
 	gchar **data;
-} DEFAULT_Recordset;
+} SQLITE_Recordset;
 
 #endif
