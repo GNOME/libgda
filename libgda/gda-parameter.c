@@ -270,7 +270,12 @@ gda_parameter_get_value (GdaParameter *param)
 void
 gda_parameter_set_value (GdaParameter *param, GdaValue *value)
 {
-	/* FIXME */
+	g_return_if_fail (param != NULL);
+	g_return_if_fail (value != NULL);
+
+	if (param->value != NULL)
+		gda_value_free (param->value);
+	param->value = gda_value_copy (value);
 }
 
 /**

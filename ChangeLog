@@ -1,3 +1,8 @@
+2003-11-21  Laurent Sansonetti <lrz@gnome.org>
+
+	* libgda/gda-parameter.c: 
+	Implements gda_parameter_set_value().
+
 2003-11-12  Paisa Seeluangsawat <paisa@users.sf.net>
 	
 	* libgda/gda-blob.c:
