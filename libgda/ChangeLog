@@ -1,3 +1,17 @@
+2002-01-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-row.[ch]: *_get_* returns const. *_set_* receives const.
+	Make Time, Timestamp and Date work. Removed assert in
+	gda_field_get_time_value(), get_date_value() and get_timestamp_value() 
+	as gda_value_*() does it.
+
+	* gda-value.[ch]: removed many warnings. Changes to Time, Date and
+	Timestamp. Same with const as the above. Changed BONOBO_ARG_* by
+	GDA_VALUE_* for the basic types. Defined TIMEZONE_INVALID. Declared
+	GdaDate, GdaTime and GdaTimestamp.
+	(gda_value_stringify()): use the maximum precision for Point. Added
+	conversion of Date, Time and Timestamp.
+	
 2002-01-08  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-row.h: define GdaType as an enumeration.

@@ -29,9 +29,14 @@
 
 G_BEGIN_DECLS
 
+#define TIMEZONE_INVALID (2*12*60*60)
+
 typedef CORBA_any      GdaValue;
 typedef CORBA_TypeCode GdaValueType;
 typedef GNOME_Database_GeometricPoint GdaGeometricPoint;
+typedef GNOME_Database_Date GdaDate;
+typedef GNOME_Database_Time GdaTime;
+typedef GNOME_Database_Timestamp GdaTimestamp;
 
 #define GDA_VALUE_TYPE_NULL      TC_null
 #define GDA_VALUE_TYPE_BIGINT    TC_CORBA_long_long
@@ -52,15 +57,15 @@ GdaValue     *gda_value_new_null (void);
 GdaValue     *gda_value_new_bigint (long long val);
 GdaValue     *gda_value_new_binary (gconstpointer val);
 GdaValue     *gda_value_new_boolean (gboolean val);
-GdaValue     *gda_value_new_date (GDate *val);
+GdaValue     *gda_value_new_date (GdaDate *val);
 GdaValue     *gda_value_new_double (gdouble val);
 GdaValue     *gda_value_new_geometric_point (GdaGeometricPoint *val);
 GdaValue     *gda_value_new_integer (gint val);
 GdaValue     *gda_value_new_single (gfloat val);
 GdaValue     *gda_value_new_smallint (gshort val);
 GdaValue     *gda_value_new_string (const gchar *val);
-GdaValue     *gda_value_new_time (GTime val);
-GdaValue     *gda_value_new_timestamp (time_t val);
+GdaValue     *gda_value_new_time (GdaTime *val);
+GdaValue     *gda_value_new_timestamp (GdaTimestamp *val);
 GdaValue     *gda_value_new_tinyint (gchar val);
 
 void          gda_value_free (GdaValue *value);
@@ -75,11 +80,11 @@ gconstpointer gda_value_get_binary (GdaValue *value);
 void          gda_value_set_binary (GdaValue *value, gconstpointer val, glong size);
 gboolean      gda_value_get_boolean (GdaValue *value);
 void          gda_value_set_boolean (GdaValue *value, gboolean val);
-GDate        *gda_value_get_date (GdaValue *value);
-void          gda_value_set_date (GdaValue *value, GDate *val);
+const GdaDate *gda_value_get_date (GdaValue *value);
+void          gda_value_set_date (GdaValue *value, GdaDate *val);
 gdouble       gda_value_get_double (GdaValue *value);
 void          gda_value_set_double (GdaValue *value, gdouble val);
-GdaGeometricPoint *gda_value_get_geometric_point (GdaValue *value);
+const GdaGeometricPoint *gda_value_get_geometric_point (GdaValue *value);
 void          gda_value_set_geometric_point (GdaValue *value, GdaGeometricPoint *val);
 gint          gda_value_get_integer (GdaValue *value);
 void          gda_value_set_integer (GdaValue *value, gint val);
@@ -90,10 +95,10 @@ gshort        gda_value_get_smallint (GdaValue *value);
 void          gda_value_set_smallint (GdaValue *value, gshort val);
 const gchar  *gda_value_get_string (GdaValue *value);
 void          gda_value_set_string (GdaValue *value, const gchar *val);
-GTime         gda_value_get_time (GdaValue *value);
-void          gda_value_set_time (GdaValue *value, GTime val);
-time_t        gda_value_get_timestamp (GdaValue *value);
-void          gda_value_set_timestamp (GdaValue *value, time_t val);
+const GdaTime *gda_value_get_time (GdaValue *value);
+void          gda_value_set_time (GdaValue *value, GdaTime *val);
+const GdaTimestamp *gda_value_get_timestamp (GdaValue *value);
+void          gda_value_set_timestamp (GdaValue *value, GdaTimestamp *val);
 gchar         gda_value_get_tinyint (GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
 

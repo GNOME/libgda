@@ -403,13 +403,10 @@ gda_field_set_boolean_value (GdaField *field, gboolean value)
 /**
  * gda_field_get_date_value
  */
-GDate *
+const GdaDate *
 gda_field_get_date_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	g_return_val_if_fail (
-		field->attributes.gdaType == GDA_TYPE_DATE,
-		NULL);
 
 	return gda_value_get_date (&field->value);
 }
@@ -418,12 +415,13 @@ gda_field_get_date_value (GdaField *field)
  * gda_field_set_date_value
  */
 void
-gda_field_set_date_value (GdaField *field, GDate *date)
+gda_field_set_date_value (GdaField *field, GdaDate *date)
 {
 	g_return_if_fail (field != NULL);
+	g_return_if_fail (date != NULL);
 
 	field->attributes.gdaType = GDA_TYPE_DATE;
-	field->actualSize = sizeof (GNOME_Database_Date);
+	field->actualSize = sizeof (GdaDate);
 
 	gda_value_set_date (&field->value, date);
 }
@@ -455,7 +453,7 @@ gda_field_set_double_value (GdaField *field, gdouble value)
 /**
  * gda_field_get_geometric_point_value
  */
-GdaGeometricPoint *
+const GdaGeometricPoint *
 gda_field_get_geometric_point_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
@@ -588,13 +586,10 @@ gda_field_set_string_value (GdaField *field, const gchar *value)
 /**
  * gda_field_get_time_value
  */
-GTime
+const GdaTime *
 gda_field_get_time_value (GdaField *field)
 {
-	g_return_val_if_fail (field != NULL, -1);
-	g_return_val_if_fail (
-		field->attributes.gdaType == GDA_TYPE_TIME,
-		-1);
+	g_return_val_if_fail (field != NULL, NULL);
 
 	return gda_value_get_time (&field->value);
 }
@@ -603,21 +598,24 @@ gda_field_get_time_value (GdaField *field)
  * gda_field_set_time_value
  */
 void
-gda_field_set_time_value (GdaField *field, GTime value)
+gda_field_set_time_value (GdaField *field, GdaTime *value)
 {
-	/* FIXME: implement */
+	g_return_if_fail (field != NULL);
+	g_return_if_fail (value != NULL);
+	
+	field->attributes.gdaType = GDA_TYPE_TIME;
+	field->actualSize = sizeof (GdaTime);
+
+	gda_value_set_time (&field->value, value);
 }
 
 /**
  * gda_field_get_timestamp_value
  */
-time_t
+const GdaTimestamp *
 gda_field_get_timestamp_value (GdaField *field)
 {
-	g_return_val_if_fail (field != NULL, -1);
-	g_return_val_if_fail (
-		field->attributes.gdaType == GDA_TYPE_TIMESTAMP,
-		-1);
+	g_return_val_if_fail (field != NULL, NULL);
 
 	return gda_value_get_timestamp (&field->value);
 }
@@ -626,12 +624,12 @@ gda_field_get_timestamp_value (GdaField *field)
  * gda_field_set_timestamp_value
  */
 void
-gda_field_set_timestamp_value (GdaField *field, time_t value)
+gda_field_set_timestamp_value (GdaField *field, GdaTimestamp *value)
 {
 	g_return_if_fail (field != NULL);
 
 	field->attributes.gdaType = GDA_TYPE_TIMESTAMP;
-	field->actualSize = sizeof (GNOME_Database_Timestamp);
+	field->actualSize = sizeof (GdaTimestamp);
 
 	gda_value_set_timestamp (&field->value, value);
 }
