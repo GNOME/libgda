@@ -5,9 +5,6 @@ INCLUDES = \
 
 bin_PROGRAMS = gda-test 
 
-noinst_PROGRAMS = \
-	gda-xmldb-test
-
 gda_test_SOURCES = \
 	client.c \
 	config.c \
@@ -16,11 +13,6 @@ gda_test_SOURCES = \
 	gda-test.h \
 	value.c
 gda_test_LDADD = \
-	$(top_builddir)/libgda/libgda-2.la \
-	$(LIBGDA_LIBS)
-
-gda_xmldb_test_SOURCES = gda-xmldb-test.c
-gda_xmldb_test_LDADD = \
 	$(top_builddir)/libgda/libgda-2.la \
 	$(LIBGDA_LIBS)
 

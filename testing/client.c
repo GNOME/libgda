@@ -40,6 +40,12 @@ open_connection (GdaClient *client,
 		return;
 	}
 
+	/* show provider features */
+	g_print ("\tProvider capabilities...\n");
+	g_print ("\t\tTransactions: %s\n",
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_TRANSACTIONS) ?
+		 _("Supported") : _("Not supported"));
+
 	/* start a transaction */
 	g_print ("\tStarting transaction...");
 	res = gda_connection_begin_transaction (cnc, NULL);

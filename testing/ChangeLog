@@ -1,3 +1,9 @@
+2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* client.c: added gda_connection_supports test
+
+	* gda-xmldb-test.c: removed. All tests will be in gda-test
+
 2001-11-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* client.c: added rollback test.
