@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-01-20 23:31+0100\n"
+"POT-Creation-Date: 2001-01-25 02:16+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -217,6 +217,7 @@ msgstr "Poskus inicializacije ¾e inicializiranega nuditelja"
 #: providers/gda-oracle-server/gda-oracle-connection.c:426
 #: providers/gda-postgres-server/gda-postgres-connection.c:779
 #: providers/gda-sybase-server/gda-sybase-error.c:109
+#: providers/gda-tds-server/gda-tds-error.c:108
 #, c-format
 msgid "error '%s' at %s"
 msgstr "napaka '%s' pri %s"
@@ -237,8 +238,12 @@ msgstr "napaka '%s' pri %s"
 #: providers/gda-oracle-server/gda-oracle-connection.c:432
 #: providers/gda-postgres-server/gda-postgres-connection.c:786
 #: providers/gda-postgres-server/gda-postgres-connection.c:787
+#: providers/gda-primebase-server/gda-primebase-connection.c:302
+#: providers/gda-primebase-server/gda-primebase-connection.c:303
 #: providers/gda-sybase-server/gda-sybase-error.c:118
 #: providers/gda-sybase-server/gda-sybase-error.c:119
+#: providers/gda-tds-server/gda-tds-error.c:117
+#: providers/gda-tds-server/gda-tds-error.c:118
 msgid "Not available"
 msgstr "Ni na voljo"
 
@@ -248,7 +253,9 @@ msgstr "Ni na voljo"
 #: providers/gda-mysql-server/gda-mysql-connection.c:393
 #: providers/gda-oracle-server/gda-oracle-connection.c:433
 #: providers/gda-postgres-server/gda-postgres-connection.c:788
+#: providers/gda-primebase-server/gda-primebase-connection.c:304
 #: providers/gda-sybase-server/gda-sybase-error.c:120
+#: providers/gda-tds-server/gda-tds-error.c:119
 msgid "error"
 msgstr "napaka"
 
@@ -271,6 +278,7 @@ msgstr "Nisem mogel registrirati implementacije nuditelja INTERBASE"
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
 #: providers/gda-sybase-server/gda-sybase-connection.c:269
+#: providers/gda-tds-server/gda-tds-connection.c:258
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Neobravnavan SCHEMA_QTYPE %d"
@@ -283,6 +291,7 @@ msgstr "Nisem mogel registrirati implementacije nuditelja po¹te"
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:87
 #: providers/gda-sybase-server/gda-sybase-command.c:120
+#: providers/gda-tds-server/gda-tds-command.c:114
 #, c-format
 msgid "executing command '%s'"
 msgstr "izvajam ukaz %s'"
@@ -322,6 +331,7 @@ msgstr "mysql_recset je NULA"
 #: providers/gda-mdb-server/gda-mdb-connection.c:457
 #: providers/gda-mysql-server/gda-mysql-connection.c:484
 #: providers/gda-sybase-server/gda-sybase-connection.c:432
+#: providers/gda-tds-server/gda-tds-connection.c:415
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Ni podanega imena tabele za SCHEMA_COLS"
 
@@ -409,64 +419,82 @@ msgid "Could not register PostgreSQL provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja PostzgreSQL"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:115
+#: providers/gda-tds-server/gda-tds-command.c:110
 msgid "Connection seems to be dead"
 msgstr "Povezava izgleda mrtva"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:135
+#: providers/gda-tds-server/gda-tds-command.c:125
 msgid "Filling command structure failed\n"
 msgstr "Polnjenje ukazne strukture ni uspelo\n"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:147
+#: providers/gda-tds-server/gda-tds-command.c:133
 msgid "sending cmd failed"
 msgstr "po9iljanje ukaza ni uspelo"
 
+#: providers/gda-primebase-server/gda-primebase-command.c:110
 #: providers/gda-sybase-server/gda-sybase-command.c:154
+#: providers/gda-tds-server/gda-tds-command.c:140
 msgid "Allocating recordset failed"
 msgstr "Rezerviranje recordset-a ni uspelo"
 
+#: providers/gda-primebase-server/gda-primebase-command.c:117
 #: providers/gda-sybase-server/gda-sybase-command.c:164
+#: providers/gda-tds-server/gda-tds-command.c:148
 msgid "Getting recordset userdata failed"
 msgstr "Dobivanje recordset uporabni¹kih podatkov ni uspelo"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:222
+#: providers/gda-tds-server/gda-tds-command.c:201
 msgid "Command execution finished, all results processed"
 msgstr "Izvajanje ukaza je bilo konhano, vsi rezultati so obdelani"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:226
+#: providers/gda-tds-server/gda-tds-command.c:205
 msgid "Command failed"
 msgstr "Ukaz ni uspel"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:230
+#: providers/gda-tds-server/gda-tds-command.c:209
 msgid "Execution of resultless command succeeded"
 msgstr "Izvedba ukaza brez rezultatov je uspela"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:246
+#: providers/gda-tds-server/gda-tds-command.c:225
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() je vrnila %x"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:256
+#: providers/gda-tds-server/gda-tds-command.c:235
 msgid "No further results, command completly succeeded."
 msgstr "Ni nadalnjih rezultatov, ukaz uspe¹no zakljuèen."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:260
+#: providers/gda-tds-server/gda-tds-command.c:239
 msgid "An error occured during command execution."
 msgstr "Ob izvajanju ukaza se je zgudila napaka."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:267
+#: providers/gda-tds-server/gda-tds-command.c:243
 msgid "Cmd execution returned unknown result, may be an error"
 msgstr "Izvedba ukaza je vrnila neznan rezultat, to je lahko napaka"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:280
+#: providers/gda-tds-server/gda-tds-command.c:253
 msgid "No data returned, freeing recordset structure"
 msgstr "Ni vrnjenih podatkov, spro¹èam recordset strukturo"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:311
 #: providers/gda-sybase-server/gda-sybase-command.c:323
+#: providers/gda-tds-server/gda-tds-command.c:283
+#: providers/gda-tds-server/gda-tds-command.c:291
 msgid "Freeing command structure failed"
 msgstr "Spro¹èanje ukazne strukture ni uspelo"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:149
+#: providers/gda-tds-server/gda-tds-connection.c:129
 msgid "Error allocating error structure"
 msgstr "Napaka ob rezervaciji strukture za napako"
 
@@ -475,79 +503,98 @@ msgid "Not enough memory for sybase_Connection"
 msgstr "Ni dovolj pomnilnika za sybase_Connection"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:422
+#: providers/gda-tds-server/gda-tds-connection.c:405
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:438
+#: providers/gda-tds-server/gda-tds-connection.c:421
 msgid "Could not allocate command structure"
 msgstr "Nisem mogel rezervirati ukazne strukture"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:460
+#: providers/gda-tds-server/gda-tds-connection.c:443
 msgid "Could not allocate enough memory for query"
 msgstr "Nisem mogel rezervirati poizvedbene strukture"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:474
+#: providers/gda-tds-server/gda-tds-connection.c:457
 msgid "Could not get recordset in schema_cols"
 msgstr "Nisem mogel dobiti recordset-a v schema_cols"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:506
 #: providers/gda-sybase-server/gda-sybase-connection.c:583
+#: providers/gda-tds-server/gda-tds-connection.c:489
+#: providers/gda-tds-server/gda-tds-connection.c:566
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: ime tabele = '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:514
 #: providers/gda-sybase-server/gda-sybase-connection.c:591
+#: providers/gda-tds-server/gda-tds-connection.c:497
+#: providers/gda-tds-server/gda-tds-connection.c:574
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "scema_tables: tabele_schema = '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:519
+#: providers/gda-tds-server/gda-tds-connection.c:502
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = '%s' NEUPORABLJENO!\n"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:523
+#: providers/gda-tds-server/gda-tds-connection.c:506
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: neveljaven tip omejitve %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:533
+#: providers/gda-tds-server/gda-tds-connection.c:516
 msgid "Could not allocate cmd structure"
 msgstr "Nisem mogel rezervirat ukazne strukture"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:596
+#: providers/gda-tds-server/gda-tds-connection.c:579
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = '%s' NEUPORABLJEN!"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:600
+#: providers/gda-tds-server/gda-tds-connection.c:583
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: neveljaven tip omejitve %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:661
+#: providers/gda-tds-server/gda-tds-connection.c:644
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Neveljaven ali nepodprt tip omejitve: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
+#: providers/gda-tds-server/gda-tds-connection.c:685
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Nisem mogel rezervirati Gda_ServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737
+#: providers/gda-tds-server/gda-tds-connection.c:715
+#: providers/gda-tds-server/gda-tds-connection.c:720
 #, c-format
 msgid "connection status: %x"
 msgstr "stanje povezave: %x"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:733
+#: providers/gda-tds-server/gda-tds-connection.c:716
 #, c-format
 msgid "return code: %x"
 msgstr "vrnjena vrednost: %x"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:770
+#: providers/gda-tds-server/gda-tds-connection.c:751
 msgid "attempting reconnection"
 msgstr "posku¹am se znova povezati"
 
@@ -557,31 +604,37 @@ msgid "Reconnected to '%s'"
 msgstr "Znova povezan z '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:911
+#: providers/gda-tds-server/gda-tds-connection.c:856
 #, c-format
 msgid "Connected to %s"
 msgstr "Povezan z %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:919
+#: providers/gda-tds-server/gda-tds-connection.c:866
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Izbrana zbirka podatkov '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:948
+#: providers/gda-tds-server/gda-tds-connection.c:891
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Nisem mogel rezervirati ukazne strukture"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:957
+#: providers/gda-tds-server/gda-tds-connection.c:900
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Nisem mogel rezervirati pomnilnika za ukazni niz"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:970
+#: providers/gda-tds-server/gda-tds-connection.c:910
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command ni uspela"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:979
+#: providers/gda-tds-server/gda-tds-connection.c:919
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: po¹iljanje ukaza ni uspelo"
@@ -597,24 +650,29 @@ msgid "%s: use command failed"
 msgstr "%s: \"use\" ukaz ni uspel"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1035
+#: providers/gda-tds-server/gda-tds-connection.c:981
 msgid "Could not allocate locale structure"
 msgstr "Nisem mogel rezervirati strukture locale"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1041
+#: providers/gda-tds-server/gda-tds-connection.c:987
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Nisem mogel nastaviti locale na '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1047
+#: providers/gda-tds-server/gda-tds-connection.c:993
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Nisem mogel nastaviti locale, da bi bil '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1052
+#: providers/gda-tds-server/gda-tds-connection.c:998
 msgid "Could not drop locale structure"
 msgstr "Nisem mogel spustiti strukture locale"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1065
+#: providers/gda-tds-server/gda-tds-connection.c:1011
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Usodna napaka: %s\n"
@@ -625,6 +683,7 @@ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:74
+#: providers/gda-tds-server/gda-tds-error.c:72
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
@@ -733,6 +792,7 @@ msgid "Fetching %d cslib messages"
 msgstr "Dobivam %d sporoèil cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:421
+#, c-format
 msgid "Fetching %d cslib message"
 msgstr "Dobivam %d sporoèilo cslib"
 
@@ -746,85 +806,153 @@ msgid "Could not clear cslib messages"
 msgstr "Nisem mogel poèistiti sporoèil cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:587
+#: providers/gda-tds-server/gda-tds-error.c:251
 msgid "Server message:"
 msgstr "Sporoèilo stre¾nika:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:596
+#: providers/gda-tds-server/gda-tds-error.c:260
 msgid "Client message:"
 msgstr "Sporoèilo odjemalca:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:603
+#: providers/gda-tds-server/gda-tds-error.c:267
 msgid "CS-Library error:"
 msgstr "Napaka knji¾nice CS:"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:152
+#: providers/gda-tds-server/gda-tds-recordset.c:149
 #, c-format
 msgid "fetch error at row %d"
 msgstr "napaka pri prenosu v vrstici %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:159
+#: providers/gda-tds-server/gda-tds-recordset.c:156
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr "CS_END_DATA na vrstici %d; razveljavljam"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:168
+#: providers/gda-tds-server/gda-tds-recordset.c:163
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: Napaka (%d)"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:343
+#: providers/gda-tds-server/gda-tds-recordset.c:336
 msgid "Failed fetching # of columns"
 msgstr "Nisem uspel prenesti ¹tevila stolpcev"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:349
+#: providers/gda-tds-server/gda-tds-recordset.c:343
 #, c-format
 msgid "Counted %d columns"
 msgstr "Pre¹tel %d stolpcev"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:356
+#: providers/gda-tds-server/gda-tds-recordset.c:350
 #, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "%s nisem mogel rezervirati datafmt podatkov"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:366
+#: providers/gda-tds-server/gda-tds-recordset.c:360
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s nisem mogel rezervirati podatkovnih polj"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:384
+#: providers/gda-tds-server/gda-tds-recordset.c:378
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe v stolpcu ¹t. %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:391
+#: providers/gda-tds-server/gda-tds-recordset.c:385
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "cd_describe v stolpcu %d ni uspel"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:397
+#: providers/gda-tds-server/gda-tds-recordset.c:391
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): '%s', %d (%s)"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:406
+#: providers/gda-tds-server/gda-tds-recordset.c:400
 msgid "could not allocate data holder"
 msgstr "nisem mogel rezervirati dr¾alca podatkov"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:416
+#: providers/gda-tds-server/gda-tds-recordset.c:410
 msgid "could not ct_bind data holder to column"
 msgstr "ne morem povezati ct_bind dr¾alca podtakov s stolpcom"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:423
+#: providers/gda-tds-server/gda-tds-recordset.c:417
 msgid "illegal type detected, aborting"
 msgstr "zaznan neveljaven tip, prekinjam"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:429
+#: providers/gda-tds-server/gda-tds-recordset.c:423
 msgid "could not allocate field"
 msgstr "nisem mogel rezervirati polja"
 
 #: providers/gda-sybase-server/main-sybase.c:74
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja gda-sybase"
+
+#: providers/gda-primebase-server/gda-primebase-command.c:128
+msgid "An error occured."
+msgstr "Pojavila se je napaka."
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:137
+#, c-format
+msgid "%2ld: Connected to '%s@%s' with connparm: '%s'"
+msgstr "%2ld: Povezan z '%s@%s' s parametri povezave: '%s'"
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:142
+#, c-format
+msgid "%2ld: ConInfo: %s@%s, Client API v%x, status: %x"
+msgstr "%2ld: Podatki povezave: %s@%s, programski vmesnik odjemalca v%x, stanje: %x"
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:145
+msgid "Could not connect to '%s'"
+msgstr "Ne se povezati z '%s'"
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:316
+msgid "Not enough memory for primebase_Error structure."
+msgstr "Ni dovolj pomnilnika za strukturo primebase_Error"
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:324
+#, c-format
+msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
+msgstr "%2ld: NAPAKA: %ld (%ld) : %s.\n"
+
+#: providers/gda-primebase-server/gda-primebase-recordset.c:190
+msgid "No according field found"
+msgstr "Ustrezno polje ni bilo najdeno"
+
+#: providers/gda-primebase-server/main-primebase.c:68
+msgid "Could not register PRIMEBASE provider implementation"
+msgstr "Nisem mogel registrirati implementacije nuditelja PRIMEBASE"
+
+#: providers/gda-tds-server/gda-tds-connection.c:137
+msgid "Not enough memory for tds_Connection"
+msgstr "Ni dovolj pomnilnika za tds_Connection"
+
+#: providers/gda-tds-server/gda-tds-connection.c:854
+msgid "Reconnected to %s"
+msgstr "Znova povezan z %s"
+
+#: providers/gda-tds-server/gda-tds-error.c:63
+msgid "gda_tds_error_make(%p,%p,%p,%p)"
+msgstr "gda_tds_error_make(%p,%p,%p,%p)"
+
+#: providers/gda-tds-server/main-tds.c:74
+msgid "Could not register gda-tds provider implementation"
+msgstr "Nisem mogel registrirati implementacije nuditelja gda-tds"
 
 #: report/gda-report-engine.c:207
 #, c-format
