@@ -1,3 +1,8 @@
+2002-01-18  Hasbullah Bin Pit <sebol@ikhlas.com>
+
+	* configure.ini: Added Malay (ms)to ALL_LINGUAS.
+	* po/ms.po: Added Malay Malay Translation.
+
 2002-01-17  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* configure.in: Added sqlite detection code
