@@ -2,13 +2,13 @@
 # Copyright (C) 2000 Free Software Foundation, Inc.
 # Daniele Medri <madrid@linux.it>, 2000.
 # Clara Tattoni <clara.tattoni@libero.it>, 2001.
-# Marco Ciampa <ciampix@libero.it>, 2003.
+# Marco Ciampa <ciampix@libero.it>, 2003, 2004.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2003-11-24 23:21+0100\n"
-"PO-Revision-Date: 2003-09-04 01:12GMT\n"
+"POT-Creation-Date: 2004-01-06 20:26+0100\n"
+"PO-Revision-Date: 2004-01-06 20:27+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -98,10 +98,10 @@ msgstr "Nome utente"
 msgid "Password"
 msgstr "Password"
 
-#: libgda/gda-data-model.c:691
+#: libgda/gda-data-model.c:889
 #, c-format
-msgid "Data model %p is not editable"
-msgstr "Il modello dati %p non è modificabile"
+msgid "Data model %p is not updatable"
+msgstr "Il modello dati %p non è aggiornabile"
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
@@ -141,20 +141,20 @@ msgstr "Errore durante la lettura %s: %s"
 msgid "Could not create file %s"
 msgstr "Non è possibile creare il file '%s'"
 
-#: libgda/gda-value.c:1954
+#: libgda/gda-value.c:1961
 msgid "TRUE"
 msgstr "SI"
 
-#: libgda/gda-value.c:1956
+#: libgda/gda-value.c:1963
 msgid "FALSE"
 msgstr "NO"
 
-#: libgda/gda-value.c:2025
+#: libgda/gda-value.c:2032
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject di tipo '%s'"
 
-#: libgda/gda-value.c:2028
+#: libgda/gda-value.c:2035
 msgid "NULL GObject"
 msgstr "GObject NULL"
 
@@ -745,6 +745,13 @@ msgstr "Stringa di caratteri"
 msgid "Could not parse '%s' command"
 msgstr "Impossibile analizzare il comando '%s'"
 
+#. parsing went fine, but there is no result
+#. (e.g. because of an invalid column name)
+#: providers/mdb/gda-mdb-provider.c:744
+#, c-format
+msgid "Got no result for '%s' command"
+msgstr "No si è ottenuto risultati dal comando '%s'"
+
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
 msgid "Table %s not found"
@@ -1311,7 +1318,7 @@ msgstr "Fallito l'invio dell'sql-command."
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
 
-#. when you execute a stored procedure through openclient, this
+#. when you execute a stored procedure through openclient, this 
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712
