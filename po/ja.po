@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda CVS-20001008\n"
-"POT-Creation-Date: 2001-02-13 01:38+0100\n"
-"PO-Revision-Date: 2000-10-10 00:43+0900\n"
+"Project-Id-Version: libgda CVS-20010214\n"
+"POT-Creation-Date: 2001-02-14 15:42-0500\n"
+"PO-Revision-Date: 2001-02-14 15:44-0500\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -213,7 +213,7 @@ msgstr "初期化を試みましたがすでにプロバイダは初期化されています"
 
 #: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
 msgid "GDA Datasource Access for LDAP"
-msgstr ""
+msgstr "LDAP用のGDAデータソースアクセス"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:261
 #: providers/gda-ldap-server/gda-ldap-connection.c:272
@@ -272,7 +272,7 @@ msgstr "LDAP プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
 msgid "GDA Datasource Access for Interbase"
-msgstr ""
+msgstr "Interbase用のGDAデータソースアクセス"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:260
 #, c-format
@@ -285,7 +285,7 @@ msgstr "INTERBASE プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
 msgid "GDA Datasource Access for Mail"
-msgstr ""
+msgstr "Mail用のGDAデータソースアクセス"
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -304,7 +304,7 @@ msgstr "メールプロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
 msgid "GDA Datasource Access for MDB (MS Access) files"
-msgstr ""
+msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -362,7 +362,7 @@ msgstr "MySQL プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
 msgid "GDA Datasource Access for MySQL"
-msgstr ""
+msgstr "MySQL用のGDAデータソースアクセス"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
@@ -375,7 +375,7 @@ msgstr ""
 
 #: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
 msgid "GDA Datasource Access for ODBC"
-msgstr ""
+msgstr "ODBC用のGDAデータソースアクセス"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -397,7 +397,7 @@ msgstr "ODBC プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
 msgid "GDA Datasource Access for Oracle"
-msgstr ""
+msgstr "Oracle用のGDAデータソースアクセス"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
@@ -443,7 +443,7 @@ msgstr "ORACLE プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
 msgid "GDA Datasource Access for Postgres"
-msgstr ""
+msgstr "Postgres用のGDAデータソースアクセス"
 
 #: providers/gda-postgres-server/gda-postgres-connection.c:888
 #: providers/gda-postgres-server/gda-postgres-connection.c:1000
@@ -456,7 +456,7 @@ msgstr "PostgreSQL プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
 msgid "GDA Datasource Access for Sybase"
-msgstr ""
+msgstr "Sybase用のGDAデータソースアクセス"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:115
 #: providers/gda-tds-server/gda-tds-command.c:110
@@ -536,7 +536,7 @@ msgstr "コマンド構造体の開放に失敗しました"
 #: providers/gda-sybase-server/gda-sybase-connection.c:149
 #: providers/gda-tds-server/gda-tds-connection.c:137
 msgid "Error allocating error structure"
-msgstr "エラー構造体の割り当て中にエラーが発生しました"
+msgstr "エラー構造体の割当て中にエラーが発生しました"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:157
 msgid "Not enough memory for sybase_Connection"
@@ -833,7 +833,7 @@ msgid "Fetching %d cslib messages"
 msgstr "%d 個の cslib メッセージを取得してします"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:421
-#, fuzzy, c-format
+#, c-format
 msgid "Fetching %d cslib message"
 msgstr "%d 個の cslib メッセージを取得してします"
 
@@ -946,69 +946,65 @@ msgstr "gda-sybase プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
 msgid "GDA Datasource Access for primebase"
-msgstr ""
+msgstr "primebase用のGDAデータソースアクセス"
 
 #: providers/gda-primebase-server/gda-primebase-command.c:128
 msgid "An error occured."
-msgstr ""
+msgstr "エラーが発生しました"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:137
 #, c-format
 msgid "%2ld: Connected to '%s@%s' with connparm: '%s'"
-msgstr ""
+msgstr "%2ld: '%s@%s'へ接続パラメータ '%s'で接続しました"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:142
 #, c-format
 msgid "%2ld: ConInfo: %s@%s, Client API v%x, status: %x"
-msgstr ""
+msgstr "%2ld: 接続情報: %s@%s, クライアントAPI v%x, ステータス: %x"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:145
-#, fuzzy, c-format
+#, c-format
 msgid "Could not connect to '%s'"
 msgstr "%s へ接続することが出来ませんでした"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:316
-#, fuzzy
 msgid "Not enough memory for primebase_Error structure."
-msgstr "sybase_Connection のための十分なメモリがありません"
+msgstr "primebase_Error 構造体のための十分なメモリがありません"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:324
 #, c-format
 msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
-msgstr ""
+msgstr "%2ld: エラー: %ld (%ld) : %s.\n"
 
 #: providers/gda-primebase-server/gda-primebase-recordset.c:190
 msgid "No according field found"
-msgstr ""
+msgstr "一致するフィールドが見つかりません"
 
 #: providers/gda-primebase-server/main-primebase.c:68
-#, fuzzy
 msgid "Could not register PRIMEBASE provider implementation"
-msgstr "INTERBASE プロバイダの実装を登録することが出来ませんでした"
+msgstr "PRIMEBASE プロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
 msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr ""
+msgstr "Sybase/MS SQL用のGDAデータソースアクセス"
 
 #: providers/gda-tds-server/gda-tds-connection.c:145
-#, fuzzy
 msgid "Not enough memory for tds_Connection"
-msgstr "sybase_Connection のための十分なメモリがありません"
+msgstr "tds_Connection のための十分なメモリがありません"
 
 #: providers/gda-tds-server/gda-tds-connection.c:862
-#, fuzzy, c-format
+#, c-format
 msgid "Reconnected to %s"
 msgstr "'%s' へ再接続しました"
 
 #: providers/gda-tds-server/gda-tds-error.c:63
-#, fuzzy, c-format
+#, c-format
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
-msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 
 #: providers/gda-tds-server/main-tds.c:74
-#, fuzzy
 msgid "Could not register gda-tds provider implementation"
-msgstr "gda-sybase プロバイダの実装を登録することが出来ませんでした"
+msgstr "gda-tds プロバイダの実装を登録することが出来ませんでした"
 
 #: report/gda-report-engine.c:209
 #, c-format
@@ -1017,7 +1013,7 @@ msgstr "CORBA 例外はレポートエンジンを取り外しています: %s"
 
 #: report/server/GNOME_GDA_Report.oaf.in.h:1
 msgid "GDA Distributed Report Engine"
-msgstr ""
+msgstr "GDA分配レポートエンジン"
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48
@@ -1096,9 +1092,3 @@ msgstr "%s: DSN エントリの設定ミスです"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: データソース '%s' は見つかりませんでした\n"
-
-#~ msgid "Fetchong %d cslib message"
-#~ msgstr "%d 個の cslib メッセージを取得しています"
-
-#~ msgid "%s: not implemented"
-#~ msgstr "%s: 実装されていません"
