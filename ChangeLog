@@ -1,3 +1,7 @@
+2002-08-30  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* tools/gda-config-tool.c: added copyright notice.
+
 2002-08-29  Vivien Malerba <malerba@gnome-db.org>
 	* libgda/gda-value.c: fixed a bug in the tests for the gda_value_compare () function
 
@@ -132,6 +136,7 @@
 	distribution, as automake takes care of these implicitly; use
 	standard $(EXTRA_DIST) list for distributing spec file
 
+>>>>>>> 1.348
 2002-08-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/default/gda-default-provider.c
