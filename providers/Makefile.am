@@ -10,6 +10,10 @@ if POSTGRES
 GDA_POSTGRES_SERVER=gda-postgres-server
 endif
 
+if PRIMEBASE
+GDA_PRIMEBASE_SERVER=gda-primebase-server
+endif
+
 if SYBASE
 GDA_SYBASE_SERVER=gda-sybase-server
 endif
@@ -42,6 +46,7 @@ SUBDIRS = \
 	$(GDA_ODBC_SERVER) \
 	$(GDA_MYSQL_SERVER) \
 	$(GDA_POSTGRES_SERVER) \
+	$(GDA_PRIMEBASE_SERVER) \
 	$(GDA_SYBASE_SERVER) \
 	$(GDA_TDS_SERVER) \
 	$(GDA_LDAP_SERVER) \

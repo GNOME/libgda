@@ -22,8 +22,13 @@
  */
 
 // $Log$
+// Revision 1.6  2000/11/27 12:09:13  holger
+// 2000-11-27	Holger Thon <holger.thon@gnome-db.org>
+//
+// 	* added primebase server skeleton
+//
 // Revision 1.5  2000/11/21 19:57:13  holger
-// 2000-11-21 Holger Thon <holger@gidayu.max.uni-duisburg.de>
+// 2000-11-21 Holger Thon <holger.thon@gnome-db.org>
 //
 // 	- Fixed missing parameter in gda-sybase-server
 // 	- Removed ct_diag/cs_diag stuff completly from tds server
