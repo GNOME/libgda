@@ -21,8 +21,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include <stdlib.h>
 #include <string.h>
+#include <config.h>
 #include <glib.h>
 #include <gmodule.h>
 #include <libgda/gda-config.h>
@@ -31,10 +32,11 @@
 #include <libgda/gda-log.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
+#include <sys/stat.h>
 
-#ifndef LIBGDA_USER_CONFIG_FILE
-#define LIBGDA_USER_CONFIG_FILE "/.libgda/config"  /* Appended to $HOME */
-#endif
+#define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
+#define LIBGDA_USER_CONFIG_FILE LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S \
+				"config"
 
 //FIXME: many functions are not thread safe!
 
@@ -194,6 +196,27 @@ get_config_client ()
 		if (g_file_get_contents (user_config, &full_file, &len, NULL)){
 			config_client->user =
 				gda_config_parse_config_file (full_file, len);
+		} else {
+			if (!g_file_test (user_config, G_FILE_TEST_EXISTS)){
+				gchar *dirpath;
+				FILE *fp;
+
+				dirpath = g_strdup_printf ("%s%s", g_get_home_dir (),
+								LIBGDA_USER_CONFIG_DIR);
+				if (!g_file_test (dirpath, G_FILE_TEST_IS_DIR)){
+					if (mkdir (dirpath, 0700))
+						g_warning ("Error creating directory %s", dirpath);
+				}
+
+				fp = fopen (user_config, "wt");
+				if (fp == NULL)
+					g_warning ("Unable to create the configuration file.");
+				else
+					fclose (fp);
+
+				g_free (dirpath);
+			} else
+				g_warning ("Config file is not readable.");
 		}
 		g_free (user_config);
 	}
