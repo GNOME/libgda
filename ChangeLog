@@ -1,3 +1,7 @@
+2000-09-28  Jesus Bravo Alvarez  <jba@pobox.com>
+
+	* configure.in: Added Galician (gl) to ALL_LINGUAS.
+
 29/09/2000	Akira TAGOH <tagoh@gnome.gr.jp>
 
 	* acconfig.h, configure.in, lib/gda-common/gda-config.c:
