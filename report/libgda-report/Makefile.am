@@ -9,6 +9,7 @@ INCLUDES = \
 
 gda_report_headers = \
 	gda-report-document.h \
+	gda-report-types.h \
 	gda-report.h
 
 libgda_report_2_la_SOURCES = \

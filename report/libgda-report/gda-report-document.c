@@ -32,6 +32,34 @@
 #define OBJECT_REPORT_ELEMENT "reportelement"
 
 struct _GdaReportDocumentPrivate {
+	GdaReportStyle        reportstyle;
+	GdaReportPageSize     pagesize;
+	GdaReportOrientation  orientation;
+	GdaReportUnits        units;
+	gfloat                topmargin;
+	gfloat                bottommargin;
+	gfloat                leftmargin;
+	gfloat                rightmargin;
+	GdaReportColor       *bgcolor;
+	GdaReportColor       *fgcolor;
+	GdaReportColor       *bordercolor;
+	gfloat                borderwidth;
+	GdaReportLineStyle    borderstyle;
+	gchar                *fontfamily;
+	gint                  fontsize;
+	GdaReportFontWeight   fontweight;
+	gboolean              fontitalic;
+	GdaReportHAlignment   halignment;
+	GdaReportVAlignment   valignment;
+	gboolean              wordwrap;
+	GdaReportColor       *negvaluecolor;
+	gchar                *dateformat;
+	gint8                 precision;
+	gchar                *currency;
+	gboolean              commaseparator;
+	gfloat                linewidth;
+	GdaReportColor       *linecolor;
+	GdaReportLineStyle    linestyle;
 };
 
 static void gda_report_document_class_init (GdaReportDocumentClass *klass);
@@ -169,4 +197,649 @@ gda_report_document_new_from_uri (const gchar *uri)
 	g_free (body);
 
 	return document;
+}
+
+
+/**
+ * gda_report_document_get_reportstyle
+ */
+GdaReportStyle
+gda_report_document_get_reportstyle (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->reportstyle;
+}
+
+/**
+ * gda_report_document_set_reportstyle
+ */
+void
+gda_report_document_set_reportstyle (GdaReportDocument *document,
+				     GdaReportStyle reportstyle)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->reportstyle = reportstyle;
+}
+
+/**
+ * gda_report_document_get_pagesize
+ */
+GdaReportPageSize
+gda_report_document_get_pagesize (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->pagesize;
+}
+
+/**
+ * gda_report_document_set_pagesize
+ */
+void
+gda_report_document_set_pagesize (GdaReportDocument *document,
+				  GdaReportPageSize pagesize)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->pagesize = pagesize;
+}
+
+/**
+ * gda_report_document_get_orientation
+ */
+GdaReportOrientation
+gda_report_document_get_orientation (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->orientation;
+}
+
+/**
+ * gda_report_document_set_orientation
+ */
+void
+gda_report_document_set_orientation (GdaReportDocument *document,
+				     GdaReportOrientation orientation)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->orientation = orientation;
+}
+
+/**
+ * gda_report_document_get_units
+ */
+GdaReportUnits
+gda_report_document_get_units (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->units;
+}
+
+/**
+ * gda_report_document_set_units
+ */
+void
+gda_report_document_set_units (GdaReportDocument *document,
+			       GdaReportUnits units)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->units = units;
+}
+
+/**
+ * gda_report_document_get_topmargin
+ */
+gfloat
+gda_report_document_get_topmargin (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->topmargin;
+}
+
+/**
+ * gda_report_document_set_topmargin
+ */
+void
+gda_report_document_set_topmargin (GdaReportDocument *document,
+				   gfloat topmargin)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->topmargin = topmargin;
+}
+
+/**
+ * gda_report_document_get_bottommargin
+ */
+gfloat
+gda_report_document_get_bottommargin (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->bottommargin;
+}
+
+/**
+ * gda_report_document_set_bottommargin
+ */
+void
+gda_report_document_set_bottommargin (GdaReportDocument *document,
+				      gfloat bottommargin)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->bottommargin = bottommargin;
+}
+
+/**
+ * gda_report_document_get_leftmargin
+ */
+gfloat
+gda_report_document_get_leftmargin (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->leftmargin;
+}
+
+/**
+ * gda_report_document_set_leftmargin
+ */
+void
+gda_report_document_set_leftmargin (GdaReportDocument *document,
+				    gfloat leftmargin)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->leftmargin = leftmargin;
+}
+
+/**
+ * gda_report_document_get_rightmargin
+ */
+gfloat
+gda_report_document_get_rightmargin (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->rightmargin;
+}
+
+/**
+ * gda_report_document_set_rightmargin
+ */
+void
+gda_report_document_set_rightmargin (GdaReportDocument *document,
+				     gfloat rightmargin)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->rightmargin = rightmargin;
+}
+
+/**
+ * gda_report_document_get_bgcolor
+ */
+GdaReportColor *
+gda_report_document_get_bgcolor (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), NULL);
+
+	return document->priv->bgcolor;
+}
+
+/**
+ * gda_report_document_set_bgcolor
+ */
+void
+gda_report_document_set_bgcolor (GdaReportDocument *document,
+				 GdaReportColor *bgcolor)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->bgcolor = bgcolor;
+}
+
+/**
+ * gda_report_document_get_fgcolor
+ */
+GdaReportColor *
+gda_report_document_get_fgcolor (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), NULL);
+
+	return document->priv->fgcolor;
+}
+
+/**
+ * gda_report_document_set_fgcolor
+ */
+void
+gda_report_document_set_fgcolor (GdaReportDocument *document,
+				 GdaReportColor *fgcolor)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->fgcolor = fgcolor;
+}
+
+/**
+ * gda_report_document_get_bordercolor
+ */
+GdaReportColor *
+gda_report_document_get_bordercolor (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), NULL);
+
+	return document->priv->bordercolor;
+}
+
+/**
+ * gda_report_document_set_bordercolor
+ */
+void
+gda_report_document_set_bordercolor (GdaReportDocument *document,
+				     GdaReportColor *bordercolor)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->bordercolor = bordercolor;
+}
+
+/**
+ * gda_report_document_get_borderwidth
+ */
+gfloat
+gda_report_document_get_borderwidth (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->borderwidth;
+}
+
+/**
+ * gda_report_document_set_borderwidth
+ */
+void
+gda_report_document_set_borderwidth (GdaReportDocument *document,
+				     gfloat borderwidth)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->borderwidth = borderwidth;
+}
+
+/**
+ * gda_report_document_get_borderstyle
+ */
+GdaReportLineStyle
+gda_report_document_get_borderstyle (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->borderstyle;
+}
+
+/**
+ * gda_report_document_set_borderstyle
+ */
+void
+gda_report_document_set_borderstyle (GdaReportDocument *document,
+				     GdaReportLineStyle borderstyle)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->borderstyle = borderstyle;
+}
+
+/**
+ * gda_report_document_get_fontfamily
+ */
+gchar *
+gda_report_document_get_fontfamily (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), NULL);
+
+	return document->priv->fontfamily;
+}
+
+/**
+ * gda_report_document_set_fontfamily
+ */
+void
+gda_report_document_set_fontfamily (GdaReportDocument *document,
+				    gchar *fontfamily)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->fontfamily = fontfamily;
+}
+
+/**
+ * gda_report_document_get_fontsize
+ */
+gint
+gda_report_document_get_fontsize (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->fontsize;
+}
+
+/**
+ * gda_report_document_set_fontsize
+ */
+void
+gda_report_document_set_fontsize (GdaReportDocument *document,
+				  gint fontsize)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->fontsize = fontsize;
+}
+
+/**
+ * gda_report_document_get_fontweight
+ */
+GdaReportFontWeight
+gda_report_document_get_fontweight (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->fontweight;
+}
+
+/**
+ * gda_report_document_set_fontweight
+ */
+void
+gda_report_document_set_fontweight (GdaReportDocument *document,
+				    GdaReportFontWeight fontweight)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->fontweight = fontweight;
+}
+
+/**
+ * gda_report_document_get_fontitalic
+ */
+gboolean
+gda_report_document_get_fontitalic (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->fontitalic;
+}
+
+/**
+ * gda_report_document_set_fontitalic
+ */
+void
+gda_report_document_set_fontitalic (GdaReportDocument *document,
+				    gboolean fontitalic)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->fontitalic = fontitalic;
+}
+
+/**
+ * gda_report_document_get_halignment
+ */
+GdaReportHAlignment
+gda_report_document_get_halignment (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->halignment;
+}
+
+/**
+ * gda_report_document_set_halignment
+ */
+void
+gda_report_document_set_halignment (GdaReportDocument *document,
+				    GdaReportHAlignment alignment)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->halignment = alignment;
+}
+
+/**
+ * gda_report_document_get_valignment
+ */
+GdaReportVAlignment
+gda_report_document_get_valignment (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->valignment;
+}
+
+/**
+ * gda_report_document_set_valignment
+ */
+void
+gda_report_document_set_valignment (GdaReportDocument *document,
+				    GdaReportVAlignment alignment)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->valignment = alignment;
+}
+
+/**
+ * gda_report_document_get_wordwrap
+ */
+gboolean
+gda_report_document_get_wordwrap (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->wordwrap;
+}
+
+/**
+ * gda_report_document_set_wordwrap
+ */
+void
+gda_report_document_set_wordwrap (GdaReportDocument *document,
+				  gboolean wordwrap)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->wordwrap = wordwrap;
+}
+
+/**
+ * gda_report_document_get_negvaluecolor
+ */
+GdaReportColor *
+gda_report_document_get_negvaluecolor (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), NULL);
+
+	return document->priv->negvaluecolor;
+}
+
+/**
+ * gda_report_document_set_negvaluecolor
+ */
+void
+gda_report_document_set_negvaluecolor (GdaReportDocument *document,
+				       GdaReportColor *negvaluecolor)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->negvaluecolor = negvaluecolor;
+}
+
+/**
+ * gda_report_document_get_dateformat
+ */
+gchar *
+gda_report_document_get_dateformat (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), NULL);
+
+	return document->priv->dateformat;
+}
+
+/**
+ * gda_report_document_set_dateformat
+ */
+void
+gda_report_document_set_dateformat (GdaReportDocument *document,
+				    gchar *dateformat)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->dateformat = dateformat;
+}
+
+/**
+ * gda_report_document_get_precision
+ */
+gint8
+gda_report_document_get_precision (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->precision;
+}
+
+/**
+ * gda_report_document_set_precision
+ */
+void
+gda_report_document_set_precision (GdaReportDocument *document,
+				   gint8 precision)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->precision = precision;
+}
+
+/**
+ * gda_report_document_get_currency
+ */
+gchar *
+gda_report_document_get_currency (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), NULL);
+
+	return document->priv->currency;
+}
+
+/**
+ * gda_report_document_set_currency
+ */
+void
+gda_report_document_set_currency (GdaReportDocument *document,
+				  gchar *currency)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->currency = currency;
+}
+
+/**
+ * gda_report_document_get_commaseparator
+ */
+gboolean
+gda_report_document_get_commaseparator (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->commaseparator;
+}
+
+/**
+ * gda_report_document_set_commaseparator
+ */
+void
+gda_report_document_set_commaseparator (GdaReportDocument *document,
+					gboolean commaseparator)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->commaseparator = commaseparator;
+}
+
+/**
+ * gda_report_document_get_linewidth
+ */
+gfloat
+gda_report_document_get_linewidth (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->linewidth;
+}
+
+/**
+ * gda_report_document_set_linewidth
+ */
+void
+gda_report_document_set_linewidth (GdaReportDocument *document,
+				   gfloat linewidth)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->linewidth = linewidth;
+}
+
+/**
+ * gda_report_document_get_linecolor
+ */
+GdaReportColor *
+gda_report_document_get_linecolor (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), NULL);
+
+	return document->priv->linecolor;
+}
+
+/**
+ * gda_report_document_set_linecolor
+ */
+void
+gda_report_document_set_linecolor (GdaReportDocument *document,
+				   GdaReportColor *linecolor)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->linecolor = linecolor;
+}
+
+/**
+ * gda_report_document_get_linestyle
+ */
+GdaReportLineStyle
+gda_report_document_get_linestyle (GdaReportDocument *document)
+{
+	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (document), -1);
+
+	return document->priv->linestyle;
+}
+
+/**
+ * gda_report_document_set_linestyle
+ */
+void
+gda_report_document_set_linestyle (GdaReportDocument *document,
+				   GdaReportLineStyle linestyle)
+{
+	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (document));
+
+	document->priv->linestyle = linestyle;
 }

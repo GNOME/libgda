@@ -1,3 +1,12 @@
+2002-05-26  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* report/libgda-report/Makefile.am: Added gda-report-type.h.
+	* report/libgda-report/gda-report-document.c: Added all its properties
+	and implemented it's _get && _set functions. We need to implement now
+	it's ParamSpec interface.
+	* report/libgda-report/gda-report-document.h: ditto.
+	* report/libgda-report/gda-report-types.h: Added all report types.
+
 2002-05-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 0.8.191
