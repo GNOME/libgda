@@ -1,3 +1,8 @@
+2000-11-22	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* removed GDA_Fieldx, which is now GDA_Field, as the old
+	GDA_Field.idl file was not used
+
 2000-11-05	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* renamed all IDL files from gda* to GDA* to avoid confusion with
