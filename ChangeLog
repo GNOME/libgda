@@ -1,5 +1,7 @@
 2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda.pc.in: adapted to new header locations
+
 	* Makefile.am: removed report from SUBDIRS, until we've got time
 	to make it build without errors
 
