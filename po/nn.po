@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.11\n"
-"POT-Creation-Date: 2001-09-16 08:46+0200\n"
+"POT-Creation-Date: 2001-09-16 22:13+0200\n"
 "PO-Revision-Date: 2001-06-25 18:55+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian (Nynorsk)\n"
@@ -240,12 +240,13 @@ msgstr ""
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:479
 #: providers/gda-postgres-server/gda-postgres-connection.c:767
-#: providers/gda-sybase-server/gda-sybase-error.c:127
+#: providers/gda-sybase-server/gda-sybase-error.c:132
 #: providers/gda-tds-server/gda-tds-error.c:123
 #, c-format
 msgid "error '%s' at %s"
 msgstr ""
 
+#. gda_error_set_help_file (error, _("Not available"));
 #: providers/gda-interbase-server/gda-interbase-connection.c:294
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
@@ -262,8 +263,7 @@ msgstr ""
 #: providers/gda-postgres-server/gda-postgres-connection.c:776
 #: providers/gda-primebase-server/gda-primebase-connection.c:375
 #: providers/gda-primebase-server/gda-primebase-connection.c:376
-#: providers/gda-sybase-server/gda-sybase-error.c:136
-#: providers/gda-sybase-server/gda-sybase-error.c:137
+#: providers/gda-sybase-server/gda-sybase-error.c:142
 #: providers/gda-tds-server/gda-tds-error.c:132
 #: providers/gda-tds-server/gda-tds-error.c:133
 #, fuzzy
@@ -277,7 +277,7 @@ msgstr "Ikkje tilgjengeleg"
 #: providers/gda-oracle-server/gda-oracle-connection.c:486
 #: providers/gda-postgres-server/gda-postgres-connection.c:777
 #: providers/gda-primebase-server/gda-primebase-connection.c:377
-#: providers/gda-sybase-server/gda-sybase-error.c:138
+#: providers/gda-sybase-server/gda-sybase-error.c:143
 #: providers/gda-tds-server/gda-tds-error.c:134
 #, fuzzy
 msgid "error"
@@ -314,7 +314,7 @@ msgstr ""
 
 #: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
-#: providers/gda-sybase-server/gda-sybase-connection.c:285
+#: providers/gda-sybase-server/gda-sybase-connection.c:290
 #: providers/gda-tds-server/gda-tds-connection.c:278
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
@@ -371,7 +371,7 @@ msgstr ""
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:469
 #: providers/gda-mysql-server/gda-mysql-connection.c:838
-#: providers/gda-sybase-server/gda-sybase-connection.c:464
+#: providers/gda-sybase-server/gda-sybase-connection.c:469
 #: providers/gda-tds-server/gda-tds-connection.c:448
 msgid "No table name given for SCHEMA_COLS"
 msgstr ""
@@ -594,73 +594,73 @@ msgstr ""
 msgid "Freeing command structure failed"
 msgstr "Feil ved lesing av magisk streng."
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:171
+#: providers/gda-sybase-server/gda-sybase-connection.c:176
 msgid "Not enough memory for sybase_Connection"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:453
+#: providers/gda-sybase-server/gda-sybase-connection.c:458
 #: providers/gda-tds-server/gda-tds-connection.c:437
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:470
+#: providers/gda-sybase-server/gda-sybase-connection.c:475
 #: providers/gda-tds-server/gda-tds-connection.c:454
 #, fuzzy
 msgid "Could not allocate command structure"
 msgstr "Kunne ikkje lasta bilete."
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:493
+#: providers/gda-sybase-server/gda-sybase-connection.c:498
 #: providers/gda-tds-server/gda-tds-connection.c:477
 msgid "Could not allocate enough memory for query"
 msgstr ""
 
 #.          gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
-#: providers/gda-sybase-server/gda-sybase-connection.c:508
+#: providers/gda-sybase-server/gda-sybase-connection.c:513
 #: providers/gda-tds-server/gda-tds-connection.c:492
 #, fuzzy
 msgid "Could not get recordset in schema_cols"
 msgstr "kunne ikkje sletta oppføring i artikkel-db"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:557
+#: providers/gda-sybase-server/gda-sybase-connection.c:562
 #: providers/gda-tds-server/gda-tds-connection.c:541
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:567
+#: providers/gda-sybase-server/gda-sybase-connection.c:572
 #: providers/gda-tds-server/gda-tds-connection.c:551
 #, fuzzy
 msgid "Could not allocate cmd structure"
 msgstr "Kunne ikkje lasta bilete."
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:633
+#: providers/gda-sybase-server/gda-sybase-connection.c:638
 #: providers/gda-tds-server/gda-tds-connection.c:617
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:695
+#: providers/gda-sybase-server/gda-sybase-connection.c:700
 #: providers/gda-tds-server/gda-tds-connection.c:679
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:738
+#: providers/gda-sybase-server/gda-sybase-connection.c:743
 #: providers/gda-tds-server/gda-tds-connection.c:722
 #, fuzzy
 msgid "Could not allocate GdaServerCommand"
 msgstr "Kunne ikkje lasta artikkelen"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:769
 #: providers/gda-sybase-server/gda-sybase-connection.c:774
+#: providers/gda-sybase-server/gda-sybase-connection.c:779
 #: providers/gda-tds-server/gda-tds-connection.c:752
 #: providers/gda-tds-server/gda-tds-connection.c:757
 #, fuzzy, c-format
 msgid "connection status: %x"
 msgstr "Sambandstilstand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:770
+#: providers/gda-sybase-server/gda-sybase-connection.c:775
 #: providers/gda-tds-server/gda-tds-connection.c:753
 #, fuzzy, c-format
 msgid "return code: %x"
@@ -668,36 +668,36 @@ msgstr ""
 "\n"
 "Avsluttingskode ="
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:808
+#: providers/gda-sybase-server/gda-sybase-connection.c:813
 #: providers/gda-tds-server/gda-tds-connection.c:788
 #, fuzzy
 msgid "attempting reconnection"
 msgstr "Vel tenar-samband ..."
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:938
+#: providers/gda-sybase-server/gda-sybase-connection.c:943
 #, fuzzy, c-format
 msgid "Reconnected to '%s'"
 msgstr "Kopla til %1"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:940
+#: providers/gda-sybase-server/gda-sybase-connection.c:945
 #: providers/gda-tds-server/gda-tds-connection.c:890
 #, fuzzy, c-format
 msgid "Connected to %s"
 msgstr "Kopla til %1"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:952
+#: providers/gda-sybase-server/gda-sybase-connection.c:957
 #: providers/gda-tds-server/gda-tds-connection.c:904
 #, fuzzy, c-format
 msgid "Selected database '%s'"
 msgstr "Valte tabellar"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:981
+#: providers/gda-sybase-server/gda-sybase-connection.c:986
 #: providers/gda-tds-server/gda-tds-connection.c:930
 #, fuzzy, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "Kunne ikkje lasta bilete."
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:990
+#: providers/gda-sybase-server/gda-sybase-connection.c:995
 #: providers/gda-tds-server/gda-tds-connection.c:939
 #, fuzzy, c-format
 msgid "%s: Could not allocate memory for cmd string"
@@ -705,288 +705,288 @@ msgstr ""
 "Kunne ikkje laga sokkel for tilgang til\n"
 "%1"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:999
+#: providers/gda-sybase-server/gda-sybase-connection.c:1004
 #: providers/gda-tds-server/gda-tds-connection.c:947
 #, fuzzy, c-format
 msgid "%s: ct_command failed"
 msgstr "Ingen kommando oppgitt"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1010
+#: providers/gda-sybase-server/gda-sybase-connection.c:1015
 #: providers/gda-tds-server/gda-tds-connection.c:957
 #, fuzzy, c-format
 msgid "%s: sending command failed"
 msgstr "Feil ved tilbakespoling av band"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1021
+#: providers/gda-sybase-server/gda-sybase-connection.c:1026
 #, fuzzy, c-format
 msgid "%s: selecting database failed"
 msgstr "Spør etter fil i RPM-database"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1038
+#: providers/gda-sybase-server/gda-sybase-connection.c:1043
 #, fuzzy, c-format
 msgid "%s: use command failed"
 msgstr "Bruk som kompendiumfil"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1066
+#: providers/gda-sybase-server/gda-sybase-connection.c:1071
 #: providers/gda-tds-server/gda-tds-connection.c:1020
 #, fuzzy
 msgid "Could not allocate locale structure"
 msgstr "Kunne ikkje lasta artikkelen"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1072
+#: providers/gda-sybase-server/gda-sybase-connection.c:1077
 #: providers/gda-tds-server/gda-tds-connection.c:1026
 #, fuzzy, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Kunne ikkje lasta kalender '%1'.\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1079
+#: providers/gda-sybase-server/gda-sybase-connection.c:1084
 #: providers/gda-tds-server/gda-tds-connection.c:1033
 #, fuzzy, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Kunne ikkje overføra fila til URL-en %1."
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1085
+#: providers/gda-sybase-server/gda-sybase-connection.c:1090
 #: providers/gda-tds-server/gda-tds-connection.c:1039
 #, fuzzy
 msgid "Could not drop locale structure"
 msgstr "Kunne ikkje lasta bilete."
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1099
+#: providers/gda-sybase-server/gda-sybase-connection.c:1104
 #: providers/gda-tds-server/gda-tds-connection.c:1052
 #, fuzzy, c-format
 msgid "Fatal error: %s\n"
 msgstr "Fatal feil"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:73
+#: providers/gda-sybase-server/gda-sybase-error.c:78
 #, c-format
 msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:85
+#: providers/gda-sybase-server/gda-sybase-error.c:90
 #: providers/gda-tds-server/gda-tds-error.c:81
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:161
+#: providers/gda-sybase-server/gda-sybase-error.c:166
 msgid "cs_diag() initialized"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:165
+#: providers/gda-sybase-server/gda-sybase-error.c:170
 #, fuzzy
 msgid "Could not initialize cs_diag()"
 msgstr "Kunne ikkje skriva ut data.\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:175
+#: providers/gda-sybase-server/gda-sybase-error.c:180
 msgid "ct_diag() initialized"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:179
+#: providers/gda-sybase-server/gda-sybase-error.c:184
 #, fuzzy
 msgid "Could not initialize ct_diag()"
 msgstr "Kunne ikkje skriva ut data.\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:215
+#: providers/gda-sybase-server/gda-sybase-error.c:220
 #, fuzzy, c-format
 msgid "%s could not find server implementation"
 msgstr "Kunne ikkje gjera operasjonen ferdig.\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:222
+#: providers/gda-sybase-server/gda-sybase-error.c:227
 #, fuzzy, c-format
 msgid "%s could not get cnc userdata"
 msgstr "Kunne ikkje koda data.\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:234
+#: providers/gda-sybase-server/gda-sybase-error.c:239
 #, fuzzy
 msgid "Could not get # of messages"
 msgstr "Kunne ikkje senda melding."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:241
+#: providers/gda-sybase-server/gda-sybase-error.c:246
 #, fuzzy, c-format
 msgid "%d ctlib messages to fetch"
 msgstr "Flytta alle meldingar til papirkorga"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:246
+#: providers/gda-sybase-server/gda-sybase-error.c:251
 #, fuzzy, c-format
 msgid "%d ctlib message to fetch"
 msgstr "Flytta alle meldingar til papirkorga"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:284
+#: providers/gda-sybase-server/gda-sybase-error.c:289
 msgid "error is nullpointer in gda_sybase_messages_handle"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:310
-#: providers/gda-sybase-server/gda-sybase-error.c:382
-#: providers/gda-sybase-server/gda-sybase-error.c:429
+#: providers/gda-sybase-server/gda-sybase-error.c:315
+#: providers/gda-sybase-server/gda-sybase-error.c:387
+#: providers/gda-sybase-server/gda-sybase-error.c:434
 #, fuzzy
 msgid "Could not get # of server messages"
 msgstr "Fann ikkje sendaren av denne meldinga"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:318
+#: providers/gda-sybase-server/gda-sybase-error.c:323
 #, fuzzy, c-format
 msgid "Fetching %d client messages"
 msgstr "&Finn i melding ..."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:321
+#: providers/gda-sybase-server/gda-sybase-error.c:326
 #, fuzzy, c-format
 msgid "Fetching %d client message"
 msgstr "&Finn i melding ..."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:330
+#: providers/gda-sybase-server/gda-sybase-error.c:335
 #, fuzzy, c-format
 msgid "Could not get client msg # %d"
 msgstr "Fann ikkje bilete %1"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:349
+#: providers/gda-sybase-server/gda-sybase-error.c:354
 #, fuzzy
 msgid "Could not get # of client messages"
 msgstr "Fann ikkje sendaren av denne meldinga"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:357
+#: providers/gda-sybase-server/gda-sybase-error.c:362
 #, fuzzy
 msgid "Could not clear client messages"
 msgstr "Kunne ikkje senda melding."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:390
+#: providers/gda-sybase-server/gda-sybase-error.c:395
 #, fuzzy, c-format
 msgid "Fetching %d server messages"
 msgstr "Hent meldingar"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:393
+#: providers/gda-sybase-server/gda-sybase-error.c:398
 #, fuzzy, c-format
 msgid "Fetching %d server message"
 msgstr "Sende ikkje heile meldinga"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:402
+#: providers/gda-sybase-server/gda-sybase-error.c:407
 #, fuzzy, c-format
 msgid "Could not get server msg # %d"
 msgstr "Fann ikkje tenesta '%1'."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:437
+#: providers/gda-sybase-server/gda-sybase-error.c:442
 #, fuzzy
 msgid "Could not clear server messages"
 msgstr "Kunne ikkje senda melding."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:459
-#: providers/gda-sybase-server/gda-sybase-error.c:499
+#: providers/gda-sybase-server/gda-sybase-error.c:464
+#: providers/gda-sybase-server/gda-sybase-error.c:504
 #, fuzzy
 msgid "Could not get # of cslib messages"
 msgstr "Fann ikkje sendaren av denne meldinga"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:467
+#: providers/gda-sybase-server/gda-sybase-error.c:472
 #, fuzzy, c-format
 msgid "Fetching %d cslib messages"
 msgstr "&Finn i melding ..."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:470
+#: providers/gda-sybase-server/gda-sybase-error.c:475
 #, fuzzy, c-format
 msgid "Fetching %d cslib message"
 msgstr "&Finn i melding ..."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:480
+#: providers/gda-sybase-server/gda-sybase-error.c:485
 #, fuzzy, c-format
 msgid "Could not get cslib msg # %d"
 msgstr "Kunne ikkje lasta bilete %1"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:507
+#: providers/gda-sybase-server/gda-sybase-error.c:512
 #, fuzzy
 msgid "Could not clear cslib messages"
 msgstr "Kunne ikkje lasta bilete %1"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:641
+#: providers/gda-sybase-server/gda-sybase-error.c:646
 #: providers/gda-tds-server/gda-tds-error.c:269
 #, fuzzy
 msgid "Server message:"
 msgstr "Send meldingar:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:649
+#: providers/gda-sybase-server/gda-sybase-error.c:654
 #: providers/gda-tds-server/gda-tds-error.c:277
 #, fuzzy
 msgid "Client message:"
 msgstr "Lukk melding"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:656
+#: providers/gda-sybase-server/gda-sybase-error.c:661
 #: providers/gda-tds-server/gda-tds-error.c:284
 #, fuzzy
 msgid "CS-Library error:"
 msgstr "vCard-feil"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:198
+#: providers/gda-sybase-server/gda-sybase-recordset.c:203
 #: providers/gda-tds-server/gda-tds-recordset.c:194
 #, c-format
 msgid "fetch error at row %d"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:205
+#: providers/gda-sybase-server/gda-sybase-recordset.c:210
 #: providers/gda-tds-server/gda-tds-recordset.c:201
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:213
+#: providers/gda-sybase-server/gda-sybase-recordset.c:218
 #: providers/gda-tds-server/gda-tds-recordset.c:208
 #, fuzzy, c-format
 msgid "%s: Error (%d)"
 msgstr "Feil: %1"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:386
+#: providers/gda-sybase-server/gda-sybase-recordset.c:391
 #: providers/gda-tds-server/gda-tds-recordset.c:382
 msgid "Failed fetching # of columns"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:393
+#: providers/gda-sybase-server/gda-sybase-recordset.c:398
 #: providers/gda-tds-server/gda-tds-recordset.c:390
 #, fuzzy, c-format
 msgid "Counted %d columns"
 msgstr "Overskriftskolonnar"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:400
+#: providers/gda-sybase-server/gda-sybase-recordset.c:405
 #: providers/gda-tds-server/gda-tds-recordset.c:397
 #, fuzzy, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "kunne ikkje laga aktiv fil"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:410
+#: providers/gda-sybase-server/gda-sybase-recordset.c:415
 #: providers/gda-tds-server/gda-tds-recordset.c:407
 #, fuzzy, c-format
 msgid "%s could not allocate data fields"
 msgstr "kunne ikkje laga aktiv fil"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:428
+#: providers/gda-sybase-server/gda-sybase-recordset.c:433
 #: providers/gda-tds-server/gda-tds-recordset.c:425
 #, fuzzy, c-format
 msgid "ct_describe on col # %d"
 msgstr "skildra kommandoen"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:435
+#: providers/gda-sybase-server/gda-sybase-recordset.c:440
 #: providers/gda-tds-server/gda-tds-recordset.c:432
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:442
+#: providers/gda-sybase-server/gda-sybase-recordset.c:447
 #: providers/gda-tds-server/gda-tds-recordset.c:439
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:454
+#: providers/gda-sybase-server/gda-sybase-recordset.c:459
 #: providers/gda-tds-server/gda-tds-recordset.c:450
 #, fuzzy
 msgid "could not allocate data holder"
 msgstr "Kunne ikkje lasta folder.bmp"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:467
+#: providers/gda-sybase-server/gda-sybase-recordset.c:472
 #: providers/gda-tds-server/gda-tds-recordset.c:463
 msgid "could not ct_bind data holder to column"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:474
+#: providers/gda-sybase-server/gda-sybase-recordset.c:479
 #: providers/gda-tds-server/gda-tds-recordset.c:470
 msgid "illegal type detected, aborting"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:481
+#: providers/gda-sybase-server/gda-sybase-recordset.c:486
 #: providers/gda-tds-server/gda-tds-recordset.c:477
 #, fuzzy
 msgid "could not allocate field"

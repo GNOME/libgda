@@ -22,7 +22,7 @@ libgda_ldap_a_SOURCES = \
 	gda-ldap-recordset.c \
 	gda-ldap.h
 
-oafdir=$(GDA_oafdir)
+oafdir=$(DESTDIR)$(GDA_oafdir)
 
 oaf_in_files = GNOME_GDA_Provider_LDAP.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

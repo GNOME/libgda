@@ -22,7 +22,7 @@ libgda_oracle_a_SOURCES = \
 	gda-oracle-recordset.c \
 	gda-oracle.h
 
-oafdir=$(GDA_oafdir)
+oafdir=$(DESTDIR)$(GDA_oafdir)
 
 oaf_in_files = GNOME_GDA_Provider_Oracle.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

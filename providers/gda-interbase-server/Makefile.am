@@ -22,7 +22,7 @@ libgda_interbase_a_SOURCES = \
 	gda-interbase-recordset.c \
 	gda-interbase.h
 
-oafdir = $(GDA_oafdir)
+oafdir = $(DESTDIR)$(GDA_oafdir)
 
 oaf_in_files = GNOME_GDA_Provider_InterBase.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

@@ -33,7 +33,7 @@ libsqlite.a:
 	make
 	cp build_sqlite/libsqlite.a libsqlite.a
 
-oafdir=$(GDA_oafdir)
+oafdir=$(DESTDIR)$(GDA_oafdir)
 
 oaf_in_files = GNOME_GDA_Provider_Default.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

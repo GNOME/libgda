@@ -29,7 +29,7 @@ libgda_tds_a_SOURCES = \
 	gda-tds-types.h \
 	gda-tds.h
 
-oafdir=$(GDA_oafdir)
+oafdir=$(DESTDIR)$(GDA_oafdir)
 
 oaf_in_files = GNOME_GDA_Provider_TDS.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

@@ -21,7 +21,7 @@ libgda_mail_a_SOURCES = \
 	gda-mail-recordset.c \
 	gda-mail.h
 
-oafdir=$(GDA_oafdir)
+oafdir=$(DESTDIR)$(GDA_oafdir)
 
 oaf_in_files = GNOME_GDA_Provider_Mail.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

@@ -20,7 +20,7 @@ libgda_bdb_a_SOURCES = \
 	gda-bdb-recordset.c \
 	gda-bdb.h
 
-oafdir=$(GDA_oafdir)
+oafdir=$(DESTDIR)$(GDA_oafdir)
 
 oaf_in_files = GNOME_GDA_Provider_BDB.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
