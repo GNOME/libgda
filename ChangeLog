@@ -1,3 +1,9 @@
+2004-01-15  Nikolai Weibull <ruby-gnome2-devel-en-list@pcppopper.org>
+
+	* providers/sqlite/gda-sqlite-provider.c
+	(gda_sqlite_provider_open_connection): set the object's private data
+	before executing any command.
+
 2004-01-03 Laurent Sansonetti <lrz@gnome.org>
 
 	* libgda/gda-util.c (gda_file_save): added O_TRUNC flag.
