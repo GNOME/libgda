@@ -262,7 +262,7 @@ gda_connection_new (GdaClient *client,
 						  cnc->priv->password)) {
 		GList *errors_copy;
 
-		errors_copy = gda_error_list_copy (gda_connection_get_errors (cnc));
+		errors_copy = gda_connection_get_errors (cnc);
 		/* emit the "error" signal on the GdaClient, since
 		   that's the only way we can notify it of errors */
 		if (errors_copy) {

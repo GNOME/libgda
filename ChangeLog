@@ -1,3 +1,8 @@
+2002-09-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.c (gda_connection_new): no need to make a copy
+	of the error list.
+
 2002-09-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.c (gda_connection_new): if the provider sets
