@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2003-01-28 01:43+0100\n"
-"PO-Revision-Date: 2003-01-26 16:14+0100\n"
+"POT-Creation-Date: 2003-01-29 15:50+0100\n"
+"PO-Revision-Date: 2003-01-29 15:50+0100\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1690,7 +1690,7 @@ msgstr "Es existiert bereits ein Element mit der Kennung %s im Bericht"
 #: report/libgda-report/gda-report-item-reportheader.c:196
 #, c-format
 msgid "Item with ID %s is not a label"
-msgstr ""
+msgstr "Objekt mit Kennung %s ist keine Beschriftung"
 
 #: report/libgda-report/gda-report-item-pagefooter.c:224
 #: report/libgda-report/gda-report-item-pageheader.c:214
@@ -1698,7 +1698,7 @@ msgstr ""
 #: report/libgda-report/gda-report-item-reportheader.c:224
 #, c-format
 msgid "Item with ID %s is not a repfield"
-msgstr ""
+msgstr "Objekt mit Kennung %s ist kein repfield"
 
 #~ msgid "Error setting parent of new node"
 #~ msgstr "Fehler beim Einrichten des Elternobjekts des neuen Knotens"
