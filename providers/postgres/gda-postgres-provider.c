@@ -22,6 +22,7 @@
  */
 
 #include "gda-postgres.h"
+#include <libgda/gda-server-recordset-model.h>
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
@@ -65,6 +66,12 @@ static gboolean gda_postgres_provider_single_command (const GdaPostgresProvider 
 static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 						GdaServerConnection *cnc,
 						GNOME_Database_Feature feature);
+
+static GdaServerRecordset *gda_postgres_provider_get_schema (GdaServerProvider *provider,
+							  GdaServerConnection *cnc,
+							  GNOME_Database_Connection_Schema schema,
+							  GdaParameterList *params);
+
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -86,6 +93,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
 	provider_class->supports = gda_postgres_provider_supports;
+	provider_class->get_schema = gda_postgres_provider_get_schema;
 }
 
 static void
@@ -141,8 +149,11 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	const gchar *pq_port;
 	const gchar *pq_options;
 	const gchar *pq_tty;
-	const gchar *pq_login;
+	const gchar *pq_user;
 	const gchar *pq_pwd;
+	const gchar *pq_hostaddr;
+	const gchar *pq_requiressl;
+	gchar *conn_string;
 	PGconn *pconn;
 	PGresult *pg_res;
 	GdaError *error;
@@ -154,17 +165,40 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 
 	/* parse connection string */
 	pq_host = gda_quark_list_find (params, "HOST");
+	pq_hostaddr = gda_quark_list_find (params, "HOSTADDR");
 	pq_db = gda_quark_list_find (params, "DATABASE");
 	pq_port = gda_quark_list_find (params, "PORT");
 	pq_options = gda_quark_list_find (params, "OPTIONS");
 	pq_tty = gda_quark_list_find (params, "TTY");
-	pq_login = gda_quark_list_find (params, "LOGIN");
+	pq_user = gda_quark_list_find (params, "USER");
 	pq_pwd = gda_quark_list_find (params, "PASSWORD");
+	pq_requiressl = gda_quark_list_find (params, "REQUIRESSL");
 
+	conn_string = g_strconcat ( "",
+				pq_host ? "host=" : "",
+				pq_host ? pq_host : "",
+				pq_hostaddr ? " hostaddr=" : "",
+				pq_hostaddr ? pq_hostaddr : "",
+				pq_db ? " dbname=" : "",
+				pq_db ? pq_db : "",
+				pq_port ? " port=" : "",
+				pq_port ? pq_port : "",
+				pq_options ? " options='" : "",
+				pq_options ? pq_options : "",
+				pq_options ? "'" : "",
+				pq_tty ? " tty=" : "",
+				pq_tty ? pq_tty : "",
+				pq_user ? " user=" : "",
+				pq_user ? pq_user : "",
+				pq_pwd ? " password=" : "",
+				pq_pwd ? pq_pwd : "",
+				pq_requiressl ? " requiressl=" : "",
+				pq_requiressl ? pq_requiressl : "",
+				NULL);
 
 	/* actually establish the connection */
-	pconn = PQsetdbLogin (pq_host, pq_port, pq_options, pq_tty, pq_db,
-		      pq_login, pq_pwd);
+	pconn = PQconnectdb (conn_string);
+	g_free(conn_string);
 
 	if (PQstatus (pconn) != CONNECTION_OK) {
 		gda_server_connection_add_error (
@@ -174,15 +208,10 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	/*
-	 * Sets the DATE format for all the current session to DD-MM-YYYY
+	 * Sets the DATE format for all the current session to YYYY-MM-DD
 	 */
-	pg_res = PQexec (pconn, "SET DATESTYLE TO 'SQL, US'");
+	pg_res = PQexec (pconn, "SET DATESTYLE TO 'ISO'");
 	PQclear (pg_res);
-	/*
-	 * the TIMEZONE is left to what is the default, without trying to impose
-	 * one. Otherwise the command would be:
-	 * "SET TIME ZONE '???'" or "SET TIME ZONE DEFAULT"
-	 */
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, pconn);
 	return TRUE;
@@ -203,7 +232,7 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaServerCo
 	if (!pconn)
 		return FALSE;
 
-		PQfinish (pconn);
+	PQfinish (pconn);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, NULL);
 	return TRUE;
@@ -224,7 +253,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 	/* parse SQL string, which can contain several commands, separated by ';' */
 	arr = g_strsplit (sql, ";", 0);
 	if (arr) {
-		gint n=0;
+		gint n = 0;
 
 		while (arr[n]) {
 			PGresult *pg_res;
@@ -242,9 +271,6 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 				if (GDA_IS_SERVER_RECORDSET (recset))
 					reclist = g_list_append (reclist, recset);
 			}
-
-			PQclear(pg_res);
-			pg_res = NULL;
 
 			n++;
 		}
@@ -342,8 +368,8 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 	result = FALSE;
 	pg_res = PQexec(pconn, command);
 	if (pg_res != NULL){
-	result = PQresultStatus(pg_res) == PGRES_COMMAND_OK;
-	PQclear (pg_res);
+		result = PQresultStatus(pg_res) == PGRES_COMMAND_OK;
+		PQclear (pg_res);
 	}
 
 	if (result == FALSE)
@@ -368,5 +394,149 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	}
  
 	return FALSE;
+}
+
+static GdaServerRecordset *
+get_postgres_procedures (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, 
+			"SELECT proname FROM pg_proc ORDER BY proname");
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
+static GdaServerRecordset *
+get_postgres_tables (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, 
+			"SELECT relname FROM pg_class WHERE relkind = 'r' AND "
+			"relname !~ '^pg_' ORDER BY relname");
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
+static void
+add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
+{
+	GdaValue *value;
+	GList list;
+
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
+
+	value = gda_value_new_string (str);
+	list.data = value;
+	list.next = NULL;
+	list.prev = NULL;
+
+	gda_server_recordset_model_append_row (recset, &list);
+
+	gda_value_free (value);
+}
+
+static GdaServerRecordset *
+get_postgres_types (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GdaServerRecordsetModel *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 1));
+	gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	gda_server_recordset_model_set_field_name (recset, 0, _("Type"));
+	gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+
+	/* fill the recordset */
+	//TODO: Get it from system tables.
+	add_string_row (recset, "abstime");
+	add_string_row (recset, "boolean");
+	add_string_row (recset, "bpchar");
+	add_string_row (recset, "bytea");
+	add_string_row (recset, "char");
+	add_string_row (recset, "date");
+	add_string_row (recset, "datetz");
+	add_string_row (recset, "float4");
+	add_string_row (recset, "float8");
+	add_string_row (recset, "int2");
+	add_string_row (recset, "int4");
+	add_string_row (recset, "int8");
+	add_string_row (recset, "numeric");
+	add_string_row (recset, "reltime");
+	add_string_row (recset, "time");
+	add_string_row (recset, "timetz");
+	add_string_row (recset, "timestamp");
+	add_string_row (recset, "text");
+	add_string_row (recset, "varbit");
+	add_string_row (recset, "varchar");
+
+	return GDA_SERVER_RECORDSET (recset);
+}
+
+static GdaServerRecordset *
+get_postgres_views (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, 
+			"SELECT relname FROM pg_class WHERE relkind = 'v' AND "
+			"relname !~ '^pg_' ORDER BY relname");
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
+/* get_schema handler for the GdaPostgresProvider class */
+static GdaServerRecordset *
+gda_postgres_provider_get_schema (GdaServerProvider *provider,
+			       GdaServerConnection *cnc,
+			       GNOME_Database_Connection_Schema schema,
+			       GdaParameterList *params)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	switch (schema) {
+	case GNOME_Database_Connection_SCHEMA_PROCEDURES :
+		return get_postgres_procedures (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_TABLES :
+		return get_postgres_tables (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_TYPES :
+		return get_postgres_types (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_VIEWS :
+		return get_postgres_views (cnc, params);
+	}
+
+	return NULL;
 }
 

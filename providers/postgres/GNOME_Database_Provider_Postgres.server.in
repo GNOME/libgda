@@ -19,12 +19,14 @@
 	               _value="GDA Datasource Access for Postgres"/>
 	<oaf_attribute name="gda_params" type="stringv">
 		<item value="HOST"/>
+		<item value="HOSTADDR"/>
 		<item value="DATABASE"/>
 		<item value="PORT"/>
 		<item value="OPTIONS"/>
 		<item value="TTY"/>
-		<item value="LOGIN"/>
+		<item value="USER"/>
 		<item value="PASSWORD"/>
+		<item value="REQUIRESSL"/>
 	</oaf_attribute>
 </oaf_server>
 

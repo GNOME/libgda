@@ -88,6 +88,8 @@ gda_postgres_type_to_gda (Oid postgres_type)
 void 
 gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
 {
+	GDate *date;
+
 	switch (type) {
 	case GDA_TYPE_BOOLEAN :
 		gda_field_set_gdatype (field, type);
@@ -117,17 +119,26 @@ gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
 		gda_field_set_gdatype (field, type);
 		gda_field_set_double_value (field, atof (value));
 		break;
+	case GDA_TYPE_DATE :
+		gda_field_set_gdatype (field, type);
+		date = g_date_new ();
+		g_date_set_parse (date, value);
+		if (!g_date_valid (date)) {
+			g_warning ("Could not parse '%s' "
+				"Setting date to 01/01/0001!\n", field);
+			g_date_clear (date, 1);
+			g_date_set_dmy (date, 1, 1, 1);
+		}
+		gda_field_set_date_value (field, date);
+		g_date_free (date);
+		
+		break;
 	case GDA_TYPE_TIMESTAMP : //FIXME
-		break;
-	case GDA_TYPE_DATE : //FIXME
-		break;
 	case GDA_TYPE_TIME : //FIXME
-		break;
 	case GDA_TYPE_BINARY : //FIXME
-		break;
 	default :
 		gda_field_set_string_value (field, value);
-		gda_field_set_gdatype (field, GDA_TYPE_UNKNOWN);
+		gda_field_set_gdatype (field, GDA_TYPE_STRING);
 	}
 }
 

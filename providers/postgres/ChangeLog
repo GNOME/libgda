@@ -1,3 +1,23 @@
+2002-01-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-postgres-provider.c (process_sql_commands()): don't call
+	PQclear() after storing the resultset. It's done when freeing the
+	resultset.
+	(gda_postgres_provider_get_schema()): added this one and a few helper 
+	functions.
+	(gda_postgres_provider_open_connection()): accept REQUIRESSL and
+	HOSTADDR as parameters and changed LOGIN by USER. Now uses
+	PQconnectdb() instead of the old PQsetdbLogin(). Changed default date
+	style to ISO.
+
+	* utils.c (gda_postgres_set_type_value()): GDA_TYPE_DATE now works.
+	Changed the type of the default from GDA_TYPE_UNKNOWN to
+	GDA_TYPE_STRING as a temporary workaround to make TIMESTAMP, TIME and
+	BINARY work.
+
+	* GNOME_Database_Provider_Postgres.server.in: added parameters
+	REQUIRESSL and HOSTADDR. Changed LOGIN by USER.
+
 2001-12-26  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-postgres-provider.c: added the call to
