@@ -335,6 +335,16 @@ rm -rf %{buildroot}
 %{_libdir}/libgda/providers/libgda-sybase.so
 %endif
 
+%if %{MDB}
+%files -n gda-mdb
+%{_libdir}/libgda/providers/libgda-mdb.so
+%endif
+
+%if %{LDAP}
+%files -n gda-ldap
+%{_libdir}/libgda/providers/libgda-ldap.so
+%endif
+
 
 %changelog
 * Tue Mar 11 2003 David Hollis <dhollis@davehollis.com>

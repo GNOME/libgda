@@ -1,3 +1,7 @@
+2003-06-12  Adam Williams <adam@morrison-ind.com>
+
+	* libgda.spec.in: added missing stanzas for MDB and LDAP packages.
+
 2003-06-10  Abel Cheung  <maddog@linux.org.hk>
 
 	* configure.in: Added "zh_TW" to ALL_LINGUAS.
