@@ -1,3 +1,10 @@
+2002-01-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-report-engine.c:
+	* libgda-report/gda-report-client.c:
+	* libgda-report/gda-report-document.c: removed a few easy-to-resolve
+	warnings. Still pending others.
+
 2002-01-14  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-report-engine.[ch]:

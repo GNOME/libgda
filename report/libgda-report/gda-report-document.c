@@ -125,6 +125,7 @@ gda_report_document_new (void)
 GdaReportDocument *
 gda_report_document_new_from_string (const gchar *xml)
 {
+	return NULL;
 }
 
 /**

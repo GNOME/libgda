@@ -22,11 +22,14 @@
 
 #include <libgda-report/gda-report-client.h>
 #include <libgda-report/GNOME_Database_Report.h>
+#include <bonobo/bonobo-moniker-util.h>
 #include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-object.h>
 #include <bonobo/bonobo-stream-client.h>
 #include <bonobo/bonobo-stream-memory.h>
+#include <libgda/gda-parameter.h>
+#include <libgda/gda-log.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 

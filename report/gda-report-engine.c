@@ -21,9 +21,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <bonobo/bonobo-object.h>
+#include <bonobo/bonobo-stream-client.h>
 #include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-log.h>
+#include <libgda/gda-parameter.h>
 #include "gda-report-engine.h"
+#include "job.h"
 
 #define PARENT_TYPE BONOBO_OBJECT_TYPE
 
@@ -49,7 +54,7 @@ impl_ReportEngine_runDocument (PortableServer_Servant servant,
 {
 	CORBA_long res;
 	gchar *body;
-	GNOME_Database_Report_Output output;
+	GNOME_Database_Report_Output *output;
 	GdaParameterList *plist;
 	GdaReportEngine *engine = bonobo_object (servant);
 
