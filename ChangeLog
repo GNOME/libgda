@@ -1,3 +1,10 @@
+2002-03-25  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/gda-postgres.h:
+	* providers/postgres/utils.c: the data type column is now a string
+	containing the type name. Closes #76128.
+
 2002-03-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-util.c (gda_file_save): use gnome_vfs_create_uri, or

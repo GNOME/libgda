@@ -722,7 +722,7 @@ gda_postgres_init_md_recset (GdaServerConnection *cnc)
 	int i;
 	GdaPostgresColData cols[8] = {
 		{ N_("Field name")	, GDA_TYPE_STRING  },
-		{ N_("Data type")	, GDA_TYPE_INTEGER },
+		{ N_("Data type")	, GDA_TYPE_STRING  },
 		{ N_("Size")		, GDA_TYPE_INTEGER },
 		{ N_("Scale")		, GDA_TYPE_INTEGER },
 		{ N_("Not null?")	, GDA_TYPE_BOOLEAN },
@@ -949,7 +949,7 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 		thevalue = PQgetvalue(pg_res, i, 1);
 		type = gda_postgres_type_name_to_gda (priv_data->h_table, 
 						      thevalue);
-		value = gda_value_new_integer (type);
+		value = gda_value_new_string (gda_data_type_to_string (type));
 		rowlist = g_list_append (rowlist, value);
 
 		/* Defined size */
