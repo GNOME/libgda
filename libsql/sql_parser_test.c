@@ -31,6 +31,11 @@ main (int argc, char *argv[])
 	GList *fields;
 
 	printf ("SQL Parse Tester\n");
+	if (argc >= 2 && strcmp(argv[1],"-testwhere")==0)
+		{
+		printf("Testing sql where clauses\n");
+		return  sql_statement_test_wherejoin();
+		}
 
 	while (fgets (buffer, 1023, stdin) != NULL) {
 		if (buffer[strlen (buffer) - 1] == '\n')
@@ -69,7 +74,8 @@ main (int argc, char *argv[])
 			break;
 		}
 	}
-	memsql_display ();
+	/* Line will generate warning if memory debugging is disabled */
+	memsql_display (); 
 
 	return error;
 }

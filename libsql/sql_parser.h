@@ -19,6 +19,7 @@ typedef struct sql_order_field      sql_order_field;
 typedef struct sql_field            sql_field;
 typedef struct sql_field_item       sql_field_item;
 typedef struct param_spec           param_spec;
+typedef struct sql_wherejoin sql_wherejoin;
 
 /* 
  * global SQL statement structures 
@@ -147,7 +148,7 @@ typedef enum
 {
 	SQL_simple,
 	SQL_nestedselect,
-        SQL_tablefunction
+    SQL_tablefunction
 }
 sql_table_type;
 
@@ -201,7 +202,7 @@ typedef enum
 	SQL_not_regexp,
 	SQL_not_regexp_ci,
 	SQL_similar,
-        SQL_not
+    SQL_not
 }
 sql_condition_operator;
 
@@ -279,10 +280,20 @@ struct sql_order_field
 	GList         *name;
 };
 
-
-
-
-
+/* This is only used by sql_statement_get_wherejoin() */
+struct sql_wherejoin
+	{
+	GList *leftfield; /* glist contains a string in data tag */
+	GList *rightfield; /* glist is in table then field order */
+	sql_condition_operator condopr;
+	/* if left or right side is a constaint mark as true. ie. 
+	 * 'value' or 1234 */
+	gboolean rightconstaint;
+	gboolean leftconstaint;
+	gboolean isajoin;	/* If it is a join not a where statement */
+	
+	sql_where *orginalwhere;
+	};
 
 int   sql_display (sql_statement * statement);
 int   sql_destroy (sql_statement * statement);
@@ -307,8 +318,9 @@ void sql_statement_free_fields (GList * fields);
 
 char *sql_statement_get_first_table (sql_statement * statement);
 
-gint sql_statement_get_wherejoin_ontable (sql_statement * statement,
-					  gchar * ontable, GList ** leftfield,
-					  GList ** rightfield,
-					  sql_condition_operator * condopr);
+/* Returns a list of sql_wherelist */
+GList *sql_statement_get_wherejoin (sql_statement * statement);
+void sql_statement_free_wherejoin(GList **wherelist);
+gint sql_statement_test_wherejoin(void);
+
 #endif /* SQL_PARSER_H */
