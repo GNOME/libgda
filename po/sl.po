@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-27 00:18+0100\n"
+"POT-Creation-Date: 2002-03-07 11:19+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -13,17 +13,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:198 libgda/gda-client.c:308 libgda/gda-connection.c:213
-#, c-format
+#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
 msgid "Data source %s not found in configuration"
 msgstr "Vir podatkov %s ni bil v nastavitvah ni bil najden"
 
-#: libgda/gda-client.c:235
-#, c-format
+#: libgda/gda-client.c:237
 msgid "Could not activate object %s"
 msgstr "Nisem uspel aktivirati predmeta %s"
 
-#: libgda/gda-client.c:253
+#: libgda/gda-client.c:255
 msgid "Could not create connection component"
 msgstr "Nisem uspel ustvariti komponente povezave"
 
@@ -35,8 +33,7 @@ msgstr "Ne morem poizvedeti po komponentah CORBA"
 msgid "Could not query CORBA providers"
 msgstr "Ne morem poizvedeti po nuditeljih CORBA"
 
-#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:417
-#: providers/mysql/gda-mysql-provider.c:446
+#: libgda/gda-config.c:869
 msgid "Name"
 msgstr "Ime"
 
@@ -79,17 +76,14 @@ msgid "Don't know how to create components with IID %s"
 msgstr "Ne znam ustvariti komponent z IID %s"
 
 #: libgda/gda-server.c:122
-#, c-format
 msgid "Could not create component of type %s"
 msgstr "Nisem mogel ustvariti komponente vrste %s"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
-"Nisem mogel podvojiti predmeta odjemalca. Odjemalec ne bo dobival obvestil"
+msgstr "Nisem mogel podvojiti predmeta odjemalca. Odjemalec ne bo dobival obvestil"
 
-#: libgda/gda-server-connection.c:450
-#, c-format
+#: libgda/gda-server-connection.c:440
 msgid "Could not notify client about action %d"
 msgstr "Nisem mogel obvestiti odjemalca o dejanju %d"
 
@@ -102,124 +96,49 @@ msgstr "Implementacija metode fetch() ni bila najdena"
 msgid "There is already a field called %s"
 msgstr "Polje z imenom %s že obstaja"
 
-#: libgda/gda-value.c:981
+#: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "RESNIČNO"
 
-#: libgda/gda-value.c:983
+#: libgda/gda-value.c:928
 msgid "FALSE"
 msgstr "NERESNIČNO"
 
-#: libgda/gda-xml-database.c:225
-#, c-format
+#: libgda/gda-xml-database.c:214
 msgid "Could not load file at %s"
 msgstr "Nisem mogel naložiti datoteke %s"
 
-#: libgda/gda-xml-database.c:234
-#, c-format
+#: libgda/gda-xml-database.c:223
 msgid "Could not parse file at %s"
 msgstr "Nisem mogel razlčleniti datoteke %s"
 
-#: libgda/gda-xml-database.c:244
-#, c-format
+#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 msgid "Invalid XML database file '%s'"
 msgstr "Neveljavna datoteka zbirke podatkov XML '%s'"
 
-#: libgda/gda-xml-database.c:432 libgda/gda-xml-database.c:473
-#, c-format
+#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
 msgid "Table %s already exists"
 msgstr "Tabela %s že obstaja"
 
-#: libgda/gda-xml-database.c:466
+#: libgda/gda-xml-database.c:327
 msgid "Invalid node"
 msgstr "Neveljaven list"
 
-#: libgda/gda-xml-database.c:498
+#: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Podvojen list <data> za tabelo %s"
 
-#: libgda/gda-xml-database.c:505
+#: libgda/gda-xml-database.c:365
 msgid "Invalid XML node"
 msgstr "Neveljaven list XML"
 
-#: providers/default/gda-default-provider.c:159
+#: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
-
-#: providers/default/gda-default-provider.c:333
-#: providers/mysql/gda-mysql-provider.c:717
-#: providers/postgres/gda-postgres-provider.c:724
-#, fuzzy
-msgid "Field name"
-msgstr "ime datoteke"
-
-#: providers/default/gda-default-provider.c:334
-#: providers/mysql/gda-mysql-provider.c:718
-#: providers/postgres/gda-postgres-provider.c:725
-msgid "Data type"
 msgstr ""
-
-#: providers/default/gda-default-provider.c:335
-#: providers/mysql/gda-mysql-provider.c:719
-#: providers/postgres/gda-postgres-provider.c:726
-msgid "Size"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:336
-#: providers/mysql/gda-mysql-provider.c:720
-#: providers/postgres/gda-postgres-provider.c:727
-#, fuzzy
-msgid "Scale"
-msgstr "Neresnično"
-
-#: providers/default/gda-default-provider.c:337
-#: providers/mysql/gda-mysql-provider.c:721
-#: providers/postgres/gda-postgres-provider.c:728
-msgid "Not null?"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:722
-#: providers/postgres/gda-postgres-provider.c:729
-msgid "Primary key?"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:339
-#: providers/mysql/gda-mysql-provider.c:723
-#: providers/postgres/gda-postgres-provider.c:730
-msgid "Unique index?"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:340
-#: providers/mysql/gda-mysql-provider.c:724
-#: providers/postgres/gda-postgres-provider.c:731
-msgid "References"
-msgstr ""
-
-#: providers/default/gda-default-provider.c:350
-#: providers/default/gda-default-provider.c:356
-#, fuzzy
-msgid "Invalid argument"
-msgstr "Neveljaven list"
-
-#: providers/default/gda-default-provider.c:363
-#, fuzzy, c-format
-msgid "Table %s not found"
-msgstr "Predmet z idjem %s ni bil najden"
-
-#: providers/default/gda-default-provider.c:388
-#, fuzzy
-msgid "Could not get description for column"
-msgstr "Nisem uspel ustvariti komponente povezave"
-
-#: providers/default/gda-default-provider.c:472
-#: providers/mysql/gda-mysql-provider.c:619
-#: providers/postgres/gda-postgres-provider.c:613
-msgid "Type"
-msgstr "Vrsta"
+"Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -247,13 +166,18 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Neveljaven obravnavalnik MYSQL"
 
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:570
+msgid "Type"
+msgstr "Vrsta"
+
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:167
+#: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
 msgstr "Neveljavnen obravnavalnik MySQL"
 
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:84
+#: providers/postgres/gda-postgres-recordset.c:70
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Številka vrstice je izven meja"
@@ -314,10 +238,10 @@ msgstr "Nisem mogel inicializirati tovarne komponent Oracle"
 msgid "Could not initialize OCI library"
 msgstr "Nisem mogel inicializirati knjižnice OCI"
 
-#: providers/postgres/gda-postgres-provider.c:360
-#: providers/postgres/gda-postgres-provider.c:498
-#: providers/postgres/gda-postgres-recordset.c:71
-#: providers/postgres/gda-postgres-recordset.c:128
+#: providers/postgres/gda-postgres-provider.c:318
+#: providers/postgres/gda-postgres-provider.c:456
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
 msgid "Invalid PostgreSQL handle"
 msgstr "Neveljaven obravnavalnik PostgreSQL"
 
@@ -340,76 +264,6 @@ msgstr "NI OPISA"
 #: providers/postgres/utils.c:44
 msgid "Not available"
 msgstr "Ni na voljo"
-
-#: providers/postgres/utils.c:240
-#, fuzzy
-msgid "NULL"
-msgstr "<NULA>"
-
-#: providers/postgres/utils.c:243
-msgid "big integer"
-msgstr ""
-
-#: providers/postgres/utils.c:246
-msgid "binary"
-msgstr ""
-
-#: providers/postgres/utils.c:249
-msgid "boolean"
-msgstr ""
-
-#: providers/postgres/utils.c:252
-msgid "date"
-msgstr ""
-
-#: providers/postgres/utils.c:255
-msgid "double precision"
-msgstr ""
-
-#: providers/postgres/utils.c:258
-msgid "geometric point"
-msgstr ""
-
-#: providers/postgres/utils.c:261
-msgid "integer"
-msgstr ""
-
-#: providers/postgres/utils.c:264
-msgid "list of values"
-msgstr ""
-
-#: providers/postgres/utils.c:267
-msgid "numeric"
-msgstr ""
-
-#: providers/postgres/utils.c:270
-msgid "single precision"
-msgstr ""
-
-#: providers/postgres/utils.c:273
-msgid "small integer"
-msgstr ""
-
-#: providers/postgres/utils.c:276
-msgid "string"
-msgstr ""
-
-#: providers/postgres/utils.c:279
-msgid "time"
-msgstr ""
-
-#: providers/postgres/utils.c:282
-msgid "timestamp"
-msgstr ""
-
-#: providers/postgres/utils.c:285
-msgid "tiny integer"
-msgstr ""
-
-#: providers/postgres/utils.c:288
-#, fuzzy
-msgid "Unknown type"
-msgstr "Neznana vrsta sheme"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
@@ -446,7 +300,6 @@ msgstr "Ne morem inicializirati tovarne komponent Sybase"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
-#, c-format
 msgid "CORBA exception: %s"
 msgstr "Izjema v sistemu CORBA: %s"
 
@@ -479,7 +332,6 @@ msgid "Could not parse XML document"
 msgstr "Nisem mogel razčleniti dokumenta XML"
 
 #: report/libgda-report/gda-report-document.c:162
-#, c-format
 msgid "Could not get file from %s"
 msgstr "Nisem mogel dobiti datoteke od %s"
 
@@ -492,7 +344,6 @@ msgid "\t\tNONE\n"
 msgstr "\t\tBREZ\n"
 
 #: testing/client.c:76
-#, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** NAPAKA: nisem mogel odpreti povezave z %s\n"
 
@@ -570,7 +421,6 @@ msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** NAPAKA: gda_config_get_data_source_list je vrnil predmet NULL\n"
 
 #: testing/client.c:142
-#, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Vir podatkov= %s, uporabnik = %s\n"
 
@@ -603,7 +453,6 @@ msgid "\trepo_ids ="
 msgstr "\trepo_ids ="
 
 #: testing/config.c:102
-#, c-format
 msgid "\tusername = %s\n"
 msgstr "\tuporabniško ime = %s\n"
 
@@ -631,11 +480,17 @@ msgstr "\tparametri_gda ="
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[Knjižnjica odjemalca GDA]"
 
+#~ msgid "<NULL>"
+#~ msgstr "<NULA>"
+
 #~ msgid "<Unknown GDA Type(NULL)>"
 #~ msgstr "<Neznan GDA Tip(NULA)>"
 
 #~ msgid "True"
 #~ msgstr "Resnično"
+
+#~ msgid "False"
+#~ msgstr "Neresnično"
 
 #~ msgid "%s: The server didn't respond."
 #~ msgstr "%s: Strežnik se ni odzval."
@@ -654,6 +509,9 @@ msgstr "\tparametri_gda ="
 
 #~ msgid "thread is already running"
 #~ msgstr "nit že teče"
+
+#~ msgid "Item with id %s not found"
+#~ msgstr "Predmet z idjem %s ni bil najden"
 
 #~ msgid "This connection is being closed, so all listeners are released"
 #~ msgstr "Povezava se zapira, zato so vsi slušatelji spuščeni"
@@ -675,6 +533,9 @@ msgstr "\tparametri_gda ="
 
 #~ msgid "You must specify a directory for the database to be stored"
 #~ msgstr "Navesti morate imenik, kjer naj bo shranjena zbirka podatkov"
+
+#~ msgid "Unknown schema type"
+#~ msgstr "Neznana vrsta sheme"
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "napaka '%s' pri %s"
@@ -1182,6 +1043,9 @@ msgstr "\tparametri_gda ="
 
 #~ msgid "PASSWORD"
 #~ msgstr "GESLO"
+
+#~ msgid "file name"
+#~ msgstr "ime datoteke"
 
 #~ msgid "FILE-NAME"
 #~ msgstr "IME-DATOTEKE"
