@@ -95,7 +95,7 @@ static const GdaValue *
 gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	gint fetched_count;
-	gint i;
+	gint i, k;
 	GdaRecordset *recset = (GdaRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
@@ -118,7 +118,7 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 			GdaValue *value;
 			GdaField *field;
 
-			field = gda_row_get_field (row_data, i);
+			field = gda_row_get_field (row_data, col);
 			value = gda_field_get_value (field);
 			value_list = g_list_append (value_list, value);
 		}
