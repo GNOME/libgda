@@ -8,35 +8,55 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-04 02:24+0100\n"
-"PO-Revision-Date: 2001-12-04 02:24+0100\n"
+"POT-Creation-Date: 2001-12-15 16:56+0100\n"
+"PO-Revision-Date: 2001-12-15 16:56+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:175 libgda/gda-client.c:268
+#: libgda/gda-client.c:200 libgda/gda-client.c:295
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakällan %s hittades inte i konfigurationen"
 
-#: libgda/gda-client.c:196
+#: libgda/gda-client.c:221
 #, c-format
 msgid "Could not activate object %s"
 msgstr "Kunde inte aktivera objektet %s"
 
-#: libgda/gda-client.c:214
+#: libgda/gda-client.c:239
 msgid "Could not create connection component"
 msgstr "Kunde inte skapa anslutningskomponent"
 
-#: libgda/gda-config.c:529
+#: libgda/gda-config.c:515
 msgid "Could not query CORBA components"
 msgstr "Kunde inte fråga CORBA-komponenter"
 
-#: libgda/gda-config.c:636
+#: libgda/gda-config.c:622
 msgid "Could not query CORBA providers"
 msgstr "Kunde inte fråga CORBA-leverantörer"
+
+#: libgda/gda-config.c:835
+msgid "Name"
+msgstr "Namn"
+
+#: libgda/gda-config.c:836
+msgid "Provider"
+msgstr "Leverantör"
+
+#: libgda/gda-config.c:837
+msgid "Connection string"
+msgstr "Anslutningssträng"
+
+#: libgda/gda-config.c:838
+msgid "Description"
+msgstr "Beskrivning"
+
+#: libgda/gda-config.c:839
+msgid "Username"
+msgstr "Användarnamn"
 
 #: libgda/gda-error.c:127
 #, c-format
@@ -70,7 +90,7 @@ msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
 "Kunde inte duplicera klientobjekt. Klienten kommer inte att få notifieringar"
 
-#: libgda/gda-server-connection.c:402
+#: libgda/gda-server-connection.c:412
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Kunde inte notifiera klienten om åtgärden %d"
@@ -185,9 +205,6 @@ msgstr "Kunde inte initiera MySQL-komponentfabrik"
 
 #~ msgid "Item with id %s not found"
 #~ msgstr "Objektet med id %s kunde inte hittas"
-
-#~ msgid "Connection being closed"
-#~ msgstr "Anslutningen håller på att stängas"
 
 #~ msgid "This connection is being closed, so all listeners are released"
 #~ msgstr "Denna anslutning håller på att stängas, så alla lyssnare släpps"
@@ -742,9 +759,6 @@ msgstr "Kunde inte initiera MySQL-komponentfabrik"
 
 #~ msgid "DATABASE"
 #~ msgstr "DATABAS"
-
-#~ msgid "user name"
-#~ msgstr "användarnamn"
 
 #~ msgid "USER-NAME"
 #~ msgstr "ANVÄNDARNAMN"
