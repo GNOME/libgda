@@ -1,3 +1,8 @@
+2001-11-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* applied part of the patch from Kuba <kpuchar@poczta.onet.pl>. The
+	rest should be re-done, since I can't make it work with CVS sources.
+
 2001-10-28  Akira TAGOH <tagoh@gnome-db.org>
 
 	* Makefile.am: Added library age.

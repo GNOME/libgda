@@ -16,48 +16,22 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-namespace gda
-{
-	class Batch;
-	class Command;
-	class Connection;
-	class Error;
-	class ErrorList;
-	class Field;
-	class Recordset;
-	class Value;
-};
-*/
-extern "C" {
-
-// hack to remove nasty compiler warnings
-//
-//
-#define export
-
-#include "glib.h"
-#include "gda-client.h"
-
-#include "gda-batch.h"
-#include "gda-command.h"
-#include "gda-connection.h"
-#include "gda-error.h"
-#include "gda-field.h"
-#include "gda-recordset.h"
-
-#undef export
-}
-
 #include <string>
-#include <vector>
+#include "config.h"
+#include "glib.h"
+#include "gdaHelpers.h"
 
-#include "gdaBatch.h"
-#include "gdaCommand.h"
-#include "gdaConnection.h"
-#include "gdaError.h"
-#include "gdaErrorList.h"
-#include "gdaField.h"
-#include "gdaRecordset.h"
-#include "gdaValue.h"
+//using namespace gda;
 
-#endif // __gda_bindings_cpp_gdaIncludesH
+string
+gda::gda_return_string (gchar* pszString)
+{
+       if (NULL == pszString) {
+               return "";
+       }
+
+       string szString = const_cast<const char*>(pszString);
+       g_free (pszString);
+
+       return szString;
+}

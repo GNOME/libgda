@@ -15,6 +15,7 @@ source_headers = \
 	gdaError.h \
 	gdaErrorList.h \
 	gdaField.h \
+	gdaHelpers.h \
 	gdaIncludes.h \
 	gdaRecordset.h \
 	gdaValue.h
@@ -30,6 +31,7 @@ libgda_clientcpp_la_SOURCES = \
 	gdaError.cpp \
 	gdaErrorList.cpp \
 	gdaField.cpp \
+	gdaHelpers.cpp \
 	gdaRecordset.cpp \
 	gdaValue.cpp
 

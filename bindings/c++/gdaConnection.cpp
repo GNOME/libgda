@@ -18,7 +18,8 @@
  */
 
 #include "config.h"
-#include "gdaConnection.h"
+#include "gdaIncludes.h"
+#include "gdaHelpers.h"
 
 using namespace gda;
 

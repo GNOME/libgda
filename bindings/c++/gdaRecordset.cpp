@@ -1,4 +1,4 @@
-/* GDA C++ bindings
+/* GNOME DB libary
  * Copyright (C) 2000 Chris Wiegand
  *
  * This library is free software; you can redistribute it and/or

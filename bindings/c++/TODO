@@ -1,2 +1,3 @@
 
-Use assignment functions for gdaField! (ie. field = i; or somesuch)
+1. Use assignment functions for gdaField! (ie. field = i; or somesuch)
+2. C++ wrappers for functions from lib/gda-common files (?)

@@ -17,7 +17,7 @@
  */
 
 #include "config.h"
-#include "gdaErrorList.h"
+#include "gdaIncludes.h"
 
 // Okay, this class doesn't exist in the C version - it is a list of errors
 // from a CORBA exception. C uses the functions gda_errors_from_exception

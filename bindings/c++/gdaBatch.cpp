@@ -67,7 +67,7 @@ Batch::clear ()
 	gda_batch_clear (_gda_batch);
 }
 
-gboolean
+bool
 Batch::start ()
 {
 	return gda_batch_start (_gda_batch);
