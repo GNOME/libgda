@@ -1,3 +1,9 @@
+2002-08-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/providers/mysql/gda-mysql-recordset.c
+	(gda_mysql_recordset_describe_column): use mysql_fetch_fields, not
+	mysql_fetch_field, or we'll get unknown results.
+
 2002-08-04  Florian Blaser <florian@tizoo.ch>
 
 	* doc/C/libgda-docs.sgml: some small corrections.

@@ -182,9 +182,11 @@ gda_mysql_recordset_describe_column (GdaDataModel *model, gint col)
 
 	attrs = gda_field_attributes_new ();
 
-	mysql_fields = mysql_fetch_field (recset->mysql_res);
-	if (!mysql_fields)
+	mysql_fields = mysql_fetch_fields (recset->mysql_res);
+	if (!mysql_fields) {
+		gda_field_attributes_free (attrs);
 		return NULL;
+	}
 
 	if (mysql_fields[col].name)
 		gda_field_attributes_set_name (attrs, mysql_fields[col].name);
