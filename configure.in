@@ -104,7 +104,15 @@ fi
 dnl
 dnl Check for Perl
 dnl
-AC_CHECK_PROG(perl_val, perl, true, false)
+AC_ARG_WITH(perl,
+[  --with-perl			use Perl bindings [default=yes]],[
+with_perl="$withval"])
+if test "x$with_perl" = "xno"; then
+	perl_val=false
+else
+	AC_CHECK_PROG(perl_val, perl, true, false)
+fi
+
 if $perl_val
 then
 	AC_MSG_CHECKING(for perl ExtUtils::Embed module)
@@ -133,7 +141,6 @@ then
 		perl_val=false
 	fi
 fi
-
 AM_CONDITIONAL(WITH_PERL, test $perl_val == true)
 
 dnl
@@ -157,7 +164,7 @@ dnl
 
 dnl Test for ODBC
 AC_ARG_WITH(odbc,
---with-odbc=<directory>     use ODBC libraries in <directory>,[
+[  --with-odbc=<directory>	use ODBC libraries in <directory>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -197,7 +204,7 @@ AM_CONDITIONAL(ODBC, test x$odbcdir != x)
 
 dnl Test for MySQL
 AC_ARG_WITH(mysql,
---with-mysql=<directory>     use mysql backend in <directory>,[
+[  --with-mysql=<directory>	use mysql backend in <directory>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -247,7 +254,7 @@ AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
 
 dnl Test for PostgreSQL
 AC_ARG_WITH(postgres,
---with-postgres=<directory>     use postgres backend in <directory>,[
+[  --with-postgres=<directory>	use postgres backend in <directory>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -291,7 +298,7 @@ AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
 dnl Check for Primebase
 AC_ARG_WITH(primebase,
---with-primebase=<directory>	use primebase sdk in <directory>,[
+[  --with-primebase=<directory>	use primebase sdk in <directory>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -328,7 +335,7 @@ AM_CONDITIONAL(PRIMEBASE, test x$primebasedir != x)
 
 dnl Test for freetds provider
 AC_ARG_WITH(tds,
---with-tds=<directory>     use freetds library in <directory>,[
+[  --with-tds=<directory>	use freetds library in <directory>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -360,7 +367,7 @@ AM_CONDITIONAL(TDS, test x$freetdsdir != x)
 
 dnl Test for Sybase
 AC_ARG_WITH(sybase,
---with-sybase=<directory>        use Sybase backend in <directory>,[
+[  --with-sybase=<directory>	use Sybase backend in <directory>],[
 AC_MSG_CHECKING(for Sybase files)
 if test $withval != yes
 then
@@ -449,7 +456,7 @@ fi
 
 dnl test for LDAP
 AC_ARG_WITH(ldap,
---with-ldap=<directory>     use LDAP backend in <directory>,[
+[  --with-ldap=<directory>	use LDAP backend in <directory>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -498,7 +505,7 @@ AM_CONDITIONAL(LDAP, test x$ldapdir != x)
 
 dnl test for ORACLE
 AC_ARG_WITH(oracle,
---with-oracle=<directory>     use ORACLE backend in <directoty>,[
+[  --with-oracle=<directory>	use ORACLE backend in <directoty>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -532,7 +539,7 @@ AM_CONDITIONAL(ORACLE, test x$oracledir != x)
 
 dnl test for INTERBASE
 AC_ARG_WITH(interbase,
---with-interbase=<directory>     use INTERBASE backend in <directoty>,[
+[  --with-interbase=<directory>	use INTERBASE backend in <directoty>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -563,7 +570,7 @@ AM_CONDITIONAL(INTERBASE, test x$interbasedir != x)
 
 dnl test for MDB libraries
 AC_ARG_WITH(mdb,
---with-mdb=<directory>     use MDB libraries in <directoty>,[
+[  --with-mdb=<directory>	use MDB libraries in <directoty>],[
 if test $withval != yes
 then
 	dir=$withval
@@ -594,7 +601,7 @@ AM_CONDITIONAL(MDB, test x$mdbdir != x)
 
 dnl test for Camel
 AC_ARG_WITH(camel,
---with-camel=<directory>     use Mail backend in <directory>,[
+[  --with-camel=<directory>	use Mail backend in <directory>],[
 if test $withval != yes
 then
 	dir=$withval

@@ -1,3 +1,7 @@
+2001-07-09  Akira TAGOH <tagoh@gnome-db.org>
+
+	* configure.in: added --with-perl option as check the perl bindings.
+
 2001-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* merged libgda-client's GdaError and libgda-server's GdaServerError
