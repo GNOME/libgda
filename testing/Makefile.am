@@ -11,7 +11,9 @@ gda_test_SOURCES = \
 	models.c \
 	gda-test.c \
 	gda-test.h \
-	value.c
+	value.c \
+	postgres-test.c \
+	postgres-test.h
 gda_test_LDADD = \
 	$(top_builddir)/libgda/libgda-2.la \
 	$(LIBGDA_LIBS)

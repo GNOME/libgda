@@ -1,3 +1,15 @@
+2002-01-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* client.c: include postgres-test.h.  Moved postgres tests to the
+	new files.
+	(open_connection()): Correctly guess the provider.
+
+	* postgres-test.[ch]: new.
+
+	* models.h: new file to show the functions available in models.c.
+
+	* Makefile.am: added postgres-test.[ch].
+
 2002-01-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* client.c (display_row_data): on the client side, we use

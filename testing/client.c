@@ -21,6 +21,7 @@
  */
 
 #include "gda-test.h"
+#include "postgres-test.h"
 
 /* Shows the object schemas */
 static void
@@ -57,124 +58,6 @@ show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
 
 }
 
-/* Prints the data in a GdaRecordset. Called from g_list_foreach() */
-static void
-display_row_data (gpointer data, gpointer user_data)
-{
-	GdaRecordset *recset = GDA_RECORDSET (data);
-
-	g_return_if_fail (GDA_IS_RECORDSET (recset));
-}
-
-/* Postgres provider own tests */
-static void
-do_postgres_test (GdaConnection *cnc)
-{
-	GdaCommand *create_command;
-	GdaCommand *drop_command;
-	GdaCommand *insert_command;
-	GdaCommand *select_command;
-	GList *list;
-	gint col_count;
-
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-
-	/* 
-	 * Drops table
-	 * Creates table
-	 * Inserts
-	 * Selects
-	 * Clean up
-	 */
-	g_print ("\tPostgres provider specific tests...\n");
-
-	/* Drops the gda_postgres_test table. Fail if not exists. */
-	drop_command = gda_command_new ( "drop table gda_postgres_test",
-					GDA_COMMAND_TYPE_SQL);
-	list = gda_connection_execute_command (cnc, drop_command, NULL);
-	g_print ("\t\tDrop table: %s\n",
-			 list ? "OK" : "Error (don't worry about this one)");
-	g_list_foreach (list, (GFunc) g_object_unref, NULL);
-	g_list_free (list);
-
-	/* Creates a table with all supported data types */
-	create_command = gda_command_new ( "create table gda_postgres_test ("
-				"boolean_value boolean, "
-				"int2_value smallint, "
-				"int4_value integer, "
-				"bigint_value bigint, "
-				"float_value real, "
-				"double_value double precision, "
-				"numeric_value numeric(15, 3), "
-				"char_value char(50), "
-				"varchar_value varchar(20), "
-				"text_value text, "
-				"point_value point, "
-				"null_value char(1) "
-				")",
-				GDA_COMMAND_TYPE_SQL);
-	list = gda_connection_execute_command (cnc, create_command, NULL);
-	g_print ("\t\tCreate table with all supported types: %s\n",
-			 list ? "OK" : "Error");
-	g_list_foreach (list, (GFunc) g_object_unref, NULL);
-	g_list_free (list);
-
-	/* Inserts values */
-	insert_command = gda_command_new ( "insert into gda_postgres_test ("
-				"boolean_value, "
-				"int2_value, "
-				"int4_value, "
-				"bigint_value, "
-				"float_value, "
-				"double_value, "
-				"numeric_value, "
-				"char_value, "
-				"varchar_value, "
-				"text_value, "
-				"point_value "
-				") values ("
-				"'T', "
-				"-22, "
-				"1048000, "
-				"123456789012345, "
-				"3.141592, "
-				"3.1415926969696, "
-				"123456789012.345, "
-				"'This is a char', "
-				"'This is a varchar', "
-				"'This is a text', "
-				"'(1,0)' "
-				")",
-				GDA_COMMAND_TYPE_SQL);
-	list = gda_connection_execute_command (cnc, insert_command, NULL);
-	g_print ("\t\tInsert values for all known types: %s\n",
-			 list ? "OK" : "Error");
-	g_list_foreach (list, (GFunc) g_object_unref, NULL);
-	g_list_free (list);
-
-	/* Selects values */
-	select_command = gda_command_new ( "select * from gda_postgres_test",
-						GDA_COMMAND_TYPE_SQL);
-	list = gda_connection_execute_command (cnc, select_command, NULL);
-	g_print ("\t\tSelecting values for all known types: %s\n",
-			 list ? "OK" : "Error");
-	
-	g_list_foreach (list, display_row_data, NULL);
-	g_list_foreach (list, (GFunc) g_object_unref, NULL);
-	g_list_free (list);
-
-	/* Clean up */
-	list = gda_connection_execute_command (cnc, drop_command, NULL);
-	g_print ("\t\tDrop table: %s\n",
-			 list ? "OK" : "Error");
-	g_list_foreach (list, (GFunc) g_object_unref, NULL);
-	g_list_free (list);
-
-	gda_command_free (select_command);
-	gda_command_free (insert_command);
-	gda_command_free (create_command);
-	gda_command_free (drop_command);
-}
 /* Opens a connection and test basic operations on it */
 static void
 open_connection (GdaClient *client,
@@ -184,6 +67,7 @@ open_connection (GdaClient *client,
 {
 	GdaConnection *cnc;
 	gboolean res;
+	GdaDataSourceInfo *dsn_info;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
@@ -222,8 +106,9 @@ open_connection (GdaClient *client,
 	res = gda_connection_rollback_transaction (cnc, NULL);
 	g_print ("%s\n", res ? "OK" : "Error");
 
+	dsn_info = gda_config_find_data_source (name);
 	/* Postgres own tests */
-	if (!strcmp (name, "PostgreSQL"))
+	if (!strcmp (dsn_info->provider, POSTGRES_PROVIDER_OAFIID))
 		do_postgres_test (cnc);
 
 	/* close the connection */
