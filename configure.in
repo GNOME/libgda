@@ -234,14 +234,14 @@ do
 	else
 		mysqldir_suffix=
 	fi
-	if test -f $d/lib/mysql/libmysqlclient.a
+	if test -f $d/lib/mysql/libmysqlclient.a -o -f $d/lib/libmysqlclient.so
 	then
 		AC_MSG_RESULT(found mysql in $d)
 		mysqldir=$d
 		mysqllibdir_suffix=/mysql
 		break
 	fi
-	if test -f $d/lib/libmysqlclient.a
+	if test -f $d/lib/libmysqlclient.a -o -f $d/lib/libmysqlclient.so
 	then
 		AC_MSG_RESULT(found mysql in $d)
 		mysqldir=$d
@@ -276,7 +276,7 @@ else
 fi
 AC_MSG_CHECKING(for Postgres files)
 postgresdir=""
-for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres
+for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
 do
 	if test -f $d/lib/libpq.so
 	then

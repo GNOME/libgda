@@ -1,3 +1,11 @@
+2001-05-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: check also for shared libs when looking for a MySQL
+	installation
+	added /usr/local/pgsql to list of possible PostgreSQL installation
+	directories
+	(fixes bug #54979)
+
 2001-05-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: only link libxslt with the XML query part, since
