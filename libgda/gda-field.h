@@ -29,7 +29,9 @@
 
 G_BEGIN_DECLS
 
-typedef struct {
+typedef struct _GdaFieldAttributes GdaFieldAttributes;
+
+struct _GdaFieldAttributes {
 	gint defined_size;
 	gchar *name;
 	gchar *table;
@@ -46,11 +48,13 @@ typedef struct {
 	gint position;
 } GdaFieldAttributes;
 
-typedef struct {
+typedef struct _GdaField GdaField;
+
+struct GdaField {
 	gint actual_size;
 	GdaValue *value;
 	GdaFieldAttributes *attributes;
-} GdaField;
+};
 
 #define GDA_TYPE_FIELD_ATTRIBUTES (gda_field_attributes_get_type ())
 

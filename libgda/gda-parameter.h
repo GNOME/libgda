@@ -28,10 +28,12 @@
 
 G_BEGIN_DECLS
 
-typedef struct {
+typedef struct _GdaParameter GdaParameter;
+
+struct _GdaParameter {
 	gchar *name;
 	GdaValue *value;
-} GdaParameter;
+};
 
 #define GDA_TYPE_PARAMETER (gda_parameter_get_type())
 

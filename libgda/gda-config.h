@@ -63,12 +63,14 @@ void     gda_config_remove_listener (guint id);
  * Providers configuration
  */
 
-typedef struct {
+typedef struct _GdaProviderInfo GdaProviderInfo;
+ 
+struct _GdaProviderInfo {
 	gchar *id;
 	gchar *location;
 	gchar *description;
 	GList *gda_params; /* A list of const char* */
-} GdaProviderInfo;
+};
 
 #define GDA_TYPE_PROVIDER_INFO (gda_provider_info_get_type ())
 
@@ -85,14 +87,16 @@ GdaProviderInfo *gda_config_get_provider_by_name (const gchar *name);
  * Data sources configuration
  */
 
-typedef struct {
+typedef struct _GdaDataSourceInfo GdaDataSourceInfo;
+ 
+struct _GdaDataSourceInfo {
 	gchar *name;
 	gchar *provider;
 	gchar *cnc_string;
 	gchar *description;
 	gchar *username;
 	gchar *password;
-} GdaDataSourceInfo;
+};
 
 #define GDA_TYPE_DATA_SOURCE_INFO (gda_data_source_info_get_type ())
 
