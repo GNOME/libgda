@@ -268,6 +268,21 @@ gda_recordset_new (GdaConnection *cnc,
 }
 
 /**
+ * gda_recordset_get_connection
+ * @recset: a #GdaRecordset object.
+ *
+ * Get the #GdaConnection associated with the given #GdaRecordset object.
+ *
+ * Returns: a connection object.
+ */
+GdaConnection *
+gda_recordset_get_connection (GdaRecordset *recset)
+{
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
+	return recset->priv->cnc;
+}
+
+/**
  * gda_recordset_get_command_text
  * @recset: a #GdaRecordset.
  *

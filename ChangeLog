@@ -1,3 +1,12 @@
+2002-05-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-recordset.c (gda_recordset_get_connection): added missing
+	function.
+
+	* data/Makefile.am: removed GConf stuff.
+
+	* data/libgda.schemas: removed.
+
 2002-05-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-recordset.c: 
@@ -11,8 +20,6 @@
 
 	* testing/client.c:
 	* testing/postgres-test.h: activate postgres tests.
-
-
 
 2002-04-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
