@@ -1,22 +1,196 @@
+2002-08-16  Holger Thon <holger.thon@gnome-db.org>
+
+	* ChangeLog: added missing entries
+
+2002-08-15  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/ibmdb2/gda-ibmdb2-provider.c:
+	* providers/ibmdb2/libmain.c: fixed host parameter to alias 
+	(database dsn), alias connections finished
+	
+	* providers/ibmdb2/gda-ibmdb2-provider.{c,h}: added get_database()
+
 2002-08-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* doc/C/Makefile.am: added fdl-appendix.sgml to $content_files, so
 	that it gets included when distcheck'ing.
 
+2002-08-14  Holger Thon <holger.thon@gnome-db.org>
+
+	* configure.in: added IBMDB2_DIR define; perhaps for dbaliases
+	in cfg/db2cli.ini
+
+	* providers/freetds/gda-freetds.h:
+	* providers/freetds/gda-freetds-provider.{c,h}:
+	* providers/freetds/gda-freetds-recordset.c: added sanity checks 
+	for correct provider in dummy functions, moved sql queries for 
+	schemas into separate header file, separated freeing on error 
+	during connection_open into free_connection_data
+	
+	* providers/freetds/gda-freetds-message.{c,h}: added 
+	gda_freetds_message_add() for appending to msg/err GPtrArray
+	* providers/freetds/Makefile.am: Added dependency for schema 
+	include file
+	* providers/freetds/gda-tds-schemas.h: Moved schema queries into 
+	header file for future include by sybase provider
+
+	* providers/ibmdb2/gda-ibmdb2-provider.{c,h}: started work on
+	connection code
+
+	* providers/freetds/gda-freetds-provider.c: Added extended remote
+	procedures to schema, corrected users schema, set column name for
+	views schema
+
+	* configure.in: removed stale tds lines commented out
+	added ibmdb2 cli checks
+	
+	* acconfig.h: Added IBMDB2 define
+	* providers/Makefile.am: Added ibmdb2 directory
+	* providers/ibmdb2/.cvsignore: added .cvsignore
+	* providers/ibmdb2/Makefile.am: replaced dummy Makefile.am with
+	provider Makefile.am
+
+	* providers/ibmdb2/gda-ibmdb2.h:
+	* providers/ibmdb2/gda-ibmdb2-provider.{c,h}:
+	* providers/ibmdb2/libmain.c:
+	* providers/ibmdb2/utils.c: added skeleton for ibmdb2 provider
+	
+	* providers/ibmdb2/Makefile.am: added dummy Makefile.am
+
 2002-08-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-value.[ch] (gda_value_get_vtype): new function.
+
+2002-08-11  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/gda-freetds-provider.c: Fixed _supports()
+	* providers/freetds/gda-freetds-types.c: Added datetim* types,
+	Added numeric types
+	* providers/freetds/gda-freetds-provider.c: Added users schema,
+	added procedures schema
+
+2002-08-10  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/config.sample: sample xml snipplet of freetds
+	configuration
+	
+	* configure.in: enabled freetds compilation in configure.in
+	
+	* providers/freetds/gda-freetds-provider.c: fixed field schema 
+	nullable
+
+	* providers/freetds/gda-freetds.h:
+	* providers/freetds/gda-freetds-provider.{c,h}: fixed sqlstate in 
+	message handler, changed TDSSOCKET *socket to shorter TDSSOCKET *tds
+	
+	
+	* providers/freetds/Makefile.am: added gda-freetds-message.{c,h}
+	* providers/freetds/gda-freetds-message.{c,h}: Added message_new()
+	and _free() to pass callback msgs list to cnc
+	* providers/freetds/gda-freetds-provider.c: added error handling 
+	routines using global tds callbacks
+	* providers/freetds/gda-freetds-types.c: Added single and double types
+	
+	* libgda/gda-value.c (gda_value_stringify):
+	Added GDA_VALUE_TYPE_TINYINT (tinyint fix)
+	
+	* testing/freetds-test.c: removed insert test
 
 2002-08-09  Xabier Rodriguez Calvar <xrcalvar@igalia.com>
 
 	* doc/C/libgda-docs.sgml: spelling fixes and migration formulae
 	section added.
 
+2002-08-09  Holger Thon <holger.thon@gnome-db.org>
+
+	* testing/Makefile.am:
+	* testing/client.c:
+	* testing/freetds-test.c:
+	* testing/freetds-test.h: started work on freetds specific tests
+	
+	* providers/freetds/gda-freetds.h:
+	* providers/freetds/gda-freetds-provider.c:
+	* providers/freetds/gda-freetds-recordset.c:
+	* providers/freetds/utils.c: completed integer implementation
+	FIXME: tinyint does not work
+
+	* providers/freetds/gda-freetds-provider.c: added tables schema, 
+	started on fields schema
+	changed sanity check order in open_connection()
+	some internalization fixes
+
+	* providers/freetds/Makefile.am: Added gda-freetds-types.* for 
+	compilation
+
+	* providers/freetds/gda-freetds-recordset.c: duped TDSCOLINFO 
+	information for describe_column(), implemented describe_column()
+	
+	* providers/freetds/gda-freetds-recordset.h: a single fields' data 
+	is now set by gda_freetds_set_gdavalue()
+	
+	* providers/freetds/gda-freetds.h: added gda-freetds-types.h to 
+	included files
+	
+	* providers/freetds/gda-freetds-types.c: Implementation of TDS 
+	string types
+
+	* providers/freetds/gda-freetds-types.h: SQL- and GdaValue feeding
+	started
+	
+
+2002-08-08  Holger Thon <holger.thon@gnome-db.org>
+	
+	* providers/freetds/.cvsignore: removed output files of old API
+	
+	* providers/freetds/gda-freetds-recordset.{c,h}:
+	very basic implementation of recordset klass/result processing,
+	completed gda_freetds_recordset_get_n_rows, _get_n_columns,
+	_get_row, _get_value_at
+	
+	* providers/freetds/gda-freetds-provider.{c,h}:
+	Completed connection (tested: freetds 0.53/TDS42/Sybase 11.9.2)
+	sql-capability added, gda_freetds_provider_process_sql_commands added
+	database schema completed
+	
+	* providers/freetds/gda-freetds.h: added gda-freetds-recordset.h
+	include, added gda_freetds_split_commandlist() definition
+	
+	* providers/freetds/libmain.c: Changed dsn-parameters
+	from TDS* to TDS_*
+
+	* providers/freetds/utils.c: Added gda_freetds_split_commandlist()
+	for split of sql commandlists
+	FIXME: function needs debugging
+
+	* providers/freetds/Makefile.am: Added gda-freetds-recordset.*
+
 2002-08-07  Xabier Rodriguez Calvar <xrcalvar@igalia.com>
 
 	* doc/C/Makefile.am:
 	* doc/C/libgda-docs.sgml: added new documentation with full source
 	code example.
+
+2002-08-07  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/Makefile.am: Added Makefile.am
+	* providers/freetds/gda-freetds.h:
+	* providers/freetds/gda-freetds-provider.c:
+	* providers/freetds/utils.c: fixed some typos
+	
+	* configure.in: Updated checks for freetds to use tds.h,
+	freetds disabled unless /etc/freetds/compile_gda_tds_provider exists
+
+	* providers/Makefile.am:
+	* providers/freetds/gda-freetds.h:
+	* providers/freetds/gda-freetds-provider.{c,h}:
+	* providers/freetds/libmain.c:
+	* providers/freetds/utils.c: Changed TDS vars to FREETDS, 
+	Added skeleton for gda-freetds-provider.*
+	
+	* acconfig.h:
+	* configure.in: Changed TDS vars to FREETDS
+	
+	* providers/freetds/.cvsignore: updated ignore file
 
 2002-08-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
