@@ -1,3 +1,13 @@
+2005-03-05  Bas Driessen <bas.driessen@xobas.com>
+
+	* libgda/gda-data-model-base.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-select.c:
+	* libgda/gda-table.[ch]:
+	* libgda/gda-xml-database.c: Cleanup. Be consistent and 
+	avoid confusion by using the name "columns" for GdaColumn
+	objects rather than a mix of the old names "fa" and "dmca". 
+
 2005-03-03  Álvaro Peña  <alvaropg@telefonica.net>
 
 	* *: Renamed GdaDataModelColumnIndexAttributes to

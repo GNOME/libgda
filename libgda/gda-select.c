@@ -323,9 +323,9 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 		GList *value_list = NULL;
 
 		for (c = 0; c < cols; c++) {
-			GdaColumn *fa;
+			GdaColumn *column;
 
-			fa = gda_data_model_describe_column (table, c);
+			column = gda_data_model_describe_column (table, c);
 
 			if (all_fields) {
 				value_list = g_list_append (
@@ -333,18 +333,18 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 					gda_value_copy (gda_data_model_get_value_at (table, c, r)));
 				if (r == 0) {
 					sel->priv->field_descriptions = g_list_append (
-						sel->priv->field_descriptions, fa);
+						sel->priv->field_descriptions, column);
 				}
 			} else {
 				for (l = sql_fields; l != NULL; l = l->next) {
-					if (!strcmp ((const char *) l->data, gda_column_get_name (fa))) {
+					if (!strcmp ((const char *) l->data, gda_column_get_name (column))) {
 						value_list = g_list_append (
 							value_list,
 							gda_value_copy (
 								gda_data_model_get_value_at (table, c, r)));
 						if (r == 0) {
 							sel->priv->field_descriptions = g_list_append (
-								sel->priv->field_descriptions, fa);
+								sel->priv->field_descriptions, column);
 						}
 					}
 				}

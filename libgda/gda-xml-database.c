@@ -748,31 +748,31 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 	/* parse the node */
 	for (children = node->xmlChildrenNode; children != NULL; children = children->next) {
 		if (!strcmp (children->name, OBJECT_FIELD)) {
-			GdaColumn *fa;
+			GdaColumn *column;
 
-			fa = gda_column_new ();
+			column = gda_column_new ();
 			gda_column_set_defined_size (
-				fa, atoi (xmlGetProp (children, PROPERTY_SIZE)));
+				column, atoi (xmlGetProp (children, PROPERTY_SIZE)));
 			gda_column_set_name (
-				fa, xmlGetProp (children, PROPERTY_NAME));
+				column, xmlGetProp (children, PROPERTY_NAME));
 			gda_column_set_scale (
-				fa, atoi (xmlGetProp (children, PROPERTY_SCALE)));
+				column, atoi (xmlGetProp (children, PROPERTY_SCALE)));
 			gda_column_set_gdatype (
-				fa, gda_type_from_string (xmlGetProp (children, PROPERTY_GDATYPE)));
+				column, gda_type_from_string (xmlGetProp (children, PROPERTY_GDATYPE)));
 			gda_column_set_allow_null (
-				fa, atoi (xmlGetProp (children, PROPERTY_ALLOW_NULL)));
+				column, atoi (xmlGetProp (children, PROPERTY_ALLOW_NULL)));
 			gda_column_set_primary_key (
-				fa, atoi (xmlGetProp (children, PROPERTY_PRIMARY_KEY)));
+				column, atoi (xmlGetProp (children, PROPERTY_PRIMARY_KEY)));
 			gda_column_set_unique_key (
-				fa, atoi (xmlGetProp (children, PROPERTY_UNIQUE_KEY)));
+				column, atoi (xmlGetProp (children, PROPERTY_UNIQUE_KEY)));
 			gda_column_set_references (
-				fa, xmlGetProp (children, PROPERTY_REFERENCES));
+				column, xmlGetProp (children, PROPERTY_REFERENCES));
 			gda_column_set_caption (
-				fa, xmlGetProp (children, PROPERTY_CAPTION));
+				column, xmlGetProp (children, PROPERTY_CAPTION));
 			gda_column_set_auto_increment (
-				fa, atoi (xmlGetProp (children, PROPERTY_AUTO)));
+				column, atoi (xmlGetProp (children, PROPERTY_AUTO)));
 
-			gda_table_add_field (table, fa);
+			gda_table_add_field (table, column);
 		}
 		else if (!strcmp (children->name, OBJECT_DATA)) {
 			if (data) {

@@ -52,26 +52,26 @@ static GObjectClass *parent_class = NULL;
 typedef struct {
 	GdaTable *table;
 	gint col_to_search;
-	GdaColumn *fa;
+	GdaColumn *column;
 } DescColData;
 
 static void
 search_field_in_hash (gpointer key, gpointer value, gpointer user_data)
 {
 	DescColData *cb_data = user_data;
-	GdaColumn *fa = value;
+	GdaColumn *column = value;
 
-	if (cb_data->fa)
+	if (cb_data->column)
 		return;
-	if (gda_column_get_position (fa) == cb_data->col_to_search)
-		cb_data->fa = fa;
+	if (gda_column_get_position (column) == cb_data->col_to_search)
+		cb_data->column = column;
 }
 
 static GdaColumn *
 gda_table_describe_column (GdaDataModelBase *model, gint col)
 {
 	DescColData cb_data;
-	GdaColumn *new_fa;
+	GdaColumn *new_column;
 	GdaTable *table = (GdaTable *) model;
 
 	g_return_val_if_fail (GDA_IS_TABLE (table), NULL);
@@ -81,13 +81,13 @@ gda_table_describe_column (GdaDataModelBase *model, gint col)
 
 	cb_data.table = table;
 	cb_data.col_to_search = col;
-	cb_data.fa = NULL;
+	cb_data.column = NULL;
 	g_hash_table_foreach (table->priv->fields, (GHFunc) search_field_in_hash, &cb_data);
-	if (!cb_data.fa)
+	if (!cb_data.column)
 		return NULL;
 
-	new_fa = gda_column_copy (cb_data.fa);
-	return new_fa;
+	new_column = gda_column_copy (cb_data.column);
+	return new_column;
 }
 
 static void
@@ -230,11 +230,11 @@ gda_table_new_from_model (const gchar *name, const GdaDataModel *model, gboolean
 	/* add the columns description */
 	cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (model));
 	for (n = 0; n < cols; n++) {
-		GdaColumn *fa;
+		GdaColumn *column;
 
-		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), n);
-		gda_table_add_field (table, (const GdaColumn *) fa);
-		gda_column_free (fa);
+		column = gda_data_model_describe_column (GDA_DATA_MODEL (model), n);
+		gda_table_add_field (table, (const GdaColumn *) column);
+		gda_column_free (column);
 	}
 
 	/* add the data */
@@ -286,20 +286,20 @@ gda_table_set_name (GdaTable *table, const gchar *name)
 /**
  * gda_table_add_field
  * @table: a #GdaTable object.
- * @fa: attributes for the new field.
+ * @column: column attributes for the new field.
  *
  * Adds a field to the given #GdaTable.
  */
 void
-gda_table_add_field (GdaTable *table, const GdaColumn *fa)
+gda_table_add_field (GdaTable *table, const GdaColumn *column)
 {
 	const gchar *name;
-	GdaColumn *new_fa;
+	GdaColumn *new_column;
 
 	g_return_if_fail (GDA_IS_TABLE (table));
-	g_return_if_fail (fa != NULL);
+	g_return_if_fail (column != NULL);
 
-	name = gda_column_get_name ((GdaColumn *) fa);
+	name = gda_column_get_name ((GdaColumn *) column);
 	if (!name || !*name)
 		return;
 
@@ -310,16 +310,16 @@ gda_table_add_field (GdaTable *table, const GdaColumn *fa)
 	}
 
 	/* add the new field to the table */
-	new_fa = gda_column_new ();
-	gda_column_set_table (new_fa, table->priv->name);
-	gda_column_set_position (new_fa, g_hash_table_size (table->priv->fields));
-	gda_column_set_defined_size (new_fa, gda_column_get_defined_size ((GdaColumn *) fa));
-	gda_column_set_name (new_fa, name);
-	gda_column_set_scale (new_fa, gda_column_get_scale ((GdaColumn *) fa));
-	gda_column_set_gdatype (new_fa, gda_column_get_gdatype ((GdaColumn *) fa));
-	gda_column_set_allow_null (new_fa, gda_column_get_allow_null ((GdaColumn *) fa));
+	new_column = gda_column_new ();
+	gda_column_set_table (new_column, table->priv->name);
+	gda_column_set_position (new_column, g_hash_table_size (table->priv->fields));
+	gda_column_set_defined_size (new_column, gda_column_get_defined_size ((GdaColumn *) column));
+	gda_column_set_name (new_column, name);
+	gda_column_set_scale (new_column, gda_column_get_scale ((GdaColumn *) column));
+	gda_column_set_gdatype (new_column, gda_column_get_gdatype ((GdaColumn *) column));
+	gda_column_set_allow_null (new_column, gda_column_get_allow_null ((GdaColumn *) column));
 
-	g_hash_table_insert (table->priv->fields, g_strdup (name), new_fa);
+	g_hash_table_insert (table->priv->fields, g_strdup (name), new_column);
 	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (table),
 					    g_hash_table_size (table->priv->fields));
 }

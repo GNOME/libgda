@@ -1051,26 +1051,26 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 	rows = gda_data_model_get_n_rows (model);
 	cols = gda_data_model_get_n_columns (model);
 	for (i = 0; i < cols; i++) {
-		GdaColumn *fa;
+		GdaColumn *column;
 		xmlNodePtr field;
 
-		fa = gda_data_model_describe_column (model, i);
-		if (!fa) {
+		column = gda_data_model_describe_column (model, i);
+		if (!column) {
 			xmlFreeNode (node);
 			return NULL;
 		}
 
 		field = xmlNewChild (node, NULL, "field", NULL);
-		xmlSetProp (field, "name", gda_column_get_name (fa));
-		xmlSetProp (field, "caption", gda_column_get_caption (fa));
-		xmlSetProp (field, "gdatype", gda_type_to_string (gda_column_get_gdatype (fa)));
-		xml_set_int (field, "size", gda_column_get_defined_size (fa));
-		xml_set_int (field, "scale", gda_column_get_scale (fa));
-		xml_set_boolean (field, "pkey", gda_column_get_primary_key (fa));
-		xml_set_boolean (field, "unique", gda_column_get_unique_key (fa));
-		xml_set_boolean (field, "isnull", gda_column_get_allow_null (fa));
-		xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (fa));
-		xmlSetProp (field, "references", gda_column_get_references (fa));
+		xmlSetProp (field, "name", gda_column_get_name (column));
+		xmlSetProp (field, "caption", gda_column_get_caption (column));
+		xmlSetProp (field, "gdatype", gda_type_to_string (gda_column_get_gdatype (column)));
+		xml_set_int (field, "size", gda_column_get_defined_size (column));
+		xml_set_int (field, "scale", gda_column_get_scale (column));
+		xml_set_boolean (field, "pkey", gda_column_get_primary_key (column));
+		xml_set_boolean (field, "unique", gda_column_get_unique_key (column));
+		xml_set_boolean (field, "isnull", gda_column_get_allow_null (column));
+		xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (column));
+		xmlSetProp (field, "references", gda_column_get_references (column));
 		xml_set_int (field, "position", i);
 	}
 	

@@ -219,31 +219,31 @@ gda_data_model_base_get_n_columns (GdaDataModel *model)
 static GdaColumn *
 gda_data_model_base_describe_column (GdaDataModel *model, gint col)
 {
-	GdaColumn *fa;
+	GdaColumn *column;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
 	g_return_val_if_fail (CLASS (model)->describe_column != NULL, NULL);
 
-	fa = CLASS (model)->describe_column (GDA_DATA_MODEL_BASE (model), col);
-	if (!fa) {
+	column = CLASS (model)->describe_column (GDA_DATA_MODEL_BASE (model), col);
+	if (!column) {
 		const GdaValue *value;
 
 		/* we generate a basic FieldAttributes structure */
-		fa = gda_column_new ();
-		gda_column_set_defined_size (fa, 0);
-		gda_column_set_name (fa, g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_titles,
+		column = gda_column_new ();
+		gda_column_set_defined_size (column, 0);
+		gda_column_set_name (column, g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_titles,
 									GINT_TO_POINTER (col)));
-		gda_column_set_scale (fa, 0);
+		gda_column_set_scale (column, 0);
 		value = gda_data_model_base_get_value_at (model, col, 0);
 		if (value == NULL)
-			gda_column_set_gdatype (fa, GDA_VALUE_TYPE_STRING);
+			gda_column_set_gdatype (column, GDA_VALUE_TYPE_STRING);
 		else
-			gda_column_set_gdatype (fa, gda_value_get_type (value));
+			gda_column_set_gdatype (column, gda_value_get_type (value));
 
-		gda_column_set_allow_null (fa, TRUE);
+		gda_column_set_allow_null (column, TRUE);
 	}
 
-	return fa;
+	return column;
 }
 
 static void
@@ -288,12 +288,12 @@ gda_data_model_base_get_column_title (GdaDataModel *model, gint col)
 		title = g_hash_table_lookup (mb->priv->column_titles,
 					     GINT_TO_POINTER (col));
 		if (title == NULL) {
-			GdaColumn *fa;
+			GdaColumn *column;
 
-			fa = gda_data_model_base_describe_column (model, col);
-			if (fa) {
+			column = gda_data_model_base_describe_column (model, col);
+			if (column) {
 				gda_data_model_base_set_column_title (model, col, title);
-				gda_column_free (fa);
+				gda_column_free (column);
 
 				return g_hash_table_lookup (mb->priv->column_titles,
 							    GINT_TO_POINTER (col));
