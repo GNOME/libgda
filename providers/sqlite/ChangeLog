@@ -1,3 +1,8 @@
+2001-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-default-provider.c (gda_default_provider_open_connection): use
+	DIRECTORY instead of FILENAME in the connection string
+
 2001-11-25  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* gda-default-provider.c (gda_default_provider_execute_command):
