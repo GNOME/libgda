@@ -1,5 +1,9 @@
 2003-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* doc/C/tmpl/gda-blob.sgml: added missing file.
+
+2003-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #123342
 
 	* libgda/gda-client.c (gda_client_close_all_connections): remove
