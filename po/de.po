@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-12-22 12:07+0100\n"
+"POT-Creation-Date: 2002-12-29 10:54+0100\n"
 "PO-Revision-Date: 2002-12-16 23:18+0100\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -44,6 +44,7 @@ msgstr "Eine von libgda erstellte temporäre Datenquelle. Nicht löschen"
 #: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
+#: providers/mdb/gda-mdb-provider.c:366 providers/mdb/gda-mdb-provider.c:429
 #: providers/mysql/gda-mysql-provider.c:663
 #: providers/mysql/gda-mysql-provider.c:847
 #: providers/oracle/gda-oracle-provider.c:1031
@@ -420,25 +421,105 @@ msgstr "Ungültiger Transaktionshandle"
 msgid "GDA provider for Interbase/Firebird databases"
 msgstr "GDA-Treiber für Interbase/Firebird-Datenbanken"
 
-#: providers/mdb/gda-mdb-provider.c:188
+#: providers/mdb/gda-mdb-provider.c:203
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
 "In der Verbindungszeichenkette muß der Dateiname einer Datenbank angegeben "
 "werden."
 
-#: providers/mdb/gda-mdb-provider.c:197
+#: providers/mdb/gda-mdb-provider.c:212
+#: providers/xbase/gda-xbase-provider.c:224
 #, c-format
 msgid "Could not open file %s"
 msgstr "Datei %s konnte nicht geöffnet werden"
 
-#: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
-#: providers/mdb/gda-mdb-provider.c:348
+#: providers/mdb/gda-mdb-provider.c:234 providers/mdb/gda-mdb-provider.c:262
+#: providers/mdb/gda-mdb-provider.c:465
 msgid "Invalid MDB handle"
 msgstr "Ungültiger MDB-Handle"
 
-#: providers/mdb/gda-mdb-provider.c:313
-msgid "Table Name"
-msgstr "Tabellenname"
+#: providers/mdb/gda-mdb-provider.c:367 providers/mdb/gda-mdb-provider.c:430
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:930
+#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/postgres/gda-postgres-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:1100
+#: providers/postgres/gda-postgres-provider.c:1119
+#: providers/postgres/gda-postgres-provider.c:1179
+#: providers/postgres/gda-postgres-provider.c:1296
+#: providers/postgres/gda-postgres-provider.c:1840
+#: providers/sqlite/gda-sqlite-provider.c:747
+#: providers/sybase/gda-sybase-provider.c:906
+msgid "Owner"
+msgstr "Besitzer"
+
+#: providers/mdb/gda-mdb-provider.c:368 providers/mdb/gda-mdb-provider.c:431
+#: providers/mysql/gda-mysql-provider.c:849
+#: providers/mysql/gda-mysql-provider.c:931
+#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/postgres/gda-postgres-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:1120
+#: providers/postgres/gda-postgres-provider.c:1180
+#: providers/postgres/gda-postgres-provider.c:1297
+#: providers/postgres/gda-postgres-provider.c:1841
+#: providers/sqlite/gda-sqlite-provider.c:748
+#: providers/sybase/gda-sybase-provider.c:908
+msgid "Comments"
+msgstr "Kommentare"
+
+#: providers/mdb/gda-mdb-provider.c:432
+msgid "GDA Type"
+msgstr "GDA-Typ"
+
+#: providers/mdb/gda-mdb-provider.c:434
+msgid "Boolean type"
+msgstr "Boolescher Typ"
+
+#: providers/mdb/gda-mdb-provider.c:435
+msgid "1-byte integers"
+msgstr "Ganzzahlen der Länge 1 Byte"
+
+#: providers/mdb/gda-mdb-provider.c:436
+msgid "Double precision values"
+msgstr "Werte mit zweifacher Genauigkeit"
+
+#: providers/mdb/gda-mdb-provider.c:437
+msgid "Single precision values"
+msgstr "Werte mit einfacher Genauigkeit"
+
+#: providers/mdb/gda-mdb-provider.c:438
+msgid "32-bit integers"
+msgstr "Ganzzahlen der Länge 32 Bit"
+
+#: providers/mdb/gda-mdb-provider.c:439
+msgid "64-bit integers"
+msgstr "Ganzzahlen der Länge 64 Bit"
+
+# CHECK
+#: providers/mdb/gda-mdb-provider.c:440
+msgid "Variable length character strings"
+msgstr "Zeichenketten mit variabler Länge"
+
+# CHECK
+#: providers/mdb/gda-mdb-provider.c:441
+msgid "Money amounts"
+msgstr "Geldmengen"
+
+#: providers/mdb/gda-mdb-provider.c:442
+msgid "OLE object"
+msgstr "OLE-Objekt"
+
+#: providers/mdb/gda-mdb-provider.c:443
+msgid "FIXME"
+msgstr "FIXME"
+
+#: providers/mdb/gda-mdb-provider.c:444
+msgid "Date/time value"
+msgstr "Wert für Datum/Zeit"
+
+#: providers/mdb/gda-mdb-provider.c:445
+msgid "Character strings"
+msgstr "Zeichenketten"
 
 #: providers/mdb/libmain.c:34
 msgid "GDA provider for MS Access files"
@@ -468,33 +549,6 @@ msgstr "Ungültiger MySQL-Handle"
 #: providers/mysql/gda-mysql-provider.c:590
 msgid "Invalid MYSQL handle"
 msgstr "Ungültiger MySQL-Handle"
-
-#: providers/mysql/gda-mysql-provider.c:848
-#: providers/mysql/gda-mysql-provider.c:930
-#: providers/oracle/gda-oracle-provider.c:1530
-#: providers/postgres/gda-postgres-provider.c:830
-#: providers/postgres/gda-postgres-provider.c:1100
-#: providers/postgres/gda-postgres-provider.c:1119
-#: providers/postgres/gda-postgres-provider.c:1179
-#: providers/postgres/gda-postgres-provider.c:1296
-#: providers/postgres/gda-postgres-provider.c:1831
-#: providers/sqlite/gda-sqlite-provider.c:747
-#: providers/sybase/gda-sybase-provider.c:906
-msgid "Owner"
-msgstr "Besitzer"
-
-#: providers/mysql/gda-mysql-provider.c:849
-#: providers/mysql/gda-mysql-provider.c:931
-#: providers/oracle/gda-oracle-provider.c:1530
-#: providers/postgres/gda-postgres-provider.c:831
-#: providers/postgres/gda-postgres-provider.c:1120
-#: providers/postgres/gda-postgres-provider.c:1180
-#: providers/postgres/gda-postgres-provider.c:1297
-#: providers/postgres/gda-postgres-provider.c:1832
-#: providers/sqlite/gda-sqlite-provider.c:748
-#: providers/sybase/gda-sybase-provider.c:908
-msgid "Comments"
-msgstr "Kommentare"
 
 #: providers/mysql/gda-mysql-provider.c:929
 #: providers/oracle/gda-oracle-provider.c:1629
@@ -732,13 +786,13 @@ msgstr "Das Oracle «nulltable»-Attribut konnte nicht empfangen werden"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1491
-#: providers/postgres/gda-postgres-provider.c:1789 testing/client.c:129
+#: providers/postgres/gda-postgres-provider.c:1798 testing/client.c:133
 msgid "Users"
 msgstr "Benutzer"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1717
-#: providers/postgres/gda-postgres-provider.c:1218 testing/client.c:127
+#: providers/postgres/gda-postgres-provider.c:1218 testing/client.c:131
 msgid "Indexes"
 msgstr "Indizes"
 
@@ -747,17 +801,17 @@ msgstr "Indizes"
 msgid "Procedures"
 msgstr "Prozeduren"
 
-#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:134
 msgid "Sequences"
 msgstr "Sequenzen"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1732
-#: providers/postgres/gda-postgres-provider.c:1335 testing/client.c:131
+#: providers/postgres/gda-postgres-provider.c:1335 testing/client.c:135
 msgid "Triggers"
 msgstr "Auslöser"
 
-#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:126
+#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:130
 msgid "Views"
 msgstr "Ansichten"
 
@@ -855,13 +909,13 @@ msgstr "Arg.-Typen"
 #: providers/postgres/gda-postgres-provider.c:1102
 #: providers/postgres/gda-postgres-provider.c:1181
 #: providers/postgres/gda-postgres-provider.c:1300
-#: providers/postgres/gda-postgres-provider.c:1833
+#: providers/postgres/gda-postgres-provider.c:1842
 msgid "Definition"
 msgstr "Definition"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1099
-#: providers/postgres/gda-postgres-provider.c:1885
+#: providers/postgres/gda-postgres-provider.c:1894
 msgid "Table"
 msgstr "Tabelle"
 
@@ -886,13 +940,13 @@ msgid "InType"
 msgstr "EinTyp"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1754 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:1763 testing/client.c:126
 msgid "Databases"
 msgstr "Datenbanken"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1830
-#: providers/postgres/gda-postgres-provider.c:1886
+#: providers/postgres/gda-postgres-provider.c:1839
+#: providers/postgres/gda-postgres-provider.c:1895
 msgid "Sequence"
 msgstr "Sequenz"
 
@@ -1244,20 +1298,20 @@ msgstr "%d Meldungen abgerufen."
 msgid "Operation not possible, connection busy."
 msgstr "Operation nicht möglich, Verbindung belegt."
 
-#: providers/xbase/gda-xbase-provider.c:185
-msgid "Either FILENAME or DIRECTORY can be specified, but not both"
+#: providers/xbase/gda-xbase-provider.c:186
+msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
 "Es kann entweder ein DATEINAME oder ein VERZEICHNIS angegeben werden, nicht "
 "jedoch beides."
 
-#: providers/xbase/gda-xbase-provider.c:205
+#: providers/xbase/gda-xbase-provider.c:233
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr ""
 "In der Verbindungszeichenkette muss entweder ein DATEINAME oder ein "
 "VERZEICHNIS angegeben werden, nicht jedoch beides."
 
-#: providers/xbase/gda-xbase-provider.c:234
-#: providers/xbase/gda-xbase-provider.c:352
+#: providers/xbase/gda-xbase-provider.c:262
+#: providers/xbase/gda-xbase-provider.c:380
 msgid "Invalid Xbase handle"
 msgstr "Ungültiger Xbase-Handle"
 
@@ -1296,14 +1350,14 @@ msgstr "\t\tAggregationen: %s\n"
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117
+#: testing/client.c:117 testing/client.c:120
 msgid "Supported"
 msgstr "Unterstützt"
 
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117
+#: testing/client.c:117 testing/client.c:120
 msgid "Not supported"
 msgstr "Nicht unterstützt"
 
@@ -1314,46 +1368,51 @@ msgstr "\t\tIndizes: %s\n"
 
 #: testing/client.c:94
 #, c-format
+msgid "\t\tNamespaces: %s\n"
+msgstr "\t\tNamensräume: %s\n"
+
+#: testing/client.c:97
+#, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tProzeduren: %s\n"
 
-#: testing/client.c:97
+#: testing/client.c:100
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tSequenzen: %s\n"
 
-#: testing/client.c:100
+#: testing/client.c:103
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:103
+#: testing/client.c:106
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransaktionen: %s\n"
 
-#: testing/client.c:106
+#: testing/client.c:109
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tAuslöser: %s\n"
 
-#: testing/client.c:109
+#: testing/client.c:112
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tBenutzer: %s\n"
 
-#: testing/client.c:112
+#: testing/client.c:115
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tAnsichten: %s\n"
 
-#: testing/client.c:115
+#: testing/client.c:118
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tXML-Abfragen: %s\n"
 
 #. show connection schemas
-#: testing/client.c:120
+#: testing/client.c:123
 #, c-format
 msgid ""
 "\n"
@@ -1364,50 +1423,58 @@ msgstr ""
 "\tTreiber liefert Version: %s\n"
 "\n"
 
-#: testing/client.c:123
+#: testing/client.c:125
+msgid "Namespaces"
+msgstr "Namensräume"
+
+#: testing/client.c:127
 msgid "Stored procedures"
 msgstr "Gespeicherte Prozeduren"
 
-#: testing/client.c:124
+#: testing/client.c:128
 msgid "Connection Tables"
 msgstr "Verbindungstabellen"
 
-#: testing/client.c:125
+#: testing/client.c:129
 msgid "Available types"
 msgstr "Verfügbare Typen"
 
-#: testing/client.c:128
+#: testing/client.c:132
 msgid "Aggregates"
 msgstr "Aggregationen"
 
-#: testing/client.c:136 testing/client.c:144
+#: testing/client.c:136
+msgid "Languages"
+msgstr "Sprachen"
+
+#: testing/client.c:141 testing/client.c:149
 msgid "\tStarting transaction..."
 msgstr "\tTransaktion wird begonnen..."
 
-#: testing/client.c:138 testing/client.c:142 testing/client.c:146
-#: testing/client.c:150
+#: testing/client.c:143 testing/client.c:147 testing/client.c:151
+#: testing/client.c:155
 msgid "Error"
 msgstr "Fehler"
 
-#: testing/client.c:140
+#: testing/client.c:145
 msgid "\tFinishing transaction..."
 msgstr "\tTransaktion wird fertiggestellt..."
 
-#: testing/client.c:148
+#: testing/client.c:153
 msgid "\tRolling back transaction..."
 msgstr "\tTransaktion wird rückgängig gemacht..."
 
-#: testing/client.c:176
+#: testing/client.c:181
 msgid "Testing GDA client API"
 msgstr "Testen der GDA-Client-API"
 
-#: testing/client.c:185
+#: testing/client.c:190
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 "** FEHLER: gda_config_get_data_source_list hat einen NULL-Eintrag "
 "zurückgegeben\n"
 
-#: testing/client.c:189
+#: testing/client.c:194
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Datenquelle = %s, Benutzer = %s\n"
@@ -1436,6 +1503,9 @@ msgstr "\tBeschreibung = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tGDA-_Parameter ="
+
+#~ msgid "Table Name"
+#~ msgstr "Tabellenname"
 
 #~ msgid "%s returned CS_CMD_FAIL"
 #~ msgstr "%s hat »CS_CMD_FAIL« geliefert"
