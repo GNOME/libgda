@@ -1,3 +1,19 @@
+2004-12-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* autogen.sh: changed to require automake >= 1.9.
+
+	* configure.in: incremented library versions.
+
+	* libsql/Makefile.am: reference correctly the libgdasql lib.
+
+	* providers/freetds/gda-freetds-provider.c (gda_freetds_execute_cmd):
+	* providers/freetds/gda-freetds-recordset.c
+	(gda_freetds_recordset_new): use correct number of arguments for
+	tds_process_result_tokens.
+
+	* providers/mdb/gda-mdb-provider.c (gda_mdb_provider_open_connection):
+	pass flags to mdb_open.
+
 2004-12-14  Dru <andru@treshna.com>
 
 	* libgda/sql_parser.c: Fixed bug in IS NOT clauses in
