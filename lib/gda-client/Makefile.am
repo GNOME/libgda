@@ -2,24 +2,9 @@ lib_LTLIBRARIES = libgda-client.la
 
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
-	$(GDA_PROVIDER_CFLAGS) \
 	-I. \
 	-I$(top_builddir)/lib/gda-common \
 	-DDTDINSTALLDIR=\""$(datadir)/gda/dtd"\"
-
-BUILT_SOURCES = GDA-skels.c GDA-stubs.c GDA-common.c GDA.h
-CLEANFILES += $(BUILT_SOURCES)
-IDL_FILES = \
-	$(top_builddir)/idl/GDA.idl \
-	$(top_builddir)/idl/GDA_Command.idl \
-	$(top_builddir)/idl/GDA_Connection.idl \
-	$(top_builddir)/idl/GDA_Error.idl \
-	$(top_builddir)/idl/GDA_Fieldx.idl \
-	$(top_builddir)/idl/GDA_Parameter.idl \
-	$(top_builddir)/idl/GDA_Recordset.idl
-
-GDA-skels.c GDA-stubs.c GDA-common.c GDA.h: $(IDLFILES)
-	$(ORBIT_IDL) -I$(top_sourcedir)/idl -I`oaf-config --prefix`/share/idl $(top_builddir)/idl/GDA.idl
 
 gda_client_headers = \
 	gda-batch.h \
@@ -31,13 +16,10 @@ gda_client_headers = \
 	gda-field.h \
 	gda-recordset.h \
 	gda-value.h \
-	gda-client.h \
-	GDA.h
+	gda-client.h 
 
 libgda_client_la_SOURCES = \
 	$(gda_client_headers) \
-	GDA-stubs.c \
-	GDA-common.c \
 	gda-batch.c \
 	gda-command.c \
 	gda-connection-pool.c \
@@ -51,5 +33,3 @@ libgda_client_la_LIBADD =
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_client_headers)
 
-dist-hook:
-	cd $(distdir); rm -f $(BUILT_SOURCES)

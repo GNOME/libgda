@@ -7,6 +7,20 @@ INCLUDES = \
 	$(GDA_PROVIDER_CFLAGS) \
 	-I.
 
+BUILT_SOURCES = GDA-skels.c GDA-stubs.c GDA-common.c GDA.h
+CLEANFILES += $(BUILT_SOURCES)
+IDL_FILES = \
+	$(top_builddir)/idl/GDA.idl \
+	$(top_builddir)/idl/GDA_Command.idl \
+	$(top_builddir)/idl/GDA_Connection.idl \
+	$(top_builddir)/idl/GDA_Error.idl \
+	$(top_builddir)/idl/GDA_Fieldx.idl \
+	$(top_builddir)/idl/GDA_Parameter.idl \
+	$(top_builddir)/idl/GDA_Recordset.idl
+
+GDA-skels.c GDA-stubs.c GDA-common.c GDA.h: $(IDLFILES) $(ORBIT_IDL)
+	$(ORBIT_IDL) -I$(top_sourcedir)/idl -I`oaf-config --prefix`/share/idl $(top_builddir)/idl/GDA.idl
+
 gda_common_headers = \
 	gda-config.h \
 	gda-corba.h \
@@ -15,10 +29,14 @@ gda_common_headers = \
 	gda-util.h \
 	gda-xml-database.h \
 	gda-xml-file.h \
-	gda-common.h
+	gda-common.h \
+	GDA.h
 
 libgda_common_la_SOURCES = \
 	$(gda_common_headers) \
+	GDA-common.c \
+	GDA-skels.c \
+	GDA-stubs.c \
 	gda-config.c \
 	gda-corba.c \
 	gda-init.c \
@@ -34,3 +52,6 @@ libgda_common_la_LIBADD=\
 
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_common_headers)
+
+dist-hook:
+	cd $(distdir); rm -f $(BUILT_SOURCES)

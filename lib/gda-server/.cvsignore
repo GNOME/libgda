@@ -5,7 +5,3 @@ Makefile.in
 .deps
 .libs
 libgda-server.la
-GDA.h
-GDA-common.c
-GDA-skels.c
-GDA-stubs.c

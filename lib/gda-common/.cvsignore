@@ -5,3 +5,7 @@ Makefile.in
 .deps
 .libs
 libgda-common.la
+GDA.h
+GDA-common.c
+GDA-skels.c
+GDA-stubs.c
