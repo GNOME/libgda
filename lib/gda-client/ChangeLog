@@ -1,3 +1,9 @@
+2000-10-21	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* added missing _() and N_() declarations which were missing after
+	removing the gnome.h #includes. This has been the first GNOME-independent
+	successful compilation
+	
 2000-10-20	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* removed all gnome.h to leave things at 99.99999%
