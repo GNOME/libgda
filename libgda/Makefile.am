@@ -39,6 +39,7 @@ gda_headers = \
 	gda-table.h \
 	gda-transaction.h \
 	gda-util.h \
+	gda-threader.h \
 	gda-value.h \
 	gda-xml-connection.h \
 	gda-xml-database.h \
@@ -97,6 +98,7 @@ libgda_sources =  \
 	gda-table.c \
 	gda-transaction.c \
 	gda-util.c \
+	gda-threader.c \
 	gda-value.c \
 	gda-xml-connection.c \
 	gda-xml-database.c \
