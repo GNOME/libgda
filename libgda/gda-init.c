@@ -51,6 +51,12 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	bindtextdomain (GETTEXT_PACKAGE, LIBGDA_LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
+	/* Threading support if possible */
+#ifdef G_THREADS_ENABLED
+#ifndef G_THREADS_IMPL_NONE
+	g_thread_init (NULL);
+#endif
+#endif
 	g_type_init ();
 	g_set_prgname (app_id);
 
