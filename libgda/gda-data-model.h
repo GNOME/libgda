@@ -110,7 +110,7 @@ void                          gda_data_model_thaw                   (GdaDataMode
 
 gint                          gda_data_model_get_n_rows             (GdaDataModel *model);
 gint                          gda_data_model_get_n_columns          (GdaDataModel *model);
-GdaColumn *gda_data_model_describe_column        (GdaDataModel *model, gint col);
+GdaColumn                    *gda_data_model_describe_column        (GdaDataModel *model, gint col);
 const gchar                  *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
 void                          gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
 gint                          gda_data_model_get_column_position    (GdaDataModel *model, const gchar *title);
@@ -147,6 +147,8 @@ const gchar                  *gda_data_model_get_command_text       (GdaDataMode
 gboolean                      gda_data_model_set_command_text       (GdaDataModel *model, const gchar *txt);
 GdaCommandType                gda_data_model_get_command_type       (GdaDataModel *model);
 gboolean                      gda_data_model_set_command_type       (GdaDataModel *model, GdaCommandType type);
+
+void                          gda_data_model_dump                   (GdaDataModel *model, FILE *to_stream);
 
 G_END_DECLS
 

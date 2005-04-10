@@ -1297,3 +1297,84 @@ gda_data_model_set_command_type (GdaDataModel *model, GdaCommandType type)
 		return FALSE;
 }
 
+/**
+ * gda_data_model_dump
+ * @model: a #GdaDataModel.
+ * @to_stream: where to dump the data model
+ *
+ * Dumps a textual representation of the @model to the @to_stream stream
+ */
+void
+gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
+{
+	gchar *offstr, *str;
+	gint n_cols, n_rows;
+	gint *cols_size;
+	gchar *sep_col  = " | ";
+	gchar *sep_row  = "-+-";
+	gchar sep_fill = '-';
+	gint i, j;
+	const GdaValue *value;
+
+	gint offset = 0;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));	
+
+        /* string for the offset */
+        offstr = g_new0 (gchar, offset+1);
+	memset (offstr, ' ', offset);
+
+	/* compute the columns widths: using column titles... */
+	n_cols = gda_data_model_get_n_columns (model);
+	n_rows = gda_data_model_get_n_rows (model);
+	cols_size = g_new0 (gint, n_cols);
+	
+	for (i = 0; i < n_cols; i++) {
+		str = gda_data_model_get_column_title (model, i);
+		cols_size [i] = strlen (str);
+	}
+
+	/* ... and using column data */
+	for (j = 0; j < n_rows; j++) {
+		for (i = 0; i < n_cols; i++) {
+			value = gda_data_model_get_value_at (model, i, j);
+			str = value ? gda_value_stringify (value) : g_strdup ("_null_");
+			cols_size [i] = MAX (cols_size [i], strlen (str));
+			g_free (str);
+		}
+	}
+	
+	/* actual dumping of the contents: column titles...*/
+	for (i = 0; i < n_cols; i++) {
+		str = gda_data_model_get_column_title (model, i);
+		if (i != 0)
+			g_print ("%s", sep_col);
+		g_print ("%*s", cols_size [i], str);
+	}
+	g_print ("\n");
+		
+	/* ... separation line ... */
+	for (i = 0; i < n_cols; i++) {
+		if (i != 0)
+			g_print ("%s", sep_row);
+		for (j = 0; j < cols_size [i]; j++)
+			g_print ("%c", sep_fill);
+	}
+	g_print ("\n");
+
+	/* ... and data */
+	for (j = 0; j < n_rows; j++) {
+		for (i = 0; i < n_cols; i++) {
+			value = gda_data_model_get_value_at (model, i, j);
+			str = value ? gda_value_stringify (value) : g_strdup ("_null_");
+			if (i != 0)
+				g_print ("%s", sep_col);
+			g_print ("%*s", cols_size [i], str);
+			g_free (str);
+		}
+		g_print ("\n");
+	}
+	g_free (cols_size);
+
+	g_free (offstr);
+}
