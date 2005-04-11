@@ -496,12 +496,7 @@ gda_mysql_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 		sql = g_string_append (sql, column_name);
 		sql = g_string_append (sql, "`");
 
-		sql_value = g_string_append (sql_value, 
-			gda_mysql_provider_value_to_sql_string (
-				NULL,
-				priv_data->cnc,
-				gda_row_get_value ((GdaRow *) row, i))
-		);
+		sql_value = g_string_append (sql_value, gda_mysql_value_to_sql_string_local (gda_row_get_value ((GdaRow *) row, i)));
 	}
 
 	/* concatenate SQL statement */
@@ -615,11 +610,7 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		else
 			column_name = gda_data_model_get_column_title (GDA_DATA_MODEL (model), colnum);
 
-		gchar *curval = gda_mysql_provider_value_to_sql_string (
-				NULL,
-				priv_data->cnc,
-				gda_row_get_value ((GdaRow *) row, colnum)
-		);
+		gchar *curval = gda_mysql_value_to_sql_string_local (gda_row_get_value ((GdaRow *) row, colnum));
 
 		/* unique column: we will use it as an index */
 		if (gda_column_get_primary_key (attrs) ||

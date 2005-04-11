@@ -1,3 +1,17 @@
+2005-04-11  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/mysql/utils.c
+	(gda_mysql_value_to_sql_string_local):
+	Restore old gda_mysql_value_to_string function under
+	unique new name, as new function does not function in
+	record set functions.
+
+	* providers/mysql/gda-mysql-recordset.c
+	(gda_mysql_recordset_append_row)
+	(gda_mysql_recordset_remove_row):
+	Change call to gda_mysql_value_to_string function to 
+	local one to prevent undefined symbol error aborts.	
+
 2005-04-10  Vivien Malerba <malerba@gnome-db.org>
 	* libgda/gda-data-model.[ch]: added gda_data_model_dump()
 	* libgda/gda-init.c: added a call to g_thread_init()
