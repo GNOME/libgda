@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-13 15:58+0100\n"
-"PO-Revision-Date: 2005-02-13 16:01+0100\n"
+"POT-Creation-Date: 2005-04-11 11:54+0200\n"
+"PO-Revision-Date: 2005-04-11 11:55+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -75,8 +75,8 @@ msgstr "Descrizione"
 #: ../providers/mdb/gda-mdb-provider.c:594
 #: ../providers/mdb/gda-mdb-provider.c:654
 #: ../providers/msql/gda-msql-provider.c:471
-#: ../providers/mysql/gda-mysql-provider.c:1107
-#: ../providers/mysql/gda-mysql-provider.c:1295
+#: ../providers/mysql/gda-mysql-provider.c:1106
+#: ../providers/mysql/gda-mysql-provider.c:1294
 #: ../providers/odbc/gda-odbc-provider.c:768
 #: ../providers/odbc/gda-odbc-provider.c:824
 #: ../providers/oracle/gda-oracle-provider.c:1893
@@ -109,11 +109,15 @@ msgstr "Password"
 msgid "Data model %p is not updatable"
 msgstr "Il modello dati %p non è aggiornabile"
 
+#: ../libgda/gda-data-model.c:1049
+msgid "Exported Data"
+msgstr "Dati esportati"
+
 #: ../libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
 msgstr "Tentativo di inizializzare un client già inizializzato"
 
-#: ../libgda/gda-init.c:58
+#: ../libgda/gda-init.c:64
 msgid "libgda needs GModule. Finishing..."
 msgstr "lbgda necessita di GModule. Fine programma..."
 
@@ -211,6 +215,11 @@ msgstr "Nodo XML non valido"
 msgid "Could not add the data from the XML node"
 msgstr "Impossibile aggiungere i dati dal nodo XML"
 
+#: ../libgda/gda-xml-database.c:817
+#, c-format
+msgid "Table %s doesn't exist"
+msgstr "La tabella %s non esiste"
+
 #: ../libsql/sql_parser.c:60
 #, c-format
 msgid "Parse error near `%s'"
@@ -270,7 +279,7 @@ msgstr "Blob chiuso"
 #: ../providers/firebird/gda-firebird-provider.c:231
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: ../providers/ldap/gda-ldap-provider.c:423
-#: ../providers/mysql/gda-mysql-provider.c:1387
+#: ../providers/mysql/gda-mysql-provider.c:1386
 #: ../providers/odbc/gda-odbc-provider.c:1360
 #: ../providers/oracle/gda-oracle-provider.c:2095
 #: ../providers/postgres/gda-postgres-provider.c:1579
@@ -297,9 +306,9 @@ msgstr "Tipo"
 #: ../providers/mdb/gda-mdb-provider.c:655
 #: ../providers/msql/gda-msql-provider.c:472
 #: ../providers/msql/gda-msql-provider.c:512
-#: ../providers/mysql/gda-mysql-provider.c:1109
-#: ../providers/mysql/gda-mysql-provider.c:1296
-#: ../providers/mysql/gda-mysql-provider.c:1388
+#: ../providers/mysql/gda-mysql-provider.c:1108
+#: ../providers/mysql/gda-mysql-provider.c:1295
+#: ../providers/mysql/gda-mysql-provider.c:1387
 #: ../providers/odbc/gda-odbc-provider.c:1025
 #: ../providers/odbc/gda-odbc-provider.c:1138
 #: ../providers/odbc/gda-odbc-provider.c:1247
@@ -333,9 +342,9 @@ msgstr "Proprietario"
 #: ../providers/mdb/gda-mdb-provider.c:656
 #: ../providers/msql/gda-msql-provider.c:473
 #: ../providers/msql/gda-msql-provider.c:513
-#: ../providers/mysql/gda-mysql-provider.c:1110
-#: ../providers/mysql/gda-mysql-provider.c:1297
-#: ../providers/mysql/gda-mysql-provider.c:1389
+#: ../providers/mysql/gda-mysql-provider.c:1109
+#: ../providers/mysql/gda-mysql-provider.c:1296
+#: ../providers/mysql/gda-mysql-provider.c:1388
 #: ../providers/odbc/gda-odbc-provider.c:1139
 #: ../providers/odbc/gda-odbc-provider.c:1362
 #: ../providers/odbc/gda-odbc-provider.c:1456
@@ -359,7 +368,7 @@ msgstr "Commenti"
 #: ../providers/firebird/gda-firebird-provider.c:234
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:949
 #: ../providers/msql/gda-msql-provider.c:514
-#: ../providers/mysql/gda-mysql-provider.c:1390
+#: ../providers/mysql/gda-mysql-provider.c:1389
 #: ../providers/odbc/gda-odbc-provider.c:1363
 #: ../providers/oracle/gda-oracle-provider.c:2097
 #: ../providers/postgres/gda-postgres-provider.c:1582
@@ -397,7 +406,7 @@ msgstr "Definizione"
 
 #: ../providers/firebird/gda-firebird-provider.c:615
 #: ../providers/mdb/gda-mdb-provider.c:490
-#: ../providers/mysql/gda-mysql-provider.c:1485
+#: ../providers/mysql/gda-mysql-provider.c:1484
 #: ../providers/odbc/gda-odbc-provider.c:949
 #: ../providers/oracle/gda-oracle-provider.c:1248
 #: ../providers/postgres/gda-postgres-provider.c:1808
@@ -409,7 +418,7 @@ msgstr "Nome campo"
 #: ../providers/firebird/gda-firebird-provider.c:616
 #: ../providers/mdb/gda-mdb-provider.c:491
 #: ../providers/msql/gda-msql-provider.c:564
-#: ../providers/mysql/gda-mysql-provider.c:1486
+#: ../providers/mysql/gda-mysql-provider.c:1485
 #: ../providers/odbc/gda-odbc-provider.c:950
 #: ../providers/oracle/gda-oracle-provider.c:1249
 #: ../providers/postgres/gda-postgres-provider.c:1809
@@ -421,7 +430,7 @@ msgstr "Tipo dati"
 #: ../providers/firebird/gda-firebird-provider.c:617
 #: ../providers/mdb/gda-mdb-provider.c:492
 #: ../providers/msql/gda-msql-provider.c:565
-#: ../providers/mysql/gda-mysql-provider.c:1487
+#: ../providers/mysql/gda-mysql-provider.c:1486
 #: ../providers/odbc/gda-odbc-provider.c:951
 #: ../providers/oracle/gda-oracle-provider.c:1250
 #: ../providers/postgres/gda-postgres-provider.c:1810
@@ -433,7 +442,7 @@ msgstr "Dimensione"
 #: ../providers/firebird/gda-firebird-provider.c:618
 #: ../providers/mdb/gda-mdb-provider.c:493
 #: ../providers/msql/gda-msql-provider.c:566
-#: ../providers/mysql/gda-mysql-provider.c:1488
+#: ../providers/mysql/gda-mysql-provider.c:1487
 #: ../providers/odbc/gda-odbc-provider.c:952
 #: ../providers/oracle/gda-oracle-provider.c:1251
 #: ../providers/postgres/gda-postgres-provider.c:1811
@@ -444,7 +453,7 @@ msgstr "Scala"
 
 #: ../providers/firebird/gda-firebird-provider.c:619
 #: ../providers/mdb/gda-mdb-provider.c:494
-#: ../providers/mysql/gda-mysql-provider.c:1489
+#: ../providers/mysql/gda-mysql-provider.c:1488
 #: ../providers/odbc/gda-odbc-provider.c:953
 #: ../providers/oracle/gda-oracle-provider.c:1252
 #: ../providers/postgres/gda-postgres-provider.c:1812
@@ -456,7 +465,7 @@ msgstr "Non null?"
 #: ../providers/firebird/gda-firebird-provider.c:620
 #: ../providers/mdb/gda-mdb-provider.c:495
 #: ../providers/msql/gda-msql-provider.c:568
-#: ../providers/mysql/gda-mysql-provider.c:1490
+#: ../providers/mysql/gda-mysql-provider.c:1489
 #: ../providers/odbc/gda-odbc-provider.c:954
 #: ../providers/oracle/gda-oracle-provider.c:1253
 #: ../providers/postgres/gda-postgres-provider.c:1813
@@ -468,7 +477,7 @@ msgstr "Chiave primaria?"
 #: ../providers/firebird/gda-firebird-provider.c:621
 #: ../providers/mdb/gda-mdb-provider.c:496
 #: ../providers/msql/gda-msql-provider.c:569
-#: ../providers/mysql/gda-mysql-provider.c:1491
+#: ../providers/mysql/gda-mysql-provider.c:1490
 #: ../providers/odbc/gda-odbc-provider.c:955
 #: ../providers/oracle/gda-oracle-provider.c:1254
 #: ../providers/postgres/gda-postgres-provider.c:1814
@@ -480,7 +489,7 @@ msgstr "Indice univoco?"
 #: ../providers/firebird/gda-firebird-provider.c:622
 #: ../providers/mdb/gda-mdb-provider.c:497
 #: ../providers/msql/gda-msql-provider.c:570
-#: ../providers/mysql/gda-mysql-provider.c:1492
+#: ../providers/mysql/gda-mysql-provider.c:1491
 #: ../providers/odbc/gda-odbc-provider.c:956
 #: ../providers/oracle/gda-oracle-provider.c:1255
 #: ../providers/postgres/gda-postgres-provider.c:1815
@@ -492,7 +501,7 @@ msgstr "Riferimenti"
 #: ../providers/firebird/gda-firebird-provider.c:623
 #: ../providers/mdb/gda-mdb-provider.c:498
 #: ../providers/msql/gda-msql-provider.c:571
-#: ../providers/mysql/gda-mysql-provider.c:1493
+#: ../providers/mysql/gda-mysql-provider.c:1492
 #: ../providers/odbc/gda-odbc-provider.c:957
 #: ../providers/oracle/gda-oracle-provider.c:1256
 #: ../providers/postgres/gda-postgres-provider.c:1816
@@ -504,8 +513,8 @@ msgstr "Valore predefinito"
 #: ../providers/firebird/gda-firebird-provider.c:639
 #: ../providers/msql/gda-msql-provider.c:584
 #: ../providers/msql/gda-msql-provider.c:590
-#: ../providers/mysql/gda-mysql-provider.c:1510
-#: ../providers/mysql/gda-mysql-provider.c:1518
+#: ../providers/mysql/gda-mysql-provider.c:1509
+#: ../providers/mysql/gda-mysql-provider.c:1517
 msgid "Table name is needed but none specified in parameter list"
 msgstr ""
 "Il nome tabella è necessario ma non è stato specificato nell'elenco del "
@@ -520,13 +529,13 @@ msgstr "SCONOSCIUTO"
 
 #: ../providers/firebird/gda-firebird-provider.c:731
 #: ../providers/mdb/gda-mdb-provider.c:547
-#: ../providers/mysql/gda-mysql-provider.c:1108
+#: ../providers/mysql/gda-mysql-provider.c:1107
 msgid "ID"
 msgstr "ID"
 
 #: ../providers/firebird/gda-firebird-provider.c:734
 #: ../providers/mdb/gda-mdb-provider.c:550
-#: ../providers/mysql/gda-mysql-provider.c:1111
+#: ../providers/mysql/gda-mysql-provider.c:1110
 #: ../providers/odbc/gda-odbc-provider.c:1140
 #: ../providers/postgres/gda-postgres-provider.c:1293
 msgid "Return type"
@@ -534,14 +543,14 @@ msgstr "Tipo di ritorno"
 
 #: ../providers/firebird/gda-firebird-provider.c:735
 #: ../providers/mdb/gda-mdb-provider.c:552
-#: ../providers/mysql/gda-mysql-provider.c:1112
+#: ../providers/mysql/gda-mysql-provider.c:1111
 #: ../providers/odbc/gda-odbc-provider.c:1142
 #: ../providers/postgres/gda-postgres-provider.c:1295
 msgid "Args types"
 msgstr "Tipo degli argomenti"
 
 #: ../providers/firebird/gda-firebird-provider.c:736
-#: ../providers/mysql/gda-mysql-provider.c:1113
+#: ../providers/mysql/gda-mysql-provider.c:1112
 #: ../providers/oracle/gda-oracle-provider.c:1913
 #: ../providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
@@ -794,8 +803,8 @@ msgid "Dump Configuration File"
 msgstr "File di configurazione del dump"
 
 #: ../providers/freetds/libmain.c:98
-msgid "File fpr TDS protocol dumps configuration"
-msgstr "File per la configurazione del dump del protocollo TDS fpr"
+msgid "File for TDS protocol dumps configuration"
+msgstr "File per la configurazione del dump del protocollo TDS"
 
 #: ../providers/freetds/utils.c:40 ../providers/oracle/utils.c:67
 #: ../providers/postgres/utils.c:48 ../providers/sybase/utils.c:534
@@ -905,8 +914,8 @@ msgstr "Handle LDAP non valido"
 #: ../providers/mysql/gda-mysql-recordset.c:380
 #: ../providers/postgres/gda-postgres-recordset.c:200
 #: ../providers/postgres/gda-postgres-recordset.c:577
-#: ../providers/sqlite/gda-sqlite-recordset.c:166
-#: ../providers/sqlite/gda-sqlite-recordset.c:205
+#: ../providers/sqlite/gda-sqlite-recordset.c:167
+#: ../providers/sqlite/gda-sqlite-recordset.c:209
 #: ../providers/bdb/gda-bdb-recordset.c:111
 msgid "Row number out of range"
 msgstr "Numero riga fuori capacità"
@@ -1139,44 +1148,44 @@ msgstr "Non null"
 msgid "Row number out of bounds"
 msgstr "Numero riga fuori capacità"
 
-#: ../providers/mysql/gda-mysql-provider.c:268
+#: ../providers/mysql/gda-mysql-provider.c:267
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Impossibile fornire una UNIX_SOCKET se si è già fornito un HOST o una PORTA."
 
-#: ../providers/mysql/gda-mysql-provider.c:344
-#: ../providers/mysql/gda-mysql-provider.c:1501
+#: ../providers/mysql/gda-mysql-provider.c:343
+#: ../providers/mysql/gda-mysql-provider.c:1500
 #: ../providers/mysql/gda-mysql-recordset.c:205
 #: ../providers/mysql/gda-mysql-recordset.c:273
 #: ../providers/mysql/gda-mysql-recordset.c:327
 #: ../providers/mysql/gda-mysql-recordset.c:374
 #: ../providers/mysql/gda-mysql-recordset.c:427
-#: ../providers/mysql/gda-mysql-recordset.c:550
-#: ../providers/mysql/gda-mysql-recordset.c:696
+#: ../providers/mysql/gda-mysql-recordset.c:555
+#: ../providers/mysql/gda-mysql-recordset.c:705
 msgid "Invalid MySQL handle"
 msgstr "Handle MySQL non valido"
 
-#: ../providers/mysql/gda-mysql-provider.c:360
-#: ../providers/mysql/gda-mysql-provider.c:430
-#: ../providers/mysql/gda-mysql-provider.c:453
-#: ../providers/mysql/gda-mysql-provider.c:484
-#: ../providers/mysql/gda-mysql-provider.c:516
-#: ../providers/mysql/gda-mysql-provider.c:558
-#: ../providers/mysql/gda-mysql-provider.c:711
-#: ../providers/mysql/gda-mysql-provider.c:751
-#: ../providers/mysql/gda-mysql-provider.c:848
-#: ../providers/mysql/gda-mysql-provider.c:918
-#: ../providers/mysql/gda-mysql-provider.c:941
-#: ../providers/mysql/gda-mysql-provider.c:998
-#: ../providers/mysql/gda-mysql-provider.c:1031
-#: ../providers/mysql/gda-mysql-provider.c:1628
+#: ../providers/mysql/gda-mysql-provider.c:359
+#: ../providers/mysql/gda-mysql-provider.c:429
+#: ../providers/mysql/gda-mysql-provider.c:452
+#: ../providers/mysql/gda-mysql-provider.c:483
+#: ../providers/mysql/gda-mysql-provider.c:515
+#: ../providers/mysql/gda-mysql-provider.c:557
+#: ../providers/mysql/gda-mysql-provider.c:710
+#: ../providers/mysql/gda-mysql-provider.c:750
+#: ../providers/mysql/gda-mysql-provider.c:847
+#: ../providers/mysql/gda-mysql-provider.c:917
+#: ../providers/mysql/gda-mysql-provider.c:940
+#: ../providers/mysql/gda-mysql-provider.c:997
+#: ../providers/mysql/gda-mysql-provider.c:1030
+#: ../providers/mysql/gda-mysql-provider.c:1648
 msgid "Invalid MYSQL handle"
 msgstr "Handle MYSQL non valido"
 
-#: ../providers/mysql/gda-mysql-provider.c:946
-#: ../providers/mysql/gda-mysql-provider.c:1003
-#: ../providers/mysql/gda-mysql-provider.c:1036
+#: ../providers/mysql/gda-mysql-provider.c:945
+#: ../providers/mysql/gda-mysql-provider.c:1002
+#: ../providers/mysql/gda-mysql-provider.c:1035
 #: ../providers/oracle/gda-oracle-provider.c:857
 #: ../providers/oracle/gda-oracle-provider.c:939
 #: ../providers/oracle/gda-oracle-provider.c:1000
@@ -1187,56 +1196,56 @@ msgstr "Le transazioni non sono supportate in modalità sola lettura"
 
 #: ../providers/mysql/gda-mysql-recordset.c:386
 #: ../providers/postgres/gda-postgres-recordset.c:583
-#: ../providers/sqlite/gda-sqlite-recordset.c:211
-#: ../providers/sqlite/gda-sqlite-recordset.c:243
+#: ../providers/sqlite/gda-sqlite-recordset.c:215
+#: ../providers/sqlite/gda-sqlite-recordset.c:247
 #: ../providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Numero di colonna fuori parametri"
 
 #: ../providers/mysql/gda-mysql-recordset.c:437
-#: ../providers/mysql/gda-mysql-recordset.c:567
+#: ../providers/mysql/gda-mysql-recordset.c:572
 msgid "Table name could not be guessed"
 msgstr "Il nome della tabella non può essere indovinato"
 
 #: ../providers/mysql/gda-mysql-recordset.c:459
 #: ../providers/mysql/gda-mysql-recordset.c:465
-#: ../providers/mysql/gda-mysql-recordset.c:582
-#: ../providers/mysql/gda-mysql-recordset.c:588
+#: ../providers/mysql/gda-mysql-recordset.c:587
+#: ../providers/mysql/gda-mysql-recordset.c:593
 msgid "Can not synchronize array with MySQL result set"
 msgstr "Impossibile sincronizzare l'array con l'insieme di risultati MySQL"
 
-#: ../providers/mysql/gda-mysql-recordset.c:521
+#: ../providers/mysql/gda-mysql-recordset.c:526
 msgid "Can not append row to data model"
 msgstr "Impossibile aggiungere una riga al modello dati"
 
-#: ../providers/mysql/gda-mysql-recordset.c:560
-#: ../providers/mysql/gda-mysql-recordset.c:706
+#: ../providers/mysql/gda-mysql-recordset.c:565
+#: ../providers/mysql/gda-mysql-recordset.c:715
 #: ../providers/postgres/gda-postgres-recordset.c:333
 #: ../providers/postgres/gda-postgres-recordset.c:434
 msgid "Given row doesn't belong to the model."
 msgstr "La riga data non appartiene al modello."
 
-#: ../providers/mysql/gda-mysql-recordset.c:638
+#: ../providers/mysql/gda-mysql-recordset.c:647
 #: ../providers/postgres/gda-postgres-recordset.c:373
 msgid "Model doesn't have at least one unique key."
 msgstr "Il modello non ha almeno una chiave unica."
 
-#: ../providers/mysql/gda-mysql-recordset.c:666
+#: ../providers/mysql/gda-mysql-recordset.c:675
 msgid "Can not remove row from data model"
 msgstr "Impossibile rimuovere una riga dal modello dati"
 
-#: ../providers/mysql/gda-mysql-recordset.c:713
+#: ../providers/mysql/gda-mysql-recordset.c:722
 #: ../providers/postgres/gda-postgres-recordset.c:236
 #: ../providers/postgres/gda-postgres-recordset.c:340
 #: ../providers/postgres/gda-postgres-recordset.c:441
 msgid "Table name could not be guessed."
 msgstr "Il nome della tabella non può essere indovinato."
 
-#: ../providers/mysql/gda-mysql-recordset.c:787
+#: ../providers/mysql/gda-mysql-recordset.c:796
 msgid "Model does not have at least one non-modified unique key."
 msgstr "Il modello non ha almeno una chiave unica non modificata."
 
-#: ../providers/mysql/gda-mysql-recordset.c:797
+#: ../providers/mysql/gda-mysql-recordset.c:806
 msgid "Model does not have any non-unique values to update."
 msgstr "Il modello non ha nessun valore non unico da aggiornare."
 
@@ -1699,9 +1708,9 @@ msgstr "Ipossibile impostare l'opzione SQLite empty_result_callbacks"
 #: ../providers/sqlite/gda-sqlite-provider.c:379
 #: ../providers/sqlite/gda-sqlite-provider.c:590
 #: ../providers/sqlite/gda-sqlite-provider.c:755
-#: ../providers/sqlite/gda-sqlite-recordset.c:157
-#: ../providers/sqlite/gda-sqlite-recordset.c:196
-#: ../providers/sqlite/gda-sqlite-recordset.c:237
+#: ../providers/sqlite/gda-sqlite-recordset.c:158
+#: ../providers/sqlite/gda-sqlite-recordset.c:200
+#: ../providers/sqlite/gda-sqlite-recordset.c:241
 msgid "Invalid SQLite handle"
 msgstr "Handle SQLite non valido"
 
