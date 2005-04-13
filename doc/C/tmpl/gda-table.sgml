@@ -72,9 +72,9 @@ An in-memory representation of a database table
 </para>
 
 @table: 
-@fa: 
-<!-- # Unused Parameters # -->
 @column: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_table_add_data_from_model ##### -->

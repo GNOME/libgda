@@ -27,7 +27,7 @@ IGNORE_HFILES= config.h acconfig.h gda-intl.h gda-marshal.h
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
-AM_CPPFLAGS = -I$(top_srcdir) \
+INCLUDES = -I$(top_srcdir) \
         -I$(top_builddir) \
         $(LIBGDA_CFLAGS)
 GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.la \

@@ -1,5 +1,5 @@
 /* GDA Library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -54,7 +54,8 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	/* Threading support if possible */
 #ifdef G_THREADS_ENABLED
 #ifndef G_THREADS_IMPL_NONE
-	g_thread_init (NULL);
+	if (! g_thread_supported ())
+		g_thread_init (NULL);
 #endif
 #endif
 	g_type_init ();

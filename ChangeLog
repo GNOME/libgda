@@ -1,3 +1,12 @@
+2005-04-13  Vivien Malerba <malerba@gnome-db.org>
+	
+	* applied patch from Jorge Bernal to fix bug #153292
+	* libgda/providers/sqlite/gda-sqlite-provider.c: implemented some missing schemas
+	* libgda/providers/sqlite/sqlite-src/*: imported SQLite sources version 3.2.1, required
+	  by the SQLite provider (inner functions used).
+	* configure.in: don't search for SQLite as it's embedded within libgda, always build it.
+	* libgda/gda-init.c: test if glib threads are mot yet enabled before calling g_thread_init().
+
 2005-04-11  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/mysql/utils.c
@@ -13,6 +22,7 @@
 	local one to prevent undefined symbol error aborts.	
 
 2005-04-10  Vivien Malerba <malerba@gnome-db.org>
+	
 	* libgda/gda-data-model.[ch]: added gda_data_model_dump()
 	* libgda/gda-init.c: added a call to g_thread_init()
 	* libgda/gda-threader.[ch]: new GdaThreader object which allows to run a function
@@ -23,6 +33,7 @@
         * configure.in: Added "rw" to ALL_LINGUAS.
 
 2005-03-25  Vivien Malerba <malerba@gnome-db.org>
+	
 	* libgda/gda-data-model.[ch]: grouped the gda_data_model_to_comma_separated() and 
 	  gda_data_model_to_tab_separated() into a single gda_data_model_to_text_separated() method
 	* libgda/gda-data-model.[ch]: Added an optionnal argument to the export functions to provide

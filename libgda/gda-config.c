@@ -1372,7 +1372,12 @@ gda_config_get_data_source_list (void)
 		GdaDataSourceInfo *info;
 
 		info = g_new0 (GdaDataSourceInfo, 1);
-		info->name = g_strdup ((const gchar *) l->data);
+		if (!strncmp (l->data, "Default", 7)) 
+			/* This is the default data source name */
+			info->name = g_strdup (_("Default"));
+		else 
+			info->name = g_strdup ((const gchar *) l->data);
+
 
 		/* get the provider */
 		tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
@@ -1398,7 +1403,7 @@ gda_config_get_data_source_list (void)
 		tmp = g_strdup_printf ("%s/%s/Password", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
 		info->password = gda_config_get_string (tmp);
 		g_free (tmp);
-
+				
 		list = g_list_append (list, info);
 	}
 

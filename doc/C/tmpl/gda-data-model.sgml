@@ -394,14 +394,30 @@ Basic data model class
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_to_text_separated ##### -->
+<para>
+
+</para>
+
+@model: 
+@cols: 
+@nb_cols: 
+@sep: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_to_xml ##### -->
 <para>
 
 </para>
 
 @model: 
-@standalone: 
+@cols: 
+@nb_cols: 
+@name: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@standalone: 
 
 
 <!-- ##### FUNCTION gda_data_model_to_xml_node ##### -->
@@ -410,6 +426,8 @@ Basic data model class
 </para>
 
 @model: 
+@cols: 
+@nb_cols: 
 @name: 
 @Returns: 
 
@@ -468,5 +486,14 @@ Basic data model class
 @Returns: 
 <!-- # Unused Parameters # -->
 @recset: 
+
+
+<!-- ##### FUNCTION gda_data_model_dump ##### -->
+<para>
+
+</para>
+
+@model: 
+@to_stream: 
 
 

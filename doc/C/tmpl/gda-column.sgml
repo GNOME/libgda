@@ -39,8 +39,8 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@gdacolumn: the object which received the signal.
-@arg1: 
+@: 
+@: 
 
 <!-- ##### FUNCTION gda_column_get_type ##### -->
 <para>
