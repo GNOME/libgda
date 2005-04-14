@@ -1,3 +1,10 @@
+2005-04-14  Murray Cumming <murrayc@murrayc.com>
+
+	* libgda/gda-xql-update.h: GdaXqlUpdate 
+	should contain an instance of the parent type 
+	(GdaXqlDml), not a pointer to one. This avoids 
+	glib warnings about the instance size.
+
 2005-04-13  Vivien Malerba <malerba@gnome-db.org>
 	
 	* applied patch from Jorge Bernal to fix bug #153292
