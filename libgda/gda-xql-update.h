@@ -42,7 +42,7 @@ typedef struct _GdaXqlUpdate GdaXqlUpdate;
 typedef struct _GdaXqlUpdateClass GdaXqlUpdateClass;
 
 struct _GdaXqlUpdate {
-	GdaXqlDml *xqldml;
+	GdaXqlDml xqldml;
 };
 
 
