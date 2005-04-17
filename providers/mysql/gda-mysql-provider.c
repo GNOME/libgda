@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998-2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -1340,6 +1340,89 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 }
 
 static GdaDataModel *
+get_mysql_views (GdaConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaMysqlRecordset *recset;
+	GdaDataModel *model;
+	gint rows, r;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* add the extra information */
+	model = gda_data_model_array_new (4);
+	gda_data_model_set_column_title (model, 0, _("Name"));
+	gda_data_model_set_column_title (model, 1, _("Owner"));
+	gda_data_model_set_column_title (model, 2, _("Comments"));
+	gda_data_model_set_column_title (model, 3, "SQL");
+
+	/* views are not yet supported in MySql => return an empty set */
+
+	return model;
+}
+
+static GdaDataModel *
+get_mysql_procedures (GdaConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaDataModel *model;
+	gint rows, r;
+	gint i;
+
+	struct {
+		const gchar *name;
+		const gchar *id;
+		/*const gchar *owner; "" */
+		const gchar *comments;
+		const gchar *rettype;
+		gint         nb_args;
+		const gchar *argtypes;
+		/*const gchar *definition; NULL */
+	} procs[] = {
+		{ "ascii", "ascii", "", "smallint", 1, "text"},
+		{ "bin", "bin", "", "text", 1, "bigint"},
+		{ "bit_length", "bit_length", "", "int", 1, "text"},
+		{ "char", "char", "", "text", -1, "-"}
+	};
+
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* add the extra information */
+	model = gda_data_model_array_new (8);
+	gda_data_model_set_column_title (model, 0, _("Procedure"));
+	gda_data_model_set_column_title (model, 1, _("Id"));
+	gda_data_model_set_column_title (model, 2, _("Owner"));
+	gda_data_model_set_column_title (model, 3, _("Comments"));
+	gda_data_model_set_column_title (model, 4, _("Return type"));
+	gda_data_model_set_column_title (model, 5, _("Nb args"));
+	gda_data_model_set_column_title (model, 6, _("Args types"));
+	gda_data_model_set_column_title (model, 7, _("Definition"));
+
+	/* fill the recordset */
+	for (i = 0; i < sizeof (procs) / sizeof (procs[0]); i++) {
+		GList *value_list = NULL;
+
+		value_list = g_list_append (value_list, gda_value_new_string (procs[i].name));
+		value_list = g_list_append (value_list, gda_value_new_string (procs[i].id));
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+		value_list = g_list_append (value_list, gda_value_new_string (procs[i].comments));
+		value_list = g_list_append (value_list, gda_value_new_string (procs[i].rettype));
+		value_list = g_list_append (value_list, gda_value_new_integer (procs[i].nb_args));
+		value_list = g_list_append (value_list, gda_value_new_string (procs[i].argtypes));
+		value_list = g_list_append (value_list, gda_value_new_string (NULL));
+
+		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	return model;
+}
+
+
+static GdaDataModel *
 get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModelArray *recset;
@@ -1599,8 +1682,12 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 		return get_table_fields (cnc, params);
 	case GDA_CONNECTION_SCHEMA_TABLES :
 		return get_mysql_tables (cnc, params);
+	case GDA_CONNECTION_SCHEMA_VIEWS:
+		return get_mysql_views (cnc, params);
 	case GDA_CONNECTION_SCHEMA_TYPES :
 		return get_mysql_types (cnc, params);
+	case GDA_CONNECTION_SCHEMA_PROCEDURES:
+		return get_mysql_procedures (cnc, params);
 	default : break;
 	}
 

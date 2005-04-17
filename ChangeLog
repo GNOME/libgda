@@ -1,3 +1,10 @@
+2005-04-17  Vivien Malerba <malerba@gnome-db.org>
+	
+	* providers/postgres/gda-postgres-provider.c: Improved fields schema
+	* providers/mysql/gda-mysql-provider.c: Added a procedures (functions) schema
+	  (needs more work) and a views schema (empty for now as MySQL does not support
+	  views)
+
 2005-04-14  Murray Cumming <murrayc@murrayc.com>
 
 	* libgda/gda-xql-update.h: GdaXqlUpdate 

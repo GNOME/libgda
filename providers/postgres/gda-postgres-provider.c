@@ -2118,7 +2118,7 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 			tblname, tblname);
 	else 
 		query = g_strdup_printf (
-			"SELECT a.attname, t.typname, a.atttypmod, t.typlen, a.attnotnull, d.adsrc, a.attnum "
+			"SELECT a.attname, t.typname, a.atttypmod, t.typlen, a.attnotnull, pg_get_expr (d.adbin, c.oid), a.attnum "
 			"FROM pg_catalog.pg_class c "
 			"LEFT JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid) "
 			"FULL JOIN pg_catalog.pg_attrdef d ON (a.attnum = d.adnum AND d.adrelid=c.oid) "
