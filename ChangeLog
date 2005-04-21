@@ -1,3 +1,9 @@
+2005-04-21  Magnus Bergman <magnus.bergman@observer.net>
+
+	Fixes #301480
+
+	* configure.in: make it work with Oracle 10's headers.
+
 2005-04-15  Murray Cumming <murrayc@murrayc.com>
 
 	* libgda/gda-client.h: Removed a trailing comma on 

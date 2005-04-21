@@ -647,7 +647,7 @@ fi
 if test $try_oracle = true
 then
 	AC_MSG_CHECKING(for ORACLE installation)
-	for d in $dir $ORACLE_HOME /opt/oracle
+	for d in $dir $ORACLE_HOME /opt/oracle /usr
 	do
 		if test -f $d/$lib/libclntsh.so
 		then
@@ -661,8 +661,8 @@ then
 		AC_MSG_WARN(ORACLE backend not used)
 	else
 		AC_DEFINE(HAVE_ORACLE, 1, [Have ORACLE])
-		ORACLE_CFLAGS="-I${ORACLE_HOME}/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I${ORACLE_HOME}/network/public"
-		ORACLE_LIBS="-L${ORACLE_HOME}/lib -lm -ldl -lclntsh"
+		ORACLE_CFLAGS=" -I$oracledir/include/oracle/client -I$oracledir/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$oracledir/network/public"
+		ORACLE_LIBS="-L$oracledir/lib -lm -ldl -lclntsh"
 	fi
 fi
 
