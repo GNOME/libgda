@@ -1,5 +1,13 @@
 2005-04-21  Magnus Bergman <magnus.bergman@observer.net>
 
+	Fixes #301485
+
+	* providers/oracle/gda-oracle-provider.c
+	(gda_oracle_provider_supports, gda_oracle_provider_execute_command):
+	made it compile with GCC 4.
+
+2005-04-21  Magnus Bergman <magnus.bergman@observer.net>
+
 	Fixes #301480
 
 	* configure.in: make it work with Oracle 10's headers.
