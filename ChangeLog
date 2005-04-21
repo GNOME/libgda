@@ -1,3 +1,8 @@
+2005-04-22  Dru <andru@treshna.com>
+
+	* libgda/gda-config.h: Fixed // problem with header file where it
+	wasnt ansi C complient and causing build errors.
+
 2005-04-21  Magnus Bergman <magnus.bergman@observer.net>
 
 	Fixes #301485
@@ -14,7 +19,7 @@
 
 2005-04-17  Alan Knowles <alan@akbkhome.com> 
 
-        * providers/mysql/gda-mysql-provider.c: 
+	* providers/mysql/gda-mysql-provider.c: 
 	* providers/mysql/gda-mysql-provider.c:
 	* providers/mysql/gda-mysql-provider.h:
 	* providers/mysql/gda-mysql-recordset.c:
