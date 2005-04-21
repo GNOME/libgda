@@ -826,6 +826,7 @@ gda_oracle_provider_execute_command (GdaServerProvider *provider,
 		g_free (str);
 		break;
 	default:
+		break;
 	}
 	/* don't know what to do here yet. */
 	return reclist;
@@ -1045,6 +1046,7 @@ gda_oracle_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_VIEWS :
 		return TRUE;
 	default :
+		break;
 	}
 
 	return FALSE;
