@@ -45,7 +45,6 @@ G_BEGIN_DECLS
 GdaError     *gda_mysql_make_error (MYSQL *handle);
 GdaValueType  gda_mysql_type_to_gda (enum enum_field_types mysql_type, gboolean is_unsigned);
 gchar        *gda_mysql_type_from_gda (const GdaValueType type);
-gchar        *gda_mysql_value_to_sql_string (GdaValue *value);
 
 G_END_DECLS
 

@@ -50,7 +50,9 @@ struct _GdaMysqlProviderClass {
 
 GType              gda_mysql_provider_get_type (void);
 GdaServerProvider *gda_mysql_provider_new (void);
-
+gchar *gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider,
+						  GdaConnection *cnc,
+						  GdaValue *from);
 G_END_DECLS
 
 #endif

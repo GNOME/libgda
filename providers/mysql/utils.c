@@ -160,34 +160,3 @@ gda_mysql_type_from_gda (const GdaValueType type)
 	return g_strdup_printf ("text");
 }
 
-gchar * 	 
-gda_mysql_value_to_sql_string_local (GdaValue *value) 	 
-{ 	 
-	gchar *val_str;
-	gchar *ret;
-
-	g_return_val_if_fail (value != NULL, NULL);
-
-	val_str = gda_value_stringify (value);
-	if (!val_str)
-		return NULL;
-
-	switch (value->type) {
-	case GDA_VALUE_TYPE_BIGINT :
-	case GDA_VALUE_TYPE_DOUBLE :
-	case GDA_VALUE_TYPE_INTEGER :
-	case GDA_VALUE_TYPE_NUMERIC :
-	case GDA_VALUE_TYPE_SINGLE :
-	case GDA_VALUE_TYPE_SMALLINT :
-	case GDA_VALUE_TYPE_TINYINT :
-		ret = g_strdup (val_str);
-		break;
-	default :
-		ret = g_strdup_printf ("\"%s\"", val_str);
-	}
-
-	g_free (val_str);
-
-	return ret;
-}
-

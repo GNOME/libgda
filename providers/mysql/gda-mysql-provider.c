@@ -118,10 +118,10 @@ static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaConnectionSchema schema,
 						    GdaParameterList *params);
-
-static gchar *gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider,
+gchar *gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaValue *from);
+
 
 static GObjectClass *parent_class = NULL;
 
