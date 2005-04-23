@@ -1432,45 +1432,54 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		const gchar *owner;
 		const gchar *comments;
 		GdaValueType type;
+		const gchar *synonyms;
 	} types[] = {
-		{ "blob", "", "Binary blob", GDA_VALUE_TYPE_BINARY },
-		{ "bigint", "", "Big integer", GDA_VALUE_TYPE_BIGINT },
-		{ "char", "", "Char", GDA_VALUE_TYPE_STRING },
-		{ "date", "", "Date", GDA_VALUE_TYPE_DATE },
-		{ "datetime", "", "Date and time", GDA_VALUE_TYPE_TIMESTAMP },
-		{ "decimal", "", "Decimal number", GDA_VALUE_TYPE_DOUBLE },
-		{ "double", "", "Double precision number", GDA_VALUE_TYPE_DOUBLE },
-		{ "enum", "", "Enumeration", GDA_VALUE_TYPE_STRING },
-		{ "float", "", "Single precision number", GDA_VALUE_TYPE_SINGLE },
-		{ "int", "", "Integer", GDA_VALUE_TYPE_INTEGER },
-		{ "integer", "", "Integer", GDA_VALUE_TYPE_INTEGER },		
-		{ "long", "", "Long integer", GDA_VALUE_TYPE_INTEGER },
-		{ "longblob", "", "Long blob", GDA_VALUE_TYPE_BINARY },
-		{ "longtext", "", "Long text", GDA_VALUE_TYPE_STRING },
-		{ "mediumint", "", "Medium integer", GDA_VALUE_TYPE_INTEGER },
-		{ "mediumblob", "", "Medium blob", GDA_VALUE_TYPE_BINARY },
-		{ "mediumtext", "", "Medium text", GDA_VALUE_TYPE_STRING },				
-		{ "set", "", "Set", GDA_VALUE_TYPE_STRING },
-		{ "smallint", "", "Small integer", GDA_VALUE_TYPE_INTEGER },
-		{ "text", "", "Text", GDA_VALUE_TYPE_STRING },
-		{ "tinyint", "", "Tiny integer", GDA_VALUE_TYPE_INTEGER }, /* really a boolean */
-		{ "tinyblob", "", "Tiny blob", GDA_VALUE_TYPE_BINARY },
-		{ "tinytext", "", "Tiny text", GDA_VALUE_TYPE_STRING },		
-		{ "time", "", "Time", GDA_VALUE_TYPE_TIME },
-		{ "timestamp", "", "Time stamp", GDA_VALUE_TYPE_TIMESTAMP },
-		{ "varchar", "", "Variable Length Char", GDA_VALUE_TYPE_STRING },
-		{ "year", "", "Year", GDA_VALUE_TYPE_INTEGER }
+		{ "bool", "", "Boolean type", GDA_VALUE_TYPE_BINARY, "boolean" },
+		{ "blob", "", "Binary blob (up to 65535 bytes)", GDA_VALUE_TYPE_BINARY, NULL },
+		{ "bigint", "", "Big integer, range is -9223372036854775808 to 9223372036854775807", GDA_VALUE_TYPE_BIGINT, NULL  },
+		{ "bigint unsigned", "", "Big unsigned integer, range is 0 to 18446744073709551615", GDA_VALUE_TYPE_BIGINT, NULL  },
+		{ "char", "", "Char", GDA_VALUE_TYPE_STRING, "binary"  },
+		{ "date", "", "Date", GDA_VALUE_TYPE_DATE, NULL  },
+		{ "datetime", "", "Date and time", GDA_VALUE_TYPE_TIMESTAMP, NULL  },
+		{ "decimal", "", "Decimal number", GDA_VALUE_TYPE_DOUBLE, "dec,numeric,fixed"  },
+		{ "double", "", "Double precision number", GDA_VALUE_TYPE_DOUBLE, "double precision,real"  },
+		{ "double unsigned", "", "Unsigned double precision number", GDA_VALUE_TYPE_DOUBLE, "double precision unsigned,real unsigned"  },
+		{ "enum", "", "Enumeration: a string object that can have only one value, chosen from the list of values 'value1', 'value2', ..., NULL or the special '' error value. An ENUM column can have a maximum of 65,535 distinct values", GDA_VALUE_TYPE_STRING, NULL  },
+		{ "float", "", "Floating point number", GDA_VALUE_TYPE_SINGLE , NULL },
+		{ "float unsigned", "", "Unsigned floating point number", GDA_VALUE_TYPE_SINGLE , NULL },
+		{ "int", "", "Integer, range is -2147483648 to 2147483647", GDA_VALUE_TYPE_INTEGER, "integer"  },
+		{ "int unsigned", "", "Unsigned integer, range is 0 to 4294967295", GDA_VALUE_TYPE_UINTEGER, "integer unsigned"  },
+		{ "long", "", "Long integer", GDA_VALUE_TYPE_INTEGER, NULL  },
+		{ "longblob", "", "Long blob (up to 4Gb)", GDA_VALUE_TYPE_BINARY, NULL  },
+		{ "longtext", "", "Long text (up to 4Gb characters)", GDA_VALUE_TYPE_STRING, NULL  },
+		{ "mediumint", "", "Medium integer, range is -8388608 to 8388607", GDA_VALUE_TYPE_INTEGER, NULL  },
+		{ "mediumint unsigned", "", "Medium unsigned integer, range is 0 to 16777215", GDA_VALUE_TYPE_INTEGER, NULL  },
+		{ "mediumblob", "", "Medium blob (up to 16777215 bytes)", GDA_VALUE_TYPE_BINARY, NULL  },
+		{ "mediumtext", "", "Medium text (up to 16777215 characters)", GDA_VALUE_TYPE_STRING, NULL  },				
+		{ "set", "", "Set: a string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET column can have a maximum of 64 members", GDA_VALUE_TYPE_STRING, NULL  },
+		{ "smallint", "", "Small integer, range is -32768 to 32767", GDA_VALUE_TYPE_SMALLINT, NULL  },
+		{ "smallint unsigned", "", "Small unsigned integer, range is 0 to 65535", GDA_VALUE_TYPE_SMALLINT, NULL  },
+		{ "text", "", "Text (up to 65535 characters)", GDA_VALUE_TYPE_STRING, NULL  },
+		{ "tinyint", "", "Tiny integer, range is -128 to 127", GDA_VALUE_TYPE_TINYINT, NULL  },
+		{ "tinyint unsigned", "", "Tiny unsigned integer, range is 0 to 255", GDA_VALUE_TYPE_TINYUINT, NULL  },
+		{ "tinyblob", "", "Tiny blob (up to 255 bytes)", GDA_VALUE_TYPE_BINARY, NULL  },
+		{ "tinytext", "", "Tiny text (up to 255 characters)", GDA_VALUE_TYPE_STRING, NULL  },		
+		{ "time", "", "Time", GDA_VALUE_TYPE_TIME, NULL  },
+		{ "timestamp", "", "Time stamp", GDA_VALUE_TYPE_TIMESTAMP, NULL  },
+		{ "varchar", "", "Variable Length Char", GDA_VALUE_TYPE_STRING, "varbinary"  },
+		{ "year", "", "Year", GDA_VALUE_TYPE_INTEGER, NULL  }
 	};
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (4);
+	recset = (GdaDataModelArray *) gda_data_model_array_new (5);
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
-
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Synonyms"));
+	
 	/* fill the recordset */
 	for (i = 0; i < sizeof (types) / sizeof (types[0]); i++) {
 		GList *value_list = NULL;
@@ -1479,6 +1488,7 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].owner));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].comments));
 		value_list = g_list_append (value_list, gda_value_new_type (types[i].type));
+		value_list = g_list_append (value_list, gda_value_new_string (types[i].synonyms));
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 

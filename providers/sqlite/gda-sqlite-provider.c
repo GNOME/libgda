@@ -684,6 +684,7 @@ add_type_row (GdaDataModelArray *recset, const gchar *name,
 	value_list = g_list_append (value_list, gda_value_new_string (owner));
 	value_list = g_list_append (value_list, gda_value_new_string (comments));
 	value_list = g_list_append (value_list, gda_value_new_type (type));
+	value_list = g_list_append (value_list, gda_value_new_string (NULL));
 
 	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
@@ -989,11 +990,12 @@ get_types (GdaConnection *cnc, GdaParameterList *params)
 	g_assert ((scnc->connection->flags & SQLITE_Initialized) || scnc->connection->init.busy);
 
 	/* create the recordset */
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (5));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Synonyms"));
 
 	/* basic data types */
 	add_type_row (recset, "integer", "system", "Signed integer, stored in 1, 2, 3, 4, 6, or 8 bytes depending on the magnitude of the value", GDA_VALUE_TYPE_INTEGER);

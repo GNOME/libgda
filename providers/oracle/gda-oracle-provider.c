@@ -1,9 +1,10 @@
 /* GDA Oracle provider
- * Copyright (C) 2000-2002 The GNOME Foundation.
+ * Copyright (C) 2000 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Tim Coleman <tim@timcoleman.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -2063,24 +2064,29 @@ get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionS
 
 typedef struct
 {
-    const gchar  *name;
-    GdaValueType type;
+	const gchar  *name;
+	GdaValueType  type;
+	const gchar  *synonyms;
 } ora_native_type;
 
 static const ora_native_type ora_type_tab[] =
 {
-	{ "BFILE",     GDA_VALUE_TYPE_BINARY    },
-	{ "BLOB",      GDA_VALUE_TYPE_BINARY    },
-	{ "CHAR",      GDA_VALUE_TYPE_STRING    },
-	{ "CLOB",      GDA_VALUE_TYPE_STRING    },
-	{ "DATE",      GDA_VALUE_TYPE_TIMESTAMP },
-	{ "NUMBER",    GDA_VALUE_TYPE_NUMERIC   },
-	{ "LONG",      GDA_VALUE_TYPE_STRING    },
-	{ "LONG RAW",  GDA_VALUE_TYPE_BINARY    },
-	{ "RAW",       GDA_VALUE_TYPE_BINARY    },
-	{ "ROWID",     GDA_VALUE_TYPE_STRING    },
-	{ "TIMESTAMP", GDA_VALUE_TYPE_TIMESTAMP },
-	{ "VARCHAR2",  GDA_VALUE_TYPE_STRING    }
+	{ "BFILE",     GDA_VALUE_TYPE_BINARY, NULL   },
+	{ "BLOB",      GDA_VALUE_TYPE_BINARY, NULL   },
+	{ "CHAR",      GDA_VALUE_TYPE_STRING, "CHARACTER"   },
+	{ "NCHAR",     GDA_VALUE_TYPE_STRING, NULL   },
+	{ "CLOB",      GDA_VALUE_TYPE_STRING, NULL   },
+	{ "NCLOB",     GDA_VALUE_TYPE_STRING, NULL   },
+	{ "DATE",      GDA_VALUE_TYPE_TIMESTAMP, NULL},
+	{ "NUMBER",    GDA_VALUE_TYPE_NUMERIC, "INTEGER,SMALLINT,INT,DEC,DECIMAL,NUMERIC,DOUBLE PRECISION,FLOAT,REAL"  },
+	{ "LONG",      GDA_VALUE_TYPE_STRING, NULL   },
+	{ "LONG RAW",  GDA_VALUE_TYPE_BINARY, NULL   },
+	{ "RAW",       GDA_VALUE_TYPE_BINARY, NULL   },
+	{ "ROWID",     GDA_VALUE_TYPE_STRING, NULL   },
+	{ "UROWID",    GDA_VALUE_TYPE_STRING, NULL   },
+	{ "TIMESTAMP", GDA_VALUE_TYPE_TIMESTAMP, NULL},
+	{ "VARCHAR2",  GDA_VALUE_TYPE_STRING, "VARCHAR,STRING"   },
+	{ "NVARCHAR2", GDA_VALUE_TYPE_STRING, NULL },
 };
 static const ora_native_type *
 ora_type_end = ora_type_tab+sizeof(ora_type_tab)/sizeof(ora_native_type);
@@ -2093,10 +2099,13 @@ get_oracle_types (GdaConnection *cnc, GdaParameterList *params)
     GList             *value_list;
     
     /* create the recordset */
-    recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+    recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (5));
     gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
     gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
-    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
+    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));    
+    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
+    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Synonyms"));
+
     /* fill the recordset */
     for (otp = ora_type_tab; otp < ora_type_end; otp++)
     {
@@ -2105,6 +2114,7 @@ get_oracle_types (GdaConnection *cnc, GdaParameterList *params)
         value_list = g_list_append (value_list, gda_value_new_string ("SYS"));
         value_list = g_list_append (value_list, gda_value_new_string ("NULL"));
         value_list = g_list_append (value_list, gda_value_new_type (otp->type));
+        value_list = g_list_append (value_list, gda_value_new_string (otp->synonyms));
 
 	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
         g_list_foreach (value_list, (GFunc) gda_value_free, NULL);

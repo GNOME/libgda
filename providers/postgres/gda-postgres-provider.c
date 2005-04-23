@@ -1571,26 +1571,48 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 	GdaDataModelArray *recset;
 	GdaPostgresConnectionData *priv_data;
 	gint i;
+	static GHashTable *synonyms = NULL;
+
+	if (!synonyms) {
+		synonyms = g_hash_table_new (g_str_hash, g_str_equal);
+
+		g_hash_table_insert (synonyms, "int4", "int,integer");
+		g_hash_table_insert (synonyms, "int8", "bigint");
+		g_hash_table_insert (synonyms, "serial8", "bigserial");
+		g_hash_table_insert (synonyms, "varbit", "bit varying");
+		g_hash_table_insert (synonyms, "bool", "boolean");
+		g_hash_table_insert (synonyms, "varchar", "character varying");
+		g_hash_table_insert (synonyms, "char", "character");
+		g_hash_table_insert (synonyms, "float8", "double precision");
+		g_hash_table_insert (synonyms, "numeric", "decimal");
+		g_hash_table_insert (synonyms, "float4", "real");
+		g_hash_table_insert (synonyms, "int2", "smallint");
+		g_hash_table_insert (synonyms, "serial4", "serial");
+	}
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (5));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Synonyms"));
 
 	/* fill the recordset */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
 	for (i = 0; i < priv_data->ntypes; i++) {
 		GList *value_list = NULL;
+		gchar *syn;
 
 		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].name));
 		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].owner));
 		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].comments));
 		value_list = g_list_append (value_list, gda_value_new_type (priv_data->type_data[i].type));
+		syn = g_hash_table_lookup (synonyms, priv_data->type_data[i].name);
+		value_list = g_list_append (value_list, gda_value_new_string (syn));
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 

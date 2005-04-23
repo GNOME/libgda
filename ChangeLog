@@ -1,3 +1,13 @@
+2005-04-23 Vivien Malerba <malerba@gnome-db.org>
+	
+	* libgda/gda-data-model.[ch]: added gda_data_model_dump_as_string() and fixed
+	  gda_data_model_dump()
+	* providers/mysql/gda-mysql-provider.c: improved data types schema, and added an
+	  extra column for data type synonyms
+	* providers/oracle/gda-oracle-provider.c: idem
+	* providers/postgres/gda-postgres-provider.c: idem
+	* providers/sqlite/gda-sqlite-provider.c: added an extra column for data type synonyms
+
 2005-04-22  Dru <andru@treshna.com>
 
 	* libgda/gda-config.h: Fixed // problem with header file where it

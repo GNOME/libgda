@@ -2343,7 +2343,7 @@
 		<entry>Types</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_TYPES</parameter></entry>
 		<entry>"name" (name of type, optional)</entry>
-		<entry>name, owner, comments, GDA type</entry>
+		<entry>name, owner, comments, GDA type, synonyms (comma separated)</entry>
 	      </row>
 	    </tbody>
 	  </tgroup>

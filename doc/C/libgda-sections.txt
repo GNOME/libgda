@@ -172,6 +172,7 @@ gda_data_model_set_command_text
 gda_data_model_get_command_type
 gda_data_model_set_command_type
 gda_data_model_dump
+gda_data_model_dump_as_string
 <SUBSECTION Standard>
 GDA_DATA_MODEL
 GDA_IS_DATA_MODEL

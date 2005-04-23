@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -1307,9 +1307,32 @@ gda_data_model_set_command_type (GdaDataModel *model, GdaCommandType type)
 void
 gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 {
+	gchar *str;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	g_return_if_fail (to_stream);
+
+	str = gda_data_model_dump_as_string (model);
+	g_fprintf (to_stream, "%s", str);
+	g_free (str);
+}
+
+/**
+ * gda_data_model_dump_as_string
+ * @model: a #GdaDataModel.
+ *
+ * Dumps a textual representation of the @model into a new string
+ *
+ * Returns: a new string.
+ */
+gchar *
+gda_data_model_dump_as_string (GdaDataModel *model)
+{
+	GString *string;
 	gchar *offstr, *str;
 	gint n_cols, n_rows;
 	gint *cols_size;
+	gboolean *cols_is_num;
 	gchar *sep_col  = " | ";
 	gchar *sep_row  = "-+-";
 	gchar sep_fill = '-';
@@ -1318,7 +1341,7 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 
 	gint offset = 0;
 
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));	
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
         /* string for the offset */
         offstr = g_new0 (gchar, offset+1);
@@ -1328,10 +1351,30 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 	n_cols = gda_data_model_get_n_columns (model);
 	n_rows = gda_data_model_get_n_rows (model);
 	cols_size = g_new0 (gint, n_cols);
+	cols_is_num = g_new0 (gboolean, n_cols);
 	
 	for (i = 0; i < n_cols; i++) {
+		GdaColumn *gdacol;
+		GdaValueType coltype;
+
 		str = gda_data_model_get_column_title (model, i);
-		cols_size [i] = strlen (str);
+		cols_size [i] = g_utf8_strlen (str, -1);
+
+		gdacol = gda_data_model_describe_column (model, i);
+		coltype = gda_column_get_gdatype (gdacol);
+		if ((coltype == GDA_VALUE_TYPE_BIGINT) ||
+		    (coltype == GDA_VALUE_TYPE_BIGUINT) ||
+		    (coltype == GDA_VALUE_TYPE_INTEGER) ||
+		    (coltype == GDA_VALUE_TYPE_NUMERIC) ||
+		    (coltype == GDA_VALUE_TYPE_SINGLE) ||
+		    (coltype == GDA_VALUE_TYPE_SMALLINT) ||
+		    (coltype == GDA_VALUE_TYPE_SMALLUINT) ||
+		    (coltype == GDA_VALUE_TYPE_TINYINT) ||
+		    (coltype == GDA_VALUE_TYPE_TINYUINT) ||
+		    (coltype == GDA_VALUE_TYPE_UINTEGER))
+			cols_is_num [i] = TRUE;
+		else
+			cols_is_num [i] = FALSE;
 	}
 
 	/* ... and using column data */
@@ -1339,28 +1382,33 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 		for (i = 0; i < n_cols; i++) {
 			value = gda_data_model_get_value_at (model, i, j);
 			str = value ? gda_value_stringify (value) : g_strdup ("_null_");
-			cols_size [i] = MAX (cols_size [i], strlen (str));
+			cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
 			g_free (str);
 		}
 	}
 	
 	/* actual dumping of the contents: column titles...*/
+	string = g_string_new ("");
 	for (i = 0; i < n_cols; i++) {
+		gint j;
 		str = gda_data_model_get_column_title (model, i);
 		if (i != 0)
-			g_print ("%s", sep_col);
-		g_print ("%*s", cols_size [i], str);
+			g_string_append_printf (string, "%s", sep_col);
+
+		g_string_append_printf (string, "%s", str);
+		for (j = 0; j < (cols_size [i] - g_utf8_strlen (str, -1)); j++)
+			g_string_append_c (string, ' ');
 	}
-	g_print ("\n");
+	g_string_append_c (string, '\n');
 		
 	/* ... separation line ... */
 	for (i = 0; i < n_cols; i++) {
 		if (i != 0)
-			g_print ("%s", sep_row);
+			g_string_append_printf (string, "%s", sep_row);
 		for (j = 0; j < cols_size [i]; j++)
-			g_print ("%c", sep_fill);
+			g_string_append_c (string, sep_fill);
 	}
-	g_print ("\n");
+	g_string_append_c (string, '\n');
 
 	/* ... and data */
 	for (j = 0; j < n_rows; j++) {
@@ -1368,13 +1416,25 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 			value = gda_data_model_get_value_at (model, i, j);
 			str = value ? gda_value_stringify (value) : g_strdup ("_null_");
 			if (i != 0)
-				g_print ("%s", sep_col);
-			g_print ("%*s", cols_size [i], str);
+				g_string_append_printf (string, "%s", sep_col);
+			if (cols_is_num [i])
+				g_string_append_printf (string, "%*s", cols_size [i], str);
+			else {
+				gint j;
+				g_string_append_printf (string, "%s", str);
+				for (j = 0; j < (cols_size [i] - g_utf8_strlen (str, -1)); j++)
+					g_string_append_c (string, ' ');
+			}
 			g_free (str);
 		}
-		g_print ("\n");
+		g_string_append_c (string, '\n');
 	}
 	g_free (cols_size);
+	g_free (cols_is_num);
 
 	g_free (offstr);
+	
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
 }

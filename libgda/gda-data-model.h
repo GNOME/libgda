@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -149,6 +149,7 @@ GdaCommandType                gda_data_model_get_command_type       (GdaDataMode
 gboolean                      gda_data_model_set_command_type       (GdaDataModel *model, GdaCommandType type);
 
 void                          gda_data_model_dump                   (GdaDataModel *model, FILE *to_stream);
+gchar                        *gda_data_model_dump_as_string         (GdaDataModel *model);
 
 G_END_DECLS
 
