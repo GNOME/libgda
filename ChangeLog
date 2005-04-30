@@ -1,3 +1,9 @@
+2005-04-30  Jean Bréfort <jean.brefort@ac-dijon.fr>
+
+	Fixes #302158
+
+	* configure.in: fixed MySQL detection.
+		
 2005-04-21  Magnus Bergman <magnus.bergman@observer.net>
 
 	Fixes #301485
