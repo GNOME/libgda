@@ -575,6 +575,9 @@ gda_column_set_unique_key (GdaColumn *column, gboolean uk)
  * gda_column_get_references
  * @column: a #GdaColumn.
  *
+ * Reference is returned in tablename.fieldname format. Do not free
+ * this variable, it is used internally within GdaColumn.
+ *
  * Returns: @column's references.
  */
 const gchar *
