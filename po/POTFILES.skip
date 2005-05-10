@@ -1,1 +1,3 @@
+providers/sqlite/sqlite-src/os_common.h
+providers/sqlite/sqlite-src/vdbe.c
 providers/sybase/main.c
