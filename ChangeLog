@@ -1,3 +1,8 @@
+2005-05-13  Mike Kestner <mkestner@ximian.com>
+
+	* libgda/gda-export.c (gda_export_class_init): fixed typo in
+	"cancelled" signal creation.
+
 2005-05-03  Dru <andru@treshna.com>
 
 	* libgda/gda-column.c: added some comments to references function.

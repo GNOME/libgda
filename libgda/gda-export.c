@@ -213,10 +213,10 @@ gda_export_class_init (GdaExportClass *klass)
 			      G_TYPE_NONE, 2,
 			      G_TYPE_INT, G_TYPE_STRING);
 	gda_export_signals[CANCELLED] =
-		g_signal_new ("finished",
+		g_signal_new ("cancelled",
 				G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (GdaExportClass, finished),
+			      G_STRUCT_OFFSET (GdaExportClass, cancelled),
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
