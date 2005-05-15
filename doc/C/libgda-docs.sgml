@@ -2316,7 +2316,7 @@
 		<entry>Table (or view) fields</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_FIELDS</parameter></entry>
 		<entry>"name" (name of table (or view), required)</entry>
-		<entry>name, type, size, scale, not null?, primary key?, unique index?, references, default value</entry>
+		<entry>name, type, size, scale, not null?, primary key?, unique index?, references, default value, comma separated extra attributes (AUTO_INCREMENT)</entry>
 	      </row>
 	      <row>
 		<entry>Sequences</entry>
@@ -2329,7 +2329,7 @@
 		<entry><parameter>GDA_CONNECTION_SCHEMA_PROCEDURES</parameter></entry>
 		<entry>"name" (name of procedure, optional)</entry>
 		<entry>name, unique id, owner, comments, return type, number of arguments, arguments types 
-		       (arguments types in the order, separated by spaces) and SQL definition.
+		       (arguments types in the order, comma separated) and SQL definition.
 		       For the arguments where any type is accepted, '-' is returned as type.</entry>
 	      </row>
 	      <row>

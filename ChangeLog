@@ -1,3 +1,20 @@
+2005-05-14 Vivien Malerba <malerba@gnome-db.org>
+
+	* Changed the GDA_CONNECTION_SCHEMA_PROCEDURES schema: the list of argument types
+	  are now separated by commas and not by spaces as some data types contain
+	  spaces themselves.
+	* data/config: removed the default system-wide test XML database
+	* data/sales-test.db: new database file for a sample Sales test database
+	* gda-config.c: when the user directory ~/.libgda does not exist, then it's created
+	  and a data source is declared for the sample Sales test database
+	* gda-config.[ch]: s/gda_config_copy_data_source_info/gda_data_source_info_copy/
+	  and s/gda_config_free_data_source_info/gda_data_source_info_free/
+	* gda-config.c: use Gamin or FAM to monitor changes made to either the global
+	  config file or the local user config file and notify of changes when
+	  appropriate
+	* configure.in: added Gamin or FAM discovery and a --enable-debug option
+	* providers/sqlite/sqlite-src/*: updated to SQLite version 3.2.1
+
 2005-05-13  Mike Kestner <mkestner@ximian.com>
 
 	* libgda/gda-export.c (gda_export_class_init): fixed typo in

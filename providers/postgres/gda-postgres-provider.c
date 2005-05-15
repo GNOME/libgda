@@ -1427,7 +1427,7 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 					if (!gstr) 
 						gstr = g_string_new (thevalue);
 					else
-						g_string_append_printf (gstr, " %s", thevalue);
+						g_string_append_printf (gstr, ",%s", thevalue);
 				}
 					
 				ptr = strtok (NULL, " ");

@@ -1033,7 +1033,7 @@ get_types (GdaConnection *cnc, GdaParameterList *params)
 				for (j = 0; j < table->nCol; j++) {
 					Column *column = &(table->aCol[j]);
 					
-					if (! g_hash_table_lookup (names, column->zType)) {
+					if (column->zType && !g_hash_table_lookup (names, column->zType)) {
 						g_hash_table_insert (names, g_strdup (column->zType), GINT_TO_POINTER (1));
 						GdaValueType type;
 						switch (column->affinity) {
@@ -1180,7 +1180,7 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 					string = g_string_new ("");
 					for (j = 0; j < nbargs; j++) {
 						if (j > 0)
-							g_string_append_c (string, ' ');
+							g_string_append_c (string, ',');
 						g_string_append_c (string, '-');
 					}
 					value = gda_value_new_string (string->str);

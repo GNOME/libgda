@@ -1,8 +1,9 @@
 /* GDA - Test suite
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -175,7 +176,7 @@ open_connection (GdaClient *client,
 	if (!strcmp (dsn_info->provider, IBMDB2_PROVIDER_NAME))
 		do_ibmdb2_test (cnc);
 		
-	gda_config_free_data_source_info (dsn_info);
+	gda_data_source_info_free (dsn_info);
 
 	/* close the connection */
 	gda_connection_close (cnc);

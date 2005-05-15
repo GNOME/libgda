@@ -59,6 +59,7 @@ Access/Management of libgda configuration
 
 @path: 
 @new_value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_config_set_int ##### -->
@@ -68,6 +69,7 @@ Access/Management of libgda configuration
 
 @path: 
 @new_value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_config_set_float ##### -->
@@ -77,6 +79,7 @@ Access/Management of libgda configuration
 
 @path: 
 @new_value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_config_set_boolean ##### -->
@@ -86,6 +89,7 @@ Access/Management of libgda configuration
 
 @path: 
 @new_value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_config_remove_section ##### -->
@@ -271,6 +275,7 @@ Access/Management of libgda configuration
 @description: 
 @username: 
 @password: 
+@is_global: 
 
 <!-- ##### MACRO GDA_TYPE_DATA_SOURCE_INFO ##### -->
 <para>
@@ -287,7 +292,7 @@ Access/Management of libgda configuration
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_copy_data_source_info ##### -->
+<!-- ##### FUNCTION gda_data_source_info_copy ##### -->
 <para>
 
 </para>
@@ -296,7 +301,17 @@ Access/Management of libgda configuration
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_free_data_source_info ##### -->
+<!-- ##### FUNCTION gda_data_source_info_equal ##### -->
+<para>
+
+</para>
+
+@info1: 
+@info2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_source_info_free ##### -->
 <para>
 
 </para>
@@ -337,6 +352,14 @@ Access/Management of libgda configuration
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_config_can_modify_global_config ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_config_save_data_source ##### -->
 <para>
 
@@ -348,6 +371,8 @@ Access/Management of libgda configuration
 @description: 
 @username: 
 @password: 
+@is_global: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_config_save_data_source_info ##### -->
@@ -356,6 +381,7 @@ Access/Management of libgda configuration
 </para>
 
 @dsn_info: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_config_remove_data_source ##### -->

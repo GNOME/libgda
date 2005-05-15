@@ -1,10 +1,11 @@
 /* GDA library
- * Copyright (C) 1998-2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Bas Driessen <bas.driessen@xobas.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -266,7 +267,7 @@ gda_connection_new (GdaClient *client,
 	cnc->priv->password = real_password;
 	cnc->priv->options = options;
 
-	gda_config_free_data_source_info (dsn_info);
+	gda_data_source_info_free (dsn_info);
 
 	/* try to open the connection */
 	if (!gda_server_provider_open_connection (provider, cnc, params,

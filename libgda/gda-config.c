@@ -1,9 +1,10 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *      Vivien Malerba <maletba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -32,14 +33,16 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <sys/stat.h>
-
+#ifdef HAVE_FAM
+#include <fam.h>
+#include <glib/giochannel.h>
+#endif
 #ifdef LIBGDA_WIN32
 #include <io.h>
 #endif
 
 #define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
-#define LIBGDA_USER_CONFIG_FILE LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S \
-				"config"
+#define LIBGDA_USER_CONFIG_FILE LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S "config"
 
 /* FIXME: many functions are not thread safe! */
 
@@ -49,29 +52,69 @@ typedef struct {
 	gchar *value;
 	/* gchar *mtime; */
 	/* gchar *muser; */
-} gda_config_entry;
+} GdaConfigEntry;
 
 typedef struct {
-	gchar *path;
-	GList *entries;
-} gda_config_section;
+	gchar    *path;
+	GList    *entries; /* list of GdaConfigEntry */
+	gboolean  is_global;
+} GdaConfigSection;
 
 typedef struct {
-	GList *global;
-	GList *user;
-} gda_config_client;
+	GList *global; /* list of GdaConfigSection */
+	GList *user;   /* list of GdaConfigSection */
+} GdaConfigClient;
 
-static gda_config_client *config_client;
-static void do_notify (const gchar *path);
+static GdaConfigClient *config_client;
+static gboolean         can_modif_global_conf; /* TRUE if the current user can modify the system wide config file */
+static gboolean         lock_write_notify = FALSE;
+static void             do_notify (const gchar *path);
+
+/*
+ * FAM delcarations and static variables
+ */
+#ifdef HAVE_FAM
+static FAMConnection *fam_connection = NULL;
+static gint           fam_watch_id = 0;
+gboolean              lock_fam = FALSE;
+FAMRequest           *fam_conf_user = NULL;
+FAMRequest           *fam_conf_global = NULL;
+
+static gboolean       fam_callback (GIOChannel *source, GIOCondition condition, gpointer data);
+static void           fam_lock_notify ();
+static void           fam_unlock_notify ();
+#endif
 
 /*
  * Private functions
  */
+#ifdef debug
+static void
+dump_config_client ()
+{
+	g_print ("--- %p\n", config_client);
+	if (config_client) {
+		GList *list;
+
+		list = config_client->global;
+		while (list) {
+			g_print ("GLOBAL section: %p %s\n", list->data, ((GdaConfigSection*)(list->data))->path);
+			list = list->next;
+		}
+		list = config_client->user;
+		while (list) {
+			g_print ("USER   section: %p %s\n", list->data, ((GdaConfigSection*)(list->data))->path);
+			list = list->next;
+		}
+	}
+}
+#endif
+
 static GList *
 gda_config_read_entries (xmlNodePtr cur)
 {
 	GList *list;
-	gda_config_entry *entry;
+	GdaConfigEntry *entry;
 
 	g_return_val_if_fail (cur != NULL, NULL);
 
@@ -79,7 +122,7 @@ gda_config_read_entries (xmlNodePtr cur)
 	cur = cur->xmlChildrenNode;
 	while (cur != NULL){
 		if (!strcmp(cur->name, "entry")){
-			entry = g_new (gda_config_entry, 1);
+			entry = g_new0 (GdaConfigEntry, 1);
 			entry->name = xmlGetProp(cur, "name");
 			if (entry->name == NULL){
 				g_warning ("NULL 'name' in an entry");
@@ -98,23 +141,9 @@ gda_config_read_entries (xmlNodePtr cur)
 				entry->value = g_strdup ("");
 			}
 
-			/*
-			entry->muser =  xmlGetProp(cur, "muser");
-			if (entry->value == NULL){
-				g_warning ("NULL 'muser' in an entry");
-				entry->muser = g_strdup ("");
-			}
-			
-			entry->mtime =  xmlGetProp(cur, "mtime");
-			if (entry->value == NULL){
-				g_warning ("NULL 'mtime' in an entry");
-				entry->mtime = g_strdup ("");
-			}
-			*/
 			list = g_list_append (list, entry);
 		} else {
-			g_warning ("'entry' expected, got '%s'. Ignoring...", 
-				   cur->name);
+			g_warning ("'entry' expected, got '%s'. Ignoring...", cur->name);
 		}
 		cur = cur->next;
 	}
@@ -128,7 +157,7 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 	GList *list = NULL;
-	gda_config_section *section;
+	GdaConfigSection *section;
 	gint sp_len;
 	const gchar *section_path = GDA_CONFIG_SECTION_DATASOURCES;
 	xmlFreeFunc old_free;
@@ -186,12 +215,16 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 	}
 
 	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
-		if (strcmp(cur->name, "section")) {
-			g_warning ("'section' expected, got '%s'. Ignoring...", cur->name);
+		if (xmlNodeIsText (cur)) 
+			continue;
+
+		if (strcmp (cur->name, "section")) {
+			if (strcmp (cur->name, "comment"))
+				g_warning ("'section' expected, got '%s'. Ignoring...", cur->name);
 			continue;
 		}
 
-		section = g_new (gda_config_section, 1);
+		section = g_new0 (GdaConfigSection, 1);
 		section->path = xmlGetProp (cur, "path");
 		if (section->path != NULL &&
 		    !strncmp (section->path, section_path, sp_len)){
@@ -218,42 +251,123 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 	return list;
 }
 
-static gda_config_client *
+static GdaConfigClient *
 get_config_client ()
 {
 	/* FIXME: if we're updating or writing config_client,
 	 *	  wait until the operation finishes
 	 */
-	if (config_client == NULL){
+	if (! config_client) {
 		gint len;
 		gchar *full_file;
-		gchar *user_config;
+		gchar *user_config = NULL;
+		gboolean has_user_config;
 
-		config_client = g_new0 (gda_config_client, 1);
+		has_user_config = g_get_home_dir () ? TRUE : FALSE;
+		if (has_user_config)
+			user_config = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_FILE);
+
+		{
+			/* compute system wide rights */
+			FILE *file;
+
+			file = fopen (LIBGDA_GLOBAL_CONFIG_FILE, "a");
+			if (file) {
+				can_modif_global_conf = TRUE;
+#ifdef debug
+				g_print ("Can write system wide config file\n");
+#endif
+				fclose (file);
+			}
+			else {
+				can_modif_global_conf = FALSE;
+#ifdef debug
+				g_print ("Cannot write system wide config file\n");
+#endif			
+			}
+		}
+
+#ifdef HAVE_FAM
+		if (!fam_connection) {
+			/* FAM init */
+			GIOChannel *ioc;
+			int res;
+	
+#ifdef debug
+			g_print ("Using FAM to monitor configuration files changes.\n");
+#endif
+			fam_connection = g_malloc0 (sizeof (FAMConnection));
+			if (FAMOpen2 (fam_connection, "libgnomedb user") != 0) {
+				g_print ("FAMOpen failed, FAMErrno=%d\n", FAMErrno);
+				g_free (fam_connection);
+				fam_connection = NULL;
+			}
+			else {
+				ioc = g_io_channel_unix_new (FAMCONNECTION_GETFD(fam_connection));
+				fam_watch_id = g_io_add_watch (ioc,
+							       G_IO_IN | G_IO_HUP | G_IO_ERR,
+							       fam_callback, NULL);
+				
+				fam_conf_global = g_new0 (FAMRequest, 1);
+				res = FAMMonitorFile (fam_connection, LIBGDA_GLOBAL_CONFIG_FILE, fam_conf_global, 
+						      GINT_TO_POINTER (TRUE));
+#ifdef debug
+				g_print ("Monitoring changes on file %s: %s\n", 
+					 LIBGDA_GLOBAL_CONFIG_FILE, res ? "ERROR" : "Ok");
+#endif
+				
+				if (has_user_config) {
+					fam_conf_user = g_new0 (FAMRequest, 1);
+					res = FAMMonitorFile (fam_connection, user_config, fam_conf_user, 
+							      GINT_TO_POINTER (FALSE));
+#ifdef debug
+					g_print ("Monitoring changes on file %s: %s\n", 
+						 user_config, res ? "ERROR" : "Ok");
+#endif
+				}
+			}
+			
+		}
+#endif
+		
+		config_client = g_new0 (GdaConfigClient, 1);
 		xmlKeepBlanksDefault(0);
+
+		/*
+		 * load system wide config
+		 */
 		if (g_file_get_contents (LIBGDA_GLOBAL_CONFIG_FILE, &full_file,
 					 &len, NULL)){
+			GList *list;
 			config_client->global = gda_config_parse_config_file (full_file, len);
 			g_free (full_file);
-
+			
+			/* mark GdaConfigSection as global */
+			list = config_client->global;
+			while (list) {
+				((GdaConfigSection *)(list->data))->is_global = TRUE;
+				list = g_list_next (list);
+			}
 		}
-		if (!g_get_home_dir ()) {
+
+		if (! has_user_config) 
 			/* this can occur on win98, and maybe other win32 platforms */
 			return config_client;
-		}
-		user_config = g_strdup_printf ("%s%s", g_get_home_dir (),
-						LIBGDA_USER_CONFIG_FILE);
+
+		/*
+		 * load user specific config
+		 */
 		if (g_file_get_contents (user_config, &full_file, &len, NULL)) {
 			if (len != 0) 
 				config_client->user = gda_config_parse_config_file (full_file, len);
 			g_free (full_file);
-		} else {
+		} 
+		else {
 			if (!g_file_test (user_config, G_FILE_TEST_EXISTS)){
 				gchar *dirpath;
 				FILE *fp;
 
-				dirpath = g_strdup_printf ("%s%s", g_get_home_dir (),
-								LIBGDA_USER_CONFIG_DIR);
+				dirpath = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_DIR);
 				if (!g_file_test (dirpath, G_FILE_TEST_IS_DIR)){
 #ifdef LIBGDA_WIN32
 					if (mkdir (dirpath))
@@ -266,24 +380,138 @@ get_config_client ()
 				fp = fopen (user_config, "wt");
 				if (fp == NULL)
 					g_warning ("Unable to create the configuration file.");
-				else
-					fclose (fp);
+				else {
+					gchar *str;
+#define DB_FILE "sales_test.db"
+#define DEFAULT_CONFIG \
+"<?xml version=\"1.0\"?>\n" \
+"<libgda-config>\n" \
+"    <section path=\"/apps/libgda/Datasources/SalesTest\">\n" \
+"        <entry name=\"DSN\" type=\"string\" value=\"URI=%s/sales_test.db\"/>\n" \
+"        <entry name=\"Description\" type=\"string\" value=\"Test database for a sales department\"/>\n" \
+"        <entry name=\"Password\" type=\"string\" value=\"\"/>\n" \
+"        <entry name=\"Provider\" type=\"string\" value=\"SQLite\"/>\n" \
+"        <entry name=\"Username\" type=\"string\" value=\"\"/>\n" \
+"    </section>\n" \
+"</libgda-config>\n"
+					str = g_build_filename (LIBGDA_GLOBAL_CONFIG_DIR, DB_FILE, NULL);
+					if (g_file_get_contents (str, &full_file, &len, NULL)) {
+						gboolean allok = TRUE;
+						FILE *db;
+						gchar *dbfile;
+						
+						/* copy the Sales test database */
+						dbfile = g_build_filename (g_get_home_dir (), 
+									   LIBGDA_USER_CONFIG_DIR, DB_FILE, NULL);
+						db = fopen (dbfile, "wt");
+						if (db) {
+							allok = fwrite (full_file, sizeof (gchar), len, db) == len ? TRUE : FALSE;
+							fclose (db);
+						}
+						else
+							allok = FALSE;
+						g_free (dbfile);
+						g_free (full_file);
+						
+						if (allok) {
+							/* write down a default data source entry */
+							full_file = g_strdup_printf (DEFAULT_CONFIG, dirpath);
+							len = strlen (full_file);
+							fwrite (full_file, sizeof (gchar), len, fp);
+							fclose (fp);
+							config_client->user = gda_config_parse_config_file (full_file, len);
+							g_free (full_file);
+						}
+					}
+					g_free (str);
+				}
 
 				g_free (dirpath);
-			} else
+			} 
+			else
 				g_warning ("Config file is not readable.");
 		}
 		g_free (user_config);
+#ifdef debug
+		dump_config_client ();
+#endif
 	}
 
 	return config_client;
 }
 
-static gda_config_section *
+static void gda_config_client_reset ();
+
+#ifdef HAVE_FAM
+static gboolean
+fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
+{
+        gboolean res = TRUE;
+
+	while (fam_connection && FAMPending (fam_connection)) {
+                FAMEvent ev;
+		gboolean is_global;
+		gchar *msg = NULL;
+		
+		if (FAMNextEvent (fam_connection, &ev) != 1) {
+                        FAMClose (fam_connection);
+                        g_free (fam_connection);
+                        g_source_remove (fam_watch_id);
+                        fam_watch_id = 0;
+                        fam_connection = NULL;
+                        return FALSE;
+                }
+
+		if (lock_fam)
+			continue;
+
+		is_global = GPOINTER_TO_INT (ev.userdata);
+		switch (ev.code) {
+		case FAMChanged:
+		case FAMDeleted:
+		case FAMCreated:
+#ifdef debug
+			g_print ("Reloading config files (%s config has changed)\n", is_global ? "global" : "user");
+#endif
+			gda_config_client_reset ();
+			g_free (config_client);
+			config_client = NULL;
+			/* config_client will be re-created next time a gda_config* call is made */
+			do_notify (NULL);
+			break;
+		case FAMAcknowledge:
+		case FAMStartExecuting:
+		case FAMStopExecuting:
+		case FAMExists:
+		case FAMEndExist:
+		case FAMMoved:
+			/* Not supported */
+			break;
+                }
+	}
+	
+        return res;
+}
+
+static void
+fam_lock_notify ()
+{
+	lock_fam = TRUE;
+}
+
+static void
+fam_unlock_notify ()
+{
+	lock_fam = FALSE;
+}
+
+#endif
+
+static GdaConfigSection *
 gda_config_search_section (GList *sections, const gchar *path)
 {
 	GList *ls;
-	gda_config_section *section;
+	GdaConfigSection *section;
 
 	section = NULL;
 	for (ls = sections; ls; ls = ls->next){
@@ -297,15 +525,15 @@ gda_config_search_section (GList *sections, const gchar *path)
 	return section;
 }
 
-static gda_config_entry *
+static GdaConfigEntry *
 gda_config_search_entry (GList *sections, const gchar *path, const gchar *type)
 {
 	gint last_dash;
 	gchar *ptr_last_dash;
 	gchar *section_path;
 	GList *le;
-	gda_config_section *section;
-	gda_config_entry *entry;
+	GdaConfigSection *section;
+	GdaConfigEntry *entry;
 
 	if (sections == NULL)
 		return NULL;
@@ -337,13 +565,13 @@ gda_config_search_entry (GList *sections, const gchar *path, const gchar *type)
 	return entry;
 }
 
-static gda_config_section *
+static GdaConfigSection *
 gda_config_add_section (const gchar *section_path)
 {
-	gda_config_client *cfg_client;
-	gda_config_section *section;
+	GdaConfigClient *cfg_client;
+	GdaConfigSection *section;
 
-	section = g_new (gda_config_section, 1);
+	section = g_new0 (GdaConfigSection, 1);
 	section->path = g_strdup (section_path);
 	section->entries = NULL;
 
@@ -359,12 +587,12 @@ gda_config_add_entry (const gchar *section_path,
 		      const gchar *type,
 		      const gchar *value)
 {
-	gda_config_entry *entry;
-	gda_config_section *section;
-	gda_config_client *cfg_client;
+	GdaConfigEntry *entry;
+	GdaConfigSection *section;
+	GdaConfigClient *cfg_client;
 
 	cfg_client = get_config_client ();
-	entry = g_new (gda_config_entry, 1);
+	entry = g_new0 (GdaConfigEntry, 1);
 	entry->name = g_strdup (name);
 	entry->type = g_strdup (type);
 	entry->value = g_strdup (value);
@@ -379,7 +607,7 @@ gda_config_add_entry (const gchar *section_path,
 static void
 free_entry (gpointer data, gpointer user_data)
 {
-	gda_config_entry *entry = data;
+	GdaConfigEntry *entry = data;
 
 	g_free (entry->name);
 	g_free (entry->type);
@@ -388,10 +616,8 @@ free_entry (gpointer data, gpointer user_data)
 }
 
 static void
-free_section (gpointer data, gpointer user_data)
+free_section (GdaConfigSection *section)
 {
-	gda_config_section *section = data;
-
 	g_list_foreach (section->entries, free_entry, NULL);
 	g_list_free (section->entries);
 	g_free (section->path);
@@ -399,7 +625,30 @@ free_section (gpointer data, gpointer user_data)
 }
 
 static void
-add_xml_entry (xmlNodePtr parent, gda_config_entry *entry)
+gda_config_client_reset ()
+{
+	GList *list;
+
+	if (config_client == NULL)
+		return;
+
+	if (config_client->global) {
+		for (list = config_client->global; list; list = g_list_next (list)) 
+			free_section ((GdaConfigSection *)(list->data));
+		g_list_free (config_client->global);
+		config_client->global = NULL;
+	}
+
+	if (config_client->user) {
+		for (list = config_client->user; list; list = g_list_next (list)) 
+			free_section ((GdaConfigSection *)(list->data));
+		g_list_free (config_client->user);
+		config_client->user = NULL;
+	}
+}
+
+static void
+add_xml_entry (xmlNodePtr parent, GdaConfigEntry *entry)
 {
 	xmlNodePtr new_node;
 
@@ -407,14 +656,10 @@ add_xml_entry (xmlNodePtr parent, gda_config_entry *entry)
 	xmlSetProp (new_node, "name", entry->name);
 	xmlSetProp (new_node, "type", entry->type);
 	xmlSetProp (new_node, "value", entry->value);
-	/*
-	xmlSetProp (new_node, "mtime", entry->mtime);
-	xmlSetProp (new_node, "muser", entry->muser);
-	*/
 }
 
 static xmlNodePtr
-add_xml_section (xmlNodePtr parent, gda_config_section *section)
+add_xml_section (xmlNodePtr parent, GdaConfigSection *section)
 {
 	xmlNodePtr new_node;
 
@@ -426,16 +671,20 @@ add_xml_section (xmlNodePtr parent, gda_config_section *section)
 static void
 write_config_file ()
 {
-	gda_config_client *cfg_client;
+	GdaConfigClient *cfg_client;
 	xmlDocPtr doc;
 	xmlNodePtr root;
 	xmlNodePtr xml_section;
 	GList *ls; /* List of sections */
 	GList *le; /* List of entries */
-	gda_config_section *section;
-	gda_config_entry *entry;
+	GdaConfigSection *section;
+	GdaConfigEntry *entry;
 	gchar *user_config;
 
+	if (lock_write_notify)
+		return;
+
+	/* user specific data sources */
 	cfg_client = get_config_client ();
 	doc = xmlNewDoc ("1.0");
 	g_return_if_fail (doc != NULL);
@@ -456,14 +705,49 @@ write_config_file ()
 		}
 	}
 
-	user_config = g_strdup_printf ("%s%s", g_get_home_dir (),
-					LIBGDA_USER_CONFIG_FILE);
-	if (xmlSaveFormatFile (user_config, doc, TRUE) == -1){
-		g_warning ("Error saving config data to %s", user_config);
-	}
-
+	user_config = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_FILE);
+#ifdef HAVE_FAM
+	fam_lock_notify ();
+#endif
+	if (xmlSaveFormatFile (user_config, doc, TRUE) == -1)
+		g_warning ("Error saving config data to '%s'", user_config);
+#ifdef HAVE_FAM
+	fam_unlock_notify ();
+#endif
 	g_free (user_config);
 	xmlFreeDoc (doc);
+
+	/* system wide data sources */
+	if (can_modif_global_conf && cfg_client->global) {
+		doc = xmlNewDoc ("1.0");
+		g_return_if_fail (doc != NULL);
+		root = xmlNewDocNode (doc, NULL, "libgda-config", NULL);
+		xmlDocSetRootElement (doc, root);
+		for (ls = cfg_client->global; ls; ls = ls->next){
+			section = ls->data;
+			if (section == NULL)
+				continue;
+			
+			xml_section = add_xml_section (root, section);
+			for (le = section->entries; le; le = le->next){
+				entry = le->data;
+				if (entry == NULL)
+					continue;
+				
+				add_xml_entry (xml_section, le->data);
+			}
+		}
+		
+#ifdef HAVE_FAM
+	fam_lock_notify ();
+#endif
+		if (xmlSaveFormatFile (LIBGDA_GLOBAL_CONFIG_FILE, doc, TRUE) == -1)
+			g_warning ("Error saving config data to '%s'", user_config);
+#ifdef HAVE_FAM
+	fam_unlock_notify ();
+#endif
+		xmlFreeDoc (doc);
+	}
 }
 
 /*
@@ -482,8 +766,8 @@ write_config_file ()
 gchar *
 gda_config_get_string (const gchar *path)
 {
-	gda_config_client *cfg_client;
-	gda_config_entry *entry;
+	GdaConfigClient *cfg_client;
+	GdaConfigEntry *entry;
 
 	g_return_val_if_fail (path != NULL, NULL);
 
@@ -508,8 +792,8 @@ gda_config_get_string (const gchar *path)
 gint
 gda_config_get_int (const gchar *path)
 {
-	gda_config_client *cfg_client;
-	gda_config_entry *entry;
+	GdaConfigClient *cfg_client;
+	GdaConfigEntry *entry;
 
 	g_return_val_if_fail (path != NULL, 0);
 
@@ -534,8 +818,8 @@ gda_config_get_int (const gchar *path)
 gdouble
 gda_config_get_float (const gchar *path)
 {
-	gda_config_client *cfg_client;
-	gda_config_entry *entry;
+	GdaConfigClient *cfg_client;
+	GdaConfigEntry *entry;
 
 	g_return_val_if_fail (path != NULL, 0.0);
 
@@ -560,8 +844,8 @@ gda_config_get_float (const gchar *path)
 gboolean
 gda_config_get_boolean (const gchar *path)
 {
-	gda_config_client *cfg_client;
-	gda_config_entry *entry;
+	GdaConfigClient *cfg_client;
+	GdaConfigEntry *entry;
 
 	g_return_val_if_fail (path != NULL, FALSE);
 
@@ -581,21 +865,28 @@ gda_config_get_boolean (const gchar *path)
  * @new_value: new value.
  *
  * Sets the given configuration entry to contain a string.
+ *
+ * Returns: TRUE if no error occured
  */
-void
+gboolean
 gda_config_set_string (const gchar *path, const gchar *new_value)
 {
-	gda_config_entry *entry;
+	GdaConfigEntry *entry;
 	gchar *ptr_last_dash;
 	gchar *section_path;
 	gint last_dash;
-	gda_config_client *cfg_client;
+	GdaConfigClient *cfg_client;
 
 	g_return_if_fail (path != NULL);
 	g_return_if_fail (new_value != NULL);
 
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "string");
+	if (!entry) {
+		entry = gda_config_search_entry (cfg_client->global, path, "string");
+		if (entry && !can_modif_global_conf)
+			return FALSE;
+	}
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
@@ -608,7 +899,8 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 		gda_config_add_entry (section_path, ptr_last_dash + 1, 
 						    "string", new_value);
 		g_free (section_path);
-	} else {
+	} 
+	else {
 		g_free (entry->value);
 		g_free (entry->type);
 		entry->value = g_strdup (new_value);
@@ -617,6 +909,8 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 
 	write_config_file ();
 	do_notify (path);
+
+	return TRUE;
 }
 
 /**
@@ -625,21 +919,28 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
  * @new_value: new value.
  *
  * Sets the given configuration entry to contain an integer.
+ *
+ * Returns: TRUE if no error occured
  */
-void
+gboolean
 gda_config_set_int (const gchar *path, gint new_value)
 {
-	gda_config_entry *entry;
+	GdaConfigEntry *entry;
 	gchar *ptr_last_dash;
 	gchar *section_path;
 	gint last_dash;
 	gchar *newstr;
-	gda_config_client *cfg_client;
+	GdaConfigClient *cfg_client;
 
 	g_return_if_fail (path !=NULL);
 
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "long");
+	if (!entry) {
+		entry = gda_config_search_entry (cfg_client->global, path, "long");
+		if (entry && !can_modif_global_conf)
+			return FALSE;
+	}
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
@@ -651,7 +952,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 		section_path [last_dash] = '\0';
 		newstr = g_strdup_printf ("%d", new_value);
 		gda_config_add_entry (section_path, ptr_last_dash + 1, 
-						    "long", newstr);
+				      "long", newstr);
 		g_free (newstr);
 		g_free (section_path);
 	} else {
@@ -663,6 +964,8 @@ gda_config_set_int (const gchar *path, gint new_value)
 
 	write_config_file ();
 	do_notify (path);
+
+	return TRUE;
 }
 
 /**
@@ -671,21 +974,28 @@ gda_config_set_int (const gchar *path, gint new_value)
  * @new_value: new value.
  *
  * Sets the given configuration entry to contain a float.
+ *
+ * Returns: TRUE if no error occured
  */
-void
+gboolean
 gda_config_set_float (const gchar * path, gdouble new_value)
 {
-	gda_config_entry *entry;
+	GdaConfigEntry *entry;
 	gchar *ptr_last_dash;
 	gchar *section_path;
 	gint last_dash;
 	gchar *newstr;
-	gda_config_client *cfg_client;
+	GdaConfigClient *cfg_client;
 
 	g_return_if_fail (path !=NULL);
 
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "float");
+	if (!entry) {
+		entry = gda_config_search_entry (cfg_client->global, path, "float");
+		if (entry && !can_modif_global_conf)
+			return FALSE;
+	}
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
@@ -709,6 +1019,8 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 
 	write_config_file ();
 	do_notify (path);
+
+	return TRUE;
 }
 
 /**
@@ -717,22 +1029,29 @@ gda_config_set_float (const gchar * path, gdouble new_value)
  * @new_value: new value.
  *
  * Sets the given configuration entry to contain a boolean.
+ *
+ * Returns: TRUE if no error occured
  */
-void
+gboolean
 gda_config_set_boolean (const gchar *path, gboolean new_value)
 {
-	gda_config_entry *entry;
+	GdaConfigEntry *entry;
 	gchar *ptr_last_dash;
 	gchar *section_path;
 	gint last_dash;
 	gchar *newstr;
-	gda_config_client *cfg_client;
+	GdaConfigClient *cfg_client;
 
 	g_return_if_fail (path !=NULL);
 
 	new_value = new_value != 0 ? TRUE : FALSE;
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "bool");
+	if (!entry) {
+		entry = gda_config_search_entry (cfg_client->global, path, "bool");
+		if (entry && !can_modif_global_conf)
+			return FALSE;
+	}
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
@@ -755,6 +1074,8 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 
 	write_config_file ();
 	do_notify (path);
+
+	return TRUE;
 }
 
 /**
@@ -766,20 +1087,23 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 void
 gda_config_remove_section (const gchar *path)
 {
-	gda_config_section *section;
-	gda_config_client *cfg_client;
+	GdaConfigSection *section;
+	GdaConfigClient *cfg_client;
 
 	g_return_if_fail (path != NULL);
 
 	cfg_client = get_config_client ();
 	section = gda_config_search_section (cfg_client->user, path);
+	if (!section)
+		section = gda_config_search_section (cfg_client->global, path);
 	if (section == NULL) {
 		g_warning ("Section %s not found!", path);
 		return;
 	}
 
 	cfg_client->user = g_list_remove (cfg_client->user, section);
-	free_section (section, NULL);
+	cfg_client->global = g_list_remove (cfg_client->global, section);
+	free_section (section);
 	write_config_file ();
 	do_notify (path);
 }
@@ -798,9 +1122,9 @@ gda_config_remove_key (const gchar *path)
 	gchar *ptr_last_dash;
 	gchar *section_path;
 	GList *le;
-	gda_config_section *section;
-	gda_config_entry *entry;
-	gda_config_client *cfg_client;
+	GdaConfigSection *section;
+	GdaConfigEntry *entry;
+	GdaConfigClient *cfg_client;
 
 	g_return_if_fail (path != NULL);
 
@@ -814,6 +1138,8 @@ gda_config_remove_key (const gchar *path)
 	entry = NULL;
 	cfg_client = get_config_client ();
 	section = gda_config_search_section (cfg_client->user, section_path);
+	if (!section)
+		section = gda_config_search_section (cfg_client->global, section_path);
 	if (section == NULL) {
 		g_free (section_path);
 		return;
@@ -836,7 +1162,7 @@ gda_config_remove_key (const gchar *path)
 	free_entry (entry, NULL);
 	if (section->entries == NULL) {
 		cfg_client->user = g_list_remove (cfg_client->user, section);
-		free_section (section, NULL);
+		free_section (section);
 	}
 
 	write_config_file ();
@@ -855,8 +1181,8 @@ gda_config_remove_key (const gchar *path)
 gboolean
 gda_config_has_section (const gchar *path)
 {
-	gda_config_section *section;
-	gda_config_client *cfg_client;
+	GdaConfigSection *section;
+	GdaConfigClient *cfg_client;
 
 	g_return_val_if_fail (path != NULL, FALSE);
 
@@ -879,8 +1205,8 @@ gda_config_has_section (const gchar *path)
 gboolean
 gda_config_has_key (const gchar *path)
 {
-	gda_config_entry *entry;
-	gda_config_client *cfg_client;
+	GdaConfigEntry *entry;
+	GdaConfigClient *cfg_client;
 
 	g_return_val_if_fail (path != NULL, FALSE);
 
@@ -906,8 +1232,8 @@ gda_config_has_key (const gchar *path)
 gchar *
 gda_config_get_type (const gchar *path)
 {
-	gda_config_entry *entry;
-	gda_config_client *cfg_client;
+	GdaConfigEntry *entry;
+	GdaConfigClient *cfg_client;
 
 	g_return_val_if_fail (path != NULL, FALSE);
 
@@ -924,6 +1250,40 @@ gda_config_get_type (const gchar *path)
 	return g_strdup (entry->type);
 }
 
+static GList *
+gda_config_list_sections_raw (const gchar *path)
+{
+	GdaConfigClient *cfg_client;
+	GList *list;
+        GList *ret = NULL;
+	GdaConfigSection *section;
+	gint len;
+
+        g_return_val_if_fail (path != NULL, NULL);
+
+	len = strlen (path);
+	cfg_client = get_config_client ();
+	for (list = cfg_client->user; list; list = list->next){
+		section = (GdaConfigSection*) list->data;
+		if (section && len < strlen (section->path) && 
+		    !strncmp (path, section->path, len))
+			ret = g_list_append (ret, section);
+	}
+		
+	for (list = cfg_client->global; list; list = list->next){
+		section = (GdaConfigSection*) list->data;
+		if (section && len < strlen (section->path) && 
+		    !strncmp (path, section->path, len)){
+			if (!g_list_find_custom (ret, 
+						 section->path + len + 1,
+						 (GCompareFunc) strcmp))
+				ret = g_list_append (ret, section);
+		}
+	}
+
+        return ret;
+}
+
 /**
  * gda_config_list_sections
  * @path: path for root dir.
@@ -938,40 +1298,18 @@ gda_config_get_type (const gchar *path)
 GList *
 gda_config_list_sections (const gchar *path)
 {
-	gda_config_client *cfg_client;
-	GList *list;
-        GList *ret = NULL;
-	gda_config_section *section;
 	gint len;
-
-        g_return_val_if_fail (path != NULL, NULL);
+	GList *ret = NULL, *list, *tmp;
 
 	len = strlen (path);
-	cfg_client = get_config_client ();
-	if (cfg_client->user){
-		for (list = cfg_client->user; list; list = list->next){
-			section = list->data;
-			if (section && len < strlen (section->path) && 
-			    !strncmp (path, section->path, len))
-				ret = g_list_append (ret, g_strdup (section->path + len + 1));
-		}
+	list = gda_config_list_sections_raw (path);
+	tmp = list;
+	while (tmp) {
+		ret = g_list_append (ret, g_strdup (((GdaConfigSection*) (tmp->data))->path + len + 1));
+		tmp = g_list_next (tmp);
 	}
-		
-	if (cfg_client->global){
-		for (list = cfg_client->global; list; list = list->next){
-			section = list->data;
-			if (section && len < strlen (section->path) && 
-			    !strncmp (path, section->path, len)){
-				if (!g_list_find_custom (ret, 
-							 section->path + len + 1,
-							 (GCompareFunc) strcmp))
-					ret = g_list_append (ret, 
-							g_strdup (section->path + len + 1));
-			}
-		}
-	}
-
-        return ret;
+	g_list_free (list);
+	return ret;
 }
 
 /**
@@ -990,9 +1328,9 @@ gda_config_list_keys (const gchar * path)
 	GList *ls;
 	GList *le;
         GList *ret = NULL;
-	gda_config_section *section;
-	gda_config_entry *entry;
-	gda_config_client *cfg_client;
+	GdaConfigSection *section;
+	GdaConfigEntry *entry;
+	GdaConfigClient *cfg_client;
 	gint len;
 
         g_return_val_if_fail (path != NULL, NULL);
@@ -1365,49 +1703,50 @@ gda_config_get_data_source_list (void)
 	GList *list = NULL;
 	GList *sections;
 	GList *l;
+	gint len;
 
-	sections = gda_config_list_sections (GDA_CONFIG_SECTION_DATASOURCES);
+        len = strlen (GDA_CONFIG_SECTION_DATASOURCES);
+	sections = gda_config_list_sections_raw (GDA_CONFIG_SECTION_DATASOURCES);
 	for (l = sections; l != NULL; l = l->next) {
-		gchar *tmp;
+		gchar *tmp, *sect_name;
 		GdaDataSourceInfo *info;
 
+		sect_name = ((GdaConfigSection*) (l->data))->path + len + 1;
 		info = g_new0 (GdaDataSourceInfo, 1);
-		if (!strncmp (l->data, "Default", 7)) 
-			/* This is the default data source name */
-			info->name = g_strdup (_("Default"));
-		else 
-			info->name = g_strdup ((const gchar *) l->data);
-
+		info->name = g_strdup ((const gchar *) sect_name);
 
 		/* get the provider */
-		tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
+		tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
 		info->provider = gda_config_get_string (tmp);
 		g_free (tmp);
 
 		/* get the connection string */
-		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
+		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
 		info->cnc_string = gda_config_get_string (tmp);
 		g_free (tmp);
 
 		/* get the description */
-		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
+		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
 		info->description = gda_config_get_string (tmp);
 		g_free (tmp);
 
 		/* get the user name */
-		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
+		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
 		info->username = gda_config_get_string (tmp);
 		g_free (tmp);
 
 		/* get the password */
-		tmp = g_strdup_printf ("%s/%s/Password", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
+		tmp = g_strdup_printf ("%s/%s/Password", GDA_CONFIG_SECTION_DATASOURCES, (char *) sect_name);
 		info->password = gda_config_get_string (tmp);
 		g_free (tmp);
+
+		/* system wide data source ? */
+		info->is_global = ((GdaConfigSection*) (l->data))->is_global;
 				
 		list = g_list_append (list, info);
 	}
 
-	gda_config_free_list (sections);
+	g_list_free (sections);
 
 	return list;
 }
@@ -1417,9 +1756,10 @@ gda_config_get_data_source_list (void)
  * @name: name of the data source to search for.
  *
  * Gets a #GdaDataSourceInfo structure from the data source list given its 
- * name.
+ * name. After usage, the returned structure's memory must be freed using
+ * gda_data_source_info_free().
  *
- * Returns: a #GdaDataSourceInfo structure, if found, or %NULL if not found.
+ * Returns: a new #GdaDataSourceInfo structure, if found, or %NULL if not found.
  */
 GdaDataSourceInfo *
 gda_config_find_data_source (const gchar *name)
@@ -1435,7 +1775,7 @@ gda_config_find_data_source (const gchar *name)
 		GdaDataSourceInfo *tmp_info = (GdaDataSourceInfo *) l->data;
 
 		if (tmp_info && !g_strcasecmp (tmp_info->name, name)) {
-			info = gda_config_copy_data_source_info (tmp_info);
+			info = gda_data_source_info_copy (tmp_info);
 			break;
 		}
 	}
@@ -1446,7 +1786,7 @@ gda_config_find_data_source (const gchar *name)
 }
 
 /**
- * gda_config_copy_data_source_info
+ * gda_data_source_info_copy
  * @src: data source information to get a copy from.
  *
  * Creates a new #GdaDataSourceInfo structure from an existing one.
@@ -1455,7 +1795,7 @@ gda_config_find_data_source (const gchar *name)
  * information in @src.
  */
 GdaDataSourceInfo *
-gda_config_copy_data_source_info (GdaDataSourceInfo *src)
+gda_data_source_info_copy (GdaDataSourceInfo *src)
 {
 	GdaDataSourceInfo *info;
 
@@ -1468,18 +1808,51 @@ gda_config_copy_data_source_info (GdaDataSourceInfo *src)
 	info->description = g_strdup (src->description);
 	info->username = g_strdup (src->username);
 	info->password = g_strdup (src->password);
+	info->is_global = src->is_global;
 
 	return info;
 }
 
 /**
- * gda_config_free_data_source_info
+ * gda_data_source_info_equal
+ * @info1: a data source information
+ * @info2: a data source information
+ * 
+ * Tells if @info1 and @info2 are equal
+ *
+ * Returns: TRUE if @info1 and @info2 are equal
+ */
+gboolean
+gda_data_source_info_equal (GdaDataSourceInfo *info1, GdaDataSourceInfo *info2)
+{
+	if (!info1 && !info2)
+		return TRUE;
+	if (!info1 || !info2)
+		return FALSE;
+
+	if (strcmp (info1->name, info2->name))
+		return FALSE;
+	if (strcmp (info1->provider, info2->provider))
+		return FALSE;
+	if (strcmp (info1->cnc_string, info2->cnc_string))
+		return FALSE;
+	if (strcmp (info1->description, info2->description))
+		return FALSE;
+	if (strcmp (info1->username, info2->username))
+		return FALSE;
+	if (strcmp (info1->password, info2->password))
+		return FALSE;
+	return info1->is_global == info2->is_global;
+}
+
+/**
+ * gda_data_source_info_free
  * @info: data source information to free.
  *
  * Deallocates all memory associated to the given #GdaDataSourceInfo.
  */
 void
-gda_config_free_data_source_info (GdaDataSourceInfo *info)
+gda_data_source_info_free (GdaDataSourceInfo *info)
 {
 	g_return_if_fail (info != NULL);
 
@@ -1508,7 +1881,7 @@ gda_config_free_data_source_list (GList *list)
 		GdaDataSourceInfo *info = (GdaDataSourceInfo *) l->data;
 
 		list = g_list_remove (list, info);
-		gda_config_free_data_source_info (info);
+		gda_data_source_info_free (info);
 	}
 }
 
@@ -1518,9 +1891,9 @@ gda_config_free_data_source_list (GList *list)
  * Fills and returns a new #GdaDataModel object using information from all 
  * data sources which are currently configured in the system.
  *
- * Rows are separated in 6 columns: 
- * 'Name', 'Provider', 'Connection string', 'Description', 'Username' and 
- * 'Password'.
+ * Rows are separated in 7 columns: 
+ * 'Name', 'Provider', 'Connection string', 'Description', 'Username',
+ * 'Password' and 'Global'.
  *
  * Returns: a new #GdaDataModel object. 
  */
@@ -1531,13 +1904,14 @@ gda_config_get_data_source_model (void)
 	GList *l;
 	GdaDataModel *model;
 
-	model = gda_data_model_array_new (6);
+	model = gda_data_model_array_new (7);
 	gda_data_model_set_column_title (model, 0, _("Name"));
 	gda_data_model_set_column_title (model, 1, _("Provider"));
 	gda_data_model_set_column_title (model, 2, _("Connection string"));
 	gda_data_model_set_column_title (model, 3, _("Description"));
 	gda_data_model_set_column_title (model, 4, _("Username"));
 	gda_data_model_set_column_title (model, 5, _("Password"));
+	gda_data_model_set_column_title (model, 6, _("Global"));
 	
 	/* convert the returned GList into a GdaDataModelArray */
 	dsn_list = gda_config_get_data_source_list ();
@@ -1553,6 +1927,7 @@ gda_config_get_data_source_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->description));
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->username));
 		value_list = g_list_append (value_list, gda_value_new_string ("******"));
+		value_list = g_list_append (value_list, gda_value_new_boolean (dsn_info->is_global));
 
 		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
 	}
@@ -1564,6 +1939,21 @@ gda_config_get_data_source_model (void)
 }
 
 /**
+ * gda_config_can_modify_global_config
+ *
+ * Tells if the calling program can modify the global configured
+ * data sources.
+ * 
+ * Returns: TRUE if modifications are possible
+ */
+gboolean
+gda_config_can_modify_global_config ()
+{
+	get_config_client ();
+	return can_modif_global_conf;
+}
+
+/**
  * gda_config_save_data_source
  * @name: name for the data source to be saved.
  * @provider: provider ID for the new data source.
@@ -1571,23 +1961,35 @@ gda_config_get_data_source_model (void)
  * @description: description for the new data source.
  * @username: user name for the new data source.
  * @password: password to use when authenticating @username.
+ * @is_global: TRUE if the data source is system-wide
  *
  * Adds a new data source (or update an existing one) to the GDA
  * configuration, based on the parameters given.
+ *
+ * Returns: TRUE if no error occured
  */
-void
+gboolean
 gda_config_save_data_source (const gchar *name,
 			     const gchar *provider,
 			     const gchar *cnc_string,
 			     const gchar *description,
 			     const gchar *username,
-			     const gchar *password)
+			     const gchar *password,
+			     gboolean is_global)
 {
 	GString *str;
 	gint trunc_len;
+	GdaConfigSection *section;
+	GdaConfigClient *cfg_client;
 
 	g_return_if_fail (name != NULL);
 	g_return_if_fail (provider != NULL);
+
+	if (is_global && !can_modif_global_conf)
+		return FALSE;
+
+	/* delay write and nofity */
+	lock_write_notify = TRUE;
 
 	str = g_string_new ("");
 	g_string_printf (str, "%s/%s/", GDA_CONFIG_SECTION_DATASOURCES, name);
@@ -1625,7 +2027,32 @@ gda_config_save_data_source (const gchar *name,
 		gda_config_set_string (str->str, password);
 		g_string_truncate (str, trunc_len);
 	}
+
+	/* set the GdaSection in the right list (user of global) */
+	cfg_client = get_config_client ();
+	g_string_truncate (str, trunc_len - 1); /* we don't want the last '/' */
+	section = gda_config_search_section (cfg_client->user, str->str);
+	if (!section)
+		section = gda_config_search_section (cfg_client->global, str->str);
+	g_assert (section);
+	section->is_global = is_global;
+
+	cfg_client->user = g_list_remove (cfg_client->user, section);
+	cfg_client->global = g_list_remove (cfg_client->global, section);
+
+	if (!g_list_find (cfg_client->global, section) && is_global)
+		cfg_client->global = g_list_append (cfg_client->global, section);
+	if (!g_list_find (cfg_client->user, section) && !is_global)
+		cfg_client->user = g_list_append (cfg_client->user, section);
+
 	g_string_free (str, TRUE);
+
+	/* actual write and nofity */
+	lock_write_notify = FALSE;
+	write_config_file ();
+	do_notify (NULL);	
+
+	return TRUE;
 }
 
 /**
@@ -1635,18 +2062,21 @@ gda_config_save_data_source (const gchar *name,
  * Saves a data source in the libgda configuration given a
  * #GdaDataSourceInfo structure containing all the information
  * about the data source.
+ *
+ * Returns: TRUE if no error occured
  */
-void
+gboolean
 gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info)
 {
 	g_return_if_fail (dsn_info != NULL);
 
-	gda_config_save_data_source (dsn_info->name,
-				     dsn_info->provider,
-				     dsn_info->cnc_string,
-				     dsn_info->description,
-				     dsn_info->username,
-				     dsn_info->password);
+	return gda_config_save_data_source (dsn_info->name,
+					    dsn_info->provider,
+					    dsn_info->cnc_string,
+					    dsn_info->description,
+					    dsn_info->username,
+					    dsn_info->password,
+					    dsn_info->is_global);
 }
 
 /**
@@ -1675,7 +2105,7 @@ typedef struct {
 } config_listener_data_t;
 
 static GList *listeners;
-static guint next_id;
+static guint next_id = 1;
 
 static void
 config_listener_func (gpointer data, gpointer user_data)
@@ -1683,24 +2113,27 @@ config_listener_func (gpointer data, gpointer user_data)
 	GList *l;
 	config_listener_data_t *listener = data;
 	gchar *path = user_data;
-	gint len;
+	gint len = -1;
 
 	g_return_if_fail (listener != NULL);
-	g_return_if_fail (path != NULL);
 
-	len = strlen (path);
+	if (path)
+		len = strlen (path);
 	for (l = listeners; l; l = l->next){
 		listener = l->data;
-		if (!strncmp (listener->path, path, len)){
+		if (!path ||
+		    (path && !strncmp (listener->path, path, len))) {
 			listener->func (path, listener->user_data);
 		}
 	}
-
 }
 
 static void
 do_notify (const gchar *path)
 {
+	if (lock_write_notify)
+		return;
+
 	g_list_foreach (listeners, config_listener_func, (gpointer) path);
 }
 
@@ -1728,7 +2161,7 @@ gda_config_add_listener (const gchar *path,
 	g_return_val_if_fail (path != NULL, 0);
 	g_return_val_if_fail (func != NULL, 0);
 
-	listener = g_new (config_listener_data_t, 1);
+	listener = g_new0 (config_listener_data_t, 1);
 	listener->id = next_id++;
 	listener->func = func;
 	listener->user_data = user_data;
@@ -1795,12 +2228,8 @@ gda_data_source_info_get_type (void)
 
 	if (our_type == 0)
 		our_type = g_boxed_type_register_static ("GdaDataSourceInfo",
-							 (GBoxedCopyFunc) gda_config_copy_data_source_info,
-							 (GBoxedFreeFunc) gda_config_free_data_source_info);
+							 (GBoxedCopyFunc) gda_data_source_info_copy,
+							 (GBoxedFreeFunc) gda_data_source_info_free);
 
 	return our_type;
 }
-
-
-
-

@@ -6,7 +6,8 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	-DLIBGDA_PLUGINDIR=\""$(prefix)/lib/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers"\" \
 	-DLIBGDA_LOCALEDIR=\""$(datadir)/locale"\" \
-	-DLIBGDA_GLOBAL_CONFIG_FILE=\""$(sysconfdir)/libgda/config"\"
+	-DLIBGDA_GLOBAL_CONFIG_FILE=\""$(sysconfdir)/libgda/config"\" \
+	-DLIBGDA_GLOBAL_CONFIG_DIR=\""$(sysconfdir)/libgda"\"
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -169,7 +170,7 @@ libgda_3_la_SOURCES = \
 	$(libgda_sources)
 
 libgda_3_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
-libgda_3_la_LIBADD = $(LIBGDA_LIBS) $(top_builddir)/libsql/libgdasql.la
+libgda_3_la_LIBADD = $(LIBGDA_LIBS) $(FAM_LIBS) $(top_builddir)/libsql/libgdasql.la
 
 gdaincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)

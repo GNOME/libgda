@@ -497,3 +497,12 @@ Basic data model class
 @to_stream: 
 
 
+<!-- ##### FUNCTION gda_data_model_dump_as_string ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+

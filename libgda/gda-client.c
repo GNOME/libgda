@@ -1,9 +1,10 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -320,7 +321,7 @@ gda_client_open_connection (GdaClient *client,
 		    ! (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
 			g_object_ref (G_OBJECT (cnc));
 			gda_client_notify_connection_opened_event (client, cnc);
-			gda_config_free_data_source_info (dsn_info);
+			gda_data_source_info_free (dsn_info);
 			return cnc;
 		}
 	}
@@ -340,7 +341,7 @@ gda_client_open_connection (GdaClient *client,
 			emit_client_error (client, NULL,
 					   _("Could not find provider %s in the current setup"),
 					   dsn_info->provider);
-			gda_config_free_data_source_info (dsn_info);
+			gda_data_source_info_free (dsn_info);
 			return NULL;
 		}
 
@@ -350,7 +351,7 @@ gda_client_open_connection (GdaClient *client,
 		gda_provider_info_free (prv_info);
 		if (!prv->handle) {
 			emit_client_error (client, NULL, g_module_error ());
-			gda_config_free_data_source_info (dsn_info);
+			gda_data_source_info_free (dsn_info);
 			g_free (prv);
 			return NULL;
 		}
@@ -370,7 +371,7 @@ gda_client_open_connection (GdaClient *client,
 			emit_client_error (client, NULL,
 					   _("Provider %s does not implement entry function"),
 					   dsn_info->provider);
-			gda_config_free_data_source_info (dsn_info);
+			gda_data_source_info_free (dsn_info);
 			g_free (prv);
 			return NULL;
 		}
@@ -379,7 +380,7 @@ gda_client_open_connection (GdaClient *client,
 		if (!prv->provider) {
 			emit_client_error (client, NULL,
 					   _("Could not create GdaServerProvider object from plugin"));
-			gda_config_free_data_source_info (dsn_info);
+			gda_data_source_info_free (dsn_info);
 			g_free (prv);
 			return NULL;
 		}
@@ -394,7 +395,7 @@ gda_client_open_connection (GdaClient *client,
 	cnc = gda_connection_new (client, prv->provider, dsn, username, password, options);
 
 	if (!GDA_IS_CONNECTION (cnc)) {
-		gda_config_free_data_source_info (dsn_info);
+		gda_data_source_info_free (dsn_info);
 		return NULL;
 	}
 
@@ -405,7 +406,7 @@ gda_client_open_connection (GdaClient *client,
 			  G_CALLBACK (connection_error_cb), client);
 
 	/* free memory */
-	gda_config_free_data_source_info (dsn_info);
+	gda_data_source_info_free (dsn_info);
 
 	return cnc;
 }
@@ -471,7 +472,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 				     dsn_info->cnc_string,
 				     dsn_info->description,
 				     dsn_info->username,
-				     dsn_info->password);
+				     dsn_info->password, TRUE);
 
 	/* open the connection */
 	cnc = gda_client_open_connection (client,
@@ -482,7 +483,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 
 	/* free memory */
 	gda_config_remove_data_source (dsn_info->name);
-	gda_config_free_data_source_info (dsn_info);
+	gda_data_source_info_free (dsn_info);
 
 	return cnc;
 }
@@ -551,12 +552,12 @@ gda_client_find_connection (GdaClient *client,
 		if (!strcmp (tmp_dsn ? tmp_dsn : "", dsn_info->name ? dsn_info->name : "")
 		    && !strcmp (tmp_usr ? tmp_usr : "", username ? username : "")
 		    && !strcmp (tmp_pwd ? tmp_pwd : "", password ? password : "")) {
-			gda_config_free_data_source_info (dsn_info);
+			gda_data_source_info_free (dsn_info);
 			return cnc;
 		}
 	}
 
-	gda_config_free_data_source_info (dsn_info);
+	gda_data_source_info_free (dsn_info);
 
 	return NULL;
 }
