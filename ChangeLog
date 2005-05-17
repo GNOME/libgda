@@ -1,3 +1,8 @@
+2005-05-17  Bas Driessen <bas.driessen@xobas.com>
+
+	* doc/C/Makefile.am: Fix noise autogen.sh by
+	changing the deprecated INCLUDES to AM_CPPFLAGS.
+
 2005-05-14 Vivien Malerba <malerba@gnome-db.org>
 
 	* Changed the GDA_CONNECTION_SCHEMA_PROCEDURES schema: the list of argument types
