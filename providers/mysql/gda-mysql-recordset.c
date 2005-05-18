@@ -59,26 +59,34 @@ fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
 		gda_value_set_single (gda_value, atof (value));
 		break;
 	case FIELD_TYPE_LONG :
-		if (is_unsigned)
-			gda_value_set_uinteger (gda_value, atol (value));
+		if (is_unsigned) {
+			gda_value_set_uinteger (gda_value, strtoul (value, NULL, 0));
+			break;
+		}
 	case FIELD_TYPE_YEAR :
 		gda_value_set_integer (gda_value, atol (value));
 		break;
 	case FIELD_TYPE_LONGLONG :
 	case FIELD_TYPE_INT24 :
-		if (is_unsigned)
-			gda_value_set_biguint (gda_value, atoll (value));
-		gda_value_set_bigint (gda_value, atoll (value));
+		if (is_unsigned) {
+			gda_value_set_biguint (gda_value, strtoull (value, NULL, 0));
+		} else {
+			gda_value_set_bigint (gda_value, atoll (value));
+		}
 		break;
 	case FIELD_TYPE_SHORT :
-		if (is_unsigned)
+		if (is_unsigned) {
 			gda_value_set_smalluint (gda_value, atoi (value));
-		gda_value_set_smallint (gda_value, atoi (value));
+		} else {
+			gda_value_set_smallint (gda_value, atoi (value));
+		}
 		break;
 	case FIELD_TYPE_TINY :
-		if (is_unsigned)
+		if (is_unsigned) {
 			gda_value_set_tinyuint (gda_value, atoi (value));
-		gda_value_set_tinyint (gda_value, atoi (value));
+		} else {
+			gda_value_set_tinyint (gda_value, atoi (value));
+		}
 		break;
 	case FIELD_TYPE_TINY_BLOB :
 	case FIELD_TYPE_MEDIUM_BLOB :

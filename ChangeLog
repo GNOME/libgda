@@ -1,3 +1,10 @@
+2005-05-18  Mike Fisk <mfisk@woozle.org>
+
+	Fixes #304586
+
+	* providers/mysql/gda-mysql-recordset.c (fill_gda_value): set
+	correctly unsigned values.
+
 2005-05-13  Mike Kestner <mkestner@ximian.com>
 
 	* libgda/gda-export.c (gda_export_class_init): fixed typo in
