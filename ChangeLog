@@ -1,3 +1,10 @@
+2005-05-18  Mike Fisk <mfisk@woozle.org>
+
+	Fixes #304586
+
+	* providers/mysql/gda-mysql-recordset.c (fill_gda_value): set
+	correctly unsigned values.
+
 2005-05-17  Bas Driessen <bas.driessen@xobas.com>
 
 	* doc/C/Makefile.am: Fix noise autogen.sh by
