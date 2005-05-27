@@ -6,9 +6,9 @@ provider_LTLIBRARIES = libgda-sqlite.la
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	-Isqlite-src \
 	$(LIBGDA_CFLAGS) \
-	$(SQLITE_CFLAGS)
+	-I$(top_srcdir)/providers/sqlite/sqlite-src \
+	-I$(top_builddir)/providers/sqlite/sqlite-src
 
 libgda_sqlite_la_SOURCES = \
 	gda-sqlite-provider.c \
@@ -23,5 +23,5 @@ libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_sqlite_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.la \
-	sqlite-src/libsqlite.la 
+	$(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la 
 

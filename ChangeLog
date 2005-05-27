@@ -1,3 +1,16 @@
+2005-05-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.3.2
+
+2005-05-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libsql/Makefile.am: added libgdasql.la as a dependency for
+	sql_parse_test, so that the library gets built first.
+
+	* providers/sqlite/Makefile.am: fixed to pass make distcheck.
+
+	* doc/C/Makefile.am: s/AM_CPPFLAGS/GTKDOC_FLAGS.
+
 2005-05-18  Mike Fisk <mfisk@woozle.org>
 
 	Fixes #304586
@@ -156,6 +169,7 @@
 	use " for column names in 'WHERE' part of query.
 
 2005-03-21  Alan Knowles <alan@akbkhome.com>
+
 	* providers/mysql/gda-mysql-recordset.c prevent segfault when
 	running insert or update queries.
 

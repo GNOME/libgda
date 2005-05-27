@@ -1,3 +1,35 @@
+libgda 1.3.2, 2005-05-27
+------------------------
+
+ - Prevent segfault when running INSERT of UPDATE queries in MySQL provider (Alan)
+ - Improved update of PostgreSQL data models (Bas)
+ - Improved exporting of data models (Vivien)
+ - Added GdaThreader object to make it easy to run threaded operations (Vivien)
+ - Implemented missing schemas in SQLite provider (Vivien)
+ - Fixed GdaXqlUpdate API typo (Murray)
+ - Improved fields schema for PostgreSQL provider (Vivien)
+ - Added procedures schema to MySQL provider (Vivien)
+ - Fixed MySQL value conversion to string (Alan)
+ - Compilation fixes (Dru, Bas, Rodrigo)
+ - Added functions to dump data models (Vivien)
+ - Improved data types schema in MySQL provider (Vivien)
+ - Added synonyms to the data types schema (Vivien)
+ - API documentation (Dru)
+ - Fixed typo in GdaExport signal creation (Mike Kestner)
+ - Changed procedures schema to include more information (Vivien)
+ - Added creation of ~/.libgda directory when it does not exist (Vivien)
+ - Fixed #153292 (Jorge)
+ - Fixed #301480 (Magnus)
+ - Fixed #301485 (Magnus)
+ - Fixed #302158 (Jean)
+ - Fixed #304586 (Mike Fisk)
+ - Updated translations:
+        - es (Jorge)
+	- it (Marco)
+	- rw (Steve)
+        - uk (Maxim)
+        - zw (Steve)
+
 libgda 1.3.1, 2005-03-21
 ------------------------
 
@@ -24,6 +56,27 @@ libgda 1.3.1, 2005-03-21
 	- pt (Duarte)
 	- pt_BR (Raphael)
 
+libgda 1.3.0, 2005-02-07
+------------------------
+
+ - Fixed spec includedir (Aaron)
+ - Set missing row number on gda_data_model_hash_append_row (Bas)
+ - Changed GdaDataModel class to be an interface (Vivien)
+ - Data model improvements (Vivien, Bas, Álvaro)
+ - Renamed GdaField to GdaColumn (Vivien)
+ - Improved documentation (Vivien, Bas)
+ - Added full update/remove for MySQL and PostgreSQL data models (Bas)
+ - Fixed build (Rodrigo)
+ - Added methods for creating/droping tables and indices (Bas)
+ - Updated translations:
+        - cs (Miroslav)
+	- de (Frank)
+        - en_CA (Adam)
+        - es (Francisco)
+	- it (Marco)
+	- nl (Vincent)
+	- pt_BR (Raphael)
+
 libgda 1.2.1, 2005-03-03
 ------------------------
 
@@ -45,27 +98,6 @@ libgda 1.2.1, 2005-03-03
  - Fixed #129153 (Rodrigo)
  - Fixed #167500 (Denis)
  - Fixed #168641 (Loïc)
-
-libgda 1.3.0, 2005-02-07
-------------------------
-
- - Fixed spec includedir (Aaron)
- - Set missing row number on gda_data_model_hash_append_row (Bas)
- - Changed GdaDataModel class to be an interface (Vivien)
- - Data model improvements (Vivien, Bas, Álvaro)
- - Renamed GdaField to GdaColumn (Vivien)
- - Improved documentation (Vivien, Bas)
- - Added full update/remove for MySQL and PostgreSQL data models (Bas)
- - Fixed build (Rodrigo)
- - Added methods for creating/droping tables and indices (Bas)
- - Updated translations:
-        - cs (Miroslav)
-	- de (Frank)
-        - en_CA (Adam)
-        - es (Francisco)
-	- it (Marco)
-	- nl (Vincent)
-	- pt_BR (Raphael)
 
 libgda 1.2.0, 2004-12-28
 ------------------------
