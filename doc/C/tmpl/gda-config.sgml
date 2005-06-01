@@ -198,6 +198,7 @@ Access/Management of libgda configuration
 @location: 
 @description: 
 @gda_params: 
+@dsn_spec: 
 
 <!-- ##### MACRO GDA_TYPE_PROVIDER_INFO ##### -->
 <para>

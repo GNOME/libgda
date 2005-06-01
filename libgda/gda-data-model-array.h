@@ -48,10 +48,11 @@ struct _GdaDataModelArrayClass {
 	GdaDataModelBaseClass parent_class;
 };
 
-GType         gda_data_model_array_get_type      (void);
-GdaDataModel *gda_data_model_array_new           (gint cols);
-void          gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols);
-void          gda_data_model_array_clear         (GdaDataModelArray *model);
+GType         gda_data_model_array_get_type          (void);
+GdaDataModel *gda_data_model_array_new               (gint cols);
+GdaDataModel *gda_data_model_array_new_from_xml_node (xmlNodePtr node, GError **error);
+void          gda_data_model_array_set_n_columns     (GdaDataModelArray *model, gint cols);
+void          gda_data_model_array_clear             (GdaDataModelArray *model);
 
 G_END_DECLS
 

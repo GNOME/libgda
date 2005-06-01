@@ -338,6 +338,18 @@
              package will be installed
           </para>
         </listitem>
+	<listitem>
+          <para>
+            <userinput>--enable-gtk-doc</userinput>: Specify that the library's documentation
+	     must be built (using the gtk-doc program)
+          </para>
+        </listitem>
+	<listitem>
+          <para>
+            <userinput>--enable-debug</userinput>: Specify to explicietly print some debuging
+             information
+          </para>
+        </listitem>
         <listitem>
           <para>
             <userinput>--with-mysql=&lt;directory&gt;</userinput>: Specify
@@ -381,19 +393,14 @@
             are installed
           </para>
         </listitem>
-	<listitem>
-          <para>
-            <userinput>--with-sqlite=&lt;directory&gt;</userinput>: Specify
-            directory where the SQLite libraries are installed
-          </para>
-        </listitem>
       </itemizedlist>
       <para>
         Libraries needed by providers are searched by default, so, if found, providers are
 	compiled by default. Those libraries are searched in hard-coded directories, so
 	if the installation of these libraries is in an uncommon place, the above arguments
 	should be used to specify the directories where the libraries and header files
-	are installed.
+	are installed. Note that the SQLite provider is now always built using the sources
+	of the SQLite library that are bundled within &LIBGDA;'s sources.
       </para>
       <para>
         If you find any problem during the configuration, compilation or
@@ -617,18 +624,24 @@
 	        <para>
 		  The password to be used when connecting to the database.
 		  This is stored in plain text, so be sure you restrict access
-		  to the configuration file (<filename>~/.libgda/config</filename>)
+		  to the configuration files 
 		  to any &quot;dangerous&quot; users.
 		</para>
 	      </callout>
 	    </calloutlist>
 	  </programlistingco>
 	</para>
+	<para>
+	  For each user, &LIBGDA; has two possible configuration files: one local to the user
+	  which is stored in <filename class="directory">~/.libgda/config</filename> and one
+	  which is for all the users on the system which is 
+	  <filename class="directory">&lt;prefix&gt;/etc/libgda/config</filename> where
+	  &lt;prefix&gt; is where the &LIBGDA; library has been installed.
+	</para>
         <para>
-          The &XML; configuration file (<filename
-	  class="directory">~/.libgda/config</filename>) is not
-	  recommended to be modified by hand and, for our example, it is
-	  something like this:
+	  It is not recommended to modify configuration files by hand (instead use the
+	  <application>gnome-database-properties</application> application from the
+	  &GNOMEDB; library. For our example, a configuarion file is:
         </para>
 	<programlisting>
 &lt;?xml version="1.0"?&gt;

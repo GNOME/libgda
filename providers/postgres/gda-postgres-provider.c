@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998-2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -50,9 +50,14 @@ static const gchar *gda_postgres_provider_get_server_version (GdaServerProvider 
 static const gchar *gda_postgres_provider_get_database (GdaServerProvider *provider,
 							GdaConnection *cnc);
 
-static gboolean gda_postgres_provider_create_database (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       const gchar *name);
+static gchar *gda_postgres_provider_get_specs_create_database  (GdaServerProvider *provider);
+
+static gboolean gda_postgres_provider_create_database_params (GdaServerProvider *provider, 
+							      GdaParameterList *params, GError **error);
+
+static gboolean gda_postgres_provider_create_database_cnc (GdaServerProvider *provider,
+							   GdaConnection *cnc,
+							   const gchar *name);
 
 static gboolean gda_postgres_provider_drop_database (GdaServerProvider *provider,
 						     GdaConnection *cnc,
@@ -164,7 +169,9 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->close_connection = gda_postgres_provider_close_connection;
 	provider_class->get_server_version = gda_postgres_provider_get_server_version;
 	provider_class->get_database = gda_postgres_provider_get_database;
-	provider_class->create_database = gda_postgres_provider_create_database;
+	provider_class->get_specs_create_database = gda_postgres_provider_get_specs_create_database;
+	provider_class->create_database_params = gda_postgres_provider_create_database_params;
+	provider_class->create_database_cnc = gda_postgres_provider_create_database_cnc;
 	provider_class->drop_database = gda_postgres_provider_drop_database;
 	provider_class->create_table = gda_postgres_provider_create_table;
 	provider_class->drop_table = gda_postgres_provider_drop_table;
@@ -774,11 +781,161 @@ gda_postgres_provider_get_database (GdaServerProvider *provider,
 	return (const char *) PQdb ((const PGconn *) priv_data->pconn);
 }
 
-/* create_database handler for the GdaPostgresProvider class */
+/* get_specs_create_database handler for the GdaPostgresProvider class */ 
+static gchar *
+gda_postgres_provider_get_specs_create_database (GdaServerProvider *provider)
+{
+	gchar *specs, *file;
+	gint len;
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
+
+	file = g_build_filename (LIBGDA_DATA_DIR, "postgres_specs_create_db.xml", NULL);
+	if (g_file_get_contents (file, &specs, &len, NULL)) 
+		return specs;
+	else
+		return NULL;
+}
+
+#define string_from_string_param(param) \
+	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
+	gda_value_get_string (gda_parameter_get_value (param)) : NULL
+
+#define int_from_int_param(param) \
+	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
+	gda_value_get_integer (gda_parameter_get_value (param)) : -1
+
+#define bool_from_bool_param(param) \
+	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
+	gda_value_get_boolean (gda_parameter_get_value (param)) : FALSE
+
+
+/* create_database_params handler for the GdaPostgresProvider class */ 
 static gboolean
-gda_postgres_provider_create_database (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       const gchar *name)
+gda_postgres_provider_create_database_params (GdaServerProvider *provider,
+					      GdaParameterList *params, GError **error)
+{
+	const gchar *pq_host;
+	const gchar *pq_db;
+	gint         pq_port = -1;
+	const gchar *pq_options = NULL;
+	const gchar *pq_user = NULL;
+	const gchar *pq_pwd = NULL;
+	gboolean     pq_ssl = FALSE;
+
+	const gchar *pq_newdb = NULL;
+	const gchar *pq_enc = NULL;
+	const gchar *pq_owner = NULL;
+	const gchar *pq_tspace = NULL;
+
+	GString *string;
+	PGconn *pconn;
+	PGresult *pg_res;
+	
+	gboolean retval = TRUE;
+	GdaParameter *param = NULL;
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+
+	if (params) {
+		param = gda_parameter_list_find (params, "HOST");
+		pq_host = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "PORT");
+		pq_port = int_from_int_param (param);
+
+		param = gda_parameter_list_find (params, "OPTIONS");
+		pq_options = string_from_string_param (param);
+		
+		param = gda_parameter_list_find (params, "ADM_LOGIN");
+		pq_user = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "ADM_PASSWORD");
+		pq_pwd = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "TEMPLATE");
+		pq_db = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "REQUIRESSL");
+		pq_ssl = bool_from_bool_param (param);
+
+		param = gda_parameter_list_find (params, "DATABASE");
+		pq_newdb = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "ENCODING");
+		pq_enc = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "OWNER");
+		pq_owner = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "TABLESPACE");
+		pq_tspace = string_from_string_param (param);
+	}
+	if (!pq_newdb) {
+		g_set_error (error, 0, 0,
+			     _("Missing parameter 'DATABASE'"));
+		return FALSE;
+	}
+
+	/* open a connection with the administrator settings */
+	string = g_string_new ("");
+	if (pq_host && *pq_host)
+		g_string_append_printf (string, "host=%s", pq_host);
+	if (pq_port > 0)
+		g_string_append_printf (string, " port=%d", pq_port);
+	g_string_append_printf (string, " dbname=%s", pq_db ? pq_db : "template1");
+	if (pq_options && *pq_options)
+		g_string_append_printf (string, " options=%s", pq_options);
+	if (pq_user && *pq_user)
+		g_string_append_printf (string, " user=%s", pq_user);
+	if (pq_pwd && *pq_pwd)
+		g_string_append_printf (string, " password=%s", pq_pwd);
+	if (pq_ssl)
+		g_string_append (string, " requiressl=1");
+
+	pconn = PQconnectdb (string->str);
+	g_string_free (string, TRUE);
+	
+	if (PQstatus (pconn) != CONNECTION_OK) {
+		g_set_error (error, 0, 0, PQerrorMessage (pconn));
+		PQfinish(pconn);
+
+		return FALSE;
+	}
+
+	/* Ask to create a database */
+	string = g_string_new ("CREATE DATABASE ");
+	g_string_append (string, pq_newdb);
+	if (pq_owner)
+		g_string_append_printf (string, " OWNER=%s", pq_owner);
+	if (pq_db)
+		g_string_append_printf (string, " TEMPLATE=%s", pq_db);
+	if (pq_enc)
+		g_string_append_printf (string, " ENCODING='%s'", pq_enc);
+	if (pq_tspace)
+		g_string_append_printf (string, " TABLESPACE=%s", pq_tspace);
+
+	pg_res = PQexec (pconn, string->str);
+	g_string_free (string, TRUE);
+
+	if (!pg_res || PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
+		g_set_error (error, 0, 0, PQresultErrorMessage (pg_res));
+		retval = FALSE;
+	}
+
+	PQfinish(pconn);
+	
+	return retval;
+}
+
+
+/* create_database_cnc handler for the GdaPostgresProvider class */
+static gboolean
+gda_postgres_provider_create_database_cnc (GdaServerProvider *provider,
+					   GdaConnection *cnc,
+					   const gchar *name)
 {
 	gboolean retval;
 	gchar *sql;
@@ -1826,7 +1983,7 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
 	gint i;
-	GdaPostgresColData cols[9] = {
+	GdaPostgresColData cols[] = {
 		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
@@ -1835,7 +1992,8 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("References")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  }
+		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  },
+		{ N_("Extra attributes"), GDA_VALUE_TYPE_STRING  }
 		};
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
@@ -2247,7 +2405,12 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 		else
 			value = gda_value_new_null ();
 	        rowlist = g_list_append (rowlist, value);
-		
+
+		/* Extra attributes */
+		if (strstr (PQgetvalue (pg_res, i, 5), "nextval"))
+			value = gda_value_new_string ("AUTO_INCREMENT");
+		else
+			value = gda_value_new_string ("");			
 
 		list = g_list_append (list, rowlist);
 		rowlist = NULL;

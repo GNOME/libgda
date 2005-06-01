@@ -34,19 +34,19 @@
 #define PARENT_TYPE G_TYPE_OBJECT
 
 typedef struct {
-	GModule *handle;
-	GdaServerProvider *provider;
+	GModule              *handle;
+	GdaServerProvider    *provider;
 
 	/* entry points to the plugin */
-	const gchar * (* plugin_get_name) (void);
-	const gchar * (* plugin_get_description) (void);
-	GList * (* plugin_get_connection_params) (void);
-	GdaServerProvider * (* plugin_create_provider) (void);
+	const gchar        *(*plugin_get_name) (void);
+	const gchar        *(*plugin_get_description) (void);
+	GList              *(*plugin_get_connection_params) (void);
+	GdaServerProvider * (*plugin_create_provider) (void);
 } LoadedProvider;
 
 struct _GdaClientPrivate {
-	GHashTable *providers;
-	GList *connections;
+	GHashTable           *providers;
+	GList                *connections;
 };
 
 static void gda_client_class_init (GdaClientClass *klass);
@@ -275,6 +275,66 @@ gda_client_new (void)
 	return client;
 }
 
+static LoadedProvider *
+find_or_load_provider (GdaClient *client, const gchar *provider)
+{
+	LoadedProvider *prv = NULL;
+	GdaProviderInfo *prv_info;
+
+	prv_info = gda_config_get_provider_by_name (provider);
+	if (!prv_info) {
+		emit_client_error (client, NULL,
+				   _("Could not find provider %s in the current setup"),
+				   provider);
+		return NULL;
+	}
+	
+	/* load the new provider */
+	prv = g_new0 (LoadedProvider, 1);
+	prv->handle = g_module_open (prv_info->location, G_MODULE_BIND_LAZY);
+
+	if (!prv->handle) {
+		emit_client_error (client, NULL, g_module_error ());
+		g_free (prv);
+		return NULL;
+	}
+	
+	g_module_make_resident (prv->handle);
+	
+	g_module_symbol (prv->handle, "plugin_get_name",
+			 (gpointer) &prv->plugin_get_name);
+	g_module_symbol (prv->handle, "plugin_get_description",
+			 (gpointer) &prv->plugin_get_description);
+	g_module_symbol (prv->handle, "plugin_get_connection_params",
+			 (gpointer) &prv->plugin_get_connection_params);
+	g_module_symbol (prv->handle, "plugin_create_provider",
+			 (gpointer) &prv->plugin_create_provider);
+	
+	if (!prv->plugin_create_provider) {
+		emit_client_error (client, NULL,
+				   _("Provider %s does not implement entry function"),
+				   provider);
+		g_free (prv);
+		return NULL;
+	}
+	
+	prv->provider = prv->plugin_create_provider ();
+	if (!prv->provider) {
+		emit_client_error (client, NULL,
+				   _("Could not create GdaServerProvider object from plugin"));
+		g_free (prv);
+		return NULL;
+	}
+	
+	g_object_ref (G_OBJECT (prv->provider)); /* vivien: usefull? */
+	g_object_weak_ref (G_OBJECT (prv->provider), (GWeakNotify) provider_weak_cb, client);
+	g_hash_table_insert (client->priv->providers,
+			     g_strdup (provider),
+			     prv);
+
+	return prv;
+}
+
 /**
  * gda_client_open_connection
  * @client: a #GdaClient object.
@@ -301,7 +361,7 @@ gda_client_open_connection (GdaClient *client,
 			    const gchar *password,
 			    GdaConnectionOptions options)
 {
-	GdaConnection *cnc;
+	GdaConnection *cnc = NULL;
 	LoadedProvider *prv;
 	GdaDataSourceInfo *dsn_info;
 
@@ -327,83 +387,28 @@ gda_client_open_connection (GdaClient *client,
 	}
 
 	/* try to find provider in our hash table */
-	prv = NULL;
-	if (dsn_info->provider != NULL)
+	if (dsn_info->provider != NULL) {
 		prv = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
+		if (!prv)
+			prv = find_or_load_provider (client, dsn_info->provider);
+	
+		if (prv)
+			cnc = gda_connection_new (client, prv->provider, dsn, username, password, options);
+		
+		if (!cnc || !GDA_IS_CONNECTION (cnc)) {
+			gda_data_source_info_free (dsn_info);
+			return NULL;
+		}
+		
+		/* add list to our private list */
+		client->priv->connections = g_list_append (client->priv->connections, cnc);
+		g_object_weak_ref (G_OBJECT (cnc), (GWeakNotify) cnc_weak_cb, client);
+		g_signal_connect (G_OBJECT (cnc), "error",
+				  G_CALLBACK (connection_error_cb), client);
+	}
 	else
 		g_warning ("Provider is null!");
-	
-	if (!prv) {
-		GdaProviderInfo *prv_info;
 
-		prv_info = gda_config_get_provider_by_name (dsn_info->provider);
-		if (!prv_info) {
-			emit_client_error (client, NULL,
-					   _("Could not find provider %s in the current setup"),
-					   dsn_info->provider);
-			gda_data_source_info_free (dsn_info);
-			return NULL;
-		}
-
-		/* load the new provider */
-		prv = g_new0 (LoadedProvider, 1);
-		prv->handle = g_module_open (prv_info->location, G_MODULE_BIND_LAZY);
-		gda_provider_info_free (prv_info);
-		if (!prv->handle) {
-			emit_client_error (client, NULL, g_module_error ());
-			gda_data_source_info_free (dsn_info);
-			g_free (prv);
-			return NULL;
-		}
-
-		g_module_make_resident (prv->handle);
-
-		g_module_symbol (prv->handle, "plugin_get_name",
-				 (gpointer) &prv->plugin_get_name);
-		g_module_symbol (prv->handle, "plugin_get_description",
-				 (gpointer) &prv->plugin_get_description);
-		g_module_symbol (prv->handle, "plugin_get_connection_params",
-				 (gpointer) &prv->plugin_get_connection_params);
-		g_module_symbol (prv->handle, "plugin_create_provider",
-				 (gpointer) &prv->plugin_create_provider);
-
-		if (!prv->plugin_create_provider) {
-			emit_client_error (client, NULL,
-					   _("Provider %s does not implement entry function"),
-					   dsn_info->provider);
-			gda_data_source_info_free (dsn_info);
-			g_free (prv);
-			return NULL;
-		}
-
-		prv->provider = prv->plugin_create_provider ();
-		if (!prv->provider) {
-			emit_client_error (client, NULL,
-					   _("Could not create GdaServerProvider object from plugin"));
-			gda_data_source_info_free (dsn_info);
-			g_free (prv);
-			return NULL;
-		}
-
-		g_object_ref (G_OBJECT (prv->provider));
-		g_object_weak_ref (G_OBJECT (prv->provider), (GWeakNotify) provider_weak_cb, client);
-		g_hash_table_insert (client->priv->providers,
-				     g_strdup (dsn_info->provider),
-				     prv);
-	}
-
-	cnc = gda_connection_new (client, prv->provider, dsn, username, password, options);
-
-	if (!GDA_IS_CONNECTION (cnc)) {
-		gda_data_source_info_free (dsn_info);
-		return NULL;
-	}
-
-	/* add list to our private list */
-	client->priv->connections = g_list_append (client->priv->connections, cnc);
-	g_object_weak_ref (G_OBJECT (cnc), (GWeakNotify) cnc_weak_cb, client);
-	g_signal_connect (G_OBJECT (cnc), "error",
-			  G_CALLBACK (connection_error_cb), client);
 
 	/* free memory */
 	gda_data_source_info_free (dsn_info);
@@ -604,7 +609,7 @@ gda_client_notify_event (GdaClient *client,
 {
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
-	if (g_list_find (client->priv->connections, cnc)) {
+	if (!cnc || g_list_find (client->priv->connections, cnc)) {
 		g_signal_emit (G_OBJECT (client), gda_client_signals[EVENT_NOTIFICATION], 0,
 			       cnc, event, params);
 	}
@@ -624,7 +629,6 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaError *
 	GdaParameterList *params;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (error != NULL);
 
 	params = gda_parameter_list_new ();
@@ -845,4 +849,60 @@ gda_client_rollback_transaction (GdaClient *client, GdaTransaction *xaction)
 	}
 
 	return failures == 0 ? TRUE : FALSE;
+}
+
+/**
+ * gda_client_get_specs_to_create_database
+ * @client: a #GdaClient object.
+ * @provider: a provider
+ *
+ * Get an XML string representing the parameters required to create a new database
+ * using the @provider provider.
+ *
+ * Returns: a string (free it after usage), or %NULL if the provider does not implement database
+ * creation
+ */
+gchar *
+gda_client_get_specs_to_create_database (GdaClient *client, const gchar *provider)
+{
+	LoadedProvider *prv;
+
+	g_return_val_if_fail (client && GDA_IS_CLIENT (client), NULL);
+
+	if (!provider || !*provider)
+		return NULL;
+
+	prv = find_or_load_provider (client, provider);
+	if (prv && prv->provider) 
+		return gda_server_provider_get_specs_to_create_database (prv->provider);
+	else
+		return NULL;
+}
+
+/**
+ * gda_client_create_database
+ * @client: a #GdaClient object.
+ * @provider: a provider
+ * @params:
+ * @error: a place to store en error, or %NULL
+ *
+ * Creates a new database using the specifications in @params
+ *
+ * Returns: TRUE if no error occured and the database has been created
+ */
+gboolean
+gda_client_create_database (GdaClient *client, const gchar *provider, GdaParameterList *params,
+			    GError **error)
+{
+	LoadedProvider *prv;
+
+	g_return_val_if_fail (client && GDA_IS_CLIENT (client), FALSE);
+
+	prv = find_or_load_provider (client, provider);
+	if (prv && prv->provider) 
+		return gda_server_provider_create_database (prv->provider, params, error);
+	else {
+		g_set_error (error, 0, 0, _("Could not find provider %s in the current setup"), provider); 
+		return FALSE;
+	}
 }

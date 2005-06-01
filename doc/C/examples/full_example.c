@@ -285,9 +285,6 @@ list_providers (void)
       g_print ("ID: %s\n", info->id);
 
     }
-
-  gda_config_free_provider_list (prov_list);
-
 }
 
 

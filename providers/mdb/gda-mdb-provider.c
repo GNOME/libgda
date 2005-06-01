@@ -52,9 +52,9 @@ static const gchar *gda_mdb_provider_get_database (GdaServerProvider *provider,
 static gboolean gda_mdb_provider_change_database (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  const gchar *name);
-static gboolean gda_mdb_provider_create_database (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  const gchar *name);
+static gboolean gda_mdb_provider_create_database_cnc (GdaServerProvider *provider,
+						      GdaConnection *cnc,
+						      const gchar *name);
 static gboolean gda_mdb_provider_drop_database (GdaServerProvider *provider,
 						GdaConnection *cnc,
 						const gchar *name);
@@ -107,7 +107,7 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	provider_class->get_server_version = gda_mdb_provider_get_server_version;
 	provider_class->get_database = gda_mdb_provider_get_database;
 	provider_class->change_database = gda_mdb_provider_change_database;
-	provider_class->create_database = gda_mdb_provider_create_database;
+	provider_class->create_database_cnc = gda_mdb_provider_create_database_cnc;
 	provider_class->drop_database = gda_mdb_provider_drop_database;
 	provider_class->execute_command = gda_mdb_provider_execute_command;
 	provider_class->begin_transaction = gda_mdb_provider_begin_transaction;
@@ -303,11 +303,11 @@ gda_mdb_provider_change_database (GdaServerProvider *provider,
 	return FALSE;
 }
 
-/* create_database handler for the GdaMdbProvider class */
+/* create_database_cnc handler for the GdaMdbProvider class */
 static gboolean
-gda_mdb_provider_create_database (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  const gchar *name)
+gda_mdb_provider_create_database_cnc (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      const gchar *name)
 {
 	return FALSE;
 }

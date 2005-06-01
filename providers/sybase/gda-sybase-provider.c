@@ -58,9 +58,9 @@ static gboolean gda_sybase_provider_change_database (GdaServerProvider *provider
 static gboolean gda_sybase_provider_commit_transaction (GdaServerProvider *provider,
                                                         GdaConnection *cnc,
                                                         GdaTransaction *xaction);
-static gboolean gda_sybase_provider_create_database (GdaServerProvider *provider,
-                                                     GdaConnection *cnc,
-                                                     const gchar *name);
+static gboolean gda_sybase_provider_create_database_cnc (GdaServerProvider *provider,
+                                                         GdaConnection *cnc,
+                                                         const gchar *name);
 static gboolean gda_sybase_provider_drop_database (GdaServerProvider *provider,
                                                    GdaConnection *cnc,
                                                    const gchar *name);
@@ -110,7 +110,7 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 	provider_class->change_database = gda_sybase_provider_change_database;
 	provider_class->close_connection = gda_sybase_provider_close_connection;
 	provider_class->commit_transaction = gda_sybase_provider_commit_transaction;
-	provider_class->create_database = gda_sybase_provider_create_database;
+	provider_class->create_database_cnc = gda_sybase_provider_create_database_cnc;
 	provider_class->drop_database = gda_sybase_provider_drop_database;
 	provider_class->execute_command = gda_sybase_provider_execute_command;
 	provider_class->get_database = gda_sybase_provider_get_database;
@@ -563,9 +563,9 @@ gda_sybase_provider_commit_transaction (GdaServerProvider *provider,
 }
 
 static gboolean 
-gda_sybase_provider_create_database (GdaServerProvider *provider,
-                                     GdaConnection *cnc,
-                                     const gchar *name)
+gda_sybase_provider_create_database_cnc (GdaServerProvider *provider,
+                                         GdaConnection *cnc,
+                                         const gchar *name)
 {
 	return FALSE;
 }

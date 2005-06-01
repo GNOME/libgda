@@ -1,5 +1,5 @@
 /* GDA Postgres Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -25,10 +25,12 @@
 #include <libgda/gda-config.h>
 #include "gda-postgres-provider.h"
 
-const gchar *plugin_get_name (void);
-const gchar *plugin_get_description (void);
-GList *plugin_get_connection_params (void);
+const gchar       *plugin_get_name (void);
+const gchar       *plugin_get_description (void);
+GList             *plugin_get_connection_params (void);
+gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
+
 
 const gchar *
 plugin_get_name (void)
@@ -60,27 +62,32 @@ plugin_get_connection_params (void)
 								    _("Name of the host to connect to"),
 								    GDA_VALUE_TYPE_STRING));
 	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("HOSTADDR", _("Host Address"),
-								    _("IP address of the host to connect to"),
-								    GDA_VALUE_TYPE_STRING));
+			      gda_provider_parameter_info_new_full ("PORT", _("Port"),
+								    _("Port number to use for the connection"),
+								    GDA_VALUE_TYPE_INTEGER));
 	list = g_list_append (list,
 			      gda_provider_parameter_info_new_full ("OPTIONS", _("Extra Options"),
 								    _("Extra PostgreSQL options to use for the connection"),
 								    GDA_VALUE_TYPE_STRING));
 	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("PORT", _("Port"),
-								    _("Port number to use for the connection"),
-								    GDA_VALUE_TYPE_INTEGER));
-	list = g_list_append (list,
 			      gda_provider_parameter_info_new_full ("REQUIRESSL", _("Require SSL"),
 								    _("Whether to require SSL or not when connecting"),
 								    GDA_VALUE_TYPE_BOOLEAN));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("TTY", _("TTY"),
-								    _("TTY"),
-								    GDA_VALUE_TYPE_STRING));
 
 	return list;
+}
+
+gchar *
+plugin_get_dsn_spec (void)
+{
+	gchar *specs, *file;
+	gint len;
+
+	file = g_build_filename (LIBGDA_DATA_DIR, "postgres_specs_dsn.xml", NULL);
+	if (g_file_get_contents (file, &specs, &len, NULL)) 
+		return specs;
+	else
+		return NULL;
 }
 
 GdaServerProvider *

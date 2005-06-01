@@ -1,3 +1,31 @@
+2005-06-01 Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model.c: gda_data_model_to_xml(): the contents of the 
+	  GdaDataModel is now dumped into a <data-array> tag.
+	* libgda/gda-data-model-array.[ch]:added gda_data_model_array_new_from_xml_node()
+	* libgda/gda-client.[ch]: added gda_client_get_specs_to_create_database() and
+	  gda_client_create_database()
+	* libgda/gda-server-provider.[ch]: added virtual methods: get_specs_create_database()
+	  and create_database_params(), and renamed virtual method create_database() to 
+	  create_database_cnc()
+	* libgda/gda-server-provider.[ch]: renamed gda_server_provider_create_database()
+	  to gda_server_provider_create_database_cnc() and marked it as deprecated
+	* libgda/gda-server-provider.[ch]: added gda_server_provider_create_database()
+	  and gda_server_provider_get_specs_to_create_database()
+	* libgda/doc: update to API changes
+	* libgda/providers/sqlite/*: implemented the 
+	  gda_server_provider_get_specs_to_create_database() and 
+	  gda_server_provider_create_database() functions, and
+	  implemented the "Extra attributes" column for table's fields schema
+	* libgda/providers/postgres/*: implemented the 
+	  gda_server_provider_get_specs_to_create_database() and 
+	  gda_server_provider_create_database() functions and
+	  implemented the "Extra attributes" column for table's fields schema
+	* libgda/providers/mysql/*: implemented the 
+	  gda_server_provider_get_specs_to_create_database() and 
+	  gda_server_provider_create_database() functions and
+	  implemented the "Extra attributes" column for table's fields schema	
+
 2005-05-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.3.2

@@ -985,18 +985,12 @@ gda_data_model_to_xml (GdaDataModel *model, const gint *cols, gint nb_cols, cons
 	gchar *xml;
 	gint size;
 	xmlDocPtr xml_doc;
-	xmlNodePtr xml_root, xml_tables;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	xml_node = gda_data_model_to_xml_node (model, cols, nb_cols, name);
 	xml_doc = xmlNewDoc ("1.0");
-		
-	xml_root = xmlNewDocNode (xml_doc, NULL, "database", NULL);
-	xmlDocSetRootElement (xml_doc, xml_root);
-	
-	xml_tables = xmlNewChild (xml_root, NULL, "tables", NULL);
-	xmlAddChild (xml_tables, xml_node);
+	xmlDocSetRootElement (xml_doc, xml_node);
 	
 	xmlDocDumpMemory (xml_doc, &xml_contents, &size);
 	xmlFreeDoc (xml_doc);
@@ -1042,7 +1036,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	node = xmlNewNode (NULL, "table");
+	node = xmlNewNode (NULL, "data-array");
 	if (name)
 		xmlSetProp (node, "name", name);
 	else

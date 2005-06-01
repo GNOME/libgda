@@ -23,6 +23,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <glib.h>
 #include <gmodule.h>
@@ -92,7 +93,6 @@ static void           fam_unlock_notify ();
 static void
 dump_config_client ()
 {
-	g_print ("--- %p\n", config_client);
 	if (config_client) {
 		GList *list;
 
@@ -1388,85 +1388,98 @@ gda_config_free_list (GList *list)
  *
  * Returns a list of all providers currently installed in
  * the system. Each of the nodes in the returned GList
- * is a #GdaProviderInfo. To free the returned list,
- * call the #gda_config_free_provider_list function.
+ * is a #GdaProviderInfo.
  *
- * Returns: a GList of #GdaProviderInfo structures.
+ * Returns: a GList of #GdaProviderInfo structures, don't free or modify it!
  */
 GList *
 gda_config_get_provider_list (void)
 {
-	GDir *dir;
-	GError *err = NULL;
-	const gchar *name;
-	GList *list = NULL;
+	static GList *prov_list = NULL;
 
-	/* read the plugin directory */
-	dir = g_dir_open (LIBGDA_PLUGINDIR, 0, &err);
-	if (err) {
-		gda_log_error (err->message);
-		g_error_free (err);
-		return NULL;
-	}
+	if (!prov_list) {
+		GDir *dir;
+		GError *err = NULL;
+		const gchar *name;
+		GList *list = NULL;
 
-	while ((name = g_dir_read_name (dir))) {
-		GdaProviderInfo *info;
-		GModule *handle;
-		gchar *path;
-		gchar *ext;
-		const gchar * (* plugin_get_name) (void);
-		const gchar * (* plugin_get_description) (void);
-		GList * (* plugin_get_cnc_params) (void);
-
-		ext = g_strrstr (name, ".");
-		if (!ext)
-			continue;
-		if (strcmp (ext + 1, G_MODULE_SUFFIX))
-			continue;
-
-		path = g_build_path (G_DIR_SEPARATOR_S, LIBGDA_PLUGINDIR,
-				     name, NULL);
-		handle = g_module_open (path, G_MODULE_BIND_LAZY);
-		if (!handle) {
-			g_warning (_("Error: %s"), g_module_error ());
-			g_free (path);
-			continue;
+		/* read the plugin directory */
+		dir = g_dir_open (LIBGDA_PLUGINDIR, 0, &err);
+		if (err) {
+			gda_log_error (err->message);
+			g_error_free (err);
+			return NULL;
 		}
+		
+		while ((name = g_dir_read_name (dir))) {
+			GdaProviderInfo *info;
+			GModule *handle;
+			gchar *path;
+			gchar *ext;
+			const gchar * (* plugin_get_name) (void);
+			const gchar * (* plugin_get_description) (void);
+			GList * (* plugin_get_cnc_params) (void);
+			gchar * (* plugin_get_dsn_spec) (void);
+			
+			ext = g_strrstr (name, ".");
+			if (!ext)
+				continue;
+			if (strcmp (ext + 1, G_MODULE_SUFFIX))
+				continue;
+			
+			path = g_build_path (G_DIR_SEPARATOR_S, LIBGDA_PLUGINDIR,
+					     name, NULL);
+			handle = g_module_open (path, G_MODULE_BIND_LAZY);
+			if (!handle) {
+				g_warning (_("Error: %s"), g_module_error ());
+				g_free (path);
+				continue;
+			}
+			
+			g_module_symbol (handle, "plugin_get_name",
+					 (gpointer *) &plugin_get_name);
+			g_module_symbol (handle, "plugin_get_description",
+					 (gpointer *) &plugin_get_description);
+			g_module_symbol (handle, "plugin_get_connection_params",
+					 (gpointer *) &plugin_get_cnc_params);
+			g_module_symbol (handle, "plugin_get_dsn_spec",
+					 (gpointer *) &plugin_get_dsn_spec);
+			
+			info = g_new0 (GdaProviderInfo, 1);
+			info->location = path;
+			
+			if (plugin_get_name != NULL)
+				info->id = g_strdup (plugin_get_name ());
+			else
+				info->id = g_strdup (name);
+			
+			if (plugin_get_description != NULL)
+				info->description = g_strdup (plugin_get_description ());
+			else
+				info->description = NULL;
+			
+			if (plugin_get_cnc_params != NULL)
+				info->gda_params = plugin_get_cnc_params ();
+			else
+				info->gda_params = NULL;
+			
+			if (plugin_get_dsn_spec != NULL)
+				info->dsn_spec = plugin_get_dsn_spec ();
+			else
+				info->dsn_spec = NULL;
+			
+			list = g_list_append (list, info);
+			
+			g_module_close (handle);
+		}
+		
+		/* free memory */
+		g_dir_close (dir);
 
-		g_module_symbol (handle, "plugin_get_name",
-				 (gpointer *) &plugin_get_name);
-		g_module_symbol (handle, "plugin_get_description",
-				 (gpointer *) &plugin_get_description);
-		g_module_symbol (handle, "plugin_get_connection_params",
-				 (gpointer *) &plugin_get_cnc_params);
-
-		info = g_new0 (GdaProviderInfo, 1);
-		info->location = path;
-
-		if (plugin_get_name != NULL)
-			info->id = g_strdup (plugin_get_name ());
-		else
-			info->id = g_strdup (name);
-
-		if (plugin_get_description != NULL)
-			info->description = g_strdup (plugin_get_description ());
-		else
-			info->description = NULL;
-
-		if (plugin_get_cnc_params != NULL)
-			info->gda_params = plugin_get_cnc_params ();
-		else
-			info->gda_params = NULL;
-
-		list = g_list_append (list, info);
-
-		g_module_close (handle);
+		prov_list = list;
 	}
 
-	/* free memory */
-	g_dir_close (dir);
-
-	return list;
+	return prov_list;
 }
 
 /**
@@ -1494,7 +1507,8 @@ gda_config_free_provider_list (GList *list)
  * gda_config_get_provider_by_name
  * @name: name of the provider to search for.
  *
- * Gets a #GdaProviderInfo structure from the provider list given its name.
+ * Gets a #GdaProviderInfo structure from the provider list given its name,
+ * don't modify or free it.
  *
  * Returns: a #GdaProviderInfo structure, if found, or %NULL if not found.
  */
@@ -1503,21 +1517,21 @@ gda_config_get_provider_by_name (const gchar *name)
 {
 	GList *prov_list;
 	GList *l;
+	gchar *tmpname;
+
+	if (name)
+		tmpname = name;
+	else
+		tmpname= "SQLite";
 
 	prov_list = gda_config_get_provider_list ();
 
-	for (l = prov_list; l != NULL; l = l->next) {
+	for (l = prov_list; l; l = l->next) {
 		GdaProviderInfo *provider_info = (GdaProviderInfo *) l->data;
 
-		if (provider_info && !strcmp (provider_info->id, name)) {
-			l->data = NULL;
-			gda_config_free_provider_list (prov_list);
-
+		if (provider_info && !strcmp (provider_info->id, tmpname))
 			return provider_info;
-		}
 	}
-
-	gda_config_free_provider_list (prov_list);
 
 	return NULL;
 }
@@ -1558,10 +1572,8 @@ gda_config_get_provider_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (prov_info->description));
 
 		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
+		/* FIXME: correct memory leak here by freeing value_list */
 	}
-	
-	/* free memory */
-	gda_config_free_provider_list (prov_list);
 	
 	return model;
 }
@@ -1683,6 +1695,8 @@ gda_provider_info_free (GdaProviderInfo *provider_info)
 	g_free (provider_info->description);
 	g_list_foreach (provider_info->gda_params, (GFunc) gda_provider_parameter_info_free, NULL);
 	g_list_free (provider_info->gda_params);
+	if (provider_info->dsn_spec)
+		g_free (provider_info->dsn_spec);
 
 	g_free (provider_info);
 }

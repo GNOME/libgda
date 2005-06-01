@@ -54,9 +54,9 @@ static const gchar *gda_ibmdb2_provider_get_database (GdaServerProvider *provide
 static gboolean gda_ibmdb2_provider_change_database (GdaServerProvider *provider,
                                                      GdaConnection *cnc,
                                                      const gchar *name);
-static gboolean gda_ibmdb2_provider_create_database (GdaServerProvider *provider,
-                                                     GdaConnection *cnc,
-                                                     const gchar *name);
+static gboolean gda_ibmdb2_provider_create_database_cnc (GdaServerProvider *provider,
+                                                         GdaConnection *cnc,
+                                                         const gchar *name);
 static gboolean gda_ibmdb2_provider_drop_database (GdaServerProvider *provider,
                                                    GdaConnection *cnc,
                                                    const gchar *name);
@@ -364,9 +364,9 @@ gda_ibmdb2_provider_single_command (GdaIBMDB2ConnectionData *conn_data,
 
 
 static gboolean
-gda_ibmdb2_provider_create_database (GdaServerProvider *provider,                                                    
-				     GdaConnection *cnc,
-                                     const gchar *name)
+gda_ibmdb2_provider_create_database_cnc (GdaServerProvider *provider,                                                    
+				         GdaConnection *cnc,
+                                         const gchar *name)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 	GdaIBMDB2ConnectionData *conn_data = NULL;
@@ -1061,7 +1061,7 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 	provider_class->get_server_version = gda_ibmdb2_provider_get_server_version;
 	provider_class->get_database = gda_ibmdb2_provider_get_database;
 	provider_class->change_database = gda_ibmdb2_provider_change_database;
-	provider_class->create_database = gda_ibmdb2_provider_create_database;
+	provider_class->create_database_cnc = gda_ibmdb2_provider_create_database_cnc;
 	provider_class->drop_database = gda_ibmdb2_provider_drop_database;
 	provider_class->execute_command = gda_ibmdb2_provider_execute_command;
 	provider_class->begin_transaction = gda_ibmdb2_provider_begin_transaction;

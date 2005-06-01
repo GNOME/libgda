@@ -50,8 +50,8 @@ static const gchar *gda_msql_provider_get_database(GdaServerProvider*,
                                                    GdaConnection*);
 static gboolean gda_msql_provider_change_database(GdaServerProvider*,
                                                   GdaConnection*,const gchar*);
-static gboolean gda_msql_provider_create_database(GdaServerProvider*,
-                                                  GdaConnection*,const gchar*);
+static gboolean gda_msql_provider_create_database_cnc(GdaServerProvider*,
+                                                      GdaConnection*,const gchar*);
 static gboolean gda_msql_provider_drop_database(GdaServerProvider*,
                                                 GdaConnection*,const gchar*);
 static GList *gda_msql_provider_execute_command(GdaServerProvider*,
@@ -94,7 +94,7 @@ static void gda_msql_provider_class_init(GdaMsqlProviderClass *cl)
 	pcl->get_server_version=gda_msql_provider_get_server_version;
 	pcl->get_database=gda_msql_provider_get_database;
 	pcl->change_database=gda_msql_provider_change_database;
-	pcl->create_database=gda_msql_provider_create_database;
+	pcl->create_database_cnc=gda_msql_provider_create_database_cnc;
 	pcl->drop_database=gda_msql_provider_drop_database;
 	pcl->execute_command=gda_msql_provider_execute_command;
 	pcl->begin_transaction=gda_msql_provider_begin_transaction;
@@ -321,9 +321,9 @@ gda_msql_provider_change_database(GdaServerProvider *p,GdaConnection *cnc,
 }
 
 static gboolean
-gda_msql_provider_create_database(GdaServerProvider *p,
-                                  GdaConnection *cnc,
-                                  const gchar *name)
+gda_msql_provider_create_database_cnc(GdaServerProvider *p,
+                                      GdaConnection *cnc,
+                                      const gchar *name)
 {
 	GdaMsqlProvider *mp=(GdaMsqlProvider*)p;
 

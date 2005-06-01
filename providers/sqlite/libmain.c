@@ -1,5 +1,5 @@
 /* GDA Postgres Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -24,9 +24,10 @@
 #include <libgda/gda-intl.h>
 #include "gda-sqlite-provider.h"
 
-const gchar *plugin_get_name (void);
-const gchar *plugin_get_description (void);
-GList *plugin_get_connection_params (void);
+const gchar       *plugin_get_name (void);
+const gchar       *plugin_get_description (void);
+GList             *plugin_get_connection_params (void);
+gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
 
 const gchar *
@@ -52,6 +53,19 @@ plugin_get_connection_params (void)
 								    GDA_VALUE_TYPE_STRING));
 
 	return list;
+}
+
+gchar *
+plugin_get_dsn_spec (void)
+{
+	gchar *specs, *file;
+	gint len;
+
+	file = g_build_filename (LIBGDA_DATA_DIR, "sqlite_specs_dsn.xml", NULL);
+	if (g_file_get_contents (file, &specs, &len, NULL)) 
+		return specs;
+	else
+		return NULL;
 }
 
 GdaServerProvider *

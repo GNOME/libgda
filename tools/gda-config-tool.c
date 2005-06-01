@@ -1424,7 +1424,6 @@ list_providers ()
 	
 	g_print ("---Providers list---\n");
 	g_list_foreach (providers, display_provider, NULL);
-	gda_config_free_provider_list (providers);
 }
 
 static void

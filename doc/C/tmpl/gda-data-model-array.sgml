@@ -29,6 +29,16 @@ An implementation of #GdaDataModel based on an array
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_array_new_from_xml_node ##### -->
+<para>
+
+</para>
+
+@node: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_array_set_n_columns ##### -->
 <para>
 

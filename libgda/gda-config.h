@@ -65,10 +65,10 @@ void     gda_config_remove_listener (guint id);
 typedef struct _GdaProviderInfo GdaProviderInfo;
 
 typedef struct {
-	char *name;
-	char *short_description;
-	char *long_description;
-	GdaValueType type;
+	char         *name;
+	char         *short_description;
+	char         *long_description;
+	GdaValueType  type;
 } GdaProviderParameterInfo;
 
 #define GDA_TYPE_PROVIDER_PARAMETER_INFO (gda_provider_parameter_info_get_type ())
@@ -81,11 +81,24 @@ GdaProviderParameterInfo *gda_provider_parameter_info_new_full (const gchar *nam
 GdaProviderParameterInfo *gda_provider_parameter_info_copy     (GdaProviderParameterInfo *param_info);
 void                      gda_provider_parameter_info_free     (GdaProviderParameterInfo *param_info);
 
+
+/*
+ * REM about the @gda_params and @dsn_spec fields:
+ *
+ * The @gda_params lists all the parameters required to create a DSN, and is historically the
+ * way to create a DSN. However the @dsn_spec field has been introduced to produce a more
+ * detailled spec on what is required to create a DSN, but is not yet implemented by all the
+ * providers.
+ *
+ * When both fields are present, they are guaranted to list the _same_ parameters, using
+ * different representations.
+ */
 struct _GdaProviderInfo {
 	gchar *id;
 	gchar *location;
 	gchar *description;
-	GList *gda_params; /* A list of GdaProviderParameterInfo pointers */
+	GList *gda_params; /* A list of GdaProviderParameterInfo pointers to create a DSN */
+	gchar *dsn_spec; /* XML string with all the parameters required to create a DSN */
 };
 
 #define GDA_TYPE_PROVIDER_INFO (gda_provider_info_get_type ())

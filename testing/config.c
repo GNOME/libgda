@@ -1,8 +1,9 @@
 /* GDA - Test suite
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -98,8 +99,6 @@ list_all_providers (void)
 		}
 		g_print ("\n");
 	}
-
-	gda_config_free_provider_list (providers);
 }
 
 /* Lists configured data sources */

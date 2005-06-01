@@ -23,6 +23,7 @@
 
 #include <glib/garray.h>
 #include <libgda/gda-data-model-array.h>
+#include <glib/gi18n-lib.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
@@ -313,6 +314,92 @@ gda_data_model_array_new (gint cols)
 
 	model = g_object_new (GDA_TYPE_DATA_MODEL_ARRAY, NULL);
 	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (model), cols);
+	return model;
+}
+
+typedef struct {
+	gchar *title;
+	gint   position;
+} XmlColumnSpec;
+
+/**
+ * gda_data_model_array_new_from_xml_node
+ * @node: an XML node representing a &lt;data-array&gt; tag
+ * @error: a place to store errors or %NULL
+ *
+ * Creates a new #GdaDataModel with the data stored in @node
+ *
+ * Returns: a pointer to the newly created #GdaDataModel, or %NULL if an error occured
+ */
+GdaDataModel *
+gda_data_model_array_new_from_xml_node (xmlNodePtr node, GError **error)
+{
+	GdaDataModel *model;
+	xmlNodePtr cur;
+	gint nbfields = 0;
+	GSList *fields = NULL;
+	GSList *list;
+
+	g_return_val_if_fail (node, NULL);
+
+	if (strcmp (node->name, "data-array")) {
+		g_set_error (error, 0, 0, _("Node is not <data-array>: '%s'"), node->name);
+		return NULL;
+	}
+
+	for (cur = node->children; cur; cur=cur->next) {
+		if (!strcmp (cur->name, "field")) {
+			gchar *str;
+			XmlColumnSpec *spec;
+
+			spec = g_new0 (XmlColumnSpec, 1);
+			spec->title = xmlGetProp(cur, "name");
+			if (!spec->title)
+				spec->title = g_strdup_printf ("field_%d", nbfields);
+			str = xmlGetProp(cur, "position");
+			if (str) {
+				spec->position = atoi (str);
+				g_free (str);
+			}
+			else
+				spec->position = nbfields;
+
+			fields = g_slist_append (fields, spec);
+			nbfields ++;
+			continue;
+		}
+		if (!strcmp (cur->name, "data"))
+			break;
+	}
+
+	if (nbfields == 0) {
+		g_set_error (error, 0, 0, _("No <field> specified in <data-array>"));
+		return NULL;
+	}
+
+	if (! cur) {
+		g_set_error (error, 0, 0, _("No <data> specified in <data-array>"), node->name);
+		return NULL;
+	}
+
+	/* model creation */
+	model = gda_data_model_array_new (nbfields);
+	if (! gda_data_model_add_data_from_xml_node (model, cur)) {
+		g_object_unref (model);
+		return NULL;
+	}
+	
+	/* setting model's column titles */
+	list = fields;
+	while (list) {
+		gda_data_model_set_column_title (model, ((XmlColumnSpec *)(list->data))->position,
+						 ((XmlColumnSpec *)(list->data))->title);
+		g_free (((XmlColumnSpec *)(list->data))->title);
+		g_free (list->data);
+		list = g_slist_next (list);
+	}
+	g_slist_free (fields);
+	
 	return model;
 }
 

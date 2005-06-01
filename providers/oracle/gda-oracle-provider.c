@@ -109,7 +109,7 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	provider_class->close_connection = gda_oracle_provider_close_connection;
 	provider_class->get_server_version = gda_oracle_provider_get_server_version;
 	provider_class->get_database = gda_oracle_provider_get_database;
-	provider_class->create_database = gda_oracle_provider_create_database;
+	provider_class->create_database_cnc = gda_oracle_provider_create_database;
 	provider_class->drop_database = gda_oracle_provider_drop_database;
 	provider_class->execute_command = gda_oracle_provider_execute_command;
 	provider_class->begin_transaction = gda_oracle_provider_begin_transaction;

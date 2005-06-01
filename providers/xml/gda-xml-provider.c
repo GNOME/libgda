@@ -52,9 +52,9 @@ static const gchar *gda_xml_provider_get_server_version (GdaServerProvider *prov
 							 GdaConnection *cnc);
 static const gchar *gda_xml_provider_get_database (GdaServerProvider *provider,
 						   GdaConnection *cnc);
-static gboolean gda_xml_provider_create_database (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  const gchar *name);
+static gboolean gda_xml_provider_create_database_cnc (GdaServerProvider *provider,
+						      GdaConnection *cnc,
+						      const gchar *name);
 static GList *gda_xml_provider_execute_command (GdaServerProvider *provider,
 						GdaConnection *cnc,
 						GdaCommand *cmd,
@@ -96,7 +96,7 @@ gda_xml_provider_class_init (GdaXmlProviderClass *klass)
 	provider_class->close_connection = gda_xml_provider_close_connection;
 	provider_class->get_server_version = gda_xml_provider_get_server_version;
 	provider_class->get_database = gda_xml_provider_get_database;
-	provider_class->create_database = gda_xml_provider_create_database;
+	provider_class->create_database_cnc = gda_xml_provider_create_database_cnc;
 	provider_class->execute_command = gda_xml_provider_execute_command;
 	provider_class->begin_transaction = gda_xml_provider_begin_transaction;
 	provider_class->commit_transaction = gda_xml_provider_commit_transaction;
@@ -354,9 +354,9 @@ process_table_commands (GList *reclist, GdaConnection *cnc, const gchar *str)
 	return reclist;
 }
 
-/* create_database handler for the GdaXmlProvider class */
+/* create_database_cnc handler for the GdaXmlProvider class */
 static gboolean
-gda_xml_provider_create_database (GdaServerProvider *provider,
+gda_xml_provider_create_database_cnc (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      const gchar *name)
 {

@@ -48,9 +48,9 @@ static const gchar 	*gda_firebird_provider_get_database (GdaServerProvider *prov
 static gboolean		gda_firebird_provider_change_database (GdaServerProvider *provider,
 							       GdaConnection *cnc,
 							       const gchar *name);
-static gboolean 	gda_firebird_provider_create_database (GdaServerProvider *provider,
-							       GdaConnection *cnc,
-							       const gchar *name);
+static gboolean 	gda_firebird_provider_create_database_cnc (GdaServerProvider *provider,
+					  		           GdaConnection *cnc,
+							           const gchar *name);
 static gboolean 	gda_firebird_provider_drop_database (GdaServerProvider *provider,
 							     GdaConnection *cnc,
 							     const gchar *name);
@@ -96,7 +96,7 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 	provider_class->get_server_version = gda_firebird_provider_get_server_version;
 	provider_class->get_database = gda_firebird_provider_get_database;
 	provider_class->change_database = gda_firebird_provider_change_database;
-	provider_class->create_database = gda_firebird_provider_create_database;
+	provider_class->create_database_cnc = gda_firebird_provider_create_database_cnc;
 	provider_class->drop_database = gda_firebird_provider_drop_database;
 	provider_class->execute_command = gda_firebird_provider_execute_command;
 	provider_class->begin_transaction = gda_firebird_provider_begin_transaction;
@@ -996,11 +996,11 @@ gda_firebird_provider_change_database (GdaServerProvider *provider,
 	return FALSE;
 }
 
-/* create_database handler for the GdaFirebirdProvider class */
+/* create_database_cnc handler for the GdaFirebirdProvider class */
 static gboolean
-gda_firebird_provider_create_database (GdaServerProvider *provider,
-					GdaConnection *cnc,
-					const gchar *name)
+gda_firebird_provider_create_database_cnc (GdaServerProvider *provider,
+					   GdaConnection *cnc,
+					   const gchar *name)
 {
 	gchar *sql;
 	GdaFirebirdConnection *fcnc;

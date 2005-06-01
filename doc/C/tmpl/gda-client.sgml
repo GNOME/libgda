@@ -114,6 +114,16 @@ Database client access
 @client: 
 
 
+<!-- ##### FUNCTION gda_client_get_specs_to_create_database ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_client_notify_event ##### -->
 <para>
 

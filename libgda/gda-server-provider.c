@@ -1,9 +1,10 @@
 /* GDA library
- * Copyright (C) 1998-2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Bas Driessen <bas.driessen@xobas.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,6 +25,7 @@
 #include <glib/gmessages.h>
 #include <libgda/gda-server-provider.h>
 #include <string.h>
+#include <glib/gi18n-lib.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
@@ -66,7 +68,9 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->get_server_version = NULL;
 	klass->get_database = NULL;
 	klass->change_database = NULL;
-	klass->create_database = NULL;
+	klass->create_database_cnc = NULL;
+	klass->create_database_params = NULL;
+	klass->get_specs_create_database = NULL;
 	klass->drop_database = NULL;
 	klass->create_table = NULL;
 	klass->drop_table = NULL;
@@ -311,7 +315,50 @@ gda_server_provider_change_database (GdaServerProvider *provider,
 }
 
 /**
+ * gda_server_provider_get_specs_to_create_database
+ * @provider: a #GdaServerProvider object
+ *
+ *
+ * Returns:
+ */
+gchar *
+gda_server_provider_get_specs_to_create_database  (GdaServerProvider *provider)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+	if (CLASS (provider)->get_specs_create_database)
+		return CLASS (provider)->get_specs_create_database (provider);
+	else
+		return NULL;
+}
+
+/**
  * gda_server_provider_create_database
+ * @provider: a #GdaServerProvider object
+ *
+ * Returns: TRUE if no error occured
+ */
+gboolean
+gda_server_provider_create_database (GdaServerProvider *provider, GdaParameterList *params, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+
+	if (CLASS (provider)->create_database_params)
+		return CLASS (provider)->create_database_params (provider, params, error);
+	else {
+		gchar *str;
+
+		str = g_strdup_printf (_("Provider does not support the '%s()' method"), 
+				       "create_database");
+		g_set_error (error, 0, 0, str);
+		g_free (str);
+		return FALSE;
+	}
+}
+
+
+/**
+ * gda_server_provider_create_database_cnc
  * @provider: a #GdaServerProvider object.
  * @name: database name.
  * @cnc: a #GdaConnection object.
@@ -322,16 +369,16 @@ gda_server_provider_change_database (GdaServerProvider *provider,
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_server_provider_create_database (GdaServerProvider *provider,
+gda_server_provider_create_database_cnc (GdaServerProvider *provider,
 				     GdaConnection *cnc,
 				     const gchar *name)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
-	g_return_val_if_fail (CLASS (provider)->create_database != NULL, FALSE);
+	g_return_val_if_fail (CLASS (provider)->create_database_cnc != NULL, FALSE);
 
-	return CLASS (provider)->create_database (provider, cnc, name);
+	return CLASS (provider)->create_database_cnc (provider, cnc, name);
 }
 
 /**

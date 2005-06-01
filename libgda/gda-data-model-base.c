@@ -232,7 +232,7 @@ gda_data_model_base_describe_column (GdaDataModel *model, gint col)
 		column = gda_column_new ();
 		gda_column_set_defined_size (column, 0);
 		gda_column_set_name (column, g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_titles,
-									GINT_TO_POINTER (col)));
+								  GINT_TO_POINTER (col)));
 		gda_column_set_scale (column, 0);
 		value = gda_data_model_base_get_value_at (model, col, 0);
 		if (value == NULL)

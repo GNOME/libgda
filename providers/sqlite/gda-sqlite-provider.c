@@ -54,9 +54,9 @@ static const gchar *gda_sqlite_provider_get_database (GdaServerProvider *provide
 static gboolean gda_sqlite_provider_change_database (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     const gchar *name);
+static gchar *gda_sqlite_provider_get_specs_create_database (GdaServerProvider *provider);
 static gboolean gda_sqlite_provider_create_database (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     const gchar *name);
+						     GdaParameterList *params, GError **error);
 static gboolean gda_sqlite_provider_drop_database (GdaServerProvider *provider,
 						   GdaConnection *cnc,
 						   const gchar *name);
@@ -110,7 +110,8 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->get_server_version = gda_sqlite_provider_get_server_version;
 	provider_class->get_database = gda_sqlite_provider_get_database;
 	provider_class->change_database = gda_sqlite_provider_change_database;
-	provider_class->create_database = gda_sqlite_provider_create_database;
+	provider_class->get_specs_create_database = gda_sqlite_provider_get_specs_create_database;
+	provider_class->create_database_params = gda_sqlite_provider_create_database;
 	provider_class->drop_database = gda_sqlite_provider_drop_database;
 	provider_class->execute_command = gda_sqlite_provider_execute_command;
 	provider_class->begin_transaction = gda_sqlite_provider_begin_transaction;
@@ -440,20 +441,64 @@ gda_sqlite_provider_change_database (GdaServerProvider *provider,
 	gda_connection_add_error_string (cnc, _("Only one database per connection is allowed"));
 	return FALSE;
 }
-	
-/* create_database handler for the GdaSqliteProvider class */
-static gboolean
-gda_sqlite_provider_create_database (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     const gchar *name)
+
+/* get_specs_create_database handler for the GdaSqliteProvider class */
+static gchar *
+gda_sqlite_provider_get_specs_create_database (GdaServerProvider *provider)
 {
+	gchar *specs, *file;
+        gint len;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	gda_connection_add_error_string (cnc, _("Only one database per connection is allowed"));
-	return FALSE;
+        file = g_build_filename (LIBGDA_DATA_DIR, "sqlite_specs_create_db.xml", NULL);
+        if (g_file_get_contents (file, &specs, &len, NULL))
+                return specs;
+        else
+                return NULL;
+}
+
+/* create_database handler for the GdaSqliteProvider class */
+static gboolean
+gda_sqlite_provider_create_database (GdaServerProvider *provider,
+				     GdaParameterList *params, GError **error)
+{
+	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
+	gboolean retval;
+	GdaParameter *param = NULL;
+
+	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
+	
+	if (params)
+		param = gda_parameter_list_find (params, "URI");
+	if (!param) {
+		g_set_error (error, 0, 0,
+			     _("Missing parameter 'URI'"));
+		retval = FALSE;
+	}
+	else {
+		SQLITEcnc *scnc;
+		gint errmsg;
+		gchar *filename;
+
+		filename = gda_value_get_string (gda_parameter_get_value (param));
+
+		scnc = g_new0 (SQLITEcnc, 1);
+		errmsg = sqlite3_open (filename, &scnc->connection);
+		
+		if (errmsg != SQLITE_OK) {
+			g_set_error (error, 0, 0,
+				     sqlite3_errmsg (scnc->connection));
+			retval = FALSE;
+		}
+		else
+			retval = TRUE;
+		sqlite3_close (scnc->connection);
+		g_free (scnc);
+	}
+
+	return retval;
 }
 
 static gboolean
@@ -718,7 +763,7 @@ init_table_fields_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
 	gint i;
-	GdaSqliteColData cols[9] = {
+	GdaSqliteColData cols[] = {
 		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
@@ -727,7 +772,8 @@ init_table_fields_recset (GdaConnection *cnc)
 		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("References")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  }
+		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  },
+		{ N_("Extra attributes"), GDA_VALUE_TYPE_STRING  }		
 	};
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
@@ -877,6 +923,13 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 			/* default value */
 			if (column->pDflt)
 				value = gda_value_new_string (column->pDflt->token.z);
+			else
+				value = gda_value_new_string ("");
+			rowlist = g_list_append (rowlist, value);
+
+			/* extra attributes */
+			if ((table->iPKey == i) && table->autoInc)
+				value = gda_value_new_string ("AUTO_INCREMENT");
 			else
 				value = gda_value_new_string ("");
 			rowlist = g_list_append (rowlist, value);

@@ -60,9 +60,14 @@ static gboolean gda_mysql_provider_change_database (GdaServerProvider *provider,
 		                                    GdaConnection *cnc,
 		                                    const gchar *name);
 
+static gchar *gda_mysql_provider_get_specs_create_database (GdaServerProvider *provider);
+
 static gboolean gda_mysql_provider_create_database (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    const gchar *name);
+						    GdaParameterList *params, GError **error);
+
+static gboolean gda_mysql_provider_create_database_cnc (GdaServerProvider *provider,
+						        GdaConnection *cnc,
+						        const gchar *name);
 
 static gboolean gda_mysql_provider_drop_database (GdaServerProvider *provider,
 						  GdaConnection *cnc,
@@ -144,7 +149,9 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->get_server_version = gda_mysql_provider_get_server_version;
 	provider_class->get_database = gda_mysql_provider_get_database;
 	provider_class->change_database = gda_mysql_provider_change_database;
-	provider_class->create_database = gda_mysql_provider_create_database;
+	provider_class->get_specs_create_database = gda_mysql_provider_get_specs_create_database;
+	provider_class->create_database_params = gda_mysql_provider_create_database;
+	provider_class->create_database_cnc = gda_mysql_provider_create_database_cnc;
 	provider_class->drop_database = gda_mysql_provider_drop_database;
 	provider_class->create_table = gda_mysql_provider_create_table;
 	provider_class->drop_table = gda_mysql_provider_drop_table;
@@ -218,8 +225,71 @@ gda_mysql_provider_get_version (GdaServerProvider *provider)
 	return PACKAGE_VERSION;
 }
 
+/* generic function to open a MYSQL connection */
+static MYSQL *
+real_open_connection (const gchar *host, gint port, const gchar *socket,
+		      const gchar *db,
+		      const gchar *login, const gchar *password, 
+		      gboolean usessl, GError **error)
+{
+	MYSQL *mysql;
+	MYSQL *mysql_ret;
+	unsigned int mysqlflags = 0;
+#if MYSQL_VERSION_ID < 32200
+        gint err;
+#endif
+	
+	/* we can't have both a host/pair AND a unix_socket */
+        if ((host || (port >= 0)) && socket) {
+                g_set_error (error, 0, 0,
+			     _("You cannot provide a UNIX SOCKET if you also provide"
+			       " either a HOST or a PORT."));
+                return NULL;
+        }
+
+	/* provide the default of localhost:3306 if neither is provided */
+	if (!socket) {
+		if (!host)
+			host = "localhost";
+		else if (port <= 0)
+			port = 3306;
+	}
+
+	if (usessl)
+		 mysqlflags |= CLIENT_SSL;
+
+	mysql = g_new0 (MYSQL, 1);
+        mysql_init (mysql);
+        mysql_ret = mysql_real_connect (mysql, host, login, password,
+#if MYSQL_VERSION_ID >= 32200
+					db,
+#endif
+					port > 0? port : 0,
+					socket,
+					mysqlflags);
+	
+	
+	if (!mysql_ret) {
+		g_set_error (error, 0, 0, mysql_error (mysql));
+		g_free (mysql);
+		return NULL;
+	}
+	
+#if MYSQL_VERSION_ID < 32200
+	err = mysql_select_db (mysql, db);
+	if (err != 0) {
+		g_set_error (error, 0, 0, mysql_error (mysql))
+			mysql_close (mysql);
+		
+		return NULL;
+	}
+#endif
+	
+	return mysql;
+}
+
 /* open_connection handler for the GdaMysqlProvider class */
-static gboolean
+static 
 gda_mysql_provider_open_connection (GdaServerProvider *provider,
 				    GdaConnection *cnc,
 				    GdaQuarkList *params,
@@ -234,11 +304,10 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
         const gchar *t_unix_socket = NULL;
         const gchar *t_use_ssl = NULL;
 	unsigned int mysqlflags = 0;
+
 	MYSQL *mysql;
-#if MYSQL_VERSION_ID < 32200
-        gint err;
-#endif
 	GdaError *error;
+	GError *gerror = NULL;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
@@ -258,51 +327,19 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	if (password && *password != '\0')
 		t_password = password;
 
-	if (t_use_ssl && atoi (t_use_ssl) == 1)
-		mysqlflags |= CLIENT_SSL;
-
-	/* we can't have both a host/pair AND a unix_socket */
-	if ((t_host || t_port) && t_unix_socket) {
-		gda_connection_add_error_string (
-			cnc, _("You cannot provide a UNIX_SOCKET if you also provide"
-			       " either a HOST or a PORT."));
-		return FALSE;
-	}
-
-	/* provide the default of localhost:3306 if neither is provided */
-	if (!t_unix_socket) {
-		if (!t_host)
-			t_host = "localhost";
-		else if (!t_port)
-			t_port = "3306";
-	}
-	
-	mysql = g_new0 (MYSQL, 1);
-	mysql_init (mysql);
-	mysql = mysql_real_connect (mysql, t_host, t_user, t_password,
-#if MYSQL_VERSION_ID >= 32200
-				    t_db,
-#endif
-				    t_port ? atoi (t_port) : 0,
-				    t_unix_socket,
-				    mysqlflags);
+	mysql = real_open_connection (t_host, t_port ? atoi (t_port) : 0, t_unix_socket,
+				      t_db, t_user, t_password, t_use_ssl ? TRUE : FALSE, &gerror);
 	if (!mysql) {
-		error = gda_mysql_make_error (mysql);
+		error = gda_error_new ();
+		gda_error_set_description (error, gerror && gerror->message ? 
+					   gerror->message : "NO DESCRIPTION");
+                gda_error_set_number (error, gerror ? gerror->code : -1);
+		if (gerror)
+			g_error_free (gerror);
 		gda_connection_add_error (cnc, error);
 
 		return FALSE;
 	}
-#if MYSQL_VERSION_ID < 32200
-	err = mysql_select_db (mysql, t_db);
-	if (err != 0) {
-		error = gda_mysql_make_error (mysql);
-		mysql_close (mysql);
-		gda_connection_add_error (cnc, error);
-
-		return FALSE;
-	}
-#endif
-
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE, mysql);
 
 	return TRUE;
@@ -463,11 +500,126 @@ gda_mysql_provider_change_database (GdaServerProvider *provider,
 
 }
 
+/* get_specs_create_database handler for the GdaMysqlProvider class */
+static gchar *
+gda_mysql_provider_get_specs_create_database (GdaServerProvider *provider)
+{
+	gchar *specs, *file;
+        gint len;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
+
+        file = g_build_filename (LIBGDA_DATA_DIR, "mysql_specs_create_db.xml", NULL);
+        if (g_file_get_contents (file, &specs, &len, NULL))
+                return specs;
+        else
+                return NULL;
+}
+
+#define string_from_string_param(param) \
+	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
+	gda_value_get_string (gda_parameter_get_value (param)) : NULL
+
+#define int_from_int_param(param) \
+	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
+	gda_value_get_integer (gda_parameter_get_value (param)) : -1
+
+#define bool_from_bool_param(param) \
+	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
+	gda_value_get_boolean (gda_parameter_get_value (param)) : FALSE
+
 /* create_database handler for the GdaMysqlProvider class */
 static gboolean
 gda_mysql_provider_create_database (GdaServerProvider *provider,
-				    GdaConnection *cnc,
-				    const gchar *name)
+				    GdaParameterList *params, GError **error)
+{
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+	MYSQL *mysql;
+	int res;
+	gboolean retval = TRUE;
+	GdaParameter *param = NULL;
+	GString *string;
+	
+	const gchar *login = NULL;
+	const gchar *password = NULL;
+	const gchar *host = NULL;
+	gint         port = -1;
+	const gchar *socket = NULL;
+	gboolean     usessl = FALSE;
+	const gchar *dbname = NULL;
+	const gchar *encoding = NULL;
+	const gchar *collate = NULL;
+
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
+	
+	if (params) {
+		param = gda_parameter_list_find (params, "HOST");
+		host = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "PORT");
+		port = int_from_int_param (param);
+
+		param = gda_parameter_list_find (params, "UNIX_SOCKET");
+		socket = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "USE_SSL");
+		usessl = bool_from_bool_param (param);
+		
+		param = gda_parameter_list_find (params, "DATABASE");
+		dbname = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "ENCODING");
+		encoding = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "COLLATE");
+		collate = string_from_string_param (param);
+
+		param = gda_parameter_list_find (params, "ADM_LOGIN");
+		login = string_from_string_param (param);
+		
+		param = gda_parameter_list_find (params, "ADM_PASSWORD");
+		password = string_from_string_param (param);
+	}
+	if (!dbname) {
+		g_set_error (error, 0, 0,
+			     _("Missing parameter 'DATABASE'"));
+		return FALSE;
+	}
+
+	mysql = real_open_connection (host, port, socket,
+				      "mysql", login, password, usessl, error);
+	if (!mysql)
+		return FALSE;
+
+	/* Ask to create a database */
+	string = g_string_new ("CREATE DATABASE ");
+	g_string_append (string, dbname);
+	if (encoding)
+		g_string_append_printf (string, " CHARACTER SET %s", encoding);
+	if (collate)
+		g_string_append_printf (string, " COLLATE %s", collate);
+
+	res = mysql_query (mysql, string->str);
+	g_string_free (string, TRUE);
+
+	if (res) {
+		g_set_error (error, 0, 0, mysql_error (mysql));
+		retval = FALSE;
+	}
+	
+	mysql_close (mysql);
+
+	return retval;
+}
+
+
+/* create_database_cnc handler for the GdaMysqlProvider class */
+static gboolean
+gda_mysql_provider_create_database_cnc (GdaServerProvider *provider,
+				        GdaConnection *cnc,
+				        const gchar *name)
 {
 	gint rc;
 	gchar *sql;
@@ -1551,10 +1703,16 @@ field_row_to_value_list (MYSQL_ROW mysql_row)
 	value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
 
 	/* references */
-	value_list = g_list_append (value_list, gda_value_new_string (mysql_row[5]));
+	value_list = g_list_append (value_list, gda_value_new_string (""));
 
 	/* default value */
 	value_list = g_list_append (value_list, gda_value_new_string (mysql_row[4]));
+
+	/* Extra column */
+	if (!strcmp (mysql_row[5], "auto_increment"))
+		value_list = g_list_append (value_list, gda_value_new_string ("AUTO_INCREMENT"));
+	else
+		value_list = g_list_append (value_list, gda_value_new_string (""));
 
 	return value_list;
 }
@@ -1582,7 +1740,8 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("References")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  }
+		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  },
+		{ N_("Extra attributes"), GDA_VALUE_TYPE_STRING  }
 	};
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
