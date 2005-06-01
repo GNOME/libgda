@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="URI" name="Database file name" descr="File name where all the database is stored" gdatype="string" null-ok="FALSE" plugin="File selector Plugin"/>
+  </parameters>
+</data-set-spec>
