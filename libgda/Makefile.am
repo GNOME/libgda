@@ -176,6 +176,7 @@ gdaincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/lib
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)
 
 CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
+	gda-marshal.c \
 	gda-enum-types.h \
 	s-enum-types-h \
 	gda-enum-types.c \

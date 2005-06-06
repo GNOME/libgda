@@ -1,3 +1,12 @@
+2005-06-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.3.3.
+
+2005-06-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am:
+	* libgda/Makefile.am: added missing files to CLEANFILES.
+
 2005-06-01 Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model.c: gda_data_model_to_xml(): the contents of the 

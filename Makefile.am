@@ -23,3 +23,6 @@ pkgconfigdir=$(libdir)/pkgconfig
 pkgconfig_DATA = libgda.pc
 
 all-local: libgda.spec
+
+CLEANFILES = intltool-extract intltool-merge intltool-update
+
