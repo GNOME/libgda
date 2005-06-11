@@ -3,10 +3,12 @@
 libgda/gda-client.c
 libgda/gda-config.c
 libgda/gda-connection.c
+libgda/gda-data-model-array.c
 libgda/gda-data-model.c
 libgda/gda-init.c
 libgda/gda-log.c
 libgda/gda-select.c
+libgda/gda-server-provider.c
 libgda/gda-table.c
 libgda/gda-util.c
 libgda/gda-value.c
