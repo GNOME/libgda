@@ -87,6 +87,17 @@ libgda 1.3.0, 2005-02-07
 	- nl (Vincent)
 	- pt_BR (Raphael)
 
+libgda 1.2.2, 2005-06-14
+------------------------
+
+ - Fixed typo in GdaXqlUpdate object declaration (Murray)
+ - GCC 4 compilation fixes (Murray, Magnus)
+ - Made Oracle provider work with Oracle 10 headers (Magnus)
+ - Fixed MySQL header/libs detection (Jean)
+ - Fixed typo in GdaExport class signal creation (Mike Kestner)
+ - Set correctly unsigned values in MySQL provider (Mike Fish)
+ - Fixed leak in PostgreSQL provider (Alex)
+
 libgda 1.2.1, 2005-03-03
 ------------------------
 
