@@ -1,3 +1,7 @@
+2005-06-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.2.2.
+
 2005-06-14  Alex <alex@igalia.com>
 
 	* providers/postgres/gda-postgres-recordset.c (guess_table_name):
