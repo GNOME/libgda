@@ -1,3 +1,7 @@
+2005-06-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: install libgda-x.x.pc instead of just libgda.pc.
+
 2005-06-14  Alex <alex@igalia.com>
 
 	* providers/postgres/gda-postgres-recordset.c (guess_table_name):

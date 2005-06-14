@@ -23,6 +23,9 @@ Database client access
  #GdaConnection.
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GdaClient ##### -->
 <para>
 
