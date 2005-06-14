@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgda
+Name: libgda-2.0
 Description: GDA (GNOME Data Access) library
 Requires: glib-2.0 libxml-2.0 libxslt
 Version: @VERSION@

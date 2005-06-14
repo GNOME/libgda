@@ -19,11 +19,8 @@ EXTRA_DIST = \
 	intltool-update.in \
 	mkinstalldirs
 
-libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION).pc: libgda.pc
-	cp libgda.pc libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION).pc
-
 pkgconfigdir=$(libdir)/pkgconfig
-pkgconfig_DATA = libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION).pc
+pkgconfig_DATA = libgda-2.0.pc
 
 all-local: libgda.spec
 

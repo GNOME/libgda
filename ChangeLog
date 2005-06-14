@@ -1,5 +1,10 @@
 2005-06-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda-2.0.pc.in:
+	* Makefile.am: use fixed 2.0 for pkg-config.
+
+2005-06-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* Makefile.am: install libgda-x.x.pc instead of just libgda.pc.
 
 2005-06-14  Alex <alex@igalia.com>

@@ -940,7 +940,7 @@ AC_SUBST(REBUILD)
 AC_OUTPUT([
 Makefile
 libgda.spec
-libgda.pc
+libgda-2.0.pc
 po/Makefile.in
 libsql/Makefile
 libgda/Makefile
