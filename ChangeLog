@@ -1,3 +1,8 @@
+2005-06-14  Alex <alex@igalia.com>
+
+	* providers/postgres/gda-postgres-recordset.c (guess_table_name):
+	fixed leak on query string.
+
 2005-05-18  Mike Fisk <mfisk@woozle.org>
 
 	Fixes #304586
