@@ -1,3 +1,8 @@
+2005-06-14  Alex <alex@igalia.com>
+
+	* providers/postgres/gda-postgres-recordset.c (guess_table_name):
+	fixed leak on query string.
+
 2005-06-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.3.3.

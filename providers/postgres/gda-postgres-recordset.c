@@ -616,8 +616,12 @@ static gchar *guess_table_name (GdaPostgresRecordset *recset)
 		for (i = 0; i < PQnfields (pg_res); i++) {
 			const gchar *column_name = PQfname (pg_res, i);
 			gchar *cond = g_strdup_printf (" AND '%s' IN (SELECT a.attname FROM pg_catalog.pg_attribute a WHERE a.attrelid = c.oid)", column_name);
-			query = g_strconcat (query, cond, NULL);
+			gchar *tmp_query = NULL;
+
+			tmp_query = g_strconcat (query, cond, NULL);
+			g_free (query);
 			g_free (cond);
+			query = tmp_query;
 		}
 		pg_name_res = PQexec (pg_conn, query);
 		if (pg_name_res != NULL) {
