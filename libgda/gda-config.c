@@ -89,7 +89,7 @@ static void           fam_unlock_notify ();
 /*
  * Private functions
  */
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 dump_config_client ()
 {
@@ -274,14 +274,14 @@ get_config_client ()
 			file = fopen (LIBGDA_GLOBAL_CONFIG_FILE, "a");
 			if (file) {
 				can_modif_global_conf = TRUE;
-#ifdef debug
+#ifdef GDA_DEBUG
 				g_print ("Can write system wide config file\n");
 #endif
 				fclose (file);
 			}
 			else {
 				can_modif_global_conf = FALSE;
-#ifdef debug
+#ifdef GDA_DEBUG
 				g_print ("Cannot write system wide config file\n");
 #endif			
 			}
@@ -293,7 +293,7 @@ get_config_client ()
 			GIOChannel *ioc;
 			int res;
 	
-#ifdef debug
+#ifdef GDA_DEBUG
 			g_print ("Using FAM to monitor configuration files changes.\n");
 #endif
 			fam_connection = g_malloc0 (sizeof (FAMConnection));
@@ -311,7 +311,7 @@ get_config_client ()
 				fam_conf_global = g_new0 (FAMRequest, 1);
 				res = FAMMonitorFile (fam_connection, LIBGDA_GLOBAL_CONFIG_FILE, fam_conf_global, 
 						      GINT_TO_POINTER (TRUE));
-#ifdef debug
+#ifdef GDA_DEBUG
 				g_print ("Monitoring changes on file %s: %s\n", 
 					 LIBGDA_GLOBAL_CONFIG_FILE, res ? "ERROR" : "Ok");
 #endif
@@ -320,7 +320,7 @@ get_config_client ()
 					fam_conf_user = g_new0 (FAMRequest, 1);
 					res = FAMMonitorFile (fam_connection, user_config, fam_conf_user, 
 							      GINT_TO_POINTER (FALSE));
-#ifdef debug
+#ifdef GDA_DEBUG
 					g_print ("Monitoring changes on file %s: %s\n", 
 						 user_config, res ? "ERROR" : "Ok");
 #endif
@@ -432,7 +432,7 @@ get_config_client ()
 				g_warning ("Config file is not readable.");
 		}
 		g_free (user_config);
-#ifdef debug
+#ifdef GDA_DEBUG
 		dump_config_client ();
 #endif
 	}
@@ -470,7 +470,7 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
 		case FAMChanged:
 		case FAMDeleted:
 		case FAMCreated:
-#ifdef debug
+#ifdef GDA_DEBUG
 			g_print ("Reloading config files (%s config has changed)\n", is_global ? "global" : "user");
 #endif
 			gda_config_client_reset ();
