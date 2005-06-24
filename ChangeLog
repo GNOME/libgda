@@ -1,5 +1,9 @@
 2005-06-24  Bas Driessen <bas.driessen@xobas.com>
 
+	* libgda/Makefile.am: Replace hardcoded "lib"
+	with $(libdir) so it works OK on 64 bit platforms
+	where "lib64" is used.
+
 	* providers/bdb/gda-bdb-recordset.c: Cater for bdb 
 	versions > 4.3.x 
 
