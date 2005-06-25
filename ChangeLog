@@ -1,3 +1,18 @@
+2005-06-25  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/mysql/libmain.c
+	(plugin_get_dsn_spec): use correct data type
+	gsize rather than gint when calling function
+	g_file_get_contents. The x86_64 platform is 
+	very picky about this and crashes with a 
+	segmentation fault.
+
+	* providers/postgres/libmain.c
+	(plugin_get_dsn_spec): idem.
+
+	* providers/sqlite/libmain.c
+	(plugin_get_dsn_spec): idem.
+
 2005-06-24  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/Makefile.am: Replace hardcoded "lib"

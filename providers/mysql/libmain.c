@@ -75,7 +75,7 @@ gchar *
 plugin_get_dsn_spec (void)
 {
 	gchar *specs, *file;
-	gint len;
+	gsize len;
 
 	file = g_build_filename (LIBGDA_DATA_DIR, "mysql_specs_dsn.xml", NULL);
 	if (g_file_get_contents (file, &specs, &len, NULL)) 
