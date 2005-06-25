@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	-DLIBGDA_PLUGINDIR=\""$(prefix)/lib/libgda/providers"\" \
+	-DLIBGDA_PLUGINDIR=\""$(libdir)/libgda/providers"\" \
 	-DLIBGDA_LOCALEDIR=\""$(datadir)/locale"\" \
 	-DLIBGDA_GLOBAL_CONFIG_FILE=\""$(sysconfdir)/libgda/config"\"
 
