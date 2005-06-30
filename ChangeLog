@@ -1,3 +1,11 @@
+2005-06-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/ldap/libmain.c:
+	* providers/mysql/libmain.c:
+	* providers/odbc/libmain.c:
+	* providers/sqlite/libmain.c:
+	* providers/xml/libmain.c: added missing header files.
+
 2005-06-24  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/Makefile.am: Replace hardcoded "lib"

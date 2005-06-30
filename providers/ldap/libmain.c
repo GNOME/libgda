@@ -22,6 +22,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <libgda/gda-config.h>
 #include <libgda/gda-intl.h>
 #include "gda-ldap-provider.h"
 
