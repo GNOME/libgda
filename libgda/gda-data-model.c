@@ -1241,8 +1241,8 @@ gda_data_model_get_command_text (GdaDataModel *model)
 gboolean
 gda_data_model_set_command_text (GdaDataModel *model, const gchar *txt)
 {
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	g_return_if_fail (txt != NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (txt != NULL, FALSE);
 	
 	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command)
 		return (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command) (model, txt, -1);
@@ -1284,7 +1284,7 @@ gda_data_model_get_command_type (GdaDataModel *model)
 gboolean
 gda_data_model_set_command_type (GdaDataModel *model, GdaCommandType type)
 {
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command)
 		return (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command) (model, NULL, type);
 	else

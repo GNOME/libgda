@@ -20,6 +20,7 @@
  */
 
 #include <libgda/gda-intl.h>
+#include <libgda/gda-config.h>
 #include "gda-xml-provider.h"
 
 const gchar *plugin_get_name (void);

@@ -1,3 +1,18 @@
+2005-06-30  Stanislav Brabec <sbrabec@suse.de>
+
+	* libgda/gda-data-model.c (gda_data_model_set_command_text,
+	gda_data_model_set_command_type):
+	* libgda/gda-config.c (gda_config_set_string, gda_config_set_int,
+	gda_config_set_float, gda_config_set_boolean,
+	gda_config_save_data_source, gda_config_save_data_source_info):
+	fixed return values.
+
+	* providers/ldap/libmain.c:
+	* providers/mysql/libmain.c:
+	* providers/odbc/libmain.c:
+	* providers/sqlite/libmain.c:
+	* providers/xml/libmain.c: added missing header files.
+
 2005-06-25  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/mysql/libmain.c

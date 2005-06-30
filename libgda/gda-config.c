@@ -877,8 +877,8 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 	gint last_dash;
 	GdaConfigClient *cfg_client;
 
-	g_return_if_fail (path != NULL);
-	g_return_if_fail (new_value != NULL);
+	g_return_val_if_fail (path != NULL, FALSE);
+	g_return_val_if_fail (new_value != NULL, FALSE);
 
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "string");
@@ -891,7 +891,7 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
 			g_warning ("%s does not containt any '/'!?", path);
-			return;
+			return FALSE;
 		}
 		last_dash = ptr_last_dash - path;
 		section_path = g_strdup (path);
@@ -932,7 +932,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 	gchar *newstr;
 	GdaConfigClient *cfg_client;
 
-	g_return_if_fail (path !=NULL);
+	g_return_val_if_fail (path !=NULL, FALSE);
 
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "long");
@@ -945,7 +945,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
 			g_warning ("%s does not containt any '/'!?", path);
-			return;
+			return FALSE;
 		}
 		last_dash = ptr_last_dash - path;
 		section_path = g_strdup (path);
@@ -987,7 +987,7 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 	gchar *newstr;
 	GdaConfigClient *cfg_client;
 
-	g_return_if_fail (path !=NULL);
+	g_return_val_if_fail (path !=NULL, FALSE);
 
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, "float");
@@ -1000,7 +1000,7 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
 			g_warning ("%s does not containt any '/'!?", path);
-			return;
+			return FALSE;
 		}
 		last_dash = ptr_last_dash - path;
 		section_path = g_strdup (path);
@@ -1042,7 +1042,7 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 	gchar *newstr;
 	GdaConfigClient *cfg_client;
 
-	g_return_if_fail (path !=NULL);
+	g_return_val_if_fail (path !=NULL, FALSE);
 
 	new_value = new_value != 0 ? TRUE : FALSE;
 	cfg_client = get_config_client ();
@@ -1056,7 +1056,7 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
 			g_warning ("%s does not containt any '/'!?", path);
-			return;
+			return FALSE;
 		}
 		last_dash = ptr_last_dash - path;
 		section_path = g_strdup (path);
@@ -1996,8 +1996,8 @@ gda_config_save_data_source (const gchar *name,
 	GdaConfigSection *section;
 	GdaConfigClient *cfg_client;
 
-	g_return_if_fail (name != NULL);
-	g_return_if_fail (provider != NULL);
+	g_return_val_if_fail (name != NULL, FALSE);
+	g_return_val_if_fail (provider != NULL, FALSE);
 
 	if (is_global && !can_modif_global_conf)
 		return FALSE;
@@ -2082,7 +2082,7 @@ gda_config_save_data_source (const gchar *name,
 gboolean
 gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info)
 {
-	g_return_if_fail (dsn_info != NULL);
+	g_return_val_if_fail (dsn_info != NULL, FALSE);
 
 	return gda_config_save_data_source (dsn_info->name,
 					    dsn_info->provider,
