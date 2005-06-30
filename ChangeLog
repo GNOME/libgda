@@ -1,3 +1,8 @@
+2005-06-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/mysql/gda-mysql-recordset.c (gda_mysql_recordset_update_row):
+	removed invalid g_free call.
+
 2005-06-30  Stanislav Brabec <sbrabec@suse.de>
 
 	* libgda/gda-data-model.c (gda_data_model_set_command_text,

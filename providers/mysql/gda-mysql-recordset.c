@@ -801,7 +801,6 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	if (uk == 0) {
 		gda_connection_add_error_string (priv_data->cnc,
 						_("Model does not have at least one non-modified unique key."));
-		g_free (query);
 		g_free (query_set);
 		g_free (query_where);
 
@@ -811,7 +810,6 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	if (nuk == 0) {
 		gda_connection_add_error_string (priv_data->cnc,
 						_("Model does not have any non-unique values to update."));
-		g_free (query);
 		g_free (query_set);
 		g_free (query_where);
 
