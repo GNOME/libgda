@@ -64,7 +64,7 @@ typedef struct {
 	GdaThreaderFunc cancel_end_cb; /* called when job->func ends and this job has been cancelled */
 } ThreadJob;
 
-guint
+GType
 gda_threader_get_type (void)
 {
 	static GType type = 0;

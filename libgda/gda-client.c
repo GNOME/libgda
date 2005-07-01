@@ -41,7 +41,8 @@ typedef struct {
 	const gchar        *(*plugin_get_name) (void);
 	const gchar        *(*plugin_get_description) (void);
 	GList              *(*plugin_get_connection_params) (void);
-	GdaServerProvider * (*plugin_create_provider) (void);
+	GdaServerProvider  *(*plugin_create_provider) (void);
+	gchar              *(*get_dsn_spec) (void);
 } LoadedProvider;
 
 struct _GdaClientPrivate {
@@ -309,6 +310,8 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 			 (gpointer) &prv->plugin_get_connection_params);
 	g_module_symbol (prv->handle, "plugin_create_provider",
 			 (gpointer) &prv->plugin_create_provider);
+	g_module_symbol (prv->handle, "plugin_get_dsn_spec",
+			 (gpointer) &prv->get_dsn_spec);
 	
 	if (!prv->plugin_create_provider) {
 		emit_client_error (client, NULL,
@@ -849,6 +852,34 @@ gda_client_rollback_transaction (GdaClient *client, GdaTransaction *xaction)
 	}
 
 	return failures == 0 ? TRUE : FALSE;
+}
+
+/**
+ * gda_client_get_dsn_specs
+ * @client: a #GdaClient object.
+ * @provider: a provider
+ *
+ * Get an XML string representing the parameters which can be present in the
+ * DSN string used to open a connection.
+ *
+ * Returns: a string (free it after usage), or %NULL if an error occured
+ *
+ */
+gchar *
+gda_client_get_dsn_specs (GdaClient *client, const gchar *provider)
+{
+	LoadedProvider *prv;
+	
+	g_return_val_if_fail (client && GDA_IS_CLIENT (client), NULL);
+	
+	if (!provider || !*provider)
+		return NULL;
+
+	prv = find_or_load_provider (client, provider);
+	if (prv && prv->get_dsn_spec) 
+		return (prv->get_dsn_spec)();
+	else
+		return NULL;
 }
 
 /**

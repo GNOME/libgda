@@ -102,6 +102,11 @@ void           gda_client_notify_transaction_cancelled_event (GdaClient *client,
 							      GdaTransaction *xaction);
 
 /*
+ * General provider information
+ */
+gchar         *gda_client_get_dsn_specs                      (GdaClient *client, const gchar *provider);
+
+/*
  * Database creation functions
  */
 gchar         *gda_client_get_specs_to_create_database       (GdaClient *client, const gchar *provider);

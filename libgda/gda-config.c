@@ -165,8 +165,8 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 	xmlReallocFunc old_realloc;
 	xmlStrdupFunc old_strdup;
 
-	g_return_val_if_fail (buffer != NULL, NULL);
-	g_return_val_if_fail (len != 0, NULL);
+	if (!buffer || (len == 0))
+		return NULL;
 
 	sp_len = strlen (section_path);
 
@@ -718,7 +718,7 @@ write_config_file ()
 	xmlFreeDoc (doc);
 
 	/* system wide data sources */
-	if (can_modif_global_conf && cfg_client->global) {
+	if (can_modif_global_conf) {
 		doc = xmlNewDoc ("1.0");
 		g_return_if_fail (doc != NULL);
 		root = xmlNewDocNode (doc, NULL, "libgda-config", NULL);
@@ -1827,6 +1827,8 @@ gda_data_source_info_copy (GdaDataSourceInfo *src)
 	return info;
 }
 
+#define str_is_equal(x,y) (((x) && (y) && !strcmp ((x),(y))) || (!(x) && (!y)))
+
 /**
  * gda_data_source_info_equal
  * @info1: a data source information
@@ -1844,17 +1846,17 @@ gda_data_source_info_equal (GdaDataSourceInfo *info1, GdaDataSourceInfo *info2)
 	if (!info1 || !info2)
 		return FALSE;
 
-	if (strcmp (info1->name, info2->name))
+	if (! str_is_equal (info1->name, info2->name))
 		return FALSE;
-	if (strcmp (info1->provider, info2->provider))
+	if (! str_is_equal (info1->provider, info2->provider))
 		return FALSE;
-	if (strcmp (info1->cnc_string, info2->cnc_string))
+	if (! str_is_equal (info1->cnc_string, info2->cnc_string))
 		return FALSE;
-	if (strcmp (info1->description, info2->description))
+	if (! str_is_equal (info1->description, info2->description))
 		return FALSE;
-	if (strcmp (info1->username, info2->username))
+	if (! str_is_equal (info1->username, info2->username))
 		return FALSE;
-	if (strcmp (info1->password, info2->password))
+	if (! str_is_equal (info1->password, info2->password))
 		return FALSE;
 	return info1->is_global == info2->is_global;
 }
