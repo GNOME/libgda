@@ -14,9 +14,6 @@ Base class for XML document management
 
 </para>
 
-<!-- ##### SECTION Stability_Level ##### -->
-
-
 <!-- ##### FUNCTION gda_xml_document_new ##### -->
 <para>
 
