@@ -1783,7 +1783,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	rows = mysql_num_rows (mysql_res);
 
 	/* fill in the recordset to be returned */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (9);
+	recset = (GdaDataModelArray *) gda_data_model_array_new (sizeof fields_desc / sizeof fields_desc[0]);
 	for (r = 0; r < sizeof (fields_desc) / sizeof (fields_desc[0]); r++) {
 /*
 		gint defined_size =  (fields_desc[r].type == GDA_VALUE_TYPE_STRING) ? 64 : 
@@ -1821,7 +1821,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 		}
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset),
-					   (const GList *) value_list);
+					      (const GList *) value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

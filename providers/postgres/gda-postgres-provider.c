@@ -2410,7 +2410,8 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 		if (strstr (PQgetvalue (pg_res, i, 5), "nextval"))
 			value = gda_value_new_string ("AUTO_INCREMENT");
 		else
-			value = gda_value_new_string ("");			
+			value = gda_value_new_string ("");
+	        rowlist = g_list_append (rowlist, value);			
 
 		list = g_list_append (list, rowlist);
 		rowlist = NULL;
