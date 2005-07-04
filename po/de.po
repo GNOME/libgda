@@ -4,15 +4,15 @@
 # Christian Meyer <chrisime@gnome.org>, 2000, 2001, 2002.
 # Christian Neumair <chris@gnome-de.org>, 2002, 2003.
 # Frank Arnold <frank@scirocco-5v-turbo.de>, 2005.
-#
+# Hendrik Richter <hendi@gnome-de.org>, 2005.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-02-18 08:32+0100\n"
-"PO-Revision-Date: 2005-02-18 08:28+0100\n"
-"Last-Translator: Frank Arnold <frank@scirocco-5v-turbo.de>\n"
+"PO-Revision-Date: 2005-07-04 19:25+0200\n"
+"Last-Translator: Hendrik Richter <hendi@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -990,7 +990,7 @@ msgstr "Zu verwendende Legitimierungsmethode für die Verbindung"
 #: ../providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
-"In der Verbindungszeichenkette muß der Dateiname einer Datenbank angegeben "
+"In der Verbindungszeichenkette muss der Dateiname einer Datenbank angegeben "
 "werden."
 
 #: ../providers/mdb/gda-mdb-provider.c:214
@@ -1279,7 +1279,7 @@ msgstr "UNIX-Socket"
 #: ../providers/mysql/libmain.c:63
 msgid "Full path of the UNIX socket to use for connecting locally"
 msgstr ""
-"Voller Pfad des UNIX-Socket, der für die lokale Vebindung genutzt werden soll"
+"Voller Pfad des UNIX-Socket, der für die lokale Verbindung genutzt werden soll"
 
 #: ../providers/mysql/libmain.c:66
 msgid "Use Secure Connection"
@@ -1558,7 +1558,7 @@ msgstr "Die Größe des Oracle-Felds konnte nicht empfangen werden"
 # CHECK
 #: ../providers/oracle/gda-oracle-provider.c:1732
 msgid "Could not get the Oracle field scale"
-msgstr "Die Orcale-Feldskalierung konnte nicht empfangen werden"
+msgstr "Die Oracle-Feldskalierung konnte nicht empfangen werden"
 
 #: ../providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
@@ -1621,7 +1621,7 @@ msgstr "Die Oracle-Spaltenskalierung konnte nicht empfangen werden"
 
 #: ../providers/oracle/gda-oracle-recordset.c:236
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Das Orcale-Spaltenattribut »nullable« konnte nicht empfangen werden"
+msgstr "Das Oracle-Spaltenattribut »nullable« konnte nicht empfangen werden"
 
 #: ../providers/oracle/gda-oracle-recordset.c:248
 msgid "Could not get the Oracle defined size"
@@ -2414,7 +2414,7 @@ msgstr "Fehler beim Validieren des Elements %s"
 #: ../report/libgda-report/gda-report-valid.c:269
 #, c-format
 msgid "No declaration for attribute %s of element %s\n"
-msgstr "Keine Delkaration für Attribut %s des Elements %s\n"
+msgstr "Keine Deklaration für Attribut %s des Elements %s\n"
 
 # CHECK
 #: ../report/libgda-report/gda-report-valid.c:283
