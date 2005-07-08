@@ -380,6 +380,12 @@ then
 			elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
 			then
 				POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
+                        elif test -f ${postgresdir}/include/postgresql/8.0/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include/8.0/postgresql
+                        elif test -f ${postgresdir}/include/postgresql/7.4/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include/7.4/postgresql
 			else
 				AC_MSG_WARN(Postgres include files not found, backend not used)
 				postgresdir=""

@@ -1,3 +1,10 @@
+2005-07-08  Murray Cumming <murrayc@murrayc.com>
+
+	Fixes #309332
+
+	* configure.in: Check for postgres headers in the 
+	version-specific directories used by Ubuntu Breezy.
+
 2005-06-28  Stanislav Brabec <sbrabec@suse.de>
 
 	* providers/ldap/libmain.c:
