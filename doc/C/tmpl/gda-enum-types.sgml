@@ -14,6 +14,9 @@ gda-enum-types
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gda_blob_mode_get_type ##### -->
 <para>
 

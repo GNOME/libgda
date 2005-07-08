@@ -1,3 +1,10 @@
+2005-07-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-column-index.c:
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-data-model-index.c:
+	* providers/sqlite/gda-sqlite-recordset.c: added missing headers.
+
 2005-07-02  Vivien Malerba <malerba@gnome-db.org>
 
 	* postgres/gda-postgres-provider.c:
