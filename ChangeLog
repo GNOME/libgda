@@ -1,3 +1,22 @@
+2005-07-05 Daniel Espinosa Ortiz <esodan@gmail.com>, Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-value.c
+	* libgda/gda-value.h
+	* libgda/gda-blob.c
+	* libgda/gda-blob.h
+	* libgda/gda-row.c
+	* providers/ldap/utils.c
+	* providers/mysql/gda-mysql-provider.c
+	* providers/oracle/utils.c
+	* providers/postgres/gda-postgres-provider.c
+	* providers/postgres/utils.c
+	Porting of GdaValue implementation to GValue. Now GdaValue is basically
+	a GValue container, but exist some special kind of values like smallint,
+	smalluint, GdaMoney, GdaGeometricPoint, etc., that is recomend to handle
+	with the API of GdaValue, because they uses a custom GType derived,
+	and have a special way to store in the GValue container, is the case of
+	smallint, for example,and must use the API to set/get this kind of values.
+
 2005-07-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.3.4.

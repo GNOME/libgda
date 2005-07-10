@@ -526,7 +526,7 @@ gda_postgres_value_to_sql_string (GdaValue *value)
 	if (!val_str)
 		return NULL;
 
-	switch (value->type) {
+	switch (GDA_VALUE_TYPE(value)) {
 	case GDA_VALUE_TYPE_BIGINT :
 	case GDA_VALUE_TYPE_DOUBLE :
 	case GDA_VALUE_TYPE_INTEGER :

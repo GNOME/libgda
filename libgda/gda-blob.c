@@ -27,6 +27,19 @@
 
 #include "gda-blob.h"
 
+G_DEFINE_TYPE(GdaBlob, gda_blob, G_TYPE_OBJECT);
+
+static void     
+gda_blob_init       (GdaBlob      *self) {
+	self->priv_data = NULL;
+	self->user_data = NULL;
+}
+
+static void     
+gda_blob_class_init (GdaBlobClass *klass) {
+	
+}
+
 /**
  * gda_blob_open
  * @blob: a #GdaBlob structure obtained from a #GdaValue or allocated by the
@@ -164,3 +177,17 @@ gda_blob_free_data (GdaBlob *blob)
 	blob->free_data (blob);
 }
 
+/**
+ * gda_blob_stringify
+ * @blob: a valid #GdaBlob.
+ *
+ * Returns a string representation of a @blob.
+ *
+ */
+gchar*
+gda_blob_stringify(GdaBlob *blob) {
+	g_return_val_if_fail(GDA_VALUE_IS_BLOB(blob), NULL);
+	g_return_val_if_fail (blob->free_data != NULL, NULL);
+	
+	return blob->stringify (blob);
+}

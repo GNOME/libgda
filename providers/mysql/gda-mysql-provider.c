@@ -1879,7 +1879,7 @@ gda_mysql_provider_value_to_sql_string (
 	if (!val_str)
 		return NULL;
 
-	switch (from->type) {
+	switch (GDA_VALUE_TYPE(from)) {
 		case GDA_VALUE_TYPE_BIGINT :
 		case GDA_VALUE_TYPE_DOUBLE :
 		case GDA_VALUE_TYPE_INTEGER :

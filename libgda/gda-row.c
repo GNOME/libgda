@@ -60,6 +60,8 @@ GdaRow *
 gda_row_new (GdaDataModel *model, gint count)
 {
 	GdaRow *row = NULL;
+	gint i;
+	GdaValue *value;
 
 	g_return_val_if_fail (count >= 0, NULL);
 
@@ -95,8 +97,12 @@ gda_row_new_from_list (GdaDataModel *model, const GList *values)
 	for (i = 0, l = values; l != NULL; l = l->next, i++) {
 		const GdaValue *value = (const GdaValue *) l->data;
 
-		if (value)
-			gda_value_set_from_value (gda_row_get_value (row, i), value);
+		if (value) {
+			GdaValue *dest;
+			dest = gda_row_get_value (row, i);
+			gda_value_reset_with_type (dest, gda_value_get_type (value));
+			gda_value_set_from_value (dest, value);
+		}
 		else
 			gda_value_set_null (gda_row_get_value (row, i));
 	}
@@ -264,7 +270,7 @@ gda_row_get_value (GdaRow *row, gint num)
 	g_return_val_if_fail (row != NULL, NULL);
 	g_return_val_if_fail (num >= 0 && num < row->nfields, NULL);
 
-	return &row->fields[num];
+	return & (row->fields[num]);
 }
 
 /**

@@ -286,7 +286,7 @@ gda_oracle_value_to_sql_string (GdaValue *value)
 	if (!val_str)
 		return NULL;
 
-	switch (value->type) {
+	switch (gda_value_get_type (value)) {
 	case GDA_VALUE_TYPE_BIGINT :
 	case GDA_VALUE_TYPE_DOUBLE :
 	case GDA_VALUE_TYPE_INTEGER :
@@ -320,7 +320,7 @@ gda_value_to_oracle_value (const GdaValue *value)
 
 	ora_value = g_new0 (GdaOracleValue, 1);
 
-	ora_value->gda_type = value->type;
+	ora_value->gda_type = gda_value_get_type (value);
 	ora_value->indicator = 0;
 	ora_value->hdef = (OCIDefine *) 0;
 	ora_value->pard = (OCIParam *) 0;
