@@ -1,3 +1,10 @@
+2005-07-11  Christopher Taylor <christophth@tiscali.it>
+
+	Fixes #306682
+
+	* providers/firebird/gda-firebird-recordset.c (fb_gda_value_fill): calm
+	down gcc 4.0.
+
 2005-07-08  Murray Cumming <murrayc@murrayc.com>
 
 	Fixes #309332

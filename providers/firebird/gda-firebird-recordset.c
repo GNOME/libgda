@@ -442,7 +442,7 @@ fb_gda_value_fill (GdaValue *gda_value,
 	g_return_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset));
 
 	sql_result = recset->priv->sql_result;
-	(gchar *) field_data = sql_result->sqlvar[field_number].sqldata;
+	field_data = (gchar *) sql_result->sqlvar[field_number].sqldata;
 	
 	/* If value is null  */
 	if (*(sql_result->sqlvar[field_number].sqlind) == -1) {
