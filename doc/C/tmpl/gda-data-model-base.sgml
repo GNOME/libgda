@@ -14,9 +14,6 @@ This object is not intended to be instanciated directly, but to be inherited.
 
 </para>
 
-<!-- ##### SECTION Stability_Level ##### -->
-
-
 <!-- ##### STRUCT GdaDataModelBase ##### -->
 <para>
 

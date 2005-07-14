@@ -786,7 +786,7 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 
 		/* auto increment */
 		if (gda_column_get_auto_increment (dmca) == TRUE)
-			g_string_append_printf (sql, "AUTO_INCREMENT");
+			g_string_append_printf (sql, " AUTO_INCREMENT");
 
 		/* (primary) key */
 		if (gda_column_get_primary_key (dmca) == TRUE)
@@ -1639,7 +1639,7 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].name));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].owner));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].comments));
-		value_list = g_list_append (value_list, gda_value_new_type (types[i].type));
+		value_list = g_list_append (value_list, gda_value_new_gdatype (types[i].type));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].synonyms));
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);

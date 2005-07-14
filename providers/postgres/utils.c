@@ -452,10 +452,14 @@ gda_postgres_set_value (GdaValue *value,
 		gda_value_set_smallint (value, atoi (thevalue));
 		break;
 	case GDA_VALUE_TYPE_SINGLE :
+		setlocale (LC_NUMERIC, "C");
 		gda_value_set_single (value, atof (thevalue));
+		setlocale (LC_NUMERIC, "");
 		break;
 	case GDA_VALUE_TYPE_DOUBLE :
+		setlocale (LC_NUMERIC, "C");
 		gda_value_set_double (value, atof (thevalue));
+		setlocale (LC_NUMERIC, "");
 		break;
 	case GDA_VALUE_TYPE_NUMERIC :
 		numeric.number = g_strdup (thevalue);

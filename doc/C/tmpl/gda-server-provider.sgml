@@ -14,9 +14,6 @@ Base class for implementing new providers
 
 </para>
 
-<!-- ##### SECTION Stability_Level ##### -->
-
-
 <!-- ##### STRUCT GdaServerProvider ##### -->
 <para>
 

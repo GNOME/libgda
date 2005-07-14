@@ -1,5 +1,5 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
@@ -240,7 +240,7 @@ fb_get_types (GdaConnection *cnc,
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].name));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].owner));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].comments));
-		value_list = g_list_append (value_list, gda_value_new_type (types[i].type));
+		value_list = g_list_append (value_list, gda_value_new_gdatype (types[i].type));
 
 		/* Add values to row */
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);

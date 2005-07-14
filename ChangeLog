@@ -1,3 +1,13 @@
+2005-07-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-value.c: code cleanups and bug fixes
+	* libgda/doc/C: improved GdaValue's documentation
+	* libgda/gda-value.[ch]: renamed gda_value_new_type() to
+	gda_value_new_gdatype() and added gda_gvalue_set_gdatype()
+	and gda_gvalue_get_gdatype() for GdaValue values of type
+	GDA_VALUE_TYPE_TYPE.
+	* providers/postgres/util.c: fixed a bug with DOUBLE and SINGLE data types
+
 2005-07-10 Daniel Espinosa Ortiz <esodan@gmail.com>, Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-value.c

@@ -2113,7 +2113,7 @@ get_oracle_types (GdaConnection *cnc, GdaParameterList *params)
         value_list = g_list_append (value_list, gda_value_new_string (otp->name));
         value_list = g_list_append (value_list, gda_value_new_string ("SYS"));
         value_list = g_list_append (value_list, gda_value_new_string ("NULL"));
-        value_list = g_list_append (value_list, gda_value_new_type (otp->type));
+        value_list = g_list_append (value_list, gda_value_new_gdatype (otp->type));
         value_list = g_list_append (value_list, gda_value_new_string (otp->synonyms));
 
 	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);

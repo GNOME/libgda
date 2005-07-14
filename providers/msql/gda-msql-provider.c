@@ -1,5 +1,5 @@
 /* GDA mSQL Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  * 	   Danilo Schoeneberg <dj@starfire-programming.net
@@ -518,7 +518,7 @@ get_msql_types(GdaConnection *cnc,GdaParameterList *params)
 		value_list=g_list_append(value_list,gda_value_new_string(types[i].name));
 		value_list=g_list_append(value_list,gda_value_new_string(types[i].owner));
 		value_list=g_list_append(value_list,gda_value_new_string(types[i].comments));
-		value_list=g_list_append(value_list,gda_value_new_type(types[i].type));  
+		value_list=g_list_append(value_list,gda_value_new_gdatype(types[i].type));  
 		gda_data_model_append_values(GDA_DATA_MODEL(rs),value_list);
 		g_list_foreach(value_list,(GFunc)gda_value_free,NULL);
 		g_list_free(value_list);

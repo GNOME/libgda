@@ -47,7 +47,7 @@ G_BEGIN_DECLS
 #define	G_VALUE_TYPE_BOOLEAN G_TYPE_BOOLEAN
 #define	G_VALUE_TYPE_DATE (gda_date_get_type())
 #define	G_VALUE_TYPE_DOUBLE G_TYPE_DOUBLE
-#define	G_VALUE_TYPE_GEOMETRIC_POINT (gda_date_get_type())
+#define	G_VALUE_TYPE_GEOMETRIC_POINT (gda_geometricpoint_get_type())
 #define	G_VALUE_TYPE_GOBJECT G_TYPE_OBJECT
 #define	G_VALUE_TYPE_INTEGER G_TYPE_INT
 #define G_VALUE_TYPE_UINTEGER G_TYPE_UINT
@@ -172,6 +172,8 @@ GdaValue                         *gda_value_new_timestamp_from_timet (time_t val
 GdaValue                         *gda_value_new_tinyint (gchar val);
 GdaValue                         *gda_value_new_tinyuint (guchar val);
 GdaValue                         *gda_value_new_uinteger(guint val);
+GdaValue                         *gda_value_new_gdatype (GdaValueType val);
+
 GdaValue                         *gda_value_new_from_string (const gchar *as_string, GdaValueType type);
 GdaValue                         *gda_value_new_from_xml (const xmlNodePtr node);
 
@@ -228,6 +230,9 @@ guchar                            gda_value_get_tinyuint (GdaValue *value);
 void                              gda_value_set_tinyuint (GdaValue *value, guchar val);
 guint                             gda_value_get_uinteger (GdaValue *value);
 void                              gda_value_set_uinteger (GdaValue *value, guint val);
+void                              gda_value_set_gdatype (GValue *value, GdaValueType val);
+GdaValueType                      gda_value_get_gdatype (GValue *value);
+
 
 void                              gda_value_set_type (GdaValue *value, GType type);
 gboolean                          gda_value_set_from_string (GdaValue *value, 
@@ -241,6 +246,7 @@ gint                              gda_value_compare_ext (GdaValue *value1, GdaVa
 gchar                            *gda_value_stringify (GdaValue *value);
 xmlNodePtr                        gda_value_to_xml (GdaValue *value);
 
+/* Custom data types */
 GType                             gda_money_get_type (void);
 gpointer                          gda_money_copy (gpointer boxed);
 void                              gda_money_free (gpointer boxed);
@@ -252,7 +258,6 @@ void                              gda_numeric_free (gpointer boxed);
 GType                             gda_time_get_type(void);
 gpointer                          gda_time_copy (gpointer boxed);
 void                              gda_time_free (gpointer boxed);
-
 
 GType                             gda_timestamp_get_type(void);
 gpointer                          gda_timestamp_copy (gpointer boxed);
@@ -274,15 +279,6 @@ GType                             gda_value_list_get_type (void);
 GType                             gda_smallint_get_type (void);
 GType                             gda_smalluint_get_type (void);
 GType                             gda_gdatype_get_type (void);
-
-void                              gda_gvalue_set_smallint (GValue *value, gshort v_short);
-gshort                            gda_gvalue_get_smallint (const GValue *val);
-
-void                              gda_gvalue_set_smalluint (GValue *value, gushort v_ushort);
-gushort                           gda_gvalue_get_smalluint (const GValue *val);
-
-void                              gda_gvalue_set_gdatype (GValue *value, GdaValueType v_gdatype);
-GdaValueType                      gda_gvalue_get_gdatype (const GValue *val);
 
 G_END_DECLS
 

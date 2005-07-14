@@ -1,5 +1,5 @@
 /* GDA Sybase provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *         Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
@@ -41,12 +41,12 @@ static void gda_sybase_provider_init (GdaSybaseProvider *provider,
 static void gda_sybase_provider_finalize (GObject *object);
 
 static gboolean gda_sybase_provider_open_connection (GdaServerProvider *provider,
-																										 GdaConnection *cnc,
-																										 GdaQuarkList *params,
-																										 const gchar *username,
-																										 const gchar *password);
+						     GdaConnection *cnc,
+						     GdaQuarkList *params,
+						     const gchar *username,
+						     const gchar *password);
 static gboolean gda_sybase_provider_close_connection (GdaServerProvider *provider,
-																											GdaConnection *cnc);
+						      GdaConnection *cnc);
 
 
 static gboolean gda_sybase_provider_begin_transaction (GdaServerProvider *provider,
@@ -75,7 +75,7 @@ static GdaDataModel *gda_sybase_provider_get_schema (GdaServerProvider *provider
                                                      GdaConnectionSchema schema,
                                                      GdaParameterList *params);
 static const gchar *gda_sybase_provider_get_server_version (GdaServerProvider *provider,
-																														GdaConnection *cnc);
+							    GdaConnection *cnc);
 static const gchar *gda_sybase_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_sybase_provider_rollback_transaction (GdaServerProvider *provider,
                                                           GdaConnection *cnc,
@@ -126,7 +126,7 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 
 static void
 gda_sybase_provider_init (GdaSybaseProvider *myprv, 
-													GdaSybaseProviderClass *klass)
+			  GdaSybaseProviderClass *klass)
 {
 }
 
@@ -158,8 +158,8 @@ gda_sybase_provider_get_type (void)
 			(GInstanceInitFunc) gda_sybase_provider_init
 		};
 		type = g_type_register_static (PARENT_TYPE,
-																	 "GdaSybaseProvider",
-																	 &info, 0);
+					       "GdaSybaseProvider",
+					       &info, 0);
 	}
 
 	return type;
@@ -208,7 +208,7 @@ gda_sybase_connection_data_free(GdaSybaseConnectionData *sconn)
 			// we do not check if the handle is the same,
 			// because it must be identical (connection_open)
 			g_object_set_data (G_OBJECT (sconn->gda_cnc), 
-												 OBJECT_DATA_SYBASE_HANDLE, NULL);
+					   OBJECT_DATA_SYBASE_HANDLE, NULL);
 			// is just a reference copy
 			sconn->gda_cnc = NULL;
 		}
@@ -241,10 +241,10 @@ gda_sybase_connection_data_free(GdaSybaseConnectionData *sconn)
 /* open_connection handler for the GdaSybaseProvider class */
 static gboolean
 gda_sybase_provider_open_connection (GdaServerProvider *provider,
-																		 GdaConnection *cnc,
-																		 GdaQuarkList *params,
-																		 const gchar *username,
-																		 const gchar *password)
+				     GdaConnection *cnc,
+				     GdaQuarkList *params,
+				     const gchar *username,
+				     const gchar *password)
 {
 		
 	GdaSybaseConnectionData *sconn = NULL;
@@ -317,27 +317,27 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 		 * avoid nested if clauses because of same condition */
 		if (sconn->ret == CS_SUCCEED) {
 			sconn->ret = cs_locale (sconn->context,
-															CS_SET,
-															locale,
-															CS_LC_ALL,
-															(CS_CHAR *) t_locale,
-															CS_NULLTERM,
-															NULL);
+						CS_SET,
+						locale,
+						CS_LC_ALL,
+						(CS_CHAR *) t_locale,
+						CS_NULLTERM,
+						NULL);
 		}
 		if (sconn->ret == CS_SUCCEED) {
 			sconn->ret = cs_config (sconn->context,
-															CS_SET,
-															CS_LOC_PROP,
-															locale,
-															CS_UNUSED,
-															NULL);
+						CS_SET,
+						CS_LOC_PROP,
+						locale,
+						CS_UNUSED,
+						NULL);
 		}
 		if (sconn->ret == CS_SUCCEED) {
 			sybase_debug_msg (_("Locale set to '%s'."), t_locale);
 		}
 		if (locale) {
 			sconn->ret = cs_loc_drop (sconn->context,
-																locale);
+						  locale);
 			locale = NULL;
 		}
 	}
@@ -384,10 +384,10 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	//sybase_debug_msg(_("Connection allocated."));
 	/* init inline error handling for cs-lib */
 	sconn->ret = cs_diag (sconn->context, 
-												CS_INIT, 
-												CS_UNUSED, 
-												CS_UNUSED,
-												NULL);		
+			      CS_INIT, 
+			      CS_UNUSED, 
+			      CS_UNUSED,
+			      NULL);		
 	if (sconn->ret != CS_SUCCEED) {
 		gda_sybase_connection_data_free (sconn);
 		return FALSE;
@@ -395,10 +395,10 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	//sybase_debug_msg(_("Error handling for cs-lib initialized.")); 
 	/* init inline error handling for ct-lib */
 	sconn->ret = ct_diag (sconn->connection, 
-												CS_INIT, 
-												CS_UNUSED, 
-												CS_UNUSED,
-												NULL);
+			      CS_INIT, 
+			      CS_UNUSED, 
+			      CS_UNUSED,
+			      NULL);
 	if (sconn->ret != CS_SUCCEED) {
 		gda_sybase_connection_data_free (sconn);
 		return FALSE;
@@ -414,11 +414,11 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	
 	/* set appname */
 	sconn->ret = ct_con_props (sconn->connection, 
-														 CS_SET, 
-														 CS_APPNAME, 
-														 (CS_CHAR *) "gda-sybase provider", 
-														 CS_NULLTERM, 
-														 NULL);
+				   CS_SET, 
+				   CS_APPNAME, 
+				   (CS_CHAR *) "gda-sybase provider", 
+				   CS_NULLTERM, 
+				   NULL);
 	if (sconn->ret != CS_SUCCEED) {
 		sybase_check_messages(cnc);
 		gda_sybase_connection_data_free (sconn);
@@ -428,11 +428,11 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 
 	/* set username */
 	sconn->ret = ct_con_props (sconn->connection, 
-														 CS_SET, 
-														 CS_USERNAME, 
-														 (CS_CHAR *) t_user,
-														 CS_NULLTERM, 
-														 NULL);
+				   CS_SET, 
+				   CS_USERNAME, 
+				   (CS_CHAR *) t_user,
+				   CS_NULLTERM, 
+				   NULL);
 	if (sconn->ret != CS_SUCCEED) {
 		sybase_check_messages(cnc);
 		gda_sybase_connection_data_free (sconn);
@@ -443,11 +443,11 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	/* assume null-length passwords as passwordless logins */
 	if ((t_password != NULL) && (strlen(t_password) > 0)) {
 		sconn->ret = ct_con_props (sconn->connection, 
-															 CS_SET, 
-															 CS_PASSWORD, 
-															 (CS_CHAR *) t_password,
-															 CS_NULLTERM, 
-															 NULL);
+					   CS_SET, 
+					   CS_PASSWORD, 
+					   (CS_CHAR *) t_password,
+					   CS_NULLTERM, 
+					   NULL);
 		if (sconn->ret != CS_SUCCEED) {
 			sybase_check_messages(cnc);
 			gda_sybase_connection_data_free (sconn);
@@ -456,11 +456,11 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 		//sybase_debug_msg(_("Password set."));
 	} else {
 		sconn->ret = ct_con_props (sconn->connection, 
-															 CS_SET, 
-															 CS_PASSWORD, 
-															 (CS_CHAR *) "",
-															 CS_NULLTERM, 
-															 NULL);
+					   CS_SET, 
+					   CS_PASSWORD, 
+					   (CS_CHAR *) "",
+					   CS_NULLTERM, 
+					   NULL);
 		if (sconn->ret != CS_SUCCEED) {
 			sybase_check_messages(cnc);
 			gda_sybase_connection_data_free (sconn);
@@ -469,9 +469,9 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 		//sybase_debug_msg(_("Empty password set."));
 	}
 	sconn->ret = ct_connect (sconn->connection, 
-													 (t_host) ? ((CS_CHAR *) t_host)
-													 : ((CS_CHAR *) NULL), 
-													 (t_host) ? strlen(t_host) : 0);
+				 (t_host) ? ((CS_CHAR *) t_host)
+				 : ((CS_CHAR *) NULL), 
+				 (t_host) ? strlen(t_host) : 0);
 	if (sconn->ret != CS_SUCCEED) {
 		sybase_check_messages(cnc);
 		gda_sybase_connection_data_free (sconn);
@@ -485,11 +485,11 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	
 	/* get the hostname from SQL server as a test */
 	sconn->ret = ct_con_props (sconn->connection, 
-														 CS_GET, 
-														 CS_SERVERNAME, 
-														 &buf,
-														 CS_MAX_CHAR, 
-														 NULL);
+				   CS_GET, 
+				   CS_SERVERNAME, 
+				   &buf,
+				   CS_MAX_CHAR, 
+				   NULL);
 	if (sconn->ret != CS_SUCCEED) {
 		sybase_check_messages(cnc);
 		gda_sybase_connection_data_free (sconn);
@@ -509,7 +509,7 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 /* close_connection handler for the GdaSybaseProvider class */
 static gboolean
 gda_sybase_provider_close_connection (GdaServerProvider *provider, 
-																			GdaConnection *cnc)
+				      GdaConnection *cnc)
 {
 	GdaSybaseConnectionData *sconn;
 	g_return_val_if_fail (GDA_IS_SYBASE_PROVIDER (provider), FALSE);
@@ -602,9 +602,9 @@ gda_sybase_provider_execute_command (GdaServerProvider *provider,
 		reclist = gda_sybase_provider_process_sql_commands (reclist, cnc, query);
 		if (reclist && GDA_IS_DATA_MODEL (reclist->data)) {
 			gda_data_model_set_command_text (GDA_DATA_MODEL (reclist->data),
-																			 gda_command_get_text (cmd));
+							 gda_command_get_text (cmd));
 			gda_data_model_set_command_type (GDA_DATA_MODEL (reclist->data),
-																			 GDA_COMMAND_TYPE_TABLE);
+							 GDA_COMMAND_TYPE_TABLE);
 		}
 		g_free(query);
 		query = NULL;
@@ -654,20 +654,20 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 			scnc->ret = ct_cmd_alloc (scnc->connection, &scnc->cmd);
 			if (scnc->ret != CS_SUCCEED) {
 				sybase_debug_msg(_("Failed allocating a command structure in %s()"),
-												 __FUNCTION__);
+						 __FUNCTION__);
 				sybase_check_messages(cnc);
 				return NULL;
 			}
 
 			// execute _single_ sql query (one stmt)
 			scnc->ret = ct_command (scnc->cmd, 
-															CS_LANG_CMD,
-															arr[n], 
-															CS_NULLTERM, 
-															CS_UNUSED);
+						CS_LANG_CMD,
+						arr[n], 
+						CS_NULLTERM, 
+						CS_UNUSED);
 			if (scnc->ret != CS_SUCCEED) {
 				error = gda_sybase_make_error (scnc,
-																			 _("Could not prepare command structure."));
+							       _("Could not prepare command structure."));
 				gda_connection_add_error (cnc, error);
 				ct_cmd_drop (scnc->cmd);
 				scnc->cmd = NULL;
@@ -677,7 +677,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 			scnc->ret = ct_send(scnc->cmd);
 			if (scnc->ret != CS_SUCCEED) {
 				error = gda_sybase_make_error (scnc,
-																			 _("Sending sql-command failed."));
+							       _("Sending sql-command failed."));
 				gda_connection_add_error (cnc, error);
 				ct_cmd_drop (scnc->cmd);
 				scnc->cmd = NULL;
@@ -687,15 +687,15 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 
 			// part 1: process results in while-loop
 			while ((scnc->rret = 
-							ct_results (scnc->cmd,&scnc->res_type)) == CS_SUCCEED){
+				ct_results (scnc->cmd,&scnc->res_type)) == CS_SUCCEED){
 				switch (scnc->res_type) {
 				case CS_ROW_RESULT:
 					// the query returned a result set!
 					//sybase_debug_msg (_("CS_ROW_RESULT!"));
 
 					srecset = gda_sybase_process_row_result (cnc, 
-																									 scnc,
-																									 TRUE);
+										 scnc,
+										 TRUE);
 					recset = GDA_DATA_MODEL(srecset);
 					if (GDA_IS_SYBASE_RECORDSET (recset)) {
 						gda_data_model_set_command_text (recset, arr[n]);
@@ -703,7 +703,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						reclist = g_list_append (reclist, recset);
 					}
 					else
-						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));						
+						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));
 					break;
 				case CS_STATUS_RESULT:
 					// when you execute a stored procedure through openclient, this 
@@ -712,8 +712,8 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 					sybase_debug_msg (_("CS_STATUS_RESULT!"));
 
 					srecset = gda_sybase_process_row_result (cnc, 
-																									 scnc,
-																									 TRUE);
+										 scnc,
+										 TRUE);
 					recset = GDA_DATA_MODEL(srecset);
 					if (GDA_IS_SYBASE_RECORDSET (recset)) {
 						gda_data_model_set_command_text (recset, arr[n]);
@@ -721,7 +721,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						reclist = g_list_append (reclist, recset);
 					}
 					else
-						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));						
+						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));
 				case CS_COMPUTE_RESULT:
 					// FIXME - figure this out
 					break;
@@ -734,7 +734,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 					sybase_debug_msg (_("Hit unsupported result type"));
 					
 					scnc->ret = ct_cancel (NULL, scnc->cmd,
-																 CS_CANCEL_CURRENT);
+							       CS_CANCEL_CURRENT);
 					break;
 				case CS_CMD_DONE:
 					// the command executed successfully.  
@@ -751,10 +751,10 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 					// check the number of msgs...
 					// see if there is a message
 					ret = ct_diag (scnc->connection,
-												 CS_STATUS, 
-												 CS_ALLMSG_TYPE, 
-												 CS_UNUSED,
-												 &msgcnt);
+						       CS_STATUS, 
+						       CS_ALLMSG_TYPE, 
+						       CS_UNUSED,
+						       &msgcnt);
 					
 					if ( ret != CS_SUCCEED ) {
 						error = gda_error_new();
@@ -762,7 +762,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						gda_error_set_description (error, _("an error occured when calling ct_diag attempting to test if there is a server message for resultset"));
 						gda_error_set_number (error, -1);
 						gda_error_set_source (error, "gda-sybase");
-						gda_error_set_sqlstate (error, _("Not available"));					
+						gda_error_set_sqlstate (error, _("Not available"));
 						gda_connection_add_error (cnc, error);		
 						return NULL;
 					}			
@@ -771,8 +771,8 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 					if ( msgcnt == 0 ) {
 						srecset = g_object_new (GDA_TYPE_SYBASE_RECORDSET, NULL);
 						if ((srecset != NULL) && (srecset->priv != NULL)
-								&& (srecset->priv->columns != NULL) 
-								&& (srecset->priv->rows != NULL)) {
+						    && (srecset->priv->columns != NULL) 
+						    && (srecset->priv->rows != NULL)) {
 							srecset->priv->cnc = cnc;
 							srecset->priv->scnc = scnc;
 						}
@@ -787,11 +787,11 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						reclist = g_list_append (reclist, recset);
 					}
 					else
-						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));						
+						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));
 					break;
 				case CS_CMD_FAIL:
 					sybase_debug_msg (_("%s returned %s"),
-														"ct_results()", "CS_CMD_FAIL");
+							  "ct_results()", "CS_CMD_FAIL");
 					sybase_check_messages(cnc);
 					break;
 				case CS_MSG_RESULT:
@@ -808,7 +808,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						reclist = g_list_append (reclist, recset);
 					}
 					else
-						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));						
+						sybase_debug_msg (_("GDA_IS_SYBASE_RECORDSET != TRUE"));
 					break;
 				default:
 					break;
@@ -848,7 +848,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	
 	if (scnc->cmd != NULL) {
 		error = gda_sybase_make_error (scnc, _("Command structure already in use. %s failed."),
-																	 __FUNCTION__);
+					       __FUNCTION__);
 		gda_connection_add_error (cnc, error);
 		return FALSE;
 	}
@@ -862,7 +862,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	}
 
 	scnc->ret = ct_command (scnc->cmd, CS_LANG_CMD, (CS_CHAR *) sql, 
-													CS_NULLTERM, CS_UNUSED);
+				CS_NULLTERM, CS_UNUSED);
 	if (scnc->ret != CS_SUCCEED) {
 		error = gda_sybase_make_error (scnc, _("Could not prepare command structure with %s."), "ct_command()");
 		gda_connection_add_error (cnc, error);
@@ -895,11 +895,11 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 
 		case CS_STATUS_RESULT:
 			scnc->ret = ct_cancel (NULL, scnc->cmd,
-														 CS_CANCEL_CURRENT);
+					       CS_CANCEL_CURRENT);
 			if (scnc->ret != CS_SUCCEED) {
 				error = gda_sybase_make_error (
-																			 scnc,
-																			 _("%s: %s failed"), __FUNCTION__, "ct_cancel");
+					scnc,
+					_("%s: %s failed"), __FUNCTION__, "ct_cancel");
 				gda_connection_add_error (cnc, error);
 				sybase_check_messages(cnc);
 				ret = FALSE;
@@ -912,23 +912,23 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 		// cancel all result processing on failure
 		if (!ret) {
 			scnc->ret = ct_cancel (NULL, scnc->cmd,
-														 CS_CANCEL_ALL);
+					       CS_CANCEL_ALL);
 			if (scnc->ret != CS_SUCCEED) {
 				error = gda_sybase_make_error (
-																			 scnc,
-																			 _("%s: %s failed"), __FUNCTION__, "ct_cancel");
+					scnc,
+					_("%s: %s failed"), __FUNCTION__, "ct_cancel");
 				gda_connection_add_error (cnc, error);
 				sybase_check_messages(cnc);
 			}
 		}
 	}
-
+	
 	if (scnc->ret == CS_END_RESULTS) {
 		scnc->ret = ct_cmd_drop (scnc->cmd);
 		if (scnc->ret != CS_SUCCEED) {
 			error = gda_sybase_make_error (scnc,
-																		 _("%s: %s failed"),
-																		 __FUNCTION__, "ct_cmd_drop()");
+						       _("%s: %s failed"),
+						       __FUNCTION__, "ct_cmd_drop()");
 			gda_connection_add_error (cnc, error);
 			sybase_check_messages(cnc);
 			ret = FALSE;
@@ -963,7 +963,7 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 	memset(current_db,'\0',256);
 
 	sconn = (GdaSybaseConnectionData *) g_object_get_data (G_OBJECT (cnc),
-																												 OBJECT_DATA_SYBASE_HANDLE);
+							       OBJECT_DATA_SYBASE_HANDLE);
 	g_return_val_if_fail (sconn != NULL, NULL);
 	g_return_val_if_fail (sconn->connection != NULL, NULL);
 	g_return_val_if_fail (sconn->context != NULL, NULL);
@@ -976,10 +976,10 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 	}
 	
 	ret = ct_command(cmd, 
-									 CS_LANG_CMD,
-									 TDS_QUERY_CURRENT_DATABASE,
-									 CS_NULLTERM, 
-									 CS_UNUSED); 	
+			 CS_LANG_CMD,
+			 TDS_QUERY_CURRENT_DATABASE,
+			 CS_NULLTERM, 
+			 CS_UNUSED); 	
 
 	if ( ret != CS_SUCCEED ) {
 		sybase_debug_msg (_("could not execute command to get current database."));
@@ -1006,11 +1006,11 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 					column.count = 1;
 					column.locale = NULL;
 					ret = ct_bind(cmd, 
-												1, 
-												&column,
-												current_db, 
-												&datalen,
-												&indicator);
+						      1, 
+						      &column,
+						      current_db, 
+						      &datalen,
+						      &indicator);
 
 					if ( ret != CS_SUCCEED ) {
 						sybase_debug_msg (_("could not bind variable to get current database."));
@@ -1019,10 +1019,10 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 					}
 
 					ret1 = ct_fetch(cmd, 
-													CS_UNUSED, 
-													CS_UNUSED,
-													CS_UNUSED, 
-													&count);
+							CS_UNUSED, 
+							CS_UNUSED,
+							CS_UNUSED, 
+							&count);
 
 
 					if ( ret != CS_SUCCEED ) {
@@ -1034,10 +1034,10 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 					while(ret1 == CS_SUCCEED)
 						{
 							ret1 = ct_fetch(cmd, 
-															CS_UNUSED, 
-															CS_UNUSED,
-															CS_UNUSED, 
-															&count);							
+									CS_UNUSED, 
+									CS_UNUSED,
+									CS_UNUSED, 
+									&count);
 						}
 
 					if ( ret != CS_SUCCEED ) {
@@ -1072,7 +1072,7 @@ gda_sybase_get_fields (GdaConnection *cnc,
 	GdaSybaseConnectionData *scnc = NULL;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	scnc = (GdaSybaseConnectionData *) g_object_get_data (G_OBJECT (cnc),
-																												OBJECT_DATA_SYBASE_HANDLE);
+							      OBJECT_DATA_SYBASE_HANDLE);
 	g_return_val_if_fail (scnc != NULL, NULL);
 
 	return NULL;
@@ -1088,33 +1088,33 @@ gda_sybase_provider_get_types (GdaConnection *cnc,
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	scnc = (GdaSybaseConnectionData *) g_object_get_data (G_OBJECT (cnc),
-																												OBJECT_DATA_SYBASE_HANDLE);
+							      OBJECT_DATA_SYBASE_HANDLE);
 	g_return_val_if_fail (scnc != NULL, NULL);
-
+	
 	recset = (GdaDataModelArray *) gda_data_model_array_new (4);
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-																	 0, _("Type"));
+					 0, _("Type"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-																	 1, _("Owner"));
+					 1, _("Owner"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-																	 2, _("Comments"));
+					 2, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-																	 3, _("GDA type"));
-
+					 3, _("GDA type"));
+	
 	for (i = 0; i < GDA_SYBASE_TYPE_CNT; i++) {
 		if (gda_sybase_type_list[i].name != NULL) {
 			GList *value_list = NULL;
-
+			
 			value_list = g_list_append (value_list,
-																	gda_value_new_string (gda_sybase_type_list[i].name));
+						    gda_value_new_string (gda_sybase_type_list[i].name));
 			// FIXME: owner
 			value_list = g_list_append (value_list,
-																	gda_value_new_string (""));
+						    gda_value_new_string (""));
 			value_list = g_list_append (value_list, 
-																	gda_value_new_string (""));
+						    gda_value_new_string (""));
 			value_list = g_list_append (value_list,
-																	gda_value_new_type (gda_sybase_type_list[i].gda_type));
-
+						    gda_value_new_gdatype (gda_sybase_type_list[i].gda_type));
+			
 			gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 			g_list_free (value_list);
@@ -1213,7 +1213,7 @@ gda_sybase_execute_query (GdaConnection *cnc,
 	g_return_val_if_fail (sql != NULL, NULL);
 
 	scnc = (GdaSybaseConnectionData *) g_object_get_data (G_OBJECT (cnc),
-																												OBJECT_DATA_SYBASE_HANDLE);
+							      OBJECT_DATA_SYBASE_HANDLE);
 	g_return_val_if_fail (scnc != NULL, NULL);
 
 	model_list = gda_sybase_provider_process_sql_commands (NULL, cnc, sql);
@@ -1237,17 +1237,17 @@ gda_sybase_provider_get_server_version (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	
 	scnc = (GdaSybaseConnectionData *) g_object_get_data (G_OBJECT (cnc),
-																												OBJECT_DATA_SYBASE_HANDLE);
+							      OBJECT_DATA_SYBASE_HANDLE);
 	g_return_val_if_fail (scnc != NULL, NULL);
 	if (!scnc->server_version) {
 		model = gda_sybase_execute_query (cnc, TDS_QUERY_SERVER_VERSION);
 		if (model) {
 			if ((gda_data_model_get_n_columns (model) == 1)
-					&& (gda_data_model_get_n_rows (model) == 1)) {
+			    && (gda_data_model_get_n_rows (model) == 1)) {
 				GdaValue *value;
 				
 				value = (GdaValue *) gda_data_model_get_value_at (model, 
-																													0, 0);
+										  0, 0);
 				scnc->server_version = gda_value_stringify ((GdaValue *) value);
 			}
 			g_object_unref (model);

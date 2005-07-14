@@ -1767,7 +1767,7 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].name));
 		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].owner));
 		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].comments));
-		value_list = g_list_append (value_list, gda_value_new_type (priv_data->type_data[i].type));
+		value_list = g_list_append (value_list, gda_value_new_gdatype (priv_data->type_data[i].type));
 		syn = g_hash_table_lookup (synonyms, priv_data->type_data[i].name);
 		value_list = g_list_append (value_list, gda_value_new_string (syn));
 

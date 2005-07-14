@@ -2122,6 +2122,7 @@
     </para>
     &libgda-init;
     &libgda-config;
+    &libgda-value;
     &libgda-client;
     &libgda-connection;
     &libgda-command;
@@ -2134,7 +2135,6 @@
     &libgda-column-index;
     &libgda-data-model-index;
     &libgda-row;
-    &libgda-value;
     &libgda-error;
     &libgda-export;
     &libgda-log;

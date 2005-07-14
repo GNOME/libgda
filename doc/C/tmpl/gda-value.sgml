@@ -1,21 +1,23 @@
 <!-- ##### SECTION Title ##### -->
-GdaDataModel individual value
+GdaValue
 
 <!-- ##### SECTION Short_Description ##### -->
 Single value stored in a #GdaDataModel
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+&LIBGDA; manages each individual value within an opaque GdaValue structure (which is in fact a #GValue). Each GdaValue
+has a pre-defined type which is among the #GdaValueType possible types.
+</para>
+<para>
+The NULL value is a special case value. It corresponds to a zero-filled (uninitialized) #GValue, and it is safe to
+use such values.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
-<!-- ##### SECTION Stability_Level ##### -->
-
 
 <!-- ##### MACRO TIMEZONE_INVALID ##### -->
 <para>
@@ -29,31 +31,31 @@ Single value stored in a #GdaDataModel
 
 </para>
 
-@GDA_VALUE_TYPE_NULL: 
-@GDA_VALUE_TYPE_BIGINT: 
-@GDA_VALUE_TYPE_BIGUINT: 
-@GDA_VALUE_TYPE_BINARY: 
-@GDA_VALUE_TYPE_BLOB: 
-@GDA_VALUE_TYPE_BOOLEAN: 
-@GDA_VALUE_TYPE_DATE: 
-@GDA_VALUE_TYPE_DOUBLE: 
-@GDA_VALUE_TYPE_GEOMETRIC_POINT: 
-@GDA_VALUE_TYPE_GOBJECT: 
-@GDA_VALUE_TYPE_INTEGER: 
-@GDA_VALUE_TYPE_LIST: 
-@GDA_VALUE_TYPE_MONEY: 
-@GDA_VALUE_TYPE_NUMERIC: 
-@GDA_VALUE_TYPE_SINGLE: 
-@GDA_VALUE_TYPE_SMALLINT: 
-@GDA_VALUE_TYPE_SMALLUINT: 
-@GDA_VALUE_TYPE_STRING: 
-@GDA_VALUE_TYPE_TIME: 
-@GDA_VALUE_TYPE_TIMESTAMP: 
-@GDA_VALUE_TYPE_TINYINT: 
-@GDA_VALUE_TYPE_TINYUINT: 
-@GDA_VALUE_TYPE_TYPE: 
-@GDA_VALUE_TYPE_UINTEGER: 
-@GDA_VALUE_TYPE_UNKNOWN: 
+@GDA_VALUE_TYPE_NULL: represents a NULL value
+@GDA_VALUE_TYPE_BIGINT: signed integer guaranteed to be 64 bits on all platforms on which it is available (see G_HAVE_GINT64). Values of this type can range from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807.
+@GDA_VALUE_TYPE_BIGUINT: unsigned integer guaranteed to be 64 bits on all platforms on which it is available (see G_HAVE_GINT64). Values of this type can range from 0 to 18,446,744,073,709,551,615.
+@GDA_VALUE_TYPE_BINARY: represents binary data: a buffer and its length
+@GDA_VALUE_TYPE_BLOB: To be removed
+@GDA_VALUE_TYPE_BOOLEAN: standard boolean type
+@GDA_VALUE_TYPE_DATE: date type (Year, month, day)
+@GDA_VALUE_TYPE_DOUBLE: standard C double type
+@GDA_VALUE_TYPE_GEOMETRIC_POINT: a 2D point (x, y)
+@GDA_VALUE_TYPE_GOBJECT: fundamental type for GObject
+@GDA_VALUE_TYPE_INTEGER: standard C int type
+@GDA_VALUE_TYPE_LIST: a list (GList) of GdaValue values
+@GDA_VALUE_TYPE_MONEY: type to hold money values (a currency and a value as a double)
+@GDA_VALUE_TYPE_NUMERIC: arbitrary precision numerical value (string plus precision and width)
+@GDA_VALUE_TYPE_SINGLE: standard C float type
+@GDA_VALUE_TYPE_SMALLINT: standard C short type
+@GDA_VALUE_TYPE_SMALLUINT: standard C unsigned short type
+@GDA_VALUE_TYPE_STRING: a string (0 terminated array of characters)
+@GDA_VALUE_TYPE_TIME: time type (HH:MM:SS)
+@GDA_VALUE_TYPE_TIMESTAMP: date and time type
+@GDA_VALUE_TYPE_TINYINT: standard C char type
+@GDA_VALUE_TYPE_TINYUINT: standard C unsigned char type
+@GDA_VALUE_TYPE_TYPE: value which represents a GdaValueType
+@GDA_VALUE_TYPE_UINTEGER: standard C unsigned int type
+@GDA_VALUE_TYPE_UNKNOWN: undefined data type, can't be instanciated as it represents an error
 
 <!-- ##### STRUCT GdaDate ##### -->
 <para>
@@ -119,27 +121,17 @@ Single value stored in a #GdaDataModel
 </para>
 
 
-<!-- ##### STRUCT GdaValue ##### -->
+<!-- ##### TYPEDEF GdaValue ##### -->
 <para>
 
 </para>
 
-@type: 
-@binary_length: 
 
 <!-- ##### MACRO GDA_TYPE_VALUE ##### -->
 <para>
 
 </para>
 
-
-
-<!-- ##### FUNCTION gda_value_get_gtype ##### -->
-<para>
-
-</para>
-
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_new_null ##### -->
@@ -349,7 +341,7 @@ Single value stored in a #GdaDataModel
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_new_type ##### -->
+<!-- ##### FUNCTION gda_value_new_gdatype ##### -->
 <para>
 
 </para>
@@ -845,7 +837,7 @@ Single value stored in a #GdaDataModel
 @val: 
 
 
-<!-- ##### FUNCTION gda_value_get_vtype ##### -->
+<!-- ##### FUNCTION gda_value_get_gdatype ##### -->
 <para>
 
 </para>
@@ -854,13 +846,13 @@ Single value stored in a #GdaDataModel
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_set_vtype ##### -->
+<!-- ##### FUNCTION gda_value_set_gdatype ##### -->
 <para>
 
 </para>
 
 @value: 
-@type: 
+@val: 
 
 
 <!-- ##### FUNCTION gda_value_set_from_string ##### -->

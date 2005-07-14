@@ -1,5 +1,5 @@
 /* GNOME DB ODBC Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Michael Lausch <michael@lausch.at>
@@ -1320,10 +1320,10 @@ get_types_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset, const
 					&ival, sizeof( ival ), &ind );
 
 		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
-			value_list = g_list_append (value_list, gda_value_new_type ( odbc_to_gda_type( ival )));
+			value_list = g_list_append (value_list, gda_value_new_gdatype ( odbc_to_gda_type( ival )));
 		}
 		else {
-			value_list = g_list_append (value_list, gda_value_new_type ( GDA_VALUE_TYPE_UNKNOWN ));
+			value_list = g_list_append (value_list, gda_value_new_gdatype ( GDA_VALUE_TYPE_UNKNOWN ));
 		}
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);

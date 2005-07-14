@@ -1724,7 +1724,7 @@ gda_value_new_timestamp
 gda_value_new_timestamp_from_timet
 gda_value_new_tinyint
 gda_value_new_tinyuint
-gda_value_new_type
+gda_value_new_gdatype
 gda_value_new_uinteger
 gda_value_new_from_string
 gda_value_new_from_xml
@@ -1779,8 +1779,8 @@ gda_value_get_tinyuint
 gda_value_set_tinyuint
 gda_value_get_uinteger
 gda_value_set_uinteger
-gda_value_get_vtype
-gda_value_set_vtype
+gda_value_get_gdatype
+gda_value_set_gdatype
 gda_value_set_from_string
 gda_value_set_from_value
 gda_value_compare

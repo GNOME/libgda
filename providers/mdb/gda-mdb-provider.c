@@ -1,5 +1,5 @@
 /* GDA MDB provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -634,7 +634,7 @@ add_type (GdaDataModel *model, const gchar *typname, const gchar *owner,
 	value_list = g_list_append (value_list, gda_value_new_string (typname));
 	value_list = g_list_append (value_list, gda_value_new_string (owner));
 	value_list = g_list_append (value_list, gda_value_new_string (comments));
-	value_list = g_list_append (value_list, gda_value_new_type (type));
+	value_list = g_list_append (value_list, gda_value_new_gdatype (type));
 
 	gda_data_model_append_values (model, value_list);
 

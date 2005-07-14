@@ -263,7 +263,7 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		break;
 	
 	case GDA_VALUE_TYPE_TYPE:
-		gda_gvalue_set_gdatype (value, gda_type_from_string (as_string));
+		gda_value_set_gdatype (value, gda_type_from_string (as_string));
 		break;
 
 	case GDA_VALUE_TYPE_LIST:
@@ -1104,7 +1104,7 @@ gda_value_new_tinyuint (guchar val)
 }
 
 /** 
- * gda_value_new_type
+ * gda_value_new_gdatype
  * @val: Value to set for the new #GdaValue.
  *
  * Makes a new #GdaValue of type #GDA_VALUE_TYPE_TYPE with value @val.
@@ -1112,12 +1112,12 @@ gda_value_new_tinyuint (guchar val)
  * Returns: the newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_type (GdaValueType val)
+gda_value_new_gdatype (GdaValueType val)
 {
 	GdaValue *value;
 
 	value = g_new0 (GdaValue, 1);
-	gda_gvalue_set_gdatype (value, val);
+	gda_value_set_gdatype (value, val);
 
 	return value;
 }
@@ -1221,7 +1221,6 @@ gda_value_reset_with_type (GdaValue *value, GdaValueType type)
  *
  * Returns: the #GType of the value.
  */
- 
 GdaValueType
 gda_value_get_type (GdaValue *value)
 {
@@ -1810,7 +1809,7 @@ gda_value_get_smallint (GdaValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SMALLINT), -1);
-	return gda_gvalue_get_smallint(value);
+	return (gshort) value->data[0].v_int;
 }
 
 /**
@@ -1827,7 +1826,7 @@ gda_value_set_smallint (GdaValue *value, gshort val)
 
 	l_g_value_unset (value);
 	g_value_init (value, G_VALUE_TYPE_SMALLINT);
-	gda_gvalue_set_smallint (value, val);
+	value->data[0].v_int = val;
 }
 
 /**
@@ -1841,7 +1840,7 @@ gda_value_get_smalluint (GdaValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SMALLUINT), -1);
-	return gda_gvalue_get_smalluint(value);
+	return (gushort) value->data[0].v_uint;
 }
 
 /**
@@ -1858,7 +1857,7 @@ gda_value_set_smalluint (GdaValue *value, gushort val)
 
 	l_g_value_unset (value);
 	g_value_init (value, G_VALUE_TYPE_SMALLUINT);
-	gda_gvalue_set_smalluint (value, val);
+	value->data[0].v_uint = val;
 }
 
 /**
@@ -2310,7 +2309,7 @@ gda_value_stringify (GdaValue *value)
 		break;
 
 	case  GDA_VALUE_TYPE_TYPE:
-		retval = g_strdup (gda_type_to_string (gda_gvalue_get_gdatype (value)));
+		retval = g_strdup (gda_type_to_string (gda_value_get_gdatype (value)));
 		break;
 
 	default:
@@ -2656,38 +2655,6 @@ gda_smalluint_get_type (void) {
   	return type;
 }
 
-void
-gda_gvalue_set_smallint (GValue *value,
-		  gshort	  v_short)
-{
-	g_return_if_fail (G_VALUE_TYPE(value) == G_VALUE_TYPE_SMALLINT);
-	value->data[0].v_int = v_short;
-}
-
-gshort
-gda_gvalue_get_smallint (const GValue *value)
-{
-	g_return_val_if_fail (G_VALUE_TYPE(value) == G_VALUE_TYPE_SMALLINT, 0);
-    return (gshort) value->data[0].v_int;
-}
-
-void
-gda_gvalue_set_smalluint (GValue *value,
-		  gushort	  v_ushort)
-{
-	g_return_if_fail (G_VALUE_TYPE(value) == G_VALUE_TYPE_SMALLUINT);
-	value->data[0].v_uint = v_ushort;
-}
-
-gushort
-gda_gvalue_get_smalluint (const GValue *value)
-{
-	g_return_val_if_fail (G_VALUE_TYPE(value) == G_VALUE_TYPE_SMALLUINT, 0);
-  
-	return (gushort) value->data[0].v_uint;
-}
-
-
 GType
 gda_gdatype_get_type (void) {
 	static GType type = 0;
@@ -2711,19 +2678,29 @@ gda_gdatype_get_type (void) {
   	return type;
 }
 
+/**
+ * gda_value_get_gdatype
+ */
 GdaValueType
-gda_gvalue_get_gdatype (const GValue *value)
+gda_value_get_gdatype (GValue *value)
 {
-	g_return_val_if_fail (G_VALUE_TYPE(value) == G_VALUE_TYPE_TYPE, 0);
+	g_return_val_if_fail (value && G_IS_VALUE (value), -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TYPE), -1);
   
 	return (GdaValueType) value->data[0].v_int;
 }
 
+/**
+ * gda_value_set_gdatype
+ */
 void
-gda_gvalue_set_gdatype (GValue *value, GdaValueType v_gdatype)
+gda_value_set_gdatype (GValue *value, GdaValueType val)
 {
-	g_return_if_fail (G_VALUE_TYPE(value) == G_VALUE_TYPE_TYPE);
-	value->data[0].v_int = (int) v_gdatype;
+	g_return_if_fail (value);
+
+	l_g_value_unset (value);
+	g_value_init (value, G_VALUE_TYPE_TYPE);
+	value->data[0].v_int = (int) val;
 }
 
 static GdaValueType
@@ -2797,6 +2774,9 @@ gtype_to_gdatype (GType type)
 	
 	else if ( type == gda_timestamp_get_type() )
 		return GDA_VALUE_TYPE_TIMESTAMP;
+	
+	else if ( type == gda_gdatype_get_type() )
+		return GDA_VALUE_TYPE_TYPE;
 
 	g_warning ("Can't find GdaValueType type for GType `%s'", g_type_name (type));
 	return GDA_VALUE_TYPE_UNKNOWN;

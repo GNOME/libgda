@@ -123,7 +123,7 @@ gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, Gd
 
 gboolean             gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob);
 
-gchar *			gda_connection_value_to_sql_string (GdaConnection *cnc, GdaValue *from);
+gchar               *gda_connection_value_to_sql_string (GdaConnection *cnc, GdaValue *from);
 const GList         *gda_connection_get_errors (GdaConnection *cnc);
 
 typedef enum {

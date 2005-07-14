@@ -14,9 +14,6 @@ An implementation of #GdaDataModel based on an array
 
 </para>
 
-<!-- ##### SECTION Stability_Level ##### -->
-
-
 <!-- ##### STRUCT GdaDataModelArray ##### -->
 <para>
 
