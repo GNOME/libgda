@@ -1306,7 +1306,6 @@ gda_firebird_provider_supports (GdaServerProvider *provider,
 				GdaConnectionFeature feature)
 {
 	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	switch (feature) {
 		case GDA_CONNECTION_FEATURE_VIEWS:
