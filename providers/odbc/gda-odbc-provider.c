@@ -1138,7 +1138,7 @@ get_odbc_procedures (GdaConnection *cnc, GdaParameterList *params)
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Owner"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Return type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("Nb args"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("# args"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 6, _("Args types"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 7, _("Definition"));
 

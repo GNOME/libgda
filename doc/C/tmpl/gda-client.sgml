@@ -23,6 +23,9 @@ Database client access
  #GdaConnection.
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GdaClient ##### -->
 <para>
 
@@ -112,16 +115,6 @@ Database client access
 </para>
 
 @client: 
-
-
-<!-- ##### FUNCTION gda_client_get_dsn_specs ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_client_get_specs_to_create_database ##### -->

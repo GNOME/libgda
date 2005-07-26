@@ -21,6 +21,9 @@ XML database representation (used for import/export and in the default provider)
  #GdaTable
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GdaXmlDatabasePrivate ##### -->
 <para>
 

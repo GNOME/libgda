@@ -30,13 +30,13 @@ GdaServerProvider *plugin_create_provider (void);
 const gchar *
 plugin_get_name (void)
 {
-	return "Xbase";
+	return "xBase";
 }
 
 const gchar *
 plugin_get_description (void)
 {
-	return _("Provider for Xbase (dBase, FoxPro, etc) files");
+	return _("Provider for xBase (dBase, FoxPro, etc) files");
 }
 
 GList *

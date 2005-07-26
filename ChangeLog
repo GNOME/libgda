@@ -1,4 +1,19 @@
-2005-07-11  Christopher Taylor <christophth@tiscali.it>
+2005-07-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #311573
+
+	* providers/mdb/gda-mdb-provider.c (get_mdb_types): fixed description
+	of "repid" type.
+
+	* providers/xbase/libmain.c (plugin_get_description):
+	* providers/sybase/gda-sybase-provider.c
+	(gda_sybase_provider_process_sql_commands):
+	* providers/sybase/gda-sybase-recordset.c (gda_sybase_process_msg_result):
+	* providers/sybase/utils.c (sybase_add_cmsg_errors_to_list,
+	sybase_add_server_errors_to_list, sybase_add_client_errors_to_list):
+	* providers/odbc/gda-odbc-provider.c (get_odbc_procedures): fixed strings.
+
+2005-07-21  Christopher Taylor <christophth@tiscali.it>
 
 	Fixes #306682
 

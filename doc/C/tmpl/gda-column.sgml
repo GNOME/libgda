@@ -14,6 +14,9 @@ Management of #GdaDataModel column attributes
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GdaColumn ##### -->
 <para>
 
@@ -24,6 +27,9 @@ Management of #GdaDataModel column attributes
 <para>
 
 </para>
+
+@: 
+@:
 
 @gdacolumn: the object which received the signal.
 @arg1: 
@@ -39,8 +45,8 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@: 
-@: 
+@gdacolumn: the object which received the signal.
+@arg1: 
 
 <!-- ##### FUNCTION gda_column_get_type ##### -->
 <para>

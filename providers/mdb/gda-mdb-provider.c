@@ -665,7 +665,7 @@ get_mdb_types (GdaMdbConnection *mdb_cnc)
 	add_type (model, "memo", NULL, _("Variable length character strings"), GDA_VALUE_TYPE_BINARY);
 	add_type (model, "money", NULL, _("Money amounts"), GDA_VALUE_TYPE_DOUBLE);
 	add_type (model, "ole", NULL, _("OLE object"), GDA_VALUE_TYPE_BINARY);
-	add_type (model, "repid", NULL, _("FIXME"), GDA_VALUE_TYPE_BINARY);
+	add_type (model, "repid", NULL, _("Replication ID"), GDA_VALUE_TYPE_BINARY);
 	add_type (model, "sdatetime", NULL, _("Date/time value"), GDA_VALUE_TYPE_TIMESTAMP);
 	add_type (model, "text", NULL, _("Character strings"), GDA_VALUE_TYPE_STRING);
 

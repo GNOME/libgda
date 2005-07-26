@@ -473,8 +473,8 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 
 
 GdaSybaseRecordset *
-gda_sybase_process_msg_result(GdaConnection *cnc,
-															GdaSybaseConnectionData *scnc)
+gda_sybase_process_msg_result (GdaConnection *cnc,
+			       GdaSybaseConnectionData *scnc)
 {
 	
 	// in ASE when a stored procedure uses the print statement, it 
@@ -507,7 +507,7 @@ gda_sybase_process_msg_result(GdaConnection *cnc,
 	if ( ret != CS_SUCCEED ) {
 		error = gda_error_new();
 		g_return_val_if_fail (error != NULL, FALSE);
-		gda_error_set_description (error, _("an error occured when calling ct_diag attempting to retrieve a server message count for resultset"));
+		gda_error_set_description (error, _("An error occured when attempting to retrieve a server message count for resultset"));
 		gda_error_set_number (error, -1);
 		gda_error_set_source (error, "gda-sybase");
 		gda_error_set_sqlstate (error, _("Not available"));					
@@ -529,7 +529,7 @@ gda_sybase_process_msg_result(GdaConnection *cnc,
 		error = gda_error_new();
 		g_return_val_if_fail (error != NULL, FALSE);
 		gda_error_set_description (error,
-															 _("an error occured when calling ct_diag attempting to retrieve a server message for recordset"));
+					   _("An error occured when attempting to retrieve a server message for recordset"));
 		gda_error_set_number (error, -1);
 		gda_error_set_source (error, "gda-sybase");
 		gda_error_set_sqlstate (error, _("Not available"));					

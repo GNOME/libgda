@@ -759,7 +759,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 					if ( ret != CS_SUCCEED ) {
 						error = gda_error_new();
 						g_return_val_if_fail (error != NULL, FALSE);
-						gda_error_set_description (error, _("an error occured when calling ct_diag attempting to test if there is a server message for resultset"));
+						gda_error_set_description (error, _("An error occured when attempting to test if there is a server message for resultset"));
 						gda_error_set_number (error, -1);
 						gda_error_set_source (error, "gda-sybase");
 						gda_error_set_sqlstate (error, _("Not available"));

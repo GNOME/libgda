@@ -35,6 +35,9 @@ Functions that deal with #GdaCommand
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### ENUM GdaCommandOptions ##### -->
 <para>
 And OR'ed combination of GDA_COMMAND_OPTIONS_* values.
