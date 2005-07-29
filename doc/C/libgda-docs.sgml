@@ -41,7 +41,7 @@
 <!ENTITY libgda-data-model-list SYSTEM "xml/gda-data-model-list.xml">
 <!ENTITY libgda-data-model-base SYSTEM "xml/gda-data-model-base.xml">
 <!ENTITY libgda-data-model SYSTEM "xml/gda-data-model.xml">
-<!ENTITY libgda-error SYSTEM "xml/gda-error.xml">
+<!ENTITY libgda-connection-event SYSTEM "xml/gda-connection-event.xml">
 <!ENTITY libgda-export SYSTEM "xml/gda-export.xml">
 <!ENTITY libgda-column SYSTEM "xml/gda-column.xml">
 <!ENTITY libgda-column-index SYSTEM "xml/gda-column-index.xml">
@@ -1840,7 +1840,7 @@
     <title>Managing errors</title>
     <para>
       You can manage errors with <link
-      linkend="libgda-GdaError">GdaError</link> class and obtain them with
+      linkend="libgda-GdaConnectionEvent">GdaConnectionEvent</link> class and obtain them with
       function <link
       linkend="gda-connection-get-errors"><emphasis>gda_connection_get_errors()
       </emphasis></link> so let's see them and an example: 
@@ -1850,16 +1850,16 @@
     </para>
     <itemizedlist>
       <listitem><para>
-        <link linkend="gda-error-get-description">gda_error_get_description()</link></para>
+        <link linkend="gda-connection-event-get-description">gda_connection_event_get_description()</link></para>
       </listitem>
       <listitem><para>
-        <link linkend="gda-error-get-number">gda_error_get_number()</link></para>
+        <link linkend="gda-connection-event-get-number">gda_connection_event_get_code()</link></para>
       </listitem>
       <listitem><para>
-        <link linkend="gda-error-get-source">gda_error_get_source()</link></para>
+        <link linkend="gda-connection-event-get-source">gda_connection_event_get_source()</link></para>
       </listitem>
       <listitem><para>
-        <link linkend="gda-error-get-sqlstate">gda_error_get_sqlstate()</link></para>
+        <link linkend="gda-connection-event-get-sqlstate">gda_connection_event_get_sqlstate()</link></para>
       </listitem>
     </itemizedlist>
     <para>
@@ -1876,17 +1876,17 @@
       {
         GList *list;
         GList *node;
-        GdaError *error;
+        GdaConnectionEvent *error;
       
         list = (GList *) gda_connection_get_errors (connection);
       
         for (node = g_list_first (list); node != NULL; node = g_list_next (node))
           {
-            error = (GdaError *) node->data;
-            g_print ("Error no: %d\t", gda_error_get_number (error));
-            g_print ("desc: %s\t", gda_error_get_description (error));
-            g_print ("source: %s\t", gda_error_get_source (error));
-            g_print ("sqlstate: %s\n", gda_error_get_sqlstate (error));
+            error = (GdaConnectionEvent *) node->data;
+            g_print ("Error no: %d\t", gda_connection_event_get_code (error));
+            g_print ("desc: %s\t", gda_connection_event_get_description (error));
+            g_print ("source: %s\t", gda_connection_event_get_source (error));
+            g_print ("sqlstate: %s\n", gda_connection_event_get_sqlstate (error));
           }
       }
       </programlisting>
@@ -2135,7 +2135,7 @@
     &libgda-column-index;
     &libgda-data-model-index;
     &libgda-row;
-    &libgda-error;
+    &libgda-connection-event;
     &libgda-export;
     &libgda-log;
     &libgda-parameter;

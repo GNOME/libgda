@@ -27,10 +27,10 @@
 #include <sqlcli1.h>
 #include "gda-ibmdb2.h"
 
-GdaError *
+GdaConnectionEvent *
 gda_ibmdb2_make_error (SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt)
 {
-        GdaError *error = NULL;
+        GdaConnectionEvent *error = NULL;
 	SQLRETURN rc;
         SQLCHAR sql_state[6];
 	SQLINTEGER native_error;
@@ -49,14 +49,14 @@ gda_ibmdb2_make_error (SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt)
 		               &error_msg_len);
 	    	
 		if (rc == SQL_SUCCESS) {
-    	 		error = gda_error_new ();
+    	 		error = gda_connection_event_new ();
 			
 			/* g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%s", (gchar*)error_msg); */
 				       			
-			gda_error_set_description (error, (gchar*)error_msg);
-			gda_error_set_number (error, native_error);
-			gda_error_set_source (error, "gda-ibmdb2");
-			gda_error_set_sqlstate (error, sql_state);
+			gda_connection_event_set_description (error, (gchar*)error_msg);
+			gda_connection_event_set_code (error, native_error);
+			gda_connection_event_set_source (error, "gda-ibmdb2");
+			gda_connection_event_set_sqlstate (error, sql_state);
 		} else {
 			return NULL;
 		}
@@ -71,7 +71,7 @@ void
 gda_ibmdb2_emit_error (GdaConnection * cnc,
 		       SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt)
 {
-	GdaError *error;
+	GdaConnectionEvent *error;
 	GList *list = NULL;
 	while ((error = gda_ibmdb2_make_error (henv, hdbc, hstmt))) {
 		list = g_list_append (list, error);

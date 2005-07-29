@@ -54,7 +54,7 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError *gda_oracle_make_error (dvoid *hndlp, ub4 type,
+GdaConnectionEvent *gda_oracle_make_error (dvoid *hndlp, ub4 type,
 				 const gchar *file, gint line);
 
 void gda_oracle_set_value (GdaValue *value, 

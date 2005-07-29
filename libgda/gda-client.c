@@ -73,7 +73,7 @@ emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, .
 {
 	va_list args;
 	gchar sz[2048];
-	GdaError *error;
+	GdaConnectionEvent *error;
 	GList *list;
 
 	/* build the message string */
@@ -84,9 +84,9 @@ emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, .
 	g_print ("Error: %s\n", sz);
 
 	/* create the error list */
-	error = gda_error_new ();
-	gda_error_set_description (error, sz);
-	gda_error_set_source (error, "[GDA client]");
+	error = gda_connection_event_new ();
+	gda_connection_event_set_description (error, sz);
+	gda_connection_event_set_source (error, "[GDA client]");
 
 	list = g_list_append (NULL, error);
 	connection_error_cb (cnc, list, client);
@@ -120,7 +120,7 @@ connection_error_cb (GdaConnection *cnc, GList *error_list, gpointer user_data)
 
 	/* notify actions */
 	for (l = error_list; l != NULL; l = l->next)
-		gda_client_notify_error_event (client, cnc, GDA_ERROR (l->data));
+		gda_client_notify_error_event (client, cnc, GDA_CONNNECTION_EVENT (l->data));
 }
 
 static void
@@ -235,6 +235,15 @@ gda_client_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
+/* module error */
+GQuark gda_client_error_quark (void)
+{
+	static GQuark quark;
+	if (!quark)
+		quark = g_quark_from_static_string ("gda_client_error");
+	return quark;
+}
+
 GType
 gda_client_get_type (void)
 {
@@ -345,6 +354,7 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
  * @username: user name.
  * @password: password for @username.
  * @options: options for the connection (see #GdaConnectionOptions).
+ * @error: a place to store an error, or %NULL
  *
  * Establishes a connection to a data source. The connection will be opened
  * if no identical connection is available in the #GdaClient connection pool,
@@ -362,7 +372,8 @@ gda_client_open_connection (GdaClient *client,
 			    const gchar *dsn,
 			    const gchar *username,
 			    const gchar *password,
-			    GdaConnectionOptions options)
+			    GdaConnectionOptions options,
+			    GError **error)
 {
 	GdaConnection *cnc = NULL;
 	LoadedProvider *prv;
@@ -374,6 +385,8 @@ gda_client_open_connection (GdaClient *client,
 	dsn_info = gda_config_find_data_source (dsn);
 	if (!dsn_info) {
 		gda_log_error (_("Data source %s not found in configuration"), dsn);
+		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+			     _("Data source %s not found in configuration"), dsn);
 		return NULL;
 	}
 
@@ -395,13 +408,12 @@ gda_client_open_connection (GdaClient *client,
 		if (!prv)
 			prv = find_or_load_provider (client, dsn_info->provider);
 	
-		if (prv)
+		if (prv) 
 			cnc = gda_connection_new (client, prv->provider, dsn, username, password, options);
-		
-		if (!cnc || !GDA_IS_CONNECTION (cnc)) {
-			gda_data_source_info_free (dsn_info);
-			return NULL;
-		}
+		else 
+			g_set_error (error, GDA_CLIENT_ERROR, 0, 
+				     _("Datasource configuration error: could not find provider '%s'"),
+				     dsn_info->provider);
 		
 		/* add list to our private list */
 		client->priv->connections = g_list_append (client->priv->connections, cnc);
@@ -409,8 +421,11 @@ gda_client_open_connection (GdaClient *client,
 		g_signal_connect (G_OBJECT (cnc), "error",
 				  G_CALLBACK (connection_error_cb), client);
 	}
-	else
-		g_warning ("Provider is null!");
+	else {
+		g_warning (_("Datasource configuration error: no provider specified"));
+		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+			     _("Datasource configuration error: no provider specified"));
+	}
 
 
 	/* free memory */
@@ -425,6 +440,7 @@ gda_client_open_connection (GdaClient *client,
  * @provider_id: provider ID to connect to.
  * @cnc_string: connection string.
  * @options: options for the connection (see #GdaConnectionOptions).
+ * @error: a place to store an error, or %NULL
  *
  * Opens a connection given a provider ID and a connection string. This
  * allows applications to open connections without having to create
@@ -442,7 +458,8 @@ GdaConnection *
 gda_client_open_connection_from_string (GdaClient *client,
 					const gchar *provider_id,
 					const gchar *cnc_string,
-					GdaConnectionOptions options)
+					GdaConnectionOptions options,
+					GError **error)
 {
 	GdaDataSourceInfo *dsn_info;
 	GdaConnection *cnc;
@@ -487,7 +504,8 @@ gda_client_open_connection_from_string (GdaClient *client,
 					  dsn_info->name,
 					  dsn_info->username,
 					  dsn_info->password,
-					  options);
+					  options,
+					  error);
 
 	/* free memory */
 	gda_config_remove_data_source (dsn_info->name);
@@ -497,7 +515,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 }
 
 /**
- * gda_client_get_connection_list
+ * gda_client_get_connections
  * @client: a #GdaClient object.
  *
  * Gets the list of all open connections in the given #GdaClient object.
@@ -507,7 +525,7 @@ gda_client_open_connection_from_string (GdaClient *client,
  * Returns: a GList of #GdaConnection objects.
  */
 const GList *
-gda_client_get_connection_list (GdaClient *client)
+gda_client_get_connections (GdaClient *client)
 {
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 	return (const GList *) client->priv->connections;
@@ -627,7 +645,7 @@ gda_client_notify_event (GdaClient *client,
  * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_ERROR event.
  */
 void
-gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaError *error)
+gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error)
 {
 	GdaParameterList *params;
 
@@ -933,7 +951,8 @@ gda_client_create_database (GdaClient *client, const gchar *provider, GdaParamet
 	if (prv && prv->provider) 
 		return gda_server_provider_create_database (prv->provider, params, error);
 	else {
-		g_set_error (error, 0, 0, _("Could not find provider %s in the current setup"), provider); 
+		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+			     _("Could not find provider %s in the current setup"), provider); 
 		return FALSE;
 	}
 }

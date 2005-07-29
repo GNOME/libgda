@@ -163,7 +163,7 @@ static gboolean gda_msql_provider_open_connection(GdaServerProvider *p1,
 {
 	const gchar *_host = NULL;
 	const gchar *_db = NULL;
-	GdaError *error;
+	GdaConnectionEvent *error;
 	int rc=-1,sock=-1;
 	gint *sock_ptr;
 	GdaMsqlProvider *p=(GdaMsqlProvider*)p1;

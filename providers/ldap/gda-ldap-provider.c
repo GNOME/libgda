@@ -161,7 +161,7 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider,
 	const gchar *t_flags = NULL;
 	const gchar *t_authmethod = NULL;
 	LDAP *ldap;
-	/*GdaError *error;*/
+	/*GdaConnectionEvent *error;*/
 	GdaLdapProvider *myprv = (GdaLdapProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (myprv), FALSE);

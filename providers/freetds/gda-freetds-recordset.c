@@ -325,7 +325,7 @@ GdaDataModel
 	GdaFreeTDSRecordset *recset = NULL;
 	TDSCOLINFO *col = NULL;
 	GdaRow *row = NULL;
-	GdaError *error = NULL;
+	GdaConnectionEvent *error = NULL;
 	gboolean columns_set = FALSE;
 	gint i;
 

@@ -33,7 +33,7 @@
 
 G_BEGIN_DECLS
 
-GdaError     *gda_msql_make_error(int sock);
+GdaConnectionEvent     *gda_msql_make_error(int sock);
 GdaValueType  gda_msql_type_to_gda(int msql_type);
 gchar        *gda_msql_value_to_sql_string(GdaValue *val);
 

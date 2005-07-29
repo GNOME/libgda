@@ -80,7 +80,7 @@ const gboolean
 gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
                           GdaValue *value, GdaSybaseField *field)
 {
-	GdaError   *error = NULL;
+	GdaConnectionEvent   *error = NULL;
 	gboolean   success = FALSE;
 	
 	g_return_val_if_fail (value != NULL, FALSE);
@@ -188,7 +188,7 @@ gda_sybase_set_value_general (GdaSybaseConnectionData *scnc,
 	CS_RETCODE ret = CS_SUCCEED;
 	CS_INT     len = 0;
 	gchar      tmp_data[SYBASE_CONVBUF_SIZE];
-	GdaError   *error = NULL;
+	GdaConnectionEvent   *error = NULL;
 
 	g_return_val_if_fail (scnc != NULL, FALSE);
 	g_return_val_if_fail (scnc->gda_cnc != NULL, FALSE);

@@ -22,7 +22,7 @@ gda_connection_feature_get_type
 gda_connection_schema_get_type
 gda_transaction_isolation_get_type
 gda_value_type_get_type
-gda_error_get_type
+gda_connection_event_get_type
 gda_export_get_type
 gda_parameter_get_type
 gda_parameter_list_get_type

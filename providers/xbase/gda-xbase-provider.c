@@ -370,7 +370,7 @@ gda_xbase_provider_get_schema (GdaServerProvider *provider,
 void
 gda_xbase_provider_make_error (GdaConnection *cnc)
 {
-	GdaError *error;
+	GdaConnectionEvent *error;
 	GdaXbaseProviderData *pdata;
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
@@ -381,9 +381,9 @@ gda_xbase_provider_make_error (GdaConnection *cnc)
 		return;
 	}
 
-	error = gda_error_new ();
+	error = gda_connection_event_new ();
 	/* FIXME: get error information */
-	gda_error_set_source (error, "[GDA Xbase]");
+	gda_connection_event_set_source (error, "[GDA Xbase]");
 
 	gda_connection_add_error (cnc, error);
 }

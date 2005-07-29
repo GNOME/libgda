@@ -1,5 +1,5 @@
 <!-- ##### SECTION Title ##### -->
-GdaError
+GdaConnectionEvent
 
 <!-- ##### SECTION Short_Description ##### -->
 Management of errors
@@ -15,15 +15,13 @@ Management of errors
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->
-
-
-<!-- ##### STRUCT GdaErrorPrivate ##### -->
+<!-- ##### STRUCT GdaConnectionEventPrivate ##### -->
 <para>
 
 </para>
 
 
-<!-- ##### FUNCTION gda_error_new ##### -->
+<!-- ##### FUNCTION gda_connection_event_new ##### -->
 <para>
 
 </para>
@@ -31,7 +29,7 @@ Management of errors
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_error_free ##### -->
+<!-- ##### FUNCTION gda_connection_event_free ##### -->
 <para>
 
 </para>
@@ -39,7 +37,7 @@ Management of errors
 @error: 
 
 
-<!-- ##### FUNCTION gda_error_list_copy ##### -->
+<!-- ##### FUNCTION gda_connection_event_list_copy ##### -->
 <para>
 
 </para>
@@ -48,7 +46,7 @@ Management of errors
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_error_list_free ##### -->
+<!-- ##### FUNCTION gda_connection_event_list_free ##### -->
 <para>
 
 </para>
@@ -56,7 +54,7 @@ Management of errors
 @errors: 
 
 
-<!-- ##### FUNCTION gda_error_get_description ##### -->
+<!-- ##### FUNCTION gda_connection_event_get_description ##### -->
 <para>
 
 </para>
@@ -65,7 +63,7 @@ Management of errors
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_error_set_description ##### -->
+<!-- ##### FUNCTION gda_connection_event_set_description ##### -->
 <para>
 
 </para>
@@ -74,7 +72,7 @@ Management of errors
 @description: 
 
 
-<!-- ##### FUNCTION gda_error_get_number ##### -->
+<!-- ##### FUNCTION gda_connection_event_get_code ##### -->
 <para>
 
 </para>
@@ -83,7 +81,7 @@ Management of errors
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_error_set_number ##### -->
+<!-- ##### FUNCTION gda_connection_event_set_code ##### -->
 <para>
 
 </para>
@@ -92,7 +90,7 @@ Management of errors
 @number: 
 
 
-<!-- ##### FUNCTION gda_error_get_source ##### -->
+<!-- ##### FUNCTION gda_connection_event_get_source ##### -->
 <para>
 
 </para>
@@ -101,7 +99,7 @@ Management of errors
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_error_set_source ##### -->
+<!-- ##### FUNCTION gda_connection_event_set_source ##### -->
 <para>
 
 </para>
@@ -110,7 +108,7 @@ Management of errors
 @source: 
 
 
-<!-- ##### FUNCTION gda_error_get_sqlstate ##### -->
+<!-- ##### FUNCTION gda_connection_event_get_sqlstate ##### -->
 <para>
 
 </para>
@@ -119,7 +117,7 @@ Management of errors
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_error_set_sqlstate ##### -->
+<!-- ##### FUNCTION gda_connection_event_set_sqlstate ##### -->
 <para>
 
 </para>

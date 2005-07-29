@@ -42,7 +42,7 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
+GdaConnectionEvent *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
 void gda_postgres_set_value (GdaValue *value, 
 			     GdaValueType type, 
 			     const gchar *thevalue,

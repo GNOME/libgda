@@ -306,7 +306,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	unsigned int mysqlflags = 0;
 
 	MYSQL *mysql;
-	GdaError *error;
+	GdaConnectionEvent *error;
 	GError *gerror = NULL;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
@@ -330,10 +330,10 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	mysql = real_open_connection (t_host, t_port ? atoi (t_port) : 0, t_unix_socket,
 				      t_db, t_user, t_password, t_use_ssl ? TRUE : FALSE, &gerror);
 	if (!mysql) {
-		error = gda_error_new ();
-		gda_error_set_description (error, gerror && gerror->message ? 
+		error = gda_connection_event_new ();
+		gda_connection_event_set_description (error, gerror && gerror->message ? 
 					   gerror->message : "NO DESCRIPTION");
-                gda_error_set_number (error, gerror ? gerror->code : -1);
+                gda_connection_event_set_code (error, gerror ? gerror->code : -1);
 		if (gerror)
 			g_error_free (gerror);
 		gda_connection_add_error (cnc, error);

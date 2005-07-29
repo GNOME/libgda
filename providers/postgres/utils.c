@@ -29,28 +29,35 @@
 #include <libpq/libpq-fs.h>
 #include "gda-postgres.h"
 
-GdaError *
+GdaConnectionEvent *
 gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 {
-	GdaError *error;
+	GdaConnectionEvent *error;
+	gchar *sqlstate;
 
-	error = gda_error_new ();
+	error = gda_connection_event_new ();
 	if (pconn != NULL) {
 		gchar *message;
 		
-		if (pg_res != NULL)
+		if (pg_res != NULL) {
 			message = PQresultErrorMessage (pg_res);
-		else
+			sqlstate = PQresultErrorField (pg_res, PG_DIAG_SQLSTATE);
+		}
+		else {
 			message = PQerrorMessage (pconn);
+			sqlstate = _("Not available");
+		}
 
-		gda_error_set_description (error, message);
-	} else {
-		gda_error_set_description (error, _("NO DESCRIPTION"));
+		gda_connection_event_set_description (error, message);
+		gda_connection_event_set_sqlstate (error, sqlstate);
+	} 
+	else {
+		gda_connection_event_set_description (error, _("NO DESCRIPTION"));
+		gda_connection_event_set_sqlstate (error, _("Not available"));
 	}
 
-	gda_error_set_number (error, -1);
-	gda_error_set_source (error, "gda-postgres");
-	gda_error_set_sqlstate (error, _("Not available"));
+	gda_connection_event_set_code (error, -1);
+	gda_connection_event_set_source (error, "gda-postgres");
 
 	return error;
 }
@@ -206,7 +213,7 @@ gda_postgres_blob_open (GdaBlob *blob, GdaBlobMode mode)
 	pconn = get_pconn (priv->cnc);
 	priv->fd = lo_open (pconn, priv->blobid, pg_mode);
 	if (priv->fd < 0) {
-		GdaError *error = gda_postgres_make_error (pconn, NULL);
+		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
 		gda_connection_add_error (priv->cnc, error);
 		return -1;
 	}
@@ -231,7 +238,7 @@ gda_postgres_blob_read (GdaBlob *blob, gpointer buf, gint size,
 	pconn = get_pconn (priv->cnc);
 	*bytes_read = lo_read (pconn, priv->fd, (gchar *) buf, size);
 	if (*bytes_read == -1) {
-		GdaError *error = gda_postgres_make_error (pconn, NULL);
+		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
 		gda_connection_add_error (priv->cnc, error);
 		return -1;
 	}
@@ -255,7 +262,7 @@ gda_postgres_blob_write (GdaBlob *blob, gpointer buf, gint size,
 	pconn = get_pconn (priv->cnc);
 	*bytes_written = lo_write (pconn, priv->fd, (gchar *) buf, size);
 	if (*bytes_written == -1) {
-		GdaError *error = gda_postgres_make_error (pconn, NULL);
+		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
 		gda_connection_add_error (priv->cnc, error);
 		return -1;
 	}
@@ -281,7 +288,7 @@ gda_postgres_blob_lseek (GdaBlob *blob, gint offset, gint whence)
 	pconn = get_pconn (priv->cnc);
 	result = lo_lseek (pconn, priv->fd, offset, whence);
 	if (result == -1) {
-		GdaError *error = gda_postgres_make_error (pconn, NULL);
+		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
 		gda_connection_add_error (priv->cnc, error);
 	}
 
@@ -306,7 +313,7 @@ gda_postgres_blob_close (GdaBlob *blob)
 	pconn = get_pconn (priv->cnc);
 	result = lo_close (pconn, priv->fd);
 	if (result < 0) {
-		GdaError *error = gda_postgres_make_error (pconn, NULL);
+		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
 		gda_connection_add_error (priv->cnc, error);
 	}
 
@@ -329,7 +336,7 @@ gda_postgres_blob_remove (GdaBlob *blob)
 	pconn = get_pconn (priv->cnc);
 	result = lo_unlink (pconn, priv->blobid);
 	if (result < 0) {
-		GdaError *error = gda_postgres_make_error (pconn, NULL);
+		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
 		gda_connection_add_error (priv->cnc, error);
 	}
 
@@ -382,7 +389,7 @@ gda_postgres_blob_create (GdaBlob *blob, GdaConnection *cnc)
 	pconn = get_pconn (cnc);
 	oid = lo_creat (pconn, INV_READ | INV_WRITE);
 	if (oid == 0) {
-		GdaError *error = gda_postgres_make_error (pconn, NULL);
+		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
 		gda_connection_add_error (cnc, error);
 		return FALSE;
 	}

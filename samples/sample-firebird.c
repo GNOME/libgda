@@ -23,15 +23,15 @@ void
 show_errors (GdaConnection * cnc)
 {
 	GList *list, *node;
-	GdaError *error;
+	GdaConnectionEvent *error;
 
 	list = (GList *) gda_connection_get_errors (cnc);
 	for (node = g_list_first (list); node != NULL; node = g_list_next (node)) {
-		error = (GdaError *) node->data;
-		g_print ("\nError no: %ld\n", gda_error_get_number (error));
-		g_print ("desc: %s\n", gda_error_get_description (error));
-		g_print ("source: %s\n", gda_error_get_source (error));
-		g_print ("sqlstate: %s\n\n", gda_error_get_sqlstate (error));
+		error = (GdaConnectionEvent *) node->data;
+		g_print ("\nError no: %ld\n", gda_connection_event_get_code (error));
+		g_print ("desc: %s\n", gda_connection_event_get_description (error));
+		g_print ("source: %s\n", gda_connection_event_get_source (error));
+		g_print ("sqlstate: %s\n\n", gda_connection_event_get_sqlstate (error));
 	}
 }
 								  

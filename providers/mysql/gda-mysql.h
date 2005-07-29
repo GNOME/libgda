@@ -42,7 +42,7 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError     *gda_mysql_make_error (MYSQL *handle);
+GdaConnectionEvent     *gda_mysql_make_error (MYSQL *handle);
 GdaValueType  gda_mysql_type_to_gda (enum enum_field_types mysql_type, gboolean is_unsigned);
 gchar        *gda_mysql_type_from_gda (const GdaValueType type);
 

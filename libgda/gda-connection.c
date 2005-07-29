@@ -34,17 +34,17 @@
 #define PARENT_TYPE G_TYPE_OBJECT
 
 struct _GdaConnectionPrivate {
-	GdaClient *client;
-	GdaServerProvider *provider_obj;
-	GdaConnectionOptions options;
-	gchar *dsn;
-	gchar *cnc_string;
-	gchar *provider;
-	gchar *username;
-	gchar *password;
-	gboolean is_open;
-	GList *error_list;
-	GList *recset_list;
+	GdaClient            *client;
+	GdaServerProvider    *provider_obj;
+	GdaConnectionOptions  options;
+	gchar                *dsn;
+	gchar                *cnc_string;
+	gchar                *provider;
+	gchar                *username;
+	gchar                *password;
+	gboolean              is_open;
+	GList                *error_list;
+	GList                *recset_list;
 };
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
@@ -143,7 +143,7 @@ gda_connection_finalize (GObject *object)
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
 
-	gda_error_list_free (cnc->priv->error_list);
+	gda_connection_event_list_free (cnc->priv->error_list);
 
 	g_list_foreach (cnc->priv->recset_list, (GFunc) g_object_unref, NULL);
 
@@ -283,7 +283,7 @@ gda_connection_new (GdaClient *client,
 			GList *l;
 
 			for (l = (GList *) errors_copy; l != NULL; l = l->next)
-				gda_client_notify_error_event (client, cnc, GDA_ERROR (l->data));
+				gda_client_notify_error_event (client, cnc, GDA_CONNNECTION_EVENT (l->data));
 		}
 		gda_quark_list_free (params);
 		g_object_unref (G_OBJECT (cnc));
@@ -519,26 +519,28 @@ gda_connection_get_password (GdaConnection *cnc)
  * during some operation.
  *
  * As soon as a provider (or a client, it does not matter) calls this
- * function, the connection object (and the associated #GdaClient object)
+ * function with an @error object which is a fatal error,
+ * the connection object (and the associated #GdaClient object)
  * emits the "error" signal, to which clients can connect to be
  * informed of errors.
  *
  */
 void
-gda_connection_add_error (GdaConnection *cnc, GdaError *error)
+gda_connection_add_error (GdaConnection *cnc, GdaConnectionEvent *error)
 {
 	GList *err_list;
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (GDA_IS_ERROR (error));
+	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (error));
 
 	err_list = cnc->priv->error_list;
-	gda_error_list_free (err_list);
+	gda_connection_event_list_free (err_list);
 	
 	err_list = g_list_append (NULL, error);
 	cnc->priv->error_list = err_list;
 
-	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, cnc->priv->error_list);
+	if (gda_connection_event_get_event_type (error) == GDA_CONNNECTION_EVENT_FATAL)
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, cnc->priv->error_list);
 }
 
 /**
@@ -548,13 +550,13 @@ gda_connection_add_error (GdaConnection *cnc, GdaError *error)
  * @...: the arguments to insert in the error message.
  *
  * Adds a new error to the given connection object. This is just a convenience
- * function that simply creates a #GdaError and then calls
+ * function that simply creates a #GdaConnectionEvent and then calls
  * #gda_server_connection_add_error.
  */
 void
 gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
 {
-	GdaError *error;
+	GdaConnectionEvent *error;
 
 	va_list args;
 	gchar sz[2048];
@@ -567,11 +569,11 @@ gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
 	vsprintf (sz, str, args);
 	va_end (args);
 	
-	error = gda_error_new ();
-	gda_error_set_description (error, sz);
-	gda_error_set_number (error, -1);
-	gda_error_set_source (error, gda_connection_get_provider (cnc));
-	gda_error_set_sqlstate (error, "-1");
+	error = gda_connection_event_new ();
+	gda_connection_event_set_description (error, sz);
+	gda_connection_event_set_code (error, -1);
+	gda_connection_event_set_source (error, gda_connection_get_provider (cnc));
+	gda_connection_event_set_sqlstate (error, "-1");
 	
 	gda_connection_add_error (cnc, error);
 }
@@ -579,10 +581,10 @@ gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
 /**
  * gda_connection_add_error_list
  * @cnc: a #GdaConnection object.
- * @error_list: a list of #GdaError.
+ * @error_list: a list of #GdaConnectionEvent.
  *
  * This is just another convenience function which lets you add
- * a list of #GdaError's to the given connection. As with
+ * a list of #GdaConnectionEvent's to the given connection. As with
  * #gda_connection_add_error and #gda_connection_add_error_string,
  * this function makes the connection object emit the "error"
  * signal. The only difference is that, instead of a notification
@@ -600,21 +602,21 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 	g_return_if_fail (error_list != NULL);
 
 	l = cnc->priv->error_list;
-	gda_error_list_free (l);
-	l = gda_error_list_copy (error_list);
+	gda_connection_event_list_free (l);
+	l = gda_connection_event_list_copy (error_list);
 
 	cnc->priv->error_list = l;
 	/* notify errors */
 	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, l);
 
-	gda_error_list_free (error_list);
+	gda_connection_event_list_free (error_list);
 }
 
 /**
  * gda_connection_clear_error_list
  * @cnc: a #GdaConnection object.
  *
- * This function lets you clear the list of #GdaError's of the
+ * This function lets you clear the list of #GdaConnectionEvent's of the
  * given connection. This is usefull to reuse a #GdaConnection 
  * because next uses of #gda_connection_errors will return an empty
  * list.
@@ -628,7 +630,7 @@ gda_connection_clear_error_list (GdaConnection *cnc)
 
 	if (cnc->priv->error_list != NULL) {
 		l = cnc->priv->error_list;
-		gda_error_list_free (l);
+		gda_connection_event_list_free (l);
 	  
 		cnc->priv->error_list =  NULL;
 	}
@@ -1040,9 +1042,9 @@ gda_connection_get_schema (GdaConnection *cnc,
  * @cnc: a #GdaConnection.
  *
  * Retrieves a list of the last errors ocurred in the connection.
- * You can make a copy of the list using #gda_error_list_copy.
+ * You can make a copy of the list using #gda_connection_event_list_copy.
  * 
- * Returns: a GList of #GdaError.
+ * Returns: a GList of #GdaConnectionEvent.
  *
  */
 const GList *

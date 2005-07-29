@@ -9,17 +9,17 @@ get_errors (GdaConnection * connection)
 {
   GList *list;
   GList *node;
-  GdaError *error;
+  GdaConnectionEvent *error;
 
   list = (GList *) gda_connection_get_errors (connection);
 
   for (node = g_list_first (list); node != NULL; node = g_list_next (node))
     {
-      error = (GdaError *) node->data;
-      g_print ("Error no: %d\t", gda_error_get_number (error));
-      g_print ("desc: %s\t", gda_error_get_description (error));
-      g_print ("source: %s\t", gda_error_get_source (error));
-      g_print ("sqlstate: %s\n", gda_error_get_sqlstate (error));
+      error = (GdaConnectionEvent *) node->data;
+      g_print ("Error no: %d\t", gda_connection_event_get_code (error));
+      g_print ("desc: %s\t", gda_connection_event_get_description (error));
+      g_print ("source: %s\t", gda_connection_event_get_source (error));
+      g_print ("sqlstate: %s\n", gda_connection_event_get_sqlstate (error));
     }
 }
 

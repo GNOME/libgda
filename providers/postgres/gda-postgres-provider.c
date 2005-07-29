@@ -1426,6 +1426,7 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_BLOBS :
 		return TRUE;
 	case GDA_CONNECTION_FEATURE_NAMESPACES :
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 		if (priv_data->version_float >= 7.3)
 			return TRUE;

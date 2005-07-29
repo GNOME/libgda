@@ -27,21 +27,21 @@
 #include <tds.h>
 #include "gda-freetds.h"
 
-GdaError *
+GdaConnectionEvent *
 gda_freetds_make_error (TDSSOCKET *tds, const gchar *message)
 {
-	GdaError *error;
+	GdaConnectionEvent *error;
 
-	error = gda_error_new ();
+	error = gda_connection_event_new ();
 	if (error) {
 		if (message) {
-			gda_error_set_description (error, message);
+			gda_connection_event_set_description (error, message);
 		} else {
-			gda_error_set_description (error, _("NO DESCRIPTION"));
+			gda_connection_event_set_description (error, _("NO DESCRIPTION"));
 		}
-		gda_error_set_number (error, -1);
-	        gda_error_set_source (error, "gda-freetds");
-	        gda_error_set_sqlstate (error, _("Not available"));
+		gda_connection_event_set_code (error, -1);
+	        gda_connection_event_set_source (error, "gda-freetds");
+	        gda_connection_event_set_sqlstate (error, _("Not available"));
 	}
 		
 	return error;

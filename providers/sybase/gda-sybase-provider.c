@@ -6,7 +6,7 @@
  *         Holger Thon <holger.thon@gnome-db.org>
  *      based on the MySQL provider by
  *         Michael Lausch <michael@lausch.at>
- *	        Rodrigo Moya <rodrigo@gnome-db.org>
+ *	   Rodrigo Moya <rodrigo@gnome-db.org>
  *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
@@ -626,7 +626,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
                                          const gchar   *sql)
 {
 	GdaSybaseConnectionData *scnc;
-	GdaError                *error;
+	GdaConnectionEvent                *error;
 	gchar                   **arr;
 	GdaSybaseRecordset      *srecset = NULL;	
 	CS_RETCODE              ret;
@@ -757,12 +757,12 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						       &msgcnt);
 					
 					if ( ret != CS_SUCCEED ) {
-						error = gda_error_new();
+						error = gda_connection_event_new();
 						g_return_val_if_fail (error != NULL, FALSE);
-						gda_error_set_description (error, _("An error occured when attempting to test if there is a server message for resultset"));
-						gda_error_set_number (error, -1);
-						gda_error_set_source (error, "gda-sybase");
-						gda_error_set_sqlstate (error, _("Not available"));
+						gda_connection_event_set_description (error, _("An error occured when attempting to test if there is a server message for resultset"));
+						gda_connection_event_set_code (error, -1);
+						gda_connection_event_set_source (error, "gda-sybase");
+						gda_connection_event_set_sqlstate (error, _("Not available"));
 						gda_connection_add_error (cnc, error);		
 						return NULL;
 					}			
@@ -835,7 +835,7 @@ static gboolean
 gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 {
 	GdaSybaseConnectionData *scnc;
-	GdaError *error;
+	GdaConnectionEvent *error;
 	gboolean ret = TRUE;
 	CS_INT res_type;
 

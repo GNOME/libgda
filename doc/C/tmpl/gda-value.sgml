@@ -19,9 +19,6 @@ use such values.
 
 </para>
 
-<!-- ##### SECTION Stability_Level ##### -->
-
-
 <!-- ##### MACRO TIMEZONE_INVALID ##### -->
 <para>
 
@@ -124,27 +121,17 @@ use such values.
 </para>
 
 
-<!-- ##### STRUCT GdaValue ##### -->
+<!-- ##### TYPEDEF GdaValue ##### -->
 <para>
 
 </para>
 
-@type: 
-@binary_length: 
 
 <!-- ##### MACRO GDA_TYPE_VALUE ##### -->
 <para>
 
 </para>
 
-
-
-<!-- ##### FUNCTION gda_value_get_gtype ##### -->
-<para>
-
-</para>
-
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_new_null ##### -->
@@ -346,6 +333,15 @@ use such values.
 
 
 <!-- ##### FUNCTION gda_value_new_tinyuint ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_gdatype ##### -->
 <para>
 
 </para>
@@ -833,6 +829,24 @@ use such values.
 
 
 <!-- ##### FUNCTION gda_value_set_uinteger ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_gdatype ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_gdatype ##### -->
 <para>
 
 </para>

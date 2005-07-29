@@ -1,3 +1,27 @@
+2005-07-29  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-client.[ch]: added a GError to gda_client_open_connection() and
+	gda_client_open_connection_from_string(), and replaced
+	gda_client_get_connection_list() with gda_client_get_connections()
+	* all files: renamed GdaError to GdaConnectionEvent
+	* libgda/gda-connection-event.[ch]: renamed files from gda-error.[ch]
+	* all files: replaced gda_connection_event_[gs]et_number()
+	by gda_connection_event_[gs]et_code()
+	* all files: replaced gda_connection_event_[gs]et_error_type() by
+	gda_connection_event_[gs]et_event_type()
+	* providers/sqlite/gda-sqlite-provider.c: replaced sqlite_complete() by
+	sqlite3_complete() to avoid undefined symbols
+	* providers/postgres/utils.c improved gda_postgres_make_error()
+	to add sqlstate (thanks to Juan Manuel Mouriz)
+	* providers/postgres/gda-postgres-provider.c: added a test to the
+	gda_postgres_provider_supports() function when the cnc argument is really 
+	used
+	* providers/freetds/gda-freetds-provider.c: minor correction related to
+	the GdaValue recent changes.
+	* libgda/gda-connection-event.[ch]: added gda_connection_event_get_gda_code()
+	and gda_connection_event_set_gda_code() to have libgda standardized event 
+	codes (suggested by Juan Manuel Mouriz)
+
 2005-07-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #311573

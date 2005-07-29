@@ -290,7 +290,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 	GdaSybaseRecordset *srecset = NULL;
 	GdaSybaseField     *sfield = NULL;
 	GdaRow             *row = NULL;
-	GdaError           *error = NULL;
+	GdaConnectionEvent           *error = NULL;
 	gboolean           columns_set = FALSE;
 	gboolean           sfields_allocated = TRUE;
 	gint               i = 0;
@@ -308,7 +308,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		srecset->priv->scnc = scnc;
 	} else {
 		// most probably a lack of ram failure, 
-		// so don't alloc e.g. an instance of GdaError
+		// so don't alloc e.g. an instance of GdaConnectionEvent
 		if (srecset) {
 			g_object_unref (srecset);
 			srecset = NULL;
@@ -487,7 +487,7 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 	GdaValue *val = NULL;
 	gchar *message;
 	CS_INT msgcnt = 0;
-	GdaError *error;
+	GdaConnectionEvent *error;
 	CS_SERVERMSG msg; 
 	CS_RETCODE ret;
 
@@ -505,12 +505,12 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 								 &msgcnt);
 	
 	if ( ret != CS_SUCCEED ) {
-		error = gda_error_new();
+		error = gda_connection_event_new();
 		g_return_val_if_fail (error != NULL, FALSE);
-		gda_error_set_description (error, _("An error occured when attempting to retrieve a server message count for resultset"));
-		gda_error_set_number (error, -1);
-		gda_error_set_source (error, "gda-sybase");
-		gda_error_set_sqlstate (error, _("Not available"));					
+		gda_connection_event_set_description (error, _("An error occured when attempting to retrieve a server message count for resultset"));
+		gda_connection_event_set_code (error, -1);
+		gda_connection_event_set_source (error, "gda-sybase");
+		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_error (cnc, error);		
 		return NULL;
 	}
@@ -526,13 +526,14 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 																1, 
 																&msg); 
 	if ( ret != CS_SUCCEED ) { 
-		error = gda_error_new();
+		error = gda_connection_event_new();
 		g_return_val_if_fail (error != NULL, FALSE);
-		gda_error_set_description (error,
-					   _("An error occured when attempting to retrieve a server message for recordset"));
-		gda_error_set_number (error, -1);
-		gda_error_set_source (error, "gda-sybase");
-		gda_error_set_sqlstate (error, _("Not available"));					
+
+		gda_connection_event_set_description (error,
+						      _("An error occured when attempting to retrieve a server message for recordset"));
+		gda_connection_event_set_code (error, -1);
+		gda_connection_event_set_source (error, "gda-sybase");
+		gda_connection_event_set_sqlstate (error, _("Not available"));					
 		gda_connection_add_error (cnc, error);
 		return NULL;					
 	} 	
@@ -586,12 +587,12 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 																CS_UNUSED, 
 																NULL);   
 	if ( ret != CS_SUCCEED ) { 
-			error = gda_error_new();
+			error = gda_connection_event_new();
 			g_return_val_if_fail (error != NULL, FALSE);
-			gda_error_set_description (error, _("call to ct_diag failed when attempting to clear the server messages"));
-			gda_error_set_number (error, -1);
-			gda_error_set_source (error, "gda-sybase");
-			gda_error_set_sqlstate (error, _("Not available"));					
+			gda_connection_event_set_description (error, _("call to ct_diag failed when attempting to clear the server messages"));
+			gda_connection_event_set_code (error, -1);
+			gda_connection_event_set_source (error, "gda-sybase");
+			gda_connection_event_set_sqlstate (error, _("Not available"));					
 			gda_connection_add_error (cnc, error);
 			return NULL;
 		} 	

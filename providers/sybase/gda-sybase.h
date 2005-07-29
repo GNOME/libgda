@@ -63,7 +63,7 @@ CS_RETCODE CS_PUBLIC gda_sybase_servermsg_callback (CS_CONTEXT *context,
                                                     CS_CONNECTION *conn,
                                                     CS_SERVERMSG *msg);
 
-GdaError *gda_sybase_make_error (GdaSybaseConnectionData *scnc, gchar *fmt, ...);
+GdaConnectionEvent *gda_sybase_make_error (GdaSybaseConnectionData *scnc, gchar *fmt, ...);
 
 void sybase_debug_msg(gchar *fmt, ...);
 void sybase_error_msg(gchar *fmt, ...);

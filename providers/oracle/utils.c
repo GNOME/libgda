@@ -43,15 +43,15 @@
  *
  * The error number is set to the Oracle error code.
  */
-GdaError *
+GdaConnectionEvent *
 gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 {
-	GdaError *error;
+	GdaConnectionEvent *error;
 	gchar errbuf[512];
 	ub4 errcode;
 	gchar *source;
 
-	error = gda_error_new ();
+	error = gda_connection_event_new ();
 
 	if (hndlp != NULL) {
 		OCIErrorGet ((dvoid *) hndlp,
@@ -62,16 +62,16 @@ gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 				(ub4) sizeof (errbuf), 
 				(ub4) type);
 	
-		gda_error_set_description (error, errbuf);	
+		gda_connection_event_set_description (error, errbuf);	
 	} else {
-		gda_error_set_description (error, _("NO DESCRIPTION"));
+		gda_connection_event_set_description (error, _("NO DESCRIPTION"));
 	}
 		
-	gda_error_set_number (error, errcode);
+	gda_connection_event_set_code (error, errcode);
 	source = g_strdup_printf("gda-oracle:%s:%d", file, line);
-	gda_error_set_source (error, source);
+	gda_connection_event_set_source (error, source);
 	g_free(source);
-	gda_error_set_sqlstate (error, _("Not available"));
+	gda_connection_event_set_sqlstate (error, _("Not available"));
 	
 	return error;
 }

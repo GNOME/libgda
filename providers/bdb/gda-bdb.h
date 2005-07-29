@@ -44,7 +44,7 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError *gda_bdb_make_error (int ret);
+GdaConnectionEvent *gda_bdb_make_error (int ret);
 
 G_END_DECLS
 

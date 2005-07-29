@@ -809,7 +809,7 @@ void
 gda_firebird_connection_make_error (GdaConnection *cnc,
 				    const gint statement_type)
 {
-	GdaError *error;
+	GdaConnectionEvent *error;
 	GdaFirebirdConnection *fcnc;
 	gchar *description;
 
@@ -821,11 +821,11 @@ gda_firebird_connection_make_error (GdaConnection *cnc,
 		return;
 	}
 	
-	error = gda_error_new ();
-	gda_error_set_number (error, isc_sqlcode (fcnc->status));
-	gda_error_set_source (error, "[GDA Firebird]");
+	error = gda_connection_event_new ();
+	gda_connection_event_set_code (error, isc_sqlcode (fcnc->status));
+	gda_connection_event_set_source (error, "[GDA Firebird]");
 	description = fb_sqlerror_get_description (fcnc, statement_type);
-	gda_error_set_description (error, description);
+	gda_connection_event_set_description (error, description);
 	gda_connection_add_error (cnc, error);	
 	g_free (description);
 }

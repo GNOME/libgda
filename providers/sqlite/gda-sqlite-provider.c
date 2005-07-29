@@ -305,7 +305,7 @@ sql_split (const gchar *sql)
 
 	while ((next = (const gchar *) strchr (next, ';')) != NULL) {
 		gchar *tmp = g_strndup (remainder, next - remainder + 1);
-		if (sqlite_complete (tmp)) {
+		if (sqlite3_complete (tmp)) {
 			string_list = g_slist_prepend (string_list, tmp);
 			n++;
 			remainder = (const gchar *) (next + 1);
@@ -374,8 +374,8 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					reclist = g_list_append (reclist, recset);
 				}
 			} else {
-				GdaError *error = gda_error_new ();
-				gda_error_set_description (error, errmsg);
+				GdaConnectionEvent *error = gda_connection_event_new ();
+				gda_connection_event_set_description (error, errmsg);
 				gda_connection_add_error (cnc, error);
 
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
@@ -683,8 +683,8 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 	if (status == SQLITE_OK)
 		result = TRUE;
 	else {
-		GdaError *error = gda_error_new ();
-		gda_error_set_description (error, errmsg);
+		GdaConnectionEvent *error = gda_connection_event_new ();
+		gda_connection_event_set_description (error, errmsg);
 		gda_connection_add_error (cnc, error);
 
 		result = FALSE;

@@ -1,9 +1,10 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -67,6 +68,10 @@ struct _GdaClientClass {
 				     GdaParameterList *params);
 };
 
+/* error reporting */
+extern GQuark gda_client_error_quark (void);
+#define GDA_CLIENT_ERROR gda_client_error_quark ()
+
 GType          gda_client_get_type                           (void);
 GdaClient     *gda_client_new                                (void);
 
@@ -74,12 +79,14 @@ GdaConnection *gda_client_open_connection                    (GdaClient *client,
 							      const gchar *dsn,
 							      const gchar *username,
 							      const gchar *password,
-							      GdaConnectionOptions options);
+							      GdaConnectionOptions options,
+							      GError **error);
 GdaConnection *gda_client_open_connection_from_string        (GdaClient *client,
 							      const gchar *provider_id,
 							      const gchar *cnc_string,
-							      GdaConnectionOptions options);
-const GList   *gda_client_get_connection_list                (GdaClient *client);
+							      GdaConnectionOptions options,
+							      GError **error);
+const GList   *gda_client_get_connections                    (GdaClient *client);
 GdaConnection *gda_client_find_connection                    (GdaClient *client,
 							      const gchar *dsn,
 							      const gchar *username,
@@ -88,7 +95,7 @@ void           gda_client_close_all_connections              (GdaClient *client)
 
 void           gda_client_notify_event                       (GdaClient *client, GdaConnection *cnc,
 							      GdaClientEvent event, GdaParameterList *params);
-void           gda_client_notify_error_event                 (GdaClient *client, GdaConnection *cnc, GdaError *error);
+void           gda_client_notify_error_event                 (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error);
 void           gda_client_notify_connection_opened_event     (GdaClient *client, GdaConnection *cnc);
 void           gda_client_notify_connection_closed_event     (GdaClient *client, GdaConnection *cnc);
 void           gda_client_notify_transaction_started_event   (GdaClient *client,
@@ -112,7 +119,6 @@ gchar         *gda_client_get_dsn_specs                      (GdaClient *client,
 gchar         *gda_client_get_specs_to_create_database       (GdaClient *client, const gchar *provider);
 gboolean       gda_client_create_database                    (GdaClient *client, const gchar *provider, 
 							      GdaParameterList *params, GError **error);
-
 
 /*
  * Connection stack functions

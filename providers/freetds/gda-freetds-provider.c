@@ -153,7 +153,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	const gchar *tds_dump = NULL;
 	const gchar *tds_dumpconfig = NULL;
 
-	GdaError *error = NULL;
+	GdaConnectionEvent *error = NULL;
 	GdaFreeTDSProvider *tds_provider = (GdaFreeTDSProvider *) provider;
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
 
@@ -658,9 +658,9 @@ static const gchar
 	return PACKAGE_VERSION;
 }
 
-static GdaDataModel
-*gda_freetds_provider_get_types (GdaConnection    *cnc,
-                                 GdaParameterList *params)
+static GdaDataModel *
+gda_freetds_provider_get_types (GdaConnection    *cnc,
+				GdaParameterList *params)
 {
 	GdaDataModel *model = NULL;
 	TDSCOLINFO col;
@@ -676,36 +676,28 @@ static GdaDataModel
 	
 	if (model) {
 		for (i = 0; i < gda_data_model_get_n_rows (model); i++) {
-			GdaRow *row = (GdaRow *) gda_data_model_get_row (model,
-			                                                 i);
+			GdaRow *row = (GdaRow *) gda_data_model_get_row (model, i);
 			
 			/* first fix gda_type */
 			if (row) {
 				value = gda_row_get_value (row, 2);
-				
-				if (gda_value_get_type (value) == GDA_VALUE_TYPE_INTEGER) {
+				if (gda_value_get_type (value) == GDA_VALUE_TYPE_INTEGER)
 					col.column_size = gda_value_get_integer (value);
-				} else {
+				else
 					col.column_size = 0;
-				}
+				
 				value = gda_row_get_value (row, 3);
-				if (gda_value_get_type (value) != GDA_VALUE_TYPE_TINYINT) {
+				if (gda_value_get_type (value) != GDA_VALUE_TYPE_TINYINT)
 					col.column_type = SYBVARIANT;
-				} else {
+				else 
 					col.column_type = gda_value_get_tinyint (value);
-				}
 				
 				gda_type = gda_freetds_get_value_type (&col);
-				/* col 3: type -> clear and set
-				 *   step 1: make sure value is cleared
-				 */
-				gda_value_set_null (value);
-				memset (value, 0, sizeof(GdaValue));
-				/*   step 2: set type of gdavalue */
-				value->type = GDA_VALUE_TYPE_TYPE;
-				value->value.v_type = gda_type;
 				
-				/* col 2: comment -> clear */
+				/* col 3: type */
+				gda_value_set_gdatype (value, gda_type);
+				
+				/* col 2: comment */
 				value = gda_row_get_value (row, 2);
 				gda_value_set_string (value, "");
 			}
@@ -715,8 +707,9 @@ static GdaDataModel
 	return model;
 }
 
-static GdaDataModel
-*gda_freetds_provider_get_schema (GdaServerProvider *provider,                                                    GdaConnection *cnc,
+static GdaDataModel *
+gda_freetds_provider_get_schema (GdaServerProvider *provider,
+				  GdaConnection *cnc,
                                   GdaConnectionSchema schema,
                                   GdaParameterList *params)
 {
@@ -781,7 +774,7 @@ static gboolean
 gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
-	GdaError *error;
+	GdaConnectionEvent *error;
 #ifdef HAVE_FREETDS_VER0_6X
 	int result_type = 0;
 #endif
@@ -832,7 +825,7 @@ static GdaDataModel *
 gda_freetds_execute_query (GdaConnection *cnc, const gchar* sql)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
-	GdaError *error;
+	GdaConnectionEvent *error;
 	GdaDataModel *recset;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -939,7 +932,7 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
                                                         const gchar   *sql)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
-	GdaError *error;
+	GdaConnectionEvent *error;
 	gchar **arr;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -1046,7 +1039,7 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	TDSMSGINFO *msg_info = (TDSMSGINFO *) bStruct;
 	GdaConnection *cnc = NULL;
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
-	GdaError *error = NULL;
+	GdaConnectionEvent *error = NULL;
 	gchar *msg = NULL;
 
 	g_return_val_if_fail (tds != NULL, TDS_SUCCEED);
@@ -1068,15 +1061,15 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	/* if errormessage, proceed */
 	if (is_err_msg == TRUE) {
 		if (cnc != NULL) {
-			error = gda_error_new ();
-			gda_error_set_description (error, msg);
-			gda_error_set_number (error, msg_info->msg_number);
-			gda_error_set_source (error, "gda-freetds");
+			error = gda_connection_event_new ();
+			gda_connection_event_set_description (error, msg);
+			gda_connection_event_set_code (error, msg_info->msg_number);
+			gda_connection_event_set_source (error, "gda-freetds");
 			if (msg_info->sql_state != NULL) {
-				gda_error_set_sqlstate (error,
+				gda_connection_event_set_sqlstate (error,
 				                        msg_info->sql_state);
 			} else {
-				gda_error_set_sqlstate (error, _("Not available"));
+				gda_connection_event_set_sqlstate (error, _("Not available"));
 			}
 
 			gda_connection_add_error (cnc, error);

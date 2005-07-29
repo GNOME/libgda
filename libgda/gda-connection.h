@@ -28,7 +28,7 @@
 #include <libgda/gda-command.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-index.h>
-#include <libgda/gda-error.h>
+#include <libgda/gda-connection-event.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-transaction.h>
 
@@ -48,12 +48,12 @@ typedef struct _GdaServerProvider    GdaServerProvider; /* defined in gda-server
 typedef struct _GdaClient GdaClient; /* defined in gda-client.h */
 
 struct _GdaConnection {
-	GObject object;
+	GObject               object;
 	GdaConnectionPrivate *priv;
 };
 
 struct _GdaConnectionClass {
-	GObjectClass object_class;
+	GObjectClass          object_class;
 
 	/* signals */
 	void (* error) (GdaConnection *cnc, GList *error_list);
@@ -89,7 +89,7 @@ const gchar         *gda_connection_get_provider (GdaConnection *cnc);
 const gchar         *gda_connection_get_username (GdaConnection *cnc);
 const gchar         *gda_connection_get_password (GdaConnection *cnc);
 
-void                 gda_connection_add_error (GdaConnection *cnc, GdaError *error);
+void                 gda_connection_add_error (GdaConnection *cnc, GdaConnectionEvent *error);
 void                 gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...);
 void                 gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
 void                 gda_connection_clear_error_list (GdaConnection *cnc);

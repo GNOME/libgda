@@ -26,11 +26,11 @@
 #include "gda-odbc.h"
 
 /*
- * Create a GdaError from the ODBC connection, checking for errors on 
+ * Create a GdaConnectionEvent from the ODBC connection, checking for errors on 
  * any of the handles
  */
 
-static GdaError *
+static GdaConnectionEvent *
 gda_odbc_make_error( SQLHANDLE env,
 			SQLHANDLE con,
 			SQLHANDLE stmt )
@@ -73,14 +73,14 @@ gda_odbc_make_error( SQLHANDLE env,
 	}
 
 	if ( SQL_SUCCEEDED( rc )) {
-		GdaError *error;
+		GdaConnectionEvent *error;
 
-		error = gda_error_new ();
+		error = gda_connection_event_new ();
 
-		gda_error_set_description (error, msg);
-		gda_error_set_number (error, native);
-		gda_error_set_source (error, "gda-odbc");
-		gda_error_set_sqlstate (error, sqlstate);
+		gda_connection_event_set_description (error, msg);
+		gda_connection_event_set_code (error, native);
+		gda_connection_event_set_source (error, "gda-odbc");
+		gda_connection_event_set_sqlstate (error, sqlstate);
 
 		return error;
 	}
@@ -90,7 +90,7 @@ gda_odbc_make_error( SQLHANDLE env,
 }
 
 /*
- * Generate a GList of GdaErrors, we may as well use the ODBC 2 SQLError as we 
+ * Generate a GList of GdaConnectionEvents, we may as well use the ODBC 2 SQLError as we 
  * don't need any of the ODBC 3 bits
  */
 
@@ -100,7 +100,7 @@ gda_odbc_emit_error ( GdaConnection *cnc,
 			SQLHANDLE con, 
 			SQLHANDLE stmt )
 {
-	GdaError *error;
+	GdaConnectionEvent *error;
 	GList *list = NULL;
 
 	while (( error = gda_odbc_make_error( env, con, stmt ))) {

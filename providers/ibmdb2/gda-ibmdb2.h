@@ -40,7 +40,7 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError *gda_ibmdb2_make_error (SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt);
+GdaConnectionEvent *gda_ibmdb2_make_error (SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt);
 void 	  gda_ibmdb2_emit_error (GdaConnection *cnc, SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt);
 										      
 G_END_DECLS

@@ -21,19 +21,19 @@
 
 #include "gda-msql.h"
 
-GdaError *gda_msql_make_error(int sock) {
-  GdaError *error;
+GdaConnectionEvent *gda_msql_make_error(int sock) {
+  GdaConnectionEvent *error;
 
-  error=gda_error_new();
+  error=gda_connection_event_new();
   if (msqlErrMsg) {
-    gda_error_set_description(error,msqlErrMsg);
-    gda_error_set_number(error,-1);
+    gda_connection_event_set_description(error,msqlErrMsg);
+    gda_connection_event_set_code(error,-1);
   } else {
-    gda_error_set_description(error,"NO DESCRIPTION");
-    gda_error_set_number(error,-1);
+    gda_connection_event_set_description(error,"NO DESCRIPTION");
+    gda_connection_event_set_code(error,-1);
   }
-  gda_error_set_source(error,"gda-mSQL");
-  gda_error_set_sqlstate(error,"Not available");
+  gda_connection_event_set_source(error,"gda-mSQL");
+  gda_connection_event_set_sqlstate(error,"Not available");
   return error;
 }
 
