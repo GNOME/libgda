@@ -349,7 +349,9 @@ gda_server_provider_get_specs  (GdaServerProvider *provider,
  * @action_type: action to perform
  * @error: a place to store an error, or %NULL
  *
- * Creates a database using the parameters listed in @params.
+ * Performs a specific action specified by the @action_type argument
+ * using the parameters listed in @params (the list of parameters may have
+ * been obtained using the gda_server_provider_get_specs() method).
  *
  * Returns: TRUE if no error occured
  */

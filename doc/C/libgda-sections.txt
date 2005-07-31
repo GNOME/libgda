@@ -53,6 +53,8 @@ gda_connection_get_password
 gda_connection_add_event
 gda_connection_add_event_string
 gda_connection_add_event_list
+gda_connection_get_events
+gda_connection_clear_events_list
 gda_connection_change_database
 gda_connection_create_table
 gda_connection_drop_table

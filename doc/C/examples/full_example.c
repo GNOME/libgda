@@ -1,5 +1,5 @@
-#include <libgda/libgda.h>
-#include <stdio.h>
+#include &lt;libgda/libgda.h&gt;
+#include &lt;stdio.h&gt;
 
 #define DEFAULT_BUFFER_SIZE 1024
 
@@ -15,7 +15,7 @@ get_errors (GdaConnection * connection)
 
   for (node = g_list_first (list); node != NULL; node = g_list_next (node))
     {
-      error = (GdaConnectionEvent *) node->data;
+      error = (GdaConnectionEvent *) node-&gt;data;
       g_print ("Error no: %d\t", gda_connection_event_get_code (error));
       g_print ("desc: %s\t", gda_connection_event_get_description (error));
       g_print ("source: %s\t", gda_connection_event_get_source (error));
@@ -33,14 +33,14 @@ show_table (GdaDataModel * dm)
   GdaValue *value;
   gchar *string;
 
-  for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+  for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
        column_id++)
     g_print ("%s\t", gda_data_model_get_column_title (dm, column_id));
   g_print ("\n");
 
-  for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
+  for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++)
     {
-      for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+      for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
 	   column_id++)
 	{
 	  value =
@@ -64,15 +64,15 @@ show_table2 (GdaDataModel * dm)
   GdaRow *row;
   gchar *string;
 
-  for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+  for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
        column_id++)
     g_print ("%s\t", gda_data_model_get_column_title (dm, column_id));
   g_print ("\n");
 
-  for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
+  for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++)
     {
       row = (GdaRow *) gda_data_model_get_row (dm, row_id);
-      for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+      for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
 	   column_id++)
 	{
 	  value = gda_row_get_value (row, column_id);
@@ -162,7 +162,7 @@ execute_sql_command (GdaConnection * connection, const gchar * buffer)
   if (list != NULL)
     for (node = g_list_first (list); node != NULL; node = g_list_next (node))
       {
-	dm = (GdaDataModel *) node->data;
+	dm = (GdaDataModel *) node-&gt;data;
 	if (dm == NULL)
 	  {
 	    errors = TRUE;
@@ -252,12 +252,12 @@ list_datasources (void)
   g_print ("\n");
   for (node = g_list_first (ds_list); node != NULL; node = g_list_next (node))
     {
-      info = (GdaDataSourceInfo *) node->data;
+      info = (GdaDataSourceInfo *) node-&gt;data;
 
       g_print
 	("NAME: %s PROVIDER: %s CNC: %s DESC: %s USER: %s PASSWORD: %s\n",
-	 info->name, info->provider, info->cnc_string, info->description,
-	 info->username, info->password);
+	 info-&gt;name, info-&gt;provider, info-&gt;cnc_string, info-&gt;description,
+	 info-&gt;username, info-&gt;password);
 
     }
   g_print ("\n");
@@ -280,9 +280,9 @@ list_providers (void)
   for (node = g_list_first (prov_list); node != NULL;
        node = g_list_next (node))
     {
-      info = (GdaProviderInfo *) node->data;
+      info = (GdaProviderInfo *) node-&gt;data;
 
-      g_print ("ID: %s\n", info->id);
+      g_print ("ID: %s\n", info-&gt;id);
 
     }
 }

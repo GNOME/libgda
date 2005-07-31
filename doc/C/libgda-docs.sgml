@@ -1839,6 +1839,8 @@
   <chapter id="managing-errors">
     <title>Managing errors</title>
     <para>
+      Errors are a special kind of event which the <link
+      linkend="libgda-GdaConnection">GdaConnection</link> object generates. 
       You can manage errors with <link
       linkend="libgda-GdaConnectionEvent">GdaConnectionEvent</link> class and obtain them with
       function <link
@@ -1853,7 +1855,10 @@
         <link linkend="gda-connection-event-get-description">gda_connection_event_get_description()</link></para>
       </listitem>
       <listitem><para>
-        <link linkend="gda-connection-event-get-number">gda_connection_event_get_code()</link></para>
+        <link linkend="gda-connection-event-get-gda-code">gda_connection_event_get_gda_code()</link></para>
+      </listitem>
+      <listitem><para>
+        <link linkend="gda-connection-event-get-code">gda_connection_event_get_code()</link></para>
       </listitem>
       <listitem><para>
         <link linkend="gda-connection-event-get-source">gda_connection_event_get_source()</link></para>
@@ -1883,7 +1888,8 @@
         for (node = g_list_first (list); node != NULL; node = g_list_next (node))
           {
             error = (GdaConnectionEvent *) node->data;
-            g_print ("Error no: %d\t", gda_connection_event_get_code (error));
+            g_print ("GDA error no: %d\t", gda_connection_event_get_code (error));
+            g_print ("Provider specific error no: %d\t", gda_connection_event_get_code (error));
             g_print ("desc: %s\t", gda_connection_event_get_description (error));
             g_print ("source: %s\t", gda_connection_event_get_source (error));
             g_print ("sqlstate: %s\n", gda_connection_event_get_sqlstate (error));
@@ -1907,7 +1913,7 @@
   <chapter id="main_example">
     <title>Full example</title>
     <programlisting>
-<inlinegraphic entityref="fullexample"></inlinegraphic>
+&fullexample;
     </programlisting>
   </chapter>
   <chapter id="migration">

@@ -182,6 +182,23 @@ Management of connections to data sources
 @error_list: 
 
 
+<!-- ##### FUNCTION gda_connection_get_events ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_clear_events_list ##### -->
+<para>
+
+</para>
+
+@cnc: 
+
+
 <!-- ##### FUNCTION gda_connection_change_database ##### -->
 <para>
 
