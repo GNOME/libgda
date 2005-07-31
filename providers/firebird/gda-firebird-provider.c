@@ -313,7 +313,7 @@ fb_get_tables (GdaConnection *cnc,
 		/* Execute statement */
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);		
-		reclist = gda_connection_execute_command (cnc, command, NULL);
+		reclist = gda_connection_execute_command (cnc, command, NULL, NULL);
 
 		if (reclist) {
 			recset = gda_data_model_array_new (4);
@@ -433,7 +433,7 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 				table_name);
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		reclist = gda_connection_execute_command (cnc, command, NULL);
+		reclist = gda_connection_execute_command (cnc, command, NULL, NULL);
 		if (reclist) {
 			gda_data_model_freeze (recset);
 			
@@ -652,7 +652,7 @@ fb_get_fields_metadata (GdaConnection *cnc,
 				table_name);
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		reclist = gda_connection_execute_command (cnc, command, NULL);
+		reclist = gda_connection_execute_command (cnc, command, NULL, NULL);
 		if (reclist) {
 			/* Create and fill recordset to be returned */
 			recset = (GdaDataModelArray *) gda_data_model_array_new (9);
