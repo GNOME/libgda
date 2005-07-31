@@ -150,7 +150,7 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider,
 	bdb_file = g_strdup (gda_quark_list_find (params, "FILE"));
 	bdb_db = g_strdup (gda_quark_list_find (params, "DATABASE"));
 	if (bdb_file == NULL || *(g_strstrip (bdb_file)) == '\0') {
-		gda_connection_add_error_string (cnc, 
+		gda_connection_add_event_string (cnc, 
 						 _("The FILE parameter is "
 						   "not defined in the " 
 						   "connection string."));
@@ -162,7 +162,7 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider,
 	/* open database */
 	ret = db_create (&dbp, NULL, 0);
 	if (ret != 0) {
-		gda_connection_add_error (cnc, gda_bdb_make_error (ret));
+		gda_connection_add_event (cnc, gda_bdb_make_error (ret));
 		return FALSE;
 	}
 	ret = dbp->open (dbp, 
@@ -174,7 +174,7 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider,
 		   	 DB_UNKNOWN, 	/* autodetect DBTYPE */
 			 0, 0);
 	if (ret != 0) {
-		gda_connection_add_error (cnc, gda_bdb_make_error (ret));
+		gda_connection_add_event (cnc, gda_bdb_make_error (ret));
 		return FALSE;
 	}
 
@@ -219,7 +219,7 @@ gda_bdb_provider_close_connection (GdaServerProvider *provider,
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE, NULL);
 	
 	if (ret != 0) {
-		gda_connection_add_error (cnc, gda_bdb_make_error (ret));
+		gda_connection_add_event (cnc, gda_bdb_make_error (ret));
 		return FALSE;
 	}
 	return TRUE;
@@ -239,7 +239,7 @@ gda_bdb_provider_get_server_version (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE);
 	if (priv_data == NULL) {
-		gda_connection_add_error_string (cnc, _("Invalid BDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid BDB handle"));
 		return NULL;
 	}
 
@@ -260,7 +260,7 @@ gda_bdb_provider_get_database (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE);
 	if (priv_data == NULL) {
-		gda_connection_add_error_string (cnc, _("Invalid BDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid BDB handle"));
 		return NULL;
 	}
 
@@ -283,7 +283,7 @@ gda_bdb_provider_get_schema (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE);
 	if (priv_data == NULL) {
-		gda_connection_add_error_string (cnc, _("Invalid BDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid BDB handle"));
 		return NULL;
 	}
 	

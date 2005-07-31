@@ -61,9 +61,9 @@ static gboolean gda_sybase_provider_commit_transaction (GdaServerProvider *provi
 static gboolean gda_sybase_provider_create_database_cnc (GdaServerProvider *provider,
                                                          GdaConnection *cnc,
                                                          const gchar *name);
-static gboolean gda_sybase_provider_drop_database (GdaServerProvider *provider,
-                                                   GdaConnection *cnc,
-                                                   const gchar *name);
+static gboolean gda_sybase_provider_drop_database_cnc (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       const gchar *name);
 static GList *gda_sybase_provider_execute_command (GdaServerProvider *provider,
                                                    GdaConnection *cnc,
                                                    GdaCommand *cmd,
@@ -111,7 +111,7 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 	provider_class->close_connection = gda_sybase_provider_close_connection;
 	provider_class->commit_transaction = gda_sybase_provider_commit_transaction;
 	provider_class->create_database_cnc = gda_sybase_provider_create_database_cnc;
-	provider_class->drop_database = gda_sybase_provider_drop_database;
+	provider_class->drop_database_cnc = gda_sybase_provider_drop_database_cnc;
 	provider_class->execute_command = gda_sybase_provider_execute_command;
 	provider_class->get_database = gda_sybase_provider_get_database;
 	provider_class->get_schema = gda_sybase_provider_get_schema;
@@ -571,9 +571,9 @@ gda_sybase_provider_create_database_cnc (GdaServerProvider *provider,
 }
 
 static gboolean 
-gda_sybase_provider_drop_database (GdaServerProvider *provider,
-                                   GdaConnection *cnc,
-                                   const gchar *name)
+gda_sybase_provider_drop_database_cnc (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       const gchar *name)
 {
 	return FALSE;
 }
@@ -668,7 +668,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 			if (scnc->ret != CS_SUCCEED) {
 				error = gda_sybase_make_error (scnc,
 							       _("Could not prepare command structure."));
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 				ct_cmd_drop (scnc->cmd);
 				scnc->cmd = NULL;
 				sybase_check_messages(cnc);
@@ -678,7 +678,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 			if (scnc->ret != CS_SUCCEED) {
 				error = gda_sybase_make_error (scnc,
 							       _("Sending sql-command failed."));
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 				ct_cmd_drop (scnc->cmd);
 				scnc->cmd = NULL;
 				sybase_check_messages(cnc);
@@ -763,7 +763,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						gda_connection_event_set_code (error, -1);
 						gda_connection_event_set_source (error, "gda-sybase");
 						gda_connection_event_set_sqlstate (error, _("Not available"));
-						gda_connection_add_error (cnc, error);		
+						gda_connection_add_event (cnc, error);		
 						return NULL;
 					}			
 					// if there are no messages, then the command didn't return any results.
@@ -849,14 +849,14 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	if (scnc->cmd != NULL) {
 		error = gda_sybase_make_error (scnc, _("Command structure already in use. %s failed."),
 					       __FUNCTION__);
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return FALSE;
 	}
 
 	scnc->ret = ct_cmd_alloc (scnc->connection, &scnc->cmd);
 	if (scnc->ret != CS_SUCCEED) {
 		error = gda_sybase_make_error (scnc, _("Could not allocate command structure."));
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		sybase_check_messages(cnc);
 		return FALSE;
 	}
@@ -865,7 +865,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 				CS_NULLTERM, CS_UNUSED);
 	if (scnc->ret != CS_SUCCEED) {
 		error = gda_sybase_make_error (scnc, _("Could not prepare command structure with %s."), "ct_command()");
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		ct_cmd_drop (scnc->cmd);
 		sybase_check_messages(cnc);
 		scnc->cmd = NULL;
@@ -875,7 +875,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	scnc->ret = ct_send (scnc->cmd);
 	if (scnc->ret != CS_SUCCEED) {
 		error = gda_sybase_make_error (scnc, _("Sending command failed."));
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		ct_cmd_drop (scnc->cmd);
 		sybase_check_messages(cnc);
 		scnc->cmd = NULL;
@@ -900,7 +900,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 				error = gda_sybase_make_error (
 					scnc,
 					_("%s: %s failed"), __FUNCTION__, "ct_cancel");
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 				sybase_check_messages(cnc);
 				ret = FALSE;
 			}
@@ -917,7 +917,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 				error = gda_sybase_make_error (
 					scnc,
 					_("%s: %s failed"), __FUNCTION__, "ct_cancel");
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 				sybase_check_messages(cnc);
 			}
 		}
@@ -929,7 +929,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 			error = gda_sybase_make_error (scnc,
 						       _("%s: %s failed"),
 						       __FUNCTION__, "ct_cmd_drop()");
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			sybase_check_messages(cnc);
 			ret = FALSE;
 		} else {

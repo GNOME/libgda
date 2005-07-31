@@ -107,7 +107,7 @@ gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
 	if (row_num < 0 || row_num >= recset->priv->nrows) {
-		gda_connection_add_error_string (recset->priv->cnc,
+		gda_connection_add_event_string (recset->priv->cnc,
 						 _("Row number out of range"));
 		return NULL;
 	}
@@ -124,7 +124,7 @@ gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
 	memset (&data, 0, sizeof data);
 	ret = dbcp->c_get (dbcp, &key, &data, DB_FIRST);
 	if (ret != 0) {
-		gda_connection_add_error (recset->priv->cnc,
+		gda_connection_add_event (recset->priv->cnc,
 					  gda_bdb_make_error (ret));
 		return NULL;
 	}
@@ -133,7 +133,7 @@ gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
 		memset (&data, 0, sizeof data);
 		ret = dbcp->c_get (dbcp, &key, &data, DB_NEXT);
 		if (ret != 0) {
-			gda_connection_add_error (recset->priv->cnc,
+			gda_connection_add_event (recset->priv->cnc,
 						  gda_bdb_make_error (ret));
 			return NULL;
 		}
@@ -162,7 +162,7 @@ gda_bdb_recordset_get_value_at (GdaDataModelBase *model, gint col_num, gint row_
 	if (row == NULL)
 		return NULL;
 	if (col_num < 0 || col_num >= gda_row_get_length (row)) {
-		gda_connection_add_error_string (recset->priv->cnc,
+		gda_connection_add_event_string (recset->priv->cnc,
 						 _("Column number out "
 						   "of range"));
 		return NULL;
@@ -237,20 +237,20 @@ gda_bdb_recordset_new (GdaConnection *cnc, DB *dbp)
 #endif
 			 0);
 	if (ret != 0) {
-		gda_connection_add_error (cnc, gda_bdb_make_error (ret));
+		gda_connection_add_event (cnc, gda_bdb_make_error (ret));
 		return NULL;
 	}
 	nrows = (int) statp->bt_ndata;
 	free (statp);
 	if (nrows <= 0) {
-		gda_connection_add_error_string (cnc, _("Database is empty"));
+		gda_connection_add_event_string (cnc, _("Database is empty"));
 		return NULL;
 	}
 	
 	/* acquire a cursor on the database */
 	ret = dbp->cursor (dbp, NULL, &dbcp, 0);
 	if (ret != 0) {
-		gda_connection_add_error (cnc, gda_bdb_make_error (ret));
+		gda_connection_add_event (cnc, gda_bdb_make_error (ret));
 		return NULL;
 	}
 

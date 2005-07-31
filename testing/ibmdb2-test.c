@@ -37,7 +37,7 @@ execute_non_query (GdaConnection *cnc, const gchar *query)
 				   GDA_COMMAND_TYPE_SQL,
 				   STOP_ON_ERR);
 
-        list = gda_connection_execute_command (cnc, command, NULL);
+        list = gda_connection_execute_command (cnc, command, NULL, NULL);
         retval = (list == NULL) ? FALSE : TRUE;
         g_list_foreach (list, (GFunc) g_object_unref, NULL);
         g_list_free (list);
@@ -114,8 +114,7 @@ select_data (GdaConnection *cnc)
 	select_command = gda_command_new ("SELECT * FROM gda_ibmdb2_test",
 					  GDA_COMMAND_TYPE_SQL, STOP_ON_ERR);
 
-	list = gda_connection_execute_command (cnc, select_command,
-						NULL);
+	list = gda_connection_execute_command (cnc, select_command, NULL, NULL);
 	gda_command_free (select_command);
 
 	return list;

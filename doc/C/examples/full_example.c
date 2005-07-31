@@ -11,7 +11,7 @@ get_errors (GdaConnection * connection)
   GList *node;
   GdaConnectionEvent *error;
 
-  list = (GList *) gda_connection_get_errors (connection);
+  list = (GList *) gda_connection_get_events (connection);
 
   for (node = g_list_first (list); node != NULL; node = g_list_next (node))
     {

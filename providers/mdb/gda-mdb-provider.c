@@ -55,9 +55,9 @@ static gboolean gda_mdb_provider_change_database (GdaServerProvider *provider,
 static gboolean gda_mdb_provider_create_database_cnc (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      const gchar *name);
-static gboolean gda_mdb_provider_drop_database (GdaServerProvider *provider,
-						GdaConnection *cnc,
-						const gchar *name);
+static gboolean gda_mdb_provider_drop_database_cnc (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    const gchar *name);
 static GList *gda_mdb_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
@@ -108,7 +108,7 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	provider_class->get_database = gda_mdb_provider_get_database;
 	provider_class->change_database = gda_mdb_provider_change_database;
 	provider_class->create_database_cnc = gda_mdb_provider_create_database_cnc;
-	provider_class->drop_database = gda_mdb_provider_drop_database;
+	provider_class->drop_database_cnc = gda_mdb_provider_drop_database_cnc;
 	provider_class->execute_command = gda_mdb_provider_execute_command;
 	provider_class->begin_transaction = gda_mdb_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mdb_provider_commit_transaction;
@@ -200,7 +200,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 	/* look for parameters */
 	filename = gda_quark_list_find (params, "FILENAME");
 	if (!filename) {
-		gda_connection_add_error_string (
+		gda_connection_add_event_string (
 			cnc,
 			_("A database FILENAME must be specified in the connection_string"));
 		return FALSE;
@@ -211,7 +211,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 	mdb_cnc->server_version = NULL;
 	mdb_cnc->mdb = mdb_open (filename, MDB_WRITABLE);
 	if (!mdb_cnc->mdb) {
-		gda_connection_add_error_string (cnc, _("Could not open file %s"), filename);
+		gda_connection_add_event_string (cnc, _("Could not open file %s"), filename);
 		g_free (mdb_cnc);
 		return FALSE;
 	}
@@ -235,7 +235,7 @@ gda_mdb_provider_close_connection (GdaServerProvider *provider, GdaConnection *c
 
 	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
 	if (!mdb_cnc) {
-		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MDB handle"));
 		return FALSE;
 	}
 
@@ -265,7 +265,7 @@ gda_mdb_provider_get_server_version (GdaServerProvider *provider,
 
 	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
 	if (!mdb_cnc) {
-		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MDB handle"));
 		return NULL;
 	}
 
@@ -287,7 +287,7 @@ gda_mdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 
 	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
 	if (!mdb_cnc) {
-		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MDB handle"));
 		return NULL;
 	}
 
@@ -314,9 +314,9 @@ gda_mdb_provider_create_database_cnc (GdaServerProvider *provider,
 
 /* drop_database handler for the GdaMdbProvider class */
 static gboolean
-gda_mdb_provider_drop_database (GdaServerProvider *provider,
-				GdaConnection *cnc,
-				const gchar *name)
+gda_mdb_provider_drop_database_cnc (GdaServerProvider *provider,
+				    GdaConnection *cnc,
+				    const gchar *name)
 {
 	return FALSE;
 }
@@ -339,7 +339,7 @@ gda_mdb_provider_execute_command (GdaServerProvider *provider,
 
 	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
 	if (!mdb_cnc) {
-		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MDB handle"));
 		return NULL;
 	}
 
@@ -401,7 +401,7 @@ gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
 				    GdaConnection *cnc,
 				    GdaTransaction *xaction)
 {
-	gda_connection_add_error_string (cnc, _("Transactions not supported in MDB provider"));
+	gda_connection_add_event_string (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 
@@ -411,7 +411,7 @@ gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
 				     GdaConnection *cnc,
 				     GdaTransaction *xaction)
 {
-	gda_connection_add_error_string (cnc, _("Transactions not supported in MDB provider"));
+	gda_connection_add_event_string (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 
@@ -421,7 +421,7 @@ gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
 				       GdaTransaction *xaction)
 {
-	gda_connection_add_error_string (cnc, _("Transactions not supported in MDB provider"));
+	gda_connection_add_event_string (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 
@@ -687,7 +687,7 @@ gda_mdb_provider_get_schema (GdaServerProvider *provider,
 
 	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
 	if (!mdb_cnc) {
-		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MDB handle"));
 		return NULL;
 	}
 
@@ -723,7 +723,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 
 	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
 	if (!mdb_cnc) {
-		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MDB handle"));
 		return NULL;
 	}
 
@@ -734,14 +734,14 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	_mdb_sql (mdb_SQL);
 	if (yyparse ()) {
 		/* end unsafe */
-		gda_connection_add_error_string (cnc, _("Could not parse '%s' command"), sql);
+		gda_connection_add_event_string (cnc, _("Could not parse '%s' command"), sql);
 		mdb_sql_reset (mdb_SQL);
 		return NULL;
 	}
 	if (!mdb_SQL->cur_table) {
 		/* parsing went fine, but there is no result
 		   (e.g. because of an invalid column name) */
-		gda_connection_add_error_string (cnc, _("Got no result for '%s' command"), sql);
+		gda_connection_add_event_string (cnc, _("Got no result for '%s' command"), sql);
 		return NULL;
 	}
 

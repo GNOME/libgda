@@ -17,6 +17,12 @@ Database client access
   a transaction in all the connections being managed by a unique #GdaClient object, or
   obtain the list of all tables in all opened connections.
 </para>
+<para>
+Database creation and destruction is done through a #GdaClient object uding the
+gda_client_create_database() and gda_client_drop_database() methods. Note however that 
+depending on the provider, an opened connection may be required in order to create
+or destroy a database.
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
@@ -51,6 +57,14 @@ Database client access
 @GDA_CLIENT_EVENT_TRANSACTION_STARTED: 
 @GDA_CLIENT_EVENT_TRANSACTION_COMMITTED: 
 @GDA_CLIENT_EVENT_TRANSACTION_CANCELLED: 
+
+<!-- ##### ENUM GdaClientSpecsType ##### -->
+<para>
+
+</para>
+
+@GDA_CLIENT_SPECS_CREATE_DATABASE: 
+@GDA_CLIENT_SPECS_DROP_DATABASE: 
 
 <!-- ##### FUNCTION gda_client_new ##### -->
 <para>
@@ -117,13 +131,38 @@ Database client access
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_client_get_specs_to_create_database ##### -->
+<!-- ##### FUNCTION gda_client_get_provider_specs ##### -->
 <para>
 
 </para>
 
 @client: 
 @provider: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_create_database ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider: 
+@params: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_drop_database ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider: 
+@params: 
+@error: 
 @Returns: 
 
 

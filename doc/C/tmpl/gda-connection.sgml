@@ -154,7 +154,7 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_add_error ##### -->
+<!-- ##### FUNCTION gda_connection_add_event ##### -->
 <para>
 
 </para>
@@ -163,7 +163,7 @@ Management of connections to data sources
 @error: 
 
 
-<!-- ##### FUNCTION gda_connection_add_error_string ##### -->
+<!-- ##### FUNCTION gda_connection_add_event_string ##### -->
 <para>
 
 </para>
@@ -173,7 +173,7 @@ Management of connections to data sources
 @Varargs: 
 
 
-<!-- ##### FUNCTION gda_connection_add_error_list ##### -->
+<!-- ##### FUNCTION gda_connection_add_event_list ##### -->
 <para>
 
 </para>
@@ -183,26 +183,6 @@ Management of connections to data sources
 
 
 <!-- ##### FUNCTION gda_connection_change_database ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_create_database ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_drop_database ##### -->
 <para>
 
 </para>
@@ -269,6 +249,7 @@ Management of connections to data sources
 @cnc: 
 @cmd: 
 @params: 
+@error: 
 @Returns: 
 
 
@@ -290,6 +271,7 @@ Management of connections to data sources
 @cnc: 
 @cmd: 
 @params: 
+@error: 
 @Returns: 
 
 
@@ -301,6 +283,7 @@ Management of connections to data sources
 @cnc: 
 @cmd: 
 @params: 
+@error: 
 @Returns: 
 
 
@@ -350,7 +333,7 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_get_errors ##### -->
+<!-- ##### FUNCTION gda_connection_get_events ##### -->
 <para>
 
 </para>

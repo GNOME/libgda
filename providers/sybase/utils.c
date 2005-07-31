@@ -205,7 +205,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
 		gda_connection_event_set_sqlstate (error, _("Not available"));					
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return TRUE;
 	} 
 	while ( msgcur < msgcnt ) { 
@@ -222,7 +222,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			return TRUE;
 		} 
 		else { 
@@ -238,7 +238,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 				gda_connection_event_set_code (error, -1);
 				gda_connection_event_set_source (error, "gda-sybase");
 				gda_connection_event_set_sqlstate (error, _("Not available"));					
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 				returner = TRUE;
 			}
 			else {
@@ -254,7 +254,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 				gda_connection_event_set_code (error, -1);
 				gda_connection_event_set_source (error, "gda-sybase");
 				gda_connection_event_set_sqlstate (error, _("Not available"));					
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 				returner = TRUE;
 			} 
 		}
@@ -274,7 +274,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			return TRUE;
 		} 
 	}
@@ -315,7 +315,7 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
 		gda_connection_event_set_sqlstate (error, _("Not available"));					
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return TRUE;			
 	} 
 	while ( msgcur < msgcnt ) { 
@@ -332,7 +332,7 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			return TRUE;					
 		} 
 		else { 
@@ -384,7 +384,7 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 				gda_connection_event_set_code (error, -1);
 				gda_connection_event_set_source (error, "gda-sybase");
 				gda_connection_event_set_sqlstate (error, _("Not available"));					
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 			}
 			else
 				stupid_5701_message = TRUE;
@@ -410,7 +410,7 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			return TRUE;
 		} 
 	}
@@ -444,7 +444,7 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
 		gda_connection_event_set_sqlstate (error, _("Not available"));					
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return TRUE;			
 	} 
 	while ( msgcur < msgcnt ) { 
@@ -461,7 +461,7 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			return TRUE;					
 		} 
 		else { 
@@ -484,7 +484,7 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					
-			gda_connection_add_error (cnc, error);					
+			gda_connection_add_event (cnc, error);					
 		} 
 	} 
 
@@ -500,7 +500,7 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
 		gda_connection_event_set_sqlstate (error, _("Not available"));					
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return TRUE;
 	} 
 

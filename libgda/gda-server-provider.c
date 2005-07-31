@@ -68,10 +68,13 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->get_server_version = NULL;
 	klass->get_database = NULL;
 	klass->change_database = NULL;
+
+	klass->get_specs = NULL;
+	klass->perform_action_params = NULL;
+
 	klass->create_database_cnc = NULL;
-	klass->create_database_params = NULL;
-	klass->get_specs_create_database = NULL;
-	klass->drop_database = NULL;
+	klass->drop_database_cnc = NULL;
+
 	klass->create_table = NULL;
 	klass->drop_table = NULL;
 	klass->create_index = NULL;
@@ -315,41 +318,57 @@ gda_server_provider_change_database (GdaServerProvider *provider,
 }
 
 /**
- * gda_server_provider_get_specs_to_create_database
+ * gda_server_provider_get_specs
  * @provider: a #GdaServerProvider object
+ * @action_type: what action the specs are for
  *
+ * Fetch a list of parameters required to create a database for the specific
+ * @provider provider.
  *
- * Returns:
+ * The list of parameters is returned as an XML string listing each paraleter, its type,
+ * its name, etc.
+ *
+ * Returns: a new XML string, or %NULL if @provider does not implement that method.
  */
 gchar *
-gda_server_provider_get_specs_to_create_database  (GdaServerProvider *provider)
+gda_server_provider_get_specs  (GdaServerProvider *provider,
+				GdaClientSpecsType action_type)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
-	if (CLASS (provider)->get_specs_create_database)
-		return CLASS (provider)->get_specs_create_database (provider);
+	if (CLASS (provider)->get_specs)
+		return CLASS (provider)->get_specs (provider, action_type);
 	else
 		return NULL;
 }
 
 /**
- * gda_server_provider_create_database
+ * gda_server_provider_perform_action_params
  * @provider: a #GdaServerProvider object
+ * @params: a list of parameters required to create a database
+ * @action_type: action to perform
+ * @error: a place to store an error, or %NULL
+ *
+ * Creates a database using the parameters listed in @params.
  *
  * Returns: TRUE if no error occured
  */
 gboolean
-gda_server_provider_create_database (GdaServerProvider *provider, GdaParameterList *params, GError **error)
+gda_server_provider_perform_action_params (GdaServerProvider *provider, 
+					   GdaParameterList *params, 
+					   GdaClientSpecsType action_type,
+					   GError **error)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 
-	if (CLASS (provider)->create_database_params)
-		return CLASS (provider)->create_database_params (provider, params, error);
+	if (CLASS (provider)->perform_action_params)
+		return CLASS (provider)->perform_action_params (provider, params, action_type,
+								error);
 	else {
 		gchar *str;
 
 		str = g_strdup_printf (_("Provider does not support the '%s()' method"), 
-				       "create_database");
+				       "perform_action_params");
 		g_set_error (error, 0, 0, str);
 		g_free (str);
 		return FALSE;
@@ -363,15 +382,14 @@ gda_server_provider_create_database (GdaServerProvider *provider, GdaParameterLi
  * @name: database name.
  * @cnc: a #GdaConnection object.
  *
- * Proxy the call to the create_database method on the
- * #GdaServerProvider class to the corresponding provider.
+ * Creates a database named @name using the @cnc connection.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_server_provider_create_database_cnc (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     const gchar *name)
+					 GdaConnection *cnc,
+					 const gchar *name)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -382,28 +400,28 @@ gda_server_provider_create_database_cnc (GdaServerProvider *provider,
 }
 
 /**
- * gda_server_provider_drop_database
+ * gda_server_provider_drop_database_cnc
  * @provider: a #GdaServerProvider object.
  * @cnc: a #GdaConnection object.
  * @name: database name.
  *
- * Proxy the call to the drop_database method on the
- * #GdaServerProvider class to the corresponding provider.
+ * Destroy the database named @name using the @cnc connection.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_server_provider_drop_database (GdaServerProvider *provider,
-				   GdaConnection *cnc,
-				   const gchar *name)
+gda_server_provider_drop_database_cnc (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       const gchar *name)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
-	g_return_val_if_fail (CLASS (provider)->drop_database != NULL, FALSE);
+	g_return_val_if_fail (CLASS (provider)->drop_database_cnc != NULL, FALSE);
 
-	return CLASS (provider)->drop_database (provider, cnc, name);
+	return CLASS (provider)->drop_database_cnc (provider, cnc, name);
 }
+
 
 /**
  * gda_server_provider_create_table:

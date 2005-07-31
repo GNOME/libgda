@@ -331,7 +331,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		error = gda_sybase_make_error (scnc,
 		                               _("%s failed while processing a row result."),
 		                               "ct_res_info()");
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		sybase_check_messages(cnc);
 		return NULL;
 	}
@@ -339,7 +339,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		error = gda_sybase_make_error (scnc,
 		                               _("%s returned <= 0 columns."),
 		                               "ct_res_info()");
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return NULL;
 	}
 
@@ -381,7 +381,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		if (scnc->ret != CS_SUCCEED) {
 			error = gda_sybase_make_error (scnc, 
 			                               _("Could not run %s on column %d"), "ct_describe()", i);
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			sybase_check_messages(cnc);
 			break;
 		}
@@ -390,7 +390,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		if (sfield->data == NULL) {
 			error = gda_sybase_make_error (scnc,
 			                               _("Could not allocate data placeholder for column %d"), i);
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			sybase_check_messages(cnc);
 			break;
 		}
@@ -402,7 +402,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		if (scnc->ret != CS_SUCCEED) {
 			error = gda_sybase_make_error (scnc,
 			                               _("Could not run %s on column %d"), "ct_bind()", i);
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			sybase_check_messages(cnc);
 			break;
 		}
@@ -421,7 +421,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		scnc->ret = ct_cancel (NULL, scnc->cmd, CS_CANCEL_ALL);
 		if (scnc->ret != CS_SUCCEED) {
 			error = gda_sybase_make_error (scnc, _("Could not run %s to cancel processing row resultset."), "ct_cancel");
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			sybase_check_messages(cnc);
 		}
 		
@@ -437,7 +437,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 		
 		if (scnc->ret == CS_ROW_FAIL) {
 			error = gda_sybase_make_error (scnc, _("%s failed on row %d"), "ct_fetch()", row_cnt);
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			sybase_check_messages(cnc);
 		}
 		
@@ -464,7 +464,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 			break;
 		default:
 			error = gda_sybase_make_error (scnc, _("%s terminated with unexpected return code."), "ct_fetch()");
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			sybase_check_messages(cnc);
 	}
 	
@@ -511,7 +511,7 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
 		gda_connection_event_set_sqlstate (error, _("Not available"));					
-		gda_connection_add_error (cnc, error);		
+		gda_connection_add_event (cnc, error);		
 		return NULL;
 	}
 
@@ -534,7 +534,7 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
 		gda_connection_event_set_sqlstate (error, _("Not available"));					
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return NULL;					
 	} 	
 
@@ -593,7 +593,7 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			return NULL;
 		} 	
 

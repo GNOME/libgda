@@ -60,18 +60,19 @@ static gboolean gda_mysql_provider_change_database (GdaServerProvider *provider,
 		                                    GdaConnection *cnc,
 		                                    const gchar *name);
 
-static gchar *gda_mysql_provider_get_specs_create_database (GdaServerProvider *provider);
+static gchar *gda_mysql_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType type);
 
-static gboolean gda_mysql_provider_create_database (GdaServerProvider *provider,
-						    GdaParameterList *params, GError **error);
+static gboolean gda_mysql_provider_perform_action_params (GdaServerProvider *provider,
+							  GdaParameterList *params, GdaClientSpecsType type,
+							  GError **error);
 
 static gboolean gda_mysql_provider_create_database_cnc (GdaServerProvider *provider,
 						        GdaConnection *cnc,
 						        const gchar *name);
 
-static gboolean gda_mysql_provider_drop_database (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  const gchar *name);
+static gboolean gda_mysql_provider_drop_database_cnc (GdaServerProvider *provider,
+						      GdaConnection *cnc,
+						      const gchar *name);
 
 static gboolean gda_mysql_provider_create_table (GdaServerProvider *provider,
                                                     GdaConnection *cnc,
@@ -149,10 +150,10 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->get_server_version = gda_mysql_provider_get_server_version;
 	provider_class->get_database = gda_mysql_provider_get_database;
 	provider_class->change_database = gda_mysql_provider_change_database;
-	provider_class->get_specs_create_database = gda_mysql_provider_get_specs_create_database;
-	provider_class->create_database_params = gda_mysql_provider_create_database;
+	provider_class->get_specs = gda_mysql_provider_get_specs;
+	provider_class->perform_action_params = gda_mysql_provider_perform_action_params;
 	provider_class->create_database_cnc = gda_mysql_provider_create_database_cnc;
-	provider_class->drop_database = gda_mysql_provider_drop_database;
+	provider_class->drop_database_cnc = gda_mysql_provider_drop_database_cnc;
 	provider_class->create_table = gda_mysql_provider_create_table;
 	provider_class->drop_table = gda_mysql_provider_drop_table;
 	provider_class->create_index = gda_mysql_provider_create_index;
@@ -336,7 +337,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
                 gda_connection_event_set_code (error, gerror ? gerror->code : -1);
 		if (gerror)
 			g_error_free (gerror);
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 
 		return FALSE;
 	}
@@ -377,7 +378,7 @@ gda_mysql_provider_get_server_version (GdaServerProvider *provider, GdaConnectio
 	
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MySQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return FALSE;
 	}
 
@@ -393,7 +394,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return NULL;
 	}
 
@@ -418,7 +419,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 				s = g_strstrip (g_strdup (arr[n]));
 				if (g_ascii_strncasecmp (s, "select", strlen ("select")) &&
 				    g_ascii_strncasecmp (s, "show", strlen ("show"))) {
-					gda_connection_add_error_string (
+					gda_connection_add_event_string (
 						cnc, "Command '%s' cannot be executed in read-only mode", arr[n]);
 					break;
 				}
@@ -429,7 +430,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 			/* execute the command on the server */
 			rc = mysql_real_query (mysql, arr[n], strlen (arr[n]));
 			if (rc != 0) {
-				gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+				gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 				break;
 			}
 
@@ -463,7 +464,7 @@ gda_mysql_provider_get_database (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return NULL;
 	}
 
@@ -486,13 +487,13 @@ gda_mysql_provider_change_database (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
 	rc = mysql_select_db (mysql, name);
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -502,7 +503,7 @@ gda_mysql_provider_change_database (GdaServerProvider *provider,
 
 /* get_specs_create_database handler for the GdaMysqlProvider class */
 static gchar *
-gda_mysql_provider_get_specs_create_database (GdaServerProvider *provider)
+gda_mysql_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType type)
 {
 	gchar *specs, *file;
         gint len;
@@ -510,11 +511,17 @@ gda_mysql_provider_get_specs_create_database (GdaServerProvider *provider)
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 
-        file = g_build_filename (LIBGDA_DATA_DIR, "mysql_specs_create_db.xml", NULL);
-        if (g_file_get_contents (file, &specs, &len, NULL))
-                return specs;
-        else
-                return NULL;
+	switch (type) {
+	case GDA_CLIENT_SPECS_CREATE_DATABASE:
+		file = g_build_filename (LIBGDA_DATA_DIR, "mysql_specs_create_db.xml", NULL);
+		if (g_file_get_contents (file, &specs, &len, NULL))
+			return specs;
+		else
+			return NULL;
+		break;
+	default: 
+		return NULL;
+	}
 }
 
 #define string_from_string_param(param) \
@@ -531,8 +538,9 @@ gda_mysql_provider_get_specs_create_database (GdaServerProvider *provider)
 
 /* create_database handler for the GdaMysqlProvider class */
 static gboolean
-gda_mysql_provider_create_database (GdaServerProvider *provider,
-				    GdaParameterList *params, GError **error)
+gda_mysql_provider_perform_action_params (GdaServerProvider *provider,
+					  GdaParameterList *params, 
+					  GdaClientSpecsType type, GError **error)
 {
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 	MYSQL *mysql;
@@ -553,63 +561,71 @@ gda_mysql_provider_create_database (GdaServerProvider *provider,
 
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
-	
-	if (params) {
-		param = gda_parameter_list_find (params, "HOST");
-		host = string_from_string_param (param);
 
-		param = gda_parameter_list_find (params, "PORT");
-		port = int_from_int_param (param);
-
-		param = gda_parameter_list_find (params, "UNIX_SOCKET");
-		socket = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "USE_SSL");
-		usessl = bool_from_bool_param (param);
+	switch (type) {
+	case GDA_CLIENT_SPECS_CREATE_DATABASE:	
+		if (params) {
+			param = gda_parameter_list_find (params, "HOST");
+			host = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "PORT");
+			port = int_from_int_param (param);
+			
+			param = gda_parameter_list_find (params, "UNIX_SOCKET");
+			socket = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "USE_SSL");
+			usessl = bool_from_bool_param (param);
+			
+			param = gda_parameter_list_find (params, "DATABASE");
+			dbname = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "ENCODING");
+			encoding = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "COLLATE");
+			collate = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "ADM_LOGIN");
+			login = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "ADM_PASSWORD");
+			password = string_from_string_param (param);
+		}
+		if (!dbname) {
+			g_set_error (error, 0, 0,
+				     _("Missing parameter 'DATABASE'"));
+			return FALSE;
+		}
 		
-		param = gda_parameter_list_find (params, "DATABASE");
-		dbname = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "ENCODING");
-		encoding = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "COLLATE");
-		collate = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "ADM_LOGIN");
-		login = string_from_string_param (param);
+		mysql = real_open_connection (host, port, socket,
+					      "mysql", login, password, usessl, error);
+		if (!mysql)
+			return FALSE;
 		
-		param = gda_parameter_list_find (params, "ADM_PASSWORD");
-		password = string_from_string_param (param);
-	}
-	if (!dbname) {
+		/* Ask to create a database */
+		string = g_string_new ("CREATE DATABASE ");
+		g_string_append (string, dbname);
+		if (encoding)
+			g_string_append_printf (string, " CHARACTER SET %s", encoding);
+		if (collate)
+			g_string_append_printf (string, " COLLATE %s", collate);
+		
+		res = mysql_query (mysql, string->str);
+		g_string_free (string, TRUE);
+		
+		if (res) {
+			g_set_error (error, 0, 0, mysql_error (mysql));
+			retval = FALSE;
+		}
+		
+		mysql_close (mysql);
+		break;
+	default:
 		g_set_error (error, 0, 0,
-			     _("Missing parameter 'DATABASE'"));
-		return FALSE;
+			     _("Method not handled by this provider"));
+		return NULL;
 	}
-
-	mysql = real_open_connection (host, port, socket,
-				      "mysql", login, password, usessl, error);
-	if (!mysql)
-		return FALSE;
-
-	/* Ask to create a database */
-	string = g_string_new ("CREATE DATABASE ");
-	g_string_append (string, dbname);
-	if (encoding)
-		g_string_append_printf (string, " CHARACTER SET %s", encoding);
-	if (collate)
-		g_string_append_printf (string, " COLLATE %s", collate);
-
-	res = mysql_query (mysql, string->str);
-	g_string_free (string, TRUE);
-
-	if (res) {
-		g_set_error (error, 0, 0, mysql_error (mysql));
-		retval = FALSE;
-	}
-	
-	mysql_close (mysql);
 
 	return retval;
 }
@@ -632,7 +648,7 @@ gda_mysql_provider_create_database_cnc (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
@@ -640,7 +656,7 @@ gda_mysql_provider_create_database_cnc (GdaServerProvider *provider,
 	rc = mysql_query (mysql, sql);
 	g_free (sql);
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -649,9 +665,9 @@ gda_mysql_provider_create_database_cnc (GdaServerProvider *provider,
 
 /* drop_database handler for the GdaMysqlProvider class */
 static gboolean
-gda_mysql_provider_drop_database (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  const gchar *name)
+gda_mysql_provider_drop_database_cnc (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      const gchar *name)
 {
 	gint rc;
 	gchar *sql;
@@ -664,7 +680,7 @@ gda_mysql_provider_drop_database (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
@@ -672,7 +688,7 @@ gda_mysql_provider_drop_database (GdaServerProvider *provider,
 	rc = mysql_query (mysql, sql);
 	g_free (sql);
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -706,7 +722,7 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 	/* check for valid MySQL handle */
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
@@ -816,7 +832,7 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 	/* execute sql command */
 	rc = mysql_query (mysql, sql->str);
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -859,7 +875,7 @@ gda_mysql_provider_drop_table (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
@@ -867,7 +883,7 @@ gda_mysql_provider_drop_table (GdaServerProvider *provider,
 	rc = mysql_query (mysql, sql);
 	g_free (sql);
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -899,7 +915,7 @@ gda_mysql_provider_create_index (GdaServerProvider *provider,
 	/* get MySQL handle */
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
@@ -965,7 +981,7 @@ gda_mysql_provider_create_index (GdaServerProvider *provider,
         /* execute sql command */
 	rc = mysql_query (mysql, sql->str);
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -996,7 +1012,7 @@ gda_mysql_provider_drop_index (GdaServerProvider *provider,
 	/* get MySQL handle */
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
@@ -1008,7 +1024,7 @@ gda_mysql_provider_drop_index (GdaServerProvider *provider,
 	rc = mysql_query (mysql, sql);
 	g_free (sql);
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -1066,7 +1082,7 @@ gda_mysql_provider_get_last_insert_id (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return NULL;
 	}
 
@@ -1089,12 +1105,12 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
-		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 
@@ -1117,14 +1133,14 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 	}
 
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
 	/* start the transaction */
 	rc = mysql_real_query (mysql, "BEGIN", strlen ("BEGIN"));
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -1146,18 +1162,18 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
-		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 
 	rc = mysql_real_query (mysql, "COMMIT", strlen ("COMMIT"));
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -1179,18 +1195,18 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
-		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 
 	rc = mysql_real_query (mysql, "ROLLBACK", strlen ("ROLLBACK"));
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -1749,14 +1765,14 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MySQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
 		return NULL;
 	}
 
 	/* get parameters sent by client */
 	par = gda_parameter_list_find (params, "name");
 	if (!par) {
-		gda_connection_add_error_string (
+		gda_connection_add_event_string (
 			cnc,
 			_("Table name is needed but none specified in parameter list"));
 		return NULL;
@@ -1764,7 +1780,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 
 	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
 	if (!table_name) {
-		gda_connection_add_error_string (
+		gda_connection_add_event_string (
 			cnc,
 			_("Table name is needed but none specified in parameter list"));
 		return NULL;
@@ -1775,7 +1791,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
 	g_free (cmd_str);
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
 		return NULL;
 	}
 
@@ -1901,7 +1917,7 @@ gda_mysql_provider_value_to_sql_string (
 			mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 			
 			if (!mysql) {
-				gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+				gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
 				return NULL;
 			}
 			quoted = ret = g_malloc(strlen(val_str) * 2 + 3);

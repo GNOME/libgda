@@ -45,7 +45,7 @@ gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name)
 	}
 
 	if (!entry) {
-		gda_connection_add_error_string (mdb_cnc->cnc, _("Table %s not found"), name);
+		gda_connection_add_event_string (mdb_cnc->cnc, _("Table %s not found"), name);
 		return NULL;
 	}
 

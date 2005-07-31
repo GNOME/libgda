@@ -117,7 +117,7 @@ run_export_cb (gpointer user_data)
 
 		cmd = gda_command_new (name, GDA_COMMAND_TYPE_TABLE, 0);
 
-		recset = gda_connection_execute_single_command (exp->priv->cnc, cmd, NULL);
+		recset = gda_connection_execute_single_command (exp->priv->cnc, cmd, NULL, NULL);
 		gda_command_free (cmd);
 		if (!GDA_IS_DATA_MODEL (recset)) {
 			gda_export_stop (exp);

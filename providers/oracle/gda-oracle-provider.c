@@ -54,9 +54,9 @@ static const gchar *gda_oracle_provider_get_database (GdaServerProvider *provide
 static gboolean gda_oracle_provider_create_database (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    const gchar *name);
-static gboolean gda_oracle_provider_drop_database (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  const gchar *name);
+static gboolean gda_oracle_provider_drop_database_cnc (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       const gchar *name);
 static GList *gda_oracle_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
@@ -110,7 +110,7 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	provider_class->get_server_version = gda_oracle_provider_get_server_version;
 	provider_class->get_database = gda_oracle_provider_get_database;
 	provider_class->create_database_cnc = gda_oracle_provider_create_database;
-	provider_class->drop_database = gda_oracle_provider_drop_database;
+	provider_class->drop_database_cnc = gda_oracle_provider_drop_database_cnc;
 	provider_class->execute_command = gda_oracle_provider_execute_command;
 	provider_class->begin_transaction = gda_oracle_provider_begin_transaction;
 	provider_class->commit_transaction = gda_oracle_provider_commit_transaction;
@@ -193,7 +193,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 	/* check we have a TNS name to connect to */
 
 	if ((tnsname = gda_quark_list_find (params, "TNSNAME")) == NULL) {
-		gda_connection_add_error_string (cnc, 
+		gda_connection_add_event_string (cnc, 
 		        _("No TNS name supplied"));
 		return FALSE;
 	}
@@ -209,7 +209,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 				(void (*)(dvoid *, dvoid *)) 0);
 
 	if (result != OCI_SUCCESS) {
-		gda_connection_add_error_string (cnc, 
+		gda_connection_add_event_string (cnc, 
 			_("Could not initialize Oracle"));
 		return FALSE;
 	}
@@ -220,7 +220,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 				(size_t) 0, 
 				(dvoid **) 0);
 	if (result != OCI_SUCCESS) {
-		gda_connection_add_error_string (cnc, 
+		gda_connection_add_event_string (cnc, 
 			_("Could not initialize the Oracle environment"));
 		return FALSE;
 	}
@@ -420,7 +420,7 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 				priv_data->herr,
 				priv_data->hsession,
 				OCI_DEFAULT))) {
-		gda_connection_add_error (cnc, 
+		gda_connection_add_event (cnc, 
 			gda_oracle_make_error (priv_data->herr, OCI_HTYPE_ERROR, __FILE__, __LINE__));
 		return FALSE;
 	}
@@ -464,7 +464,7 @@ gda_oracle_provider_get_server_version (GdaServerProvider *provider,
 	/* Get the OracleConnectionData */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return NULL;
 	}
 
@@ -496,7 +496,7 @@ prepare_oracle_statement (GdaConnection *cnc, GdaParameterList *params, gchar *s
 	/* Get the OracleConnectionData */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return NULL;
 	}
 
@@ -571,7 +571,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return NULL;
 	}
 
@@ -720,7 +720,7 @@ gda_oracle_provider_get_database (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
 	}
 
@@ -743,7 +743,7 @@ gda_oracle_provider_create_database (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
 	}
 
@@ -751,11 +751,11 @@ gda_oracle_provider_create_database (GdaServerProvider *provider,
 	return FALSE;
 }
 
-/* drop_database handler for the GdaOracleProvider class */
+/* drop_database_cnc handler for the GdaOracleProvider class */
 static gboolean
-gda_oracle_provider_drop_database (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  const gchar *name)
+gda_oracle_provider_drop_database_cnc (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       const gchar *name)
 {
 	GdaOracleConnectionData *priv_data;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
@@ -766,7 +766,7 @@ gda_oracle_provider_drop_database (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
 	}
 
@@ -796,7 +796,7 @@ gda_oracle_provider_execute_command (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
 	}
 
@@ -851,12 +851,12 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
 	}
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
-		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 
@@ -933,12 +933,12 @@ gda_oracle_provider_commit_transaction (GdaServerProvider *provider,
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	ora_xaction = g_object_get_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data || !ora_xaction) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
 	}
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
-		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 
@@ -994,12 +994,12 @@ gda_oracle_provider_rollback_transaction (GdaServerProvider *provider,
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	ora_xaction = g_object_get_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data || !ora_xaction) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
 	}
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
-		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 
@@ -1142,7 +1142,7 @@ get_oracle_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return NULL;
 	}
 

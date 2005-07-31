@@ -25,7 +25,7 @@ show_errors (GdaConnection * cnc)
 	GList *list, *node;
 	GdaConnectionEvent *error;
 
-	list = (GList *) gda_connection_get_errors (cnc);
+	list = (GList *) gda_connection_get_events (cnc);
 	for (node = g_list_first (list); node != NULL; node = g_list_next (node)) {
 		error = (GdaConnectionEvent *) node->data;
 		g_print ("\nError no: %ld\n", gda_connection_event_get_code (error));

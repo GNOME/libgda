@@ -50,9 +50,9 @@ static gboolean gda_xbase_provider_change_database (GdaServerProvider *provider,
 static gboolean gda_xbase_provider_create_database_cnc (GdaServerProvider *provider,
 						        GdaConnection *cnc,
 						        const gchar *name);
-static gboolean gda_xbase_provider_drop_database (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  const gchar *name);
+static gboolean gda_xbase_provider_drop_database_cnc (GdaServerProvider *provider,
+						      GdaConnection *cnc,
+						      const gchar *name);
 static GList *gda_xbase_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
@@ -101,7 +101,7 @@ gda_xbase_provider_class_init (GdaXbaseProviderClass *klass)
 	provider_class->get_database = gda_xbase_provider_get_database;
 	provider_class->change_database = gda_xbase_provider_change_database;
 	provider_class->create_database_cnc = gda_xbase_provider_create_database_cnc;
-	provider_class->drop_database = gda_xbase_provider_drop_database;
+	provider_class->drop_database_cnc = gda_xbase_provider_drop_database_cnc;
 	provider_class->execute_command = gda_xbase_provider_execute_command;
 	provider_class->begin_transaction = gda_xbase_provider_begin_transaction;
 	provider_class->commit_transaction = gda_xbase_provider_commit_transaction;
@@ -181,7 +181,7 @@ gda_xbase_provider_open_connection (GdaServerProvider *provider,
 	p_directory = gda_quark_list_find (params, "DIRECTORY");
 
 	if ((p_filename && p_directory)) {
-		gda_connection_add_error_string (
+		gda_connection_add_event_string (
 			cnc, _("Either FILENAME or DIRECTORY can be specified, but not both or neither"));
 		return FALSE;
 	}
@@ -209,7 +209,7 @@ gda_xbase_provider_open_connection (GdaServerProvider *provider,
 		pdata->using_directory = TRUE;
 		dir = g_dir_open (p_directory, 0, &error);
 		if (error) {
-			gda_connection_add_error_string (cnc, error->message);
+			gda_connection_add_event_string (cnc, error->message);
 			g_error_free (error);
 			return FALSE;
 		}
@@ -220,7 +220,7 @@ gda_xbase_provider_open_connection (GdaServerProvider *provider,
 			if (xdb) {
 				g_hash_table_insert (pdata->databases, gda_xbase_database_get_name (xdb), xdb);
 			} else {
-				gda_connection_add_error_string (cnc, _("Could not open file %s"), s);
+				gda_connection_add_event_string (cnc, _("Could not open file %s"), s);
 			}
 
 			g_free (s);
@@ -228,7 +228,7 @@ gda_xbase_provider_open_connection (GdaServerProvider *provider,
 
 		g_dir_close (dir);
 	} else {
-		gda_connection_add_error_string (
+		gda_connection_add_event_string (
 			cnc, _("Either FILENAME or DIRECTORY must be specified in the connection string"));
 		gda_xbase_provider_close_connection (provider, cnc);
 		return FALSE;
@@ -258,7 +258,7 @@ gda_xbase_provider_close_connection (GdaServerProvider *provider, GdaConnection 
 
 	pdata = (GdaXbaseProviderData *) g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!pdata) {
-		gda_connection_add_error_string (cnc, _("Invalid Xbase handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Xbase handle"));
 		return FALSE;
 	}
 
@@ -304,9 +304,9 @@ gda_xbase_provider_create_database_cnc (GdaServerProvider *provider,
 	return FALSE;
 }
 
-/* drop_database handler for the GdaXbaseProvider class */
+/* drop_database_cnc handler for the GdaXbaseProvider class */
 static gboolean
-gda_xbase_provider_drop_database (GdaServerProvider *provider,
+gda_xbase_provider_drop_database_cnc (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      const gchar *name)
 {
@@ -377,7 +377,7 @@ gda_xbase_provider_make_error (GdaConnection *cnc)
 
 	pdata = (GdaXbaseProviderData *) g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!pdata) {
-		gda_connection_add_error_string (cnc, _("Invalid Xbase handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Xbase handle"));
 		return;
 	}
 
@@ -385,5 +385,5 @@ gda_xbase_provider_make_error (GdaConnection *cnc)
 	/* FIXME: get error information */
 	gda_connection_event_set_source (error, "[GDA Xbase]");
 
-	gda_connection_add_error (cnc, error);
+	gda_connection_add_event (cnc, error);
 }

@@ -275,7 +275,7 @@ gda_connection_new (GdaClient *client,
 						  cnc->priv->password)) {
 		const GList *errors_copy;
 
-		errors_copy = gda_connection_get_errors (cnc);
+		errors_copy = gda_connection_get_events (cnc);
 		/* notify the GdaClient of the error, since
 		   that's the only way we can notify it of errors
 		   when creating the connection */
@@ -510,7 +510,7 @@ gda_connection_get_password (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_add_error
+ * gda_connection_add_event
  * @cnc: a #GdaConnection object.
  * @error: is stored internally, so you don't need to unref it.
  *
@@ -526,7 +526,7 @@ gda_connection_get_password (GdaConnection *cnc)
  *
  */
 void
-gda_connection_add_error (GdaConnection *cnc, GdaConnectionEvent *error)
+gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *error)
 {
 	GList *err_list;
 
@@ -544,7 +544,7 @@ gda_connection_add_error (GdaConnection *cnc, GdaConnectionEvent *error)
 }
 
 /**
- * gda_connection_add_error_string
+ * gda_connection_add_event_string
  * @cnc: a #GdaServerConnection object.
  * @str: a format string (see the printf(3) documentation).
  * @...: the arguments to insert in the error message.
@@ -554,7 +554,7 @@ gda_connection_add_error (GdaConnection *cnc, GdaConnectionEvent *error)
  * #gda_server_connection_add_error.
  */
 void
-gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
+gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 {
 	GdaConnectionEvent *error;
 
@@ -575,17 +575,17 @@ gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
 	gda_connection_event_set_source (error, gda_connection_get_provider (cnc));
 	gda_connection_event_set_sqlstate (error, "-1");
 	
-	gda_connection_add_error (cnc, error);
+	gda_connection_add_event (cnc, error);
 }
 
 /**
- * gda_connection_add_error_list
+ * gda_connection_add_event_list
  * @cnc: a #GdaConnection object.
  * @error_list: a list of #GdaConnectionEvent.
  *
  * This is just another convenience function which lets you add
  * a list of #GdaConnectionEvent's to the given connection. As with
- * #gda_connection_add_error and #gda_connection_add_error_string,
+ * #gda_connection_add_event and #gda_connection_add_event_string,
  * this function makes the connection object emit the "error"
  * signal. The only difference is that, instead of a notification
  * for each error, this function only does one notification for
@@ -594,7 +594,7 @@ gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
  * @error_list is copied to an internal list and freed.
  */
 void
-gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
+gda_connection_add_event_list (GdaConnection *cnc, GList *error_list)
 {
 	GList *l;
 
@@ -613,7 +613,7 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 }
 
 /**
- * gda_connection_clear_error_list
+ * gda_connection_clear_events_list
  * @cnc: a #GdaConnection object.
  *
  * This function lets you clear the list of #GdaConnectionEvent's of the
@@ -622,7 +622,7 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
  * list.
  */
 void
-gda_connection_clear_error_list (GdaConnection *cnc)
+gda_connection_clear_events_list (GdaConnection *cnc)
 {
 	GList *l;
 
@@ -654,42 +654,6 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
 	g_return_val_if_fail (name != NULL, FALSE);
 
 	return gda_server_provider_change_database (cnc->priv->provider_obj, cnc, name);
-}
-
-/**
- * gda_connection_create_database
- * @cnc: a #GdaConnection object.
- * @name: database name.
- *
- * Creates a new database named @name on the given connection.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_connection_create_database (GdaConnection *cnc, const gchar *name)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (name != NULL, FALSE);
-
-	return gda_server_provider_create_database (cnc->priv->provider_obj, cnc, name);
-}
-
-/**
- * gda_connection_drop_database
- * @cnc: a #GdaConnection object.
- * @name: database name.
- *
- * Drops a database from the given connection.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (name != NULL, FALSE);
-
-	return gda_server_provider_drop_database (cnc->priv->provider_obj, cnc, name);
 }
 
 /**
@@ -783,6 +747,7 @@ gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name, gboolean
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
  * @params: parameter list.
+ * @error: a place to store an error, or %NULL
  *
  * Executes a command on the underlying data source.
  *
@@ -801,7 +766,8 @@ gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name, gboolean
 GList *
 gda_connection_execute_command (GdaConnection *cnc,
 				GdaCommand *cmd,
-				GdaParameterList *params)
+				GdaParameterList *params,
+				GError **error)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
@@ -837,6 +803,7 @@ gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
  * @params: parameter list.
+ * @error: a place to store an error, or %NULL
  *
  * Executes a single command on the given connection.
  *
@@ -850,7 +817,8 @@ gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
 GdaDataModel *
 gda_connection_execute_single_command (GdaConnection *cnc,
 				       GdaCommand *cmd,
-				       GdaParameterList *params)
+				       GdaParameterList *params,
+				       GError **error)
 {
 	GList *reclist;
 	GdaDataModel *model;
@@ -858,7 +826,7 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
-	reclist = gda_connection_execute_command (cnc, cmd, params);
+	reclist = gda_connection_execute_command (cnc, cmd, params, error);
 	if (!reclist)
 		return NULL;
 
@@ -886,7 +854,8 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 gint
 gda_connection_execute_non_query (GdaConnection *cnc,
 				  GdaCommand *cmd,
-				  GdaParameterList *params)
+				  GdaParameterList *params,
+				  GError **error)
 {
 	GList *reclist;
 	GdaDataModel *model;
@@ -895,7 +864,7 @@ gda_connection_execute_non_query (GdaConnection *cnc,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
 	g_return_val_if_fail (cmd != NULL, -1);
 
-	reclist = gda_connection_execute_command (cnc, cmd, params);
+	reclist = gda_connection_execute_command (cnc, cmd, params, error);
 	if (!reclist)
 		return -1;
 
@@ -1038,7 +1007,7 @@ gda_connection_get_schema (GdaConnection *cnc,
 }
 
 /**
- * gda_connection_get_errors
+ * gda_connection_get_events
  * @cnc: a #GdaConnection.
  *
  * Retrieves a list of the last errors ocurred in the connection.
@@ -1048,7 +1017,7 @@ gda_connection_get_schema (GdaConnection *cnc,
  *
  */
 const GList *
-gda_connection_get_errors (GdaConnection *cnc)
+gda_connection_get_events (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	return cnc->priv->error_list;

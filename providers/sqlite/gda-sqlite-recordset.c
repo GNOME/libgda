@@ -155,7 +155,7 @@ gda_sqlite_recordset_get_row (GdaDataModelBase *model, gint row)
 
 	priv_data = recset->priv;
 	if (!priv_data->sres) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Invalid SQLite handle"));
 		return NULL;
 	}
@@ -164,7 +164,7 @@ gda_sqlite_recordset_get_row (GdaDataModelBase *model, gint row)
 		return NULL;
 
 	if (row < 0 || row > priv_data->nrows) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Row number out of range"));
 		return NULL;
 	}
@@ -197,7 +197,7 @@ gda_sqlite_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	sres = priv_data->sres;
 
 	if (!sres) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Invalid SQLite handle"));
 		return NULL;
 	}
@@ -206,13 +206,13 @@ gda_sqlite_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 		return NULL;
 
 	if (row < 0 || row > priv_data->nrows) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Row number out of range"));
 		return NULL;
 	}
 
 	if (col >= priv_data->ncolumns) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Column number out of range"));
 		return NULL;
 	}
@@ -238,13 +238,13 @@ gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col)
 	sres = priv_data->sres;
 	
 	if (!sres) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Invalid SQLite handle"));
 		return NULL;
 	}
 
 	if (col >= priv_data->ncolumns) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Column number out of range"));
 		return NULL;
 	}

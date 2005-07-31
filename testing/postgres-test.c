@@ -37,7 +37,7 @@ execute_non_query (GdaConnection *cnc, const gchar *query)
 				   GDA_COMMAND_TYPE_SQL,
 				   STOP_ON_ERR);
 
-	list = gda_connection_execute_command (cnc, command, NULL);
+	list = gda_connection_execute_command (cnc, command, NULL, NULL);
 	retval = (list == NULL) ? FALSE : TRUE;
 	g_list_foreach (list, (GFunc) g_object_unref, NULL);
 	g_list_free (list);
@@ -124,8 +124,7 @@ select_data (GdaConnection *cnc)
 	select_command = gda_command_new ( "select * from gda_postgres_test",
 					GDA_COMMAND_TYPE_SQL, STOP_ON_ERR);
 
-	list = gda_connection_execute_command (cnc, select_command,
-						NULL);
+	list = gda_connection_execute_command (cnc, select_command, NULL, NULL);
 	gda_command_free (select_command);
 
 	return list;
@@ -197,7 +196,7 @@ blob_tests (GdaConnection *cnc)
 	g_print ("\t\tCreating a BLOB: ");
 	if (!gda_connection_create_blob (cnc, blob)) {
 		g_print ("FAILED\n");
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 	} else {
 		g_print ("OK\n");
 	}
@@ -205,7 +204,7 @@ blob_tests (GdaConnection *cnc)
 	g_print ("\t\tOpening a BLOB (read/write): ");
 	if (gda_blob_open (blob, GDA_BLOB_MODE_RDWR)) {
 		g_print ("FAILED\n");
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 	} else {
 		g_print ("OK\n");
 	}
@@ -213,7 +212,7 @@ blob_tests (GdaConnection *cnc)
 	g_print ("\t\tWriting to BLOB: ");
 	if (gda_blob_write (blob, str, strlen (str), &nbytes)) {
 		g_print ("FAILED\n");
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 	} else {
 		g_print ("OK %d\n", nbytes);
 	}
@@ -221,7 +220,7 @@ blob_tests (GdaConnection *cnc)
 	g_print ("\t\tSeeking: ");
 	if (gda_blob_lseek (blob, 2, SEEK_SET) < 0) {
 		g_print ("FAILED\n");
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 	} else {
 		g_print ("OK\n");
 	}
@@ -229,7 +228,7 @@ blob_tests (GdaConnection *cnc)
 	g_print ("\t\tReading from BLOB: ");
 	if (gda_blob_read (blob, copy_str, strlen (str) - 2, &nbytes)) {
 		g_print ("FAILED\n");
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 	} else {
 		copy_str [nbytes] = '\0';
 		if (strcmp (copy_str, str + 2)) {
@@ -242,7 +241,7 @@ blob_tests (GdaConnection *cnc)
 	g_print ("\t\tClosing the BLOB: ");
 	if (gda_blob_close (blob)) {
 		g_print ("FAILED\n");
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 	} else {
 		g_print ("OK\n");
 	}
@@ -254,7 +253,7 @@ blob_tests (GdaConnection *cnc)
 	g_print ("\t\tCreating another BLOB: ");
 	if (!gda_connection_create_blob (cnc, blob)) {
 		g_print ("FAILED\n");
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 	} else {
 		g_print ("OK\n");
 	}
@@ -262,7 +261,7 @@ blob_tests (GdaConnection *cnc)
 	g_print ("\t\tRemoving the BLOB: ");
 	if (gda_blob_remove (blob)) {
 		g_print ("FAILED\n");
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 	} else {
 		g_print ("OK\n");
 	}
@@ -295,7 +294,7 @@ do_postgres_test (GdaConnection *cnc)
 			success ? "OK" : "Error");
 
 	if (!success)
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 
 	/* Inserts values */
 	success = insert_data (cnc);
@@ -303,7 +302,7 @@ do_postgres_test (GdaConnection *cnc)
 				 success ? "OK" : "Error");
 
 	if (!success)
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 
 	/* Selects values */
 	list = select_data (cnc);
@@ -319,7 +318,7 @@ do_postgres_test (GdaConnection *cnc)
 	g_list_free (list);
 
 	if (!success)
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 
 	/* Parent tables */
 	execute_non_query (cnc, "drop table gda_postgres_parent");
@@ -329,11 +328,11 @@ do_postgres_test (GdaConnection *cnc)
 
 	success = execute_non_query (cnc, "drop table gda_postgres_child");
 	if (!success)
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 
 	success = execute_non_query (cnc, "drop table gda_postgres_parent");
 	if (!success)
-		print_errors (gda_connection_get_errors (cnc));
+		print_errors (gda_connection_get_events (cnc));
 
 	g_print ("-----------------\n");
 

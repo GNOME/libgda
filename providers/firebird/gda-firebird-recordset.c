@@ -343,11 +343,11 @@ fb_sql_prepare (GdaFirebirdConnection *fcnc,
 
 		} 
 		else
-			gda_connection_add_error_string (recset->priv->cnc, _("Statement already prepared."));
+			gda_connection_add_event_string (recset->priv->cnc, _("Statement already prepared."));
 
 	}
 	else
-		gda_connection_add_error_string (recset->priv->cnc, _("Transaction not initialized."));
+		gda_connection_add_event_string (recset->priv->cnc, _("Transaction not initialized."));
 	
 	/* Free cursors */
 	isc_dsql_free_statement (fcnc->status, &(recset->priv->sql_handle), DSQL_drop);
@@ -384,7 +384,7 @@ fb_sql_unprepare (GdaFirebirdConnection *fcnc,
 		return TRUE;
 	}
 	else
-		gda_connection_add_error_string (recset->priv->cnc, _("Statement already prepared."));
+		gda_connection_add_event_string (recset->priv->cnc, _("Statement already prepared."));
 	
 	return FALSE;
 }
@@ -692,7 +692,7 @@ gda_firebird_recordset_get_row (GdaDataModelBase *model,
 
 	fcnc = g_object_get_data (G_OBJECT (recset->priv->cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (recset->priv->cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (recset->priv->cnc, _("Invalid Firebird handle"));
 		return NULL;
 	}
 
@@ -894,7 +894,7 @@ gda_firebird_recordset_new (GdaConnection *cnc,
 
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return NULL;
 	}
 

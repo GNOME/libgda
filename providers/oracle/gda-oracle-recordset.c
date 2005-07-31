@@ -165,13 +165,13 @@ gda_oracle_recordset_describe_column (GdaDataModelBase *model, gint col)
 	priv_data = recset->priv;
 
 	if (!priv_data->cdata) {
-		gda_connection_add_error_string (priv_data->cnc, 
+		gda_connection_add_event_string (priv_data->cnc, 
 						_("Invalid Oracle handle"));
 		return NULL;
 	}
 
 	if (col >= priv_data->ncolumns) {
-		gda_connection_add_error_string (priv_data->cnc, 
+		gda_connection_add_event_string (priv_data->cnc, 
 						_("Column out of range"));
 		return NULL;
 	}
@@ -388,7 +388,7 @@ gda_oracle_recordset_get_row (GdaDataModelBase *model, gint row)
 	priv_data = recset->priv;
 
 	if (!priv_data->cdata) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Invalid Oracle handle"));
 		return NULL;
 	}
@@ -466,7 +466,7 @@ gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values
 	priv_data = recset->priv;
 
 	if (priv_data->ncolumns != g_list_length ((GList *) values)) {
-		gda_connection_add_error_string (
+		gda_connection_add_event_string (
 			recset->priv->cnc,
 			_("Attempt to insert a row with an invalid number of columns"));
 		return NULL;
@@ -481,7 +481,7 @@ gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values
 
 		fa = gda_data_model_describe_column (model, i);
 		if (!fa) {
-			gda_connection_add_error_string (
+			gda_connection_add_event_string (
 				recset->priv->cnc,
 				_("Could not retrieve column's information"));
 			g_string_free (sql, TRUE);
@@ -499,7 +499,7 @@ gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values
 		const GdaValue *val = (const GdaValue *) l->data;
 
 		if (!val) { 
-			gda_connection_add_error_string (
+			gda_connection_add_event_string (
 				recset->priv->cnc,
 				_("Could not retrieve column's value"));
 			g_string_free (sql, TRUE);
@@ -589,7 +589,7 @@ gda_oracle_recordset_finalize (GObject *object)
 	priv_data = recset->priv;
 
 	if (!priv_data->cdata) {
-		gda_connection_add_error_string (priv_data->cnc, 
+		gda_connection_add_event_string (priv_data->cnc, 
 						_("Invalid Oracle handle"));
 		return NULL;
 	}

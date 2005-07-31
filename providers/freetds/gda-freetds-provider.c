@@ -61,9 +61,9 @@ static gboolean gda_freetds_provider_change_database (GdaServerProvider *provide
 static gboolean gda_freetds_provider_create_database_cnc (GdaServerProvider *provider,
                                                           GdaConnection *cnc,
                                                           const gchar *name);
-static gboolean gda_freetds_provider_drop_database (GdaServerProvider *provider,
-                                                    GdaConnection *cnc,
-                                                    const gchar *name);
+static gboolean gda_freetds_provider_drop_database_cnc (GdaServerProvider *provider,
+							GdaConnection *cnc,
+							const gchar *name);
 static GList *gda_freetds_provider_execute_command (GdaServerProvider *provider,
                                                     GdaConnection *cnc,
                                                     GdaCommand *cmd,
@@ -195,7 +195,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	/* FreeTDS SIGSEGV on NULL pointers */
 	if ((t_user == NULL) || (t_host == NULL) || (t_password == NULL)) {
 		error = gda_freetds_make_error(NULL, _("Connection aborted. You must provide at least a host, username and password using DSN 'QUERY=;USER=;PASSWORD='."));
-		gda_connection_add_error(cnc, error);
+		gda_connection_add_event(cnc, error);
 
 		return FALSE;
 	}
@@ -207,14 +207,14 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	if (tds_cnc->msg_arr == NULL) {
 		gda_freetds_free_connection_data (tds_cnc);
 		tds_cnc = NULL;
-		gda_connection_add_error_string (cnc, _("Error creating message container."));
+		gda_connection_add_event_string (cnc, _("Error creating message container."));
 		return FALSE;
 	}
 
 	tds_cnc->err_arr = g_ptr_array_new ();
 	if (tds_cnc->err_arr == NULL) {
 		gda_freetds_free_connection_data (tds_cnc);
-		gda_connection_add_error_string (cnc, _("Error creating error container."));
+		gda_connection_add_event_string (cnc, _("Error creating error container."));
 		return FALSE;
 	}
 
@@ -258,7 +258,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		gda_log_error (_("Allocating tds context failed."));
 		gda_freetds_free_connection_data (tds_cnc);
 		error = gda_freetds_make_error(NULL, _("Allocating tds context failed."));
-		gda_connection_add_error(cnc, error);
+		gda_connection_add_event(cnc, error);
 		return FALSE;
 	}
 	/* Initialize callbacks which are now in context struct */
@@ -274,7 +274,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	if (! tds_cnc->tds) {
 		gda_log_error (_("Allocating tds socket failed."));
 		gda_freetds_free_connection_data (tds_cnc);
-		gda_connection_add_error_string (cnc, _("Allocating tds socket failed."));
+		gda_connection_add_event_string (cnc, _("Allocating tds socket failed."));
 		return FALSE;
 	}
 	tds_set_parent (tds_cnc->tds, NULL);
@@ -282,7 +282,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	if (tds_connect (tds_cnc->tds, tds_cnc->config) != TDS_SUCCEED) {
 		gda_log_error (_("Establishing connection failed."));
 		//gda_freetds_free_connection_data (tds_cnc);
-		gda_connection_add_error_string (cnc, _("Establishing connection failed."));
+		gda_connection_add_event_string (cnc, _("Establishing connection failed."));
 		return FALSE;
 	}
 #else
@@ -292,7 +292,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		gda_log_error (_("Establishing connection failed."));
 		gda_freetds_free_connection_data (tds_cnc);
 		error = gda_freetds_make_error(NULL, _("Establishing connection failed."));
-		gda_connection_add_error(cnc, error);
+		gda_connection_add_event(cnc, error);
 		return FALSE;
 	}
 
@@ -307,7 +307,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	if (! tds_cnc->config) {
 		gda_log_error (_("Failed getting connection info."));	
 		error = gda_freetds_make_error (tds_cnc->tds, _("Failed getting connection info."));
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 
 		gda_freetds_free_connection_data (tds_cnc);
 		return FALSE;
@@ -495,9 +495,9 @@ gda_freetds_provider_create_database_cnc (GdaServerProvider *provider,
 }
 
 static gboolean
-gda_freetds_provider_drop_database (GdaServerProvider *provider,
-                                    GdaConnection *cnc,
-                                    const gchar *name)
+gda_freetds_provider_drop_database_cnc (GdaServerProvider *provider,
+					GdaConnection *cnc,
+					const gchar *name)
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 
@@ -790,7 +790,7 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	if (tds_cnc->rc != TDS_SUCCEED) {
 		gda_log_error (_("Query did not succeed in execute_cmd()."));
 		error = gda_freetds_make_error (tds_cnc->tds, _("Query did not succeed in execute_cmd()."));
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return FALSE;
 	}
 
@@ -805,7 +805,7 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 			gda_log_error (_("Unexpected result tokens in execute_cmd()."));
 			error = gda_freetds_make_error (tds_cnc->tds,
 			                                _("Unexpected result tokens in execute_cmd()."));
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 			return FALSE;
 		}
 	}
@@ -814,7 +814,7 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 		error = gda_freetds_make_error (tds_cnc->tds,
 		                                _("Unexpected return in execute_cmd()."));
 		gda_log_error (_("Unexpected return in execute_cmd()."));
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return FALSE;
 	}
 
@@ -837,7 +837,7 @@ gda_freetds_execute_query (GdaConnection *cnc, const gchar* sql)
 
 	if (tds_cnc->rc != TDS_SUCCEED) {
 		error = gda_freetds_make_error (tds_cnc->tds, NULL);
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return NULL;
 	}
 	recset = gda_freetds_recordset_new (cnc, TRUE);
@@ -951,7 +951,7 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
 			if (tds_cnc->rc != TDS_SUCCEED) {
 				error = gda_freetds_make_error(tds_cnc->tds,
 						               NULL);
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 			}
 			recset = gda_freetds_recordset_new (cnc, TRUE);
 			if (GDA_IS_FREETDS_RECORDSET (recset)) {
@@ -985,7 +985,7 @@ gda_freetds_provider_class_init (GdaFreeTDSProviderClass *klass)
 	provider_class->get_database = gda_freetds_provider_get_database;
 	provider_class->change_database = gda_freetds_provider_change_database;
 	provider_class->create_database_cnc = gda_freetds_provider_create_database_cnc;
-	provider_class->drop_database = gda_freetds_provider_drop_database;
+	provider_class->drop_database_cnc = gda_freetds_provider_drop_database_cnc;
 	provider_class->execute_command = gda_freetds_provider_execute_command;
 	provider_class->begin_transaction = gda_freetds_provider_begin_transaction;
 	provider_class->commit_transaction = gda_freetds_provider_commit_transaction;
@@ -1072,7 +1072,7 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 				gda_connection_event_set_sqlstate (error, _("Not available"));
 			}
 
-			gda_connection_add_error (cnc, error);
+			gda_connection_add_event (cnc, error);
 		} else {
 			gda_log_error (msg);
 		}

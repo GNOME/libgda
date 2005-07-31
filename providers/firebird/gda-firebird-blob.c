@@ -126,12 +126,12 @@ gda_firebird_blob_open (GdaBlob *blob,
 		
 		fcnc = g_object_get_data (G_OBJECT (priv->cnc), CONNECTION_DATA);
 		if (!fcnc) {
-			gda_connection_add_error_string (priv->cnc, _("Invalid Firebird handle"));
+			gda_connection_add_event_string (priv->cnc, _("Invalid Firebird handle"));
 			return -1;
 		}
 		
 		if (isc_start_transaction (fcnc->status, &(priv->ftr), 1, &(fcnc->handle), 0, NULL)) {
-			gda_connection_add_error_string (priv->cnc, _("Unable to start transaction"));
+			gda_connection_add_event_string (priv->cnc, _("Unable to start transaction"));
 			return -1;
 		}
 		
@@ -142,7 +142,7 @@ gda_firebird_blob_open (GdaBlob *blob,
 		}
 	}
 	
-	gda_connection_add_error_string (priv->cnc, _("Blob already open"));
+	gda_connection_add_event_string (priv->cnc, _("Blob already open"));
 	
 	return -1;
 }
@@ -173,7 +173,7 @@ gda_firebird_blob_read (GdaBlob *blob,
 	
 		fcnc = g_object_get_data (G_OBJECT (priv->cnc), CONNECTION_DATA);
 		if (!fcnc) {
-			gda_connection_add_error_string (priv->cnc, _("Invalid Firebird handle"));
+			gda_connection_add_event_string (priv->cnc, _("Invalid Firebird handle"));
 			return -1;
 		}
 	
@@ -196,11 +196,11 @@ gda_firebird_blob_read (GdaBlob *blob,
 			return 0;
 		}
 		else
-			gda_connection_add_error_string (priv->cnc, _("Error getting blob segment."));
+			gda_connection_add_event_string (priv->cnc, _("Error getting blob segment."));
 
 	}
 		
-	gda_connection_add_error_string (priv->cnc, _("Can't read a closed Blob"));
+	gda_connection_add_event_string (priv->cnc, _("Can't read a closed Blob"));
 	
 	return -1;
 }
@@ -221,7 +221,7 @@ gda_firebird_blob_close (GdaBlob *blob)
 	
 		fcnc = g_object_get_data (G_OBJECT (priv->cnc), CONNECTION_DATA);
 		if (!fcnc) {
-			gda_connection_add_error_string (priv->cnc, _("Invalid Firebird handle"));
+			gda_connection_add_event_string (priv->cnc, _("Invalid Firebird handle"));
 			return -1;
 		}
 		
@@ -237,10 +237,10 @@ gda_firebird_blob_close (GdaBlob *blob)
 			return 0;
 		}
 		else
-			gda_connection_add_error_string (priv->cnc, _("Unable to close blob."));
+			gda_connection_add_event_string (priv->cnc, _("Unable to close blob."));
 	}
 
-	gda_connection_add_error_string (priv->cnc, _("Blob is closed"));
+	gda_connection_add_event_string (priv->cnc, _("Blob is closed"));
 
 	return -1;
 }

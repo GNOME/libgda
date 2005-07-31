@@ -92,7 +92,7 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 			    && GDA_IS_CONNECTION (scnc->gda_cnc)) {
 				error = gda_sybase_make_error (scnc,
 				                               _("Attempt setting a nonnullable field to null."));
-				gda_connection_add_error (scnc->gda_cnc, error);
+				gda_connection_add_event (scnc->gda_cnc, error);
 			} else {
 				sybase_error_msg (_("Attempt setting a nonnullable field to null."));
 			}
@@ -207,7 +207,7 @@ gda_sybase_set_value_general (GdaSybaseConnectionData *scnc,
 		error = gda_sybase_make_error (scnc, 
 			_("cslib cannot convert type %d"),
 			field->fmt.datatype);
-		gda_connection_add_error (scnc->gda_cnc, error);
+		gda_connection_add_event (scnc->gda_cnc, error);
 		return FALSE;
 	}
 
@@ -222,7 +222,7 @@ gda_sybase_set_value_general (GdaSybaseConnectionData *scnc,
 		error = gda_sybase_make_error (scnc,
 		        _("data conversion failed for type %d"),
 			field->fmt.datatype);
-		gda_connection_add_error (scnc->gda_cnc, error);
+		gda_connection_add_event (scnc->gda_cnc, error);
 		sybase_check_messages(scnc->gda_cnc);
 		return FALSE;
 	}

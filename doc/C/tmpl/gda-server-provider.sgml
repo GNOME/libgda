@@ -83,6 +83,28 @@ Base class for implementing new providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_get_specs ##### -->
+<para>
+
+</para>
+
+@provider: 
+@action_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_perform_action_params ##### -->
+<para>
+
+</para>
+
+@provider: 
+@params: 
+@action_type: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_create_database_cnc ##### -->
 <para>
 
@@ -94,30 +116,7 @@ Base class for implementing new providers
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_get_specs_to_create_database ##### -->
-<para>
-
-</para>
-
-@provider: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_create_database ##### -->
-<para>
-
-</para>
-
-@provider: 
-@params: 
-@error: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@cnc: 
-@name: 
-
-
-<!-- ##### FUNCTION gda_server_provider_drop_database ##### -->
+<!-- ##### FUNCTION gda_server_provider_drop_database_cnc ##### -->
 <para>
 
 </para>

@@ -55,7 +55,7 @@ fetch_row (GdaDataModel *model, GdaLdapRecordset *recset, gulong rownum)
 	g_return_val_if_fail (GDA_IS_LDAP_RECORDSET (recset), NULL);
 
 	if (!recset->ldap_res) {
-		gda_connection_add_error_string (recset->cnc, _("Invalid LDAP handle"));
+		gda_connection_add_event_string (recset->cnc, _("Invalid LDAP handle"));
 		return NULL;
 	}
 
@@ -66,7 +66,7 @@ fetch_row (GdaDataModel *model, GdaLdapRecordset *recset, gulong rownum)
 	field_count = ldap_num_fields (recset->ldap_res);
 */
 	if (rownum < 0 || rownum >= row_count) {
-		gda_connection_add_error_string (recset->cnc, _("Row number out of range"));
+		gda_connection_add_event_string (recset->cnc, _("Row number out of range"));
 		return NULL;
 	}
 
@@ -173,7 +173,7 @@ gda_ldap_recordset_describe_column (GdaDataModelBase *model, gint col)
 	g_return_val_if_fail (GDA_IS_LDAP_RECORDSET (recset), NULL);
 
 	if (!recset->ldap_res) {
-		gda_connection_add_error_string (recset->cnc, _("Invalid LDAP handle"));
+		gda_connection_add_event_string (recset->cnc, _("Invalid LDAP handle"));
 		return NULL;
 	}
 
@@ -278,7 +278,7 @@ gda_ldap_recordset_append_values (GdaDataModelBase *model, const GList *values)
 
 /*	cols = ldap_num_fields (recset->ldap_res);*/
 	if (cols != g_list_length ((GList *) values)) {
-		gda_connection_add_error_string (
+		gda_connection_add_event_string (
 			recset->cnc,
 			_("Attempt to insert a row with an invalid number of columns"));
 		return NULL;
@@ -293,7 +293,7 @@ gda_ldap_recordset_append_values (GdaDataModelBase *model, const GList *values)
 
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 		if (!fa) {
-			gda_connection_add_error_string (
+			gda_connection_add_event_string (
 				recset->cnc,
 				_("Could not retrieve column's information"));
 			g_string_free (sql, TRUE);
@@ -311,7 +311,7 @@ gda_ldap_recordset_append_values (GdaDataModelBase *model, const GList *values)
 		const GdaValue *val = (const GdaValue *) l->data;
 
 		if (!val) {
-			gda_connection_add_error_string (
+			gda_connection_add_event_string (
 				recset->cnc,
 				_("Could not retrieve column's value"));
 			g_string_free (sql, TRUE);
@@ -331,7 +331,7 @@ gda_ldap_recordset_append_values (GdaDataModelBase *model, const GList *values)
 /*	rc = ldap_real_query (recset->ldap_res->handle, sql->str, strlen (sql->str));*/
 	g_string_free (sql, TRUE);
 /*	if (rc != 0) {
-		gda_connection_add_error (
+		gda_connection_add_event (
 			recset->cnc, gda_ldap_make_error (recset->ldap_res->handle));
 		return NULL;
 	}

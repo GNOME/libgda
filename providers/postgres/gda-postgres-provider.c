@@ -50,18 +50,19 @@ static const gchar *gda_postgres_provider_get_server_version (GdaServerProvider 
 static const gchar *gda_postgres_provider_get_database (GdaServerProvider *provider,
 							GdaConnection *cnc);
 
-static gchar *gda_postgres_provider_get_specs_create_database  (GdaServerProvider *provider);
+static gchar *gda_postgres_provider_get_specs  (GdaServerProvider *provider, GdaClientSpecsType type);
 
-static gboolean gda_postgres_provider_create_database_params (GdaServerProvider *provider, 
-							      GdaParameterList *params, GError **error);
+static gboolean gda_postgres_provider_perform_action_params (GdaServerProvider *provider, 
+							     GdaParameterList *params, 
+							     GdaClientSpecsType type, GError **error);
 
 static gboolean gda_postgres_provider_create_database_cnc (GdaServerProvider *provider,
 							   GdaConnection *cnc,
 							   const gchar *name);
 
-static gboolean gda_postgres_provider_drop_database (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     const gchar *name);
+static gboolean gda_postgres_provider_drop_database_cnc (GdaServerProvider *provider,
+							 GdaConnection *cnc,
+							 const gchar *name);
 
 static gboolean gda_postgres_provider_create_table (GdaServerProvider *provider,
 						    GdaConnection *cnc,
@@ -169,10 +170,10 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->close_connection = gda_postgres_provider_close_connection;
 	provider_class->get_server_version = gda_postgres_provider_get_server_version;
 	provider_class->get_database = gda_postgres_provider_get_database;
-	provider_class->get_specs_create_database = gda_postgres_provider_get_specs_create_database;
-	provider_class->create_database_params = gda_postgres_provider_create_database_params;
+	provider_class->get_specs = gda_postgres_provider_get_specs;
+	provider_class->perform_action_params = gda_postgres_provider_perform_action_params;
 	provider_class->create_database_cnc = gda_postgres_provider_create_database_cnc;
-	provider_class->drop_database = gda_postgres_provider_drop_database;
+	provider_class->drop_database_cnc = gda_postgres_provider_drop_database_cnc;
 	provider_class->create_table = gda_postgres_provider_create_table;
 	provider_class->drop_table = gda_postgres_provider_drop_table;
 	provider_class->create_index = gda_postgres_provider_create_index;
@@ -564,7 +565,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	g_free(conn_string);
 
 	if (PQstatus (pconn) != CONNECTION_OK) {
-		gda_connection_add_error (cnc, gda_postgres_make_error (pconn, NULL));
+		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
 		PQfinish(pconn);
 		return FALSE;
 	}
@@ -629,7 +630,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	priv_data->version = version;
 	priv_data->version_float = version_float;
 	if (get_connection_type_list (priv_data) != 0) {
-		gda_connection_add_error (cnc, gda_postgres_make_error (pconn, NULL));
+		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
 		PQfinish(pconn);
 		g_free (priv_data);
 		return FALSE;
@@ -686,7 +687,7 @@ gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
 		return NULL;
 	}
 
@@ -703,7 +704,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
 		return NULL;
 	}
 
@@ -721,7 +722,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 
 			pg_res = PQexec(pconn, arr[n]);
 			if (pg_res == NULL) {
-				gda_connection_add_error (cnc, gda_postgres_make_error (pconn, NULL));
+				gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
 				reclist = NULL;
@@ -745,7 +746,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				}
 			}
 			else {
-				gda_connection_add_error (cnc, gda_postgres_make_error (pconn, pg_res));
+				gda_connection_add_event (cnc, gda_postgres_make_error (pconn, pg_res));
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
 				reclist = NULL;
@@ -774,16 +775,16 @@ gda_postgres_provider_get_database (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
 		return NULL;
 	}
 
 	return (const char *) PQdb ((const PGconn *) priv_data->pconn);
 }
 
-/* get_specs_create_database handler for the GdaPostgresProvider class */ 
+/* get_specs handler for the GdaPostgresProvider class */ 
 static gchar *
-gda_postgres_provider_get_specs_create_database (GdaServerProvider *provider)
+gda_postgres_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType type)
 {
 	gchar *specs, *file;
 	gint len;
@@ -791,11 +792,17 @@ gda_postgres_provider_get_specs_create_database (GdaServerProvider *provider)
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
 
-	file = g_build_filename (LIBGDA_DATA_DIR, "postgres_specs_create_db.xml", NULL);
-	if (g_file_get_contents (file, &specs, &len, NULL)) 
-		return specs;
-	else
+	switch (type) {
+	case GDA_CLIENT_SPECS_CREATE_DATABASE:
+		file = g_build_filename (LIBGDA_DATA_DIR, "postgres_specs_create_db.xml", NULL);
+		if (g_file_get_contents (file, &specs, &len, NULL)) 
+			return specs;
+		else
+			return NULL;
+		break;
+	default:
 		return NULL;
+	}
 }
 
 #define string_from_string_param(param) \
@@ -811,10 +818,11 @@ gda_postgres_provider_get_specs_create_database (GdaServerProvider *provider)
 	gda_value_get_boolean (gda_parameter_get_value (param)) : FALSE
 
 
-/* create_database_params handler for the GdaPostgresProvider class */ 
+/* perform_action_params handler for the GdaPostgresProvider class */ 
 static gboolean
-gda_postgres_provider_create_database_params (GdaServerProvider *provider,
-					      GdaParameterList *params, GError **error)
+gda_postgres_provider_perform_action_params (GdaServerProvider *provider,
+					     GdaParameterList *params, 
+					     GdaClientSpecsType type, GError **error)
 {
 	const gchar *pq_host;
 	const gchar *pq_db;
@@ -839,93 +847,101 @@ gda_postgres_provider_create_database_params (GdaServerProvider *provider,
 	
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 
-	if (params) {
-		param = gda_parameter_list_find (params, "HOST");
-		pq_host = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "PORT");
-		pq_port = int_from_int_param (param);
-
-		param = gda_parameter_list_find (params, "OPTIONS");
-		pq_options = string_from_string_param (param);
+	switch (type) {
+	case GDA_CLIENT_SPECS_CREATE_DATABASE:
+		if (params) {
+			param = gda_parameter_list_find (params, "HOST");
+			pq_host = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "PORT");
+			pq_port = int_from_int_param (param);
+			
+			param = gda_parameter_list_find (params, "OPTIONS");
+			pq_options = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "ADM_LOGIN");
+			pq_user = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "ADM_PASSWORD");
+			pq_pwd = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "TEMPLATE");
+			pq_db = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "REQUIRESSL");
+			pq_ssl = bool_from_bool_param (param);
+			
+			param = gda_parameter_list_find (params, "DATABASE");
+			pq_newdb = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "ENCODING");
+			pq_enc = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "OWNER");
+			pq_owner = string_from_string_param (param);
+			
+			param = gda_parameter_list_find (params, "TABLESPACE");
+			pq_tspace = string_from_string_param (param);
+		}
+		if (!pq_newdb) {
+			g_set_error (error, 0, 0,
+				     _("Missing parameter 'DATABASE'"));
+			return FALSE;
+		}
 		
-		param = gda_parameter_list_find (params, "ADM_LOGIN");
-		pq_user = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "ADM_PASSWORD");
-		pq_pwd = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "TEMPLATE");
-		pq_db = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "REQUIRESSL");
-		pq_ssl = bool_from_bool_param (param);
-
-		param = gda_parameter_list_find (params, "DATABASE");
-		pq_newdb = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "ENCODING");
-		pq_enc = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "OWNER");
-		pq_owner = string_from_string_param (param);
-
-		param = gda_parameter_list_find (params, "TABLESPACE");
-		pq_tspace = string_from_string_param (param);
-	}
-	if (!pq_newdb) {
-		g_set_error (error, 0, 0,
-			     _("Missing parameter 'DATABASE'"));
-		return FALSE;
-	}
-
-	/* open a connection with the administrator settings */
-	string = g_string_new ("");
-	if (pq_host && *pq_host)
-		g_string_append_printf (string, "host=%s", pq_host);
-	if (pq_port > 0)
-		g_string_append_printf (string, " port=%d", pq_port);
-	g_string_append_printf (string, " dbname=%s", pq_db ? pq_db : "template1");
-	if (pq_options && *pq_options)
-		g_string_append_printf (string, " options=%s", pq_options);
-	if (pq_user && *pq_user)
-		g_string_append_printf (string, " user=%s", pq_user);
-	if (pq_pwd && *pq_pwd)
-		g_string_append_printf (string, " password=%s", pq_pwd);
-	if (pq_ssl)
-		g_string_append (string, " requiressl=1");
-
-	pconn = PQconnectdb (string->str);
-	g_string_free (string, TRUE);
-	
-	if (PQstatus (pconn) != CONNECTION_OK) {
-		g_set_error (error, 0, 0, PQerrorMessage (pconn));
+		/* open a connection with the administrator settings */
+		string = g_string_new ("");
+		if (pq_host && *pq_host)
+			g_string_append_printf (string, "host=%s", pq_host);
+		if (pq_port > 0)
+			g_string_append_printf (string, " port=%d", pq_port);
+		g_string_append_printf (string, " dbname=%s", pq_db ? pq_db : "template1");
+		if (pq_options && *pq_options)
+			g_string_append_printf (string, " options=%s", pq_options);
+		if (pq_user && *pq_user)
+			g_string_append_printf (string, " user=%s", pq_user);
+		if (pq_pwd && *pq_pwd)
+			g_string_append_printf (string, " password=%s", pq_pwd);
+		if (pq_ssl)
+			g_string_append (string, " requiressl=1");
+		
+		pconn = PQconnectdb (string->str);
+		g_string_free (string, TRUE);
+		
+		if (PQstatus (pconn) != CONNECTION_OK) {
+			g_set_error (error, 0, 0, PQerrorMessage (pconn));
+			PQfinish(pconn);
+			
+			return FALSE;
+		}
+		
+		/* Ask to create a database */
+		string = g_string_new ("CREATE DATABASE ");
+		g_string_append (string, pq_newdb);
+		if (pq_owner)
+			g_string_append_printf (string, " OWNER=%s", pq_owner);
+		if (pq_db)
+			g_string_append_printf (string, " TEMPLATE=%s", pq_db);
+		if (pq_enc)
+			g_string_append_printf (string, " ENCODING='%s'", pq_enc);
+		if (pq_tspace)
+			g_string_append_printf (string, " TABLESPACE=%s", pq_tspace);
+		
+		pg_res = PQexec (pconn, string->str);
+		g_string_free (string, TRUE);
+		
+		if (!pg_res || PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
+			g_set_error (error, 0, 0, PQresultErrorMessage (pg_res));
+			retval = FALSE;
+		}
+		
 		PQfinish(pconn);
-
-		return FALSE;
+		break;
+	default:
+		g_set_error (error, 0, 0,
+			     _("Method not handled by this provider"));
+		return NULL;
 	}
-
-	/* Ask to create a database */
-	string = g_string_new ("CREATE DATABASE ");
-	g_string_append (string, pq_newdb);
-	if (pq_owner)
-		g_string_append_printf (string, " OWNER=%s", pq_owner);
-	if (pq_db)
-		g_string_append_printf (string, " TEMPLATE=%s", pq_db);
-	if (pq_enc)
-		g_string_append_printf (string, " ENCODING='%s'", pq_enc);
-	if (pq_tspace)
-		g_string_append_printf (string, " TABLESPACE=%s", pq_tspace);
-
-	pg_res = PQexec (pconn, string->str);
-	g_string_free (string, TRUE);
-
-	if (!pg_res || PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
-		g_set_error (error, 0, 0, PQresultErrorMessage (pg_res));
-		retval = FALSE;
-	}
-
-	PQfinish(pconn);
 	
 	return retval;
 }
@@ -952,11 +968,11 @@ gda_postgres_provider_create_database_cnc (GdaServerProvider *provider,
 	return retval;
 }
 
-/* drop_database handler for the GdaPostgresProvider class */
+/* drop_database_cnc handler for the GdaPostgresProvider class */
 static gboolean
-gda_postgres_provider_drop_database (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     const gchar *name)
+gda_postgres_provider_drop_database_cnc (GdaServerProvider *provider,
+					 GdaConnection *cnc,
+					 const gchar *name)
 {
 	gboolean retval;
 	gchar *sql;
@@ -1277,7 +1293,7 @@ gda_postgres_provider_get_last_insert_id (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
 		return NULL;
 	}
 
@@ -1315,7 +1331,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 		                write_option = "READ ONLY";
            	        } 
                         else {
-		                gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		                gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
 				return FALSE;
 			}
 		}
@@ -1324,10 +1340,10 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 		        isolation_level = g_strconcat ("SET TRANSACTION ISOLATION LEVEL READ COMMITTED ", write_option, NULL);
 		        break;
 		case GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED :
-		        gda_connection_add_error_string (cnc, _("Transactions are not supported in read uncommitted isolation level"));
+		        gda_connection_add_event_string (cnc, _("Transactions are not supported in read uncommitted isolation level"));
 		        return FALSE;
 		case GDA_TRANSACTION_ISOLATION_REPEATABLE_READ :
-		        gda_connection_add_error_string (cnc, _("Transactions are not supported in repeatable read isolation level"));
+		        gda_connection_add_event_string (cnc, _("Transactions are not supported in repeatable read isolation level"));
 		        return FALSE;
 		case GDA_TRANSACTION_ISOLATION_SERIALIZABLE :
 		        isolation_level = g_strconcat ("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE ", write_option, NULL);
@@ -1385,7 +1401,7 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
 		return FALSE;
 	}
 
@@ -1398,7 +1414,7 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 	}
 
 	if (result == FALSE)
-		gda_connection_add_error (cnc, gda_postgres_make_error (pconn, pg_res));
+		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, pg_res));
 
 	return result;
 }

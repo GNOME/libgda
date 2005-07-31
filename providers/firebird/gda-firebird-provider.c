@@ -51,9 +51,9 @@ static gboolean		gda_firebird_provider_change_database (GdaServerProvider *provi
 static gboolean 	gda_firebird_provider_create_database_cnc (GdaServerProvider *provider,
 					  		           GdaConnection *cnc,
 							           const gchar *name);
-static gboolean 	gda_firebird_provider_drop_database (GdaServerProvider *provider,
-							     GdaConnection *cnc,
-							     const gchar *name);
+static gboolean 	gda_firebird_provider_drop_database_cnc (GdaServerProvider *provider,
+								 GdaConnection *cnc,
+								 const gchar *name);
 static GList 		*gda_firebird_provider_execute_command (GdaServerProvider *provider,
 								GdaConnection *cnc,
 								GdaCommand *cmd,
@@ -97,7 +97,7 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 	provider_class->get_database = gda_firebird_provider_get_database;
 	provider_class->change_database = gda_firebird_provider_change_database;
 	provider_class->create_database_cnc = gda_firebird_provider_create_database_cnc;
-	provider_class->drop_database = gda_firebird_provider_drop_database;
+	provider_class->drop_database_cnc = gda_firebird_provider_drop_database_cnc;
 	provider_class->execute_command = gda_firebird_provider_execute_command;
 	provider_class->begin_transaction = gda_firebird_provider_begin_transaction;
 	provider_class->commit_transaction = gda_firebird_provider_commit_transaction;
@@ -628,14 +628,14 @@ fb_get_fields_metadata (GdaConnection *cnc,
 	
 	par = gda_parameter_list_find (params, "name");
 	if (!par) {
-		gda_connection_add_error_string (cnc,
+		gda_connection_add_event_string (cnc,
 				_("Table name is needed but none specified in parameter list"));
 		return NULL;
 	}
 
 	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
 	if (!table_name) {
-		gda_connection_add_error_string (cnc,
+		gda_connection_add_event_string (cnc,
 				_("Table name is needed but none specified in parameter list"));
 		return NULL;
 	}
@@ -817,7 +817,7 @@ gda_firebird_connection_make_error (GdaConnection *cnc,
 
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return;
 	}
 	
@@ -826,7 +826,7 @@ gda_firebird_connection_make_error (GdaConnection *cnc,
 	gda_connection_event_set_source (error, "[GDA Firebird]");
 	description = fb_sqlerror_get_description (fcnc, statement_type);
 	gda_connection_event_set_description (error, description);
-	gda_connection_add_error (cnc, error);	
+	gda_connection_add_event (cnc, error);	
 	g_free (description);
 }
 																								
@@ -855,7 +855,7 @@ gda_firebird_provider_open_connection (GdaServerProvider *provider,
 	/* get parameters */
 	fb_db = (gchar *) gda_quark_list_find (params, "DATABASE");
 	if (!fb_db) {
-		gda_connection_add_error_string (cnc, _("No database specified"));
+		gda_connection_add_event_string (cnc, _("No database specified"));
 		return FALSE;
 	}
 
@@ -934,7 +934,7 @@ gda_firebird_provider_close_connection (GdaServerProvider *provider,
 	
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
@@ -961,7 +961,7 @@ gda_firebird_provider_get_server_version (GdaServerProvider *provider,
 
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
@@ -980,7 +980,7 @@ gda_firebird_provider_get_database (GdaServerProvider *provider,
 
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return NULL;
 	}
 
@@ -1016,7 +1016,7 @@ gda_firebird_provider_create_database_cnc (GdaServerProvider *provider,
 	
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 	
@@ -1094,11 +1094,11 @@ gda_firebird_provider_run_sql (GList *reclist,
 	return reclist;
 }
 
-/* drop_database handler for the GdaFirebirdProvider class */
+/* drop_database_cnc handler for the GdaFirebirdProvider class */
 static gboolean
-gda_firebird_provider_drop_database (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     const gchar *name)
+gda_firebird_provider_drop_database_cnc (GdaServerProvider *provider,
+					 GdaConnection *cnc,
+					 const gchar *name)
 {
 	GdaFirebirdConnection *fcnc;
 	isc_db_handle db_handle = NULL;
@@ -1109,7 +1109,7 @@ gda_firebird_provider_drop_database (GdaServerProvider *provider,
 	/* Get current firebird connection */
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 	
@@ -1204,7 +1204,7 @@ gda_firebird_provider_begin_transaction (GdaServerProvider *provider,
 
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
@@ -1238,13 +1238,13 @@ gda_firebird_provider_commit_transaction (GdaServerProvider *provider,
 
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
 	ftr = g_object_get_data (G_OBJECT (xaction), TRANSACTION_DATA);
 	if (!ftr) {
-		gda_connection_add_error_string (cnc, _("Invalid transaction handle"));
+		gda_connection_add_event_string (cnc, _("Invalid transaction handle"));
 		return FALSE;
 	}
 
@@ -1276,13 +1276,13 @@ gda_firebird_provider_rollback_transaction (GdaServerProvider *provider,
 
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
 	ftr = g_object_get_data (G_OBJECT (xaction), TRANSACTION_DATA);
 	if (!ftr) {
-		gda_connection_add_error_string (cnc, _("Invalid transaction handle"));
+		gda_connection_add_event_string (cnc, _("Invalid transaction handle"));
 		return FALSE;
 	}
 

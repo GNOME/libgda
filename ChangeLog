@@ -1,3 +1,20 @@
+2005-07-31  Vivien Malerba <malerba@gnome-db.org>
+	
+	* libgda/gda-client.[ch]: added gda_client_drop_database()
+	* libgda/gda-connection.[ch]: removed gda_connection_create_database()
+	where gda_client_create_database() can be used instead, and removed
+	gda_connection_drop_database() where gda_client_drop_database() can
+	be used instead.
+	* libgda/gda-connection.[ch]: modified API to include a GError ** argument
+	for easy error reporting.
+	* libgda/gda-server-provider.[ch]: changed the virtual methods regarding
+	database creation and destruction: a get_specs virtual method has been added
+	to get an XML string describing the required parameters to perform a specific
+	action (existing actions are listed in a GdaClientSpecsType enum), and
+	added a perform_action_params virtual method to do the actual action
+	for which the specs have been obtained (such as "create a database").
+	* doc/C: documentation update
+
 2005-07-29  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-client.[ch]: added a GError to gda_client_open_connection() and

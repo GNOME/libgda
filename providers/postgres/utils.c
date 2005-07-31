@@ -182,7 +182,7 @@ get_pconn (GdaConnection *cnc)
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
 		return NULL;
 	}
 
@@ -214,7 +214,7 @@ gda_postgres_blob_open (GdaBlob *blob, GdaBlobMode mode)
 	priv->fd = lo_open (pconn, priv->blobid, pg_mode);
 	if (priv->fd < 0) {
 		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_error (priv->cnc, error);
+		gda_connection_add_event (priv->cnc, error);
 		return -1;
 	}
 
@@ -239,7 +239,7 @@ gda_postgres_blob_read (GdaBlob *blob, gpointer buf, gint size,
 	*bytes_read = lo_read (pconn, priv->fd, (gchar *) buf, size);
 	if (*bytes_read == -1) {
 		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_error (priv->cnc, error);
+		gda_connection_add_event (priv->cnc, error);
 		return -1;
 	}
 
@@ -263,7 +263,7 @@ gda_postgres_blob_write (GdaBlob *blob, gpointer buf, gint size,
 	*bytes_written = lo_write (pconn, priv->fd, (gchar *) buf, size);
 	if (*bytes_written == -1) {
 		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_error (priv->cnc, error);
+		gda_connection_add_event (priv->cnc, error);
 		return -1;
 	}
 
@@ -289,7 +289,7 @@ gda_postgres_blob_lseek (GdaBlob *blob, gint offset, gint whence)
 	result = lo_lseek (pconn, priv->fd, offset, whence);
 	if (result == -1) {
 		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_error (priv->cnc, error);
+		gda_connection_add_event (priv->cnc, error);
 	}
 
 	return result;
@@ -314,7 +314,7 @@ gda_postgres_blob_close (GdaBlob *blob)
 	result = lo_close (pconn, priv->fd);
 	if (result < 0) {
 		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_error (priv->cnc, error);
+		gda_connection_add_event (priv->cnc, error);
 	}
 
 	return (result >= 0) ? 0 : -1;
@@ -337,7 +337,7 @@ gda_postgres_blob_remove (GdaBlob *blob)
 	result = lo_unlink (pconn, priv->blobid);
 	if (result < 0) {
 		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_error (priv->cnc, error);
+		gda_connection_add_event (priv->cnc, error);
 	}
 
 	return (result >= 0) ? 0 : -1;
@@ -390,7 +390,7 @@ gda_postgres_blob_create (GdaBlob *blob, GdaConnection *cnc)
 	oid = lo_creat (pconn, INV_READ | INV_WRITE);
 	if (oid == 0) {
 		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_error (cnc, error);
+		gda_connection_add_event (cnc, error);
 		return FALSE;
 	}
 

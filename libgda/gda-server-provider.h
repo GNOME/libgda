@@ -31,6 +31,7 @@
 #include <libgda/gda-data-model-index.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-transaction.h>
+#include <libgda/gda-client.h>
 
 G_BEGIN_DECLS
 
@@ -74,15 +75,19 @@ struct _GdaServerProviderClass {
 	gboolean      (* change_database) (GdaServerProvider *provider,
 					   GdaConnection *cnc,
 					   const gchar *name);
-	gboolean      (* create_database_cnc) (GdaServerProvider *provider, /* deprecated */
-					       GdaConnection *cnc,
-					       const gchar *name);
-	gchar        *(* get_specs_create_database)  (GdaServerProvider *provider);
-	gboolean      (* create_database_params) (GdaServerProvider *provider, 
-						  GdaParameterList *params, GError **error);
-	gboolean      (* drop_database) (GdaServerProvider *provider, 
-					 GdaConnection *cnc, 
-					 const gchar *name);
+	/* actions with parameters */
+	gchar        *(* get_specs) (GdaServerProvider *provider, GdaClientSpecsType type);
+	gboolean      (* perform_action_params) (GdaServerProvider *provider, 
+						 GdaParameterList *params, GdaClientSpecsType type,
+						 GError **error);
+
+	/* database creation and destruction */
+	gboolean      (* create_database_cnc) (GdaServerProvider *provider,
+					       GdaConnection *cnc, const gchar *name);
+	gboolean      (* drop_database_cnc) (GdaServerProvider *provider, 
+					     GdaConnection *cnc, const gchar *name);
+
+	/* tables creation and destroying */
 	gboolean      (* create_table) (GdaServerProvider *provider, 
 					GdaConnection *cnc, 
 					const gchar *table_name,
@@ -91,6 +96,8 @@ struct _GdaServerProviderClass {
 	gboolean      (* drop_table) (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      const gchar *table_name);
+
+	/* index creation and destroying */
 	gboolean      (* create_index) (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					const GdaDataModelIndex *index,
@@ -158,15 +165,16 @@ const gchar  *gda_server_provider_get_database (GdaServerProvider *provider,
 gboolean      gda_server_provider_change_database (GdaServerProvider *provider,
 						   GdaConnection *cnc,
 						   const gchar *name);
+gchar        *gda_server_provider_get_specs  (GdaServerProvider *provider,
+					      GdaClientSpecsType action_type);
+gboolean      gda_server_provider_perform_action_params (GdaServerProvider *provider, 
+							 GdaParameterList *params, 
+							 GdaClientSpecsType action_type, 
+							 GError **error);
 gboolean      gda_server_provider_create_database_cnc (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       const gchar *name);
-gchar        *gda_server_provider_get_specs_to_create_database  (GdaServerProvider *provider);
-gboolean      gda_server_provider_create_database (GdaServerProvider *provider, 
-						   GdaParameterList *params, GError **error);
-gboolean      gda_server_provider_drop_database (GdaServerProvider *provider,
-						 GdaConnection *cnc,
-						 const gchar *name);
+						       GdaConnection *cnc, const gchar *name);
+gboolean      gda_server_provider_drop_database_cnc (GdaServerProvider *provider,
+						     GdaConnection *cnc, const gchar *name);
 gboolean      gda_server_provider_create_table (GdaServerProvider *provider,
 						GdaConnection *cnc,
 						const gchar *table_name,

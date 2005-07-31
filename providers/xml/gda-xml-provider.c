@@ -187,7 +187,7 @@ gda_xml_provider_open_connection (GdaServerProvider *provider,
 	t_uri = gda_quark_list_find (params, "URI");
 
 	if (!t_uri) {
-		gda_connection_add_error_string (cnc,
+		gda_connection_add_event_string (cnc,
 						 _("A full path must be specified on the "
 						   "connection string to open a database "
 						   "on the XML provider."));
@@ -219,7 +219,7 @@ gda_xml_provider_close_connection (GdaServerProvider *provider,
 
 	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb) {
-		gda_connection_add_error_string (cnc, _("Invalid XML handle"));
+		gda_connection_add_event_string (cnc, _("Invalid XML handle"));
 		return FALSE;
 	}
 
@@ -241,7 +241,7 @@ gda_xml_provider_get_server_version (GdaServerProvider *provider, GdaConnection 
 
 	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb) {
-		gda_connection_add_error_string (cnc, _("Invalid XML handle"));
+		gda_connection_add_event_string (cnc, _("Invalid XML handle"));
 		return NULL;
 	}
 
@@ -260,7 +260,7 @@ gda_xml_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 
 	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb) {
-		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
+		gda_connection_add_event_string (cnc, _("Invalid internal handle"));
 		return NULL;
 	}
 
@@ -275,7 +275,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 
 	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb) {
-		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
+		gda_connection_add_event_string (cnc, _("Invalid internal handle"));
 		return reclist;
 	}
 
@@ -326,7 +326,7 @@ process_table_commands (GList *reclist, GdaConnection *cnc, const gchar *str)
 
 	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb) {
-		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
+		gda_connection_add_event_string (cnc, _("Invalid internal handle"));
 		return reclist;
 	}
 
@@ -365,7 +365,7 @@ gda_xml_provider_create_database_cnc (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	gda_connection_add_error_string (cnc, _("Not Implemented"));
+	gda_connection_add_event_string (cnc, _("Not Implemented"));
 	return FALSE;
 }
 
@@ -503,20 +503,20 @@ get_table_fields (GdaConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *p
 	/* get parameters sent by client */
 	par = gda_parameter_list_find (params, "name");
 	if (!par) {
-		gda_connection_add_error_string (cnc, _("Invalid argument"));
+		gda_connection_add_event_string (cnc, _("Invalid argument"));
 		return NULL;
 	}
 
 	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
 	if (!table_name) {
-		gda_connection_add_error_string (cnc, _("Invalid argument"));
+		gda_connection_add_event_string (cnc, _("Invalid argument"));
 		return NULL;
 	}
 
 	/* find the table */
 	table = gda_xml_database_find_table (xmldb, table_name);
 	if (!table) {
-		gda_connection_add_error_string (cnc, _("Table %s not found"), table_name);
+		gda_connection_add_event_string (cnc, _("Table %s not found"), table_name);
 		return NULL;
 	}
 
@@ -534,7 +534,7 @@ get_table_fields (GdaConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *p
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (table), i);
 		if (!fa) {
 			g_object_unref (G_OBJECT (recset));
-			gda_connection_add_error_string (
+			gda_connection_add_event_string (
 				cnc, _("Could not get description for column"));
 
 			return NULL;

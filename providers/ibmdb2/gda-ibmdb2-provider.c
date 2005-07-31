@@ -57,9 +57,9 @@ static gboolean gda_ibmdb2_provider_change_database (GdaServerProvider *provider
 static gboolean gda_ibmdb2_provider_create_database_cnc (GdaServerProvider *provider,
                                                          GdaConnection *cnc,
                                                          const gchar *name);
-static gboolean gda_ibmdb2_provider_drop_database (GdaServerProvider *provider,
-                                                   GdaConnection *cnc,
-                                                   const gchar *name);
+static gboolean gda_ibmdb2_provider_drop_database_cnc (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       const gchar *name);
 static GList *gda_ibmdb2_provider_execute_command (GdaServerProvider *provider,
                                                    GdaConnection *cnc,
                                                    GdaCommand *cmd,
@@ -131,7 +131,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		t_alias = "sample";
 	
 /*	if ((t_host == NULL) || (t_user == NULL) || (t_password == NULL)) {
-		gda_connection_add_error_string (cnc, _("You must at least provide host, user and password to connect."));
+		gda_connection_add_event_string (cnc, _("You must at least provide host, user and password to connect."));
 		return FALSE;
 	}*/
 	
@@ -149,7 +149,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		g_free (conn_data);
 		conn_data = NULL;
 		
-		gda_connection_add_error_string (cnc, _("Could not allocate environment handle.\n"));
+		gda_connection_add_event_string (cnc, _("Could not allocate environment handle.\n"));
 		return FALSE;
 	}
 	conn_data->rc = SQLAllocHandle (SQL_HANDLE_DBC, conn_data->henv, &conn_data->hdbc);
@@ -176,7 +176,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		g_free (conn_data);
 		conn_data = NULL;
 
-		gda_connection_add_error_string (cnc, _("Could not set autocommit to off.\n"));
+		gda_connection_add_event_string (cnc, _("Could not set autocommit to off.\n"));
 		return FALSE;
 	}
 	*/
@@ -208,7 +208,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 
 		/* GetInfo is needed for obtaining database name */
 		/* is needed for tables schema */
-		gda_connection_add_error_string (cnc, _("SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"));
+		gda_connection_add_event_string (cnc, _("SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"));
 
 		conn_data->rc = SQLDisconnect (conn_data->hdbc);
 		conn_data->rc = SQLFreeHandle (SQL_HANDLE_DBC, conn_data->hdbc);
@@ -389,9 +389,9 @@ gda_ibmdb2_provider_create_database_cnc (GdaServerProvider *provider,
 
 
 static gboolean
-gda_ibmdb2_provider_drop_database (GdaServerProvider *provider,
-                                   GdaConnection *cnc,
-                                   const gchar *name)
+gda_ibmdb2_provider_drop_database_cnc (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       const gchar *name)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 	GdaIBMDB2ConnectionData *conn_data = NULL;
@@ -447,7 +447,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 
 	conn_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
         if (!conn_data) {
-		gda_connection_add_error_string (cnc, _("Invalid IBM DB2 handle"));
+		gda_connection_add_event_string (cnc, _("Invalid IBM DB2 handle"));
 		return NULL;
 	}
 	
@@ -577,7 +577,7 @@ gda_ibmdb2_provider_begin_transaction (GdaServerProvider *provider,
 
 	conn_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
         if (!conn_data) {
-		gda_connection_add_error_string (cnc, _("Invalid IBM DB2 handle"));
+		gda_connection_add_event_string (cnc, _("Invalid IBM DB2 handle"));
 		return FALSE;
 	}
 
@@ -685,7 +685,7 @@ gda_ibmdb2_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 
     conn_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
     if (!conn_data) {
-            gda_connection_add_error_string (cnc, _("Invalid IBM DB2 handle"));
+            gda_connection_add_event_string (cnc, _("Invalid IBM DB2 handle"));
             return NULL;
     }
     return conn_data->server_version;
@@ -760,7 +760,7 @@ static GdaDataModel
 
 	conn_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
         if (!conn_data) {
-		gda_connection_add_error_string (cnc, _("Invalid IBM DB2 handle"));
+		gda_connection_add_event_string (cnc, _("Invalid IBM DB2 handle"));
 		return NULL;
 	}
 
@@ -1062,7 +1062,7 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 	provider_class->get_database = gda_ibmdb2_provider_get_database;
 	provider_class->change_database = gda_ibmdb2_provider_change_database;
 	provider_class->create_database_cnc = gda_ibmdb2_provider_create_database_cnc;
-	provider_class->drop_database = gda_ibmdb2_provider_drop_database;
+	provider_class->drop_database_cnc = gda_ibmdb2_provider_drop_database_cnc;
 	provider_class->execute_command = gda_ibmdb2_provider_execute_command;
 	provider_class->begin_transaction = gda_ibmdb2_provider_begin_transaction;
 	provider_class->commit_transaction = gda_ibmdb2_provider_commit_transaction;

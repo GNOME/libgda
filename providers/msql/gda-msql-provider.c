@@ -176,13 +176,13 @@ static gboolean gda_msql_provider_open_connection(GdaServerProvider *p1,
 	sock=msqlConnect((char*)_host);
 	if (sock<0) {
 		error=gda_msql_make_error(sock);
-		gda_connection_add_error(cnc,error);
+		gda_connection_add_event(cnc,error);
 		return FALSE;
 	}
 	rc=msqlSelectDB(sock,(char*)_db);
 	if (rc<0) {
 		error=gda_msql_make_error(rc);
-		if (cnc) gda_connection_add_error(cnc,error);
+		if (cnc) gda_connection_add_event(cnc,error);
 		msqlClose(sock);
 		return FALSE;
 	}
@@ -239,7 +239,7 @@ static GList *process_sql_commands(GList *rl,GdaConnection *cnc,
 
 	sock=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
 	if ((!sock) || (*sock<0)) {
-		gda_connection_add_error_string(cnc,_("Invalid mSQL handle"));
+		gda_connection_add_event_string(cnc,_("Invalid mSQL handle"));
 		return NULL;
 	}
 	options=gda_connection_get_options(cnc);
@@ -254,7 +254,7 @@ static GList *process_sql_commands(GList *rl,GdaConnection *cnc,
 
 			rc=msqlQuery(*sock,arr[n]);
 			if (rc<0) {
-				gda_connection_add_error(cnc,gda_msql_make_error(rc));
+				gda_connection_add_event(cnc,gda_msql_make_error(rc));
 				break;
 			}
 			res=msqlStoreResult();
@@ -283,7 +283,7 @@ gda_msql_provider_get_database(GdaServerProvider *p,GdaConnection *cnc)
 	if (!GDA_IS_CONNECTION(cnc)) return NULL;
 	sock=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
 	if ((!sock) || (*sock<0)) {
-		gda_connection_add_error_string(cnc,_("Invalid mSQL handle"));
+		gda_connection_add_event_string(cnc,_("Invalid mSQL handle"));
 		return NULL;
 	}
 	dbname=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_DBNAME);
@@ -304,7 +304,7 @@ gda_msql_provider_change_database(GdaServerProvider *p,GdaConnection *cnc,
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
 	sock=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
 	if ((!sock) || (*sock<0)) {
-		gda_connection_add_error_string(cnc,_("Invalid mSQL handle"));
+		gda_connection_add_event_string(cnc,_("Invalid mSQL handle"));
 		return FALSE;
 	}
 	dbname=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_DBNAME);
@@ -312,7 +312,7 @@ gda_msql_provider_change_database(GdaServerProvider *p,GdaConnection *cnc,
 	if (!name) return FALSE;
 	rc=msqlSelectDB(*sock,(char*)name);
 	if (rc<0) {
-		gda_connection_add_error(cnc,gda_msql_make_error(rc));
+		gda_connection_add_event(cnc,gda_msql_make_error(rc));
 		return FALSE;
 	}
 	g_free(dbname);  
@@ -329,7 +329,7 @@ gda_msql_provider_create_database_cnc(GdaServerProvider *p,
 
 	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_error_string(cnc,
+	gda_connection_add_event_string(cnc,
 					_("mSQL allows database creation only through the msqladmin tool."));
 	return FALSE;
 }
@@ -343,7 +343,7 @@ gda_msql_provider_drop_database(GdaServerProvider *p,
 
 	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_error_string(cnc,
+	gda_connection_add_event_string(cnc,
 					_("mSQL allows database drops only through the msqladmin tool."));
 	return FALSE;
 }
@@ -390,7 +390,7 @@ gda_msql_provider_begin_transaction(GdaServerProvider *p,
 
 	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_error_string(cnc,
+	gda_connection_add_event_string(cnc,
 					_("mSQL doesn't support transactions."));
 	return FALSE;
 }
@@ -404,7 +404,7 @@ gda_msql_provider_commit_transaction(GdaServerProvider *p,
 
 	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_error_string(cnc,
+	gda_connection_add_event_string(cnc,
 					_("mSQL doesn't support transactions."));
 	return FALSE;
 }
@@ -418,7 +418,7 @@ gda_msql_provider_rollback_transaction(GdaServerProvider *p,
 
 	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_error_string(cnc,
+	gda_connection_add_event_string(cnc,
 					_("mSQL doesn't support transactions."));
 	return FALSE;
 }
@@ -575,24 +575,24 @@ get_table_fields(GdaConnection *cnc,GdaParameterList *params)
 	g_return_val_if_fail(GDA_IS_CONNECTION(cnc),NULL);
 	g_return_val_if_fail(params!=NULL,NULL);
 	if ((!sock) || (*sock<0)) {
-		gda_connection_add_error_string(cnc,_("Invalid mSQL handle"));
+		gda_connection_add_event_string(cnc,_("Invalid mSQL handle"));
 		return NULL;
 	}
 	par=gda_parameter_list_find(params,"name");
 	if (!par) {
-		gda_connection_add_error_string(cnc,
+		gda_connection_add_event_string(cnc,
 						_("Table name is needed but none specified in parameter list"));
 		return NULL;
 	}
 	table_name=gda_value_get_string((GdaValue*)gda_parameter_get_value(par));
 	if (!table_name) {
-		gda_connection_add_error_string(cnc,
+		gda_connection_add_event_string(cnc,
 						_("Table name is needed but none specified in parameter list"));
 		return NULL;
 	}
 	res=msqlListFields(*sock,(char*)table_name);
 	if (!res) {
-		gda_connection_add_error(cnc,gda_msql_make_error(*sock));
+		gda_connection_add_event(cnc,gda_msql_make_error(*sock));
 		return NULL;
 	}
 	rs=(GdaDataModelArray*)gda_data_model_array_new(9);

@@ -48,14 +48,14 @@ static GdaRow *fetch_row(GdaMsqlRecordset *rs,gulong rownum) {
 
 	g_return_val_if_fail(GDA_IS_MSQL_RECORDSET(rs),NULL);
 	if (!rs->res) {
-		gda_connection_add_error_string(rs->cnc,_("Invalid mSQL handle"));
+		gda_connection_add_event_string(rs->cnc,_("Invalid mSQL handle"));
 		return NULL;
 	}
 	row_count=msqlNumRows(rs->res);
 	if (!row_count) return NULL;
 	field_count=msqlNumFields(rs->res);
 	if ((rownum<0) || (rownum>=row_count)) {
-		gda_connection_add_error_string(rs->cnc,_("Row number out of bounds"));
+		gda_connection_add_event_string(rs->cnc,_("Row number out of bounds"));
 		return NULL;
 	}
 	msqlDataSeek(rs->res,rownum);
@@ -138,7 +138,7 @@ static GdaColumn
   
 	if (!GDA_IS_MSQL_RECORDSET(rs)) return NULL;
 	if (!rs->res) {
-		gda_connection_add_error_string(rs->cnc,_("Invalid mSQL handle"));
+		gda_connection_add_event_string(rs->cnc,_("Invalid mSQL handle"));
 		return NULL;
 	}
 	field_count=msqlNumFields(rs->res);
@@ -226,7 +226,7 @@ static const GdaRow
 	}
 	cols=msqlNumFields(rs->res);
 	if (cols!=g_list_length((GList*)values)) {
-		gda_connection_add_error_string(rs->cnc,
+		gda_connection_add_event_string(rs->cnc,
 						_("Attempt to insert a row with an invalid number of columns"));
 		return NULL;
 	}
@@ -238,7 +238,7 @@ static const GdaRow
     
 		fa=gda_data_model_describe_column(model,i);
 		if (!fa) {
-			gda_connection_add_error_string(rs->cnc,
+			gda_connection_add_event_string(rs->cnc,
 							_("Could not retrieve column's information"));
 			g_string_free(sql,TRUE);
 			return NULL;
@@ -252,7 +252,7 @@ static const GdaRow
 		const GdaValue *val=(const GdaValue*)lst->data;
    
 		if (!val) {
-			gda_connection_add_error_string(rs->cnc,
+			gda_connection_add_event_string(rs->cnc,
 							_("Could not retrieve column's value"));
 			g_string_free(sql,TRUE);
 			return NULL;
@@ -266,7 +266,7 @@ static const GdaRow
 	rc=msqlQuery(rs->sock,sql->str);
 	g_string_free(sql,TRUE);
 	if (rc<0) {
-		gda_connection_add_error(rs->cnc,gda_msql_make_error(rc));
+		gda_connection_add_event(rs->cnc,gda_msql_make_error(rc));
 		return NULL;
 	}
 	row=gda_row_new_from_list(model,values);

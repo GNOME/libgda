@@ -179,7 +179,7 @@ gda_odbc_provider_open_connection (GdaServerProvider *provider,
 	priv_data = g_new0 (GdaOdbcConnectionData, 1);
 	rc = SQLAllocEnv (&priv_data->henv);
 	if (!SQL_SUCCEEDED (rc)) {
-		gda_connection_add_error_string ( cnc,
+		gda_connection_add_event_string ( cnc,
 					_("Unable to SQLAllocEnv()..."));
 		g_free (priv_data);
 		return FALSE;
@@ -448,7 +448,7 @@ gda_odbc_provider_get_server_version (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Odbc handle"));
 		return NULL;
 	}
 
@@ -468,7 +468,7 @@ gda_odbc_provider_get_database (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Odbc handle"));
 		return NULL;
 	}
 
@@ -498,7 +498,7 @@ gda_odbc_provider_change_database (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Odbc handle"));
 		return FALSE;
 	}
 
@@ -528,7 +528,7 @@ gda_odbc_provider_begin_transaction (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Odbc handle"));
 		return FALSE;
 	}
 
@@ -559,7 +559,7 @@ gda_odbc_provider_commit_transaction (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Odbc handle"));
 		return FALSE;
 	}
 
@@ -589,7 +589,7 @@ gda_odbc_provider_rollback_transaction (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 	if (!priv_data) {
-		gda_connection_add_error_string (cnc, _("Invalid Odbc handle"));
+		gda_connection_add_event_string (cnc, _("Invalid Odbc handle"));
 		return FALSE;
 	}
 

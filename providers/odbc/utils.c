@@ -107,7 +107,7 @@ gda_odbc_emit_error ( GdaConnection *cnc,
 		list = g_list_append( list, error );
 	}
 
-	gda_connection_add_error_list( cnc, list );
+	gda_connection_add_event_list( cnc, list );
 }
 
 /*

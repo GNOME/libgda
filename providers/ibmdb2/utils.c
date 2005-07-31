@@ -78,6 +78,6 @@ gda_ibmdb2_emit_error (GdaConnection * cnc,
 	}
 	
 	if (list) {
-		gda_connection_add_error_list (cnc, list);
+		gda_connection_add_event_list (cnc, list);
 	}
 }

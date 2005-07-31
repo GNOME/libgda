@@ -106,15 +106,15 @@ gda_oracle_handle_error(gint result, GdaConnection *cnc,
 	case OCI_ERROR:
 		switch(type) {
 		case OCI_HTYPE_ERROR:
-			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->herr, type, file, line));
+			gda_connection_add_event (cnc, gda_oracle_make_error (priv_data->herr, type, file, line));
 			break;
 		case OCI_HTYPE_ENV:
-			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->henv, type, file, line));
+			gda_connection_add_event (cnc, gda_oracle_make_error (priv_data->henv, type, file, line));
 		default: ;
 		}
 		break;
 	default:
-		gda_connection_add_error_string (cnc, msg);
+		gda_connection_add_event_string (cnc, msg);
 	}
 	return FALSE;
 }

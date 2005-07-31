@@ -88,7 +88,7 @@ gda_ldap_provider_class_init (GdaLdapProviderClass *klass)
 	provider_class->close_connection = gda_ldap_provider_close_connection;
 	provider_class->get_database = gda_ldap_provider_get_database;
 	/*provider_class->create_database = gda_ldap_provider_create_database;
-	provider_class->drop_database = gda_ldap_provider_drop_database;
+	provider_class->drop_database_cnc = gda_ldap_provider_drop_database_cnc;
 	provider_class->execute_command = gda_ldap_provider_execute_command;*/
 	provider_class->begin_transaction = gda_ldap_provider_begin_transaction;
 	provider_class->commit_transaction = gda_ldap_provider_commit_transaction;
@@ -189,7 +189,7 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider,
 		 /* FIXME: try to use the struct ldap_error or 
 			ldap_perror or ldap_err2string */
 		/* error = gda_ldap_make_error (ldap);
-		gda_connection_add_error (cnc, error);*/
+		gda_connection_add_event (cnc, error);*/
 		
 		ldap_perror (ldap, "gda-ldap-provider: ldap_init");
 		
@@ -254,7 +254,7 @@ gda_ldap_provider_get_database (GdaServerProvider *provider,
 
 	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
 	if (!ldap) {
-		gda_connection_add_error_string (cnc, _("Invalid LDAP handle"));
+		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
 		return NULL;
 	}
 
@@ -487,13 +487,13 @@ gda_ldap_provider_begin_transaction (GdaServerProvider *provider,
 
 	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
 	if (!ldap) {
-		gda_connection_add_error_string (cnc, _("Invalid LDAP handle"));
+		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
 		return FALSE;
 	}
 
 /*	rc = ldap_real_query (ldap, "BEGIN", strlen ("BEGIN"));
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_ldap_make_error (ldap));
+		gda_connection_add_event (cnc, gda_ldap_make_error (ldap));
 		return FALSE;
 	}
 
@@ -516,13 +516,13 @@ gda_ldap_provider_commit_transaction (GdaServerProvider *provider,
 
 	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
 	if (!ldap) {
-		gda_connection_add_error_string (cnc, _("Invalid LDAP handle"));
+		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
 		return FALSE;
 	}
 
 /*	rc = ldap_real_query (ldap, "COMMIT", strlen ("COMMIT"));
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_ldap_make_error (ldap));
+		gda_connection_add_event (cnc, gda_ldap_make_error (ldap));
 		return FALSE;
 	}
 
@@ -545,13 +545,13 @@ gda_ldap_provider_rollback_transaction (GdaServerProvider *provider,
 
 	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
 	if (!ldap) {
-		gda_connection_add_error_string (cnc, _("Invalid LDAP handle"));
+		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
 		return FALSE;
 	}
 
 /*	rc = ldap_real_query (ldap, "ROLLBACK", strlen ("ROLLBACK"));
 	if (rc != 0) {
-		gda_connection_add_error (cnc, gda_ldap_make_error (ldap));
+		gda_connection_add_event (cnc, gda_ldap_make_error (ldap));
 		return FALSE;
 	}
 
@@ -584,7 +584,7 @@ gda_ldap_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 
 	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
 	if (!ldap) {
-		gda_connection_add_error_string (cnc, _("Invalid LDAP handle"));
+		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
 		return NULL;
 	}
 

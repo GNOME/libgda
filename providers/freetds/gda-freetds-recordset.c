@@ -375,14 +375,14 @@ GdaDataModel
 			if (tds_cnc->rc == TDS_FAIL) {
 				error = gda_freetds_make_error(tds_cnc->tds,
 				                               _("Error processing result rows.\n"));
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 				g_object_unref (recset);
 				recset = NULL;
 				return NULL;
 			} else if (tds_cnc->rc != TDS_NO_MORE_ROWS) {
 				error = gda_freetds_make_error(tds_cnc->tds,
 				                               _("Unexpected freetds return code in tds_process_row_tokens().\n"));
-				gda_connection_add_error (cnc, error);
+				gda_connection_add_event (cnc, error);
 				g_object_unref (recset);
 				recset = NULL;
 				return NULL;
@@ -392,14 +392,14 @@ GdaDataModel
 	if (tds_cnc->rc == TDS_FAIL) {
 		error = gda_freetds_make_error(tds_cnc->tds,
 		                               _("Error processing results.\n"));
-		gda_connection_add_error(cnc, error);
+		gda_connection_add_event(cnc, error);
 		g_object_unref (recset);
 		recset = NULL;
 		return NULL;
 	} else if (tds_cnc->rc != TDS_NO_MORE_RESULTS) {
 		error = gda_freetds_make_error(tds_cnc->tds,
 		                               _("Unexpected freetds return code in tds_process_result_tokens\n"));
-		gda_connection_add_error(cnc, error);
+		gda_connection_add_event(cnc, error);
 		g_object_unref (recset);
 		recset = NULL;
 		return NULL;

@@ -187,7 +187,7 @@ gda_postgres_recordset_get_row (GdaDataModelBase *model, gint row)
 
 	priv_data = recset->priv;
 	if (!priv_data->pg_res) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Invalid PostgreSQL handle"));
 		return NULL;
 	}
@@ -196,7 +196,7 @@ gda_postgres_recordset_get_row (GdaDataModelBase *model, gint row)
 		return NULL; /* For the last row don't add an error. */
 
 	if (row < 0 || row > priv_data->nrows) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Row number out of range"));
 		return NULL;
 	}
@@ -232,14 +232,14 @@ gda_postgres_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 
 	/* checks if the table name has been guessed */
 	if (priv_data->table_name == NULL) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Table name could not be guessed."));
 		return FALSE;
 	}
 
 	/* checks for correct number of columns */
         if (priv_data->ncolumns != gda_row_get_length (row)) {
-                gda_connection_add_error_string (priv_data->cnc,
+                gda_connection_add_event_string (priv_data->cnc,
                                                 _("Attempt to insert a row with an invalid number of columns"));
                 return FALSE;
         }
@@ -283,7 +283,7 @@ gda_postgres_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 	if (pg_res != NULL) {
 		/* update ok! */
 		if (PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
-			gda_connection_add_error (priv_data->cnc,
+			gda_connection_add_event (priv_data->cnc,
 						  gda_postgres_make_error (pg_conn, pg_res));
 			PQclear (pg_res);
 			return FALSE;
@@ -291,12 +291,12 @@ gda_postgres_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 		PQclear (pg_res);
 	}
 	else
-		gda_connection_add_error (priv_data->cnc,
+		gda_connection_add_event (priv_data->cnc,
 					  gda_postgres_make_error (pg_conn, NULL));
 
 	/* append row in hash table */
 	if (GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (model, row) == FALSE) {
-		gda_connection_add_error (priv_data->cnc,
+		gda_connection_add_event (priv_data->cnc,
                                                   gda_postgres_make_error (pg_conn, pg_res));
 		return FALSE;
 	}
@@ -329,14 +329,14 @@ gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 
 	/* checks if the given row belongs to the given model */
 	if (gda_row_get_model ((GdaRow *) row) != GDA_DATA_MODEL (model)) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Given row doesn't belong to the model."));
 		return FALSE;
 	}
 
 	/* checks if the table name has been guessed */
 	if (priv_data->table_name == NULL) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Table name could not be guessed."));
 		return FALSE;
 	}
@@ -369,7 +369,7 @@ gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 	}
 
 	if (uk == 0) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Model doesn't have at least one unique key."));
 	}
 	else {
@@ -387,12 +387,12 @@ gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 			if (PQresultStatus (pg_rm_res) == PGRES_COMMAND_OK)
 				status = TRUE;
 			else
-				gda_connection_add_error (priv_data->cnc,
+				gda_connection_add_event (priv_data->cnc,
 							  gda_postgres_make_error (pg_conn, pg_rm_res));
 			PQclear (pg_rm_res);
 		}
 		else
-			gda_connection_add_error (priv_data->cnc,
+			gda_connection_add_event (priv_data->cnc,
 						  gda_postgres_make_error (pg_conn, NULL));
 	}
 
@@ -430,14 +430,14 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	
 	/* checks if the given row belongs to the given model */
 	if (gda_row_get_model ((GdaRow *) row) != GDA_DATA_MODEL (model)) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Given row doesn't belong to the model."));
 		return FALSE;
 	}
 
 	/* checks if the table name has been guessed */
 	if (priv_data->table_name == NULL) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Table name could not be guessed."));
 		return FALSE;
 	}
@@ -497,11 +497,11 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	}
 
 	if (uk == 0) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Model doesn't have at least one non-modified unique key."));
 	}
 	else if (nuk == 0) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Model doesn't have any non-unique values to update."));
 	}
 	else {
@@ -525,12 +525,12 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 			if (PQresultStatus (pg_upd_res) == PGRES_COMMAND_OK)
 				status = TRUE;
 			else
-				gda_connection_add_error (priv_data->cnc,
+				gda_connection_add_event (priv_data->cnc,
 			        	                  gda_postgres_make_error (pg_conn, pg_upd_res));
 			PQclear (pg_upd_res);
 		}
 		else
-			gda_connection_add_error (priv_data->cnc,
+			gda_connection_add_event (priv_data->cnc,
 			       	                  gda_postgres_make_error (pg_conn, NULL));
 	}
 	
@@ -564,7 +564,7 @@ gda_postgres_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row
 	priv_data = recset->priv;
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						 _("Invalid PostgreSQL handle"));
 		return NULL;
 	}
@@ -573,13 +573,13 @@ gda_postgres_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row
 		return NULL; /* For the last row don't add an error. */
 
 	if (row < 0 || row > priv_data->nrows) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Row number out of range"));
 		return NULL;
 	}
 
 	if (col >= priv_data->ncolumns) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Column number out of range"));
 		return NULL;
 	}
@@ -694,13 +694,13 @@ gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
 	priv_data = recset->priv;
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Invalid PostgreSQL handle"));
 		return NULL;
 	}
 
 	if (col >= priv_data->ncolumns) {
-		gda_connection_add_error_string (priv_data->cnc,
+		gda_connection_add_event_string (priv_data->cnc,
 						_("Column out of range"));
 		return NULL;
 	}

@@ -50,6 +50,11 @@ typedef enum {
 	GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, /* params: "transaction" */
 } GdaClientEvent;
 
+typedef enum {
+	GDA_CLIENT_SPECS_CREATE_DATABASE,
+	GDA_CLIENT_SPECS_DROP_DATABASE
+} GdaClientSpecsType;
+
 typedef struct _GdaClientClass   GdaClientClass;
 typedef struct _GdaClientPrivate GdaClientPrivate;
 
@@ -114,10 +119,13 @@ void           gda_client_notify_transaction_cancelled_event (GdaClient *client,
 gchar         *gda_client_get_dsn_specs                      (GdaClient *client, const gchar *provider);
 
 /*
- * Database creation functions
+ * Database creation and destruction functions
  */
-gchar         *gda_client_get_specs_to_create_database       (GdaClient *client, const gchar *provider);
+gchar         *gda_client_get_provider_specs                 (GdaClient *client, const gchar *provider,
+							      GdaClientSpecsType type);
 gboolean       gda_client_create_database                    (GdaClient *client, const gchar *provider, 
+							      GdaParameterList *params, GError **error);
+gboolean       gda_client_drop_database                      (GdaClient *client, const gchar *provider,
 							      GdaParameterList *params, GError **error);
 
 /*

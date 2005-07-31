@@ -1842,7 +1842,7 @@
       You can manage errors with <link
       linkend="libgda-GdaConnectionEvent">GdaConnectionEvent</link> class and obtain them with
       function <link
-      linkend="gda-connection-get-errors"><emphasis>gda_connection_get_errors()
+      linkend="gda-connection-get-errors"><emphasis>gda_connection_get_events()
       </emphasis></link> so let's see them and an example: 
     </para>
     <para>
@@ -1878,7 +1878,7 @@
         GList *node;
         GdaConnectionEvent *error;
       
-        list = (GList *) gda_connection_get_errors (connection);
+        list = (GList *) gda_connection_get_events (connection);
       
         for (node = g_list_first (list); node != NULL; node = g_list_next (node))
           {
@@ -2210,14 +2210,28 @@
 	  Change the database being used in the active connection.
 	</para>
       </sect2>
-      <sect2 id="libgda-provider-create-database">
-	<title>create_database</title>
+      <sect2 id="libgda-provider-get-specs">
+	<title>get_specs</title>
+	<para>
+	  Returns the parameters which would be required to perform a specific
+	  action (such as create a database)
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-perform-action-params">
+	<title>perform_action_params</title>
+	<para>
+	  Actually perform an action (such as create a database) using parameters
+	  for which a list has been obtained using the get_specs() virtual method.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-create-database-cnc">
+	<title>create_database_cnc</title>
 	<para>
 	  Creates a new database whose name is received in a parameter.	
 	</para>
       </sect2>
-      <sect2 id="libgda-provider-drop-database">
-	<title>drop_database</title>
+      <sect2 id="libgda-provider-drop-database-cnc">
+	<title>drop_database_cnc</title>
 	<para>
 	  Drops an existing database whose name is received in a parameter.
 	</para>
