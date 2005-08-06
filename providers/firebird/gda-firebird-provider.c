@@ -821,7 +821,7 @@ gda_firebird_connection_make_error (GdaConnection *cnc,
 		return;
 	}
 	
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	gda_connection_event_set_code (error, isc_sqlcode (fcnc->status));
 	gda_connection_event_set_source (error, "[GDA Firebird]");
 	description = fb_sqlerror_get_description (fcnc, statement_type);

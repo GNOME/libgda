@@ -27,6 +27,7 @@
 #include <libgda/gda-client.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-connection-event.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-server-provider.h>
@@ -43,7 +44,7 @@ struct _GdaConnectionPrivate {
 	gchar                *username;
 	gchar                *password;
 	gboolean              is_open;
-	GList                *error_list;
+	GList                *events_list;
 	GList                *recset_list;
 };
 
@@ -116,7 +117,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->username = NULL;
 	cnc->priv->password = NULL;
 	cnc->priv->is_open = FALSE;
-	cnc->priv->error_list = NULL;
+	cnc->priv->events_list = NULL;
 	cnc->priv->recset_list = NULL;
 }
 
@@ -143,7 +144,7 @@ gda_connection_finalize (GObject *object)
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
 
-	gda_connection_event_list_free (cnc->priv->error_list);
+	gda_connection_event_list_free (cnc->priv->events_list);
 
 	g_list_foreach (cnc->priv->recset_list, (GFunc) g_object_unref, NULL);
 
@@ -203,7 +204,8 @@ gda_connection_new (GdaClient *client,
 		    const gchar *dsn,
 		    const gchar *username,
 		    const gchar *password,
-		    GdaConnectionOptions options)
+		    GdaConnectionOptions options,
+		    GError **error)
 {
 	GdaConnection *cnc;
 	GdaDataSourceInfo *dsn_info;
@@ -218,6 +220,8 @@ gda_connection_new (GdaClient *client,
 	dsn_info = gda_config_find_data_source (dsn);
 	if (!dsn_info) {
 		gda_log_error (_("Data source %s not found in configuration"), dsn);
+		g_set_error (error, 0, 0,
+			     _("Data source %s not found in configuration"), dsn);
 		return NULL;
 	}
 
@@ -273,29 +277,35 @@ gda_connection_new (GdaClient *client,
 	if (!gda_server_provider_open_connection (provider, cnc, params,
 						  cnc->priv->username,
 						  cnc->priv->password)) {
-		const GList *errors_copy;
+		const GList *events;
 
-		errors_copy = gda_connection_get_events (cnc);
-		/* notify the GdaClient of the error, since
-		   that's the only way we can notify it of errors
-		   when creating the connection */
-		if (errors_copy) {
+		events = gda_connection_get_events (cnc);
+		if (events) {
 			GList *l;
 
-			for (l = (GList *) errors_copy; l != NULL; l = l->next)
-				gda_client_notify_error_event (client, cnc, GDA_CONNNECTION_EVENT (l->data));
+			for (l = (GList *) events; l != NULL; l = l->next) {
+				GdaConnectionEvent *event;
+
+				event = GDA_CONNECTION_EVENT (l->data);
+				if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR) {
+					if (error && !(*error))
+						g_set_error (error, 0, 0,
+							     gda_connection_event_get_description (event));
+					gda_client_notify_error_event (client, cnc, GDA_CONNECTION_EVENT (l->data));
+				}
+			}
 		}
 		gda_quark_list_free (params);
 		g_object_unref (G_OBJECT (cnc));
 		return NULL;
 	}
+	cnc->priv->is_open = TRUE;
 
 	/* notify action */
 	gda_client_notify_connection_opened_event (client, cnc);
 
 	/* free memory */
 	gda_quark_list_free (params);
-	cnc->priv->is_open = TRUE;
 
 	return cnc;
 }
@@ -512,35 +522,30 @@ gda_connection_get_password (GdaConnection *cnc)
 /**
  * gda_connection_add_event
  * @cnc: a #GdaConnection object.
- * @error: is stored internally, so you don't need to unref it.
+ * @event: is stored internally, so you don't need to unref it.
  *
- * Adds an error to the given connection. This function is usually
- * called by providers, to inform clients of errors that happened
+ * Adds an event to the given connection. This function is usually
+ * called by providers, to inform clients of events that happened
  * during some operation.
  *
  * As soon as a provider (or a client, it does not matter) calls this
- * function with an @error object which is a fatal error,
+ * function with an @event object which is an error,
  * the connection object (and the associated #GdaClient object)
  * emits the "error" signal, to which clients can connect to be
- * informed of errors.
+ * informed of events.
  *
+ * WARNING: the reference to the @event object is stolen by this function!
  */
 void
-gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *error)
+gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 {
-	GList *err_list;
-
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (error));
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
-	err_list = cnc->priv->error_list;
-	gda_connection_event_list_free (err_list);
-	
-	err_list = g_list_append (NULL, error);
-	cnc->priv->error_list = err_list;
+	cnc->priv->events_list = g_list_append (cnc->priv->events_list, event);
 
-	if (gda_connection_event_get_event_type (error) == GDA_CONNNECTION_EVENT_FATAL)
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, cnc->priv->error_list);
+	if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR)
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, event);
 }
 
 /**
@@ -569,7 +574,7 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	vsprintf (sz, str, args);
 	va_end (args);
 	
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	gda_connection_event_set_description (error, sz);
 	gda_connection_event_set_code (error, -1);
 	gda_connection_event_set_source (error, gda_connection_get_provider (cnc));
@@ -579,37 +584,36 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 }
 
 /**
- * gda_connection_add_event_list
+ * gda_connection_add_events_list
  * @cnc: a #GdaConnection object.
- * @error_list: a list of #GdaConnectionEvent.
+ * @events_list: a list of #GdaConnectionEvent.
  *
  * This is just another convenience function which lets you add
- * a list of #GdaConnectionEvent's to the given connection. As with
+ * a list of #GdaConnectionEvent's to the given connection.*
+ * As with
  * #gda_connection_add_event and #gda_connection_add_event_string,
  * this function makes the connection object emit the "error"
- * signal. The only difference is that, instead of a notification
- * for each error, this function only does one notification for
- * the whole list of errors.
+ * signal for each error event.
  *
- * @error_list is copied to an internal list and freed.
+ * @events_list is copied to an internal list and freed.
  */
 void
-gda_connection_add_event_list (GdaConnection *cnc, GList *error_list)
+gda_connection_add_events_list (GdaConnection *cnc, GList *events_list)
 {
 	GList *l;
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (error_list != NULL);
+	g_return_if_fail (events_list != NULL);
 
-	l = cnc->priv->error_list;
-	gda_connection_event_list_free (l);
-	l = gda_connection_event_list_copy (error_list);
+	cnc->priv->events_list = g_list_concat (cnc->priv->events_list, events_list);
 
-	cnc->priv->error_list = l;
 	/* notify errors */
-	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, l);
+	for (l = events_list; l ; l = g_list_next (l))
+		if (gda_connection_event_get_event_type (GDA_CONNECTION_EVENT (l->data)) ==
+		    GDA_CONNECTION_EVENT_ERROR)
+			g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, l->data);
 
-	gda_connection_event_list_free (error_list);
+	g_list_free (events_list);
 }
 
 /**
@@ -617,22 +621,16 @@ gda_connection_add_event_list (GdaConnection *cnc, GList *error_list)
  * @cnc: a #GdaConnection object.
  *
  * This function lets you clear the list of #GdaConnectionEvent's of the
- * given connection. This is usefull to reuse a #GdaConnection 
- * because next uses of #gda_connection_errors will return an empty
- * list.
+ * given connection. 
  */
 void
 gda_connection_clear_events_list (GdaConnection *cnc)
 {
-	GList *l;
-
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-
-	if (cnc->priv->error_list != NULL) {
-		l = cnc->priv->error_list;
-		gda_connection_event_list_free (l);
-	  
-		cnc->priv->error_list =  NULL;
+	
+	if (cnc->priv->events_list != NULL) {
+		gda_connection_event_list_free (cnc->priv->events_list);
+		cnc->priv->events_list =  NULL;
 	}
 }
 
@@ -769,12 +767,37 @@ gda_connection_execute_command (GdaConnection *cnc,
 				GdaParameterList *params,
 				GError **error)
 {
+	GList *retval, *events;
+	gboolean has_error = FALSE;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
+	/* clean any previous connection events */
+	gda_connection_clear_events_list (cnc);
+
 	/* execute the command on the provider */
-	return gda_server_provider_execute_command (cnc->priv->provider_obj,
-						    cnc, cmd, params);
+	retval = gda_server_provider_execute_command (cnc->priv->provider_obj,
+						      cnc, cmd, params);
+
+	/* make an error if necessary */
+	events = cnc->priv->events_list;
+	while (events && !has_error) {
+		if (gda_connection_event_get_event_type (GDA_CONNECTION_EVENT (events->data)) == 
+		    GDA_CONNECTION_EVENT_ERROR) {
+			g_set_error (error, 0, 0,
+				     gda_connection_event_get_description (GDA_CONNECTION_EVENT (events->data)));
+			has_error = TRUE;
+		}
+		events = g_list_next (events);
+	}
+	if (has_error) {
+		g_list_foreach (retval, (GFunc) g_object_unref, NULL);
+		g_list_free (retval);
+		retval = NULL;
+	}
+
+	return retval;
 }
 
 /**
@@ -820,7 +843,7 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 				       GdaParameterList *params,
 				       GError **error)
 {
-	GList *reclist;
+	GList *reclist, *list;
 	GdaDataModel *model;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -831,9 +854,27 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 		return NULL;
 
 	model = GDA_DATA_MODEL (reclist->data);
-	g_object_ref (G_OBJECT (model));
+	if (model) {
+		GdaConnectionEvent *event;
+		gchar *str;
+		gint nb = gda_data_model_get_n_rows (model);
 
-	g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+		event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+		if (nb > 1)
+			str = g_strdup_printf ("(%d rows)", nb);
+		else
+			str = g_strdup_printf ("(%d row)", nb);
+		gda_connection_event_set_description (event, str);
+		g_free (str);
+		gda_connection_add_event (cnc, event);
+
+		g_object_ref (G_OBJECT (model));
+	}
+
+	list = reclist;
+	for (list = reclist; list; list = g_list_next (list))
+		if (list->data)
+			g_object_unref (list->data);
 	g_list_free (reclist);
 
 	return model;
@@ -1020,7 +1061,7 @@ const GList *
 gda_connection_get_events (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	return cnc->priv->error_list;
+	return cnc->priv->events_list;
 }
 
 /**

@@ -355,8 +355,10 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			SQLITEresult *sres;
 			GdaDataModel *recset;
 			gint status, i;
+			int changes;
 
 			sres = g_new0 (SQLITEresult, 1);
+			changes = sqlite3_total_changes (scnc->connection);
 			status = sqlite3_get_table (scnc->connection, arr[n],
 						   &sres->data,
 						   &sres->nrows,
@@ -364,18 +366,57 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 						   &errmsg);
 			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS ||
 			    status == SQLITE_OK) {
+				gchar *tststr;
 
-				recset = gda_sqlite_recordset_new (cnc, sres);
-				if (GDA_IS_DATA_MODEL (recset)) {
-					gda_data_model_set_command_text (recset, arr[n]);
-					gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
-					for (i = sres->ncols; i >= 0; i--)
-						gda_data_model_set_column_title (recset, i,
-								sres->data[i]);
-					reclist = g_list_append (reclist, recset);
+				g_strchug (arr[n]);
+				tststr = arr[n];
+				if (! g_ascii_strncasecmp (tststr, "SELECT", 6) ||
+				    ! g_ascii_strncasecmp (tststr, "EXPLAIN", 7)) {
+					recset = gda_sqlite_recordset_new (cnc, sres);
+					if (GDA_IS_DATA_MODEL (recset)) {
+						gda_data_model_set_command_text (recset, arr[n]);
+						gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+						for (i = sres->ncols; i >= 0; i--)
+							gda_data_model_set_column_title (recset, i,
+											 sres->data[i]);
+						reclist = g_list_append (reclist, recset);
+					}
 				}
-			} else {
-				GdaConnectionEvent *error = gda_connection_event_new ();
+				else {
+					int newchanges;
+					GdaConnectionEvent *event;
+					gchar *str, *tmp, *ptr;
+
+					/* don't return a data model */
+					reclist = g_list_append (reclist, NULL);
+					
+					/* generate a notice about changes */
+					newchanges = sqlite3_total_changes (scnc->connection);
+					event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+					ptr = tststr;
+					while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
+					       (*ptr != '\n'))
+						ptr++;
+					*ptr = 0;
+					tmp = g_ascii_strup (tststr, -1);
+					if (!strcmp (tmp, "DELETE"))
+						str = g_strdup_printf ("%s %d (see SQLite documentation for a \"DELETE * FROM table\" query)", 
+								       tmp, (newchanges - changes));
+					else {
+						if (!strcmp (tmp, "INSERT"))
+							str = g_strdup_printf ("%s %lld %d", tmp, 
+									       sqlite3_last_insert_rowid (scnc->connection),
+									       (newchanges - changes));
+						else
+							str = g_strdup_printf ("%s %d", tmp, (newchanges - changes));
+					}
+					gda_connection_event_set_description (event, str);
+					g_free (str);
+					gda_connection_add_event (cnc, event);
+				}
+			} 
+			else {
+				GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (error, errmsg);
 				gda_connection_add_event (cnc, error);
 
@@ -512,7 +553,7 @@ gda_sqlite_provider_perform_action_params (GdaServerProvider *provider,
 	default:
 		g_set_error (error, 0, 0,
 			     _("Method not handled by this provider"));
-		return NULL;
+		return FALSE;
 	}
 
 	return retval;
@@ -700,7 +741,7 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 	if (status == SQLITE_OK)
 		result = TRUE;
 	else {
-		GdaConnectionEvent *error = gda_connection_event_new ();
+		GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (error, errmsg);
 		gda_connection_add_event (cnc, error);
 
@@ -839,7 +880,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	/* Fetch more information in memory */
 	if (SQLITE_VERSION_NUMBER >= 3000000) {
 		Table *table;
-		gint i;
+		int i;
 		GList *list = NULL;
 
 		table = sqlite3FindTable (scnc->connection, tblname, NULL); /* FIXME: database name as 3rd arg */
@@ -897,7 +938,8 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 				while (index && !found) {
 					if (index->pTable == table) {
 						if ((index->nColumn == 1) && 
-						    (index->aiColumn == i) && index->autoIndex)
+						    (*(index->aiColumn) == i) && 
+						    index->autoIndex)
 							found = TRUE;
 					}
 					index = index->pNext;

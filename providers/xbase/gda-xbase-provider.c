@@ -381,7 +381,7 @@ gda_xbase_provider_make_error (GdaConnection *cnc)
 		return;
 	}
 
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	/* FIXME: get error information */
 	gda_connection_event_set_source (error, "[GDA Xbase]");
 

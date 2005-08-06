@@ -331,7 +331,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	mysql = real_open_connection (t_host, t_port ? atoi (t_port) : 0, t_unix_socket,
 				      t_db, t_user, t_password, t_use_ssl ? TRUE : FALSE, &gerror);
 	if (!mysql) {
-		error = gda_connection_event_new ();
+		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (error, gerror && gerror->message ? 
 					   gerror->message : "NO DESCRIPTION");
                 gda_connection_event_set_code (error, gerror ? gerror->code : -1);
@@ -409,6 +409,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 			gint rc;
 			MYSQL_RES *mysql_res;
 			GdaMysqlRecordset *recset;
+			gchar *tststr;
 
 			/* if the connection is in read-only mode, just allow SELECT,
 			   SHOW commands */
@@ -434,12 +435,51 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 				break;
 			}
 
-			mysql_res = mysql_store_result (mysql);
-			recset = gda_mysql_recordset_new (cnc, mysql_res, mysql);
-			if (GDA_IS_MYSQL_RECORDSET (recset)) {
-				gda_data_model_set_command_text ( (GdaDataModel*) recset, arr[n]);
-				gda_data_model_set_command_type ( (GdaDataModel*) recset, GDA_COMMAND_TYPE_SQL);
-				reclist = g_list_append (reclist, recset);
+			/* command was executed OK */
+			g_strchug (arr[n]);
+			tststr = arr[n];
+			if (! g_ascii_strncasecmp (tststr, "SELECT", 6) ||
+			    ! g_ascii_strncasecmp (tststr, "SHOW", 4) ||
+			    ! g_ascii_strncasecmp (tststr, "DESCRIBE", 6) ||
+			    ! g_ascii_strncasecmp (tststr, "EXPLAIN", 7)) {
+				mysql_res = mysql_store_result (mysql);
+				recset = gda_mysql_recordset_new (cnc, mysql_res, mysql);
+				if (GDA_IS_MYSQL_RECORDSET (recset)) {
+					gda_data_model_set_command_text ( (GdaDataModel*) recset, arr[n]);
+					gda_data_model_set_command_type ( (GdaDataModel*) recset, GDA_COMMAND_TYPE_SQL);
+					reclist = g_list_append (reclist, recset);
+				}
+			}
+			else {
+				int changes;
+				GdaConnectionEvent *event;
+				gchar *str, *tmp, *ptr;
+				
+				/* don't return a data model */
+				reclist = g_list_append (reclist, NULL);
+				
+				/* generate a notice about changes */
+				changes = mysql_affected_rows (mysql);
+				event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+				ptr = tststr;
+				while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
+				       (*ptr != '\n'))
+					ptr++;
+				*ptr = 0;
+				tmp = g_ascii_strup (tststr, -1);
+				if (!strcmp (tmp, "INSERT")) {
+					if (mysql_insert_id (mysql) != 0)
+						str = g_strdup_printf ("%s %lld %d", tmp, 
+								       mysql_insert_id (mysql),
+								       changes);
+					else
+						str = g_strdup_printf ("%s NOID %d", tmp, changes);
+				}
+				else
+					str = g_strdup_printf ("%s %d", tmp, changes);
+				gda_connection_event_set_description (event, str);
+				g_free (str);
+				gda_connection_add_event (cnc, event);
 			}
 
 			n++;
@@ -624,7 +664,7 @@ gda_mysql_provider_perform_action_params (GdaServerProvider *provider,
 	default:
 		g_set_error (error, 0, 0,
 			     _("Method not handled by this provider"));
-		return NULL;
+		return FALSE;
 	}
 
 	return retval;

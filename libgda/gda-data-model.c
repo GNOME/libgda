@@ -1358,7 +1358,7 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 
 		gdacol = gda_data_model_describe_column (model, i);
 		coltype = gda_column_get_gdatype (gdacol);
-		g_string_append_printf (string, "COL %d is a %s\n", i+1, gda_type_to_string (coltype));
+		/*g_string_append_printf (string, "COL %d is a %s\n", i+1, gda_type_to_string (coltype));*/
 		if ((coltype == GDA_VALUE_TYPE_BIGINT) ||
 		    (coltype == GDA_VALUE_TYPE_BIGUINT) ||
 		    (coltype == GDA_VALUE_TYPE_INTEGER) ||

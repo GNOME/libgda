@@ -538,6 +538,7 @@ void sqlite3AlterBeginAddColumn(Parse *pParse, SrcList *pSrc){
   }
   pNew->iDb = iDb;
   pNew->addColOffset = pTab->addColOffset;
+  pNew->nRef = 1;
 
   /* Begin a transaction and increment the schema cookie.  */
   sqlite3BeginWriteOperation(pParse, 0, iDb);

@@ -175,7 +175,7 @@ print_errors (const GList *list)
 
 	tmp = (GList *) list;
 	for (tmp = (GList *) list; tmp; tmp = tmp->next) {
-		GdaConnectionEvent *error = GDA_CONNNECTION_EVENT (tmp->data);
+		GdaConnectionEvent *error = GDA_CONNECTION_EVENT (tmp->data);
 		g_print ("\t\t\t%s\n", gda_connection_event_get_description (error));
 	}
 }

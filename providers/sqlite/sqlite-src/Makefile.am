@@ -13,7 +13,7 @@ libsqlite_la_SOURCES = \
 	btree.c \
 	btree.h \
 	build.c \
-	config.h \
+	callback.c \
 	date.c \
 	delete.c \
 	expr.c \
@@ -37,6 +37,7 @@ libsqlite_la_SOURCES = \
 	parse.c \
 	parse.h \
 	pragma.c \
+	prepare.c \
 	printf.c \
 	random.c \
 	select.c \

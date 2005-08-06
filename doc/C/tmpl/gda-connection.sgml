@@ -173,15 +173,6 @@ Management of connections to data sources
 @Varargs: 
 
 
-<!-- ##### FUNCTION gda_connection_add_event_list ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@error_list: 
-
-
 <!-- ##### FUNCTION gda_connection_get_events ##### -->
 <para>
 

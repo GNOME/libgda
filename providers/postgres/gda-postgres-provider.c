@@ -631,7 +631,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	priv_data->version_float = version_float;
 	if (get_connection_type_list (priv_data) != 0) {
 		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
-		PQfinish(pconn);
+		PQfinish (pconn);
 		g_free (priv_data);
 		return FALSE;
 	}
@@ -729,21 +729,37 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				break;
 			} 
 			
-			status = PQresultStatus(pg_res);
+			status = PQresultStatus (pg_res);
 			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS	||
 			    status == PGRES_EMPTY_QUERY			||
 			    status == PGRES_TUPLES_OK 			||
 			    status == PGRES_COMMAND_OK) {
-				recset = gda_postgres_recordset_new (cnc, pg_res);
-				if (GDA_IS_DATA_MODEL (recset)) {
-					gda_data_model_set_command_text (recset, arr[n]);
-					gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
-					for (i = PQnfields (pg_res) - 1; i >= 0; i--)
-						gda_data_model_set_column_title (recset, i, 
-									PQfname (pg_res, i));
 
-					reclist = g_list_append (reclist, recset);
+				if (status == PGRES_COMMAND_OK) {
+					GdaConnectionEvent *event;
+					gchar *str;
+					
+					event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+					str = g_strdup (PQcmdStatus (pg_res));
+					gda_connection_event_set_description (event, str);
+					g_free (str);
+					gda_connection_add_event (cnc, event);
 				}
+				
+				if (status == PGRES_TUPLES_OK) {
+					recset = gda_postgres_recordset_new (cnc, pg_res);
+					if (GDA_IS_DATA_MODEL (recset)) {
+						gda_data_model_set_command_text (recset, arr[n]);
+						gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+						for (i = PQnfields (pg_res) - 1; i >= 0; i--)
+							gda_data_model_set_column_title (recset, i, 
+											 PQfname (pg_res, i));
+					
+						reclist = g_list_append (reclist, recset);
+					}
+				}
+				else
+					reclist = g_list_append (reclist, NULL);
 			}
 			else {
 				gda_connection_add_event (cnc, gda_postgres_make_error (pconn, pg_res));
@@ -940,7 +956,7 @@ gda_postgres_provider_perform_action_params (GdaServerProvider *provider,
 	default:
 		g_set_error (error, 0, 0,
 			     _("Method not handled by this provider"));
-		return NULL;
+		return FALSE;
 	}
 	
 	return retval;
@@ -1388,7 +1404,6 @@ gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 	return gda_postgres_provider_single_command (pg_prv, cnc, "ROLLBACK"); 
 }
 
-/* Really does the BEGIN/ROLLBACK/COMMIT */
 static gboolean 
 gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 				      GdaConnection *cnc,

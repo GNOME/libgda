@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 2002 The GNOME Foundation.
+ * Copyright (C) 2002 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
@@ -51,7 +51,7 @@ gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 	ub4 errcode;
 	gchar *source;
 
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 
 	if (hndlp != NULL) {
 		OCIErrorGet ((dvoid *) hndlp,
@@ -392,7 +392,7 @@ gda_oracle_set_value (GdaValue *value,
 	ub1 min;
 	ub1 sec;
 
-	gchar *string_buffer;
+	gchar *string_buffer, *tmp;
 
 	if (-1 == (ora_value->indicator)) {
 		gda_value_set_null (value);
@@ -408,7 +408,10 @@ gda_oracle_set_value (GdaValue *value,
 		memcpy (string_buffer, ora_value->value, ora_value->defined_size);
 		string_buffer[ora_value->defined_size] = '\0';
 		g_strchomp(string_buffer);
-		gda_value_set_string (value, string_buffer);
+		tmp = g_locale_to_utf8 (string_buffer, -1, NULL, NULL, NULL);
+		gda_value_set_string (value, tmp);
+		g_free (tmp);
+		g_free (string_buffer);
 		break;
 	case GDA_VALUE_TYPE_BIGINT:
 		gda_value_set_bigint (value, atoll (ora_value->value));
@@ -426,10 +429,15 @@ gda_oracle_set_value (GdaValue *value,
 		gda_value_set_double (value, atof (ora_value->value));
 		break;
 	case GDA_VALUE_TYPE_NUMERIC:
-		numeric.number = ora_value->value;
-		numeric.precision = 5; /* FIXME */
-		numeric.width = 5; /* FIXME */
+		string_buffer = g_malloc0 (ora_value->defined_size+1);
+		memcpy (string_buffer, ora_value->value, ora_value->defined_size);
+		string_buffer [ora_value->defined_size] = '\0';
+		g_strchomp (string_buffer);
+		numeric.number = string_buffer;
+		numeric.precision = 0; /* FIXME */
+		numeric.width = 0; /* FIXME */
 		gda_value_set_numeric (value, &numeric);
+		g_free (string_buffer);
 		break;
 	case GDA_VALUE_TYPE_DATE:
 		OCIDateGetDate ((CONST OCIDate *) ora_value->value,

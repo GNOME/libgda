@@ -30,7 +30,7 @@ gda_mysql_make_error (MYSQL *handle)
 {
 	GdaConnectionEvent *error;
 
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	if (handle != NULL) {
 		gda_connection_event_set_description (error, mysql_error (handle));
 		gda_connection_event_set_code (error, mysql_errno (handle));

@@ -31,7 +31,7 @@ struct _GdaConnectionEventPrivate {
 	GdaConnectionEventCode  gda_code;
 	gchar                  *source;
 	gchar                  *sqlstate;
-	GdaConnectionEventType  type; /* default is GDA_CONNNECTION_EVENT_FATAL */
+	GdaConnectionEventType  type; /* default is GDA_CONNECTION_EVENT_ERROR */
 };
 
 static void gda_connection_event_class_init (GdaConnectionEventClass *klass);
@@ -80,7 +80,7 @@ static void
 gda_connection_event_init (GdaConnectionEvent *event, GdaConnectionEventClass *klass)
 {
 	event->priv = g_new0 (GdaConnectionEventPrivate, 1);
-	event->priv->type = GDA_CONNNECTION_EVENT_FATAL;
+	event->priv->type = GDA_CONNECTION_EVENT_ERROR;
 	event->priv->gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
 }
 
@@ -93,11 +93,12 @@ gda_connection_event_init (GdaConnectionEvent *event, GdaConnectionEventClass *k
  * Returns: the event object.
  */
 GdaConnectionEvent *
-gda_connection_event_new (void)
+gda_connection_event_new (GdaConnectionEventType type)
 {
 	GdaConnectionEvent *event;
 
-	event = GDA_CONNNECTION_EVENT (g_object_new (GDA_TYPE_CONNNECTION_EVENT, NULL));
+	event = GDA_CONNECTION_EVENT (g_object_new (GDA_TYPE_CONNECTION_EVENT, NULL));
+	event->priv->type = type;
 	return event;
 }
 
@@ -106,7 +107,7 @@ gda_connection_event_finalize (GObject *object)
 {
 	GdaConnectionEvent *event = (GdaConnectionEvent *) object;
 
-	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (event));
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
 	/* free memory */
 	if (event->priv->description)
@@ -183,7 +184,7 @@ gda_connection_event_list_free (GList * events)
 void
 gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEventType type)
 {
-	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (event));
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 	g_return_if_fail (event->priv);
 
 	event->priv->type = type;
@@ -200,8 +201,8 @@ gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEve
 GdaConnectionEventType
 gda_connection_event_get_event_type (GdaConnectionEvent *event)
 {
-	g_return_val_if_fail (GDA_IS_CONNNECTION_EVENT (event), GDA_CONNNECTION_EVENT_FATAL);
-	g_return_val_if_fail (event->priv, GDA_CONNNECTION_EVENT_FATAL);
+	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), GDA_CONNECTION_EVENT_ERROR);
+	g_return_val_if_fail (event->priv, GDA_CONNECTION_EVENT_ERROR);
 
 	return event->priv->type;
 }
@@ -215,7 +216,7 @@ gda_connection_event_get_event_type (GdaConnectionEvent *event)
 const gchar *
 gda_connection_event_get_description (GdaConnectionEvent *event)
 {
-	g_return_val_if_fail (GDA_IS_CONNNECTION_EVENT (event), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), NULL);
 	return event->priv->description;
 }
 
@@ -229,7 +230,7 @@ gda_connection_event_get_description (GdaConnectionEvent *event)
 void
 gda_connection_event_set_description (GdaConnectionEvent *event, const gchar *description)
 {
-	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (event));
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
 	if (event->priv->description)
 		g_free (event->priv->description);
@@ -245,7 +246,7 @@ gda_connection_event_set_description (GdaConnectionEvent *event, const gchar *de
 glong
 gda_connection_event_get_code (GdaConnectionEvent * event)
 {
-	g_return_val_if_fail (GDA_IS_CONNNECTION_EVENT (event), -1);
+	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), -1);
 	return event->priv->provider_code;
 }
 
@@ -261,7 +262,7 @@ gda_connection_event_get_code (GdaConnectionEvent * event)
 void
 gda_connection_event_set_code (GdaConnectionEvent *event, glong code)
 {
-	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (event));
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 	event->priv->provider_code = code;
 }
 
@@ -276,7 +277,7 @@ gda_connection_event_set_code (GdaConnectionEvent *event, glong code)
 GdaConnectionEventCode
 gda_connection_event_get_gda_code (GdaConnectionEvent *event)
 {
-	g_return_val_if_fail (GDA_IS_CONNNECTION_EVENT (event), GDA_CONNECTION_EVENT_CODE_UNKNOWN);
+	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), GDA_CONNECTION_EVENT_CODE_UNKNOWN);
 	return event->priv->gda_code;
 }
 
@@ -292,7 +293,7 @@ gda_connection_event_get_gda_code (GdaConnectionEvent *event)
 void
 gda_connection_event_set_gda_code (GdaConnectionEvent *event, GdaConnectionEventCode code)
 {
-	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (event));
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 	event->priv->gda_code = code;
 }
 
@@ -306,7 +307,7 @@ gda_connection_event_set_gda_code (GdaConnectionEvent *event, GdaConnectionEvent
 const gchar *
 gda_connection_event_get_source (GdaConnectionEvent *event)
 {
-	g_return_val_if_fail (GDA_IS_CONNNECTION_EVENT (event), 0);
+	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), 0);
 	return event->priv->source;
 }
 
@@ -320,7 +321,7 @@ gda_connection_event_get_source (GdaConnectionEvent *event)
 void
 gda_connection_event_set_source (GdaConnectionEvent *event, const gchar *source)
 {
-	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (event));
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
 	if (event->priv->source)
 		g_free (event->priv->source);
@@ -336,7 +337,7 @@ gda_connection_event_set_source (GdaConnectionEvent *event, const gchar *source)
 const gchar *
 gda_connection_event_get_sqlstate (GdaConnectionEvent *event)
 {
-	g_return_val_if_fail (GDA_IS_CONNNECTION_EVENT (event), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), NULL);
 	return event->priv->sqlstate;
 }
 
@@ -350,7 +351,7 @@ gda_connection_event_get_sqlstate (GdaConnectionEvent *event)
 void
 gda_connection_event_set_sqlstate (GdaConnectionEvent *event, const gchar *sqlstate)
 {
-	g_return_if_fail (GDA_IS_CONNNECTION_EVENT (event));
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
 	if (event->priv->sqlstate)
 		g_free (event->priv->sqlstate);

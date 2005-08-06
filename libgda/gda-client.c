@@ -54,7 +54,7 @@ static void gda_client_class_init (GdaClientClass *klass);
 static void gda_client_init       (GdaClient *client, GdaClientClass *klass);
 static void gda_client_finalize   (GObject *object);
 
-static void connection_error_cb (GdaConnection *cnc, GList *error_list, gpointer user_data);
+static void connection_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client);
 
 enum {
 	EVENT_NOTIFICATION,
@@ -74,7 +74,6 @@ emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, .
 	va_list args;
 	gchar sz[2048];
 	GdaConnectionEvent *error;
-	GList *list;
 
 	/* build the message string */
 	va_start (args, format);
@@ -84,12 +83,10 @@ emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, .
 	g_print ("Error: %s\n", sz);
 
 	/* create the error list */
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	gda_connection_event_set_description (error, sz);
 	gda_connection_event_set_source (error, "[GDA client]");
-
-	list = g_list_append (NULL, error);
-	connection_error_cb (cnc, list, client);
+	gda_connection_add_event (cnc, error);
 }
 
 static void
@@ -111,16 +108,12 @@ free_hash_provider (gpointer key, gpointer value, gpointer user_data)
  */
 
 static void
-connection_error_cb (GdaConnection *cnc, GList *error_list, gpointer user_data)
+connection_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client)
 {
-	GList *l;
-	GdaClient *client = (GdaClient *) user_data;
-
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
-	/* notify actions */
-	for (l = error_list; l != NULL; l = l->next)
-		gda_client_notify_error_event (client, cnc, GDA_CONNNECTION_EVENT (l->data));
+	/* notify error */
+	gda_client_notify_error_event (client, cnc, error);
 }
 
 static void
@@ -408,18 +401,22 @@ gda_client_open_connection (GdaClient *client,
 		if (!prv)
 			prv = find_or_load_provider (client, dsn_info->provider);
 	
-		if (prv) 
-			cnc = gda_connection_new (client, prv->provider, dsn, username, password, options);
+		if (prv) {
+			cnc = gda_connection_new (client, prv->provider, dsn, username, password, 
+						  options, error);
+
+			if (cnc) {
+				/* add cnc to our private list */
+				client->priv->connections = g_list_append (client->priv->connections, cnc);
+				g_object_weak_ref (G_OBJECT (cnc), (GWeakNotify) cnc_weak_cb, client);
+				g_signal_connect (G_OBJECT (cnc), "error",
+						  G_CALLBACK (connection_error_cb), client);
+			}
+		}
 		else 
 			g_set_error (error, GDA_CLIENT_ERROR, 0, 
 				     _("Datasource configuration error: could not find provider '%s'"),
 				     dsn_info->provider);
-		
-		/* add list to our private list */
-		client->priv->connections = g_list_append (client->priv->connections, cnc);
-		g_object_weak_ref (G_OBJECT (cnc), (GWeakNotify) cnc_weak_cb, client);
-		g_signal_connect (G_OBJECT (cnc), "error",
-				  G_CALLBACK (connection_error_cb), client);
 	}
 	else {
 		g_warning (_("Datasource configuration error: no provider specified"));

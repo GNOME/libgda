@@ -1759,7 +1759,7 @@ gda_oracle_fill_md_data (const gchar *tblname,
 			return NULL;
 		}
 
-		value = gda_value_new_boolean (nullable > 0);
+		value = gda_value_new_boolean (! (nullable > 0));
 		rowlist = g_list_append (rowlist, value);
 
 		if (!h_table_index) {

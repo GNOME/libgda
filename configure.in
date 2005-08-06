@@ -375,47 +375,41 @@ fi
 postgresdir=""
 if test $try_postgres = true
 then
-	AC_CHECK_HEADER(libpq-fe.h, pq_ok=yes, pq_ok=no, [])
-	if test $pq_ok = yes ; then
-		postgresdir=yes
-		POSTGRES_LIBS="-lpq"
-	else
-		AC_MSG_CHECKING(for Postgres files)
-		for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
-		do
-			if test -f $d/$lib/libpq.so
-			then
-				AC_MSG_RESULT(found Postgres in $d)
-				postgresdir=$d
-				break
-			fi
-		done
-		if test x$postgresdir = x
+	AC_MSG_CHECKING(for Postgres files)
+	for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
+	do
+		if test -f $d/$lib/libpq.so
 		then
-			AC_MSG_WARN(Postgres backend not used)
-		else
-			if test -f ${postgresdir}/include/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include
-			elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
-			elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
-                        elif test -f ${postgresdir}/include/postgresql/8.0/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include/8.0/postgresql
-                        elif test -f ${postgresdir}/include/postgresql/7.4/libpq-fe.h
-			then
-				POSTGRES_CFLAGS=-I${postgresdir}/include/7.4/postgresql
-			else
-				AC_MSG_WARN(Postgres include files not found, backend not used)
-				postgresdir=""
-			fi
-			POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
-			AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
+			AC_MSG_RESULT(found Postgres in $d)
+			postgresdir=$d
+			break
 		fi
+	done
+	if test x$postgresdir = x
+	then
+		AC_MSG_WARN(Postgres backend not used)
+	else
+		if test -f ${postgresdir}/include/libpq-fe.h
+		then
+			POSTGRES_CFLAGS=-I${postgresdir}/include
+		elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
+		then
+			POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
+		elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
+		then
+			POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
+                elif test -f ${postgresdir}/include/postgresql/8.0/libpq-fe.h
+		then
+			POSTGRES_CFLAGS=-I${postgresdir}/include/8.0/postgresql
+                elif test -f ${postgresdir}/include/postgresql/7.4/libpq-fe.h
+		then
+			POSTGRES_CFLAGS=-I${postgresdir}/include/7.4/postgresql
+		else
+			AC_MSG_WARN(Postgres include files not found, backend not used)
+			postgresdir=""
+		fi
+		POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
+		AC_DEFINE(HAVE_POSTGRES, 1, [Have PostgreSQL])
 	fi
 fi
 

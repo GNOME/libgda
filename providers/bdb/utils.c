@@ -28,7 +28,7 @@
 GdaConnectionEvent *
 gda_bdb_make_error (int ret)
 {
-	GdaConnectionEvent *error = gda_connection_event_new ();
+	GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 
 	gda_connection_event_set_description (error, db_strerror (ret));
 	gda_connection_event_set_code (error, -1);

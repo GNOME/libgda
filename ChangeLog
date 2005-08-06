@@ -1,3 +1,34 @@
+2005-08-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: make sure the postgres installation used is the one
+	passed using the --with-postgres if that argument has been used.
+	* providers/sqlite/sqlite-src/: updated to version 3.2.2 of SQLite
+	* libgda/gda-connection-event.[ch]: changed the signature of the
+	gda_connection_event_new() to include event type
+	* libgda/gda-client.[ch]: the "error" signal now only passes the
+	actual GdaConnectionEvent which represents the error as argument
+	* libgda/gda-client.c: bug fixed when a conection could not be opened
+	* libgda/gda-connection.|ch]: added a GError** argument to the
+	gda_connection_new() function
+	* libgda/gda-connection.c: gda_connection_add_event() and 
+	gda_connection_add_event_list() doe not destroy
+	the list of events kept by the GdaConnection anymore (this needs
+	to be done manually using gda_connection_clear_events_list()).
+	* libgda/all files: s/GDA_CONNNECTION/GDA_CONNECTION/
+	* providers/postgres/gda-postgres-provider.c: better error and notices
+	reporting
+	* providers/postgres/gda-sqlite-provider.c: better error and notices
+	reporting
+	* providers/postgres/gda-mysql-provider.c: better error and notices
+	reporting
+	* All files: renamed gda_connection_add_event_list() to 
+	gda_connection_add_events_list()
+	* providers/oracle/util.c, providers/oracle/gda-oracle-recordset.c: fixed a bug
+	with values of type GDA_VALUE_TYPE_NUMERIC which got transfered as 
+	GDA_VALUE_TYPE_STRING
+	* providers/oracle/gda-oracle-provider.c: corrected the NOT NULL value returned
+	by the FIELDS schema
+
 2005-07-31  Vivien Malerba <malerba@gnome-db.org>
 	
 	* libgda/gda-client.[ch]: added gda_client_drop_database()

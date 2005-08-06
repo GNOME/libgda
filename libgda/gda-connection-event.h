@@ -29,11 +29,11 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_CONNNECTION_EVENT            (gda_connection_event_get_type())
-#define GDA_CONNNECTION_EVENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNNECTION_EVENT, GdaConnectionEvent))
-#define GDA_CONNNECTION_EVENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNNECTION_EVENT, GdaConnectionEventClass))
-#define GDA_IS_CONNNECTION_EVENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNNECTION_EVENT))
-#define GDA_IS_CONNNECTION_EVENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNNECTION_EVENT))
+#define GDA_TYPE_CONNECTION_EVENT            (gda_connection_event_get_type())
+#define GDA_CONNECTION_EVENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION_EVENT, GdaConnectionEvent))
+#define GDA_CONNECTION_EVENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION_EVENT, GdaConnectionEventClass))
+#define GDA_IS_CONNECTION_EVENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION_EVENT))
+#define GDA_IS_CONNECTION_EVENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION_EVENT))
 
 typedef struct _GdaConnectionEvent        GdaConnectionEvent;
 typedef struct _GdaConnectionEventClass   GdaConnectionEventClass;
@@ -49,9 +49,9 @@ struct _GdaConnectionEventClass {
 };
 
 typedef enum {
-	GDA_CONNNECTION_EVENT_NOTICE,
-	GDA_CONNNECTION_EVENT_WARNING,
-	GDA_CONNNECTION_EVENT_FATAL
+	GDA_CONNECTION_EVENT_NOTICE,
+	GDA_CONNECTION_EVENT_WARNING,
+	GDA_CONNECTION_EVENT_ERROR
 } GdaConnectionEventType;
 
 typedef enum
@@ -78,7 +78,7 @@ typedef enum
 } GdaConnectionEventCode;
 
 GType                   gda_connection_event_get_type (void);
-GdaConnectionEvent     *gda_connection_event_new (void);
+GdaConnectionEvent     *gda_connection_event_new (GdaConnectionEventType type);
 void                    gda_connection_event_free (GdaConnectionEvent * event);
 GList                  *gda_connection_event_list_copy (const GList * events);
 void                    gda_connection_event_list_free (GList * events);

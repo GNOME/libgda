@@ -1061,7 +1061,7 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	/* if errormessage, proceed */
 	if (is_err_msg == TRUE) {
 		if (cnc != NULL) {
-			error = gda_connection_event_new ();
+			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (error, msg);
 			gda_connection_event_set_code (error, msg_info->msg_number);
 			gda_connection_event_set_source (error, "gda-freetds");

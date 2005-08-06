@@ -32,7 +32,7 @@ gda_freetds_make_error (TDSSOCKET *tds, const gchar *message)
 {
 	GdaConnectionEvent *error;
 
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	if (error) {
 		if (message) {
 			gda_connection_event_set_description (error, message);

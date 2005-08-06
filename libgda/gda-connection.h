@@ -1,10 +1,11 @@
 /* GDA client library
- * Copyright (C) 1998-2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Bas Driessen <bas.driessen@xobas.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -56,7 +57,7 @@ struct _GdaConnectionClass {
 	GObjectClass          object_class;
 
 	/* signals */
-	void (* error) (GdaConnection *cnc, GList *error_list);
+	void (* error) (GdaConnection *cnc, GdaConnectionEvent *error);
 };
 
 GType          gda_connection_get_type (void);
@@ -71,7 +72,8 @@ GdaConnection       *gda_connection_new (GdaClient *client,
 					 const gchar *dsn,
 					 const gchar *username,
 					 const gchar *password,
-					 GdaConnectionOptions options);
+					 GdaConnectionOptions options,
+					 GError **error);
 gboolean             gda_connection_reset (GdaConnection *cnc);
 gboolean             gda_connection_close (GdaConnection *cnc);
 gboolean             gda_connection_is_open (GdaConnection *cnc);
@@ -91,7 +93,7 @@ const gchar         *gda_connection_get_password (GdaConnection *cnc);
 
 void                 gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *error);
 void                 gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...);
-void                 gda_connection_add_event_list (GdaConnection *cnc, GList *error_list);
+void                 gda_connection_add_events_list (GdaConnection *cnc, GList *events_list);
 void                 gda_connection_clear_events_list (GdaConnection *cnc);
 const GList         *gda_connection_get_events (GdaConnection *cnc);
 

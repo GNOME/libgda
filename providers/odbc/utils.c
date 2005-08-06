@@ -75,7 +75,7 @@ gda_odbc_make_error( SQLHANDLE env,
 	if ( SQL_SUCCEEDED( rc )) {
 		GdaConnectionEvent *error;
 
-		error = gda_connection_event_new ();
+		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 
 		gda_connection_event_set_description (error, msg);
 		gda_connection_event_set_code (error, native);
@@ -107,7 +107,7 @@ gda_odbc_emit_error ( GdaConnection *cnc,
 		list = g_list_append( list, error );
 	}
 
-	gda_connection_add_event_list( cnc, list );
+	gda_connection_add_events_list( cnc, list );
 }
 
 /*

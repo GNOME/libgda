@@ -61,6 +61,7 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 	GList *fields = NULL;
 	gint i;
 	gint result;
+	ub2 fake_type;
 
 	for (i = 0; i < priv->ncolumns; i += 1) {
 		GdaOracleValue *ora_value = g_new0 (GdaOracleValue, 1);
@@ -99,19 +100,21 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 			return NULL;
 		}
 
+		/* for data fetching  */
+		fake_type = ora_value->sql_type;
 		switch (ora_value->sql_type) {
-		case SQLT_NUM: /* Numerics are coerced to string */
-			ora_value->sql_type = SQLT_CHR;
-			break;
-		case SQLT_DAT: /* Convert SQLT_DAT to OCIDate */
-			ora_value->sql_type = SQLT_ODT;
-			break;
-		}
+                case SQLT_NUM: /* Numerics are coerced to string */
+                        fake_type = SQLT_CHR;
+                        break;
+                case SQLT_DAT: /* Convert SQLT_DAT to OCIDate */
+                        fake_type = SQLT_ODT;
+                        break;
+                }
 
 		if (ora_value->defined_size == 0)
-		    ora_value->value = NULL;
+			ora_value->value = NULL;
 		else
-		    ora_value->value = g_malloc0 (ora_value->defined_size+1);
+			ora_value->value = g_malloc0 (ora_value->defined_size+1);
 		ora_value->hdef = (OCIDefine *) 0;
 		ora_value->indicator = 0;
 		ora_value->gda_type = oracle_sqltype_to_gda_type (ora_value->sql_type);
@@ -121,7 +124,7 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 					(ub4) i + 1,
 					ora_value->value,
 					ora_value->defined_size+1,
-					(ub2) ora_value->sql_type,
+					(ub2) fake_type,
 					(dvoid *) &(ora_value->indicator),
 					(ub2 *) 0,
 					(ub2 *) 0, 
@@ -479,7 +482,7 @@ gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values
 	for (i = 0; i < priv_data->ncolumns; i += 1) {
 		GdaColumn *fa;
 
-		fa = gda_data_model_describe_column (model, i);
+		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 		if (!fa) {
 			gda_connection_add_event_string (
 				recset->priv->cnc,
@@ -520,7 +523,7 @@ gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values
 
 	g_string_free (sql, TRUE);
 
-	row = gda_row_new_from_list (model, values);
+	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
 	g_ptr_array_add (recset->priv->rows, row);
 
 	return (const GdaRow *) row;
@@ -591,7 +594,7 @@ gda_oracle_recordset_finalize (GObject *object)
 	if (!priv_data->cdata) {
 		gda_connection_add_event_string (priv_data->cnc, 
 						_("Invalid Oracle handle"));
-		return NULL;
+		return;
 	}
 
 	g_return_if_fail (GDA_IS_ORACLE_RECORDSET (recset));
@@ -661,7 +664,7 @@ gda_oracle_recordset_new (GdaConnection *cnc,
 	recset->priv->hstmt = stmthp;
 	recset->priv->ncolumns = parcount;
 	recset->priv->ora_values = define_columns (recset->priv);
-	recset->priv->nrows = gda_oracle_recordset_get_n_rows (GDA_DATA_MODEL (recset));
+	recset->priv->nrows = gda_oracle_recordset_get_n_rows (recset);
 
 	return recset;
 }

@@ -30,7 +30,7 @@ gda_ldap_make_error (LDAP *handle)
 {
 	GdaConnectionEvent *error;
 
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 /*	if (handle != NULL) {
 		gda_connection_event_set_description (error, ldap_error (handle));
 		gda_connection_event_set_code (error, ldap_errno (handle));

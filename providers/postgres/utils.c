@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -35,7 +35,7 @@ gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 	GdaConnectionEvent *error;
 	gchar *sqlstate;
 
-	error = gda_connection_event_new ();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	if (pconn != NULL) {
 		gchar *message;
 		
