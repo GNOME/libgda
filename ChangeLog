@@ -1,3 +1,7 @@
+2006-08-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.3.90.
+
 2005-08-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: make sure the postgres installation used is the one

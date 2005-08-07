@@ -1,4 +1,23 @@
-libgda 1.3.4, 2006-07-08
+libgda 1.3.90, 2005-08-07
+-------------------------
+
+ - Port GdaValue to use GValue (Daniel, Vivien)
+ - Disabled useless test in Firebird provider (Juan Manuel)
+ - GCC 4 compilation fixes (Christopher)
+ - Fixed #311573 (Rodrigo)
+ - GdaClient/GdaConnection API improvements (Vivien)
+ - Renamed GdaError to GdaConnectionEvent, to be used not only for errors,
+   but for any DB event (Vivien, Juan Manuel)
+ - Improved PostgreSQL/SQLite/MySQL error reporting (Vivien, Juan Manuel)
+ - Update to SQLite3 API (Vivien)
+ - Added get_specs method to GdaServerProvider, to get information on
+   arguments for actions (Vivien)
+ - Fixed PostgreSQL libraries detection (Vivien)
+ - Fixed NUMERIC values passing in Oracle provider (Vivien)
+ - Updated translations:
+        - vi (Clytie)
+
+libgda 1.3.4, 2005-07-08
 ------------------------
 
  - Fixed leak in PostgreSQL provider (Alex)
