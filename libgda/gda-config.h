@@ -141,7 +141,7 @@ GList             *gda_config_get_data_source_list  (void);
 void               gda_config_free_data_source_list (GList *list);
 
 GdaDataModel      *gda_config_get_data_source_model (void);
-gboolean           gda_config_can_modify_global_config ();
+gboolean           gda_config_can_modify_global_config (void);
 gboolean           gda_config_save_data_source      (const gchar *name,
 						     const gchar *provider,
 						     const gchar *cnc_string,

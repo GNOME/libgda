@@ -634,7 +634,7 @@ add_type_row (GdaDataModelArray *recset, const gchar *type, const gchar *owner,
 	value_list = g_list_append (value_list, gda_value_new_string (type));
 	value_list = g_list_append (value_list, gda_value_new_string (owner));
 	value_list = g_list_append (value_list, gda_value_new_string (comments));
-	value_list = g_list_append (value_list, gda_value_new_type (gda_type));
+	value_list = g_list_append (value_list, gda_value_new_gdatype (gda_type));
 
 	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 

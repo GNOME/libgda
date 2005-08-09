@@ -1963,7 +1963,7 @@ gda_config_get_data_source_model (void)
  * Returns: TRUE if modifications are possible
  */
 gboolean
-gda_config_can_modify_global_config ()
+gda_config_can_modify_global_config (void)
 {
 	get_config_client ();
 	return can_modif_global_conf;
