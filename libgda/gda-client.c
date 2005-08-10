@@ -988,6 +988,8 @@ gda_client_create_database (GdaClient *client, const gchar *provider, GdaParamet
 			     _("Could not find provider %s in the current setup"), provider); 
 		return FALSE;
 	}
+
+	return FALSE;
 }
 
 /**
@@ -1046,4 +1048,6 @@ gda_client_drop_database (GdaClient *client, const gchar *provider,
 			     _("Could not find provider %s in the current setup"), provider); 
 		return FALSE;
 	}
+
+	return FALSE;
 }

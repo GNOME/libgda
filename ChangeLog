@@ -1,3 +1,8 @@
+2005-08-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-client.c (gda_client_create_database,
+	gda_client_drop_database): added missing return statement.
+
 2005-08-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/xml/gda-xml-provider.c (add_type_row): use
