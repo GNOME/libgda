@@ -877,6 +877,43 @@ AC_SUBST(BUILD_CONFIG_TOOL)
 AC_SUBST(BUILD_RUN_TOOL)
 
 dnl ******************************
+dnl Check for Mono/Gtk#
+dnl ******************************
+MONO_REQUIRED_VERSION=1.0
+PKG_CHECK_MODULES(MONO_DEPENDENCY, mono >= $MONO_REQUIRED_VERSION, build_gda_sharp=true, build_gda_sharp=false)
+if test "$build_gda_sharp" = "true"; then
+	PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp-2.0 >= 1.9.0, :, build_gda_sharp=false)
+	PKG_CHECK_MODULES(GAPI, gapi-2.0 >= 1.9.0, :, build_gda_sharp=false)
+fi
+
+AM_CONDITIONAL(BUILD_GDA_SHARP, test "$build_gda_sharp" = "true")
+if test "$build_gda_sharp" = "true"; then
+	AC_PATH_PROG(MONO, mono, no)
+	AC_PATH_PROG(MCS, mcs, no)
+	AC_PATH_PROG(GAPI_PARSER, gapi2-parser, no)
+	AC_PATH_PROG(GAPI_FIXUP, gapi2-fixup, no)
+	AC_PATH_PROG(GAPI_CODEGEN, gapi2-codegen, no)
+
+	if test `uname -s` = "Darwin"; then
+		LIB_PREFIX=
+		LIB_SUFFIX=.dylib
+	else
+		LIB_PREFIX=.so
+		LIB_SUFFIX=
+	fi
+else
+	AC_MSG_NOTICE("Not building gda-sharp")
+fi
+AC_SUBST(MONO)
+AC_SUBST(MCS)
+AC_SUBST(GAPI)
+AC_SUBST(LIB_PREFIX)
+AC_SUBST(LIB_SUFFIX)
+AC_SUBST(GTK_SHARP_CFLAGS)
+AC_SUBST(GTK_SHARP_LIBS)
+
+
+dnl ******************************
 dnl Variables
 dnl ******************************
 AC_SUBST(BDB_LIBS)
@@ -966,6 +1003,10 @@ report/gda-report.dtd
 report/libgda-report/Makefile
 report/testing/Makefile
 tools/Makefile
+gda-sharp/Makefile
+gda-sharp/gda-sharp.dll.config
+gda-sharp/gda-sharp-2.0.pc
+gda-sharp/AssemblyInfo.cs
 testing/Makefile
 doc/Makefile
 doc/libgda-C.omf
@@ -994,4 +1035,5 @@ echo "      SQLite = yes (embedded in libgda)"
 echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
 echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
+echo "   C# bindings = `if test $build_gda_sharp = true; then echo yes; else echo no; fi`"
 echo ""

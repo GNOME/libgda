@@ -7,6 +7,7 @@ SUBDIRS = \
 	providers \
 	report \
 	tools \
+	gda-sharp \
 	testing \
 	data \
 	doc

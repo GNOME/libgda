@@ -1,0 +1,4176 @@
+<?xml version="1.0"?>
+<api>
+  <!--
+
+        This file was automatically generated.
+        Please DO NOT MODIFY THIS FILE, modify .metadata files instead.
+
+-->
+  <namespace name="Gda" library="gda-3">
+    <enum name="BlobMode" cname="GdaBlobMode" type="flags">
+      <member cname="GDA_BLOB_MODE_READ" name="Read" value="1" />
+      <member cname="GDA_BLOB_MODE_WRITE" name="Write" value="1 &lt;&lt; 1" />
+      <member cname="GDA_BLOB_MODE_RDWR" name="Rdwr" value="0x03" />
+    </enum>
+    <enum name="ClientEvent" cname="GdaClientEvent" type="enum">
+      <member cname="GDA_CLIENT_EVENT_INVALID" name="Invalid" />
+      <member cname="GDA_CLIENT_EVENT_ERROR" name="Error" />
+      <member cname="GDA_CLIENT_EVENT_CONNECTION_OPENED" name="ConnectionOpened" />
+      <member cname="GDA_CLIENT_EVENT_CONNECTION_CLOSED" name="ConnectionClosed" />
+      <member cname="GDA_CLIENT_EVENT_TRANSACTION_STARTED" name="TransactionStarted" />
+      <member cname="GDA_CLIENT_EVENT_TRANSACTION_COMMITTED" name="TransactionCommitted" />
+      <member cname="GDA_CLIENT_EVENT_TRANSACTION_CANCELLED" name="TransactionCancelled" />
+    </enum>
+    <enum name="ClientSpecsType" cname="GdaClientSpecsType" type="enum">
+      <member cname="GDA_CLIENT_SPECS_CREATE_DATABASE" name="CreateDatabase" />
+      <member cname="GDA_CLIENT_SPECS_DROP_DATABASE" name="DropDatabase" />
+    </enum>
+    <enum name="CommandOptions" cname="GdaCommandOptions" type="flags">
+      <member cname="GDA_COMMAND_OPTION_IGNORE_ERRORS" name="IgnoreErrors" value="1" />
+      <member cname="GDA_COMMAND_OPTION_STOP_ON_ERRORS" name="StopOnErrors" value="1 &lt;&lt; 1" />
+      <member cname="GDA_COMMAND_OPTION_BAD_OPTION" name="BadOption" value="1 &lt;&lt; 2" />
+    </enum>
+    <enum name="CommandType" cname="GdaCommandType" type="enum">
+      <member cname="GDA_COMMAND_TYPE_SQL" name="Sql" />
+      <member cname="GDA_COMMAND_TYPE_XML" name="Xml" />
+      <member cname="GDA_COMMAND_TYPE_PROCEDURE" name="Procedure" />
+      <member cname="GDA_COMMAND_TYPE_TABLE" name="Table" />
+      <member cname="GDA_COMMAND_TYPE_SCHEMA" name="Schema" />
+      <member cname="GDA_COMMAND_TYPE_INVALID" name="Invalid" />
+    </enum>
+    <enum name="ConnectionEventCode" cname="GdaConnectionEventCode" type="enum">
+      <member cname="GDA_CONNECTION_EVENT_CODE_CONSTRAINT_VIOLATION" name="ConstraintViolation" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_RESTRICT_VIOLATION" name="RestrictViolation" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_NOT_NULL_VIOLATION" name="NotNullViolation" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_FOREIGN_KEY_VIOLATION" name="ForeignKeyViolation" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_UNIQUE_VIOLATION" name="UniqueViolation" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_CHECK_VIOLATION" name="CheckViolation" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_INSUFFICIENT_PRIVILEGES" name="InsufficientPrivileges" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_UNDEFINED_COLUMN" name="UndefinedColumn" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_UNDEFINED_FUNCTION" name="UndefinedFunction" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_UNDEFINED_TABLE" name="UndefinedTable" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_DUPLICATE_COLUMN" name="DuplicateColumn" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_DUPLICATE_DATABASE" name="DuplicateDatabase" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_DUPLICATE_FUNCTION" name="DuplicateFunction" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_DUPLICATE_SCHEMA" name="DuplicateSchema" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_DUPLICATE_TABLE" name="DuplicateTable" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_DUPLICATE_ALIAS" name="DuplicateAlias" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_DUPLICATE_OBJECT" name="DuplicateObject" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_SYNTAX_ERROR" name="SyntaxError" />
+      <member cname="GDA_CONNECTION_EVENT_CODE_UNKNOWN" name="Unknown" />
+    </enum>
+    <enum name="ConnectionEventType" cname="GdaConnectionEventType" type="enum">
+      <member cname="GDA_CONNNECTION_EVENT_NOTICE" name="Notice" />
+      <member cname="GDA_CONNNECTION_EVENT_WARNING" name="Warning" />
+      <member cname="GDA_CONNNECTION_EVENT_FATAL" name="Fatal" />
+    </enum>
+    <enum name="ConnectionFeature" cname="GdaConnectionFeature" type="enum">
+      <member cname="GDA_CONNECTION_FEATURE_AGGREGATES" name="Aggregates" />
+      <member cname="GDA_CONNECTION_FEATURE_BLOBS" name="Blobs" />
+      <member cname="GDA_CONNECTION_FEATURE_INDEXES" name="Indexes" />
+      <member cname="GDA_CONNECTION_FEATURE_INHERITANCE" name="Inheritance" />
+      <member cname="GDA_CONNECTION_FEATURE_NAMESPACES" name="Namespaces" />
+      <member cname="GDA_CONNECTION_FEATURE_PROCEDURES" name="Procedures" />
+      <member cname="GDA_CONNECTION_FEATURE_SEQUENCES" name="Sequences" />
+      <member cname="GDA_CONNECTION_FEATURE_SQL" name="Sql" />
+      <member cname="GDA_CONNECTION_FEATURE_TRANSACTIONS" name="Transactions" />
+      <member cname="GDA_CONNECTION_FEATURE_TRIGGERS" name="Triggers" />
+      <member cname="GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR" name="UpdatableCursor" />
+      <member cname="GDA_CONNECTION_FEATURE_USERS" name="Users" />
+      <member cname="GDA_CONNECTION_FEATURE_VIEWS" name="Views" />
+      <member cname="GDA_CONNECTION_FEATURE_XML_QUERIES" name="XmlQueries" />
+    </enum>
+    <enum name="ConnectionOptions" cname="GdaConnectionOptions" type="flags">
+      <member cname="GDA_CONNECTION_OPTIONS_READ_ONLY" name="ReadOnly" value="1 &lt;&lt; 0" />
+      <member cname="GDA_CONNECTION_OPTIONS_DONT_SHARE" name="DontShare" value="2 &lt;&lt; 0" />
+    </enum>
+    <enum name="ConnectionSchema" cname="GdaConnectionSchema" type="enum">
+      <member cname="GDA_CONNECTION_SCHEMA_AGGREGATES" name="Aggregates" />
+      <member cname="GDA_CONNECTION_SCHEMA_DATABASES" name="Databases" />
+      <member cname="GDA_CONNECTION_SCHEMA_FIELDS" name="Fields" />
+      <member cname="GDA_CONNECTION_SCHEMA_INDEXES" name="Indexes" />
+      <member cname="GDA_CONNECTION_SCHEMA_LANGUAGES" name="Languages" />
+      <member cname="GDA_CONNECTION_SCHEMA_NAMESPACES" name="Namespaces" />
+      <member cname="GDA_CONNECTION_SCHEMA_PARENT_TABLES" name="ParentTables" />
+      <member cname="GDA_CONNECTION_SCHEMA_PROCEDURES" name="Procedures" />
+      <member cname="GDA_CONNECTION_SCHEMA_SEQUENCES" name="Sequences" />
+      <member cname="GDA_CONNECTION_SCHEMA_TABLES" name="Tables" />
+      <member cname="GDA_CONNECTION_SCHEMA_TRIGGERS" name="Triggers" />
+      <member cname="GDA_CONNECTION_SCHEMA_TYPES" name="Types" />
+      <member cname="GDA_CONNECTION_SCHEMA_USERS" name="Users" />
+      <member cname="GDA_CONNECTION_SCHEMA_VIEWS" name="Views" />
+    </enum>
+    <enum name="Sorting" cname="GdaSorting" type="enum">
+      <member cname="GDA_SORTING_ASCENDING" name="Ascending" />
+      <member cname="GDA_SORTING_DESCENDING" name="Descending" />
+    </enum>
+    <enum name="TransactionIsolation" cname="GdaTransactionIsolation" type="enum">
+      <member cname="GDA_TRANSACTION_ISOLATION_UNKNOWN" name="Unknown" />
+      <member cname="GDA_TRANSACTION_ISOLATION_READ_COMMITTED" name="ReadCommitted" />
+      <member cname="GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED" name="ReadUncommitted" />
+      <member cname="GDA_TRANSACTION_ISOLATION_REPEATABLE_READ" name="RepeatableRead" />
+      <member cname="GDA_TRANSACTION_ISOLATION_SERIALIZABLE" name="Serializable" />
+    </enum>
+    <enum name="ValueType" cname="GdaValueType" type="enum">
+      <member cname="GDA_VALUE_TYPE_NULL" name="Null" />
+      <member cname="GDA_VALUE_TYPE_BIGINT" name="Bigint" />
+      <member cname="GDA_VALUE_TYPE_BIGUINT" name="Biguint" />
+      <member cname="GDA_VALUE_TYPE_BINARY" name="Binary" />
+      <member cname="GDA_VALUE_TYPE_BLOB" name="Blob" />
+      <member cname="GDA_VALUE_TYPE_BOOLEAN" name="Boolean" />
+      <member cname="GDA_VALUE_TYPE_DATE" name="Date" />
+      <member cname="GDA_VALUE_TYPE_DOUBLE" name="Double" />
+      <member cname="GDA_VALUE_TYPE_GEOMETRIC_POINT" name="GeometricPoint" />
+      <member cname="GDA_VALUE_TYPE_GOBJECT" name="Gobject" />
+      <member cname="GDA_VALUE_TYPE_INTEGER" name="Integer" />
+      <member cname="GDA_VALUE_TYPE_LIST" name="List" />
+      <member cname="GDA_VALUE_TYPE_MONEY" name="Money" />
+      <member cname="GDA_VALUE_TYPE_NUMERIC" name="Numeric" />
+      <member cname="GDA_VALUE_TYPE_SINGLE" name="Single" />
+      <member cname="GDA_VALUE_TYPE_SMALLINT" name="Smallint" />
+      <member cname="GDA_VALUE_TYPE_SMALLUINT" name="Smalluint" />
+      <member cname="GDA_VALUE_TYPE_STRING" name="String" />
+      <member cname="GDA_VALUE_TYPE_TIME" name="Time" />
+      <member cname="GDA_VALUE_TYPE_TIMESTAMP" name="Timestamp" />
+      <member cname="GDA_VALUE_TYPE_TINYINT" name="Tinyint" />
+      <member cname="GDA_VALUE_TYPE_TINYUINT" name="Tinyuint" />
+      <member cname="GDA_VALUE_TYPE_TYPE" name="Type" />
+      <member cname="GDA_VALUE_TYPE_UINTEGER" name="Uinteger" />
+      <member cname="GDA_VALUE_TYPE_UNKNOWN" name="Unknown" />
+    </enum>
+    <callback name="ConfigListenerFunc" cname="GdaConfigListenerFunc">
+      <return-type type="void" />
+      <parameters>
+        <parameter type="const-gchar*" name="path" />
+        <parameter type="gpointer" name="user_data" />
+      </parameters>
+    </callback>
+    <callback name="DataModelForeachFunc" cname="GdaDataModelForeachFunc">
+      <return-type type="gboolean" />
+      <parameters>
+        <parameter type="GdaDataModel*" name="model" />
+        <parameter type="GdaRow*" name="row" />
+        <parameter type="gpointer" name="user_data" />
+      </parameters>
+    </callback>
+    <callback name="InitFunc" cname="GdaInitFunc">
+      <return-type type="void" />
+      <parameters>
+        <parameter type="gpointer" name="user_data" />
+      </parameters>
+    </callback>
+    <callback name="ThreaderFunc" cname="GdaThreaderFunc">
+      <return-type type="void" />
+      <parameters>
+        <parameter type="GdaThreader*" name="arg1" />
+        <parameter type="guint" name="arg2" />
+        <parameter type="gpointer" name="arg3" />
+      </parameters>
+    </callback>
+    <interface name="DataModel" cname="GdaDataModel">
+      <virtual_method name="IGetNRows" cname="i_get_n_rows">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IGetNColumns" cname="i_get_n_columns">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IDescribeColumn" cname="i_describe_column">
+        <return-type type="GdaColumn*" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="col" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ISetColumnTitle" cname="i_set_column_title">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="col" />
+          <parameter type="const-gchar*" name="title" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IGetColumnPos" cname="i_get_column_pos">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="const-gchar*" name="title" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IIsUpdatable" cname="i_is_updatable">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IHasChanged" cname="i_has_changed">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IBeginChanges" cname="i_begin_changes">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ICommitChanges" cname="i_commit_changes">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ICancelChanges" cname="i_cancel_changes">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IAppendRow" cname="i_append_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="GdaRow*" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IRemoveRow" cname="i_remove_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="const-GdaRow*" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IUpdateRow" cname="i_update_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="const-GdaRow*" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IAppendColumn" cname="i_append_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="const-GdaColumn*" name="attrs" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IUpdateColumn" cname="i_update_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="col" />
+          <parameter type="const-GdaColumn*" name="attrs" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IRemoveColumn" cname="i_remove_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="col" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ISetNotify" cname="i_set_notify">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gboolean" name="do_notify_changes" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IGetNotify" cname="i_get_notify">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ISetCommand" cname="i_set_command">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="const-gchar*" name="txt" />
+          <parameter type="GdaCommandType" name="type" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="Changed" cname="changed">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="RowInserted" cname="row_inserted">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="RowUpdated" cname="row_updated">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="RowRemoved" cname="row_removed">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ColumnInserted" cname="column_inserted">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="col" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ColumnUpdated" cname="column_updated">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="col" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ColumnRemoved" cname="column_removed">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="col" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="BeginUpdate" cname="begin_update">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="CancelUpdate" cname="cancel_update">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="CommitUpdate" cname="commit_update">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+        </parameters>
+      </virtual_method>
+      <method name="AddDataFromXmlNode" cname="gda_data_model_add_data_from_xml_node">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="xmlNodePtr" name="node" />
+        </parameters>
+      </method>
+      <method name="AppendColumn" cname="gda_data_model_append_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-GdaColumn*" name="attrs" />
+        </parameters>
+      </method>
+      <method name="AppendRow" cname="gda_data_model_append_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaRow*" name="row" />
+        </parameters>
+      </method>
+      <method name="AppendValues" cname="gda_data_model_append_values">
+        <return-type type="const-GdaRow*" />
+        <parameters>
+          <parameter type="const-GList*" name="values" />
+        </parameters>
+      </method>
+      <method name="BeginUpdate" cname="gda_data_model_begin_update">
+        <return-type type="gboolean" />
+      </method>
+      <method name="CancelUpdate" cname="gda_data_model_cancel_update">
+        <return-type type="gboolean" />
+      </method>
+      <method name="Changed" cname="gda_data_model_changed">
+        <return-type type="void" />
+      </method>
+      <method name="ColumnInserted" cname="gda_data_model_column_inserted">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="col" />
+        </parameters>
+      </method>
+      <method name="ColumnRemoved" cname="gda_data_model_column_removed">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="col" />
+        </parameters>
+      </method>
+      <method name="ColumnUpdated" cname="gda_data_model_column_updated">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="col" />
+        </parameters>
+      </method>
+      <method name="CommitUpdate" cname="gda_data_model_commit_update">
+        <return-type type="gboolean" />
+      </method>
+      <method name="DescribeColumn" cname="gda_data_model_describe_column">
+        <return-type type="GdaColumn*" />
+        <parameters>
+          <parameter type="gint" name="col" />
+        </parameters>
+      </method>
+      <method name="Dump" cname="gda_data_model_dump">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="FILE*" name="to_stream" />
+        </parameters>
+      </method>
+      <method name="DumpAsString" cname="gda_data_model_dump_as_string">
+        <return-type type="gchar*" />
+      </method>
+      <method name="Foreach" cname="gda_data_model_foreach">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaDataModelForeachFunc" name="func" />
+          <parameter type="gpointer" name="user_data" />
+        </parameters>
+      </method>
+      <method name="Freeze" cname="gda_data_model_freeze">
+        <return-type type="void" />
+      </method>
+      <method name="GetColumnPosition" cname="gda_data_model_get_column_position">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="const-gchar*" name="title" />
+        </parameters>
+      </method>
+      <method name="GetColumnTitle" cname="gda_data_model_get_column_title">
+        <return-type type="const-gchar*" />
+        <parameters>
+          <parameter type="gint" name="col" />
+        </parameters>
+      </method>
+      <method name="GetCommandText" cname="gda_data_model_get_command_text">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetCommandType" cname="gda_data_model_get_command_type">
+        <return-type type="GdaCommandType" />
+      </method>
+      <method name="GetNColumns" cname="gda_data_model_get_n_columns">
+        <return-type type="gint" />
+      </method>
+      <method name="GetNRows" cname="gda_data_model_get_n_rows">
+        <return-type type="gint" />
+      </method>
+      <method name="GetRow" cname="gda_data_model_get_row">
+        <return-type type="const-GdaRow*" />
+        <parameters>
+          <parameter type="gint" name="row" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_data_model_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetValueAt" cname="gda_data_model_get_value_at">
+        <return-type type="const-GdaValue*" />
+        <parameters>
+          <parameter type="gint" name="col" />
+          <parameter type="gint" name="row" />
+        </parameters>
+      </method>
+      <method name="HasChanged" cname="gda_data_model_has_changed">
+        <return-type type="gboolean" />
+      </method>
+      <method name="IsUpdatable" cname="gda_data_model_is_updatable">
+        <return-type type="gboolean" />
+      </method>
+      <method name="RemoveColumn" cname="gda_data_model_remove_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="gint" name="col" />
+        </parameters>
+      </method>
+      <method name="RemoveRow" cname="gda_data_model_remove_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-GdaRow*" name="row" />
+        </parameters>
+      </method>
+      <method name="RowInserted" cname="gda_data_model_row_inserted">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="row" />
+        </parameters>
+      </method>
+      <method name="RowRemoved" cname="gda_data_model_row_removed">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="row" />
+        </parameters>
+      </method>
+      <method name="RowUpdated" cname="gda_data_model_row_updated">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="row" />
+        </parameters>
+      </method>
+      <method name="SetColumnTitle" cname="gda_data_model_set_column_title">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="col" />
+          <parameter type="const-gchar*" name="title" />
+        </parameters>
+      </method>
+      <method name="SetCommandText" cname="gda_data_model_set_command_text">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="txt" />
+        </parameters>
+      </method>
+      <method name="SetCommandType" cname="gda_data_model_set_command_type">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaCommandType" name="type" />
+        </parameters>
+      </method>
+      <method name="Thaw" cname="gda_data_model_thaw">
+        <return-type type="void" />
+      </method>
+      <method name="ToTextSeparated" cname="gda_data_model_to_text_separated">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="const-gint*" name="cols" />
+          <parameter type="gint" name="nb_cols" />
+          <parameter type="gchar" name="sep" />
+        </parameters>
+      </method>
+      <method name="ToXml" cname="gda_data_model_to_xml">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="const-gint*" name="cols" />
+          <parameter type="gint" name="nb_cols" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="ToXmlNode" cname="gda_data_model_to_xml_node">
+        <return-type type="xmlNodePtr" />
+        <parameters>
+          <parameter type="const-gint*" name="cols" />
+          <parameter type="gint" name="nb_cols" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="UpdateColumn" cname="gda_data_model_update_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="gint" name="col" />
+          <parameter type="const-GdaColumn*" name="attrs" />
+        </parameters>
+      </method>
+      <method name="UpdateRow" cname="gda_data_model_update_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-GdaRow*" name="row" />
+        </parameters>
+      </method>
+    </interface>
+    <object name="Client" cname="GdaClient" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaClientPrivate*" />
+      <signal name="EventNotification" cname="event_notification" when="LAST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaClient*" name="client" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaClientEvent" name="event" />
+          <parameter type="GdaParameterList*" name="params" />
+        </parameters>
+      </signal>
+      <method name="BeginTransaction" cname="gda_client_begin_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="CloseAllConnections" cname="gda_client_close_all_connections">
+        <return-type type="void" />
+      </method>
+      <method name="CommitTransaction" cname="gda_client_commit_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="CreateDatabase" cname="gda_client_create_database">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="provider" />
+          <parameter type="GdaParameterList*" name="params" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="DropDatabase" cname="gda_client_drop_database">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="provider" />
+          <parameter type="GdaParameterList*" name="params" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="FindConnection" cname="gda_client_find_connection">
+        <return-type type="GdaConnection*" />
+        <parameters>
+          <parameter type="const-gchar*" name="dsn" />
+          <parameter type="const-gchar*" name="username" />
+          <parameter type="const-gchar*" name="password" />
+        </parameters>
+      </method>
+      <method name="GetConnections" cname="gda_client_get_connections">
+        <return-type type="const-GList*" />
+      </method>
+      <method name="GetDsnSpecs" cname="gda_client_get_dsn_specs">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="const-gchar*" name="provider" />
+        </parameters>
+      </method>
+      <method name="GetProviderSpecs" cname="gda_client_get_provider_specs">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="const-gchar*" name="provider" />
+          <parameter type="GdaClientSpecsType" name="type" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_client_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_client_new" />
+      <method name="NotifyConnectionClosedEvent" cname="gda_client_notify_connection_closed_event">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+        </parameters>
+      </method>
+      <method name="NotifyConnectionOpenedEvent" cname="gda_client_notify_connection_opened_event">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+        </parameters>
+      </method>
+      <method name="NotifyErrorEvent" cname="gda_client_notify_error_event">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaConnectionEvent*" name="error" />
+        </parameters>
+      </method>
+      <method name="NotifyEvent" cname="gda_client_notify_event">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaClientEvent" name="event" />
+          <parameter type="GdaParameterList*" name="params" />
+        </parameters>
+      </method>
+      <method name="NotifyTransactionCancelledEvent" cname="gda_client_notify_transaction_cancelled_event">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="NotifyTransactionCommittedEvent" cname="gda_client_notify_transaction_committed_event">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="NotifyTransactionStartedEvent" cname="gda_client_notify_transaction_started_event">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="OpenConnection" cname="gda_client_open_connection">
+        <return-type type="GdaConnection*" />
+        <parameters>
+          <parameter type="const-gchar*" name="dsn" />
+          <parameter type="const-gchar*" name="username" />
+          <parameter type="const-gchar*" name="password" />
+          <parameter type="GdaConnectionOptions" name="options" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="OpenConnectionFromString" cname="gda_client_open_connection_from_string">
+        <return-type type="GdaConnection*" />
+        <parameters>
+          <parameter type="const-gchar*" name="provider_id" />
+          <parameter type="const-gchar*" name="cnc_string" />
+          <parameter type="GdaConnectionOptions" name="options" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="RollbackTransaction" cname="gda_client_rollback_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+    </object>
+    <object name="Column" cname="GdaColumn" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaColumnPrivate*" />
+      <signal name="NameChanged" cname="name_changed" when="LAST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaColumn*" name="column" />
+          <parameter type="const-gchar*" name="old_name" />
+        </parameters>
+      </signal>
+      <method name="Copy" cname="gda_column_copy">
+        <return-type type="GdaColumn*" owned="true" />
+      </method>
+      <method name="Equal" cname="gda_column_equal">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-GdaColumn*" name="rhs" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_column_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetAllowNull" cname="gda_column_get_allow_null">
+        <return-type type="gboolean" />
+      </method>
+      <method name="GetAutoIncrement" cname="gda_column_get_auto_increment">
+        <return-type type="gboolean" />
+      </method>
+      <method name="GetCaption" cname="gda_column_get_caption">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetDbmsType" cname="gda_column_get_dbms_type">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetDefaultValue" cname="gda_column_get_default_value">
+        <return-type type="const-GdaValue*" />
+      </method>
+      <method name="GetDefinedSize" cname="gda_column_get_defined_size">
+        <return-type type="glong" />
+      </method>
+      <method name="GetGdatype" cname="gda_column_get_gdatype">
+        <return-type type="GdaValueType" />
+      </method>
+      <method name="GetName" cname="gda_column_get_name">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetPosition" cname="gda_column_get_position">
+        <return-type type="gint" />
+      </method>
+      <method name="GetPrimaryKey" cname="gda_column_get_primary_key">
+        <return-type type="gboolean" />
+      </method>
+      <method name="GetReferences" cname="gda_column_get_references">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetScale" cname="gda_column_get_scale">
+        <return-type type="glong" />
+      </method>
+      <method name="GetTable" cname="gda_column_get_table">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetType" cname="gda_column_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetUniqueKey" cname="gda_column_get_unique_key">
+        <return-type type="gboolean" />
+      </method>
+      <constructor cname="gda_column_new" />
+      <method name="SetAllowNull" cname="gda_column_set_allow_null">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gboolean" name="allow" />
+        </parameters>
+      </method>
+      <method name="SetAutoIncrement" cname="gda_column_set_auto_increment">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gboolean" name="is_auto" />
+        </parameters>
+      </method>
+      <method name="SetCaption" cname="gda_column_set_caption">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="caption" />
+        </parameters>
+      </method>
+      <method name="SetDbmsType" cname="gda_column_set_dbms_type">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="dbms_type" />
+        </parameters>
+      </method>
+      <method name="SetDefaultValue" cname="gda_column_set_default_value">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-GdaValue*" name="default_value" />
+        </parameters>
+      </method>
+      <method name="SetDefinedSize" cname="gda_column_set_defined_size">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="glong" name="size" />
+        </parameters>
+      </method>
+      <method name="SetGdatype" cname="gda_column_set_gdatype">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValueType" name="type" />
+        </parameters>
+      </method>
+      <method name="SetName" cname="gda_column_set_name">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="SetPosition" cname="gda_column_set_position">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="position" />
+        </parameters>
+      </method>
+      <method name="SetPrimaryKey" cname="gda_column_set_primary_key">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gboolean" name="pk" />
+        </parameters>
+      </method>
+      <method name="SetReferences" cname="gda_column_set_references">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="ref" />
+        </parameters>
+      </method>
+      <method name="SetScale" cname="gda_column_set_scale">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="glong" name="scale" />
+        </parameters>
+      </method>
+      <method name="SetTable" cname="gda_column_set_table">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="table" />
+        </parameters>
+      </method>
+      <method name="SetUniqueKey" cname="gda_column_set_unique_key">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gboolean" name="uk" />
+        </parameters>
+      </method>
+    </object>
+    <object name="ColumnIndex" cname="GdaColumnIndex" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaColumnIndexPrivate*" />
+      <method name="Copy" cname="gda_column_index_copy">
+        <return-type type="GdaColumnIndex*" owned="true" />
+      </method>
+      <method name="Equal" cname="gda_column_index_equal">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-GdaColumnIndex*" name="rhs" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_column_index_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetColumnName" cname="gda_column_index_get_column_name">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetDefinedSize" cname="gda_column_index_get_defined_size">
+        <return-type type="glong" />
+      </method>
+      <method name="GetReferences" cname="gda_column_index_get_references">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetSorting" cname="gda_column_index_get_sorting">
+        <return-type type="GdaSorting" />
+      </method>
+      <method name="GetType" cname="gda_column_index_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_column_index_new" />
+      <method name="SetColumnName" cname="gda_column_index_set_column_name">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="column_name" />
+        </parameters>
+      </method>
+      <method name="SetDefinedSize" cname="gda_column_index_set_defined_size">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="glong" name="size" />
+        </parameters>
+      </method>
+      <method name="SetReferences" cname="gda_column_index_set_references">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="ref" />
+        </parameters>
+      </method>
+      <method name="SetSorting" cname="gda_column_index_set_sorting">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaSorting" name="sorting" />
+        </parameters>
+      </method>
+    </object>
+    <object name="Connection" cname="GdaConnection" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaConnectionPrivate*" />
+      <signal name="Error" cname="error" when="LAST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GList*" name="error_list" />
+        </parameters>
+      </signal>
+      <method name="AddEvent" cname="gda_connection_add_event">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnectionEvent*" name="error" />
+        </parameters>
+      </method>
+      <method name="AddEventList" cname="gda_connection_add_event_list">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GList*" name="error_list" />
+        </parameters>
+      </method>
+      <method name="AddEventString" cname="gda_connection_add_event_string">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="str" />
+          <parameter ellipsis="true" />
+        </parameters>
+      </method>
+      <method name="BeginTransaction" cname="gda_connection_begin_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="ChangeDatabase" cname="gda_connection_change_database">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="ClearEventsList" cname="gda_connection_clear_events_list">
+        <return-type type="void" />
+      </method>
+      <method name="Close" cname="gda_connection_close">
+        <return-type type="gboolean" />
+      </method>
+      <method name="CommitTransaction" cname="gda_connection_commit_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="CreateBlob" cname="gda_connection_create_blob">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob" />
+        </parameters>
+      </method>
+      <method name="CreateIndex" cname="gda_connection_create_index">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-GdaDataModelIndex*" name="index" />
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </method>
+      <method name="CreateTable" cname="gda_connection_create_table">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="const-GList*" name="attributes_list" />
+          <parameter type="const-GList*" name="index_list" />
+        </parameters>
+      </method>
+      <method name="DropIndex" cname="gda_connection_drop_index">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="index_name" />
+          <parameter type="gboolean" name="primary_key" />
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </method>
+      <method name="DropTable" cname="gda_connection_drop_table">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </method>
+      <method name="ExecuteCommand" cname="gda_connection_execute_command">
+        <return-type type="GList*" />
+        <parameters>
+          <parameter type="GdaCommand*" name="cmd" />
+          <parameter type="GdaParameterList*" name="params" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="ExecuteNonQuery" cname="gda_connection_execute_non_query">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaCommand*" name="cmd" />
+          <parameter type="GdaParameterList*" name="params" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="ExecuteSingleCommand" cname="gda_connection_execute_single_command">
+        <return-type type="GdaDataModel*" />
+        <parameters>
+          <parameter type="GdaCommand*" name="cmd" />
+          <parameter type="GdaParameterList*" name="params" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="GetClient" cname="gda_connection_get_client">
+        <return-type type="GdaClient*" />
+      </method>
+      <method name="GetCncString" cname="gda_connection_get_cnc_string">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetDatabase" cname="gda_connection_get_database">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetDsn" cname="gda_connection_get_dsn">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetEvents" cname="gda_connection_get_events">
+        <return-type type="const-GList*" />
+      </method>
+      <method name="GetLastInsertId" cname="gda_connection_get_last_insert_id">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaDataModel*" name="recset" />
+        </parameters>
+      </method>
+      <method name="GetOptions" cname="gda_connection_get_options">
+        <return-type type="GdaConnectionOptions" />
+      </method>
+      <method name="GetPassword" cname="gda_connection_get_password">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetProvider" cname="gda_connection_get_provider">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetSchema" cname="gda_connection_get_schema">
+        <return-type type="GdaDataModel*" />
+        <parameters>
+          <parameter type="GdaConnectionSchema" name="schema" />
+          <parameter type="GdaParameterList*" name="params" />
+        </parameters>
+      </method>
+      <method name="GetServerVersion" cname="gda_connection_get_server_version">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetType" cname="gda_connection_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetUsername" cname="gda_connection_get_username">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="IsOpen" cname="gda_connection_is_open">
+        <return-type type="gboolean" />
+      </method>
+      <constructor cname="gda_connection_new">
+        <parameters>
+          <parameter type="GdaClient*" name="client" />
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="const-gchar*" name="dsn" />
+          <parameter type="const-gchar*" name="username" />
+          <parameter type="const-gchar*" name="password" />
+          <parameter type="GdaConnectionOptions" name="options" />
+        </parameters>
+      </constructor>
+      <method name="Reset" cname="gda_connection_reset">
+        <return-type type="gboolean" />
+      </method>
+      <method name="RollbackTransaction" cname="gda_connection_rollback_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="SetClient" cname="gda_connection_set_client">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaClient*" name="client" />
+        </parameters>
+      </method>
+      <method name="Supports" cname="gda_connection_supports">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnectionFeature" name="feature" />
+        </parameters>
+      </method>
+      <method name="ValueToSqlString" cname="gda_connection_value_to_sql_string">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaValue*" name="from" />
+        </parameters>
+      </method>
+    </object>
+    <object name="ConnectionEvent" cname="GdaConnectionEvent" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaConnectionEventPrivate*" />
+      <method name="Free" cname="gda_connection_event_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetCode" cname="gda_connection_event_get_code">
+        <return-type type="glong" />
+      </method>
+      <method name="GetDescription" cname="gda_connection_event_get_description">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetEventType" cname="gda_connection_event_get_event_type">
+        <return-type type="GdaConnectionEventType" />
+      </method>
+      <method name="GetGdaCode" cname="gda_connection_event_get_gda_code">
+        <return-type type="GdaConnectionEventCode" />
+      </method>
+      <method name="GetSource" cname="gda_connection_event_get_source">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetSqlstate" cname="gda_connection_event_get_sqlstate">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetType" cname="gda_connection_event_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="ListCopy" cname="gda_connection_event_list_copy" shared="true">
+        <return-type type="GList*" />
+        <parameters>
+          <parameter type="const-GList*" name="events" />
+        </parameters>
+      </method>
+      <method name="ListFree" cname="gda_connection_event_list_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GList*" name="events" />
+        </parameters>
+      </method>
+      <constructor cname="gda_connection_event_new" />
+      <method name="SetCode" cname="gda_connection_event_set_code">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="glong" name="code" />
+        </parameters>
+      </method>
+      <method name="SetDescription" cname="gda_connection_event_set_description">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="description" />
+        </parameters>
+      </method>
+      <method name="SetEventType" cname="gda_connection_event_set_event_type">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnectionEventType" name="type" />
+        </parameters>
+      </method>
+      <method name="SetGdaCode" cname="gda_connection_event_set_gda_code">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaConnectionEventCode" name="code" />
+        </parameters>
+      </method>
+      <method name="SetSource" cname="gda_connection_event_set_source">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="source" />
+        </parameters>
+      </method>
+      <method name="SetSqlstate" cname="gda_connection_event_set_sqlstate">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="sqlstate" />
+        </parameters>
+      </method>
+    </object>
+    <object name="DataModelArray" cname="GdaDataModelArray" parent="GdaDataModelBase">
+      <field name="Priv" cname="priv" type="GdaDataModelArrayPrivate*" />
+      <method name="Clear" cname="gda_data_model_array_clear">
+        <return-type type="void" />
+      </method>
+      <method name="GetType" cname="gda_data_model_array_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_data_model_array_new">
+        <parameters>
+          <parameter type="gint" name="cols" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_data_model_array_new_from_xml_node">
+        <parameters>
+          <parameter type="xmlNodePtr" name="node" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </constructor>
+      <method name="SetNColumns" cname="gda_data_model_array_set_n_columns">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="cols" />
+        </parameters>
+      </method>
+    </object>
+    <object name="DataModelBase" cname="GdaDataModelBase" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaDataModelBasePrivate*" />
+      <virtual_method name="GetNRows" cname="get_n_rows">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="GetNColumns" cname="get_n_columns">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="DescribeColumn" cname="describe_column">
+        <return-type type="GdaColumn*" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+          <parameter type="gint" name="col" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="IsUpdatable" cname="is_updatable">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AppendRow" cname="append_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+          <parameter type="GdaRow*" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="RemoveRow" cname="remove_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+          <parameter type="const-GdaRow*" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="UpdateRow" cname="update_row">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+          <parameter type="const-GdaRow*" name="row" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AppendColumn" cname="append_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+          <parameter type="const-GdaColumn*" name="attrs" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="UpdateColumn" cname="update_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+          <parameter type="gint" name="col" />
+          <parameter type="const-GdaColumn*" name="attrs" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="RemoveColumn" cname="remove_column">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataModelBase*" name="model" />
+          <parameter type="gint" name="col" />
+        </parameters>
+      </virtual_method>
+      <implements>
+        <interface cname="GdaDataModel" />
+      </implements>
+      <method name="GetType" cname="gda_data_model_base_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </object>
+    <object name="DataModelHash" cname="GdaDataModelHash" parent="GdaDataModelBase">
+      <field name="Priv" cname="priv" type="GdaDataModelHashPrivate*" />
+      <method name="Clear" cname="gda_data_model_hash_clear">
+        <return-type type="void" />
+      </method>
+      <method name="GetType" cname="gda_data_model_hash_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="InsertRow" cname="gda_data_model_hash_insert_row">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="rownum" />
+          <parameter type="GdaRow*" name="row" />
+        </parameters>
+      </method>
+      <constructor cname="gda_data_model_hash_new">
+        <parameters>
+          <parameter type="gint" name="cols" />
+        </parameters>
+      </constructor>
+      <method name="SetNColumns" cname="gda_data_model_hash_set_n_columns">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="cols" />
+        </parameters>
+      </method>
+    </object>
+    <object name="DataModelList" cname="GdaDataModelList" parent="GdaDataModelBase">
+      <field name="Priv" cname="priv" type="GdaDataModelListPrivate*" />
+      <method name="AppendValue" cname="gda_data_model_list_append_value">
+        <return-type type="const-GdaRow*" />
+        <parameters>
+          <parameter type="const-GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_data_model_list_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_data_model_list_new" />
+      <constructor cname="gda_data_model_list_new_from_string_list">
+        <parameters>
+          <parameter type="const-GList*" name="list" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="Select" cname="GdaSelect" parent="GdaDataModelArray">
+      <field name="Priv" cname="priv" type="GdaSelectPrivate*" />
+      <method name="AddSource" cname="gda_select_add_source">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="GdaDataModel*" name="source" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_select_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_select_new" />
+      <method name="Run" cname="gda_select_run">
+        <return-type type="gboolean" />
+      </method>
+      <method name="SetSql" cname="gda_select_set_sql">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="sql" />
+        </parameters>
+      </method>
+    </object>
+    <object name="ServerProvider" cname="GdaServerProvider" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaServerProviderPrivate*" />
+      <virtual_method name="LastConnectionGone" cname="last_connection_gone">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="OpenConnection" cname="open_connection">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaQuarkList*" name="params" />
+          <parameter type="const-gchar*" name="username" />
+          <parameter type="const-gchar*" name="password" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ResetConnection" cname="reset_connection">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="CloseConnection" cname="close_connection">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ChangeDatabase" cname="change_database">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="GetSpecs" cname="get_specs">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaClientSpecsType" name="type" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="PerformActionParams" cname="perform_action_params">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaParameterList*" name="params" />
+          <parameter type="GdaClientSpecsType" name="type" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="CreateDatabaseCnc" cname="create_database_cnc">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="DropDatabaseCnc" cname="drop_database_cnc">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="CreateTable" cname="create_table">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="const-GList*" name="attributes_list" />
+          <parameter type="const-GList*" name="index_list" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="DropTable" cname="drop_table">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="CreateIndex" cname="create_index">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-GdaDataModelIndex*" name="index" />
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="DropIndex" cname="drop_index">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="index_name" />
+          <parameter type="gboolean" name="primary_key" />
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ExecuteCommand" cname="execute_command">
+        <return-type type="GList*" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaCommand*" name="cmd" />
+          <parameter type="GdaParameterList*" name="params" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="GetLastInsertId" cname="get_last_insert_id">
+        <return-type type="char*" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaDataModel*" name="recset" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="BeginTransaction" cname="begin_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="CommitTransaction" cname="commit_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="RollbackTransaction" cname="rollback_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="Supports" cname="supports">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaConnectionFeature" name="feature" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="GetSchema" cname="get_schema">
+        <return-type type="GdaDataModel*" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaConnectionSchema" name="schema" />
+          <parameter type="GdaParameterList*" name="params" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="CreateBlob" cname="create_blob">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaBlob*" name="blob" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="ValueToSqlString" cname="value_to_sql_string">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaServerProvider*" name="provider" />
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaValue*" name="from" />
+        </parameters>
+      </virtual_method>
+      <method name="BeginTransaction" cname="gda_server_provider_begin_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="ChangeDatabase" cname="gda_server_provider_change_database">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="CloseConnection" cname="gda_server_provider_close_connection">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+        </parameters>
+      </method>
+      <method name="CommitTransaction" cname="gda_server_provider_commit_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="CreateBlob" cname="gda_server_provider_create_blob">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaBlob*" name="blob" />
+        </parameters>
+      </method>
+      <method name="CreateDatabaseCnc" cname="gda_server_provider_create_database_cnc">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="CreateIndex" cname="gda_server_provider_create_index">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-GdaDataModelIndex*" name="index" />
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </method>
+      <method name="CreateTable" cname="gda_server_provider_create_table">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="const-GList*" name="attributes_list" />
+          <parameter type="const-GList*" name="index_list" />
+        </parameters>
+      </method>
+      <method name="DropDatabaseCnc" cname="gda_server_provider_drop_database_cnc">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="DropIndex" cname="gda_server_provider_drop_index">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="index_name" />
+          <parameter type="gboolean" name="primary_key" />
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </method>
+      <method name="DropTable" cname="gda_server_provider_drop_table">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="const-gchar*" name="table_name" />
+        </parameters>
+      </method>
+      <method name="ExecuteCommand" cname="gda_server_provider_execute_command">
+        <return-type type="GList*" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaCommand*" name="cmd" />
+          <parameter type="GdaParameterList*" name="params" />
+        </parameters>
+      </method>
+      <method name="GetDatabase" cname="gda_server_provider_get_database">
+        <return-type type="const-gchar*" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+        </parameters>
+      </method>
+      <method name="GetLastInsertId" cname="gda_server_provider_get_last_insert_id">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaDataModel*" name="recset" />
+        </parameters>
+      </method>
+      <method name="GetSchema" cname="gda_server_provider_get_schema">
+        <return-type type="GdaDataModel*" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaConnectionSchema" name="schema" />
+          <parameter type="GdaParameterList*" name="params" />
+        </parameters>
+      </method>
+      <method name="GetServerVersion" cname="gda_server_provider_get_server_version">
+        <return-type type="const-gchar*" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+        </parameters>
+      </method>
+      <method name="GetSpecs" cname="gda_server_provider_get_specs">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaClientSpecsType" name="action_type" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_server_provider_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetVersion" cname="gda_server_provider_get_version">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="OpenConnection" cname="gda_server_provider_open_connection">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaQuarkList*" name="params" />
+          <parameter type="const-gchar*" name="username" />
+          <parameter type="const-gchar*" name="password" />
+        </parameters>
+      </method>
+      <method name="PerformActionParams" cname="gda_server_provider_perform_action_params">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaParameterList*" name="params" />
+          <parameter type="GdaClientSpecsType" name="action_type" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="ResetConnection" cname="gda_server_provider_reset_connection">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+        </parameters>
+      </method>
+      <method name="RollbackTransaction" cname="gda_server_provider_rollback_transaction">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+      <method name="Supports" cname="gda_server_provider_supports">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaConnectionFeature" name="feature" />
+        </parameters>
+      </method>
+      <method name="ValueToSqlString" cname="gda_server_provider_value_to_sql_string">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnc" />
+          <parameter type="GdaValue*" name="from" />
+        </parameters>
+      </method>
+    </object>
+    <object name="Table" cname="GdaTable" parent="GdaDataModelArray">
+      <field name="Priv" cname="priv" type="GdaTablePrivate*" />
+      <signal name="NameChanged" cname="name_changed" when="LAST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaTable*" name="table" />
+          <parameter type="const-gchar*" name="old_name" />
+        </parameters>
+      </signal>
+      <method name="AddDataFromModel" cname="gda_table_add_data_from_model">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-GdaDataModel*" name="model" />
+        </parameters>
+      </method>
+      <method name="AddField" cname="gda_table_add_field">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-GdaColumn*" name="column" />
+        </parameters>
+      </method>
+      <method name="FindColumn" cname="gda_table_find_column">
+        <return-type type="GdaColumn*" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="GetColumns" cname="gda_table_get_columns">
+        <return-type type="GList*" />
+      </method>
+      <method name="GetName" cname="gda_table_get_name">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetType" cname="gda_table_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_table_new">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_table_new_from_model">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="const-GdaDataModel*" name="model" />
+          <parameter type="gboolean" name="add_data" />
+        </parameters>
+      </constructor>
+      <method name="SetName" cname="gda_table_set_name">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+    </object>
+    <object name="Threader" cname="GdaThreader" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaThreaderPrivate*" />
+      <signal name="Finished" cname="finished" when="FIRST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaThreader*" name="thread" />
+          <parameter type="guint" name="job_id" />
+          <parameter type="gpointer" name="arg_data" />
+        </parameters>
+      </signal>
+      <signal name="Cancelled" cname="cancelled" when="FIRST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaThreader*" name="thread" />
+          <parameter type="guint" name="job_id" />
+          <parameter type="gpointer" name="arg_data" />
+        </parameters>
+      </signal>
+      <method name="Cancel" cname="gda_threader_cancel">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="guint" name="job_id" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_threader_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_threader_new" />
+      <method name="StartThread" cname="gda_threader_start_thread">
+        <return-type type="guint" />
+        <parameters>
+          <parameter type="GThreadFunc" name="func" />
+          <parameter type="gpointer" name="func_arg" />
+          <parameter type="GdaThreaderFunc" name="ok_callback" />
+          <parameter type="GdaThreaderFunc" name="cancel_callback" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+    </object>
+    <object name="Transaction" cname="GdaTransaction" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaTransactionPrivate*" />
+      <method name="GetIsolationLevel" cname="gda_transaction_get_isolation_level">
+        <return-type type="GdaTransactionIsolation" />
+      </method>
+      <method name="GetName" cname="gda_transaction_get_name">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetType" cname="gda_transaction_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_transaction_new">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </constructor>
+      <method name="SetIsolationLevel" cname="gda_transaction_set_isolation_level">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaTransactionIsolation" name="level" />
+        </parameters>
+      </method>
+      <method name="SetName" cname="gda_transaction_set_name">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+    </object>
+    <object name="XmlConnection" cname="GdaXmlConnection" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaXmlConnectionPrivate*" />
+      <method name="GetDsn" cname="gda_xml_connection_get_dsn">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetPassword" cname="gda_xml_connection_get_password">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetType" cname="gda_xml_connection_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetUsername" cname="gda_xml_connection_get_username">
+        <return-type type="const-gchar*" />
+      </method>
+      <constructor cname="gda_xml_connection_new" />
+      <constructor cname="gda_xml_connection_new_from_file">
+        <parameters>
+          <parameter type="const-gchar*" name="filename" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xml_connection_new_from_string">
+        <parameters>
+          <parameter type="const-gchar*" name="string" />
+        </parameters>
+      </constructor>
+      <method name="SetDsn" cname="gda_xml_connection_set_dsn">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="dsn" />
+        </parameters>
+      </method>
+      <method name="SetFromFile" cname="gda_xml_connection_set_from_file">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="filename" />
+        </parameters>
+      </method>
+      <method name="SetFromString" cname="gda_xml_connection_set_from_string">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="string" />
+        </parameters>
+      </method>
+      <method name="SetPassword" cname="gda_xml_connection_set_password">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="password" />
+        </parameters>
+      </method>
+      <method name="SetUsername" cname="gda_xml_connection_set_username">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="username" />
+        </parameters>
+      </method>
+    </object>
+    <object name="XmlDatabase" cname="GdaXmlDatabase" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaXmlDatabasePrivate*" />
+      <signal name="Changed" cname="changed" when="LAST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXmlDatabase*" name="xmldb" />
+        </parameters>
+      </signal>
+      <method name="Changed" cname="gda_xml_database_changed">
+        <return-type type="void" />
+      </method>
+      <method name="FindTable" cname="gda_xml_database_find_table">
+        <return-type type="GdaTable*" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="FreeTableList" cname="gda_xml_database_free_table_list" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GList*" name="list" />
+        </parameters>
+      </method>
+      <method name="GetName" cname="gda_xml_database_get_name">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetTables" cname="gda_xml_database_get_tables">
+        <return-type type="GList*" />
+      </method>
+      <method name="GetType" cname="gda_xml_database_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetUri" cname="gda_xml_database_get_uri">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetUserVersion" cname="gda_xml_database_get_user_version">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetVersion" cname="gda_xml_database_get_version">
+        <return-type type="const-gchar*" />
+      </method>
+      <constructor cname="gda_xml_database_new" />
+      <constructor cname="gda_xml_database_new_from_uri">
+        <parameters>
+          <parameter type="const-gchar*" name="uri" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xml_database_new_table">
+        <parameters>
+          <parameter type="GdaXmlDatabase*" name="xmldb" />
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xml_database_new_table_from_model">
+        <parameters>
+          <parameter type="GdaXmlDatabase*" name="xmldb" />
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="const-GdaDataModel*" name="model" />
+          <parameter type="gboolean" name="add_data" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xml_database_new_table_from_node">
+        <parameters>
+          <parameter type="GdaXmlDatabase*" name="xmldb" />
+          <parameter type="xmlNodePtr" name="node" />
+        </parameters>
+      </constructor>
+      <method name="Reload" cname="gda_xml_database_reload">
+        <return-type type="void" />
+      </method>
+      <method name="RemoveTable" cname="gda_xml_database_remove_table">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="Save" cname="gda_xml_database_save">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="uri" />
+        </parameters>
+      </method>
+      <method name="SetName" cname="gda_xml_database_set_name">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="SetUri" cname="gda_xml_database_set_uri">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="uri" />
+        </parameters>
+      </method>
+      <method name="SetUserVersion" cname="gda_xml_database_set_user_version">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="user_version" />
+        </parameters>
+      </method>
+      <method name="ToString" cname="gda_xml_database_to_string">
+        <return-type type="gchar*" />
+      </method>
+    </object>
+    <object name="XmlDocument" cname="GdaXmlDocument" parent="GObject">
+      <field name="Doc" cname="doc" type="xmlDocPtr" />
+      <field name="Dtd" cname="dtd" type="xmlDtdPtr" />
+      <field name="Root" cname="root" type="xmlNodePtr" />
+      <field name="Context" cname="context" type="xmlValidCtxtPtr" />
+      <signal name="Warning" cname="warning" when="LAST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXmlDocument*" name="q" />
+          <parameter type="const-char*" name="msg" />
+        </parameters>
+      </signal>
+      <signal name="Error" cname="error" when="LAST">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXmlDocument*" name="q" />
+          <parameter type="const-char*" name="msg" />
+        </parameters>
+      </signal>
+      <method name="Construct" cname="gda_xml_document_construct">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="root_doc" />
+        </parameters>
+      </method>
+      <method name="GetCompressMode" cname="gda_xml_document_get_compress_mode">
+        <return-type type="gint" />
+      </method>
+      <method name="GetType" cname="gda_xml_document_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xml_document_new">
+        <parameters>
+          <parameter type="const-gchar*" name="root_doc" />
+        </parameters>
+      </constructor>
+      <method name="SetCompressMode" cname="gda_xml_document_set_compress_mode">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="mode" />
+        </parameters>
+      </method>
+      <method name="Stringify" cname="gda_xml_document_stringify">
+        <return-type type="gchar*" />
+      </method>
+      <method name="ToFile" cname="gda_xml_document_to_file">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="uri" />
+        </parameters>
+      </method>
+    </object>
+    <object name="XqlAtom" cname="GdaXqlAtom" parent="GdaXqlItem">
+      <method name="GetType" cname="gda_xql_atom_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_atom_new">
+        <parameters>
+          <parameter type="gchar*" name="tag" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlBin" cname="GdaXqlBin" parent="GdaXqlItem">
+      <field name="Priv" cname="priv" type="GdaXqlBinPrivate*" />
+      <method name="GetChild" cname="gda_xql_bin_get_child">
+        <return-type type="GdaXqlItem*" />
+      </method>
+      <method name="GetType" cname="gda_xql_bin_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_bin_new">
+        <parameters>
+          <parameter type="gchar*" name="tag" />
+          <parameter type="gchar*" name="sqlfmt" />
+          <parameter type="gchar*" name="sqlop" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_bin_new_exists" />
+      <constructor cname="gda_xql_bin_new_having" />
+      <constructor cname="gda_xql_bin_new_having_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="data" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_bin_new_intersect" />
+      <constructor cname="gda_xql_bin_new_minus" />
+      <constructor cname="gda_xql_bin_new_not" />
+      <constructor cname="gda_xql_bin_new_not_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="data" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_bin_new_null" />
+      <constructor cname="gda_xql_bin_new_null_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="data" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_bin_new_on" />
+      <constructor cname="gda_xql_bin_new_union" />
+      <constructor cname="gda_xql_bin_new_unionall" />
+      <constructor cname="gda_xql_bin_new_where" />
+      <constructor cname="gda_xql_bin_new_where_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="data" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_bin_new_with_data">
+        <parameters>
+          <parameter type="gchar*" name="tag" />
+          <parameter type="gchar*" name="sqlfmt" />
+          <parameter type="gchar*" name="sqlop" />
+          <parameter type="GdaXqlItem*" name="child" />
+        </parameters>
+      </constructor>
+      <method name="SetChild" cname="gda_xql_bin_set_child">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="item" />
+        </parameters>
+      </method>
+    </object>
+    <object name="XqlColumn" cname="GdaXqlColumn" parent="GdaXqlAtom">
+      <method name="GetType" cname="gda_xql_column_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_column_new" />
+      <constructor cname="gda_xql_column_new_with_data">
+        <parameters>
+          <parameter type="gint" name="num" />
+          <parameter type="gboolean" name="asc" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlConst" cname="GdaXqlConst" parent="GdaXqlAtom">
+      <method name="GetType" cname="gda_xql_const_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_const_new" />
+      <constructor cname="gda_xql_const_new_with_data">
+        <parameters>
+          <parameter type="gchar*" name="value" />
+          <parameter type="gchar*" name="alias" />
+          <parameter type="gchar*" name="type" />
+          <parameter type="gchar*" name="null" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlDelete" cname="GdaXqlDelete" parent="GdaXqlDml">
+      <method name="GetType" cname="gda_xql_delete_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_delete_new" />
+    </object>
+    <object name="XqlDml" cname="GdaXqlDml" parent="GdaXqlItem">
+      <field name="Priv" cname="priv" type="GdaXqlDmlPrivate*" />
+      <virtual_method name="AddTargetFromText" cname="add_target_from_text">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="gchar*" name="name" />
+          <parameter type="GdaXqlItem*" name="join" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddFieldFromText" cname="add_field_from_text">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="gchar*" name="id" />
+          <parameter type="gchar*" name="name" />
+          <parameter type="gchar*" name="alias" />
+          <parameter type="gboolean" name="group" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddConstFromText" cname="add_const_from_text">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="gchar*" name="value" />
+          <parameter type="gchar*" name="type" />
+          <parameter type="gboolean" name="null" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddFunc" cname="add_func">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="GdaXqlItem*" name="item" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddQuery" cname="add_query">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="GdaXqlItem*" name="item" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddRowCondition" cname="add_row_condition">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="GdaXqlItem*" name="cond" />
+          <parameter type="gchar*" name="type" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddGroupCondition" cname="add_group_condition">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="GdaXqlItem*" name="cond" />
+          <parameter type="gchar*" name="type" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddOrder" cname="add_order">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="gint" name="column" />
+          <parameter type="gboolean" name="asc" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddSet" cname="add_set">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="GdaXqlItem*" name="item" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="AddSetConst" cname="add_set_const">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlDml*" name="xqldml" />
+          <parameter type="gchar*" name="field" />
+          <parameter type="gchar*" name="value" />
+          <parameter type="gchar*" name="type" />
+          <parameter type="gboolean" name="null" />
+        </parameters>
+      </virtual_method>
+      <method name="AddConstFromText" cname="gda_xql_dml_add_const_from_text">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="gchar*" name="value" />
+          <parameter type="gchar*" name="type" />
+          <parameter type="gboolean" name="null" />
+        </parameters>
+      </method>
+      <method name="AddFieldFromText" cname="gda_xql_dml_add_field_from_text">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="gchar*" name="id" />
+          <parameter type="gchar*" name="name" />
+          <parameter type="gchar*" name="alias" />
+          <parameter type="gboolean" name="group" />
+        </parameters>
+      </method>
+      <method name="AddFunc" cname="gda_xql_dml_add_func">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="item" />
+        </parameters>
+      </method>
+      <method name="AddGroupCondition" cname="gda_xql_dml_add_group_condition">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="cond" />
+          <parameter type="gchar*" name="type" />
+        </parameters>
+      </method>
+      <method name="AddOrder" cname="gda_xql_dml_add_order">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="column" />
+          <parameter type="gboolean" name="asc" />
+        </parameters>
+      </method>
+      <method name="AddQuery" cname="gda_xql_dml_add_query">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="item" />
+        </parameters>
+      </method>
+      <method name="AddRowCondition" cname="gda_xql_dml_add_row_condition">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="cond" />
+          <parameter type="gchar*" name="type" />
+        </parameters>
+      </method>
+      <method name="AddSet" cname="gda_xql_dml_add_set">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="item" />
+        </parameters>
+      </method>
+      <method name="AddSetConst" cname="gda_xql_dml_add_set_const">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gchar*" name="field" />
+          <parameter type="gchar*" name="value" />
+          <parameter type="gchar*" name="type" />
+          <parameter type="gboolean" name="null" />
+        </parameters>
+      </method>
+      <method name="AddTargetFromText" cname="gda_xql_dml_add_target_from_text">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="gchar*" name="name" />
+          <parameter type="GdaXqlItem*" name="join" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_xql_dml_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </object>
+    <object name="XqlDual" cname="GdaXqlDual" parent="GdaXqlItem">
+      <field name="Priv" cname="priv" type="GdaXqlDualPrivate*" />
+      <method name="GetLeft" cname="gda_xql_dual_get_left">
+        <return-type type="GdaXqlItem*" />
+      </method>
+      <method name="GetRight" cname="gda_xql_dual_get_right">
+        <return-type type="GdaXqlItem*" />
+      </method>
+      <method name="GetType" cname="gda_xql_dual_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_dual_new">
+        <parameters>
+          <parameter type="gchar*" name="tag" />
+          <parameter type="gchar*" name="sqlfmt" />
+          <parameter type="gchar*" name="sqlop" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_eq" />
+      <constructor cname="gda_xql_dual_new_eq_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_ge" />
+      <constructor cname="gda_xql_dual_new_ge_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_gt" />
+      <constructor cname="gda_xql_dual_new_gt_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_in" />
+      <constructor cname="gda_xql_dual_new_in_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_le" />
+      <constructor cname="gda_xql_dual_new_le_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_like" />
+      <constructor cname="gda_xql_dual_new_like_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_lt" />
+      <constructor cname="gda_xql_dual_new_lt_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_ne" />
+      <constructor cname="gda_xql_dual_new_ne_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_set" />
+      <constructor cname="gda_xql_dual_new_set_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_dual_new_with_data">
+        <parameters>
+          <parameter type="gchar*" name="tag" />
+          <parameter type="gchar*" name="sqlfmt" />
+          <parameter type="gchar*" name="sqlop" />
+          <parameter type="GdaXqlItem*" name="left" />
+          <parameter type="GdaXqlItem*" name="right" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlField" cname="GdaXqlField" parent="GdaXqlAtom">
+      <method name="GetType" cname="gda_xql_field_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_field_new" />
+      <constructor cname="gda_xql_field_new_with_data">
+        <parameters>
+          <parameter type="gchar*" name="source" />
+          <parameter type="gchar*" name="name" />
+          <parameter type="gchar*" name="alias" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlFunc" cname="GdaXqlFunc" parent="GdaXqlBin">
+      <method name="AddConstFromText" cname="gda_xql_func_add_const_from_text">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gchar*" name="value" />
+          <parameter type="gchar*" name="type" />
+          <parameter type="gchar*" name="null" />
+        </parameters>
+      </method>
+      <method name="AddFieldFromText" cname="gda_xql_func_add_field_from_text">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gchar*" name="id" />
+          <parameter type="gchar*" name="name" />
+          <parameter type="gchar*" name="alias" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_xql_func_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_func_new" />
+      <constructor cname="gda_xql_func_new_with_data">
+        <parameters>
+          <parameter type="gchar*" name="name" />
+          <parameter type="gchar*" name="alias" />
+          <parameter type="gchar*" name="aggregate" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlInsert" cname="GdaXqlInsert" parent="GdaXqlDml">
+      <method name="GetType" cname="gda_xql_insert_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_insert_new" />
+    </object>
+    <object name="XqlItem" cname="GdaXqlItem" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaXqlItemPrivate*" />
+      <virtual_method name="ToDom" cname="to_dom">
+        <return-type type="xmlNode*" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="xqlitem" />
+          <parameter type="xmlNode*" name="parNode" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="Add" cname="add">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="xqlitem" />
+          <parameter type="GdaXqlItem*" name="child" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="FindId" cname="find_id">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="xqlitem" />
+          <parameter type="gchar*" name="id" />
+        </parameters>
+      </virtual_method>
+      <virtual_method name="FindRef" cname="find_ref">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="xqlitem" />
+          <parameter type="gchar*" name="ref" />
+        </parameters>
+      </virtual_method>
+      <method name="Add" cname="gda_xql_item_add">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="child" />
+        </parameters>
+      </method>
+      <method name="AddId" cname="gda_xql_item_add_id">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gchar*" name="id" />
+        </parameters>
+      </method>
+      <method name="AddRef" cname="gda_xql_item_add_ref">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gchar*" name="ref" />
+        </parameters>
+      </method>
+      <method name="FindId" cname="gda_xql_item_find_id">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="gchar*" name="id" />
+        </parameters>
+      </method>
+      <method name="FindRef" cname="gda_xql_item_find_ref">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="gchar*" name="ref" />
+        </parameters>
+      </method>
+      <method name="FindRoot" cname="gda_xql_item_find_root">
+        <return-type type="GdaXqlItem*" />
+      </method>
+      <method name="GetAttrib" cname="gda_xql_item_get_attrib">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="gchar*" name="attrib" />
+        </parameters>
+      </method>
+      <method name="GetParent" cname="gda_xql_item_get_parent">
+        <return-type type="GdaXqlItem*" />
+      </method>
+      <method name="GetRef" cname="gda_xql_item_get_ref">
+        <return-type type="GdaXqlItem*" />
+        <parameters>
+          <parameter type="gchar*" name="ref" />
+        </parameters>
+      </method>
+      <method name="GetTag" cname="gda_xql_item_get_tag">
+        <return-type type="gchar*" />
+      </method>
+      <method name="GetType" cname="gda_xql_item_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="SetAttrib" cname="gda_xql_item_set_attrib">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gchar*" name="attrib" />
+          <parameter type="gchar*" name="value" />
+        </parameters>
+      </method>
+      <method name="SetParent" cname="gda_xql_item_set_parent">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="parent" />
+        </parameters>
+      </method>
+      <method name="SetTag" cname="gda_xql_item_set_tag">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gchar*" name="tag" />
+        </parameters>
+      </method>
+      <method name="ToDom" cname="gda_xql_item_to_dom">
+        <return-type type="xmlNode*" />
+        <parameters>
+          <parameter type="xmlNode*" name="parent" />
+        </parameters>
+      </method>
+    </object>
+    <object name="XqlJoin" cname="GdaXqlJoin" parent="GdaXqlDual">
+      <method name="GetType" cname="gda_xql_join_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_join_new" />
+      <constructor cname="gda_xql_join_new_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="target" />
+          <parameter type="GdaXqlItem*" name="cond" />
+          <parameter type="gchar*" name="type" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlList" cname="GdaXqlList" parent="GdaXqlItem">
+      <field name="Priv" cname="priv" type="GdaXqlListPrivate*" />
+      <method name="GetType" cname="gda_xql_list_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_list_new">
+        <parameters>
+          <parameter type="gchar*" name="tag" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_xql_list_new_and" />
+      <constructor cname="gda_xql_list_new_arglist" />
+      <constructor cname="gda_xql_list_new_dest" />
+      <constructor cname="gda_xql_list_new_group" />
+      <constructor cname="gda_xql_list_new_joinlist" />
+      <constructor cname="gda_xql_list_new_or" />
+      <constructor cname="gda_xql_list_new_order" />
+      <constructor cname="gda_xql_list_new_setlist" />
+      <constructor cname="gda_xql_list_new_sourcelist" />
+      <constructor cname="gda_xql_list_new_targetlist" />
+      <constructor cname="gda_xql_list_new_valuelist" />
+      <method name="UnrefList" cname="gda_xql_list_unref_list" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GSList*" name="list" />
+        </parameters>
+      </method>
+    </object>
+    <object name="XqlQuery" cname="GdaXqlQuery" parent="GdaXqlBin">
+      <method name="GetType" cname="gda_xql_query_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_query_new" />
+      <constructor cname="gda_xql_query_new_with_data">
+        <parameters>
+          <parameter type="GdaXqlItem*" name="xqlitem" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlSelect" cname="GdaXqlSelect" parent="GdaXqlDml">
+      <method name="GetType" cname="gda_xql_select_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_select_new" />
+    </object>
+    <object name="XqlStack" cname="GdaXqlStack" parent="GObject">
+      <field name="Priv" cname="priv" type="GdaXqlStackPrivate*" />
+      <method name="Empty" cname="gda_xql_stack_empty">
+        <return-type type="gboolean" />
+      </method>
+      <method name="GetType" cname="gda_xql_stack_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_stack_new" />
+      <method name="Pop" cname="gda_xql_stack_pop">
+        <return-type type="GdaXqlItem*" />
+      </method>
+      <method name="Push" cname="gda_xql_stack_push">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaXqlItem*" name="item" />
+        </parameters>
+      </method>
+    </object>
+    <object name="XqlTarget" cname="GdaXqlTarget" parent="GdaXqlBin">
+      <method name="GetType" cname="gda_xql_target_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_target_new" />
+      <constructor cname="gda_xql_target_new_with_data">
+        <parameters>
+          <parameter type="gchar*" name="id" />
+          <parameter type="gchar*" name="name" />
+          <parameter type="GdaXqlItem*" name="join" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlUpdate" cname="GdaXqlUpdate" parent="GdaXqlDml">
+      <method name="GetType" cname="gda_xql_update_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_update_new" />
+    </object>
+    <object name="XqlValue" cname="GdaXqlValue" parent="GdaXqlBin">
+      <method name="GetType" cname="gda_xql_value_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_value_new" />
+      <constructor cname="gda_xql_value_new_with_data">
+        <parameters>
+          <parameter type="gchar*" name="id" />
+        </parameters>
+      </constructor>
+    </object>
+    <object name="XqlValueRef" cname="GdaXqlValueRef" parent="GdaXqlAtom">
+      <method name="GetType" cname="gda_xql_valueref_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_xql_valueref_new" />
+    </object>
+    <object name="Blob" cname="GdaBlob" parent="GObject">
+      <callback cname="open">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob," />
+        </parameters>
+      </callback>
+      <callback cname="read">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob," />
+        </parameters>
+      </callback>
+      <callback cname="write">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob," />
+        </parameters>
+      </callback>
+      <callback cname="lseek">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob," />
+        </parameters>
+      </callback>
+      <callback cname="close">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob" />
+        </parameters>
+      </callback>
+      <callback cname="remove">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob" />
+        </parameters>
+      </callback>
+      <callback cname="stringify">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob" />
+        </parameters>
+      </callback>
+      <callback cname="free_data">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaBlob*" name="blob" />
+        </parameters>
+      </callback>
+      <field name="PrivData" cname="priv_data" type="gpointer" />
+      <field name="UserData" cname="user_data" type="gpointer" />
+      <method name="Close" cname="gda_blob_close">
+        <return-type type="gint" />
+      </method>
+      <method name="FreeData" cname="gda_blob_free_data">
+        <return-type type="void" />
+      </method>
+      <method name="Lseek" cname="gda_blob_lseek">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="gint" name="offset" />
+          <parameter type="gint" name="whence" />
+        </parameters>
+      </method>
+      <method name="Open" cname="gda_blob_open">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaBlobMode" name="mode" />
+        </parameters>
+      </method>
+      <method name="Read" cname="gda_blob_read">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="gpointer" name="buf" />
+          <parameter type="gint" name="size" />
+          <parameter type="gint*" name="bytes_read" />
+        </parameters>
+      </method>
+      <method name="Remove" cname="gda_blob_remove">
+        <return-type type="gint" />
+      </method>
+      <method name="Stringify" cname="gda_blob_stringify">
+        <return-type type="gchar*" />
+      </method>
+      <method name="Write" cname="gda_blob_write">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="gpointer" name="buf" />
+          <parameter type="gint" name="size" />
+          <parameter type="gint*" name="bytes_written" />
+        </parameters>
+      </method>
+    </object>
+    <boxed name="Binary" cname="GdaBinary">
+      <field name="Data" cname="data" type="gpointer" />
+      <field name="BinaryLength" cname="binary_length" type="glong" />
+      <method name="Copy" cname="gda_binary_copy" shared="true">
+        <return-type type="gpointer" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_binary_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_binary_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <boxed name="Command" cname="GdaCommand">
+      <field name="Text" cname="text" type="gchar*" />
+      <field name="Type" cname="type" type="GdaCommandType" />
+      <field name="Options" cname="options" type="GdaCommandOptions" />
+      <field name="Xaction" cname="xaction" type="GdaTransaction*" />
+      <method name="Copy" cname="gda_command_copy">
+        <return-type type="GdaCommand*" owned="true" />
+      </method>
+      <method name="Free" cname="gda_command_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetCommandType" cname="gda_command_get_command_type">
+        <return-type type="GdaCommandType" />
+      </method>
+      <method name="GetOptions" cname="gda_command_get_options">
+        <return-type type="GdaCommandOptions" />
+      </method>
+      <method name="GetText" cname="gda_command_get_text">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetTransaction" cname="gda_command_get_transaction">
+        <return-type type="GdaTransaction*" />
+      </method>
+      <method name="GetType" cname="gda_command_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_command_new">
+        <parameters>
+          <parameter type="const-gchar*" name="text" />
+          <parameter type="GdaCommandType" name="type" />
+          <parameter type="GdaCommandOptions" name="options" />
+        </parameters>
+      </constructor>
+      <method name="SetCommandType" cname="gda_command_set_command_type">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaCommandType" name="type" />
+        </parameters>
+      </method>
+      <method name="SetOptions" cname="gda_command_set_options">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaCommandOptions" name="options" />
+        </parameters>
+      </method>
+      <method name="SetText" cname="gda_command_set_text">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="text" />
+        </parameters>
+      </method>
+      <method name="SetTransaction" cname="gda_command_set_transaction">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaTransaction*" name="xaction" />
+        </parameters>
+      </method>
+    </boxed>
+    <boxed name="DataModelIndex" cname="GdaDataModelIndex">
+      <field name="Name" cname="name" type="gchar*" />
+      <field name="TableName" cname="table_name" type="gchar*" />
+      <field name="PrimaryKey" cname="primary_key" type="gboolean" />
+      <field name="UniqueKey" cname="unique_key" type="gboolean" />
+      <field name="References" cname="references" type="gchar*" />
+      <field name="ColIdxList" cname="col_idx_list" type="GList*" />
+      <method name="Copy" cname="gda_data_model_index_copy">
+        <return-type type="GdaDataModelIndex*" owned="true" />
+      </method>
+      <method name="Equal" cname="gda_data_model_index_equal">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-GdaDataModelIndex*" name="rhs" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_data_model_index_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetColumnIndexList" cname="gda_data_model_index_get_column_index_list">
+        <return-type type="GList*" />
+      </method>
+      <method name="GetName" cname="gda_data_model_index_get_name">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetPrimaryKey" cname="gda_data_model_index_get_primary_key">
+        <return-type type="gboolean" />
+      </method>
+      <method name="GetReferences" cname="gda_data_model_index_get_references">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetTableName" cname="gda_data_model_index_get_table_name">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetType" cname="gda_data_model_index_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetUniqueKey" cname="gda_data_model_index_get_unique_key">
+        <return-type type="gboolean" />
+      </method>
+      <constructor cname="gda_data_model_index_new" />
+      <method name="SetColumnIndexList" cname="gda_data_model_index_set_column_index_list">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GList*" name="col_idx_list" />
+        </parameters>
+      </method>
+      <method name="SetName" cname="gda_data_model_index_set_name">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="SetPrimaryKey" cname="gda_data_model_index_set_primary_key">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gboolean" name="pk" />
+        </parameters>
+      </method>
+      <method name="SetReferences" cname="gda_data_model_index_set_references">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="ref" />
+        </parameters>
+      </method>
+      <method name="SetTableName" cname="gda_data_model_index_set_table_name">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="SetUniqueKey" cname="gda_data_model_index_set_unique_key">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gboolean" name="uk" />
+        </parameters>
+      </method>
+    </boxed>
+    <boxed name="DataSourceInfo" cname="GdaDataSourceInfo">
+      <field name="Name" cname="name" type="gchar*" />
+      <field name="Provider" cname="provider" type="gchar*" />
+      <field name="CncString" cname="cnc_string" type="gchar*" />
+      <field name="Description" cname="description" type="gchar*" />
+      <field name="Username" cname="username" type="gchar*" />
+      <field name="Password" cname="password" type="gchar*" />
+      <field name="IsGlobal" cname="is_global" type="gboolean" />
+      <method name="Copy" cname="gda_data_source_info_copy">
+        <return-type type="GdaDataSourceInfo*" owned="true" />
+      </method>
+      <method name="Equal" cname="gda_data_source_info_equal">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataSourceInfo*" name="info2" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_data_source_info_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetType" cname="gda_data_source_info_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <boxed name="Date" cname="GdaDate">
+      <field name="Year" cname="year" type="gshort" />
+      <field name="Month" cname="month" type="gushort" />
+      <field name="Day" cname="day" type="gushort" />
+      <method name="Copy" cname="gda_date_copy" shared="true">
+        <return-type type="gpointer" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_date_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_date_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <boxed name="GeometricPoint" cname="GdaGeometricPoint">
+      <field name="X" cname="x" type="gdouble" />
+      <field name="Y" cname="y" type="gdouble" />
+      <method name="Copy" cname="gda_geometricpoint_copy" shared="true">
+        <return-type type="gpointer" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_geometricpoint_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_geometricpoint_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <boxed name="Money" cname="GdaMoney">
+      <field name="Currency" cname="currency" type="gchar*" />
+      <field name="Amount" cname="amount" type="gdouble" />
+      <method name="Copy" cname="gda_money_copy" shared="true">
+        <return-type type="gpointer" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_money_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_money_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <boxed name="Numeric" cname="GdaNumeric">
+      <field name="Number" cname="number" type="gchar*" />
+      <field name="Precision" cname="precision" type="glong" />
+      <field name="Width" cname="width" type="glong" />
+      <method name="Copy" cname="gda_numeric_copy" shared="true">
+        <return-type type="gpointer" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_numeric_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_numeric_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <boxed name="Parameter" cname="GdaParameter">
+      <field name="Name" cname="name" type="gchar*" />
+      <field name="Value" cname="value" type="GdaValue*" />
+      <method name="Copy" cname="gda_parameter_copy">
+        <return-type type="GdaParameter*" owned="true" />
+      </method>
+      <method name="Free" cname="gda_parameter_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetName" cname="gda_parameter_get_name">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetType" cname="gda_parameter_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetValue" cname="gda_parameter_get_value">
+        <return-type type="const-GdaValue*" />
+      </method>
+      <constructor cname="gda_parameter_new_boolean">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="gboolean" name="value" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_parameter_new_double">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="gdouble" name="value" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_parameter_new_from_value">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="const-GdaValue*" name="value" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_parameter_new_gobject">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="const-GObject*" name="value" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_parameter_new_string">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="const-gchar*" name="value" />
+        </parameters>
+      </constructor>
+      <method name="SetName" cname="gda_parameter_set_name">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="SetValue" cname="gda_parameter_set_value">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+    </boxed>
+    <boxed name="ParameterList" cname="GdaParameterList" opaque="true">
+      <method name="AddParameter" cname="gda_parameter_list_add_parameter">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaParameter*" name="param" />
+        </parameters>
+      </method>
+      <method name="Clear" cname="gda_parameter_list_clear">
+        <return-type type="void" />
+      </method>
+      <method name="Copy" cname="gda_parameter_list_copy">
+        <return-type type="GdaParameterList*" owned="true" />
+      </method>
+      <method name="Find" cname="gda_parameter_list_find">
+        <return-type type="GdaParameter*" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_parameter_list_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetLength" cname="gda_parameter_list_get_length">
+        <return-type type="guint" />
+      </method>
+      <method name="GetNames" cname="gda_parameter_list_get_names">
+        <return-type type="GList*" />
+      </method>
+      <method name="GetType" cname="gda_parameter_list_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_parameter_list_new" />
+    </boxed>
+    <boxed name="ProviderInfo" cname="GdaProviderInfo">
+      <field name="Id" cname="id" type="gchar*" />
+      <field name="Location" cname="location" type="gchar*" />
+      <field name="Description" cname="description" type="gchar*" />
+      <field name="GdaParams" cname="gda_params" type="GList*" />
+      <field name="DsnSpec" cname="dsn_spec" type="gchar*" />
+      <method name="Copy" cname="gda_provider_info_copy">
+        <return-type type="GdaProviderInfo*" owned="true" />
+      </method>
+      <method name="Free" cname="gda_provider_info_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetType" cname="gda_provider_info_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <boxed name="ProviderParameterInfo" cname="GdaProviderParameterInfo">
+      <field name="Name" cname="name" type="char*" />
+      <field name="ShortDescription" cname="short_description" type="char*" />
+      <field name="LongDescription" cname="long_description" type="char*" />
+      <field name="Type" cname="type" type="GdaValueType" />
+      <method name="Copy" cname="gda_provider_parameter_info_copy">
+        <return-type type="GdaProviderParameterInfo*" owned="true" />
+      </method>
+      <method name="Free" cname="gda_provider_parameter_info_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetType" cname="gda_provider_parameter_info_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_provider_parameter_info_new_full">
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="const-gchar*" name="short_description" />
+          <parameter type="const-gchar*" name="long_description" />
+          <parameter type="GdaValueType" name="type" />
+        </parameters>
+      </constructor>
+    </boxed>
+    <struct name="QuarkList" cname="GdaQuarkList" opaque="true">
+      <method name="AddFromString" cname="gda_quark_list_add_from_string">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="string" />
+          <parameter type="gboolean" name="cleanup" />
+        </parameters>
+      </method>
+      <method name="Clear" cname="gda_quark_list_clear">
+        <return-type type="void" />
+      </method>
+      <method name="Copy" cname="gda_quark_list_copy">
+        <return-type type="GdaQuarkList*" owned="true" />
+      </method>
+      <method name="Find" cname="gda_quark_list_find">
+        <return-type type="const-gchar*" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_quark_list_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetType" cname="gda_quark_list_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <constructor cname="gda_quark_list_new" />
+      <constructor cname="gda_quark_list_new_from_string">
+        <parameters>
+          <parameter type="const-gchar*" name="string" />
+        </parameters>
+      </constructor>
+      <method name="Remove" cname="gda_quark_list_remove">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+    </struct>
+    <struct name="Row" cname="GdaRow" opaque="true">
+      <method name="Copy" cname="gda_row_copy">
+        <return-type type="GdaRow*" owned="true" />
+      </method>
+      <method name="Free" cname="gda_row_free">
+        <return-type type="void" />
+      </method>
+      <method name="GetId" cname="gda_row_get_id">
+        <return-type type="const-gchar*" />
+      </method>
+      <method name="GetIsDefault" cname="gda_row_get_is_default">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="gint" name="num" />
+        </parameters>
+      </method>
+      <method name="GetLength" cname="gda_row_get_length">
+        <return-type type="gint" />
+      </method>
+      <method name="GetModel" cname="gda_row_get_model">
+        <return-type type="GdaDataModel*" />
+      </method>
+      <method name="GetNumber" cname="gda_row_get_number">
+        <return-type type="gint" />
+      </method>
+      <method name="GetType" cname="gda_row_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="GetValue" cname="gda_row_get_value">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gint" name="num" />
+        </parameters>
+      </method>
+      <constructor cname="gda_row_new">
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="gint" name="count" />
+        </parameters>
+      </constructor>
+      <constructor cname="gda_row_new_from_list">
+        <parameters>
+          <parameter type="GdaDataModel*" name="model" />
+          <parameter type="const-GList*" name="values" />
+        </parameters>
+      </constructor>
+      <method name="SetId" cname="gda_row_set_id">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="id" />
+        </parameters>
+      </method>
+      <method name="SetIsDefault" cname="gda_row_set_is_default">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="num" />
+          <parameter type="gboolean" name="is_default" />
+        </parameters>
+      </method>
+      <method name="SetNumber" cname="gda_row_set_number">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gint" name="number" />
+        </parameters>
+      </method>
+    </struct>
+    <boxed name="Time" cname="GdaTime">
+      <field name="Hour" cname="hour" type="gushort" />
+      <field name="Minute" cname="minute" type="gushort" />
+      <field name="Second" cname="second" type="gushort" />
+      <field name="Timezone" cname="timezone" type="glong" />
+      <method name="Copy" cname="gda_time_copy" shared="true">
+        <return-type type="gpointer" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_time_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_time_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <boxed name="Timestamp" cname="GdaTimestamp">
+      <field name="Year" cname="year" type="gshort" />
+      <field name="Month" cname="month" type="gushort" />
+      <field name="Day" cname="day" type="gushort" />
+      <field name="Hour" cname="hour" type="gushort" />
+      <field name="Minute" cname="minute" type="gushort" />
+      <field name="Second" cname="second" type="gushort" />
+      <field name="Fraction" cname="fraction" type="gulong" />
+      <field name="Timezone" cname="timezone" type="glong" />
+      <method name="Copy" cname="gda_timestamp_copy" shared="true">
+        <return-type type="gpointer" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_timestamp_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gpointer" name="boxed" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_timestamp_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </boxed>
+    <alias name="Value" cname="GdaValue" type="GValue" />
+    <alias name="ValueList" cname="GdaValueList" type="GList" />
+    <class name="Config" cname="GdaConfig_">
+      <method name="AddListener" cname="gda_config_add_listener" shared="true">
+        <return-type type="guint" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+          <parameter type="GdaConfigListenerFunc" name="func" />
+          <parameter type="gpointer" name="user_data" />
+        </parameters>
+      </method>
+      <method name="CanModifyGlobalConfig" cname="gda_config_can_modify_global_config" shared="true">
+        <return-type type="gboolean" />
+      </method>
+      <method name="FindDataSource" cname="gda_config_find_data_source" shared="true">
+        <return-type type="GdaDataSourceInfo*" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="FreeDataSourceList" cname="gda_config_free_data_source_list" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GList*" name="list" />
+        </parameters>
+      </method>
+      <method name="FreeList" cname="gda_config_free_list" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GList*" name="list" />
+        </parameters>
+      </method>
+      <method name="FreeProviderList" cname="gda_config_free_provider_list" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GList*" name="list" />
+        </parameters>
+      </method>
+      <method name="GetBoolean" cname="gda_config_get_boolean" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="GetDataSourceList" cname="gda_config_get_data_source_list" shared="true">
+        <return-type type="GList*" />
+      </method>
+      <method name="GetDataSourceModel" cname="gda_config_get_data_source_model" shared="true">
+        <return-type type="GdaDataModel*" />
+      </method>
+      <method name="GetFloat" cname="gda_config_get_float" shared="true">
+        <return-type type="gdouble" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="GetInt" cname="gda_config_get_int" shared="true">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="GetProviderByName" cname="gda_config_get_provider_by_name" shared="true">
+        <return-type type="GdaProviderInfo*" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="GetProviderList" cname="gda_config_get_provider_list" shared="true">
+        <return-type type="GList*" />
+      </method>
+      <method name="GetProviderModel" cname="gda_config_get_provider_model" shared="true">
+        <return-type type="GdaDataModel*" />
+      </method>
+      <method name="GetString" cname="gda_config_get_string" shared="true">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_config_get_type" shared="true">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="HasKey" cname="gda_config_has_key" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="HasSection" cname="gda_config_has_section" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="ListKeys" cname="gda_config_list_keys" shared="true">
+        <return-type type="GList*" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="ListSections" cname="gda_config_list_sections" shared="true">
+        <return-type type="GList*" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="RemoveDataSource" cname="gda_config_remove_data_source" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
+      <method name="RemoveKey" cname="gda_config_remove_key" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="RemoveListener" cname="gda_config_remove_listener" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="guint" name="id" />
+        </parameters>
+      </method>
+      <method name="RemoveSection" cname="gda_config_remove_section" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+        </parameters>
+      </method>
+      <method name="SaveDataSource" cname="gda_config_save_data_source" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+          <parameter type="const-gchar*" name="provider" />
+          <parameter type="const-gchar*" name="cnc_string" />
+          <parameter type="const-gchar*" name="description" />
+          <parameter type="const-gchar*" name="username" />
+          <parameter type="const-gchar*" name="password" />
+          <parameter type="gboolean" name="is_global" />
+        </parameters>
+      </method>
+      <method name="SaveDataSourceInfo" cname="gda_config_save_data_source_info" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaDataSourceInfo*" name="dsn_info" />
+        </parameters>
+      </method>
+      <method name="SetBoolean" cname="gda_config_set_boolean" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+          <parameter type="gboolean" name="new_value" />
+        </parameters>
+      </method>
+      <method name="SetFloat" cname="gda_config_set_float" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+          <parameter type="gdouble" name="new_value" />
+        </parameters>
+      </method>
+      <method name="SetInt" cname="gda_config_set_int" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+          <parameter type="gint" name="new_value" />
+        </parameters>
+      </method>
+      <method name="SetString" cname="gda_config_set_string" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="path" />
+          <parameter type="const-gchar*" name="new_value" />
+        </parameters>
+      </method>
+    </class>
+    <class name="File" cname="GdaFile_">
+      <method name="Load" cname="gda_file_load" shared="true">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="const-gchar*" name="filename" />
+        </parameters>
+      </method>
+      <method name="Save" cname="gda_file_save" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="filename" />
+          <parameter type="const-gchar*" name="buffer" />
+          <parameter type="gint" name="len" />
+        </parameters>
+      </method>
+    </class>
+    <class name="Global" cname="GdaGlobal">
+      <method name="GdatypeGetType" cname="gda_gdatype_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="SmallintGetType" cname="gda_smallint_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="SmalluintGetType" cname="gda_smalluint_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="SqlReplacePlaceholders" cname="gda_sql_replace_placeholders" shared="true">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="const-gchar*" name="sql" />
+          <parameter type="GdaParameterList*" name="params" />
+        </parameters>
+      </method>
+      <method name="StringHashToList" cname="gda_string_hash_to_list" shared="true">
+        <return-type type="GList*" />
+        <parameters>
+          <parameter type="GHashTable*" name="hash_table" />
+        </parameters>
+      </method>
+    </class>
+    <class name="Main" cname="GdaMain_">
+      <method name="Quit" cname="gda_main_quit" shared="true">
+        <return-type type="void" />
+      </method>
+      <method name="Run" cname="gda_main_run" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaInitFunc" name="init_func" />
+          <parameter type="gpointer" name="user_data" />
+        </parameters>
+      </method>
+    </class>
+    <class name="Type" cname="GdaType_">
+      <method name="FromString" cname="gda_type_from_string" shared="true">
+        <return-type type="GdaValueType" />
+        <parameters>
+          <parameter type="const-gchar*" name="str" />
+        </parameters>
+      </method>
+      <method name="ToString" cname="gda_type_to_string" shared="true">
+        <return-type type="const-gchar*" />
+        <parameters>
+          <parameter type="GdaValueType" name="type" />
+        </parameters>
+      </method>
+    </class>
+    <class name="Value" cname="GdaValue_">
+      <method name="Compare" cname="gda_value_compare" shared="true">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaValue*" name="value1" />
+          <parameter type="GdaValue*" name="value2" />
+        </parameters>
+      </method>
+      <method name="CompareExt" cname="gda_value_compare_ext" shared="true">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaValue*" name="value1" />
+          <parameter type="GdaValue*" name="value2" />
+        </parameters>
+      </method>
+      <method name="Copy" cname="gda_value_copy" shared="true">
+        <return-type type="GdaValue*" owned="true" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="Free" cname="gda_value_free" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetBigint" cname="gda_value_get_bigint" shared="true">
+        <return-type type="gint64" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetBiguint" cname="gda_value_get_biguint" shared="true">
+        <return-type type="guint64" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetBinary" cname="gda_value_get_binary" shared="true">
+        <return-type type="const-GdaBinary*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="glong*" name="size" />
+        </parameters>
+      </method>
+      <method name="GetBlob" cname="gda_value_get_blob" shared="true">
+        <return-type type="const-GdaBlob*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetBoolean" cname="gda_value_get_boolean" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetDate" cname="gda_value_get_date" shared="true">
+        <return-type type="const-GdaDate*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetDouble" cname="gda_value_get_double" shared="true">
+        <return-type type="gdouble" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetGdatype" cname="gda_value_get_gdatype" shared="true">
+        <return-type type="GdaValueType" />
+        <parameters>
+          <parameter type="GValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetGeometricPoint" cname="gda_value_get_geometric_point" shared="true">
+        <return-type type="const-GdaGeometricPoint*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetGobject" cname="gda_value_get_gobject" shared="true">
+        <return-type type="const-GObject*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetInteger" cname="gda_value_get_integer" shared="true">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetList" cname="gda_value_get_list" shared="true">
+        <return-type type="const-GdaValueList*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetMoney" cname="gda_value_get_money" shared="true">
+        <return-type type="const-GdaMoney*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetNumeric" cname="gda_value_get_numeric" shared="true">
+        <return-type type="const-GdaNumeric*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetSingle" cname="gda_value_get_single" shared="true">
+        <return-type type="gfloat" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetSmallint" cname="gda_value_get_smallint" shared="true">
+        <return-type type="gshort" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetSmalluint" cname="gda_value_get_smalluint" shared="true">
+        <return-type type="gushort" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetString" cname="gda_value_get_string" shared="true">
+        <return-type type="const-gchar*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetTime" cname="gda_value_get_time" shared="true">
+        <return-type type="const-GdaTime*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetTimestamp" cname="gda_value_get_timestamp" shared="true">
+        <return-type type="const-GdaTimestamp*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetTinyint" cname="gda_value_get_tinyint" shared="true">
+        <return-type type="gchar" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetTinyuint" cname="gda_value_get_tinyuint" shared="true">
+        <return-type type="guchar" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetType" cname="gda_value_get_type" shared="true">
+        <return-type type="GdaValueType" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="GetUinteger" cname="gda_value_get_uinteger" shared="true">
+        <return-type type="guint" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="IsNull" cname="gda_value_is_null" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="IsNumber" cname="gda_value_is_number" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="ListGetType" cname="gda_value_list_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="NewBigint" cname="gda_value_new_bigint" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gint64" name="val" />
+        </parameters>
+      </method>
+      <method name="NewBiguint" cname="gda_value_new_biguint" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="guint64" name="val" />
+        </parameters>
+      </method>
+      <method name="NewBinary" cname="gda_value_new_binary" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gconstpointer" name="val" />
+          <parameter type="glong" name="size" />
+        </parameters>
+      </method>
+      <method name="NewBlob" cname="gda_value_new_blob" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GdaBlob*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewBoolean" cname="gda_value_new_boolean" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gboolean" name="val" />
+        </parameters>
+      </method>
+      <method name="NewDate" cname="gda_value_new_date" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GdaDate*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewDouble" cname="gda_value_new_double" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gdouble" name="val" />
+        </parameters>
+      </method>
+      <method name="NewFromString" cname="gda_value_new_from_string" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-gchar*" name="as_string" />
+          <parameter type="GdaValueType" name="type" />
+        </parameters>
+      </method>
+      <method name="NewFromXml" cname="gda_value_new_from_xml" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-xmlNodePtr" name="node" />
+        </parameters>
+      </method>
+      <method name="NewGdatype" cname="gda_value_new_gdatype" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="GdaValueType" name="val" />
+        </parameters>
+      </method>
+      <method name="NewGeometricPoint" cname="gda_value_new_geometric_point" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GdaGeometricPoint*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewGobject" cname="gda_value_new_gobject" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GObject*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewInteger" cname="gda_value_new_integer" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gint" name="val" />
+        </parameters>
+      </method>
+      <method name="NewList" cname="gda_value_new_list" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GdaValueList*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewMoney" cname="gda_value_new_money" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GdaMoney*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewNull" cname="gda_value_new_null" shared="true">
+        <return-type type="GdaValue*" />
+      </method>
+      <method name="NewNumeric" cname="gda_value_new_numeric" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GdaNumeric*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewSingle" cname="gda_value_new_single" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gfloat" name="val" />
+        </parameters>
+      </method>
+      <method name="NewSmallint" cname="gda_value_new_smallint" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gshort" name="val" />
+        </parameters>
+      </method>
+      <method name="NewSmalluint" cname="gda_value_new_smalluint" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gushort" name="val" />
+        </parameters>
+      </method>
+      <method name="NewString" cname="gda_value_new_string" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-gchar*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewTime" cname="gda_value_new_time" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GdaTime*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewTimestamp" cname="gda_value_new_timestamp" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="const-GdaTimestamp*" name="val" />
+        </parameters>
+      </method>
+      <method name="NewTimestampFromTimet" cname="gda_value_new_timestamp_from_timet" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="time_t" name="val" />
+        </parameters>
+      </method>
+      <method name="NewTinyint" cname="gda_value_new_tinyint" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="gchar" name="val" />
+        </parameters>
+      </method>
+      <method name="NewTinyuint" cname="gda_value_new_tinyuint" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="guchar" name="val" />
+        </parameters>
+      </method>
+      <method name="NewUinteger" cname="gda_value_new_uinteger" shared="true">
+        <return-type type="GdaValue*" />
+        <parameters>
+          <parameter type="guint" name="val" />
+        </parameters>
+      </method>
+      <method name="ResetWithType" cname="gda_value_reset_with_type" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="GdaValueType" name="type" />
+        </parameters>
+      </method>
+      <method name="SetBigint" cname="gda_value_set_bigint" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gint64" name="val" />
+        </parameters>
+      </method>
+      <method name="SetBiguint" cname="gda_value_set_biguint" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="guint64" name="val" />
+        </parameters>
+      </method>
+      <method name="SetBinary" cname="gda_value_set_binary" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gconstpointer" name="val" />
+          <parameter type="glong" name="size" />
+        </parameters>
+      </method>
+      <method name="SetBlob" cname="gda_value_set_blob" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaBlob*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetBoolean" cname="gda_value_set_boolean" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gboolean" name="val" />
+        </parameters>
+      </method>
+      <method name="SetDate" cname="gda_value_set_date" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaDate*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetDouble" cname="gda_value_set_double" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gdouble" name="val" />
+        </parameters>
+      </method>
+      <method name="SetFromString" cname="gda_value_set_from_string" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-gchar*" name="as_string" />
+          <parameter type="GdaValueType" name="type" />
+        </parameters>
+      </method>
+      <method name="SetFromValue" cname="gda_value_set_from_value" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaValue*" name="from" />
+        </parameters>
+      </method>
+      <method name="SetGdatype" cname="gda_value_set_gdatype" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GValue*" name="value" />
+          <parameter type="GdaValueType" name="val" />
+        </parameters>
+      </method>
+      <method name="SetGeometricPoint" cname="gda_value_set_geometric_point" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaGeometricPoint*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetGobject" cname="gda_value_set_gobject" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GObject*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetInteger" cname="gda_value_set_integer" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gint" name="val" />
+        </parameters>
+      </method>
+      <method name="SetList" cname="gda_value_set_list" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaValueList*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetMoney" cname="gda_value_set_money" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaMoney*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetNull" cname="gda_value_set_null" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="SetNumeric" cname="gda_value_set_numeric" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaNumeric*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetSingle" cname="gda_value_set_single" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gfloat" name="val" />
+        </parameters>
+      </method>
+      <method name="SetSmallint" cname="gda_value_set_smallint" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gshort" name="val" />
+        </parameters>
+      </method>
+      <method name="SetSmalluint" cname="gda_value_set_smalluint" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gushort" name="val" />
+        </parameters>
+      </method>
+      <method name="SetString" cname="gda_value_set_string" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-gchar*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetTime" cname="gda_value_set_time" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaTime*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetTimestamp" cname="gda_value_set_timestamp" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="const-GdaTimestamp*" name="val" />
+        </parameters>
+      </method>
+      <method name="SetTinyint" cname="gda_value_set_tinyint" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="gchar" name="val" />
+        </parameters>
+      </method>
+      <method name="SetTinyuint" cname="gda_value_set_tinyuint" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="guchar" name="val" />
+        </parameters>
+      </method>
+      <method name="SetType" cname="gda_value_set_type" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="GType" name="type" />
+        </parameters>
+      </method>
+      <method name="SetUinteger" cname="gda_value_set_uinteger" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+          <parameter type="guint" name="val" />
+        </parameters>
+      </method>
+      <method name="Stringify" cname="gda_value_stringify" shared="true">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+      <method name="ToXml" cname="gda_value_to_xml" shared="true">
+        <return-type type="xmlNodePtr" />
+        <parameters>
+          <parameter type="GdaValue*" name="value" />
+        </parameters>
+      </method>
+    </class>
+    <class name="Xql" cname="GdaXql_">
+      <method name="DestroyHashPair" cname="gda_xql_destroy_hash_pair" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="gchar*" name="key" />
+          <parameter type="gpointer*" name="value" />
+          <parameter type="GFreeFunc" name="func" />
+        </parameters>
+      </method>
+      <method name="DomToSql" cname="gda_xql_dom_to_sql" shared="true">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="xmlNode*" name="node" />
+          <parameter type="gboolean" name="freedoc" />
+        </parameters>
+      </method>
+      <method name="DomToXml" cname="gda_xql_dom_to_xml" shared="true">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="xmlNode*" name="node" />
+          <parameter type="gboolean" name="freedoc" />
+        </parameters>
+      </method>
+      <method name="Gensym" cname="gda_xql_gensym" shared="true">
+        <return-type type="gchar*" />
+        <parameters>
+          <parameter type="gchar*" name="sym" />
+        </parameters>
+      </method>
+      <method name="NewAttr" cname="gda_xql_new_attr" shared="true">
+        <return-type type="void" />
+        <parameters>
+          <parameter type="gchar*" name="key" />
+          <parameter type="gchar*" name="value" />
+          <parameter type="xmlNode*" name="node" />
+        </parameters>
+      </method>
+      <method name="NewNode" cname="gda_xql_new_node" shared="true">
+        <return-type type="xmlNode*" />
+        <parameters>
+          <parameter type="gchar*" name="tag" />
+          <parameter type="xmlNode*" name="parNode" />
+        </parameters>
+      </method>
+    </class>
+  </namespace>
+</api>

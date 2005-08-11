@@ -40,8 +40,8 @@ typedef enum {
 /* --- type macros --- */
 #define G_VALUE_TYPE_BLOB (gda_blob_get_type())
 #define G_TYPE_IS_GDABLOB(type)     (G_TYPE_FUNDAMENTAL (type) == GDA_VALUE_TYPE_BLOB)
-#define GDA_VALUE_BLOB(object)            (G_TYPE_CHECK_INSTANCE_CAST ((object), G_VALUE_TYPE_BLOB, GdaDate))
-#define GDA_VALUE_BLOB_CLASS(class)       (G_TYPE_CHECK_CLASS_CAST ((class), G_VALUE_TYPE_BLOB, GdaDateClass))
+#define GDA_VALUE_BLOB(object)            (G_TYPE_CHECK_INSTANCE_CAST ((object), G_VALUE_TYPE_BLOB, GdaBlob))
+#define GDA_VALUE_BLOB_CLASS(class)       (G_TYPE_CHECK_CLASS_CAST ((class), G_VALUE_TYPE_BLOB, GdaBlobClass))
 #define GDA_VALUE_IS_BLOB(object)         (G_TYPE_CHECK_INSTANCE_TYPE ((object), G_VALUE_TYPE_BLOB))
 #define GDA_VALUE_IS_BLOB_CLASS(class)    (G_TYPE_CHECK_CLASS_TYPE ((class), G_VALUE_TYPE_BLOB))
 #define GDA_VALUE_BLOB_GET_CLASS(object)  (G_TYPE_INSTANCE_GET_CLASS ((object), G_VALUE_TYPE_BLOB,GdaTimeClass))
@@ -60,6 +60,8 @@ struct _GdaBlobClass {
 typedef struct _GdaBlob GdaBlob;
 
 struct _GdaBlob {
+	GObject object;
+
 	/* Private */
 	gint (* open) (GdaBlob *blob, GdaBlobMode mode);
 
