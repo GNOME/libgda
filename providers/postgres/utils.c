@@ -29,10 +29,29 @@
 #include <libpq/libpq-fs.h>
 #include "gda-postgres.h"
 
+GdaConnectionEventCode
+gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)
+{
+	guint64 gda_code = g_ascii_strtoull (sqlstate, NULL, 0);
+
+	switch (gda_code)
+	{
+		case 42501:
+		       	return GDA_CONNECTION_EVENT_CODE_INSUFFICIENT_PRIVILEGES;
+		case 23505:
+		       	return GDA_CONNECTION_EVENT_CODE_UNIQUE_VIOLATION;
+		case 23502:
+		       	return GDA_CONNECTION_EVENT_CODE_NOT_NULL_VIOLATION;
+		default:
+		       	return GDA_CONNECTION_EVENT_CODE_UNKNOWN;
+	}
+}
+
 GdaConnectionEvent *
 gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 {
 	GdaConnectionEvent *error;
+	GdaConnectionEventCode gda_code;
 	gchar *sqlstate;
 
 	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
@@ -42,18 +61,22 @@ gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 		if (pg_res != NULL) {
 			message = PQresultErrorMessage (pg_res);
 			sqlstate = PQresultErrorField (pg_res, PG_DIAG_SQLSTATE);
+			gda_code = gda_postgres_sqlsate_to_gda_code (sqlstate);
 		}
 		else {
 			message = PQerrorMessage (pconn);
 			sqlstate = _("Not available");
+			gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
 		}
 
 		gda_connection_event_set_description (error, message);
 		gda_connection_event_set_sqlstate (error, sqlstate);
+		gda_connection_event_set_gda_code (error, gda_code);
 	} 
 	else {
 		gda_connection_event_set_description (error, _("NO DESCRIPTION"));
 		gda_connection_event_set_sqlstate (error, _("Not available"));
+		gda_connection_event_set_gda_code (error, gda_code);
 	}
 
 	gda_connection_event_set_code (error, -1);

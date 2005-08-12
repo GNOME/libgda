@@ -1,3 +1,9 @@
+2005-08-12  Juan Manuel Mouriz <jmouriz@gmail.com>
+
+	* providers/postgres/utils.c (gda_postgres_sqlstate_to_gda_code): new
+	function.
+	(gda_postgres_make_error): convert SQLstate to GDA error code.
+
 2005-08-11  Dan Winship  <danw@novell.com>
 
 	* configure.in: add checks for mono/gtk-sharp
