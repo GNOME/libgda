@@ -1,0 +1,2650 @@
+# translation of libgda.HEAD.po to Nepali
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Pawan Chitrakar <pawan@mpp.org.np>, 2005.
+# Kapil Timilsina <lipak21@gmail.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda.HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-08-14 09:24+0545\n"
+"PO-Revision-Date: 2005-07-04 16:05+0545\n"
+"Last-Translator: Kapil Timilsina <lipak21@gmail.com>\n"
+"Language-Team: Nepali <info@mpp.org.np>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.9.1\n"
+"Plural-Forms: nplural=2;plural=(n!=1)\n"
+
+#: ../libgda/gda-client.c:290 ../libgda/gda-client.c:988
+#: ../libgda/gda-client.c:1048
+#, c-format
+msgid "Could not find provider %s in the current setup"
+msgstr "हालको सेटअपमा प्रदायक %s पाइएन"
+
+#: ../libgda/gda-client.c:320
+#, c-format
+msgid "Provider %s does not implement entry function"
+msgstr "प्रदायक %s इम्प्लिमेन्ट द्रष्टव्य कार्य गर्न सक्दैन"
+
+#: ../libgda/gda-client.c:329
+msgid "Could not create GdaServerProvider object from plugin"
+msgstr "जडानबाट जिडासर्भरप्रदायन वस्तु पाउन सकिएन"
+
+#: ../libgda/gda-client.c:380 ../libgda/gda-client.c:382
+#: ../libgda/gda-client.c:563 ../libgda/gda-connection.c:222
+#: ../libgda/gda-connection.c:224
+#, c-format
+msgid "Data source %s not found in configuration"
+msgstr "डाटा श्रोत %s कन्फिगरेसनमा पाइएन"
+
+#: ../libgda/gda-client.c:418
+#, c-format
+msgid "Datasource configuration error: could not find provider '%s'"
+msgstr ""
+
+#: ../libgda/gda-client.c:422 ../libgda/gda-client.c:424
+msgid "Datasource configuration error: no provider specified"
+msgstr ""
+
+#: ../libgda/gda-client.c:488
+msgid "Temporary data source created by libgda. Don't remove it"
+msgstr "अस्थायी डाटा श्रोत लिब्ग्डाबाट निर्माण गरिएको हो. यसलाई नहटाउनुहोस्"
+
+#: ../libgda/gda-config.c:1434
+#, c-format
+msgid "Error: %s"
+msgstr "गल्ती: %s"
+
+#: ../libgda/gda-config.c:1558 ../providers/mysql/gda-mysql-provider.c:1602
+#: ../providers/odbc/gda-odbc-provider.c:1137
+#: ../providers/oracle/gda-oracle-provider.c:1156
+#: ../providers/postgres/gda-postgres-provider.c:1479
+#: ../providers/postgres/gda-postgres-provider.c:1968
+#: ../providers/sqlite/gda-sqlite-provider.c:1188
+#: ../providers/sqlite/gda-sqlite-provider.c:1198
+msgid "Id"
+msgstr "परिचय"
+
+#: ../libgda/gda-config.c:1559
+msgid "Location"
+msgstr "स्थान"
+
+#: ../libgda/gda-config.c:1560 ../libgda/gda-config.c:1927
+#: ../providers/firebird/gda-firebird-provider.c:322
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:892
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:920
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1001
+#: ../providers/odbc/gda-odbc-provider.c:1248
+#: ../providers/odbc/gda-odbc-provider.c:1404
+#: ../providers/postgres/gda-postgres-provider.c:1751
+msgid "Description"
+msgstr "बर्णन"
+
+#: ../libgda/gda-config.c:1924
+#: ../providers/firebird/gda-firebird-provider.c:730
+#: ../providers/ldap/gda-ldap-provider.c:327
+#: ../providers/mdb/gda-mdb-provider.c:457
+#: ../providers/mdb/gda-mdb-provider.c:594
+#: ../providers/mdb/gda-mdb-provider.c:654
+#: ../providers/msql/gda-msql-provider.c:471
+#: ../providers/mysql/gda-mysql-provider.c:1314
+#: ../providers/mysql/gda-mysql-provider.c:1502
+#: ../providers/mysql/gda-mysql-provider.c:1562
+#: ../providers/odbc/gda-odbc-provider.c:768
+#: ../providers/odbc/gda-odbc-provider.c:824
+#: ../providers/oracle/gda-oracle-provider.c:1896
+#: ../providers/oracle/gda-oracle-provider.c:1913
+#: ../providers/oracle/gda-oracle-provider.c:1958
+#: ../providers/oracle/gda-oracle-provider.c:1975
+#: ../providers/xml/gda-xml-provider.c:584
+#: ../providers/xml/gda-xml-provider.c:603
+msgid "Name"
+msgstr "नाम"
+
+#: ../libgda/gda-config.c:1925
+msgid "Provider"
+msgstr "प्रदायक"
+
+#: ../libgda/gda-config.c:1926
+msgid "Connection string"
+msgstr "सम्बन्ध स्ट्रिङ्ग"
+
+#: ../libgda/gda-config.c:1928
+msgid "Username"
+msgstr "प्रयोगकर्ताको नाम"
+
+#: ../libgda/gda-config.c:1929
+msgid "Password"
+msgstr "प्रवेशचिन्ह"
+
+#: ../libgda/gda-config.c:1930
+msgid "Global"
+msgstr ""
+
+#: ../libgda/gda-data-model-array.c:347
+#, c-format
+msgid "Node is not <data-array>: '%s'"
+msgstr ""
+
+#: ../libgda/gda-data-model-array.c:377
+msgid "No <field> specified in <data-array>"
+msgstr ""
+
+#: ../libgda/gda-data-model-array.c:382
+#, fuzzy
+msgid "No <data> specified in <data-array>"
+msgstr "डाटाबेस वर्णन गरिएको छैन"
+
+#: ../libgda/gda-data-model.c:822
+#, c-format
+msgid "Data model %p is not updatable"
+msgstr "डाटा मोडेल %p अपडेट गर्न मिल्दैन"
+
+#: ../libgda/gda-data-model.c:1043
+#, fuzzy
+msgid "Exported Data"
+msgstr "[सहारा नदिने डाटा]"
+
+#: ../libgda/gda-init.c:47
+msgid "Attempt to initialize an already initialized client"
+msgstr "थालनी गरिसकेको ग्राहकलाई थालनी गर्न जोड गर्नुहोस्"
+
+#: ../libgda/gda-init.c:65
+msgid "libgda needs GModule. Finishing..."
+msgstr "लिब्गडालाई जिमोड्युल चाहिन्छ. सकिदै..."
+
+#: ../libgda/gda-select.c:395
+#, c-format
+msgid "Could not parse SQL string '%s'"
+msgstr "एसक्युएल स्ट्रिङ्ग पार्स गर्न सकिँदैन '%s'"
+
+#: ../libgda/gda-select.c:399
+#, c-format
+msgid "SQL command is not a SELECT (is '%s'"
+msgstr "एसक्युएल आदेश छानिएको छैन ('%s' हो"
+
+#: ../libgda/gda-server-provider.c:372
+#, c-format
+msgid "Provider does not support the '%s()' method"
+msgstr ""
+
+#: ../libgda/gda-table.c:308
+#, c-format
+msgid "There is already a field called %s"
+msgstr "त्यहाँ पहिले नै फिल्ड बोलावट छ %s"
+
+#: ../libgda/gda-util.c:173
+#, c-format
+msgid "Could not parse SQL command '%s'"
+msgstr "एसक्युएल आदेश पार्स गर्न सकिँदैन '%s'"
+
+#: ../libgda/gda-util.c:206
+#, c-format
+msgid "Error while reading %s: %s"
+msgstr "पढ्दा गल्ती भेटियो %s: %s"
+
+#: ../libgda/gda-util.c:232
+#, c-format
+msgid "Could not create file %s"
+msgstr "फाइल निर्माण गर्न सकिँदैन %s"
+
+#: ../libgda/gda-value.c:2169
+msgid "TRUE"
+msgstr "सहि"
+
+#: ../libgda/gda-value.c:2171
+msgid "FALSE"
+msgstr "गलत"
+
+#: ../libgda/gda-value.c:2257
+#, c-format
+msgid "(GObject of type '%s'"
+msgstr "(गोवस्तु प्रकारको '%s'"
+
+#: ../libgda/gda-value.c:2260
+msgid "NULL GObject"
+msgstr "शून्य गोवस्तु"
+
+#: ../libgda/gda-xml-database.c:290
+#, c-format
+msgid "Could not load file at %s"
+msgstr "%s मा फाइल लोड गर्न सकिँदैन"
+
+#: ../libgda/gda-xml-database.c:299
+#, c-format
+msgid "Could not parse file at %s"
+msgstr "%s मा फइल पार्स गर्न सकिँदैन"
+
+#: ../libgda/gda-xml-database.c:309
+#, c-format
+msgid "Invalid XML database file '%s'"
+msgstr "अमान्य एक्सएमएल डाटाबेस फाइल '%s'"
+
+#: ../libgda/gda-xml-database.c:552
+#, c-format
+msgid "Could not create a XML node from table %s"
+msgstr "तालिकाको लागि एक्सएमएल नोड निर्माण गर्न सकिँदैन %s"
+
+#: ../libgda/gda-xml-database.c:570
+msgid "Could not dump XML file to memory"
+msgstr "मेमोरीमा एक्सएमएल फाइल डम्प गर्न सकिँदैन"
+
+#: ../libgda/gda-xml-database.c:661 ../libgda/gda-xml-database.c:699
+#: ../libgda/gda-xml-database.c:744
+#, c-format
+msgid "Table %s already exists"
+msgstr "तालिका %s पहिले नै अबस्थित छ"
+
+#: ../libgda/gda-xml-database.c:737
+msgid "Invalid node"
+msgstr "अमान्य नोड"
+
+#: ../libgda/gda-xml-database.c:779
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr "नक्कली <data> तालिकाको लागि नोड %s"
+
+#: ../libgda/gda-xml-database.c:786
+msgid "Invalid XML node"
+msgstr "अमान्य एक्सएमएल नोड"
+
+#: ../libgda/gda-xml-database.c:795
+msgid "Could not add the data from the XML node"
+msgstr "एक्सएमएल नोडबाट डाटा जोड्न सकिँदैन"
+
+#: ../libgda/gda-xml-database.c:817
+#, c-format
+msgid "Table %s doesn't exist"
+msgstr "तालिका %s छिर्दैन"
+
+#: ../libsql/sql_parser.c:60
+#, c-format
+msgid "Parse error near `%s'"
+msgstr "पार्स गल्ती नजिक '%s'"
+
+#: ../libsql/sql_parser.c:62
+#, c-format
+msgid "Syntax error near `%s'"
+msgstr "सामान्य गल्ती नजिक '%s'"
+
+#: ../libsql/sql_parser.c:384
+msgid "Empty query to parse"
+msgstr "पार्सको लागि क्वेरि खाली गर्नुहोस्"
+
+#: ../providers/firebird/gda-firebird-blob.c:129
+#: ../providers/firebird/gda-firebird-blob.c:176
+#: ../providers/firebird/gda-firebird-blob.c:224
+#: ../providers/firebird/gda-firebird-provider.c:820
+#: ../providers/firebird/gda-firebird-provider.c:937
+#: ../providers/firebird/gda-firebird-provider.c:964
+#: ../providers/firebird/gda-firebird-provider.c:983
+#: ../providers/firebird/gda-firebird-provider.c:1019
+#: ../providers/firebird/gda-firebird-provider.c:1112
+#: ../providers/firebird/gda-firebird-provider.c:1207
+#: ../providers/firebird/gda-firebird-provider.c:1241
+#: ../providers/firebird/gda-firebird-provider.c:1279
+#: ../providers/firebird/gda-firebird-recordset.c:695
+#: ../providers/firebird/gda-firebird-recordset.c:897
+msgid "Invalid Firebird handle"
+msgstr "अमान्य फायरबर्ड ह्यान्डल"
+
+#: ../providers/firebird/gda-firebird-blob.c:134
+msgid "Unable to start transaction"
+msgstr "कारोवार शुरु गर्न असक्षम"
+
+#: ../providers/firebird/gda-firebird-blob.c:145
+msgid "Blob already open"
+msgstr "ब्लब पहिले नै खोलिसक्यो"
+
+#: ../providers/firebird/gda-firebird-blob.c:199
+msgid "Error getting blob segment."
+msgstr "ब्लब बिभाजक पाउँदा गल्ती."
+
+#: ../providers/firebird/gda-firebird-blob.c:203
+msgid "Can't read a closed Blob"
+msgstr "बन्द ब्लब पढ्न सकिएन"
+
+#: ../providers/firebird/gda-firebird-blob.c:240
+msgid "Unable to close blob."
+msgstr "ब्लब बन्द गर्न असक्षम"
+
+#: ../providers/firebird/gda-firebird-blob.c:243
+msgid "Blob is closed"
+msgstr "ब्लब बन्द भयो"
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: ../providers/firebird/gda-firebird-provider.c:231
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:946
+#: ../providers/ldap/gda-ldap-provider.c:423
+#: ../providers/mysql/gda-mysql-provider.c:1685
+#: ../providers/odbc/gda-odbc-provider.c:1360
+#: ../providers/oracle/gda-oracle-provider.c:2103
+#: ../providers/postgres/gda-postgres-provider.c:1786
+#: ../providers/sqlite/gda-sqlite-provider.c:1106
+#: ../providers/sybase/gda-sybase-provider.c:1096
+#: ../providers/xml/gda-xml-provider.c:654
+#: ../providers/xml/gda-xml-provider.c:679
+msgid "Type"
+msgstr "प्रकार"
+
+#: ../providers/firebird/gda-firebird-provider.c:232
+#: ../providers/firebird/gda-firebird-provider.c:321
+#: ../providers/firebird/gda-firebird-provider.c:732
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:742
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:832
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:861
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:891
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:919
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:947
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1000
+#: ../providers/ldap/gda-ldap-provider.c:328
+#: ../providers/mdb/gda-mdb-provider.c:548
+#: ../providers/mdb/gda-mdb-provider.c:595
+#: ../providers/mdb/gda-mdb-provider.c:655
+#: ../providers/msql/gda-msql-provider.c:472
+#: ../providers/msql/gda-msql-provider.c:512
+#: ../providers/mysql/gda-mysql-provider.c:1316
+#: ../providers/mysql/gda-mysql-provider.c:1503
+#: ../providers/mysql/gda-mysql-provider.c:1563
+#: ../providers/mysql/gda-mysql-provider.c:1603
+#: ../providers/mysql/gda-mysql-provider.c:1686
+#: ../providers/odbc/gda-odbc-provider.c:1025
+#: ../providers/odbc/gda-odbc-provider.c:1138
+#: ../providers/odbc/gda-odbc-provider.c:1247
+#: ../providers/odbc/gda-odbc-provider.c:1361
+#: ../providers/odbc/gda-odbc-provider.c:1403
+#: ../providers/odbc/gda-odbc-provider.c:1455
+#: ../providers/oracle/gda-oracle-provider.c:1157
+#: ../providers/oracle/gda-oracle-provider.c:1896
+#: ../providers/oracle/gda-oracle-provider.c:1914
+#: ../providers/oracle/gda-oracle-provider.c:1958
+#: ../providers/oracle/gda-oracle-provider.c:1976
+#: ../providers/oracle/gda-oracle-provider.c:2104
+#: ../providers/postgres/gda-postgres-provider.c:1480
+#: ../providers/postgres/gda-postgres-provider.c:1750
+#: ../providers/postgres/gda-postgres-provider.c:1787
+#: ../providers/postgres/gda-postgres-provider.c:1851
+#: ../providers/postgres/gda-postgres-provider.c:1969
+#: ../providers/postgres/gda-postgres-provider.c:2614
+#: ../providers/sqlite/gda-sqlite-provider.c:1107
+#: ../providers/sqlite/gda-sqlite-provider.c:1189
+#: ../providers/sqlite/gda-sqlite-provider.c:1199
+#: ../providers/sybase/gda-sybase-provider.c:1098
+#: ../providers/xml/gda-xml-provider.c:655
+msgid "Owner"
+msgstr "मालिक"
+
+#: ../providers/firebird/gda-firebird-provider.c:233
+#: ../providers/firebird/gda-firebird-provider.c:733
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:948
+#: ../providers/ldap/gda-ldap-provider.c:329
+#: ../providers/mdb/gda-mdb-provider.c:549
+#: ../providers/mdb/gda-mdb-provider.c:596
+#: ../providers/mdb/gda-mdb-provider.c:656
+#: ../providers/msql/gda-msql-provider.c:473
+#: ../providers/msql/gda-msql-provider.c:513
+#: ../providers/mysql/gda-mysql-provider.c:1317
+#: ../providers/mysql/gda-mysql-provider.c:1504
+#: ../providers/mysql/gda-mysql-provider.c:1564
+#: ../providers/mysql/gda-mysql-provider.c:1604
+#: ../providers/mysql/gda-mysql-provider.c:1687
+#: ../providers/odbc/gda-odbc-provider.c:1139
+#: ../providers/odbc/gda-odbc-provider.c:1362
+#: ../providers/odbc/gda-odbc-provider.c:1456
+#: ../providers/oracle/gda-oracle-provider.c:1158
+#: ../providers/oracle/gda-oracle-provider.c:1896
+#: ../providers/oracle/gda-oracle-provider.c:1915
+#: ../providers/oracle/gda-oracle-provider.c:1958
+#: ../providers/oracle/gda-oracle-provider.c:1977
+#: ../providers/oracle/gda-oracle-provider.c:2105
+#: ../providers/postgres/gda-postgres-provider.c:1481
+#: ../providers/postgres/gda-postgres-provider.c:1788
+#: ../providers/postgres/gda-postgres-provider.c:1852
+#: ../providers/postgres/gda-postgres-provider.c:1970
+#: ../providers/postgres/gda-postgres-provider.c:2615
+#: ../providers/sqlite/gda-sqlite-provider.c:1108
+#: ../providers/sqlite/gda-sqlite-provider.c:1190
+#: ../providers/sqlite/gda-sqlite-provider.c:1200
+#: ../providers/sybase/gda-sybase-provider.c:1100
+#: ../providers/xml/gda-xml-provider.c:656
+msgid "Comments"
+msgstr "टिप्पणीहरू"
+
+#: ../providers/firebird/gda-firebird-provider.c:234
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:949
+#: ../providers/msql/gda-msql-provider.c:514
+#: ../providers/mysql/gda-mysql-provider.c:1688
+#: ../providers/odbc/gda-odbc-provider.c:1363
+#: ../providers/oracle/gda-oracle-provider.c:2106
+#: ../providers/postgres/gda-postgres-provider.c:1789
+#: ../providers/sqlite/gda-sqlite-provider.c:1109
+#: ../providers/sybase/gda-sybase-provider.c:1102
+#: ../providers/xml/gda-xml-provider.c:657
+msgid "GDA type"
+msgstr "जिडिए प्रकार"
+
+#. Set it here instead of the SQL query to allow i18n
+#: ../providers/firebird/gda-firebird-provider.c:320
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:833
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:890
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:999
+#: ../providers/odbc/gda-odbc-provider.c:1246
+#: ../providers/postgres/gda-postgres-provider.c:1749
+#: ../providers/postgres/gda-postgres-provider.c:2668
+msgid "Table"
+msgstr "तालिका"
+
+#: ../providers/firebird/gda-firebird-provider.c:323
+#: ../providers/mdb/gda-mdb-provider.c:553
+#: ../providers/mysql/gda-mysql-provider.c:1608
+#: ../providers/odbc/gda-odbc-provider.c:1143
+#: ../providers/odbc/gda-odbc-provider.c:1249
+#: ../providers/odbc/gda-odbc-provider.c:1405
+#: ../providers/odbc/gda-odbc-provider.c:1457
+#: ../providers/oracle/gda-oracle-provider.c:1161
+#: ../providers/postgres/gda-postgres-provider.c:1485
+#: ../providers/postgres/gda-postgres-provider.c:1752
+#: ../providers/postgres/gda-postgres-provider.c:1853
+#: ../providers/postgres/gda-postgres-provider.c:1973
+#: ../providers/postgres/gda-postgres-provider.c:2616
+#: ../providers/sqlite/gda-sqlite-provider.c:1194
+#: ../providers/sqlite/gda-sqlite-provider.c:1203
+msgid "Definition"
+msgstr "परिभाषा"
+
+#: ../providers/firebird/gda-firebird-provider.c:615
+#: ../providers/mdb/gda-mdb-provider.c:490
+#: ../providers/mysql/gda-mysql-provider.c:1791
+#: ../providers/odbc/gda-odbc-provider.c:949
+#: ../providers/oracle/gda-oracle-provider.c:1251
+#: ../providers/postgres/gda-postgres-provider.c:2019
+#: ../providers/sqlite/gda-sqlite-provider.c:825
+#: ../providers/xml/gda-xml-provider.c:489
+msgid "Field name"
+msgstr "क्षेत्रको नाम"
+
+#: ../providers/firebird/gda-firebird-provider.c:616
+#: ../providers/mdb/gda-mdb-provider.c:491
+#: ../providers/msql/gda-msql-provider.c:564
+#: ../providers/mysql/gda-mysql-provider.c:1792
+#: ../providers/odbc/gda-odbc-provider.c:950
+#: ../providers/oracle/gda-oracle-provider.c:1252
+#: ../providers/postgres/gda-postgres-provider.c:2020
+#: ../providers/sqlite/gda-sqlite-provider.c:826
+#: ../providers/xml/gda-xml-provider.c:490
+msgid "Data type"
+msgstr "डाटा प्रकार"
+
+#: ../providers/firebird/gda-firebird-provider.c:617
+#: ../providers/mdb/gda-mdb-provider.c:492
+#: ../providers/msql/gda-msql-provider.c:565
+#: ../providers/mysql/gda-mysql-provider.c:1793
+#: ../providers/odbc/gda-odbc-provider.c:951
+#: ../providers/oracle/gda-oracle-provider.c:1253
+#: ../providers/postgres/gda-postgres-provider.c:2021
+#: ../providers/sqlite/gda-sqlite-provider.c:827
+#: ../providers/xml/gda-xml-provider.c:491
+msgid "Size"
+msgstr "आकार"
+
+#: ../providers/firebird/gda-firebird-provider.c:618
+#: ../providers/mdb/gda-mdb-provider.c:493
+#: ../providers/msql/gda-msql-provider.c:566
+#: ../providers/mysql/gda-mysql-provider.c:1794
+#: ../providers/odbc/gda-odbc-provider.c:952
+#: ../providers/oracle/gda-oracle-provider.c:1254
+#: ../providers/postgres/gda-postgres-provider.c:2022
+#: ../providers/sqlite/gda-sqlite-provider.c:828
+#: ../providers/xml/gda-xml-provider.c:492
+msgid "Scale"
+msgstr "माप"
+
+#: ../providers/firebird/gda-firebird-provider.c:619
+#: ../providers/mdb/gda-mdb-provider.c:494
+#: ../providers/mysql/gda-mysql-provider.c:1795
+#: ../providers/odbc/gda-odbc-provider.c:953
+#: ../providers/oracle/gda-oracle-provider.c:1255
+#: ../providers/postgres/gda-postgres-provider.c:2023
+#: ../providers/sqlite/gda-sqlite-provider.c:829
+#: ../providers/xml/gda-xml-provider.c:493
+msgid "Not null?"
+msgstr "शून्य छैन?"
+
+#: ../providers/firebird/gda-firebird-provider.c:620
+#: ../providers/mdb/gda-mdb-provider.c:495
+#: ../providers/msql/gda-msql-provider.c:568
+#: ../providers/mysql/gda-mysql-provider.c:1796
+#: ../providers/odbc/gda-odbc-provider.c:954
+#: ../providers/oracle/gda-oracle-provider.c:1256
+#: ../providers/postgres/gda-postgres-provider.c:2024
+#: ../providers/sqlite/gda-sqlite-provider.c:830
+#: ../providers/xml/gda-xml-provider.c:494
+msgid "Primary key?"
+msgstr "प्राथमिक कुञ्जी?"
+
+#: ../providers/firebird/gda-firebird-provider.c:621
+#: ../providers/mdb/gda-mdb-provider.c:496
+#: ../providers/msql/gda-msql-provider.c:569
+#: ../providers/mysql/gda-mysql-provider.c:1797
+#: ../providers/odbc/gda-odbc-provider.c:955
+#: ../providers/oracle/gda-oracle-provider.c:1257
+#: ../providers/postgres/gda-postgres-provider.c:2025
+#: ../providers/sqlite/gda-sqlite-provider.c:831
+#: ../providers/xml/gda-xml-provider.c:495
+msgid "Unique index?"
+msgstr "अद्वितीय अनुक्रमणिका?"
+
+#: ../providers/firebird/gda-firebird-provider.c:622
+#: ../providers/mdb/gda-mdb-provider.c:497
+#: ../providers/msql/gda-msql-provider.c:570
+#: ../providers/mysql/gda-mysql-provider.c:1798
+#: ../providers/odbc/gda-odbc-provider.c:956
+#: ../providers/oracle/gda-oracle-provider.c:1258
+#: ../providers/postgres/gda-postgres-provider.c:2026
+#: ../providers/sqlite/gda-sqlite-provider.c:832
+#: ../providers/xml/gda-xml-provider.c:496
+msgid "References"
+msgstr "सन्दर्भहरु"
+
+#: ../providers/firebird/gda-firebird-provider.c:623
+#: ../providers/mdb/gda-mdb-provider.c:498
+#: ../providers/msql/gda-msql-provider.c:571
+#: ../providers/mysql/gda-mysql-provider.c:1799
+#: ../providers/odbc/gda-odbc-provider.c:957
+#: ../providers/oracle/gda-oracle-provider.c:1259
+#: ../providers/postgres/gda-postgres-provider.c:2027
+#: ../providers/sqlite/gda-sqlite-provider.c:833
+msgid "Default value"
+msgstr "पूर्वनिर्धारित मान"
+
+#: ../providers/firebird/gda-firebird-provider.c:632
+#: ../providers/firebird/gda-firebird-provider.c:639
+#: ../providers/msql/gda-msql-provider.c:584
+#: ../providers/msql/gda-msql-provider.c:590
+#: ../providers/mysql/gda-mysql-provider.c:1817
+#: ../providers/mysql/gda-mysql-provider.c:1825
+msgid "Table name is needed but none specified in parameter list"
+msgstr "तालिका नाम आवाश्यक छ तर वर्णन नगरिएको पारामिटर सूची भित्र"
+
+#. 5th the return type
+#. 6th the argument type
+#: ../providers/firebird/gda-firebird-provider.c:708
+#: ../providers/firebird/gda-firebird-provider.c:710
+msgid "UNKNOWN"
+msgstr "अज्ञात"
+
+#: ../providers/firebird/gda-firebird-provider.c:731
+#: ../providers/mdb/gda-mdb-provider.c:547
+#: ../providers/mysql/gda-mysql-provider.c:1315
+msgid "ID"
+msgstr "आइडि"
+
+#: ../providers/firebird/gda-firebird-provider.c:734
+#: ../providers/mdb/gda-mdb-provider.c:550
+#: ../providers/mysql/gda-mysql-provider.c:1318
+#: ../providers/mysql/gda-mysql-provider.c:1605
+#: ../providers/odbc/gda-odbc-provider.c:1140
+#: ../providers/postgres/gda-postgres-provider.c:1482
+#: ../providers/sqlite/gda-sqlite-provider.c:1191
+#: ../providers/sqlite/gda-sqlite-provider.c:1201
+msgid "Return type"
+msgstr "फर्कने प्रकार"
+
+#: ../providers/firebird/gda-firebird-provider.c:735
+#: ../providers/mdb/gda-mdb-provider.c:552
+#: ../providers/mysql/gda-mysql-provider.c:1319
+#: ../providers/mysql/gda-mysql-provider.c:1607
+#: ../providers/odbc/gda-odbc-provider.c:1142
+#: ../providers/postgres/gda-postgres-provider.c:1484
+#: ../providers/sqlite/gda-sqlite-provider.c:1193
+msgid "Args types"
+msgstr "आर्ग्स प्रकारहरु"
+
+#: ../providers/firebird/gda-firebird-provider.c:736
+#: ../providers/mysql/gda-mysql-provider.c:1320
+#: ../providers/oracle/gda-oracle-provider.c:1916
+#: ../providers/oracle/gda-oracle-provider.c:1978
+msgid "SQL"
+msgstr "एसक्युएल"
+
+#: ../providers/firebird/gda-firebird-provider.c:858
+msgid "No database specified"
+msgstr "डाटाबेस वर्णन गरिएको छैन"
+
+#: ../providers/firebird/gda-firebird-provider.c:1247
+#: ../providers/firebird/gda-firebird-provider.c:1285
+msgid "Invalid transaction handle"
+msgstr "अमान्य कारोवार ह्यान्डल"
+
+#: ../providers/firebird/gda-firebird-recordset.c:346
+#: ../providers/firebird/gda-firebird-recordset.c:387
+msgid "Statement already prepared."
+msgstr "प्रतिबेदन पहिले नै बनिसक्यो."
+
+#: ../providers/firebird/gda-firebird-recordset.c:350
+msgid "Transaction not initialized."
+msgstr "कारोवार थालनी भएको छैन."
+
+#: ../providers/firebird/gda-firebird-recordset.c:457
+msgid "Firebird's ARRAY datatype not supported yet!\n"
+msgstr "फाएरबर्ड एरे डाटा प्रकारले सहारा दिँदैन!\n"
+
+#: ../providers/firebird/gda-firebird-recordset.c:566
+msgid "Unknown Firebird's field value!\n"
+msgstr "अज्ञात फाएरबर्डको फिल्ड मान!\n"
+
+#: ../providers/firebird/libmain.c:40
+msgid "Provider for Firebird databases"
+msgstr "प्रदायक फाएरबर्ड डाटाबेसहरुको लागि"
+
+#: ../providers/firebird/libmain.c:49 ../providers/freetds/libmain.c:48
+#: ../providers/ibmdb2/libmain.c:48 ../providers/msql/gda-msql-libmain.c:56
+#: ../providers/mysql/libmain.c:52 ../providers/postgres/libmain.c:53
+#: ../providers/sybase/libmain.c:49
+msgid "Database Name"
+msgstr "डाटाबेस नाम"
+
+#: ../providers/firebird/libmain.c:50 ../providers/freetds/libmain.c:49
+msgid "Name of the database to be used"
+msgstr "प्रयोग गर्नको लागि डाटाबेसको नाम"
+
+#: ../providers/firebird/libmain.c:53
+msgid "Character Set"
+msgstr "क्यारेक्टर सेट"
+
+#: ../providers/firebird/libmain.c:54
+msgid "Character set to be used on the connection"
+msgstr "क्यारेक्टर सेट जडानमा प्रयोग गर्नको लागि"
+
+#: ../providers/firebird/libmain.c:57
+msgid "SQL Dialect"
+msgstr "एसक्युएल डाइलेक्ट"
+
+#: ../providers/firebird/libmain.c:58
+msgid "SQL dialect to use on the connection"
+msgstr "एसक्युएल डाइलेक्ट जडानमा प्रयोग गर्नको लागि"
+
+#: ../providers/firebird/libmain.c:61
+msgid "Page Size"
+msgstr "पृष्ठको आकार"
+
+#: ../providers/firebird/libmain.c:62
+msgid "Page size to use on the database"
+msgstr "डाटाबेसमा प्रयोग गर्नको लागि पृष्ठको आकार"
+
+#: ../providers/freetds/gda-freetds-provider.c:197
+msgid ""
+"Connection aborted. You must provide at least a host, username and password "
+"using DSN 'QUERY=;USER=;PASSWORD='."
+msgstr ""
+"जडान खारेज गरियो. तपाईले कम्तिमा होस्ट, प्रयोगकर्ता नाम र पासवर्ड दिनुपर्छ डिएसएन "
+"'क्वेरि=;प्रयोगकर्ता=;पासवर्ड='."
+
+#: ../providers/freetds/gda-freetds-provider.c:210
+msgid "Error creating message container."
+msgstr "सूचना कन्टेनर निर्माण गर्दा गल्ती."
+
+#: ../providers/freetds/gda-freetds-provider.c:217
+msgid "Error creating error container."
+msgstr "गल्ती कन्टेनर निर्माण गर्दा गल्ती"
+
+#: ../providers/freetds/gda-freetds-provider.c:258
+#: ../providers/freetds/gda-freetds-provider.c:260
+msgid "Allocating tds context failed."
+msgstr "टिडिएस प्रसङ्ग निर्धारण गर्न असफल."
+
+#: ../providers/freetds/gda-freetds-provider.c:275
+#: ../providers/freetds/gda-freetds-provider.c:277
+msgid "Allocating tds socket failed."
+msgstr "सकेट टिडिएस निर्धारण गर्न असफल."
+
+#. gda_freetds_free_connection_data (tds_cnc);
+#: ../providers/freetds/gda-freetds-provider.c:283
+#: ../providers/freetds/gda-freetds-provider.c:285
+#: ../providers/freetds/gda-freetds-provider.c:292
+#: ../providers/freetds/gda-freetds-provider.c:294
+msgid "Establishing connection failed."
+msgstr "जडान निर्माण गर्न असफल."
+
+#: ../providers/freetds/gda-freetds-provider.c:308
+#: ../providers/freetds/gda-freetds-provider.c:309
+msgid "Failed getting connection info."
+msgstr "जडान सूचना पाउन असफल."
+
+#: ../providers/freetds/gda-freetds-provider.c:791
+#: ../providers/freetds/gda-freetds-provider.c:792
+msgid "Query did not succeed in execute_cmd()."
+msgstr "क्वेरि कार्यान्वयन आदेश गर्न सफल भएन()."
+
+#: ../providers/freetds/gda-freetds-provider.c:805
+#: ../providers/freetds/gda-freetds-provider.c:807
+msgid "Unexpected result tokens in execute_cmd()."
+msgstr "कार्यान्वयन आदेशमा टोकनहरुको नसोचिएको परिणाम"
+
+#: ../providers/freetds/gda-freetds-provider.c:815
+#: ../providers/freetds/gda-freetds-provider.c:816
+msgid "Unexpected return in execute_cmd()."
+msgstr "कार्यान्वयन आदेशमा नसोचिएको फर्काइ()."
+
+#: ../providers/freetds/gda-freetds-provider.c:1053
+#, c-format
+msgid ""
+"Msg %d, Level %d, State %d, Server %s, Line %d\n"
+"%s\n"
+msgstr ""
+"सूचना %d, तह %d, स्थिति %d, सर्भर %s, रेखा %d\n"
+"%s\n"
+
+#: ../providers/freetds/gda-freetds-provider.c:1072
+#: ../providers/freetds/utils.c:44 ../providers/oracle/utils.c:74
+#: ../providers/postgres/utils.c:68 ../providers/postgres/utils.c:78
+#: ../providers/sybase/gda-sybase-provider.c:765
+#: ../providers/sybase/gda-sybase-recordset.c:513
+#: ../providers/sybase/gda-sybase-recordset.c:536
+#: ../providers/sybase/gda-sybase-recordset.c:595
+#: ../providers/sybase/utils.c:207 ../providers/sybase/utils.c:224
+#: ../providers/sybase/utils.c:240 ../providers/sybase/utils.c:256
+#: ../providers/sybase/utils.c:276 ../providers/sybase/utils.c:317
+#: ../providers/sybase/utils.c:334 ../providers/sybase/utils.c:386
+#: ../providers/sybase/utils.c:412 ../providers/sybase/utils.c:446
+#: ../providers/sybase/utils.c:463 ../providers/sybase/utils.c:486
+#: ../providers/sybase/utils.c:502 ../providers/sybase/utils.c:540
+#: ../providers/bdb/utils.c:36
+msgid "Not available"
+msgstr "उपलब्ध भएन"
+
+#: ../providers/freetds/gda-freetds-recordset.c:377
+msgid "Error processing result rows.\n"
+msgstr "गल्ती प्रोसेसिङ्ग पङ्त्तिहरुको परिणाम.\n"
+
+#: ../providers/freetds/gda-freetds-recordset.c:384
+msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
+msgstr "नसोचिएको खुलाटिडिएस फर्काइएको कोड टिडिएस_प्रकृया_पङ्त्ति_टोकनहरु().\n"
+
+#: ../providers/freetds/gda-freetds-recordset.c:394
+msgid "Error processing results.\n"
+msgstr "गल्ती प्रोसेसिङ्ग परिणाम \n"
+
+#: ../providers/freetds/gda-freetds-recordset.c:401
+msgid "Unexpected freetds return code in tds_process_result_tokens\n"
+msgstr "नसोचिएको फ्रिट्ड्स फर्काइएको संकेत टिडिएस_प्रकृया_टोकनहरुमा\n"
+
+#: ../providers/freetds/libmain.c:39
+msgid "Provider for TDS-based databases (using FreeTDS)"
+msgstr "टिडिएस-आधारित डाटाबेसहरुको लागि प्रदायक (खुलाटिडिएस प्रयोग गरि)"
+
+#: ../providers/freetds/libmain.c:52
+msgid "Host"
+msgstr "होस्ट"
+
+#: ../providers/freetds/libmain.c:53
+msgid "Host name of the machine where the database is located"
+msgstr "डाटाबेस अवस्थित स्थानमा यन्त्रको होस्ट नाम"
+
+#: ../providers/freetds/libmain.c:56 ../providers/sybase/libmain.c:61
+msgid "Host Address"
+msgstr "होस्ट ठेगाना"
+
+#: ../providers/freetds/libmain.c:57 ../providers/sybase/libmain.c:62
+msgid "IP address of the host to connect to"
+msgstr "आईपी ठेगाना होस्टको जडान गर्नको लागि"
+
+#: ../providers/freetds/libmain.c:60
+msgid "Connection Options"
+msgstr "सम्बन्ध विकल्पहरु"
+
+#: ../providers/freetds/libmain.c:61
+msgid "Extra options to use on the connection"
+msgstr "जडानमा प्रयोग गर्न अन्य बिकल्पहरु"
+
+#: ../providers/freetds/libmain.c:64 ../providers/ldap/libmain.c:65
+#: ../providers/mysql/libmain.c:60 ../providers/postgres/libmain.c:65
+#: ../providers/sybase/libmain.c:69
+msgid "Port"
+msgstr "पोर्ट"
+
+#: ../providers/freetds/libmain.c:65
+msgid "Port to use to connect to the database's host"
+msgstr "डाटाबेसको होस्टमा जडान गर्न पोर्टको प्रयोग"
+
+#: ../providers/freetds/libmain.c:71 ../providers/sybase/libmain.c:76
+msgid "Enable Sybase"
+msgstr "सक्षम सिवेस"
+
+#: ../providers/freetds/libmain.c:72 ../providers/sybase/libmain.c:77
+msgid "Enable Sybase operative mode"
+msgstr "सक्षम सिवेस अपरेशन शैली"
+
+#: ../providers/freetds/libmain.c:79
+msgid "FreeTDS Config File"
+msgstr "खुलाटिडिएस कन्फिग फाईल"
+
+#: ../providers/freetds/libmain.c:80
+msgid "Location of the FreeTDS config file"
+msgstr "खुलाटिडिएस कन्फिग फाइलको स्थान"
+
+#: ../providers/freetds/libmain.c:84
+msgid "TDS Major Version"
+msgstr "टिडिएस प्रमुख संस्करण"
+
+#: ../providers/freetds/libmain.c:85
+msgid "TDS protocol major version"
+msgstr "टिडिएस प्रोटोकल प्रमुख संस्करण"
+
+#: ../providers/freetds/libmain.c:88
+msgid "TDS Minor Version"
+msgstr "टिडिएस माइनर संस्करण"
+
+#: ../providers/freetds/libmain.c:89
+msgid "TDS protocol minor version"
+msgstr "टिडिएस प्रोटोकल माइनर संस्करण"
+
+#: ../providers/freetds/libmain.c:93
+msgid "Dump File"
+msgstr "डम्प फाईल"
+
+#: ../providers/freetds/libmain.c:94
+msgid "File for TDS protocol dumps"
+msgstr "टिडिएस प्रोटोकल डम्प्सको लागि फाईल"
+
+#: ../providers/freetds/libmain.c:97
+msgid "Dump Configuration File"
+msgstr "डम्प समायोजन फाईल"
+
+#: ../providers/freetds/libmain.c:98
+#, fuzzy
+msgid "File for TDS protocol dumps configuration"
+msgstr "टिडिएस प्रोटोकल डम्प्स कन्फिगरेसनको लागि फाईल"
+
+#: ../providers/freetds/utils.c:40 ../providers/oracle/utils.c:67
+#: ../providers/postgres/utils.c:77 ../providers/sybase/utils.c:535
+msgid "NO DESCRIPTION"
+msgstr "वर्णन छैन"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:152
+msgid "Could not allocate environment handle.\n"
+msgstr "वातावरण ह्यान्डल निर्धारण गर्न सकिँदैन.\n"
+
+#. GetInfo is needed for obtaining database name
+#. is needed for tables schema
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:211
+msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
+msgstr "एसक्युएल सूचना पाउनेले सहारा दिँदैन. त्यसैले आइबिएम डिबि२ प्रदायकले कार्य गर्दैन.\n"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:450
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:580
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:688
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:763
+msgid "Invalid IBM DB2 handle"
+msgstr "अमान्य आइबिएम डिबि२ ह्यान्डल"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:741
+msgid "Function"
+msgstr "कार्य"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:777
+msgid "Database"
+msgstr "डाटाबेस"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:831
+msgid "Index"
+msgstr "अनुक्रमणिका"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:860
+#: ../providers/mdb/gda-mdb-provider.c:546
+#: ../providers/mysql/gda-mysql-provider.c:1601
+#: ../providers/odbc/gda-odbc-provider.c:1136
+#: ../providers/postgres/gda-postgres-provider.c:1478
+#: ../providers/sqlite/gda-sqlite-provider.c:1187
+#: ../providers/sqlite/gda-sqlite-provider.c:1197
+msgid "Procedure"
+msgstr "कार्यविधि"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:862
+msgid "Language"
+msgstr "भाषा"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:893
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:921
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1002
+msgid "SQL Definition"
+msgstr "एसक्युएल परिभाषा"
+
+#. Set it here instead of the SQL query to allow i18n
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:918
+#: ../providers/oracle/gda-oracle-provider.c:2201
+#: ../providers/postgres/gda-postgres-provider.c:2008 ../testing/client.c:144
+msgid "Triggers"
+msgstr "ट्राइगरहरू"
+
+#. Set it here instead of the SQL query to allow i18n
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:974
+#: ../providers/oracle/gda-oracle-provider.c:1828
+#: ../providers/postgres/gda-postgres-provider.c:2572 ../testing/client.c:142
+msgid "Users"
+msgstr "प्रयोगकर्ताहरू"
+
+#: ../providers/ibmdb2/gda-ibmdb2-types.c:154
+msgid "[BLOB unsupported]"
+msgstr "[ब्लब सहारा नदिइएको]"
+
+#: ../providers/ibmdb2/gda-ibmdb2-types.c:157
+msgid "[Unsupported data]"
+msgstr "[सहारा नदिने डाटा]"
+
+#: ../providers/ibmdb2/libmain.c:39
+msgid "Provider for IBMDB2 databases"
+msgstr "आइबिएमडिबि२ डाटाबेसहरुको लागि प्रदायक"
+
+#: ../providers/ibmdb2/libmain.c:49 ../providers/msql/gda-msql-libmain.c:57
+#: ../providers/postgres/libmain.c:54 ../providers/sybase/libmain.c:50
+msgid "Name of the database to use"
+msgstr "प्रयोग गर्न डाटाबेसको नाम"
+
+#: ../providers/ibmdb2/libmain.c:52 ../providers/postgres/libmain.c:69
+#: ../providers/sybase/libmain.c:65
+msgid "Extra Options"
+msgstr "बढि विकल्पहरु"
+
+#: ../providers/ibmdb2/libmain.c:53
+msgid "Extra database options"
+msgstr "बढि डाटाबेस बिकल्पहरु"
+
+#: ../providers/ldap/gda-ldap-provider.c:257
+#: ../providers/ldap/gda-ldap-provider.c:490
+#: ../providers/ldap/gda-ldap-provider.c:519
+#: ../providers/ldap/gda-ldap-provider.c:548
+#: ../providers/ldap/gda-ldap-provider.c:587
+#: ../providers/ldap/gda-ldap-recordset.c:58
+#: ../providers/ldap/gda-ldap-recordset.c:176
+msgid "Invalid LDAP handle"
+msgstr "अमान्य एलडिएपि ह्यान्डल"
+
+#: ../providers/ldap/gda-ldap-recordset.c:69
+#: ../providers/mysql/gda-mysql-recordset.c:224
+#: ../providers/mysql/gda-mysql-recordset.c:341
+#: ../providers/mysql/gda-mysql-recordset.c:388
+#: ../providers/postgres/gda-postgres-recordset.c:200
+#: ../providers/postgres/gda-postgres-recordset.c:577
+#: ../providers/sqlite/gda-sqlite-recordset.c:168
+#: ../providers/sqlite/gda-sqlite-recordset.c:210
+#: ../providers/bdb/gda-bdb-recordset.c:111
+msgid "Row number out of range"
+msgstr "दायरा बाहिरको पङ्त्ति संख्या"
+
+#: ../providers/ldap/gda-ldap-recordset.c:283
+#: ../providers/msql/gda-msql-recordset.c:230
+#: ../providers/mysql/gda-mysql-recordset.c:452
+#: ../providers/oracle/gda-oracle-recordset.c:474
+#: ../providers/postgres/gda-postgres-recordset.c:243
+msgid "Attempt to insert a row with an invalid number of columns"
+msgstr "अमान्य संख्याको स्तम्भहरू सहित पङ्त्ति घुसाउन प्रयास गर्नुहोस्"
+
+#: ../providers/ldap/gda-ldap-recordset.c:298
+#: ../providers/msql/gda-msql-recordset.c:242
+#: ../providers/oracle/gda-oracle-recordset.c:489
+msgid "Could not retrieve column's information"
+msgstr "स्तम्भको सूचना फेरि पाउन असफल"
+
+#: ../providers/ldap/gda-ldap-recordset.c:316
+#: ../providers/msql/gda-msql-recordset.c:256
+#: ../providers/oracle/gda-oracle-recordset.c:507
+msgid "Could not retrieve column's value"
+msgstr "स्तम्भको मान फेरि पाउन असफल"
+
+#: ../providers/ldap/libmain.c:48
+msgid "Provider for LDAP directory"
+msgstr "एलडिएपि डाइरेक्टरीको लागि प्रदायक"
+
+#: ../providers/ldap/libmain.c:57
+msgid "LDAP Flags"
+msgstr "एलडिएपि ध्वजाहरु"
+
+#: ../providers/ldap/libmain.c:58
+msgid "LDAP flags"
+msgstr "एलडिएपि झन्डाहरु"
+
+#: ../providers/ldap/libmain.c:61 ../providers/msql/gda-msql-libmain.c:60
+#: ../providers/mysql/libmain.c:56 ../providers/postgres/libmain.c:61
+#: ../providers/sybase/libmain.c:53 ../providers/sybase/libmain.c:57
+msgid "Host Name"
+msgstr "होस्ट नाम"
+
+#: ../providers/ldap/libmain.c:62
+msgid "Host name of the LDAP server"
+msgstr "एलडिएपि सर्भरको होस्ट नाम"
+
+#: ../providers/ldap/libmain.c:66
+msgid "Port to use for connecting to the LDAP server"
+msgstr "एलडिएपि सर्भरमा जडानको लागि पोर्टको प्रयोग"
+
+#: ../providers/ldap/libmain.c:69
+msgid "Bind Domain"
+msgstr "बाइन्ड डोमेन"
+
+#: ../providers/ldap/libmain.c:70
+msgid "LDAP bind domain to use for authentication"
+msgstr "प्रमाणिकरणको लागि एलडिएपि बाइन्ड डोमेनको प्रयोग"
+
+#: ../providers/ldap/libmain.c:73
+msgid "Authentication Method"
+msgstr "प्रमाणीकरण बिधि"
+
+#: ../providers/ldap/libmain.c:74
+msgid "Authentication method to use for connecting"
+msgstr "जडानको लागि प्रमाणीकरण बिधि"
+
+#: ../providers/mdb/gda-mdb-provider.c:205
+msgid "A database FILENAME must be specified in the connection_string"
+msgstr "जडान स्ट्रिङ्गमा डाटाबेस फाइलनामको वर्णन हुनुपर्छ"
+
+#: ../providers/mdb/gda-mdb-provider.c:214
+#: ../providers/xbase/gda-xbase-provider.c:223
+#, c-format
+msgid "Could not open file %s"
+msgstr "फाइल खोल्न सकिँदैन %s"
+
+#: ../providers/mdb/gda-mdb-provider.c:238
+#: ../providers/mdb/gda-mdb-provider.c:268
+#: ../providers/mdb/gda-mdb-provider.c:290
+#: ../providers/mdb/gda-mdb-provider.c:342
+#: ../providers/mdb/gda-mdb-provider.c:690
+#: ../providers/mdb/gda-mdb-provider.c:726
+msgid "Invalid MDB handle"
+msgstr "अमान्य एमडिबि ह्यान्डल"
+
+#: ../providers/mdb/gda-mdb-provider.c:404
+#: ../providers/mdb/gda-mdb-provider.c:414
+#: ../providers/mdb/gda-mdb-provider.c:424
+msgid "Transactions not supported in MDB provider"
+msgstr "एमडिबि प्रदायकमा कारोवारले सहारा दिंदैन"
+
+#: ../providers/mdb/gda-mdb-provider.c:551
+msgid "# of args"
+msgstr "# आर्ग्सको"
+
+#: ../providers/mdb/gda-mdb-provider.c:657
+msgid "GDA Type"
+msgstr "जिडिए प्रकार"
+
+#: ../providers/mdb/gda-mdb-provider.c:659
+msgid "Boolean type"
+msgstr "बुलेन प्रकार"
+
+#: ../providers/mdb/gda-mdb-provider.c:660
+msgid "1-byte integers"
+msgstr "१-बाइट पूर्ण संख्याहरु"
+
+#: ../providers/mdb/gda-mdb-provider.c:661
+msgid "Double precision values"
+msgstr "द्विगुणीय यथार्थ मानहरु"
+
+#: ../providers/mdb/gda-mdb-provider.c:662
+msgid "Single precision values"
+msgstr "एक्लो यथार्थ मानहरु"
+
+#: ../providers/mdb/gda-mdb-provider.c:663
+msgid "32-bit integers"
+msgstr "३२-बिट पूर्ण संख्याहरु"
+
+#: ../providers/mdb/gda-mdb-provider.c:664
+msgid "64-bit integers"
+msgstr "६४-बिट पूर्ण संख्याहरु"
+
+#: ../providers/mdb/gda-mdb-provider.c:665
+msgid "Variable length character strings"
+msgstr "चल लम्बाइ क्यारेक्टर स्ट्रिङ्गहरु"
+
+#: ../providers/mdb/gda-mdb-provider.c:666
+msgid "Money amounts"
+msgstr "पैसा रकमहरु"
+
+#: ../providers/mdb/gda-mdb-provider.c:667
+msgid "OLE object"
+msgstr "ओएलइ वस्तु"
+
+#: ../providers/mdb/gda-mdb-provider.c:668
+msgid "Replication ID"
+msgstr ""
+
+#: ../providers/mdb/gda-mdb-provider.c:669
+msgid "Date/time value"
+msgstr "मिति/समय मान"
+
+#: ../providers/mdb/gda-mdb-provider.c:670
+msgid "Character strings"
+msgstr "क्यारेक्टर स्ट्रिङ्गहरु"
+
+#. end unsafe
+#: ../providers/mdb/gda-mdb-provider.c:737
+#, c-format
+msgid "Could not parse '%s' command"
+msgstr "आदेश '%s' पार्स गर्न सकिंदैन"
+
+#. parsing went fine, but there is no result
+#. (e.g. because of an invalid column name)
+#: ../providers/mdb/gda-mdb-provider.c:744
+#, c-format
+msgid "Got no result for '%s' command"
+msgstr "आदेशको लागि '%s' परिणाम पाउन सकिएन"
+
+#: ../providers/mdb/gda-mdb-table.c:48 ../providers/xml/gda-xml-provider.c:519
+#, c-format
+msgid "Table %s not found"
+msgstr "तालिका %s फेला परेन"
+
+#: ../providers/mdb/libmain.c:36
+msgid "Provider for Microsoft Access files"
+msgstr "माइक्रोसफ्ट पहुँच फाइलहरुको लागि प्रदायक"
+
+#: ../providers/mdb/libmain.c:45 ../providers/sqlite/libmain.c:52
+#: ../providers/xbase/libmain.c:48 ../providers/xml/libmain.c:49
+msgid "File Name"
+msgstr "फाइलको नाम"
+
+#: ../providers/mdb/libmain.c:46 ../providers/xbase/libmain.c:49
+msgid "Full path of the file containing the database"
+msgstr "भरि बाटो फाइल डाटाबेस समावेश गरि"
+
+#: ../providers/msql/gda-msql-libmain.c:45
+msgid "Provider for Hughes Technologies mSQL databases"
+msgstr "हग्हेस टेक्नोलोजिज एमएसकयुएल डाटाबेसहरुको लागि प्रदायक"
+
+#: ../providers/msql/gda-msql-libmain.c:61 ../providers/mysql/libmain.c:57
+#: ../providers/postgres/libmain.c:62 ../providers/sybase/libmain.c:54
+#: ../providers/sybase/libmain.c:58
+msgid "Name of the host to connect to"
+msgstr "जडान गर्नको लागि होस्टको नाम"
+
+#: ../providers/msql/gda-msql-provider.c:242
+#: ../providers/msql/gda-msql-provider.c:286
+#: ../providers/msql/gda-msql-provider.c:307
+#: ../providers/msql/gda-msql-provider.c:578
+#: ../providers/msql/gda-msql-recordset.c:51
+#: ../providers/msql/gda-msql-recordset.c:141
+msgid "Invalid mSQL handle"
+msgstr "अमान्य एमएसक्युएल ह्यान्डल"
+
+#: ../providers/msql/gda-msql-provider.c:333
+msgid "mSQL allows database creation only through the msqladmin tool."
+msgstr "एमएसक्युएलएड्मिन उपकरण मार्फत मात्र एमएसक्युएलले डाटाबेस निर्माण गर्न अनुमति दिन्छ."
+
+#: ../providers/msql/gda-msql-provider.c:347
+msgid "mSQL allows database drops only through the msqladmin tool."
+msgstr "एमएसक्युएलएड्मिन उपकरण मार्फत मात्र एमएसक्युएलले डाटाबेस छोड्न अनुमति दिन्छ"
+
+#: ../providers/msql/gda-msql-provider.c:394
+#: ../providers/msql/gda-msql-provider.c:408
+#: ../providers/msql/gda-msql-provider.c:422
+msgid "mSQL doesn't support transactions."
+msgstr "एमएसक्युएलले कारोवारलाई सहारा दिँदैन."
+
+#: ../providers/msql/gda-msql-provider.c:511
+msgid "Title"
+msgstr "शीर्षक"
+
+#: ../providers/msql/gda-msql-provider.c:563
+msgid "Field Name"
+msgstr "क्षेत्रको नाम"
+
+#: ../providers/msql/gda-msql-provider.c:567
+msgid "Not null"
+msgstr "शून्य हैन"
+
+#: ../providers/msql/gda-msql-recordset.c:58
+msgid "Row number out of bounds"
+msgstr "पंक्ति संख्या बाउन्ड बाहिर"
+
+#: ../providers/mysql/gda-mysql-provider.c:246
+#, fuzzy
+msgid ""
+"You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"तपाई युनिक्स सकेट उपलब्ध गराउन सक्नुहुन्न यदि तपाई होस्ट वा पोर्ट पठाउन चाहनुभयो भने."
+
+#: ../providers/mysql/gda-mysql-provider.c:381
+#: ../providers/mysql/gda-mysql-provider.c:1808
+#: ../providers/mysql/gda-mysql-recordset.c:213
+#: ../providers/mysql/gda-mysql-recordset.c:281
+#: ../providers/mysql/gda-mysql-recordset.c:335
+#: ../providers/mysql/gda-mysql-recordset.c:382
+#: ../providers/mysql/gda-mysql-recordset.c:435
+#: ../providers/mysql/gda-mysql-recordset.c:563
+#: ../providers/mysql/gda-mysql-recordset.c:712
+msgid "Invalid MySQL handle"
+msgstr "अमान्य एमएसक्युएल ह्यान्डल"
+
+#: ../providers/mysql/gda-mysql-provider.c:397
+#: ../providers/mysql/gda-mysql-provider.c:507
+#: ../providers/mysql/gda-mysql-provider.c:530
+#: ../providers/mysql/gda-mysql-provider.c:691
+#: ../providers/mysql/gda-mysql-provider.c:723
+#: ../providers/mysql/gda-mysql-provider.c:765
+#: ../providers/mysql/gda-mysql-provider.c:918
+#: ../providers/mysql/gda-mysql-provider.c:958
+#: ../providers/mysql/gda-mysql-provider.c:1055
+#: ../providers/mysql/gda-mysql-provider.c:1125
+#: ../providers/mysql/gda-mysql-provider.c:1148
+#: ../providers/mysql/gda-mysql-provider.c:1205
+#: ../providers/mysql/gda-mysql-provider.c:1238
+#: ../providers/mysql/gda-mysql-provider.c:1960
+msgid "Invalid MYSQL handle"
+msgstr "अमान्य एमवाइएसक्युएल ह्यान्डल"
+
+#: ../providers/mysql/gda-mysql-provider.c:637
+#: ../providers/postgres/gda-postgres-provider.c:904
+msgid "Missing parameter 'DATABASE'"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-provider.c:666
+#: ../providers/postgres/gda-postgres-provider.c:958
+#: ../providers/sqlite/gda-sqlite-provider.c:555
+msgid "Method not handled by this provider"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-provider.c:1153
+#: ../providers/mysql/gda-mysql-provider.c:1210
+#: ../providers/mysql/gda-mysql-provider.c:1243
+#: ../providers/oracle/gda-oracle-provider.c:859
+#: ../providers/oracle/gda-oracle-provider.c:941
+#: ../providers/oracle/gda-oracle-provider.c:1002
+#: ../providers/postgres/gda-postgres-provider.c:1350
+#: ../providers/sqlite/gda-sqlite-provider.c:654
+msgid "Transactions are not supported in read-only mode"
+msgstr "पढ्ने शैलीमा मात्र कारोवारले सहारा दिंदैन"
+
+#: ../providers/mysql/gda-mysql-provider.c:1606
+#: ../providers/postgres/gda-postgres-provider.c:1483
+#: ../providers/sqlite/gda-sqlite-provider.c:1192
+msgid "Nb args"
+msgstr "एनबि आर्ग्स"
+
+#: ../providers/mysql/gda-mysql-provider.c:1689
+#: ../providers/oracle/gda-oracle-provider.c:2107
+#: ../providers/postgres/gda-postgres-provider.c:1790
+#: ../providers/sqlite/gda-sqlite-provider.c:1110
+msgid "Synonyms"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-provider.c:1800
+#: ../providers/postgres/gda-postgres-provider.c:2028
+#: ../providers/sqlite/gda-sqlite-provider.c:834
+#, fuzzy
+msgid "Extra attributes"
+msgstr "बढि विकल्पहरु"
+
+#: ../providers/mysql/gda-mysql-recordset.c:394
+#: ../providers/postgres/gda-postgres-recordset.c:583
+#: ../providers/sqlite/gda-sqlite-recordset.c:216
+#: ../providers/sqlite/gda-sqlite-recordset.c:248
+#: ../providers/bdb/gda-bdb-recordset.c:166
+msgid "Column number out of range"
+msgstr "स्तम्भ संख्या दायरा बाहिर"
+
+#: ../providers/mysql/gda-mysql-recordset.c:445
+#: ../providers/mysql/gda-mysql-recordset.c:580
+msgid "Table name could not be guessed"
+msgstr "तालिका नाम अड्कल गर्न सकिँदैन"
+
+#: ../providers/mysql/gda-mysql-recordset.c:467
+#: ../providers/mysql/gda-mysql-recordset.c:473
+#: ../providers/mysql/gda-mysql-recordset.c:595
+#: ../providers/mysql/gda-mysql-recordset.c:601
+msgid "Can not synchronize array with MySQL result set"
+msgstr "माइएसक्युएल परिणाम सेट सँग एर्रे सिन्क्रोनाइज गर्न सकिँदैन"
+
+#: ../providers/mysql/gda-mysql-recordset.c:534
+msgid "Can not append row to data model"
+msgstr "पङ्त्तिलाई डाटा मोडेलमा जोड्न सकिँदैन"
+
+#: ../providers/mysql/gda-mysql-recordset.c:573
+#: ../providers/mysql/gda-mysql-recordset.c:722
+#: ../providers/postgres/gda-postgres-recordset.c:333
+#: ../providers/postgres/gda-postgres-recordset.c:434
+msgid "Given row doesn't belong to the model."
+msgstr "दिइएको पङ्त्ति मोडेल सँग सम्बन्धित छैन"
+
+#: ../providers/mysql/gda-mysql-recordset.c:654
+#: ../providers/postgres/gda-postgres-recordset.c:373
+msgid "Model doesn't have at least one unique key."
+msgstr "मोडेल सँग कम्तिमा पनि एउटा अनौठो कुञ्जी छैन"
+
+#: ../providers/mysql/gda-mysql-recordset.c:682
+msgid "Can not remove row from data model"
+msgstr "डाटा मोडेलबाट पङ्त्ति हटाउन सकिँदैन"
+
+#: ../providers/mysql/gda-mysql-recordset.c:729
+#: ../providers/postgres/gda-postgres-recordset.c:236
+#: ../providers/postgres/gda-postgres-recordset.c:340
+#: ../providers/postgres/gda-postgres-recordset.c:441
+msgid "Table name could not be guessed."
+msgstr "तालिका नाम अड्कल गर्न सकिँदैन."
+
+#: ../providers/mysql/gda-mysql-recordset.c:803
+msgid "Model does not have at least one non-modified unique key."
+msgstr "मोडेल सँग कम्तिमा पनि एउटा परिमार्जन नभएको अनौठो कुञ्जी छैन."
+
+#: ../providers/mysql/gda-mysql-recordset.c:812
+msgid "Model does not have any non-unique values to update."
+msgstr "अपडेट गर्नको लागि मोडेल सँग कुनै अनौठो नभएको मानहरु छैन."
+
+#: ../providers/mysql/libmain.c:43
+msgid "Provider for MySQL databases"
+msgstr "माइएसक्युएल डाटाबेसहरुको लागि प्रदायक"
+
+#: ../providers/mysql/libmain.c:53
+msgid "Name of the database to connect to"
+msgstr "जडान गर्नको लागि डाटाबेसको नाम"
+
+#: ../providers/mysql/libmain.c:61
+msgid "Port number to use for connecting"
+msgstr "पोर्ट संख्या जडानमा प्रयोग गर्नको लागि"
+
+#: ../providers/mysql/libmain.c:64
+msgid "UNIX Socket"
+msgstr "युनिक्स सकेट"
+
+#: ../providers/mysql/libmain.c:65
+msgid "Full path of the UNIX socket to use for connecting locally"
+msgstr "स्थानीय रुपमा जडान गर्नको लागि युनिक्स सकेटको पूरा बाटो"
+
+#: ../providers/mysql/libmain.c:68
+msgid "Use Secure Connection"
+msgstr "सुरक्षित सम्बन्ध प्रयोग गर्नुहोस्"
+
+#: ../providers/mysql/libmain.c:69
+msgid "Whether to use or not SSL for establishing the connection"
+msgstr "जडान निर्माणको लागि एसएसएल प्रयोग गर्न वा नगर्न"
+
+#: ../providers/odbc/gda-odbc-provider.c:183
+msgid "Unable to SQLAllocEnv()..."
+msgstr "एसक्युएलएलोक्इन्भ() सक्षम..."
+
+#: ../providers/odbc/gda-odbc-provider.c:451
+#: ../providers/odbc/gda-odbc-provider.c:471
+#: ../providers/odbc/gda-odbc-provider.c:501
+#: ../providers/odbc/gda-odbc-provider.c:531
+#: ../providers/odbc/gda-odbc-provider.c:562
+#: ../providers/odbc/gda-odbc-provider.c:592
+msgid "Invalid Odbc handle"
+msgstr "अमान्य ओडिबिसि ह्यान्डल"
+
+#: ../providers/odbc/gda-odbc-provider.c:1141
+#, fuzzy
+msgid "# args"
+msgstr "# आर्ग्सको"
+
+#: ../providers/odbc/gda-odbc-provider.c:1402
+#: ../providers/oracle/gda-oracle-provider.c:2205 ../testing/client.c:139
+msgid "Views"
+msgstr "दृश्यहरु"
+
+#. Set it here instead of the SQL query to allow i18n
+#: ../providers/odbc/gda-odbc-provider.c:1454
+#: ../providers/postgres/gda-postgres-provider.c:2613
+#: ../providers/postgres/gda-postgres-provider.c:2669
+msgid "Sequence"
+msgstr "अनुक्रम"
+
+#: ../providers/odbc/libmain.c:42
+msgid "Provider for ODBC data sources"
+msgstr "ओडिबिसि डाटा श्रोतहरुको लागि प्रदायक"
+
+#: ../providers/odbc/libmain.c:51
+msgid "Connection String"
+msgstr "सम्बन्ध स्ट्रिङ्ग"
+
+#: ../providers/odbc/libmain.c:52
+msgid "ODBC connection string"
+msgstr "ओडिबिसि जडान स्ट्रिङ्ग"
+
+#: ../providers/oracle/gda-oracle-provider.c:197
+msgid "No TNS name supplied"
+msgstr "टिएनएस नाम उपलब्ध छैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:213
+msgid "Could not initialize Oracle"
+msgstr "ओर्याकल इनिसियलाइज गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:224
+msgid "Could not initialize the Oracle environment"
+msgstr "ओर्याकल वातावरण इनिसियलाइज गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:235
+msgid "Could not allocate the Oracle service handle"
+msgstr "ओर्याकल सर्भिस ह्यान्डल निर्धारण गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:245
+msgid "Could not allocate the Oracle error handle"
+msgstr "ओर्याकल गल्ती ह्यान्डल निर्धारण गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:257
+msgid "Could not allocate the Oracle server handle"
+msgstr "ओर्याकल सर्भर ह्यान्डल निर्धारण गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:270
+msgid "Could not allocate the Oracle session handle"
+msgstr "ओर्याकल सत्र ह्यान्डल निर्धारण गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:300
+msgid "Could not attach to the Oracle server"
+msgstr "ओर्याकल सर्भरमा संलग्न गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:316
+msgid "Could not set the Oracle server attribute in the service context"
+msgstr "ओर्याकल सर्भर बिशेषता सर्भिस सामाग्रीमा सेट गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:332
+msgid "Could not set the Oracle username attribute"
+msgstr "ओर्याकल प्रयोगकर्ता नाम बिशेषता सेट गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:348
+msgid "Could not set the Oracle password attribute"
+msgstr "ओर्याकल प्रवेशचिन्ह बिशेषता सेट गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:363
+msgid "Could not begin the Oracle session"
+msgstr "ओर्याकल सत्र शुरु गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:381
+msgid "Could not set the Oracle session attribute in the service context"
+msgstr "ओर्याकल सत्र बिशेषता सर्भिस सामाग्रीमा सेट गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:467
+#: ../providers/oracle/gda-oracle-provider.c:499
+#: ../providers/oracle/gda-oracle-provider.c:574
+#: ../providers/oracle/gda-oracle-provider.c:723
+#: ../providers/oracle/gda-oracle-provider.c:746
+#: ../providers/oracle/gda-oracle-provider.c:769
+#: ../providers/oracle/gda-oracle-provider.c:799
+#: ../providers/oracle/gda-oracle-provider.c:854
+#: ../providers/oracle/gda-oracle-provider.c:936
+#: ../providers/oracle/gda-oracle-provider.c:997
+#: ../providers/oracle/gda-oracle-provider.c:1145
+#: ../providers/oracle/gda-oracle-recordset.c:172
+#: ../providers/oracle/gda-oracle-recordset.c:395
+#: ../providers/oracle/gda-oracle-recordset.c:596
+msgid "Invalid Oracle handle"
+msgstr "अमान्य ओर्याकल ह्यान्डल"
+
+#: ../providers/oracle/gda-oracle-provider.c:510
+msgid "Could not allocate the Oracle statement handle"
+msgstr "ओर्याकल कथन ह्यान्डल निर्धारण गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:521
+msgid "Could not prepare the Oracle statement"
+msgstr "ओर्याकल कथन तयार गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:553
+msgid "Could not bind the Oracle statement parameter"
+msgstr "ओर्याकल कथन पारामिटर बाइन्ड गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:599
+msgid "Could not get the Oracle statement type"
+msgstr "ओर्याकल कथन प्रकार प्राप्त गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:611
+msgid "Could not set the Oracle statement pre-fetch row count"
+msgstr "ओर्यकल कथन प्रि-फेच पङ्त्ति गणना सेट गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:628
+msgid "Could not execute the Oracle statement"
+msgstr "ओर्याकल कथन कार्यान्वयन गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:641
+msgid "Could not get the number of columns in the result set"
+msgstr "परिणाम सेटमा स्तम्भहरुको संख्या पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:658
+msgid "Could not get the parameter descripter in the result set"
+msgstr "परिणाम सेटमा पारामिटर वर्णनकर्ता पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:670
+msgid "Could not get the column name in the result set"
+msgstr "परिणाम सेटमा स्तम्भ नाम पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:816
+#: ../providers/oracle/gda-oracle-provider.c:898
+#: ../providers/oracle/gda-oracle-provider.c:953
+#: ../providers/oracle/gda-oracle-provider.c:1014
+msgid "Could not attach the transaction to the service context"
+msgstr "सर्भिस सामाग्रीमा कारोवार संलग्न गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:872
+msgid "Could not allocate the Oracle transaction handle"
+msgstr "ओर्याकल कारोवार ह्यान्डल निर्धारण गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:884
+msgid "Could not set the Oracle transaction name"
+msgstr "ओर्याकल कारोवार नाम सेट गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:909
+msgid "Could not start the Oracle transaction"
+msgstr "ओर्याकल कारोवार शुरु गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:962
+msgid "Could not prepare the transaction to commit"
+msgstr "पठाउनको लागि कारोवार तयार भएको छैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:970
+msgid "Could not commit the Oracle transaction"
+msgstr "ओर्याकल कारोवार पठाउन सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1021
+msgid "Could not rollback the Oracle transaction"
+msgstr "ओर्याकल कारोवार रोलब्याक गर्न सकिँदैन"
+
+#. Set it here instead of the SQL query to allow i18n
+#: ../providers/oracle/gda-oracle-provider.c:1155
+#: ../providers/postgres/gda-postgres-provider.c:1967
+msgid "Aggregate"
+msgstr "एग्रिगेट"
+
+#: ../providers/oracle/gda-oracle-provider.c:1159
+#: ../providers/postgres/gda-postgres-provider.c:1971
+msgid "OutType"
+msgstr "बाह्य प्रकार"
+
+#: ../providers/oracle/gda-oracle-provider.c:1160
+#: ../providers/postgres/gda-postgres-provider.c:1972
+msgid "InType"
+msgstr "भित्री प्रकार"
+
+#: ../providers/oracle/gda-oracle-provider.c:1444
+msgid "Could not allocate the Oracle describe handle"
+msgstr "ओर्याकल वर्णन ह्यान्डल निर्धारण गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1454
+msgid "Could not set describe handle attribute"
+msgstr "वर्णन ह्यान्डल बिशेषता सेट गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1481
+#: ../providers/oracle/gda-oracle-provider.c:1586
+msgid "Could not describe the Oracle table"
+msgstr "ओर्याकल तालिका वर्णन गर्न सकिँदैन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1496
+#: ../providers/oracle/gda-oracle-provider.c:1599
+msgid "Could not get the Oracle parameter handle"
+msgstr "ओर्याकल पारामिटर ह्यान्डल पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1511
+msgid "Could not get described object type"
+msgstr "वर्णन गरिएको वस्तु प्रकार पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1526
+msgid "Could not get synonym referred-to schema"
+msgstr "स्किमा सँग सम्बन्धित पर्याय शब्द पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1539
+msgid "Could not get synonym referred-to name"
+msgstr "नाम सँग सम्बन्धित पर्याय शब्द पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1552
+msgid "Could not get synonym referred-to dblink"
+msgstr "डिबिलिङ्क सँग सम्बन्धित पर्याय शब्द पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1614
+msgid "Could not get the number of columns in the table"
+msgstr "तालिकामा स्तम्भहरुको संख्या पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1628
+msgid "Could not get the column list"
+msgstr "स्तम्भ सूची पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1659
+msgid "Could not get the Oracle column handle"
+msgstr "ओर्याकल स्तम्भ ह्यान्डल पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1674
+msgid "Could not get the Oracle field name"
+msgstr "ओर्याकल फिल्ड नाम पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1696
+msgid "Could not get the Oracle field data type"
+msgstr "ओर्याकल फिल्ड डाटा प्रकार पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1716
+msgid "Could not get the Oracle field defined size"
+msgstr "ओर्याकल फिल्ड परिभाषित आकार पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1735
+msgid "Could not get the Oracle field scale"
+msgstr "ओर्याकल फिल्ड माप पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-provider.c:1754
+msgid "Could not get the Oracle field nullable attribute"
+msgstr "ओर्याकल फिल्ड नलेबल बिशेषता पाउन सकिएन"
+
+#. Set it here instead of the SQL query to allow i18n
+#: ../providers/oracle/gda-oracle-provider.c:2189
+#: ../providers/postgres/gda-postgres-provider.c:1890 ../testing/client.c:140
+msgid "Indexes"
+msgstr "अनुक्रमणिकाहरू"
+
+#: ../providers/oracle/gda-oracle-provider.c:2192
+msgid "Procedures"
+msgstr "तरिकाहरु"
+
+#: ../providers/oracle/gda-oracle-provider.c:2195 ../testing/client.c:143
+msgid "Sequences"
+msgstr "अनुक्रमहरु"
+
+#: ../providers/oracle/gda-oracle-recordset.c:75
+msgid "Could not get the Oracle parameter"
+msgstr "ओर्याकल पारामिटरहरु पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:85
+msgid "Could not get the parameter defined size"
+msgstr "पारामिटर परिभाषित आकार पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:98
+msgid "Could not get the parameter data type"
+msgstr "पारामिटर डाटा प्रकार पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:133
+msgid "Could not define by position"
+msgstr "स्थान द्वारा परिभाषित गर्न सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:178
+#: ../providers/postgres/gda-postgres-recordset.c:704
+msgid "Column out of range"
+msgstr "स्तम्भ दायरा बाहिर"
+
+#: ../providers/oracle/gda-oracle-recordset.c:190
+msgid "Could not get the Oracle parameter information"
+msgstr "ओर्याकल पारामिटर सूचना पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:200
+msgid "Could not get the Oracle column name"
+msgstr "ओर्याकल स्तम्भ नाम पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:215
+msgid "Could not get the Oracle column data type"
+msgstr "ओर्याकल स्तम्भ डाटा प्रकार पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:227
+msgid "Could not get the Oracle column scale"
+msgstr "ओर्याकल स्तम्भ माप पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:239
+msgid "Could not get the Oracle column nullable attribute"
+msgstr "ओर्याकल स्तम्भ नलेबल बिशेषता पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:251
+msgid "Could not get the Oracle defined size"
+msgstr "ओर्याकल परिभाषित आकार पाउन सकिएन"
+
+#: ../providers/oracle/gda-oracle-recordset.c:360
+msgid "Could not fetch a row"
+msgstr "पङ्ति फेच गर्न सकिएन"
+
+#: ../providers/oracle/libmain.c:34
+msgid "Provider for Oracle databases"
+msgstr "ओर्याकल डाटाबेसहरुको लागि प्रदायक"
+
+#: ../providers/oracle/libmain.c:43
+msgid "TNS Name"
+msgstr "टिएनएस नाम"
+
+#: ../providers/oracle/libmain.c:44
+msgid "Name of the TNS configuration to use for connecting"
+msgstr "जडानको लागि प्रयोग गर्न टिएनएस कन्फिगरेसनको नाम"
+
+#: ../providers/postgres/gda-postgres-provider.c:690
+#: ../providers/postgres/gda-postgres-provider.c:707
+#: ../providers/postgres/gda-postgres-provider.c:794
+#: ../providers/postgres/gda-postgres-provider.c:1312
+#: ../providers/postgres/gda-postgres-provider.c:1419
+#: ../providers/postgres/gda-postgres-recordset.c:191
+#: ../providers/postgres/gda-postgres-recordset.c:568
+#: ../providers/postgres/gda-postgres-recordset.c:698
+#: ../providers/postgres/utils.c:208
+msgid "Invalid PostgreSQL handle"
+msgstr "अमान्य पोस्टग्रेसएसक्युएल ह्यान्डल"
+
+#: ../providers/postgres/gda-postgres-provider.c:1359
+msgid "Transactions are not supported in read uncommitted isolation level"
+msgstr "पढ्ने नसमेटिएको आइसोलेसन तहमा कारोवारले सहारा दिंदैन"
+
+#: ../providers/postgres/gda-postgres-provider.c:1362
+msgid "Transactions are not supported in repeatable read isolation level"
+msgstr "दोहोरिएको पढ्ने आइसोलेसन तहमा कारोवारले सहारा दिंदैन"
+
+#. Set it here instead of the SQL query to allow i18n
+#: ../providers/postgres/gda-postgres-provider.c:1850
+msgid "View"
+msgstr "दृष्य"
+
+#. Set it here instead of the SQL query to allow i18n
+#: ../providers/postgres/gda-postgres-provider.c:2537 ../testing/client.c:135
+msgid "Databases"
+msgstr "डाटाबेस"
+
+#: ../providers/postgres/gda-postgres-recordset.c:501
+msgid "Model doesn't have at least one non-modified unique key."
+msgstr "मोडेल सँग कम्तिमा पनि एउटा परिमार्ज नगरिएको अनौठो कुञ्जी छैन"
+
+#: ../providers/postgres/gda-postgres-recordset.c:505
+msgid "Model doesn't have any non-unique values to update."
+msgstr "अपडेट गर्नको लागि मोडेल सँग कुनै अनौठो मानहरु छैन"
+
+#: ../providers/postgres/gda-postgres-recordset.c:819
+#, c-format
+msgid "Tuples:\"%s\""
+msgstr "टुप्लेस:\"%s\""
+
+#: ../providers/postgres/libmain.c:44
+msgid "Provider for PostgreSQL databases"
+msgstr "पोस्टग्रेसएसक्युएल डाटाबेसहरुको लागि प्रदायक"
+
+#: ../providers/postgres/libmain.c:57
+msgid "Search Path"
+msgstr "बाटो खोज्नुहोस्ो"
+
+#: ../providers/postgres/libmain.c:58
+msgid "Search path"
+msgstr "बाटो खोज्नुहोस्"
+
+#: ../providers/postgres/libmain.c:66 ../providers/sybase/libmain.c:70
+msgid "Port number to use for the connection"
+msgstr "जडानमा प्रयोगको लागि पोर्ट संख्या"
+
+#: ../providers/postgres/libmain.c:70
+msgid "Extra PostgreSQL options to use for the connection"
+msgstr "जडानमा प्रयोगको लागि अन्य पोस्टग्रेसएसक्युएल बिकल्पहरु"
+
+#: ../providers/postgres/libmain.c:73
+msgid "Require SSL"
+msgstr "एसएसएल आवश्यक"
+
+#: ../providers/postgres/libmain.c:74
+msgid "Whether to require SSL or not when connecting"
+msgstr "जडानको बेला एसएसएल चाहिन्छ वा चाहिँदैन"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:202
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr "डाटाबेस खोल्नको लागि पूरा बाटो जडान स्ट्रिङ्गमा वर्णन गर्नुपर्छ."
+
+#: ../providers/sqlite/gda-sqlite-provider.c:226
+msgid "Could not set empty_result_callbacks SQLite option"
+msgstr "खाली_परिणाम_कलब्याकहरु एसक्युएलाइट बिकल्प सेट गर्न सकिंदैन"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:287
+#: ../providers/sqlite/gda-sqlite-provider.c:465
+#: ../providers/sqlite/gda-sqlite-provider.c:736
+#: ../providers/sqlite/gda-sqlite-provider.c:1063
+#: ../providers/sqlite/gda-sqlite-recordset.c:159
+#: ../providers/sqlite/gda-sqlite-recordset.c:201
+#: ../providers/sqlite/gda-sqlite-recordset.c:242
+msgid "Invalid SQLite handle"
+msgstr "अमान्य एसक्युलाइट ह्यान्डल"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:345
+#: ../providers/sqlite/gda-sqlite-provider.c:857
+#: ../providers/sqlite/gda-sqlite-provider.c:1099
+#: ../providers/sqlite/gda-sqlite-provider.c:1228
+msgid "Invalid SQLITE handle"
+msgstr "अमान्य एसक्युलाइट ह्यान्डल"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:483
+msgid "Only one database per connection is allowed"
+msgstr "एउटा मात्र डाटाबेस प्रति जडानमा अनुमति छ"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:529
+msgid "Missing parameter 'URI'"
+msgstr ""
+
+#: ../providers/sqlite/gda-sqlite-provider.c:572
+msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr "एसक्युलाइट डाटाबेस हटाउनको लागि तपाईले डाटाबेस फाइल हातले हटाउनु पर्छ"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:888
+#, fuzzy, c-format
+msgid "Can't find table %s"
+msgstr "सम्बन्ध तालिकाहरु"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1013
+msgid "Could not retrieve information for field"
+msgstr "फिल्डको लागि सूचना फेरि पाउन सकिएन"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1202
+#, fuzzy
+msgid "Arg type"
+msgstr "आर्ग्स प्रकारहरु"
+
+#: ../providers/sqlite/libmain.c:43
+msgid "Provider for SQLite databases"
+msgstr "एसक्युलाइट डाटाबेसहरुको लागि प्रदायक"
+
+#: ../providers/sqlite/libmain.c:53
+msgid "Full path of the file containing the SQLite database"
+msgstr "एसक्युलाइट डाटाबेसको फाइलको पूरा बाटो"
+
+#: ../providers/sybase/gda-sybase-provider.c:291
+msgid "Out of memory. Allocating connection structure failed."
+msgstr "मेमोरि बाहिर. जडान बनावट निर्धारणमा असफलता"
+
+#: ../providers/sybase/gda-sybase-provider.c:336
+#, c-format
+msgid "Locale set to '%s'."
+msgstr "लोकेल सेट '%s' मा."
+
+#: ../providers/sybase/gda-sybase-provider.c:642
+msgid ""
+"Cmd structure already in use. Command will not be executed because of "
+"blocked connection."
+msgstr "आदेश बनावट प्रयोगमा छ. रोकिएको जडानले गर्दा आदेशको कार्यान्वयन हुँदैन."
+
+#: ../providers/sybase/gda-sybase-provider.c:656
+#, c-format
+msgid "Failed allocating a command structure in %s()"
+msgstr "%s() मा आदेश बनावट निर्धारण गर्न असफल"
+
+#: ../providers/sybase/gda-sybase-provider.c:670
+msgid "Could not prepare command structure."
+msgstr "आदेश बनावट तयार गर्न सकिँदैन."
+
+#: ../providers/sybase/gda-sybase-provider.c:680
+msgid "Sending sql-command failed."
+msgstr "एसक्युएल-आदेश पठाउदैं असफल"
+
+#: ../providers/sybase/gda-sybase-provider.c:706
+#: ../providers/sybase/gda-sybase-provider.c:724
+#: ../providers/sybase/gda-sybase-provider.c:790
+#: ../providers/sybase/gda-sybase-provider.c:811
+msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
+msgstr "जिडिए_सिबेस_रेकर्डसेट_हो != ठिक"
+
+#. when you execute a stored procedure through openclient, this
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#: ../providers/sybase/gda-sybase-provider.c:712
+msgid "CS_STATUS_RESULT!"
+msgstr "सिएस_स्थिति_परिणाम!"
+
+#: ../providers/sybase/gda-sybase-provider.c:734
+msgid "Hit unsupported result type"
+msgstr "सहार नगर्ने परिणाम प्रकारलाई हिर्काउनुहोस्"
+
+#: ../providers/sybase/gda-sybase-provider.c:762
+#, fuzzy
+msgid ""
+"An error occured when attempting to test if there is a server message for "
+"resultset"
+msgstr ""
+"सिटि_डियाग एटेम्प्ट गरेको बेला गल्ती यो जाँच्नको लागि कि यदि त्यहाँ सर्भर सूचना "
+"परिणामसेटको लागि छ भनेर"
+
+#: ../providers/sybase/gda-sybase-provider.c:793
+#, c-format
+msgid "%s returned %s"
+msgstr "%s फर्काइयो %s"
+
+#: ../providers/sybase/gda-sybase-provider.c:820
+msgid "Failed dropping command structure."
+msgstr "आदेश बनावट छोडेको बेला असफल."
+
+#: ../providers/sybase/gda-sybase-provider.c:850
+#, c-format
+msgid "Command structure already in use. %s failed."
+msgstr "आदेश बनावट पहिले नै प्रयोगमा छ. %s असफल."
+
+#: ../providers/sybase/gda-sybase-provider.c:858
+msgid "Could not allocate command structure."
+msgstr "आदेश बनावट निर्धारण गर्न असफल."
+
+#: ../providers/sybase/gda-sybase-provider.c:867
+#, c-format
+msgid "Could not prepare command structure with %s."
+msgstr "%s सँग आदेश बनावट तयार गर्न असफल."
+
+#: ../providers/sybase/gda-sybase-provider.c:877
+msgid "Sending command failed."
+msgstr "आदेश पठाउँदै गर्दा असफल."
+
+#: ../providers/sybase/gda-sybase-provider.c:902
+#: ../providers/sybase/gda-sybase-provider.c:919
+#: ../providers/sybase/gda-sybase-provider.c:930
+#, c-format
+msgid "%s: %s failed"
+msgstr "%s: %s असफल"
+
+#: ../providers/sybase/gda-sybase-provider.c:974
+msgid "could not allocate cmd structure to find current database."
+msgstr "हालको डाटाबेस पत्ता लगाउन आदेश बनावट निर्धारण गर्न असफल."
+
+#: ../providers/sybase/gda-sybase-provider.c:985
+msgid "could not execute command to get current database."
+msgstr "हालको डाटाबेस पाउन आदेश कार्यान्वयन गर्न सकिएन"
+
+#: ../providers/sybase/gda-sybase-provider.c:993
+msgid "could not send command to get current database."
+msgstr "हालको डाटाबेस पाउन आदेश पठाउन सकिएन"
+
+#: ../providers/sybase/gda-sybase-provider.c:1016
+msgid "could not bind variable to get current database."
+msgstr "हालको डाटाबेस पाउन चललाई बाइन्ड गर्न सकिएन"
+
+#: ../providers/sybase/gda-sybase-provider.c:1029
+#: ../providers/sybase/gda-sybase-provider.c:1044
+msgid "could not fetch data to find current database."
+msgstr "हालको डाटाबेस पाउन डाटालाई फेच गर्न सकिएन"
+
+#: ../providers/sybase/gda-sybase-provider.c:1058
+msgid "could not drop cmd structure to find current database."
+msgstr "हालको डाटाबेस पाउन आदेश बनावट छोड्न सकिएन"
+
+#: ../providers/sybase/gda-sybase-recordset.c:316
+msgid "Could not allocate datamodel. No results will be returned."
+msgstr "डाटामोडेल निर्धारण गर्न सकिएन. कुनै परिणाम फर्काइदैन."
+
+#: ../providers/sybase/gda-sybase-recordset.c:319
+msgid "ct_cancel() failed."
+msgstr "सिटि_रद्द() असफल."
+
+#: ../providers/sybase/gda-sybase-recordset.c:332
+#, c-format
+msgid "%s failed while processing a row result."
+msgstr "%s असफल जब पङ्त्ति परिणाम प्रोसेसिङ्ग गर्दा."
+
+#: ../providers/sybase/gda-sybase-recordset.c:340
+#, c-format
+msgid "%s returned <= 0 columns."
+msgstr "%s फर्काइयो <= ० स्तम्भहरू."
+
+#: ../providers/sybase/gda-sybase-recordset.c:360
+#: ../providers/sybase/gda-sybase-recordset.c:551
+msgid "Could not allocate structure for column metainformation."
+msgstr "स्तम्भ मेटासूचनाको लागि बनावटको निर्धारण गर्न सकिएन."
+
+#: ../providers/sybase/gda-sybase-recordset.c:364
+#: ../providers/sybase/gda-sybase-recordset.c:555
+#, c-format
+msgid "Could not call %s while processing row resultset."
+msgstr "पङ्त्ति परिणामसेट प्रोसेसिङ्ग गर्दा %s कल गर्न सकिएन"
+
+#: ../providers/sybase/gda-sybase-recordset.c:383
+#: ../providers/sybase/gda-sybase-recordset.c:404
+#, c-format
+msgid "Could not run %s on column %d"
+msgstr "चालु गर्न सकिएन %s स्तम्भमा %d"
+
+#: ../providers/sybase/gda-sybase-recordset.c:392
+#, c-format
+msgid "Could not allocate data placeholder for column %d"
+msgstr "स्तम्भको लागि डाटा स्थानहोल्डर निर्धारण गर्न सकिएन %d"
+
+#: ../providers/sybase/gda-sybase-recordset.c:423
+#, c-format
+msgid "Could not run %s to cancel processing row resultset."
+msgstr "प्रोसेसिङ्ग पङ्त्ति परिणामसेट रद्द गर्न %s चालु गर्न सकिँदैन."
+
+#: ../providers/sybase/gda-sybase-recordset.c:439
+#, c-format
+msgid "%s failed on row %d"
+msgstr "%s पङ्त्तिमा असफल %d"
+
+#: ../providers/sybase/gda-sybase-recordset.c:466
+#, c-format
+msgid "%s terminated with unexpected return code."
+msgstr "%s टर्मिनेटेड नसोचिएको फर्काइएको संकेत सँग"
+
+#: ../providers/sybase/gda-sybase-recordset.c:510
+#, fuzzy
+msgid ""
+"An error occured when attempting to retrieve a server message count for "
+"resultset"
+msgstr ""
+"कलिङ्ग सिटि_दियाग एटेम्प्ट गर्दा गल्ती भेटियो जहाँ परिणामसेटको लागि सर्भर सूचना गणना पुन "
+"प्राप्त गर्न खोज्दा"
+
+#: ../providers/sybase/gda-sybase-recordset.c:519
+msgid "attempting to make recordset and msg count != 1 !"
+msgstr "रेकर्डसेट र सूचना गणना बनाउन कोशिस गर्दा != १ !"
+
+#: ../providers/sybase/gda-sybase-recordset.c:533
+#, fuzzy
+msgid ""
+"An error occured when attempting to retrieve a server message for recordset"
+msgstr ""
+"कलिङ्ग सिटि_दियाग एटेम्प्ट गर्दा गल्ती भेटियो जहाँ रेकर्डसेटको लागि सर्भर सूचना पुन प्राप्त "
+"गर्न खोज्दा"
+
+#: ../providers/sybase/gda-sybase-recordset.c:592
+#: ../providers/sybase/utils.c:409
+msgid "call to ct_diag failed when attempting to clear the server messages"
+msgstr "सिटि_डियाग कल गर्दा असफल जब सर्भर सूचनाहरु सफा गर्न खोज्दा"
+
+#: ../providers/sybase/gda-sybase-types.c:94
+#: ../providers/sybase/gda-sybase-types.c:97
+msgid "Attempt setting a nonnullable field to null."
+msgstr "नलको लागि नननलेबल फिल्डमा सेटिङ्ग गर्न कोशिस गर्नुहोस्"
+
+#: ../providers/sybase/gda-sybase-types.c:208
+#, c-format
+msgid "cslib cannot convert type %d"
+msgstr "सिएछलिब प्रकारमा रुपान्तर गर्न सक्दैन %d"
+
+#: ../providers/sybase/gda-sybase-types.c:223
+#, c-format
+msgid "data conversion failed for type %d"
+msgstr "प्रकारको लागि डाटा गर्न असफल %d"
+
+#: ../providers/sybase/libmain.c:40
+msgid "GDA provider for sybase databases (using OpenClient)"
+msgstr "सिबेस डाटाबेसहरुको लागि जिडिए प्रदायक (खुलाग्राहक प्रयोग गरि)"
+
+#: ../providers/sybase/libmain.c:66
+msgid "Extra Sybase options to use for the connection"
+msgstr "जडानको लागि प्रयोग गर्न अन्य सिबेस बिकल्पहरु"
+
+#: ../providers/sybase/libmain.c:80
+msgid "Locale"
+msgstr "लोकेल"
+
+#: ../providers/sybase/libmain.c:81
+msgid "Locale to use in the connection"
+msgstr "जडानमा प्रयोगको लागि लोकेल"
+
+#: ../providers/sybase/utils.c:48
+msgid "Call: csmsg callback"
+msgstr "वोलाउनुहोस्: सिएससूचना कलब्याक"
+
+#: ../providers/sybase/utils.c:53
+#, c-format
+msgid ""
+"CS-Library error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+"सिएस-पुस्तकालय गल्ती:\n"
+"\tसेभरिटि(%ld) तह(%ld) ओरिजिन(%ld) संख्या(%ld)\n"
+"\t%s"
+
+#: ../providers/sybase/utils.c:60
+#, c-format
+msgid "OS error: %s"
+msgstr "ओएस गल्ती: %s"
+
+#: ../providers/sybase/utils.c:70
+msgid "Call: Client callback."
+msgstr "वोलाउनुहोस्: ग्राहक कलब्याक"
+
+#: ../providers/sybase/utils.c:75
+#, c-format
+msgid ""
+"CT-Client error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+"सिटि-ग्राहक गल्ती:\n"
+"\tसेभरिटि(%ld) तह(%ld) ओरिजिन (%ld) संख्या(%ld)\n"
+"\t%s"
+
+#: ../providers/sybase/utils.c:90
+msgid "Call: server callback"
+msgstr "वोलाउनुहोस्: सर्भर कलब्याक"
+
+#: ../providers/sybase/utils.c:95
+#, c-format
+msgid ""
+"CT-Server message:\n"
+"\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
+msgstr ""
+"सिटि सर्भर सूचना:\n"
+"\tसंख्या(%ld) सेभरिटि(%ld) स्थिति(%ld) पङ्त्ति(%ld)"
+
+#: ../providers/sybase/utils.c:100
+#, c-format
+msgid "\tServer name: %s\n"
+msgstr "\tसर्भर नाम: %s\n"
+
+#: ../providers/sybase/utils.c:103
+#, c-format
+msgid "\tProcedure name: %s\n"
+msgstr "\tकार्यविधि नाम: %s\n"
+
+#: ../providers/sybase/utils.c:147
+msgid "ct_diag() failed determining # of client messages."
+msgstr "सिटि_डियाग() असफल # ग्राहक सूचनाहरुको निर्धारण गर्नुहोस्"
+
+#: ../providers/sybase/utils.c:204 ../providers/sybase/utils.c:443
+#, fuzzy
+msgid "Failed when attempting to retrieve the amount of client messages"
+msgstr "सिएस_डियाग बोलाउन असफल जब ग्राहक सूचनाहरुको रकम एटेम्प्ट गर्दा"
+
+#: ../providers/sybase/utils.c:221 ../providers/sybase/utils.c:460
+#, fuzzy
+msgid "An error occured when attempting to retrieve a client message"
+msgstr "ग्राहक सूचना पुन पाउन कोशिस गर्दा सिटि_डियागलाई बोलाउँदा गल्ती भेटियो"
+
+#: ../providers/sybase/utils.c:231
+msgid "OS_Error:("
+msgstr "ओएस गल्ती:("
+
+#: ../providers/sybase/utils.c:233
+msgid ") Message: "
+msgstr ") सन्देश: "
+
+#: ../providers/sybase/utils.c:245
+#, c-format
+msgid ""
+"Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
+"s"
+msgstr "सिवेस खुलाग्राहक सूचना: सेभरिटि(%ld), संख्या(%ld), ओरिजिन(%ld), तह(%ld): %s"
+
+#: ../providers/sybase/utils.c:273
+msgid "call to cs_diag failed when attempting to clear the client messages"
+msgstr "ग्राहक सूचनाहरु सफा गर्न खोज्दा सिएस_डियाग बोलाउन असफल"
+
+#: ../providers/sybase/utils.c:314
+#, fuzzy
+msgid "Failed when attempting to retrieve the amount of server messages"
+msgstr "सर्भर सूचनाहरुको रकम "
+
+#: ../providers/sybase/utils.c:331
+#, fuzzy
+msgid "An error occured when attempting to retrieve a server message"
+msgstr "सिटि_डियागलाई बोलाउन सर्भर सूचना पुन पाउन कोशिस गर्दा गल्ती भेटियो"
+
+#: ../providers/sybase/utils.c:343
+msgid "Server:"
+msgstr "सर्भर:"
+
+#: ../providers/sybase/utils.c:347
+msgid "Stored Procedure:"
+msgstr "बचत गरिएको कार्यविधि:"
+
+#: ../providers/sybase/utils.c:351
+msgid "Number"
+msgstr "अंक"
+
+#: ../providers/sybase/utils.c:354 ../providers/sybase/utils.c:471
+msgid "Severity"
+msgstr "कठोरता"
+
+#: ../providers/sybase/utils.c:357
+msgid "State"
+msgstr "स्थिति"
+
+#: ../providers/sybase/utils.c:360
+msgid "Line"
+msgstr "रेखा"
+
+#: ../providers/sybase/utils.c:473
+msgid "Layer"
+msgstr "तह"
+
+#: ../providers/sybase/utils.c:475
+msgid "Origin"
+msgstr "उत्पत्ति"
+
+#: ../providers/sybase/utils.c:477
+msgid "Message Number"
+msgstr "सन्देश अंक"
+
+#: ../providers/sybase/utils.c:499
+msgid "call to ct_diag failed when attempting to clear the client messages"
+msgstr "ग्राहक सूचनाहरु सफा गर्न कोशिस गर्दा सिटि_डियागलाई बोलाउँदा गल्ती भेटियो"
+
+#: ../providers/sybase/utils.c:520
+msgid "Operation not possible, connection busy."
+msgstr "अपरेशन सम्भव छैन, जडान ब्यस्त."
+
+#: ../providers/xbase/gda-xbase-provider.c:185
+msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
+msgstr "फाइलको नाम वा निर्देशिका स्पेसिफाइ हुनसक्छ, तर दुबै होइन वा कुनै पनि होइन"
+
+#: ../providers/xbase/gda-xbase-provider.c:232
+msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
+msgstr "जडित स्ट्रिङ्गमा कि त फाइलको नाम वा निर्देशिका स्पेसिफाइ हुनुपर्छ"
+
+#: ../providers/xbase/gda-xbase-provider.c:261
+#: ../providers/xbase/gda-xbase-provider.c:380
+msgid "Invalid Xbase handle"
+msgstr "अमान्य एक्सबेस ह्यान्डल"
+
+#: ../providers/xbase/libmain.c:39
+#, fuzzy
+msgid "Provider for xBase (dBase, FoxPro, etc) files"
+msgstr "एक्सबेस (डिबेस, फक्सप्रो, इत्यादि) फाइलहरुको लागि प्रदायक"
+
+#: ../providers/xbase/libmain.c:52
+msgid "Directory"
+msgstr "निर्देशिका"
+
+#: ../providers/xbase/libmain.c:53
+msgid "Directory containing the xBase files"
+msgstr "निर्देशिका एक्सबेस फाइलहरु समावेश सहित"
+
+#: ../providers/xml/gda-xml-provider.c:191
+msgid ""
+"A full path must be specified on the connection string to open a database on "
+"the XML provider."
+msgstr ""
+"एक्सएमएल प्रदायकमा जडान स्ट्रिङ्ग डाटाबेस खोल्नको लागि पूरा बाटो स्पेसिफाइ हुनुपर्छ."
+
+#: ../providers/xml/gda-xml-provider.c:222
+#: ../providers/xml/gda-xml-provider.c:244
+msgid "Invalid XML handle"
+msgstr "अमान्य एक्सएमएल ह्यान्डल"
+
+#: ../providers/xml/gda-xml-provider.c:263
+#: ../providers/xml/gda-xml-provider.c:278
+#: ../providers/xml/gda-xml-provider.c:329
+msgid "Invalid internal handle"
+msgstr "अमान्य आन्तरिक ह्यान्डल"
+
+#: ../providers/xml/gda-xml-provider.c:368
+msgid "Not Implemented"
+msgstr "इम्प्लिमेन्टेड होइन"
+
+#: ../providers/xml/gda-xml-provider.c:506
+#: ../providers/xml/gda-xml-provider.c:512
+msgid "Invalid argument"
+msgstr "अमान्य तर्क"
+
+#: ../providers/xml/gda-xml-provider.c:538
+msgid "Could not get description for column"
+msgstr "स्तम्भको लागि वर्णन पाउन सकिएन"
+
+#. fill the recordset
+#: ../providers/xml/gda-xml-provider.c:660
+msgid "Big integer"
+msgstr "ठूलो पूर्ण संख्या"
+
+#: ../providers/xml/gda-xml-provider.c:661
+msgid "Big unsigned integer"
+msgstr "ठूलो सहि नगरिएको पूर्ण संख्या"
+
+#: ../providers/xml/gda-xml-provider.c:662
+msgid "Binary"
+msgstr "बाईनरी"
+
+#: ../providers/xml/gda-xml-provider.c:663
+msgid "Boolean"
+msgstr "बुलेन"
+
+#: ../providers/xml/gda-xml-provider.c:664
+msgid "Date"
+msgstr "मिति"
+
+#: ../providers/xml/gda-xml-provider.c:665
+msgid "Double precision"
+msgstr "द्विगुणीय प्रेसिसन"
+
+#: ../providers/xml/gda-xml-provider.c:666
+msgid "Integer"
+msgstr "इन्टिगर"
+
+#: ../providers/xml/gda-xml-provider.c:667
+msgid "List"
+msgstr "सूची"
+
+#: ../providers/xml/gda-xml-provider.c:668
+msgid "Money"
+msgstr "पैसा"
+
+#: ../providers/xml/gda-xml-provider.c:669
+msgid "Numeric"
+msgstr "संख्यात्मक"
+
+#: ../providers/xml/gda-xml-provider.c:670
+msgid "Point"
+msgstr "बिन्दु॒"
+
+#: ../providers/xml/gda-xml-provider.c:671
+msgid "Single precision"
+msgstr "एक्लो प्रेसिसन"
+
+#: ../providers/xml/gda-xml-provider.c:672
+msgid "Small integer"
+msgstr "सानो इन्टिगर"
+
+#: ../providers/xml/gda-xml-provider.c:673
+msgid "Small unsigned integer"
+msgstr "सानो सहि नगरिएको इन्टिगर"
+
+#: ../providers/xml/gda-xml-provider.c:674
+msgid "String"
+msgstr "स्ट्रिङ्ग"
+
+#: ../providers/xml/gda-xml-provider.c:675
+msgid "Time"
+msgstr "समय"
+
+#: ../providers/xml/gda-xml-provider.c:676
+msgid "Timestamp"
+msgstr "समयस्ट्याम्प"
+
+#: ../providers/xml/gda-xml-provider.c:677
+msgid "Tiny integer"
+msgstr "अति सानो इन्टिगर"
+
+#: ../providers/xml/gda-xml-provider.c:678
+msgid "Tiny unsigned integer"
+msgstr "अति सानो सहि नगरिएको इन्टिगर"
+
+#: ../providers/xml/gda-xml-provider.c:680
+msgid "Unsigned integer"
+msgstr "सहि नगरिएको इन्टिगर"
+
+#: ../providers/xml/libmain.c:34
+msgid "XML"
+msgstr "एक्सएमएल"
+
+#: ../providers/xml/libmain.c:40
+msgid "XML provider, based on the libgda XML database format"
+msgstr "एक्सएमएल प्रदायक, लिब्ग्डा डाबेस ढाँचामा आधारित"
+
+#: ../providers/xml/libmain.c:50
+msgid "Full path of the file containing the XML database"
+msgstr "एक्सएमएल डाटाबेस समावेश गरेको फाइलको पूरा बाटो"
+
+#: ../report/libgda-report/gda-report-document.c:179
+msgid "Could not parse XML document"
+msgstr "एक्सएमएल लिखत पार्स गर्न सकिएन"
+
+#: ../report/libgda-report/gda-report-document.c:189
+msgid "XML document is not valid"
+msgstr "एक्सएमएल लिखत सहि छैन"
+
+#: ../report/libgda-report/gda-report-document.c:221
+#, c-format
+msgid "Could not get file from %s"
+msgstr "%s बाट फाइल पाउन सकिएन"
+
+#: ../report/libgda-report/gda-report-item-detail.c:160
+#: ../report/libgda-report/gda-report-item-pagefooter.c:171
+#: ../report/libgda-report/gda-report-item-pageheader.c:160
+#: ../report/libgda-report/gda-report-item-report.c:155
+#: ../report/libgda-report/gda-report-item-reportfooter.c:172
+#: ../report/libgda-report/gda-report-item-reportheader.c:171
+#, c-format
+msgid "An element with ID %s already exists in the report"
+msgstr "प्रतिवेदनमा आइडि सँगको तत्व %s पहिले नै अवस्थित छ"
+
+#: ../report/libgda-report/gda-report-item-detail.c:185
+#: ../report/libgda-report/gda-report-item-pagefooter.c:196
+#: ../report/libgda-report/gda-report-item-pageheader.c:185
+#: ../report/libgda-report/gda-report-item-report.c:711
+#: ../report/libgda-report/gda-report-item-reportfooter.c:197
+#: ../report/libgda-report/gda-report-item-reportheader.c:196
+#, c-format
+msgid "Item with ID %s is not a label"
+msgstr "आइडि सँगको चीज %s लेबुल होइन"
+
+#: ../report/libgda-report/gda-report-item-detail.c:214
+#: ../report/libgda-report/gda-report-item-pagefooter.c:224
+#: ../report/libgda-report/gda-report-item-pageheader.c:214
+#: ../report/libgda-report/gda-report-item-report.c:739
+#: ../report/libgda-report/gda-report-item-reportfooter.c:225
+#: ../report/libgda-report/gda-report-item-reportheader.c:224
+#, c-format
+msgid "Item with ID %s is not a repfield"
+msgstr "आइडि सँगको चीज %s रेपफिल्ड होइन"
+
+#: ../report/libgda-report/gda-report-item.c:276
+msgid "Error setting parent -> child relation"
+msgstr "गल्ती सेटिङ्ग अभिभावक > बच्चा सम्बन्ध"
+
+#: ../report/libgda-report/gda-report-item.c:375
+#, c-format
+msgid "Error setting value %s to attribute %s of item %s"
+msgstr "गल्ती सेटिङ्ग मान %s बिशेषतामा %s चीजको %s"
+
+#: ../report/libgda-report/gda-report-valid.c:130
+#, c-format
+msgid "could not get DTD from %s"
+msgstr "%s बाट डिटिडि पाउन सकिएन"
+
+#: ../report/libgda-report/gda-report-valid.c:231
+#, c-format
+msgid "Error validating element %s"
+msgstr "गल्ती बैध तत्व %s"
+
+#: ../report/libgda-report/gda-report-valid.c:269
+#, c-format
+msgid "No declaration for attribute %s of element %s\n"
+msgstr "बिशेषताको लागि डिक्लेरेसन छैन %s तत्वको %s\n"
+
+#: ../report/libgda-report/gda-report-valid.c:283
+#, c-format
+msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
+msgstr "मान \"%s\" बिशेषताको %s लागि %s इनुमेरेटेड सेट मध्यको होइन\n"
+
+#: ../testing/client.c:43
+msgid "\t\tNONE\n"
+msgstr "\t\tकुनै पनि होइन\n"
+
+#: ../testing/client.c:88
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr "** गल्ती: जडान खोल्न सकिएन %s\n"
+
+#. show provider features
+#: ../testing/client.c:93
+msgid "\tProvider capabilities...\n"
+msgstr "\tप्रदायक सक्षमहरु...\n"
+
+#: ../testing/client.c:94
+#, c-format
+msgid "\t\tAggregates: %s\n"
+msgstr "\t\tएग्रिगेटहरु: %s\n"
+
+#: ../testing/client.c:96 ../testing/client.c:99 ../testing/client.c:102
+#: ../testing/client.c:105 ../testing/client.c:108 ../testing/client.c:111
+#: ../testing/client.c:114 ../testing/client.c:117 ../testing/client.c:120
+#: ../testing/client.c:123 ../testing/client.c:126 ../testing/client.c:129
+msgid "Supported"
+msgstr "सहारा दिइएको"
+
+#: ../testing/client.c:96 ../testing/client.c:99 ../testing/client.c:102
+#: ../testing/client.c:105 ../testing/client.c:108 ../testing/client.c:111
+#: ../testing/client.c:114 ../testing/client.c:117 ../testing/client.c:120
+#: ../testing/client.c:123 ../testing/client.c:126 ../testing/client.c:129
+msgid "Not supported"
+msgstr "सहारा नदिइएको"
+
+#: ../testing/client.c:97
+#, c-format
+msgid "\t\tIndexes: %s\n"
+msgstr "\t\tअनुक्रमणिकाहरु: %s\n"
+
+#: ../testing/client.c:100
+#, c-format
+msgid "\t\tNamespaces: %s\n"
+msgstr "\t\tनाम खाली स्थानहरु: %s\n"
+
+#: ../testing/client.c:103
+#, c-format
+msgid "\t\tProcedures: %s\n"
+msgstr "\t\tतरिकाहरु: %s\n"
+
+#: ../testing/client.c:106
+#, c-format
+msgid "\t\tSequences: %s\n"
+msgstr "\t\tअनुक्रमहरु: %s\n"
+
+#: ../testing/client.c:109
+#, c-format
+msgid "\t\tSQL: %s\n"
+msgstr "\t\tएसक्युएल: %s\n"
+
+#: ../testing/client.c:112
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "\t\tकारोवारहरु: %s\n"
+
+#: ../testing/client.c:115
+#, c-format
+msgid "\t\tTriggers: %s\n"
+msgstr "\t\tट्रिग्गर्स: %s\n"
+
+#: ../testing/client.c:118
+#, c-format
+msgid "\t\tUsers: %s\n"
+msgstr "\t\tप्रयोगकर्ताहरु: %s\n"
+
+#: ../testing/client.c:121
+#, c-format
+msgid "\t\tViews: %s\n"
+msgstr "\t\tदृष्यहरु: %s\n"
+
+#: ../testing/client.c:124
+#, c-format
+msgid "\t\tXML queries: %s\n"
+msgstr "\t\tएक्सएमएल क्वेरिहरु: %s\n"
+
+#: ../testing/client.c:127
+#, c-format
+msgid "\t\tBLOBs: %s\n"
+msgstr "\t\tब्लब्स: %s\n"
+
+#. show connection schemas
+#: ../testing/client.c:132
+#, c-format
+msgid ""
+"\n"
+"\tProvider reports version: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\tप्रदायक प्रतिवेदन संस्करण: %s\n"
+"\n"
+
+#: ../testing/client.c:134
+msgid "Namespaces"
+msgstr "नाम खाली स्थानहरु"
+
+#: ../testing/client.c:136
+msgid "Stored procedures"
+msgstr "तरिकाहरुको बचत"
+
+#: ../testing/client.c:137
+msgid "Connection Tables"
+msgstr "सम्बन्ध तालिकाहरु"
+
+#: ../testing/client.c:138
+msgid "Available types"
+msgstr "उपलब्ध प्रकारहरु"
+
+#: ../testing/client.c:141
+msgid "Aggregates"
+msgstr "एग्रिगेट्स"
+
+#: ../testing/client.c:145
+msgid "Languages"
+msgstr "भाषाहरु"
+
+#: ../testing/client.c:150 ../testing/client.c:158
+msgid "\tStarting transaction..."
+msgstr "\tकारोवार शुरु गर्दै..."
+
+#: ../testing/client.c:152 ../testing/client.c:156 ../testing/client.c:160
+#: ../testing/client.c:164
+msgid "Error"
+msgstr "गल्ती"
+
+#: ../testing/client.c:154
+msgid "\tFinishing transaction..."
+msgstr "\tकारोवार अन्त गर्दै..."
+
+#: ../testing/client.c:162
+msgid "\tRolling back transaction..."
+msgstr "\tपछाडिको कारोवार रोलिङ्ग गर्दै..."
+
+#: ../testing/client.c:193
+msgid "Testing GDA client API"
+msgstr "जिडिए ग्राहक एपिआइ जाँच गर्दै"
+
+#: ../testing/client.c:202
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr "** गल्ती: ग्डा_कन्फिग_पाउनुहोस्_डाटा_श्रोत_सूची शून्य चीज फर्काउनुहोस्\n"
+
+#: ../testing/client.c:206
+#, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr "डाटा श्रोत = %s, प्रयोगकर्ता = %s\n"
+
+#: ../testing/config.c:85
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
+msgstr "** गल्ती: ग्डा_कन्फिग_पाउनुहोस्_प्रदायक_सूची शून्य चीज फर्काउनुहोस्\n"
+
+#: ../testing/config.c:89
+#, c-format
+msgid " Provider = %s\n"
+msgstr " प्रदायक = %s\n"
+
+#: ../testing/config.c:90
+#, c-format
+msgid "\tlocation = %s\n"
+msgstr "\tस्थान = %s\n"
+
+#: ../testing/config.c:91
+#, c-format
+msgid "\tdescription = %s\n"
+msgstr "\t वर्णन = %s\n"
+
+#: ../testing/config.c:93
+msgid "\tgda_params ="
+msgstr "\tग्डा_पारामिटरहरु ="
+
+#: ../providers/bdb/gda-bdb-provider.c:154
+msgid "The FILE parameter is not defined in the connection string."
+msgstr "जडान स्ट्रिङ्गमा फाइल पारामिटर परिभाषित भएको छैन."
+
+#: ../providers/bdb/gda-bdb-provider.c:185
+msgid "-"
+msgstr "-"
+
+#: ../providers/bdb/gda-bdb-provider.c:242
+#: ../providers/bdb/gda-bdb-provider.c:263
+#: ../providers/bdb/gda-bdb-provider.c:286
+msgid "Invalid BDB handle"
+msgstr "अमान्य बिडिबि ह्यान्डल"
+
+#: ../providers/bdb/gda-bdb-recordset.c:246
+msgid "Database is empty"
+msgstr "डाटाबेस खाली छ"
+
+#: ../providers/bdb/libmain.c:39
+msgid "Provider for Berkeley databases"
+msgstr "बर्किलि डाटाबेसहरुको लागि प्रदायक"
+
+#: ../providers/bdb/libmain.c:48
+msgid "Database File"
+msgstr "डाटाबेस फाइल"
+
+#: ../providers/bdb/libmain.c:49
+msgid "Berkeley DB database file to be used"
+msgstr "बर्किलि डिबि डाटाबेस फाइल प्रयोगको लागि"
+
+#: ../providers/bdb/libmain.c:52
+msgid "Database name"
+msgstr "डाटाबेस नाम"
+
+#: ../providers/bdb/libmain.c:53
+msgid "Name of the database in the database file to be used"
+msgstr "डाटाबेस फाइलमा डाटाबेसको नाम प्रयोग गर्नको लागि"
+
+#~ msgid "FIXME"
+#~ msgstr "फिक्समि"
+
+#~ msgid "TTY"
+#~ msgstr "टिटिवाइ"
+
+#~ msgid ""
+#~ "an error occured when calling cs_diag attempting to retrieve a client "
+#~ "message"
+#~ msgstr "सिएस_डियाग एटेम्प्ट गरेर ग्राहक सूचना पुन प्राप्त गर्न खोज्दा गल्ती भेटियो"
+
+#~ msgid ""
+#~ "call to ct_diag failed when attempting to the amount of client messages"
+#~ msgstr "ग्राहक सूचनाहरुको रकम पाउन कोशिस गर्दा सिटि_डियागलाई बोलाउन असफल"

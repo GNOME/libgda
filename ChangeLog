@@ -1,3 +1,7 @@
+2005-08-14  Pawan Chitrakar  <pawan@nplinux.org>
+
+	* configure.in: Added ne in ALL_LINGUAS
+
 2005-08-12  Juan Manuel Mouriz <jmouriz@gmail.com>
 
 	* providers/postgres/utils.c (gda_postgres_sqlstate_to_gda_code): new
