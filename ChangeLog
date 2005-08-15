@@ -1,3 +1,9 @@
+2005-08-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in:
+	* doc/Makefile.am: libgda was the only library using scrollkeeper
+	for API docs. Now no more.
+
 2005-08-14  Pawan Chitrakar  <pawan@nplinux.org>
 
 	* configure.in: Added ne in ALL_LINGUAS
