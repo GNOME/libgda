@@ -1,3 +1,7 @@
+2005-08-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: depend on GTK#/gapi 2.3.90 or greater.
+
 2005-08-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in:
