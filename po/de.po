@@ -579,7 +579,7 @@ msgstr "Transaktion nicht initialisiert."
 #: ../providers/firebird/gda-firebird-recordset.c:457
 msgid "Firebird's ARRAY datatype not supported yet!\n"
 msgstr ""
-"Der ARRAY-Datentyp von Firebird wird zur Zeit noch nicht unterstützt!\n"
+"Der ARRAY-Datentyp von Firebird wird zurzeit noch nicht unterstützt!\n"
 
 #: ../providers/firebird/gda-firebird-recordset.c:566
 msgid "Unknown Firebird's field value!\n"
