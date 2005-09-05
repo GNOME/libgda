@@ -1,3 +1,9 @@
+2005-09-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/*: improved the SQLite provider to take into account the
+	real data type of columns instead of always returning string GdaValues
+	* providers/postgres/gda-postgres-provider.c: applied patch from Juan Manuel Mouriz
+
 2005-09-05  Iñaki Larrañaga  <dooteo@euskalgnu.org>
 
 	* configure.in: Added "eu" to ALL_LINGUAS.

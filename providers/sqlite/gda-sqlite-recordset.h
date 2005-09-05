@@ -43,12 +43,12 @@ typedef struct _GdaSqliteRecordsetClass   GdaSqliteRecordsetClass;
 typedef struct _GdaSqliteRecordsetPrivate GdaSqliteRecordsetPrivate;
 
 struct _GdaSqliteRecordset {
-	GdaDataModelHash model;
+	GdaDataModelHash           model;
 	GdaSqliteRecordsetPrivate *priv;
 };
 
 struct _GdaSqliteRecordsetClass {
-	GdaDataModelHashClass parent_class;
+	GdaDataModelHashClass      parent_class;
 };
 
 GType         gda_sqlite_recordset_get_type (void);

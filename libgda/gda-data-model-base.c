@@ -227,12 +227,15 @@ gda_data_model_base_describe_column (GdaDataModel *model, gint col)
 	column = CLASS (model)->describe_column (GDA_DATA_MODEL_BASE (model), col);
 	if (!column) {
 		const GdaValue *value;
-
+		const gchar *cname;
+		
 		/* we generate a basic FieldAttributes structure */
 		column = gda_column_new ();
 		gda_column_set_defined_size (column, 0);
-		gda_column_set_name (column, g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_titles,
-								  GINT_TO_POINTER (col)));
+		cname = g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_titles,
+					     GINT_TO_POINTER (col));
+		if (cname)
+			gda_column_set_name (column, cname);
 		gda_column_set_scale (column, 0);
 		value = gda_data_model_base_get_value_at (model, col, 0);
 		if (value == NULL)

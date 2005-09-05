@@ -2547,6 +2547,10 @@
     &libgda-report-result;
     &libgda-report-valid;
   </chapter>
+
+  <index>
+    <title>Index</title>
+  </index>
   
   &fdl-appendix;
 </book>

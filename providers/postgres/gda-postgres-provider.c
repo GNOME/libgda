@@ -2055,7 +2055,7 @@ gda_postgres_get_idx_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 					 "WHERE c.relname = '%s' "
 					 "AND c.oid = i.indrelid "
 					 "AND i.indexrelid = c2.oid "
-					 "AND pg_catalog.pg_table_is_visible(c.oid)", tblname);
+					 "AND pg_catalog.pg_table_is_visible(c.oid) AND i.indkey [0] <> 0", tblname);
 
 	pg_idx = PQexec(priv_data->pconn, query);
 	g_free (query);

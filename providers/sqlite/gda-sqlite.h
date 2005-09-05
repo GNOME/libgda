@@ -1,9 +1,10 @@
 /* GDA SQLite provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Carlos Perelló Marín <carlos@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -32,17 +33,24 @@
 #define GDA_SQLITE_PROVIDER_ID          "GDA SQLite provider"
 
 typedef struct {
-	gint ncols;
-	gint nrows;
-	gchar **data;
+	sqlite3_stmt *stmt;
+	gint          ncols;
+	gint          nrows;
+	GdaValueType *types; /* array of ncols types */
+	int          *sqlite_types; /* array of ncols types */
+	int          *cols_size; /* array of ncols types */
 } SQLITEresult;
 
 typedef struct {
-	sqlite3 *connection;
-	gchar *file;
+	sqlite3    *connection;
+	gchar      *file;
+	GHashTable *types; /* key = type name, value = GdaValueType */
 } SQLITEcnc;
 
-void gda_sqlite_set_value (GdaValue *value, GdaValueType type,
-			   const gchar *thevalue, gboolean isNull);
+
+void gda_sqlite_update_types_hash (SQLITEcnc *scnc);
+
+void gda_sqlite_free_result (SQLITEresult *sres);
+void gda_sqlite_free_cnc    (SQLITEcnc *scnc);
 
 #endif

@@ -227,22 +227,21 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 
 	/* make sure the internals are completely initialized now */
 	{
-		SQLITEresult *sres;
+		gchar **data = NULL;
+		gint ncols;
+		gint nrows;
 		gint status, i;
 		gchar *errmsg;
 		
-		sres = g_new0 (SQLITEresult, 1);
 		status = sqlite3_get_table (scnc->connection, "SELECT name"
 					    " FROM (SELECT * FROM sqlite_master UNION ALL "
 					    "       SELECT * FROM sqlite_temp_master)",
-					    &sres->data,
-					    &sres->nrows,
-					    &sres->ncols,
+					    &data,
+					    &nrows,
+					    &ncols,
 					    &errmsg);
-		if (status == SQLITE_OK) {
-			sqlite3_free_table (sres->data);
-			g_free (sres);
-		}
+		if (status == SQLITE_OK) 
+			sqlite3_free_table (data);
 		else {
 			g_print ("error: %s", errmsg);
 			gda_connection_add_event_string (cnc, errmsg);
@@ -250,7 +249,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 			sqlite3_close (scnc->connection);
 			g_free (scnc->file);
 			g_free (scnc);
-			g_free (sres);
 
 			return FALSE;
 		}
@@ -288,9 +286,7 @@ gda_sqlite_provider_close_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	sqlite3_close (scnc->connection);
-	g_free (scnc->file);
-	g_free (scnc);
+	gda_sqlite_free_cnc (scnc);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, NULL);
 
 	return TRUE;
@@ -337,7 +333,6 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 		      const gchar *sql, GdaCommandOptions options)
 {
 	SQLITEcnc *scnc;
-	gchar  *errmsg;
 	gchar **arr;
 
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
@@ -356,14 +351,14 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			GdaDataModel *recset;
 			gint status, i;
 			int changes;
+			sqlite3_stmt *stmt;
+			const char *left;
 
 			sres = g_new0 (SQLITEresult, 1);
 			changes = sqlite3_total_changes (scnc->connection);
-			status = sqlite3_get_table (scnc->connection, arr[n],
-						   &sres->data,
-						   &sres->nrows,
-						   &sres->ncols,
-						   &errmsg);
+
+			status = sqlite3_prepare (scnc->connection, arr [n], -1, &(sres->stmt), &left);
+			/*g_print ("SQlite SQL: %s\n", arr [n]);*/
 			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS ||
 			    status == SQLITE_OK) {
 				gchar *tststr;
@@ -373,23 +368,31 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				if (! g_ascii_strncasecmp (tststr, "SELECT", 6) ||
 				    ! g_ascii_strncasecmp (tststr, "EXPLAIN", 7)) {
 					recset = gda_sqlite_recordset_new (cnc, sres);
-					if (GDA_IS_DATA_MODEL (recset)) {
-						gda_data_model_set_command_text (recset, arr[n]);
-						gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
-						for (i = sres->ncols; i >= 0; i--)
-							gda_data_model_set_column_title (recset, i,
-											 sres->data[i]);
-						reclist = g_list_append (reclist, recset);
-					}
+					gda_data_model_set_command_text (recset, arr[n]);
+					gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+					reclist = g_list_append (reclist, recset);
 				}
 				else {
 					int newchanges;
 					GdaConnectionEvent *event;
 					gchar *str, *tmp, *ptr;
-
-					/* don't return a data model */
-					reclist = g_list_append (reclist, NULL);
 					
+					/* actually execute the command */
+					status = sqlite3_step (sres->stmt);
+					if (status != SQLITE_DONE) {
+						GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+						gda_connection_event_set_description (error, sqlite3_errmsg (scnc->connection));
+						gda_connection_add_event (cnc, error);
+						gda_sqlite_free_result (sres);
+						break;
+					}
+					else {
+						/* don't return a data model */
+						reclist = g_list_append (reclist, NULL);
+					}
+
+					gda_sqlite_free_result (sres);
+
 					/* generate a notice about changes */
 					newchanges = sqlite3_total_changes (scnc->connection);
 					event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
@@ -417,13 +420,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			} 
 			else {
 				GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-				gda_connection_event_set_description (error, errmsg);
+				gda_connection_event_set_description (error, sqlite3_errmsg (scnc->connection));
 				gda_connection_add_event (cnc, error);
-
-				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
-				g_list_free (reclist);
-				free (errmsg);
-				reclist = NULL;
+				gda_sqlite_free_result (sres);
 
 				break;
 			}
@@ -580,7 +579,7 @@ gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 				     GdaCommand *cmd,
 				     GdaParameterList *params)
 {
-	GList  *reclist = NULL;
+	GList *reclist = NULL;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 	GdaCommandOptions options;
 	gchar **arr;
@@ -1067,7 +1066,7 @@ get_tables (GdaConnection *cnc, GdaParameterList *params, gboolean views)
 	sql = g_strdup_printf ("SELECT name as 'Table', 'system' as Owner, ' ' as Description, sql as Definition "
 			       " FROM (SELECT * FROM sqlite_master UNION ALL "
 			       "       SELECT * FROM sqlite_temp_master) "
-			       " WHERE type = '%s' "
+			       " WHERE type = '%s' AND name not like 'sqlite_%'"
 			       " ORDER BY name", views ? "view": "table");
 
 	reclist = process_sql_commands (NULL, cnc, sql, 0);
@@ -1089,11 +1088,22 @@ get_tables (GdaConnection *cnc, GdaParameterList *params, gboolean views)
 /*
  * Data types
  */
+static void
+get_types_foreach (gchar *key, gpointer value, GdaDataModelArray *recset)
+{
+	if (strcmp (key, "integer") &&
+	    strcmp (key, "real") &&
+	    strcmp (key, "string") && 
+	    strcmp (key, "blob"))
+		add_type_row (recset, key, "system", NULL, GPOINTER_TO_INT (value));
+}
+
 static GdaDataModel *
 get_types (GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModelArray *recset;
 	SQLITEcnc *scnc;
+
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!scnc) {
 		gda_connection_add_event_string (cnc, _("Invalid SQLITE handle"));
@@ -1117,58 +1127,8 @@ get_types (GdaConnection *cnc, GdaParameterList *params)
 
 
 	/* scan the data types of all the columns of all the tables */
-	if (SQLITE_VERSION_NUMBER >= 3000000) {
-		GHashTable *names;
-		Db *db;
-		gint i;
-
-		names = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL); /* key= type name, value=1 */
-		g_hash_table_insert (names, g_strdup ("integer"), GINT_TO_POINTER (1));
-		g_hash_table_insert (names, g_strdup ("real"), GINT_TO_POINTER (1));
-		g_hash_table_insert (names, g_strdup ("string"), GINT_TO_POINTER (1));
-		g_hash_table_insert (names, g_strdup ("blob"), GINT_TO_POINTER (1));
-
-		for (i = OMIT_TEMPDB; i < scnc->connection->nDb; i++) {
-			Hash *tab_hash;
-			HashElem *tab_elem;
-			Table *table;
-
-			db = &(scnc->connection->aDb[i]);
-			tab_hash = &(db->tblHash);
-			for (tab_elem = sqliteHashFirst (tab_hash); tab_elem ; tab_elem = sqliteHashNext (tab_elem)) {
-				GList *rowlist = NULL;
-				GdaValue *value;
-				gint j;
-				
-				table = sqliteHashData (tab_elem);
-				g_print ("table: %s\n", table->zName);
-				for (j = 0; j < table->nCol; j++) {
-					Column *column = &(table->aCol[j]);
-					
-					if (column->zType && !g_hash_table_lookup (names, column->zType)) {
-						g_hash_table_insert (names, g_strdup (column->zType), GINT_TO_POINTER (1));
-						GdaValueType type;
-						switch (column->affinity) {
-						case SQLITE_AFF_INTEGER:
-							type = GDA_VALUE_TYPE_INTEGER;
-							break;
-						case SQLITE_AFF_NUMERIC:
-							type = GDA_VALUE_TYPE_NUMERIC;
-							break;
-						case SQLITE_AFF_TEXT:
-						case SQLITE_AFF_NONE:
-						default:
-							type = GDA_VALUE_TYPE_STRING;
-							break;
-						}
-						add_type_row (recset, column->zType, "system", NULL, type);
-					}
-				}
-			}
-		}
-
-		g_hash_table_destroy (names);
-	}
+	gda_sqlite_update_types_hash (scnc);
+	g_hash_table_foreach (scnc->types, (GHFunc) get_types_foreach, recset);
 
 	return GDA_DATA_MODEL (recset);
 }
