@@ -8,12 +8,14 @@ noinst_LTLIBRARIES = \
 # and remove shell.c and tclsqlite.c
 libsqlite_la_SOURCES = \
 	alter.c \
+	analyze.c \
 	attach.c \
 	auth.c \
 	btree.c \
 	btree.h \
 	build.c \
 	callback.c \
+	complete.c \
 	date.c \
 	delete.c \
 	expr.c \
@@ -53,7 +55,8 @@ libsqlite_la_SOURCES = \
 	vdbeapi.c \
 	vdbeaux.c \
 	vdbe.c \
+	vdbefifo.c \
 	vdbe.h \
 	vdbeInt.h \
 	vdbemem.c \
-	where.c
+	where.c 
