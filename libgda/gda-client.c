@@ -898,7 +898,7 @@ gda_client_get_dsn_specs (GdaClient *client, const gchar *provider)
 }
 
 /**
- * gda_client_get_specs_to_create_database
+ * gda_client_get_provider_specs
  * @client: a #GdaClient object.
  * @provider: a provider
  * @type: a #GdaClientSpecsType type
@@ -940,9 +940,9 @@ gda_client_get_provider_specs (GdaClient *client, const gchar *provider,
  *
  * Creates a new database using the specifications in @params. The list of parameters to
  * provide to create a database depends of the provider being used, and can be obtained using
- * the gda_client_get_specs_to_create_database() function.
+ * the gda_client_get_provider_specs() function.
  *
- * For the providers which do not yet implement the gda_client_get_specs_to_create_database()
+ * For the providers which do not yet implement the gda_client_get_provider_specs()
  * method, create a list with a #GdaParameter object for
  * <ul>
  *   <li>an opened #GdaConnection object, named "cnc"</li>
@@ -1001,9 +1001,9 @@ gda_client_create_database (GdaClient *client, const gchar *provider, GdaParamet
  *
  * Destroys an existing database using the specifications in @params. The list of parameters to
  * provide to destroy a database depends of the provider being used, and can be obtained using
- * the gda_client_get_specs_to_drop_database() function.
+ * the gda_client_get_provider_specs() function.
  *
- * For the providers which do not yet implement the gda_client_get_specs_to_drop_database()
+ * For the providers which do not yet implement the gda_client_get_provider_specs()
  * method, create a list with a #GdaParameter object for
  * <ul>
  *   <li>an opened #GdaConnection object, named "cnc"</li>

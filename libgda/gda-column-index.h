@@ -56,7 +56,6 @@ struct _GdaColumnIndexClass {
 GType           gda_column_index_get_type (void);
 GdaColumnIndex *gda_column_index_new (void);
 GdaColumnIndex *gda_column_index_copy (GdaColumnIndex *dmcia);
-void            gda_column_index_free (GdaColumnIndex *dmcia);
 gboolean        gda_column_index_equal (const GdaColumnIndex *lhs, const GdaColumnIndex *rhs);
 const gchar    *gda_column_index_get_column_name (GdaColumnIndex *dmcia);
 void            gda_column_index_set_column_name (GdaColumnIndex *dmcia, const gchar *column_name);

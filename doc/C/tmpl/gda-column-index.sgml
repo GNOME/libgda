@@ -51,14 +51,6 @@ Management of #GdaDataModel column index attributes
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_index_free ##### -->
-<para>
-
-</para>
-
-@dmcia: 
-
-
 <!-- ##### FUNCTION gda_column_index_equal ##### -->
 <para>
 

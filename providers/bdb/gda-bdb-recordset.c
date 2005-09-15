@@ -101,6 +101,7 @@ gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
 	GdaRow *row;
 	int i, ret;
 	DBC *dbcp;
+	GdaBinary bin;
 
 	recset = (GdaBdbRecordset *) model;
 	g_return_val_if_fail (GDA_IS_BDB_RECORDSET (recset), NULL);
@@ -140,10 +141,12 @@ gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
 	}
  
 	row = gda_row_new (GDA_DATA_MODEL (model), 2);
-	gda_value_set_binary ((GdaValue *) gda_row_get_value (row, 0),
-			      key.data, key.size);
-	gda_value_set_binary ((GdaValue *) gda_row_get_value (row, 1),
-			      data.data, data.size);
+	bin.data = key.data;
+	bin.binary_length = key.size;
+	gda_value_set_binary ((GdaValue *) gda_row_get_value (row, 0), &bin);
+	bin.data = data.data;
+	bin.binary_length = data.size;
+	gda_value_set_binary ((GdaValue *) gda_row_get_value (row, 1), &bin);
 
 	return row;
 }

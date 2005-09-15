@@ -40,6 +40,7 @@ Management of connections to data sources
 @username: 
 @password: 
 @options: 
+@error: 
 @Returns: 
 <!-- # Unused Parameters # -->
 @corba_cnc: 
@@ -171,6 +172,15 @@ Management of connections to data sources
 @cnc: 
 @str: 
 @Varargs: 
+
+
+<!-- ##### FUNCTION gda_connection_add_events_list ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@events_list: 
 
 
 <!-- ##### FUNCTION gda_connection_get_events ##### -->

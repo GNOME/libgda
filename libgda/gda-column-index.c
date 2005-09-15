@@ -67,8 +67,15 @@ gda_column_index_finalize (GObject *object)
 	
 	g_return_if_fail (GDA_IS_COLUMN_INDEX (dmcia));
 	
-	gda_column_index_free (dmcia);
-	
+	if (dmcia->priv) {
+		if (dmcia->priv->column_name)
+			g_free (dmcia->priv->column_name);
+		if (dmcia->priv->references)
+			g_free (dmcia->priv->references);
+		g_free (dmcia->priv);
+	}
+	g_free (dmcia);
+
 	parent_class->finalize (object);
 }
 
@@ -132,28 +139,6 @@ gda_column_index_copy (GdaColumnIndex *dmcia)
 	dmcia_copy->priv->references = g_strdup (dmcia->priv->references);
 
 	return dmcia_copy;
-}
-
-/**
- * gda_column_index_free
- * @dmcia: the resource to free.
- *
- * Deallocates all memory associated to the given #GdaColumnIndex object.
- */
-void
-gda_column_index_free (GdaColumnIndex *dmcia)
-{
-	g_return_if_fail (GDA_IS_COLUMN_INDEX (dmcia));
-
-	if (dmcia->priv) {
-		if (dmcia->priv->column_name)
-			g_free (dmcia->priv->column_name);
-		if (dmcia->priv->references)
-			g_free (dmcia->priv->references);
-		g_free (dmcia->priv);
-	}
-
-	g_free (dmcia);
 }
 
 /**

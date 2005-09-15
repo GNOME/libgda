@@ -455,7 +455,7 @@ gda_postgres_provider_get_version (GdaServerProvider *provider)
 	return PACKAGE_VERSION;
 }
 
-/* get the float version og a Postgres version which looks like:
+/* get the float version of a Postgres version which looks like:
  * PostgreSQL 7.2.2 on i686-pc-linux-gnu, compiled by GCC 2.96 => returns 7.22
  * PostgreSQL 7.3 on i686-pc-linux-gnu, compiled by GCC 2.95.3 => returns 7.3
  * WARNING: no serious test is made on the validity of the string
@@ -487,6 +487,7 @@ get_pg_version_float (const gchar *str)
 
 	return retval;
 }
+
 
 /* open_connection handler for the GdaPostgresProvider class */
 static gboolean
@@ -2051,13 +2052,14 @@ gda_postgres_get_idx_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 					 "AND i.indexrelid = c2.oid", tblname);
 	else
 		query = g_strdup_printf ("SELECT i.indkey, i.indisprimary, i.indisunique "
+					 /*",pg_get_indexdef (i.indexrelid, 1, false) ": to get index definition */
 					 "FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i "
 					 "WHERE c.relname = '%s' "
 					 "AND c.oid = i.indrelid "
 					 "AND i.indexrelid = c2.oid "
 					 "AND pg_catalog.pg_table_is_visible(c.oid) AND i.indkey [0] <> 0", tblname);
 
-	pg_idx = PQexec(priv_data->pconn, query);
+	pg_idx = PQexec (priv_data->pconn, query);
 	g_free (query);
 	if (pg_idx == NULL)
 		return NULL;
@@ -2071,8 +2073,10 @@ gda_postgres_get_idx_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 		gchar *value;
 		gint k;
 
-		arr = g_strsplit (PQgetvalue (pg_idx, i, 0), " ", 0);
-		if (arr == NULL || arr[0][0] == '\0') {
+		value = PQgetvalue (pg_idx, i, 0);
+		if (value && *value) 
+			arr = g_strsplit (value, " ", 0);
+		else {
 			idx_data[i].ncolumns = 0;
 			continue;
 		}

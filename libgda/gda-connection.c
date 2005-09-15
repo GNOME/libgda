@@ -1094,8 +1094,7 @@ gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob)
  * Returns: escaped and quoted value or NULL if not supported.
  */
 gchar *
-gda_connection_value_to_sql_string (GdaConnection *cnc,
-			      GdaValue *from)
+gda_connection_value_to_sql_string (GdaConnection *cnc, GdaValue *from)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);

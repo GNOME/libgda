@@ -1568,7 +1568,6 @@ GDA_TYPE_DATA_MODEL_COLUMN_INDEX_ATTRIBUTES
 gda_column_index_get_type
 gda_column_index_new
 gda_column_index_copy
-gda_column_index_free
 gda_column_index_equal
 gda_column_index_get_column_name
 gda_column_index_set_column_name
@@ -1707,6 +1706,8 @@ GdaValueList
 GdaValue
 GDA_TYPE_VALUE
 gda_value_get_gtype
+gda_value_convert_gdatype_to_gtype
+gda_value_convert_gtype_to_gdatype
 gda_value_new_null
 gda_value_new_bigint
 gda_value_new_biguint

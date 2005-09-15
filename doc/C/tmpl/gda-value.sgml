@@ -134,6 +134,24 @@ use such values.
 
 
 
+<!-- ##### FUNCTION gda_value_convert_gdatype_to_gtype ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_convert_gtype_to_gdatype ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_new_null ##### -->
 <para>
 
@@ -473,8 +491,9 @@ use such values.
 </para>
 
 @value: 
-@size: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@size: 
 
 
 <!-- ##### FUNCTION gda_value_set_binary ##### -->
@@ -483,6 +502,8 @@ use such values.
 </para>
 
 @value: 
+@binary: 
+<!-- # Unused Parameters # -->
 @val: 
 @size: 
 

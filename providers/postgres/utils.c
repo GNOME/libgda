@@ -458,7 +458,8 @@ gda_postgres_set_value (GdaValue *value,
 	GdaGeometricPoint point;
 	GdaNumeric numeric;
 	GdaBlob blob;
-	/* guchar *unescaped; See comment below on BINARY */
+	GdaBinary bin;
+	guchar *unescaped;
 
 	if (isNull){
 		gda_value_set_null (value);
@@ -526,18 +527,19 @@ gda_postgres_set_value (GdaValue *value,
 		gda_value_set_time (value, &timegda);
 		break;
 	case GDA_VALUE_TYPE_BINARY :
-		gda_value_set_binary (value, thevalue, length);
 		/*
-		 * No PQescapeBytea in 7.3??
-		unescaped = PQunescapeBytea (thevalue, &length);
+		 * Requires PQunescapeBytea in libpq (present since 7.3.x)
+		 */
+		unescaped = PQunescapeBytea (thevalue, &(bin.binary_length));
 		if (unescaped != NULL) {
-			gda_value_set_binary (value, unescaped, length);
-			free (unescaped);
-		} else {
+			bin.data = unescaped;
+			gda_value_set_binary (value, &bin);
+			PQfreemem (unescaped);
+		} 
+		else {
 			g_warning ("Error unescaping string: %s\n", thevalue);
 			gda_value_set_string (value, thevalue);
 		}
-		*/
 		break;
 	case GDA_VALUE_TYPE_BLOB :
 		gda_postgres_blob_from_id (&blob, atoi (thevalue));

@@ -83,8 +83,8 @@ gda_data_model_index_copy (GdaDataModelIndex *dmi)
 	/* g_list_copy (shallow copy) not good enough */
 	for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
 		dmi_copy->col_idx_list = g_list_append (dmi_copy->col_idx_list, 
-			(GdaColumnIndex *) 
-			gda_column_index_copy (g_list_nth_data (dmi->col_idx_list, i)));
+							(GdaColumnIndex *) 
+				       gda_column_index_copy (g_list_nth_data (dmi->col_idx_list, i)));
 
 	return dmi_copy;
 }
@@ -108,7 +108,7 @@ gda_data_model_index_free (GdaDataModelIndex *dmi)
 
 	/* free column index attributes list */	
 	for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
-		gda_column_index_free (g_list_nth_data (dmi->col_idx_list, i));
+		g_object_unref (g_list_nth_data (dmi->col_idx_list, i));
 
 	g_list_free (dmi->col_idx_list);
 
@@ -346,7 +346,7 @@ gda_data_model_index_set_column_index_list (GdaDataModelIndex *dmi, GList *col_i
 
 		/* free column index attributes list */	
 		for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
-			gda_column_index_free (g_list_nth_data (dmi->col_idx_list, i));
+			g_object_unref (g_list_nth_data (dmi->col_idx_list, i));
 
 		g_list_free (dmi->col_idx_list);
 		dmi->col_idx_list = NULL;

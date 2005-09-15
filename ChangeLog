@@ -1,3 +1,21 @@
+2005-09-15  Vivien Malerba <malerba@gnome-db.org>
+	* libgda/gda-value.h: removed the gda_value_set_type() declaration as there is no 
+	definition for that function (and having such function is meaningless).
+	* libgda/gda-value.[ch]: corrected the signatures of the gda_value_get_binary() and
+	gda_value_set_binary() functions
+	* libgda/gda-column-index.[ch]: removed the gda_column_index_free() which is a bad
+	implementation (GdaColumnIndex is a GObject), use g_object_unref() instead
+	* libgda/gda-value.c: renamed gdatype_to_gtype() to 
+	gda_value_convert_gdatype_to_gtype()
+	and gtype_to_gdatype() to gda_value_convert_gtype_to_gdatype() 
+	and made those functions public.
+	* libgda/gda-value.h: added gda_value_convert_gdatype_to_gtype() and
+	gda_value_convert_gtype_to_gdatype().
+	* providers/postgres/util.c: fixed bug #31196
+	* libgda/gda-value.[ch]: fixed bug #310226 (Use guchar* instead of gpointer)
+	* providers/postgres/gda-postgres-provider.c: correction related to bug #314858
+	* other files: modifications made necessary by the modifications listed above
+
 2005-09-05  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/sqlite-src: updated to version 3.2.5

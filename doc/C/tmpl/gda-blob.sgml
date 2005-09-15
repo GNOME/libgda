@@ -28,6 +28,7 @@ Management of BLOBs (Binary Large OBjects)
 
 </para>
 
+@object: 
 @open: 
 @read: 
 @write: 

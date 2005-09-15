@@ -134,8 +134,8 @@ typedef struct {
 } GdaTimestamp;
 
 typedef struct {
-	gpointer data;
-	glong binary_length;
+	guchar *data;
+	glong  binary_length;
 } GdaBinary;
 
 typedef GList GdaValueList;
@@ -147,11 +147,14 @@ typedef GValue GdaValue;
 #define gda_value_isa(value, type) (gda_value_get_type (value) == type)
 
 GdaValueType                      gda_value_get_type(GdaValue *value);
+GType                             gda_value_convert_gdatype_to_gtype (GdaValueType type);
+GdaValueType                      gda_value_convert_gtype_to_gdatype (GType type);
+
 
 GdaValue                         *gda_value_new_null (void);
 GdaValue                         *gda_value_new_bigint (gint64 val);
 GdaValue                         *gda_value_new_biguint(guint64 val);
-GdaValue                         *gda_value_new_binary (gconstpointer val, glong size);
+GdaValue                         *gda_value_new_binary (guchar *val, glong size);
 GdaValue                         *gda_value_new_blob (const GdaBlob *val);
 GdaValue                         *gda_value_new_boolean (gboolean val);
 GdaValue                         *gda_value_new_date (const GdaDate *val);
@@ -189,8 +192,8 @@ gint64                            gda_value_get_bigint (GdaValue *value);
 void                              gda_value_set_bigint (GdaValue *value, gint64 val);
 guint64                           gda_value_get_biguint (GdaValue *value);
 void                              gda_value_set_biguint (GdaValue *value, guint64 val);
-G_CONST_RETURN GdaBinary         *gda_value_get_binary (GdaValue *value, glong *size);
-void                              gda_value_set_binary (GdaValue *value, gconstpointer val, glong size);
+G_CONST_RETURN GdaBinary         *gda_value_get_binary (GdaValue *value);
+void                              gda_value_set_binary (GdaValue *value, const GdaBinary *binary);
 G_CONST_RETURN GdaBlob           *gda_value_get_blob (GdaValue *value);
 void                              gda_value_set_blob (GdaValue *value, const GdaBlob *val);
 gboolean                          gda_value_get_boolean (GdaValue *value);
@@ -234,10 +237,9 @@ void                              gda_value_set_gdatype (GValue *value, GdaValue
 GdaValueType                      gda_value_get_gdatype (GValue *value);
 
 
-void                              gda_value_set_type (GdaValue *value, GType type);
 gboolean                          gda_value_set_from_string (GdaValue *value, 
-						                                     const gchar *as_string,
-						                                     GdaValueType type);
+						             const gchar *as_string,
+						             GdaValueType type);
 gboolean                          gda_value_set_from_value (GdaValue *value, const GdaValue *from);
 
 

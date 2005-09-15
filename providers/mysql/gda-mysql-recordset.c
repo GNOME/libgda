@@ -161,9 +161,13 @@ fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
 	case FIELD_TYPE_TINY_BLOB :
 	case FIELD_TYPE_MEDIUM_BLOB :
 	case FIELD_TYPE_LONG_BLOB :
-	case FIELD_TYPE_BLOB :
-		gda_value_set_binary (gda_value, value, length);
+	case FIELD_TYPE_BLOB : {
+		GdaBinary bin;
+		bin.data = value;
+		bin.binary_length = length;
+		gda_value_set_binary (gda_value, &bin);
 		break;
+	}
 	case FIELD_TYPE_VAR_STRING :
 	case FIELD_TYPE_STRING :
 		/* FIXME: we might get "[VAR]CHAR(20) BINARY" type with \0 inside

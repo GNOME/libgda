@@ -195,6 +195,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 	CONV_RESULT tds_conv;
 #endif
 	GdaNumeric numeric;
+	GdaBinary bin;
 
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (col != NULL);
@@ -221,14 +222,14 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 				break;
 			case SYBBINARY:
 			case SYBIMAGE:
-				gda_value_set_binary (field, 
-				                      (gconstpointer) val,
-				                      (glong) col->column_size);
+				bin.data = val;
+				bin.binary_length = (glong) col->column_size;
+				gda_value_set_binary (field, &bin);
 				break;
 			case SYBVARBINARY:
-				gda_value_set_binary (field,
-				                      (gconstpointer ) (&((TDS_VARBINARY *) val)->array),
-						      (glong) ((TDS_VARBINARY *) val)->len);
+				bin.data = (&((TDS_VARBINARY *) val)->array);
+				bin.binary_length = ((TDS_VARBINARY *) val)->len;
+				gda_value_set_binary (field, &bin);
 				break;
 			/* FIXME: TDS_VARCHAR returned for which types? */
 			case SYBCHAR:

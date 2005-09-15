@@ -40,11 +40,6 @@
 
 #define l_g_value_unset(val) if G_IS_VALUE (val) g_value_unset (val)
 
-static GType        gdatype_to_gtype (GdaValueType type);
-static GdaValueType gtype_to_gdatype (GType type);
-
-
-
 /* Makes a point from a string like "(3.2,5.6)" */
 static void
 make_point (GdaGeometricPoint *point, const gchar *value)
@@ -108,6 +103,7 @@ set_from_string (GdaValue *value, const gchar *as_string)
 	glong lvalue;
         gulong ulvalue;
 	GdaValueType type;
+	GdaBinary binary;
 
 	g_return_val_if_fail (value, FALSE);
 	if (! G_IS_VALUE (value)) {
@@ -129,7 +125,9 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		break;
 
 	case GDA_VALUE_TYPE_BINARY:
-		gda_value_set_binary (value, as_string, strlen (as_string));
+		binary.data = as_string;
+		binary.binary_length = strlen (as_string);
+		gda_value_set_binary (value, &binary);
 		break;
 	
 	case GDA_VALUE_TYPE_BIGINT:
@@ -349,12 +347,16 @@ GdaValue *gda_value_new_biguint (guint64 val)
  * Returns: the newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_binary (gconstpointer val, glong size)
+gda_value_new_binary (guchar *val, glong size)
 {
 	GdaValue *value;
+	GdaBinary binary;
+
+	binary.data = val;
+	binary.binary_length = size;
 
 	value = g_new0 (GdaValue, 1);
-	gda_value_set_binary (value, val, size);
+	gda_value_set_binary (value, &binary);
 
 	return value;
 }
@@ -392,7 +394,7 @@ gda_binary_copy (gpointer boxed)
 	g_return_val_if_fail (src, NULL);
 
 	copy = g_new0 (GdaBinary, 1);
-	copy->data = g_memdup(src->data, src->binary_length);
+	copy->data = g_memdup (src->data, src->binary_length);
 	copy->binary_length = src->binary_length;
 
 	return copy;
@@ -1210,7 +1212,7 @@ gda_value_reset_with_type (GdaValue *value, GdaValueType type)
 	if (type == GDA_VALUE_TYPE_NULL || type == GDA_VALUE_TYPE_UNKNOWN)
 		return;
 	else
-		g_value_init (value, gdatype_to_gtype (type));
+		g_value_init (value, gda_value_convert_gdatype_to_gtype (type));
 }
 
 /**
@@ -1228,7 +1230,7 @@ gda_value_get_type (GdaValue *value)
 	if (! G_IS_VALUE (value))
 		return GDA_VALUE_TYPE_NULL;
 	
-	return gtype_to_gdatype (G_VALUE_TYPE (value));
+	return gda_value_convert_gtype_to_gdatype (G_VALUE_TYPE (value));
 }
 
 
@@ -1376,21 +1378,18 @@ gda_value_set_biguint (GdaValue *value, guint64 val)
 /**
  * gda_value_get_binary
  * @value: a #GdaValue whose value we want to get.
- * @size: holder for length of data.
  *
  * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaBinary *
-gda_value_get_binary (GdaValue *value, glong *size)
+gda_value_get_binary (GdaValue *value)
 {
 	GdaBinary *val;
 
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BINARY), NULL);
 
-	val = (GdaBinary*) g_value_get_boxed(value);
-	if (size)
-		*size = val->binary_length;
+	val = (GdaBinary*) g_value_get_boxed (value);
 
 	return val;
 }
@@ -1398,24 +1397,18 @@ gda_value_get_binary (GdaValue *value, glong *size)
 /**
  * gda_value_set_binary
  * @value: a #GdaValue that will store @val.
- * @val: value to be stored in @value.
- * @size: the size of the memory pool pointed to by @val.
+ * @binary: a #GdaBinary structure with the data and its size to be stored in @value.
  *
  * Stores @val into @value.
  */
 void
-gda_value_set_binary (GdaValue *value, gconstpointer val, glong size)
+gda_value_set_binary (GdaValue *value, const GdaBinary *binary)
 {
 	g_return_if_fail (value);
+	g_return_if_fail (binary);
 	
-	GdaBinary *binary;
-	
-	binary = g_new0 (GdaBinary, 1);
-
 	l_g_value_unset (value);
 	g_value_init (value, G_VALUE_TYPE_BINARY);
-	binary->data = g_memdup (val, size);
-	binary->binary_length = size;
 	g_value_set_boxed (value, binary);
 }
 
@@ -1524,8 +1517,7 @@ gda_value_set_date (GdaValue *value, const GdaDate *val)
 
 	l_g_value_unset (value);
 	g_value_init (value, G_VALUE_TYPE_DATE);
-	g_value_set_boxed (value, val);
-	
+	g_value_set_boxed (value, val);	
 }
 
 /**
@@ -2085,7 +2077,7 @@ gda_value_set_from_string (GdaValue *value,
 	g_return_val_if_fail (as_string, FALSE);
 
 	l_g_value_unset (value);
-	g_value_init (value, gdatype_to_gtype (type));
+	g_value_init (value, gda_value_convert_gdatype_to_gtype (type));
 	return set_from_string (value, as_string);
 }
 
@@ -2157,8 +2149,7 @@ gda_value_stringify (GdaValue *value)
 
 	case GDA_VALUE_TYPE_BINARY:
 	{
-		glong size;
-		const GdaBinary *binary = gda_value_get_binary (value, &size);
+		const GdaBinary *binary = gda_value_get_binary (value);
 		retval = g_memdup (binary->data, binary->binary_length+1);
 		retval [binary->binary_length] = '\0';
 		break;
@@ -2262,7 +2253,7 @@ gda_value_stringify (GdaValue *value)
 	
 	case GDA_VALUE_TYPE_BLOB:
 		gdablob = gda_value_get_blob (value);
-		retval = g_strdup_printf ("%s", gda_blob_stringify(gdablob));
+		retval = g_strdup_printf ("%s", gda_blob_stringify (gdablob));
 		break;
 
 	case GDA_VALUE_TYPE_LIST:
@@ -2355,11 +2346,10 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 
 	case GDA_VALUE_TYPE_BINARY:
 	{
-		glong size1, size2;
-		GdaBinary *binary1 = gda_value_get_binary (value1, &size1);
-		GdaBinary *binary2 = gda_value_get_binary (value2, &size2);
-		if(size1 == size2 && binary1 && binary2)
-		    retval = memcmp (binary1->data, binary2->data, size1) ;
+		GdaBinary *binary1 = gda_value_get_binary (value1);
+		GdaBinary *binary2 = gda_value_get_binary (value2);
+		if(binary1 && binary2 && (binary1->binary_length == binary2->binary_length))
+		    retval = memcmp (binary1->data, binary2->data, binary1->binary_length) ;
 		else
 			retval = -1;
 		break;
@@ -2703,8 +2693,20 @@ gda_value_set_gdatype (GValue *value, GdaValueType val)
 	value->data[0].v_int = (int) val;
 }
 
-static GdaValueType
-gtype_to_gdatype (GType type)
+/**
+ * gda_value_convert_gtype_to_gdatype
+ * @type: a GType type
+ *
+ * As a #GdaValue is a #GValue, all the GValue functions returning information on the type of value
+ * stored in the #GdaValue will return a GType which can be converted into a #GdaValueType.
+ *
+ * Converts @type to the corresponding #GdaValueType. This function does the opposite of the
+ * gda_value_convert_gdatype_to_gtype() function.
+ *
+ * Returns: the converted type.
+ */
+GdaValueType
+gda_value_convert_gtype_to_gdatype (GType type)
 {
 	if (type == G_TYPE_INT64)
 		return GDA_VALUE_TYPE_BIGINT;
@@ -2782,8 +2784,18 @@ gtype_to_gdatype (GType type)
 	return GDA_VALUE_TYPE_UNKNOWN;
 }
 
-static GType
-gdatype_to_gtype (GdaValueType type)
+/**
+ * gda_value_convert_gdatype_to_gtype
+ * @type: a #GdaValueType
+ * 
+ * Converts @type to its GType equivalent. This function does the opposite of the
+ * gda_value_convert_gtype_to_gdatype() function. See the gda_value_convert_gtype_to_gdatype()
+ * function's documentation for more information.
+ *
+ * Returns: the converted type.
+ */
+GType
+gda_value_convert_gdatype_to_gtype (GdaValueType type)
 {
 	switch (type) {
 	case GDA_VALUE_TYPE_NULL:			
