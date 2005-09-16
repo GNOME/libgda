@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libgda Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-02-07 12:45+0100\n"
-"PO-Revision-Date: 2005-07-26 20:00+0930\n"
+"PO-Revision-Date: 2005-09-16 18:21+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -107,7 +107,7 @@ msgstr "Không thể cập nhật mô hình dữ liệu « %p »."
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
-msgstr "Thử khởi động một khách đã khởi động rồi."
+msgstr "Thử khởi động một khách đã được khởi động."
 
 #: libgda/gda-init.c:58
 msgid "libgda needs GModule. Finishing..."
@@ -126,7 +126,7 @@ msgstr "Lệnh SQL không phải là SELECT [chọn] (là « %s »"
 #: libgda/gda-table.c:286
 #, c-format
 msgid "There is already a field called %s"
-msgstr "Đã có trường tên là « %s » rồi."
+msgstr "Trường tên là « %s » đã có."
 
 #: libgda/gda-util.c:173
 #, c-format
@@ -188,7 +188,7 @@ msgstr "Không thể đổ tập tin XML vào bộ nhớ."
 #: libgda/gda-xml-database.c:731
 #, c-format
 msgid "Table %s already exists"
-msgstr "Bảng « %s » đã có rồi."
+msgstr "Bảng « %s » đã có."
 
 #: libgda/gda-xml-database.c:724
 msgid "Invalid node"
@@ -244,7 +244,7 @@ msgstr "Không thể khởi động giao dịch."
 
 #: providers/firebird/gda-firebird-blob.c:145
 msgid "Blob already open"
-msgstr "Blob mở rồi."
+msgstr "Blob đã mở."
 
 #: providers/firebird/gda-firebird-blob.c:199
 msgid "Error getting blob segment."
@@ -260,7 +260,7 @@ msgstr "Không đóng được blob."
 
 #: providers/firebird/gda-firebird-blob.c:243
 msgid "Blob is closed"
-msgstr "Blob bị đóng rồi."
+msgstr "Blob đã được đóng."
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/firebird/gda-firebird-provider.c:231
@@ -541,7 +541,7 @@ msgstr "Bộ quản lý giao dịch không hợp lệ."
 #: providers/firebird/gda-firebird-recordset.c:346
 #: providers/firebird/gda-firebird-recordset.c:387
 msgid "Statement already prepared."
-msgstr "Câu được chuẩn bị rồi."
+msgstr "Câu đã được chuẩn bị."
 
 #: providers/firebird/gda-firebird-recordset.c:350
 msgid "Transaction not initialized."
@@ -1757,7 +1757,7 @@ msgstr "Lỗi xóa bỏ cấu trúc lệnh."
 #: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
-msgstr "Cấu trúc lệnh đang dùng rồi. « %s » thất bại."
+msgstr "Cấu trúc lệnh đang được dùng. « %s » thất bại."
 
 #: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
@@ -2227,7 +2227,7 @@ msgstr "Không thể lấy tập tin từ « %s »."
 #: report/libgda-report/gda-report-item-reportheader.c:171
 #, c-format
 msgid "An element with ID %s already exists in the report"
-msgstr "Trong báo cáo có một yếu tố ID « %s » rồi."
+msgstr "Trong báo cáo đã có một yếu tố ID « %s »."
 
 #: report/libgda-report/gda-report-item-detail.c:185
 #: report/libgda-report/gda-report-item-pagefooter.c:196
