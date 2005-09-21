@@ -42,7 +42,6 @@
 <!ENTITY libgda-data-model-base SYSTEM "xml/gda-data-model-base.xml">
 <!ENTITY libgda-data-model SYSTEM "xml/gda-data-model.xml">
 <!ENTITY libgda-connection-event SYSTEM "xml/gda-connection-event.xml">
-<!ENTITY libgda-export SYSTEM "xml/gda-export.xml">
 <!ENTITY libgda-column SYSTEM "xml/gda-column.xml">
 <!ENTITY libgda-column-index SYSTEM "xml/gda-column-index.xml">
 <!ENTITY libgda-data-model-index SYSTEM "xml/gda-data-model-index.xml">
@@ -53,13 +52,9 @@
 <!ENTITY libgda-row SYSTEM "xml/gda-row.xml">
 <!ENTITY libgda-select SYSTEM "xml/gda-select.xml">
 <!ENTITY libgda-server-provider SYSTEM "xml/gda-server-provider.xml">
-<!ENTITY libgda-table SYSTEM "xml/gda-table.xml">
 <!ENTITY libgda-transaction SYSTEM "xml/gda-transaction.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
 <!ENTITY libgda-value SYSTEM "xml/gda-value.xml">
-<!ENTITY libgda-xml-connection SYSTEM "xml/gda-xml-connection.xml">
-<!ENTITY libgda-xml-database SYSTEM "xml/gda-xml-database.xml">
-<!ENTITY libgda-xml-document SYSTEM "xml/gda-xml-document.xml">
 <!ENTITY libgda-report-types SYSTEM "xml/gda-report-types.xml">
 <!ENTITY libgda-report-document SYSTEM "xml/gda-report-document.xml">
 <!ENTITY libgda-report-item SYSTEM "xml/gda-report-item.xml">
@@ -2121,18 +2116,13 @@
     &libgda-data-model-index;
     &libgda-row;
     &libgda-connection-event;
-    &libgda-export;
     &libgda-log;
     &libgda-parameter;
     &libgda-quark-list;
     &libgda-select;
-    &libgda-table;
     &libgda-transaction;
     &libgda-util;
     &libgda-blob;
-    &libgda-xml-connection;
-    &libgda-xml-database;
-    &libgda-xml-document;
   </chapter>
 
   <chapter id="libgda-providers">
