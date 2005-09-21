@@ -178,12 +178,12 @@ void sqlite3DeleteFrom(
   if( pParse->nested==0 ) sqlite3VdbeCountChanges(v);
   sqlite3BeginWriteOperation(pParse, triggers_exist, pTab->iDb);
 
-  /* If we are trying to delete from a view, construct that view into
-  ** a temporary table.
+  /* If we are trying to delete from a view, realize that view into
+  ** a ephemeral table.
   */
   if( isView ){
     Select *pView = sqlite3SelectDup(pTab->pSelect);
-    sqlite3Select(pParse, pView, SRT_TempTable, iCur, 0, 0, 0, 0);
+    sqlite3Select(pParse, pView, SRT_VirtualTab, iCur, 0, 0, 0, 0);
     sqlite3SelectDelete(pView);
   }
 

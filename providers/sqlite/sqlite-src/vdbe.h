@@ -108,7 +108,7 @@ void sqlite3VdbeChangeP3(Vdbe*, int addr, const char *zP1, int N);
 VdbeOp *sqlite3VdbeGetOp(Vdbe*, int);
 int sqlite3VdbeMakeLabel(Vdbe*);
 void sqlite3VdbeDelete(Vdbe*);
-void sqlite3VdbeMakeReady(Vdbe*,int,int,int,int,int);
+void sqlite3VdbeMakeReady(Vdbe*,int,int,int,int);
 int sqlite3VdbeFinalize(Vdbe*);
 void sqlite3VdbeResolveLabel(Vdbe*, int);
 int sqlite3VdbeCurrentAddr(Vdbe*);

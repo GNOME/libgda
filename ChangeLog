@@ -1,4 +1,8 @@
 2005-09-21  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/sqlite-src: updated to version 3.2.6
+
+2005-09-21  Vivien Malerba <malerba@gnome-db.org>
 	
 	* libgda/gda-data-model.[ch]: moved unused methods into a private header file:
 	gda_data_model_changed(), gda_data_model_row_inserted(), gda_data_model_row_updated(),

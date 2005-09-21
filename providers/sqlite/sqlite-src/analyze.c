@@ -88,8 +88,8 @@ static void analyzeOneTable(
   int addr;        /* The address of an instruction */
 
   v = sqlite3GetVdbe(pParse);
-  if( pTab==0 || pTab->pIndex==0 || pTab->pIndex->pNext==0 ){
-    /* Do no analysis for tables with fewer than 2 indices */
+  if( pTab==0 || pTab->pIndex==0 ){
+    /* Do no analysis for tables that have no indices */
     return;
   }
 
@@ -333,7 +333,7 @@ static int analysisLoader(void *pData, int argc, char **argv, char **azNotUsed){
   const char *z;
 
   assert( argc==2 );
-  if( argv[0]==0 || argv[1]==0 ){
+  if( argv==0 || argv[0]==0 || argv[1]==0 ){
     return 0;
   }
   pIndex = sqlite3FindIndex(pInfo->db, argv[0], pInfo->zDatabase);
