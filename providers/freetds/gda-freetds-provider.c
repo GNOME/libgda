@@ -23,6 +23,7 @@
 #endif
 
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-private.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <glib.h>

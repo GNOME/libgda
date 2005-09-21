@@ -1,5 +1,5 @@
 /* GDA IBM DB2 provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Sergey N. Belinsky <sergey_be@mail.ru>
@@ -38,9 +38,9 @@ static void gda_ibmdb2_recordset_init       (GdaIBMDB2Recordset *recset, GdaIBMD
 static void gda_ibmdb2_recordset_finalize   (GObject *object);
 
 static const GdaValue 		*gda_ibmdb2_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row);
-static GdaColumn 	*gda_ibmdb2_recordset_describe     (GdaDataModelBase *model, gint col);
-static gint			gda_ibmdb2_recordset_get_n_rows    (GdaDataModelBase *model);
-static gint			gda_ibmdb2_recordset_get_n_columns (GdaDataModelBase *model);
+static void      	         gda_ibmdb2_recordset_describe     (GdaDataModelBase *model, gint col);
+static gint			 gda_ibmdb2_recordset_get_n_rows    (GdaDataModelBase *model);
+static gint			 gda_ibmdb2_recordset_get_n_columns (GdaDataModelBase *model);
 static const GdaRow 		*gda_ibmdb2_recordset_get_row 	   (GdaDataModelBase *model, gint rownum);
 
 static GObjectClass	*parent_class = NULL;
@@ -76,7 +76,6 @@ gda_ibmdb2_recordset_class_init (GdaIBMDB2RecordsetClass *klass)
 	object_class->finalize = gda_ibmdb2_recordset_finalize;
 	model_class->get_n_rows = gda_ibmdb2_recordset_get_n_rows;
 	model_class->get_n_columns = gda_ibmdb2_recordset_get_n_columns;
-	model_class->describe_column = gda_ibmdb2_recordset_describe;
 	model_class->get_value_at = gda_ibmdb2_recordset_get_value_at;
 	model_class->get_row = gda_ibmdb2_recordset_get_row;
 }
@@ -171,44 +170,6 @@ gda_ibmdb2_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	
 }
 
-static GdaColumn *
-gda_ibmdb2_recordset_describe (GdaDataModelBase *model, gint col)
-{
-	GdaIBMDB2Recordset *recset = (GdaIBMDB2Recordset *) model;
-        GdaIBMDB2Field     *field = NULL;
-        GdaColumn *attribs = NULL;
-
-        g_return_val_if_fail (GDA_IS_IBMDB2_RECORDSET (recset), NULL);
-        g_return_val_if_fail (recset->priv != NULL, NULL);
-        g_return_val_if_fail (recset->priv->columns != NULL, NULL);
-
-        if (col >= recset->priv->columns->len) {
-                return NULL;
-        }
-
-	field = g_ptr_array_index (recset->priv->columns, col);
-        if (!field) {
-                return NULL;
-        }
-
-        attribs = gda_column_new ();
-	if (!attribs) {
-                return NULL;
-        }
-	
-	gda_column_set_name (attribs, field->column_name);
-	gda_column_set_scale (attribs, field->column_scale);
-        gda_column_set_gdatype (attribs, gda_ibmdb2_get_value_type (field));
-        gda_column_set_defined_size (attribs, field->column_size);
-
-        gda_column_set_unique_key (attribs, FALSE);
-	gda_column_set_references (attribs, "");
-        gda_column_set_primary_key (attribs, FALSE);
-
-        gda_column_set_allow_null (attribs, field->column_nullable == SQL_NULLABLE);
-
-	return attribs;
-}
 
 static gint
 gda_ibmdb2_recordset_get_n_rows (GdaDataModelBase *model)
@@ -281,6 +242,40 @@ gda_ibmdb2_recordset_get_type (void)
 	return type;
 }
 
+static void
+gda_ibmdb2_recordset_describe (GdaDataModel *model, gint col)
+{
+	GdaIBMDB2Recordset *recset = (GdaIBMDB2Recordset *) model;
+        GdaIBMDB2Field     *field = NULL;
+        GdaColumn *attribs = NULL;
+	gchar *tmp;
+
+        g_return_if_fail (GDA_IS_IBMDB2_RECORDSET (recset));
+        g_return_if_fail (recset->priv != NULL);
+        g_return_if_fail (recset->priv->columns != NULL);
+        g_return_if_fail (col < recset->priv->columns->len);
+
+
+	field = (GdaIBMDB2Field*) g_ptr_array_index (recset->priv->columns, col);
+	g_return_if_fail (field);
+        attribs = gda_data_model_describe_column (model, col);
+
+	tmp = g_strndup (field->column_name, field->column_name_len);
+	gda_column_set_title (attribs, tmp);
+	g_free (tmp);
+	
+	gda_column_set_name (attribs, field->column_name);
+	gda_column_set_scale (attribs, field->column_scale);
+        gda_column_set_gdatype (attribs, gda_ibmdb2_get_value_type (field));
+        gda_column_set_defined_size (attribs, field->column_size);
+
+        gda_column_set_unique_key (attribs, FALSE);
+	gda_column_set_references (attribs, "");
+        gda_column_set_primary_key (attribs, FALSE);
+
+        gda_column_set_allow_null (attribs, field->column_nullable == SQL_NULLABLE);
+}
+
 GdaDataModel*
 gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt)
 {
@@ -288,7 +283,6 @@ gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt)
 	GdaIBMDB2ConnectionData *conn_data;
 	GdaIBMDB2Field *field;
 	gint i;
-	gchar *tmp;
 	GdaRow *row;
 	SQLSMALLINT ncols = 0;
 	SQLINTEGER  nrows = 0;
@@ -365,10 +359,7 @@ gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt)
 			gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, hstmt);
 		}
 		
-		tmp = g_strndup (field->column_name, field->column_name_len);
-		gda_data_model_set_column_title (GDA_DATA_MODEL(recset), i, tmp);
-		g_free (tmp);
-
+		gda_ibmdb2_recordset_describe (GDA_DATA_MODEL (recset), i);
 	}
 
 	/* Fetch all data from statement */

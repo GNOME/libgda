@@ -347,8 +347,9 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@blob: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@blob: 
 
 
 <!-- ##### FUNCTION gda_connection_get_events ##### -->

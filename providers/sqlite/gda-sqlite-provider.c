@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-private.h>
 #include <libgda/gda-util.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-provider.h"
@@ -91,6 +92,11 @@ static GdaDataModel *gda_sqlite_provider_get_schema (GdaServerProvider *provider
 						     GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
+
+typedef struct {
+        gchar        *col_name;
+        GdaValueType  data_type;
+} GdaSqliteColData;
 
 /*
  * GdaSqliteProvider class implementation
@@ -794,12 +800,6 @@ add_type_row (GdaDataModelArray *recset, const gchar *name,
 	g_list_free (value_list);
 }
 
-typedef struct {
-        gchar *col_name;
-        GdaValueType data_type;
-} GdaSqliteColData;
-
-
 static void
 add_g_list_row (gpointer data, gpointer user_data)
 {
@@ -820,6 +820,7 @@ init_table_fields_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
 	gint i;
+	GdaColumn *column;
 	GdaSqliteColData cols[] = {
 		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
@@ -834,8 +835,12 @@ init_table_fields_recset (GdaConnection *cnc)
 	};
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
-	for (i = 0; i < sizeof cols / sizeof cols[0]; i++)
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
+		column = gda_data_model_describe_column (GDA_DATA_MODEL (recset), i);
+		
+		gda_column_set_title (column, _(cols[i].col_name));
+		gda_column_set_gdatype (column, cols[i].data_type);
+	}
 
 	return recset;
 }
@@ -1057,6 +1062,15 @@ get_tables (GdaConnection *cnc, GdaParameterList *params, gboolean views)
 	gchar *sql;
 	GdaDataModel *model;
 
+	gint i;
+	GdaColumn *column;
+	GdaSqliteColData cols[] = {
+		{ N_("Table")	                , GDA_VALUE_TYPE_STRING },
+		{ N_("Owner")	                , GDA_VALUE_TYPE_STRING },
+		{ N_("Comments")		, GDA_VALUE_TYPE_STRING },
+		{ N_("Definition")		, GDA_VALUE_TYPE_STRING }
+	};
+
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!scnc) {
 		gda_connection_add_event_string (cnc, _("Invalid SQLite handle"));
@@ -1077,6 +1091,15 @@ get_tables (GdaConnection *cnc, GdaParameterList *params, gboolean views)
 
 	model = GDA_DATA_MODEL (reclist->data);
 	g_object_ref (G_OBJECT (model));
+
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
+		column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
+		
+		gda_column_set_title (column, _(cols[i].col_name));
+		gda_column_set_gdatype (column, cols[i].data_type);
+	}
+	if (views)
+		gda_data_model_set_column_title (model, 0, _("View"));
 
 	g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 	g_list_free (reclist);

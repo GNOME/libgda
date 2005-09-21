@@ -1,8 +1,9 @@
 /* GDA Firebird Blob
- * Copyright (C) 1998-2004 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -26,10 +27,32 @@
 #include <libgda/gda-connection.h>
 #include <ibase.h>
 
-/* Firebird Blob public interface */
+G_BEGIN_DECLS
 
-GdaBlob		*gda_firebird_blob_new (GdaConnection *cnc);
-void		 gda_firebird_blob_set_id (GdaBlob *self, const ISC_QUAD *blob_id);
+#define GDA_TYPE_FIREBIRD_BLOB            (gda_firebird_blob_get_type())
+#define GDA_FIREBIRD_BLOB(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FIREBIRD_BLOB, GdaFirebirdBlob))
+#define GDA_FIREBIRD_BLOB_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_FIREBIRD_BLOB, GdaFirebirdBlobClass))
+#define GDA_IS_FIREBIRD_BLOB(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_FIREBIRD_BLOB))
+#define GDA_IS_FIREBIRD_BLOB_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_FIREBIRD_BLOB))
+
+typedef struct _GdaFirebirdBlob        GdaFirebirdBlob;
+typedef struct _GdaFirebirdBlobClass   GdaFirebirdBlobClass;
+typedef struct _GdaFirebirdBlobPrivate GdaFirebirdBlobPrivate;
+
+struct _GdaFirebirdBlob {
+	GdaBlob                 parent;
+	GdaFirebirdBlobPrivate *priv;
+};
+
+struct _GdaFirebirdBlobClass {
+	GdaBlobClass            parent_class;
+};
+
+GType         gda_firebird_blob_get_type (void);
+GdaBlob      *gda_firebird_blob_new      (GdaConnection *cnc);
+void          gda_firebird_blob_set_id   (GdaFirebirdBlob *blob, const ISC_QUAD *blob_id);
+
+G_END_DECLS
 
 #endif /* _GDA_FIREBIRD_BLOB_H */
 

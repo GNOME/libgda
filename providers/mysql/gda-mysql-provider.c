@@ -24,6 +24,7 @@
  */
 
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-private.h>
 #include <libgda/gda-column-index.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-intl.h>

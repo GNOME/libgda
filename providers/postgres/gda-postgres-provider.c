@@ -25,9 +25,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-private.h>
 #include <libgda/gda-column-index.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
+#include "gda-postgres-blob.h"
 
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
@@ -119,9 +121,8 @@ static GdaDataModel *gda_postgres_provider_get_schema (GdaServerProvider *provid
 						       GdaConnectionSchema schema,
 						       GdaParameterList *params);
 
-static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
-						   GdaConnection *cnc,
-						   GdaBlob *blob);
+static GdaBlob *gda_postgres_provider_create_blob (GdaServerProvider *provider,
+						   GdaConnection *cnc);
 
 gchar *
 gda_postgres_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont actually use this!*/
@@ -129,8 +130,8 @@ gda_postgres_provider_value_to_sql_string (GdaServerProvider *provider, /* we do
 					GdaValue *from);
 				 		 
 typedef struct {
-	gchar *col_name;
-	GdaValueType data_type;
+	gchar        *col_name;
+	GdaValueType  data_type;
 } GdaPostgresColData;
 
 typedef struct {
@@ -1475,6 +1476,7 @@ gda_postgres_init_procs_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
 	gint i;
+	GdaColumn *column;
 	GdaPostgresColData cols[8] = {
 		{ N_("Procedure")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Id")              , GDA_VALUE_TYPE_STRING  },
@@ -1487,8 +1489,12 @@ gda_postgres_init_procs_recset (GdaConnection *cnc)
 		};
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
-	for (i = 0; i < sizeof cols / sizeof cols[0]; i++)
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
+		column = gda_data_model_describe_column (GDA_DATA_MODEL (recset), i);
+		
+		gda_column_set_title (column, _(cols[i].col_name));
+		gda_column_set_gdatype (column, cols[i].data_type);
+	}
 
 	return recset;
 }
@@ -1763,6 +1769,15 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 	gint i;
 	static GHashTable *synonyms = NULL;
 
+	GdaColumn *column;
+	GdaPostgresColData cols[5] = {
+		{ N_("Type")	           , GDA_VALUE_TYPE_STRING  },
+		{ N_("Owner")              , GDA_VALUE_TYPE_STRING  },
+		{ N_("Comments")	   , GDA_VALUE_TYPE_STRING  },
+		{ N_("GDA type")       	   , GDA_VALUE_TYPE_TYPE  },
+		{ N_("Synonyms")	   , GDA_VALUE_TYPE_STRING  }
+		};
+
 	if (!synonyms) {
 		synonyms = g_hash_table_new (g_str_hash, g_str_equal);
 
@@ -1783,12 +1798,13 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (5));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Synonyms"));
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
+		column = gda_data_model_describe_column (GDA_DATA_MODEL (recset), i);
+		
+		gda_column_set_title (column, _(cols[i].col_name));
+		gda_column_set_gdatype (column, cols[i].data_type);
+	}
 
 	/* fill the recordset */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -1847,6 +1863,7 @@ get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+
 	/* Set it here instead of the SQL query to allow i18n */
 	gda_data_model_set_column_title (recset, 0, _("View"));
 	gda_data_model_set_column_title (recset, 1, _("Owner"));
@@ -2016,6 +2033,7 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
 	gint i;
+	GdaColumn *column;
 	GdaPostgresColData cols[] = {
 		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
@@ -2030,8 +2048,12 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 		};
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
-	for (i = 0; i < sizeof cols / sizeof cols[0]; i++)
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
+		column = gda_data_model_describe_column (GDA_DATA_MODEL (recset), i);
+		
+		gda_column_set_title (column, _(cols[i].col_name));
+		gda_column_set_gdatype (column, cols[i].data_type);
+	}
 
 	return recset;
 }
@@ -2613,6 +2635,7 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+
 	/* Set it here instead of the SQL query to allow i18n */
 	gda_data_model_set_column_title (recset, 0, _("Sequence"));
 	gda_data_model_set_column_title (recset, 1, _("Owner"));
@@ -2717,14 +2740,14 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 	return NULL;
 }
 
-static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
-						   GdaConnection *cnc,
-						   GdaBlob *blob)
+static GdaBlob *
+gda_postgres_provider_create_blob (GdaServerProvider *provider,
+				   GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	return gda_postgres_blob_create (blob, cnc);
+	return gda_postgres_blob_new (cnc);
 }
 
 gchar *

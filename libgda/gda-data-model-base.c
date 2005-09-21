@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -31,7 +31,6 @@
 #include <libgda/gda-util.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include <libgda/gda-xml-database.h>
 #include <string.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
@@ -39,7 +38,7 @@
 
 struct _GdaDataModelBasePrivate {
 	gboolean       notify_changes;
-	GHashTable    *column_titles;
+	GHashTable    *column_spec;
 	gchar         *cmd_text;
 	GdaCommandType cmd_type;
 
@@ -55,7 +54,7 @@ static void gda_data_model_base_finalize   (GObject *object);
 static void                 gda_data_model_base_data_model_init (GdaDataModelIface *iface);
 static gint                 gda_data_model_base_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_base_get_n_columns   (GdaDataModel *model);
-static GdaColumn  *gda_data_model_base_describe_column (GdaDataModel *model, gint col);
+static GdaColumn           *gda_data_model_base_describe_column (GdaDataModel *model, gint col);
 static const gchar         *gda_data_model_base_get_column_title(GdaDataModel *model, gint col);
 static void                 gda_data_model_base_set_column_title(GdaDataModel *model, gint col, const gchar *title);
 static gint                 gda_data_model_base_get_column_pos  (GdaDataModel *model, const gchar *title);
@@ -102,9 +101,6 @@ gda_data_model_base_data_model_init (GdaDataModelIface *iface)
 	iface->i_get_n_rows = gda_data_model_base_get_n_rows;
 	iface->i_get_n_columns = gda_data_model_base_get_n_columns;
 	iface->i_describe_column = gda_data_model_base_describe_column;
-	iface->i_get_column_title = gda_data_model_base_get_column_title;
-	iface->i_set_column_title = gda_data_model_base_set_column_title;
-	iface->i_get_column_pos = gda_data_model_base_get_column_pos;
         iface->i_get_row = gda_data_model_base_get_row;
 	iface->i_get_value_at = gda_data_model_base_get_value_at;
 	iface->i_is_updatable = gda_data_model_base_is_updatable;
@@ -132,17 +128,16 @@ gda_data_model_base_init (GdaDataModelBase *model, GdaDataModelBaseClass *klass)
 
 	model->priv = g_new (GdaDataModelBasePrivate, 1);
 	model->priv->notify_changes = TRUE;
-	model->priv->column_titles = g_hash_table_new (g_direct_hash,
-						       g_direct_equal);
+	model->priv->column_spec = g_hash_table_new (g_direct_hash, g_direct_equal);
 	model->priv->updating = FALSE;
 	model->priv->cmd_text = NULL;
 	model->priv->cmd_type = GDA_COMMAND_TYPE_INVALID;
 }
 
 static void
-free_hash_string (gpointer key, gpointer value, gpointer user_data)
+hash_free_column (gpointer key, GdaColumn *column, gpointer user_data)
 {
-	g_free (value);
+	g_object_unref (column);
 }
 
 static void
@@ -153,9 +148,9 @@ gda_data_model_base_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
 	/* free memory */
-	g_hash_table_foreach (model->priv->column_titles, free_hash_string, NULL);
-	g_hash_table_destroy (model->priv->column_titles);
-	model->priv->column_titles = NULL;
+	g_hash_table_foreach (model->priv->column_spec, (GHFunc) hash_free_column, NULL);
+	g_hash_table_destroy (model->priv->column_spec);
+	model->priv->column_spec = NULL;
 
 	g_free (model->priv->cmd_text);
 	model->priv->cmd_text = NULL;
@@ -222,120 +217,17 @@ gda_data_model_base_describe_column (GdaDataModel *model, gint col)
 	GdaColumn *column;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
-	g_return_val_if_fail (CLASS (model)->describe_column != NULL, NULL);
 
-	column = CLASS (model)->describe_column (GDA_DATA_MODEL_BASE (model), col);
+	column = g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_spec,
+				      GINT_TO_POINTER (col));
 	if (!column) {
-		const GdaValue *value;
-		const gchar *cname;
-		
-		/* we generate a basic FieldAttributes structure */
 		column = gda_column_new ();
-		gda_column_set_defined_size (column, 0);
-		cname = g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_titles,
-					     GINT_TO_POINTER (col));
-		if (cname)
-			gda_column_set_name (column, cname);
-		gda_column_set_scale (column, 0);
-		value = gda_data_model_base_get_value_at (model, col, 0);
-		if (value == NULL)
-			gda_column_set_gdatype (column, GDA_VALUE_TYPE_STRING);
-		else
-			gda_column_set_gdatype (column, gda_value_get_type (value));
-
-		gda_column_set_allow_null (column, TRUE);
+		gda_column_set_position (column, col);
+		g_hash_table_insert (GDA_DATA_MODEL_BASE (model)->priv->column_spec,
+				     GINT_TO_POINTER (col), column);
 	}
 
 	return column;
-}
-
-static void
-gda_data_model_base_set_column_title (GdaDataModel *model, gint col, const gchar *title)
-{
-	gint n_cols;
-	GdaDataModelBase *mb;
-
-	g_return_if_fail (GDA_IS_DATA_MODEL_BASE (model));
-
-	mb = GDA_DATA_MODEL_BASE (model);
-
-	n_cols = gda_data_model_base_get_n_columns (model);
-	if (col >= 0 && col < n_cols) {
-		gpointer key, value;
-
-		if (g_hash_table_lookup_extended (mb->priv->column_titles,
-						  GINT_TO_POINTER (col),
-						  &key, &value)) {
-			g_hash_table_remove (mb->priv->column_titles,
-					     GINT_TO_POINTER (col));
-			g_free (value);
-		}
-
-		g_hash_table_insert (mb->priv->column_titles, 
-				     GINT_TO_POINTER (col), g_strdup (title));
-	}
-}
-
-static const gchar *
-gda_data_model_base_get_column_title (GdaDataModel *model, gint col)
-{
-	gint n_cols;
-	gchar *title;
-	GdaDataModelBase *mb;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
-
-	mb = GDA_DATA_MODEL_BASE (model);
-	n_cols = gda_data_model_base_get_n_columns (model);
-	if (col < n_cols && col >= 0){
-		title = g_hash_table_lookup (mb->priv->column_titles,
-					     GINT_TO_POINTER (col));
-		if (title == NULL) {
-			GdaColumn *column;
-
-			column = gda_data_model_base_describe_column (model, col);
-			if (column) {
-				gda_data_model_base_set_column_title (model, col, title);
-				gda_column_free (column);
-
-				return g_hash_table_lookup (mb->priv->column_titles,
-							    GINT_TO_POINTER (col));
-			}
-			else
-				title = "";
-		}
-	}
-	else
-		title = "";
-
-	return (const gchar *) title;
-}
-
-static gint
-gda_data_model_base_get_column_pos (GdaDataModel *model, const gchar *title)
-{
-	gint n_cols;
-	gint i;
-
-	GdaDataModelBase *mb;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), -1);
-
-	mb = GDA_DATA_MODEL_BASE (model);
-
-	g_return_val_if_fail (title != NULL, -1);
-
-	n_cols = gda_data_model_base_get_n_columns (model);
-	for (i = 0; i < n_cols; i++) {
-		gpointer value;
-
-		value = g_hash_table_lookup (mb->priv->column_titles,
-					     GINT_TO_POINTER (i));
-		if (value && !strcmp (title, (const char *) value))
-			return i;
-	}
-
-	return -1;
 }
 
 static const GdaRow *

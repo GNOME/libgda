@@ -17,6 +17,8 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres-provider.h \
 	gda-postgres-recordset.c \
 	gda-postgres-recordset.h \
+	gda-postgres-blob.c \
+	gda-postgres-blob.h \
 	gda-postgres.h \
 	libmain.c \
 	utils.c

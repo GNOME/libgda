@@ -1,5 +1,5 @@
 /* GDA Sybase provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *         Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
@@ -48,8 +48,7 @@ static void gda_sybase_recordset_init (GdaSybaseRecordset *recset,
                                        GdaSybaseRecordsetClass *klass);
 static void gda_sybase_recordset_finalize (GObject *object);
 
-static GdaColumn *gda_sybase_recordset_describe_column (GdaDataModelBase *model,
-                                                                 gint col);
+static void gda_sybase_recordset_describe_column (GdaDataModel *model, gint col);
 static gint gda_sybase_recordset_get_n_rows (GdaDataModelBase *model);
 static gint gda_sybase_recordset_get_n_columns (GdaDataModelBase *model);
 static const GdaRow *gda_sybase_recordset_get_row (GdaDataModelBase *model,
@@ -58,41 +57,33 @@ static const GdaValue *gda_sybase_recordset_get_value_at (GdaDataModelBase *mode
                                                           gint col,
                                                           gint row);
 
-static GdaColumn *
-gda_sybase_recordset_describe_column (GdaDataModelBase *model, gint col)
+static void
+gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 	CS_DATAFMT         *colinfo = NULL;
-	GdaColumn *attribs = NULL;
+	GdaColumn          *attribs = NULL;
 	gchar              name[256];
 
-	g_return_val_if_fail (GDA_IS_SYBASE_RECORDSET (recset), NULL);
-	g_return_val_if_fail (recset->priv != NULL, NULL);
-	g_return_val_if_fail (recset->priv->columns != NULL, NULL);
+	g_return_if_fail (GDA_IS_SYBASE_RECORDSET (recset));
+	g_return_if_fail (recset->priv != NULL);
+	g_return_if_fail (recset->priv->columns != NULL);
+	g_return_if_fail (col < recset->priv->columns->len);
 
-	if (col >= recset->priv->columns->len) {
-		return NULL;
-	}
 	colinfo = g_ptr_array_index (recset->priv->columns, col);
+	g_return_if_fail (colinfo);
 
-	if (!colinfo) {
-		return NULL;
-	}
-
-	attribs = gda_column_new ();
-
-	if (!attribs) {
-		return NULL;
-	}
+	attribs = gda_data_model_describe_column (model, col);
 
 	memcpy (name, colinfo->name,
 	        colinfo->namelen);
-	//name[colinfo->namelen + 1] = '\0';
+	name[colinfo->namelen + 1] = 0
 
+		gda_column_set_title (attribs, name);
 	gda_column_set_name (attribs, name);
 	gda_column_set_scale (attribs, colinfo->scale);
 	gda_column_set_gdatype (attribs,
-	         gda_sybase_get_value_type (colinfo->datatype));
+				gda_sybase_get_value_type (colinfo->datatype));
 	gda_column_set_defined_size (attribs, colinfo->maxlength);
 
 	// FIXME:
@@ -103,9 +94,7 @@ gda_sybase_recordset_describe_column (GdaDataModelBase *model, gint col)
 	gda_column_set_unique_key (attribs, FALSE);
 	
 	gda_column_set_allow_null (attribs,
-	         (colinfo->status & CS_CANBENULL) == CS_CANBENULL);
-	
-	return attribs;
+				   (colinfo->status & CS_CANBENULL) == CS_CANBENULL);
 }
 
 static gint
@@ -168,7 +157,6 @@ gda_sybase_recordset_class_init (GdaSybaseRecordsetClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_sybase_recordset_finalize;
-	model_class->describe_column = gda_sybase_recordset_describe_column;
 	model_class->get_n_rows = gda_sybase_recordset_get_n_rows;
 	model_class->get_n_columns = gda_sybase_recordset_get_n_columns;
 	model_class->get_row = gda_sybase_recordset_get_row;
@@ -290,7 +278,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 	GdaSybaseRecordset *srecset = NULL;
 	GdaSybaseField     *sfield = NULL;
 	GdaRow             *row = NULL;
-	GdaConnectionEvent           *error = NULL;
+	GdaConnectionEvent *error = NULL;
 	gboolean           columns_set = FALSE;
 	gboolean           sfields_allocated = TRUE;
 	gint               i = 0;
@@ -407,10 +395,8 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 			break;
 		}
 
-		if (sfield->fmt.namelen > 0) {
-			gda_data_model_set_column_title (GDA_DATA_MODEL (srecset),
-			                                 i, sfield->fmt.name);
-		}
+		if (sfield->fmt.namelen > 0) 
+			gda_sybase_recordset_describe_column (GDA_DATA_MODEL (srecset), i);
 	}
 
 	// catch error: ct_describe or g_new0 or ct_bind failed
@@ -453,19 +439,19 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 //	sybase_debug_msg (_("Got %d of %d rows"), srecset->priv->rowcnt, row_cnt);
 	// step 5: verify ct_fetch's last return code
 	switch (scnc->ret) {
-		case CS_END_DATA:
+	case CS_END_DATA:
 //			sybase_debug_msg (_("Row processing succeeded."));
-			break;
-		case CS_CANCELED:
+		break;
+	case CS_CANCELED:
 //			sybase_debug_msg (_("Row processing canceled."));
-			break;
-		case CS_FAIL:
+		break;
+	case CS_FAIL:
 //			sybase_debug_msg (_("%s returned CS_FAIL. Probably o.k."), "ct_fetch()");
-			break;
-		default:
-			error = gda_sybase_make_error (scnc, _("%s terminated with unexpected return code."), "ct_fetch()");
-			gda_connection_add_event (cnc, error);
-			sybase_check_messages(cnc);
+		break;
+	default:
+		error = gda_sybase_make_error (scnc, _("%s terminated with unexpected return code."), "ct_fetch()");
+		gda_connection_add_event (cnc, error);
+		sybase_check_messages(cnc);
 	}
 	
 	return srecset;
@@ -499,15 +485,16 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 
 	// see if there is a message
 	ret = ct_diag (scnc->connection,
-								 CS_STATUS, 
-								 CS_ALLMSG_TYPE, 
-								 CS_UNUSED,
-								 &msgcnt);
+		       CS_STATUS, 
+		       CS_ALLMSG_TYPE, 
+		       CS_UNUSED,
+		       &msgcnt);
 	
 	if ( ret != CS_SUCCEED ) {
 		error = gda_connection_event_new();
 		g_return_val_if_fail (error != NULL, FALSE);
-		gda_connection_event_set_description (error, _("An error occured when attempting to retrieve a server message count for resultset"));
+		gda_connection_event_set_description (error, 
+						      _("An error occured when attempting to retrieve a server message count for resultset"));
 		gda_connection_event_set_code (error, -1);
 		gda_connection_event_set_source (error, "gda-sybase");
 		gda_connection_event_set_sqlstate (error, _("Not available"));					
@@ -516,15 +503,15 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 	}
 
 	if ( msgcnt < 1 ){
-			sybase_debug_msg (_("attempting to make recordset and msg count != 1 !"));
-			return NULL;
+		sybase_debug_msg (_("attempting to make recordset and msg count != 1 !"));
+		return NULL;
 	}
 
 	ret = ct_diag (scnc->connection, 
-																CS_GET, 
-																CS_SERVERMSG_TYPE, 
-																1, 
-																&msg); 
+		       CS_GET, 
+		       CS_SERVERMSG_TYPE, 
+		       1, 
+		       &msg); 
 	if ( ret != CS_SUCCEED ) { 
 		error = gda_connection_event_new();
 		g_return_val_if_fail (error != NULL, FALSE);
@@ -571,31 +558,30 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 	row = gda_row_new(GDA_DATA_MODEL(srecset), 1);
 	val = gda_row_get_value(row,0);
 
-	message = g_strdup_printf("%s",
-																											(msg.text) ? msg.text : "");
-
+	message = g_strdup_printf("%s", (msg.text) ? msg.text : "");
 	sfield->fmt.maxlength = strlen(message);
 
 	srecset->priv->rowcnt = 1;	
- gda_value_set_string(val,(gchar *)message);
+	gda_value_set_string(val,(gchar *)message);
 	g_ptr_array_add(srecset->priv->rows, row);
 
 	// clear the message so we don't get bugged by it later
 	ret = ct_diag (scnc->connection, 
-																CS_CLEAR, 
-																CS_SERVERMSG_TYPE, 
-																CS_UNUSED, 
-																NULL);   
+		       CS_CLEAR, 
+		       CS_SERVERMSG_TYPE, 
+		       CS_UNUSED, 
+		       NULL);   
 	if ( ret != CS_SUCCEED ) { 
-			error = gda_connection_event_new();
-			g_return_val_if_fail (error != NULL, FALSE);
-			gda_connection_event_set_description (error, _("call to ct_diag failed when attempting to clear the server messages"));
-			gda_connection_event_set_code (error, -1);
-			gda_connection_event_set_source (error, "gda-sybase");
-			gda_connection_event_set_sqlstate (error, _("Not available"));					
-			gda_connection_add_event (cnc, error);
-			return NULL;
-		} 	
+		error = gda_connection_event_new();
+		g_return_val_if_fail (error != NULL, FALSE);
+		gda_connection_event_set_description (error, 
+						      _("call to ct_diag failed when attempting to clear the server messages"));
+		gda_connection_event_set_code (error, -1);
+		gda_connection_event_set_source (error, "gda-sybase");
+		gda_connection_event_set_sqlstate (error, _("Not available"));					
+		gda_connection_add_event (cnc, error);
+		return NULL;
+	} 	
 
 	return srecset;
 }

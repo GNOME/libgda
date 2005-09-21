@@ -778,7 +778,7 @@ then
 	mdbdir=""
 	for d in $dir /usr /usr/local /opt/gnome
 	do
-		if test -f $d/include/mdbtools.h -a -f $d/$lib/libmdbsql.so
+		if test -f $d/include/mdbtools.h -a -f $d/$lib/libmdbsql.so -o -f $d/include/mdbtools.h -a -f $d/$lib/libmdbsql
 		then
 			AC_MSG_RESULT(found MDB Tools in $d)
 			mdbdir=$d
@@ -984,7 +984,6 @@ providers/sqlite/Makefile
 providers/sqlite/sqlite-src/Makefile
 providers/sybase/Makefile
 providers/xbase/Makefile
-providers/xml/Makefile
 report/Makefile
 report/gda-report.dtd
 report/libgda-report/Makefile
@@ -1006,7 +1005,6 @@ echo ""
 echo " Configuration summary"
 echo "   Installation prefix = $prefix"
 echo "   Providers"
-echo "      XML = yes"
 echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"
 echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"

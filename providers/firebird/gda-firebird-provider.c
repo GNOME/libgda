@@ -22,11 +22,13 @@
 
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-private.h>
 #include <libgda/gda-command.h>
 #include <glib/gprintf.h>
 #include <string.h>
 #include "gda-firebird-provider.h"
 #include "gda-firebird-recordset.h"
+#include "gda-firebird-blob.h"
 
 static void 		gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass);
 static void 		gda_firebird_provider_init (GdaFirebirdProvider *provider,
@@ -75,6 +77,8 @@ static GdaDataModel	*gda_firebird_provider_get_schema (GdaServerProvider *provid
 							   GdaConnectionSchema schema,
 							   GdaParameterList *params);
 
+static GdaBlob          *gda_firebird_provider_create_blob (GdaServerProvider *provider,
+							    GdaConnection *cnc);
 
 static GObjectClass *parent_class = NULL;
 
@@ -104,6 +108,7 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 	provider_class->rollback_transaction = gda_firebird_provider_rollback_transaction;
 	provider_class->supports = gda_firebird_provider_supports;
 	provider_class->get_schema = gda_firebird_provider_get_schema;
+	provider_class->create_blob = gda_firebird_provider_create_blob;
 }
 
 static void
@@ -1362,3 +1367,11 @@ gda_firebird_provider_get_schema (GdaServerProvider *provider,
 }
 
 
+static GdaBlob *
+gda_firebird_provider_create_blob (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	return gda_firebird_blob_new (cnc);
+}

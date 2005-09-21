@@ -43,7 +43,7 @@ typedef struct _GdaColumnClass   GdaColumnClass;
 typedef struct _GdaColumnPrivate GdaColumnPrivate;
 
 struct _GdaColumn {
-	GObject object;
+	GObject           object;
 	GdaColumnPrivate *priv;
 };
 
@@ -54,40 +54,53 @@ struct _GdaColumnClass {
 	void (* name_changed) (GdaColumn *column, const gchar *old_name);
 };
 
-GType           gda_column_get_type (void);
-GdaColumn      *gda_column_new (void);
-GdaColumn      *gda_column_copy (GdaColumn *column);
-void            gda_column_free (GdaColumn *column);
-gboolean        gda_column_equal (const GdaColumn *lhs, const GdaColumn *rhs);
-glong           gda_column_get_defined_size (GdaColumn *column);
-void            gda_column_set_defined_size (GdaColumn *column, glong size);
-const gchar    *gda_column_get_name (GdaColumn *column);
-void            gda_column_set_name (GdaColumn *column, const gchar *name);
-const gchar    *gda_column_get_table (GdaColumn *column);
-void            gda_column_set_table (GdaColumn *column, const gchar *table);
-const gchar    *gda_column_get_caption (GdaColumn *column);
-void            gda_column_set_caption (GdaColumn *column, const gchar *caption);
-glong           gda_column_get_scale (GdaColumn *column);
-void            gda_column_set_scale (GdaColumn *column, glong scale);
-const gchar*    gda_column_get_dbms_type (GdaColumn *column);
-void            gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type);
-GdaValueType    gda_column_get_gdatype (GdaColumn *column);
-void            gda_column_set_gdatype (GdaColumn *column, GdaValueType type);
-gboolean        gda_column_get_allow_null (GdaColumn *column);
-void            gda_column_set_allow_null (GdaColumn *column, gboolean allow);
-gboolean        gda_column_get_primary_key (GdaColumn *column);
-void            gda_column_set_primary_key (GdaColumn *column, gboolean pk);
-gboolean        gda_column_get_unique_key (GdaColumn *column);
-void            gda_column_set_unique_key (GdaColumn *column, gboolean uk);
-const gchar    *gda_column_get_references (GdaColumn *column);
-void            gda_column_set_references (GdaColumn *column, const gchar *ref);
+GType           gda_column_get_type           (void);
+GdaColumn      *gda_column_new                (void);
+
+const gchar    *gda_column_get_title          (GdaColumn *column);
+void            gda_column_set_title          (GdaColumn *column, const gchar *title);
+
+glong           gda_column_get_defined_size   (GdaColumn *column);
+void            gda_column_set_defined_size   (GdaColumn *column, glong size);
+
+const gchar    *gda_column_get_name           (GdaColumn *column);
+void            gda_column_set_name           (GdaColumn *column, const gchar *name);
+
+const gchar    *gda_column_get_table          (GdaColumn *column);
+void            gda_column_set_table          (GdaColumn *column, const gchar *table);
+
+const gchar    *gda_column_get_caption        (GdaColumn *column);
+void            gda_column_set_caption        (GdaColumn *column, const gchar *caption);
+
+glong           gda_column_get_scale          (GdaColumn *column);
+void            gda_column_set_scale          (GdaColumn *column, glong scale);
+
+const gchar*    gda_column_get_dbms_type      (GdaColumn *column);
+void            gda_column_set_dbms_type      (GdaColumn *column, const gchar *dbms_type);
+
+GdaValueType    gda_column_get_gdatype        (GdaColumn *column);
+void            gda_column_set_gdatype        (GdaColumn *column, GdaValueType type);
+
+gboolean        gda_column_get_allow_null     (GdaColumn *column);
+void            gda_column_set_allow_null     (GdaColumn *column, gboolean allow);
+
+gboolean        gda_column_get_primary_key    (GdaColumn *column);
+void            gda_column_set_primary_key    (GdaColumn *column, gboolean pk);
+
+gboolean        gda_column_get_unique_key     (GdaColumn *column);
+void            gda_column_set_unique_key     (GdaColumn *column, gboolean uk);
+
+const gchar    *gda_column_get_references     (GdaColumn *column);
+void            gda_column_set_references     (GdaColumn *column, const gchar *ref);
+
 gboolean        gda_column_get_auto_increment (GdaColumn *column);
 void            gda_column_set_auto_increment (GdaColumn *column, gboolean is_auto);
-gint            gda_column_get_position (GdaColumn *column);
-void            gda_column_set_position (GdaColumn *column, gint position);
 
-const GdaValue *gda_column_get_default_value (GdaColumn *column);
-void            gda_column_set_default_value (GdaColumn *column, const GdaValue *default_value);
+gint            gda_column_get_position       (GdaColumn *column);
+void            gda_column_set_position       (GdaColumn *column, gint position);
+
+const GdaValue *gda_column_get_default_value  (GdaColumn *column);
+void            gda_column_set_default_value  (GdaColumn *column, const GdaValue *default_value);
 
 G_END_DECLS
 

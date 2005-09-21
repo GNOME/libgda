@@ -1423,7 +1423,7 @@ gda_value_get_blob (GdaValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BLOB), NULL);
-	return (const GdaBlob *)  g_value_get_object(value);
+	return (const GdaBlob *) g_value_get_object (value);
 }
 
 /**
@@ -1437,23 +1437,14 @@ void
 gda_value_set_blob (GdaValue *value, const GdaBlob *val)
 {
 	g_return_if_fail (value);
-	g_return_if_fail (GDA_VALUE_IS_BLOB(val));
+	g_return_if_fail (GDA_IS_BLOB (val));
 	
 	GdaBlob *blob;
 	l_g_value_unset (value);
 	g_value_init (value, G_VALUE_TYPE_BLOB);
 	
 	blob = g_object_ref (val);
-	
-	/*
-	blob.priv_data = val->priv_data;
-	blob.open = val->open;
-	blob.read = val->read;
-	blob.write = val->write;
-	blob.lseek = val->lseek;
-	blob.close = val->close;
-	*/
-	
+		
 	g_value_set_object (value, blob);
 }
 

@@ -26,6 +26,7 @@
 
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-private.h>
 #include <string.h>
 #include "gda-postgres.h"
 #include "gda-postgres-recordset.h"
@@ -90,7 +91,6 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 
 	object_class->finalize = gda_postgres_recordset_finalize;
 	model_class->get_n_rows = gda_postgres_recordset_get_n_rows;
-	model_class->describe_column = gda_postgres_recordset_describe;
 	model_class->get_value_at = gda_postgres_recordset_get_value_at;
 	model_class->get_row = gda_postgres_recordset_get_row;
 	model_class->append_row = gda_postgres_recordset_append_row;
@@ -147,16 +147,12 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
 	
 	row = gda_row_new (model, priv->ncolumns);
 	for (i = 0; i < priv->ncolumns; i++) {
-		thevalue = PQgetvalue(priv->pg_res, rownum, i);
+		thevalue = PQgetvalue (priv->pg_res, rownum, i);
 		length = PQgetlength (priv->pg_res, rownum, i);
 		ftype = priv->column_types [i];
 		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, rownum, i);
 		value = (GdaValue *) gda_row_get_value (row, i);
-		gda_postgres_set_value (value, ftype, thevalue, isNull, length);
-		if (gda_value_isa (value, GDA_VALUE_TYPE_BLOB)) {
-			GdaBlob *blob = (GdaBlob *) gda_value_get_blob (value);
-			gda_postgres_blob_set_connection (blob, priv->cnc);
-		}
+		gda_postgres_set_value (priv->cnc, value, ftype, thevalue, isNull, length);
 	}
 
 	gda_row_set_number (row, rownum);
@@ -365,7 +361,6 @@ gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		}
 
 		g_free (curval);
-		gda_column_free (attrs);
 	}
 
 	if (uk == 0) {
@@ -493,7 +488,6 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 		}
 
 		g_free (newval);
-		gda_column_free (attrs);
 	}
 
 	if (uk == 0) {
@@ -539,7 +533,6 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 
 	/* emit update signals */
 	gda_data_model_row_updated (GDA_DATA_MODEL (model), gda_row_get_number ((GdaRow *) row));
-	gda_data_model_changed (GDA_DATA_MODEL (model));
 
 	return status;
 }
@@ -677,8 +670,8 @@ static gboolean check_constraint (const GdaDataModelBase *model,
 	return state;
 }
 
-static GdaColumn *
-gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
+static void
+gda_postgres_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -688,24 +681,24 @@ gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
 	GdaColumn *field_attrs;
 	gboolean ispk = FALSE, isuk = FALSE;
 
-	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
-	g_return_val_if_fail (recset->priv != NULL, 0);
+	g_return_if_fail (GDA_IS_POSTGRES_RECORDSET (recset));
+	g_return_if_fail (recset->priv != NULL);
 
 	priv_data = recset->priv;
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Invalid PostgreSQL handle"));
-		return NULL;
+		return;
 	}
 
 	if (col >= priv_data->ncolumns) {
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Column out of range"));
-		return NULL;
+		return;
 	}
 
-	field_attrs = gda_column_new ();
+	field_attrs = gda_data_model_describe_column (model, col);
 	gda_column_set_name (field_attrs, PQfname (pg_res, col));
 
 	ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
@@ -742,8 +735,6 @@ gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
 	gda_column_set_primary_key (field_attrs, ispk);
 	gda_column_set_unique_key (field_attrs, isuk);
 	/* FIXME: set_allow_null? */
-
-	return field_attrs;
 }
 
 static gint
@@ -797,6 +788,7 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	GdaPostgresConnectionData *cnc_priv_data;
 	gchar *cmd_tuples;
 	gchar *endptr [1];
+	gint i;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (pg_res != NULL, NULL);
@@ -811,18 +803,23 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	model->priv->h_table = cnc_priv_data->h_table;
 	model->priv->ncolumns = PQnfields (pg_res);
 	cmd_tuples = PQcmdTuples (pg_res);
-	if (cmd_tuples == NULL || *cmd_tuples == '\0'){
+	if (cmd_tuples == NULL || *cmd_tuples == '\0')
 		model->priv->nrows = PQntuples (pg_res);
-	} else {
+	else {
 		model->priv->nrows = strtol (cmd_tuples, endptr, 10);
 		if (**endptr != '\0')
 			g_warning (_("Tuples:\"%s\""), cmd_tuples);
-
+		
 	}
 	model->priv->column_types = get_column_types (model->priv);
 	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
-					    model->priv->ncolumns);
+					   model->priv->ncolumns);
 	model->priv->table_name = guess_table_name (model);
+
+	/* set GdaColumn attributes */
+	for (i = 0; i < model->priv->ncolumns; i++)
+		gda_postgres_recordset_describe_column (GDA_DATA_MODEL (model), i);
+
 	return GDA_DATA_MODEL (model);
 }
 

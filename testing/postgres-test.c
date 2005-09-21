@@ -192,84 +192,84 @@ blob_tests (GdaConnection *cnc)
 	xaction = gda_transaction_new (NULL);
 
 	gda_connection_begin_transaction (cnc, xaction);
-	blob = g_new0 (GdaBlob, 1);
+	blob = gda_connection_create_blob (cnc);
 	g_print ("\t\tCreating a BLOB: ");
-	if (!gda_connection_create_blob (cnc, blob)) {
+	if (!blob) {
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
-	} else {
+	} 
+	else 
 		g_print ("OK\n");
-	}
-
+	
 	g_print ("\t\tOpening a BLOB (read/write): ");
 	if (gda_blob_open (blob, GDA_BLOB_MODE_RDWR)) {
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
-	} else {
+	} 
+	else 
 		g_print ("OK\n");
-	}
 
 	g_print ("\t\tWriting to BLOB: ");
 	if (gda_blob_write (blob, str, strlen (str), &nbytes)) {
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
-	} else {
+	} 
+	else
 		g_print ("OK %d\n", nbytes);
-	}
 
 	g_print ("\t\tSeeking: ");
 	if (gda_blob_lseek (blob, 2, SEEK_SET) < 0) {
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
-	} else {
+	} 
+	else
 		g_print ("OK\n");
-	}
 
 	g_print ("\t\tReading from BLOB: ");
 	if (gda_blob_read (blob, copy_str, strlen (str) - 2, &nbytes)) {
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
-	} else {
+	} 
+	else {
 		copy_str [nbytes] = '\0';
-		if (strcmp (copy_str, str + 2)) {
+		if (strcmp (copy_str, str + 2)) 
 			g_print ("FAILED\n\t\tExpecting %s but was %s\n", str + 2, copy_str);
-		} else {
+		else
 			g_print ("OK %d\n", nbytes);
-		}
 	}
 
 	g_print ("\t\tClosing the BLOB: ");
 	if (gda_blob_close (blob)) {
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
-	} else {
+	} else
 		g_print ("OK\n");
-	}
 
-	gda_blob_free_data (blob);
+	g_object_unref (blob);
+
 	gda_connection_rollback_transaction (cnc, xaction);
 	
 	gda_connection_begin_transaction (cnc, xaction);
 	g_print ("\t\tCreating another BLOB: ");
-	if (!gda_connection_create_blob (cnc, blob)) {
+	blob = gda_connection_create_blob (cnc);
+	if (!blob) {
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
-	} else {
+	} 
+	else
 		g_print ("OK\n");
-	}
 
 	g_print ("\t\tRemoving the BLOB: ");
 	if (gda_blob_remove (blob)) {
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
-	} else {
+	} 
+	else
 		g_print ("OK\n");
-	}
 
 	gda_connection_rollback_transaction (cnc, xaction);
 
-	gda_blob_free_data (blob);
-	g_free (blob);
+	g_object_unref (blob);
 	g_object_unref (G_OBJECT (xaction));
 }
 

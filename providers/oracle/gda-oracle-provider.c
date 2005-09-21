@@ -23,6 +23,7 @@
  */
 
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-private.h>
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1152,13 +1153,13 @@ get_oracle_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	
 	/* create the recordset */
 	recset = (GdaDataModelArray *) gda_data_model_array_new (7);
-	gda_data_model_set_column_title (recset, 0, _("Aggregate"));
-	gda_data_model_set_column_title (recset, 1, _("Id"));
-	gda_data_model_set_column_title (recset, 2, _("Owner"));
-	gda_data_model_set_column_title (recset, 3, _("Comments"));
-	gda_data_model_set_column_title (recset, 4, _("OutType"));
-	gda_data_model_set_column_title (recset, 5, _("InType"));
-	gda_data_model_set_column_title (recset, 6, _("Definition"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Aggregate"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Id"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("OutType"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("InType"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 6, _("Definition"));
 
 	if (params)
 		par = gda_parameter_list_find (params, "name");
@@ -1176,7 +1177,7 @@ get_oracle_aggregates (GdaConnection *cnc, GdaParameterList *params)
 }
 
 static GTree *
-gda_oracle_table_tree(GdaConnection *cnc)
+gda_oracle_table_tree (GdaConnection *cnc)
 {
     GdaOracleConnectionData *priv_data;
     GTree *tree;

@@ -43,7 +43,7 @@ G_BEGIN_DECLS
 #define G_VALUE_TYPE_BIGINT G_TYPE_INT64
 #define	G_VALUE_TYPE_BIGUINT G_TYPE_UINT64
 #define	G_VALUE_TYPE_BINARY (gda_binary_get_type())
-// G_VALUE_TYPE_BLOB to be defined in gda-blob.h
+#define G_VALUE_TYPE_BLOB (gda_blob_get_type())
 #define	G_VALUE_TYPE_BOOLEAN G_TYPE_BOOLEAN
 #define	G_VALUE_TYPE_DATE (gda_date_get_type())
 #define	G_VALUE_TYPE_DOUBLE G_TYPE_DOUBLE

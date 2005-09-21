@@ -23,12 +23,11 @@
 #if !defined(__gda_mdb_table_h__)
 #  define __gda_mdb_table_h__
 
-#include <libgda/gda-table.h>
 #include "gda-mdb.h"
 
 G_BEGIN_DECLS
 
-GdaTable *gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name);
+GdaDataModel *gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name);
 
 G_END_DECLS
 

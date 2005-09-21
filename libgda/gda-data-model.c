@@ -210,6 +210,22 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
+	/* update column's data types if they are not yet defined */
+	if (gda_data_model_get_n_rows (model) == 1) {
+		GdaColumn *column;
+		gint i, nbcols;
+		GdaValue *value;
+
+		nbcols = gda_data_model_get_n_columns (model);
+		for (i = 0; i < nbcols; i++) {
+			column = gda_data_model_describe_column (model, i);
+			value = gda_data_model_get_value_at (model, i, 0);
+			if ((gda_column_get_gdatype (column) == GDA_VALUE_TYPE_UNKNOWN))
+				gda_column_set_gdatype (column, value ? gda_value_get_type (value) : GDA_VALUE_TYPE_NULL);
+		}
+	}
+
+	/* notify changes */
 	if (do_notify_changes (model)) {
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_INSERTED],
@@ -256,69 +272,6 @@ gda_data_model_row_removed (GdaDataModel *model, gint row)
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_REMOVED],
 			       0, row);
-
-		gda_data_model_changed (model);
-	}
-}
-
-/**
- * gda_data_model_column_inserted
- * @model: a #GdaDataModel object.
- * @col: column number.
- *
- * Emits the 'column_inserted' and 'changed' signals on @model.
- */
-void
-gda_data_model_column_inserted (GdaDataModel *model, gint col)
-{
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-
-	if (do_notify_changes (model)) {
-		g_signal_emit (G_OBJECT (model),
-			       gda_data_model_signals[COLUMN_INSERTED],
-			       0, col);
-
-		gda_data_model_changed (model);
-	}
-}
-
-/**
- * gda_data_model_column_updated
- * @model: a #GdaDataModel object.
- * @col: column number.
- *
- * Emits the 'column_updated' and 'changed' signals on @model.
- */
-void
-gda_data_model_column_updated (GdaDataModel *model, gint col)
-{
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-
-	if (do_notify_changes (model)) {
-		g_signal_emit (G_OBJECT (model),
-			       gda_data_model_signals[COLUMN_UPDATED],
-			       0, col);
-
-		gda_data_model_changed (model);
-	}
-}
-
-/**
- * gda_data_model_column_removed
- * @model: a #GdaDataModel object.
- * @col: column number.
- *
- * Emits the 'column_removed' and 'changed' signal on @model.
- */
-void
-gda_data_model_column_removed (GdaDataModel *model, gint col)
-{
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-
-	if (do_notify_changes (model)) {
-		g_signal_emit (G_OBJECT (model),
-			       gda_data_model_signals[COLUMN_REMOVED],
-			       0, col);
 
 		gda_data_model_changed (model);
 	}
@@ -408,6 +361,9 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * a #GdaColumn structure, which contains all the information
  * about the given column in the data model.
  *
+ * WARNING: the returned #GdaColumn object belongs to the @model model and
+ * and should not be destroyed.
+ *
  * Returns: the description of the column.
  */
 GdaColumn *
@@ -433,10 +389,12 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 const gchar *
 gda_data_model_get_column_title (GdaDataModel *model, gint col)
 {
+	GdaColumn *column;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_column_title)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_column_title) (model, col);
+	column = gda_data_model_describe_column (model, col);
+	if (column)
+		return gda_column_get_title (column);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
@@ -454,36 +412,14 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 void
 gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *title)
 {
+	GdaColumn *column;
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_column_title)
-		(GDA_DATA_MODEL_GET_IFACE (model)->i_set_column_title) (model, col, title);
+	column = gda_data_model_describe_column (model, col);
+	if (column)
+		gda_column_set_title (column, title);
 	else 
 		g_warning ("%s() method not supported\n", __FUNCTION__);
-}
-
-/**
- * gda_data_model_get_column_position
- * @model: a #GdaDataModel object.
- * @title: column title.
- *
- * Gets the position of a column on the data model, based on
- * the column's title.
- *
- * Returns: the position of the column in the data model, or -1
- * if the column could not be found.
- */
-gint
-gda_data_model_get_column_position (GdaDataModel *model, const gchar *title)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
-
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_column_pos)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_column_pos) (model, title);
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return -1;
-	}
 }
 
 /**
@@ -1004,7 +940,7 @@ gda_data_model_to_xml (GdaDataModel *model, const gint *cols, gint nb_cols, cons
 static void
 xml_set_boolean (xmlNodePtr node, const gchar *name, gboolean value)
 {
-	xmlSetProp (node, name, value ? "1" : "0");
+	xmlSetProp (node, name, value ? "TRUE" : "FALSE");
 }
 
 static void
@@ -1059,6 +995,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	for (i = 0; i < rnb_cols; i++) {
 		GdaColumn *column;
 		xmlNodePtr field;
+		const gchar *cstr;
 
 		column = gda_data_model_describe_column (model, rcols [i]);
 		if (!column) {
@@ -1068,16 +1005,31 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 
 		field = xmlNewChild (node, NULL, "field", NULL);
 		xmlSetProp (field, "name", gda_column_get_name (column));
-		xmlSetProp (field, "caption", gda_column_get_caption (column));
+		cstr = gda_column_get_title (column);
+		if (cstr && *cstr)
+			xmlSetProp (field, "title", cstr);
+		cstr = gda_column_get_caption (column);
+		if (cstr && *cstr)
+			xmlSetProp (field, "caption", cstr);
+		cstr = gda_column_get_dbms_type (column);
+		if (cstr && *cstr)
+			xmlSetProp (field, "dbms_type", cstr);
 		xmlSetProp (field, "gdatype", gda_type_to_string (gda_column_get_gdatype (column)));
-		xml_set_int (field, "size", gda_column_get_defined_size (column));
-		xml_set_int (field, "scale", gda_column_get_scale (column));
-		xml_set_boolean (field, "pkey", gda_column_get_primary_key (column));
-		xml_set_boolean (field, "unique", gda_column_get_unique_key (column));
-		xml_set_boolean (field, "isnull", gda_column_get_allow_null (column));
-		xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (column));
-		xmlSetProp (field, "references", gda_column_get_references (column));
-		xml_set_int (field, "position", i);
+		if (gda_column_get_defined_size (column) != 0)
+			xml_set_int (field, "size", gda_column_get_defined_size (column));
+		if (gda_column_get_scale (column) != 0)
+			xml_set_int (field, "scale", gda_column_get_scale (column));
+		if (gda_column_get_primary_key (column))
+			xml_set_boolean (field, "pkey", gda_column_get_primary_key (column));
+		if (gda_column_get_unique_key (column))
+			xml_set_boolean (field, "unique", gda_column_get_unique_key (column));
+		if (gda_column_get_allow_null (column))
+			xml_set_boolean (field, "nullok", gda_column_get_allow_null (column));
+		if (gda_column_get_auto_increment (column))
+			xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (column));
+		cstr = gda_column_get_references (column);
+		if (cstr && *cstr)
+			xmlSetProp (field, "references", cstr);
 	}
 	
 	/* add the model data to the XML output */
@@ -1088,7 +1040,6 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		data = xmlNewChild (node, NULL, "data", NULL);
 		for (r = 0; r < rows; r++) {
 			row = xmlNewChild (data, NULL, "row", NULL);
-			xml_set_int (row, "position", r);
 			for (c = 0; c < rnb_cols; c++) {
 				GdaValue *value;
 				gchar *str;
@@ -1099,8 +1050,6 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 				else
 					str = gda_value_stringify (value);
 				field = xmlNewChild (row, NULL, "value", str);
-				xml_set_int (field, "position", c);
-				xmlSetProp (field, "gdatype", gda_type_to_string (gda_value_get_type (value)));
 
 				g_free (str);
 			}
@@ -1121,38 +1070,38 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
 	GPtrArray *values;
 	gint i;
 	gboolean retval = TRUE;
+	gint pos = 0;
 
 	values = g_ptr_array_new ();
 	g_ptr_array_set_size (values, gda_data_model_get_n_columns (model));
 	for (xml_field = xml_row->xmlChildrenNode; xml_field != NULL; xml_field = xml_field->next) {
-		gint pos;
 		GdaValue *value;
+		GdaColumn *column;
+		GdaValueType gdatype;
 
 		if (strcmp (xml_field->name, "value"))
 			continue;
 
-		pos = atoi (xmlGetProp (xml_field, "position"));
-		if (pos < 0 || pos >= gda_data_model_get_n_columns (model)) {
-			g_warning ("add_xml_row(): invalid position on 'field' node");
-			retval = FALSE;
-			break;
-		}
-
-		if (g_ptr_array_index (values, pos) != NULL) {
-			g_warning ("add_xml_row(): two fields with the same position");
-			retval = FALSE;
-			break;
-		}
-
 		/* create the value for this field */
-		value = gda_value_new_from_xml ((const xmlNodePtr) xml_field);
-		if (!value) {
+		column = gda_data_model_describe_column (model, pos);
+		gdatype = gda_column_get_gdatype (column);
+		if ((gdatype == GDA_VALUE_TYPE_UNKNOWN) ||
+		    (gdatype == GDA_VALUE_TYPE_NULL)) {
+			g_warning ("add_xml_row(): cannot retrieve column data type (type is UNKNOWN or NULL)");
+			retval = FALSE;
+			break;
+		}
+
+		value = g_new0 (GdaValue, 1);
+		if (!gda_value_set_from_string (value, xmlNodeGetContent (xml_field), gdatype)) {
+			g_free (value);
 			g_warning ("add_xml_row(): cannot retrieve value from XML node");
 			retval = FALSE;
 			break;
 		}
 
 		g_ptr_array_index (values, pos) = value;
+		pos ++;
 	}
 
 	if (retval) {

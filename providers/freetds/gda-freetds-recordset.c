@@ -1,5 +1,5 @@
 /* GDA FreeTDS provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Holger Thon <holger.thon@gnome-db.org>
@@ -49,8 +49,7 @@ static void gda_freetds_recordset_init       (GdaFreeTDSRecordset *recset,
                                               GdaFreeTDSRecordsetClass *klass);
 static void gda_freetds_recordset_finalize   (GObject *object);
 
-static GdaColumn *gda_freetds_recordset_describe_column (GdaDataModelBase *model,
-                                                                  gint col);
+static void gda_freetds_recordset_describe_column (GdaDataModel *model, gint col);
 static gint gda_freetds_recordset_get_n_rows (GdaDataModelBase *model);
 static gint gda_freetds_recordset_get_n_columns (GdaDataModelBase *model);
 static const GdaRow *gda_freetds_recordset_get_row (GdaDataModelBase *model,
@@ -64,55 +63,6 @@ static const GdaValue *gda_freetds_recordset_get_value_at (GdaDataModelBase *mod
 /* w/o results */
 static TDSCOLINFO *gda_freetds_dup_tdscolinfo (TDSCOLINFO *col);
 static GdaRow *gda_freetds_get_current_row(GdaFreeTDSRecordset *recset);
-
-
-static GdaColumn
-*gda_freetds_recordset_describe_column (GdaDataModelBase *model, gint col)
-{
-	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
-	TDSCOLINFO          *colinfo = NULL;
-	GdaColumn  *attribs = NULL;
-	gchar               name[256];
-
-	g_return_val_if_fail (GDA_IS_FREETDS_RECORDSET (recset), NULL);
-	g_return_val_if_fail (recset->priv != NULL, NULL);
-	g_return_val_if_fail (recset->priv->columns != NULL, NULL);
-
-	if (col >= recset->priv->columns->len) {
-		return NULL;
-	}
-	colinfo = (TDSCOLINFO *) g_ptr_array_index(recset->priv->columns, col);
-
-	if (!colinfo) {
-		return NULL;
-	}
-	
-	attribs = gda_column_new ();
-
-	if (!attribs) {
-		return NULL;
-	}
-
-	memcpy (name, colinfo->column_name,
-	        colinfo->column_namelen);
-	name[colinfo->column_namelen] = '\0';
-
-	gda_column_set_name (attribs, name);
-	gda_column_set_scale (attribs, colinfo->column_scale);
-	gda_column_set_gdatype (attribs,
-	                                  gda_freetds_get_value_type (colinfo));
-	gda_column_set_defined_size (attribs, colinfo->column_size);
-
-	/* FIXME: */
-	gda_column_set_references (attribs, "");
-	gda_column_set_primary_key (attribs, FALSE);
-	gda_column_set_unique_key (attribs, FALSE);
-
-	gda_column_set_allow_null (attribs, 
-	                                     !(colinfo->column_nullable == 0));
-	
-	return attribs;
-}
 
 static gint
 gda_freetds_recordset_get_n_rows (GdaDataModelBase *model)
@@ -132,8 +82,8 @@ gda_freetds_recordset_get_n_columns (GdaDataModelBase *model)
         return (recset->priv->colcnt);
 }
 
-static const GdaRow 
-*gda_freetds_recordset_get_row (GdaDataModelBase *model, gint row)
+static const GdaRow *
+gda_freetds_recordset_get_row (GdaDataModelBase *model, gint row)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
 
@@ -150,8 +100,8 @@ static const GdaRow
 	return (const GdaRow *) g_ptr_array_index (recset->priv->rows, row);
 }
 
-static const GdaValue
-*gda_freetds_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
+static const GdaValue *
+gda_freetds_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
 	const GdaRow *fields;
@@ -175,7 +125,6 @@ gda_freetds_recordset_class_init (GdaFreeTDSRecordsetClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_freetds_recordset_finalize;
-	model_class->describe_column = gda_freetds_recordset_describe_column;
 	model_class->get_n_rows = gda_freetds_recordset_get_n_rows;
 	model_class->get_n_columns = gda_freetds_recordset_get_n_columns;
 	model_class->get_row = gda_freetds_recordset_get_row;
@@ -234,8 +183,8 @@ gda_freetds_recordset_finalize (GObject * object)
 	parent_class->finalize (object);
 }
 
-static GdaRow
-*gda_freetds_get_current_row(GdaFreeTDSRecordset *recset)
+static GdaRow *
+gda_freetds_get_current_row(GdaFreeTDSRecordset *recset)
 {
 	GdaRow *row = NULL;
 	gchar *val = NULL;
@@ -267,8 +216,8 @@ static GdaRow
 	return row;
 }
 
-static TDSCOLINFO
-*gda_freetds_dup_tdscolinfo (TDSCOLINFO *col)
+static TDSCOLINFO *
+gda_freetds_dup_tdscolinfo (TDSCOLINFO *col)
 {
 	TDSCOLINFO *copy = NULL;
 
@@ -318,8 +267,47 @@ gda_freetds_recordset_get_type (void)
 	return type;
 }
 
-GdaDataModel
-*gda_freetds_recordset_new (GdaConnection *cnc, gboolean fetchall)
+static void
+gda_freetds_recordset_describe_column (GdaDataModel *model, gint col)
+{
+	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
+	TDSCOLINFO          *colinfo = NULL;
+	GdaColumn           *attribs;
+	gchar               name[256];
+
+	g_return_if_fail (GDA_IS_FREETDS_RECORDSET (recset));
+	g_return_if_fail (recset->priv != NULL);
+	g_return_if_fail (recset->priv->columns != NULL);
+	g_return_if_fail (col < recset->priv->columns->len);
+
+	colinfo = (TDSCOLINFO *) g_ptr_array_index (recset->priv->columns, col);
+	g_return_if_fail (colinfo);
+	
+	attribs = gda_data_model_describe_column (model, col);
+
+	gda_column_set_title (attribs, colinfo->column_name);
+
+	memcpy (name, colinfo->column_name,
+	        colinfo->column_namelen);
+	name[colinfo->column_namelen] = '\0';
+
+	gda_column_set_name (attribs, name);
+	gda_column_set_scale (attribs, colinfo->column_scale);
+	gda_column_set_gdatype (attribs,
+	                                  gda_freetds_get_value_type (colinfo));
+	gda_column_set_defined_size (attribs, colinfo->column_size);
+
+	/* FIXME: */
+	gda_column_set_references (attribs, "");
+	gda_column_set_primary_key (attribs, FALSE);
+	gda_column_set_unique_key (attribs, FALSE);
+
+	gda_column_set_allow_null (attribs, 
+	                                     !(colinfo->column_nullable == 0));
+}
+
+GdaDataModel *
+gda_freetds_recordset_new (GdaConnection *cnc, gboolean fetchall)
 {
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
 	GdaFreeTDSRecordset *recset = NULL;
@@ -404,13 +392,8 @@ GdaDataModel
 		recset = NULL;
 		return NULL;
 	}
-	for (i = 0; i < recset->priv->columns->len; i++) {
-		col = g_ptr_array_index (recset->priv->columns, i);
-		if (col) {
-			gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-			                                 i, col->column_name);
-		}
-	}
+	for (i = 0; i < recset->priv->columns->len; i++)
+		gda_freetds_recordset_describe_column (GDA_DATA_MODEL (recset), i);
 
 	return GDA_DATA_MODEL (recset);
 }

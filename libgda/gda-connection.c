@@ -1074,13 +1074,13 @@ gda_connection_get_events (GdaConnection *cnc)
  * Returns: %FALSE if the database does not support BLOBs. %TRUE otherwise
  * and the GdaBlob is created and ready to be used.
  */
-gboolean
-gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob)
+GdaBlob *
+gda_connection_create_blob (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (blob != NULL, FALSE);
+	g_return_val_if_fail (cnc->priv, FALSE);
 
-	return gda_server_provider_create_blob (cnc->priv->provider_obj, cnc, blob);
+	return gda_server_provider_create_blob (cnc->priv->provider_obj, cnc);
 }
 
 

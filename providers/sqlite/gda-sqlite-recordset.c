@@ -41,7 +41,6 @@ static void gda_sqlite_recordset_init       (GdaSqliteRecordset *recset,
 static void gda_sqlite_recordset_finalize   (GObject *object);
 
 static gint gda_sqlite_recordset_get_n_rows (GdaDataModelBase *model);
-static GdaColumn *gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col);
 
 static GObjectClass *parent_class = NULL;
 
@@ -71,7 +70,6 @@ gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass)
 
 	object_class->finalize = gda_sqlite_recordset_finalize;
 	model_class->get_n_rows = gda_sqlite_recordset_get_n_rows;
-	model_class->describe_column = gda_sqlite_recordset_describe_column;
 }
 
 static void
@@ -96,45 +94,6 @@ gda_sqlite_recordset_finalize (GObject *object)
 /*
  * Overrides
  */
-static GdaColumn *
-gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col)
-{
-	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
-	GdaSqliteRecordsetPrivate *priv_data;
-	SQLITEresult *sres;
-	GdaColumn *field_attrs;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_RECORDSET (recset), NULL);
-	g_return_val_if_fail (recset->priv != NULL, NULL);
-
-	priv_data = recset->priv;
-	sres = priv_data->sres;
-	
-	if (!sres) {
-		gda_connection_add_event_string (priv_data->cnc,
-						 _("Invalid SQLite handle"));
-		return NULL;
-	}
-
-	if (col >= priv_data->ncolumns) {
-		gda_connection_add_event_string (priv_data->cnc,
-						 _("Column number out of range"));
-		return NULL;
-	}
-
-	field_attrs = gda_column_new ();
-	gda_column_set_name (field_attrs, sqlite3_column_name (sres->stmt, col));
-	gda_column_set_scale (field_attrs, 0);
-	gda_column_set_gdatype (field_attrs, GDA_VALUE_TYPE_STRING);
-	gda_column_set_defined_size (field_attrs, sres->cols_size [col]);
-	gda_column_set_primary_key (field_attrs, FALSE);
-	gda_column_set_unique_key (field_attrs, FALSE);
-	gda_column_set_allow_null (field_attrs, TRUE);
-	gda_column_set_auto_increment (field_attrs, FALSE);
-
-	return field_attrs;
-}
-
 static gint
 gda_sqlite_recordset_get_n_rows (GdaDataModelBase *model)
 {
@@ -353,6 +312,21 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 				 sres->sqlite_types [i]);
 		
 		gda_data_model_dump (GDA_DATA_MODEL (model), stdout);
+	}
+
+	/* filling GdaDataModel columns data */
+	for (i = 0; i < sres->ncols; i++) {
+		GdaColumn *column;
+
+		column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
+		gda_column_set_name (column, sqlite3_column_name (sres->stmt, i));
+		gda_column_set_scale (column, 0);
+		gda_column_set_gdatype (column, sres->types [i]);
+		gda_column_set_defined_size (column, sres->cols_size [i]);
+		gda_column_set_primary_key (column, FALSE);
+		gda_column_set_unique_key (column, FALSE);
+		gda_column_set_allow_null (column, TRUE);
+		gda_column_set_auto_increment (column, FALSE);
 	}
 
 	return GDA_DATA_MODEL (model);

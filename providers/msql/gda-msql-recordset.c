@@ -25,21 +25,21 @@
 #include <string.h>
 #include "gda-msql.h"
 #include "gda-msql-recordset.h"
+#include "gda-data-model-private.h"
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
-/*----[ Forwards ]----------------------------------------------------------*/
 
 static GObjectClass *parent_class;
 
-static void gda_msql_recordset_class_init(GdaMsqlRecordsetClass *cl);
-static void gda_msql_recordset_finalize(GObject *obj);
-static void gda_msql_recordset_init(GdaMsqlRecordset *rs,
-                                    GdaMsqlRecordsetClass *cl);
+static void gda_msql_recordset_class_init (GdaMsqlRecordsetClass *cl);
+static void gda_msql_recordset_finalize (GObject *obj);
+static void gda_msql_recordset_init (GdaMsqlRecordset *rs,
+				     GdaMsqlRecordsetClass *cl);
 
-/*--------------------------------------------------------------------------*/
-
-static GdaRow *fetch_row(GdaMsqlRecordset *rs,gulong rownum) {
+static GdaRow *
+fetch_row (GdaMsqlRecordset *rs,gulong rownum) 
+{
 	GdaRow        *row;
 	gint           field_count,row_count;
 	register gint  i;
@@ -112,7 +112,9 @@ static GdaRow *fetch_row(GdaMsqlRecordset *rs,gulong rownum) {
  * GdaMsql class implementation 
  */
 
-static gint gda_msql_recordset_numrows(GdaDataModel *model) {
+static gint 
+gda_msql_recordset_numrows(GdaDataModel *model) 
+{
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
 	if (!GDA_IS_MSQL_RECORDSET(rs)) return -1;
@@ -120,7 +122,9 @@ static gint gda_msql_recordset_numrows(GdaDataModel *model) {
 	return msqlNumRows(rs->res);
 }
 
-static gint gda_msql_recordset_numcols(GdaDataModel *model) {
+static gint
+gda_msql_recordset_numcols(GdaDataModel *model) 
+{
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
 	if (!GDA_IS_MSQL_RECORDSET(rs)) return -1;
@@ -128,44 +132,9 @@ static gint gda_msql_recordset_numcols(GdaDataModel *model) {
 	return msqlNumFields(rs->res);
 }
 
-
-static GdaColumn 
-*gda_msql_recordset_describe_column(GdaDataModelBase *model,gint col) {
-	gint                field_count;
-	GdaColumn *attrs;
-	m_field            *msql_field;
-	GdaMsqlRecordset   *rs=(GdaMsqlRecordset*)model;
-  
-	if (!GDA_IS_MSQL_RECORDSET(rs)) return NULL;
-	if (!rs->res) {
-		gda_connection_add_event_string(rs->cnc,_("Invalid mSQL handle"));
-		return NULL;
-	}
-	field_count=msqlNumFields(rs->res);
-	if (col>=field_count) return NULL;
-	attrs=gda_column_new();
-	msqlFieldSeek(rs->res,col);
-	msql_field=msqlFetchField(rs->res);
-	if (!msql_field) {
-		gda_column_free(attrs);
-		return NULL;
-	}
-	if (msql_field->name) gda_column_set_name(attrs,msql_field->name);
-	gda_column_set_defined_size(attrs,msql_field->length);
-	gda_column_set_table(attrs,msql_field->table);
-	if (msql_field->type==MONEY_TYPE) {
-		gda_column_set_scale(attrs,2);
-	}
-	gda_column_set_gdatype(attrs,
-					 gda_msql_type_to_gda(msql_field->type));
-	gda_column_set_allow_null(attrs,!IS_NOT_NULL(msql_field->flags));
-	gda_column_set_primary_key(attrs,1!=1);
-	gda_column_set_unique_key(attrs,IS_UNIQUE(msql_field->flags));
-	gda_column_set_auto_increment(attrs,1!=1);
-	return attrs;
-}
-
-static const GdaRow *gda_msql_recordset_get_row(GdaDataModelBase *model,gint row) {
+static const GdaRow *
+gda_msql_recordset_get_row(GdaDataModelBase *model,gint row) 
+{
 	gint              rows, fetched_rows;
 	register gint     i;
 	GdaRow           *fields = NULL;
@@ -188,8 +157,9 @@ static const GdaRow *gda_msql_recordset_get_row(GdaDataModelBase *model,gint row
 	return (const GdaRow*)fields;
 }
 
-static const GdaValue 
-*gda_msql_recordset_get_value_at(GdaDataModelBase *model,gint col,gint row) {
+static const GdaValue *
+gda_msql_recordset_get_value_at(GdaDataModelBase *model,gint col,gint row) 
+{
 	gint              cols;
 	const GdaRow     *fields;
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
@@ -201,7 +171,9 @@ static const GdaValue
 	return (fields) ? gda_row_get_value((GdaRow*)fields,col) : NULL;
 }
 
-static gboolean gda_msql_recordset_is_updatable(GdaDataModelBase *model) {
+static gboolean
+gda_msql_recordset_is_updatable(GdaDataModelBase *model) 
+{
 	GdaCommandType    cmd_type;
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
@@ -210,8 +182,9 @@ static gboolean gda_msql_recordset_is_updatable(GdaDataModelBase *model) {
 	return (cmd_type==GDA_COMMAND_TYPE_TABLE) ? TRUE : FALSE;
 }
 
-static const GdaRow 
-*gda_msql_recordset_append_values(GdaDataModelBase *model,const GList *values) {
+static const GdaRow *
+gda_msql_recordset_append_values(GdaDataModelBase *model,const GList *values) 
+{
 	GString          *sql;
 	GdaRow           *row;
 	gint              rc,cols;
@@ -236,18 +209,19 @@ static const GdaRow
 	for(i=0;i<cols;i++) {
 		GdaColumn *fa;
     
-		fa=gda_data_model_describe_column(model,i);
+		fa= gda_data_model_describe_column(model,i);
 		if (!fa) {
 			gda_connection_add_event_string(rs->cnc,
 							_("Could not retrieve column's information"));
 			g_string_free(sql,TRUE);
 			return NULL;
 		}
-		if (i) sql=g_string_append(sql,",");
-		sql=g_string_append(sql,gda_column_get_name(fa));
+		if (i) 
+			sql = g_string_append(sql,",");
+		sql = g_string_append(sql, gda_column_get_name (fa));
 	}
-	sql=g_string_append(sql,") VALUES (");
-	for (lst=(GList*)values,i=0;i<cols;i++,lst=lst->next) {
+	sql = g_string_append(sql,") VALUES (");
+	for (lst = (GList*)values , i=0 ; i<cols ; i++, lst = lst->next) {
 		char           *val_str;
 		const GdaValue *val=(const GdaValue*)lst->data;
    
@@ -275,60 +249,68 @@ static const GdaRow
 }
 
 static gboolean 
-gda_msql_recordset_remove_row(GdaDataModelBase *model,const GdaRow *row) {
+gda_msql_recordset_remove_row (GdaDataModelBase *model,const GdaRow *row) 
+{
 	return FALSE;
 }
 
 static gboolean
-gda_msql_recordset_update_row(GdaDataModelBase *model,const GdaRow *row) {
+gda_msql_recordset_update_row (GdaDataModelBase *model,const GdaRow *row) 
+{
 	return FALSE;
 }
 
-static void gda_msql_recordset_class_init(GdaMsqlRecordsetClass *cl) {
+static void 
+gda_msql_recordset_class_init (GdaMsqlRecordsetClass *cl) 
+{
 	GObjectClass *obj_class=G_OBJECT_CLASS(cl);
 	GdaDataModelBaseClass *mdl_class=GDA_DATA_MODEL_BASE_CLASS(cl);
 
-	parent_class=g_type_class_peek_parent(cl);
-	obj_class->finalize=gda_msql_recordset_finalize;
-	mdl_class->get_n_rows=gda_msql_recordset_numrows;
-	mdl_class->get_n_columns=gda_msql_recordset_numcols;
-	mdl_class->describe_column=gda_msql_recordset_describe_column;
-	mdl_class->get_row=gda_msql_recordset_get_row;
-	mdl_class->get_value_at=gda_msql_recordset_get_value_at;
-	mdl_class->is_updatable=gda_msql_recordset_is_updatable;
-	mdl_class->append_values=gda_msql_recordset_append_values;
-	mdl_class->remove_row=gda_msql_recordset_remove_row;
-	mdl_class->update_row=gda_msql_recordset_update_row;
+	parent_class = g_type_class_peek_parent(cl);
+	obj_class->finalize = gda_msql_recordset_finalize;
+	mdl_class->get_n_rows = gda_msql_recordset_numrows;
+	mdl_class->get_n_columns = gda_msql_recordset_numcols;
+	mdl_class->get_row = gda_msql_recordset_get_row;
+	mdl_class->get_value_at = gda_msql_recordset_get_value_at;
+	mdl_class->is_updatable = gda_msql_recordset_is_updatable;
+	mdl_class->append_values = gda_msql_recordset_append_values;
+	mdl_class->remove_row = gda_msql_recordset_remove_row;
+	mdl_class->update_row = gda_msql_recordset_update_row;
 }
 
 static void 
-gda_msql_recordset_init(GdaMsqlRecordset *rs,GdaMsqlRecordsetClass *cl) {
+gda_msql_recordset_init (GdaMsqlRecordset *rs,GdaMsqlRecordsetClass *cl) 
+{
 	if (GDA_IS_MSQL_RECORDSET(rs)) {
-		rs->cnc=NULL;
-		rs->res=NULL;
-		rs->rows=g_ptr_array_new();
+		rs->cnc = NULL;
+		rs->res = NULL;
+		rs->rows = g_ptr_array_new();
 	}
 }
 
-static void gda_msql_recordset_finalize(GObject *object) {
-	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)object;
+static void 
+gda_msql_recordset_finalize(GObject *object) 
+{
+	GdaMsqlRecordset *rs = (GdaMsqlRecordset*)object;
   
 	if (GDA_IS_MSQL_RECORDSET(rs)) {
 		msqlFreeResult(rs->res);
-		rs->res=NULL;
+		rs->res = NULL;
 		for(;rs->rows->len;) {
-			GdaRow *row=(GdaRow*)g_ptr_array_index(rs->rows,0);
+			GdaRow *row = (GdaRow*)g_ptr_array_index(rs->rows,0);
 			if (row) gda_row_free(row);
 			g_ptr_array_remove_index(rs->rows,0);
 		}
 		g_ptr_array_free(rs->rows,TRUE);
-		rs->rows=NULL;
+		rs->rows = NULL;
 		parent_class->finalize(object);
 	}
 }
 
-GType gda_msql_recordset_get_type(void) {
-	static GType type=0;
+GType 
+gda_msql_recordset_get_type(void) 
+{
+	static GType type = 0;
 
 	if (!type) {
 		static const GTypeInfo info = {
@@ -339,27 +321,66 @@ GType gda_msql_recordset_get_type(void) {
 			NULL,NULL,sizeof(GdaMsqlRecordset),0,
 			(GInstanceInitFunc)gda_msql_recordset_init
 		};
-		type=g_type_register_static(PARENT_TYPE,"GdaMsqlRecordset",&info,0);
+		type = g_type_register_static(PARENT_TYPE,"GdaMsqlRecordset",&info,0);
 	}
 	return type;
 }
 
-GdaMsqlRecordset 
-*gda_msql_recordset_new(GdaConnection *cnc,m_result *res,int sock,int n_rows) {
+static void
+gda_msql_recordset_describe_column (GdaDataModel *model, gint col) 
+{
+	gint                field_count;
+	GdaColumn *attrs;
+	m_field            *msql_field;
+	GdaMsqlRecordset   *rs=(GdaMsqlRecordset*)model;
+  
+	g_return_if_fail (GDA_IS_MSQL_RECORDSET(rs));
+
+	if (!rs->res) {
+		gda_connection_add_event_string(rs->cnc,_("Invalid mSQL handle"));
+		return;
+	}
+
+	field_count = msqlNumFields (rs->res);
+	if (col> = field_count) return NULL;
+	attrs = gda_data_model_describe_column (model, col);
+
+	msqlFieldSeek (rs->res, col);
+	msql_field = msqlFetchField (rs->res);
+	g_return_if_fail (msql_field);
+
+	if (msql_field->name) {
+		gda_column_set_title (attrs, msql_field->name);
+		gda_column_set_name (attrs, msql_field->name);
+	}
+	gda_column_set_defined_size (attrs, msql_field->length);
+	gda_column_set_table(attrs, msql_field->table);
+	if (msql_field->type == MONEY_TYPE) 
+		gda_column_set_scale (attrs, 2);
+	gda_column_set_gdatype (attrs, gda_msql_type_to_gda (msql_field->type));
+	gda_column_set_allow_null (attrs, !IS_NOT_NULL (msql_field->flags));
+	gda_column_set_primary_key (attrs, 1!=1);
+	gda_column_set_unique_key (attrs, IS_UNIQUE (msql_field->flags));
+	gda_column_set_auto_increment (attrs, 1!=1);
+	return attrs;
+}
+
+GdaMsqlRecordset *
+gda_msql_recordset_new (GdaConnection *cnc, m_result *res, int sock, int n_rows) 
+{
 	GdaMsqlRecordset *rs;
 	m_fdata          *fields;
 	register gint     i;
 
 	if (!GDA_IS_CONNECTION(cnc)) return NULL;
-	rs=g_object_new(GDA_TYPE_MSQL_RECORDSET,NULL);
-	rs->cnc=cnc;
-	rs->res=res;
-	rs->sock=sock;
-	rs->n_rows=n_rows;
-	if (res!=NULL) {
-		for (fields=res->fieldData,i=0;fields;fields=fields->next,i++) {
-			gda_data_model_set_column_title(GDA_DATA_MODEL(rs),i,fields->field.name);
-		}
-	}
+	rs = g_object_new(GDA_TYPE_MSQL_RECORDSET,NULL);
+	rs->cnc = cnc;
+	rs->res = res;
+	rs->sock = sock;
+	rs->n_rows = n_rows;
+	if (res != NULL) 
+		for (fields = res->fieldData, i = 0; fields; fields = fields->next, i++)
+			gda_msql_recordset_describe_column (GDA_DATA_MODEL (rs), i);
+
 	return rs;
 }

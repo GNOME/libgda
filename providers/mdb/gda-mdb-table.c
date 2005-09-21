@@ -1,8 +1,9 @@
 /* GDA MDB provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,8 +22,9 @@
  */
 
 #include "gda-mdb-table.h"
+#include <libgda/gda-data-model-private.h>
 
-GdaTable *
+GdaDataModel *
 gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name)
 {
 	gint i;
@@ -30,7 +32,7 @@ gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name)
 	MdbTableDef *mdb_table;
 	MdbColumn *mdb_col;
 	GdaColumn *fa;
-	GdaTable *table = NULL;
+	GdaDataModel *model = NULL;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
@@ -54,19 +56,17 @@ gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name)
 	mdb_rewind_table (mdb_table);
 
 	/* create the table and its fields */
-	table = gda_table_new (name);
+	model = gda_data_model_array_new (mdb_table->num_cols);
+	gda_data_model_set_command_text (model, name);
+
 	for (i = 0; i < mdb_table->num_cols; i++) {
 		mdb_col = g_ptr_array_index (mdb_table->columns, i);
 
-		fa = gda_column_new ();
+		fa = gda_data_model_describe_column (model, i);
 		gda_column_set_name (fa, mdb_col->name);
 		gda_column_set_gdatype (fa, gda_mdb_type_to_gda (mdb_col->col_type));
 		gda_column_set_defined_size (fa, mdb_col->col_size);
-
-		gda_table_add_field (table, (const GdaColumn *) fa);
-
-		gda_column_free (fa);
 	}
 
-	return table;
+	return model;
 }

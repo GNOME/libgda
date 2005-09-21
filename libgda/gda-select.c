@@ -34,7 +34,6 @@
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
 
 struct _GdaSelectPrivate {
-	GList *field_descriptions;
 	GHashTable *source_models;
 	gchar *sql;
 	gboolean changed;
@@ -62,22 +61,6 @@ data_model_changed_cb (GdaDataModel *model, gpointer user_data)
 /*
  * GdaSelect class implementation
  */
-
-static GdaColumn *
-gda_select_describe_column (GdaDataModelBase *model, gint col)
-{
-	GList *l;
-	GdaSelect *sel = (GdaSelect *) model;
-
-	g_return_val_if_fail (GDA_IS_SELECT (sel), NULL);
-	g_return_val_if_fail (sel->priv->field_descriptions != NULL, NULL);
-
-	l = g_list_nth (sel->priv->field_descriptions, col);
-	if (!l)
-		return NULL;
-
-	return gda_column_copy ((GdaColumn *) l->data);
-}
 
 static const GdaRow *
 gda_select_get_row (GdaDataModelBase *model, gint row)
@@ -122,7 +105,6 @@ gda_select_class_init (GdaSelectClass *klass)
 
 	object_class->finalize = gda_select_finalize;
 	/* we use the get_n_rows and get_n_columns of the base class */
-	model_class->describe_column = gda_select_describe_column;
 	model_class->get_row = gda_select_get_row;
 	/* we use the get_value_at of the base class */
 	model_class->is_updatable = gda_select_is_updatable;
@@ -136,7 +118,6 @@ gda_select_init (GdaSelect *sel, GdaSelectClass *klass)
 
 	/* allocate internal structure */
 	sel->priv = g_new0 (GdaSelectPrivate, 1);
-	sel->priv->field_descriptions = NULL;
 	sel->priv->source_models = g_hash_table_new (g_str_hash, g_str_equal);
 	sel->priv->sql = NULL;
 	sel->priv->changed = FALSE;
@@ -160,12 +141,6 @@ gda_select_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_SELECT (sel));
 
 	/* free memory */
-	if (sel->priv->field_descriptions) {
-		g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_column_free, NULL);
-		g_list_free (sel->priv->field_descriptions);
-		sel->priv->field_descriptions = NULL;
-	}
-
 	g_hash_table_foreach (sel->priv->source_models, (GHFunc) free_source_model, sel);
 	g_hash_table_destroy (sel->priv->source_models);
 	sel->priv->source_models = NULL;
@@ -323,29 +298,19 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 		GList *value_list = NULL;
 
 		for (c = 0; c < cols; c++) {
-			GdaColumn *column;
-
-			column = gda_data_model_describe_column (table, c);
-
 			if (all_fields) {
-				value_list = g_list_append (
-					value_list,
-					gda_value_copy (gda_data_model_get_value_at (table, c, r)));
-				if (r == 0) {
-					sel->priv->field_descriptions = g_list_append (
-						sel->priv->field_descriptions, column);
-				}
-			} else {
+				value_list = g_list_append (value_list,
+							    gda_value_copy (gda_data_model_get_value_at (table, c, r)));
+			} 
+			else {
+				GdaColumn *column;
+				
+				column = gda_data_model_describe_column (table, c);
 				for (l = sql_fields; l != NULL; l = l->next) {
 					if (!strcmp ((const char *) l->data, gda_column_get_name (column))) {
 						value_list = g_list_append (
 							value_list,
-							gda_value_copy (
-								gda_data_model_get_value_at (table, c, r)));
-						if (r == 0) {
-							sel->priv->field_descriptions = g_list_append (
-								sel->priv->field_descriptions, column);
-						}
+							gda_value_copy (gda_data_model_get_value_at (table, c, r)));
 					}
 				}
 			}
@@ -386,8 +351,6 @@ gda_select_run (GdaSelect *sel)
 		return sel->priv->run_result;
 
 	gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (sel));
-	g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_column_free, NULL);
-	g_list_free (sel->priv->field_descriptions);
 
 	/* parse the SQL command */
 	sqlst = sql_parse (sel->priv->sql);

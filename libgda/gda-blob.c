@@ -1,9 +1,10 @@
 /* GDA Common Library
- * Copyright (C) 1998-2003 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * Authors:
  *	 Juan-Mariano de Goyeneche <jmseyas@dit.upm.es>
  *	 Gonzalo Paniagua Javier (gonzalo@gnome-db.org)
+ *       Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -27,38 +28,87 @@
 
 #include "gda-blob.h"
 
-G_DEFINE_TYPE(GdaBlob, gda_blob, G_TYPE_OBJECT);
+#define PARENT_TYPE G_TYPE_OBJECT
+#define CLASS(blob) (GDA_BLOB_CLASS (G_OBJECT_GET_CLASS (blob)))
+static void gda_blob_class_init (GdaBlobClass *klass);
+static void gda_blob_init       (GdaBlob *provider, GdaBlobClass *klass);
+static void gda_blob_finalize   (GObject *object);
 
-static void     
-gda_blob_init       (GdaBlob      *self) {
-	self->priv_data = NULL;
-	self->user_data = NULL;
+static GObjectClass *parent_class = NULL;
+
+GType
+gda_blob_get_type (void)
+{
+        static GType type = 0;
+
+        if (!type) {
+                static const GTypeInfo info = {
+                        sizeof (GdaBlobClass),
+                        (GBaseInitFunc) NULL,
+                        (GBaseFinalizeFunc) NULL,
+                        (GClassInitFunc) gda_blob_class_init,
+                        NULL,
+                        NULL,
+                        sizeof (GdaBlob),
+                        0,
+                        (GInstanceInitFunc) gda_blob_init
+                };
+                type = g_type_register_static (PARENT_TYPE, "GdaBlob", &info, G_TYPE_FLAG_ABSTRACT);
+        }
+        return type;
 }
 
-static void     
-gda_blob_class_init (GdaBlobClass *klass) {
-	
+static void
+gda_blob_class_init (GdaBlobClass *klass)
+{
+        GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+        parent_class = g_type_class_peek_parent (klass);
+
+        object_class->finalize = gda_blob_finalize;
+        klass->open = NULL;
+        klass->read = NULL;
+        klass->write = NULL;
+        klass->lseek = NULL;
+        klass->close = NULL;
+        klass->remove = NULL;
+        klass->stringify = NULL;
 }
+
+static void
+gda_blob_init (GdaBlob *provider, GdaBlobClass *klass)
+{
+
+}
+
+static void
+gda_blob_finalize (GObject *object)
+{
+	/* chain to parent class */
+        parent_class->finalize (object);
+}
+
 
 /**
  * gda_blob_open
- * @blob: a #GdaBlob structure obtained from a #GdaValue or allocated by the
- * user when he/she wants to create a new #GdaBlob.
+ * @blob: an existing #GdaBlob
  * @mode: see #GdaBlobMode.
  *
  * Opens an existing BLOB. The BLOB must be initialized by
  * #gda_connection_create_blob or obtained from a #GdaValue.
  * 
  * Returns: 0 if everything's ok. In case of error, -1 is returned and the
- * provider should have added an error to the connection.
+ * provider should have added an error (a #GdaConnectionEvent) to the connection.
  */
 gint 
 gda_blob_open (GdaBlob *blob, GdaBlobMode mode)
 {
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->open != NULL, -1);
+	g_return_val_if_fail (blob && GDA_IS_BLOB (blob), -1);
 
-	return blob->open (blob, mode);
+	if (CLASS (blob)->open != NULL)
+		return CLASS (blob)->open (blob, mode);
+	else
+		return -1;
 }
 
 /**
@@ -76,10 +126,12 @@ gda_blob_open (GdaBlob *blob, GdaBlobMode mode)
 gint
 gda_blob_read (GdaBlob *blob, gpointer buf, gint size, gint *bytes_read)
 {
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->read != NULL, -1);
+	g_return_val_if_fail (blob && GDA_IS_BLOB (blob), -1);
 
-	return blob->read (blob, buf, size, bytes_read);
+	if (CLASS (blob)->read != NULL)
+		return CLASS (blob)->read (blob, buf, size, bytes_read);
+	else
+		return -1;
 }
 
 /**
@@ -97,10 +149,12 @@ gda_blob_read (GdaBlob *blob, gpointer buf, gint size, gint *bytes_read)
 gint
 gda_blob_write (GdaBlob *blob, gpointer buf, gint size, gint *bytes_written)
 {
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->write != NULL, -1);
+	g_return_val_if_fail (blob && GDA_IS_BLOB (blob), -1);
 
-	return blob->write (blob, buf, size, bytes_written);
+	if (CLASS (blob)->write != NULL)
+		return CLASS (blob)->write (blob, buf, size, bytes_written);
+	else
+		return -1;
 }
 
 /**
@@ -117,10 +171,12 @@ gda_blob_write (GdaBlob *blob, gpointer buf, gint size, gint *bytes_written)
 gint 
 gda_blob_lseek (GdaBlob *blob, gint offset, gint whence)
 {
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->lseek != NULL, -1);
+	g_return_val_if_fail (blob && GDA_IS_BLOB (blob), -1);
 
-	return blob->lseek (blob, offset, whence);
+	if (CLASS (blob)->lseek != NULL)
+		return CLASS (blob)->lseek (blob, offset, whence);
+	else
+		return -1;
 }
 
 /**
@@ -135,10 +191,12 @@ gda_blob_lseek (GdaBlob *blob, gint offset, gint whence)
 gint 
 gda_blob_close (GdaBlob *blob)
 {
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->close != NULL, -1);
+	g_return_val_if_fail (blob && GDA_IS_BLOB (blob), -1);
 
-	return blob->close (blob);
+	if (CLASS (blob)->close != NULL)
+		return CLASS (blob)->close (blob);
+	else
+		return -1;
 }
 
 /**
@@ -154,27 +212,12 @@ gda_blob_close (GdaBlob *blob)
 gint 
 gda_blob_remove (GdaBlob *blob)
 {
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->remove != NULL, -1);
+	g_return_val_if_fail (blob && GDA_IS_BLOB (blob), -1);
 
-	return blob->remove (blob);
-}
-
-/**
- * gda_blob_free_data
- * @blob: a valid #GdaBlob.
- *
- * Let the provider free any internal data stored in @blob. The user
- * is still responsible for deallocating @blob itself.
- *
- */
-void 
-gda_blob_free_data (GdaBlob *blob)
-{
-	g_return_if_fail (blob != NULL);
-	g_return_if_fail (blob->free_data != NULL);
-
-	blob->free_data (blob);
+	if (CLASS (blob)->remove != NULL)
+		return CLASS (blob)->remove (blob);
+	else
+		return -1;
 }
 
 /**
@@ -185,9 +228,12 @@ gda_blob_free_data (GdaBlob *blob)
  *
  */
 gchar*
-gda_blob_stringify(GdaBlob *blob) {
-	g_return_val_if_fail(GDA_VALUE_IS_BLOB(blob), NULL);
-	g_return_val_if_fail (blob->free_data != NULL, NULL);
-	
-	return blob->stringify (blob);
+gda_blob_stringify (GdaBlob *blob) 
+{
+	g_return_val_if_fail(blob && GDA_IS_BLOB (blob), NULL);
+
+	if (CLASS (blob)->stringify != NULL)
+		return CLASS (blob)->stringify (blob);
+	else
+		return NULL;
 }

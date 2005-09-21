@@ -125,7 +125,7 @@ gboolean             gda_connection_begin_transaction (GdaConnection *cnc, GdaTr
 gboolean             gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction);
 gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction);
 
-gboolean             gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob);
+GdaBlob             *gda_connection_create_blob (GdaConnection *cnc);
 
 gchar               *gda_connection_value_to_sql_string (GdaConnection *cnc, GdaValue *from);
 

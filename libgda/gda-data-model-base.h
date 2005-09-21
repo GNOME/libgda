@@ -52,7 +52,6 @@ struct _GdaDataModelBaseClass {
 	/* virtual methods */
 	gint                (* get_n_rows)      (GdaDataModelBase *model);
 	gint                (* get_n_columns)   (GdaDataModelBase *model);
-	GdaColumn *(* describe_column) (GdaDataModelBase *model, gint col);
 	const GdaRow       *(* get_row)         (GdaDataModelBase *model, gint row);
 	const GdaValue     *(* get_value_at)    (GdaDataModelBase *model, gint col, gint row);
 	

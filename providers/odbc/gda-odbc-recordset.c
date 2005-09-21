@@ -1,5 +1,5 @@
 /* GDA Postgres provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Nick Gorham <nick@lurcher.org>
@@ -47,7 +47,7 @@ static void gda_odbc_recordset_init       (GdaOdbcRecordset *recset,
 static void gda_odbc_recordset_finalize   (GObject *object);
 
 static const GdaValue *gda_odbc_recordset_get_value_at    (GdaDataModelBase *model, gint col, gint row);
-static GdaColumn *gda_odbc_recordset_describe    (GdaDataModelBase *model, gint col);
+static void gda_odbc_recordset_describe    (GdaDataModel *model, gint col);
 static gint gda_odbc_recordset_get_n_rows 		  (GdaDataModelBase *model);
 static const GdaRow *gda_odbc_recordset_get_row 	  (GdaDataModelBase *model, gint rownum);
 
@@ -79,7 +79,6 @@ gda_odbc_recordset_class_init (GdaOdbcRecordsetClass *klass)
 
 	object_class->finalize = gda_odbc_recordset_finalize;
 	model_class->get_n_rows = gda_odbc_recordset_get_n_rows;
-	model_class->describe_column = gda_odbc_recordset_describe;
 	model_class->get_value_at = gda_odbc_recordset_get_value_at;
 	model_class->get_row = gda_odbc_recordset_get_row;
 }
@@ -132,14 +131,6 @@ gda_odbc_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	return NULL;
 }
 
-static GdaColumn *
-gda_odbc_recordset_describe (GdaDataModelBase *model, gint col)
-{
-	/* FIXME: Write this */
-
-	return NULL;
-}
-
 static gint
 gda_odbc_recordset_get_n_rows (GdaDataModelBase *model)
 {
@@ -174,6 +165,14 @@ gda_odbc_recordset_get_type (void)
 	return type;
 }
 
+static void
+gda_odbc_recordset_describe (GdaDataModel *model, gint col)
+{
+	/* FIXME: Write this */
+
+	return NULL;
+}
+
 GdaDataModel *
 gda_odbc_recordset_new (GdaConnection *cnc, SQLHANDLE stmt )
 {
@@ -188,6 +187,8 @@ gda_odbc_recordset_new (GdaConnection *cnc, SQLHANDLE stmt )
 	model = g_object_new (GDA_TYPE_ODBC_RECORDSET, NULL);
 	model->priv->stmt = stmt;
 	model->priv->cnc = cnc;
+
+	/* FIXME: call gda_odbc_recordset_describe() for each column */
 
 	return GDA_DATA_MODEL (model);
 }

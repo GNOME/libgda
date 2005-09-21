@@ -29,16 +29,6 @@ Management of BLOBs (Binary Large OBjects)
 </para>
 
 @object: 
-@open: 
-@read: 
-@write: 
-@lseek: 
-@close: 
-@remove: 
-@stringify: 
-@free_data: 
-@priv_data: 
-@user_data: 
 
 <!-- ##### FUNCTION gda_blob_open ##### -->
 <para>
@@ -103,11 +93,12 @@ Management of BLOBs (Binary Large OBjects)
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_blob_free_data ##### -->
+<!-- ##### FUNCTION gda_blob_stringify ##### -->
 <para>
 
 </para>
 
 @blob: 
+@Returns: 
 
 

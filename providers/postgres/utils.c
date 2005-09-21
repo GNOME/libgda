@@ -26,8 +26,8 @@
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libpq/libpq-fs.h>
 #include "gda-postgres.h"
+#include "gda-postgres-blob.h"
 
 GdaConnectionEventCode
 gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)
@@ -189,263 +189,9 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 	}
 }
 
-typedef struct _PostgresBlobPrivateData PostgresBlobPrivateData;
-
-struct _PostgresBlobPrivateData {
-	gint blobid;
-	GdaBlobMode mode;
-	gint fd;
-	GdaConnection *cnc;
-};
-
-static PGconn *
-get_pconn (GdaConnection *cnc)
-{
-	GdaPostgresConnectionData *priv_data;
-
-	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
-	if (!priv_data) {
-		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
-		return NULL;
-	}
-
-	return priv_data->pconn;
-}
-
-static gint 
-gda_postgres_blob_open (GdaBlob *blob, GdaBlobMode mode)
-{
-	PostgresBlobPrivateData *priv;
-	PGconn *pconn;
-	gint pg_mode;
-
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->priv_data != NULL, -1);
-
-	priv = blob->priv_data;
-	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
-
-	priv->mode = mode;
-	pg_mode = 0;
-	if ((mode & GDA_BLOB_MODE_READ) == GDA_BLOB_MODE_READ)
-		pg_mode |= INV_READ;
-
-	if ((mode & GDA_BLOB_MODE_WRITE) == GDA_BLOB_MODE_WRITE)
-		pg_mode |= INV_WRITE;
-
-	pconn = get_pconn (priv->cnc);
-	priv->fd = lo_open (pconn, priv->blobid, pg_mode);
-	if (priv->fd < 0) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (priv->cnc, error);
-		return -1;
-	}
-
-	return 0;
-}
-
-static gint 
-gda_postgres_blob_read (GdaBlob *blob, gpointer buf, gint size, 
-			gint *bytes_read)
-{
-	PostgresBlobPrivateData *priv;
-	PGconn *pconn;
-
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->priv_data != NULL, -1);
-	g_return_val_if_fail (bytes_read != NULL, -1);
-
-	priv = blob->priv_data;
-	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
-
-	pconn = get_pconn (priv->cnc);
-	*bytes_read = lo_read (pconn, priv->fd, (gchar *) buf, size);
-	if (*bytes_read == -1) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (priv->cnc, error);
-		return -1;
-	}
-
-	return 0;
-}
-
-static gint 
-gda_postgres_blob_write (GdaBlob *blob, gpointer buf, gint size,
-			gint *bytes_written)
-{
-	PostgresBlobPrivateData *priv;
-	PGconn *pconn;
-
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->priv_data != NULL, -1);
-	g_return_val_if_fail (bytes_written != NULL, -1);
-
-	priv = blob->priv_data;
-	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
-	pconn = get_pconn (priv->cnc);
-	*bytes_written = lo_write (pconn, priv->fd, (gchar *) buf, size);
-	if (*bytes_written == -1) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (priv->cnc, error);
-		return -1;
-	}
-
-	return 0;
-}
-
-static gint 
-gda_postgres_blob_lseek (GdaBlob *blob, gint offset, gint whence)
-{
-	PostgresBlobPrivateData *priv;
-	PGconn *pconn;
-	gint result;
-
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->priv_data != NULL, -1);
-
-	priv = blob->priv_data;
-	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
-
-	g_return_val_if_fail (priv->fd >= 0, -1);
-
-	pconn = get_pconn (priv->cnc);
-	result = lo_lseek (pconn, priv->fd, offset, whence);
-	if (result == -1) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (priv->cnc, error);
-	}
-
-	return result;
-}
-
-static gint 
-gda_postgres_blob_close (GdaBlob *blob)
-{
-	PostgresBlobPrivateData *priv;
-	PGconn *pconn;
-	gint result;
-
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->priv_data != NULL, -1);
-
-	priv = blob->priv_data;
-	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
-
-	g_return_val_if_fail (priv->fd >= 0, -1);
-
-	pconn = get_pconn (priv->cnc);
-	result = lo_close (pconn, priv->fd);
-	if (result < 0) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (priv->cnc, error);
-	}
-
-	return (result >= 0) ? 0 : -1;
-}
-
-static gint 
-gda_postgres_blob_remove (GdaBlob *blob)
-{
-	PostgresBlobPrivateData *priv;
-	PGconn *pconn;
-	gint result;
-
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->priv_data != NULL, -1);
-
-	priv = blob->priv_data;
-	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
-
-	pconn = get_pconn (priv->cnc);
-	result = lo_unlink (pconn, priv->blobid);
-	if (result < 0) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (priv->cnc, error);
-	}
-
-	return (result >= 0) ? 0 : -1;
-}
-
-static void
-gda_postgres_blob_free_data (GdaBlob *blob)
-{
-	PostgresBlobPrivateData *priv;
-
-	g_return_if_fail (blob != NULL);
-	priv = blob->priv_data;
-	blob->priv_data = NULL;
-
-	g_free (priv);
-}
-
-static void
-gda_postgres_blob_new (GdaBlob *blob)
-{
-	PostgresBlobPrivateData *priv = g_new0 (PostgresBlobPrivateData, 1);
-
-	priv->blobid = -1;
-	priv->mode = -1;
-	priv->fd = -1;
-
-	blob->priv_data = priv;
-	blob->open = gda_postgres_blob_open;
-	blob->read = gda_postgres_blob_read;
-	blob->write = gda_postgres_blob_write;
-	blob->lseek = gda_postgres_blob_lseek;
-	blob->close = gda_postgres_blob_close;
-	blob->remove = gda_postgres_blob_remove;
-	blob->free_data = gda_postgres_blob_free_data;
-}
-
-gboolean
-gda_postgres_blob_create (GdaBlob *blob, GdaConnection *cnc)
-{
-	PostgresBlobPrivateData *priv;
-	PGconn *pconn;
-	gint oid;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	gda_postgres_blob_new (blob);
-	priv = (PostgresBlobPrivateData *) blob->priv_data;
-
-	pconn = get_pconn (cnc);
-	oid = lo_creat (pconn, INV_READ | INV_WRITE);
-	if (oid == 0) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (cnc, error);
-		return FALSE;
-	}
-
-	priv->blobid = oid;
-	priv->cnc = cnc;
-	return TRUE;
-}
-
-static void
-gda_postgres_blob_from_id (GdaBlob *blob, gint value)
-{
-	PostgresBlobPrivateData *priv;
-
-	gda_postgres_blob_new (blob);
-
-	priv = (PostgresBlobPrivateData *) blob->priv_data;
-	priv->blobid = value;
-}
-
 void
-gda_postgres_blob_set_connection (GdaBlob *blob, GdaConnection *cnc)
-{
-	PostgresBlobPrivateData *priv;
-
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-
-	priv = (PostgresBlobPrivateData *) blob->priv_data;
-	priv->cnc = cnc;
-}
-
-void
-gda_postgres_set_value (GdaValue *value,
+gda_postgres_set_value (GdaConnection *cnc,
+			GdaValue *value,
 			GdaValueType type,
 			const gchar *thevalue,
 			gboolean isNull,
@@ -457,7 +203,7 @@ gda_postgres_set_value (GdaValue *value,
 	GdaTimestamp timestamp;
 	GdaGeometricPoint point;
 	GdaNumeric numeric;
-	GdaBlob blob;
+	GdaBlob *blob;
 	GdaBinary bin;
 	guchar *unescaped;
 
@@ -542,8 +288,9 @@ gda_postgres_set_value (GdaValue *value,
 		}
 		break;
 	case GDA_VALUE_TYPE_BLOB :
-		gda_postgres_blob_from_id (&blob, atoi (thevalue));
-		gda_value_set_blob (value, &blob);
+		blob = gda_postgres_blob_new (cnc);
+		gda_postgres_blob_set_id (GDA_POSTRES_BLOB (blob), atoi (thevalue));
+		gda_value_set_blob (value, blob);
  		break;
 	default :
 		gda_value_set_string (value, thevalue);

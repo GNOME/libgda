@@ -32,6 +32,7 @@
 #include "gda-sybase.h"
 #include "gda-sybase-recordset.h"
 #include "gda-sybase-types.h"
+#include <libgda/gda-data-model-private.h>
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 

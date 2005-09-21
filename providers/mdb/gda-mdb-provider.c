@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,7 +25,7 @@
 #include <glib/gbacktrace.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-list.h>
-#include <libgda/gda-table.h>
+#include <libgda/gda-data-model-private.h>
 #include <libgda/gda-intl.h>
 #include "gda-mdb.h"
 
@@ -715,7 +716,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	gchar *bound_data[256];
 	gint c, r;
 	GdaMdbConnection *mdb_cnc;
-	GdaTable *model;
+	GdaDataModel *model;
 
 	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdbprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -745,7 +746,8 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 		return NULL;
 	}
 
-	model = gda_table_new (sql);
+	model = gda_data_model_array_new (mdb_SQL->num_columns);
+	gda_data_model_set_command_text (model, sql);
 
 	/* allocate bound data */
 	for (c = 0; c < mdb_SQL->num_columns; c++) {
@@ -758,14 +760,10 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 
 		/* set description for the field */
 		sqlcol = g_ptr_array_index (mdb_SQL->columns, c);
-		fa = gda_column_new ();
+		fa = gda_data_model_describe_column (model, c);
 		gda_column_set_name (fa, sqlcol->name);
 		gda_column_set_defined_size (fa, sqlcol->disp_size);
 		gda_column_set_gdatype (fa, gda_mdb_type_to_gda (sqlcol->bind_type));
-
-		/* and add it to the table */
-		gda_table_add_field (model, (const GdaColumn *) fa);
-		gda_column_free (fa);
 	}
 
 	/* read data */
@@ -787,6 +785,5 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	for (c = 0; c < mdb_SQL->num_columns; c++)
 		free (bound_data[c]);
 	mdb_sql_reset (mdb_SQL);
-
-	return GDA_DATA_MODEL (model);
+	return model;
 }

@@ -28,6 +28,7 @@
 #include <string.h>
 #include "gda-mysql.h"
 #include "gda-mysql-recordset.h"
+#include <libgda/gda-data-model-private.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
 
@@ -73,7 +74,6 @@ gda_mysql_recordset_class_init (GdaMysqlRecordsetClass *klass)
 
 	object_class->finalize = gda_mysql_recordset_finalize;
 	model_class->get_n_rows = gda_mysql_recordset_get_n_rows;
-	model_class->describe_column = gda_mysql_recordset_describe_column;
 	model_class->get_row = gda_mysql_recordset_get_row;
 	model_class->get_value_at = gda_mysql_recordset_get_value_at;
 	model_class->is_updatable = gda_mysql_recordset_is_updatable;
@@ -265,56 +265,6 @@ gda_mysql_recordset_get_n_rows (GdaDataModelBase *model)
 		return recset->priv->mysql_res_rows;
 	else
 		return GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_n_rows (model);
-}
-
-static GdaColumn *
-gda_mysql_recordset_describe_column (GdaDataModelBase *model, gint col)
-{
-	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
-	GdaMysqlRecordsetPrivate *priv_data;
-	gint field_count;
-	GdaColumn *attrs;
-	MYSQL_FIELD *mysql_field;
-
-	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
-	g_return_val_if_fail (recset->priv != NULL, 0);
-
-	priv_data = recset->priv;
-
-	if (!priv_data->mysql_res) {
-		gda_connection_add_event_string (priv_data->cnc, _("Invalid MySQL handle"));
-		return NULL;
-	}
-
-	/* create the GdaColumn to be returned */
-	field_count = mysql_num_fields (priv_data->mysql_res);
-	if (col >= field_count)
-		return NULL;
-
-	mysql_field = mysql_fetch_field_direct (priv_data->mysql_res, col);
-	if (!mysql_field)
-		return NULL;
-
-	attrs = gda_column_new ();
-
-	if (mysql_field->name)
-		gda_column_set_name (attrs, mysql_field->name);
-	gda_column_set_defined_size (attrs, mysql_field->length);
-	gda_column_set_table (attrs, mysql_field->table);
-	/* gda_column_set_caption(attrs, ); */
-	gda_column_set_scale (attrs, mysql_field->decimals);
-	gda_column_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_field->type,
-									mysql_field->flags & UNSIGNED_FLAG));
-	gda_column_set_allow_null (attrs, !IS_NOT_NULL (mysql_field->flags));
-	gda_column_set_primary_key (attrs, IS_PRI_KEY (mysql_field->flags));
-	gda_column_set_unique_key (attrs, mysql_field->flags & UNIQUE_KEY_FLAG);
-	/* gda_column_set_references(attrs, ); */
-	gda_column_set_auto_increment (attrs, mysql_field->flags & AUTO_INCREMENT_FLAG);
-	/* attrs->auto_increment_start */
-	/* attrs->auto_increment_step  */
-	gda_column_set_position (attrs, col);
-
-	return attrs;
 }
 
 static const GdaRow *
@@ -632,10 +582,10 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 				priv_data->cnc, 	 
 				gda_row_get_value ((GdaRow *) row, colnum) 	 
      		);
+
 		/* unique column: we will use it as an index */
 		if (gda_column_get_primary_key (attrs) ||
-		    gda_column_get_unique_key (attrs))
-		{
+		    gda_column_get_unique_key (attrs)) {
 			/* fills the 'where' part of the update command */
 			if (colnum != 0)
 				query_where = g_strconcat (query_where, "AND ", NULL);
@@ -650,7 +600,6 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		}
 
 		g_free (curval);
-		gda_column_free (attrs);
 	}
 
 	if (uk == 0) {
@@ -799,7 +748,6 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 		}
 
 		g_free (newval);
-		gda_column_free (attrs);
 	}
 
 	if (uk == 0) {
@@ -841,7 +789,6 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	
 	/* emit update signals */
 	gda_data_model_row_updated (GDA_DATA_MODEL (model), gda_row_get_number ((GdaRow *) row));
-	gda_data_model_changed (GDA_DATA_MODEL (model));
 
 	/* clean up */
 	g_free (query);
@@ -891,19 +838,20 @@ gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql)
 	if (mysql_res == NULL) {
 		model->priv->mysql_res_rows = mysql_affected_rows (mysql);
 		return model;
-	} else {
+	} 
+	else 
 		model->priv->mysql_res_rows = mysql_num_rows (model->priv->mysql_res);
-	}
+
 	mysql_fields = mysql_fetch_fields (model->priv->mysql_res);
 	if (mysql_fields != NULL) {
 		gint i;
 
 		model->priv->ncolumns = mysql_num_fields (model->priv->mysql_res);
 		gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (model),
-					    model->priv->ncolumns);
+						    model->priv->ncolumns);
 		for (i = 0; i < model->priv->ncolumns; i++) {
-			gda_data_model_set_column_title (GDA_DATA_MODEL (model),
-							 i, mysql_fields[i].name);
+			GdaColumn *column;
+			MYSQL_FIELD *mysql_field;
 
 			/* determine table name */
 			gboolean multi_table = FALSE;
@@ -914,6 +862,22 @@ gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql)
 				model->priv->table_name = g_strdup (mysql_fields[0].table);
 			else
 				model->priv->table_name = NULL;
+
+			/* set GdaColumn attributes */
+			column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
+			mysql_field = &(mysql_fields[i]);
+			gda_column_set_title (column, mysql_field->name);
+			if (mysql_field->name)
+				gda_column_set_name (column, mysql_field->name);
+			gda_column_set_defined_size (column, mysql_field->length);
+			gda_column_set_table (column, mysql_field->table);
+			gda_column_set_scale (column, mysql_field->decimals);
+			gda_column_set_gdatype (column, gda_mysql_type_to_gda (mysql_field->type,
+									       mysql_field->flags & UNSIGNED_FLAG));
+			gda_column_set_allow_null (column, !IS_NOT_NULL (mysql_field->flags));
+			gda_column_set_primary_key (column, IS_PRI_KEY (mysql_field->flags));
+			gda_column_set_unique_key (column, mysql_field->flags & UNIQUE_KEY_FLAG);
+			gda_column_set_auto_increment (column, mysql_field->flags & AUTO_INCREMENT_FLAG);
 		}
 	}
 

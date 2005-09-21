@@ -45,12 +45,11 @@ static GObjectClass *parent_class = NULL;
  * GdaServerProvider class implementation
  */
 
-static gboolean
+static GdaBlob *
 _gda_server_provider_create_blob (GdaServerProvider *provider,
-				 GdaConnection *cnc,
-				 GdaBlob *blob)
+				  GdaConnection *cnc)
 {
-	return FALSE;
+	return NULL;
 }
 
 static void
@@ -693,23 +692,20 @@ gda_server_provider_get_schema (GdaServerProvider *provider,
  * gda_server_provider_create_blob
  * @provider: a server provider.
  * @cnc: a #GdaConnection object.
- * @blob: a user-allocated #GdaBlob structure.
  *
  * Creates a BLOB (Binary Large OBject) with read/write access.
  *
- * Returns: %FALSE if the database does not support BLOBs. %TRUE otherwise
- * and the GdaBlob is created and ready to be used.
+ * Returns: a new #GdaBlob object, or %NULL if the database (or the libgda's provider)
+ * does not support BLOBS
  */
-gboolean
+GdaBlob *
 gda_server_provider_create_blob (GdaServerProvider *provider,
-				 GdaConnection *cnc,
-				 GdaBlob *blob)
+				 GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (blob != NULL, FALSE);
 
-	return CLASS (provider)->create_blob (provider, cnc, blob);
+	return CLASS (provider)->create_blob (provider, cnc);
 }
  
 /**

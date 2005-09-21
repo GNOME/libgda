@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include "gda-ldap.h"
 #include "gda-ldap-recordset.h"
+#include <libgda/gda-data-model-private.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
@@ -162,8 +163,8 @@ gda_ldap_recordset_get_n_columns (GdaDataModelBase *model)
 	return 1; /* FIXME */
 }
 
-static GdaColumn *
-gda_ldap_recordset_describe_column (GdaDataModelBase *model, gint col)
+static void
+gda_ldap_recordset_describe_column (GdaDataModel *model, gint col)
 {
 	gint field_count = 0;
 	GdaColumn *attrs;
@@ -182,7 +183,7 @@ gda_ldap_recordset_describe_column (GdaDataModelBase *model, gint col)
 	if (col >= field_count)
 		return NULL;
 
-	attrs = gda_column_new ();
+	attrs = gda_data_model_describe_column (model, col);
 
 	/*ldap_fields = ldap_fetch_field (recset->ldap_res);*/
 /*	if (!ldap_fields)
@@ -366,7 +367,6 @@ gda_ldap_recordset_class_init (GdaLdapRecordsetClass *klass)
 	object_class->finalize = gda_ldap_recordset_finalize;
 	model_class->get_n_rows = gda_ldap_recordset_get_n_rows;
 	model_class->get_n_columns = gda_ldap_recordset_get_n_columns;
-	model_class->describe_column = gda_ldap_recordset_describe_column;
 	model_class->get_row = gda_ldap_recordset_get_row;
 	model_class->get_value_at = gda_ldap_recordset_get_value_at;
 	model_class->is_updatable = gda_ldap_recordset_is_updatable;

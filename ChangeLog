@@ -1,4 +1,41 @@
+2005-09-21  Vivien Malerba <malerba@gnome-db.org>
+	
+	* libgda/gda-data-model.[ch]: moved unused methods into a private header file:
+	gda_data_model_changed(), gda_data_model_row_inserted(), gda_data_model_row_updated(),
+	gda_data_model_row_removed(), gda_data_model_get_command_text(), 
+	gda_data_model_set_command_text(), gda_data_model_get_command_type(),
+	gda_data_model_set_command_type().
+	* libgda/gda-data-model.[ch]: removed unused methods:
+	gda_data_model_column_inserted(), gda_data_model_column_updated(), 
+	gda_data_model_column_removed(), gda_data_model_get_column_position()
+	* libgda/gda-column.[ch]: removed unused method gda_column_equal() and dangerous
+	method gda_column_free(), and added gda_column_set_title() and gda_column_get_title()
+	* libgda/gda-data-model.c: IMPORTANT change: the GdaColumn object
+	returned by gda_data_model_describe_column() belongs to the
+	GdaDataModel and MUST NOT be destroyed.
+	* libgda/gda-data-model.c: re-implemented gda_data_model_get_column_title() and
+	gda_data_model_set_column_title() and using gda_column_get_title() and 
+	gda_column_set_title()
+	* libgda/gda-table.[ch]:
+	* libgda/gda-export.[ch]:
+	* libgda/gda-xml-connection.[ch]:
+	* libgda/gda-xml-database.[ch]:
+	* libgda/gda-xml-document.[ch]: removed these unfinished/non working objects
+	* libgda/gda-xql-*: removed these files as there is no documentation on how to use them,
+	there are not used elsewhere in libgda and they are not the correct way to implement
+	XML queries. Note that a GdaTable can easily be replaced by a
+	GdaDataModelArray
+	* libgda/gda-blob.[ch]: corrections to make the object work.
+	* libgda/providers/postgres/gda-postgres-blob.[ch]: new GdaPostgresBlob object which
+	implements the virtual methods defined in the GdaBlob class.
+	* libgda/providers/firebird/gda-firebird-blob.[ch]: updated implementation of BLOBs
+	using the new GdaBlob class
+	* configure.in: removed XML provider
+	* configure.in: improved test to locate MDB libraries
+	
+
 2005-09-15  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-value.h: removed the gda_value_set_type() declaration as there is no 
 	definition for that function (and having such function is meaningless).
 	* libgda/gda-value.[ch]: corrected the signatures of the gda_value_get_binary() and

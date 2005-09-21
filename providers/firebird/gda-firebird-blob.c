@@ -1,8 +1,9 @@
 /* GDA Firebird Blob
- * Copyright (C) 1998-2004 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,10 +25,8 @@
 #include "gda-firebird-recordset.h"
 #include <libgda/gda-intl.h>
 
-typedef struct _FirebirdBlobPrivate FirebirdBlobPrivate;
-
 /* FirebirdBlob private structure */
-struct _FirebirdBlobPrivate {
+struct _GdaFirebirdBlobPrivate {
 	isc_blob_handle blob_handle;
 	isc_tr_handle ftr;
 	GdaBlobMode mode;
@@ -35,114 +34,148 @@ struct _FirebirdBlobPrivate {
 	GdaConnection *cnc;
 };
 
-static void	gda_firebird_blob_free_data (GdaBlob *blob);
+static void gda_firebird_blob_class_init (GdaFirebirdBlobClass *klass);
+static void gda_firebird_blob_init       (GdaFirebirdBlob *blob,
+					  GdaFirebirdBlobClass *klass);
+static void gda_firebird_blob_finalize   (GObject *object);
+
 static gint	gda_firebird_blob_open (GdaBlob *blob, GdaBlobMode mode);
 static gint	gda_firebird_blob_read (GdaBlob *blob, gpointer buf, gint size, gint *bytes_read);
 static gint	gda_firebird_blob_close (GdaBlob *blob);
 
+static GObjectClass *parent_class = NULL;
 
-/********************************
- * FirebirdBlob public methods *
- ********************************/
+/*
+ * Object init and finalize
+ */
+GType
+gda_firebird_blob_get_type (void)
+{
+	static GType type = 0;
+
+	if (!type) {
+		static const GTypeInfo info = {
+			sizeof (GdaFirebirdBlobClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_firebird_blob_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaFirebirdBlob),
+			0,
+			(GInstanceInitFunc) gda_firebird_blob_init
+		};
+		type = g_type_register_static (GDA_TYPE_BLOB, "GdaFirebirdBlob", &info, 0);
+	}
+	return type;
+}
+
+static void
+gda_firebird_blob_init (GdaFirebirdBlob *blob,
+			GdaFirebirdBlobClass *klass)
+{
+	g_return_if_fail (GDA_IS_FIREBIRD_BLOB (blob));
+
+	blob->priv = g_new0 (GdaFirebirdBlobPrivate, 1);
+	blob->priv->mode = -1;
+	blob->priv->blob_handle = NULL;
+	blob->priv->ftr = NULL;
+}
+
+static void
+gda_firebird_blob_class_init (GdaFirebirdBlobClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GdaBlobClass *blob_class = GDA_BLOB_CLASS (klass);
+
+	parent_class = g_type_class_peek_parent (klass);
+
+	object_class->finalize = gda_firebird_blob_finalize;
+	blob_class->open = gda_firebird_blob_open;
+	blob_class->read = gda_firebird_blob_read;
+	blob_class->write = NULL;
+	blob_class->lseek = NULL;
+	blob_class->close = gda_firebird_blob_close;
+	blob_class->remove = NULL;
+	blob_class->stringify = NULL;
+}
+
+static void
+gda_firebird_blob_finalize (GObject * object)
+{
+	GdaFirebirdBlob *blob = (GdaFirebirdBlob *) object;
+
+	g_return_if_fail (GDA_IS_FIREBIRD_BLOB (blob));
+	g_return_if_fail (blob->priv);
+	ISC_STATUS status[20];
+
+	/* Rollback transaction if active */
+	if (blob->priv->ftr)
+		isc_rollback_transaction (status, blob->priv->ftr);
+	g_free (blob->priv);
+	blob->priv = NULL;
+
+	parent_class->finalize (object);
+}
 
 GdaBlob *
 gda_firebird_blob_new (GdaConnection *cnc)
 {
-	FirebirdBlobPrivate *priv;
-	GdaBlob *blob;
-	
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	
-	blob = g_new0 (GdaBlob, 1);
-	blob->priv_data = g_new0 (FirebirdBlobPrivate, 1);
-		
-	priv = blob->priv_data;
-	priv->mode = -1;
-	priv->blob_handle = NULL;
-	priv->cnc = cnc;
-	priv->ftr = NULL;
-		
-	blob->free_data = gda_firebird_blob_free_data;
-	blob->open = gda_firebird_blob_open;
-	blob->read = gda_firebird_blob_read;
-	blob->close = gda_firebird_blob_close;
-	blob->write = NULL;
-	blob->lseek = NULL;
-	blob->remove = NULL;
+	GdaFirebirdBlob *blob;
 
-	return blob;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	blob = g_object_new (GDA_TYPE_FIREBIRD_BLOB, NULL);
+	blob->priv->cnc = cnc;
+		
+	return GDA_BLOB (blob);
 }
 
 void
-gda_firebird_blob_set_id (GdaBlob *blob,
+gda_firebird_blob_set_id (GdaFirebirdBlob *blob,
 			  const ISC_QUAD *blob_id)
 {
-	FirebirdBlobPrivate *priv;
-
-	g_return_if_fail (blob != NULL);
-
-	priv = blob->priv_data;
+	g_return_if_fail (blob && GDA_IS_FIREBIRD_BLOB (blob));
+	g_return_if_fail (blob->priv);
 	
-	priv->blob_id.gds_quad_high = blob_id->gds_quad_high;
-	priv->blob_id.gds_quad_low = blob_id->gds_quad_low;
+	blob->priv->blob_id.gds_quad_high = blob_id->gds_quad_high;
+	blob->priv->blob_id.gds_quad_low = blob_id->gds_quad_low;
 }
 
-
-/********************************
- * FirebirdBlob private methods *
- ********************************/
-
-static void
-gda_firebird_blob_free_data (GdaBlob *blob)
-{
-	FirebirdBlobPrivate *priv;
-	ISC_STATUS status[20];
-
-	g_return_if_fail (blob != NULL);
-	
-	priv = blob->priv_data;
-
-	/* Rollback transaction if active */
-	if (priv->ftr)
-		isc_rollback_transaction (status, priv->ftr);
-	
-	g_free (priv);
-	
-	blob->priv_data = NULL;
-}
 
 static gint
 gda_firebird_blob_open (GdaBlob *blob, 
 			GdaBlobMode mode)
 {
-	FirebirdBlobPrivate *priv;
+	GdaFirebirdBlob *fblob;
 	GdaFirebirdConnection *fcnc;
 	
-	g_return_val_if_fail (blob != NULL, -1);
-
-	priv = blob->priv_data;
+	g_return_val_if_fail (blob && GDA_IS_FIREBIRD_BLOB (blob), -1);
+	fblob = GDA_FIREBIRD_BLOB (blob);
+	g_return_val_if_fail (fblob->priv, -1);
+	
 	/* Process Blob only if is not oppened */
-	if (!priv->blob_handle) {
+	if (!fblob->priv->blob_handle) {
 		
-		fcnc = g_object_get_data (G_OBJECT (priv->cnc), CONNECTION_DATA);
+		fcnc = g_object_get_data (G_OBJECT (fblob->priv->cnc), CONNECTION_DATA);
 		if (!fcnc) {
-			gda_connection_add_event_string (priv->cnc, _("Invalid Firebird handle"));
+			gda_connection_add_event_string (fblob->priv->cnc, _("Invalid Firebird handle"));
 			return -1;
 		}
 		
-		if (isc_start_transaction (fcnc->status, &(priv->ftr), 1, &(fcnc->handle), 0, NULL)) {
-			gda_connection_add_event_string (priv->cnc, _("Unable to start transaction"));
+		if (isc_start_transaction (fcnc->status, &(fblob->priv->ftr), 1, &(fcnc->handle), 0, NULL)) {
+			gda_connection_add_event_string (fblob->priv->cnc, _("Unable to start transaction"));
 			return -1;
 		}
 		
-		priv->mode = mode;
-		if (!isc_open_blob2 (fcnc->status, &(fcnc->handle), &(priv->ftr),
-				     &(priv->blob_handle), &(priv->blob_id), 0, NULL)) {
+		fblob->priv->mode = mode;
+		if (!isc_open_blob2 (fcnc->status, &(fcnc->handle), &(fblob->priv->ftr),
+				     &(fblob->priv->blob_handle), &(fblob->priv->blob_id), 0, NULL)) {
 			return 0;
 		}
 	}
 	
-	gda_connection_add_event_string (priv->cnc, _("Blob already open"));
+	gda_connection_add_event_string (fblob->priv->cnc, _("Blob already open"));
 	
 	return -1;
 }
@@ -153,33 +186,32 @@ gda_firebird_blob_read (GdaBlob *blob,
 			gint size,
 			gint *bytes_read)
 {
+	GdaFirebirdBlob *fblob;
 	GdaFirebirdConnection *fcnc;
-	FirebirdBlobPrivate *priv;
 	gushort actual_segment_length;
 	gint fetch_stat;
 	
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->priv_data != NULL, -1);
+	g_return_val_if_fail (blob && GDA_IS_FIREBIRD_BLOB (blob), -1);
+	fblob = GDA_FIREBIRD_BLOB (blob);
+	g_return_val_if_fail (fblob->priv, -1);
 	g_return_val_if_fail (bytes_read != NULL, -1);
 
-	priv = blob->priv_data;
-
 	/* Process Blob only if is oppened */
-	if (priv->blob_handle) {
+	if (fblob->priv->blob_handle) {
 	
 		/* I don't know if buffer comes initialized, so I initialize */
 		if (!buf)
 			buf = g_malloc0 (size);
 	
-		fcnc = g_object_get_data (G_OBJECT (priv->cnc), CONNECTION_DATA);
+		fcnc = g_object_get_data (G_OBJECT (fblob->priv->cnc), CONNECTION_DATA);
 		if (!fcnc) {
-			gda_connection_add_event_string (priv->cnc, _("Invalid Firebird handle"));
+			gda_connection_add_event_string (fblob->priv->cnc, _("Invalid Firebird handle"));
 			return -1;
 		}
 	
 		fetch_stat = isc_get_segment (
 					fcnc->status,
-					&(priv->blob_handle),
+					&(fblob->priv->blob_handle),
 					&actual_segment_length,
 					(gushort) size,
 					(gchar *) buf);
@@ -196,11 +228,11 @@ gda_firebird_blob_read (GdaBlob *blob,
 			return 0;
 		}
 		else
-			gda_connection_add_event_string (priv->cnc, _("Error getting blob segment."));
+			gda_connection_add_event_string (fblob->priv->cnc, _("Error getting blob segment."));
 
 	}
 		
-	gda_connection_add_event_string (priv->cnc, _("Can't read a closed Blob"));
+	gda_connection_add_event_string (fblob->priv->cnc, _("Can't read a closed Blob"));
 	
 	return -1;
 }
@@ -208,39 +240,38 @@ gda_firebird_blob_read (GdaBlob *blob,
 static gint 
 gda_firebird_blob_close (GdaBlob *blob)
 {
-	FirebirdBlobPrivate *priv;
+	GdaFirebirdBlob *fblob;
 	GdaFirebirdConnection *fcnc;
-
-	g_return_val_if_fail (blob != NULL, -1);
-	g_return_val_if_fail (blob->priv_data != NULL, -1);
-
-	priv = blob->priv_data;
+	
+	g_return_val_if_fail (blob && GDA_IS_FIREBIRD_BLOB (blob), -1);
+	fblob = GDA_FIREBIRD_BLOB (blob);
+	g_return_val_if_fail (fblob->priv, -1);
 
 	/* Close Blob if is opened */
-	if (priv->blob_handle) {
+	if (fblob->priv->blob_handle) {
 	
-		fcnc = g_object_get_data (G_OBJECT (priv->cnc), CONNECTION_DATA);
+		fcnc = g_object_get_data (G_OBJECT (fblob->priv->cnc), CONNECTION_DATA);
 		if (!fcnc) {
-			gda_connection_add_event_string (priv->cnc, _("Invalid Firebird handle"));
+			gda_connection_add_event_string (fblob->priv->cnc, _("Invalid Firebird handle"));
 			return -1;
 		}
 		
-		if (!isc_close_blob (fcnc->status, &(priv->blob_handle))) {
+		if (!isc_close_blob (fcnc->status, &(fblob->priv->blob_handle))) {
 			
 			/* Rollback transaction if active */
-			if (priv->ftr)
-				isc_rollback_transaction (fcnc->status, &(priv->ftr));
+			if (fblob->priv->ftr)
+				isc_rollback_transaction (fcnc->status, &(fblob->priv->ftr));
 			
-			priv->blob_handle = NULL;
-			priv->ftr = NULL;
+			fblob->priv->blob_handle = NULL;
+			fblob->priv->ftr = NULL;
 
 			return 0;
 		}
 		else
-			gda_connection_add_event_string (priv->cnc, _("Unable to close blob."));
+			gda_connection_add_event_string (fblob->priv->cnc, _("Unable to close blob."));
 	}
 
-	gda_connection_add_event_string (priv->cnc, _("Blob is closed"));
+	gda_connection_add_event_string (fblob->priv->cnc, _("Blob is closed"));
 
 	return -1;
 }

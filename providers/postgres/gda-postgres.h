@@ -43,14 +43,13 @@ G_BEGIN_DECLS
  */
 
 GdaConnectionEvent *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
-void gda_postgres_set_value (GdaValue *value, 
+void gda_postgres_set_value (GdaConnection *cnc,
+			     GdaValue *value, 
 			     GdaValueType type, 
 			     const gchar *thevalue,
 			     gboolean isNull,
 			     gint length);
 
-void gda_postgres_blob_set_connection (GdaBlob *blob, GdaConnection *cnc);
-gboolean gda_postgres_blob_create (GdaBlob *blob, GdaConnection *cnc);
 
 GdaValueType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
 					   gint ntypes,

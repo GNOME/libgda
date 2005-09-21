@@ -96,68 +96,6 @@ Basic data model class
 @gdadatamodel: the object which received the signal.
 @arg1: 
 
-<!-- ##### FUNCTION gda_data_model_changed ##### -->
-<para>
-
-</para>
-
-@model: 
-
-
-<!-- ##### FUNCTION gda_data_model_row_inserted ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-
-
-<!-- ##### FUNCTION gda_data_model_row_updated ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-
-
-<!-- ##### FUNCTION gda_data_model_row_removed ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-
-
-<!-- ##### FUNCTION gda_data_model_column_inserted ##### -->
-<para>
-
-</para>
-
-@model: 
-@col: 
-
-
-<!-- ##### FUNCTION gda_data_model_column_updated ##### -->
-<para>
-
-</para>
-
-@model: 
-@col: 
-
-
-<!-- ##### FUNCTION gda_data_model_column_removed ##### -->
-<para>
-
-</para>
-
-@model: 
-@col: 
-
-
 <!-- ##### FUNCTION gda_data_model_freeze ##### -->
 <para>
 
@@ -220,16 +158,6 @@ Basic data model class
 @model: 
 @col: 
 @title: 
-
-
-<!-- ##### FUNCTION gda_data_model_get_column_position ##### -->
-<para>
-
-</para>
-
-@model: 
-@title: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_data_model_get_row ##### -->
@@ -440,52 +368,6 @@ Basic data model class
 @model: 
 @node: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_get_command_text ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@recset: 
-
-
-<!-- ##### FUNCTION gda_data_model_set_command_text ##### -->
-<para>
-
-</para>
-
-@model: 
-@txt: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@recset: 
-
-
-<!-- ##### FUNCTION gda_data_model_get_command_type ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@recset: 
-
-
-<!-- ##### FUNCTION gda_data_model_set_command_type ##### -->
-<para>
-
-</para>
-
-@model: 
-@type: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@recset: 
 
 
 <!-- ##### FUNCTION gda_data_model_dump ##### -->

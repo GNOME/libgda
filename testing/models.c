@@ -21,6 +21,7 @@
  */
 
 #include "models.h"
+#include <libgda/gda-data-model-private.h>
 
 static const char *
 command_type_to_string (GdaCommandType cmd_type)

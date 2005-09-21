@@ -37,35 +37,10 @@ gda_headers = \
 	gda-row.h \
 	gda-select.h \
 	gda-server-provider.h \
-	gda-table.h \
 	gda-transaction.h \
 	gda-util.h \
 	gda-threader.h \
 	gda-value.h \
-	gda-xml-connection.h \
-	gda-xml-database.h \
-	gda-xml-document.h \
-	gda-xql-atom.h \
-	gda-xql-dual.h \
-	gda-xql-list.h \
-	gda-xql-utils.h \
-	gda-xql-bin.h \
-	gda-xql-field.h \
-	gda-xql-query.h \
-	gda-xql-value.h \
-	gda-xql-column.h \
-	gda-xql-func.h \
-	gda-xql-select.h \
-	gda-xql-valueref.h \
-	gda-xql-const.h \
-	gda-xql-insert.h \
-	gda-xql-stack.h \
-	gda-xql-delete.h \
-	gda-xql-item.h \
-	gda-xql-target.h \
-	gda-xql-dml.h \
-	gda-xql-join.h \
-	gda-xql-update.h \
 	global-decl.h \
 	libgda.h
 
@@ -82,8 +57,6 @@ libgda_sources =  \
 	gda-data-model-hash.c \
 	gda-data-model-list.c \
 	gda-connection-event.c \
-	gda-export.c \
-	gda-export.h \
 	gda-column.c \
 	gda-column-index.c \
 	gda-data-model-index.c \
@@ -96,35 +69,10 @@ libgda_sources =  \
 	gda-row.c \
 	gda-select.c \
 	gda-server-provider.c \
-	gda-table.c \
 	gda-transaction.c \
 	gda-util.c \
 	gda-threader.c \
-	gda-value.c \
-	gda-xml-connection.c \
-	gda-xml-database.c \
-	gda-xml-document.c \
-	gda-xql-atom.c \
-	gda-xql-dual.c \
-	gda-xql-list.c \
-	gda-xql-utils.c \
-	gda-xql-bin.c \
-	gda-xql-field.c \
-	gda-xql-query.c \
-	gda-xql-value.c \
-	gda-xql-column.c \
-	gda-xql-func.c \
-	gda-xql-select.c \
-	gda-xql-valueref.c \
-	gda-xql-const.c \
-	gda-xql-insert.c \
-	gda-xql-stack.c \
-	gda-xql-delete.c \
-	gda-xql-item.c \
-	gda-xql-target.c \
-	gda-xql-dml.c \
-	gda-xql-join.c \
-	gda-xql-update.c
+	gda-value.c 
 
 gda-enum-types.h: s-enum-types-h
 	@true

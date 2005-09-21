@@ -23,6 +23,7 @@
 
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-list.h>
+#include <libgda/gda-data-model-private.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
@@ -108,7 +109,6 @@ gda_data_model_list_class_init (GdaDataModelListClass *klass)
 	object_class->finalize = gda_data_model_list_finalize;
 	model_class->get_n_rows = gda_data_model_list_get_n_rows;
 	model_class->get_n_columns = gda_data_model_list_get_n_columns;
-	model_class->describe_column = NULL;
 	model_class->get_row = gda_data_model_list_get_row;
 	model_class->get_value_at = gda_data_model_list_get_value_at;
 	model_class->is_updatable = gda_data_model_list_is_updatable;

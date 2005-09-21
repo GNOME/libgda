@@ -25,6 +25,7 @@
 #include <glib/garray.h>
 #include <libgda/gda-data-model-array.h>
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-data-model-private.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
@@ -59,14 +60,6 @@ gda_data_model_array_get_n_columns (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
 	return GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns;
-}
-
-static GdaColumn *
-gda_data_model_array_describe_column (GdaDataModelBase *model, gint col)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
-
-	return NULL;
 }
 
 static const GdaRow *
@@ -118,14 +111,12 @@ gda_data_model_array_append_values (GdaDataModelBase *model, const GList *values
 	g_return_val_if_fail (values != NULL, NULL);
 
 	len = g_list_length ((GList *) values);
-	if (len != GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns)
-		return NULL;
+	g_return_val_if_fail (len == GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns, NULL);
 
 	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
 	if (row) {
 		g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 		gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
-		gda_data_model_changed (GDA_DATA_MODEL (model));
 		gda_data_model_row_inserted (GDA_DATA_MODEL (model), 
 					     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 	}
@@ -141,7 +132,6 @@ gda_data_model_array_append_row (GdaDataModelBase *model, GdaRow *row)
 
 	g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, (GdaRow *) row);
 	gda_row_set_number ((GdaRow *) row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
-	gda_data_model_changed (GDA_DATA_MODEL (model));
 	gda_data_model_row_inserted (GDA_DATA_MODEL (model), 
 				     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 
@@ -166,7 +156,6 @@ gda_data_model_array_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		gda_row_set_id ((GdaRow *) row, "R");
 		gda_row_set_number ((GdaRow *) row, -1);
 
-		gda_data_model_changed (GDA_DATA_MODEL (model));
 		gda_data_model_row_removed (GDA_DATA_MODEL (model), rownum);
 		return TRUE;
 	}
@@ -189,7 +178,6 @@ gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
 		if (priv->rows->pdata[i] == row) {
 			gda_row_free (priv->rows->pdata[i]);
 			priv->rows->pdata[i] = gda_row_copy ((GdaRow *) row);
-			gda_data_model_changed (GDA_DATA_MODEL (model));
 			gda_data_model_row_updated (GDA_DATA_MODEL (model), i);
 
 			return TRUE;
@@ -236,7 +224,6 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	object_class->finalize = gda_data_model_array_finalize;
 	model_class->get_n_rows = gda_data_model_array_get_n_rows;
 	model_class->get_n_columns = gda_data_model_array_get_n_columns;
-	model_class->describe_column = gda_data_model_array_describe_column;
 	model_class->get_row = gda_data_model_array_get_row;
 	model_class->get_value_at = gda_data_model_array_get_value_at;
 	model_class->is_updatable = gda_data_model_array_is_updatable;
@@ -295,9 +282,7 @@ gda_data_model_array_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_data_model_array_init
 		};
-		type = g_type_register_static (PARENT_TYPE,
-					       "GdaDataModelArray",
-					       &info, 0);
+		type = g_type_register_static (PARENT_TYPE, "GdaDataModelArray", &info, 0);
 	}
 	return type;
 }
@@ -319,9 +304,42 @@ gda_data_model_array_new (gint cols)
 }
 
 typedef struct {
-	gchar *title;
-	gint   position;
+	gchar        *name;
+	gchar        *title;
+	gchar        *caption;
+	gchar        *dbms_type;
+	GdaValueType  gdatype;
+	gint          size;
+	gint          scale;
+	gboolean      pkey;
+	gboolean      unique;
+	gboolean      nullok;
+	gboolean      autoinc;
 } XmlColumnSpec;
+
+static void
+clean_field_specs (GSList *fields)
+{
+	GSList *list;
+	XmlColumnSpec *spec;
+
+	list = fields;
+	while (list) {
+		spec = (XmlColumnSpec*)(list->data);
+		if (spec->name)
+			g_free (spec->name);
+		if (spec->title)
+			g_free (spec->title);
+		if (spec->caption)
+			g_free (spec->caption);
+		if (spec->dbms_type)
+			g_free (spec->dbms_type);
+		g_free (spec);
+
+		list = g_slist_next (list);
+	}
+	g_slist_free (fields);
+}
 
 /**
  * gda_data_model_array_new_from_xml_node
@@ -340,6 +358,7 @@ gda_data_model_array_new_from_xml_node (xmlNodePtr node, GError **error)
 	gint nbfields = 0;
 	GSList *fields = NULL;
 	GSList *list;
+	gint pos;
 
 	g_return_val_if_fail (node, NULL);
 
@@ -354,18 +373,55 @@ gda_data_model_array_new_from_xml_node (xmlNodePtr node, GError **error)
 			XmlColumnSpec *spec;
 
 			spec = g_new0 (XmlColumnSpec, 1);
-			spec->title = xmlGetProp(cur, "name");
+			fields = g_slist_append (fields, spec);
+
+			spec->title = xmlGetProp (cur, "name");
 			if (!spec->title)
 				spec->title = g_strdup_printf ("field_%d", nbfields);
-			str = xmlGetProp(cur, "position");
+			spec->title = xmlGetProp (cur, "title");
+			spec->caption = xmlGetProp (cur, "caption");
+			spec->dbms_type = xmlGetProp (cur, "dbms_type");
+			str = xmlGetProp (cur, "gdatype");
 			if (str) {
-				spec->position = atoi (str);
+				spec->gdatype = gda_type_from_string (str);
 				g_free (str);
 			}
-			else
-				spec->position = nbfields;
+			else {
+				g_set_error (error, 0, 0, _("No \"gdatype\" attribute specified in <field>"));
+				clean_field_specs (fields);
+				return NULL;
+			}
+			str = xmlGetProp (cur, "size");
+			if (str) {
+				spec->size = atoi (str);
+				g_free (str);
+			}
+			str = xmlGetProp (cur, "scale");
+			if (str) {
+				spec->scale = atoi (str);
+				g_free (str);
+			}
+			str = xmlGetProp (cur, "pkey");
+			if (str) {
+				spec->pkey = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
+				g_free (str);
+			}
+			str = xmlGetProp (cur, "unique");
+			if (str) {
+				spec->unique = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
+				g_free (str);
+			}
+			str = xmlGetProp (cur, "nullok");
+			if (str) {
+				spec->nullok = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
+				g_free (str);
+			}
+			str = xmlGetProp (cur, "auto_increment");
+			if (str) {
+				spec->autoinc = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
+				g_free (str);
+			}
 
-			fields = g_slist_append (fields, spec);
 			nbfields ++;
 			continue;
 		}
@@ -375,32 +431,47 @@ gda_data_model_array_new_from_xml_node (xmlNodePtr node, GError **error)
 
 	if (nbfields == 0) {
 		g_set_error (error, 0, 0, _("No <field> specified in <data-array>"));
+		clean_field_specs (fields);
 		return NULL;
 	}
 
 	if (! cur) {
 		g_set_error (error, 0, 0, _("No <data> specified in <data-array>"), node->name);
+		clean_field_specs (fields);
 		return NULL;
 	}
 
 	/* model creation */
 	model = gda_data_model_array_new (nbfields);
+	list = fields;
+	pos = 0;
+	while (list) {
+		GdaColumn *column;
+		XmlColumnSpec *spec;
+
+		spec = (XmlColumnSpec *)(list->data);
+		column = gda_data_model_describe_column (model, pos);
+		gda_column_set_title (column, spec->title);
+		gda_column_set_name (column, spec->name);
+		gda_column_set_defined_size (column, spec->size);
+		gda_column_set_caption (column, spec->caption);
+		gda_column_set_dbms_type (column, spec->dbms_type);
+		gda_column_set_scale (column, spec->scale);
+		gda_column_set_gdatype (column, spec->gdatype);
+		gda_column_set_allow_null (column, spec->nullok);
+		gda_column_set_primary_key (column, spec->pkey);
+		gda_column_set_unique_key (column, spec->unique);
+
+		list = g_slist_next (list);
+		pos++;
+	}
+	clean_field_specs (fields);
+
 	if (! gda_data_model_add_data_from_xml_node (model, cur)) {
 		g_object_unref (model);
 		return NULL;
 	}
-	
-	/* setting model's column titles */
-	list = fields;
-	while (list) {
-		gda_data_model_set_column_title (model, ((XmlColumnSpec *)(list->data))->position,
-						 ((XmlColumnSpec *)(list->data))->title);
-		g_free (((XmlColumnSpec *)(list->data))->title);
-		g_free (list->data);
-		list = g_slist_next (list);
-	}
-	g_slist_free (fields);
-	
+		
 	return model;
 }
 

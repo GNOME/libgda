@@ -25,6 +25,7 @@
 
 #include <glib/ghash.h>
 #include <libgda/gda-data-model-hash.h>
+#include <libgda/gda-data-model-private.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
@@ -97,14 +98,6 @@ gda_data_model_hash_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	return (const GdaValue *) gda_row_get_value ((GdaRow *) fields, col);
 }
 
-static GdaColumn *
-gda_data_model_hash_describe_column (GdaDataModelBase *model, gint col)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
-
-	return NULL;
-}
-
 static gboolean
 gda_data_model_hash_is_updatable (GdaDataModelBase *model)
 {
@@ -140,7 +133,6 @@ gda_data_model_hash_append_row (GdaDataModelBase *model, GdaRow *row)
 
 	/* emit update signals */
 	gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum_array_new);
-	gda_data_model_changed (GDA_DATA_MODEL (model));
 
 	/* increment the number of entries in the hash table */
 	GDA_DATA_MODEL_HASH (model)->priv->number_of_hash_table_rows++;
@@ -179,7 +171,6 @@ gda_data_model_hash_remove_row (GdaDataModelBase *model, const GdaRow *row)
 
 	/* emit updated signals */
 	gda_data_model_row_removed (GDA_DATA_MODEL (model), gda_row_get_number ((GdaRow *) row));
-	gda_data_model_changed (GDA_DATA_MODEL (model));
 	
 	return TRUE;
 }
@@ -201,7 +192,6 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	object_class->finalize = gda_data_model_hash_finalize;
 	model_class->get_n_rows = gda_data_model_hash_get_n_rows;
 	model_class->get_n_columns = gda_data_model_hash_get_n_columns;
-	model_class->describe_column = gda_data_model_hash_describe_column;
 	model_class->get_row = gda_data_model_hash_get_row;
 	model_class->get_value_at = gda_data_model_hash_get_value_at;
 	model_class->is_updatable = gda_data_model_hash_is_updatable;
@@ -321,7 +311,6 @@ gda_data_model_hash_insert_row (GdaDataModelHash *model,
 	g_hash_table_insert (model->priv->rows,
 			     GINT_TO_POINTER (rownum), row);
 	gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum);
-	gda_data_model_changed (GDA_DATA_MODEL (model));
 }
 
 /**

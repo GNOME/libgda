@@ -60,27 +60,6 @@
 <!ENTITY libgda-xml-connection SYSTEM "xml/gda-xml-connection.xml">
 <!ENTITY libgda-xml-database SYSTEM "xml/gda-xml-database.xml">
 <!ENTITY libgda-xml-document SYSTEM "xml/gda-xml-document.xml">
-<!ENTITY libgda-xql-atom SYSTEM "xml/gda-xql-atom.xml">
-<!ENTITY libgda-xql-bin SYSTEM "xml/gda-xql-bin.xml">
-<!ENTITY libgda-xql-column SYSTEM "xml/gda-xql-column.xml">
-<!ENTITY libgda-xql-const SYSTEM "xml/gda-xql-const.xml">
-<!ENTITY libgda-xql-delete SYSTEM "xml/gda-xql-delete.xml">
-<!ENTITY libgda-xql-dml SYSTEM "xml/gda-xql-dml.xml">
-<!ENTITY libgda-xql-dual SYSTEM "xml/gda-xql-dual.xml">
-<!ENTITY libgda-xql-field SYSTEM "xml/gda-xql-field.xml">
-<!ENTITY libgda-xql-func SYSTEM "xml/gda-xql-func.xml">
-<!ENTITY libgda-xql-insert SYSTEM "xml/gda-xql-insert.xml">
-<!ENTITY libgda-xql-item SYSTEM "xml/gda-xql-item.xml">
-<!ENTITY libgda-xql-join SYSTEM "xml/gda-xql-join.xml">
-<!ENTITY libgda-xql-list SYSTEM "xml/gda-xql-list.xml">
-<!ENTITY libgda-xql-query SYSTEM "xml/gda-xql-query.xml">
-<!ENTITY libgda-xql-select SYSTEM "xml/gda-xql-select.xml">
-<!ENTITY libgda-xql-stack SYSTEM "xml/gda-xql-stack.xml">
-<!ENTITY libgda-xql-target SYSTEM "xml/gda-xql-target.xml">
-<!ENTITY libgda-xql-update SYSTEM "xml/gda-xql-update.xml">
-<!ENTITY libgda-xql-utils SYSTEM "xml/gda-xql-utils.xml">
-<!ENTITY libgda-xql-value SYSTEM "xml/gda-xql-value.xml">
-<!ENTITY libgda-xql-valueref SYSTEM "xml/gda-xql-valueref.xml">
 <!ENTITY libgda-report-types SYSTEM "xml/gda-report-types.xml">
 <!ENTITY libgda-report-document SYSTEM "xml/gda-report-document.xml">
 <!ENTITY libgda-report-item SYSTEM "xml/gda-report-item.xml">
@@ -2179,7 +2158,7 @@
     </para>
     </sect1>
     <sect1 id="libgda-provider-class">
-      <title>The GdaServerProvider class</title>
+      <title>Virtual methods for providers</title>
       <para>
 	The &GDASERVERPROVIDER; is the class you should implement for adding
 	a new provider. This class is just a typical GObject-based class,
@@ -2384,7 +2363,7 @@
       </sect2>
     </sect1>
     <sect1 id="libgda-provider-recordset">
-      <title>The recordset class</title>
+      <title>Virtual methods for recordsets</title>
       <para>
 	You have to extend one of &GDADATAMODEL;, &GDADATAMODELARRAY; or
 	&GDADATAMODELHASH;. The easiest to extend are the last two. They both
@@ -2493,37 +2472,7 @@
 	</listitem>
       </itemizedlist>
     </sect1>
-    <sect1 id="libgda-server-provider-details">
-      <title>Details</title>
-      &libgda-server-provider;
-    </sect1>
-  </chapter>
-
-  <chapter id="libgda-xql">
-    <title>XML Queries</title>
-    <para>
-    </para>
-    &libgda-xql-atom;
-    &libgda-xql-bin;
-    &libgda-xql-column;
-    &libgda-xql-const;
-    &libgda-xql-delete;
-    &libgda-xql-dml;
-    &libgda-xql-dual;
-    &libgda-xql-field;
-    &libgda-xql-func;
-    &libgda-xql-insert;
-    &libgda-xql-item;
-    &libgda-xql-join;
-    &libgda-xql-list;
-    &libgda-xql-query;
-    &libgda-xql-select;
-    &libgda-xql-stack;
-    &libgda-xql-target;
-    &libgda-xql-update;
-    &libgda-xql-utils;
-    &libgda-xql-value;
-    &libgda-xql-valueref;
+    &libgda-server-provider;
   </chapter>
 
   <chapter id="libgda-reports">
