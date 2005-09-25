@@ -214,7 +214,7 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 	if (gda_data_model_get_n_rows (model) == 1) {
 		GdaColumn *column;
 		gint i, nbcols;
-		GdaValue *value;
+		const GdaValue *value;
 
 		nbcols = gda_data_model_get_n_columns (model);
 		for (i = 0; i < nbcols; i++) {
@@ -431,7 +431,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  *
  * Returns: a #GdaRow object.
  */
-const GdaRow *
+GdaRow *
 gda_data_model_get_row (GdaDataModel *model, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
@@ -499,17 +499,15 @@ gda_data_model_is_updatable (GdaDataModel *model)
  *
  * Appends a row to the given data model.
  *
- * Deprecated: will be removed in future versions, use gda_data_model_append_row() instead.
- *
  * Returns: the added row.
  */
-const GdaRow *
+GdaRow *
 gda_data_model_append_values (GdaDataModel *model, const GList *values)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_values) {
-		const GdaRow *row;
+		GdaRow *row;
 		row = (GDA_DATA_MODEL_GET_IFACE (model)->i_append_values) (model, values);
 		gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
 		return row;
@@ -532,6 +530,10 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values)
  * it is more coherent with the other gda_data_model_*_row() functions, and also
  * is more adapted to #GdaDataModel which don't manage themselves any #GdaRow internally.
  *
+ * The @row object is then referenced by the @model model and can be safely unref'ed by the
+ * caller. A pointer to that row object can be obtained at any time using the 
+ * gda_data_model_get_row() method.
+ *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
@@ -547,6 +549,36 @@ gda_data_model_append_row (GdaDataModel *model, GdaRow *row)
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return FALSE;
 	}
+}
+
+/**
+ * gda_data_model_update_row
+ * @model: a #GdaDataModel object.
+ * @row: the #GdaRow to be updated.
+ *
+ * Updates a row data model. This results in the underlying
+ * database row's values being changed.
+ *
+ * NOTE: the @row GdaRow must not be used again because it may or may not
+ * be used by the @model model depending on @model's implementation.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
+{
+        gboolean result;
+
+        g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+        g_return_val_if_fail (row != NULL, FALSE);
+
+        if (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) {
+                return (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) (model, row);
+        }
+        else {
+                g_warning ("%s() method not supported\n", __FUNCTION__);
+                return FALSE;
+        }
 }
 
 /**
@@ -575,54 +607,25 @@ gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
 }
 
 /**
- * gda_data_model_update_row
- * @model: a #GdaDataModel object.
- * @row: the #GdaRow to be updated.
- *
- * Updates a row data model. This results in the underlying
- * database row's values being changed.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
-{
-	gboolean result;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (row != NULL, FALSE);
-
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) {
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) (model, row);
-	}
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
-}
-
-/**
  * gda_data_model_append_column
  * @model: a #GdaDataModel object.
  * @attrs: a #GdaColumn describing the column to add.
  *
  * Appends a column to the given data model.  If successful, the position of
- * the new column in the data model is set on @col, and you can grab it using
- * @gda_column_get_position.
+ * a pointer to a #GdaColumn is returned (and its attributes can be updated)
  *
- * Returns: %TRUE if successful, %FALSE otherwise.
+ * Returns: a #GdaColumn if successful, and %NULL if the data model does not suppport this method.
  */
-gboolean
-gda_data_model_append_column (GdaDataModel *model, const GdaColumn *attrs)
+GdaColumn *
+gda_data_model_append_column (GdaDataModel *model)
 {
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (attrs != NULL, FALSE);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 	
 	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_column) 
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_append_column) (model, attrs);
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_append_column) (model);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
+		return NULL;
 	}
 }
 
@@ -634,7 +637,8 @@ gda_data_model_append_column (GdaDataModel *model, const GdaColumn *attrs)
  * Removes a column from the data model. This means that all values attached to this
  * column in the data model will be destroyed in the underlying database.
  *
- * Returns: %TRUE if successful, %FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE if the data model cannot be modified of if it does not
+ * support that method.
  */
 gboolean
 gda_data_model_remove_column (GdaDataModel *model, gint col)
@@ -643,31 +647,6 @@ gda_data_model_remove_column (GdaDataModel *model, gint col)
 
 	if (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_column) 
 		return (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_column) (model, col);
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
-}
-
-/**
- * gda_data_model_update_column
- * @model: a #GdaDataModel object.
- * @col: the column to be updated.
- * @attrs: attributes for the column.
- *
- * Updates a column in the given data model. This results in the underlying
- * database row's values being changed.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_data_model_update_column (GdaDataModel *model, gint col, const GdaColumn *attrs)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (attrs != NULL, FALSE);
-
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_update_column) 
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_update_column) (model, col, attrs);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return FALSE;

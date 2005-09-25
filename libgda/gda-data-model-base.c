@@ -58,20 +58,18 @@ static GdaColumn           *gda_data_model_base_describe_column (GdaDataModel *m
 static const gchar         *gda_data_model_base_get_column_title(GdaDataModel *model, gint col);
 static void                 gda_data_model_base_set_column_title(GdaDataModel *model, gint col, const gchar *title);
 static gint                 gda_data_model_base_get_column_pos  (GdaDataModel *model, const gchar *title);
-static const GdaRow        *gda_data_model_base_get_row         (GdaDataModel *model, gint row);
+static GdaRow              *gda_data_model_base_get_row         (GdaDataModel *model, gint row);
 static const GdaValue      *gda_data_model_base_get_value_at    (GdaDataModel *model, gint col, gint row);
 static gboolean             gda_data_model_base_is_updatable    (GdaDataModel *model);
 static gboolean             gda_data_model_base_has_changed     (GdaDataModel *model);
 static void                 gda_data_model_base_begin_changes   (GdaDataModel *model);
 static gboolean             gda_data_model_base_commit_changes  (GdaDataModel *model);
 static gboolean             gda_data_model_base_cancel_changes  (GdaDataModel *model);
-static const GdaRow        *gda_data_model_base_append_values   (GdaDataModel *model, const GList *values);
+static GdaRow              *gda_data_model_base_append_values   (GdaDataModel *model, const GList *values);
 static gboolean             gda_data_model_base_append_row      (GdaDataModel *model, GdaRow *row);
-static gboolean             gda_data_model_base_remove_row      (GdaDataModel *model, const GdaRow *row);
 static gboolean             gda_data_model_base_update_row      (GdaDataModel *model, const GdaRow *row);
-static gboolean             gda_data_model_base_append_column   (GdaDataModel *model, const GdaColumn *attrs);
-static gboolean             gda_data_model_base_update_column   (GdaDataModel *model, gint col,
-								 const GdaColumn *attrs);
+static gboolean             gda_data_model_base_remove_row      (GdaDataModel *model, const GdaRow *row);
+static GdaColumn           *gda_data_model_base_append_column   (GdaDataModel *model);
 static gboolean             gda_data_model_base_remove_column   (GdaDataModel *model, gint col);
 static void                 gda_data_model_base_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
 static gboolean             gda_data_model_base_get_notify      (GdaDataModel *model);
@@ -110,10 +108,9 @@ gda_data_model_base_data_model_init (GdaDataModelIface *iface)
 	iface->i_commit_changes = gda_data_model_base_commit_changes;
         iface->i_append_values = gda_data_model_base_append_values;
 	iface->i_append_row = gda_data_model_base_append_row;
-	iface->i_remove_row = gda_data_model_base_remove_row;
 	iface->i_update_row = gda_data_model_base_update_row;
+	iface->i_remove_row = gda_data_model_base_remove_row;
 	iface->i_append_column = gda_data_model_base_append_column;
-	iface->i_update_column = gda_data_model_base_update_column;
 	iface->i_remove_column = gda_data_model_base_remove_column;
 	iface->i_set_notify = gda_data_model_base_set_notify;
 	iface->i_get_notify = gda_data_model_base_get_notify;
@@ -134,9 +131,13 @@ gda_data_model_base_init (GdaDataModelBase *model, GdaDataModelBaseClass *klass)
 	model->priv->cmd_type = GDA_COMMAND_TYPE_INVALID;
 }
 
+static void column_gda_type_changed_cb (GdaColumn *column, GdaValueType old, GdaValueType new, GdaDataModelBase *model);
+
 static void
-hash_free_column (gpointer key, GdaColumn *column, gpointer user_data)
+hash_free_column (gpointer key, GdaColumn *column, GdaDataModelBase *model)
 {
+	g_signal_handlers_disconnect_by_func (G_OBJECT (column),
+					      G_CALLBACK (column_gda_type_changed_cb), model);
 	g_object_unref (column);
 }
 
@@ -148,7 +149,7 @@ gda_data_model_base_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
 	/* free memory */
-	g_hash_table_foreach (model->priv->column_spec, (GHFunc) hash_free_column, NULL);
+	g_hash_table_foreach (model->priv->column_spec, (GHFunc) hash_free_column, model);
 	g_hash_table_destroy (model->priv->column_spec);
 	model->priv->column_spec = NULL;
 
@@ -222,6 +223,8 @@ gda_data_model_base_describe_column (GdaDataModel *model, gint col)
 				      GINT_TO_POINTER (col));
 	if (!column) {
 		column = gda_column_new ();
+		g_signal_connect (G_OBJECT (column), "gda_type_changed",
+				  G_CALLBACK (column_gda_type_changed_cb), model);
 		gda_column_set_position (column, col);
 		g_hash_table_insert (GDA_DATA_MODEL_BASE (model)->priv->column_spec,
 				     GINT_TO_POINTER (col), column);
@@ -230,7 +233,44 @@ gda_data_model_base_describe_column (GdaDataModel *model, gint col)
 	return column;
 }
 
-static const GdaRow *
+static void
+column_gda_type_changed_cb (GdaColumn *column, GdaValueType old, GdaValueType new, GdaDataModelBase *model)
+{
+	/* emit a warning if there are GdaValues which are not compatible with the new type */
+	gint i, nrows, col;
+	const GdaValue *value;
+	gchar *str;
+	gint nb_warnings = 0;
+#define max_warnings 5
+
+	if ((new == GDA_VALUE_TYPE_NULL) ||
+	    (new == GDA_VALUE_TYPE_UNKNOWN))
+		return;
+
+	col = gda_column_get_position (column);
+	nrows = gda_data_model_base_get_n_rows (GDA_DATA_MODEL (model));
+	for (i = 0; (i < nrows) && (nb_warnings < max_warnings); i++) {
+		GdaValueType vtype;
+
+		value = gda_data_model_base_get_value_at (GDA_DATA_MODEL (model), col, i);
+		vtype = gda_value_get_type (value);
+		if ((vtype != GDA_VALUE_TYPE_NULL) && (vtype != new)) {
+			nb_warnings ++;
+			if (nb_warnings >= max_warnings)
+				g_warning ("Max number of warning reachedn more incompatible types...");
+			else {
+				str = gda_value_stringify (value);
+				g_warning ("Value of type %s not compatible with new column type %s (value=%s)",
+					   gda_type_to_string (gda_value_get_type (value)), 
+					   gda_type_to_string (new), str);
+				g_free (str);
+			}
+		}
+			
+	}
+}
+
+static GdaRow *
 gda_data_model_base_get_row (GdaDataModel *model, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
@@ -240,7 +280,7 @@ gda_data_model_base_get_row (GdaDataModel *model, gint row)
 }
 
 static const GdaValue *
-gda_data_model_base_get_value_at    (GdaDataModel *model, gint col, gint row)
+gda_data_model_base_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
 	g_return_val_if_fail (CLASS (model)->get_value_at != NULL, NULL);
@@ -306,10 +346,10 @@ gda_data_model_base_cancel_changes (GdaDataModel *model)
 
 
 
-static const GdaRow *
+static GdaRow *
 gda_data_model_base_append_values (GdaDataModel *model, const GList *values)
 {
-	const GdaRow *row;
+	GdaRow *row;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
 	g_return_val_if_fail (CLASS (model)->append_values != NULL, NULL);
@@ -329,6 +369,16 @@ gda_data_model_base_append_row (GdaDataModel *model, GdaRow *row)
 }
 
 static gboolean
+gda_data_model_base_update_row (GdaDataModel *model, const GdaRow *row)
+{
+        g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
+        g_return_val_if_fail (row != NULL, FALSE);
+        g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
+
+        return CLASS (model)->update_row (GDA_DATA_MODEL_BASE (model), row);
+}
+
+static gboolean
 gda_data_model_base_remove_row (GdaDataModel *model, const GdaRow *row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
@@ -338,35 +388,13 @@ gda_data_model_base_remove_row (GdaDataModel *model, const GdaRow *row)
 	return CLASS (model)->remove_row (GDA_DATA_MODEL_BASE (model), row);
 }
 
-static gboolean
-gda_data_model_base_update_row (GdaDataModel *model, const GdaRow *row)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
-	g_return_val_if_fail (row != NULL, FALSE);
-	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
-
-	return CLASS (model)->update_row (GDA_DATA_MODEL_BASE (model), row);
-}
-
-static gboolean
-gda_data_model_base_append_column (GdaDataModel *model, const GdaColumn *attrs)
+static GdaColumn *
+gda_data_model_base_append_column (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
 	g_return_val_if_fail (CLASS (model)->append_column != NULL, FALSE);
-	g_return_val_if_fail (attrs != NULL, FALSE);
 
-	return CLASS (model)->append_column (GDA_DATA_MODEL_BASE (model), attrs);
-}
-
-static gboolean
-gda_data_model_base_update_column (GdaDataModel *model, gint col,
-				   const GdaColumn *attrs)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
-	g_return_val_if_fail (CLASS (model)->update_column != NULL, FALSE);
-	g_return_val_if_fail (attrs != NULL, FALSE);
-
-	return CLASS (model)->update_column (GDA_DATA_MODEL_BASE (model), col, attrs);
+	return CLASS (model)->append_column (GDA_DATA_MODEL_BASE (model));
 }
 
 static gboolean

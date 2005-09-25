@@ -97,7 +97,7 @@ gda_firebird_blob_class_init (GdaFirebirdBlobClass *klass)
 	blob_class->lseek = NULL;
 	blob_class->close = gda_firebird_blob_close;
 	blob_class->remove = NULL;
-	blob_class->stringify = NULL;
+	blob_class->get_sql_id = NULL;
 }
 
 static void

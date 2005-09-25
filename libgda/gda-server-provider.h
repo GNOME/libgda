@@ -137,6 +137,9 @@ struct _GdaServerProviderClass {
 	
 	GdaBlob      *(* create_blob) (GdaServerProvider *provider,
 				       GdaConnection *cnc);
+
+	GdaBlob      *(* fetch_blob) (GdaServerProvider *provider,
+				      GdaConnection *cnc, const gchar *sql_id);
 	
 	gchar        *(* value_to_sql_string) (GdaServerProvider *provider,
 					       GdaConnection *cnc,
@@ -221,6 +224,8 @@ GdaDataModel *gda_server_provider_get_schema (GdaServerProvider *provider,
 
 GdaBlob      *gda_server_provider_create_blob (GdaServerProvider *provider,
 					       GdaConnection *cnc);
+GdaBlob      *gda_server_provider_fetch_blob_by_id (GdaServerProvider *provider,
+						    GdaConnection *cnc, const gchar *sql_id);
 
 gchar        *gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 						       GdaConnection *cnc,

@@ -62,7 +62,7 @@ gda_data_model_array_get_n_columns (GdaDataModelBase *model)
 	return GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns;
 }
 
-static const GdaRow *
+static GdaRow *
 gda_data_model_array_get_row (GdaDataModelBase *model, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
@@ -70,7 +70,7 @@ gda_data_model_array_get_row (GdaDataModelBase *model, gint row)
 	if (row >= GDA_DATA_MODEL_ARRAY (model)->priv->rows->len)
 		return NULL;
 
-	return (const GdaRow *) g_ptr_array_index (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
+	return (GdaRow *) g_ptr_array_index (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 }
 
 static const GdaValue *
@@ -101,7 +101,7 @@ gda_data_model_array_is_updatable (GdaDataModelBase *model)
 	return TRUE;
 }
 
-static const GdaRow *
+static GdaRow *
 gda_data_model_array_append_values (GdaDataModelBase *model, const GList *values)
 {
 	gint len;
@@ -121,7 +121,7 @@ gda_data_model_array_append_values (GdaDataModelBase *model, const GList *values
 					     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 	}
 
-	return (const GdaRow *) row;
+	return (GdaRow *) row;
 }
 
 static gboolean
@@ -131,11 +131,38 @@ gda_data_model_array_append_row (GdaDataModelBase *model, GdaRow *row)
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, (GdaRow *) row);
+	g_object_ref (row);
 	gda_row_set_number ((GdaRow *) row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 	gda_data_model_row_inserted (GDA_DATA_MODEL (model), 
 				     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 
 	return TRUE;
+}
+
+static gboolean
+gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
+{
+        gint i;
+        GdaDataModelArrayPrivate *priv;
+	gint num;
+
+        g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+        g_return_val_if_fail (row != NULL, FALSE);
+
+	num = gda_row_get_number (row);
+        priv = GDA_DATA_MODEL_ARRAY (model)->priv;
+
+        for (i = 0; i < priv->rows->len; i++) {
+                if (gda_row_get_number (priv->rows->pdata[i]) == num) {
+                        g_object_unref (priv->rows->pdata[i]);
+                        priv->rows->pdata[i] = gda_row_copy (row);
+                        gda_data_model_row_updated (GDA_DATA_MODEL (model), i);
+
+                        return TRUE;
+                }
+        }
+
+        return FALSE; /* row not found in this data model */
 }
 
 static gboolean
@@ -157,52 +184,20 @@ gda_data_model_array_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		gda_row_set_number ((GdaRow *) row, -1);
 
 		gda_data_model_row_removed (GDA_DATA_MODEL (model), rownum);
+		g_object_unref (row);
 		return TRUE;
 	}
 
 	return FALSE;
 }
 
-static gboolean
-gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
+static GdaColumn *
+gda_data_model_array_append_column (GdaDataModelBase *model)
 {
-	gint i;
-	GdaDataModelArrayPrivate *priv;
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
-	g_return_val_if_fail (row != NULL, FALSE);
-
-	priv = GDA_DATA_MODEL_ARRAY (model)->priv;
-
-	for (i = 0; i < priv->rows->len; i++) {
-		if (priv->rows->pdata[i] == row) {
-			gda_row_free (priv->rows->pdata[i]);
-			priv->rows->pdata[i] = gda_row_copy ((GdaRow *) row);
-			gda_data_model_row_updated (GDA_DATA_MODEL (model), i);
-
-			return TRUE;
-		}
-	}
-
-	return FALSE; /* row not found in this data model */
-}
-
-static gboolean
-gda_data_model_array_append_column (GdaDataModelBase *model, const GdaColumn *attrs)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
-	g_return_val_if_fail (attrs != NULL, FALSE);
-
-	return FALSE;
-}
-
-static gboolean
-gda_data_model_array_update_column (GdaDataModelBase *model, gint col, const GdaColumn *attrs)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
-	g_return_val_if_fail (attrs != NULL, FALSE);
-
-	return FALSE;
+	/* non supported method */
+	return NULL;
 }
 
 static gboolean
@@ -210,6 +205,7 @@ gda_data_model_array_remove_column (GdaDataModelBase *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 
+	/* non supported method */
 	return FALSE;
 }
 
@@ -229,10 +225,9 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->is_updatable = gda_data_model_array_is_updatable;
 	model_class->append_values = gda_data_model_array_append_values;
 	model_class->append_row = gda_data_model_array_append_row;
-	model_class->remove_row = gda_data_model_array_remove_row;
 	model_class->update_row = gda_data_model_array_update_row;
+	model_class->remove_row = gda_data_model_array_remove_row;
 	model_class->append_column = gda_data_model_array_append_column;
-	model_class->update_column = gda_data_model_array_update_column;
 	model_class->remove_column = gda_data_model_array_remove_column;
 }
 
@@ -506,7 +501,7 @@ gda_data_model_array_clear (GdaDataModelArray *model)
 		GdaRow *row = (GdaRow *) g_ptr_array_index (model->priv->rows, 0);
 
 		if (row != NULL)
-			gda_row_free (row);
+			g_object_unref (row);
 		g_ptr_array_remove_index (model->priv->rows, 0);
 	}
 }

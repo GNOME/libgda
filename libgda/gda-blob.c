@@ -72,7 +72,7 @@ gda_blob_class_init (GdaBlobClass *klass)
         klass->lseek = NULL;
         klass->close = NULL;
         klass->remove = NULL;
-        klass->stringify = NULL;
+        klass->get_sql_id = NULL;
 }
 
 static void
@@ -221,19 +221,18 @@ gda_blob_remove (GdaBlob *blob)
 }
 
 /**
- * gda_blob_stringify
+ * gda_blob_get_sql_id
  * @blob: a valid #GdaBlob.
  *
- * Returns a string representation of a @blob.
- *
+ * Returns a string representation of a @blob's SQL ID.
  */
 gchar*
-gda_blob_stringify (GdaBlob *blob) 
+gda_blob_get_sql_id (GdaBlob *blob) 
 {
 	g_return_val_if_fail(blob && GDA_IS_BLOB (blob), NULL);
 
-	if (CLASS (blob)->stringify != NULL)
-		return CLASS (blob)->stringify (blob);
+	if (CLASS (blob)->get_sql_id != NULL)
+		return CLASS (blob)->get_sql_id (blob);
 	else
 		return NULL;
 }

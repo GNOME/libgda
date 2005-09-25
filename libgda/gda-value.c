@@ -2244,7 +2244,7 @@ gda_value_stringify (GdaValue *value)
 	
 	case GDA_VALUE_TYPE_BLOB:
 		gdablob = gda_value_get_blob (value);
-		retval = g_strdup_printf ("%s", gda_blob_stringify (gdablob));
+		retval = g_strdup_printf ("%s", gda_blob_get_sql_id (gdablob));
 		break;
 
 	case GDA_VALUE_TYPE_LIST:

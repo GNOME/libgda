@@ -52,7 +52,7 @@ struct _GdaDataModelIface {
 	gint                 (* i_get_n_columns)   (GdaDataModel *model);
 
 	GdaColumn           *(* i_describe_column) (GdaDataModel *model, gint col);
-	const GdaRow        *(* i_get_row)         (GdaDataModel *model, gint row);
+	GdaRow              *(* i_get_row)         (GdaDataModel *model, gint row);
 	const GdaValue      *(* i_get_value_at)    (GdaDataModel *model, gint col, gint row);
 
 	gboolean             (* i_is_updatable)    (GdaDataModel *model);
@@ -61,14 +61,12 @@ struct _GdaDataModelIface {
 	gboolean             (* i_commit_changes)  (GdaDataModel *model);
 	gboolean             (* i_cancel_changes)  (GdaDataModel *model);
 
-	const GdaRow        *(* i_append_values)   (GdaDataModel *model, const GList *values);
+	GdaRow              *(* i_append_values)   (GdaDataModel *model, const GList *values);
 	gboolean             (* i_append_row)      (GdaDataModel *model, GdaRow *row);
-	gboolean             (* i_remove_row)      (GdaDataModel *model, const GdaRow *row);
 	gboolean             (* i_update_row)      (GdaDataModel *model, const GdaRow *row);
+	gboolean             (* i_remove_row)      (GdaDataModel *model, const GdaRow *row);
 
-	gboolean             (* i_append_column)   (GdaDataModel *model, const GdaColumn *attrs);
-	gboolean             (* i_update_column)   (GdaDataModel *model, gint col,
-						    const GdaColumn *attrs);
+	GdaColumn           *(* i_append_column)   (GdaDataModel *model);
 	gboolean             (* i_remove_column)   (GdaDataModel *model, gint col);
 
 	void                 (* i_set_notify)      (GdaDataModel *model, gboolean do_notify_changes);
@@ -102,17 +100,15 @@ gint                          gda_data_model_get_n_columns          (GdaDataMode
 GdaColumn                    *gda_data_model_describe_column        (GdaDataModel *model, gint col);
 const gchar                  *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
 void                          gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
-const GdaRow                 *gda_data_model_get_row                (GdaDataModel *model, gint row);
+GdaRow                       *gda_data_model_get_row                (GdaDataModel *model, gint row);
 const GdaValue               *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
 
 gboolean                      gda_data_model_is_updatable           (GdaDataModel *model);
-const GdaRow                 *gda_data_model_append_values          (GdaDataModel *model, const GList *values);
+GdaRow                       *gda_data_model_append_values          (GdaDataModel *model, const GList *values);
 gboolean                      gda_data_model_append_row             (GdaDataModel *model, GdaRow *row);
-gboolean                      gda_data_model_remove_row             (GdaDataModel *model, const GdaRow *row);
 gboolean                      gda_data_model_update_row             (GdaDataModel *model, const GdaRow *row);
-gboolean	              gda_data_model_append_column          (GdaDataModel *model, const GdaColumn *attrs);
-gboolean	              gda_data_model_update_column          (GdaDataModel *model, gint col,
-								     const GdaColumn *attrs);
+gboolean                      gda_data_model_remove_row             (GdaDataModel *model, const GdaRow *row);
+GdaColumn	             *gda_data_model_append_column          (GdaDataModel *model);
 gboolean	              gda_data_model_remove_column          (GdaDataModel *model, gint col);
 
 void                          gda_data_model_foreach                (GdaDataModel *model, GdaDataModelForeachFunc func,

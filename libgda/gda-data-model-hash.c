@@ -70,7 +70,7 @@ gda_data_model_hash_get_n_columns (GdaDataModelBase *model)
 	return GDA_DATA_MODEL_HASH (model)->priv->number_of_columns;
 }
 
-static const GdaRow *
+static GdaRow *
 gda_data_model_hash_get_row (GdaDataModelBase *model, gint row)
 {
 	gint hash_entry;
@@ -80,8 +80,8 @@ gda_data_model_hash_get_row (GdaDataModelBase *model, gint row)
 	/* get row according mapping */
 	hash_entry = g_array_index (GDA_DATA_MODEL_HASH (model)->priv->row_map, gint, row);
 
-	return (const GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
-						     GINT_TO_POINTER (hash_entry));
+	return (GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
+					       GINT_TO_POINTER (hash_entry));
 }
 
 static const GdaValue *
@@ -144,17 +144,14 @@ static gboolean
 gda_data_model_hash_remove_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	gint i, cols, rownum;
-	GdaValue *value;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	cols = GDA_DATA_MODEL_HASH (model)->priv->number_of_columns;
 
-	for (i=0; i<cols; i++) {
-		value = (GdaValue *) gda_row_get_value ((GdaRow *) row, i);
-		gda_value_set_string (value, "NULL");
-	}
+	for (i=0; i<cols; i++)
+		gda_row_set_value (row, i, NULL);
 
 	rownum = gda_row_get_number ((GdaRow *) row);
 
@@ -178,7 +175,7 @@ gda_data_model_hash_remove_row (GdaDataModelBase *model, const GdaRow *row)
 static void
 free_hash (gpointer value)
 {
-	gda_row_free ((GdaRow *) value);
+	g_object_unref (value);
 }
 
 static void
@@ -195,7 +192,9 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	model_class->get_row = gda_data_model_hash_get_row;
 	model_class->get_value_at = gda_data_model_hash_get_value_at;
 	model_class->is_updatable = gda_data_model_hash_is_updatable;
+	model_class->append_values = NULL;
 	model_class->append_row = gda_data_model_hash_append_row;
+	model_class->update_row = NULL;
 	model_class->remove_row = gda_data_model_hash_remove_row;
 }
 
@@ -310,6 +309,7 @@ gda_data_model_hash_insert_row (GdaDataModelHash *model,
 
 	g_hash_table_insert (model->priv->rows,
 			     GINT_TO_POINTER (rownum), row);
+	g_object_ref (row);
 	gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum);
 }
 

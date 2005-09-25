@@ -52,6 +52,13 @@ _gda_server_provider_create_blob (GdaServerProvider *provider,
 	return NULL;
 }
 
+static GdaBlob *
+_gda_server_provider_fetch_blob (GdaServerProvider *provider,
+				 GdaConnection *cnc, const gchar *sql_id)
+{
+	return NULL;
+}
+
 static void
 gda_server_provider_class_init (GdaServerProviderClass *klass)
 {
@@ -86,6 +93,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->supports = NULL;
 	klass->get_schema = NULL;
 	klass->create_blob = _gda_server_provider_create_blob;
+	klass->fetch_blob = _gda_server_provider_fetch_blob;
 	klass->value_to_sql_string = NULL;
 }
 
@@ -707,6 +715,29 @@ gda_server_provider_create_blob (GdaServerProvider *provider,
 
 	return CLASS (provider)->create_blob (provider, cnc);
 }
+
+/**
+ * gda_server_provider_fetch_blob_by_id
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object.
+ * @sql_id: the SQL ID of the blob to fetch
+ *
+ * Fetch an existing BLOB (Binary Large OBject) using its SQL ID.
+ *
+ * Returns: a new #GdaBlob object, or %NULL if the database (or the libgda's provider)
+ * does not support BLOBS
+ */
+GdaBlob *
+gda_server_provider_fetch_blob_by_id (GdaServerProvider *provider,
+				      GdaConnection *cnc, const gchar *sql_id)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (sql_id, FALSE);
+
+	return CLASS (provider)->fetch_blob (provider, cnc, sql_id);
+}
+
  
 /**
  * gda_server_provider_value_to_sql_string

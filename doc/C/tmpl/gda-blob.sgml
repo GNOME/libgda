@@ -93,12 +93,3 @@ Management of BLOBs (Binary Large OBjects)
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_blob_stringify ##### -->
-<para>
-
-</para>
-
-@blob: 
-@Returns: 
-
-

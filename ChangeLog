@@ -1,3 +1,22 @@
+2005-09-25  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model.[ch]: changed the signature of the gda_data_model_append_column()
+	to make it return a GdaColumn (instead of having to pass one to the function).
+	* libgda/gda-data-model.[ch]: removed gda_data_model_update_column() which does not serve
+	any purpose (and was implemented nowhere)
+	* libgda/gda-row.[ch]: made GdaRow a GObject
+	* libgda/gda-row.[ch]: added gda_row_set_value()
+	* libgda/gda-blob.[ch]: removed gda_blob_stringify() and added gda_blob_get_sql_id()
+	* libgda/gda-connection.[ch]: added gda_connection_fetch_blob_by_id()
+	* libgda/gda-server-provider.[ch]: added gda_server_provider_fetch_blob_by_id()
+	* libgda/gda-data-model.[ch]: removed the "const" attribute of the GdaRow returnes
+	by the gda_data_model_append_values() and gda_data_model_get_row() functions.
+	* libgda/gda-colmun.[ch]: added a "gda_type_changed" signal
+	* libgda/gda-data-model-base.c: show warnings if a data model already contains data
+	and the gda type of a column is changed and becomes incompatible with the already
+	existing values in the represented column
+	* other files: modifications made necessary by the modifications listed above
+
 2005-09-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/sqlite-src: updated to version 3.2.6

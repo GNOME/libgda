@@ -52,7 +52,7 @@ GType         gda_data_model_list_get_type             (void);
 GdaDataModel *gda_data_model_list_new                  (void);
 GdaDataModel *gda_data_model_list_new_from_string_list (const GList *list);
 
-const GdaRow *gda_data_model_list_append_value         (GdaDataModelList *model,
+GdaRow       *gda_data_model_list_append_value         (GdaDataModelList *model,
 							const GdaValue *value);
 
 G_END_DECLS

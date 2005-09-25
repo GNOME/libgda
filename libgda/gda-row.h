@@ -3,7 +3,8 @@
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
- *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,25 +25,53 @@
 #if !defined(__gda_row_h__)
 #  define __gda_row_h__
 
+#include <glib-object.h>
 #include <libgda/gda-column.h>
+#include <glib/gmacros.h>
 #include <libgda/global-decl.h>
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_ROW (gda_row_get_type())
+#define GDA_TYPE_ROW            (gda_row_get_type())
+#define GDA_ROW(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_ROW, GdaRow))
+#define GDA_ROW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_ROW, GdaRowClass))
+#define GDA_IS_ROW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_ROW))
+#define GDA_IS_ROW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_ROW))
 
-GType         gda_row_get_type       (void);
+typedef struct _GdaRowClass   GdaRowClass;
+typedef struct _GdaRowPrivate GdaRowPrivate;
+
+struct _GdaRow {
+	GObject        object;
+	GdaRowPrivate *priv;
+};
+
+struct _GdaRowClass {
+	GObjectClass   parent_class;
+	
+	/* signals */
+	gboolean (* value_to_change) (GdaRow *row, gint num, const GdaValue *current, const GdaValue *proposed);
+	void     (* value_changed)   (GdaRow *row, gint num, const GdaValue *old, const GdaValue *new);
+};
+
+GType         gda_row_get_type           (void);
+
 GdaRow       *gda_row_new            (GdaDataModel *model, gint count);
 GdaRow       *gda_row_new_from_list  (GdaDataModel *model, const GList *values);
 GdaRow       *gda_row_copy           (GdaRow *row);
-void          gda_row_free           (GdaRow *row);
+
 GdaDataModel *gda_row_get_model      (GdaRow *row);
+
+gint          gda_row_get_length     (GdaRow *row);
+
 gint          gda_row_get_number     (GdaRow *row);
 void          gda_row_set_number     (GdaRow *row, gint number);
+
 const gchar  *gda_row_get_id         (GdaRow *row);
 void          gda_row_set_id         (GdaRow *row, const gchar *id);
+
 GdaValue     *gda_row_get_value      (GdaRow *row, gint num);
-gint          gda_row_get_length     (GdaRow *row);
+gboolean      gda_row_set_value      (GdaRow *row, gint num, const GdaValue *value);
 
 void          gda_row_set_is_default (GdaRow *row, gint num, gboolean is_default);
 gboolean      gda_row_get_is_default (GdaRow *row, gint num);

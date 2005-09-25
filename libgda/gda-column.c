@@ -1,10 +1,11 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Álvaro Peña <alvaropg@telefonica.net>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,6 +27,7 @@
 #include <glib/gstrfuncs.h>
 #include <libgda/gda-column.h>
 #include <string.h>
+#include "gda-marshal.h"
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
@@ -55,6 +57,7 @@ struct _GdaColumnPrivate {
 
 enum {
 	NAME_CHANGED,
+	GDA_TYPE_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -62,7 +65,7 @@ static void gda_column_class_init (GdaColumnClass *klass);
 static void gda_column_init       (GdaColumn *column, GdaColumnClass *klass);
 static void gda_column_finalize   (GObject *object);
 
-static guint gda_column_signals[LAST_SIGNAL];
+static guint gda_column_signals[LAST_SIGNAL] = {0 , 0};
 static GObjectClass *parent_class = NULL;
 
 static void
@@ -81,6 +84,15 @@ gda_column_class_init (GdaColumnClass *klass)
 			      g_cclosure_marshal_VOID__STRING,
 			      G_TYPE_NONE,
 			      1, G_TYPE_STRING);
+	gda_column_signals[GDA_TYPE_CHANGED] =
+		g_signal_new ("gda_type_changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaColumnClass, gda_type_changed),
+			      NULL, NULL,
+			      gda_marshal_VOID__INT_INT,
+			      G_TYPE_NONE,
+			      2, G_TYPE_INT, G_TYPE_INT);
 
 	object_class->finalize = gda_column_finalize;
 }
@@ -215,17 +227,17 @@ gda_column_get_name (GdaColumn *column)
 void
 gda_column_set_name (GdaColumn *column, const gchar *name)
 {
-	gchar *old_name;
+	gchar *old_name = NULL;
 
 	g_return_if_fail (GDA_IS_COLUMN (column));
-	g_return_if_fail (name != NULL);
 
 	if (column->priv->name != NULL) {
 		old_name = g_strdup (column->priv->name);
 		g_free (column->priv->name);
 	}
-	
-	column->priv->name = g_strdup (name);
+
+	if (name)
+		column->priv->name = g_strdup (name);
 
 	g_signal_emit (G_OBJECT (column),
 		       gda_column_signals[NAME_CHANGED],
@@ -398,8 +410,16 @@ gda_column_get_gdatype (GdaColumn *column)
 void
 gda_column_set_gdatype (GdaColumn *column, GdaValueType type)
 {
+	GdaValueType old_type;
+
 	g_return_if_fail (GDA_IS_COLUMN (column));
+
+	old_type = column->priv->gda_type;
 	column->priv->gda_type = type;
+
+	g_signal_emit (G_OBJECT (column),
+		       gda_column_signals[GDA_TYPE_CHANGED],
+		       0, old_type, type);
 }
 
 /**

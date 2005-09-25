@@ -6,7 +6,7 @@ Row for a #GdaDataModel object
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -64,12 +64,14 @@ Row for a #GdaDataModel object
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_row_free ##### -->
+<!-- ##### FUNCTION gda_row_get_value ##### -->
 <para>
 
 </para>
 
 @row: 
+@num: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_row_get_model ##### -->
@@ -115,16 +117,6 @@ Row for a #GdaDataModel object
 
 @row: 
 @id: 
-
-
-<!-- ##### FUNCTION gda_row_get_value ##### -->
-<para>
-
-</para>
-
-@row: 
-@num: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_row_get_length ##### -->

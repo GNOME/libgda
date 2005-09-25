@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -52,17 +52,15 @@ struct _GdaDataModelBaseClass {
 	/* virtual methods */
 	gint                (* get_n_rows)      (GdaDataModelBase *model);
 	gint                (* get_n_columns)   (GdaDataModelBase *model);
-	const GdaRow       *(* get_row)         (GdaDataModelBase *model, gint row);
+	GdaRow             *(* get_row)         (GdaDataModelBase *model, gint row);
 	const GdaValue     *(* get_value_at)    (GdaDataModelBase *model, gint col, gint row);
 	
 	gboolean            (* is_updatable)    (GdaDataModelBase *model);
-	const GdaRow       *(* append_values)   (GdaDataModelBase *model, const GList *values);
+	GdaRow             *(* append_values)   (GdaDataModelBase *model, const GList *values);
 	gboolean            (* append_row)      (GdaDataModelBase *model, GdaRow *row);
-	gboolean            (* remove_row)      (GdaDataModelBase *model, const GdaRow *row);
 	gboolean            (* update_row)      (GdaDataModelBase *model, const GdaRow *row);
-	gboolean            (* append_column)   (GdaDataModelBase *model, const GdaColumn *attrs);
-	gboolean            (* update_column)   (GdaDataModelBase *model, gint col,
-						 const GdaColumn *attrs);
+	gboolean            (* remove_row)      (GdaDataModelBase *model, const GdaRow *row);
+	GdaColumn          *(* append_column)   (GdaDataModelBase *model);
 	gboolean            (* remove_column)   (GdaDataModelBase *model, gint col);
 };
 

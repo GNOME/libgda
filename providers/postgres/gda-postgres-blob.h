@@ -48,9 +48,10 @@ struct _GdaPostgresBlobClass {
 	GdaBlobClass            parent_class;
 };
 
-GType         gda_postgres_blob_get_type (void);
-GdaBlob      *gda_postgres_blob_new      (GdaConnection *cnc);
-void          gda_postgres_blob_set_id   (GdaPostgresBlob *blob, gint value);
+GType         gda_postgres_blob_get_type    (void);
+GdaBlob      *gda_postgres_blob_new         (GdaConnection *cnc);
+GdaBlob      *gda_postgres_blob_new_with_id (GdaConnection *cnc, const gchar *sql_id);
+void          gda_postgres_blob_set_id      (GdaPostgresBlob *blob, gint value);
 
 G_END_DECLS
 

@@ -123,6 +123,8 @@ static GdaDataModel *gda_postgres_provider_get_schema (GdaServerProvider *provid
 
 static GdaBlob *gda_postgres_provider_create_blob (GdaServerProvider *provider,
 						   GdaConnection *cnc);
+static GdaBlob *gda_postgres_provider_fetch_blob (GdaServerProvider *provider,
+						  GdaConnection *cnc, const gchar *sql_id);
 
 gchar *
 gda_postgres_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont actually use this!*/
@@ -187,6 +189,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->supports = gda_postgres_provider_supports;
 	provider_class->get_schema = gda_postgres_provider_get_schema;
 	provider_class->create_blob = gda_postgres_provider_create_blob;
+	provider_class->fetch_blob = gda_postgres_provider_fetch_blob;
 	provider_class->value_to_sql_string = gda_postgres_provider_value_to_sql_string;
 }
 
@@ -2748,6 +2751,16 @@ gda_postgres_provider_create_blob (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	return gda_postgres_blob_new (cnc);
+}
+
+static GdaBlob *
+gda_postgres_provider_fetch_blob (GdaServerProvider *provider,
+				  GdaConnection *cnc, const gchar *sql_id)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	return gda_postgres_blob_new_with_id (cnc, sql_id);
 }
 
 gchar *

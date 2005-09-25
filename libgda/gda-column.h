@@ -51,7 +51,8 @@ struct _GdaColumnClass {
 	GObjectClass parent_class;
 	
 	/* signals */
-	void (* name_changed) (GdaColumn *column, const gchar *old_name);
+	void (* name_changed)     (GdaColumn *column, const gchar *old_name);
+	void (* gda_type_changed) (GdaColumn *column, GdaValueType old_type, GdaValueType new_type);
 };
 
 GType           gda_column_get_type           (void);

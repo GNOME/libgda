@@ -60,7 +60,7 @@ struct _GdaBlobClass {
 	gint   (* lseek)     (GdaBlob *blob, gint offset, gint whence);
 	gint   (* close)     (GdaBlob *blob);
 	gint   (* remove)    (GdaBlob *blob);
-	gchar *(* stringify) (GdaBlob *blob);
+	gchar *(* get_sql_id)(GdaBlob *blob);
 };
 
 GType    gda_blob_get_type  (void);
@@ -71,7 +71,7 @@ gint     gda_blob_write     (GdaBlob *blob, gpointer buf, gint size, gint *bytes
 gint     gda_blob_lseek     (GdaBlob *blob, gint offset, gint whence);
 gint     gda_blob_close     (GdaBlob *blob);
 gint     gda_blob_remove    (GdaBlob *blob);
-gchar   *gda_blob_stringify (GdaBlob *blob);
+gchar   *gda_blob_get_sql_id(GdaBlob *blob);
 
 G_END_DECLS
 

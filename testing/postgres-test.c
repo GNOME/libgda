@@ -1,8 +1,9 @@
 /* GDA - Test suite
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -188,6 +189,7 @@ blob_tests (GdaConnection *cnc)
 	gchar *str = "The string";
 	gchar copy_str [10];
 	gint nbytes;
+	gchar *tmp;
 
 	xaction = gda_transaction_new (NULL);
 
@@ -206,8 +208,11 @@ blob_tests (GdaConnection *cnc)
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
 	} 
-	else 
-		g_print ("OK\n");
+	else {
+		tmp = gda_blob_get_sql_id (blob);
+		g_print ("OK, blob Oid=%s\n", tmp);
+		g_free (tmp);
+	}
 
 	g_print ("\t\tWriting to BLOB: ");
 	if (gda_blob_write (blob, str, strlen (str), &nbytes)) {
@@ -256,8 +261,11 @@ blob_tests (GdaConnection *cnc)
 		g_print ("FAILED\n");
 		print_errors (gda_connection_get_events (cnc));
 	} 
-	else
-		g_print ("OK\n");
+	else {
+		tmp = gda_blob_get_sql_id (blob);
+		g_print ("OK, blob Oid=%s\n", tmp);
+		g_free (tmp);
+	}
 
 	g_print ("\t\tRemoving the BLOB: ");
 	if (gda_blob_remove (blob)) {

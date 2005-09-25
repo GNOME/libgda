@@ -1083,6 +1083,26 @@ gda_connection_create_blob (GdaConnection *cnc)
 	return gda_server_provider_create_blob (cnc->priv->provider_obj, cnc);
 }
 
+/**
+ * gda_connection_create_blob
+ * @cnc: a #GdaConnection object.
+ * @blob: a user-allocated #GdaBlob structure.
+ * @sql_id: the SQL ID of the blob to fetch
+ *
+ * Fetch an existing BLOB (Binary Large OBject) using its SQL ID.
+ *
+ * Returns: %FALSE if the database does not support BLOBs. %TRUE otherwise
+ * and the GdaBlob is created and ready to be used.
+ */
+GdaBlob *
+gda_connection_fetch_blob_by_id (GdaConnection *cnc, const gchar *sql_id)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (cnc->priv, FALSE);
+	g_return_val_if_fail (sql_id, FALSE);
+
+	return gda_server_provider_fetch_blob_by_id (cnc->priv->provider_obj, cnc, sql_id);
+}
 
 /**
  * gda_connection_value_to_sql_string

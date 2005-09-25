@@ -34,9 +34,9 @@
 
 struct _GdaPostgresBlobPrivate {
 	GdaConnection *cnc;
-	gint           blobid;
+	Oid            blobid;  /* SQL ID in database */
 	GdaBlobMode    mode;
-	gint           fd;
+	gint           fd;      /* to use with lo_read, lo_write, lo_lseek, lo_tell, and lo_close */
 };
 
 static void gda_postgres_blob_class_init (GdaPostgresBlobClass *klass);
@@ -52,7 +52,7 @@ static gint   gda_postgres_blob_write      (GdaBlob *blob, gpointer buf, gint si
 static gint   gda_postgres_blob_lseek      (GdaBlob *blob, gint offset, gint whence);
 static gint   gda_postgres_blob_close      (GdaBlob *blob);
 static gint   gda_postgres_blob_remove     (GdaBlob *blob);
-static gchar *gda_postgres_blob_stringify  (GdaBlob *blob);
+static gchar *gda_postgres_blob_get_sql_id  (GdaBlob *blob);
 
 static GObjectClass *parent_class = NULL;
 
@@ -88,7 +88,7 @@ gda_postgres_blob_init (GdaPostgresBlob *blob,
 	g_return_if_fail (GDA_IS_POSTGRES_BLOB (blob));
 
 	blob->priv = g_new0 (GdaPostgresBlobPrivate, 1);
-	blob->priv->blobid = -1;
+	blob->priv->blobid = 0;
 	blob->priv->mode = -1;
 	blob->priv->fd = -1;
 }
@@ -108,7 +108,7 @@ gda_postgres_blob_class_init (GdaPostgresBlobClass *klass)
 	blob_class->lseek = gda_postgres_blob_lseek;
 	blob_class->close = gda_postgres_blob_close;
 	blob_class->remove = gda_postgres_blob_remove;
-	blob_class->stringify = gda_postgres_blob_stringify;
+	blob_class->get_sql_id = gda_postgres_blob_get_sql_id;
 }
 
 static void
@@ -143,15 +143,15 @@ gda_postgres_blob_new (GdaConnection *cnc)
 {
 	GdaPostgresBlob *blob;
 	PGconn *pconn;
-	gint oid;
+	Oid blobid;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	blob = g_object_new (GDA_TYPE_POSTGRES_BLOB, NULL);
 
 	pconn = get_pconn (cnc);
-	oid = lo_creat (pconn, INV_READ | INV_WRITE);
-	if (oid == 0) {
+	blobid = lo_creat (pconn, INV_READ | INV_WRITE);
+	if (blobid == 0) {
 		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
 		gda_connection_add_event (cnc, error);
 		g_object_unref (blob);
@@ -159,7 +159,37 @@ gda_postgres_blob_new (GdaConnection *cnc)
 		return NULL;
 	}
 
-	blob->priv->blobid = oid;
+	blob->priv->blobid = blobid;
+	blob->priv->cnc = cnc;
+
+	return GDA_BLOB (blob);
+}
+
+GdaBlob *
+gda_postgres_blob_new_with_id (GdaConnection *cnc, const gchar *sql_id)
+{
+	GdaPostgresBlob *blob;
+	PGconn *pconn;
+	gint fd;
+	Oid blobid;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	blob = g_object_new (GDA_TYPE_POSTGRES_BLOB, NULL);
+
+	pconn = get_pconn (cnc);
+	blobid = atoi (sql_id);
+	fd = lo_open (pconn, blobid, INV_READ | INV_WRITE);
+	if (fd < 0) {
+		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
+		gda_connection_add_event (cnc, error);
+		g_object_unref (blob);
+
+		return NULL;
+	}
+
+	blob->priv->blobid = blobid;
+	blob->priv->fd = fd;
 	blob->priv->cnc = cnc;
 
 	return GDA_BLOB (blob);
@@ -327,7 +357,7 @@ gda_postgres_blob_remove (GdaBlob *blob)
 }
 
 static gchar *
-gda_postgres_blob_stringify (GdaBlob *blob)
+gda_postgres_blob_get_sql_id (GdaBlob *blob)
 {
 	GdaPostgresBlob *pblob;
 	PGconn *pconn;
@@ -336,5 +366,5 @@ gda_postgres_blob_stringify (GdaBlob *blob)
 	pblob = GDA_POSTGRES_BLOB (blob);
 	g_return_val_if_fail (pblob->priv, NULL);
 
-	return g_strdup ("Postgres BLOB to string not implemented");
+	return g_strdup_printf ("%d", pblob->priv->blobid);
 }

@@ -56,7 +56,7 @@ gda_data_model_list_get_n_columns (GdaDataModelBase *model)
 	return 1;
 }
 
-static const GdaRow *
+static GdaRow *
 gda_data_model_list_get_row (GdaDataModelBase *model, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
@@ -79,7 +79,7 @@ gda_data_model_list_is_updatable (GdaDataModelBase *model)
 	return TRUE;
 }
 
-static const GdaRow *
+static GdaRow *
 gda_data_model_list_append_values (GdaDataModelBase *model, const GList *values)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
@@ -114,7 +114,6 @@ gda_data_model_list_class_init (GdaDataModelListClass *klass)
 	model_class->is_updatable = gda_data_model_list_is_updatable;
 	model_class->append_values = gda_data_model_list_append_values;
 	model_class->remove_row = gda_data_model_list_remove_row;
-	model_class->update_row = NULL;
 }
 
 static void
@@ -266,11 +265,11 @@ gda_data_model_list_new_from_string_list (const GList *list)
  *
  * Returns: the #GdaRow which has been inserted, or %NULL on failure.
  */
-const GdaRow *
+GdaRow *
 gda_data_model_list_append_value (GdaDataModelList *model, const GdaValue *value)
 {
 	GList *values;
-	const GdaRow *row;
+	GdaRow *row;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	g_return_val_if_fail (value != NULL, NULL);

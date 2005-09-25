@@ -212,7 +212,7 @@ Basic data model class
 @values: 
 
 
-<!-- ##### FUNCTION gda_data_model_remove_row ##### -->
+<!-- ##### FUNCTION gda_data_model_update_row ##### -->
 <para>
 
 </para>
@@ -222,7 +222,7 @@ Basic data model class
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_update_row ##### -->
+<!-- ##### FUNCTION gda_data_model_remove_row ##### -->
 <para>
 
 </para>
@@ -242,17 +242,6 @@ Basic data model class
 @Returns: 
 <!-- # Unused Parameters # -->
 @col: 
-
-
-<!-- ##### FUNCTION gda_data_model_update_column ##### -->
-<para>
-
-</para>
-
-@model: 
-@col: 
-@attrs: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_data_model_remove_column ##### -->

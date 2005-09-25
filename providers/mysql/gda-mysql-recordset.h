@@ -41,7 +41,7 @@ typedef struct _GdaMysqlRecordsetClass GdaMysqlRecordsetClass;
 typedef struct _GdaMysqlRecordsetPrivate GdaMysqlRecordsetPrivate;
 
 struct _GdaMysqlRecordset {
-	GdaDataModelArray model;
+	GdaDataModelArray         model;
 	GdaMysqlRecordsetPrivate *priv;
 };
 

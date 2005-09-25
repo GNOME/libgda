@@ -70,9 +70,6 @@ static const GdaRow 	       *gda_firebird_recordset_append_values (GdaDataModelB
 								      const GList *values);
 static gboolean			gda_firebird_recordset_remove_row (GdaDataModelBase *model,
 								   const GdaRow *row);
-static gboolean			gda_firebird_recordset_update_row (GdaDataModelBase *model,
-								   const GdaRow *row);
-
 
 static GObjectClass *parent_class = NULL;
 
@@ -733,13 +730,6 @@ gda_firebird_recordset_remove_row (GdaDataModelBase *model,
 {
 	return FALSE;
 }
-                                                                                                                            
-static gboolean
-gda_firebird_recordset_update_row (GdaDataModelBase *model,
-				   const GdaRow *row)
-{
-	return FALSE;
-}
 
 
 static void
@@ -748,7 +738,7 @@ gda_firebird_recordset_init (GdaFirebirdRecordset *recset,
 {
 	g_return_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset));
 
-	/* Init private structure and properties */                                                                                  
+	/* Init private structure and properties */
 	recset->priv = g_new0 (GdaFirebirdRecordsetPrivate, 1);
 	recset->priv->rows = g_ptr_array_new ();
 	recset->priv->cnc = NULL;
@@ -819,8 +809,8 @@ gda_firebird_recordset_class_init (GdaFirebirdRecordsetClass *klass)
 	model_class->get_value_at = gda_firebird_recordset_get_value_at;
 	model_class->is_updatable = gda_firebird_recordset_is_updatable;
 	model_class->append_values = gda_firebird_recordset_append_values;
+	model_class->update_row = NULL;
 	model_class->remove_row = gda_firebird_recordset_remove_row;
-	model_class->update_row = gda_firebird_recordset_update_row;
 }
 
 

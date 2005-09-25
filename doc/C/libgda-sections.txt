@@ -68,6 +68,7 @@ gda_connection_begin_transaction
 gda_connection_commit_transaction
 gda_connection_rollback_transaction
 gda_connection_create_blob
+gda_connection_fetch_blob_by_sql_id
 gda_connection_get_events
 GdaConnectionFeature
 gda_connection_supports
@@ -151,10 +152,9 @@ gda_data_model_get_value_at
 gda_data_model_is_updatable
 gda_data_model_append_values
 gda_data_model_append_row
-gda_data_model_remove_row
 gda_data_model_update_row
+gda_data_model_remove_row
 gda_data_model_append_column
-gda_data_model_update_column
 gda_data_model_remove_column
 GdaDataModelForeachFunc
 gda_data_model_foreach
@@ -280,6 +280,7 @@ gda_server_provider_rollback_transaction
 gda_server_provider_supports
 gda_server_provider_get_schema
 gda_server_provider_create_blob
+gda_server_provider_fetch_blob_by_sql_id
 <SUBSECTION Standard>
 GDA_SERVER_PROVIDER
 GDA_IS_SERVER_PROVIDER
@@ -1192,13 +1193,13 @@ gda_row_get_type
 gda_row_new
 gda_row_new_from_list
 gda_row_copy
-gda_row_free
+gda_row_get_value
+gda_row_set_value
 gda_row_get_model
 gda_row_get_number
 gda_row_set_number
 gda_row_get_id
 gda_row_set_id
-gda_row_get_value
 gda_row_get_length
 gda_row_set_is_default
 gda_row_get_is_default
@@ -1361,7 +1362,7 @@ gda_blob_write
 gda_blob_lseek
 gda_blob_close
 gda_blob_remove
-gda_blob_stringify
+gda_blob_get_sql_id
 </SECTION>
 
 <SECTION>
