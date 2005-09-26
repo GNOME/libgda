@@ -56,6 +56,7 @@ libgda_sources =  \
 	gda-data-model-base.c \
 	gda-data-model-hash.c \
 	gda-data-model-list.c \
+	gda-data-model-private.h \
 	gda-connection-event.c \
 	gda-column.c \
 	gda-column-index.c \

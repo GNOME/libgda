@@ -1,3 +1,9 @@
+2005-09-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #317267
+
+	* libgda/Makefile.am: added gda-data-model-private.h to $sources.
+
 2005-09-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.9.99.
