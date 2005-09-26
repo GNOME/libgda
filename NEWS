@@ -1,3 +1,21 @@
+libgda 1.9.99, 2005-09-26
+-------------------------
+
+ - Added Mono bindings from GTK# (Dan)
+ - Convert SQLstate to GDA error code in PostgreSQL provider (Juan Manuel)
+ - Don't use scrollkeeper for API docs (Rodrigo)
+ - Improved data types in SQLite provider (Vivien)
+ - API fixes (Vivien, Murray)
+ - Removed unfinished, non-working objects (Vivien)
+ - Blob object fixes (Vivien)
+ - Blob improvements in PostgreSQL provider (Vivien)
+ - Improved test to locate MDB libraries (Vivien)
+ - Added "gda_type_changed" signal to GdaColumn (Vivien)
+ - Updated translations:
+        - eu (Iñaki)
+        - ne (Pawan)
+	- vi (Clytie)
+
 libgda 1.3.91, 2005-08-10
 -------------------------
 

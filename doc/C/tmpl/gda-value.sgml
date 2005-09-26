@@ -19,6 +19,9 @@ use such values.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### MACRO TIMEZONE_INVALID ##### -->
 <para>
 
@@ -121,11 +124,13 @@ use such values.
 </para>
 
 
-<!-- ##### TYPEDEF GdaValue ##### -->
+<!-- ##### STRUCT GdaValue ##### -->
 <para>
 
 </para>
 
+@type: 
+@binary_length: 
 
 <!-- ##### MACRO GDA_TYPE_VALUE ##### -->
 <para>
@@ -134,21 +139,11 @@ use such values.
 
 
 
-<!-- ##### FUNCTION gda_value_convert_gdatype_to_gtype ##### -->
+<!-- ##### FUNCTION gda_value_get_gtype ##### -->
 <para>
 
 </para>
 
-@type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_convert_gtype_to_gdatype ##### -->
-<para>
-
-</para>
-
-@type: 
 @Returns: 
 
 
@@ -359,15 +354,6 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_new_gdatype ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_value_new_uinteger ##### -->
 <para>
 
@@ -491,9 +477,8 @@ use such values.
 </para>
 
 @value: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @size: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_set_binary ##### -->
@@ -502,10 +487,10 @@ use such values.
 </para>
 
 @value: 
-@binary: 
-<!-- # Unused Parameters # -->
 @val: 
 @size: 
+<!-- # Unused Parameters # -->
+@binary: 
 
 
 <!-- ##### FUNCTION gda_value_get_blob ##### -->
@@ -850,24 +835,6 @@ use such values.
 
 
 <!-- ##### FUNCTION gda_value_set_uinteger ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_gdatype ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_gdatype ##### -->
 <para>
 
 </para>

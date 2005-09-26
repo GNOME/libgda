@@ -14,6 +14,9 @@ Basic data model class
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GdaDataModel ##### -->
 <para>
 
@@ -158,6 +161,16 @@ Basic data model class
 @model: 
 @col: 
 @title: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_column_position ##### -->
+<para>
+
+</para>
+
+@model: 
+@title: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_data_model_get_row ##### -->

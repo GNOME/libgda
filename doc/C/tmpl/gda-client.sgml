@@ -29,6 +29,9 @@ or destroy a database.
  #GdaConnection.
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GdaClient ##### -->
 <para>
 
@@ -58,14 +61,6 @@ or destroy a database.
 @GDA_CLIENT_EVENT_TRANSACTION_COMMITTED: 
 @GDA_CLIENT_EVENT_TRANSACTION_CANCELLED: 
 
-<!-- ##### ENUM GdaClientSpecsType ##### -->
-<para>
-
-</para>
-
-@GDA_CLIENT_SPECS_CREATE_DATABASE: 
-@GDA_CLIENT_SPECS_DROP_DATABASE: 
-
 <!-- ##### FUNCTION gda_client_new ##### -->
 <para>
 
@@ -84,8 +79,9 @@ or destroy a database.
 @username: 
 @password: 
 @options: 
-@error: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@error: 
 
 
 <!-- ##### FUNCTION gda_client_open_connection_from_string ##### -->
@@ -97,7 +93,17 @@ or destroy a database.
 @provider_id: 
 @cnc_string: 
 @options: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @error: 
+
+
+<!-- ##### FUNCTION gda_client_get_connection_list ##### -->
+<para>
+
+</para>
+
+@client: 
 @Returns: 
 
 
@@ -121,40 +127,7 @@ or destroy a database.
 @client: 
 
 
-<!-- ##### FUNCTION gda_client_get_dsn_specs ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_get_provider_specs ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
-@type: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_client_create_database ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
-@params: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_drop_database ##### -->
 <para>
 
 </para>
