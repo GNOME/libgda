@@ -62,7 +62,7 @@ data_model_changed_cb (GdaDataModel *model, gpointer user_data)
  * GdaSelect class implementation
  */
 
-static const GdaRow *
+static GdaRow *
 gda_select_get_row (GdaDataModelBase *model, gint row)
 {
 	GdaSelect *sel = (GdaSelect *) model;
@@ -85,7 +85,7 @@ gda_select_is_updatable (GdaDataModelBase *model)
 	return FALSE;
 }
 
-static const GdaRow *
+static GdaRow *
 gda_select_append_values (GdaDataModelBase *model, const GList *values)
 {
 	GdaSelect *sel = (GdaSelect *) model;

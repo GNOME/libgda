@@ -14,14 +14,47 @@ Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 
 </para>
 
-<!-- ##### SECTION Stability_Level ##### -->
-
-
 <!-- ##### STRUCT GdaRow ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### SIGNAL GdaRow::value-changed ##### -->
+<para>
+
+</para>
+
+@gdarow: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### SIGNAL GdaRow::value-to-change ##### -->
+<para>
+
+</para>
+
+@gdarow: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+@Returns: 
+
+<!-- ##### ARG GdaRow:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaRow:nb-values ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaRow:values ##### -->
+<para>
+
+</para>
 
 <!-- ##### MACRO GDA_TYPE_ROW ##### -->
 <para>
@@ -75,6 +108,26 @@ Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 @row: 
 @num: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_row_set_value ##### -->
+<para>
+
+</para>
+
+@row: 
+@num: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_row_set_model ##### -->
+<para>
+
+</para>
+
+@row: 
+@model: 
 
 
 <!-- ##### FUNCTION gda_row_get_model ##### -->

@@ -58,8 +58,8 @@ struct _GdaDataModelBaseClass {
 	gboolean            (* is_updatable)    (GdaDataModelBase *model);
 	GdaRow             *(* append_values)   (GdaDataModelBase *model, const GList *values);
 	gboolean            (* append_row)      (GdaDataModelBase *model, GdaRow *row);
-	gboolean            (* update_row)      (GdaDataModelBase *model, const GdaRow *row);
-	gboolean            (* remove_row)      (GdaDataModelBase *model, const GdaRow *row);
+	gboolean            (* update_row)      (GdaDataModelBase *model, GdaRow *row);
+	gboolean            (* remove_row)      (GdaDataModelBase *model, GdaRow *row);
 	GdaColumn          *(* append_column)   (GdaDataModelBase *model);
 	gboolean            (* remove_column)   (GdaDataModelBase *model, gint col);
 };

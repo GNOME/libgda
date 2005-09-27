@@ -141,7 +141,7 @@ gda_data_model_hash_append_row (GdaDataModelBase *model, GdaRow *row)
 }
 
 static gboolean
-gda_data_model_hash_remove_row (GdaDataModelBase *model, const GdaRow *row)
+gda_data_model_hash_remove_row (GdaDataModelBase *model, GdaRow *row)
 {
 	gint i, cols, rownum;
 

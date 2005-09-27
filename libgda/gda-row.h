@@ -60,6 +60,7 @@ GdaRow       *gda_row_new            (GdaDataModel *model, gint count);
 GdaRow       *gda_row_new_from_list  (GdaDataModel *model, const GList *values);
 GdaRow       *gda_row_copy           (GdaRow *row);
 
+void          gda_row_set_model      (GdaRow *row, GdaDataModel *model);
 GdaDataModel *gda_row_get_model      (GdaRow *row);
 
 gint          gda_row_get_length     (GdaRow *row);

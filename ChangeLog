@@ -1,3 +1,21 @@
+2005-09-27  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-row.[ch]: added gda_row_set_model(), improved the referencing of the
+	GdaDataModel and modified the gda_row_copy() which now do not copy anymore the model
+	attribute (because the new GdaRow is unknown to the model the original GdaRow belongs to)
+	* libgda/gda-row.c: added "model", "values" and "nb_values" properties to make it easy for bindings.
+	* libgda/gda-row.c: improved documentation
+	* libgda/gda-column.[ch]: re-added gda_column_copy() and gda_column_equal().
+	* libgda/gda-data-model.[ch]: removed the 'const' attribute to the GdaRow * in the
+	gda_data_model_update_row() and gda_data_model_remove_row() functions
+	* libgda/gda-util.[ch]: added gda_provider_get_schema_nb_columns() and
+	gda_provider_init_schema_model() to make it easy to providers implementers to initialize
+	data models returned for schema requests.
+	* providers/sqlite/gda-sqlite-provider.c: uses the SQLite specific PRAGMA command when possible
+	to limit as much as possible the usage of SQLite's internal structures
+	* providers/sqlite/gda-sqlite-provider.c: now use gda_provider_get_schema_nb_columns()
+	and gda_provider_init_schema_model()
+
 2005-09-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #317267

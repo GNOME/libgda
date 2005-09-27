@@ -16,9 +16,6 @@ Access/Management of libgda configuration
 
 </para>
 
-<!-- ##### SECTION Stability_Level ##### -->
-
-
 <!-- ##### FUNCTION gda_config_get_string ##### -->
 <para>
 

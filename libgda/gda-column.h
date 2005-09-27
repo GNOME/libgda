@@ -57,6 +57,7 @@ struct _GdaColumnClass {
 
 GType           gda_column_get_type           (void);
 GdaColumn      *gda_column_new                (void);
+GdaColumn      *gda_column_copy               (GdaColumn *column);
 
 const gchar    *gda_column_get_title          (GdaColumn *column);
 void            gda_column_set_title          (GdaColumn *column, const gchar *title);

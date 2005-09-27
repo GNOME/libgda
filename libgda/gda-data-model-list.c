@@ -90,7 +90,7 @@ gda_data_model_list_append_values (GdaDataModelBase *model, const GList *values)
 }
 
 static gboolean
-gda_data_model_list_remove_row (GdaDataModelBase *model, const GdaRow *row)
+gda_data_model_list_remove_row (GdaDataModelBase *model, GdaRow *row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);

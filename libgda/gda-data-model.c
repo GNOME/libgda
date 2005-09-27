@@ -455,6 +455,11 @@ gda_data_model_get_row (GdaDataModel *model, gint row)
  *
  * This is the main function for accessing data in a model.
  *
+ * Note that the returned #GdaValue must not be modified directly (unexpected behavoiurs may
+ * occur if you do so). If you want to
+ * modify a value stored in a #GdaDataModel, you must first obtain a #GdaRow object using
+ * gda_data_model_get_row() and then call gda_row_set_value() on that row object.
+ *
  * Returns: a #GdaValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
  */
@@ -526,13 +531,12 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values)
  * Appends a row to the data model. The 'number' attribute of @row may be
  * modified by the data model to represent the actual row position.
  *
- * This function differs from the gda_data_model_append_values() method in that
- * it is more coherent with the other gda_data_model_*_row() functions, and also
- * is more adapted to #GdaDataModel which don't manage themselves any #GdaRow internally.
- *
  * The @row object is then referenced by the @model model and can be safely unref'ed by the
  * caller. A pointer to that row object can be obtained at any time using the 
  * gda_data_model_get_row() method.
+ *
+ * The @row can be created using gda_row_new() or gda_row_new_from_list() (passing %NULL
+ * for the @model argument).
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
@@ -562,10 +566,13 @@ gda_data_model_append_row (GdaDataModel *model, GdaRow *row)
  * NOTE: the @row GdaRow must not be used again because it may or may not
  * be used by the @model model depending on @model's implementation.
  *
+ * The @row can be created using gda_row_new() or gda_row_new_from_list() (passing %NULL
+ * for the @model argument).
+ *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
+gda_data_model_update_row (GdaDataModel *model, GdaRow *row)
 {
         gboolean result;
 
@@ -589,10 +596,12 @@ gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
  * Removes a row from the data model. This results in the underlying
  * database row being removed in the database.
  *
+ * The @row must have been obtained using the gda_data_model_get_row() function.
+ *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
+gda_data_model_remove_row (GdaDataModel *model, GdaRow *row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);

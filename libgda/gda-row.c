@@ -4,6 +4,7 @@
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Álvaro Peña <alvaropg@telefonica.net>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,14 +22,15 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-row.h>
+#include "gda-row.h"
 #include <string.h>
 #include "gda-marshal.h"
+#include "gda-data-model.h"
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
 struct _GdaRowPrivate {
-	GdaDataModel *model;
+	GdaDataModel *model; /* can be NULL */
         gint          number;
         gchar        *id;
 
@@ -37,15 +39,35 @@ struct _GdaRowPrivate {
         gint          nfields;
 };
 
+/* signals */
 enum {
 	VALUE_TO_CHANGE,
 	VALUE_CHANGED,
 	LAST_SIGNAL
 };
 
+/* properties */
+enum
+{
+        PROP_0,
+        PROP_MODEL,
+        PROP_VALUES,
+        PROP_NB_VALUES
+};
+
 static void gda_row_class_init (GdaRowClass *klass);
 static void gda_row_init       (GdaRow *row, GdaRowClass *klass);
 static void gda_row_finalize   (GObject *object);
+static void gda_row_dispose    (GObject *object);
+
+static void gda_row_set_property (GObject              *object,
+				  guint                 param_id,
+				  const GValue         *value,
+				  GParamSpec           *pspec);
+static void gda_row_get_property (GObject              *object,
+				  guint                 param_id,
+				  GValue               *value,
+				  GParamSpec           *pspec);
 
 static guint gda_row_signals[LAST_SIGNAL] = { 0, 0 };
 static GObjectClass *parent_class = NULL;
@@ -77,6 +99,22 @@ gda_row_class_init (GdaRowClass *klass)
 			      3, G_TYPE_INT, G_TYPE_POINTER, G_TYPE_POINTER);
 
 	object_class->finalize = gda_row_finalize;
+	object_class->dispose = gda_row_dispose;
+
+	/* Properties */
+        object_class->set_property = gda_row_set_property;
+        object_class->get_property = gda_row_get_property;
+
+	g_object_class_install_property (object_class, PROP_MODEL,
+                                         g_param_spec_pointer ("model", NULL, NULL, 
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (object_class, PROP_VALUES,
+                                         g_param_spec_pointer ("values", NULL, NULL, 
+							       G_PARAM_WRITABLE));
+	g_object_class_install_property (object_class, PROP_NB_VALUES,
+                                         g_param_spec_int ("nb_values", NULL, NULL,
+							   1, G_MAXINT, 1, 
+							   G_PARAM_WRITABLE));
 }
 
 static void
@@ -89,8 +127,21 @@ gda_row_init (GdaRow *row, GdaRowClass *klass)
 	row->priv->number = -1;
 	row->priv->id = NULL;
 	row->priv->fields = NULL;
-	row->priv->is_default = FALSE;
+	row->priv->is_default = NULL;
 	row->priv->nfields = 0;
+}
+
+static void
+gda_row_dispose (GObject *object)
+{
+	GdaRow *row = (GdaRow *) object;
+	
+	g_return_if_fail (GDA_IS_ROW (row));
+	
+	if (row->priv->model)
+		gda_row_set_model (row, NULL);
+	
+	parent_class->finalize (object);
 }
 
 static void
@@ -118,6 +169,82 @@ gda_row_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
+static void
+gda_row_set_property (GObject              *object,
+		      guint                 param_id,
+		      const GValue         *value,
+		      GParamSpec           *pspec)
+{
+        GdaRow *row;
+
+        row = GDA_ROW (object);
+        if (row->priv) {
+                switch (param_id) {
+                case PROP_MODEL:
+			gda_row_set_model (row, g_value_get_pointer (value));
+                        break;
+                case PROP_VALUES: {
+			const GList *l;
+			GList *values;
+			gint i;
+			
+			g_return_if_fail (!row->priv->fields);
+
+			values = (GList *) g_value_get_pointer (value);
+			i = g_list_length (values);
+
+			row->priv->nfields = i;
+			row->priv->fields = g_new0 (GdaValue, row->priv->nfields);
+			
+			for (i = 0, l = values; l != NULL; l = l->next, i++) {
+				const GdaValue *value = (const GdaValue *) l->data;
+				
+				if (value) {
+					GdaValue *dest;
+					dest = gda_row_get_value (row, i);
+					gda_value_reset_with_type (dest, gda_value_get_type (value));
+					gda_value_set_from_value (dest, value);
+				}
+				else
+					gda_value_set_null (gda_row_get_value (row, i));
+			}
+                        break;
+		}
+		case PROP_NB_VALUES:
+			g_return_if_fail (!row->priv->fields);
+
+			row->priv->nfields = g_value_get_int (value);
+			row->priv->fields = g_new0 (GdaValue, row->priv->nfields);			
+			break;
+		default:
+			g_assert_not_reached ();
+			break;
+                }
+        }
+}
+
+static void
+gda_row_get_property (GObject              *object,
+		      guint                 param_id,
+		      GValue               *value,
+		      GParamSpec           *pspec)
+{
+        GdaRow *row;
+
+        row = GDA_ROW (object);
+        if (row->priv) {
+                switch (param_id) {
+                case PROP_MODEL:
+			g_value_set_pointer (value, gda_row_get_model (row));
+                        break;
+                case PROP_VALUES:
+		case PROP_NB_VALUES:
+			g_assert_not_reached ();
+			break;
+                }
+        }
+}
+
 GType
 gda_row_get_type (void)
 {
@@ -143,10 +270,14 @@ gda_row_get_type (void)
 
 /**
  * gda_row_new
- * @model: the #GdaDataModel this row belongs to.
+ * @model: the #GdaDataModel this row belongs to, or %NULL if the row is outside any data model
  * @count: number of #GdaValue in the new #GdaRow.
  *
  * Creates a #GdaRow which can hold @count #GdaValue values.
+ *
+ * The caller of this function is the only owner of a reference to the newly created #GdaRow
+ * object, even if @model is not %NULL (it is recommended to pass %NULL as the @model argument
+ * if this function is not called from within a #GdaDataModel implementation).
  *
  * Returns: a newly allocated #GdaRow object.
  */
@@ -157,15 +288,11 @@ gda_row_new (GdaDataModel *model, gint count)
 	gint i;
         GdaValue *value;
 
-        g_return_val_if_fail (count >= 0, NULL);
-	row = g_object_new (GDA_TYPE_ROW, NULL);
+	if (model)
+		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+        g_return_val_if_fail (count > 0, NULL);
 
-        row->priv->model = model;
-        row->priv->number = -1;
-        row->priv->id = NULL;
-        row->priv->nfields = count;
-        row->priv->fields = g_new0 (GdaValue, count);
-        row->priv->is_default = NULL;
+	row = g_object_new (GDA_TYPE_ROW, "model", model, "nb_values", count, NULL);
 
 	return row;
 }
@@ -174,7 +301,8 @@ gda_row_new (GdaDataModel *model, gint count)
  * gda_row_copy
  * @row: the #GdaRow to copy
  *
- * Copy constructor
+ * Copy constructor.
+ * Warning: does not copy the GdaDataModel attribute.
  *
  * Returns: a new #GdaRow
  */
@@ -187,7 +315,7 @@ gda_row_copy (GdaRow *row)
 	g_return_val_if_fail (row && GDA_IS_ROW (row), NULL);
 	g_return_val_if_fail (row->priv, NULL);
 
-	newrow = gda_row_new (row->priv->model, row->priv->nfields);
+	newrow = gda_row_new (NULL, row->priv->nfields);
 	newrow->priv->number = row->priv->number;
 	if (row->priv->id)
 		newrow->priv->id = g_strdup (row->priv->id);
@@ -206,11 +334,13 @@ gda_row_copy (GdaRow *row)
 
 /**
  * gda_row_new_from_list
- * @model: a #GdaDataModel.
+ * @model: a #GdaDataModel this row belongs to, or %NULL if the row is outside any data model
  * @values: a list of #GdaValue's.
  *
  * Creates a #GdaRow from a list of #GdaValue's.  These GdaValue's are
- * value-copied and the user are still resposible for freeing them.
+ * value-copied and the user are still responsible for freeing them.
+ *
+ * See the gda_row_new() function's documentation for more information about the @model attribute
  *
  * Returns: the newly created row.
  */
@@ -218,24 +348,40 @@ GdaRow *
 gda_row_new_from_list (GdaDataModel *model, const GList *values)
 {
         GdaRow *row;
-        const GList *l;
-        gint i;
-
-        row = gda_row_new (model, g_list_length ((GList *) values));
-        for (i = 0, l = values; l != NULL; l = l->next, i++) {
-                const GdaValue *value = (const GdaValue *) l->data;
-
-                if (value) {
-                        GdaValue *dest;
-                        dest = gda_row_get_value (row, i);
-                        gda_value_reset_with_type (dest, gda_value_get_type (value));
-                        gda_value_set_from_value (dest, value);
-                }
-                else
-                        gda_value_set_null (gda_row_get_value (row, i));
-        }
+	
+	if (model)
+		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+        row = g_object_new (GDA_TYPE_ROW, "model", model, "values", values, NULL);
 
         return row;
+}
+
+/**
+ * gda_row_set_model
+ * @row: a #GdaRow.
+ * @model: a #GdaDataModel this row belongs to, or %NULL if the row is outside any data model
+ *
+ * Set the #GdaDataModel the given #GdaRow belongs to. Note that calling this method should be reserved
+ * to GdaDataModel implementations and should therefore not be called by the user.
+ *
+ * Returns: a #GdaDataModel.
+ */
+void
+gda_row_set_model (GdaRow *row, GdaDataModel *model)
+{
+        g_return_if_fail (row && GDA_IS_ROW (row));
+	g_return_if_fail (row->priv);
+
+	if (row->priv->model) {
+		g_object_remove_weak_pointer (G_OBJECT (row->priv->model), (gpointer *) &(row->priv->model));
+		row->priv->model = NULL;
+	}
+
+	if (model) {
+		g_return_if_fail (GDA_IS_DATA_MODEL (model));
+		row->priv->model = model;
+		g_object_add_weak_pointer (G_OBJECT (model), (gpointer *) &(row->priv->model));
+	}
 }
 
 /**

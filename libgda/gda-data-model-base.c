@@ -67,8 +67,8 @@ static gboolean             gda_data_model_base_commit_changes  (GdaDataModel *m
 static gboolean             gda_data_model_base_cancel_changes  (GdaDataModel *model);
 static GdaRow              *gda_data_model_base_append_values   (GdaDataModel *model, const GList *values);
 static gboolean             gda_data_model_base_append_row      (GdaDataModel *model, GdaRow *row);
-static gboolean             gda_data_model_base_update_row      (GdaDataModel *model, const GdaRow *row);
-static gboolean             gda_data_model_base_remove_row      (GdaDataModel *model, const GdaRow *row);
+static gboolean             gda_data_model_base_update_row      (GdaDataModel *model, GdaRow *row);
+static gboolean             gda_data_model_base_remove_row      (GdaDataModel *model, GdaRow *row);
 static GdaColumn           *gda_data_model_base_append_column   (GdaDataModel *model);
 static gboolean             gda_data_model_base_remove_column   (GdaDataModel *model, gint col);
 static void                 gda_data_model_base_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
@@ -369,7 +369,7 @@ gda_data_model_base_append_row (GdaDataModel *model, GdaRow *row)
 }
 
 static gboolean
-gda_data_model_base_update_row (GdaDataModel *model, const GdaRow *row)
+gda_data_model_base_update_row (GdaDataModel *model, GdaRow *row)
 {
         g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
         g_return_val_if_fail (row != NULL, FALSE);
@@ -379,7 +379,7 @@ gda_data_model_base_update_row (GdaDataModel *model, const GdaRow *row)
 }
 
 static gboolean
-gda_data_model_base_remove_row (GdaDataModel *model, const GdaRow *row)
+gda_data_model_base_remove_row (GdaDataModel *model, GdaRow *row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);

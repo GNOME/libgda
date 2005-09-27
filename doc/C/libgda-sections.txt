@@ -1054,6 +1054,7 @@ GDA_TYPE_DATA_MODEL_COLUMN_ATTRIVUTES
 gda_column_get_type
 gda_column_new
 gda_column_copy
+gda_column_equal
 gda_column_get_defined_size
 gda_column_set_defined_size
 gda_column_get_title
@@ -1195,6 +1196,7 @@ gda_row_new_from_list
 gda_row_copy
 gda_row_get_value
 gda_row_set_value
+gda_row_set_model
 gda_row_get_model
 gda_row_get_number
 gda_row_set_number

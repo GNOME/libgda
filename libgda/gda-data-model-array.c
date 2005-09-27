@@ -114,12 +114,10 @@ gda_data_model_array_append_values (GdaDataModelBase *model, const GList *values
 	g_return_val_if_fail (len == GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns, NULL);
 
 	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
-	if (row) {
-		g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
-		gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
-		gda_data_model_row_inserted (GDA_DATA_MODEL (model), 
-					     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
-	}
+	g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
+	gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
+	gda_data_model_row_inserted (GDA_DATA_MODEL (model), 
+				     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 
 	return (GdaRow *) row;
 }
@@ -140,7 +138,7 @@ gda_data_model_array_append_row (GdaDataModelBase *model, GdaRow *row)
 }
 
 static gboolean
-gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
+gda_data_model_array_update_row (GdaDataModelBase *model, GdaRow *row)
 {
         gint i;
         GdaDataModelArrayPrivate *priv;
@@ -156,6 +154,7 @@ gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
                 if (gda_row_get_number (priv->rows->pdata[i]) == num) {
                         g_object_unref (priv->rows->pdata[i]);
                         priv->rows->pdata[i] = gda_row_copy (row);
+			gda_row_set_model (priv->rows->pdata[i], GDA_DATA_MODEL (model));
                         gda_data_model_row_updated (GDA_DATA_MODEL (model), i);
 
                         return TRUE;
@@ -166,7 +165,7 @@ gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
 }
 
 static gboolean
-gda_data_model_array_remove_row (GdaDataModelBase *model, const GdaRow *row)
+gda_data_model_array_remove_row (GdaDataModelBase *model, GdaRow *row)
 {
 	gint i, rownum;
 	

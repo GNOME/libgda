@@ -21,9 +21,6 @@ Management of connections to data sources
 
 </para>
 
-<!-- ##### SECTION Stability_Level ##### -->
-
-
 <!-- ##### ENUM GdaConnectionOptions ##### -->
 <para>
 
@@ -43,9 +40,9 @@ Management of connections to data sources
 @username: 
 @password: 
 @options: 
+@error: 
 @Returns: 
 <!-- # Unused Parameters # -->
-@error: 
 @corba_cnc: 
 @cnc_string: 
 
@@ -158,6 +155,51 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_add_event ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@error: 
+
+
+<!-- ##### FUNCTION gda_connection_add_event_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@str: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gda_connection_add_events_list ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@events_list: 
+
+
+<!-- ##### FUNCTION gda_connection_get_events ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_clear_events_list ##### -->
+<para>
+
+</para>
+
+@cnc: 
+
+
 <!-- ##### FUNCTION gda_connection_change_database ##### -->
 <para>
 
@@ -225,9 +267,8 @@ Management of connections to data sources
 @cnc: 
 @cmd: 
 @params: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @error: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_get_last_insert_id ##### -->
@@ -248,9 +289,8 @@ Management of connections to data sources
 @cnc: 
 @cmd: 
 @params: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @error: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_execute_non_query ##### -->
@@ -261,9 +301,8 @@ Management of connections to data sources
 @cnc: 
 @cmd: 
 @params: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @error: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_begin_transaction ##### -->
@@ -308,7 +347,17 @@ Management of connections to data sources
 </para>
 
 @cnc: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @blob: 
+
+
+<!-- ##### FUNCTION gda_connection_get_events ##### -->
+<para>
+
+</para>
+
+@cnc: 
 @Returns: 
 
 

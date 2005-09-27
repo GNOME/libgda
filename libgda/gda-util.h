@@ -25,8 +25,9 @@
 
 #include <glib/ghash.h>
 #include <glib/glist.h>
-#include <libgda/gda-parameter.h>
-#include <libgda/gda-row.h>
+#include "gda-parameter.h"
+#include "gda-row.h"
+#include "gda-connection.h"
 
 G_BEGIN_DECLS
 
@@ -47,6 +48,12 @@ gchar *gda_sql_replace_placeholders (const gchar *sql, GdaParameterList *params)
 
 gchar    *gda_file_load (const gchar *filename);
 gboolean  gda_file_save (const gchar *filename, const gchar *buffer, gint len);
+
+/*
+ * Help to implement providers
+ */
+gint      gda_provider_get_schema_nb_columns (GdaConnectionSchema schema);
+gboolean  gda_provider_init_schema_model     (GdaDataModel *model, GdaConnectionSchema schema);
 
 G_END_DECLS
 
