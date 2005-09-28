@@ -51,7 +51,7 @@ struct _GdaRowClass {
 	
 	/* signals */
 	gboolean (* value_to_change) (GdaRow *row, gint num, const GdaValue *current, const GdaValue *proposed);
-	void     (* value_changed)   (GdaRow *row, gint num, const GdaValue *old, const GdaValue *new);
+	void     (* value_changed)   (GdaRow *row, gint num, const GdaValue *old_value, const GdaValue *new_value);
 };
 
 GType         gda_row_get_type           (void);
