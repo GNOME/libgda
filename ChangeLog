@@ -1,3 +1,7 @@
+2005-09-28  Vivien Malerba <malerba@gnome-db.org>
+	
+	* libgda/gda-column.h: added gda_column_equal() which is already in the .c file
+
 2005-09-28  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/gda-row.h:  Don't use the C++ keyword 'new'
