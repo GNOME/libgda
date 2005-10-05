@@ -74,7 +74,6 @@ gda_column_index_finalize (GObject *object)
 			g_free (dmcia->priv->references);
 		g_free (dmcia->priv);
 	}
-	g_free (dmcia);
 
 	parent_class->finalize (object);
 }
@@ -289,8 +288,10 @@ gda_column_index_set_references (GdaColumnIndex *dmcia, const gchar *ref)
 {
 	g_return_if_fail (GDA_IS_COLUMN_INDEX (dmcia));
 
-	if (dmcia->priv->references != NULL)
+	if (dmcia->priv->references != NULL) {
 		g_free (dmcia->priv->references);
+		dmcia->priv->references = NULL;
+	}
 
 	if (ref)
 		dmcia->priv->references = g_strdup (ref);

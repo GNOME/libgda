@@ -348,9 +348,9 @@ gda_column_set_name (GdaColumn *column, const gchar *name)
 
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
-	if (column->priv->name != NULL) {
-		old_name = g_strdup (column->priv->name);
-		g_free (column->priv->name);
+	if (column->priv->name) {
+		old_name = column->priv->name;
+		column->priv->name = NULL;
 	}
 
 	if (name)
@@ -359,6 +359,9 @@ gda_column_set_name (GdaColumn *column, const gchar *name)
 	g_signal_emit (G_OBJECT (column),
 		       gda_column_signals[NAME_CHANGED],
 		       0, old_name);
+
+	if (old_name)
+		g_free (old_name);
 }
 
 /**
@@ -497,8 +500,10 @@ gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
 	
-	if (column->priv->dbms_type != NULL)
+	if (column->priv->dbms_type != NULL) {
 		g_free (column->priv->dbms_type);
+		column->priv->dbms_type = NULL;
+	}
 	
 	if (dbms_type)
 		column->priv->dbms_type = g_strdup (dbms_type);
@@ -650,8 +655,10 @@ gda_column_set_references (GdaColumn *column, const gchar *ref)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
-	if (column->priv->references != NULL)
+	if (column->priv->references != NULL) {
 		g_free (column->priv->references);
+		column->priv->references = NULL;
+	}
 
 	if (ref)
 		column->priv->references = g_strdup (ref);
