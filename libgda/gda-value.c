@@ -551,10 +551,11 @@ gpointer
 gda_geometricpoint_copy (gpointer boxed)
 {
 	GdaGeometricPoint *val = (GdaGeometricPoint*) boxed;
+	GdaGeometricPoint *copy;
 	
 	g_return_val_if_fail( val, NULL);
 		
-	GdaGeometricPoint *copy = g_new0(GdaGeometricPoint, 1);
+	copy = g_new0(GdaGeometricPoint, 1);
 	copy->x = val->x;
 	copy->y = val->y;
 
@@ -748,7 +749,7 @@ gda_money_copy (gpointer boxed)
 void
 gda_money_free (gpointer boxed)
 {
-	GdaMoney *money = (GdaMoney*) money;
+	GdaMoney *money = (GdaMoney*) boxed;
 	
 	g_return_if_fail (money);
 		
