@@ -14,28 +14,8 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-<!-- ##### STRUCT GdaColumn ##### -->
-<para>
+<!-- ##### SECTION Stability_Level ##### -->
 
-</para>
-
-
-<!-- ##### SIGNAL GdaColumn::gda-type-changed ##### -->
-<para>
-
-</para>
-
-@gdacolumn: the object which received the signal.
-@arg1: 
-@arg2: 
-
-<!-- ##### SIGNAL GdaColumn::name-changed ##### -->
-<para>
-
-</para>
-
-@gdacolumn: the object which received the signal.
-@arg1: 
 
 <!-- ##### STRUCT GdaColumn ##### -->
 <para>
@@ -58,7 +38,33 @@ Management of #GdaDataModel column attributes
 </para>
 
 @: 
+@:
+
+@gdacolumn: the object which received the signal.
+@arg1: 
+
+<!-- ##### STRUCT GdaColumn ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaColumn::gda-type-changed ##### -->
+<para>
+
+</para>
+
 @: 
+@: 
+@: 
+
+<!-- ##### SIGNAL GdaColumn::name-changed ##### -->
+<para>
+
+</para>
+
+@gdacolumn: the object which received the signal.
+@arg1: 
 
 <!-- ##### FUNCTION gda_column_get_type ##### -->
 <para>
@@ -85,6 +91,16 @@ Management of #GdaDataModel column attributes
 @Returns: 
 <!-- # Unused Parameters # -->
 @fa: 
+
+
+<!-- ##### FUNCTION gda_column_equal ##### -->
+<para>
+
+</para>
+
+@lhs: 
+@rhs: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_column_get_defined_size ##### -->

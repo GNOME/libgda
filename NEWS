@@ -1,3 +1,13 @@
+libgda 1.9.100, 2005-10-13
+--------------------------
+
+ - Fixed #317267 (Rodrigo)
+ - GdaRow API improvements (Vivien)
+ - GdaColumn API improvements (Vivien)
+ - Limit usage of SQLite internal structures (Vivien)
+ - Removed usage of C++ 'new' keyboard as argument (Bas)
+ - Added missing declarations to gda-column.h (Vivien)
+
 libgda 1.9.99, 2005-09-26
 -------------------------
 

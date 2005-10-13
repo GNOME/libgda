@@ -29,6 +29,9 @@ or destroy a database.
  #GdaConnection.
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GdaClient ##### -->
 <para>
 

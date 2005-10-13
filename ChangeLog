@@ -1,3 +1,7 @@
+2005-10-13  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.9.100.
+
 2005-10-07  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-value.c: bug fixed
