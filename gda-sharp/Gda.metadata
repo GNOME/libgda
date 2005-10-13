@@ -2,21 +2,10 @@
 <metadata>
   <attr path="/api/namespace/class[@cname='GdaType_']" name="hidden">1</attr>
   <attr path="/api/namespace/interface[@cname='GdaDataModel']/method[@name='Foreach']/*/*[@name='func']" name="scope">call</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='Changed']" name="name">DataChanged</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='BeginEdit']" name="name">BeginEditing</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='CancelEdit']" name="name">CancelEditing</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='EndEdit']" name="name">EndEditing</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='RowInserted']" name="name">RowInsertedEvent</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='RowUpdated']" name="name">RowUpdatedEvent</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='RowRemoved']" name="name">RowRemovedEvent</attr>
+  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='BeginUpdate']" name="name">BeganUpdate</attr>
+  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='CancelUpdate']" name="name">CanceledUpdat</attr>
+  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='CommitUpdate']" name="name">CommittedUpdate</attr>
   <attr path="/api/namespace/object[@cname='GdaDataModelArray']/method[@name='SetNColumns']" name="new_flag">1</attr>
   <attr path="/api/namespace/object[@cname='GdaDataModelHash']/method[@name='SetNColumns']" name="new_flag">1</attr>
-  <attr path="/api/namespace/object[@cname='GdaExport']" name="hidden">1</attr>
-  <attr path="/api/namespace/object[@cname='GdaXmlDatabase']/signal[@name='Changed']" name="name">DataChanged</attr>
-  <attr path="/api/namespace/struct[@cname='GdaCommand']" name="opaque">1</attr>
-  <attr path="/api/namespace/struct[@cname='GdaFieldAttributes']" name="opaque">1</attr>
-  <attr path="/api/namespace/struct[@cname='GdaParameter']" name="opaque">1</attr>
-  <attr path="/api/namespace/struct[@cname='GdaValue']" name="opaque">1</attr>
-  <attr path="/api/namespace/struct[@cname='GdaValue']/method[@cname='gda_value_get_type']" name="name">GetGdaType</attr>
 </metadata>
 

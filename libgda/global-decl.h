@@ -22,7 +22,7 @@
 #define __GLOBAL_DECL_H_
 
 typedef struct _GdaRow              GdaRow;
-typedef struct _GdaDataModelIface   GdaDataModelIface;
+typedef struct _GdaDataModelClass   GdaDataModelClass;
 typedef struct _GdaDataModel        GdaDataModel;
 
 #endif

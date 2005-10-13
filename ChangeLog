@@ -1,3 +1,14 @@
+2005-10-13  Dan Winship  <danw@novell.com>
+
+	* libgda/gda-data-model.h, etc: Rename GInterface-related macros,
+	structures, etc to correspond to the standard naming conventions
+	so the gtk-sharp parser will interpret them correctly.
+
+	* gda-sharp/gda-api.raw: Regen, picking up GdaDataModel's signals
+
+	* gda-sharp/Gda.metadata: update for various API changes since
+	this was written.
+
 2005-10-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.9.100.

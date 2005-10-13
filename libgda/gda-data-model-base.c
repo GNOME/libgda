@@ -51,7 +51,7 @@ static void gda_data_model_base_init       (GdaDataModelBase *model, GdaDataMode
 static void gda_data_model_base_finalize   (GObject *object);
 
 /* GdaDataModel interface */
-static void                 gda_data_model_base_data_model_init (GdaDataModelIface *iface);
+static void                 gda_data_model_base_data_model_init (GdaDataModelClass *iface);
 static gint                 gda_data_model_base_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_base_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_base_describe_column (GdaDataModel *model, gint col);
@@ -94,7 +94,7 @@ gda_data_model_base_class_init (GdaDataModelBaseClass *klass)
 }
 
 static void
-gda_data_model_base_data_model_init (GdaDataModelIface *iface)
+gda_data_model_base_data_model_init (GdaDataModelClass *iface)
 {
 	iface->i_get_n_rows = gda_data_model_base_get_n_rows;
 	iface->i_get_n_columns = gda_data_model_base_get_n_columns;

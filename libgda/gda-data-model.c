@@ -34,7 +34,7 @@
 #define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))
 
 
-static void gda_data_model_iface_init (gpointer g_class);
+static void gda_data_model_class_init (gpointer g_class);
 
 /* signals */
 enum {
@@ -60,8 +60,8 @@ gda_data_model_get_type (void)
 
 	if (!type) {
 		static const GTypeInfo info = {
-			sizeof (GdaDataModelIface),
-			(GBaseInitFunc) gda_data_model_iface_init,
+			sizeof (GdaDataModelClass),
+			(GBaseInitFunc) gda_data_model_class_init,
 			(GBaseFinalizeFunc) NULL,
 			(GClassInitFunc) NULL,
 			NULL,
@@ -78,7 +78,7 @@ gda_data_model_get_type (void)
 }
 
 static void
-gda_data_model_iface_init (gpointer g_class)
+gda_data_model_class_init (gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 
@@ -87,7 +87,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("changed",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, changed),
+				      G_STRUCT_OFFSET (GdaDataModelClass, changed),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
@@ -95,7 +95,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("row_inserted",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, row_inserted),
+				      G_STRUCT_OFFSET (GdaDataModelClass, row_inserted),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -103,7 +103,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("row_updated",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, row_updated),
+				      G_STRUCT_OFFSET (GdaDataModelClass, row_updated),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -111,7 +111,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("row_removed",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, row_removed),
+				      G_STRUCT_OFFSET (GdaDataModelClass, row_removed),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -119,7 +119,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("column_inserted",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, column_inserted),
+				      G_STRUCT_OFFSET (GdaDataModelClass, column_inserted),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -127,7 +127,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("column_updated",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, column_updated),
+				      G_STRUCT_OFFSET (GdaDataModelClass, column_updated),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -135,7 +135,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("column_removed",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, column_removed),
+				      G_STRUCT_OFFSET (GdaDataModelClass, column_removed),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
@@ -143,7 +143,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("begin_update",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, begin_update),
+				      G_STRUCT_OFFSET (GdaDataModelClass, begin_update),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
@@ -151,7 +151,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("cancel_update",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, cancel_update),
+				      G_STRUCT_OFFSET (GdaDataModelClass, cancel_update),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
@@ -159,7 +159,7 @@ gda_data_model_iface_init (gpointer g_class)
 			g_signal_new ("commit_update",
 				      GDA_TYPE_DATA_MODEL,
 				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, commit_update),
+				      G_STRUCT_OFFSET (GdaDataModelClass, commit_update),
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
@@ -172,8 +172,8 @@ static gboolean
 do_notify_changes (GdaDataModel *model)
 {
 	gboolean notify_changes = TRUE;
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_notify)
-		notify_changes = (GDA_DATA_MODEL_GET_IFACE (model)->i_get_notify) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_notify)
+		notify_changes = (GDA_DATA_MODEL_GET_CLASS (model)->i_get_notify) (model);
 	return notify_changes;
 }
 
@@ -290,8 +290,8 @@ gda_data_model_freeze (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_notify)
-		(GDA_DATA_MODEL_GET_IFACE (model)->i_set_notify) (model, FALSE);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
+		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, FALSE);
 	else
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
@@ -307,8 +307,8 @@ gda_data_model_thaw (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_notify)
-		(GDA_DATA_MODEL_GET_IFACE (model)->i_set_notify) (model, TRUE);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
+		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, TRUE);
 	else
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
@@ -324,8 +324,8 @@ gda_data_model_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_n_rows)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_n_rows) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows) (model);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return -1;
@@ -343,8 +343,8 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 	
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_n_columns)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_n_columns) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns) (model);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return -1;
@@ -371,8 +371,8 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_describe_column)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_describe_column) (model, col);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column) (model, col);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
@@ -436,8 +436,8 @@ gda_data_model_get_row (GdaDataModel *model, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_row)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_row) (model, row);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_row)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_row) (model, row);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
@@ -468,8 +468,8 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_value_at)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_value_at) (model, col, row);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at) (model, col, row);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
@@ -489,8 +489,8 @@ gda_data_model_is_updatable (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_is_updatable)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_is_updatable) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_is_updatable)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_is_updatable) (model);
 	else 
 		return FALSE;
 }
@@ -511,9 +511,9 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_values) {
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) {
 		GdaRow *row;
-		row = (GDA_DATA_MODEL_GET_IFACE (model)->i_append_values) (model, values);
+		row = (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) (model, values);
 		gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
 		return row;
 	}
@@ -546,8 +546,8 @@ gda_data_model_append_row (GdaDataModel *model, GdaRow *row)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) {
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) (model, row);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) {
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) (model, row);
 	}
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
@@ -579,8 +579,8 @@ gda_data_model_update_row (GdaDataModel *model, GdaRow *row)
         g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
         g_return_val_if_fail (row != NULL, FALSE);
 
-        if (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) {
-                return (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) (model, row);
+        if (GDA_DATA_MODEL_GET_CLASS (model)->i_update_row) {
+                return (GDA_DATA_MODEL_GET_CLASS (model)->i_update_row) (model, row);
         }
         else {
                 g_warning ("%s() method not supported\n", __FUNCTION__);
@@ -606,8 +606,8 @@ gda_data_model_remove_row (GdaDataModel *model, GdaRow *row)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_row) {
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_row) (model, row);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) {
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) (model, row);
 	}
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
@@ -630,8 +630,8 @@ gda_data_model_append_column (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 	
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_column) 
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_append_column) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_column) 
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_column) (model);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
@@ -654,8 +654,8 @@ gda_data_model_remove_column (GdaDataModel *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_column) 
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_column) (model, col);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_column) 
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_column) (model, col);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return FALSE;
@@ -720,8 +720,8 @@ gda_data_model_has_changed (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_has_changed) 
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_has_changed) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_has_changed) 
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_has_changed) (model);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return FALSE;
@@ -747,8 +747,8 @@ gda_data_model_begin_update (GdaDataModel *model)
 		return FALSE;
 	}
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_begin_changes) 
-		(GDA_DATA_MODEL_GET_IFACE (model)->i_begin_changes) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_begin_changes) 
+		(GDA_DATA_MODEL_GET_CLASS (model)->i_begin_changes) (model);
 	
 	g_signal_emit (G_OBJECT (model),
 		       gda_data_model_signals[BEGIN_UPDATE], 0);
@@ -770,9 +770,9 @@ gda_data_model_cancel_update (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_cancel_changes) {
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_cancel_changes) {
 		gboolean status;
-		status = (GDA_DATA_MODEL_GET_IFACE (model)->i_cancel_changes) (model);
+		status = (GDA_DATA_MODEL_GET_CLASS (model)->i_cancel_changes) (model);
 		if (status)
 			g_signal_emit (G_OBJECT (model),
 				       gda_data_model_signals[CANCEL_UPDATE], 0);
@@ -798,9 +798,9 @@ gda_data_model_commit_update (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_commit_changes) {
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_commit_changes) {
 		gboolean status;
-		status = (GDA_DATA_MODEL_GET_IFACE (model)->i_commit_changes) (model);
+		status = (GDA_DATA_MODEL_GET_CLASS (model)->i_commit_changes) (model);
 		if (status)
 			g_signal_emit (G_OBJECT (model),
 				       gda_data_model_signals[COMMIT_UPDATE], 0);
@@ -1160,8 +1160,8 @@ gda_data_model_get_command_text (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_command)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_command) (model, NULL);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_command)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_command) (model, NULL);
 	else
 		return NULL;
 }
@@ -1181,8 +1181,8 @@ gda_data_model_set_command_text (GdaDataModel *model, const gchar *txt)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (txt != NULL, FALSE);
 	
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command) (model, txt, -1);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_command)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_command) (model, txt, -1);
 	else
 		return FALSE;
 }
@@ -1200,9 +1200,9 @@ gda_data_model_get_command_type (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), GDA_COMMAND_TYPE_INVALID);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_command) {
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_command) {
 		GdaCommandType type;
-		(GDA_DATA_MODEL_GET_IFACE (model)->i_get_command) (model, &type);
+		(GDA_DATA_MODEL_GET_CLASS (model)->i_get_command) (model, &type);
 		return type;
 	}
 	else
@@ -1222,8 +1222,8 @@ gboolean
 gda_data_model_set_command_type (GdaDataModel *model, GdaCommandType type)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command)
-		return (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command) (model, NULL, type);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_command)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_command) (model, NULL, type);
 	else
 		return FALSE;
 }
