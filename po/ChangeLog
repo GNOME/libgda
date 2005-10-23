@@ -1,10 +1,14 @@
+2005-10-23  Ilkka Tuohela  <hile@iki.fi>
+	
+	* fi.po: Updated Finnish translation
+	
 2005-10-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* POTFILES.in: removed non existing files.
 
 2005-09-16  Clytie Siddall <clytie@riverland.net.au>
 
-        * vi.po: Updated Vietnamese translation.
+    * vi.po: Updated Vietnamese translation.
 
 2005-09-05  Iñaki Larrañaga  <dooteo@euskalgnu.org>
 
@@ -16,7 +20,7 @@
 
 2005-07-26  Clytie Siddall <clytie@riverland.net.au>
 
-        * vi.po: Updated Vietnamese translation.
+    * vi.po: Updated Vietnamese translation.
 
 2005-07-04  Hendrik Richter  <hendi@gnome-de.org>
 
