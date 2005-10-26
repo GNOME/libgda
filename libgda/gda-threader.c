@@ -146,7 +146,7 @@ gda_threader_new ()
 	GObject   *obj;
 
 	GdaThreader *thread;
-	obj = g_object_new (GDA_THREADER_TYPE, NULL);
+	obj = g_object_new (GDA_TYPE_THREADER, NULL);
 	thread = GDA_THREADER (obj);
 
 	return obj;

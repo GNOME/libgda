@@ -1,3 +1,11 @@
+2005-10-23  Murray Cumming <murrayc@murrayc.com>
+
+	* libgda/gda-threader.c: (gda_threader_new):
+	* libgda/gda-threader.h: Rename GDA_THREADER_TYPE to 
+	GDA_TYPE_THREADER, so it matches the convention, for 
+	language bindings, though I am not sure if this is public 
+	API anyway.
+
 2005-10-26  Martin Schulze <joey@infodrom.org>
 
         * libgda/gda-log.c (gda_log_error, gda_log_message): pass clean

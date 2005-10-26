@@ -25,7 +25,7 @@
 
 G_BEGIN_DECLS
 
-#define GDA_THREADER_TYPE          (gda_threader_get_type())
+#define GDA_TYPE_THREADER          (gda_threader_get_type())
 #define GDA_THREADER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_threader_get_type(), GdaThreader)
 #define GDA_THREADER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_threader_get_type (), GdaThreaderClass)
 #define IS_GDA_THREADER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_threader_get_type ())
