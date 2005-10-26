@@ -111,7 +111,7 @@ gda_log_message (const gchar *format, ...)
 #ifdef LIBGDA_WIN32
 	g_log ("Gda", G_LOG_LEVEL_INFO, "%s", msg);
 #else
-	syslog (LOG_USER | LOG_INFO, msg);
+	syslog (LOG_USER | LOG_INFO, "%s", msg);
 #endif
 	g_free (msg);
 }
@@ -144,7 +144,7 @@ gda_log_error (const gchar * format, ...)
 #ifdef LIBGDA_WIN32
 	g_log ("Gda", G_LOG_LEVEL_ERROR, "%s", msg);
 #else
-	syslog (LOG_USER | LOG_ERR, msg);
+	syslog (LOG_USER | LOG_ERR, "%s", msg);
 #endif
  	g_free (msg);
 }
