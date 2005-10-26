@@ -1,3 +1,8 @@
+2005-10-26  Martin Schulze <joey@infodrom.org>
+
+	* libgda/gda-log.c (gda_log_error, gda_log_message): pass clean
+	strings to syslog.
+
 2005-07-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Pointed out by Oliver <oliver303@aon.at>
