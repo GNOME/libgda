@@ -464,6 +464,13 @@ then
 					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
 					AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
 					;;
+				*v0.6[[3-9]]*) AC_MSG_RESULT($freetdsvercheck - using v0.63 api)
+					AC_DEFINE(HAVE_FREETDS_VER0_63, 1, [Have freetds v0.63 API])
+					AC_DEFINE(HAVE_FREETDS_VER0_6X, 1, [Have freetds v0.6x API])
+					FREETDS_CFLAGS="-I${freetds_incdir}"
+					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
+					AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
+					;;
 				*v0.6*) AC_MSG_RESULT($freetdsvercheck - using v0.6x api)
 					AC_DEFINE(HAVE_FREETDS_VER0_6X, 1, [Have freetds v0.6x API])
 					FREETDS_CFLAGS="-I${freetds_incdir}"

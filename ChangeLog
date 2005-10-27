@@ -1,3 +1,10 @@
+2005-10-27  Leonardo Boshell <p@kapcoweb.com>
+
+	* configure.in: check for explicit FreeTDS 0.63 version.
+
+	* providers/freetds/gda-freetds-provider.h: if using FreeTDS 0.63,
+	define some missing macros.
+
 2005-10-27  Juan Manuel Mouriz <jmouriz@gmail.com>
 
 	* doc/C/libgda-docs.sgml: fixed example code.
