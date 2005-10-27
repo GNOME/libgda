@@ -1,4 +1,8 @@
-2005-10-23  Murray Cumming <murrayc@murrayc.com>
+2005-10-27  Juan Manuel Mouriz <jmouriz@gmail.com>
+
+	* doc/C/libgda-docs.sgml: fixed example code.
+
+2005-10-26  Murray Cumming <murrayc@murrayc.com>
 
 	* libgda/gda-threader.c: (gda_threader_new):
 	* libgda/gda-threader.h: Rename GDA_THREADER_TYPE to 
