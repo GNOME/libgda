@@ -1,3 +1,10 @@
+2005-10-27  Leonardo Boshell <p@kapcoweb.com>
+
+	* configure.in: check for explicit FreeTDS 0.63 version.
+
+	* providers/freetds/gda-freetds-provider.h: if using FreeTDS 0.63,
+	define some missing macros.
+
 2005-10-26  Martin Schulze <joey@infodrom.org>
 
 	* libgda/gda-log.c (gda_log_error, gda_log_message): pass clean

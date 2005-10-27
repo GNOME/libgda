@@ -30,6 +30,15 @@
 
 G_BEGIN_DECLS
 
+/* Compatibility macros */
+#ifdef HAVE_FREETDS_VER0_63
+
+#define TDSCONNECTINFO TDSCONNECTION
+#define TDSCOLINFO     TDSCOLUMN
+#define TDSMSGINFO     TDSMESSAGE
+
+#endif  /* HAVE_FREETDS_VER0_63 */
+
 #define GDA_TYPE_FREETDS_PROVIDER            (gda_freetds_provider_get_type())
 #define GDA_FREETDS_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FREETDS_PROVIDER, GdaFreeTDSProvider))
 #define GDA_FREETDS_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_FREETDS_PROVIDER, GdaFreeTDSProviderClass))
