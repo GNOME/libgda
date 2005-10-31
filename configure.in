@@ -1,6 +1,6 @@
 m4_define(major, 1)
 m4_define(minor, 2)
-m4_define(micro, 3)
+m4_define(micro, 4)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
 AC_PREREQ(2.59)
