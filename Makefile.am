@@ -1,7 +1,6 @@
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 
 SUBDIRS = \
-	po \
 	libsql \
 	libgda \
 	providers \
@@ -9,6 +8,7 @@ SUBDIRS = \
 	tools \
 	testing \
 	data \
+	po \
 	doc
 
 EXTRA_DIST = \

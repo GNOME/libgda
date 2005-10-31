@@ -1,3 +1,16 @@
+libgda 1.2.3, 2005-10-31
+------------------------
+
+ - Fixed 64bit library installation path (Bas)
+ - Require Berkley DB >= 4.3.x (Bas)
+ - Compilation fixes (Stanislav, Christopher, Rodrigo)
+ - Fixed PostgreSQL detection on Ubuntu breezy (Murray)
+ - Fixed possible syslog vulnerability (Martin)
+ - Fixed compilation with FreeTDS 0.63 (Leonardo)
+ - Updated translations:
+        - nb (Kjartan)
+	- no (Kjartan)
+
 libgda 1.2.2, 2005-06-14
 ------------------------
 

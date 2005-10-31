@@ -14,6 +14,9 @@ GdaReportItemPageHeader
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gda_report_item_pageheader_new ##### -->
 <para>
 

@@ -14,6 +14,9 @@ An in-memory representation of a database table
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT GdaTablePrivate ##### -->
 <para>
 
