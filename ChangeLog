@@ -1,3 +1,7 @@
+2005-11-02  Bob Ham <rah@bash.sh>
+
+	* libsql/Makefile.am: fixes for building out of the source tree.
+
 2005-10-27  Leonardo Boshell <p@kapcoweb.com>
 
 	* configure.in: check for explicit FreeTDS 0.63 version.

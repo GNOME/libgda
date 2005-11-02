@@ -5,11 +5,11 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS)
 
-parser.c: parser.y
-	$(YACC) -v -d -o parser.c -p sql parser.y
+parser.c: $(top_srcdir)/libsql/parser.y
+	$(YACC) -v -d -o parser.c -p sql $<
 
-lexer.c: lexer.l parser.c
-	$(LEX) -olexer.c -Psql lexer.l
+lexer.c: $(top_srcdir)/libsql/lexer.l parser.c
+	$(LEX) -olexer.c -Psql $<
 
 noinst_PROGRAMS = sql_parser_test
 lib_LTLIBRARIES = libgdasql.la
