@@ -1,3 +1,7 @@
+2005-11-14  Marcel Telka  <marcel@telka.sk>
+
+	* POTFILES.in: Added providers/postgres/gda-postgres-blob.c.
+
 2005-10-31  Nikos Charonitakis  <nikosx@gmail.com>
 
 	* el.po: Updated Greek translation.

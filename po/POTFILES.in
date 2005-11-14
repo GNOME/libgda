@@ -41,6 +41,7 @@ providers/oracle/gda-oracle-provider.c
 providers/oracle/gda-oracle-recordset.c
 providers/oracle/libmain.c
 providers/oracle/utils.c
+providers/postgres/gda-postgres-blob.c
 providers/postgres/gda-postgres-provider.c
 providers/postgres/gda-postgres-recordset.c
 providers/postgres/libmain.c
