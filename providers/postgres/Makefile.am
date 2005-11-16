@@ -22,10 +22,10 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres.h \
 	libmain.c \
 	utils.c
-libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
 libgda_postgres_la_LIBADD = \
-	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.la \
+	$(LIBGDA_LIBS) \
 	$(POSTGRES_LIBS)
 
 EXTRA_DIST = $(config_DATA)

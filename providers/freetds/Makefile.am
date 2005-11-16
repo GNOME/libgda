@@ -21,9 +21,9 @@ libgda_freetds_la_SOURCES = \
 	libmain.c \
 	utils.c
 
-libgda_freetds_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_freetds_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
 libgda_freetds_la_LIBADD = \
-	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.la \
+	$(LIBGDA_LIBS) \
 	$(FREETDS_LIBS)
 

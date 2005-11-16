@@ -15,10 +15,10 @@ libgda_bdb_la_SOURCES = \
 	gda-bdb.h \
 	utils.c \
 	libmain.c
-libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
 libgda_bdb_la_LIBADD = \
-	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.la \
+	$(LIBGDA_LIBS) \
 	$(BDB_LIBS)
 
 #bin_PROGRAMS = gda-bdb-test

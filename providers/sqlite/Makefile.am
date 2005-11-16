@@ -24,10 +24,10 @@ libgda_sqlite_la_SOURCES = \
 	utils.c \
 	libmain.c
 
-libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
 libgda_sqlite_la_LIBADD = \
-	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.la \
-	$(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la 
+	$(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la \
+	$(LIBGDA_LIBS)
 
 EXTRA_DIST = $(config_DATA)

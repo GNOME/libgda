@@ -27,12 +27,12 @@ libgdasql_la_SOURCES = \
 	sql_tree.h
 libgdasqlincdir = $(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/sql
 libgdasqlinc_HEADERS = sql_parser.h
-libgdasql_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(LIBGDA_LIBS)
+libgdasql_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) -no-undefined
+libgdasql_la_LIBADD = $(LIBGDA_LIBS)
 
 sql_parser_test_SOURCES=sql_parser_test.c
-sql_parser_test_LDFLAGS = $(LIBGDA_LIBS)
 sql_parser_test_DEPENDENCIES = libgdasql.la
-sql_parser_test_LDADD = libgdasql.la
+sql_parser_test_LDADD = libgdasql.la $(LIBGDA_LIBS)
 
 tests: sql_parser_test
 

@@ -1,3 +1,29 @@
+2005-11-16  Cygwin Ports Maintainer <yselkowitz@users.sourceforge.net>
+
+	* configure.in: changed to check for the correct shared library
+	extensions depending on the system.
+
+	* libgda/Makefile.am:
+	* libsql/Makefile.am:
+	* providers/bdb/Makefile.am:
+	* providers/freetds/Makefile.am:
+	* providers/ldap/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/odbc/Makefile.am:
+	* providers/postgres/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/xbase/Makefile.am:
+	* report/libgda-report/Makefile.am: use -no-undefined in $LDFLAGS for
+	Cygwin compilation.
+
+	* providers/mdb/gda-mdb.h: fixed order of included headers.
+
+	* providers/odbc/gda-odbc.h:
+	* providers/odbc/gda-odbc-provider.h: include windows.h if running
+	on Cygwin.
+
+	* providers/postgres/utils.c (gda_postgres_set_value): fixed typo.
+
 2005-11-02  Bob Ham <rah@bash.sh>
 
 	* libsql/Makefile.am: fixes for building out of the source tree.

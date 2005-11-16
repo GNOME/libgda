@@ -289,7 +289,7 @@ gda_postgres_set_value (GdaConnection *cnc,
 		break;
 	case GDA_VALUE_TYPE_BLOB :
 		blob = gda_postgres_blob_new (cnc);
-		gda_postgres_blob_set_id (GDA_POSTRES_BLOB (blob), atoi (thevalue));
+		gda_postgres_blob_set_id (GDA_POSTGRES_BLOB (blob), atoi (thevalue));
 		gda_value_set_blob (value, blob);
  		break;
 	default :

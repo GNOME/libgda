@@ -28,9 +28,9 @@
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-value.h>
-#include "gda-mdb-provider.h"
 #include <mdbtools.h>
 #include <mdbsql.h>
+#include "gda-mdb-provider.h"
 
 #define GDA_MYSQL_PROVIDER_ID          "GDA MDB provider"
 

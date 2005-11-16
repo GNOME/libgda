@@ -26,6 +26,10 @@
 #  define __gda_odbc_provider_h__
 
 #include <libgda/gda-server-provider.h>
+#ifdef __CYGWIN__
+#  define WIN32_LEAN_AND_MEAN
+#  include <windows.h>
+#endif
 #include <sql.h>
 #include <sqlext.h>
 
