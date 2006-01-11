@@ -28,7 +28,7 @@
 #endif
 
 #include <glib/gmacros.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-blob.h>
 #include "gda-postgres-provider.h"

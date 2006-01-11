@@ -1,0 +1,95 @@
+<!-- ##### SECTION Title ##### -->
+GdaReferer
+
+<!-- ##### SECTION Short_Description ##### -->
+Interface to know when on object is completely defined
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Some objects can be initialized in an uncomplete state. This is the case for example of
+a primary key database constraint, when we don't know, at creation time, which field it applies to.
+These objects implement this interface to at least signal when they are ready to be used.
+</para>
+<para>
+Also some objects need to be created <b>before</b> other objects they will need to be operational even exist; they
+implement this interface.
+</para>
+<para>
+This interface is particularly important for the #GdaQuery and related objects: the individual components of a 
+query are completely defined when they reference objects defined in a data dictionary (a #GdaDict object). When any of
+the components of a query relates to an element not defined in a dictionary, the query can still be used but it's not
+completely defined.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaReferer ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaReferer::activated ##### -->
+<para>
+
+</para>
+
+@dbreferer: the object which received the signal.
+
+<!-- ##### SIGNAL GdaReferer::deactivated ##### -->
+<para>
+
+</para>
+
+@dbreferer: the object which received the signal.
+
+<!-- ##### FUNCTION gda_referer_activate ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_referer_deactivate ##### -->
+<para>
+
+</para>
+
+@iface: 
+
+
+<!-- ##### FUNCTION gda_referer_is_active ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_referer_get_ref_objects ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_referer_replace_refs ##### -->
+<para>
+
+</para>
+
+@iface: 
+@replacements: 
+
+

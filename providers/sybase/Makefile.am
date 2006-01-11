@@ -1,11 +1,15 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-sybase.la
 
+configdir   = $(datadir)/libgda
+config_DATA = sybase_specs_dsn.xml
+
 AM_CPPFLAGS = \
 	$(SYBASE_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS)
+	$(LIBGDA_CFLAGS) \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_sybase_la_SOURCES = \
 	gda-sybase-provider.c \
@@ -24,4 +28,6 @@ libgda_sybase_la_LIBADD = \
 	$(SYBASE_LIBS) \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.la 
+
+EXTRA_DIST = $(config_DATA)
 

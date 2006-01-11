@@ -1,0 +1,64 @@
+<!-- ##### SECTION Title ##### -->
+GdaQueryFieldAll
+
+<!-- ##### SECTION Short_Description ##### -->
+Represents all the fields of an entity (through a #GdaQueryTarget object)
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaQueryFieldAll ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaQueryFieldAll:query ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryFieldAll:target ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryFieldAll:target-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryFieldAll:target-name ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_query_field_all_new ##### -->
+<para>
+
+</para>
+
+@query: 
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_all_get_target ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+

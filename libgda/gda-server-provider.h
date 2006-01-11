@@ -41,11 +41,32 @@ G_BEGIN_DECLS
 #define GDA_IS_SERVER_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_SERVER_PROVIDER))
 #define GDA_IS_SERVER_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_PROVIDER))
 
-typedef struct _GdaServerProviderClass   GdaServerProviderClass;
-typedef struct _GdaServerProviderPrivate GdaServerProviderPrivate;
+/* 
+ * struct to hold any information specific to the provider used 
+ */
+struct _GdaServerProviderInfo {
+        gchar         *provider_name; /* equal to the return of gda_connection_get_provider() */
+
+        /*
+         * TRUE if all comparisons of names can be done on the lower case versions of the objects names
+         */
+        gboolean       is_case_insensitive;
+
+        /*
+         * TRUE to suppose that there are implicit casts available for data types which have
+         * the same gda type
+         */
+        gboolean       implicit_data_types_casts;
+
+        /*
+         * TRUE if writing "... FROM mytable AS alias..." is ok, and FALSE if we need to write this as
+         * "... FROM mytable alias..."
+         */
+        gboolean       alias_needs_as_keyword;
+};
 
 struct _GdaServerProvider {
-	GObject object;
+	GObject                   object;
 	GdaServerProviderPrivate *priv;
 };
 
@@ -56,36 +77,63 @@ struct _GdaServerProviderClass {
 	void          (* last_connection_gone) (GdaServerProvider *provider);
 
 	/* virtual methods */
-	const gchar  *(* get_version) (GdaServerProvider *provider);
+
+	/* provider information */
+	const gchar           *(* get_version) (GdaServerProvider *provider);
+	const gchar           *(* get_server_version) (GdaServerProvider *provider,
+						       GdaConnection *cnc);
+	GdaServerProviderInfo *(* get_info) (GdaServerProvider *provider,
+					     GdaConnection *cnc);
+	gboolean               (* supports) (GdaServerProvider *provider,
+					     GdaConnection *cnc,
+					     GdaConnectionFeature feature);
 	
-	gboolean      (* open_connection) (GdaServerProvider *provider,
-					   GdaConnection *cnc,
-					   GdaQuarkList *params,
-					   const gchar *username,
-					   const gchar *password);
-	gboolean      (* reset_connection) (GdaServerProvider *provider,
-					    GdaConnection *cnc);
-	gboolean      (* close_connection) (GdaServerProvider *provider,
-					    GdaConnection *cnc);
+	GdaDataModel          *(* get_schema) (GdaServerProvider *provider,
+					       GdaConnection *cnc,
+					       GdaConnectionSchema schema,
+					       GdaParameterList *params);
+
+	/* types and values manipulation */
+	GdaDataHandler        *(* get_data_handler) (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     GdaValueType gda_type,
+						     const gchar *dbms_type);
+	GdaValue              *(* string_to_value) (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    const gchar *string, 
+						    GdaValueType prefered_type,
+						    gchar **dbms_type);
+	const gchar           *(*get_def_dbms_type) (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     GdaValueType gda_type);
+
+	/* connections management */
+	gboolean               (* open_connection) (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    GdaQuarkList *params,
+						    const gchar *username,
+						    const gchar *password);
+	gboolean               (* reset_connection) (GdaServerProvider *provider,
+						     GdaConnection *cnc);
+	gboolean               (* close_connection) (GdaServerProvider *provider,
+						     GdaConnection *cnc);
 	
-	const gchar  *(* get_server_version) (GdaServerProvider *provider,
-					      GdaConnection *cnc);
-	const gchar  *(* get_database) (GdaServerProvider *provider,
-					GdaConnection *cnc);
-	gboolean      (* change_database) (GdaServerProvider *provider,
-					   GdaConnection *cnc,
-					   const gchar *name);
+	const gchar           *(* get_database) (GdaServerProvider *provider,
+						 GdaConnection *cnc);
+	gboolean               (* change_database) (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    const gchar *name);
 	/* actions with parameters */
-	gchar        *(* get_specs) (GdaServerProvider *provider, GdaClientSpecsType type);
-	gboolean      (* perform_action_params) (GdaServerProvider *provider, 
-						 GdaParameterList *params, GdaClientSpecsType type,
-						 GError **error);
+	gchar                 *(* get_specs) (GdaServerProvider *provider, GdaClientSpecsType type);
+	gboolean               (* perform_action_params) (GdaServerProvider *provider, 
+							  GdaParameterList *params, GdaClientSpecsType type,
+							  GError **error);
 
 	/* database creation and destruction */
-	gboolean      (* create_database_cnc) (GdaServerProvider *provider,
-					       GdaConnection *cnc, const gchar *name);
-	gboolean      (* drop_database_cnc) (GdaServerProvider *provider, 
-					     GdaConnection *cnc, const gchar *name);
+	gboolean               (* create_database_cnc) (GdaServerProvider *provider,
+							GdaConnection *cnc, const gchar *name);
+	gboolean               (* drop_database_cnc) (GdaServerProvider *provider, 
+						      GdaConnection *cnc, const gchar *name);
 
 	/* tables creation and destroying */
 	gboolean      (* create_table) (GdaServerProvider *provider, 
@@ -108,71 +156,94 @@ struct _GdaServerProviderClass {
 				      gboolean primary_key,
 				      const gchar *table_name);
 	
-	GList        *(* execute_command) (GdaServerProvider *provider,
-					   GdaConnection *cnc,
-					   GdaCommand *cmd,
-					   GdaParameterList *params);
-	char         *(* get_last_insert_id) (GdaServerProvider *provider,
-					      GdaConnection *cnc,
-					      GdaDataModel *recset);
+	/* commands */
+	GList                  *(* execute_command) (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     GdaCommand *cmd,
+						     GdaParameterList *params);
+	char                   *(* get_last_insert_id) (GdaServerProvider *provider,
+							GdaConnection *cnc,
+							GdaDataModel *recset);
 	
-	gboolean      (* begin_transaction) (GdaServerProvider *provider,
-					     GdaConnection *cnc,
-					     GdaTransaction *xaction);
-	gboolean      (* commit_transaction) (GdaServerProvider *provider,
-					      GdaConnection *cnc,
-					      GdaTransaction *xaction);
-	gboolean      (* rollback_transaction) (GdaServerProvider *provider,
-						GdaConnection *cnc,
-						GdaTransaction *xaction);
-	
-	gboolean      (* supports) (GdaServerProvider *provider,
-				    GdaConnection *cnc,
-				    GdaConnectionFeature feature);
-	
-	GdaDataModel *(* get_schema) (GdaServerProvider *provider,
-				      GdaConnection *cnc,
-				      GdaConnectionSchema schema,
-				      GdaParameterList *params);
-	
-	GdaBlob      *(* create_blob) (GdaServerProvider *provider,
-				       GdaConnection *cnc);
+	/* transactions */
+	gboolean                (* begin_transaction) (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       GdaTransaction *xaction);
+	gboolean                (* commit_transaction) (GdaServerProvider *provider,
+							GdaConnection *cnc,
+							GdaTransaction *xaction);
+	gboolean                (* rollback_transaction) (GdaServerProvider *provider,
+							  GdaConnection *cnc,
+							  GdaTransaction *xaction);
 
-	GdaBlob      *(* fetch_blob) (GdaServerProvider *provider,
-				      GdaConnection *cnc, const gchar *sql_id);
-	
-	gchar        *(* value_to_sql_string) (GdaServerProvider *provider,
-					       GdaConnection *cnc,
-					       GdaValue *from);
-				  
-				  
+	/* blobs */
+	GdaBlob                *(* create_blob) (GdaServerProvider *provider,
+						 GdaConnection *cnc);
+
+	GdaBlob                *(* fetch_blob) (GdaServerProvider *provider,
+						GdaConnection *cnc, const gchar *sql_id);
 };
 
-GType         gda_server_provider_get_type (void);
-const gchar  *gda_server_provider_get_version (GdaServerProvider *provider);
-gboolean      gda_server_provider_open_connection (GdaServerProvider *provider,
-						   GdaConnection *cnc,
-						   GdaQuarkList *params,
-						   const gchar *username,
-						   const gchar *password);
-gboolean      gda_server_provider_reset_connection (GdaServerProvider *provider,
-						    GdaConnection *cnc);
-gboolean      gda_server_provider_close_connection (GdaServerProvider *provider,
-						    GdaConnection *cnc);
+GType                  gda_server_provider_get_type (void);
 
-const gchar  *gda_server_provider_get_server_version (GdaServerProvider *provider,
-						      GdaConnection *cnc);
-const gchar  *gda_server_provider_get_database (GdaServerProvider *provider,
-						GdaConnection *cnc);
-gboolean      gda_server_provider_change_database (GdaServerProvider *provider,
-						   GdaConnection *cnc,
-						   const gchar *name);
-gchar        *gda_server_provider_get_specs  (GdaServerProvider *provider,
-					      GdaClientSpecsType action_type);
-gboolean      gda_server_provider_perform_action_params (GdaServerProvider *provider, 
-							 GdaParameterList *params, 
-							 GdaClientSpecsType action_type, 
-							 GError **error);
+/* provider information */
+const gchar           *gda_server_provider_get_version (GdaServerProvider *provider);
+const gchar           *gda_server_provider_get_server_version (GdaServerProvider *provider,
+							       GdaConnection *cnc);
+GdaServerProviderInfo *gda_server_provider_get_info (GdaServerProvider *provider,
+						     GdaConnection *cnc);
+gboolean               gda_server_provider_supports (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     GdaConnectionFeature feature);
+GdaDataModel          *gda_server_provider_get_schema (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       GdaConnectionSchema schema,
+						       GdaParameterList *params, GError **error);
+
+/* types and values manipulation */
+GdaDataHandler        *gda_server_provider_get_data_handler_gda (GdaServerProvider *provider,
+								 GdaConnection *cnc,
+								 GdaValueType for_type);
+GdaDataHandler        *gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,
+								  GdaConnection *cnc,
+								  const gchar *for_type);
+GdaValue              *gda_server_provider_string_to_value (GdaServerProvider *provider,
+							    GdaConnection *cnc,
+							    const gchar *string, 
+							    GdaValueType prefered_type,
+							    gchar **dbms_type);
+gchar                 *gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
+								GdaConnection *cnc,
+								GdaValue *from);
+const gchar           *gda_server_provider_get_default_dbms_type (GdaServerProvider *provider,
+								  GdaConnection *cnc,
+								  GdaValueType gda_type);
+
+
+/* connections management */
+gboolean               gda_server_provider_open_connection (GdaServerProvider *provider,
+							    GdaConnection *cnc,
+							    GdaQuarkList *params,
+							    const gchar *username,
+							    const gchar *password);
+gboolean               gda_server_provider_reset_connection (GdaServerProvider *provider,
+							     GdaConnection *cnc);
+gboolean               gda_server_provider_close_connection (GdaServerProvider *provider,
+							     GdaConnection *cnc);
+
+const gchar           *gda_server_provider_get_database (GdaServerProvider *provider,
+							 GdaConnection *cnc);
+gboolean               gda_server_provider_change_database (GdaServerProvider *provider,
+							    GdaConnection *cnc,
+							    const gchar *name);
+
+/* actions with parameters */
+gchar                *gda_server_provider_get_specs  (GdaServerProvider *provider,
+						      GdaClientSpecsType action_type);
+gboolean              gda_server_provider_perform_action_params (GdaServerProvider *provider, 
+								 GdaParameterList *params, 
+								 GdaClientSpecsType action_type, 
+								 GError **error);
 gboolean      gda_server_provider_create_database_cnc (GdaServerProvider *provider,
 						       GdaConnection *cnc, const gchar *name);
 gboolean      gda_server_provider_drop_database_cnc (GdaServerProvider *provider,
@@ -213,24 +284,11 @@ gboolean      gda_server_provider_rollback_transaction (GdaServerProvider *provi
 							GdaConnection *cnc,
 							GdaTransaction *xaction);
 
-gboolean      gda_server_provider_supports (GdaServerProvider *provider,
-					    GdaConnection *cnc,
-					    GdaConnectionFeature feature);
-
-GdaDataModel *gda_server_provider_get_schema (GdaServerProvider *provider,
-					      GdaConnection *cnc,
-					      GdaConnectionSchema schema,
-					      GdaParameterList *params);
 
 GdaBlob      *gda_server_provider_create_blob (GdaServerProvider *provider,
 					       GdaConnection *cnc);
 GdaBlob      *gda_server_provider_fetch_blob_by_id (GdaServerProvider *provider,
 						    GdaConnection *cnc, const gchar *sql_id);
-
-gchar        *gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       GdaValue *from);
-	
 
 G_END_DECLS
 

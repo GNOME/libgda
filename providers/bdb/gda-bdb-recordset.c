@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <string.h>
 #include "gda-bdb.h"
 
@@ -41,12 +41,12 @@ static void gda_bdb_recordset_init       (GdaBdbRecordset *recset,
 					  GdaBdbRecordsetClass *klass);
 static void gda_bdb_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_bdb_recordset_get_value_at (GdaDataModelBase *model, 
+static const GdaValue *gda_bdb_recordset_get_value_at (GdaDataModelRow *model, 
 						       gint col,
 						       gint row);
-static gint gda_bdb_recordset_get_n_rows 	      (GdaDataModelBase *model);
-static const GdaRow *gda_bdb_recordset_get_row 	      (GdaDataModelBase *model,
-						       gint rownum);
+static gint gda_bdb_recordset_get_n_rows 	      (GdaDataModelRow *model);
+static const GdaRow *gda_bdb_recordset_get_row 	      (GdaDataModelRow *model,
+						       gint rownum, GError **error);
 
 static GObjectClass *parent_class = NULL;
 
@@ -70,7 +70,7 @@ static void
 gda_bdb_recordset_class_init (GdaBdbRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -94,7 +94,7 @@ gda_bdb_recordset_finalize (GObject * object)
 }
 
 static const GdaRow *
-gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
+gda_bdb_recordset_get_row (GdaDataModelRow *model, gint row_num, GError **error)
 {
 	GdaBdbRecordset *recset;
 	DBT key, data;
@@ -108,8 +108,14 @@ gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
 	if (row_num < 0 || row_num >= recset->priv->nrows) {
-		gda_connection_add_event_string (recset->priv->cnc,
-						 _("Row number out of range"));
+		gchar *str;
+
+		str = g_strdup_printf (_("Row number out of range 0 - %d"),
+				       recset->priv->nrows - 1);
+				       
+		gda_connection_add_event_string (recset->priv->cnc, str);
+		g_set_error (error, 0, 0, str);
+		g_free (str);
 		return NULL;
 	}
 
@@ -152,7 +158,7 @@ gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
 }
 
 static const GdaValue *
-gda_bdb_recordset_get_value_at (GdaDataModelBase *model, gint col_num, gint row_num)
+gda_bdb_recordset_get_value_at (GdaDataModelRow *model, gint col_num, gint row_num)
 {
 	GdaBdbRecordset *recset;
 	GdaRow *row;
@@ -161,7 +167,7 @@ gda_bdb_recordset_get_value_at (GdaDataModelBase *model, gint col_num, gint row_
 	g_return_val_if_fail (GDA_IS_BDB_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	row = (GdaRow *) gda_bdb_recordset_get_row (model, row_num);
+	row = (GdaRow *) gda_bdb_recordset_get_row (model, row_num, NULL);
 	if (row == NULL)
 		return NULL;
 	if (col_num < 0 || col_num >= gda_row_get_length (row)) {
@@ -174,7 +180,7 @@ gda_bdb_recordset_get_value_at (GdaDataModelBase *model, gint col_num, gint row_
 }
 
 static gint
-gda_bdb_recordset_get_n_rows (GdaDataModelBase *model)
+gda_bdb_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	GdaBdbRecordset *recset = (GdaBdbRecordset *) model;
 

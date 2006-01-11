@@ -11,7 +11,7 @@
 
     <!-- DSN parameters -->
     <parameter id="DATABASE" name="Database name" descr="The name of a database to create" gdatype="string" null-ok="FALSE"/>
-    <parameter id="ENCODING" name="Encoding" descr="Character set encoding to use in the new database" gdatype="string" source="csets:1"/>
+    <parameter id="ENCODING" name="Encoding" descr="Character set encoding to use in the new database" gdatype="string" source="csets:0"/>
     <parameter id="OWNER" name="Owner" descr="The name of the database user who will own the new database" gdatype="string"/>
     <parameter id="TEMPLATE" name="Template" descr="The name of the template from which to create the new database" gdatype="string"/>
     <parameter id="TABLESPACE" name="Tablespace" descr="The name of the tablespace that will be associated with the new database" gdatype="string"/>

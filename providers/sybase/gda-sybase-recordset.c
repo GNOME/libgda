@@ -26,7 +26,7 @@
 #  include <config.h>
 #endif
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>
 #include <string.h>
 #include <ctpublic.h>
@@ -39,7 +39,7 @@
 #  undef PARENT_TYPE
 #endif
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
 static GObjectClass *parent_class = NULL;
 
@@ -49,11 +49,11 @@ static void gda_sybase_recordset_init (GdaSybaseRecordset *recset,
 static void gda_sybase_recordset_finalize (GObject *object);
 
 static void gda_sybase_recordset_describe_column (GdaDataModel *model, gint col);
-static gint gda_sybase_recordset_get_n_rows (GdaDataModelBase *model);
-static gint gda_sybase_recordset_get_n_columns (GdaDataModelBase *model);
-static const GdaRow *gda_sybase_recordset_get_row (GdaDataModelBase *model,
-                                                   gint row);
-static const GdaValue *gda_sybase_recordset_get_value_at (GdaDataModelBase *model,
+static gint gda_sybase_recordset_get_n_rows (GdaDataModelRow *model);
+static gint gda_sybase_recordset_get_n_columns (GdaDataModelRow *model);
+static const GdaRow *gda_sybase_recordset_get_row (GdaDataModelRow *model,
+                                                   gint row, GError **error);
+static const GdaValue *gda_sybase_recordset_get_value_at (GdaDataModelRow *model,
                                                           gint col,
                                                           gint row);
 
@@ -82,7 +82,7 @@ gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
 		gda_column_set_title (attribs, name);
 	gda_column_set_name (attribs, name);
 	gda_column_set_scale (attribs, colinfo->scale);
-	gda_column_set_gdatype (attribs,
+	gda_column_set_gda_type (attribs,
 				gda_sybase_get_value_type (colinfo->datatype));
 	gda_column_set_defined_size (attribs, colinfo->maxlength);
 
@@ -98,7 +98,7 @@ gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
 }
 
 static gint
-gda_sybase_recordset_get_n_rows (GdaDataModelBase *model)
+gda_sybase_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 
@@ -107,7 +107,7 @@ gda_sybase_recordset_get_n_rows (GdaDataModelBase *model)
 }
 
 static gint
-gda_sybase_recordset_get_n_columns (GdaDataModelBase *model)
+gda_sybase_recordset_get_n_columns (GdaDataModelRow *model)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 
@@ -116,7 +116,7 @@ gda_sybase_recordset_get_n_columns (GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_sybase_recordset_get_row (GdaDataModelBase *model, gint row)
+gda_sybase_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 
@@ -133,7 +133,7 @@ gda_sybase_recordset_get_row (GdaDataModelBase *model, gint row)
 }
 
 static const GdaValue *
-gda_sybase_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
+gda_sybase_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 	const GdaRow *fields;
@@ -144,7 +144,7 @@ gda_sybase_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	if (col >= recset->priv->colcnt)
 		return NULL;
 
-	fields = gda_sybase_recordset_get_row (model, row);
+	fields = gda_sybase_recordset_get_row (model, row, NULL);
 	return fields != NULL ? gda_row_get_value ((GdaRow *)fields, col) : NULL;
 }
 
@@ -152,7 +152,7 @@ static void
 gda_sybase_recordset_class_init (GdaSybaseRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -188,7 +188,7 @@ gda_sybase_recordset_finalize (GObject *object)
 				GdaRow *row = (GdaRow *) g_ptr_array_index (recset->priv->rows, 0);
 
 				if (row != NULL) {
-					gda_row_free (row);
+					g_object_unref (row);
 					row = NULL;
 				}
 				g_ptr_array_remove_index (recset->priv->rows, 0);

@@ -24,11 +24,11 @@
 #  define __gda_ibmdb2_h__
 
 #include <glib/gmacros.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-value.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <sqlcli1.h>
 #include "gda-ibmdb2-provider.h"
 

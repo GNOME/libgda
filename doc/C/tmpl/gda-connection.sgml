@@ -24,6 +24,41 @@ Management of connections to data sources
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### STRUCT GdaConnection ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaConnection::conn-closed ##### -->
+<para>
+
+</para>
+
+@gdaconnection: the object which received the signal.
+
+<!-- ##### SIGNAL GdaConnection::conn-opened ##### -->
+<para>
+
+</para>
+
+@gdaconnection: the object which received the signal.
+
+<!-- ##### SIGNAL GdaConnection::conn-to-close ##### -->
+<para>
+
+</para>
+
+@gdaconnection: the object which received the signal.
+
+<!-- ##### SIGNAL GdaConnection::error ##### -->
+<para>
+
+</para>
+
+@gdaconnection: the object which received the signal.
+@arg1: 
+
 <!-- ##### ENUM GdaConnectionOptions ##### -->
 <para>
 
@@ -31,6 +66,46 @@ Management of connections to data sources
 
 @GDA_CONNECTION_OPTIONS_READ_ONLY: 
 @GDA_CONNECTION_OPTIONS_DONT_SHARE: 
+
+<!-- ##### ENUM GdaConnectionFeature ##### -->
+<para>
+
+</para>
+
+@GDA_CONNECTION_FEATURE_AGGREGATES: 
+@GDA_CONNECTION_FEATURE_BLOBS: 
+@GDA_CONNECTION_FEATURE_INDEXES: 
+@GDA_CONNECTION_FEATURE_INHERITANCE: 
+@GDA_CONNECTION_FEATURE_NAMESPACES: 
+@GDA_CONNECTION_FEATURE_PROCEDURES: 
+@GDA_CONNECTION_FEATURE_SEQUENCES: 
+@GDA_CONNECTION_FEATURE_SQL: 
+@GDA_CONNECTION_FEATURE_TRANSACTIONS: 
+@GDA_CONNECTION_FEATURE_TRIGGERS: 
+@GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR: 
+@GDA_CONNECTION_FEATURE_USERS: 
+@GDA_CONNECTION_FEATURE_VIEWS: 
+@GDA_CONNECTION_FEATURE_XML_QUERIES: 
+
+<!-- ##### ENUM GdaConnectionSchema ##### -->
+<para>
+
+</para>
+
+@GDA_CONNECTION_SCHEMA_AGGREGATES: 
+@GDA_CONNECTION_SCHEMA_DATABASES: 
+@GDA_CONNECTION_SCHEMA_FIELDS: 
+@GDA_CONNECTION_SCHEMA_INDEXES: 
+@GDA_CONNECTION_SCHEMA_LANGUAGES: 
+@GDA_CONNECTION_SCHEMA_NAMESPACES: 
+@GDA_CONNECTION_SCHEMA_PARENT_TABLES: 
+@GDA_CONNECTION_SCHEMA_PROCEDURES: 
+@GDA_CONNECTION_SCHEMA_SEQUENCES: 
+@GDA_CONNECTION_SCHEMA_TABLES: 
+@GDA_CONNECTION_SCHEMA_TRIGGERS: 
+@GDA_CONNECTION_SCHEMA_TYPES: 
+@GDA_CONNECTION_SCHEMA_USERS: 
+@GDA_CONNECTION_SCHEMA_VIEWS: 
 
 <!-- ##### FUNCTION gda_connection_new ##### -->
 <para>
@@ -43,11 +118,30 @@ Management of connections to data sources
 @username: 
 @password: 
 @options: 
-@error: 
 @Returns: 
 <!-- # Unused Parameters # -->
+@error: 
 @corba_cnc: 
 @cnc_string: 
+
+
+<!-- ##### FUNCTION gda_connection_reset ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_open ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@error: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_close ##### -->
@@ -56,7 +150,16 @@ Management of connections to data sources
 </para>
 
 @cnc: 
+<!-- # Unused Parameters # -->
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_close_no_warning ##### -->
+<para>
+
+</para>
+
+@cnc: 
 
 
 <!-- ##### FUNCTION gda_connection_is_open ##### -->
@@ -95,6 +198,24 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_get_provider_obj ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_infos ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_get_server_version ##### -->
 <para>
 
@@ -110,6 +231,16 @@ Management of connections to data sources
 </para>
 
 @cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_set_dsn ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@datasource: 
 @Returns: 
 
 
@@ -140,12 +271,32 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_set_username ##### -->
+<para>
+
+</para>
+
+@srv: 
+@username: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_get_username ##### -->
 <para>
 
 </para>
 
 @cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_set_password ##### -->
+<para>
+
+</para>
+
+@srv: 
+@password: 
 @Returns: 
 
 
@@ -344,6 +495,28 @@ Management of connections to data sources
 @id: 
 
 
+<!-- ##### FUNCTION gda_connection_supports ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_schema ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@schema: 
+@params: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_create_blob ##### -->
 <para>
 
@@ -355,73 +528,23 @@ Management of connections to data sources
 @blob: 
 
 
-<!-- ##### FUNCTION gda_connection_get_events ##### -->
+<!-- ##### FUNCTION gda_connection_fetch_blob_by_id ##### -->
 <para>
 
 </para>
 
 @cnc: 
+@sql_id: 
 @Returns: 
 
 
-<!-- ##### ENUM GdaConnectionFeature ##### -->
-<para>
-
-</para>
-
-@GDA_CONNECTION_FEATURE_AGGREGATES: 
-@GDA_CONNECTION_FEATURE_BLOBS: 
-@GDA_CONNECTION_FEATURE_INDEXES: 
-@GDA_CONNECTION_FEATURE_INHERITANCE: 
-@GDA_CONNECTION_FEATURE_NAMESPACES: 
-@GDA_CONNECTION_FEATURE_PROCEDURES: 
-@GDA_CONNECTION_FEATURE_SEQUENCES: 
-@GDA_CONNECTION_FEATURE_SQL: 
-@GDA_CONNECTION_FEATURE_TRANSACTIONS: 
-@GDA_CONNECTION_FEATURE_TRIGGERS: 
-@GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR: 
-@GDA_CONNECTION_FEATURE_USERS: 
-@GDA_CONNECTION_FEATURE_VIEWS: 
-@GDA_CONNECTION_FEATURE_XML_QUERIES: 
-
-<!-- ##### FUNCTION gda_connection_supports ##### -->
+<!-- ##### FUNCTION gda_connection_value_to_sql_string ##### -->
 <para>
 
 </para>
 
 @cnc: 
-@feature: 
-@Returns: 
-
-
-<!-- ##### ENUM GdaConnectionSchema ##### -->
-<para>
-
-</para>
-
-@GDA_CONNECTION_SCHEMA_AGGREGATES: 
-@GDA_CONNECTION_SCHEMA_DATABASES: 
-@GDA_CONNECTION_SCHEMA_FIELDS: 
-@GDA_CONNECTION_SCHEMA_INDEXES: 
-@GDA_CONNECTION_SCHEMA_LANGUAGES: 
-@GDA_CONNECTION_SCHEMA_NAMESPACES: 
-@GDA_CONNECTION_SCHEMA_PARENT_TABLES: 
-@GDA_CONNECTION_SCHEMA_PROCEDURES: 
-@GDA_CONNECTION_SCHEMA_SEQUENCES: 
-@GDA_CONNECTION_SCHEMA_TABLES: 
-@GDA_CONNECTION_SCHEMA_TRIGGERS: 
-@GDA_CONNECTION_SCHEMA_TYPES: 
-@GDA_CONNECTION_SCHEMA_USERS: 
-@GDA_CONNECTION_SCHEMA_VIEWS: 
-
-<!-- ##### FUNCTION gda_connection_get_schema ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@schema: 
-@params: 
+@from: 
 @Returns: 
 
 

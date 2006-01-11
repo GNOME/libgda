@@ -1,8 +1,9 @@
 /* GDA - Command line configuration utility
- * Copyright (C) 2002 The GNOME Foundation.
+ * Copyright (C) 2002 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +30,6 @@
 #include <libxml/parser.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
 
 #define PRINT_ALL	0
 #define PRINT_SECTIONS	1
@@ -1378,13 +1378,14 @@ batch_options ()
 static void
 add_param_name_to_string (gpointer data, gpointer user_data)
 {
-	GdaProviderParameterInfo *param_info = data;
+	GdaParameter *param = GDA_PARAMETER (data);
 	GString *str = user_data;
+	gchar *tmp;
 
-	if (param_info != NULL) {
-		g_string_append_c (str, ' ');
-		g_string_append (str, param_info->name);
-	}
+	g_object_get (G_OBJECT (param), "string_id", &tmp, NULL);
+	g_string_append_c (str, ' ');
+	g_string_append (str, tmp);
+	g_free (tmp);
 }
 
 static void
@@ -1400,7 +1401,10 @@ display_provider (gpointer data, gpointer user_data)
 	pretty_print (info->description, strlen (desc));
 	g_print (paramInDsn);
 	str = g_string_new (NULL);
-	g_list_foreach (info->gda_params, add_param_name_to_string, str);
+	if (info->gda_params) 
+		g_slist_foreach (info->gda_params->parameters, add_param_name_to_string, str);
+	else
+		g_string_append (str, "No DSN (or wrong) DSN spec");
 	pretty_print (str->str, strlen (paramInDsn) + 1);
 	g_string_free (str, TRUE);
 	g_print ("Location: %s\n", info->location);

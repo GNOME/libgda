@@ -58,47 +58,31 @@ guint    gda_config_add_listener   (const gchar *path, GdaConfigListenerFunc fun
 				    gpointer user_data);
 void     gda_config_remove_listener (guint id);
 
+
+
+
 /*
  * Providers configuration
  */
 
 typedef struct _GdaProviderInfo GdaProviderInfo;
 
-typedef struct {
-	char         *name;
-	char         *short_description;
-	char         *long_description;
-	GdaValueType  type;
-} GdaProviderParameterInfo;
-
-#define GDA_TYPE_PROVIDER_PARAMETER_INFO (gda_provider_parameter_info_get_type ())
-
-GType                     gda_provider_parameter_info_get_type (void);
-GdaProviderParameterInfo *gda_provider_parameter_info_new_full (const gchar *name,
-								const gchar *short_description,
-								const gchar *long_description,
-								GdaValueType type);
-GdaProviderParameterInfo *gda_provider_parameter_info_copy     (GdaProviderParameterInfo *param_info);
-void                      gda_provider_parameter_info_free     (GdaProviderParameterInfo *param_info);
-
-
 /*
  * REM about the @gda_params and @dsn_spec fields:
  *
- * The @gda_params lists all the parameters required to create a DSN, and is historically the
+ * The @gda_params holds all the parameters required to create a DSN, and is historically the
  * way to create a DSN. However the @dsn_spec field has been introduced to produce a more
- * detailled spec on what is required to create a DSN, but is not yet implemented by all the
- * providers.
+ * detailled spec on what is required to create a DSN.
  *
  * When both fields are present, they are guaranted to list the _same_ parameters, using
  * different representations.
  */
 struct _GdaProviderInfo {
-	gchar *id;
-	gchar *location;
-	gchar *description;
-	GList *gda_params; /* A list of GdaProviderParameterInfo pointers to create a DSN */
-	gchar *dsn_spec; /* XML string with all the parameters required to create a DSN */
+	gchar            *id;
+	gchar            *location;
+	gchar            *description;
+	GdaParameterList *gda_params; /* Contains a list of GdaParameter to create a DSN */
+	gchar            *dsn_spec; /* XML string with all the parameters required to create a DSN */
 };
 
 #define GDA_TYPE_PROVIDER_INFO (gda_provider_info_get_type ())
@@ -111,6 +95,9 @@ GList           *gda_config_get_provider_list    (void);
 void             gda_config_free_provider_list   (GList *list);
 GdaProviderInfo *gda_config_get_provider_by_name (const gchar *name);
 GdaDataModel    *gda_config_get_provider_model   (void);
+
+
+
 
 /*
  * Data sources configuration
@@ -151,15 +138,6 @@ gboolean           gda_config_save_data_source      (const gchar *name,
 						     gboolean is_global);
 gboolean           gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info);
 void               gda_config_remove_data_source    (const gchar *name);
-
-/*
- * GDA configuration sections/keys
- */
-#define GDA_CONFIG_BASE			     "/apps/libgda"
-#define GDA_CONFIG_SECTION_DATASOURCES       "/apps/libgda/Datasources"
-#define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/libgda/LastConnections"
-
-#define GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS  "/apps/libgda/MaxLastConnections"
 
 G_END_DECLS
 

@@ -57,14 +57,15 @@ gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name)
 
 	/* create the table and its fields */
 	model = gda_data_model_array_new (mdb_table->num_cols);
-	gda_data_model_set_command_text (model, name);
+	g_object_set (G_OBJECT (model), 
+		      "command_text", name, NULL);
 
 	for (i = 0; i < mdb_table->num_cols; i++) {
 		mdb_col = g_ptr_array_index (mdb_table->columns, i);
 
 		fa = gda_data_model_describe_column (model, i);
 		gda_column_set_name (fa, mdb_col->name);
-		gda_column_set_gdatype (fa, gda_mdb_type_to_gda (mdb_col->col_type));
+		gda_column_set_gda_type (fa, gda_mdb_type_to_gda (mdb_col->col_type));
 		gda_column_set_defined_size (fa, mdb_col->col_size);
 	}
 

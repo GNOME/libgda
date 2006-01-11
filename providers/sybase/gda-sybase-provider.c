@@ -29,6 +29,7 @@
 #  include <config.h>
 #endif
 #include <string.h>
+#include <locale.h>
 #include "gda-sybase.h"
 #include "gda-sybase-recordset.h"
 #include "gda-sybase-types.h"
@@ -106,21 +107,42 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_sybase_provider_finalize;
-	
-	provider_class->begin_transaction = gda_sybase_provider_begin_transaction;
-	provider_class->change_database = gda_sybase_provider_change_database;
+
+	provider_class->get_version = gda_sybase_provider_get_version;
+	provider_class->get_server_version = gda_sybase_provider_get_server_version;
+	provider_class->get_info = NULL;
+	provider_class->supports = gda_sybase_provider_supports;
+	provider_class->get_schema = gda_sybase_provider_get_schema;
+
+	provider_class->get_data_handler = NULL;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
+
+	provider_class->open_connection = gda_sybase_provider_open_connection;
+	provider_class->reset_connection = NULL;
 	provider_class->close_connection = gda_sybase_provider_close_connection;
-	provider_class->commit_transaction = gda_sybase_provider_commit_transaction;
+	provider_class->get_database = gda_sybase_provider_get_database;
+	provider_class->change_database = gda_sybase_provider_change_database;
+
+	provider_class->get_specs = NULL;
+	provider_class->perform_action_params = NULL;
+
 	provider_class->create_database_cnc = gda_sybase_provider_create_database_cnc;
 	provider_class->drop_database_cnc = gda_sybase_provider_drop_database_cnc;
+	provider_class->create_table = NULL;
+	provider_class->drop_table = NULL;
+	provider_class->create_index = NULL;
+	provider_class->drop_index = NULL;
+
 	provider_class->execute_command = gda_sybase_provider_execute_command;
-	provider_class->get_database = gda_sybase_provider_get_database;
-	provider_class->get_schema = gda_sybase_provider_get_schema;
-	provider_class->get_server_version = gda_sybase_provider_get_server_version;
-	provider_class->get_version = gda_sybase_provider_get_version;
-	provider_class->open_connection = gda_sybase_provider_open_connection;
+	provider_class->get_last_insert_id = NULL;
+
+	provider_class->begin_transaction = gda_sybase_provider_begin_transaction;
+	provider_class->commit_transaction = gda_sybase_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_sybase_provider_rollback_transaction;
-	provider_class->supports = gda_sybase_provider_supports;
+	
+	provider_class->create_blob = NULL;
+	provider_class->fetch_blob = NULL;
 
 	setlocale(LC_ALL, "C");
 }
@@ -601,12 +623,11 @@ gda_sybase_provider_execute_command (GdaServerProvider *provider,
 	case GDA_COMMAND_TYPE_TABLE:
 		query = g_strdup_printf ("SELECT * FROM %s", gda_command_get_text (cmd));
 		reclist = gda_sybase_provider_process_sql_commands (reclist, cnc, query);
-		if (reclist && GDA_IS_DATA_MODEL (reclist->data)) {
-			gda_data_model_set_command_text (GDA_DATA_MODEL (reclist->data),
-							 gda_command_get_text (cmd));
-			gda_data_model_set_command_type (GDA_DATA_MODEL (reclist->data),
-							 GDA_COMMAND_TYPE_TABLE);
-		}
+		if (reclist && GDA_IS_DATA_MODEL (reclist->data)) 
+			g_object_set (G_OBJECT (reclist->data), 
+				      "command_text", gda_command_get_text (cmd),
+				      "command_type", GDA_COMMAND_TYPE_TABLE, NULL);
+
 		g_free(query);
 		query = NULL;
 		break;
@@ -699,8 +720,9 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 										 TRUE);
 					recset = GDA_DATA_MODEL(srecset);
 					if (GDA_IS_SYBASE_RECORDSET (recset)) {
-						gda_data_model_set_command_text (recset, arr[n]);
-						gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+						g_object_set (G_OBJECT (recset), 
+							      "command_text", arr[n],
+							      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 						reclist = g_list_append (reclist, recset);
 					}
 					else
@@ -717,8 +739,10 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 										 TRUE);
 					recset = GDA_DATA_MODEL(srecset);
 					if (GDA_IS_SYBASE_RECORDSET (recset)) {
-						gda_data_model_set_command_text (recset, arr[n]);
-						gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+						g_object_set (G_OBJECT (recset), 
+							      "command_text", arr[n],
+							      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
+
 						reclist = g_list_append (reclist, recset);
 					}
 					else
@@ -783,8 +807,9 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 
 					recset = GDA_DATA_MODEL(srecset);
 					if (GDA_IS_SYBASE_RECORDSET (recset)) {
-						gda_data_model_set_command_text (recset, arr[n]);
-						gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+						g_object_set (G_OBJECT (recset), 
+							      "command_text", arr[n],
+							      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 						reclist = g_list_append (reclist, recset);
 					}
 					else
@@ -804,8 +829,9 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 
 					recset = GDA_DATA_MODEL(srecset);
 					if (GDA_IS_SYBASE_RECORDSET (recset)) {
-						gda_data_model_set_command_text (recset, arr[n]);
-						gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+						g_object_set (G_OBJECT (recset), 
+							      "command_text", arr[n],
+							      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 						reclist = g_list_append (reclist, recset);
 					}
 					else

@@ -74,7 +74,17 @@ or destroy a database.
 
 </para>
 
+@dict: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_client_declare_connection ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
 
 
 <!-- ##### FUNCTION gda_client_open_connection ##### -->
@@ -104,6 +114,15 @@ or destroy a database.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_client_get_connections ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_client_find_connection ##### -->
 <para>
 
@@ -122,51 +141,6 @@ or destroy a database.
 </para>
 
 @client: 
-
-
-<!-- ##### FUNCTION gda_client_get_dsn_specs ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_get_provider_specs ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
-@type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_create_database ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
-@params: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_client_drop_database ##### -->
-<para>
-
-</para>
-
-@client: 
-@provider: 
-@params: 
-@error: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_client_notify_event ##### -->
@@ -265,6 +239,51 @@ or destroy a database.
 
 @client: 
 @xaction: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_get_dsn_specs ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_get_provider_specs ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_create_database ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider: 
+@params: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_drop_database ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider: 
+@params: 
+@error: 
 @Returns: 
 
 

@@ -78,3 +78,22 @@ Utility functions
 @uri: 
 
 
+<!-- ##### FUNCTION gda_server_provider_get_schema_nb_columns ##### -->
+<para>
+
+</para>
+
+@schema: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_init_schema_model ##### -->
+<para>
+
+</para>
+
+@model: 
+@schema: 
+@Returns: 
+
+

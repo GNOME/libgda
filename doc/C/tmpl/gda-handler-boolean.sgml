@@ -1,0 +1,56 @@
+<!-- ##### SECTION Title ##### -->
+GdaHandlerBoolean
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaHandlerBoolean ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerBoolean ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerBooleanClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaHandlerBooleanPriv ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_handler_boolean_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

@@ -7,5 +7,5 @@ Name: libgda-2.0
 Description: GDA (GNOME Data Access) library
 Requires: glib-2.0 libxml-2.0 libxslt
 Version: @VERSION@
-Libs: -L${libdir} -lgda-3
+Libs: -L${libdir} -lgda-3 -lgda_handlers-3 -lgda_graph-3 -lgda_sql_delimiter-3 -lgda-report-3
 Cflags: -I${includedir}/libgda-@GDA_MAJOR_VERSION@.@GDA_MINOR_VERSION@

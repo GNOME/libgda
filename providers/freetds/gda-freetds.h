@@ -25,7 +25,7 @@
 #endif
 
 #include <glib/gmacros.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
 #include <tds.h>
 #include "gda-freetds-provider.h"

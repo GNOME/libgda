@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <string.h>
 #include "gda-odbc.h"
 #include "gda-odbc-recordset.h"
@@ -46,10 +46,11 @@ static void gda_odbc_recordset_init       (GdaOdbcRecordset *recset,
 					       GdaOdbcRecordsetClass *klass);
 static void gda_odbc_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_odbc_recordset_get_value_at    (GdaDataModelBase *model, gint col, gint row);
+static const GdaValue *gda_odbc_recordset_get_value_at    (GdaDataModelRow *model, gint col, gint row);
 static void gda_odbc_recordset_describe    (GdaDataModel *model, gint col);
-static gint gda_odbc_recordset_get_n_rows 		  (GdaDataModelBase *model);
-static const GdaRow *gda_odbc_recordset_get_row 	  (GdaDataModelBase *model, gint rownum);
+static gint gda_odbc_recordset_get_n_rows 		  (GdaDataModelRow *model);
+static const GdaRow *gda_odbc_recordset_get_row 	  (GdaDataModelRow *model, 
+							   gint rownum, GError **error);
 
 static GObjectClass *parent_class = NULL;
 
@@ -73,7 +74,7 @@ static void
 gda_odbc_recordset_class_init (GdaOdbcRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -104,7 +105,7 @@ get_column_types (GdaOdbcRecordsetPrivate *priv)
 }
 
 static GdaRow *
-get_row (GdaOdbcRecordsetPrivate *priv, gint rownum)
+get_row (GdaOdbcRecordsetPrivate *priv, gint rownum, GError **error)
 {
 	/* FIXME: Write this */
 
@@ -116,7 +117,7 @@ get_row (GdaOdbcRecordsetPrivate *priv, gint rownum)
  */
 
 static const GdaRow *
-gda_odbc_recordset_get_row (GdaDataModelBase *model, gint row)
+gda_odbc_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	/* FIXME: Write this */
 
@@ -124,7 +125,7 @@ gda_odbc_recordset_get_row (GdaDataModelBase *model, gint row)
 }
 
 static const GdaValue *
-gda_odbc_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
+gda_odbc_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	/* FIXME: Write this */
 
@@ -132,7 +133,7 @@ gda_odbc_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 }
 
 static gint
-gda_odbc_recordset_get_n_rows (GdaDataModelBase *model)
+gda_odbc_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	/* FIXME: Write this */
 

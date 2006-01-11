@@ -2,12 +2,34 @@
 GdaParameter
 
 <!-- ##### SECTION Short_Description ##### -->
-Management of parameters
+Represents a #GdaValue with various attributes
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-  Parameters are the way clients have to send an unlimited number
-  of arguments to the providers.
+A #GdaParameter object basically is a specification for a value and can convey a value once one has been
+set.
+</para>
+<para>
+The #GdaParameter object offers other features such as:
+<itemizedlist>
+    <listitem>
+      <para>keeping a list of objects which "are interested" (mentioned as "users" in the API)
+	in the value placed in the parameter: 
+	this feature is usefull when parameters are created by objects and when these objects want to
+	be reminded that the parameter has been created by them at a later time</para>
+    </listitem>
+    <listitem>
+      <para>aliasing (binding) to another parameter: this is an easy way to keep several parameters
+	synchronized. There are two modes: one where parameters A and B will always have the same value
+	and where parameter B will update itself whan A changes to mirror tha change but will be
+	allowed to have its own changes afterwards.</para>
+    </listitem>
+    <listitem>
+      <para>values restrictions: a parameter can be told to choose a value among the values in a
+      colmun in a #GdaDataModel (beware that this is a declarative feature only and that no policy is
+      enforced regarding values changes)</para>
+    </listitem>
+</itemizedlist>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -23,31 +45,76 @@ Management of parameters
 
 </para>
 
-@name: 
-@value: 
 
-<!-- ##### MACRO GDA_TYPE_PARAMETER ##### -->
+<!-- ##### SIGNAL GdaParameter::restrict-changed ##### -->
 <para>
 
 </para>
 
+@gdaparameter: the object which received the signal.
 
-
-<!-- ##### FUNCTION gda_parameter_get_type ##### -->
+<!-- ##### ARG GdaParameter:full-bind ##### -->
 <para>
 
 </para>
 
+<!-- ##### ARG GdaParameter:gda-type ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaParameter:handler-plugin ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaParameter:restrict-column ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaParameter:restrict-model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaParameter:simple-bind ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaParameter:use-default-value ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_parameter_new ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dict: 
+
+
+<!-- ##### FUNCTION gda_parameter_new_copy ##### -->
+<para>
+
+</para>
+
+@orig: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_new_from_value ##### -->
+<!-- ##### FUNCTION gda_parameter_new_string ##### -->
 <para>
 
 </para>
 
 @name: 
-@value: 
+@str: 
 @Returns: 
 
 
@@ -61,37 +128,7 @@ Management of parameters
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_new_double ##### -->
-<para>
-
-</para>
-
-@name: 
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_parameter_new_gobject ##### -->
-<para>
-
-</para>
-
-@name: 
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_parameter_new_string ##### -->
-<para>
-
-</para>
-
-@name: 
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_parameter_copy ##### -->
+<!-- ##### FUNCTION gda_parameter_get_gda_type ##### -->
 <para>
 
 </para>
@@ -100,30 +137,24 @@ Management of parameters
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_free ##### -->
+<!-- ##### FUNCTION gda_parameter_declare_param_user ##### -->
 <para>
 
 </para>
 
 @param: 
+@user: 
+<!-- # Unused Parameters # -->
+@field: 
 
 
-<!-- ##### FUNCTION gda_parameter_get_name ##### -->
+<!-- ##### FUNCTION gda_parameter_get_param_users ##### -->
 <para>
 
 </para>
 
 @param: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_parameter_set_name ##### -->
-<para>
-
-</para>
-
-@param: 
-@name: 
 
 
 <!-- ##### FUNCTION gda_parameter_get_value ##### -->
@@ -144,94 +175,134 @@ Management of parameters
 @value: 
 
 
-<!-- ##### STRUCT GdaParameterList ##### -->
+<!-- ##### FUNCTION gda_parameter_set_value_str ##### -->
 <para>
 
 </para>
 
-
-<!-- ##### MACRO GDA_TYPE_PARAMETER_LIST ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION gda_parameter_list_get_type ##### -->
-<para>
-
-</para>
-
+@param: 
+@value: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_new ##### -->
+<!-- ##### FUNCTION gda_parameter_declare_invalid ##### -->
 <para>
 
 </para>
 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_parameter_list_free ##### -->
-<para>
-
-</para>
-
-@plist: 
-
-
-<!-- ##### FUNCTION gda_parameter_list_copy ##### -->
-<para>
-
-</para>
-
-@plist: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_parameter_list_add_parameter ##### -->
-<para>
-
-</para>
-
-@plist: 
 @param: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_get_names ##### -->
+<!-- ##### FUNCTION gda_parameter_is_valid ##### -->
 <para>
 
 </para>
 
-@plist: 
+@param: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_find ##### -->
+<!-- ##### FUNCTION gda_parameter_get_default_value ##### -->
 <para>
 
 </para>
 
-@plist: 
-@name: 
+@param: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_clear ##### -->
+<!-- ##### FUNCTION gda_parameter_set_default_value ##### -->
 <para>
 
 </para>
 
-@plist: 
+@param: 
+@value: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_get_length ##### -->
+<!-- ##### FUNCTION gda_parameter_get_exists_default_value ##### -->
 <para>
 
 </para>
 
-@plist: 
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_set_exists_default_value ##### -->
+<para>
+
+</para>
+
+@param: 
+@default_value_exists: 
+
+
+<!-- ##### FUNCTION gda_parameter_set_not_null ##### -->
+<para>
+
+</para>
+
+@param: 
+@not_null: 
+
+
+<!-- ##### FUNCTION gda_parameter_get_not_null ##### -->
+<para>
+
+</para>
+
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_restrict_values ##### -->
+<para>
+
+</para>
+
+@param: 
+@model: 
+@col: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_has_restrict_values ##### -->
+<para>
+
+</para>
+
+@param: 
+@model: 
+@col: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_replace_param_users ##### -->
+<para>
+
+</para>
+
+@param: 
+@replacements: 
+
+
+<!-- ##### FUNCTION gda_parameter_bind_to_param ##### -->
+<para>
+
+</para>
+
+@param: 
+@bind_to: 
+
+
+<!-- ##### FUNCTION gda_parameter_get_bind_param ##### -->
+<para>
+
+</para>
+
+@param: 
 @Returns: 
 
 

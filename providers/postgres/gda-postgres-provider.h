@@ -41,7 +41,7 @@ typedef struct _GdaPostgresProvider      GdaPostgresProvider;
 typedef struct _GdaPostgresProviderClass GdaPostgresProviderClass;
 
 struct _GdaPostgresProvider {
-	GdaServerProvider provider;
+	GdaServerProvider  provider;
 };
 
 struct _GdaPostgresProviderClass {

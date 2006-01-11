@@ -25,7 +25,7 @@
 #  define __gda_data_model_array_h__
 
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-base.h>
+#include <libgda/gda-data-model-row.h>
 
 G_BEGIN_DECLS
 
@@ -40,12 +40,12 @@ typedef struct _GdaDataModelArrayClass   GdaDataModelArrayClass;
 typedef struct _GdaDataModelArrayPrivate GdaDataModelArrayPrivate;
 
 struct _GdaDataModelArray {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GdaDataModelArrayPrivate *priv;
 };
 
 struct _GdaDataModelArrayClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 GType         gda_data_model_array_get_type          (void);

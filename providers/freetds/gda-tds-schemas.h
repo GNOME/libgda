@@ -25,7 +25,7 @@
 #endif
 
 #include <libgda/gda-data-model-array.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 
 G_BEGIN_DECLS
 

@@ -1,11 +1,15 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-bdb.la
 
+configdir   = $(datadir)/libgda
+config_DATA = bdb_specs_dsn.xml
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(BDB_CFLAGS)
+	$(BDB_CFLAGS) \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_bdb_la_SOURCES = \
 	gda-bdb-provider.c \
@@ -27,3 +31,6 @@ libgda_bdb_la_LIBADD = \
 #	$(LIBGDA_LIBS) \
 #	$(top_builddir)/libgda/libgda-3.la \
 #	$(BDB_LIBS)
+
+EXTRA_DIST = $(config_DATA)
+

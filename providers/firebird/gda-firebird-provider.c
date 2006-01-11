@@ -20,7 +20,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-command.h>
@@ -95,20 +95,40 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 
 	object_class->finalize = gda_firebird_provider_finalize;
 	provider_class->get_version = gda_firebird_provider_get_version;
-	provider_class->open_connection = gda_firebird_provider_open_connection;
-	provider_class->close_connection = gda_firebird_provider_close_connection;
 	provider_class->get_server_version = gda_firebird_provider_get_server_version;
+	provider_class->get_info = NULL;
+	provider_class->supports = gda_firebird_provider_supports;
+	provider_class->get_schema = gda_firebird_provider_get_schema;
+
+	provider_class->get_data_handler = NULL;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
+
+	provider_class->open_connection = gda_firebird_provider_open_connection;
+	provider_class->reset_connection = NULL;
+	provider_class->close_connection = gda_firebird_provider_close_connection;
 	provider_class->get_database = gda_firebird_provider_get_database;
 	provider_class->change_database = gda_firebird_provider_change_database;
+
+	provider_class->get_specs = NULL;
+	provider_class->perform_action_params = NULL;
+
 	provider_class->create_database_cnc = gda_firebird_provider_create_database_cnc;
 	provider_class->drop_database_cnc = gda_firebird_provider_drop_database_cnc;
+	provider_class->create_table = NULL;
+	provider_class->drop_table = NULL;
+	provider_class->create_index = NULL;
+	provider_class->drop_index = NULL;
+
 	provider_class->execute_command = gda_firebird_provider_execute_command;
+	provider_class->get_last_insert_id = NULL;
+
 	provider_class->begin_transaction = gda_firebird_provider_begin_transaction;
 	provider_class->commit_transaction = gda_firebird_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_firebird_provider_rollback_transaction;
-	provider_class->supports = gda_firebird_provider_supports;
-	provider_class->get_schema = gda_firebird_provider_get_schema;
+	
 	provider_class->create_blob = gda_firebird_provider_create_blob;
+	provider_class->fetch_blob = NULL;
 }
 
 static void
@@ -248,7 +268,7 @@ fb_get_types (GdaConnection *cnc,
 		value_list = g_list_append (value_list, gda_value_new_gdatype (types[i].type));
 
 		/* Add values to row */
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		/* Free temporary list of values */
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -346,7 +366,7 @@ fb_get_tables (GdaConnection *cnc,
 				value_list = g_list_append (value_list, gda_value_new_string (""));
 				value_list = g_list_append (value_list, gda_value_new_string (""));
 
-				gda_data_model_append_values (recset, value_list);
+				gda_data_model_append_values (recset, value_list, NULL);
 				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 				g_list_free (value_list);
 			}
@@ -671,7 +691,7 @@ fb_get_fields_metadata (GdaConnection *cnc,
 				
 				/* Set field metdata for row, then append to recordset */
 				value_list = fb_set_field_metadata (row);
-				gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+				gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 				/* Free temp list of values */
 				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -716,7 +736,7 @@ fb_add_aggregate_row (GdaDataModelArray *recset,
 	/* 7th the SQL definition */
 	list = g_list_append (list, gda_value_new_string (NULL));
 
-	gda_data_model_append_values (GDA_DATA_MODEL (recset), list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), list, NULL);
 
 	g_list_foreach (list, (GFunc) gda_value_free, NULL);
 	g_list_free (list);
@@ -1067,9 +1087,9 @@ gda_firebird_provider_create_database_cnc (GdaServerProvider *provider,
 
 static GList *
 gda_firebird_provider_run_sql (GList *reclist,
-				GdaConnection *cnc,
-				isc_tr_handle *ftr,
-				const gchar *sql)
+			       GdaConnection *cnc,
+			       isc_tr_handle *ftr,
+			       const gchar *sql)
 {
 	GdaFirebirdRecordset *recset;
 	gchar **arr;
@@ -1085,8 +1105,8 @@ gda_firebird_provider_run_sql (GList *reclist,
 		while (arr[n]) {
 			recset = gda_firebird_recordset_new (cnc, ftr, sql);
   			if (GDA_IS_FIREBIRD_RECORDSET (recset)) {
-				gda_data_model_set_command_text ((GdaDataModel*) recset, arr[n]);
-				gda_data_model_set_command_type ((GdaDataModel*) recset, GDA_COMMAND_TYPE_SQL);
+				g_object_set (G_OBJECT (recset), "command_text", arr[n],
+					      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 				reclist = g_list_append (reclist, recset);
 			}
 			

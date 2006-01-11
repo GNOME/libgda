@@ -5,6 +5,7 @@
  *         Michael Lausch <michael@lausch.at>
  *         Nick Gorham <nick@lurcher.org>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -93,18 +94,42 @@ gda_odbc_provider_class_init (GdaOdbcProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_odbc_provider_finalize;
+
 	provider_class->get_version = gda_odbc_provider_get_version;
-	provider_class->open_connection = gda_odbc_provider_open_connection;
-	provider_class->close_connection = gda_odbc_provider_close_connection;
 	provider_class->get_server_version = gda_odbc_provider_get_server_version;
+	provider_class->get_info = NULL;
+	provider_class->supports = gda_odbc_provider_supports;
+	provider_class->get_schema = gda_odbc_provider_get_schema;
+
+	provider_class->get_data_handler = NULL;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
+
+	provider_class->open_connection = gda_odbc_provider_open_connection;
+	provider_class->reset_connection = NULL;
+	provider_class->close_connection = gda_odbc_provider_close_connection;
 	provider_class->get_database = gda_odbc_provider_get_database;
 	provider_class->change_database = gda_odbc_provider_change_database;
+
+	provider_class->get_specs = NULL;
+	provider_class->perform_action_params = NULL;
+
+	provider_class->create_database_cnc = NULL;
+	provider_class->drop_database_cnc = NULL;
+	provider_class->create_table = NULL;
+	provider_class->drop_table = NULL;
+	provider_class->create_index = NULL;
+	provider_class->drop_index = NULL;
+
 	provider_class->execute_command = gda_odbc_provider_execute_command;
+	provider_class->get_last_insert_id = NULL;
+
 	provider_class->begin_transaction = gda_odbc_provider_begin_transaction;
 	provider_class->commit_transaction = gda_odbc_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_odbc_provider_rollback_transaction;
-	provider_class->supports = gda_odbc_provider_supports;
-	provider_class->get_schema = gda_odbc_provider_get_schema;
+	
+	provider_class->create_blob = NULL;
+	provider_class->fetch_blob = NULL;
 }
 
 static void
@@ -347,7 +372,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 						}
 					}
 
-					gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+					gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 					g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 					g_list_free (value_list);
@@ -743,7 +768,7 @@ get_databases_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 			value_list = g_list_append (value_list, gda_value_new_string (""));
 		}
 
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -913,7 +938,7 @@ get_columns_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 			value_list = g_list_append (value_list, gda_value_new_string (""));
 		}
 
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1002,7 +1027,7 @@ get_namespaces_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 		}
 
 
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1111,7 +1136,7 @@ get_procedure_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 		/* Definition */
 		value_list = g_list_append (value_list, gda_value_new_string (""));
 
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1221,7 +1246,7 @@ get_tables_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 
 		value_list = g_list_append (value_list, gda_value_new_string (""));
 
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1326,7 +1351,7 @@ get_types_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset, const
 			value_list = g_list_append (value_list, gda_value_new_gdatype ( GDA_VALUE_TYPE_UNKNOWN ));
 		}
 
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

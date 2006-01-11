@@ -235,7 +235,10 @@ gda_bdb_provider_get_server_version (GdaServerProvider *provider,
 
 	bdb_prv = (GdaBdbProvider *) provider;
 	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (bdb_prv), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	else
+		return NULL;
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE);
 	if (priv_data == NULL) {
@@ -279,7 +282,10 @@ gda_bdb_provider_get_schema (GdaServerProvider *provider,
 
 	bdb_prv = (GdaBdbProvider *) provider;
 	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (bdb_prv), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	else
+		return NULL;
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE);
 	if (priv_data == NULL) {

@@ -24,7 +24,7 @@
  */
 
 #include <libgda/gda-data-model-array.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-ldap.h"
@@ -84,19 +84,42 @@ gda_ldap_provider_class_init (GdaLdapProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_ldap_provider_finalize;
+
+	provider_class->get_version = gda_ldap_provider_get_version;
+	provider_class->get_server_version = gda_ldap_provider_get_server_version;
+	provider_class->get_info = NULL;
+	provider_class->supports = gda_ldap_provider_supports;
+	provider_class->get_schema = gda_ldap_provider_get_schema;
+
+	provider_class->get_data_handler = NULL;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
+
 	provider_class->open_connection = gda_ldap_provider_open_connection;
+	provider_class->reset_connection = NULL;
 	provider_class->close_connection = gda_ldap_provider_close_connection;
 	provider_class->get_database = gda_ldap_provider_get_database;
-	/*provider_class->create_database = gda_ldap_provider_create_database;
-	provider_class->drop_database_cnc = gda_ldap_provider_drop_database_cnc;
-	provider_class->execute_command = gda_ldap_provider_execute_command;*/
+	provider_class->change_database = NULL;
+
+	provider_class->get_specs = NULL;
+	provider_class->perform_action_params = NULL;
+
+	provider_class->create_database_cnc = NULL;
+	provider_class->drop_database_cnc = NULL;
+	provider_class->create_table = NULL;
+	provider_class->drop_table = NULL;
+	provider_class->create_index = NULL;
+	provider_class->drop_index = NULL;
+
+	provider_class->execute_command = NULL;
+	provider_class->get_last_insert_id = NULL;
+
 	provider_class->begin_transaction = gda_ldap_provider_begin_transaction;
 	provider_class->commit_transaction = gda_ldap_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_ldap_provider_rollback_transaction;
-	provider_class->supports = gda_ldap_provider_supports;
-	provider_class->get_schema = gda_ldap_provider_get_schema;
-	provider_class->get_version = gda_ldap_provider_get_version;
-	provider_class->get_server_version = gda_ldap_provider_get_server_version;
+	
+	provider_class->create_blob = NULL;
+	provider_class->fetch_blob = NULL;	
 }
 
 static void
@@ -294,7 +317,7 @@ add_string_row (GdaDataModelArray *recset, const gchar *str)
 	list.next = NULL;
 	list.prev = NULL;
 
-	gda_data_model_append_values (GDA_DATA_MODEL (recset), &list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), &list, NULL);
 
 	gda_value_free (value);
 }
@@ -395,7 +418,7 @@ get_ldap_tables (GdaConnection *cnc, GdaParameterList *params)
 						value_list = g_list_append (value_list, gda_value_new_string (""));
 						value_list = g_list_append (value_list, gda_value_new_string (""));
 
-						gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+						gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 						/*printf ("%s\n", oc->oc_names[j]);*/
 
 						g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -453,7 +476,10 @@ gda_ldap_provider_get_schema (GdaServerProvider *provider,
 			       GdaParameterList *params)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	else
+		return NULL;
 
 	switch (schema) {
 /*	case GDA_CONNECTION_SCHEMA_AGGREGATES :
@@ -580,7 +606,10 @@ gda_ldap_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 	gint result;
 
 	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (myprv), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	else
+		return NULL;
 
 	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
 	if (!ldap) {

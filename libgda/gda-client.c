@@ -25,13 +25,14 @@
 #include <gmodule.h>
 #include <libgda/gda-client.h>
 #include <libgda/gda-config.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-server-provider.h>
 #include <string.h>
 #include "gda-marshal.h"
-
-#define PARENT_TYPE G_TYPE_OBJECT
+#include "gda-dict.h"
+#include "gda-parameter-list.h"
+#include "gda-value.h"
 
 typedef struct {
 	GModule              *handle;
@@ -54,7 +55,8 @@ static void gda_client_class_init (GdaClientClass *klass);
 static void gda_client_init       (GdaClient *client, GdaClientClass *klass);
 static void gda_client_finalize   (GObject *object);
 
-static void connection_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client);
+static void cnc_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client);
+static void cnc_destroyed_cb (GdaConnection *cnc, GdaClient *client);
 
 enum {
 	EVENT_NOTIFICATION,
@@ -108,7 +110,7 @@ free_hash_provider (gpointer key, gpointer value, gpointer user_data)
  */
 
 static void
-connection_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client)
+cnc_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client)
 {
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
@@ -117,15 +119,15 @@ connection_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *c
 }
 
 static void
-cnc_weak_cb (gpointer user_data, GObject *object)
+cnc_destroyed_cb (GdaConnection *cnc, GdaClient *client)
 {
-	GdaConnection *cnc = (GdaConnection *) object;
-	GdaClient *client = (GdaClient *) user_data;
-
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (GDA_IS_CLIENT (client));
-
+	g_assert (g_list_find (client->priv->connections, cnc));
+	g_signal_handlers_disconnect_by_func (G_OBJECT (cnc), 
+					      G_CALLBACK (cnc_destroyed_cb), client);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (cnc), 
+					      G_CALLBACK (cnc_error_cb), client);
 	client->priv->connections = g_list_remove (client->priv->connections, cnc);
+	g_object_unref (cnc);
 }
 
 typedef struct {
@@ -214,7 +216,8 @@ gda_client_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
 	/* free memory */
-	gda_client_close_all_connections (client);
+	while (client->priv->connections)
+		cnc_destroyed_cb (GDA_CONNECTION (client->priv->connections->data), client);
 
 	g_hash_table_foreach (client->priv->providers, (GHFunc) remove_weak_ref, client);
 	g_hash_table_foreach (client->priv->providers, (GHFunc) free_hash_provider, NULL);
@@ -254,7 +257,7 @@ gda_client_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_client_init
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaClient", &info, 0);
+		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaClient", &info, 0);
 	}
 	return type;
 }
@@ -270,11 +273,14 @@ gda_client_get_type (void)
  * Returns: the newly created object.
  */
 GdaClient *
-gda_client_new (void)
+gda_client_new (GdaDict *dict)
 {
 	GdaClient *client;
 
-	client = g_object_new (GDA_TYPE_CLIENT, NULL);
+	if (dict)
+		g_return_val_if_fail (GDA_IS_DICT (dict), NULL);
+
+	client = g_object_new (GDA_TYPE_CLIENT, "dict", ASSERT_DICT (dict), NULL);
 	return client;
 }
 
@@ -341,6 +347,35 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 }
 
 /**
+ * gda_client_declare_connection
+ * @client: a #GdaClient object
+ * @cnc: a #GdaConnection object
+ *
+ * Declares the @cnc to @client. This function should not be used directly
+ */
+void
+gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
+{
+	g_return_if_fail (client && GDA_IS_CLIENT (client));
+	g_return_if_fail (client->priv);
+	g_return_if_fail (cnc && GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (cnc->priv);
+	
+	if (g_list_find (client->priv->connections, cnc))
+		return;
+
+	client->priv->connections = g_list_append (client->priv->connections, cnc);
+	g_object_ref (cnc);
+
+	/* signals */
+	g_signal_connect (G_OBJECT (cnc), "destroyed",
+			  G_CALLBACK (cnc_destroyed_cb), client);
+
+	g_signal_connect (G_OBJECT (cnc), "error",
+			  G_CALLBACK (cnc_error_cb), client);
+}
+
+/**
  * gda_client_open_connection
  * @client: a #GdaClient object.
  * @dsn: data source name.
@@ -403,14 +438,10 @@ gda_client_open_connection (GdaClient *client,
 	
 		if (prv) {
 			cnc = gda_connection_new (client, prv->provider, dsn, username, password, 
-						  options, error);
-
-			if (cnc) {
-				/* add cnc to our private list */
-				client->priv->connections = g_list_append (client->priv->connections, cnc);
-				g_object_weak_ref (G_OBJECT (cnc), (GWeakNotify) cnc_weak_cb, client);
-				g_signal_connect (G_OBJECT (cnc), "error",
-						  G_CALLBACK (connection_error_cb), client);
+						  options);
+			if (!gda_connection_open (cnc, error)) {
+				g_object_unref (cnc);
+				cnc = NULL;
 			}
 		}
 		else 
@@ -423,7 +454,6 @@ gda_client_open_connection (GdaClient *client,
 		g_set_error (error, GDA_CLIENT_ERROR, 0, 
 			     _("Datasource configuration error: no provider specified"));
 	}
-
 
 	/* free memory */
 	gda_data_source_info_free (dsn_info);
@@ -494,7 +524,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 				     dsn_info->cnc_string,
 				     dsn_info->description,
 				     dsn_info->username,
-				     dsn_info->password, TRUE);
+				     dsn_info->password, FALSE);
 
 	/* open the connection */
 	cnc = gda_client_open_connection (client,
@@ -519,7 +549,7 @@ gda_client_open_connection_from_string (GdaClient *client,
  * The GList returned is an internal pointer, so DON'T TRY TO
  * FREE IT.
  *
- * Returns: a GList of #GdaConnection objects.
+ * Returns: a GList of #GdaConnection objects; dont't modify that list
  */
 const GList *
 gda_client_get_connections (GdaClient *client)
@@ -595,17 +625,10 @@ void
 gda_client_close_all_connections (GdaClient *client)
 {
 	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_return_if_fail (client->priv);
 
-	while (client->priv->connections != NULL) {
-		GdaConnection *cnc = client->priv->connections->data;
-
-		g_assert (GDA_IS_CONNECTION (cnc));
-
-		client->priv->connections = g_list_remove (client->priv->connections, cnc);
-		g_object_unref (cnc);
-	}
-
-	client->priv->connections = NULL;
+	if (client->priv->connections) 
+		g_list_foreach (client->priv->connections, (GFunc) gda_connection_close, NULL);
 }
 
 /**
@@ -645,15 +668,23 @@ void
 gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error)
 {
 	GdaParameterList *params;
+	GdaParameter *param;
+	GdaValue *value;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (error != NULL);
 
-	params = gda_parameter_list_new ();
-	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("error", G_OBJECT (error)));
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
+	param = gda_parameter_new (GDA_VALUE_TYPE_GOBJECT);
+	gda_object_set_name (GDA_OBJECT (param), "error");
+	value = gda_value_new_gobject (G_OBJECT (error));
+	gda_parameter_set_value (param, value);
+	gda_value_free (value);
 
-	gda_parameter_list_free (params);
+	params = gda_parameter_list_new (NULL);
+	gda_parameter_list_add_param (params, param);
+	g_object_unref (param);
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
+	g_object_unref (params);
 }
 
 /**
@@ -703,16 +734,24 @@ void
 gda_client_notify_transaction_started_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
 {
 	GdaParameterList *params;
+	GdaParameter *param;
+	GdaValue *value;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
-	params = gda_parameter_list_new ();
-	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", G_OBJECT (xaction)));
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, params);
+	param = gda_parameter_new (GDA_VALUE_TYPE_GOBJECT);
+	gda_object_set_name (GDA_OBJECT (param), "transaction");
+	value = gda_value_new_gobject (G_OBJECT (xaction));
+	gda_parameter_set_value (param, value);
+	gda_value_free (value);
 
-	gda_parameter_list_free (params);
+	params = gda_parameter_list_new (NULL);
+	gda_parameter_list_add_param (params, param);
+	g_object_unref (param);
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, params);
+	g_object_unref (params);
 }
 
 /**
@@ -728,16 +767,24 @@ void
 gda_client_notify_transaction_committed_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
 {
 	GdaParameterList *params;
+	GdaParameter *param;
+	GdaValue *value;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
-	params = gda_parameter_list_new ();
-	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", G_OBJECT (xaction)));
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, params);
+	param = gda_parameter_new (GDA_VALUE_TYPE_GOBJECT);
+	gda_object_set_name (GDA_OBJECT (param), "transaction");
+	value = gda_value_new_gobject (G_OBJECT (xaction));
+	gda_parameter_set_value (param, value);
+	gda_value_free (value);
 
-	gda_parameter_list_free (params);
+	params = gda_parameter_list_new (NULL);
+	gda_parameter_list_add_param (params, param);
+	g_object_unref (param);
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, params);
+	g_object_unref (params);
 }
 
 /**
@@ -753,16 +800,24 @@ void
 gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
 {
 	GdaParameterList *params;
+	GdaParameter *param;
+	GdaValue *value;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
-	params = gda_parameter_list_new ();
-	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", G_OBJECT (xaction)));
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, params);
+	param = gda_parameter_new (GDA_VALUE_TYPE_GOBJECT);
+	gda_object_set_name (GDA_OBJECT (param), "transaction");
+	value = gda_value_new_gobject (G_OBJECT (xaction));
+	gda_parameter_set_value (param, value);
+	gda_value_free (value);
 
-	gda_parameter_list_free (params);
+	params = gda_parameter_list_new (NULL);
+	gda_parameter_list_add_param (params, param);
+	g_object_unref (param);
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, params);
+	g_object_unref (params);
 }
 
 /**
@@ -944,10 +999,10 @@ gda_client_get_provider_specs (GdaClient *client, const gchar *provider,
  *
  * For the providers which do not yet implement the gda_client_get_provider_specs()
  * method, create a list with a #GdaParameter object for
- * <ul>
- *   <li>an opened #GdaConnection object, named "cnc"</li>
- *   <li>the name of the database to create, named "dbname"</li>
- * </ul>
+ * <itemizedlist>
+ *   <listitem><para>an opened #GdaConnection object, named "cnc"</para></listitem>
+ *   <listitem><para>the name of the database to create, named "dbname"</para></listitem>
+ * </itemizedlist>
  *
  * Returns: TRUE if no error occured and the database has been created
  */
@@ -965,8 +1020,8 @@ gda_client_create_database (GdaClient *client, const gchar *provider, GdaParamet
 		if (params && (gda_parameter_list_get_length (params) == 2)) {
 			GdaParameter *cnc, *name;
 			
-			cnc = gda_parameter_list_find (params, "cnc");
-			name = gda_parameter_list_find (params, "dbname");
+			cnc = gda_parameter_list_find_param (params, "cnc");
+			name = gda_parameter_list_find_param (params, "dbname");
 			
 			if (name && cnc) {
 				const GdaValue *cnc_v, *name_v;
@@ -1005,10 +1060,10 @@ gda_client_create_database (GdaClient *client, const gchar *provider, GdaParamet
  *
  * For the providers which do not yet implement the gda_client_get_provider_specs()
  * method, create a list with a #GdaParameter object for
- * <ul>
- *   <li>an opened #GdaConnection object, named "cnc"</li>
- *   <li>the name of the database to destroy, named "dbname"</li>
- * </ul>
+ * <itemizedlist>
+ *   <listitem><para>an opened #GdaConnection object, named "cnc"</para></listitem>
+ *   <listitem><para>the name of the database to destroy, named "dbname"</para></listitem>
+ * </itemizedlist>
  *
  * Returns: TRUE if no error occured and the database has been destroyed
  */
@@ -1026,8 +1081,8 @@ gda_client_drop_database (GdaClient *client, const gchar *provider,
 		if (params && (gda_parameter_list_get_length (params) == 2)) {
 			GdaParameter *cnc, *name;
 			
-			cnc = gda_parameter_list_find (params, "cnc");
-			name = gda_parameter_list_find (params, "dbname");
+			cnc = gda_parameter_list_find_param (params, "cnc");
+			name = gda_parameter_list_find_param (params, "dbname");
 			
 			if (name && cnc) {
 				const GdaValue *cnc_v, *name_v;

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="DATABASE" name="Database name" descr="The name of a database to create" gdatype="string" null-ok="FALSE"/>
+    <parameter id="DATABASE" name="Database name" descr="The name of a database to connect to" gdatype="string" null-ok="FALSE"/>
     <parameter id="HOST" name="Database server" descr="Host which has the database server running" gdatype="string"/>
     <parameter id="PORT" name="Port" descr="Database server port" gdatype="integer"/>
     <parameter id="UNIX_SOCKET" name="UNIX Socket" descr="Full path of the UNIX socket to use for connecting locally" gdatype="string"/>

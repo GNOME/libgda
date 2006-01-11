@@ -1,5 +1,7 @@
 lib_LTLIBRARIES = libgda-3.la
 
+SUBDIRS = handlers sql-delimiter graph
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
@@ -7,7 +9,8 @@ AM_CPPFLAGS = \
 	-DLIBGDA_PLUGINDIR=\""$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers"\" \
 	-DLIBGDA_LOCALEDIR=\""$(datadir)/locale"\" \
 	-DLIBGDA_GLOBAL_CONFIG_FILE=\""$(sysconfdir)/libgda/config"\" \
-	-DLIBGDA_GLOBAL_CONFIG_DIR=\""$(sysconfdir)/libgda"\"
+	-DLIBGDA_GLOBAL_CONFIG_DIR=\""$(sysconfdir)/libgda"\" \
+	-DDTDINSTALLDIR=\""$(LIBGDA_DTDDIR)"\"
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -19,61 +22,131 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 gda_headers = \
 	gda-blob.h \
 	gda-client.h \
-	gda-command.h \
-	gda-config.h \
-	gda-connection.h \
-	gda-data-model.h \
-	gda-data-model-array.h \
-	gda-data-model-base.h \
-	gda-data-model-hash.h \
-	gda-data-model-list.h \
-	gda-connection-event.h \
 	gda-column.h \
 	gda-column-index.h \
+	gda-command.h \
+	gda-config.h \
+	gda-connection-event.h \
+	gda-connection.h \
+	gda-data-handler.h \
+	gda-data-model-array.h \
+	gda-data-model-row.h \
+	gda-data-model.h \
+	gda-data-model-filter-sql.h \
+	gda-data-model-hash.h \
 	gda-data-model-index.h \
+	gda-data-model-iter.h \
+	gda-data-model-private.h \
+	gda-data-model-query.h \
+	gda-data-proxy.h \
+	gda-decl.h \
+	gda-dict-aggregate.h \
+	gda-dict-constraint.h \
+	gda-dict-database.h \
+	gda-dict-field.h \
+	gda-dict-function.h \
+	gda-dict.h \
+	gda-dict-table.h \
+	gda-dict-type.h \
+	gda-entity-field.h \
+	gda-entity.h \
+	gda-enums.h \
+	gda-graphviz.h \
 	gda-log.h \
+	gda-marshal.h \
+	gda-object.h \
+	gda-object-ref.h \
 	gda-parameter.h \
+	gda-parameter-list.h \
 	gda-quark-list.h \
+	gda-query-condition.h \
+	gda-query-field-agg.h \
+	gda-query-field-all.h \
+	gda-query-field-field.h \
+	gda-query-field-func.h \
+	gda-query-field.h \
+	gda-query-field-value.h \
+	gda-query.h \
+	gda-query-join.h \
+	gda-query-object.h \
+	gda-query-parsing.h \
+	gda-query-private.h \
+	gda-query-target.h \
+	gda-referer.h \
+	gda-renderer.h \
 	gda-row.h \
-	gda-select.h \
+	gda-data-model-filter-sql.h \
 	gda-server-provider.h \
+	gda-server-provider-extra.h \
+	gda-server-provider-private.h \
+	gda-threader.h \
 	gda-transaction.h \
 	gda-util.h \
-	gda-threader.h \
 	gda-value.h \
-	global-decl.h \
-	libgda.h
+	gda-xml-storage.h \
+	libgda.h 
 
 libgda_sources =  \
 	$(gda_headers) \
 	gda-blob.c \
 	gda-client.c \
+	gda-column.c \
+	gda-column-index.c \
 	gda-command.c \
 	gda-config.c \
 	gda-connection.c \
-	gda-data-model.c \
-	gda-data-model-array.c \
-	gda-data-model-base.c \
-	gda-data-model-hash.c \
-	gda-data-model-list.c \
-	gda-data-model-private.h \
 	gda-connection-event.c \
-	gda-column.c \
-	gda-column-index.c \
+	gda-data-handler.c \
+	gda-data-model-array.c \
+	gda-data-model-row.c \
+	gda-data-model.c \
+	gda-data-model-filter-sql.c \
+	gda-data-model-hash.c \
 	gda-data-model-index.c \
+	gda-data-model-iter.c \
+	gda-data-model-query.c \
+	gda-data-proxy.c \
+	gda-dict-aggregate.c \
+	gda-dict.c \
+	gda-dict-constraint.c \
+	gda-dict-database.c \
+	gda-dict-field.c \
+	gda-dict-function.c \
+	gda-dict-table.c \
+	gda-dict-type.c \
+	gda-entity.c \
+	gda-entity-field.c \
+	gda-graphviz.c \
 	gda-init.c \
-	gda-intl.h \
 	gda-log.c \
-	gda-log.h \
+	gda-marshal.c \
+	gda-object.c \
+	gda-object-ref.c \
 	gda-parameter.c \
+	gda-parameter-list.c \
 	gda-quark-list.c \
+	gda-query.c \
+	gda-query-condition.c \
+	gda-query-field-agg.c \
+	gda-query-field-all.c \
+	gda-query-field.c \
+	gda-query-field-field.c \
+	gda-query-field-func.c \
+	gda-query-field-value.c \
+	gda-query-join.c \
+	gda-query-object.c \
+	gda-query-parsing.c \
+	gda-query-target.c \
+	gda-referer.c \
+	gda-renderer.c \
 	gda-row.c \
-	gda-select.c \
 	gda-server-provider.c \
+	gda-server-provider-extra.c \
+	gda-threader.c \
 	gda-transaction.c \
 	gda-util.c \
-	gda-threader.c \
-	gda-value.c 
+	gda-value.c \
+	gda-xml-storage.c 
 
 gda-enum-types.h: s-enum-types-h
 	@true
@@ -134,5 +207,11 @@ CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers) $(libgda_built_cfiles)
 
+DTD_FILES = libgda-dict.dtd
+dtddir=$(LIBGDA_DTDDIR)
+dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \
+	$(DTD_FILES) \
 	gda-marshal.list
+
+DISTCLEANFILES  = .deps/*.P

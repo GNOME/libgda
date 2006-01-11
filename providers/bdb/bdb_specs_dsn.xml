@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="FILE" name="Database file" descr="Berkeley DB database file to be used" gdatype="string" null-ok="FALSE"/>
+    <parameter id="DATABASE" name="Database name" descr="Name of the database in the database file to be used" gdatype="string"/>
+  </parameters>
+</data-set-spec>

@@ -1,9 +1,10 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Rodrigo Moya <rodrigo@gnome-db.org>
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,12 +21,12 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include "gda-firebird-provider.h"
 
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
-GList             *plugin_get_connection_params (void);
+gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
 
 const gchar *
@@ -40,29 +41,17 @@ plugin_get_description (void)
 	return _("Provider for Firebird databases");
 }
 
-GList *
-plugin_get_connection_params (void)
+gchar *
+plugin_get_dsn_spec (void)
 {
-	GList *list = NULL;
+	gchar *specs, *file;
+	gsize len;
 
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("DATABASE", _("Database Name"),
-								    _("Name of the database to be used"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("CHARACTER_SET", _("Character Set"),
-								    _("Character set to be used on the connection"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("SQL_DIALECT", _("SQL Dialect"),
-								    _("SQL dialect to use on the connection"),
-								    GDA_VALUE_TYPE_INTEGER));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("PAGE_SIZE", _("Page Size"),
-								    _("Page size to use on the database"),
-								    GDA_VALUE_TYPE_INTEGER));
-
-	return list;
+	file = g_build_filename (LIBGDA_DATA_DIR, "firebird_specs_dsn.xml", NULL);
+	if (g_file_get_contents (file, &specs, &len, NULL)) 
+		return specs;
+	else
+		return NULL;
 }
 
 GdaServerProvider *

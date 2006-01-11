@@ -1,9 +1,10 @@
 /* GDA IBMDB2 Provider
- * Copyright (C) 2002 The GNOME Foundation
+ * Copyright (C) 2002 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Holger Thon <holger.thon@gnome-db-org>
  *	   Sergey N. Belinsky <sergey_be@mail.ru>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,7 +23,7 @@
 
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <sqlcli1.h>
 #include "gda-ibmdb2.h"
@@ -41,7 +42,7 @@ static GObjectClass *parent_class = NULL;
 static void gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass);
 static void gda_ibmdb2_provider_init       (GdaIBMDB2Provider      *provider,
                                             GdaIBMDB2ProviderClass *klass);
-static void gda_ibmdb2_provider_finalize   (GObject                 *object);
+static void gda_ibmdb2_provider_finalize   (GObject *object);
 
 static gboolean gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
                                                      GdaConnection *cnc,
@@ -497,8 +498,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 			recset = gda_ibmdb2_recordset_new (cnc, conn_data->hstmt);
 
                     	if (GDA_IS_IBMDB2_RECORDSET (recset)) {
-				gda_data_model_set_command_text (recset, arr[n]);
-				gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+				g_object_set (G_OBJECT (recset), 
+					      "command_text", arr[n],
+					      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
                                 reclist = g_list_append (reclist, recset);
                     	} else {
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
@@ -547,12 +549,11 @@ static GList
 	    case GDA_COMMAND_TYPE_TABLE:
 		str = g_strdup_printf ("SELECT * FROM %s", gda_command_get_text (cmd));
                 reclist = process_sql_commands (reclist, cnc, str, options);
-                if (reclist && GDA_IS_DATA_MODEL (reclist->data)) {
-			gda_data_model_set_command_text (GDA_DATA_MODEL (reclist->data),
-                                                         gda_command_get_text (cmd));
-                        gda_data_model_set_command_type (GDA_DATA_MODEL (reclist->data),
-                                                         GDA_COMMAND_TYPE_TABLE);
-		}
+                if (reclist && GDA_IS_DATA_MODEL (reclist->data))
+			g_object_set (G_OBJECT (reclist->data), 
+				      "command_text", gda_command_get_text (cmd),
+				      "command_type", GDA_COMMAND_TYPE_TABLE, NULL);
+
 		g_free(str);
 		break;
             case GDA_COMMAND_TYPE_XML:
@@ -1056,20 +1057,43 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_ibmdb2_provider_finalize;
+
 	provider_class->get_version = gda_ibmdb2_provider_get_version;
-	provider_class->open_connection = gda_ibmdb2_provider_open_connection;
-	provider_class->close_connection = gda_ibmdb2_provider_close_connection;
 	provider_class->get_server_version = gda_ibmdb2_provider_get_server_version;
+	provider_class->get_info = NULL;
+	provider_class->supports = gda_ibmdb2_provider_supports;
+	provider_class->get_schema = gda_ibmdb2_provider_get_schema;
+
+	provider_class->get_data_handler = NULL;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
+
+	provider_class->open_connection = gda_ibmdb2_provider_open_connection;
+	provider_class->reset_connection = NULL;
+	provider_class->close_connection = gda_ibmdb2_provider_close_connection;
 	provider_class->get_database = gda_ibmdb2_provider_get_database;
 	provider_class->change_database = gda_ibmdb2_provider_change_database;
+
+	provider_class->get_specs = NULL;
+	provider_class->perform_action_params = NULL;
+
 	provider_class->create_database_cnc = gda_ibmdb2_provider_create_database_cnc;
 	provider_class->drop_database_cnc = gda_ibmdb2_provider_drop_database_cnc;
+	provider_class->create_table = NULL;
+	provider_class->drop_table = NULL;
+	provider_class->create_index = NULL;
+	provider_class->drop_index = NULL;
+
 	provider_class->execute_command = gda_ibmdb2_provider_execute_command;
+	provider_class->get_last_insert_id = NULL;
+
 	provider_class->begin_transaction = gda_ibmdb2_provider_begin_transaction;
 	provider_class->commit_transaction = gda_ibmdb2_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_ibmdb2_provider_rollback_transaction;
-	provider_class->supports = gda_ibmdb2_provider_supports;
-	provider_class->get_schema = gda_ibmdb2_provider_get_schema;
+	
+	provider_class->create_blob = NULL;
+	provider_class->fetch_blob = NULL;
+
 }
 
 static void

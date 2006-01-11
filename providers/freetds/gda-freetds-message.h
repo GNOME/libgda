@@ -25,7 +25,7 @@
 #endif
 
 #include <glib/gmacros.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
 #include <tds.h>
 #include "gda-freetds.h"
@@ -37,16 +37,16 @@ G_BEGIN_DECLS
 
 typedef struct _GdaFreeTDSMessage GdaFreeTDSMessage;
 struct _GdaFreeTDSMessage {
-	gboolean    is_err_msg;
+	gboolean     is_err_msg;
 
-	TDSMSGINFO  msg;
+	_TDSMSGINFO  msg;
 };
 
 GdaFreeTDSMessage *gda_freetds_message_new (GdaConnection *cnc,
-                                            TDSMSGINFO *info,
+                                            _TDSMSGINFO *info,
                                             const gboolean is_err_msg);
 GdaFreeTDSMessage *gda_freetds_message_add (GdaConnection *cnc,
-                                            TDSMSGINFO *info,
+                                            _TDSMSGINFO *info,
                                             const gboolean is_err_msg);
 void gda_freetds_message_free (GdaFreeTDSMessage *message);
 

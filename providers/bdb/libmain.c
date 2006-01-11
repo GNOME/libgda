@@ -1,8 +1,9 @@
 /* GDA Berkeley-DB Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Laurent Sansonetti <lrz@gnome.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,12 +20,12 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include "gda-bdb.h"
 
-const gchar *plugin_get_name (void);
-const gchar *plugin_get_description (void);
-GList *plugin_get_connection_params (void);
+const gchar       *plugin_get_name (void);
+const gchar       *plugin_get_description (void);
+gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
 
 const gchar *
@@ -39,22 +40,19 @@ plugin_get_description (void)
 	return _("Provider for Berkeley databases");
 }
 
-GList *
-plugin_get_connection_params (void)
+gchar *
+plugin_get_dsn_spec (void)
 {
-	GList *list = NULL;
+	gchar *specs, *file;
+	gsize len;
 
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("FILE", _("Database File"),
-								    _("Berkeley DB database file to be used"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("DATABASE", _("Database name"),
-								    _("Name of the database in the database file to be used"),
-								    GDA_VALUE_TYPE_STRING));
-
-	return list;
+	file = g_build_filename (LIBGDA_DATA_DIR, "bdb_specs_dsn.xml", NULL);
+	if (g_file_get_contents (file, &specs, &len, NULL)) 
+		return specs;
+	else
+		return NULL;
 }
+
 
 GdaServerProvider *
 plugin_create_provider (void)

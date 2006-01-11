@@ -20,14 +20,14 @@
 #include <glib/gmain.h>
 #include <gmodule.h>
 #include <libgda/libgda.h>
-#include <libgda/gda-intl.h>
-
-/* Include the marshalers here */
-#include "gda-marshal.h"
-#include "gda-marshal.c"
-/* end of marshalers */
+#include <glib/gi18n-lib.h>
 
 static GMainLoop *main_loop = NULL;
+
+/* global variables */
+GdaDict        *default_dict = NULL; /* available in all libgda, anways NOT NULL */
+GdaDataHandler *default_handlers [GDA_VALUE_TYPE_UNKNOWN]; /* to be used by providers, not GdaDict because of locale issues */
+
 
 /**
  * gda_init
@@ -64,7 +64,49 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	if (!g_module_supported ())
 		g_error (_("libgda needs GModule. Finishing..."));
 
+	/* create a default dictionary */
+	default_dict = GDA_DICT (gda_dict_new ());
+
+	/* fill the default data handlers */
+	default_handlers [GDA_VALUE_TYPE_NULL] = NULL;
+	default_handlers [GDA_VALUE_TYPE_BIGINT] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_BIGUINT] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_BINARY] = gda_handler_bin_new ();
+	default_handlers [GDA_VALUE_TYPE_BLOB] = gda_handler_bin_new ();
+	default_handlers [GDA_VALUE_TYPE_BOOLEAN] = gda_handler_boolean_new ();
+	default_handlers [GDA_VALUE_TYPE_DATE] = gda_handler_time_new_no_locale ();
+	default_handlers [GDA_VALUE_TYPE_DOUBLE] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_GEOMETRIC_POINT] = NULL;
+	default_handlers [GDA_VALUE_TYPE_GOBJECT] = NULL;
+	default_handlers [GDA_VALUE_TYPE_INTEGER] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_LIST] = NULL;
+	default_handlers [GDA_VALUE_TYPE_MONEY] = NULL;
+	default_handlers [GDA_VALUE_TYPE_NUMERIC] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_SINGLE] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_SMALLINT] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_SMALLUINT] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_STRING] = gda_handler_string_new ();
+	default_handlers [GDA_VALUE_TYPE_TIME] = gda_handler_time_new_no_locale ();
+	default_handlers [GDA_VALUE_TYPE_TIMESTAMP] = gda_handler_time_new_no_locale ();
+	default_handlers [GDA_VALUE_TYPE_TINYINT] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_TINYUINT] = gda_handler_numerical_new ();
+	default_handlers [GDA_VALUE_TYPE_TYPE] = gda_handler_type_new ();
+	default_handlers [GDA_VALUE_TYPE_UINTEGER] = gda_handler_numerical_new ();	
+
 	initialized = TRUE;
+}
+
+/**
+ * gda_get_default_dict
+ *
+ * Get the default dictionary.
+ *
+ * Returns: a not %NULL pointer to the default #GdaDict dictionary
+ */
+GdaDict *
+gda_get_default_dict (void)
+{
+        return default_dict;
 }
 
 typedef struct {

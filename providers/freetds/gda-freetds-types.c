@@ -23,7 +23,7 @@
 #if defined(HAVE_CONFIG_H)
 #endif
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +35,7 @@
 static void
 gda_freetds_set_gdavalue_by_datetime (GdaValue     *field,
                                       TDS_DATETIME *dt,
-                                      TDSCOLINFO   *col
+                                      _TDSCOLINFO   *col
                                      )
 {
 	GDate        date;
@@ -82,7 +82,7 @@ gda_freetds_set_gdavalue_by_datetime (GdaValue     *field,
 static void
 gda_freetds_set_gdavalue_by_datetime4 (GdaValue      *field,
                                        TDS_DATETIME4 *dt4,
-                                       TDSCOLINFO    *col
+                                       _TDSCOLINFO    *col
                                       )
 {
 	GDate        date;
@@ -123,7 +123,7 @@ gda_freetds_set_gdavalue_by_datetime4 (GdaValue      *field,
  */
 
 const GdaValueType
-gda_freetds_get_value_type (TDSCOLINFO *col)
+gda_freetds_get_value_type (_TDSCOLINFO *col)
 {
 	g_return_val_if_fail (col != NULL, GDA_VALUE_TYPE_UNKNOWN);
 
@@ -185,13 +185,13 @@ gda_freetds_get_value_type (TDSCOLINFO *col)
 
 
 void
-gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
+gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
 			  GdaFreeTDSConnectionData *tds_cnc)
 {
 	const TDS_INT max_size = 255;
 	TDS_INT col_size = 0;
 	gchar *txt = NULL;
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63) 
 	CONV_RESULT tds_conv;
 #endif
 	GdaNumeric numeric;
@@ -203,7 +203,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 	/* perhaps remove ifdef later on
 	 * tds_cnc is just needed for context structure of 0.6x api for now
 	 */
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63) 
 	g_return_if_fail (tds_cnc != NULL);
 	g_return_if_fail (tds_cnc->ctx != NULL);
 
@@ -310,7 +310,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 				txt = g_new0 (gchar, col_size);
 
 				/* tds_convert api changed to 0.6x */
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63) 
 				if (tds_convert (tds_cnc->ctx,
 						 col->column_type, val,
 						 col->column_size, SYBCHAR,

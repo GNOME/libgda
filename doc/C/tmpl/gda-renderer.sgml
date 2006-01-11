@@ -1,0 +1,68 @@
+<!-- ##### SECTION Title ##### -->
+GdaRenderer
+
+<!-- ##### SECTION Short_Description ##### -->
+Interface to get representations of objects as SQL statements, XML nodes or
+human readable text
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaRenderer ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GdaRendererOptions ##### -->
+<para>
+
+</para>
+
+@GDA_RENDERER_EXTRA_PRETTY_SQL: The rendered statement will output easy to read SQL
+@GDA_RENDERER_EXTRA_VAL_ATTRS: The rendered statement will include some extra text (not part of SQL) for parameters desecription
+@GDA_RENDERER_ERROR_IF_DEFAULT: 
+
+<!-- ##### FUNCTION gda_renderer_render_as_sql ##### -->
+<para>
+
+</para>
+
+@iface: 
+@context: 
+@options: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_renderer_render_as_str ##### -->
+<para>
+
+</para>
+
+@iface: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_renderer_is_valid ##### -->
+<para>
+
+</para>
+
+@iface: 
+@context: 
+@error: 
+@Returns: 
+
+

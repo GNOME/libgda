@@ -19,6 +19,39 @@ Access/Management of libgda configuration
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### USER_FUNCTION GdaConfigListenerFunc ##### -->
+<para>
+
+</para>
+
+@path: 
+@user_data: 
+
+
+<!-- ##### STRUCT GdaProviderInfo ##### -->
+<para>
+
+</para>
+
+@id: 
+@location: 
+@description: 
+@gda_params: 
+@dsn_spec: 
+
+<!-- ##### STRUCT GdaDataSourceInfo ##### -->
+<para>
+
+</para>
+
+@name: 
+@provider: 
+@cnc_string: 
+@description: 
+@username: 
+@password: 
+@is_global: 
+
 <!-- ##### FUNCTION gda_config_get_string ##### -->
 <para>
 
@@ -147,92 +180,12 @@ Access/Management of libgda configuration
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_config_get_type ##### -->
-<para>
-
-</para>
-
-@path: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_config_free_list ##### -->
 <para>
 
 </para>
 
 @list: 
-
-
-<!-- ##### USER_FUNCTION GdaConfigListenerFunc ##### -->
-<para>
-
-</para>
-
-@path: 
-@user_data: 
-
-
-<!-- ##### FUNCTION gda_config_add_listener ##### -->
-<para>
-
-</para>
-
-@path: 
-@func: 
-@user_data: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_remove_listener ##### -->
-<para>
-
-</para>
-
-@id: 
-
-
-<!-- ##### STRUCT GdaProviderInfo ##### -->
-<para>
-
-</para>
-
-@id: 
-@location: 
-@description: 
-@gda_params: 
-@dsn_spec: 
-
-<!-- ##### MACRO GDA_TYPE_PROVIDER_INFO ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION gda_provider_info_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_provider_info_copy ##### -->
-<para>
-
-</para>
-
-@src: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_provider_info_free ##### -->
-<para>
-
-</para>
-
-@provider_info: 
 
 
 <!-- ##### FUNCTION gda_config_get_provider_list ##### -->
@@ -268,31 +221,37 @@ Access/Management of libgda configuration
 @Returns: 
 
 
-<!-- ##### STRUCT GdaDataSourceInfo ##### -->
+<!-- ##### FUNCTION gda_provider_info_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_provider_info_free ##### -->
+<para>
+
+</para>
+
+@provider_info: 
+
+
+<!-- ##### FUNCTION gda_config_get_data_source_list ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_find_data_source ##### -->
 <para>
 
 </para>
 
 @name: 
-@provider: 
-@cnc_string: 
-@description: 
-@username: 
-@password: 
-@is_global: 
-
-<!-- ##### MACRO GDA_TYPE_DATA_SOURCE_INFO ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION gda_data_source_info_get_type ##### -->
-<para>
-
-</para>
-
 @Returns: 
 
 
@@ -321,23 +280,6 @@ Access/Management of libgda configuration
 </para>
 
 @info: 
-
-
-<!-- ##### FUNCTION gda_config_get_data_source_list ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_find_data_source ##### -->
-<para>
-
-</para>
-
-@name: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_config_free_data_source_list ##### -->
@@ -396,31 +338,22 @@ Access/Management of libgda configuration
 @name: 
 
 
-<!-- ##### MACRO GDA_CONFIG_BASE ##### -->
+<!-- ##### FUNCTION gda_config_add_listener ##### -->
 <para>
 
 </para>
 
+@path: 
+@func: 
+@user_data: 
+@Returns: 
 
 
-<!-- ##### MACRO GDA_CONFIG_SECTION_DATASOURCES ##### -->
+<!-- ##### FUNCTION gda_config_remove_listener ##### -->
 <para>
 
 </para>
 
-
-
-<!-- ##### MACRO GDA_CONFIG_SECTION_LAST_CONNECTIONS ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS ##### -->
-<para>
-
-</para>
-
+@id: 
 
 

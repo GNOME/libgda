@@ -24,7 +24,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-private.h>
 #include <string.h>
@@ -55,13 +55,13 @@ static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset,
 					       GdaPostgresRecordsetClass *klass);
 static void gda_postgres_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModelBase *model, gint col, gint row);
-static GdaColumn *gda_postgres_recordset_describe    (GdaDataModelBase *model, gint col);
-static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModelBase *model);
-static const GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModelBase *model, gint rownum);
-static gboolean gda_postgres_recordset_append_row	      (GdaDataModelBase *model, GdaRow *row);
-static gboolean gda_postgres_recordset_remove_row 	      (GdaDataModelBase *model, const GdaRow *row);
-static gboolean gda_postgres_recordset_update_row 	      (GdaDataModelBase *model, const GdaRow *row);
+static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModelRow *model, gint col, gint row);
+static GdaColumn *gda_postgres_recordset_describe    (GdaDataModelRow *model, gint col);
+static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModelRow *model);
+static GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModelRow *model, gint rownum, GError **error);
+static gboolean gda_postgres_recordset_append_row	      (GdaDataModelRow *model, GdaRow *row, GError **error);
+static gboolean gda_postgres_recordset_remove_row 	      (GdaDataModelRow *model, GdaRow *row, GError **error);
+static gboolean gda_postgres_recordset_update_row 	      (GdaDataModelRow *model, GdaRow *row, GError **error);
 
 static GObjectClass *parent_class = NULL;
 
@@ -85,7 +85,7 @@ static void
 gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -134,7 +134,7 @@ get_column_types (GdaPostgresRecordsetPrivate *priv)
 }
 
 static GdaRow *
-get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
+get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum, GError **error)
 {
 	gchar *thevalue;
 	GdaValueType ftype;
@@ -167,8 +167,8 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
  * Overrides
  */
 
-static const GdaRow *
-gda_postgres_recordset_get_row (GdaDataModelBase *model, gint row)
+static GdaRow *
+gda_postgres_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -177,7 +177,8 @@ gda_postgres_recordset_get_row (GdaDataModelBase *model, gint row)
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	row_list = (GdaRow *) GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_row (model, row);
+	row_list = (GdaRow *) GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_row (model, row, 
+										error);
 	if (row_list != NULL)
 		return (const GdaRow *)row_list;
 
@@ -197,7 +198,7 @@ gda_postgres_recordset_get_row (GdaDataModelBase *model, gint row)
 		return NULL;
 	}
 
-	row_list = get_row (GDA_DATA_MODEL (model), priv_data, row);
+	row_list = get_row (GDA_DATA_MODEL (model), priv_data, row, error);
 	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
 					row, row_list);
 
@@ -205,7 +206,7 @@ gda_postgres_recordset_get_row (GdaDataModelBase *model, gint row)
 }
 
 static gboolean
-gda_postgres_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
+gda_postgres_recordset_append_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -291,9 +292,9 @@ gda_postgres_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 					  gda_postgres_make_error (pg_conn, NULL));
 
 	/* append row in hash table */
-	if (GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (model, row) == FALSE) {
+	if (! GDA_DATA_MODEL_ROW_CLASS (parent_class)->append_row (model, row, error)) {
 		gda_connection_add_event (priv_data->cnc,
-                                                  gda_postgres_make_error (pg_conn, pg_res));
+					  gda_postgres_make_error (pg_conn, pg_res));
 		return FALSE;
 	}
 
@@ -301,7 +302,7 @@ gda_postgres_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 }
 
 static gboolean
-gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
+gda_postgres_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -395,13 +396,13 @@ gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 
 	/* remove entry from data model */
 	if (status == TRUE)
-		status = GDA_DATA_MODEL_BASE_CLASS (parent_class)->remove_row (model, row);
+		status = GDA_DATA_MODEL_ROW_CLASS (parent_class)->remove_row (model, row, error);
 
 	return status;
 }
 
 static gboolean
-gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
+gda_postgres_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -538,7 +539,7 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 }
 
 static const GdaValue *
-gda_postgres_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
+gda_postgres_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -550,7 +551,7 @@ gda_postgres_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 	
-	value = GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_value_at (model, col, row);
+	value = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_value_at (model, col, row);
 	if (value != NULL)
 		return value;
 
@@ -576,8 +577,8 @@ gda_postgres_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row
 						_("Column number out of range"));
 		return NULL;
 	}
-
-	row_list = get_row (GDA_DATA_MODEL (model), priv_data, row);
+	
+	row_list = get_row (GDA_DATA_MODEL (model), priv_data, row, NULL);
 	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
 					 row, row_list);
 	return gda_row_get_value (row_list, col);
@@ -636,7 +637,7 @@ static gchar *guess_table_name (GdaPostgresRecordset *recset)
  *    'u': unique key
  *    etc...
  */
-static gboolean check_constraint (const GdaDataModelBase *model,
+static gboolean check_constraint (const GdaDataModelRow *model,
 				  const gchar *table_name,
 				  const gint col,
 				  const gchar contype)
@@ -671,7 +672,7 @@ static gboolean check_constraint (const GdaDataModelBase *model,
 }
 
 static void
-gda_postgres_recordset_describe_column (GdaDataModelBase *model, gint col)
+gda_postgres_recordset_describe_column (GdaDataModelRow *model, gint col)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -709,7 +710,7 @@ gda_postgres_recordset_describe_column (GdaDataModelBase *model, gint col)
 		(ftype == GDA_VALUE_TYPE_SINGLE) ? FLT_DIG : 0;
 
 	gda_column_set_scale (field_attrs, scale);
-	gda_column_set_gdatype (field_attrs, ftype);
+	gda_column_set_gda_type (field_attrs, ftype);
 
 	/* PQfsize() == -1 => variable length */
 	gda_column_set_defined_size (field_attrs,
@@ -738,7 +739,7 @@ gda_postgres_recordset_describe_column (GdaDataModelBase *model, gint col)
 }
 
 static gint
-gda_postgres_recordset_get_n_rows (GdaDataModelBase *model)
+gda_postgres_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	gint parent_row_num;
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
@@ -746,7 +747,7 @@ gda_postgres_recordset_get_n_rows (GdaDataModelBase *model)
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (model), 0);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	parent_row_num = GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_n_rows (model);
+	parent_row_num = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_n_rows (model);
 
 	/* if not initialized return number of PQ Tuples */
 	if (parent_row_num < 0)

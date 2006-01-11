@@ -1,0 +1,55 @@
+<!-- ##### SECTION Title ##### -->
+GdaXmlStorage
+
+<!-- ##### SECTION Short_Description ##### -->
+Interface which provides saving and loading using XML structures
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Any object which implements this interface can be streamed and restored to and from an XML file.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaXmlStorage ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xml_storage_get_xml_id ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_storage_save_to_xml ##### -->
+<para>
+
+</para>
+
+@iface: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_storage_load_from_xml ##### -->
+<para>
+
+</para>
+
+@iface: 
+@node: 
+@error: 
+@Returns: 
+
+

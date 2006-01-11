@@ -12,5 +12,8 @@ gda_report_test_SOURCES = \
 
 gda_report_test_LDADD = \
         $(top_builddir)/libgda/libgda-3.la \
+        $(top_builddir)/libgda/graph/libgda_graph-3.la \
+	$(top_builddir)/libgda/handlers/libgda_handlers-3.la \
+	$(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.la \
         $(top_builddir)/report/libgda-report/libgda-report-3.la \
         $(LIBGDA_LIBS)

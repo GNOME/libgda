@@ -27,7 +27,8 @@
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-column-index.h>
 #include <libgda/gda-util.h>
-#include <libgda/gda-intl.h>
+#include <libgda/gda-data-handler.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-mysql.h"
@@ -121,13 +122,24 @@ static gboolean gda_mysql_provider_supports (GdaServerProvider *provider,
 					     GdaConnection *cnc,
 					     GdaConnectionFeature feature);
 
+static GdaServerProviderInfo *gda_mysql_provider_get_info (GdaServerProvider *provider,
+							      GdaConnection *cnc);
+
 static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaConnectionSchema schema,
 						    GdaParameterList *params);
-gchar *gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider,
-						  GdaConnection *cnc,
-						  GdaValue *from);
+GdaDataHandler *gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     GdaValueType for_type);
+GdaValue *gda_mysql_provider_string_to_value (GdaServerProvider *provider,
+					     GdaConnection *cnc,
+					     const gchar *string, 
+					     GdaValueType prefered_type,
+					     gchar **dbms_type);
+const gchar *gda_mysql_provider_get_def_dbms_type (GdaServerProvider *provider,
+						   GdaConnection *cnc,
+						   GdaValueType gda_type);
 
 
 static GObjectClass *parent_class = NULL;
@@ -145,28 +157,42 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_mysql_provider_finalize;
+
 	provider_class->get_version = gda_mysql_provider_get_version;
-	provider_class->open_connection = gda_mysql_provider_open_connection;
-	provider_class->close_connection = gda_mysql_provider_close_connection;
 	provider_class->get_server_version = gda_mysql_provider_get_server_version;
+	provider_class->get_info = gda_mysql_provider_get_info;
+	provider_class->supports = gda_mysql_provider_supports;
+	provider_class->get_schema = gda_mysql_provider_get_schema;
+
+	provider_class->get_data_handler = gda_mysql_provider_get_data_handler;
+	provider_class->string_to_value = gda_mysql_provider_string_to_value;
+	provider_class->get_def_dbms_type = gda_mysql_provider_get_def_dbms_type;
+
+	provider_class->open_connection = gda_mysql_provider_open_connection;
+	provider_class->reset_connection = NULL;
+	provider_class->close_connection = gda_mysql_provider_close_connection;
 	provider_class->get_database = gda_mysql_provider_get_database;
 	provider_class->change_database = gda_mysql_provider_change_database;
+
 	provider_class->get_specs = gda_mysql_provider_get_specs;
 	provider_class->perform_action_params = gda_mysql_provider_perform_action_params;
+
 	provider_class->create_database_cnc = gda_mysql_provider_create_database_cnc;
 	provider_class->drop_database_cnc = gda_mysql_provider_drop_database_cnc;
 	provider_class->create_table = gda_mysql_provider_create_table;
 	provider_class->drop_table = gda_mysql_provider_drop_table;
 	provider_class->create_index = gda_mysql_provider_create_index;
 	provider_class->drop_index = gda_mysql_provider_drop_index;
+
 	provider_class->execute_command = gda_mysql_provider_execute_command;
 	provider_class->get_last_insert_id = gda_mysql_provider_get_last_insert_id;
+
 	provider_class->begin_transaction = gda_mysql_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mysql_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_mysql_provider_rollback_transaction;
-	provider_class->supports = gda_mysql_provider_supports;
-	provider_class->get_schema = gda_mysql_provider_get_schema;
-	provider_class->value_to_sql_string = gda_mysql_provider_value_to_sql_string;
+	
+	provider_class->create_blob = NULL;
+	provider_class->fetch_blob = NULL;
 }
 
 static void
@@ -375,7 +401,10 @@ gda_mysql_provider_get_server_version (GdaServerProvider *provider, GdaConnectio
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	else
+		return NULL;
 	
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
@@ -446,8 +475,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 				mysql_res = mysql_store_result (mysql);
 				recset = gda_mysql_recordset_new (cnc, mysql_res, mysql);
 				if (GDA_IS_MYSQL_RECORDSET (recset)) {
-					gda_data_model_set_command_text ( (GdaDataModel*) recset, arr[n]);
-					gda_data_model_set_command_type ( (GdaDataModel*) recset, GDA_COMMAND_TYPE_SQL);
+					g_object_set (G_OBJECT (recset), 
+						      "command_text", arr[n],
+						      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 					reclist = g_list_append (reclist, recset);
 				}
 			}
@@ -539,7 +569,6 @@ gda_mysql_provider_change_database (GdaServerProvider *provider,
 	}
 
 	return TRUE;
-
 }
 
 /* get_specs_create_database handler for the GdaMysqlProvider class */
@@ -606,31 +635,31 @@ gda_mysql_provider_perform_action_params (GdaServerProvider *provider,
 	switch (type) {
 	case GDA_CLIENT_SPECS_CREATE_DATABASE:	
 		if (params) {
-			param = gda_parameter_list_find (params, "HOST");
+			param = gda_parameter_list_find_param (params, "HOST");
 			host = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "PORT");
+			param = gda_parameter_list_find_param (params, "PORT");
 			port = int_from_int_param (param);
 			
-			param = gda_parameter_list_find (params, "UNIX_SOCKET");
+			param = gda_parameter_list_find_param (params, "UNIX_SOCKET");
 			socket = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "USE_SSL");
+			param = gda_parameter_list_find_param (params, "USE_SSL");
 			usessl = bool_from_bool_param (param);
 			
-			param = gda_parameter_list_find (params, "DATABASE");
+			param = gda_parameter_list_find_param (params, "DATABASE");
 			dbname = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "ENCODING");
+			param = gda_parameter_list_find_param (params, "ENCODING");
 			encoding = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "COLLATE");
+			param = gda_parameter_list_find_param (params, "COLLATE");
 			collate = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "ADM_LOGIN");
+			param = gda_parameter_list_find_param (params, "ADM_LOGIN");
 			login = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "ADM_PASSWORD");
+			param = gda_parameter_list_find_param (params, "ADM_PASSWORD");
 			password = string_from_string_param (param);
 		}
 		if (!dbname) {
@@ -783,7 +812,7 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 		g_string_append_printf (sql, "`%s` ", gda_column_get_name (dmca));
 
 		/* data type */
-		value_type = gda_column_get_gdatype (dmca);
+		value_type = gda_column_get_gda_type (dmca);
 		mysql_data_type = gda_mysql_type_from_gda (value_type);
 		g_string_append_printf (sql, "%s", mysql_data_type);
 		g_free(mysql_data_type);
@@ -1094,12 +1123,10 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 	case GDA_COMMAND_TYPE_TABLE :
 		str = g_strdup_printf ("SELECT * FROM %s", gda_command_get_text (cmd));
 		reclist = process_sql_commands (reclist, cnc, str);
-		if (reclist && GDA_IS_DATA_MODEL (reclist->data)) {
-			gda_data_model_set_command_text (GDA_DATA_MODEL (reclist->data),
-							 gda_command_get_text (cmd));
-			gda_data_model_set_command_type (GDA_DATA_MODEL (reclist->data),
-							 GDA_COMMAND_TYPE_TABLE);
-		}
+		if (reclist && GDA_IS_DATA_MODEL (reclist->data))
+			g_object_set (G_OBJECT (reclist->data), 
+				      "command_text", gda_command_get_text (cmd),
+				      "command_type", GDA_COMMAND_TYPE_TABLE, NULL);
 
 		g_free (str);
 		break;
@@ -1275,6 +1302,19 @@ gda_mysql_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
+static GdaServerProviderInfo *
+gda_mysql_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	static GdaServerProviderInfo info = {
+		"MySQL",
+		TRUE, 
+		TRUE,
+		TRUE,
+	};
+	
+	return &info;
+}
+
 static void
 add_aggregate_row (GdaDataModelArray *recset, const gchar *str, const gchar *comments)
 {
@@ -1297,7 +1337,7 @@ add_aggregate_row (GdaDataModelArray *recset, const gchar *str, const gchar *com
 	/* 7th the SQL definition */
 	list = g_list_append (list, gda_value_new_string (NULL));
 
-	gda_data_model_append_values (GDA_DATA_MODEL (recset), list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), list, NULL);
 
 	g_list_foreach (list, (GFunc) gda_value_free, NULL);
 	g_list_free (list);
@@ -1311,152 +1351,146 @@ get_mysql_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (7);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("ID"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Return type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("Args types"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 6, _("SQL"));
+	recset = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_AGGREGATES));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_AGGREGATES);
 
 	/* fill the recordset */
-	add_aggregate_row (recset, "abs", "comments");
-	add_aggregate_row (recset, "acos", "comments");
-	add_aggregate_row (recset, "adddate", "comments");
-	add_aggregate_row (recset, "ascii", "comments");
-	add_aggregate_row (recset, "asin", "comments");
-	add_aggregate_row (recset, "atan", "comments");
-	add_aggregate_row (recset, "atan2", "comments");
-	add_aggregate_row (recset, "benchmark", "comments");
-	add_aggregate_row (recset, "bin", "comments");
-	add_aggregate_row (recset, "bit_count", "comments");
-	add_aggregate_row (recset, "ceiling", "comments");
-	add_aggregate_row (recset, "char", "comments");
-	add_aggregate_row (recset, "char_length", "comments");
-	add_aggregate_row (recset, "character_length", "comments");
-	add_aggregate_row (recset, "coalesce", "comments");
-	add_aggregate_row (recset, "concat", "comments");
-	add_aggregate_row (recset, "concat_ws", "comments");
-	add_aggregate_row (recset, "connection_id", "comments");
-	add_aggregate_row (recset, "conv", "comments");
-	add_aggregate_row (recset, "cos", "comments");
-	add_aggregate_row (recset, "cot", "comments");
-	add_aggregate_row (recset, "count", "comments");
-	add_aggregate_row (recset, "curdate", "comments");
-	add_aggregate_row (recset, "current_date", "comments");
-	add_aggregate_row (recset, "current_time", "comments");
-	add_aggregate_row (recset, "current_timestamp", "comments");
-	add_aggregate_row (recset, "curtime", "comments");
-	add_aggregate_row (recset, "database", "comments");
-	add_aggregate_row (recset, "date_add", "comments");
-	add_aggregate_row (recset, "date_format", "comments");
-	add_aggregate_row (recset, "date_sub", "comments");
-	add_aggregate_row (recset, "dayname", "comments");
-	add_aggregate_row (recset, "dayofmonth", "comments");
-	add_aggregate_row (recset, "dayofweek", "comments");
-	add_aggregate_row (recset, "dayofyear", "comments");
-	add_aggregate_row (recset, "decode", "comments");
-	add_aggregate_row (recset, "degrees", "comments");
-	add_aggregate_row (recset, "elt", "comments");
-	add_aggregate_row (recset, "encode", "comments");
-	add_aggregate_row (recset, "encrypt", "comments");
-	add_aggregate_row (recset, "exp", "comments");
-	add_aggregate_row (recset, "export_set", "comments");
-	add_aggregate_row (recset, "extract", "comments");
-	add_aggregate_row (recset, "field", "comments");
-	add_aggregate_row (recset, "find_in_set", "comments");
-	add_aggregate_row (recset, "floor", "comments");
-	add_aggregate_row (recset, "format", "comments");
-	add_aggregate_row (recset, "from_days", "comments");
-	add_aggregate_row (recset, "from_unixtime", "comments");
-	add_aggregate_row (recset, "get_lock", "comments");
-	add_aggregate_row (recset, "greatest", "comments");
-	add_aggregate_row (recset, "hex", "comments");
-	add_aggregate_row (recset, "hour", "comments");
-	add_aggregate_row (recset, "if", "comments");
-	add_aggregate_row (recset, "ifnull", "comments");
-	add_aggregate_row (recset, "inet_aton", "comments");
-	add_aggregate_row (recset, "inet_ntoa", "comments");
-	add_aggregate_row (recset, "insert", "comments");
-	add_aggregate_row (recset, "instr", "comments");
-	add_aggregate_row (recset, "interval", "comments");
-	add_aggregate_row (recset, "isnull", "comments");
-	add_aggregate_row (recset, "last_insert_id", "comments");
-	add_aggregate_row (recset, "lcase", "comments");
-	add_aggregate_row (recset, "least", "comments");
-	add_aggregate_row (recset, "left", "comments");
-	add_aggregate_row (recset, "length", "comments");
-	add_aggregate_row (recset, "load_file", "comments");
-	add_aggregate_row (recset, "locate", "comments");
-	add_aggregate_row (recset, "log", "comments");
-	add_aggregate_row (recset, "log10", "comments");
-	add_aggregate_row (recset, "lower", "comments");
-	add_aggregate_row (recset, "lpad", "comments");
-	add_aggregate_row (recset, "ltrim", "comments");
-	add_aggregate_row (recset, "make_set", "comments");
-	add_aggregate_row (recset, "master_pos_wait", "comments");
-	add_aggregate_row (recset, "match", "comments");
-	add_aggregate_row (recset, "max", "comments");
-	add_aggregate_row (recset, "md5", "comments");
-	add_aggregate_row (recset, "mid", "comments");
-	add_aggregate_row (recset, "min", "comments");
-	add_aggregate_row (recset, "minute", "comments");
-	add_aggregate_row (recset, "mod", "comments");
-	add_aggregate_row (recset, "month", "comments");
-	add_aggregate_row (recset, "monthname", "comments");
-	add_aggregate_row (recset, "now", "comments");
-	add_aggregate_row (recset, "nullif", "comments");
-	add_aggregate_row (recset, "oct", "comments");
-	add_aggregate_row (recset, "octet_length", "comments");
-	add_aggregate_row (recset, "ord", "comments");
-	add_aggregate_row (recset, "password", "comments");
-	add_aggregate_row (recset, "period_add", "comments");
-	add_aggregate_row (recset, "period_diff", "comments");
-	add_aggregate_row (recset, "pi", "comments");
-	add_aggregate_row (recset, "position", "comments");	
-	add_aggregate_row (recset, "pow", "comments");
-	add_aggregate_row (recset, "power", "comments");
-	add_aggregate_row (recset, "quarter", "comments");
-	add_aggregate_row (recset, "radians", "comments");
-	add_aggregate_row (recset, "rand", "comments");
-	add_aggregate_row (recset, "release_lock", "comments");
-	add_aggregate_row (recset, "repeat", "comments");
-	add_aggregate_row (recset, "replace", "comments");	
-	add_aggregate_row (recset, "reverse", "comments");
-	add_aggregate_row (recset, "right", "comments");
-	add_aggregate_row (recset, "round", "comments");
-	add_aggregate_row (recset, "rpad", "comments");
-	add_aggregate_row (recset, "rtrim", "comments");
-	add_aggregate_row (recset, "second", "comments");
-	add_aggregate_row (recset, "sec_to_time", "comments");
-	add_aggregate_row (recset, "session_user", "comments");
-	add_aggregate_row (recset, "sign", "comments");
-	add_aggregate_row (recset, "sin", "comments");
-	add_aggregate_row (recset, "soundex", "comments");
-	add_aggregate_row (recset, "space", "comments");
-	add_aggregate_row (recset, "sqrt", "comments");
-	add_aggregate_row (recset, "strcmp", "comments");
-	add_aggregate_row (recset, "subdate", "comments");
-	add_aggregate_row (recset, "substring", "comments");
-	add_aggregate_row (recset, "substring_index", "comments");
-	add_aggregate_row (recset, "sysdate", "comments");
-	add_aggregate_row (recset, "system_user", "comments");
-	add_aggregate_row (recset, "tan", "comments");
-	add_aggregate_row (recset, "time_format", "comments");
-	add_aggregate_row (recset, "time_to_sec", "comments");
-	add_aggregate_row (recset, "to_days", "comments");
-	add_aggregate_row (recset, "trim", "comments");
-	add_aggregate_row (recset, "truncate", "comments");
-	add_aggregate_row (recset, "ucase", "comments");
-	add_aggregate_row (recset, "unix_timestamp", "comments");
-	add_aggregate_row (recset, "upper", "comments");
-	add_aggregate_row (recset, "user", "comments");
-	add_aggregate_row (recset, "version", "comments");
-	add_aggregate_row (recset, "week", "comments");
-	add_aggregate_row (recset, "weekday", "comments");
-	add_aggregate_row (recset, "year", "comments");
-	add_aggregate_row (recset, "yearweek", "comments");
+	add_aggregate_row (recset, "abs", "");
+	add_aggregate_row (recset, "acos", "");
+	add_aggregate_row (recset, "adddate", "");
+	add_aggregate_row (recset, "ascii", "");
+	add_aggregate_row (recset, "asin", "");
+	add_aggregate_row (recset, "atan", "");
+	add_aggregate_row (recset, "atan2", "");
+	add_aggregate_row (recset, "benchmark", "");
+	add_aggregate_row (recset, "bin", "");
+	add_aggregate_row (recset, "bit_count", "");
+	add_aggregate_row (recset, "ceiling", "");
+	add_aggregate_row (recset, "char", "");
+	add_aggregate_row (recset, "char_length", "");
+	add_aggregate_row (recset, "character_length", "");
+	add_aggregate_row (recset, "coalesce", "");
+	add_aggregate_row (recset, "concat", "");
+	add_aggregate_row (recset, "concat_ws", "");
+	add_aggregate_row (recset, "connection_id", "");
+	add_aggregate_row (recset, "conv", "");
+	add_aggregate_row (recset, "cos", "");
+	add_aggregate_row (recset, "cot", "");
+	add_aggregate_row (recset, "count", "");
+	add_aggregate_row (recset, "curdate", "");
+	add_aggregate_row (recset, "current_date", "");
+	add_aggregate_row (recset, "current_time", "");
+	add_aggregate_row (recset, "current_timestamp", "");
+	add_aggregate_row (recset, "curtime", "");
+	add_aggregate_row (recset, "database", "");
+	add_aggregate_row (recset, "date_add", "");
+	add_aggregate_row (recset, "date_format", "");
+	add_aggregate_row (recset, "date_sub", "");
+	add_aggregate_row (recset, "dayname", "");
+	add_aggregate_row (recset, "dayofmonth", "");
+	add_aggregate_row (recset, "dayofweek", "");
+	add_aggregate_row (recset, "dayofyear", "");
+	add_aggregate_row (recset, "decode", "");
+	add_aggregate_row (recset, "degrees", "");
+	add_aggregate_row (recset, "elt", "");
+	add_aggregate_row (recset, "encode", "");
+	add_aggregate_row (recset, "encrypt", "");
+	add_aggregate_row (recset, "exp", "");
+	add_aggregate_row (recset, "export_set", "");
+	add_aggregate_row (recset, "extract", "");
+	add_aggregate_row (recset, "field", "");
+	add_aggregate_row (recset, "find_in_set", "");
+	add_aggregate_row (recset, "floor", "");
+	add_aggregate_row (recset, "format", "");
+	add_aggregate_row (recset, "from_days", "");
+	add_aggregate_row (recset, "from_unixtime", "");
+	add_aggregate_row (recset, "get_lock", "");
+	add_aggregate_row (recset, "greatest", "");
+	add_aggregate_row (recset, "hex", "");
+	add_aggregate_row (recset, "hour", "");
+	add_aggregate_row (recset, "if", "");
+	add_aggregate_row (recset, "ifnull", "");
+	add_aggregate_row (recset, "inet_aton", "");
+	add_aggregate_row (recset, "inet_ntoa", "");
+	add_aggregate_row (recset, "insert", "");
+	add_aggregate_row (recset, "instr", "");
+	add_aggregate_row (recset, "interval", "");
+	add_aggregate_row (recset, "isnull", "");
+	add_aggregate_row (recset, "last_insert_id", "");
+	add_aggregate_row (recset, "lcase", "");
+	add_aggregate_row (recset, "least", "");
+	add_aggregate_row (recset, "left", "");
+	add_aggregate_row (recset, "length", "");
+	add_aggregate_row (recset, "load_file", "");
+	add_aggregate_row (recset, "locate", "");
+	add_aggregate_row (recset, "log", "");
+	add_aggregate_row (recset, "log10", "");
+	add_aggregate_row (recset, "lower", "");
+	add_aggregate_row (recset, "lpad", "");
+	add_aggregate_row (recset, "ltrim", "");
+	add_aggregate_row (recset, "make_set", "");
+	add_aggregate_row (recset, "master_pos_wait", "");
+	add_aggregate_row (recset, "match", "");
+	add_aggregate_row (recset, "max", "");
+	add_aggregate_row (recset, "md5", "");
+	add_aggregate_row (recset, "mid", "");
+	add_aggregate_row (recset, "min", "");
+	add_aggregate_row (recset, "minute", "");
+	add_aggregate_row (recset, "mod", "");
+	add_aggregate_row (recset, "month", "");
+	add_aggregate_row (recset, "monthname", "");
+	add_aggregate_row (recset, "now", "");
+	add_aggregate_row (recset, "nullif", "");
+	add_aggregate_row (recset, "oct", "");
+	add_aggregate_row (recset, "octet_length", "");
+	add_aggregate_row (recset, "ord", "");
+	add_aggregate_row (recset, "password", "");
+	add_aggregate_row (recset, "period_add", "");
+	add_aggregate_row (recset, "period_diff", "");
+	add_aggregate_row (recset, "pi", "");
+	add_aggregate_row (recset, "position", "");	
+	add_aggregate_row (recset, "pow", "");
+	add_aggregate_row (recset, "power", "");
+	add_aggregate_row (recset, "quarter", "");
+	add_aggregate_row (recset, "radians", "");
+	add_aggregate_row (recset, "rand", "");
+	add_aggregate_row (recset, "release_lock", "");
+	add_aggregate_row (recset, "repeat", "");
+	add_aggregate_row (recset, "replace", "");	
+	add_aggregate_row (recset, "reverse", "");
+	add_aggregate_row (recset, "right", "");
+	add_aggregate_row (recset, "round", "");
+	add_aggregate_row (recset, "rpad", "");
+	add_aggregate_row (recset, "rtrim", "");
+	add_aggregate_row (recset, "second", "");
+	add_aggregate_row (recset, "sec_to_time", "");
+	add_aggregate_row (recset, "session_user", "");
+	add_aggregate_row (recset, "sign", "");
+	add_aggregate_row (recset, "sin", "");
+	add_aggregate_row (recset, "soundex", "");
+	add_aggregate_row (recset, "space", "");
+	add_aggregate_row (recset, "sqrt", "");
+	add_aggregate_row (recset, "strcmp", "");
+	add_aggregate_row (recset, "subdate", "");
+	add_aggregate_row (recset, "substring", "");
+	add_aggregate_row (recset, "substring_index", "");
+	add_aggregate_row (recset, "sysdate", "");
+	add_aggregate_row (recset, "system_user", "");
+	add_aggregate_row (recset, "tan", "");
+	add_aggregate_row (recset, "time_format", "");
+	add_aggregate_row (recset, "time_to_sec", "");
+	add_aggregate_row (recset, "to_days", "");
+	add_aggregate_row (recset, "trim", "");
+	add_aggregate_row (recset, "truncate", "");
+	add_aggregate_row (recset, "ucase", "");
+	add_aggregate_row (recset, "unix_timestamp", "");
+	add_aggregate_row (recset, "upper", "");
+	add_aggregate_row (recset, "user", "");
+	add_aggregate_row (recset, "version", "");
+	add_aggregate_row (recset, "week", "");
+	add_aggregate_row (recset, "weekday", "");
+	add_aggregate_row (recset, "year", "");
+	add_aggregate_row (recset, "yearweek", "");
 
 	return GDA_DATA_MODEL (recset);
 }
@@ -1499,11 +1533,9 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 		return NULL;
 
 	/* add the extra information */
-	model = gda_data_model_array_new (4);
-	gda_data_model_set_column_title (model, 0, _("Name"));
-	gda_data_model_set_column_title (model, 1, _("Owner"));
-	gda_data_model_set_column_title (model, 2, _("Comments"));
-	gda_data_model_set_column_title (model, 3, "SQL");
+	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TABLES));
+	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_TABLES);
+
 	rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (recset));
 	for (r = 0; r < rows; r++) {
 		GList *value_list = NULL;
@@ -1538,7 +1570,7 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 		else
 			value_list = g_list_append (value_list, gda_value_new_string (""));
 
-		gda_data_model_append_values (model, value_list);
+		gda_data_model_append_values (model, value_list, NULL);
 
 		g_free (name);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -1559,11 +1591,8 @@ get_mysql_views (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* add the extra information */
-	model = gda_data_model_array_new (4);
-	gda_data_model_set_column_title (model, 0, _("Name"));
-	gda_data_model_set_column_title (model, 1, _("Owner"));
-	gda_data_model_set_column_title (model, 2, _("Comments"));
-	gda_data_model_set_column_title (model, 3, "SQL");
+	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_VIEWS));
+	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_VIEWS);
 
 	/* views are not yet supported in MySql => return an empty set */
 
@@ -1598,15 +1627,8 @@ get_mysql_procedures (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* add the extra information */
-	model = gda_data_model_array_new (8);
-	gda_data_model_set_column_title (model, 0, _("Procedure"));
-	gda_data_model_set_column_title (model, 1, _("Id"));
-	gda_data_model_set_column_title (model, 2, _("Owner"));
-	gda_data_model_set_column_title (model, 3, _("Comments"));
-	gda_data_model_set_column_title (model, 4, _("Return type"));
-	gda_data_model_set_column_title (model, 5, _("Nb args"));
-	gda_data_model_set_column_title (model, 6, _("Args types"));
-	gda_data_model_set_column_title (model, 7, _("Definition"));
+	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_PROCEDURES));
+	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_PROCEDURES);
 
 	/* fill the recordset */
 	for (i = 0; i < sizeof (procs) / sizeof (procs[0]); i++) {
@@ -1621,7 +1643,7 @@ get_mysql_procedures (GdaConnection *cnc, GdaParameterList *params)
 		value_list = g_list_append (value_list, gda_value_new_string (procs[i].argtypes));
 		value_list = g_list_append (value_list, gda_value_new_string (NULL));
 
-		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1682,12 +1704,8 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (5);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Synonyms"));
+	recset = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_TYPES);
 	
 	/* fill the recordset */
 	for (i = 0; i < sizeof (types) / sizeof (types[0]); i++) {
@@ -1699,7 +1717,7 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		value_list = g_list_append (value_list, gda_value_new_gdatype (types[i].type));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].synonyms));
 
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1785,21 +1803,6 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	gint rc;
 	MYSQL *mysql;
 	MYSQL_RES *mysql_res;
-	struct {
-		const gchar *name;
-		GdaValueType type;
-	} fields_desc[] = {
-		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
-		{ N_("Scale")		, GDA_VALUE_TYPE_INTEGER },
-		{ N_("Not null?")	, GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("References")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  },
-		{ N_("Extra attributes"), GDA_VALUE_TYPE_STRING  }
-	};
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
@@ -1811,7 +1814,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	}
 
 	/* get parameters sent by client */
-	par = gda_parameter_list_find (params, "name");
+	par = gda_parameter_list_find_param (params, "name");
 	if (!par) {
 		gda_connection_add_event_string (
 			cnc,
@@ -1840,21 +1843,8 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	rows = mysql_num_rows (mysql_res);
 
 	/* fill in the recordset to be returned */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (sizeof fields_desc / sizeof fields_desc[0]);
-	for (r = 0; r < sizeof (fields_desc) / sizeof (fields_desc[0]); r++) {
-/*
-		gint defined_size =  (fields_desc[r].type == GDA_VALUE_TYPE_STRING) ? 64 : 
-			(fields_desc[r].type == GDA_VALUE_TYPE_INTEGER) ? sizeof (gint) : 1;
-*/
-
-		/* gda_server_recordset_model_set_field_defined_size (recset, r, defined_size); */
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), r,
-						_(fields_desc[r].name));
-/*
-		gda_server_recordset_model_set_field_scale (recset, r, 0);
-		gda_server_recordset_model_set_field_gdatype (recset, r, fields_desc[r].type);
-*/
-	}
+	recset = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_FIELDS));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_FIELDS);
 	
 	for (r = 0; r < rows; r++) {
 		GList *value_list;
@@ -1878,7 +1868,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 		}
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset),
-					      (const GList *) value_list);
+					      (const GList *) value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1897,7 +1887,10 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 			       GdaParameterList *params)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	else
+		return NULL;
 
 	switch (schema) {
 	case GDA_CONNECTION_SCHEMA_AGGREGATES :
@@ -1978,3 +1971,31 @@ gda_mysql_provider_value_to_sql_string (
 	return ret;
 }
 
+GdaDataHandler *
+gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
+				     GdaConnection *cnc,
+				     GdaValueType for_type)
+{
+	TO_IMPLEMENT;
+	return NULL;
+}
+
+GdaValue *
+gda_mysql_provider_string_to_value (GdaServerProvider *provider,
+				    GdaConnection *cnc,
+				    const gchar *string, 
+				    GdaValueType prefered_type,
+				    gchar **dbms_type)
+{
+	TO_IMPLEMENT;
+	return NULL;
+}
+
+const gchar *
+gda_mysql_provider_get_def_dbms_type (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      GdaValueType gda_type)
+{
+	TO_IMPLEMENT;
+	return NULL;
+}

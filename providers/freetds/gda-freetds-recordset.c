@@ -24,19 +24,20 @@
 #if defined(HAVE_CONFIG_H)
 #endif
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model.h>
 #include <string.h>
 #include <tds.h>
 #include <tdsconvert.h>
 #include "gda-freetds.h"
 #include "gda-freetds-recordset.h"
+#include "gda-freetds-defs.h"
 
 #ifdef PARENT_TYPE
 #undef PARENT_TYPE
 #endif
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
 /*
  * Private declarations and functions
@@ -50,22 +51,22 @@ static void gda_freetds_recordset_init       (GdaFreeTDSRecordset *recset,
 static void gda_freetds_recordset_finalize   (GObject *object);
 
 static void gda_freetds_recordset_describe_column (GdaDataModel *model, gint col);
-static gint gda_freetds_recordset_get_n_rows (GdaDataModelBase *model);
-static gint gda_freetds_recordset_get_n_columns (GdaDataModelBase *model);
-static const GdaRow *gda_freetds_recordset_get_row (GdaDataModelBase *model,
-                                                    gint row);
-static const GdaValue *gda_freetds_recordset_get_value_at (GdaDataModelBase *model,
+static gint gda_freetds_recordset_get_n_rows (GdaDataModelRow *model);
+static gint gda_freetds_recordset_get_n_columns (GdaDataModelRow *model);
+static const GdaRow *gda_freetds_recordset_get_row (GdaDataModelRow *model,
+                                                    gint row, GError **error);
+static const GdaValue *gda_freetds_recordset_get_value_at (GdaDataModelRow *model,
                                                            gint         col,
                                                            gint         row);
 
 /* Private utility functions */
 
 /* w/o results */
-static TDSCOLINFO *gda_freetds_dup_tdscolinfo (TDSCOLINFO *col);
+static _TDSCOLINFO *gda_freetds_dup_tdscolinfo (_TDSCOLINFO *col);
 static GdaRow *gda_freetds_get_current_row(GdaFreeTDSRecordset *recset);
 
 static gint
-gda_freetds_recordset_get_n_rows (GdaDataModelBase *model)
+gda_freetds_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
 
@@ -74,7 +75,7 @@ gda_freetds_recordset_get_n_rows (GdaDataModelBase *model)
 }
 
 static gint
-gda_freetds_recordset_get_n_columns (GdaDataModelBase *model)
+gda_freetds_recordset_get_n_columns (GdaDataModelRow *model)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
 
@@ -83,7 +84,7 @@ gda_freetds_recordset_get_n_columns (GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_freetds_recordset_get_row (GdaDataModelBase *model, gint row)
+gda_freetds_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
 
@@ -101,7 +102,7 @@ gda_freetds_recordset_get_row (GdaDataModelBase *model, gint row)
 }
 
 static const GdaValue *
-gda_freetds_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
+gda_freetds_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
 	const GdaRow *fields;
@@ -112,7 +113,7 @@ gda_freetds_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	if (col >= recset->priv->colcnt)
 		return NULL;
 
-	fields = gda_freetds_recordset_get_row (model, row);
+	fields = gda_freetds_recordset_get_row (model, row, NULL);
 	return fields != NULL ? gda_row_get_value ((GdaRow *) fields, col) : NULL;
 }
 
@@ -120,7 +121,7 @@ static void
 gda_freetds_recordset_class_init (GdaFreeTDSRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -155,7 +156,7 @@ gda_freetds_recordset_finalize (GObject * object)
 			while (recset->priv->rows->len > 0) {
 				GdaRow *row = (GdaRow *) g_ptr_array_index (recset->priv->rows, 0);
 				if (row != NULL) {
-					gda_row_free (row);
+					g_object_unref (row);
 					row = NULL;
 				}
 				g_ptr_array_remove_index (recset->priv->rows, 0);
@@ -165,7 +166,7 @@ gda_freetds_recordset_finalize (GObject * object)
 		}
 		if (recset->priv->columns) {
 			while (recset->priv->columns->len > 0) {
-				TDSCOLINFO *col = (TDSCOLINFO *) g_ptr_array_index (recset->priv->columns, 0);
+				_TDSCOLINFO *col = (_TDSCOLINFO *) g_ptr_array_index (recset->priv->columns, 0);
 				if (col != NULL) {
 					g_free (col);
 					col = NULL;
@@ -203,7 +204,7 @@ gda_freetds_get_current_row(GdaFreeTDSRecordset *recset)
 	
 	for (i = 0; i < recset->priv->res->num_cols; i++) {
 		GdaValue   *field;
-		TDSCOLINFO *col;
+		_TDSCOLINFO *col;
 
 		field = gda_row_get_value (row, i);
 		col = recset->priv->res->columns[i];
@@ -216,20 +217,20 @@ gda_freetds_get_current_row(GdaFreeTDSRecordset *recset)
 	return row;
 }
 
-static TDSCOLINFO *
-gda_freetds_dup_tdscolinfo (TDSCOLINFO *col)
+static _TDSCOLINFO *
+gda_freetds_dup_tdscolinfo (_TDSCOLINFO *col)
 {
-	TDSCOLINFO *copy = NULL;
+	_TDSCOLINFO *copy = NULL;
 
 	g_return_val_if_fail (col != NULL, NULL);
 
-	copy = g_new0(TDSCOLINFO, 1);
+	copy = g_new0(_TDSCOLINFO, 1);
 	if (copy) {
-		memcpy(copy, col, sizeof(TDSCOLINFO));
+		memcpy(copy, col, sizeof(_TDSCOLINFO));
 		
 		/* set pointers to NULL */
 		copy->column_nullbind = NULL;
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
 		copy->column_varaddr = NULL;
 #else
 		copy->varaddr = NULL;
@@ -271,7 +272,7 @@ static void
 gda_freetds_recordset_describe_column (GdaDataModel *model, gint col)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
-	TDSCOLINFO          *colinfo = NULL;
+	_TDSCOLINFO          *colinfo = NULL;
 	GdaColumn           *attribs;
 	gchar               name[256];
 
@@ -280,7 +281,7 @@ gda_freetds_recordset_describe_column (GdaDataModel *model, gint col)
 	g_return_if_fail (recset->priv->columns != NULL);
 	g_return_if_fail (col < recset->priv->columns->len);
 
-	colinfo = (TDSCOLINFO *) g_ptr_array_index (recset->priv->columns, col);
+	colinfo = (_TDSCOLINFO *) g_ptr_array_index (recset->priv->columns, col);
 	g_return_if_fail (colinfo);
 	
 	attribs = gda_data_model_describe_column (model, col);
@@ -293,7 +294,7 @@ gda_freetds_recordset_describe_column (GdaDataModel *model, gint col)
 
 	gda_column_set_name (attribs, name);
 	gda_column_set_scale (attribs, colinfo->column_scale);
-	gda_column_set_gdatype (attribs,
+	gda_column_set_gda_type (attribs,
 	                                  gda_freetds_get_value_type (colinfo));
 	gda_column_set_defined_size (attribs, colinfo->column_size);
 
@@ -311,7 +312,7 @@ gda_freetds_recordset_new (GdaConnection *cnc, gboolean fetchall)
 {
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
 	GdaFreeTDSRecordset *recset = NULL;
-	TDSCOLINFO *col = NULL;
+	_TDSCOLINFO *col = NULL;
 	GdaRow *row = NULL;
 	GdaConnectionEvent *error = NULL;
 	gboolean columns_set = FALSE;
@@ -328,16 +329,16 @@ gda_freetds_recordset_new (GdaConnection *cnc, gboolean fetchall)
 	recset->priv->tds_cnc = tds_cnc;
 	recset->priv->res = tds_cnc->tds->res_info;
 
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds,
-							 &tds_cnc->result_type))
+							 &tds_cnc->result_type, NULL))
 	       == TDS_SUCCEED) {
 		if (tds_cnc->result_type == TDS_ROW_RESULT) {
 			gint row_type, compute_id;
 
 			while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->tds, &row_type, &compute_id))
 #else
-	while ((tds_cnc->rc = tds_process_result_tokens(tds_cnc->tds))
+			       while ((tds_cnc->rc = tds_process_result_tokens(tds_cnc->tds))
 	       == TDS_SUCCEED) {
 		if (tds_cnc->tds->res_info->rows_exist) {
 			while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->tds))

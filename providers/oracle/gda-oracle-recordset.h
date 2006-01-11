@@ -48,12 +48,12 @@ typedef struct _GdaOracleRecordsetPrivate GdaOracleRecordsetPrivate;
 typedef struct _GdaOracleValue            GdaOracleValue;
 
 struct _GdaOracleRecordset {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GdaOracleRecordsetPrivate *priv;
 };
 
 struct _GdaOracleRecordsetClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 struct _GdaOracleValue {

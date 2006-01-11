@@ -24,9 +24,8 @@
 #include <stdlib.h>
 #include <glib/gbacktrace.h>
 #include <libgda/gda-data-model-array.h>
-#include <libgda/gda-data-model-list.h>
 #include <libgda/gda-data-model-private.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include "gda-mdb.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
@@ -102,20 +101,42 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_mdb_provider_finalize;
+
 	provider_class->get_version = gda_mdb_provider_get_version;
-	provider_class->open_connection = gda_mdb_provider_open_connection;
-	provider_class->close_connection = gda_mdb_provider_close_connection;
 	provider_class->get_server_version = gda_mdb_provider_get_server_version;
+	provider_class->get_info = NULL;
+	provider_class->supports = gda_mdb_provider_supports;
+	provider_class->get_schema = gda_mdb_provider_get_schema;
+
+	provider_class->get_data_handler = NULL;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
+
+	provider_class->open_connection = gda_mdb_provider_open_connection;
+	provider_class->reset_connection = NULL;
+	provider_class->close_connection = gda_mdb_provider_close_connection;
 	provider_class->get_database = gda_mdb_provider_get_database;
 	provider_class->change_database = gda_mdb_provider_change_database;
+
+	provider_class->get_specs = NULL;
+	provider_class->perform_action_params = NULL;
+
 	provider_class->create_database_cnc = gda_mdb_provider_create_database_cnc;
 	provider_class->drop_database_cnc = gda_mdb_provider_drop_database_cnc;
+	provider_class->create_table = NULL;
+	provider_class->drop_table = NULL;
+	provider_class->create_index = NULL;
+	provider_class->drop_index = NULL;
+
 	provider_class->execute_command = gda_mdb_provider_execute_command;
+	provider_class->get_last_insert_id = NULL;
+
 	provider_class->begin_transaction = gda_mdb_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mdb_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_mdb_provider_rollback_transaction;
-	provider_class->supports = gda_mdb_provider_supports;
-	provider_class->get_schema = gda_mdb_provider_get_schema;
+	
+	provider_class->create_blob = NULL;
+	provider_class->fetch_blob = NULL;
 }
 
 static void
@@ -449,19 +470,17 @@ static GdaDataModel *
 get_mdb_databases (GdaMdbConnection *mdb_cnc)
 {
 	GdaDataModel *model;
-	GList l;
+	GdaValue *value;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	model = gda_data_model_list_new ();
+	model = gda_data_model_array_new (1);
 	gda_data_model_set_column_title (model, 0, _("Name"));
 
-	l.prev = l.next = NULL;
-	l.data = gda_value_new_string (mdb_cnc->mdb->f->filename);
-	gda_data_model_append_values (model, &l);
-
-	gda_value_free (l.data);
+	value = gda_value_new_string (mdb_cnc->mdb->f->filename);
+	gda_data_model_set_value_at (model, 0, 0, value, NULL);
+	gda_value_free (value);
 
 	return model;
 }
@@ -523,7 +542,7 @@ get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
 				value_list = g_list_append (value_list, gda_value_new_string (NULL));
 				value_list = g_list_append (value_list, gda_value_new_string (NULL));
 
-				gda_data_model_append_values (model, value_list);
+				gda_data_model_append_values (model, value_list, NULL);
 
 				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 				g_list_free (value_list);
@@ -572,7 +591,7 @@ get_mdb_procedures (GdaMdbConnection *mdb_cnc)
 			value_list = g_list_append (value_list, gda_value_new_string (NULL));
 			value_list = g_list_append (value_list, gda_value_new_string (NULL));
 
-			gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
+			gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
 
 			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 			g_list_free (value_list);
@@ -615,7 +634,7 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 				value_list = g_list_append (value_list, gda_value_new_string (""));
 				value_list = g_list_append (value_list, gda_value_new_string (""));
 
-				gda_data_model_append_values (model, value_list);
+				gda_data_model_append_values (model, value_list, NULL);
 
 				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 				g_list_free (value_list);
@@ -637,7 +656,7 @@ add_type (GdaDataModel *model, const gchar *typname, const gchar *owner,
 	value_list = g_list_append (value_list, gda_value_new_string (comments));
 	value_list = g_list_append (value_list, gda_value_new_gdatype (type));
 
-	gda_data_model_append_values (model, value_list);
+	gda_data_model_append_values (model, value_list, NULL);
 
 	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 	g_list_free (value_list);
@@ -747,7 +766,8 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	}
 
 	model = gda_data_model_array_new (mdb_SQL->num_columns);
-	gda_data_model_set_command_text (model, sql);
+	g_object_set (G_OBJECT (model), 
+		      "command_text", sql, NULL);
 
 	/* allocate bound data */
 	for (c = 0; c < mdb_SQL->num_columns; c++) {
@@ -763,7 +783,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 		fa = gda_data_model_describe_column (model, c);
 		gda_column_set_name (fa, sqlcol->name);
 		gda_column_set_defined_size (fa, sqlcol->disp_size);
-		gda_column_set_gdatype (fa, gda_mdb_type_to_gda (sqlcol->bind_type));
+		gda_column_set_gda_type (fa, gda_mdb_type_to_gda (sqlcol->bind_type));
 	}
 
 	/* read data */
@@ -775,7 +795,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 		for (c = 0; c < mdb_SQL->num_columns; c++)
 			value_list = g_list_append (value_list, gda_value_new_string (bound_data[c]));
 
-		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

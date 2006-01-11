@@ -1,0 +1,353 @@
+<!-- ##### SECTION Title ##### -->
+GdaDictDatabase
+
+<!-- ##### SECTION Short_Description ##### -->
+Represents a database structure in the DBMS server
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This object manages an internal dictionary mirroring the real database structure
+with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaDictConstraint.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDictDatabase ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaDictDatabase::constraint-added ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::constraint-removed ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::constraint-updated ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::data-update-finished ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDictDatabase::data-update-started ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDictDatabase::field-added ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::field-removed ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::field-updated ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::fs-link-added ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL GdaDictDatabase::fs-link-removed ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL GdaDictDatabase::sequence-added ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::sequence-removed ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::sequence-updated ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::table-added ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::table-removed ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::table-updated ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDictDatabase::update-progress ##### -->
+<para>
+
+</para>
+
+@dbdatabase: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### ARG GdaDictDatabase:prop ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_dict_database_new ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_add_constraint ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@cstr: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_dict ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_update_dbms_data ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_stop_update_dbms_data ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_tables ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_table_by_name ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_table_by_xml_id ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_field_by_name ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@fullname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_field_by_xml_id ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_sequence_by_name ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_sequence_by_xml_id ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_sequence_to_field ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_link_sequence ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@seq: 
+@field: 
+
+
+<!-- ##### FUNCTION gda_dict_database_unlink_sequence ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@seq: 
+@field: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_all_constraints ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_table_constraints ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@table: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_all_fk_constraints ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_database_get_tables_fk_constraints ##### -->
+<para>
+
+</para>
+
+@mgdb: 
+@table1: 
+@table2: 
+@table1_has_fk: 
+@Returns: 
+
+

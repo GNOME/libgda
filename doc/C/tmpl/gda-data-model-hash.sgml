@@ -27,6 +27,25 @@ until the one requested).
 </para>
 
 
+<!-- ##### STRUCT GdaDataModelHash ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaDataModelHashClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaDataModelHashPrivate ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION gda_data_model_hash_new ##### -->
 <para>
 
@@ -34,23 +53,6 @@ until the one requested).
 
 @cols: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_hash_clear ##### -->
-<para>
-
-</para>
-
-@model: 
-
-
-<!-- ##### FUNCTION gda_data_model_hash_set_n_columns ##### -->
-<para>
-
-</para>
-
-@model: 
-@cols: 
 
 
 <!-- ##### FUNCTION gda_data_model_hash_insert_row ##### -->
@@ -63,5 +65,22 @@ until the one requested).
 @row: 
 <!-- # Unused Parameters # -->
 @values: 
+
+
+<!-- ##### FUNCTION gda_data_model_hash_set_n_columns ##### -->
+<para>
+
+</para>
+
+@model: 
+@cols: 
+
+
+<!-- ##### FUNCTION gda_data_model_hash_clear ##### -->
+<para>
+
+</para>
+
+@model: 
 
 

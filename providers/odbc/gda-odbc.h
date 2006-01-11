@@ -27,7 +27,7 @@
 
 #include <glib/gmacros.h>
 #include <glib-object.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
 #if defined(__CYGWIN__)
 #  define WIN32_LEAN_AND_MEAN

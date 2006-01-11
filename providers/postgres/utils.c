@@ -23,11 +23,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-postgres.h"
 #include "gda-postgres-blob.h"
+#include <locale.h>
 
 GdaConnectionEventCode
 gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)

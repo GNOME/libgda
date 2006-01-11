@@ -24,8 +24,10 @@
  */
 
 #if !defined(__gda_connection_h__)
-#  define __gda_connection_h__
+#define __gda_connection_h__
 
+#include "gda-decl.h"
+#include <libgda/gda-object.h>
 #include <libgda/gda-command.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-index.h>
@@ -41,55 +43,97 @@ G_BEGIN_DECLS
 #define GDA_IS_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION))
 #define GDA_IS_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 
-typedef struct _GdaConnection        GdaConnection;
-typedef struct _GdaConnectionClass   GdaConnectionClass;
-typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
-
-typedef struct _GdaServerProvider    GdaServerProvider; /* defined in gda-server-provider.h */
-typedef struct _GdaClient GdaClient; /* defined in gda-client.h */
-
 struct _GdaConnection {
-	GObject               object;
+	GdaObject             object;
 	GdaConnectionPrivate *priv;
 };
 
 struct _GdaConnectionClass {
-	GObjectClass          object_class;
+	GdaObjectClass        object_class;
 
 	/* signals */
-	void (* error) (GdaConnection *cnc, GdaConnectionEvent *error);
+	void   (*error)                     (GdaConnection *cnc, GdaConnectionEvent *error);
+        void   (*conn_opened)               (GdaConnection *obj);
+        void   (*conn_to_close)             (GdaConnection *obj);
+        void   (*conn_closed)               (GdaConnection *obj);
 };
-
-GType          gda_connection_get_type (void);
 
 typedef enum {
 	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
 	GDA_CONNECTION_OPTIONS_DONT_SHARE = 2 << 0
 } GdaConnectionOptions;
 
+typedef enum {
+	GDA_CONNECTION_FEATURE_AGGREGATES,
+	GDA_CONNECTION_FEATURE_BLOBS,
+	GDA_CONNECTION_FEATURE_INDEXES,
+	GDA_CONNECTION_FEATURE_INHERITANCE,
+	GDA_CONNECTION_FEATURE_NAMESPACES,
+	GDA_CONNECTION_FEATURE_PROCEDURES,
+	GDA_CONNECTION_FEATURE_SEQUENCES,
+	GDA_CONNECTION_FEATURE_SQL,
+	GDA_CONNECTION_FEATURE_TRANSACTIONS,
+	GDA_CONNECTION_FEATURE_TRIGGERS,
+	GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR,
+	GDA_CONNECTION_FEATURE_USERS,
+	GDA_CONNECTION_FEATURE_VIEWS,
+	GDA_CONNECTION_FEATURE_XML_QUERIES
+} GdaConnectionFeature;
+
+typedef enum {
+	GDA_CONNECTION_SCHEMA_AGGREGATES,
+	GDA_CONNECTION_SCHEMA_DATABASES,
+	GDA_CONNECTION_SCHEMA_FIELDS,
+	GDA_CONNECTION_SCHEMA_INDEXES,
+	GDA_CONNECTION_SCHEMA_LANGUAGES,
+	GDA_CONNECTION_SCHEMA_NAMESPACES,
+	GDA_CONNECTION_SCHEMA_PARENT_TABLES,
+	GDA_CONNECTION_SCHEMA_PROCEDURES,
+	GDA_CONNECTION_SCHEMA_SEQUENCES,
+	GDA_CONNECTION_SCHEMA_TABLES,
+	GDA_CONNECTION_SCHEMA_TRIGGERS,
+	GDA_CONNECTION_SCHEMA_TYPES,
+	GDA_CONNECTION_SCHEMA_USERS,
+	GDA_CONNECTION_SCHEMA_VIEWS
+} GdaConnectionSchema;
+
+/* errors */
+enum
+{
+        GDA_CONNECTION_CONN_OPEN_ERROR,
+        GDA_CONNECTION_DO_QUERY_ERROR,
+};
+
+GType                gda_connection_get_type (void);
 GdaConnection       *gda_connection_new (GdaClient *client,
 					 GdaServerProvider *provider,
 					 const gchar *dsn,
 					 const gchar *username,
 					 const gchar *password,
-					 GdaConnectionOptions options,
-					 GError **error);
+					 GdaConnectionOptions options);
+gboolean             gda_connection_open (GdaConnection *cnc, GError **error);
 gboolean             gda_connection_reset (GdaConnection *cnc);
-gboolean             gda_connection_close (GdaConnection *cnc);
+void                 gda_connection_close (GdaConnection *cnc);
+void                 gda_connection_close_no_warning (GdaConnection *cnc);
 gboolean             gda_connection_is_open (GdaConnection *cnc);
 
 GdaClient           *gda_connection_get_client (GdaConnection *cnc);
 void                 gda_connection_set_client (GdaConnection *cnc, GdaClient *client);
 
+const gchar         *gda_connection_get_provider (GdaConnection *cnc);
+GdaServerProvider   *gda_connection_get_provider_obj (GdaConnection *cnc);
+GdaServerProviderInfo *gda_connection_get_infos (GdaConnection *cnc);
 GdaConnectionOptions gda_connection_get_options (GdaConnection *cnc);
 
 const gchar         *gda_connection_get_server_version (GdaConnection *cnc);
 const gchar         *gda_connection_get_database (GdaConnection *cnc);
 const gchar         *gda_connection_get_dsn (GdaConnection *cnc);
+gboolean             gda_connection_set_dsn (GdaConnection *cnc, const gchar *datasource);
 const gchar         *gda_connection_get_cnc_string (GdaConnection *cnc);
-const gchar         *gda_connection_get_provider (GdaConnection *cnc);
 const gchar         *gda_connection_get_username (GdaConnection *cnc);
+gboolean             gda_connection_set_username (GdaConnection *srv, const gchar *username);
 const gchar         *gda_connection_get_password (GdaConnection *cnc);
+gboolean             gda_connection_set_password (GdaConnection *srv, const gchar *password);
 
 void                 gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *error);
 void                 gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...);
@@ -130,45 +174,9 @@ GdaBlob             *gda_connection_fetch_blob_by_id (GdaConnection *cnc, const 
 
 gchar               *gda_connection_value_to_sql_string (GdaConnection *cnc, GdaValue *from);
 
-typedef enum {
-	GDA_CONNECTION_FEATURE_AGGREGATES,
-	GDA_CONNECTION_FEATURE_BLOBS,
-	GDA_CONNECTION_FEATURE_INDEXES,
-	GDA_CONNECTION_FEATURE_INHERITANCE,
-	GDA_CONNECTION_FEATURE_NAMESPACES,
-	GDA_CONNECTION_FEATURE_PROCEDURES,
-	GDA_CONNECTION_FEATURE_SEQUENCES,
-	GDA_CONNECTION_FEATURE_SQL,
-	GDA_CONNECTION_FEATURE_TRANSACTIONS,
-	GDA_CONNECTION_FEATURE_TRIGGERS,
-	GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR,
-	GDA_CONNECTION_FEATURE_USERS,
-	GDA_CONNECTION_FEATURE_VIEWS,
-	GDA_CONNECTION_FEATURE_XML_QUERIES
-} GdaConnectionFeature;
-
 gboolean             gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);
-
-typedef enum {
-	GDA_CONNECTION_SCHEMA_AGGREGATES,
-	GDA_CONNECTION_SCHEMA_DATABASES,
-	GDA_CONNECTION_SCHEMA_FIELDS,
-	GDA_CONNECTION_SCHEMA_INDEXES,
-	GDA_CONNECTION_SCHEMA_LANGUAGES,
-	GDA_CONNECTION_SCHEMA_NAMESPACES,
-	GDA_CONNECTION_SCHEMA_PARENT_TABLES,
-	GDA_CONNECTION_SCHEMA_PROCEDURES,
-	GDA_CONNECTION_SCHEMA_SEQUENCES,
-	GDA_CONNECTION_SCHEMA_TABLES,
-	GDA_CONNECTION_SCHEMA_TRIGGERS,
-	GDA_CONNECTION_SCHEMA_TYPES,
-	GDA_CONNECTION_SCHEMA_USERS,
-	GDA_CONNECTION_SCHEMA_VIEWS
-} GdaConnectionSchema;
-
-GdaDataModel        *gda_connection_get_schema (GdaConnection *cnc,
-						GdaConnectionSchema schema,
-						GdaParameterList *params);
+GdaDataModel        *gda_connection_get_schema (GdaConnection *cnc, GdaConnectionSchema schema,
+						GdaParameterList *params, GError **error);
 
 G_END_DECLS
 

@@ -26,7 +26,7 @@
 #  define __gda_sybase_recordset_h__
 
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-base.h>
+#include <libgda/gda-data-model-row.h>
 #include <libgda/gda-value.h>
 #include <ctpublic.h>
 #include <cspublic.h>
@@ -47,12 +47,12 @@ typedef struct _GdaSybaseField            GdaSybaseField;
 typedef struct _GdaSybaseRecordsetPrivate GdaSybaseRecordsetPrivate;
 
 struct _GdaSybaseRecordset {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GdaSybaseRecordsetPrivate *priv;
 };
 
 struct _GdaSybaseRecordsetClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 struct _GdaSybaseField {

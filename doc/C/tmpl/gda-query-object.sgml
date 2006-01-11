@@ -1,0 +1,65 @@
+<!-- ##### SECTION Title ##### -->
+GdaQueryObject
+
+<!-- ##### SECTION Short_Description ##### -->
+Parent class for any object participating in a #GdaQuery query
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaQueryObject ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaQueryObject::numid-changed ##### -->
+<para>
+
+</para>
+
+@gdaqueryobject: the object which received the signal.
+
+<!-- ##### STRUCT GdaQueryObjectClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@numid_changed: 
+@set_int_id: 
+
+<!-- ##### STRUCT GdaQueryObjectPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_query_object_set_int_id ##### -->
+<para>
+
+</para>
+
+@qobj: 
+@id: 
+
+
+<!-- ##### FUNCTION gda_query_object_get_int_id ##### -->
+<para>
+
+</para>
+
+@qobj: 
+@Returns: 
+
+

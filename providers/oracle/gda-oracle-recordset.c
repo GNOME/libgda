@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include "gda-oracle.h"
 #include "gda-oracle-recordset.h"
@@ -30,7 +30,7 @@
 #include <oci.h>
 #include <libgda/gda-data-model-private.h>
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
 struct _GdaOracleRecordsetPrivate {
 	GdaConnection *cnc;
@@ -256,7 +256,7 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 	
 	gda_column_set_name (field_attrs, name_buffer);
 	gda_column_set_scale (field_attrs, scale);
-	gda_column_set_gdatype (field_attrs, oracle_sqltype_to_gda_type (sql_type));
+	gda_column_set_gda_type (field_attrs, oracle_sqltype_to_gda_type (sql_type));
 	gda_column_set_defined_size (field_attrs, defined_size);
 	
 	/* FIXME */
@@ -274,7 +274,7 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 }
 
 static gint
-gda_oracle_recordset_get_n_rows (GdaDataModelBase *model)
+gda_oracle_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;
@@ -319,7 +319,7 @@ gda_oracle_recordset_get_n_rows (GdaDataModelBase *model)
 }
 
 static gint
-gda_oracle_recordset_get_n_columns (GdaDataModelBase *model)
+gda_oracle_recordset_get_n_columns (GdaDataModelRow *model)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (model), 0);
@@ -374,7 +374,7 @@ fetch_row (GdaOracleRecordset *recset, gint rownum)
 }
 
 static const GdaRow *
-gda_oracle_recordset_get_row (GdaDataModelBase *model, gint row)
+gda_oracle_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;
@@ -416,7 +416,7 @@ gda_oracle_recordset_get_row (GdaDataModelBase *model, gint row)
 }
 
 static const GdaValue *
-gda_oracle_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
+gda_oracle_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;
@@ -430,12 +430,12 @@ gda_oracle_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	if (col >= priv_data->ncolumns)
 		return NULL;
 
-	fields = gda_oracle_recordset_get_row (model, row);
+	fields = gda_oracle_recordset_get_row (model, row, NULL);
 	return fields != NULL ? gda_row_get_value ((GdaRow *) fields, col) : NULL;
 }
 
 static gboolean
-gda_oracle_recordset_is_updatable (GdaDataModelBase *model)
+gda_oracle_recordset_is_updatable (GdaDataModelRow *model)
 {
 	GdaCommandType cmd_type;
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
@@ -448,7 +448,7 @@ gda_oracle_recordset_is_updatable (GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values)
+gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values)
 {
 	GString *sql;
 	GdaRow *row;
@@ -460,7 +460,6 @@ gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
 	g_return_val_if_fail (gda_data_model_is_updatable (GDA_DATA_MODEL (model)), NULL);
-	g_return_val_if_fail (gda_data_model_has_changed (GDA_DATA_MODEL (model)), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
 	priv_data = recset->priv;
@@ -527,13 +526,13 @@ gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values
 }
 
 static gboolean
-gda_oracle_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
+gda_oracle_recordset_remove_row (GdaDataModelRow *model, const GdaRow *row)
 {
 	return FALSE;
 }
 
 static gboolean
-gda_oracle_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
+gda_oracle_recordset_update_row (GdaDataModelRow *model, const GdaRow *row)
 {
 	return FALSE;
 }
@@ -554,7 +553,7 @@ static void
 gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -599,7 +598,7 @@ gda_oracle_recordset_finalize (GObject *object)
 		GdaRow *row = (GdaRow *) g_ptr_array_index (priv_data->rows, 0);
 
 		if (row != NULL) 
-			gda_row_free (row);
+			g_object_unref (row);
 		g_ptr_array_remove_index (priv_data->rows, 0);
 	}
 	g_ptr_array_free (priv_data->rows, TRUE);
@@ -661,7 +660,7 @@ gda_oracle_recordset_new (GdaConnection *cnc,
 	recset->priv->hstmt = stmthp;
 	recset->priv->ncolumns = parcount;
 	recset->priv->ora_values = define_columns (recset->priv);
-	recset->priv->nrows = gda_oracle_recordset_get_n_rows (GDA_DATA_MODEL_BASE (recset));
+	recset->priv->nrows = gda_oracle_recordset_get_n_rows (GDA_DATA_MODEL_ROW (recset));
 
 	/* define GdaColumn attributes */
 	for (i = 0; i < recset->priv->ncolumns; i += 1) 

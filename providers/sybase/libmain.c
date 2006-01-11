@@ -1,9 +1,10 @@
 /* GDA Sybase Provider
- * Copyright (C) 2002 The GNOME Foundation
+ * Copyright (C) 2002 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
  *         Holger Thon <holger.thon@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,12 +21,12 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include "gda-sybase-provider.h"
 
-const gchar *plugin_get_name (void);
-const gchar *plugin_get_description (void);
-GList *plugin_get_connection_params (void);
+const gchar       *plugin_get_name (void);
+const gchar       *plugin_get_description (void);
+gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
 
 const gchar *
@@ -40,48 +41,17 @@ plugin_get_description (void)
 	return _("GDA provider for sybase databases (using OpenClient)");
 }
 
-GList *
-plugin_get_connection_params (void)
+gchar *
+plugin_get_dsn_spec (void)
 {
-	GList *list = NULL;
+	gchar *specs, *file;
+	gsize len;
 
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("DATABASE", _("Database Name"),
-								    _("Name of the database to use"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("HOST", _("Host Name"),
-								    _("Name of the host to connect to"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("HOST", _("Host Name"),
-								    _("Name of the host to connect to"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("HOSTADDR", _("Host Address"),
-								    _("IP address of the host to connect to"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("OPTIONS", _("Extra Options"),
-								    _("Extra Sybase options to use for the connection"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("PORT", _("Port"),
-								    _("Port number to use for the connection"),
-								    GDA_VALUE_TYPE_INTEGER));
-
-	/************************************/
-	/* environment variables for sybase */
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("SYBASE", _("Enable Sybase"),
-								    _("Enable Sybase operative mode"),
-								    GDA_VALUE_TYPE_BOOLEAN));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("LOCALE", _("Locale"),
-								    _("Locale to use in the connection"),
-								    GDA_VALUE_TYPE_STRING));
-
-	return list;
+	file = g_build_filename (LIBGDA_DATA_DIR, "sybase_specs_dsn.xml", NULL);
+	if (g_file_get_contents (file, &specs, &len, NULL)) 
+		return specs;
+	else
+		return NULL;
 }
 
 GdaServerProvider *

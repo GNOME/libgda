@@ -1,0 +1,299 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelIter
+
+<!-- ##### SECTION Short_Description ##### -->
+#GdaDataModel iterator
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #GdaDataModelIter object is a specialization of the #GdaParameterList object which serves as
+an iterator through the data of a #GdaDataModel object.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+#GdaParameterList
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataProxy ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataProxy:autocommit ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataProxy:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataProxy:prepend-null-entry ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaDataProxyClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaDataProxyPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_proxy_new ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_is_read_only ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_values ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@cols_index: 
+@n_cols: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_delete ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_undelete ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_find_row_from_values ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@values: 
+@cols_index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_cancel_row_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@col: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_apply_row_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_has_changed ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_set_sample_size ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@sample_size: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_sample_size ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_set_sample_start ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@sample_start: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_sample_start ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_sample_end ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_apply_all_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_cancel_all_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### STRUCT GdaDataModelIter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataModelIter:current-row ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelIter:data-model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelIter:forced-model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelIter:update-model ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_data_model_iter_new ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_set_at_row ##### -->
+<para>
+
+</para>
+
+@iter: 
+@row: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_move_next ##### -->
+<para>
+
+</para>
+
+@iter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_move_prev ##### -->
+<para>
+
+</para>
+
+@iter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_get_row ##### -->
+<para>
+
+</para>
+
+@iter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_get_column_for_param ##### -->
+<para>
+
+</para>
+
+@iter: 
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_get_param_for_column ##### -->
+<para>
+
+</para>
+
+@iter: 
+@col: 
+@Returns: 
+
+

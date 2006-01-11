@@ -1,11 +1,15 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-ibmdb2.la
 
+configdir   = $(datadir)/libgda
+config_DATA = ibmdb2_specs_dsn.xml
+
 AM_CPPFLAGS = \
 	$(IBMDB2_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS)
+	$(LIBGDA_CFLAGS) \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_ibmdb2_la_SOURCES = \
 	gda-ibmdb2-provider.c \
@@ -23,4 +27,6 @@ libgda_ibmdb2_la_LIBADD = \
 	$(IBMDB2_LIBS) \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.la 
+
+EXTRA_DIST = $(config_DATA)
 

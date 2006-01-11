@@ -41,12 +41,12 @@ typedef struct _GdaFirebirdRecordsetClass   GdaFirebirdRecordsetClass;
 typedef struct _GdaFirebirdRecordsetPrivate GdaFirebirdRecordsetPrivate;
 
 struct _GdaFirebirdRecordset {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GdaFirebirdRecordsetPrivate *priv;
 };
 
 struct _GdaFirebirdRecordsetClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 typedef struct {

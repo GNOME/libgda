@@ -29,21 +29,6 @@ Management of #GdaDataModel indexes
 @references: 
 @col_idx_list: 
 
-<!-- ##### MACRO GDA_TYPE_DATA_MODEL_INDEX ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION gda_data_model_index_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_model_index_new ##### -->
 <para>
 

@@ -1,0 +1,277 @@
+<!-- ##### SECTION Title ##### -->
+GdaParameterList
+
+<!-- ##### SECTION Short_Description ##### -->
+Manages a list of #GdaParameter objects which contain individual values
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A #GdaParameterList is in a way only a better than GList list of #GdaParameter objects: it handles a list of
+#GdaParameter objects (accessible directly using paramlist->parameters) but also creates other lists such as:
+<itemizedlist>
+    <listitem>
+         <para>a list of #GdaParameterListNode structures (the nodes_list attribute): for each 
+	   parameter a such structure is created
+	   to show in a signle place all the information about each parameter: the #GdaDataModel which 
+	   may restrict the list of values along with the column number in it, and any hint for the
+	   parameter (a value made of GdaParameterListParamHint flags)</para>
+    </listitem>
+    <listitem>
+         <para>a list of #GdaParameterListSource structures (the sources_list attribute): each 
+	   #GdaParameterListSource structure is
+	   complementary to the #GdaParameterListNode structures listed in its "nodes" attribute: there
+	   is one such structure for each #GdaDataModel which may restrict values of one or more
+	   parameters.</para>
+    </listitem>
+    <listitem>
+         <para>a list of #GdaParameterListGroup structures (the groups_list attribute): 
+	   there is one such structure for each _independant_ parameter (parameters which are constrained by the same
+	   data model all appear in the same #GdaParameterListGroup structure)
+	 </para>
+    </listitem>
+</itemizedlist>
+</para>
+<para>
+Some queries require arguments before they can be executed. For such queries, the arguments are passed using 
+#GdaParameter objects (the list of parameters can be obtained using gda_entity_get_parameters()). 
+The #GdaParameterList object removes the hassle
+of managing these #GdaParameter objects. For a query, a #GdaParameterList can be obtained using the 
+gda_entity_get_exec_context() function.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaParameterList ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaParameterList::param-changed ##### -->
+<para>
+
+</para>
+
+@dbdataset: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaParameterList::public-data-changed ##### -->
+<para>
+
+</para>
+
+@gdaparameterlist: the object which received the signal.
+
+<!-- ##### ENUM GdaParameterListParamHint ##### -->
+<para>
+
+</para>
+
+@GDA_PARAMETER_LIST_PARAM_READ_ONLY: 
+@GDA_PARAMETER_LIST_PARAM_HIDE: 
+
+<!-- ##### STRUCT GdaParameterListNode ##### -->
+<para>
+
+</para>
+
+@param: 
+@source_model: 
+@source_column: 
+@hint: 
+
+<!-- ##### STRUCT GdaParameterListGroup ##### -->
+<para>
+
+</para>
+
+@nodes: 
+@nodes_source: 
+
+<!-- ##### STRUCT GdaParameterListSource ##### -->
+<para>
+
+</para>
+
+@data_model: 
+@nodes: 
+@shown_n_cols: 
+@shown_cols_index: 
+@ref_n_cols: 
+@ref_cols_index: 
+
+<!-- ##### FUNCTION gda_parameter_list_new ##### -->
+<para>
+
+</para>
+
+@params: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dict: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_new_from_spec ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_spec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_get_length ##### -->
+<para>
+
+</para>
+
+@plist: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_get_spec ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_add_param ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@param: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_is_coherent ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@error: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_is_valid ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_find_param ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@param_name: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_find_param_for_user ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@user: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dataset: 
+@for_field: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_find_node_for_param ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@param: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_find_source_for_param ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@param: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_find_source ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_set_param_default_value ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@param: 
+@value: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_set_param_default_alias ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@param: 
+@alias: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_get_param_default_value ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@param: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@dataset: 
+
+

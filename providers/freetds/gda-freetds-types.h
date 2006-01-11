@@ -25,19 +25,19 @@
 #endif
 
 #include <glib/gmacros.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
 #include <tds.h>
 #include "gda-freetds.h"
 #include "gda-freetds-provider.h"
 #include "gda-freetds-recordset.h"
+#include "gda-freetds-defs.h"
 
 G_BEGIN_DECLS
 
-void gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
+void gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
                                GdaFreeTDSConnectionData *tds_cnc);
-const GdaValueType gda_freetds_get_value_type (TDSCOLINFO *col);
-
+const GdaValueType gda_freetds_get_value_type (_TDSCOLINFO *col);
 
 G_END_DECLS
 

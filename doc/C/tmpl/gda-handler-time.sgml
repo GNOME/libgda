@@ -1,0 +1,64 @@
+<!-- ##### SECTION Title ##### -->
+GdaHandlerTime
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaHandlerTime ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerTime ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerTimeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaHandlerTimePriv ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_handler_time_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_handler_time_new_no_locale ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

@@ -23,7 +23,7 @@
 #if defined(HAVE_CONFIG_H)
 #endif
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,7 +32,7 @@
 
 GdaFreeTDSMessage
 *gda_freetds_message_new (GdaConnection *cnc,
-                          TDSMSGINFO *info,
+                          _TDSMSGINFO *info,
                           const gboolean is_err_msg)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
@@ -46,7 +46,7 @@ GdaFreeTDSMessage
 	g_return_val_if_fail (message != NULL, NULL);
 
 	message->is_err_msg = is_err_msg;
-	memcpy ((void *) &message->msg, (void *) info, sizeof (TDSMSGINFO));
+	memcpy ((void *) &message->msg, (void *) info, sizeof (_TDSMSGINFO));
 	if (info->server != NULL)
 		message->msg.server = g_strdup (info->server);
 	if (info->message != NULL)
@@ -61,7 +61,7 @@ GdaFreeTDSMessage
 
 GdaFreeTDSMessage *
 gda_freetds_message_add (GdaConnection *cnc,
-                         TDSMSGINFO *info,
+                         _TDSMSGINFO *info,
                          const gboolean is_err_msg)
 {
 	GdaFreeTDSMessage *msg = NULL;

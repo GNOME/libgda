@@ -22,57 +22,8 @@ Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 
 </para>
 
-
-<!-- ##### SIGNAL GdaRow::value-changed ##### -->
-<para>
-
-</para>
-
-@gdarow: the object which received the signal.
-@arg1: 
-@arg2: 
-@arg3: 
-
-<!-- ##### SIGNAL GdaRow::value-to-change ##### -->
-<para>
-
-</para>
-
-@gdarow: the object which received the signal.
-@arg1: 
-@arg2: 
-@arg3: 
-@Returns: 
-
-<!-- ##### ARG GdaRow:model ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaRow:nb-values ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaRow:values ##### -->
-<para>
-
-</para>
-
-<!-- ##### MACRO GDA_TYPE_ROW ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION gda_row_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
+@object: 
+@priv: 
 
 <!-- ##### FUNCTION gda_row_new ##### -->
 <para>
@@ -81,16 +32,6 @@ Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 
 @model: 
 @count: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_new_from_list ##### -->
-<para>
-
-</para>
-
-@model: 
-@values: 
 @Returns: 
 
 
@@ -103,24 +44,13 @@ Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_row_get_value ##### -->
+<!-- ##### FUNCTION gda_row_new_from_list ##### -->
 <para>
 
 </para>
 
-@row: 
-@num: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_set_value ##### -->
-<para>
-
-</para>
-
-@row: 
-@num: 
-@value: 
+@model: 
+@values: 
 @Returns: 
 
 
@@ -176,6 +106,27 @@ Each #GdaDataModel uses #GdaRow to let the user access each row it contains.
 
 @row: 
 @id: 
+
+
+<!-- ##### FUNCTION gda_row_get_value ##### -->
+<para>
+
+</para>
+
+@row: 
+@num: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_row_set_value ##### -->
+<para>
+
+</para>
+
+@row: 
+@num: 
+@value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_row_get_length ##### -->

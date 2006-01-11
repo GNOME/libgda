@@ -1,0 +1,84 @@
+<!-- ##### SECTION Title ##### -->
+GdaGraphviz
+
+<!-- ##### SECTION Short_Description ##### -->
+Creates .dot files which can then be processed with GraphViz.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+An object os this class will be able to produce .dot files representing a graphical view
+of one or more query internals. The .dot file can be processed with the GraphViz tool (http://www.graphviz.org/).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaGraphviz ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaGraphviz:prop ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaGraphviz ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaGraphviz:prop ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaGraphvizClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaGraphvizPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_graphviz_new ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_graphviz_add_to_graph ##### -->
+<para>
+
+</para>
+
+@graph: 
+@obj: 
+
+
+<!-- ##### FUNCTION gda_graphviz_save_file ##### -->
+<para>
+
+</para>
+
+@graph: 
+@filename: 
+@error: 
+@Returns: 
+
+

@@ -48,12 +48,12 @@ show_schema (GdaConnection *cnc,
 	GdaValue *value;
 	gint n_row;
 
-	prm_list = gda_parameter_list_new ();
+	prm_list = gda_parameter_list_new (NULL);
 
 	prm = gda_parameter_new_boolean ("systables", show_systables);
-	gda_parameter_list_add_parameter (prm_list, prm);
+	gda_parameter_list_add_param (prm_list, prm);
 
-	dm_schema = gda_connection_get_schema (cnc, cnc_schema, prm_list);
+	dm_schema = gda_connection_get_schema (cnc, cnc_schema, prm_list, NULL);
 	if (dm_schema) {
 		for (n_row = 0; n_row < gda_data_model_get_n_rows (dm_schema); n_row++) {
 			row = (GdaRow *) gda_data_model_get_row (dm_schema, n_row);
@@ -68,7 +68,7 @@ show_schema (GdaConnection *cnc,
 	}
 
 	g_object_unref (dm_schema);	
-	gda_parameter_list_free (prm_list);
+	g_object_unref (prm_list);
 }
 
 

@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	   Rodrigo Moya <rodrigo@gnome-db.org>
@@ -23,10 +23,11 @@
  */
 
 #include <string.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-recordset.h"
 #include "gda-sqlite-provider.h"
+#include <libgda/gda-util.h>
 
 struct _GdaSqliteRecordsetPrivate {
 	SQLITEresult  *sres;
@@ -40,7 +41,7 @@ static void gda_sqlite_recordset_init       (GdaSqliteRecordset *recset,
 					     GdaSqliteRecordsetClass *klass);
 static void gda_sqlite_recordset_finalize   (GObject *object);
 
-static gint gda_sqlite_recordset_get_n_rows (GdaDataModelBase *model);
+static gint gda_sqlite_recordset_get_n_rows (GdaDataModelRow *model);
 
 static GObjectClass *parent_class = NULL;
 
@@ -64,7 +65,7 @@ static void
 gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -95,7 +96,7 @@ gda_sqlite_recordset_finalize (GObject *object)
  * Overrides
  */
 static gint
-gda_sqlite_recordset_get_n_rows (GdaDataModelBase *model)
+gda_sqlite_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
 
@@ -183,14 +184,11 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 		rc = sqlite3_step (sres->stmt);
 		switch (rc) {
 		case  SQLITE_ROW: {
-			/* make a new GdaRow GdaValue */
-			GdaRow *row;
+			GList *row_values = NULL; /* list of values for a row */
 			gint col;
-			gchar *id;
 
-			row = gda_row_new (GDA_DATA_MODEL (model), sres->ncols);
 			for (col = 0; col < sres->ncols; col++) {
-				GdaValue *value = gda_row_get_value (row, col);
+				GdaValue *value = NULL;
 				int size;
 				const gchar *ctype;
 				int stype;
@@ -240,48 +238,52 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 							g_error ("GDA data types differ in the same column : %d / %d\n", 
 								 sres->types [col], gtype);
 					}
-					else
+					else {
+						GdaColumn *column;
+
 						sres->types [col] = gtype;
+						column = gda_data_model_describe_column (GDA_DATA_MODEL (model), col);
+						gda_column_set_gda_type (column, gtype);
+					}
 				}
 				
 				/* compute GdaValue */
-				switch (sres->sqlite_types [col]) {
-				case SQLITE_INTEGER:
-					gda_value_set_integer (value, 
-							       sqlite3_column_int (sres->stmt, col));
+				switch (sres->types [col]) {
+				case GDA_VALUE_TYPE_INTEGER:
+					value = gda_value_new_integer (sqlite3_column_int (sres->stmt, col));
 					break;
-				case SQLITE_FLOAT:
-					gda_value_set_double (value, 
-							      sqlite3_column_double (sres->stmt, col));
+				case GDA_VALUE_TYPE_DOUBLE:
+					value = gda_value_new_double (sqlite3_column_double (sres->stmt, col));
 					break;
-				case SQLITE_TEXT:
-					gda_value_set_string (value, 
-							      sqlite3_column_text (sres->stmt, col));
+				case GDA_VALUE_TYPE_STRING:
+					value = gda_value_new_string (sqlite3_column_text (sres->stmt, col));
 					break;
-				case SQLITE_BLOB:
-					gda_value_set_null (value);
+				case GDA_VALUE_TYPE_BLOB:
+					value = gda_value_new_null ();
 					g_error ("SQLite BLOBS not yet implemented");
 					break;
-				case SQLITE_NULL:
-					gda_value_set_null (value);
+				case GDA_VALUE_TYPE_NULL:
+					value = gda_value_new_null ();
 					break;
 				default:
-					g_error ("Unknown SQLite internal data type %d", sres->sqlite_types [col]);
+					g_error ("Unhandled GDA type %s in SQLite recordset", 
+						 gda_type_to_string (sres->types [col]));
 					break;
 				}
 
 				size = sqlite3_column_bytes (sres->stmt, col);
 				if (sres->cols_size [col] < size)
 					sres->cols_size [col] = size;
+
+				row_values = g_list_prepend (row_values, value);
 			}
-			
-			/* by now, the rowid is just the row number */
-			id = g_strdup_printf ("%d", i);
-			gda_row_set_id (row, id);
-			g_free (id);
+			row_values = g_list_reverse (row_values);
 
 			/* insert row */
-			gda_data_model_append_row (GDA_DATA_MODEL (model), row);
+			gda_data_model_append_values (GDA_DATA_MODEL (model), row_values, NULL);
+			g_list_foreach (row_values, (GFunc) gda_value_free, NULL);
+			g_list_free (row_values);
+			
 			types_done = TRUE;
 			i++;
 
@@ -321,7 +323,6 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 		column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 		gda_column_set_name (column, sqlite3_column_name (sres->stmt, i));
 		gda_column_set_scale (column, 0);
-		gda_column_set_gdatype (column, sres->types [i]);
 		gda_column_set_defined_size (column, sres->cols_size [i]);
 		gda_column_set_primary_key (column, FALSE);
 		gda_column_set_unique_key (column, FALSE);

@@ -1,8 +1,9 @@
 /* GNOME DB FreeTDS Provider
- * Copyright (C) 2002 The GNOME Foundation
+ * Copyright (C) 2002 - 2005 The GNOME Foundation
  *
  * AUTHORS: 
  *         Holger Thon <holger.thon@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -27,6 +28,7 @@
 
 #include <libgda/gda-server-provider.h>
 #include <tds.h>
+#include "gda-freetds-defs.h"
 
 G_BEGIN_DECLS
 
@@ -62,21 +64,17 @@ struct _GdaFreeTDSProviderClass {
 
 typedef struct _GdaFreeTDSConnectionData GdaFreeTDSConnectionData;
 struct _GdaFreeTDSConnectionData {
-	gint           rc;         /* rc code of last operation */
-	GPtrArray      *msg_arr;   /* array containing msgs from server */
-	GPtrArray      *err_arr;   /* array containing error msgs from server */
-	gchar          *database;  /* database we are connected to */
+	gint            rc;         /* rc code of last operation */
+	GPtrArray       *msg_arr;   /* array containing msgs from server */
+	GPtrArray       *err_arr;   /* array containing error msgs from server */
+	gchar           *database;  /* database we are connected to */
 	
-	TDSLOGIN       *login;     /* tds login struct */
-#if defined(HAVE_FREETDS_VER0_6X) || defined(HAVE_FREETDS_VER0_60)
-	TDSCONTEXT     *ctx;       /* tds context */
+	TDSLOGIN        *login;     /* tds login struct */
+#if defined(HAVE_FREETDS_VER0_63) || defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_60)
+	TDSCONTEXT      *ctx;       /* tds context */
 #endif
-	TDSSOCKET      *tds;       /* connection handle */
-#ifdef HAVE_FREETDS_VER0_6X
-	TDSCONNECTINFO *config;    /* tds connect struct */
-#else
-	TDSCONFIGINFO  *config;     /* tds config struct */
-#endif
+	TDSSOCKET       *tds;       /* connection handle */
+	_TDSCONNECTINFO *config;    /* tds connect struct */
 
 	/* Data just got at connection beginning */
 	gchar          *server_id; /* Server identifier/version string */

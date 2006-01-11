@@ -71,7 +71,7 @@ show_table2 (GdaDataModel * dm)
 
   for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++)
     {
-      row = (GdaRow *) gda_data_model_get_row (dm, row_id);
+	    row = (GdaRow *) gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (dm), row_id);
       for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
 	   column_id++)
 	{
@@ -295,19 +295,21 @@ play_with_parameters ()
   GdaParameter *parameter;
   GdaValue *value;
 
-  list = gda_parameter_list_new ();
+  list = gda_parameter_list_new (NULL);
 
   value = gda_value_new_integer (10);
   parameter = gda_parameter_new_from_value ("p1", value);
-  gda_parameter_list_add_parameter (list, parameter);
+  gda_parameter_list_add_param (list, parameter);
   gda_value_free (value);
+  g_object_unref (parameter);
 
   value = gda_value_new_integer (2);
   parameter = gda_parameter_new_from_value ("p2", value);
-  gda_parameter_list_add_parameter (list, parameter);
+  gda_parameter_list_add_param (list, parameter);
   gda_value_free (value);
+  g_object_unref (parameter);
 
-  gda_parameter_list_free (list);
+  g_object_unref (list);
 }
 
 

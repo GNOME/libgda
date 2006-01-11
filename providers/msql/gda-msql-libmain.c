@@ -1,8 +1,9 @@
 /* GDA mSQL Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  * 	   Danilo Schoeneberg <dj@starfire-programming.net
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,17 +20,13 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include "gda-msql-provider.h"
 
-/*----[ Forwards ]----------------------------------------------------------*/
-
-const gchar       *plugin_get_name(void);
-const gchar       *plugin_get_description(void);
-GList             *plugin_get_connection_params(void);
-GdaServerProvider *plugin_create_provider(void);
-
-/*--------------------------------------------------------------------------*/
+const gchar       *plugin_get_name (void);
+const gchar       *plugin_get_description (void);
+gchar             *plugin_get_dsn_spec (void);
+GdaServerProvider *plugin_create_provider (void);
 
 const gchar *
 plugin_get_name (void)
@@ -37,37 +34,27 @@ plugin_get_name (void)
 	return "mSQL";
 }
 
-/*--------------------------------------------------------------------------*/
-
 const gchar *
 plugin_get_description (void)
 {
 	return _("Provider for Hughes Technologies mSQL databases");
 }
 
-/*--------------------------------------------------------------------------*/
-
-GList *
-plugin_get_connection_params (void)
+gchar *
+plugin_get_dsn_spec (void)
 {
-	GList *list = NULL;
+	gchar *specs, *file;
+	gsize len;
 
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("DATABASE", _("Database Name"),
-								   _("Name of the database to use"),
-								   GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("HOST", _("Host Name"),
-								    _("Name of the host to connect to"),
-								    GDA_VALUE_TYPE_STRING));
-
-	return list;
+	file = g_build_filename (LIBGDA_DATA_DIR, "msql_specs_dsn.xml", NULL);
+	if (g_file_get_contents (file, &specs, &len, NULL)) 
+		return specs;
+	else
+		return NULL;
 }
-
-/*--------------------------------------------------------------------------*/
 
 GdaServerProvider *
 plugin_create_provider (void)
 {
-  return gda_msql_provider_new ();
+	return gda_msql_provider_new ();
 }

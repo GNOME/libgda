@@ -1,11 +1,15 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-freetds.la
 
+configdir   = $(datadir)/libgda
+config_DATA = freetds_specs_dsn.xml
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(FREETDS_CFLAGS)
+	$(FREETDS_CFLAGS) \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_freetds_la_SOURCES = \
 	gda-freetds-provider.c \
@@ -26,4 +30,6 @@ libgda_freetds_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.la \
 	$(LIBGDA_LIBS) \
 	$(FREETDS_LIBS)
+
+EXTRA_DIST = $(config_DATA)
 

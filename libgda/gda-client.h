@@ -55,16 +55,13 @@ typedef enum {
 	GDA_CLIENT_SPECS_DROP_DATABASE
 } GdaClientSpecsType;
 
-typedef struct _GdaClientClass   GdaClientClass;
-typedef struct _GdaClientPrivate GdaClientPrivate;
-
 struct _GdaClient {
-	GObject object;
+	GdaObject         object;
 	GdaClientPrivate *priv;
 };
 
 struct _GdaClientClass {
-	GObjectClass parent_class;
+	GdaObjectClass   parent_class;
 
 	/* signals */
 	void (* event_notification) (GdaClient *client,
@@ -78,7 +75,7 @@ extern GQuark gda_client_error_quark (void);
 #define GDA_CLIENT_ERROR gda_client_error_quark ()
 
 GType          gda_client_get_type                           (void);
-GdaClient     *gda_client_new                                (void);
+GdaClient     *gda_client_new                                (GdaDict *dict);
 
 GdaConnection *gda_client_open_connection                    (GdaClient *client,
 							      const gchar *dsn,
@@ -86,6 +83,7 @@ GdaConnection *gda_client_open_connection                    (GdaClient *client,
 							      const gchar *password,
 							      GdaConnectionOptions options,
 							      GError **error);
+void           gda_client_declare_connection                 (GdaClient *client, GdaConnection *cnc);
 GdaConnection *gda_client_open_connection_from_string        (GdaClient *client,
 							      const gchar *provider_id,
 							      const gchar *cnc_string,
@@ -135,6 +133,8 @@ gboolean       gda_client_drop_database                      (GdaClient *client,
 gboolean       gda_client_begin_transaction                  (GdaClient *client, GdaTransaction *xaction);
 gboolean       gda_client_commit_transaction                 (GdaClient *client, GdaTransaction *xaction);
 gboolean       gda_client_rollback_transaction               (GdaClient *client, GdaTransaction *xaction);
+
+
 
 G_END_DECLS
 

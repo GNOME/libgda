@@ -1,12 +1,16 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-ldap.la
 
+configdir   = $(datadir)/libgda
+config_DATA = ldap_specs_dsn.xml
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	-I. \
 	$(LIBGDA_CFLAGS) \
-	$(LDAP_CFLAGS)
+	$(LDAP_CFLAGS) \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_ldap_la_SOURCES = \
 	gda-ldap-provider.c \
@@ -22,3 +26,4 @@ libgda_ldap_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(LDAP_LIBS)
 
+EXTRA_DIST = $(config_DATA)

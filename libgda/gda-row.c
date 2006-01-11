@@ -60,14 +60,14 @@ static void gda_row_init       (GdaRow *row, GdaRowClass *klass);
 static void gda_row_finalize   (GObject *object);
 static void gda_row_dispose    (GObject *object);
 
-static void gda_row_set_property (GObject              *object,
-				  guint                 param_id,
-				  const GValue         *value,
-				  GParamSpec           *pspec);
-static void gda_row_get_property (GObject              *object,
-				  guint                 param_id,
-				  GValue               *value,
-				  GParamSpec           *pspec);
+static void gda_row_set_property (GObject *object,
+				  guint param_id,
+				  const GValue *value,
+				  GParamSpec *pspec);
+static void gda_row_get_property (GObject *object,
+				  guint param_id,
+				  GValue *value,
+				  GParamSpec *pspec);
 
 static guint gda_row_signals[LAST_SIGNAL] = { 0, 0 };
 static GObjectClass *parent_class = NULL;
@@ -170,10 +170,10 @@ gda_row_finalize (GObject *object)
 }
 
 static void
-gda_row_set_property (GObject              *object,
-		      guint                 param_id,
-		      const GValue         *value,
-		      GParamSpec           *pspec)
+gda_row_set_property (GObject *object,
+		      guint param_id,
+		      const GValue *value,
+		      GParamSpec *pspec)
 {
         GdaRow *row;
 
@@ -202,7 +202,7 @@ gda_row_set_property (GObject              *object,
 				if (value) {
 					GdaValue *dest;
 					dest = gda_row_get_value (row, i);
-					gda_value_reset_with_type (dest, gda_value_get_type (value));
+					gda_value_reset_with_type (dest, gda_value_get_type ((GdaValue *) value));
 					gda_value_set_from_value (dest, value);
 				}
 				else
@@ -224,10 +224,10 @@ gda_row_set_property (GObject              *object,
 }
 
 static void
-gda_row_get_property (GObject              *object,
-		      guint                 param_id,
-		      GValue               *value,
-		      GParamSpec           *pspec)
+gda_row_get_property (GObject *object,
+		      guint param_id,
+		      GValue *value,
+		      GParamSpec *pspec)
 {
         GdaRow *row;
 
@@ -302,7 +302,6 @@ gda_row_new (GdaDataModel *model, gint count)
  * @row: the #GdaRow to copy
  *
  * Copy constructor.
- * Warning: does not copy the GdaDataModel attribute.
  *
  * Returns: a new #GdaRow
  */
@@ -312,24 +311,30 @@ gda_row_copy (GdaRow *row)
 	GdaRow *newrow;
 	gint i;
 
-	g_return_val_if_fail (row && GDA_IS_ROW (row), NULL);
+	g_return_val_if_fail (GDA_IS_ROW (row), NULL);
 	g_return_val_if_fail (row->priv, NULL);
 
-	newrow = gda_row_new (NULL, row->priv->nfields);
+	newrow = g_object_new (GDA_TYPE_ROW, "model", row->priv->model, "nb_values", row->priv->nfields, NULL);
+
 	newrow->priv->number = row->priv->number;
 	if (row->priv->id)
 		newrow->priv->id = g_strdup (row->priv->id);
 	
 	/* copy values */
 	newrow->priv->fields = g_new0 (GdaValue, row->priv->nfields);
-	for (i = 0; i < row->priv->nfields; i++)
-		gda_value_set_from_value (&(newrow->priv->fields[i]), gda_row_get_value (row, i));
+	for (i = 0; i < row->priv->nfields; i++) {
+		GdaValue *origval = gda_row_get_value (row, i);
+		g_value_init (&(newrow->priv->fields[i]), G_VALUE_TYPE (origval));
+		gda_value_set_from_value (&(newrow->priv->fields[i]), origval);
+	}
 
 	/* copy values' attributes */
 	if (row->priv->is_default) {
 		newrow->priv->is_default = g_new0 (gboolean, row->priv->nfields);
 		memcpy (newrow->priv->is_default, row->priv->is_default, sizeof (gboolean) * row->priv->nfields);
 	}
+
+	return newrow;
 }
 
 /**
@@ -369,7 +374,7 @@ gda_row_new_from_list (GdaDataModel *model, const GList *values)
 void
 gda_row_set_model (GdaRow *row, GdaDataModel *model)
 {
-        g_return_if_fail (row && GDA_IS_ROW (row));
+        g_return_if_fail (GDA_IS_ROW (row));
 	g_return_if_fail (row->priv);
 
 	if (row->priv->model) {
@@ -395,7 +400,7 @@ gda_row_set_model (GdaRow *row, GdaDataModel *model)
 GdaDataModel *
 gda_row_get_model (GdaRow *row)
 {
-        g_return_val_if_fail (row && GDA_IS_ROW (row), NULL);
+        g_return_val_if_fail (GDA_IS_ROW (row), NULL);
 	g_return_val_if_fail (row->priv, NULL);
 
         return row->priv->model;
@@ -413,7 +418,7 @@ gda_row_get_model (GdaRow *row)
 gint
 gda_row_get_number (GdaRow *row)
 {
-        g_return_val_if_fail (row && GDA_IS_ROW (row), -1);
+        g_return_val_if_fail (GDA_IS_ROW (row), -1);
 	g_return_val_if_fail (row->priv, -1);
 
         return row->priv->number;
@@ -429,7 +434,7 @@ gda_row_get_number (GdaRow *row)
 void
 gda_row_set_number (GdaRow *row, gint number)
 {
-	g_return_if_fail (row && GDA_IS_ROW (row));
+	g_return_if_fail (GDA_IS_ROW (row));
 	g_return_if_fail (row->priv);
 
 	row->priv->number = number;
@@ -451,7 +456,7 @@ gda_row_set_number (GdaRow *row, gint number)
 const gchar *
 gda_row_get_id (GdaRow *row)
 {
-        g_return_val_if_fail (row && GDA_IS_ROW (row), NULL);
+        g_return_val_if_fail (GDA_IS_ROW (row), NULL);
 	g_return_val_if_fail (row->priv, NULL);
 
         return (const gchar *) row->priv->id;
@@ -468,7 +473,7 @@ gda_row_get_id (GdaRow *row)
 void
 gda_row_set_id (GdaRow *row, const gchar *id)
 {
-	g_return_if_fail (row && GDA_IS_ROW (row));
+	g_return_if_fail (GDA_IS_ROW (row));
 	g_return_if_fail (row->priv); 
 
         if (row->priv->id)
@@ -491,7 +496,7 @@ gda_row_set_id (GdaRow *row, const gchar *id)
 GdaValue *
 gda_row_get_value (GdaRow *row, gint num)
 {
-        g_return_val_if_fail (row && GDA_IS_ROW (row), NULL);
+        g_return_val_if_fail (GDA_IS_ROW (row), NULL);
 	g_return_val_if_fail (row->priv, NULL);
         g_return_val_if_fail (num >= 0 && num < row->priv->nfields, NULL);
 
@@ -515,32 +520,47 @@ gda_row_set_value (GdaRow *row, gint num, const GdaValue *value)
 	GdaValue *current, *newval;
 	gboolean retval;
 
-        g_return_val_if_fail (row && GDA_IS_ROW (row), FALSE);
+        g_return_val_if_fail (GDA_IS_ROW (row), FALSE);
 	g_return_val_if_fail (row->priv, FALSE);
         g_return_val_if_fail (num >= 0 && num < row->priv->nfields, FALSE);
 
 	if (!value) 
 		newval = gda_value_new_null ();
 	else
-		newval = value;
+		newval = (GdaValue *) value;
 
-	current = gda_value_copy (gda_row_get_value (row, num));
+	current = gda_row_get_value (row, num);
 	g_signal_emit (G_OBJECT (row),
 		       gda_row_signals [VALUE_TO_CHANGE],
 		       0, num, current, newval, &retval);
-	if (retval)
-		retval = gda_value_set_from_value (&(row->priv->fields[num]), newval);
 	
+	/* FIXME: it seems the return value is always FALSE */
+	retval = TRUE;
+
 	if (retval) {
-		const GdaValue *realval;
-		realval = gda_row_get_value (row, num);
-		g_signal_emit (G_OBJECT (row),
-			       gda_row_signals [VALUE_CHANGED],
-			       0, num, current, realval);
+		current = gda_value_copy (gda_row_get_value (row, num));
+		if (value) {
+			if (gda_value_is_null (&(row->priv->fields[num])))
+				gda_value_reset_with_type (&(row->priv->fields[num]),
+							   gda_value_get_type (newval));
+			retval = gda_value_set_from_value (&(row->priv->fields[num]), newval);
+		}
+		else
+			gda_value_set_null (&(row->priv->fields[num]));
+		
+		if (retval) {
+			const GdaValue *realval;
+			realval = gda_row_get_value (row, num);
+			g_signal_emit (G_OBJECT (row),
+				       gda_row_signals [VALUE_CHANGED],
+				       0, num, current, realval);
+		}
+		gda_value_free (current);
 	}
-	gda_value_free (current);
-	if (value)
+
+	if (!value)
 		gda_value_free (newval);
+
 
 	return retval;
 }
@@ -554,7 +574,7 @@ gda_row_set_value (GdaRow *row, gint num, const GdaValue *value)
 gint
 gda_row_get_length (GdaRow *row)
 {
-        g_return_val_if_fail (row && GDA_IS_ROW (row), 0);
+        g_return_val_if_fail (GDA_IS_ROW (row), 0);
 	g_return_val_if_fail (row->priv, 0);
 
         return row->priv->nfields;
@@ -572,7 +592,7 @@ gda_row_get_length (GdaRow *row)
 void
 gda_row_set_is_default (GdaRow *row, gint num, gboolean is_default)
 {
-        g_return_if_fail (row && GDA_IS_ROW (row));
+        g_return_if_fail (GDA_IS_ROW (row));
 	g_return_if_fail (row->priv);
         g_return_if_fail (num >= 0 && num < row->priv->nfields);
 
@@ -594,7 +614,7 @@ gda_row_set_is_default (GdaRow *row, gint num, gboolean is_default)
 gboolean
 gda_row_get_is_default (GdaRow *row, gint num)
 {
-        g_return_val_if_fail (row && GDA_IS_ROW (row), FALSE);
+        g_return_val_if_fail (GDA_IS_ROW (row), FALSE);
 	g_return_val_if_fail (row->priv, FALSE);
         g_return_val_if_fail (num >= 0 && num < row->priv->nfields, FALSE);
 

@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <string.h>
 #include "gda-postgres.h"
 #include "gda-postgres-blob.h"

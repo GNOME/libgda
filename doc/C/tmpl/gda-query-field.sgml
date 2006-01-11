@@ -1,0 +1,152 @@
+<!-- ##### SECTION Title ##### -->
+GdaQueryField
+
+<!-- ##### SECTION Short_Description ##### -->
+Parent class for any query's field
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaQueryField ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaQueryField:prop ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_query_field_new_from_xml ##### -->
+<para>
+
+</para>
+
+@query: 
+@node: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_new_copy ##### -->
+<para>
+
+</para>
+
+@orig: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_new_from_sql ##### -->
+<para>
+
+</para>
+
+@query: 
+@sqlfield: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_set_alias ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@alias: 
+
+
+<!-- ##### FUNCTION gda_query_field_get_alias ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_set_visible ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@visible: 
+
+
+<!-- ##### FUNCTION gda_query_field_is_visible ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_set_internal ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@internal: 
+
+
+<!-- ##### FUNCTION gda_query_field_is_internal ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_get_dict_type ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_get_parameters ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_is_equal ##### -->
+<para>
+
+</para>
+
+@qfield1: 
+@qfield2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_is_list ##### -->
+<para>
+
+</para>
+
+@qfield: 
+@Returns: 
+
+

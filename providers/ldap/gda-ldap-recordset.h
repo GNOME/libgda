@@ -27,7 +27,7 @@
 #  define __gda_ldap_recordset_h__
 
 #include <libgda/gda-connection.h>
-#include <libgda/gda-data-model-base.h>
+#include <libgda/gda-data-model-row.h>
 #include <ldap.h>
 
 G_BEGIN_DECLS
@@ -42,14 +42,14 @@ typedef struct _GdaLdapRecordset      GdaLdapRecordset;
 typedef struct _GdaLdapRecordsetClass GdaLdapRecordsetClass;
 
 struct _GdaLdapRecordset {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GPtrArray *rows;
 	GdaConnection *cnc;
 	LDAPMessage *ldap_res;
 };
 
 struct _GdaLdapRecordsetClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 GType             gda_ldap_recordset_get_type (void);

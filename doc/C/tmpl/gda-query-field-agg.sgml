@@ -1,0 +1,74 @@
+<!-- ##### SECTION Title ##### -->
+GdaQueryFieldAgg
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaQueryFieldAgg ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaQueryFieldAgg:aggregate ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryFieldAgg:aggregate-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryFieldAgg:aggregate-name ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryFieldAgg:query ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_query_field_agg_new ##### -->
+<para>
+
+</para>
+
+@query: 
+@agg_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_agg_get_ref_agg ##### -->
+<para>
+
+</para>
+
+@agg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_field_agg_set_arg ##### -->
+<para>
+
+</para>
+
+@agg: 
+@arg: 
+@Returns: 
+
+

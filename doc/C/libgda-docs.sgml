@@ -25,36 +25,41 @@
 <!ENTITY SYBASE          "<application>Sybase</application>">
 <!ENTITY MSACC           "<application>MS Access</application>">
 <!ENTITY INFOR           "<application>Informix</application>">
-<!ENTITY GDASERVERPROVIDER "<xref linkend='GdaServerProvider'>GdaServerProvider</xref>">
-<!ENTITY GDADATAMODEL    "<xref linkend='GdaDataModel'>GdaDataModel</xref>">
-<!ENTITY GDADATAMODELARRAY "<xref linkend='GdaDataModelArray'>GdaDataModelArray</xref>">
-<!ENTITY GDADATAMODELHASH "<xref linkend='GdaDataModelHash'>GdaDataModelHash</xref>">
+<!ENTITY GDASERVERPROVIDER "<link linkend='GdaServerProvider'>GdaServerProvider</link>">
+<!ENTITY GDADATAMODEL    "<link linkend='GdaDataModel'>GdaDataModel</link>">
+<!ENTITY GDADATAMODELARRAY "<link linkend='GdaDataModelArray'>GdaDataModelArray</link>">
+<!ENTITY GDADATAMODELHASH "<link linkend='GdaDataModelHash'>GdaDataModelHash</link>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c">
-<!ENTITY migration.sgml SYSTEM "migration.sgml">
-<!ENTITY libgda-blob SYSTEM "xml/gda-blob.xml">
-<!ENTITY libgda-client SYSTEM "xml/gda-client.xml">
-<!ENTITY libgda-command SYSTEM "xml/gda-command.xml">
+<!ENTITY install SYSTEM "installation.xml">
+<!ENTITY examples SYSTEM "gettingstarted.xml">
+<!ENTITY migration SYSTEM "migration.xml">
+<!ENTITY libgda-GdaBlob SYSTEM "xml/gda-blob.xml">
+<!ENTITY libgda-GdaClient SYSTEM "xml/gda-client.xml">
+<!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
 <!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
-<!ENTITY libgda-connection SYSTEM "xml/gda-connection.xml">
-<!ENTITY libgda-data-model-array SYSTEM "xml/gda-data-model-array.xml">
-<!ENTITY libgda-data-model-hash SYSTEM "xml/gda-data-model-hash.xml">
-<!ENTITY libgda-data-model-list SYSTEM "xml/gda-data-model-list.xml">
-<!ENTITY libgda-data-model-base SYSTEM "xml/gda-data-model-base.xml">
-<!ENTITY libgda-data-model SYSTEM "xml/gda-data-model.xml">
-<!ENTITY libgda-connection-event SYSTEM "xml/gda-connection-event.xml">
-<!ENTITY libgda-column SYSTEM "xml/gda-column.xml">
-<!ENTITY libgda-column-index SYSTEM "xml/gda-column-index.xml">
-<!ENTITY libgda-data-model-index SYSTEM "xml/gda-data-model-index.xml">
+<!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
+<!ENTITY libgda-GdaThreader SYSTEM "xml/gda-threader.xml">
+<!ENTITY libgda-GdaDataModelArray SYSTEM "xml/gda-data-model-array.xml">
+<!ENTITY libgda-GdaDataModelQuery SYSTEM "xml/gda-data-model-query.xml">
+<!ENTITY libgda-GdaDataModelHash SYSTEM "xml/gda-data-model-hash.xml">
+<!ENTITY libgda-GdaDataModelRow SYSTEM "xml/gda-data-model-row.xml">
+<!ENTITY libgda-GdaDataModel SYSTEM "xml/gda-data-model.xml">
+<!ENTITY libgda-GdaDataModelIter SYSTEM "xml/gda-data-model-iter.xml">
+<!ENTITY libgda-GdaDataProxy SYSTEM "xml/gda-data-proxy.xml">
+<!ENTITY libgda-GdaConnection-event SYSTEM "xml/gda-connection-event.xml">
+<!ENTITY libgda-GdaColumn SYSTEM "xml/gda-column.xml">
+<!ENTITY libgda-GdaColumnIndex SYSTEM "xml/gda-column-index.xml">
+<!ENTITY libgda-GdaDataModelIndex SYSTEM "xml/gda-data-model-index.xml">
 <!ENTITY libgda-init SYSTEM "xml/libgda.xml">
 <!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
-<!ENTITY libgda-parameter SYSTEM "xml/gda-parameter.xml">
+<!ENTITY libgda-GdaParameter SYSTEM "xml/gda-parameter.xml">
 <!ENTITY libgda-quark-list SYSTEM "xml/gda-quark-list.xml">
-<!ENTITY libgda-row SYSTEM "xml/gda-row.xml">
-<!ENTITY libgda-select SYSTEM "xml/gda-select.xml">
-<!ENTITY libgda-server-provider SYSTEM "xml/gda-server-provider.xml">
+<!ENTITY libgda-GdaRow SYSTEM "xml/gda-row.xml">
+<!ENTITY libgda-GdaDataModelFilterSQL SYSTEM "xml/gda-data-model-filter-sql.xml">
+<!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
 <!ENTITY libgda-transaction SYSTEM "xml/gda-transaction.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
-<!ENTITY libgda-value SYSTEM "xml/gda-value.xml">
+<!ENTITY libgda-GdaValue SYSTEM "xml/gda-value.xml">
 <!ENTITY libgda-report-types SYSTEM "xml/gda-report-types.xml">
 <!ENTITY libgda-report-document SYSTEM "xml/gda-report-document.xml">
 <!ENTITY libgda-report-item SYSTEM "xml/gda-report-item.xml">
@@ -69,7 +74,51 @@
 <!ENTITY libgda-report-item-sqlquery SYSTEM "xml/gda-report-item-sqlquery.xml">
 <!ENTITY libgda-report-result SYSTEM "xml/gda-report-result.xml">
 <!ENTITY libgda-report-valid SYSTEM "xml/gda-report-valid.xml">
+<!ENTITY libgda-GdaDict SYSTEM "xml/gda-dict.xml">
+<!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
+<!ENTITY libgda-GdaObject SYSTEM "xml/gda-object.xml">
+<!ENTITY libgda-GdaXmlStorage SYSTEM "xml/gda-xml-storage.xml">
+<!ENTITY libgda-GdaDictType SYSTEM "xml/gda-dict-type.xml">
+<!ENTITY libgda-GdaDictFunction SYSTEM "xml/gda-dict-function.xml">
+<!ENTITY libgda-GdaDictAggregate SYSTEM "xml/gda-dict-aggregate.xml">
+<!ENTITY libgda-GdaDataHandler SYSTEM "xml/gda-data-handler.xml">
+<!ENTITY libgda-GdaHandlerString SYSTEM "xml/gda-handler-string.xml">
+<!ENTITY libgda-GdaHandlerBoolean SYSTEM "xml/gda-handler-boolean.xml">
+<!ENTITY libgda-GdaHandlerTime SYSTEM "xml/gda-handler-time.xml">
+<!ENTITY libgda-GdaHandlerNumerical SYSTEM "xml/gda-handler-numerical.xml">
+<!ENTITY libgda-GdaHandlerBin SYSTEM "xml/gda-handler-bin.xml">
+<!ENTITY libgda-GdaHandlerType SYSTEM "xml/gda-handler-type.xml">
+<!ENTITY libgda-GdaDictDatabase SYSTEM "xml/gda-dict-database.xml">
+<!ENTITY libgda-GdaDictTable SYSTEM "xml/gda-dict-table.xml">
+<!ENTITY libgda-GdaDictField SYSTEM "xml/gda-dict-field.xml">
+<!ENTITY libgda-GdaEntity SYSTEM "xml/gda-entity.xml">
+<!ENTITY libgda-GdaEntityField SYSTEM "xml/gda-entity-field.xml">
+<!ENTITY libgda-GdaRenderer SYSTEM "xml/gda-renderer.xml">
+<!ENTITY libgda-GdaReferer SYSTEM "xml/gda-referer.xml">
+<!ENTITY libgda-GdaDictConstraint SYSTEM "xml/gda-dict-constraint.xml">
+<!ENTITY libgda-GdaObjectRef SYSTEM "xml/gda-object-ref.xml">
+<!ENTITY libgda-query-intro SYSTEM "query.xml">
+<!ENTITY libgda-query-fields SYSTEM "query-fields.xml">
+<!ENTITY libgda-GdaQuery SYSTEM "xml/gda-query.xml">
+<!ENTITY libgda-GdaQueryObject SYSTEM "xml/gda-query-object.xml">
+<!ENTITY libgda-GdaQueryTarget SYSTEM "xml/gda-query-target.xml">
+<!ENTITY libgda-GdaQueryField SYSTEM "xml/gda-query-field.xml">
+<!ENTITY libgda-GdaQueryFieldAll SYSTEM "xml/gda-query-field-all.xml">
+<!ENTITY libgda-GdaQueryFieldField SYSTEM "xml/gda-query-field-field.xml">
+<!ENTITY libgda-GdaQueryFieldFunc SYSTEM "xml/gda-query-field-func.xml">
+<!ENTITY libgda-GdaQueryFieldAgg SYSTEM "xml/gda-query-field-agg.xml">
+<!ENTITY libgda-GdaQueryFieldValue SYSTEM "xml/gda-query-field-value.xml">
+<!ENTITY libgda-GdaQueryJoin SYSTEM "xml/gda-query-join.xml">
+<!ENTITY libgda-GdaParameter SYSTEM "xml/gda-parameter.xml">
+<!ENTITY libgda-GdaQueryCondition SYSTEM "xml/gda-query-condition.xml">
+<!ENTITY libgda-GdaParameterList SYSTEM "xml/gda-parameter-list.xml">
+<!ENTITY libgda-GdaGraphviz SYSTEM "xml/gda-graphviz.xml">
+<!ENTITY libgda-GdaGraph SYSTEM "xml/gda-graph.xml">
+<!ENTITY libgda-GdaGraphQuery SYSTEM "xml/gda-graph-query.xml">
+<!ENTITY libgda-GdaGraphItem SYSTEM "xml/gda-graph-item.xml">
+<!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
+<!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
 ]>
 
 <book id="index">
@@ -163,7 +212,7 @@
         Free Documentation License</citetitle></link>, Version 1.1 or any later
         version published by the Free Software Foundation with no Invariant
         Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the
-        license can be found in <xref linkend="fdl">the appendix</xref>.
+        license can be found in <link linkend="fdl">the appendix</link>.
       </para>
       <para>
         Many of the names used by companies to distinguish their products and
@@ -175,1500 +224,86 @@
     </legalnotice>
   </bookinfo>
 
-  <chapter id="introduction">
-    <title>Introduction</title>
-    <para>
-      &ODBC; and &SQL; are established standards. The problem is, that &ODBC;
-      doesn't specify the wire protocol and for some databases no &ODBC; driver
-      exists. You might use <acronym>RPC</acronym>, <acronym>TCP/IP</acronym>,
-      or shared memory and signals to pass the request from the client to the
-      server. So you have to use the database specific &ODBC; library. This 
-      library might not be available for the <acronym>CPU</acronym> or 
-      operating system on which the client is running. 
-    </para>
-    <para>
-      &SQL; itself is also not standardised enough, so that source
-      compatibility can not be assured for all database servers. And for some
-      sort of servers, &SQL; is not even feasible (think about &LDAP;).
-    </para>
-    <para>
-      &GDA; tries to tackle the &ODBC; problem and help you with the &SQL;
-      problem. It's a sort of middleware (or can be blown up to be a middleware
-      layer) to access different data sources. It offers a high level view of
-      data sources and has some places where you can plug in low level access
-      to the database for special tasks.
-    </para>
-    <para>
-      GNOME Data Access (&GDA;) is defined as a set of plug-in interfaces.
-      The level of abstraction provided by &GDA; makes it possible to access
-      any kind of data source, provided that a plug-in implementing 
-      those interfaces and accessing this particular data source is
-      written.
-    </para>
-    <para>
-      It offers a wrapper around the database internals, thus making it easier
-      for programmers to make use of all the power provided by many RDBMS without
-      even knowing about it. It comes along with a library, for both
-      clients and servers, as a C implementation of this architecture. This level of
-      abstraction would make possible to, at a later time, change all the
-      internals without having to modify applications using the libraries.
-    </para>
-    <para>
-      Along with these libraries (and associated header files and language 
-      bindings for development), &LIBGDA; includes several tools and utilities
-      to help you with the task of developing applications based on &LIBGDA;,
-      as well as for automating some database-related tasks.
-    </para>
-    <para>
-      &LIBGDA; is implemented for <systemitem class="osname">UNIX
-      </systemitem>-like operating systems (including <systemitem 
-      class="osname">Linux</systemitem>), and does not depend on other 
-      libraries apart from  <systemitem class="resource">libxml2</systemitem> and 
-      <systemitem class="resource">Glib</systemitem>, which makes it a very
-      lightweight system also ideal for applications to be run on 
-      hardware-limited systems. It was once part of the &GNOMEDB; project, and
-      is still used as the basis for it, but it's been separated from it to
-      remove all GNOME dependencies and thus allow non-GNOME applications to
-      be developed based on it.
-    </para>
-  </chapter>
-  
-  <chapter id="architecture">
-    <title>&LIBGDA; architecture</title>
-    <para>
-      &LIBGDA; is composed of three independent layers. The lower level is
-      covered by the &GDA; providers, which are plug-ins whose task is
-      to map the <acronym>RDBMS</acronym>-specific &API; to the &GDA; model.
-      That is, they are objects implementing the &GDA; interfaces.
-    </para>
-    <para>
-      Then, in a middle layer, are the client libraries: an easy-to-use and
-      full featured library which offers access to all the architecture,
-      also including several utility functions to help you on the development
-      of applications based on &GDA;. This library, although targeted to client
-      applications, also includes a set of helper classes and functions to help
-      in the addition of new providers to the &LIBGDA; architecture.
-    </para>
-    <para>
-      Finally, at the upper level sit all the client applications provided in
-      the suite, as well as any application that may make use of the client
-      libraries.
-    </para>
-  </chapter>
-  
-  <chapter id="installation">
-    <title>Installation</title>
-    <sect1 id="installation-introduction">
+  <part id="part_begin">
+    <title>Getting started</title>
+    <chapter id="introduction">
       <title>Introduction</title>
       <para>
-        On our web site, <ulink url="http://www.redhat.com"
-        type="http">RedHat</ulink> and <ulink
-        url="http://www.debian.org" type="http">Debian</ulink>
-        packages are available, so you shouldn't have any problem
-        installing it. For a standard installation, there is are no
-        further steps, but, you'd better know configuration options,
-        just in case you come across a non-standard installation, or
-        in case of problems during a standard installation.
-      </para>
-    </sect1>
-    <sect1 id="installation-installing">
-      <title>Installing</title>
-      <para>
-        Installation depends on which format you choose to download. If
-        you've got a package such as &RPM; or <acronym>DEB</acronym>, check
-        your package manager documentation for how to install new packages.
+	&ODBC; and &SQL; are established standards. The problem is, that &ODBC;
+	doesn't specify the wire protocol and for some databases no &ODBC; driver
+	exists. You might use <acronym>RPC</acronym>, <acronym>TCP/IP</acronym>,
+	or shared memory and signals to pass the request from the client to the
+	server. So you have to use the database specific &ODBC; library. This 
+	library might not be available for the <acronym>CPU</acronym> or 
+	operating system on which the client is running. 
       </para>
       <para>
-        If you downloaded the source code (in a tarball), you must
-        compile the software. To do so, once you have unpacked
-        the source tree, you must:
-        <programlisting>
-          <prompt>$</prompt> <userinput>./configure</userinput>
-          <prompt>$</prompt> <userinput>make</userinput>
-          <prompt>$</prompt> <userinput>make install</userinput>
-        </programlisting>
+	&SQL; itself is also not standardised enough, so that source
+	compatibility can not be assured for all database servers. And for some
+	sort of servers, &SQL; is not even feasible (think about &LDAP;).
       </para>
       <para>
-        This will generate the makefiles for your specific platform,
-        compile all the source tree, and install the binaries and
-        documentation in your system.
+	&GDA; tries to tackle the &ODBC; problem and help you with the &SQL;
+	problem. It's a sort of middleware (or can be blown up to be a middleware
+	layer) to access different data sources. It offers a high level view of
+	data sources and has some places where you can plug in low level access
+	to the database for special tasks.
       </para>
       <para>
-        If you don't find a file named <filename>configure</filename>, there
-        should be one called <filename>autogen.sh</filename>. In this case,
-        run <filename>autogen.sh</filename>, which will create and run the
-        generated <filename>configure</filename> file.
+	GNOME Data Access (&GDA;) is defined as a set of plug-in interfaces.
+	The level of abstraction provided by &GDA; makes it possible to access
+	any kind of data source, provided that a plug-in implementing 
+	those interfaces and accessing this particular data source is
+	written.
       </para>
       <para>
-        You can specify several arguments to <filename>configure</filename> (or
-        <filename>autogen.sh</filename>). The most significant are (you can
-        check all the available arguments by running
-        <command>configure --help</command>):
-      </para>
-      <itemizedlist mark="bullet">
-        <listitem>
-          <para>
-            <userinput>--prefix=&lt;directory&gt;</userinput>: Prefix where
-             package will be installed
-          </para>
-        </listitem>
-	<listitem>
-          <para>
-            <userinput>--enable-gtk-doc</userinput>: Specify that the library's documentation
-	     must be built (using the gtk-doc program)
-          </para>
-        </listitem>
-	<listitem>
-          <para>
-            <userinput>--enable-debug</userinput>: Specify to explicietly print some debuging
-             information
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <userinput>--with-mysql=&lt;directory&gt;</userinput>: Specify
-            directory where &MYSQL; libraries are installed
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <userinput>--with-postgres=&lt;directory&gt;</userinput>:
-            Specify directory where &PGSQL; libraries are installed
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <userinput>--with-sybase=&lt;directory&gt;</userinput>: Specify
-            directory where &SYBASE; libraries are installed
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <userinput>--with-ldap=&lt;directory&gt;</userinput>: Specify
-             directory where &LDAP; libraries are installed
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <userinput>--with-oracle=&lt;directory&gt;</userinput>: Specify
-            directory where &ORAC; libraries are installed
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <userinput>--with-interbase=&lt;directory&gt;</userinput>: Specify
-            directory where &INTERB; libraries are installed
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            <userinput>--with-mdb=&lt;directory&gt;</userinput>: Specify
-            directory where the MDB libraries (for accessing &MSACC; files)
-            are installed
-          </para>
-        </listitem>
-      </itemizedlist>
-      <para>
-        Libraries needed by providers are searched by default, so, if found, providers are
-	compiled by default. Those libraries are searched in hard-coded directories, so
-	if the installation of these libraries is in an uncommon place, the above arguments
-	should be used to specify the directories where the libraries and header files
-	are installed. Note that the SQLite provider is now always built using the sources
-	of the SQLite library that are bundled within &LIBGDA;'s sources.
+	It offers a wrapper around the database internals, thus making it easier
+	for programmers to make use of all the power provided by many RDBMS without
+	even knowing about it. It comes along with a library, for both
+	clients and servers, as a C implementation of this architecture. This level of
+	abstraction would make possible to, at a later time, change all the
+	internals without having to modify applications using the libraries.
       </para>
       <para>
-        If you find any problem during the configuration, compilation or
-        installation process, do not hesitate in contacting the
-        &GNOMEDB; mailing list (<email>gnome-db-list@gnome.org</email>, first
-        send an email to <email>gnome-db-list-request@gnome.org</email> with 
-        the subject SUBSCRIBE, if you are not already subscribed).
+	Along with these libraries (and associated header files and language 
+	bindings for development), &LIBGDA; includes several tools and utilities
+	to help you with the task of developing applications based on &LIBGDA;,
+	as well as for automating some database-related tasks.
       </para>
-      <sect2 id="installation-debian">
-        <title>Debian installation</title>
-          <para>
-            If you are using <ulink url="http://www.debian.org">Debian</ulink> you
-	    will need to install a few packages in the following way:
-	  </para>
-          <programlisting>
-            <systemitem class="prompt">$</systemitem> <userinput> apt-get install <replaceable>package-names</replaceable></userinput>
-          </programlisting>
-          <para>
-            These are the packages you will need for this:
-          </para>
-          <itemizedlist>
-          <listitem><para>libgda2-1</para></listitem>
-            <listitem><para>libgda2-common</para></listitem>
-            <listitem><para>libgda2-dev</para></listitem>
-            <listitem><para>libgda2-doc</para></listitem>
-            <listitem><para>libgda2-dbg</para></listitem>
-            <listitem><para>libgda2-ruby (Ruby bindings)</para></listitem>
-          </itemizedlist>
-	  <para>
-	    Alternatively, you can install the different providers that allow access to the
-	    different supported data sources. The packages you can choose from are:
-	  </para>
-	  <itemizedlist>
-          <listitem><para>gda2-postgres for PostgreSQL databases</para></listitem>
-            <listitem><para>gda2-mysql for MySQL databases</para></listitem>
-            <listitem><para>gda2-odbc for ODBC data sources</para></listitem>
-            <listitem><para>gda2-freetds for Sybase and MS SQL Server databases</para></listitem>
-            <listitem><para>gda2-sqlite for SQLite databases</para></listitem>
-          </itemizedlist>
-          <para>
-            You can obtain information about any packages with:
-          </para>
-          <programlisting>
-            <systemitem class="prompt">$</systemitem> <userinput> apt-cache show <replaceable>package-names</replaceable></userinput>
-          </programlisting>
-          <para>
-            If you cannot find this packages, you must include in
-            <filename class="directory">/etc/apt/sources.list</filename>
-            a line like this:
-          </para>
-          <programlisting>
-            deb http://gluck.debian.org/~kov/debian woody gnome2
-          </programlisting>
-      </sect2>
-    </sect1>
-    <sect1 id="compiling">
-      <title>Compiling with the library</title>
-        <para>
-          To compile you will need to set the C flags and to link the library, so we recommend
-          to use the <emphasis>pkg-config</emphasis> command.
-        </para>
-        <programlisting>
-          <systemitem class="prompt">$</systemitem> <userinput> gcc -c full_example.c `pkg-config --cflags libgda`</userinput>
-          <systemitem class="prompt">$</systemitem> <userinput> gcc -o full_example `pkg-config --libs libgda` full_example.o</userinput>
-        </programlisting>
-	<para>
-	  Doing this will add to the C compiler command line all needed header files
-	  and library directories as well as all needed libraries for linking your GDA
-	  application. To include header files, you can just use <filename>libgda/libgda.h</filename>,
-	  which will include all GDA header files.
-	</para>
-    </sect1>
-    <sect1 id="installation-configuring">
-      <title>Configuring</title>
       <para>
-        Depending on the use you're going to get out of &LIBGDA;, you may have
-        to dig deep into its internals, but don't be afraid, things have been
-        implemented to be easy to use.
+	&LIBGDA; is implemented for <systemitem class="osname">UNIX
+	</systemitem>-like operating systems (including <systemitem 
+							   class="osname">Linux</systemitem>), and does not depend on other 
+	libraries apart from  <systemitem class="resource">libxml2</systemitem> and 
+	<systemitem class="resource">Glib</systemitem>, which makes it a very
+	lightweight system also ideal for applications to be run on 
+	hardware-limited systems. It was once part of the &GNOMEDB; project, and
+	is still used as the basis for it, but it's been separated from it to
+	remove all GNOME dependencies and thus allow non-GNOME applications to
+	be developed based on it.
       </para>
-      <sect2 id="installation-development">
-        <title>Configuration for development</title>
-        <para>
-          If you want to develop applications using &LIBGDA;, you should 
-          install the libgda-dev[el] package if you do a &RPM; or <link
-	  linkend="installation-debian">Debian-based</link>
-          installation. If you compiled the source code, development files are
-          installed in your system.
-        </para>
-        <para>
-          The only step you need to do to make sure everything is well 
-          installed, is to check that &LIBGDA; libraries and binaries are seen
-          by your system. That is, make sure that the &LIBGDA; 
-          <filename class="directory">bin/</filename> directory is in your
-          <envar>PATH</envar> environment variable, as well as the
-          <filename class="directory">lib/</filename> in your 
-          <envar>LD_LIBRARY_PATH</envar> (or 
-          <filename>/etc/ld.so.conf</filename> file).
-        </para>
-        <para>
-          You have to include a headers file, and it is:
-        </para>
-        <programlisting>
-#include &lt;libgda/libgda.h&gt;
-        </programlisting>
-      </sect2>
-      <sect2 id="installation-client">
-        <title>Configuration for accessing a database</title>
-        <para>
-          If you want to access a data source through a &GDA;
-          provider, you must first of all have access to this provider, and
-          most importantly, this provider should have access to its specific
-          data source. So, first have your database up and running.
-          For this, you'll have to check your specific data source
-          documentation, or see the &LIBGDA; providers' specific documentation.
-        </para>
-        <para>
-          Once you've got your &GDA; provider installed,
-          whether on your machine or on another one on the network, you must
-          configure your local system to have access to it. If you're on a
-          local installation, once you have installed the &GDA; provider (by 
-          compiling it or by installing its &RPM; or Debian package), the 
-          provider is visible in your machine. This is because the provider
-          installs itself in a well known location that makes &LIBGDA;
-	  itself know about the new provider.
-        </para>
-        <para>
-          Then, the next step is to configure the data sources you want
-          available on your system. For doing this, you should, as for now, use
-          &GNOMEDB;, which is a front-end to &LIBGDA; for the 
-          <ulink url="http://www.gnome.org" type="http">GNOME project</ulink>.
-          <footnote>
-	    <para>
-	      It would be a good idea to add a command-line tool for managing
-              the configuration, as now, using <systemitem class="resource">
-              GConf</systemitem>, is not a matter of hacking on a config text
-              file, as it was before with <function>gnome_config</function>.
-              The &API; for doing so is already available in the <filename>
-              libgda-common</filename>library, so it would be really easy.
-              Volunteers?
-	    </para>
-	  </footnote>
-	</para>
-	<para>
-	  Command-line tools will be provided in &LIBGDA; for doing so in a
-          not-too-distant future, so you may want to know what information
-          you need to setup a data source.
-	</para>
-	<para>
-	  One of the problem &GDA; solves is the naming of
-          data sources. Every database system has it's own way of defining
-	  names for it's databases. For example &MYSQL; uses the hostname, 
-          port number, and the name of the database. Other databases, like
-          Solid use the hostname and port number only. There is no support
-          for multiple databases per server. Because the client does not
-          need all these details, the &LIBGDA; configuration defines all the
-	  properties of such a data source, so that the correct data base
-          server can be contacted. This information is accessed by the
-          client library and sent to the provider, which in turn will parse
-          the string to decide which database must be connected to. The
-          data stored for each data source is as follows:
-	  
-	  <programlistingco>
-	    <areaspec>
-	      <area id="provider" coords="2"/>
-	      <area id="dsn" coords="3"/>
-              <area id="description" coords="4"/>
-	      <area id="username" coords="5"/>
-	      <area id="password" coords="6"/>
-            </areaspec>
-	    <programlisting>
-	      [sales]
-	      Provider=MySQL
-              DSN=DATABASE=test;HOST=localhost;PORT=1111
-	      Description=MySQL Test Database in native mode
-	      Username=username
-	      Password=password
-	    </programlisting>
-	    <calloutlist>
-	      <callout arearefs="provider">
-		<para>
-    		  The provider for this database is the gda-mysql
-		  provider. The value of this entry is used as the
-		  object ID for the plug-in activation.
-		</para>
-	      </callout>
-	      <callout arearefs="dsn">
-		<para>
-		  This is the most important entry. The value of
-		  this entry is the string sent to the provider so
-		  that it knows which datasource to access. How this
-		  entry is interpreted by the providers is described 
-		  in the provider section.
-		</para>
-		<para>
-		  There are, though, a set of default properties that can
-		  be used for the connection string for all providers. Those
-		  are:
-		  <itemizedlist>
-		    <listitem>
-		      <para>USERNAME: user name to be used for authentication.</para>
-		    </listitem>
-		    <listitem>
-		      <para>PASSWORD: password to be used for authentication.</para>
-		    </listitem>
-		  </itemizedlist>
-		</para>
-	      </callout>
-	      <callout arearefs="description">
-		<para>
-		  The value of this entry is a short description of
-		  the datasource. It is here for convenience only
-		  and it is not used for any purpose.
-		</para>
-	      </callout>
-	      <callout arearefs="username">
-	        <para>
-		  The user name to be used when connecting to the database.
-		</para>
-	      </callout>
-	      <callout arearefs="password">
-	        <para>
-		  The password to be used when connecting to the database.
-		  This is stored in plain text, so be sure you restrict access
-		  to the configuration files 
-		  to any &quot;dangerous&quot; users.
-		</para>
-	      </callout>
-	    </calloutlist>
-	  </programlistingco>
-	</para>
-	<para>
-	  For each user, &LIBGDA; has two possible configuration files: one local to the user
-	  which is stored in <filename class="directory">~/.libgda/config</filename> and one
-	  which is for all the users on the system which is 
-	  <filename class="directory">&lt;prefix&gt;/etc/libgda/config</filename> where
-	  &lt;prefix&gt; is where the &LIBGDA; library has been installed.
-	</para>
-        <para>
-	  It is not recommended to modify configuration files by hand (instead use the
-	  <application>gnome-database-properties</application> application from the
-	  &GNOMEDB; library. For our example, a configuarion file is:
-        </para>
-	<programlisting>
-&lt;?xml version="1.0"?&gt;
-&lt;libgda-config&gt;
-  &lt;section path="/apps/libgda/Datasources/sales"&gt;
-    &lt;entry name="DSN" type="string" value="PORT=1111;DATABASE=test;HOST=localhost"/&gt;
-    &lt;entry name="Description" type="string" value="MySQL Test Database in native mode"/&gt;
-    &lt;entry name="Password" type="string" value="password"/&gt;
-    &lt;entry name="Provider" type="string" value="MySQL"/&gt;
-    &lt;entry name="Username" type="string" value="username"/&gt;
-  &lt;/section&gt;
-&lt;/libgda-config&gt;
-        </programlisting>
-        <sect3 id="data-sources-API-functions">
-        <title>Managing data sources with API functions</title>
-          <sect4>
-            <title>Create data sources</title>
-            <para>
-                      To create a data source you must use the function <link
-              linkend="gda-config-save-data-source"><emphasis>gda-config-save-data-source ()
-              </emphasis></link>
-            </para>
-            <para>
-                      Here you see how to create a data source named
-              <emphasis>foo_ds</emphasis>. If you do not need to give an username or password to
-              enter the database, you could put <emphasis>NULL</emphasis>.
-            </para>
-            <programlisting>
-            gda_config_save_data_source ("foo_ds", "PostgreSQL", "DATABASE=foo_db",
-                                         "description of foo_ds", "foo_username", "foo_password");
-            gda_config_save_data_source ("other_foo_ds", "MySQL", "DATABASE=other_foo_db,HOST=db.foo.com",
-                                         "description of other_foo_ds", "foo", NULL);
-            </programlisting>
-            <para>
-              For more details about provider specific information see in the section about
-              <link linkend="installation-provider">providers specific information</link>.
-            </para>
-            <para>
-              There was a little bug<footnote><para>It can be fixed, but it
-              is better not to run the risk of it.</para></footnote>, and it
-	      is that <link
-	      linkend="gda-config-save-data-source">gda_config_save_data_source()</link> 
-              does not create the configuration directory <filename
-	      class="directory">~/.libgda</filename>, so you have to do
-	      it.
-            </para>
-            <para>
-              There is no problem about calling several times to this
-	      function because if you save an existing data source, it
-	      is replaced.
-            </para>
-          </sect4>
-          <sect4>
-            <title>Removing data sources</title>
-            <para>
-                      To remove a data source you must use the function <link
-              linkend="gda-config-remove-data-source"><emphasis>gda-config-remove-data-source ()
-              </emphasis></link>
-            </para>
-            <para>
-                      Here you see how to remove a data source named
-              <emphasis>foo_ds</emphasis>.
-            </para>
-            <programlisting>
-            gda_config_remove_data_source("foo_ds");
-            </programlisting>
-          </sect4>
-          <sect4>
-            <title>Listing available data sources</title>
-            <para>
-                      To list available data sources you must use the function <link
-              linkend="gda-config-get-data-source-list"><emphasis>gda_config_get_data_source_list ()
-              </emphasis></link>
-            </para>
-            <para>
-              Here you see a function which lists the available data sources.
-            </para>
-            <programlistingco>
-              <areaspec units="LINECOLUMN">
-                <area id="gda-config-get-data-source-list-1" coords="8 1"/>
-                <area id="gda-config-get-data-source-list-2" coords="21 1"/>
-              </areaspec>
-              <programlisting>
-              void
-              list_datasources (void)
-              {
-                GList *ds_list;
-                GList *node;
-                GdaDataSourceInfo *info;
-              
-                ds_list = gda_config_get_data_source_list ();
-              
-                g_print ("\n");
-                for (node = g_list_first (ds_list); node != NULL; node = g_list_next (node))
-                  {
-                    info = (GdaDataSourceInfo *) node->data;
-              
-                    g_print
-                      ("NAME: %s PROVIDER: %s CNC: %s DESC: %s USER: %s PASSWORD: %s\n",
-                       info->name, info->provider, info->cnc_string, info->description,
-                       info->username, info->password);
-              
-                  }
-                g_print ("\n");
-              
-                gda_config_free_data_source_list (ds_list);
-              
-              }
-              </programlisting>
-              <calloutlist>
-                <callout arearefs="gda-config-get-data-source-list-1">
-                  <para>Our function.</para>
-                </callout>
-                <callout arearefs="gda-config-get-data-source-list-2">
-                  <para>Note that you must free the list when you finish using it.</para>
-                </callout>
-              </calloutlist>
-            </programlistingco>
-          </sect4>
-          <sect4>
-            <title>Listing available providers</title>
-            <para>
-              To list the available providers you must use the function <link
-              linkend="gda-config-get-provider-list"><emphasis>gda_config_get_provider_list ()
-              </emphasis></link>
-            </para>
-            <para>
-              Here you see a function which lists available providers.
-            </para>
-            <programlistingco>
-              <areaspec units="LINECOLUMN">
-                <area id="gda-config-get-provider-list-1" coords="8 1"/>
-                <area id="gda-config-get-provider-list-2" coords="19 1"/>
-              </areaspec>
-              <programlisting>
-              void
-              list_providers (void)
-              {
-                GList *prov_list;
-                GList *node;
-                GdaProviderInfo *info;
-              
-                prov_list = gda_config_get_provider_list ();
-              
-                for (node = g_list_first (prov_list); node != NULL;
-                     node = g_list_next (node))
-                  {
-                    info = (GdaProviderInfo *) node->data;
-              
-                    g_print ("ID: %s\n", info->id);
-              
-                  }
-              
-                gda_config_free_provider_list (prov_list);
-              
-              }
-              </programlisting>
-              <calloutlist>
-                <callout arearefs="gda-config-get-provider-list-1">
-                  <para>Our function.</para>
-                </callout>
-                <callout arearefs="gda-config-get-provider-list-2">
-                  <para>Note that you must free the list when you finish using it.</para>
-                </callout>
-              </calloutlist>
-            </programlistingco>
-          </sect4>
-        </sect3>
-      </sect2>
-      <sect2 id="installation-provider">
-        <title>Provider's specific information</title>
-        <para>
-          This section provides information specific to each of the available
-          &LIBGDA; providers.
-        </para>
-	<sect3 id="installation-provider-default">
-	  <title>Default provider</title>
-	  <para>
-	    The &GDA; default provider is always installed 
-            with &LIBGDA;, which means that you've got always a default
-	    database system available for you. To connect to a default 
-            provider's database, you only need to specify, in the &DSN; string,
-            a string of the form "URI=/path/to/the/database/file". When
-            you	first connect to the new data source, the &GDA; default 
-            provider will create the database, in the path you specified
-            in the &DSN; string, if it does not exist. This default provider
-	    uses XML as the format for that file.
-	  </para>
-	</sect3>
-	<sect3 id="installation-provider-odbc">
-	  <title>&ODBC; Provider</title>
-	  <para>
-	    The &ODBC; provider is a special case, since &ODBC; is itself a 
-            data access layer, the same as &LIBGDA;, So, in the case of the
-            &GDA; &ODBC; provider, the &DSN; string is completely up to the
-            &ODBC; driver manager. That is, the &GDA; &ODBC; provider does not
-            parse it all, nor does it try to understand what it means; it
-            simply passes it over to the &ODBC; library.
-	  </para>
-	  <para>
-	    So, if you want to use &LIBGDA; with &ODBC;, you should first know
-            how to set up an &ODBC; data source, and then just specify the
-            &DSN; string you would pass to the &ODBC; library in the &DSN;
-            string of the &GDA; data sources.
-	  </para>
-	  <para>
-	    There is a project called
-	    <ulink url="http://www.unixodbc.org">unixODBC</ulink>,
-            which provides some graphical tools to help you in
-	    setting up &ODBC; data sources. You may find it
-	    interesting to give it a try.
-	  </para>
-	</sect3>
-	<sect3 id="installation-provider-postgres">
-	  <title>&PGSQL; Provider</title>
-	  <para>
-	    To use the &GDA; &PGSQL; provider, you'll need
-	    the <application>gda-postgres</application> package.	
-	  </para>
-	  <para>
-	    The &PGSQL; provider accepts the following
-	    arguments in the &GDA; data source's &DSN; string:
-	     <itemizedlist>
-	       <listitem>
-	         <para>
-	           HOST: name of the host where
-		   the database server is running. If it begins with a slash
-		   then the protocol used is Unix-domain instead of TCP/IP and
-		   its value is the name of the directory where the file is
-		   stored. By default: /tmp.
-		 </para>
-               </listitem>
-	       <listitem>
-		 <para>
-		   HOSTADDR: IP of the host where the database server is
-		   running (avoids DNS lookup). If this option has a value,
-		   TCP/IP communications is used.
-
-		   If neither a host name or host address is specified, the
-		   connection will be established using a local Unix domain
-		   socket.
-		 </para>
-	       </listitem>
-	       <listitem>
-	         <para>
-	           PORT: Port number or socket filename extension for
-		   Unix-domain connections.
-		 </para>
-               </listitem>
-	       <listitem>
-		 <para>
-		   DATABASE: name of the database you want to access. This one
-		   is called 'dbname' in the &PGSQL; documentation.
-		 </para>
-	       </listitem>
-	       <listitem>
-	         <para>
-	           USER: user name to connect as.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           PASSWORD: password if the connection requires it.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           OPTIONS: trace/debug options to be sent to the server.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           TTY: a file or tty for optional debug output from the
-		   back-end.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           REQUIRESSL: set to '1' to force SSL connection to the
-		   back-end. Set to '0' to negotiate with server.
-		 </para>
-               </listitem>
-	     </itemizedlist>
-	     The description of the parameters is almost copied from the
-	     &PGSQL; documentation. Refer to it for details on how some
-	     environment variables can also set these parameters.
-	   </para>
-	 </sect3>
-        <sect3 id="installation-provider-mysql">
-          <title>&MYSQL; Provider</title>
-          <para>
-	    To configure a data source to access a &MYSQL; database,
-	    you'll need to install the &GDA; &MYSQL; provider (package
-	    <filename>gda-mysql</filename>).
-          </para>
-	  <para>
-	    It accepts the following arguments in the &DSN;
-	    string:	
-	     <itemizedlist>
-	       <listitem>
-	         <para>
-	           HOST: name of the host where the database server is running.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           PORT: port number for connecting to the database server.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           UNIX_SOCKET: socket file for connecting to the database server
-	           (should not be defined with HOST and/or PORT).
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           DATABASE: name of the database you want to access.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           USER: employ the specified user name for logging in to the
-	           server.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           PASSWORD: employ the specified password when connecting to the 
-	           database server.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           USE_SSL: will use SSL (encrypted protocol) if specified and set to 1.
-		 </para>
-               </listitem>
-	     </itemizedlist>
-	  </para>
-        </sect3>
-	<sect3 id="installation-provider-sybase">
-	  <title>&SYBASE; Provider</title>
-	  <para>
-	    To use the &GDA; &SYBASE; provider, you'll need
-	    the <application>gda-sybase</application> package.	
-	  </para>
-	  <para>
-	    The &SYBASE; provider accepts the following
-	    arguments in the &GDA; data source's &DSN; string:
-	     <itemizedlist>
-	       <listitem>
-	         <para>
-		   HOST: name of the host where the database server is
-		   running.
-		   </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           USERNAME: user name to connect as.
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           APPNAME:
-		 </para>
-               </listitem>
-	       <listitem>
-	         <para>
-	           PASSWORD: password if the connection requires it.
-		 </para>
-               </listitem>
-	       <listitem>
-		 <para>
-		   DATABASE:
-		 </para>
-	       </listitem>
-	     </itemizedlist>
-	   </para>
-	 </sect3>
-      </sect2>
-    </sect1>
-  </chapter>
-  <chapter id="connecting">
-    <title>Beginning</title>
-    <sect1 id="initializing">
-      <title>Initialising</title>
-      <para>
-        First of all you have to initialise the gda library, i.e. to call the
-        <link linkend="gda-init"><emphasis>gda_init ()</emphasis></link> function.
-      </para>
-      <programlisting>
-        gda_init ("TestGDA", "0.1", argc, argv);
-      </programlisting>
-      <para>
-        After initialising you can work as usual or make a function with the whole
-        stuff, calling <link linkend="gda-main-run">gda_main_run()</link>. Note that
-        if you use this way you will need to call <link
-        linkend="gda-main-quit">gda_main_quit()</link> in order to finish the program.
-      </para>
-      <programlisting>
-    void
-    do_stuff ()
-    {
-      GdaClient *client;
-      GdaConnection *connection;
+    </chapter>
     
-      list_providers ();
-      list_datasources ();
-    
-      client = gda_client_new ();
-    
-      g_print ("CONNECTING\n");
-      connection = gda_client_open_connection (client, "calvaris", NULL, NULL,
-					       GDA_CONNECTION_OPTIONS_READ_ONLY);
-
-      g_print ("CONNECTED\n");
-    
-      execute_some_queries (connection);
-
-      g_print ("ERRORS PROVED!\n");
-    
-      process_accounts(connection);
-    
-      gda_client_close_all_connections (client);
-
-      g_object_unref(G_OBJECT(client));
-
-      play_with_parameters();
-
-      gda_main_quit();
-    }
-    
-    
-    int
-    main (int argc, char **argv)
-    {
-    
-      g_print ("STARTING\n");
-      gda_init ("TestGDA", "0.1", argc, argv);
-    
-      save_ds ();
-    
-      gda_main_run ((GdaInitFunc) do_stuff, (gpointer) NULL);
-      /* do_stuff(); */
-      g_print("ENDING\n");
-    
-    }
-      </programlisting>
-    </sect1>
-    <sect1 id="connections">
-      <title>Connecting</title>
+    <chapter id="architecture">
+      <title>&LIBGDA; architecture</title>
       <para>
-                To connect you need to use two functions. We use
-        <link linkend="gda-client-new"><emphasis>gda_client_new ()</emphasis></link>
-        to create a connection pool and use
-        <link linkend="gda-client-open-connection"><emphasis>gda_client_open_connection ()</emphasis></link>
-        to create the specific connections to the different data sources.
-      </para>
-      <programlistingco>
-        <areaspec units="LINECOLUMN">
-          <area id="connecting-1" coords="10 1"/>
-          <area id="connecting-2" coords="13 1"/>
-	  <area id="connecting-3" coords="24 1"/>
-	  <area id="connecting-4" coords="26 1"/>
-	</areaspec>
-        <programlisting>
-          void
-          do_stuff ()
-          {
-            GdaClient *client;
-            GdaConnection *connection;
-          
-            list_providers ();
-            list_datasources ();
-          
-            client = gda_client_new ();
-          
-            g_print ("CONNECTING\n");
-            connection = gda_client_open_connection (client, "calvaris", NULL, NULL,
-                                                     GDA_CONNECTION_OPTIONS_READ_ONLY);
-      
-            g_print ("CONNECTED\n");
-          
-            execute_some_queries (connection);
-      
-            g_print ("ERRORS PROVED!\n");
-          
-            process_accounts(connection);
-          
-            gda_client_close_all_connections (client);
-      
-            g_object_unref(G_OBJECT(client));
-      
-            play_with_parameters();
-      
-            gda_main_quit();
-          }
-        </programlisting>
-        <calloutlist>
-          <callout arearefs="connecting-1">
-            <para>Creates the connection pool.</para>
-          </callout>
-          <callout arearefs="connecting-2">
-            <para>
-              Creates the connection to calvaris data source with the default username and
-              password you have specify when
-              <link linkend="installation-client">creating the data source</link>. However, you
-              can specify them if you want.
-            </para>
-          </callout>
-          <callout arearefs="connecting-3">
-            <para>
-              It's a good practice to close connections when you finish using them. It
-              doesn't mean that you must close them each time you use them. It's better
-              to open the connections when program starts and use them during the whole
-              execution. This function frees the <link linkend="libgda-GdaConnection">GdaConnection</link>
-              objects attached to the <link linkend="libgda-GdaClient">GdaClient</link>.
-            </para>
-          </callout>
-          <callout arearefs="connecting-4">
-            <para>
-              When finishing with the client, I have to free it.
-            </para>
-          </callout>
-        </calloutlist>
-      </programlistingco>
-    </sect1>
-  </chapter>
-  <chapter id="processing-queries">
-    <title>Processing queries</title>
-    <sect1>
-      <title>Executing sentences</title>
-      <sect2 id="building-commands">
-        <title>Building commands</title>
-        <para>
-          Before invoking a query you have to build the structure containing the
-          command and you can do this with <link linkend="gda-command-new">
-          <emphasis>gda_command_new ()</emphasis></link>.
-        </para>
-        <para>
-          The command type we most commonly use is <link
-          linkend="GdaCommandType">GDA_COMMAND_TYPE_SQL</link> because we will only
-          focus on &SQL; queries<footnote><para>There are other command types, as &XML; and so on.</para>
-          </footnote>
-        </para>
-        <programlistingco>
-          <areaspec units="LINECOLUMN">
-            <area id="GdaCommandOptions-1" coords="2 1"/>
-            <area id="GdaCommandOptions-2" coords="3 1"/>
-          </areaspec>
-          <programlisting>
-          typedef enum {
-                  GDA_COMMAND_OPTION_IGNORE_ERRORS  = 1,
-                  GDA_COMMAND_OPTION_STOP_ON_ERRORS = 1 &lt;&lt; 1,
-                  GDA_COMMAND_OPTION_BAD_OPTION     = 1 &lt;&lt; 2
-          } <link linkend="GdaCommandOptions">GdaCommandOptions</link>;
-          </programlisting>
-          <calloutlist>
-            <callout arearefs="GdaCommandOptions-1">
-              <para>
-                        Ignores all errors and executes all sentences returning data models.
-                For failed sentences, it returns an empty data model.
-              </para>
-            </callout>
-            <callout arearefs="GdaCommandOptions-2">
-              <para>
-                Stops when finding and error and doesn't return data models.
-              </para>
-            </callout>
-          </calloutlist>
-        </programlistingco>
-        <para>
-          Here you see an example of creating a command:
-        </para>
-        <programlistingco>
-          <areaspec units="LINECOLUMN">
-            <area id="gda-command-new-1" coords="7 1"/>
-            <area id="gda-command-new-2" coords="8 1"/>
-            <area id="gda-command-new-3" coords="10 1"/>
-          </areaspec>
-          <programlisting>
-          gint
-          execute_sql_non_query (GdaConnection *connection, const gchar * buffer)
-          {
-            GdaCommand *command;
-            gint number;
-          
-            command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-            number  = gda_connection_execute_non_query (connection, command, NULL);
-          
-            gda_command_free (command);
-          
-            return (number);
-          }
-          </programlisting>
-          <calloutlist>
-            <callout arearefs="gda-command-new-1">
-              <para>
-                Our function. You can give it several comma-separated sentences.
-              </para>
-            </callout>
-            <callout arearefs="gda-command-new-2">
-              <para>
-                We will see it <link linkend="making-queries">later</link>.
-              </para>
-            </callout>
-            <callout arearefs="gda-command-new-3">
-              <para>
-                It is a good practice to free the commands.
-              </para>
-            </callout>
-          </calloutlist>
-        </programlistingco>
-      </sect2>
-      <sect2 id="making-queries">
-        <title>Making <emphasis>non queries</emphasis></title>
-        <para>
-          <emphasis>Non queries</emphasis> are queries that does not return data, only the
-          number of rows affected, as a DELETE or an UPDATE. We use <link
-          linkend="gda-connection-execute-non-query"><emphasis>
-          gda_connection_execute_non_query()</emphasis></link>
-        </para>
-        <programlisting>
-        gint
-        execute_sql_non_query (GdaConnection *connection, const gchar * buffer)
-        {
-          GdaCommand *command;
-          gint number;
-        
-          command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-          number  = gda_connection_execute_non_query (connection, command, NULL);
-        
-          gda_command_free (command);
-        
-          return (number);
-        }
-        </programlisting>
-      </sect2>
-      <sect2 id="normal-queries">
-        <title>Making normal queries</title>
-        <para>
-          Normal queries are queries that return data (<link
-          linkend="data-model">data models</link>). You have two ways to do this:
-        </para>
-        <itemizedlist>
-          <listitem><para>
-            <link linkend="gda-connection-execute-single-command">
-              gda_data_model_execute_single_command()</link></para>
-          </listitem>
-          <listitem><para>
-            <link linkend="gda-connection-execute-command">
-              gda_data_model_execute_command()</link></para>
-          </listitem>
-        </itemizedlist>
-        <para>
-          You can use the first way when you want to invoke only a single command.
-          Second way is used to execute several comma-separated sentences. It is recommended
-          to use <link linkend="gda-connection-execute-single-command">
-          gda_connection_execute_single_command ()</link>. Here you see an
-          example:
-        </para>
-        <programlistingco>
-          <areaspec units="LINECOLUMN">
-            <area id="normal-query-1" coords="13 1"/>
-            <area id="normal-query-2" coords="15 1"/>
-          </areaspec>
-          <programlisting>
-          gboolean
-          execute_sql_command (GdaConnection *connection, const gchar * buffer)
-          {
-            GdaCommand *command;
-            GList *list;
-            GList *node;
-            gboolean errors=FALSE;
-          
-            GdaDataModel *dm;
-          
-          
-            command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-            list = gda_connection_execute_command (connection, command, NULL);
-            if (list!=NULL)
-              for (node=g_list_first(list); node != NULL; node=g_list_next(node))
-                {
-                  dm=(GdaDataModel *) node->data;
-                  if (dm == NULL)
-                    {
-                      errors=TRUE;
-                    }
-                  else
-                    {
-                      show_table (dm);
-                      g_object_unref(dm);
-                    }
-                }
-            else
-              {
-                errors=TRUE;
-              }
-            gda_command_free (command);
-          
-            return (errors);
-          }
-          </programlisting>
-          <calloutlist>
-            <callout arearefs="normal-query-1">
-              <para>
-                Executes the query and obtains a list of <link linkend="data-model">data models</link>
-              </para>
-            </callout>
-            <callout arearefs="normal-query-2">
-              <para>
-                Loop for moving through the list of data models. If you use <link
-                linkend="gda-connection-execute-single-command">
-                gda_connection_execute_single_command()</link>, you should not need to use a loop,
-                because this function would return a <link linkend="data-model">data model</link>.
-              </para>
-            </callout>
-          </calloutlist>
-        </programlistingco>
-      </sect2>
-      </sect1>
-      
-    <sect1 id="data-model">
-      <title>Managing <emphasis>data models</emphasis></title>
-      <para>
-        Each time we execute a normal query, we will obtain a <link
-        linkend="GdaDataModel"><emphasis>GdaDataModel
-        </emphasis></link> object, which is the way to see what the query returned. As
-        <link
-        linkend="GdaDataModel">GdaDataModel</link> is an object, we can manage it with <link
-        linkend="GdaDataModel">GdaDataModel</link> class.
+	&LIBGDA; is composed of three independent layers. The lower level is
+	covered by the &GDA; providers, which are plug-ins whose task is
+	to map the <acronym>RDBMS</acronym>-specific &API; to the &GDA; model.
+	That is, they are objects implementing the &GDA; interfaces.
       </para>
       <para>
-        Before continuing, we must say that it is possible to modify a data model, but as we
-        are accessing using &SQL;, it is not recommended to modify it, so modifications on the
-        database must be done using &SQL;.
+	Then, in a middle layer, are the client libraries: an easy-to-use and
+	full featured library which offers access to all the architecture,
+	also including several utility functions to help you on the development
+	of applications based on &GDA;. This library, although targeted to client
+	applications, also includes a set of helper classes and functions to help
+	in the addition of new providers to the &LIBGDA; architecture.
       </para>
       <para>
-        Let's see the functions we need:
-      </para>
-      <itemizedlist>
-        <listitem><para>
-          <link linkend="gda-data-model-get-n-rows">gda_data_model_get_n_rows()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-data-model-get-n-columns">gda_data_model_get_n_columns()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-data-model-describe-column">gda_data_model_describe_column()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-data-model-get-column-title">gda_data_model_get_column_title()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-data-model-get-column-position">gda_data_model_get_column_position()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-data-model-get-row">gda_data_model_get_row()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-data-model-get-value-at">gda_data_model_get_value_at()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-row-get-value">gda_row_get_value()</link></para>
-        </listitem>
-      </itemizedlist>
-      <para>
-        This functions are very easy to use, so let's see some clear 
-        examples:
-      </para>
-      <sect2 id="data-model-table-access">
-        <title>Example using direct cell access</title>
-        <para>
-          This function accesses the data model by directly accessing cells (using
-          <link linkend="gda-data-model-get-value-at">gda_data_model_get_value_at ()
-          </link>)
-        </para>
-        <programlistingco>
-          <areaspec units="LINECOLUMN">
-            <area id="data-model-1-1" coords="8 1"/>
-            <area id="data-model-1-2" coords="13 1"/>
-            <area id="data-model-1-3" coords="18 1"/>
-          </areaspec>
-          <programlisting>
-          void
-          show_table (GdaDataModel * dm)
-          {
-            gint row_id;
-            gint column_id;
-            GdaValue *value;
-          
-            for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
-                 column_id++)
-              g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
-            g_print("\n");
-          
-            for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++) {
-                for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
-                     column_id++) {
-                    char *str;
-
-                    value = gda_data_model_get_value_at (dm, column_id, row_id);
-                    str = gda_value_stringify (value);
-                    g_print ("%s\t", str);
-                  }
-                g_print("\n");
-              }
-          }
-          </programlisting>
-          <calloutlist>
-            <callout arearefs="data-model-1-1">
-              <para>
-                Loop for writing column names.
-              </para>
-            </callout>
-            <callout arearefs="data-model-1-2">
-              <para>
-                Double loop accessing values using
-                <link
-                linkend="gda-data-model-get-value-at">gda_data_model_get_value_at ()
-                </link>
-              </para>
-            </callout>
-            <callout arearefs="data-model-1-3">
-              <para>
-                Data returned is a <link linkend="libgda-gda-value">GdaValue</link> object.
-              </para>
-            </callout>
-          </calloutlist>
-        </programlistingco>
-      </sect2>
-      <sect2 id="data-model-row-access">
-        <title>Example using row access</title>
-        <para>
-          This function accesses the data model by accessing rows (using
-          <link linkend="gda-data-model-get-row">gda_data_model_get_row ()
-          </link> and
-          <link linkend="gda-row-get-value"> gda_row_get_value ()
-          </link>)
-        </para>
-        <programlistingco>
-          <areaspec units="LINECOLUMN">
-            <area id="data-model-2-1" coords="10 1"/>
-            <area id="data-model-2-2" coords="15 1"/>
-            <area id="data-model-2-3" coords="18 1"/>
-          </areaspec>
-          <programlisting>
-            <anchor id="show_table2">
-          void
-          show_table2 (GdaDataModel * dm)
-          {
-            gint row_id;
-            gint column_id;
-            GdaValue *value;
-            GdaRow *row;
-          
-            for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
-                 column_id++)
-              g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
-            g_print("\n");
-          
-            for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++) {
-                row = (GdaRow *) gda_data_model_get_row (dm, row_id);
-                for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
-                     column_id++) {
-                    value = gda_row_get_value (row, column_id);
-                    string=gda_value_stringify (value);
-                    g_print ("%s\t", string);
-                    g_free(string);
-                  }
-                g_print ("\n");
-              }
-          }
-	    </anchor>
-          </programlisting>
-          <calloutlist>
-            <callout arearefs="data-model-2-1">
-              <para>
-                Loop for writing column names.
-              </para>
-            </callout>
-            <callout arearefs="data-model-2-2">
-              <para>
-                Outer loop obtaining rows using
-                <link
-                linkend="gda-data-model-get-row">gda_data_model_get_row ()
-                </link>
-              </para>
-            </callout>
-            <callout arearefs="data-model-2-3">
-              <para>
-                Inner loop obtaining the value using
-                <link
-                linkend="gda-row-get-value">gda_row_get_value ()
-                </link>. Notice that <link
-                linkend="gda-row-get-value">gda_row_get_value ()</link>
-                returns a <emphasis>const <link
-                linkend="libgda-gda-value">GdaValue</link></emphasis>, so we
-                do not have to free it. 
-              </para>
-            </callout>
-          </calloutlist>
-        </programlistingco>
-        
-      </sect2>
-      <sect2 id="data-model-free">
-        <title>Freeing data models</title>
-        <para>
-          When you finish using data models you must free it, but GdaDataModel class
-          does not have a function to do it, so you have to use <emphasis>g_object_unref
-          ()</emphasis>.
-        </para>
-      </sect2>
-    </sect1>
-    <sect1 id="manage-gdavalue">
-      <title>Managing values</title>
-      <para>
-        Values returned by functions of managing data are <link
-        linkend="libgda-gda-value">GdaValue</link> objects. <link
-        linkend="libgda-gda-value">GdaValue</link> class has many functions
-        to access data, so we show the most important ones 
-        of them:
-      </para>
-      <itemizedlist>
-        <listitem><para>
-          <link linkend="gda-value-free">gda_value_free()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-value-is-null">gda_value_is_null()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-value-copy">gda_value_copy()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-value-compare">gda_value_compare()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-value-stringify">gda_value_stringify()</link></para>
-        </listitem>
-      </itemizedlist>
-      <para>
-        There are many functions to know what is the type of a value and to manage values,
-        that can be seen in <link
-        linkend="libgda-gda-value">GdaValue</link> class.
-      </para>
-      <para>
-        We will return to the examples about last section to notice some
-        important details: 
-      </para>
-      <programlistingco>
-        <areaspec units="LINECOLUMN">
-          <area id="gda-value-1" coords="10 1"/>
-          <area id="gda-value-2" coords="15 1"/>
-          <area id="gda-value-3" coords="18 1"/>
-          <area id="gda-value-4" coords="22 1"/>
-        </areaspec>
-        <programlisting>
-        void
-        show_table2 (GdaDataModel * dm)
-        {
-          gint row_id;
-          gint column_id;
-          GdaValue *value;
-          GdaRow *row;
-          gchar *string;
-        
-          for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
-               column_id++)
-            g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
-          g_print("\n");
-        
-          for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++) {
-              row = (GdaRow *) gda_data_model_get_row (dm, row_id);
-              for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
-                   column_id++) {
-                  value = gda_row_get_value (row, column_id);
-                  string=gda_value_stringify (value);
-                  g_print ("%s\t", string);
-                  g_free(string);
-                }
-              g_print ("\n");
-            }
-        }
-        </programlisting>
-        <calloutlist>
-          <callout arearefs="gda-value-1">
-            <para>
-              Loop for writing column names.
-            </para>
-          </callout>
-          <callout arearefs="gda-value-2">
-            <para>
-              Outer loop obtaining rows using
-              <link
-              linkend="gda-data-model-get-row">gda_data_model_get_row ()
-              </link>
-            </para>
-          </callout>
-          <callout arearefs="gda-value-3">
-            <para>
-              Inner loop obtaining the value using
-              <link
-              linkend="gda-row-get-value">gda_row_get_value ()
-              </link>. Notice that <link
-              linkend="gda-row-get-value">gda_row_get_value ()
-              </link> doesn't return a
-              <emphasis>const <link
-              linkend="libgda-gda-value">GdaValue</link></emphasis>, so we
-              have to free it. 
-            </para>
-           </callout>
-          <callout arearefs="gda-value-4">
-            <para>
-              We have the difference here. As you can see above, <link
-              linkend="gda-value-stringify">gda_value_stringify ()</link> does not return a
-              <emphasis>const</emphasis> gchar *, so you have to free it. First way is quite
-              attractive but it is not good.
-            </para>
-          </callout>
-        </calloutlist>
-      </programlistingco>
-    </sect1>
-  </chapter>
-  <chapter>
-    <title>Transactions and batch processes</title>
-    <sect1 id="transactions">
-      <title>Managing transactions</title>
-      <para>
-        The special functions we need to do this are defined in the
-        <link linkend="libgda-GdaTransaction">GdaTransaction</link>,
-        <link linkend="libgda-GdaConnection">GdaConnection</link> and
-        <link linkend="libgda-gda-command">GdaCommand</link>
-        classes, and they are:
-      </para>
-      <itemizedlist>
-        <listitem><para>
-          <link linkend="gda-transaction-new">gda_transaction_new ()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-connection-begin-transaction">gda_connection_begin_transaction ()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-connection-commit-transaction">gda_connection_commit_transaction ()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-connection-rollback-transaction">gda_connection_rollback_transaction ()</link></para>
-        </listitem>
-        <listitem><para>
-          <link linkend="gda-command-set-transaction">gda_command_set_transaction ()</link></para>
-        </listitem>
-      </itemizedlist>
-      <para>
-        Things you have to do to manage transactions are:
+	Finally, at the upper level sit all the client applications provided in
+	the suite, as well as any application that may make use of the client
+	libraries.
       </para>
       <orderedlist NUMERATION="arabic">
         <listitem><para>Create transaction</para></listitem>
@@ -2100,54 +735,243 @@
     <para>
       The following sections describe the API available for &GDA; applications.
     </para>
-    &libgda-init;
-    &libgda-config;
-    &libgda-value;
-    &libgda-client;
-    &libgda-connection;
-    &libgda-command;
-    &libgda-data-model;
-    &libgda-data-model-array;
-    &libgda-data-model-hash;
-    &libgda-data-model-list;
-    &libgda-data-model-base;
-    &libgda-column;
-    &libgda-column-index;
-    &libgda-data-model-index;
-    &libgda-row;
-    &libgda-connection-event;
-    &libgda-log;
-    &libgda-parameter;
-    &libgda-quark-list;
-    &libgda-select;
-    &libgda-transaction;
-    &libgda-util;
-    &libgda-blob;
-  </chapter>
 
-  <chapter id="libgda-providers">
-    <title>GDA Providers</title>
-    <sect1 id="libgda-provider-introduction">
-    <title>Introduction</title>
-    <para>
-       For each different data source supported by &LIBGDA; there must be a
-       GObject that implements the virtual methods defined in &GDASERVERPROVIDER;
-       class.
-    </para>
-    <para>
-       Providers must also create their own object to implement the virtual
-       methods defined in &GDADATAMODEL; or one of
-       its subclasses (currently &GDADATAMODELARRAY; and &GDADATAMODELHASH;) 
-       to support recordsets.
-    </para>
-    <para>
-      Since &LIBGDA; itself is developed in the C language, and that most
-      providers are also implemented in that language, the &LIBGDA; library
-      itself contains a set of helper classes and functions to guide you
-      in the addition of a new provider to the GDA framework.
-    </para>
-    </sect1>
-    <sect1 id="libgda-provider-class">
+    <chapter>
+      <title>Object Hierarchy</title>
+      &libgda-TreeIndex;
+    </chapter>
+
+    <chapter id="init_config">
+      <title>Initialization and configuration</title>
+      &libgda-init;
+      &libgda-config;
+    </chapter>
+
+    <chapter id="connection">
+      <title>Connections &amp; commands</title>
+      &libgda-GdaClient;
+      &libgda-GdaConnection;
+      &libgda-GdaConnection-event;
+      &libgda-GdaCommand;
+    </chapter>
+
+    <chapter id="data_models">
+      <title>Data handling</title>
+      <para>
+	&LIBGDA; being a data oriented library, data handling is a central point of the library. 
+	Data handling is about:
+	<itemizedlist>
+	  <listitem>
+            <para>individual values: they are encapsulated within a <link linkend="GdaValue">GdaValue</link> 
+	      container (which is not much more than a #GValue from GLIB)</para>
+	  </listitem>
+	  <listitem>
+            <para>parameters which are each a specification for a value: a type, a name, a description,
+	      a default value, etc). Parameters are encapsulated within a 
+	      <link linkend="GdaParameter">GdaParameter</link> container.</para>
+	  </listitem>
+	  <listitem>
+            <para>lists of parameters which are encapsulated within a 
+	      <link linkend="GdaParameterList">GdaParameterList</link> container.</para>
+	  </listitem>
+	  <listitem>
+            <para>arrays of values organized in rows and columns. All the data in the same 
+	      column have the same type, and all the data in each row have the same semantic meaning. 
+	      &LIBGDA; uses the <link linkend="GdaDataModel">GdaDataModel</link> 
+	      objects to actually hold the data (note that this is actually an interface which has 
+	      sevaral implementations depending on the real data organization in the data model).</para>
+	    <para>Note that depending on the real implementation, access to the data can be random or
+	    done using an iterator, and that the data model can be read-only or modifiable.</para>
+	  </listitem>
+	  <listitem>
+            <para>The <link linkend="GdaDataModelIter">GdaDataModelIter</link> object is used to 
+	      iterate through the rows of a <link linkend="GdaDataModel">GdaDataModel</link>.</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+      &libgda-GdaValue;
+      &libgda-GdaParameter;
+      &libgda-GdaParameterList;
+      &libgda-GdaDataModel;
+      &libgda-GdaColumn;
+      &libgda-GdaDataModelIter;
+      &libgda-GdaDataModelArray;
+      &libgda-GdaDataModelHash;
+      &libgda-GdaDataModelQuery;
+      &libgda-GdaDataModelFilterSQL;
+      &libgda-GdaDataProxy;
+      &libgda-GdaDataModelIndex;
+      &libgda-GdaColumnIndex;
+    </chapter>
+
+    <chapter>
+      <title>Dictionary and related objects</title>
+      &libgda-GdaDict;
+      &libgda-GdaDictType;
+      &libgda-GdaDictFunction;
+      &libgda-GdaDictAggregate;
+      <para>
+	These objects make the in-memory representation of a database structure (Tables, fields, ...),
+	they are part of the data dictionary (see <link linkend="GdaDict">GdaDict</link>).
+	Related interfaces are:  
+	<link linkend="GdaXmlStorage">GdaXmlStorage</link>, 
+	<link linkend="GdaEntity">GdaEntity</link>,
+	<link linkend="GdaEntityField">GdaEntityField</link>, 
+	<link linkend="GdaRenderer">GdaRenderer</link> and 
+	<link linkend="GdaReferer">GdaReferer</link>.
+      </para>
+      &libgda-GdaDictDatabase;
+      &libgda-GdaDictTable;
+      &libgda-GdaDictField;
+      &libgda-GdaDictConstraint;
+    </chapter>
+
+    <chapter>
+      <title>Data manipulation (DML) queries</title>
+      &libgda-query-intro;
+      &libgda-query-fields;
+      &libgda-GdaQuery;
+      &libgda-GdaQueryTarget;
+      &libgda-GdaQueryJoin;
+      &libgda-GdaQueryFieldAll;
+      &libgda-GdaQueryFieldField;
+      &libgda-GdaQueryFieldFunc;
+      &libgda-GdaQueryFieldAgg;
+      &libgda-GdaQueryFieldValue;
+      &libgda-GdaQueryCondition;
+    </chapter>
+
+    <chapter id="misc">
+      <title>Miscellaneous</title>
+      &libgda-util;
+      &libgda-log;
+      &libgda-quark-list;
+      &libgda-transaction;
+      &libgda-GdaBlob;
+      &libgda-GdaObject;
+      &libgda-GdaObjectRef;
+      &libgda-GdaGraphviz;
+      &libgda-GdaDataModelRow;
+      &libgda-GdaQueryField;
+      &libgda-GdaQueryObject;
+      &libgda-GdaThreader;
+    </chapter>
+
+    <chapter>
+      <title>Graphs</title>
+      &libgda-GdaGraph;
+      &libgda-GdaGraphQuery;
+      &libgda-GdaGraphItem;
+    </chapter>
+    <chapter>
+      <title>List of lesser used interfaces</title>
+      &libgda-GdaEntity;
+      &libgda-GdaEntityField;
+      &libgda-GdaXmlStorage;
+      &libgda-GdaRenderer;
+      &libgda-GdaReferer;
+    </chapter>
+  </part>
+
+  <part id="part_tools">
+    <title>&GDA; Tools</title>
+    <chapter id="libgda-tools-introduction">
+      <title>Introduction</title>
+      <para>
+	&LIBGDA; offers several command line tools to help disgnose and resolve problems. All the
+	provided tools can be run with the "--help" command line argument to give an online help
+	and description.
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-list-config">
+      <title>gda-list-config</title>
+      <para>
+	The gda-list-config tool simply lists all the declared data sources, and all the installed
+	providers, giving some other usefull information as well for each.
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-diagnose">
+      <title>gda-diagnose</title>
+      <para>
+	The gda-diagnose tool is a quite exhaustive and verbose testing program which output 
+	several HTML files
+	in a specified directory (DIAGNOSE_OUTPUT by default). It can either test a single data source
+	or all the data sources if none is specified. Running this tool can be time consuming...
+      </para>
+      <para>
+	The tool tests:
+	<itemizedlist>
+	  <listitem>
+            <para>Data sources (or one if one is provided): </para>
+	  </listitem>
+	  <listitem>
+            <para>All the installed providers when connection is provided</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-author-dict">
+      <title>gda-author-dict-file</title>
+      <para>
+	The gda-author-dict-file tool allows to create a XML dictionary file which can be loaded into a 
+	#GdaDict object, specifying a data source to use. Specifically it does (depending on command line
+	options):
+	<itemizedlist>
+	  <listitem>
+            <para>reports errors if the XML file already exists can't be loaded</para>
+	  </listitem>
+	  <listitem>
+            <para>synchronizes the contents of the dictionary with a data source</para>
+	  </listitem>
+	</itemizedlist>
+
+      </para>
+    </chapter>
+
+    <chapter id="libgda-tools-inspect-dict">
+      <title>gda-inspect-dict-file</title>
+      <para>
+	The gda-inspect-dict-file tool tests an existing XML dictionary file and (depending on command line
+	options):
+	<itemizedlist>
+	  <listitem>
+            <para>reports errors if the file can't be loaded or if saving it back produces a different file</para>
+	  </listitem>
+	  <listitem>
+            <para>lists all the pre-defined queries and creates .dot files for each of them</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </chapter>
+  </part>
+
+  <part id="part_providers">
+    <title>Databases access providers</title>
+    <chapter id="libgda-provider-introduction">
+      <title>Introduction</title>
+      <para>
+	For each different data source supported by &LIBGDA; there must be a
+	GObject that implements the virtual methods defined in &GDASERVERPROVIDER;
+	class.
+      </para>
+      <para>
+	Providers must also create their own object to implement the virtual
+	methods defined in &GDADATAMODEL; or one of
+	its subclasses (currently &GDADATAMODELARRAY; and &GDADATAMODELHASH;) 
+	to support recordsets.
+      </para>
+      <para>
+	Since &LIBGDA; itself is developed in the C language, and that most
+	providers are also implemented in that language, the &LIBGDA; library
+	itself contains a set of helper classes and functions to guide you
+	in the addition of a new provider to the GDA framework.
+      </para>
+    </chapter>
+
+    <chapter id="libgda-provider-class">
       <title>Virtual methods for providers</title>
       <para>
 	The &GDASERVERPROVIDER; is the class you should implement for adding
@@ -2157,99 +981,99 @@
 	in the <filename>gda-server-provider.h</filename> file. They are
 	explained in detail in the following subsections.
       </para>
-      <sect2 id="libgda-provider-open-connection">
+      <sect1 id="libgda-provider-open-connection">
 	<title>open_connection</title>
-	   <para>
-	   Sets up the connection to the database back-end using the parameters
-	   received as arguments and returns a boolean TRUE if the connection
-	   is successfully established, otherwise FALSE.
+	<para>
+	  Sets up the connection to the database back-end using the parameters
+	  received as arguments and returns a boolean TRUE if the connection
+	  is successfully established, otherwise FALSE.
 	</para>
-      </sect2>
-	<sect2 id="libgda-provider-close-connection">
+      </sect1>
+      <sect1 id="libgda-provider-close-connection">
 	<title>close_connection</title>
 	<para>
 	  Frees the resources allocated for the connection and returns TRUE
 	  if everything is ok
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-get-database">
+      </sect1>
+      <sect1 id="libgda-provider-get-database">
 	<title>get_database</title>
 	<para>
 	  Returns the name of the currently open database for a given
 	  connection.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-change-database">
+      </sect1>
+      <sect1 id="libgda-provider-change-database">
 	<title>change_database</title>
 	<para>
 	  Change the database being used in the active connection.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-get-specs">
+      </sect1>
+      <sect1 id="libgda-provider-get-specs">
 	<title>get_specs</title>
 	<para>
 	  Returns the parameters which would be required to perform a specific
 	  action (such as create a database)
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-perform-action-params">
+      </sect1>
+      <sect1 id="libgda-provider-perform-action-params">
 	<title>perform_action_params</title>
 	<para>
 	  Actually perform an action (such as create a database) using parameters
 	  for which a list has been obtained using the get_specs() virtual method.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-create-database-cnc">
+      </sect1>
+      <sect1 id="libgda-provider-create-database-cnc">
 	<title>create_database_cnc</title>
 	<para>
 	  Creates a new database whose name is received in a parameter.	
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-drop-database-cnc">
+      </sect1>
+      <sect1 id="libgda-provider-drop-database-cnc">
 	<title>drop_database_cnc</title>
 	<para>
 	  Drops an existing database whose name is received in a parameter.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-execute-command">
+      </sect1>
+      <sect1 id="libgda-provider-execute-command">
 	<title>execute_command</title>
 	<para>
 	  Executes a command and returns a GList of &GDADATAMODEL; with the
 	  results.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-begin-transaction">
+      </sect1>
+      <sect1 id="libgda-provider-begin-transaction">
 	<title>begin_transaction</title>
 	<para>
 	  Initiates a transaction if the DB back-end supports transactions.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-commit-transaction">
+      </sect1>
+      <sect1 id="libgda-provider-commit-transaction">
 	<title>commit_transaction</title>
 	<para>
 	  Commits a transaction if the DB back-end supports transactions.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-rollback-transaction">
+      </sect1>
+      <sect1 id="libgda-provider-rollback-transaction">
 	<title>rollback_transaction</title>
 	<para>
 	  Rollback a transaction if the DB back-end supports transactions.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-supports">
+      </sect1>
+      <sect1 id="libgda-provider-supports">
 	<title>supports</title>
 	<para>
 	  Tests if a given feature is supported by the provider and the
 	  DB back-end. You can view the list of features in <filename>
-	  gda-connection.h</filename>, enumeration GdaConnectionFeature.
+	    gda-connection.h</filename>, enumeration GdaConnectionFeature.
 	</para>
-      </sect2>
-      <sect2 id="libgda-provider-get-schema">
+      </sect1>
+      <sect1 id="libgda-provider-get-schema">
 	<title>get_schema</title>
 	<para>
 	  Returns a &GDADATAMODEL; with the schema information requested.
 	  You can view the list of features in <filename>
-	  gda-connection.h</filename>, enumeration GdaConnectionSchema.
+	    gda-connection.h</filename>, enumeration GdaConnectionSchema.
 	  This schema information is what describes the objects in the
 	  database, and is the way applications can manage the structure
 	  of several database systems without knowing anything about
@@ -2291,7 +1115,7 @@
 	      </row>
 	      <row>
 		<entry>Schemas (also namespaces), a feature supported by Postgres which allows to
-                       define multiple domains within a single database</entry>
+                  define multiple domains within a single database</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_NAMESPACES</parameter></entry>
 		<entry></entry>
 		<entry>name</entry>
@@ -2331,15 +1155,15 @@
 		<entry><parameter>GDA_CONNECTION_SCHEMA_PROCEDURES</parameter></entry>
 		<entry>"name" (name of procedure, optional)</entry>
 		<entry>name, unique id, owner, comments, return type, number of arguments, arguments types 
-		       (arguments types in the order, comma separated) and SQL definition.
-		       For the arguments where any type is accepted, '-' is returned as type.</entry>
+		  (arguments types in the order, comma separated) and SQL definition.
+		  For the arguments where any type is accepted, '-' is returned as type.</entry>
 	      </row>
 	      <row>
 		<entry>Aggregates</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_AGGREGATES</parameter></entry>
 		<entry>"name" (name of aggregate, optional)</entry>
 		<entry>name, unique id, owner, comments, return type, argument type, SQL definition.
-		       If the argument can be of any type, then '-' is returned as type.</entry>
+		  If the argument can be of any type, then '-' is returned as type.</entry>
 	      </row>
 	      <row>
 		<entry>Types</entry>
@@ -2350,9 +1174,10 @@
 	    </tbody>
 	  </tgroup>
 	</table>
-      </sect2>
-    </sect1>
-    <sect1 id="libgda-provider-recordset">
+      </sect1>
+    </chapter>
+
+    <chapter id="libgda-provider-recordset">
       <title>Virtual methods for recordsets</title>
       <para>
 	You have to extend one of &GDADATAMODEL;, &GDADATAMODELARRAY; or
@@ -2461,36 +1286,45 @@
 	  </para>
 	</listitem>
       </itemizedlist>
-    </sect1>
-    &libgda-server-provider;
-  </chapter>
+    </chapter>
+    &libgda-GdaServerProvider;
+  </part>
 
-  <chapter id="libgda-reports">
+  <part id="part_libgda-reports">
     <title>&GDA; Report Engine</title>
-    <para>
-      libgda includes a built-in reporting engine which allows applications to easily
-      create, manage and run custom reports.
-    </para>
-    &libgda-report-types;
-    &libgda-report-document;
-    &libgda-report-item;
-    &libgda-report-item-detail;
-    &libgda-report-item-label;
-    &libgda-report-item-pagefooter;
-    &libgda-report-item-pageheader;
-    &libgda-report-item-repfield;
-    &libgda-report-item-report;
-    &libgda-report-item-reportfooter;
-    &libgda-report-item-reportheader;
-    &libgda-report-item-sqlquery;
-    &libgda-report-result;
-    &libgda-report-valid;
-  </chapter>
+    <chapter id="libgda-reports-introduction">
+      <title>Introduction</title>
+      <para>
+	FIXME: place here an introduction about reports
+      </para>
+    </chapter>
 
+    <chapter id="libgda-reports">
+      <title>API reference</title>
+      <para>
+	&LIBGDA; includes a built-in reporting engine which allows applications to easily
+	create, manage and run custom reports.
+      </para>
+      &libgda-report-types;
+      &libgda-report-document;
+      &libgda-report-item;
+      &libgda-report-item-detail;
+      &libgda-report-item-label;
+      &libgda-report-item-pagefooter;
+      &libgda-report-item-pageheader;
+      &libgda-report-item-repfield;
+      &libgda-report-item-report;
+      &libgda-report-item-reportfooter;
+      &libgda-report-item-reportheader;
+      &libgda-report-item-sqlquery;
+      &libgda-report-result;
+      &libgda-report-valid;
+    </chapter>
+  </part>
+
+  &fdl-appendix;
   <index>
     <title>Index</title>
   </index>
-  
-  &fdl-appendix;
 </book>
 

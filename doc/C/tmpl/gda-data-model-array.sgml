@@ -23,6 +23,19 @@ An implementation of #GdaDataModel based on an array
 </para>
 
 
+<!-- ##### STRUCT GdaDataModelArrayClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaDataModelArrayPrivate ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION gda_data_model_array_new ##### -->
 <para>
 

@@ -1,8 +1,9 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -45,15 +46,27 @@ gchar *gda_sql_replace_placeholders (const gchar *sql, GdaParameterList *params)
 /*
  * File management utility functions
  */
-
 gchar    *gda_file_load (const gchar *filename);
 gboolean  gda_file_save (const gchar *filename, const gchar *buffer, gint len);
 
 /*
- * Help to implement providers
+ * utilities dealing with storing and retreiving GdaDictField's attributes
+ * which is a list of comma separated keywords
  */
-gint      gda_provider_get_schema_nb_columns (GdaConnectionSchema schema);
-gboolean  gda_provider_init_schema_model     (GdaDataModel *model, GdaConnectionSchema schema);
+gchar *utility_table_field_attrs_stringify (guint attributes);
+guint utility_table_field_attrs_parse     (const gchar *str);
+
+/*
+ * XML Id encoding and decoding
+ */
+gchar *utility_build_encoded_id (const gchar *prefix, const gchar *id);
+gchar *utility_build_decoded_id (const gchar *prefix, const gchar *id);
+
+/*
+ * Check model columns
+ */
+gboolean utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
+
 
 G_END_DECLS
 

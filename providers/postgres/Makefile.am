@@ -4,7 +4,6 @@ provider_LTLIBRARIES = libgda-postgres.la
 configdir   = $(datadir)/libgda
 config_DATA = postgres_specs_create_db.xml postgres_specs_dsn.xml
 
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \

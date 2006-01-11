@@ -26,7 +26,7 @@
 #  define __gda_data_model_hash_h__
 
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-base.h>
+#include <libgda/gda-data-model-row.h>
 
 G_BEGIN_DECLS
 
@@ -41,12 +41,12 @@ typedef struct _GdaDataModelHashClass   GdaDataModelHashClass;
 typedef struct _GdaDataModelHashPrivate GdaDataModelHashPrivate;
 
 struct _GdaDataModelHash {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GdaDataModelHashPrivate *priv;
 };
 
 struct _GdaDataModelHashClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 GType         gda_data_model_hash_get_type      (void);

@@ -1,0 +1,629 @@
+<!-- ##### SECTION Title ##### -->
+GdaDict
+
+<!-- ##### SECTION Short_Description ##### -->
+GDA dictionary
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This object is a "proxy repository" for all the objects: 
+<itemizedlist>
+    <listitem>
+         <para>existing within a database such as data types (see the #GdaDictType object), 
+	   functions (see the #GdaDictFunction object), aggregates (see the #GdaDictAggregate object), 
+	   and the database structure (through the #GdaDictDatabase and associated object)</para>
+    </listitem>
+    <listitem>
+         <para>pre-defined queries as #GdaQuery objects</para>
+    </listitem>
+    <listitem>
+         <para>graphs as #GdaGraph objects</para>
+    </listitem>
+</itemizedlist>
+</para>
+
+<para>
+Each #GdaDict object can be saved to an XML file and loaded back in an efficient way; any #GdaDict 
+object can be assigned a #GdaConnection object which tells it how to use a real connection to a data source.
+</para>
+<para>
+The #GdaDict object is responsible for the life management of all the objects it handles; see the #GdaObject
+object for more information.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDict ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaDict::aggregate-added ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::aggregate-removed ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::aggregate-updated ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::changed ##### -->
+<para>
+
+</para>
+
+@dbdict: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDict::data-type-added ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::data-type-removed ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::data-type-updated ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::data-update-finished ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDict::data-update-started ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDict::function-added ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::function-removed ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::function-updated ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::graph-added ##### -->
+<para>
+
+</para>
+
+@dbdict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::graph-removed ##### -->
+<para>
+
+</para>
+
+@dbdict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::graph-updated ##### -->
+<para>
+
+</para>
+
+@dbdict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::query-added ##### -->
+<para>
+
+</para>
+
+@dbdict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::query-removed ##### -->
+<para>
+
+</para>
+
+@dbdict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::query-updated ##### -->
+<para>
+
+</para>
+
+@dbdict: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDict::update-progress ##### -->
+<para>
+
+</para>
+
+@gdadict: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
+<!-- ##### ARG GdaDict:dsn ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDict:graph-serial ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDict:query-serial ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDict:username ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDict:with-functions ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_dict_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_load_xml_file ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xmlfile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_save_xml_file ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xmlfile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_declare_query ##### -->
+<para>
+
+</para>
+
+@dict: 
+@query: 
+
+
+<!-- ##### FUNCTION gda_dict_assume_query ##### -->
+<para>
+
+</para>
+
+@dict: 
+@query: 
+
+
+<!-- ##### FUNCTION gda_dict_unassume_query ##### -->
+<para>
+
+</para>
+
+@dict: 
+@query: 
+
+
+<!-- ##### FUNCTION gda_dict_get_queries ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_query_by_xml_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_declare_graph ##### -->
+<para>
+
+</para>
+
+@dict: 
+@graph: 
+
+
+<!-- ##### FUNCTION gda_dict_assume_graph ##### -->
+<para>
+
+</para>
+
+@dict: 
+@graph: 
+
+
+<!-- ##### FUNCTION gda_dict_unassume_graph ##### -->
+<para>
+
+</para>
+
+@dict: 
+@graph: 
+
+
+<!-- ##### FUNCTION gda_dict_get_graphs ##### -->
+<para>
+
+</para>
+
+@dict: 
+@type_of_graphs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_graph_by_xml_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_graph_for_object ##### -->
+<para>
+
+</para>
+
+@dict: 
+@obj: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_connection ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_set_connection ##### -->
+<para>
+
+</para>
+
+@dict: 
+@cnc: 
+
+
+<!-- ##### FUNCTION gda_dict_get_database ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_dump ##### -->
+<para>
+
+</para>
+
+@dict: 
+
+
+<!-- ##### FUNCTION gda_dict_update_dbms_data ##### -->
+<para>
+
+</para>
+
+@dict: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_stop_update_dbms_data ##### -->
+<para>
+
+</para>
+
+@dict: 
+
+
+<!-- ##### FUNCTION gda_dict_compute_xml_filename ##### -->
+<para>
+
+</para>
+
+@dict: 
+@datasource: 
+@app_id: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_set_xml_filename ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xmlfile: 
+
+
+<!-- ##### FUNCTION gda_dict_get_xml_filename ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_load ##### -->
+<para>
+
+</para>
+
+@dict: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_save ##### -->
+<para>
+
+</para>
+
+@dict: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_entities_fk_constraints ##### -->
+<para>
+
+</para>
+
+@dict: 
+@entity1: 
+@entity2: 
+@entity1_has_fk: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_data_types ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_data_type_by_name ##### -->
+<para>
+
+</para>
+
+@dict: 
+@typename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_add_data_type ##### -->
+<para>
+
+</para>
+
+@dict: 
+@datatype: 
+
+
+<!-- ##### FUNCTION gda_dict_get_data_type_by_xml_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_declare_custom_data_type ##### -->
+<para>
+
+</para>
+
+@dict: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_functions ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_functions_by_name ##### -->
+<para>
+
+</para>
+
+@dict: 
+@funcname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_function_by_name_arg ##### -->
+<para>
+
+</para>
+
+@dict: 
+@funcname: 
+@argtypes: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_function_by_dbms_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@dbms_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_function_by_xml_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_aggregates ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_aggregates_by_name ##### -->
+<para>
+
+</para>
+
+@dict: 
+@aggname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_aggregate_by_name_arg ##### -->
+<para>
+
+</para>
+
+@dict: 
+@aggname: 
+@argtype: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_aggregate_by_dbms_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@dbms_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_aggregate_by_xml_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_default_handler ##### -->
+<para>
+
+</para>
+
+@dict: 
+@for_type: 
+@Returns: 
+
+

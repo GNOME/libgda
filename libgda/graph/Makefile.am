@@ -1,0 +1,22 @@
+lib_LTLIBRARIES = libgda_graph-3.la
+
+AM_CPPFLAGS = \
+        -I$(top_srcdir) -I$(srcdir)/.. \
+        -I$(top_builddir) \
+        $(LIBGDA_CFLAGS) 
+
+libgda_graph_headers = \
+	gda-graph.h \
+	gda-graph-item.h \
+	gda-graph-query.h
+
+libgda_graphincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda/graph
+libgda_graphinclude_HEADERS=$(libgda_graph_headers)
+
+libgda_graph_3_la_SOURCES = \
+	$(libgda_graph_headers) \
+	gda-graph.c \
+        gda-graph-item.c \
+        gda-graph-query.c
+
+libgda_graph_3_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)

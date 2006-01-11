@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+GdaHandlerBin
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaHandlerBin ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerBin ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerBinClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaHandlerBinPriv ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_handler_bin_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_handler_bin_new_with_prov ##### -->
+<para>
+
+</para>
+
+@prov: 
+@cnc: 
+@Returns: 
+
+

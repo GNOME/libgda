@@ -2,7 +2,7 @@
 Commands
 
 <!-- ##### SECTION Short_Description ##### -->
-Functions that deal with #GdaCommand
+Issuing commands to the provider
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -48,15 +48,6 @@ And OR'ed combination of GDA_COMMAND_OPTIONS_* values.
 @GDA_COMMAND_OPTION_STOP_ON_ERRORS: 
 @GDA_COMMAND_OPTION_BAD_OPTION: 
 
-<!-- ##### MACRO GDA_COMMAND_DEFAULT_OPTION ##### -->
-<para>
-This value is the one set by default. Currently is equal to
-#GDA_COMMAND_OPTION_STOP_ON_ERRORS.
-
-</para>
-
-
-
 <!-- ##### ENUM GdaCommandType ##### -->
 <para>
 
@@ -80,21 +71,6 @@ table names.
 @type: 
 @options: 
 @xaction: 
-
-<!-- ##### MACRO GDA_TYPE_COMMAND ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION gda_command_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
 
 <!-- ##### FUNCTION gda_command_new ##### -->
 <para>

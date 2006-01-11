@@ -1,10 +1,11 @@
 /* GDA ODBC Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
  *	Nick Gorham <nick@lurcher.org>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,13 +22,13 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-config.h>
 #include "gda-odbc-provider.h"
 
-const gchar *plugin_get_name (void);
-const gchar *plugin_get_description (void);
-GList *plugin_get_connection_params (void);
+const gchar       *plugin_get_name (void);
+const gchar       *plugin_get_description (void);
+gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
 
 const gchar *
@@ -42,17 +43,17 @@ plugin_get_description (void)
 	return _("Provider for ODBC data sources");
 }
 
-GList *
-plugin_get_connection_params (void)
+gchar *
+plugin_get_dsn_spec (void)
 {
-	GList *list = NULL;
+	gchar *specs, *file;
+	gsize len;
 
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("STRING", _("Connection String"),
-								    _("ODBC connection string"),
-								    GDA_VALUE_TYPE_STRING));
-
-	return list;
+	file = g_build_filename (LIBGDA_DATA_DIR, "odbc_specs_dsn.xml", NULL);
+	if (g_file_get_contents (file, &specs, &len, NULL)) 
+		return specs;
+	else
+		return NULL;
 }
 
 GdaServerProvider *

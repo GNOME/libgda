@@ -1,0 +1,62 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelFilterSQL
+
+<!-- ##### SECTION Short_Description ##### -->
+Filtering data from one or several #GdaDataModel objects
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #GdaDataModelFilterSQL object implements simple SQL "SELECT" queries accessing 
+data stored in various #GdaDataModel objects which it is instructed to use.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataModelFilterSQL ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_model_filter_sql_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_filter_sql_add_source ##### -->
+<para>
+
+</para>
+
+@sel: 
+@name: 
+@source: 
+
+
+<!-- ##### FUNCTION gda_data_model_filter_sql_set_sql ##### -->
+<para>
+
+</para>
+
+@sel: 
+@sql: 
+
+
+<!-- ##### FUNCTION gda_data_model_filter_sql_run ##### -->
+<para>
+
+</para>
+
+@sel: 
+@Returns: 
+
+

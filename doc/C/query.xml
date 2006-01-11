@@ -1,0 +1,276 @@
+<sect2>
+  <title>General words about queries</title>
+  <para>
+    Every DML (Data Manipulation Language) query is described as a single <link linkend="GdaQuery">GdaQuery</link>
+    object. The object is then specialized to represent all the possible DML queries:
+    <itemizedlist>
+      <listitem>
+        <para>selection queries: of type GDA_QUERY_TYPE_SELECT</para>
+      </listitem>
+      <listitem>
+        <para>modification queries: of type GDA_QUERY_TYPE_INSERT, GDA_QUERY_TYPE_UPDATE and GDA_QUERY_TYPE_DELETE</para>
+      </listitem>
+      <listitem>
+        <para>aggregation queries: of type GDA_QUERY_TYPE_UNION, GDA_QUERY_TYPE_INTERSECT and GDA_QUERY_TYPE_EXCEPT</para>
+      </listitem>
+      <listitem>
+        <para>direct SQL queries: when they can be interpreted, their type is set to one of the above types, and
+          when parsing is not possible (either because the SQL statement is wrong or because the SQL statement
+          uses some specific extensions), the type is set to GDA_QUERY_TYPE_NON_PARSED_SQL</para>
+      </listitem>
+    </itemizedlist>
+  </para>
+  <sect3>
+    <title>General structure of a query</title>
+    <para>
+      The general structure of a query is the following one:
+      <itemizedlist>
+	<listitem>
+          <para>A list of targets (as <link linkend="GdaQueryTarget">GdaQueryTarget</link> objects). Each GdaQueryTarget object
+            represents an entity (= an object which implements the <link linkend="GdaEntity">GdaEntity</link>
+            interface, for example a database table or another query);
+            A single entity can be represented
+            several times through different GdaQueryTarget objects. In the example above there are two GdaQueryTarget objects
+            representing the "person" and "title" entities.</para>
+          <para>If a target that represents a <link linkend="GdaQuery">GdaQuery</link> object is added to a query,
+            then the represented query MUST BE a sub query of the query the target is added to. In the following query:
+            <quote>"SELECT firstname, lastname FROM (SELECT * FROM person WHERE type=1)"</quote>, 
+            there is one GdaQueryTarget object
+            which represents the <quote>"SELECT * FROM person WHERE type=1"</quote>
+            sub query and that sub query must be declared
+            as a sub query of the complete query.</para>
+	</listitem>
+	<listitem>
+          <para>A list of joins (as <link linkend="GdaQueryJoin">GdaQueryJoin</link> objects) between the targets. This is
+            usefull only for selection queries where a join represents a SQL join between entities to avoid
+            cross products. In the example above there is one GdaQueryJoin object to represent the "INNER JOIN" between
+            the two GdaQueryTarget objects representing the "person" and "title" entities.</para>
+	</listitem>
+	<listitem>
+          <para>A list of fields (as <link linkend="GdaQueryField">GdaQueryField</link> objects). Query fields can be
+            of several different types to represent all the possibilities of data manipulation. In the example
+            query, there are three query fields, all representing an entity's field: "firstname", "lastname" and "title".</para>
+          <para>Query fields can be visible or invisible (in which case they are only there to be used by other query
+            fields, but they do not participate directly in the query).</para>
+          <para>Depending on their type, some query fields have a "value_provider" property which can point to another query field.
+            In this case, when the query is executed, the query field which is pointed at is used to provide a value. This is
+            particularly the case of modification queries: a query such as 
+            <quote>"INSERT INTO persons (firstname, lastname) VALUES ('name1', 'name2')"</quote>,
+            the query fields "firstname" and "lastname"
+            have their "value_provider" property pointing respectively to the GdaQueryFieldValue query fields with the values "name1" and
+            "name2".</para>
+	</listitem>
+	<listitem>
+          <para>A list of sub queries (also as <link linkend="GdaQuery">GdaQuery</link> objects).</para>
+	</listitem>
+	<listitem>
+          <para>A condition on the application of the query (as a <link linkend="GdaQueryCondition">GdaQueryCondition</link>
+            object). A condition object can contain several sub conditions.</para>
+	</listitem>
+	<listitem>
+          <para>Some other attributes describing the grouping and ordering.</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      The requirements in terms of query structuration for each type of query is explained in the following sections.
+      Note that these requirements are only really tested when the query is rendered into an executable statement,
+      where errors may be returned.
+    </para>
+  </sect3>
+
+
+
+  <sect3>
+    <title>Graphical conventions to represent queries</title>
+    <para>
+      The <link linkend="GdaGraphviz">GdaGraphviz</link> object can produce .dot files out of a <link linkend="GdaQuery">GdaQuery</link>
+      object, which can the processed using the GraphViz tool. 
+      This tool has been used to produce the internal represantations of queries in this documentation.
+    </para>
+    <para>
+      As an example, the following query <quote>SELECT t1.id, t1.name, t2.name, t3.country, t3.city FROM customers AS t1  INNER JOIN salesrep AS t2  ON (t1.default_served_by=t2.id) LEFT JOIN locations AS t3  ON (t1.country=t3.country AND t1.city=t3.city) WHERE t1.id=12</quote>
+      has the internal structure as represented in the following figure.
+    </para>
+    <mediaobject>
+      <imageobject>
+	<imagedata fileref="query01.ps" format="EPS"/>
+      </imageobject>
+      <imageobject>
+	<imagedata fileref="query01.png" format="PNG"/>
+      </imageobject>
+      <textobject>
+	<phrase>Sample SELECT query</phrase>
+      </textobject>
+      <caption>
+	<para>
+	  Internal structure of the "SELECT t1.id, t1.name, t2.name, t3.country, t3.city FROM customers AS t1  INNER JOIN salesrep AS t2  ON (t1.default_served_by=t2.id) LEFT JOIN locations AS t3  ON (t1.country=t3.country AND t1.city=t3.city) WHERE t1.id=12" query.
+	</para>
+      </caption>
+    </mediaobject>
+    <para>
+      Here is how to read the diagram:
+      <itemizedlist>
+	<listitem>
+          <para>Each <link linkend="GdaQueryTarget">GdaQueryTarget</link> object is represented by an orange box (here "customers", "salesrep" and "locations").</para>
+	</listitem>
+	<listitem>
+          <para>Each <link linkend="GdaQueryJoin">GdaQueryJoin</link> object is represented by an arc between the GdaQueryTarget objects it links. Here
+            there is one join between "customers" and "salesrep" (INNER join), and one between "customers" and "locations" (LEFT
+            join, note the empty circle on the side of the target where NULL values can be part of the join).</para>
+	</listitem>
+	<listitem>
+          <para>Each <link linkend="GdaQueryField">GdaQueryField</link> object is represented by a blue box devided into two rows: the top one
+            is the name of the field, and the bottom one is devided into 4 boxes which in order from the left display the
+            real type of field ("Field" fo a GdaQueryFieldField, "Value" for a GdaQueryFieldValue, etc), if the field is visible (a "V" appears),
+            if the field is internal (marked with a "I") and if the field is a query parameter (a "P").</para>
+          <para>Also, each blue box representing a GdaQueryFieldField object has an arc to the GdaQueryTarget in which it belongs.
+          </para>
+	</listitem>
+	<listitem>
+          <para>The <link linkend="GdaQueryCondition">GdaQueryCondition</link> object, if present, is represented by a yellow box labeled after the
+            SQL representation of the condition, and with arcs to all the GdaQueryField objects it uses.
+          </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </sect3>
+
+
+
+
+
+  <sect3>
+    <title>Query's parameters</title>
+    <para>
+      Any query can require some parameters to be given values before they can be executed. That is the case for example for
+      a query like <quote>SELECT name FROM person WHERE age = &lt;value&gt;</quote> where "&lt;value&gt;"
+      is a parameter which value must be provided
+      before the query can be executed. A parameter can only be represented as such in a query by a 
+      <link linkend="GdaQueryFieldValue">GdaQueryFieldValue</link> query field, and 
+      providing a value for a parameter to a query is done using a <link linkend="GdaParameter">GdaParameter</link> object.
+    </para>
+    <para>
+      A query QU1 can specify that a given parameter QU1:QF1 have its value restrained by the values of another "SELECT" query (QU2:QF2). 
+      In this case the
+      <link linkend="GdaQueryFieldValue">GdaQueryFieldValue</link> which is a parameter (QU1:QF1) has its "value_prov" property set to point to the QU2:QF1 field 
+      In this case, the QU2 query can be managed by the QU1 query (use the
+      <link linkend="gda-query-add-param-source">gda_query_add_param_source()</link> and similar methods).
+    </para>
+    <para>
+      The list of parameters required to run a query is obtained using the 
+      <link linkend="gda-entity-get-parameters">gda_entity_get_parameters()</link> method. This function returns a
+      raw list of parameters. Usually however, it is better to use a <link linkend="GdaParameterList">GdaParameterList</link>
+      object which stores the parameters, and organises the parameters in a convenient. The function to be used to obtain a
+      GdaParameterList object is <link linkend="gda-entity-get-exec-context">gda_entity_get_exec_context()</link>.
+      them 
+    </para>
+  </sect3>
+  <sect3>
+    <title>Structural requirements for each type of query</title>
+    <sect4>
+      <title>Selection queries</title>
+      <para>
+	A selection query can have all the possible structural elements, with the following restrictions:
+	<itemizedlist>
+	  <listitem>
+            <para>All the sub queries must also be selection queries</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </sect4>
+    <sect4>
+      <title>Modification queries</title>
+      <para>
+	Modification queries have the following structural restrictions:
+	<itemizedlist>
+	  <listitem>
+            <para>There must be one and only one target object which represents the entity to be
+              modified. Also the represented entity mus be modifiable (ie it cannot be another query
+              or a database view for example)</para>
+	  </listitem>
+	  <listitem>
+            <para>There cannot be any join</para>
+	  </listitem>
+	  <listitem>
+            <para>All the visible query fields must be <link linkend="GdaQueryFieldField">GdaQueryFieldField</link> fields</para>
+	  </listitem>
+	  <listitem>
+            <para>If the query is an insertion query, there must be at most one sub query, and in this case the sub query
+              must be a selection query (and the insertion query will be interpreted as "INSERT INTO
+              table SELECT ..."). As a consequence the sub query must render the same number of fields as the
+              query itself.</para>
+            <para>Also, if there is no sub query, then all the fields which are value providers MUST be 
+              <link linkend="GdaQueryFieldValue">GdaQueryFieldValue</link> fields.</para>
+            <para>Insertion queries can't have any associated condition.</para>
+	  </listitem>
+	  <listitem>
+            <para>If the query is a deletion query, then there can't be any visible field at all (some hidden ones
+              can exist to take part in a condition.</para>
+	  </listitem>
+	  <listitem>
+            <para>If the query is an update query, then all the fields which are value providers MUST NOT be
+              <link linkend="GdaQueryFieldAll">GdaQueryFieldAll</link> fields.</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </sect4>
+    <sect4>
+      <title>Aggregation queries</title>
+      <para>
+	Aggregation queries have the following structural restrictions:
+	<itemizedlist>
+	  <listitem>
+            <para>There cannot be any target or join</para>
+	  </listitem>
+	  <listitem>
+            <para>There cannot be any condition</para>
+	  </listitem>
+	  <listitem>
+            <para>All the sub queries must be selection queries and have the same number of selected fields. Also
+              for EXCEPT queries, there can be only two sub queries.</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </sect4>
+  </sect3>
+  <sect3>
+    <title>Direct SQL queries</title>
+    <para>
+      As it is sometimes easier to define a query usong an SQL statement, a #GdaQuery object can be defined from any SQL
+      1992 statement, using the gda_query_set_sql_text() method. The SQL passed as argument must be a single SQL statement
+      (that is not several statements separated by a colon).
+    </para>
+    <para>
+      Some extensions are provided to be able to define variables from within SQL. The way of doing this is to use
+      the following syntax right after a constant value in the SQL statement: [:attribute="value", ...]. For example
+      the following SQL:
+    </para>
+    <programlisting>
+      SELECT 10[:type="int2" :descr="this is a good' description" :isparam="TRUE" :nullok="TRUE"], id 
+      FROM customers
+    </programlisting>
+    <para>
+      creates a query structure similar to "SELECT 10, t1.id FROM customers AS t1",
+      but also specifies that the "10" value is in fact
+      to be interpreted as of type "int2", with a description, that it is a variable for which the NULL value is 
+      acceptable.
+    </para>
+    <para>
+      So, when the query will be executed, the real executed SQL statement will be "SELECT 10, t1.id FROM customers AS t1"
+      if the "10" value has not been replaced by another value. The replacement of that value will be possible
+      through the usage of a #GdaParameter object (obtained through a <link linkend="GdaParameterList">GdaParameterList</link> object).
+    </para>
+    <para>
+      The available extension "tags" are:
+      <itemizedlist>
+	<listitem><para>":name" fixes the name of the value's name</para></listitem>
+	<listitem><para>":descr" fixes the name of the value's description</para></listitem>
+	<listitem><para>":type" fixes the <link linkend="GdaValueType">Gda type</link> or the <link linkend="GdaDictType">GdaDictType</link>
+	    type of the value</para></listitem>
+	<listitem><para>":isparam" tells if value is a variable (a parameter) or not (the default is that it is a parameter)</para></listitem>
+	<listitem><para>":nullok" tells if value can have a NULL value</para></listitem>
+      </itemizedlist>
+    </para>
+  </sect3>
+</sect2>

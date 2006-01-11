@@ -22,13 +22,6 @@ use such values.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### MACRO TIMEZONE_INVALID ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### ENUM GdaValueType ##### -->
 <para>
 
@@ -118,6 +111,14 @@ use such values.
 @fraction: 
 @timezone: 
 
+<!-- ##### STRUCT GdaBinary ##### -->
+<para>
+
+</para>
+
+@data: 
+@binary_length: 
+
 <!-- ##### TYPEDEF GdaValueList ##### -->
 <para>
 
@@ -128,31 +129,6 @@ use such values.
 <para>
 
 </para>
-
-
-<!-- ##### MACRO GDA_TYPE_VALUE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION gda_value_convert_gdatype_to_gtype ##### -->
-<para>
-
-</para>
-
-@type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_convert_gtype_to_gdatype ##### -->
-<para>
-
-</para>
-
-@type: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_new_null ##### -->
@@ -191,13 +167,21 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_new_blob ##### -->
+<!-- ##### FUNCTION gda_binary_copy ##### -->
 <para>
 
 </para>
 
-@val: 
+@boxed: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_binary_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
 
 
 <!-- ##### FUNCTION gda_value_new_boolean ##### -->
@@ -218,6 +202,23 @@ use such values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_date_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_date_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
 <!-- ##### FUNCTION gda_value_new_double ##### -->
 <para>
 
@@ -236,6 +237,23 @@ use such values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_geometricpoint_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_geometricpoint_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
 <!-- ##### FUNCTION gda_value_new_gobject ##### -->
 <para>
 
@@ -246,6 +264,15 @@ use such values.
 
 
 <!-- ##### FUNCTION gda_value_new_integer ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_uinteger ##### -->
 <para>
 
 </para>
@@ -272,6 +299,23 @@ use such values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_money_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_money_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
 <!-- ##### FUNCTION gda_value_new_numeric ##### -->
 <para>
 
@@ -279,6 +323,23 @@ use such values.
 
 @val: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_numeric_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_numeric_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
 
 
 <!-- ##### FUNCTION gda_value_new_single ##### -->
@@ -326,6 +387,23 @@ use such values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_time_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_time_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
 <!-- ##### FUNCTION gda_value_new_timestamp ##### -->
 <para>
 
@@ -333,6 +411,23 @@ use such values.
 
 @val: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_timestamp_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_timestamp_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
 
 
 <!-- ##### FUNCTION gda_value_new_timestamp_from_timet ##### -->
@@ -371,15 +466,6 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_new_uinteger ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_value_new_from_string ##### -->
 <para>
 
@@ -407,16 +493,7 @@ use such values.
 @value: 
 
 
-<!-- ##### FUNCTION gda_value_get_type ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### MACRO gda_value_isa ##### -->
+<!-- ##### FUNCTION gda_value_reset_with_type ##### -->
 <para>
 
 </para>
@@ -655,14 +732,6 @@ use such values.
 @val: 
 
 
-<!-- ##### FUNCTION gda_value_set_null ##### -->
-<para>
-
-</para>
-
-@value: 
-
-
 <!-- ##### FUNCTION gda_value_get_money ##### -->
 <para>
 
@@ -679,6 +748,14 @@ use such values.
 
 @value: 
 @val: 
+
+
+<!-- ##### FUNCTION gda_value_set_null ##### -->
+<para>
+
+</para>
+
+@value: 
 
 
 <!-- ##### FUNCTION gda_value_get_numeric ##### -->
@@ -861,24 +938,6 @@ use such values.
 @val: 
 
 
-<!-- ##### FUNCTION gda_value_get_gdatype ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_gdatype ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
 <!-- ##### FUNCTION gda_value_set_from_string ##### -->
 <para>
 
@@ -900,6 +959,15 @@ use such values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_stringify ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_compare ##### -->
 <para>
 
@@ -910,12 +978,13 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_stringify ##### -->
+<!-- ##### FUNCTION gda_value_compare_ext ##### -->
 <para>
 
 </para>
 
-@value: 
+@value1: 
+@value2: 
 @Returns: 
 
 
@@ -925,6 +994,42 @@ use such values.
 </para>
 
 @value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_get_gdatype ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_gdatype ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_convert_gtype_to_gdatype ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_convert_gdatype_to_gtype ##### -->
+<para>
+
+</para>
+
+@type: 
 @Returns: 
 
 

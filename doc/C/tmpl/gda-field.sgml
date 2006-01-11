@@ -177,7 +177,7 @@ Management of #GdaDataModel fields
 @scale: 
 
 
-<!-- ##### FUNCTION gda_column_get_gdatype ##### -->
+<!-- ##### FUNCTION gda_column_get_gda_type ##### -->
 <para>
 
 </para>
@@ -186,7 +186,7 @@ Management of #GdaDataModel fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_set_gdatype ##### -->
+<!-- ##### FUNCTION gda_column_set_gda_type ##### -->
 <para>
 
 </para>

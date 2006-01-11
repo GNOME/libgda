@@ -21,13 +21,12 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-config.h>
 #include "gda-mysql-provider.h"
 
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
-GList             *plugin_get_connection_params (void);
 gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
 
@@ -41,35 +40,6 @@ const gchar *
 plugin_get_description (void)
 {
 	return _("Provider for MySQL databases");
-}
-
-GList *
-plugin_get_connection_params (void)
-{
-	GList *list = NULL;
-
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("DATABASE", _("Database Name"),
-								    _("Name of the database to connect to"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("HOST", _("Host Name"),
-								    _("Name of the host to connect to"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("PORT", _("Port"),
-								    _("Port number to use for connecting"),
-								    GDA_VALUE_TYPE_INTEGER));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("UNIX_SOCKET", _("UNIX Socket"),
-								    _("Full path of the UNIX socket to use for connecting locally"),
-								    GDA_VALUE_TYPE_STRING));
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("USE_SSL", _("Use Secure Connection"),
-								    _("Whether to use or not SSL for establishing the connection"),
-								    GDA_VALUE_TYPE_BOOLEAN));
-
-	return list;
 }
 
 gchar *

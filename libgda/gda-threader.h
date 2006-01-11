@@ -28,7 +28,7 @@ G_BEGIN_DECLS
 #define GDA_TYPE_THREADER          (gda_threader_get_type())
 #define GDA_THREADER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_threader_get_type(), GdaThreader)
 #define GDA_THREADER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_threader_get_type (), GdaThreaderClass)
-#define IS_GDA_THREADER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_threader_get_type ())
+#define GDA_IS_THREADER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_threader_get_type ())
 
 
 typedef struct _GdaThreader GdaThreader;
@@ -46,7 +46,7 @@ struct _GdaThreader
 /* struct for the object's class */
 struct _GdaThreaderClass
 {
-	GObjectClass            class;
+	GObjectClass            parent_class;
 
 	/* signals */
 	void        (*finished)       (GdaThreader *thread, guint job_id, gpointer arg_data);

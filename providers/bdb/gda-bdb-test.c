@@ -82,7 +82,7 @@ gda_stuff (gpointer filename)
 	/* get schema */
 	schema = gda_connection_get_schema (conn,
 					    GDA_CONNECTION_SCHEMA_TABLES,
-					    NULL);
+					    NULL, NULL);
 	g_assert (schema != NULL);
 	g_assert (gda_data_model_get_n_columns (schema) == 2);
 	g_assert (gda_data_model_get_n_rows (schema) == MAXNUMBERS);

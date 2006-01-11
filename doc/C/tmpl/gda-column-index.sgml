@@ -23,18 +23,31 @@ Management of #GdaDataModel column index attributes
 </para>
 
 
+<!-- ##### ENUM GdaSorting ##### -->
+<para>
+
+</para>
+
+@GDA_SORTING_ASCENDING: 
+@GDA_SORTING_DESCENDING: 
+
 <!-- ##### STRUCT GdaColumnIndex ##### -->
 <para>
 
 </para>
 
 
-<!-- ##### FUNCTION gda_column_index_get_type ##### -->
+<!-- ##### STRUCT GdaColumnIndexClass ##### -->
 <para>
 
 </para>
 
-@Returns: 
+@parent_class: 
+
+<!-- ##### STRUCT GdaColumnIndexPrivate ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION gda_column_index_new ##### -->

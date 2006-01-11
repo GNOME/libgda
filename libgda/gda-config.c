@@ -29,7 +29,8 @@
 #include <gmodule.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-data-model-array.h>
-#include <libgda/gda-intl.h>
+#include <libgda/gda-parameter-list.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
@@ -42,6 +43,7 @@
 #include <io.h>
 #endif
 
+#define GDA_CONFIG_SECTION_DATASOURCES "/apps/libgda/Datasources"
 #define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
 #define LIBGDA_USER_CONFIG_FILE LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S "config"
 
@@ -554,8 +556,10 @@ gda_config_search_entry (GList *sections, const gchar *path, const gchar *type)
 			    !strcmp (entry->type, type) && 
 			    !strcmp (entry->name, ptr_last_dash + 1))
 				break;
-			else if (!strcmp (entry->name, ptr_last_dash + 1))
-				break;
+			else {
+				if (!strcmp (entry->name, ptr_last_dash + 1))
+					break;
+			}
 
 			entry = NULL;
 		}
@@ -774,11 +778,10 @@ gda_config_get_string (const gchar *path)
 	cfg_client = get_config_client ();
 
 	entry = gda_config_search_entry (cfg_client->user, path, "string");
-	if (entry == NULL)
+	if (!entry)
 		entry = gda_config_search_entry (cfg_client->global, path, "string");
 
-        return (entry != NULL && entry->value != NULL) ? 
-			g_strdup (entry->value) : NULL;
+        return (entry && entry->value) ? g_strdup (entry->value) : NULL;
 }
 
 /**
@@ -1265,18 +1268,20 @@ gda_config_list_sections_raw (const gchar *path)
 	cfg_client = get_config_client ();
 	for (list = cfg_client->user; list; list = list->next){
 		section = (GdaConfigSection*) list->data;
-		if (section && len < strlen (section->path) && 
-		    !strncmp (path, section->path, len))
+		if (section && 
+		    (len < strlen (section->path)) && 
+		    !strncmp (path, section->path, len) && 
+		    ((section->path[len] == 0) || (section->path[len] == '/')))
 			ret = g_list_append (ret, section);
 	}
 		
 	for (list = cfg_client->global; list; list = list->next){
 		section = (GdaConfigSection*) list->data;
-		if (section && len < strlen (section->path) && 
-		    !strncmp (path, section->path, len)){
-			if (!g_list_find_custom (ret, 
-						 section->path + len + 1,
-						 (GCompareFunc) strcmp))
+		if (section && 
+		    (len < strlen (section->path)) && 
+		    !strncmp (path, section->path, len) &&
+		    ((section->path[len] == 0) || (section->path[len] == '/'))){
+			if (!g_list_find_custom (ret, section->path + len + 1, (GCompareFunc) strcmp))
 				ret = g_list_append (ret, section);
 		}
 	}
@@ -1418,7 +1423,6 @@ gda_config_get_provider_list (void)
 			gchar *ext;
 			const gchar * (* plugin_get_name) (void);
 			const gchar * (* plugin_get_description) (void);
-			GList * (* plugin_get_cnc_params) (void);
 			gchar * (* plugin_get_dsn_spec) (void);
 			
 			ext = g_strrstr (name, ".");
@@ -1440,8 +1444,6 @@ gda_config_get_provider_list (void)
 					 (gpointer *) &plugin_get_name);
 			g_module_symbol (handle, "plugin_get_description",
 					 (gpointer *) &plugin_get_description);
-			g_module_symbol (handle, "plugin_get_connection_params",
-					 (gpointer *) &plugin_get_cnc_params);
 			g_module_symbol (handle, "plugin_get_dsn_spec",
 					 (gpointer *) &plugin_get_dsn_spec);
 			
@@ -1458,15 +1460,24 @@ gda_config_get_provider_list (void)
 			else
 				info->description = NULL;
 			
-			if (plugin_get_cnc_params != NULL)
-				info->gda_params = plugin_get_cnc_params ();
-			else
-				info->gda_params = NULL;
-			
-			if (plugin_get_dsn_spec != NULL)
+			info->dsn_spec = NULL;
+			info->gda_params = NULL;
+
+			if (plugin_get_dsn_spec) {
+				GError *error = NULL;
+				
 				info->dsn_spec = plugin_get_dsn_spec ();
-			else
-				info->dsn_spec = NULL;
+				info->gda_params = gda_parameter_list_new_from_spec (NULL, info->dsn_spec, &error);
+				if (!info->gda_params) {
+					g_warning ("Invalid format for provider '%s' DSN spec : %s",
+						   info->id,
+						   error ? error->message : "Unknown error");
+					if (error)
+						g_error_free (error);
+				}
+			}
+			else 
+				g_warning ("Provider '%s' does not provide a DSN spec", info->id);
 			
 			list = g_list_append (list, info);
 			
@@ -1571,77 +1582,12 @@ gda_config_get_provider_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (prov_info->location));
 		value_list = g_list_append (value_list, gda_value_new_string (prov_info->description));
 
-		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
-		/* FIXME: correct memory leak here by freeing value_list */
+		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
+		g_list_foreach (value_list, gda_value_free, NULL);
+		g_slist_free (value_list);
 	}
 	
 	return model;
-}
-
-/**
- * gda_provider_parameter_info_new_full:
- * @name:
- * @short_description:
- * @long_description:
- * @type:
- */
-GdaProviderParameterInfo *
-gda_provider_parameter_info_new_full (const gchar *name,
-				      const gchar *short_description,
-				      const gchar *long_description,
-				      GdaValueType type)
-{
-	GdaProviderParameterInfo *param_info;
-
-	param_info = g_new0 (GdaProviderParameterInfo, 1);
-	param_info->name = g_strdup (name);
-	param_info->short_description = g_strdup (short_description);
-	param_info->long_description = g_strdup (long_description);
-	param_info->type = type;
-
-	return param_info;
-}
-
-/**
- * gda_provider_parameter_info_copy:
- * @param_info: a #GdaProviderParameterInfo structure.
- *
- * Creates a new #GdaProviderParameterInfo structure with the values
- * contained in the given @param_info argument..
- *
- * Returns: a newly allocated #GdaProviderParameterInfo structure.
- */
-GdaProviderParameterInfo *
-gda_provider_parameter_info_copy (GdaProviderParameterInfo *param_info)
-{
-	GdaProviderParameterInfo *new_info;
-
-	g_return_val_if_fail (param_info != NULL, NULL);
-
-	new_info = g_new0 (GdaProviderParameterInfo, 1);
-	new_info->name = g_strdup (param_info->name);
-	new_info->short_description = g_strdup (param_info->short_description);
-	new_info->long_description = g_strdup (param_info->long_description);
-	new_info->type = param_info->type;
-
-	return new_info;
-}
-
-/**
- * gda_provider_parameter_info_free:
- * @param_info: a #GdaProviderParameterInfo structure to be freed.
- *
- * Free the memory associated with the given @param_info argument.
- */
-void
-gda_provider_parameter_info_free (GdaProviderParameterInfo *param_info)
-{
-	g_return_if_fail (param_info != NULL);
-
-	g_free (param_info->name);
-	g_free (param_info->short_description);
-	g_free (param_info->long_description);
-	g_free (param_info);
 }
 
 /**
@@ -1657,8 +1603,6 @@ GdaProviderInfo*
 gda_provider_info_copy (GdaProviderInfo *src)
 {
 	GdaProviderInfo *info;
-	GList *list = NULL;
-	GList *list_src = NULL;
 
 	g_return_val_if_fail (src != NULL, NULL);
 
@@ -1666,15 +1610,10 @@ gda_provider_info_copy (GdaProviderInfo *src)
 	info->id = g_strdup (src->id);
 	info->location = g_strdup (src->location);
 	info->description = g_strdup (src->description);
-
-	/* Deep copy: */
-	list_src = src->gda_params;
-	while (list_src) {
-		list = g_list_append (list, gda_provider_parameter_info_copy (list_src->data));
-		list_src = g_list_next (list_src);
+	if (src->gda_params) {
+		info->gda_params = src->gda_params;
+		g_object_ref (info->gda_params);
 	}
-
-	info->gda_params = list;
 
 	return info;
 }
@@ -1693,8 +1632,8 @@ gda_provider_info_free (GdaProviderInfo *provider_info)
 	g_free (provider_info->id);
 	g_free (provider_info->location);
 	g_free (provider_info->description);
-	g_list_foreach (provider_info->gda_params, (GFunc) gda_provider_parameter_info_free, NULL);
-	g_list_free (provider_info->gda_params);
+	if (provider_info->gda_params)
+		g_object_unref (provider_info->gda_params);
 	if (provider_info->dsn_spec)
 		g_free (provider_info->dsn_spec);
 
@@ -1944,8 +1883,10 @@ gda_config_get_data_source_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->username));
 		value_list = g_list_append (value_list, gda_value_new_string ("******"));
 		value_list = g_list_append (value_list, gda_value_new_boolean (dsn_info->is_global));
-
-		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
+		
+		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
+		g_list_foreach (value_list, gda_value_free, NULL);
+		g_slist_free (value_list);
 	}
 	
 	/* free memory */
@@ -2209,19 +2150,6 @@ gda_config_remove_listener (guint id)
 			break;
 		}
 	}
-}
-
-GType
-gda_provider_parameter_info_get_type (void)
-{
-	static GType our_type = 0;
-
-	if (our_type == 0)
-		our_type = g_boxed_type_register_static ("GdaProviderParameterInfo",
-							 (GBoxedCopyFunc) gda_provider_parameter_info_copy,
-							 (GBoxedFreeFunc) gda_provider_parameter_info_free);
-
-	return our_type;
 }
 
 GType

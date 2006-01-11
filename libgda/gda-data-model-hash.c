@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -24,10 +24,11 @@
  */
 
 #include <glib/ghash.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-data-model-private.h>
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
 struct _GdaDataModelHashPrivate {
 	/* number of columns in each row */
@@ -53,7 +54,7 @@ static GObjectClass *parent_class = NULL;
  */
 
 static gint
-gda_data_model_hash_get_n_rows (GdaDataModelBase *model)
+gda_data_model_hash_get_n_rows (GdaDataModelRow *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), -1);
 
@@ -64,49 +65,59 @@ gda_data_model_hash_get_n_rows (GdaDataModelBase *model)
 }
 
 static gint
-gda_data_model_hash_get_n_columns (GdaDataModelBase *model)
+gda_data_model_hash_get_n_columns (GdaDataModelRow *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), -1);
 	return GDA_DATA_MODEL_HASH (model)->priv->number_of_columns;
 }
 
 static GdaRow *
-gda_data_model_hash_get_row (GdaDataModelBase *model, gint row)
+gda_data_model_hash_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	gint hash_entry;
+	GdaRow *gdarow;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
 
 	/* get row according mapping */
 	hash_entry = g_array_index (GDA_DATA_MODEL_HASH (model)->priv->row_map, gint, row);
 
-	return (GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
-					       GINT_TO_POINTER (hash_entry));
+	gdarow = (GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
+					      GINT_TO_POINTER (hash_entry));
+	if (!gdarow)
+		g_set_error (error, 0, 0, _("Row %d not found in data model"), row);
+	return gdarow;
 }
 
 static const GdaValue *
-gda_data_model_hash_get_value_at (GdaDataModelBase *model, gint col, gint row)
+gda_data_model_hash_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	const GdaRow *fields;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
 
-	fields = gda_data_model_hash_get_row (model, row);
+	fields = gda_data_model_hash_get_row (model, row, NULL);
 	if (fields == NULL)
 		return NULL;
+
+	if (col >= GDA_DATA_MODEL_HASH (model)->priv->number_of_columns) {
+		g_warning (_("Column out %d of range 0 - %d"), col, 
+			   GDA_DATA_MODEL_HASH (model)->priv->number_of_columns);
+		return NULL;
+	}
 
 	return (const GdaValue *) gda_row_get_value ((GdaRow *) fields, col);
 }
 
 static gboolean
-gda_data_model_hash_is_updatable (GdaDataModelBase *model)
+gda_data_model_hash_is_updatable (GdaDataModelRow *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
 	return TRUE;
 }
 
 static gboolean
-gda_data_model_hash_append_row (GdaDataModelBase *model, GdaRow *row)
+gda_data_model_hash_append_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	gint cols, rownum_hash_new, rownum_array_new;
 
@@ -114,8 +125,11 @@ gda_data_model_hash_append_row (GdaDataModelBase *model, GdaRow *row)
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	cols = gda_row_get_length (row);
-	if (cols != GDA_DATA_MODEL_HASH (model)->priv->number_of_columns)
+	if (cols != GDA_DATA_MODEL_HASH (model)->priv->number_of_columns) {
+		g_set_error (error, 0, GDA_DATA_MODEL_VALUES_LIST_ERROR,
+			     _("Wrong number of values in values list"));
 		return FALSE;
+	}
 
 	/* get the new hash and array row number */
 	rownum_hash_new = GDA_DATA_MODEL_HASH (model)->priv->number_of_hash_table_rows;
@@ -141,7 +155,7 @@ gda_data_model_hash_append_row (GdaDataModelBase *model, GdaRow *row)
 }
 
 static gboolean
-gda_data_model_hash_remove_row (GdaDataModelBase *model, GdaRow *row)
+gda_data_model_hash_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	gint i, cols, rownum;
 
@@ -157,7 +171,7 @@ gda_data_model_hash_remove_row (GdaDataModelBase *model, GdaRow *row)
 
 	/* renumber following rows */
 	for (i=(rownum+1); i<GDA_DATA_MODEL_HASH (model)->priv->row_map->len; i++) 
-		gda_row_set_number ((GdaRow *) gda_data_model_get_row (GDA_DATA_MODEL (model), i), (i-1));
+		gda_row_set_number ((GdaRow *) gda_data_model_hash_get_row (model, i, error), (i-1));
 
 	/* tag the row as being removed */	
 	gda_row_set_id ((GdaRow *) row, "R");
@@ -172,6 +186,31 @@ gda_data_model_hash_remove_row (GdaDataModelBase *model, GdaRow *row)
 	return TRUE;
 }
 
+static GdaRow *
+gda_data_model_hash_append_values (GdaDataModelRow *model, const GList *values, GError **error)
+{
+	gint len;
+	GdaRow *row = NULL;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
+	g_return_val_if_fail (values != NULL, NULL);
+
+	len = g_list_length ((GList *) values);
+	if (len != GDA_DATA_MODEL_HASH (model)->priv->number_of_columns) {
+		g_set_error (error, 0, GDA_DATA_MODEL_VALUES_LIST_ERROR,
+			     _("Wrong number of values in values list"));
+		return NULL;
+	}
+
+	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
+	if (!gda_data_model_hash_append_row (model, row, error)) {
+		g_object_unref (row);
+		return NULL;
+	}
+
+	return (GdaRow *) row;
+}
+
 static void
 free_hash (gpointer value)
 {
@@ -182,7 +221,7 @@ static void
 gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -192,7 +231,7 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	model_class->get_row = gda_data_model_hash_get_row;
 	model_class->get_value_at = gda_data_model_hash_get_value_at;
 	model_class->is_updatable = gda_data_model_hash_is_updatable;
-	model_class->append_values = NULL;
+	model_class->append_values = gda_data_model_hash_append_values;
 	model_class->append_row = gda_data_model_hash_append_row;
 	model_class->update_row = NULL;
 	model_class->remove_row = gda_data_model_hash_remove_row;

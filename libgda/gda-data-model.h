@@ -28,7 +28,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libgda/gda-command.h>
-#include <libgda/global-decl.h>
+#include <libgda/gda-decl.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-value.h>
 
@@ -39,96 +39,98 @@ G_BEGIN_DECLS
 #define GDA_IS_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_MODEL))
 #define GDA_DATA_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_DATA_MODEL, GdaDataModelClass))
 
-typedef gboolean (* GdaDataModelForeachFunc) (GdaDataModel *model,
-					      GdaRow *row,
-					      gpointer user_data);
+typedef enum {
+	GDA_DATA_MODEL_ACCESS_RANDOM = 1 << 0,
+	GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD = 1 << 1,
+	GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD = 1 << 2,
+	GDA_DATA_MODEL_ACCESS_INSERT  = 1 << 3,
+	GDA_DATA_MODEL_ACCESS_UPDATE  = 1 << 4,
+	GDA_DATA_MODEL_ACCESS_DELETE  = 1 << 5,
+	GDA_DATA_MODEL_ACCESS_WRITE = GDA_DATA_MODEL_ACCESS_INSERT | GDA_DATA_MODEL_ACCESS_UPDATE |
+	GDA_DATA_MODEL_ACCESS_DELETE,
+} GdaDataModelAccessFlags;
+
+enum {
+	GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
+	GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+	GDA_DATA_MODEL_VALUES_LIST_ERROR,
+	GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR
+};
+
 
 /* struct for the interface */
 struct _GdaDataModelClass {
 	GTypeInterface           g_iface;
 
 	/* virtual table */
-	gint                 (* i_get_n_rows)      (GdaDataModel *model);
-	gint                 (* i_get_n_columns)   (GdaDataModel *model);
+	gint                 (* i_get_n_rows)       (GdaDataModel *model);
+	gint                 (* i_get_n_columns)    (GdaDataModel *model);
 
-	GdaColumn           *(* i_describe_column) (GdaDataModel *model, gint col);
-	GdaRow              *(* i_get_row)         (GdaDataModel *model, gint row);
-	const GdaValue      *(* i_get_value_at)    (GdaDataModel *model, gint col, gint row);
+	GdaColumn           *(* i_describe_column)  (GdaDataModel *model, gint col);
+	guint                (* i_get_access_flags) (GdaDataModel *model);
 
-	gboolean             (* i_is_updatable)    (GdaDataModel *model);
-	gboolean             (* i_has_changed)     (GdaDataModel *model);
-	void                 (* i_begin_changes)   (GdaDataModel *model);
-	gboolean             (* i_commit_changes)  (GdaDataModel *model);
-	gboolean             (* i_cancel_changes)  (GdaDataModel *model);
+	const GdaValue      *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row);
+	GdaDataModelIter    *(* i_create_iter)      (GdaDataModel *model);
+	gboolean             (* i_iter_at_row)      (GdaDataModel *model, GdaDataModelIter *iter, gint row);
+	gboolean             (* i_iter_next)        (GdaDataModel *model, GdaDataModelIter *iter); 
+	gboolean             (* i_iter_prev)        (GdaDataModel *model, GdaDataModelIter *iter);
 
-	GdaRow              *(* i_append_values)   (GdaDataModel *model, const GList *values);
-	gboolean             (* i_append_row)      (GdaDataModel *model, GdaRow *row);
-	gboolean             (* i_update_row)      (GdaDataModel *model, GdaRow *row);
-	gboolean             (* i_remove_row)      (GdaDataModel *model, GdaRow *row);
+	gboolean             (* i_set_value_at)     (GdaDataModel *model, gint col, gint row, 
+						     const GdaValue *value, GError **error);
+	gboolean             (* i_set_values)       (GdaDataModel *model, gint row, GList *values,
+						     GError **error);
+	gint                 (* i_append_values)    (GdaDataModel *model, const GList *values, GError **error);
+	gint                 (* i_append_row)       (GdaDataModel *model, GError **error);
+	gboolean             (* i_remove_row)       (GdaDataModel *model, gint row, GError **error);
 
-	GdaColumn           *(* i_append_column)   (GdaDataModel *model);
-	gboolean             (* i_remove_column)   (GdaDataModel *model, gint col);
-
-	void                 (* i_set_notify)      (GdaDataModel *model, gboolean do_notify_changes);
-	gboolean             (* i_get_notify)      (GdaDataModel *model);
-
-	gboolean             (* i_set_command)     (GdaDataModel *model, const gchar *txt, GdaCommandType type);
-	const gchar         *(* i_get_command)     (GdaDataModel *model, GdaCommandType *type);
-	
+	void                 (* i_set_notify)       (GdaDataModel *model, gboolean do_notify_changes);
+	gboolean             (* i_get_notify)       (GdaDataModel *model);
 
 	/* signals */
-	void                 (* changed)         (GdaDataModel *model);
 	void                 (* row_inserted)    (GdaDataModel *model, gint row);
 	void                 (* row_updated)     (GdaDataModel *model, gint row);
 	void                 (* row_removed)     (GdaDataModel *model, gint row);
-	void                 (* column_inserted) (GdaDataModel *model, gint col);
-	void                 (* column_updated)  (GdaDataModel *model, gint col);
-	void                 (* column_removed)  (GdaDataModel *model, gint col);
-
-	void                 (* begin_update)    (GdaDataModel *model);
-	void                 (* cancel_update)   (GdaDataModel *model);
-	void                 (* commit_update)   (GdaDataModel *model);
 };
 
-GType                         gda_data_model_get_type               (void);
+GType               gda_data_model_get_type               (void);
 
-void                          gda_data_model_freeze                 (GdaDataModel *model);
-void                          gda_data_model_thaw                   (GdaDataModel *model);
+gboolean            gda_data_model_is_updatable           (GdaDataModel *model);
+guint               gda_data_model_get_access_flags       (GdaDataModel *model);
 
-gint                          gda_data_model_get_n_rows             (GdaDataModel *model);
-gint                          gda_data_model_get_n_columns          (GdaDataModel *model);
-GdaColumn                    *gda_data_model_describe_column        (GdaDataModel *model, gint col);
-const gchar                  *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
-void                          gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
-GdaRow                       *gda_data_model_get_row                (GdaDataModel *model, gint row);
-const GdaValue               *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
+gint                gda_data_model_get_n_rows             (GdaDataModel *model);
+gint                gda_data_model_get_n_columns          (GdaDataModel *model);
 
-gboolean                      gda_data_model_is_updatable           (GdaDataModel *model);
-GdaRow                       *gda_data_model_append_values          (GdaDataModel *model, const GList *values);
-gboolean                      gda_data_model_append_row             (GdaDataModel *model, GdaRow *row);
-gboolean                      gda_data_model_update_row             (GdaDataModel *model, GdaRow *row);
-gboolean                      gda_data_model_remove_row             (GdaDataModel *model, GdaRow *row);
-GdaColumn	             *gda_data_model_append_column          (GdaDataModel *model);
-gboolean	              gda_data_model_remove_column          (GdaDataModel *model, gint col);
+GdaColumn          *gda_data_model_describe_column        (GdaDataModel *model, gint col);
+const gchar        *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
+void                gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
 
-void                          gda_data_model_foreach                (GdaDataModel *model, GdaDataModelForeachFunc func,
-								     gpointer user_data);
+const GdaValue     *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
+GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
+gboolean            gda_data_model_iter_at_row            (GdaDataModel *model, GdaDataModelIter *iter, gint row);
+gboolean            gda_data_model_iter_next              (GdaDataModel *model, GdaDataModelIter *iter);
+gboolean            gda_data_model_iter_prev              (GdaDataModel *model, GdaDataModelIter *iter);
+void                gda_data_model_freeze                 (GdaDataModel *model);
+void                gda_data_model_thaw                   (GdaDataModel *model);
+gboolean            gda_data_model_set_value_at           (GdaDataModel *model, gint col, gint row, 
+							   const GdaValue *value, GError **error);
+gboolean            gda_data_model_set_values             (GdaDataModel *model, gint row, 
+							   GList *values, GError **error);
+gint                gda_data_model_append_row             (GdaDataModel *model, GError **error);
+gint                gda_data_model_append_values          (GdaDataModel *model, const GList *values, GError **error);
+gboolean            gda_data_model_remove_row             (GdaDataModel *model, gint row, GError **error);
+gint                gda_data_model_get_row_from_values    (GdaDataModel *model, GSList *values, gint *cols_index);
 
-gboolean                      gda_data_model_has_changed            (GdaDataModel *model);
-gboolean                      gda_data_model_begin_update           (GdaDataModel *model);
-gboolean                      gda_data_model_cancel_update          (GdaDataModel *model);
-gboolean                      gda_data_model_commit_update          (GdaDataModel *model);
+/* contents saving and loading */
+gchar              *gda_data_model_to_text_separated      (GdaDataModel *model, const gint *cols, gint nb_cols,
+							   gchar sep);
+gchar              *gda_data_model_to_xml                 (GdaDataModel *model, const gint *cols, gint nb_cols,
+							   const gchar *name);
+xmlNodePtr          gda_data_model_to_xml_node            (GdaDataModel *model, const gint *cols, gint nb_cols, 
+							   const gchar *name);
+gboolean            gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GError **error);
 
-gchar                        *gda_data_model_to_text_separated      (GdaDataModel *model, const gint *cols, gint nb_cols,
-								     gchar sep);
-gchar                        *gda_data_model_to_xml                 (GdaDataModel *model, const gint *cols, gint nb_cols,
-								     const gchar *name);
-xmlNodePtr                    gda_data_model_to_xml_node            (GdaDataModel *model, const gint *cols, gint nb_cols, 
-								     const gchar *name);
-gboolean                      gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node);
-
-void                          gda_data_model_dump                   (GdaDataModel *model, FILE *to_stream);
-gchar                        *gda_data_model_dump_as_string         (GdaDataModel *model);
+void                gda_data_model_dump                   (GdaDataModel *model, FILE *to_stream);
+gchar              *gda_data_model_dump_as_string         (GdaDataModel *model);
 
 G_END_DECLS
 

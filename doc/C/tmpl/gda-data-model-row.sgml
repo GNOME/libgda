@@ -1,0 +1,57 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelRow
+
+<!-- ##### SECTION Short_Description ##### -->
+Base implementation for other objects to implement the #GdaDataModel interface based on the usage of
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This object is not intended to be instanciated directly, but to be inherited.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataModelRow ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataModelRow:command-text ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelRow:command-type ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaDataModelRowClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@get_n_rows: 
+@get_n_columns: 
+@get_row: 
+@get_value_at: 
+@is_updatable: 
+@append_values: 
+@append_row: 
+@update_row: 
+@remove_row: 
+
+<!-- ##### STRUCT GdaDataModelRowPrivate ##### -->
+<para>
+
+</para>
+
+

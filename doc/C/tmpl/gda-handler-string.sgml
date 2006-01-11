@@ -1,0 +1,56 @@
+<!-- ##### SECTION Title ##### -->
+GdaHandlerString
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaHandlerString ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerString ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerStringClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaHandlerStringPriv ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_handler_string_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

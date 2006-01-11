@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-mysql.h"
@@ -46,14 +46,15 @@ static void gda_mysql_recordset_init       (GdaMysqlRecordset *recset,
 					    GdaMysqlRecordsetClass *klass);
 static void gda_mysql_recordset_finalize   (GObject *object);
 
-static gint gda_mysql_recordset_get_n_rows			     (GdaDataModelBase *model);
-static GdaColumn *gda_mysql_recordset_describe_column (GdaDataModelBase *model, gint col);
-static const GdaRow *gda_mysql_recordset_get_row		     (GdaDataModelBase *model, gint row);
-static const GdaValue *gda_mysql_recordset_get_value_at		     (GdaDataModelBase *model, gint col, gint row);
-static gboolean gda_mysql_recordset_is_updatable		     (GdaDataModelBase *model);
-static gboolean gda_mysql_recordset_append_row			     (GdaDataModelBase *model, GdaRow *row);
-static gboolean gda_mysql_recordset_remove_row			     (GdaDataModelBase *model, const GdaRow *row);
-static gboolean gda_mysql_recordset_update_row			     (GdaDataModelBase *model, const GdaRow *row);
+static gint gda_mysql_recordset_get_n_rows			     (GdaDataModelRow *model);
+static GdaColumn *gda_mysql_recordset_describe_column (GdaDataModelRow *model, gint col);
+static GdaRow *gda_mysql_recordset_get_row		     (GdaDataModelRow *model, 
+							      gint row, GError **error);
+static const GdaValue *gda_mysql_recordset_get_value_at		     (GdaDataModelRow *model, gint col, gint row);
+static gboolean gda_mysql_recordset_is_updatable		     (GdaDataModelRow *model);
+static gboolean gda_mysql_recordset_append_row			     (GdaDataModelRow *model, GdaRow *row, GError **error);
+static gboolean gda_mysql_recordset_remove_row			     (GdaDataModelRow *model, GdaRow *row, GError **error);
+static gboolean gda_mysql_recordset_update_row			     (GdaDataModelRow *model, GdaRow *row, GError **error);
 
 static GObjectClass *parent_class = NULL;
 
@@ -68,7 +69,7 @@ static void
 gda_mysql_recordset_class_init (GdaMysqlRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -254,7 +255,7 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
  */
 
 static gint
-gda_mysql_recordset_get_n_rows (GdaDataModelBase *model)
+gda_mysql_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 
@@ -264,11 +265,11 @@ gda_mysql_recordset_get_n_rows (GdaDataModelBase *model)
 	if (recset->priv->row_sync == FALSE)
 		return recset->priv->mysql_res_rows;
 	else
-		return GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_n_rows (model);
+		return GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_n_rows (model);
 }
 
-static const GdaRow *
-gda_mysql_recordset_get_row (GdaDataModelBase *model, gint row)
+static GdaRow *
+gda_mysql_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 	GdaMysqlRecordsetPrivate *priv_data;
@@ -279,7 +280,8 @@ gda_mysql_recordset_get_row (GdaDataModelBase *model, gint row)
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	row_list = (GdaRow *) GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_row (model, row);
+	row_list = (GdaRow *) GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_row (model, row, 
+										error);
 	if (row_list != NULL)
 		return (const GdaRow *)row_list;	
 
@@ -291,12 +293,18 @@ gda_mysql_recordset_get_row (GdaDataModelBase *model, gint row)
 	}
 	
 	if (row < 0 || row > priv_data->mysql_res_rows) {
-		gda_connection_add_event_string (priv_data->cnc,
-						_("Row number out of range"));
+		gchar *str;
+
+		str = g_strdup_printf (_("Row number out of range 0 - %d"),
+				       priv_data->mysql_res_rows - 1);
+		gda_connection_add_event_string (priv_data->cnc, str);
+		g_set_error (error, 0, 0, str);
+		g_free (str);
+						 
 		return NULL;
 	}
 
-	fetched_rows = GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_n_rows (model);
+	fetched_rows = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_n_rows (model);
 
 	gda_data_model_freeze (GDA_DATA_MODEL (recset));
 
@@ -305,7 +313,7 @@ gda_mysql_recordset_get_row (GdaDataModelBase *model, gint row)
 		if (!row_list)
 			return NULL;
 
-		if (GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (model, row_list) == FALSE)
+		if (! GDA_DATA_MODEL_ROW_CLASS (parent_class)->append_row (model, row_list, NULL))
 			return NULL;
 	}
 
@@ -316,7 +324,7 @@ gda_mysql_recordset_get_row (GdaDataModelBase *model, gint row)
 }
 
 static const GdaValue *
-gda_mysql_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
+gda_mysql_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 	GdaMysqlRecordsetPrivate *priv_data;
@@ -326,7 +334,7 @@ gda_mysql_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	value = GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_value_at (model, col, row);
+	value = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_value_at (model, col, row);
 	if (value != NULL)
 		return value;
 
@@ -349,12 +357,12 @@ gda_mysql_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 		return NULL;
 	}	
 
-	fields = gda_mysql_recordset_get_row (model, row);
+	fields = gda_mysql_recordset_get_row (model, row, NULL);
 	return fields != NULL ? gda_row_get_value ((GdaRow *) fields, col) : NULL;
 }
 
 static gboolean
-gda_mysql_recordset_is_updatable (GdaDataModelBase *model)
+gda_mysql_recordset_is_updatable (GdaDataModelRow *model)
 {
 	GdaCommandType cmd_type;
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
@@ -366,7 +374,7 @@ gda_mysql_recordset_is_updatable (GdaDataModelBase *model)
 }
 
 static gboolean
-gda_mysql_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
+gda_mysql_recordset_append_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 	GdaMysqlRecordsetPrivate *priv_data;
@@ -410,7 +418,7 @@ gda_mysql_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 	/* check if all results are loaded in array, if not do so */
 	if (priv_data->row_sync == FALSE)
 	{
-		fetched_rows = GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_n_rows (model);
+		fetched_rows = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_n_rows (model);
 
 		gda_data_model_freeze (GDA_DATA_MODEL (recset));
 
@@ -422,7 +430,7 @@ gda_mysql_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 				return FALSE;
 			}
 
-			if (GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (model, row_list) == FALSE) {
+			if (!GDA_DATA_MODEL_ROW_CLASS (parent_class)->append_row (model, row_list, NULL)) {
 				gda_connection_add_event_string (priv_data->cnc,
 						_("Can not synchronize array with MySQL result set"));
 				return FALSE;
@@ -483,7 +491,7 @@ gda_mysql_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 	g_string_free (sql_value, TRUE);
 
 	/* append row in the array */
-	if (GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (model, row) == FALSE) {
+	if (! GDA_DATA_MODEL_ROW_CLASS (parent_class)->append_row (model, row, NULL)) {
 		gda_connection_add_event_string (priv_data->cnc,
 			_("Can not append row to data model"));
 		return FALSE;
@@ -493,7 +501,7 @@ gda_mysql_recordset_append_row (GdaDataModelBase *model, GdaRow *row)
 }
 
 static gboolean
-gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
+gda_mysql_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 	GdaMysqlRecordsetPrivate *priv_data;
@@ -523,6 +531,8 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 	
 	/* checks if the given row belongs to the given model */
 	if (gda_row_get_model ((GdaRow *) row) != GDA_DATA_MODEL (model)) {
+		g_set_error (error, 0, 0,
+			     _("Given row doesn't belong to the model."));
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Given row doesn't belong to the model."));
 		return FALSE;
@@ -530,6 +540,8 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 
 	/* checks if the table name has been guessed */
 	if (priv_data->table_name == NULL) {
+		g_set_error (error, 0, 0,
+			     _("Table name could not be guessed"));
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Table name could not be guessed"));
 		return FALSE;
@@ -538,19 +550,21 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 	/* check if all results are loaded in array, if not do so */
 	if (priv_data->row_sync == FALSE)
 	{
-		fetched_rows = GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_n_rows (model);
+		fetched_rows = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_n_rows (model);
 
 		gda_data_model_freeze (GDA_DATA_MODEL (recset));
 
 		for (i = fetched_rows; i < priv_data->mysql_res_rows; i++) {
 			row_list = fetch_row (recset, i);
 			if (!row_list) {
+				g_set_error (error, 0, 0,
+					     _("Can not synchronize array with MySQL result set"));
 				gda_connection_add_event_string (priv_data->cnc,
 						_("Can not synchronize array with MySQL result set"));
 				return FALSE;
 			}
 
-			if (GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (model, row_list) == FALSE) {
+			if (! GDA_DATA_MODEL_ROW_CLASS (parent_class)->append_row (model, row_list, error)) {
 				gda_connection_add_event_string (priv_data->cnc,
 						_("Can not synchronize array with MySQL result set"));
 				return FALSE;
@@ -603,6 +617,8 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 	}
 
 	if (uk == 0) {
+		g_set_error (error, 0, 0,
+			     _("Model doesn't have at least one unique key."));
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Model doesn't have at least one unique key."));
 		g_free (query_where);
@@ -630,7 +646,9 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 	g_free (query_where);
 
 	/* remove row from the array */
-	if (GDA_DATA_MODEL_BASE_CLASS (parent_class)->remove_row (model, row) == FALSE) {
+	if (! GDA_DATA_MODEL_ROW_CLASS (parent_class)->remove_row (model, row, NULL)) {
+		g_set_error (error, 0, 0,
+			     _("Can not remove row from data model"));
 		gda_connection_add_event_string (priv_data->cnc,
 			_("Can not remove row from data model"));
 		return FALSE;
@@ -640,7 +658,7 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 }
 
 static gboolean
-gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
+gda_mysql_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 	GdaMysqlRecordsetPrivate *priv_data;
@@ -662,6 +680,8 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 
 	/* checks for valid MySQL handle */
         if (!priv_data->mysql_res) {
+		g_set_error (error, 0, 0,
+			     _("Invalid MySQL handle"));
 		gda_connection_add_event_string (priv_data->cnc, _("Invalid MySQL handle"));
 		return FALSE;
 	}
@@ -671,6 +691,8 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	
 	/* checks if the given row belongs to the given model */
 	if (gda_row_get_model ((GdaRow *) row) != GDA_DATA_MODEL (model)) {
+		g_set_error (error, 0, 0,
+			     _("Given row doesn't belong to the model."));
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Given row doesn't belong to the model."));
 		return FALSE;
@@ -678,6 +700,8 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 
 	/* checks if the table name has been guessed */
 	if (priv_data->table_name == NULL) {
+		g_set_error (error, 0, 0,
+			     _("Table name could not be guessed."));
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Table name could not be guessed."));
 		return FALSE;
@@ -751,6 +775,8 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	}
 
 	if (uk == 0) {
+		g_set_error (error, 0, 0,
+			     _("Model does not have at least one non-modified unique key."));	     
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Model does not have at least one non-modified unique key."));
 		g_free (query_set);
@@ -760,6 +786,8 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	}
 
 	if (nuk == 0) {
+		g_set_error (error, 0, 0,
+			     _("Model does not have any non-unique values to update."));
 		gda_connection_add_event_string (priv_data->cnc,
 						_("Model does not have any non-unique values to update."));
 		g_free (query_set);
@@ -782,8 +810,10 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	/* execute update command */
 	rc = mysql_real_query (mysql, query, strlen (query));
 	if (rc != 0) {
-		gda_connection_add_event (
-			priv_data->cnc, gda_mysql_make_error (mysql));
+		GdaConnectionEvent *event = gda_mysql_make_error (mysql);
+		gda_connection_add_event (priv_data->cnc, event);
+		g_set_error (error, 0, 0,
+			     gda_connection_event_get_description (event));
 		return FALSE;
 	}
 	
@@ -872,7 +902,7 @@ gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql)
 			gda_column_set_defined_size (column, mysql_field->length);
 			gda_column_set_table (column, mysql_field->table);
 			gda_column_set_scale (column, mysql_field->decimals);
-			gda_column_set_gdatype (column, gda_mysql_type_to_gda (mysql_field->type,
+			gda_column_set_gda_type (column, gda_mysql_type_to_gda (mysql_field->type,
 									       mysql_field->flags & UNSIGNED_FLAG));
 			gda_column_set_allow_null (column, !IS_NOT_NULL (mysql_field->flags));
 			gda_column_set_primary_key (column, IS_PRI_KEY (mysql_field->flags));

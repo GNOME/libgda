@@ -24,15 +24,14 @@
 
 #include <glib/gmessages.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-server-provider-private.h>
+#include <libgda/gda-data-handler.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
-
-struct _GdaServerProviderPrivate {
-	GList *connections;
-};
 
 static void gda_server_provider_class_init (GdaServerProviderClass *klass);
 static void gda_server_provider_init       (GdaServerProvider *provider,
@@ -67,11 +66,19 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_server_provider_finalize;
+
 	klass->get_version = NULL;
+	klass->get_server_version = NULL;
+	klass->get_info = NULL;
+	klass->supports = NULL;
+	klass->get_schema = NULL;
+
+	klass->get_data_handler = NULL;
+	klass->string_to_value = NULL;
+
 	klass->open_connection = NULL;
 	klass->reset_connection = NULL;
 	klass->close_connection = NULL;
-	klass->get_server_version = NULL;
 	klass->get_database = NULL;
 	klass->change_database = NULL;
 
@@ -90,11 +97,8 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->begin_transaction = NULL;
 	klass->commit_transaction = NULL;
 	klass->rollback_transaction = NULL;
-	klass->supports = NULL;
-	klass->get_schema = NULL;
 	klass->create_blob = _gda_server_provider_create_blob;
 	klass->fetch_blob = _gda_server_provider_fetch_blob;
-	klass->value_to_sql_string = NULL;
 }
 
 static void
@@ -105,6 +109,10 @@ gda_server_provider_init (GdaServerProvider *provider,
 
 	provider->priv = g_new0 (GdaServerProviderPrivate, 1);
 	provider->priv->connections = NULL;
+	provider->priv->data_handlers = g_hash_table_new_full ((GHashFunc) gda_server_provider_handler_info_hash_func,
+							       (GEqualFunc) gda_server_provider_handler_info_equal_func,
+							       (GDestroyNotify) gda_server_provider_handler_info_free,
+							       (GDestroyNotify) g_object_unref);
 }
 
 static void
@@ -115,10 +123,13 @@ gda_server_provider_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
 
 	/* free memory */
-	g_list_free (provider->priv->connections);
-
-	g_free (provider->priv);
-	provider->priv = NULL;
+	if (provider->priv) {
+		g_list_free (provider->priv->connections);
+		g_hash_table_destroy (provider->priv->data_handlers);
+		
+		g_free (provider->priv);
+		provider->priv = NULL;
+	}
 
 	/* chain to parent class */
 	parent_class->finalize (object);
@@ -163,6 +174,44 @@ gda_server_provider_get_version (GdaServerProvider *provider)
 		return CLASS (provider)->get_version (provider);
 
 	return PACKAGE_VERSION;
+}
+
+/**
+ * gda_server_provider_get_info
+ * @provider: a #GdaServerProvider object.
+ * @cnc: a #GdaConnection, or %NULL
+ *
+ * Retreive some information specific to the provider. The returned #GdaServerProviderInfo
+ * structure must not be modified
+ *
+ * Returns: a #GdaServerProviderInfo pointer or %NULL if an error occured
+ */
+GdaServerProviderInfo *
+gda_server_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	GdaServerProviderInfo *retval = NULL;
+	static GdaServerProviderInfo *default_info = NULL;
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	if (CLASS (provider)->get_info != NULL)
+		retval = CLASS (provider)->get_info (provider, cnc);
+
+	if (!retval) {
+		if (!default_info) {
+			default_info = g_new0 (GdaServerProviderInfo, 1);
+			default_info->provider_name = NULL;
+			default_info->is_case_insensitive = TRUE;
+			default_info->implicit_data_types_casts = TRUE;
+			default_info->alias_needs_as_keyword = TRUE;
+		}
+
+		retval = default_info;
+	}
+
+	return retval;
 }
 
 /**
@@ -666,7 +715,8 @@ gda_server_provider_supports (GdaServerProvider *provider,
 			      GdaConnectionFeature feature)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->supports != NULL, FALSE);
 
 	return CLASS (provider)->supports (provider, cnc, feature);
@@ -686,13 +736,22 @@ GdaDataModel *
 gda_server_provider_get_schema (GdaServerProvider *provider,
 				GdaConnection *cnc,
 				GdaConnectionSchema schema,
-				GdaParameterList *params)
+				GdaParameterList *params,
+				GError **error)
 {
+	GdaDataModel *model;
+
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (CLASS (provider)->get_schema != NULL, NULL);
 
-	return CLASS (provider)->get_schema (provider, cnc, schema, params);
+	model = CLASS (provider)->get_schema (provider, cnc, schema, params);
+	if (model)
+		/* test model validity */
+		gda_server_provider_test_schema_model (model, schema, error);
+
+	return model;
 }
 
 
@@ -738,11 +797,161 @@ gda_server_provider_fetch_blob_by_id (GdaServerProvider *provider,
 	return CLASS (provider)->fetch_blob (provider, cnc, sql_id);
 }
 
+/**
+ * gda_server_provider_get_data_handler_gda
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object, or %NULL
+ * @for_type: a #GdaValueType
+ *
+ * Find a #GdaDataHandler object to manipulate data of type @for_type.
+ * 
+ * Returns: a #GdaDataHandler, or %NULL if the provider does not support the requested @for_type data type 
+ *          or @for_type is GDA_VALUE_TYPE_NULL
+ */
+GdaDataHandler *
+gda_server_provider_get_data_handler_gda (GdaServerProvider *provider,
+					  GdaConnection *cnc,
+					  GdaValueType for_type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	if (CLASS (provider)->get_data_handler)
+		return CLASS (provider)->get_data_handler (provider, cnc, for_type, NULL);
+	return NULL;
+}
+
+/**
+ * gda_server_provider_get_data_handler_dbms
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object, or %NULL
+ * @for_type: a DBMS type definition
+ *
+ * Find a #GdaDataHandler object to manipulate data of type @for_type.
+ * 
+ * Returns: a #GdaDataHandler, or %NULL if the provider does not know about the @for_type type
+ */
+GdaDataHandler *
+gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,
+					   GdaConnection *cnc,
+					   const gchar *for_type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (for_type && *for_type, NULL);
+
+	if (CLASS (provider)->get_data_handler)
+		return CLASS (provider)->get_data_handler (provider, cnc, GDA_VALUE_TYPE_UNKNOWN, for_type);
+	return NULL;
+}
+
+/**
+ * gda_server_provider_string_to_value
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object.
+ * @string: the SQL string to convert to a value
+ * @prefered_type: a #GdaValueType
+ *
+ * Use @provider to create a new #GdaValue from a single string representation. 
+ *
+ * The @prefered_type can optionnaly ask @provider to return a #GdaValue of the requested type 
+ * (but if such a value can't be created from @string, then %NULL is returned); pass GDA_VALUE_TYPE_UNKNOWN
+ * if any returned type is acceptable.
+ *
+ * The returned value is either a new #GdaValue or %NULL in the following cases:
+ * - @string cannot be converted to @prefered_type type
+ * - the provider does not handle @prefered_type
+ * - the provider could not make a #GdaValue from @string
+ *
+ * Returns: a new #GdaValue, or %NULL
+ */
+GdaValue *
+gda_server_provider_string_to_value (GdaServerProvider *provider,
+				     GdaConnection *cnc,
+				     const gchar *string, 
+				     GdaValueType prefered_type, gchar **dbms_type)
+{
+	GdaValue *retval = NULL;
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	if (CLASS (provider)->string_to_value)
+		retval = CLASS (provider)->string_to_value (provider, cnc, string, prefered_type, dbms_type);
+	
+	if (!retval) {
+		GdaDataHandler *dh;
+		gint i;
+
+		if (prefered_type) {
+			dh = gda_server_provider_get_data_handler_gda (provider, cnc, prefered_type);
+			if (dh) {
+				retval = gda_data_handler_get_value_from_sql (dh, string, prefered_type);
+				if (retval) {
+					gchar *tmp;
+
+					tmp = gda_data_handler_get_sql_from_value (dh, retval);
+					if (strcmp (tmp, string)) {
+						gda_value_free (retval);
+						retval = NULL;
+					}
+					g_free (tmp);
+				}
+			}
+		}
+		else {
+			/* test all the possible data types and see if we have a match */
+			GdaValueType types[] = {GDA_VALUE_TYPE_TINYUINT,
+						GDA_VALUE_TYPE_SMALLUINT,
+						GDA_VALUE_TYPE_UINTEGER,
+						GDA_VALUE_TYPE_BIGUINT,
+						
+						GDA_VALUE_TYPE_TINYINT,
+						GDA_VALUE_TYPE_SMALLINT,
+						GDA_VALUE_TYPE_INTEGER,
+						GDA_VALUE_TYPE_BIGINT,
+						
+						GDA_VALUE_TYPE_SINGLE,
+						GDA_VALUE_TYPE_DOUBLE,
+						GDA_VALUE_TYPE_NUMERIC,
+						
+						GDA_VALUE_TYPE_BOOLEAN,
+						GDA_VALUE_TYPE_TIME,
+						GDA_VALUE_TYPE_DATE,
+						GDA_VALUE_TYPE_TIMESTAMP,
+						GDA_VALUE_TYPE_GEOMETRIC_POINT,
+						GDA_VALUE_TYPE_STRING,
+						GDA_VALUE_TYPE_BINARY};
+
+			for (i = 0; !retval && (i <= (sizeof(types)/sizeof (GdaValueType)) - 1); i++) {
+				dh = gda_server_provider_get_data_handler_gda (provider, cnc, types [i]);
+				if (dh) {
+					retval = gda_data_handler_get_value_from_sql (dh, string, types [i]);
+					if (retval) {
+						gchar *tmp;
+						
+						tmp = gda_data_handler_get_sql_from_value (dh, retval);
+						if (strcmp (tmp, string)) {
+							gda_value_free (retval);
+							retval = NULL;
+						}
+						g_free (tmp);
+					}
+				}
+			}
+		}
+	}
+
+	return retval;
+}
+
  
 /**
  * gda_server_provider_value_to_sql_string
  * @provider: a server provider.
- * @cnc: a #GdaConnection object.
+ * @cnc: a #GdaConnection object, or %NULL
  * @from: #GdaValue to convert from
  *
  * Produces a fully quoted and escaped string from a GdaValue
@@ -751,12 +960,44 @@ gda_server_provider_fetch_blob_by_id (GdaServerProvider *provider,
  */
 gchar *
 gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
-				   GdaConnection *cnc,
-				   GdaValue *from)
+					 GdaConnection *cnc,
+					 GdaValue *from)
 {
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (from != NULL, FALSE);
+	GdaDataHandler *dh;
 
-	return CLASS (provider)->value_to_sql_string (provider, cnc, from);
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (from != NULL, NULL);
+
+	dh = gda_server_provider_get_data_handler_gda (provider, cnc, GDA_VALUE_TYPE (from));
+	if (dh)
+		return gda_data_handler_get_sql_from_value (dh, from);
+	else
+		return NULL;
+}
+
+/**
+ * gda_server_provider_get_default_dbms_type
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object or %NULL
+ * @gda_type: a #GdaValueType value type
+ *
+ * Get the name of the most common data type which has @gda_type GDA type
+ *
+ * Returns: the name of the DBMS type, or %NULL
+ */
+const gchar *
+gda_server_provider_get_default_dbms_type (GdaServerProvider *provider,
+					   GdaConnection *cnc,
+					   GdaValueType gda_type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	
+	if (CLASS (provider)->get_def_dbms_type)
+		return (CLASS (provider)->get_def_dbms_type)(provider, cnc, gda_type);
+	else
+		return NULL;
 }

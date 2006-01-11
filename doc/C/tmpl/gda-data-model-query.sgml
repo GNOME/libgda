@@ -1,0 +1,73 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelQuery
+
+<!-- ##### SECTION Short_Description ##### -->
+An implementation of GdaDataModel based on a SELECT query
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #GdaDataModelQuery data model simply stores the values returned by a SELECT query. The connection
+used to execute the SELECT query (given when the object is constructed) is the same as the
+one provided th the #GdaDict object to which the query relates.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataModelQuery ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataModelQuery:query ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaDataModelQueryClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaDataModelQueryPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_model_query_new ##### -->
+<para>
+
+</para>
+
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_query_get_param_list ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_query_refresh ##### -->
+<para>
+
+</para>
+
+@model: 
+@error: 
+@Returns: 
+
+

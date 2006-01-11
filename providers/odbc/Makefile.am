@@ -1,11 +1,15 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-odbc.la
 
+configdir   = $(datadir)/libgda
+config_DATA = odbc_specs_dsn.xml
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(ODBC_CFLAGS)
+	$(ODBC_CFLAGS) \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_odbc_la_SOURCES = \
 	gda-odbc-provider.c \
@@ -21,3 +25,4 @@ libgda_odbc_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(ODBC_LIBS)
 
+EXTRA_DIST = $(config_DATA)

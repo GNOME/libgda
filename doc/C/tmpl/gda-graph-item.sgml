@@ -1,0 +1,69 @@
+<!-- ##### SECTION Title ##### -->
+GdaGraphItem
+
+<!-- ##### SECTION Short_Description ##### -->
+Parts of data model used with the #GdaGraph object.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Each graph item which needs to have its position kept in the #GdaDict object (and written in the dictionary file)
+has a corresponding #GdaGraphItem object. A graph item can hold a reference to any #GdaObject object, meaning that
+the position it stores is the position where the references object's graphical representation will be
+on the canvas.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+Se the #GdaGraph object.
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaGraphItem ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### FUNCTION gda_graph_item_new ##### -->
+<para>
+
+</para>
+
+@dict: 
+@ref_obj: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_graph_item_set_position ##### -->
+<para>
+
+</para>
+
+@item: 
+@x: 
+@y: 
+
+
+<!-- ##### FUNCTION gda_graph_item_get_position ##### -->
+<para>
+
+</para>
+
+@item: 
+@x: 
+@y: 
+
+
+<!-- ##### FUNCTION gda_graph_item_get_ref_object ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+

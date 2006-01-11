@@ -1,0 +1,189 @@
+<!-- ##### SECTION Title ##### -->
+GdaEntity
+
+<!-- ##### SECTION Short_Description ##### -->
+Interface to represent a generic entity (for tables, views or queries)
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaEntity ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaEntity::field-added ##### -->
+<para>
+
+</para>
+
+@dbentity: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaEntity::field-removed ##### -->
+<para>
+
+</para>
+
+@dbentity: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaEntity::field-updated ##### -->
+<para>
+
+</para>
+
+@dbentity: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaEntity::fields-order-changed ##### -->
+<para>
+
+</para>
+
+@dbentity: the object which received the signal.
+
+<!-- ##### FUNCTION gda_entity_has_field ##### -->
+<para>
+
+</para>
+
+@iface: 
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_get_fields ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_get_n_fields ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_get_field_by_name ##### -->
+<para>
+
+</para>
+
+@iface: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_get_field_by_xml_id ##### -->
+<para>
+
+</para>
+
+@iface: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_get_field_by_index ##### -->
+<para>
+
+</para>
+
+@iface: 
+@index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_get_field_index ##### -->
+<para>
+
+</para>
+
+@iface: 
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_add_field ##### -->
+<para>
+
+</para>
+
+@iface: 
+@field: 
+
+
+<!-- ##### FUNCTION gda_entity_add_field_before ##### -->
+<para>
+
+</para>
+
+@iface: 
+@field: 
+@field_before: 
+
+
+<!-- ##### FUNCTION gda_entity_swap_fields ##### -->
+<para>
+
+</para>
+
+@iface: 
+@field1: 
+@field2: 
+
+
+<!-- ##### FUNCTION gda_entity_remove_field ##### -->
+<para>
+
+</para>
+
+@iface: 
+@field: 
+
+
+<!-- ##### FUNCTION gda_entity_is_writable ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_get_parameters ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_get_param_list ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+

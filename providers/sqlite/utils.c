@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
@@ -22,7 +22,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-sqlite.h"
@@ -71,8 +71,10 @@ gda_sqlite_update_types_hash (SQLITEcnc *scnc)
 							type = GDA_VALUE_TYPE_INTEGER;
 							break;
 						case SQLITE_AFF_NUMERIC:
-							type = GDA_VALUE_TYPE_NUMERIC;
-							break;
+							/* We don't want numerical affinity to be set to
+							 * GDA_VALUE_TYPE_NUMERIC because it does not work for dates. */
+							/* type = GDA_VALUE_TYPE_NUMERIC; */
+							/* break; */
 						case SQLITE_AFF_TEXT:
 						case SQLITE_AFF_NONE:
 						default:

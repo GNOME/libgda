@@ -1,0 +1,89 @@
+<!-- ##### SECTION Title ##### -->
+GdaGraph
+
+<!-- ##### SECTION Short_Description ##### -->
+Data model to keep graphs' layout
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+An instance of this object is required for each unique graph that is to be created. It is the
+"model" part of the graph. The "view" and "controler" parts are brought by the #GnomeDbCanvas and associated widgets.
+</para>
+<para>
+The graph can be "attached" to a specific #GdaObject object using the "ref_object" property. If the referenced object is destroyed,
+then the graph object will also automaticallu be destroyed.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaGraph ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### FUNCTION gda_graph_new ##### -->
+<para>
+
+</para>
+
+@dict: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_graph_get_graph_type ##### -->
+<para>
+
+</para>
+
+@graph: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_graph_get_items ##### -->
+<para>
+
+</para>
+
+@graph: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_graph_get_item_from_obj ##### -->
+<para>
+
+</para>
+
+@graph: 
+@ref_obj: 
+@create_if_needed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_graph_add_item ##### -->
+<para>
+
+</para>
+
+@graph: 
+@item: 
+
+
+<!-- ##### FUNCTION gda_graph_del_item ##### -->
+<para>
+
+</para>
+
+@graph: 
+@item: 
+
+

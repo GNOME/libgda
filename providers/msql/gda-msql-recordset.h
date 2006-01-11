@@ -25,7 +25,7 @@
 
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-base.h>
+#include <libgda/gda-data-model-row.h>
 
 G_BEGIN_DECLS
 
@@ -48,7 +48,7 @@ typedef struct _GdaMsqlRecordset      GdaMsqlRecordset;
 typedef struct _GdaMsqlRecordsetClass GdaMsqlRecordsetClass;
 
 struct _GdaMsqlRecordset {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GPtrArray       *rows;
 	GdaConnection   *cnc;
 	m_result        *res;
@@ -57,7 +57,7 @@ struct _GdaMsqlRecordset {
 };
 
 struct _GdaMsqlRecordsetClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 GType             gda_msql_recordset_get_type(void);

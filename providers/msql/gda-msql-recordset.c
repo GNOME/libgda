@@ -20,14 +20,14 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-msql.h"
 #include "gda-msql-recordset.h"
 #include "gda-data-model-private.h"
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
 
 static GObjectClass *parent_class;
@@ -133,7 +133,7 @@ gda_msql_recordset_numcols(GdaDataModel *model)
 }
 
 static const GdaRow *
-gda_msql_recordset_get_row(GdaDataModelBase *model,gint row) 
+gda_msql_recordset_get_row(GdaDataModelRow *model, gint row, GError **error) 
 {
 	gint              rows, fetched_rows;
 	register gint     i;
@@ -158,7 +158,7 @@ gda_msql_recordset_get_row(GdaDataModelBase *model,gint row)
 }
 
 static const GdaValue *
-gda_msql_recordset_get_value_at(GdaDataModelBase *model,gint col,gint row) 
+gda_msql_recordset_get_value_at(GdaDataModelRow *model,gint col,gint row) 
 {
 	gint              cols;
 	const GdaRow     *fields;
@@ -167,12 +167,12 @@ gda_msql_recordset_get_value_at(GdaDataModelBase *model,gint col,gint row)
 	if (!GDA_IS_MSQL_RECORDSET(rs)) return NULL;
 	cols=msqlNumFields(rs->res);
 	if (col>=cols) return NULL;
-	fields=gda_msql_recordset_get_row(model,row);
+	fields=gda_msql_recordset_get_row (model,row, NULL);
 	return (fields) ? gda_row_get_value((GdaRow*)fields,col) : NULL;
 }
 
 static gboolean
-gda_msql_recordset_is_updatable(GdaDataModelBase *model) 
+gda_msql_recordset_is_updatable(GdaDataModelRow *model) 
 {
 	GdaCommandType    cmd_type;
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
@@ -183,7 +183,7 @@ gda_msql_recordset_is_updatable(GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_msql_recordset_append_values(GdaDataModelBase *model,const GList *values) 
+gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values) 
 {
 	GString          *sql;
 	GdaRow           *row;
@@ -193,8 +193,7 @@ gda_msql_recordset_append_values(GdaDataModelBase *model,const GList *values)
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
 	if ((!GDA_IS_MSQL_RECORDSET(rs)) ||
-	    (!values) || (!gda_data_model_is_updatable(model)) ||
-	    (!gda_data_model_has_changed(model))) {
+	    (!values) || (!gda_data_model_is_updatable(model))) {
 		return NULL;
 	}
 	cols=msqlNumFields(rs->res);
@@ -249,13 +248,13 @@ gda_msql_recordset_append_values(GdaDataModelBase *model,const GList *values)
 }
 
 static gboolean 
-gda_msql_recordset_remove_row (GdaDataModelBase *model,const GdaRow *row) 
+gda_msql_recordset_remove_row (GdaDataModelRow *model,const GdaRow *row) 
 {
 	return FALSE;
 }
 
 static gboolean
-gda_msql_recordset_update_row (GdaDataModelBase *model,const GdaRow *row) 
+gda_msql_recordset_update_row (GdaDataModelRow *model,const GdaRow *row) 
 {
 	return FALSE;
 }
@@ -264,7 +263,7 @@ static void
 gda_msql_recordset_class_init (GdaMsqlRecordsetClass *cl) 
 {
 	GObjectClass *obj_class=G_OBJECT_CLASS(cl);
-	GdaDataModelBaseClass *mdl_class=GDA_DATA_MODEL_BASE_CLASS(cl);
+	GdaDataModelRowClass *mdl_class=GDA_DATA_MODEL_ROW_CLASS(cl);
 
 	parent_class = g_type_class_peek_parent(cl);
 	obj_class->finalize = gda_msql_recordset_finalize;
@@ -298,7 +297,8 @@ gda_msql_recordset_finalize(GObject *object)
 		rs->res = NULL;
 		for(;rs->rows->len;) {
 			GdaRow *row = (GdaRow*)g_ptr_array_index(rs->rows,0);
-			if (row) gda_row_free(row);
+			if (row) 
+				g_object_unref (row);
 			g_ptr_array_remove_index(rs->rows,0);
 		}
 		g_ptr_array_free(rs->rows,TRUE);
@@ -357,7 +357,7 @@ gda_msql_recordset_describe_column (GdaDataModel *model, gint col)
 	gda_column_set_table(attrs, msql_field->table);
 	if (msql_field->type == MONEY_TYPE) 
 		gda_column_set_scale (attrs, 2);
-	gda_column_set_gdatype (attrs, gda_msql_type_to_gda (msql_field->type));
+	gda_column_set_gda_type (attrs, gda_msql_type_to_gda (msql_field->type));
 	gda_column_set_allow_null (attrs, !IS_NOT_NULL (msql_field->flags));
 	gda_column_set_primary_key (attrs, 1!=1);
 	gda_column_set_unique_key (attrs, IS_UNIQUE (msql_field->flags));

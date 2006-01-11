@@ -1,0 +1,300 @@
+<!-- ##### SECTION Title ##### -->
+GdaObject
+
+<!-- ##### SECTION Short_Description ##### -->
+The base class for many of the library's objects
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This class defines a common behaviour for most of the objects of this library. As the data dictionary is quite dynamic,
+the default way by which GObjects are managed (referenced and unreferenced when not needed anymore using g_object_[un]ref())
+is not enough: sometimes this behaviour should be kept, and sometimes an object's destruction should be forced and
+all the other reference holders of that object should take appropriate actions and drop their reference on that object.
+</para>
+<para>
+Just an example to illustrate this: suppose a data type has been removed from the database itself, 
+then the corresponding #GdaDictType must be destroyed since it does not represent a valid data type anymore.
+#GdaDictType object are all managed by a #GdaDict which has a reference on them.
+
+When the #GdaDict object does a metadata sychronization (using gda_dict_update_dbms_data()), it calls
+gda_object_destroy() on the proper #GdaDictType which must be destroyed. The other objects which did use
+tha particular #GdaDictType object (such as #GdaDictField and  #GdaDictFunction for example) catch the
+"destroy" signal which is emitted by the #GdaDictType object being destroyed and take appropriate actions
+(in this case both these objects will destroy themselves and release any reference they had on the
+#GdaDictType object). 
+
+The reference count of the #GdaDictType object being destroyed then should normally reach 0 and the
+destruction occur as for any other #GObject object.
+</para>
+
+<para>
+This class also introduces common attributes that can be exploited by the classes inheriting that class, such as:
+<itemizedlist>
+    <listitem>
+         <para>The #GdaDict object to which any #GdaObject relates</para>
+    </listitem>
+    <listitem>
+         <para>The string ID of the object: any string which uniquely identifies a #GdaObject within a dictionary</para>
+    </listitem>
+    <listitem>
+         <para>The ID as a guint, the name, description and owner attached to the #GdaObject.</para>
+    </listitem>
+</itemizedlist>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaObject ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaObject::changed ##### -->
+<para>
+
+</para>
+
+@dbbase: the object which received the signal.
+
+<!-- ##### SIGNAL GdaObject::descr-changed ##### -->
+<para>
+
+</para>
+
+@dbbase: the object which received the signal.
+
+<!-- ##### SIGNAL GdaObject::destroyed ##### -->
+<para>
+
+</para>
+
+@dbbase: the object which received the signal.
+
+<!-- ##### SIGNAL GdaObject::id-changed ##### -->
+<para>
+
+</para>
+
+@dbbase: the object which received the signal.
+
+<!-- ##### SIGNAL GdaObject::name-changed ##### -->
+<para>
+
+</para>
+
+@dbbase: the object which received the signal.
+
+<!-- ##### SIGNAL GdaObject::owner-changed ##### -->
+<para>
+
+</para>
+
+@dbbase: the object which received the signal.
+
+<!-- ##### SIGNAL GdaObject::to-be-destroyed ##### -->
+<para>
+
+</para>
+
+@gdaobject: the object which received the signal.
+
+<!-- ##### ARG GdaObject:changed-blocked ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaObject:dict ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaObject:string-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_object_get_dict ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_set_id ##### -->
+<para>
+
+</para>
+
+@object: 
+@strid: 
+
+
+<!-- ##### FUNCTION gda_object_set_name ##### -->
+<para>
+
+</para>
+
+@object: 
+@name: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_set_description ##### -->
+<para>
+
+</para>
+
+@object: 
+@descr: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_set_owner ##### -->
+<para>
+
+</para>
+
+@object: 
+@owner: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_get_id ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_object_get_id ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_object_get_name ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_get_description ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_get_owner ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_destroy ##### -->
+<para>
+
+</para>
+
+@object: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_destroy_check ##### -->
+<para>
+
+</para>
+
+@object: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_connect_destroy ##### -->
+<para>
+
+</para>
+
+@object: 
+@callback: 
+@data: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_changed ##### -->
+<para>
+
+</para>
+
+@object: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_block_changed ##### -->
+<para>
+
+</para>
+
+@object: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_unblock_changed ##### -->
+<para>
+
+</para>
+
+@object: 
+<!-- # Unused Parameters # -->
+@base: 
+
+
+<!-- ##### FUNCTION gda_object_dump ##### -->
+<para>
+
+</para>
+
+@object: 
+@offset: 
+<!-- # Unused Parameters # -->
+@base: 
+
+

@@ -25,7 +25,7 @@
 #  define __gda_freetds_recordset_h__
 
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-base.h>
+#include <libgda/gda-data-model-row.h>
 #include <libgda/gda-value.h>
 #include <tds.h>
 
@@ -42,12 +42,12 @@ typedef struct _GdaFreeTDSRecordsetClass   GdaFreeTDSRecordsetClass;
 typedef struct _GdaFreeTDSRecordsetPrivate GdaFreeTDSRecordsetPrivate;
 
 struct _GdaFreeTDSRecordset {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GdaFreeTDSRecordsetPrivate *priv;
 };
 
 struct _GdaFreeTDSRecordsetClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 struct _GdaFreeTDSRecordsetPrivate {

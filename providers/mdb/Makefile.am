@@ -1,11 +1,15 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-mdb.la
 
+configdir   = $(datadir)/libgda
+config_DATA = mdb_specs_dsn.xml
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(MDB_CFLAGS)
+	$(MDB_CFLAGS) \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_mdb_la_SOURCES = \
 	gda-mdb-provider.c \
@@ -20,4 +24,6 @@ libgda_mdb_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.la \
 	$(LIBGDA_LIBS) \
 	$(MDB_LIBS)
+
+EXTRA_DIST = $(config_DATA)
 

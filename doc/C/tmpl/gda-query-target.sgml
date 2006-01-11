@@ -1,0 +1,140 @@
+<!-- ##### SECTION Title ##### -->
+GdaQueryTarget
+
+<!-- ##### SECTION Short_Description ##### -->
+Represents a target entity within a query.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A #GdaQueryTarget object represents an entity (usually a table, as a #GdaDictTable) which is taking part in a query. 
+For SELECT queries, the targets are
+the entities listed after the FROM clause; for the INSERT, DELETE and UPDATE queries, there is only one target
+which is the entity to which the modifications apply.
+</para>
+<para>
+Within a single SELECT query, there can be more than one #GdaQueryTarget object representing the same entity
+for queries making usage of an entity more than one time.
+</para>
+<para>
+It implements the #GdaXmlStorage, #GdaReferer and #GdaRenderer interfaces.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaQueryTarget ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaQueryTarget:entity ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryTarget:entity-id ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryTarget:entity-name ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaQueryTarget:query ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GdaQueryTargetType ##### -->
+<para>
+
+</para>
+
+@GDA_QUERY_TARGET_TYPE_INNER: 
+@GDA_QUERY_TARGET_TYPE_LEFT_OUTER: 
+@GDA_QUERY_TARGET_TYPE_RIGHT_OUTER: 
+@GDA_QUERY_TARGET_TYPE_FULL_OUTER: 
+@GDA_QUERY_TARGET_TYPE_CROSS: 
+@GDA_QUERY_TARGET_TYPE_LAST: 
+
+<!-- ##### FUNCTION gda_query_target_new ##### -->
+<para>
+
+</para>
+
+@query: 
+@table: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_target_new_copy ##### -->
+<para>
+
+</para>
+
+@orig: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_target_get_query ##### -->
+<para>
+
+</para>
+
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_target_get_represented_table_name ##### -->
+<para>
+
+</para>
+
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_target_get_represented_entity ##### -->
+<para>
+
+</para>
+
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_target_set_alias ##### -->
+<para>
+
+</para>
+
+@target: 
+@alias: 
+
+
+<!-- ##### FUNCTION gda_query_target_get_alias ##### -->
+<para>
+
+</para>
+
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_target_get_complete_name ##### -->
+<para>
+
+</para>
+
+@target: 
+@Returns: 
+
+

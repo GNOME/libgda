@@ -92,6 +92,7 @@ typedef enum {
         GDA_VALUE_TYPE_UINTEGER,
 	GDA_VALUE_TYPE_UNKNOWN
 } GdaValueType;
+#define GDA_VALUE_NB_TYPES GDA_VALUE_TYPE_UNKNOWN
 
 typedef struct {
 	gshort year;

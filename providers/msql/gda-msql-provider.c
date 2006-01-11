@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  * 	   Danilo Schoeneberg <dj@starfire-programming.net
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,7 +22,7 @@
 
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-msql.h"
@@ -89,20 +90,42 @@ static void gda_msql_provider_class_init(GdaMsqlProviderClass *cl)
 
 	parent_class=g_type_class_peek_parent(cl);
 	ocl->finalize=gda_msql_provider_finalize;
-	pcl->get_version=gda_msql_provider_get_version;
-	pcl->open_connection=gda_msql_provider_open_connection;
-	pcl->close_connection=gda_msql_provider_close_connection;
-	pcl->get_server_version=gda_msql_provider_get_server_version;
-	pcl->get_database=gda_msql_provider_get_database;
-	pcl->change_database=gda_msql_provider_change_database;
-	pcl->create_database_cnc=gda_msql_provider_create_database_cnc;
-	pcl->drop_database=gda_msql_provider_drop_database;
-	pcl->execute_command=gda_msql_provider_execute_command;
-	pcl->begin_transaction=gda_msql_provider_begin_transaction;
-	pcl->commit_transaction=gda_msql_provider_commit_transaction;
-	pcl->rollback_transaction=gda_msql_provider_rollback_transaction;
-	pcl->supports=gda_msql_provider_supports;
-	pcl->get_schema=gda_msql_provider_get_schema;
+
+	pcl->get_version = gda_msql_provider_get_version;
+	pcl->get_server_version = gda_msql_provider_get_server_version;
+	pcl->get_info = NULL;
+	pcl->supports = gda_msql_provider_supports;
+	pcl->get_schema = gda_msql_provider_get_schema;
+
+	pcl->get_data_handler = NULL;
+	pcl->string_to_value = NULL;
+	pcl->get_def_dbms_type = NULL;
+
+	pcl->open_connection = gda_msql_provider_open_connection;
+	pcl->reset_connection = NULL;
+	pcl->close_connection = gda_msql_provider_close_connection;
+	pcl->get_database = gda_msql_provider_get_database;
+	pcl->change_database = gda_msql_provider_change_database;
+
+	pcl->get_specs = NULL;
+	pcl->perform_action_params = NULL;
+
+	pcl->create_database_cnc = gda_msql_provider_create_database_cnc;
+	pcl->drop_database_cnc = NULL;
+	pcl->create_table = NULL;
+	pcl->drop_table = gda_msql_provider_drop_database;
+	pcl->create_index = NULL;
+	pcl->drop_index = NULL;
+
+	pcl->execute_command = gda_msql_provider_execute_command;
+	pcl->get_last_insert_id = NULL;
+
+	pcl->begin_transaction = gda_msql_provider_begin_transaction;
+	pcl->commit_transaction = gda_msql_provider_commit_transaction;
+	pcl->rollback_transaction = gda_msql_provider_rollback_transaction;
+	
+	pcl->create_blob = NULL;
+	pcl->fetch_blob = NULL;	
 }
 
 static void 
@@ -261,9 +284,9 @@ static GList *process_sql_commands(GList *rl,GdaConnection *cnc,
 			res=msqlStoreResult();
 			rs=gda_msql_recordset_new(cnc,res,*sock,(int)rc);
 			if (GDA_IS_MSQL_RECORDSET(rs)) {
-				gda_data_model_set_command_text((GdaDataModel*)rs,arr[n]);
-				gda_data_model_set_command_type((GdaDataModel*)rs,
-								GDA_COMMAND_TYPE_SQL);
+				g_object_set (G_OBJECT (rs), 
+					      "command_text", arr[n],
+					      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 				rl=g_list_append(rl,rs);
 			}
 			++n;
@@ -369,12 +392,10 @@ gda_msql_provider_execute_command(GdaServerProvider *p,
 	case GDA_COMMAND_TYPE_TABLE:
 		str=g_strdup_printf("SELECT * FROM %s",gda_command_get_text(cmd));
 		rl=process_sql_commands(rl,cnc,str);
-		if (rl && GDA_IS_DATA_MODEL(rl->data)) {
-			gda_data_model_set_command_text(GDA_DATA_MODEL(rl->data),
-							gda_command_get_text(cmd));
-			gda_data_model_set_command_type(GDA_DATA_MODEL(rl->data),
-							GDA_COMMAND_TYPE_TABLE);
-		}
+		if (rl && GDA_IS_DATA_MODEL(rl->data))
+			g_object_set (G_OBJECT (rl->data), 
+				      "command_text", arr[n],
+				      "command_type", GDA_COMMAND_TYPE_TABLE, NULL);
 		g_free(str);
 		break;
 	default:;

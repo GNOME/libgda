@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <string.h>
 #include "gda-ibmdb2.h"
 #include "gda-ibmdb2-recordset.h"
@@ -31,17 +31,17 @@
 #undef PARENT_TYPE
 #endif
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
 static void gda_ibmdb2_recordset_class_init (GdaIBMDB2RecordsetClass *klass);
 static void gda_ibmdb2_recordset_init       (GdaIBMDB2Recordset *recset, GdaIBMDB2RecordsetClass *klass);
 static void gda_ibmdb2_recordset_finalize   (GObject *object);
 
-static const GdaValue 		*gda_ibmdb2_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row);
-static void      	         gda_ibmdb2_recordset_describe     (GdaDataModelBase *model, gint col);
-static gint			 gda_ibmdb2_recordset_get_n_rows    (GdaDataModelBase *model);
-static gint			 gda_ibmdb2_recordset_get_n_columns (GdaDataModelBase *model);
-static const GdaRow 		*gda_ibmdb2_recordset_get_row 	   (GdaDataModelBase *model, gint rownum);
+static const GdaValue 		*gda_ibmdb2_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row);
+static void      	         gda_ibmdb2_recordset_describe     (GdaDataModelRow *model, gint col);
+static gint			 gda_ibmdb2_recordset_get_n_rows    (GdaDataModelRow *model);
+static gint			 gda_ibmdb2_recordset_get_n_columns (GdaDataModelRow *model);
+static const GdaRow 		*gda_ibmdb2_recordset_get_row 	   (GdaDataModelRow *model, gint rownum, GError **error);
 
 static GObjectClass	*parent_class = NULL;
 
@@ -69,7 +69,7 @@ static void
 gda_ibmdb2_recordset_class_init (GdaIBMDB2RecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
+	GdaDataModelRowClass *model_class = GDA_DATA_MODEL_ROW_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -92,7 +92,7 @@ gda_ibmdb2_recordset_finalize (GObject * object)
                         while (recset->priv->rows->len > 0) {
                                 GdaRow *row = (GdaRow *) g_ptr_array_index (recset->priv->rows, 0);
                                 if (row != NULL) {
-                                        gda_row_free (row);
+                                        g_object_unref (row);
                                         row = NULL;
                                 }
                                 g_ptr_array_remove_index (recset->priv->rows, 0);
@@ -137,7 +137,7 @@ gda_ibmdb2_recordset_finalize (GObject * object)
  */
 
 static const GdaRow *
-gda_ibmdb2_recordset_get_row (GdaDataModelBase *model, gint row)
+gda_ibmdb2_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
         GdaIBMDB2Recordset *recset = (GdaIBMDB2Recordset *) model;
 
@@ -154,7 +154,7 @@ gda_ibmdb2_recordset_get_row (GdaDataModelBase *model, gint row)
 }
 
 static const GdaValue *
-gda_ibmdb2_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
+gda_ibmdb2_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaIBMDB2Recordset *recset = (GdaIBMDB2Recordset *) model;
         const GdaRow *fields;
@@ -165,14 +165,14 @@ gda_ibmdb2_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
         if (col >= recset->priv->ncols)
                 return NULL;
 
-        fields = gda_ibmdb2_recordset_get_row (model, row);
+        fields = gda_ibmdb2_recordset_get_row (model, row, NULL);
         return fields != NULL ? gda_row_get_value ((GdaRow *)fields, col) : NULL;
 	
 }
 
 
 static gint
-gda_ibmdb2_recordset_get_n_rows (GdaDataModelBase *model)
+gda_ibmdb2_recordset_get_n_rows (GdaDataModelRow *model)
 {
 	GdaIBMDB2Recordset *recset = (GdaIBMDB2Recordset *) model;
 
@@ -183,7 +183,7 @@ gda_ibmdb2_recordset_get_n_rows (GdaDataModelBase *model)
 }
 
 static gint
-gda_ibmdb2_recordset_get_n_columns (GdaDataModelBase *model)
+gda_ibmdb2_recordset_get_n_columns (GdaDataModelRow *model)
 {
 	GdaIBMDB2Recordset *recset = (GdaIBMDB2Recordset *) model;
 
@@ -266,7 +266,7 @@ gda_ibmdb2_recordset_describe (GdaDataModel *model, gint col)
 	
 	gda_column_set_name (attribs, field->column_name);
 	gda_column_set_scale (attribs, field->column_scale);
-        gda_column_set_gdatype (attribs, gda_ibmdb2_get_value_type (field));
+        gda_column_set_gda_type (attribs, gda_ibmdb2_get_value_type (field));
         gda_column_set_defined_size (attribs, field->column_size);
 
         gda_column_set_unique_key (attribs, FALSE);

@@ -28,7 +28,7 @@
 #include <glib-object.h>
 #include <libgda/gda-value.h>
 #include <glib/gmacros.h>
-#include <libgda/global-decl.h>
+#include <libgda/gda-decl.h>
 
 G_BEGIN_DECLS
 
@@ -37,10 +37,6 @@ G_BEGIN_DECLS
 #define GDA_COLUMN_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_COLUMN, GdaColumnClass))
 #define GDA_IS_COLUMN(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_COLUMN))
 #define GDA_IS_COLUMN_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_COLUMN))
-
-typedef struct _GdaColumn        GdaColumn;
-typedef struct _GdaColumnClass   GdaColumnClass;
-typedef struct _GdaColumnPrivate GdaColumnPrivate;
 
 struct _GdaColumn {
 	GObject           object;
@@ -81,8 +77,8 @@ void            gda_column_set_scale          (GdaColumn *column, glong scale);
 const gchar*    gda_column_get_dbms_type      (GdaColumn *column);
 void            gda_column_set_dbms_type      (GdaColumn *column, const gchar *dbms_type);
 
-GdaValueType    gda_column_get_gdatype        (GdaColumn *column);
-void            gda_column_set_gdatype        (GdaColumn *column, GdaValueType type);
+GdaValueType    gda_column_get_gda_type        (GdaColumn *column);
+void            gda_column_set_gda_type        (GdaColumn *column, GdaValueType type);
 
 gboolean        gda_column_get_allow_null     (GdaColumn *column);
 void            gda_column_set_allow_null     (GdaColumn *column, gboolean allow);

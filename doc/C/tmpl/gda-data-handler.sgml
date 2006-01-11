@@ -1,0 +1,131 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataHandler
+
+<!-- ##### SECTION Short_Description ##### -->
+Interface which provides data handling capabilities
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Because data types vary a lot from a DBMS to another, the #GdaDataHandler interface helps
+designing modules which can handle very specific pieces of data through plugins.
+Each object which imlements the #GdaDataHandler interface is expected to handle a subset of
+the possible libgda defined data types.
+</para>
+<para>
+The #GdaDataHandler object can convert a #GdaValue to and from both SQL and 'STR'. The SQL representation of a value is 
+the actual string which would be used in an SQL statement (for example a string's SQL representation is surrounded by 
+quotes such as 'that\'s a string'). The 'STR' representation is a user friendly representation of a value (and the
+previous example would simply be: that's a string).
+</para>
+<para>
+Only one object which implements this interface is needed for any given data type, and it mainly contains some
+methods to manage values (as #GdaValue structures). The #GnomeDbDataEntry interface is complementary to this one since
+it it implemented by widgets where the user can enter or modify some data.
+</para>
+<para>
+For a given data type, the #GdaConnection (found in the correspoding #GdaDict object) will provide a reference to a valid
+#GdaDataHandler to handle values of that data type.
+</para>
+<para>
+Libmergeant provides some default #GdaDataHandler objects for the most common data types (strings with a #GdaHandlerString, 
+booleans with a #GdaHandlerBoolean, etc) and some other as plugins.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+The #GdaDictType class an the #GnomeDbDataEntry interface.
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gda_data_handler_get_sql_from_value ##### -->
+<para>
+
+</para>
+
+@dh: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_handler_get_str_from_value ##### -->
+<para>
+
+</para>
+
+@dh: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_handler_get_value_from_sql ##### -->
+<para>
+
+</para>
+
+@dh: 
+@sql: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_handler_get_value_from_str ##### -->
+<para>
+
+</para>
+
+@dh: 
+@str: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_handler_get_sane_init_value ##### -->
+<para>
+
+</para>
+
+@dh: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_handler_get_nb_gda_types ##### -->
+<para>
+
+</para>
+
+@dh: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_handler_accepts_gda_type ##### -->
+<para>
+
+</para>
+
+@dh: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_handler_get_gda_type_index ##### -->
+<para>
+
+</para>
+
+@dh: 
+@index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_handler_get_descr ##### -->
+<para>
+
+</para>
+
+@dh: 
+@Returns: 
+
+

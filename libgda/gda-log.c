@@ -28,7 +28,7 @@
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
 #include <glib/gutils.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 
 static gboolean log_enabled = TRUE;

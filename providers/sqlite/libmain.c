@@ -21,13 +21,12 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-config.h>
 #include "gda-sqlite-provider.h"
 
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
-GList             *plugin_get_connection_params (void);
 gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
 
@@ -41,19 +40,6 @@ const gchar *
 plugin_get_description (void)
 {
 	return _("Provider for SQLite databases");
-}
-
-GList *
-plugin_get_connection_params (void)
-{
-	GList *list = NULL;
-
-	list = g_list_append (list,
-			      gda_provider_parameter_info_new_full ("URI", _("File Name"),
-								    _("Full path of the file containing the SQLite database"),
-								    GDA_VALUE_TYPE_STRING));
-
-	return list;
 }
 
 gchar *

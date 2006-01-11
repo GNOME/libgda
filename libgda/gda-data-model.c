@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -23,11 +23,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
+#include <glib/gprintf.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-row.h>
+#include <libgda/gda-object.h>
 #include <string.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
@@ -38,16 +41,9 @@ static void gda_data_model_class_init (gpointer g_class);
 
 /* signals */
 enum {
-	CHANGED,
 	ROW_INSERTED,
 	ROW_UPDATED,
 	ROW_REMOVED,
-	COLUMN_INSERTED,
-	COLUMN_UPDATED,
-	COLUMN_REMOVED,
-	BEGIN_UPDATE,
-	CANCEL_UPDATE,
-	COMMIT_UPDATE,
 	LAST_SIGNAL
 };
 
@@ -72,7 +68,7 @@ gda_data_model_get_type (void)
 		};
 		
 		type = g_type_register_static (G_TYPE_INTERFACE, "GdaDataModel", &info, 0);
-		g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
+		g_type_interface_add_prerequisite (type, GDA_TYPE_OBJECT);
 	}
 	return type;
 }
@@ -83,14 +79,6 @@ gda_data_model_class_init (gpointer g_class)
 	static gboolean initialized = FALSE;
 
 	if (! initialized) {
-		gda_data_model_signals[CHANGED] =
-			g_signal_new ("changed",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, changed),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__VOID,
-				      G_TYPE_NONE, 0);
 		gda_data_model_signals[ROW_INSERTED] =
 			g_signal_new ("row_inserted",
 				      GDA_TYPE_DATA_MODEL,
@@ -115,54 +103,6 @@ gda_data_model_class_init (gpointer g_class)
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
-		gda_data_model_signals[COLUMN_INSERTED] =
-			g_signal_new ("column_inserted",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, column_inserted),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__INT,
-				      G_TYPE_NONE, 1, G_TYPE_INT);
-		gda_data_model_signals[COLUMN_UPDATED] =
-			g_signal_new ("column_updated",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, column_updated),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__INT,
-				      G_TYPE_NONE, 1, G_TYPE_INT);
-		gda_data_model_signals[COLUMN_REMOVED] =
-			g_signal_new ("column_removed",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, column_removed),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__INT,
-				      G_TYPE_NONE, 1, G_TYPE_INT);
-		gda_data_model_signals[BEGIN_UPDATE] =
-			g_signal_new ("begin_update",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, begin_update),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__VOID,
-				      G_TYPE_NONE, 0);
-		gda_data_model_signals[CANCEL_UPDATE] =
-			g_signal_new ("cancel_update",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, cancel_update),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__VOID,
-				      G_TYPE_NONE, 0);
-		gda_data_model_signals[COMMIT_UPDATE] =
-			g_signal_new ("commit_update",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelClass, commit_update),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__VOID,
-				      G_TYPE_NONE, 0);
 
 		initialized = TRUE;
 	}
@@ -193,9 +133,7 @@ gda_data_model_changed (GdaDataModel *model)
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	
 	if (do_notify_changes (model)) 
-		g_signal_emit (G_OBJECT (model),
-			       gda_data_model_signals[CHANGED],
-			       0);
+		gda_object_changed (GDA_OBJECT (model));
 }
 
 /**
@@ -220,8 +158,9 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 		for (i = 0; i < nbcols; i++) {
 			column = gda_data_model_describe_column (model, i);
 			value = gda_data_model_get_value_at (model, i, 0);
-			if ((gda_column_get_gdatype (column) == GDA_VALUE_TYPE_UNKNOWN))
-				gda_column_set_gdatype (column, value ? gda_value_get_type (value) : GDA_VALUE_TYPE_NULL);
+			if ((gda_column_get_gda_type (column) == GDA_VALUE_TYPE_UNKNOWN))
+				gda_column_set_gda_type (column, 
+							 value ? gda_value_get_type ((GdaValue *)value) : GDA_VALUE_TYPE_NULL);
 		}
 	}
 
@@ -314,6 +253,42 @@ gda_data_model_thaw (GdaDataModel *model)
 }
 
 /**
+ * gda_data_model_is_updatable
+ * @model: a #GdaDataModel object.
+ *
+ * Tells if @model can be modified
+ *
+ * Returns: TRUE if @model can be modified
+ */
+gboolean
+gda_data_model_is_updatable (GdaDataModel *model)
+{
+	guint flags;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	flags = gda_data_model_get_access_flags (model);
+	return (flags & GDA_DATA_MODEL_ACCESS_WRITE);
+}
+
+/**
+ * gda_data_model_get_access_flags
+ * @model: a #GdaDataModel object.
+ *
+ * Get the attributes of @model such as how to access the data it contains if it's modifiable, etc.
+ *
+ * Returns: an ORed value of #GdaDataModelAccessFlags flags
+ */
+guint
+gda_data_model_get_access_flags (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_access_flags)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_access_flags) (model);
+	else
+		return 0;
+}
+
+/**
  * gda_data_model_get_n_rows
  * @model: a #GdaDataModel object.
  *
@@ -362,7 +337,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * about the given column in the data model.
  *
  * WARNING: the returned #GdaColumn object belongs to the @model model and
- * and should not be destroyed.
+ * and should not be destroyed; any modification will impact the whole data model.
  *
  * Returns: the description of the column.
  */
@@ -423,28 +398,6 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 }
 
 /**
- * gda_data_model_get_row
- * @model: a #GdaDataModel object.
- * @row: row number.
- *
- * Retrieves a given row from a data model.
- *
- * Returns: a #GdaRow object.
- */
-GdaRow *
-gda_data_model_get_row (GdaDataModel *model, gint row)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_row)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_row) (model, row);
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return NULL;
-	}
-}
-
-/**
  * gda_data_model_get_value_at
  * @model: a #GdaDataModel object.
  * @col: column number.
@@ -455,10 +408,9 @@ gda_data_model_get_row (GdaDataModel *model, gint row)
  *
  * This is the main function for accessing data in a model.
  *
- * Note that the returned #GdaValue must not be modified directly (unexpected behavoiurs may
+ * Note that the returned #GdaValue must not be modified directly (unexpected behaviours may
  * occur if you do so). If you want to
- * modify a value stored in a #GdaDataModel, you must first obtain a #GdaRow object using
- * gda_data_model_get_row() and then call gda_row_set_value() on that row object.
+ * modify a value stored in a #GdaDataModel, use the gda_data_model_set_value() method.
  *
  * Returns: a #GdaValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
@@ -477,23 +429,229 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 /**
- * gda_data_model_is_updatable
+ * gda_data_model_set_value_at
  * @model: a #GdaDataModel object.
+ * @col: column number.
+ * @row: row number.
+ * @value: a #GdaValue, or %NULL
+ * @error: a place to store errors, or %NULL
  *
- * Checks whether the given data model can be updated or not.
- *
- * Returns: %TRUE if it can be updated, %FALSE if not.
+ * Returns: TRUE if the value in the data model has been updated and no error occured
  */
 gboolean
-gda_data_model_is_updatable (GdaDataModel *model)
+gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GdaValue *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_is_updatable)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_is_updatable) (model);
-	else 
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_value_at)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_value_at) (model, col, row, value, error);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return FALSE;
+	}
 }
+
+/**
+ * gda_data_model_set_values
+ * @model: a #GdaDataModel object.
+ * @row: row number.
+ * @values: a list of #GdaValue, one for each n (<nb_cols) columns of @model
+ * @error: a place to store errors, or %NULL
+ *
+ * Returns: TRUE if the value in the data model has been updated and no error occured
+ */
+gboolean
+gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values) (model, row, values, error);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
+}
+
+/**
+ * gda_data_model_create_iter
+ * @model: a #GdaDataModel object.
+ *
+ * Creates a new iterator object #GdaDataModelIter object which can be used to iterate through
+ * rows in @model.
+ *
+ * The row the returned #GdaDataModelIter represents is undefined. For models which can be accessed 
+ * randomly the correspoding row can be set using gda_data_model_iter_at_row(), 
+ * and for models which are accessible sequentially only then the first row will be
+ * fetched using gda_data_model_iter_next().
+ *
+ * Returns: a new #GdaDataModelIter object, or %NULL if an error occured
+ */
+GdaDataModelIter *
+gda_data_model_create_iter (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_create_iter)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_create_iter) (model);
+	else 
+		/* default method */
+		return gda_data_model_iter_new (model);
+}
+
+/**
+ * gda_data_model_iter_at_row
+ * @model: a #GdaDataModel object.
+ * @iter: a #GdaDataModelIter object
+ * @row: row number.
+ *
+ * Sets @iter to represent the @row row. @iter must be a valid iterator object obtained
+ * using the gda_data_model_create_iter() method.
+ *
+ * Returns: TRUE if no error occured
+ */
+gboolean
+gda_data_model_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
+	else {
+		/* default method */
+		GSList *list;
+		gint col;
+		GdaDataModel *test;
+		gboolean update_model;
+
+		/* validity tests */
+		if (row >= gda_data_model_get_n_rows (model))
+			return FALSE;
+		
+		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
+			return FALSE;
+		
+		g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+
+		g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
+		g_return_val_if_fail (test == model, FALSE);
+
+		/* actual sync. */
+		g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
+		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+		col = 0;
+		list = ((GdaParameterList *) iter)->parameters;
+		while (list) {
+			gda_parameter_set_value (GDA_PARAMETER (list->data), 
+						 gda_data_model_get_value_at (model, col, row));
+			list = g_slist_next (list);
+			col ++;
+		}
+		g_object_set (G_OBJECT (iter), "current_row", row, "update_model", update_model, NULL);
+		return TRUE;
+	}
+}
+
+/**
+ * gda_data_model_iter_next
+ * @model: a #GdaDataModel object.
+ * @iter: a #GdaDataModelIter object
+ *
+ * Sets @iter to the next available row in @model. @iter must be a valid iterator object obtained
+ * using the gda_data_model_create_iter() method.
+ *
+ * Returns: TRUE if no error occured
+ */
+gboolean
+gda_data_model_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next) (model, iter);
+	else {
+		/* default method */
+		GSList *list;
+		gint col;
+		gint row;
+		GdaDataModel *test;
+
+		/* validity tests */
+		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
+			return FALSE;
+		
+		g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+
+		g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
+		g_return_val_if_fail (test == model, FALSE);
+
+		g_object_get (G_OBJECT (iter), "current_row", &row, NULL);
+		row++;
+		if (row >= gda_data_model_get_n_rows (model))
+			return FALSE;
+
+		/* actual sync. */
+		col = 0;
+		list = ((GdaParameterList *) iter)->parameters;
+		while (list) {
+			gda_parameter_set_value (GDA_PARAMETER (list->data), 
+						 gda_data_model_get_value_at (model, col, row));
+			list = g_slist_next (list);
+			col ++;
+		}
+		g_object_set (G_OBJECT (iter), "current_row", row, NULL);
+		return TRUE;
+	}
+}
+
+/**
+ * gda_data_model_iter_prev
+ * @model: a #GdaDataModel object.
+ * @iter: a #GdaDataModelIter object
+ *
+ * Sets @iter to the previous available row in @model. @iter must be a valid iterator object obtained
+ * using the gda_data_model_create_iter() method.
+ *
+ * Returns: TRUE if no error occured
+ */
+gboolean
+gda_data_model_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev) (model, iter);
+	else {
+		/* default method */
+		GSList *list;
+		gint col;
+		gint row;
+		GdaDataModel *test;
+
+		/* validity tests */
+		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
+			return FALSE;
+		
+		g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+
+		g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
+		g_return_val_if_fail (test == model, FALSE);
+
+		g_object_get (G_OBJECT (iter), "current_row", &row, NULL);
+		row--;
+		if (row < 0)
+			return FALSE;
+
+		/* actual sync. */
+		col = 0;
+		list = ((GdaParameterList *) iter)->parameters;
+		while (list) {
+			gda_parameter_set_value (GDA_PARAMETER (list->data), 
+						 gda_data_model_get_value_at (model, col, row));
+			list = g_slist_next (list);
+			col ++;
+		}
+		g_object_set (G_OBJECT (iter), "current_row", row, NULL);
+		return TRUE;
+	}
+}
+
 
 /**
  * gda_data_model_append_values
@@ -501,113 +659,65 @@ gda_data_model_is_updatable (GdaDataModel *model)
  * @values: #GList of #GdaValue* representing the row to add.  The
  *          length must match model's column count.  These #GdaValue
  *	    are value-copied.  The user is still responsible for freeing them.
+ * @error: a place to store errors, or %NULL
  *
  * Appends a row to the given data model.
  *
- * Returns: the added row.
+ * Returns: the number of the added row, or -1 if an error occured
  */
-GdaRow *
-gda_data_model_append_values (GdaDataModel *model, const GList *values)
+gint
+gda_data_model_append_values (GdaDataModel *model, const GList *values, GError **error)
 {
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) {
-		GdaRow *row;
-		row = (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) (model, values);
-		gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
-		return row;
-	}
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) 
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) (model, values, error);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return NULL;
+		return -1;
 	}
 }
 
 /**
  * gda_data_model_append_row
  * @model: a #GdaDataModel object.
- * @row: the #GdaRow to be appended
+ * @error: a place to store errors, or %NULL
  * 
- * Appends a row to the data model. The 'number' attribute of @row may be
- * modified by the data model to represent the actual row position.
+ * Appends a row to the data model. 
  *
- * The @row object is then referenced by the @model model and can be safely unref'ed by the
- * caller. A pointer to that row object can be obtained at any time using the 
- * gda_data_model_get_row() method.
- *
- * The @row can be created using gda_row_new() or gda_row_new_from_list() (passing %NULL
- * for the @model argument).
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
+ * Returns: the number of the added row, or -1 if an error occured
  */
-gboolean
-gda_data_model_append_row (GdaDataModel *model, GdaRow *row)
+gint
+gda_data_model_append_row (GdaDataModel *model, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (row != NULL, FALSE);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) {
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) (model, row);
-	}
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) 
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) (model, error);
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
+		return -1;
 	}
 }
 
-/**
- * gda_data_model_update_row
- * @model: a #GdaDataModel object.
- * @row: the #GdaRow to be updated.
- *
- * Updates a row data model. This results in the underlying
- * database row's values being changed.
- *
- * NOTE: the @row GdaRow must not be used again because it may or may not
- * be used by the @model model depending on @model's implementation.
- *
- * The @row can be created using gda_row_new() or gda_row_new_from_list() (passing %NULL
- * for the @model argument).
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_data_model_update_row (GdaDataModel *model, GdaRow *row)
-{
-        gboolean result;
-
-        g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-        g_return_val_if_fail (row != NULL, FALSE);
-
-        if (GDA_DATA_MODEL_GET_CLASS (model)->i_update_row) {
-                return (GDA_DATA_MODEL_GET_CLASS (model)->i_update_row) (model, row);
-        }
-        else {
-                g_warning ("%s() method not supported\n", __FUNCTION__);
-                return FALSE;
-        }
-}
 
 /**
  * gda_data_model_remove_row
  * @model: a #GdaDataModel object.
- * @row: the #GdaRow to be removed.
+ * @row: the row number to be removed.
+ * @error: a place to store errors, or %NULL
  *
- * Removes a row from the data model. This results in the underlying
- * database row being removed in the database.
- *
- * The @row must have been obtained using the gda_data_model_get_row() function.
+ * Removes a row from the data model.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_remove_row (GdaDataModel *model, GdaRow *row)
+gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (row != NULL, FALSE);
 
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) {
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) (model, row);
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) (model, row, error);
 	}
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
@@ -616,200 +726,71 @@ gda_data_model_remove_row (GdaDataModel *model, GdaRow *row)
 }
 
 /**
- * gda_data_model_append_column
+ * gda_data_model_get_row_from_values
  * @model: a #GdaDataModel object.
- * @attrs: a #GdaColumn describing the column to add.
+ * @values: a list of #GdaValue values
+ * @cols_index: an array of #gint containing the column number to match each value of @values
  *
- * Appends a column to the given data model.  If successful, the position of
- * a pointer to a #GdaColumn is returned (and its attributes can be updated)
+ * Returns the first row where all the values in @values at the columns identified at
+ * @cols_index match. If the row can't be identified, then returns -1;
  *
- * Returns: a #GdaColumn if successful, and %NULL if the data model does not suppport this method.
+ * NOTE: the @cols_index array MUST contain a column index for each value in @values
+ *
+ * Returns: the requested row number, of -1 if not found
  */
-GdaColumn *
-gda_data_model_append_column (GdaDataModel *model)
+gint
+gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *cols_index)
 {
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_column) 
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_column) (model);
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return NULL;
-	}
-}
+	gint row = -1;
+        gint current_row, n_rows, n_cols;
 
-/**
- * gda_data_model_remove_column
- * @model: a #GdaDataModel object.
- * @col: the column to be removed.
- *
- * Removes a column from the data model. This means that all values attached to this
- * column in the data model will be destroyed in the underlying database.
- *
- * Returns: %TRUE if successful, %FALSE if the data model cannot be modified of if it does not
- * support that method.
- */
-gboolean
-gda_data_model_remove_column (GdaDataModel *model, gint col)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
+	g_return_val_if_fail (values, -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_column) 
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_column) (model, col);
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
-}
+        n_rows = gda_data_model_get_n_rows (model);
+        n_cols = gda_data_model_get_n_columns (model);
+        current_row = 0;
 
-/**
- * gda_data_model_foreach
- * @model: a #GdaDataModel object.
- * @func: callback function.
- * @user_data: context data for the callback function.
- *
- * Calls the specified callback function for each row in the data model.
- * This will just traverse all rows, and call the given callback
- * function for each of them.
- *
- * The callback function must have the following form:
- *
- *      gboolean foreach_func (GdaDataModel *model, GdaRow *row, gpointer user_data)
- *
- * where "row" would be the row being read, and "user_data" the parameter
- * specified in @user_data in the call to gda_data_model_foreach.
- * This callback function can return %FALSE to stop the processing. If
- * it returns %TRUE, processing will continue until no rows remain.
- */
-void
-gda_data_model_foreach (GdaDataModel *model,
-			GdaDataModelForeachFunc func,
-			gpointer user_data)
-{
-	gint rows;
-	gint r;
-	const GdaRow *row;
-	gboolean more;
+#ifdef debug_NO
+        {
+                GSList *list = values;
 
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	g_return_if_fail (func != NULL);
+                g_print ("%s() find row for values: ", __FUNCTION__);
+                while (list) {
+                        g_print ("#%s# ", gda_value_stringify ((GdaValue *)(list->data)));
+                        list = g_slist_next (list);
+                }
+                g_print ("In %d rows\n", n_rows);
+        }
+#endif
 
-	rows = gda_data_model_get_n_rows (model);
-	more = TRUE;
-	for (r = 0; more && r < rows ; r++) {
-		row = gda_data_model_get_row (model, r);
-		/* call the callback function */
-		more = func (model, (GdaRow *) row, user_data);
-	}
-}
+	while ((current_row < n_rows) && (row == -1)) {
+                GSList *list;
+                gboolean allequal = TRUE;
+                const GdaValue *value;
+                gint index;
 
-/**
- * gda_data_model_has_changed
- * @model: a #GdaDataModel object.
- *
- * Checks whether this data model is in updating mode or not. Updating
- * mode is set to %TRUE when @gda_data_model_begin_update has been
- * called successfully, and is not set back to %FALSE until either
- * @gda_data_model_cancel_update or @gda_data_model_commit_update have
- * been called.
- *
- * Returns: %TRUE if updating mode, %FALSE otherwise.
- */
-gboolean
-gda_data_model_has_changed (GdaDataModel *model)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+                list = values;
+                index = 0;
+                while (list && allequal) {
+                        if (cols_index)
+                                g_return_val_if_fail (cols_index [index] < n_cols, FALSE);
+                        value = gda_data_model_get_value_at (model, cols_index [index], current_row);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_has_changed) 
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_has_changed) (model);
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
-}
+                        if (gda_value_compare_ext ((GdaValue *) (list->data), (GdaValue *) value))
+                                allequal = FALSE;
 
-/**
- * gda_data_model_begin_update
- * @model: a #GdaDataModel object.
- *
- * Starts update of this data model. This function should be the
- * first called when modifying the data model.
- *
- * Returns: %TRUE on success, %FALSE if there was an error.
- */
-gboolean
-gda_data_model_begin_update (GdaDataModel *model)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+                        list = g_slist_next (list);
+                        index++;
+                }
 
-	if (!gda_data_model_is_updatable (model)) {
-		gda_log_error (_("Data model %p is not updatable"), model);
-		return FALSE;
-	}
+                if (allequal)
+                        row = current_row;
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_begin_changes) 
-		(GDA_DATA_MODEL_GET_CLASS (model)->i_begin_changes) (model);
-	
-	g_signal_emit (G_OBJECT (model),
-		       gda_data_model_signals[BEGIN_UPDATE], 0);
-	
-	return TRUE;
-}
+                current_row++;
+        }
 
-/**
- * gda_data_model_cancel_update
- * @model: a #GdaDataModel object.
- *
- * Cancels update of this data model. This means that all changes
- * will be discarded, and the old data put back in the model.
- *
- * Returns: %TRUE on success, %FALSE if there was an error.
- */
-gboolean
-gda_data_model_cancel_update (GdaDataModel *model)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_cancel_changes) {
-		gboolean status;
-		status = (GDA_DATA_MODEL_GET_CLASS (model)->i_cancel_changes) (model);
-		if (status)
-			g_signal_emit (G_OBJECT (model),
-				       gda_data_model_signals[CANCEL_UPDATE], 0);
-		return status;
-	}
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
-}
-
-/**
- * gda_data_model_commit_update
- * @model: a #GdaDataModel object.
- *
- * Approves all modifications and send them to the underlying
- * data source/store.
- *
- * Returns: %TRUE on success, %FALSE if there was an error.
- */
-gboolean
-gda_data_model_commit_update (GdaDataModel *model)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_commit_changes) {
-		gboolean status;
-		status = (GDA_DATA_MODEL_GET_CLASS (model)->i_commit_changes) (model);
-		if (status)
-			g_signal_emit (G_OBJECT (model),
-				       gda_data_model_signals[COMMIT_UPDATE], 0);
-		return status;
-	}
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
+        return row;
 }
 
 static gchar *
@@ -957,10 +938,15 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	xmlNodePtr node;
 	gint rows, i;
 	gint *rcols, rnb_cols;
+	gchar *arrayid;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	node = xmlNewNode (NULL, "data-array");
+	node = xmlNewNode (NULL, "gda_array");
+	
+	arrayid = g_strdup_printf ("DA%s", gda_object_get_id (GDA_OBJECT (model)));
+	xmlSetProp (node, "id", arrayid);
+
 	if (name)
 		xmlSetProp (node, "name", name);
 	else
@@ -974,7 +960,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 			rcols [i] = i;
 	}
 	else {
-		rcols = cols;
+		rcols = (gint *) cols;
 		rnb_cols = nb_cols;
 	}
 
@@ -984,6 +970,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		GdaColumn *column;
 		xmlNodePtr field;
 		const gchar *cstr;
+		gchar *str;
 
 		column = gda_data_model_describe_column (model, rcols [i]);
 		if (!column) {
@@ -991,7 +978,10 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 			return NULL;
 		}
 
-		field = xmlNewChild (node, NULL, "field", NULL);
+		field = xmlNewChild (node, NULL, "gda_array_field", NULL);
+		str = g_strdup_printf ("%s:FI%d", arrayid, i);
+		xmlSetProp (field, "id", str);
+		g_free (str);
 		xmlSetProp (field, "name", gda_column_get_name (column));
 		cstr = gda_column_get_title (column);
 		if (cstr && *cstr)
@@ -1002,7 +992,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		cstr = gda_column_get_dbms_type (column);
 		if (cstr && *cstr)
 			xmlSetProp (field, "dbms_type", cstr);
-		xmlSetProp (field, "gdatype", gda_type_to_string (gda_column_get_gdatype (column)));
+		xmlSetProp (field, "gdatype", gda_type_to_string (gda_column_get_gda_type (column)));
 		if (gda_column_get_defined_size (column) != 0)
 			xml_set_int (field, "size", gda_column_get_defined_size (column));
 		if (gda_column_get_scale (column) != 0)
@@ -1017,7 +1007,10 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 			xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (column));
 		cstr = gda_column_get_references (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, "references", cstr);
+			xmlSetProp (field, "ref", cstr);
+		cstr = gda_column_get_table (column);
+		if (cstr && *cstr)
+			xmlSetProp (field, "table", cstr);
 	}
 	
 	/* add the model data to the XML output */
@@ -1025,19 +1018,25 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		xmlNodePtr row, data, field;
 		gint r, c;
 
-		data = xmlNewChild (node, NULL, "data", NULL);
+		data = xmlNewChild (node, NULL, "gda_array_data", NULL);
 		for (r = 0; r < rows; r++) {
-			row = xmlNewChild (data, NULL, "row", NULL);
+			row = xmlNewChild (data, NULL, "gda_array_row", NULL);
 			for (c = 0; c < rnb_cols; c++) {
 				GdaValue *value;
 				gchar *str;
 
 				value = (GdaValue *) gda_data_model_get_value_at (model, rcols [c], r);
-				if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
-					str = g_strdup (gda_value_get_boolean (value) ? "TRUE" : "FALSE");
-				else
-					str = gda_value_stringify (value);
-				field = xmlNewChild (row, NULL, "value", str);
+				if (!value || gda_value_is_null ((GdaValue *) value))
+					str = NULL;
+				else {
+					if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
+						str = g_strdup (gda_value_get_boolean (value) ? "TRUE" : "FALSE");
+					else
+						str = gda_value_stringify (value);
+				}
+				field = xmlNewChild (row, NULL, "gda_value", str);
+				if (!str)
+					xmlSetProp (field, "isnull", "t");
 
 				g_free (str);
 			}
@@ -1047,11 +1046,12 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	if (!cols)
 		g_free (rcols);
 
+	g_free (arrayid);
 	return node;
 }
 
 static gboolean
-add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
+add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 {
 	xmlNodePtr xml_field;
 	GList *value_list = NULL;
@@ -1063,30 +1063,50 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
 	values = g_ptr_array_new ();
 	g_ptr_array_set_size (values, gda_data_model_get_n_columns (model));
 	for (xml_field = xml_row->xmlChildrenNode; xml_field != NULL; xml_field = xml_field->next) {
-		GdaValue *value;
+		GdaValue *value = NULL;
 		GdaColumn *column;
 		GdaValueType gdatype;
+		gchar *isnull;
 
-		if (strcmp (xml_field->name, "value"))
+		if (xmlNodeIsText (xml_field))
 			continue;
+
+		if (strcmp (xml_field->name, "gda_value")) {
+			g_set_error (error, 0, 0, _("Expected tag <gda_value>, got <%s>, ignoring"), xml_field->name);
+			continue;
+		}
 
 		/* create the value for this field */
 		column = gda_data_model_describe_column (model, pos);
-		gdatype = gda_column_get_gdatype (column);
+		gdatype = gda_column_get_gda_type (column);
 		if ((gdatype == GDA_VALUE_TYPE_UNKNOWN) ||
 		    (gdatype == GDA_VALUE_TYPE_NULL)) {
-			g_warning ("add_xml_row(): cannot retrieve column data type (type is UNKNOWN or NULL)");
+			g_set_error (error, 0, 0,
+				     _("Cannot retrieve column data type (type is UNKNOWN or not specified)"));
 			retval = FALSE;
 			break;
 		}
 
-		value = g_new0 (GdaValue, 1);
-		if (!gda_value_set_from_string (value, xmlNodeGetContent (xml_field), gdatype)) {
-			g_free (value);
-			g_warning ("add_xml_row(): cannot retrieve value from XML node");
-			retval = FALSE;
-			break;
+		isnull = xmlGetProp (xml_field, "isnull");
+		if (isnull) {
+			if ((*isnull == 'f') || (*isnull == 'F')) {
+				g_free (isnull);
+				isnull = NULL;
+			}
 		}
+
+		if (!isnull) {
+			value = g_new0 (GdaValue, 1);
+			if (!gda_value_set_from_string (value, xmlNodeGetContent (xml_field), gdatype)) {
+				g_free (value);
+				g_set_error (error, 0, 0, _("Cannot interpret string as a valid %s value"), 
+					     gda_type_to_string (gdatype));
+				retval = FALSE;
+				break;
+			}
+		}
+		else
+			g_free (isnull);
 
 		g_ptr_array_index (values, pos) = value;
 		pos ++;
@@ -1097,22 +1117,22 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
 			GdaValue *value = (GdaValue *) g_ptr_array_index (values, i);
 
 			if (!value) {
-				g_warning ("add_xml_row(): there are missing values on the XML node");
-				retval = FALSE;
-				break;
+				value = gda_value_new_null ();
+				g_ptr_array_index (values, i) = value;
 			}
 
 			value_list = g_list_append (value_list, value);
 		}
 
 		if (retval)
-			gda_data_model_append_values (model, value_list);
+			gda_data_model_append_values (model, value_list, NULL);
 
 		g_list_free (value_list);
 	}
 
 	for (i = 0; i < values->len; i++)
-		gda_value_free ((GdaValue *) g_ptr_array_index (values, i));
+		if (g_ptr_array_index (values, i))
+			gda_value_free ((GdaValue *) g_ptr_array_index (values, i));
 
 	return retval;
 }
@@ -1127,105 +1147,30 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node)
+gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GError **error)
 {
 	xmlNodePtr children;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (node != NULL, FALSE);
 
-	if (strcmp (node->name, "data") != 0)
+	while (xmlNodeIsText (node))
+		node = node->next;
+
+	if (strcmp (node->name, "gda_array_data")) {
+		g_set_error (error, 0, 0,
+			     _("Expected tag <gda_array_data>, got <%s>"), node->name);
 		return FALSE;
+	}
 
 	for (children = node->xmlChildrenNode; children != NULL; children = children->next) {
-		if (!strcmp (children->name, "row")) {
-			if (!add_xml_row (model, children))
+		if (!strcmp (children->name, "gda_array_row")) {
+			if (!add_xml_row (model, children, error))
 				return FALSE;
 		}
 	}
 
 	return TRUE;
-}
-
-/**
- * gda_data_model_get_command_text
- * @model: a #GdaDataModel.
- *
- * Gets the text of command that generated this data model.
- *
- * Returns: a string with the command issued.
- */
-const gchar *
-gda_data_model_get_command_text (GdaDataModel *model)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_command)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_command) (model, NULL);
-	else
-		return NULL;
-}
-
-/**
- * gda_data_model_set_command_text
- * @model: a #GdaDataModel.
- * @txt: the command text.
- *
- * Sets the command text of the given @model.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_data_model_set_command_text (GdaDataModel *model, const gchar *txt)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (txt != NULL, FALSE);
-	
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_command)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_command) (model, txt, -1);
-	else
-		return FALSE;
-}
-
-/**
- * gda_data_model_get_command_type
- * @model: a #GdaDataModel.
- *
- * Gets the type of command that generated this data model.
- *
- * Returns: a #GdaCommandType.
- */
-GdaCommandType
-gda_data_model_get_command_type (GdaDataModel *model)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), GDA_COMMAND_TYPE_INVALID);
-
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_command) {
-		GdaCommandType type;
-		(GDA_DATA_MODEL_GET_CLASS (model)->i_get_command) (model, &type);
-		return type;
-	}
-	else
-		return GDA_COMMAND_TYPE_INVALID;
-}
-
-/**
- * gda_data_model_set_command_type
- * @model: a #GdaDataModel.
- * @type: the type of the command (one of #GdaCommandType)
- *
- * Sets the type of command that generated this data model.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_data_model_set_command_type (GdaDataModel *model, GdaCommandType type)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_command)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_command) (model, NULL, type);
-	else
-		return FALSE;
 }
 
 /**
@@ -1290,11 +1235,19 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 		GdaColumn *gdacol;
 		GdaValueType coltype;
 
-		str = gda_data_model_get_column_title (model, i);
-		cols_size [i] = g_utf8_strlen (str, -1);
+		/* { */
+/* 			GdaColumn *col = gda_data_model_describe_column (model, i); */
+/* 			g_print ("Model col %d has type %s\n", i, gda_type_to_string (gda_column_get_gda_type (col))); */
+/* 		} */
+
+		str = (gchar *) gda_data_model_get_column_title (model, i);
+		if (str)
+			cols_size [i] = g_utf8_strlen (str, -1);
+		else
+			cols_size [i] = 6; /* for "<none>" */
 
 		gdacol = gda_data_model_describe_column (model, i);
-		coltype = gda_column_get_gdatype (gdacol);
+		coltype = gda_column_get_gda_type (gdacol);
 		/*g_string_append_printf (string, "COL %d is a %s\n", i+1, gda_type_to_string (coltype));*/
 		if ((coltype == GDA_VALUE_TYPE_BIGINT) ||
 		    (coltype == GDA_VALUE_TYPE_BIGUINT) ||
@@ -1315,21 +1268,30 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	for (j = 0; j < n_rows; j++) {
 		for (i = 0; i < n_cols; i++) {
 			value = gda_data_model_get_value_at (model, i, j);
-			str = value ? gda_value_stringify (value) : g_strdup ("_null_");
-			cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
-			g_free (str);
+			str = value ? gda_value_stringify ((GdaValue*)value) : g_strdup ("_null_");
+			if (str) {
+				cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
+				g_free (str);
+			}
 		}
 	}
 	
 	/* actual dumping of the contents: column titles...*/
 	for (i = 0; i < n_cols; i++) {
-		gint j;
-		str = gda_data_model_get_column_title (model, i);
+		gint j, max;
+		str = (gchar *) gda_data_model_get_column_title (model, i);
 		if (i != 0)
 			g_string_append_printf (string, "%s", sep_col);
 
-		g_string_append_printf (string, "%s", str);
-		for (j = 0; j < (cols_size [i] - g_utf8_strlen (str, -1)); j++)
+		if (str) {
+			g_string_append_printf (string, "%s", str);
+			max = cols_size [i] - g_utf8_strlen (str, -1);
+		}
+		else {
+			g_string_append (string, "<none>");
+			max = cols_size [i] - 6;
+		}
+		for (j = 0; j < max; j++)
 			g_string_append_c (string, ' ');
 	}
 	g_string_append_c (string, '\n');
@@ -1347,15 +1309,20 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	for (j = 0; j < n_rows; j++) {
 		for (i = 0; i < n_cols; i++) {
 			value = gda_data_model_get_value_at (model, i, j);
-			str = value ? gda_value_stringify (value) : g_strdup ("_null_");
+			str = value ? gda_value_stringify ((GdaValue *)value) : g_strdup ("_null_");
 			if (i != 0)
 				g_string_append_printf (string, "%s", sep_col);
 			if (cols_is_num [i])
 				g_string_append_printf (string, "%*s", cols_size [i], str);
 			else {
-				gint j;
-				g_string_append_printf (string, "%s", str);
-				for (j = 0; j < (cols_size [i] - g_utf8_strlen (str, -1)); j++)
+				gint j, max;
+				if (str) {
+					g_string_append_printf (string, "%s", str);
+					max = cols_size [i] - g_utf8_strlen (str, -1);
+				}
+				else
+					max = cols_size [i];
+				for (j = 0; j < max; j++)
 					g_string_append_c (string, ' ');
 			}
 			g_free (str);

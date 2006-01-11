@@ -23,7 +23,7 @@
  */
 
 #include <libgda/gda-connection-event.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 
 struct _GdaConnectionEventPrivate {
 	gchar                  *description;

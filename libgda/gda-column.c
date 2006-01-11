@@ -177,47 +177,47 @@ gda_column_new (void)
 	return column;
 }
 
-/** 	 /**
-  * gda_column_copy 	 
-  * @column: column to get a copy from. 	 
-  * 	 
-  * Creates a new #GdaColumn object from an existing one. 	 
-  * Returns: a newly allocated #GdaColumn with a copy of the data 	 
-  * in @column. 	 
-  */ 	 
- GdaColumn * 	 
- gda_column_copy (GdaColumn *column) 	 
- { 	 
-         GdaColumn *column_copy; 	 
-  	 
-         g_return_val_if_fail (GDA_IS_COLUMN (column), NULL); 	 
-  	 
-         column_copy = gda_column_new (); 	 
-         column_copy->priv->defined_size = column->priv->defined_size;
-	 if (column->priv->name)
-		 column_copy->priv->name = g_strdup (column->priv->name);
-	 if (column->priv->title)
-		 column_copy->priv->name = g_strdup (column->priv->title);
-	 if (column->priv->table)
-		 column_copy->priv->table = g_strdup (column->priv->table);
-	 if (column->priv->caption)
-		 column_copy->priv->caption = g_strdup (column->priv->caption);
-         column_copy->priv->scale = column->priv->scale;
-         column_copy->priv->gda_type = column->priv->gda_type;
-         column_copy->priv->allow_null = column->priv->allow_null;
-         column_copy->priv->primary_key = column->priv->primary_key;
-         column_copy->priv->unique_key = column->priv->unique_key;
-	 if (column->priv->references)
-		 column_copy->priv->references = g_strdup (column->priv->references);
-         column_copy->priv->auto_increment = column->priv->auto_increment;
-         column_copy->priv->auto_increment_start = column->priv->auto_increment_start;
-         column_copy->priv->auto_increment_step = column->priv->auto_increment_step;
-         column_copy->priv->position = column->priv->position;
-	 if (column->priv->default_value)
-		 column_copy->priv->default_value = gda_value_copy (column->priv->default_value);
-  	 
-         return column_copy; 	 
- }
+/**
+ * gda_column_copy 	 
+ * @column: column to get a copy from. 	 
+ * 	 
+ * Creates a new #GdaColumn object from an existing one. 	 
+ * Returns: a newly allocated #GdaColumn with a copy of the data 	 
+ * in @column. 	 
+ */ 	 
+GdaColumn * 	 
+gda_column_copy (GdaColumn *column) 	 
+{ 	 
+	GdaColumn *column_copy; 	 
+  	
+	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL); 	 
+  	
+	column_copy = gda_column_new (); 	 
+	column_copy->priv->defined_size = column->priv->defined_size;
+	if (column->priv->name)
+		column_copy->priv->name = g_strdup (column->priv->name);
+	if (column->priv->title)
+		column_copy->priv->title = g_strdup (column->priv->title);
+	if (column->priv->table)
+		column_copy->priv->table = g_strdup (column->priv->table);
+	if (column->priv->caption)
+		column_copy->priv->caption = g_strdup (column->priv->caption);
+	column_copy->priv->scale = column->priv->scale;
+	column_copy->priv->gda_type = column->priv->gda_type;
+	column_copy->priv->allow_null = column->priv->allow_null;
+	column_copy->priv->primary_key = column->priv->primary_key;
+	column_copy->priv->unique_key = column->priv->unique_key;
+	if (column->priv->references)
+		column_copy->priv->references = g_strdup (column->priv->references);
+	column_copy->priv->auto_increment = column->priv->auto_increment;
+	column_copy->priv->auto_increment_start = column->priv->auto_increment_start;
+	column_copy->priv->auto_increment_step = column->priv->auto_increment_step;
+	column_copy->priv->position = column->priv->position;
+	if (column->priv->default_value)
+		column_copy->priv->default_value = gda_value_copy (column->priv->default_value);
+	
+	return column_copy; 	 
+}
 
 /** 	 
  * gda_column_equal: 	 
@@ -510,27 +510,27 @@ gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type)
 }
 
 /**
- * gda_column_get_gdatype
+ * gda_column_get_gda_type
  * @column: a #GdaColumn.
  *
  * Returns: the type of @column.
  */
 GdaValueType
-gda_column_get_gdatype (GdaColumn *column)
+gda_column_get_gda_type (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), GDA_VALUE_TYPE_NULL);
 	return column->priv->gda_type;
 }
 
 /**
- * gda_column_set_gdatype
+ * gda_column_set_gda_type
  * @column: a #GdaColumn.
  * @type: the new type of @column.
  *
  * Sets the type of @column to @type.
  */
 void
-gda_column_set_gdatype (GdaColumn *column, GdaValueType type)
+gda_column_set_gda_type (GdaColumn *column, GdaValueType type)
 {
 	GdaValueType old_type;
 

@@ -1,450 +1,1405 @@
-/* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+/* gda-parameter.c
  *
- * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
- * This Library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public License as
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
- * This Library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this Library; see the file COPYING.LIB.  If not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
  */
 
-#include <glib/ghash.h>
-#include <glib/gmem.h>
-#include <glib/gmessages.h>
-#include <glib/gstrfuncs.h>
-#include <libgda/gda-parameter.h>
+#include <string.h>
+#include "gda-parameter.h"
+#include "gda-dict.h"
+#include "gda-dict-type.h"
+#include "gda-query.h"
+#include "gda-entity.h"
+#include "gda-entity-field.h"
+#include "gda-xml-storage.h"
+#include "gda-referer.h"
+#include "gda-data-model.h"
+#include "gda-data-handler.h"
+#include "gda-marshal.h"
 
-struct _GdaParameterList {
-	GHashTable *hash;
+/* 
+ * Main static functions 
+ */
+static void gda_parameter_class_init (GdaParameterClass * class);
+static void gda_parameter_init (GdaParameter * srv);
+static void gda_parameter_dispose (GObject   * object);
+static void gda_parameter_finalize (GObject   * object);
+
+static void gda_parameter_set_property    (GObject *object,
+					   guint param_id,
+					   const GValue *value,
+					   GParamSpec *pspec);
+static void gda_parameter_get_property    (GObject *object,
+					   guint param_id,
+					   GValue *value,
+					   GParamSpec *pspec);
+
+/* Referer interface */
+static void        gda_parameter_referer_init        (GdaRefererIface *iface);
+static void        gda_parameter_replace_refs        (GdaReferer *iface, GHashTable *replacements);
+
+static void gda_parameter_add_user (GdaParameter *param, GdaObject *user);
+static void gda_parameter_del_user (GdaParameter *param, GdaObject *user);
+
+static void destroyed_user_cb (GdaObject *obj, GdaParameter *param);
+static void destroyed_alias_of_cb (GdaObject *obj, GdaParameter *param);
+static void destroyed_restrict_cb (GdaObject *obj, GdaParameter *param);
+
+static void alias_of_changed_cb (GdaParameter *alias_of, GdaParameter *param);
+
+static void gda_parameter_signal_changed (GdaObject *base, gboolean block_changed_signal);
+#ifdef debug
+static void gda_parameter_dump (GdaParameter *parameter, guint offset);
+#endif
+
+static void gda_parameter_set_full_bind_param (GdaParameter *param, GdaParameter *alias_of);
+
+/* get a pointer to the parents to be able to call their destructor */
+static GObjectClass  *parent_class = NULL;
+
+/* signals */
+enum
+{
+        RESTRICT_CHANGED,
+        LAST_SIGNAL
 };
+
+static gint gda_parameter_signals[LAST_SIGNAL] = { 0 };
+
+
+/* properties */
+enum
+{
+	PROP_0,
+	PROP_PLUGIN,
+	PROP_QF_INTERNAL,
+	PROP_USE_DEFAULT_VALUE,
+	PROP_SIMPLE_BIND,
+	PROP_FULL_BIND,
+	PROP_RESTRICT_MODEL,
+	PROP_RESTRICT_COLUMN,
+	PROP_GDA_TYPE,
+	PROP_DICT_TYPE /* TO ADD */
+};
+
+
+struct _GdaParameterPrivate
+{
+	GSList                *param_users; /* list of #GdaObject using that parameter */
+	GdaValueType           gda_type;
+	GdaParameter          *alias_of;     /* FULL bind to param */
+	GdaParameter          *change_with;  /* SIMPLE bind to param */
+	
+	gboolean               invalid_forced;
+	gboolean               valid;
+
+	GdaValue              *value;
+	GdaValue              *default_value; /* CAN be either NULL or of any type */
+	gboolean               has_default_value; /* TRUE if param has a default value (even if unknown) */
+	gboolean               default_forced;
+	gboolean               not_null;      /* TRUE if 'value' must not be NULL when passed to destination fields */
+
+	GdaDataModel          *restrict_model;
+	gint                   restrict_col;
+
+	gchar                 *plugin;        /* plugin to be used for user interaction */
+};
+
+/* module error */
+GQuark gda_parameter_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_parameter_error");
+        return quark;
+}
 
 GType
 gda_parameter_get_type (void)
 {
-	static GType our_type = 0;
+	static GType type = 0;
 
-	if (our_type == 0)
-		our_type = g_boxed_type_register_static ("GdaParameter",
-			(GBoxedCopyFunc) gda_parameter_copy,
-			(GBoxedFreeFunc) gda_parameter_free);
-	return our_type;
+	if (!type) {
+		static const GTypeInfo info = {
+			sizeof (GdaParameterClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_parameter_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaParameter),
+			0,
+			(GInstanceInitFunc) gda_parameter_init
+		};
+
+		static const GInterfaceInfo referer_info = {
+			(GInterfaceInitFunc) gda_parameter_referer_init,
+			NULL,
+			NULL
+		};
+		
+		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaParameter", &info, 0);
+		g_type_add_interface_static (type, GDA_TYPE_REFERER, &referer_info);
+	}
+	return type;
 }
 
-GType
-gda_parameter_list_get_type (void)
+static void
+gda_parameter_referer_init (GdaRefererIface *iface)
 {
-	static GType our_type = 0;
-
-	if (our_type == 0)
-		our_type = g_boxed_type_register_static ("GdaParameterList",
-			(GBoxedCopyFunc) gda_parameter_list_copy,
-			(GBoxedFreeFunc) gda_parameter_list_free);
-	return our_type;
+	iface->activate = NULL;
+	iface->deactivate = NULL;
+	iface->is_active = NULL;
+	iface->get_ref_objects = NULL;
+	iface->replace_refs = gda_parameter_replace_refs;
 }
 
-/*
- * Private functions
- */
-
-static gboolean 
-free_hash_param (gpointer key, gpointer value, gpointer user_data)
+static void
+gda_parameter_class_init (GdaParameterClass *class)
 {
-	g_free (key);
-	gda_parameter_free ((GdaParameter *) value);
-	return TRUE;
+	GObjectClass *object_class = G_OBJECT_CLASS (class);
+
+	parent_class = g_type_class_peek_parent (class);
+
+	gda_parameter_signals[RESTRICT_CHANGED] =
+                g_signal_new ("restrict_changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaParameterClass, restrict_changed),
+                              NULL, NULL,
+                              gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
+        class->restrict_changed = NULL;
+
+	/* virtual functions */
+	GDA_OBJECT_CLASS (class)->signal_changed = gda_parameter_signal_changed;
+#ifdef debug
+        GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_parameter_dump;
+#endif
+
+	object_class->dispose = gda_parameter_dispose;
+	object_class->finalize = gda_parameter_finalize;
+
+	/* Properties */
+	object_class->set_property = gda_parameter_set_property;
+	object_class->get_property = gda_parameter_get_property;
+        g_object_class_install_property (object_class, PROP_GDA_TYPE,
+                                         g_param_spec_int ("gda_type", NULL, NULL,
+							   0, G_MAXINT, GDA_VALUE_TYPE_UNKNOWN,
+							   (G_PARAM_READABLE | 
+							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
+	g_object_class_install_property (object_class, PROP_PLUGIN,
+					 g_param_spec_string ("handler_plugin", NULL, NULL, NULL, 
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_USE_DEFAULT_VALUE,
+					 g_param_spec_boolean ("use_default_value", NULL, NULL, FALSE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_SIMPLE_BIND,
+					 g_param_spec_pointer ("simple_bind", NULL, NULL, 
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_FULL_BIND,
+					 g_param_spec_pointer ("full_bind", NULL, NULL, 
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_RESTRICT_MODEL,
+                                         g_param_spec_pointer ("restrict_model", NULL, NULL,
+                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+        g_object_class_install_property (object_class, PROP_RESTRICT_COLUMN,
+                                         g_param_spec_int ("restrict_column", NULL, NULL,
+							   0, G_MAXINT, 0,
+							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	/* class attributes */
+	/* class attributes */
+	GDA_OBJECT_CLASS (class)->id_unique_enforced = FALSE;
+}
+
+static void
+gda_parameter_init (GdaParameter *parameter)
+{
+	parameter->priv = g_new0 (GdaParameterPrivate, 1);
+	parameter->priv->param_users = NULL;
+	parameter->priv->gda_type = GDA_VALUE_TYPE_UNKNOWN;
+	parameter->priv->alias_of = NULL;
+	parameter->priv->change_with = NULL;
+
+	parameter->priv->invalid_forced = FALSE;
+	parameter->priv->valid = TRUE;
+	parameter->priv->default_forced = FALSE;
+	parameter->priv->value = NULL;
+	parameter->priv->default_value = NULL;
+	parameter->priv->has_default_value = FALSE;
+
+	parameter->priv->not_null = FALSE;
+	parameter->priv->restrict_model = NULL;
+	parameter->priv->restrict_col = 0;
+	parameter->priv->plugin = NULL;
 }
 
 /**
- * gda_parameter_new_from_value
- * @name: name for the parameter being created.
- * @value: a #GdaValue for this parameter.
+ * gda_parameter_new
+ * @type: the #GdaValueType requested
  *
- * Creates a new #GdaParameter object, which is usually used
- * with #GdaParameterList.
+ * Creates a new parameter of type @type
  *
- * Returns: the newly created #GdaParameter.
+ * Returns: a new #GdaParameter object
  */
 GdaParameter *
-gda_parameter_new_from_value (const gchar *name, const GdaValue *value)
+gda_parameter_new (GdaValueType type)
+{
+	GObject   *obj;
+	GdaParameter *param;
+
+	g_return_val_if_fail (type != GDA_VALUE_TYPE_UNKNOWN, NULL);
+
+        obj = g_object_new (GDA_TYPE_PARAMETER, "gda_type", type, NULL);
+	param = GDA_PARAMETER (obj);
+
+        return param;
+}
+
+/**
+ * gda_parameter_new_copy
+ * @orig: a #GdaParameter object to copy
+ *
+ * Copy constructor.
+ *
+ * Returns: a new #GdaParameter object
+ */
+GdaParameter *
+gda_parameter_new_copy (GdaParameter *orig)
+{
+	GObject   *obj;
+	GdaParameter *param;
+	GSList *list;
+	GdaDict *dict;
+
+	g_return_val_if_fail (orig && GDA_IS_PARAMETER (orig), NULL);
+	g_return_val_if_fail (orig->priv, NULL);
+
+	dict = gda_object_get_dict (GDA_OBJECT (orig));
+	obj = g_object_new (GDA_TYPE_PARAMETER, "dict", dict,"gda_type", orig->priv->gda_type, NULL);
+	param = GDA_PARAMETER (obj);
+
+	gda_object_set_name (GDA_OBJECT (param), gda_object_get_name (GDA_OBJECT (orig)));
+	gda_object_set_description (GDA_OBJECT (param), gda_object_get_description (GDA_OBJECT (orig)));
+
+	list = orig->priv->param_users;
+	while (list) {
+		gda_parameter_add_user (param, GDA_OBJECT (list->data));
+		list = g_slist_next (list);
+	}
+	if (orig->priv->alias_of)
+		gda_parameter_set_full_bind_param (param, orig->priv->alias_of);
+	if (orig->priv->change_with)
+		gda_parameter_bind_to_param (param, orig->priv->change_with);
+	
+	if (orig->priv->restrict_model) {
+		/*g_print ("Restrict param %p\n", param);*/
+		gda_parameter_restrict_values (param, orig->priv->restrict_model, orig->priv->restrict_col,
+					       NULL);
+	}
+
+	/* direct settings */
+	param->priv->invalid_forced = orig->priv->invalid_forced;
+	param->priv->valid = orig->priv->valid;
+	param->priv->default_forced = orig->priv->default_forced;	
+	if (orig->priv->value)
+		param->priv->value = gda_value_copy (orig->priv->value);
+	if (orig->priv->default_value)
+		param->priv->default_value = gda_value_copy (orig->priv->default_value);
+	param->priv->has_default_value = orig->priv->has_default_value;
+	param->priv->not_null = orig->priv->not_null;
+	if (orig->priv->plugin)
+		param->priv->plugin = g_strdup (orig->priv->plugin);
+
+	return param;
+}
+
+/**
+ * gda_parameter_new_string
+ * @name: the name of the parameter to create
+ * @str: the contents of the parameter to create
+ *
+ * Creates a new #GdaParameter object of type GDA_VALUE_TYPE_STRING
+ *
+ * Returns: a new #GdaParameter object
+ */
+GdaParameter *
+gda_parameter_new_string (const gchar *name, const gchar *str)
 {
 	GdaParameter *param;
 
-	g_return_val_if_fail (name != NULL, NULL);
-	g_return_val_if_fail (value != NULL, NULL);
-
-	param = g_new0 (GdaParameter, 1);
-	param->name = g_strdup (name);
-	param->value = gda_value_copy (value);
+	param = gda_parameter_new (GDA_VALUE_TYPE_STRING);
+	gda_object_set_name (GDA_OBJECT (param), name);
+	gda_parameter_set_value_str (param, str);
 
 	return param;
 }
 
 /**
  * gda_parameter_new_boolean
- * @name: name for the parameter being created.
- * @value: a boolean value.
+ * @name: the name of the parameter to create
+ * @value: the value to give to the new parameter
  *
- * Creates a new #GdaParameter from a gboolean value.
+ * Creates a new #GdaParameter object of type GDA_VALUE_TYPE_BOOLEAN
  *
- * Returns: the newly created #GdaParameter.
+ * Returns: a new #GdaParameter object
  */
 GdaParameter *
 gda_parameter_new_boolean (const gchar *name, gboolean value)
 {
 	GdaParameter *param;
 
-	g_return_val_if_fail (name != NULL, NULL);
-
-	param = g_new0 (GdaParameter, 1);
-	param->name = g_strdup (name);
-	param->value = gda_value_new_boolean (value);
+	param = gda_parameter_new (GDA_VALUE_TYPE_BOOLEAN);
+	gda_object_set_name (GDA_OBJECT (param), name);
+	gda_parameter_set_value_str (param, value ? "true" : "false");
 
 	return param;
 }
 
-/**
- * gda_parameter_new_double
- * @name: name for the parameter being created.
- * @value: a gdouble value.
- *
- * Creates a new #GdaParameter from a gdouble value.
- *
- * Returns: the newly created #GdaParameter.
- */
-GdaParameter *
-gda_parameter_new_double (const gchar *name, gdouble value)
+static void
+gda_parameter_add_user (GdaParameter *param, GdaObject *user)
 {
-	GdaParameter *param;
-
-	g_return_val_if_fail (name != NULL, NULL);
-
-	param = g_new0 (GdaParameter, 1);
-	param->name = g_strdup (name);
-	param->value = gda_value_new_double (value);
-
-	return param;
+	if (!g_slist_find (param->priv->param_users, user)) {
+		param->priv->param_users = g_slist_append (param->priv->param_users, user);
+		gda_object_connect_destroy (user, G_CALLBACK (destroyed_user_cb), param);
+		g_object_ref (G_OBJECT (user));
+	}
 }
 
-/**
- * gda_parameter_new_gobject
- * @name: name for the parameter being created.
- * @value: a GObject value.
- *
- * Creates a new #GdaParameter from a GObject.
- *
- * Returns: the newly created #GdaParameter.
- */
-GdaParameter *
-gda_parameter_new_gobject (const gchar *name, const GObject *value)
+static void
+gda_parameter_del_user (GdaParameter *param, GdaObject *user)
 {
-	GdaParameter *param;
-
-	g_return_val_if_fail (name != NULL, NULL);
-	g_return_val_if_fail (value != NULL, NULL);
-
-	param = g_new0 (GdaParameter, 1);
-	param->name = g_strdup (name);
-	param->value = gda_value_new_gobject (value);
-
-	return param;
+	if (g_slist_find (param->priv->param_users, user)) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (user),
+						      G_CALLBACK (destroyed_user_cb), param);
+		param->priv->param_users = g_slist_remove (param->priv->param_users, user);
+		g_object_unref (G_OBJECT (user));
+	}
 }
- 
-/**
- * gda_parameter_new_string
- * @name: name for the parameter being created.
- * @value: string value.
- *
- * Creates a new #GdaParameter from a string.
- *
- * Returns: the newly created #GdaParameter.
- */
-GdaParameter *
-gda_parameter_new_string (const gchar *name, const gchar *value)
+
+static void
+destroyed_user_cb (GdaObject *obj, GdaParameter *param)
 {
-	GdaParameter *param;
-
-	g_return_val_if_fail (name != NULL, NULL);
-	g_return_val_if_fail (value != NULL, NULL);
-
-	param = g_new0 (GdaParameter, 1);
-	param->name = g_strdup (name);
-	param->value = gda_value_new_string (value);
-
-	return param;
+	gda_parameter_del_user (param, obj);
 }
 
+static void
+gda_parameter_dispose (GObject *object)
+{
+	GdaParameter *parameter;
+
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (GDA_IS_PARAMETER (object));
+
+	parameter = GDA_PARAMETER (object);
+	if (parameter->priv) {
+		gda_object_destroy_check (GDA_OBJECT (object));
+
+		gda_parameter_bind_to_param (parameter, NULL);
+		gda_parameter_set_full_bind_param (parameter, NULL);
+
+		if (parameter->priv->restrict_model)
+			destroyed_restrict_cb ((GdaObject*) parameter->priv->restrict_model, parameter);
+
+		while (parameter->priv->param_users)
+			gda_parameter_del_user (parameter, GDA_OBJECT (parameter->priv->param_users->data));
+
+		parameter->priv->gda_type = GDA_VALUE_TYPE_UNKNOWN;
+
+		if (parameter->priv->value) {
+			gda_value_free (parameter->priv->value);
+			parameter->priv->value = NULL;
+		}
+
+		if (parameter->priv->default_value) {
+			gda_value_free (parameter->priv->default_value);
+			parameter->priv->default_value = NULL;
+		}
+	}
+
+	/* parent class */
+	parent_class->dispose (object);
+}
+
+static void
+gda_parameter_finalize (GObject   * object)
+{
+	GdaParameter *parameter;
+
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (GDA_IS_PARAMETER (object));
+
+	parameter = GDA_PARAMETER (object);
+	if (parameter->priv) {
+		if (parameter->priv->plugin)
+			g_free (parameter->priv->plugin);
+
+		g_free (parameter->priv);
+		parameter->priv = NULL;
+	}
+
+	/* parent class */
+	parent_class->finalize (object);
+}
+
+
+static void 
+gda_parameter_set_property    (GObject *object,
+			       guint param_id,
+			       const GValue *value,
+			       GParamSpec *pspec)
+{
+	const gchar *ptr;
+	GdaParameter *parameter;
+
+	parameter = GDA_PARAMETER (object);
+	if (parameter->priv) {
+		switch (param_id) {
+		case PROP_GDA_TYPE:
+			parameter->priv->gda_type = g_value_get_int (value);
+			break;
+		case PROP_PLUGIN:
+			ptr = g_value_get_string (value);
+			if (parameter->priv->plugin) {
+				g_free (parameter->priv->plugin);
+				parameter->priv->plugin = NULL;
+			}
+			if (ptr)
+				parameter->priv->plugin = g_strdup (ptr);
+			break;
+		case PROP_USE_DEFAULT_VALUE:
+			if (g_value_get_boolean (value)) {
+				if (!parameter->priv->has_default_value)
+					g_warning ("Can't force parameter to use default value if there "
+						   "is no default value");
+				else {
+					parameter->priv->default_forced = TRUE;
+					parameter->priv->invalid_forced = FALSE;
+				}
+			}
+			else
+				parameter->priv->default_forced = FALSE;
+
+			break;
+		case PROP_SIMPLE_BIND:
+			gda_parameter_bind_to_param (parameter, g_value_get_pointer (value));
+			break;
+		case PROP_FULL_BIND:
+			gda_parameter_set_full_bind_param (parameter, g_value_get_pointer (value));
+			break;
+		case PROP_RESTRICT_MODEL:
+			ptr = g_value_get_pointer (value);
+			g_return_if_fail (gda_parameter_restrict_values (parameter, 
+									 (GdaDataModel *)ptr, -1, NULL));
+			break;
+		case PROP_RESTRICT_COLUMN:
+			parameter->priv->restrict_col = g_value_get_int (value);
+			break;
+		}
+	}
+}
+
+static void
+gda_parameter_get_property    (GObject *object,
+			       guint param_id,
+			       GValue *value,
+			       GParamSpec *pspec)
+{
+	GdaParameter *parameter;
+
+	parameter = GDA_PARAMETER (object);
+	if (parameter->priv) {
+		switch (param_id) {
+		case PROP_GDA_TYPE:
+			g_value_set_int (value, parameter->priv->gda_type);
+		case PROP_PLUGIN:
+			g_value_set_string (value, parameter->priv->plugin);
+			break;
+		case PROP_USE_DEFAULT_VALUE:
+			g_value_set_boolean (value, parameter->priv->default_forced);
+			break;
+		case PROP_SIMPLE_BIND:
+			g_value_set_pointer (value, parameter->priv->change_with);
+			break;
+		case PROP_FULL_BIND:
+			g_value_set_pointer (value, parameter->priv->alias_of);
+			break;
+		case PROP_RESTRICT_MODEL:
+			g_value_set_pointer (value, parameter->priv->restrict_model);
+			break;
+		case PROP_RESTRICT_COLUMN:
+			g_value_set_int (value, parameter->priv->restrict_col);
+			break;	
+		}
+	}
+}
+
+
 /**
- * gda_parameter_free
- * @param: the #GdaParameter to be freed.
+ * gda_parameter_declare_param_user
+ * @param: a #GdaParameter object
+ * @user: the #GdaObject object using that parameter for
  *
- * Releases all memory occupied by the given #GdaParameter.
+ * Tells that @user is potentially using @param.
  */
 void
-gda_parameter_free (GdaParameter *param)
+gda_parameter_declare_param_user (GdaParameter *param, GdaObject *user)
 {
-	g_return_if_fail (param != NULL);
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
+	g_return_if_fail (GDA_IS_OBJECT (user));
 
-	g_free (param->name);
-	gda_value_free (param->value);
-	g_free (param);
+	gda_parameter_add_user (param, user);	
 }
 
 /**
- * gda_parameter_copy
- * @param: parameter to get a copy from.
- *
- * Creates a new #GdaParameter from an existing one.
+ * gda_parameter_get_param_users
+ * @param: a #GdaParameter object
  * 
- * Returns: a newly allocated #GdaParameter with a copy of the data in @param.
+ * Get the #GdaEntityField objects which created @param (and which will use its value)
+ *
+ * Returns: the list of #GdaEntityField object; it must not be changed or free'd
  */
-GdaParameter *
-gda_parameter_copy (GdaParameter *param)
+GSList *
+gda_parameter_get_param_users (GdaParameter *param)
 {
-	g_return_val_if_fail (param != NULL, NULL);
-	return gda_parameter_new_from_value (gda_parameter_get_name (param),
-					     gda_parameter_get_value (param));
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
+	g_return_val_if_fail (param->priv, NULL);
+
+	return param->priv->param_users;
 }
 
 /**
- * gda_parameter_get_name
- * @param: a #GdaParameter object.
+ * gda_parameter_replace_param_users
+ * @param: a #GdaParameter object
+ * @replacements: the (objects to be replaced, replacing object) pairs
  *
- * Returns: the name of the given #GdaParameter.
- */
-const gchar *
-gda_parameter_get_name (GdaParameter *param)
-{
-	g_return_val_if_fail (param != NULL, NULL);
-	return (const gchar *) param->name;
-}
-
-/**
- * gda_parameter_set_name
- * @param: a #GdaParameter.
- * @name: new name for the parameter.
- *
- * Sets the name of the given #GdaParameter.
+ * For each declared parameter user in the @replacements keys, declare the value stored in
+ * @replacements also as a user of @param.
  */
 void
-gda_parameter_set_name (GdaParameter *param, const gchar *name)
+gda_parameter_replace_param_users (GdaParameter *param, GHashTable *replacements)
 {
-	g_return_if_fail (param != NULL);
-	g_return_if_fail (name != NULL);
+	GSList *list;
+	gpointer ref;
 
-	if (param->name != NULL)
-		g_free (param->name);
-	param->name = g_strdup (name);
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
+
+	/* Destination fields */
+	list = param->priv->param_users;
+	while (list) {
+		ref = g_hash_table_lookup (replacements, list->data);
+		if (ref) /* we don't actually replace the ref, but simply add one destination field */
+			gda_parameter_declare_param_user (param, ref);
+
+		list = g_slist_next (list);
+	}
 }
+
+/**
+ * gda_parameter_get_gda_type
+ * @param: a #GdaParameter object
+ * 
+ * Get the requested data type for @param.
+ *
+ * Returns: the data type
+ */
+GdaValueType
+gda_parameter_get_gda_type (GdaParameter *param)
+{
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (param->priv, GDA_VALUE_TYPE_UNKNOWN);
+
+	return param->priv->gda_type;
+}
+
 
 /**
  * gda_parameter_get_value
- * @param: a #GdaParameter.
+ * @param: a #GdaParameter object
  *
- * Returns: the value stored in the given @param.
+ * Get the value held into the parameter
+ *
+ * Returns: the value (a NULL value returns a GDA_VALUE_TYPE_NULL GdaValue)
  */
 const GdaValue *
 gda_parameter_get_value (GdaParameter *param)
 {
-	g_return_val_if_fail (param != NULL, NULL);
-	return param->value;
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
+	g_return_val_if_fail (param->priv, NULL);
+
+	if (!param->priv->alias_of) {
+		if (!param->priv->value)
+			param->priv->value = gda_value_new_null ();
+		return param->priv->value;
+	}
+	else 
+		return gda_parameter_get_value (param->priv->alias_of);
 }
 
-/**
+
+/*
  * gda_parameter_set_value
- * @param: a #GdaParameter.
- * @value: a #GdaValue.
+ * @param: a #GdaParameter object
+ * @value: a value to set the parameter to
  *
- * Stores the given @value in the given @param.
- */
-void
-gda_parameter_set_value (GdaParameter *param, GdaValue *value)
-{
-	g_return_if_fail (param != NULL);
-	g_return_if_fail (value != NULL);
-
-	if (param->value != NULL)
-		gda_value_free (param->value);
-	param->value = gda_value_copy (value);
-}
-
-/**
- * gda_parameter_list_new
+ * Sets the value within the parameter. If @param is an alias for another
+ * parameter, then the value is also set for that other parameter.
  *
- * Creates a new #GdaParameterList.
- *
- * Returns: the newly created parameter list.
- */
-GdaParameterList *
-gda_parameter_list_new (void)
-{
-	GdaParameterList *plist;
-
-	plist = g_new0 (GdaParameterList, 1);
-	plist->hash = g_hash_table_new (g_str_hash, g_str_equal);
-
-	return plist;
-}
-
-/**
- * gda_parameter_list_free
- * @plist: a #GdaParameterList.
- *
- * Releases all memory occupied by the given #GdaParameterList.
- */
-void
-gda_parameter_list_free (GdaParameterList *plist)
-{
-	g_return_if_fail (plist != NULL);
-
-	g_hash_table_foreach (plist->hash, (GHFunc) free_hash_param, NULL);
-	g_hash_table_destroy (plist->hash);
-
-	g_free (plist);
-}
-
-/**
- * gda_parameter_list_copy
- * @plist: parameter list to get a copy from.
- *
- * Creates a new #GdaParameterList from an existing one.
+ * The action of any call to gda_parameter_declare_invalid() is cancelled
+ * as soon as this method is called, even if @param's value does not change.
  * 
- * Returns: a newly allocated #GdaParameterList with a copy of the data in @plist.
+ * If the value is not different from the one already contained within @param,
+ * then @param is not chaged and no signal is emitted.
  */
-GdaParameterList *
-gda_parameter_list_copy (GdaParameterList *plist)
+void
+gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
 {
-	GdaParameterList *new_list;
-	GList *node, *names;
-	
-	g_return_val_if_fail (plist != NULL, NULL);
+	gboolean changed = TRUE;
+	const GdaValue *current_val;
 
-	new_list = gda_parameter_list_new ();
-	names = gda_parameter_list_get_names (plist);
-	for (node = g_list_first (names);
-	     node != NULL;
-	     node = g_list_next (node)) {
-		GdaParameter *param = gda_parameter_list_find (plist, (const gchar *)node->data);
-		if (param != NULL) /* normally should always be non-null... */
-			gda_parameter_list_add_parameter (new_list, param);
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
+
+	param->priv->invalid_forced = FALSE;
+
+	/* param will be changed? */
+	current_val = gda_parameter_get_value (param);
+	if (current_val == value)
+		changed = FALSE;
+
+	if (changed && gda_value_is_null ((GdaValue *)current_val) && 
+	    ((value && gda_value_is_null ((GdaValue *)value)) || !value)) 
+		changed = FALSE;
+	
+	if (changed && value && (gda_value_get_type ((GdaValue *)value) == 
+				 gda_value_get_type ((GdaValue *)current_val)))
+		changed = gda_value_compare ((GdaValue *)value, (GdaValue *)current_val);
+		
+	/* param's validity */
+	param->priv->valid = TRUE;
+	if (!value || gda_value_is_null ((GdaValue *)value))
+		if (param->priv->not_null)
+			param->priv->valid = FALSE;
+
+	if (value &&
+	    (gda_value_get_type ((GdaValue *)value) != GDA_VALUE_TYPE_NULL) &&
+	    (gda_value_get_type ((GdaValue *)value) != param->priv->gda_type))
+		param->priv->valid = FALSE;
+
+#ifdef debug_NO
+	g_print ("Changed param %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d CHANGED: %d\n", param, gda_object_get_name (param),
+		 current_val ? gda_value_stringify ((GdaValue *)current_val) : "_NULL_",
+		 value ? gda_value_stringify (GdaValue *)(value) : "_NULL_",
+		 current_val ? gda_value_get_type ((GdaValue *)current_val) : 0,
+		 value ? gda_value_get_type ((GdaValue *)value) : 0, 
+		 gda_parameter_is_valid (param), changed);
+#endif
+
+	/* end of procedure if the value has not been changed, after calculating the param's validity */
+	if (!changed) {
+		if (GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "changed_pending"))) {
+			gboolean changed_blocked;
+			g_object_get (G_OBJECT (param), "changed_blocked", &changed_blocked, NULL);
+			if (!changed_blocked) {
+				g_object_set_data (G_OBJECT (param), "changed_pending", NULL);
+				gda_object_changed (GDA_OBJECT (param));
+			}
+		}
+		return;
 	}
-	g_list_free (names);
-	return new_list;
+
+	/* the parameter does not have the default value forced since it has changed */
+	param->priv->default_forced = FALSE;
+
+	/* real setting of the value */
+	if (param->priv->alias_of) {
+#ifdef debug_NO
+		g_print ("Param %p is alias of param %p => propagating changes to param %p\n",
+			 param, param->priv->alias_of, param->priv->alias_of);
+#endif
+		gda_parameter_set_value (param->priv->alias_of, value);
+	}
+	else {
+		gboolean changed_blocked;
+		if (param->priv->value) {
+			gda_value_free (param->priv->value);
+			param->priv->value = NULL;
+		}
+
+		if (value)
+			param->priv->value = gda_value_copy ((GdaValue *)value);
+
+		/* if the GdaObject has "changed_blocked" property TRUE, then store that the next time we need
+		 * to emit the "changed" signal even if the stored value has not changed "
+		 */
+		g_object_get (G_OBJECT (param), "changed_blocked", &changed_blocked, NULL);
+		if (changed_blocked)
+			g_object_set_data (G_OBJECT (param), "changed_pending", GINT_TO_POINTER (TRUE));
+		else
+			gda_object_changed (GDA_OBJECT (param));
+	}
 }
 
 /**
- * gda_parameter_list_add_parameter
- * @plist: a #GdaParameterList.
- * @param: the #GdaParameter to be added to the list.
+ * gda_parameter_set_value_str
+ * @param: a #GdaParameter object
+ * @value: a value to set the parameter to, as a string
  *
- * Adds a new parameter to the given #GdaParameterList. Note that @param is, 
- * when calling this function, is owned by the #GdaParameterList, so the 
- * caller should just forget about it and not try to free the parameter once 
- * it's been added to the #GdaParameterList.
+ * Same function as gda_parameter_set_value() except that the value
+ * is provided as a string, and may return FALSE if the string did not
+ * represent a correct value for the data type of the parameter.
+ *
+ * Returns: TRUE if no error occured
+ */
+gboolean
+gda_parameter_set_value_str (GdaParameter *param, const gchar *value)
+{
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), FALSE);
+	g_return_val_if_fail (param->priv, FALSE);
+
+	if (!value) {
+		gda_parameter_set_value (param, NULL);	
+		return TRUE;
+	}
+	else {
+		GdaValue *gdaval = NULL;
+		GdaDict *dict;
+		GdaConnection *cnc = NULL;
+
+		dict = gda_object_get_dict (GDA_OBJECT (param));
+		if (dict)
+			cnc = gda_dict_get_connection (dict);
+		
+		if (cnc) {
+			GdaServerProvider *prov;
+			prov = gda_connection_get_provider_obj (cnc);
+			
+			if (prov) {
+				GdaDataHandler *dh;
+
+				dh = gda_server_provider_get_data_handler_gda (prov, cnc, param->priv->gda_type);
+				if (dh)
+					gdaval = gda_data_handler_get_value_from_str (dh, value, param->priv->gda_type);
+			}
+		}
+		else {
+			/* use dict's default data handlers */
+			GdaDataHandler *dh;
+
+			dh = gda_dict_get_default_handler (ASSERT_DICT (dict), param->priv->gda_type);
+			gdaval = gda_data_handler_get_value_from_str (dh, value, param->priv->gda_type);
+		}
+
+		if (gdaval) {
+			gda_parameter_set_value (param, gdaval);
+			gda_value_free (gdaval);
+			return TRUE;
+		}
+		else
+			return FALSE;
+	}
+}
+
+/**
+ * gda_parameter_declare_invalid
+ * @param: a #GdaParameter object
+ *
+ * Forces a parameter to be invalid; to set it valid again, a new value must be assigned
+ * to it using gda_parameter_set_value().
  */
 void
-gda_parameter_list_add_parameter (GdaParameterList *plist, GdaParameter *param)
+gda_parameter_declare_invalid (GdaParameter *param)
 {
-	gpointer orig_key;
-	gpointer orig_value;
-	const gchar *name;
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
 
-	g_return_if_fail (plist != NULL);
-	g_return_if_fail (param != NULL);
+#ifdef debug_NO
+	g_print ("Param %p (%s): declare invalid\n", param, gda_object_get_name (param));
+#endif
 
-	name = gda_parameter_get_name (param);
+	if (param->priv->invalid_forced)
+		return;
 
-	/* first look for the key in our list */
-	if (g_hash_table_lookup_extended (plist->hash, name, &orig_key, &orig_value)) {
-		g_hash_table_remove (plist->hash, name);
-		g_free (orig_key);
-		gda_parameter_free ((GdaParameter *) orig_value);
+	param->priv->invalid_forced = TRUE;
+	param->priv->valid = FALSE;
+	
+	if (param->priv->value) {
+		gda_value_free (param->priv->value);
+		param->priv->value = NULL;
 	}
 
-	/* add the parameter to the list */
-	g_hash_table_insert (plist->hash, g_strdup (name), param);
+	/* if we are an alias, then we forward the value setting to the master */
+	if (param->priv->alias_of) 
+		gda_parameter_declare_invalid (param->priv->alias_of);
+	else 
+		gda_object_changed (GDA_OBJECT (param));
+}
+
+
+/**
+ * gda_parameter_is_valid
+ * @param: a #GdaParameter object
+ *
+ * Get the validity of @param (that is, of the value held by @param)
+ *
+ * Returns: TRUE if @param's value can safely be used
+ */
+gboolean
+gda_parameter_is_valid (GdaParameter *param)
+{
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), FALSE);
+	g_return_val_if_fail (param->priv, FALSE);
+
+	if (param->priv->alias_of) {
+		return gda_parameter_is_valid (param->priv->alias_of);
+	}
+	else {
+		if (param->priv->invalid_forced) {
+			return FALSE;
+		}
+
+		if (param->priv->default_forced) {
+			return param->priv->default_value ? TRUE : FALSE;
+		}
+		else {
+			return param->priv->valid;
+		}
+	}
+}
+
+
+/**
+ * gda_parameter_get_default_value
+ * @param: a #GdaParameter object
+ *
+ * Get the default value held into the parameter. WARNING: the default value does not need to be of 
+ * the same type as the one required by @param.
+ *
+ * Returns: the default value
+ */
+const GdaValue *
+gda_parameter_get_default_value (GdaParameter *param)
+{
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
+	g_return_val_if_fail (param->priv, NULL);
+
+	if (param->priv->has_default_value)
+		return param->priv->default_value;
+	else
+		return NULL;
+}
+
+
+/*
+ * gda_parameter_set_default_value
+ * @param: a #GdaParameter object
+ * @value: a value to set the parameter's default value to
+ *
+ * Sets the default value within the parameter. WARNING: the default value does not need to be of 
+ * the same type as the one required by @param.
+ */
+void
+gda_parameter_set_default_value (GdaParameter *param, const GdaValue *value)
+{
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
+
+	if (param->priv->default_value) {
+		gda_value_free (param->priv->default_value);
+		param->priv->default_value = NULL;
+	}
+
+	if (value) {
+		param->priv->has_default_value = TRUE;
+		param->priv->default_value = gda_value_copy ((GdaValue *)value);
+	}
+
+	gda_object_changed (GDA_OBJECT (param));
+}
+
+/**
+ * gda_parameter_get_exists_default_value
+ * @param: a #GdaParameter object
+ *
+ * Returns: TRUE if @param has a default value (which may be unspecified)
+ */
+gboolean
+gda_parameter_get_exists_default_value (GdaParameter *param)
+{
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), FALSE);
+	g_return_val_if_fail (param->priv, FALSE);
+
+	return param->priv->has_default_value;
+}
+
+/**
+ * gda_parameter_set_exists_default_value
+ *
+ * Tells if @param has default unspecified value. This function is usefull
+ * if one wants to inform that @param has a default value but does not know
+ * what that default value actually is.
+ */
+void
+gda_parameter_set_exists_default_value (GdaParameter *param, gboolean default_value_exists)
+{
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
+
+	if (default_value_exists)
+		param->priv->has_default_value = TRUE;
+	else {
+		gda_parameter_set_default_value (param, NULL);
+		param->priv->has_default_value = FALSE;
+	}
+}
+
+
+/**
+ * gda_parameter_set_not_null
+ * @param: a #GdaParameter object
+ * @not_null:
+ *
+ * Sets if the parameter can have a NULL value. If @not_null is TRUE, then that won't be allowed
+ */
+void
+gda_parameter_set_not_null (GdaParameter *param, gboolean not_null)
+{
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
+
+	if (not_null != param->priv->not_null) {
+		param->priv->not_null = not_null;
+
+		/* updating the parameter's validity regarding the NULL value */
+		if (!not_null && 
+		    (!param->priv->value || gda_value_is_null (param->priv->value)))
+			param->priv->valid = TRUE;
+
+		if (not_null && 
+		    (!param->priv->value || gda_value_is_null (param->priv->value)))
+			param->priv->valid = FALSE;
+
+		gda_object_changed (GDA_OBJECT (param));
+	}
+}
+
+/**
+ * gda_parameter_get_not_null
+ * @param: a #GdaParameter object
+ *
+ * Get wether the parameter can be NULL or not
+ *
+ * Returns: TRUE if the parameter cannot be NULL
+ */
+gboolean
+gda_parameter_get_not_null (GdaParameter *param)
+{
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), FALSE);
+	g_return_val_if_fail (param->priv, FALSE);
+
+	return param->priv->not_null;
+}
+
+/**
+ * gda_parameter_restrict_values
+ * @param: a #GdaParameter object
+ * @model: a #GdaDataModel object or NULL
+ * @col: the reference column in @model
+ * @error: location to store error, or %NULL
+ *
+ * Sets a limit on the possible values for the @param parameter: the value must be among the values
+ * contained in the @col column of the @model data model.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_parameter_restrict_values (GdaParameter *param, GdaDataModel *model,
+			       gint col, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), FALSE);
+	g_return_val_if_fail (param->priv, FALSE);
+
+	/* No check is done on the validity of @col or even its existance */
+	/* Note: for internal implementation if @col<0, then it's ignored */
+
+	if (param->priv->restrict_model == model) {
+		if (col >= 0)
+			param->priv->restrict_col = col;
+	}
+	else {
+		if (param->priv->restrict_model)
+			destroyed_restrict_cb (GDA_OBJECT (param->priv->restrict_model), param);
+		
+		if (col >= 0)
+			param->priv->restrict_col = col;
+		
+		if (model) {
+			param->priv->restrict_model = model;
+			g_object_ref (model);
+			gda_object_connect_destroy (model, G_CALLBACK (destroyed_restrict_cb), param);
+		}
+	}
+
+#ifdef debug_signal
+        g_print (">> 'RESTRICT_CHANGED' from %p\n", param);
+#endif
+	g_signal_emit (param, gda_parameter_signals[RESTRICT_CHANGED], 0);
+#ifdef debug_signal
+        g_print ("<< 'RESTRICT_CHANGED' from %p\n", param);
+#endif
+	return TRUE;
 }
 
 static void
-get_names_cb (gpointer key, gpointer value, gpointer user_data)
+destroyed_restrict_cb (GdaObject *obj, GdaParameter *param)
 {
-	GList **list = (GList **) user_data;
-	*list = g_list_append (*list, key);
+	g_assert (param->priv->restrict_model == (GdaDataModel *)obj);
+	g_object_unref (obj);
+	param->priv->restrict_model = NULL;
+	g_signal_handlers_disconnect_by_func (obj,
+					      G_CALLBACK (destroyed_restrict_cb), param);
 }
 
 /**
- * gda_parameter_list_get_names
- * @plist: a #GdaParameterList.
+ * gda_parameter_has_restrict_values
+ * @param: a #GdaParameter
+ * @model: a place to store a pointer to the model restricting the parameter, or %NULL
+ * @col: a place to store the column in the model restricting the parameter, or %NULL
  *
- * Gets the names of all parameters in the parameter list.
+ * Tells if @param has its values restricted by a #GdaDataModel, and optionnaly
+ * allows to fetch the resteictions.
  *
- * Returns: a GList containing the names of the parameters. After
- * using it, you should free this list by calling g_list_free.
+ * Returns: TRUE if @param has its values restricted.
  */
-GList *
-gda_parameter_list_get_names (GdaParameterList *plist)
+gboolean
+gda_parameter_has_restrict_values (GdaParameter *param, GdaDataModel **model, gint *col)
 {
-	GList *list = NULL;
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), FALSE);
+	g_return_val_if_fail (param->priv, FALSE);
+	
+	if (model)
+		*model = param->priv->restrict_model;
+	if (col)
+		*col = param->priv->restrict_col;
 
-	g_return_val_if_fail (plist != NULL, NULL);
-
-	g_hash_table_foreach (plist->hash, get_names_cb, &list);
-	return list;
+	return param->priv->restrict_model ? TRUE : FALSE;
 }
 
 /**
- * gda_parameter_list_find
- * @plist: a #GdaParameterList.
- * @name: name of the parameter to search for.
+ * gda_parameter_bind_to_param
+ * @param: a #GdaParameter
+ * @bind_to: a #GdaParameter or %NULL
  *
- * Gets a #GdaParameter from the parameter list given its name.
- *
- * Returns: the #GdaParameter identified by @name, if found, or %NULL
- * if not found.
- */
-GdaParameter *
-gda_parameter_list_find (GdaParameterList *plist, const gchar *name)
-{
-	g_return_val_if_fail (plist != NULL, NULL);
-	g_return_val_if_fail (name != NULL, NULL);
-
-	return g_hash_table_lookup (plist->hash, name);
-}
-
-/**
- * gda_parameter_list_clear
- * @plist: a #GdaParameterList.
- *
- * Clears the parameter list. This means removing all #GdaParameter's currently
- * being stored in the parameter list. After calling this function,
- * the parameter list is empty.
+ * Sets @param to change when @bind_to changes (and does not make @bind_to change when @param changes)
  */
 void
-gda_parameter_list_clear (GdaParameterList *plist)
+gda_parameter_bind_to_param (GdaParameter *param, GdaParameter *bind_to)
 {
-	g_return_if_fail (plist != NULL);
-	g_hash_table_foreach_remove (plist->hash, free_hash_param, NULL);
+	const GdaValue *cvalue;
+	GdaValue *value1 = NULL, *value2 = NULL;
+
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
+	g_return_if_fail (param != bind_to);
+
+	if (param->priv->change_with == bind_to)
+		return;
+
+	/* get a copy of the current values of @param and @bind_to */
+	if (bind_to) {
+		g_return_if_fail (bind_to && GDA_IS_PARAMETER (bind_to));
+		g_return_if_fail (bind_to->priv);
+		g_return_if_fail (param->priv->gda_type == bind_to->priv->gda_type);
+		cvalue = gda_parameter_get_value (bind_to);
+		if (cvalue && !gda_value_is_null ((GdaValue*)cvalue))
+			value2 = gda_value_copy ((GdaValue*)cvalue);
+	}
+
+	cvalue = gda_parameter_get_value (param);
+	if (cvalue && !gda_value_is_null ((GdaValue*)cvalue))
+		value1 = gda_value_copy ((GdaValue*)cvalue);
+
+	/* get rid of the old alias */
+	if (param->priv->change_with) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (param->priv->change_with),
+						      G_CALLBACK (destroyed_alias_of_cb), param);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (param->priv->change_with),
+						      G_CALLBACK (alias_of_changed_cb), param);
+		param->priv->change_with = NULL;
+	}
+
+	/* setting the new alias or reseting the value if there is no new alias */
+	if (bind_to) {
+		gboolean equal = FALSE;
+
+		param->priv->change_with = bind_to;
+		gda_object_connect_destroy (param->priv->change_with, 
+					       G_CALLBACK (destroyed_alias_of_cb), param);
+		g_signal_connect (G_OBJECT (param->priv->change_with), "changed",
+				  G_CALLBACK (alias_of_changed_cb), param);
+
+		/* if alias_of has a different value than param, then we set param to the new value */
+		if (value1 && value2 &&
+		    (gda_value_get_type (value1) == gda_value_get_type (value2)))
+			equal = !gda_value_compare (value1, value2);
+		else {
+			if (!value1 && !value2)
+				equal = TRUE;
+		}
+		if (!equal)
+			gda_parameter_set_value (param, value2);
+	}
+		
+	if (value1) gda_value_free (value1);
+	if (value2) gda_value_free (value2);
+}
+
+/*
+ * gda_parameter_set_full_bind_param
+ * @param: a #GdaParameter
+ * @alias_of: a #GdaParameter or %NULL
+ *
+ * Sets @param to change when @alias_of changes and makes @alias_of change when @param changes.
+ * The difference with gda_parameter_bind_to_param is that when @param changes, then @alias_of also
+ * changes.
+ */
+static void
+gda_parameter_set_full_bind_param (GdaParameter *param, GdaParameter *alias_of)
+{
+	const GdaValue *cvalue;
+	GdaValue *value1 = NULL, *value2 = NULL;
+
+	g_return_if_fail (GDA_IS_PARAMETER (param));
+	g_return_if_fail (param->priv);
+
+	if (param->priv->alias_of == alias_of)
+		return;
+
+	/* get a copy of the current values of @param and @alias_of */
+	if (alias_of) {
+		g_return_if_fail (alias_of && GDA_IS_PARAMETER (alias_of));
+		g_return_if_fail (alias_of->priv);
+		g_return_if_fail (param->priv->gda_type == alias_of->priv->gda_type);
+		cvalue = gda_parameter_get_value (alias_of);
+		if (cvalue && !gda_value_is_null ((GdaValue*)cvalue))
+			value2 = gda_value_copy ((GdaValue*)cvalue);
+	}
+
+	cvalue = gda_parameter_get_value (param);
+	if (cvalue && !gda_value_is_null ((GdaValue*)cvalue))
+		value1 = gda_value_copy ((GdaValue*)cvalue);
+		
+	
+	/* get rid of the old alias */
+	if (param->priv->alias_of) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (param->priv->alias_of),
+						      G_CALLBACK (destroyed_alias_of_cb), param);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (param->priv->alias_of),
+						      G_CALLBACK (alias_of_changed_cb), param);
+		param->priv->alias_of = NULL;
+	}
+
+	/* setting the new alias or reseting the value if there is no new alias */
+	if (alias_of) {
+		gboolean equal = FALSE;
+
+		/* get rid of the internal param's value */
+		if (param->priv->value) {
+			gda_value_free (param->priv->value);
+			param->priv->value = NULL;
+		}
+
+		param->priv->alias_of = alias_of;
+		gda_object_connect_destroy (param->priv->alias_of, 
+					       G_CALLBACK (destroyed_alias_of_cb), param);
+		g_signal_connect (G_OBJECT (param->priv->alias_of), "changed",
+				  G_CALLBACK (alias_of_changed_cb), param);
+
+		/* if alias_of has a different value than param, then we emit a CHANGED signal */
+		if (value1 && value2 &&
+		    (gda_value_get_type (value1) == gda_value_get_type (value2)))
+			equal = !gda_value_compare (value1, value2);
+		else {
+			if (!value1 && !value2)
+				equal = TRUE;
+		}
+
+		if (!equal)
+			gda_object_changed (GDA_OBJECT (param));
+	}
+	else {
+		/* restore the value that was in the previous alias parameter, 
+		 * if there was such a value, and don't emit a signal */
+		g_assert (! param->priv->value);
+		if (value1)
+			param->priv->value = value1;
+		value1 = NULL;
+	}
+
+	if (value1) gda_value_free (value1);
+	if (value2) gda_value_free (value2);
+}
+
+static void
+destroyed_alias_of_cb (GdaObject *obj, GdaParameter *param)
+{
+	if ((gpointer) obj == (gpointer) param->priv->alias_of)
+		gda_parameter_set_full_bind_param (param, NULL);
+	else
+		gda_parameter_bind_to_param (param, NULL);
+}
+
+static void
+alias_of_changed_cb (GdaParameter *alias_of, GdaParameter *param)
+{
+	if ((gpointer) alias_of == (gpointer) param->priv->alias_of) {
+		/* callback used as full bind */
+		gda_object_changed (GDA_OBJECT (param));
+	}
+	else {
+		/* callback used as simple bind */
+		gda_parameter_set_value (param, gda_parameter_get_value (alias_of));
+	}
+}
+
+static void
+gda_parameter_signal_changed (GdaObject *base, gboolean block_changed_signal)
+{
+	GdaParameter *param = GDA_PARAMETER (base);
+
+	if (param->priv->alias_of) {
+		if (block_changed_signal)
+			gda_object_block_changed (GDA_OBJECT (param->priv->alias_of));
+		else
+			gda_object_unblock_changed (GDA_OBJECT (param->priv->alias_of));
+	}
 }
 
 /**
- * gda_parameter_list_get_length
- * @plist: a #GdaParameterList.
+ * gda_parameter_get_bind_param
+ * @param: a #GdaParameter
  *
- * Returns: the number of parameters stored in the given parameter list.
+ * Get the parameter which makes @param change its value when the param's value is changed.
+ *
+ * Returns: the #GdaParameter or %NULL
  */
-guint
-gda_parameter_list_get_length (GdaParameterList *plist)
+GdaParameter *
+gda_parameter_get_bind_param (GdaParameter *param)
 {
-	return plist ? g_hash_table_size (plist->hash) : 0;
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
+	g_return_val_if_fail (param->priv, NULL);
+
+	return param->priv->change_with;
+}
+
+#ifdef debug
+static void
+gda_parameter_dump (GdaParameter *parameter, guint offset)
+{
+	gchar *str;
+	guint i;
+
+	g_return_if_fail (parameter);
+	g_return_if_fail (GDA_IS_PARAMETER (parameter));
+
+	/* string for the offset */
+	str = g_new0 (gchar, offset+1);
+        for (i=0; i<offset; i++)
+                str[i] = ' ';
+        str[offset] = 0;
+	
+	/* dump */
+	if (parameter->priv) {
+		GSList *list;
+		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s\n" D_COL_NOR, str, parameter,
+			 gda_object_get_name (GDA_OBJECT (parameter)), 
+			 gda_type_to_string (parameter->priv->gda_type));
+		
+		list = parameter->priv->param_users;
+		while (list) {
+			gchar *xmlid = NULL;
+
+			if (GDA_IS_XML_STORAGE (list->data))
+				xmlid = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (list->data));
+
+			if (list == parameter->priv->param_users)
+				g_print ("%sFor fields: ", str);
+			else
+				g_print (", ");
+			if (xmlid) {
+				g_print ("%p (%s)", list->data, xmlid);
+				g_free (xmlid);
+			}
+			else
+				g_print ("%p", list->data);
+
+			list = g_slist_next (list);
+		}
+		if (parameter->priv->param_users)
+			g_print ("\n");
+
+		if (parameter->priv->restrict_model) {
+				g_print ("%sValues restrictions: COLUMN %d\n", str, 
+					 parameter->priv->restrict_col);
+				gda_object_dump (GDA_OBJECT (parameter->priv->restrict_model), offset+5);
+		}
+
+		if (parameter->priv->alias_of) {
+			g_print ("%sAlias of parameter %p (%s)\n", str, parameter->priv->alias_of,
+				 gda_object_get_name (GDA_OBJECT (parameter->priv->alias_of)));
+			gda_parameter_dump (parameter->priv->alias_of, offset + 5);
+		}
+	}
+	else
+		g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, parameter);
+
+	g_free (str);
+}
+#endif
+
+
+/* 
+ * GdaReferer interface implementation
+ */
+
+static void
+gda_parameter_replace_refs (GdaReferer *iface, GHashTable *replacements)
+{
+	GdaParameter *parameter;
+	gpointer repl;
+
+	g_return_if_fail (iface && GDA_IS_PARAMETER (iface));
+	g_return_if_fail (GDA_PARAMETER (iface)->priv);
+
+	parameter = GDA_PARAMETER (iface);
+	
+	gda_parameter_replace_param_users (parameter, replacements);
+	
+	if (parameter->priv->alias_of) {
+		repl = g_hash_table_lookup (replacements, parameter->priv->alias_of);
+		if (repl) 
+			gda_parameter_set_full_bind_param (parameter, repl);
+	}
+
+	if (parameter->priv->change_with) {
+		repl = g_hash_table_lookup (replacements, parameter->priv->change_with);
+		if (repl)
+			gda_parameter_bind_to_param (parameter, GDA_PARAMETER (repl));
+	}
 }

@@ -159,7 +159,7 @@ gda_threader_dispose (GObject   * object)
 	GdaThreader *thread;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (IS_GDA_THREADER (object));
+	g_return_if_fail (GDA_IS_THREADER (object));
 
 	thread = GDA_THREADER (object);
 	if (thread->priv) {
@@ -189,7 +189,7 @@ gda_threader_finalize (GObject   * object)
 	GdaThreader *thread;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (IS_GDA_THREADER (object));
+	g_return_if_fail (GDA_IS_THREADER (object));
 
 	thread = GDA_THREADER (object);
 	if (thread->priv) {
@@ -224,7 +224,7 @@ gda_threader_start_thread (GdaThreader *thread, GThreadFunc func, gpointer func_
 {
 	ThreadJob *job;
 
-	g_return_val_if_fail (thread && IS_GDA_THREADER (thread), 0);
+	g_return_val_if_fail (thread && GDA_IS_THREADER (thread), 0);
 	g_return_val_if_fail (func, 0);
 	
 	job = g_new0 (ThreadJob, 1);
@@ -322,7 +322,7 @@ gda_threader_cancel (GdaThreader *thread, guint job_id)
 {
 	ThreadJob *job;
 
-	g_return_if_fail (thread && IS_GDA_THREADER (thread));
+	g_return_if_fail (thread && GDA_IS_THREADER (thread));
 	job = g_hash_table_lookup (thread->priv->jobs, GUINT_TO_POINTER (job_id));
 	if (!job)
 		g_warning ("Could not find threaded job %d", job_id);

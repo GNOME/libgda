@@ -28,7 +28,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libgda/gda-command.h>
-#include <libgda/global-decl.h>
+#include <libgda/gda-decl.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-value.h>
 

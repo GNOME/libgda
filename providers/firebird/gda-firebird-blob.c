@@ -23,7 +23,7 @@
 #include "gda-firebird-blob.h"
 #include "gda-firebird-provider.h"
 #include "gda-firebird-recordset.h"
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 
 /* FirebirdBlob private structure */
 struct _GdaFirebirdBlobPrivate {

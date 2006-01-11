@@ -17,6 +17,12 @@ Management of BLOBs (Binary Large OBjects)
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### STRUCT GdaBlob ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### ENUM GdaBlobMode ##### -->
 <para>
 
@@ -25,13 +31,6 @@ Management of BLOBs (Binary Large OBjects)
 @GDA_BLOB_MODE_READ: 
 @GDA_BLOB_MODE_WRITE: 
 @GDA_BLOB_MODE_RDWR: 
-
-<!-- ##### STRUCT GdaBlob ##### -->
-<para>
-
-</para>
-
-@object: 
 
 <!-- ##### FUNCTION gda_blob_open ##### -->
 <para>

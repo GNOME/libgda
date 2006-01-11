@@ -28,7 +28,7 @@
 #include <glib-object.h>
 #include <libgda/gda-column.h>
 #include <glib/gmacros.h>
-#include <libgda/global-decl.h>
+#include <libgda/gda-decl.h>
 
 G_BEGIN_DECLS
 
@@ -38,6 +38,7 @@ G_BEGIN_DECLS
 #define GDA_IS_ROW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_ROW))
 #define GDA_IS_ROW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_ROW))
 
+typedef struct _GdaRow        GdaRow;
 typedef struct _GdaRowClass   GdaRowClass;
 typedef struct _GdaRowPrivate GdaRowPrivate;
 

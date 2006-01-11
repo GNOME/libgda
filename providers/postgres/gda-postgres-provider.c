@@ -24,12 +24,21 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <libgda/gda-parameter-list.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
+#include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-column-index.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
 #include "gda-postgres-blob.h"
+
+#include <libgda/handlers/gda-handler-numerical.h>
+#include <libgda/handlers/gda-handler-boolean.h>
+#include <libgda/handlers/gda-handler-time.h>
+#include <libgda/handlers/gda-handler-string.h>
+#include <libgda/handlers/gda-handler-type.h>
+#include <libgda/handlers/gda-handler-bin.h>
 
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
@@ -116,10 +125,18 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 						GdaConnection *cnc,
 						GdaConnectionFeature feature);
 
+static GdaServerProviderInfo *gda_postgres_provider_get_info (GdaServerProvider *provider,
+							      GdaConnection *cnc);
+
 static GdaDataModel *gda_postgres_provider_get_schema (GdaServerProvider *provider,
 						       GdaConnection *cnc,
 						       GdaConnectionSchema schema,
 						       GdaParameterList *params);
+
+static GdaDataHandler *gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
+							       GdaConnection *cnc,
+							       GdaValueType gda_type,
+							       const gchar *dbms_type);
 
 static GdaBlob *gda_postgres_provider_create_blob (GdaServerProvider *provider,
 						   GdaConnection *cnc);
@@ -131,11 +148,6 @@ gda_postgres_provider_value_to_sql_string (GdaServerProvider *provider, /* we do
 					GdaConnection *cnc,
 					GdaValue *from);
 				 		 
-typedef struct {
-	gchar        *col_name;
-	GdaValueType  data_type;
-} GdaPostgresColData;
-
 typedef struct {
 	gint ncolumns;
 	gint *columns;
@@ -168,29 +180,42 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_postgres_provider_finalize;
+
 	provider_class->get_version = gda_postgres_provider_get_version;
-	provider_class->open_connection = gda_postgres_provider_open_connection;
-	provider_class->close_connection = gda_postgres_provider_close_connection;
 	provider_class->get_server_version = gda_postgres_provider_get_server_version;
+	provider_class->get_info = gda_postgres_provider_get_info;
+	provider_class->supports = gda_postgres_provider_supports;
+	provider_class->get_schema = gda_postgres_provider_get_schema;
+
+	provider_class->get_data_handler = gda_postgres_provider_get_data_handler;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
+
+	provider_class->open_connection = gda_postgres_provider_open_connection;
+	provider_class->reset_connection = NULL;
+	provider_class->close_connection = gda_postgres_provider_close_connection;
 	provider_class->get_database = gda_postgres_provider_get_database;
+	provider_class->change_database = NULL;
+
 	provider_class->get_specs = gda_postgres_provider_get_specs;
 	provider_class->perform_action_params = gda_postgres_provider_perform_action_params;
+
 	provider_class->create_database_cnc = gda_postgres_provider_create_database_cnc;
 	provider_class->drop_database_cnc = gda_postgres_provider_drop_database_cnc;
 	provider_class->create_table = gda_postgres_provider_create_table;
 	provider_class->drop_table = gda_postgres_provider_drop_table;
 	provider_class->create_index = gda_postgres_provider_create_index;
 	provider_class->drop_index = gda_postgres_provider_drop_index;
+
 	provider_class->execute_command = gda_postgres_provider_execute_command;
 	provider_class->get_last_insert_id = gda_postgres_provider_get_last_insert_id;
+
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
 	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
-	provider_class->supports = gda_postgres_provider_supports;
-	provider_class->get_schema = gda_postgres_provider_get_schema;
+	
 	provider_class->create_blob = gda_postgres_provider_create_blob;
 	provider_class->fetch_blob = gda_postgres_provider_fetch_blob;
-	provider_class->value_to_sql_string = gda_postgres_provider_value_to_sql_string;
 }
 
 static void
@@ -204,7 +229,7 @@ gda_postgres_provider_finalize (GObject *object)
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) object;
 
 	g_return_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv));
-
+	
 	/* chain to parent class */
 	parent_class->finalize(object);
 }
@@ -688,7 +713,10 @@ gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	else
+		return NULL;
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
@@ -754,8 +782,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				if (status == PGRES_TUPLES_OK) {
 					recset = gda_postgres_recordset_new (cnc, pg_res);
 					if (GDA_IS_DATA_MODEL (recset)) {
-						gda_data_model_set_command_text (recset, arr[n]);
-						gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+						g_object_set (G_OBJECT (recset), 
+							      "command_text", arr[n],
+							      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 						for (i = PQnfields (pg_res) - 1; i >= 0; i--)
 							gda_data_model_set_column_title (recset, i, 
 											 PQfname (pg_res, i));
@@ -871,37 +900,37 @@ gda_postgres_provider_perform_action_params (GdaServerProvider *provider,
 	switch (type) {
 	case GDA_CLIENT_SPECS_CREATE_DATABASE:
 		if (params) {
-			param = gda_parameter_list_find (params, "HOST");
+			param = gda_parameter_list_find_param (params, "HOST");
 			pq_host = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "PORT");
+			param = gda_parameter_list_find_param (params, "PORT");
 			pq_port = int_from_int_param (param);
 			
-			param = gda_parameter_list_find (params, "OPTIONS");
+			param = gda_parameter_list_find_param (params, "OPTIONS");
 			pq_options = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "ADM_LOGIN");
+			param = gda_parameter_list_find_param (params, "ADM_LOGIN");
 			pq_user = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "ADM_PASSWORD");
+			param = gda_parameter_list_find_param (params, "ADM_PASSWORD");
 			pq_pwd = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "TEMPLATE");
+			param = gda_parameter_list_find_param (params, "TEMPLATE");
 			pq_db = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "REQUIRESSL");
+			param = gda_parameter_list_find_param (params, "REQUIRESSL");
 			pq_ssl = bool_from_bool_param (param);
 			
-			param = gda_parameter_list_find (params, "DATABASE");
+			param = gda_parameter_list_find_param (params, "DATABASE");
 			pq_newdb = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "ENCODING");
+			param = gda_parameter_list_find_param (params, "ENCODING");
 			pq_enc = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "OWNER");
+			param = gda_parameter_list_find_param (params, "OWNER");
 			pq_owner = string_from_string_param (param);
 			
-			param = gda_parameter_list_find (params, "TABLESPACE");
+			param = gda_parameter_list_find_param (params, "TABLESPACE");
 			pq_tspace = string_from_string_param (param);
 		}
 		if (!pq_newdb) {
@@ -1052,7 +1081,7 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 			g_string_append_printf (sql, "serial");
 			value_type = GDA_VALUE_TYPE_INTEGER;
 		} else {
-			value_type = gda_column_get_gdatype (dmca);
+			value_type = gda_column_get_gda_type (dmca);
 			postgres_data_type = postgres_name_from_gda_type (value_type);
 			g_string_append_printf (sql, "%s", postgres_data_type);
 			g_free(postgres_data_type);
@@ -1447,6 +1476,8 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pgprv), FALSE);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);	
 
 	switch (feature) {
 	case GDA_CONNECTION_FEATURE_AGGREGATES :
@@ -1462,10 +1493,14 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_BLOBS :
 		return TRUE;
 	case GDA_CONNECTION_FEATURE_NAMESPACES :
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
-		if (priv_data->version_float >= 7.3)
-			return TRUE;
+		if (cnc) {
+			g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+			priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+			if (priv_data->version_float >= 7.3)
+				return TRUE;
+		}
+		else
+			return FALSE;
 	default :
 		break;
 	}
@@ -1473,33 +1508,17 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
-
-static GdaDataModelArray *
-gda_postgres_init_procs_recset (GdaConnection *cnc)
+static GdaServerProviderInfo *
+gda_postgres_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	GdaDataModelArray *recset;
-	gint i;
-	GdaColumn *column;
-	GdaPostgresColData cols[8] = {
-		{ N_("Procedure")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Id")              , GDA_VALUE_TYPE_STRING  },
-		{ N_("Owner")		, GDA_VALUE_TYPE_STRING  },
-		{ N_("Comments")       	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Return type")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Nb args")	        , GDA_VALUE_TYPE_INTEGER },
-		{ N_("Args types")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Definition")	, GDA_VALUE_TYPE_STRING  }
-		};
-
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
-	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
-		column = gda_data_model_describe_column (GDA_DATA_MODEL (recset), i);
-		
-		gda_column_set_title (column, _(cols[i].col_name));
-		gda_column_set_gdatype (column, cols[i].data_type);
-	}
-
-	return recset;
+	static GdaServerProviderInfo info = {
+		"PostgreSQL",
+		TRUE, 
+		TRUE,
+		TRUE,
+	};
+	
+	return &info;
 }
 
 static const GdaPostgresTypeOid *
@@ -1688,7 +1707,9 @@ get_postgres_procedures (GdaConnection *cnc, GdaParameterList *params)
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
-	recset = gda_postgres_init_procs_recset (cnc);
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
+				       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_PROCEDURES)));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_PROCEDURES);
 	list = gda_postgres_fill_procs_data (recset, priv_data);
 	g_list_foreach (list, add_g_list_row, recset);
 	g_list_free (list);
@@ -1708,7 +1729,7 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	if (params)
-		par = gda_parameter_list_find (params, "namespace");
+		par = gda_parameter_list_find_param (params, "namespace");
 
 	if (par)
 		namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
@@ -1755,11 +1776,9 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("Table"));
-	gda_data_model_set_column_title (recset, 1, _("Owner"));
-	gda_data_model_set_column_title (recset, 2, _("Description"));
-	gda_data_model_set_column_title (recset, 3, _("Definition"));
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_TABLES);
 
 	return recset;
 }
@@ -1771,15 +1790,7 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 	GdaPostgresConnectionData *priv_data;
 	gint i;
 	static GHashTable *synonyms = NULL;
-
 	GdaColumn *column;
-	GdaPostgresColData cols[5] = {
-		{ N_("Type")	           , GDA_VALUE_TYPE_STRING  },
-		{ N_("Owner")              , GDA_VALUE_TYPE_STRING  },
-		{ N_("Comments")	   , GDA_VALUE_TYPE_STRING  },
-		{ N_("GDA type")       	   , GDA_VALUE_TYPE_TYPE  },
-		{ N_("Synonyms")	   , GDA_VALUE_TYPE_STRING  }
-		};
 
 	if (!synonyms) {
 		synonyms = g_hash_table_new (g_str_hash, g_str_equal);
@@ -1801,13 +1812,9 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
-	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
-		column = gda_data_model_describe_column (GDA_DATA_MODEL (recset), i);
-		
-		gda_column_set_title (column, _(cols[i].col_name));
-		gda_column_set_gdatype (column, cols[i].data_type);
-	}
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
+				       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES)));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_TYPES);
 
 	/* fill the recordset */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -1823,7 +1830,7 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 		syn = g_hash_table_lookup (synonyms, priv_data->type_data[i].name);
 		value_list = g_list_append (value_list, gda_value_new_string (syn));
 
-		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1868,10 +1875,7 @@ get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 	g_list_free (reclist);
 
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("View"));
-	gda_data_model_set_column_title (recset, 1, _("Owner"));
-	gda_data_model_set_column_title (recset, 2, _("Comments"));
-	gda_data_model_set_column_title (recset, 3, _("Definition"));
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_VIEWS);
 
 	return recset;
 }
@@ -1907,8 +1911,9 @@ get_postgres_indexes (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("Indexes"));
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_INDEXES);
 
 	return recset;
 }
@@ -1925,7 +1930,7 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	if (params)
-		par = gda_parameter_list_find (params, "namespace");
+		par = gda_parameter_list_find_param (params, "namespace");
 
 	if (par)
 		namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
@@ -1984,14 +1989,9 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("Aggregate"));
-	gda_data_model_set_column_title (recset, 1, _("Id"));
-	gda_data_model_set_column_title (recset, 2, _("Owner"));
-	gda_data_model_set_column_title (recset, 3, _("Comments"));
-	gda_data_model_set_column_title (recset, 4, _("OutType"));
-	gda_data_model_set_column_title (recset, 5, _("InType"));
-	gda_data_model_set_column_title (recset, 6, _("Definition"));
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_AGGREGATES);
 
 	return recset;
 }
@@ -2025,38 +2025,9 @@ get_postgres_triggers (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("Triggers"));
-
-	return recset;
-}
-
-static GdaDataModelArray *
-gda_postgres_init_md_recset (GdaConnection *cnc)
-{
-	GdaDataModelArray *recset;
-	gint i;
-	GdaColumn *column;
-	GdaPostgresColData cols[] = {
-		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
-		{ N_("Scale")		, GDA_VALUE_TYPE_INTEGER },
-		{ N_("Not null?")	, GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("References")	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  },
-		{ N_("Extra attributes"), GDA_VALUE_TYPE_STRING  }
-		};
-
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
-	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
-		column = gda_data_model_describe_column (GDA_DATA_MODEL (recset), i);
-		
-		gda_column_set_title (column, _(cols[i].col_name));
-		gda_column_set_gdatype (column, cols[i].data_type);
-	}
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_TRIGGERS);
 
 	return recset;
 }
@@ -2148,8 +2119,6 @@ gda_postgres_index_type (gint colnum, GList *idx_list, IdxType type)
 					idx_data->primary : idx_data->unique;
 			}
 		}
-		
-
 	}
 
 	return FALSE;
@@ -2500,7 +2469,7 @@ add_g_list_row (gpointer data, gpointer user_data)
 	GList *rowlist = data;
 	GdaDataModelArray *recset = user_data;
 
-	gda_data_model_append_values (GDA_DATA_MODEL (recset), rowlist);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), rowlist, NULL);
 	g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
 	g_list_free (rowlist);
 }
@@ -2517,7 +2486,7 @@ get_postgres_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
 
-	par = gda_parameter_list_find (params, "name");
+	par = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
 	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
@@ -2525,7 +2494,9 @@ get_postgres_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 	
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
-	recset = gda_postgres_init_md_recset (cnc);
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
+				       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_FIELDS)));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_FIELDS);
 	list = gda_postgres_fill_md_data (tblname, recset, priv_data);
 	g_list_foreach (list, add_g_list_row, recset);
 	g_list_free (list);
@@ -2562,8 +2533,9 @@ get_postgres_databases (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("Databases"));
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_DATABASES);
 
 	return recset;
 }
@@ -2597,8 +2569,9 @@ get_postgres_users (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("Users"));
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_USERS);
 
 	return recset;
 }
@@ -2640,10 +2613,7 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 	g_list_free (reclist);
 
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("Sequence"));
-	gda_data_model_set_column_title (recset, 1, _("Owner"));
-	gda_data_model_set_column_title (recset, 2, _("Comments"));
-        gda_data_model_set_column_title (recset, 3, _("Definition"));
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_SEQUENCES);
 
 	return recset;
 }
@@ -2661,7 +2631,7 @@ get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
 
-	par = gda_parameter_list_find (params, "name");
+	par = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
 	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
@@ -2695,8 +2665,9 @@ get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	gda_data_model_set_column_title (recset, 0, _("Table"));
-	gda_data_model_set_column_title (recset, 1, _("Sequence"));
+
+	/* Set it here instead of the SQL query to allow i18n */
+	gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_PARENT_TABLES);
 
 	return recset;
 }
@@ -2709,7 +2680,10 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 				  GdaParameterList *params)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	else
+		return NULL;
 
 	switch (schema) {
 	case GDA_CONNECTION_SCHEMA_AGGREGATES :
@@ -2763,6 +2737,8 @@ gda_postgres_provider_fetch_blob (GdaServerProvider *provider,
 	return gda_postgres_blob_new_with_id (cnc, sql_id);
 }
 
+
+/* FIXME: not used anymore, make sure the data handlers do the same */
 gchar *
 gda_postgres_provider_value_to_sql_string (
 				GdaServerProvider *provider, /* we dont actually use this!*/
@@ -2817,3 +2793,136 @@ gda_postgres_provider_value_to_sql_string (
 
 	return ret;
 }
+
+static GdaDataHandler *
+gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
+					GdaConnection *cnc,
+					GdaValueType gda_type,
+					const gchar *dbms_type)
+{
+	GdaDataHandler *dh = NULL;
+	GdaPostgresProvider *pg_prv = GDA_POSTGRES_PROVIDER (provider);
+	GdaPostgresConnectionData *priv_data = NULL;
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	}
+
+	switch (gda_type) {
+        case GDA_VALUE_TYPE_BIGINT:
+	case GDA_VALUE_TYPE_BIGUINT:
+	case GDA_VALUE_TYPE_DOUBLE:
+	case GDA_VALUE_TYPE_INTEGER:
+	case GDA_VALUE_TYPE_NUMERIC:
+	case GDA_VALUE_TYPE_SINGLE:
+	case GDA_VALUE_TYPE_SMALLINT:
+	case GDA_VALUE_TYPE_SMALLUINT:
+        case GDA_VALUE_TYPE_TINYINT:
+        case GDA_VALUE_TYPE_TINYUINT:
+        case GDA_VALUE_TYPE_UINTEGER:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_numerical_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_INTEGER, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SINGLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_UINTEGER, NULL);
+			g_object_unref (dh);
+		}
+		break;
+        case GDA_VALUE_TYPE_BINARY:
+        case GDA_VALUE_TYPE_BLOB:
+		dh = gda_server_provider_handler_find (provider, cnc, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_bin_new_with_prov (provider, cnc);
+			if (dh) {
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BINARY, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BLOB, NULL);
+				g_object_unref (dh);
+			}
+		}
+		break;
+        case GDA_VALUE_TYPE_BOOLEAN:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_boolean_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BOOLEAN, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_DATE:
+	case GDA_VALUE_TYPE_TIME:
+	case GDA_VALUE_TYPE_TIMESTAMP:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_time_new_no_locale ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DATE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIME, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIMESTAMP, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_STRING:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_string_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_STRING, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_TYPE:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_type_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TYPE, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_NULL:
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT:
+	case GDA_VALUE_TYPE_GOBJECT:
+	case GDA_VALUE_TYPE_LIST:
+	case GDA_VALUE_TYPE_MONEY:
+		break;
+	case GDA_VALUE_TYPE_UNKNOWN: {
+			/* special case: we take into account the dbms_type argument */
+			if (priv_data) {
+				gint i;
+				GdaPostgresTypeOid *td = NULL;
+
+				for (i = 0; i < priv_data->ntypes; i++) {
+					if (!strcmp (priv_data->type_data[i].name, dbms_type))
+						td = &(priv_data->type_data[i]);
+				}
+				
+				if (td) {
+					dh = gda_postgres_provider_get_data_handler (provider, cnc, td->type, NULL);
+					gda_server_provider_handler_declare (provider, dh, cnc, 
+									     GDA_VALUE_TYPE_UNKNOWN, dbms_type);
+				}
+			}
+			else {
+				dh = gda_postgres_provider_get_data_handler (provider, cnc, 
+									     postgres_name_to_gda_type (dbms_type), NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, 
+								     GDA_VALUE_TYPE_UNKNOWN, dbms_type);
+			}
+			break;
+		}
+	default:
+		g_assert_not_reached ();
+		break;
+	}
+
+	return dh;
+}
+	

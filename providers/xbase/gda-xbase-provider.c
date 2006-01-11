@@ -1,8 +1,9 @@
 /* GDA Xbase Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,7 +20,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include "gda-xbase-database.h"
 #include "gda-xbase-provider.h"
 
@@ -94,20 +95,42 @@ gda_xbase_provider_class_init (GdaXbaseProviderClass *klass)
 	parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
 
 	object_class->finalize = gda_xbase_provider_finalize;
+
 	provider_class->get_version = gda_xbase_provider_get_version;
-	provider_class->open_connection = gda_xbase_provider_open_connection;
-	provider_class->close_connection = gda_xbase_provider_close_connection;
 	provider_class->get_server_version = gda_xbase_provider_get_server_version;
+	provider_class->get_info = NULL;
+	provider_class->supports = gda_xbase_provider_supports;
+	provider_class->get_schema = gda_xbase_provider_get_schema;
+
+	provider_class->get_data_handler = NULL;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
+
+	provider_class->open_connection = gda_xbase_provider_open_connection;
+	provider_class->reset_connection = NULL;
+	provider_class->close_connection = gda_xbase_provider_close_connection;
 	provider_class->get_database = gda_xbase_provider_get_database;
 	provider_class->change_database = gda_xbase_provider_change_database;
+
+	provider_class->get_specs = NULL;
+	provider_class->perform_action_params = NULL;
+
 	provider_class->create_database_cnc = gda_xbase_provider_create_database_cnc;
 	provider_class->drop_database_cnc = gda_xbase_provider_drop_database_cnc;
+	provider_class->create_table = NULL;
+	provider_class->drop_table = NULL;
+	provider_class->create_index = NULL;
+	provider_class->drop_index = NULL;
+
 	provider_class->execute_command = gda_xbase_provider_execute_command;
+	provider_class->get_last_insert_id = NULL;
+
 	provider_class->begin_transaction = gda_xbase_provider_begin_transaction;
 	provider_class->commit_transaction = gda_xbase_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_xbase_provider_rollback_transaction;
-	provider_class->supports = gda_xbase_provider_supports;
-	provider_class->get_schema = gda_xbase_provider_get_schema;
+	
+	provider_class->create_blob = NULL;
+	provider_class->fetch_blob = NULL;
 }
 
 static void

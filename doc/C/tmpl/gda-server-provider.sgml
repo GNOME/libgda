@@ -32,6 +32,16 @@ Base class for implementing new providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_get_info ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_open_connection ##### -->
 <para>
 
@@ -42,6 +52,16 @@ Base class for implementing new providers
 @params: 
 @username: 
 @password: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_reset_connection ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
 @Returns: 
 
 
@@ -263,6 +283,7 @@ Base class for implementing new providers
 @cnc: 
 @schema: 
 @params: 
+@error: 
 @Returns: 
 
 
@@ -276,5 +297,73 @@ Base class for implementing new providers
 @Returns: 
 <!-- # Unused Parameters # -->
 @blob: 
+
+
+<!-- ##### FUNCTION gda_server_provider_fetch_blob_by_id ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@sql_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_get_data_handler_gda ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@for_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_get_data_handler_dbms ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@for_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_string_to_value ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@string: 
+@prefered_type: 
+@dbms_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_value_to_sql_string ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@from: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_get_default_dbms_type ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@gda_type: 
+@Returns: 
 
 

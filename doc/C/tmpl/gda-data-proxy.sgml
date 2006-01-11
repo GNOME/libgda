@@ -1,0 +1,248 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataProxy
+
+<!-- ##### SECTION Short_Description ##### -->
+Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataModel interface itself
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+  This object stores modifications made to a #GdaDataModel object which is proxied until asked to make the changes
+  inside the #GdaDataModel, it also filters the proxied data model to show only a sample (a defined number of continuous
+  rows) of it.
+</para>
+<para>
+  Specifically, for a proxied data model having <varname>nb_cols</varname> columns and <varname>nb_rows</varname> rows, 
+  the #GdaDataProxy object has the following attributes:
+  <itemizedlist>
+    <listitem>
+      <para><varname>5 + 3 * nb_cols</varname> columns, the 5 first columns having <emphasis>negative</emphasis> numbers:
+	<itemizedlist>
+	  <listitem><para>negative column number PROXY_COL_MODEL_N_COLUMNS: gives the number of columns in the 
+	      proxied data model</para></listitem>
+	  <listitem><para>negative column number PROXY_COL_MODEL_ROW: gives the number of rows in the 
+	      proxied data model</para></listitem>
+	  <listitem><para>negative column number PROXY_COL_MODEL_POINTER: gives a pointer to the 
+	      proxied data model itself</para></listitem>
+	  <listitem><para>negative column number PROXY_COL_MODIFIED: TRUE if any value in the row has been modified 
+	      (compared to what's in the proxied data model)</para></listitem>
+	  <listitem><para>negative column number PROXY_COL_TO_DELETE: TRUE if the row has been marked to be 
+	      deleted; this value can be modified</para></listitem>
+	  <listitem><para>the first (&gt;= 0) <varname>nb_cols</varname> columns are the current values stored in the 
+	      proxy (which correspond to the values of the proxied data model if the considered row has not been 
+	      changed). The associated values are writable.</para></listitem>
+	  <listitem><para>the next <varname>nb_cols</varname> columns correspond to the attributes for each column of the proxy
+	    (which tells if the value at that column and specific row has been modified among other things, see the 
+	    #GdaValueAttribute enums for more information), at column <varname>col - nb_cols</varname>.</para>
+	    <para>Note that these values can be modified but only for the following attributes: GDA_VALUE_ATTR_CAN_BE_NULL and
+	      GDA_VALUE_ATTR_CAN_BE_DEFAULT</para></listitem>
+	  <listitem><para>the last <varname>nb_cols</varname> columns are the values stored in the proxied data model, 
+	      at column <varname>col - 2 * nb_cols</varname></para></listitem>
+	</itemizedlist>
+      </para>
+    </listitem>
+    <listitem><para>a variable number of rows depending on the following attributes:
+	<itemizedlist>
+	  <listitem><para>if the proxy is configured to have an empty row as the first row</para></listitem>
+	  <listitem><para>if the proxy only displays parts of the proxied data model</para></listitem>
+	  <listitem><para>if new rows have been added to the proxy</para></listitem>
+	</itemizedlist>
+    </para></listitem>
+  </itemizedlist>
+  Note that unless explicitely mentionned, the columns are read-only.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataProxy ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataProxy:autocommit ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataProxy:model ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataProxy:prepend-null-entry ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaDataProxyClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaDataProxyPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_proxy_new ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_is_read_only ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_values ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@cols_index: 
+@n_cols: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_delete ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_undelete ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_find_row_from_values ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@values: 
+@cols_index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_cancel_row_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@col: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_apply_row_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_has_changed ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_set_sample_size ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@sample_size: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_sample_size ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_set_sample_start ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@sample_start: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_sample_start ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_sample_end ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_apply_all_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_cancel_all_changes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+

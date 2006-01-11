@@ -1,0 +1,56 @@
+<!-- ##### SECTION Title ##### -->
+GdaHandlerType
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaHandlerType ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerType ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
+<!-- ##### STRUCT GdaHandlerTypeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaHandlerTypePriv ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_handler_type_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

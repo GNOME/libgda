@@ -1,11 +1,15 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-msql.la
 
+configdir   = $(datadir)/libgda
+config_DATA = msql_specs_dsn.xml
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(MSQL_CFLAGS)
+	$(MSQL_CFLAGS) \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_msql_la_SOURCES = \
 	gda-msql-provider.c \
@@ -20,3 +24,6 @@ libgda_msql_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.la \
 	$(MSQL_LIBS)
+
+EXTRA_DIST = $(config_DATA)
+

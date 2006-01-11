@@ -1,0 +1,64 @@
+/* gda-server-provider-extra.h
+ *
+ * Copyright (C) 2005 Vivien Malerba
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ */
+
+#ifndef __GDA_SERVER_PROVIDER_EXTRA__
+#define __GDA_SERVER_PROVIDER_EXTRA__
+
+#include <libgda/gda-decl.h>
+#include <libgda/gda-value.h>
+#include <libgda/gda-connection.h>
+
+G_BEGIN_DECLS
+
+/*
+ * Help to implement providers, so the schemas return the same
+ * number of columns and column titles across the providers.
+ */
+gint      gda_server_provider_get_schema_nb_columns (GdaConnectionSchema schema);
+gboolean  gda_server_provider_init_schema_model     (GdaDataModel *model, GdaConnectionSchema schema);
+gboolean  gda_server_provider_test_schema_model     (GdaDataModel *model, GdaConnectionSchema schema, GError **error);
+
+
+/*
+ * Help to implement the GdaDataHandler retreiving for the providers
+ */
+typedef struct {
+	GdaConnection *cnc;
+	GdaValueType   gda_type;
+	gchar         *dbms_type;
+} GdaServerProviderHandlerInfo;
+
+guint           gda_server_provider_handler_info_hash_func  (GdaServerProviderHandlerInfo *key);
+gboolean        gda_server_provider_handler_info_equal_func (GdaServerProviderHandlerInfo *a, 
+							     GdaServerProviderHandlerInfo *b);
+void            gda_server_provider_handler_info_free       (GdaServerProviderHandlerInfo *info);
+
+GdaDataHandler *gda_server_provider_handler_find            (GdaServerProvider *prov, GdaConnection *cnc, 
+							     GdaValueType gda_type, const gchar *dbms_type);
+void            gda_server_provider_handler_declare         (GdaServerProvider *prov, GdaDataHandler *dh,
+							     GdaConnection *cnc, 
+							     GdaValueType gda_type, const gchar *dbms_type);
+
+G_END_DECLS
+
+#endif
+
+
+

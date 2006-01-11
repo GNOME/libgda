@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<gda_array name="csets" id="DA06">
+  <gda_array_field name="id" caption="Customer Id" title="Id" dbms_type="integer" gdatype="integer" size="4" pkey="t" unique="t" nullok="f" auto_increment="t" table="customers"/>
+  <gda_array_field name="name" caption="Customer name" title="Name" dbms_type="varchar" gdatype="string" size="35" pkey="f" unique="f" nullok="f" auto_increment="f" table="customers"/>
+  <gda_array_field name="default_served_by" caption="Assigned salesrep" title="Served by" dbms_type="integer" gdatype="integer" size="4" pkey="f" unique="f" nullok="t" auto_increment="f" table="customers"/>
+  <gda_array_field name="country" caption="Country of residence" title="Country" dbms_type="varchar" gdatype="string" size="20" pkey="f" unique="f" nullok="t" auto_increment="f" ref="locations.country" table="customers"/>
+  <gda_array_field name="city" caption="City of residence" title="City" dbms_type="varchar" gdatype="string" size="30" pkey="f" unique="f" nullok="t" auto_increment="f" ref="locations.city" table="customers"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>10</gda_value>
+      <gda_value>Vladimir Zirkov</gda_value>
+      <gda_value>4</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>11</gda_value>
+      <gda_value>Lew Bonito</gda_value>
+      <gda_value>1</gda_value>
+      <gda_value>FR</gda_value>
+      <gda_value>TLS</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>30</gda_value>
+      <gda_value>Mark Lawrence</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>SP</gda_value>
+      <gda_value>MDR</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value isnull="t">4</gda_value>
+      <gda_value>Greg Popoff</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value isnull="t"/>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>

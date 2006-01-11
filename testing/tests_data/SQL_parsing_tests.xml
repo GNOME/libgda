@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<test_scenario>
+  <dictionary name="DICT_Sales_postgres.xml"/>
+
+  <!-- SELECT -->
+  <output_file name="SQL_SELECT_result.html" descr="SELECT queries testing"/>
+
+  <test_group descr="Parsing error reporting">
+    <test sql="SELECT id, c.name FRO customers AS c" parsed="0"/>
+    <test sql="SELECT fsdf!id, c.name FRO customers AS c" parsed="0"/>
+  </test_group>
+  <test_group descr="Basic SELECT rules">
+    <test sql="SELECT id FROM customers AS c" parsed="1" rendered="SELECT c.id FROM customers AS c"/>
+    <test sql="SELECT c.name FROM customers AS c" parsed="1"/>
+    <test sql="SELECT id, c.name FROM customers AS c" parsed="1" rendered="SELECT c.id, c.name FROM customers AS c"/>
+    <test sql="SELECT id, c.name FROM customers c" parsed="1" rendered="SELECT c.id, c.name FROM customers AS c"/>
+    <test sql="SELECT id, customers.name FROM customers AS c" parsed="1" rendered="SELECT c.id, c.name FROM customers AS c"/>
+    <test sql="SELECT customers.id, c.name FROM customers AS c" parsed="1" rendered="SELECT c.id, c.name FROM customers AS c"/>
+    <test sql="SELECT id, c.name FROM customers AS c, nonexistant AS t" parsed="1" rendered="SELECT c.id, c.name FROM customers AS c, nonexistant AS t"/>
+    <test sql="SELECT id AS the_id, c.name FROM customers AS c, salesrep AS s" parsed="0"/>
+    <test sql="SELECT s.id AS &quot;Big AS&quot;, c.name FROM customers AS c, salesrep AS s" parsed="1"/>
+    <test sql="SELECT * FROM customers" parsed="1" rendered="SELECT t1.* FROM customers AS t1"/>
+    <test sql="SELECT * FROM customers, salesrep" parsed="0"/>
+    <test sql="SELECT c.* FROM customers AS c, salesrep" parsed="1" rendered="SELECT c.* FROM customers AS c, salesrep AS t2"/>
+    <test sql="SELECT c.* FROM customers AS c
+               , salesrep" parsed="1" rendered="SELECT c.* FROM customers AS c, salesrep AS t2"/>
+    <test sql="SELECT c1.*, c2.* FROM customers c1, customers c2" parsed="1" rendered="SELECT c1.*, c2.* FROM customers AS c1, customers AS c2"/>
+    <test sql="select c1.* from customers c1, customers" parsed="1" rendered="SELECT c1.* FROM customers AS c1, customers AS t2"/>
+  </test_group>
+  <test_group descr="Queries with objects not declared in dictionary">
+    <test sql="SELECT * FROM nonexist_table" parsed="1" rendered="SELECT t1.* FROM nonexist_table AS t1"/>
+    <test sql="SELECT notable.id FROM notable" parsed="1" rendered="SELECT t1.id FROM notable AS t1"/>
+    <test sql="SELECT customers.nofield FROM customers" parsed="1" rendered="SELECT t1.nofield FROM customers AS t1"/>
+    <test sql="SELECT id FROM notable" parsed="1" rendered="SELECT id FROM notable AS t1"/>
+    <test sql="SELECT nofield FROM customers" parsed="1" rendered="SELECT nofield FROM customers AS t1"/>
+    <test sql="SELECT notable.* FROM notable" parsed="1" rendered="SELECT t1.* FROM notable AS t1"/>
+    <test sql="SELECT * FROM notable" parsed="1" rendered="SELECT t1.* FROM notable AS t1"/>
+    <test sql="SELECT notable2.* FROM notable1" parsed="0"/>
+  </test_group>
+  <test_group descr="Value fields">
+    <test sql="SELECT id, 'string's value', c.name FROM customers AS c" parsed="0"/>
+    <test sql="SELECT id, 'string\'s value', c.name FROM customers AS c" parsed="1" rendered="SELECT c.id, 'string\'s value', c.name FROM customers AS c"/>
+    <test sql="SELECT id, 10, c.name FROM customers AS c" parsed="1" rendered="SELECT c.id, 10, c.name FROM customers AS c"/>
+    <test sql="SELECT id, FALSE, c.name FROM customers AS c" parsed="1" rendered="SELECT c.id, FALSE, c.name FROM customers AS c"/>
+    <test sql="SELECT id, 'f', c.name FROM customers AS c" parsed="1" rendered="SELECT c.id, 'f', c.name FROM customers AS c"/>
+    <test sql="SELECT 10" parsed="1"/>
+  </test_group>
+  <test_group descr="Function fields">
+    <test sql="SELECT version()" parsed="1" rendered="SELECT version ()"/>
+    <test sql="SELECT text(id), version () from customers" parsed="1" rendered="SELECT text (t1.id), version () FROM customers AS t1"/>
+    <test sql="SELECT text(ids) from customers" parsed="1" rendered="SELECT text (ids) FROM customers AS t1"/>
+    <test sql="SELECT varchar ('toto', id, TRUE) from customers" parsed="1" rendered="SELECT varchar ('toto', t1.id, TRUE) FROM customers AS t1"/>
+    <test sql="SELECT repeat(varchar ('toto', id, TRUE), 10) from customers" parsed="1" rendered="SELECT repeat (varchar ('toto', t1.id, TRUE), 10) FROM customers AS t1"/>
+    <test sql="SELECT repeat(varchar ('toto', id, TRUE), 10[:isparam=&quot;false&quot; :type=&quot;int4&quot;]) from customers" parsed="1" rendered="SELECT repeat (varchar ('toto', t1.id, TRUE), 10) FROM customers AS t1"/>
+    <test sql="SELECT repeat(varchar ('toto', id, TRUE), 10[:isparam=&quot;true&quot; :type=&quot;int4&quot;]) from customers" parsed="1" rendered="SELECT repeat (varchar ('toto', t1.id, TRUE), 10 [:type=&quot;int4&quot;]) FROM customers AS t1"/>
+    <test sql="SELECT repeat (unknown ('toto', id, TRUE), 10) from customers" parsed="1" rendered="SELECT repeat (unknown ('toto', t1.id, TRUE), 10) FROM customers AS t1"/>
+  </test_group>
+  <test_group descr="Param spec">
+    <test sql="SELECT 'toto'[:name=&quot;first' param&quot;]" parsed="1" rendered="SELECT 'toto' [:name=&quot;first' param&quot;]"/>
+    <test sql="SELECT 10[:type=&quot;int2&quot; :descr=&quot;this is a good' description&quot; :nullok=&quot;TRUE&quot; :isparam=&quot;TRUE&quot;], id FROM customers" parsed="1" rendered="SELECT 10 [:type=&quot;int2&quot; :descr=&quot;this is a good' description&quot; :nullok=&quot;TRUE&quot;], t1.id FROM customers AS t1"/>
+    <test sql="Select * from customers where id&gt;=2[:name=&quot;Test param&quot; :descr=&quot;Example of description&quot; :nullok=&quot;FALSE&quot; :isparam=&quot;TRUE&quot;]" parsed="1" rendered="SELECT t1.* FROM customers AS t1 WHERE t1.id >= 2 [:name=&quot;Test param&quot; :descr=&quot;Example of description&quot;]"/>
+    <test sql="UPDATE customers set name='joe' where id=1 
+[:isparam=&quot;TRUE&quot; :name=&quot;Cutomer Id&quot; :nullok=&quot;FALSE&quot;]" parsed="1" rendered="UPDATE customers SET name='joe' WHERE t1.id=1 [:name=&quot;Cutomer Id&quot;]"/>
+    <test sql="SELECT ## [:type=&quot;int4&quot;]" parsed="1"/>
+    <test sql="SELECT ## [:isparam=&quot;TRUE&quot; :type=&quot;int4&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;],
+	## [:isparam=&quot;TRUE&quot; :type=&quot;date&quot;]" parsed="1" rendered="SELECT ## [:type=&quot;int4&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;], ## [:type=&quot;date&quot;]"/>
+    <test sql="SELECT ##" parsed="0"/>
+    <test sql="SELECT t1.name FROM salesrep AS t1 WHERE t1.id=## [:isparam=&quot;TRUE&quot; :type=&quot;int4&quot; :name=&quot;SalesRep Id&quot;] " parsed="1" rendered="SELECT t1.name FROM salesrep AS t1 WHERE t1.id=## [:type=&quot;int4&quot; :name=&quot;SalesRep Id&quot;]"/>
+    <test sql="SELECT c.name AS Customer , o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE c.id= 3[:name=&quot;cid&quot; :type=&quot;int4&quot;]" parsed="1" rendered="SELECT c.name AS Customer, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers AS c INNER JOIN orders AS o ON (c.id=o.customer) WHERE c.id=3 [:type=&quot;int4&quot; :name=&quot;cid&quot;]"/>
+  </test_group>
+
+
+  <test_group descr="WHERE clauses">
+    <test sql="SELECT id, name FROM customers WHERE id=10" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.id=10"/>
+    <test sql="SELECT id, name FROM customers WHERE id=ids" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.id=ids"/>
+    <test sql="SELECT id, name FROM customers WHERE country='FR'" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.country='FR'"/>
+    <test sql="SELECT id, name FROM customers WHERE country='FR' AND id&lt;15" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.country='FR' AND t1.id &lt; 15"/>
+    <test sql="SELECT id, name FROM customers WHERE country='FR' OR id != 154" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.country='FR' OR t1.id!=154"/>
+    <test sql="SELECT id, name FROM customers WHERE NOT id>=32" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE NOT (t1.id >= 32)"/>
+    <test sql="SELECT id, name FROM customers WHERE country='FR' OR id != 154 AND NOT id&gt;=32" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.country='FR' OR t1.id!=154 AND NOT (t1.id &gt;= 32)"/>
+    <test sql="SELECT id, name FROM customers WHERE id != 154 AND NOT id&gt;=32 OR country='FR'" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.id!=154 AND NOT (t1.id &gt;= 32) OR t1.country='FR'"/>
+    <test sql="SELECT id, name FROM customers WHERE id != 154 AND id&gt;=32 OR country='FR'" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.id!=154 AND t1.id &gt;= 32 OR t1.country='FR'"/>
+    <test sql="SELECT id, name FROM customers WHERE id != 154 AND NOT id&gt;=32 OR country='FR' AND id&lt;=123 OR id=3" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.id!=154 AND NOT (t1.id &gt;= 32) OR t1.country='FR' AND t1.id &lt;= 123 OR t1.id=3"/>
+    <test sql="SELECT id, name FROM customers WHERE (id != 154 AND NOT id&gt;=32) OR country='FR'" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.id!=154 AND NOT (t1.id &gt;= 32) OR t1.country='FR'"/>
+    <test sql="SELECT id, name FROM customers WHERE id != 154 AND (NOT id&gt;=32 OR country='FR')" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 WHERE t1.id!=154 AND (NOT (t1.id &gt;= 32) OR t1.country='FR')"/>
+  </test_group>
+
+  <test_group descr="ORDER BY clauses">
+    <test sql="SELECT id FROM customers ORDER BY id" parsed="1" rendered="SELECT t1.id FROM customers AS t1 ORDER BY t1.id"/>
+    <test sql="SELECT id FROM customers ORDER BY 2" parsed="0"/>
+    <test sql="SELECT id, name FROM customers ORDER BY 2" parsed="1" rendered="SELECT t1.id, t1.name FROM customers AS t1 ORDER BY t1.name"/>
+    <test sql="SELECT id FROM customers ORDER BY 'toto'" parsed="0"/>
+    <test sql="SELECT id FROM customers ORDER BY name" parsed="1" rendered="SELECT t1.id FROM customers AS t1 ORDER BY t1.name"/>
+    <test sql="SELECT c.id AS myid FROM customers c ORDER BY id" parsed="1" rendered="SELECT c.id AS myid FROM customers AS c ORDER BY c.id"/>
+  </test_group>
+
+  <test_group descr="Joins">
+    <test sql="SELECT c.id, c.name, s.name FROM customers c JOIN salesrep s ON (s.id = c.default_served_by)" parsed="1" rendered="SELECT c.id, c.name, s.name FROM customers AS c INNER JOIN salesrep AS s ON (s.id=c.default_served_by)"/>
+    <test sql="SELECT c.id, c.name, s.name FROM customers c JOIN salesrep s ON s.id = c.default_served_by" parsed="1" rendered="SELECT c.id, c.name, s.name FROM customers AS c INNER JOIN salesrep AS s ON (s.id=c.default_served_by)"/>
+    <test sql="SELECT c.id, c.name, s.name, s.id,c.default_served_by FROM customers c JOIN salesrep s ON s.id = c.default_served_by" parsed="1" rendered="SELECT c.id, c.name, s.name, s.id, c.default_served_by FROM customers AS c INNER JOIN salesrep AS s ON (s.id=c.default_served_by)"/>
+    <test sql="SELECT c.id, c.name, s.name FROM customers c JOIN salesrep s ON s.id = c.default_served_by AND c.name=s.name" parsed="1" rendered="SELECT c.id, c.name, s.name FROM customers AS c INNER JOIN salesrep AS s ON (s.id=c.default_served_by AND c.name=s.name)"/>
+    <test sql="SELECT c.id, c.name, s.name FROM customers c JOIN salesrep s" parsed="1" rendered="SELECT c.id, c.name, s.name FROM customers AS c INNER JOIN salesrep AS s ON (c.default_served_by=s.id)"/>
+    <test sql="SELECT c.id, c.name, s.name, l.shortcut FROM customers c JOIN salesrep s JOIN locations l" parsed="1" rendered="SELECT c.id, c.name, s.name, l.shortcut FROM customers AS c INNER JOIN salesrep AS s ON (c.default_served_by=s.id) INNER JOIN locations AS l ON (c.country=l.country AND c.city=l.city)"/>
+    <test sql="SELECT c.id, c.name, s.name, l.shortcut FROM salesrep s FULL JOIN customers c JOIN locations l" parsed="1" rendered="SELECT c.id, c.name, s.name, l.shortcut FROM salesrep AS s FULL JOIN customers AS c ON (c.default_served_by=s.id) INNER JOIN locations AS l ON (c.country=l.country AND c.city=l.city)"/>
+    <test sql="SELECT c.id, c.name, s.name, l.shortcut FROM customers c FULL JOIN salesrep s JOIN locations l" parsed="1" rendered="SELECT c.id, c.name, s.name, l.shortcut FROM customers AS c FULL JOIN salesrep AS s ON (c.default_served_by=s.id) INNER JOIN locations AS l ON (c.country=l.country AND c.city=l.city)"/>
+    <test sql="SELECT c.id, c.name, s.name, l.shortcut FROM salesrep s LEFT JOIN customers c, locations l" parsed="1" rendered="SELECT c.id, c.name, s.name, l.shortcut FROM salesrep AS s LEFT JOIN customers AS c ON (c.default_served_by=s.id), locations AS l"/>
+  </test_group>
+
+  <test_group descr="Joins with missing references">
+    <test sql="SELECT c.id, l.shortcut FROM unknown c JOIN locations l" parsed="1" rendered="SELECT c.id, l.shortcut FROM unknown AS c INNER JOIN locations AS l"/>
+    <test sql="SELECT c.id, l.shortcut FROM locations l JOIN unknown c" parsed="1" rendered="SELECT c.id, l.shortcut FROM locations AS l INNER JOIN unknown AS c"/>
+    <test sql="SELECT c.id, l.shortcut FROM unknown1 c JOIN unknown2 l" parsed="1" rendered="SELECT c.id, l.shortcut FROM unknown1 AS c INNER JOIN unknown2 AS l"/>
+    <test sql="SELECT c.id, l.shortcut FROM unknown2 l JOIN unknown1 c" parsed="1" rendered="SELECT c.id, l.shortcut FROM unknown2 AS l INNER JOIN unknown1 AS c"/>
+    <test sql="SELECT c.id, c.name, s.name, l.shortcut FROM unknown c JOIN salesrep s JOIN locations l" parsed="1" rendered="SELECT c.id, c.name, s.name, l.shortcut FROM unknown AS c INNER JOIN salesrep AS s INNER JOIN locations AS l"/>
+    <test sql="SELECT c.id, c.name, s.name, l.shortcut FROM customers c JOIN unknown s JOIN locations l" parsed="1" rendered="SELECT c.id, c.name, s.name, l.shortcut FROM customers AS c INNER JOIN unknown AS s INNER JOIN locations AS l"/>
+    <test sql="SELECT c.id, c.name, s.name, l.shortcut FROM customers c JOIN salesrep s JOIN unknown l" parsed="1" rendered="SELECT c.id, c.name, s.name, l.shortcut FROM customers AS c INNER JOIN salesrep AS s ON (c.default_served_by=s.id) INNER JOIN unknown AS l"/>
+  </test_group>
+
+  <test_group descr="Misc">
+    <test sql="SELECT DISTINCT id, name FROM customers AS c" parsed="1" rendered="SELECT DISTINCT c.id, c.name FROM customers AS c"/>
+    <test sql="SELECT DISTINCT ON (name) id, name FROM customers AS c" parsed="0"/>
+  </test_group>
+
+  <test_group descr="Sub queries as target">
+    <test sql="SELECT * FROM (SELECT name FROM customers)" parsed="1" rendered="SELECT t1.* FROM (SELECT t1.name FROM customers AS t1 ) AS t1"/>
+    <test sql="SELECT * FROM (SELECT name FROM customers) AS c" parsed="1" rendered="SELECT c.* FROM (SELECT t1.name FROM customers AS t1 ) AS c"/>
+    <test sql="SELECT c.name FROM (SELECT name FROM customers) AS c" parsed="1" rendered="SELECT c.name FROM (SELECT t1.name FROM customers AS t1 ) AS c"/>
+  </test_group>
+
+  <!-- INSERT -->
+  <output_file name="SQL_INSERT_result.html" descr="INSERT queries testing"/>
+
+  <test_group descr="Basic INSERT syntax">
+    <test sql="insert into customers ('id') VALUES 10" parsed="0"/>
+    <test sql="insert into customers ('id') VALUES (10)" parsed="0"/>
+    <test sql="insert into customers (id) VALUES (10)" parsed="1" rendered="INSERT INTO customers (id) VALUES (10)"/>
+    <test sql="insert into customers VALUES (10, 'new customer\'s name')" parsed="1" rendered="INSERT INTO customers (id, name) VALUES (10, 'new customer\'s name')"/>
+  </test_group>
+
+  <!-- UPDATE -->
+  <output_file name="SQL_UPDATE_result.html" descr="UPDATE queries testing"/>
+
+  <test_group descr="Basic UPDATE syntax">
+    <test sql="update customers set 'id'=10" parsed="0"/>
+    <test sql="update customers set id=10" parsed="1" rendered="UPDATE customers SET id=10"/>
+    <test sql="update customers set id=10, name='better' WHERE name='unknown'" parsed="1" rendered="UPDATE customers SET id=10, name='better' WHERE t1.name='unknown'"/>
+    <test sql="update customers set salesrep.id=10" parsed="0"/>
+    <test sql="update customers set unknown=10" parsed="1" rendered="UPDATE customers SET unknown=10"/>
+  </test_group>
+
+  <!-- DELETE -->
+  <output_file name="SQL_DELETE_result.html" descr="DELETE queries testing"/>
+
+  <test_group descr="Basic DELETE syntax">
+    <test sql="delete FROM customers WHERE name='unknown'" parsed="1" rendered="DELETE FROM customers WHERE t1.name='unknown'"/>
+    <test sql="delete FROM customers" parsed="1" rendered="DELETE FROM customers"/>
+    <test sql="delete FROM customers WHERE name='unknown' or not id=12 AND name='john'" parsed="1" rendered="DELETE FROM customers WHERE t1.name='unknown' OR NOT (t1.id=12) AND t1.name='john'"/>
+    <test sql="delete FROM customers WHERE name='unknown' or not (id=12 AND name='john')" parsed="1" rendered="DELETE FROM customers WHERE t1.name='unknown' OR NOT (t1.id=12 AND t1.name='john')"/>
+  </test_group>
+</test_scenario>

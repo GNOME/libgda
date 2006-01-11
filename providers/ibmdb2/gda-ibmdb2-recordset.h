@@ -42,12 +42,12 @@ typedef struct _GdaIBMDB2RecordsetPrivate GdaIBMDB2RecordsetPrivate;
 typedef struct _GdaIBMDB2Field            GdaIBMDB2Field;
 
 struct _GdaIBMDB2Recordset {
-	GdaDataModelBase model;
+	GdaDataModelRow model;
 	GdaIBMDB2RecordsetPrivate *priv;
 };
 
 struct _GdaIBMDB2RecordsetClass {
-	GdaDataModelBaseClass parent_class;
+	GdaDataModelRowClass parent_class;
 };
 
 struct _GdaIBMDB2RecordsetPrivate

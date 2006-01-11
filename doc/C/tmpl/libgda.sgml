@@ -28,12 +28,12 @@ Library initialization
 @args: 
 
 
-<!-- ##### USER_FUNCTION GdaInitFunc ##### -->
+<!-- ##### FUNCTION gda_get_default_dict ##### -->
 <para>
 
 </para>
 
-@user_data: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_main_run ##### -->

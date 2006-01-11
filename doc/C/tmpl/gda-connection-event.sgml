@@ -2,11 +2,13 @@
 GdaConnectionEvent
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Any event which has occured on a #GdaConnection
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+Events occuring on a connection are each represented as a #GdaConnectionEvent object. Each #GdaConnection
+is responsible for keeping a list of past events; that list can be consulted using the 
+gda_connection_get_events() function.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -17,11 +19,51 @@ GdaConnectionEvent
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### STRUCT GdaConnectionEvent ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### STRUCT GdaConnectionEventPrivate ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### ENUM GdaConnectionEventType ##### -->
+<para>
+
+</para>
+
+@GDA_CONNECTION_EVENT_NOTICE: 
+@GDA_CONNECTION_EVENT_WARNING: 
+@GDA_CONNECTION_EVENT_ERROR: 
+
+<!-- ##### ENUM GdaConnectionEventCode ##### -->
+<para>
+
+</para>
+
+@GDA_CONNECTION_EVENT_CODE_CONSTRAINT_VIOLATION: 
+@GDA_CONNECTION_EVENT_CODE_RESTRICT_VIOLATION: 
+@GDA_CONNECTION_EVENT_CODE_NOT_NULL_VIOLATION: 
+@GDA_CONNECTION_EVENT_CODE_FOREIGN_KEY_VIOLATION: 
+@GDA_CONNECTION_EVENT_CODE_UNIQUE_VIOLATION: 
+@GDA_CONNECTION_EVENT_CODE_CHECK_VIOLATION: 
+@GDA_CONNECTION_EVENT_CODE_INSUFFICIENT_PRIVILEGES: 
+@GDA_CONNECTION_EVENT_CODE_UNDEFINED_COLUMN: 
+@GDA_CONNECTION_EVENT_CODE_UNDEFINED_FUNCTION: 
+@GDA_CONNECTION_EVENT_CODE_UNDEFINED_TABLE: 
+@GDA_CONNECTION_EVENT_CODE_DUPLICATE_COLUMN: 
+@GDA_CONNECTION_EVENT_CODE_DUPLICATE_DATABASE: 
+@GDA_CONNECTION_EVENT_CODE_DUPLICATE_FUNCTION: 
+@GDA_CONNECTION_EVENT_CODE_DUPLICATE_SCHEMA: 
+@GDA_CONNECTION_EVENT_CODE_DUPLICATE_TABLE: 
+@GDA_CONNECTION_EVENT_CODE_DUPLICATE_ALIAS: 
+@GDA_CONNECTION_EVENT_CODE_DUPLICATE_OBJECT: 
+@GDA_CONNECTION_EVENT_CODE_SYNTAX_ERROR: 
+@GDA_CONNECTION_EVENT_CODE_UNKNOWN: 
 
 <!-- ##### FUNCTION gda_connection_event_new ##### -->
 <para>
@@ -93,24 +135,6 @@ GdaConnectionEvent
 @description: 
 
 
-<!-- ##### FUNCTION gda_connection_event_get_gda_code ##### -->
-<para>
-
-</para>
-
-@event: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_event_set_gda_code ##### -->
-<para>
-
-</para>
-
-@event: 
-@code: 
-
-
 <!-- ##### FUNCTION gda_connection_event_get_code ##### -->
 <para>
 
@@ -121,6 +145,24 @@ GdaConnectionEvent
 
 
 <!-- ##### FUNCTION gda_connection_event_set_code ##### -->
+<para>
+
+</para>
+
+@event: 
+@code: 
+
+
+<!-- ##### FUNCTION gda_connection_event_get_gda_code ##### -->
+<para>
+
+</para>
+
+@event: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_event_set_gda_code ##### -->
 <para>
 
 </para>

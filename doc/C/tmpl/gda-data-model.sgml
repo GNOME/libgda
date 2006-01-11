@@ -6,7 +6,19 @@ Basic data model class
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+A #GdaDataMode represents an array of values organized in rows and columns. All the data in the same 
+column have the same type, and all the data in each row have the same semantic meaning. The #GdaDataModel is
+actually an interface implemented by other objects to support various kinds of data storage and operations.
+</para>
+<para>
+Depending on the real implementation, the contents of data models may be modified by the user using functions
+provided by the model. The actual operations a data model permits can be known using the 
+gda_data_model_get_access_flags() method.
+</para>
+<para>
+Again, depending on the real implementatiob, data retreiving can be done either accessing direct random
+values located by their row and column, or using a #GdaDataModelIter cursor, or both. Use the 
+gda_data_model_get_access_flags() method to know how the data model can be accessed.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -22,58 +34,6 @@ Basic data model class
 
 </para>
 
-
-<!-- ##### SIGNAL GdaDataModel::begin-update ##### -->
-<para>
-
-</para>
-
-@gdadatamodel: the object which received the signal.
-
-<!-- ##### SIGNAL GdaDataModel::cancel-update ##### -->
-<para>
-
-</para>
-
-@gdadatamodel: the object which received the signal.
-
-<!-- ##### SIGNAL GdaDataModel::changed ##### -->
-<para>
-
-</para>
-
-@gdadatamodel: the object which received the signal.
-
-<!-- ##### SIGNAL GdaDataModel::column-inserted ##### -->
-<para>
-
-</para>
-
-@gdadatamodel: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDataModel::column-removed ##### -->
-<para>
-
-</para>
-
-@gdadatamodel: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDataModel::column-updated ##### -->
-<para>
-
-</para>
-
-@gdadatamodel: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDataModel::commit-update ##### -->
-<para>
-
-</para>
-
-@gdadatamodel: the object which received the signal.
 
 <!-- ##### SIGNAL GdaDataModel::row-inserted ##### -->
 <para>
@@ -99,6 +59,54 @@ Basic data model class
 @gdadatamodel: the object which received the signal.
 @arg1: 
 
+<!-- ##### ENUM GdaDataModelAccessFlags ##### -->
+<para>
+
+</para>
+
+@GDA_DATA_MODEL_ACCESS_RANDOM: 
+@GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD: 
+@GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD: 
+@GDA_DATA_MODEL_ACCESS_INSERT: 
+@GDA_DATA_MODEL_ACCESS_UPDATE: 
+@GDA_DATA_MODEL_ACCESS_DELETE: 
+@GDA_DATA_MODEL_ACCESS_WRITE: 
+
+<!-- ##### FUNCTION gda_data_model_changed ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION gda_data_model_row_inserted ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
+<!-- ##### FUNCTION gda_data_model_row_updated ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
+<!-- ##### FUNCTION gda_data_model_row_removed ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
 <!-- ##### FUNCTION gda_data_model_freeze ##### -->
 <para>
 
@@ -113,6 +121,15 @@ Basic data model class
 </para>
 
 @model: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_access_flags ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_data_model_get_n_rows ##### -->
@@ -163,16 +180,6 @@ Basic data model class
 @title: 
 
 
-<!-- ##### FUNCTION gda_data_model_get_row ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_model_get_value_at ##### -->
 <para>
 
@@ -184,12 +191,58 @@ Basic data model class
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_is_updatable ##### -->
+<!-- ##### FUNCTION gda_data_model_set_value_at ##### -->
 <para>
 
 </para>
 
 @model: 
+@col: 
+@row: 
+@value: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_create_iter ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@row: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_at_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@iter: 
+@row: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_next ##### -->
+<para>
+
+</para>
+
+@model: 
+@iter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_prev ##### -->
+<para>
+
+</para>
+
+@model: 
+@iter: 
 @Returns: 
 
 
@@ -200,6 +253,7 @@ Basic data model class
 
 @model: 
 @values: 
+@error: 
 @Returns: 
 
 
@@ -209,20 +263,11 @@ Basic data model class
 </para>
 
 @model: 
-@row: 
+@error: 
 @Returns: 
 <!-- # Unused Parameters # -->
-@values: 
-
-
-<!-- ##### FUNCTION gda_data_model_update_row ##### -->
-<para>
-
-</para>
-
-@model: 
 @row: 
-@Returns: 
+@values: 
 
 
 <!-- ##### FUNCTION gda_data_model_remove_row ##### -->
@@ -232,85 +277,18 @@ Basic data model class
 
 @model: 
 @row: 
+@error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_append_column ##### -->
+<!-- ##### FUNCTION gda_data_model_get_row_from_values ##### -->
 <para>
 
 </para>
 
 @model: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@attrs: 
-@col: 
-
-
-<!-- ##### FUNCTION gda_data_model_remove_column ##### -->
-<para>
-
-</para>
-
-@model: 
-@col: 
-@Returns: 
-
-
-<!-- ##### USER_FUNCTION GdaDataModelForeachFunc ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-@user_data: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_foreach ##### -->
-<para>
-
-</para>
-
-@model: 
-@func: 
-@user_data: 
-
-
-<!-- ##### FUNCTION gda_data_model_has_changed ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_begin_update ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_cancel_update ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_commit_update ##### -->
-<para>
-
-</para>
-
-@model: 
+@values: 
+@cols_index: 
 @Returns: 
 
 
@@ -359,6 +337,7 @@ Basic data model class
 
 @model: 
 @node: 
+@error: 
 @Returns: 
 
 

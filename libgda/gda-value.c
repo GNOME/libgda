@@ -32,7 +32,7 @@
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
 #include <glib/gstring.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-util.h>
 #include <libxml/parser.h>
@@ -438,6 +438,25 @@ gda_value_new_boolean (gboolean val)
 }
 
 /**
+ * gda_value_new_blob
+ * @val: value to set for the new #GdaValue.
+ *
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_BLOB with value @val.
+ *
+ * Returns: the newly created #GdaValue.
+ */
+GdaValue *
+gda_value_new_blob (const GdaBlob *blob)
+{
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_blob (value, blob);
+
+	return value;
+}
+
+/**
  * gda_value_new_date
  * @val: value to set for the new #GdaValue.
  *
@@ -820,9 +839,9 @@ gda_numeric_copy (gpointer boxed)
 
 /**
  * gda_numeric_free
- * @provider_info: provider information to free.
+ * @boxed:
  *
- * Deallocates all memory associated to the given #GdaProviderInfo.
+ * Deallocates all memory associated to the given @boxed
  */
 void
 gda_numeric_free (gpointer boxed)
@@ -1440,13 +1459,10 @@ gda_value_set_blob (GdaValue *value, const GdaBlob *val)
 	g_return_if_fail (value);
 	g_return_if_fail (GDA_IS_BLOB (val));
 	
-	GdaBlob *blob;
 	l_g_value_unset (value);
 	g_value_init (value, G_VALUE_TYPE_BLOB);
 	
-	blob = g_object_ref (val);
-		
-	g_value_set_object (value, blob);
+	g_value_set_object (value, val);
 }
 
 /**
@@ -2236,9 +2252,10 @@ gda_value_stringify (GdaValue *value)
 		break;
 
 	case GDA_VALUE_TYPE_GOBJECT:
-		if (G_IS_OBJECT(gda_value_get_gobject(value))) 
-			retval = g_strdup_printf (_("(GObject of type '%s'"),
-						  g_type_name (GDA_VALUE_TYPE(value)));
+		if (G_IS_OBJECT(gda_value_get_gobject (value))) 
+			retval = g_strdup_printf (_("(%s %p)"),
+						  g_type_name (GDA_VALUE_TYPE (value)),
+						  gda_value_get_gobject (value));
 		else
 			retval = g_strdup_printf (_("NULL GObject"));
 		break;

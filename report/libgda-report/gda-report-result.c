@@ -22,7 +22,7 @@
 
 #include <libxml/tree.h>
 #include <libxml/xmlIO.h>
-#include <libgda/gda-intl.h>
+#include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda-report/gda-report-item.h>
