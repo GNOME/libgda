@@ -1022,7 +1022,6 @@ testing/Makefile
 doc/Makefile
 doc/C/Makefile
 data/Makefile
-autopackage/default.apspec
 stamp.h
 ])
 
