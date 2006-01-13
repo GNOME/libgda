@@ -24,6 +24,32 @@ an iterator through the data of a #GdaDataModel object.
 </para>
 
 
+<!-- ##### SIGNAL GdaDataProxy::row-delete-changed ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL GdaDataProxy::sample-changed ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL GdaDataProxy::sample-size-changed ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+@arg1: 
+
 <!-- ##### ARG GdaDataProxy:autocommit ##### -->
 <para>
 
@@ -45,6 +71,9 @@ an iterator through the data of a #GdaDataModel object.
 </para>
 
 @parent_class: 
+@row_delete_changed: 
+@sample_size_changed: 
+@sample_changed: 
 
 <!-- ##### STRUCT GdaDataProxyPrivate ##### -->
 <para>
@@ -79,6 +108,17 @@ an iterator through the data of a #GdaDataModel object.
 @proxy_row: 
 @cols_index: 
 @n_cols: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_value_attributes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@col: 
 @Returns: 
 
 
@@ -133,6 +173,15 @@ an iterator through the data of a #GdaDataModel object.
 
 
 <!-- ##### FUNCTION gda_data_proxy_has_changed ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_n_new_rows ##### -->
 <para>
 
 </para>

@@ -1,6 +1,6 @@
 /* gda-data-model-iter.h
  *
- * Copyright (C) 2005 Vivien Malerba
+ * Copyright (C) 2005 ( 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -46,14 +46,16 @@ enum
 /* struct for the object's data */
 struct _GdaDataModelIter
 {
-	GdaParameterList             object;
-	GdaDataModelIterPrivate     *priv;
+	GdaParameterList           object;
+	GdaDataModelIterPrivate   *priv;
 };
 
 /* struct for the object's class */
 struct _GdaDataModelIterClass
 {
-	GdaParameterListClass        parent_class;
+	GdaParameterListClass      parent_class;
+
+	void                    (* row_changed)      (GdaDataModelIter *iter, gint row);
 };
 
 GType             gda_data_model_iter_get_type             (void);
@@ -63,6 +65,8 @@ gboolean          gda_data_model_iter_set_at_row           (GdaDataModelIter *it
 gboolean          gda_data_model_iter_move_next            (GdaDataModelIter *iter);
 gboolean          gda_data_model_iter_move_prev            (GdaDataModelIter *iter);
 gint              gda_data_model_iter_get_row              (GdaDataModelIter *iter);
+
+void              gda_data_model_iter_set_invalid          (GdaDataModelIter *iter);
 
 gint              gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaParameter *param);
 GdaParameter     *gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col);

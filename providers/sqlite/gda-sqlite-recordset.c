@@ -172,10 +172,48 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 
 	/* Gda default type & column titles */
 	for (i=0; i < sres->ncols; i++) {
+		const gchar *ctype;
+		GdaValueType gtype = GDA_VALUE_TYPE_NULL;
+
 		gda_data_model_set_column_title (GDA_DATA_MODEL (model), i,
 						 sqlite3_column_name (sres->stmt, i));
 		sres->types [i] = GDA_VALUE_TYPE_NULL;
-		sres->sqlite_types [i] = SQLITE_NULL;
+		sres->sqlite_types [i] = sqlite3_column_type (sres->stmt, i);
+
+		/* Gda type */
+		ctype = sqlite3_column_decltype (sres->stmt, i);
+		if (ctype)
+			gtype = GPOINTER_TO_INT (g_hash_table_lookup (scnc->types, ctype));
+		else {
+			switch (sres->sqlite_types [i]) {
+			case SQLITE_INTEGER:
+				gtype = GDA_VALUE_TYPE_INTEGER;
+				break;
+			case SQLITE_FLOAT:
+				gtype = GDA_VALUE_TYPE_DOUBLE;
+				break;
+			case SQLITE_TEXT:
+				gtype = GDA_VALUE_TYPE_STRING;
+				break;
+			case SQLITE_BLOB:
+				gtype = GDA_VALUE_TYPE_BLOB;
+				break;
+			case SQLITE_NULL:
+				gtype = GDA_VALUE_TYPE_NULL;
+				break;
+			default:
+				g_error ("Unknown SQLite internal data type %d", sres->sqlite_types [i]);
+				break;
+			}
+		}
+
+		if (gtype != GDA_VALUE_TYPE_NULL) {
+			GdaColumn *column;
+			
+			sres->types [i] = gtype;
+			column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
+			gda_column_set_gda_type (column, gtype);
+		}
 	}
 
 	/* filling the model with GValues, and computing data types */
@@ -190,63 +228,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 			for (col = 0; col < sres->ncols; col++) {
 				GdaValue *value = NULL;
 				int size;
-				const gchar *ctype;
-				int stype;
-				GdaValueType gtype;
 
-				/* SQLite type */
-				stype = sqlite3_column_type (sres->stmt, col);
-				if (stype != SQLITE_NULL) {
-					if (sres->sqlite_types [col] != SQLITE_NULL) {
-						if (sres->sqlite_types [col] != stype)
-							g_error ("SQLite data types differ in the same column : %d / %d\n", 
-								 sres->sqlite_types [col], stype);
-					}
-					else
-						sres->sqlite_types [col] = stype;
-				}
-				
-				/* Gda type */
-				ctype = sqlite3_column_decltype (sres->stmt, col);
-				if (ctype)
-					gtype = GPOINTER_TO_INT (g_hash_table_lookup (scnc->types, ctype));
-				else {
-					switch (sres->sqlite_types [col]) {
-					case SQLITE_INTEGER:
-						gtype = GDA_VALUE_TYPE_INTEGER;
-						break;
-					case SQLITE_FLOAT:
-						gtype = GDA_VALUE_TYPE_DOUBLE;
-						break;
-					case SQLITE_TEXT:
-						gtype = GDA_VALUE_TYPE_STRING;
-						break;
-					case SQLITE_BLOB:
-						gtype = GDA_VALUE_TYPE_BLOB;
-						break;
-					case SQLITE_NULL:
-						gtype = GDA_VALUE_TYPE_NULL;
-						break;
-					default:
-						g_error ("Unknown SQLite internal data type %d", sres->sqlite_types [col]);
-						break;
-					}
-				}
-				if (gtype != GDA_VALUE_TYPE_NULL) {
-					if (sres->types [col] != GDA_VALUE_TYPE_NULL) {
-						if (sres->types [col] != gtype)
-							g_error ("GDA data types differ in the same column : %d / %d\n", 
-								 sres->types [col], gtype);
-					}
-					else {
-						GdaColumn *column;
-
-						sres->types [col] = gtype;
-						column = gda_data_model_describe_column (GDA_DATA_MODEL (model), col);
-						gda_column_set_gda_type (column, gtype);
-					}
-				}
-				
 				/* compute GdaValue */
 				switch (sres->types [col]) {
 				case GDA_VALUE_TYPE_INTEGER:

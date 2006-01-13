@@ -523,8 +523,11 @@ gda_data_model_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint ro
 		gboolean update_model;
 
 		/* validity tests */
-		if (row >= gda_data_model_get_n_rows (model))
+		if (row >= gda_data_model_get_n_rows (model)) {
+			gda_data_model_iter_set_invalid (iter);
+			g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
 			return FALSE;
+		}
 		
 		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
 			return FALSE;

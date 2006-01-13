@@ -1,6 +1,6 @@
 /* gda-data-proxy.h
  *
- * Copyright (C) 2005 Vivien Malerba
+ * Copyright (C) 2005 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -42,27 +42,22 @@ enum {
 	GDA_DATA_PROXY_COMMIT_ERROR
 };
 
-enum {
-	PROXY_COL_MODEL_N_COLUMNS = -5, /* number of columns in the GdaDataModel */
-	PROXY_COL_MODEL_POINTER   = -4, /* pointer to the GdaDataModel */
-	PROXY_COL_MODEL_ROW       = -3, /* row number in the GdaDataModel, or -1 for new rows */
-	PROXY_COL_MODIFIED        = -2, /* TRUE if row has been modified */
-	PROXY_COL_TO_DELETE       = -1, /* TRUE if row is marked to be deleted */
-};
-#define PROXY_NB_GEN_COLUMNS -PROXY_COL_MODEL_N_COLUMNS
-
 /* struct for the object's data */
 struct _GdaDataProxy
 {
-	GdaObject                  object;
-	GdaDataProxyPrivate       *priv;
+	GdaObject               object;
+	GdaDataProxyPrivate    *priv;
 };
 
 
 /* struct for the object's class */
 struct _GdaDataProxyClass
 {
-	GdaObjectClass             parent_class;
+	GdaObjectClass          parent_class;
+
+	void                 (* row_delete_changed)  (GdaDataProxy *proxy, gint row, gboolean to_be_deleted);
+	void                 (* sample_size_changed) (GdaDataProxy *proxy, gint sample_size);
+	void                 (* sample_changed)      (GdaDataProxy *proxy, gint sample_start, gint sample_end);
 };
 
 GType             gda_data_proxy_get_type                 (void);
@@ -73,12 +68,19 @@ gint              gda_data_proxy_get_proxied_model_n_cols (GdaDataProxy *proxy);
 gboolean          gda_data_proxy_is_read_only             (GdaDataProxy *proxy);
 GSList           *gda_data_proxy_get_values               (GdaDataProxy *proxy, gint proxy_row, 
 						           gint *cols_index, gint n_cols);
+guint             gda_data_proxy_get_value_attributes     (GdaDataProxy *proxy, gint proxy_row, gint col);
+void              gda_data_proxy_alter_value_attributes   (GdaDataProxy *proxy, gint proxy_row, gint col, guint alter_flags);
+gint              gda_data_proxy_get_proxied_model_row    (GdaDataProxy *proxy, gint proxy_row);
+
 void              gda_data_proxy_delete                   (GdaDataProxy *proxy, gint proxy_row);
 void              gda_data_proxy_undelete                 (GdaDataProxy *proxy, gint proxy_row);
+gboolean          gda_data_proxy_row_is_deleted           (GdaDataProxy *proxy, gint proxy_row);
 
 gint              gda_data_proxy_find_row_from_values     (GdaDataProxy *proxy, GSList *values, 
 						           gint *cols_index);
+gboolean          gda_data_proxy_row_has_changed          (GdaDataProxy *proxy, gint proxy_row);
 gboolean          gda_data_proxy_has_changed              (GdaDataProxy *proxy);
+gint              gda_data_proxy_get_n_new_rows           (GdaDataProxy *proxy);
 
 gboolean          gda_data_proxy_apply_row_changes        (GdaDataProxy *proxy, gint proxy_row, GError **error);
 void              gda_data_proxy_cancel_row_changes       (GdaDataProxy *proxy, gint proxy_row, gint col);

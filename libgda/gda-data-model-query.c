@@ -391,6 +391,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
         model->priv->data = gda_connection_execute_single_command (cnc, cmd, NULL, error);
 	gda_command_free (cmd);
 
+#ifdef debug_NO
 	{
 		g_print ("GdaDataModelQuery refresh:\n");
 		if (model->priv->data) 
@@ -398,6 +399,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 		else
 			g_print ("\t=> error\n");
 	}
+#endif
 
 	return model->priv->data ? TRUE : FALSE;
 }

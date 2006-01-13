@@ -301,11 +301,8 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 {
 	xmlNodePtr node, tr, td;
         gint rows, cols, i;
-	gint start_col = 0;
 
         g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	if (GDA_IS_DATA_PROXY (model))
-		start_col = PROXY_COL_MODEL_N_COLUMNS;
 
         node = xmlNewChild (parent, NULL, "table", "");
 
@@ -314,7 +311,7 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 
         /* set the table structure */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
-        for (i = start_col; i < cols; i++) {
+        for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -332,7 +329,7 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 
                 for (r = 0; r < rows; r++) {
 			tr = xmlNewChild (node, NULL, "tr", "");
-                        for (c = start_col ; c < cols; c++) {
+                        for (c = 0 ; c < cols; c++) {
                                 GdaValue *value;
                                 gchar *str;
 
@@ -364,11 +361,8 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	xmlNodePtr node, tr, td;
         gint cols, i;
 	gchar *str;
-	gint start_col = 0;
 
         g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	if (GDA_IS_DATA_PROXY (model))
-		start_col = PROXY_COL_MODEL_N_COLUMNS;
 
 	/* model name and ID */
 	str = g_strdup_printf ("Model of class %s: name=%s ID=%s", G_OBJECT_TYPE_NAME(model), 
@@ -384,7 +378,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 
 	/* name */
 	td = xmlNewChild (tr, NULL, "th", "Column attributes / columns");
-        for (i = start_col; i < cols; i++) {
+        for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -399,7 +393,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* title */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "title");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -414,7 +408,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* dbms type */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "dbms type");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -429,7 +423,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* gda type */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "GDA type");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -444,7 +438,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* NOT NULL */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "not NULL ?");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -459,7 +453,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* Primary key */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "primary key ?");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -474,7 +468,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* Unique */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "unique ?");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -489,7 +483,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* References */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "references");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -504,7 +498,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* Auto increment */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "Auto increment ?");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -519,7 +513,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* defined size */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "defined size");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -538,7 +532,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* table */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "table");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -553,7 +547,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* default value */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "default value");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -579,7 +573,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* caption */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "caption");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -594,7 +588,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* scale */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "scale");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);
@@ -613,7 +607,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 	/* position */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "position");
-	for (i = start_col; i < cols; i++) {
+	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
                 column = gda_data_model_describe_column (model, i);

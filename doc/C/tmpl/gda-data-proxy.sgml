@@ -15,28 +15,13 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
   the #GdaDataProxy object has the following attributes:
   <itemizedlist>
     <listitem>
-      <para><varname>5 + 3 * nb_cols</varname> columns, the 5 first columns having <emphasis>negative</emphasis> numbers:
+      <para><varname>2 * nb_cols</varname> columns:
 	<itemizedlist>
-	  <listitem><para>negative column number PROXY_COL_MODEL_N_COLUMNS: gives the number of columns in the 
-	      proxied data model</para></listitem>
-	  <listitem><para>negative column number PROXY_COL_MODEL_ROW: gives the number of rows in the 
-	      proxied data model</para></listitem>
-	  <listitem><para>negative column number PROXY_COL_MODEL_POINTER: gives a pointer to the 
-	      proxied data model itself</para></listitem>
-	  <listitem><para>negative column number PROXY_COL_MODIFIED: TRUE if any value in the row has been modified 
-	      (compared to what's in the proxied data model)</para></listitem>
-	  <listitem><para>negative column number PROXY_COL_TO_DELETE: TRUE if the row has been marked to be 
-	      deleted; this value can be modified</para></listitem>
 	  <listitem><para>the first (&gt;= 0) <varname>nb_cols</varname> columns are the current values stored in the 
 	      proxy (which correspond to the values of the proxied data model if the considered row has not been 
 	      changed). The associated values are writable.</para></listitem>
-	  <listitem><para>the next <varname>nb_cols</varname> columns correspond to the attributes for each column of the proxy
-	    (which tells if the value at that column and specific row has been modified among other things, see the 
-	    #GdaValueAttribute enums for more information), at column <varname>col - nb_cols</varname>.</para>
-	    <para>Note that these values can be modified but only for the following attributes: GDA_VALUE_ATTR_CAN_BE_NULL and
-	      GDA_VALUE_ATTR_CAN_BE_DEFAULT</para></listitem>
 	  <listitem><para>the last <varname>nb_cols</varname> columns are the values stored in the proxied data model, 
-	      at column <varname>col - 2 * nb_cols</varname></para></listitem>
+	      at column <varname>col - nb_cols</varname></para></listitem>
 	</itemizedlist>
       </para>
     </listitem>
@@ -65,6 +50,32 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 </para>
 
 
+<!-- ##### SIGNAL GdaDataProxy::row-delete-changed ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL GdaDataProxy::sample-changed ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL GdaDataProxy::sample-size-changed ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+@arg1: 
+
 <!-- ##### ARG GdaDataProxy:autocommit ##### -->
 <para>
 
@@ -86,6 +97,9 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 </para>
 
 @parent_class: 
+@row_delete_changed: 
+@sample_size_changed: 
+@sample_changed: 
 
 <!-- ##### STRUCT GdaDataProxyPrivate ##### -->
 <para>
@@ -120,6 +134,17 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @proxy_row: 
 @cols_index: 
 @n_cols: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_value_attributes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@col: 
 @Returns: 
 
 
@@ -174,6 +199,15 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 
 
 <!-- ##### FUNCTION gda_data_proxy_has_changed ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_n_new_rows ##### -->
 <para>
 
 </para>
