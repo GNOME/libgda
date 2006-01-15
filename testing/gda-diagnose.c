@@ -4,6 +4,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <gmodule.h>
+#include <glib/gi18n-lib.h>
 
 #include "html.h"
 

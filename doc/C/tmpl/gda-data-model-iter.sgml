@@ -122,6 +122,27 @@ an iterator through the data of a #GdaDataModel object.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_proxy_alter_value_attributes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@col: 
+@alter_flags: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_proxied_model_row ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_proxy_delete ##### -->
 <para>
 
@@ -138,6 +159,16 @@ an iterator through the data of a #GdaDataModel object.
 
 @proxy: 
 @proxy_row: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_row_is_deleted ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_data_proxy_find_row_from_values ##### -->
@@ -178,6 +209,16 @@ an iterator through the data of a #GdaDataModel object.
 </para>
 
 @proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_row_has_changed ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
 @Returns: 
 
 
@@ -260,6 +301,14 @@ an iterator through the data of a #GdaDataModel object.
 </para>
 
 
+<!-- ##### SIGNAL GdaDataModelIter::row-changed ##### -->
+<para>
+
+</para>
+
+@gdadatamodeliter: the object which received the signal.
+@arg1: 
+
 <!-- ##### ARG GdaDataModelIter:current-row ##### -->
 <para>
 
@@ -324,6 +373,14 @@ an iterator through the data of a #GdaDataModel object.
 
 @iter: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_iter_set_invalid ##### -->
+<para>
+
+</para>
+
+@iter: 
 
 
 <!-- ##### FUNCTION gda_data_model_iter_get_column_for_param ##### -->

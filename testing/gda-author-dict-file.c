@@ -1,4 +1,5 @@
 #include <libgda/libgda.h>
+#include <glib/gi18n-lib.h>
 
 /* options */
 gchar *pass = NULL;

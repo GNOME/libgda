@@ -1,6 +1,7 @@
 #include <libgda/libgda.h>
 #include <unistd.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n-lib.h>
 
 /* options */
 gboolean dotest = FALSE;

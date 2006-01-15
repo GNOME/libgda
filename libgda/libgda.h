@@ -26,7 +26,6 @@
 #ifndef __LIBGDA_H__
 #define __LIBGDA_H__
 
-#include <glib/gi18n-lib.h>
 #include <libgda/gda-blob.h>
 #include <libgda/gda-client.h>
 #include <libgda/gda-column-index.h>

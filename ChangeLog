@@ -1,3 +1,10 @@
+2006-01-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: corrected the version of libgda in HEAD had decreased (thanks
+	to Murray Cumming)
+	* libgda/libgda.h: removed the '#include <glib/gi18n-lib.h>' include
+	from the header (thanks	to Murray Cumming)
+
 2006-01-13  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/gda-sqlite-recordset.c: fixed a bug with empty result sets

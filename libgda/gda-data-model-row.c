@@ -481,7 +481,7 @@ gda_data_model_row_set_values (GdaDataModel *model, gint row, GList *values, GEr
 	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->get_row != NULL, FALSE);
 	if (!values)
-		return;
+		return TRUE;
 	if (g_list_length (values) > gda_data_model_get_n_columns (model)) {
 		g_set_error (error, 0, GDA_DATA_MODEL_VALUES_LIST_ERROR,
 			     _("Too many values in list"));
@@ -500,8 +500,8 @@ gda_data_model_row_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		}
 		return CLASS (model)->update_row (GDA_DATA_MODEL_ROW (model), gdarow, error);
 	}
-	else 
-		return FALSE;
+
+	return FALSE;
 }
 
 

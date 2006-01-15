@@ -19,6 +19,7 @@
  */
 
 #include <string.h>
+#include <glib/gi18n-lib.h>
 #include "gda-parameter-list.h"
 #include "gda-query.h"
 #include "gda-marshal.h"

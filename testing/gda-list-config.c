@@ -3,6 +3,7 @@
 #include <glib.h>
 #include <gmodule.h>
 #include <libgda/libgda.h>
+#include <glib/gi18n-lib.h>
 
 static void list_all_sections (void);
 static void list_all_providers (void);

@@ -1,4 +1,5 @@
 #include "html.h"
+#include <glib/gi18n-lib.h>
 
 static gint counter = 0;
 

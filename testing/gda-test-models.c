@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib.h>
+#include <glib/gi18n-lib.h>
 
 #include "html.h"
 

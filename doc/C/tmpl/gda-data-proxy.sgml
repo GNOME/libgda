@@ -148,6 +148,27 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_proxy_alter_value_attributes ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@col: 
+@alter_flags: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_proxied_model_row ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_proxy_delete ##### -->
 <para>
 
@@ -164,6 +185,16 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 
 @proxy: 
 @proxy_row: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_row_is_deleted ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_data_proxy_find_row_from_values ##### -->
@@ -204,6 +235,16 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 </para>
 
 @proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_row_has_changed ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
 @Returns: 
 
 
