@@ -929,8 +929,8 @@ gda_parameter_set_default_value (GdaParameter *param, const GdaValue *value)
 		param->priv->has_default_value = TRUE;
 		param->priv->default_value = gda_value_copy ((GdaValue *)value);
 	}
-
-	gda_object_changed (GDA_OBJECT (param));
+	
+	/* don't emit the "changed" signal */
 }
 
 /**

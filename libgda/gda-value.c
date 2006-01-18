@@ -2340,6 +2340,9 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 	g_return_val_if_fail (value1 && value2, -1);
 	g_return_val_if_fail (GDA_VALUE_TYPE (value1) == GDA_VALUE_TYPE (value2), -1);
 
+	if (value1 == value2)
+		return 0;
+
 	switch (GDA_VALUE_TYPE (value1)) {
 	case GDA_VALUE_TYPE_NULL:
 		retval = 0;
@@ -2536,6 +2539,9 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 gint
 gda_value_compare_ext (GdaValue *value1, GdaValue *value2)
 {
+	if (value1 == value2)
+		return 0;
+
 	if (!value1 || (GDA_VALUE_TYPE (value1) == GDA_VALUE_TYPE_NULL)) {
 		/* value1 represents a NULL value */
 		if (! value2 || (GDA_VALUE_TYPE (value2) == GDA_VALUE_TYPE_NULL))

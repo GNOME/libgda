@@ -48,6 +48,7 @@ static void paramlist_remove_source (GdaParameterList *paramlist, GdaParameterLi
 
 static void destroyed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 static void changed_param_cb (GdaParameter *param, GdaParameterList *dataset);
+static void restrict_changed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 
 #ifdef debug
 static void gda_parameter_list_dump                     (GdaParameterList *paramlist, guint offset);
@@ -587,6 +588,8 @@ destroyed_param_cb (GdaParameter *param, GdaParameterList *paramlist)
 					      G_CALLBACK (destroyed_param_cb), paramlist);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (param),
 					      G_CALLBACK (changed_param_cb), paramlist);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (param),
+					      G_CALLBACK (restrict_changed_param_cb), paramlist);
 
 	/* now destroy the GdaParameterListNode and the GdaParameterListSource if necessary */
 	node = gda_parameter_list_find_node_for_param (paramlist, param);
@@ -604,6 +607,12 @@ destroyed_param_cb (GdaParameter *param, GdaParameterList *paramlist)
 
 	paramlist->parameters = g_slist_remove (paramlist->parameters, param);
 	g_object_unref (G_OBJECT (param));
+}
+
+static void
+restrict_changed_param_cb (GdaParameter *param, GdaParameterList *paramlist)
+{
+	compute_public_data (paramlist);
 }
 
 static void
@@ -954,6 +963,8 @@ gda_parameter_list_real_add_param (GdaParameterList *paramlist, GdaParameter *pa
 					       G_CALLBACK (destroyed_param_cb), paramlist);
 		g_signal_connect (G_OBJECT (param), "changed",
 				  G_CALLBACK (changed_param_cb), paramlist);
+		g_signal_connect (G_OBJECT (param), "restrict_changed",
+				  G_CALLBACK (restrict_changed_param_cb), paramlist);
 
 		g_object_ref (G_OBJECT (param));
 		gda_parameter_replace_param_users (param, paramlist->priv->param_repl);

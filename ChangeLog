@@ -1,3 +1,11 @@
+2006-01-18  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-extra.h: new header file which contains declarations for
+	functions to help GdaDataModel writers
+	* libgda/gda-value.c: small improvement in comparison functions
+	* libgda/gda-data-proxy.[ch]: bug fixes and improvements
+	* other files: small bug fixes and improvements	
+
 2006-01-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: corrected the version of libgda in HEAD had decreased (thanks

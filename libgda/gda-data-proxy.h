@@ -65,6 +65,7 @@ GObject          *gda_data_proxy_new                      (GdaDataModel *model);
 
 GdaDataModel     *gda_data_proxy_get_proxied_model        (GdaDataProxy *proxy);
 gint              gda_data_proxy_get_proxied_model_n_cols (GdaDataProxy *proxy);
+gint              gda_data_proxy_get_proxied_model_n_rows (GdaDataProxy *proxy);
 gboolean          gda_data_proxy_is_read_only             (GdaDataProxy *proxy);
 GSList           *gda_data_proxy_get_values               (GdaDataProxy *proxy, gint proxy_row, 
 						           gint *cols_index, gint n_cols);
@@ -94,10 +95,15 @@ void              gda_data_proxy_set_sample_start         (GdaDataProxy *proxy, 
 gint              gda_data_proxy_get_sample_start         (GdaDataProxy *proxy);
 gint              gda_data_proxy_get_sample_end           (GdaDataProxy *proxy);
 
-void              gda_data_proxy_store_model_row_value    (GdaDataProxy *proxy, GdaDataModel *model, gint extra_col, 
-							   const GdaValue *value);
-const GdaValue   *gda_data_proxy_get_model_row_value      (GdaDataProxy *proxy, GdaDataModel *model, gint extra_col);
-void              gda_data_proxy_assign_model_col         (GdaDataProxy *proxy, GdaDataModel *model, gint model_col, gint proxy_col);
+void              gda_data_proxy_set_model_row_value      (GdaDataProxy *proxy, GdaDataModel *model, 
+							   gint proxy_row, gint extra_col, const GdaValue *value);
+void              gda_data_proxy_clear_model_row_value    (GdaDataProxy *proxy, GdaDataModel *model, 
+							   gint proxy_row, gint extra_col);
+const GdaValue   *gda_data_proxy_get_model_row_value      (GdaDataProxy *proxy, GdaDataModel *model, 
+							   gint proxy_row, gint extra_col);
+void              gda_data_proxy_assign_model_col         (GdaDataProxy *proxy, GdaDataModel *model, 
+							   gint proxy_col, gint model_col);
+gint              gda_data_proxy_get_assigned_model_col   (GdaDataProxy *proxy, GdaDataModel *model, gint model_col);
 
 G_END_DECLS
 

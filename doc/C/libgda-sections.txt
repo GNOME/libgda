@@ -447,6 +447,9 @@ GdaDataProxy
 GdaDataProxyClass
 GdaDataProxyPrivate
 gda_data_proxy_new
+gda_data_proxy_get_proxied_model
+gda_data_proxy_get_proxied_model_n_cols
+gda_data_proxy_get_proxied_model_n_rows
 gda_data_proxy_is_read_only
 gda_data_proxy_get_values
 gda_data_proxy_get_value_attributes

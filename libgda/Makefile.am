@@ -32,6 +32,7 @@ gda_headers = \
 	gda-data-model-array.h \
 	gda-data-model-row.h \
 	gda-data-model.h \
+	gda-data-model-extra.h \
 	gda-data-model-filter-sql.h \
 	gda-data-model-hash.h \
 	gda-data-model-index.h \

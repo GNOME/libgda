@@ -26,6 +26,7 @@
 #include <glib/gi18n-lib.h>
 #include <glib/gprintf.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
@@ -515,42 +516,50 @@ gda_data_model_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint ro
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
-	else {
+	else 
 		/* default method */
-		GSList *list;
-		gint col;
-		GdaDataModel *test;
-		gboolean update_model;
+		return gda_data_model_iter_at_row_default (model, iter, row);
+}
 
-		/* validity tests */
-		if (row >= gda_data_model_get_n_rows (model)) {
-			gda_data_model_iter_set_invalid (iter);
-			g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
-			return FALSE;
-		}
-		
-		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
-			return FALSE;
-		
-		g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+gboolean
+gda_data_model_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row)
+{
+	/* default method */
+	GSList *list;
+	gint col;
+	GdaDataModel *test;
+	gboolean update_model;
+	
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-		g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
-		g_return_val_if_fail (test == model, FALSE);
-
-		/* actual sync. */
-		g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
-		g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
-		col = 0;
-		list = ((GdaParameterList *) iter)->parameters;
-		while (list) {
-			gda_parameter_set_value (GDA_PARAMETER (list->data), 
-						 gda_data_model_get_value_at (model, col, row));
-			list = g_slist_next (list);
-			col ++;
-		}
-		g_object_set (G_OBJECT (iter), "current_row", row, "update_model", update_model, NULL);
-		return TRUE;
+	/* validity tests */
+	if (row >= gda_data_model_get_n_rows (model)) {
+		gda_data_model_iter_set_invalid (iter);
+		g_object_set (G_OBJECT (iter), "current_row", -1, NULL);
+		return FALSE;
 	}
+	
+	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
+		return FALSE;
+	
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+	
+	g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
+	g_return_val_if_fail (test == model, FALSE);
+	
+	/* actual sync. */
+	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
+	g_object_set (G_OBJECT (iter), "update_model", FALSE, NULL);
+	col = 0;
+	list = ((GdaParameterList *) iter)->parameters;
+	while (list) {
+		gda_parameter_set_value (GDA_PARAMETER (list->data), 
+					 gda_data_model_get_value_at (model, col, row));
+		list = g_slist_next (list);
+		col ++;
+	}
+	g_object_set (G_OBJECT (iter), "current_row", row, "update_model", update_model, NULL);
+	return TRUE;
 }
 
 /**

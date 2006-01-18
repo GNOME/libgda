@@ -116,6 +116,33 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_proxy_get_proxied_model ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_proxied_model_n_cols ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_proxy_get_proxied_model_n_rows ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_proxy_is_read_only ##### -->
 <para>
 
