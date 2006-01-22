@@ -179,6 +179,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 						 sqlite3_column_name (sres->stmt, i));
 		sres->types [i] = GDA_VALUE_TYPE_NULL;
 		sres->sqlite_types [i] = sqlite3_column_type (sres->stmt, i);
+		/*g_print ("SQLite Type: %d\n", sres->sqlite_types [i]);*/
 
 		/* Gda type */
 		ctype = sqlite3_column_decltype (sres->stmt, i);
@@ -192,6 +193,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 			case SQLITE_FLOAT:
 				gtype = GDA_VALUE_TYPE_DOUBLE;
 				break;
+			case 0:
 			case SQLITE_TEXT:
 				gtype = GDA_VALUE_TYPE_STRING;
 				break;

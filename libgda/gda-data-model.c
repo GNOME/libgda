@@ -728,9 +728,8 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) {
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) (model, row, error);
-	}
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return FALSE;
@@ -759,11 +758,14 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 	g_return_val_if_fail (values, -1);
 
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_find_row)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_find_row) (model, values, cols_index);
+
         n_rows = gda_data_model_get_n_rows (model);
         n_cols = gda_data_model_get_n_columns (model);
         current_row = 0;
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
         {
                 GSList *list = values;
 

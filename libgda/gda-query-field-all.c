@@ -79,7 +79,7 @@ static gboolean    gda_query_field_all_is_equal       (GdaQueryField *qfield1, G
 static void destroyed_object_cb (GObject *obj, GdaQueryFieldAll *field);
 static void target_removed_cb (GdaQuery *query, GdaQueryTarget *target, GdaQueryFieldAll *field);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_query_field_all_dump (GdaQueryFieldAll *field, guint offset);
 #endif
 
@@ -229,7 +229,7 @@ gda_query_field_all_class_init (GdaQueryFieldAllClass * class)
 							      G_PARAM_WRITABLE));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_field_all_dump;
 #endif
 	GDA_QUERY_FIELD_CLASS (class)->copy = gda_query_field_all_copy;
@@ -495,7 +495,7 @@ gda_query_field_all_get_target (GdaQueryFieldAll *field)
 		return NULL;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_field_all_dump (GdaQueryFieldAll *field, guint offset)
 {

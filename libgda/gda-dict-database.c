@@ -66,7 +66,7 @@ static void table_field_removed_cb (GdaDictTable *table, GdaDictField *field, Gd
 static void updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb);
 static void updated_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_dict_database_dump (GdaDictDatabase *mgdb, gint offset);
 #endif
 
@@ -353,7 +353,7 @@ gda_dict_database_class_init (GdaDictDatabaseClass * class)
 					 g_param_spec_pointer ("prop", NULL, NULL, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_dict_database_dump;
 #endif
 
@@ -577,7 +577,7 @@ gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError **error)
 				
 		if (cstr)
 			xmlAddChild (tree, cstr); /* otherwise, just ignore the error */
-#ifdef debug
+#ifdef GDA_DEBUG
 		else
 			g_print (D_COL_ERR "ERROR\n" D_COL_NOR);
 #endif
@@ -743,11 +743,11 @@ gda_dict_database_add_table (GdaDictDatabase *mgdb, GdaDictTable *table, gint po
 	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (table));
 	g_hash_table_insert (mgdb->priv->tables_hash, str, table);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'TABLE_ADDED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[TABLE_ADDED], 0, table);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'TABLE_ADDED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -770,11 +770,11 @@ gda_dict_database_add_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, gin
 			  G_CALLBACK (updated_sequence_cb), mgdb);
 
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'SEQUENCE_ADDED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[SEQUENCE_ADDED], 0, seq);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'SEQUENCE_ADDED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -842,17 +842,17 @@ gda_dict_database_add_constraint_real (GdaDictDatabase *mgdb, GdaDictConstraint 
 		list = g_slist_append (list, cstr);
 		g_hash_table_insert (mgdb->priv->constraints_hash, table, list);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'CONSTRAINT_ADDED' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[CONSTRAINT_ADDED], 0, cstr);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'CONSTRAINT_ADDED' from %s\n", __FUNCTION__);
 #endif
 	}
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void 
 gda_dict_database_dump (GdaDictDatabase *mgdb, gint offset)
 {
@@ -983,11 +983,11 @@ gda_dict_database_update_dbms_data (GdaDictDatabase *mgdb, GError **error)
 	mgdb->priv->update_in_progress = TRUE;
 	mgdb->priv->stop_update = FALSE;
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'DATA_UPDATE_STARTED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[DATA_UPDATE_STARTED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'DATA_UPDATE_STARTED' from %s\n", __FUNCTION__);
 #endif
 
@@ -997,11 +997,11 @@ gda_dict_database_update_dbms_data (GdaDictDatabase *mgdb, GError **error)
 	if (retval && !mgdb->priv->stop_update) 
 		retval = database_constraints_update_list (mgdb, error);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'DATA_UPDATE_FINISHED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[DATA_UPDATE_FINISHED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'DATA_UPDATE_FINISHED' from %s\n", __FUNCTION__);
 #endif
 
@@ -1214,11 +1214,11 @@ destroyed_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb)
 	g_hash_table_remove (mgdb->priv->tables_hash, str);
 	g_free (str);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'TABLE_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "table_removed", table);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'TABLE_REMOVED' from %s\n", __FUNCTION__);
 #endif
 
@@ -1228,11 +1228,11 @@ destroyed_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb)
 static void
 updated_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'TABLE_UPDATED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "table_updated", table);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'TABLE_UPDATED' from %s\n", __FUNCTION__);
 #endif	
 }
@@ -1240,11 +1240,11 @@ updated_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb)
 static void
 table_field_added_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELD_ADDED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "field_added", field);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELD_ADDED' from %s\n", __FUNCTION__);
 #endif	
 }
@@ -1252,11 +1252,11 @@ table_field_added_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase 
 static void
 table_field_updated_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "field_updated", field);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif	
 }
@@ -1264,11 +1264,11 @@ table_field_updated_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabas
 static void
 table_field_removed_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELD_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "field_removed", field);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELD_REMOVED' from %s\n", __FUNCTION__);
 #endif	
 }
@@ -1294,11 +1294,11 @@ destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb)
 	g_signal_handlers_disconnect_by_func (G_OBJECT (seq), 
 					      G_CALLBACK (updated_sequence_cb), mgdb);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'SEQUENCE_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "sequence_removed", seq);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'SEQUENCE_REMOVED' from %s\n", __FUNCTION__);
 #endif
 
@@ -1309,11 +1309,11 @@ destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb)
 static void
 updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'SEQUENCE_UPDATED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "sequence_updated", seq);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'SEQUENCE_UPDATED' from %s\n", __FUNCTION__);
 #endif	
 }
@@ -1353,11 +1353,11 @@ destroyed_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb)
 			g_hash_table_remove (mgdb->priv->constraints_hash, table);
 	}
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'CONSTRAINT_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "constraint_removed", cons);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'CONSTRAINT_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	g_object_unref (G_OBJECT (cons));
@@ -1366,11 +1366,11 @@ destroyed_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb)
 static void
 updated_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'CONSTRAINT_UPDATED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (mgdb), "constraint_updated", cons);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'CONSTRAINT_UPDATED' from %s\n", __FUNCTION__);
 #endif	
 }

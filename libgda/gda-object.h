@@ -55,7 +55,7 @@ struct _GdaObjectClass
 
 	/* pure virtual functions */
 	void        (*signal_changed) (GdaObject *object, gboolean block_changed_signal);
-#ifdef debug
+#ifdef GDA_DEBUG
 	void        (*dump)           (GdaObject *object, guint offset);
 #endif
 
@@ -84,7 +84,7 @@ void         gda_object_changed         (GdaObject *object);
 void         gda_object_block_changed   (GdaObject *object);
 void         gda_object_unblock_changed (GdaObject *object);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 void         gda_object_dump            (GdaObject *object, guint offset); /* dump contents on stdout */
 #endif
 

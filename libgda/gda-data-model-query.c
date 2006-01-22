@@ -84,7 +84,7 @@ static gboolean             gda_data_model_query_remove_row      (GdaDataModel *
 
 static void to_be_destroyed_query_cb (GdaQuery *query, GdaDataModelQuery *model);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_data_model_query_dump (GdaDataModelQuery *select, guint offset);
 #endif
 
@@ -144,7 +144,7 @@ gda_data_model_query_class_init (GdaDataModelQueryClass *klass)
 	/* virtual functions */
 	object_class->dispose = gda_data_model_query_dispose;
 	object_class->finalize = gda_data_model_query_finalize;
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (klass)->dump = (void (*)(GdaObject *, guint)) gda_data_model_query_dump;
 #endif
 
@@ -171,6 +171,7 @@ gda_data_model_query_data_model_init (GdaDataModelClass *iface)
         iface->i_append_values = gda_data_model_query_append_values;
 	iface->i_append_row = gda_data_model_query_append_row;
 	iface->i_remove_row = gda_data_model_query_remove_row;
+	iface->i_find_row = NULL;
 	
 	iface->i_set_notify = NULL;
 	iface->i_get_notify = NULL;
@@ -391,7 +392,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
         model->priv->data = gda_connection_execute_single_command (cnc, cmd, NULL, error);
 	gda_command_free (cmd);
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	{
 		g_print ("GdaDataModelQuery refresh:\n");
 		if (model->priv->data) 
@@ -404,7 +405,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 	return model->priv->data ? TRUE : FALSE;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_data_model_query_dump (GdaDataModelQuery *select, guint offset)
 {

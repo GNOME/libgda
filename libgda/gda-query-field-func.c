@@ -78,7 +78,7 @@ static GObject    *gda_query_field_func_copy           (GdaQueryField *orig);
 static gboolean    gda_query_field_func_is_equal       (GdaQueryField *qfield1, GdaQueryField *qfield2);
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void        gda_query_field_func_dump           (GdaQueryFieldFunc *func, guint offset);
 #endif
 
@@ -232,7 +232,7 @@ gda_query_field_func_class_init (GdaQueryFieldFuncClass * class)
 					 g_param_spec_string ("function_id", "XML ID of a function", NULL, NULL,
 							      G_PARAM_WRITABLE));
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_field_func_dump;
 #endif
 	GDA_QUERY_FIELD_CLASS (class)->copy = gda_query_field_func_copy;
@@ -658,7 +658,7 @@ gda_query_field_func_get_args (GdaQueryFieldFunc *func)
 	return retval;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_field_func_dump (GdaQueryFieldFunc *func, guint offset)
 {

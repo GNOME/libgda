@@ -59,7 +59,7 @@ static void        gda_dict_constraint_referer_init (GdaRefererIface *iface);
 static gboolean    gda_dict_constraint_activate            (GdaReferer *iface);
 static gboolean    gda_dict_constraint_is_active           (GdaReferer *iface);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void        gda_dict_constraint_dump                (GdaDictConstraint *cstr, guint offset);
 #endif
 
@@ -182,7 +182,7 @@ gda_dict_constraint_class_init (GdaDictConstraintClass * class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_dict_constraint_dump;
 #endif
 }
@@ -1005,7 +1005,7 @@ gda_dict_constraint_not_null_get_field (GdaDictConstraint *cstr)
 
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_dict_constraint_dump (GdaDictConstraint *cstr, guint offset)
 {

@@ -141,6 +141,7 @@ gda_data_model_row_data_model_init (GdaDataModelClass *iface)
         iface->i_append_values = gda_data_model_row_append_values;
 	iface->i_append_row = gda_data_model_row_append_row;
 	iface->i_remove_row = gda_data_model_row_remove_row;
+	iface->i_find_row = NULL;
 
 	iface->i_set_notify = gda_data_model_row_set_notify;
 	iface->i_get_notify = gda_data_model_row_get_notify;

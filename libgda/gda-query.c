@@ -126,7 +126,7 @@ static gboolean query_sql_forget (GdaQuery *query, GError **error);
 static void     query_clean_junk (GdaQuery *query);
 
 static void gda_query_set_int_id (GdaQueryObject *query, guint id);
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_query_dump (GdaQuery *query, guint offset);
 #endif
 
@@ -409,7 +409,7 @@ gda_query_class_init (GdaQueryClass * class)
 
 	/* virtual functions */
         GDA_QUERY_OBJECT_CLASS (class)->set_int_id = (void (*)(GdaQueryObject *, guint)) gda_query_set_int_id;
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_dump;
 #endif
 
@@ -627,7 +627,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 
 	gda_query->priv->internal_transaction --;
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	g_print ("Query %p is a copy of %p\n", gda_query, orig);
 	gda_object_dump (GDA_OBJECT (orig), 2);
 	gda_object_dump (GDA_OBJECT (gda_query), 2);
@@ -741,7 +741,7 @@ gda_query_clean (GdaQuery *gda_query)
 	gda_query->priv->serial_cond = 1;
 
 	/* internal coherence test */
-#ifdef debug
+#ifdef GDA_DEBUG
 	if (gda_query->priv->all_conds) {
 		g_print ("Query incoherence error!!!\n");
 		gda_object_dump (gda_query, 0);
@@ -1007,7 +1007,7 @@ query_clean_junk (GdaQuery *query)
 			}
 
 			if (!used) {
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 				g_print ("Removed field %p:\n", qfield);
 #endif
 				gda_object_destroy (GDA_OBJECT (qfield));
@@ -1086,11 +1086,11 @@ gda_query_set_query_type (GdaQuery *query, GdaQueryType type)
 		query->priv->internal_transaction --;
 		query->priv->query_type = type;
 		    
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'TYPE_CHANGED' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit_by_name (G_OBJECT (query), "type_changed");
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'TYPE_CHANGED' from %s\n", __FUNCTION__);
 #endif	
 	}
@@ -1171,8 +1171,13 @@ gda_query_is_select_query (GdaQuery *query)
 	    (query->priv->query_type == GDA_QUERY_TYPE_INTERSECT) ||
 	    (query->priv->query_type == GDA_QUERY_TYPE_EXCEPT))
 		return TRUE;
-	else
-		return FALSE;
+	else {
+		if ((query->priv->query_type == GDA_QUERY_TYPE_NON_PARSED_SQL) &&
+		    ! g_ascii_strncasecmp (query->priv->sql, "select ", 7))
+			return TRUE;
+		else
+			return FALSE;
+	}
 }
 
 /**
@@ -1239,7 +1244,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 	/* try to parse the SQL */
 	result = sql_parse_with_error (sql, error);
 	if (result) {
-#ifdef debug
+#ifdef GDA_DEBUG_NO
 		sql_display (result);
 #endif
 		switch (result->type) {
@@ -1597,11 +1602,11 @@ gda_query_add_sub_query (GdaQuery *query, GdaQuery *sub_query)
         g_signal_connect (G_OBJECT (sub_query), "changed",
                           G_CALLBACK (changed_sub_query_cb), query);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'SUB_QUERY_ADDED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "sub_query_added", sub_query);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'SUB_QUERY_ADDED' from %s\n", __FUNCTION__);
 #endif	
 }
@@ -1618,11 +1623,11 @@ destroyed_sub_query_cb (GdaQuery *sub_query, GdaQuery *query)
                                               G_CALLBACK (changed_sub_query_cb), query);
 
 	query->priv->internal_transaction ++;
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'SUB_QUERY_REMOVED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "sub_query_removed", sub_query);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'SUB_QUERY_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	query->priv->internal_transaction --;
@@ -1636,11 +1641,11 @@ destroyed_sub_query_cb (GdaQuery *sub_query, GdaQuery *query)
 static void
 changed_sub_query_cb (GdaQuery *sub_query, GdaQuery *query)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'SUB_QUERY_UPDATED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "sub_query_updated", sub_query);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'SUB_QUERY_UPDATED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -1819,11 +1824,11 @@ gda_query_add_target (GdaQuery *query, GdaQueryTarget *target, GError **error)
 	if (query->priv->serial_target <= gda_query_object_get_int_id (GDA_QUERY_OBJECT (target)))
 		query->priv->serial_target = gda_query_object_get_int_id (GDA_QUERY_OBJECT (target)) + 1;
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'TARGET_ADDED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "target_added", target);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'TARGET_ADDED' from %s\n", __FUNCTION__);
 #endif
 	return TRUE;
@@ -1845,11 +1850,11 @@ destroyed_target_cb (GdaQueryTarget *target, GdaQuery *query)
                                               G_CALLBACK (id_target_changed_cb), query);
 
 	query->priv->internal_transaction ++;
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'TARGET_REMOVED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "target_removed", target);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'TARGET_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	query->priv->internal_transaction --;
@@ -1864,11 +1869,11 @@ destroyed_target_cb (GdaQueryTarget *target, GdaQuery *query)
 static void
 changed_target_cb (GdaQueryTarget *target, GdaQuery *query)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'TARGET_UPDATED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "target_updated", target);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'TARGET_UPDATED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -2097,7 +2102,7 @@ gda_query_get_join_by_targets (GdaQuery *query, GdaQueryTarget *target1, GdaQuer
 }
 
 static gboolean gda_query_are_joins_active (GdaQuery *query);
-#ifdef debug
+#ifdef GDA_DEBUG
 static void joins_pack_dump (GdaQuery *query);
 #endif
 static gboolean joins_pack_add_join (GdaQuery *query, GdaQueryJoin *join);
@@ -2158,11 +2163,11 @@ gda_query_add_join (GdaQuery *query, GdaQueryJoin *join)
         g_signal_connect (G_OBJECT (join), "changed",
                           G_CALLBACK (changed_join_cb), query);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'JOIN_ADDED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "join_added", join);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'JOIN_ADDED' from %s\n", __FUNCTION__);
 #endif	
 	return TRUE;
@@ -2182,11 +2187,11 @@ destroyed_join_cb (GdaQueryJoin *join, GdaQuery *query)
                                               G_CALLBACK (changed_join_cb), query);
 
 	query->priv->internal_transaction ++;
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'JOIN_REMOVED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "join_removed", join);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'JOIN_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	
@@ -2200,11 +2205,11 @@ destroyed_join_cb (GdaQueryJoin *join, GdaQuery *query)
 static void
 changed_join_cb (GdaQueryJoin *join, GdaQuery *query)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'JOIN_UPDATED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "join_updated", join);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'JOIN_UPDATED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -2228,7 +2233,7 @@ gda_query_del_join (GdaQuery *query, GdaQueryJoin *join)
 	destroyed_join_cb (join, query);
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 joins_pack_dump (GdaQuery *query)
 {
@@ -2535,7 +2540,7 @@ gda_query_add_field_from_sql (GdaQuery *query, const gchar *field, GError **erro
 }
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_dump (GdaQuery *query, guint offset)
 {
@@ -2804,7 +2809,7 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 			/* split the sql_name into a list of strings, by the '.' separator */
 			gchar **split = g_strsplit (sql_name, ".", 0);
 			gint nb_tokens;
-			GdaEntityField *ref_field = gda_query_field_field_get_ref_field (GDA_QUERY_FIELD_FIELD (list->data));
+			gchar *ref_name = gda_query_field_field_get_ref_field_name (GDA_QUERY_FIELD_FIELD (list->data));
 			gchar *str;
 
 			for (nb_tokens = 0; split[nb_tokens] != NULL; nb_tokens++);
@@ -2812,8 +2817,8 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 				/* first try to find the table corresponding to a lower-case version of @sql_name, 
 				   and if not found, try with the unchanged @sql_name */
 				str = g_utf8_strdown (sql_name, -1);
-				if (!strcmp (gda_entity_field_get_name (ref_field), str) ||
-				    !strcmp (gda_entity_field_get_name (ref_field), sql_name)) {
+				if (!strcmp (ref_name, str) ||
+				    !strcmp (ref_name, sql_name)) {
 					if (field)
 						err = TRUE;
 					else
@@ -2826,8 +2831,8 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 				GdaQueryTarget *target = gda_query_field_field_get_target (GDA_QUERY_FIELD_FIELD (list->data));
 				str = g_utf8_strdown (split[1], -1);
 				if (!strcmp (gda_query_target_get_alias (target), split[0]) &&
-				    (!strcmp (gda_entity_field_get_name (ref_field), str) ||
-				     !strcmp (gda_entity_field_get_name (ref_field), split[1]))) {
+				    (!strcmp (ref_name, str) ||
+				     !strcmp (ref_name, split[1]))) {
 					if (field)
 						err = TRUE;
 					else
@@ -2837,12 +2842,19 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 				/* compare with target_ref_entity.ref_field */
 				if (!field) {
 					gchar *str2 = g_utf8_strdown (split[0], -1);
-					gchar *entstr = gda_object_get_name (GDA_OBJECT (gda_query_target_get_represented_entity (target)));
+					GdaEntity *tmpent = gda_query_target_get_represented_entity (target);
+					gchar *entstr;
+					
+					if (tmpent)
+						entstr = gda_object_get_name (GDA_OBJECT (tmpent));
+					else
+						entstr = gda_query_target_get_represented_table_name (target);
+
 					if (!err && !field &&
 					    (!strcmp (entstr, str2) ||
 					     !strcmp (entstr, split[0])) &&
-					    (!strcmp (gda_entity_field_get_name (ref_field), str) ||
-					     !strcmp (gda_entity_field_get_name (ref_field), split[1]) )) {
+					    (!strcmp (ref_name, str) ||
+					     !strcmp (ref_name, split[1]) )) {
 						if (field)
 							err = TRUE;
 						else
@@ -3140,11 +3152,11 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
         g_signal_connect (G_OBJECT (field), "numid_changed",
                           G_CALLBACK (id_field_changed_cb), query);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'FIELD_ADDED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "field_added", field);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'FIELD_ADDED' from %s\n", __FUNCTION__);
 #endif	
 	m_changed_cb (query);
@@ -3168,11 +3180,11 @@ destroyed_field_cb (GdaEntityField *field, GdaQuery *query)
         g_signal_handlers_disconnect_by_func (G_OBJECT (field),
                                               G_CALLBACK (id_field_changed_cb), query);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'FIELD_REMOVED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "field_removed", field);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'FIELD_REMOVED' from %s\n", __FUNCTION__);
 #endif
 
@@ -3185,11 +3197,11 @@ destroyed_field_cb (GdaEntityField *field, GdaQuery *query)
 static void
 changed_field_cb (GdaEntityField *field, GdaQuery *query)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "field_updated", field);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif
 	gda_object_changed (GDA_OBJECT (query));
@@ -3218,11 +3230,11 @@ gda_query_swap_fields (GdaEntity *iface, GdaEntityField *field1, GdaEntityField 
 	ptr1->data = field2;
 	ptr2->data = field1;
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'FIELDS_ORDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (query), "fields_order_changed");
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'FIELDS_ORDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
 
@@ -4241,7 +4253,7 @@ assert_coherence_all_params_present (GdaQuery *query, GdaParameterList *context,
 								     GDA_QUERY_ERROR,
 								     GDA_QUERY_RENDER_ERROR,
 								     _("Missing parameters"));
-#ifdef debug
+#ifdef GDA_DEBUG
 							g_print ("QUERY MISSING PARAM: QU%d %s\n", 
 								 gda_query_object_get_int_id (GDA_QUERY_OBJECT (query)),
 								 gda_object_get_name (GDA_OBJECT (query)));
@@ -4361,7 +4373,7 @@ assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, 
 	/* make sure entity is writable */
 	if (retval) {
 		GdaEntity *entity = gda_query_target_get_represented_entity (GDA_QUERY_TARGET (query->priv->targets->data));
-		if (!gda_entity_is_writable (entity)) {
+		if (entity && !gda_entity_is_writable (entity)) {
 			g_set_error (error,
 				     GDA_QUERY_ERROR,
 				     GDA_QUERY_RENDER_ERROR,
@@ -4956,7 +4968,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 			g_object_get (G_OBJECT (list->data), "value_provider", &value_prov, NULL);
 			g_assert (value_prov);
 			str = gda_renderer_render_as_sql (GDA_RENDERER (value_prov), context, 
-							       options | GDA_RENDERER_ERROR_IF_DEFAULT, &my_error);
+							  options | GDA_RENDERER_ERROR_IF_DEFAULT, &my_error);
 			if (!str) {
 				if (my_error) {
 					if (my_error->code == GDA_QUERY_FIELD_VALUE_DEFAULT_PARAM_ERROR) {
@@ -4966,7 +4978,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 					else {
 						/* make sure @error is set */
 						gda_renderer_render_as_sql (GDA_RENDERER (value_prov), context, 
-										 options, error);
+									    options, error);
 						err = TRUE;
 					}
 					g_error_free (my_error);
@@ -4976,7 +4988,10 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 			}
 			
 			if (add_field) {
-				printed_fields = g_slist_append (printed_fields, list->data);
+				gchar *tmpstr;
+				tmpstr = gda_query_field_field_get_ref_field_name (GDA_QUERY_FIELD_FIELD (list->data));
+				if (tmpstr)
+					printed_fields = g_slist_append (printed_fields, list->data);
 				printed_values = g_slist_append (printed_values, str);
 			}
 			else
@@ -5001,37 +5016,54 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 	/* query is supposed to be active and of a good constitution here */
 	sql = g_string_new ("INSERT INTO ");
 	ent = gda_query_target_get_represented_entity (GDA_QUERY_TARGET (query->priv->targets->data));
-	g_string_append (sql, gda_object_get_name (GDA_OBJECT (ent)));
+	if (ent)
+		g_string_append (sql, gda_object_get_name (GDA_OBJECT (ent)));
+	else
+		g_string_append (sql, gda_query_target_get_represented_table_name (GDA_QUERY_TARGET (query->priv->targets->data)));
 	if (pprint) g_string_append (sql, "\n\t");
 
 	/* list of fields */
-	g_string_append (sql, " (");
-	list = printed_fields;
-	first = TRUE;
-	while (list) {
-		GdaEntityField *field;
-		if (first) 
-			first = FALSE;
-		else {
-			if (pprint)
-				g_string_append (sql, ",\n\t");
-			else
-				g_string_append (sql, ", ");
+	if (printed_fields) {
+		if (g_slist_length (printed_fields) != g_slist_length (printed_values)) {
+			g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_RENDER_ERROR,
+				     _("Can't correctly print the list of columns to use."));
+			if (printed_values) {
+				g_slist_foreach (printed_values, (GFunc) g_free, NULL);
+				g_slist_free (printed_values);
+			}
+			
+			return NULL;
 		}
-		field = gda_query_field_field_get_ref_field (GDA_QUERY_FIELD_FIELD (list->data));
-		g_string_append (sql, gda_entity_field_get_name (field));
-		
-		list = g_slist_next (list);
-	}
-	g_string_append (sql, ") ");
-	g_slist_free (printed_fields);
 
-	if (pprint) g_string_append (sql, "\n");
+		g_string_append (sql, " (");
+		list = printed_fields;
+		first = TRUE;
+		while (list) {
+			GdaEntityField *field;
+			if (first) 
+				first = FALSE;
+			else {
+				if (pprint)
+					g_string_append (sql, ",\n\t");
+				else
+					g_string_append (sql, ", ");
+			}
+			g_string_append (sql, 
+					 gda_query_field_field_get_ref_field_name (GDA_QUERY_FIELD_FIELD (list->data)));
+			
+			list = g_slist_next (list);
+		}
+		g_string_append (sql, ") ");
+		g_slist_free (printed_fields);
+		if (pprint) g_string_append (sql, "\n");
+	}
+	else
+		g_string_append_c (sql, ' ');
 
 	/* list of values */
 	if (query->priv->sub_queries) {
 		gchar *str = gda_query_render_as_sql (GDA_RENDERER (query->priv->sub_queries->data), context, 
-							   options, error);
+						      options, error);
 		if (str) {
 			g_string_append (sql, str);
 			g_free (str);
@@ -5087,7 +5119,10 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 	/* query is supposed to be active and of a good constitution here */
 	sql = g_string_new ("UPDATE ");
 	ent = gda_query_target_get_represented_entity (GDA_QUERY_TARGET (query->priv->targets->data));
-	g_string_append (sql, gda_object_get_name (GDA_OBJECT (ent)));
+	if (ent)
+		g_string_append (sql, gda_object_get_name (GDA_OBJECT (ent)));
+	else
+		g_string_append (sql, gda_query_target_get_represented_table_name (GDA_QUERY_TARGET (query->priv->targets->data)));
 	if (pprint)
 		g_string_append (sql, "\nSET ");
 	else
@@ -5192,7 +5227,10 @@ render_sql_delete (GdaQuery *query, GdaParameterList *context, guint options, GE
 	/* query is supposed to be active and of a good constitution here */
 	sql = g_string_new ("DELETE FROM ");
 	ent = gda_query_target_get_represented_entity (GDA_QUERY_TARGET (query->priv->targets->data));
-	g_string_append (sql, gda_object_get_name (GDA_OBJECT (ent)));
+	if (ent)
+		g_string_append (sql, gda_object_get_name (GDA_OBJECT (ent)));
+	else
+		g_string_append (sql, gda_query_target_get_represented_table_name (GDA_QUERY_TARGET (query->priv->targets->data)));
 
 	if (pprint) g_string_append (sql, "\n");
 	if (query->priv->cond) {
@@ -5525,11 +5563,11 @@ gda_query_order_fields_using_join_conds (GdaQuery *query)
 	}
 
 	if (reordered) {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'FIELDS_ORDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit_by_name (G_OBJECT (query), "fields_order_changed");
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'FIELDS_ORDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	}

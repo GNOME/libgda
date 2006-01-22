@@ -44,7 +44,7 @@ static void gda_dict_aggregate_get_property (GObject *object,
 					     GValue *value,
 					     GParamSpec *pspec);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_dict_aggregate_dump (GdaDictAggregate *agg, guint offset);
 #endif
 
@@ -139,7 +139,7 @@ gda_dict_aggregate_class_init (GdaDictAggregateClass * class)
 					 g_param_spec_pointer ("prop", NULL, NULL, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_dict_aggregate_dump;
 #endif
 
@@ -259,7 +259,7 @@ gda_dict_aggregate_get_property (GObject *object,
 	}
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_dict_aggregate_dump (GdaDictAggregate *agg, guint offset)
 {

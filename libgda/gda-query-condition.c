@@ -78,7 +78,7 @@ static GSList     *gda_query_condition_get_ref_objects     (GdaReferer *iface);
 static void        gda_query_condition_replace_refs        (GdaReferer *iface, GHashTable *replacements);
 
 static void        gda_query_condition_set_int_id          (GdaQueryObject *condition, guint id);
-#ifdef debug
+#ifdef GDA_DEBUG
 static void        gda_query_condition_dump                (GdaQueryCondition *condition, guint offset);
 #endif
 
@@ -218,7 +218,7 @@ gda_query_condition_class_init (GdaQueryConditionClass * class)
 
 	/* virtual functions */
 	GDA_QUERY_OBJECT_CLASS (class)->set_int_id = (void (*)(GdaQueryObject *, guint)) gda_query_condition_set_int_id;
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_condition_dump;
 #endif
 }
@@ -1165,7 +1165,7 @@ gda_query_condition_get_main_conditions (GdaQueryCondition *condition)
 
 static const gchar *condition_type_to_str (GdaQueryConditionType type);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_condition_dump (GdaQueryCondition *condition, guint offset)
 {

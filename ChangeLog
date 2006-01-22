@@ -1,3 +1,15 @@
+2006-01-22  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query*: corrected bugs which prevented creation of queries when no
+	dictionary was provided or when the provided one did not contain anough database
+	structure information
+	* libgda/*: corrected a bug which prevented the --enable-debug
+	configure argument to work correctly
+	* testing/gda-test-sql.c: bug fixed
+	* testing/tests_data/SQL_parsing_tests.xml: new tests and possibility
+	to use an empty dictionary
+	* testing/tests_data/DICT_empty.xml: empty dictionary
+
 2006-01-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #327797

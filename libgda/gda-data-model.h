@@ -82,6 +82,7 @@ struct _GdaDataModelClass {
 	gint                 (* i_append_values)    (GdaDataModel *model, const GList *values, GError **error);
 	gint                 (* i_append_row)       (GdaDataModel *model, GError **error);
 	gboolean             (* i_remove_row)       (GdaDataModel *model, gint row, GError **error);
+	gint                 (* i_find_row)         (GdaDataModel *model, GSList *values, gint *cols_index);
 
 	void                 (* i_set_notify)       (GdaDataModel *model, gboolean do_notify_changes);
 	gboolean             (* i_get_notify)       (GdaDataModel *model);

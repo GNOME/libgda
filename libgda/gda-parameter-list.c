@@ -50,7 +50,7 @@ static void destroyed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 static void changed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 static void restrict_changed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_parameter_list_dump                     (GdaParameterList *paramlist, guint offset);
 #endif
 
@@ -144,7 +144,7 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 	object_class->finalize = gda_parameter_list_finalize;
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_parameter_list_dump;
 #endif
 
@@ -620,11 +620,11 @@ changed_param_cb (GdaParameter *param, GdaParameterList *paramlist)
 {
 	/* signal the parameter change */
 	gda_object_changed (GDA_OBJECT (paramlist));
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'PARAM_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (paramlist), gda_parameter_list_signals[PARAM_CHANGED], 0, param);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'PARAM_CHANGED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -789,11 +789,11 @@ compute_public_data (GdaParameterList *paramlist)
 
 	g_hash_table_destroy (groups);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'PUBLIC_DATA_CHANGED' from %p\n", paramlist);
 #endif
 	g_signal_emit (paramlist, gda_parameter_list_signals[PUBLIC_DATA_CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'PUBLIC_DATA_CHANGED' from %p\n", paramlist);
 #endif
 }
@@ -945,7 +945,7 @@ gda_parameter_list_real_add_param (GdaParameterList *paramlist, GdaParameter *pa
 	}
 	
 	if (similar) {
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 		g_print ("Param %p and %p are similar, keeping %p only\n", similar, param, similar);
 #endif
 		g_hash_table_insert (paramlist->priv->param_repl, param, similar);
@@ -1146,7 +1146,7 @@ gda_parameter_list_is_valid (GdaParameterList *paramlist)
 		if (!gda_parameter_is_valid (GDA_PARAMETER (params->data))) 
 			retval = FALSE;
 		
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 		g_print ("== PARAM %p: valid= %d, value=%s\n", params->data, gda_parameter_is_valid (GDA_PARAMETER (params->data)),
 			 gda_parameter_get_value (GDA_PARAMETER (params->data)) ?
 			 gda_value_stringify (gda_parameter_get_value (GDA_PARAMETER (params->data))) : "Null");
@@ -1472,7 +1472,7 @@ gda_parameter_list_get_param_default_value  (GdaParameterList *paramlist, GdaPar
 	return NULL;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_parameter_list_dump (GdaParameterList *paramlist, guint offset)
 {
@@ -1506,25 +1506,26 @@ gda_parameter_list_dump (GdaParameterList *paramlist, guint offset)
 			list = g_slist_next (list);
 		}
 
-		g_print ("\n%s     ***** Nodes:\n", str);
-		list = paramlist->nodes;
-		while (list) {
-			GdaParameterListNode *node = GDA_PARAMETER_LIST_NODE (list->data);
-			if (node->param) 
-				g_print ("%s     * " D_COL_H1 "GdaParameterListNode %p" D_COL_NOR " for param %p\n", 
-					 str, node, node->param);
-			else {
-				GSList *params = node->params;
-				g_print ("%s     * " D_COL_H1 "GdaParameterListNode %p" D_COL_NOR "\n", str, node);
-				gda_object_dump (GDA_OBJECT (node->data_for_param), offset+10);
-				while (params) {
-					g_print ("%s       -> param %p (%s)\n", str, params->data, 
-						 gda_object_get_name (GDA_OBJECT (params->data)));
-					params = g_slist_next (params);
-				}
-			}
-			list = g_slist_next (list);
-		}
+		/* g_print ("\n%s     ***** Nodes:\n", str); */
+/* 		list = paramlist->nodes; */
+/* 		while (list) { */
+/* 			GdaParameterListNode *node = GDA_PARAMETER_LIST_NODE (list->data); */
+/* 			if (node->param)  */
+/* 				g_print ("%s     * " D_COL_H1 "GdaParameterListNode %p" D_COL_NOR " for param %p\n",  */
+/* 					 str, node, node->param); */
+/* 			else { */
+/* 				GSList *params = node->params; */
+/* 				g_print ("%s     * " D_COL_H1 "GdaParameterListNode %p" D_COL_NOR "\n", str, node); */
+/* 				gda_object_dump (GDA_OBJECT (node->data_for_param), offset+10); */
+/* 				while (params) { */
+/* 					g_print ("%s       -> param %p (%s)\n", str, params->data,  */
+/* 						 gda_object_get_name (GDA_OBJECT (params->data))); */
+/* 					params = g_slist_next (params); */
+/* 				} */
+/* 			} */
+/* 			list = g_slist_next (list); */
+/* 		} */
+		TO_IMPLEMENT;
 	}
         else
                 g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, paramlist);

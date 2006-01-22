@@ -157,11 +157,11 @@ gda_query_object_set_int_id (GdaQueryObject *qobj, guint id)
 	qobj->priv->id = id;
 	GDA_QUERY_OBJECT_CLASS (G_OBJECT_GET_CLASS (qobj))->set_int_id (qobj, id);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'NUMID_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (qobj), gda_query_object_signals[NUMID_CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'NUMID_CHANGED' from %s\n", __FUNCTION__);
 #endif
 }

@@ -74,7 +74,7 @@ static void         gda_query_field_field_replace_refs        (GdaReferer *iface
 static GObject     *gda_query_field_field_copy           (GdaQueryField *orig);
 static gboolean     gda_query_field_field_is_equal       (GdaQueryField *qfield1, GdaQueryField *qfield2);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void         gda_query_field_field_dump           (GdaQueryFieldField *field, guint offset);
 #endif
 
@@ -259,7 +259,7 @@ gda_query_field_field_class_init (GdaQueryFieldFieldClass * class)
 							      G_PARAM_WRITABLE));
 	
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_field_field_dump;
 #endif
 	GDA_QUERY_FIELD_CLASS (class)->copy = gda_query_field_field_copy;
@@ -680,14 +680,14 @@ gda_query_field_field_get_ref_field_name (GdaQueryFieldField *field)
 	else
 		fname = gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL);
 
-	if (tname)
+	if (tname && fname)
 		return g_strdup_printf ("%s.%s", tname, fname);
 	else {
 		if (fname)
 			return g_strdup (fname);
-		else
-			return NULL;
 	}
+
+	return NULL;
 }
 
 /**
@@ -735,7 +735,7 @@ gda_query_field_field_get_target (GdaQueryFieldField *field)
 		return NULL;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_field_field_dump (GdaQueryFieldField *field, guint offset)
 {
@@ -858,8 +858,13 @@ gda_query_field_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 		xmlid = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (obj));
 		xmlSetProp (node, "object", xmlid);
 	}
-	else
-		xmlSetProp (node, "object_name", gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL));
+	else {
+		gchar *tmpstr;
+
+		tmpstr = gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL);
+		if (tmpstr)
+			xmlSetProp (node, "object_name", tmpstr);
+	}
 
 	if (! gda_query_field_is_visible (GDA_QUERY_FIELD (field)))
 		xmlSetProp (node, "is_visible",  "f");

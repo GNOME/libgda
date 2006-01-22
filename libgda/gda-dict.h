@@ -167,7 +167,7 @@ GSList         *gda_dict_get_entities_fk_constraints (GdaDict *dict, GdaEntity *
 
 GdaDataHandler    * gda_dict_get_default_handler (GdaDict *dict, GdaValueType for_type);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 void            gda_dict_dump                (GdaDict *dict);
 #endif
 G_END_DECLS

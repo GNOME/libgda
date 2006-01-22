@@ -62,7 +62,7 @@ static void destroyed_restrict_cb (GdaObject *obj, GdaParameter *param);
 static void alias_of_changed_cb (GdaParameter *alias_of, GdaParameter *param);
 
 static void gda_parameter_signal_changed (GdaObject *base, gboolean block_changed_signal);
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_parameter_dump (GdaParameter *parameter, guint offset);
 #endif
 
@@ -187,7 +187,7 @@ gda_parameter_class_init (GdaParameterClass *class)
 
 	/* virtual functions */
 	GDA_OBJECT_CLASS (class)->signal_changed = gda_parameter_signal_changed;
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_parameter_dump;
 #endif
 
@@ -702,7 +702,7 @@ gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
 	    (gda_value_get_type ((GdaValue *)value) != param->priv->gda_type))
 		param->priv->valid = FALSE;
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	g_print ("Changed param %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d CHANGED: %d\n", param, gda_object_get_name (param),
 		 current_val ? gda_value_stringify ((GdaValue *)current_val) : "_NULL_",
 		 value ? gda_value_stringify (GdaValue *)(value) : "_NULL_",
@@ -729,7 +729,7 @@ gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
 
 	/* real setting of the value */
 	if (param->priv->alias_of) {
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 		g_print ("Param %p is alias of param %p => propagating changes to param %p\n",
 			 param, param->priv->alias_of, param->priv->alias_of);
 #endif
@@ -829,7 +829,7 @@ gda_parameter_declare_invalid (GdaParameter *param)
 	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (param->priv);
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	g_print ("Param %p (%s): declare invalid\n", param, gda_object_get_name (param));
 #endif
 
@@ -1056,11 +1056,11 @@ gda_parameter_restrict_values (GdaParameter *param, GdaDataModel *model,
 		}
 	}
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'RESTRICT_CHANGED' from %p\n", param);
 #endif
 	g_signal_emit (param, gda_parameter_signals[RESTRICT_CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'RESTRICT_CHANGED' from %p\n", param);
 #endif
 	return TRUE;
@@ -1308,7 +1308,7 @@ gda_parameter_get_bind_param (GdaParameter *param)
 	return param->priv->change_with;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_parameter_dump (GdaParameter *parameter, guint offset)
 {

@@ -197,7 +197,7 @@ test_and_destroy_dict (TestConfig *config)
 								g_print (_("Can't run command '%s':\n%s\n"), cmde, error->message);
 								g_error_free (error);
 							}
-							g_print ("%s\n", chout);
+							g_print ("%s\n", chout2);
 							g_free (cmde2);
 							g_free (chout2);
 							g_free (cherr2);

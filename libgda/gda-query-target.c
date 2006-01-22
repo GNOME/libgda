@@ -74,7 +74,7 @@ static gchar      *gda_query_target_render_as_str   (GdaRenderer *iface, GdaPara
 static void        destroyed_object_cb (GObject *obj, GdaQueryTarget *target);
 static void        gda_query_target_set_int_id (GdaQueryObject *target, guint id);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void        gda_query_target_dump (GdaQueryTarget *table, guint offset);
 #endif
 
@@ -211,7 +211,7 @@ gda_query_target_class_init (GdaQueryTargetClass * class)
 							      G_PARAM_WRITABLE));
 	/* virtual functions */
 	GDA_QUERY_OBJECT_CLASS (class)->set_int_id = (void (*)(GdaQueryObject *, guint)) gda_query_target_set_int_id;
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_target_dump;
 #endif
 
@@ -599,7 +599,7 @@ gda_query_target_get_complete_name (GdaQueryTarget *target)
 	return tmpstr;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_target_dump (GdaQueryTarget *target, guint offset)
 {
@@ -733,9 +733,9 @@ gda_query_target_save_to_xml (GdaXmlStorage *iface, GError **error)
 	
 	if (target->priv->entity_ref) {
 		str = NULL;
-		if (gda_object_ref_is_active (target->priv->entity_ref)) {
-			GdaObject *base = gda_object_ref_get_ref_object (target->priv->entity_ref);
-			g_assert (base);
+		GdaObject *base = gda_object_ref_get_ref_object (target->priv->entity_ref);
+
+		if (base) {
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (base));
 			if (str) {
 				xmlSetProp (node, "entity_ref", str);

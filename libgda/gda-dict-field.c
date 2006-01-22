@@ -65,7 +65,7 @@ static void            gda_dict_field_renderer_init   (GdaRendererIface *iface);
 static gchar          *gda_dict_field_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
 static gchar          *gda_dict_field_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void            gda_dict_field_dump            (GdaDictField *field, guint offset);
 #endif
 
@@ -190,7 +190,7 @@ gda_dict_field_class_init (GdaDictFieldClass * class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_dict_field_dump;
 #endif
 }
@@ -740,7 +740,7 @@ gda_dict_field_get_attributes (GdaDictField *field)
 }
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_dict_field_dump (GdaDictField *field, guint offset)
 {

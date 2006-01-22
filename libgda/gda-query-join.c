@@ -73,7 +73,7 @@ static void        target_ref_lost_cb (GdaObjectRef *ref, GdaQueryJoin *join);
 static void        target_removed_cb (GdaQuery *query, GdaQueryTarget *target, GdaQueryJoin *join);
 
 static void        gda_query_join_set_int_id (GdaQueryObject *join, guint id);
-#ifdef debug
+#ifdef GDA_DEBUG
 static void        gda_query_join_dump (GdaQueryJoin *join, guint offset);
 #endif
 
@@ -234,7 +234,7 @@ gda_query_join_class_init (GdaQueryJoinClass * class)
 
 	/* virtual functions */
 	GDA_QUERY_OBJECT_CLASS (class)->set_int_id = (void (*)(GdaQueryObject *, guint)) gda_query_join_set_int_id;	
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_join_dump;
 #endif
 
@@ -433,11 +433,11 @@ target_removed_cb (GdaQuery *query, GdaQueryTarget *target, GdaQueryJoin *join)
 static void
 cond_changed_cb (GdaQueryCondition *cond, GdaQueryJoin *join)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'CONDITION_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (join), "condition_changed");
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'CONDITION_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	gda_object_changed (GDA_OBJECT (join));
@@ -628,11 +628,11 @@ gda_query_join_set_join_type (GdaQueryJoin *join, GdaQueryJoinType type)
 	
 	if (join->priv->join_type != type) {
 		join->priv->join_type = type;
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'TYPE_CHANGED' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit_by_name (G_OBJECT (join), "type_changed");
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'TYPE_CHANGED' from %s\n", __FUNCTION__);
 #endif
 		gda_object_changed (GDA_OBJECT (join));
@@ -977,11 +977,11 @@ gda_query_join_set_condition (GdaQueryJoin *join, GdaQueryCondition *cond)
 				  G_CALLBACK (cond_changed_cb), join);
 		join->priv->cond = cond;
 		g_object_set (G_OBJECT (cond), "join", join, NULL);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'CONDITION_CHANGED' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit_by_name (G_OBJECT (join), "condition_changed");
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'CONDITION_CHANGED' from %s\n", __FUNCTION__);
 #endif
 		gda_object_changed (GDA_OBJECT (join));
@@ -1039,7 +1039,7 @@ gda_query_join_render_type (GdaQueryJoin *join)
 	}
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_join_dump (GdaQueryJoin *join, guint offset)
 {

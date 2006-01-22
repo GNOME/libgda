@@ -394,7 +394,7 @@ parsed_create_select_query (GdaQuery *query, sql_select_statement *select, GErro
 
 	parse_data_destroy (pdata);
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	if (has_error) {
 		if (error && *error)
 			g_print ("Analysed SELECT query (ERROR: %s):\n", (*error)->message);
@@ -503,7 +503,7 @@ parsed_create_update_query (GdaQuery *query, sql_update_statement *update, GErro
 
 	parse_data_destroy (pdata);
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	if (has_error) {
 		if (error && *error)
 			g_print ("Analysed UPDATE query (ERROR: %s):\n", (*error)->message);
@@ -585,9 +585,9 @@ parsed_create_insert_query (GdaQuery *query, sql_insert_statement *insert, GErro
 	 * Values: creating hidden #GdaEntityField objects
 	 */
 	if (!has_error && insert->values) {
-		GList *list = insert->values;
+		GList *list;
 		GSList *entity_fields = NULL;
-		gint pos = 0;
+		gint pos;
 
 		if (fields) {
 			if (g_slist_length (fields) < g_list_length (insert->values)) {
@@ -606,16 +606,23 @@ parsed_create_insert_query (GdaQuery *query, sql_insert_statement *insert, GErro
 			}
 		}
 		else {
-			entity_fields = gda_entity_get_fields (gda_query_target_get_represented_entity (target));
-			if (g_slist_length (entity_fields) < g_list_length (insert->values)) {
-				g_set_error (error,
-					     GDA_QUERY_ERROR,
-					     GDA_QUERY_SQL_ANALYSE_ERROR,
-					     _("INSERT has more expression values than insert fields"));
-				has_error = TRUE;
+			GdaEntity *tmpent;
+
+			tmpent = gda_query_target_get_represented_entity (target);
+			if (tmpent) {
+				entity_fields = gda_entity_get_fields (tmpent);
+				if (g_slist_length (entity_fields) < g_list_length (insert->values)) {
+					g_set_error (error,
+						     GDA_QUERY_ERROR,
+						     GDA_QUERY_SQL_ANALYSE_ERROR,
+						     _("INSERT has more expression values than insert fields"));
+					has_error = TRUE;
+				}
 			}
 		}
 		
+		list = insert->values;
+		pos = 0;
 		while (list && !has_error) {
 			sql_field *field = (sql_field *) (list->data);
 			GdaEntityField *qfield;
@@ -635,8 +642,19 @@ parsed_create_insert_query (GdaQuery *query, sql_insert_statement *insert, GErro
 						field = (GdaEntityField *) g_object_new (GDA_TYPE_QUERY_FIELD_FIELD, 
 								 "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 								 "query", query, NULL);
-						g_object_set (G_OBJECT (field), "target", target, 
-							      "field", g_slist_nth_data (entity_fields, pos), NULL);
+						if (entity_fields)
+							g_object_set (G_OBJECT (field), "target", target, 
+								      "field", g_slist_nth_data (entity_fields, pos), NULL);
+						else {
+							gchar *fname;
+							
+							fname = g_strdup_printf ("unnamed_field_%d", pos);
+							g_object_set (G_OBJECT (field), "target", target, 
+								      /*"field_name", fname,*/ NULL);
+							g_free (fname);
+							g_warning ("Dictionary is recommended for this INSERT query as "
+								   "the fields to insert into have not been named");
+						}
 
 						gda_query_field_set_visible (GDA_QUERY_FIELD (field), TRUE);
 						gda_entity_add_field (GDA_ENTITY (query), field);
@@ -663,7 +681,7 @@ parsed_create_insert_query (GdaQuery *query, sql_insert_statement *insert, GErro
 
 	parse_data_destroy (pdata);
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	if (has_error) {
 		if (error && *error)
 			g_print ("Analysed INSERT query (ERROR: %s):\n", (*error)->message);
@@ -722,7 +740,7 @@ parsed_create_delete_query (GdaQuery *query, sql_delete_statement *delete, GErro
 
 	parse_data_destroy (pdata);
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	if (has_error) {
 		if (error && *error)
 			g_print ("Analysed DELETE query (ERROR: %s):\n", (*error)->message);
@@ -1306,8 +1324,15 @@ parsed_create_field_query_field (GdaQuery *query, gboolean add_to_query,
 							qfield = (GdaEntityField *) g_object_new (GDA_TYPE_QUERY_FIELD_FIELD, 
 									   "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 									   "query", query, NULL);
-							g_object_set (G_OBJECT (qfield), "target_name", table_alias, 
-								      "field_name", field_name, NULL);
+							if (target) {
+								g_object_set (G_OBJECT (qfield), "target", target, 
+									      "field_name", field_name, NULL);
+								if (target_return)
+									*target_return = target;
+							}
+							else
+								g_object_set (G_OBJECT (qfield), "target_name", table_alias, 
+									      "field_name", field_name, NULL);
 						}
 					}
 					else {

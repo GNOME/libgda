@@ -583,7 +583,7 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 				rtype = (GdaValueType) argtype;
 				if (mtype != rtype) {
 					retval = FALSE;
-#ifdef debug
+#ifdef GDA_DEBUG
 					g_print ("Column %d: Expected %s, got %s\n",
 						 i, gda_type_to_string (rtype), gda_type_to_string (mtype));
 #endif

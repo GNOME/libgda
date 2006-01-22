@@ -488,7 +488,7 @@ gda_data_model_array_new_from_xml_node (xmlNodePtr node, GError **error)
 		return NULL;
 	}
 
-#ifdef debug_NO
+#ifdef GDA_DEBUG_NO
 	g_print ("==== Loaded data model ====\n");
 	gda_data_model_dump (model, stdout);
 	g_print ("===========================\n");

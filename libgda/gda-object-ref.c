@@ -63,7 +63,7 @@ static GType handled_object_type (GType type);
 static void destroyed_object_cb (GObject *obj, GdaObjectRef *ref);
 static void helper_ref_destroyed_cb (GdaObject *obj, GdaObjectRef *ref);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_object_ref_dump (GdaObjectRef *field, guint offset);
 #endif
 
@@ -174,7 +174,7 @@ gda_object_ref_class_init (GdaObjectRefClass * class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_object_ref_dump;
 #endif
 }
@@ -272,11 +272,11 @@ gda_object_ref_new_copy (GdaObjectRef *orig)
 		gda_object_connect_destroy (obj, G_CALLBACK (destroyed_object_cb), ref);
 		ref->priv->ref_object = GDA_OBJECT (obj);
 		if (! ref->priv->block_signals) {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 			g_print (">> 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
 			g_signal_emit (G_OBJECT (ref), gda_object_ref_signals[REF_FOUND], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 			g_print ("<< 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
 		}
@@ -302,11 +302,11 @@ destroyed_object_cb (GObject *obj, GdaObjectRef *ref)
 		g_object_unref (ref->priv->ref_object);
 
 	ref->priv->ref_object = NULL;
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'REF_LOST' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (ref), gda_object_ref_signals[REF_LOST], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'REF_LOST' from %s\n", __FUNCTION__);
 #endif
 }
@@ -555,11 +555,11 @@ gda_object_ref_set_ref_object_type (GdaObjectRef *ref, GdaObject *object, GType 
 	gda_object_connect_destroy (object, G_CALLBACK (destroyed_object_cb), ref);
 	ref->priv->ref_object = object;
 	if (! ref->priv->block_signals) {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit (G_OBJECT (ref), gda_object_ref_signals[REF_FOUND], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
 	}
@@ -928,11 +928,11 @@ gda_object_ref_activate (GdaObjectRef *ref)
 
 		gda_object_connect_destroy (obj, G_CALLBACK (destroyed_object_cb), ref);
 		ref->priv->ref_object = obj;
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit (G_OBJECT (ref), gda_object_ref_signals[REF_FOUND], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
 	}
@@ -966,11 +966,11 @@ gda_object_ref_deactivate (GdaObjectRef *ref)
 	ref->priv->ref_object = NULL;
 
 	if (! ref->priv->block_signals) {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'REF_LOST' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit (G_OBJECT (ref), gda_object_ref_signals[REF_LOST], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'REF_LOST' from %s\n", __FUNCTION__);
 #endif
 	}
@@ -998,7 +998,7 @@ gda_object_ref_is_active (GdaObjectRef *ref)
 }
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_object_ref_dump (GdaObjectRef *ref, guint offset)
 {

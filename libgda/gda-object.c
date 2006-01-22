@@ -180,7 +180,7 @@ gda_object_class_init (GdaObjectClass * class)
 
 	/* virtual functions */
 	class->signal_changed = NULL;
-#ifdef debug
+#ifdef GDA_DEBUG
 	class->dump = NULL;
 #endif
 
@@ -386,11 +386,11 @@ gda_object_set_id (GdaObject *gdaobj, const gchar *strid)
 	if (real_class->id_unique_enforced)
 		gda_dict_declare_object_string_id_change (gdaobj->priv->dict, gdaobj, oldid);
 	
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'ID_CHANGED' from %s %p\n", G_OBJECT_TYPE_NAME (gdaobj), gdaobj);
 #endif
 	g_signal_emit (G_OBJECT (gdaobj), gda_object_signals[ID_CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'ID_CHANGED' from %s %p\n", G_OBJECT_TYPE_NAME (gdaobj), gdaobj);
 #endif
 	g_free (oldid);
@@ -424,11 +424,11 @@ gda_object_set_name (GdaObject *gdaobj, const gchar *name)
 	}
 
 	if (changed) {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'NAME_CHANGED' from %s %p\n", G_OBJECT_TYPE_NAME (gdaobj), gdaobj);
 #endif
 		g_signal_emit (G_OBJECT (gdaobj), gda_object_signals[NAME_CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'NAME_CHANGED' from %s %p\n", G_OBJECT_TYPE_NAME (gdaobj), gdaobj);
 #endif
 	}
@@ -463,11 +463,11 @@ gda_object_set_description (GdaObject *gdaobj, const gchar *descr)
 	}
 
 	if (changed) {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'DESCR_CHANGED' from gda_object_set_descr (%s)\n", gdaobj->priv->descr);
 #endif
 		g_signal_emit (G_OBJECT (gdaobj), gda_object_signals[DESCR_CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'DESCR_CHANGED' from gda_object_set_descr (%s)\n", gdaobj->priv->descr);
 #endif
 	}
@@ -502,11 +502,11 @@ gda_object_set_owner (GdaObject *gdaobj, const gchar *owner)
 	}
 
 	if (changed) {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'OWNER_CHANGED' from gda_object_set_descr (%s)\n", gdaobj->priv->descr);
 #endif
 		g_signal_emit (G_OBJECT (gdaobj), gda_object_signals[OWNER_CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'OWNER_CHANGED' from gda_object_set_descr (%s)\n", gdaobj->priv->descr);
 #endif
 	}
@@ -615,19 +615,19 @@ gda_object_destroy (GdaObject *gdaobj)
 		 * signals */
 		g_object_ref (gdaobj);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'TO_BE_DESTROYED' from %s %p\n", G_OBJECT_TYPE_NAME (gdaobj), gdaobj);
 #endif
 		g_signal_emit (G_OBJECT (gdaobj), gda_object_signals[TO_BE_DESTROYED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'TO_BE_DESTROYED' from %p\n", gdaobj);
 #endif
 		gdaobj->priv->destroyed = TRUE;
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'DESTROYED' from %s %p\n", G_OBJECT_TYPE_NAME (gdaobj), gdaobj);
 #endif
 		g_signal_emit (G_OBJECT (gdaobj), gda_object_signals[DESTROYED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'DESTROYED' from %p\n", gdaobj);
 #endif
 
@@ -691,11 +691,11 @@ gda_object_changed (GdaObject *gdaobj)
 	if (gdaobj->priv->changed_locked)
 		return;
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'CHANGED' from %s %p\n", G_OBJECT_TYPE_NAME (gdaobj), gdaobj);
 #endif
 	g_signal_emit (G_OBJECT (gdaobj), gda_object_signals[CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'CHANGED' from %s %p\n", G_OBJECT_TYPE_NAME (gdaobj), gdaobj);
 #endif
 }
@@ -754,7 +754,7 @@ gda_object_unblock_changed (GdaObject *gdaobj)
 void
 gda_object_dump (GdaObject *gdaobj, guint offset)
 {
-#ifdef debug
+#ifdef GDA_DEBUG
 	gchar *str;
 	guint i;
 

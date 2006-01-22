@@ -378,11 +378,11 @@ gda_connection_close (GdaConnection *cnc)
 	if (! cnc->priv->is_open)
 		return;
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'CONN_TO_CLOSE' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_TO_CLOSE], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'CONN_TO_CLOSE' from %s\n", __FUNCTION__);
 #endif
 
@@ -408,11 +408,11 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 	gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
 	cnc->priv->is_open = FALSE;
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'CONN_CLOSED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_CLOSED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'CONN_CLOSED' from %s\n", __FUNCTION__);
 #endif
 }

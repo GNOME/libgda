@@ -48,7 +48,7 @@ static xmlNodePtr  gda_graph_item_save_to_xml (GdaXmlStorage *iface, GError **er
 static gboolean    gda_graph_item_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error);
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void        gda_graph_item_dump                (GdaGraphItem *graph, guint offset);
 #endif
 
@@ -155,7 +155,7 @@ gda_graph_item_class_init (GdaGraphItemClass * class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_graph_item_dump;
 #endif
 }
@@ -314,11 +314,11 @@ gda_graph_item_set_position (GdaGraphItem *item, gdouble x, gdouble y)
 	item->priv->x = x;
 	item->priv->y = y;
 	
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'MOVED' from %s::%s()\n", __FILE__, __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (item), gda_graph_item_signals[MOVED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'MOVED' from %s::%s()\n", __FILE__, __FUNCTION__);
 #endif
 }
@@ -361,7 +361,7 @@ gda_graph_item_get_ref_object (GdaGraphItem *item)
 	return gda_object_ref_get_ref_object (item->priv->ref_object);
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_graph_item_dump (GdaGraphItem *item, guint offset)
 {

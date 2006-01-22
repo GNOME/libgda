@@ -44,7 +44,7 @@ static void gda_dict_function_get_property (GObject *object,
 					     GValue *value,
 					     GParamSpec *pspec);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_dict_function_dump (GdaDictFunction *func, guint offset);
 #endif
 
@@ -140,7 +140,7 @@ gda_dict_function_class_init (GdaDictFunctionClass * class)
 					 g_param_spec_pointer ("prop", NULL, NULL, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_dict_function_dump;
 #endif
 
@@ -260,7 +260,7 @@ gda_dict_function_get_property (GObject *object,
 	}
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_dict_function_dump (GdaDictFunction *func, guint offset)
 {

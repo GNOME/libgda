@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <test_scenario>
   <dictionary name="DICT_Sales_postgres.xml"/>
+  <!--<dictionary name="DICT_empty.xml"/>-->
 
   <!-- SELECT -->
   <output_file name="SQL_SELECT_result.html" descr="SELECT queries testing"/>
@@ -127,6 +128,10 @@
     <test sql="SELECT c.name FROM (SELECT name FROM customers) AS c" parsed="1" rendered="SELECT c.name FROM (SELECT t1.name FROM customers AS t1 ) AS c"/>
   </test_group>
 
+  <test_group descr="Buggy ones">
+    <test sql="SELECT o.id, c.name AS &quot;Customer name&quot;, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE o.customer= ## [:name=&quot;Customer&quot; :type=&quot;integer&quot;]" parsed="1"/>
+  </test_group>
+
   <!-- INSERT -->
   <output_file name="SQL_INSERT_result.html" descr="INSERT queries testing"/>
 
@@ -143,7 +148,7 @@
   <test_group descr="Basic UPDATE syntax">
     <test sql="update customers set 'id'=10" parsed="0"/>
     <test sql="update customers set id=10" parsed="1" rendered="UPDATE customers SET id=10"/>
-    <test sql="update customers set id=10, name='better' WHERE name='unknown'" parsed="1" rendered="UPDATE customers SET id=10, name='better' WHERE t1.name='unknown'"/>
+    <test sql="update customers set id=10, name='better' WHERE name='unknown'" parsed="1" rendered="UPDATE customers SET id=10, name='better' WHERE name='unknown'"/>
     <test sql="update customers set salesrep.id=10" parsed="0"/>
     <test sql="update customers set unknown=10" parsed="1" rendered="UPDATE customers SET unknown=10"/>
   </test_group>
@@ -152,9 +157,9 @@
   <output_file name="SQL_DELETE_result.html" descr="DELETE queries testing"/>
 
   <test_group descr="Basic DELETE syntax">
-    <test sql="delete FROM customers WHERE name='unknown'" parsed="1" rendered="DELETE FROM customers WHERE t1.name='unknown'"/>
+    <test sql="delete FROM customers WHERE name='unknown'" parsed="1" rendered="DELETE FROM customers WHERE name='unknown'"/>
     <test sql="delete FROM customers" parsed="1" rendered="DELETE FROM customers"/>
-    <test sql="delete FROM customers WHERE name='unknown' or not id=12 AND name='john'" parsed="1" rendered="DELETE FROM customers WHERE t1.name='unknown' OR NOT (t1.id=12) AND t1.name='john'"/>
-    <test sql="delete FROM customers WHERE name='unknown' or not (id=12 AND name='john')" parsed="1" rendered="DELETE FROM customers WHERE t1.name='unknown' OR NOT (t1.id=12 AND t1.name='john')"/>
+    <test sql="delete FROM customers WHERE name='unknown' or not id=12 AND name='john'" parsed="1" rendered="DELETE FROM customers WHERE name='unknown' OR NOT (id=12) AND name='john'"/>
+    <test sql="delete FROM customers WHERE name='unknown' or not (id=12 AND name='john')" parsed="1" rendered="DELETE FROM customers WHERE name='unknown' OR NOT (id=12 AND name='john')"/>
   </test_group>
 </test_scenario>

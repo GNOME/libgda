@@ -57,7 +57,7 @@ static xmlNodePtr  gda_graph_save_to_xml (GdaXmlStorage *iface, GError **error);
 static gboolean    gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error);
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void        gda_graph_dump                (GdaGraph *graph, guint offset);
 #endif
 
@@ -191,7 +191,7 @@ gda_graph_class_init (GdaGraphClass * class)
 							   1, G_MAXINT, 1, G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_graph_dump;
 #endif
 }
@@ -289,11 +289,11 @@ destroyed_item_cb (GdaGraphItem *item, GdaGraph *graph)
 					      G_CALLBACK (graph_item_moved_cb) , graph);
 
 	graph->priv->graph_items = g_slist_remove (graph->priv->graph_items, item);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'ITEM_DROPPED' from %s::%s()\n", __FILE__, __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (graph), gda_graph_signals [ITEM_DROPPED], 0, item);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'ITEM_DROPPED' from %s::%s()\n", __FILE__, __FUNCTION__);
 #endif
 	g_object_unref (G_OBJECT (item));
@@ -478,11 +478,11 @@ gda_graph_add_item (GdaGraph *graph, GdaGraphItem *item)
 	gda_object_connect_destroy (item, G_CALLBACK (destroyed_item_cb), graph);
 	g_signal_connect (G_OBJECT (item), "moved",
 			  G_CALLBACK (graph_item_moved_cb), graph);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'ITEM_ADDED' from %s::%s()\n", __FILE__, __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (graph), gda_graph_signals [ITEM_ADDED], 0, item);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'ITEM_ADDED' from %s::%s()\n", __FILE__, __FUNCTION__);
 #endif
 }
@@ -490,11 +490,11 @@ gda_graph_add_item (GdaGraph *graph, GdaGraphItem *item)
 static void
 graph_item_moved_cb (GdaGraphItem *item, GdaGraph *graph)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'ITEM_MOVED' from %s::%s()\n", __FILE__, __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (graph), gda_graph_signals [ITEM_MOVED], 0, item);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'ITEM_MOVED' from %s::%s()\n", __FILE__, __FUNCTION__);
 #endif
 }
@@ -516,7 +516,7 @@ gda_graph_del_item (GdaGraph *graph, GdaGraphItem *item)
 	destroyed_item_cb (item, graph);
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_graph_dump (GdaGraph *graph, guint offset)
 {

@@ -87,7 +87,7 @@ static GSList   *gda_query_field_value_get_params (GdaQueryField *qfield);
 static gboolean gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameterList *context,
 					       const GdaValue **value_found, GdaParameter **param_source);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset);
 #endif
 
@@ -253,7 +253,7 @@ gda_query_field_value_class_init (GdaQueryFieldValueClass * class)
                                          g_param_spec_string ("handler_plugin", NULL, NULL, NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_field_value_dump;
 #endif
 	GDA_QUERY_FIELD_CLASS (class)->copy = gda_query_field_value_copy;
@@ -883,7 +883,7 @@ gda_query_field_value_get_dict_type (GdaQueryFieldValue *field)
 	return field->priv->dict_type;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset)
 {
@@ -911,7 +911,7 @@ gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset)
 		if (field->priv->is_parameter) 
 			g_print ("is param, ");
 
-		if (gda_query_field_value_is_active (GDA_REFERER (field)))
+		if (gda_referer_is_active (GDA_REFERER (field)))
 			g_print ("Active, ");
 		else
 			g_print (D_COL_ERR "Inactive" D_COL_NOR ", ");
@@ -1340,7 +1340,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 					if (prov)
 						dh = gda_server_provider_get_data_handler_gda (prov, cnc, 
 											       field->priv->gda_type);
-					else
+					if (!dh)
 						dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
 					str = gda_data_handler_get_sql_from_value (dh, value);
 				}
@@ -1374,6 +1374,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 									       field->priv->gda_type);
 			else
 				dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
+			g_assert (dh);
 			str = gda_data_handler_get_sql_from_value (dh, value);
 		}
 		else

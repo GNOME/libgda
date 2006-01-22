@@ -78,7 +78,7 @@ static GObject     *gda_query_field_agg_copy           (GdaQueryField *orig);
 static gboolean     gda_query_field_agg_is_equal       (GdaQueryField *qfield1, GdaQueryField *qfield2);
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void         gda_query_field_agg_dump           (GdaQueryFieldAgg *agg, guint offset);
 #endif
 
@@ -232,7 +232,7 @@ gda_query_field_agg_class_init (GdaQueryFieldAggClass * class)
 							      G_PARAM_WRITABLE));
 
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_field_agg_dump;
 #endif
 	GDA_QUERY_FIELD_CLASS (class)->copy = gda_query_field_agg_copy;
@@ -598,7 +598,7 @@ gda_query_field_agg_get_args (GdaQueryFieldAgg *agg)
 		return NULL;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_query_field_agg_dump (GdaQueryFieldAgg *agg, guint offset)
 {

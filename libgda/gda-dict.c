@@ -436,11 +436,11 @@ gda_dict_class_init (GdaDictClass * class)
 static void
 dict_changed (GdaDict *dict, gpointer data)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'CHANGED' from %s()\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (dict), gda_dict_signals[CHANGED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'CHANGED' from %s()\n", __FUNCTION__);
 #endif	
 }
@@ -1102,12 +1102,12 @@ gda_dict_load_data_types (GdaDict *dict, xmlNodePtr types, GError **error)
 					gda_object_connect_destroy (type, G_CALLBACK (destroyed_data_type_cb), dict);
 					g_signal_connect (G_OBJECT (type), "changed",
 							  G_CALLBACK (updated_data_type_cb), dict);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 					g_print (">> 'DATA_TYPE_ADDED' from %s\n", __FUNCTION__);
 #endif
 					g_signal_emit (G_OBJECT (dict), gda_dict_signals[DATA_TYPE_ADDED],
 						       0, type);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 					g_print ("<< 'DATA_TYPE_ADDED' from %s\n", __FUNCTION__);
 #endif
 				}
@@ -1133,11 +1133,11 @@ destroyed_data_type_cb (GdaDictType *dt, GdaDict *dict)
         g_signal_handlers_disconnect_by_func (G_OBJECT (dt),
                                               G_CALLBACK (updated_data_type_cb), dict);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'DATA_TYPE_REMOVED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (dict), "data_type_removed", dt);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'DATA_TYPE_REMOVED' from %s\n", __FUNCTION__);
 #endif
 
@@ -1150,11 +1150,11 @@ destroyed_data_type_cb (GdaDictType *dt, GdaDict *dict)
 static void
 updated_data_type_cb (GdaDictType *dt, GdaDict *dict)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'DATA_TYPE_UPDATED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (dict), "data_type_updated", dt);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'DATA_TYPE_UPDATED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -1178,11 +1178,11 @@ gda_dict_load_procedures (GdaDict *dict, xmlNodePtr procs, GError **error)
 				gda_object_connect_destroy (func, G_CALLBACK (destroyed_function_cb), dict);
 				g_signal_connect (G_OBJECT (func), "changed",
 						  G_CALLBACK (updated_function_cb), dict);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 				g_print (">> 'FUNCTION_ADDED' from %s\n", __FUNCTION__);
 #endif
 				g_signal_emit_by_name (G_OBJECT (dict), "function_added", func);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 				g_print ("<< 'FUNCTION_ADDED' from %s\n", __FUNCTION__);
 #endif
 			}
@@ -1206,11 +1206,11 @@ destroyed_function_cb (GdaDictFunction *func, GdaDict *dict)
         g_signal_handlers_disconnect_by_func (G_OBJECT (func),
                                               G_CALLBACK (updated_function_cb), dict);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'FUNCTION_REMOVED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (dict), "function_removed", func);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'FUNCTION_REMOVED' from %s\n", __FUNCTION__);
 #endif
 
@@ -1220,11 +1220,11 @@ destroyed_function_cb (GdaDictFunction *func, GdaDict *dict)
 static void
 updated_function_cb (GdaDictFunction *func, GdaDict *dict)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'FUNCTION_UPDATED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (dict), "function_updated", func);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'FUNCTION_UPDATED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -1247,11 +1247,11 @@ gda_dict_load_aggregates (GdaDict *dict, xmlNodePtr aggs, GError **error)
 				gda_object_connect_destroy (agg, G_CALLBACK (destroyed_aggregate_cb), dict);
 				g_signal_connect (G_OBJECT (agg), "changed",
 						  G_CALLBACK (updated_aggregate_cb), dict);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 				g_print (">> 'AGGREGATE_ADDED' from %s\n", __FUNCTION__);
 #endif
 				g_signal_emit_by_name (G_OBJECT (dict), "aggregate_added", agg);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 				g_print ("<< 'AGGREGATE_ADDED' from %s\n", __FUNCTION__);
 #endif
 
@@ -1276,11 +1276,11 @@ destroyed_aggregate_cb (GdaDictAggregate *agg, GdaDict *dict)
         g_signal_handlers_disconnect_by_func (G_OBJECT (agg),
                                               G_CALLBACK (updated_aggregate_cb), dict);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'AGGREGATE_REMOVED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (dict), "aggregate_removed", agg);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'AGGREGATE_REMOVED' from %s\n", __FUNCTION__);
 #endif
         g_object_unref (G_OBJECT (agg));
@@ -1289,11 +1289,11 @@ destroyed_aggregate_cb (GdaDictAggregate *agg, GdaDict *dict)
 static void
 updated_aggregate_cb (GdaDictAggregate *agg, GdaDict *dict)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'AGGREGATE_UPDATED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit_by_name (G_OBJECT (dict), "aggregate_updated", agg);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'AGGREGATE_UPDATED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -1634,11 +1634,11 @@ query_weak_ref_notify (GdaDict *dict, GdaQuery *query)
 static void
 updated_query_cb (GdaQuery *query, GdaDict *dict)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'QUERY_UPDATED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (dict), "query_updated", query);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'QUERY_UPDATED' from %s\n", __FUNCTION__);
 #endif	
 }
@@ -1671,11 +1671,11 @@ gda_dict_assume_query (GdaDict *dict, GdaQuery *query)
 	g_signal_connect (G_OBJECT (query), "changed",
 			  G_CALLBACK (updated_query_cb), dict);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'QUERY_ADDED' from gda_dict_assume_query\n");
 #endif
 	g_signal_emit (G_OBJECT (dict), gda_dict_signals[QUERY_ADDED], 0, query);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'QUERY_ADDED' from gda_dict_assume_query\n");
 #endif
 }
@@ -1708,11 +1708,11 @@ gda_dict_unassume_query (GdaDict *dict, GdaQuery *query)
 						      G_CALLBACK (query_destroyed_cb), dict);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (query),
 						      G_CALLBACK (updated_query_cb), dict);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'QUERY_REMOVED' from gda_dict_unassume_query\n");
 #endif
 		g_signal_emit (G_OBJECT (dict), gda_dict_signals[QUERY_REMOVED], 0, query);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'QUERY_REMOVED' from gda_dict_unassume_query\n");
 #endif
 		g_object_unref (G_OBJECT (query));
@@ -1817,11 +1817,11 @@ graph_weak_ref_notify (GdaDict *dict, GdaGraph *graph)
 static void
 updated_graph_cb (GdaGraph *graph, GdaDict *dict)
 {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'GRAPH_UPDATED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (dict), "graph_updated", graph);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'GRAPH_UPDATED' from %s\n", __FUNCTION__);
 #endif
 }
@@ -1856,11 +1856,11 @@ gda_dict_assume_graph (GdaDict *dict, GdaGraph *graph)
 	g_signal_connect (G_OBJECT (graph), "changed",
 			  G_CALLBACK (updated_graph_cb), dict);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'GRAPH_ADDED' from gda_dict_assume_graph\n");
 #endif
 	g_signal_emit (G_OBJECT (dict), gda_dict_signals[GRAPH_ADDED], 0, graph);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'GRAPH_ADDED' from gda_dict_assume_graph\n");
 #endif
 }
@@ -1893,11 +1893,11 @@ gda_dict_unassume_graph (GdaDict *dict, GdaGraph *graph)
 						      G_CALLBACK (graph_destroyed_cb), dict);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (graph),
 						      G_CALLBACK (updated_graph_cb), dict);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'GRAPH_REMOVED' from gda_dict_unassume_graph\n");
 #endif
 		g_signal_emit (G_OBJECT (dict), gda_dict_signals[GRAPH_REMOVED], 0, graph);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'GRAPH_REMOVED' from gda_dict_unassume_graph\n");
 #endif
 		g_object_unref (G_OBJECT (graph));
@@ -2066,7 +2066,7 @@ gda_dict_get_database (GdaDict *dict)
 	return dict->priv->database;
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 /**
  * gda_dict_dump
  * @dict: a #GdaDict object
@@ -2084,7 +2084,7 @@ gda_dict_dump (GdaDict *dict)
 	g_print ("\n----------------- DUMPING START -----------------\n");
 	g_print (D_COL_H1 "GdaDict %p\n" D_COL_NOR, dict);
 	if (dict->priv->cnc) 
-		gda_connection_MIG_dump (dict->priv->cnc, 0);
+		g_print ("Connection: %p\n", dict->priv->cnc);
 
 	if (dict->priv->database)
 		gda_object_dump (GDA_OBJECT (dict->priv->database), 0);
@@ -2162,11 +2162,11 @@ gda_dict_update_dbms_data (GdaDict *dict, GError **error)
 	dict->priv->update_in_progress = TRUE;
         dict->priv->stop_update = FALSE;
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'DATA_UPDATE_STARTED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit (G_OBJECT (dict), gda_dict_signals[DATA_UPDATE_STARTED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'DATA_UPDATE_STARTED' from %s\n", __FUNCTION__);
 #endif
 	
@@ -2180,11 +2180,11 @@ gda_dict_update_dbms_data (GdaDict *dict, GError **error)
 	/* tables, fields, etc */
 	retval = gda_dict_database_update_dbms_data (dict->priv->database, error);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print (">> 'DATA_UPDATE_FINISHED' from %s\n", __FUNCTION__);
 #endif
         g_signal_emit (G_OBJECT (dict), gda_dict_signals[DATA_UPDATE_FINISHED], 0);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
         g_print ("<< 'DATA_UPDATE_FINISHED' from %s\n", __FUNCTION__);
 #endif
 
@@ -2344,11 +2344,11 @@ dict_data_type_update_list (GdaDict *dict, GError **error)
 						 G_CALLBACK (destroyed_data_type_cb), dict);
 			g_signal_connect (G_OBJECT (dt), "changed",
 					  G_CALLBACK (updated_data_type_cb), dict);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 			g_print (">> 'DATA_TYPE_ADDED' from %s\n", __FUNCTION__);
 #endif
 			g_signal_emit (G_OBJECT (dict), gda_dict_signals[DATA_TYPE_ADDED], 0, dt);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 			g_print ("<< 'DATA_TYPE_ADDED' from %s\n", __FUNCTION__);
 #endif
 		}
@@ -2593,11 +2593,11 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 			g_signal_connect (G_OBJECT (func), "changed",
 					  G_CALLBACK (updated_function_cb), dict);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 			g_print (">> 'FUNCTION_ADDED' from %s\n", __FUNCTION__);
 #endif
 			g_signal_emit_by_name (G_OBJECT (dict), "function_added", func);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 			g_print ("<< 'FUNCTION_ADDED' from %s\n", __FUNCTION__);
 #endif
 		}
@@ -2802,11 +2802,11 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 			g_signal_connect (G_OBJECT (agg), "changed",
 					  G_CALLBACK (updated_aggregate_cb), dict);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 			g_print (">> 'AGGREGATE_ADDED' from %s\n", __FUNCTION__);
 #endif
 			g_signal_emit_by_name (G_OBJECT (dict), "aggregate_added", agg);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 			g_print ("<< 'AGGREGATE_ADDED' from %s\n", __FUNCTION__);
 #endif
 		}
@@ -3167,11 +3167,11 @@ gda_dict_add_data_type_real (GdaDict *dict, GdaDictType *datatype)
 	gda_object_connect_destroy (datatype, G_CALLBACK (destroyed_data_type_cb), dict);
 	g_signal_connect (G_OBJECT (datatype), "changed",
 			  G_CALLBACK (updated_data_type_cb), dict);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'DATA_TYPE_ADDED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit (G_OBJECT (dict), gda_dict_signals[DATA_TYPE_ADDED], 0, datatype);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'DATA_TYPE_ADDED' from %s\n", __FUNCTION__);
 #endif
 }

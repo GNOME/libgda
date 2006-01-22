@@ -84,7 +84,7 @@ static void        destroyed_parent_cb (GObject *obj, GdaDictTable *table);
 static void        changed_field_cb    (GObject *obj, GdaDictTable *table);
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void        gda_dict_table_dump    (GdaDictTable *table, guint offset);
 #endif
 
@@ -201,7 +201,7 @@ gda_dict_table_class_init (GdaDictTableClass * class)
 					 g_param_spec_pointer ("database", NULL, NULL, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_dict_table_dump;
 #endif
 
@@ -256,11 +256,11 @@ destroyed_field_cb (GObject *obj, GdaDictTable *table)
 	g_hash_table_remove (table->priv->fields_hash, str);
 	g_free (str);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELD_REMOVED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (table), "field_removed", obj);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELD_REMOVED' from %s\n", __FUNCTION__);
 #endif
 
@@ -702,11 +702,11 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		}
 		else {
 			if (g_object_get_data (G_OBJECT (field), ".gda")) {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 				g_print (">> 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif
 				g_signal_emit_by_name (G_OBJECT (table), "field_updated", field);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 				g_print ("<< 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif 
 			}
@@ -891,11 +891,11 @@ gda_dict_table_add_field_at_pos (GdaDictTable *table, GdaDictField *field, gint 
 	g_signal_connect (G_OBJECT (field), "changed",
 			  G_CALLBACK (changed_field_cb), table);
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELD_ADDED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (table), "field_added", field);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELD_ADDED' from %s\n", __FUNCTION__);
 #endif	
 }
@@ -907,18 +907,18 @@ changed_field_cb (GObject *obj, GdaDictTable *table)
 	if (table->priv->is_updating) 
 		g_object_set_data (G_OBJECT (obj), ".gda", GINT_TO_POINTER (1));
 	else {
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print (">> 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif
 		g_signal_emit_by_name (G_OBJECT (table), "field_updated", obj);
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 		g_print ("<< 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif	
 	}
 }
 
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_dict_table_dump (GdaDictTable *table, guint offset)
 {
@@ -1083,11 +1083,11 @@ gda_dict_table_swap_fields (GdaEntity *iface, GdaEntityField *field1, GdaEntityF
 	ptr1->data = field2;
 	ptr2->data = field1;
 
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELDS_ORDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	g_signal_emit_by_name (G_OBJECT (iface), "fields_order_changed");
-#ifdef debug_signal
+#ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELDS_ORDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
 

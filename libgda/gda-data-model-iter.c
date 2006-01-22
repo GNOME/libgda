@@ -50,7 +50,7 @@ static void model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIte
 
 static void param_changed_cb (GdaParameterList *paramlist, GdaParameter *param);
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset);
 #endif
 
@@ -162,7 +162,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 							       "to the GdaDataModel", NULL, TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* virtual functions */
-#ifdef debug
+#ifdef GDA_DEBUG_NO
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_data_model_iter_dump;
 #endif
 }
@@ -587,7 +587,7 @@ gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col)
 	return g_slist_nth_data (((GdaParameterList *) iter)->parameters, col);
 }
 
-#ifdef debug
+#ifdef GDA_DEBUG
 static void
 gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset)
 {
@@ -607,40 +607,6 @@ gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset)
 
         /* dump */
         if (iter->priv) {
-		gchar *val;
-		dh = gda_dict_get_default_handler (dict, iter->priv->gda_type);
-                g_print ("%s" D_COL_H1 "GdaDataModelIter" D_COL_NOR " \"%s\" (%p, id=%s) ",
-                         str, gda_object_get_name (GDA_OBJECT (iter)), iter, 
-			 gda_object_get_id (GDA_OBJECT (iter)));
-		if (iter->priv->is_parameter) 
-			g_print ("is param, ");
-
-		if (gda_data_model_iter_is_active (GDA_REFERER (iter)))
-			g_print ("Active, ");
-		else
-			g_print (D_COL_ERR "Inactive" D_COL_NOR ", ");
-
-		if (gda_query_iter_is_visible (GDA_QUERY_ITER (iter)))
-			g_print ("Visible, ");
-		if (iter->priv->value) {
-			val = gda_data_handler_get_sql_from_value (dh, iter->priv->value);
-			g_print ("Value: %s ", val);
-			g_free (val);
-		}
-
-		if (iter->priv->default_value) {
-			GdaDataHandler *dhd;
-			dhd = gda_dict_get_default_handler (dict, gda_value_get_type (iter->priv->default_value));
-			val = gda_data_handler_get_sql_from_value (dhd, iter->priv->default_value);
-			g_print ("Default: %s ", val);
-			g_free (val);
-		}
-		g_print ("\n");
-
-		if (iter->priv->restrict_model) {
-			g_print ("%sValues restrictions: COLUMN %d\n", str, iter->priv->restrict_col);
-			gda_object_dump (GDA_OBJECT (iter->priv->restrict_model), offset+5);
-		}
 	}
         else
                 g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, iter);

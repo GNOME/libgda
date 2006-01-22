@@ -277,7 +277,7 @@ gnome_db_handler_compute_locale (GdaHandlerTime *hdl)
 	
 	/* computations */
 	if (!error) {
-#ifdef debug
+#ifdef GDA_DEBUG
 		gchar *strings[3];
 #endif
 		gint i;
@@ -306,7 +306,7 @@ gnome_db_handler_compute_locale (GdaHandlerTime *hdl)
 		now_tm = localtime (&now);
 		hdl->priv->str_locale->current_offset = ((now_tm->tm_year + 1900) / 100) * 100;
 
-#ifdef debug		
+#ifdef GDA_DEBUG		
 		for (i=0; i<3; i++) {
 			switch (hdl->priv->str_locale->dmy_order[i]) {
 			case G_DATE_MONTH:
