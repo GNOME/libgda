@@ -170,7 +170,7 @@ main (int argc, char **argv)
 	else
 		g_object_set (G_OBJECT (dict), "with_functions", TRUE, NULL);
 
-	g_print (_("Fetching meta-data from the DBMS server, this may take some time\n"));
+	g_print (_("Fetching meta-data from the DBMS server. This may take some time...\n"));
 
 	/* signal handlers for info display */
 	if (!silent)

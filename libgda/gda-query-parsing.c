@@ -611,7 +611,7 @@ parsed_create_insert_query (GdaQuery *query, sql_insert_statement *insert, GErro
 				g_set_error (error,
 					     GDA_QUERY_ERROR,
 					     GDA_QUERY_SQL_ANALYSE_ERROR,
-					     _("INSERT has more expression valuess than insert fields"));
+					     _("INSERT has more expression values than insert fields"));
 				has_error = TRUE;
 			}
 		}
@@ -1264,7 +1264,7 @@ parsed_create_field_query_field (GdaQuery *query, gboolean add_to_query,
 					g_set_error (error,
 						     GDA_QUERY_ERROR,
 						     GDA_QUERY_SQL_ANALYSE_ERROR,
-						     _("Non declared target '%s'"), table_alias);
+						     _("Non-declared target '%s'"), table_alias);
 					has_error = TRUE;
 				}
 				else {

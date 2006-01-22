@@ -727,7 +727,7 @@ gda_query_field_all_render_as_str (GdaRenderer *iface, GdaParameterList *context
 				       gda_query_target_get_alias (GDA_QUERY_TARGET (base)));
 	}
 	else
-		str = g_strdup (_("Non activated field"));
+		str = g_strdup (_("Non-activated field"));
 	return str;
 }
 

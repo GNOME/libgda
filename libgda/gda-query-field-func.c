@@ -1041,7 +1041,7 @@ gda_query_field_func_render_as_str (GdaRenderer *iface, GdaParameterList *contex
 
 	}
 	else 
-		str = g_strdup (_("Non activated function"));
+		str = g_strdup (_("Non-activated function"));
 	
 	return str;
 }

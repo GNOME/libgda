@@ -1497,7 +1497,7 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 		g_set_error (error,
 			     GDA_QUERY_CONDITION_ERROR,
 			     GDA_QUERY_CONDITION_XML_LOAD_ERROR,
-			     _("Missing Id attribute in <gda_query_cond>"));
+			     _("Missing ID attribute in <gda_query_cond>"));
 		return FALSE;
         }
 

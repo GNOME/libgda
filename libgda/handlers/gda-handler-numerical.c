@@ -128,7 +128,7 @@ gda_handler_numerical_init (GdaHandlerNumerical * hdl)
 	hdl->priv->valid_gda_types[10] = GDA_VALUE_TYPE_UINTEGER;
 
 	gda_object_set_name (GDA_OBJECT (hdl), _("InternalNumerical"));
-	gda_object_set_description (GDA_OBJECT (hdl), _("Numericals representation"));
+	gda_object_set_description (GDA_OBJECT (hdl), _("Numerical representation"));
 }
 
 static void

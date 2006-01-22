@@ -1,3 +1,30 @@
+2006-01-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #327797
+
+	* libgda/gda-server-provider-extra.c:
+	* libgda/gda-query.c (query_sql_forget, gda_query_add_target,
+	gda_query_render_as_sql, assert_coherence_data_modify_query,
+	assert_coherence_aggregate_query):
+	* libgda/gda-query-condition.c (gda_query_condition_load_from_xml):
+	* libgda/gda-query-field-agg.c (gda_query_field_agg_render_as_str):
+	* libgda/gda-query-field-all.c (gda_query_field_all_render_as_str):
+	* libgda/gda-query-field-func.c (gda_query_field_func_render_as_str):
+	* libgda/gda-query-parsing.c (parsed_create_insert_query,
+	parsed_create_field_query_field):
+	* libgda/graph/gda-graph.c (gda_graph_load_from_xml):
+	* libgda/handlers/gda-handler-boolean.c (gda_handler_booler_init):
+	* libgda/handlers/gda-handler-numerical.c (gda_handler_numerical_init):
+	* providers/sybase/gda-sybase-provider.c
+	(gda_sybase_provider_process_sql_commands):
+	* providers/sybase/gda-sybase-recordset.c (gda_sybase_process_msg_result):
+	* providers/sybase/utils.c (sybase_add_cmsg_errors_to_list,
+	sybase_add_server_errors_to_list):
+	* testing/gda-author-dict-file.c (main):
+	* testing/gda-diagnose.c (detail_provider):
+	* testing/gda-test-sql.c (get_query_status, make_query_test): fixed
+	spelling/grammar errors.
+
 2006-01-18  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model-extra.h: new header file which contains declarations for

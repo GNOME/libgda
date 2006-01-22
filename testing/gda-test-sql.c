@@ -358,7 +358,7 @@ static const gchar *
 get_query_status (GdaQuery *query)
 {
 	if (gda_query_get_query_type (query) == GDA_QUERY_TYPE_NON_PARSED_SQL)
-		return _("non parsed");
+		return _("non-parsed");
 	
 	return gda_referer_activate (GDA_REFERER (query)) ? _("Active") : _("Inactive");
 }
@@ -391,7 +391,7 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 	is_non_parsed = (gda_query_get_query_type (query) == GDA_QUERY_TYPE_NON_PARSED_SQL);
 
 	if (is_non_parsed) {
-		td = xmlNewChild (tr, NULL, "td", error && error->message ? error->message : _("Unonown error"));
+		td = xmlNewChild (tr, NULL, "td", error && error->message ? error->message : _("Unknown error"));
 	}
 	else {
 		/* rendering */

@@ -218,7 +218,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 		if ( ret != CS_SUCCEED ) { 
 			error = gda_connection_event_new();
 			g_return_val_if_fail (error != NULL, FALSE);
-			gda_connection_event_set_description (error, _("An error occured when attempting to retrieve a client message"));
+			gda_connection_event_set_description (error, _("An error occurred when attempting to retrieve a client message"));
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					
@@ -328,7 +328,7 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 		if ( ret != CS_SUCCEED ) { 
 			error = gda_connection_event_new();
 			g_return_val_if_fail (error != NULL, FALSE);
-			gda_connection_event_set_description (error, _("An error occured when attempting to retrieve a server message"));
+			gda_connection_event_set_description (error, _("An error occurred when attempting to retrieve a server message"));
 			gda_connection_event_set_code (error, -1);
 			gda_connection_event_set_source (error, "gda-sybase");
 			gda_connection_event_set_sqlstate (error, _("Not available"));					

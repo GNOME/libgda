@@ -972,7 +972,7 @@ gda_query_field_agg_render_as_str (GdaRenderer *iface, GdaParameterList *context
 
 	}
 	else 
-		str = g_strdup (_("Non activated aggregate"));
+		str = g_strdup (_("Non-activated aggregate"));
 	
 	return str;
 }

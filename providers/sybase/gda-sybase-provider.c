@@ -784,7 +784,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 					if ( ret != CS_SUCCEED ) {
 						error = gda_connection_event_new();
 						g_return_val_if_fail (error != NULL, FALSE);
-						gda_connection_event_set_description (error, _("An error occured when attempting to test if there is a server message for resultset"));
+						gda_connection_event_set_description (error, _("An error occurred when attempting to test if there is a server message for resultset"));
 						gda_connection_event_set_code (error, -1);
 						gda_connection_event_set_source (error, "gda-sybase");
 						gda_connection_event_set_sqlstate (error, _("Not available"));

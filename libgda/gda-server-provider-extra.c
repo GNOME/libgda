@@ -103,7 +103,7 @@ GdaSchemaColData fields_spec [] = {
 };
 
 GdaSchemaColData indexes_spec [] = {
-	{ N_("Indexe"), GDA_VALUE_TYPE_STRING}
+	{ N_("Index"), GDA_VALUE_TYPE_STRING}
 };
 
 GdaSchemaColData lang_spec [] = {

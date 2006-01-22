@@ -731,7 +731,7 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 		g_set_error (error,
 			     GDA_GRAPH_ERROR,
 			     GDA_GRAPH_XML_LOAD_ERROR,
-			     _("Missing Id attribute in <gda_graph>"));
+			     _("Missing ID attribute in <gda_graph>"));
 		return FALSE;
         }
 

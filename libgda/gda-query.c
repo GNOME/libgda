@@ -911,7 +911,7 @@ query_sql_forget (GdaQuery *query, GError **error)
 	/* return FALSE if we can't switch to non SQL mode */
 	if (query->priv->query_type == GDA_QUERY_TYPE_NON_PARSED_SQL) {
 		g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_STRUCTURE_ERROR, 
-			     _("Can't modify the structure of a non parsed SQL query"));
+			     _("Can't modify the structure of a non-parsed SQL query"));
 		return FALSE;
 	}
 
@@ -1762,7 +1762,7 @@ gda_query_add_target (GdaQuery *query, GdaQueryTarget *target, GError **error)
 			g_set_error (error,
 				     GDA_QUERY_ERROR,
 				     GDA_QUERY_TARGETS_ERROR,
-				     _("The query represented by a target must be a sub query of the current query"));
+				     _("The query represented by a target must be a sub-query of the current query"));
 			return FALSE;
 		}
 	}
@@ -1787,7 +1787,7 @@ gda_query_add_target (GdaQuery *query, GdaQueryTarget *target, GError **error)
 		g_set_error (error,
 			     GDA_QUERY_ERROR,
 			     GDA_QUERY_TARGETS_ERROR,
-			     _("Aggregation queries can't have any target, only sub queries"));
+			     _("Aggregation queries may only have sub-queries, not targets."));
 		return FALSE;
 		break;
 	default:
@@ -4162,7 +4162,7 @@ gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint op
 				g_set_error (error,
 					     GDA_QUERY_ERROR,
 					     GDA_QUERY_RENDER_ERROR,
-					     _("More than two sub queries for an EXCEPT query"));
+					     _("More than two sub-queries for an EXCEPT query"));
 			else
 				sql = render_sql_except (query, context, options, error);
 		}
@@ -4411,7 +4411,7 @@ assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, 
 				g_set_error (error,
 					     GDA_QUERY_ERROR,
 					     GDA_QUERY_RENDER_ERROR,
-					     _("Insertion query fields incompatible with sub query's fields"));
+					     _("Insertion query fields incompatible with sub-query's fields"));
 				retval = FALSE;
 			}
 		}
@@ -4442,7 +4442,7 @@ assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, 
 			g_set_error (error,
 				     GDA_QUERY_ERROR,
 				     GDA_QUERY_RENDER_ERROR,
-				     _("Insertion query can't have any condition"));
+				     _("Insertion query can't have any conditions"));
 			retval = FALSE;
 		}
 	}
@@ -4504,7 +4504,7 @@ assert_coherence_aggregate_query (GdaQuery *query, GdaParameterList *context, GE
 		g_set_error (error,
 			     GDA_QUERY_ERROR,
 			     GDA_QUERY_RENDER_ERROR,
-			     _("An aggregate type (UNION, etc) of query can't have any target"));
+			     _("An aggregate type (UNION, etc) of query can't have any targets"));
 		retval = FALSE;
 	}
 
@@ -4512,7 +4512,7 @@ assert_coherence_aggregate_query (GdaQuery *query, GdaParameterList *context, GE
 		g_set_error (error,
 			     GDA_QUERY_ERROR,
 			     GDA_QUERY_RENDER_ERROR,
-			     _("An aggregate type (UNION, etc) of query can't have any condition"));
+			     _("An aggregate type (UNION, etc) of query can't have any conditions"));
 		retval = FALSE;
 	}
 

@@ -314,11 +314,11 @@ detail_provider (TestConfig *config, const gchar *provider)
 	if (info->dsn_spec) {
 		xmlNodePtr tt;
 
-		node = xmlNewChild (ul, NULL, "li", _("Detailled data source's parameters"));
+		node = xmlNewChild (ul, NULL, "li", _("Detailed data source's parameters"));
 		tt = xmlNewChild (node, NULL, "pre", info->dsn_spec);
 	}
 	else {
-		node = xmlNewChild (ul, NULL, "li", _("Detailled data source's parameters: none provided"));
+		node = xmlNewChild (ul, NULL, "li", _("Detailed data source's parameters: none provided"));
 		html_mark_node_error (HTML_CONFIG (config), node);
 	}
 
