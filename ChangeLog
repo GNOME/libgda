@@ -1,3 +1,12 @@
+2006-01-25  Bas Driessen <bas.driessen@xobas.com>
+
+	* configure.in: require glib >= 2.6.0.
+	* testing/gda-diagnose.c (main):
+	* testing/gda-test-models.c (main):
+	* testing/gda-test-sql.c (main):
+	use functions g_mkdir() and access() to stay compatible with
+	glib 2.6.
+
 2006-01-22  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-query*: corrected bugs which prevented creation of queries when no

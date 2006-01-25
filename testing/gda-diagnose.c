@@ -69,12 +69,12 @@ gint main (int argc, char **argv) {
 		str = g_strdup_printf ("./%s", dir);
 
 	if (g_file_test (dir, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)) {
-		if (g_access (dir, W_OK))
+		if (access (dir, W_OK))
 			g_error ("Can't write to %s", dir);
 		g_print ("Output dir '%s' exists and is writable\n", str);
 	}
 	else {
-		if (g_mkdir_with_parents (dir, 0700))
+		if (g_mkdir (dir, 0700))
 			g_error ("Can't create directory %s", dir);
 		g_print ("Output dir '%s' created\n", str);
 	}
