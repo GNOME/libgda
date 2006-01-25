@@ -237,6 +237,33 @@ It implements the #GdaEntity, #GdaXmlStorage, #GdaReferer and #GdaRenderer inter
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_query_is_insert_query ##### -->
+<para>
+
+</para>
+
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_is_update_query ##### -->
+<para>
+
+</para>
+
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_is_delete_query ##### -->
+<para>
+
+</para>
+
+@query: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_query_is_modif_query ##### -->
 <para>
 

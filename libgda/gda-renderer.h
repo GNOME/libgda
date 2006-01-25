@@ -1,6 +1,6 @@
 /* gda-renderer.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -35,9 +35,10 @@ G_BEGIN_DECLS
 
 /* rendering options */
 typedef enum {
-	GDA_RENDERER_EXTRA_PRETTY_SQL   = 1 << 0,
-	GDA_RENDERER_EXTRA_VAL_ATTRS    = 1 << 1,
-	GDA_RENDERER_ERROR_IF_DEFAULT   = 1 << 2
+	GDA_RENDERER_EXTRA_PRETTY_SQL       = 1 << 0,
+	GDA_RENDERER_EXTRA_VAL_ATTRS        = 1 << 1,
+	GDA_RENDERER_ERROR_IF_DEFAULT       = 1 << 2,
+	GDA_RENDERER_FIELDS_NO_TARGET_ALIAS = 1 << 3
 } GdaRendererOptions;
 
 /* struct for the interface */

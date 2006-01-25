@@ -45,7 +45,7 @@ void         parse_data_compute_targets_hash (GdaQuery *query, ParseData *pdata)
 gboolean     parsed_create_select_query       (GdaQuery *query, sql_select_statement *select, GError **error);
 gboolean     parsed_create_update_query       (GdaQuery *query, sql_update_statement *update, GError **error);
 gboolean     parsed_create_insert_query       (GdaQuery *query, sql_insert_statement *insert, GError **error);
-gboolean     parsed_create_delete_query       (GdaQuery *query, sql_delete_statement *delete, GError **error);
+gboolean     parsed_create_delete_query       (GdaQuery *query, sql_delete_statement *del, GError **error);
 
 GdaEntityField    *parsed_create_global_query_field (GdaQuery *query, gboolean add_to_query,
 						     ParseData *pdata, sql_field *field,

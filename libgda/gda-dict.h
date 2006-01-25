@@ -125,7 +125,7 @@ gboolean        gda_dict_save_xml_file       (GdaDict *dict, const gchar *xmlfil
 
 /* GdaDictType manipulations */
 GSList         *gda_dict_get_data_types            (GdaDict *dict);
-GdaDictType    *gda_dict_get_data_type_by_name     (GdaDict *dict, const gchar *typename);
+GdaDictType    *gda_dict_get_data_type_by_name     (GdaDict *dict, const gchar *type_name);
 GdaDictType    *gda_dict_get_data_type_by_xml_id   (GdaDict *dict, const gchar *xml_id);
 gboolean        gda_dict_declare_custom_data_type  (GdaDict *dict, GdaDictType *type);
 

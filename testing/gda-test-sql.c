@@ -209,10 +209,11 @@ test_and_destroy_dict (TestConfig *config)
 					g_free (chout);
 					g_free (cherr);
 				}
+
 				g_free (dictfile2);
+				g_unlink (dictfile);
 			}
 			g_object_unref (loaded_dict);
-			g_unlink (dictfile);
 		}
 		g_free (dictfile);
 
@@ -291,7 +292,7 @@ test_all_queries (TestConfig *config)
 			xmlSetProp (td, "width", "5%");
 			td = xmlNewChild (tr, NULL, "th", _("Query Status"));
 			xmlSetProp (td, "width", "5%");
-			td = xmlNewChild (tr, NULL, "th", _("Rendered SQL / error if parsing is not done"));
+			td = xmlNewChild (tr, NULL, "th", _("Rendered SQL"));
 			xmlSetProp (td, "width", "85%");
 			g_free (descr);
 
@@ -363,13 +364,14 @@ get_query_status (GdaQuery *query)
 	return gda_referer_activate (GDA_REFERER (query)) ? _("Active") : _("Inactive");
 }
 
+static void show_params (GdaQuery *query, xmlNodePtr parent);
 static void
 make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gchar *rendered, xmlNodePtr table)
 {
 	GdaQuery *query;
         GError *error = NULL;
 	xmlNodePtr tr, td, actiontd;
-	gchar *sql2;
+	gchar *sql2, *str;
 	gboolean is_non_parsed;
 
 	query = (GdaQuery *) gda_query_new_from_sql (config->dict, sql, &error);
@@ -380,73 +382,57 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 	td = xmlNewChild (tr, NULL, "td", sql);
 	xmlSetProp (td, "colspan", "4");
 
-	/* first parsing */
+	/* first: parsing */
 	tr = xmlNewChild (table, NULL, "tr", NULL);
 	actiontd = xmlNewChild (tr, NULL, "td", _("Parsing"));
 	td = xmlNewChild (tr, NULL, "td", gda_object_get_id (GDA_OBJECT (query)));
-	td = xmlNewChild (tr, NULL, "td", get_query_status (query));
+	is_non_parsed = (gda_query_get_query_type (query) == GDA_QUERY_TYPE_NON_PARSED_SQL);
+	if (is_non_parsed)
+		str = g_strdup_printf ("%s: %s", get_query_status (query),
+				       error && error->message ? error->message : _("Unknown error"));
+	else
+		str = g_strdup (get_query_status (query));
+	td = xmlNewChild (tr, NULL, "td", str);
+	g_free (str);
+
 	if (!gda_referer_activate (GDA_REFERER (query)))
 		xmlSetProp (td, "id", "inactive");
 
-	is_non_parsed = (gda_query_get_query_type (query) == GDA_QUERY_TYPE_NON_PARSED_SQL);
-
-	if (is_non_parsed) {
-		td = xmlNewChild (tr, NULL, "td", error && error->message ? error->message : _("Unknown error"));
-	}
-	else {
+	/* 2nd: rendering */
+	sql2 = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 
+					   GDA_RENDERER_EXTRA_VAL_ATTRS, &error);
+	if (sql2) {
+		/* rendering OK */
+		GdaQuery *copy, *copy2;
+		gchar *sql3;
+		xmlNodePtr actiontd_c;
+		
+		g_strchomp (sql2);
+		td = xmlNewChild (tr, NULL, "td", sql2);
+		if (rendered && strcmp (sql2, rendered)) 
+			html_mark_node_error (HTML_CONFIG (config), td);
+		
+		if (!rendered && strcmp (sql2, sql))
+			html_mark_node_warning (HTML_CONFIG (config), td);
+		
+		show_params (query, td);
+		
+		/* copy test */
+		copy = (GdaQuery *) gda_query_new_copy (query, NULL);
+		copy2 = (GdaQuery *) gda_query_new_copy (copy, NULL);
+		tr = xmlNewChild (table, NULL, "tr", NULL);
+		actiontd_c = xmlNewChild (tr, NULL, "td", _("Copied"));
+		td = xmlNewChild (tr, NULL, "td", gda_object_get_id (GDA_OBJECT (copy2)));
+		td = xmlNewChild (tr, NULL, "td", get_query_status (copy2));
+		if (!gda_referer_activate (GDA_REFERER (copy2)))
+			xmlSetProp (td, "id", "inactive");
+		
 		/* rendering */
-		sql2 = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 
+		sql3 = gda_renderer_render_as_sql (GDA_RENDERER (copy2), NULL, 
 						   GDA_RENDERER_EXTRA_VAL_ATTRS, &error);
-		if (sql2) {
-			/* rendering OK */
-			GdaQuery *copy, *copy2;
-			gchar *sql3;
-			xmlNodePtr actiontd_c;
-			
-			g_strchomp (sql2);
-			td = xmlNewChild (tr, NULL, "td", sql2);
-			if (rendered && strcmp (sql2, rendered)) 
-				html_mark_node_error (HTML_CONFIG (config), td);
-			
-			if (!rendered && strcmp (sql2, sql))
-				html_mark_node_warning (HTML_CONFIG (config), td);
-			
-			/* copy test */
-			copy = (GdaQuery *) gda_query_new_copy (query, NULL);
-			copy2 = (GdaQuery *) gda_query_new_copy (copy, NULL);
-			g_object_unref (copy);
-			copy = copy2;
-			tr = xmlNewChild (table, NULL, "tr", NULL);
-			actiontd_c = xmlNewChild (tr, NULL, "td", _("Copied"));
-			td = xmlNewChild (tr, NULL, "td", gda_object_get_id (GDA_OBJECT (copy)));
-			td = xmlNewChild (tr, NULL, "td", get_query_status (copy));
-			if (!gda_referer_activate (GDA_REFERER (copy)))
-				xmlSetProp (td, "id", "inactive");
-			
-			/* rendering */
-			sql3 = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 
-							   GDA_RENDERER_EXTRA_VAL_ATTRS, &error);
+		if (sql3) {
 			g_strchomp (sql3);
-			if (sql3) 
-				td = xmlNewChild (tr, NULL, "td", sql3);
-			else {
-				/* rendering error */
-				td = xmlNewChild (tr, NULL, "td", 
-						  error && error->message ? error->message : "---");
-				html_mark_node_warning (HTML_CONFIG (config), td);
-			}
-			
-			/* validity test */
-			if (gda_query_get_query_type (query) != gda_query_get_query_type (copy))
-				html_mark_node_error (HTML_CONFIG (config), actiontd_c);
-			else {
-				if (strcmp (sql2, sql3))
-					html_mark_node_error (HTML_CONFIG (config), actiontd_c);
-			}
-			g_object_unref (copy);
-			
-			g_free (sql3);
-			g_free (sql2);
+			td = xmlNewChild (tr, NULL, "td", sql3);
 		}
 		else {
 			/* rendering error */
@@ -454,10 +440,60 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 					  error && error->message ? error->message : "---");
 			html_mark_node_warning (HTML_CONFIG (config), td);
 		}
+		
+		show_params (copy2, td);
+		
+		/* validity test */
+		if (gda_query_get_query_type (query) != gda_query_get_query_type (copy2))
+			html_mark_node_error (HTML_CONFIG (config), actiontd_c);
+		else {
+			if (!sql3 || strcmp (sql2, sql3)) 
+				html_mark_node_error (HTML_CONFIG (config), actiontd_c);
+		}
+		g_object_unref (copy);
+		g_object_unref (copy2);
+		
+		g_free (sql3);
+		g_free (sql2);
 	}
-
+	else {
+		/* rendering error */
+		td = xmlNewChild (tr, NULL, "td", 
+				  error && error->message ? error->message : "---");
+		html_mark_node_warning (HTML_CONFIG (config), td);
+		show_params (query, td);
+	}
+	
 	/* test validity */
 	if ((parsed && is_non_parsed) ||
 	    (!parsed && !is_non_parsed))
 		html_mark_node_error (HTML_CONFIG (config), actiontd);
+
+}
+
+static void
+show_params (GdaQuery *query, xmlNodePtr parent)
+{
+	GdaParameterList *params;
+
+	params = gda_entity_get_param_list (GDA_ENTITY (query));
+	if (params) {
+		xmlNodePtr pul;
+		GSList *list;
+
+		pul = xmlNewChild (parent, NULL, "ul", NULL);
+
+		list = params->parameters;
+		while (list) {
+			gchar *str;
+
+			str = g_strdup_printf ("Parameter \"%s\": %s",
+					       gda_object_get_name (GDA_OBJECT (list->data)),
+					       gda_type_to_string (gda_parameter_get_gda_type (GDA_PARAMETER (list->data))));
+			xmlNewChild (pul, NULL, "li", str);
+			g_free (str);
+			list = g_slist_next (list);
+		}
+		g_object_unref (G_OBJECT (params));
+	}	
 }

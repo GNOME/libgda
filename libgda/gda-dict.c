@@ -690,10 +690,9 @@ gda_dict_declare_object_string_id_change (GdaDict *dict, GdaObject *obj, const g
 	}
 	
 	strid = gda_object_get_id (obj);
-	if (!strid || !(*strid)) {
-		g_warning ("Object has no string ID");
+	if (!strid || !(*strid))
+		/* stop here if no Id */
 		return;
-	}
 
 	exobj = g_hash_table_lookup (dict->priv->object_ids, strid);
 	if (exobj) {
@@ -3087,27 +3086,27 @@ gda_dict_get_data_types (GdaDict *dict)
 /**
  * gda_dict_get_data_type_by_name
  * @dict: a #GdaDict object
- * @typename: the name of the requested data type
+ * @type_name: the name of the requested data type
  *
  * Find a data type from its DBMS name or from one of its synonyms if it has some.
  *
  * Returns: the data type or %NULL if it cannot be found
  */
 GdaDictType  *
-gda_dict_get_data_type_by_name (GdaDict *dict, const gchar *typename)
+gda_dict_get_data_type_by_name (GdaDict *dict, const gchar *type_name)
 {
 	GSList *list;
 	GdaDictType *datatype = NULL;
 
 	g_return_val_if_fail (GDA_IS_DICT (dict), NULL);
 	g_return_val_if_fail (dict->priv, NULL);
-	g_return_val_if_fail (typename && *typename, NULL);
+	g_return_val_if_fail (type_name && *type_name, NULL);
 	
 	/* compare the data types names */
 	list = dict->priv->data_types;
 	while (list && !datatype) {
 		if (!strcmp (gda_dict_type_get_sqlname (GDA_DICT_TYPE (list->data)),
-			     typename))
+			     type_name))
 			datatype = GDA_DICT_TYPE (list->data);
 		list = g_slist_next (list);
 	}
@@ -3117,7 +3116,7 @@ gda_dict_get_data_type_by_name (GdaDict *dict, const gchar *typename)
 	while (list && !datatype) {
 		const GSList *synlist = gda_dict_type_get_synonyms (GDA_DICT_TYPE (list->data));
 		while (synlist && !datatype) {
-			if (!strcmp ((gchar *) (synlist->data), typename))
+			if (!strcmp ((gchar *) (synlist->data), type_name))
 				datatype = GDA_DICT_TYPE (list->data);
 			synlist = g_slist_next (synlist);
 		}

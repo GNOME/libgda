@@ -52,8 +52,8 @@ GdaDataModel     *gda_data_model_query_new            (GdaQuery *query);
 
 GdaParameterList *gda_data_model_query_get_param_list (GdaDataModelQuery *model);
 gboolean          gda_data_model_query_refresh        (GdaDataModelQuery *model, GError **error);
-gboolean          gda_data_model_query_set_alter_query(GdaDataModelQuery *model, 
-						       const gchar *query, GError **error);
+gboolean          gda_data_model_query_set_modification_query(GdaDataModelQuery *model, 
+							      const gchar *query, GError **error);
 
 
 G_END_DECLS

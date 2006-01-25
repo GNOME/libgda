@@ -1,6 +1,6 @@
 /* gda-sql-delimiter.h
  *
- * Copyright (C) 2004 Vivien Malerba
+ * Copyright (C) 2004 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -28,7 +28,7 @@
 
 typedef struct GdaDelimiterStatement        GdaDelimiterStatement;
 typedef struct GdaDelimiterExpr             GdaDelimiterExpr;
-typedef struct GdaDelimiterParamSpec           GdaDelimiterParamSpec;
+typedef struct GdaDelimiterParamSpec        GdaDelimiterParamSpec;
 
 /*
  * Type of parsed SQL
@@ -38,7 +38,8 @@ typedef enum
 	GDA_DELIMITER_SQL_SELECT,
 	GDA_DELIMITER_SQL_INSERT,
 	GDA_DELIMITER_SQL_DELETE,
-	GDA_DELIMITER_SQL_UPDATE
+	GDA_DELIMITER_SQL_UPDATE,
+	GDA_DELIMITER_UNKNOWN
 }
 GdaDelimiterStatementType;
 
@@ -49,9 +50,9 @@ GdaDelimiterStatementType;
 struct GdaDelimiterStatement
 {
 	GdaDelimiterStatementType  type;
-	char               *full_query;
-	GList              *expr_list;  /* list of GdaDelimiterExpr structures */
-	GList              *params_specs;/* list of GList of GdaDelimiterParamSpec structures */
+	char                      *full_query;
+	GList                     *expr_list;   /* list of GdaDelimiterExpr structures */
+	GList                     *params_specs;/* list of GList of GdaDelimiterParamSpec structures */
 };
 
 /*
@@ -91,6 +92,8 @@ int   gda_delimiter_destroy (GdaDelimiterStatement * statement);
 
 GdaDelimiterStatement *gda_delimiter_parse                (const char *sql_text);
 GdaDelimiterStatement *gda_delimiter_parse_with_error     (const char *sql_text, GError ** error);
+GdaDelimiterStatement *gda_delimiter_no_parse             (const char *sql_text);
+
 GdaDelimiterStatement *gda_delimiter_parse_copy_statement (GdaDelimiterStatement * statement);
 
 #endif

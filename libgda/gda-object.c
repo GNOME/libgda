@@ -234,6 +234,16 @@ gda_object_dispose (GObject *object)
 			gda_object_destroy (gdaobj);
 
 		if (gdaobj->priv->dict) {
+			GdaObjectClass *real_class;
+
+			real_class = (GdaObjectClass *) G_OBJECT_GET_CLASS (gdaobj);
+			if (real_class->id_unique_enforced && gdaobj->priv->id_string) {
+				gchar *oldid = gdaobj->priv->id_string;
+
+				gdaobj->priv->id_string = NULL;
+				gda_dict_declare_object_string_id_change (gdaobj->priv->dict, gdaobj, oldid);
+				g_free (oldid);
+			}
 			g_object_remove_weak_pointer (G_OBJECT (gdaobj->priv->dict),
 						      (gpointer) & (gdaobj->priv->dict));
 			gdaobj->priv->dict = NULL;

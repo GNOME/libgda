@@ -101,6 +101,9 @@ void               gda_query_set_query_type         (GdaQuery *query, GdaQueryTy
 GdaQueryType       gda_query_get_query_type         (GdaQuery *query);
 const gchar       *gda_query_get_query_type_string  (GdaQuery *query);
 gboolean           gda_query_is_select_query        (GdaQuery *query);
+gboolean           gda_query_is_insert_query        (GdaQuery *query);
+gboolean           gda_query_is_update_query        (GdaQuery *query);
+gboolean           gda_query_is_delete_query        (GdaQuery *query);
 gboolean           gda_query_is_modif_query         (GdaQuery *query);
 GdaQuery          *gda_query_get_parent_query       (GdaQuery *query);
 

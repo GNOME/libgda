@@ -558,6 +558,9 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 		g_object_get (G_OBJECT (gda_query), "target_serial", &id, NULL);
 		gda_query_object_set_int_id (GDA_QUERY_OBJECT (target), id);
 
+		gda_query_target_set_alias (target, 
+					    gda_query_target_get_alias ((GdaQueryTarget *) list->data));
+
 		g_object_unref (G_OBJECT (target));
 		g_hash_table_insert (repl, list->data, target);
 		list = g_slist_next (list);
@@ -572,6 +575,9 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 		gda_query_add_field (GDA_ENTITY (gda_query), GDA_ENTITY_FIELD (qf));
 		g_object_get (G_OBJECT (gda_query), "field_serial", &id, NULL);
 		gda_query_object_set_int_id (GDA_QUERY_OBJECT (qf), id);
+
+		gda_query_field_set_alias (qf,
+					   gda_query_field_get_alias ((GdaQueryField *) list->data));
 
 		g_object_unref (G_OBJECT (qf));
 		g_hash_table_insert (repl, list->data, qf);
@@ -1155,8 +1161,7 @@ gda_query_get_query_type_string  (GdaQuery *query)
  * gda_query_is_select_query
  * @query: a # GdaQuery object
  *
- * Tells if @query is a SELECTION query (a simple SELECT, UNION, INTERSECT or EXCEPT); pure SQL
- * queries are not handled and will always return FALSE.
+ * Tells if @query is a SELECTION query (a simple SELECT, UNION, INTERSECT or EXCEPT);
  *
  * Returns: TRUE if @query is a selection query
  */
@@ -1181,6 +1186,81 @@ gda_query_is_select_query (GdaQuery *query)
 }
 
 /**
+ * gda_query_is_insert_query
+ * @query: a # GdaQuery object
+ *
+ * Tells if @query is a INSERT query.
+ *
+ * Returns: TRUE if @query is an insertion query
+ */
+gboolean
+gda_query_is_insert_query (GdaQuery *query)
+{
+	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (query->priv, FALSE);
+
+	if ((query->priv->query_type == GDA_QUERY_TYPE_INSERT))
+		return TRUE;
+	else {
+		if ((query->priv->query_type == GDA_QUERY_TYPE_NON_PARSED_SQL) &&
+		    ! g_ascii_strncasecmp (query->priv->sql, "insert into ", 12))
+			return TRUE;
+		else
+			return FALSE;
+	}
+}
+
+/**
+ * gda_query_is_update_query
+ * @query: a # GdaQuery object
+ *
+ * Tells if @query is a UPDATE query.
+ *
+ * Returns: TRUE if @query is an update query
+ */
+gboolean
+gda_query_is_update_query (GdaQuery *query)
+{
+	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (query->priv, FALSE);
+
+	if ((query->priv->query_type == GDA_QUERY_TYPE_UPDATE))
+		return TRUE;
+	else {
+		if ((query->priv->query_type == GDA_QUERY_TYPE_NON_PARSED_SQL) &&
+		    ! g_ascii_strncasecmp (query->priv->sql, "update ", 7))
+			return TRUE;
+		else
+			return FALSE;
+	}
+}
+
+/**
+ * gda_query_is_delete_query
+ * @query: a # GdaQuery object
+ *
+ * Tells if @query is a DELETE query.
+ *
+ * Returns: TRUE if @query is an delete query
+ */
+gboolean
+gda_query_is_delete_query (GdaQuery *query)
+{
+	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (query->priv, FALSE);
+
+	if ((query->priv->query_type == GDA_QUERY_TYPE_DELETE))
+		return TRUE;
+	else {
+		if ((query->priv->query_type == GDA_QUERY_TYPE_NON_PARSED_SQL) &&
+		    ! g_ascii_strncasecmp (query->priv->sql, "delete from ", 12))
+			return TRUE;
+		else
+			return FALSE;
+	}
+}
+
+/**
  * gda_query_is_modif_query
  * @query: a # GdaQuery object
  *
@@ -1195,9 +1275,9 @@ gda_query_is_modif_query (GdaQuery *query)
 	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
 	g_return_val_if_fail (query->priv, FALSE);
 
-	if ((query->priv->query_type == GDA_QUERY_TYPE_INSERT) ||
-	    (query->priv->query_type == GDA_QUERY_TYPE_DELETE) ||
-	    (query->priv->query_type == GDA_QUERY_TYPE_UPDATE))
+	if (gda_query_is_delete_query (query) ||
+	    gda_query_is_insert_query (query) ||
+	    gda_query_is_update_query (query))
 		return TRUE;
 	else
 		return FALSE;
@@ -1263,8 +1343,10 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 		}
 		sql_destroy (result);
 	}
+	else
+		err = TRUE;
 
-	if (!result || err) {
+	if (err) {
 		GdaDelimiterStatement *stm;
 		GError *local_error = NULL; /* we don't care about the error, but we don't want any output to stderr */
 
@@ -1291,21 +1373,28 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 			params = stm->params_specs;
 			while (params && allok) {
 				GdaDictType *dtype = NULL;
+				GdaValueType gtype = GDA_VALUE_TYPE_UNKNOWN;
 				GList *pspecs = (GList *)(params->data);
 				
 				while (pspecs && !dtype) {
-					if (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->type == GDA_DELIMITER_PARAM_TYPE) 
+					if (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->type == GDA_DELIMITER_PARAM_TYPE) {
 						dtype = gda_dict_get_data_type_by_name (dict,
 							      GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
+						if (!dtype) 
+							gtype = gda_type_from_string (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
+						else
+							gtype = gda_dict_type_get_gda_type (dtype);
+					}
 					pspecs = g_list_next (pspecs);
 				}
-				if (dtype) {
+
+				if (gtype != GDA_VALUE_TYPE_UNKNOWN) {
 					GdaQueryField *field;
 
 					/* create the #GdaQueryFieldValue fields */
-					field = GDA_QUERY_FIELD (gda_query_field_value_new (query, 
-											    gda_dict_type_get_gda_type (dtype)));
-					gda_query_field_value_set_dict_type (GDA_QUERY_FIELD_VALUE (field), dtype);
+					field = GDA_QUERY_FIELD (gda_query_field_value_new (query, gtype));
+					if (dtype)
+						gda_query_field_value_set_dict_type (GDA_QUERY_FIELD_VALUE (field), dtype);
 					gda_query_field_set_internal (field, TRUE);
 					gda_query_field_set_visible (field, FALSE);
 					gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (field));
@@ -1353,7 +1442,15 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 			else {
 				gda_delimiter_destroy (stm);
 				gda_query_clean (query);
+
+				gda_query_set_query_type (query, GDA_QUERY_TYPE_NON_PARSED_SQL);
+				stm = gda_delimiter_no_parse (sql);
+				query->priv->sql_exprs = stm;
 			}
+		}
+		else {
+			stm = gda_delimiter_no_parse (sql);
+			query->priv->sql_exprs = stm;	
 		}
 	}
 
@@ -4989,9 +5086,12 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 			
 			if (add_field) {
 				gchar *tmpstr;
-				tmpstr = gda_query_field_field_get_ref_field_name (GDA_QUERY_FIELD_FIELD (list->data));
-				if (tmpstr)
+				tmpstr = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, 
+								     options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, NULL);
+				if (tmpstr) {
 					printed_fields = g_slist_append (printed_fields, list->data);
+					g_free (tmpstr);
+				}
 				printed_values = g_slist_append (printed_values, str);
 			}
 			else
@@ -5040,6 +5140,8 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 		first = TRUE;
 		while (list) {
 			GdaEntityField *field;
+			gchar *tmpstr;
+
 			if (first) 
 				first = FALSE;
 			else {
@@ -5048,8 +5150,10 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 				else
 					g_string_append (sql, ", ");
 			}
-			g_string_append (sql, 
-					 gda_query_field_field_get_ref_field_name (GDA_QUERY_FIELD_FIELD (list->data)));
+			tmpstr = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, 
+							     options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, NULL);
+			g_string_append (sql, tmpstr);
+			g_free (tmpstr);
 			
 			list = g_slist_next (list);
 		}
@@ -5132,6 +5236,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 	while (list && !err) {
 		if (gda_query_field_is_visible (GDA_QUERY_FIELD (list->data))) {
 			GdaEntityField *field, *value_prov;
+			gchar *str;
 			if (first) 
 				first = FALSE;
 			else {
@@ -5140,24 +5245,14 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 				else
 					g_string_append (sql, ", ");
 			}
-			field = gda_query_field_field_get_ref_field (GDA_QUERY_FIELD_FIELD (list->data));
-			if (field)
-				g_string_append (sql, gda_entity_field_get_name (field));
-			else {
-				gchar *str;
-				str = gda_query_field_field_get_ref_field_name (GDA_QUERY_FIELD_FIELD (list->data));
-				if (str) {
-					g_string_append (sql, str);
-					g_free (str);
-				}
-				else {
-					g_set_error (error,
-						     GDA_QUERY_ERROR,
-						     GDA_QUERY_RENDER_ERROR,
-						     _("Can't render field as SQL"));
-					err = TRUE;
-				}
+			str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context,
+							  options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, error);
+			if (str) {
+				g_string_append (sql, str);
+				g_free (str);
 			}
+			else
+				err = TRUE;
 			g_string_append (sql, "=");
 
 			g_object_get (G_OBJECT (list->data), "value_provider", &value_prov, NULL);
@@ -5197,7 +5292,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 		else
 			g_string_append (sql, "WHERE ");
 		str = gda_renderer_render_as_sql (GDA_RENDERER (query->priv->cond), context, 
-						 options, error);
+						  options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, error);
 		if (str) {
 			g_string_append (sql, str);
 			g_free (str);
@@ -5237,7 +5332,7 @@ render_sql_delete (GdaQuery *query, GdaParameterList *context, guint options, GE
 		gchar *str;
 		g_string_append (sql, " WHERE ");
 		str = gda_renderer_render_as_sql (GDA_RENDERER (query->priv->cond), context, 
-						 options, error);
+						  options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, error);
 		if (str) {
 			g_string_append (sql, str);
 			g_free (str);

@@ -1016,7 +1016,7 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 	}
 
 	dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
-	if (field->priv->value) {
+	if (field->priv->value && (field->priv->gda_type != GDA_VALUE_TYPE_NULL)) {
 		str = gda_data_handler_get_str_from_value (dh, field->priv->value);
 		xmlSetProp (node, "value", str);
 		g_free (str);
@@ -1119,6 +1119,9 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		field->priv->gda_type = gda_type_from_string (prop);
 		dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
 		g_free (prop);
+
+		if (field->priv->gda_type == GDA_VALUE_TYPE_NULL)
+			field->priv->value = gda_value_new_null ();
 	}
 
 	prop = xmlGetProp (node, "dict_type");
@@ -1201,7 +1204,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		g_free (prop);
 	}
 
-	if (!dh) {
+	if (!dh && (field->priv->gda_type != GDA_VALUE_TYPE_NULL)) {
 		err = TRUE;
 		g_set_error (error,
 			     GDA_QUERY_FIELD_VALUE_ERROR,
@@ -1336,7 +1339,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			}
 			if (!str) {
 				if (value && (gda_value_get_type ((GdaValue *)value) != GDA_VALUE_TYPE_NULL)) {
-					GdaDataHandler *dh;
+					GdaDataHandler *dh = NULL;
 					if (prov)
 						dh = gda_server_provider_get_data_handler_gda (prov, cnc, 
 											       field->priv->gda_type);

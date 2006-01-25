@@ -807,6 +807,24 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
         return row;
 }
 
+/**
+ * gda_data_model_send_hint
+ * @model: a #GdaDataModel
+ * @hint: a hint to send to the model
+ * @hint_value: an optional value to specify the hint, or %NULL
+ *
+ * Sends a hint to the data model. The hint may or may not be handled by the data
+ * model, depending on its implementation
+ */
+void
+gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_send_hint)
+		(GDA_DATA_MODEL_GET_CLASS (model)->i_send_hint) (model, hint, hint_value);
+}
+
 static gchar *
 export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, gchar sep)
 {

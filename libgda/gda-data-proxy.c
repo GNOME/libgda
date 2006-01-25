@@ -70,6 +70,9 @@ static gboolean             gda_data_proxy_remove_row      (GdaDataModel *model,
 
 static void                 gda_data_proxy_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
 static gboolean             gda_data_proxy_get_notify      (GdaDataModel *model);
+static void                 gda_data_proxy_send_hint       (GdaDataModel *model, GdaDataModelHint hint, 
+							    const GdaValue *hint_value);
+
 
 static void destroyed_object_cb (GdaObject *obj, GdaDataProxy *proxy);
 #ifdef GDA_DEBUG
@@ -305,7 +308,7 @@ row_modifs_new (GdaDataProxy *proxy, gint proxy_row)
 #ifdef GDA_DEBUG
 	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
 	if (rm) 
-		g_warning ("%s(): RowModif already exists for that proxy_row");
+		g_warning ("%s(): RowModif already exists for that proxy_row", __FUNCTION__);
 #endif
 	
 	rm = g_new0 (RowModif, 1);
@@ -446,6 +449,7 @@ gda_data_proxy_data_model_init (GdaDataModelClass *iface)
 
 	iface->i_set_notify = gda_data_proxy_set_notify;
 	iface->i_get_notify = gda_data_proxy_get_notify;
+	iface->i_send_hint = gda_data_proxy_send_hint;
 }
 
 static void
@@ -1824,6 +1828,8 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 	 * emitted, and instead send that signal only once at the end */
 	gda_object_block_changed (GDA_OBJECT (proxy->priv->model));
 
+	gda_data_proxy_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_START_BATCH_UPDATE, NULL);
+
 	/* temporary disable changes notification */
 	notify_changes = proxy->priv->notify_changes;
 	proxy->priv->notify_changes = FALSE;
@@ -1833,6 +1839,8 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 		allok = commit_row_modif (proxy, ROW_MODIF (proxy->priv->all_modifs->data), error);
 
 	proxy->priv->notify_changes = notify_changes;
+
+	gda_data_proxy_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_END_BATCH_UPDATE, NULL);
 
 	/* re-enable the emision of the "changed" signal each time a "row_*" signal is
 	 * emitted */
@@ -2262,7 +2270,7 @@ gda_data_proxy_get_access_flags (GdaDataModel *model)
 	g_return_val_if_fail (proxy->priv, 0);
 
 	if (proxy->priv->model)
-		return gda_data_model_get_access_flags (proxy->priv->model);
+		return gda_data_model_get_access_flags (proxy->priv->model) | GDA_DATA_MODEL_ACCESS_RANDOM;
 	else
 		return 0;
 }
@@ -2323,7 +2331,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 				/* simply alter the RowValue */
 				guint flags = gda_value_get_uinteger (rv->attributes);
 				
-				if (value && !gda_value_is_null (value)) {
+				if (value && !gda_value_is_null ((GdaValue *) value)) {
 					flags &= ~GDA_VALUE_ATTR_IS_NULL;
 					rv->value = gda_value_copy ((GdaValue*) value);
 				}
@@ -2522,4 +2530,16 @@ gda_data_proxy_get_notify (GdaDataModel *model)
 	g_return_val_if_fail (proxy->priv, FALSE);
 
 	return proxy->priv->notify_changes;
+}
+
+static void
+gda_data_proxy_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value)
+{
+	GdaDataProxy *proxy;
+	g_return_if_fail (GDA_IS_DATA_PROXY (model));
+	proxy = GDA_DATA_PROXY (model);
+	g_return_if_fail (proxy->priv);
+
+	if (proxy->priv->model)
+		gda_data_model_send_hint (proxy->priv->model, hint, hint_value);
 }

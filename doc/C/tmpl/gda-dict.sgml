@@ -484,8 +484,10 @@ object for more information.
 </para>
 
 @dict: 
-@typename: 
+@type_name: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@typename: 
 
 
 <!-- ##### FUNCTION gda_connection_add_data_type ##### -->

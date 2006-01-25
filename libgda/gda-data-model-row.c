@@ -145,6 +145,7 @@ gda_data_model_row_data_model_init (GdaDataModelClass *iface)
 
 	iface->i_set_notify = gda_data_model_row_set_notify;
 	iface->i_get_notify = gda_data_model_row_get_notify;
+	iface->i_send_hint = NULL;
 }
 
 static void

@@ -330,6 +330,7 @@ GdaDataModelQueryPrivate
 gda_data_model_query_new
 gda_data_model_query_get_param_list
 gda_data_model_query_refresh
+gda_data_model_query_set_modification_query
 <SUBSECTION Standard>
 GDA_DATA_MODEL_QUERY
 GDA_DATA_MODEL_QUERY_CLASS
@@ -404,6 +405,7 @@ gda_data_model_index_get_type
 <TITLE>GdaDataModel</TITLE>
 GdaDataModel
 GdaDataModelAccessFlags
+GdaDataModelHint
 gda_data_model_changed
 gda_data_model_row_inserted
 gda_data_model_row_updated
@@ -426,6 +428,7 @@ gda_data_model_append_values
 gda_data_model_append_row
 gda_data_model_remove_row
 gda_data_model_get_row_from_values
+gda_data_model_send_hint
 gda_data_model_to_text_separated
 gda_data_model_to_xml
 gda_data_model_to_xml_node
@@ -1382,6 +1385,9 @@ gda_query_set_query_type
 gda_query_get_query_type
 gda_query_get_query_type_string
 gda_query_is_select_query
+gda_query_is_insert_query
+gda_query_is_update_query
+gda_query_is_delete_query
 gda_query_is_modif_query
 gda_query_set_sql_text
 gda_query_get_sql_text

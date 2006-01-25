@@ -1,3 +1,25 @@
+2006-01-25  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query.c: corrected INSERT, UPDATE and DELETE queries SQL rendering
+	* libgda/gda-renderer.h: added a GDA_RENDERER_FIELDS_NO_TARGET_ALIAS option to
+	the rendering arguments
+	* libgda/gda-query-field-field.c: corrected SQL rendering
+	* libgda/gda-query-field-value.c: corrected a bug with NULL values
+	* libgda/gda-query.c: corrected bugs related to query copying
+	* libgda/gda-query-condition.c: condition copy bug fixed
+	* libgda/gda-dict.[ch]: s/typename/type_name/
+	* libgda/gda-query-parsing.[ch]: changed 
+	parsed_create_delete_query (GdaQuery *query, sql_delete_statement *delete, GError **error)
+	to
+	parsed_create_delete_query (GdaQuery *query, sql_delete_statement *del, GError **error)
+	* libgda/gda-query.[ch]: target aliases copy bug fixed, added gda_query_is_insert_query(),
+	gda_query_is_update_query() and gda_query_is_delete_query(), and SQL rendering and analyzing
+	bug fixes
+	* libgda/gda-data-model-query.[ch]: more features implemented
+	* libgda/gda-data-model.[ch]: added gda_data_model_send_hint()
+	* libgda/gda-dict.[ch]: GdaObject id assignment bug fixed and s/typename/type_name/
+	* libgda/sql-delimiter/gda-sql-delimiter.[ch]: added gda_delimiter_no_parse()
+
 2006-01-25  Bas Driessen <bas.driessen@xobas.com>
 
 	* configure.in: require glib >= 2.6.0.

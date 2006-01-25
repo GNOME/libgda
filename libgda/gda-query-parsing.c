@@ -699,7 +699,7 @@ parsed_create_insert_query (GdaQuery *query, sql_insert_statement *insert, GErro
  * main DELETE analysis
  */
 gboolean
-parsed_create_delete_query (GdaQuery *query, sql_delete_statement *delete, GError **error)
+parsed_create_delete_query (GdaQuery *query, sql_delete_statement *del, GError **error)
 {
 	gboolean has_error = FALSE;
 	ParseData *pdata = parse_data_new (query);
@@ -709,8 +709,8 @@ parsed_create_delete_query (GdaQuery *query, sql_delete_statement *delete, GErro
 	/*
 	 * Target: creating the #GdaQueryTarget object
 	 */
-	if (delete->table) {
-		has_error = parsed_create_target_sql_table (query, pdata, delete->table, error) ? FALSE : TRUE;
+	if (del->table) {
+		has_error = parsed_create_target_sql_table (query, pdata, del->table, error) ? FALSE : TRUE;
 		clean_old_targets (query, pdata);
 	}
 	else {
@@ -728,8 +728,8 @@ parsed_create_delete_query (GdaQuery *query, sql_delete_statement *delete, GErro
 	 */
 	if (query->priv->cond)
 		gda_object_destroy (GDA_OBJECT (query->priv->cond));
-	if (!has_error && delete->where) {
-		GdaQueryCondition *cond = parsed_create_complex_condition (query, pdata, delete->where, TRUE, NULL, error);
+	if (!has_error && del->where) {
+		GdaQueryCondition *cond = parsed_create_complex_condition (query, pdata, del->where, TRUE, NULL, error);
 		if (!cond)
 			has_error = TRUE;
 		else {
@@ -1351,8 +1351,11 @@ parsed_create_field_query_field (GdaQuery *query, gboolean add_to_query,
 			field_name = (gchar *) (list->data);
 			if (*field_name != '*') {
 				if (!strcmp (field_name, "null")) {
-					TO_IMPLEMENT;
-					/* PB: we don't know the exact data type of the value! */
+					/* we don't know the exact data type of the value! */
+					qfield = (GdaEntityField *) g_object_new (GDA_TYPE_QUERY_FIELD_VALUE, 
+										  "dict", gda_object_get_dict (GDA_OBJECT (query)), 
+										  "query", query,	  
+										  "gda_type", GDA_VALUE_TYPE_NULL, NULL);
 				}
 				else {
 					while (targets && !has_error) {

@@ -50,13 +50,18 @@ typedef enum {
 	GDA_DATA_MODEL_ACCESS_DELETE,
 } GdaDataModelAccessFlags;
 
+typedef enum {
+	GDA_DATA_MODEL_HINT_START_BATCH_UPDATE,
+	GDA_DATA_MODEL_HINT_END_BATCH_UPDATE,
+	GDA_DATA_MODEL_HINT_REFRESH,
+} GdaDataModelHint;
+
 enum {
 	GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 	GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
 	GDA_DATA_MODEL_VALUES_LIST_ERROR,
 	GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR
 };
-
 
 /* struct for the interface */
 struct _GdaDataModelClass {
@@ -86,6 +91,7 @@ struct _GdaDataModelClass {
 
 	void                 (* i_set_notify)       (GdaDataModel *model, gboolean do_notify_changes);
 	gboolean             (* i_get_notify)       (GdaDataModel *model);
+	void                 (* i_send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value);
 
 	/* signals */
 	void                 (* row_inserted)    (GdaDataModel *model, gint row);
@@ -120,6 +126,8 @@ gint                gda_data_model_append_row             (GdaDataModel *model, 
 gint                gda_data_model_append_values          (GdaDataModel *model, const GList *values, GError **error);
 gboolean            gda_data_model_remove_row             (GdaDataModel *model, gint row, GError **error);
 gint                gda_data_model_get_row_from_values    (GdaDataModel *model, GSList *values, gint *cols_index);
+
+void                gda_data_model_send_hint              (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value);
 
 /* contents saving and loading */
 gchar              *gda_data_model_to_text_separated      (GdaDataModel *model, const gint *cols, gint nb_cols,

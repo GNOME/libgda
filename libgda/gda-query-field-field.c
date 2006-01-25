@@ -652,7 +652,7 @@ gda_query_field_field_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
  * gda_query_field_field_get_ref_field_name
  * @field: a #GdaQueryFieldField object
  *
- * Get the real name of the represented field. The returnad name can be in either forms:
+ * Get the real name of the represented field. The returned name can be in either forms:
  * <itemizedlist>
  *   <listitem><para>field_name</para></listitem>
  *   <listitem><para>table_name.field_name</para></listitem>
@@ -1011,12 +1011,38 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 {
 	gchar *str = NULL;
 	GdaQueryFieldField *field;
+	GdaObject *fobj;
+	const gchar *tname = NULL, *fname = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_FIELD (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_FIELD_FIELD (iface)->priv, NULL);
 	field = GDA_QUERY_FIELD_FIELD (iface);
+	g_return_val_if_fail (field->priv, NULL);
 
-	return gda_query_field_field_get_ref_field_name (field);
+	if (! (options & GDA_RENDERER_FIELDS_NO_TARGET_ALIAS)) {
+		GdaObject *tobj;
+
+		tobj = gda_object_ref_get_ref_object (field->priv->target_ref);
+		if (tobj)
+			tname = gda_query_target_get_alias (GDA_QUERY_TARGET (tobj));
+		else
+			tname = gda_object_ref_get_ref_name (field->priv->target_ref, NULL, NULL);
+	}		
+		
+	fobj = gda_object_ref_get_ref_object (field->priv->field_ref);
+	if (fobj)
+		fname = gda_object_get_name (fobj);
+	else
+		fname = gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL);
+	
+	if (tname && fname)
+		return g_strdup_printf ("%s.%s", tname, fname);
+	else {
+		if (fname)
+			return g_strdup (fname);
+	}
+
+	return NULL;
 }
 
 static gchar *

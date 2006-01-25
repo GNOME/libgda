@@ -289,6 +289,7 @@ gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
 	GdaQueryCondition *newcond;
 	GdaDict *dict;
 	GSList *list;
+	gint i;
 
 	g_return_val_if_fail (GDA_IS_QUERY_CONDITION (orig), NULL);
 	g_return_val_if_fail (orig->priv, NULL);
@@ -304,6 +305,15 @@ gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
 	if (replacements)
 		g_hash_table_insert (replacements, orig, newcond);
 
+	/* operators */
+	for (i=0; i<3; i++) {
+		g_object_unref (newcond->priv->ops[i]);
+		newcond->priv->ops[i] = (GdaObjectRef *) gda_object_ref_new_copy (orig->priv->ops[i]);
+		g_signal_connect (G_OBJECT (newcond->priv->ops[i]), "ref_lost",
+				  G_CALLBACK (ops_ref_lost_cb), newcond);
+	}
+
+	/* children conditions */
 	list = orig->priv->cond_children;
 	while (list) {
 		GObject *ccond;

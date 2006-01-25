@@ -25,7 +25,22 @@ one provided th the #GdaDict object to which the query relates.
 </para>
 
 
+<!-- ##### ARG GdaDataModelQuery:delete-query ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelQuery:insert-query ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaDataModelQuery:query ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelQuery:update-query ##### -->
 <para>
 
 </para>
@@ -67,6 +82,17 @@ one provided th the #GdaDict object to which the query relates.
 </para>
 
 @model: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_query_set_modification_query ##### -->
+<para>
+
+</para>
+
+@model: 
+@query: 
 @error: 
 @Returns: 
 

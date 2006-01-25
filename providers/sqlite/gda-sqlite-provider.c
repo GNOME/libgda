@@ -95,6 +95,11 @@ static GdaDataModel *gda_sqlite_provider_get_schema (GdaServerProvider *provider
 						     GdaConnectionSchema schema,
 						     GdaParameterList *params);
 
+static GdaDataHandler *gda_sqlite_provider_get_data_handler (GdaServerProvider *provider,
+							     GdaConnection *cnc,
+							     GdaValueType gda_type,
+							     const gchar *dbms_type);
+
 static GObjectClass *parent_class = NULL;
 
 typedef struct {
@@ -122,7 +127,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->supports = gda_sqlite_provider_supports;
 	provider_class->get_schema = gda_sqlite_provider_get_schema;
 
-	provider_class->get_data_handler = NULL;
+	provider_class->get_data_handler = gda_sqlite_provider_get_data_handler;
 	provider_class->string_to_value = NULL;
 	provider_class->get_def_dbms_type = NULL;
 
@@ -1362,4 +1367,108 @@ gda_sqlite_provider_get_schema (GdaServerProvider *provider,
 	}
 
 	return NULL;
+}
+
+static GdaDataHandler *
+gda_sqlite_provider_get_data_handler (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      GdaValueType gda_type,
+				      const gchar *dbms_type)
+{
+	GdaDataHandler *dh = NULL;
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	if (cnc) 
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	switch (gda_type) {
+        case GDA_VALUE_TYPE_BIGINT:
+	case GDA_VALUE_TYPE_BIGUINT:
+	case GDA_VALUE_TYPE_DOUBLE:
+	case GDA_VALUE_TYPE_INTEGER:
+	case GDA_VALUE_TYPE_NUMERIC:
+	case GDA_VALUE_TYPE_SINGLE:
+	case GDA_VALUE_TYPE_SMALLINT:
+	case GDA_VALUE_TYPE_SMALLUINT:
+        case GDA_VALUE_TYPE_TINYINT:
+        case GDA_VALUE_TYPE_TINYUINT:
+        case GDA_VALUE_TYPE_UINTEGER:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_numerical_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_INTEGER, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SINGLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_UINTEGER, NULL);
+			g_object_unref (dh);
+		}
+		break;
+        case GDA_VALUE_TYPE_BINARY:
+        case GDA_VALUE_TYPE_BLOB:
+		dh = gda_server_provider_handler_find (provider, cnc, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_bin_new_with_prov (provider, cnc);
+			if (dh) {
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BINARY, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BLOB, NULL);
+				g_object_unref (dh);
+			}
+		}
+		break;
+        case GDA_VALUE_TYPE_BOOLEAN:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_boolean_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BOOLEAN, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_DATE:
+	case GDA_VALUE_TYPE_TIME:
+	case GDA_VALUE_TYPE_TIMESTAMP:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_time_new_no_locale ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DATE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIME, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIMESTAMP, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_STRING:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_string_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_STRING, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_TYPE:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_type_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TYPE, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_NULL:
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT:
+	case GDA_VALUE_TYPE_GOBJECT:
+	case GDA_VALUE_TYPE_LIST:
+	case GDA_VALUE_TYPE_MONEY:
+	case GDA_VALUE_TYPE_UNKNOWN:
+		break;
+	default:
+		g_assert_not_reached ();
+		break;
+	}
+
+	return dh;	
 }
