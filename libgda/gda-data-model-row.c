@@ -74,12 +74,6 @@ static GdaColumn           *gda_data_model_row_describe_column (GdaDataModel *mo
 static const GdaValue      *gda_data_model_row_get_value_at    (GdaDataModel *model, gint col, gint row);
 static guint                gda_data_model_row_get_access_flags(GdaDataModel *model);
 
-static GdaDataModelIter    *gda_data_model_row_create_iter     (GdaDataModel *model, gint row);
-static gboolean             gda_data_model_row_iter_at_row     (GdaDataModel *model, GdaDataModelIter *iter, 
-								 gint row);
-static gboolean             gda_data_model_row_iter_next       (GdaDataModel *model, GdaDataModelIter *iter);
-static gboolean             gda_data_model_row_iter_prev       (GdaDataModel *model, GdaDataModelIter *iter);
-
 static gboolean             gda_data_model_row_set_value_at    (GdaDataModel *model, gint col, gint row, 
 								 const GdaValue *value, GError **error);
 static gboolean             gda_data_model_row_set_values      (GdaDataModel *model, gint row, 
@@ -131,10 +125,10 @@ gda_data_model_row_data_model_init (GdaDataModelClass *iface)
         iface->i_get_access_flags = gda_data_model_row_get_access_flags;
 	iface->i_get_value_at = gda_data_model_row_get_value_at;
 
-	iface->i_create_iter = gda_data_model_row_create_iter;
-	iface->i_iter_at_row = gda_data_model_row_iter_at_row;
-	iface->i_iter_next = gda_data_model_row_iter_next;
-	iface->i_iter_prev = gda_data_model_row_iter_prev;
+	iface->i_create_iter = NULL;
+	iface->i_iter_at_row = NULL;
+	iface->i_iter_next = NULL;
+	iface->i_iter_prev = NULL;
 
 	iface->i_set_value_at = gda_data_model_row_set_value_at;
 	iface->i_set_values = gda_data_model_row_set_values;
@@ -402,57 +396,6 @@ gda_data_model_row_get_access_flags (GdaDataModel *model)
 	return flags;
 }
 
-static GdaDataModelIter *
-gda_data_model_row_create_iter (GdaDataModel *model, gint row)
-{
-	GdaDataModelRow *mb;
-	GdaDataModelIter *iter;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), NULL);
-	g_return_val_if_fail (row >= 0, NULL);
-	
-	mb = GDA_DATA_MODEL_ROW (model);
-	
-	return NULL;
-}
-
-static gboolean
-gda_data_model_row_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
-{
-	GdaDataModelRow *mb;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
-	g_return_val_if_fail (row >= 0, FALSE);
-	mb = GDA_DATA_MODEL_ROW (model);
-	
-	return FALSE;	
-}
-
-static gboolean
-gda_data_model_row_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
-{
-	GdaDataModelRow *mb;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
-	mb = GDA_DATA_MODEL_ROW (model);
-	
-	return FALSE;
-}
-
-static gboolean
-gda_data_model_row_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
-{
-	GdaDataModelRow *mb;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
-	mb = GDA_DATA_MODEL_ROW (model);
-	
-	return FALSE;
-}
-
 static gboolean
 gda_data_model_row_set_value_at (GdaDataModel *model, gint col, gint row, 
 				 const GdaValue *value, GError **error)
@@ -514,7 +457,7 @@ gda_data_model_row_append_values (GdaDataModel *model, const GList *values, GErr
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), -1);
 	g_return_val_if_fail (CLASS (model)->append_values != NULL, -1);
-
+	
 	row = CLASS (model)->append_values (GDA_DATA_MODEL_ROW (model), values, error);
 	if (row)
 		return gda_row_get_number (row);

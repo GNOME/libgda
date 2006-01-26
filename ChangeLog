@@ -1,3 +1,10 @@
+2006-01-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-row.c, libgda/gda-data-model-hash.c, libgda/gda-data-model-array.c:
+	fixed a bug related to the gda_data_model_append_values() function, as discussed with
+	Bas Driessen
+	* libgda/gda-data-model-row.c: removed useless functions related to GdaDataModelIter
+
 2006-01-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-query.c: corrected INSERT, UPDATE and DELETE queries SQL rendering

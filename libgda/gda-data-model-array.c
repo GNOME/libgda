@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -27,7 +27,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-data-model-private.h>
+#include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-util.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
@@ -134,10 +134,12 @@ gda_data_model_array_append_values (GdaDataModelRow *model, const GList *values,
 	}
 
 	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
-	g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
-	gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
-	gda_data_model_row_inserted ((GdaDataModel *) model, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
+	if (!GDA_DATA_MODEL_ROW_CLASS (G_OBJECT_GET_CLASS (model))->append_row (model, row, error)) {
+		g_object_unref (row);
+		return NULL;
+	}
 
+	g_object_unref (row);
 	return (GdaRow *) row;
 }
 

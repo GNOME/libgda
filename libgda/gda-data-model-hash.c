@@ -26,7 +26,7 @@
 #include <glib/ghash.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-model-hash.h>
-#include <libgda/gda-data-model-private.h>
+#include <libgda/gda-data-model-extra.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
@@ -203,11 +203,12 @@ gda_data_model_hash_append_values (GdaDataModelRow *model, const GList *values, 
 	}
 
 	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
-	if (!gda_data_model_hash_append_row (model, row, error)) {
+	if (!GDA_DATA_MODEL_ROW_CLASS (G_OBJECT_GET_CLASS (model))->append_row (model, row, error)) {
 		g_object_unref (row);
 		return NULL;
 	}
 
+	g_object_unref (row);
 	return (GdaRow *) row;
 }
 
