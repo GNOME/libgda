@@ -7,8 +7,8 @@ msgid ""
 ""
 msgstr "Project-Id-Version: libgda Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-23 20:17+0100\n"
-"PO-Revision-Date: 2006-01-24 21:36+1030\n"
+"POT-Creation-Date: 2006-01-27 04:18+0100\n"
+"PO-Revision-Date: 2006-01-27 19:03+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -130,42 +130,44 @@ msgstr "Cột vượt ngoài %d phạm vi 0 - %d."
 msgid "Wrong number of values in values list"
 msgstr "Số giá trị không đúng trong danh sách giá trị."
 
-#:../libgda/gda-data-model-array.c:190 ../libgda/gda-data-model-array.c:218
+#:../libgda/gda-data-model-array.c:192 ../libgda/gda-data-model-array.c:220
 msgid "Row not found in data model"
 msgstr "Không tìm thấy hàng trong mô hình dữ liệu."
 
-#:../libgda/gda-data-model-array.c:370
+#:../libgda/gda-data-model-array.c:372
 #,c-format
 msgid "Node is not <gda_array> but <%s>"
 msgstr "Nút không phải là <gda_array> (mảng gda) còn <%s>."
 
-#:../libgda/gda-data-model-array.c:396
+#:../libgda/gda-data-model-array.c:398
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
-msgstr "Chưa ghi rõ thuộc tính « gdatype » (kiểu gda) trong <gda_array_field> (trường mảng gda)."
+msgstr "Chưa ghi rõ thuộc tính « gdatype » (kiểu gda) trong <gda_array_field> "
+"(trường mảng gda)."
 
-#:../libgda/gda-data-model-array.c:442
+#:../libgda/gda-data-model-array.c:444
 msgid "No <gda_array_field> specified in <gda_array>"
-msgstr "Chưa ghi rõ thuộc tính « gda_array_field » (trường mảng gda) trong <gda_array> (mảng gda)."
+msgstr "Chưa ghi rõ thuộc tính « gda_array_field » (trường mảng gda) trong "
+"<gda_array> (mảng gda)."
 
-#:../libgda/gda-data-model.c:967
+#:../libgda/gda-data-model.c:985
 msgid "Exported Data"
 msgstr "Dữ liệu đã xuất"
 
-#:../libgda/gda-data-model.c:1089
+#:../libgda/gda-data-model.c:1107
 #,c-format
 msgid "Expected tag <gda_value>, got <%s>, ignoring"
 msgstr "Ngờ thẻ <gda_value> (giá trị gda), còn nhận <%s> nên bỏ qua."
 
-#:../libgda/gda-data-model.c:1099 ../testing/gda-test-models.c:528
+#:../libgda/gda-data-model.c:1117 ../testing/gda-test-models.c:528
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr "Không thể gọi kiểu dữ liệu cột (kiểu là UNKNOWN [không rõ] hay chưa ghi rõ)."
 
-#:../libgda/gda-data-model.c:1116 ../testing/gda-test-models.c:546
+#:../libgda/gda-data-model.c:1134 ../testing/gda-test-models.c:546
 #,c-format
 msgid "Cannot interpret string as a valid %s value"
 msgstr "Không thể giải dịch chuỗi là giá trị %s hợp lệ."
 
-#:../libgda/gda-data-model.c:1176
+#:../libgda/gda-data-model.c:1194
 #,c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Ngờ thẻ <gda_array_data> (dữ liệu mảng gda), còn nhận <%s>."
@@ -185,37 +187,41 @@ msgstr "Lệnh SQL không phải là SELECT [chọn] (là « %s »"
 msgid "Row %d not found in data model"
 msgstr "Không tìm thấy hàng %d trong mô hình dữ liệu."
 
-#:../libgda/gda-data-model-query.c:368
+#:../libgda/gda-data-model-query.c:487
 msgid "Query is not a SELECT query"
 msgstr "Truy vấn không phải là truy vấn kiểu SELECT (chọn)."
 
-#:../libgda/gda-data-model-query.c:375
+#:../libgda/gda-data-model-query.c:494
 msgid "No connection specified"
 msgstr "Chưa xác định cách kết nối."
 
-#:../libgda/gda-data-model-query.c:381
+#:../libgda/gda-data-model-query.c:500
 msgid "Connection is not opened"
 msgstr "Chuỗi mở kết nối."
 
-#:../libgda/gda-data-model-row.c:488
+#:../libgda/gda-data-model-query.c:571
+msgid "Wrong type of query"
+msgstr "Kiểu truy vấn không đúng"
+
+#:../libgda/gda-data-model-row.c:432
 msgid "Too many values in list"
 msgstr "Có quá nhiều giá trị trong danh sách."
 
-#:../libgda/gda-data-proxy.c:415
+#:../libgda/gda-data-proxy.c:418
 msgid "Data model"
 msgstr "Mô hình dữ liệu"
 
-#:../libgda/gda-data-proxy.c:2212
+#:../libgda/gda-data-proxy.c:2220
 #,c-format
 msgid "Unknown GdaDataProxy column: %d"
 msgstr "Không biết cột GdaDataProxy (ủy nhiệm dữ liệu Gda): %d"
 
-#:../libgda/gda-data-proxy.c:2379
+#:../libgda/gda-data-proxy.c:2387
 #,c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Đang cố thay đổi cột chỉ đọc: %d"
 
-#:../libgda/gda-data-proxy.c:2416
+#:../libgda/gda-data-proxy.c:2424
 #,c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Kiểu giá trị không khớp với nhau: %s thay vào %s"
@@ -241,7 +247,8 @@ msgstr "Có nhiều kiểu đối số cho tập hợp « %s »."
 
 #:../libgda/gda-dict-aggregate.c:461
 msgid "Missing required attributes for <gda_dict_aggregate>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_aggregate> (tập hợp dict gda)."
+msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_aggregate> (tập hợp dict "
+"gda)."
 
 #:../libgda/gda-dict.c:424
 msgid "DSN of the connection to use"
@@ -251,64 +258,66 @@ msgstr "DSN của cách kết nối cần dùng."
 msgid "Username for the connection to use"
 msgstr "Tên người dùng cho cách kết nối cần dùng."
 
-#:../libgda/gda-dict.c:1349
+#:../libgda/gda-dict.c:1348
 msgid "gda_graph of type 'Q' must have an 'object' attribute"
-msgstr "« gda_graph » (đồ thị gda) kiểu « Q » phải có một thuộc tính « object » (đối tượng)."
+msgstr "« gda_graph » (đồ thị gda) kiểu « Q » phải có một thuộc tính « object » (đối "
+"tượng)."
 
-#:../libgda/gda-dict.c:1359
+#:../libgda/gda-dict.c:1358
 msgid "gda_graph of type 'Q' must have valid 'object' attribute"
-msgstr "« gda_graph » (đồ thị gda) kiểu « Q » phải có một thuộc tính « object » (đối tượng) hợp lệ."
+msgstr "« gda_graph » (đồ thị gda) kiểu « Q » phải có một thuộc tính « object » (đối "
+"tượng) hợp lệ."
 
-#:../libgda/gda-dict.c:1580 ../testing/html.c:131
+#:../libgda/gda-dict.c:1579 ../testing/html.c:131
 #,c-format
 msgid "Error writing XML file %s"
 msgstr "Gặp lỗi khi ghi tập tin XML %s."
 
-#:../libgda/gda-dict.c:1591
+#:../libgda/gda-dict.c:1590
 msgid "Can't allocate memory for XML structure."
 msgstr "Không thể cấp phát bộ nhớ cho cấu trúc XML."
 
-#:../libgda/gda-dict.c:2143
+#:../libgda/gda-dict.c:2142
 msgid "No connection associated to the dictionary"
 msgstr "Không có cách kết nối tương ứng vớitừ điển."
 
-#:../libgda/gda-dict.c:2150
+#:../libgda/gda-dict.c:2149
 msgid "Connection is closed"
 msgstr "Kết nối bị ngắt."
 
-#:../libgda/gda-dict.c:2157 ../libgda/gda-dict-database.c:966
+#:../libgda/gda-dict.c:2156 ../libgda/gda-dict-database.c:966
 msgid "Update already started!"
 msgstr "• Việc cập nhật đã được khởi chạy. •"
 
-#:../libgda/gda-dict.c:2195 ../libgda/gda-dict-database.c:1011
+#:../libgda/gda-dict.c:2194 ../libgda/gda-dict-database.c:1011
 msgid "Update stopped!"
 msgstr "• Việc cập nhật đã ngưng lại. •"
 
-#:../libgda/gda-dict.c:2222
+#:../libgda/gda-dict.c:2221
 msgid "Can't get list of data types"
 msgstr "Không thể lấy danh sách kiểu dữ liệu."
 
-#:../libgda/gda-dict.c:2233
+#:../libgda/gda-dict.c:2232
 msgid "Schema for list of data types is wrong"
 msgstr "Giản đồ không đúng cho danh sách kiểu dữ liệu."
 
-#:../libgda/gda-dict.c:2420
+#:../libgda/gda-dict.c:2419
 msgid "Can't get list of functions"
 msgstr "Không thể lấy danh sách các chức năng."
 
-#:../libgda/gda-dict.c:2435
+#:../libgda/gda-dict.c:2434
 msgid "Schema for list of functions is wrong"
 msgstr "Giản đồ không đúng cho danh sách chức năng."
 
-#:../libgda/gda-dict.c:2659
+#:../libgda/gda-dict.c:2658
 msgid "Can't get list of aggregates"
 msgstr "Không thể lấy danh sách các tập hợp."
 
-#:../libgda/gda-dict.c:2673
+#:../libgda/gda-dict.c:2672
 msgid "Schema for list of aggregates is wrong"
 msgstr "Giản đồ không đúng cho danh sách các tập hợp."
 
-#:../libgda/gda-dict.c:2915
+#:../libgda/gda-dict.c:2914
 #,c-format
 msgid "Error creating directory %s"
 msgstr "Gặp lỗi khi tạo  từ điển %s."
@@ -323,7 +332,8 @@ msgstr "Thẻ XML không phải là <gda_dict_constraint> (ràng buộc từ đi
 
 #:../libgda/gda-dict-constraint.c:1411
 msgid "Missing required attributes for <gda_dict_constraint>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_constraint> (ràng buộc từ điển gda)."
+msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_constraint> (ràng buộc từ "
+"điển gda)."
 
 #:../libgda/gda-dict-constraint.c:1416
 #,c-format
@@ -345,11 +355,13 @@ msgstr "Thẻ XML không phải là <gda_dict_database> (cơ sở dữ liệu t�
 
 #:../libgda/gda-dict-database.c:676
 msgid "XML Tag below <GDA_DICT_TABLES> is not <GDA_DICT_TABLE>"
-msgstr "Thẻ XML bên dưới <GDA_DICT_TABLES> (các bảng từ điển gda) không phải là <GDA_DICT_TABLE> (bảng từ điển gda)."
+msgstr "Thẻ XML bên dưới <GDA_DICT_TABLES> (các bảng từ điển gda) không phải là "
+"<GDA_DICT_TABLE> (bảng từ điển gda)."
 
 #:../libgda/gda-dict-database.c:708
 msgid "XML Tag below <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
-msgstr "Thể XML bên dưới <GDA_DICT_CONSTRAINTS> (các ràng buộc từ điển gda) không phải là <GDA_DICT_CONSTRAINT> (ràng buộc từ điển gda)."
+msgstr "Thể XML bên dưới <GDA_DICT_CONSTRAINTS> (các ràng buộc từ điển gda) không "
+"phải là <GDA_DICT_CONSTRAINT> (ràng buộc từ điển gda)."
 
 #:../libgda/gda-dict-database.c:974 ../libgda/gda-dict-database.c:1050
 #:../libgda/gda-dict-table.c:541
@@ -392,7 +404,8 @@ msgstr "Có nhiều kiểu trả gởi cho chức năng « %s »."
 
 #:../libgda/gda-dict-function.c:467
 msgid "Missing required attributes for <gda_dict_function>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_function> (chức năng từ điển gda)."
+msgstr "Thiếu một số thuộc tính cần thiết cho <gda_dict_function> (chức năng từ điển "
+"gda)."
 
 #:../libgda/gda-dict-table.c:591 ../libgda/gda-dict-table.c:603
 msgid "Schema for list of fields is wrong"
@@ -432,7 +445,7 @@ msgstr "Thử khởi động một ứng dụng khách đã được khởi đ�
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda cần GModule nên đang kết thúc..."
 
-#:../libgda/gda-object.c:294
+#:../libgda/gda-object.c:304
 msgid "LibGda must be initialized before any usage."
 msgstr "Phải khởi động LibGda trước khi dùng nó bằng cách nào."
 
@@ -483,7 +496,8 @@ msgstr "Thiếu GdaParameterListSource (nguồn danh sách tham số gda)."
 #:../libgda/gda-parameter-list.c:1043
 msgid ""
 "GdaParameterListSource does not list a GdaParameterListNode as it should"
-msgstr "GdaParameterListSource (nguồn danh sách tham số gda) không liệt kê một GdaParameterListNode (nút danh sách tham số gda) như nên."
+msgstr "GdaParameterListSource (nguồn danh sách tham số gda) không liệt kê một "
+"GdaParameterListNode (nút danh sách tham số gda) như nên."
 
 #:../libgda/gda-parameter-list.c:1050
 #,c-format
@@ -494,243 +508,249 @@ msgstr "GdaDataModel (mô hình dữ liệu gda) %p không có cột %d."
 #,c-format
 msgid ""
 "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
-msgstr "GdaParameter (tham số gda) bị hạn chế bởi một cột kiểu không đúng: %s (còn ngờ %s)."
+msgstr "GdaParameter (tham số gda) bị hạn chế bởi một cột kiểu không đúng: %s (còn "
+"ngờ %s)."
 
 #:../libgda/gda-parameter-list.c:1075
 msgid "GdaParameterListSource has a NULL data model"
-msgstr "GdaParameterListSource (nguồn danh sách tham số gda) có một mô hình dữ liệu RỖNG."
+msgstr "GdaParameterListSource (nguồn danh sách tham số gda) có một mô hình dữ liệu "
+"RỖNG."
 
 #:../libgda/gda-parameter-list.c:1083
 msgid ""
 "GdaParameterListSource references a GdaParameterListNodenot found in the "
 "nodes list"
-msgstr "GdaParameterListSource (nguồn danh sách tham số gda) tham chiếu một GdaParameterListNode (nút danh sách tham số gda) không được tìm trong danh sách các nút."
+msgstr "GdaParameterListSource (nguồn danh sách tham số gda) tham chiếu một "
+"GdaParameterListNode (nút danh sách tham số gda) không được tìm trong danh "
+"sách các nút."
 
 #:../libgda/gda-parameter-list.c:1089
 msgid ""
 "GdaParameterListSource references a GdaParameterListNodewhich does not use "
 "the same data model"
-msgstr "GdaParameterListSource (nguồn danh sách tham số gda) tham chiếu một GdaParameterListNode (nút danh sách tham số gda) không dùng cùng một mô hình dữ liệu."
+msgstr "GdaParameterListSource (nguồn danh sách tham số gda) tham chiếu một "
+"GdaParameterListNode (nút danh sách tham số gda) không dùng cùng một mô hình "
+"dữ liệu."
 
-#:../libgda/gda-query.c:914
+#:../libgda/gda-query.c:920
 msgid "Can't modify the structure of a non-parsed SQL query"
 msgstr "Không thể sửa đổi cấu trúc của một truy vấn SQL không được phân tách."
 
-#:../libgda/gda-query.c:1132
+#:../libgda/gda-query.c:1138
 msgid "Select"
 msgstr "Chọn"
 
-#:../libgda/gda-query.c:1134
+#:../libgda/gda-query.c:1140
 msgid "Insert"
 msgstr "Chèn"
 
-#:../libgda/gda-query.c:1136
+#:../libgda/gda-query.c:1142
 msgid "Update"
 msgstr "Cập nhật"
 
-#:../libgda/gda-query.c:1138
+#:../libgda/gda-query.c:1144
 msgid "Delete"
 msgstr "Xóa bỏ"
 
-#:../libgda/gda-query.c:1140
+#:../libgda/gda-query.c:1146
 msgid "Select (union)"
 msgstr "Chọn (hợp)"
 
-#:../libgda/gda-query.c:1142
+#:../libgda/gda-query.c:1148
 msgid "Select (intersection)"
 msgstr "Chọn (giao)"
 
-#:../libgda/gda-query.c:1144
+#:../libgda/gda-query.c:1150
 msgid "Select (exception)"
 msgstr "Chọn (ngoài lệ)"
 
-#:../libgda/gda-query.c:1146
+#:../libgda/gda-query.c:1152
 msgid "SQL text"
 msgstr "Văn bản SQL"
 
-#:../libgda/gda-query.c:1274
+#:../libgda/gda-query.c:1356
 #,c-format
 msgid "Error during query parsing (%s)"
 msgstr "Gặp lỗi trong khi phân tách truy vấn (%s)."
 
-#:../libgda/gda-query.c:1770
+#:../libgda/gda-query.c:1867
 msgid ""
 "The query represented by a target must be a sub-query of the current query"
 msgstr "Truy vấn do đích tiểu biểu phải là truy vấn phụ của truy vấn hiện có."
 
-#:../libgda/gda-query.c:1785
+#:../libgda/gda-query.c:1882
 msgid "Queries which update data can only have one target"
 msgstr "Truy vấn mà cập nhật dữ liệu có thể có chỉ một đích thôi."
 
-#:../libgda/gda-query.c:1795
+#:../libgda/gda-query.c:1892
 msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr "Truy vấn tập hợp có thể có chỉ truy vấn phụ, không phải đích."
 
-#:../libgda/gda-query.c:3780
+#:../libgda/gda-query.c:3877
 msgid "XML Tag is not <gda_query>"
 msgstr "Thẻ XML không phải là <gda_query> (truy vấn gda)."
 
-#:../libgda/gda-query.c:3796
+#:../libgda/gda-query.c:3893
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "ID XML cho một truy vấn nên là QUxxx mà xxx là số."
 
-#:../libgda/gda-query.c:3912
+#:../libgda/gda-query.c:4009
 msgid ""
 "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
-msgstr "Thiếu thuộc tính cả « entity_ref » (tham chiếu thực thể) lẫn « table_name » (tên bảng) đều trong « gda_query_target » (đích truy vấn gda)."
+msgstr "Thiếu thuộc tính cả « entity_ref » (tham chiếu thực thể) lẫn « table_name "
+"» (tên bảng) đều trong « gda_query_target » (đích truy vấn gda)."
 
-#:../libgda/gda-query.c:3936
+#:../libgda/gda-query.c:4033
 #,c-format
 msgid "Can't find field '%s'"
 msgstr "Không tìm thấy trường « %s »."
 
-#:../libgda/gda-query.c:4055
+#:../libgda/gda-query.c:4152
 msgid "Problem loading <gda_query>"
 msgstr "Gặp vấn đề khi tải <gda_query> (truy vấn gda)."
 
-#:../libgda/gda-query.c:4177
+#:../libgda/gda-query.c:4274
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "Có hơn hai truy vấn phụ cho một truy vấn EXCEPT (trừ)."
 
-#:../libgda/gda-query.c:4194
+#:../libgda/gda-query.c:4291
 msgid "Query without any SQL code"
 msgstr "Truy vấn không có mã SQL nào."
 
-#:../libgda/gda-query.c:4249
+#:../libgda/gda-query.c:4346
 #,c-format
 msgid "Invalid parameter '%s'"
 msgstr "Tham số không hợp lệ « %s »."
 
-#:../libgda/gda-query.c:4255
+#:../libgda/gda-query.c:4352
 msgid "Missing parameters"
 msgstr "Thiếu tham số"
 
-#:../libgda/gda-query.c:4329
+#:../libgda/gda-query.c:4426
 #,c-format
 msgid "Query %s is not a selection query"
 msgstr "Truy vấn %s không phải là một truy vấm lựa chọn."
 
-#:../libgda/gda-query.c:4361
+#:../libgda/gda-query.c:4458
 msgid "No target defined to apply modifications"
 msgstr "Chưa định nghĩa đích nào cần áp dụng các sự sửa đổi."
 
-#:../libgda/gda-query.c:4369
+#:../libgda/gda-query.c:4466
 msgid "More than one target defined to apply modifications"
 msgstr "Nhiều đích được định nghĩa để áp dụng các sự sửa đổi."
 
-#:../libgda/gda-query.c:4380
+#:../libgda/gda-query.c:4477
 #,c-format
 msgid "Entity %s is not writable"
 msgstr "Thực thể %s không có khả năng ghi."
 
-#:../libgda/gda-query.c:4399
+#:../libgda/gda-query.c:4496
 msgid "Modification query field has incompatible type"
 msgstr "Trường truy vấn sửa đổi có kiểu không tương thích."
 
-#:../libgda/gda-query.c:4418
+#:../libgda/gda-query.c:4515
 msgid "An insertion query can only have one sub-query"
 msgstr "Truy vấn chèn có thể có chỉ một truy vấn phụ thôi."
 
-#:../libgda/gda-query.c:4426
+#:../libgda/gda-query.c:4523
 msgid "Insertion query fields incompatible with sub-query's fields"
-msgstr "Các trường của truy vấn chèn không tương thích với các trường của truy vấn phụ."
+msgstr "Các trường của truy vấn chèn không tương thích với các trường của truy vấn "
+"phụ."
 
-#:../libgda/gda-query.c:4444
+#:../libgda/gda-query.c:4541
 msgid "Insertion query field has incompatible value assignment"
 msgstr "Trường của truy vấn chèn có sự gán giá trị không tương thích."
 
-#:../libgda/gda-query.c:4457
+#:../libgda/gda-query.c:4554
 msgid "Insertion query can't have any conditions"
 msgstr "Truy vấn chèn không thể có điều kiện nào."
 
-#:../libgda/gda-query.c:4472
+#:../libgda/gda-query.c:4569
 msgid "Deletion query can't have any visible field"
 msgstr "Truy vấn xóa bỏ không thể có trường hiển thị nào."
 
-#:../libgda/gda-query.c:4492
+#:../libgda/gda-query.c:4589
 msgid "Update query field has incompatible value assignment"
 msgstr "Trường của truy vấn cập nhật có sự gán giá trị không tương thích."
 
-#:../libgda/gda-query.c:4519
+#:../libgda/gda-query.c:4616
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "Truy vấn kiểu tập hợp (UNION [hợp] v.v.) không thể có đích nào."
 
-#:../libgda/gda-query.c:4527
+#:../libgda/gda-query.c:4624
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "Truy vấn kiểu tập hợp (UNION [hợp] v.v.) không thể có điều kiện nào."
 
-#:../libgda/gda-query.c:5029
+#:../libgda/gda-query.c:5129
 msgid "Can't correctly print the list of columns to use."
 msgstr "Không thể in ra đúng danh sách các cột cần dùng."
 
-#:../libgda/gda-query.c:5157
-msgid "Can't render field as SQL"
-msgstr "Không thể vẽ trường dạng SQL."
-
-#:../libgda/gda-query.c:5184
+#:../libgda/gda-query.c:5279
 msgid "Missing values"
 msgstr "Thiếu giá trị"
 
-#:../libgda/gda-query.c:5430
+#:../libgda/gda-query.c:5525
 #,c-format
 msgid "Query '%s'"
 msgstr "Truy vấn « %s »."
 
-#:../libgda/gda-query.c:5432
+#:../libgda/gda-query.c:5527
 msgid "Unnamed Query"
 msgstr "Truy vấn không tên."
 
-#:../libgda/gda-query-condition.c:357
+#:../libgda/gda-query-condition.c:367
 #,c-format
 msgid "No join condition found in '%s'"
 msgstr "Không tìm thấy điều kiện nối kết trong « %s »."
 
-#:../libgda/gda-query-condition.c:363 ../libgda/gda-query-field.c:325
+#:../libgda/gda-query-condition.c:373 ../libgda/gda-query-field.c:325
 #,c-format
 msgid "Error parsing '%s'"
 msgstr "Gặp lỗi khi phân tách « %s »."
 
-#:../libgda/gda-query-condition.c:780
+#:../libgda/gda-query-condition.c:790
 msgid "Conditions hierarchy error"
 msgstr "Lỗi hệ đẳng cấp điều kiện."
 
-#:../libgda/gda-query-condition.c:789
+#:../libgda/gda-query-condition.c:799
 msgid "A NOT node can only have one child"
 msgstr "Một nút kiểu NOT (không) có thể có chỉ một điều con thôi."
 
-#:../libgda/gda-query-condition.c:1422
+#:../libgda/gda-query-condition.c:1432
 msgid "XML Tag is not <gda_query_cond>"
 msgstr "Thẻ XML không phải là <gda_query_cond> (điều kiện truy vấn gda)."
 
-#:../libgda/gda-query-condition.c:1435
+#:../libgda/gda-query-condition.c:1445
 msgid "Wrong 'id' attribute in <gda_query_cond>"
-msgstr "Gặp thuộc tính « ld » không đúng trong <gda_query_cond> (điều kiện truy vấn gda)."
+msgstr "Gặp thuộc tính « ld » không đúng trong <gda_query_cond> (điều kiện truy vấn "
+"gda)."
 
-#:../libgda/gda-query-condition.c:1450
+#:../libgda/gda-query-condition.c:1460
 msgid "Wrong 'type' attribute in <gda_query_cond>"
-msgstr "Gặp thuộc tính « type » (kiểu) không đúng trong <gda_query_cond> (điều kiện truy vấn gda)."
+msgstr "Gặp thuộc tính « type » (kiểu) không đúng trong <gda_query_cond> (điều kiện "
+"truy vấn gda)."
 
-#:../libgda/gda-query-condition.c:1500
+#:../libgda/gda-query-condition.c:1510
 msgid "Missing ID attribute in <gda_query_cond>"
 msgstr "Thiếu thuộc tính ID trong <gda_query_cond> (điều kiện truy vấn gda)."
 
-#:../libgda/gda-query-condition.c:1531
+#:../libgda/gda-query-condition.c:1541
 msgid "Condition is not active"
 msgstr "Điều kiện không hoạt động."
 
-#:../libgda/gda-query-condition.c:1545
+#:../libgda/gda-query-condition.c:1555
 msgid "Condition operator 'NOT' must have one argument"
 msgstr "Toán tử điều kiện « NOT » (không) phải có một đối số."
 
-#:../libgda/gda-query-condition.c:1555
+#:../libgda/gda-query-condition.c:1565
 msgid "Condition must have at least one argument"
 msgstr "Điều kiện phải có ít nhất một đối số."
 
-#:../libgda/gda-query-condition.c:1576
+#:../libgda/gda-query-condition.c:1586
 msgid "Condition must have two arguments"
 msgstr "Điều kiện phải có hai đối số."
 
-#:../libgda/gda-query-condition.c:1586
+#:../libgda/gda-query-condition.c:1596
 msgid "Condition 'BETWEEN' must have three arguments"
 msgstr "Điều kiện « BETWEEN » (giữa) phải có ba đối số."
 
@@ -752,7 +772,8 @@ msgstr "Có nhiều đối số cho tập hợp %s."
 
 #:../libgda/gda-query-field-agg.c:844
 msgid "Missing required attributes for <gda_query_fagg>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_fagg> (tập hợp f truy vấn gda)."
+msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_fagg> (tập hợp f truy vấn "
+"gda)."
 
 #:../libgda/gda-query-field-agg.c:896 ../libgda/gda-query-field-func.c:976
 #,c-format
@@ -792,11 +813,13 @@ msgstr "Trường chưa được hoạt hóa."
 
 #:../libgda/gda-query-field.c:196
 msgid "Missing 'target' attribute in <gda_query_fall>"
-msgstr "Thiếu thuộc tính « target » (đích) trong <gda_query_fall> (truy vấn hết f gda)."
+msgstr "Thiếu thuộc tính « target » (đích) trong <gda_query_fall> (truy vấn hết f "
+"gda)."
 
 #:../libgda/gda-query-field.c:240
 msgid "Missing Implementation in loading <gda_query_f*>"
-msgstr "Thiếu Implementation (cách thực hiện) khi tải <gda_query_f*> (truy vấn f* gda)."
+msgstr "Thiếu Implementation (cách thực hiện) khi tải <gda_query_f*> (truy vấn f* "
+"gda)."
 
 #:../libgda/gda-query-field.c:305
 #,c-format
@@ -814,7 +837,8 @@ msgstr "Thẻ XML không phải là <gda_query_ffield> (trường f truy vấn g
 
 #:../libgda/gda-query-field-field.c:999
 msgid "Missing required attributes for <gda_query_ffield>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_ffield> (trường f truy vấn gda)."
+msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_ffield> (trường f truy vấn "
+"gda)."
 
 #:../libgda/gda-query-field-func.c:804
 msgid "XML Tag is not <gda_query_ffunc>"
@@ -827,7 +851,8 @@ msgstr "Số đối số không đúng cho chức năng %s."
 
 #:../libgda/gda-query-field-func.c:910
 msgid "Missing required attributes for <gda_query_ffunc>"
-msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_ffunc> (chức năng f truy vấn gda)."
+msgstr "Thiếu một số thuộc tính cần thiết cho <gda_query_ffunc> (chức năng f truy "
+"vấn gda)."
 
 #:../libgda/gda-query-field-func.c:945
 msgid "Don't know how to render function"
@@ -841,26 +866,27 @@ msgstr "Hàm chưa được hoạt hóa."
 msgid "XML Tag is not <gda_query_fval>"
 msgstr "Thẻ XML không phải là <gda_query_fval> (giá trị f truy vấn gda)."
 
-#:../libgda/gda-query-field-value.c:1143
+#:../libgda/gda-query-field-value.c:1146
 #,c-format
 msgid "Can't interpret '%s' as a value"
 msgstr "Không thể giải dịch « %s » dạng giá trị."
 
-#:../libgda/gda-query-field-value.c:1209
+#:../libgda/gda-query-field-value.c:1212
 msgid "Missing required gda_type for <gda_query_fval>"
-msgstr "Thiếu « gda_type » (kiểu gda) cần thiết cho <gda_query_fval> (giá trị f truy vấn gda)."
+msgstr "Thiếu « gda_type » (kiểu gda) cần thiết cho <gda_query_fval> (giá trị f truy "
+"vấn gda)."
 
-#:../libgda/gda-query-field-value.c:1219
+#:../libgda/gda-query-field-value.c:1222
 #,c-format
 msgid "Value field '%s' does not have a value!"
 msgstr "• Trường giá trị « %s » không có giá trị. •"
 
-#:../libgda/gda-query-field-value.c:1306
+#:../libgda/gda-query-field-value.c:1309
 #,c-format
 msgid "Invalid parameter '%s' (value: %s)"
 msgstr "Tham số không hợp lệ « %s » (giá trị: %s)."
 
-#:../libgda/gda-query-field-value.c:1359
+#:../libgda/gda-query-field-value.c:1362
 msgid "No specified value"
 msgstr "Chưa ghi rõ giá trị."
 
@@ -888,7 +914,8 @@ msgstr "Mệnh đề « ORDER BY » (sắp xếp theo) không hợp lệ."
 #:../libgda/gda-query-parsing.c:386
 #,c-format
 msgid "Invalid ORDER BY clause: can't find field number %d"
-msgstr "Mệnh đề « ORDER BY » (sắp xếp theo) không hợp lệ: không tìm thấy trường số %d."
+msgstr "Mệnh đề « ORDER BY » (sắp xếp theo) không hợp lệ: không tìm thấy trường số %"
+"d."
 
 #:../libgda/gda-query-parsing.c:436
 msgid "Missing UPDATE target entity"
@@ -971,25 +998,25 @@ msgstr "Trường không hợp lệ « %s.%s »."
 msgid "Non declared target '%s'"
 msgstr "Đích chưa được khai báo « %s »."
 
-#:../libgda/gda-query-parsing.c:1371
+#:../libgda/gda-query-parsing.c:1374
 #,c-format
 msgid "Ambiguous field '%s'"
 msgstr "Trường mơ hồ « %s »."
 
-#:../libgda/gda-query-parsing.c:1406
+#:../libgda/gda-query-parsing.c:1409
 msgid "Ambiguous field '*'"
 msgstr "Trường mơ hồ « * »."
 
-#:../libgda/gda-query-parsing.c:1494
+#:../libgda/gda-query-parsing.c:1497
 #,c-format
 msgid "Unknown data type '%s'"
 msgstr "Không biết kiểu dữ liệu « %s »."
 
-#:../libgda/gda-query-parsing.c:1508
+#:../libgda/gda-query-parsing.c:1511
 msgid "Data type must be specified when no default value is provided"
 msgstr "Phải ghi rõ kiểu dữ liệu khi chưa cung cấp giá trị mặc định."
 
-#:../libgda/gda-query-parsing.c:1743
+#:../libgda/gda-query-parsing.c:1746
 msgid "Can't set aggregate or function's arguments"
 msgstr "Không thể lập các đối số của chức năng hay tập hợp."
 
@@ -1321,9 +1348,9 @@ msgstr "ĐÚNG"
 msgid "FALSE"
 msgstr "SAI"
 
+# Variable: don't translate / Biến: đừng dịch
 #:../libgda/gda-value.c:2256
 #,c-format
-# Variable: don't translate / Biến: đừng dịch
 msgid "(%s %p)"
 msgstr "(%s %p)"
 
@@ -1429,7 +1456,7 @@ msgstr "Lỗi phân tách gần « %s »."
 msgid "Syntax error near `%s'"
 msgstr "Lỗi cú pháp gần « %s »."
 
-#:../libgda/sql-delimiter/gda-sql-delimiter.c:145 ../libsql/sql_parser.c:384
+#:../libgda/sql-delimiter/gda-sql-delimiter.c:142 ../libsql/sql_parser.c:384
 msgid "Empty query to parse"
 msgstr "Truy vấn rỗng cần phân tách."
 
@@ -1533,8 +1560,8 @@ msgstr "Bộ cung cấp cơ sở dữ liệu Firebird."
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
-msgstr "Kết nối bị hủy bỏ. Bạn phải cung cấp ít nhất tên máy, tên người dùng (user) và mật "
-"khẩu (password) bằng « DSN 'QUERY=;USER=;PASSWORD= »."
+msgstr "Kết nối bị hủy bỏ. Bạn phải cung cấp ít nhất tên máy, tên người dùng (user) "
+"và mật khẩu (password) bằng « DSN 'QUERY=;USER=;PASSWORD= »."
 
 #:../providers/freetds/gda-freetds-provider.c:212
 msgid "Error creating message container."
@@ -1614,7 +1641,8 @@ msgstr "Gặp lỗi khi xử lý hàng kết quả.\n"
 
 #:../providers/freetds/gda-freetds-recordset.c:373
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
-msgstr "Mã trả về « freetds » bất ngờ trong « tds_process_row_tokens() » (các hiệu bài hàng xử lý tds).\n"
+msgstr "Mã trả về « freetds » bất ngờ trong « tds_process_row_tokens() » (các hiệu "
+"bài hàng xử lý tds).\n"
 
 #:../providers/freetds/gda-freetds-recordset.c:383
 msgid "Error processing results.\n"
@@ -1622,7 +1650,8 @@ msgstr "Gặp lỗi khi xử lý kết quả.\n"
 
 #:../providers/freetds/gda-freetds-recordset.c:390
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
-msgstr "Mã trả về « freetds » không mong đợi trong « tds_process_row_tokens » (các hiệu bài hàng xử lý tds).\n"
+msgstr "Mã trả về « freetds » không mong đợi trong « tds_process_row_tokens » (các "
+"hiệu bài hàng xử lý tds).\n"
 
 #:../providers/freetds/libmain.c:40
 msgid "Provider for TDS-based databases (using FreeTDS)"
@@ -1727,7 +1756,8 @@ msgstr "Bộ cung cấp thư mục LDAP"
 
 #:../providers/mdb/gda-mdb-provider.c:227
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr "Phải xác định cơ sở dữ liệu TÊN TẬP TIN trong « connection_string » (chuỗi kết nối)."
+msgstr "Phải xác định cơ sở dữ liệu TÊN TẬP TIN trong « connection_string » (chuỗi "
+"kết nối)."
 
 #:../providers/mdb/gda-mdb-provider.c:236
 #:../providers/xbase/gda-xbase-provider.c:246
@@ -1874,8 +1904,8 @@ msgstr "Số thứ tự hàng vượt ngoài phạm vi."
 #:../providers/mysql/gda-mysql-provider.c:273
 msgid ""
 "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
-msgstr "Bạn không thể cung cấp một « UNIX_SOCKET » (ổ cắm Unix) nếu cũng đã cung cấp hoặc "
-"là « HOST » (máy) hoặc là « PORT » (cổng)."
+msgstr "Bạn không thể cung cấp một « UNIX_SOCKET » (ổ cắm Unix) nếu cũng đã cung cấp "
+"hoặc là « HOST » (máy) hoặc là « PORT » (cổng)."
 
 #:../providers/mysql/gda-mysql-provider.c:411
 #:../providers/mysql/gda-mysql-provider.c:1812
@@ -1913,7 +1943,7 @@ msgstr "Thiếu tham số « DATABASE » (cơ sở dữ liệu)."
 
 #:../providers/mysql/gda-mysql-provider.c:696
 #:../providers/postgres/gda-postgres-provider.c:992
-#:../providers/sqlite/gda-sqlite-provider.c:587
+#:../providers/sqlite/gda-sqlite-provider.c:592
 msgid "Method not handled by this provider"
 msgstr "Bộ cung cấp này không quản lý phương pháp đó."
 
@@ -1924,7 +1954,7 @@ msgstr "Bộ cung cấp này không quản lý phương pháp đó."
 #:../providers/oracle/gda-oracle-provider.c:973
 #:../providers/oracle/gda-oracle-provider.c:1034
 #:../providers/postgres/gda-postgres-provider.c:1384
-#:../providers/sqlite/gda-sqlite-provider.c:686
+#:../providers/sqlite/gda-sqlite-provider.c:691
 msgid "Transactions are not supported in read-only mode"
 msgstr "Không hỗ trợ giao dịch trong chế độ chỉ đọc."
 
@@ -2330,47 +2360,47 @@ msgstr "Bộ đa phần: « %s »"
 msgid "Provider for PostgreSQL databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu PostgreSQL"
 
-#:../providers/sqlite/gda-sqlite-provider.c:233
+#:../providers/sqlite/gda-sqlite-provider.c:238
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr "Phải xác định đường dẫn đầy đủ trong chuỗi kết nối để mở cơ sở dữ liệu."
 
-#:../providers/sqlite/gda-sqlite-provider.c:257
+#:../providers/sqlite/gda-sqlite-provider.c:262
 msgid "Could not set empty_result_callbacks SQLite option"
-msgstr "Không thể lập tùy chọn SQLite « empty_result_callbacks » (vuộc gọi ngược kết quả "
-"rỗng)."
+msgstr "Không thể lập tùy chọn SQLite « empty_result_callbacks » (vuộc gọi ngược kết "
+"quả rỗng)."
 
-#:../providers/sqlite/gda-sqlite-provider.c:316
-#:../providers/sqlite/gda-sqlite-provider.c:497
-#:../providers/sqlite/gda-sqlite-provider.c:768
-#:../providers/sqlite/gda-sqlite-provider.c:1144
+#:../providers/sqlite/gda-sqlite-provider.c:321
+#:../providers/sqlite/gda-sqlite-provider.c:502
+#:../providers/sqlite/gda-sqlite-provider.c:773
+#:../providers/sqlite/gda-sqlite-provider.c:1149
 msgid "Invalid SQLite handle"
 msgstr "Bộ quản lý SQLite không hợp lệ."
 
-#:../providers/sqlite/gda-sqlite-provider.c:371
-#:../providers/sqlite/gda-sqlite-provider.c:974
-#:../providers/sqlite/gda-sqlite-provider.c:1196
-#:../providers/sqlite/gda-sqlite-provider.c:1233
+#:../providers/sqlite/gda-sqlite-provider.c:376
+#:../providers/sqlite/gda-sqlite-provider.c:979
+#:../providers/sqlite/gda-sqlite-provider.c:1201
+#:../providers/sqlite/gda-sqlite-provider.c:1238
 msgid "Invalid SQLITE handle"
 msgstr "Bộ quản lý SQLITE không hợp lệ."
 
-#:../providers/sqlite/gda-sqlite-provider.c:515
+#:../providers/sqlite/gda-sqlite-provider.c:520
 msgid "Only one database per connection is allowed"
 msgstr "Chỉ cho phép một cơ sở dữ liệu cho mỗi cách kết nối."
 
-#:../providers/sqlite/gda-sqlite-provider.c:561
+#:../providers/sqlite/gda-sqlite-provider.c:566
 msgid "Missing parameter 'URI'"
 msgstr "Thiếu địa điểm URI tham số."
 
-#:../providers/sqlite/gda-sqlite-provider.c:604
+#:../providers/sqlite/gda-sqlite-provider.c:609
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "Để gỡ bỏ cơ sở dữ liệu SQLite, bạn nên tự gỡ bỏ tập tin cơ sở dữ liệu."
 
-#:../providers/sqlite/gda-sqlite-provider.c:996
+#:../providers/sqlite/gda-sqlite-provider.c:1001
 msgid "Can't execute PRAGMA table_info()"
 msgstr "Không thể thực hiện « table_info() » (thông tin bảng) kiểu PRAGMA."
 
-#:../providers/sqlite/gda-sqlite-provider.c:1103
+#:../providers/sqlite/gda-sqlite-provider.c:1108
 #,c-format
 msgid "Can't find table %s"
 msgstr "Không tìm thấy bảng %s."
@@ -2429,7 +2459,8 @@ msgstr "Đánh kiểu kết quả không được hỗ trợ."
 msgid ""
 "An error occurred when attempting to test if there is a server message for "
 "resultset"
-msgstr "Gặp lỗi khi cố thử ra nếu có thông điệp trình phục vụ cho tập kết quả hay không."
+msgstr "Gặp lỗi khi cố thử ra nếu có thông điệp trình phục vụ cho tập kết quả hay "
+"không."
 
 #:../providers/sybase/gda-sybase-provider.c:819
 #,c-format
@@ -2664,8 +2695,7 @@ msgstr ") Thông điệp: "
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
-msgstr "Thông điệp OpenClient Sybase: q.trọng(%ld), số(%ld), gốc(%ld), cấp(%"
-"ld): %s"
+msgstr "Thông điệp OpenClient Sybase: q.trọng(%ld), số(%ld), gốc(%ld), cấp(%ld): %s"
 
 #:../providers/sybase/utils.c:273
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -2816,8 +2846,7 @@ msgstr "Không có lời khai báo cho thuộc tính %s của yếu tố %s.\n"
 #:../report/libgda-report/gda-report-valid.c:283
 #,c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr "Giá trị « %s » cho thuộc tính %s của %s không có trong tập hợp đã "
-"tính.\n"
+msgstr "Giá trị « %s » cho thuộc tính %s của %s không có trong tập hợp đã tính.\n"
 
 #:../providers/bdb/gda-bdb-provider.c:154
 msgid "The FILE parameter is not defined in the connection string."
@@ -2858,7 +2887,7 @@ msgstr "Không thể mở kết nối tới DSN %s: %s.\n"
 #:../testing/gda-test-models.c:452 ../testing/gda-test-models.c:459
 #:../testing/gda-test-models.c:477 ../testing/gda-test-models.c:558
 #:../testing/gda-test-models.c:589 ../testing/gda-test-sql.c:144
-#:../testing/gda-test-sql.c:171 ../testing/gda-test-sql.c:394
+#:../testing/gda-test-sql.c:171 ../testing/gda-test-sql.c:392
 msgid "Unknown error"
 msgstr "Lỗi không rõ"
 
@@ -2890,7 +2919,8 @@ msgstr "Nguồn dữ liệu"
 
 #:../testing/gda-diagnose.c:152
 msgid "List of data sources from the config files (user and system wide)"
-msgstr "Danh sách nguồn dữ liệu từ các tập tin cấu hình (của người dùng và cho toàn hệ thống)."
+msgstr "Danh sách nguồn dữ liệu từ các tập tin cấu hình (của người dùng và cho toàn "
+"hệ thống)."
 
 #:../testing/gda-diagnose.c:213
 msgid "Providers"
@@ -3015,7 +3045,8 @@ msgstr "Bộ cung cấp này không hỗ trợ bộ quản lý dữ liệu."
 msgid ""
 "Data handler marked as error cannot handle the data type they are returned "
 "for."
-msgstr "Bộ quản lý lỗi có nhãn lỗi không thể quản lý kiểu dữ liệu cho mà các lỗi được trả gởi."
+msgstr "Bộ quản lý lỗi có nhãn lỗi không thể quản lý kiểu dữ liệu cho mà các lỗi "
+"được trả gởi."
 
 #:../testing/gda-diagnose.c:694
 msgid "Data handlers test"
@@ -3023,7 +3054,8 @@ msgstr "Thử ra bộ quản lý dữ liệu"
 
 #:../testing/gda-diagnose.c:695
 msgid "get_sql_from_value() and get_str_from_value()"
-msgstr "« get_sql_from_value() » (lấy SQL từ giá trị) và « get_str_from_value() » (lấy chuỗi từ giá trị)"
+msgstr "« get_sql_from_value() » (lấy SQL từ giá trị) và « get_str_from_value() "
+"» (lấy chuỗi từ giá trị)"
 
 #:../testing/gda-diagnose.c:703
 msgid "get_value_from_sql()"
@@ -3112,8 +3144,8 @@ msgstr "Không có truy vấn nào trong tập tin này.\n"
 msgid "########### Query \"%s\" ###########\n"
 msgstr "########### Truy vấn « %s » ###########\n"
 
-#:../testing/gda-inspect-dict-file.c:151
 # Name: don't translate / Tên: đừng dịch
+#:../testing/gda-inspect-dict-file.c:151
 msgid "## SQL:\n"
 msgstr "## SQL:\n"
 
@@ -3204,43 +3236,43 @@ msgstr "• Mô hình %s (tên=%s): hàng %d được cập nhật. •"
 msgid "Model %s (name=%s): row %d removed!"
 msgstr "• Mô hình %s (tên=%s): hàng %d bị gỡ bỏ. •"
 
-#:../testing/gda-test-sql.c:285
+#:../testing/gda-test-sql.c:286
 msgid "SQL tested"
 msgstr "Được kiểm tra SQL"
 
-#:../testing/gda-test-sql.c:288
+#:../testing/gda-test-sql.c:289
 msgid "Action"
 msgstr "Hành động"
 
-#:../testing/gda-test-sql.c:290
+#:../testing/gda-test-sql.c:291
 msgid "Query Name"
 msgstr "Tên truy vấn"
 
-#:../testing/gda-test-sql.c:292
+#:../testing/gda-test-sql.c:293
 msgid "Query Status"
 msgstr "Trạng thái truy vấn"
 
-#:../testing/gda-test-sql.c:294
-msgid "Rendered SQL / error if parsing is not done"
-msgstr "« /error » (lỗi) đã vẽ SQL nếu chưa phân tách"
+#:../testing/gda-test-sql.c:295
+msgid "Rendered SQL"
+msgstr "SQL đã vẽ"
 
-#:../testing/gda-test-sql.c:361
+#:../testing/gda-test-sql.c:362
 msgid "non-parsed"
 msgstr "chưa phân tách"
 
-#:../testing/gda-test-sql.c:363
+#:../testing/gda-test-sql.c:364
 msgid "Active"
 msgstr "Hoạt động"
 
-#:../testing/gda-test-sql.c:363
+#:../testing/gda-test-sql.c:364
 msgid "Inactive"
 msgstr "Bị động"
 
-#:../testing/gda-test-sql.c:385
+#:../testing/gda-test-sql.c:387
 msgid "Parsing"
 msgstr "Đang phân tách"
 
-#:../testing/gda-test-sql.c:420
+#:../testing/gda-test-sql.c:424
 msgid "Copied"
 msgstr "Đã sao chép"
 
