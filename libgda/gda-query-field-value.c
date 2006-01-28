@@ -1396,14 +1396,16 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			isfirst = FALSE;
 		}
 
-		if (field->priv->dict_type) {
-			if (isfirst)
-				isfirst = FALSE;
-			else
-				g_string_append (extra, " ");
+		if (isfirst)
+			isfirst = FALSE;
+		else
+			g_string_append (extra, " ");
+		if (field->priv->dict_type)
 			g_string_append_printf (extra, ":type=\"%s\"", 
 						gda_object_get_name (GDA_OBJECT (field->priv->dict_type)));
-		}
+		else
+			/* print gda_type instead */
+			g_string_append_printf (extra, ":type=\"%s\"", gda_type_to_string (field->priv->gda_type));
 
 		tmpstr = gda_object_get_name (GDA_OBJECT (field));
 		if (tmpstr && *tmpstr) {

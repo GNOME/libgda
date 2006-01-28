@@ -11,6 +11,7 @@ int gda_delimitererror (char *);
 int gda_delimiterlex ();
 
 extern GdaDelimiterStatement *sql_result;
+#define YYDEBUG 1
 %}
 
 %union{
@@ -33,7 +34,7 @@ GdaDelimiterParamSpec     *ps;
 %token L_EQ
 
 %type <v> select_statement insert_statement update_statement delete_statement expr
-%type <str> L_IDENT L_STRING L_TEXTUAL
+%type <str> L_IDENT L_STRING L_TEXTUAL L_EQ
 %type <list> param_spec param_spec_list expr_list
 %type <ps> param_spec_item
 
@@ -43,6 +44,7 @@ statement: select_statement     {sql_result = $1;}
         | insert_statement      {sql_result = $1;}
         | update_statement      {sql_result = $1;}
         | delete_statement      {sql_result = $1;}
+	| expr_list		{sql_result = gda_delimiter_statement_build (GDA_DELIMITER_UNKNOWN, $1);}
         ;
 
 select_statement: L_SELECT expr_list {$$ = gda_delimiter_statement_build (GDA_DELIMITER_SQL_SELECT, $2);}

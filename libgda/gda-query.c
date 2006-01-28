@@ -526,7 +526,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 	if (orig->priv->sql)
 		gda_query->priv->sql = g_strdup (orig->priv->sql);
 	if (orig->priv->sql_exprs)
-		gda_query->priv->sql_exprs = gda_delimiter_parse_copy_statement (orig->priv->sql_exprs);
+		gda_query->priv->sql_exprs = gda_delimiter_parse_copy_statement (orig->priv->sql_exprs, repl);
 	gda_query->priv->global_distinct = orig->priv->global_distinct;
 
 	/* copy sub queries */
@@ -581,6 +581,17 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 
 		g_object_unref (G_OBJECT (qf));
 		g_hash_table_insert (repl, list->data, qf);
+
+		if (gda_query->priv->sql_exprs) {
+			gpointer data;
+
+			data = g_object_get_data (G_OBJECT (list->data), "pspeclist");
+			if (data) 
+				g_object_set_data (G_OBJECT (g_hash_table_lookup (repl, list->data)),
+						   "pspeclist",
+						   g_hash_table_lookup (repl, data));
+		}
+
 		list = g_slist_next (list);
 	}
 
@@ -1363,20 +1374,21 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 		* parameter.
 		*/
 		stm = gda_delimiter_parse_with_error (sql, &local_error);
-		if (local_error)
-			g_error_free (local_error);
+	       
 		if (stm) {
 			GList *params;
 			gboolean allok = TRUE;
 			GdaDict *dict = gda_object_get_dict (GDA_OBJECT (query));
 
+			/*g_print ("DELIMITED: %s\n", sql);
+			  gda_delimiter_display (stm);*/
 			params = stm->params_specs;
 			while (params && allok) {
 				GdaDictType *dtype = NULL;
 				GdaValueType gtype = GDA_VALUE_TYPE_UNKNOWN;
 				GList *pspecs = (GList *)(params->data);
 				
-				while (pspecs && !dtype) {
+				while (pspecs && !dtype && (gtype == GDA_VALUE_TYPE_UNKNOWN)) {
 					if (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->type == GDA_DELIMITER_PARAM_TYPE) {
 						dtype = gda_dict_get_data_type_by_name (dict,
 							      GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
@@ -1387,7 +1399,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 					}
 					pspecs = g_list_next (pspecs);
 				}
-
+				
 				if (gtype != GDA_VALUE_TYPE_UNKNOWN) {
 					GdaQueryField *field;
 
@@ -1402,7 +1414,6 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 					g_object_unref (field);
 					
 					gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (field), TRUE);
-					gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (field), FALSE);
 
 					pspecs = (GList *) (params->data);
 					while (pspecs) {
@@ -1440,17 +1451,17 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 			if (allok) 
 				query->priv->sql_exprs = stm;
 			else {
+				/*g_warning ("Not allok");*/
 				gda_delimiter_destroy (stm);
 				gda_query_clean (query);
-
 				gda_query_set_query_type (query, GDA_QUERY_TYPE_NON_PARSED_SQL);
-				stm = gda_delimiter_no_parse (sql);
-				query->priv->sql_exprs = stm;
 			}
 		}
 		else {
-			stm = gda_delimiter_no_parse (sql);
-			query->priv->sql_exprs = stm;	
+			/*g_warning ("NOT DELIMITED: %s (ERR: %s)", sql, 
+			  local_error && local_error->message ? local_error->message : "unknown");*/
+			if (local_error)
+				g_error_free (local_error);
 		}
 	}
 
@@ -2745,8 +2756,10 @@ gda_query_dump (GdaQuery *query, guint offset)
 			g_free (sql);
 		}
 		else {
-			g_print ("%sError occurred:\n%s%s\n", str, str, error->message);
-			g_error_free (error);
+			g_print ("%sError occurred:\n%s%s\n", str, str, 
+				 error && error->message ? error->message : _("Unknown error"));
+			if (error)
+				g_error_free (error);
 		}
 	}
         else
@@ -5493,7 +5506,7 @@ render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, g
 			
 			if (found) 
 				str = gda_renderer_render_as_sql (GDA_RENDERER (found), context, options, error);
-
+			
 			if (!str) {
 				g_string_free (string, TRUE);
 				return NULL;

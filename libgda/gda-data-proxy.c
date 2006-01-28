@@ -688,6 +688,12 @@ proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 	if (proxy->priv->ignore_proxied_changes)
 		return;
 
+	/* stop idle adding of rows */
+	if (proxy->priv->idle_add_event_source) {
+		g_idle_remove_by_data (proxy);
+		proxy->priv->idle_add_event_source = 0;
+	}
+
 	/* Free memory for the modifications */
 	while (proxy->priv->all_modifs) {
 		gint model_row = ROW_MODIF (proxy->priv->all_modifs->data)->model_row;

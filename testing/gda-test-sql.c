@@ -387,9 +387,12 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 	actiontd = xmlNewChild (tr, NULL, "td", _("Parsing"));
 	td = xmlNewChild (tr, NULL, "td", gda_object_get_id (GDA_OBJECT (query)));
 	is_non_parsed = (gda_query_get_query_type (query) == GDA_QUERY_TYPE_NON_PARSED_SQL);
-	if (is_non_parsed)
+	if (is_non_parsed) {
 		str = g_strdup_printf ("%s: %s", get_query_status (query),
 				       error && error->message ? error->message : _("Unknown error"));
+		g_error_free (error);
+		error = NULL;
+	}
 	else
 		str = g_strdup (get_query_status (query));
 	td = xmlNewChild (tr, NULL, "td", str);

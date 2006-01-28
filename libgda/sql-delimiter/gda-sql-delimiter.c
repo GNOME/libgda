@@ -31,8 +31,10 @@
 #endif
 
 extern char *gda_delimitertext;
+extern int gda_delimiterdebug;
 extern void gda_delimiter_switch_to_buffer (void *buffer);
 extern void *gda_delimiter_scan_string (const char *string);
+extern void gda_delimiter_delete_buffer (void *buffer);
 
 void gda_delimitererror (char *error);
 
@@ -137,6 +139,10 @@ gda_delimiter_destroy (GdaDelimiterStatement *statement)
 GdaDelimiterStatement *
 gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
 {
+	void *buffer;
+
+	gda_delimiterdebug = 0; /* parser debug active or not */
+	sql_result = NULL;
 	if (!sqlquery) {
 		if (error)
 			g_set_error (error, 0, 0, _("Empty query to parse"));
@@ -144,13 +150,19 @@ gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
 	}
 	
 	gda_sql_error = error;
-	gda_delimiter_switch_to_buffer (gda_delimiter_scan_string (g_strdup (sqlquery)));
+	buffer = gda_delimiter_scan_string (sqlquery);
+	gda_delimiter_switch_to_buffer (buffer);
 	if (! gda_delimiterparse ()) {
 		sql_result->full_query = g_strdup (sqlquery);
-		return sql_result;
 	}
+	else {
+		if (sql_result)
+			sql_destroy_statement (sql_result);
+		sql_result = NULL;
+	}
+	gda_delimiter_delete_buffer (buffer);
 
-	return NULL;
+	return sql_result;
 }
 
 /**
@@ -167,35 +179,6 @@ GdaDelimiterStatement *
 gda_delimiter_parse (const char *sqlquery)
 {
 	return gda_delimiter_parse_with_error (sqlquery, NULL);
-}
-
-/**
- * gda_delimiter_no_parse
- * @sqlquery: A SQL query string. ie SELECT * FROM FOO
- * 
- * Generates a GdaDelimiterStatement structure without trying to actually
- * analyse @sqlquery. This is usefull as a fallback where any other
- * analysis methods have failed.
- *
- * It is not much usefull except that it creates a valid #GdaDelimiterStatement
- * structure.
- */
-GdaDelimiterStatement *
-gda_delimiter_no_parse (const char *sql_text)
-{
-	GdaDelimiterStatement *retval;
-	GdaDelimiterExpr *expr;
-
-	expr = g_new0 (GdaDelimiterExpr, 1);
-	expr->sql_text = g_strdup (sql_text);
-	expr->pspec_list = NULL;
-
-	retval = g_new0 (GdaDelimiterStatement, 1);
-	retval->type = GDA_DELIMITER_UNKNOWN;
-	retval->full_query = g_strdup (sql_text);
-	retval->expr_list = g_list_append (NULL, expr);
-
-	return retval;
 }
 
 static void sql_display_expr (GdaDelimiterExpr *expr);
@@ -290,7 +273,7 @@ sql_display_pspec_list (GList *pspecs)
 
 
 static GdaDelimiterExpr *
-copy_expr (GdaDelimiterExpr *orig)
+copy_expr (GdaDelimiterExpr *orig, GHashTable *repl)
 {
 	GList *list;
 	GdaDelimiterExpr *expr = g_new0 (GdaDelimiterExpr, 1);
@@ -303,8 +286,11 @@ copy_expr (GdaDelimiterExpr *orig)
 		expr->pspec_list = g_list_prepend (expr->pspec_list, pspec);
 		list = g_list_next (list);
 	}
-	if (expr->pspec_list)
+	if (expr->pspec_list) {
 		expr->pspec_list = g_list_reverse (expr->pspec_list);
+		if (repl)
+			g_hash_table_insert (repl, orig->pspec_list, expr->pspec_list);
+	}
 	if (orig->sql_text)
 		expr->sql_text = g_strdup (orig->sql_text);
 
@@ -318,7 +304,7 @@ copy_expr (GdaDelimiterExpr *orig)
  * makes a copy of @statement
  */
 GdaDelimiterStatement *
-gda_delimiter_parse_copy_statement (GdaDelimiterStatement *statement)
+gda_delimiter_parse_copy_statement (GdaDelimiterStatement *statement, GHashTable *repl)
 {
 	GdaDelimiterStatement *stm;
 	GList *list;
@@ -331,8 +317,11 @@ gda_delimiter_parse_copy_statement (GdaDelimiterStatement *statement)
 	stm->full_query = g_strdup (statement->full_query);
 	list = statement->expr_list;
 	while (list) {
-		GdaDelimiterExpr *tmp = copy_expr ((GdaDelimiterExpr *)(list->data));
+		GdaDelimiterExpr *tmp = copy_expr ((GdaDelimiterExpr *)(list->data), repl);
 		stm->expr_list = g_list_prepend (stm->expr_list, tmp);
+
+		if (repl)
+			g_hash_table_insert (repl, list->data, tmp);
 		
 		list = g_list_next (list);
 	}

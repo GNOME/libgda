@@ -44,6 +44,9 @@ gda_delimiter_statement_build (GdaDelimiterStatementType type, GList *expr_list)
 	case GDA_DELIMITER_SQL_UPDATE:
 		first = gda_delimiter_expr_build (g_strdup ("UPDATE"), NULL);
 		break;
+	case GDA_DELIMITER_UNKNOWN:
+		first = NULL;
+		break;
 	default:
 		g_assert_not_reached ();
 		break;

@@ -30,6 +30,7 @@
 extern char *sqltext;
 extern void sql_switch_to_buffer(void *buffer);
 extern void *sql_scan_string(const char *string);
+extern void sql_delete_buffer (void *buffer);
 
 void sqlerror(char *error);
 
@@ -378,6 +379,8 @@ sql_destroy(sql_statement * statement)
 sql_statement *
 sql_parse_with_error(const char *sqlquery, GError ** error)
 	{
+	void *buffer;
+
 	if (sqlquery == NULL)
 		{
 		if (error)
@@ -389,17 +392,20 @@ sql_parse_with_error(const char *sqlquery, GError ** error)
 		}
 
 	sql_error = error;
-	sql_switch_to_buffer(sql_scan_string(g_strdup(sqlquery)));
+	buffer = sql_scan_string (sqlquery);
+	sql_switch_to_buffer (buffer);
 
 	if (sqlparse() == 0)
 		{
 		sql_result->full_query = memsql_strdup(sqlquery);
+		sql_delete_buffer (buffer);
 		return sql_result;
 		}
 	else
 		{
 		if (!error)
-			fprintf(stderr, "Error on SQL statement: %s\n", sqlquery);
+			fprintf (stderr, "Error on SQL statement: %s\n", sqlquery);
+		sql_delete_buffer (buffer);
 		return NULL;
 		}
 	}

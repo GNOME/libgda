@@ -26,13 +26,16 @@ char *string_buf_ptr;
 %x STRING
 %x TEXTUAL
 %%
+
+		BEGIN(INITIAL);
+
 "select"	{return L_SELECT;}
 "insert"	{return L_INSERT;}
 "update" 	{return L_UPDATE;}
 "delete"        {return L_DELETE;}
 "="		{return L_EQ;}
 
-[a-zA-Z0-9_,+-/|().!~*]+	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
+[a-zA-Z0-9_,+-/|().!~*=]+	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
 [ \t\n\r]	{;}
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}
 <STRING>\\'     {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
@@ -74,4 +77,5 @@ char *string_buf_ptr;
 <TEXTUAL>.       {*string_buf_ptr++=gda_delimitertext[0];}
 
 .		 {;}
+
 %%

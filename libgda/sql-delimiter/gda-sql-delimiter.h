@@ -83,7 +83,7 @@ typedef enum
 struct GdaDelimiterParamSpec
 {
 	GdaDelimiterParamSpecType  type;
-	char            *content;
+	char                      *content;
 };
 #define GDA_DELIMITER_PARAM_SPEC(x) ((GdaDelimiterParamSpec *)(x))
 
@@ -92,8 +92,7 @@ int   gda_delimiter_destroy (GdaDelimiterStatement * statement);
 
 GdaDelimiterStatement *gda_delimiter_parse                (const char *sql_text);
 GdaDelimiterStatement *gda_delimiter_parse_with_error     (const char *sql_text, GError ** error);
-GdaDelimiterStatement *gda_delimiter_no_parse             (const char *sql_text);
 
-GdaDelimiterStatement *gda_delimiter_parse_copy_statement (GdaDelimiterStatement * statement);
+GdaDelimiterStatement *gda_delimiter_parse_copy_statement (GdaDelimiterStatement *statement, GHashTable *repl);
 
 #endif

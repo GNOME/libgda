@@ -1,3 +1,13 @@
+2006-01-28  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sql-delimiter/gda-sql-delimiter.c: corrected memory leaks
+	* libgda/sql-delimiter/lexer.l: impose the INITIAL state
+	* libgda/sql-delimiter/*: added a new type of reported query: the "unknown" one
+	* libsql/sql_parser.c: corrected memory leaks
+	* testing/tests_data/SQL_parsing_tests.xml: added some tests and corrected some other ones
+	* libgda/gda-query.c, libgda/gda-query-field-value.c, libgda/gda-data-proxy.c: bug fixed
+	
+	
 2006-01-26  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model-row.c, libgda/gda-data-model-hash.c, libgda/gda-data-model-array.c:
