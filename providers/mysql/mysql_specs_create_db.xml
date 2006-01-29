@@ -13,157 +13,153 @@
     <!-- DSN parameters -->
     <parameter id="DATABASE" name="Database name" descr="The name of a database to create" gdatype="string" null-ok="FALSE"/>
     <parameter id="ENCODING" name="Encoding" descr="Character set encoding to use in the new database" gdatype="string" source="csets:1"/>
-    <parameter id="COLLATE"  name="Collation method" descr="Default database collation" gdatype="string" source="colls:1"/>
   </parameters>
   <sources>
-    <data-array name="csets">
-      <field name="id" gdatype="string" position="0"/>
-      <field name="text" gdatype="string" position="1"/>
-      <data>
-        <row position="0">
-          <value position="0" gdatype="string">big5</value>
-          <value position="1" gdatype="string">Big5 Traditional Chinese</value>
-        </row>
-        <row position="1">
-          <value position="0" gdatype="string">dec8</value>
-          <value position="1" gdatype="string">DEC West European</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">cp850</value>
-          <value position="1" gdatype="string">DOS West European</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">hp8</value>
-          <value position="1" gdatype="string">HP West European</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">koi8r</value>
-          <value position="1" gdatype="string">KOI8-R Relcom Russian</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">latin1</value>
-          <value position="1" gdatype="string">ISO 8859-1 West European</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">latin2</value>
-          <value position="1" gdatype="string">ISO 8859-2 Central European</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">swe7</value>
-          <value position="1" gdatype="string">7bit Swedish</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">ascii</value>
-          <value position="1" gdatype="string">US ASCII</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">ujis</value>
-          <value position="1" gdatype="string">EUC-JP Japanese</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">sjis</value>
-          <value position="1" gdatype="string">Shift-JIS Japanese</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">hebrew</value>
-          <value position="1" gdatype="string">ISO 8859-8 Hebrew</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">tis620</value>
-          <value position="1" gdatype="string">TIS620 Thai</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">euckr</value>
-          <value position="1" gdatype="string">EUC-KR Korean</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">koi8u</value>
-          <value position="1" gdatype="string">KOI8-U Ukrainian</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">gb2312</value>
-          <value position="1" gdatype="string">GB2312 Simplified Chinese</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">greek</value>
-          <value position="1" gdatype="string">ISO 8859-7 Greek</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-
-      </data>
-    </data-array>
-    <data-array name="colls">
-      <field name="id" gdatype="string" position="0"/>
-      <field name="text" gdatype="string" position="1"/>
-      <data>
-        <row position="0">
-          <value position="0" gdatype="string">big5_chinese_ci</value>
-          <value position="1" gdatype="string">Big5 Traditional Chinese</value>
-        </row>
-	<row position="1">
-          <value position="0" gdatype="string">dec8_swedish_ci</value>
-          <value position="1" gdatype="string">DEC West European</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">cp850_general_ci</value>
-          <value position="1" gdatype="string">DOS West European</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">hp8_english_ci</value>
-          <value position="1" gdatype="string">HP West European</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string">koi8r_general_ci</value>
-          <value position="1" gdatype="string">KOI8-R Relcom Russian</value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-        <row position="2">
-          <value position="0" gdatype="string"></value>
-          <value position="1" gdatype="string"></value>
-        </row>
-      </data>
-    </data-array>
+    <gda_array name="csets">
+      <gda_array_field name="id" gdatype="string"/>
+      <gda_array_field name="text" gdatype="string"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>utf8</gda_value>
+          <gda_value>UTF-8 Unicode</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>latin1</gda_value>
+          <gda_value>ISO 8859-1 West European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>latin2</gda_value>
+          <gda_value>ISO 8859-2 Central European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>ascii</gda_value>
+          <gda_value>US ASCII</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>big5</gda_value>
+          <gda_value>Big5 Traditional Chinese</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>dec8</gda_value>
+          <gda_value>DEC West European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp850</gda_value>
+          <gda_value>DOS West European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>hp8</gda_value>
+          <gda_value>HP West European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>koi8r</gda_value>
+          <gda_value>KOI8-R Relcom Russian</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>swe7</gda_value>
+          <gda_value>7bit Swedish</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>ujis</gda_value>
+          <gda_value>EUC-JP Japanese</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>sjis</gda_value>
+          <gda_value>Shift-JIS Japanese</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>hebrew</gda_value>
+          <gda_value>ISO 8859-8 Hebrew</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>tis620</gda_value>
+          <gda_value>TIS620 Thai</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>euckr</gda_value>
+          <gda_value>EUC-KR Korean</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>koi8u</gda_value>
+          <gda_value>KOI8-U Ukrainian</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>gb2312</gda_value>
+          <gda_value>GB2312 Simplified Chinese</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>greek</gda_value>
+          <gda_value>ISO 8859-7 Greek</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp1250</gda_value>
+          <gda_value>Windows Central European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>gbk</gda_value>
+          <gda_value>GBK Simplified Chinese</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>latin5</gda_value>
+          <gda_value>ISO 8859-9 Turkish</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>armscii8</gda_value>
+          <gda_value>ARMSCII-8 Armenian</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>ucs2</gda_value>
+          <gda_value>UCS-2 Unicode</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp866</gda_value>
+          <gda_value>DOS Russian</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>keybcs2</gda_value>
+          <gda_value>DOS Kamenicky Czech-Slovak</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>macce</gda_value>
+          <gda_value>Mac Central European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>macroman</gda_value>
+          <gda_value>Mac West European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp852</gda_value>
+          <gda_value>DOS Central European</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>latin7</gda_value>
+          <gda_value>ISO 8859-13 Baltic</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp1251</gda_value>
+          <gda_value>Windows Cyrillic</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp1256</gda_value>
+          <gda_value>Windows Arabic</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp1257</gda_value>
+          <gda_value>Windows Baltic</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>binary</gda_value>
+          <gda_value>Binary pseudo charset</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>geostd8</gda_value>
+          <gda_value>GEOSTD8 Georgian</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp932</gda_value>
+          <gda_value>SJIS for Windows Japanese</gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
   </sources>
 </data-set-spec>

@@ -178,7 +178,8 @@ gda_msql_recordset_is_updatable(GdaDataModelRow *model)
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
 	if (!GDA_IS_MSQL_RECORDSET(rs)) return FALSE;
-	cmd_type=gda_data_model_get_command_type(model);
+
+	g_object_get (G_OBJECT (model), "command_type", &cmd_type, NULL);
 	return (cmd_type==GDA_COMMAND_TYPE_TABLE) ? TRUE : FALSE;
 }
 

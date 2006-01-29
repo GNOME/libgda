@@ -17,123 +17,123 @@
     <parameter id="TABLESPACE" name="Tablespace" descr="The name of the tablespace that will be associated with the new database" gdatype="string"/>
   </parameters>
   <sources>
-    <data-array name="csets">
-      <field name="id" gdatype="string" position="0"/>
-      <field name="text" gdatype="string" position="1"/>
-      <data>
-	<row position="0">
-	  <value position="0" gdatype="string">UNICODE</value>
-	  <value position="1" gdatype="string">Unicode (UTF-8)</value>
-	</row>
-	<row position="1">
-	  <value position="0" gdatype="string">SQL_ASCII</value>
-	  <value position="1" gdatype="string">ASCII</value>
-	</row>
-	<row position="2">
-	  <value position="0" gdatype="string">EUC_JP</value>
-	  <value position="1" gdatype="string">Japanese EUC</value>
-	</row>
-	<row position="3">
-	  <value position="0" gdatype="string">EUC_CN</value>
-	  <value position="1" gdatype="string">Chinese EUC</value>
-	</row>
-	<row position="4">
-	  <value position="0" gdatype="string">EUC_KR</value>
-	  <value position="1" gdatype="string">Korean EUC</value>
-	</row>
-	<row position="5">
-	  <value position="0" gdatype="string">JOHAB</value>
-	  <value position="1" gdatype="string">Korean EUC (Hangle base)</value>
-	</row>
-	<row position="6">
-	  <value position="0" gdatype="string">EUC_TW</value>
-	  <value position="1" gdatype="string">Taiwan EUC</value>
-	</row>
-	<row position="7">
-	  <value position="0" gdatype="string">LATIN1</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.1)</value>
-	</row>
-	<row position="8">
-	  <value position="0" gdatype="string">LATIN2</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.2)</value>
-	</row>
-	<row position="9">
-	  <value position="0" gdatype="string">LATIN3</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.3)</value>
-	</row>
-	<row position="10">
-	  <value position="0" gdatype="string">LATIN4</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.4)</value>
-	</row>
-	<row position="11">
-	  <value position="0" gdatype="string">LATIN5</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.5)</value>
-	</row>
-	<row position="12">
-	  <value position="0" gdatype="string">LATIN6</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.6)</value>
-	</row>
-	<row position="13">
-	  <value position="0" gdatype="string">LATIN7</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.7)</value>
-	</row>
-	<row position="14">
-	  <value position="0" gdatype="string">LATIN8</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.8)</value>
-	</row>
-	<row position="15">
-	  <value position="0" gdatype="string">LATIN9</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.9)</value>
-	</row>
-	<row position="16">
-	  <value position="0" gdatype="string">LATIN10</value>
-	  <value position="1" gdatype="string">ISO 8859-1/ECMA 94 (Latin alphabet no.10)</value>
-	</row>
-	<row position="17">
-	  <value position="0" gdatype="string">ISO_8859_5</value>
-	  <value position="1" gdatype="string">ISO 8859-5/ECMA 113 (Latin/Cyrillic)</value>
-	</row>
-	<row position="18">
-	  <value position="0" gdatype="string">ISO_8859_6</value>
-	  <value position="1" gdatype="string">ISO 8859-6/ECMA 114 (Latin/Arabic)</value>
-	</row>
-	<row position="19">
-	  <value position="0" gdatype="string">ISO_8859_7</value>
-	  <value position="1" gdatype="string">ISO 8859-7/ECMA 118 (Latin/Greek)</value>
-	</row>
-	<row position="20">
-	  <value position="0" gdatype="string">ISO_8859_8</value>
-	  <value position="1" gdatype="string">ISO 8859-8/ECMA 121 (Latin/Hebrew)</value>
-	</row>
-	<row position="21">
-	  <value position="0" gdatype="string">KOI8</value>
-	  <value position="1" gdatype="string">KOI8-R(U)</value>
-	</row>
-	<row position="22">
-	  <value position="0" gdatype="string">ALT</value>
-	  <value position="1" gdatype="string">Windows CP866</value>
-	</row>
-	<row position="23">
-	  <value position="0" gdatype="string">WIN874</value>
-	  <value position="1" gdatype="string">Windows CP874 (Thai)</value>
-	</row>
-	<row position="24">
-	  <value position="0" gdatype="string">WIN1250</value>
-	  <value position="1" gdatype="string">Windows CP1250</value>
-	</row>
-	<row position="25">
-	  <value position="0" gdatype="string">WIN</value>
-	  <value position="1" gdatype="string">Windows CP1251</value>
-	</row>
-	<row position="26">
-	  <value position="0" gdatype="string">WIN1256</value>
-	  <value position="1" gdatype="string">Windows CP1256 (Arabic)</value>
-	</row>
-	<row position="27">
-	  <value position="0" gdatype="string">TCVN</value>
-	  <value position="1" gdatype="string">TCVN-5712/Windows CP1258 (Vietnamese)</value>
-	</row>
-      </data>
-    </data-array>
+    <gda_array name="csets">
+      <gda_array_field name="id" gdatype="string"/>
+      <gda_array_field name="text" gdatype="string"/>
+      <gda_array_data>
+	<gda_array_row>
+	  <gda_value>UNICODE</gda_value>
+	  <gda_value>Unicode (UTF-8)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>SQL_ASCII</gda_value>
+	  <gda_value>ASCII</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>EUC_JP</gda_value>
+	  <gda_value>Japanese EUC</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>EUC_CN</gda_value>
+	  <gda_value>Chinese EUC</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>EUC_KR</gda_value>
+	  <gda_value>Korean EUC</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>JOHAB</gda_value>
+	  <gda_value>Korean EUC (Hangle base)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>EUC_TW</gda_value>
+	  <gda_value>Taiwan EUC</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN1</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.1)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN2</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.2)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN3</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.3)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN4</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.4)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN5</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.5)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN6</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.6)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN7</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.7)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN8</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.8)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN9</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.9)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>LATIN10</gda_value>
+	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.10)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>ISO_8859_5</gda_value>
+	  <gda_value>ISO 8859-5/ECMA 113 (Latin/Cyrillic)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>ISO_8859_6</gda_value>
+	  <gda_value>ISO 8859-6/ECMA 114 (Latin/Arabic)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>ISO_8859_7</gda_value>
+	  <gda_value>ISO 8859-7/ECMA 118 (Latin/Greek)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>ISO_8859_8</gda_value>
+	  <gda_value>ISO 8859-8/ECMA 121 (Latin/Hebrew)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>KOI8</gda_value>
+	  <gda_value>KOI8-R(U)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>ALT</gda_value>
+	  <gda_value>Windows CP866</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>WIN874</gda_value>
+	  <gda_value>Windows CP874 (Thai)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>WIN1250</gda_value>
+	  <gda_value>Windows CP1250</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>WIN</gda_value>
+	  <gda_value>Windows CP1251</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>WIN1256</gda_value>
+	  <gda_value>Windows CP1256 (Arabic)</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+	  <gda_value>TCVN</gda_value>
+	  <gda_value>TCVN-5712/Windows CP1258 (Vietnamese)</gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
   </sources>
 </data-set-spec>

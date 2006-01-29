@@ -50,7 +50,7 @@ struct _GdaMysqlRecordsetClass {
 };
 
 GType              gda_mysql_recordset_get_type (void);
-GdaMysqlRecordset *gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql);
+GdaMysqlRecordset *gda_mysql_recordset_new      (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql);
 
 G_END_DECLS
 

@@ -33,12 +33,12 @@
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
 
 struct _GdaMysqlRecordsetPrivate {
-	MYSQL_RES *mysql_res;
-	gint mysql_res_rows;
+	MYSQL_RES     *mysql_res;
+	gint           mysql_res_rows;
 	GdaConnection *cnc;
-	gint ncolumns;
-	gchar *table_name;
-	gboolean row_sync;
+	gint           ncolumns;
+	gchar         *table_name;
+	gboolean       row_sync;
 };
 
 static void gda_mysql_recordset_class_init (GdaMysqlRecordsetClass *klass);
@@ -210,7 +210,6 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 	MYSQL_ROW mysql_row;
 	unsigned long *mysql_lengths;
 
-
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
@@ -319,7 +318,6 @@ gda_mysql_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 
 	gda_data_model_thaw (GDA_DATA_MODEL (recset));
 
-
 	return (const GdaRow *) row_list;
 }
 
@@ -334,9 +332,11 @@ gda_mysql_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	value = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_value_at (model, col, row);
-	if (value != NULL)
-		return value;
+	if (row < GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_n_rows (model)) {
+		value = GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_value_at (model, col, row);
+		if (value != NULL)
+			return value;
+	}
 
 	priv_data = recset->priv;
         if (!priv_data->mysql_res) {
@@ -369,7 +369,7 @@ gda_mysql_recordset_is_updatable (GdaDataModelRow *model)
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), FALSE);
 	
-	cmd_type = gda_data_model_get_command_type (GDA_DATA_MODEL (model));
+	g_object_get (G_OBJECT (model), "command_type", &cmd_type, NULL);
 	return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;
 }
 

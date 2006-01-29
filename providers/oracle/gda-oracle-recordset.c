@@ -442,7 +442,7 @@ gda_oracle_recordset_is_updatable (GdaDataModelRow *model)
 
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), FALSE);
 
-	cmd_type = gda_data_model_get_command_type (GDA_DATA_MODEL (model));
+	g_object_get (G_OBJECT (model), "command_type", &cmd_type, NULL);
 
 	return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;
 }
