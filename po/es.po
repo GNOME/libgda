@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-01-22 12:13+0100\n"
-"PO-Revision-Date: 2006-01-28 12:58+0100\n"
+"PO-Revision-Date: 2006-01-29 15:05+0100\n"
 "Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -251,14 +251,12 @@ msgid "Missing required attributes for <gda_dict_aggregate>"
 msgstr ""
 
 #: ../libgda/gda-dict.c:424
-#, fuzzy
 msgid "DSN of the connection to use"
-msgstr "Nombre del anfitrión al que conectar"
+msgstr "DSN de la conexión a usar"
 
 #: ../libgda/gda-dict.c:427
-#, fuzzy
 msgid "Username for the connection to use"
-msgstr "Número de puerto que se va a usar en la conexión"
+msgstr "Usuario para la conexión a usar"
 
 #: ../libgda/gda-dict.c:1349
 msgid "gda_graph of type 'Q' must have an 'object' attribute"
@@ -623,9 +621,9 @@ msgid "More than one target defined to apply modifications"
 msgstr ""
 
 #: ../libgda/gda-query.c:4368
-#, fuzzy, c-format
+#, c-format
 msgid "Entity %s is not writable"
-msgstr "El elemento con el ID %s no es una etiqueta"
+msgstr "La entidad %s no es escribible"
 
 #: ../libgda/gda-query.c:4387
 msgid "Modification query field has incompatible type"
@@ -686,9 +684,9 @@ msgid "No join condition found in '%s'"
 msgstr ""
 
 #: ../libgda/gda-query-condition.c:363 ../libgda/gda-query-field.c:325
-#, fuzzy, c-format
+#, c-format
 msgid "Error parsing '%s'"
-msgstr "Error al procesar los resultados.\n"
+msgstr "Error al procesar «%s»"
 
 #: ../libgda/gda-query-condition.c:780
 msgid "Conditions hierarchy error"
@@ -803,9 +801,9 @@ msgid "More than one field to parse in '%s'"
 msgstr ""
 
 #: ../libgda/gda-query-field.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "No field to parse in '%s'"
-msgstr "No se ha podido analizar la cadena SQL «%s»"
+msgstr "No hay campo para analizar en «%s»"
 
 #: ../libgda/gda-query-field-field.c:898
 msgid "XML Tag is not <gda_query_ffield>"
@@ -820,9 +818,9 @@ msgid "XML Tag is not <gda_query_ffunc>"
 msgstr ""
 
 #: ../libgda/gda-query-field-func.c:901
-#, fuzzy, c-format
+#, c-format
 msgid "Wrong number of arguments for function %s"
-msgstr "Número de puerto que se va a usar para la conexión"
+msgstr "Número de argumentos erróneo para la función %s"
 
 #: ../libgda/gda-query-field-func.c:910
 msgid "Missing required attributes for <gda_query_ffunc>"
@@ -834,7 +832,7 @@ msgstr ""
 
 #: ../libgda/gda-query-field-func.c:1044
 msgid "Non activated function"
-msgstr ""
+msgstr "Función no activada"
 
 #: ../libgda/gda-query-field-value.c:1073
 msgid "XML Tag is not <gda_query_fval>"
@@ -881,9 +879,8 @@ msgid "Problem loading <gda_query_join>"
 msgstr ""
 
 #: ../libgda/gda-query-parsing.c:374
-#, fuzzy
 msgid "Invalid ORDER BY clause"
-msgstr "Manejador MDB inválido"
+msgstr "Cláusula ORDER BY inválida"
 
 #: ../libgda/gda-query-parsing.c:386
 #, c-format
@@ -947,18 +944,18 @@ msgid "Ambiguous join: no target to join with"
 msgstr ""
 
 #: ../libgda/gda-query-parsing.c:1201
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid field name: %s"
-msgstr "Manejador Firebird inválido"
+msgstr "Nombre de campo inválido: %s"
 
 #: ../libgda/gda-query-parsing.c:1241
 msgid "Invalid empty field name"
 msgstr ""
 
 #: ../libgda/gda-query-parsing.c:1246
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid field name '%s'"
-msgstr "Archivo de base de datos XML inválido «%s»"
+msgstr "Nombre de campo «%s» inválido"
 
 #: ../libgda/gda-query-parsing.c:1267 ../libgda/gda-query-parsing.c:1317
 #, c-format
@@ -1001,30 +998,29 @@ msgid "Can't get XML ID of target's referenced entity"
 msgstr ""
 
 #: ../libgda/gda-query-target.c:759
-#, fuzzy
 msgid "Can't get the name of target's referenced table"
-msgstr "No se ha podido obtener la cantidad de columnas de la tabla"
+msgstr "No se ha podido obtener la tabla de referencia del destino"
 
 #: ../libgda/gda-query-target.c:786
 msgid "XML Tag is not <gda_query_target>"
-msgstr ""
+msgstr "La etiqueta XML no es <gda_query_target>"
 
 #: ../libgda/gda-query-target.c:807
 msgid "XML ID for a query target should be QUxxx:Tyyy where xxx and yyy are numbers"
-msgstr ""
+msgstr "El ID XML para un destino de consulta debería ser QUxxx:Tyyy donde xxx e yyy son números"
 
 #: ../libgda/gda-query-target.c:857
 msgid "Error loading data from <gda_query_target> node"
-msgstr ""
+msgstr "Error cargando datos desde el nodo <gda_query_target>"
 
 #: ../libgda/gda-query-target.c:904
 msgid "Don't know how to render target"
-msgstr ""
+msgstr "No se sabe cómo renderizar el destino"
 
 #: ../libgda/gda-server-provider.c:428
 #, c-format
 msgid "Provider does not support the '%s()' method"
-msgstr ""
+msgstr "El proveedor no soporta el método '%s()'"
 
 #: ../libgda/gda-server-provider-extra.c:79
 msgid "Aggregate"
@@ -1885,9 +1881,8 @@ msgid "Row number out of bounds"
 msgstr "Número de fila fuera de rango"
 
 #: ../providers/mysql/gda-mysql-provider.c:273
-#, fuzzy
 msgid "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
-msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgstr "No puede proveer un UNIX_SOCKET si también provee un HOST o un PUERTO."
 
 #: ../providers/mysql/gda-mysql-provider.c:411
 #: ../providers/mysql/gda-mysql-provider.c:1812
@@ -1921,13 +1916,13 @@ msgstr "Manejador MYSQL inválido"
 #: ../providers/mysql/gda-mysql-provider.c:667
 #: ../providers/postgres/gda-postgres-provider.c:938
 msgid "Missing parameter 'DATABASE'"
-msgstr ""
+msgstr "Falta el parámetro 'DATABASE'"
 
 #: ../providers/mysql/gda-mysql-provider.c:696
 #: ../providers/postgres/gda-postgres-provider.c:992
 #: ../providers/sqlite/gda-sqlite-provider.c:587
 msgid "Method not handled by this provider"
-msgstr ""
+msgstr "Método no manipulado por este proveedor"
 
 #: ../providers/mysql/gda-mysql-provider.c:1181
 #: ../providers/mysql/gda-mysql-provider.c:1238
@@ -1942,9 +1937,9 @@ msgstr "Las transacciones no están soportadas en el modo de sólo lectura"
 
 #: ../providers/mysql/gda-mysql-recordset.c:298
 #: ../providers/bdb/gda-bdb-recordset.c:113
-#, fuzzy, c-format
+#, c-format
 msgid "Row number out of range 0 - %d"
-msgstr "Número de fila fuera de rango"
+msgstr "Número de fila fuera de rango 0 - %d"
 
 #: ../providers/mysql/gda-mysql-recordset.c:356
 #: ../providers/postgres/gda-postgres-recordset.c:577
@@ -1956,7 +1951,7 @@ msgstr "Número de columna fuera de rango"
 #: ../providers/mysql/gda-mysql-recordset.c:544
 #: ../providers/mysql/gda-mysql-recordset.c:546
 msgid "Table name could not be guessed"
-msgstr "El nombre de la tabla no se pudo adivinar."
+msgstr "El nombre de la tabla no se pudo adivinar"
 
 #: ../providers/mysql/gda-mysql-recordset.c:429
 #: ../providers/mysql/gda-mysql-recordset.c:435
@@ -1964,7 +1959,7 @@ msgstr "El nombre de la tabla no se pudo adivinar."
 #: ../providers/mysql/gda-mysql-recordset.c:563
 #: ../providers/mysql/gda-mysql-recordset.c:569
 msgid "Can not synchronize array with MySQL result set"
-msgstr "No se puede sincronizar la matriz con el juego de resultados de MySQL"
+msgstr "No se puede sincronizar el array con el conjunto de resultados de MySQL"
 
 #: ../providers/mysql/gda-mysql-recordset.c:496
 msgid "Can not append row to data model"
@@ -2026,7 +2021,6 @@ msgid "Invalid Odbc handle"
 msgstr "Manejador de odbc inválido"
 
 #: ../providers/odbc/gda-odbc-provider.c:1166
-#, fuzzy
 msgid "# args"
 msgstr "# de argumentos"
 
@@ -2398,9 +2392,9 @@ msgid "Can't execute PRAGMA table_info()"
 msgstr ""
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1103
-#, fuzzy, c-format
+#, c-format
 msgid "Can't find table %s"
-msgstr "Tablas de Conexiones"
+msgstr "No se pudo encontrar la tabla %s"
 
 #: ../providers/sqlite/libmain.c:42
 msgid "Provider for SQLite databases"
@@ -2455,13 +2449,10 @@ msgid "Hit unsupported result type"
 msgstr "Se obtuvo un tipo de resultado no soportado"
 
 #: ../providers/sybase/gda-sybase-provider.c:787
-#, fuzzy
 msgid ""
 "An error occured when attempting to test if there is a server message for "
 "resultset"
-msgstr ""
-"ha ocurrido un error cuando en la llamada a ct_diag cuando intentaba probar "
-"si hay un mensaje del servidor para el conjunto de resultados"
+msgstr "Ha ocurrido un error al intentar comprobar si hay un mensaje del servidor para el conjunto de resultados"
 
 #: ../providers/sybase/gda-sybase-provider.c:819
 #, c-format
@@ -2586,24 +2577,18 @@ msgid "%s terminated with unexpected return code."
 msgstr "%s ha terminado con un código de retorno inesperado."
 
 #: ../providers/sybase/gda-sybase-recordset.c:497
-#, fuzzy
 msgid ""
 "An error occured when attempting to retrieve a server message count for "
 "resultset"
-msgstr ""
-"ha ocurrido un error en la llamada a ct_diag cuando intentaba recuperar un "
-"mensaje de contar del servidor para el conjunto de resultados"
+msgstr "Ha ocurrido un error al intentar obtener un contador de mensajes del servidor para el conjunto de resultados"
 
 #: ../providers/sybase/gda-sybase-recordset.c:506
 msgid "attempting to make recordset and msg count != 1 !"
 msgstr "se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
 
 #: ../providers/sybase/gda-sybase-recordset.c:520
-#, fuzzy
 msgid "An error occured when attempting to retrieve a server message for recordset"
-msgstr ""
-"ha ocurrido un error en la llamada a ct_diag cuando intentaba recuperar un "
-"mensaje del servidor para un conjunto de registros"
+msgstr "Ha ocurrido un error al intentar obtener un mensaje del servidor para el conjunto de registros"
 
 #: ../providers/sybase/gda-sybase-recordset.c:578
 #: ../providers/sybase/utils.c:409
@@ -2694,18 +2679,12 @@ msgid "ct_diag() failed determining # of client messages."
 msgstr "ct_diag() ha fallado al determinar el número de mensajes del cliente."
 
 #: ../providers/sybase/utils.c:204 ../providers/sybase/utils.c:443
-#, fuzzy
 msgid "Failed when attempting to retrieve the amount of client messages"
-msgstr ""
-"la llamada a ct_diag ha fallado cuando se intentaba obtener la cantidad de "
-"mensajes del cliente"
+msgstr "Falló al intentar obtener la cantidad de mensajes cliente"
 
 #: ../providers/sybase/utils.c:221 ../providers/sybase/utils.c:460
-#, fuzzy
 msgid "An error occured when attempting to retrieve a client message"
-msgstr ""
-"ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
-"mensaje del cliente"
+msgstr "Ha ocurrido un error al intentar obtener un mensaje cliente"
 
 #: ../providers/sybase/utils.c:231
 msgid "OS_Error:("
@@ -2731,18 +2710,12 @@ msgstr ""
 "cliente"
 
 #: ../providers/sybase/utils.c:314
-#, fuzzy
 msgid "Failed when attempting to retrieve the amount of server messages"
-msgstr ""
-"la llamada a ct_diag ha fallado cuando intentaba obtener la cantidad de "
-"mensajes del servidor"
+msgstr "Falló al intentar obtener la cantidad de mensajes del servidor"
 
 #: ../providers/sybase/utils.c:331
-#, fuzzy
 msgid "An error occured when attempting to retrieve a server message"
-msgstr ""
-"ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
-"mensaje del servidor"
+msgstr "Ocurrió un error al intentar obtener un mensaje del servidor"
 
 #: ../providers/sybase/utils.c:343
 msgid "Server:"
@@ -2806,9 +2779,8 @@ msgid "Invalid Xbase handle"
 msgstr "Manejador de Xbase inválido"
 
 #: ../providers/xbase/libmain.c:40
-#, fuzzy
 msgid "Provider for xBase (dBase, FoxPro, etc) files"
-msgstr "Proveedor para archivos Xbase (dBase, FoxPro, etc)"
+msgstr "Proveedor para archivos xbase (dBase, FoxPro, etc)"
 
 #: ../report/libgda-report/gda-report-document.c:179
 msgid "Could not parse XML document"
@@ -2911,12 +2883,12 @@ msgstr "Proveedor para bases datos Berkeley"
 #: ../testing/gda-author-dict-file.c:125
 #, c-format
 msgid "Usage: %s <Data source>\n"
-msgstr ""
+msgstr "Uso: %s <Fuente de fdatos>\n"
 
 #: ../testing/gda-author-dict-file.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Can't open connection to DSN %s: %s\n"
-msgstr "** ERROR: no se pudo abrir la conexión hacia %s\n"
+msgstr "No se pudo abrir la conexión a DSN %s:%s\n"
 
 #: ../testing/gda-author-dict-file.c:154 ../testing/gda-author-dict-file.c:165
 #: ../testing/gda-author-dict-file.c:227 ../testing/gda-author-dict-file.c:233
@@ -2949,54 +2921,52 @@ msgstr ""
 #: ../testing/gda-test-sql.c:97
 #, c-format
 msgid "Generated @ %s"
-msgstr ""
+msgstr "Generó @ %s"
 
 #: ../testing/gda-diagnose.c:151
-#, fuzzy
 msgid "Data sources"
-msgstr "Bases de datos"
+msgstr "Fuentes de datos"
 
 #: ../testing/gda-diagnose.c:152
 msgid "List of data sources from the config files (user and system wide)"
-msgstr ""
+msgstr "Lista de fuentes de datos del archivo de configuración (usuario y sistema)"
 
 #: ../testing/gda-diagnose.c:213
-#, fuzzy
 msgid "Providers"
-msgstr "Proveedor"
+msgstr "Proveedores"
 
 #: ../testing/gda-diagnose.c:214
 msgid "Installed providers"
-msgstr ""
+msgstr "Proveedores instalados"
 
 #: ../testing/gda-diagnose.c:270
-#, fuzzy, c-format
+#, c-format
 msgid "Provider '%s' details"
-msgstr " Proveedor =%s\n"
+msgstr "Detalles del proveedor «%s»"
 
 #: ../testing/gda-diagnose.c:279
 msgid "Provider's information"
-msgstr ""
+msgstr "Información del proveedor"
 
 #: ../testing/gda-diagnose.c:288
 msgid "Data source's parameters:"
-msgstr ""
+msgstr "Parámetros de la fuente de datos:"
 
 #: ../testing/gda-diagnose.c:291
 msgid "Parameter name"
-msgstr ""
+msgstr "Nombre del parámetro"
 
 #: ../testing/gda-diagnose.c:310
 msgid "Data source's parameters: none provided"
-msgstr ""
+msgstr "Parámetros de la fuente de datos: ninguno proporcionado"
 
 #: ../testing/gda-diagnose.c:317
 msgid "Detailled data source's parameters"
-msgstr ""
+msgstr "Parámetros detallados de la fuente de datos"
 
 #: ../testing/gda-diagnose.c:321
 msgid "Detailled data source's parameters: none provided"
-msgstr ""
+msgstr "Parámetros detallados de la fuente de datos: ninguno proporcionado"
 
 #: ../testing/gda-diagnose.c:352
 msgid "Plugin's entry functions"
@@ -3004,7 +2974,7 @@ msgstr ""
 
 #: ../testing/gda-diagnose.c:356 ../testing/gda-diagnose.c:441
 msgid "Present?"
-msgstr ""
+msgstr "¿Presente?"
 
 #: ../testing/gda-diagnose.c:360 ../testing/gda-diagnose.c:364
 #: ../testing/gda-diagnose.c:368 ../testing/gda-diagnose.c:374
@@ -3013,7 +2983,7 @@ msgstr ""
 #: ../testing/gda-diagnose.c:492 ../testing/gda-diagnose.c:531
 #: ../testing/html.c:293
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #: ../testing/gda-diagnose.c:360 ../testing/gda-diagnose.c:364
 #: ../testing/gda-diagnose.c:368 ../testing/gda-diagnose.c:374
@@ -3022,47 +2992,44 @@ msgstr ""
 #: ../testing/gda-diagnose.c:492 ../testing/gda-diagnose.c:531
 #: ../testing/html.c:293
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #.
 #. * Virtual functions
 #.
 #: ../testing/gda-diagnose.c:437
-#, fuzzy
 msgid "GdaServerProvider object's virtual functions"
-msgstr "No se ha podido crear el objeto GdaServerProvider desde la extensión"
+msgstr "Funciones virtuales del objeto GdaServerProvider"
 
 #: ../testing/gda-diagnose.c:442
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 #: ../testing/gda-diagnose.c:442
-#, fuzzy
 msgid "Result without any connection"
-msgstr "Localización que se va a usar en la conexión"
+msgstr "Resultado sin ninguna conexión"
 
 #: ../testing/gda-diagnose.c:541
 msgid "Schemas reporting"
-msgstr ""
+msgstr "Reporte de esquemas"
 
 #: ../testing/gda-diagnose.c:543
-#, fuzzy
 msgid "Schemas not reported by this provider"
-msgstr "Las transacciones no están soportadas en el proveedor MDB"
+msgstr "Esquemas no repostados por este proveedor"
 
 #: ../testing/gda-diagnose.c:599
-#, fuzzy, c-format
+#, c-format
 msgid "Schema Error: %s"
-msgstr "Error: %s"
+msgstr "Error de esquema: %s"
 
 #: ../testing/gda-diagnose.c:634
 #, c-format
 msgid "Fields for '%s'"
-msgstr ""
+msgstr "Campos para «%s»"
 
 #: ../testing/gda-diagnose.c:643
 msgid "No field returned"
-msgstr ""
+msgstr "Ningún campo devuelto"
 
 #: ../testing/gda-diagnose.c:650 ../testing/gda-diagnose.c:663
 msgid "Error"
@@ -3070,19 +3037,18 @@ msgstr "Error"
 
 #: ../testing/gda-diagnose.c:659
 msgid "Nothing to return"
-msgstr ""
+msgstr "Nada para devolver"
 
 #.
 #. * Data types testing
 #.
 #: ../testing/gda-diagnose.c:675
-#, fuzzy
 msgid "Data types handling"
-msgstr "Tipo de dato"
+msgstr "Manejo de tipos de datos"
 
 #: ../testing/gda-diagnose.c:677
 msgid "This provider does not support data handlers"
-msgstr ""
+msgstr "Este proveedor no soporta manipuladores de datos"
 
 #: ../testing/gda-diagnose.c:684
 msgid ""
@@ -3112,24 +3078,22 @@ msgid "%s (init value)"
 msgstr ""
 
 #: ../testing/gda-diagnose.c:1240
-#, fuzzy, c-format
+#, c-format
 msgid "Datasource '%s' details"
-msgstr " Origen de datos = %s, Usuario = %s\n"
+msgstr "Detalles del origen de datos «%s»"
 
 #: ../testing/gda-diagnose.c:1249
-#, fuzzy
 msgid "Datasource's information"
-msgstr "Origen de datos %s no encontrado en la configuración"
+msgstr "Información del origen de datos"
 
 #: ../testing/gda-diagnose.c:1259
-#, fuzzy
 msgid "Can't open connection."
-msgstr "Localización que se va a usar en la conexión"
+msgstr "No puede abrir la conexión."
 
 #: ../testing/gda-inspect-dict-file.c:47
 #, c-format
 msgid "Usage: %s <Dictionaty XML file>\n"
-msgstr ""
+msgstr "Uso: %s <Archivo de diccionario XML>\n"
 
 #: ../testing/gda-inspect-dict-file.c:53
 #, c-format
@@ -3152,7 +3116,7 @@ msgstr ""
 #: ../testing/gda-inspect-dict-file.c:65 ../testing/gda-test-models.c:164
 #: ../testing/gda-test-sql.c:157
 msgid "Unspecified"
-msgstr ""
+msgstr "No especificado"
 
 #: ../testing/gda-inspect-dict-file.c:81
 #, c-format
@@ -3165,37 +3129,39 @@ msgstr ""
 #: ../testing/gda-inspect-dict-file.c:107 ../testing/gda-test-models.c:190
 #: ../testing/gda-test-models.c:204 ../testing/gda-test-sql.c:183
 #: ../testing/gda-test-sql.c:197
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Can't run command '%s':\n"
 "%s\n"
-msgstr "No se ha podido analizar el comando SQL «%s»"
+msgstr ""
+"No se ha podido ejecutar el comando «%s»:\n"
+"%s\n"
 
 #: ../testing/gda-inspect-dict-file.c:138
 msgid "List of queries in this file:\n"
-msgstr ""
+msgstr "Lista de consultas en este archivo:\n"
 
 #: ../testing/gda-inspect-dict-file.c:140
 msgid "There is no query in this file.\n"
-msgstr ""
+msgstr "No hay ninguna consulta en este archivo.\n"
 
 #: ../testing/gda-inspect-dict-file.c:148
 #, c-format
 msgid "########### Query \"%s\" ###########\n"
-msgstr ""
+msgstr "########### Consulta «%s» ###########\n"
 
 #: ../testing/gda-inspect-dict-file.c:151
 msgid "## SQL:\n"
-msgstr ""
+msgstr "## SQL:\n"
 
 #: ../testing/gda-inspect-dict-file.c:157
-#, fuzzy, c-format
+#, c-format
 msgid "SQL ERROR: %s\n"
-msgstr "\t\tSQL: %s\n"
+msgstr "SQL ERROR: %s\n"
 
 #: ../testing/gda-inspect-dict-file.c:162
 msgid "## information:\n"
-msgstr ""
+msgstr "## información:\n"
 
 #: ../testing/gda-inspect-dict-file.c:179
 #, c-format
@@ -3203,11 +3169,11 @@ msgid "Query_%02d"
 msgstr ""
 
 #: ../testing/gda-inspect-dict-file.c:184
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not write graph to '%s' (%s)\n"
 "\n"
-msgstr "No se ha podido analizar el archivo en %s"
+msgstr "No se ha podido escribir la gráficoa en «%s» (%s)\n"
 
 #: ../testing/gda-inspect-dict-file.c:189
 #, c-format
@@ -3215,19 +3181,19 @@ msgid "Written graph to '%s'\n"
 msgstr ""
 
 #: ../testing/gda-list-config.c:102
-#, fuzzy, c-format
+#, c-format
 msgid "Provider: %s\n"
-msgstr " Proveedor =%s\n"
+msgstr "Proveedor: %s\n"
 
 #: ../testing/gda-list-config.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "Description: %s\n"
-msgstr "\tdescripción = %s\n"
+msgstr "Descripción: %s\n"
 
 #: ../testing/gda-list-config.c:104
-#, fuzzy, c-format
+#, c-format
 msgid "Location: %s\n"
-msgstr "\tdirección = %s\n"
+msgstr "Ubicación: %s\n"
 
 #: ../testing/gda-list-config.c:105
 msgid "Data source's parameters (Name / Type / Description):\n"
@@ -3235,24 +3201,24 @@ msgstr ""
 
 #: ../testing/gda-list-config.c:121
 msgid "None provided"
-msgstr ""
+msgstr "Ninguno proporcionado"
 
 #: ../testing/gda-test-models.c:88 ../testing/gda-test-sql.c:87
 msgid "List of SQL parsing tests"
-msgstr ""
+msgstr "Lista de pruebas de análisis léxico SQL"
 
 #: ../testing/gda-test-models.c:388
 msgid "Missing 'file' attribute"
-msgstr ""
+msgstr "Falta el atributo 'file'"
 
 #: ../testing/gda-test-models.c:392
-#, fuzzy, c-format
+#, c-format
 msgid "Can't load file '%s'"
-msgstr "No se ha podido cargar el archivo en %s"
+msgstr "No se puede cargar el archivo «%s»"
 
 #: ../testing/gda-test-models.c:649
 msgid "GdaDataModel required for this action"
-msgstr ""
+msgstr "GdaDataModel requerido para esta acción"
 
 #: ../testing/gda-test-models.c:687
 #, c-format
