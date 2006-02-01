@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-26 01:18-0500\n"
+"POT-Creation-Date: 2006-01-31 21:09-0500\n"
 "PO-Revision-Date: 2005-02-17 18:05-0400\n"
 "Last-Translator: Adam Weinberger <adamw@gnome.org>\n"
 "Language-Team: Canadian English <adamw@gnome.org>\n"
@@ -116,8 +116,8 @@ msgstr "Global"
 
 #: ../libgda/gda-data-model-array.c:75 ../libgda/gda-data-model-array.c:91
 #, c-format
-msgid "Row out %d of range 0 - %d"
-msgstr "Row out %d of range 0 - %d"
+msgid "Row %d out of range 0 - %d"
+msgstr "Row %d out of range 0 - %d"
 
 #: ../libgda/gda-data-model-array.c:97 ../libgda/gda-data-model-hash.c:104
 #, c-format
@@ -129,20 +129,20 @@ msgstr "Column out %d of range 0 - %d"
 msgid "Wrong number of values in values list"
 msgstr "Wrong number of values in values list"
 
-#: ../libgda/gda-data-model-array.c:190 ../libgda/gda-data-model-array.c:218
+#: ../libgda/gda-data-model-array.c:192 ../libgda/gda-data-model-array.c:220
 msgid "Row not found in data model"
 msgstr "Row not found in data model"
 
-#: ../libgda/gda-data-model-array.c:370
+#: ../libgda/gda-data-model-array.c:372
 #, c-format
 msgid "Node is not <gda_array> but <%s>"
 msgstr "Node is not <gda_array> but <%s>"
 
-#: ../libgda/gda-data-model-array.c:396
+#: ../libgda/gda-data-model-array.c:398
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "No \"gdatype\" attribute specified in <gda_array_field>"
 
-#: ../libgda/gda-data-model-array.c:442
+#: ../libgda/gda-data-model-array.c:444
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "No <gda_array_field> specified in <gda_array>"
 
@@ -200,7 +200,7 @@ msgstr "Connection is not opened"
 msgid "Wrong type of query"
 msgstr "Wrong type of query"
 
-#: ../libgda/gda-data-model-row.c:489
+#: ../libgda/gda-data-model-row.c:432
 msgid "Too many values in list"
 msgstr "Too many values in list"
 
@@ -208,17 +208,17 @@ msgstr "Too many values in list"
 msgid "Data model"
 msgstr "Data model"
 
-#: ../libgda/gda-data-proxy.c:2220
+#: ../libgda/gda-data-proxy.c:2226
 #, c-format
 msgid "Unknown GdaDataProxy column: %d"
 msgstr "Unknown GdaDataProxy column: %d"
 
-#: ../libgda/gda-data-proxy.c:2387
+#: ../libgda/gda-data-proxy.c:2393
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Trying to change read-only column: %d"
 
-#: ../libgda/gda-data-proxy.c:2424
+#: ../libgda/gda-data-proxy.c:2430
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Value type mismatch %s instead of %s"
@@ -522,169 +522,181 @@ msgstr ""
 "GdaParameterListSource references a GdaParameterListNodewhich does not use "
 "the same data model"
 
-#: ../libgda/gda-query.c:920
+#: ../libgda/gda-query.c:931
 msgid "Can't modify the structure of a non-parsed SQL query"
 msgstr "Cannot modify the structure of a non-parsed SQL query"
 
-#: ../libgda/gda-query.c:1138
+#: ../libgda/gda-query.c:1149
 msgid "Select"
 msgstr "Select"
 
-#: ../libgda/gda-query.c:1140
+#: ../libgda/gda-query.c:1151
 msgid "Insert"
 msgstr "Insert"
 
-#: ../libgda/gda-query.c:1142
+#: ../libgda/gda-query.c:1153
 msgid "Update"
 msgstr "Update"
 
-#: ../libgda/gda-query.c:1144
+#: ../libgda/gda-query.c:1155
 msgid "Delete"
 msgstr "Delete"
 
-#: ../libgda/gda-query.c:1146
+#: ../libgda/gda-query.c:1157
 msgid "Select (union)"
 msgstr "Select (union)"
 
-#: ../libgda/gda-query.c:1148
+#: ../libgda/gda-query.c:1159
 msgid "Select (intersection)"
 msgstr "Select (intersection)"
 
-#: ../libgda/gda-query.c:1150
+#: ../libgda/gda-query.c:1161
 msgid "Select (exception)"
 msgstr "Select (exception)"
 
-#: ../libgda/gda-query.c:1152
+#: ../libgda/gda-query.c:1163
 msgid "SQL text"
 msgstr "SQL text"
 
-#: ../libgda/gda-query.c:1356
+#: ../libgda/gda-query.c:1367
 #, c-format
 msgid "Error during query parsing (%s)"
 msgstr "Error during query parsing (%s)"
 
-#: ../libgda/gda-query.c:1867
+#: ../libgda/gda-query.c:1878
 msgid ""
 "The query represented by a target must be a sub-query of the current query"
 msgstr ""
 "The query represented by a target must be a sub-query of the current query"
 
-#: ../libgda/gda-query.c:1882
+#: ../libgda/gda-query.c:1893
 msgid "Queries which update data can only have one target"
 msgstr "Queries which update data can only have one target"
 
-#: ../libgda/gda-query.c:1892
+#: ../libgda/gda-query.c:1903
 msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr "Aggregation queries may only have sub-queries, not targets."
 
-#: ../libgda/gda-query.c:3877
+#: ../libgda/gda-query.c:2760 ../testing/gda-author-dict-file.c:154
+#: ../testing/gda-author-dict-file.c:165 ../testing/gda-author-dict-file.c:227
+#: ../testing/gda-author-dict-file.c:233 ../testing/gda-diagnose.c:601
+#: ../testing/gda-test-models.c:151 ../testing/gda-test-models.c:178
+#: ../testing/gda-test-models.c:398 ../testing/gda-test-models.c:452
+#: ../testing/gda-test-models.c:459 ../testing/gda-test-models.c:477
+#: ../testing/gda-test-models.c:558 ../testing/gda-test-models.c:589
+#: ../testing/gda-test-sql.c:144 ../testing/gda-test-sql.c:171
+#: ../testing/gda-test-sql.c:392
+msgid "Unknown error"
+msgstr "Unknown error"
+
+#: ../libgda/gda-query.c:3890
 msgid "XML Tag is not <gda_query>"
 msgstr "XML Tag is not <gda_query>"
 
-#: ../libgda/gda-query.c:3893
+#: ../libgda/gda-query.c:3906
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "XML ID for a query should be QUxxx where xxx is a number"
 
-#: ../libgda/gda-query.c:4009
+#: ../libgda/gda-query.c:4022
 msgid ""
 "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 msgstr ""
 "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 
-#: ../libgda/gda-query.c:4033
+#: ../libgda/gda-query.c:4046
 #, c-format
 msgid "Can't find field '%s'"
 msgstr "Can't find field '%s'"
 
-#: ../libgda/gda-query.c:4152
+#: ../libgda/gda-query.c:4165
 msgid "Problem loading <gda_query>"
 msgstr "Problem loading <gda_query>"
 
-#: ../libgda/gda-query.c:4274
+#: ../libgda/gda-query.c:4287
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "More than two sub-queries for an EXCEPT query"
 
-#: ../libgda/gda-query.c:4291
+#: ../libgda/gda-query.c:4304
 msgid "Query without any SQL code"
 msgstr "Query without any SQL code"
 
-#: ../libgda/gda-query.c:4346
+#: ../libgda/gda-query.c:4359
 #, c-format
 msgid "Invalid parameter '%s'"
 msgstr "Invalid parameter '%s'"
 
-#: ../libgda/gda-query.c:4352
+#: ../libgda/gda-query.c:4365
 msgid "Missing parameters"
 msgstr "Missing parameters"
 
-#: ../libgda/gda-query.c:4426
+#: ../libgda/gda-query.c:4439
 #, c-format
 msgid "Query %s is not a selection query"
 msgstr "Query %s is not a selection query"
 
-#: ../libgda/gda-query.c:4458
+#: ../libgda/gda-query.c:4471
 msgid "No target defined to apply modifications"
 msgstr "No target defined to apply modifications"
 
-#: ../libgda/gda-query.c:4466
+#: ../libgda/gda-query.c:4479
 msgid "More than one target defined to apply modifications"
 msgstr "More than one target defined to apply modifications"
 
-#: ../libgda/gda-query.c:4477
+#: ../libgda/gda-query.c:4490
 #, c-format
 msgid "Entity %s is not writable"
 msgstr "Entity %s is not writable"
 
-#: ../libgda/gda-query.c:4496
+#: ../libgda/gda-query.c:4509
 msgid "Modification query field has incompatible type"
 msgstr "Modification query field has incompatible type"
 
-#: ../libgda/gda-query.c:4515
+#: ../libgda/gda-query.c:4528
 msgid "An insertion query can only have one sub-query"
 msgstr "An insertion query can only have one sub-query"
 
-#: ../libgda/gda-query.c:4523
+#: ../libgda/gda-query.c:4536
 msgid "Insertion query fields incompatible with sub-query's fields"
 msgstr "Insertion query fields incompatible with sub-query's fields"
 
-#: ../libgda/gda-query.c:4541
+#: ../libgda/gda-query.c:4554
 msgid "Insertion query field has incompatible value assignment"
 msgstr "Insertion query field has incompatible value assignment"
 
-#: ../libgda/gda-query.c:4554
+#: ../libgda/gda-query.c:4567
 msgid "Insertion query can't have any conditions"
 msgstr "Insertion query cannot have any conditions"
 
-#: ../libgda/gda-query.c:4569
+#: ../libgda/gda-query.c:4582
 msgid "Deletion query can't have any visible field"
 msgstr "Deletion query can't have any visible field"
 
-#: ../libgda/gda-query.c:4589
+#: ../libgda/gda-query.c:4602
 msgid "Update query field has incompatible value assignment"
 msgstr "Update query field has incompatible value assignment"
 
-#: ../libgda/gda-query.c:4616
+#: ../libgda/gda-query.c:4629
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "An aggregate type (UNION, etc) of query cannot have any targets"
 
-#: ../libgda/gda-query.c:4624
+#: ../libgda/gda-query.c:4637
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "An aggregate type (UNION, etc) of query cannot have any conditions"
 
-#: ../libgda/gda-query.c:5129
+#: ../libgda/gda-query.c:5142
 msgid "Can't correctly print the list of columns to use."
 msgstr "Cannot correctly print the list of columns to use."
 
-#: ../libgda/gda-query.c:5279
+#: ../libgda/gda-query.c:5292
 msgid "Missing values"
 msgstr "Missing values"
 
-#: ../libgda/gda-query.c:5525
+#: ../libgda/gda-query.c:5538
 #, c-format
 msgid "Query '%s'"
 msgstr "Query '%s'"
 
-#: ../libgda/gda-query.c:5527
+#: ../libgda/gda-query.c:5540
 msgid "Unnamed Query"
 msgstr "Unnamed Query"
 
@@ -1428,17 +1440,17 @@ msgstr "InternalType"
 msgid "Gda type representation"
 msgstr "Gda type representation"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:57 ../libsql/sql_parser.c:60
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:59 ../libsql/sql_parser.c:61
 #, c-format
 msgid "Parse error near `%s'"
 msgstr "Parse error near `%s'"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:59 ../libsql/sql_parser.c:62
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:61 ../libsql/sql_parser.c:63
 #, c-format
 msgid "Syntax error near `%s'"
 msgstr "Syntax error near `%s'"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:142 ../libsql/sql_parser.c:384
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:148 ../libsql/sql_parser.c:387
 msgid "Empty query to parse"
 msgstr "Empty query to parse"
 
@@ -1705,7 +1717,7 @@ msgid "Invalid LDAP handle"
 msgstr "Invalid LDAP handle"
 
 #: ../providers/ldap/gda-ldap-recordset.c:70
-#: ../providers/mysql/gda-mysql-recordset.c:229
+#: ../providers/mysql/gda-mysql-recordset.c:228
 #: ../providers/mysql/gda-mysql-recordset.c:350
 #: ../providers/postgres/gda-postgres-recordset.c:197
 #: ../providers/postgres/gda-postgres-recordset.c:571
@@ -1713,7 +1725,7 @@ msgid "Row number out of range"
 msgstr "Row number out of range"
 
 #: ../providers/ldap/gda-ldap-recordset.c:283
-#: ../providers/msql/gda-msql-recordset.c:202
+#: ../providers/msql/gda-msql-recordset.c:203
 #: ../providers/mysql/gda-mysql-recordset.c:414
 #: ../providers/oracle/gda-oracle-recordset.c:470
 #: ../providers/postgres/gda-postgres-recordset.c:240
@@ -1721,13 +1733,13 @@ msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Attempt to insert a row with an invalid number of columns"
 
 #: ../providers/ldap/gda-ldap-recordset.c:298
-#: ../providers/msql/gda-msql-recordset.c:214
+#: ../providers/msql/gda-msql-recordset.c:215
 #: ../providers/oracle/gda-oracle-recordset.c:485
 msgid "Could not retrieve column's information"
 msgstr "Could not retrieve column's information"
 
 #: ../providers/ldap/gda-ldap-recordset.c:316
-#: ../providers/msql/gda-msql-recordset.c:229
+#: ../providers/msql/gda-msql-recordset.c:230
 #: ../providers/oracle/gda-oracle-recordset.c:503
 msgid "Could not retrieve column's value"
 msgstr "Could not retrieve column's value"
@@ -1848,7 +1860,7 @@ msgstr "Provider for Hughes Technologies mSQL databases"
 #: ../providers/msql/gda-msql-provider.c:331
 #: ../providers/msql/gda-msql-provider.c:600
 #: ../providers/msql/gda-msql-recordset.c:51
-#: ../providers/msql/gda-msql-recordset.c:340
+#: ../providers/msql/gda-msql-recordset.c:341
 msgid "Invalid mSQL handle"
 msgstr "Invalid mSQL handle"
 
@@ -1890,8 +1902,8 @@ msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:411
 #: ../providers/mysql/gda-mysql-provider.c:1812
-#: ../providers/mysql/gda-mysql-recordset.c:218
-#: ../providers/mysql/gda-mysql-recordset.c:291
+#: ../providers/mysql/gda-mysql-recordset.c:217
+#: ../providers/mysql/gda-mysql-recordset.c:290
 #: ../providers/mysql/gda-mysql-recordset.c:344
 #: ../providers/mysql/gda-mysql-recordset.c:397
 #: ../providers/mysql/gda-mysql-recordset.c:525
@@ -1939,7 +1951,7 @@ msgstr "Method not handled by this provider"
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transactions are not supported in read-only mode"
 
-#: ../providers/mysql/gda-mysql-recordset.c:298
+#: ../providers/mysql/gda-mysql-recordset.c:297
 #: ../providers/bdb/gda-bdb-recordset.c:113
 #, c-format
 msgid "Row number out of range 0 - %d"
@@ -2872,17 +2884,6 @@ msgstr "Usage: %s <Data source>\n"
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "Cannot open connection to DSN %s: %s\n"
 
-#: ../testing/gda-author-dict-file.c:154 ../testing/gda-author-dict-file.c:165
-#: ../testing/gda-author-dict-file.c:227 ../testing/gda-author-dict-file.c:233
-#: ../testing/gda-diagnose.c:601 ../testing/gda-test-models.c:151
-#: ../testing/gda-test-models.c:178 ../testing/gda-test-models.c:398
-#: ../testing/gda-test-models.c:452 ../testing/gda-test-models.c:459
-#: ../testing/gda-test-models.c:477 ../testing/gda-test-models.c:558
-#: ../testing/gda-test-models.c:589 ../testing/gda-test-sql.c:144
-#: ../testing/gda-test-sql.c:171 ../testing/gda-test-sql.c:392
-msgid "Unknown error"
-msgstr "Unknown error"
-
 #: ../testing/gda-author-dict-file.c:173
 msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
 msgstr "Fetching meta-data from the DBMS server. This may take some time...\n"
@@ -3266,7 +3267,7 @@ msgstr "Inactive"
 msgid "Parsing"
 msgstr "Parsing"
 
-#: ../testing/gda-test-sql.c:424
+#: ../testing/gda-test-sql.c:427
 msgid "Copied"
 msgstr "Copied"
 
