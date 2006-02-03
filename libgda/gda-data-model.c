@@ -401,8 +401,8 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 /**
  * gda_data_model_get_value_at
  * @model: a #GdaDataModel object.
- * @col: column number.
- * @row: row number.
+ * @col: a valid column number.
+ * @row: a valid row number.
  *
  * Retrieves the data stored in the given position (identified by
  * the @col and @row parameters) on a data model.
@@ -427,6 +427,30 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
 	}
+}
+
+/**
+ * gda_data_model_get_attributes_at
+ * @model: a #GdaDataModel object
+ * @col: a valid column number
+ * @row: a valid row number, or -1
+ *
+ * Get the attributes of the value stored at (row, col) in @proxy, which
+ * is an ORed value of #GdaValueAttribute flags. As a special case, if
+ * @row is -1, then the attributes returned correspond to a "would be" value
+ * if a row was added to @model.
+ *
+ * Returns: the attributes
+ */
+guint
+gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
+
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_attributes_at)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_attributes_at) (model, col, row);
+	else 
+		return 0;
 }
 
 /**

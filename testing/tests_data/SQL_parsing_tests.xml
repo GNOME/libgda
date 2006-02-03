@@ -334,6 +334,7 @@
     <test sql="delete FROM customers" parsed="1" rendered="DELETE FROM customers"/>
     <test sql="delete FROM customers WHERE name='unknown' or not id=12 AND name='john'" parsed="1" rendered="DELETE FROM customers WHERE name='unknown' OR NOT (id=12) AND name='john'"/>
     <test sql="delete FROM customers WHERE name='unknown' or not (id=12 AND name='john')" parsed="1" rendered="DELETE FROM customers WHERE name='unknown' OR NOT (id=12 AND name='john')"/>
+    <test sql="DELETE FROM orders o WHERE o.id=## [:name=&quot;_0&quot; :type=&quot;integer&quot;]" parsed="1" rendered="DELETE FROM orders WHERE id=## [:type=&quot;int4&quot; :name=&quot;_0&quot;]"/>
   </test_group>
 
 

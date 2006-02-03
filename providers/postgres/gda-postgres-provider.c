@@ -2893,31 +2893,33 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 	case GDA_VALUE_TYPE_LIST:
 	case GDA_VALUE_TYPE_MONEY:
 		break;
-	case GDA_VALUE_TYPE_UNKNOWN: {
-			/* special case: we take into account the dbms_type argument */
-			if (priv_data) {
-				gint i;
-				GdaPostgresTypeOid *td = NULL;
+	case GDA_VALUE_TYPE_UNKNOWN:
+		/* special case: we take into account the dbms_type argument */
+		if (!dbms_type)
+			break;
 
-				for (i = 0; i < priv_data->ntypes; i++) {
-					if (!strcmp (priv_data->type_data[i].name, dbms_type))
-						td = &(priv_data->type_data[i]);
-				}
-				
-				if (td) {
-					dh = gda_postgres_provider_get_data_handler (provider, cnc, td->type, NULL);
-					gda_server_provider_handler_declare (provider, dh, cnc, 
-									     GDA_VALUE_TYPE_UNKNOWN, dbms_type);
-				}
+		if (priv_data) {
+			gint i;
+			GdaPostgresTypeOid *td = NULL;
+			
+			for (i = 0; i < priv_data->ntypes; i++) {
+				if (!strcmp (priv_data->type_data[i].name, dbms_type))
+					td = &(priv_data->type_data[i]);
 			}
-			else {
-				dh = gda_postgres_provider_get_data_handler (provider, cnc, 
-									     postgres_name_to_gda_type (dbms_type), NULL);
+			
+			if (td) {
+				dh = gda_postgres_provider_get_data_handler (provider, cnc, td->type, NULL);
 				gda_server_provider_handler_declare (provider, dh, cnc, 
 								     GDA_VALUE_TYPE_UNKNOWN, dbms_type);
 			}
-			break;
 		}
+		else {
+			dh = gda_postgres_provider_get_data_handler (provider, cnc, 
+								     postgres_name_to_gda_type (dbms_type), NULL);
+			gda_server_provider_handler_declare (provider, dh, cnc, 
+							     GDA_VALUE_TYPE_UNKNOWN, dbms_type);
+		}
+		break;
 	default:
 		g_assert_not_reached ();
 		break;

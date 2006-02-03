@@ -672,6 +672,9 @@ gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
 {
 	gboolean changed = TRUE;
 	const GdaValue *current_val;
+#ifdef GDA_DEBUG_NO
+	gboolean was_valid = gda_parameter_is_valid (param);
+#endif
 
 	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (param->priv);
@@ -703,12 +706,13 @@ gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
 		param->priv->valid = FALSE;
 
 #ifdef GDA_DEBUG_NO
-	g_print ("Changed param %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d CHANGED: %d\n", param, gda_object_get_name (param),
+	g_print ("Changed param %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
+		 param, gda_object_get_name (param),
 		 current_val ? gda_value_stringify ((GdaValue *)current_val) : "_NULL_",
-		 value ? gda_value_stringify (GdaValue *)(value) : "_NULL_",
+		 value ? gda_value_stringify ((GdaValue *)(value)) : "_NULL_",
 		 current_val ? gda_value_get_type ((GdaValue *)current_val) : 0,
 		 value ? gda_value_get_type ((GdaValue *)value) : 0, 
-		 gda_parameter_is_valid (param), changed);
+		 was_valid, gda_parameter_is_valid (param), changed);
 #endif
 
 	/* end of procedure if the value has not been changed, after calculating the param's validity */
@@ -1070,10 +1074,10 @@ static void
 destroyed_restrict_cb (GdaObject *obj, GdaParameter *param)
 {
 	g_assert (param->priv->restrict_model == (GdaDataModel *)obj);
-	g_object_unref (obj);
-	param->priv->restrict_model = NULL;
 	g_signal_handlers_disconnect_by_func (obj,
 					      G_CALLBACK (destroyed_restrict_cb), param);
+	g_object_unref (obj);
+	param->priv->restrict_model = NULL;
 }
 
 /**
@@ -1327,9 +1331,15 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 	/* dump */
 	if (parameter->priv) {
 		GSList *list;
-		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s\n" D_COL_NOR, str, parameter,
+		gchar *str;
+
+		str = gda_value_stringify (gda_parameter_get_value (parameter));
+		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s, %s, value=%s\n" D_COL_NOR, str, parameter,
 			 gda_object_get_name (GDA_OBJECT (parameter)), 
-			 gda_type_to_string (parameter->priv->gda_type));
+			 gda_type_to_string (parameter->priv->gda_type),
+			 gda_parameter_is_valid (parameter) ? "VALID" : "INVALID",
+			 str);
+		g_free (str);
 		
 		list = parameter->priv->param_users;
 		while (list) {

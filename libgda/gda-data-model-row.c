@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -30,6 +30,7 @@
 #include <libgda/gda-column.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
+#include <libgda/gda-enums.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <string.h>
@@ -41,7 +42,7 @@ struct _GdaDataModelRowPrivate {
 	gboolean       notify_changes;
 	GHashTable    *column_spec;
 
-	/* to be removed */
+	gboolean       read_only;
 	gchar         *command_text;
 	GdaCommandType command_type;
 };
@@ -50,6 +51,7 @@ struct _GdaDataModelRowPrivate {
 enum
 {
         PROP_0,
+	PROP_READ_ONLY,
         PROP_COMMAND_TEXT,
         PROP_COMMAND_TYPE,
 };
@@ -72,6 +74,7 @@ static gint                 gda_data_model_row_get_n_rows      (GdaDataModel *mo
 static gint                 gda_data_model_row_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_row_describe_column (GdaDataModel *model, gint col);
 static const GdaValue      *gda_data_model_row_get_value_at    (GdaDataModel *model, gint col, gint row);
+static guint                gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row);
 static guint                gda_data_model_row_get_access_flags(GdaDataModel *model);
 
 static gboolean             gda_data_model_row_set_value_at    (GdaDataModel *model, gint col, gint row, 
@@ -106,6 +109,10 @@ gda_data_model_row_class_init (GdaDataModelRowClass *klass)
 	/* Properties */
         object_class->set_property = gda_data_model_row_set_property;
         object_class->get_property = gda_data_model_row_get_property;
+        g_object_class_install_property (object_class, PROP_READ_ONLY,
+                                         g_param_spec_boolean ("read_only", NULL, NULL,
+							       FALSE, 
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
         g_object_class_install_property (object_class, PROP_COMMAND_TEXT,
                                          g_param_spec_string ("command_text", NULL, NULL,
 							      NULL, G_PARAM_READABLE | G_PARAM_WRITABLE));
@@ -124,6 +131,7 @@ gda_data_model_row_data_model_init (GdaDataModelClass *iface)
 	iface->i_describe_column = gda_data_model_row_describe_column;
         iface->i_get_access_flags = gda_data_model_row_get_access_flags;
 	iface->i_get_value_at = gda_data_model_row_get_value_at;
+	iface->i_get_attributes_at = gda_data_model_row_get_attributes_at;
 
 	iface->i_create_iter = NULL;
 	iface->i_iter_at_row = NULL;
@@ -152,6 +160,7 @@ gda_data_model_row_init (GdaDataModelRow *model, GdaDataModelRowClass *klass)
 	model->priv->column_spec = g_hash_table_new (g_direct_hash, g_direct_equal);
 	model->priv->command_text = NULL;
 	model->priv->command_type = GDA_COMMAND_TYPE_INVALID;
+	model->priv->read_only = FALSE;
 }
 
 static void column_gda_type_changed_cb (GdaColumn *column, GdaValueType old, GdaValueType new, GdaDataModelRow *model);
@@ -229,6 +238,9 @@ gda_data_model_row_set_property (GObject *object,
         row = GDA_DATA_MODEL_ROW (object);
         if (row->priv) {
                 switch (param_id) {
+		case PROP_READ_ONLY:
+			row->priv->read_only = g_value_get_boolean (value);
+			break;
                 case PROP_COMMAND_TEXT:
 			if (row->priv->command_text) {
 				g_free (row->priv->command_text);
@@ -255,6 +267,9 @@ gda_data_model_row_get_property (GObject *object,
         row = GDA_DATA_MODEL_ROW (object);
         if (row->priv) {
                 switch (param_id) {
+		case PROP_READ_ONLY:
+			g_value_set_boolean (value, row->priv->read_only);
+			break;
                 case PROP_COMMAND_TEXT:
 			g_value_set_string (value, row->priv->command_text);
                         break;
@@ -382,6 +397,33 @@ gda_data_model_row_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static guint
+gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row)
+{
+	const GdaValue *gdavalue;
+	guint flags = 0;
+	GdaColumn *column;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), 0);
+
+	column = gda_data_model_row_describe_column (model, col);
+	if (gda_column_get_allow_null (column))
+		flags |= GDA_VALUE_ATTR_CAN_BE_NULL;
+	if (gda_column_get_default_value (column))
+		flags |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
+	
+	if (row >= 0) {
+		gdavalue = gda_data_model_get_value_at (model, col, row);
+		if (!gdavalue || gda_value_is_null ((GdaValue *) gdavalue))
+			flags |= GDA_VALUE_ATTR_IS_NULL;
+	}
+
+	if (((GdaDataModelRow *)model)->priv->read_only)
+		flags |= GDA_VALUE_ATTR_NO_MODIF;
+
+	return flags;
+}
+
+static guint
 gda_data_model_row_get_access_flags (GdaDataModel *model)
 {
 	guint flags = GDA_DATA_MODEL_ACCESS_RANDOM | 
@@ -390,7 +432,8 @@ gda_data_model_row_get_access_flags (GdaDataModel *model)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
 	g_return_val_if_fail (CLASS (model)->is_updatable != NULL, FALSE);
 
-	if ( CLASS (model)->is_updatable (GDA_DATA_MODEL_ROW (model)))
+	if (! ((GdaDataModelRow *)model)->priv->read_only &&
+	    CLASS (model)->is_updatable (GDA_DATA_MODEL_ROW (model)))
 		flags |= GDA_DATA_MODEL_ACCESS_WRITE;
 	
 	return flags;
@@ -406,6 +449,11 @@ gda_data_model_row_set_value_at (GdaDataModel *model, gint col, gint row,
 	g_return_val_if_fail (row >= 0, FALSE);
 	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->get_row != NULL, FALSE);
+
+	if (((GdaDataModelRow *)model)->priv->read_only) {
+		g_warning ("Attempting to modify a read-only data model");
+		return FALSE;
+	}
 
 	gdarow = CLASS (model)->get_row (GDA_DATA_MODEL_ROW (model), row, error);
 	if (gdarow) {
@@ -425,8 +473,15 @@ gda_data_model_row_set_values (GdaDataModel *model, gint row, GList *values, GEr
 	g_return_val_if_fail (row >= 0, FALSE);
 	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->get_row != NULL, FALSE);
+
 	if (!values)
 		return TRUE;
+
+	if (((GdaDataModelRow *)model)->priv->read_only) {
+		g_warning ("Attempting to modify a read-only data model");
+		return FALSE;
+	}
+
 	if (g_list_length (values) > gda_data_model_get_n_columns (model)) {
 		g_set_error (error, 0, GDA_DATA_MODEL_VALUES_LIST_ERROR,
 			     _("Too many values in list"));
@@ -457,6 +512,11 @@ gda_data_model_row_append_values (GdaDataModel *model, const GList *values, GErr
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), -1);
 	g_return_val_if_fail (CLASS (model)->append_values != NULL, -1);
+
+	if (((GdaDataModelRow *)model)->priv->read_only) {
+		g_warning ("Attempting to modify a read-only data model");
+		return FALSE;
+	}
 	
 	row = CLASS (model)->append_values (GDA_DATA_MODEL_ROW (model), values, error);
 	if (row)
@@ -475,6 +535,11 @@ gda_data_model_row_append_row (GdaDataModel *model, GError **error)
 	g_return_val_if_fail (row != NULL, -1);
 	g_return_val_if_fail (CLASS (model)->append_row != NULL, -1);
 
+	if (((GdaDataModelRow *)model)->priv->read_only) {
+		g_warning ("Attempting to modify a read-only data model");
+		return FALSE;
+	}
+
 	row = gda_row_new (model, gda_data_model_get_n_columns (model));
 	if (CLASS (model)->append_row (GDA_DATA_MODEL_ROW (model), row, error))
 		retval = gda_row_get_number (row);
@@ -492,6 +557,11 @@ gda_data_model_row_remove_row (GdaDataModel *model, gint row, GError **error)
 	g_return_val_if_fail (row >= 0, FALSE);
 	g_return_val_if_fail (CLASS (model)->remove_row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->get_row != NULL, FALSE);
+
+	if (((GdaDataModelRow *)model)->priv->read_only) {
+		g_warning ("Attempting to modify a read-only data model");
+		return FALSE;
+	}
 
 	gdarow = CLASS (model)->get_row (GDA_DATA_MODEL_ROW (model), row, error);
 	if (gdarow)

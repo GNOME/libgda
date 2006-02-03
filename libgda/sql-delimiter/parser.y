@@ -67,6 +67,7 @@ expr: L_TEXTUAL                   {$$ = gda_delimiter_expr_build (g_strdup_print
         | L_STRING                {$$ = gda_delimiter_expr_build ($1, NULL);}
         | L_IDENT                 {$$ = gda_delimiter_expr_build ($1, NULL);}
         | L_UNSPECVAL param_spec  {$$ = gda_delimiter_expr_build (NULL, $2);}
+	| L_EQ			  {$$ = gda_delimiter_expr_build (g_strdup ("="), NULL);}
         ;
 
 param_spec: L_LSBRACKET param_spec_list L_RSBRACKET {$$ = $2;}

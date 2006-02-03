@@ -75,17 +75,20 @@ static GdaRow *
 gda_data_model_hash_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	gint hash_entry;
-	GdaRow *gdarow;
+	GdaRow *gdarow = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
 
 	/* get row according mapping */
-	hash_entry = g_array_index (GDA_DATA_MODEL_HASH (model)->priv->row_map, gint, row);
-
-	gdarow = (GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
-					      GINT_TO_POINTER (hash_entry));
+	if (row < GDA_DATA_MODEL_HASH (model)->priv->row_map->len) {
+		hash_entry = g_array_index (GDA_DATA_MODEL_HASH (model)->priv->row_map, gint, row);
+		
+		gdarow = (GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
+							 GINT_TO_POINTER (hash_entry));
+	}
 	if (!gdarow)
 		g_set_error (error, 0, 0, _("Row %d not found in data model"), row);
+
 	return gdarow;
 }
 

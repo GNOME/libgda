@@ -26,7 +26,7 @@ main (int argc, char **argv)
 	GError *error = NULL;
 	GSList *list, *lptr;
 	
-/* command line parsing */
+	/* command line parsing */
 	context = g_option_context_new ("<Dictionaty XML file> - Test and list the contents of a dictionary file");
 	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {

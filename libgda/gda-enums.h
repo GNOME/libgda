@@ -1,6 +1,6 @@
 /* gda-enums.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -30,7 +30,8 @@ typedef enum  {
         GDA_VALUE_ATTR_IS_UNCHANGED   = 1 << 4, /* READ | WRITE */
         GDA_VALUE_ATTR_ACTIONS_SHOWN  = 1 << 5, /* READ | WRITE */
         GDA_VALUE_ATTR_DATA_NON_VALID = 1 << 6, /* READ */
-        GDA_VALUE_ATTR_HAS_VALUE_ORIG = 1 << 7  /* READ */
+        GDA_VALUE_ATTR_HAS_VALUE_ORIG = 1 << 7, /* READ */
+	GDA_VALUE_ATTR_NO_MODIF       = 1 << 8, /* READ | WRITE */
 } GdaValueAttribute;
 
 /* different possible types for a GdaGraph object */

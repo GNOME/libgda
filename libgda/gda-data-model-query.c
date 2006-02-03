@@ -84,6 +84,7 @@ static gint                 gda_data_model_query_get_n_columns   (GdaDataModel *
 static GdaColumn           *gda_data_model_query_describe_column (GdaDataModel *model, gint col);
 static guint                gda_data_model_query_get_access_flags(GdaDataModel *model);
 static const GdaValue      *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row);
+static guint                gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static gboolean             gda_data_model_query_set_value_at    (GdaDataModel *model, gint col, gint row, 
 								   const GdaValue *value, GError **error);
@@ -192,6 +193,7 @@ gda_data_model_query_data_model_init (GdaDataModelClass *iface)
 	iface->i_describe_column = gda_data_model_query_describe_column;
         iface->i_get_access_flags = gda_data_model_query_get_access_flags;
 	iface->i_get_value_at = gda_data_model_query_get_value_at;
+	iface->i_get_attributes_at = gda_data_model_query_get_attributes_at;
 
 	iface->i_create_iter = NULL; 
 	iface->i_iter_at_row = NULL;
@@ -284,6 +286,36 @@ query_changed_cb (GdaQuery *query, GdaDataModelQuery *model)
 	g_error ("Query for GdaDataModelQuery has changed, which is not supported!");
 }
 
+/*
+ * converts "[+-]<num>" to <num> and returns FALSE if @pname is not like
+ * "[+-]<num>". <num> is stored in @result, and the +/- signed is stored in @old_val
+ * (@old_val is set to TRUE if there is a "-")
+ */
+static gboolean
+param_name_to_int (const gchar *pname, gint *result, gboolean *old_val)
+{
+	gint sum = 0;
+	const gchar *ptr;
+
+	if (!pname || ((*pname != '-') && (*pname != '+')))
+		return FALSE;
+	
+	ptr = pname + 1;
+	while (*ptr) {
+		if ((*ptr > '9') || (*ptr < '0'))
+			return FALSE;
+		sum = sum * 10 + *ptr - '0';
+		ptr++;
+	}
+	
+	if (result) 
+		*result = sum;
+	if (old_val)
+		*old_val = (*pname == '-') ? TRUE : FALSE;
+	
+	return TRUE;
+}
+
 static void
 gda_data_model_query_set_property (GObject *object,
 				   guint param_id,
@@ -328,20 +360,38 @@ gda_data_model_query_set_property (GObject *object,
 								  G_CALLBACK (param_changed_cb), model);
 				}
 				else {
-					/* other queries: for all the parameters in the param list, if some have the same name
-					 * as a parameter for the SELECT query, then bind them to that parameter */
+					/* other queries: for all the parameters in the param list, 
+					 * if some have a name like "_<num>", then they will be filled with
+					 * the value at the <num>th column before being run, or, if the name is
+					 * the same as a parameter for the SELECT query, then bind them to that parameter */
+					gint num;
+
 					if (model->priv->params [qindex] && model->priv->params [SEL_QUERY]) {
 						GSList *params = model->priv->params [qindex]->parameters;
 						while (params) {
 							const gchar *pname = gda_object_get_name (GDA_OBJECT (params->data));
-
-							if (pname) {
-								GdaParameter *bind_to;
-								bind_to = gda_parameter_list_find_param (model->priv->params [SEL_QUERY],
-													 pname);
-								if (bind_to)
-									gda_parameter_bind_to_param (GDA_PARAMETER (params->data),
-												     bind_to);
+							gboolean old_val;
+							
+							if (param_name_to_int (pname, &num, &old_val)) {
+								if (old_val)
+									g_object_set_data ((GObject*) params->data, "-num", 
+											   GINT_TO_POINTER (num + 1));
+								else
+									g_object_set_data ((GObject*) params->data, "+num", 
+											   GINT_TO_POINTER (num + 1));
+								g_object_set_data ((GObject*) params->data, "_num",
+										   GINT_TO_POINTER (num + 1));
+							}
+							else {
+								if (pname) {
+									GdaParameter *bind_to;
+									bind_to = gda_parameter_list_find_param 
+										(model->priv->params [SEL_QUERY],
+										 pname);
+									if (bind_to)
+										g_object_set_data ((GObject*) params->data, 
+												   "_bind", bind_to);
+								}
 							}
 							params = g_slist_next (params);
 						}
@@ -405,6 +455,25 @@ to_be_destroyed_query_cb (GdaQuery *query, GdaDataModelQuery *model)
 static void
 param_changed_cb (GdaParameterList *paramlist, GdaParameter *param, GdaDataModelQuery *model)
 {
+	/* first: sync the parameters which are bound */
+	if (model->priv->params [SEL_QUERY]) {
+		gint i;
+		for (i = INS_QUERY; i <= DEL_QUERY; i++) {
+			if (model->priv->params [i]) {
+				GSList *params = model->priv->params [i]->parameters;
+				while (params) {
+					GdaParameter *bind_to;
+					bind_to = g_object_get_data ((GObject*) params->data, "_bind");
+					if (bind_to == param)
+						gda_parameter_set_value (GDA_PARAMETER (params->data),
+									 gda_parameter_get_value (bind_to));
+					params = g_slist_next (params);
+				}
+			}
+		}
+	}
+
+	/* second: do a refresh */
 	if (gda_parameter_list_is_valid (paramlist))
 		gda_data_model_query_refresh (model, NULL);
 	else {
@@ -739,11 +808,15 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 				gboolean allok = TRUE;
 				GSList *params = selmodel->priv->params [i]->parameters;
 				while (params && allok) {
-					const gchar *pname = gda_object_get_name ((GdaObject*)(params->data));
-					if (pname && (*pname == '_') &&
-					    *(pname+1) && (*(pname+1) >= '0') && (*(pname+1) <= '9'));
-					else
+					gint num;
+					
+					num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "_num")) - 1;
+					if (num < 0)
 						allok = gda_parameter_is_valid ((GdaParameter*)(params->data));
+					if (!allok) {
+						g_print ("Not OK:\n");
+						gda_object_dump (params->data, 10);
+					}
 					params = g_slist_next (params);
 				}
 				
@@ -751,15 +824,15 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 					switch (i) {
 					case INS_QUERY:
 						flags |= GDA_DATA_MODEL_ACCESS_INSERT;
-						/*g_print ("INS flag\n");*/
+						/* g_print ("INS flag\n"); */
 						break;
 					case UPD_QUERY:
 						flags |= GDA_DATA_MODEL_ACCESS_UPDATE;
-						/*g_print ("UPD flag\n");*/
+						/* g_print ("UPD flag\n"); */
 						break;
 					case DEL_QUERY:
 						flags |= GDA_DATA_MODEL_ACCESS_DELETE;
-						/*g_print ("DEL flag\n");*/
+						/* g_print ("DEL flag\n"); */
 						break;
 					default:
 						g_assert_not_reached ();
@@ -767,7 +840,6 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 				}
 			}
 		}
-
 	}
 
 	return flags;
@@ -790,69 +862,308 @@ gda_data_model_query_get_value_at (GdaDataModel *model, gint col, gint row)
 		return NULL;
 }
 
+static guint
+gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
+{
+	guint flags = 0;
+	GdaDataModelQuery *selmodel;
+	gboolean used = FALSE;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), 0);
+	selmodel = (GdaDataModelQuery *) model;
+	g_return_val_if_fail (selmodel->priv, 0);
+	
+	if (selmodel->priv->data)
+		flags = gda_data_model_get_attributes_at (selmodel->priv->data, col, row);
+
+	if ((row >= 0) && selmodel->priv->queries[UPD_QUERY] && selmodel->priv->params[UPD_QUERY]) {
+		GSList *params = selmodel->priv->params[UPD_QUERY]->parameters;
+		while (params && !used) {
+			if (GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1 == col)
+				used = TRUE;
+			params = params->next;
+		}
+	}
+
+	if ((row < 0) && selmodel->priv->queries[INS_QUERY] && selmodel->priv->params[INS_QUERY]) {
+		GSList *params = selmodel->priv->params[INS_QUERY]->parameters;
+		while (params && !used) {
+			if (GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1 == col)
+				used = TRUE;
+			params = params->next;
+		}
+	}
+	
+	if (!used)
+		flags |= GDA_VALUE_ATTR_NO_MODIF;
+
+	return flags;
+}
+
+static gboolean
+run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
+{
+	GdaConnection *cnc;
+	gchar *sql;
+	GdaCommand *cmd;
+	gboolean retval = FALSE;
+
+	/* check connection */
+	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (selmodel)));
+	if (!cnc) {
+		g_set_error (error, 0, 0,
+			     _("No connection specified"));
+		return FALSE;
+	}
+
+	if (!gda_connection_is_open (cnc)) {
+		g_set_error (error, 0, 0,
+			     _("Connection is not opened"));
+		return FALSE;
+	}
+
+	/* render the SQL and run it */
+	/*gda_object_dump (selmodel->priv->params [query_type], 0);*/
+	sql = gda_renderer_render_as_sql (GDA_RENDERER (selmodel->priv->queries[query_type]), 
+					  selmodel->priv->params [query_type],
+					  0, error);
+	if (!sql)
+		return FALSE;
+
+	cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	g_free (sql);
+        if (gda_connection_execute_non_query (cnc, cmd, NULL, error) >= 0)
+		retval = TRUE;
+	gda_command_free (cmd);
+
+	if (retval && !selmodel->priv->defer_refresh)
+		/* do a refresh */
+		gda_data_model_query_refresh (selmodel, NULL);
+
+	return retval;
+}
+
 static gboolean
 gda_data_model_query_set_value_at (GdaDataModel *model, gint col, gint row, const GdaValue *value, GError **error)
 {
 	GdaDataModelQuery *selmodel;
+	GdaParameterList *paramlist;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), FALSE);
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, FALSE);
 
-	TO_IMPLEMENT;
+	/* make sure there is a UPDATE query */
+	if (!selmodel->priv->queries[UPD_QUERY]) {
+		g_set_error (error, 0, 0,
+			     _("No UPDATE query specified, can't update row"));
+		return FALSE;
+	}
 
-	return FALSE;
+	/* set the values of the parameters in the paramlist if necessary */
+	paramlist = selmodel->priv->params[UPD_QUERY];
+	if (paramlist && paramlist->parameters) {
+		GSList *params = paramlist->parameters;
+		while (params) {
+			gint num;
+
+			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1;
+			if (num >= 0) {
+				/* new values */
+				if (num == col)
+					gda_parameter_set_value (GDA_PARAMETER (params->data), value);
+				else
+					gda_parameter_set_value (GDA_PARAMETER (params->data), NULL);
+			}
+			else {
+				num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "-num")) - 1;	
+				if (num >= 0)
+					/* old values */
+					gda_parameter_set_value (GDA_PARAMETER (params->data),
+								 gda_data_model_get_value_at ((GdaDataModel*) selmodel, 
+											      num, row));
+			}
+			params = g_slist_next (params);
+		}
+	}
+
+	/* render the SQL and run it */
+	return run_modif_query (selmodel, UPD_QUERY, error);
 }
 
 static gboolean
 gda_data_model_query_set_values (GdaDataModel *model, gint row, GList *values, GError **error)
 {
 	GdaDataModelQuery *selmodel;
+	GdaParameterList *paramlist;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), FALSE);
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, FALSE);
 
-	TO_IMPLEMENT;
+	/* make sure there is a UPDATE query */
+	if (!selmodel->priv->queries[UPD_QUERY]) {
+		g_set_error (error, 0, 0,
+			     _("No UPDATE query specified, can't update row"));
+		return FALSE;
+	}
 
-	return FALSE;
+	/* set the values of the parameters in the paramlist if necessary */
+	paramlist = selmodel->priv->params[UPD_QUERY];
+	if (paramlist && paramlist->parameters) {
+		GSList *params = paramlist->parameters;
+		while (params) {
+			gint num;
+
+			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1;
+			if (num >= 0) {
+				/* new values */
+				GdaValue *value;
+				value = g_list_nth_data ((GList *) values, num);
+				if (value)
+					gda_parameter_set_value (GDA_PARAMETER (params->data), value);
+				else
+					gda_parameter_set_value (GDA_PARAMETER (params->data), NULL);
+			}
+			else {
+				num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "-num")) - 1;
+				if (num >= 0)
+					/* old values */
+					gda_parameter_set_value (GDA_PARAMETER (params->data),
+								 gda_data_model_get_value_at ((GdaDataModel*) selmodel, 
+											      num, row));
+			}
+			params = g_slist_next (params);
+		}
+	}
+
+	/* render the SQL and run it */
+	return run_modif_query (selmodel, UPD_QUERY, error);
 }
 
 static gint
 gda_data_model_query_append_values (GdaDataModel *model, const GList *values, GError **error)
 {
 	GdaDataModelQuery *selmodel;
+	GdaParameterList *paramlist;
+	gboolean retval;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), -1);
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, -1);
 
-	TO_IMPLEMENT;
+	/* make sure there is a INSERT query */
+	if (!selmodel->priv->queries[INS_QUERY]) {
+		g_set_error (error, 0, 0,
+			     _("No INSERT query specified, can't insert row"));
+		return -1;
+	}
 
-	return -1;
+	/* set the values of the parameters in the paramlist if necessary */
+	paramlist = selmodel->priv->params[INS_QUERY];
+	if (paramlist && paramlist->parameters) {
+		GSList *params = paramlist->parameters;
+		while (params) {
+			gint num;
+
+			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1;
+			if (num >= 0) {
+				/* new values only */
+				GdaValue *value;
+				value = g_list_nth_data ((GList *) values, num);
+				gda_parameter_set_value (GDA_PARAMETER (params->data), value);
+			}
+			params = g_slist_next (params);
+		}
+	}
+
+	/* render the SQL and run it */
+	retval = run_modif_query (selmodel, INS_QUERY, error);
+
+	if (retval)
+		return 0;
+	else
+		return -1;
 }
 
 static gint
 gda_data_model_query_append_row (GdaDataModel *model, GError **error)
 {
 	GdaDataModelQuery *selmodel;
+	GdaParameterList *paramlist;
+	gboolean retval;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), -1);
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, -1);
 
-	TO_IMPLEMENT;
+	/* make sure there is a INSERT query */
+	if (!selmodel->priv->queries[INS_QUERY]) {
+		g_set_error (error, 0, 0,
+			     _("No INSERT query specified, can't insert row"));
+		return -1;
+	}
 
-	return -1;
+	/* set the values of the parameters in the paramlist if necessary */
+	paramlist = selmodel->priv->params[INS_QUERY];
+	if (paramlist && paramlist->parameters) {
+		GSList *params = paramlist->parameters;
+		while (params) {
+			gint num;
+
+			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1;
+
+			if (num >= 0) 
+				/* new values only */
+				gda_parameter_set_value (GDA_PARAMETER (params->data), NULL);
+			params = g_slist_next (params);
+		}
+	}
+
+	/* render the SQL and run it */
+	retval = run_modif_query (selmodel, INS_QUERY, error);
+
+	if (retval)
+		return 0;
+	else
+		return -1;
 }
 
 static gboolean
 gda_data_model_query_remove_row (GdaDataModel *model, gint row, GError **error)
 {
 	GdaDataModelQuery *selmodel;
+	GdaParameterList *paramlist;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), FALSE);
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, FALSE);
+	
+	/* make sure there is a REMOVE query */
+	if (!selmodel->priv->queries[DEL_QUERY]) {
+		g_set_error (error, 0, 0,
+			     _("No DELETE query specified, can't delete row"));
+		return FALSE;
+	}
 
-	TO_IMPLEMENT;
+	/* set the values of the parameters in the paramlist if necessary */
+	paramlist = selmodel->priv->params[DEL_QUERY];
+	if (paramlist && paramlist->parameters) {
+		GSList *params = paramlist->parameters;
+		while (params) {
+			gint num;
 
-	return FALSE;
+			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "-num")) - 1;
+			if (num >= 0) 
+				/* old values only */
+				gda_parameter_set_value (GDA_PARAMETER (params->data),
+							 gda_data_model_get_value_at ((GdaDataModel*) selmodel, num, row));
+			params = g_slist_next (params);
+		}
+	}
+
+	/* render the SQL and run it */
+	return run_modif_query (selmodel, DEL_QUERY, error);
 }
 
 static void

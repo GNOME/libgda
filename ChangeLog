@@ -1,3 +1,20 @@
+2006-02-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sql-delimiter/parser.y: corrected a bug with the "=" sign
+	* libgda/gda-parameter.c: bug fixes
+	* libgda/gda-enums.h: added GDA_VALUE_ATTR_NO_MODIF attribute to GdaValueAttribute
+	* libgda/gda-data-model.[ch]: added gda_data_model_get_attributes_at() function, 
+	and the i_get_attributes_at() virtual function
+	* libgda/gda-data-proxy.c: bug fixes, now use the i_get_attributes_at()
+	virtual function of the proxied data model
+	* libgda/gda-data-model-row.c, libgda/gda-data-model-hash.c: implemented the
+	i_get_attributes_at() interface
+	* libgda/gda-data-model-query.c: implemented the i_get_attributes_at() interface,
+	and now use the INSERT, UPDATE and DELETE queries to actually update data
+	* libgda/gda-data-model-row.c: added a "read_only" property which prevents any change to
+	the data model.
+	* minor bug fixes
+
 2006-01-29  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/ldap/gda-ldap-recordset.c:

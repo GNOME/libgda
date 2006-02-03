@@ -857,8 +857,8 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,
  * Use @provider to create a new #GdaValue from a single string representation. 
  *
  * The @prefered_type can optionnaly ask @provider to return a #GdaValue of the requested type 
- * (but if such a value can't be created from @string, then %NULL is returned); pass GDA_VALUE_TYPE_UNKNOWN
- * if any returned type is acceptable.
+ * (but if such a value can't be created from @string, then %NULL is returned); 
+ * pass GDA_VALUE_TYPE_UNKNOWN if any returned type is acceptable.
  *
  * The returned value is either a new #GdaValue or %NULL in the following cases:
  * - @string cannot be converted to @prefered_type type
