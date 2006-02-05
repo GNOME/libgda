@@ -28,7 +28,9 @@
 #include <string.h>
 #include "gda-postgres.h"
 #include "gda-postgres-blob.h"
+#ifdef HAVE_LOCALE_H
 #include <locale.h>
+#endif
 
 GdaConnectionEventCode
 gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)

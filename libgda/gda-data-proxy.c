@@ -158,6 +158,7 @@ struct _GdaDataProxyPrivate
 	GHashTable        *modif_rows;  /* key = model_row number, value = RowModif, NOT for new rows */
 
 	gboolean           ignore_proxied_changes;
+	gboolean           proxy_has_changed;
 	gboolean           multiple_rows_changes;
 
 	gboolean           add_null_entry; /* artificially add a NULL entry at the beginning of the tree model */
@@ -256,13 +257,28 @@ find_row_modif_for_proxy_row (GdaDataProxy *proxy, gint proxy_row)
 	if (model_row >= 0)
 		rm = g_hash_table_lookup (proxy->priv->modif_rows, GINT_TO_POINTER (model_row));
 	else {
-		gint offset = proxy->priv->current_nb_rows + (proxy->priv->add_null_entry ? 1 : 0);
+		gint offset = proxy->priv->current_nb_rows + 
+			(proxy->priv->add_null_entry ? 1 : 0);
 
 		offset = proxy_row - offset;
 		rm = g_slist_nth_data (proxy->priv->new_rows, offset);
 	}
 
 	return rm;
+}
+
+static gint
+find_proxy_row_for_row_modif (GdaDataProxy *proxy, RowModif *rm)
+{
+	if (rm->model_row >= 0)
+		return model_row_to_proxy_row (proxy, rm->model_row);
+	else {
+		gint index;
+		index = g_slist_index (proxy->priv->new_rows, rm);
+		g_assert (index >= 0);
+		return index + proxy->priv->current_nb_rows + 
+			(proxy->priv->add_null_entry ? 1 : 0);
+	}
 }
 
 /*
@@ -461,6 +477,7 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 	proxy->priv->modif_rows = g_hash_table_new (NULL, NULL);
 	proxy->priv->notify_changes = TRUE;
 	proxy->priv->ignore_proxied_changes = FALSE;
+	proxy->priv->proxy_has_changed = FALSE;
 	proxy->priv->multiple_rows_changes = FALSE;
 
 	proxy->priv->add_null_entry = FALSE;
@@ -687,8 +704,11 @@ gda_data_proxy_get_property (GObject *object,
 static void
 proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 {
-	if (proxy->priv->ignore_proxied_changes)
+	if (proxy->priv->ignore_proxied_changes) {
+		proxy->priv->proxy_has_changed = TRUE;
 		return;
+	}
+	proxy->priv->proxy_has_changed = FALSE;
 
 	/* stop idle adding of rows */
 	if (proxy->priv->idle_add_event_source) {
@@ -1370,6 +1390,7 @@ static gboolean
 commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 {
 	gboolean err = FALSE;
+	gboolean freedone = FALSE;
 
 	if (!rm)
 		return TRUE;
@@ -1462,28 +1483,38 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 				values = g_list_append (values, newvalue);
 			}
 			
-			/* for (i = 0; i < proxy->priv->model_nb_cols; i++) { */
-/* 				if (is_default [i]) { */
-/* 					gda_row_set_is_default (gdarow, i, TRUE); */
-/* 				} */
-/* 			} */
-			err = gda_data_model_append_values (proxy->priv->model, values, error) >= 0 ? FALSE : TRUE;
+			err = gda_data_model_append_values (proxy->priv->model, 
+							    values, error) >= 0 ? FALSE : TRUE;
 			g_list_free (values);
 			g_free (is_default);
+
+			if (!err) {
+				/* emit a "delete" signal for that row because when rm is
+				 * removed it means the corresponding row will have been removed,
+				 * and if we don't emit that signal, then there will be a problem. 
+				 */
+				gint rowsig = find_proxy_row_for_row_modif (proxy, rm);
+
+				proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
+				proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
+				row_modifs_free (rm);
+
+				gda_data_model_row_removed ((GdaDataModel *) proxy, rowsig);
+				freedone = TRUE;
+			}
 		}
 	}
 	
-	if (!err) {
-		/* get rid of the commited change */
+	if (!err && !freedone) {
+		/* get rid of the commited change, where rm->model_row >= 0 */
 		proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
-		if (rm->model_row < 0) 
-			proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
-		else
-			g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
+		g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
 		row_modifs_free (rm);
 	}
 
 	proxy->priv->ignore_proxied_changes = FALSE;
+	if (proxy->priv->proxy_has_changed) 
+		proxied_model_data_changed_cb (proxy->priv->model, proxy);
 
 	return !err;
 }
@@ -1828,7 +1859,6 @@ gboolean
 gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 {
 	gboolean allok = TRUE;
-	gboolean notify_changes;
 
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
 	g_return_val_if_fail (proxy->priv, FALSE);
@@ -1839,15 +1869,10 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 
 	gda_data_model_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_START_BATCH_UPDATE, NULL);
 
-	/* temporary disable changes notification */
-	notify_changes = proxy->priv->notify_changes;
-	proxy->priv->notify_changes = FALSE;
-
 	proxy->priv->multiple_rows_changes = TRUE;
 	while (proxy->priv->all_modifs && allok)
 		allok = commit_row_modif (proxy, ROW_MODIF (proxy->priv->all_modifs->data), error);
 
-	proxy->priv->notify_changes = notify_changes;
 
 	gda_data_model_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_END_BATCH_UPDATE, NULL);
 

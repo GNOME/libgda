@@ -1139,9 +1139,9 @@ gda_connection_execute_non_query (GdaConnection *cnc,
 				  GdaParameterList *params,
 				  GError **error)
 {
-	GList *reclist;
+	GList *reclist, *list;
 	GdaDataModel *model;
-	gint result = -1;
+	gint result = 0;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
 	g_return_val_if_fail (cnc->priv, -1);
@@ -1155,7 +1155,10 @@ gda_connection_execute_non_query (GdaConnection *cnc,
 	if (GDA_IS_DATA_MODEL (model))
 		result = gda_data_model_get_n_rows (model);
 
-	g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+	list = reclist;
+	for (list = reclist; list; list = g_list_next (list))
+		if (list->data)
+			g_object_unref (list->data);
 	g_list_free (reclist);
 
 	return result;

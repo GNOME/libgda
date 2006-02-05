@@ -41,6 +41,7 @@ struct _GdaDataModelQueryPrivate {
 	GdaDataModel     *data;
 
 	gboolean          defer_refresh;
+	gboolean          refresh_pending;
 	GSList           *columns;
 };
 
@@ -222,6 +223,7 @@ gda_data_model_query_init (GdaDataModelQuery *model, GdaDataModelQueryClass *kla
 
 	/* model refreshing is performed as soon as any modification is done */
 	model->priv->defer_refresh = FALSE;
+	model->priv->refresh_pending = FALSE;
 }
 
 static void
@@ -930,6 +932,8 @@ run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 	if (!sql)
 		return FALSE;
 
+	g_print ("Query model SQL: %s\n", sql);
+
 	cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	g_free (sql);
         if (gda_connection_execute_non_query (cnc, cmd, NULL, error) >= 0)
@@ -939,6 +943,9 @@ run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 	if (retval && !selmodel->priv->defer_refresh)
 		/* do a refresh */
 		gda_data_model_query_refresh (selmodel, NULL);
+	else
+		/* the refresh is delayed */
+		selmodel->priv->refresh_pending = TRUE;
 
 	return retval;
 }
@@ -1180,8 +1187,11 @@ gda_data_model_query_send_hint (GdaDataModel *model, GdaDataModelHint hint, cons
 		if (hint == GDA_DATA_MODEL_HINT_START_BATCH_UPDATE)
 			selmodel->priv->defer_refresh = TRUE;
 		else {
-			if (hint == GDA_DATA_MODEL_HINT_END_BATCH_UPDATE)
+			if (hint == GDA_DATA_MODEL_HINT_END_BATCH_UPDATE) {
 				selmodel->priv->defer_refresh = FALSE;
+				if (selmodel->priv->refresh_pending)
+					gda_data_model_query_refresh (selmodel, NULL);
+			}
 		}
 	}
 }
