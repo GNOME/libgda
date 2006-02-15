@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-23 08:29+0200\n"
-"PO-Revision-Date: 2006-01-23 08:43+0200\n"
+"POT-Creation-Date: 2006-02-15 07:03+0200\n"
+"PO-Revision-Date: 2006-02-15 07:15+0200\n"
 "Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -117,56 +117,56 @@ msgstr "Järjestelmän laajuinen"
 
 #: ../libgda/gda-data-model-array.c:75 ../libgda/gda-data-model-array.c:91
 #, c-format
-msgid "Row out %d of range 0 - %d"
+msgid "Row %d out of range 0 - %d"
 msgstr "Rivi %d välin 0 - %d ulkopolella"
 
-#: ../libgda/gda-data-model-array.c:97 ../libgda/gda-data-model-hash.c:104
+#: ../libgda/gda-data-model-array.c:97 ../libgda/gda-data-model-hash.c:107
 #, c-format
 msgid "Column out %d of range 0 - %d"
 msgstr "Sarake %d välin 0 - %d ulkopuolella"
 
-#: ../libgda/gda-data-model-array.c:132 ../libgda/gda-data-model-hash.c:130
-#: ../libgda/gda-data-model-hash.c:201
+#: ../libgda/gda-data-model-array.c:132 ../libgda/gda-data-model-hash.c:133
+#: ../libgda/gda-data-model-hash.c:204
 msgid "Wrong number of values in values list"
 msgstr "Virheellinen määrä arvoja arvolistassa"
 
-#: ../libgda/gda-data-model-array.c:190 ../libgda/gda-data-model-array.c:218
+#: ../libgda/gda-data-model-array.c:192 ../libgda/gda-data-model-array.c:220
 msgid "Row not found in data model"
 msgstr "Riviä ei löydy tietomallista"
 
-#: ../libgda/gda-data-model-array.c:370
+#: ../libgda/gda-data-model-array.c:372
 #, c-format
 msgid "Node is not <gda_array> but <%s>"
 msgstr "Solmu ei ole <gda-array> vaan <%s>"
 
-#: ../libgda/gda-data-model-array.c:396
+#: ../libgda/gda-data-model-array.c:398
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "Attribuuttia \"gdatype\" ei ole määritelty kentässä <gda_array_field>"
 
-#: ../libgda/gda-data-model-array.c:442
+#: ../libgda/gda-data-model-array.c:444
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "Kenttää <gda_array_field> ei ole määritelty listassa <gda_array>"
 
-#: ../libgda/gda-data-model.c:967
+#: ../libgda/gda-data-model.c:1009
 msgid "Exported Data"
 msgstr "Viety tieto"
 
-#: ../libgda/gda-data-model.c:1089
+#: ../libgda/gda-data-model.c:1131
 #, c-format
 msgid "Expected tag <gda_value>, got <%s>, ignoring"
 msgstr "Oletettiin tagia <gda_value>, saatiin <%s>, ohitetaan"
 
-#: ../libgda/gda-data-model.c:1099 ../testing/gda-test-models.c:528
+#: ../libgda/gda-data-model.c:1141 ../testing/gda-test-models.c:528
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "Sarakkeen tietotyyppiä ei voi hakea (tyyppi on UNKNOWN tai määrittelemätön)"
 
-#: ../libgda/gda-data-model.c:1116 ../testing/gda-test-models.c:546
+#: ../libgda/gda-data-model.c:1158 ../testing/gda-test-models.c:546
 #, c-format
 msgid "Cannot interpret string as a valid %s value"
 msgstr "Merkkijonoa ei voida tulkita kelvolliseksi %s-arvoksi"
 
-#: ../libgda/gda-data-model.c:1176
+#: ../libgda/gda-data-model.c:1218
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Oletettiin tagia <gda_array_data, saatiin <%s>"
@@ -181,42 +181,58 @@ msgstr "SQL-merkkijonoa \"%s\" ei voi jäsentää"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "SQL-komento ei ole SELECT (vaan \"%s\""
 
-#: ../libgda/gda-data-model-hash.c:88
+#: ../libgda/gda-data-model-hash.c:90
 #, c-format
 msgid "Row %d not found in data model"
 msgstr "Riviä %d ei löydy tietomallista"
 
-#: ../libgda/gda-data-model-query.c:368
+#: ../libgda/gda-data-model-query.c:558
 msgid "Query is not a SELECT query"
 msgstr "Kysely ei ole SELECT-kysely"
 
-#: ../libgda/gda-data-model-query.c:375
+#: ../libgda/gda-data-model-query.c:565 ../libgda/gda-data-model-query.c:917
 msgid "No connection specified"
 msgstr "Yhteyttä ei ole määritetty"
 
-#: ../libgda/gda-data-model-query.c:381
+#: ../libgda/gda-data-model-query.c:571 ../libgda/gda-data-model-query.c:923
 msgid "Connection is not opened"
 msgstr "Yhteys ei ole avattu"
 
-#: ../libgda/gda-data-model-row.c:488
+#: ../libgda/gda-data-model-query.c:642
+msgid "Wrong type of query"
+msgstr "Virheellinen kyselyn tyyppi"
+
+#: ../libgda/gda-data-model-query.c:966 ../libgda/gda-data-model-query.c:1014
+msgid "No UPDATE query specified, can't update row"
+msgstr "UPDATE-kyselyä ei ollut määritelty, riviä ei voi päivittää"
+
+#: ../libgda/gda-data-model-query.c:1065 ../libgda/gda-data-model-query.c:1110
+msgid "No INSERT query specified, can't insert row"
+msgstr "INSERT-kyselyä ei ollut määritelty, riviä ei voi lisätä" 
+
+#: ../libgda/gda-data-model-query.c:1152
+msgid "No DELETE query specified, can't delete row"
+msgstr "DELETE-kyselyä ei ollut määritelty, riviä ei voi poistaa" 
+
+#: ../libgda/gda-data-model-row.c:487
 msgid "Too many values in list"
 msgstr "Liian monta arvoa listassa"
 
-#: ../libgda/gda-data-proxy.c:415
+#: ../libgda/gda-data-proxy.c:435
 msgid "Data model"
 msgstr "Tietomalli"
 
-#: ../libgda/gda-data-proxy.c:2212
+#: ../libgda/gda-data-proxy.c:2254
 #, c-format
 msgid "Unknown GdaDataProxy column: %d"
 msgstr "Tuntematon GdaDataProxy-sarake: %d"
 
-#: ../libgda/gda-data-proxy.c:2379
+#: ../libgda/gda-data-proxy.c:2430
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Yritettiin muuttaa vain luettavissa olevaa saraketta: %d"
 
-#: ../libgda/gda-data-proxy.c:2416
+#: ../libgda/gda-data-proxy.c:2467
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Arvotyypit %s ja %s eivät täsmää"
@@ -252,65 +268,65 @@ msgstr "Käytettävän yhteyden DSN"
 msgid "Username for the connection to use"
 msgstr "Yhteyden kanssa käytettävä käytäjätunnus"
 
-#: ../libgda/gda-dict.c:1349
+#: ../libgda/gda-dict.c:1348
 msgid "gda_graph of type 'Q' must have an 'object' attribute"
 msgstr "Tyypin \"Q\" gda_graphilla täytyy olle attribuutti \"object\""
 
-#: ../libgda/gda-dict.c:1359
+#: ../libgda/gda-dict.c:1358
 msgid "gda_graph of type 'Q' must have valid 'object' attribute"
 msgstr ""
 "Tyypin \"Q\" gda_grapilla töytyy olle kelvollinen attribuutti \"object\""
 
-#: ../libgda/gda-dict.c:1580 ../testing/html.c:131
+#: ../libgda/gda-dict.c:1579 ../testing/html.c:131
 #, c-format
 msgid "Error writing XML file %s"
 msgstr "Virhe kirjoitettaessa XML-tiedostoa %s"
 
-#: ../libgda/gda-dict.c:1591
+#: ../libgda/gda-dict.c:1590
 msgid "Can't allocate memory for XML structure."
 msgstr "XML-rakenteelle ei voi varata muistia."
 
-#: ../libgda/gda-dict.c:2143
+#: ../libgda/gda-dict.c:2142
 msgid "No connection associated to the dictionary"
 msgstr "Sanakirjaan ei ole liitetty yhteyttä"
 
-#: ../libgda/gda-dict.c:2150
+#: ../libgda/gda-dict.c:2149
 msgid "Connection is closed"
 msgstr "Yhteys on suljettu"
 
-#: ../libgda/gda-dict.c:2157 ../libgda/gda-dict-database.c:966
+#: ../libgda/gda-dict.c:2156 ../libgda/gda-dict-database.c:966
 msgid "Update already started!"
 msgstr "Päivitys n jo käynnistetty!"
 
-#: ../libgda/gda-dict.c:2195 ../libgda/gda-dict-database.c:1011
+#: ../libgda/gda-dict.c:2194 ../libgda/gda-dict-database.c:1011
 msgid "Update stopped!"
 msgstr "Päivitys pysäytetty!"
 
-#: ../libgda/gda-dict.c:2222
+#: ../libgda/gda-dict.c:2221
 msgid "Can't get list of data types"
 msgstr "Listaa tietotyypeistä ei voi hakea"
 
-#: ../libgda/gda-dict.c:2233
+#: ../libgda/gda-dict.c:2232
 msgid "Schema for list of data types is wrong"
 msgstr "Tietotyyppilistan skeema on virheellinen"
 
-#: ../libgda/gda-dict.c:2420
+#: ../libgda/gda-dict.c:2419
 msgid "Can't get list of functions"
 msgstr "Listaa funktioista ei voi hakea"
 
-#: ../libgda/gda-dict.c:2435
+#: ../libgda/gda-dict.c:2434
 msgid "Schema for list of functions is wrong"
 msgstr "Funktiolistan skeema on virheellinen"
 
-#: ../libgda/gda-dict.c:2659
+#: ../libgda/gda-dict.c:2658
 msgid "Can't get list of aggregates"
 msgstr "Listaa yhdisteistä ei löydy"
 
-#: ../libgda/gda-dict.c:2673
+#: ../libgda/gda-dict.c:2672
 msgid "Schema for list of aggregates is wrong"
 msgstr "Yhdistelistän skeema on virheellinen"
 
-#: ../libgda/gda-dict.c:2915
+#: ../libgda/gda-dict.c:2914
 #, c-format
 msgid "Error creating directory %s"
 msgstr "Virhe luotaessa kansiota %s"
@@ -437,7 +453,7 @@ msgstr "Yritys alustaa jo alustettu asiakas"
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda tarvitsee GModulen. Lopetetaan..."
 
-#: ../libgda/gda-object.c:294
+#: ../libgda/gda-object.c:304
 msgid "LibGda must be initialized before any usage."
 msgstr "LibGda täytyy alustaa ennen käyttöä."
 
@@ -524,230 +540,236 @@ msgstr ""
 "GdaParameterListSource viittaa solmuun GdaParameterListNode, joka ei käytä "
 "samaa tietomallia"
 
-#: ../libgda/gda-query.c:914
+#: ../libgda/gda-query.c:931
 msgid "Can't modify the structure of a non-parsed SQL query"
 msgstr "Tulkitsemattoman SQL-kyselyn rakennetta ei voi muokata"
 
-#: ../libgda/gda-query.c:1132
+#: ../libgda/gda-query.c:1149
 msgid "Select"
 msgstr "Valitse"
 
-#: ../libgda/gda-query.c:1134
+#: ../libgda/gda-query.c:1151
 msgid "Insert"
 msgstr "Lisää"
 
-#: ../libgda/gda-query.c:1136
+#: ../libgda/gda-query.c:1153
 msgid "Update"
 msgstr "Päivitä"
 
-#: ../libgda/gda-query.c:1138
+#: ../libgda/gda-query.c:1155
 msgid "Delete"
 msgstr "Poista"
 
-#: ../libgda/gda-query.c:1140
+#: ../libgda/gda-query.c:1157
 msgid "Select (union)"
 msgstr "Valitse (yhdiste)"
 
-#: ../libgda/gda-query.c:1142
+#: ../libgda/gda-query.c:1159
 msgid "Select (intersection)"
 msgstr "Valitse (leikkaus)"
 
-#: ../libgda/gda-query.c:1144
+#: ../libgda/gda-query.c:1161
 msgid "Select (exception)"
 msgstr "Valitse (poikkeus)"
 
-#: ../libgda/gda-query.c:1146
+#: ../libgda/gda-query.c:1163
 msgid "SQL text"
 msgstr "SQL-teksti"
 
-#: ../libgda/gda-query.c:1274
+#: ../libgda/gda-query.c:1367
 #, c-format
 msgid "Error during query parsing (%s)"
 msgstr "Virhe tulkittaessa kyselyä (%s)"
 
-#: ../libgda/gda-query.c:1770
+#: ../libgda/gda-query.c:1878
 msgid ""
 "The query represented by a target must be a sub-query of the current query"
-msgstr ""
-"Kohteen esittämän kyselyn täytyy olla nykyisen kyselyn alikysely"
+msgstr "Kohteen esittämän kyselyn täytyy olla nykyisen kyselyn alikysely"
 
-#: ../libgda/gda-query.c:1785
+#: ../libgda/gda-query.c:1893
 msgid "Queries which update data can only have one target"
 msgstr "Tietoja päivittävillä kyselyillä voi olla vain yksi kohde"
 
-#: ../libgda/gda-query.c:1795
+#: ../libgda/gda-query.c:1903
 msgid "Aggregation queries may only have sub-queries, not targets."
-msgstr ""
-"Yhdistävillä kyselyillä voi olla vain ei alikyselyitä, ei kohteita."
+msgstr "Yhdistävillä kyselyillä voi olla vain ei alikyselyitä, ei kohteita."
 
-#: ../libgda/gda-query.c:3780
+#: ../libgda/gda-query.c:2760 ../testing/gda-author-dict-file.c:154
+#: ../testing/gda-author-dict-file.c:165 ../testing/gda-author-dict-file.c:227
+#: ../testing/gda-author-dict-file.c:233 ../testing/gda-diagnose.c:601
+#: ../testing/gda-test-models.c:151 ../testing/gda-test-models.c:178
+#: ../testing/gda-test-models.c:398 ../testing/gda-test-models.c:452
+#: ../testing/gda-test-models.c:459 ../testing/gda-test-models.c:477
+#: ../testing/gda-test-models.c:558 ../testing/gda-test-models.c:589
+#: ../testing/gda-test-sql.c:144 ../testing/gda-test-sql.c:171
+#: ../testing/gda-test-sql.c:392
+msgid "Unknown error"
+msgstr "Tuntematon virhe"
+
+#: ../libgda/gda-query.c:3890
 msgid "XML Tag is not <gda_query>"
 msgstr "XML-tagi ei ole <gda_query>"
 
-#: ../libgda/gda-query.c:3796
+#: ../libgda/gda-query.c:3906
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "Kyselyn XML-tunnisteen tulisi olla muodossa QUxxx, jossa xxx on numero"
 
-#: ../libgda/gda-query.c:3912
+#: ../libgda/gda-query.c:4022
 msgid ""
 "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 msgstr ""
 "Attribuutit \"entity_ref\" ja \"table_name\" puuttuvat kohdasta "
 "<gda_query_target>"
 
-#: ../libgda/gda-query.c:3936
+#: ../libgda/gda-query.c:4046
 #, c-format
 msgid "Can't find field '%s'"
 msgstr "Kenttää \"%s\" ei löydy"
 
-#: ../libgda/gda-query.c:4055
+#: ../libgda/gda-query.c:4165
 msgid "Problem loading <gda_query>"
 msgstr "Virhe ladattaessa <gda_query>"
 
-#: ../libgda/gda-query.c:4177
+#: ../libgda/gda-query.c:4287
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "Useampia kuin kaksi alikyselyä EXCEPT-kyselyssä"
 
-#: ../libgda/gda-query.c:4194
+#: ../libgda/gda-query.c:4304
 msgid "Query without any SQL code"
 msgstr "Kyselyssä ei ollut SQL-koodia"
 
-#: ../libgda/gda-query.c:4249
+#: ../libgda/gda-query.c:4359
 #, c-format
 msgid "Invalid parameter '%s'"
 msgstr "Virheellinen parametri \"%s\""
 
-#: ../libgda/gda-query.c:4255
+#: ../libgda/gda-query.c:4365
 msgid "Missing parameters"
 msgstr "Parametreja puuttuu"
 
-#: ../libgda/gda-query.c:4329
+#: ../libgda/gda-query.c:4439
 #, c-format
 msgid "Query %s is not a selection query"
 msgstr "Kysely %s ei ole valintakysely"
 
-#: ../libgda/gda-query.c:4361
+#: ../libgda/gda-query.c:4471
 msgid "No target defined to apply modifications"
 msgstr "Muutoksien toteuttamiselle ei ole määritelty kohdetta"
 
-#: ../libgda/gda-query.c:4369
+#: ../libgda/gda-query.c:4479
 msgid "More than one target defined to apply modifications"
 msgstr "Useampi kuin yksi kohde määritelty muutoksien toteuttamiselle"
 
-#: ../libgda/gda-query.c:4380
+#: ../libgda/gda-query.c:4490
 #, c-format
 msgid "Entity %s is not writable"
 msgstr "Kohta %s ei ole kirjoitettavissa"
 
-#: ../libgda/gda-query.c:4399
+#: ../libgda/gda-query.c:4509
 msgid "Modification query field has incompatible type"
 msgstr "Muokkaavassa kyselyssä on epäyhteensopiva tyyppi"
 
-#: ../libgda/gda-query.c:4418
+#: ../libgda/gda-query.c:4528
 msgid "An insertion query can only have one sub-query"
 msgstr "Lisäävässä kyselyssä voi olla vain yksi alikysely"
 
-#: ../libgda/gda-query.c:4426
+#: ../libgda/gda-query.c:4536
 msgid "Insertion query fields incompatible with sub-query's fields"
 msgstr ""
 "Lisäävän kyselyn kentät eivät ole yhteensopivia alikyselyn kenttien kanssa"
 
-#: ../libgda/gda-query.c:4444
+#: ../libgda/gda-query.c:4554
 msgid "Insertion query field has incompatible value assignment"
 msgstr "Lisäävän kyselyn kenttään sijoitettu arvo on epäyhteensopiva"
 
-#: ../libgda/gda-query.c:4457
+#: ../libgda/gda-query.c:4567
 msgid "Insertion query can't have any conditions"
 msgstr "Lisäävässä kyselyssä ei voi olla ehtoja"
 
-#: ../libgda/gda-query.c:4472
+#: ../libgda/gda-query.c:4582
 msgid "Deletion query can't have any visible field"
 msgstr "Poistavassa kyselyssä ei voi olla näkyviä kenttiä"
 
-#: ../libgda/gda-query.c:4492
+#: ../libgda/gda-query.c:4602
 msgid "Update query field has incompatible value assignment"
 msgstr "Päivittävässä kyselyssä on epäyhteensopiva arvon sijoitus"
 
-#: ../libgda/gda-query.c:4519
+#: ../libgda/gda-query.c:4629
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "Yhdistävä tyyppi (esim. UNION) ei voi sisältää kohdetta"
 
-#: ../libgda/gda-query.c:4527
+#: ../libgda/gda-query.c:4637
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "Yhdistävä tyyppi (esim. UNION) ei voi sisältää ehtoja"
 
-#: ../libgda/gda-query.c:5029
+#: ../libgda/gda-query.c:5142
 msgid "Can't correctly print the list of columns to use."
 msgstr "Listaa käytettävistä sarakkeista ei voi tulostaa oikein."
 
-#: ../libgda/gda-query.c:5157
-msgid "Can't render field as SQL"
-msgstr "Kenttää ei voida esittää SQL-muodossa"
-
-#: ../libgda/gda-query.c:5184
+#: ../libgda/gda-query.c:5292
 msgid "Missing values"
 msgstr "Puuttuvia arvoja"
 
-#: ../libgda/gda-query.c:5430
+#: ../libgda/gda-query.c:5538
 #, c-format
 msgid "Query '%s'"
 msgstr "Kysely \"%s\""
 
-#: ../libgda/gda-query.c:5432
+#: ../libgda/gda-query.c:5540
 msgid "Unnamed Query"
 msgstr "Nimeämätön kysely"
 
-#: ../libgda/gda-query-condition.c:357
+#: ../libgda/gda-query-condition.c:367
 #, c-format
 msgid "No join condition found in '%s'"
 msgstr "Kyselystä \"%s\" ei löydy liitosehtoa"
 
-#: ../libgda/gda-query-condition.c:363 ../libgda/gda-query-field.c:325
+#: ../libgda/gda-query-condition.c:373 ../libgda/gda-query-field.c:325
 #, c-format
 msgid "Error parsing '%s'"
 msgstr "Virhe tulkittaessa kyselyä \"%s\""
 
-#: ../libgda/gda-query-condition.c:780
+#: ../libgda/gda-query-condition.c:790
 msgid "Conditions hierarchy error"
 msgstr "Ehtohierarkian virhe"
 
-#: ../libgda/gda-query-condition.c:789
+#: ../libgda/gda-query-condition.c:799
 msgid "A NOT node can only have one child"
 msgstr "NOT-solmulla voi olla vain yksi lapsisolmu"
 
-#: ../libgda/gda-query-condition.c:1422
+#: ../libgda/gda-query-condition.c:1432
 msgid "XML Tag is not <gda_query_cond>"
 msgstr "XML-tagi ei ole <gda_query_cond>"
 
-#: ../libgda/gda-query-condition.c:1435
+#: ../libgda/gda-query-condition.c:1445
 msgid "Wrong 'id' attribute in <gda_query_cond>"
 msgstr "Virheellinen attribuutti \"id\" tagissa <gda_query_cond>"
 
-#: ../libgda/gda-query-condition.c:1450
+#: ../libgda/gda-query-condition.c:1460
 msgid "Wrong 'type' attribute in <gda_query_cond>"
 msgstr "Virheellinen attribuutti \"type\" tagissa <gda_query_cond>"
 
-#: ../libgda/gda-query-condition.c:1500
+#: ../libgda/gda-query-condition.c:1510
 msgid "Missing ID attribute in <gda_query_cond>"
 msgstr "Puuttuva attribuutti \"Id\" kyselyssä <gda_query_cond>"
 
-#: ../libgda/gda-query-condition.c:1531
+#: ../libgda/gda-query-condition.c:1541
 msgid "Condition is not active"
 msgstr "Ehto ei ole aktiivinen"
 
-#: ../libgda/gda-query-condition.c:1545
+#: ../libgda/gda-query-condition.c:1555
 msgid "Condition operator 'NOT' must have one argument"
 msgstr "Ehto-operaattorilla \"NOT\" täytyy olla yksi argumentti"
 
-#: ../libgda/gda-query-condition.c:1555
+#: ../libgda/gda-query-condition.c:1565
 msgid "Condition must have at least one argument"
 msgstr "Ehdolla täytyy olla ainakin yksi argumentti"
 
-#: ../libgda/gda-query-condition.c:1576
+#: ../libgda/gda-query-condition.c:1586
 msgid "Condition must have two arguments"
 msgstr "Ehto vaatii kaksi argumenttia"
 
-#: ../libgda/gda-query-condition.c:1586
+#: ../libgda/gda-query-condition.c:1596
 msgid "Condition 'BETWEEN' must have three arguments"
 msgstr "Ehto \"BETWEEN\" vaatii kolme argumenttia"
 
@@ -860,26 +882,26 @@ msgstr "Funktio ei ole aktivoitu"
 msgid "XML Tag is not <gda_query_fval>"
 msgstr "XML-tagi ei ole <gda_query_fval"
 
-#: ../libgda/gda-query-field-value.c:1143
+#: ../libgda/gda-query-field-value.c:1146
 #, c-format
 msgid "Can't interpret '%s' as a value"
 msgstr "Merkkijonoa \"%s\" ei voida tulkita arvoksi"
 
-#: ../libgda/gda-query-field-value.c:1209
+#: ../libgda/gda-query-field-value.c:1212
 msgid "Missing required gda_type for <gda_query_fval>"
 msgstr "Vaadittuja attribuutteja puuttuu tagilta <gda_query_fval>"
 
-#: ../libgda/gda-query-field-value.c:1219
+#: ../libgda/gda-query-field-value.c:1222
 #, c-format
 msgid "Value field '%s' does not have a value!"
 msgstr "Arvokentällä \"%s\" ei ole arvoa!"
 
-#: ../libgda/gda-query-field-value.c:1306
+#: ../libgda/gda-query-field-value.c:1309
 #, c-format
 msgid "Invalid parameter '%s' (value: %s)"
 msgstr "Virheellinen parametri \"%s\" (arvo: %s)"
 
-#: ../libgda/gda-query-field-value.c:1359
+#: ../libgda/gda-query-field-value.c:1362
 msgid "No specified value"
 msgstr "Ei annettua arvoa"
 
@@ -990,25 +1012,25 @@ msgstr "Virheellinen kenttä \"%s.%s\""
 msgid "Non declared target '%s'"
 msgstr "Määrittelemätön kohde \"%s\""
 
-#: ../libgda/gda-query-parsing.c:1371
+#: ../libgda/gda-query-parsing.c:1374
 #, c-format
 msgid "Ambiguous field '%s'"
 msgstr "Epäselvä kenttä \"%s\""
 
-#: ../libgda/gda-query-parsing.c:1406
+#: ../libgda/gda-query-parsing.c:1409
 msgid "Ambiguous field '*'"
 msgstr "Epäselvä kenttä \"*\""
 
-#: ../libgda/gda-query-parsing.c:1494
+#: ../libgda/gda-query-parsing.c:1497
 #, c-format
 msgid "Unknown data type '%s'"
 msgstr "Tuntematon tietotyyppi \"%s\""
 
-#: ../libgda/gda-query-parsing.c:1508
+#: ../libgda/gda-query-parsing.c:1511
 msgid "Data type must be specified when no default value is provided"
 msgstr "Tietotyyppi täytyy olla määritelty, jos oletusarvoa ei ole annettu"
 
-#: ../libgda/gda-query-parsing.c:1743
+#: ../libgda/gda-query-parsing.c:1746
 msgid "Can't set aggregate or function's arguments"
 msgstr "Yhdisteen tai funktion argumentteja ei voi asettaa"
 
@@ -1307,7 +1329,8 @@ msgstr "Skeeman tietomallissa on väärä määrä sarakkeita"
 #: ../libgda/gda-server-provider-extra.c:292
 #, c-format
 msgid "Data model for schema has a wrong column title: '%s' instead of '%s'"
-msgstr "Skeeman tietomallissa on väärä sarakkeen otsikko: \"%s\" \"%s\" sijasta"
+msgstr ""
+"Skeeman tietomallissa on väärä sarakkeen otsikko: \"%s\" \"%s\" sijasta"
 
 #: ../libgda/gda-server-provider-extra.c:299
 #, c-format
@@ -1439,17 +1462,17 @@ msgstr "InternalType"
 msgid "Gda type representation"
 msgstr "Gda-tyyppien esitys"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:57 ../libsql/sql_parser.c:60
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:59 ../libsql/sql_parser.c:61
 #, c-format
 msgid "Parse error near `%s'"
 msgstr "Jäsennysvirhe \"%s\" lähistöllä"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:59 ../libsql/sql_parser.c:62
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:61 ../libsql/sql_parser.c:63
 #, c-format
 msgid "Syntax error near `%s'"
 msgstr "Syntaksivirhe \"%s\" lähistöllä"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:145 ../libsql/sql_parser.c:384
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:148 ../libsql/sql_parser.c:387
 msgid "Empty query to parse"
 msgstr "Tyhjä kysely jäsennettäväksi"
 
@@ -1614,7 +1637,7 @@ msgstr ""
 
 #: ../providers/freetds/gda-freetds-provider.c:1103
 #: ../providers/freetds/utils.c:44 ../providers/oracle/utils.c:74
-#: ../providers/postgres/utils.c:69 ../providers/postgres/utils.c:79
+#: ../providers/postgres/utils.c:71 ../providers/postgres/utils.c:81
 #: ../providers/sybase/gda-sybase-provider.c:790
 #: ../providers/sybase/gda-sybase-recordset.c:500
 #: ../providers/sybase/gda-sybase-recordset.c:523
@@ -1651,7 +1674,7 @@ msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Tarjoaja TDS-pohjaisille tietokannoille (käyttää FreeTDS:ää)"
 
 #: ../providers/freetds/utils.c:40 ../providers/oracle/utils.c:67
-#: ../providers/postgres/utils.c:78 ../providers/sybase/utils.c:535
+#: ../providers/postgres/utils.c:80 ../providers/sybase/utils.c:535
 msgid "NO DESCRIPTION"
 msgstr "EI KUVAUSTA"
 
@@ -1716,7 +1739,7 @@ msgid "Invalid LDAP handle"
 msgstr "Virheellinen LDAP-kahva"
 
 #: ../providers/ldap/gda-ldap-recordset.c:70
-#: ../providers/mysql/gda-mysql-recordset.c:229
+#: ../providers/mysql/gda-mysql-recordset.c:228
 #: ../providers/mysql/gda-mysql-recordset.c:350
 #: ../providers/postgres/gda-postgres-recordset.c:197
 #: ../providers/postgres/gda-postgres-recordset.c:571
@@ -1724,7 +1747,7 @@ msgid "Row number out of range"
 msgstr "Rivinumero yli rajojen"
 
 #: ../providers/ldap/gda-ldap-recordset.c:283
-#: ../providers/msql/gda-msql-recordset.c:202
+#: ../providers/msql/gda-msql-recordset.c:203
 #: ../providers/mysql/gda-mysql-recordset.c:414
 #: ../providers/oracle/gda-oracle-recordset.c:470
 #: ../providers/postgres/gda-postgres-recordset.c:240
@@ -1732,13 +1755,13 @@ msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Yritys lisätä rivi, jossa on väärä määrä sarakkeita"
 
 #: ../providers/ldap/gda-ldap-recordset.c:298
-#: ../providers/msql/gda-msql-recordset.c:214
+#: ../providers/msql/gda-msql-recordset.c:215
 #: ../providers/oracle/gda-oracle-recordset.c:485
 msgid "Could not retrieve column's information"
 msgstr "Ei saa sarakkeiden tietoja"
 
 #: ../providers/ldap/gda-ldap-recordset.c:316
-#: ../providers/msql/gda-msql-recordset.c:229
+#: ../providers/msql/gda-msql-recordset.c:230
 #: ../providers/oracle/gda-oracle-recordset.c:503
 msgid "Could not retrieve column's value"
 msgstr "Ei saa sarakkeiden arvoja"
@@ -1859,7 +1882,7 @@ msgstr "Tarjoaja Hughes Technologiesin mSQL-tietokannoille"
 #: ../providers/msql/gda-msql-provider.c:331
 #: ../providers/msql/gda-msql-provider.c:600
 #: ../providers/msql/gda-msql-recordset.c:51
-#: ../providers/msql/gda-msql-recordset.c:340
+#: ../providers/msql/gda-msql-recordset.c:341
 msgid "Invalid mSQL handle"
 msgstr "Virheellinen mSQL-kahva"
 
@@ -1901,8 +1924,8 @@ msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:411
 #: ../providers/mysql/gda-mysql-provider.c:1812
-#: ../providers/mysql/gda-mysql-recordset.c:218
-#: ../providers/mysql/gda-mysql-recordset.c:291
+#: ../providers/mysql/gda-mysql-recordset.c:217
+#: ../providers/mysql/gda-mysql-recordset.c:290
 #: ../providers/mysql/gda-mysql-recordset.c:344
 #: ../providers/mysql/gda-mysql-recordset.c:397
 #: ../providers/mysql/gda-mysql-recordset.c:525
@@ -1935,7 +1958,7 @@ msgstr "Puuttuva parametri 'DATABASE'"
 
 #: ../providers/mysql/gda-mysql-provider.c:696
 #: ../providers/postgres/gda-postgres-provider.c:992
-#: ../providers/sqlite/gda-sqlite-provider.c:587
+#: ../providers/sqlite/gda-sqlite-provider.c:592
 msgid "Method not handled by this provider"
 msgstr "Tämä tarjoaja ei käsittele annettua menetelmää"
 
@@ -1946,11 +1969,11 @@ msgstr "Tämä tarjoaja ei käsittele annettua menetelmää"
 #: ../providers/oracle/gda-oracle-provider.c:973
 #: ../providers/oracle/gda-oracle-provider.c:1034
 #: ../providers/postgres/gda-postgres-provider.c:1384
-#: ../providers/sqlite/gda-sqlite-provider.c:686
+#: ../providers/sqlite/gda-sqlite-provider.c:691
 msgid "Transactions are not supported in read-only mode"
 msgstr "Pelkkä luku -tilassa ei tueta transaktioita"
 
-#: ../providers/mysql/gda-mysql-recordset.c:298
+#: ../providers/mysql/gda-mysql-recordset.c:297
 #: ../providers/bdb/gda-bdb-recordset.c:113
 #, c-format
 msgid "Row number out of range 0 - %d"
@@ -2352,47 +2375,47 @@ msgstr "Monikot:\"%s\""
 msgid "Provider for PostgreSQL databases"
 msgstr "Tarjoaja PostgreSQL-tietokannoille"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:233
+#: ../providers/sqlite/gda-sqlite-provider.c:238
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Koko polku täytyy määrittää yhteysmerkkijonossa tietokannan avaamiseksi"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:257
+#: ../providers/sqlite/gda-sqlite-provider.c:262
 msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "SQLite-valitsinta empty_result_callbacks ei voi asettaa"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:316
-#: ../providers/sqlite/gda-sqlite-provider.c:497
-#: ../providers/sqlite/gda-sqlite-provider.c:768
-#: ../providers/sqlite/gda-sqlite-provider.c:1144
+#: ../providers/sqlite/gda-sqlite-provider.c:321
+#: ../providers/sqlite/gda-sqlite-provider.c:502
+#: ../providers/sqlite/gda-sqlite-provider.c:773
+#: ../providers/sqlite/gda-sqlite-provider.c:1149
 msgid "Invalid SQLite handle"
 msgstr "Virheellinen SQLite-kahva"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:371
-#: ../providers/sqlite/gda-sqlite-provider.c:974
-#: ../providers/sqlite/gda-sqlite-provider.c:1196
-#: ../providers/sqlite/gda-sqlite-provider.c:1233
+#: ../providers/sqlite/gda-sqlite-provider.c:376
+#: ../providers/sqlite/gda-sqlite-provider.c:979
+#: ../providers/sqlite/gda-sqlite-provider.c:1201
+#: ../providers/sqlite/gda-sqlite-provider.c:1238
 msgid "Invalid SQLITE handle"
 msgstr "Virheellinen SQLite-kahva"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:515
+#: ../providers/sqlite/gda-sqlite-provider.c:520
 msgid "Only one database per connection is allowed"
 msgstr "Vain yksi tietokanta yhteyttä kohti sallitaan"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:561
+#: ../providers/sqlite/gda-sqlite-provider.c:566
 msgid "Missing parameter 'URI'"
 msgstr "Puuttuva parametri 'URI'"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:604
+#: ../providers/sqlite/gda-sqlite-provider.c:609
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "SQLite-tietokanta poistetaan poistamalla tietokantatiedosto käsin"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:996
+#: ../providers/sqlite/gda-sqlite-provider.c:1001
 msgid "Can't execute PRAGMA table_info()"
 msgstr "PRAGMA:a table_info() ei voida suorittaa"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1103
+#: ../providers/sqlite/gda-sqlite-provider.c:1108
 #, c-format
 msgid "Can't find table %s"
 msgstr "Taulua %s ei löydy"
@@ -2452,8 +2475,7 @@ msgstr "Osuttiin tukemattomaan tulostyyppiin"
 msgid ""
 "An error occurred when attempting to test if there is a server message for "
 "resultset"
-msgstr ""
-"Tapahtui virhe yritettäessä testata onko tulosjoukolle palvelinviestiä"
+msgstr "Tapahtui virhe yritettäessä testata onko tulosjoukolle palvelinviestiä"
 
 #: ../providers/sybase/gda-sybase-provider.c:819
 #, c-format
@@ -2583,8 +2605,7 @@ msgstr "yritetään tehdä tulosjoukko ja viestimäärä != 1 !"
 #: ../providers/sybase/gda-sybase-recordset.c:520
 msgid ""
 "An error occurred when attempting to retrieve a server message for recordset"
-msgstr ""
-"Tapahtui virhe yritettäessä hakea palvelinviestiä tietuejoukolle"
+msgstr "Tapahtui virhe yritettäessä hakea palvelinviestiä tietuejoukolle"
 
 #: ../providers/sybase/gda-sybase-recordset.c:578
 #: ../providers/sybase/utils.c:409
@@ -2880,20 +2901,10 @@ msgstr "Käyttö: %s <tietolähde>\n"
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "yhteyttä DSN:ään %s ei voi avata: %s\n"
 
-#: ../testing/gda-author-dict-file.c:154 ../testing/gda-author-dict-file.c:165
-#: ../testing/gda-author-dict-file.c:227 ../testing/gda-author-dict-file.c:233
-#: ../testing/gda-diagnose.c:601 ../testing/gda-test-models.c:151
-#: ../testing/gda-test-models.c:178 ../testing/gda-test-models.c:398
-#: ../testing/gda-test-models.c:452 ../testing/gda-test-models.c:459
-#: ../testing/gda-test-models.c:477 ../testing/gda-test-models.c:558
-#: ../testing/gda-test-models.c:589 ../testing/gda-test-sql.c:144
-#: ../testing/gda-test-sql.c:171 ../testing/gda-test-sql.c:394
-msgid "Unknown error"
-msgstr "Tuntematon virhe"
-
 #: ../testing/gda-author-dict-file.c:173
 msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
-msgstr "Haetaan metatietoja tietokantapalvelimelta. Tämä voi kestää hetken...\n"
+msgstr ""
+"Haetaan metatietoja tietokantapalvelimelta. Tämä voi kestää hetken...\n"
 
 #: ../testing/gda-author-dict-file.c:232 ../testing/gda-test-models.c:150
 #: ../testing/gda-test-models.c:177 ../testing/gda-test-sql.c:143
@@ -3240,43 +3251,43 @@ msgstr "Malli %s (nimi=%s): rivi %d päivitetty!"
 msgid "Model %s (name=%s): row %d removed!"
 msgstr "Malli %s (nimi=%s): rivi %d poistettu!"
 
-#: ../testing/gda-test-sql.c:285
+#: ../testing/gda-test-sql.c:286
 msgid "SQL tested"
 msgstr "SQL testattu"
 
-#: ../testing/gda-test-sql.c:288
+#: ../testing/gda-test-sql.c:289
 msgid "Action"
 msgstr "Toiminto"
 
-#: ../testing/gda-test-sql.c:290
+#: ../testing/gda-test-sql.c:291
 msgid "Query Name"
 msgstr "Kyselyn nimi"
 
-#: ../testing/gda-test-sql.c:292
+#: ../testing/gda-test-sql.c:293
 msgid "Query Status"
 msgstr "Kyselyn tila"
 
-#: ../testing/gda-test-sql.c:294
-msgid "Rendered SQL / error if parsing is not done"
-msgstr "Esitetään muodossa SQL / virhe, jos tulkintaa ei ole tehty"
+#: ../testing/gda-test-sql.c:295
+msgid "Rendered SQL"
+msgstr "Muotoiltu SQL"
 
-#: ../testing/gda-test-sql.c:361
+#: ../testing/gda-test-sql.c:362
 msgid "non-parsed"
 msgstr "tulkitsematon"
 
-#: ../testing/gda-test-sql.c:363
+#: ../testing/gda-test-sql.c:364
 msgid "Active"
 msgstr "Aktiivinen"
 
-#: ../testing/gda-test-sql.c:363
+#: ../testing/gda-test-sql.c:364
 msgid "Inactive"
 msgstr "Ei aktiivinen"
 
-#: ../testing/gda-test-sql.c:385
+#: ../testing/gda-test-sql.c:387
 msgid "Parsing"
 msgstr "Merkkijono"
 
-#: ../testing/gda-test-sql.c:420
+#: ../testing/gda-test-sql.c:427
 msgid "Copied"
 msgstr "Kopioitu"
 
@@ -3284,6 +3295,12 @@ msgstr "Kopioitu"
 #: ../testing/html.c:113
 msgid "Table of contents"
 msgstr "Sisällysluettelo"
+
+#~ msgid "Can't render field as SQL"
+#~ msgstr "Kenttää ei voida esittää SQL-muodossa"
+
+#~ msgid "Rendered SQL / error if parsing is not done"
+#~ msgstr "Esitetään muodossa SQL / virhe, jos tulkintaa ei ole tehty"
 
 #~ msgid "INSERT has more expression valuess than insert fields"
 #~ msgstr "INSERT-lauseke sisältää enemmän arvoja kuin kenttiä"
@@ -3453,9 +3470,6 @@ msgstr "Sisällysluettelo"
 
 #~ msgid "Extra PostgreSQL options to use for the connection"
 #~ msgstr "Lisävalinnat PostgreSQL:lle, joita käytetään yhdistettäessä"
-
-#~ msgid "Require SSL"
-#~ msgstr "Vaadi SSL"
 
 #~ msgid "Whether to require SSL or not when connecting"
 #~ msgstr "Vaaditaanko SSL:n käyttöä yhdistettäessä"
