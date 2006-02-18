@@ -33,6 +33,11 @@ This object is not intended to be instanciated directly, but to be inherited.
 
 </para>
 
+<!-- ##### ARG GdaDataModelRow:read-only ##### -->
+<para>
+
+</para>
+
 <!-- ##### STRUCT GdaDataModelRowClass ##### -->
 <para>
 

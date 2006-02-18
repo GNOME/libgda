@@ -1370,12 +1370,12 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	else {
 		value = field->priv->value;
 		if (value && (gda_value_get_type ((GdaValue *)value) != GDA_VALUE_TYPE_NULL)) {
-			GdaDataHandler *dh;
+			GdaDataHandler *dh = NULL;
 			
 			if (prov)
 				dh = gda_server_provider_get_data_handler_gda (prov, cnc, 
 									       field->priv->gda_type);
-			else
+			if (!dh)
 				dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
 			g_assert (dh);
 			str = gda_data_handler_get_sql_from_value (dh, value);
