@@ -53,10 +53,8 @@ gda_sqlite_update_types_hash (SQLITEcnc *scnc)
 			Table *table;
 
 			db = &(scnc->connection->aDb[i]);
-			tab_hash = &(db->tblHash);
+			tab_hash = &(db->pSchema->tblHash);
 			for (tab_elem = sqliteHashFirst (tab_hash); tab_elem ; tab_elem = sqliteHashNext (tab_elem)) {
-				GList *rowlist = NULL;
-				GdaValue *value;
 				gint j;
 				
 				table = sqliteHashData (tab_elem);

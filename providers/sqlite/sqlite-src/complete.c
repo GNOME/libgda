@@ -257,7 +257,7 @@ int sqlite3_complete16(const void *zSql){
     rc = sqlite3_complete(zSql8);
   }
   sqlite3ValueFree(pVal);
-  return rc;
+  return sqlite3ApiExit(0, rc);
 }
 #endif /* SQLITE_OMIT_UTF16 */
 #endif /* SQLITE_OMIT_COMPLETE */

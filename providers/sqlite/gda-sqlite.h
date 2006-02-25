@@ -28,7 +28,7 @@
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
 #include <libgda/gda-value.h>
-#include <sqlite3.h>
+#include "sqlite-src/sqlite3.h"
 
 #define GDA_SQLITE_PROVIDER_ID          "GDA SQLite provider"
 

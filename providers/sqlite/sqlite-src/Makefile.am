@@ -28,12 +28,11 @@ libsqlite_la_SOURCES = \
 	main.c \
 	opcodes.c \
 	opcodes.h \
+	os.c \
 	os_common.h \
 	os.h \
 	os_unix.c \
-	os_unix.h \
 	os_win.c \
-	os_win.h \
 	pager.c \
 	pager.h \
 	parse.c \
