@@ -1,3 +1,27 @@
+2006-02-25  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/sqlite-src: using SQlite 3.3.4 sources
+	* providers/sqlite/gda-sqlite-provider.c: switched to SQLite 3.3.4 and implemented
+	the get_data_handler() method
+	* providers/sqlite/gda-sqlite.h && providers/sqlite/utils.c: switched to SQLite 3.3.4
+	* libgda/gda-connection.h: added a GDA_CONNECTION_SCHEMA_CONSTRAINTS schema to
+	get a list of all the constraints on a table
+	* libgda/gda-server-provider-extra.c: added utility code for the
+	GDA_CONNECTION_SCHEMA_CONSTRAINTS schema
+	* providers/mysql/gda-mysql-provider.c: implemented the get_data_handler() schema, 
+	and stated to implement the new GDA_CONNECTION_SCHEMA_CONSTRAINTS schema.
+	* providers/postgres/gda-postgres-provider.c: stated to implement the new 
+	GDA_CONNECTION_SCHEMA_CONSTRAINTS schema.
+	* libgda/gda-client.[ch]: gda_client_new() now does not require any argument and
+	GdaClient inherits directly GObject
+	* libgda/gda-connection.[ch]: now inherits directly GObject, and added a new
+	"dsn_changed" signal
+	* libgda/gda-data-model-query.c: corrected a bug which would make the program
+	loop indefinitely if the SELECT query could not be run
+	* libgda/gda-dict.c: uses the GdaConnection's "dsn_changed" signal
+	* libgda/gda-value.c: corrected TimeStamp copy function
+	* other files: minor corrections and improvements
+
 2006-02-18  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-query-field-value.c: bug fixed when rendering as SQL

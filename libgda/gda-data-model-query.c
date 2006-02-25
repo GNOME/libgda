@@ -38,7 +38,9 @@
 struct _GdaDataModelQueryPrivate {
 	GdaQuery         *queries[4]; /* indexed by SEL_* */
 	GdaParameterList *params[4];  /* parameters required to execute @query, indexed by SEL_* */
+
 	GdaDataModel     *data;
+	GError           *refresh_error; /* if @data is NULL, then can contain the error */
 
 	gboolean          defer_refresh;
 	gboolean          refresh_pending;
@@ -219,6 +221,7 @@ gda_data_model_query_init (GdaDataModelQuery *model, GdaDataModelQueryClass *kla
 	g_return_if_fail (GDA_IS_DATA_MODEL_QUERY (model));
 	model->priv = g_new0 (GdaDataModelQueryPrivate, 1);
 	model->priv->data = NULL;
+	model->priv->refresh_error = NULL;
 	model->priv->columns = NULL;
 
 	/* model refreshing is performed as soon as any modification is done */
@@ -274,6 +277,9 @@ gda_data_model_query_finalize (GObject *object)
 
 	/* free memory */
 	if (model->priv) {
+		if (model->priv->refresh_error)
+			g_error_free (model->priv->refresh_error);
+
 		g_free (model->priv);
 		model->priv = NULL;
 	}
@@ -550,36 +556,56 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 		g_object_unref (model->priv->data);
 		model->priv->data = NULL;
 	}
+	if (model->priv->refresh_error) {
+		g_error_free (model->priv->refresh_error);
+		model->priv->refresh_error = NULL;
+	}
 
 	if (! model->priv->queries[SEL_QUERY])
 		return TRUE;
+
 	if (!gda_query_is_select_query (model->priv->queries[SEL_QUERY])) {
-		g_set_error (error, 0, 0,
+		g_set_error (&model->priv->refresh_error, 0, 0,
 			     _("Query is not a SELECT query"));
+		if (error) 
+			*error = g_error_copy (model->priv->refresh_error);
 		return FALSE;
 	}
 
 	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (model)));
 	if (!cnc) {
-		g_set_error (error, 0, 0,
+		g_set_error (&model->priv->refresh_error, 0, 0,
 			     _("No connection specified"));
+		if (error) 
+			*error = g_error_copy (model->priv->refresh_error);
 		return FALSE;
 	}
 
 	if (!gda_connection_is_open (cnc)) {
-		g_set_error (error, 0, 0,
+		g_set_error (&model->priv->refresh_error, 0, 0,
 			     _("Connection is not opened"));
+		if (error) 
+			*error = g_error_copy (model->priv->refresh_error);
 		return FALSE;
 	}
 
 	sql = gda_renderer_render_as_sql (GDA_RENDERER (model->priv->queries[SEL_QUERY]), model->priv->params [SEL_QUERY],
-					  0, error);
-	if (!sql)
+					  0, &model->priv->refresh_error);
+	if (!sql) {
+		g_assert (model->priv->refresh_error);
+		if (error) 
+			*error = g_error_copy (model->priv->refresh_error);
 		return FALSE;
+	}
 
 	cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-        model->priv->data = gda_connection_execute_single_command (cnc, cmd, NULL, error);
+        model->priv->data = gda_connection_execute_single_command (cnc, cmd, NULL, &model->priv->refresh_error);
 	gda_command_free (cmd);
+	if (!model->priv->data) {
+		g_assert (model->priv->refresh_error);
+		if (error) 
+			*error = g_error_copy (model->priv->refresh_error);
+	}
 
 #ifdef GDA_DEBUG_NO
 	{
@@ -666,7 +692,7 @@ gda_data_model_query_get_n_rows (GdaDataModel *model)
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, 0);
 
-	if (!selmodel->priv->data)
+	if (!selmodel->priv->data && !selmodel->priv->refresh_error)
 		gda_data_model_query_refresh (selmodel, NULL);
 	
 	if (selmodel->priv->data)
@@ -682,8 +708,8 @@ gda_data_model_query_get_n_columns (GdaDataModel *model)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), 0);
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, 0);
-
-	if (!selmodel->priv->data)
+	
+	if (!selmodel->priv->data && !selmodel->priv->refresh_error)
 		gda_data_model_query_refresh (selmodel, NULL);
 	
 	create_columns (selmodel);
@@ -778,7 +804,7 @@ gda_data_model_query_describe_column (GdaDataModel *model, gint col)
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, NULL);
 
-	if (!selmodel->priv->data)
+	if (!selmodel->priv->data  && !selmodel->priv->refresh_error)
 		gda_data_model_query_refresh (selmodel, NULL);
 
 	create_columns (selmodel);
@@ -798,7 +824,7 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, 0);
 
-	if (!selmodel->priv->data)
+	if (!selmodel->priv->data && !selmodel->priv->refresh_error)
 		gda_data_model_query_refresh (selmodel, NULL);
 	
 	if (selmodel->priv->data) {
@@ -855,7 +881,7 @@ gda_data_model_query_get_value_at (GdaDataModel *model, gint col, gint row)
 	selmodel = GDA_DATA_MODEL_QUERY (model);
 	g_return_val_if_fail (selmodel->priv, NULL);
 
-	if (!selmodel->priv->data)
+	if (!selmodel->priv->data && !selmodel->priv->refresh_error)
 		gda_data_model_query_refresh (selmodel, NULL);
 	
 	if (selmodel->priv->data)

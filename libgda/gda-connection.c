@@ -59,10 +59,11 @@ enum {
 	CONN_OPENED,
         CONN_TO_CLOSE,
         CONN_CLOSED,
+	DSN_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
+static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -108,6 +109,14 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               NULL, NULL,
                               gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
+	gda_connection_signals[DSN_CHANGED] =
+		g_signal_new ("dsn_changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaConnectionClass, dsn_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1, G_TYPE_POINTER);
 
 	object_class->finalize = gda_connection_finalize;
 }
@@ -564,12 +573,8 @@ gda_connection_get_database (GdaConnection *cnc)
  * Sets the data source of the connection. If the connection is already opened,
  * then no action is performed at all and FALSE is returned.
  *
- * If the requested datasource does not exist, then nothing is done ans FALSE
+ * If the requested datasource does not exist, then nothing is done and FALSE
  * is returned.
- *
- * If the default XML filename to save the dictionary has not yet been
- * specified, then the default one is specified, so it is possible to call
- * gda_dict_load_xml() right after that.
  *
  * Returns: TRUE on success
  */
@@ -577,8 +582,6 @@ gboolean
 gda_connection_set_dsn (GdaConnection *cnc, const gchar *datasource)
 {
 	GdaDataSourceInfo *dsn;
-        const gchar *cstr;
-	GdaDict *dict;
 
         g_return_val_if_fail (cnc && GDA_IS_CONNECTION (cnc), FALSE);
         g_return_val_if_fail (cnc->priv, FALSE);
@@ -593,19 +596,13 @@ gda_connection_set_dsn (GdaConnection *cnc, const gchar *datasource)
 
 	g_free (cnc->priv->dsn);
 	cnc->priv->dsn = g_strdup (datasource);
-
-        /* set the default XML filename for the dictionary */
-	dict = gda_object_get_dict (GDA_OBJECT (cnc));
-        cstr = gda_dict_get_xml_filename (dict);
-        if (!cstr) {
-                gchar *str;
-
-                str = gda_dict_compute_xml_filename (dict, datasource, NULL, NULL);
-                if (str) {
-                        gda_dict_set_xml_filename (dict, str);
-                        g_free (str);
-                }
-        }
+#ifdef GDA_DEBUG_signal
+        g_print (">> 'DSN_CHANGED' from %s\n", __FUNCTION__);
+#endif
+        g_signal_emit (G_OBJECT (cnc), gda_connection_signals[DSN_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+        g_print ("<< 'DSN_CHANGED' from %s\n", __FUNCTION__);
+#endif
 
 	return TRUE;
 }

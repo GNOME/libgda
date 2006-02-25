@@ -578,7 +578,8 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 						      "Triggers",
 						      "Types",
 						      "Users",
-						      "Views"};
+						      "Views",
+						      "Constraints"};
 			
 			for (i = 0; i < (sizeof (schemas) / sizeof (SchemaFeature)); i++) {
 				SchemaFeature *current = &(schemas[i]);
@@ -644,6 +645,49 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 										html_mark_node_error (HTML_CONFIG (config), node);	
 									}
 									g_object_unref (fields);
+								}
+								else {
+									node = xmlNewChild (sect, NULL, "p", 
+											    _("Error"));
+									html_mark_node_error (HTML_CONFIG (config), node);	
+								}
+							}
+						}
+
+						if (current->schema == GDA_CONNECTION_SCHEMA_TABLES) {
+							/* list the table's constraints */
+							gint nrows, row;
+
+							nrows = gda_data_model_get_n_rows (model);
+							for (row = 0; row < nrows; row++) {
+								GdaDataModel *constraints;
+								GdaParameterList *params;
+								GdaParameter *param;
+								gchar *tmp;
+								const GdaValue *name;
+								
+								param = gda_parameter_new (GDA_VALUE_TYPE_STRING);
+								name = gda_data_model_get_value_at (model, 0, row);
+								gda_object_set_name (GDA_OBJECT (param), "name");
+								gda_parameter_set_value (param, name);
+								params = gda_parameter_list_new (NULL);
+								gda_parameter_list_add_param (params, param);
+								g_object_unref (param);
+
+								constraints = (class->get_schema) (provider, cnc, 
+									     GDA_CONNECTION_SCHEMA_CONSTRAINTS, params);
+								g_object_unref (params);
+								tmp = g_strdup_printf (_("Constraints for '%s'"),
+										       gda_value_get_string (name));
+								xmlNewChild (sect, NULL, "h4", tmp);
+								g_free (tmp);
+								if (constraints) {
+									if (gda_data_model_get_n_rows (constraints) != 0)
+										html_render_data_model (sect, constraints);
+									else
+										xmlNewChild (sect, NULL, "p",
+											     _("No constraint"));
+									g_object_unref (constraints);
 								}
 								else {
 									node = xmlNewChild (sect, NULL, "p", 
@@ -1249,7 +1293,7 @@ detail_datasource (TestConfig *config, GdaDataSourceInfo *dsn)
 	node = html_add_header (HTML_CONFIG (config), file, _("Datasource's information"));
 	list_datasource_info (config, file->body, dsn->name);
 
-	client = gda_client_new (NULL);
+	client = gda_client_new ();
 	cnc = gda_client_open_connection (client, dsn->name, dsn->username, 
 					  (dsn->password) ? dsn->password : "",
 					  0, NULL);

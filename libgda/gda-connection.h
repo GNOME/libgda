@@ -44,18 +44,19 @@ G_BEGIN_DECLS
 #define GDA_IS_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 
 struct _GdaConnection {
-	GdaObject             object;
+	GObject               object;
 	GdaConnectionPrivate *priv;
 };
 
 struct _GdaConnectionClass {
-	GdaObjectClass        object_class;
+	GObjectClass          object_class;
 
 	/* signals */
 	void   (*error)                     (GdaConnection *cnc, GdaConnectionEvent *error);
         void   (*conn_opened)               (GdaConnection *obj);
         void   (*conn_to_close)             (GdaConnection *obj);
         void   (*conn_closed)               (GdaConnection *obj);
+	void   (*dsn_changed)               (GdaConnection *obj);
 };
 
 typedef enum {
@@ -94,7 +95,8 @@ typedef enum {
 	GDA_CONNECTION_SCHEMA_TRIGGERS,
 	GDA_CONNECTION_SCHEMA_TYPES,
 	GDA_CONNECTION_SCHEMA_USERS,
-	GDA_CONNECTION_SCHEMA_VIEWS
+	GDA_CONNECTION_SCHEMA_VIEWS,
+	GDA_CONNECTION_SCHEMA_CONSTRAINTS
 } GdaConnectionSchema;
 
 /* errors */

@@ -56,12 +56,12 @@ typedef enum {
 } GdaClientSpecsType;
 
 struct _GdaClient {
-	GdaObject         object;
+	GObject           object;
 	GdaClientPrivate *priv;
 };
 
 struct _GdaClientClass {
-	GdaObjectClass   parent_class;
+	GObjectClass      parent_class;
 
 	/* signals */
 	void (* event_notification) (GdaClient *client,
@@ -75,7 +75,7 @@ extern GQuark gda_client_error_quark (void);
 #define GDA_CLIENT_ERROR gda_client_error_quark ()
 
 GType          gda_client_get_type                           (void);
-GdaClient     *gda_client_new                                (GdaDict *dict);
+GdaClient     *gda_client_new                                (void);
 
 GdaConnection *gda_client_open_connection                    (GdaClient *client,
 							      const gchar *dsn,

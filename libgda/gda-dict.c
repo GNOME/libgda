@@ -95,6 +95,8 @@ static gboolean gda_dict_load_graphs (GdaDict *dict, xmlNodePtr graphs, GError *
 static void query_destroyed_cb (GdaQuery *query, GdaDict *dict);
 static void query_weak_ref_notify (GdaDict *dict, GdaQuery *query);
 static void updated_query_cb (GdaQuery *query, GdaDict *dict);
+static void dsn_changed_cb (GdaConnection *cnc, GdaDict *dict);
+
 
 /* FIXME : rename functions */
 static void destroyed_data_type_cb (GdaDictType *dt, GdaDict *dict);
@@ -557,6 +559,8 @@ gda_dict_dispose (GObject   * object)
 		
 		/* connection */
 		if (dict->priv->cnc) {
+			g_signal_handlers_disconnect_by_func (dict->priv->cnc,
+							      G_CALLBACK (dsn_changed_cb), dict);
 			g_object_unref (G_OBJECT (dict->priv->cnc));
 			dict->priv->cnc = NULL;
 		}
@@ -2016,6 +2020,28 @@ gda_dict_get_connection (GdaDict *dict)
 	return dict->priv->cnc;
 }
 
+static void
+dsn_changed_cb (GdaConnection *cnc, GdaDict *dict)
+{
+	const gchar *cstr;
+
+	g_assert (cnc == dict->priv->cnc);
+
+	g_free (dict->priv->dsn);
+	dict->priv->dsn = g_strdup ((gchar *) gda_connection_get_dsn (cnc));
+
+        cstr = gda_dict_get_xml_filename (dict);
+        if (!cstr) {
+                gchar *str;
+
+                str = gda_dict_compute_xml_filename (dict, dict->priv->dsn, NULL, NULL);
+                if (str) {
+                        gda_dict_set_xml_filename (dict, str);
+                        g_free (str);
+                }
+        }
+}
+
 /**
  * gda_dict_set_connection
  * @dict: a #GdaDict object
@@ -2034,16 +2060,20 @@ gda_dict_set_connection (GdaDict *dict, GdaConnection *cnc)
 
 	if (dict->priv->cnc) {
 		g_object_unref (G_OBJECT (dict->priv->cnc));
+		g_signal_handlers_disconnect_by_func (dict->priv->cnc,
+						      G_CALLBACK (dsn_changed_cb), dict);
 		dict->priv->cnc = NULL;
 	}
 	if (cnc) {
 		g_object_ref (cnc);
 		dict->priv->cnc = cnc;
 
-		g_free (dict->priv->dsn);
 		g_free (dict->priv->user);
-		dict->priv->dsn = g_strdup ((gchar *) gda_connection_get_dsn (dict->priv->cnc));
 		dict->priv->user = g_strdup ((gchar *) gda_connection_get_username (dict->priv->cnc));
+
+		g_signal_connect (G_OBJECT (dict->priv->cnc), "dsn_changed",
+				  G_CALLBACK (dsn_changed_cb), dict);
+		dsn_changed_cb (cnc, dict);
 	}
 }
 

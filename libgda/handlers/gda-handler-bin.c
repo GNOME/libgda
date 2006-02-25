@@ -178,15 +178,17 @@ gda_handler_bin_new_with_prov (GdaServerProvider *prov, GdaConnection *cnc)
 	GdaHandlerBin *dh;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
 	dh = GDA_HANDLER_BIN (gda_handler_bin_new ());
 	
 	dh->priv->prov = prov;
-	dh->priv->cnc = cnc;
+	if (cnc)
+		dh->priv->cnc = cnc;
 
 	g_object_add_weak_pointer (G_OBJECT (prov), &(dh->priv->prov));
-	g_object_add_weak_pointer (G_OBJECT (cnc), &(dh->priv->cnc));
+	if (cnc)
+		g_object_add_weak_pointer (G_OBJECT (cnc), &(dh->priv->cnc));
 
 	return dh;
 }

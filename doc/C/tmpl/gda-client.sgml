@@ -74,8 +74,9 @@ or destroy a database.
 
 </para>
 
-@dict: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@dict: 
 
 
 <!-- ##### FUNCTION gda_client_declare_connection ##### -->

@@ -520,6 +520,15 @@ use such values.
 @Returns: 
 
 
+<!-- ##### MACRO gda_value_isa ##### -->
+<para>
+
+</para>
+
+@value: 
+@type: 
+
+
 <!-- ##### FUNCTION gda_value_copy ##### -->
 <para>
 

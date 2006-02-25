@@ -761,6 +761,13 @@
 		<entry>"name" (name of type, optional)</entry>
 		<entry>name, owner, comments, GDA type, synonyms (comma separated)</entry>
 	      </row>
+	      <row>
+		<entry>Tables' constraints</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_CONSTRAINTS</parameter></entry>
+		<entry>"name" (name of table)</entry>
+		<entry>constraint name, constraint type (FOREIGN_KEY, PRIMARY_KEY, UNIQUE, CHECK), on fields (comma separated), 
+		  definition, options (ON_UPDATE_*, ON_DELETE_*, DEFERRABLE, INITIALLY_DEFERRED)</entry>
+	      </row>
 	    </tbody>
 	  </tgroup>
 	</table>

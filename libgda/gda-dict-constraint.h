@@ -50,6 +50,8 @@ typedef enum
 	CONSTRAINT_UNIQUE,
 	CONSTRAINT_NOT_NULL,
 	CONSTRAINT_CHECK_EXPR,
+	CONSTRAINT_CHECK_IN_LIST,
+	CONSTRAINT_CHECK_SETOF_LIST,
 	CONSTRAINT_UNKNOWN
 } GdaDictConstraintType;
 
@@ -66,7 +68,7 @@ typedef struct
 {
 	GdaDictField   *fkey;
 	GdaDictField   *ref_pkey;
-	GdaObjectRef *ref_pkey_repl; /* can be used instead of ref_pkey, the object will fill ref_pkey itself */
+	GdaObjectRef   *ref_pkey_repl; /* can be used instead of ref_pkey, the object will fill ref_pkey itself */
 } GdaDictConstraintFkeyPair;
 
 #define GDA_DICT_CONSTRAINT_FK_PAIR(x) ((GdaDictConstraintFkeyPair*) (x))

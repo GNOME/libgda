@@ -856,16 +856,16 @@ gda_postgres_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType
 }
 
 #define string_from_string_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
-	gda_value_get_string (gda_parameter_get_value (param)) : NULL
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
+	gda_value_get_string ((GdaValue *) gda_parameter_get_value (param)) : NULL
 
 #define int_from_int_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
-	gda_value_get_integer (gda_parameter_get_value (param)) : -1
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
+	gda_value_get_integer ((GdaValue *) gda_parameter_get_value (param)) : -1
 
 #define bool_from_bool_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
-	gda_value_get_boolean (gda_parameter_get_value (param)) : FALSE
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
+	gda_value_get_boolean ((GdaValue *) gda_parameter_get_value (param)) : FALSE
 
 
 /* perform_action_params handler for the GdaPostgresProvider class */ 
@@ -1790,7 +1790,6 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 	GdaPostgresConnectionData *priv_data;
 	gint i;
 	static GHashTable *synonyms = NULL;
-	GdaColumn *column;
 
 	if (!synonyms) {
 		synonyms = g_hash_table_new (g_str_hash, g_str_equal);
@@ -2672,6 +2671,35 @@ get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
 	return recset;
 }
 
+static GdaDataModel *
+get_postgres_constraints (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaPostgresConnectionData *priv_data;
+	GdaDataModelArray *recset;
+	GdaParameter *par;
+	const gchar *tblname;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (params != NULL, NULL);
+
+	par = gda_parameter_list_find_param (params, "name");
+	g_return_val_if_fail (par != NULL, NULL);
+
+	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	g_return_val_if_fail (tblname != NULL, NULL);
+	
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
+				       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_CONSTRAINTS)));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_CONSTRAINTS);
+
+	TO_IMPLEMENT;
+
+	return GDA_DATA_MODEL (recset);
+}
+
+
 /* get_schema handler for the GdaPostgresProvider class */
 static GdaDataModel *
 gda_postgres_provider_get_schema (GdaServerProvider *provider,
@@ -2710,6 +2738,8 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 		return get_postgres_views (cnc, params);
 	case GDA_CONNECTION_SCHEMA_PARENT_TABLES :
 		return get_postgres_parent_tables (cnc, params);
+	case GDA_CONNECTION_SCHEMA_CONSTRAINTS :
+		return get_postgres_constraints (cnc, params);
 	default:
 		break;
 	}

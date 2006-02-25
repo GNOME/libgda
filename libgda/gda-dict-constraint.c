@@ -82,20 +82,23 @@ struct _GdaDictConstraintPrivate
 {
 	GdaDictConstraintType      type;
 	GdaDictTable              *table;
-	gboolean                user_defined; /* FALSE if the constraint is hard coded into the database */
+	gboolean                   user_defined; /* FALSE if the constraint is hard coded into the database */
 	
 	/* Only used if single field constraint */
 	GdaDictField              *single_field;
 
 	/* Only used if Primary key */
-	GSList                 *multiple_fields; 
+	GSList                    *multiple_fields; 
 
 	/* Only used for foreign keys */
 	GdaDictTable              *ref_table; 
-	GSList                 *fk_pairs;  
+	GSList                    *fk_pairs;  
 	GdaDictConstraintFkAction  on_delete;
 	GdaDictConstraintFkAction  on_update;
-	
+
+	/* Only used for IN and SETOF constraints */
+	GdaDataModel              *cstr_data;
+	gint                       cstr_data_row;
 };
 
 
@@ -327,6 +330,13 @@ gda_dict_constraint_dispose (GObject *object)
 								      G_CALLBACK (destroyed_object_cb), cstr);
 			cstr->priv->single_field = NULL;
 			break;
+		case CONSTRAINT_CHECK_IN_LIST:
+		case CONSTRAINT_CHECK_SETOF_LIST:
+			if (cstr->priv->cstr_data) {
+				g_object_unref (G_OBJECT (cstr->priv->cstr_data));
+				cstr->priv->cstr_data = NULL;
+			}
+			break;
 		case CONSTRAINT_CHECK_EXPR:
 		default:
 			TO_IMPLEMENT;
@@ -510,6 +520,11 @@ gda_dict_constraint_equal (GdaDictConstraint *cstr1, GdaDictConstraint *cstr2)
 	case CONSTRAINT_NOT_NULL:
 		if (cstr1->priv->single_field != cstr2->priv->single_field)
 			equal = FALSE;
+		break;
+	case CONSTRAINT_CHECK_IN_LIST:
+	case CONSTRAINT_CHECK_SETOF_LIST:
+		/* create and use a gda_data_model_equal() method */
+		TO_IMPLEMENT;
 		break;
 	case CONSTRAINT_CHECK_EXPR:
 		TO_IMPLEMENT;

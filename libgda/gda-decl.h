@@ -196,10 +196,12 @@ typedef struct _GdaGraphItemPrivate GdaGraphItemPrivate;
 #define DEBUG_HEADER_STR(str) (g_print (D_COL_H0 "====================== %s %s %s():%d ======================\n" D_COL_NOR, (str), __FILE__, __FUNCTION__, __LINE__))
 #endif
 
-#ifdef GDA_DEBUG
-#define TO_IMPLEMENT g_print (D_COL_ERR "Implementation missing:" D_COL_NOR " %s() in %s line %d\n", __FUNCTION__, __FILE__,__LINE__)
-#else
-#define TO_IMPLEMENT g_print ("Implementation missing: %s() in %s line %d\n", __FUNCTION__, __FILE__,__LINE__)
+#ifndef TO_IMPLEMENT
+  #ifdef GDA_DEBUG
+    #define TO_IMPLEMENT g_print (D_COL_ERR "Implementation missing:" D_COL_NOR " %s() in %s line %d\n", __FUNCTION__, __FILE__,__LINE__)
+  #else
+    #define TO_IMPLEMENT g_print ("Implementation missing: %s() in %s line %d\n", __FUNCTION__, __FILE__,__LINE__)
+  #endif
 #endif
 
 #endif

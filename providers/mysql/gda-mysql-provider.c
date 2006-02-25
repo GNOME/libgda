@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -28,11 +28,20 @@
 #include <libgda/gda-column-index.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-data-handler.h>
+#include <libgda/gda-parameter-list.h>
+#include <libgda/gda-server-provider-extra.h>
 #include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-mysql.h"
 #include "gda-mysql-recordset.h"
+
+#include <libgda/handlers/gda-handler-numerical.h>
+#include <libgda/handlers/gda-handler-bin.h>
+#include <libgda/handlers/gda-handler-boolean.h>
+#include <libgda/handlers/gda-handler-time.h>
+#include <libgda/handlers/gda-handler-string.h>
+#include <libgda/handlers/gda-handler-type.h>
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
@@ -131,15 +140,8 @@ static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
 						    GdaParameterList *params);
 GdaDataHandler *gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 						     GdaConnection *cnc,
-						     GdaValueType for_type);
-GdaValue *gda_mysql_provider_string_to_value (GdaServerProvider *provider,
-					     GdaConnection *cnc,
-					     const gchar *string, 
-					     GdaValueType prefered_type,
-					     gchar **dbms_type);
-const gchar *gda_mysql_provider_get_def_dbms_type (GdaServerProvider *provider,
-						   GdaConnection *cnc,
-						   GdaValueType gda_type);
+						     GdaValueType gda_type,
+						     const gchar *dbms_type);
 
 
 static GObjectClass *parent_class = NULL;
@@ -165,8 +167,8 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->get_schema = gda_mysql_provider_get_schema;
 
 	provider_class->get_data_handler = gda_mysql_provider_get_data_handler;
-	provider_class->string_to_value = gda_mysql_provider_string_to_value;
-	provider_class->get_def_dbms_type = gda_mysql_provider_get_def_dbms_type;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
 
 	provider_class->open_connection = gda_mysql_provider_open_connection;
 	provider_class->reset_connection = NULL;
@@ -317,7 +319,7 @@ real_open_connection (const gchar *host, gint port, const gchar *socket,
 }
 
 /* open_connection handler for the GdaMysqlProvider class */
-static 
+static gboolean
 gda_mysql_provider_open_connection (GdaServerProvider *provider,
 				    GdaConnection *cnc,
 				    GdaQuarkList *params,
@@ -331,7 +333,6 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
         const gchar *t_port = NULL;
         const gchar *t_unix_socket = NULL;
         const gchar *t_use_ssl = NULL;
-	unsigned int mysqlflags = 0;
 
 	MYSQL *mysql;
 	GdaConnectionEvent *error;
@@ -595,16 +596,16 @@ gda_mysql_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType ty
 }
 
 #define string_from_string_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
-	gda_value_get_string (gda_parameter_get_value (param)) : NULL
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
+	gda_value_get_string ((GdaValue *) gda_parameter_get_value (param)) : NULL
 
 #define int_from_int_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
-	gda_value_get_integer (gda_parameter_get_value (param)) : -1
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
+	gda_value_get_integer ((GdaValue *) gda_parameter_get_value (param)) : -1
 
 #define bool_from_bool_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null (gda_parameter_get_value (param))) ? \
-	gda_value_get_boolean (gda_parameter_get_value (param)) : FALSE
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
+	gda_value_get_boolean ((GdaValue *) gda_parameter_get_value (param)) : FALSE
 
 /* create_database handler for the GdaMysqlProvider class */
 static gboolean
@@ -829,40 +830,26 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 			g_string_append_printf (sql, "(%ld)", size);
 
 		/* optional sizes */
-		if ((value_type == GDA_VALUE_TYPE_BIGINT) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_BIGUINT) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_BIGUINT) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_DOUBLE) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_INTEGER) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_SINGLE) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_SMALLINT) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_SMALLUINT) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_TINYINT) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_TINYUINT) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
-		else if ((value_type == GDA_VALUE_TYPE_UINTEGER) && (size > 0))
-			g_string_append_printf (sql, "(%ld)", size);
+		if (size > 0) {
+			if ((value_type == GDA_VALUE_TYPE_BIGINT) ||
+			    (value_type == GDA_VALUE_TYPE_BIGUINT) ||
+			    (value_type == GDA_VALUE_TYPE_DOUBLE) ||
+			    (value_type == GDA_VALUE_TYPE_INTEGER) ||
+			    (value_type == GDA_VALUE_TYPE_SINGLE) ||
+			    (value_type == GDA_VALUE_TYPE_SMALLINT) ||
+			    (value_type == GDA_VALUE_TYPE_SMALLUINT) ||
+			    (value_type == GDA_VALUE_TYPE_TINYINT) ||
+			    (value_type == GDA_VALUE_TYPE_TINYUINT) ||
+			    (value_type == GDA_VALUE_TYPE_UINTEGER))
+				g_string_append_printf (sql, "(%ld)", size);
+		}
 
 		/* set UNSIGNED if applicable */
-		switch (value_type) {
-		case GDA_VALUE_TYPE_BIGUINT :
-			g_string_append_printf (sql, "UNSIGNED");
-		case GDA_VALUE_TYPE_SMALLUINT :
-			g_string_append_printf (sql, "UNSIGNED");
-		case GDA_VALUE_TYPE_TINYUINT :
-			g_string_append_printf (sql, "UNSIGNED");
-		case GDA_VALUE_TYPE_UINTEGER :
-			g_string_append_printf (sql, "UNSIGNED");
-		}
+		if ((value_type == GDA_VALUE_TYPE_BIGUINT) ||
+		    (value_type == GDA_VALUE_TYPE_SMALLUINT) ||
+		    (value_type == GDA_VALUE_TYPE_TINYUINT) ||
+		    (value_type == GDA_VALUE_TYPE_UINTEGER))
+			g_string_append (sql, "UNSIGNED");
 
 		/* NULL */
 		if (gda_column_get_allow_null (dmca) == TRUE)
@@ -974,7 +961,6 @@ gda_mysql_provider_create_index (GdaServerProvider *provider,
 	GList *col_list;
 	gchar *index_name, *col_ref, *idx_ref;
 	gint i, rc, size;
-	gboolean retval = FALSE;
 	GdaSorting sort;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
@@ -997,7 +983,7 @@ gda_mysql_provider_create_index (GdaServerProvider *provider,
 
 	/* determine type of index (PRIMARY, UNIQUE or INDEX) */
 	if (gda_data_model_index_get_primary_key ((GdaDataModelIndex *) index) == TRUE)
-		g_string_append_printf (sql, "%s ADD PRIMARY KEY (", table_name, index_name);
+		g_string_append_printf (sql, "%s ADD PRIMARY KEY (", table_name);
 	else if (gda_data_model_index_get_unique_key ((GdaDataModelIndex *) index) == TRUE)
 		g_string_append_printf (sql, "%s ADD UNIQUE `%s` (", table_name, index_name);
 	else
@@ -1583,10 +1569,7 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 static GdaDataModel *
 get_mysql_views (GdaConnection *cnc, GdaParameterList *params)
 {
-	GList *reclist;
-	GdaMysqlRecordset *recset;
 	GdaDataModel *model;
-	gint rows, r;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -1602,9 +1585,7 @@ get_mysql_views (GdaConnection *cnc, GdaParameterList *params)
 static GdaDataModel *
 get_mysql_procedures (GdaConnection *cnc, GdaParameterList *params)
 {
-	GList *reclist;
 	GdaDataModel *model;
-	gint rows, r;
 	gint i;
 
 	struct {
@@ -1744,16 +1725,37 @@ field_row_to_value_list (MYSQL_ROW mysql_row)
 		value_list = g_list_append (value_list, gda_value_new_integer (-1));
 	}
 	else {
-		if (arr[0] && arr[1]) {
-			value_list = g_list_append (value_list,
-						    gda_value_new_string (arr[0]));
-			value_list = g_list_append (value_list,
-						    gda_value_new_integer (atoi (arr[1])));
-		}
-		else {
+		if (!strcmp (arr[0], "enum") ||
+		    !strcmp (arr[0], "set")) {
 			value_list = g_list_append (value_list,
 						    gda_value_new_string (arr[0]));
 			value_list = g_list_append (value_list, gda_value_new_integer (-1));
+		}
+		else {
+			if (arr[0] && arr[1]) {
+				value_list = g_list_append (value_list,
+							    gda_value_new_string (arr[0]));
+				/* if arr[0] is an int type, hard code its size instead of
+				 * using arr[1] which is an indication of display padding */
+				if (!strcmp (arr[0], "int"))
+					value_list = g_list_append (value_list, gda_value_new_integer (4));
+				else if (!strcmp (arr[0], "tinyint"))
+					value_list = g_list_append (value_list, gda_value_new_integer (1));
+				else if (!strcmp (arr[0], "smallint"))
+					value_list = g_list_append (value_list, gda_value_new_integer (2));
+				else if (!strcmp (arr[0], "mediumint"))
+					value_list = g_list_append (value_list, gda_value_new_integer (3));
+				else if (!strcmp (arr[0], "bigint"))
+					value_list = g_list_append (value_list, gda_value_new_integer (8));
+				else
+					value_list = g_list_append (value_list,
+								    gda_value_new_integer (atoi (arr[1])));
+			}
+			else {
+				value_list = g_list_append (value_list,
+							    gda_value_new_string (arr[0]));
+				value_list = g_list_append (value_list, gda_value_new_integer (-1));
+			}
 		}
 
 		g_strfreev (arr);
@@ -1879,6 +1881,142 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	return GDA_DATA_MODEL (recset);
 }
 
+static GdaDataModel *
+get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
+{
+	const gchar *table_name;
+	GdaParameter *par;
+	gchar *cmd_str;
+	GdaDataModelArray *recset;
+	gint rows, r;
+	gint rc;
+	MYSQL *mysql;
+	MYSQL_RES *mysql_res;
+	GString *pkey_fields = NULL;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (params != NULL, NULL);
+
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_connection_add_event_string (cnc, _("Invalid MySQL handle"));
+		return NULL;
+	}
+
+	/* get parameters sent by client */
+	par = gda_parameter_list_find_param (params, "name");
+	if (!par) {
+		gda_connection_add_event_string (
+			cnc,
+			_("Table name is needed but none specified in parameter list"));
+		return NULL;
+	}
+
+	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	if (!table_name) {
+		gda_connection_add_event_string (
+			cnc,
+			_("Table name is needed but none specified in parameter list"));
+		return NULL;
+	}
+
+	/* create and initialize the recordset to be returned */
+	recset = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_CONSTRAINTS));
+	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_CONSTRAINTS);
+
+	/* Obtaining list of columns */	
+	cmd_str = g_strdup_printf ("SHOW COLUMNS FROM %s", table_name);
+	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
+	g_free (cmd_str);
+	if (rc != 0) {
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
+		return NULL;
+	}
+
+	mysql_res = mysql_store_result (mysql);
+	rows = mysql_num_rows (mysql_res);
+
+	
+	for (r = 0; r < rows; r++) {
+		GList *value_list = NULL;
+		MYSQL_ROW mysql_row;
+		gchar **arr;
+
+		mysql_data_seek (mysql_res, r);
+		mysql_row = mysql_fetch_row (mysql_res);
+		if (!mysql_row) {
+			mysql_free_result (mysql_res);
+			g_object_unref (G_OBJECT (recset));
+
+			return NULL;
+		}
+
+		/* treating ENUM and SET types into CHECK constraints */
+		arr = g_strsplit ((const gchar *) mysql_row[1], "(", 0);
+		if (arr) {
+			gchar *str;
+			if (!strcmp (arr[0], "enum")) {
+				value_list = g_list_append (value_list, gda_value_new_string (""));
+				value_list = g_list_append (value_list, gda_value_new_string ("CHECK"));
+				value_list = g_list_append (value_list, gda_value_new_string (mysql_row[0]));
+				str = g_strdup_printf ("IN %s", mysql_row[1]+4);
+				value_list = g_list_append (value_list, gda_value_new_string (str));
+				g_free (str);
+				value_list = g_list_append (value_list, gda_value_new_null());
+			}
+			else if (!strcmp (arr[0], "set")) {
+				value_list = g_list_append (value_list, gda_value_new_string (""));
+				value_list = g_list_append (value_list, gda_value_new_string ("CHECK"));
+				value_list = g_list_append (value_list, gda_value_new_string (mysql_row[0]));
+				str = g_strdup_printf ("SETOF %s", mysql_row[1]+3);
+				value_list = g_list_append (value_list, gda_value_new_string (str));
+				g_free (str);
+				value_list = g_list_append (value_list, gda_value_new_null());
+			}
+			g_strfreev (arr);
+		}
+		if (value_list) {
+			gda_data_model_append_values (GDA_DATA_MODEL (recset),
+						      (const GList *) value_list, NULL);
+			
+			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+			g_list_free (value_list);
+			value_list = NULL;
+		}
+
+		/* treating PRIMARY key constraints */
+		if (!strcmp (mysql_row[3], "PRI")) {
+			if (!pkey_fields)
+				pkey_fields = g_string_new (mysql_row[0]);
+			else {
+				g_string_append_c (pkey_fields, ',');
+				g_string_append (pkey_fields, mysql_row[0]);
+			}
+		}
+	}
+
+	/* creating the PKEY entry if necessary */
+	if (pkey_fields) {
+		GList *value_list = NULL;
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+		value_list = g_list_append (value_list, gda_value_new_string ("PRIMARY_KEY"));
+		value_list = g_list_append (value_list, gda_value_new_string (pkey_fields->str));
+		value_list = g_list_append (value_list, gda_value_new_null());
+		value_list = g_list_append (value_list, gda_value_new_null());
+		g_string_free (pkey_fields, TRUE);
+
+		gda_data_model_append_values (GDA_DATA_MODEL (recset),
+					      (const GList *) value_list, NULL);
+		
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	mysql_free_result (mysql_res);
+
+	return GDA_DATA_MODEL (recset);
+}
+
 /* get_schema handler for the GdaMysqlProvider class */
 static GdaDataModel *
 gda_mysql_provider_get_schema (GdaServerProvider *provider,
@@ -1907,6 +2045,8 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 		return get_mysql_types (cnc, params);
 	case GDA_CONNECTION_SCHEMA_PROCEDURES:
 		return get_mysql_procedures (cnc, params);
+	case GDA_CONNECTION_SCHEMA_CONSTRAINTS:
+		return get_mysql_constraints (cnc, params);
 	default : break;
 	}
 
@@ -1974,28 +2114,107 @@ gda_mysql_provider_value_to_sql_string (
 GdaDataHandler *
 gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 				     GdaConnection *cnc,
-				     GdaValueType for_type)
+				     GdaValueType gda_type, const gchar *dbms_type)
 {
-	TO_IMPLEMENT;
-	return NULL;
-}
+	GdaDataHandler *dh = NULL;
 
-GdaValue *
-gda_mysql_provider_string_to_value (GdaServerProvider *provider,
-				    GdaConnection *cnc,
-				    const gchar *string, 
-				    GdaValueType prefered_type,
-				    gchar **dbms_type)
-{
-	TO_IMPLEMENT;
-	return NULL;
-}
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	if (cnc) 
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-const gchar *
-gda_mysql_provider_get_def_dbms_type (GdaServerProvider *provider,
-				      GdaConnection *cnc,
-				      GdaValueType gda_type)
-{
-	TO_IMPLEMENT;
-	return NULL;
+	switch (gda_type) {
+        case GDA_VALUE_TYPE_BIGINT:
+	case GDA_VALUE_TYPE_BIGUINT:
+	case GDA_VALUE_TYPE_DOUBLE:
+	case GDA_VALUE_TYPE_INTEGER:
+	case GDA_VALUE_TYPE_NUMERIC:
+	case GDA_VALUE_TYPE_SINGLE:
+	case GDA_VALUE_TYPE_SMALLINT:
+	case GDA_VALUE_TYPE_SMALLUINT:
+        case GDA_VALUE_TYPE_TINYINT:
+        case GDA_VALUE_TYPE_TINYUINT:
+        case GDA_VALUE_TYPE_UINTEGER:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_numerical_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_INTEGER, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SINGLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYUINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_UINTEGER, NULL);
+			g_object_unref (dh);
+		}
+		break;
+        case GDA_VALUE_TYPE_BINARY:
+        case GDA_VALUE_TYPE_BLOB:
+		dh = gda_server_provider_handler_find (provider, cnc, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_bin_new_with_prov (provider, cnc);
+			if (dh) {
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BINARY, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BLOB, NULL);
+				g_object_unref (dh);
+			}
+		}
+		break;
+        case GDA_VALUE_TYPE_BOOLEAN:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_boolean_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BOOLEAN, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_DATE:
+	case GDA_VALUE_TYPE_TIME:
+	case GDA_VALUE_TYPE_TIMESTAMP:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_time_new_no_locale ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DATE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIME, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIMESTAMP, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_STRING:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_string_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_STRING, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_TYPE:
+		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+		if (!dh) {
+			dh = gda_handler_type_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TYPE, NULL);
+			g_object_unref (dh);
+		}
+ 		break;
+	case GDA_VALUE_TYPE_NULL:
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT:
+	case GDA_VALUE_TYPE_GOBJECT:
+	case GDA_VALUE_TYPE_LIST:
+	case GDA_VALUE_TYPE_MONEY:
+	case GDA_VALUE_TYPE_UNKNOWN:
+		/* special case: we take into account the dbms_type argument */
+		if (!dbms_type)
+			break;
+
+		TO_IMPLEMENT;
+		break;
+	default:
+		g_assert_not_reached ();
+		break;
+	}
+
+	return dh;
 }

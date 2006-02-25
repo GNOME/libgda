@@ -63,7 +63,7 @@ dict_change_cb (GdaDict *dict, GdaObject *obj, gpointer what)
 						if (GDA_IS_DICT_CONSTRAINT (obj)) {
 							gchar *str;
 							
-							str = gda_object_get_name (obj);
+							str = (gchar *) gda_object_get_name (obj);
 							if (!str || !(*str))
 								str = "unnamed";
 							g_print ("Constraint %s on table %s ", str,
@@ -129,7 +129,7 @@ main (int argc, char **argv)
 	gda_init ("Gda author dictionary file", PACKAGE_VERSION, argc, argv);
 
 	/* open connection */
-	client = gda_client_new (NULL);
+	client = gda_client_new ();
 	cnc = gda_client_open_connection (client, dsn->name, 
 					  user ? user : dsn->username, 
 					  pass ? pass : ((dsn->password) ? dsn->password : ""),

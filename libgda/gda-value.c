@@ -102,7 +102,6 @@ set_from_string (GdaValue *value, const gchar *as_string)
 	gdouble dvalue;
 	glong lvalue;
         gulong ulvalue;
-	GdaValueType type;
 	GdaBinary binary;
 
 	g_return_val_if_fail (value, FALSE);
@@ -125,7 +124,7 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		break;
 
 	case GDA_VALUE_TYPE_BINARY:
-		binary.data = as_string;
+		binary.data = (guchar *) as_string;
 		binary.binary_length = strlen (as_string);
 		gda_value_set_binary (value, &binary);
 		break;
@@ -1040,8 +1039,8 @@ gda_timestamp_copy (gpointer boxed)
 	copy->month = src->month;
 	copy->day = src->day;
 	copy->hour = src->hour;
-	copy->minute = src->hour;
-	copy->second = src->hour;
+	copy->minute = src->minute;
+	copy->second = src->second;
 	copy->fraction = src->fraction;
 	copy->timezone = src->timezone;
 	
@@ -1316,8 +1315,7 @@ GdaValue *
 gda_value_copy (GdaValue *value)
 {
 	GdaValue *copy;
-	GList *l;
-
+	
 	g_return_val_if_fail (value, NULL);
 
 	copy = g_new0 (GdaValue, 1);
@@ -1462,7 +1460,7 @@ gda_value_set_blob (GdaValue *value, const GdaBlob *val)
 	l_g_value_unset (value);
 	g_value_init (value, G_VALUE_TYPE_BLOB);
 	
-	g_value_set_object (value, val);
+	g_value_set_object (value, (gpointer) val);
 }
 
 /**
@@ -1678,7 +1676,6 @@ gda_value_get_list (GdaValue *value)
 void
 gda_value_set_list (GdaValue *value, const GdaValueList *val)
 {
-	const GList *values;
 	g_return_if_fail (value);
 	g_return_if_fail (val);
 
@@ -2142,7 +2139,6 @@ gda_value_stringify (GdaValue *value)
 	GList *l;
 	GString *str = NULL;
 	gchar *retval = NULL;
-	GdaValueType type;
 
 	g_return_val_if_fail (value, NULL);
 
@@ -2262,7 +2258,7 @@ gda_value_stringify (GdaValue *value)
 	
 	case GDA_VALUE_TYPE_BLOB:
 		gdablob = gda_value_get_blob (value);
-		retval = g_strdup_printf ("%s", gda_blob_get_sql_id (gdablob));
+		retval = g_strdup_printf ("%s", gda_blob_get_sql_id ((GdaBlob*) gdablob));
 		break;
 
 	case GDA_VALUE_TYPE_LIST:
@@ -2335,7 +2331,6 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 {
 	GList *l1, *l2;
 	gint retval;
-	GdaValueType type;
 
 	g_return_val_if_fail (value1 && value2, -1);
 	g_return_val_if_fail (GDA_VALUE_TYPE (value1) == GDA_VALUE_TYPE (value2), -1);
@@ -2358,8 +2353,8 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 
 	case GDA_VALUE_TYPE_BINARY:
 	{
-		GdaBinary *binary1 = gda_value_get_binary (value1);
-		GdaBinary *binary2 = gda_value_get_binary (value2);
+		const GdaBinary *binary1 = gda_value_get_binary (value1);
+		const GdaBinary *binary2 = gda_value_get_binary (value2);
 		if(binary1 && binary2 && (binary1->binary_length == binary2->binary_length))
 		    retval = memcmp (binary1->data, binary2->data, binary1->binary_length) ;
 		else
@@ -2426,7 +2421,7 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 
 	case GDA_VALUE_TYPE_MONEY:
 	{
-		GdaMoney *money1, *money2;
+		const GdaMoney *money1, *money2;
 		money1 = gda_value_get_money(value1);
 		money2 = gda_value_get_money(value2);
 		if (!strcmp (money1->currency ? money2->currency : "",
@@ -2440,7 +2435,7 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 
 	case GDA_VALUE_TYPE_NUMERIC:
 	{
-		GdaNumeric *num1, *num2;
+		const GdaNumeric *num1, *num2;
 		num1= gda_value_get_numeric (value1);
 		num2 = gda_value_get_numeric (value2);
                 if (num1) {
@@ -2472,7 +2467,7 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 
 	case GDA_VALUE_TYPE_STRING:
 	{
-		gchar *str1, *str2;
+		const gchar *str1, *str2;
 		str1 = gda_value_get_string (value1);
 		str2 = gda_value_get_string (value2);
 		if (str1 && str2)

@@ -42,6 +42,8 @@ It implements the #GdaXmlStorage and #GdaReferer interfaces.
 @CONSTRAINT_UNIQUE: 
 @CONSTRAINT_NOT_NULL: 
 @CONSTRAINT_CHECK_EXPR: 
+@CONSTRAINT_CHECK_IN_LIST: 
+@CONSTRAINT_CHECK_SETOF_LIST: 
 @CONSTRAINT_UNKNOWN: 
 
 <!-- ##### ENUM GdaDictConstraintFkAction ##### -->

@@ -257,7 +257,7 @@ gda_client_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_client_init
 		};
-		type = g_type_register_static (GDA_TYPE_OBJECT, "GdaClient", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaClient", &info, 0);
 	}
 	return type;
 }
@@ -273,14 +273,11 @@ gda_client_get_type (void)
  * Returns: the newly created object.
  */
 GdaClient *
-gda_client_new (GdaDict *dict)
+gda_client_new (void)
 {
 	GdaClient *client;
 
-	if (dict)
-		g_return_val_if_fail (GDA_IS_DICT (dict), NULL);
-
-	client = g_object_new (GDA_TYPE_CLIENT, "dict", ASSERT_DICT (dict), NULL);
+	client = g_object_new (GDA_TYPE_CLIENT, NULL);
 	return client;
 }
 
@@ -1029,8 +1026,8 @@ gda_client_create_database (GdaClient *client, const gchar *provider, GdaParamet
 				cnc_v = gda_parameter_get_value (cnc);
 				name_v = gda_parameter_get_value (name);
 				return gda_server_provider_create_database_cnc (prv->provider, 
-										GDA_CONNECTION (gda_value_get_gobject (cnc_v)),
-										gda_value_get_string (name_v));
+										GDA_CONNECTION (gda_value_get_gobject ((GdaValue *) cnc_v)),
+										gda_value_get_string ((GdaValue *) name_v));
 			}
 		}
 		else
@@ -1090,8 +1087,8 @@ gda_client_drop_database (GdaClient *client, const gchar *provider,
 				cnc_v = gda_parameter_get_value (cnc);
 				name_v = gda_parameter_get_value (name);
 				return gda_server_provider_drop_database_cnc (prv->provider, 
-									      GDA_CONNECTION (gda_value_get_gobject (cnc_v)),
-									      gda_value_get_string (name_v));
+									      GDA_CONNECTION (gda_value_get_gobject ((GdaValue *) cnc_v)),
+									      gda_value_get_string ((GdaValue *) name_v));
 			}
 		}
 		else

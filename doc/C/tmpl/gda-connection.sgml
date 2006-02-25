@@ -51,6 +51,14 @@ Management of connections to data sources
 
 @gdaconnection: the object which received the signal.
 
+<!-- ##### SIGNAL GdaConnection::dsn-changed ##### -->
+<para>
+
+</para>
+
+@gdaconnection: the object which received the signal.
+@arg1: 
+
 <!-- ##### SIGNAL GdaConnection::error ##### -->
 <para>
 
@@ -106,6 +114,7 @@ Management of connections to data sources
 @GDA_CONNECTION_SCHEMA_TYPES: 
 @GDA_CONNECTION_SCHEMA_USERS: 
 @GDA_CONNECTION_SCHEMA_VIEWS: 
+@GDA_CONNECTION_SCHEMA_CONSTRAINTS: 
 
 <!-- ##### FUNCTION gda_connection_new ##### -->
 <para>

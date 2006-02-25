@@ -1,6 +1,6 @@
 /* gda-handler-time.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -25,7 +25,7 @@
 static void gda_handler_time_class_init (GdaHandlerTimeClass *class);
 static void gda_handler_time_init (GdaHandlerTime *hdl);
 static void gda_handler_time_dispose (GObject *object);
-static void gnome_db_handler_compute_locale (GdaHandlerTime *hdl);
+static void handler_compute_locale (GdaHandlerTime *hdl);
 
 /* General notes:
  * about months representations:
@@ -155,12 +155,12 @@ gda_handler_time_init (GdaHandlerTime *hdl)
 	hdl->priv->sql_locale->separator = '-';
 
 	hdl->priv->str_locale = g_new0 (LocaleSetting, 1);
-	hdl->priv->str_locale->dmy_order[0] = G_DATE_DAY;
-	hdl->priv->str_locale->dmy_order[1] = G_DATE_MONTH;
+	hdl->priv->str_locale->dmy_order[0] = G_DATE_MONTH;
+	hdl->priv->str_locale->dmy_order[1] = G_DATE_DAY;
 	hdl->priv->str_locale->dmy_order[2] = G_DATE_YEAR;
 	hdl->priv->str_locale->twodigit_years = FALSE;
-	hdl->priv->sql_locale->current_offset = 0;
-	hdl->priv->str_locale->separator = '/';
+	hdl->priv->str_locale->current_offset = 0;
+	hdl->priv->str_locale->separator = '-';
 
 	gda_object_set_name (GDA_OBJECT (hdl), _("InternalTime"));
 	gda_object_set_description (GDA_OBJECT (hdl), _("Time, Date and TimeStamp representation"));
@@ -206,7 +206,7 @@ gda_handler_time_new (void)
 	GObject *obj;
 
 	obj = g_object_new (GDA_TYPE_HANDLER_TIME, "dict", NULL, NULL);
-	gnome_db_handler_compute_locale (GDA_HANDLER_TIME (obj));
+	handler_compute_locale (GDA_HANDLER_TIME (obj));
 
 	return (GdaDataHandler *) obj;
 }
@@ -230,7 +230,7 @@ gda_handler_time_new_no_locale (void)
 }
 
 static void
-gnome_db_handler_compute_locale (GdaHandlerTime *hdl)
+handler_compute_locale (GdaHandlerTime *hdl)
 {
 	GDate *date;
 	gchar buf[128], *ptr, *numstart;
@@ -358,22 +358,22 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GdaValue *valu
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	switch (gda_value_get_type (value)) {
+	switch (gda_value_get_type ((GdaValue *) value)) {
 	case GDA_VALUE_TYPE_DATE:
-		date = gda_value_get_date (value);
+		date = gda_value_get_date ((GdaValue *) value);
 		str = render_date_locale (date, hdl->priv->sql_locale);
 		retval = g_strdup_printf ("'%s'", str);
 		g_free (str);
 		break;
 	case GDA_VALUE_TYPE_TIME:
-		tim = gda_value_get_time (value);
+		tim = gda_value_get_time ((GdaValue *) value);
 		retval = g_strdup_printf ("'%02d:%02d:%02d'",
 					  tim->hour,
 					  tim->minute,
 					  tim->second);
 		break;
 	case GDA_VALUE_TYPE_TIMESTAMP:
-		gdats = gda_value_get_timestamp (value);
+		gdats = gda_value_get_timestamp ((GdaValue *) value);
 		vdate.year = gdats->year;
 		vdate.month = gdats->month;
 		vdate.day = gdats->day;
@@ -411,9 +411,9 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GdaValue *valu
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 	
-	switch (gda_value_get_type (value)) {
+	switch (gda_value_get_type ((GdaValue *) value)) {
 	case GDA_VALUE_TYPE_DATE:
-		date = gda_value_get_date (value);
+		date = gda_value_get_date ((GdaValue *) value);
 		retval = render_date_locale (date, hdl->priv->str_locale);
 		break;
 	case GDA_VALUE_TYPE_TIME:
@@ -422,7 +422,7 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GdaValue *valu
 		g_free (str);
 		break;
 	case GDA_VALUE_TYPE_TIMESTAMP:
-		gdats = gda_value_get_timestamp (value);
+		gdats = gda_value_get_timestamp ((GdaValue *) value);
 		vdate.year = gdats->year;
 		vdate.month = gdats->month;
 		vdate.day = gdats->day;
@@ -508,12 +508,25 @@ static GdaValue *
 gda_handler_time_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GdaValueType type)
 {
 	GdaHandlerTime *hdl;
+	GdaValue *value = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_handler_time_get_value_from_locale (iface, sql, type, hdl->priv->sql_locale);
+	if (sql && *sql) {
+		gint i = strlen (sql);
+		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
+			gchar *str = g_strdup (sql);
+			str[i-1] = 0;
+			value = gda_handler_time_get_value_from_locale (iface, str+1, type, hdl->priv->sql_locale);
+			g_free (str);
+		}
+	}
+	else
+		value = gda_value_new_null ();
+
+	return value;
 }
 
 static GdaValue *
@@ -525,7 +538,10 @@ gda_handler_time_get_value_from_str (GdaDataHandler *iface, const gchar *sql, Gd
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_handler_time_get_value_from_locale (iface, sql, type, hdl->priv->str_locale);
+	if (sql && (*sql == '\''))
+		return NULL;
+	else
+		return gda_handler_time_get_value_from_locale (iface, sql, type, hdl->priv->str_locale);
 }
 
 
@@ -563,7 +579,7 @@ gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql,
 			value = NULL;
 		break;
 	case GDA_VALUE_TYPE_TIMESTAMP:
-		if (make_timestamp (hdl, &timestamp, sql, locale)) 
+		if (make_timestamp (hdl, &timestamp, sql, locale))
 			value = gda_value_new_timestamp (&timestamp);
 		else
 			value = NULL;
@@ -587,12 +603,13 @@ make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, const gchar *value
 	gchar *str, *ptr;
 	GdaDate vdate;
 	GdaTime vtime;
+	char *buff;
 
 	str = g_strdup (value);
-	ptr = strtok (str, " ");
+	ptr = strtok_r (str, " ", &buff);
 	retval = make_date (hdl, &vdate, ptr, locale);
 	if (retval) {
-		ptr = strtok (NULL, " ");
+		ptr = strtok_r (NULL, " ", &buff);
 		retval = make_time (hdl, &vtime, ptr);
 		if (retval) {
 			timestamp->day = vdate.day;
@@ -700,22 +717,30 @@ static gboolean
 make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
 {
 	gboolean retval = TRUE;
+	gchar *str, *ptr;
+	char *buff;
 
 	if (!value)
 		return FALSE;
 
-        timegda->hour = atoi (value);
-        value += 3;
-        timegda->minute = atoi (value);
-        value += 3;
-        timegda->second = atoi (value);
-        value += 2;
-        if (*value)
+	str = g_strdup (value);
+	ptr = strtok_r (str, ":", &buff);
+        timegda->hour = atoi (ptr);
+	
+        ptr = strtok_r (NULL, ":", &buff);
+        timegda->minute = atoi (ptr);
+
+	ptr = strtok_r (NULL, ":", &buff);
+        timegda->second = atoi (ptr);
+
+	ptr = strtok_r (NULL, " ", &buff);
+        if (ptr && *ptr)
                 timegda->timezone = atoi (value);
         else
                 timegda->timezone = 0;
 	timegda->timezone = 0;
 
+	g_free (str);
 
 	/* checks */
 	if ((timegda->hour > 24) || (timegda->minute > 60) || (timegda->second > 60))

@@ -20,10 +20,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-server-provider-private.h>
 #include <libgda/gda-data-handler.h>
+#include <libgda/gda-util.h>
 #include <glib/gi18n-lib.h>
 
 /**
@@ -65,6 +67,8 @@ gda_server_provider_get_schema_nb_columns (GdaConnectionSchema schema)
 		return 1;
         case GDA_CONNECTION_SCHEMA_VIEWS:
 		return 4;
+	case GDA_CONNECTION_SCHEMA_CONSTRAINTS:
+		return 5;
 	default:
 		g_assert_not_reached ();
 	}
@@ -167,6 +171,14 @@ GdaSchemaColData view_spec [] = {
 	{ N_("Definition"), GDA_VALUE_TYPE_STRING}
 };
 
+GdaSchemaColData constraint_spec [] = {
+	{ N_("Name"), GDA_VALUE_TYPE_STRING},
+	{ N_("Type"), GDA_VALUE_TYPE_STRING},
+	{ N_("Fields"), GDA_VALUE_TYPE_STRING},
+	{ N_("Definition"), GDA_VALUE_TYPE_STRING},
+	{ N_("Options"), GDA_VALUE_TYPE_STRING}
+};
+
 static GdaSchemaColData *
 schema_get_spec (GdaConnectionSchema schema)
 {
@@ -214,6 +226,9 @@ schema_get_spec (GdaConnectionSchema schema)
    		break;
 	case GDA_CONNECTION_SCHEMA_VIEWS:
 		spec = view_spec;
+		break;
+	case GDA_CONNECTION_SCHEMA_CONSTRAINTS:
+		spec = constraint_spec;
 		break;
 	default:
 		g_assert_not_reached ();
@@ -352,7 +367,7 @@ gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc,
 
 	info.cnc = cnc;
 	info.gda_type = gda_type;
-	info.dbms_type = dbms_type;
+	info.dbms_type = (gchar *) dbms_type;
 
 	dh = g_hash_table_lookup (prov->priv->data_handlers, &info);
 	return dh;
