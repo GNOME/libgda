@@ -1,3 +1,21 @@
+2006-03-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-private.h: #define corrections
+	* libgda/gda-util.[ch]: added gda_default_escape_chars() and 
+	gda_default_unescape_chars()
+	* libgda/gda-value.[ch]: added gda_binary_to_string() and gda_string_to_binary()
+	* libgda/handlers/gda-handler-bin.c: bug fixes, and use gda_default_escape_chars()
+	gda_default_unescape_chars(), gda_binary_to_string() and gda_string_to_binary()
+	* libgda/handlers/gda-handler-string.c: bug fixes, and use gda_default_escape_chars()
+	and gda_default_unescape_chars()
+	* providers/mysql/*: removed compilation warnings, modifications to handle 
+	MySQL versions >= 5, implemented the GDA_CONNECTION_SCHEMA_CONSTRAINTS schema,
+	corrections for bug #318183
+	* providers/postgres/gda-postgres-provider.c: code cleanup
+	* providers/sqlite/gda-sqlite-provider.c: implemented the 
+	GDA_CONNECTION_SCHEMA_CONSTRAINTS schema
+
+
 2006-02-25  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/sqlite-src: using SQlite 3.3.4 sources

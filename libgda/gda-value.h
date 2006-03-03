@@ -249,6 +249,9 @@ gint                              gda_value_compare_ext (GdaValue *value1, GdaVa
 gchar                            *gda_value_stringify (GdaValue *value);
 xmlNodePtr                        gda_value_to_xml (GdaValue *value);
 
+gchar                            *gda_binary_to_string (const GdaBinary *bin, guint maxlen);
+gboolean                          gda_string_to_binary (const gchar *str, GdaBinary *bin);
+
 /* Custom data types */
 GType                             gda_money_get_type (void);
 gpointer                          gda_money_copy (gpointer boxed);

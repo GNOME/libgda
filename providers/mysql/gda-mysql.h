@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -34,6 +34,14 @@
 #include <mysql.h>
 #include <mysql_com.h>
 
+/* undefine the macros defined by Libgda because MySQL exports them */
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+#include <my_config.h>
+
 #define GDA_MYSQL_PROVIDER_ID          "GDA MySQL provider"
 
 G_BEGIN_DECLS
@@ -42,9 +50,9 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaConnectionEvent     *gda_mysql_make_error (MYSQL *handle);
-GdaValueType  gda_mysql_type_to_gda (enum enum_field_types mysql_type, gboolean is_unsigned);
-gchar        *gda_mysql_type_from_gda (const GdaValueType type);
+GdaConnectionEvent     *gda_mysql_make_error    (MYSQL *handle);
+GdaValueType            gda_mysql_type_to_gda   (enum enum_field_types mysql_type, gboolean is_unsigned);
+gchar                  *gda_mysql_type_from_gda (const GdaValueType type);
 
 G_END_DECLS
 

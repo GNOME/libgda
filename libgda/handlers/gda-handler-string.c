@@ -1,6 +1,6 @@
 /* gda-handler-string.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -21,6 +21,7 @@
 #include "gda-handler-string.h"
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-util.h>
 
 static void gda_handler_string_class_init (GdaHandlerStringClass * class);
 static void gda_handler_string_init (GdaHandlerString * wid);
@@ -163,60 +164,6 @@ gda_handler_string_new (void)
 }
 
 static gchar *
-default_escape_chars (const gchar *string)
-{
-	gchar *str, *ptr, *ret, *retptr;
-	gint size;
-
-	if (!string)
-		return NULL;
-	
-	str = g_strdup (string);
-	ptr = str;
-
-	/* determination of the new string size */
-	size = 1;
-	while (*ptr != '\0') {
-		if (*ptr == '\'') {
-			if (ptr == str)
-				size += 2;
-			else {
-				if (*(ptr - 1) == '\\')
-					size += 1;
-				else
-					size += 2;
-			}
-		}
-		else
-			size += 1;
-		ptr++;
-	}
-
-	ptr = str;
-	ret = (gchar *) malloc (sizeof (gchar) * size);
-	retptr = ret;
-	while (*ptr != '\0') {
-		if (*ptr == '\'') {
-			if (ptr == str) {
-				*retptr = '\\';
-				retptr++;
-			}
-			else if (*(ptr - 1) != '\\') {
-				*retptr = '\\';
-				retptr++;
-			}
-		}
-		*retptr = *ptr;
-		retptr++;
-		ptr++;
-	}
-	*retptr = '\0';
-	g_free (str);
-
-	return ret;
-}
-
-static gchar *
 gda_handler_string_get_sql_from_value (GdaDataHandler *iface, const GdaValue *value)
 {
 	gchar *str, *str2, *retval;
@@ -226,9 +173,9 @@ gda_handler_string_get_sql_from_value (GdaDataHandler *iface, const GdaValue *va
 	hdl = GDA_HANDLER_STRING (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	str = gda_value_stringify (value);
+	str = gda_value_stringify ((GdaValue *) value);
 	if (str) {
-		str2 = default_escape_chars (str);
+		str2 = gda_default_escape_chars (str);
 		retval = g_strdup_printf ("'%s'", str2);
 		g_free (str2);
 		g_free (str);
@@ -248,7 +195,7 @@ gda_handler_string_get_str_from_value (GdaDataHandler *iface, const GdaValue *va
 	hdl = GDA_HANDLER_STRING (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_value_stringify (value);
+	return gda_value_stringify ((GdaValue *) value);
 }
 
 static GdaValue *
@@ -265,8 +212,14 @@ gda_handler_string_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, 
 		gint i = strlen (sql);
 		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
 			gchar *str = g_strdup (sql);
+			gchar *unstr;
+
 			str[i-1] = 0;
-			value = gda_value_new_string (str+1);	
+			unstr = gda_default_unescape_chars (str+1);
+			if (unstr) {
+				value = gda_value_new_string (unstr);
+				g_free (unstr);
+			}
 			g_free (str);
 		}
 	}

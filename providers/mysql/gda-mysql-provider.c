@@ -1663,19 +1663,19 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		{ "int unsigned", "", "Unsigned integer, range is 0 to 4294967295", GDA_VALUE_TYPE_UINTEGER, "integer unsigned"  },
 		{ "long", "", "Long integer", GDA_VALUE_TYPE_INTEGER, NULL  },
 		{ "longblob", "", "Long blob (up to 4Gb)", GDA_VALUE_TYPE_BINARY, NULL  },
-		{ "longtext", "", "Long text (up to 4Gb characters)", GDA_VALUE_TYPE_STRING, NULL  },
+		{ "longtext", "", "Long text (up to 4Gb characters)", GDA_VALUE_TYPE_BINARY, NULL  },
 		{ "mediumint", "", "Medium integer, range is -8388608 to 8388607", GDA_VALUE_TYPE_INTEGER, NULL  },
 		{ "mediumint unsigned", "", "Medium unsigned integer, range is 0 to 16777215", GDA_VALUE_TYPE_INTEGER, NULL  },
 		{ "mediumblob", "", "Medium blob (up to 16777215 bytes)", GDA_VALUE_TYPE_BINARY, NULL  },
-		{ "mediumtext", "", "Medium text (up to 16777215 characters)", GDA_VALUE_TYPE_STRING, NULL  },				
+		{ "mediumtext", "", "Medium text (up to 16777215 characters)", GDA_VALUE_TYPE_BINARY, NULL  },				
 		{ "set", "", "Set: a string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET column can have a maximum of 64 members", GDA_VALUE_TYPE_STRING, NULL  },
 		{ "smallint", "", "Small integer, range is -32768 to 32767", GDA_VALUE_TYPE_SMALLINT, NULL  },
 		{ "smallint unsigned", "", "Small unsigned integer, range is 0 to 65535", GDA_VALUE_TYPE_SMALLINT, NULL  },
-		{ "text", "", "Text (up to 65535 characters)", GDA_VALUE_TYPE_STRING, NULL  },
+		{ "text", "", "Text (up to 65535 characters)", GDA_VALUE_TYPE_BLOB, NULL  },
 		{ "tinyint", "", "Tiny integer, range is -128 to 127", GDA_VALUE_TYPE_TINYINT, NULL  },
 		{ "tinyint unsigned", "", "Tiny unsigned integer, range is 0 to 255", GDA_VALUE_TYPE_TINYUINT, NULL  },
 		{ "tinyblob", "", "Tiny blob (up to 255 bytes)", GDA_VALUE_TYPE_BINARY, NULL  },
-		{ "tinytext", "", "Tiny text (up to 255 characters)", GDA_VALUE_TYPE_STRING, NULL  },		
+		{ "tinytext", "", "Tiny text (up to 255 characters)", GDA_VALUE_TYPE_BLOB, NULL  },		
 		{ "time", "", "Time", GDA_VALUE_TYPE_TIME, NULL  },
 		{ "timestamp", "", "Time stamp", GDA_VALUE_TYPE_TIMESTAMP, NULL  },
 		{ "varchar", "", "Variable Length Char", GDA_VALUE_TYPE_STRING, "varbinary"  },
@@ -1780,7 +1780,17 @@ field_row_to_value_list (MYSQL_ROW mysql_row)
 	value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
 
 	/* references */
+#if NDB_VERSION_MAJOR < 5
 	value_list = g_list_append (value_list, gda_value_new_string (""));
+#else
+	if (mysql_row[6] && mysql_row[7]) {
+		gchar *str = g_strdup_printf ("%s.%s", mysql_row[6], mysql_row[7]);
+		value_list = g_list_append (value_list, gda_value_new_string (str));
+		g_free (str);
+	}
+	else
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+#endif
 
 	/* default value */
 	value_list = g_list_append (value_list, gda_value_new_string (mysql_row[4]));
@@ -1833,7 +1843,17 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	}
 
 	/* execute command on server */	
+#if NDB_VERSION_MAJOR < 5
 	cmd_str = g_strdup_printf ("SHOW COLUMNS FROM %s", table_name);
+#else
+	/* with MySQL >= 5.0 there are foreign keys: add support for those */
+	cmd_str = g_strdup_printf ("SELECT c.COLUMN_NAME, c.COLUMN_TYPE, c.IS_NULLABLE, c.COLUMN_KEY, c.COLUMN_DEFAULT, c.EXTRA, "
+				   "u.REFERENCED_TABLE_NAME, u.REFERENCED_COLUMN_NAME "
+				   "FROM INFORMATION_SCHEMA.COLUMNS c LEFT OUTER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE u "
+				   "ON (c.TABLE_NAME = u.TABLE_NAME AND c.TABLE_SCHEMA = u.TABLE_SCHEMA AND c.COLUMN_NAME = u.COLUMN_NAME) "
+				   " WHERE c.TABLE_NAME = '%s' AND c.TABLE_SCHEMA = DATABASE() ORDER BY c.ORDINAL_POSITION;",
+				   table_name);
+#endif
 	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
 	g_free (cmd_str);
 	if (rc != 0) {
@@ -1924,7 +1944,9 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 	recset = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_CONSTRAINTS));
 	gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_CONSTRAINTS);
 
-	/* Obtaining list of columns */	
+	/* 
+	 * Obtaining list of columns 
+	 */	
 	cmd_str = g_strdup_printf ("SHOW COLUMNS FROM %s", table_name);
 	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
 	g_free (cmd_str);
@@ -1936,7 +1958,6 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 	mysql_res = mysql_store_result (mysql);
 	rows = mysql_num_rows (mysql_res);
 
-	
 	for (r = 0; r < rows; r++) {
 		GList *value_list = NULL;
 		MYSQL_ROW mysql_row;
@@ -2013,6 +2034,92 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 	}
 
 	mysql_free_result (mysql_res);
+
+	/* 
+	 * taking care of foreign keys if possible 
+	 */
+#if NDB_VERSION_MAJOR >= 5
+	gchar *current_cname = NULL;
+	GString *ref_string = NULL;
+	GList *value_list = NULL;
+		
+	cmd_str = g_strdup_printf ("SELECT CONSTRAINT_NAME, COLUMN_NAME, ORDINAL_POSITION, REFERENCED_TABLE_SCHEMA, "
+				   "REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME "
+				   "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE "
+				   "WHERE TABLE_NAME = '%s' AND TABLE_SCHEMA = DATABASE() AND CONSTRAINT_NAME != 'PRIMARY' "
+				   "ORDER BY CONSTRAINT_NAME, ORDINAL_POSITION", 
+				   table_name);
+	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
+	g_free (cmd_str);
+	if (rc != 0) {
+		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
+		return NULL;
+	}
+
+	mysql_res = mysql_store_result (mysql);
+	rows = mysql_num_rows (mysql_res);
+
+	for (r = 0; r < rows; r++) {
+		MYSQL_ROW mysql_row;
+
+		mysql_data_seek (mysql_res, r);
+		mysql_row = mysql_fetch_row (mysql_res);
+		if (!mysql_row) {
+			mysql_free_result (mysql_res);
+			g_object_unref (G_OBJECT (recset));
+
+			return NULL;
+		}
+		
+	
+		if ((! current_cname) || strcmp (current_cname, mysql_row[0])) {
+			/* new constraint */
+			if (value_list) {
+				/* complete and store current row */
+				g_string_append_c (ref_string, ')');
+				value_list = g_list_append (value_list, gda_value_new_string (ref_string->str));
+				g_string_free (ref_string, TRUE);
+				value_list = g_list_append (value_list, gda_value_new_null ());
+
+				gda_data_model_append_values (GDA_DATA_MODEL (recset),
+							      (const GList *) value_list, NULL);
+				
+				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+				g_list_free (value_list);
+			}
+			if (current_cname) 
+				g_free (current_cname);
+			
+			/* prepare new constraint */
+			value_list = g_list_append (NULL, gda_value_new_string (mysql_row[0]));
+			value_list = g_list_append (value_list, gda_value_new_string ("FOREIGN_KEY"));
+			value_list = g_list_append (value_list, gda_value_new_string (mysql_row[1]));
+			
+			ref_string = g_string_new (mysql_row[4]);
+			g_string_append_c (ref_string, '(');
+			g_string_append (ref_string, mysql_row[5]);
+			current_cname = g_strdup (mysql_row[0]);
+		}
+		else {
+			g_string_append_c (ref_string, ',');
+			g_string_append (ref_string, mysql_row[5]);
+		}
+	}
+
+	if (value_list) {
+		/* complete and store current row */
+		g_string_append_c (ref_string, ')');
+		value_list = g_list_append (value_list, gda_value_new_string (ref_string->str));
+		g_string_free (ref_string, TRUE);
+		value_list = g_list_append (value_list, gda_value_new_null ());
+		
+		gda_data_model_append_values (GDA_DATA_MODEL (recset),
+					      (const GList *) value_list, NULL);
+		
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+#endif
 
 	return GDA_DATA_MODEL (recset);
 }

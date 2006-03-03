@@ -1042,3 +1042,23 @@ use such values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_binary_to_string ##### -->
+<para>
+
+</para>
+
+@bin: 
+@maxlen: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_string_to_binary ##### -->
+<para>
+
+</para>
+
+@str: 
+@bin: 
+@Returns: 
+
+

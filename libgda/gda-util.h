@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -36,6 +36,12 @@ const gchar *gda_type_to_string (GdaValueType type);
 GdaValueType gda_type_from_string (const gchar *str);
 
 GList       *gda_string_hash_to_list (GHashTable *hash_table);
+
+/* 
+ * SQL escaping
+ */
+gchar *gda_default_escape_chars (const gchar *string);
+gchar *gda_default_unescape_chars (const gchar *string);
 
 /*
  * SQL parsing utilities

@@ -767,6 +767,7 @@ gda_transaction_get_type
 gda_type_to_string
 gda_type_from_string
 gda_string_hash_to_list
+gda_default_escape_chars
 gda_sql_replace_placeholders
 gda_file_load
 gda_file_save
@@ -892,6 +893,8 @@ gda_value_get_gdatype
 gda_value_set_gdatype
 gda_value_convert_gtype_to_gdatype
 gda_value_convert_gdatype_to_gtype
+gda_binary_to_string
+gda_string_to_binary
 <SUBSECTION Standard>
 GDA_TYPE_VALUE
 GDA_VALUE_TYPE

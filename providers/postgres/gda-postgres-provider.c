@@ -142,11 +142,6 @@ static GdaBlob *gda_postgres_provider_create_blob (GdaServerProvider *provider,
 						   GdaConnection *cnc);
 static GdaBlob *gda_postgres_provider_fetch_blob (GdaServerProvider *provider,
 						  GdaConnection *cnc, const gchar *sql_id);
-
-gchar *
-gda_postgres_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont actually use this!*/
-					GdaConnection *cnc,
-					GdaValue *from);
 				 		 
 typedef struct {
 	gint ncolumns;

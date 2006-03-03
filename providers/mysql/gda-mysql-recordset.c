@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -47,7 +47,6 @@ static void gda_mysql_recordset_init       (GdaMysqlRecordset *recset,
 static void gda_mysql_recordset_finalize   (GObject *object);
 
 static gint gda_mysql_recordset_get_n_rows			     (GdaDataModelRow *model);
-static GdaColumn *gda_mysql_recordset_describe_column (GdaDataModelRow *model, gint col);
 static GdaRow *gda_mysql_recordset_get_row		     (GdaDataModelRow *model, 
 							      gint row, GError **error);
 static const GdaValue *gda_mysql_recordset_get_value_at		     (GdaDataModelRow *model, gint col, gint row);
@@ -187,6 +186,8 @@ fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
 		gda_value_set_from_string (gda_value, value, GDA_VALUE_TYPE_TIMESTAMP);
 		break;
 	case FIELD_TYPE_NULL :
+		gda_value_set_null (gda_value);
+		break;
 	case FIELD_TYPE_NEWDATE :
 	case FIELD_TYPE_ENUM :
 	case FIELD_TYPE_SET : /* FIXME */
@@ -274,7 +275,7 @@ gda_mysql_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 	GdaMysqlRecordsetPrivate *priv_data;
 	gint fetched_rows;
 	gint i;
-	GdaRow *row_list, *fields = NULL;
+	GdaRow *row_list;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
@@ -282,7 +283,7 @@ gda_mysql_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 	row_list = (GdaRow *) GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_row (model, row, 
 										error);
 	if (row_list != NULL)
-		return (const GdaRow *)row_list;	
+		return row_list;	
 
 	priv_data = recset->priv;
 	if (!priv_data->mysql_res) {
@@ -318,7 +319,7 @@ gda_mysql_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 
 	gda_data_model_thaw (GDA_DATA_MODEL (recset));
 
-	return (const GdaRow *) row_list;
+	return row_list;
 }
 
 static const GdaValue *

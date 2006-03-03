@@ -1347,6 +1347,226 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 }
 
 static GdaDataModel *
+get_constraints (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+	SQLITEcnc *scnc;
+	GdaParameter *par;
+	const gchar *tblname;
+	GList *reclist;
+        gchar *sql;
+	GdaDataModel *pragmamodel = NULL;
+	int i, nrows;
+
+	/* current constraint */
+	gchar *cid = NULL;
+	GString *cfields = NULL;
+	GString *cref_fields = NULL;
+	GdaRow *crow = NULL;
+
+	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
+	if (!scnc) {
+		gda_connection_add_event_string (cnc, _("Invalid SQLITE handle"));
+		return NULL;
+	}
+
+	/* find table name */
+	par = gda_parameter_list_find_param (params, "name");
+	g_return_val_if_fail (par != NULL, NULL);
+
+	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	g_return_val_if_fail (tblname != NULL, NULL);
+
+	/* does the table exist? */
+	/* FIXME */
+
+	/* create the model */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
+				       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_CONSTRAINTS)));
+	g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_CONSTRAINTS));
+
+	/* 
+	 * PRMARY KEY
+	 * use the SQLite PRAGMA for table information command 
+	 */
+	sql = g_strdup_printf ("PRAGMA table_info ('%s');", tblname);
+	reclist = process_sql_commands (NULL, cnc, sql, 0);
+	g_free (sql);
+	if (reclist) 
+		pragmamodel = GDA_DATA_MODEL (reclist->data);
+	g_list_free (reclist);
+	if (!pragmamodel) {
+		gda_connection_add_event_string (cnc, _("Can't execute PRAGMA table_info()"));
+		return NULL;
+	}
+
+	/* analysing the returned data model for the PRAGMA command */
+	crow = NULL;
+	cfields = NULL;
+	nrows = gda_data_model_get_n_rows (pragmamodel);
+	for (i = 0; i < nrows; i++) {
+		GdaRow *row;
+		GdaValue *value;
+		gchar *str;
+		row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (pragmamodel), i, NULL);
+		g_assert (row);
+
+		value = gda_row_get_value (row, 5);
+		str = (gchar *) gda_value_get_string ((GdaValue *) value);
+		if (str && (*str == '1')) {
+			if (!crow) {
+				gint new_row_num;
+				
+				new_row_num = gda_data_model_append_row (GDA_DATA_MODEL (recset), NULL);
+				crow = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (recset), new_row_num, NULL);
+				
+				value = gda_value_new_string ("");
+				gda_row_set_value (crow, 0, value);
+				gda_value_free (value);
+				
+				value = gda_value_new_string ("PRIMARY_KEY");
+				gda_row_set_value (crow, 1, value);
+				gda_value_free (value);
+			}
+			
+			value = gda_row_get_value (row, 1);
+			if (!cfields)
+				cfields = g_string_new (gda_value_get_string (value));
+			else {
+				g_string_append_c (cfields, ',');
+				g_string_append (cfields, gda_value_get_string (value));
+			}
+		}
+	}
+
+	if (crow) {
+		GdaValue *value;
+
+		value = gda_value_new_string (cfields->str);
+		gda_row_set_value (crow, 2, value);
+		gda_value_free (value);
+		g_string_free (cfields, TRUE);
+		
+		value = gda_value_new_null ();
+		gda_row_set_value (crow, 3, value);
+		gda_value_free (value);
+
+		value = gda_value_new_null ();
+		gda_row_set_value (crow, 4, value);
+		gda_value_free (value);
+	}
+
+	g_object_unref (pragmamodel);
+
+	/* 
+	 * FOREIGN KEYS
+	 * use the SQLite PRAGMA for table information command 
+	 */
+	sql = g_strdup_printf ("PRAGMA foreign_key_list ('%s');", tblname);
+	reclist = process_sql_commands (NULL, cnc, sql, 0);
+	g_free (sql);
+	if (reclist) 
+		pragmamodel = GDA_DATA_MODEL (reclist->data);
+	g_list_free (reclist);
+	if (!pragmamodel) {
+		gda_connection_add_event_string (cnc, _("Can't execute PRAGMA foreign_key_list()"));
+		return NULL;
+	}
+
+	/* analysing the returned data model for the PRAGMA command */
+	cid = NULL;
+	cfields = NULL;
+	cref_fields = NULL;
+	crow = NULL;
+	nrows = gda_data_model_get_n_rows (pragmamodel);
+	for (i = 0; i < nrows; i++) {
+		GdaRow *row;
+		GdaValue *value;
+		gchar *str;
+		row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (pragmamodel), i, NULL);
+		g_assert (row);
+
+		value = gda_row_get_value (row, 0);
+		str = (gchar *) gda_value_get_string (value);
+		if (!cid || strcmp (cid, str)) {
+			gint new_row_num;
+			cid = str;
+
+			/* record current constraint */
+			if (crow) {
+				value = gda_value_new_string (cfields->str);
+				gda_row_set_value (crow, 2, value);
+				gda_value_free (value);
+				g_string_free (cfields, TRUE);
+
+				g_string_append_c (cref_fields, ')');
+				value = gda_value_new_string (cref_fields->str);
+				gda_row_set_value (crow, 3, value);
+				gda_value_free (value);
+				g_string_free (cref_fields, TRUE);
+			}
+
+			/* start a new constraint */
+			new_row_num = gda_data_model_append_row (GDA_DATA_MODEL (recset), NULL);
+			crow = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (recset), new_row_num, NULL);
+			
+			value = gda_value_new_string ("");
+			gda_row_set_value (crow, 0, value);
+			gda_value_free (value);
+
+			value = gda_value_new_string ("FOREIGN_KEY");
+			gda_row_set_value (crow, 1, value);
+			gda_value_free (value);
+
+			
+			value = gda_row_get_value (row, 3);
+			cfields = g_string_new (gda_value_get_string (value));
+			
+			value = gda_row_get_value (row, 2);
+			cref_fields = g_string_new (gda_value_get_string (value));
+			g_string_append_c (cref_fields, '(');
+			value = gda_row_get_value (row, 4);
+			g_string_append (cref_fields, (gchar *) gda_value_get_string (value));
+
+			value = gda_value_new_null ();
+			gda_row_set_value (crow, 4, value);
+			gda_value_free (value);
+		}
+		else {
+			/* "augment" the current constraint */
+			g_string_append_c (cfields, ',');
+			value = gda_row_get_value (row, 3);
+			g_string_append (cfields, (gchar *) gda_value_get_string (value));
+
+			g_string_append_c (cref_fields, ',');
+			value = gda_row_get_value (row, 4);
+			g_string_append (cref_fields, (gchar *) gda_value_get_string (value));
+		}
+	       
+	}
+
+	if (crow) {
+		GdaValue *value;
+
+		value = gda_value_new_string (cfields->str);
+		gda_row_set_value (crow, 2, value);
+		gda_value_free (value);
+		g_string_free (cfields, TRUE);
+		
+		g_string_append_c (cref_fields, ')');
+		value = gda_value_new_string (cref_fields->str);
+		gda_row_set_value (crow, 3, value);
+		gda_value_free (value);
+		g_string_free (cref_fields, TRUE);
+	}
+
+	g_object_unref (pragmamodel);
+
+	return GDA_DATA_MODEL (recset);
+}
+
+
+static GdaDataModel *
 gda_sqlite_provider_get_schema (GdaServerProvider *provider,
 				GdaConnection *cnc,
 				GdaConnectionSchema schema,
@@ -1369,6 +1589,8 @@ gda_sqlite_provider_get_schema (GdaServerProvider *provider,
 		return get_procs (cnc, params, FALSE);
 	case GDA_CONNECTION_SCHEMA_AGGREGATES:
 		return get_procs (cnc, params, TRUE);
+	case GDA_CONNECTION_SCHEMA_CONSTRAINTS:
+		return get_constraints (cnc, params);
 	default: ;
 	}
 

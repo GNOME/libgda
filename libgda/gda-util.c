@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -121,6 +121,114 @@ gda_type_from_string (const gchar *str)
 	else if (!g_strcasecmp (str, "unknown")) return GDA_VALUE_TYPE_UNKNOWN;      
   
 	return GDA_VALUE_TYPE_UNKNOWN;
+}
+
+/**
+ * gda_default_escape_chars
+ * @string: string to escape
+ *
+ * Escapes @string to make it understandable by a DBMS. The escape method is very common and replaces any
+ * occurence of "'" with "\'" and "\" with "\\".
+ */
+gchar *
+gda_default_escape_chars (const gchar *string)
+{
+	gchar *ptr, *ret, *retptr;
+	gint size;
+
+	if (!string)
+		return NULL;
+	
+	/* determination of the new string size */
+	ptr = (gchar *) string;
+	size = 1;
+	while (*ptr) {
+		if ((*ptr == '\'') ||(*ptr == '\\'))
+			size += 2;
+		else
+			size += 1;
+		ptr++;
+	}
+
+	ptr = (gchar *) string;
+	ret = g_new0 (gchar, size);
+	retptr = ret;
+	while (*ptr) {
+		if ((*ptr == '\'') || (*ptr == '\\')) {
+			*retptr = '\\';
+			*(retptr+1) = *ptr;
+			retptr += 2;
+		}
+		else {
+			*retptr = *ptr;
+			retptr ++;
+		}
+		ptr++;
+	}
+	*retptr = '\0';
+
+	return ret;
+}
+
+/**
+ * gda_default_unescape_chars
+ * @string: string to unescape
+ *
+ * Do the reverse of gda_default_escape_chars(): transforms any "\'" into "'" and any
+ * "\\" into "\". 
+ *
+ * Returns: a new unescaped string, or %NULL in an error was found in @string
+ */
+gchar *
+gda_default_unescape_chars (const gchar *string)
+{
+	glong total;
+	gchar *ptr;
+	gchar *retval;
+	glong offset = 0;
+	
+	if (!string) 
+		return NULL;
+	
+	total = strlen (string);
+	retval = g_memdup (string, total+1);
+	ptr = (gchar *) retval;
+	while (offset < total) {
+		/* we accept the "''" as a synonym of "\'" */
+		if (*ptr == '\'') {
+			if (*(ptr+1) == '\'') {
+				g_memmove (ptr+1, ptr+2, total - offset);
+				offset += 2;
+			}
+			else {
+				g_free (retval);
+				return NULL;
+			}
+		}
+		if (*ptr == '\\') {
+			if (*(ptr+1) == '\\') {
+				g_memmove (ptr+1, ptr+2, total - offset);
+				offset += 2;
+			}
+			else {
+				if (*(ptr+1) == '\'') {
+					*ptr = '\'';
+					g_memmove (ptr+1, ptr+2, total - offset);
+					offset += 2;
+				}
+				else {
+					g_free (retval);
+					return NULL;
+				}
+			}
+		}
+		else
+			offset ++;
+
+		ptr++;
+	}
+
+	return retval;	
 }
 
 /* function called by g_hash_table_foreach to add items to a GList */

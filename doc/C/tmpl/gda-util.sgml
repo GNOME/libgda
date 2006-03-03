@@ -44,6 +44,15 @@ Utility functions
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_default_escape_chars ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_sql_replace_placeholders ##### -->
 <para>
 

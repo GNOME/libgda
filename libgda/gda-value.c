@@ -124,9 +124,9 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		break;
 
 	case GDA_VALUE_TYPE_BINARY:
-		binary.data = (guchar *) as_string;
-		binary.binary_length = strlen (as_string);
-		gda_value_set_binary (value, &binary);
+		retval = gda_string_to_binary (as_string, &binary);
+		if (retval)
+			gda_value_set_binary (value, &binary);
 		break;
 	
 	case GDA_VALUE_TYPE_BIGINT:
@@ -2152,12 +2152,8 @@ gda_value_stringify (GdaValue *value)
 		break;
 
 	case GDA_VALUE_TYPE_BINARY:
-	{
-		const GdaBinary *binary = gda_value_get_binary (value);
-		retval = g_memdup (binary->data, binary->binary_length+1);
-		retval [binary->binary_length] = '\0';
+		retval = gda_binary_to_string (gda_value_get_binary (value), 0);
 		break;
-	}
 
 	case GDA_VALUE_TYPE_BOOLEAN:
 		if (gda_value_get_boolean (value))
@@ -2885,4 +2881,150 @@ gda_value_convert_gdatype_to_gtype (GdaValueType type)
 	default:
 		g_assert_not_reached ();
 	}
+}
+
+#define MYMIN(a,b) (((b) > 0) ? ((a) < (b) ? (a) : (b)) : (a))
+
+/**
+ * gda_binary_to_string
+ * @bin: a correctly filled @GdaBinary structure
+ * @maxlen: a maximum len used to truncate, or 0 for no maximum length
+ *
+ * Converts all the non printable characters of bin->data into the \xxx representation
+ * where xxx is the octal representation of the byte, and the '\' (backslash) character
+ * is converted to "\\".
+ *
+ * Returns: a new string from @bin
+ */
+gchar *
+gda_binary_to_string (const GdaBinary *bin, guint maxlen)
+{
+	gint nb_rewrites = 0;
+	gchar *ptr, *hold;
+	gulong realsize = MYMIN (bin->binary_length, maxlen);
+
+	gchar *retval;
+	glong offset = 0;
+	gunichar unichar;
+
+	if (!bin->data || (bin->binary_length == 0))
+		return g_strdup ("");
+
+	/* compute number of char rewrites */
+	ptr = bin->data;
+	while (offset < realsize) {
+		unichar = g_utf8_get_char_validated (ptr, -1);
+		if ((*ptr == '\n') ||
+		    ((*ptr != '\\') && (unichar > 0) && g_unichar_isprint (unichar))) {
+			hold = ptr;
+			ptr = g_utf8_next_char (ptr);
+			offset += ptr - hold;
+		}
+		else {
+			ptr++;
+			nb_rewrites++;
+			offset ++;
+		}
+	}
+	
+	/* mem allocation and copy */
+	retval = g_malloc0 (realsize + nb_rewrites * 4 + 1);
+	memcpy (retval, bin->data, realsize);
+	ptr = retval;
+	offset = 0;
+	while (offset < realsize) {
+		unichar = g_utf8_get_char_validated (ptr, -1);
+		/* g_print (">%x<\n", (guchar) *ptr); */
+		if ((*ptr == '\n') ||
+		    ((*ptr != '\\') && (unichar > 0) && g_unichar_isprint (unichar))) {
+			hold = ptr;
+			ptr = g_utf8_next_char (ptr);
+			offset += ptr - hold;
+		}
+		else {
+			if (*ptr == '\\') {
+				g_memmove (ptr+2, ptr+1, realsize - offset);
+
+				*(ptr+1) = '\\';
+				ptr += 2;
+				offset ++;
+			}
+			else {
+				guchar val = *ptr;
+				g_memmove (ptr+4, ptr+1, realsize - offset);
+				*ptr = '\\';
+				*(ptr+1) = val / 49 + '0';
+				val = val % 49;
+				*(ptr+2) = val / 7 + '0';
+				val = val % 7;
+				*(ptr+3) = val + '0';
+				
+				ptr += 4;
+				offset ++;
+			}
+		}
+	}
+
+	return retval;
+}
+
+/**
+ * gda_string_to_binary
+ * @str: a string to convert
+ * @bin: a non filled @GdaBinary structure
+ *
+ * Performs the reverse of gda_binary_to_string().
+ *
+ * Returns: TRUE if no error were found in @str, or FALSE otherwise
+ */
+gboolean
+gda_string_to_binary (const gchar *str, GdaBinary *bin)
+{
+	glong len = 0, total;
+	gchar *ptr;
+	gchar *retval;
+	glong offset = 0;
+
+	if (!str) {
+		bin->data = NULL;
+		bin->binary_length = 0;
+		return TRUE;
+	}
+
+	total = strlen (str);
+	retval = g_memdup (str, total);
+	ptr = (gchar *) retval;
+	while (offset < total) {
+		if (*ptr == '\\') {
+			if (*(ptr+1) == '\\') {
+				g_memmove (ptr+1, ptr+2, total - offset);
+				offset += 2;
+			}
+			else {
+				if ((*(ptr+1) >= '0') && (*(ptr+1) <= '9') &&
+				    (*(ptr+2) >= '0') && (*(ptr+2) <= '9') &&
+				    (*(ptr+3) >= '0') && (*(ptr+3) <= '9')) {
+					*ptr = (*(ptr+1) - '0') * 49 +
+						(*(ptr+2) - '0') * 7 +
+						*(ptr+3) - '0';
+					g_memmove (ptr+1, ptr+4, total - offset);
+					offset += 4;
+				}
+				else {
+					g_free (retval);
+					return FALSE;
+				}
+			}
+		}
+		else
+			offset ++;
+
+		ptr++;
+		len ++;
+	}
+
+	bin->data = retval;
+	bin->binary_length = len;
+
+	return TRUE;
 }

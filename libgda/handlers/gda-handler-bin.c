@@ -22,6 +22,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-util.h>
 
 static void gda_handler_bin_class_init (GdaHandlerBinClass * class);
 static void gda_handler_bin_init (GdaHandlerBin * wid);
@@ -186,74 +187,11 @@ gda_handler_bin_new_with_prov (GdaServerProvider *prov, GdaConnection *cnc)
 	if (cnc)
 		dh->priv->cnc = cnc;
 
-	g_object_add_weak_pointer (G_OBJECT (prov), &(dh->priv->prov));
+	g_object_add_weak_pointer (G_OBJECT (prov), (gpointer) &(dh->priv->prov));
 	if (cnc)
-		g_object_add_weak_pointer (G_OBJECT (cnc), &(dh->priv->cnc));
+		g_object_add_weak_pointer (G_OBJECT (cnc), (gpointer) &(dh->priv->cnc));
 
-	return dh;
-}
-
-static GdaBinary *
-string_to_bin (const gchar *string)
-{
-	GdaBinary *bin;
-	gchar *sptr;
-	guchar *bptr;
-
-	bin = g_new0 (GdaBinary, 1);
-	bin->data = g_new (guchar, strlen (string)*4+1);
-	bptr = bin->data;
-	sptr = string;
-	while (*sptr) {
-		if (*sptr == '\\') {
-			sptr++;
-			if (*sptr && *(sptr+1) && *(sptr+2)) {
-				*bptr = (*sptr - '0') * 100 +
-					(*(sptr+1) - '0') * 10 +
-					(*(sptr+2) - '0');
-				bptr++;
-				sptr += 3;
-			}
-			else {
-				g_free (bin->data);
-				g_free (bin);
-				return NULL;
-			}
-		}
-		else {
-			*bptr = *sptr;
-			bptr++;
-			sptr++;
-		}
-		bin->binary_length ++;
-	}
-
-	return bin;
-}
-
-static gchar *
-bin_to_string (const GdaBinary *bin)
-{
-	GString *string;
-	gchar *retval;
-	guchar *ptr;
-	glong offset;
-
-	string = g_string_new (NULL);
-	
-	for (ptr = bin->data, offset = 0; offset < bin->binary_length; offset++, ptr++) {
-		if (((*ptr >= 'a') && (*ptr <= 'z')) ||
-		    ((*ptr >= 'A') && (*ptr <= 'Z')) ||
-		    ((*ptr >= '0') && (*ptr <= '9')) ||
-		    (*ptr == ' '))
-			g_string_append_c (string, *ptr);
-		else 
-			g_string_append_printf (string, "\%3d", *ptr);
-	}
-
-	retval = string->str;
-	g_string_free (string, FALSE);
-	return retval;
+	return (GdaDataHandler *) dh;
 }
 
 static gchar *
@@ -267,11 +205,11 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GdaValue *value
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (value) {
-		if (gda_value_isa (value, GDA_VALUE_TYPE_BLOB)) {
+		if (gda_value_isa ((GdaValue *) value, GDA_VALUE_TYPE_BLOB)) {
 			gchar *sql_id;
 			GdaBlob *blob;
 
-			blob = gda_value_get_blob (value);
+			blob = (GdaBlob *) gda_value_get_blob ((GdaValue *) value);
 			sql_id = gda_blob_get_sql_id (blob);
 			if (sql_id)
 				retval = sql_id;
@@ -282,10 +220,12 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GdaValue *value
 			}
 		}
 		else {
-			gchar *str;
-			str = bin_to_string (gda_value_get_binary (value));
-			retval = g_strdup_printf ("'%s'", str);
+			gchar *str, *str2;
+			str = gda_binary_to_string (gda_value_get_binary ((GdaValue *) value), 0);
+			str2 = gda_default_escape_chars (str);
 			g_free (str);
+			retval = g_strdup_printf ("'%s'", str2);
+			g_free (str2);
 		}
 	}
 	else
@@ -305,11 +245,11 @@ gda_handler_bin_get_str_from_value (GdaDataHandler *iface, const GdaValue *value
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (value) {
-		if (gda_value_isa (value, GDA_VALUE_TYPE_BLOB)) {
+		if (gda_value_isa ((GdaValue *) value, GDA_VALUE_TYPE_BLOB)) {
 			gchar *sql_id;
 			GdaBlob *blob;
 			
-			blob = gda_value_get_blob (value);
+			blob = (GdaBlob *) gda_value_get_blob ((GdaValue *) value);
 			sql_id = gda_blob_get_sql_id (blob);
 			if (sql_id)
 				retval = sql_id;
@@ -320,7 +260,7 @@ gda_handler_bin_get_str_from_value (GdaDataHandler *iface, const GdaValue *value
 			}
 		}
 		else
-			retval = bin_to_string (gda_value_get_binary (value));
+			retval = gda_binary_to_string (gda_value_get_binary ((GdaValue *) value), 0);
 	}
 	else
 		retval = g_strdup (NULL);
@@ -342,9 +282,14 @@ gda_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, Gda
 		gint i = strlen (sql);
 		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
 			gchar *str = g_strdup (sql);
-			GdaBinary *bin;
+			gchar *unstr;
+
 			str[i-1] = 0;
-			value = gda_handler_bin_get_value_from_str (iface, str+1, type);
+			unstr = gda_default_unescape_chars (str+1);
+			if (unstr) {
+				value = gda_handler_bin_get_value_from_str (iface, unstr, type);
+				g_free (unstr);
+			}
 			g_free (str);
 		}
 	}
@@ -357,7 +302,7 @@ gda_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *str, Gda
 {
 	GdaHandlerBin *hdl;
 	GdaValue *value = NULL;
-	GdaBinary *bin;
+	GdaBinary bin;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_BIN (iface), NULL);
 	hdl = GDA_HANDLER_BIN (iface);
@@ -365,11 +310,9 @@ gda_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *str, Gda
 
 	switch (type) {
 	case GDA_VALUE_TYPE_BINARY:
-		bin = string_to_bin (str+1);
-		if (bin) {
-			value = gda_value_new_binary (bin->data, bin->binary_length);
-			g_free (bin->data);
-			g_free (bin);
+		if (gda_string_to_binary (str, &bin)) {
+			value = gda_value_new_binary (bin.data, bin.binary_length);
+			g_free (bin.data);
 		}
 		break;
 
@@ -379,7 +322,7 @@ gda_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *str, Gda
 		if (hdl->priv->prov) 
 			blob = gda_server_provider_fetch_blob_by_id (hdl->priv->prov,
 								     hdl->priv->cnc,
-								     str+1);
+								     str);
 		if (blob) {
 			value = gda_value_new_blob (blob);
 			g_object_unref (blob);

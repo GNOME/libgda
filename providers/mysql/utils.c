@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998-2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -94,6 +94,19 @@ gda_mysql_type_to_gda (enum enum_field_types mysql_type, gboolean is_unsigned)
 	case FIELD_TYPE_ENUM :
 	case FIELD_TYPE_SET :
 		return GDA_VALUE_TYPE_STRING;
+#if NDB_VERSION_MAJOR >= 5
+	case MYSQL_TYPE_VARCHAR:
+		return GDA_VALUE_TYPE_STRING;
+	case MYSQL_TYPE_BIT:
+		if (is_unsigned)
+			return GDA_VALUE_TYPE_TINYUINT;
+		return GDA_VALUE_TYPE_TINYINT;
+	case MYSQL_TYPE_NEWDECIMAL:
+		return GDA_VALUE_TYPE_DOUBLE;
+	case MYSQL_TYPE_GEOMETRY:
+		return GDA_VALUE_TYPE_STRING;
+		break;
+#endif
 	}
 
 	return GDA_VALUE_TYPE_UNKNOWN;

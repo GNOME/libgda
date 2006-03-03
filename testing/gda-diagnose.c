@@ -757,6 +757,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 		td = xmlNewChild (tr, NULL, "th", "Gda type");
 		td = xmlNewChild (tr, NULL, "th", "String");
 		td = xmlNewChild (tr, NULL, "th", "Value converted by data handler to string");
+		td = xmlNewChild (tr, NULL, "th", "Value converted by data handler to SQL");
 
 		for (type= GDA_VALUE_TYPE_NULL;
 		     type < GDA_VALUE_TYPE_UNKNOWN;
@@ -990,10 +991,18 @@ test_data_handler (TestConfig *config,
 			{"hello ()", FALSE, NULL},
 			{"hell'o", FALSE, NULL},
 			{"hell''o", FALSE, NULL},
+			{"simple quote: '", FALSE, NULL},
+			{"double quote: \"", FALSE, NULL},
+			{"CR: \n", FALSE, NULL},
 			{"'hello'", FALSE, NULL},
 			{"'hello ()'", FALSE, NULL},
 			{"'hell\\'o'", FALSE, NULL},
 			{"'hell\\'\\'o'", FALSE, NULL},
+			{"'hell''o'", FALSE, NULL},
+			{"'simple quote: ''", FALSE, NULL},
+			{"'simple quote: \''", FALSE, NULL},
+			{"'double quote: \"'", FALSE, NULL},
+			{"'CR: \n'", FALSE, NULL},
 			{NULL, FALSE, NULL}};
 
 		values = g_slist_prepend (NULL, gda_value_new_string ("hell'o"));
@@ -1195,7 +1204,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GdaValueType typ
 
 		sql = sql_values[i].str;
 		while (sql) {
-			tr = xmlNewChild (table2, NULL, "tr", NULL);
+			tr = xmlNewChild (table2, NULL, "tr", "\n");
 			td = xmlNewChild (tr, NULL, "td", gda_type_to_string (type));
 			td = xmlNewChild (tr, NULL, "td", sql);
 
@@ -1239,6 +1248,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GdaValueType typ
 
 			value = gda_data_handler_get_value_from_str (dh, sql, type);
 			if (value) {
+				/* str column */
 				tmp = gda_data_handler_get_str_from_value (dh, value);
 				td = xmlNewChild (tr, NULL, "td", tmp);
 
@@ -1250,6 +1260,11 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GdaValueType typ
 				else 
 					if (!tmp || strcmp (tmp, sql))
 						html_mark_node_error (HTML_CONFIG (config), td);
+				g_free (tmp);
+
+				/* sql column */
+				tmp = gda_data_handler_get_sql_from_value (dh, value);
+				td = xmlNewChild (tr, NULL, "td", tmp);
 				g_free (tmp);
 
 				gda_value_free (value);
