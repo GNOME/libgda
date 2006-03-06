@@ -1238,7 +1238,7 @@ gda_oracle_table_tree (GdaConnection *cnc)
 	recset = reclist->data;
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	tree = g_tree_new((GCompareFunc)strcmp);
-	for (i = 0; (row = (GdaRow *)gda_data_model_get_row(recset, i)); i++) {
+	for (i = 0; (row = (GdaRow *)gda_data_model_row_get_row (recset, i, NULL)); i++) {
 		value = gda_row_get_value (row, 0);
 		name = gda_value_stringify (value);
 		value = gda_row_get_value (row, 1);
@@ -1272,7 +1272,7 @@ gda_oracle_view_tree(GdaConnection *cnc)
 	recset = reclist->data;
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	tree = g_tree_new((GCompareFunc)strcmp);
-	for (i = 0; (row = (GdaRow *)gda_data_model_get_row(recset, i)); i++) {
+	for (i = 0; (row = (GdaRow *)gda_data_model_row_get_row (recset, i, NULL)); i++) {
 		value = gda_row_get_value(row, 0);
 		name = gda_value_stringify (value);
 		g_tree_insert(tree, name, priv_data->schema);
