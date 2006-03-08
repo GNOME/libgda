@@ -2,17 +2,17 @@
 <data-set-spec>
   <parameters>
     <!-- Connection parameters -->
-    <parameter id="HOST" name="Database server" descr="Host which has the database server running" gdatype="string"/>
-    <parameter id="PORT" name="Port" descr="Database server port" gdatype="integer"/>
-    <parameter id="UNIX_SOCKET" name="UNIX Socket" descr="Full path of the UNIX socket to use for connecting locally" gdatype="string"/>
-    <parameter id="USE_SSL" name="Use SSL to connect" descr="Whether to require SSL or not when connecting" gdatype="boolean"/>
-    <parameter id="ADM_LOGIN" name="Administrator login" descr="Login name (which has the rights to create databases)" gdatype="string"/>
-    <parameter id="ADM_PASSWORD" name="Administrator password" gdatype="string"/>
+    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="string"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="integer"/>
+    <parameter id="UNIX_SOCKET" _name="UNIX Socket" _descr="Full path of the UNIX socket to use for connecting locally" gdatype="string"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to use or not SSL for establishing the connection" gdatype="boolean"/>
+    <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="string"/>
+    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="string"/>
 
 
     <!-- DSN parameters -->
-    <parameter id="DATABASE" name="Database name" descr="The name of a database to create" gdatype="string" null-ok="FALSE"/>
-    <parameter id="ENCODING" name="Encoding" descr="Character set encoding to use in the new database" gdatype="string" source="csets:1"/>
+    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to create" gdatype="string" null-ok="FALSE"/>
+    <parameter id="ENCODING" _name="Encoding" _descr="Character set encoding to use in the new database" gdatype="string" source="csets:1"/>
   </parameters>
   <sources>
     <gda_array name="csets">

@@ -3,9 +3,6 @@ SUBDIRS = sqlite-src
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-sqlite.la
 
-configdir   = $(datadir)/libgda
-config_DATA = sqlite_specs_create_db.xml sqlite_specs_dsn.xml
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
@@ -30,4 +27,11 @@ libgda_sqlite_la_LIBADD = \
 	$(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la \
 	$(LIBGDA_LIBS)
 
-EXTRA_DIST = $(config_DATA)
+xmldir   = $(datadir)/libgda
+xml_in_files = sqlite_specs_create_db.xml.in sqlite_specs_dsn.xml.in
+xml_DATA = $(xml_in_files:.xml.in=.xml)
+
+@INTLTOOL_XML_RULE@
+
+EXTRA_DIST = $(xml_in_files)
+DISTCLEANFILES = $(xml_DATA)

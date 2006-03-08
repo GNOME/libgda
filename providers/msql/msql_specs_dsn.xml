@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<data-set-spec>
-  <parameters>
-    <parameter id="DATABASE" name="Database name" descr="The name of a database to connect to" gdatype="string" null-ok="FALSE"/>
-    <parameter id="HOST" name="Host Name" descr="Host which has the database server running" gdatype="string"/>
-  </parameters>
-</data-set-spec>

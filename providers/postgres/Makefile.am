@@ -1,9 +1,6 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-postgres.la
 
-configdir   = $(datadir)/libgda
-config_DATA = postgres_specs_create_db.xml postgres_specs_dsn.xml
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
@@ -27,4 +24,11 @@ libgda_postgres_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(POSTGRES_LIBS)
 
-EXTRA_DIST = $(config_DATA)
+xmldir   = $(datadir)/libgda
+xml_in_files = postgres_specs_create_db.xml.in postgres_specs_dsn.xml.in
+xml_DATA = $(xml_in_files:.xml.in=.xml)
+
+@INTLTOOL_XML_RULE@
+
+EXTRA_DIST = $(xml_in_files)
+DISTCLEANFILES = $(xml_DATA)

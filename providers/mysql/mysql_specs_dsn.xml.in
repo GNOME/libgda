@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="string" null-ok="FALSE"/>
+    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="string"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="integer"/>
+    <parameter id="UNIX_SOCKET" _name="UNIX Socket" _descr="Full path of the UNIX socket to use for connecting locally" gdatype="string"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to use or not SSL for establishing the connection" gdatype="boolean"/>
+  </parameters>
+</data-set-spec>

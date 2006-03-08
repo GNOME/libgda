@@ -1,9 +1,6 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-mysql.la
 
-configdir   = $(datadir)/libgda
-config_DATA = mysql_specs_create_db.xml mysql_specs_dsn.xml
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
@@ -25,4 +22,11 @@ libgda_mysql_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.la \
 	$(MYSQL_LIBS)
 
-EXTRA_DIST = $(config_DATA)
+xmldir   = $(datadir)/libgda
+xml_in_files = mysql_specs_create_db.xml.in mysql_specs_dsn.xml.in
+xml_DATA = $(xml_in_files:.xml.in=.xml)
+
+@INTLTOOL_XML_RULE@
+
+EXTRA_DIST = $(xml_in_files)
+DISTCLEANFILES = $(xml_DATA)

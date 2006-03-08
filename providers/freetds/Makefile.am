@@ -1,9 +1,6 @@
 providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-freetds.la
 
-configdir   = $(datadir)/libgda
-config_DATA = freetds_specs_dsn.xml
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
@@ -31,5 +28,12 @@ libgda_freetds_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(FREETDS_LIBS)
 
-EXTRA_DIST = $(config_DATA)
+xmldir   = $(datadir)/libgda
+xml_in_files = freetds_specs_dsn.xml.in
+xml_DATA = $(xml_in_files:.xml.in=.xml)
+
+@INTLTOOL_XML_RULE@
+
+EXTRA_DIST = $(xml_in_files)
+DISTCLEANFILES = $(xml_DATA)
 

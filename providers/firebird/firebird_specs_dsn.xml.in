@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="string" null-ok="FALSE"/>
+    <parameter id="CHARACTER_SET" _name="Character Set" _descr="Character set to be used on the connection" gdatype="string"/>
+    <!-- FIXME: pre-set values for the SQL_DIALECT values with human readable values -->
+    <parameter id="SQL_DIALECT" _name="SQL Dialect" _descr="SQL dialect to use on the connection" gdatype="integer"/>
+    <parameter id="PAGE_SIZE" _name="Page Size" _descr="Page size to use on the database" gdatype="integer"/>
+  </parameters>
+</data-set-spec>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="string" null-ok="FALSE"/>
+    <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="string"/>
+  </parameters>
+</data-set-spec>
