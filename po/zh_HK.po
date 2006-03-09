@@ -308,11 +308,11 @@ msgstr "用於資料類型清單的綱要（Schema）是錯誤的"
 
 #: ../libgda/gda-dict.c:2419
 msgid "Can't get list of functions"
-msgstr "無法取得函式清單"
+msgstr "無法取得函數清單"
 
 #: ../libgda/gda-dict.c:2434
 msgid "Schema for list of functions is wrong"
-msgstr "用於函式清單的綱要（Schema）是錯誤的"
+msgstr "用於函數清單的綱要（Schema）是錯誤的"
 
 #: ../libgda/gda-dict.c:2658
 msgid "Can't get list of aggregates"
@@ -402,7 +402,7 @@ msgstr "XML 標記不是 <gda_dict_function>"
 #: ../libgda/gda-dict-function.c:443
 #, c-format
 msgid "More than one return type for function '%s'"
-msgstr "『%s』函式有多於一種回傳類型"
+msgstr "『%s』函數有多於一種回傳類型"
 
 #: ../libgda/gda-dict-function.c:467
 msgid "Missing required attributes for <gda_dict_function>"
@@ -511,7 +511,7 @@ msgstr "GdaDataModel %p 沒有直行 %d"
 msgid ""
 "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
 msgstr ""
-"GdaParameter 被錯誤類型的直行限制著: %s (預期為 %s)"
+"GdaParameter 被錯誤類型的直行限制着: %s (預期為 %s)"
 
 #: ../libgda/gda-parameter-list.c:1075
 msgid "GdaParameterListSource has a NULL data model"
@@ -853,7 +853,7 @@ msgstr "XML 標記不是 <gda_query_ffunc>"
 #: ../libgda/gda-query-field-func.c:901
 #, c-format
 msgid "Wrong number of arguments for function %s"
-msgstr "函式 %s 的引數數目錯誤"
+msgstr "函數 %s 的引數數目錯誤"
 
 #: ../libgda/gda-query-field-func.c:910
 msgid "Missing required attributes for <gda_query_ffunc>"
@@ -861,11 +861,11 @@ msgstr "<gda_query_ffunc> 未有所需的屬性"
 
 #: ../libgda/gda-query-field-func.c:945
 msgid "Don't know how to render function"
-msgstr "不知道如何表現函式"
+msgstr "不知道如何表現函數"
 
 #: ../libgda/gda-query-field-func.c:1044
 msgid "Non-activated function"
-msgstr "未啟動函式"
+msgstr "未啟動函數"
 
 #: ../libgda/gda-query-field-value.c:1073
 msgid "XML Tag is not <gda_query_fval>"
@@ -1021,7 +1021,7 @@ msgstr "如不提供預設值，則必須指定資料類型"
 
 #: ../libgda/gda-query-parsing.c:1746
 msgid "Can't set aggregate or function's arguments"
-msgstr "無法設定聚合（aggregate）或函式的引數"
+msgstr "無法設定聚合（aggregate）或函數的引數"
 
 #: ../libgda/gda-query-target.c:588 ../libgda/gda-query-target.c:596
 msgid "No name"
@@ -1565,7 +1565,7 @@ msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"連線已中止。您必須使用 DSN 提供至少主機、用戶名稱及密碼，格式為 'QUERY=;USER=;PASSWORD=' 。"
+"連線已中止。你必須使用 DSN 提供至少主機、用戶名稱及密碼，格式為 'QUERY=;USER=;PASSWORD=' 。"
 
 #: ../providers/freetds/gda-freetds-provider.c:212
 msgid "Error creating message container."
@@ -1683,7 +1683,7 @@ msgstr "IBM DB2 識別號無效"
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:743 ../testing/gda-diagnose.c:355
 #: ../testing/gda-diagnose.c:440
 msgid "Function"
-msgstr "函式"
+msgstr "函數"
 
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:895
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:923
@@ -2020,7 +2020,7 @@ msgstr "無法猜度表格名稱。"
 #: ../providers/mysql/gda-mysql-recordset.c:779
 #: ../providers/mysql/gda-mysql-recordset.c:781
 msgid "Model does not have at least one non-modified unique key."
-msgstr "此模型沒有至少一個未變更的唯一索引。"
+msgstr "此模型沒有至少一個未更改的唯一索引。"
 
 #: ../providers/mysql/gda-mysql-recordset.c:790
 #: ../providers/mysql/gda-mysql-recordset.c:792
@@ -2347,7 +2347,7 @@ msgstr ""
 
 #: ../providers/postgres/gda-postgres-recordset.c:496
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr "模型中沒有至少一個未變更的唯一鍵。"
+msgstr "模型中沒有至少一個未更改的唯一鍵。"
 
 #: ../providers/postgres/gda-postgres-recordset.c:500
 msgid "Model doesn't have any non-unique values to update."
@@ -2396,7 +2396,7 @@ msgstr "沒有『URI』參數"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:609
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr "如果想移除 SQLite 資料庫，您應自行移除資料庫檔案"
+msgstr "如果想移除 SQLite 資料庫，你應自行移除資料庫檔案"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1001
 msgid "Can't execute PRAGMA table_info()"
@@ -2981,7 +2981,7 @@ msgstr "沒有"
 #.
 #: ../testing/gda-diagnose.c:437
 msgid "GdaServerProvider object's virtual functions"
-msgstr "GdaServerProvider 物件的虛擬函式"
+msgstr "GdaServerProvider 物件的虛擬函數"
 
 #: ../testing/gda-diagnose.c:442
 msgid "Result"
@@ -3211,7 +3211,7 @@ msgstr "此行動需要 GdaDataModel"
 #: ../testing/gda-test-models.c:687
 #, c-format
 msgid "Model %s (name=%s) has changed!"
-msgstr "模型 %s (名稱=%s) 已變更！"
+msgstr "模型 %s (名稱=%s) 已更改！"
 
 #: ../testing/gda-test-models.c:701
 #, c-format

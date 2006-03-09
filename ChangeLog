@@ -1,3 +1,7 @@
+2006-03-09  Chao-Hsiung Liao  <j_h_liau@yahoo.com.tw>
+
+	* configure.in: Added "zh_HK" to ALL_LINGUAS.
+
 2006-03-08  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-parameter-list.c: handle correctly the xml:lang attribute
