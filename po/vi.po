@@ -7,8 +7,8 @@ msgid ""
 ""
 msgstr "Project-Id-Version: libgda Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-28 04:03+0100\n"
-"PO-Revision-Date: 2006-02-28 17:04+1030\n"
+"POT-Creation-Date: 2006-03-10 04:09+0100\n"
+"PO-Revision-Date: 2006-03-10 21:31+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -461,74 +461,74 @@ msgstr "libgda cần GModule nên đang kết thúc..."
 msgid "LibGda must be initialized before any usage."
 msgstr "Phải khởi động LibGda trước khi dùng nó bằng cách nào."
 
-#:../libgda/gda-parameter-list.c:259
+#:../libgda/gda-parameter-list.c:267
 #,c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "Nút gốc của Spec « != 'data-set-spec »: « %s »"
 
-#:../libgda/gda-parameter-list.c:270
+#:../libgda/gda-parameter-list.c:278
 #,c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Thiếu nút <parameters> (các tham số): « %s »"
 
-#:../libgda/gda-parameter-list.c:322
+#:../libgda/gda-parameter-list.c:357
 #,c-format
 msgid "Can't find a data type for parameter '%s'"
 msgstr "Không tìm thấy kiểu dữ liệu cho tham số « %s »."
 
-#:../libgda/gda-parameter-list.c:424
+#:../libgda/gda-parameter-list.c:461
 #,c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "Không tìm thấy trường số %d trong nguồn tên « %s »."
 
-#:../libgda/gda-parameter-list.c:442
+#:../libgda/gda-parameter-list.c:479
 #,c-format
 msgid "Can't find parameter source named '%s'"
 msgstr "Không tìm thấy nguồn tham số tên « %s »."
 
-#:../libgda/gda-parameter-list.c:448
+#:../libgda/gda-parameter-list.c:485
 #,c-format
 msgid ""
 "Parameter source specification should be \"<source name>:<field pos>\": '%s'"
 msgstr "Đặc tả nguồn tham số nên là « <tên nguồn>:<vị trí trường> »: « %s »."
 
-#:../libgda/gda-parameter-list.c:1014
+#:../libgda/gda-parameter-list.c:1052
 #,c-format
 msgid "Missing GdaParameterListNode for param %p"
 msgstr "Thiếu GdaParameterListNode (nút danh sách tham số gda) cho tham số %p."
 
-#:../libgda/gda-parameter-list.c:1027
+#:../libgda/gda-parameter-list.c:1065
 msgid "GdaParameterListNode has a NULL param attribute"
 msgstr "GdaParameterListNode (nút danh sách tham số gda) có thuộc tính tham số RỖNG."
 
-#:../libgda/gda-parameter-list.c:1038
+#:../libgda/gda-parameter-list.c:1076
 msgid "Missing GdaParameterListSource"
 msgstr "Thiếu GdaParameterListSource (nguồn danh sách tham số gda)."
 
-#:../libgda/gda-parameter-list.c:1043
+#:../libgda/gda-parameter-list.c:1081
 msgid ""
 "GdaParameterListSource does not list a GdaParameterListNode as it should"
 msgstr "GdaParameterListSource (nguồn danh sách tham số gda) không liệt kê một "
 "GdaParameterListNode (nút danh sách tham số gda) như nên."
 
-#:../libgda/gda-parameter-list.c:1050
+#:../libgda/gda-parameter-list.c:1088
 #,c-format
 msgid "GdaDataModel %p does not have a column %d"
 msgstr "GdaDataModel (mô hình dữ liệu gda) %p không có cột %d."
 
-#:../libgda/gda-parameter-list.c:1056
+#:../libgda/gda-parameter-list.c:1094
 #,c-format
 msgid ""
 "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
 msgstr "GdaParameter (tham số gda) bị hạn chế bởi một cột kiểu không đúng: %s (còn "
 "ngờ %s)."
 
-#:../libgda/gda-parameter-list.c:1075
+#:../libgda/gda-parameter-list.c:1113
 msgid "GdaParameterListSource has a NULL data model"
 msgstr "GdaParameterListSource (nguồn danh sách tham số gda) có một mô hình dữ liệu "
 "RỖNG."
 
-#:../libgda/gda-parameter-list.c:1083
+#:../libgda/gda-parameter-list.c:1121
 msgid ""
 "GdaParameterListSource references a GdaParameterListNodenot found in the "
 "nodes list"
@@ -536,7 +536,7 @@ msgstr "GdaParameterListSource (nguồn danh sách tham số gda) tham chiếu m
 "GdaParameterListNode (nút danh sách tham số gda) không được tìm trong danh "
 "sách các nút."
 
-#:../libgda/gda-parameter-list.c:1089
+#:../libgda/gda-parameter-list.c:1127
 msgid ""
 "GdaParameterListSource references a GdaParameterListNodewhich does not use "
 "the same data model"
@@ -1359,36 +1359,36 @@ msgstr "Mô hình cho giản đồ có tên cột không đúng: « %s » thay v
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr "Mô hình cho giản đồ có kiểu gda không đúng: « %s » thay vào « %s »."
 
-#:../libgda/gda-util.c:178
+#:../libgda/gda-util.c:286
 #,c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Không thể phân tách lệnh SQL « %s »."
 
-#:../libgda/gda-util.c:211
+#:../libgda/gda-util.c:319
 #,c-format
 msgid "Error while reading %s: %s"
 msgstr "Gặp lỗi khi đọc %s: %s"
 
-#:../libgda/gda-util.c:237
+#:../libgda/gda-util.c:345
 #,c-format
 msgid "Could not create file %s"
 msgstr "Không thể tạo tập tin %s."
 
-#:../libgda/gda-value.c:2164
+#:../libgda/gda-value.c:2160
 msgid "TRUE"
 msgstr "ĐÚNG"
 
-#:../libgda/gda-value.c:2166
+#:../libgda/gda-value.c:2162
 msgid "FALSE"
 msgstr "SAI"
 
 # Variable: don't translate / Biến: đừng dịch
-#:../libgda/gda-value.c:2252
+#:../libgda/gda-value.c:2248
 #,c-format
 msgid "(%s %p)"
 msgstr "(%s %p)"
 
-#:../libgda/gda-value.c:2256
+#:../libgda/gda-value.c:2252
 msgid "NULL GObject"
 msgstr "Đối tượng GObject RỖNG"
 
@@ -1412,15 +1412,15 @@ msgstr "Thiếu thuộc tính ID trong <gda_graph> (đồ thị gda)."
 msgid "XML Tag is not <gda_graph_item>"
 msgstr "Thẻ XML không phải là <gda_graph_item> (mục đồ thị gda)."
 
-#:../libgda/handlers/gda-handler-bin.c:117
+#:../libgda/handlers/gda-handler-bin.c:118
 msgid "Binary handler"
 msgstr "Bộ quản lý nhị phân"
 
-#:../libgda/handlers/gda-handler-bin.c:123
+#:../libgda/handlers/gda-handler-bin.c:124
 msgid "InternalBin"
 msgstr "NhịPhânCụcBộ"
 
-#:../libgda/handlers/gda-handler-bin.c:124
+#:../libgda/handlers/gda-handler-bin.c:125
 msgid "Binary representation"
 msgstr "Đại diện nhị phân"
 
@@ -1444,15 +1444,15 @@ msgstr "KiểuSốCụcBộ"
 msgid "Numerical representation"
 msgstr "Đại diện thuộc số"
 
-#:../libgda/handlers/gda-handler-string.c:115
+#:../libgda/handlers/gda-handler-string.c:116
 msgid "Strings handler"
 msgstr "Bộ quản lý chuỗi"
 
-#:../libgda/handlers/gda-handler-string.c:120
+#:../libgda/handlers/gda-handler-string.c:121
 msgid "InternalString"
 msgstr "ChuỗiCụcBộ"
 
-#:../libgda/handlers/gda-handler-string.c:121
+#:../libgda/handlers/gda-handler-string.c:122
 msgid "Strings representation"
 msgstr "Đại diện chuỗi"
 
@@ -1539,10 +1539,10 @@ msgstr "Blob đã được đóng."
 #:../providers/firebird/gda-firebird-provider.c:664
 #:../providers/msql/gda-msql-provider.c:606
 #:../providers/msql/gda-msql-provider.c:612
-#:../providers/mysql/gda-mysql-provider.c:1823
-#:../providers/mysql/gda-mysql-provider.c:1831
-#:../providers/mysql/gda-mysql-provider.c:1911
-#:../providers/mysql/gda-mysql-provider.c:1919
+#:../providers/mysql/gda-mysql-provider.c:1833
+#:../providers/mysql/gda-mysql-provider.c:1841
+#:../providers/mysql/gda-mysql-provider.c:1931
+#:../providers/mysql/gda-mysql-provider.c:1939
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Cần tên bảng nhưng chưa được xác định trong danh sách tham số."
 
@@ -1759,8 +1759,8 @@ msgid "Invalid LDAP handle"
 msgstr "Bộ quản lý LDAP không hợp lệ."
 
 #:../providers/ldap/gda-ldap-recordset.c:70
-#:../providers/mysql/gda-mysql-recordset.c:228
-#:../providers/mysql/gda-mysql-recordset.c:350
+#:../providers/mysql/gda-mysql-recordset.c:229
+#:../providers/mysql/gda-mysql-recordset.c:351
 #:../providers/postgres/gda-postgres-recordset.c:197
 #:../providers/postgres/gda-postgres-recordset.c:571
 msgid "Row number out of range"
@@ -1768,7 +1768,7 @@ msgstr "Số hàng vượt ngoài phạm vi."
 
 #:../providers/ldap/gda-ldap-recordset.c:283
 #:../providers/msql/gda-msql-recordset.c:203
-#:../providers/mysql/gda-mysql-recordset.c:414
+#:../providers/mysql/gda-mysql-recordset.c:415
 #:../providers/oracle/gda-oracle-recordset.c:470
 #:../providers/postgres/gda-postgres-recordset.c:240
 msgid "Attempt to insert a row with an invalid number of columns"
@@ -1944,15 +1944,15 @@ msgstr "Bạn không thể cung cấp một « UNIX_SOCKET » (ổ cắm Unix) n
 "hoặc là « HOST » (máy) hoặc là « PORT » (cổng)."
 
 #:../providers/mysql/gda-mysql-provider.c:412
-#:../providers/mysql/gda-mysql-provider.c:1814
-#:../providers/mysql/gda-mysql-provider.c:1902
-#:../providers/mysql/gda-mysql-recordset.c:217
-#:../providers/mysql/gda-mysql-recordset.c:290
-#:../providers/mysql/gda-mysql-recordset.c:344
-#:../providers/mysql/gda-mysql-recordset.c:397
-#:../providers/mysql/gda-mysql-recordset.c:525
-#:../providers/mysql/gda-mysql-recordset.c:684
+#:../providers/mysql/gda-mysql-provider.c:1824
+#:../providers/mysql/gda-mysql-provider.c:1922
+#:../providers/mysql/gda-mysql-recordset.c:218
+#:../providers/mysql/gda-mysql-recordset.c:291
+#:../providers/mysql/gda-mysql-recordset.c:345
+#:../providers/mysql/gda-mysql-recordset.c:398
+#:../providers/mysql/gda-mysql-recordset.c:526
 #:../providers/mysql/gda-mysql-recordset.c:685
+#:../providers/mysql/gda-mysql-recordset.c:686
 msgid "Invalid MySQL handle"
 msgstr "Bộ quản lý MySQL không hợp lệ."
 
@@ -1969,17 +1969,17 @@ msgstr "Bộ quản lý MySQL không hợp lệ."
 #:../providers/mysql/gda-mysql-provider.c:1162
 #:../providers/mysql/gda-mysql-provider.c:1219
 #:../providers/mysql/gda-mysql-provider.c:1252
-#:../providers/mysql/gda-mysql-provider.c:2094
+#:../providers/mysql/gda-mysql-provider.c:2201
 msgid "Invalid MYSQL handle"
 msgstr "Bộ quản lý MYSQL không hợp lệ."
 
 #:../providers/mysql/gda-mysql-provider.c:668
-#:../providers/postgres/gda-postgres-provider.c:938
+#:../providers/postgres/gda-postgres-provider.c:933
 msgid "Missing parameter 'DATABASE'"
 msgstr "Thiếu tham số « DATABASE » (cơ sở dữ liệu)."
 
 #:../providers/mysql/gda-mysql-provider.c:697
-#:../providers/postgres/gda-postgres-provider.c:992
+#:../providers/postgres/gda-postgres-provider.c:987
 #:../providers/sqlite/gda-sqlite-provider.c:597
 msgid "Method not handled by this provider"
 msgstr "Bộ cung cấp này không quản lý phương pháp đó."
@@ -1990,76 +1990,76 @@ msgstr "Bộ cung cấp này không quản lý phương pháp đó."
 #:../providers/oracle/gda-oracle-provider.c:889
 #:../providers/oracle/gda-oracle-provider.c:973
 #:../providers/oracle/gda-oracle-provider.c:1034
-#:../providers/postgres/gda-postgres-provider.c:1384
+#:../providers/postgres/gda-postgres-provider.c:1379
 #:../providers/sqlite/gda-sqlite-provider.c:696
 msgid "Transactions are not supported in read-only mode"
 msgstr "Không hỗ trợ giao dịch trong chế độ chỉ đọc."
 
-#:../providers/mysql/gda-mysql-recordset.c:297
+#:../providers/mysql/gda-mysql-recordset.c:298
 #:../providers/bdb/gda-bdb-recordset.c:113
 #,c-format
 msgid "Row number out of range 0 - %d"
 msgstr "Số thứ tự hàng vượt ngoài phạm vi - %d."
 
-#:../providers/mysql/gda-mysql-recordset.c:356
+#:../providers/mysql/gda-mysql-recordset.c:357
 #:../providers/postgres/gda-postgres-recordset.c:577
 #:../providers/bdb/gda-bdb-recordset.c:175
 msgid "Column number out of range"
 msgstr "Số thứ tự cột vượt ngoài phạm vi."
 
-#:../providers/mysql/gda-mysql-recordset.c:407
-#:../providers/mysql/gda-mysql-recordset.c:544
-#:../providers/mysql/gda-mysql-recordset.c:546
+#:../providers/mysql/gda-mysql-recordset.c:408
+#:../providers/mysql/gda-mysql-recordset.c:545
+#:../providers/mysql/gda-mysql-recordset.c:547
 msgid "Table name could not be guessed"
 msgstr "Không thể đoán tên bảng."
 
-#:../providers/mysql/gda-mysql-recordset.c:429
-#:../providers/mysql/gda-mysql-recordset.c:435
-#:../providers/mysql/gda-mysql-recordset.c:561
-#:../providers/mysql/gda-mysql-recordset.c:563
-#:../providers/mysql/gda-mysql-recordset.c:569
+#:../providers/mysql/gda-mysql-recordset.c:430
+#:../providers/mysql/gda-mysql-recordset.c:436
+#:../providers/mysql/gda-mysql-recordset.c:562
+#:../providers/mysql/gda-mysql-recordset.c:564
+#:../providers/mysql/gda-mysql-recordset.c:570
 msgid "Can not synchronize array with MySQL result set"
 msgstr "Không thể đồng bộ hóa mảng với bộ kết quả MySQL."
 
-#:../providers/mysql/gda-mysql-recordset.c:496
+#:../providers/mysql/gda-mysql-recordset.c:497
 msgid "Can not append row to data model"
 msgstr "Không thể phụ thêm hàng vào mô hình dữ liệu."
 
-#:../providers/mysql/gda-mysql-recordset.c:535
-#:../providers/mysql/gda-mysql-recordset.c:537
-#:../providers/mysql/gda-mysql-recordset.c:695
-#:../providers/mysql/gda-mysql-recordset.c:697
+#:../providers/mysql/gda-mysql-recordset.c:536
+#:../providers/mysql/gda-mysql-recordset.c:538
+#:../providers/mysql/gda-mysql-recordset.c:696
+#:../providers/mysql/gda-mysql-recordset.c:698
 #:../providers/postgres/gda-postgres-recordset.c:330
 #:../providers/postgres/gda-postgres-recordset.c:430
 msgid "Given row doesn't belong to the model."
 msgstr "Hàng đã đưa không thuộc về mô hình đó."
 
-#:../providers/mysql/gda-mysql-recordset.c:621
-#:../providers/mysql/gda-mysql-recordset.c:623
+#:../providers/mysql/gda-mysql-recordset.c:622
+#:../providers/mysql/gda-mysql-recordset.c:624
 #:../providers/postgres/gda-postgres-recordset.c:369
 msgid "Model doesn't have at least one unique key."
 msgstr "Mô hình không có khóa duy nhất nào (cần ít nhất một điều)."
 
-#:../providers/mysql/gda-mysql-recordset.c:651
-#:../providers/mysql/gda-mysql-recordset.c:653
+#:../providers/mysql/gda-mysql-recordset.c:652
+#:../providers/mysql/gda-mysql-recordset.c:654
 msgid "Can not remove row from data model"
 msgstr "Không thể gỡ bỏ hàng ra mô hình dữ liệu."
 
-#:../providers/mysql/gda-mysql-recordset.c:704
-#:../providers/mysql/gda-mysql-recordset.c:706
+#:../providers/mysql/gda-mysql-recordset.c:705
+#:../providers/mysql/gda-mysql-recordset.c:707
 #:../providers/postgres/gda-postgres-recordset.c:233
 #:../providers/postgres/gda-postgres-recordset.c:337
 #:../providers/postgres/gda-postgres-recordset.c:437
 msgid "Table name could not be guessed."
 msgstr "Không thể đoán tên bảng."
 
-#:../providers/mysql/gda-mysql-recordset.c:779
-#:../providers/mysql/gda-mysql-recordset.c:781
+#:../providers/mysql/gda-mysql-recordset.c:780
+#:../providers/mysql/gda-mysql-recordset.c:782
 msgid "Model does not have at least one non-modified unique key."
 msgstr "Mô hình không có khóa duy nhất không được sửa đổi nào (cần ít nhất một điều)."
 
-#:../providers/mysql/gda-mysql-recordset.c:790
-#:../providers/mysql/gda-mysql-recordset.c:792
+#:../providers/mysql/gda-mysql-recordset.c:791
+#:../providers/mysql/gda-mysql-recordset.c:793
 msgid "Model does not have any non-unique values to update."
 msgstr "Mô hình không có giá trị không duy nhất cần cập nhật."
 
@@ -2361,22 +2361,22 @@ msgid "Provider for Oracle databases"
 msgstr "Bộ cung cấp cơ sở dữ liệu Oracle."
 
 #:../providers/postgres/gda-postgres-blob.c:134
-#:../providers/postgres/gda-postgres-provider.c:723
-#:../providers/postgres/gda-postgres-provider.c:740
-#:../providers/postgres/gda-postgres-provider.c:828
-#:../providers/postgres/gda-postgres-provider.c:1346
-#:../providers/postgres/gda-postgres-provider.c:1453
+#:../providers/postgres/gda-postgres-provider.c:718
+#:../providers/postgres/gda-postgres-provider.c:735
+#:../providers/postgres/gda-postgres-provider.c:823
+#:../providers/postgres/gda-postgres-provider.c:1341
+#:../providers/postgres/gda-postgres-provider.c:1448
 #:../providers/postgres/gda-postgres-recordset.c:188
 #:../providers/postgres/gda-postgres-recordset.c:562
 #:../providers/postgres/gda-postgres-recordset.c:692
 msgid "Invalid PostgreSQL handle"
 msgstr "Bộ quản lý PostgreSQL không hợp lệ."
 
-#:../providers/postgres/gda-postgres-provider.c:1393
+#:../providers/postgres/gda-postgres-provider.c:1388
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr "Không hỗ trợ giao dịch trong cấp cô lập chưa gài vào đã đọc."
 
-#:../providers/postgres/gda-postgres-provider.c:1396
+#:../providers/postgres/gda-postgres-provider.c:1391
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "Không hỗ trợ giao dịch trong cấp cô lập đã đọc có thể lập lại."
 
@@ -2418,6 +2418,7 @@ msgstr "Bộ quản lý SQLite không hợp lệ."
 #:../providers/sqlite/gda-sqlite-provider.c:986
 #:../providers/sqlite/gda-sqlite-provider.c:1207
 #:../providers/sqlite/gda-sqlite-provider.c:1244
+#:../providers/sqlite/gda-sqlite-provider.c:1369
 msgid "Invalid SQLITE handle"
 msgstr "Bộ quản lý SQLITE không hợp lệ."
 
@@ -2434,6 +2435,7 @@ msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "Để gỡ bỏ cơ sở dữ liệu SQLite, bạn nên tự gỡ bỏ tập tin cơ sở dữ liệu."
 
 #:../providers/sqlite/gda-sqlite-provider.c:1008
+#:../providers/sqlite/gda-sqlite-provider.c:1399
 msgid "Can't execute PRAGMA table_info()"
 msgstr "Không thể thực hiện « table_info() » (thông tin bảng) kiểu PRAGMA."
 
@@ -2441,6 +2443,10 @@ msgstr "Không thể thực hiện « table_info() » (thông tin bảng) kiểu
 #,c-format
 msgid "Can't find table %s"
 msgstr "Không tìm thấy bảng %s."
+
+#:../providers/sqlite/gda-sqlite-provider.c:1472
+msgid "Can't execute PRAGMA foreign_key_list()"
+msgstr "Không thể thực hiện « foreign_key_list() » (danh sách khoá lạ) kiểu PRAGMA."
 
 #:../providers/sqlite/libmain.c:42
 msgid "Provider for SQLite databases"
@@ -3101,21 +3107,21 @@ msgstr "« get_value_from_sql() » (lấy giá trị từ SQL)"
 msgid "get_value_from_str()"
 msgstr "« get_value_from_str() » (lấy giá trị từ chuỗi)"
 
-#:../testing/gda-diagnose.c:1153
+#:../testing/gda-diagnose.c:1162
 #,c-format
 msgid "%s (init value)"
 msgstr "%s (giá trị ban đầu)"
 
-#:../testing/gda-diagnose.c:1284
+#:../testing/gda-diagnose.c:1299
 #,c-format
 msgid "Datasource '%s' details"
 msgstr "Chi tiết về nguồn dữ liệu « %s »"
 
-#:../testing/gda-diagnose.c:1293
+#:../testing/gda-diagnose.c:1308
 msgid "Datasource's information"
 msgstr "Thông tin về nguồn dữ liệu."
 
-#:../testing/gda-diagnose.c:1303
+#:../testing/gda-diagnose.c:1318
 msgid "Can't open connection."
 msgstr "Không thể mở kết nối."
 
