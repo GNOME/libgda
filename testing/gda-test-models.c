@@ -10,6 +10,7 @@
 /* options */
 gchar *dir = NULL;
 gchar *infile = NULL;
+extern xmlDtdPtr gda_array_dtd;
 
 static GOptionEntry entries[] = {
 	{ "output-dir", 'o', 0, G_OPTION_ARG_STRING, &dir, "Output dir", "output directory"},
@@ -375,8 +376,7 @@ test_models (TestConfig *config)
 static void
 action_load_file (TestConfig *config, const gchar *model_name, xmlNodePtr node, gboolean expected_res)
 {
-	GdaDataModel *model;
-	GError *error = NULL;
+	GdaDataModel *import = NULL;
 	gchar *file;
 	gchar *errmsg = NULL;
 
@@ -391,17 +391,35 @@ action_load_file (TestConfig *config, const gchar *model_name, xmlNodePtr node, 
 		if (!doc) 
 			errmsg = g_strdup_printf (_("Can't load file '%s'"), file);
 		else {
-			model = gda_data_model_array_new_from_xml_node (xmlDocGetRootElement (doc), &error);
-			if (model) 
-				register_model (config, model, model_name);
-			else {
-				errmsg = g_strdup (error && error->message ? error->message : _("Unknown error"));
-				if (error)
-					g_error_free (error);
+			GSList *errors;
+
+			import = gda_data_model_import_new_xml_node (xmlDocGetRootElement (doc));
+			errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import));
+			if (errors) {
+				GError *err = (GError *) errors->data;
+
+				errmsg = g_strdup (err && err->message ? err->message : _("Unknown error"));
+				g_object_unref (import);
+				import = NULL;
 			}
+
 			xmlFreeDoc (doc);
 		}
 		g_free (file);
+	}
+
+	if (import) {
+		GdaDataModel *model;
+		GError *error = NULL;
+
+		model = gda_data_model_array_copy_model (import, &error);
+		gda_object_set_id (GDA_OBJECT (model), gda_object_get_id (GDA_OBJECT (import)));
+		if (model)
+			register_model (config, model, model_name);
+		else {
+			errmsg = g_strdup (error && error->message ? error->message : _("Unknown error"));
+			g_error_free (error);
+		}
 	}
 
 	handle_error (config, errmsg, expected_res);

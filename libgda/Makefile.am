@@ -35,6 +35,7 @@ gda_headers = \
 	gda-data-model-extra.h \
 	gda-data-model-filter-sql.h \
 	gda-data-model-hash.h \
+	gda-data-model-import.h \
 	gda-data-model-index.h \
 	gda-data-model-iter.h \
 	gda-data-model-private.h \
@@ -103,6 +104,7 @@ libgda_sources =  \
 	gda-data-model.c \
 	gda-data-model-filter-sql.c \
 	gda-data-model-hash.c \
+	gda-data-model-import.c \
 	gda-data-model-index.c \
 	gda-data-model-iter.c \
 	gda-data-model-query.c \
@@ -208,7 +210,7 @@ CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers) $(libgda_built_cfiles)
 
-DTD_FILES = libgda-dict.dtd
+DTD_FILES = libgda-dict.dtd libgda-array.dtd
 dtddir=$(LIBGDA_DTDDIR)
 dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \

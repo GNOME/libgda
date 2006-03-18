@@ -71,21 +71,25 @@ typedef enum {
 	GDA_VALUE_TYPE_BIGUINT,
 	GDA_VALUE_TYPE_BINARY,
 	GDA_VALUE_TYPE_BLOB,
+
 	GDA_VALUE_TYPE_BOOLEAN,
 	GDA_VALUE_TYPE_DATE,
 	GDA_VALUE_TYPE_DOUBLE,
 	GDA_VALUE_TYPE_GEOMETRIC_POINT,
 	GDA_VALUE_TYPE_GOBJECT,
+
 	GDA_VALUE_TYPE_INTEGER,
 	GDA_VALUE_TYPE_LIST,
 	GDA_VALUE_TYPE_MONEY,
 	GDA_VALUE_TYPE_NUMERIC,
 	GDA_VALUE_TYPE_SINGLE,
+
 	GDA_VALUE_TYPE_SMALLINT,
 	GDA_VALUE_TYPE_SMALLUINT,
 	GDA_VALUE_TYPE_STRING,
 	GDA_VALUE_TYPE_TIME,
 	GDA_VALUE_TYPE_TIMESTAMP,
+
 	GDA_VALUE_TYPE_TINYINT,
 	GDA_VALUE_TYPE_TINYUINT,
 	GDA_VALUE_TYPE_TYPE,
@@ -151,6 +155,8 @@ GdaValueType                      gda_value_get_type(GdaValue *value);
 GType                             gda_value_convert_gdatype_to_gtype (GdaValueType type);
 GdaValueType                      gda_value_convert_gtype_to_gdatype (GType type);
 
+gboolean                          gda_value_type_transformable (GdaValueType src_type, GdaValueType dest_type, gboolean strict);
+gboolean                          gda_value_transform (const GdaValue *src, GdaValue *dest);
 
 GdaValue                         *gda_value_new_null (void);
 GdaValue                         *gda_value_new_bigint (gint64 val);

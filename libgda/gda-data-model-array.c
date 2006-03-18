@@ -308,193 +308,50 @@ gda_data_model_array_new (gint cols)
 	return model;
 }
 
-typedef struct {
-	gchar        *name;
-	gchar        *title;
-	gchar        *caption;
-	gchar        *dbms_type;
-	GdaValueType  gdatype;
-	gint          size;
-	gint          scale;
-	gboolean      pkey;
-	gboolean      unique;
-	gboolean      nullok;
-	gboolean      autoinc;
-	gchar        *table;
-	gchar        *ref;
-} XmlColumnSpec;
-
-static void
-clean_field_specs (GSList *fields)
-{
-	GSList *list;
-	XmlColumnSpec *spec;
-
-	list = fields;
-	while (list) {
-		spec = (XmlColumnSpec*)(list->data);
-		g_free (spec->name);
-		g_free (spec->title);
-		g_free (spec->caption);
-		g_free (spec->dbms_type);
-		g_free (spec->table);
-		g_free (spec->ref);
-		g_free (spec);
-
-		list = g_slist_next (list);
-	}
-	g_slist_free (fields);
-}
-
 /**
- * gda_data_model_array_new_from_xml_node
- * @node: an XML node representing a &lt;data-array&gt; tag
- * @error: a place to store errors or %NULL
+ * gda_data_model_array_copy_model
+ * @src: a #GdaDataModel to copy data from
+ * @error: a place to store errors, or %NULL
  *
- * Creates a new #GdaDataModel with the data stored in @node
+ * Makes a copy of @src into a new #GdaDataModelArray object
  *
- * Returns: a pointer to the newly created #GdaDataModel, or %NULL if an error occured
+ * Returns: a new data model, or %NULL if an error occured
  */
 GdaDataModel *
-gda_data_model_array_new_from_xml_node (xmlNodePtr node, GError **error)
+gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 {
 	GdaDataModel *model;
-	xmlNodePtr cur;
-	gint nbfields = 0;
-	GSList *fields = NULL;
-	GSList *list;
-	gint pos;
-	gchar *str;
+	gint nbfields, i;
 
-	g_return_val_if_fail (node, NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (src), NULL);
 
-	if (strcmp (node->name, "gda_array")) {
-		g_set_error (error, 0, 0, _("Node is not <gda_array> but <%s>"), node->name);
-		return NULL;
-	}
-
-	for (cur = node->children; cur; cur=cur->next) {
-		if (xmlNodeIsText (cur))
-			continue;
-		if (!strcmp (cur->name, "gda_array_field")) {
-			XmlColumnSpec *spec;
-
-			spec = g_new0 (XmlColumnSpec, 1);
-			fields = g_slist_append (fields, spec);
-
-			spec->name = xmlGetProp (cur, "name");
-			spec->title = xmlGetProp (cur, "title");
-			if (!spec->title && spec->name)
-				spec->title = g_strdup (spec->name);
-
-			spec->caption = xmlGetProp (cur, "caption");
-			spec->dbms_type = xmlGetProp (cur, "dbms_type");
-			str = xmlGetProp (cur, "gdatype");
-			if (str) {
-				spec->gdatype = gda_type_from_string (str);
-				g_free (str);
-			}
-			else {
-				g_set_error (error, 0, 0, _("No \"gdatype\" attribute specified in <gda_array_field>"));
-				clean_field_specs (fields);
-				return NULL;
-			}
-			str = xmlGetProp (cur, "size");
-			if (str) {
-				spec->size = atoi (str);
-				g_free (str);
-			}
-			str = xmlGetProp (cur, "scale");
-			if (str) {
-				spec->scale = atoi (str);
-				g_free (str);
-			}
-			str = xmlGetProp (cur, "pkey");
-			if (str) {
-				spec->pkey = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
-				g_free (str);
-			}
-			str = xmlGetProp (cur, "unique");
-			if (str) {
-				spec->unique = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
-				g_free (str);
-			}
-			str = xmlGetProp (cur, "nullok");
-			spec->nullok = TRUE;
-			if (str) {
-				spec->nullok = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
-				g_free (str);
-			}
-			str = xmlGetProp (cur, "auto_increment");
-			if (str) {
-				spec->autoinc = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
-				g_free (str);
-			}
-			spec->table = xmlGetProp (cur, "table");
-			spec->ref = xmlGetProp (cur, "ref");
-
-			nbfields ++;
-			continue;
-		}
-		if (!strcmp (cur->name, "gda_array_data"))
-			break;
-	}
-
-	if ((nbfields == 0) || !cur) {
-		g_set_error (error, 0, 0, _("No <gda_array_field> specified in <gda_array>"));
-		clean_field_specs (fields);
-		return NULL;
-	}
-
-	/* model creation */
+	nbfields = gda_data_model_get_n_columns (src);
 	model = gda_data_model_array_new (nbfields);
-	str = xmlGetProp (node, "id");
-	if (str) {
-		gda_object_set_id (GDA_OBJECT (model), str+2);
-		g_free (str);
+
+	gda_object_set_name (GDA_OBJECT (model), gda_object_get_name (GDA_OBJECT (src)));
+	gda_object_set_description (GDA_OBJECT (model), gda_object_get_description (GDA_OBJECT (src)));
+	for (i = 0; i < nbfields; i++) {
+		GdaColumn *copycol, *srccol;
+
+		srccol = gda_data_model_describe_column (src, i);
+		copycol = gda_data_model_describe_column (model, i);
+
+		gda_column_set_title (copycol, gda_column_get_title (srccol));
+		gda_column_set_defined_size (copycol, gda_column_get_defined_size (srccol));
+		gda_column_set_name (copycol, gda_column_get_name (srccol));
+		gda_column_set_caption (copycol, gda_column_get_caption (srccol));
+		gda_column_set_scale (copycol, gda_column_get_scale (srccol));
+		gda_column_set_dbms_type (copycol, gda_column_get_dbms_type (srccol));
+		gda_column_set_gda_type (copycol, gda_column_get_gda_type (srccol));
+		gda_column_set_position (copycol, gda_column_get_position (srccol));
 	}
-	str = xmlGetProp (node, "name");
-	if (str) {
-		gda_object_set_name (GDA_OBJECT (model), str);
-		g_free (str);
-	}
 
-	list = fields;
-	pos = 0;
-	while (list) {
-		GdaColumn *column;
-		XmlColumnSpec *spec;
-
-		spec = (XmlColumnSpec *)(list->data);
-		column = gda_data_model_describe_column (model, pos);
-		gda_column_set_title (column, spec->title);
-		gda_column_set_name (column, spec->name);
-		gda_column_set_defined_size (column, spec->size);
-		gda_column_set_caption (column, spec->caption);
-		gda_column_set_dbms_type (column, spec->dbms_type);
-		gda_column_set_scale (column, spec->scale);
-		gda_column_set_gda_type (column, spec->gdatype);
-		gda_column_set_allow_null (column, spec->nullok);
-		gda_column_set_primary_key (column, spec->pkey);
-		gda_column_set_unique_key (column, spec->unique);
-		gda_column_set_table (column, spec->table);
-		gda_column_set_references (column, spec->ref);
-
-		list = g_slist_next (list);
-		pos++;
-	}
-	clean_field_specs (fields);
-
-	if (! gda_data_model_add_data_from_xml_node (model, cur, error)) {
+	if (! gda_data_model_import_from_model (model, src, NULL, error)) {
 		g_object_unref (model);
-		return NULL;
+		model = NULL;
 	}
-
-#ifdef GDA_DEBUG_NO
-	g_print ("==== Loaded data model ====\n");
-	gda_data_model_dump (model, stdout);
-	g_print ("===========================\n");
-#endif
+	else
+		gda_data_model_dump (model, stdout);
 
 	return model;
 }

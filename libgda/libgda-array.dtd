@@ -1,0 +1,26 @@
+<!--      libgda-array.dtd
+          DTD for libgda's arrays
+          Version 1.0
+          Copyright (C) 2006 Vivien Malerba
+-->
+
+<!ELEMENT gda_array (gda_array_field*, gda_array_data?)>
+<!ATTLIST gda_array
+	  id NMTOKEN #IMPLIED
+	  name CDATA #IMPLIED>
+
+<!ELEMENT gda_array_field EMPTY>
+<!ATTLIST gda_array_field
+	  id NMTOKEN #IMPLIED
+	  name CDATA #IMPLIED
+	  title CDATA #IMPLIED
+	  gdatype NMTOKEN #REQUIRED
+	  size NMTOKEN #IMPLIED
+	  nullok (TRUE|FALSE) #IMPLIED>
+
+<!ELEMENT gda_array_data (gda_array_row*)>
+
+<!ELEMENT gda_array_row (gda_value*)>
+
+<!ELEMENT gda_value (#PCDATA)>
+

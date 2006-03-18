@@ -45,12 +45,12 @@ An implementation of #GdaDataModel based on an array
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_array_new_from_xml_node ##### -->
+<!-- ##### FUNCTION gda_data_model_array_copy_model ##### -->
 <para>
 
 </para>
 
-@node: 
+@src: 
 @error: 
 @Returns: 
 

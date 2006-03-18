@@ -25,6 +25,7 @@
 #include "gda-query.h"
 #include "gda-marshal.h"
 #include "gda-data-model.h"
+#include "gda-data-model-import.h"
 #include "gda-parameter.h"
 #include "gda-entity-field.h"
 #include "gda-referer.h"
@@ -416,17 +417,25 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 
 			if (!strcmp (cur->name, "gda_array")) {
 				GdaDataModel *model;
+				GSList *errors;
 
-				str = xmlGetProp(cur, "name");
-				model = gda_data_model_array_new_from_xml_node (cur, error);
-				if (model) {
-					sources = g_slist_prepend (sources, model);
-					if (str)
-						gda_object_set_name (GDA_OBJECT (model), str);
+				model = gda_data_model_import_new_xml_node (cur);
+				errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (model));
+				if (errors) {
+					GError *err = (GError *) errors->data;
+					g_set_error (error, 0, 0, err->message);
+					g_object_unref (model);
+					model = NULL;
+					allok = FALSE;
 				}
-				else 
-					allok = FALSE; /* error has already been set */
-				g_free (str);
+				else  {
+					sources = g_slist_prepend (sources, model);
+					str = xmlGetProp(cur, "name");
+					if (str) {
+						gda_object_set_name (GDA_OBJECT (model), str);
+						g_free (str);
+					}
+				}
 			}
 		}
 	}
@@ -571,7 +580,7 @@ gda_parameter_list_get_spec (GdaParameterList *paramlist)
 	while (list) {
 		xmlNodePtr node;
 		GdaParameter *param = GDA_PARAMETER (list->data);
-		GdaDictType *dtype;
+		/*GdaDictType *dtype;*/
 		gchar *str;
 		const gchar *cstr;
 

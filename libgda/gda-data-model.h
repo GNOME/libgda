@@ -21,8 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_data_model_h__)
-#  define __gda_data_model_h__
+#ifndef __GDA_DATA_MODEL_H__
+#define __GDA_DATA_MODEL_H__
 
 #include <glib-object.h>
 #include <libxml/parser.h>
@@ -55,6 +55,11 @@ typedef enum {
 	GDA_DATA_MODEL_HINT_END_BATCH_UPDATE,
 	GDA_DATA_MODEL_HINT_REFRESH,
 } GdaDataModelHint;
+
+typedef enum {
+	GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
+	GDA_DATA_MODEL_IO_TEXT_SEPARATED,
+} GdaDataModelIOFormat;
 
 enum {
 	GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
@@ -115,9 +120,9 @@ void                gda_data_model_set_column_title       (GdaDataModel *model, 
 const GdaValue     *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
 guint               gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
-gboolean            gda_data_model_iter_at_row            (GdaDataModel *model, GdaDataModelIter *iter, gint row);
-gboolean            gda_data_model_iter_next              (GdaDataModel *model, GdaDataModelIter *iter);
-gboolean            gda_data_model_iter_prev              (GdaDataModel *model, GdaDataModelIter *iter);
+gboolean            gda_data_model_move_iter_at_row       (GdaDataModel *model, GdaDataModelIter *iter, gint row);
+gboolean            gda_data_model_move_iter_next         (GdaDataModel *model, GdaDataModelIter *iter);
+gboolean            gda_data_model_move_iter_prev         (GdaDataModel *model, GdaDataModelIter *iter);
 void                gda_data_model_freeze                 (GdaDataModel *model);
 void                gda_data_model_thaw                   (GdaDataModel *model);
 gboolean            gda_data_model_set_value_at           (GdaDataModel *model, gint col, gint row, 
@@ -132,14 +137,23 @@ gint                gda_data_model_get_row_from_values    (GdaDataModel *model, 
 void                gda_data_model_send_hint              (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value);
 
 /* contents saving and loading */
-gchar              *gda_data_model_to_text_separated      (GdaDataModel *model, const gint *cols, gint nb_cols,
-							   gchar sep);
-gchar              *gda_data_model_to_xml                 (GdaDataModel *model, const gint *cols, gint nb_cols,
-							   const gchar *name);
-xmlNodePtr          gda_data_model_to_xml_node            (GdaDataModel *model, const gint *cols, gint nb_cols, 
-							   const gchar *name);
-gboolean            gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GError **error);
+gchar              *gda_data_model_export_to_string       (GdaDataModel *model, GdaDataModelIOFormat format, 
+							   const gint *cols, gint nb_cols, GdaParameterList *options);
+gboolean            gda_data_model_export_to_file         (GdaDataModel *model, GdaDataModelIOFormat format, 
+							   const gchar *file,
+							   const gint *cols, gint nb_cols, 
+							   GdaParameterList *options, GError **error);
 
+gboolean            gda_data_model_import_from_model      (GdaDataModel *to, GdaDataModel *from, 
+							   GHashTable *cols_trans, GError **error);
+gboolean            gda_data_model_import_from_string     (GdaDataModel *model,
+							   const gchar *string, GHashTable *cols_trans,
+							   GdaParameterList *options, GError **error);
+gboolean            gda_data_model_import_from_file       (GdaDataModel *model,
+							   const gchar *file, GHashTable *cols_trans,
+							   GdaParameterList *options, GError **error);
+
+/* debug functions */
 void                gda_data_model_dump                   (GdaDataModel *model, FILE *to_stream);
 gchar              *gda_data_model_dump_as_string         (GdaDataModel *model);
 

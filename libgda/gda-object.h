@@ -66,12 +66,12 @@ struct _GdaObjectClass
 GType        gda_object_get_type        (void);
 GdaDict     *gda_object_get_dict        (GdaObject *object);
 
-void         gda_object_set_id   (GdaObject *object, const gchar *strid);
+void         gda_object_set_id          (GdaObject *object, const gchar *strid);
 void         gda_object_set_name        (GdaObject *object, const gchar *name);
 void         gda_object_set_description (GdaObject *object, const gchar *descr);
 void         gda_object_set_owner       (GdaObject *object, const gchar *owner);
 
-const gchar *gda_object_get_id   (GdaObject *object);
+const gchar *gda_object_get_id          (GdaObject *object);
 const gchar *gda_object_get_name        (GdaObject *object);
 const gchar *gda_object_get_description (GdaObject *object);
 const gchar *gda_object_get_owner       (GdaObject *object);

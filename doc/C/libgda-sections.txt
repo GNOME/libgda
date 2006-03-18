@@ -255,7 +255,7 @@ gda_connection_reset
 gda_connection_open
 gda_connection_close
 gda_connection_close_no_warning
-gda_connection_is_open
+gda_connection_is_opened
 gda_connection_get_client
 gda_connection_set_client
 gda_connection_get_options
@@ -309,7 +309,7 @@ GdaDataModelArray
 GdaDataModelArrayClass
 GdaDataModelArrayPrivate
 gda_data_model_array_new
-gda_data_model_array_new_from_xml_node
+gda_data_model_array_copy_model
 gda_data_model_array_set_n_columns
 gda_data_model_array_clear
 <SUBSECTION Standard>
@@ -359,7 +359,6 @@ gda_data_model_row_get_type
 <FILE>gda-data-model-hash</FILE>
 <TITLE>GdaDataModelHash</TITLE>
 GdaDataModelHash
-GdaDataModelHash
 GdaDataModelHashClass
 GdaDataModelHashPrivate
 gda_data_model_hash_new
@@ -373,6 +372,26 @@ GDA_IS_DATA_MODEL_HASH
 GDA_IS_DATA_MODEL_HASH_CLASS
 GDA_TYPE_DATA_MODEL_HASH
 gda_data_model_hash_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-data-model-import</FILE>
+<TITLE>GdaDataModelImport</TITLE>
+GdaDataModelImport
+GdaDataModelImportClass
+GdaDataModelImportPrivate
+gda_data_model_import_new_file
+gda_data_model_import_new_mem
+gda_data_model_import_new_xml_node
+gda_data_model_import_get_errors
+gda_data_model_import_clean_errors
+<SUBSECTION Standard>
+GDA_DATA_MODEL_IMPORT
+GDA_DATA_MODEL_IMPORT_CLASS
+GDA_IS_DATA_MODEL_IMPORT
+GDA_IS_DATA_MODEL_IMPORT_CLASS
+GDA_TYPE_DATA_MODEL_IMPORT
+gda_data_model_import_get_type
 </SECTION>
 
 <SECTION>
@@ -406,6 +425,7 @@ gda_data_model_index_get_type
 GdaDataModel
 GdaDataModelAccessFlags
 GdaDataModelHint
+GdaDataModelIOFormat
 gda_data_model_changed
 gda_data_model_row_inserted
 gda_data_model_row_updated
@@ -421,18 +441,19 @@ gda_data_model_set_column_title
 gda_data_model_get_value_at
 gda_data_model_set_value_at
 gda_data_model_create_iter
-gda_data_model_iter_at_row
-gda_data_model_iter_next
-gda_data_model_iter_prev
+gda_data_model_move_iter_at_row
+gda_data_model_move_iter_next
+gda_data_model_move_iter_prev
 gda_data_model_append_values
 gda_data_model_append_row
 gda_data_model_remove_row
 gda_data_model_get_row_from_values
 gda_data_model_send_hint
-gda_data_model_to_text_separated
-gda_data_model_to_xml
-gda_data_model_to_xml_node
-gda_data_model_add_data_from_xml_node
+gda_data_model_export_to_string
+gda_data_model_export_to_file
+gda_data_model_import_from_model
+gda_data_model_import_from_string
+gda_data_model_import_from_file
 gda_data_model_dump
 gda_data_model_dump_as_string
 <SUBSECTION Standard>
@@ -485,16 +506,17 @@ GDA_TYPE_DATA_PROXY
 gda_data_proxy_get_type
 </SECTION>
 
-SECTION>
+<SECTION>
 <FILE>gda-data-model-iter</FILE>
 <TITLE>GdaDataModelIter</TITLE>
 GdaDataModelIter
 gda_data_model_iter_new
+gda_data_model_iter_is_valid
 gda_data_model_iter_set_at_row
 gda_data_model_iter_move_next
 gda_data_model_iter_move_prev
 gda_data_model_iter_get_row
-gda_data_model_iter_set_invalid
+gda_data_model_iter_invalidate_contents
 gda_data_model_iter_get_column_for_param
 gda_data_model_iter_get_param_for_column
 <SUBSECTION Standard>
@@ -895,6 +917,8 @@ gda_value_convert_gtype_to_gdatype
 gda_value_convert_gdatype_to_gtype
 gda_binary_to_string
 gda_string_to_binary
+gda_value_type_transformable
+gda_value_transform
 <SUBSECTION Standard>
 GDA_TYPE_VALUE
 GDA_VALUE_TYPE

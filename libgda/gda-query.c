@@ -46,6 +46,7 @@
 #include "gda-data-handler.h"
 #include "gda-query-field-func.h"
 #include "gda-data-model-query.h"
+#include "gda-data-model-private.h"
 
 #include "gda-query-private.h"
 #include "gda-query-parsing.h"
@@ -3962,15 +3963,21 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 				else {
 					if (!strcmp (sparams->name, "gda_array")) {
 						GdaDataModel *model;
+						GSList *errors;
 
-						model = gda_data_model_array_new_from_xml_node (sparams,
-												error);
-						if (model) {
+						model = gda_data_model_import_new_xml_node (sparams);
+						errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (model));
+						if (errors) {
+							GError *err = (GError *) errors->data;
+							g_set_error (error, 0, 0, err->message);
+							g_object_unref (model);
+							model = NULL;
+							return FALSE;
+						}
+						else {
 							gda_query_add_param_source (query, model);
 							g_object_unref (G_OBJECT (model));
 						}
-						else
-							return FALSE;
 					}
 				}
 				sparams = sparams->next;

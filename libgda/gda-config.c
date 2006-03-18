@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -453,7 +453,6 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
 	while (fam_connection && FAMPending (fam_connection)) {
                 FAMEvent ev;
 		gboolean is_global;
-		gchar *msg = NULL;
 		
 		if (FAMNextEvent (fam_connection, &ev) != 1) {
                         FAMClose (fam_connection);
@@ -1528,7 +1527,7 @@ gda_config_get_provider_by_name (const gchar *name)
 {
 	GList *prov_list;
 	GList *l;
-	gchar *tmpname;
+	const gchar *tmpname;
 
 	if (name)
 		tmpname = name;
@@ -1583,8 +1582,8 @@ gda_config_get_provider_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (prov_info->description));
 
 		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
-		g_list_foreach (value_list, gda_value_free, NULL);
-		g_slist_free (value_list);
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
 	}
 	
 	return model;
@@ -1885,8 +1884,8 @@ gda_config_get_data_source_model (void)
 		value_list = g_list_append (value_list, gda_value_new_boolean (dsn_info->is_global));
 		
 		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
-		g_list_foreach (value_list, gda_value_free, NULL);
-		g_slist_free (value_list);
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
 	}
 	
 	/* free memory */

@@ -2283,7 +2283,7 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 static gboolean
 gda_data_proxy_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 {
-	if (gda_data_model_iter_at_row_default (model, iter, row)) {
+	if (gda_data_model_move_iter_at_row_default (model, iter, row)) {
 		/* set specific parameter's attributes */
 
 		GSList *list;

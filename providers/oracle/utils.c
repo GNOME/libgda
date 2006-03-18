@@ -62,11 +62,12 @@ gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 				(ub4) sizeof (errbuf), 
 				(ub4) type);
 	
-		gda_connection_event_set_description (error, errbuf);	
-	} else {
+		gda_connection_event_set_description (error, errbuf);
+		g_warning ("Oracle error:%s", errbuf);
+	} 
+	else 
 		gda_connection_event_set_description (error, _("NO DESCRIPTION"));
-	}
-		
+	
 	gda_connection_event_set_code (error, errcode);
 	source = g_strdup_printf("gda-oracle:%s:%d", file, line);
 	gda_connection_event_set_source (error, source);

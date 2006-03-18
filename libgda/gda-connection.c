@@ -428,7 +428,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
 
 
 /**
- * gda_connection_is_open
+ * gda_connection_is_opened
  * @cnc: a #GdaConnection object.
  *
  * Checks whether a connection is open or not.
@@ -436,7 +436,7 @@ gda_connection_close_no_warning (GdaConnection *cnc)
  * Returns: %TRUE if the connection is open, %FALSE if it's not.
  */
 gboolean
-gda_connection_is_open (GdaConnection *cnc)
+gda_connection_is_opened (GdaConnection *cnc)
 {
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 

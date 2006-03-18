@@ -21,8 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_data_model_private_h__)
-#  define __gda_data_model_private_h__
+#ifndef __GDA_DATA_MODEL_PRIVATE_H__
+#define __GDA_DATA_MODEL_PRIVATE_H__
 
 #include <glib-object.h>
 #include <libxml/parser.h>
@@ -43,6 +43,10 @@ const gchar                  *gda_data_model_get_command_text       (GdaDataMode
 gboolean                      gda_data_model_set_command_text       (GdaDataModel *model, const gchar *txt);
 GdaCommandType                gda_data_model_get_command_type       (GdaDataModel *model);
 gboolean                      gda_data_model_set_command_type       (GdaDataModel *model, GdaCommandType type);
+
+xmlNodePtr                    gda_data_model_to_xml_node            (GdaDataModel *model, const gint *cols, gint nb_cols, 
+								     const gchar *name);
+gboolean                      gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GError **error);
 
 G_END_DECLS
 

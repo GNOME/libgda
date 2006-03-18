@@ -171,7 +171,7 @@ Management of connections to data sources
 @cnc: 
 
 
-<!-- ##### FUNCTION gda_connection_is_open ##### -->
+<!-- ##### FUNCTION gda_connection_is_opened ##### -->
 <para>
 
 </para>

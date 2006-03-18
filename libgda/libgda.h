@@ -35,12 +35,12 @@
 #include <libgda/gda-connection-event.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model-array.h>
-/*#include <libgda/gda-data-model-row.h>*/
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-data-model-index.h>
 #include <libgda/gda-data-model-query.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-iter.h>
+#include <libgda/gda-data-model-import.h>
 #include <libgda/gda-data-proxy.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-parameter.h>
@@ -95,9 +95,6 @@
 #include <libgda/gda-query-field.h>
 #include <libgda/gda-query-parsing.h>
 #include <libgda/gda-query-private.h>
-/*#include <libgda/sql-delimiter/gda-delimiter-tree.h>*/
-/*#include <sql-delimiter/gda-sql-delimiter.h>*/
-/*#include <libgda/sql-delimiter/parser.h>*/
 
 G_BEGIN_DECLS
 

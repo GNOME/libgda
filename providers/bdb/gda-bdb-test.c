@@ -77,7 +77,7 @@ gda_stuff (gpointer filename)
 	g_assert (client != NULL);
 	conn = gda_client_open_connection (client, BDB_DSN, NULL, NULL, 0);
 	g_assert (conn != NULL);
-	g_assert (gda_connection_is_open (conn));
+	g_assert (gda_connection_is_opened (conn));
 
 	/* get schema */
 	schema = gda_connection_get_schema (conn,

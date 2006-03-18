@@ -1,0 +1,137 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelImport
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Imports data from a string or a file
+</para>
+<para>
+The #GdaDataModelImport data model imports data from a string or a file. The data can either be
+in a CSV (comma separated values) format or in an XML format as described by the libgda-array.dtd DTD (as a side
+way it is also possible to import data from an already-build XML tree validated against that DTD).
+</para>
+<para>
+The caller must decide, upon construction, if the new #GdaDataModelImport must support random access or simply
+a cursor based access. Random acces makes it easier to use the resulting data model but consumes more memory as
+all the data is copied in memory, and is thus not suitable for large data sets. Note that importing from an 
+already-build XML tree will always result in a random access data model.
+</para>
+<para>
+Various import options can be specified using parameters in a #GdaParameterList object. The available options
+depend on the format of the imported data listed here:
+<itemizedlist>
+  <listitem><para>"SEPARATOR" (string, CVS import only): specifies the separator to consider</para></listitem>
+  <listitem><para>"ESCAPE_CHAR" (string, CVS import only): specifies the character used to "escape" the strings
+      contained between two separators</para></listitem>
+  <listitem><para>"ENCODING" (string, CVS import only): specifies the character set used in the imported data</para></listitem>
+  <listitem><para>"TITLE_AS_FIRST_LINE" (boolean, CVS import only): TRUE to specify that the first line of the 
+      imported data contains the column names</para></listitem>
+  <listitem><para>"GDA_TYPE_&lt;col number&gt;" (gda type, CVS import only): specifies the requested GDA type for the column
+	numbered "col number"</para></listitem>
+  <listitem><para>"DBMS_TYPE_&lt;col number&gt;" (string, CVS import only): specifies the requested DBMS type for the column
+	numbered "col number"; if the DBMS type is listed in the dictionary used by the created model, then
+	the GDA type is set in accordance</para></listitem>
+</itemizedlist>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaDataModelImport ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ARG GdaDataModelImport:data ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelImport:filename ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelImport:options ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelImport:random-access ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaDataModelImport:xml-node ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaDataModelImportClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GdaDataModelImportPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_model_import_new_file ##### -->
+<para>
+
+</para>
+
+@filename: 
+@random_access: 
+@options: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_import_new_mem ##### -->
+<para>
+
+</para>
+
+@data: 
+@random_access: 
+@options: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_import_new_xml_node ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_import_get_errors ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_import_clean_errors ##### -->
+<para>
+
+</para>
+
+@model: 
+
+

@@ -117,7 +117,7 @@ gboolean             gda_connection_open (GdaConnection *cnc, GError **error);
 gboolean             gda_connection_reset (GdaConnection *cnc);
 void                 gda_connection_close (GdaConnection *cnc);
 void                 gda_connection_close_no_warning (GdaConnection *cnc);
-gboolean             gda_connection_is_open (GdaConnection *cnc);
+gboolean             gda_connection_is_opened (GdaConnection *cnc);
 
 GdaClient           *gda_connection_get_client (GdaConnection *cnc);
 void                 gda_connection_set_client (GdaConnection *cnc, GdaClient *client);

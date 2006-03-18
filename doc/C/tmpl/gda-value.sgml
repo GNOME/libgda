@@ -1062,3 +1062,24 @@ use such values.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_type_transformable ##### -->
+<para>
+
+</para>
+
+@src_type: 
+@dest_type: 
+@strict: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_transform ##### -->
+<para>
+
+</para>
+
+@src: 
+@dest: 
+@Returns: 
+
+

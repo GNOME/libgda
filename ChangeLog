@@ -1,3 +1,32 @@
+2006-03-18  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-dict.c: ignore the DTD declaration, and always use our own internal parsed DTD
+	to avoid paths problems in XML files
+	* libgda/gda-init.c: added gda_dict_dtd and gda_array_dtd global parsed DTD
+	* libgda/gda-data-model-import.[ch]: new GdaDataModel class to import data from 
+	XML or from a CSV text format
+	* libgda/libgda-array.dtd: DTD for GdaDataModel XML storage
+	* libgda/gda-data-model.[ch]: replaced gda_data_model_to_text_separated(), 
+	gda_data_model_to_xml(), gda_data_model_to_xml_node() and gda_data_model_add_data_from_xml_node()
+	by gda_data_model_export_to_string(), gda_data_model_export_to_file(), 
+	gda_data_model_import_from_model(), gda_data_model_import_from_string() and 
+	gda_data_model_import_from_file()
+	* libgda/gda-data-model-iter.[ch]: added gda_data_model_iter_is_valid()
+	* libgda/gda-data-model-array.c: replaced gda_data_model_array_new_from_xml_node() with
+	gda_data_model_array_copy_model()
+	* libgda/gda-data-model-extra.h: added new declarations for GdaDataModel implementations
+	* libgda/gda-value.[ch]: added gda_value_type_transformable() and
+	gda_value_transform()
+	* doc/C: doc. update
+	* po/POTFILES.in: added the missing providers/*/*.xml.in files
+	* testing/tests_data/DICT_Sales_postgres.xml: updated the DOCTYPE header
+	* other: s/gda_connection_is_open/gda_connection_is_opened/
+	s/gda_data_model_iter_at_row/gda_data_model_move_iter_at_row/
+	s/gda_data_model_iter_next/gda_data_model_move_iter_next/
+	s/gda_data_model_iter_prev/gda_data_model_move_iter_prev/
+	s/gda_data_model_iter_set_invalid/gda_data_model_iter_invalidate_contents/
+	and minor corrections
+
 2006-03-09  Chao-Hsiung Liao  <j_h_liau@yahoo.com.tw>
 
 	* configure.in: Added "zh_HK" to ALL_LINGUAS.

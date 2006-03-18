@@ -3028,3 +3028,142 @@ gda_string_to_binary (const gchar *str, GdaBinary *bin)
 
 	return TRUE;
 }
+
+/* possible conversions, conversion will always work, independantly of the value */
+static gboolean assigns_compat_strict[GDA_VALUE_TYPE_UNKNOWN][GDA_VALUE_TYPE_UNKNOWN] = {
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* NULL */
+	{1, 1, 0, 0, 0,  1, 0, 0, 0, 0,  1, 0, 0, 0, 1,  1, 1, 0, 0, 0,  1, 1, 1, 1}, /* BIGINT */
+	{1, 0, 1, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 1, 0, 0, 0,  0, 1, 1, 1}, /* BIGUINT */
+	{1, 1, 1, 1, 1,  1, 1, 1, 1, 0,  1, 0, 1, 1, 1,  1, 1, 1, 1, 1,  1, 1, 1, 1}, /* BINARY */
+	{1, 1, 1, 1, 1,  1, 1, 1, 1, 0,  1, 0, 1, 1, 1,  1, 1, 1, 1, 1,  1, 1, 1, 1}, /* BLOB */
+
+	{1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* BOOLEAN */
+	{1, 0, 0, 0, 0,  0, 1, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* DATE */
+	{1, 0, 0, 0, 0,  0, 0, 1, 0, 0,  0, 0, 0, 0, 1,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* DOUBLE */
+	{1, 0, 0, 0, 0,  0, 0, 0, 1, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* GEOMETRIC POINT */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 1,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* GOBJECT */
+
+	{1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  1, 1, 0, 0, 0,  1, 1, 1, 0}, /* INTEGER */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 1, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* LIST */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 1, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* MONEY */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* NUMERIC */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 1,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* SINGLE */
+
+	{1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  1, 1, 0, 0, 0,  1, 1, 1, 0}, /* SMALLINT */
+	{1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 1, 0, 0, 0,  1, 1, 1, 0}, /* SMALLUINT */
+	{1, 1, 1, 0, 0,  1, 1, 1, 1, 0,  1, 0, 0, 1, 1,  1, 1, 1, 1, 1,  1, 1, 1, 1}, /* STRING */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 0,  0, 0, 0, 0}, /* TIME */
+	{1, 0, 0, 0, 0,  0, 1, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 1,  0, 0, 0, 0}, /* TIMESTAMP */
+
+	{1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  1, 1, 1, 0}, /* TINYINT */
+	{1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 1, 1, 0}, /* TINYUINT */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 1, 0}, /* TYPE */
+	{1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  1, 1, 0, 0, 0,  1, 1, 1, 1}, /* UINTEGER */
+};
+
+/* possible conversions, conversion may fail depending on the value */
+static gboolean assigns_compat_non_strict[GDA_VALUE_TYPE_UNKNOWN][GDA_VALUE_TYPE_UNKNOWN] = {
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* NULL */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* BIGINT */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* BIGUINT */
+	{1, 1, 1, 1, 1,  1, 1, 1, 1, 0,  1, 0, 1, 1, 1,  1, 1, 1, 1, 1,  1, 1, 1, 1}, /* BINARY */
+	{1, 1, 1, 1, 1,  1, 1, 1, 1, 0,  1, 0, 1, 1, 1,  1, 1, 1, 1, 1,  1, 1, 1, 1}, /* BLOB */
+	
+	{1, 0, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* BOOLEAN */
+	{1, 0, 0, 0, 0,  0, 1, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 1,  0, 0, 0, 0}, /* DATE */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* DOUBLE */
+	{1, 0, 0, 0, 0,  0, 0, 0, 1, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* GEOMETRIC POINT */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 1,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* GOBJECT */
+
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* INTEGER */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 1, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* LIST */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 1, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0}, /* MONEY */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* NUMERIC */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* SINGLE */
+
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* SMALLINT */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* SMALLUINT */
+	{1, 1, 1, 0, 0,  1, 1, 1, 1, 0,  1, 0, 0, 1, 1,  1, 1, 1, 1, 1,  1, 1, 1, 1}, /* STRING */
+	{1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 1,  0, 0, 0, 0}, /* TIME */
+	{1, 0, 0, 0, 0,  0, 1, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 1,  0, 0, 0, 0}, /* TIMESTAMP */
+
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* TINYINT */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* TINYUINT */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* TYPE */
+	{1, 1, 1, 0, 0,  1, 0, 1, 0, 0,  1, 0, 0, 1, 1,  1, 1, 1, 0, 0,  1, 1, 1, 1}, /* UINTEGER */
+};
+
+/**
+ * gda_value_type_transformable
+ * @src_type: source GDA type
+ * @dest_type: target GDA type
+ * @strict: 
+ * 
+ * Check whether gda_value_transform() is able to transform GDA values of type @src_type into 
+ * GDA values of type @dest_type.
+ *
+ * If @strict is TRUE, then the returned value is conservative in the way that it is ensured that
+ * transformations will _always_ work, depending on the actual values. On the contrary if @strict
+ * is FALSE, then the transformations may fail even thouh this function returns TRUE depending on 
+ * the actual values being converted.
+ *
+ * Returns: TRUE if the transformation is possible, FALSE otherwise.
+ */
+gboolean
+gda_value_type_transformable (GdaValueType src_type, GdaValueType dest_type, gboolean strict)
+{
+	if (strict)
+		return assigns_compat_strict[dest_type][src_type];
+	else
+		return assigns_compat_non_strict[dest_type][src_type];
+}
+
+/**
+ * gda_value_transform
+ * @src: source value
+ * @dest: target value (to modify)
+ *
+ * Tries to cast the contents of @src_value into a GDA type appropriate to store in @dest_value.
+ * Note that on the contrary to g_value_transform(), performing transformations between values will be 
+ * done only if there is no data loss.
+ *
+ * Returns: Whether a transformation rule was found and could be applied. 
+ * Upon failing transformations, @dest_value may have been changed and should not be used.
+ */
+gboolean
+gda_value_transform (const GdaValue *src, GdaValue *dest)
+{
+	GdaValueType dest_type, src_type;
+	gchar *src_str, *dest_str = NULL;
+	gboolean retval = TRUE;
+
+	g_return_val_if_fail (dest, FALSE);
+	g_return_val_if_fail (src, FALSE);
+
+	dest_type = gda_value_get_type (dest);
+	src_type = gda_value_get_type ((GdaValue *) src);
+
+	if (! assigns_compat_non_strict[dest_type][src_type])
+		return FALSE;
+
+	if (src_type == GDA_VALUE_TYPE_NULL) {
+		gda_value_set_null (dest);
+		return TRUE;
+	}
+	
+	/* TODO: improve that translation method */
+	src_str = gda_value_stringify ((GdaValue *) src);
+	l_g_value_unset (dest);
+	if (! gda_value_set_from_string (dest, src_str, dest_type))
+		retval = FALSE;
+	else {
+		dest_str = gda_value_stringify (dest);
+		if (strcmp (src_str, dest_str))
+			retval = FALSE;
+	}
+
+	g_free (src_str);
+	g_free (dest_str);
+
+	return retval;
+}

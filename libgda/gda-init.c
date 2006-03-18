@@ -25,8 +25,10 @@
 static GMainLoop *main_loop = NULL;
 
 /* global variables */
-GdaDict        *default_dict = NULL; /* available in all libgda, anways NOT NULL */
+GdaDict        *default_dict = NULL; /* available in all libgda, always NOT NULL */
 GdaDataHandler *default_handlers [GDA_VALUE_TYPE_UNKNOWN]; /* to be used by providers, not GdaDict because of locale issues */
+xmlDtdPtr       gda_dict_dtd = NULL;
+xmlDtdPtr       gda_array_dtd = NULL;
 
 
 /**
@@ -44,7 +46,7 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	static gboolean initialized = FALSE;
 
 	if (initialized) {
-		gda_log_error (_("Attempt to initialize an already initialized client"));
+		gda_log_error (_("Attempt to re-initialize GDA library. ignored."));
 		return;
 	}
 
@@ -92,6 +94,21 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	default_handlers [GDA_VALUE_TYPE_TINYUINT] = gda_handler_numerical_new ();
 	default_handlers [GDA_VALUE_TYPE_TYPE] = gda_handler_type_new ();
 	default_handlers [GDA_VALUE_TYPE_UINTEGER] = gda_handler_numerical_new ();	
+
+#define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
+	gda_dict_dtd = xmlParseDTD (NULL, LIBGDA_DICT_DTD_FILE);
+	if (gda_dict_dtd)
+		gda_dict_dtd->name = xmlStrdup((xmlChar*) "gda_dict");
+	else
+		g_warning (_("Could not parse " LIBGDA_DICT_DTD_FILE ": "
+			     "XML dictionaries validation will not be performed (some weird errors may occur)"));
+#define LIBGDA_ARRAY_DTD_FILE DTDINSTALLDIR"/libgda-array.dtd"
+	gda_array_dtd = xmlParseDTD (NULL, LIBGDA_ARRAY_DTD_FILE);
+	if (gda_array_dtd)
+		gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
+	else
+		g_warning (_("Could not parse " LIBGDA_ARRAY_DTD_FILE ": "
+			     "XML data import validation will not be performed (some weird errors may occur)"));
 
 	initialized = TRUE;
 }

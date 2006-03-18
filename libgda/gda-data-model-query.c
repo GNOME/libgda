@@ -581,7 +581,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 		return FALSE;
 	}
 
-	if (!gda_connection_is_open (cnc)) {
+	if (!gda_connection_is_opened (cnc)) {
 		g_set_error (&model->priv->refresh_error, 0, 0,
 			     _("Connection is not opened"));
 		if (error) 
@@ -944,7 +944,7 @@ run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 		return FALSE;
 	}
 
-	if (!gda_connection_is_open (cnc)) {
+	if (!gda_connection_is_opened (cnc)) {
 		g_set_error (error, 0, 0,
 			     _("Connection is not opened"));
 		return FALSE;

@@ -542,7 +542,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		table->priv->is_updating = FALSE;
                 return FALSE;
 	}
-	if (!gda_connection_is_open (cnc)) {
+	if (!gda_connection_is_opened (cnc)) {
 		g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_TABLE_META_DATA_UPDATE,
 			     _("Connection is not opened!"));
 		table->priv->is_updating = FALSE;

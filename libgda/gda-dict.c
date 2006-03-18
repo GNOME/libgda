@@ -54,6 +54,7 @@
 #define XML_ID_TEST 
 #endif
 
+extern xmlDtdPtr gda_dict_dtd;
 
 static gboolean 
 LC_NAMES (GdaDict *dict) 
@@ -880,6 +881,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 	xmlDocPtr doc;
 	xmlNodePtr node, subnode;
 	gchar *str;
+	xmlDtdPtr old_dtd = NULL;
 
 	g_return_val_if_fail (dict && GDA_IS_DICT (dict), FALSE);
 	g_return_val_if_fail (dict->priv, FALSE);
@@ -904,6 +906,11 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 		validc->error = xml_validity_error_func;
 		validc->warning = NULL; 
 		xmlDoValidityCheckingDefaultValue = 1;
+
+		/* replace the DTD with ours */
+		old_dtd = doc->intSubset;
+		doc->intSubset = gda_dict_dtd;
+
 		if (! xmlValidateDocument (validc, doc)) {
 			gchar *str;
 
@@ -1072,6 +1079,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 
 		subnode = subnode->next;
 	}
+	doc->intSubset = old_dtd;
 	xmlFreeDoc (doc);
 
 	return TRUE;
@@ -1437,7 +1445,7 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 {
 	gboolean retval = TRUE;
 	xmlDocPtr doc;
-#define XML_LIBGNOME_DB_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
+#define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
 
 	g_return_val_if_fail (dict && GDA_IS_DICT (dict), FALSE);
 	g_return_val_if_fail (dict->priv, FALSE);
@@ -1447,7 +1455,7 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 		xmlNodePtr topnode, node;
 
 		/* DTD insertion */
-                xmlCreateIntSubset(doc, "gda_dict", NULL, XML_LIBGNOME_DB_DTD_FILE);
+                xmlCreateIntSubset(doc, "gda_dict", NULL, "libgda-dict.dtd"/*LIBGDA_DICT_DTD_FILE*/);
 
 		/* Top node */
 		topnode = xmlNewDocNode (doc, NULL, "gda_dict", NULL);
@@ -2173,7 +2181,7 @@ gda_dict_update_dbms_data (GdaDict *dict, GError **error)
 		return FALSE;
 	}
 	
-	if (!gda_connection_is_open (dict->priv->cnc)) {
+	if (!gda_connection_is_opened (dict->priv->cnc)) {
 		g_set_error (error, GDA_DICT_ERROR,
 			     GDA_DICT_META_DATA_UPDATE_ERROR,
 			     _("Connection is closed"));

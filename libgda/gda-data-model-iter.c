@@ -208,7 +208,7 @@ model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 	/* sync parameters with the new values in row */
 	if (iter->priv->row == row) {
 		iter->priv->keep_param_changes = TRUE;
-		gda_data_model_iter_at_row (iter->priv->data_model, iter, row);
+		gda_data_model_move_iter_at_row (iter->priv->data_model, iter, row);
 		iter->priv->keep_param_changes = FALSE;
 	}
 }
@@ -223,7 +223,7 @@ model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 	/* if removed row is the one corresponding to iter, 
 	 * then make all the parameters invalid */
 	if (iter->priv->row == row) {
-		gda_data_model_iter_set_invalid (iter);
+		gda_data_model_iter_invalidate_contents (iter);
 		gda_data_model_iter_set_at_row (iter, -1);
 	}
 	else {
@@ -464,7 +464,7 @@ gda_data_model_iter_set_at_row (GdaDataModelIter *iter, gint row)
 		return TRUE;
 	}
 	else
-		return gda_data_model_iter_at_row (iter->priv->data_model, iter, row);
+		return gda_data_model_move_iter_at_row (iter->priv->data_model, iter, row);
 }
 
 /**
@@ -482,7 +482,7 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	g_return_val_if_fail (iter->priv, FALSE);
 
-	return gda_data_model_iter_next (iter->priv->data_model, iter);
+	return gda_data_model_move_iter_next (iter->priv->data_model, iter);
 }
 
 /**
@@ -500,7 +500,7 @@ gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	g_return_val_if_fail (iter->priv, FALSE);
 
-	return gda_data_model_iter_prev (iter->priv->data_model, iter);
+	return gda_data_model_move_iter_prev (iter->priv->data_model, iter);
 }
 
 /**
@@ -521,14 +521,14 @@ gda_data_model_iter_get_row (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_set_invalid
+ * gda_data_model_iter_invalidate_contents
  * @iter: a #GdaDataModelIter object
  *
  * Declare all the parameters in @iter invalid, without modifying the
  * #GdaDataModel @iter is for or changing the row it represents
  */
 void
-gda_data_model_iter_set_invalid (GdaDataModelIter *iter)
+gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)
 {
 	GSList *list;
 	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (iter));
@@ -545,6 +545,23 @@ gda_data_model_iter_set_invalid (GdaDataModelIter *iter)
 		list = g_slist_next (list);
 	}
 	iter->priv->keep_param_changes = FALSE;
+}
+
+/**
+ * gda_data_model_iter_is_valid
+ * @iter: a #GdaDataModelIter object
+ *
+ * Tells if @iter is a valid iterator.
+ *
+ * Returns: TRUE if @iter is valid
+ */
+gboolean
+gda_data_model_iter_is_valid (GdaDataModelIter *iter)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+	g_return_val_if_fail (iter->priv, FALSE);
+
+	return iter->priv->row >= 0 ? TRUE : FALSE;
 }
 
 /**

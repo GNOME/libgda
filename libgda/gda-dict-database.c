@@ -974,7 +974,7 @@ gda_dict_database_update_dbms_data (GdaDictDatabase *mgdb, GError **error)
                              _("No connection associated to dictionary!"));
                 return FALSE;
 	}
-	if (!gda_connection_is_open (cnc)) {
+	if (!gda_connection_is_opened (cnc)) {
 		g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_DATABASE_META_DATA_UPDATE,
 			     _("Connection is not opened!"));
 		return FALSE;
@@ -1050,7 +1050,7 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
                              _("No connection associated to dictionary!"));
                 return FALSE;
 	}
-	if (!gda_connection_is_open (cnc)) {
+	if (!gda_connection_is_opened (cnc)) {
                 g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_TABLE_META_DATA_UPDATE,
                              _("Connection is not opened!"));
                 return FALSE;

@@ -66,7 +66,8 @@ gboolean          gda_data_model_iter_move_next            (GdaDataModelIter *it
 gboolean          gda_data_model_iter_move_prev            (GdaDataModelIter *iter);
 gint              gda_data_model_iter_get_row              (GdaDataModelIter *iter);
 
-void              gda_data_model_iter_set_invalid          (GdaDataModelIter *iter);
+void              gda_data_model_iter_invalidate_contents  (GdaDataModelIter *iter);
+gboolean          gda_data_model_iter_is_valid             (GdaDataModelIter *iter);
 
 gint              gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaParameter *param);
 GdaParameter     *gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col);
