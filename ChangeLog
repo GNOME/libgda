@@ -1,4 +1,8 @@
 2006-03-24  Vivien Malerba <malerba@gnome-db.org>
+	
+	Released 1.9.102.
+
+2006-03-24  Vivien Malerba <malerba@gnome-db.org>
 
 	* libsql/Makefile.am: added a CLEANFILES target
 	* libgda/gda-data-access-wrapper.[ch]: new data model to offer random access

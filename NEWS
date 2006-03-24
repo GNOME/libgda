@@ -1,3 +1,34 @@
+libgda 1.9.102, 2006-03-24
+--------------------------
+
+ - Merged the Libgnomedb's part which is not GUI related (Vivien)
+ - GdaDataModel API simplifications (Vivien)
+ - Added support for cursor based navigation in GdaDataModel (Vivien)
+ - Fixed #327797 (Rodrigo)
+ - Fixed #329933 (Thomas)
+ - Improved Cygwin compilation (Cygwin Ports Maintainer)
+ - Added data import from CSV and XML files (Vivien)
+ - Use SQLite 3.3.4 (Vivien)
+ - Providers can now provide information about constraints in the database structure (Vivien)
+ - Fixes for building out of the source tree (Bob)
+ - FreeTDS provider compilation fixes (Leonardo)
+ - New tests
+ - More respectfull of standard naming conventions (Dan, Murray)
+ - Documentation improvements (Juan Manuel Mouriz, Vivien)
+ - Modifications to require glib >= 2.6.0 (Bas)
+ - Many bug fixes
+ - Many other small improvements
+ - Translations:
+	- new Chinese (Taiwan) translation (Chao-Hsiung)
+	- fi (Ilkka)
+	- it (Marco)
+	- en_CA (Adam)
+	- vi (Clytie)
+	- es (Francisco Javier)
+	- eu (Iñaki)
+	- zh_TW (Chao-Hsiung)
+	- pt_BR (Raphael)
+
 libgda 1.9.100, 2005-10-13
 --------------------------
 
