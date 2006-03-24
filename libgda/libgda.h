@@ -41,6 +41,7 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-data-model-import.h>
+#include <libgda/gda-data-access-wrapper.h>
 #include <libgda/gda-data-proxy.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-parameter.h>

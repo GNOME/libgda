@@ -300,7 +300,7 @@ gda_data_model_get_access_flags (GdaDataModel *model)
  * gda_data_model_get_n_rows
  * @model: a #GdaDataModel object.
  *
- * Returns: the number of rows in the given data model.
+ * Returns: the number of rows in the given data model, or -1 if the number of rows is not known
  */
 gint
 gda_data_model_get_n_rows (GdaDataModel *model)
@@ -309,10 +309,8 @@ gda_data_model_get_n_rows (GdaDataModel *model)
 
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows) (model);
-	else {
-		g_warning ("%s() method not supported\n", __FUNCTION__);
+	else 
 		return -1;
-	}
 }
 
 /**
@@ -527,7 +525,9 @@ gda_data_model_create_iter (GdaDataModel *model)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_create_iter) (model);
 	else 
 		/* default method */
-		return gda_data_model_iter_new (model);
+		return  g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
+				      "dict", gda_object_get_dict (GDA_OBJECT (model)), 
+				      "data_model", model, NULL);
 }
 
 /**
@@ -1766,29 +1766,34 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	g_string_append_c (string, '\n');
 
 	/* ... and data */
-	for (j = 0; j < n_rows; j++) {
-		for (i = 0; i < n_cols; i++) {
-			value = gda_data_model_get_value_at (model, i, j);
-			str = value ? gda_value_stringify ((GdaValue *)value) : g_strdup ("_null_");
-			if (i != 0)
-				g_string_append_printf (string, "%s", sep_col);
-			if (cols_is_num [i])
-				g_string_append_printf (string, "%*s", cols_size [i], str);
-			else {
-				gint j, max;
-				if (str) {
-					g_string_append_printf (string, "%s", str);
-					max = cols_size [i] - g_utf8_strlen (str, -1);
+	if (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM) {
+		for (j = 0; j < n_rows; j++) {
+			for (i = 0; i < n_cols; i++) {
+				value = gda_data_model_get_value_at (model, i, j);
+				str = value ? gda_value_stringify ((GdaValue *)value) : g_strdup ("_null_");
+				if (i != 0)
+					g_string_append_printf (string, "%s", sep_col);
+				if (cols_is_num [i])
+					g_string_append_printf (string, "%*s", cols_size [i], str);
+				else {
+					gint j, max;
+					if (str) {
+						g_string_append_printf (string, "%s", str);
+						max = cols_size [i] - g_utf8_strlen (str, -1);
+					}
+					else
+						max = cols_size [i];
+					for (j = 0; j < max; j++)
+						g_string_append_c (string, ' ');
 				}
-				else
-					max = cols_size [i];
-				for (j = 0; j < max; j++)
-					g_string_append_c (string, ' ');
+				g_free (str);
 			}
-			g_free (str);
+			g_string_append_c (string, '\n');
 		}
-		g_string_append_c (string, '\n');
 	}
+	else 
+		g_string_append (string, _("Model does not support random access, not showing data\n"));
+
 	g_free (cols_size);
 	g_free (cols_is_num);
 

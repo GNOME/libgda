@@ -37,3 +37,4 @@ sql_parser_test_LDADD = libgdasql.la $(LIBGDA_LIBS)
 tests: sql_parser_test
 
 EXTRA_DIST=parser.y lexer.l
+CLEANFILES = lexer.c parser.h parser.c parser.output

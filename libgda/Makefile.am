@@ -40,6 +40,7 @@ gda_headers = \
 	gda-data-model-iter.h \
 	gda-data-model-private.h \
 	gda-data-model-query.h \
+	gda-data-access-wrapper.h \
 	gda-data-proxy.h \
 	gda-decl.h \
 	gda-dict-aggregate.h \
@@ -108,6 +109,7 @@ libgda_sources =  \
 	gda-data-model-index.c \
 	gda-data-model-iter.c \
 	gda-data-model-query.c \
+	gda-data-access-wrapper.c \
 	gda-data-proxy.c \
 	gda-dict-aggregate.c \
 	gda-dict.c \

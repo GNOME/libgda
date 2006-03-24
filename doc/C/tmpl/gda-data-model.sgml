@@ -16,9 +16,26 @@ provided by the model. The actual operations a data model permits can be known u
 gda_data_model_get_access_flags() method.
 </para>
 <para>
-Again, depending on the real implementatiob, data retreiving can be done either accessing direct random
+Again, depending on the real implementation, data retreiving can be done either accessing direct random
 values located by their row and column, or using a #GdaDataModelIter cursor, or both. Use the 
-gda_data_model_get_access_flags() method to know how the data model can be accessed.
+gda_data_model_get_access_flags() method to know how the data model can be accessed. Note that a #GdaDatamodel
+which can be accessed in a random way can also be accessed using cursors (and several cusrors may be used at the same
+time), whereas data model which can only be accessed using cursors can only have one cursor for iterating.
+</para>
+<para>
+Random access data models are easier to use since picking a value is very simple using the gda_data_model_get_value_at(),
+but consume more memory since all the accessible values must generally be present in memory even if they are not used.
+Thus if a data model must handle large quantities of data, it is generally wiser to use a data model which can be 
+only accessed using a cursor.
+</para>
+<para>
+As a side note there are also data models which wrap other data models such as:
+<itemizedlist>
+    <listitem><para>The #GdaDataProxy data model which stores temporary modifications and shows only some
+	parts of the wrapped data model</para></listitem>
+    <listitem><para>The #GdaDataAccessWrapper data model which offers a memory-efficient random access on top of a
+	wrapped cursor based access data model</para></listitem>
+</itemizedlist>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

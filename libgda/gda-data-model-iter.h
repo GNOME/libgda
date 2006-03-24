@@ -56,6 +56,7 @@ struct _GdaDataModelIterClass
 	GdaParameterListClass      parent_class;
 
 	void                    (* row_changed)      (GdaDataModelIter *iter, gint row);
+	void                    (* end_of_data)      (GdaDataModelIter *iter);
 };
 
 GType             gda_data_model_iter_get_type             (void);

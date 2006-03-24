@@ -2274,7 +2274,9 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, FALSE);
 
-	iter = gda_data_model_iter_new (proxy->priv->model);
+	iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
+						  "dict", gda_object_get_dict (GDA_OBJECT (proxy->priv->model)), 
+						  "data_model", proxy->priv->model, NULL);
 	g_object_set (G_OBJECT (iter), "forced_model", proxy, NULL);
 
 	return iter;

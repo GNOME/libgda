@@ -52,5 +52,5 @@ FIXXREF_OPTIONS=
 include $(top_srcdir)/gtk-doc.make
 
 # Other files to distribute
-EXTRA_DIST += examples/full_example.c
+EXTRA_DIST += examples/full_example.c installation.xml migration.xml query.xml query-fields.xml gettingstarted.xml
 

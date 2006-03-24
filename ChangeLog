@@ -1,3 +1,11 @@
+2006-03-24  Vivien Malerba <malerba@gnome-db.org>
+
+	* libsql/Makefile.am: added a CLEANFILES target
+	* libgda/gda-data-access-wrapper.[ch]: new data model to offer random access
+	on top of a cursor only access data model
+	* libgda/*: small corrections and improvements
+	* libgda/doc/C: documentation update
+
 2006-03-18  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-dict.c: ignore the DTD declaration, and always use our own internal parsed DTD

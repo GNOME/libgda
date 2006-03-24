@@ -3,6 +3,7 @@
 libgda/gda-client.c
 libgda/gda-config.c
 libgda/gda-connection.c
+libgda/gda-data-access-wrapper.c
 libgda/gda-data-model-array.c
 libgda/gda-data-model.c
 libgda/gda-data-model-filter-sql.c

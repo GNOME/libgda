@@ -19,6 +19,7 @@
  */
 
 #include <glib/gi18n-lib.h>
+#include <string.h>
 #include "gda-data-model-iter.h"
 #include "gda-data-model.h"
 #include "gda-parameter.h"
@@ -61,10 +62,11 @@ static GObjectClass  *parent_class = NULL;
 enum
 {
         ROW_CHANGED,
+	END_OF_DATA,
         LAST_SIGNAL
 };
 
-static gint gda_data_model_iter_signals[LAST_SIGNAL] = { 0 };
+static gint gda_data_model_iter_signals[LAST_SIGNAL] = { 0, 0 };
 
 /* properties */
 enum
@@ -75,7 +77,6 @@ enum
 	PROP_FORCED_MODEL,
 	PROP_UPDATE_MODEL
 };
-
 
 /* private structure */
 struct _GdaDataModelIterPrivate
@@ -136,8 +137,16 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
                               G_STRUCT_OFFSET (GdaDataModelIterClass, row_changed),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
+	gda_data_model_iter_signals [END_OF_DATA] =
+                g_signal_new ("end_of_data",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaDataModelIterClass, end_of_data),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	class->row_changed = NULL;
+	class->end_of_data = NULL;
 
 	object_class->dispose = gda_data_model_iter_dispose;
 	object_class->finalize = gda_data_model_iter_finalize;
@@ -162,7 +171,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 							       "to the GdaDataModel", NULL, TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* virtual functions */
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_data_model_iter_dump;
 #endif
 }
@@ -190,14 +199,10 @@ gda_data_model_iter_init (GdaDataModelIter *iter)
 GdaDataModelIter *
 gda_data_model_iter_new (GdaDataModel *model)
 {
-	GObject *obj;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	obj = g_object_new (GDA_TYPE_DATA_MODEL_ITER, "dict", gda_object_get_dict (GDA_OBJECT (model)), 
-			    "data_model", model, NULL);
-
-	return (GdaDataModelIter *) obj;
+	/* use the data model's own creation method here */
+	return gda_data_model_create_iter (model);
 }
 
 static void 
@@ -609,8 +614,6 @@ static void
 gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset)
 {
 	gchar *str;
-	gint i;
-	GdaDataHandler *dh;
 	GdaDict *dict;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (iter));
@@ -618,14 +621,14 @@ gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset)
 	
         /* string for the offset */
         str = g_new0 (gchar, offset+1);
-        for (i=0; i<offset; i++)
-                str[i] = ' ';
-        str[offset] = 0;
+	memset (str, ' ', offset);
 
         /* dump */
         if (iter->priv) {
+		g_print ("Iter %p\n", iter);
 	}
         else
                 g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, iter);
+	g_free (str);
 }
 #endif

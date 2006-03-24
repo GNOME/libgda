@@ -395,6 +395,23 @@ gda_data_model_import_get_type
 </SECTION>
 
 <SECTION>
+<FILE>gda-data-access-wrapper</FILE>
+<TITLE>GdaDataAccessWrapper</TITLE>
+GdaDataAccessWrapper
+GdaDataAccessWrapperClass
+GdaDataAccessWrapperPrivate
+gda_data_access_wrapper_new
+<SUBSECTION Standard>
+GDA_DATA_ACCESS_WRAPPER
+GDA_DATA_ACCESS_WRAPPER_CLASS
+GDA_IS_DATA_ACCESS_WRAPPER
+GDA_IS_DATA_ACCESS_WRAPPER_CLASS
+GDA_TYPE_DATA_ACCESS_WRAPPER
+gda_data_access_wrapper_get_type
+</SECTION>
+
+
+<SECTION>
 <FILE>gda-data-model-index</FILE>
 <TITLE>GdaDataModelIndex</TITLE>
 GdaDataModelIndex
