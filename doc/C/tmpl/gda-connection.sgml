@@ -134,15 +134,6 @@ Management of connections to data sources
 @cnc_string: 
 
 
-<!-- ##### FUNCTION gda_connection_reset ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_connection_open ##### -->
 <para>
 
@@ -434,6 +425,18 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_execute_command_l ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@cmd: 
+@params: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_get_last_insert_id ##### -->
 <para>
 
@@ -441,30 +444,6 @@ Management of connections to data sources
 
 @cnc: 
 @recset: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_execute_single_command ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@cmd: 
-@params: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_execute_non_query ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@cmd: 
-@params: 
-@error: 
 @Returns: 
 
 

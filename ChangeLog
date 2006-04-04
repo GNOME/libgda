@@ -1,3 +1,30 @@
+2006-04-04  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-parameter-list.[ch]: added gda_parameter_list_add_param_from_string() to 
+	quickly add a parameter to a GdaParameterList object
+	* libgda/gda-entity.[ch]: removed gda_entity_get_parameters() and 
+	gda_entity_get_param_list()
+	* libgda/gda-query.[ch]: added gda_query_get_parameters() and 
+	gda_query_get_parameters_boxed()
+	* libgda/gda-query.[ch]: added gda_query_execute()
+	* libgda/gda-connection.[ch]: removed gda_connection_reset() which was never implemented
+	* libgda/gda-connection.[ch]: renamed gda_connection_execute_command() to
+	gda_connection_execute_command_l() and gda_connection_execute_single_command() to
+	gda_connection_execute_command() because the names were leading to misunderstandings
+	* libgda/gda-connection.[ch]: removed gda_connection_execute_non_query() which is quite a
+	nonsense
+	* libgda/gda-server-provider.[ch]: removed the reset() virtual method which was 
+	never implemented
+	* libgda/handlers/gda-handler-time.c: fixed a bug in string parsing
+	* libgda/testing/gda-test-models.c: improvements using GdaDataModelImport object
+	* libgda/gda-data-access-wrapper.c: added gda_data_access_wrapper_row_exists()
+	* libgda/gda-parameter-list.[ch]: added gda_parameter_list_add_param_from_value()
+	* libgda/gda-data-model-import.c: bug fixed in CSV parsing
+	* libgda/gda-data-proxy.c: correctly handle data models for which the total number
+	of rows is not known
+	* compilation warnings removed
+	* documentation corrections.
+
 2006-03-24  Vivien Malerba <malerba@gnome-db.org>
 	
 	Released 1.9.102.

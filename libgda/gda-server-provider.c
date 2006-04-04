@@ -77,7 +77,6 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->string_to_value = NULL;
 
 	klass->open_connection = NULL;
-	klass->reset_connection = NULL;
 	klass->close_connection = NULL;
 	klass->get_database = NULL;
 	klass->change_database = NULL;
@@ -263,25 +262,6 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	return retcode;
-}
-
-/**
- * gda_server_provider_reset_connection:
- * @provider: A #GdaServerProvider object.
- * @cnc: The connection to be reset.
- *
- * Calls the reset_connection method implementation on the given #GdaServerProvider.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_server_provider_reset_connection (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (CLASS (provider)->reset_connection != NULL, FALSE);
-
-	return CLASS (provider)->reset_connection (provider, cnc);
 }
 
 /**

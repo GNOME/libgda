@@ -247,22 +247,6 @@ gda_connection_new (GdaClient *client,
 }
 
 /**
- * gda_connection_reset:
- * @cnc: a #GdaConnection object.
- *
- * Resets the given #GdaConnection.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_connection_reset (GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	return gda_server_provider_reset_connection (cnc->priv->provider_obj, cnc);
-}
-
-/**
  * gda_connection_open
  * @conn: a #GdaConnection object
  * @error: a place to store errors, or %NULL
@@ -976,13 +960,11 @@ gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name, gboolean
 }
 
 /**
- * gda_connection_execute_command
+ * gda_connection_execute_command_l
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
- * @params: parameter list.
+ * @params: parameter list for the commands
  * @error: a place to store an error, or %NULL
- *
- * Executes a command on the underlying data source.
  *
  * This function provides the way to send several commands
  * at once to the data source being accessed by the given
@@ -991,16 +973,23 @@ gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name, gboolean
  * of SQL commands separated by ';').
  *
  * The return value is a GList of #GdaDataModel's, which you
- * are responsible to free when not needed anymore.
+ * are responsible to free when not needed anymore (and unref the
+ * data models when they are not used anymore). Note that some nodes of the
+ * returned list may actually not point to a GdaDataModel but may be NULL (which
+ * corresponds to a command which did not return a data set, like UPDATE commands).
+ *
+ * The @params can contain the following parameters:
+ * <itemizedlist>
+ *   <listitem><para>a "ITER_MODEL_ONLY" parameter of type #GDA_VALUE_TYPE_BOOLEAN which, if set to TRUE
+ *             will preferably return a data model which can be accessed only using an iterator.</para></listitem>
+ * </itemizedlist>
  *
  * Returns: a list of #GdaDataModel's, as returned by the underlying
- * provider.
+ * provider, or %NULL if an error occured.
  */
 GList *
-gda_connection_execute_command (GdaConnection *cnc,
-				GdaCommand *cmd,
-				GdaParameterList *params,
-				GError **error)
+gda_connection_execute_command_l (GdaConnection *cnc, GdaCommand *cmd,
+				  GdaParameterList *params, GError **error)
 {
 	GList *retval, *events;
 	gboolean has_error = FALSE;
@@ -1059,26 +1048,30 @@ gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
 }
 
 /**
- * gda_connection_execute_single_command
+ * gda_connection_execute_command
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
- * @params: parameter list.
+ * @params: parameter list for the command
  * @error: a place to store an error, or %NULL
  *
  * Executes a single command on the given connection.
  *
  * This function lets you retrieve a simple data model from
  * the underlying difference, instead of having to retrieve
- * a list of them, as is the case with #gda_connection_execute_command.
+ * a list of them, as is the case with #gda_connection_execute_command_l.
+ *
+ * Note that if the @cmd command is composed of several SQL statements, the data model
+ * returned is the one corresponding to the last statement.
+ *
+ * See the documentation of the gda_connection_execute_command_l() for information
+ * about the @params list of parameters.
  *
  * Returns: a #GdaDataModel containing the data returned by the
- * data source, or %NULL on error.
+ * data source, %NULL if no data was expected, or GDA_CONNECTION_EXEC_FAILED if an error occured.
  */
 GdaDataModel *
-gda_connection_execute_single_command (GdaConnection *cnc,
-				       GdaCommand *cmd,
-				       GdaParameterList *params,
-				       GError **error)
+gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
+				GdaParameterList *params, GError **error)
 {
 	GList *reclist, *list;
 	GdaDataModel *model;
@@ -1087,11 +1080,11 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
-	reclist = gda_connection_execute_command (cnc, cmd, params, error);
+	reclist = gda_connection_execute_command_l (cnc, cmd, params, error);
 	if (!reclist)
-		return NULL;
+		return GDA_CONNECTION_EXEC_FAILED;
 
-	model = GDA_DATA_MODEL (reclist->data);
+	model = GDA_DATA_MODEL (g_list_last (reclist)->data);
 	if (model) {
 		GdaConnectionEvent *event;
 		gchar *str;
@@ -1116,49 +1109,6 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 	g_list_free (reclist);
 
 	return model;
-}
-
-/**
- * gda_connection_execute_non_query
- * @cnc: a #GdaConnection object.
- * @cmd: a #GdaCommand.
- * @params: parameter list.
- *
- * Executes a single command on the underlying database, and gets the
- * number of rows affected.
- *
- * Returns: the number of affected rows by the executed command,
- * or -1 on error.
- */
-gint
-gda_connection_execute_non_query (GdaConnection *cnc,
-				  GdaCommand *cmd,
-				  GdaParameterList *params,
-				  GError **error)
-{
-	GList *reclist, *list;
-	GdaDataModel *model;
-	gint result = 0;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
-	g_return_val_if_fail (cnc->priv, -1);
-	g_return_val_if_fail (cmd != NULL, -1);
-
-	reclist = gda_connection_execute_command (cnc, cmd, params, error);
-	if (!reclist)
-		return -1;
-
-	model = (GdaDataModel *) reclist->data;
-	if (GDA_IS_DATA_MODEL (model))
-		result = gda_data_model_get_n_rows (model);
-
-	list = reclist;
-	for (list = reclist; list; list = g_list_next (list))
-		if (list->data)
-			g_object_unref (list->data);
-	g_list_free (reclist);
-
-	return result;
 }
 
 /**

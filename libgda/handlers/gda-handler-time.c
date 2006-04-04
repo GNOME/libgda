@@ -728,9 +728,13 @@ make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
         timegda->hour = atoi (ptr);
 	
         ptr = strtok_r (NULL, ":", &buff);
+	if (!ptr)
+		return FALSE;
         timegda->minute = atoi (ptr);
 
 	ptr = strtok_r (NULL, ":", &buff);
+	if (!ptr)
+		return FALSE;
         timegda->second = atoi (ptr);
 
 	ptr = strtok_r (NULL, " ", &buff);

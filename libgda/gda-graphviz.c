@@ -1,6 +1,6 @@
 /* gda-graphviz.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -372,7 +372,7 @@ get_depend_query (GdaQuery *query, GSList **deplist, GSList **alldisplayed)
 	list = gda_query_get_sub_queries (query);
 	*alldisplayed = g_slist_concat (*alldisplayed, list);
 
-	list = g_slist_copy (gda_query_get_param_sources (query));
+	list = g_slist_copy ((GSList *) gda_query_get_param_sources (query));
 	*alldisplayed = g_slist_concat (*alldisplayed, list);
 
 	list = gda_query_get_all_fields (query);
@@ -769,7 +769,7 @@ render_qf_value_label (GdaGraphviz *graph, GdaQueryFieldValue *field)
 		g_string_append (retval, cstr);
 	value = gda_query_field_value_get_value (field);
 	if (value) {
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		g_string_append_printf (retval, " (%s)", str);
 		g_free (str);
 	}

@@ -49,6 +49,7 @@ struct _GdaDataAccessWrapperClass {
 
 GType         gda_data_access_wrapper_get_type    (void);
 GdaDataModel *gda_data_access_wrapper_new         (GdaDataModel *model);
+gboolean      gda_data_access_wrapper_row_exists  (GdaDataAccessWrapper *wrapper, gint row);
 
 G_END_DECLS
 

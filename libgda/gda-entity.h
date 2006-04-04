@@ -1,6 +1,6 @@
 /* gda-entity.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -50,7 +50,6 @@ struct _GdaEntityIface
 	void             (*swap_fields)          (GdaEntity *iface, GdaEntityField *field1, GdaEntityField *field2);
 	void             (*remove_field)         (GdaEntity *iface, GdaEntityField *field);
 	gboolean         (*is_writable)          (GdaEntity *iface);
-	GSList          *(*get_parameters)       (GdaEntity *iface);
 
 	/* signals */
 	void             (*field_added)          (GdaEntity *iface, GdaEntityField *field);
@@ -74,11 +73,6 @@ void              gda_entity_swap_fields         (GdaEntity *iface, GdaEntityFie
 void              gda_entity_remove_field        (GdaEntity *iface, GdaEntityField *field);
 
 gboolean          gda_entity_is_writable         (GdaEntity *iface);
-GSList           *gda_entity_get_parameters      (GdaEntity *iface);
-GdaParameterList *gda_entity_get_param_list    (GdaEntity *iface);
-
-
-
 
 G_END_DECLS
 

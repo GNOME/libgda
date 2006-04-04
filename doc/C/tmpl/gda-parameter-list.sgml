@@ -33,10 +33,8 @@ A #GdaParameterList is in a way only a better than GList list of #GdaParameter o
 </para>
 <para>
 Some queries require arguments before they can be executed. For such queries, the arguments are passed using 
-#GdaParameter objects (the list of parameters can be obtained using gda_entity_get_parameters()). 
-The #GdaParameterList object removes the hassle
-of managing these #GdaParameter objects. For a query, a #GdaParameterList can be obtained using the 
-gda_entity_get_exec_context() function.
+#GdaParameter objects (the list of parameters can be obtained using gda_query_get_parameters() or
+gda_query_get_parameters_boxed()). 
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -157,6 +155,29 @@ gda_entity_get_exec_context() function.
 @param: 
 <!-- # Unused Parameters # -->
 @dataset: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_add_param_from_string ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@name: 
+@type: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_add_param_from_value ##### -->
+<para>
+
+</para>
+
+@paramlist: 
+@name: 
+@value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_is_coherent ##### -->

@@ -23,11 +23,6 @@ Parent class for any query's field
 </para>
 
 
-<!-- ##### ARG GdaQueryField:prop ##### -->
-<para>
-
-</para>
-
 <!-- ##### FUNCTION gda_query_field_new_from_xml ##### -->
 <para>
 

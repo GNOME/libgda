@@ -1,6 +1,6 @@
 /* gda-query-field.c
  *
- * Copyright (C) 2003 - 2005  Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -43,34 +43,9 @@ static void gda_query_field_init (GdaQueryField *qfield);
 static void gda_query_field_dispose (GObject *object);
 static void gda_query_field_finalize (GObject *object);
 
-static void gda_query_field_set_property    (GObject *object,
-					     guint param_id,
-					     const GValue *value,
-					     GParamSpec *pspec);
-static void gda_query_field_get_property    (GObject *object,
-					     guint param_id,
-					     GValue *value,
-					     GParamSpec *pspec);
-
 static void gda_query_field_set_int_id (GdaQueryObject *qfield, guint id);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
-
-/* signals */
-enum
-{
-	LAST_SIGNAL
-};
-
-static gint gda_query_field_signals[LAST_SIGNAL] = { };
-
-/* properties */
-enum
-{
-	PROP_0,
-	PROP
-};
-
 
 struct _GdaQueryFieldPrivate
 {
@@ -127,13 +102,6 @@ gda_query_field_class_init (GdaQueryFieldClass * class)
 
 	object_class->dispose = gda_query_field_dispose;
 	object_class->finalize = gda_query_field_finalize;
-
-	/* Properties */
-	object_class->set_property = gda_query_field_set_property;
-	object_class->get_property = gda_query_field_get_property;
-	g_object_class_install_property (object_class, PROP,
-					 g_param_spec_pointer ("prop", NULL, NULL, 
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
 
 static void
@@ -366,42 +334,6 @@ gda_query_field_finalize (GObject   * object)
 	/* parent class */
 	parent_class->finalize (object);
 }
-
-
-static void 
-gda_query_field_set_property (GObject *object,
-			guint param_id,
-			const GValue *value,
-			GParamSpec *pspec)
-{
-	GdaQueryField *qfield;
-
-	qfield = GDA_QUERY_FIELD (object);
-	if (qfield->priv) {
-		switch (param_id) {
-		case PROP:
-			break;
-		}
-	}
-}
-
-static void
-gda_query_field_get_property (GObject *object,
-			guint param_id,
-			GValue *value,
-			GParamSpec *pspec)
-{
-	GdaQueryField *qfield;
-
-	qfield = GDA_QUERY_FIELD (object);
-        if (qfield->priv) {
-                switch (param_id) {
-                case PROP:
-                        break;
-                }
-        }
-}
-
 
 /**
  * gda_query_field_set_alias

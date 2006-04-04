@@ -1,6 +1,6 @@
 /* gda-dict-function.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -577,7 +577,7 @@ gda_dict_function_set_arg_types (GdaDictFunction *func, const GSList *arg_types)
 		g_slist_free (func->priv->arg_types);
 	}
 
-	func->priv->arg_types = g_slist_copy (arg_types);
+	func->priv->arg_types = g_slist_copy ((GSList *) arg_types);
 	list = func->priv->arg_types;
 	while (list) {
 		if (list->data) {
@@ -675,7 +675,7 @@ gda_dict_function_get_ret_type  (GdaDictFunction *func)
 gboolean
 gda_dict_function_accepts_args (GdaDictFunction *func, const GSList *arg_types)
 {
-	GSList *arg = arg_types, *list;
+	GSList *arg = (GSList *) arg_types, *list;
 	gboolean args_ok = TRUE;
 	GdaServerProviderInfo *sinfo = NULL;
 	GdaDict *dict;
@@ -688,7 +688,7 @@ gda_dict_function_accepts_args (GdaDictFunction *func, const GSList *arg_types)
 	cnc = gda_dict_get_connection (dict);
 	if (cnc) 
 		sinfo = gda_connection_get_infos (cnc);
-	list = gda_dict_function_get_arg_types (func);
+	list = (GSList *) gda_dict_function_get_arg_types (func);
 	
 	if (g_slist_length (arg) != g_slist_length (list))
 		return FALSE;

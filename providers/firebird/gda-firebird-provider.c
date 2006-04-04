@@ -105,7 +105,6 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 	provider_class->get_def_dbms_type = NULL;
 
 	provider_class->open_connection = gda_firebird_provider_open_connection;
-	provider_class->reset_connection = NULL;
 	provider_class->close_connection = gda_firebird_provider_close_connection;
 	provider_class->get_database = gda_firebird_provider_get_database;
 	provider_class->change_database = gda_firebird_provider_change_database;
@@ -338,7 +337,7 @@ fb_get_tables (GdaConnection *cnc,
 		/* Execute statement */
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);		
-		reclist = gda_connection_execute_command (cnc, command, NULL, NULL);
+		reclist = gda_connection_execute_command_l (cnc, command, NULL, NULL);
 
 		if (reclist) {
 			recset = gda_data_model_array_new (4);
@@ -458,7 +457,7 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 				table_name);
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		reclist = gda_connection_execute_command (cnc, command, NULL, NULL);
+		reclist = gda_connection_execute_command_l (cnc, command, NULL, NULL);
 		if (reclist) {
 			gda_data_model_freeze (recset);
 			
@@ -677,7 +676,7 @@ fb_get_fields_metadata (GdaConnection *cnc,
 				table_name);
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		reclist = gda_connection_execute_command (cnc, command, NULL, NULL);
+		reclist = gda_connection_execute_command_l (cnc, command, NULL, NULL);
 		if (reclist) {
 			/* Create and fill recordset to be returned */
 			recset = (GdaDataModelArray *) gda_data_model_array_new (9);

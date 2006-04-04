@@ -1,6 +1,6 @@
 /* gda-dict-constraint.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -29,6 +29,7 @@
 #include "gda-entity-field.h"
 #include <libgda/gda-util.h>
 #include <glib/gi18n-lib.h>
+#include <string.h>
 
 /* 
  * Main static functions 

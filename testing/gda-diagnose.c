@@ -5,6 +5,7 @@
 #include <glib/gstdio.h>
 #include <gmodule.h>
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-server-provider-extra.h>
 
 #include "html.h"
 
@@ -406,7 +407,6 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 		{"string_to_value", (GFunc) class->string_to_value, FALSE},
 		{"get_def_dbms_type", (GFunc) class->get_def_dbms_type, TRUE},
 		{"open_connection", (GFunc) class->open_connection, TRUE},
-		{"reset_connection", (GFunc) class->reset_connection, FALSE},
 		{"close_connection", (GFunc) class->close_connection, TRUE},
 		{"get_database", (GFunc) class->get_database, TRUE},
 		{"change_database", (GFunc) class->change_database, FALSE},

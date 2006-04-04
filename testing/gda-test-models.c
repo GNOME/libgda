@@ -380,30 +380,20 @@ action_load_file (TestConfig *config, const gchar *model_name, xmlNodePtr node, 
 	gchar *file;
 	gchar *errmsg = NULL;
 
-	xmlDocPtr doc;
-	xmlNodePtr root;
-
 	file = xmlGetProp (node, "file");
 	if (!file)
 		errmsg = g_strdup (_("Missing 'file' attribute"));
 	else {
-		doc = xmlParseFile (file);
-		if (!doc) 
-			errmsg = g_strdup_printf (_("Can't load file '%s'"), file);
-		else {
-			GSList *errors;
+		GSList *errors;
 
-			import = gda_data_model_import_new_xml_node (xmlDocGetRootElement (doc));
-			errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import));
-			if (errors) {
-				GError *err = (GError *) errors->data;
-
-				errmsg = g_strdup (err && err->message ? err->message : _("Unknown error"));
-				g_object_unref (import);
-				import = NULL;
-			}
-
-			xmlFreeDoc (doc);
+		import = gda_data_model_import_new_file (file, FALSE, NULL);
+		errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import));
+		if (errors) {
+			GError *err = (GError *) errors->data;
+			
+			errmsg = g_strdup (err && err->message ? err->message : _("Unknown error"));
+			g_object_unref (import);
+			import = NULL;
 		}
 		g_free (file);
 	}
@@ -420,6 +410,7 @@ action_load_file (TestConfig *config, const gchar *model_name, xmlNodePtr node, 
 			errmsg = g_strdup (error && error->message ? error->message : _("Unknown error"));
 			g_error_free (error);
 		}
+		g_object_unref (import);
 	}
 
 	handle_error (config, errmsg, expected_res);

@@ -260,14 +260,12 @@ GdaParameter *
 gda_parameter_new (GdaValueType type)
 {
 	GObject   *obj;
-	GdaParameter *param;
 
 	g_return_val_if_fail (type != GDA_VALUE_TYPE_UNKNOWN, NULL);
 
         obj = g_object_new (GDA_TYPE_PARAMETER, "gda_type", type, NULL);
-	param = GDA_PARAMETER (obj);
 
-        return param;
+        return (GdaParameter *) obj;
 }
 
 /**
@@ -1333,7 +1331,7 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 		GSList *list;
 		gchar *str;
 
-		str = gda_value_stringify (gda_parameter_get_value (parameter));
+		str = gda_value_stringify ((GdaValue *) gda_parameter_get_value (parameter));
 		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s, %s, value=%s\n" D_COL_NOR, str, parameter,
 			 gda_object_get_name (GDA_OBJECT (parameter)), 
 			 gda_type_to_string (parameter->priv->gda_type),

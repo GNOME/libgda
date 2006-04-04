@@ -568,7 +568,7 @@ gda_parameter_list_get_spec (GdaParameterList *paramlist)
 	int buffersize;
 	GSList *list;
 
-	g_return_val_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist), NULL);
+	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), NULL);
 
 	doc = xmlNewDoc ("1.0");
 	g_return_val_if_fail (doc, NULL);
@@ -955,8 +955,8 @@ compute_ref_columns_index (GdaParameterListSource *source)
 void
 gda_parameter_list_add_param (GdaParameterList *paramlist, GdaParameter *param)
 {
-	g_return_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist));
-	g_return_if_fail (param && GDA_IS_PARAMETER (param));
+	g_return_if_fail (GDA_IS_PARAMETER_LIST (paramlist));
+	g_return_if_fail (GDA_IS_PARAMETER (param));
 
 	gda_parameter_list_real_add_param (paramlist, param);
 	compute_public_data (paramlist);
@@ -1019,6 +1019,82 @@ gda_parameter_list_real_add_param (GdaParameterList *paramlist, GdaParameter *pa
 }
 
 /**
+ * gda_parameter_list_add_param_from_string
+ * @paramlist: a #GdaParameterList object
+ * @name: the name to give to the new parameter
+ * @type: the type of parameter to add
+ * @str: the string representation of the parameter
+ *
+ * Creates and adds a new #GdaParameter to @paramlist. The ID and name of the new parameter
+ * are set as @name. The parameter's value is set from @str.
+ *
+ * Returns: the new #GdaParameter for information, or %NULL if an error occured
+ */
+GdaParameter *
+gda_parameter_list_add_param_from_string (GdaParameterList *paramlist, const gchar *name,
+					  GdaValueType type, const gchar *str)
+{
+	GdaParameter *param;
+	GdaDict *dict;
+
+	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), NULL);
+	g_return_val_if_fail (paramlist->priv, NULL);
+
+	dict = gda_object_get_dict ((GdaObject*) paramlist);
+	param = g_object_new (GDA_TYPE_PARAMETER, "dict", dict, "gda_type", type, NULL);
+	g_return_val_if_fail (param, NULL);
+
+	if (! gda_parameter_set_value_str (param, str)) {
+		g_object_unref (param);
+		g_warning (_("Could not add parameter of type %s with value '%s'"), 
+			   gda_type_to_string (type), str);
+		return NULL;
+	}
+
+	gda_object_set_name ((GdaObject *) param, name);
+	gda_object_set_id ((GdaObject *) param, name);
+	gda_parameter_list_add_param (paramlist, param);
+	g_object_unref (param);
+
+	return param;
+}
+
+/**
+ * gda_parameter_list_add_param_from_value
+ * @paramlist: a #GdaParameterList object
+ * @name: the name to give to the new parameter
+ * @value: the value to give to the new parameter, must not be NULL or of type null
+ *
+ * Creates and adds a new #GdaParameter to @paramlist. The ID and name of the new parameter
+ * are set as @name. The parameter's value is a copy of @value.
+ *
+ * Returns: the new #GdaParameter for information, or %NULL if an error occured
+ */
+GdaParameter *
+gda_parameter_list_add_param_from_value (GdaParameterList *paramlist, const gchar *name, GdaValue *value)
+{
+	GdaParameter *param;
+	GdaDict *dict;
+
+	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), NULL);
+	g_return_val_if_fail (paramlist->priv, NULL);
+	g_return_val_if_fail (G_IS_VALUE (value), NULL);
+
+	dict = gda_object_get_dict ((GdaObject*) paramlist);
+	param = g_object_new (GDA_TYPE_PARAMETER, "dict", dict, "gda_type", gda_value_get_type (value), NULL);
+	g_return_val_if_fail (param, NULL);
+
+	gda_parameter_set_value (param, value);
+	gda_object_set_name ((GdaObject *) param, name);
+	gda_object_set_id ((GdaObject *) param, name);
+	gda_parameter_list_add_param (paramlist, param);
+	g_object_unref (param);
+
+	return param;
+}
+
+
+/**
  * gda_parameter_list_merge_paramlist_params
  * @paramlist: a #GdaParameterList object
  * @paramlist_to_merge: a #GdaParameterList object
@@ -1029,7 +1105,7 @@ void
 gda_parameter_list_merge_paramlist_params (GdaParameterList *paramlist, GdaParameterList *paramlist_to_merge)
 {
 	GSList *params = paramlist_to_merge->parameters;
-	g_return_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist));
+	g_return_if_fail (GDA_IS_PARAMETER_LIST (paramlist));
 	g_return_if_fail (paramlist_to_merge && GDA_IS_PARAMETER_LIST (paramlist_to_merge));
 
 	while (params) {
@@ -1185,7 +1261,7 @@ gda_parameter_list_is_valid (GdaParameterList *paramlist)
 	GSList *params;
 	gboolean retval = TRUE;
 
-	g_return_val_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist), FALSE);
+	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), FALSE);
 	g_return_val_if_fail (paramlist->priv, FALSE);
 
 	params = paramlist->parameters;
@@ -1221,7 +1297,7 @@ gda_parameter_list_find_param (GdaParameterList *paramlist, const gchar *param_n
 	gchar *string_id;
 	gchar *pname;
 
-	g_return_val_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist), NULL);
+	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), NULL);
 	g_return_val_if_fail (paramlist->priv, NULL);
 
 	list = paramlist->parameters;
@@ -1256,7 +1332,7 @@ gda_parameter_list_find_param_for_user (GdaParameterList *paramlist, GdaObject *
 	GdaParameter *param = NULL;
 	GSList *list;
 
-	g_return_val_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist), NULL);
+	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), NULL);
 	g_return_val_if_fail (paramlist->priv, NULL);
 
 	list = paramlist->parameters;
@@ -1408,8 +1484,8 @@ gda_parameter_list_find_source (GdaParameterList *paramlist, GdaDataModel *model
 void
 gda_parameter_list_set_param_default_value (GdaParameterList *paramlist, GdaParameter *param, const GdaValue *value)
 {
-	g_return_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist));
-	g_return_if_fail (param && GDA_IS_PARAMETER (param));
+	g_return_if_fail (GDA_IS_PARAMETER_LIST (paramlist));
+	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (g_slist_find (paramlist->parameters, param));
 
 	if (value && ! gda_value_is_null ((GdaValue *) value)) {
@@ -1441,8 +1517,8 @@ gda_parameter_list_set_param_default_alias (GdaParameterList *paramlist, GdaPara
 {
 	GdaParameter *oldalias;
 
-	g_return_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist));
-	g_return_if_fail (param && GDA_IS_PARAMETER (param));
+	g_return_if_fail (GDA_IS_PARAMETER_LIST (paramlist));
+	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (g_slist_find (paramlist->parameters, param));
 
 	/* remove the old alias if there was one */
@@ -1502,9 +1578,9 @@ const GdaValue *
 gda_parameter_list_get_param_default_value  (GdaParameterList *paramlist, GdaParameter *param)
 {
 	const GdaValue *value;
-	g_return_val_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist), NULL);
+	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), NULL);
 	g_return_val_if_fail (paramlist->priv, NULL);
-	g_return_val_if_fail (param && GDA_IS_PARAMETER (param), NULL);
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
 
 	value = g_hash_table_lookup (paramlist->priv->param_default_values, param);
 	if (value)
@@ -1527,7 +1603,7 @@ gda_parameter_list_dump (GdaParameterList *paramlist, guint offset)
 	gchar *str;
         guint i;
 	
-	g_return_if_fail (paramlist && GDA_IS_PARAMETER_LIST (paramlist));
+	g_return_if_fail (GDA_IS_PARAMETER_LIST (paramlist));
 
         /* string for the offset */
         str = g_new0 (gchar, offset+1);

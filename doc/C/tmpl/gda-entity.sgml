@@ -169,21 +169,3 @@ Interface to represent a generic entity (for tables, views or queries)
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_entity_get_parameters ##### -->
-<para>
-
-</para>
-
-@iface: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_entity_get_param_list ##### -->
-<para>
-
-</para>
-
-@iface: 
-@Returns: 
-
-

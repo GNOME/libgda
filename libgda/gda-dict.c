@@ -2488,7 +2488,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 
 		/* fetch return type */
 		value = gda_data_model_get_value_at (rs, 4, now);
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		if (*str != '-') {
 			rettype = gda_dict_get_data_type_by_name (dict, str);
 			if (!rettype)
@@ -2500,7 +2500,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 
 		/* fetch argument types */
 		value = gda_data_model_get_value_at (rs, 6, now);
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		if (str) {
 			ptr = strtok_r (str, ",", &tok);
 			while (ptr && *ptr) {
@@ -2522,7 +2522,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 
 		/* fetch a func if there is already one with the same id */
 		value = gda_data_model_get_value_at (rs, 1, now);
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		func = gda_dict_get_function_by_dbms_id (dict, str);
 		g_free (str);
 
@@ -2531,7 +2531,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 			   and not its DBMS id, this is usefull if the DBMS has changed and the
 			   DBMS id have changed */
 			value =  gda_data_model_get_value_at (rs, 0, now);
-			str = gda_value_stringify (value);
+			str = gda_value_stringify ((GdaValue *) value);
 			func = gda_dict_get_function_by_name_arg_real (dict, original_functions, str, dtl);
 			g_free (str);
 
@@ -2552,7 +2552,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 				gboolean isequal = TRUE;
 				GSList *hlist;
 				
-				list = gda_dict_function_get_arg_types (func);
+				list = (GSList *) gda_dict_function_get_arg_types (func);
 				hlist = dtl;
 				while (list && hlist && isequal) {
 					if (list->data != hlist->data)
@@ -2592,28 +2592,30 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 		if (func) {
 			/* unique id */
 			value = gda_data_model_get_value_at (rs, 1, now);
-			str = gda_value_stringify (value);
+			str = gda_value_stringify ((GdaValue *) value);
 			gda_dict_function_set_dbms_id (func, str);
 			g_free (str);
 
 			/* description */
 			value = gda_data_model_get_value_at (rs, 3, now);
-			if (value && !gda_value_is_null (value) && (* gda_value_get_string(value))) {
-				str = gda_value_stringify (value);
+			if (value && !gda_value_is_null ((GdaValue *) value) && 
+			    (* gda_value_get_string((GdaValue *) value))) {
+				str = gda_value_stringify ((GdaValue *) value);
 				gda_object_set_description (GDA_OBJECT (func), str);
 				g_free (str);
 			}
 			
 			/* sqlname */
 			value =  gda_data_model_get_value_at (rs, 0, now);
-			str = gda_value_stringify (value);
+			str = gda_value_stringify ((GdaValue *) value);
 			gda_dict_function_set_sqlname (func, str);
 			g_free (str);
 			
 			/* owner */
 			value = gda_data_model_get_value_at (rs, 2, now);
-			if (value && !gda_value_is_null (value) && (* gda_value_get_string(value))) {
-				str = gda_value_stringify (value);
+			if (value && !gda_value_is_null ((GdaValue *) value) && 
+			    (* gda_value_get_string((GdaValue *) value))) {
+				str = gda_value_stringify ((GdaValue *) value);
 				gda_object_set_owner (GDA_OBJECT (func), str);
 				g_free (str);
 			}
@@ -2724,7 +2726,7 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 
 		/* fetch return type */
 		value = gda_data_model_get_value_at (rs, 4, now);
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		if (*str != '-') {
 			outdt = gda_dict_get_data_type_by_name (dict, str);
 			if (!outdt)
@@ -2736,7 +2738,7 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 
 		/* fetch argument type */
 		value = gda_data_model_get_value_at (rs, 5, now);
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		if (str) {
 			if (*str != '-') {
 				indt = gda_dict_get_data_type_by_name (dict, str);
@@ -2748,7 +2750,7 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 
 		/* fetch a agg if there is already one with the same id */
 		value = gda_data_model_get_value_at (rs, 1, now);
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		agg = gda_dict_get_aggregate_by_dbms_id (dict, str);
 		g_free (str);
 
@@ -2757,7 +2759,7 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 			   and not its DBMS id, this is usefull if the DBMS has changed and the
 			   DBMS id have changed */
 			value =  gda_data_model_get_value_at (rs, 0, now);
-			str = gda_value_stringify (value);
+			str = gda_value_stringify ((GdaValue *) value);
 			agg = gda_dict_get_aggregate_by_name_arg_real (dict, original_aggregates, str, indt);
 			g_free (str);
 
@@ -2801,28 +2803,30 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 		if (agg) {
 			/* unique id */
 			value = gda_data_model_get_value_at (rs, 1, now);
-			str = gda_value_stringify (value);
+			str = gda_value_stringify ((GdaValue *) value);
 			gda_dict_aggregate_set_dbms_id (agg, str);
 			g_free (str);
 
 			/* description */
 			value = gda_data_model_get_value_at (rs, 3, now);
-			if (value && !gda_value_is_null (value) && (* gda_value_get_string(value))) {
-				str = gda_value_stringify (value);
+			if (value && !gda_value_is_null ((GdaValue *) value) && 
+			    (* gda_value_get_string((GdaValue *) value))) {
+				str = gda_value_stringify ((GdaValue *) value);
 				gda_object_set_description (GDA_OBJECT (agg), str);
 				g_free (str);
 			}
 			
 			/* sqlname */
 			value =  gda_data_model_get_value_at (rs, 0, now);
-			str = gda_value_stringify (value);
+			str = gda_value_stringify ((GdaValue *) value);
 			gda_dict_aggregate_set_sqlname (agg, str);
 			g_free (str);
 			
 			/* owner */
 			value = gda_data_model_get_value_at (rs, 2, now);
-			if (value && !gda_value_is_null (value) && (* gda_value_get_string(value))) {
-				str = gda_value_stringify (value);
+			if (value && !gda_value_is_null ((GdaValue *) value) && 
+			    (* gda_value_get_string((GdaValue *) value))) {
+				str = gda_value_stringify ((GdaValue *) value);
 				gda_object_set_owner (GDA_OBJECT (agg), str);
 				g_free (str);
 			}

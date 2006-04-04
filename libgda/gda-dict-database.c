@@ -1,6 +1,6 @@
 /* gda-dict-database.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -1082,7 +1082,7 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 		gint i = -1;
 
 		value = gda_data_model_get_value_at (rs, 0, now);
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		table = gda_dict_database_get_table_by_name (mgdb, str);
 		if (!table) {
 			gboolean found = FALSE;
@@ -1109,8 +1109,9 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 
 		/* description */
 		value = gda_data_model_get_value_at (rs, 2, now);
-		if (value && !gda_value_is_null (value) && (* gda_value_get_string(value))) {
-			str = gda_value_stringify (value);
+		if (value && !gda_value_is_null ((GdaValue *) value) && 
+		    (* gda_value_get_string((GdaValue *) value))) {
+			str = gda_value_stringify ((GdaValue *) value);
 			gda_object_set_description (GDA_OBJECT (table), str);
 			g_free (str);
 		}
@@ -1119,8 +1120,9 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 
 		/* owner */
 		value = gda_data_model_get_value_at (rs, 1, now);
-		if (value && !gda_value_is_null (value) && (* gda_value_get_string(value))) {
-			str = gda_value_stringify (value);
+		if (value && !gda_value_is_null ((GdaValue *) value) && 
+		    (* gda_value_get_string((GdaValue *) value))) {
+			str = gda_value_stringify ((GdaValue *) value);
 			gda_object_set_owner (GDA_OBJECT (table), str);
 			g_free (str);
 		}
@@ -1417,7 +1419,7 @@ gda_dict_database_get_table_by_name (GdaDictDatabase *mgdb, const gchar *name)
 	if (mgdb->priv->lc_names)
 		cmpstr = g_utf8_strdown (name, -1);
 	else
-		cmpstr = name;
+		cmpstr = (gchar *) name;
 
 	tables = mgdb->priv->tables;
 	while (!table && tables) {

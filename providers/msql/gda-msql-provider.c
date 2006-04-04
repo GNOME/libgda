@@ -102,7 +102,6 @@ static void gda_msql_provider_class_init(GdaMsqlProviderClass *cl)
 	pcl->get_def_dbms_type = NULL;
 
 	pcl->open_connection = gda_msql_provider_open_connection;
-	pcl->reset_connection = NULL;
 	pcl->close_connection = gda_msql_provider_close_connection;
 	pcl->get_database = gda_msql_provider_get_database;
 	pcl->change_database = gda_msql_provider_change_database;

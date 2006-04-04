@@ -107,7 +107,6 @@ gda_xbase_provider_class_init (GdaXbaseProviderClass *klass)
 	provider_class->get_def_dbms_type = NULL;
 
 	provider_class->open_connection = gda_xbase_provider_open_connection;
-	provider_class->reset_connection = NULL;
 	provider_class->close_connection = gda_xbase_provider_close_connection;
 	provider_class->get_database = gda_xbase_provider_get_database;
 	provider_class->change_database = gda_xbase_provider_change_database;

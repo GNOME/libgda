@@ -163,7 +163,7 @@ main (int argc, char **argv)
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (lptr->data));
 			g_print ("XML Id: %s\n", str);
 			g_free (str);
-			context = gda_entity_get_param_list (GDA_ENTITY (lptr->data));
+			context = gda_query_get_parameters_boxed (GDA_QUERY (lptr->data));
 			if (context) {
 				if (!gda_parameter_list_is_coherent (context, &error)) {
 					g_print ("Generated context is not coherent: %s\n", error->message);

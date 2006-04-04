@@ -30,6 +30,7 @@
 #include "gda-enums.h"
 #include "gda-util.h"
 #include "gda-marshal.h"
+#include "gda-data-access-wrapper.h"
 
 /* 
  * Main static functions 
@@ -630,6 +631,10 @@ gda_data_proxy_set_property (GObject *object,
 			model = (GdaDataModel*) g_value_get_pointer (value);
 			g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
+			if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM)) {
+				g_warning (_("GdaDataProxy cant' handle non random access data models"));
+				return;
+			}
 			proxy->priv->model = model;
 			g_object_ref (model);
 			gda_object_connect_destroy (GDA_OBJECT (model), G_CALLBACK (destroyed_object_cb), object);
@@ -791,7 +796,7 @@ gda_data_proxy_get_proxied_model_n_cols (GdaDataProxy *proxy)
  * 
  * Get the number of rows in the proxied data model
  *
- * Returns: the number of rows, or -1 if an error occured
+ * Returns: the number of rows, or -1 if the number of rows is not known
  */
 gint
 gda_data_proxy_get_proxied_model_n_rows (GdaDataProxy *proxy)
@@ -1726,6 +1731,7 @@ adjust_displayed_chunck (GdaDataProxy *proxy)
 	model_nb_rows = gda_data_model_get_n_rows (proxy->priv->model);
 
 	if (model_nb_rows > 0) {
+		/* known number of rows */
 		if (proxy->priv->sample_size > 0) {
 			if (proxy->priv->sample_first_row >= model_nb_rows) 
 				proxy->priv->sample_first_row = proxy->priv->sample_size * 
@@ -1744,9 +1750,25 @@ adjust_displayed_chunck (GdaDataProxy *proxy)
 		}
 	}
 	else {
-		proxy->priv->sample_first_row = 0;
-		proxy->priv->sample_last_row = 0;
-		new_nb_rows = 0;
+		if (model_nb_rows == 0 ) {
+			/* known number of rows */
+			proxy->priv->sample_first_row = 0;
+			proxy->priv->sample_last_row = 0;
+			new_nb_rows = 0;
+		}
+		else {
+			/* unknown number of rows */
+			if (proxy->priv->sample_size > 0) {
+				proxy->priv->sample_last_row = proxy->priv->sample_first_row + 
+					proxy->priv->sample_size - 1;
+				new_nb_rows = proxy->priv->sample_last_row - proxy->priv->sample_first_row + 1;
+			}
+			else {
+				proxy->priv->sample_first_row = 0;
+				proxy->priv->sample_last_row = G_MAXINT - 1;
+				new_nb_rows = G_MAXINT;
+			}
+		}
 	}
 
 	if ((old_start != proxy->priv->sample_first_row) ||
@@ -1819,20 +1841,48 @@ idle_add_model_rows (GdaDataProxy *proxy)
 	g_return_val_if_fail (proxy->priv->model, FALSE);
 
 	model_nb_rows = gda_data_model_get_n_rows (proxy->priv->model);
-	if (proxy->priv->sample_size > 0) {
-		tmp_current_nb_rows = proxy->priv->sample_size;
-		if (tmp_current_nb_rows >= model_nb_rows)
+	if (model_nb_rows >= 0) {
+		/* known number of rows */
+		if (proxy->priv->sample_size > 0) {
+			tmp_current_nb_rows = proxy->priv->sample_size;
+			if (tmp_current_nb_rows >= model_nb_rows)
+				tmp_current_nb_rows = model_nb_rows;
+		}
+		else
 			tmp_current_nb_rows = model_nb_rows;
 	}
-	else
-		tmp_current_nb_rows = model_nb_rows;
+	else {
+		/* unknown number of rows */
+		if (proxy->priv->sample_size > 0)
+			tmp_current_nb_rows = proxy->priv->sample_size;
+		else
+			tmp_current_nb_rows = G_MAXINT;
+	}
 	
 	while ((i < IDLE_STEP) && (proxy->priv->current_nb_rows < tmp_current_nb_rows)) {
+		if (model_nb_rows < 0) {
+			if (! gda_data_model_get_value_at (proxy->priv->model, 0,
+							   proxy->priv->sample_first_row + 
+							   proxy->priv->current_nb_rows)) {
+				i = IDLE_STEP;
+				proxy->priv->sample_last_row = proxy->priv->sample_first_row + 
+					proxy->priv->current_nb_rows - 1;
+				break;
+			}
+		}
+		
 		proxy->priv->current_nb_rows ++;
-		if (proxy->priv->notify_changes)
+		/*g_print ("Nr: %d (%d)\n", proxy->priv->current_nb_rows, proxy->priv->notify_changes);*/
+		if (proxy->priv->notify_changes) {
+			if (model_nb_rows < 0)
+				/* Force to fetch the next row to see if we have come to the end */
+				gda_data_model_get_value_at (proxy->priv->model, 0,
+							     proxy->priv->sample_first_row + 
+							     proxy->priv->current_nb_rows);
 			gda_data_model_row_inserted ((GdaDataModel *) proxy,
 						     model_row_to_proxy_row (proxy, 
 							       proxy->priv->sample_first_row + proxy->priv->current_nb_rows - 1));
+		}
 		i++;
 	}
 

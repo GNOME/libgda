@@ -128,8 +128,11 @@ gchar                  *gda_parameter_list_get_spec                 (GdaParamete
 guint                   gda_parameter_list_get_length               (GdaParameterList *plist);
 
 
-void                    gda_parameter_list_add_param                (GdaParameterList *paramlist, 
-								     GdaParameter *param);
+void                    gda_parameter_list_add_param                (GdaParameterList *paramlist, GdaParameter *param);
+GdaParameter           *gda_parameter_list_add_param_from_string    (GdaParameterList *paramlist, const gchar *name,
+								     GdaValueType type, const gchar *str);
+GdaParameter           *gda_parameter_list_add_param_from_value     (GdaParameterList *paramlist, const gchar *name,
+								     GdaValue *value);
 void                    gda_parameter_list_merge                    (GdaParameterList *paramlist, 
 								     GdaParameterList *paramlist_to_merge);
 gboolean                gda_parameter_list_is_coherent              (GdaParameterList *paramlist, GError **error);

@@ -59,7 +59,9 @@ enum
 	GDA_QUERY_PARSE_ERROR,
 	GDA_QUERY_SYNTAX_ERROR,
 	GDA_QUERY_STRUCTURE_ERROR,
-	GDA_QUERY_SQL_ANALYSE_ERROR
+	GDA_QUERY_SQL_ANALYSE_ERROR,
+	GDA_QUERY_NO_CNC_ERROR,
+	GDA_QUERY_CNC_CLOSED_ERROR
 };
 
 
@@ -106,6 +108,13 @@ gboolean           gda_query_is_update_query        (GdaQuery *query);
 gboolean           gda_query_is_delete_query        (GdaQuery *query);
 gboolean           gda_query_is_modif_query         (GdaQuery *query);
 GdaQuery          *gda_query_get_parent_query       (GdaQuery *query);
+
+GSList            *gda_query_get_parameters         (GdaQuery *query);
+GdaParameterList  *gda_query_get_parameters_boxed   (GdaQuery *query);
+#define            GDA_QUERY_EXEC_FAILED ((void *) -1)
+GdaDataModel      *gda_query_execute                (GdaQuery *query, GdaParameterList *params,
+						     gboolean iter_model_only_requested, GError **error);
+
 
 /* if SQL queries */
 void               gda_query_set_sql_text           (GdaQuery *query, const gchar *sql, GError **error);

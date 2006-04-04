@@ -1,6 +1,6 @@
 /* gda-dict-table.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -70,7 +70,6 @@ static void             gda_dict_table_add_field_before    (GdaEntity *iface, Gd
 static void             gda_dict_table_swap_fields         (GdaEntity *iface, GdaEntityField *field1, GdaEntityField *field2);
 static void             gda_dict_table_remove_field        (GdaEntity *iface, GdaEntityField *field);
 static gboolean         gda_dict_table_is_writable         (GdaEntity *iface);
-static GSList          *gda_dict_table_get_parameters      (GdaEntity *iface);
 
 
 static void        gda_dict_table_set_database        (GdaDictTable *table, GdaDictDatabase *db);
@@ -180,9 +179,7 @@ gda_dict_table_entity_init (GdaEntityIface *iface)
 	iface->swap_fields = gda_dict_table_swap_fields;
 	iface->remove_field = gda_dict_table_remove_field;
 	iface->is_writable = gda_dict_table_is_writable;
-	iface->get_parameters = gda_dict_table_get_parameters;
 }
-
 
 static void
 gda_dict_table_class_init (GdaDictTableClass * class)
@@ -616,7 +613,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		GdaEntityField *mgf;
 
 		value = gda_data_model_get_value_at (rs, 0, now);
-		str = gda_value_stringify (value);
+		str = gda_value_stringify ((GdaValue *) value);
 		mgf = gda_dict_table_get_field_by_name (GDA_ENTITY (table), str);
 		if (!mgf) {
 			/* field name */
@@ -637,10 +634,11 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		
 		/* Data type */
 		value = gda_data_model_get_value_at (rs, 1, now);
-		if (value && !gda_value_is_null (value) && gda_value_get_string (value) && (* gda_value_get_string (value))) {
+		if (value && !gda_value_is_null ((GdaValue *) value) && 
+		    gda_value_get_string ((GdaValue *) value) && (* gda_value_get_string ((GdaValue *) value))) {
 			GdaDictType *type;
 
-			str = gda_value_stringify (value);
+			str = gda_value_stringify ((GdaValue *) value);
 			type = gda_dict_get_data_type_by_name (dict, str);
 			if (type)
 				gda_dict_field_set_data_type (field, type);
@@ -663,7 +661,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		}
 		if (!gda_entity_field_get_data_type (GDA_ENTITY_FIELD (field))) {
 			if (value)
-				str = gda_value_stringify (value);
+				str = gda_value_stringify ((GdaValue *) value);
 			else
 				str = g_strdup ("NULL");
 			g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_FIELDS_ERROR,
@@ -676,18 +674,18 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 
 		/* Size */
 		value = gda_data_model_get_value_at (rs, 2, now);
-		if (value && !gda_value_is_null (value)) 
-			gda_dict_field_set_length (field, gda_value_get_integer (value));
+		if (value && !gda_value_is_null ((GdaValue *) value)) 
+			gda_dict_field_set_length (field, gda_value_get_integer ((GdaValue *) value));
 
 		/* Scale */
 		value = gda_data_model_get_value_at (rs, 3, now);
-		if (value && !gda_value_is_null (value)) 
-			gda_dict_field_set_scale (field, gda_value_get_integer (value));
+		if (value && !gda_value_is_null ((GdaValue *) value)) 
+			gda_dict_field_set_scale (field, gda_value_get_integer ((GdaValue *) value));
 
 		/* Default value */
 		value = gda_data_model_get_value_at (rs, 8, now);
-		if (value && !gda_value_is_null (value)) {
-			gchar *defv = gda_value_stringify (value);
+		if (value && !gda_value_is_null ((GdaValue *) value)) {
+			gchar *defv = gda_value_stringify ((GdaValue *) value);
 			if (defv && *defv)
 				gda_dict_field_set_default_value (field, value);
 			if (defv)
@@ -715,7 +713,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		
 		/* NOT NULL constraint */
 		value = gda_data_model_get_value_at (rs, 4, now);
-		if (value && !gda_value_is_null (value) && gda_value_get_boolean (value)) {
+		if (value && !gda_value_is_null ((GdaValue *) value) && gda_value_get_boolean ((GdaValue *) value)) {
 			GdaDictConstraint *cstr = GDA_DICT_CONSTRAINT (gda_dict_constraint_new (table, CONSTRAINT_NOT_NULL));
 			gda_dict_constraint_not_null_set_field (cstr, field);
 			constraints = g_slist_append (constraints, cstr);
@@ -754,7 +752,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 
 		/* PRIMARY KEY constraint */
 		value = gda_data_model_get_value_at (rs, 5, now);
-		if (value && !gda_value_is_null (value) && gda_value_get_boolean (value)) {
+		if (value && !gda_value_is_null ((GdaValue *) value) && gda_value_get_boolean ((GdaValue *) value)) {
 			GdaDictConstraint *cstr = NULL;
 			GSList *list = constraints, *nlist;
 			
@@ -780,7 +778,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 
 		/* UNIQUE constraint */
 		value = gda_data_model_get_value_at (rs, 6, now);
-		if (value && !gda_value_is_null (value) && gda_value_get_boolean (value)) {
+		if (value && !gda_value_is_null ((GdaValue *) value) && gda_value_get_boolean ((GdaValue *) value)) {
 			GdaDictConstraint *cstr;
 			GSList *nlist;
 
@@ -794,7 +792,8 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 
 		/* FOREIGN KEY constraint */
 		value = gda_data_model_get_value_at (rs, 7, now);
-		if (value && !gda_value_is_null (value) && gda_value_get_string (value) && (* gda_value_get_string (value))) {
+		if (value && !gda_value_is_null ((GdaValue *) value) && gda_value_get_string ((GdaValue *) value) && 
+		    (* gda_value_get_string ((GdaValue *) value))) {
 			gchar *ref_table, *str, *tok;
 			GdaObjectRef *ref;
 			GdaDictConstraint *cstr = NULL;
@@ -802,13 +801,13 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 			GdaDictConstraintFkeyPair *pair;
 
 			/* ref table */
-			str = g_strdup (gda_value_get_string (value));
+			str = g_strdup (gda_value_get_string ((GdaValue *) value));
 			ref_table = g_strdup (strtok_r (str, ".", &tok));
 			g_free (str);
 			
 			ref = GDA_OBJECT_REF (gda_object_ref_new (gda_object_get_dict (GDA_OBJECT (table))));
 			gda_object_ref_set_ref_name (ref, GDA_TYPE_DICT_FIELD, 
-						  REFERENCE_BY_NAME, gda_value_get_string (value));
+						  REFERENCE_BY_NAME, gda_value_get_string ((GdaValue *) value));
 			
 			/* find the foreign key constraint if it already exists */
 			cstr = g_hash_table_lookup (fk_hash, ref_table);
@@ -842,9 +841,9 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		if (has_extra_attributes) {
 			value = gda_data_model_get_value_at (rs, 9, now);
 			
-			if (! gda_value_is_null (value))
+			if (! gda_value_is_null ((GdaValue *) value))
 				gda_dict_field_set_attributes (field, 
-					 utility_table_field_attrs_parse (gda_value_get_string (value)));
+					 utility_table_field_attrs_parse (gda_value_get_string ((GdaValue *) value)));
 		}
 		
 		now++;
@@ -1112,16 +1111,6 @@ gda_dict_table_is_writable (GdaEntity *iface)
 	
 	return GDA_DICT_TABLE (iface)->priv->is_view ? FALSE : TRUE;
 }
-
-static GSList *
-gda_dict_table_get_parameters (GdaEntity *iface)
-{
-	g_return_val_if_fail (iface && GDA_IS_DICT_TABLE (iface), NULL);
-	g_return_val_if_fail (GDA_DICT_TABLE (iface)->priv, NULL);
-	
-	return NULL;
-}
-
 
 /* 
  * GdaXmlStorage interface implementation

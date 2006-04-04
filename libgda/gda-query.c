@@ -80,7 +80,6 @@ static void        gda_query_add_field_before    (GdaEntity *iface, GdaEntityFie
 static void        gda_query_swap_fields         (GdaEntity *iface, GdaEntityField *field1, GdaEntityField *field2);
 static void        gda_query_remove_field        (GdaEntity *iface, GdaEntityField *field);
 static gboolean    gda_query_is_writable         (GdaEntity *iface);
-static GSList     *gda_query_get_parameters      (GdaEntity *iface);
 
 /* XML storage interface */
 static void        gda_query_xml_storage_init (GdaXmlStorageIface *iface);
@@ -247,7 +246,6 @@ gda_query_entity_init (GdaEntityIface *iface)
 	iface->swap_fields = gda_query_swap_fields;
 	iface->remove_field = gda_query_remove_field;
 	iface->is_writable = gda_query_is_writable;
-	iface->get_parameters = gda_query_get_parameters;
 }
 
 static void 
@@ -375,12 +373,12 @@ gda_query_class_init (GdaQueryClass * class)
 
 	class->type_changed = m_changed_cb;
 	class->condition_changed = m_changed_cb;
-	class->target_added = m_changed_cb;
+	class->target_added = (void (*) (GdaQuery *, GdaQueryTarget *)) m_changed_cb;
 	class->target_removed = NULL;
-	class->target_updated = m_changed_cb;
-	class->join_added = m_changed_cb;
+	class->target_updated = (void (*) (GdaQuery *, GdaQueryTarget *)) m_changed_cb;
+	class->join_added = (void (*) (GdaQuery *, GdaQueryJoin *)) m_changed_cb;
 	class->join_removed = NULL;
-	class->join_updated = m_changed_cb;
+	class->join_updated = (void (*) (GdaQuery *, GdaQueryJoin *)) m_changed_cb;
 	class->sub_query_added = NULL;
 	class->sub_query_removed = NULL;
 	class->sub_query_updated = NULL;
@@ -463,7 +461,6 @@ gda_query_new (GdaDict *dict)
 	GObject *obj;
 	GdaQuery *gda_query;
 	guint id;
-	gchar *str;
 
 	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
 	obj = g_object_new (GDA_TYPE_QUERY, "dict", ASSERT_DICT (dict), NULL);
@@ -762,7 +759,7 @@ gda_query_clean (GdaQuery *gda_query)
 #ifdef GDA_DEBUG
 	if (gda_query->priv->all_conds) {
 		g_print ("Query incoherence error!!!\n");
-		gda_object_dump (gda_query, 0);
+		gda_object_dump (GDA_OBJECT (gda_query), 0);
 	}
 #endif
 	g_assert (!gda_query->priv->all_conds);
@@ -2064,7 +2061,7 @@ gda_query_get_target_by_alias (GdaQuery *query, const gchar *alias_or_name)
 {
 	GdaQueryTarget *target = NULL;
 	GSList *list;
-	gchar *str;
+	const gchar *str;
 
 	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
@@ -2211,7 +2208,7 @@ gda_query_get_join_by_targets (GdaQuery *query, GdaQueryTarget *target1, GdaQuer
 }
 
 static gboolean gda_query_are_joins_active (GdaQuery *query);
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_0
 static void joins_pack_dump (GdaQuery *query);
 #endif
 static gboolean joins_pack_add_join (GdaQuery *query, GdaQueryJoin *join);
@@ -2342,7 +2339,7 @@ gda_query_del_join (GdaQuery *query, GdaQueryJoin *join)
 	destroyed_join_cb (join, query);
 }
 
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_0
 static void
 joins_pack_dump (GdaQuery *query)
 {
@@ -2619,6 +2616,150 @@ destroyed_cond_cb (GdaQueryCondition *cond, GdaQuery *query)
 	/* cleaning... */
 	query_clean_junk (query);
 }
+
+/**
+ * gda_query_get_parameters
+ * @query: a #GdaQuery object
+ *
+ * Get a list of parameters which the query accepts.
+ *
+ * Returns: a list of #GdaParameter objects (the list and objects must be freed by the caller)
+ */
+GSList *
+gda_query_get_parameters (GdaQuery *query)
+{
+	GSList *list, *tmplist, *retval = NULL;
+
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (query->priv, NULL);
+	
+	/* parameters for value fields */
+	list = query->priv->fields;
+	while (list) {
+		tmplist = gda_query_field_get_parameters (GDA_QUERY_FIELD (list->data));
+		if (tmplist)
+			retval = g_slist_concat (retval, tmplist);
+		list = g_slist_next (list);
+	}
+
+	/* parameters for sub queries */
+	list = query->priv->sub_queries;
+	while (list) {
+		tmplist = gda_query_get_parameters (GDA_QUERY (list->data));
+		if (tmplist)
+			retval = g_slist_concat (retval, tmplist);
+		list = g_slist_next (list);
+	}
+
+	return retval;
+}
+
+/**
+ * gda_query_get_parameters_boxed
+ * @query: a #GdaQuery object
+ *
+ * Like the gda_query_get_parameters() method, get a list of parameters which the query accepts,
+ * except that the parameters are stored within a #GdaParameterList object
+ *
+ * Returns: a new #GdaParameterList object, or %NULL if @query does not accept any parameter.
+ */
+GdaParameterList *
+gda_query_get_parameters_boxed (GdaQuery *query)
+{
+	GdaParameterList *dataset = NULL;
+	GSList *list, *params;
+
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);	
+
+	params = gda_query_get_parameters (query);
+
+	if (params) {
+		dataset = GDA_PARAMETER_LIST (gda_parameter_list_new (params));
+ 
+		/* get rid of the params list since we don't use them anymore */
+		list = params;
+		while (list) {
+			g_object_unref (G_OBJECT (list->data));
+			list = g_slist_next (list);
+		}
+		g_slist_free (params);
+	}
+
+	return dataset;
+}
+
+/**
+ * gda_query_execute
+ * @query: the #GdaQuery to execute
+ * @params: a #GdaParameterList object obtained using gda_query_get_parameters_boxed()
+ * @iter_model_only_requested: set to TRUE if the returned data model will only be accessed using an iterator
+ * @error: a place to store errors, or %NULL
+ *
+ * Executes @query and optionnaly returns a #GdaDataModel as a result.
+ *
+ * Returns: a #GdaDataModel pointer or %NULL if no error occured, or GDA_QUERY_EXEC_FAILED if an error occured
+ */
+GdaDataModel *
+gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_model_only_requested, GError **error)
+{
+	gchar *str;
+	GdaCommand *cmde;
+	GdaConnection *cnc;
+	GdaDict *dict;
+	GList *list;
+	GdaDataModel *model = NULL;
+	GdaParameterList *options = NULL;
+
+	g_return_val_if_fail (GDA_IS_QUERY (query), GDA_QUERY_EXEC_FAILED);
+	g_return_val_if_fail (!params || GDA_IS_PARAMETER_LIST (params), GDA_QUERY_EXEC_FAILED);
+
+	dict = gda_object_get_dict (GDA_OBJECT (query));
+	cnc = gda_dict_get_connection (dict);
+	if (!cnc) {
+		g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_NO_CNC_ERROR,
+			     _("No connection associated to query's dictionary"));
+		return GDA_QUERY_EXEC_FAILED;
+	}
+	if (!gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_CNC_CLOSED_ERROR,
+			     _("Connection associated to query's dictionary is closed"));
+		return GDA_QUERY_EXEC_FAILED;
+	}
+
+	str = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 0, error);
+	if (!str)
+		return GDA_QUERY_EXEC_FAILED;
+       
+	cmde = gda_command_new (str, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	if (iter_model_only_requested) {
+		options = (GdaParameterList *) g_object_new (GDA_TYPE_PARAMETER_LIST, "dict", dict, NULL);
+		gda_parameter_list_add_param_from_string (options, "ITER_MODEL_ONLY", 
+							  GDA_VALUE_TYPE_BOOLEAN, "TRUE");
+	}
+	list = gda_connection_execute_command_l (cnc, cmde, options, error);
+	if (list) {
+		GList *plist;
+
+		model = (GdaDataModel*) g_list_last (list)->data;
+		if (model)
+			g_object_ref (model);
+		plist = list;
+		for (plist = list; plist; plist = g_list_next (plist))
+			if (plist->data)
+				g_object_unref (plist->data);
+		g_list_free (list);
+	}
+	else
+		model = GDA_QUERY_EXEC_FAILED;
+
+	if (options)
+		g_object_unref (options);
+	gda_command_free (cmde);
+	g_free (str);
+
+	return model;
+}
+
 
 /**
  * gda_query_add_field_from_sql
@@ -2954,7 +3095,7 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 				if (!field) {
 					gchar *str2 = g_utf8_strdown (split[0], -1);
 					GdaEntity *tmpent = gda_query_target_get_represented_entity (target);
-					gchar *entstr;
+					const gchar *entstr;
 					
 					if (tmpent)
 						entstr = gda_object_get_name (GDA_OBJECT (tmpent));
@@ -3373,37 +3514,6 @@ gda_query_is_writable (GdaEntity *iface)
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, FALSE);
 	
 	return FALSE;
-}
-
-static GSList *
-gda_query_get_parameters (GdaEntity *iface)
-{
-	GdaQuery *query;
-	GSList *list, *tmplist, *retval = NULL;
-
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
-	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
-	query = GDA_QUERY (iface);
-	
-	/* parameters for value fields */
-	list = query->priv->fields;
-	while (list) {
-		tmplist = gda_query_field_get_parameters (GDA_QUERY_FIELD (list->data));
-		if (tmplist)
-			retval = g_slist_concat (retval, tmplist);
-		list = g_slist_next (list);
-	}
-
-	/* parameters for sub queries */
-	list = query->priv->sub_queries;
-	while (list) {
-		tmplist = gda_query_get_parameters (GDA_ENTITY (list->data));
-		if (tmplist)
-			retval = g_slist_concat (retval, tmplist);
-		list = g_slist_next (list);
-	}
-
-	return retval;
 }
 
 /**
@@ -4324,7 +4434,7 @@ assert_coherence_all_params_present (GdaQuery *query, GdaParameterList *context,
 	gboolean allok = TRUE;
 	GSList *params, *plist;
 
-	params = gda_entity_get_parameters (GDA_ENTITY (query));
+	params = gda_query_get_parameters (query);
 
 	plist = params;
 	while (plist && allok) {
@@ -4706,7 +4816,7 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GE
 				g_string_append (sql, str);
 				g_free (str);
 
-				str = gda_query_field_get_alias (GDA_QUERY_FIELD (list->data));
+				str = (gchar *) gda_query_field_get_alias (GDA_QUERY_FIELD (list->data));
 				if (str && *str) {
 					if (strstr (str, " "))
 						g_string_append_printf (sql, " AS \"%s\"", str);
@@ -5159,7 +5269,6 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 		list = printed_fields;
 		first = TRUE;
 		while (list) {
-			GdaEntityField *field;
 			gchar *tmpstr;
 
 			if (first) 
@@ -5255,7 +5364,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 	first = TRUE;
 	while (list && !err) {
 		if (gda_query_field_is_visible (GDA_QUERY_FIELD (list->data))) {
-			GdaEntityField *field, *value_prov;
+			GdaEntityField *value_prov;
 			gchar *str;
 			if (first) 
 				first = FALSE;

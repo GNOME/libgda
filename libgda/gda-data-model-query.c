@@ -355,8 +355,8 @@ gda_data_model_query_set_property (GObject *object,
 				g_object_ref (model->priv->queries[qindex]);
 				g_signal_connect (model->priv->queries[qindex], "to_be_destroyed",
 						  G_CALLBACK (to_be_destroyed_query_cb), model);
-
-				model->priv->params[qindex] = gda_entity_get_param_list (GDA_ENTITY (model->priv->queries[qindex]));
+				
+				model->priv->params[qindex] = gda_query_get_parameters_boxed (model->priv->queries[qindex]);
 
 				if (qindex == SEL_QUERY) {
 					/* SELECT query */
@@ -545,10 +545,6 @@ gda_data_model_query_get_param_list (GdaDataModelQuery *model)
 gboolean
 gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 {
-	gchar *sql;
-	GdaCommand *cmd;
-	GdaConnection *cnc;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), FALSE);
 	g_return_val_if_fail (model->priv, FALSE);
 
@@ -572,39 +568,14 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 		return FALSE;
 	}
 
-	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (model)));
-	if (!cnc) {
-		g_set_error (&model->priv->refresh_error, 0, 0,
-			     _("No connection specified"));
-		if (error) 
-			*error = g_error_copy (model->priv->refresh_error);
-		return FALSE;
-	}
-
-	if (!gda_connection_is_opened (cnc)) {
-		g_set_error (&model->priv->refresh_error, 0, 0,
-			     _("Connection is not opened"));
-		if (error) 
-			*error = g_error_copy (model->priv->refresh_error);
-		return FALSE;
-	}
-
-	sql = gda_renderer_render_as_sql (GDA_RENDERER (model->priv->queries[SEL_QUERY]), model->priv->params [SEL_QUERY],
-					  0, &model->priv->refresh_error);
-	if (!sql) {
+	model->priv->data = gda_query_execute (model->priv->queries[SEL_QUERY], model->priv->params [SEL_QUERY],
+					       TRUE, &model->priv->refresh_error);
+	if (!model->priv->data || (model->priv->data == GDA_QUERY_EXEC_FAILED)) {
+		model->priv->data = NULL;
 		g_assert (model->priv->refresh_error);
 		if (error) 
 			*error = g_error_copy (model->priv->refresh_error);
 		return FALSE;
-	}
-
-	cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-        model->priv->data = gda_connection_execute_single_command (cnc, cmd, NULL, &model->priv->refresh_error);
-	gda_command_free (cmd);
-	if (!model->priv->data) {
-		g_assert (model->priv->refresh_error);
-		if (error) 
-			*error = g_error_copy (model->priv->refresh_error);
 	}
 
 #ifdef GDA_DEBUG_NO
@@ -616,7 +587,6 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 			g_print ("\t=> error\n");
 	}
 #endif
-	g_free (sql);
 
 	gda_data_model_changed ((GdaDataModel *) model);
 	return model->priv->data ? TRUE : FALSE;
@@ -931,40 +901,15 @@ gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
 static gboolean
 run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 {
-	GdaConnection *cnc;
-	gchar *sql;
-	GdaCommand *cmd;
 	gboolean retval = FALSE;
-
-	/* check connection */
-	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (selmodel)));
-	if (!cnc) {
-		g_set_error (error, 0, 0,
-			     _("No connection specified"));
-		return FALSE;
-	}
-
-	if (!gda_connection_is_opened (cnc)) {
-		g_set_error (error, 0, 0,
-			     _("Connection is not opened"));
-		return FALSE;
-	}
-
-	/* render the SQL and run it */
-	/*gda_object_dump (selmodel->priv->params [query_type], 0);*/
-	sql = gda_renderer_render_as_sql (GDA_RENDERER (selmodel->priv->queries[query_type]), 
-					  selmodel->priv->params [query_type],
-					  0, error);
-	if (!sql)
-		return FALSE;
-
-	g_print ("Query model SQL: %s\n", sql);
-
-	cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-	g_free (sql);
-        if (gda_connection_execute_non_query (cnc, cmd, NULL, error) >= 0)
+	GdaDataModel *model;
+	model = gda_query_execute (selmodel->priv->queries[query_type], 
+				   selmodel->priv->params [query_type], TRUE, error);
+	if (model != GDA_QUERY_EXEC_FAILED) {
 		retval = TRUE;
-	gda_command_free (cmd);
+		if (model)
+			g_object_unref (model);
+	}
 
 	if (retval && !selmodel->priv->defer_refresh)
 		/* do a refresh */

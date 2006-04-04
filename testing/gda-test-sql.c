@@ -479,7 +479,7 @@ show_params (GdaQuery *query, xmlNodePtr parent)
 {
 	GdaParameterList *params;
 
-	params = gda_entity_get_param_list (GDA_ENTITY (query));
+	params = gda_query_get_parameters_boxed (query);
 	if (params) {
 		xmlNodePtr pul;
 		GSList *list;

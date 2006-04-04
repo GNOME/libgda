@@ -1,6 +1,6 @@
 /* gda-query-field-field.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -859,7 +859,7 @@ gda_query_field_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 		xmlSetProp (node, "object", xmlid);
 	}
 	else {
-		gchar *tmpstr;
+		const gchar *tmpstr;
 
 		tmpstr = gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL);
 		if (tmpstr)
@@ -1009,7 +1009,6 @@ gda_query_field_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 static gchar *
 gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
 {
-	gchar *str = NULL;
 	GdaQueryFieldField *field;
 	GdaObject *fobj;
 	const gchar *tname = NULL, *fname = NULL;
@@ -1061,7 +1060,9 @@ gda_query_field_field_render_as_str (GdaRenderer *iface, GdaParameterList *conte
 	if (tobj) {
 		GdaEntity *ent = gda_query_target_get_represented_entity (GDA_QUERY_TARGET (tobj));
 		if (ent)
-			tname = g_strdup_printf ("%s(%s)", gda_query_target_get_alias (GDA_QUERY_TARGET (tobj)));
+			tname = g_strdup_printf ("%s(%s)", 
+						 gda_object_get_name (ent), 
+						 gda_query_target_get_alias (GDA_QUERY_TARGET (tobj)));
 		else
 			tname = g_strdup (gda_query_target_get_alias (GDA_QUERY_TARGET (tobj)));
 	}

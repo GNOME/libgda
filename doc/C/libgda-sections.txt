@@ -282,9 +282,8 @@ gda_connection_drop_table
 gda_connection_create_index
 gda_connection_drop_index
 gda_connection_execute_command
+gda_connection_execute_command_l
 gda_connection_get_last_insert_id
-gda_connection_execute_single_command
-gda_connection_execute_non_query
 gda_connection_begin_transaction
 gda_connection_commit_transaction
 gda_connection_rollback_transaction
@@ -401,6 +400,7 @@ GdaDataAccessWrapper
 GdaDataAccessWrapperClass
 GdaDataAccessWrapperPrivate
 gda_data_access_wrapper_new
+gda_data_access_wrapper_row_exists
 <SUBSECTION Standard>
 GDA_DATA_ACCESS_WRAPPER
 GDA_DATA_ACCESS_WRAPPER_CLASS
@@ -1318,8 +1318,6 @@ gda_entity_add_field_before
 gda_entity_swap_fields
 gda_entity_remove_field
 gda_entity_is_writable
-gda_entity_get_parameters
-gda_entity_get_param_list
 <SUBSECTION Standard>
 GDA_ENTITY
 GDA_ENTITY_GET_IFACE
@@ -1436,6 +1434,8 @@ gda_query_is_delete_query
 gda_query_is_modif_query
 gda_query_set_sql_text
 gda_query_get_sql_text
+gda_query_get_parameters
+gda_query_get_parameters_boxed
 gda_query_get_parent_query
 gda_query_get_field_by_ref_field
 gda_query_get_first_field_for_target
@@ -1489,6 +1489,8 @@ gda_parameter_list_new_from_spec
 gda_parameter_list_get_length
 gda_parameter_list_get_spec
 gda_parameter_list_add_param
+gda_parameter_list_add_param_from_string
+gda_parameter_list_add_param_from_value
 gda_parameter_list_merge_paramlist_params
 gda_parameter_list_is_coherent
 gda_parameter_list_is_valid

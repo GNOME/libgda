@@ -113,8 +113,6 @@ struct _GdaServerProviderClass {
 						    GdaQuarkList *params,
 						    const gchar *username,
 						    const gchar *password);
-	gboolean               (* reset_connection) (GdaServerProvider *provider,
-						     GdaConnection *cnc);
 	gboolean               (* close_connection) (GdaServerProvider *provider,
 						     GdaConnection *cnc);
 	

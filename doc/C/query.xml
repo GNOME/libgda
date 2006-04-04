@@ -159,10 +159,10 @@
     </para>
     <para>
       The list of parameters required to run a query is obtained using the 
-      <link linkend="gda-entity-get-parameters">gda_entity_get_parameters()</link> method. This function returns a
+      <link linkend="gda-query-get-parameters">gda_query_get_parameters()</link> method. This function returns a
       raw list of parameters. Usually however, it is better to use a <link linkend="GdaParameterList">GdaParameterList</link>
       object which stores the parameters, and organises the parameters in a convenient. The function to be used to obtain a
-      GdaParameterList object is <link linkend="gda-entity-get-exec-context">gda_entity_get_exec_context()</link>.
+      GdaParameterList object is <link linkend="gda-query-get-parameters-boxed">gda_query_get_parameters_boxed()</link>.
       them 
     </para>
   </sect3>
@@ -237,7 +237,8 @@
   <sect3>
     <title>Direct SQL queries</title>
     <para>
-      As it is sometimes easier to define a query usong an SQL statement, a #GdaQuery object can be defined from any SQL
+      As it is sometimes easier to define a query usong an SQL statement, a <link linkend="GdaQuery">GdaQuery</link>
+      object can be defined from any SQL
       1992 statement, using the gda_query_set_sql_text() method. The SQL passed as argument must be a single SQL statement
       (that is not several statements separated by a colon).
     </para>
@@ -259,7 +260,8 @@
     <para>
       So, when the query will be executed, the real executed SQL statement will be "SELECT 10, t1.id FROM customers AS t1"
       if the "10" value has not been replaced by another value. The replacement of that value will be possible
-      through the usage of a #GdaParameter object (obtained through a <link linkend="GdaParameterList">GdaParameterList</link> object).
+      through the usage of a <link linkend="GdaParameter">GdaParameter</link> object 
+      (obtained through a <link linkend="GdaParameterList">GdaParameterList</link> object).
     </para>
     <para>
       The available extension "tags" are:

@@ -344,6 +344,8 @@ gda_data_model_import_dispose (GObject *object)
 				model->priv->extract.csv.delimiter = NULL;
 			}
 			break;
+		case FORMAT_XML_NODE:
+			break;
 		default:
 			g_assert_not_reached ();
 			break;
@@ -382,6 +384,7 @@ gda_data_model_import_finalize (GObject *object)
 		if (model->priv->cursor_values) {
 			g_slist_foreach (model->priv->cursor_values, (GFunc) gda_value_free, NULL);
 			g_slist_free (model->priv->cursor_values);
+			model->priv->cursor_values = NULL;
 		}
 
 		g_free (model->priv);
@@ -546,10 +549,11 @@ gda_data_model_import_set_property (GObject *object,
 			break;
 			
 	case FORMAT_CSV:
+		model->priv->extract.csv.escape_char = '"';
 		if (model->priv->options) {
 			const gchar *option;
 			option = find_option_as_string (model, "ENCODING");
-			if (option)
+			if (option) 
 				model->priv->extract.csv.encoding = g_strdup (option);
 			option = find_option_as_string (model, "SEPARATOR");
 			if (option)
@@ -639,12 +643,12 @@ gda_data_model_import_new_file   (const gchar *filename, gboolean random_access,
 }
 
 /**
- * gda_data_model_import_new_file
+ * gda_data_model_import_new_mem
  * @data: a string containng the data to import
  *
  * Creates a new #GdaDataModel object which contains the data stored in the @data string. 
  *
- * <b>Important note:</b> the @data string is not copied for memory efficiency reasons and should not
+ * Important note: the @data string is not copied for memory efficiency reasons and should not
  * therefore be altered in any way as long as the returned data model exists.
  *
  * Returns: a pointer to the newly created #GdaDataModel.
@@ -685,10 +689,91 @@ gda_data_model_import_new_xml_node (xmlNodePtr node)
 }
 
 #ifdef GDA_DEBUG
+
+static void
+_dump_row (GdaDataModelIter *iter, gint n_cols, gchar *stroff)
+{
+	gint i;
+	gchar *sep_col  = " | ";
+
+	for (i = 0; i < n_cols; i++) {
+		GdaParameter *param;
+		gchar *str;
+
+		param = gda_data_model_iter_get_param_for_column (iter, i);
+		str = gda_value_stringify ((GdaValue *) gda_parameter_get_value (param));
+		if (i != 0)
+			g_print ("%s%s", sep_col, str);
+		else
+			g_print ("%s%s", stroff, str);		
+		g_free (str);
+	}
+	g_print ("\n");
+}
+
 static void
 gda_data_model_import_dump (GdaDataModelImport *model, guint offset)
 {
-	TO_IMPLEMENT;
+	gchar *stroff;
+
+	stroff = g_new0 (gchar, offset+1);
+	memset (stroff, ' ', offset);
+
+	if (model->priv) {
+		GdaDataModelIter *iter;
+		gint n_cols, i;
+		gchar *sep_col  = " | ";
+		gchar *sep_row  = "-+-";
+		gchar sep_fill = '-';
+		
+		g_print ("%s" D_COL_H1 "GdaDataModelImport %p (name=%s, id=%s)\n" D_COL_NOR,
+			 stroff, model, gda_object_get_name (GDA_OBJECT (model)), 
+			 gda_object_get_id (GDA_OBJECT (model)));
+		
+		/* columns */
+		n_cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (model));
+		for (i = 0; i < n_cols; i++) {
+			GdaColumn *col = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
+                        g_print ("%sModel col %d has type %s\n", stroff, i, 
+				 gda_type_to_string (gda_column_get_gda_type (col)));
+		}
+
+		for (i = 0; i < n_cols; i++) {
+			const gchar *str;
+
+			str = (gchar *) gda_data_model_get_column_title (GDA_DATA_MODEL (model), i);
+			if (i != 0)
+				g_print ("%s%s", sep_col, str);
+			else
+				g_print ("%s%s", stroff, str);
+		}
+		g_print ("\n");
+
+		/* data */
+		for (i = 0; i < n_cols; i++) {
+			gint j;
+			if (i != 0)
+				g_print ("%s", sep_row);
+			else
+				g_print ("%s", stroff);
+			for (j = 0; j < 10; j++)
+				g_print ("%c", sep_fill);
+		}
+		g_print ("\n");
+
+		iter = gda_data_model_create_iter (GDA_DATA_MODEL (model));
+		if (gda_data_model_iter_is_valid (iter)) {
+			g_print ("%sSome parts of the model may be missing...\n", stroff);
+			_dump_row (iter, n_cols, stroff);
+		}
+		while (gda_data_model_iter_move_next (iter))
+			_dump_row (iter, n_cols, stroff);
+		g_object_unref (iter);
+        }
+        else
+                g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, stroff, model);
+
+	g_free (stroff);
 }
 #endif
 
@@ -854,6 +939,10 @@ csv_split_line (GdaDataModelImport *model)
 			g_error_free (error);
 		}
 	}
+	else 
+		line = g_locale_to_utf8 (model->priv->extract.csv.line_start,
+					 model->priv->extract.csv.line_end - model->priv->extract.csv.line_start,
+					 NULL, NULL, NULL);
 	
 	if (!line)
 		line = g_strndup (model->priv->extract.csv.line_start, 
@@ -937,11 +1026,10 @@ csv_split_line (GdaDataModelImport *model)
 			ptr = ch;
 			while (*ptr) {
 				/* convert double escape char to a single one */
-				if ((*ptr == esc) && (*(ptr+1) == esc)) {
+				if ((*ptr == esc) && (*(ptr+1) == esc))
 					g_memmove (ptr, ptr+1, len);
-					len--;
-				}
-					
+
+				len--;
 				ptr++;
 			}
 
@@ -1193,7 +1281,7 @@ init_xml_import (GdaDataModelImport *model)
 			/* error */
 			gchar *str;
 
-			str = g_strdup_printf (_("Expected <gda-array> node in XML file, got <%s>"), name);
+			str = g_strdup_printf (_("Expected <gda_array> node in XML file, got <%s>"), name);
 			add_error (model, str);
 			g_free (str);
 			xmlFreeTextReader (reader);
@@ -1458,7 +1546,7 @@ init_node_import (GdaDataModelImport *model)
 	if (strcmp (node->name, "gda_array")) {
 		gchar *str;
 
-		str = g_strdup_printf (_("Expected XML node <gda_array> but got <%s>"), node->name);
+		str = g_strdup_printf (_("Expected <gda_array> node but got <%s>"), node->name);
 		add_error (model, str);
 		g_free (str);
 
@@ -1733,7 +1821,6 @@ gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, gint row
 	g_return_val_if_fail (imodel->priv, 0);
 	
 	flags = GDA_VALUE_ATTR_NO_MODIF;
-	TO_IMPLEMENT;
 	
 	return flags;
 }

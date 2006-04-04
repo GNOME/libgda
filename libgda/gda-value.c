@@ -117,9 +117,11 @@ set_from_string (GdaValue *value, const gchar *as_string)
 			gda_value_set_boolean (value, TRUE);
 			retval = TRUE;
 		}
-		else if (g_strcasecmp (as_string, "false") == 0) {
-			gda_value_set_boolean (value, FALSE);
-			retval = TRUE;
+		else {
+			if (g_strcasecmp (as_string, "false") == 0) {
+				gda_value_set_boolean (value, FALSE);
+				retval = TRUE;
+			}
 		}
 		break;
 

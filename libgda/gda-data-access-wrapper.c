@@ -335,6 +335,29 @@ gda_data_access_wrapper_new (GdaDataModel *model)
 	return GDA_DATA_MODEL (retmodel);
 }
 
+/**
+ * gda_data_access_wrapper_row_exists
+ * @wrapper: a #GdaDataAccessWrapper objects
+ * @row: a row number to test existance
+ *
+ * Tests if the wrapper model of @wrapper has a row number @row
+ *
+ * Returns: TRUE if row number @row exists
+ */
+gboolean
+gda_data_access_wrapper_row_exists (GdaDataAccessWrapper *wrapper, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (wrapper), FALSE);
+	
+	if (wrapper->priv->nb_cols == 0)
+		return FALSE;
+
+	if (gda_data_model_get_value_at ((GdaDataModel*) wrapper, 0, row))
+		return TRUE;
+	else
+		return FALSE;
+}
+
 #ifdef GDA_DEBUG
 static void
 gda_data_access_wrapper_dump (GdaDataAccessWrapper *model, guint offset)
@@ -438,7 +461,7 @@ create_new_row (GdaDataAccessWrapper *model)
 	}
 
 	g_hash_table_insert (model->priv->rows, GINT_TO_POINTER (model->priv->iter_row), row);
-	g_print ("%s(%d)\n", __FUNCTION__, model->priv->iter_row);
+	/*g_print ("%s(%d)\n", __FUNCTION__, model->priv->iter_row);*/
 
 	return row;
 }
@@ -511,7 +534,7 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *mod
 	g_assert (model->priv->rows);
 
 	if (gda_data_model_iter_is_valid (iter)) {
-		g_print ("%s(%d)\n", __FUNCTION__, row);
+		/*g_print ("%s(%d)\n", __FUNCTION__, row);*/
 		model->priv->iter_row = row;
 		if (model->priv->last_row < row)
 			model->priv->last_row = row;
@@ -524,7 +547,7 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *mod
 			gda_row = g_hash_table_lookup (model->priv->rows, GINT_TO_POINTER (row));
 			if (!gda_row) {
 				create_new_row (model);
-				gda_object_dump (model, 10);
+				/*gda_object_dump (model, 10);*/
 			}
 		}
 	}

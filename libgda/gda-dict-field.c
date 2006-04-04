@@ -1,6 +1,6 @@
 /* gda-dict-field.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -505,14 +505,14 @@ gda_dict_field_set_default_value (GdaDictField *field, const GdaValue *value)
 	g_return_if_fail (field && GDA_IS_DICT_FIELD (field));
 	g_return_if_fail (field->priv);
 
-	if (gda_value_compare_ext (field->priv->default_val, value)) {
+	if (gda_value_compare_ext (field->priv->default_val, (GdaValue *) value)) {
 		if (field->priv->default_val) {
 			gda_value_free (field->priv->default_val);
 			field->priv->default_val = NULL;
 		}
 		
 		if (value)
-			field->priv->default_val = gda_value_copy (value);
+			field->priv->default_val = gda_value_copy ((GdaValue *) value);
 		
 		/* signal the modification */
 		gda_object_changed (GDA_OBJECT (field));

@@ -1,6 +1,6 @@
 /* gda-query-parsing.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -1658,7 +1658,6 @@ parsed_create_func_query_field (GdaQuery *query, gboolean add_to_query, ParseDat
 				gboolean try_existing_field, gboolean *new_field, GError **error)
 {
 	GdaEntityField *qfield = NULL;
-	GSList *list;
 	GSList *args = NULL, *arg_types = NULL;
 	GList *dlist;
 	GdaDictFunction *function = NULL;
