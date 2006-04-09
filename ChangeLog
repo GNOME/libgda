@@ -1,3 +1,8 @@
+2006-04-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c: applied patch from Chris Shoemaker
+	to fix bug #337497
+
 2006-04-04  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-parameter-list.[ch]: added gda_parameter_list_add_param_from_string() to 

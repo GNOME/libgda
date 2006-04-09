@@ -1451,13 +1451,16 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 	pconn = priv_data->pconn;
 	result = FALSE;
 	pg_res = PQexec (pconn, command);
-	if (pg_res != NULL){
+	if (pg_res != NULL){		
 		result = PQresultStatus (pg_res) == PGRES_COMMAND_OK;
+		if (result == FALSE)
+			gda_connection_add_event (cnc, gda_postgres_make_error (pconn, pg_res));
+
 		PQclear (pg_res);
 	}
+	else 
+		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
 
-	if (result == FALSE)
-		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, pg_res));
 
 	return result;
 }
