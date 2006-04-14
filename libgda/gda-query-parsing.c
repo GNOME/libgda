@@ -1479,7 +1479,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		unspecvalue = TRUE; 
 
 	/*
-	 * try to determine a suitable GdaDictType or at least GdaValyeType for the value 
+	 * try to determine a suitable GdaDictType or at least GdaValueType for the value 
 	 */
 	list = param_specs;
 	while (list && !real_type) {
@@ -1577,6 +1577,19 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		gdatype = gda_dict_type_get_gda_type (real_type);
 	g_assert (gdatype != GDA_VALUE_TYPE_UNKNOWN);
 
+	if (!unspecvalue && !gdaval) {
+		dh = gda_dict_get_handler (dict, gdatype);
+		if (dh)
+			gdaval = gda_data_handler_get_value_from_sql (dh, value, gdatype);
+		if (! gdaval) {
+			g_set_error (error,
+				     GDA_QUERY_ERROR,
+				     GDA_QUERY_SQL_ANALYSE_ERROR,
+				     _("Value '%s' can't be converted to a known type"), value);
+			return NULL;
+		}
+	}
+
 	/*
 	 * Actual GdaEntityField creation
 	 */
@@ -1587,15 +1600,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		/* value MUST BE a parameter */
 		gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (qfield), TRUE);
 	else {
-		if (!gdaval) {
-			if (prov)
-				dh = gda_server_provider_get_data_handler_gda (prov, cnc, gdatype);
-			else
-				dh = gda_dict_get_default_handler (dict, gdatype);
-			gdaval = gda_data_handler_get_value_from_sql (dh, value, gdatype);
-			g_assert (gdaval);
-		}
-
+		/* gdaval can't be NULL here */
 		gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (qfield), gdaval);
 		gda_value_free (gdaval);
 		gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (qfield), FALSE);

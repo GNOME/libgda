@@ -988,6 +988,8 @@ GdaDict
 gda_dict_new
 gda_dict_load_xml_file
 gda_dict_save_xml_file
+gda_dict_get_handler
+gda_dict_get_default_handler
 gda_dict_declare_query
 gda_dict_assume_query
 gda_dict_unassume_query
@@ -1027,7 +1029,6 @@ gda_dict_get_aggregate_by_name_arg_real
 gda_dict_get_aggregate_by_name_arg
 gda_dict_get_aggregate_by_dbms_id
 gda_dict_get_aggregate_by_xml_id
-gda_dict_get_default_handler
 <SUBSECTION Standard>
 GDA_DICT
 GDA_DICT_CLASS
@@ -1436,6 +1437,7 @@ gda_query_set_sql_text
 gda_query_get_sql_text
 gda_query_get_parameters
 gda_query_get_parameters_boxed
+gda_query_execute
 gda_query_get_parent_query
 gda_query_get_field_by_ref_field
 gda_query_get_first_field_for_target

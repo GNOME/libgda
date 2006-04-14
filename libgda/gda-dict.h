@@ -123,6 +123,9 @@ gboolean        gda_dict_save                (GdaDict *dict, GError **error);
 gboolean        gda_dict_load_xml_file       (GdaDict *dict, const gchar *xmlfile, GError **error);
 gboolean        gda_dict_save_xml_file       (GdaDict *dict, const gchar *xmlfile, GError **error);
 
+GdaDataHandler *gda_dict_get_handler         (GdaDict *dict, GdaValueType for_type);
+GdaDataHandler *gda_dict_get_default_handler (GdaDict *dict, GdaValueType for_type);
+
 /* GdaDictType manipulations */
 GSList         *gda_dict_get_data_types            (GdaDict *dict);
 GdaDictType    *gda_dict_get_data_type_by_name     (GdaDict *dict, const gchar *type_name);
@@ -164,8 +167,6 @@ GdaDictDatabase  *gda_dict_get_database        (GdaDict *dict);
 
 GSList         *gda_dict_get_entities_fk_constraints (GdaDict *dict, GdaEntity *entity1, GdaEntity *entity2,
  						     gboolean entity1_has_fk);
-
-GdaDataHandler    * gda_dict_get_default_handler (GdaDict *dict, GdaValueType for_type);
 
 #ifdef GDA_DEBUG
 void            gda_dict_dump                (GdaDict *dict);

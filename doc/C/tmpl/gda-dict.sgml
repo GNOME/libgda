@@ -251,6 +251,16 @@ object for more information.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_dict_get_default_handler ##### -->
+<para>
+
+</para>
+
+@dict: 
+@for_type: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_dict_declare_query ##### -->
 <para>
 
@@ -616,16 +626,6 @@ object for more information.
 
 @dict: 
 @xml_id: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_default_handler ##### -->
-<para>
-
-</para>
-
-@dict: 
-@for_type: 
 @Returns: 
 
 

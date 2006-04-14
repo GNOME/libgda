@@ -44,7 +44,7 @@ MKDB_OPTIONS=--sgml-mode --output-format=xml
 content_files = fdl-appendix.sgml 
 
 # Images to copy into HTML directory
-HTML_IMAGES = 
+HTML_IMAGES = query01.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=

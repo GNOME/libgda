@@ -1,6 +1,6 @@
 /* gda-query-field-value.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -1281,18 +1281,13 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	GdaQueryFieldValue *field;
 	const GdaValue *value = NULL;
 	gboolean sqlext = options & GDA_RENDERER_EXTRA_VAL_ATTRS;
-	GdaServerProvider *prov = NULL;
 	GdaDict *dict;
-	GdaConnection *cnc;
 
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_FIELD_VALUE (iface)->priv, NULL);
 	field = GDA_QUERY_FIELD_VALUE (iface);
 
 	dict = gda_object_get_dict (GDA_OBJECT (field));
-	cnc = gda_dict_get_connection (dict);
-	if (cnc)
-		prov = gda_connection_get_provider_obj (cnc);
 
 	if (field->priv->is_parameter) {
 		gboolean value_found;
@@ -1339,15 +1334,13 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			}
 			if (!str) {
 				if (value && (gda_value_get_type ((GdaValue *)value) != GDA_VALUE_TYPE_NULL)) {
-					GdaDataHandler *dh = NULL;
-					if (prov)
-						dh = gda_server_provider_get_data_handler_gda (prov, cnc, 
-											       field->priv->gda_type);
-					if (!dh)
-						dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
-					str = gda_data_handler_get_sql_from_value (dh, value);
+					GdaDataHandler *dh;
+					
+					dh = gda_dict_get_handler (dict, field->priv->gda_type);
+					if (dh)
+						str = gda_data_handler_get_sql_from_value (dh, value);
 				}
-				else
+				if (!str)
 					str = g_strdup ("NULL");	
 			}
 		}
@@ -1370,15 +1363,13 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	else {
 		value = field->priv->value;
 		if (value && (gda_value_get_type ((GdaValue *)value) != GDA_VALUE_TYPE_NULL)) {
-			GdaDataHandler *dh = NULL;
+			GdaDataHandler *dh;
 			
-			if (prov)
-				dh = gda_server_provider_get_data_handler_gda (prov, cnc, 
-									       field->priv->gda_type);
-			if (!dh)
-				dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
-			g_assert (dh);
-			str = gda_data_handler_get_sql_from_value (dh, value);
+			dh = gda_dict_get_handler (dict, field->priv->gda_type);
+			if (dh)
+				str = gda_data_handler_get_sql_from_value (dh, value);
+			else
+				str = g_strdup ("NULL");
 		}
 		else
 			str = g_strdup ("NULL");	

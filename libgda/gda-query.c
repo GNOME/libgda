@@ -2659,7 +2659,8 @@ gda_query_get_parameters (GdaQuery *query)
  * @query: a #GdaQuery object
  *
  * Like the gda_query_get_parameters() method, get a list of parameters which the query accepts,
- * except that the parameters are stored within a #GdaParameterList object
+ * except that the parameters are stored within a #GdaParameterList object, and can be used as an argument
+ * to the gda_query_execute() method.
  *
  * Returns: a new #GdaParameterList object, or %NULL if @query does not accept any parameter.
  */

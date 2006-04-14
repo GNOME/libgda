@@ -14,7 +14,7 @@
         <para>aggregation queries: of type GDA_QUERY_TYPE_UNION, GDA_QUERY_TYPE_INTERSECT and GDA_QUERY_TYPE_EXCEPT</para>
       </listitem>
       <listitem>
-        <para>direct SQL queries: when they can be interpreted, their type is set to one of the above types, and
+        <para>any other SQL query: when they can be interpreted, their type is set to one of the above types, and
           when parsing is not possible (either because the SQL statement is wrong or because the SQL statement
           uses some specific extensions), the type is set to GDA_QUERY_TYPE_NON_PARSED_SQL</para>
       </listitem>
@@ -144,7 +144,9 @@
     <title>Query's parameters</title>
     <para>
       Any query can require some parameters to be given values before they can be executed. That is the case for example for
-      a query like <quote>SELECT name FROM person WHERE age = &lt;value&gt;</quote> where "&lt;value&gt;"
+      a query like <quote>SELECT name FROM person WHERE age = &lt;value&gt;</quote> (please note that this syntax is for illustration
+      purpose only and is not recognised by the &LIBGDA;'s parser, see the section about the SQL queries for more information)
+      where "&lt;value&gt;"
       is a parameter which value must be provided
       before the query can be executed. A parameter can only be represented as such in a query by a 
       <link linkend="GdaQueryFieldValue">GdaQueryFieldValue</link> query field, and 
@@ -163,7 +165,6 @@
       raw list of parameters. Usually however, it is better to use a <link linkend="GdaParameterList">GdaParameterList</link>
       object which stores the parameters, and organises the parameters in a convenient. The function to be used to obtain a
       GdaParameterList object is <link linkend="gda-query-get-parameters-boxed">gda_query_get_parameters_boxed()</link>.
-      them 
     </para>
   </sect3>
   <sect3>
@@ -235,34 +236,41 @@
     </sect4>
   </sect3>
   <sect3>
-    <title>Direct SQL queries</title>
+    <title>SQL queries</title>
     <para>
-      As it is sometimes easier to define a query usong an SQL statement, a <link linkend="GdaQuery">GdaQuery</link>
+      As it is sometimes easier to define a query using an SQL statement, a <link linkend="GdaQuery">GdaQuery</link>
       object can be defined from any SQL
       1992 statement, using the gda_query_set_sql_text() method. The SQL passed as argument must be a single SQL statement
       (that is not several statements separated by a colon).
     </para>
     <para>
-      Some extensions are provided to be able to define variables from within SQL. The way of doing this is to use
-      the following syntax right after a constant value in the SQL statement: [:attribute="value", ...]. For example
-      the following SQL:
+      Some extensions are provided to be able to define variables (execution parameters) from within SQL. 
+      The way of doing this is to use
+      the following syntax right after a constant value or a "##" keyword in the SQL statement: [:attribute="value", ...]. If there
+      is a constant value then the variable will have this value as default, and if the "##" keyword is used, then the
+      variable will not have any default value. For example the following SQL:
     </para>
     <programlisting>
-      SELECT 10[:type="int2" :descr="this is a good' description" :isparam="TRUE" :nullok="TRUE"], id 
-      FROM customers
+      SELECT 10[:name="var01" :type="integer"], id FROM customers
     </programlisting>
     <para>
       creates a query structure similar to "SELECT 10, t1.id FROM customers AS t1",
-      but also specifies that the "10" value is in fact
-      to be interpreted as of type "int2", with a description, that it is a variable for which the NULL value is 
-      acceptable.
+      but also specifies that the "10" value is in fact a variable named "var01" of type "integer".
     </para>
     <para>
       So, when the query will be executed, the real executed SQL statement will be "SELECT 10, t1.id FROM customers AS t1"
       if the "10" value has not been replaced by another value. The replacement of that value will be possible
       through the usage of a <link linkend="GdaParameter">GdaParameter</link> object 
-      (obtained through a <link linkend="GdaParameterList">GdaParameterList</link> object).
+      (obtained through a <link linkend="GdaParameterList">GdaParameterList</link> object), see the 
+      <link linkend="gda-query-get-parameters">gda_query_get_parameters()</link> and
+      <link linkend="gda-query-get-parameters-boxed">gda_query_get_parameters_boxed()</link> methods for more information.
     </para>
+    <para>
+      The following SQL gives the same result as the previous example except that the variable has no default value:
+    </para>
+    <programlisting>
+      SELECT ##[:name="var01" :type="integer"], id FROM customers
+    </programlisting>
     <para>
       The available extension "tags" are:
       <itemizedlist>
@@ -270,8 +278,8 @@
 	<listitem><para>":descr" fixes the name of the value's description</para></listitem>
 	<listitem><para>":type" fixes the <link linkend="GdaValueType">Gda type</link> or the <link linkend="GdaDictType">GdaDictType</link>
 	    type of the value</para></listitem>
-	<listitem><para>":isparam" tells if value is a variable (a parameter) or not (the default is that it is a parameter)</para></listitem>
-	<listitem><para>":nullok" tells if value can have a NULL value</para></listitem>
+	<listitem><para>":isparam" tells if value is a variable (a parameter) or not (the default is that it is a parameter) (example: ":isparam="FALSE"")</para></listitem>
+	<listitem><para>":nullok" tells if value can have a NULL value (example: ":nullok="FALSE"")</para></listitem>
       </itemizedlist>
     </para>
   </sect3>

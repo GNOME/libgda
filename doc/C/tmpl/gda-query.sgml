@@ -314,6 +314,18 @@ It implements the #GdaEntity, #GdaXmlStorage, #GdaReferer and #GdaRenderer inter
 @iface: 
 
 
+<!-- ##### FUNCTION gda_query_execute ##### -->
+<para>
+
+</para>
+
+@query: 
+@params: 
+@iter_model_only_requested: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_query_get_parent_query ##### -->
 <para>
 

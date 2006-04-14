@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -865,7 +865,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,
 		GdaDataHandler *dh;
 		gint i;
 
-		if (prefered_type) {
+		if (prefered_type != GDA_VALUE_TYPE_UNKNOWN) {
 			dh = gda_server_provider_get_data_handler_gda (provider, cnc, prefered_type);
 			if (dh) {
 				retval = gda_data_handler_get_value_from_sql (dh, string, prefered_type);
@@ -877,6 +877,12 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,
 						gda_value_free (retval);
 						retval = NULL;
 					}
+					else {
+						if (dbms_type)
+							*dbms_type = gda_server_provider_get_default_dbms_type (provider, 
+														cnc, prefered_type);
+					}
+
 					g_free (tmp);
 				}
 			}
@@ -916,6 +922,11 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,
 						if (strcmp (tmp, string)) {
 							gda_value_free (retval);
 							retval = NULL;
+						}
+						else {
+							if (dbms_type)
+								*dbms_type = gda_server_provider_get_default_dbms_type (provider, 
+															cnc, types[i]);
 						}
 						g_free (tmp);
 					}

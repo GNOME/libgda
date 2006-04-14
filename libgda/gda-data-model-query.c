@@ -602,8 +602,17 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
  * to the dataset in the database.
  *
  * The provided query (the @query SQL) must be either a INSERT, UPDATE or DELETE query. It can contain
- * parameters, and the parameters named '_&lt;num&gt;' will be replaced with the value of the 
- * &lt;num&gt;th column in @model's data set when run.
+ * parameters, and the parameters named '[+-]&lt;num&gt;' will be replaced when the query is run:
+ * <itemizedlist>
+ *   <listitem><para>a parameter named +&lt;num&gt; will take the new value set at the 
+ *                   &lt;num&gt;th column in @model</para></listitem>
+ *   <listitem><para>a parameter named -&lt;num&gt; will take the old value set at the
+ *                   &lt;num&gt;th column in @model</para></listitem>
+ * </itemizedlist>
+ * Please note that the "+0" and "-0" parameters names are valid and will respectively 
+ * take the new and old values of the first column of @model.
+ *
+ * Examples of queries are: "INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:name="Customer" :type="integer"], date('now'), ## [:name="+2" :type="date" :nullok="TRUE"], NULL)", "DELETE FROM orders WHERE id = ## [:name="-0" :type="integer"]" and "UPDATE orders set id=## [:name="+0" :type="integer"], delivery_before=## [:name="+2" :type="date" :nullok="TRUE"], delivery_date=## [:name="+3" :type="date" :nullok="TRUE"] WHERE id=## [:name="-0" :type="integer"]"
  *
  * Returns: TRUE if no error occured.
  */

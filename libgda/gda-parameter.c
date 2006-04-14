@@ -782,32 +782,13 @@ gda_parameter_set_value_str (GdaParameter *param, const gchar *value)
 	else {
 		GdaValue *gdaval = NULL;
 		GdaDict *dict;
-		GdaConnection *cnc = NULL;
+		GdaDataHandler *dh;
 
 		dict = gda_object_get_dict (GDA_OBJECT (param));
-		if (dict)
-			cnc = gda_dict_get_connection (dict);
-		
-		if (cnc) {
-			GdaServerProvider *prov;
-			prov = gda_connection_get_provider_obj (cnc);
-			
-			if (prov) {
-				GdaDataHandler *dh;
-
-				dh = gda_server_provider_get_data_handler_gda (prov, cnc, param->priv->gda_type);
-				if (dh)
-					gdaval = gda_data_handler_get_value_from_str (dh, value, param->priv->gda_type);
-			}
-		}
-		else {
-			/* use dict's default data handlers */
-			GdaDataHandler *dh;
-
-			dh = gda_dict_get_default_handler (ASSERT_DICT (dict), param->priv->gda_type);
+		dh = gda_dict_get_handler (dict, param->priv->gda_type);
+		if (dh)
 			gdaval = gda_data_handler_get_value_from_str (dh, value, param->priv->gda_type);
-		}
-
+		
 		if (gdaval) {
 			gda_parameter_set_value (param, gdaval);
 			gda_value_free (gdaval);

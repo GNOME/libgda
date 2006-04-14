@@ -790,10 +790,10 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 	/* update this node'id if necessary */
 	for (i = 0; i < 5; i++) {
 		if (!strcmp (node->name, upd_nodes [i])) {
-			gchar *oid, *id, *name;
+			xmlChar *oid, *id, *name;
 			
-			name = xmlGetProp (node, "name");
-			oid = xmlGetProp (node, "id");
+			name = xmlGetProp (node, BAD_CAST "name");
+			oid = xmlGetProp (node, BAD_CAST "id");
 			g_assert (name && oid);
 
 			switch (i) {
@@ -2056,7 +2056,7 @@ dsn_changed_cb (GdaConnection *cnc, GdaDict *dict)
  * @cnc: a #GdaConnection object
  * 
  * Sets the associated connection to @dict. This connection is then used when the dictionary
- * synchronises itself.
+ * synchronises itself, and when manipulating data (the gda_dict_get_handler() method).
  */
 void
 gda_dict_set_connection (GdaDict *dict, GdaConnection *cnc)
@@ -3785,6 +3785,48 @@ gda_dict_get_aggregate_by_xml_id (GdaDict *dict, const gchar *xml_id)
 	}
 
 	return agg;
+}
+
+/**
+ * gda_dict_get_handler
+ * @dict : a #GdaDict object
+ * @for_type: a #GdaValueType type
+ *
+ * Obtain a pointer to a #GdaDataHandler which can manage
+ * #GdaValue values of type @for_type.
+ *
+ * Unlike the gda_dict_get_default_handler() method, this method asks the provider for
+ * the connection assigned to @dict using gda_dict_set_connection() if there is any.
+ *
+ * It fallbacks to the same data handler as
+ * gda_dict_get_default_handler() if no connection has been assigned, or if the assigned'd provider
+ * offers no data handler for that type.
+ *
+ * The returned pointer is %NULL if @for_type is GDA_VALUE_TYPE_NULL, 
+ * or if there is no default data handler available.
+ *
+ * Returns: a #GdaDataHandler
+ */
+GdaDataHandler *
+gda_dict_get_handler (GdaDict *dict, GdaValueType for_type)
+{
+	GdaDataHandler *handler = NULL;
+
+	g_return_val_if_fail (GDA_IS_DICT (dict), NULL);
+	g_return_val_if_fail (dict->priv, NULL);
+
+	if (dict->priv->cnc) {
+		GdaServerProvider *prov;
+
+		prov = gda_connection_get_provider_obj (dict->priv->cnc);
+		if (prov)
+			handler = gda_server_provider_get_data_handler_gda (prov, dict->priv->cnc, for_type);
+	}
+
+	if (handler)
+		return handler;
+	else
+		return gda_dict_get_default_handler (dict, for_type);
 }
 
 /**
