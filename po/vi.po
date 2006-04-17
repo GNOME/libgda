@@ -7,8 +7,8 @@ msgid ""
 ""
 msgstr "Project-Id-Version: libgda Gnome HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-10 12:11+0200\n"
-"PO-Revision-Date: 2006-04-10 23:31+0930\n"
+"POT-Creation-Date: 2006-04-17 04:10+0200\n"
+"PO-Revision-Date: 2006-04-17 17:24+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -237,19 +237,19 @@ msgstr "Không tìm thấy hàng %d trong mô hình dữ liệu."
 msgid "Query is not a SELECT query"
 msgstr "Truy vấn không phải là truy vấn kiểu SELECT (chọn)."
 
-#:../libgda/gda-data-model-query.c:638
+#:../libgda/gda-data-model-query.c:647
 msgid "Wrong type of query"
 msgstr "Kiểu truy vấn không đúng"
 
-#:../libgda/gda-data-model-query.c:937 ../libgda/gda-data-model-query.c:985
+#:../libgda/gda-data-model-query.c:946 ../libgda/gda-data-model-query.c:994
 msgid "No UPDATE query specified, can't update row"
 msgstr "Chưa ghi rõ truy vấn CẬP NHẬT nên không thể cập nhật hàng."
 
-#:../libgda/gda-data-model-query.c:1036 ../libgda/gda-data-model-query.c:1081
+#:../libgda/gda-data-model-query.c:1045 ../libgda/gda-data-model-query.c:1090
 msgid "No INSERT query specified, can't insert row"
 msgstr "Chưa ghi rõ truy vấn CHÈN nên không thể chèn hàng."
 
-#:../libgda/gda-data-model-query.c:1123
+#:../libgda/gda-data-model-query.c:1132
 msgid "No DELETE query specified, can't delete row"
 msgstr "Chưa ghi rõ truy vấn XOÁ BỎ nên không thể xoá bỏ hàng."
 
@@ -663,15 +663,15 @@ msgstr "Truy vấn mà cập nhật dữ liệu có thể có chỉ một đích
 msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr "Truy vấn tập hợp có thể có chỉ truy vấn phụ, không phải đích."
 
-#:../libgda/gda-query.c:2720
+#:../libgda/gda-query.c:2721
 msgid "No connection associated to query's dictionary"
 msgstr "Không có sự kết nối tương ứng với từ điển của truy vấn."
 
-#:../libgda/gda-query.c:2725
+#:../libgda/gda-query.c:2726
 msgid "Connection associated to query's dictionary is closed"
 msgstr "Sự kết nối tương ứng với từ điển của truy vấn đã được đóng."
 
-#:../libgda/gda-query.c:2902 ../testing/gda-author-dict-file.c:154
+#:../libgda/gda-query.c:2903 ../testing/gda-author-dict-file.c:154
 #:../testing/gda-author-dict-file.c:165 ../testing/gda-author-dict-file.c:227
 #:../testing/gda-author-dict-file.c:233 ../testing/gda-diagnose.c:602
 #:../testing/gda-test-models.c:152 ../testing/gda-test-models.c:179
@@ -683,115 +683,115 @@ msgstr "Sự kết nối tương ứng với từ điển của truy vấn đã 
 msgid "Unknown error"
 msgstr "Lỗi không rõ"
 
-#:../libgda/gda-query.c:4001
+#:../libgda/gda-query.c:4002
 msgid "XML Tag is not <gda_query>"
 msgstr "Thẻ XML không phải là <gda_query> (truy vấn gda)."
 
-#:../libgda/gda-query.c:4017
+#:../libgda/gda-query.c:4018
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "ID XML cho một truy vấn nên là QUxxx mà xxx là số."
 
-#:../libgda/gda-query.c:4139
+#:../libgda/gda-query.c:4140
 msgid ""
 "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 msgstr "Thiếu thuộc tính cả « entity_ref » (tham chiếu thực thể) lẫn « table_name "
 "» (tên bảng) đều trong « gda_query_target » (đích truy vấn gda)."
 
-#:../libgda/gda-query.c:4163
+#:../libgda/gda-query.c:4164
 #,c-format
 msgid "Can't find field '%s'"
 msgstr "Không tìm thấy trường « %s »."
 
-#:../libgda/gda-query.c:4282
+#:../libgda/gda-query.c:4283
 msgid "Problem loading <gda_query>"
 msgstr "Gặp vấn đề khi tải <gda_query> (truy vấn gda)."
 
-#:../libgda/gda-query.c:4404
+#:../libgda/gda-query.c:4405
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "Có hơn hai truy vấn phụ cho một truy vấn EXCEPT (trừ)."
 
-#:../libgda/gda-query.c:4421
+#:../libgda/gda-query.c:4422
 msgid "Query without any SQL code"
 msgstr "Truy vấn không có mã SQL nào."
 
-#:../libgda/gda-query.c:4476
+#:../libgda/gda-query.c:4477
 #,c-format
 msgid "Invalid parameter '%s'"
 msgstr "Tham số không hợp lệ « %s »."
 
-#:../libgda/gda-query.c:4482
+#:../libgda/gda-query.c:4483
 msgid "Missing parameters"
 msgstr "Thiếu tham số"
 
-#:../libgda/gda-query.c:4556
+#:../libgda/gda-query.c:4557
 #,c-format
 msgid "Query %s is not a selection query"
 msgstr "Truy vấn %s không phải là một truy vấm lựa chọn."
 
-#:../libgda/gda-query.c:4588
+#:../libgda/gda-query.c:4589
 msgid "No target defined to apply modifications"
 msgstr "Chưa định nghĩa đích nào cần áp dụng các sự sửa đổi."
 
-#:../libgda/gda-query.c:4596
+#:../libgda/gda-query.c:4597
 msgid "More than one target defined to apply modifications"
 msgstr "Nhiều đích được định nghĩa để áp dụng các sự sửa đổi."
 
-#:../libgda/gda-query.c:4607
+#:../libgda/gda-query.c:4608
 #,c-format
 msgid "Entity %s is not writable"
 msgstr "Thực thể %s không có khả năng ghi."
 
-#:../libgda/gda-query.c:4626
+#:../libgda/gda-query.c:4627
 msgid "Modification query field has incompatible type"
 msgstr "Trường truy vấn sửa đổi có kiểu không tương thích."
 
-#:../libgda/gda-query.c:4645
+#:../libgda/gda-query.c:4646
 msgid "An insertion query can only have one sub-query"
 msgstr "Truy vấn chèn có thể có chỉ một truy vấn phụ thôi."
 
-#:../libgda/gda-query.c:4653
+#:../libgda/gda-query.c:4654
 msgid "Insertion query fields incompatible with sub-query's fields"
 msgstr "Các trường của truy vấn chèn không tương thích với các trường của truy vấn "
 "phụ."
 
-#:../libgda/gda-query.c:4671
+#:../libgda/gda-query.c:4672
 msgid "Insertion query field has incompatible value assignment"
 msgstr "Trường của truy vấn chèn có sự gán giá trị không tương thích."
 
-#:../libgda/gda-query.c:4684
+#:../libgda/gda-query.c:4685
 msgid "Insertion query can't have any conditions"
 msgstr "Truy vấn chèn không thể có điều kiện nào."
 
-#:../libgda/gda-query.c:4699
+#:../libgda/gda-query.c:4700
 msgid "Deletion query can't have any visible field"
 msgstr "Truy vấn xóa bỏ không thể có trường hiển thị nào."
 
-#:../libgda/gda-query.c:4719
+#:../libgda/gda-query.c:4720
 msgid "Update query field has incompatible value assignment"
 msgstr "Trường của truy vấn cập nhật có sự gán giá trị không tương thích."
 
-#:../libgda/gda-query.c:4746
+#:../libgda/gda-query.c:4747
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "Truy vấn kiểu tập hợp (UNION [hợp] v.v.) không thể có đích nào."
 
-#:../libgda/gda-query.c:4754
+#:../libgda/gda-query.c:4755
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "Truy vấn kiểu tập hợp (UNION [hợp] v.v.) không thể có điều kiện nào."
 
-#:../libgda/gda-query.c:5259
+#:../libgda/gda-query.c:5260
 msgid "Can't correctly print the list of columns to use."
 msgstr "Không thể in ra đúng danh sách các cột cần dùng."
 
-#:../libgda/gda-query.c:5408
+#:../libgda/gda-query.c:5409
 msgid "Missing values"
 msgstr "Thiếu giá trị"
 
-#:../libgda/gda-query.c:5654
+#:../libgda/gda-query.c:5655
 #,c-format
 msgid "Query '%s'"
 msgstr "Truy vấn « %s »."
 
-#:../libgda/gda-query.c:5656
+#:../libgda/gda-query.c:5657
 msgid "Unnamed Query"
 msgstr "Truy vấn không tên."
 
@@ -978,12 +978,12 @@ msgstr "Thiếu « gda_type » (kiểu gda) cần thiết cho <gda_query_fval> (
 msgid "Value field '%s' does not have a value!"
 msgstr "• Trường giá trị « %s » không có giá trị. •"
 
-#:../libgda/gda-query-field-value.c:1309
+#:../libgda/gda-query-field-value.c:1304
 #,c-format
 msgid "Invalid parameter '%s' (value: %s)"
 msgstr "Tham số không hợp lệ « %s » (giá trị: %s)."
 
-#:../libgda/gda-query-field-value.c:1362
+#:../libgda/gda-query-field-value.c:1355
 msgid "No specified value"
 msgstr "Chưa ghi rõ giá trị."
 
@@ -1113,7 +1113,12 @@ msgstr "Không biết kiểu dữ liệu « %s »."
 msgid "Data type must be specified when no default value is provided"
 msgstr "Phải ghi rõ kiểu dữ liệu khi chưa cung cấp giá trị mặc định."
 
-#:../libgda/gda-query-parsing.c:1745
+#:../libgda/gda-query-parsing.c:1588
+#,c-format
+msgid "Value '%s' can't be converted to a known type"
+msgstr "Không thể chuyển đổi giá trị « %s » sang kiểu đã biết"
+
+#:../libgda/gda-query-parsing.c:1750
 msgid "Can't set aggregate or function's arguments"
 msgstr "Không thể lập các đối số của chức năng hay tập hợp."
 
