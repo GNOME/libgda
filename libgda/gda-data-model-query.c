@@ -369,12 +369,12 @@ gda_data_model_query_set_property (GObject *object,
 				}
 				else {
 					/* other queries: for all the parameters in the param list, 
-					 * if some have a name like "_<num>", then they will be filled with
-					 * the value at the <num>th column before being run, or, if the name is
+					 * if some have a name like "[+-]<num>", then they will be filled with
+					 * the value at the new/old <num>th column before being run, or, if the name is
 					 * the same as a parameter for the SELECT query, then bind them to that parameter */
 					gint num;
 
-					if (model->priv->params [qindex] && model->priv->params [SEL_QUERY]) {
+					if (model->priv->params [qindex]) {
 						GSList *params = model->priv->params [qindex]->parameters;
 						while (params) {
 							const gchar *pname = gda_object_get_name (GDA_OBJECT (params->data));
@@ -391,7 +391,7 @@ gda_data_model_query_set_property (GObject *object,
 										   GINT_TO_POINTER (num + 1));
 							}
 							else {
-								if (pname) {
+								if (pname && model->priv->params [SEL_QUERY]) {
 									GdaParameter *bind_to;
 									bind_to = gda_parameter_list_find_param 
 										(model->priv->params [SEL_QUERY],

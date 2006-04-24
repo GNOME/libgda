@@ -235,7 +235,7 @@ gda_query_field_field_class_init (GdaQueryFieldFieldClass * class)
 					 g_param_spec_string ("value_provider_xml_id", NULL, NULL, NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_HANDLER_PLUGIN,
-                                         g_param_spec_string ("handler_plugin", NULL, NULL, NULL,
+                                         g_param_spec_string ("entry_plugin", NULL, NULL, NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	g_object_class_install_property (object_class, PROP_TARGET_OBJ,

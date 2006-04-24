@@ -251,6 +251,16 @@ object for more information.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_dict_get_handler ##### -->
+<para>
+
+</para>
+
+@dict: 
+@for_type: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_dict_get_default_handler ##### -->
 <para>
 

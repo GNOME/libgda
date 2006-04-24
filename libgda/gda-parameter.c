@@ -203,7 +203,7 @@ gda_parameter_class_init (GdaParameterClass *class)
 							   (G_PARAM_READABLE | 
 							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_PLUGIN,
-					 g_param_spec_string ("handler_plugin", NULL, NULL, NULL, 
+					 g_param_spec_string ("entry_plugin", NULL, NULL, NULL, 
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_USE_DEFAULT_VALUE,
 					 g_param_spec_boolean ("use_default_value", NULL, NULL, FALSE,

@@ -1454,9 +1454,10 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 			if (! gda_value_type_transformable (gda_parameter_get_gda_type (param), 
 							    gda_column_get_gda_type (column), FALSE)) {
 				g_set_error (error, 0, 0,
-					     _("Destination column %d has a gda type incompatible with source column %d: "
-					       "%s / %s"), i, col,
+					     _("Destination column %d has a gda type (%s) incompatible with "
+					       "source column %d type (%s)"), i,
 					     gda_type_to_string (gda_column_get_gda_type (column)),
+					     col,
 					     gda_type_to_string (gda_parameter_get_gda_type (param)));
 				return FALSE;
 			}

@@ -1,3 +1,22 @@
+2006-04-24  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-query.c: applied a patch from Chris to fix a bug which would
+	prevent parameterized data-modification queries to work when the SELECT query isn't 
+	parameterized.
+	* libgda/gda-parameter.c:
+	* libgda/gda-parameter-list.c:
+	* libgda/gda-query-field-field.c:
+	* libgda/gda-query-field-value.c: s/handler_plugin/entry_plugin/g
+	* providers/mysql/gda-mysql-provider.c: take into account the version of the MySQL server to which
+	the connection is opened and not the version of the MySQL client libraries at compile time.
+	* providers/mysql/Makefile.am: define GDA_PACKAGE_VERSION as PACKAGE_VERSION is re-defined by
+	MySQL
+	* providers/oracle/gda-oracle-recordset.c: potential buffer overflow
+	correction
+	* providers/oracle/gda-oracle-provider.c: started improvements on the
+	schemas
+	* doc/C/query.xml: various improvements
+
 2006-04-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda-gda-dict.[ch]: added gda_dict_get_handler()

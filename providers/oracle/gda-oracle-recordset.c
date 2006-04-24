@@ -203,6 +203,9 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 		return;
 	}
 	
+	if (col_name_len > ORA_NAME_BUFFER_SIZE)
+		col_name_len = ORA_NAME_BUFFER_SIZE;
+		
 	memcpy (name_buffer, pgchar_dummy, col_name_len);
 	name_buffer[col_name_len] = '\0';
 	

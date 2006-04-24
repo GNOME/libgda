@@ -396,7 +396,7 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 				gda_parameter_set_not_null (param, FALSE);
 			str = xmlGetProp(cur, "plugin");
 			if (str) {
-				g_object_set (G_OBJECT (param), "handler_plugin", str, NULL);
+				g_object_set (G_OBJECT (param), "entry_plugin", str, NULL);
 				g_free (str);
 			}
 
@@ -606,7 +606,7 @@ gda_parameter_list_get_spec (GdaParameterList *paramlist)
 		xmlSetProp (node, "gdatype", gda_type_to_string (gda_parameter_get_gda_type (param)));
 
 		xmlSetProp (node, "null-ok", gda_parameter_get_not_null (param) ? "FALSE" : "TRUE");
-		g_object_get (G_OBJECT (param), "handler_plugin", &str, NULL);
+		g_object_get (G_OBJECT (param), "entry_plugin", &str, NULL);
 		if (str) {
 			xmlSetProp (node, "plugin", str);
 			g_free (str);

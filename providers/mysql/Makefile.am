@@ -6,7 +6,8 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(MYSQL_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\" \
+	-DGDA_PACKAGE_VERSION=\""$(PACKAGE_VERSION)"\"
 
 libgda_mysql_la_SOURCES = \
 	gda-mysql-provider.c \

@@ -102,7 +102,7 @@ enum
 	PROP_GDA_TYPE,
 	PROP_RESTRICT_MODEL,
         PROP_RESTRICT_COLUMN,
-	PROP_HANDLER_PLUGIN
+	PROP_ENTRY_PLUGIN
 };
 
 
@@ -249,8 +249,8 @@ gda_query_field_value_class_init (GdaQueryFieldValueClass * class)
                                          g_param_spec_int ("restrict_column", NULL, NULL,
 							   0, G_MAXINT, 0,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	g_object_class_install_property (object_class, PROP_HANDLER_PLUGIN,
-                                         g_param_spec_string ("handler_plugin", NULL, NULL, NULL,
+	g_object_class_install_property (object_class, PROP_ENTRY_PLUGIN,
+                                         g_param_spec_string ("entry_plugin", NULL, NULL, NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* virtual functions */
 #ifdef GDA_DEBUG
@@ -421,7 +421,7 @@ gda_query_field_value_set_property (GObject *object,
 		case PROP_RESTRICT_COLUMN:
 			field->priv->restrict_col = g_value_get_int (value);
 			break;
-		case PROP_HANDLER_PLUGIN:
+		case PROP_ENTRY_PLUGIN:
 			str =  g_value_get_string (value);
 			if (field->priv->plugin) {
 				g_free (field->priv->plugin);
@@ -456,7 +456,7 @@ gda_query_field_value_get_property (GObject *object,
 		case PROP_RESTRICT_COLUMN:
 			g_value_set_int (value, field->priv->restrict_col);
 			break;
-		case PROP_HANDLER_PLUGIN:
+		case PROP_ENTRY_PLUGIN:
 			g_value_set_string (value, field->priv->plugin);
 			break;
 		}	
@@ -694,7 +694,7 @@ gda_query_field_value_get_params (GdaQueryField *qfield)
 
 		/* specified plugin */
 		if (field->priv->plugin)
-			g_object_set (G_OBJECT (param), "handler_plugin", field->priv->plugin, NULL);
+			g_object_set (G_OBJECT (param), "entry_plugin", field->priv->plugin, NULL);
 
 		/* possible values in a sub query */
 		if (field->priv->restrict_model && (field->priv->restrict_col >= 0)) {
