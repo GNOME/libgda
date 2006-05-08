@@ -83,8 +83,8 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaConnectionClass, error),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__POINTER,
-			      G_TYPE_NONE, 1, G_TYPE_POINTER);
+			      g_cclosure_marshal_VOID__OBJECT,
+			      G_TYPE_NONE, 1, GDA_TYPE_CONNECTION_EVENT);
 	gda_connection_signals[CONN_OPENED] =
                 g_signal_new ("conn_opened",
                               G_TYPE_FROM_CLASS (object_class),
@@ -115,8 +115,8 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaConnectionClass, dsn_changed),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__POINTER,
-			      G_TYPE_NONE, 1, G_TYPE_POINTER);
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 
 	object_class->finalize = gda_connection_finalize;
 }

@@ -1,3 +1,8 @@
+2006-05-08  Murray Cumming,  <murrayc@murrayc.com>
+
+	* libgda/gda-connection.c: (gda_connection_class_init): Correct the registration of the 
+	error and dsn_changed signals, correcting the parameter types and the marshallers.
+
 2006-05-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: removed newlines from ALL_LINGUAS.
