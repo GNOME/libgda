@@ -1,5 +1,12 @@
 2006-05-08  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/gda-query.c: gda_query_execute(): show SQL if query if GDA_DEBUG is set
+	* libgda/gda-query-target.c:
+	* libgda/gda-query-field-field.c: surround rendered SQL with double quotes if necessary
+	* libgda/gda-data-model-query.c: code cleanup
+
+2006-05-08  Vivien Malerba <malerba@gnome-db.org>
+
 	* Individual values are now strictly GValue, much of the GdaValue API has been removed.
 	* libgda/graph/gda-graph-item.c: corrected a bug where locale was used in XML loading and
 	saving.

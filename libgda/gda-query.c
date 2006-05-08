@@ -2730,7 +2730,11 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 	str = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 0, error);
 	if (!str)
 		return GDA_QUERY_EXEC_FAILED;
-       
+
+#ifdef GDA_DEBUG
+	g_print ("GdaQueryExecute:\nSQL= %s\n", str);
+#endif
+
 	cmde = gda_command_new (str, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	if (iter_model_only_requested) {
 		options = (GdaParameterList *) g_object_new (GDA_TYPE_PARAMETER_LIST, "dict", dict, NULL);

@@ -578,16 +578,6 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 		return FALSE;
 	}
 
-#ifdef GDA_DEBUG_NO
-	{
-		g_print ("GdaDataModelQuery refresh:\nSQL= %s\n", sql);
-		if (model->priv->data) 
-			gda_data_model_dump (model, stdout);
-		else
-			g_print ("\t=> error\n");
-	}
-#endif
-
 	gda_data_model_changed ((GdaDataModel *) model);
 	return model->priv->data ? TRUE : FALSE;
 }

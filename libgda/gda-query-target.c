@@ -878,8 +878,20 @@ gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, g
 
 	entity = gda_query_target_get_represented_entity (target);
 	if (entity) {
-		if (GDA_IS_DICT_TABLE (entity))
-			string = g_string_new (gda_object_get_name (GDA_OBJECT (entity)));
+		if (GDA_IS_DICT_TABLE (entity)) {
+			gchar *tmp, *tname;
+
+			tname = (gchar *) gda_object_get_name (GDA_OBJECT (entity));
+			tmp = g_utf8_strdown (tname, -1);
+			if (strcmp (tmp, tname)) {
+				g_free (tmp);
+				tmp = tname;
+				tname = g_strdup_printf ("\"%s\"", tmp);
+			}
+			else
+				g_free (tmp);
+			string = g_string_new (tname);
+		}
 		
 		if (GDA_IS_QUERY (entity)) {
 			string = g_string_new ("(");

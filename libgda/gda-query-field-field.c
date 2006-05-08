@@ -1012,6 +1012,7 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	GdaQueryFieldField *field;
 	GdaObject *fobj;
 	const gchar *tname = NULL, *fname = NULL;
+	gchar *retval = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_FIELD (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_FIELD_FIELD (iface)->priv, NULL);
@@ -1034,14 +1035,28 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	else
 		fname = gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL);
 	
-	if (tname && fname)
-		return g_strdup_printf ("%s.%s", tname, fname);
-	else {
-		if (fname)
-			return g_strdup (fname);
+	if (fname) {
+		/* see if we need quotes around returned string */
+		gchar *tmp;
+
+		tmp = g_utf8_strdown (fname, -1);
+		if (strcmp (tmp, fname)) {
+			g_free (tmp);
+			tmp = fname;
+			fname = g_strdup_printf ("\"%s\"", tmp);
+		}
+		else
+			g_free (tmp);
 	}
 
-	return NULL;
+	if (tname && fname)
+		retval = g_strdup_printf ("%s.%s", tname, fname);
+	else {
+		if (fname)
+			retval = g_strdup (fname);
+	}
+
+	return retval;
 }
 
 static gchar *
