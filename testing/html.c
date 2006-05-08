@@ -438,7 +438,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 
 	/* NOT NULL */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
-	td = xmlNewChild (tr, NULL, "td", "not NULL ?");
+	td = xmlNewChild (tr, NULL, "td", "not NULL?");
 	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
@@ -453,7 +453,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 
 	/* Primary key */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
-	td = xmlNewChild (tr, NULL, "td", "primary key ?");
+	td = xmlNewChild (tr, NULL, "td", "primary key?");
 	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
@@ -468,7 +468,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 
 	/* Unique */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
-	td = xmlNewChild (tr, NULL, "td", "unique ?");
+	td = xmlNewChild (tr, NULL, "td", "unique?");
 	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
@@ -498,7 +498,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 
 	/* Auto increment */
 	tr = xmlNewChild (node, NULL, "tr", NULL);
-	td = xmlNewChild (tr, NULL, "td", "Auto increment ?");
+	td = xmlNewChild (tr, NULL, "td", "Auto increment?");
 	for (i = 0; i < cols; i++) {
                 GdaColumn *column;
 
