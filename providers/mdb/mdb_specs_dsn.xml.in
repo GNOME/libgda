@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="FILENAME" _name="File Name" _descr="Full path of the file containing the database" gdatype="string" null-ok="FALSE"/>
+    <parameter id="FILENAME" _name="File Name" _descr="Full path of the file containing the database" gdatype="gchararray" null-ok="FALSE"/>
   </parameters>
 </data-set-spec>

@@ -96,10 +96,10 @@ gint              gda_data_proxy_get_sample_start         (GdaDataProxy *proxy);
 gint              gda_data_proxy_get_sample_end           (GdaDataProxy *proxy);
 
 void              gda_data_proxy_set_model_row_value      (GdaDataProxy *proxy, GdaDataModel *model, 
-							   gint proxy_row, gint extra_col, const GdaValue *value);
+							   gint proxy_row, gint extra_col, const GValue *value);
 void              gda_data_proxy_clear_model_row_value    (GdaDataProxy *proxy, GdaDataModel *model, 
 							   gint proxy_row, gint extra_col);
-const GdaValue   *gda_data_proxy_get_model_row_value      (GdaDataProxy *proxy, GdaDataModel *model, 
+const GValue   *gda_data_proxy_get_model_row_value      (GdaDataProxy *proxy, GdaDataModel *model, 
 							   gint proxy_row, gint extra_col);
 void              gda_data_proxy_assign_model_col         (GdaDataProxy *proxy, GdaDataModel *model, 
 							   gint proxy_col, gint model_col);

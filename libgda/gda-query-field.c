@@ -251,7 +251,7 @@ gda_query_field_new_copy (GdaQueryField *orig)
  *
  * Creates a new #GdaQueryField from its SQL representation
  *
- * Returns: a new #GdaQueryField object, or %NULL if an error occured
+ * Returns: a new #GdaQueryField object, or %NULL if an error occurred
  */
 GdaQueryField *
 gda_query_field_new_from_sql (GdaQuery *query, const gchar *sqlfield, GError **error)

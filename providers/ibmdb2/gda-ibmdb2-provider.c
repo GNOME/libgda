@@ -1,5 +1,5 @@
 /* GDA IBMDB2 Provider
- * Copyright (C) 2002 - 2005 The GNOME Foundation
+ * Copyright (C) 2002 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Holger Thon <holger.thon@gnome-db-org>
@@ -780,10 +780,11 @@ static GdaDataModel
 
 	for (i = 0; conn_data->rc != SQL_NO_DATA_FOUND; i++)
 	{
-	    
+		GValue *tmpval;
 		str = g_strndup(alias, alias_len);
 	    
-	    	value_list = g_list_append (NULL, gda_value_new_string (str));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+	    	value_list = g_list_append (NULL, tmpval);
 	    	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 	   
 	    	g_free(str);

@@ -62,8 +62,8 @@ GdaDictType        *gda_dict_type_new           (GdaDict *dict);
 void                gda_dict_type_set_sqlname   (GdaDictType *dt, const gchar *sqlname);
 const gchar        *gda_dict_type_get_sqlname   (GdaDictType *dt);
 
-void                gda_dict_type_set_gda_type  (GdaDictType *dt, GdaValueType gda_type);
-GdaValueType        gda_dict_type_get_gda_type  (GdaDictType *dt);
+void                gda_dict_type_set_gda_type  (GdaDictType *dt, GType gda_type);
+GType               gda_dict_type_get_gda_type  (GdaDictType *dt);
 
 void                gda_dict_type_add_synonym   (GdaDictType *dt, const gchar *synonym);
 const GSList       *gda_dict_type_get_synonyms  (GdaDictType *dt);

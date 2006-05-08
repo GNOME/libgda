@@ -598,7 +598,7 @@ gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaParameter *
  * Fetch a pointer to the #GdaParameter object which is synchronized with data at 
  * column @col
  *
- * Returns: the #GdaParameter, or %NULL if an error occured
+ * Returns: the #GdaParameter, or %NULL if an error occurred
  */
 GdaParameter *
 gda_data_model_iter_get_param_for_column (GdaDataModelIter *iter, gint col)

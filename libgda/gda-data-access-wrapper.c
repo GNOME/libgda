@@ -72,7 +72,7 @@ static gint                 gda_data_access_wrapper_get_n_rows      (GdaDataMode
 static gint                 gda_data_access_wrapper_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col);
 static guint                gda_data_access_wrapper_get_access_flags(GdaDataModel *model);
-static const GdaValue      *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue      *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row);
 static guint                gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row);
 #ifdef GDA_DEBUG
 static void gda_data_access_wrapper_dump (GdaDataAccessWrapper *model, guint offset);
@@ -466,7 +466,7 @@ create_new_row (GdaDataAccessWrapper *model)
 	return row;
 }
 
-static const GdaValue *
+static const GValue *
 gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	GdaDataAccessWrapper *imodel;

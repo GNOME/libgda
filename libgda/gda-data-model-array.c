@@ -80,7 +80,7 @@ gda_data_model_array_get_row (GdaDataModelRow *model, gint row, GError **error)
 	return GDA_ROW (g_ptr_array_index (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row));
 }
 
-static const GdaValue *
+static const GValue *
 gda_data_model_array_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaRow *fields;
@@ -101,10 +101,10 @@ gda_data_model_array_get_value_at (GdaDataModelRow *model, gint col, gint row)
 
 	fields = g_ptr_array_index (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 	if (fields != NULL) {
-		GdaValue *field;
+		GValue *field;
 
 		field = gda_row_get_value (fields, col);
-		return (const GdaValue *) field;
+		return (const GValue *) field;
 	}
 
 	return NULL;
@@ -315,7 +315,7 @@ gda_data_model_array_new (gint cols)
  *
  * Makes a copy of @src into a new #GdaDataModelArray object
  *
- * Returns: a new data model, or %NULL if an error occured
+ * Returns: a new data model, or %NULL if an error occurred
  */
 GdaDataModel *
 gda_data_model_array_copy_model (GdaDataModel *src, GError **error)

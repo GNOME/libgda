@@ -183,7 +183,7 @@ gda_server_provider_get_version (GdaServerProvider *provider)
  * Retreive some information specific to the provider. The returned #GdaServerProviderInfo
  * structure must not be modified
  *
- * Returns: a #GdaServerProviderInfo pointer or %NULL if an error occured
+ * Returns: a #GdaServerProviderInfo pointer or %NULL if an error occurred
  */
 GdaServerProviderInfo *
 gda_server_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
@@ -389,7 +389,7 @@ gda_server_provider_get_specs  (GdaServerProvider *provider,
  * using the parameters listed in @params (the list of parameters may have
  * been obtained using the gda_server_provider_get_specs() method).
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_server_provider_perform_action_params (GdaServerProvider *provider, 
@@ -781,17 +781,16 @@ gda_server_provider_fetch_blob_by_id (GdaServerProvider *provider,
  * gda_server_provider_get_data_handler_gda
  * @provider: a server provider.
  * @cnc: a #GdaConnection object, or %NULL
- * @for_type: a #GdaValueType
+ * @for_type: a #GType
  *
  * Find a #GdaDataHandler object to manipulate data of type @for_type.
  * 
  * Returns: a #GdaDataHandler, or %NULL if the provider does not support the requested @for_type data type 
- *          or @for_type is GDA_VALUE_TYPE_NULL
  */
 GdaDataHandler *
 gda_server_provider_get_data_handler_gda (GdaServerProvider *provider,
 					  GdaConnection *cnc,
-					  GdaValueType for_type)
+					  GType for_type)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	if (cnc)
@@ -823,7 +822,7 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,
 	g_return_val_if_fail (for_type && *for_type, NULL);
 
 	if (CLASS (provider)->get_data_handler)
-		return CLASS (provider)->get_data_handler (provider, cnc, GDA_VALUE_TYPE_UNKNOWN, for_type);
+		return CLASS (provider)->get_data_handler (provider, cnc, G_TYPE_INVALID, for_type);
 	return NULL;
 }
 
@@ -832,28 +831,28 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,
  * @provider: a server provider.
  * @cnc: a #GdaConnection object.
  * @string: the SQL string to convert to a value
- * @prefered_type: a #GdaValueType
+ * @prefered_type: a #GType
  *
- * Use @provider to create a new #GdaValue from a single string representation. 
+ * Use @provider to create a new #GValue from a single string representation. 
  *
- * The @prefered_type can optionnaly ask @provider to return a #GdaValue of the requested type 
+ * The @prefered_type can optionnaly ask @provider to return a #GValue of the requested type 
  * (but if such a value can't be created from @string, then %NULL is returned); 
- * pass GDA_VALUE_TYPE_UNKNOWN if any returned type is acceptable.
+ * pass G_TYPE_INVALID if any returned type is acceptable.
  *
- * The returned value is either a new #GdaValue or %NULL in the following cases:
+ * The returned value is either a new #GValue or %NULL in the following cases:
  * - @string cannot be converted to @prefered_type type
  * - the provider does not handle @prefered_type
- * - the provider could not make a #GdaValue from @string
+ * - the provider could not make a #GValue from @string
  *
- * Returns: a new #GdaValue, or %NULL
+ * Returns: a new #GValue, or %NULL
  */
-GdaValue *
+GValue *
 gda_server_provider_string_to_value (GdaServerProvider *provider,
 				     GdaConnection *cnc,
 				     const gchar *string, 
-				     GdaValueType prefered_type, gchar **dbms_type)
+				     GType prefered_type, gchar **dbms_type)
 {
-	GdaValue *retval = NULL;
+	GValue *retval = NULL;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	if (cnc)
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -865,7 +864,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,
 		GdaDataHandler *dh;
 		gint i;
 
-		if (prefered_type != GDA_VALUE_TYPE_UNKNOWN) {
+		if (prefered_type != G_TYPE_INVALID) {
 			dh = gda_server_provider_get_data_handler_gda (provider, cnc, prefered_type);
 			if (dh) {
 				retval = gda_data_handler_get_value_from_sql (dh, string, prefered_type);
@@ -889,29 +888,29 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,
 		}
 		else {
 			/* test all the possible data types and see if we have a match */
-			GdaValueType types[] = {GDA_VALUE_TYPE_TINYUINT,
-						GDA_VALUE_TYPE_SMALLUINT,
-						GDA_VALUE_TYPE_UINTEGER,
-						GDA_VALUE_TYPE_BIGUINT,
-						
-						GDA_VALUE_TYPE_TINYINT,
-						GDA_VALUE_TYPE_SMALLINT,
-						GDA_VALUE_TYPE_INTEGER,
-						GDA_VALUE_TYPE_BIGINT,
-						
-						GDA_VALUE_TYPE_SINGLE,
-						GDA_VALUE_TYPE_DOUBLE,
-						GDA_VALUE_TYPE_NUMERIC,
-						
-						GDA_VALUE_TYPE_BOOLEAN,
-						GDA_VALUE_TYPE_TIME,
-						GDA_VALUE_TYPE_DATE,
-						GDA_VALUE_TYPE_TIMESTAMP,
-						GDA_VALUE_TYPE_GEOMETRIC_POINT,
-						GDA_VALUE_TYPE_STRING,
-						GDA_VALUE_TYPE_BINARY};
+			GType types[] = {G_TYPE_UCHAR,
+					 GDA_TYPE_USHORT,
+					 G_TYPE_UINT,
+					 G_TYPE_UINT64,
+					 
+					 G_TYPE_CHAR,
+					 GDA_TYPE_SHORT,
+					 G_TYPE_INT,
+					 G_TYPE_INT64,
+					 
+					 G_TYPE_FLOAT,
+					 G_TYPE_DOUBLE,
+					 GDA_TYPE_NUMERIC,
+					 
+					 G_TYPE_BOOLEAN,
+					 GDA_TYPE_TIME,
+					 G_TYPE_DATE,
+					 GDA_TYPE_TIMESTAMP,
+					 GDA_TYPE_GEOMETRIC_POINT,
+					 G_TYPE_STRING,
+					 GDA_TYPE_BINARY};
 
-			for (i = 0; !retval && (i <= (sizeof(types)/sizeof (GdaValueType)) - 1); i++) {
+			for (i = 0; !retval && (i <= (sizeof(types)/sizeof (GType)) - 1); i++) {
 				dh = gda_server_provider_get_data_handler_gda (provider, cnc, types [i]);
 				if (dh) {
 					retval = gda_data_handler_get_value_from_sql (dh, string, types [i]);
@@ -943,16 +942,16 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,
  * gda_server_provider_value_to_sql_string
  * @provider: a server provider.
  * @cnc: a #GdaConnection object, or %NULL
- * @from: #GdaValue to convert from
+ * @from: #GValue to convert from
  *
- * Produces a fully quoted and escaped string from a GdaValue
+ * Produces a fully quoted and escaped string from a GValue
  *
  * Returns: escaped and quoted value or NULL if not supported.
  */
 gchar *
 gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 					 GdaConnection *cnc,
-					 GdaValue *from)
+					 GValue *from)
 {
 	GdaDataHandler *dh;
 
@@ -961,7 +960,7 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (from != NULL, NULL);
 
-	dh = gda_server_provider_get_data_handler_gda (provider, cnc, GDA_VALUE_TYPE (from));
+	dh = gda_server_provider_get_data_handler_gda (provider, cnc, G_VALUE_TYPE (from));
 	if (dh)
 		return gda_data_handler_get_sql_from_value (dh, from);
 	else
@@ -972,7 +971,7 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
  * gda_server_provider_get_default_dbms_type
  * @provider: a server provider.
  * @cnc: a #GdaConnection object or %NULL
- * @gda_type: a #GdaValueType value type
+ * @gda_type: a #GType value type
  *
  * Get the name of the most common data type which has @gda_type GDA type
  *
@@ -981,7 +980,7 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 const gchar *
 gda_server_provider_get_default_dbms_type (GdaServerProvider *provider,
 					   GdaConnection *cnc,
-					   GdaValueType gda_type)
+					   GType gda_type)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	if (cnc)

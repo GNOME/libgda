@@ -4,7 +4,6 @@ AUTOMAKE_OPTIONS = 1.6
 
 # The name of the module.
 DOC_MODULE=libgda
-HTML_DIR=$(datadir)/gtk-doc/html
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml

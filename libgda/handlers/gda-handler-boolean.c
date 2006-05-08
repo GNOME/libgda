@@ -1,6 +1,6 @@
 /* gda-handler-boolean.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -29,25 +29,25 @@ static void gda_handler_boolean_dispose (GObject   * object);
 
 /* GdaDataHandler interface */
 static void         gda_handler_boolean_data_handler_init      (GdaDataHandlerIface *iface);
-static gchar       *gda_handler_boolean_get_sql_from_value     (GdaDataHandler *dh, const GdaValue *value);
-static gchar       *gda_handler_boolean_get_str_from_value     (GdaDataHandler *dh, const GdaValue *value);
-static GdaValue    *gda_handler_boolean_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql, 
-								     GdaValueType type);
-static GdaValue    *gda_handler_boolean_get_value_from_str     (GdaDataHandler *iface, const gchar *str, 
-								     GdaValueType type);
+static gchar       *gda_handler_boolean_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);
+static gchar       *gda_handler_boolean_get_str_from_value     (GdaDataHandler *dh, const GValue *value);
+static GValue      *gda_handler_boolean_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql, 
+								GType type);
+static GValue      *gda_handler_boolean_get_value_from_str     (GdaDataHandler *iface, const gchar *str, 
+								GType type);
 
-static GdaValue    *gda_handler_boolean_get_sane_init_value    (GdaDataHandler * dh, GdaValueType type);
+static GValue      *gda_handler_boolean_get_sane_init_value    (GdaDataHandler * dh, GType type);
 
 static guint        gda_handler_boolean_get_nb_gda_types       (GdaDataHandler *dh);
-static GdaValueType gda_handler_boolean_get_gda_type_index     (GdaDataHandler *dh, guint index);
-static gboolean     gda_handler_boolean_accepts_gda_type       (GdaDataHandler * dh, GdaValueType type);
+static GType        gda_handler_boolean_get_gda_type_index     (GdaDataHandler *dh, guint index);
+static gboolean     gda_handler_boolean_accepts_gda_type       (GdaDataHandler * dh, GType type);
 
 static const gchar *gda_handler_boolean_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerBooleanPriv {
 	gchar          *detailled_descr;
 	guint           nb_gda_types;
-	GdaValueType   *valid_gda_types;
+	GType          *valid_gda_types;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -115,8 +115,8 @@ gda_handler_boolean_init (GdaHandlerBoolean *hdl)
 	hdl->priv = g_new0 (GdaHandlerBooleanPriv, 1);
 	hdl->priv->detailled_descr = _("Boolean values handler");
 	hdl->priv->nb_gda_types = 1;
-	hdl->priv->valid_gda_types = g_new0 (GdaValueType, 1);
-	hdl->priv->valid_gda_types[0] = GDA_VALUE_TYPE_BOOLEAN;
+	hdl->priv->valid_gda_types = g_new0 (GType, 1);
+	hdl->priv->valid_gda_types[0] = G_TYPE_BOOLEAN;
 
 	gda_object_set_name (GDA_OBJECT (hdl), _("InternalBoolean"));
 	gda_object_set_description (GDA_OBJECT (hdl), _("Boolean representation"));
@@ -163,7 +163,7 @@ gda_handler_boolean_new (void)
 }
 
 static gchar *
-gda_handler_boolean_get_sql_from_value (GdaDataHandler *iface, const GdaValue *value)
+gda_handler_boolean_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 {
 	gchar *retval;
 	GdaHandlerBoolean *hdl;
@@ -172,7 +172,7 @@ gda_handler_boolean_get_sql_from_value (GdaDataHandler *iface, const GdaValue *v
 	hdl = GDA_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	if (gda_value_get_boolean (value)) 
+	if (g_value_get_boolean (value)) 
 		retval = g_strdup ("TRUE");
 	else
 		retval = g_strdup ("FALSE");
@@ -181,7 +181,7 @@ gda_handler_boolean_get_sql_from_value (GdaDataHandler *iface, const GdaValue *v
 }
 
 static gchar *
-gda_handler_boolean_get_str_from_value (GdaDataHandler *iface, const GdaValue *value)
+gda_handler_boolean_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 {
 	GdaHandlerBoolean *hdl;
 
@@ -189,68 +189,70 @@ gda_handler_boolean_get_str_from_value (GdaDataHandler *iface, const GdaValue *v
 	hdl = GDA_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_value_stringify (value);
+	return gda_value_stringify ((GValue *) value);
 }
 
-static GdaValue *
-gda_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GdaValueType type)
+static GValue *
+gda_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
 {
 	GdaHandlerBoolean *hdl;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_BOOLEAN (iface), NULL);
 	hdl = GDA_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
+	value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
 	if ((*sql == 't') || (*sql == 'T'))
-		value = gda_value_new_boolean (TRUE);
+		g_value_set_boolean (value, TRUE);
 	else
-		value = gda_value_new_boolean (FALSE);
+		g_value_set_boolean (value, FALSE);
 	return value;
 }
 
-static GdaValue *
-gda_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str, GdaValueType type)
+static GValue *
+gda_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
 {
 	GdaHandlerBoolean *hdl;
-	GdaValue *value = NULL;
+	GValue *value = NULL;
 	gchar *lcstr;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_BOOLEAN (iface), NULL);
 	hdl = GDA_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
+	value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
 	lcstr = g_utf8_strdown (str, -1);
 	if (!strcmp (lcstr, "true") || (*lcstr == 't'))
-		value = gda_value_new_boolean (TRUE);
+		g_value_set_boolean (value, TRUE);
 	if (!value && (!strcmp (lcstr, "FALSE") || (*lcstr == 'f')))
-		value = gda_value_new_boolean (FALSE);
+		g_value_set_boolean (value, FALSE);
 	g_free (lcstr);
 
-	if (!value) {
-		value = gda_value_new_boolean (TRUE);
+	if (! G_IS_VALUE (value)) {
+		g_value_set_boolean (value, TRUE);
 		lcstr = gda_value_stringify (value);
-		if (strcmp (str, lcstr)) {
-			gda_value_free (value);
-			value = gda_value_new_boolean (FALSE);
-		}
+		if (strcmp (str, lcstr))
+			g_value_set_boolean (value, FALSE);
 	}
 
 	return value;
 }
 
 
-static GdaValue *
-gda_handler_boolean_get_sane_init_value (GdaDataHandler *iface, GdaValueType type)
+static GValue *
+gda_handler_boolean_get_sane_init_value (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerBoolean *hdl;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_BOOLEAN (iface), NULL);
 	hdl = GDA_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	value = gda_value_new_boolean (FALSE);
+	value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
+	g_value_set_boolean (value, FALSE);
+
 	return value;
 }
 
@@ -268,14 +270,14 @@ gda_handler_boolean_get_nb_gda_types (GdaDataHandler *iface)
 
 
 static gboolean
-gda_handler_boolean_accepts_gda_type (GdaDataHandler *iface, GdaValueType type)
+gda_handler_boolean_accepts_gda_type (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerBoolean *hdl;
 	guint i = 0;
 	gboolean found = FALSE;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_BOOLEAN (iface), FALSE);
-	g_return_val_if_fail (type != GDA_VALUE_TYPE_UNKNOWN, FALSE);
+	g_return_val_if_fail (type != G_TYPE_INVALID, FALSE);
 	hdl = GDA_HANDLER_BOOLEAN (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 
@@ -288,15 +290,15 @@ gda_handler_boolean_accepts_gda_type (GdaDataHandler *iface, GdaValueType type)
 	return found;
 }
 
-static GdaValueType
+static GType
 gda_handler_boolean_get_gda_type_index (GdaDataHandler *iface, guint index)
 {
 	GdaHandlerBoolean *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_BOOLEAN (iface), GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (iface && GDA_IS_HANDLER_BOOLEAN (iface), G_TYPE_INVALID);
 	hdl = GDA_HANDLER_BOOLEAN (iface);
-	g_return_val_if_fail (hdl->priv, GDA_VALUE_TYPE_UNKNOWN);
-	g_return_val_if_fail (index < hdl->priv->nb_gda_types, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (hdl->priv, G_TYPE_INVALID);
+	g_return_val_if_fail (index < hdl->priv->nb_gda_types, G_TYPE_INVALID);
 
 	return hdl->priv->valid_gda_types[index];
 }

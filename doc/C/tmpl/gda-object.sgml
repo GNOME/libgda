@@ -127,8 +127,6 @@ This class also introduces common attributes that can be exploited by the classe
 
 @object: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_set_id ##### -->
@@ -147,8 +145,6 @@ This class also introduces common attributes that can be exploited by the classe
 
 @object: 
 @name: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_set_description ##### -->
@@ -158,8 +154,6 @@ This class also introduces common attributes that can be exploited by the classe
 
 @object: 
 @descr: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_set_owner ##### -->
@@ -169,8 +163,6 @@ This class also introduces common attributes that can be exploited by the classe
 
 @object: 
 @owner: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_get_id ##### -->
@@ -198,8 +190,6 @@ This class also introduces common attributes that can be exploited by the classe
 
 @object: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_get_description ##### -->
@@ -209,8 +199,6 @@ This class also introduces common attributes that can be exploited by the classe
 
 @object: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_get_owner ##### -->
@@ -220,8 +208,6 @@ This class also introduces common attributes that can be exploited by the classe
 
 @object: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_destroy ##### -->
@@ -230,8 +216,6 @@ This class also introduces common attributes that can be exploited by the classe
 </para>
 
 @object: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_destroy_check ##### -->
@@ -240,8 +224,6 @@ This class also introduces common attributes that can be exploited by the classe
 </para>
 
 @object: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_connect_destroy ##### -->
@@ -253,8 +235,6 @@ This class also introduces common attributes that can be exploited by the classe
 @callback: 
 @data: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_changed ##### -->
@@ -263,8 +243,6 @@ This class also introduces common attributes that can be exploited by the classe
 </para>
 
 @object: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_block_changed ##### -->
@@ -273,8 +251,6 @@ This class also introduces common attributes that can be exploited by the classe
 </para>
 
 @object: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_unblock_changed ##### -->
@@ -283,8 +259,6 @@ This class also introduces common attributes that can be exploited by the classe
 </para>
 
 @object: 
-<!-- # Unused Parameters # -->
-@base: 
 
 
 <!-- ##### FUNCTION gda_object_dump ##### -->
@@ -294,7 +268,5 @@ This class also introduces common attributes that can be exploited by the classe
 
 @object: 
 @offset: 
-<!-- # Unused Parameters # -->
-@base: 
 
 

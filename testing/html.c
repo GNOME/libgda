@@ -331,10 +331,10 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
                 for (r = 0; r < rows; r++) {
 			tr = xmlNewChild (node, NULL, "tr", "");
                         for (c = 0 ; c < cols; c++) {
-                                GdaValue *value;
+                                GValue *value;
                                 gchar *str;
 
-                                value = (GdaValue *) gda_data_model_get_value_at (model, c, r);
+                                value = (GValue *) gda_data_model_get_value_at (model, c, r);
 				if (!value || gda_value_is_null (value)) {
 					xmlNodePtr p;
 					td = xmlNewChild (tr, NULL, "td", NULL);
@@ -342,8 +342,8 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 					xmlSetProp (p, "class", "null");
 				}
 				else {
-					if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
-						str = g_strdup (gda_value_get_boolean (value) ? "TRUE" : "FALSE");
+					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
+						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
 					else
 						str = gda_value_stringify (value);
 					td = xmlNewChild (tr, NULL, "td", str);
@@ -558,11 +558,11 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 }
 		else {
 			gchar *str = NULL;
-			const GdaValue *value;
+			const GValue *value;
 
 			value= gda_column_get_default_value (column);
 			if (value) 
-				str = gda_value_stringify ((GdaValue *) value);
+				str = gda_value_stringify ((GValue *) value);
 			else
 				str = "";
 			td = xmlNewChild (tr, NULL, "td", str);

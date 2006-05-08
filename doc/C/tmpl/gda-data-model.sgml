@@ -245,8 +245,6 @@ As a side note there are also data models which wrap other data models such as:
 
 @model: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@row: 
 
 
 <!-- ##### FUNCTION gda_data_model_move_iter_at_row ##### -->
@@ -299,9 +297,6 @@ As a side note there are also data models which wrap other data models such as:
 @model: 
 @error: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@row: 
-@values: 
 
 
 <!-- ##### FUNCTION gda_data_model_remove_row ##### -->
@@ -387,10 +382,6 @@ As a side note there are also data models which wrap other data models such as:
 @options: 
 @error: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@format: 
-@cols: 
-@nb_cols: 
 
 
 <!-- ##### FUNCTION gda_data_model_import_from_file ##### -->
@@ -404,10 +395,6 @@ As a side note there are also data models which wrap other data models such as:
 @options: 
 @error: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@format: 
-@cols: 
-@nb_cols: 
 
 
 <!-- ##### FUNCTION gda_data_model_dump ##### -->

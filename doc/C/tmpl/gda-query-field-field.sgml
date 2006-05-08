@@ -23,6 +23,11 @@ Represents one field of an entity (through a #GdaQueryTarget object)
 </para>
 
 
+<!-- ##### ARG GdaQueryFieldField:entry-plugin ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaQueryFieldField:field ##### -->
 <para>
 
@@ -34,11 +39,6 @@ Represents one field of an entity (through a #GdaQueryTarget object)
 </para>
 
 <!-- ##### ARG GdaQueryFieldField:field-name ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaQueryFieldField:handler-plugin ##### -->
 <para>
 
 </para>

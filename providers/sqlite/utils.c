@@ -42,10 +42,10 @@ gda_sqlite_update_types_hash (SQLITEcnc *scnc)
 		Db *db;
 		gint i;
 
-		g_hash_table_insert (types, g_strdup ("integer"), GINT_TO_POINTER (GDA_VALUE_TYPE_INTEGER));
-		g_hash_table_insert (types, g_strdup ("real"), GINT_TO_POINTER (GDA_VALUE_TYPE_DOUBLE));
-		g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (GDA_VALUE_TYPE_STRING));
-		g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_VALUE_TYPE_BLOB));
+		g_hash_table_insert (types, g_strdup ("integer"), GINT_TO_POINTER (G_TYPE_INT));
+		g_hash_table_insert (types, g_strdup ("real"), GINT_TO_POINTER (G_TYPE_DOUBLE));
+		g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (G_TYPE_STRING));
+		g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BLOB));
 
 		for (i = OMIT_TEMPDB; i < scnc->connection->nDb; i++) {
 			Hash *tab_hash;
@@ -63,20 +63,20 @@ gda_sqlite_update_types_hash (SQLITEcnc *scnc)
 					Column *column = &(table->aCol[j]);
 					
 					if (column->zType && !g_hash_table_lookup (types, column->zType)) {
-						GdaValueType type;
+						GType type;
 						switch (column->affinity) {
 						case SQLITE_AFF_INTEGER:
-							type = GDA_VALUE_TYPE_INTEGER;
+							type = G_TYPE_INT;
 							break;
 						case SQLITE_AFF_NUMERIC:
 							/* We don't want numerical affinity to be set to
-							 * GDA_VALUE_TYPE_NUMERIC because it does not work for dates. */
-							/* type = GDA_VALUE_TYPE_NUMERIC; */
+							 * GDA_TYPE_NUMERIC because it does not work for dates. */
+							/* type = GDA_TYPE_NUMERIC; */
 							/* break; */
 						case SQLITE_AFF_TEXT:
 						case SQLITE_AFF_NONE:
 						default:
-							type = GDA_VALUE_TYPE_STRING;
+							type = G_TYPE_STRING;
 							break;
 						}
 						g_hash_table_insert (types, g_strdup (column->zType), 

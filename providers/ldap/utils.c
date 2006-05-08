@@ -46,56 +46,57 @@ gda_ldap_make_error (LDAP *handle)
 	return error;
 }
 
-/*GdaValueType
+/*GType
 gda_ldap_type_to_gda (enum enum_field_types ldap_type)
 {
 
 	switch (ldap_type) {
 	case FIELD_TYPE_DATE :
-		return GDA_VALUE_TYPE_DATE;
+		return G_TYPE_DATE;
 	case FIELD_TYPE_DECIMAL :
 	case FIELD_TYPE_DOUBLE :
-		return GDA_VALUE_TYPE_DOUBLE;
+		return G_TYPE_DOUBLE;
 	case FIELD_TYPE_FLOAT :
-		return GDA_VALUE_TYPE_SINGLE;
+		return G_TYPE_FLOAT;
 	case FIELD_TYPE_LONG :
 	case FIELD_TYPE_YEAR :
-		return GDA_VALUE_TYPE_INTEGER;
+		return G_TYPE_INT;
 	case FIELD_TYPE_LONGLONG :
 	case FIELD_TYPE_INT24 :
-		return GDA_VALUE_TYPE_BIGINT;
+		return G_TYPE_INT64;
 	case FIELD_TYPE_SHORT :
-		return GDA_VALUE_TYPE_SMALLINT;
+		return GDA_TYPE_SHORT;
 	case FIELD_TYPE_TIME :
-		return GDA_VALUE_TYPE_TIME;
+		return GDA_TYPE_TIME;
 	case FIELD_TYPE_TIMESTAMP :
 	case FIELD_TYPE_DATETIME :
-		return GDA_VALUE_TYPE_TIMESTAMP;
+		return GDA_TYPE_TIMESTAMP;
 	case FIELD_TYPE_TINY :
-		return GDA_VALUE_TYPE_TINYINT;
+		return G_TYPE_CHAR;
 	case FIELD_TYPE_TINY_BLOB :
 	case FIELD_TYPE_MEDIUM_BLOB :
 	case FIELD_TYPE_LONG_BLOB :
 	case FIELD_TYPE_BLOB :
-		return GDA_VALUE_TYPE_BINARY;
+		return GDA_TYPE_BINARY;
 	case FIELD_TYPE_VAR_STRING :
 	case FIELD_TYPE_STRING :
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 	case FIELD_TYPE_NULL :
 	case FIELD_TYPE_NEWDATE :
 	case FIELD_TYPE_ENUM :
 	case FIELD_TYPE_SET :
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 	}
 
-	return GDA_VALUE_TYPE_UNKNOWN;
+	return G_TYPE_INVALID;
 }
 */
 gchar *
-gda_ldap_value_to_sql_string (GdaValue *value)
+gda_ldap_value_to_sql_string (GValue *value)
 {
 	gchar *val_str;
 	gchar *ret;
+	GType type;
 
 	g_return_val_if_fail (value != NULL, NULL);
 
@@ -103,21 +104,18 @@ gda_ldap_value_to_sql_string (GdaValue *value)
 	if (!val_str)
 		return NULL;
 
-	switch (GDA_VALUE_TYPE(value)) {
-	case GDA_VALUE_TYPE_BIGINT :
-	case GDA_VALUE_TYPE_DOUBLE :
-	case GDA_VALUE_TYPE_INTEGER :
-	case GDA_VALUE_TYPE_NUMERIC :
-	case GDA_VALUE_TYPE_SINGLE :
-	case GDA_VALUE_TYPE_SMALLINT :
-	case GDA_VALUE_TYPE_TINYINT :
-		ret = g_strdup (val_str);
-		break;
-	default :
-		ret = g_strdup_printf ("\"%s\"", val_str);
-	}
+	type = G_VALUE_TYPE (value);
 
-	g_free (val_str);
+	if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == G_TYPE_CHAR))
+		ret = g_strdup (val_str);
+	else
+		ret = g_strdup_printf ("\"%s\"", val_str);
 
 	return ret;
 }

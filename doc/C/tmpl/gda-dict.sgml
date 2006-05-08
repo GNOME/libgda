@@ -506,8 +506,6 @@ object for more information.
 @dict: 
 @type_name: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@typename: 
 
 
 <!-- ##### FUNCTION gda_connection_add_data_type ##### -->

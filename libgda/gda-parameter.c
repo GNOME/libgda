@@ -100,15 +100,15 @@ enum
 struct _GdaParameterPrivate
 {
 	GSList                *param_users; /* list of #GdaObject using that parameter */
-	GdaValueType           gda_type;
+	GType                  gda_type;
 	GdaParameter          *alias_of;     /* FULL bind to param */
 	GdaParameter          *change_with;  /* SIMPLE bind to param */
 	
 	gboolean               invalid_forced;
 	gboolean               valid;
 
-	GdaValue              *value;
-	GdaValue              *default_value; /* CAN be either NULL or of any type */
+	GValue                *value;
+	GValue                *default_value; /* CAN be either NULL or of any type */
 	gboolean               has_default_value; /* TRUE if param has a default value (even if unknown) */
 	gboolean               default_forced;
 	gboolean               not_null;      /* TRUE if 'value' must not be NULL when passed to destination fields */
@@ -198,8 +198,8 @@ gda_parameter_class_init (GdaParameterClass *class)
 	object_class->set_property = gda_parameter_set_property;
 	object_class->get_property = gda_parameter_get_property;
         g_object_class_install_property (object_class, PROP_GDA_TYPE,
-                                         g_param_spec_int ("gda_type", NULL, NULL,
-							   0, G_MAXINT, GDA_VALUE_TYPE_UNKNOWN,
+                                         g_param_spec_ulong ("gda_type", NULL, NULL,
+							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | 
 							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_PLUGIN,
@@ -231,7 +231,7 @@ gda_parameter_init (GdaParameter *parameter)
 {
 	parameter->priv = g_new0 (GdaParameterPrivate, 1);
 	parameter->priv->param_users = NULL;
-	parameter->priv->gda_type = GDA_VALUE_TYPE_UNKNOWN;
+	parameter->priv->gda_type = G_TYPE_INVALID;
 	parameter->priv->alias_of = NULL;
 	parameter->priv->change_with = NULL;
 
@@ -250,18 +250,18 @@ gda_parameter_init (GdaParameter *parameter)
 
 /**
  * gda_parameter_new
- * @type: the #GdaValueType requested
+ * @type: the #GType requested
  *
  * Creates a new parameter of type @type
  *
  * Returns: a new #GdaParameter object
  */
 GdaParameter *
-gda_parameter_new (GdaValueType type)
+gda_parameter_new (GType type)
 {
 	GObject   *obj;
 
-	g_return_val_if_fail (type != GDA_VALUE_TYPE_UNKNOWN, NULL);
+	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 
         obj = g_object_new (GDA_TYPE_PARAMETER, "gda_type", type, NULL);
 
@@ -331,7 +331,7 @@ gda_parameter_new_copy (GdaParameter *orig)
  * @name: the name of the parameter to create
  * @str: the contents of the parameter to create
  *
- * Creates a new #GdaParameter object of type GDA_VALUE_TYPE_STRING
+ * Creates a new #GdaParameter object of type G_TYPE_STRING
  *
  * Returns: a new #GdaParameter object
  */
@@ -340,7 +340,7 @@ gda_parameter_new_string (const gchar *name, const gchar *str)
 {
 	GdaParameter *param;
 
-	param = gda_parameter_new (GDA_VALUE_TYPE_STRING);
+	param = gda_parameter_new (G_TYPE_STRING);
 	gda_object_set_name (GDA_OBJECT (param), name);
 	gda_parameter_set_value_str (param, str);
 
@@ -352,7 +352,7 @@ gda_parameter_new_string (const gchar *name, const gchar *str)
  * @name: the name of the parameter to create
  * @value: the value to give to the new parameter
  *
- * Creates a new #GdaParameter object of type GDA_VALUE_TYPE_BOOLEAN
+ * Creates a new #GdaParameter object of type G_TYPE_BOOLEAN
  *
  * Returns: a new #GdaParameter object
  */
@@ -361,7 +361,7 @@ gda_parameter_new_boolean (const gchar *name, gboolean value)
 {
 	GdaParameter *param;
 
-	param = gda_parameter_new (GDA_VALUE_TYPE_BOOLEAN);
+	param = gda_parameter_new (G_TYPE_BOOLEAN);
 	gda_object_set_name (GDA_OBJECT (param), name);
 	gda_parameter_set_value_str (param, value ? "true" : "false");
 
@@ -416,7 +416,7 @@ gda_parameter_dispose (GObject *object)
 		while (parameter->priv->param_users)
 			gda_parameter_del_user (parameter, GDA_OBJECT (parameter->priv->param_users->data));
 
-		parameter->priv->gda_type = GDA_VALUE_TYPE_UNKNOWN;
+		parameter->priv->gda_type = G_TYPE_INVALID;
 
 		if (parameter->priv->value) {
 			gda_value_free (parameter->priv->value);
@@ -468,7 +468,7 @@ gda_parameter_set_property    (GObject *object,
 	if (parameter->priv) {
 		switch (param_id) {
 		case PROP_GDA_TYPE:
-			parameter->priv->gda_type = g_value_get_int (value);
+			parameter->priv->gda_type = g_value_get_ulong (value);
 			break;
 		case PROP_PLUGIN:
 			ptr = g_value_get_string (value);
@@ -523,7 +523,7 @@ gda_parameter_get_property    (GObject *object,
 	if (parameter->priv) {
 		switch (param_id) {
 		case PROP_GDA_TYPE:
-			g_value_set_int (value, parameter->priv->gda_type);
+			g_value_set_ulong (value, parameter->priv->gda_type);
 		case PROP_PLUGIN:
 			g_value_set_string (value, parameter->priv->plugin);
 			break;
@@ -617,11 +617,11 @@ gda_parameter_replace_param_users (GdaParameter *param, GHashTable *replacements
  *
  * Returns: the data type
  */
-GdaValueType
+GType
 gda_parameter_get_gda_type (GdaParameter *param)
 {
-	g_return_val_if_fail (GDA_IS_PARAMETER (param), GDA_VALUE_TYPE_UNKNOWN);
-	g_return_val_if_fail (param->priv, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), G_TYPE_INVALID);
+	g_return_val_if_fail (param->priv, G_TYPE_INVALID);
 
 	return param->priv->gda_type;
 }
@@ -633,9 +633,9 @@ gda_parameter_get_gda_type (GdaParameter *param)
  *
  * Get the value held into the parameter
  *
- * Returns: the value (a NULL value returns a GDA_VALUE_TYPE_NULL GdaValue)
+ * Returns: the value (a NULL value returns a GDA_TYPE_NULL GValue)
  */
-const GdaValue *
+const GValue *
 gda_parameter_get_value (GdaParameter *param)
 {
 	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
@@ -666,10 +666,10 @@ gda_parameter_get_value (GdaParameter *param)
  * then @param is not chaged and no signal is emitted.
  */
 void
-gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
+gda_parameter_set_value (GdaParameter *param, const GValue *value)
 {
 	gboolean changed = TRUE;
-	const GdaValue *current_val;
+	const GValue *current_val;
 #ifdef GDA_DEBUG_NO
 	gboolean was_valid = gda_parameter_is_valid (param);
 #endif
@@ -684,32 +684,32 @@ gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
 	if (current_val == value)
 		changed = FALSE;
 
-	if (changed && gda_value_is_null ((GdaValue *)current_val) && 
-	    ((value && gda_value_is_null ((GdaValue *)value)) || !value)) 
+	if (changed && gda_value_is_null ((GValue *)current_val) && 
+	    ((value && gda_value_is_null ((GValue *)value)) || !value)) 
 		changed = FALSE;
 	
-	if (changed && value && (gda_value_get_type ((GdaValue *)value) == 
-				 gda_value_get_type ((GdaValue *)current_val)))
-		changed = gda_value_compare ((GdaValue *)value, (GdaValue *)current_val);
+	if (changed && value && (G_VALUE_TYPE ((GValue *)value) == 
+				 G_VALUE_TYPE ((GValue *)current_val)))
+		changed = gda_value_compare ((GValue *)value, (GValue *)current_val);
 		
 	/* param's validity */
 	param->priv->valid = TRUE;
-	if (!value || gda_value_is_null ((GdaValue *)value))
+	if (!value || gda_value_is_null ((GValue *)value))
 		if (param->priv->not_null)
 			param->priv->valid = FALSE;
 
 	if (value &&
-	    (gda_value_get_type ((GdaValue *)value) != GDA_VALUE_TYPE_NULL) &&
-	    (gda_value_get_type ((GdaValue *)value) != param->priv->gda_type))
+	    (G_VALUE_TYPE ((GValue *)value) != GDA_TYPE_NULL) &&
+	    (G_VALUE_TYPE ((GValue *)value) != param->priv->gda_type))
 		param->priv->valid = FALSE;
 
 #ifdef GDA_DEBUG_NO
 	g_print ("Changed param %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
 		 param, gda_object_get_name (param),
-		 current_val ? gda_value_stringify ((GdaValue *)current_val) : "_NULL_",
-		 value ? gda_value_stringify ((GdaValue *)(value)) : "_NULL_",
-		 current_val ? gda_value_get_type ((GdaValue *)current_val) : 0,
-		 value ? gda_value_get_type ((GdaValue *)value) : 0, 
+		 current_val ? gda_value_stringify ((GValue *)current_val) : "_NULL_",
+		 value ? gda_value_stringify ((GValue *)(value)) : "_NULL_",
+		 current_val ? G_VALUE_TYPE ((GValue *)current_val) : 0,
+		 value ? G_VALUE_TYPE ((GValue *)value) : 0, 
 		 was_valid, gda_parameter_is_valid (param), changed);
 #endif
 
@@ -745,7 +745,7 @@ gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
 		}
 
 		if (value)
-			param->priv->value = gda_value_copy ((GdaValue *)value);
+			param->priv->value = gda_value_copy ((GValue *)value);
 
 		/* if the GdaObject has "changed_blocked" property TRUE, then store that the next time we need
 		 * to emit the "changed" signal even if the stored value has not changed "
@@ -767,7 +767,7 @@ gda_parameter_set_value (GdaParameter *param, const GdaValue *value)
  * is provided as a string, and may return FALSE if the string did not
  * represent a correct value for the data type of the parameter.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_parameter_set_value_str (GdaParameter *param, const gchar *value)
@@ -780,7 +780,7 @@ gda_parameter_set_value_str (GdaParameter *param, const gchar *value)
 		return TRUE;
 	}
 	else {
-		GdaValue *gdaval = NULL;
+		GValue *gdaval = NULL;
 		GdaDict *dict;
 		GdaDataHandler *dh;
 
@@ -876,7 +876,7 @@ gda_parameter_is_valid (GdaParameter *param)
  *
  * Returns: the default value
  */
-const GdaValue *
+const GValue *
 gda_parameter_get_default_value (GdaParameter *param)
 {
 	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
@@ -898,7 +898,7 @@ gda_parameter_get_default_value (GdaParameter *param)
  * the same type as the one required by @param.
  */
 void
-gda_parameter_set_default_value (GdaParameter *param, const GdaValue *value)
+gda_parameter_set_default_value (GdaParameter *param, const GValue *value)
 {
 	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (param->priv);
@@ -910,7 +910,7 @@ gda_parameter_set_default_value (GdaParameter *param, const GdaValue *value)
 
 	if (value) {
 		param->priv->has_default_value = TRUE;
-		param->priv->default_value = gda_value_copy ((GdaValue *)value);
+		param->priv->default_value = gda_value_copy ((GValue *)value);
 	}
 	
 	/* don't emit the "changed" signal */
@@ -1094,8 +1094,8 @@ gda_parameter_has_restrict_values (GdaParameter *param, GdaDataModel **model, gi
 void
 gda_parameter_bind_to_param (GdaParameter *param, GdaParameter *bind_to)
 {
-	const GdaValue *cvalue;
-	GdaValue *value1 = NULL, *value2 = NULL;
+	const GValue *cvalue;
+	GValue *value1 = NULL, *value2 = NULL;
 
 	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (param->priv);
@@ -1110,13 +1110,13 @@ gda_parameter_bind_to_param (GdaParameter *param, GdaParameter *bind_to)
 		g_return_if_fail (bind_to->priv);
 		g_return_if_fail (param->priv->gda_type == bind_to->priv->gda_type);
 		cvalue = gda_parameter_get_value (bind_to);
-		if (cvalue && !gda_value_is_null ((GdaValue*)cvalue))
-			value2 = gda_value_copy ((GdaValue*)cvalue);
+		if (cvalue && !gda_value_is_null ((GValue*)cvalue))
+			value2 = gda_value_copy ((GValue*)cvalue);
 	}
 
 	cvalue = gda_parameter_get_value (param);
-	if (cvalue && !gda_value_is_null ((GdaValue*)cvalue))
-		value1 = gda_value_copy ((GdaValue*)cvalue);
+	if (cvalue && !gda_value_is_null ((GValue*)cvalue))
+		value1 = gda_value_copy ((GValue*)cvalue);
 
 	/* get rid of the old alias */
 	if (param->priv->change_with) {
@@ -1139,7 +1139,7 @@ gda_parameter_bind_to_param (GdaParameter *param, GdaParameter *bind_to)
 
 		/* if alias_of has a different value than param, then we set param to the new value */
 		if (value1 && value2 &&
-		    (gda_value_get_type (value1) == gda_value_get_type (value2)))
+		    (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2)))
 			equal = !gda_value_compare (value1, value2);
 		else {
 			if (!value1 && !value2)
@@ -1165,8 +1165,8 @@ gda_parameter_bind_to_param (GdaParameter *param, GdaParameter *bind_to)
 static void
 gda_parameter_set_full_bind_param (GdaParameter *param, GdaParameter *alias_of)
 {
-	const GdaValue *cvalue;
-	GdaValue *value1 = NULL, *value2 = NULL;
+	const GValue *cvalue;
+	GValue *value1 = NULL, *value2 = NULL;
 
 	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (param->priv);
@@ -1180,13 +1180,13 @@ gda_parameter_set_full_bind_param (GdaParameter *param, GdaParameter *alias_of)
 		g_return_if_fail (alias_of->priv);
 		g_return_if_fail (param->priv->gda_type == alias_of->priv->gda_type);
 		cvalue = gda_parameter_get_value (alias_of);
-		if (cvalue && !gda_value_is_null ((GdaValue*)cvalue))
-			value2 = gda_value_copy ((GdaValue*)cvalue);
+		if (cvalue && !gda_value_is_null ((GValue*)cvalue))
+			value2 = gda_value_copy ((GValue*)cvalue);
 	}
 
 	cvalue = gda_parameter_get_value (param);
-	if (cvalue && !gda_value_is_null ((GdaValue*)cvalue))
-		value1 = gda_value_copy ((GdaValue*)cvalue);
+	if (cvalue && !gda_value_is_null ((GValue*)cvalue))
+		value1 = gda_value_copy ((GValue*)cvalue);
 		
 	
 	/* get rid of the old alias */
@@ -1216,7 +1216,7 @@ gda_parameter_set_full_bind_param (GdaParameter *param, GdaParameter *alias_of)
 
 		/* if alias_of has a different value than param, then we emit a CHANGED signal */
 		if (value1 && value2 &&
-		    (gda_value_get_type (value1) == gda_value_get_type (value2)))
+		    (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2)))
 			equal = !gda_value_compare (value1, value2);
 		else {
 			if (!value1 && !value2)
@@ -1312,7 +1312,7 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 		GSList *list;
 		gchar *str;
 
-		str = gda_value_stringify ((GdaValue *) gda_parameter_get_value (parameter));
+		str = gda_value_stringify ((GValue *) gda_parameter_get_value (parameter));
 		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s, %s, value=%s\n" D_COL_NOR, str, parameter,
 			 gda_object_get_name (GDA_OBJECT (parameter)), 
 			 gda_type_to_string (parameter->priv->gda_type),

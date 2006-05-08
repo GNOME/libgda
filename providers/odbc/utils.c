@@ -111,10 +111,10 @@ gda_odbc_emit_error ( GdaConnection *cnc,
 }
 
 /*
- * Map from a ODBC type to a GdaValueType
+ * Map from a ODBC type to a GType
  */
 
-GdaValueType
+GType
 odbc_to_gda_type ( int odbc_type )
 {
 	switch ( odbc_type ) {
@@ -124,59 +124,59 @@ odbc_to_gda_type ( int odbc_type )
 	case SQL_WVARCHAR:
 	case SQL_LONGVARCHAR:
 	case SQL_WLONGVARCHAR:
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 
 	case SQL_DECIMAL:
 	case SQL_NUMERIC:
-		return GDA_VALUE_TYPE_NUMERIC;
+		return GDA_TYPE_NUMERIC;
 
 	case SQL_BINARY:
 	case SQL_VARBINARY:
 	case SQL_LONGVARBINARY:
-		return GDA_VALUE_TYPE_BINARY;
+		return GDA_TYPE_BINARY;
 
 	case SQL_INTEGER:
 	case SQL_C_ULONG:
 	case SQL_C_SLONG:
-		return GDA_VALUE_TYPE_INTEGER;
+		return G_TYPE_INT;
 
 	case SQL_BIGINT:
 	case SQL_C_UBIGINT:
 	case SQL_C_SBIGINT:
-		return GDA_VALUE_TYPE_BIGINT;
+		return G_TYPE_INT64;
 
 	case SQL_SMALLINT:
 	case SQL_C_USHORT:
 	case SQL_C_SSHORT:
-		return GDA_VALUE_TYPE_SMALLINT;
+		return GDA_TYPE_SHORT;
 
 	case SQL_TINYINT:
 	case SQL_C_UTINYINT:
 	case SQL_C_STINYINT:
-		return GDA_VALUE_TYPE_TINYINT;
+		return G_TYPE_CHAR;
 
 	case SQL_C_BIT:
-		return GDA_VALUE_TYPE_BOOLEAN;
+		return G_TYPE_BOOLEAN;
 
 	case SQL_REAL:
 	case SQL_DOUBLE:
 	case SQL_FLOAT:
-		return GDA_VALUE_TYPE_DOUBLE;
+		return G_TYPE_DOUBLE;
 
 	case SQL_TYPE_DATE:
 	case SQL_DATE:
-		return GDA_VALUE_TYPE_DATE;
+		return G_TYPE_DATE;
 
 	case SQL_TYPE_TIME:
 	case SQL_TIME:
-		return GDA_VALUE_TYPE_TIME;
+		return GDA_TYPE_TIME;
 
 	case SQL_TYPE_TIMESTAMP:
 	case SQL_TIMESTAMP:
-		return GDA_VALUE_TYPE_TIMESTAMP;
+		return GDA_TYPE_TIMESTAMP;
 
 	default:
-		return GDA_VALUE_TYPE_UNKNOWN;
+		return G_TYPE_INVALID;
 	}
 }
 

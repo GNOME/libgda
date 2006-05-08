@@ -1355,7 +1355,7 @@ parsed_create_field_query_field (GdaQuery *query, gboolean add_to_query,
 					qfield = (GdaEntityField *) g_object_new (GDA_TYPE_QUERY_FIELD_VALUE, 
 										  "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 										  "query", query,	  
-										  "gda_type", GDA_VALUE_TYPE_NULL, NULL);
+										  "gda_type", GDA_TYPE_NULL, NULL);
 				}
 				else {
 					while (targets && !has_error) {
@@ -1463,9 +1463,9 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	GdaEntityField *qfield = NULL;
 	GList *list;
 	GdaDataHandler *dh;
-	GdaValue *gdaval = NULL;
+	GValue *gdaval = NULL;
 	GdaDictType *real_type = NULL;
-	GdaValueType gdatype = GDA_VALUE_TYPE_UNKNOWN;
+	GType gdatype = G_TYPE_INVALID;
 	gboolean unspecvalue = FALSE;
 	gboolean isparam;
 
@@ -1479,7 +1479,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		unspecvalue = TRUE; 
 
 	/*
-	 * try to determine a suitable GdaDictType or at least GdaValueType for the value 
+	 * try to determine a suitable GdaDictType or at least GType for the value 
 	 */
 	list = param_specs;
 	while (list && !real_type) {
@@ -1490,7 +1490,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 			if (!real_type) {
 				/* try a generic GDA type then */
 				gdatype = gda_type_from_string (((param_spec*) list->data)->content);
-				if (gdatype == GDA_VALUE_TYPE_UNKNOWN) {
+				if (gdatype == G_TYPE_INVALID) {
 					g_set_error (error,
 						     GDA_QUERY_ERROR,
 						     GDA_QUERY_SQL_ANALYSE_ERROR,
@@ -1504,7 +1504,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		list = g_list_next (list);
 	}
 
-	if (!real_type && (gdatype == GDA_VALUE_TYPE_UNKNOWN) && unspecvalue) {
+	if (!real_type && (gdatype == G_TYPE_INVALID) && unspecvalue) {
 		g_set_error (error,
 			     GDA_QUERY_ERROR,
 			     GDA_QUERY_SQL_ANALYSE_ERROR,
@@ -1512,11 +1512,11 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		return NULL;
 	}
 
-	if (!real_type && (gdatype == GDA_VALUE_TYPE_UNKNOWN)) {
+	if (!real_type && (gdatype == G_TYPE_INVALID)) {
 		if (prov) {
 			gchar *type = NULL;
 			gdaval = gda_server_provider_string_to_value (prov, cnc, value, 
-								      GDA_VALUE_TYPE_UNKNOWN, &type);
+								      G_TYPE_INVALID, &type);
 			if (gdaval)
 				real_type = gda_dict_get_data_type_by_name (dict, type);
 			else
@@ -1528,26 +1528,26 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 			/* no provider, try default data handlers to find a suitable type */
 			gint i;
 			GdaDataHandler *dh;
-			GdaValueType test_types[] = {
-				GDA_VALUE_TYPE_SMALLINT, 
-				GDA_VALUE_TYPE_INTEGER,
-				GDA_VALUE_TYPE_BIGINT,
-				GDA_VALUE_TYPE_BIGUINT,
-				GDA_VALUE_TYPE_SINGLE,
-				GDA_VALUE_TYPE_DOUBLE,
-				GDA_VALUE_TYPE_BOOLEAN,
-				GDA_VALUE_TYPE_TIME,
-				GDA_VALUE_TYPE_DATE,
-				GDA_VALUE_TYPE_TIMESTAMP,
-				GDA_VALUE_TYPE_GEOMETRIC_POINT,
-				GDA_VALUE_TYPE_STRING,
-				GDA_VALUE_TYPE_NUMERIC,
-				GDA_VALUE_TYPE_BINARY
+			GType test_types[] = {
+				GDA_TYPE_SHORT, 
+				G_TYPE_INT,
+				G_TYPE_INT64,
+				G_TYPE_UINT64,
+				G_TYPE_FLOAT,
+				G_TYPE_DOUBLE,
+				G_TYPE_BOOLEAN,
+				GDA_TYPE_TIME,
+				G_TYPE_DATE,
+				GDA_TYPE_TIMESTAMP,
+				GDA_TYPE_GEOMETRIC_POINT,
+				G_TYPE_STRING,
+				GDA_TYPE_NUMERIC,
+				GDA_TYPE_BINARY
 			};
 
 			i = 0;
-			while ((gdatype == GDA_VALUE_TYPE_UNKNOWN) && 
-			       (i < sizeof (test_types) / sizeof (GdaValueType))) {
+			while ((gdatype == G_TYPE_INVALID) && 
+			       (i < sizeof (test_types) / sizeof (GType))) {
 				gdaval = NULL;
 				dh = gda_dict_get_default_handler (dict, test_types[i]);
 				if (dh)
@@ -1560,7 +1560,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
                                                 /*g_print ("TEST : %s => %s => %s\n", value, sql, !strcmp (value, sql) ? "OK": "NOK");*/
                                                 g_free (sql);
                                         }
-					if (gdatype == GDA_VALUE_TYPE_UNKNOWN) {
+					if (gdatype == G_TYPE_INVALID) {
 						gda_value_free (gdaval);
 						gdaval = NULL;
 					}
@@ -1568,14 +1568,14 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 				i++;
 			}
 
-			if (gdatype == GDA_VALUE_TYPE_UNKNOWN)
+			if (gdatype == G_TYPE_INVALID)
 				return NULL;
 		}
 	}
 
 	if (real_type)
 		gdatype = gda_dict_type_get_gda_type (real_type);
-	g_assert (gdatype != GDA_VALUE_TYPE_UNKNOWN);
+	g_assert (gdatype != G_TYPE_INVALID);
 
 	if (!unspecvalue && !gdaval) {
 		dh = gda_dict_get_handler (dict, gdatype);

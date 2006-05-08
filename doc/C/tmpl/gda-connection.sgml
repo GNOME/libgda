@@ -67,6 +67,36 @@ Management of connections to data sources
 @gdaconnection: the object which received the signal.
 @arg1: 
 
+<!-- ##### ARG GdaConnection:client ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaConnection:dsn ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaConnection:options ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaConnection:password ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaConnection:provider-obj ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaConnection:username ##### -->
+<para>
+
+</para>
+
 <!-- ##### ENUM GdaConnectionOptions ##### -->
 <para>
 
@@ -128,10 +158,6 @@ Management of connections to data sources
 @password: 
 @options: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@error: 
-@corba_cnc: 
-@cnc_string: 
 
 
 <!-- ##### FUNCTION gda_connection_open ##### -->
@@ -150,8 +176,6 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-<!-- # Unused Parameters # -->
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_close_no_warning ##### -->
@@ -178,15 +202,6 @@ Management of connections to data sources
 
 @cnc: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_set_client ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@client: 
 
 
 <!-- ##### FUNCTION gda_connection_get_options ##### -->
@@ -374,8 +389,6 @@ Management of connections to data sources
 @attributes_list: 
 @index_list: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@attributes: 
 
 
 <!-- ##### FUNCTION gda_connection_drop_table ##### -->
@@ -397,8 +410,6 @@ Management of connections to data sources
 @index: 
 @table_name: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@table: 
 
 
 <!-- ##### FUNCTION gda_connection_drop_index ##### -->
@@ -455,8 +466,6 @@ Management of connections to data sources
 @cnc: 
 @xaction: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@id: 
 
 
 <!-- ##### FUNCTION gda_connection_commit_transaction ##### -->
@@ -467,8 +476,6 @@ Management of connections to data sources
 @cnc: 
 @xaction: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@id: 
 
 
 <!-- ##### FUNCTION gda_connection_rollback_transaction ##### -->
@@ -479,8 +486,6 @@ Management of connections to data sources
 @cnc: 
 @xaction: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@id: 
 
 
 <!-- ##### FUNCTION gda_connection_supports ##### -->
@@ -512,8 +517,6 @@ Management of connections to data sources
 
 @cnc: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@blob: 
 
 
 <!-- ##### FUNCTION gda_connection_fetch_blob_by_id ##### -->

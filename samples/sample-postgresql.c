@@ -61,7 +61,7 @@ show_table2 (GdaDataModel * dm)
 {
 	gint      row_id;
 	gint      column_id;
-	GdaValue *value;
+	GValue *value;
 	GdaRow   *row;
 	gchar    *string;
 

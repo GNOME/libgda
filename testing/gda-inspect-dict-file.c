@@ -27,7 +27,7 @@ main (int argc, char **argv)
 	GSList *list, *lptr;
 	
 	/* command line parsing */
-	context = g_option_context_new ("<Dictionaty XML file> - Test and list the contents of a dictionary file");
+	context = g_option_context_new ("<Dictionary XML file> - Test and list the contents of a dictionary file");
 	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {
 		g_warning ("Can't parse arguments: %s", error->message);
@@ -44,7 +44,7 @@ main (int argc, char **argv)
 	gda_init ("Gda verify dictionary file", PACKAGE_VERSION, argc, argv);
 
 	if (argc <= 1) {
-		g_print (_("Usage: %s <Dictionaty XML file>\n"), argv[0]);
+		g_print (_("Usage: %s <Dictionary XML file>\n"), argv[0]);
 		exit (1);
 	}
 

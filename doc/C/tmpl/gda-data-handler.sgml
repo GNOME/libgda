@@ -12,14 +12,14 @@ Each object which imlements the #GdaDataHandler interface is expected to handle 
 the possible libgda defined data types.
 </para>
 <para>
-The #GdaDataHandler object can convert a #GdaValue to and from both SQL and 'STR'. The SQL representation of a value is 
+The #GdaDataHandler object can convert a #GValue to and from both SQL and 'STR'. The SQL representation of a value is 
 the actual string which would be used in an SQL statement (for example a string's SQL representation is surrounded by 
 quotes such as 'that\'s a string'). The 'STR' representation is a user friendly representation of a value (and the
 previous example would simply be: that's a string).
 </para>
 <para>
 Only one object which implements this interface is needed for any given data type, and it mainly contains some
-methods to manage values (as #GdaValue structures). The #GnomeDbDataEntry interface is complementary to this one since
+methods to manage values (as #GValue structures). The #GnomeDbDataEntry interface is complementary to this one since
 it it implemented by widgets where the user can enter or modify some data.
 </para>
 <para>

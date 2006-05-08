@@ -53,7 +53,7 @@ static gint gda_sybase_recordset_get_n_rows (GdaDataModelRow *model);
 static gint gda_sybase_recordset_get_n_columns (GdaDataModelRow *model);
 static const GdaRow *gda_sybase_recordset_get_row (GdaDataModelRow *model,
                                                    gint row, GError **error);
-static const GdaValue *gda_sybase_recordset_get_value_at (GdaDataModelRow *model,
+static const GValue *gda_sybase_recordset_get_value_at (GdaDataModelRow *model,
                                                           gint col,
                                                           gint row);
 
@@ -132,7 +132,7 @@ gda_sybase_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 	return (const GdaRow *) g_ptr_array_index (recset->priv->rows, row);
 }
 
-static const GdaValue *
+static const GValue *
 gda_sybase_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
@@ -234,7 +234,7 @@ gda_sybase_create_current_row (GdaSybaseRecordset *recset)
 	g_return_val_if_fail (row != NULL, NULL);
 
 	for (i = 0; i < recset->priv->columns->len; i++) {
-		GdaValue       *value;
+		GValue       *value;
 		GdaSybaseField *sfield;
 
 		value = gda_row_get_value (row, i);
@@ -470,7 +470,7 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 	GdaSybaseField *sfield = NULL;
 	//	gboolean sfields_allocated = TRUE;
 	GdaRow *row = NULL;
-	GdaValue *val = NULL;
+	GValue *val = NULL;
 	gchar *message;
 	CS_INT msgcnt = 0;
 	GdaConnectionEvent *error;
@@ -562,7 +562,7 @@ gda_sybase_process_msg_result (GdaConnection *cnc,
 	sfield->fmt.maxlength = strlen(message);
 
 	srecset->priv->rowcnt = 1;	
-	gda_value_set_string(val,(gchar *)message);
+	g_value_set_string(val,(gchar *)message);
 	g_ptr_array_add(srecset->priv->rows, row);
 
 	// clear the message so we don't get bugged by it later

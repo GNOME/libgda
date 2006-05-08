@@ -87,6 +87,8 @@ void           gda_client_declare_connection                 (GdaClient *client,
 GdaConnection *gda_client_open_connection_from_string        (GdaClient *client,
 							      const gchar *provider_id,
 							      const gchar *cnc_string,
+							      const gchar *username,
+							      const gchar *password,
 							      GdaConnectionOptions options,
 							      GError **error);
 const GList   *gda_client_get_connections                    (GdaClient *client);

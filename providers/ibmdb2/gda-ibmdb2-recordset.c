@@ -37,7 +37,7 @@ static void gda_ibmdb2_recordset_class_init (GdaIBMDB2RecordsetClass *klass);
 static void gda_ibmdb2_recordset_init       (GdaIBMDB2Recordset *recset, GdaIBMDB2RecordsetClass *klass);
 static void gda_ibmdb2_recordset_finalize   (GObject *object);
 
-static const GdaValue 		*gda_ibmdb2_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row);
+static const GValue 		*gda_ibmdb2_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row);
 static void      	         gda_ibmdb2_recordset_describe     (GdaDataModelRow *model, gint col);
 static gint			 gda_ibmdb2_recordset_get_n_rows    (GdaDataModelRow *model);
 static gint			 gda_ibmdb2_recordset_get_n_columns (GdaDataModelRow *model);
@@ -153,7 +153,7 @@ gda_ibmdb2_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
         return (const GdaRow *) g_ptr_array_index (recset->priv->rows, row);
 }
 
-static const GdaValue *
+static const GValue *
 gda_ibmdb2_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaIBMDB2Recordset *recset = (GdaIBMDB2Recordset *) model;
@@ -198,7 +198,7 @@ gda_ibmdb2_create_current_row(GdaIBMDB2Recordset *recset)
 {
 	GdaRow *row = NULL;
         GdaIBMDB2Field *field;
-	GdaValue       *value;
+	GValue       *value;
         gint i = 0;
 
         g_return_val_if_fail (GDA_IS_IBMDB2_RECORDSET (recset), NULL);

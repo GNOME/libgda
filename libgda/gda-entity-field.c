@@ -107,19 +107,19 @@ gda_entity_field_get_data_type (GdaEntityField *iface)
  *
  * Returns: the corresponding #GdaDictType
  */
-GdaValueType
+GType
 gda_entity_field_get_gda_type (GdaEntityField *iface)
 {
-	g_return_val_if_fail (iface && GDA_IS_ENTITY_FIELD (iface), GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (iface && GDA_IS_ENTITY_FIELD (iface), G_TYPE_INVALID);
 
 	if (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_data_type) {
 		GdaDictType *type;	
 		type = (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_data_type) (iface);
 
-		return type ? gda_dict_type_get_gda_type (type) : GDA_VALUE_TYPE_UNKNOWN;
+		return type ? gda_dict_type_get_gda_type (type) : G_TYPE_INVALID;
 	}
 	
-	return GDA_VALUE_TYPE_UNKNOWN;
+	return G_TYPE_INVALID;
 }
 
 

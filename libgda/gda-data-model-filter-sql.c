@@ -300,7 +300,7 @@ populate_from_single_table (GdaDataModelFilterSQL *sel, const gchar *table_name,
 		for (c = 0; c < cols; c++) {
 			if (all_fields) {
 				value_list = g_list_append (value_list,
-							    gda_value_copy ((GdaValue *)
+							    gda_value_copy ((GValue *)
 									    gda_data_model_get_value_at (table, c, r)));
 			} 
 			else {
@@ -311,7 +311,7 @@ populate_from_single_table (GdaDataModelFilterSQL *sel, const gchar *table_name,
 					if (!strcmp ((const char *) l->data, gda_column_get_name (column))) {
 						value_list = g_list_append (
 							value_list,
-							gda_value_copy ((GdaValue *)
+							gda_value_copy ((GValue *)
 									gda_data_model_get_value_at (table, c, r)));
 					}
 				}

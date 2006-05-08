@@ -130,9 +130,9 @@ guint                   gda_parameter_list_get_length               (GdaParamete
 
 void                    gda_parameter_list_add_param                (GdaParameterList *paramlist, GdaParameter *param);
 GdaParameter           *gda_parameter_list_add_param_from_string    (GdaParameterList *paramlist, const gchar *name,
-								     GdaValueType type, const gchar *str);
+								     GType type, const gchar *str);
 GdaParameter           *gda_parameter_list_add_param_from_value     (GdaParameterList *paramlist, const gchar *name,
-								     GdaValue *value);
+								     GValue *value);
 void                    gda_parameter_list_merge                    (GdaParameterList *paramlist, 
 								     GdaParameterList *paramlist_to_merge);
 gboolean                gda_parameter_list_is_coherent              (GdaParameterList *paramlist, GError **error);
@@ -152,10 +152,10 @@ GdaParameterListGroup  *gda_parameter_list_find_group_for_param     (GdaParamete
 								     GdaParameter *param);
 
 void                    gda_parameter_list_set_param_default_value  (GdaParameterList *paramlist, 
-								     GdaParameter *param, const GdaValue *value);
+								     GdaParameter *param, const GValue *value);
 void                    gda_parameter_list_set_param_default_alias  (GdaParameterList *paramlist, 
 								     GdaParameter *param, GdaParameter *alias);
-const GdaValue         *gda_parameter_list_get_param_default_value  (GdaParameterList *paramlist, GdaParameter *param);
+const GValue         *gda_parameter_list_get_param_default_value  (GdaParameterList *paramlist, GdaParameter *param);
 
 G_END_DECLS
 

@@ -60,13 +60,13 @@ struct _GdaQueryFieldValueClass
 };
 
 GType             gda_query_field_value_get_type            (void);
-GObject          *gda_query_field_value_new                 (GdaQuery *query, GdaValueType type);
+GObject          *gda_query_field_value_new                 (GdaQuery *query, GType type);
 
-void              gda_query_field_value_set_value           (GdaQueryFieldValue *field, const GdaValue *val);
-const GdaValue   *gda_query_field_value_get_value           (GdaQueryFieldValue *field);
-void              gda_query_field_value_set_default_value   (GdaQueryFieldValue *field, const GdaValue *default_val);
-const GdaValue   *gda_query_field_value_get_default_value   (GdaQueryFieldValue *field);
-GdaValueType      gda_query_field_value_get_value_type      (GdaQueryFieldValue *field);
+void              gda_query_field_value_set_value           (GdaQueryFieldValue *field, const GValue *val);
+const GValue   *gda_query_field_value_get_value           (GdaQueryFieldValue *field);
+void              gda_query_field_value_set_default_value   (GdaQueryFieldValue *field, const GValue *default_val);
+const GValue   *gda_query_field_value_get_default_value   (GdaQueryFieldValue *field);
+GType      gda_query_field_value_get_value_type      (GdaQueryFieldValue *field);
 
 void              gda_query_field_value_set_dict_type       (GdaQueryFieldValue *field, GdaDictType *type);
 GdaDictType      *gda_query_field_value_get_dict_type       (GdaQueryFieldValue *field);

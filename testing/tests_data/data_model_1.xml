@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <gda_array name="csets">
-  <gda_array_field name="id" gdatype="string"/>
-  <gda_array_field name="text" gdatype="string"/>
+  <gda_array_field name="id" gdatype="gchararray"/>
+  <gda_array_field name="text" gdatype="gchararray"/>
   <gda_array_data>
     <gda_array_row>
       <gda_value>UNICODE</gda_value>

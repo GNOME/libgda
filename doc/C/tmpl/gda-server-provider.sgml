@@ -23,6 +23,16 @@ Base class for implementing new providers
 </para>
 
 
+<!-- ##### STRUCT GdaServerProviderInfo ##### -->
+<para>
+
+</para>
+
+@provider_name: 
+@is_case_insensitive: 
+@implicit_data_types_casts: 
+@alias_needs_as_keyword: 
+
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>
 
@@ -161,8 +171,6 @@ Base class for implementing new providers
 @attributes_list: 
 @index_list: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@attributes: 
 
 
 <!-- ##### FUNCTION gda_server_provider_drop_table ##### -->
@@ -233,8 +241,6 @@ Base class for implementing new providers
 @cnc: 
 @xaction: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@trans_id: 
 
 
 <!-- ##### FUNCTION gda_server_provider_commit_transaction ##### -->
@@ -246,8 +252,6 @@ Base class for implementing new providers
 @cnc: 
 @xaction: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@trans_id: 
 
 
 <!-- ##### FUNCTION gda_server_provider_rollback_transaction ##### -->
@@ -259,8 +263,6 @@ Base class for implementing new providers
 @cnc: 
 @xaction: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@trans_id: 
 
 
 <!-- ##### FUNCTION gda_server_provider_supports ##### -->
@@ -295,8 +297,6 @@ Base class for implementing new providers
 @provider: 
 @cnc: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@blob: 
 
 
 <!-- ##### FUNCTION gda_server_provider_fetch_blob_by_id ##### -->

@@ -47,8 +47,6 @@ It implements the #GdaXmlStorage interface.
 
 @dict: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@srv: 
 
 
 <!-- ##### FUNCTION gda_dict_type_set_sqlname ##### -->

@@ -86,11 +86,11 @@ static gint                 gda_data_model_query_get_n_rows      (GdaDataModel *
 static gint                 gda_data_model_query_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_query_describe_column (GdaDataModel *model, gint col);
 static guint                gda_data_model_query_get_access_flags(GdaDataModel *model);
-static const GdaValue      *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue      *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row);
 static guint                gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static gboolean             gda_data_model_query_set_value_at    (GdaDataModel *model, gint col, gint row, 
-								   const GdaValue *value, GError **error);
+								   const GValue *value, GError **error);
 static gboolean             gda_data_model_query_set_values      (GdaDataModel *model, gint row, 
 								   GList *values, GError **error);
 static gint                 gda_data_model_query_append_values   (GdaDataModel *model, const GList *values, GError **error);
@@ -98,7 +98,7 @@ static gint                 gda_data_model_query_append_row      (GdaDataModel *
 static gboolean             gda_data_model_query_remove_row      (GdaDataModel *model, gint row, 
 								  GError **error);
 static void                 gda_data_model_query_send_hint       (GdaDataModel *model, GdaDataModelHint hint, 
-								  const GdaValue *hint_value);
+								  const GValue *hint_value);
 
 static void create_columns (GdaDataModelQuery *model);
 static void to_be_destroyed_query_cb (GdaQuery *query, GdaDataModelQuery *model);
@@ -540,7 +540,7 @@ gda_data_model_query_get_param_list (GdaDataModelQuery *model)
  *
  * (Re)-runs the SELECT query to update the contents of @model
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
@@ -614,7 +614,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
  *
  * Examples of queries are: "INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:name="Customer" :type="integer"], date('now'), ## [:name="+2" :type="date" :nullok="TRUE"], NULL)", "DELETE FROM orders WHERE id = ## [:name="-0" :type="integer"]" and "UPDATE orders set id=## [:name="+0" :type="integer"], delivery_before=## [:name="+2" :type="date" :nullok="TRUE"], delivery_date=## [:name="+3" :type="date" :nullok="TRUE"] WHERE id=## [:name="-0" :type="integer"]"
  *
- * Returns: TRUE if no error occured.
+ * Returns: TRUE if no error occurred.
  */
 gboolean
 gda_data_model_query_set_modification_query (GdaDataModelQuery *model, const gchar *query, GError **error)
@@ -732,7 +732,7 @@ create_columns (GdaDataModelQuery *model)
 		fields = gda_entity_get_fields (GDA_ENTITY (model->priv->queries[SEL_QUERY]));
 		list = fields;
 		while (list && allok) {
-			if (gda_entity_field_get_gda_type (GDA_ENTITY_FIELD (list->data)) == GDA_VALUE_TYPE_UNKNOWN)
+			if (gda_entity_field_get_gda_type (GDA_ENTITY_FIELD (list->data)) == G_TYPE_INVALID)
 				allok = FALSE;
 			list = g_slist_next (list);
 		}
@@ -755,7 +755,7 @@ create_columns (GdaDataModelQuery *model)
 				ref_field = gda_query_field_field_get_ref_field (GDA_QUERY_FIELD_FIELD (field));
 				if (GDA_IS_DICT_FIELD (ref_field)) {
 					GdaEntity *table;
-					const GdaValue *value;
+					const GValue *value;
 					gda_column_set_defined_size (col, gda_dict_field_get_length ((GdaDictField*) ref_field));
 					table = gda_entity_field_get_entity (ref_field);
 					gda_column_set_table (col, gda_object_get_name (GDA_OBJECT (table)));
@@ -852,7 +852,7 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 	return flags;
 }
 
-static const GdaValue *
+static const GValue *
 gda_data_model_query_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	GdaDataModelQuery *selmodel;
@@ -931,7 +931,7 @@ run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 }
 
 static gboolean
-gda_data_model_query_set_value_at (GdaDataModel *model, gint col, gint row, const GdaValue *value, GError **error)
+gda_data_model_query_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error)
 {
 	GdaDataModelQuery *selmodel;
 	GdaParameterList *paramlist;
@@ -1005,7 +1005,7 @@ gda_data_model_query_set_values (GdaDataModel *model, gint row, GList *values, G
 			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1;
 			if (num >= 0) {
 				/* new values */
-				GdaValue *value;
+				GValue *value;
 				value = g_list_nth_data ((GList *) values, num);
 				if (value)
 					gda_parameter_set_value (GDA_PARAMETER (params->data), value);
@@ -1056,7 +1056,7 @@ gda_data_model_query_append_values (GdaDataModel *model, const GList *values, GE
 			num = GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1;
 			if (num >= 0) {
 				/* new values only */
-				GdaValue *value;
+				GValue *value;
 				value = g_list_nth_data ((GList *) values, num);
 				gda_parameter_set_value (GDA_PARAMETER (params->data), value);
 			}
@@ -1154,7 +1154,7 @@ gda_data_model_query_remove_row (GdaDataModel *model, gint row, GError **error)
 }
 
 static void
-gda_data_model_query_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value)
+gda_data_model_query_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value)
 {
 	GdaDataModelQuery *selmodel;
 	g_return_if_fail (GDA_IS_DATA_MODEL_QUERY (model));

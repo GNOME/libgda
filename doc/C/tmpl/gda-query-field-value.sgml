@@ -26,12 +26,12 @@ to tell from which query field the values will be taken).
 </para>
 
 
-<!-- ##### ARG GdaQueryFieldValue:gda-type ##### -->
+<!-- ##### ARG GdaQueryFieldValue:entry-plugin ##### -->
 <para>
 
 </para>
 
-<!-- ##### ARG GdaQueryFieldValue:handler-plugin ##### -->
+<!-- ##### ARG GdaQueryFieldValue:gda-type ##### -->
 <para>
 
 </para>

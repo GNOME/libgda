@@ -82,7 +82,7 @@ fetch_row (GdaDataModel *model, GdaLdapRecordset *recset, gulong rownum)
 		return NULL;
 
 	for (i = 0; i < field_count; i++) {
-		GdaValue *field;
+		GValue *field;
 		gchar *thevalue;
 
 		field = gda_row_get_value (row, i);
@@ -92,24 +92,24 @@ fetch_row (GdaDataModel *model, GdaLdapRecordset *recset, gulong rownum)
 		switch (ldap_fields[i].type) {
 		case FIELD_TYPE_DECIMAL :
 		case FIELD_TYPE_DOUBLE :
-			gda_value_set_double (field, atof (thevalue));
+			g_value_set_double (field, atof (thevalue));
 			break;
 		case FIELD_TYPE_FLOAT :
-			gda_value_set_single (field, atof (thevalue));
+			g_value_set_float (field, atof (thevalue));
 			break;
 		case FIELD_TYPE_LONG :
 		case FIELD_TYPE_YEAR :
-			gda_value_set_integer (field, atol (thevalue));
+			g_value_set_int (field, atol (thevalue));
 			break;
 		case FIELD_TYPE_LONGLONG :
 		case FIELD_TYPE_INT24 :
-			gda_value_set_bigint (field, atoll (thevalue));
+			g_value_set_int64 (field, atoll (thevalue));
 			break;
 		case FIELD_TYPE_SHORT :
-			gda_value_set_smallint (field, atoi (thevalue));
+			gda_value_set_short (field, atoi (thevalue));
 			break;
 		case FIELD_TYPE_TINY :
-			gda_value_set_tinyint (field, atoi (thevalue));
+			g_value_set_char (field, atoi (thevalue));
 			break;
 		case FIELD_TYPE_TINY_BLOB :
 		case FIELD_TYPE_MEDIUM_BLOB :
@@ -119,7 +119,7 @@ fetch_row (GdaDataModel *model, GdaLdapRecordset *recset, gulong rownum)
 			break;
 		case FIELD_TYPE_VAR_STRING :
 		case FIELD_TYPE_STRING :
-			gda_value_set_string (field, thevalue ? thevalue : "");
+			g_value_set_string (field, thevalue ? thevalue : "");
 			break;
 		case FIELD_TYPE_DATE :
 		case FIELD_TYPE_NULL :
@@ -129,10 +129,10 @@ fetch_row (GdaDataModel *model, GdaLdapRecordset *recset, gulong rownum)
 		case FIELD_TYPE_DATETIME :
 		case FIELD_TYPE_TIME :
 		case FIELD_TYPE_SET :
-			gda_value_set_string (field, thevalue ? thevalue : "");
+			g_value_set_string (field, thevalue ? thevalue : "");
 			break;
 		default :
-			gda_value_set_string (field, thevalue ? thevalue : "");
+			g_value_set_string (field, thevalue ? thevalue : "");
 		}
 	}
 */
@@ -232,7 +232,7 @@ gda_ldap_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 	return (const GdaRow *) fields;
 }
 
-static const GdaValue *
+static const GValue *
 gda_ldap_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	gint cols = 0;
@@ -308,7 +308,7 @@ gda_ldap_recordset_append_values (GdaDataModelRow *model, const GList *values)
 
 	for (l = (GList *) values, i = 0; i < cols; i++, l = l->next) {
 		gchar *val_str;
-		const GdaValue *val = (const GdaValue *) l->data;
+		const GValue *val = (const GValue *) l->data;
 
 		if (!val) {
 			gda_connection_add_event_string (
@@ -320,7 +320,7 @@ gda_ldap_recordset_append_values (GdaDataModelRow *model, const GList *values)
 
 		if (i != 0)
 			sql = g_string_append (sql, ", ");
-		val_str = gda_ldap_value_to_sql_string ((GdaValue *) val);
+		val_str = gda_ldap_value_to_sql_string ((GValue *) val);
 		sql = g_string_append (sql, val_str);
 
 		g_free (val_str);

@@ -64,45 +64,45 @@ fetch_row (GdaMsqlRecordset *rs,gulong rownum)
 	if (!msql_row) return NULL;
 	for(i=0,msql_fields=rs->res->fieldData;msql_fields;
 	    i++,msql_fields=msql_fields->next) {
-		GdaValue *field;
+		GValue *field;
 		gchar    *s_val;
 
-		field=(GdaValue*)gda_row_get_value(row,i);
+		field=(GValue*)gda_row_get_value(row,i);
 		s_val=msql_row[i];
 		switch (msql_fields->field.type) {
-		case INT_TYPE:  gda_value_set_integer(field, (s_val) ? atol(s_val) : 0);
+		case INT_TYPE:  g_value_set_int(field, (s_val) ? atol(s_val) : 0);
 			break;
-		case UINT_TYPE: gda_value_set_uinteger(field,
+		case UINT_TYPE: g_value_set_uint(field,
 						       (s_val) ? (guint)atol(s_val) : 0);
 			break;
-		case REAL_TYPE:  gda_value_set_double(field,(s_val) ? atof(s_val) : 0.0);
+		case REAL_TYPE:  g_value_set_double(field,(s_val) ? atof(s_val) : 0.0);
 			break;
-		case MONEY_TYPE :gda_value_set_single(field,(s_val) ? atof(s_val) : 0.0f);
+		case MONEY_TYPE :g_value_set_float(field,(s_val) ? atof(s_val) : 0.0f);
 			break;
 #ifdef HAVE_MSQL3
-		case IPV4_TYPE:  gda_value_set_string(field,(s_val) ? s_val : "");
+		case IPV4_TYPE:  g_value_set_string(field,(s_val) ? s_val : "");
 			break;
-		case INT64_TYPE: gda_value_set_bigint(field,
+		case INT64_TYPE: g_value_set_int64(field,
 						      (s_val) ? (gint64)atof(s_val) : 0);
 			break;
-		case UINT64_TYPE: gda_value_set_biguint(field,
+		case UINT64_TYPE: g_value_set_uint64(field,
 							(s_val) ? (guint64)atof(s_val) : 0);
                         break;
-		case INT16_TYPE:  gda_value_set_smallint(field,
+		case INT16_TYPE:  gda_value_set_short(field,
 							 (s_val) ? (gshort)atol(s_val) : 0);
                         break;
-		case UINT16_TYPE: gda_value_set_smalluint(field,
+		case UINT16_TYPE: gda_value_set_ushort(field,
 							  (s_val) ? (gushort)atol(s_val) : 0);
                         break;
-		case INT8_TYPE:   gda_value_set_tinyint(field,
+		case INT8_TYPE:   g_value_set_char(field,
 							(s_val) ? (gchar)atol(s_val) : 0);
                         break;
-		case UINT8_TYPE:  gda_value_set_tinyuint(field,
+		case UINT8_TYPE:  g_value_set_uchar(field,
 							 (s_val) ? (guchar)atol(s_val) : 0);
                         break;
 #endif
 		default:
-			gda_value_set_string(field,(s_val) ? s_val : "");
+			g_value_set_string(field,(s_val) ? s_val : "");
 		}  
 	}
 	return row;
@@ -157,7 +157,7 @@ gda_msql_recordset_get_row(GdaDataModelRow *model, gint row, GError **error)
 	return (const GdaRow*)fields;
 }
 
-static const GdaValue *
+static const GValue *
 gda_msql_recordset_get_value_at(GdaDataModelRow *model,gint col,gint row) 
 {
 	gint              cols;
@@ -223,7 +223,7 @@ gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values)
 	sql = g_string_append(sql,") VALUES (");
 	for (lst = (GList*)values , i=0 ; i<cols ; i++, lst = lst->next) {
 		char           *val_str;
-		const GdaValue *val=(const GdaValue*)lst->data;
+		const GValue *val=(const GValue*)lst->data;
    
 		if (!val) {
 			gda_connection_add_event_string(rs->cnc,
@@ -232,7 +232,7 @@ gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values)
 			return NULL;
 		}
 		if (i) sql=g_string_append(sql,",");
-		val_str=gda_msql_value_to_sql_string((GdaValue*)val);
+		val_str=gda_msql_value_to_sql_string((GValue*)val);
 		sql=g_string_append(sql,val_str);
 		g_free(val_str);
 	}

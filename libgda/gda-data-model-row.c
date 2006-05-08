@@ -73,12 +73,12 @@ static void                 gda_data_model_row_data_model_init (GdaDataModelClas
 static gint                 gda_data_model_row_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_row_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_row_describe_column (GdaDataModel *model, gint col);
-static const GdaValue      *gda_data_model_row_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue      *gda_data_model_row_get_value_at    (GdaDataModel *model, gint col, gint row);
 static guint                gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row);
 static guint                gda_data_model_row_get_access_flags(GdaDataModel *model);
 
 static gboolean             gda_data_model_row_set_value_at    (GdaDataModel *model, gint col, gint row, 
-								 const GdaValue *value, GError **error);
+								 const GValue *value, GError **error);
 static gboolean             gda_data_model_row_set_values      (GdaDataModel *model, gint row, 
 								 GList *values, GError **error);
 static gint                 gda_data_model_row_append_values   (GdaDataModel *model, const GList *values, GError **error);
@@ -163,7 +163,7 @@ gda_data_model_row_init (GdaDataModelRow *model, GdaDataModelRowClass *klass)
 	model->priv->read_only = FALSE;
 }
 
-static void column_gda_type_changed_cb (GdaColumn *column, GdaValueType old, GdaValueType new, GdaDataModelRow *model);
+static void column_gda_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelRow *model);
 
 static void
 hash_free_column (gpointer key, GdaColumn *column, GdaDataModelRow *model)
@@ -325,37 +325,37 @@ gda_data_model_row_describe_column (GdaDataModel *model, gint col)
 }
 
 static void
-column_gda_type_changed_cb (GdaColumn *column, GdaValueType old, GdaValueType new, GdaDataModelRow *model)
+column_gda_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelRow *model)
 {
-	/* emit a warning if there are GdaValues which are not compatible with the new type */
+	/* emit a warning if there are GValues which are not compatible with the new type */
 	gint i, nrows, col;
-	const GdaValue *value;
+	const GValue *value;
 	gchar *str;
 	gint nb_warnings = 0;
 #define max_warnings 5
 
-	if ((new == GDA_VALUE_TYPE_NULL) ||
-	    (new == GDA_VALUE_TYPE_UNKNOWN))
+	if ((new == G_TYPE_INVALID) ||
+	    (new == GDA_TYPE_NULL))
 		return;
 
 	col = gda_column_get_position (column);
 	nrows = gda_data_model_row_get_n_rows (GDA_DATA_MODEL (model));
 	for (i = 0; (i < nrows) && (nb_warnings < max_warnings); i++) {
-		GdaValueType vtype;
+		GType vtype;
 
 		value = gda_data_model_row_get_value_at (GDA_DATA_MODEL (model), col, i);
-		vtype = gda_value_get_type ((GdaValue *) value);
-		if ((vtype != GDA_VALUE_TYPE_NULL) && (vtype != new)) {
+		vtype = G_VALUE_TYPE ((GValue *) value);
+		if ((vtype != GDA_TYPE_NULL) && (vtype != new)) {
 			nb_warnings ++;
 			if (nb_warnings < max_warnings) {
 				if (nb_warnings == max_warnings)
 					g_warning ("Max number of warning reached, "
 						   "more incompatible types...");
 				else {
-					str = gda_value_stringify ((GdaValue *) value);
+					str = gda_value_stringify ((GValue *) value);
 					g_warning ("Value of type %s not compatible with new"
 						   " column type %s (value=%s)",
-						   gda_type_to_string (gda_value_get_type ((GdaValue *) value)), 
+						   gda_type_to_string (G_VALUE_TYPE ((GValue *) value)), 
 						   gda_type_to_string (new), str);
 					g_free (str);
 				}
@@ -387,7 +387,7 @@ gda_data_model_row_get_row (GdaDataModelRow *model, gint row, GError **error)
  * GdaDataModel interface implementation
  */
 
-static const GdaValue *
+static const GValue *
 gda_data_model_row_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), NULL);
@@ -399,7 +399,7 @@ gda_data_model_row_get_value_at (GdaDataModel *model, gint col, gint row)
 static guint
 gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
-	const GdaValue *gdavalue;
+	const GValue *gdavalue;
 	guint flags = 0;
 	GdaColumn *column;
 
@@ -413,7 +413,7 @@ gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	
 	if (row >= 0) {
 		gdavalue = gda_data_model_get_value_at (model, col, row);
-		if (!gdavalue || gda_value_is_null ((GdaValue *) gdavalue))
+		if (!gdavalue || gda_value_is_null ((GValue *) gdavalue))
 			flags |= GDA_VALUE_ATTR_IS_NULL;
 	}
 
@@ -441,7 +441,7 @@ gda_data_model_row_get_access_flags (GdaDataModel *model)
 
 static gboolean
 gda_data_model_row_set_value_at (GdaDataModel *model, gint col, gint row, 
-				 const GdaValue *value, GError **error)
+				 const GValue *value, GError **error)
 {
 	GdaRow *gdarow;
 
@@ -494,7 +494,7 @@ gda_data_model_row_set_values (GdaDataModel *model, gint row, GList *values, GEr
 		gint col = 0;
 		list = values;
 		while (list) {
-			gda_row_set_value (gdarow, col, (GdaValue*)(list->data));
+			gda_row_set_value (gdarow, col, (GValue*)(list->data));
 			list = g_list_next (list);
 			col++;
 		}

@@ -31,7 +31,6 @@ typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
 
 typedef struct _GdaDataHandler      GdaDataHandler;
 typedef struct _GdaDataHandlerIface GdaDataHandlerIface;
-extern  GdaDataHandler *default_handlers [];
 
 typedef struct _GdaServerProvider        GdaServerProvider; /* defined in gda-server-provider.h */
 typedef struct _GdaServerProviderClass   GdaServerProviderClass;

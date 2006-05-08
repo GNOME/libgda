@@ -55,7 +55,7 @@ static gint gda_freetds_recordset_get_n_rows (GdaDataModelRow *model);
 static gint gda_freetds_recordset_get_n_columns (GdaDataModelRow *model);
 static const GdaRow *gda_freetds_recordset_get_row (GdaDataModelRow *model,
                                                     gint row, GError **error);
-static const GdaValue *gda_freetds_recordset_get_value_at (GdaDataModelRow *model,
+static const GValue *gda_freetds_recordset_get_value_at (GdaDataModelRow *model,
                                                            gint         col,
                                                            gint         row);
 
@@ -101,7 +101,7 @@ gda_freetds_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 	return (const GdaRow *) g_ptr_array_index (recset->priv->rows, row);
 }
 
-static const GdaValue *
+static const GValue *
 gda_freetds_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
@@ -203,7 +203,7 @@ gda_freetds_get_current_row(GdaFreeTDSRecordset *recset)
 	g_return_val_if_fail (row != NULL, NULL);
 	
 	for (i = 0; i < recset->priv->res->num_cols; i++) {
-		GdaValue   *field;
+		GValue   *field;
 		_TDSCOLINFO *col;
 
 		field = gda_row_get_value (row, i);

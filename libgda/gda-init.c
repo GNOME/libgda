@@ -26,7 +26,6 @@ static GMainLoop *main_loop = NULL;
 
 /* global variables */
 GdaDict        *default_dict = NULL; /* available in all libgda, always NOT NULL */
-GdaDataHandler *default_handlers [GDA_VALUE_TYPE_UNKNOWN]; /* to be used by providers, not GdaDict because of locale issues */
 xmlDtdPtr       gda_dict_dtd = NULL;
 xmlDtdPtr       gda_array_dtd = NULL;
 
@@ -44,6 +43,7 @@ void
 gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 {
 	static gboolean initialized = FALSE;
+	GType type;
 
 	if (initialized) {
 		gda_log_error (_("Attempt to re-initialize GDA library. ignored."));
@@ -66,34 +66,20 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	if (!g_module_supported ())
 		g_error (_("libgda needs GModule. Finishing..."));
 
+	/* create the required Gda types */
+	type = G_TYPE_DATE;
+	type = GDA_TYPE_BINARY;
+	type = GDA_TYPE_BLOB;
+	type = GDA_TYPE_GEOMETRIC_POINT;
+	type = GDA_TYPE_LIST;
+	type = GDA_TYPE_NUMERIC;
+	type = GDA_TYPE_SHORT;
+	type = GDA_TYPE_USHORT;
+	type = GDA_TYPE_TIME;
+	type = GDA_TYPE_TIMESTAMP;
+
 	/* create a default dictionary */
 	default_dict = GDA_DICT (gda_dict_new ());
-
-	/* fill the default data handlers */
-	default_handlers [GDA_VALUE_TYPE_NULL] = NULL;
-	default_handlers [GDA_VALUE_TYPE_BIGINT] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_BIGUINT] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_BINARY] = gda_handler_bin_new ();
-	default_handlers [GDA_VALUE_TYPE_BLOB] = gda_handler_bin_new ();
-	default_handlers [GDA_VALUE_TYPE_BOOLEAN] = gda_handler_boolean_new ();
-	default_handlers [GDA_VALUE_TYPE_DATE] = gda_handler_time_new_no_locale ();
-	default_handlers [GDA_VALUE_TYPE_DOUBLE] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_GEOMETRIC_POINT] = NULL;
-	default_handlers [GDA_VALUE_TYPE_GOBJECT] = NULL;
-	default_handlers [GDA_VALUE_TYPE_INTEGER] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_LIST] = NULL;
-	default_handlers [GDA_VALUE_TYPE_MONEY] = NULL;
-	default_handlers [GDA_VALUE_TYPE_NUMERIC] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_SINGLE] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_SMALLINT] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_SMALLUINT] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_STRING] = gda_handler_string_new ();
-	default_handlers [GDA_VALUE_TYPE_TIME] = gda_handler_time_new_no_locale ();
-	default_handlers [GDA_VALUE_TYPE_TIMESTAMP] = gda_handler_time_new_no_locale ();
-	default_handlers [GDA_VALUE_TYPE_TINYINT] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_TINYUINT] = gda_handler_numerical_new ();
-	default_handlers [GDA_VALUE_TYPE_TYPE] = gda_handler_type_new ();
-	default_handlers [GDA_VALUE_TYPE_UINTEGER] = gda_handler_numerical_new ();	
 
 #define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
 	gda_dict_dtd = xmlParseDTD (NULL, LIBGDA_DICT_DTD_FILE);

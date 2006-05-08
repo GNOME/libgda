@@ -49,7 +49,7 @@ static void gda_mysql_recordset_finalize   (GObject *object);
 static gint gda_mysql_recordset_get_n_rows			     (GdaDataModelRow *model);
 static GdaRow *gda_mysql_recordset_get_row		     (GdaDataModelRow *model, 
 							      gint row, GError **error);
-static const GdaValue *gda_mysql_recordset_get_value_at		     (GdaDataModelRow *model, gint col, gint row);
+static const GValue *gda_mysql_recordset_get_value_at		     (GdaDataModelRow *model, gint col, gint row);
 static gboolean gda_mysql_recordset_is_updatable		     (GdaDataModelRow *model);
 static gboolean gda_mysql_recordset_append_row			     (GdaDataModelRow *model, GdaRow *row, GError **error);
 static gboolean gda_mysql_recordset_remove_row			     (GdaDataModelRow *model, GdaRow *row, GError **error);
@@ -112,7 +112,7 @@ gda_mysql_recordset_finalize (GObject *object)
 }
 
 static void
-fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
+fill_gda_value (GValue *gda_value, enum enum_field_types type, gchar *value,
 		unsigned long length, gboolean is_unsigned)
 {
 	if (!value) {
@@ -123,39 +123,39 @@ fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
 	switch (type) {
 	case FIELD_TYPE_DECIMAL :
 	case FIELD_TYPE_DOUBLE :
-		gda_value_set_double (gda_value, atof (value));
+		g_value_set_double (gda_value, atof (value));
 		break;
 	case FIELD_TYPE_FLOAT :
-		gda_value_set_single (gda_value, atof (value));
+		g_value_set_float (gda_value, atof (value));
 		break;
 	case FIELD_TYPE_LONG :
 		if (is_unsigned) {
-			gda_value_set_uinteger (gda_value, strtoul (value, NULL, 0));
+			g_value_set_uint (gda_value, strtoul (value, NULL, 0));
 			break;
 		}
 	case FIELD_TYPE_YEAR :
-		gda_value_set_integer (gda_value, atol (value));
+		g_value_set_int (gda_value, atol (value));
 		break;
 	case FIELD_TYPE_LONGLONG :
 	case FIELD_TYPE_INT24 :
 		if (is_unsigned) {
-			gda_value_set_biguint (gda_value, strtoull (value, NULL, 0));
+			g_value_set_uint64 (gda_value, strtoull (value, NULL, 0));
 		} else {
-			gda_value_set_bigint (gda_value, atoll (value));
+			g_value_set_int64 (gda_value, atoll (value));
 		}
 		break;
 	case FIELD_TYPE_SHORT :
 		if (is_unsigned) {
-			gda_value_set_smalluint (gda_value, atoi (value));
+			gda_value_set_ushort (gda_value, atoi (value));
 		} else {
-			gda_value_set_smallint (gda_value, atoi (value));
+			gda_value_set_short (gda_value, atoi (value));
 		}
 		break;
 	case FIELD_TYPE_TINY :
 		if (is_unsigned) {
-			gda_value_set_tinyuint (gda_value, atoi (value));
+			g_value_set_uchar (gda_value, atoi (value));
 		} else {
-			gda_value_set_tinyint (gda_value, atoi (value));
+			g_value_set_char (gda_value, atoi (value));
 		}
 		break;
 	case FIELD_TYPE_TINY_BLOB :
@@ -173,17 +173,17 @@ fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
 		/* FIXME: we might get "[VAR]CHAR(20) BINARY" type with \0 inside
 		   We should check for BINARY flag and treat it like a BLOB
 		 */
-		gda_value_set_string (gda_value, value);
+		g_value_set_string (gda_value, value);
 		break;
 	case FIELD_TYPE_DATE :
-		gda_value_set_from_string (gda_value, value, GDA_VALUE_TYPE_DATE);
+		gda_value_set_from_string (gda_value, value, G_TYPE_DATE);
 		break;
 	case FIELD_TYPE_TIME :
-		gda_value_set_from_string (gda_value, value, GDA_VALUE_TYPE_TIME);
+		gda_value_set_from_string (gda_value, value, GDA_TYPE_TIME);
 		break;
 	case FIELD_TYPE_TIMESTAMP :
 	case FIELD_TYPE_DATETIME :
-		gda_value_set_from_string (gda_value, value, GDA_VALUE_TYPE_TIMESTAMP);
+		gda_value_set_from_string (gda_value, value, GDA_TYPE_TIMESTAMP);
 		break;
 	case FIELD_TYPE_NULL :
 		gda_value_set_null (gda_value);
@@ -191,11 +191,11 @@ fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
 	case FIELD_TYPE_NEWDATE :
 	case FIELD_TYPE_ENUM :
 	case FIELD_TYPE_SET : /* FIXME */
-		gda_value_set_string (gda_value, value);
+		g_value_set_string (gda_value, value);
 		break;
 	default :
 		g_printerr ("Unknown MySQL datatype.  This is fishy, but continuing anyway.\n");
-		gda_value_set_string (gda_value, value);
+		g_value_set_string (gda_value, value);
 	}
 }
 
@@ -240,7 +240,7 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 	row = gda_row_new (GDA_DATA_MODEL (recset), field_count);
 
 	for (i = 0; i < field_count; i++) {
-		fill_gda_value ((GdaValue*) gda_row_get_value (row, i),
+		fill_gda_value ((GValue*) gda_row_get_value (row, i),
 				mysql_fields[i].type,
 				mysql_row[i],
 				mysql_lengths[i],
@@ -322,12 +322,12 @@ gda_mysql_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 	return row_list;
 }
 
-static const GdaValue *
+static const GValue *
 gda_mysql_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 	GdaMysqlRecordsetPrivate *priv_data;
-	const GdaValue *value;
+	const GValue *value;
 	const GdaRow *fields;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);

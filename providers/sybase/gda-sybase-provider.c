@@ -1,5 +1,5 @@
 /* GDA Sybase provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *         Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
@@ -1130,16 +1130,17 @@ gda_sybase_provider_get_types (GdaConnection *cnc,
 	for (i = 0; i < GDA_SYBASE_TYPE_CNT; i++) {
 		if (gda_sybase_type_list[i].name != NULL) {
 			GList *value_list = NULL;
+			GValue *tmpval;
 			
-			value_list = g_list_append (value_list,
-						    gda_value_new_string (gda_sybase_type_list[i].name));
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), gda_sybase_type_list[i].name);
+			value_list = g_list_append (value_list, tmpval);
+
 			// FIXME: owner
-			value_list = g_list_append (value_list,
-						    gda_value_new_string (""));
-			value_list = g_list_append (value_list, 
-						    gda_value_new_string (""));
-			value_list = g_list_append (value_list,
-						    gda_value_new_gdatype (gda_sybase_type_list[i].gda_type));
+			value_list = g_list_append (value_list, gda_value_new_null ());
+			value_list = g_list_append (value_list, gda_value_new_null ());
+
+			g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), gda_sybase_type_list[i].gda_type);
+			value_list = g_list_append (value_list, tmpval);
 			
 			gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -1270,11 +1271,11 @@ gda_sybase_provider_get_server_version (GdaServerProvider *provider,
 		if (model) {
 			if ((gda_data_model_get_n_columns (model) == 1)
 			    && (gda_data_model_get_n_rows (model) == 1)) {
-				GdaValue *value;
+				GValue *value;
 				
-				value = (GdaValue *) gda_data_model_get_value_at (model, 
+				value = (GValue *) gda_data_model_get_value_at (model, 
 										  0, 0);
-				scnc->server_version = gda_value_stringify ((GdaValue *) value);
+				scnc->server_version = gda_value_stringify ((GValue *) value);
 			}
 			g_object_unref (model);
 			model = NULL;

@@ -56,9 +56,9 @@ struct _GdaParameterClass
 };
 
 GType                  gda_parameter_get_type                (void);
-GdaParameter          *gda_parameter_new                     (GdaValueType type);
+GdaParameter          *gda_parameter_new                     (GType type);
 GdaParameter          *gda_parameter_new_copy                (GdaParameter *orig);
-GdaValueType           gda_parameter_get_gda_type            (GdaParameter *param);
+GType           gda_parameter_get_gda_type            (GdaParameter *param);
 
 GdaParameter          *gda_parameter_new_string              (const gchar *name, const gchar *str);
 GdaParameter          *gda_parameter_new_boolean             (const gchar *name, gboolean value);
@@ -67,15 +67,15 @@ void                   gda_parameter_declare_param_user      (GdaParameter *para
 GSList                *gda_parameter_get_param_users         (GdaParameter *param);
 void                   gda_parameter_replace_param_users     (GdaParameter *param, GHashTable *replacements);
 
-const GdaValue        *gda_parameter_get_value               (GdaParameter *param);
-void                   gda_parameter_set_value               (GdaParameter *param, const GdaValue *value);
+const GValue        *gda_parameter_get_value               (GdaParameter *param);
+void                   gda_parameter_set_value               (GdaParameter *param, const GValue *value);
 gboolean               gda_parameter_set_value_str           (GdaParameter *param, const gchar *value);
 
 void                   gda_parameter_declare_invalid         (GdaParameter *param);
 gboolean               gda_parameter_is_valid                (GdaParameter *param);
 
-const GdaValue        *gda_parameter_get_default_value       (GdaParameter *param);
-void                   gda_parameter_set_default_value       (GdaParameter *param, const GdaValue *value);
+const GValue        *gda_parameter_get_default_value       (GdaParameter *param);
+void                   gda_parameter_set_default_value       (GdaParameter *param, const GValue *value);
 gboolean               gda_parameter_get_exists_default_value(GdaParameter *param);
 void                   gda_parameter_set_exists_default_value(GdaParameter *param, gboolean default_value_exists);
 

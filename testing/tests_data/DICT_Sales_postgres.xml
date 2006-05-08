@@ -3,42 +3,42 @@
 <gda_dict with_functions="t">
   <gda_dsn_info dsn="Sales" user=""/>
   <gda_dict_types>
-    <gda_dict_type id="DTYWJzdGltZQ" name="abstime" owner="postgres" descr="absolute, limited-range date and time (Unix system time)" nparam="-1" gdatype="integer"/>
-    <gda_dict_type id="DTYWNsaXRlbQ" name="aclitem" owner="postgres" descr="access control list" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTYml0" name="bit" owner="postgres" descr="fixed-length bit string" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTYm9vbA" name="bool" owner="postgres" descr="boolean, 'true'/'false'" nparam="-1" gdatype="boolean" synonyms="boolean"/>
-    <gda_dict_type id="DTYm94" name="box" owner="postgres" descr="geometric box '(lower left,upper right)'" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTYnBjaGFy" name="bpchar" owner="postgres" descr="char(length), blank-padded string, fixed storage length" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTYnl0ZWE" name="bytea" owner="postgres" descr="variable-length string, binary values escaped" nparam="-1" gdatype="binary"/>
-    <gda_dict_type id="DTY2hhcg" name="char" owner="postgres" descr="single character" nparam="-1" gdatype="string" synonyms="character"/>
-    <gda_dict_type id="DTY2lkcg" name="cidr" owner="postgres" descr="network IP address/netmask, network address" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTY2lyY2xl" name="circle" owner="postgres" descr="geometric circle '(center,radius)'" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTZGF0ZQ" name="date" owner="postgres" descr="ANSI SQL date" nparam="-1" gdatype="date"/>
-    <gda_dict_type id="DTZmxvYXQ0" name="float4" owner="postgres" descr="single-precision floating point number, 4-byte storage" nparam="-1" gdatype="single" synonyms="real"/>
-    <gda_dict_type id="DTZmxvYXQ4" name="float8" owner="postgres" descr="double-precision floating point number, 8-byte storage" nparam="-1" gdatype="double" synonyms="double precision"/>
-    <gda_dict_type id="DTaW5ldA" name="inet" owner="postgres" descr="IP address/netmask, host address, netmask optional" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTaW50Mg" name="int2" owner="postgres" descr="-32 thousand to 32 thousand, 2-byte storage" nparam="-1" gdatype="smallint" synonyms="smallint"/>
-    <gda_dict_type id="DTaW50NA" name="int4" owner="postgres" descr="-2 billion to 2 billion integer, 4-byte storage" nparam="-1" gdatype="integer" synonyms="integer,int"/>
-    <gda_dict_type id="DTaW50OA" name="int8" owner="postgres" descr="~18 digit integer, 8-byte storage" nparam="-1" gdatype="bigint" synonyms="bigint"/>
-    <gda_dict_type id="DTaW50ZXJ2YWw" name="interval" owner="postgres" descr="@ &lt;number&gt; &lt;units&gt;, time interval" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTbGluZQ" name="line" owner="postgres" descr="geometric line (not implemented)'" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTbHNlZw" name="lseg" owner="postgres" descr="geometric line segment '(pt1,pt2)'" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTbWFjYWRkcg" name="macaddr" owner="postgres" descr="XX:XX:XX:XX:XX:XX, MAC address" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTbW9uZXk" name="money" owner="postgres" descr="monetary amounts, $d,ddd.cc" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTbmFtZQ" name="name" owner="postgres" descr="63-character type for storing system identifiers" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTbnVtZXJpYw" name="numeric" owner="postgres" descr="numeric(precision, decimal), arbitrary precision number" nparam="-1" gdatype="numeric" synonyms="decimal"/>
-    <gda_dict_type id="DTcGF0aA" name="path" owner="postgres" descr="geometric path '(pt1,...)'" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTcG9pbnQ" name="point" owner="postgres" descr="geometric point '(x, y)'" nparam="-1" gdatype="point"/>
-    <gda_dict_type id="DTcG9seWdvbg" name="polygon" owner="postgres" descr="geometric polygon '(pt1,...)'" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTcmVsdGltZQ" name="reltime" owner="postgres" descr="relative, limited-range time interval (Unix delta time)" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTdGV4dA" name="text" owner="postgres" descr="variable-length string, no limit specified" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTdGltZQ" name="time" owner="postgres" descr="hh:mm:ss, ANSI SQL time" nparam="-1" gdatype="time"/>
-    <gda_dict_type id="DTdGltZXN0YW1w" name="timestamp" owner="postgres" descr="date and time" nparam="-1" gdatype="timestamp"/>
-    <gda_dict_type id="DTdGltZXN0YW1wdHo" name="timestamptz" owner="postgres" descr="date and time with time zone" nparam="-1" gdatype="timestamp"/>
-    <gda_dict_type id="DTdGltZXR6" name="timetz" owner="postgres" descr="hh:mm:ss, ANSI SQL time" nparam="-1" gdatype="time"/>
-    <gda_dict_type id="DTdGludGVydmFs" name="tinterval" owner="postgres" descr="(abstime,abstime), time interval" nparam="-1" gdatype="string"/>
-    <gda_dict_type id="DTdmFyYml0" name="varbit" owner="postgres" descr="variable-length bit string" nparam="-1" gdatype="string" synonyms="bit varying"/>
-    <gda_dict_type id="DTdmFyY2hhcg" name="varchar" owner="postgres" descr="varchar(length), non-blank-padded string, variable storage length" nparam="-1" gdatype="string" synonyms="character varying"/>
+    <gda_dict_type id="DTYWJzdGltZQ" name="abstime" owner="postgres" descr="absolute, limited-range date and time (Unix system time)" nparam="-1" gdatype="gint"/>
+    <gda_dict_type id="DTYWNsaXRlbQ" name="aclitem" owner="postgres" descr="access control list" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTYml0" name="bit" owner="postgres" descr="fixed-length bit string" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTYm9vbA" name="bool" owner="postgres" descr="boolean, 'true'/'false'" nparam="-1" gdatype="gboolean" synonyms="boolean"/>
+    <gda_dict_type id="DTYm94" name="box" owner="postgres" descr="geometric box '(lower left,upper right)'" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTYnBjaGFy" name="bpchar" owner="postgres" descr="char(length), blank-padded string, fixed storage length" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTYnl0ZWE" name="bytea" owner="postgres" descr="variable-length string, binary values escaped" nparam="-1" gdatype="GdaBinary"/>
+    <gda_dict_type id="DTY2hhcg" name="char" owner="postgres" descr="single character" nparam="-1" gdatype="gchararray" synonyms="character"/>
+    <gda_dict_type id="DTY2lkcg" name="cidr" owner="postgres" descr="network IP address/netmask, network address" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTY2lyY2xl" name="circle" owner="postgres" descr="geometric circle '(center,radius)'" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTZGF0ZQ" name="date" owner="postgres" descr="ANSI SQL date" nparam="-1" gdatype="GDate"/>
+    <gda_dict_type id="DTZmxvYXQ0" name="float4" owner="postgres" descr="single-precision floating point number, 4-byte storage" nparam="-1" gdatype="gfloat" synonyms="real"/>
+    <gda_dict_type id="DTZmxvYXQ4" name="float8" owner="postgres" descr="double-precision floating point number, 8-byte storage" nparam="-1" gdatype="gdouble" synonyms="double precision"/>
+    <gda_dict_type id="DTaW5ldA" name="inet" owner="postgres" descr="IP address/netmask, host address, netmask optional" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTaW50Mg" name="int2" owner="postgres" descr="-32 thousand to 32 thousand, 2-byte storage" nparam="-1" gdatype="GdaShort" synonyms="smallint"/>
+    <gda_dict_type id="DTaW50NA" name="int4" owner="postgres" descr="-2 billion to 2 billion integer, 4-byte storage" nparam="-1" gdatype="gint" synonyms="integer,int"/>
+    <gda_dict_type id="DTaW50OA" name="int8" owner="postgres" descr="~18 digit integer, 8-byte storage" nparam="-1" gdatype="gint64" synonyms="bigint"/>
+    <gda_dict_type id="DTaW50ZXJ2YWw" name="interval" owner="postgres" descr="@ &lt;number&gt; &lt;units&gt;, time interval" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTbGluZQ" name="line" owner="postgres" descr="geometric line (not implemented)'" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTbHNlZw" name="lseg" owner="postgres" descr="geometric line segment '(pt1,pt2)'" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTbWFjYWRkcg" name="macaddr" owner="postgres" descr="XX:XX:XX:XX:XX:XX, MAC address" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTbW9uZXk" name="money" owner="postgres" descr="monetary amounts, $d,ddd.cc" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTbmFtZQ" name="name" owner="postgres" descr="63-character type for storing system identifiers" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTbnVtZXJpYw" name="numeric" owner="postgres" descr="numeric(precision, decimal), arbitrary precision number" nparam="-1" gdatype="GdaNumeric" synonyms="decimal"/>
+    <gda_dict_type id="DTcGF0aA" name="path" owner="postgres" descr="geometric path '(pt1,...)'" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTcG9pbnQ" name="point" owner="postgres" descr="geometric point '(x, y)'" nparam="-1" gdatype="GdaGeometricPoint"/>
+    <gda_dict_type id="DTcG9seWdvbg" name="polygon" owner="postgres" descr="geometric polygon '(pt1,...)'" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTcmVsdGltZQ" name="reltime" owner="postgres" descr="relative, limited-range time interval (Unix delta time)" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTdGV4dA" name="text" owner="postgres" descr="variable-length string, no limit specified" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTdGltZQ" name="time" owner="postgres" descr="hh:mm:ss, ANSI SQL time" nparam="-1" gdatype="GdaTime"/>
+    <gda_dict_type id="DTdGltZXN0YW1w" name="timestamp" owner="postgres" descr="date and time" nparam="-1" gdatype="GdaTimestamp"/>
+    <gda_dict_type id="DTdGltZXN0YW1wdHo" name="timestamptz" owner="postgres" descr="date and time with time zone" nparam="-1" gdatype="GdaTimestamp"/>
+    <gda_dict_type id="DTdGltZXR6" name="timetz" owner="postgres" descr="hh:mm:ss, ANSI SQL time" nparam="-1" gdatype="GdaTime"/>
+    <gda_dict_type id="DTdGludGVydmFs" name="tinterval" owner="postgres" descr="(abstime,abstime), time interval" nparam="-1" gdatype="gchararray"/>
+    <gda_dict_type id="DTdmFyYml0" name="varbit" owner="postgres" descr="variable-length bit string" nparam="-1" gdatype="gchararray" synonyms="bit varying"/>
+    <gda_dict_type id="DTdmFyY2hhcg" name="varchar" owner="postgres" descr="varchar(length), non-blank-padded string, variable storage length" nparam="-1" gdatype="gchararray" synonyms="character varying"/>
   </gda_dict_types>
   <gda_dict_procedures>
     <gda_dict_function id="PRNjA1" name="abbrev" descr="abbreviated display of inet/cidr value" owner="postgres">
@@ -5775,7 +5775,7 @@
         <gda_dict_field id="TVWmJ1Zw:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVY3VzdG9tZXJz" name="customers" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVY3VzdG9tZXJz:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="string" default="nextval('public.customers_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVY3VzdG9tZXJz:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.customers_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVY3VzdG9tZXJz:FIbmFtZQ" name="name" descr="" type="DTdmFyY2hhcg" length="35" scale="0"/>
         <gda_dict_field id="TVY3VzdG9tZXJz:FIZGVmYXVsdF9zZXJ2ZWRfYnk" name="default_served_by" descr="" type="DTaW50NA" length="4" scale="0"/>
         <gda_dict_field id="TVY3VzdG9tZXJz:FIY291bnRyeQ" name="country" descr="" type="DTdmFyY2hhcg" length="20" scale="0"/>
@@ -5789,13 +5789,13 @@
       <gda_dict_table id="TVb3JkZXJfY29udGVudHM" name="order_contents" owner="vivien" descr="" is_view="f">
         <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIb3JkZXJfaWQ" name="order_id" descr="" type="DTaW50NA" length="4" scale="0"/>
         <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIcHJvZHVjdF9yZWY" name="product_ref" descr="" type="DTdmFyY2hhcg" length="15" scale="0"/>
-        <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIcXVhbnRpdHk" name="quantity" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="string" default="1"/>
-        <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIZGlzY291bnQ" name="discount" descr="" type="DTZmxvYXQ4" length="8" scale="0" default_gda_type="string" default="0"/>
+        <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIcXVhbnRpdHk" name="quantity" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="1"/>
+        <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIZGlzY291bnQ" name="discount" descr="" type="DTZmxvYXQ4" length="8" scale="0" default_gda_type="gchararray" default="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVb3JkZXJz" name="orders" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVb3JkZXJz:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="string" default="nextval('public.orders_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVb3JkZXJz:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.orders_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVb3JkZXJz:FIY3VzdG9tZXI" name="customer" descr="" type="DTaW50NA" length="4" scale="0"/>
-        <gda_dict_field id="TVb3JkZXJz:FIY3JlYXRpb25fZGF0ZQ" name="creation_date" descr="" type="DTZGF0ZQ" length="4" scale="0" default_gda_type="string" default="now()"/>
+        <gda_dict_field id="TVb3JkZXJz:FIY3JlYXRpb25fZGF0ZQ" name="creation_date" descr="" type="DTZGF0ZQ" length="4" scale="0" default_gda_type="gchararray" default="now()"/>
         <gda_dict_field id="TVb3JkZXJz:FIZGVsaXZlcnlfYmVmb3Jl" name="delivery_before" descr="" type="DTZGF0ZQ" length="4" scale="0"/>
         <gda_dict_field id="TVb3JkZXJz:FIZGVsaXZlcnlfZGF0ZQ" name="delivery_date" descr="" type="DTZGF0ZQ" length="4" scale="0"/>
       </gda_dict_table>
@@ -5806,7 +5806,7 @@
         <gda_dict_field id="TVcHJvZHVjdHM:FId2hfc3RvcmVk" name="wh_stored" descr="" type="DTaW50NA" length="4" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVcm9sZXM" name="roles" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVcm9sZXM:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="string" default="nextval('public.roles_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVcm9sZXM:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.roles_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVcm9sZXM:FIcm9sZQ" name="role" descr="" type="DTdmFyY2hhcg" length="30" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVc2FsZXNfb3JnYQ" name="sales_orga" owner="vivien" descr="" is_view="f">
@@ -5815,17 +5815,17 @@
         <gda_dict_field id="TVc2FsZXNfb3JnYQ:FIbm90ZQ" name="note" descr="" type="DTdGV4dA" length="-1" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVc2FsZXNyZXA" name="salesrep" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVc2FsZXNyZXA:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="string" default="nextval('public.salesrep_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVc2FsZXNyZXA:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.salesrep_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVc2FsZXNyZXA:FIbmFtZQ" name="name" descr="" type="DTdmFyY2hhcg" length="30" scale="0"/>
         <gda_dict_field id="TVc2FsZXNyZXA:FIeWVhcl9zYWxhcnk" name="year_salary" descr="" type="DTZmxvYXQ4" length="8" scale="0"/>
         <gda_dict_field id="TVc2FsZXNyZXA:FIZGF0ZV9lbXBs" name="date_empl" descr="" type="DTZGF0ZQ" length="4" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVdGVzdF9sYXN0X2lk" name="test_last_id" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVdGVzdF9sYXN0X2lk:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="string" default="nextval('public.test_last_id_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVdGVzdF9sYXN0X2lk:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.test_last_id_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVdGVzdF9sYXN0X2lk:FIbmFtZQ" name="name" descr="" type="DTdmFyY2hhcg" length="20" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVd2FyZWhvdXNlcw" name="warehouses" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVd2FyZWhvdXNlcw:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="string" default="nextval('public.warehouses_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVd2FyZWhvdXNlcw:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.warehouses_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVd2FyZWhvdXNlcw:FIbmFtZQ" name="name" descr="" type="DTdmFyY2hhcg" length="30" scale="0"/>
         <gda_dict_field id="TVd2FyZWhvdXNlcw:FIY291bnRyeQ" name="country" descr="" type="DTdmFyY2hhcg" length="20" scale="0"/>
         <gda_dict_field id="TVd2FyZWhvdXNlcw:FIY2l0eQ" name="city" descr="" type="DTdmFyY2hhcg" length="30" scale="0"/>

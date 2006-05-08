@@ -42,7 +42,7 @@ typedef struct {
 	gchar *server_version;
 } GdaMdbConnection;
 
-GdaValueType gda_mdb_type_to_gda (int col_type);
+GType gda_mdb_type_to_gda (int col_type);
 
 G_END_DECLS
 

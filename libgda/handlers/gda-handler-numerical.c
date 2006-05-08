@@ -1,6 +1,6 @@
 /* gda-handler-numerical.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -29,24 +29,24 @@ static void gda_handler_numerical_dispose (GObject   * object);
 
 /* GdaDataHandler interface */
 static void         gda_handler_numerical_data_handler_init      (GdaDataHandlerIface *iface);
-static gchar       *gda_handler_numerical_get_sql_from_value     (GdaDataHandler *dh, const GdaValue *value);
-static gchar       *gda_handler_numerical_get_str_from_value     (GdaDataHandler *dh, const GdaValue *value);
-static GdaValue    *gda_handler_numerical_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql,
-								       GdaValueType type);
-static GdaValue    *gda_handler_numerical_get_value_from_str     (GdaDataHandler *dh, const gchar *str,
-								       GdaValueType type);
-static GdaValue    *gda_handler_numerical_get_sane_init_value    (GdaDataHandler * dh, GdaValueType type);
+static gchar       *gda_handler_numerical_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);
+static gchar       *gda_handler_numerical_get_str_from_value     (GdaDataHandler *dh, const GValue *value);
+static GValue      *gda_handler_numerical_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql,
+								  GType type);
+static GValue      *gda_handler_numerical_get_value_from_str     (GdaDataHandler *dh, const gchar *str,
+								  GType type);
+static GValue      *gda_handler_numerical_get_sane_init_value    (GdaDataHandler * dh, GType type);
 
 static guint        gda_handler_numerical_get_nb_gda_types       (GdaDataHandler *dh);
-static GdaValueType gda_handler_numerical_get_gda_type_index     (GdaDataHandler *dh, guint index);
-static gboolean     gda_handler_numerical_accepts_gda_type       (GdaDataHandler * dh, GdaValueType type);
+static GType        gda_handler_numerical_get_gda_type_index     (GdaDataHandler *dh, guint index);
+static gboolean     gda_handler_numerical_accepts_gda_type       (GdaDataHandler * dh, GType type);
 
 static const gchar *gda_handler_numerical_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerNumericalPriv {
 	gchar          *detailled_descr;
 	guint           nb_gda_types;
-	GdaValueType   *valid_gda_types;
+	GType          *valid_gda_types;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -114,18 +114,18 @@ gda_handler_numerical_init (GdaHandlerNumerical * hdl)
 	hdl->priv = g_new0 (GdaHandlerNumericalPriv, 1);
 	hdl->priv->detailled_descr = "";
 	hdl->priv->nb_gda_types = 11;
-	hdl->priv->valid_gda_types = g_new0 (GdaValueType, 11);
-	hdl->priv->valid_gda_types[0] = GDA_VALUE_TYPE_BIGINT;
-	hdl->priv->valid_gda_types[1] = GDA_VALUE_TYPE_DOUBLE;
-	hdl->priv->valid_gda_types[2] = GDA_VALUE_TYPE_INTEGER;
-        hdl->priv->valid_gda_types[3] = GDA_VALUE_TYPE_NUMERIC;
-        hdl->priv->valid_gda_types[4] = GDA_VALUE_TYPE_SINGLE;
-        hdl->priv->valid_gda_types[5] = GDA_VALUE_TYPE_SMALLINT;
-        hdl->priv->valid_gda_types[6] = GDA_VALUE_TYPE_TINYINT;
-	hdl->priv->valid_gda_types[7] = GDA_VALUE_TYPE_BIGUINT;
-        hdl->priv->valid_gda_types[8] = GDA_VALUE_TYPE_SMALLUINT;
-        hdl->priv->valid_gda_types[9] = GDA_VALUE_TYPE_TINYUINT;
-	hdl->priv->valid_gda_types[10] = GDA_VALUE_TYPE_UINTEGER;
+	hdl->priv->valid_gda_types = g_new0 (GType, 11);
+	hdl->priv->valid_gda_types[0] = G_TYPE_INT64;
+	hdl->priv->valid_gda_types[1] = G_TYPE_DOUBLE;
+	hdl->priv->valid_gda_types[2] = G_TYPE_INT;
+        hdl->priv->valid_gda_types[3] = GDA_TYPE_NUMERIC;
+        hdl->priv->valid_gda_types[4] = G_TYPE_FLOAT;
+        hdl->priv->valid_gda_types[5] = GDA_TYPE_SHORT;
+        hdl->priv->valid_gda_types[6] = G_TYPE_CHAR;
+	hdl->priv->valid_gda_types[7] = G_TYPE_UINT64;
+        hdl->priv->valid_gda_types[8] = GDA_TYPE_USHORT;
+        hdl->priv->valid_gda_types[9] = G_TYPE_UCHAR;
+	hdl->priv->valid_gda_types[10] = G_TYPE_UINT;
 
 	gda_object_set_name (GDA_OBJECT (hdl), _("InternalNumerical"));
 	gda_object_set_description (GDA_OBJECT (hdl), _("Numerical representation"));
@@ -175,7 +175,7 @@ gda_handler_numerical_new (void)
 
 /* Interface implementation */
 static gchar *
-gda_handler_numerical_get_sql_from_value (GdaDataHandler *iface, const GdaValue *value)
+gda_handler_numerical_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 {
 	gchar *str, *retval;
 	GdaHandlerNumerical *hdl;
@@ -185,7 +185,7 @@ gda_handler_numerical_get_sql_from_value (GdaDataHandler *iface, const GdaValue 
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	setlocale (LC_NUMERIC, "C");
-	str = gda_value_stringify (value);
+	str = gda_value_stringify ((GValue *) value);
 	setlocale (LC_NUMERIC, "");
 	if (str) 
 		retval = str;
@@ -196,7 +196,7 @@ gda_handler_numerical_get_sql_from_value (GdaDataHandler *iface, const GdaValue 
 }
 
 static gchar *
-gda_handler_numerical_get_str_from_value (GdaDataHandler *iface, const GdaValue *value)
+gda_handler_numerical_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 {
 	GdaHandlerNumerical *hdl;
 
@@ -204,13 +204,13 @@ gda_handler_numerical_get_str_from_value (GdaDataHandler *iface, const GdaValue 
 	hdl = GDA_HANDLER_NUMERICAL (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	return gda_value_stringify (value);
+	return gda_value_stringify ((GValue *) value);
 }
 
-static GdaValue *
-gda_handler_numerical_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GdaValueType type)
+static GValue *
+gda_handler_numerical_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
 {
-	GdaValue *value;
+	GValue *value;
 
 	setlocale (LC_NUMERIC, "C");
 	value = gda_handler_numerical_get_value_from_str (iface, sql, type);
@@ -219,29 +219,31 @@ gda_handler_numerical_get_value_from_sql (GdaDataHandler *iface, const gchar *sq
 	return value;
 }
 
-static GdaValue *
-gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *str, GdaValueType type)
+static GValue *
+gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
 {
 	GdaHandlerNumerical *hdl;
-	GdaValue *value = NULL;
+	GValue *value = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), NULL);
 	hdl = GDA_HANDLER_NUMERICAL (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	switch (type) {
-	case GDA_VALUE_TYPE_BIGINT:
-		value = gda_value_new_bigint (atoll (str));
-		break;
-	case GDA_VALUE_TYPE_DOUBLE:
-		value = gda_value_new_double (atof (str));
-		break;
-	case GDA_VALUE_TYPE_INTEGER:
-		value = gda_value_new_integer (atoi (str));
-		break;
-	case GDA_VALUE_TYPE_NUMERIC: {
+	if (type == G_TYPE_INT64) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_INT64);
+		g_value_set_int64 (value, atoll (str));
+	}
+	else if (type == G_TYPE_DOUBLE) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_DOUBLE);
+		g_value_set_double (value, atof (str));
+	}
+	else if (type == G_TYPE_INT) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_INT);
+		g_value_set_int (value, atoi (str));
+	}
+	else if (type == GDA_TYPE_NUMERIC) {
 		GdaNumeric numeric;
-		gchar *p = str;
+		const gchar *p = str;
 		gboolean ok = TRUE;
 		gboolean hasdot = FALSE;
 		
@@ -266,46 +268,51 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 			p++;
 		}
 		if (ok) {
-			numeric.number = str;
-			value = gda_value_new_numeric (&numeric);
+			numeric.number = (gchar *) str;
+			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_NUMERIC);
+			gda_value_set_numeric (value, &numeric);
 		}
-		break;
 	}
-	case GDA_VALUE_TYPE_SINGLE:
-		value = gda_value_new_single (atof (str));
-		break;
-	case GDA_VALUE_TYPE_SMALLINT:
-		value = gda_value_new_smallint (atoi (str));
-		break;
-	case GDA_VALUE_TYPE_TINYINT:
-		value = gda_value_new_tinyint (atoi (str));
-		break;
-	case GDA_VALUE_TYPE_BIGUINT:
-		value = gda_value_new_biguint (strtoull (str, NULL, 10));
-		break;
-	case GDA_VALUE_TYPE_SMALLUINT:
-		value = gda_value_new_smalluint (atoi (str));
-		break;
-        case GDA_VALUE_TYPE_TINYUINT:
-		value = gda_value_new_tinyuint (atoi (str));
-		break;
-	case GDA_VALUE_TYPE_UINTEGER:
-		value = gda_value_new_uinteger (strtoul (str, NULL, 10));		
-		break;
-	default:
+	else if (type == G_TYPE_FLOAT) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_FLOAT);
+		g_value_set_float (value, atof (str));
+	}
+	else if (type == GDA_TYPE_SHORT) {
+		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_SHORT);
+		gda_value_set_short (value, atoi (str));
+	}
+	else if (type == G_TYPE_CHAR) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_CHAR);
+		g_value_set_char (value, atoi (str));
+	}
+	else if (type == G_TYPE_UINT64) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT64);
+		g_value_set_uint64 (value, strtoull (str, NULL, 10));
+	}
+	else if (type == GDA_TYPE_USHORT) {
+		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_USHORT);
+		gda_value_set_ushort (value, atoi (str));
+	}
+	else if (type == G_TYPE_UCHAR) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_UCHAR);
+		g_value_set_uchar (value, atoi (str));
+	}
+	else if (type == G_TYPE_UINT) {
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT);
+		g_value_set_uint (value, strtoul (str, NULL, 10));
+	}
+	else
 		g_assert_not_reached ();
-		break;
-	}
 
 	return value;
 }
 
 
-static GdaValue *
-gda_handler_numerical_get_sane_init_value (GdaDataHandler *iface, GdaValueType type)
+static GValue *
+gda_handler_numerical_get_sane_init_value (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerNumerical *hdl;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), NULL);
 	hdl = GDA_HANDLER_NUMERICAL (iface);
@@ -330,14 +337,14 @@ gda_handler_numerical_get_nb_gda_types (GdaDataHandler *iface)
 
 
 static gboolean
-gda_handler_numerical_accepts_gda_type (GdaDataHandler *iface, GdaValueType type)
+gda_handler_numerical_accepts_gda_type (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerNumerical *hdl;
 	guint i = 0;
 	gboolean found = FALSE;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), FALSE);
-	g_return_val_if_fail (type != GDA_VALUE_TYPE_UNKNOWN, FALSE);
+	g_return_val_if_fail (type != G_TYPE_INVALID, FALSE);
 	hdl = GDA_HANDLER_NUMERICAL (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 
@@ -350,15 +357,15 @@ gda_handler_numerical_accepts_gda_type (GdaDataHandler *iface, GdaValueType type
 	return found;
 }
 
-static GdaValueType
+static GType
 gda_handler_numerical_get_gda_type_index (GdaDataHandler *iface, guint index)
 {
 	GdaHandlerNumerical *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), G_TYPE_INVALID);
 	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, GDA_VALUE_TYPE_UNKNOWN);
-	g_return_val_if_fail (index < hdl->priv->nb_gda_types, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (hdl->priv, G_TYPE_INVALID);
+	g_return_val_if_fail (index < hdl->priv->nb_gda_types, G_TYPE_INVALID);
 
 	return hdl->priv->valid_gda_types[index];
 }

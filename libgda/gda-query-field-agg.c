@@ -546,7 +546,7 @@ gda_query_field_agg_set_arg (GdaQueryFieldAgg *agg, GdaQueryField *arg)
 					arg_ok = FALSE;
 			}
 			else {
-				/* GdaValueType compatibility test */
+				/* GType compatibility test */
 				if (gda_dict_type_get_gda_type (gda_query_field_get_dict_type (GDA_QUERY_FIELD (arg))) !=
 				    gda_dict_type_get_gda_type (argtype))
 					arg_ok = FALSE;

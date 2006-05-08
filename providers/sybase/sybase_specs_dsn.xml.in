@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="string" null-ok="FALSE"/>
-    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="string"/>
-    <parameter id="HOSTADDR" _name="Database server IP adress" _descr="IP adress of the host which has the database server running" gdatype="string"/>
-    <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="integer"/>
-    <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="string"/>
+    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="gchararray"/>
+    <parameter id="HOSTADDR" _name="Database server IP adress" _descr="IP adress of the host which has the database server running" gdatype="gchararray"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="gint"/>
+    <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray"/>
 
-    <parameter id="SYBASE" _name="Enable Sybase" _descr="Enable Sybase operative mode" gdatype="boolean"/>
-    <parameter id="LOCALE" _name="Locale" _descr="Locale to use in the connection" gdatype="string"/>
+    <parameter id="SYBASE" _name="Enable Sybase" _descr="Enable Sybase operative mode" gdatype="gboolean"/>
+    <parameter id="LOCALE" _name="Locale" _descr="Locale to use in the connection" gdatype="gchararray"/>
   </parameters>
 </data-set-spec>

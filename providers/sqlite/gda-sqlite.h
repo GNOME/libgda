@@ -36,7 +36,7 @@ typedef struct {
 	sqlite3_stmt *stmt;
 	gint          ncols;
 	gint          nrows;
-	GdaValueType *types; /* array of ncols types */
+	GType *types; /* array of ncols types */
 	int          *sqlite_types; /* array of ncols types */
 	int          *cols_size; /* array of ncols types */
 } SQLITEresult;
@@ -44,7 +44,7 @@ typedef struct {
 typedef struct {
 	sqlite3    *connection;
 	gchar      *file;
-	GHashTable *types; /* key = type name, value = GdaValueType */
+	GHashTable *types; /* key = type name, value = GType */
 } SQLITEcnc;
 
 

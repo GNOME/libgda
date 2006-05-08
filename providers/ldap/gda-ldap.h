@@ -45,8 +45,8 @@ G_BEGIN_DECLS
  */
 
 GdaConnectionEvent     *gda_ldap_make_error (LDAP *handle);
-/*GdaValueType  gda_ldap_type_to_gda (enum enum_field_types ldap_type);*/
-gchar        *gda_ldap_value_to_sql_string (GdaValue *value);
+/*GType  gda_ldap_type_to_gda (enum enum_field_types ldap_type);*/
+gchar        *gda_ldap_value_to_sql_string (GValue *value);
 
 G_END_DECLS
 

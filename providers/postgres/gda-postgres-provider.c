@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -135,7 +135,7 @@ static GdaDataModel *gda_postgres_provider_get_schema (GdaServerProvider *provid
 
 static GdaDataHandler *gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 							       GdaConnection *cnc,
-							       GdaValueType gda_type,
+							       GType gda_type,
 							       const gchar *dbms_type);
 
 static GdaBlob *gda_postgres_provider_create_blob (GdaServerProvider *provider,
@@ -261,96 +261,90 @@ gda_postgres_provider_new (void)
 	return GDA_SERVER_PROVIDER (provider);
 }
 
-static GdaValueType
+static GType
 postgres_name_to_gda_type (const gchar *name)
 {
 	if (!strcmp (name, "bool"))
-		return GDA_VALUE_TYPE_BOOLEAN;
+		return G_TYPE_BOOLEAN;
 	else if (!strcmp (name, "int8"))
-		return GDA_VALUE_TYPE_BIGINT;
+		return G_TYPE_INT64;
 	else if (!strcmp (name, "int4") || !strcmp (name, "abstime") || !strcmp (name, "oid"))
-		return GDA_VALUE_TYPE_INTEGER;
+		return G_TYPE_INT;
 	else if (!strcmp (name, "int2"))
-		return GDA_VALUE_TYPE_SMALLINT;
+		return GDA_TYPE_SHORT;
 	else if (!strcmp (name, "float4"))
-		return GDA_VALUE_TYPE_SINGLE;
+		return G_TYPE_FLOAT;
 	else if (!strcmp (name, "float8"))
-		return GDA_VALUE_TYPE_DOUBLE;
+		return G_TYPE_DOUBLE;
 	else if (!strcmp (name, "numeric"))
-		return GDA_VALUE_TYPE_NUMERIC;
+		return GDA_TYPE_NUMERIC;
 	else if (!strncmp (name, "timestamp", 9))
-		return GDA_VALUE_TYPE_TIMESTAMP;
+		return GDA_TYPE_TIMESTAMP;
 	else if (!strcmp (name, "date"))
-		return GDA_VALUE_TYPE_DATE;
+		return G_TYPE_DATE;
 	else if (!strncmp (name, "time", 4))
-		return GDA_VALUE_TYPE_TIME;
+		return GDA_TYPE_TIME;
 	else if (!strcmp (name, "point"))
-		return GDA_VALUE_TYPE_GEOMETRIC_POINT;
+		return GDA_TYPE_GEOMETRIC_POINT;
 	else if (!strcmp (name, "oid"))
-		return GDA_VALUE_TYPE_BLOB;
+		return GDA_TYPE_BLOB;
 	else if (!strcmp (name, "bytea"))
-		return GDA_VALUE_TYPE_BINARY;
+		return GDA_TYPE_BINARY;
 
-	return GDA_VALUE_TYPE_STRING;
+	return G_TYPE_STRING;
 }
 
 static gchar *
-postgres_name_from_gda_type (const GdaValueType type)
+postgres_name_from_gda_type (const GType type)
 {
-	switch (type) {
-	case GDA_VALUE_TYPE_NULL :
+	if (type == GDA_TYPE_NULL)
 		return g_strdup_printf ("text");
-	case GDA_VALUE_TYPE_BIGINT :
+	if (type == G_TYPE_INT64)
 		return g_strdup_printf ("int8");
-	case GDA_VALUE_TYPE_BIGUINT :
+	if (type == G_TYPE_UINT64)
 		return g_strdup_printf ("int8");
-	case GDA_VALUE_TYPE_BINARY :
+	if (type == GDA_TYPE_BINARY)
 		return g_strdup_printf ("bytea");
-	case GDA_VALUE_TYPE_BLOB :
+	if (type == GDA_TYPE_BLOB)
 		return g_strdup_printf ("oid");
-	case GDA_VALUE_TYPE_BOOLEAN :
+	if (type == G_TYPE_BOOLEAN)
 		return g_strdup_printf ("bool");
-	case GDA_VALUE_TYPE_DATE :
+	if (type == G_TYPE_DATE)
 		return g_strdup_printf ("date");
-	case GDA_VALUE_TYPE_DOUBLE :
+	if (type == G_TYPE_DOUBLE)
 		return g_strdup_printf ("float8");
-	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+	if (type == GDA_TYPE_GEOMETRIC_POINT)
 		return g_strdup_printf ("point");
-	case GDA_VALUE_TYPE_GOBJECT :
+	if (type == G_TYPE_OBJECT)
 		return g_strdup_printf ("text");
-	case GDA_VALUE_TYPE_INTEGER :
+	if (type == G_TYPE_INT)
 		return g_strdup_printf ("int4");
-	case GDA_VALUE_TYPE_LIST :
+	if (type == GDA_TYPE_LIST)
 		return g_strdup_printf ("text");
-	case GDA_VALUE_TYPE_MONEY :
-		return g_strdup_printf ("money");
-	case GDA_VALUE_TYPE_NUMERIC :
+	if (type == GDA_TYPE_NUMERIC)
 		return g_strdup_printf ("numeric");
-	case GDA_VALUE_TYPE_SINGLE :
+	if (type == G_TYPE_FLOAT)
 		return g_strdup_printf ("float4");
-	case GDA_VALUE_TYPE_SMALLINT :
+	if (type == GDA_TYPE_SHORT)
 		return g_strdup_printf ("int2");
-	case GDA_VALUE_TYPE_SMALLUINT :
+	if (type == GDA_TYPE_USHORT)
 		return g_strdup_printf ("int2");
-	case GDA_VALUE_TYPE_STRING :
+	if (type == G_TYPE_STRING)
 		return g_strdup_printf ("varchar");
-	case GDA_VALUE_TYPE_TIME :
+	if (type == GDA_TYPE_TIME)
 		return g_strdup_printf ("time");
-	case GDA_VALUE_TYPE_TIMESTAMP :
+	if (type == GDA_TYPE_TIMESTAMP)
 		return g_strdup_printf ("timestamp");
-	case GDA_VALUE_TYPE_TINYINT :
+	if (type == G_TYPE_CHAR)
 		return g_strdup_printf ("smallint");
-	case GDA_VALUE_TYPE_TINYUINT :
+	if (type == G_TYPE_UCHAR)
 		return g_strdup_printf ("smallint");
-	case GDA_VALUE_TYPE_TYPE :
+	if (type == G_TYPE_ULONG)
 		return g_strdup_printf ("int2");
-        case GDA_VALUE_TYPE_UINTEGER :
+        if (type == G_TYPE_UINT)
 		return g_strdup_printf ("int4");
-	case GDA_VALUE_TYPE_UNKNOWN :
+	if (type == G_TYPE_INVALID)
 		return g_strdup_printf ("text");
-	default :
-		return g_strdup_printf ("text");
-	}
 
 	return g_strdup_printf ("text");
 }
@@ -850,16 +844,16 @@ gda_postgres_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType
 }
 
 #define string_from_string_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
-	gda_value_get_string ((GdaValue *) gda_parameter_get_value (param)) : NULL
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
+	g_value_get_string ((GValue *) gda_parameter_get_value (param)) : NULL
 
 #define int_from_int_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
-	gda_value_get_integer ((GdaValue *) gda_parameter_get_value (param)) : -1
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
+	g_value_get_int ((GValue *) gda_parameter_get_value (param)) : -1
 
 #define bool_from_bool_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
-	gda_value_get_boolean ((GdaValue *) gda_parameter_get_value (param)) : FALSE
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
+	g_value_get_boolean ((GValue *) gda_parameter_get_value (param)) : FALSE
 
 
 /* perform_action_params handler for the GdaPostgresProvider class */ 
@@ -1047,7 +1041,7 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 	GString *sql;
 	gint i;
 	gchar *postgres_data_type, *default_value, *references;
-	GdaValueType value_type;
+	GType value_type;
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
@@ -1073,7 +1067,7 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 		/* data type; force serial to be used when auto_increment is set */
 		if (gda_column_get_auto_increment (dmca) == TRUE) {
 			g_string_append_printf (sql, "serial");
-			value_type = GDA_VALUE_TYPE_INTEGER;
+			value_type = G_TYPE_INT;
 		} else {
 			value_type = gda_column_get_gda_type (dmca);
 			postgres_data_type = postgres_name_from_gda_type (value_type);
@@ -1082,9 +1076,9 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 		}
 
 		/* size */
-		if (value_type == GDA_VALUE_TYPE_STRING)
+		if (value_type == G_TYPE_STRING)
 			g_string_append_printf (sql, "(%ld)", gda_column_get_defined_size (dmca));
-		else if (value_type == GDA_VALUE_TYPE_NUMERIC)
+		else if (value_type == GDA_TYPE_NUMERIC)
 			g_string_append_printf (sql, "(%ld,%ld)", 
 				gda_column_get_defined_size (dmca),
 				gda_column_get_scale (dmca));
@@ -1104,7 +1098,7 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 
 		/* default value (in case of string, user needs to add "'" around the field) */
 		if (gda_column_get_default_value (dmca) != NULL) {
-			default_value = gda_value_stringify ((GdaValue *) gda_column_get_default_value (dmca));
+			default_value = gda_value_stringify ((GValue *) gda_column_get_default_value (dmca));
 			if ((default_value != NULL) && (*default_value != '\0'))
 				g_string_append_printf (sql, " DEFAULT %s", default_value);
 		}
@@ -1578,7 +1572,7 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 
 	row_count = PQntuples (pg_res);
 	for (i = 0; i < row_count; i++) {
-		GdaValue *value;
+		GValue *value;
 		gchar *thevalue, *procname, *instr, *ptr;
 		GString *gstr;
 		gint nbargs, argcounter;
@@ -1587,33 +1581,33 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 
 		/* Proc name */
 		procname = thevalue = PQgetvalue(pg_res, i, 1);
-		value = gda_value_new_string (thevalue);
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Proc_Id */
 		thevalue = PQgetvalue (pg_res, i, 0);
-		value = gda_value_new_string (thevalue);
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Owner */
 		thevalue = PQgetvalue(pg_res, i, 2);
-		value = gda_value_new_string (thevalue);
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Comments */ 
 		thevalue = PQgetvalue(pg_res, i, 3);
-		value = gda_value_new_string (thevalue);
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Out type */ 
 		thevalue = PQgetvalue(pg_res, i, 4);
-		value = gda_value_new_string (thevalue);
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Number of args */
 		thevalue = PQgetvalue(pg_res, i, 5);
 		nbargs = atoi (thevalue);
-		value = gda_value_new_integer (nbargs);
+		g_value_set_int (value = gda_value_new (G_TYPE_INT), nbargs);
 		rowlist = g_list_append (rowlist, value);
 
 		/* In types */
@@ -1654,13 +1648,12 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 			insert = FALSE;
 
 		if (gstr) {
-			value = gda_value_new_string (gstr->str);
-			g_string_free (gstr, TRUE);
+			g_value_take_string (value = gda_value_new (G_TYPE_STRING), gstr->str);
+			g_string_free (gstr, FALSE);
 		}
 		else
-			value = gda_value_new_string (NULL);
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), NULL);
 		rowlist = g_list_append (rowlist, value);
-
 		
 		if (argcounter != nbargs)
 			insert = FALSE;
@@ -1670,9 +1663,9 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 		/* Definition */
 		thevalue = PQgetvalue(pg_res, i, 7);
 		if (!strcmp (thevalue, procname))
-			value = gda_value_new_string (NULL);
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), NULL);
 		else
-			value = gda_value_new_string (thevalue);
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		rowlist = g_list_append (rowlist, value);
 
 		if (insert)
@@ -1729,7 +1722,7 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 		par = gda_parameter_list_find_param (params, "namespace");
 
 	if (par)
-		namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+		namespace = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (priv_data->version_float < 7.3) {
@@ -1818,13 +1811,23 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 	for (i = 0; i < priv_data->ntypes; i++) {
 		GList *value_list = NULL;
 		gchar *syn;
+		GValue *tmpval;
 
-		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].name));
-		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].owner));
-		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].comments));
-		value_list = g_list_append (value_list, gda_value_new_gdatype (priv_data->type_data[i].type));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), priv_data->type_data[i].name);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), priv_data->type_data[i].owner);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), priv_data->type_data[i].comments);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), priv_data->type_data[i].type);
+		value_list = g_list_append (value_list, tmpval);
+
 		syn = g_hash_table_lookup (synonyms, priv_data->type_data[i].name);
-		value_list = g_list_append (value_list, gda_value_new_string (syn));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), syn);
+		value_list = g_list_append (value_list, tmpval);
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
@@ -1929,7 +1932,7 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 		par = gda_parameter_list_find_param (params, "namespace");
 
 	if (par)
-		namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+		namespace = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (priv_data->version_float < 7.3) {
@@ -2342,62 +2345,62 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 
 	row_count = PQntuples (pg_res);
 	for (i = 0; i < row_count; i++) {
-		GdaValue *value;
+		GValue *value;
 		gchar *thevalue, *colname, *ref = NULL;
-		GdaValueType type;
+		GType type;
 		gint32 integer;
 		GList *rowlist = NULL;
 		GList *rlist;
 
 		/* Field name */
 		colname = thevalue = PQgetvalue (pg_res, i, 0);
-		value = gda_value_new_string (thevalue);
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Data type */
 		thevalue = PQgetvalue(pg_res, i, 1);
 		type = gda_postgres_type_name_to_gda (priv_data->h_table, 
 						      thevalue);
-		value = gda_value_new_string (thevalue);
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Defined size */
 		thevalue = PQgetvalue(pg_res, i, 3);
 		integer = atoi (thevalue);
-		if (integer == -1 && type == GDA_VALUE_TYPE_STRING) {
+		if (integer == -1 && type == G_TYPE_STRING) {
 			thevalue = PQgetvalue(pg_res, i, 2);
 			integer = atoi (thevalue) - 4; /* don't know where the -4 comes from! */
 		}
-		if (integer == -1 && type == GDA_VALUE_TYPE_NUMERIC) {
+		if (integer == -1 && type == GDA_TYPE_NUMERIC) {
 			thevalue = PQgetvalue(pg_res, i, 2);
 			integer = atoi(thevalue) / 65536;
 		}
 			
-		value = gda_value_new_integer ((integer != -1) ? integer : 0);
+		g_value_set_int (value = gda_value_new (G_TYPE_INT), (integer != -1) ? integer : 0);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Scale */ 
 		integer = 0;
-		if (type == GDA_VALUE_TYPE_NUMERIC) {
+		if (type == GDA_TYPE_NUMERIC) {
 			thevalue = PQgetvalue(pg_res, i, 2);
 			integer = (atoi(thevalue) % 65536) - 4;
 		}
-		value = gda_value_new_integer (integer);
+		g_value_set_int (value = gda_value_new (G_TYPE_INT), integer);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Not null? */
 		thevalue = PQgetvalue(pg_res, i, 4);
-		value = gda_value_new_boolean ((*thevalue == 't' ? TRUE : FALSE));
+		g_value_set_boolean (value = gda_value_new (G_TYPE_BOOLEAN), (*thevalue == 't' ? TRUE : FALSE));
 		rowlist = g_list_append (rowlist, value);
 
 		/* Primary key? */
-		value = gda_value_new_boolean (
-				gda_postgres_index_type (i, idx_list, IDX_PRIMARY));
+		g_value_set_boolean (value = gda_value_new (G_TYPE_BOOLEAN),
+				     gda_postgres_index_type (i, idx_list, IDX_PRIMARY));
 		rowlist = g_list_append (rowlist, value);
 
 		/* Unique index? */
-		value = gda_value_new_boolean (
-				gda_postgres_index_type (i, idx_list, IDX_UNIQUE));
+		g_value_set_boolean (value = gda_value_new (G_TYPE_BOOLEAN),
+				     gda_postgres_index_type (i, idx_list, IDX_UNIQUE));
 		rowlist = g_list_append (rowlist, value);
 
 		/* References */
@@ -2420,13 +2423,13 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 			if (!ref)
 				ref = "";
 		}
-		value = gda_value_new_string (ref);
+		g_value_set_string (value = gda_value_new (G_TYPE_STRING), ref);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Default value */
 		if (!PQgetisnull (pg_res, i, 5)) {
 			thevalue = PQgetvalue (pg_res, i, 5);
-			value = gda_value_new_string (thevalue);
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), thevalue);
 		}
 		else
 			value = gda_value_new_null ();
@@ -2434,9 +2437,9 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 
 		/* Extra attributes */
 		if (strstr (PQgetvalue (pg_res, i, 5), "nextval"))
-			value = gda_value_new_string ("AUTO_INCREMENT");
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "AUTO_INCREMENT");
 		else
-			value = gda_value_new_string ("");
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
 	        rowlist = g_list_append (rowlist, value);			
 
 		list = g_list_append (list, rowlist);
@@ -2485,7 +2488,7 @@ get_postgres_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 	par = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
-	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	g_return_val_if_fail (tblname != NULL, NULL);
 	
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -2630,7 +2633,7 @@ get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
 	par = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
-	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	g_return_val_if_fail (tblname != NULL, NULL);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -2682,7 +2685,7 @@ get_postgres_constraints (GdaConnection *cnc, GdaParameterList *params)
 	par = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
-	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	g_return_val_if_fail (tblname != NULL, NULL);
 	
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -2767,54 +2770,48 @@ gda_postgres_provider_fetch_blob (GdaServerProvider *provider,
 
 /* FIXME: not used anymore, make sure the data handlers do the same */
 gchar *
-gda_postgres_provider_value_to_sql_string (
-				GdaServerProvider *provider, /* we dont actually use this!*/
-				GdaConnection *cnc,
-				GdaValue *from)
+gda_postgres_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont actually use this!*/
+					   GdaConnection *cnc,
+					   GValue *from)
 {
 	gchar *val_str;
 	gchar *ret;
-	
+	GType type;
+
 	g_return_val_if_fail (from != NULL, NULL);
 
 	val_str = gda_value_stringify (from);
 	if (!val_str)
 		return NULL;
 
-	switch (GDA_VALUE_TYPE(from)) {
-		case GDA_VALUE_TYPE_BIGINT :
-		case GDA_VALUE_TYPE_DOUBLE :
-		case GDA_VALUE_TYPE_INTEGER :
-		case GDA_VALUE_TYPE_NUMERIC :
-		case GDA_VALUE_TYPE_SINGLE :
-		case GDA_VALUE_TYPE_SMALLINT :
-		case GDA_VALUE_TYPE_TINYINT :
-			ret = g_strdup (val_str);
-			break;
-		case GDA_VALUE_TYPE_TIMESTAMP:
-		case GDA_VALUE_TYPE_DATE :
-		case GDA_VALUE_TYPE_TIME :
+	type = G_VALUE_TYPE (from);
+	if ((type == G_TYPE_INT64 ) ||
+	    (type == G_TYPE_DOUBLE ) ||
+	    (type == G_TYPE_INT ) ||
+	    (type == GDA_TYPE_NUMERIC ) ||
+	    (type == G_TYPE_FLOAT ) ||
+	    (type == GDA_TYPE_SHORT ) ||
+	    (type == G_TYPE_CHAR ))
+		ret = g_strdup (val_str);
+	else if ((type == GDA_TYPE_TIMESTAMP) ||
+		 (type == G_TYPE_DATE ) ||
+		 (type == GDA_TYPE_TIME ))
 			ret = g_strdup_printf ("\"%s\"", val_str);
-			break;
-		case GDA_VALUE_TYPE_BINARY:
-		{
-			int qlen;
-			char *quoted;
-			quoted = PQescapeBytea(val_str, (size_t) strlen(val_str), &qlen);
-			ret = g_strdup_printf ("\"%s\"", quoted);
-			PQfreemem(quoted);
-			break;
-		}
-		default :
-		{
-			char *quoted;
-			quoted = ret = g_malloc(strlen(val_str) * 2 + 3);
-			*quoted++     	= '\'';
-			quoted += PQescapeString (quoted, val_str, (size_t) strlen (val_str));
-			*quoted++     	= '\'';
-			*quoted++     	= '\0';
-			ret = g_realloc(ret, quoted - ret + 1);
-		}
+	else if (type == GDA_TYPE_BINARY) {
+		int qlen;
+		char *quoted;
+		quoted = PQescapeBytea(val_str, (size_t) strlen(val_str), &qlen);
+		ret = g_strdup_printf ("\"%s\"", quoted);
+		PQfreemem(quoted);
+	}
+	else {
+		char *quoted;
+		quoted = ret = g_malloc(strlen(val_str) * 2 + 3);
+		*quoted++     	= '\'';
+		quoted += PQescapeString (quoted, val_str, (size_t) strlen (val_str));
+		*quoted++     	= '\'';
+		*quoted++     	= '\0';
+		ret = g_realloc(ret, quoted - ret + 1);
 	}
 	g_free (val_str);
 
@@ -2824,7 +2821,7 @@ gda_postgres_provider_value_to_sql_string (
 static GdaDataHandler *
 gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 					GdaConnection *cnc,
-					GdaValueType gda_type,
+					GType type,
 					const gchar *dbms_type)
 {
 	GdaDataHandler *dh = NULL;
@@ -2837,119 +2834,106 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	}
 
-	switch (gda_type) {
-        case GDA_VALUE_TYPE_BIGINT:
-	case GDA_VALUE_TYPE_BIGUINT:
-	case GDA_VALUE_TYPE_DOUBLE:
-	case GDA_VALUE_TYPE_INTEGER:
-	case GDA_VALUE_TYPE_NUMERIC:
-	case GDA_VALUE_TYPE_SINGLE:
-	case GDA_VALUE_TYPE_SMALLINT:
-	case GDA_VALUE_TYPE_SMALLUINT:
-        case GDA_VALUE_TYPE_TINYINT:
-        case GDA_VALUE_TYPE_TINYUINT:
-        case GDA_VALUE_TYPE_UINTEGER:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+        if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_UINT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == GDA_TYPE_USHORT) ||
+	    (type == G_TYPE_CHAR) ||
+	    (type == G_TYPE_UCHAR) ||
+	    (type == G_TYPE_UINT)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_numerical_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGUINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DOUBLE, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_INTEGER, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_NUMERIC, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SINGLE, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLUINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYUINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_UINTEGER, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_FLOAT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_SHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_USHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_CHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UCHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT, NULL);
 			g_object_unref (dh);
 		}
-		break;
-        case GDA_VALUE_TYPE_BINARY:
-        case GDA_VALUE_TYPE_BLOB:
-		dh = gda_server_provider_handler_find (provider, cnc, gda_type, NULL);
+	}
+        else if ((type == GDA_TYPE_BINARY) ||
+		 (type == GDA_TYPE_BLOB)) {
+		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
 			dh = gda_handler_bin_new_with_prov (provider, cnc);
 			if (dh) {
-				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BINARY, NULL);
-				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BLOB, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
 				g_object_unref (dh);
 			}
 		}
-		break;
-        case GDA_VALUE_TYPE_BOOLEAN:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	}
+        else if (type == G_TYPE_BOOLEAN) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_boolean_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BOOLEAN, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_BOOLEAN, NULL);
 			g_object_unref (dh);
 		}
- 		break;
-	case GDA_VALUE_TYPE_DATE:
-	case GDA_VALUE_TYPE_TIME:
-	case GDA_VALUE_TYPE_TIMESTAMP:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	}
+	else if ((type == G_TYPE_DATE) ||
+		 (type == GDA_TYPE_TIME) ||
+		 (type == GDA_TYPE_TIMESTAMP)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_time_new_no_locale ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DATE, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIME, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIMESTAMP, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
 			g_object_unref (dh);
 		}
- 		break;
-	case GDA_VALUE_TYPE_STRING:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	}
+	else if (type == G_TYPE_STRING) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_string_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_STRING, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_STRING, NULL);
 			g_object_unref (dh);
 		}
- 		break;
-	case GDA_VALUE_TYPE_TYPE:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	}
+	else if (type == G_TYPE_ULONG) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_type_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TYPE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_ULONG, NULL);
 			g_object_unref (dh);
 		}
- 		break;
-	case GDA_VALUE_TYPE_NULL:
-	case GDA_VALUE_TYPE_GEOMETRIC_POINT:
-	case GDA_VALUE_TYPE_GOBJECT:
-	case GDA_VALUE_TYPE_LIST:
-	case GDA_VALUE_TYPE_MONEY:
-		break;
-	case GDA_VALUE_TYPE_UNKNOWN:
-		/* special case: we take into account the dbms_type argument */
-		if (!dbms_type)
-			break;
-
-		if (priv_data) {
-			gint i;
-			GdaPostgresTypeOid *td = NULL;
-			
-			for (i = 0; i < priv_data->ntypes; i++) {
-				if (!strcmp (priv_data->type_data[i].name, dbms_type))
-					td = &(priv_data->type_data[i]);
+	}
+	else {
+		if (dbms_type) {
+			if (priv_data) {
+				gint i;
+				GdaPostgresTypeOid *td = NULL;
+				
+				for (i = 0; i < priv_data->ntypes; i++) {
+					if (!strcmp (priv_data->type_data[i].name, dbms_type))
+						td = &(priv_data->type_data[i]);
+				}
+				
+				if (td) {
+					dh = gda_postgres_provider_get_data_handler (provider, cnc, td->type, NULL);
+					gda_server_provider_handler_declare (provider, dh, cnc, 
+									     G_TYPE_INVALID, dbms_type);
+				}
 			}
-			
-			if (td) {
-				dh = gda_postgres_provider_get_data_handler (provider, cnc, td->type, NULL);
+			else {
+				dh = gda_postgres_provider_get_data_handler (provider, cnc, 
+									     postgres_name_to_gda_type (dbms_type), NULL);
 				gda_server_provider_handler_declare (provider, dh, cnc, 
-								     GDA_VALUE_TYPE_UNKNOWN, dbms_type);
+								     G_TYPE_INVALID, dbms_type);
 			}
 		}
-		else {
-			dh = gda_postgres_provider_get_data_handler (provider, cnc, 
-								     postgres_name_to_gda_type (dbms_type), NULL);
-			gda_server_provider_handler_declare (provider, dh, cnc, 
-							     GDA_VALUE_TYPE_UNKNOWN, dbms_type);
-		}
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
 	}
 
 	return dh;

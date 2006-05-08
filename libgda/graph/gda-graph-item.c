@@ -75,8 +75,8 @@ enum
 struct _GdaGraphItemPrivate
 {
 	GdaObjectRef    *ref_object;
-	gdouble       x;
-	gdouble       y;
+	gdouble          x;
+	gdouble          y;
 };
 
 /* module error */
@@ -414,15 +414,44 @@ gda_graph_item_save_to_xml (GdaXmlStorage *iface, GError **error)
 		g_free (str);
 	}
 	
-	str = g_strdup_printf ("%.3f", item->priv->x);
+	str = g_strdup_printf ("%d.%03d", (int) item->priv->x, (int) ((item->priv->x - (int) item->priv->x) * 1000.));
 	xmlSetProp (node, "xpos", str);
 	g_free (str);
 
-	str = g_strdup_printf ("%.3f", item->priv->y);
+	str = g_strdup_printf ("%d.%03d", (int) item->priv->y, (int) ((item->priv->y - (int) item->priv->y) * 1000.));
 	xmlSetProp (node, "ypos", str);
 	g_free (str);
 
         return node;
+}
+
+/*
+ * converts a 123.456 kind of string into its dgouble equivalent
+ * without taking care of the locale settings
+ */ 
+static gdouble
+parse_float (const gchar *str)
+{
+	gdouble retval = 0.;
+
+	while (*str && g_ascii_isdigit (*str)) {
+		retval = retval * 10 + (*str - '0');
+		str++;
+	}
+	if (*str && *str == '.') {
+		gdouble tmp = 0., divider = 1.;
+
+		str++;
+		while (*str && g_ascii_isdigit (*str)) {
+			tmp = tmp * 10. + (*str - '0');
+			divider *= 10.;
+			str++;
+		}
+
+		retval += tmp / divider;
+	}
+
+	return retval;
 }
 
 static gboolean
@@ -454,16 +483,15 @@ gda_graph_item_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 
 	prop = xmlGetProp (node, "xpos");
 	if (prop) {
-		item->priv->x = atof (prop);
+		item->priv->x = parse_float (prop);
 		g_free (prop);
 	}
 
 	prop = xmlGetProp (node, "ypos");
 	if (prop) {
-		item->priv->y = atof (prop);
+		item->priv->y = parse_float (prop);
 		g_free (prop);
 	}
 
         return TRUE;
 }
-

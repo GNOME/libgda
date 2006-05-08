@@ -1,8 +1,9 @@
 /* GDA FreeTDS Provider
- * Copyright (C) 2002 The GNOME Foundation
+ * Copyright (C) 2002 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Holger Thon <holger.thon@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -640,11 +641,11 @@ static const gchar
 		if (model) {
 			if ((gda_data_model_get_n_columns (model) == 1)
 			    && (gda_data_model_get_n_rows (model) == 1)) {
-				GdaValue *value;
+				GValue *value;
 
-				value = (GdaValue *) gda_data_model_get_value_at
+				value = (GValue *) gda_data_model_get_value_at
 				                             (model, 0, 0);
-				tds_cnc->server_id = gda_value_stringify ((GdaValue *) value);
+				tds_cnc->server_id = gda_value_stringify ((GValue *) value);
 			}
 			g_object_unref (model);
 		}
@@ -669,8 +670,8 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 {
 	GdaDataModel *model = NULL;
 	_TDSCOLINFO col;
-	GdaValueType gda_type;
-	GdaValue     *value = NULL;
+	GType gda_type;
+	GValue     *value = NULL;
 	gint i = 1;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -686,25 +687,25 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 			/* first fix gda_type */
 			if (row) {
 				value = gda_row_get_value (row, 2);
-				if (gda_value_get_type (value) == GDA_VALUE_TYPE_INTEGER)
-					col.column_size = gda_value_get_integer (value);
+				if (G_VALUE_TYPE (value) == G_TYPE_INT)
+					col.column_size = g_value_get_int (value);
 				else
 					col.column_size = 0;
 				
 				value = gda_row_get_value (row, 3);
-				if (gda_value_get_type (value) != GDA_VALUE_TYPE_TINYINT)
+				if (G_VALUE_TYPE (value) != G_TYPE_CHAR)
 					col.column_type = SYBVARIANT;
 				else 
-					col.column_type = gda_value_get_tinyint (value);
+					col.column_type = g_value_get_char (value);
 				
 				gda_type = gda_freetds_get_value_type (&col);
 				
 				/* col 3: type */
-				gda_value_set_gdatype (value, gda_type);
+				g_value_set_ulong (value, gda_type);
 				
 				/* col 2: comment */
 				value = gda_row_get_value (row, 2);
-				gda_value_set_string (value, "");
+				g_value_set_string (value, "");
 			}
 		}
 	}
@@ -865,19 +866,19 @@ gda_freetds_get_stringresult_of_query (GdaConnection *cnc,
                                        const gint row)
 {
 	GdaDataModel    *model = NULL;
-	GdaValue        *value = NULL;
+	GValue        *value = NULL;
 	gchar           *ret = NULL;
 
 	/* GDA_IS_CONNECTION (cnc) validation in function call */
 	model = gda_freetds_execute_query (cnc, sql);
 	
 	if (model) {
-		value = (GdaValue *) gda_data_model_get_value_at (model,
+		value = (GValue *) gda_data_model_get_value_at (model,
 		                                                  col, row);
 
 		if ((value != NULL)
-		    && (gda_value_get_type (value) != GDA_VALUE_TYPE_NULL)
-		    && (gda_value_get_type (value) != GDA_VALUE_TYPE_UNKNOWN)) {
+		    && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)
+		    && (G_VALUE_TYPE (value) != G_TYPE_INVALID)) {
 			ret = (gchar *) gda_value_stringify (value);
 		}
 		
@@ -920,7 +921,7 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 	parameter = gda_parameter_list_find (params, "name");
 	g_return_val_if_fail (parameter != NULL, NULL);
 
-	table = gda_value_get_string ((GdaValue *) gda_parameter_get_value (parameter));
+	table = g_value_get_string ((GValue *) gda_parameter_get_value (parameter));
 	g_return_val_if_fail (table != NULL, NULL);
 
 	query = g_strdup_printf (TDS_SCHEMA_FIELDS, table);

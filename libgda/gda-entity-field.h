@@ -41,7 +41,7 @@ struct _GdaEntityFieldIface
 
 	/* virtual table */
 	GdaEntity         *(* get_entity)      (GdaEntityField *iface);
-	GdaValueType       (* get_gda_type)    (GdaEntityField *iface);
+	GType       (* get_gda_type)    (GdaEntityField *iface);
 	GdaDictType       *(* get_data_type)   (GdaEntityField *iface);
 	const gchar       *(* get_alias)       (GdaEntityField *iface);
 };
@@ -49,7 +49,7 @@ struct _GdaEntityFieldIface
 GType            gda_entity_field_get_type        (void) G_GNUC_CONST;
 
 GdaEntity       *gda_entity_field_get_entity      (GdaEntityField *iface);
-GdaValueType     gda_entity_field_get_gda_type    (GdaEntityField *iface);
+GType     gda_entity_field_get_gda_type    (GdaEntityField *iface);
 GdaDictType     *gda_entity_field_get_data_type   (GdaEntityField *iface);
 const gchar     *gda_entity_field_get_name        (GdaEntityField *iface);
 const gchar     *gda_entity_field_get_description (GdaEntityField *iface);

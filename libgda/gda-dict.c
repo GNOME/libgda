@@ -118,7 +118,7 @@ static void dict_changed (GdaDict *dict, gpointer data);
 static GObjectClass  *parent_class = NULL;
 
 /* default handlers for all dictionaries, NULL until it has been initialised */
-static GdaDataHandler **default_dict_handlers = NULL;
+static GHashTable *default_dict_handlers = NULL; /* key = GType, value = GdaDataHandler obj */
 
 /* signals */
 enum
@@ -2036,10 +2036,13 @@ dsn_changed_cb (GdaConnection *cnc, GdaDict *dict)
 	g_assert (cnc == dict->priv->cnc);
 
 	g_free (dict->priv->dsn);
-	dict->priv->dsn = g_strdup ((gchar *) gda_connection_get_dsn (cnc));
+	if (gda_connection_get_dsn (cnc))
+		dict->priv->dsn = g_strdup ((gchar *) gda_connection_get_dsn (cnc));
+	else
+		dict->priv->dsn = NULL;
 
         cstr = gda_dict_get_xml_filename (dict);
-        if (!cstr) {
+        if (!cstr && dict->priv->dsn) {
                 gchar *str;
 
                 str = gda_dict_compute_xml_filename (dict, dict->priv->dsn, NULL, NULL);
@@ -2262,30 +2265,30 @@ dict_data_type_update_list (GdaDict *dict, GError **error)
 
 
 	if (!utility_check_data_model (rs, 4, 
-				       GDA_VALUE_TYPE_STRING, 
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_TYPE)) {
+				       G_TYPE_STRING, 
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_ULONG)) {
 		g_set_error (error, GDA_DICT_ERROR, GDA_DICT_DATATYPE_ERROR,
 			     _("Schema for list of data types is wrong"));
 		g_object_unref (G_OBJECT (rs));
 		return FALSE;
 	}
 	has_synonyms = utility_check_data_model (rs, 5, 
-						 GDA_VALUE_TYPE_STRING, 
-						 GDA_VALUE_TYPE_STRING,
-						 GDA_VALUE_TYPE_STRING,
-						 GDA_VALUE_TYPE_TYPE,
-						 GDA_VALUE_TYPE_STRING);
+						 G_TYPE_STRING, 
+						 G_TYPE_STRING,
+						 G_TYPE_STRING,
+						 G_TYPE_ULONG,
+						 G_TYPE_STRING);
 
 	total = gda_data_model_get_n_rows (rs);
 	now = 0;		
 	while ((now < total) && !dict->priv->stop_update) {
-		const GdaValue *value;
+		const GValue *value;
 		gboolean newdt = FALSE;
 
 		value = gda_data_model_get_value_at (rs, 0, now);
-		str = gda_value_stringify ((GdaValue *) value);
+		str = gda_value_stringify ((GValue *) value);
 		dt = gda_dict_get_data_type_by_name (dict, str);
 		if (!dt) {
 			gint i = 0;
@@ -2322,10 +2325,10 @@ dict_data_type_update_list (GdaDict *dict, GError **error)
 
 		/* description */
 		value = gda_data_model_get_value_at (rs, 2, now);
-		if (value && !gda_value_is_null ((GdaValue *) value) && 
-		    gda_value_get_string((GdaValue *) value) && 
-		    (* gda_value_get_string((GdaValue *) value))) {
-			str = gda_value_stringify ((GdaValue *) value);
+		if (value && !gda_value_is_null ((GValue *) value) && 
+		    g_value_get_string((GValue *) value) && 
+		    (* g_value_get_string((GValue *) value))) {
+			str = gda_value_stringify ((GValue *) value);
 			gda_object_set_description (GDA_OBJECT (dt), str);
 			g_free (str);
 		}
@@ -2334,10 +2337,10 @@ dict_data_type_update_list (GdaDict *dict, GError **error)
 
 		/* owner */
 		value = gda_data_model_get_value_at (rs, 1, now);
-		if (value && !gda_value_is_null ((GdaValue *) value) && 
-		    gda_value_get_string((GdaValue *) value) && 
-		    (* gda_value_get_string((GdaValue *) value))) {
-			str = gda_value_stringify ((GdaValue *) value);
+		if (value && !gda_value_is_null ((GValue *) value) && 
+		    g_value_get_string((GValue *) value) && 
+		    (* g_value_get_string((GValue *) value))) {
+			str = gda_value_stringify ((GValue *) value);
 			gda_object_set_owner (GDA_OBJECT (dt), str);
 			g_free (str);
 		}
@@ -2346,19 +2349,19 @@ dict_data_type_update_list (GdaDict *dict, GError **error)
 				
 		/* gda_type */
 		value = gda_data_model_get_value_at (rs, 3, now);
-		if (value && !gda_value_is_null ((GdaValue *) value)) 
-			gda_dict_type_set_gda_type (dt, gda_value_get_gdatype ((GdaValue *) value));
+		if (value && !gda_value_is_null ((GValue *) value)) 
+			gda_dict_type_set_gda_type (dt, g_value_get_ulong ((GValue *) value));
 		
 		/* data type synomyms */
 		gda_dict_type_clear_synonyms (dt);
 		if (has_synonyms) {
 			value = gda_data_model_get_value_at (rs, 4, now);
-			if (value && !gda_value_is_null ((GdaValue *) value) && 
-			    gda_value_get_string ((GdaValue *) value) && 
-			    (* gda_value_get_string((GdaValue *) value))) {
+			if (value && !gda_value_is_null ((GValue *) value) && 
+			    g_value_get_string ((GValue *) value) && 
+			    (* g_value_get_string((GValue *) value))) {
 				gchar *tok, *buf;
 
-				str = gda_value_stringify ((GdaValue *) value);
+				str = gda_value_stringify ((GValue *) value);
 				tok = strtok_r (str, ",", &buf);
 				if (tok) {
 					if (*tok) 
@@ -2460,14 +2463,14 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 
 
 	if (!utility_check_data_model (rs, 8, 
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_INTEGER,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING)) {
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_INT,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING)) {
 		g_set_error (error, GDA_DICT_ERROR, GDA_DICT_FUNCTIONS_ERROR,
 			     _("Schema for list of functions is wrong"));
 		g_object_unref (G_OBJECT (rs));
@@ -2480,7 +2483,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 	while ((now < total) && !dict->priv->stop_update) {
 		GdaDictType *rettype = NULL; /* return type for the function */
 		GSList *dtl = NULL;     /* list of params for the function */
-		const GdaValue *value;
+		const GValue *value;
 		gchar *ptr;
 		gchar *tok;
 		
@@ -2488,8 +2491,8 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 
 		/* fetch return type */
 		value = gda_data_model_get_value_at (rs, 4, now);
-		str = gda_value_stringify ((GdaValue *) value);
-		if (*str != '-') {
+		str = gda_value_stringify ((GValue *) value);
+		if (*str && (*str != '-')) {
 			rettype = gda_dict_get_data_type_by_name (dict, str);
 			if (!rettype)
 				insert = FALSE;
@@ -2500,13 +2503,13 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 
 		/* fetch argument types */
 		value = gda_data_model_get_value_at (rs, 6, now);
-		str = gda_value_stringify ((GdaValue *) value);
+		str = gda_value_stringify ((GValue *) value);
 		if (str) {
 			ptr = strtok_r (str, ",", &tok);
 			while (ptr && *ptr) {
 				GdaDictType *indt;
 
-				if (*ptr == '-')
+				if (*ptr && (*ptr == '-'))
 					dtl = g_slist_append (dtl, NULL); /* any data type will do */
 				else {
 					indt = gda_dict_get_data_type_by_name (dict, ptr);
@@ -2522,7 +2525,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 
 		/* fetch a func if there is already one with the same id */
 		value = gda_data_model_get_value_at (rs, 1, now);
-		str = gda_value_stringify ((GdaValue *) value);
+		str = gda_value_stringify ((GValue *) value);
 		func = gda_dict_get_function_by_dbms_id (dict, str);
 		g_free (str);
 
@@ -2531,7 +2534,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 			   and not its DBMS id, this is usefull if the DBMS has changed and the
 			   DBMS id have changed */
 			value =  gda_data_model_get_value_at (rs, 0, now);
-			str = gda_value_stringify ((GdaValue *) value);
+			str = gda_value_stringify ((GValue *) value);
 			func = gda_dict_get_function_by_name_arg_real (dict, original_functions, str, dtl);
 			g_free (str);
 
@@ -2592,30 +2595,30 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 		if (func) {
 			/* unique id */
 			value = gda_data_model_get_value_at (rs, 1, now);
-			str = gda_value_stringify ((GdaValue *) value);
+			str = gda_value_stringify ((GValue *) value);
 			gda_dict_function_set_dbms_id (func, str);
 			g_free (str);
 
 			/* description */
 			value = gda_data_model_get_value_at (rs, 3, now);
-			if (value && !gda_value_is_null ((GdaValue *) value) && 
-			    (* gda_value_get_string((GdaValue *) value))) {
-				str = gda_value_stringify ((GdaValue *) value);
+			if (value && !gda_value_is_null ((GValue *) value) && 
+			    (* g_value_get_string((GValue *) value))) {
+				str = gda_value_stringify ((GValue *) value);
 				gda_object_set_description (GDA_OBJECT (func), str);
 				g_free (str);
 			}
 			
 			/* sqlname */
 			value =  gda_data_model_get_value_at (rs, 0, now);
-			str = gda_value_stringify ((GdaValue *) value);
+			str = gda_value_stringify ((GValue *) value);
 			gda_dict_function_set_sqlname (func, str);
 			g_free (str);
 			
 			/* owner */
 			value = gda_data_model_get_value_at (rs, 2, now);
-			if (value && !gda_value_is_null ((GdaValue *) value) && 
-			    (* gda_value_get_string((GdaValue *) value))) {
-				str = gda_value_stringify ((GdaValue *) value);
+			if (value && !gda_value_is_null ((GValue *) value) && 
+			    (* g_value_get_string((GValue *) value))) {
+				str = gda_value_stringify ((GValue *) value);
 				gda_object_set_owner (GDA_OBJECT (func), str);
 				g_free (str);
 			}
@@ -2701,13 +2704,13 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 
 
 	if (!utility_check_data_model (rs, 7, 
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING)) {
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING)) {
 		g_set_error (error, GDA_DICT_ERROR, GDA_DICT_AGGREGATES_ERROR,
 			     _("Schema for list of aggregates is wrong"));
 		g_object_unref (G_OBJECT (rs));
@@ -2720,14 +2723,14 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 	while ((now < total) && !dict->priv->stop_update) {
 		GdaDictType *outdt = NULL; /* return type for the aggregate */
 		GdaDictType *indt = NULL;  /* argument for the aggregate */
-		const GdaValue *value;
+		const GValue *value;
 		
 		insert = TRUE;
 
 		/* fetch return type */
 		value = gda_data_model_get_value_at (rs, 4, now);
-		str = gda_value_stringify ((GdaValue *) value);
-		if (*str != '-') {
+		str = gda_value_stringify ((GValue *) value);
+		if (*str && (*str != '-')) {
 			outdt = gda_dict_get_data_type_by_name (dict, str);
 			if (!outdt)
 				insert = FALSE;
@@ -2738,9 +2741,9 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 
 		/* fetch argument type */
 		value = gda_data_model_get_value_at (rs, 5, now);
-		str = gda_value_stringify ((GdaValue *) value);
+		str = gda_value_stringify ((GValue *) value);
 		if (str) {
-			if (*str != '-') {
+			if (*str && (*str != '-')) {
 				indt = gda_dict_get_data_type_by_name (dict, str);
 				if (!indt)
 					insert = FALSE;
@@ -2750,7 +2753,7 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 
 		/* fetch a agg if there is already one with the same id */
 		value = gda_data_model_get_value_at (rs, 1, now);
-		str = gda_value_stringify ((GdaValue *) value);
+		str = gda_value_stringify ((GValue *) value);
 		agg = gda_dict_get_aggregate_by_dbms_id (dict, str);
 		g_free (str);
 
@@ -2759,7 +2762,7 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 			   and not its DBMS id, this is usefull if the DBMS has changed and the
 			   DBMS id have changed */
 			value =  gda_data_model_get_value_at (rs, 0, now);
-			str = gda_value_stringify ((GdaValue *) value);
+			str = gda_value_stringify ((GValue *) value);
 			agg = gda_dict_get_aggregate_by_name_arg_real (dict, original_aggregates, str, indt);
 			g_free (str);
 
@@ -2803,30 +2806,30 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 		if (agg) {
 			/* unique id */
 			value = gda_data_model_get_value_at (rs, 1, now);
-			str = gda_value_stringify ((GdaValue *) value);
+			str = gda_value_stringify ((GValue *) value);
 			gda_dict_aggregate_set_dbms_id (agg, str);
 			g_free (str);
 
 			/* description */
 			value = gda_data_model_get_value_at (rs, 3, now);
-			if (value && !gda_value_is_null ((GdaValue *) value) && 
-			    (* gda_value_get_string((GdaValue *) value))) {
-				str = gda_value_stringify ((GdaValue *) value);
+			if (value && !gda_value_is_null ((GValue *) value) && 
+			    (* g_value_get_string((GValue *) value))) {
+				str = gda_value_stringify ((GValue *) value);
 				gda_object_set_description (GDA_OBJECT (agg), str);
 				g_free (str);
 			}
 			
 			/* sqlname */
 			value =  gda_data_model_get_value_at (rs, 0, now);
-			str = gda_value_stringify ((GdaValue *) value);
+			str = gda_value_stringify ((GValue *) value);
 			gda_dict_aggregate_set_sqlname (agg, str);
 			g_free (str);
 			
 			/* owner */
 			value = gda_data_model_get_value_at (rs, 2, now);
-			if (value && !gda_value_is_null ((GdaValue *) value) && 
-			    (* gda_value_get_string((GdaValue *) value))) {
-				str = gda_value_stringify ((GdaValue *) value);
+			if (value && !gda_value_is_null ((GValue *) value) && 
+			    (* g_value_get_string((GValue *) value))) {
+				str = gda_value_stringify ((GValue *) value);
 				gda_object_set_owner (GDA_OBJECT (agg), str);
 				g_free (str);
 			}
@@ -2926,13 +2929,13 @@ gda_dict_compute_xml_filename (GdaDict *dict, const gchar *datasource, const gch
 
 	g_return_val_if_fail (dict && GDA_IS_DICT (dict), NULL);
 	g_return_val_if_fail (dict->priv, NULL);
-	if (!datasource) {
+	if (!datasource)
 		if (dict->priv->cnc)
 			datasource = gda_connection_get_dsn (dict->priv->cnc);
-		else {
-			g_warning ("datasource != NULL failed");
-			return NULL;
-		}
+
+	if (!datasource) {
+		g_warning ("datasource != NULL failed");
+		return NULL;
 	}
 
 	if (!app_id)
@@ -2945,7 +2948,7 @@ gda_dict_compute_xml_filename (GdaDict *dict, const gchar *datasource, const gch
 	/* create an empty file with that name */
 	if (!g_file_test (str, G_FILE_TEST_EXISTS)) {
 		gchar *dirpath;
-		FILE *fp;
+		/* FILE *fp; */
 		
 		dirpath = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_DIR);
 		if (!g_file_test (dirpath, G_FILE_TEST_IS_DIR)){
@@ -3790,10 +3793,10 @@ gda_dict_get_aggregate_by_xml_id (GdaDict *dict, const gchar *xml_id)
 /**
  * gda_dict_get_handler
  * @dict : a #GdaDict object
- * @for_type: a #GdaValueType type
+ * @for_type: a #GType type
  *
  * Obtain a pointer to a #GdaDataHandler which can manage
- * #GdaValue values of type @for_type.
+ * #GValue values of type @for_type.
  *
  * Unlike the gda_dict_get_default_handler() method, this method asks the provider for
  * the connection assigned to @dict using gda_dict_set_connection() if there is any.
@@ -3802,13 +3805,12 @@ gda_dict_get_aggregate_by_xml_id (GdaDict *dict, const gchar *xml_id)
  * gda_dict_get_default_handler() if no connection has been assigned, or if the assigned'd provider
  * offers no data handler for that type.
  *
- * The returned pointer is %NULL if @for_type is GDA_VALUE_TYPE_NULL, 
- * or if there is no default data handler available.
+ * The returned pointer is %NULL if there is no data handler available for the @for_type type.
  *
  * Returns: a #GdaDataHandler
  */
 GdaDataHandler *
-gda_dict_get_handler (GdaDict *dict, GdaValueType for_type)
+gda_dict_get_handler (GdaDict *dict, GType for_type)
 {
 	GdaDataHandler *handler = NULL;
 
@@ -3829,51 +3831,57 @@ gda_dict_get_handler (GdaDict *dict, GdaValueType for_type)
 		return gda_dict_get_default_handler (dict, for_type);
 }
 
+static guint
+gtype_hash (gconstpointer key)
+{
+	return (guint) key;
+}
+
+static gboolean 
+gtype_equal (gconstpointer a, gconstpointer b)
+{
+	return (GType) a == (GType) b ? TRUE : FALSE;
+}
+
 /**
  * gda_dict_get_default_handler
  * @dict : a #GdaDict object
- * @for_type: a #GdaValueType type
+ * @for_type: a #GType type
  *
  * Obtain a pointer to a #GdaDataHandler which can manage
- * #GdaValue values of type @for_type
+ * #GValue values of type @for_type
  *
- * The returned pointer is %NULL if @for_type is GDA_VALUE_TYPE_NULL, 
- * or if there is no default data handler available.
+ * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
  *
  * Returns: a #GdaDataHandler
  */
 GdaDataHandler* 
-gda_dict_get_default_handler (GdaDict *dict, GdaValueType for_type)
+gda_dict_get_default_handler (GdaDict *dict, GType for_type)
 {
 	if (!default_dict_handlers) {
-		default_dict_handlers = g_new0 (GdaDataHandler*, GDA_VALUE_TYPE_UNKNOWN);
+		default_dict_handlers = g_hash_table_new_full (gtype_hash, gtype_equal, 
+							       NULL, (GDestroyNotify) g_object_unref);
 
-		/* FIXME: there MUST not be any NULL value below, except for GDA_VALUE_TYPE_NULL */
-		default_dict_handlers [GDA_VALUE_TYPE_NULL] = NULL;
-		default_dict_handlers [GDA_VALUE_TYPE_BIGINT] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_BIGUINT] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_BINARY] = gda_handler_bin_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_BLOB] = gda_handler_bin_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_BOOLEAN] = gda_handler_boolean_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_DATE] = gda_handler_time_new_no_locale ();
-		default_dict_handlers [GDA_VALUE_TYPE_DOUBLE] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_GEOMETRIC_POINT] = NULL;
-		default_dict_handlers [GDA_VALUE_TYPE_GOBJECT] = NULL;
-		default_dict_handlers [GDA_VALUE_TYPE_INTEGER] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_LIST] = NULL;
-		default_dict_handlers [GDA_VALUE_TYPE_MONEY] = NULL;
-		default_dict_handlers [GDA_VALUE_TYPE_NUMERIC] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_SINGLE] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_SMALLINT] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_SMALLUINT] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_STRING] = gda_handler_string_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_TIME] = gda_handler_time_new_no_locale ();
-		default_dict_handlers [GDA_VALUE_TYPE_TIMESTAMP] = gda_handler_time_new_no_locale ();
-		default_dict_handlers [GDA_VALUE_TYPE_TINYINT] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_TINYUINT] = gda_handler_numerical_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_TYPE] = gda_handler_type_new ();
-		default_dict_handlers [GDA_VALUE_TYPE_UINTEGER] = gda_handler_numerical_new ();		
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_INT64, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_UINT64, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) GDA_TYPE_BINARY, gda_handler_bin_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) GDA_TYPE_BLOB, gda_handler_bin_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_BOOLEAN, gda_handler_boolean_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_DATE, gda_handler_time_new_no_locale ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_DOUBLE, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_INT, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) GDA_TYPE_NUMERIC, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_FLOAT, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) GDA_TYPE_SHORT, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) GDA_TYPE_USHORT, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_STRING, gda_handler_string_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) GDA_TYPE_TIME, gda_handler_time_new_no_locale ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new_no_locale ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_UCHAR, gda_handler_numerical_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_ULONG, gda_handler_type_new ());
+		g_hash_table_insert (default_dict_handlers, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());		
 	}
 
-	return default_dict_handlers [for_type];
+	return g_hash_table_lookup (default_dict_handlers, (gpointer) for_type);
 }

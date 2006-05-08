@@ -36,49 +36,46 @@
 // illegal type should always be last type
 const sybase_Types gda_sybase_type_list[GDA_SYBASE_TYPE_CNT] = {
   // Binary types
-  { "binary",        CS_BINARY_TYPE,      GDA_VALUE_TYPE_BINARY },    //   1
-  { NULL,            CS_LONGBINARY_TYPE,  GDA_VALUE_TYPE_BINARY },    //   2
-  { "varbinary",     CS_VARBINARY_TYPE,   GDA_VALUE_TYPE_BINARY },    //   3
+  { "binary",        CS_BINARY_TYPE,      GDA_TYPE_BINARY },    //   1
+  { NULL,            CS_LONGBINARY_TYPE,  GDA_TYPE_BINARY },    //   2
+  { "varbinary",     CS_VARBINARY_TYPE,   GDA_TYPE_BINARY },    //   3
   // Boolean types
-  { "boolean",       CS_BIT_TYPE,         GDA_VALUE_TYPE_BOOLEAN },   //   4
+  { "boolean",       CS_BIT_TYPE,         G_TYPE_BOOLEAN },   //   4
   // Character types
-  { "char",          CS_CHAR_TYPE,        GDA_VALUE_TYPE_STRING },    //   5
-  { NULL,            CS_LONGCHAR_TYPE,    GDA_VALUE_TYPE_STRING },    //   6
-  { "varchar",       CS_VARCHAR_TYPE,     GDA_VALUE_TYPE_STRING },    //   7
+  { "char",          CS_CHAR_TYPE,        G_TYPE_STRING },    //   5
+  { NULL,            CS_LONGCHAR_TYPE,    G_TYPE_STRING },    //   6
+  { "varchar",       CS_VARCHAR_TYPE,     G_TYPE_STRING },    //   7
   // Datetime types
-  { "datetime",      CS_DATETIME_TYPE,    GDA_VALUE_TYPE_TIMESTAMP }, //   8
-  { "smalldatetime", CS_DATETIME4_TYPE,   GDA_VALUE_TYPE_TIMESTAMP }, //   9
+  { "datetime",      CS_DATETIME_TYPE,    GDA_TYPE_TIMESTAMP }, //   8
+  { "smalldatetime", CS_DATETIME4_TYPE,   GDA_TYPE_TIMESTAMP }, //   9
   // Numeric types
-  { "tinyint",       CS_TINYINT_TYPE,     GDA_VALUE_TYPE_TINYINT },   //  10
-  { "smallint",      CS_SMALLINT_TYPE,    GDA_VALUE_TYPE_SMALLINT },  //  11
-  { "int",           CS_INT_TYPE,         GDA_VALUE_TYPE_INTEGER },   //  12
-  { "decimal",       CS_DECIMAL_TYPE,     GDA_VALUE_TYPE_NUMERIC },   //  13
-  { "numeric",       CS_NUMERIC_TYPE,     GDA_VALUE_TYPE_NUMERIC },   //  14
-  { "float",         CS_FLOAT_TYPE,       GDA_VALUE_TYPE_DOUBLE },    //  15
-  { "real",          CS_REAL_TYPE,        GDA_VALUE_TYPE_SINGLE },    //  16
-  { "text",          CS_TEXT_TYPE,        GDA_VALUE_TYPE_STRING },    //  17
-  { "image",         CS_IMAGE_TYPE,       GDA_VALUE_TYPE_BINARY },    //  18
+  { "tinyint",       CS_TINYINT_TYPE,     G_TYPE_CHAR },   //  10
+  { "smallint",      CS_SMALLINT_TYPE,    GDA_TYPE_SHORT },  //  11
+  { "int",           CS_INT_TYPE,         G_TYPE_INT },   //  12
+  { "decimal",       CS_DECIMAL_TYPE,     GDA_TYPE_NUMERIC },   //  13
+  { "numeric",       CS_NUMERIC_TYPE,     GDA_TYPE_NUMERIC },   //  14
+  { "float",         CS_FLOAT_TYPE,       G_TYPE_DOUBLE },    //  15
+  { "real",          CS_REAL_TYPE,        G_TYPE_FLOAT },    //  16
+  { "text",          CS_TEXT_TYPE,        G_TYPE_STRING },    //  17
+  { "image",         CS_IMAGE_TYPE,       GDA_TYPE_BINARY },    //  18
 
   // Security types
-  { "boundary",      CS_BOUNDARY_TYPE,    GDA_VALUE_TYPE_BINARY },    //  19
-  { "sensitivity",   CS_SENSITIVITY_TYPE, GDA_VALUE_TYPE_BINARY },    //  20
+  { "boundary",      CS_BOUNDARY_TYPE,    GDA_TYPE_BINARY },    //  19
+  { "sensitivity",   CS_SENSITIVITY_TYPE, GDA_TYPE_BINARY },    //  20
 
 // Types unsupported by gda-srv are reported as varchar and at the end
 // of this list
 	// Money types
-  { "money",         CS_MONEY_TYPE,       GDA_VALUE_TYPE_STRING },    //  21
-  { "smallmoney",    CS_MONEY4_TYPE,      GDA_VALUE_TYPE_STRING },    //  22
-//{ "money",         CS_MONEY_TYPE,       GDA_VALUE_TYPE_MONEY },     //  23
-//{ "smallmoney",    CS_MONEY4_TYPE,      GDA_VALUE_TYPE_MONEY },     //  22
+  { "money",         CS_MONEY_TYPE,       G_TYPE_STRING },    //  21
+  { "smallmoney",    CS_MONEY4_TYPE,      G_TYPE_STRING },    //  22
 	
-	
-  { NULL,            CS_ILLEGAL_TYPE,     GDA_VALUE_TYPE_UNKNOWN }    //  23
+  { NULL,            CS_ILLEGAL_TYPE,     G_TYPE_INVALID }    //  23
 };
 
 
 const gboolean
 gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
-                          GdaValue *value, GdaSybaseField *field)
+                          GValue *value, GdaSybaseField *field)
 {
 	GdaConnectionEvent   *error = NULL;
 	gboolean   success = FALSE;
@@ -110,13 +107,13 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 //		case CS_VARBINARY_TYPE:
 //			break;
 		case CS_BIT_TYPE:
-			gda_value_set_boolean (value, (gboolean) *field->data);
+			g_value_set_boolean (value, (gboolean) *field->data);
 			return TRUE;
 			break;
 		case CS_CHAR_TYPE:
 		case CS_LONGCHAR_TYPE:
 		case CS_VARCHAR_TYPE:
-		        gda_value_set_string (value, (gchar *) field->data);
+		        g_value_set_string (value, (gchar *) field->data);
 			return TRUE;
 		     	break;
 		case CS_DATETIME_TYPE:
@@ -130,15 +127,15 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 			return TRUE;
 			break;
 		case CS_TINYINT_TYPE:
-			gda_value_set_tinyint (value, (gchar) *field->data);
+			g_value_set_char (value, (gchar) *field->data);
 			return TRUE;
 			break;
 		case CS_SMALLINT_TYPE:
-			gda_value_set_smallint (value, *field->data);
+			gda_value_set_short (value, *field->data);
 			return TRUE;
 			break;
 		case CS_INT_TYPE:
-			gda_value_set_integer (value, *field->data);
+			g_value_set_int (value, *field->data);
 			return TRUE;
 			break;
 		// FIXME: implement numeric types
@@ -149,16 +146,16 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 //			gda_value_set_numeric (value, numeric);
 //			break;
 		case CS_FLOAT_TYPE:
-			gda_value_set_double (value, (gdouble) *field->data);
+			g_value_set_double (value, (gdouble) *field->data);
 			return TRUE;
 			break;
 		case CS_REAL_TYPE:
-			gda_value_set_single (value, (gdouble) *field->data);
+			g_value_set_float (value, (gdouble) *field->data);
 			return TRUE;
 			break;
 		case CS_TEXT_TYPE:
 			field->data[field->datalen] = '\0';
-			gda_value_set_string (value, field->data);
+			g_value_set_string (value, field->data);
 			return TRUE;
 			break;
 		// FIXME: implement those types
@@ -181,7 +178,7 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 
 const gboolean
 gda_sybase_set_value_general (GdaSybaseConnectionData *scnc,
-                              GdaValue                *value,
+                              GValue                *value,
                               GdaSybaseField          *field)
 {
 	CS_DATAFMT destfmt;
@@ -227,13 +224,13 @@ gda_sybase_set_value_general (GdaSybaseConnectionData *scnc,
 		return FALSE;
 	}
 	
-	gda_value_set_string (value, (gchar *) &tmp_data);
+	g_value_set_string (value, (gchar *) &tmp_data);
 	
 	return TRUE;
 }
 
 void
-gda_sybase_set_value_by_datetime(GdaValue *value, CS_DATETIME *dt)
+gda_sybase_set_value_by_datetime(GValue *value, CS_DATETIME *dt)
 {
 	GDate        date;
 	GdaTimestamp timestamp;
@@ -275,7 +272,7 @@ gda_sybase_set_value_by_datetime(GdaValue *value, CS_DATETIME *dt)
 
 
 void
-gda_sybase_set_value_by_datetime4(GdaValue *value, CS_DATETIME4 *dt4)
+gda_sybase_set_value_by_datetime4(GValue *value, CS_DATETIME4 *dt4)
 {
 	GDate        date;
 	GdaTimestamp timestamp;
@@ -309,7 +306,7 @@ gda_sybase_set_value_by_datetime4(GdaValue *value, CS_DATETIME4 *dt4)
 	}
 }
 
-const GdaValueType gda_sybase_get_value_type (const CS_INT sql_type)
+const GType gda_sybase_get_value_type (const CS_INT sql_type)
 {
 	gint i = 0;
 	
@@ -323,7 +320,7 @@ const GdaValueType gda_sybase_get_value_type (const CS_INT sql_type)
 	return gda_sybase_type_list[GDA_SYBASE_TYPE_CNT - 1].gda_type;
 }
 
-const CS_INT gda_sybase_get_sql_type (const GdaValueType gda_type)
+const CS_INT gda_sybase_get_sql_type (const GType gda_type)
 {
 	gint i = 0;
 

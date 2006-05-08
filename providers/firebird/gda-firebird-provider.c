@@ -1,5 +1,5 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
@@ -232,20 +232,20 @@ fb_get_types (GdaConnection *cnc,
 		const gchar *name;
 		const gchar *owner;
 		const gchar *comments;
-		GdaValueType type;
+		GType type;
 	} types[] = {
-		{ "blob", "", "Binary large object (blob)", GDA_VALUE_TYPE_BINARY },
-		{ "char", "", "Fixed length string", GDA_VALUE_TYPE_STRING },
-		{ "varchar", "", "Variable length string", GDA_VALUE_TYPE_STRING },
-		{ "date", "", "Date", GDA_VALUE_TYPE_DATE },
-		{ "time", "", "Time", GDA_VALUE_TYPE_TIME },
-		{ "timestamp", "", "Time stamp", GDA_VALUE_TYPE_TIMESTAMP },
-		{ "smallint", "", "Signed short integer", GDA_VALUE_TYPE_SMALLINT },
-		{ "integer", "", "Signed long integer (longword)", GDA_VALUE_TYPE_INTEGER },
-		{ "decimal", "", "Decimal number", GDA_VALUE_TYPE_NUMERIC },
-		{ "numeric", "", "Decimal number", GDA_VALUE_TYPE_NUMERIC },
-		{ "float", "", "Single precision number", GDA_VALUE_TYPE_SINGLE },
-		{ "double precision", "", "Double precision number", GDA_VALUE_TYPE_DOUBLE }
+		{ "blob", "", "Binary large object (blob)", GDA_TYPE_BINARY },
+		{ "char", "", "Fixed length string", G_TYPE_STRING },
+		{ "varchar", "", "Variable length string", G_TYPE_STRING },
+		{ "date", "", "Date", G_TYPE_DATE },
+		{ "time", "", "Time", GDA_TYPE_TIME },
+		{ "timestamp", "", "Time stamp", GDA_TYPE_TIMESTAMP },
+		{ "smallint", "", "Signed short integer", GDA_TYPE_SHORT },
+		{ "integer", "", "Signed long integer (longword)", G_TYPE_INT },
+		{ "decimal", "", "Decimal number", GDA_TYPE_NUMERIC },
+		{ "numeric", "", "Decimal number", GDA_TYPE_NUMERIC },
+		{ "float", "", "Single precision number", G_TYPE_FLOAT },
+		{ "double precision", "", "Double precision number", G_TYPE_DOUBLE }
 	};
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -260,11 +260,19 @@ fb_get_types (GdaConnection *cnc,
 	/* Fill the recordset with each of the values from the array defined above */
 	for (i = 0; i < (sizeof (types) / sizeof (types[0])); i++) {
 		value_list = NULL;
+		GValue *tmpval;
 		
-		value_list = g_list_append (value_list, gda_value_new_string (types[i].name));
-		value_list = g_list_append (value_list, gda_value_new_string (types[i].owner));
-		value_list = g_list_append (value_list, gda_value_new_string (types[i].comments));
-		value_list = g_list_append (value_list, gda_value_new_gdatype (types[i].type));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].name);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].owner);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].comments);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), types[i].type);
+		value_list = g_list_append (value_list, tmpval);
 
 		/* Add values to row */
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
@@ -297,7 +305,7 @@ fb_get_tables (GdaConnection *cnc,
 	GdaDataModel *recset = NULL;
 	GdaTransaction *transaction;
 	GdaCommand *command;
-	GdaValue *value;
+	GValue *value;
 	GdaRow *row;
 	GdaParameter *par = NULL;
 	gchar *sql, *sql_cond;
@@ -315,7 +323,7 @@ fb_get_tables (GdaConnection *cnc,
 
 		/* Initialize parameter values */
 		if (par)
-			systables = gda_value_get_boolean ((GdaValue *) gda_parameter_get_value (par));
+			systables = g_value_get_boolean ((GValue *) gda_parameter_get_value (par));
 	
 		/* Evaluate statement conditions */	
 		if (show_views) {
@@ -347,23 +355,23 @@ fb_get_tables (GdaConnection *cnc,
 			gda_data_model_set_column_title (recset, 3, _("Definition"));			
 			for (i = 0; i < gda_data_model_get_n_rows (GDA_DATA_MODEL (reclist->data)); i++) {
 				value_list = NULL;
+				GValue *tmpval;
 
 				/* Get name of table */
 				row = (GdaRow *) gda_data_model_get_row (GDA_DATA_MODEL (reclist->data), i);
 				value = gda_row_get_value (row, 0);
-				value_list = g_list_append (
-						value_list,
-						gda_value_new_string ((gchar *) gda_value_get_string (value)));
+				value_list = g_list_append (value_list, gda_value_copy (value));
 
 				/* Get owner of table */
 				value = gda_row_get_value (row, 1);
-				value_list = g_list_append (
-						value_list,
-						gda_value_new_string ((gchar *) gda_value_get_string (value)));
+				value_list = g_list_append (value_list, gda_value_copy (value));
 				
 				/* FIXME: Set correct values */
-				value_list = g_list_append (value_list, gda_value_new_string (""));
-				value_list = g_list_append (value_list, gda_value_new_string (""));
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+				value_list = g_list_append (value_list, tmpval);
 
 				gda_data_model_append_values (recset, value_list, NULL);
 				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -390,36 +398,36 @@ fb_get_tables (GdaConnection *cnc,
  *  Function convert a string containing the name of Firebird's
  *  data type to it's corresponding gda data type.
  *
- *  Returns: The GdaValueType corresponding to @name Firebird's
+ *  Returns: The GType corresponding to @name Firebird's
  *           type
  */
-static GdaValueType
+static GType
 fb_type_name_to_gda_type (const gchar *name)
 {
 	if (!strcmp (name, "CHAR") || !strcmp (name, "VARCHAR"))
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 	else if (!strcmp (name, "SMALLINT"))
-		return GDA_VALUE_TYPE_SMALLINT;
+		return GDA_TYPE_SHORT;
 	else if (!strcmp (name, "NUMERIC") || !strcmp (name, "DECIMAL"))
-		return GDA_VALUE_TYPE_NUMERIC;
+		return GDA_TYPE_NUMERIC;
 	else if (!strcmp (name, "INTEGER"))
-		return GDA_VALUE_TYPE_INTEGER;
+		return G_TYPE_INT;
 	else if (!strcmp (name, "BLOB"))
-		return GDA_VALUE_TYPE_BLOB;
+		return GDA_TYPE_BLOB;
 	else if (!strcmp (name, "TIMESTAMP"))
-		return GDA_VALUE_TYPE_TIMESTAMP;
+		return GDA_TYPE_TIMESTAMP;
 	else if (!strcmp (name, "TIME"))
-		return GDA_VALUE_TYPE_TIME;
+		return GDA_TYPE_TIME;
 	else if (!strcmp (name, "DATE"))
-		return GDA_VALUE_TYPE_DATE;
+		return G_TYPE_DATE;
 	else if (!strcmp (name, "INT64"))
-		return GDA_VALUE_TYPE_NUMERIC;
+		return GDA_TYPE_NUMERIC;
 	else if (!strcmp (name, "FLOAT"))
-		return GDA_VALUE_TYPE_SINGLE;
+		return G_TYPE_FLOAT;
 	else if (!strcmp (name, "DOUBLE"))
-		return GDA_VALUE_TYPE_DOUBLE;
+		return G_TYPE_DOUBLE;
 
-	return GDA_VALUE_TYPE_STRING;
+	return G_TYPE_STRING;
 }
 
 
@@ -440,7 +448,7 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 	gchar *sql, *field_name, *recset_field_name;
 	gint i,j;
 	GList *reclist;
-	GdaValue *value, *recset_value;
+	GValue *value, *recset_value;
 	
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_DATA_MODEL (recset));
@@ -463,43 +471,43 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 			
 			/* For each index or unique field in statement */
 			for (i = 0; i < gda_data_model_get_n_rows (GDA_DATA_MODEL (reclist->data)); i++) {
-				value = (GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 0, i);
-				field_name = (gchar *) gda_value_get_string (value);
+				value = (GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 0, i);
+				field_name = (gchar *) g_value_get_string (value);
 				j = -1;
 
 				/* Find column in @recset by name */
 				do {
 					j++;
-					recset_value = (GdaValue *) gda_data_model_get_value_at (recset, 0, j);
-					recset_field_name = (gchar *) gda_value_get_string (recset_value);
+					recset_value = (GValue *) gda_data_model_get_value_at (recset, 0, j);
+					recset_field_name = (gchar *) g_value_get_string (recset_value);
 				} while (strcmp (recset_field_name, field_name) && (j < gda_data_model_get_n_rows (recset)));
 				
 				/* Set recset values */
 				if (!strcmp (recset_field_name, field_name)) {
 					
 					/* Get primary key value from statement */
-					value = (GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data),
+					value = (GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data),
 											  2,
 											  i);
 					
-					/* Get recorset GdaValue for primary key (position 5) */
-					recset_value = (GdaValue *) gda_data_model_get_value_at (recset, 5, j);
+					/* Get recorset GValue for primary key (position 5) */
+					recset_value = (GValue *) gda_data_model_get_value_at (recset, 5, j);
 
 					/* Set Primary Key mark */
-					gda_value_set_boolean (recset_value, (!strcmp (
-										gda_value_get_string (value),
+					g_value_set_boolean (recset_value, (!strcmp (
+										g_value_get_string (value),
 										"PRIMARY KEY")));
 					
 					/* Get unique index value from statement */
-					value = (GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data),
+					value = (GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data),
 											  1,
 											  i);
 					
-					/* Get recorset GdaValue for unique index (position 6) */
-					recset_value = (GdaValue *) gda_data_model_get_value_at (recset, 6, j);
+					/* Get recorset GValue for unique index (position 6) */
+					recset_value = (GValue *) gda_data_model_get_value_at (recset, 6, j);
 
 					/* Set Unique Index mark */
-					gda_value_set_boolean (recset_value, (gda_value_get_smallint (value) == 1));
+					g_value_set_boolean (recset_value, (gda_value_get_short (value) == 1));
 				}
 			}
 			
@@ -522,90 +530,78 @@ fb_set_index_field_metadata (GdaConnection *cnc,
  *  Fill a list with metadata values from @row.
  *  This function is called from #fb_get_fields_metadata.
  *
- *  Returns: A GList of GdaValues
+ *  Returns: A GList of GValues
  */
 static GList *
 fb_set_field_metadata (GdaRow *row)
 {
 	GList *value_list = NULL;
-	GdaValue *value;
+	GValue *value;
 	gchar *the_value, *tmp_value;
 	gshort scale, short_value;
+	GValue *tmpval;
+	GType type;
 
 	g_return_val_if_fail (row != NULL, NULL);
 
 	/* Set field name  */
 	value = gda_row_get_value (row, 0);
-	the_value = (gchar *) gda_value_get_string (value);
-	value_list = g_list_append (value_list,	gda_value_new_string (the_value));
-	
-	/* Get Scale (number of decimals) */
-	value = gda_row_get_value (row, 4);
-	if (!gda_value_is_null (value))
-		scale = gda_value_get_smallint (value);
-	else
-		scale = 0;
-	
+	value_list = g_list_append (value_list,	gda_value_copy (value));
+		
 	/* Set data type */
 	value = gda_row_get_value (row, 1);
-	tmp_value = (gchar *) gda_value_get_string (value);
+	tmp_value = (gchar *) g_value_get_string (value);
 	tmp_value = g_strchomp (tmp_value);
 	the_value = g_ascii_strdown (tmp_value, -1);
 	g_free (tmp_value);
-	
-	/* Set correct value name */
-	if (!strcmp (the_value, "long") && (scale < 0))
-		value_list = g_list_append (value_list, gda_value_new_string ("decimal"));
-	else if (!strcmp (the_value, "long"))
-		value_list = g_list_append (value_list, gda_value_new_string ("integer"));
-	else if (!strcmp (the_value, "int64"))
-		value_list = g_list_append (value_list, gda_value_new_string ("numeric"));
-	else if (!strcmp (the_value, "varying"))
-		value_list = g_list_append (value_list, gda_value_new_string ("varchar"));
-	else if (!strcmp (the_value, "text"))
-		value_list = g_list_append (value_list, gda_value_new_string ("char"));
-	else if (!strcmp (the_value, "short"))
-		value_list = g_list_append (value_list, gda_value_new_string ("smallint"));
-	else if (!strcmp (the_value, "double"))
-		value_list = g_list_append (value_list, gda_value_new_string ("double precision"));
-	else
-		value_list = g_list_append (value_list, gda_value_new_string (the_value));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), the_value);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* Set size */
 	short_value = 0;
-	if (fb_type_name_to_gda_type (the_value) == GDA_VALUE_TYPE_STRING) {
+	if (fb_type_name_to_gda_type (the_value) == G_TYPE_STRING) {
 		value = gda_row_get_value (row, 2);
-		short_value = gda_value_get_smallint (value);
+		short_value = gda_value_get_short (value);
 	}
-	else if (fb_type_name_to_gda_type (the_value) == GDA_VALUE_TYPE_NUMERIC) {
+	else if (fb_type_name_to_gda_type (the_value) == GDA_TYPE_NUMERIC) {
 		value = gda_row_get_value (row, 3);
-		short_value = gda_value_get_smallint (value);
+		short_value = gda_value_get_short (value);
 	}
-	value_list = g_list_append (value_list, gda_value_new_integer (short_value));
+	g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), short_value);
+	value_list = g_list_append (value_list, tmpval);
 
-	/* Set scale */	
-	value_list = g_list_append (value_list, gda_value_new_integer ((scale * -1)));
+	/* Set scale (number of decimals) */
+	value = gda_row_get_value (row, 4);
+	if (!gda_value_is_null (value))
+		scale = gda_value_get_short (value);
+	else
+		scale = 0;
+	g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), scale * -1);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* Set not null indicator */
 	value = gda_row_get_value (row, 5);
 	if (!gda_value_is_null (value))
-		value_list = g_list_append (
-				value_list,
-				gda_value_new_boolean ((gda_value_get_smallint (value) == 1)));
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), (gda_value_get_short (value) == 1));
 	else
-		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* Primary key ? (real value set in #fb_set_index_field_metadata) */
-	value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* Unique key ? (real value set in #fb_set_index_field_metadata) */
-	value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* FIXME: References */
-	value_list = g_list_append (value_list, gda_value_new_string (""));
+	tmpval = gda_value_new_null ();
+	value_list = g_list_append (value_list, tmpval);
 
 	/* FIXME: Default value */
-	value_list = g_list_append (value_list, gda_value_new_string (""));
+	tmpval = gda_value_new_null ();
+	value_list = g_list_append (value_list, tmpval);
 
 	return value_list;
 }
@@ -634,17 +630,17 @@ fb_get_fields_metadata (GdaConnection *cnc,
 	const gchar *table_name;
 	struct {
 	  	const gchar *name;
-		GdaValueType type;
+		GType type;
 	} fields_desc[] = {
-		{ N_("Field name")      , GDA_VALUE_TYPE_STRING  },
-		{ N_("Data type")       , GDA_VALUE_TYPE_STRING  },
-		{ N_("Size")            , GDA_VALUE_TYPE_INTEGER },
-		{ N_("Scale")           , GDA_VALUE_TYPE_INTEGER },
-		{ N_("Not null?")       , GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("Primary key?")    , GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("Unique index?")   , GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("References")      , GDA_VALUE_TYPE_STRING  },
-		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  }
+		{ N_("Field name")      , G_TYPE_STRING  },
+		{ N_("Data type")       , G_TYPE_STRING  },
+		{ N_("Size")            , G_TYPE_INT },
+		{ N_("Scale")           , G_TYPE_INT },
+		{ N_("Not null?")       , G_TYPE_BOOLEAN },
+		{ N_("Primary key?")    , G_TYPE_BOOLEAN },
+		{ N_("Unique index?")   , G_TYPE_BOOLEAN },
+		{ N_("References")      , G_TYPE_STRING  },
+		{ N_("Default value")   , G_TYPE_STRING  }
 	};
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -657,7 +653,7 @@ fb_get_fields_metadata (GdaConnection *cnc,
 		return NULL;
 	}
 
-	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	table_name = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	if (!table_name) {
 		gda_connection_add_event_string (cnc,
 				_("Table name is needed but none specified in parameter list"));
@@ -717,23 +713,31 @@ fb_add_aggregate_row (GdaDataModelArray *recset,
 		      const gchar *comments)
 {
 	GList *list;
+	GValue *tmpval;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
 
 	/* 1st the name */
-	list = g_list_append (NULL, gda_value_new_string (str));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+	list = g_list_append (NULL, tmpval);
 	/* 2nd the unique id */
-	list = g_list_append (list, gda_value_new_string (str));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+	list = g_list_append (list, tmpval);
 	/* 3rd the owner */
-	list = g_list_append (list, gda_value_new_string (NULL));
+	tmpval = gda_value_new_null ();
+	list = g_list_append (list, tmpval);
 	/* 4th the comments */
-	list = g_list_append (list, gda_value_new_string (comments));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), comments);
+	list = g_list_append (list, tmpval);
 	/* 5th the return type */
-	list = g_list_append (list, gda_value_new_string (_("UNKNOWN")));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), _("UNKNOWN"));
+	list = g_list_append (list, tmpval);
 	/* 6th the argument type */
-	list = g_list_append (list, gda_value_new_string (_("UNKNOWN")));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), _("UNKNOWN"));
+	list = g_list_append (list, tmpval);
 	/* 7th the SQL definition */
-	list = g_list_append (list, gda_value_new_string (NULL));
+	tmpval = gda_value_new_null ();
+	list = g_list_append (list, tmpval);
 
 	gda_data_model_append_values (GDA_DATA_MODEL (recset), list, NULL);
 

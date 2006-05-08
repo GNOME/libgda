@@ -1,10 +1,11 @@
 /* GDA library
- * Copyright (C) 1998 - 2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Álvaro Peña <alvaropg@telefonica.net>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -22,8 +23,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_column_h__)
-#  define __gda_column_h__
+#ifndef __GDA_COLUMN_H__
+#define __GDA_COLUMN_H__
 
 #include <glib-object.h>
 #include <libgda/gda-value.h>
@@ -48,7 +49,7 @@ struct _GdaColumnClass {
 	
 	/* signals */
 	void (* name_changed)     (GdaColumn *column, const gchar *old_name);
-	void (* gda_type_changed) (GdaColumn *column, GdaValueType old_type, GdaValueType new_type);
+	void (* gda_type_changed) (GdaColumn *column, GType old_type, GType new_type);
 };
 
 GType           gda_column_get_type           (void);
@@ -77,8 +78,8 @@ void            gda_column_set_scale          (GdaColumn *column, glong scale);
 const gchar*    gda_column_get_dbms_type      (GdaColumn *column);
 void            gda_column_set_dbms_type      (GdaColumn *column, const gchar *dbms_type);
 
-GdaValueType    gda_column_get_gda_type        (GdaColumn *column);
-void            gda_column_set_gda_type        (GdaColumn *column, GdaValueType type);
+GType           gda_column_get_gda_type        (GdaColumn *column);
+void            gda_column_set_gda_type        (GdaColumn *column, GType type);
 
 gboolean        gda_column_get_allow_null     (GdaColumn *column);
 void            gda_column_set_allow_null     (GdaColumn *column, gboolean allow);
@@ -98,8 +99,8 @@ void            gda_column_set_auto_increment (GdaColumn *column, gboolean is_au
 gint            gda_column_get_position       (GdaColumn *column);
 void            gda_column_set_position       (GdaColumn *column, gint position);
 
-const GdaValue *gda_column_get_default_value  (GdaColumn *column);
-void            gda_column_set_default_value  (GdaColumn *column, const GdaValue *default_value);
+const GValue *gda_column_get_default_value  (GdaColumn *column);
+void            gda_column_set_default_value  (GdaColumn *column, const GValue *default_value);
 
 G_END_DECLS
 

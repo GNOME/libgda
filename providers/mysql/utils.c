@@ -46,129 +46,123 @@ gda_mysql_make_error (MYSQL *handle)
 	return error;
 }
 
-GdaValueType
+GType
 gda_mysql_type_to_gda (enum enum_field_types mysql_type, gboolean is_unsigned)
 {
 	switch (mysql_type) {
 	case FIELD_TYPE_DATE :
-		return GDA_VALUE_TYPE_DATE;
+		return G_TYPE_DATE;
 	case FIELD_TYPE_DECIMAL :
 	case FIELD_TYPE_DOUBLE :
-		return GDA_VALUE_TYPE_DOUBLE;
+		return G_TYPE_DOUBLE;
 	case FIELD_TYPE_FLOAT :
-		return GDA_VALUE_TYPE_SINGLE;
+		return G_TYPE_FLOAT;
 	case FIELD_TYPE_LONG :
 		if (is_unsigned)
-			return GDA_VALUE_TYPE_UINTEGER;
+			return G_TYPE_UINT;
 	case FIELD_TYPE_YEAR :
-		return GDA_VALUE_TYPE_INTEGER;
+		return G_TYPE_INT;
 	case FIELD_TYPE_LONGLONG :
 	case FIELD_TYPE_INT24 :
 		if (is_unsigned)
-			return GDA_VALUE_TYPE_BIGUINT;
-		return GDA_VALUE_TYPE_BIGINT;
+			return G_TYPE_UINT64;
+		return G_TYPE_INT64;
 	case FIELD_TYPE_SHORT :
 		if (is_unsigned)
-			return GDA_VALUE_TYPE_SMALLUINT;
-		return GDA_VALUE_TYPE_SMALLINT;
+			return GDA_TYPE_USHORT;
+		return GDA_TYPE_SHORT;
 	case FIELD_TYPE_TIME :
-		return GDA_VALUE_TYPE_TIME;
+		return GDA_TYPE_TIME;
 	case FIELD_TYPE_TIMESTAMP :
 	case FIELD_TYPE_DATETIME :
-		return GDA_VALUE_TYPE_TIMESTAMP;
+		return GDA_TYPE_TIMESTAMP;
 	case FIELD_TYPE_TINY :
 		if (is_unsigned)
-			return GDA_VALUE_TYPE_TINYUINT;
-		return GDA_VALUE_TYPE_TINYINT;
+			return G_TYPE_UCHAR;
+		return G_TYPE_CHAR;
 	case FIELD_TYPE_TINY_BLOB :
 	case FIELD_TYPE_MEDIUM_BLOB :
 	case FIELD_TYPE_LONG_BLOB :
 	case FIELD_TYPE_BLOB :
-		return GDA_VALUE_TYPE_BINARY;
+		return GDA_TYPE_BINARY;
 	case FIELD_TYPE_VAR_STRING :
 	case FIELD_TYPE_STRING :
 		/* FIXME: Check for BINARY flags and use blob */
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 	case FIELD_TYPE_NULL :
 	case FIELD_TYPE_NEWDATE :
 	case FIELD_TYPE_ENUM :
 	case FIELD_TYPE_SET :
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 #if NDB_VERSION_MAJOR >= 5
 	case MYSQL_TYPE_VARCHAR:
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 	case MYSQL_TYPE_BIT:
 		if (is_unsigned)
-			return GDA_VALUE_TYPE_TINYUINT;
-		return GDA_VALUE_TYPE_TINYINT;
+			return G_TYPE_UCHAR;
+		return G_TYPE_CHAR;
 	case MYSQL_TYPE_NEWDECIMAL:
-		return GDA_VALUE_TYPE_DOUBLE;
+		return G_TYPE_DOUBLE;
 	case MYSQL_TYPE_GEOMETRY:
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 		break;
 #endif
 	}
 
-	return GDA_VALUE_TYPE_UNKNOWN;
+	return G_TYPE_INVALID;
 }
 
 gchar *
-gda_mysql_type_from_gda (const GdaValueType type)
+gda_mysql_type_from_gda (const GType type)
 {
-	switch (type) {
-	case GDA_VALUE_TYPE_NULL :
+	if (type == GDA_TYPE_NULL)
 		return g_strdup_printf ("text");
-	case GDA_VALUE_TYPE_BIGINT :
+	if (type == G_TYPE_INT64)
 		return g_strdup_printf ("bigint");
-	case GDA_VALUE_TYPE_BIGUINT :
+	if (type == G_TYPE_UINT64)
 		return g_strdup_printf ("bigint");
-	case GDA_VALUE_TYPE_BINARY :
+	if (type == GDA_TYPE_BINARY)
 		return g_strdup_printf ("binary");
-	case GDA_VALUE_TYPE_BLOB :
+	if (type == GDA_TYPE_BLOB)
 		return g_strdup_printf ("blob");
-	case GDA_VALUE_TYPE_BOOLEAN :
+	if (type == G_TYPE_BOOLEAN)
 		return g_strdup_printf ("tinyint");
-	case GDA_VALUE_TYPE_DATE :
+	if (type == G_TYPE_DATE)
 		return g_strdup_printf ("date");
-	case GDA_VALUE_TYPE_DOUBLE :
+	if (type == G_TYPE_DOUBLE)
 		return g_strdup_printf ("double");
-	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+	if (type == GDA_TYPE_GEOMETRIC_POINT)
 		return g_strdup_printf ("text");
-	case GDA_VALUE_TYPE_GOBJECT :
+	if (type == G_TYPE_OBJECT)
 		return g_strdup_printf ("text");
-	case GDA_VALUE_TYPE_INTEGER :
+	if (type == G_TYPE_INT)
 		return g_strdup_printf ("integer");
-	case GDA_VALUE_TYPE_LIST :
+	if (type == GDA_TYPE_LIST)
 		return g_strdup_printf ("text");
-	case GDA_VALUE_TYPE_MONEY :
-		return g_strdup_printf ("char");
-	case GDA_VALUE_TYPE_NUMERIC :
+	if (type == GDA_TYPE_NUMERIC)
 		return g_strdup_printf ("numeric");
-	case GDA_VALUE_TYPE_SINGLE :
+	if (type == G_TYPE_FLOAT)
 		return g_strdup_printf ("float");
-	case GDA_VALUE_TYPE_SMALLINT :
+	if (type == GDA_TYPE_SHORT)
 		return g_strdup_printf ("smallint");
-	case GDA_VALUE_TYPE_SMALLUINT :
+	if (type == GDA_TYPE_USHORT)
 		return g_strdup_printf ("smallint");
-	case GDA_VALUE_TYPE_STRING :
+	if (type == G_TYPE_STRING)
 		return g_strdup_printf ("varchar");
-	case GDA_VALUE_TYPE_TIME :
+	if (type == GDA_TYPE_TIME)
 		return g_strdup_printf ("time");
-	case GDA_VALUE_TYPE_TIMESTAMP :
+	if (type == GDA_TYPE_TIMESTAMP)
 		return g_strdup_printf ("timestamp");
-	case GDA_VALUE_TYPE_TINYINT :
+	if (type == G_TYPE_CHAR)
 		return g_strdup_printf ("tinyint");
-	case GDA_VALUE_TYPE_TINYUINT :
+	if (type == G_TYPE_UCHAR)
 		return g_strdup_printf ("tinyint");
-	case GDA_VALUE_TYPE_TYPE :
+	if (type == G_TYPE_ULONG)
 		return g_strdup_printf ("smallint");
-        case GDA_VALUE_TYPE_UINTEGER :
+        if (type == G_TYPE_UINT)
 		return g_strdup_printf ("integer");
-	case GDA_VALUE_TYPE_UNKNOWN :
+	if (type == G_TYPE_INVALID)
 		return g_strdup_printf ("text");
-	default :
-		return g_strdup_printf ("text");
-	}
 
 	return g_strdup_printf ("text");
 }

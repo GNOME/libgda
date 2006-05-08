@@ -35,7 +35,7 @@
 struct _GdaOdbcRecordsetPrivate {
 	SQLHANDLE *stmt;
 	GdaConnection *cnc;
-	GdaValueType *column_types;
+	GType *column_types;
 	gint ncolumns;
 	gint nrows;
 	GHashTable *h_table;
@@ -46,7 +46,7 @@ static void gda_odbc_recordset_init       (GdaOdbcRecordset *recset,
 					       GdaOdbcRecordsetClass *klass);
 static void gda_odbc_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_odbc_recordset_get_value_at    (GdaDataModelRow *model, gint col, gint row);
+static const GValue *gda_odbc_recordset_get_value_at    (GdaDataModelRow *model, gint col, gint row);
 static void gda_odbc_recordset_describe    (GdaDataModel *model, gint col);
 static gint gda_odbc_recordset_get_n_rows 		  (GdaDataModelRow *model);
 static const GdaRow *gda_odbc_recordset_get_row 	  (GdaDataModelRow *model, 
@@ -96,7 +96,7 @@ gda_odbc_recordset_finalize (GObject * object)
 	parent_class->finalize (object);
 }
 
-static GdaValueType *
+static GType *
 get_column_types (GdaOdbcRecordsetPrivate *priv)
 {
 	/* FIXME: Write this */
@@ -124,7 +124,7 @@ gda_odbc_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 	return NULL;
 }
 
-static const GdaValue *
+static const GValue *
 gda_odbc_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	/* FIXME: Write this */

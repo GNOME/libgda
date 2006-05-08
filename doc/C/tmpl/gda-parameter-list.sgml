@@ -111,8 +111,6 @@ gda_query_get_parameters_boxed()).
 
 @params: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dict: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_new_from_spec ##### -->
@@ -142,8 +140,6 @@ gda_query_get_parameters_boxed()).
 
 @paramlist: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_add_param ##### -->
@@ -153,8 +149,6 @@ gda_query_get_parameters_boxed()).
 
 @paramlist: 
 @param: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_add_param_from_string ##### -->
@@ -188,8 +182,6 @@ gda_query_get_parameters_boxed()).
 @paramlist: 
 @error: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_is_valid ##### -->
@@ -199,8 +191,6 @@ gda_query_get_parameters_boxed()).
 
 @paramlist: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_find_param ##### -->
@@ -211,8 +201,6 @@ gda_query_get_parameters_boxed()).
 @paramlist: 
 @param_name: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_find_param_for_user ##### -->
@@ -223,9 +211,6 @@ gda_query_get_parameters_boxed()).
 @paramlist: 
 @user: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dataset: 
-@for_field: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_find_node_for_param ##### -->
@@ -236,8 +221,6 @@ gda_query_get_parameters_boxed()).
 @paramlist: 
 @param: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_find_source_for_param ##### -->
@@ -268,8 +251,6 @@ gda_query_get_parameters_boxed()).
 @paramlist: 
 @param: 
 @value: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_set_param_default_alias ##### -->
@@ -280,8 +261,6 @@ gda_query_get_parameters_boxed()).
 @paramlist: 
 @param: 
 @alias: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_get_param_default_value ##### -->
@@ -292,7 +271,5 @@ gda_query_get_parameters_boxed()).
 @paramlist: 
 @param: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dataset: 
 
 

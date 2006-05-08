@@ -76,107 +76,107 @@ gda_server_provider_get_schema_nb_columns (GdaConnectionSchema schema)
 
 typedef struct {
         gchar        *col_name;
-        GdaValueType  data_type;
+        GType  data_type;
 } GdaSchemaColData;
 
 GdaSchemaColData aggs_spec [] = {
-	{ N_("Aggregate"), GDA_VALUE_TYPE_STRING},
-	{ N_("Id"), GDA_VALUE_TYPE_STRING},
-	{ N_("Owner"), GDA_VALUE_TYPE_STRING},
-	{ N_("Comments"), GDA_VALUE_TYPE_STRING},
-	{ N_("OutType"), GDA_VALUE_TYPE_STRING},
-	{ N_("InType"), GDA_VALUE_TYPE_STRING},
-	{ N_("Definition"), GDA_VALUE_TYPE_STRING}
+	{ N_("Aggregate"), G_TYPE_STRING},
+	{ N_("Id"), G_TYPE_STRING},
+	{ N_("Owner"), G_TYPE_STRING},
+	{ N_("Comments"), G_TYPE_STRING},
+	{ N_("OutType"), G_TYPE_STRING},
+	{ N_("InType"), G_TYPE_STRING},
+	{ N_("Definition"), G_TYPE_STRING}
 };
 
 GdaSchemaColData dbs_spec [] = {
-	{ N_("Database"), GDA_VALUE_TYPE_STRING}
+	{ N_("Database"), G_TYPE_STRING}
 };
 
 GdaSchemaColData fields_spec [] = {
-	{ N_("Field name"), GDA_VALUE_TYPE_STRING},
-	{ N_("Data type"), GDA_VALUE_TYPE_STRING},
-	{ N_("Size"), GDA_VALUE_TYPE_INTEGER},
-	{ N_("Scale"), GDA_VALUE_TYPE_INTEGER},
-	{ N_("Not null?"), GDA_VALUE_TYPE_BOOLEAN},
-	{ N_("Primary key?"), GDA_VALUE_TYPE_BOOLEAN},
-	{ N_("Unique index?"), GDA_VALUE_TYPE_BOOLEAN},
-	{ N_("References"), GDA_VALUE_TYPE_STRING},
-	{ N_("Default value"), GDA_VALUE_TYPE_STRING},
-	{ N_("Extra attributes"), GDA_VALUE_TYPE_STRING}
+	{ N_("Field name"), G_TYPE_STRING},
+	{ N_("Data type"), G_TYPE_STRING},
+	{ N_("Size"), G_TYPE_INT},
+	{ N_("Scale"), G_TYPE_INT},
+	{ N_("Not null?"), G_TYPE_BOOLEAN},
+	{ N_("Primary key?"), G_TYPE_BOOLEAN},
+	{ N_("Unique index?"), G_TYPE_BOOLEAN},
+	{ N_("References"), G_TYPE_STRING},
+	{ N_("Default value"), G_TYPE_STRING},
+	{ N_("Extra attributes"), G_TYPE_STRING}
 };
 
 GdaSchemaColData indexes_spec [] = {
-	{ N_("Index"), GDA_VALUE_TYPE_STRING}
+	{ N_("Index"), G_TYPE_STRING}
 };
 
 GdaSchemaColData lang_spec [] = {
-	{ N_("Language"), GDA_VALUE_TYPE_STRING}
+	{ N_("Language"), G_TYPE_STRING}
 };
 
 GdaSchemaColData ns_spec [] = {
-	{ N_("Namespace"), GDA_VALUE_TYPE_STRING}
+	{ N_("Namespace"), G_TYPE_STRING}
 };
 
 GdaSchemaColData parent_spec [] = {
-	{ N_("Table"), GDA_VALUE_TYPE_STRING},
-	{ N_("Sequence"), GDA_VALUE_TYPE_INTEGER}
+	{ N_("Table"), G_TYPE_STRING},
+	{ N_("Sequence"), G_TYPE_INT}
 };
 
 GdaSchemaColData procs_spec [] = {
-	{ N_("Procedure"), GDA_VALUE_TYPE_STRING},
-	{ N_("Id"), GDA_VALUE_TYPE_STRING},
-	{ N_("Owner"), GDA_VALUE_TYPE_STRING},
-	{ N_("Comments"), GDA_VALUE_TYPE_STRING},
-	{ N_("Return type"), GDA_VALUE_TYPE_STRING},
-	{ N_("Nb args"), GDA_VALUE_TYPE_INTEGER},
-	{ N_("Args types"), GDA_VALUE_TYPE_STRING},
-	{ N_("Definition"), GDA_VALUE_TYPE_STRING}
+	{ N_("Procedure"), G_TYPE_STRING},
+	{ N_("Id"), G_TYPE_STRING},
+	{ N_("Owner"), G_TYPE_STRING},
+	{ N_("Comments"), G_TYPE_STRING},
+	{ N_("Return type"), G_TYPE_STRING},
+	{ N_("Nb args"), G_TYPE_INT},
+	{ N_("Args types"), G_TYPE_STRING},
+	{ N_("Definition"), G_TYPE_STRING}
 };
 
 GdaSchemaColData seq_spec [] = {
-	{ N_("Sequence"), GDA_VALUE_TYPE_STRING},
-	{ N_("Owner"), GDA_VALUE_TYPE_STRING},
-	{ N_("Comments"), GDA_VALUE_TYPE_STRING},
-	{ N_("Definition"), GDA_VALUE_TYPE_STRING}
+	{ N_("Sequence"), G_TYPE_STRING},
+	{ N_("Owner"), G_TYPE_STRING},
+	{ N_("Comments"), G_TYPE_STRING},
+	{ N_("Definition"), G_TYPE_STRING}
 };
 
 GdaSchemaColData table_spec [] = {
-	{ N_("Table"), GDA_VALUE_TYPE_STRING},
-	{ N_("Owner"), GDA_VALUE_TYPE_STRING},
-	{ N_("Description"), GDA_VALUE_TYPE_STRING},
-	{ N_("Definition"), GDA_VALUE_TYPE_STRING}
+	{ N_("Table"), G_TYPE_STRING},
+	{ N_("Owner"), G_TYPE_STRING},
+	{ N_("Description"), G_TYPE_STRING},
+	{ N_("Definition"), G_TYPE_STRING}
 };
 
 GdaSchemaColData trigger_spec [] = {
-	{ N_("Trigger"), GDA_VALUE_TYPE_STRING}
+	{ N_("Trigger"), G_TYPE_STRING}
 };
 
 GdaSchemaColData types_spec [] = {
-	{ N_("Type"), GDA_VALUE_TYPE_STRING},
-	{ N_("Owner"), GDA_VALUE_TYPE_STRING},
-	{ N_("Comments"), GDA_VALUE_TYPE_STRING},
-	{ N_("GDA type"), GDA_VALUE_TYPE_TYPE},
-	{ N_("Synonyms"), GDA_VALUE_TYPE_STRING}
+	{ N_("Type"), G_TYPE_STRING},
+	{ N_("Owner"), G_TYPE_STRING},
+	{ N_("Comments"), G_TYPE_STRING},
+	{ N_("GDA type"), G_TYPE_ULONG},
+	{ N_("Synonyms"), G_TYPE_STRING}
 };
 
 GdaSchemaColData user_spec [] = {
-	{ N_("User"), GDA_VALUE_TYPE_STRING}
+	{ N_("User"), G_TYPE_STRING}
 };
 
 GdaSchemaColData view_spec [] = {
-	{ N_("View"), GDA_VALUE_TYPE_STRING},
-	{ N_("Owner"), GDA_VALUE_TYPE_STRING},
-	{ N_("Description"), GDA_VALUE_TYPE_STRING},
-	{ N_("Definition"), GDA_VALUE_TYPE_STRING}
+	{ N_("View"), G_TYPE_STRING},
+	{ N_("Owner"), G_TYPE_STRING},
+	{ N_("Description"), G_TYPE_STRING},
+	{ N_("Definition"), G_TYPE_STRING}
 };
 
 GdaSchemaColData constraint_spec [] = {
-	{ N_("Name"), GDA_VALUE_TYPE_STRING},
-	{ N_("Type"), GDA_VALUE_TYPE_STRING},
-	{ N_("Fields"), GDA_VALUE_TYPE_STRING},
-	{ N_("Definition"), GDA_VALUE_TYPE_STRING},
-	{ N_("Options"), GDA_VALUE_TYPE_STRING}
+	{ N_("Name"), G_TYPE_STRING},
+	{ N_("Type"), G_TYPE_STRING},
+	{ N_("Fields"), G_TYPE_STRING},
+	{ N_("Definition"), G_TYPE_STRING},
+	{ N_("Options"), G_TYPE_STRING}
 };
 
 static GdaSchemaColData *
@@ -344,7 +344,7 @@ gboolean
 gda_server_provider_handler_info_equal_func (GdaServerProviderHandlerInfo *a, GdaServerProviderHandlerInfo *b)
 {
 	if ((a->gda_type == b->gda_type) &&
-	    (a->cnc = b->cnc) &&
+	    (a->cnc == b->cnc) &&
 	    ((!a->dbms_type && !b->dbms_type) || !strcmp (a->dbms_type, b->dbms_type)))
 		return TRUE;
 	else
@@ -360,7 +360,7 @@ gda_server_provider_handler_info_free (GdaServerProviderHandlerInfo *info)
 
 GdaDataHandler *
 gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc, 
-				  GdaValueType gda_type, const gchar *dbms_type)
+				  GType gda_type, const gchar *dbms_type)
 {
 	GdaDataHandler *dh;
 	GdaServerProviderHandlerInfo info;
@@ -376,7 +376,7 @@ gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc,
 void
 gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh,
 				     GdaConnection *cnc, 
-				     GdaValueType gda_type, const gchar *dbms_type)
+				     GType gda_type, const gchar *dbms_type)
 {
 	GdaServerProviderHandlerInfo *info;
 	g_return_if_fail (GDA_IS_DATA_HANDLER (dh));

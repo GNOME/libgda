@@ -54,7 +54,7 @@ struct _GdaIBMDB2RecordsetPrivate
 {
         GdaConnection *cnc;
 	GdaIBMDB2ConnectionData *conn_data;
-	/* GdaValueType *column_types; */
+	/* GType *column_types; */
 		
 	SQLHANDLE hstmt;
 		
@@ -76,7 +76,7 @@ struct _GdaIBMDB2Field {
         SQLSMALLINT  column_scale;
 	SQLSMALLINT  column_nullable;
         SQLPOINTER   column_data;
-	GdaValueType gda_type;
+	GType gda_type;
 };
 																		
 

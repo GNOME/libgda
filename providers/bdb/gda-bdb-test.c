@@ -88,7 +88,7 @@ gda_stuff (gpointer filename)
 	g_assert (gda_data_model_get_n_rows (schema) == MAXNUMBERS);
 
 	for (i = 0; i < MAXNUMBERS; i++) {
-		GdaValue *val;
+		GValue *val;
 		GdaRow *row;
 		gchar *tmp;
 		gboolean ok;
@@ -98,7 +98,7 @@ gda_stuff (gpointer filename)
 		g_assert (row != NULL);
 		
 		/* check first val (english) */
-		val = (GdaValue *) gda_row_get_value (row, 0);
+		val = (GValue *) gda_row_get_value (row, 0);
 		g_assert (val != NULL);
 		tmp = gda_value_stringify (val);
 		for (j = 0, ok = FALSE; j < MAXNUMBERS; j++) {
@@ -106,7 +106,7 @@ gda_stuff (gpointer filename)
 				g_free (tmp);
 					
 				/* check second val (french) */
-				val = (GdaValue *) gda_row_get_value (row, 1);
+				val = (GValue *) gda_row_get_value (row, 1);
 				g_assert (val != NULL);
 				tmp = gda_value_stringify (val);
 				g_assert (strcmp (numbers[j].french, tmp) == 0);

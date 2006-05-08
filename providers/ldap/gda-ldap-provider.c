@@ -1,5 +1,5 @@
 /* GDA LDAP provider
- * Copyright (C) 1998-2003 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -306,12 +306,12 @@ gda_ldap_provider_supports (GdaServerProvider *provider,
 static void
 add_string_row (GdaDataModelArray *recset, const gchar *str)
 {
-	GdaValue *value;
+	GValue *value;
 	GList list;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
 
-	value = gda_value_new_string (str);
+	g_value_set_string (value = gda_value_new (G_TYPE_STRING), str);
 	list.data = value;
 	list.next = NULL;
 	list.prev = NULL;
@@ -409,13 +409,20 @@ get_ldap_tables (GdaConnection *cnc, GdaParameterList *params)
 				if (oc) {
 					for (j = 0; oc->oc_names[j] != NULL; j++) {
 						GList *value_list = NULL;
+						GValue *tmpval;
 
 						/* fill the recordset */
-						value_list = g_list_append (value_list,
-									    gda_value_new_string (oc->oc_names[j]));
-						value_list = g_list_append (value_list, gda_value_new_string (""));
-						value_list = g_list_append (value_list, gda_value_new_string (""));
-						value_list = g_list_append (value_list, gda_value_new_string (""));
+						g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), oc->oc_names[j]);
+						value_list = g_list_append (value_list, tmpval);
+
+						g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+						value_list = g_list_append (value_list, tmpval);
+
+						g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+						value_list = g_list_append (value_list, tmpval);
+
+						g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+						value_list = g_list_append (value_list, tmpval);
 
 						gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 						/*printf ("%s\n", oc->oc_names[j]);*/

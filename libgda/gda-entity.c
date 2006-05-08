@@ -153,7 +153,7 @@ gda_entity_get_fields (GdaEntity *iface)
  *
  * Get the number of fields in @iface
  *
- * Returns: the number of fields, or -1 if an error occured
+ * Returns: the number of fields, or -1 if an error occurred
  */
 gint
 gda_entity_get_n_fields (GdaEntity *iface)

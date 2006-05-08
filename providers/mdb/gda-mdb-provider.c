@@ -1,5 +1,5 @@
 /* GDA MDB provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -26,6 +26,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-server-provider-extra.h>
 #include "gda-mdb.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
@@ -469,7 +470,7 @@ static GdaDataModel *
 get_mdb_databases (GdaMdbConnection *mdb_cnc)
 {
 	GdaDataModel *model;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
@@ -477,7 +478,7 @@ get_mdb_databases (GdaMdbConnection *mdb_cnc)
 	model = gda_data_model_array_new (1);
 	gda_data_model_set_column_title (model, 0, _("Name"));
 
-	value = gda_value_new_string (mdb_cnc->mdb->f->filename);
+	g_value_set_string (value = gda_value_new (G_TYPE_STRING), mdb_cnc->mdb->f->filename);
 	gda_data_model_set_value_at (model, 0, 0, value, NULL);
 	gda_value_free (value);
 
@@ -501,21 +502,13 @@ get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
 	par = gda_parameter_list_find (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
-	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	table_name = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	g_return_val_if_fail (table_name != NULL, NULL);
 
 	/* create the data model */
-	model = gda_data_model_array_new (9);
-	gda_data_model_set_column_title (model, 0, _("Field name"));
-	gda_data_model_set_column_title (model, 1, _("Data type"));
-	gda_data_model_set_column_title (model, 2, _("Size"));
-	gda_data_model_set_column_title (model, 3, _("Scale"));
-	gda_data_model_set_column_title (model, 4, _("Not null?"));
-	gda_data_model_set_column_title (model, 5, _("Primary key?"));
-	gda_data_model_set_column_title (model, 6, _("Unique index?"));
-	gda_data_model_set_column_title (model, 7, _("References"));
-	gda_data_model_set_column_title (model, 8, _("Default value"));
-
+	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_FIELDS));
+	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_FIELDS);
+	
 	/* fill in the data model with the information for the table */
 	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
 		entry = g_ptr_array_index (mdb_cnc->mdb->catalog, i);
@@ -526,20 +519,34 @@ get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
 
 			for (j = 0; j < mdb_table->num_cols; j++) {
 				GList *value_list = NULL;
-
+				GValue *tmpval;
+				
 				mdb_col = g_ptr_array_index (mdb_table->columns, j);
 
-				value_list = g_list_append (value_list, gda_value_new_string (mdb_col->name));
-				value_list = g_list_append (
-					value_list,
-					gda_value_new_string (mdb_get_objtype_string (mdb_col->col_type)));
-				value_list = g_list_append (value_list, gda_value_new_integer (mdb_col->col_size));
-				value_list = g_list_append (value_list, gda_value_new_integer (mdb_col->col_scale));
-				value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
-				value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
-				value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
-				value_list = g_list_append (value_list, gda_value_new_string (NULL));
-				value_list = g_list_append (value_list, gda_value_new_string (NULL));
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mdb_col->name);
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), 
+						    mdb_get_objtype_string (mdb_col->col_type));
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), mdb_col->col_size);
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), mdb_col->col_scale);
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+				value_list = g_list_append (value_list, tmpval);
+
+				value_list = g_list_append (value_list, gda_value_new_null ());
+				value_list = g_list_append (value_list, gda_value_new_null ());
 
 				gda_data_model_append_values (model, value_list, NULL);
 
@@ -561,18 +568,12 @@ get_mdb_procedures (GdaMdbConnection *mdb_cnc)
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	model = (GdaDataModelArray *) gda_data_model_array_new (8);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Procedure"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("ID"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 4, _("Return type"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 5, _("# of args"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 6, _("Args types"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 7, _("Definition"));
+	/* create the data model */
+	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_PROCEDURES));
+	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_PROCEDURES);
 
 	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
-		GdaValue *value;
+		GValue *value;
 		MdbCatalogEntry *entry;
 
 		entry = g_ptr_array_index (mdb_cnc->mdb->catalog, i);
@@ -580,15 +581,18 @@ get_mdb_procedures (GdaMdbConnection *mdb_cnc)
  		/* if it's a table */
 		if (entry->object_type == MDB_MODULE) {
 			GList *value_list = NULL;
+			GValue *tmpval;
+			
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), entry->object_name);
+			value_list = g_list_append (value_list, tmpval);
 
-			value_list = g_list_append (value_list, gda_value_new_string (entry->object_name));
-			value_list = g_list_append (value_list, gda_value_new_string (NULL));
-			value_list = g_list_append (value_list, gda_value_new_string (NULL));
-			value_list = g_list_append (value_list, gda_value_new_string (NULL));
-			value_list = g_list_append (value_list, gda_value_new_string (NULL));
-			value_list = g_list_append (value_list, gda_value_new_integer (0));
-			value_list = g_list_append (value_list, gda_value_new_string (NULL));
-			value_list = g_list_append (value_list, gda_value_new_string (NULL));
+			value_list = g_list_append (value_list, gda_value_new_null ());
+			value_list = g_list_append (value_list, gda_value_new_null ());
+			value_list = g_list_append (value_list, gda_value_new_null ());
+			value_list = g_list_append (value_list, gda_value_new_null ());
+			value_list = g_list_append (value_list, gda_value_new_null ());
+			value_list = g_list_append (value_list, gda_value_new_null ());
+			value_list = g_list_append (value_list, gda_value_new_null ());
 
 			gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
 
@@ -609,14 +613,11 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	model = (GdaDataModelArray *) gda_data_model_array_new (4);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Name"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, "SQL");
+	model = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TABLES));
+	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_TABLES);
 
 	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
-		GdaValue *value;
+		GValue *value;
 		MdbCatalogEntry *entry;
 
 		entry = g_ptr_array_index (mdb_cnc->mdb->catalog, i);
@@ -626,12 +627,14 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 			/* skip the MSys tables */
 			if (strncmp (entry->object_name, "MSys", 4)) {
 				GList *value_list = NULL;
+				GValue *tmpval;
 
-				value_list = g_list_append (value_list,
-							    gda_value_new_string (entry->object_name));
-				value_list = g_list_append (value_list, gda_value_new_string (""));
-				value_list = g_list_append (value_list, gda_value_new_string (""));
-				value_list = g_list_append (value_list, gda_value_new_string (""));
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), entry->object_name);
+				value_list = g_list_append (value_list, tmpval);
+
+				value_list = g_list_append (value_list, gda_value_new_null ());
+				value_list = g_list_append (value_list, gda_value_new_null ());
+				value_list = g_list_append (value_list, gda_value_new_null ());
 
 				gda_data_model_append_values (model, value_list, NULL);
 
@@ -646,14 +649,22 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 
 static void
 add_type (GdaDataModel *model, const gchar *typname, const gchar *owner,
-	  const gchar *comments, GdaValueType type)
+	  const gchar *comments, GType type)
 {
 	GList *value_list = NULL;
+	GValue *tmpval;
 
-	value_list = g_list_append (value_list, gda_value_new_string (typname));
-	value_list = g_list_append (value_list, gda_value_new_string (owner));
-	value_list = g_list_append (value_list, gda_value_new_string (comments));
-	value_list = g_list_append (value_list, gda_value_new_gdatype (type));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), typname);
+	value_list = g_list_append (value_list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), owner);
+	value_list = g_list_append (value_list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), comments);
+	value_list = g_list_append (value_list, tmpval);
+
+	g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), type);
+	value_list = g_list_append (value_list, tmpval);
 
 	gda_data_model_append_values (model, value_list, NULL);
 
@@ -669,24 +680,21 @@ get_mdb_types (GdaMdbConnection *mdb_cnc)
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	model = gda_data_model_array_new (4);
-	gda_data_model_set_column_title (model, 0, _("Name"));
-	gda_data_model_set_column_title (model, 1, _("Owner"));
-	gda_data_model_set_column_title (model, 2, _("Comments"));
-	gda_data_model_set_column_title (model, 3, _("GDA Type"));
+	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
+	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_TYPES);
 
-	add_type (model, "boolean", NULL, _("Boolean type"), GDA_VALUE_TYPE_BOOLEAN);
-	add_type (model, "byte", NULL, _("1-byte integers"), GDA_VALUE_TYPE_TINYINT);
-	add_type (model, "double", NULL, _("Double precision values"), GDA_VALUE_TYPE_DOUBLE);
-	add_type (model, "float", NULL, _("Single precision values"), GDA_VALUE_TYPE_SINGLE);
-	add_type (model, "int", NULL, _("32-bit integers"), GDA_VALUE_TYPE_INTEGER);
-	add_type (model, "longint", NULL, _("64-bit integers"), GDA_VALUE_TYPE_BIGINT);
-	add_type (model, "memo", NULL, _("Variable length character strings"), GDA_VALUE_TYPE_BINARY);
-	add_type (model, "money", NULL, _("Money amounts"), GDA_VALUE_TYPE_DOUBLE);
-	add_type (model, "ole", NULL, _("OLE object"), GDA_VALUE_TYPE_BINARY);
-	add_type (model, "repid", NULL, _("Replication ID"), GDA_VALUE_TYPE_BINARY);
-	add_type (model, "sdatetime", NULL, _("Date/time value"), GDA_VALUE_TYPE_TIMESTAMP);
-	add_type (model, "text", NULL, _("Character strings"), GDA_VALUE_TYPE_STRING);
+	add_type (model, "boolean", NULL, _("Boolean type"), G_TYPE_BOOLEAN);
+	add_type (model, "byte", NULL, _("1-byte integers"), G_TYPE_CHAR);
+	add_type (model, "double", NULL, _("Double precision values"), G_TYPE_DOUBLE);
+	add_type (model, "float", NULL, _("Single precision values"), G_TYPE_FLOAT);
+	add_type (model, "int", NULL, _("32-bit integers"), G_TYPE_INT);
+	add_type (model, "longint", NULL, _("64-bit integers"), G_TYPE_INT64);
+	add_type (model, "memo", NULL, _("Variable length character strings"), GDA_TYPE_BINARY);
+	add_type (model, "money", NULL, _("Money amounts"), G_TYPE_DOUBLE);
+	add_type (model, "ole", NULL, _("OLE object"), GDA_TYPE_BINARY);
+	add_type (model, "repid", NULL, _("Replication ID"), GDA_TYPE_BINARY);
+	add_type (model, "sdatetime", NULL, _("Date/time value"), GDA_TYPE_TIMESTAMP);
+	add_type (model, "text", NULL, _("Character strings"), G_TYPE_STRING);
 
 	return model;
 }
@@ -789,10 +797,13 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	r = 0;
 	while (mdb_fetch_row (mdb_SQL->cur_table)) {
 		GList *value_list = NULL;
+		GValue *tmpval;
 
 		r++;
-		for (c = 0; c < mdb_SQL->num_columns; c++)
-			value_list = g_list_append (value_list, gda_value_new_string (bound_data[c]));
+		for (c = 0; c < mdb_SQL->num_columns; c++) {
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), bound_data[c]);
+			value_list = g_list_append (value_list, tmpval);
+		}
 
 		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
 

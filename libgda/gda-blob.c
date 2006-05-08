@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * Authors:
  *	 Juan-Mariano de Goyeneche <jmseyas@dit.upm.es>
@@ -27,6 +27,7 @@
  */
 
 #include "gda-blob.h"
+#include "gda-value.h"
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(blob) (GDA_BLOB_CLASS (G_OBJECT_GET_CLASS (blob)))
@@ -35,6 +36,19 @@ static void gda_blob_init       (GdaBlob *provider, GdaBlobClass *klass);
 static void gda_blob_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
+
+static void 
+blob_to_string (const GValue *src, GValue *dest) 
+{
+	GdaBlob *gdablob;
+	
+	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
+			  GDA_VALUE_HOLDS_BLOB (src));
+	
+	gdablob = (GdaBlob *) gda_value_get_blob ((GValue *) src);
+	
+	g_value_set_string (dest, gda_blob_get_sql_id (gdablob));
+}
 
 GType
 gda_blob_get_type (void)
@@ -53,7 +67,13 @@ gda_blob_get_type (void)
                         0,
                         (GInstanceInitFunc) gda_blob_init
                 };
+
                 type = g_type_register_static (PARENT_TYPE, "GdaBlob", &info, G_TYPE_FLAG_ABSTRACT);
+
+		g_value_register_transform_func (G_TYPE_STRING,
+						 type,
+						 blob_to_string);
+
         }
         return type;
 }
@@ -95,7 +115,7 @@ gda_blob_finalize (GObject *object)
  * @mode: see #GdaBlobMode.
  *
  * Opens an existing BLOB. The BLOB must be initialized by
- * #gda_connection_create_blob or obtained from a #GdaValue.
+ * #gda_connection_create_blob or obtained from a #GValue.
  * 
  * Returns: 0 if everything's ok. In case of error, -1 is returned and the
  * provider should have added an error (a #GdaConnectionEvent) to the connection.

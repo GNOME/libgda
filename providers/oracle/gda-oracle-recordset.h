@@ -63,7 +63,7 @@ struct _GdaOracleValue {
 	ub2 sql_type;
 	ub2 defined_size;
 	gpointer value;
-	GdaValueType gda_type;
+	GType gda_type;
 };
 
 

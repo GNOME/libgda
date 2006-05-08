@@ -40,15 +40,15 @@ struct _GdaDataHandlerIface
 	GTypeInterface           g_iface;
 
 	/* virtual table */
-	gchar           *(* get_sql_from_value)   (GdaDataHandler *dh, const GdaValue *value);
-	gchar           *(* get_str_from_value)   (GdaDataHandler *dh, const GdaValue *value);
-	GdaValue        *(* get_value_from_sql)   (GdaDataHandler *dh, const gchar *sql, GdaValueType type);
-	GdaValue        *(* get_value_from_str)   (GdaDataHandler *dh, const gchar *str, GdaValueType type);
-	GdaValue        *(* get_sane_init_value)  (GdaDataHandler *dh, GdaValueType type);
+	gchar           *(* get_sql_from_value)   (GdaDataHandler *dh, const GValue *value);
+	gchar           *(* get_str_from_value)   (GdaDataHandler *dh, const GValue *value);
+	GValue        *(* get_value_from_sql)   (GdaDataHandler *dh, const gchar *sql, GType type);
+	GValue        *(* get_value_from_str)   (GdaDataHandler *dh, const gchar *str, GType type);
+	GValue        *(* get_sane_init_value)  (GdaDataHandler *dh, GType type);
 
 	guint            (* get_nb_gda_types)     (GdaDataHandler * dh);
-	GdaValueType     (* get_gda_type_index)   (GdaDataHandler * dh, guint index);
-	gboolean         (* accepts_gda_type)     (GdaDataHandler * dh, GdaValueType type);
+	GType     (* get_gda_type_index)   (GdaDataHandler * dh, guint index);
+	gboolean         (* accepts_gda_type)     (GdaDataHandler * dh, GType type);
 	const gchar     *(* get_descr)            (GdaDataHandler * dh);
 };
 
@@ -58,16 +58,16 @@ struct _GdaDataHandlerIface
 GType        gda_data_handler_get_type               (void);
 
 /* Simple data manipulation */
-gchar           *gda_data_handler_get_sql_from_value     (GdaDataHandler * dh, const GdaValue *value);
-gchar           *gda_data_handler_get_str_from_value     (GdaDataHandler * dh, const GdaValue *value);
-GdaValue        *gda_data_handler_get_value_from_sql     (GdaDataHandler * dh, const gchar *sql, GdaValueType type);
-GdaValue        *gda_data_handler_get_value_from_str     (GdaDataHandler * dh, const gchar *str, GdaValueType type);
-GdaValue        *gda_data_handler_get_sane_init_value    (GdaDataHandler * dh, GdaValueType type);
+gchar           *gda_data_handler_get_sql_from_value     (GdaDataHandler * dh, const GValue *value);
+gchar           *gda_data_handler_get_str_from_value     (GdaDataHandler * dh, const GValue *value);
+GValue        *gda_data_handler_get_value_from_sql     (GdaDataHandler * dh, const gchar *sql, GType type);
+GValue        *gda_data_handler_get_value_from_str     (GdaDataHandler * dh, const gchar *str, GType type);
+GValue        *gda_data_handler_get_sane_init_value    (GdaDataHandler * dh, GType type);
 
 /* information about the data handler itself */
 guint            gda_data_handler_get_nb_gda_types       (GdaDataHandler * dh);
-GdaValueType     gda_data_handler_get_gda_type_index     (GdaDataHandler * dh, guint index);
-gboolean         gda_data_handler_accepts_gda_type       (GdaDataHandler * dh, GdaValueType type);
+GType     gda_data_handler_get_gda_type_index     (GdaDataHandler * dh, guint index);
+gboolean         gda_data_handler_accepts_gda_type       (GdaDataHandler * dh, GType type);
 const gchar     *gda_data_handler_get_descr              (GdaDataHandler * dh);
 
 G_END_DECLS

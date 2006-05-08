@@ -1383,10 +1383,10 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 			params = stm->params_specs;
 			while (params && allok) {
 				GdaDictType *dtype = NULL;
-				GdaValueType gtype = GDA_VALUE_TYPE_UNKNOWN;
+				GType gtype = G_TYPE_INVALID;
 				GList *pspecs = (GList *)(params->data);
 				
-				while (pspecs && !dtype && (gtype == GDA_VALUE_TYPE_UNKNOWN)) {
+				while (pspecs && !dtype && (gtype == G_TYPE_INVALID)) {
 					if (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->type == GDA_DELIMITER_PARAM_TYPE) {
 						dtype = gda_dict_get_data_type_by_name (dict,
 							      GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
@@ -1398,7 +1398,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 					pspecs = g_list_next (pspecs);
 				}
 				
-				if (gtype != GDA_VALUE_TYPE_UNKNOWN) {
+				if (gtype != G_TYPE_INVALID) {
 					GdaQueryField *field;
 
 					/* create the #GdaQueryFieldValue fields */
@@ -2698,7 +2698,7 @@ gda_query_get_parameters_boxed (GdaQuery *query)
  *
  * Executes @query and optionnaly returns a #GdaDataModel as a result.
  *
- * Returns: a #GdaDataModel pointer or %NULL if no error occured, or GDA_QUERY_EXEC_FAILED if an error occured
+ * Returns: a #GdaDataModel pointer or %NULL if no error occurred, or GDA_QUERY_EXEC_FAILED if an error occurred
  */
 GdaDataModel *
 gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_model_only_requested, GError **error)
@@ -2735,7 +2735,7 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 	if (iter_model_only_requested) {
 		options = (GdaParameterList *) g_object_new (GDA_TYPE_PARAMETER_LIST, "dict", dict, NULL);
 		gda_parameter_list_add_param_from_string (options, "ITER_MODEL_ONLY", 
-							  GDA_VALUE_TYPE_BOOLEAN, "TRUE");
+							  G_TYPE_BOOLEAN, "TRUE");
 	}
 	list = gda_connection_execute_command_l (cnc, cmde, options, error);
 	if (list) {

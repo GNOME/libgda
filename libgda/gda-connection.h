@@ -1,5 +1,5 @@
 /* GDA client library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -23,8 +23,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_connection_h__)
-#define __gda_connection_h__
+#ifndef __GDA_CONNECTION_H__
+#define __GDA_CONNECTION_H__
 
 #include "gda-decl.h"
 #include <libgda/gda-object.h>
@@ -42,6 +42,20 @@ G_BEGIN_DECLS
 #define GDA_CONNECTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION, GdaConnectionClass))
 #define GDA_IS_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION))
 #define GDA_IS_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
+
+/* error reporting */
+extern GQuark gda_connection_error_quark (void);
+#define GDA_CONNECTION_ERROR gda_connection_error_quark ()
+
+enum {
+        GDA_CONNECTION_CONN_OPEN_ERROR,
+        GDA_CONNECTION_DO_QUERY_ERROR,
+	GDA_CONNECTION_NONEXIST_DSN_ERROR,
+	GDA_CONNECTION_NO_CNC_SPEC_ERROR,
+	GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR,
+	GDA_CONNECTION_OPEN_ERROR,
+	GDA_CONNECTION_EXECUTE_COMMAND_ERROR
+};
 
 struct _GdaConnection {
 	GObject               object;
@@ -99,12 +113,6 @@ typedef enum {
 	GDA_CONNECTION_SCHEMA_CONSTRAINTS
 } GdaConnectionSchema;
 
-/* errors */
-enum
-{
-        GDA_CONNECTION_CONN_OPEN_ERROR,
-        GDA_CONNECTION_DO_QUERY_ERROR,
-};
 
 GType                gda_connection_get_type            (void);
 GdaConnection       *gda_connection_new                 (GdaClient *client,
@@ -112,19 +120,18 @@ GdaConnection       *gda_connection_new                 (GdaClient *client,
 							 const gchar *dsn,
 							 const gchar *username,
 							 const gchar *password,
-							 GdaConnectionOptions options);
+							 guint options);
 gboolean             gda_connection_open                 (GdaConnection *cnc, GError **error);
 void                 gda_connection_close                (GdaConnection *cnc);
 void                 gda_connection_close_no_warning     (GdaConnection *cnc);
 gboolean             gda_connection_is_opened            (GdaConnection *cnc);
 
 GdaClient           *gda_connection_get_client           (GdaConnection *cnc);
-void                 gda_connection_set_client           (GdaConnection *cnc, GdaClient *client);
 
 const gchar         *gda_connection_get_provider         (GdaConnection *cnc);
 GdaServerProvider   *gda_connection_get_provider_obj     (GdaConnection *cnc);
 GdaServerProviderInfo *gda_connection_get_infos          (GdaConnection *cnc);
-GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
+guint                gda_connection_get_options          (GdaConnection *cnc);
 
 const gchar         *gda_connection_get_server_version   (GdaConnection *cnc);
 const gchar         *gda_connection_get_database         (GdaConnection *cnc);
@@ -166,7 +173,7 @@ gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, Gd
 GdaBlob             *gda_connection_create_blob          (GdaConnection *cnc);
 GdaBlob             *gda_connection_fetch_blob_by_id     (GdaConnection *cnc, const gchar *sql_id);
 
-gchar               *gda_connection_value_to_sql_string  (GdaConnection *cnc, GdaValue *from);
+gchar               *gda_connection_value_to_sql_string  (GdaConnection *cnc, GValue *from);
 
 gboolean             gda_connection_supports             (GdaConnection *cnc, GdaConnectionFeature feature);
 GdaDataModel        *gda_connection_get_schema           (GdaConnection *cnc, GdaConnectionSchema schema,

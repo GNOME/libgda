@@ -44,22 +44,22 @@ G_BEGIN_DECLS
 
 GdaConnectionEvent *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
 void gda_postgres_set_value (GdaConnection *cnc,
-			     GdaValue *value, 
-			     GdaValueType type, 
+			     GValue *value, 
+			     GType type, 
 			     const gchar *thevalue,
 			     gboolean isNull,
 			     gint length);
 
 
-GdaValueType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
+GType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
 					   gint ntypes,
 					   Oid postgres_type);
 
-GdaValueType gda_postgres_type_name_to_gda (GHashTable *h_table,
+GType gda_postgres_type_name_to_gda (GHashTable *h_table,
 					    const gchar *name);
 
-const gchar *gda_data_type_to_string (GdaValueType type);
-gchar *gda_postgres_value_to_sql_string (GdaValue *value);
+const gchar *gda_data_type_to_string (GType type);
+gchar *gda_postgres_value_to_sql_string (GValue *value);
 
 G_END_DECLS
 

@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -41,7 +41,7 @@ struct _GdaColumnPrivate {
 	gint         scale;
 
 	gchar       *dbms_type;
-	GdaValueType gda_type;
+	GType        gda_type;
 
 	gboolean     allow_null;
 	gboolean     primary_key;
@@ -52,7 +52,7 @@ struct _GdaColumnPrivate {
 	glong        auto_increment_start;
 	glong        auto_increment_step;
 	gint         position;
-	GdaValue    *default_value;
+	GValue      *default_value;
 };
 
 enum {
@@ -109,7 +109,7 @@ gda_column_init (GdaColumn *column, GdaColumnClass *klass)
 	column->priv->title = NULL;
 	column->priv->caption = NULL;
 	column->priv->scale = 0;
-	column->priv->gda_type = GDA_VALUE_TYPE_UNKNOWN;
+	column->priv->gda_type = G_TYPE_INVALID;
 	column->priv->allow_null = TRUE;
 	column->priv->primary_key = FALSE;
 	column->priv->unique_key = FALSE;
@@ -515,10 +515,10 @@ gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type)
  *
  * Returns: the type of @column.
  */
-GdaValueType
+GType
 gda_column_get_gda_type (GdaColumn *column)
 {
-	g_return_val_if_fail (GDA_IS_COLUMN (column), GDA_VALUE_TYPE_NULL);
+	g_return_val_if_fail (GDA_IS_COLUMN (column), GDA_TYPE_NULL);
 	return column->priv->gda_type;
 }
 
@@ -530,9 +530,9 @@ gda_column_get_gda_type (GdaColumn *column)
  * Sets the type of @column to @type.
  */
 void
-gda_column_set_gda_type (GdaColumn *column, GdaValueType type)
+gda_column_set_gda_type (GdaColumn *column, GType type)
 {
-	GdaValueType old_type;
+	GType old_type;
 
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
@@ -726,29 +726,29 @@ gda_column_set_position (GdaColumn *column, gint position)
  * gda_column_get_default_value
  * @column: a #GdaColumn.
  *
- * Returns: @column's default value, as a #GdaValue object.
+ * Returns: @column's default value, as a #GValue object.
  */
-const GdaValue *
+const GValue *
 gda_column_get_default_value (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return (const GdaValue *) column->priv->default_value;
+	return (const GValue *) column->priv->default_value;
 }
 
 /**
  * gda_column_set_default_value
  * @column: a #GdaColumn.
- * @default_value: default #GdaValue for the column
+ * @default_value: default #GValue for the column
  *
- * Sets @column's default #GdaValue.
+ * Sets @column's default #GValue.
  */
 void
-gda_column_set_default_value (GdaColumn *column, const GdaValue *default_value)
+gda_column_set_default_value (GdaColumn *column, const GValue *default_value)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
 	g_return_if_fail (default_value != NULL);
 
 	if (column->priv->default_value)
 		g_free (column->priv->default_value);
-	column->priv->default_value = gda_value_copy ( (GdaValue*)default_value);
+	column->priv->default_value = gda_value_copy ( (GValue*)default_value);
 }

@@ -62,7 +62,7 @@ enum
 struct _GdaDictTypePrivate
 {
 	guint              numparams;
-	GdaValueType       gda_type;
+	GType       gda_type;
 	GSList            *synonyms; /* list of gchar* */
 };
 
@@ -421,7 +421,7 @@ gda_dict_type_get_sqlname (GdaDictType *dt)
  * Set the gda type for a data type
  */
 void
-gda_dict_type_set_gda_type (GdaDictType *dt, GdaValueType gda_type)
+gda_dict_type_set_gda_type (GdaDictType *dt, GType gda_type)
 {
 	g_return_if_fail (dt && GDA_IS_DICT_TYPE (dt));
 	g_return_if_fail (dt->priv);
@@ -437,11 +437,11 @@ gda_dict_type_set_gda_type (GdaDictType *dt, GdaValueType gda_type)
  *
  * Returns: the gda type
  */
-GdaValueType
+GType
 gda_dict_type_get_gda_type (GdaDictType *dt)
 {
-	g_return_val_if_fail (dt && GDA_IS_DICT_TYPE (dt), GDA_VALUE_TYPE_UNKNOWN);
-	g_return_val_if_fail (dt->priv, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (dt && GDA_IS_DICT_TYPE (dt), G_TYPE_INVALID);
+	g_return_val_if_fail (dt->priv, G_TYPE_INVALID);
 
 	return dt->priv->gda_type;
 }

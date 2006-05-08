@@ -1064,10 +1064,10 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 	}
 
 	if (!utility_check_data_model (rs, 4, 
-				       GDA_VALUE_TYPE_STRING, 
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING,
-				       GDA_VALUE_TYPE_STRING)) {
+				       G_TYPE_STRING, 
+				       G_TYPE_STRING,
+				       G_TYPE_STRING,
+				       G_TYPE_STRING)) {
 		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_TABLES_ERROR,
 			     _("Schema for list of tables is wrong"));
 		g_object_unref (G_OBJECT (rs));
@@ -1077,12 +1077,12 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 	total = gda_data_model_get_n_rows (rs);
 	now = 0;		
 	while ((now < total) && !mgdb->priv->stop_update) {
-		const GdaValue *value;
+		const GValue *value;
 		gboolean newtable = FALSE;
 		gint i = -1;
 
 		value = gda_data_model_get_value_at (rs, 0, now);
-		str = gda_value_stringify ((GdaValue *) value);
+		str = gda_value_stringify ((GValue *) value);
 		table = gda_dict_database_get_table_by_name (mgdb, str);
 		if (!table) {
 			gboolean found = FALSE;
@@ -1109,9 +1109,9 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 
 		/* description */
 		value = gda_data_model_get_value_at (rs, 2, now);
-		if (value && !gda_value_is_null ((GdaValue *) value) && 
-		    (* gda_value_get_string((GdaValue *) value))) {
-			str = gda_value_stringify ((GdaValue *) value);
+		if (value && !gda_value_is_null ((GValue *) value) && 
+		    (* g_value_get_string((GValue *) value))) {
+			str = gda_value_stringify ((GValue *) value);
 			gda_object_set_description (GDA_OBJECT (table), str);
 			g_free (str);
 		}
@@ -1120,9 +1120,9 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 
 		/* owner */
 		value = gda_data_model_get_value_at (rs, 1, now);
-		if (value && !gda_value_is_null ((GdaValue *) value) && 
-		    (* gda_value_get_string((GdaValue *) value))) {
-			str = gda_value_stringify ((GdaValue *) value);
+		if (value && !gda_value_is_null ((GValue *) value) && 
+		    (* g_value_get_string((GValue *) value))) {
+			str = gda_value_stringify ((GValue *) value);
 			gda_object_set_owner (GDA_OBJECT (table), str);
 			g_free (str);
 		}

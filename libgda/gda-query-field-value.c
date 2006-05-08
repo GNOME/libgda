@@ -60,7 +60,7 @@ static gboolean    gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xm
 /* Field interface */
 static void               gda_query_field_value_field_init      (GdaEntityFieldIface *iface);
 static GdaEntity         *gda_query_field_value_get_entity      (GdaEntityField *iface);
-static GdaValueType       gda_query_field_value_get_gda_type    (GdaEntityField *iface);
+static GType       gda_query_field_value_get_gda_type    (GdaEntityField *iface);
 static GdaDictType       *gda_query_field_value_get_data_type   (GdaEntityField *iface);
 
 /* Renderer interface */
@@ -85,7 +85,7 @@ static void destroyed_restrict_cb (GdaObject *obj, GdaQueryFieldValue *field);
 static GSList   *gda_query_field_value_get_params (GdaQueryField *qfield);
 
 static gboolean gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameterList *context,
-					       const GdaValue **value_found, GdaParameter **param_source);
+					       const GValue **value_found, GdaParameter **param_source);
 
 #ifdef GDA_DEBUG
 static void gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset);
@@ -110,11 +110,11 @@ enum
 struct _GdaQueryFieldValuePrivate
 {
 	GdaQuery              *query;
-	GdaValueType           gda_type;
+	GType                  gda_type;
 	GdaDictType           *dict_type;
 
-	GdaValue              *value;        /* MUST either be NULL, or of type GDA_VALUE_NULL or 'type' */
-	GdaValue              *default_value;/* CAN either be NULL, or of any type */
+	GValue                *value;        /* MUST either be NULL, or of type GDA_VALUE_NULL or 'type' */
+	GValue                *default_value;/* CAN either be NULL, or of any type */
 	gboolean               is_parameter;
 	gboolean               is_null_allowed;
 
@@ -239,8 +239,8 @@ gda_query_field_value_class_init (GdaQueryFieldValueClass * class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
         g_object_class_install_property (object_class, PROP_GDA_TYPE,
-                                         g_param_spec_int ("gda_type", "Gda data type", NULL,
-							   GDA_VALUE_TYPE_NULL, GDA_VALUE_TYPE_UNKNOWN, GDA_VALUE_TYPE_UNKNOWN,
+                                         g_param_spec_ulong ("gda_type", "Gda data type", NULL,
+							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_RESTRICT_MODEL,
                                          g_param_spec_pointer ("restrict_model", NULL, NULL,
@@ -267,7 +267,7 @@ gda_query_field_value_init (GdaQueryFieldValue *gda_query_field_value)
 {
 	gda_query_field_value->priv = g_new0 (GdaQueryFieldValuePrivate, 1);
 	gda_query_field_value->priv->query = NULL;
-	gda_query_field_value->priv->gda_type = GDA_VALUE_TYPE_UNKNOWN;
+	gda_query_field_value->priv->gda_type = G_TYPE_INVALID;
 	gda_query_field_value->priv->dict_type = NULL;
 	gda_query_field_value->priv->value = NULL;
 	gda_query_field_value->priv->default_value = NULL;
@@ -290,7 +290,7 @@ gda_query_field_value_init (GdaQueryFieldValue *gda_query_field_value)
  * Returns: the new object
  */
 GObject*
-gda_query_field_value_new (GdaQuery *query, GdaValueType type)
+gda_query_field_value_new (GdaQuery *query, GType type)
 {
 	GObject *obj;
 
@@ -410,7 +410,7 @@ gda_query_field_value_set_property (GObject *object,
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (field), id);
 			break;
 		case PROP_GDA_TYPE:
-			field->priv->gda_type = g_value_get_int (value);
+			field->priv->gda_type = g_value_get_ulong (value);
 			break;
 		case PROP_RESTRICT_MODEL:
 			ptr = g_value_get_pointer (value);
@@ -448,7 +448,7 @@ gda_query_field_value_get_property (GObject *object,
 			g_value_set_pointer (value, field->priv->query);
 			break;
 		case PROP_GDA_TYPE:
-			g_value_set_int (value, field->priv->gda_type);
+			g_value_set_ulong (value, field->priv->gda_type);
 			break;
 		case PROP_RESTRICT_MODEL:
 			g_value_set_pointer (value, field->priv->restrict_model);
@@ -503,8 +503,8 @@ gda_query_field_value_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
 {
 	gboolean retval;
 	GdaQueryFieldValue *qf1, *qf2;
-	GdaValue *val1, *val2;
-	GdaValueType t1 = GDA_VALUE_TYPE_NULL, t2 = GDA_VALUE_TYPE_NULL;
+	GValue *val1, *val2;
+	GType t1 = GDA_TYPE_NULL, t2 = GDA_TYPE_NULL;
 
 	/* it is here assumed that qfield1 and qfield2 are of the same type and refer to the same
 	   query */
@@ -517,16 +517,16 @@ gda_query_field_value_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
 	val1 = qf1->priv->value;
 	val2 = qf2->priv->value;
 	if (val1)
-		t1 = gda_value_get_type (val1);
+		t1 = G_VALUE_TYPE (val1);
 	if (val2)
-		t2 = gda_value_get_type (val2);
+		t2 = G_VALUE_TYPE (val2);
 
 	retval = qf1->priv->dict_type == qf2->priv->dict_type ? TRUE : FALSE;
 
 	if (retval) 
 		retval = (t1 == t2) ? TRUE : FALSE;
 
-	if (retval && (t1 != GDA_VALUE_TYPE_NULL)) 
+	if (retval && (t1 != GDA_TYPE_NULL)) 
 		retval = gda_value_compare (val1, val2) ? FALSE : TRUE;
 
 	return retval;
@@ -540,13 +540,13 @@ gda_query_field_value_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
  * Sets the value of @field, or removes it (if @val is %NULL)
  */
 void
-gda_query_field_value_set_value (GdaQueryFieldValue *field, const GdaValue *val)
+gda_query_field_value_set_value (GdaQueryFieldValue *field, const GValue *val)
 {
 	g_return_if_fail (GDA_IS_QUERY_FIELD_VALUE (field));
 	g_return_if_fail (field->priv);	
 
 	if (val)
-		g_return_if_fail (gda_value_get_type ((GdaValue *)val) == field->priv->gda_type);
+		g_return_if_fail (G_VALUE_TYPE ((GValue *)val) == field->priv->gda_type);
 
 	if (field->priv->value) {
 		gda_value_free (field->priv->value);
@@ -554,7 +554,7 @@ gda_query_field_value_set_value (GdaQueryFieldValue *field, const GdaValue *val)
 	}
 
 	if (val)
-		field->priv->value = gda_value_copy ((GdaValue *)val);
+		field->priv->value = gda_value_copy ((GValue *)val);
 	gda_object_changed (GDA_OBJECT (field));
 }
 
@@ -568,7 +568,7 @@ gda_query_field_value_set_value (GdaQueryFieldValue *field, const GdaValue *val)
  *
  * Returns: the value or NULL
  */
-const GdaValue *
+const GValue *
 gda_query_field_value_get_value (GdaQueryFieldValue *field)
 {
 	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), NULL);
@@ -587,7 +587,7 @@ gda_query_field_value_get_value (GdaQueryFieldValue *field)
  * Sets the default value of @field, or removes it (if @default_val is %NULL)
  */
 void
-gda_query_field_value_set_default_value (GdaQueryFieldValue *field, const GdaValue *default_val)
+gda_query_field_value_set_default_value (GdaQueryFieldValue *field, const GValue *default_val)
 {
 	g_return_if_fail (GDA_IS_QUERY_FIELD_VALUE (field));
 	g_return_if_fail (field->priv);
@@ -598,7 +598,7 @@ gda_query_field_value_set_default_value (GdaQueryFieldValue *field, const GdaVal
 	}
 
 	if (default_val) 
-		field->priv->default_value = gda_value_copy ((GdaValue *)default_val);
+		field->priv->default_value = gda_value_copy ((GValue *)default_val);
 }
 
 /**
@@ -609,7 +609,7 @@ gda_query_field_value_set_default_value (GdaQueryFieldValue *field, const GdaVal
  *
  * Returns: the value or NULL
  */
-const GdaValue *
+const GValue *
 gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
 {
 	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), NULL);
@@ -626,11 +626,11 @@ gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
  *
  * Returns: the type
  */
-GdaValueType
+GType
 gda_query_field_value_get_value_type (GdaQueryFieldValue *field)
 {
-	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), GDA_VALUE_TYPE_UNKNOWN);
-	g_return_val_if_fail (field->priv, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), G_TYPE_INVALID);
+	g_return_val_if_fail (field->priv, G_TYPE_INVALID);
 
 	return field->priv->gda_type;
 }
@@ -756,7 +756,7 @@ gboolean
 gda_query_field_value_is_value_null (GdaQueryFieldValue *field, GdaParameterList *context)
 {
 	gboolean value_found;
-	const GdaValue *value;
+	const GValue *value;
 
 	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), FALSE);
 	g_return_val_if_fail (field->priv, FALSE);
@@ -765,7 +765,7 @@ gda_query_field_value_is_value_null (GdaQueryFieldValue *field, GdaParameterList
 	if (!value_found) 
 		value = field->priv->value;
 
-	if (!value || gda_value_is_null ((GdaValue *)value))
+	if (!value || gda_value_is_null ((GValue *)value))
 		return TRUE;
 	else
 		return FALSE;
@@ -782,7 +782,7 @@ gda_query_field_value_is_value_null (GdaQueryFieldValue *field, GdaParameterList
  * Restricts the possible values which @field can have among the calues stored in
  * @model at column @col.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_query_field_value_restrict (GdaQueryFieldValue *field, GdaDataModel *model, gint col, GError **error)
@@ -926,7 +926,7 @@ gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset)
 
 		if (field->priv->default_value) {
 			GdaDataHandler *dhd;
-			dhd = gda_dict_get_default_handler (dict, gda_value_get_type (field->priv->default_value));
+			dhd = gda_dict_get_default_handler (dict, G_VALUE_TYPE (field->priv->default_value));
 			val = gda_data_handler_get_sql_from_value (dhd, field->priv->default_value);
 			g_print ("Default: %s ", val);
 			g_free (val);
@@ -956,11 +956,11 @@ gda_query_field_value_get_entity (GdaEntityField *iface)
 	return GDA_ENTITY (GDA_QUERY_FIELD_VALUE (iface)->priv->query);
 }
 
-static GdaValueType
+static GType
 gda_query_field_value_get_gda_type (GdaEntityField *iface)
 {
-	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), GDA_VALUE_TYPE_UNKNOWN);
-	g_return_val_if_fail (GDA_QUERY_FIELD_VALUE (iface)->priv, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), G_TYPE_INVALID);
+	g_return_val_if_fail (GDA_QUERY_FIELD_VALUE (iface)->priv, G_TYPE_INVALID);
 
 	return GDA_QUERY_FIELD_VALUE (iface)->priv->gda_type;
 }
@@ -1016,19 +1016,19 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 	}
 
 	dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
-	if (field->priv->value && (field->priv->gda_type != GDA_VALUE_TYPE_NULL)) {
+	if (field->priv->value && (field->priv->gda_type != GDA_TYPE_NULL)) {
 		str = gda_data_handler_get_str_from_value (dh, field->priv->value);
 		xmlSetProp (node, "value", str);
 		g_free (str);
 	}
 	if (field->priv->default_value) {
-		GdaDataHandler *dhd = gda_dict_get_default_handler (dict, gda_value_get_type (field->priv->default_value));
-		GdaValueType vtype;
+		GdaDataHandler *dhd = gda_dict_get_default_handler (dict, G_VALUE_TYPE (field->priv->default_value));
+		GType vtype;
 		
 		str = gda_data_handler_get_str_from_value (dhd, field->priv->default_value);
 		xmlSetProp (node, "default", str);
 		g_free (str);
-		vtype = gda_value_get_type (field->priv->default_value);
+		vtype = G_VALUE_TYPE (field->priv->default_value);
 		xmlSetProp (node, "default_gda_type", gda_type_to_string (vtype));
 	}
 
@@ -1120,7 +1120,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
 		g_free (prop);
 
-		if (field->priv->gda_type == GDA_VALUE_TYPE_NULL)
+		if (field->priv->gda_type == GDA_TYPE_NULL)
 			field->priv->value = gda_value_new_null ();
 	}
 
@@ -1159,8 +1159,8 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		str2 = xmlGetProp (node, "default_gda_type");
 		if (str2) {
 			GdaDataHandler *dh2;
-			GdaValueType vtype;
-			GdaValue *value;
+			GType vtype;
+			GValue *value;
 			
 			vtype = gda_type_from_string (str2);			
 			dh2 = gda_dict_get_default_handler (dict, vtype);
@@ -1204,7 +1204,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		g_free (prop);
 	}
 
-	if (!dh && (field->priv->gda_type != GDA_VALUE_TYPE_NULL)) {
+	if (!dh && (field->priv->gda_type != GDA_TYPE_NULL)) {
 		err = TRUE;
 		g_set_error (error,
 			     GDA_QUERY_FIELD_VALUE_ERROR,
@@ -1235,9 +1235,9 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 
 static gboolean
 gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameterList *context, 
-			       const GdaValue **value_found, GdaParameter **param_source)
+			       const GValue **value_found, GdaParameter **param_source)
 {
-	const GdaValue *cvalue = NULL;
+	const GValue *cvalue = NULL;
 	gboolean found = FALSE;
 
 	if (param_source)
@@ -1279,7 +1279,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 {
 	gchar *str = NULL;
 	GdaQueryFieldValue *field;
-	const GdaValue *value = NULL;
+	const GValue *value = NULL;
 	gboolean sqlext = options & GDA_RENDERER_EXTRA_VAL_ATTRS;
 	GdaDict *dict;
 
@@ -1300,7 +1300,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			if (param_source && ! gda_parameter_is_valid (param_source)) {
 				gchar *str, *str2;
 				
-				str2 = value ? gda_value_stringify ((GdaValue *)value) : g_strdup ("NULL");
+				str2 = value ? gda_value_stringify ((GValue *)value) : g_strdup ("NULL");
 				str = g_strdup_printf (_("Invalid parameter '%s' (value: %s)"),
 						       gda_object_get_name (GDA_OBJECT (param_source)), str2);
 				g_free (str2);
@@ -1333,7 +1333,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 				}
 			}
 			if (!str) {
-				if (value && (gda_value_get_type ((GdaValue *)value) != GDA_VALUE_TYPE_NULL)) {
+				if (value && (G_VALUE_TYPE ((GValue *)value) != GDA_TYPE_NULL)) {
 					GdaDataHandler *dh;
 					
 					dh = gda_dict_get_handler (dict, field->priv->gda_type);
@@ -1362,7 +1362,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	}
 	else {
 		value = field->priv->value;
-		if (value && (gda_value_get_type ((GdaValue *)value) != GDA_VALUE_TYPE_NULL)) {
+		if (value && (G_VALUE_TYPE ((GValue *)value) != GDA_TYPE_NULL)) {
 			GdaDataHandler *dh;
 			
 			dh = gda_dict_get_handler (dict, field->priv->gda_type);

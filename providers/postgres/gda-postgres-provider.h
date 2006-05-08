@@ -52,7 +52,7 @@ struct _GdaPostgresProviderClass {
 typedef struct {
 	gchar              *name;
 	Oid                 oid;
-	GdaValueType        type;
+	GType        type;
 	gchar              *comments;
 	gchar              *owner;
 } GdaPostgresTypeOid;

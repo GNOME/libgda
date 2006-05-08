@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -88,19 +88,19 @@ gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 	return error;
 }
 
-GdaValueType
+GType
 gda_postgres_type_name_to_gda (GHashTable *h_table, const gchar *name)
 {
-	GdaValueType *type;
+	GType *type;
 
 	type = g_hash_table_lookup (h_table, name);
 	if (type)
 		return *type;
 
-	return GDA_VALUE_TYPE_STRING;
+	return G_TYPE_STRING;
 }
 
-GdaValueType
+GType
 gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid postgres_type)
 {
 	gint i;
@@ -110,7 +110,7 @@ gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid po
 			break;
 
   	if (type_data[i].oid != postgres_type)
-		return GDA_VALUE_TYPE_STRING;
+		return G_TYPE_STRING;
 
 	return type_data[i].type;
 }
@@ -139,7 +139,7 @@ make_time (GdaTime *timegda, const gchar *value)
 	if (*value)
 		timegda->timezone = atoi (value);
 	else
-		timegda->timezone = TIMEZONE_INVALID;
+		timegda->timezone = GDA_TIMEZONE_INVALID;
 }
 
 /* Makes a GdaTimestamp from a string like "2003-12-13 13:12:01.12+01" */
@@ -194,61 +194,49 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 
 void
 gda_postgres_set_value (GdaConnection *cnc,
-			GdaValue *value,
-			GdaValueType type,
+			GValue *value,
+			GType type,
 			const gchar *thevalue,
 			gboolean isNull,
 			gint length)
 {
-	GDate *gdate;
-	GdaDate date;
-	GdaTime timegda;
-	GdaTimestamp timestamp;
-	GdaGeometricPoint point;
-	GdaNumeric numeric;
-	GdaBlob *blob;
-	GdaBinary bin;
-	guchar *unescaped;
-
 	if (isNull){
 		gda_value_set_null (value);
 		return;
 	}
 
-	switch (type) {
-	case GDA_VALUE_TYPE_BOOLEAN :
-		gda_value_set_boolean (value, (*thevalue == 't') ? TRUE : FALSE);
-		break;
-	case GDA_VALUE_TYPE_STRING :
-		gda_value_set_string (value, thevalue);
-		break;
-	case GDA_VALUE_TYPE_BIGINT :
-		gda_value_set_bigint (value, atoll (thevalue));
-		break;
-	case GDA_VALUE_TYPE_INTEGER :
-		gda_value_set_integer (value, atol (thevalue));
-		break;
-	case GDA_VALUE_TYPE_SMALLINT :
-		gda_value_set_smallint (value, atoi (thevalue));
-		break;
-	case GDA_VALUE_TYPE_SINGLE :
+	gda_value_reset_with_type (value, type);
+
+	if (type == G_TYPE_BOOLEAN)
+		g_value_set_boolean (value, (*thevalue == 't') ? TRUE : FALSE);
+	else if (type == G_TYPE_STRING)
+		g_value_set_string (value, thevalue);
+	else if (type == G_TYPE_INT64)
+		g_value_set_int64 (value, atoll (thevalue));
+	else if (type == G_TYPE_INT)
+		g_value_set_int (value, atol (thevalue));
+	else if (type == GDA_TYPE_SHORT)
+		gda_value_set_short (value, atoi (thevalue));
+	else if (type == G_TYPE_FLOAT) {
 		setlocale (LC_NUMERIC, "C");
-		gda_value_set_single (value, atof (thevalue));
+		g_value_set_float (value, atof (thevalue));
 		setlocale (LC_NUMERIC, "");
-		break;
-	case GDA_VALUE_TYPE_DOUBLE :
+	}
+	else if (type == G_TYPE_DOUBLE) {
 		setlocale (LC_NUMERIC, "C");
-		gda_value_set_double (value, atof (thevalue));
+		g_value_set_double (value, atof (thevalue));
 		setlocale (LC_NUMERIC, "");
-		break;
-	case GDA_VALUE_TYPE_NUMERIC :
+	}
+	else if (type == GDA_TYPE_NUMERIC) {
+		GdaNumeric numeric;
 		numeric.number = g_strdup (thevalue);
 		numeric.precision = 0; /* FIXME */
 		numeric.width = 0; /* FIXME */
 		gda_value_set_numeric (value, &numeric);
 		g_free (numeric.number);
-		break;
-	case GDA_VALUE_TYPE_DATE :
+	}
+	else if (type == G_TYPE_DATE) {
+		GDate *gdate;
 		gdate = g_date_new ();
 		g_date_set_parse (gdate, thevalue);
 		if (!g_date_valid (gdate)) {
@@ -257,28 +245,29 @@ gda_postgres_set_value (GdaConnection *cnc,
 			g_date_clear (gdate, 1);
 			g_date_set_dmy (gdate, 1, 1, 1);
 		}
-		date.day = g_date_get_day (gdate);
-		date.month = g_date_get_month (gdate);
-		date.year = g_date_get_year (gdate);
-		gda_value_set_date (value, &date);
-		g_date_free (gdate);
-		break;
-	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+		g_value_take_boxed (value, gdate);
+	}
+	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
+		GdaGeometricPoint point;
 		make_point (&point, thevalue);
 		gda_value_set_geometric_point (value, &point);
-		break;
-	case GDA_VALUE_TYPE_TIMESTAMP :
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		GdaTimestamp timestamp;
 		make_timestamp (&timestamp, thevalue);
 		gda_value_set_timestamp (value, &timestamp);
-		break;
-	case GDA_VALUE_TYPE_TIME :
+	}
+	else if (type == GDA_TYPE_TIME) {
+		GdaTime timegda;
 		make_time (&timegda, thevalue);
 		gda_value_set_time (value, &timegda);
-		break;
-	case GDA_VALUE_TYPE_BINARY :
+	}
+	else if (type == GDA_TYPE_BINARY) {
 		/*
 		 * Requires PQunescapeBytea in libpq (present since 7.3.x)
 		 */
+		GdaBinary bin;
+		guchar *unescaped;
 		unescaped = PQunescapeBytea (thevalue, &(bin.binary_length));
 		if (unescaped != NULL) {
 			bin.data = unescaped;
@@ -287,24 +276,27 @@ gda_postgres_set_value (GdaConnection *cnc,
 		} 
 		else {
 			g_warning ("Error unescaping string: %s\n", thevalue);
-			gda_value_set_string (value, thevalue);
+			g_value_set_string (value, thevalue);
 		}
-		break;
-	case GDA_VALUE_TYPE_BLOB :
+	}
+	else if (type == GDA_TYPE_BLOB) {
+		GdaBlob *blob;
 		blob = gda_postgres_blob_new (cnc);
 		gda_postgres_blob_set_id (GDA_POSTGRES_BLOB (blob), atoi (thevalue));
 		gda_value_set_blob (value, blob);
- 		break;
-	default :
-		gda_value_set_string (value, thevalue);
+	}
+	else {
+		gda_value_reset_with_type (value, G_TYPE_STRING);
+		g_value_set_string (value, thevalue);
 	}
 }
 
 gchar *
-gda_postgres_value_to_sql_string (GdaValue *value)
+gda_postgres_value_to_sql_string (GValue *value)
 {
 	gchar *val_str;
 	gchar *ret;
+	GType type;
 
 	g_return_val_if_fail (value != NULL, NULL);
 
@@ -312,19 +304,18 @@ gda_postgres_value_to_sql_string (GdaValue *value)
 	if (!val_str)
 		return NULL;
 
-	switch (GDA_VALUE_TYPE(value)) {
-	case GDA_VALUE_TYPE_BIGINT :
-	case GDA_VALUE_TYPE_DOUBLE :
-	case GDA_VALUE_TYPE_INTEGER :
-	case GDA_VALUE_TYPE_NUMERIC :
-	case GDA_VALUE_TYPE_SINGLE :
-	case GDA_VALUE_TYPE_SMALLINT :
-	case GDA_VALUE_TYPE_TINYINT :
+	type = G_VALUE_TYPE (value);
+
+	if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == G_TYPE_CHAR))
 		ret = g_strdup (val_str);
-		break;
-	default :
+	else
 		ret = g_strdup_printf ("\'%s\'", val_str);
-	}
 
 	g_free (val_str);
 

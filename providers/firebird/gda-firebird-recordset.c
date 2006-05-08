@@ -62,7 +62,7 @@ static gint			gda_firebird_recordset_get_n_columns (GdaDataModelRow *model);
 static void       	        gda_firebird_recordset_describe_column (GdaDataModel *model, gint col);
 static const GdaRow 	       *gda_firebird_recordset_get_row (GdaDataModelRow *model,
 								gint row, GError **error);
-static const GdaValue 	       *gda_firebird_recordset_get_value_at (GdaDataModelRow *model,
+static const GValue 	       *gda_firebird_recordset_get_value_at (GdaDataModelRow *model,
 								     gint col,
 								     gint row);
 static gboolean			gda_firebird_recordset_is_updatable (GdaDataModelRow *model);
@@ -77,48 +77,48 @@ static GObjectClass *parent_class = NULL;
 /* Firebird utility functions  */
 /*******************************/
 
-static GdaValueType
+static GType
 fb_sql_type_to_gda_type (const gshort field_type, gboolean has_decimals)
 {
 	switch (field_type && ~1) {
 		case SQL_BLOB:
 		case SQL_BLOB+1:
-			return GDA_VALUE_TYPE_BLOB;
+			return GDA_TYPE_BLOB;
 		case SQL_TIMESTAMP:
 		case SQL_TIMESTAMP+1:
-			return GDA_VALUE_TYPE_TIMESTAMP;
+			return GDA_TYPE_TIMESTAMP;
 		case SQL_TYPE_TIME:
 		case SQL_TYPE_TIME+1:
-			return GDA_VALUE_TYPE_TIME;
+			return GDA_TYPE_TIME;
 		case SQL_TYPE_DATE:
 		case SQL_TYPE_DATE+1:
-			return GDA_VALUE_TYPE_DATE;
+			return G_TYPE_DATE;
 		case SQL_TEXT:
 		case SQL_TEXT+1:
 		case SQL_VARYING:
 		case SQL_VARYING+1:
-			return GDA_VALUE_TYPE_STRING;
+			return G_TYPE_STRING;
 		case SQL_SHORT:
 		case SQL_SHORT+1:
-			return GDA_VALUE_TYPE_SMALLINT;
+			return GDA_TYPE_SHORT;
 		case SQL_LONG:
 		case SQL_LONG+1:
 			if (has_decimals)
-				return GDA_VALUE_TYPE_NUMERIC;
+				return GDA_TYPE_NUMERIC;
 			else
-				return GDA_VALUE_TYPE_INTEGER;
+				return G_TYPE_INT;
 				
 		case SQL_INT64:
 		case SQL_INT64+1:
-			return GDA_VALUE_TYPE_NUMERIC;
+			return GDA_TYPE_NUMERIC;
 		case SQL_FLOAT:
 		case SQL_FLOAT+1:
-			return GDA_VALUE_TYPE_SINGLE;
+			return G_TYPE_FLOAT;
 		case SQL_DOUBLE:
 		case SQL_DOUBLE+1:
-			return GDA_VALUE_TYPE_DOUBLE;
+			return G_TYPE_DOUBLE;
 		default:
-			return GDA_VALUE_TYPE_UNKNOWN;
+			return G_TYPE_INVALID;
 	}
 }
 
@@ -420,14 +420,14 @@ fb_sql_execute (GdaFirebirdConnection *fcnc,
  *  @type should contain Firebirds SQL datatype of @value
  */
 static void
-fb_gda_value_fill (GdaValue *gda_value,
+fb_gda_value_fill (GValue *gda_value,
 		   GdaFirebirdRecordset *recset,
 		   const gshort field_type,
 		   gint field_number,
 		   unsigned long length)
 {
 	GdaTime a_time;
-	GdaDate a_date;
+	GDate a_date;
 	GdaTimestamp a_times;
 	GdaBlob *blob = NULL;
 	struct tm *a_date_time;
@@ -500,23 +500,23 @@ fb_gda_value_fill (GdaValue *gda_value,
 			a_date.month = a_date_time->tm_mon;
 			a_date.day = a_date_time->tm_mday;
 		
-			gda_value_set_date (gda_value, (const GdaDate *) &a_date);
+			g_value_set_boxed (gda_value, (const GDate *) &a_date);
 			g_free (a_date_time);			
 			break;
 		case SQL_TEXT:
 		case SQL_TEXT+1:
-			gda_value_set_string (gda_value, (const gchar *) field_data);
+			g_value_set_string (gda_value, (const gchar *) field_data);
 			break;
 		case SQL_VARYING:
 		case SQL_VARYING+1:
 			var_text = (struct vary *) field_data;
 			var_text->vary_string[var_text->vary_length] = '\0';
 
-			gda_value_set_string (gda_value, (const gchar *) var_text->vary_string);
+			g_value_set_string (gda_value, (const gchar *) var_text->vary_string);
 			break;
 		case SQL_SHORT:
 		case SQL_SHORT+1:
-			gda_value_set_smallint (gda_value, *((gshort *) field_data));
+			gda_value_set_short (gda_value, *((gshort *) field_data));
 			break;
 		case SQL_LONG:
 		case SQL_LONG+1:
@@ -527,12 +527,12 @@ fb_gda_value_fill (GdaValue *gda_value,
 						   pow (10, (sql_result->sqlvar[field_number].sqlscale * -1)));
 
 				g_sprintf (tmp_big, "%f", i64_n);
-				gda_value_set_from_string (gda_value, tmp_big, GDA_VALUE_TYPE_NUMERIC);
+				gda_value_set_from_string (gda_value, tmp_big, GDA_TYPE_NUMERIC);
 				g_free (tmp_big);
 				break;
 			}
 			else {	/* Normal long type number */
-				gda_value_set_integer (gda_value, *((gint *) field_data));
+				g_value_set_int (gda_value, *((gint *) field_data));
 				break;
 			}
 			
@@ -548,16 +548,16 @@ fb_gda_value_fill (GdaValue *gda_value,
 			else
 				tmp_big = g_memdup (field_data, sizeof (gdouble));
 
-			gda_value_set_from_string (gda_value, (const gchar *) tmp_big, GDA_VALUE_TYPE_NUMERIC);
+			gda_value_set_from_string (gda_value, (const gchar *) tmp_big, GDA_TYPE_NUMERIC);
 			g_free (tmp_big);
 			break;
 		case SQL_FLOAT:
 		case SQL_FLOAT+1:
-			gda_value_set_single (gda_value, *((gfloat *) field_data));
+			g_value_set_float (gda_value, *((gfloat *) field_data));
 			break;
 		case SQL_DOUBLE:
 		case SQL_DOUBLE+1:
-			gda_value_set_double (gda_value, *((gdouble *) field_data));
+			g_value_set_double (gda_value, *((gdouble *) field_data));
 			break;
 		default:
 			g_print (_("Unknown Firebird's field value!\n"));
@@ -599,14 +599,14 @@ fb_sql_fetch_row (GdaFirebirdConnection *fcnc,
 			/* Create a row for the fetched data */
 			row = gda_row_new (GDA_DATA_MODEL (recset), recset->priv->ncolumns);
 
-			/* Fill each GdaValue in @row with fetched values */
+			/* Fill each GValue in @row with fetched values */
 			for (col_n = 0; col_n < recset->priv->ncolumns; col_n++) {
 
 				/* Get current field type from statement XSQLDA's variable */
 				field_type = (((gshort) recset->priv->sql_result->sqlvar[col_n].sqltype) & ~1);
 
 				/* Set row's field value */
-				fb_gda_value_fill ((GdaValue *) gda_row_get_value (row, col_n),	recset,
+				fb_gda_value_fill ((GValue *) gda_row_get_value (row, col_n),	recset,
 						   (const gint) field_type, col_n, 0);
 			}
 
@@ -690,7 +690,7 @@ gda_firebird_recordset_get_row (GdaDataModelRow *model, gint row, GError **error
 	return (const GdaRow *) fields;		
 }
 
-static const GdaValue *
+static const GValue *
 gda_firebird_recordset_get_value_at (GdaDataModelRow *model, 
 				     gint col,
 				     gint row)

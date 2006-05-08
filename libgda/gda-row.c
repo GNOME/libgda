@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -34,7 +34,7 @@ struct _GdaRowPrivate {
         gint          number;
         gchar        *id;
 
-        GdaValue     *fields;        /* GdaValue for each column */
+        GValue     *fields;        /* GValue for each column */
         gboolean     *is_default;    /* one gboolean for each column */
         gint          nfields;
 };
@@ -194,15 +194,15 @@ gda_row_set_property (GObject *object,
 			i = g_list_length (values);
 
 			row->priv->nfields = i;
-			row->priv->fields = g_new0 (GdaValue, row->priv->nfields);
+			row->priv->fields = g_new0 (GValue, row->priv->nfields);
 			
 			for (i = 0, l = values; l != NULL; l = l->next, i++) {
-				const GdaValue *value = (const GdaValue *) l->data;
+				const GValue *value = (const GValue *) l->data;
 				
 				if (value) {
-					GdaValue *dest;
+					GValue *dest;
 					dest = gda_row_get_value (row, i);
-					gda_value_reset_with_type (dest, gda_value_get_type ((GdaValue *) value));
+					gda_value_reset_with_type (dest, G_VALUE_TYPE ((GValue *) value));
 					gda_value_set_from_value (dest, value);
 				}
 				else
@@ -214,7 +214,7 @@ gda_row_set_property (GObject *object,
 			g_return_if_fail (!row->priv->fields);
 
 			row->priv->nfields = g_value_get_int (value);
-			row->priv->fields = g_new0 (GdaValue, row->priv->nfields);			
+			row->priv->fields = g_new0 (GValue, row->priv->nfields);			
 			break;
 		default:
 			g_assert_not_reached ();
@@ -271,9 +271,9 @@ gda_row_get_type (void)
 /**
  * gda_row_new
  * @model: the #GdaDataModel this row belongs to, or %NULL if the row is outside any data model
- * @count: number of #GdaValue in the new #GdaRow.
+ * @count: number of #GValue in the new #GdaRow.
  *
- * Creates a #GdaRow which can hold @count #GdaValue values.
+ * Creates a #GdaRow which can hold @count #GValue values.
  *
  * The caller of this function is the only owner of a reference to the newly created #GdaRow
  * object, even if @model is not %NULL (it is recommended to pass %NULL as the @model argument
@@ -286,7 +286,7 @@ gda_row_new (GdaDataModel *model, gint count)
 {
 	GdaRow *row;
 	gint i;
-        GdaValue *value;
+        GValue *value;
 
 	if (model)
 		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
@@ -321,9 +321,9 @@ gda_row_copy (GdaRow *row)
 		newrow->priv->id = g_strdup (row->priv->id);
 	
 	/* copy values */
-	newrow->priv->fields = g_new0 (GdaValue, row->priv->nfields);
+	newrow->priv->fields = g_new0 (GValue, row->priv->nfields);
 	for (i = 0; i < row->priv->nfields; i++) {
-		GdaValue *origval = gda_row_get_value (row, i);
+		GValue *origval = gda_row_get_value (row, i);
 		g_value_init (&(newrow->priv->fields[i]), G_VALUE_TYPE (origval));
 		gda_value_set_from_value (&(newrow->priv->fields[i]), origval);
 	}
@@ -340,9 +340,9 @@ gda_row_copy (GdaRow *row)
 /**
  * gda_row_new_from_list
  * @model: a #GdaDataModel this row belongs to, or %NULL if the row is outside any data model
- * @values: a list of #GdaValue's.
+ * @values: a list of #GValue's.
  *
- * Creates a #GdaRow from a list of #GdaValue's.  These GdaValue's are
+ * Creates a #GdaRow from a list of #GValue's.  These GValue's are
  * value-copied and the user are still responsible for freeing them.
  *
  * See the gda_row_new() function's documentation for more information about the @model attribute
@@ -442,7 +442,7 @@ gda_row_set_number (GdaRow *row, gint number)
 
 /**
  * gda_row_get_id
- * @row: a #GdaRow (which contains #GdaValue).
+ * @row: a #GdaRow (which contains #GValue).
  *
  * Returns the unique identifier for this row. This identifier is
  * assigned by the different providers, to uniquely identify
@@ -464,7 +464,7 @@ gda_row_get_id (GdaRow *row)
 
 /**
  * gda_row_set_id
- * @row: a #GdaRow (which contains #GdaValue).
+ * @row: a #GdaRow (which contains #GValue).
  * @id: new identifier for the row.
  *
  * Assigns a new identifier to the given row. This function is
@@ -486,14 +486,14 @@ gda_row_set_id (GdaRow *row, const gchar *id)
  * @row: a #GdaRow
  * @num: field index.
  *
- * Gets a pointer to a #GdaValue stored in a #GdaRow.
+ * Gets a pointer to a #GValue stored in a #GdaRow.
  *
  * This is a pointer to the internal array of values. Don't try to free
  * or modify it!
  *
- * Returns: a pointer to the #GdaValue in the position @num of @row.
+ * Returns: a pointer to the #GValue in the position @num of @row.
  */
-GdaValue *
+GValue *
 gda_row_get_value (GdaRow *row, gint num)
 {
         g_return_val_if_fail (GDA_IS_ROW (row), NULL);
@@ -507,17 +507,17 @@ gda_row_get_value (GdaRow *row, gint num)
  * gda_row_set_value
  * @row: a #GdaRow
  * @num: field index.
- * @value: a #GdaValue to insert into @row at the @num position, or %NULL
+ * @value: a #GValue to insert into @row at the @num position, or %NULL
  *
  * Sets the value stored at position @num in @row to be a copy of
  * @value.
  *
- * Returns: TRUE if no error occured.
+ * Returns: TRUE if no error occurred.
  */
 gboolean
-gda_row_set_value (GdaRow *row, gint num, const GdaValue *value)
+gda_row_set_value (GdaRow *row, gint num, const GValue *value)
 {
-	GdaValue *current, *newval;
+	GValue *current, *newval;
 	gboolean retval;
 
         g_return_val_if_fail (GDA_IS_ROW (row), FALSE);
@@ -527,7 +527,7 @@ gda_row_set_value (GdaRow *row, gint num, const GdaValue *value)
 	if (!value) 
 		newval = gda_value_new_null ();
 	else
-		newval = (GdaValue *) value;
+		newval = (GValue *) value;
 
 	current = gda_row_get_value (row, num);
 	g_signal_emit (G_OBJECT (row),
@@ -542,14 +542,14 @@ gda_row_set_value (GdaRow *row, gint num, const GdaValue *value)
 		if (value) {
 			if (gda_value_is_null (&(row->priv->fields[num])))
 				gda_value_reset_with_type (&(row->priv->fields[num]),
-							   gda_value_get_type (newval));
+							   G_VALUE_TYPE (newval));
 			retval = gda_value_set_from_value (&(row->priv->fields[num]), newval);
 		}
 		else
 			gda_value_set_null (&(row->priv->fields[num]));
 		
 		if (retval) {
-			const GdaValue *realval;
+			const GValue *realval;
 			realval = gda_row_get_value (row, num);
 			g_signal_emit (G_OBJECT (row),
 				       gda_row_signals [VALUE_CHANGED],

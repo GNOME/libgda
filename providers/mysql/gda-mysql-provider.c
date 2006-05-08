@@ -140,7 +140,7 @@ static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
 						    GdaParameterList *params);
 GdaDataHandler *gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 						     GdaConnection *cnc,
-						     GdaValueType gda_type,
+						     GType gda_type,
 						     const gchar *dbms_type);
 
 
@@ -595,16 +595,16 @@ gda_mysql_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType ty
 }
 
 #define string_from_string_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
-	gda_value_get_string ((GdaValue *) gda_parameter_get_value (param)) : NULL
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
+	g_value_get_string ((GValue *) gda_parameter_get_value (param)) : NULL
 
 #define int_from_int_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
-	gda_value_get_integer ((GdaValue *) gda_parameter_get_value (param)) : -1
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
+	g_value_get_int ((GValue *) gda_parameter_get_value (param)) : -1
 
 #define bool_from_bool_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GdaValue *) gda_parameter_get_value (param))) ? \
-	gda_value_get_boolean ((GdaValue *) gda_parameter_get_value (param)) : FALSE
+	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
+	g_value_get_boolean ((GValue *) gda_parameter_get_value (param)) : FALSE
 
 /* create_database handler for the GdaMysqlProvider class */
 static gboolean
@@ -781,7 +781,7 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 	gint i, rc;
 	gchar *mysql_data_type, *default_value, *references;
 	glong size;
-	GdaValueType value_type;
+	GType value_type;
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
@@ -819,35 +819,33 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 
 		/* size */
 		size = gda_column_get_defined_size (dmca);
-		if (value_type == GDA_VALUE_TYPE_STRING)
+		if (value_type == G_TYPE_STRING)
 			g_string_append_printf (sql, "(%ld)", size);
-		else if (value_type == GDA_VALUE_TYPE_NUMERIC)
+		else if (value_type == GDA_TYPE_NUMERIC)
 			g_string_append_printf (sql, "(%ld,%ld)",
 				gda_column_get_defined_size (dmca),
 				gda_column_get_scale (dmca));
-		else if (value_type == GDA_VALUE_TYPE_MONEY)
-			g_string_append_printf (sql, "(%ld)", size);
 
 		/* optional sizes */
 		if (size > 0) {
-			if ((value_type == GDA_VALUE_TYPE_BIGINT) ||
-			    (value_type == GDA_VALUE_TYPE_BIGUINT) ||
-			    (value_type == GDA_VALUE_TYPE_DOUBLE) ||
-			    (value_type == GDA_VALUE_TYPE_INTEGER) ||
-			    (value_type == GDA_VALUE_TYPE_SINGLE) ||
-			    (value_type == GDA_VALUE_TYPE_SMALLINT) ||
-			    (value_type == GDA_VALUE_TYPE_SMALLUINT) ||
-			    (value_type == GDA_VALUE_TYPE_TINYINT) ||
-			    (value_type == GDA_VALUE_TYPE_TINYUINT) ||
-			    (value_type == GDA_VALUE_TYPE_UINTEGER))
+			if ((value_type == G_TYPE_INT64) ||
+			    (value_type == G_TYPE_UINT64) ||
+			    (value_type == G_TYPE_DOUBLE) ||
+			    (value_type == G_TYPE_INT) ||
+			    (value_type == G_TYPE_FLOAT) ||
+			    (value_type == GDA_TYPE_SHORT) ||
+			    (value_type == GDA_TYPE_USHORT) ||
+			    (value_type == G_TYPE_CHAR) ||
+			    (value_type == G_TYPE_UCHAR) ||
+			    (value_type == G_TYPE_UINT))
 				g_string_append_printf (sql, "(%ld)", size);
 		}
 
 		/* set UNSIGNED if applicable */
-		if ((value_type == GDA_VALUE_TYPE_BIGUINT) ||
-		    (value_type == GDA_VALUE_TYPE_SMALLUINT) ||
-		    (value_type == GDA_VALUE_TYPE_TINYUINT) ||
-		    (value_type == GDA_VALUE_TYPE_UINTEGER))
+		if ((value_type == G_TYPE_UINT64) ||
+		    (value_type == GDA_TYPE_USHORT) ||
+		    (value_type == G_TYPE_UCHAR) ||
+		    (value_type == G_TYPE_UINT))
 			g_string_append (sql, "UNSIGNED");
 
 		/* NULL */
@@ -869,7 +867,7 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 			
 		/* default value (in case of string, user needs to add "'" around the field) */
                 if (gda_column_get_default_value (dmca) != NULL) {
-			default_value = gda_value_stringify ((GdaValue *) gda_column_get_default_value (dmca));
+			default_value = gda_value_stringify ((GValue *) gda_column_get_default_value (dmca));
 			if ((default_value != NULL) && (*default_value != '\0'))
 				g_string_append_printf (sql, " DEFAULT %s", default_value);
 		}
@@ -1304,23 +1302,27 @@ static void
 add_aggregate_row (GdaDataModelArray *recset, const gchar *str, const gchar *comments)
 {
 	GList *list;
+	GValue *tmpval;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
 
 	/* 1st the name */
-	list = g_list_append (NULL, gda_value_new_string (str));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+	list = g_list_append (NULL, tmpval);
 	/* 2nd the unique id */
-	list = g_list_append (list, gda_value_new_string (str));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+	list = g_list_append (list, tmpval);
 	/* 3rd the owner */
-	list = g_list_append (list, gda_value_new_string (NULL));
+	list = g_list_append (list, gda_value_new_null ());
 	/* 4th the comments */ 
-	list = g_list_append (list, gda_value_new_string (comments));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), comments);
+	list = g_list_append (list, tmpval);
 	/* 5th the return type */
-	list = g_list_append (list, gda_value_new_string (gda_type_to_string (GDA_VALUE_TYPE_UNKNOWN)));
+	list = g_list_append (list, gda_value_new_null ());
 	/* 6th the argument type */
-	list = g_list_append (list, gda_value_new_string (gda_type_to_string (GDA_VALUE_TYPE_UNKNOWN)));
+	list = g_list_append (list, gda_value_new_null ());
 	/* 7th the SQL definition */
-	list = g_list_append (list, gda_value_new_string (NULL));
+	list = g_list_append (list, gda_value_new_null ());
 
 	gda_data_model_append_values (GDA_DATA_MODEL (recset), list, NULL);
 
@@ -1524,40 +1526,38 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 	rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (recset));
 	for (r = 0; r < rows; r++) {
 		GList *value_list = NULL;
-		gchar *name;
+		const gchar *name;
 		gchar *str;
+		GValue *tmpval;
 
 		/* 1st, the name of the table */
-		name = gda_value_stringify ((GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 0, r));
-		value_list = g_list_append (value_list, gda_value_new_string (name));
+		tmpval = gda_value_copy ((GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 0, r));
+		name = g_value_get_string (tmpval);
+		value_list = g_list_append (value_list, tmpval);
 
 		/* 2nd, the owner */
-		value_list = g_list_append (value_list, gda_value_new_string (""));
+		value_list = g_list_append (value_list, gda_value_new_null ());
 
 		/* 3rd, the comments */
-		str = gda_value_stringify ((GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 14, r));
-		value_list = g_list_append (value_list, gda_value_new_string (str));
-		g_free (str);
+		tmpval = gda_value_copy ((GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 14, r));
+		value_list = g_list_append (value_list, tmpval);
 
 		/* 4th, the SQL command */
 		str = g_strdup_printf ("SHOW CREATE TABLE %s", name);
 		reclist = process_sql_commands (NULL, cnc, str);
 		g_free (str);
 		if (reclist && GDA_IS_DATA_MODEL (reclist->data)) {
-			str = gda_value_stringify (
-				(GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 1, 0));
-			value_list = g_list_append (value_list, gda_value_new_string (str));
+			tmpval = gda_value_copy ((GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 1, 0));
+			value_list = g_list_append (value_list, tmpval);
 
-			g_free (str);
 			g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 			g_list_free (reclist);
 		}
 		else
-			value_list = g_list_append (value_list, gda_value_new_string (""));
+			value_list = g_list_append (value_list, gda_value_new_null ());
 
 		gda_data_model_append_values (model, value_list, NULL);
 
-		g_free (name);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
 	}
@@ -1613,15 +1613,29 @@ get_mysql_procedures (GdaConnection *cnc, GdaParameterList *params)
 	/* fill the recordset */
 	for (i = 0; i < sizeof (procs) / sizeof (procs[0]); i++) {
 		GList *value_list = NULL;
+		GValue *tmpval;
+		
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), procs[i].name);
+		value_list = g_list_append (value_list, tmpval);
+		
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), procs[i].id);
+		value_list = g_list_append (value_list, tmpval);
+		
+		value_list = g_list_append (value_list, gda_value_new_null ());
+		
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), procs[i].comments);
+		value_list = g_list_append (value_list, tmpval);
+		
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), procs[i].rettype);
+		value_list = g_list_append (value_list, tmpval);
 
-		value_list = g_list_append (value_list, gda_value_new_string (procs[i].name));
-		value_list = g_list_append (value_list, gda_value_new_string (procs[i].id));
-		value_list = g_list_append (value_list, gda_value_new_string (""));
-		value_list = g_list_append (value_list, gda_value_new_string (procs[i].comments));
-		value_list = g_list_append (value_list, gda_value_new_string (procs[i].rettype));
-		value_list = g_list_append (value_list, gda_value_new_integer (procs[i].nb_args));
-		value_list = g_list_append (value_list, gda_value_new_string (procs[i].argtypes));
-		value_list = g_list_append (value_list, gda_value_new_string (NULL));
+		g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), procs[i].nb_args);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), procs[i].argtypes);
+		value_list = g_list_append (value_list, tmpval);
+
+		value_list = g_list_append (value_list, gda_value_new_null ());
 
 		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
 
@@ -1642,43 +1656,43 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		const gchar *name;
 		const gchar *owner;
 		const gchar *comments;
-		GdaValueType type;
+		GType type;
 		const gchar *synonyms;
 	} types[] = {
-		{ "bool", "", "Boolean type", GDA_VALUE_TYPE_BINARY, "boolean" },
-		{ "blob", "", "Binary blob (up to 65535 bytes)", GDA_VALUE_TYPE_BINARY, NULL },
-		{ "bigint", "", "Big integer, range is -9223372036854775808 to 9223372036854775807", GDA_VALUE_TYPE_BIGINT, NULL  },
-		{ "bigint unsigned", "", "Big unsigned integer, range is 0 to 18446744073709551615", GDA_VALUE_TYPE_BIGINT, NULL  },
-		{ "char", "", "Char", GDA_VALUE_TYPE_STRING, "binary"  },
-		{ "date", "", "Date", GDA_VALUE_TYPE_DATE, NULL  },
-		{ "datetime", "", "Date and time", GDA_VALUE_TYPE_TIMESTAMP, NULL  },
-		{ "decimal", "", "Decimal number", GDA_VALUE_TYPE_DOUBLE, "dec,numeric,fixed"  },
-		{ "double", "", "Double precision number", GDA_VALUE_TYPE_DOUBLE, "double precision,real"  },
-		{ "double unsigned", "", "Unsigned double precision number", GDA_VALUE_TYPE_DOUBLE, "double precision unsigned,real unsigned"  },
-		{ "enum", "", "Enumeration: a string object that can have only one value, chosen from the list of values 'value1', 'value2', ..., NULL or the special '' error value. An ENUM column can have a maximum of 65,535 distinct values", GDA_VALUE_TYPE_STRING, NULL  },
-		{ "float", "", "Floating point number", GDA_VALUE_TYPE_SINGLE , NULL },
-		{ "float unsigned", "", "Unsigned floating point number", GDA_VALUE_TYPE_SINGLE , NULL },
-		{ "int", "", "Integer, range is -2147483648 to 2147483647", GDA_VALUE_TYPE_INTEGER, "integer"  },
-		{ "int unsigned", "", "Unsigned integer, range is 0 to 4294967295", GDA_VALUE_TYPE_UINTEGER, "integer unsigned"  },
-		{ "long", "", "Long integer", GDA_VALUE_TYPE_INTEGER, NULL  },
-		{ "longblob", "", "Long blob (up to 4Gb)", GDA_VALUE_TYPE_BINARY, NULL  },
-		{ "longtext", "", "Long text (up to 4Gb characters)", GDA_VALUE_TYPE_BINARY, NULL  },
-		{ "mediumint", "", "Medium integer, range is -8388608 to 8388607", GDA_VALUE_TYPE_INTEGER, NULL  },
-		{ "mediumint unsigned", "", "Medium unsigned integer, range is 0 to 16777215", GDA_VALUE_TYPE_INTEGER, NULL  },
-		{ "mediumblob", "", "Medium blob (up to 16777215 bytes)", GDA_VALUE_TYPE_BINARY, NULL  },
-		{ "mediumtext", "", "Medium text (up to 16777215 characters)", GDA_VALUE_TYPE_BINARY, NULL  },				
-		{ "set", "", "Set: a string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET column can have a maximum of 64 members", GDA_VALUE_TYPE_STRING, NULL  },
-		{ "smallint", "", "Small integer, range is -32768 to 32767", GDA_VALUE_TYPE_SMALLINT, NULL  },
-		{ "smallint unsigned", "", "Small unsigned integer, range is 0 to 65535", GDA_VALUE_TYPE_SMALLINT, NULL  },
-		{ "text", "", "Text (up to 65535 characters)", GDA_VALUE_TYPE_BLOB, NULL  },
-		{ "tinyint", "", "Tiny integer, range is -128 to 127", GDA_VALUE_TYPE_TINYINT, NULL  },
-		{ "tinyint unsigned", "", "Tiny unsigned integer, range is 0 to 255", GDA_VALUE_TYPE_TINYUINT, NULL  },
-		{ "tinyblob", "", "Tiny blob (up to 255 bytes)", GDA_VALUE_TYPE_BINARY, NULL  },
-		{ "tinytext", "", "Tiny text (up to 255 characters)", GDA_VALUE_TYPE_BLOB, NULL  },		
-		{ "time", "", "Time", GDA_VALUE_TYPE_TIME, NULL  },
-		{ "timestamp", "", "Time stamp", GDA_VALUE_TYPE_TIMESTAMP, NULL  },
-		{ "varchar", "", "Variable Length Char", GDA_VALUE_TYPE_STRING, "varbinary"  },
-		{ "year", "", "Year", GDA_VALUE_TYPE_INTEGER, NULL  }
+		{ "bool", "", "Boolean type", GDA_TYPE_BINARY, "boolean" },
+		{ "blob", "", "Binary blob (up to 65535 bytes)", GDA_TYPE_BINARY, NULL },
+		{ "bigint", "", "Big integer, range is -9223372036854775808 to 9223372036854775807", G_TYPE_INT64, NULL  },
+		{ "bigint unsigned", "", "Big unsigned integer, range is 0 to 18446744073709551615", G_TYPE_INT64, NULL  },
+		{ "char", "", "Char", G_TYPE_STRING, "binary"  },
+		{ "date", "", "Date", G_TYPE_DATE, NULL  },
+		{ "datetime", "", "Date and time", GDA_TYPE_TIMESTAMP, NULL  },
+		{ "decimal", "", "Decimal number", G_TYPE_DOUBLE, "dec,numeric,fixed"  },
+		{ "double", "", "Double precision number", G_TYPE_DOUBLE, "double precision,real"  },
+		{ "double unsigned", "", "Unsigned double precision number", G_TYPE_DOUBLE, "double precision unsigned,real unsigned"  },
+		{ "enum", "", "Enumeration: a string object that can have only one value, chosen from the list of values 'value1', 'value2', ..., NULL or the special '' error value. An ENUM column can have a maximum of 65,535 distinct values", G_TYPE_STRING, NULL  },
+		{ "float", "", "Floating point number", G_TYPE_FLOAT , NULL },
+		{ "float unsigned", "", "Unsigned floating point number", G_TYPE_FLOAT , NULL },
+		{ "int", "", "Integer, range is -2147483648 to 2147483647", G_TYPE_INT, "integer"  },
+		{ "int unsigned", "", "Unsigned integer, range is 0 to 4294967295", G_TYPE_UINT, "integer unsigned"  },
+		{ "long", "", "Long integer", G_TYPE_INT, NULL  },
+		{ "longblob", "", "Long blob (up to 4Gb)", GDA_TYPE_BINARY, NULL  },
+		{ "longtext", "", "Long text (up to 4Gb characters)", GDA_TYPE_BINARY, NULL  },
+		{ "mediumint", "", "Medium integer, range is -8388608 to 8388607", G_TYPE_INT, NULL  },
+		{ "mediumint unsigned", "", "Medium unsigned integer, range is 0 to 16777215", G_TYPE_INT, NULL  },
+		{ "mediumblob", "", "Medium blob (up to 16777215 bytes)", GDA_TYPE_BINARY, NULL  },
+		{ "mediumtext", "", "Medium text (up to 16777215 characters)", GDA_TYPE_BINARY, NULL  },				
+		{ "set", "", "Set: a string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET column can have a maximum of 64 members", G_TYPE_STRING, NULL  },
+		{ "smallint", "", "Small integer, range is -32768 to 32767", GDA_TYPE_SHORT, NULL  },
+		{ "smallint unsigned", "", "Small unsigned integer, range is 0 to 65535", GDA_TYPE_SHORT, NULL  },
+		{ "text", "", "Text (up to 65535 characters)", GDA_TYPE_BLOB, NULL  },
+		{ "tinyint", "", "Tiny integer, range is -128 to 127", G_TYPE_CHAR, NULL  },
+		{ "tinyint unsigned", "", "Tiny unsigned integer, range is 0 to 255", G_TYPE_UCHAR, NULL  },
+		{ "tinyblob", "", "Tiny blob (up to 255 bytes)", GDA_TYPE_BINARY, NULL  },
+		{ "tinytext", "", "Tiny text (up to 255 characters)", GDA_TYPE_BLOB, NULL  },		
+		{ "time", "", "Time", GDA_TYPE_TIME, NULL  },
+		{ "timestamp", "", "Time stamp", GDA_TYPE_TIMESTAMP, NULL  },
+		{ "varchar", "", "Variable Length Char", G_TYPE_STRING, "varbinary"  },
+		{ "year", "", "Year", G_TYPE_INT, NULL  }
 	};
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -1690,12 +1704,22 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 	/* fill the recordset */
 	for (i = 0; i < sizeof (types) / sizeof (types[0]); i++) {
 		GList *value_list = NULL;
-
-		value_list = g_list_append (value_list, gda_value_new_string (types[i].name));
-		value_list = g_list_append (value_list, gda_value_new_string (types[i].owner));
-		value_list = g_list_append (value_list, gda_value_new_string (types[i].comments));
-		value_list = g_list_append (value_list, gda_value_new_gdatype (types[i].type));
-		value_list = g_list_append (value_list, gda_value_new_string (types[i].synonyms));
+		GValue *tmpval;
+		
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].name);		
+		value_list = g_list_append (value_list, tmpval);
+		
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].owner);		
+		value_list = g_list_append (value_list, tmpval);
+		
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].comments);		
+		value_list = g_list_append (value_list, tmpval);
+		
+		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), types[i].type);		
+		value_list = g_list_append (value_list, tmpval);
+		
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].synonyms);		
+		value_list = g_list_append (value_list, tmpval);
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
@@ -1711,49 +1735,60 @@ field_row_to_value_list (MYSQL *mysql, MYSQL_ROW mysql_row)
 {
 	gchar **arr;
 	GList *value_list = NULL;
-
+	GValue *tmpval;
+	
 	g_return_val_if_fail (mysql_row != NULL, NULL);
 
 	/* field name */
-	value_list = g_list_append (value_list, gda_value_new_string (mysql_row[0]));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mysql_row[0]);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* type and size */
 	arr = g_strsplit ((const gchar *) mysql_row[1], "(", 0);
 	if (!arr) {
-		value_list = g_list_append (value_list, gda_value_new_string (""));
-		value_list = g_list_append (value_list, gda_value_new_integer (-1));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), -1);
+		value_list = g_list_append (value_list, tmpval);
 	}
 	else {
 		if (!strcmp (arr[0], "enum") ||
 		    !strcmp (arr[0], "set")) {
-			value_list = g_list_append (value_list,
-						    gda_value_new_string (arr[0]));
-			value_list = g_list_append (value_list, gda_value_new_integer (-1));
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), arr[0]);
+			value_list = g_list_append (value_list, tmpval);
+			
+			g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), -1);
+			value_list = g_list_append (value_list, tmpval);
 		}
 		else {
 			if (arr[0] && arr[1]) {
-				value_list = g_list_append (value_list,
-							    gda_value_new_string (arr[0]));
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), arr[0]);
+				value_list = g_list_append (value_list, tmpval);
+
 				/* if arr[0] is an int type, hard code its size instead of
 				 * using arr[1] which is an indication of display padding */
 				if (!strcmp (arr[0], "int"))
-					value_list = g_list_append (value_list, gda_value_new_integer (4));
+					g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), 4);
 				else if (!strcmp (arr[0], "tinyint"))
-					value_list = g_list_append (value_list, gda_value_new_integer (1));
+					g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), 1);
 				else if (!strcmp (arr[0], "smallint"))
-					value_list = g_list_append (value_list, gda_value_new_integer (2));
+					g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), 2);
 				else if (!strcmp (arr[0], "mediumint"))
-					value_list = g_list_append (value_list, gda_value_new_integer (3));
+					g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), 3);
 				else if (!strcmp (arr[0], "bigint"))
-					value_list = g_list_append (value_list, gda_value_new_integer (8));
+					g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), 8);
 				else
-					value_list = g_list_append (value_list,
-								    gda_value_new_integer (atoi (arr[1])));
+					g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), atoi (arr[1]));
+
+				value_list = g_list_append (value_list, tmpval);
 			}
 			else {
-				value_list = g_list_append (value_list,
-							    gda_value_new_string (arr[0]));
-				value_list = g_list_append (value_list, gda_value_new_integer (-1));
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), arr[0]);
+				value_list = g_list_append (value_list, tmpval);
+				
+				g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), -1);
+				value_list = g_list_append (value_list, tmpval);
 			}
 		}
 
@@ -1761,44 +1796,54 @@ field_row_to_value_list (MYSQL *mysql, MYSQL_ROW mysql_row)
 	}
 
 	/* scale */
-	value_list = g_list_append (value_list, gda_value_new_integer (0));
+	g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), 0);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* Not null? */
 	if (mysql_row[2] && !strcmp (mysql_row[2], "YES"))
-		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
 	else
-		value_list = g_list_append (value_list, gda_value_new_boolean (TRUE));
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), TRUE);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* Primary key? */
 	if (mysql_row[3] && !strcmp (mysql_row[3], "PRI"))
-		value_list = g_list_append (value_list, gda_value_new_boolean (TRUE));
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), TRUE);
 	else
-		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* Unique index? */
-	value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* references */
-	if (*mysql->server_version < 5)
-		value_list = g_list_append (value_list, gda_value_new_string (""));
+	if (*mysql->server_version < 5) {
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+		value_list = g_list_append (value_list, tmpval);
+	}
 	else {
 		if (mysql_row[6] && mysql_row[7]) {
 			gchar *str = g_strdup_printf ("%s.%s", mysql_row[6], mysql_row[7]);
-			value_list = g_list_append (value_list, gda_value_new_string (str));
-			g_free (str);
+			g_value_take_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+			value_list = g_list_append (value_list, tmpval);
 		}
-		else
-			value_list = g_list_append (value_list, gda_value_new_string (""));
+		else {
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+			value_list = g_list_append (value_list, tmpval);
+		}
 	}
 
 	/* default value */
-	value_list = g_list_append (value_list, gda_value_new_string (mysql_row[4]));
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mysql_row[4]);
+	value_list = g_list_append (value_list, tmpval);
 
 	/* Extra column */
 	if (!strcmp (mysql_row[5], "auto_increment"))
-		value_list = g_list_append (value_list, gda_value_new_string ("AUTO_INCREMENT"));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "AUTO_INCREMENT");
 	else
-		value_list = g_list_append (value_list, gda_value_new_string (""));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+	value_list = g_list_append (value_list, tmpval);
 
 	return value_list;
 }
@@ -1833,7 +1878,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 		return NULL;
 	}
 
-	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	table_name = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	if (!table_name) {
 		gda_connection_add_event_string (
 			cnc,
@@ -1917,6 +1962,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 	MYSQL *mysql;
 	MYSQL_RES *mysql_res;
 	GString *pkey_fields = NULL;
+	GValue *tmpval;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
@@ -1936,7 +1982,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 		return NULL;
 	}
 
-	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	table_name = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	if (!table_name) {
 		gda_connection_add_event_string (
 			cnc,
@@ -1981,21 +2027,35 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 		if (arr) {
 			gchar *str;
 			if (!strcmp (arr[0], "enum")) {
-				value_list = g_list_append (value_list, gda_value_new_string (""));
-				value_list = g_list_append (value_list, gda_value_new_string ("CHECK"));
-				value_list = g_list_append (value_list, gda_value_new_string (mysql_row[0]));
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "CHECK");
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mysql_row[0]);
+				value_list = g_list_append (value_list, tmpval);
+
 				str = g_strdup_printf ("IN %s", mysql_row[1]+4);
-				value_list = g_list_append (value_list, gda_value_new_string (str));
-				g_free (str);
+				g_value_take_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+				value_list = g_list_append (value_list, tmpval);
+
 				value_list = g_list_append (value_list, gda_value_new_null());
 			}
 			else if (!strcmp (arr[0], "set")) {
-				value_list = g_list_append (value_list, gda_value_new_string (""));
-				value_list = g_list_append (value_list, gda_value_new_string ("CHECK"));
-				value_list = g_list_append (value_list, gda_value_new_string (mysql_row[0]));
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "CHECK");
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mysql_row[0]);
+				value_list = g_list_append (value_list, tmpval);
+
 				str = g_strdup_printf ("SETOF %s", mysql_row[1]+3);
-				value_list = g_list_append (value_list, gda_value_new_string (str));
-				g_free (str);
+				g_value_take_string (tmpval = gda_value_new (G_TYPE_STRING), str);
+				value_list = g_list_append (value_list, tmpval);
+
 				value_list = g_list_append (value_list, gda_value_new_null());
 			}
 			g_strfreev (arr);
@@ -2023,9 +2083,15 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 	/* creating the PKEY entry if necessary */
 	if (pkey_fields) {
 		GList *value_list = NULL;
-		value_list = g_list_append (value_list, gda_value_new_string (""));
-		value_list = g_list_append (value_list, gda_value_new_string ("PRIMARY_KEY"));
-		value_list = g_list_append (value_list, gda_value_new_string (pkey_fields->str));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "PRIMARY_KEY");
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), pkey_fields->str);
+		value_list = g_list_append (value_list, tmpval);
+
 		value_list = g_list_append (value_list, gda_value_new_null());
 		value_list = g_list_append (value_list, gda_value_new_null());
 		g_string_free (pkey_fields, TRUE);
@@ -2082,8 +2148,10 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 				if (value_list) {
 					/* complete and store current row */
 					g_string_append_c (ref_string, ')');
-					value_list = g_list_append (value_list, gda_value_new_string (ref_string->str));
+					g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), ref_string->str);
+					value_list = g_list_append (value_list, tmpval);
 					g_string_free (ref_string, TRUE);
+
 					value_list = g_list_append (value_list, gda_value_new_null ());
 
 					gda_data_model_append_values (GDA_DATA_MODEL (recset),
@@ -2096,9 +2164,14 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 					g_free (current_cname);
 			
 				/* prepare new constraint */
-				value_list = g_list_append (NULL, gda_value_new_string (mysql_row[0]));
-				value_list = g_list_append (value_list, gda_value_new_string ("FOREIGN_KEY"));
-				value_list = g_list_append (value_list, gda_value_new_string (mysql_row[1]));
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mysql_row[0]);
+				value_list = g_list_append (NULL, tmpval);
+
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "FOREIGN_KEY");
+				value_list = g_list_append (value_list, tmpval);
+
+				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mysql_row[1]);
+				value_list = g_list_append (value_list, tmpval);
 			
 				ref_string = g_string_new (mysql_row[4]);
 				g_string_append_c (ref_string, '(');
@@ -2114,8 +2187,10 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 		if (value_list) {
 			/* complete and store current row */
 			g_string_append_c (ref_string, ')');
-			value_list = g_list_append (value_list, gda_value_new_string (ref_string->str));
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), ref_string->str);
+			value_list = g_list_append (value_list, tmpval);
 			g_string_free (ref_string, TRUE);
+
 			value_list = g_list_append (value_list, gda_value_new_null ());
 		
 			gda_data_model_append_values (GDA_DATA_MODEL (recset),
@@ -2166,13 +2241,13 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 }
 
 gchar *
-gda_mysql_provider_value_to_sql_string (
-				GdaServerProvider *provider, /* we dont actually use this!*/
-				GdaConnection *cnc,
-				GdaValue *from)
+gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont actually use this!*/
+					GdaConnection *cnc,
+					GValue *from)
 {
 	gchar *val_str;
 	gchar *ret;
+	GType type;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);
@@ -2181,43 +2256,38 @@ gda_mysql_provider_value_to_sql_string (
 	if (!val_str)
 		return NULL;
 
-	switch (GDA_VALUE_TYPE(from)) {
-		case GDA_VALUE_TYPE_BIGINT :
-		case GDA_VALUE_TYPE_DOUBLE :
-		case GDA_VALUE_TYPE_INTEGER :
-		case GDA_VALUE_TYPE_NUMERIC :
-		case GDA_VALUE_TYPE_SINGLE :
-		case GDA_VALUE_TYPE_SMALLINT :
-		case GDA_VALUE_TYPE_TINYINT :
-			ret = g_strdup (val_str);
-			break;
-		case GDA_VALUE_TYPE_TIMESTAMP:
-		case GDA_VALUE_TYPE_DATE :
-		case GDA_VALUE_TYPE_TIME :
-			ret = g_strdup_printf ("\"%s\"", val_str);
-			break;
-		default:
-		{
-			MYSQL *mysql;
-			char *quoted;
-			mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
-			
-			if (!mysql) {
-				gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
-				return NULL;
-			}
-			quoted = ret = g_malloc(strlen(val_str) * 2 + 3);
-			*quoted++ 	= '\'';
-			quoted += mysql_real_escape_string (
-					mysql, quoted, val_str, strlen (val_str));
-					
-			*quoted++     	= '\'';
-			*quoted++     	= '\0';
-			ret = g_realloc(ret, quoted - ret + 1);
-		}
+	type = G_VALUE_TYPE (from);
+	if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == G_TYPE_CHAR))
+		ret = g_strdup (val_str);
+	else if ((type == GDA_TYPE_TIMESTAMP) ||
+		 (type == G_TYPE_DATE) ||
+		 (type == GDA_TYPE_TIME))
+		ret = g_strdup_printf ("\"%s\"", val_str);
+	else {
+		MYSQL *mysql;
+		char *quoted;
+		mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 		
+		if (!mysql) {
+			gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));
+			return NULL;
+		}
+		quoted = ret = g_malloc(strlen(val_str) * 2 + 3);
+		*quoted++ 	= '\'';
+		quoted += mysql_real_escape_string (
+						    mysql, quoted, val_str, strlen (val_str));
+		
+		*quoted++     	= '\'';
+		*quoted++     	= '\0';
+		ret = g_realloc(ret, quoted - ret + 1);
 	}
-
+	
 	g_free (val_str);
 
 	return ret;
@@ -2226,106 +2296,94 @@ gda_mysql_provider_value_to_sql_string (
 GdaDataHandler *
 gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 				     GdaConnection *cnc,
-				     GdaValueType gda_type, const gchar *dbms_type)
+				     GType type, const gchar *dbms_type)
 {
 	GdaDataHandler *dh = NULL;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	if (cnc) 
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	switch (gda_type) {
-        case GDA_VALUE_TYPE_BIGINT:
-	case GDA_VALUE_TYPE_BIGUINT:
-	case GDA_VALUE_TYPE_DOUBLE:
-	case GDA_VALUE_TYPE_INTEGER:
-	case GDA_VALUE_TYPE_NUMERIC:
-	case GDA_VALUE_TYPE_SINGLE:
-	case GDA_VALUE_TYPE_SMALLINT:
-	case GDA_VALUE_TYPE_SMALLUINT:
-        case GDA_VALUE_TYPE_TINYINT:
-        case GDA_VALUE_TYPE_TINYUINT:
-        case GDA_VALUE_TYPE_UINTEGER:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	
+        if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_UINT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == GDA_TYPE_USHORT) ||
+	    (type == G_TYPE_CHAR) ||
+	    (type == G_TYPE_UCHAR) ||
+	    (type == G_TYPE_UINT)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_numerical_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BIGUINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DOUBLE, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_INTEGER, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_NUMERIC, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SINGLE, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_SMALLUINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TINYUINT, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_UINTEGER, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_FLOAT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_SHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_USHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_CHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UCHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT, NULL);
 			g_object_unref (dh);
 		}
-		break;
-        case GDA_VALUE_TYPE_BINARY:
-        case GDA_VALUE_TYPE_BLOB:
-		dh = gda_server_provider_handler_find (provider, cnc, gda_type, NULL);
+	}
+        else if ((type == GDA_TYPE_BINARY) ||
+		 (type == GDA_TYPE_BLOB)) {
+		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
 			dh = gda_handler_bin_new_with_prov (provider, cnc);
 			if (dh) {
-				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BINARY, NULL);
-				gda_server_provider_handler_declare (provider, dh, cnc, GDA_VALUE_TYPE_BLOB, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
 				g_object_unref (dh);
 			}
 		}
-		break;
-        case GDA_VALUE_TYPE_BOOLEAN:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	}
+        else if (type == G_TYPE_BOOLEAN) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_boolean_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_BOOLEAN, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_BOOLEAN, NULL);
 			g_object_unref (dh);
 		}
- 		break;
-	case GDA_VALUE_TYPE_DATE:
-	case GDA_VALUE_TYPE_TIME:
-	case GDA_VALUE_TYPE_TIMESTAMP:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	}
+	else if ((type == G_TYPE_DATE) ||
+		 (type == GDA_TYPE_TIME) ||
+		 (type == GDA_TYPE_TIMESTAMP)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_time_new_no_locale ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_DATE, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIME, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TIMESTAMP, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
 			g_object_unref (dh);
 		}
- 		break;
-	case GDA_VALUE_TYPE_STRING:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	}
+	else if (type == G_TYPE_STRING) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_string_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_STRING, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_STRING, NULL);
 			g_object_unref (dh);
 		}
- 		break;
-	case GDA_VALUE_TYPE_TYPE:
-		dh = gda_server_provider_handler_find (provider, NULL, gda_type, NULL);
+	}
+	else if (type == G_TYPE_ULONG) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_type_new ();
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_VALUE_TYPE_TYPE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_ULONG, NULL);
 			g_object_unref (dh);
 		}
- 		break;
-	case GDA_VALUE_TYPE_NULL:
-	case GDA_VALUE_TYPE_GEOMETRIC_POINT:
-	case GDA_VALUE_TYPE_GOBJECT:
-	case GDA_VALUE_TYPE_LIST:
-	case GDA_VALUE_TYPE_MONEY:
-	case GDA_VALUE_TYPE_UNKNOWN:
+	}
+	else {
 		/* special case: we take into account the dbms_type argument */
-		if (!dbms_type)
-			break;
-
-		TO_IMPLEMENT;
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
+		if (dbms_type)
+			TO_IMPLEMENT;
 	}
 
 	return dh;

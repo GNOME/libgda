@@ -701,7 +701,7 @@ gda_dict_function_accepts_args (GdaDictFunction *func, const GSList *arg_types)
 				args_ok = FALSE;
 		}
 		else {
-			/* GdaValueType compatibility test */
+			/* GType compatibility test */
 			if (arg->data && list->data &&
 			    (gda_dict_type_get_gda_type (GDA_DICT_TYPE (arg->data)) !=
 			     gda_dict_type_get_gda_type (GDA_DICT_TYPE (list->data))))

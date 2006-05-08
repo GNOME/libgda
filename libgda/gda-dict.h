@@ -50,7 +50,6 @@ enum {
 	GDA_DICT_LOAD_FILE_NOT_EXIST_ERROR,
 	GDA_DICT_FILE_LOAD_ERROR,
 	GDA_DICT_FILE_SAVE_ERROR,
-	GDA_DICT_PROPOSED_FILE,
 	GDA_DICT_DATATYPE_ERROR,
 	GDA_DICT_FUNCTIONS_ERROR,
 	GDA_DICT_AGGREGATES_ERROR,
@@ -95,7 +94,7 @@ struct _GdaDictClass
         void (*update_progress)           (GdaDict *obj, gchar * msg, guint now, guint total);
         void (*data_update_finished)      (GdaDict *obj);
 
-	/* signal that a change in the whole dictionary has occured */
+	/* signal that a change in the whole dictionary has occurred */
 	void (*changed)          (GdaDict * dict);
 };
 
@@ -123,8 +122,8 @@ gboolean        gda_dict_save                (GdaDict *dict, GError **error);
 gboolean        gda_dict_load_xml_file       (GdaDict *dict, const gchar *xmlfile, GError **error);
 gboolean        gda_dict_save_xml_file       (GdaDict *dict, const gchar *xmlfile, GError **error);
 
-GdaDataHandler *gda_dict_get_handler         (GdaDict *dict, GdaValueType for_type);
-GdaDataHandler *gda_dict_get_default_handler (GdaDict *dict, GdaValueType for_type);
+GdaDataHandler *gda_dict_get_handler         (GdaDict *dict, GType for_type);
+GdaDataHandler *gda_dict_get_default_handler (GdaDict *dict, GType for_type);
 
 /* GdaDictType manipulations */
 GSList         *gda_dict_get_data_types            (GdaDict *dict);

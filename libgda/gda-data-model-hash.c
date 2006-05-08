@@ -92,7 +92,7 @@ gda_data_model_hash_get_row (GdaDataModelRow *model, gint row, GError **error)
 	return gdarow;
 }
 
-static const GdaValue *
+static const GValue *
 gda_data_model_hash_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	const GdaRow *fields;
@@ -109,7 +109,7 @@ gda_data_model_hash_get_value_at (GdaDataModelRow *model, gint col, gint row)
 		return NULL;
 	}
 
-	return (const GdaValue *) gda_row_get_value ((GdaRow *) fields, col);
+	return (const GValue *) gda_row_get_value ((GdaRow *) fields, col);
 }
 
 static gboolean

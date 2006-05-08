@@ -91,7 +91,7 @@ static void           fam_unlock_notify ();
 /*
  * Private functions
  */
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 static void
 dump_config_client ()
 {
@@ -434,7 +434,7 @@ get_config_client ()
 				g_warning ("Config file is not readable.");
 		}
 		g_free (user_config);
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 		dump_config_client ();
 #endif
 	}
@@ -471,7 +471,7 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
 		case FAMChanged:
 		case FAMDeleted:
 		case FAMCreated:
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 			g_print ("Reloading config files (%s config has changed)\n", is_global ? "global" : "user");
 #endif
 			gda_config_client_reset ();
@@ -868,7 +868,7 @@ gda_config_get_boolean (const gchar *path)
  *
  * Sets the given configuration entry to contain a string.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_config_set_string (const gchar *path, const gchar *new_value)
@@ -922,7 +922,7 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
  *
  * Sets the given configuration entry to contain an integer.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_config_set_int (const gchar *path, gint new_value)
@@ -977,7 +977,7 @@ gda_config_set_int (const gchar *path, gint new_value)
  *
  * Sets the given configuration entry to contain a float.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_config_set_float (const gchar * path, gdouble new_value)
@@ -1032,7 +1032,7 @@ gda_config_set_float (const gchar * path, gdouble new_value)
  *
  * Sets the given configuration entry to contain a boolean.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_config_set_boolean (const gchar *path, gboolean new_value)
@@ -1574,12 +1574,21 @@ gda_config_get_provider_model (void)
 	for (l = prov_list; l != NULL; l = l->next) {
 		GList *value_list = NULL;
 		GdaProviderInfo *prov_info = (GdaProviderInfo *) l->data;
+		GValue *value;
 
 		g_assert (prov_info != NULL);
 
-		value_list = g_list_append (value_list, gda_value_new_string (prov_info->id));
-		value_list = g_list_append (value_list, gda_value_new_string (prov_info->location));
-		value_list = g_list_append (value_list, gda_value_new_string (prov_info->description));
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, prov_info->id);
+		value_list = g_list_append (value_list, value);
+
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, prov_info->location);
+		value_list = g_list_append (value_list, value);
+
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, prov_info->description);
+		value_list = g_list_append (value_list, value);
 
 		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -1872,16 +1881,37 @@ gda_config_get_data_source_model (void)
 	for (l = dsn_list; l != NULL; l = l->next) {
 		GList *value_list = NULL;
 		GdaDataSourceInfo *dsn_info = (GdaDataSourceInfo *) l->data;
+		GValue *value;
 
 		g_assert (dsn_info != NULL);
 
-		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->name));
-		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->provider));
-		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->cnc_string));
-		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->description));
-		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->username));
-		value_list = g_list_append (value_list, gda_value_new_string ("******"));
-		value_list = g_list_append (value_list, gda_value_new_boolean (dsn_info->is_global));
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, dsn_info->name);
+		value_list = g_list_append (value_list, value);
+
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, dsn_info->provider);
+		value_list = g_list_append (value_list, value);
+
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, dsn_info->cnc_string);
+		value_list = g_list_append (value_list, value);
+
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, dsn_info->description);
+		value_list = g_list_append (value_list, value);
+
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, dsn_info->username);
+		value_list = g_list_append (value_list, value);
+
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
+		g_value_set_string (value, "******");
+		value_list = g_list_append (value_list, value);
+
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
+		g_value_set_boolean (value, dsn_info->is_global);
+		value_list = g_list_append (value_list, value);
 		
 		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -1922,7 +1952,7 @@ gda_config_can_modify_global_config (void)
  * Adds a new data source (or update an existing one) to the GDA
  * configuration, based on the parameters given.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_config_save_data_source (const gchar *name,
@@ -2019,7 +2049,7 @@ gda_config_save_data_source (const gchar *name,
  * #GdaDataSourceInfo structure containing all the information
  * about the data source.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info)

@@ -96,16 +96,16 @@ struct _GdaServerProviderClass {
 	/* types and values manipulation */
 	GdaDataHandler        *(* get_data_handler) (GdaServerProvider *provider,
 						     GdaConnection *cnc,
-						     GdaValueType gda_type,
+						     GType gda_type,
 						     const gchar *dbms_type);
-	GdaValue              *(* string_to_value) (GdaServerProvider *provider,
+	GValue              *(* string_to_value) (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    const gchar *string, 
-						    GdaValueType prefered_type,
+						    GType prefered_type,
 						    gchar **dbms_type);
 	const gchar           *(*get_def_dbms_type) (GdaServerProvider *provider,
 						     GdaConnection *cnc,
-						     GdaValueType gda_type);
+						     GType gda_type);
 
 	/* connections management */
 	gboolean               (* open_connection) (GdaServerProvider *provider,
@@ -201,21 +201,21 @@ GdaDataModel          *gda_server_provider_get_schema (GdaServerProvider *provid
 /* types and values manipulation */
 GdaDataHandler        *gda_server_provider_get_data_handler_gda (GdaServerProvider *provider,
 								 GdaConnection *cnc,
-								 GdaValueType for_type);
+								 GType for_type);
 GdaDataHandler        *gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,
 								  GdaConnection *cnc,
 								  const gchar *for_type);
-GdaValue              *gda_server_provider_string_to_value (GdaServerProvider *provider,
+GValue              *gda_server_provider_string_to_value (GdaServerProvider *provider,
 							    GdaConnection *cnc,
 							    const gchar *string, 
-							    GdaValueType prefered_type,
+							    GType prefered_type,
 							    gchar **dbms_type);
 gchar                 *gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 								GdaConnection *cnc,
-								GdaValue *from);
+								GValue *from);
 const gchar           *gda_server_provider_get_default_dbms_type (GdaServerProvider *provider,
 								  GdaConnection *cnc,
-								  GdaValueType gda_type);
+								  GType gda_type);
 
 
 /* connections management */

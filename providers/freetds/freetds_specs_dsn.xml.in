@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="string" null-ok="FALSE"/>
-    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="string"/>
-    <parameter id="HOSTADDR" _name="Database server IP adress" _descr="IP adress of the host which has the database server running" gdatype="string"/>
-    <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="integer"/>
-    <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="string"/>
+    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="gchararray"/>
+    <parameter id="HOSTADDR" _name="Database server IP adress" _descr="IP adress of the host which has the database server running" gdatype="gchararray"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="gint"/>
+    <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray"/>
 
-    <parameter id="SYBASE" _name="Enable Sybase" descr="Enable Sybase operative mode" gdatype="boolean"/>
-    <parameter id="TDS_FREETDSCONF" _name="FreeTDS Config File" _descr="Location of the FreeTDS config file" gdatype="string"/>
-    <parameter id="TDS_MAJVER" _name="TDS Major Version" _descr="TDS protocol major version" gdatype="string"/>
-    <parameter id="TDS_MINVER" _name="TDS Minor Version" _descr="TDS protocol minor version" gdatype="string"/>
-    <parameter id="TDS_DUMP" _name="Dump File" _descr="File for TDS protocol dumps" gdatype="string"/>
-    <parameter id="TDS_DUMPCONFIG" _name="Dump Configuration File" _descr="File for TDS protocol dumps configuration" gdatype="string"/>
+    <parameter id="SYBASE" _name="Enable Sybase" descr="Enable Sybase operative mode" gdatype="gboolean"/>
+    <parameter id="TDS_FREETDSCONF" _name="FreeTDS Config File" _descr="Location of the FreeTDS config file" gdatype="gchararray"/>
+    <parameter id="TDS_MAJVER" _name="TDS Major Version" _descr="TDS protocol major version" gdatype="gchararray"/>
+    <parameter id="TDS_MINVER" _name="TDS Minor Version" _descr="TDS protocol minor version" gdatype="gchararray"/>
+    <parameter id="TDS_DUMP" _name="Dump File" _descr="File for TDS protocol dumps" gdatype="gchararray"/>
+    <parameter id="TDS_DUMPCONFIG" _name="Dump Configuration File" _descr="File for TDS protocol dumps configuration" gdatype="gchararray"/>
   </parameters>
 </data-set-spec>

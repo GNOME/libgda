@@ -761,7 +761,7 @@ render_qf_value_label (GdaGraphviz *graph, GdaQueryFieldValue *field)
 	GString *retval;
 	gchar *str;
 	const gchar *cstr;
-	const GdaValue *value;
+	const GValue *value;
 
 	retval = g_string_new ("{");
 	cstr = gda_object_get_name (GDA_OBJECT (field));
@@ -769,7 +769,7 @@ render_qf_value_label (GdaGraphviz *graph, GdaQueryFieldValue *field)
 		g_string_append (retval, cstr);
 	value = gda_query_field_value_get_value (field);
 	if (value) {
-		str = gda_value_stringify ((GdaValue *) value);
+		str = gda_value_stringify ((GValue *) value);
 		g_string_append_printf (retval, " (%s)", str);
 		g_free (str);
 	}

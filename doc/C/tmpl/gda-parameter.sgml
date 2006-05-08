@@ -2,7 +2,7 @@
 GdaParameter
 
 <!-- ##### SECTION Short_Description ##### -->
-Represents a #GdaValue with various attributes
+Represents a #GValue with various attributes
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -53,17 +53,17 @@ The #GdaParameter object offers other features such as:
 
 @gdaparameter: the object which received the signal.
 
+<!-- ##### ARG GdaParameter:entry-plugin ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaParameter:full-bind ##### -->
 <para>
 
 </para>
 
 <!-- ##### ARG GdaParameter:gda-type ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaParameter:handler-plugin ##### -->
 <para>
 
 </para>
@@ -95,8 +95,6 @@ The #GdaParameter object offers other features such as:
 
 @type: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@dict: 
 
 
 <!-- ##### FUNCTION gda_parameter_new_copy ##### -->
@@ -144,8 +142,6 @@ The #GdaParameter object offers other features such as:
 
 @param: 
 @user: 
-<!-- # Unused Parameters # -->
-@field: 
 
 
 <!-- ##### FUNCTION gda_parameter_get_param_users ##### -->

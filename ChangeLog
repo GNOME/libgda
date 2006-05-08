@@ -1,3 +1,26 @@
+2006-05-08  Vivien Malerba <malerba@gnome-db.org>
+
+	* Individual values are now strictly GValue, much of the GdaValue API has been removed.
+	* libgda/graph/gda-graph-item.c: corrected a bug where locale was used in XML loading and
+	saving.
+	* doc/C/Makefile.am: avoid to override HTML_DIR, closes bug #329930
+	* libgda/gda-server-provider-extra.c: applied patch from Chris Shoemaker, closing
+	bug #337986
+	* libgda/handlers/gda-handler-time.c: applied patch from Chris Shoemaker, closing
+	bug #338081
+	* applied patch from Thierry Moisan, closed bug #328418
+	* libgda/gda-dict.h: removed GDA_DICT_PROPOSED_FILE from the error codes enum
+	* libgda/gda-connection.[ch]: added domain and code error to returned errors,
+	fixes bug #319948
+	* libgda/gda-connection.c: added properties to use during construction, for bug #321724
+	* libgda/gda-connection.[ch]: removed gda_connection_set_client()
+	* libgda/gda-client.[ch]: added username and password arguments to 
+	gda_client_open_connection_from_string()
+	* testing/gda-test-connection.c: added a tool to test connections
+	* libgda/gda-client.c: don't create any fake DSN when opening a connection from a string,
+	for bug #332556	
+
+
 2006-05-08  Murray Cumming,  <murrayc@murrayc.com>
 
 	* libgda/gda-connection.c: (gda_connection_class_init): Correct the registration of the 

@@ -1,17 +1,17 @@
 <!-- ##### SECTION Title ##### -->
-GdaValue
+Gda Value
 
 <!-- ##### SECTION Short_Description ##### -->
 Single value stored in a #GdaDataModel
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-&LIBGDA; manages each individual value within an opaque GdaValue structure (which is in fact a #GValue). Each GdaValue
-has a pre-defined type which is among the #GdaValueType possible types.
+&LIBGDA; manages each individual value within an opaque #GValue structure. Any GValue type can be used,
+and &LIBGDA; adds a few more data types usually found in DBMS such as NUMERIC, TIME, TIMESTAMP, GEOMETRIC POINT and BINARY.
 </para>
 <para>
-The NULL value is a special case value. It corresponds to a zero-filled (uninitialized) #GValue, and it is safe to
-use such values.
+The NULL value is a special case value: it is represented by to a zero-filled (uninitialized) #GValue and has a type equal
+to GDA_TYPE_NULL.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -22,46 +22,6 @@ use such values.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### ENUM GdaValueType ##### -->
-<para>
-
-</para>
-
-@GDA_VALUE_TYPE_NULL: represents a NULL value
-@GDA_VALUE_TYPE_BIGINT: signed integer guaranteed to be 64 bits on all platforms on which it is available (see G_HAVE_GINT64). Values of this type can range from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807.
-@GDA_VALUE_TYPE_BIGUINT: unsigned integer guaranteed to be 64 bits on all platforms on which it is available (see G_HAVE_GINT64). Values of this type can range from 0 to 18,446,744,073,709,551,615.
-@GDA_VALUE_TYPE_BINARY: represents binary data: a buffer and its length
-@GDA_VALUE_TYPE_BLOB: To be removed
-@GDA_VALUE_TYPE_BOOLEAN: standard boolean type
-@GDA_VALUE_TYPE_DATE: date type (Year, month, day)
-@GDA_VALUE_TYPE_DOUBLE: standard C double type
-@GDA_VALUE_TYPE_GEOMETRIC_POINT: a 2D point (x, y)
-@GDA_VALUE_TYPE_GOBJECT: fundamental type for GObject
-@GDA_VALUE_TYPE_INTEGER: standard C int type
-@GDA_VALUE_TYPE_LIST: a list (GList) of GdaValue values
-@GDA_VALUE_TYPE_MONEY: type to hold money values (a currency and a value as a double)
-@GDA_VALUE_TYPE_NUMERIC: arbitrary precision numerical value (string plus precision and width)
-@GDA_VALUE_TYPE_SINGLE: standard C float type
-@GDA_VALUE_TYPE_SMALLINT: standard C short type
-@GDA_VALUE_TYPE_SMALLUINT: standard C unsigned short type
-@GDA_VALUE_TYPE_STRING: a string (0 terminated array of characters)
-@GDA_VALUE_TYPE_TIME: time type (HH:MM:SS)
-@GDA_VALUE_TYPE_TIMESTAMP: date and time type
-@GDA_VALUE_TYPE_TINYINT: standard C char type
-@GDA_VALUE_TYPE_TINYUINT: standard C unsigned char type
-@GDA_VALUE_TYPE_TYPE: value which represents a GdaValueType
-@GDA_VALUE_TYPE_UINTEGER: standard C unsigned int type
-@GDA_VALUE_TYPE_UNKNOWN: undefined data type, can't be instanciated as it represents an error
-
-<!-- ##### STRUCT GdaDate ##### -->
-<para>
-
-</para>
-
-@year: 
-@month: 
-@day: 
-
 <!-- ##### STRUCT GdaGeometricPoint ##### -->
 <para>
 
@@ -69,14 +29,6 @@ use such values.
 
 @x: 
 @y: 
-
-<!-- ##### STRUCT GdaMoney ##### -->
-<para>
-
-</para>
-
-@currency: 
-@amount: 
 
 <!-- ##### STRUCT GdaNumeric ##### -->
 <para>
@@ -125,35 +77,11 @@ use such values.
 </para>
 
 
-<!-- ##### TYPEDEF GdaValue ##### -->
+<!-- ##### MACRO gda_value_new_null ##### -->
 <para>
 
 </para>
 
-
-<!-- ##### FUNCTION gda_value_new_null ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_bigint ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_biguint ##### -->
-<para>
-
-</para>
-
-@val: 
 @Returns: 
 
 
@@ -167,297 +95,7 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_binary_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_binary_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_value_new_boolean ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_date ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_date_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_date_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_value_new_double ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_geometric_point ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_geometricpoint_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_geometricpoint_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_value_new_gobject ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_integer ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_uinteger ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_list ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_money ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_money_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_money_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_value_new_numeric ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_numeric_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_numeric_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_value_new_single ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_smallint ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_smalluint ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_string ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_time ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_time_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_time_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
-<!-- ##### FUNCTION gda_value_new_timestamp ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_timestamp_copy ##### -->
-<para>
-
-</para>
-
-@boxed: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_timestamp_free ##### -->
-<para>
-
-</para>
-
-@boxed: 
-
-
 <!-- ##### FUNCTION gda_value_new_timestamp_from_timet ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_tinyint ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_tinyuint ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_gdatype ##### -->
 <para>
 
 </para>
@@ -538,40 +176,89 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_get_bigint ##### -->
+<!-- ##### FUNCTION gda_binary_copy ##### -->
 <para>
 
 </para>
 
-@value: 
+@boxed: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_set_bigint ##### -->
+<!-- ##### FUNCTION gda_binary_free ##### -->
 <para>
 
 </para>
 
-@value: 
-@val: 
+@boxed: 
 
 
-<!-- ##### FUNCTION gda_value_get_biguint ##### -->
+<!-- ##### FUNCTION gda_geometricpoint_copy ##### -->
 <para>
 
 </para>
 
-@value: 
+@boxed: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_set_biguint ##### -->
+<!-- ##### FUNCTION gda_geometricpoint_free ##### -->
 <para>
 
 </para>
 
-@value: 
-@val: 
+@boxed: 
+
+
+<!-- ##### FUNCTION gda_numeric_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_numeric_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
+<!-- ##### FUNCTION gda_time_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_time_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
+<!-- ##### FUNCTION gda_timestamp_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_timestamp_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
 
 
 <!-- ##### FUNCTION gda_value_get_binary ##### -->
@@ -581,8 +268,6 @@ use such values.
 
 @value: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@size: 
 
 
 <!-- ##### FUNCTION gda_value_set_binary ##### -->
@@ -592,9 +277,6 @@ use such values.
 
 @value: 
 @binary: 
-<!-- # Unused Parameters # -->
-@val: 
-@size: 
 
 
 <!-- ##### FUNCTION gda_value_get_blob ##### -->
@@ -607,60 +289,6 @@ use such values.
 
 
 <!-- ##### FUNCTION gda_value_set_blob ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_boolean ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_boolean ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_date ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_date ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_double ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_double ##### -->
 <para>
 
 </para>
@@ -687,42 +315,6 @@ use such values.
 @val: 
 
 
-<!-- ##### FUNCTION gda_value_get_gobject ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_gobject ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_integer ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_integer ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
 <!-- ##### FUNCTION gda_value_get_list ##### -->
 <para>
 
@@ -733,24 +325,6 @@ use such values.
 
 
 <!-- ##### FUNCTION gda_value_set_list ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_money ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_money ##### -->
 <para>
 
 </para>
@@ -785,7 +359,7 @@ use such values.
 @val: 
 
 
-<!-- ##### FUNCTION gda_value_get_single ##### -->
+<!-- ##### FUNCTION gda_value_get_short ##### -->
 <para>
 
 </para>
@@ -794,7 +368,7 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_set_single ##### -->
+<!-- ##### FUNCTION gda_value_set_short ##### -->
 <para>
 
 </para>
@@ -803,7 +377,7 @@ use such values.
 @val: 
 
 
-<!-- ##### FUNCTION gda_value_get_smallint ##### -->
+<!-- ##### FUNCTION gda_value_get_ushort ##### -->
 <para>
 
 </para>
@@ -812,43 +386,7 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_set_smallint ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_smalluint ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_smalluint ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_string ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_string ##### -->
+<!-- ##### FUNCTION gda_value_set_ushort ##### -->
 <para>
 
 </para>
@@ -885,60 +423,6 @@ use such values.
 
 
 <!-- ##### FUNCTION gda_value_set_timestamp ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_tinyint ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_tinyint ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_tinyuint ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_tinyuint ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_get_uinteger ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_uinteger ##### -->
 <para>
 
 </para>
@@ -1006,42 +490,6 @@ use such values.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_get_gdatype ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_gdatype ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
-<!-- ##### FUNCTION gda_value_convert_gtype_to_gdatype ##### -->
-<para>
-
-</para>
-
-@type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_convert_gdatype_to_gtype ##### -->
-<para>
-
-</para>
-
-@type: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_binary_to_string ##### -->
 <para>
 
@@ -1059,27 +507,6 @@ use such values.
 
 @str: 
 @bin: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_type_transformable ##### -->
-<para>
-
-</para>
-
-@src_type: 
-@dest_type: 
-@strict: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_transform ##### -->
-<para>
-
-</para>
-
-@src: 
-@dest: 
 @Returns: 
 
 

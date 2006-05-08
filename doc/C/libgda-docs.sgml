@@ -61,7 +61,7 @@
 <!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
 <!ENTITY libgda-transaction SYSTEM "xml/gda-transaction.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
-<!ENTITY libgda-GdaValue SYSTEM "xml/gda-value.xml">
+<!ENTITY libgda-GValue SYSTEM "xml/gda-value.xml">
 <!ENTITY libgda-report-types SYSTEM "xml/gda-report-types.xml">
 <!ENTITY libgda-report-document SYSTEM "xml/gda-report-document.xml">
 <!ENTITY libgda-report-item SYSTEM "xml/gda-report-item.xml">
@@ -345,7 +345,7 @@
 	Data handling is about:
 	<itemizedlist>
 	  <listitem>
-            <para>individual values: they are encapsulated within a <link linkend="GdaValue">GdaValue</link> 
+            <para>individual values: they are encapsulated within a <link linkend="GValue">GValue</link> 
 	      container (which is not much more than a <link linkend="GValue">GValue</link> from GLIB)</para>
 	  </listitem>
 	  <listitem>
@@ -381,7 +381,7 @@
 	  </listitem>
 	</itemizedlist>
       </para>
-      &libgda-GdaValue;
+      &libgda-GValue;
       &libgda-GdaParameter;
       &libgda-GdaParameterList;
       &libgda-GdaDataModel;

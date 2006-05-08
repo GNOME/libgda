@@ -156,15 +156,15 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 	if (gda_data_model_get_n_rows (model) == 1) {
 		GdaColumn *column;
 		gint i, nbcols;
-		const GdaValue *value;
+		const GValue *value;
 
 		nbcols = gda_data_model_get_n_columns (model);
 		for (i = 0; i < nbcols; i++) {
 			column = gda_data_model_describe_column (model, i);
 			value = gda_data_model_get_value_at (model, i, 0);
-			if ((gda_column_get_gda_type (column) == GDA_VALUE_TYPE_UNKNOWN))
+			if ((gda_column_get_gda_type (column) == G_TYPE_INVALID))
 				gda_column_set_gda_type (column, 
-							 value ? gda_value_get_type ((GdaValue *)value) : GDA_VALUE_TYPE_NULL);
+							 value ? G_VALUE_TYPE ((GValue *)value) : GDA_TYPE_NULL);
 		}
 	}
 
@@ -414,14 +414,14 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  *
  * This is the main function for accessing data in a model.
  *
- * Note that the returned #GdaValue must not be modified directly (unexpected behaviours may
+ * Note that the returned #GValue must not be modified directly (unexpected behaviours may
  * occur if you do so). If you want to
  * modify a value stored in a #GdaDataModel, use the gda_data_model_set_value() method.
  *
- * Returns: a #GdaValue containing the value stored in the given
+ * Returns: a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
  */
-const GdaValue *
+const GValue *
 gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
@@ -441,7 +441,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
  * @row: a valid row number, or -1
  *
  * Get the attributes of the value stored at (row, col) in @proxy, which
- * is an ORed value of #GdaValueAttribute flags. As a special case, if
+ * is an ORed value of #GValueAttribute flags. As a special case, if
  * @row is -1, then the attributes returned correspond to a "would be" value
  * if a row was added to @model.
  *
@@ -463,13 +463,13 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
  * @model: a #GdaDataModel object.
  * @col: column number.
  * @row: row number.
- * @value: a #GdaValue, or %NULL
+ * @value: a #GValue, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * Returns: TRUE if the value in the data model has been updated and no error occured
+ * Returns: TRUE if the value in the data model has been updated and no error occurred
  */
 gboolean
-gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GdaValue *value, GError **error)
+gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
@@ -485,10 +485,10 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GdaV
  * gda_data_model_set_values
  * @model: a #GdaDataModel object.
  * @row: row number.
- * @values: a list of #GdaValue, one for each n (<nb_cols) columns of @model
+ * @values: a list of #GValue, one for each n (<nb_cols) columns of @model
  * @error: a place to store errors, or %NULL
  *
- * Returns: TRUE if the value in the data model has been updated and no error occured
+ * Returns: TRUE if the value in the data model has been updated and no error occurred
  */
 gboolean
 gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError **error)
@@ -515,7 +515,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
  * and for models which are accessible sequentially only then the first row will be
  * fetched using gda_data_model_move_iter_next().
  *
- * Returns: a new #GdaDataModelIter object, or %NULL if an error occured
+ * Returns: a new #GdaDataModelIter object, or %NULL if an error occurred
  */
 GdaDataModelIter *
 gda_data_model_create_iter (GdaDataModel *model)
@@ -539,7 +539,7 @@ gda_data_model_create_iter (GdaDataModel *model)
  * Sets @iter to represent the @row row. @iter must be a valid iterator object obtained
  * using the gda_data_model_create_iter() method.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_move_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
@@ -601,7 +601,7 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
  * Sets @iter to the next available row in @model. @iter must be a valid iterator object obtained
  * using the gda_data_model_create_iter() method.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_move_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
@@ -663,7 +663,7 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
  * Sets @iter to the previous available row in @model. @iter must be a valid iterator object obtained
  * using the gda_data_model_create_iter() method.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_move_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
@@ -719,14 +719,14 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 /**
  * gda_data_model_append_values
  * @model: a #GdaDataModel object.
- * @values: #GList of #GdaValue* representing the row to add.  The
- *          length must match model's column count.  These #GdaValue
+ * @values: #GList of #GValue* representing the row to add.  The
+ *          length must match model's column count.  These #GValue
  *	    are value-copied.  The user is still responsible for freeing them.
  * @error: a place to store errors, or %NULL
  *
  * Appends a row to the given data model.
  *
- * Returns: the number of the added row, or -1 if an error occured
+ * Returns: the number of the added row, or -1 if an error occurred
  */
 gint
 gda_data_model_append_values (GdaDataModel *model, const GList *values, GError **error)
@@ -748,7 +748,7 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
  * 
  * Appends a row to the data model. 
  *
- * Returns: the number of the added row, or -1 if an error occured
+ * Returns: the number of the added row, or -1 if an error occurred
  */
 gint
 gda_data_model_append_row (GdaDataModel *model, GError **error)
@@ -790,7 +790,7 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 /**
  * gda_data_model_get_row_from_values
  * @model: a #GdaDataModel object.
- * @values: a list of #GdaValue values
+ * @values: a list of #GValue values
  * @cols_index: an array of #gint containing the column number to match each value of @values
  *
  * Returns the first row where all the values in @values at the columns identified at
@@ -822,7 +822,7 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
 
                 g_print ("%s() find row for values: ", __FUNCTION__);
                 while (list) {
-                        g_print ("#%s# ", gda_value_stringify ((GdaValue *)(list->data)));
+                        g_print ("#%s# ", gda_value_stringify ((GValue *)(list->data)));
                         list = g_slist_next (list);
                 }
                 g_print ("In %d rows\n", n_rows);
@@ -832,7 +832,7 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
 	while ((current_row < n_rows) && (row == -1)) {
                 GSList *list;
                 gboolean allequal = TRUE;
-                const GdaValue *value;
+                const GValue *value;
                 gint index;
 
                 list = values;
@@ -842,7 +842,7 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
                                 g_return_val_if_fail (cols_index [index] < n_cols, FALSE);
                         value = gda_data_model_get_value_at (model, cols_index [index], current_row);
 
-                        if (gda_value_compare_ext ((GdaValue *) (list->data), (GdaValue *) value))
+                        if (gda_value_compare_ext ((GValue *) (list->data), (GValue *) value))
                                 allequal = FALSE;
 
                         list = g_slist_next (list);
@@ -868,7 +868,7 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
  * model, depending on its implementation
  */
 void
-gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value)
+gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
@@ -919,10 +919,10 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 
 			param = gda_parameter_list_find_param (options, "NAME");
 			if (param) {
-				const GdaValue *value;
+				const GValue *value;
 				value = gda_parameter_get_value (param);
-				if (value && gda_value_isa ((GdaValue *) value, GDA_VALUE_TYPE_STRING))
-					name = gda_value_get_string ((GdaValue *) value);
+				if (value && gda_value_isa ((GValue *) value, G_TYPE_STRING))
+					name = g_value_get_string ((GValue *) value);
 				else
 					g_warning (_("The 'NAME' parameter must hold a string value, ignored."));
 			}
@@ -950,12 +950,12 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 
 			param = gda_parameter_list_find_param (options, "SEPARATOR");
 			if (param) {
-				const GdaValue *value;
+				const GValue *value;
 				value = gda_parameter_get_value (param);
-				if (value && gda_value_isa ((GdaValue *) value, GDA_VALUE_TYPE_STRING)) {
+				if (value && gda_value_isa ((GValue *) value, G_TYPE_STRING)) {
 					const gchar *str;
 
-					str = gda_value_get_string ((GdaValue *) value);
+					str = g_value_get_string ((GValue *) value);
 					if (str && *str)
 						sep = *str;
 				}
@@ -1010,7 +1010,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  *             </para></listitem>
  * </itemizedlist>
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format, 
@@ -1031,10 +1031,10 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 		
 		param = gda_parameter_list_find_param (options, "OVERWRITE");
 		if (param) {
-			const GdaValue *value;
+			const GValue *value;
 			value = gda_parameter_get_value (param);
-			if (value && gda_value_isa ((GdaValue *) value, GDA_VALUE_TYPE_BOOLEAN))
-				overwrite = gda_value_get_boolean ((GdaValue *) value);
+			if (value && gda_value_isa ((GValue *) value, G_TYPE_BOOLEAN))
+				overwrite = g_value_get_boolean ((GValue *) value);
 			else
 				g_warning (_("The 'OVERWRITE' parameter must hold a boolean value, ignored."));
 		}
@@ -1076,12 +1076,12 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, g
 			str = g_string_append_c (str, '\n');
 
 		for (c = 0; c < nb_cols; c++) {
-			GdaValue *value;
+			GValue *value;
 			gchar *txt;
 
-			value = (GdaValue *) gda_data_model_get_value_at (model, cols[c], r);
-			if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
-				txt = g_strdup (gda_value_get_boolean (value) ? "TRUE" : "FALSE");
+			value = (GValue *) gda_data_model_get_value_at (model, cols[c], r);
+			if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
+				txt = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
 			else
 				txt = gda_value_stringify (value);
 			if (c > 0)
@@ -1221,15 +1221,15 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		for (r = 0; r < rows; r++) {
 			row = xmlNewChild (data, NULL, "gda_array_row", NULL);
 			for (c = 0; c < rnb_cols; c++) {
-				GdaValue *value;
+				GValue *value;
 				gchar *str;
 
-				value = (GdaValue *) gda_data_model_get_value_at (model, rcols [c], r);
-				if (!value || gda_value_is_null ((GdaValue *) value))
+				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], r);
+				if (!value || gda_value_is_null ((GValue *) value))
 					str = NULL;
 				else {
-					if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
-						str = g_strdup (gda_value_get_boolean (value) ? "TRUE" : "FALSE");
+					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
+						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
 					else
 						str = gda_value_stringify (value);
 				}
@@ -1262,9 +1262,9 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 	values = g_ptr_array_new ();
 	g_ptr_array_set_size (values, gda_data_model_get_n_columns (model));
 	for (xml_field = xml_row->xmlChildrenNode; xml_field != NULL; xml_field = xml_field->next) {
-		GdaValue *value = NULL;
+		GValue *value = NULL;
 		GdaColumn *column;
-		GdaValueType gdatype;
+		GType gdatype;
 		gchar *isnull;
 
 		if (xmlNodeIsText (xml_field))
@@ -1278,8 +1278,8 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		/* create the value for this field */
 		column = gda_data_model_describe_column (model, pos);
 		gdatype = gda_column_get_gda_type (column);
-		if ((gdatype == GDA_VALUE_TYPE_UNKNOWN) ||
-		    (gdatype == GDA_VALUE_TYPE_NULL)) {
+		if ((gdatype == G_TYPE_INVALID) ||
+		    (gdatype == GDA_TYPE_NULL)) {
 			g_set_error (error, 0, 0,
 				     _("Cannot retrieve column data type (type is UNKNOWN or not specified)"));
 			retval = FALSE;
@@ -1295,7 +1295,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		}
 
 		if (!isnull) {
-			value = g_new0 (GdaValue, 1);
+			value = g_new0 (GValue, 1);
 			if (!gda_value_set_from_string (value, xmlNodeGetContent (xml_field), gdatype)) {
 				g_free (value);
 				g_set_error (error, 0, 0, _("Cannot interpret string as a valid %s value"), 
@@ -1313,7 +1313,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 
 	if (retval) {
 		for (i = 0; i < values->len; i++) {
-			GdaValue *value = (GdaValue *) g_ptr_array_index (values, i);
+			GValue *value = (GValue *) g_ptr_array_index (values, i);
 
 			if (!value) {
 				value = gda_value_new_null ();
@@ -1331,7 +1331,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 
 	for (i = 0; i < values->len; i++)
 		if (g_ptr_array_index (values, i))
-			gda_value_free ((GdaValue *) g_ptr_array_index (values, i));
+			gda_value_free ((GValue *) g_ptr_array_index (values, i));
 
 	return retval;
 }
@@ -1386,7 +1386,7 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
  * the corresponding column numbers in the @from data model. To set the values of a column in @to to NULL,
  * create an entry in the hash table with a negative value.
  *
- * Returns: TRUE if no error occured.
+ * Returns: TRUE if no error occurred.
  */
 gboolean
 gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTable *cols_trans, GError **error)
@@ -1397,7 +1397,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 	gint from_nb_cols;
 	GSList *copy_params = NULL;
 	gint i;
-	GList *append_values = NULL; /* list of #GdaValue values to add to the @to model */
+	GList *append_values = NULL; /* list of #GValue values to add to the @to model */
 	GType *append_types = NULL; /* array of the Glib type of the values to append */
 	GSList *plist;
 
@@ -1451,8 +1451,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 			return FALSE;
 		}
 		if (param) {
-			if (! gda_value_type_transformable (gda_parameter_get_gda_type (param), 
-							    gda_column_get_gda_type (column), FALSE)) {
+			if (! g_value_type_transformable (gda_parameter_get_gda_type (param), 
+							  gda_column_get_gda_type (column))) {
 				g_set_error (error, 0, 0,
 					     _("Destination column %d has a gda type (%s) incompatible with "
 					       "source column %d type (%s)"), i,
@@ -1468,8 +1468,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 	/* build the append_values list (stored in reverse order!)
 	 * node->data is:
 	 * - NULL if the value must be replaced by the value of the copied model
-	 * - a GdaValue of type GDA_VALYE_TYPE_NULL if a null value must be inserted in the dest data model
-	 * - a GdaValue of a different type is the value must be converted from the ser data model
+	 * - a GValue of type GDA_VALYE_TYPE_NULL if a null value must be inserted in the dest data model
+	 * - a GValue of a different type is the value must be converted from the ser data model
 	 */
 	append_types = g_new0 (GType, to_nb_cols);
 	plist = copy_params;
@@ -1481,10 +1481,10 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 		if (plist->data) {
 			if (gda_parameter_get_gda_type (GDA_PARAMETER (plist->data)) != 
 			    gda_column_get_gda_type (column)) {
-				GdaValue *newval;
+				GValue *newval;
 				
-				newval = g_new0 (GdaValue, 1);
-				append_types [i] = gda_value_convert_gdatype_to_gtype (gda_column_get_gda_type (column));
+				newval = g_new0 (GValue, 1);
+				append_types [i] = gda_column_get_gda_type (column);
 				g_value_init (newval, append_types [i]);
 				append_values = g_list_prepend (append_values, newval);
 			}
@@ -1509,27 +1509,27 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 		i = to_nb_cols - 1;
 
 		while (plist && avlist && retval) {
-			GdaValue *value;
+			GValue *value;
 
-			value = (GdaValue *) (avlist->data);
+			value = (GValue *) (avlist->data);
 			if (plist->data) {
-				value = (GdaValue *) gda_parameter_get_value (GDA_PARAMETER (plist->data));
+				value = (GValue *) gda_parameter_get_value (GDA_PARAMETER (plist->data));
 				if (avlist->data) {
-					if (append_types [i] && gda_value_is_null ((GdaValue *) (avlist->data))) 
+					if (append_types [i] && gda_value_is_null ((GValue *) (avlist->data))) 
 						g_value_init ((GValue *) (avlist->data), append_types [i]);
-					if (!gda_value_transform (value, (GdaValue *) (avlist->data))) {
+					if (!gda_value_is_null (value) && !g_value_transform (value, (GValue *) (avlist->data))) {
 						gchar *str;
 
 						str = gda_value_stringify (value);
 						g_set_error (error, 0, 0,
 							     _("Can't transform '%s' from GDA type %s to GDA type %s"),
 							     str, 
-							     gda_type_to_string (gda_value_get_type (value)),
-							     gda_type_to_string (gda_value_get_type ((GdaValue *) (avlist->data))));
+							     gda_type_to_string (G_VALUE_TYPE (value)),
+							     gda_type_to_string (G_VALUE_TYPE ((GValue *) (avlist->data))));
 						g_free (str);
 						retval = FALSE;
 					}
-					value = (GdaValue *) (avlist->data);
+					value = (GValue *) (avlist->data);
 				}
 			}
 			g_assert (value);
@@ -1557,7 +1557,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 		vlist = append_values;
 		while (vlist) {
 			if (vlist->data)
-				gda_value_free ((GdaValue *) vlist->data);
+				gda_value_free ((GValue *) vlist->data);
 			vlist = g_list_next (vlist);
 		}
 		g_free (append_types);
@@ -1578,7 +1578,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
  *
  * Loads the data from @string into @model.
  *
- * Returns: TRUE if no error occured.
+ * Returns: TRUE if no error occurred.
  */
 gboolean
 gda_data_model_import_from_string (GdaDataModel *model,
@@ -1612,7 +1612,7 @@ gda_data_model_import_from_string (GdaDataModel *model,
  *
  * Imports data contained in the @file file into @model; the format is specified using the @format argument.
  *
- * Returns: TRUE if no error occured
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_import_from_file (GdaDataModel *model, 
@@ -1674,7 +1674,7 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	gchar *sep_row  = "-+-";
 	gchar sep_fill = '-';
 	gint i, j;
-	const GdaValue *value;
+	const GValue *value;
 
 	gint offset = 0;
 
@@ -1694,12 +1694,14 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	
 	for (i = 0; i < n_cols; i++) {
 		GdaColumn *gdacol;
-		GdaValueType coltype;
+		GType coltype;
 
+#ifdef GDA_DEBUG_NO
 		{
 			GdaColumn *col = gda_data_model_describe_column (model, i);
 			g_print ("Model col %d has type %s\n", i, gda_type_to_string (gda_column_get_gda_type (col)));
 		}
+#endif
 
 		str = (gchar *) gda_data_model_get_column_title (model, i);
 		if (str)
@@ -1710,16 +1712,16 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 		gdacol = gda_data_model_describe_column (model, i);
 		coltype = gda_column_get_gda_type (gdacol);
 		/*g_string_append_printf (string, "COL %d is a %s\n", i+1, gda_type_to_string (coltype));*/
-		if ((coltype == GDA_VALUE_TYPE_BIGINT) ||
-		    (coltype == GDA_VALUE_TYPE_BIGUINT) ||
-		    (coltype == GDA_VALUE_TYPE_INTEGER) ||
-		    (coltype == GDA_VALUE_TYPE_NUMERIC) ||
-		    (coltype == GDA_VALUE_TYPE_SINGLE) ||
-		    (coltype == GDA_VALUE_TYPE_SMALLINT) ||
-		    (coltype == GDA_VALUE_TYPE_SMALLUINT) ||
-		    (coltype == GDA_VALUE_TYPE_TINYINT) ||
-		    (coltype == GDA_VALUE_TYPE_TINYUINT) ||
-		    (coltype == GDA_VALUE_TYPE_UINTEGER))
+		if ((coltype == G_TYPE_INT64) ||
+		    (coltype == G_TYPE_UINT64) ||
+		    (coltype == G_TYPE_INT) ||
+		    (coltype == GDA_TYPE_NUMERIC) ||
+		    (coltype == G_TYPE_FLOAT) ||
+		    (coltype == GDA_TYPE_SHORT) ||
+		    (coltype == GDA_TYPE_USHORT) ||
+		    (coltype == G_TYPE_CHAR) ||
+		    (coltype == G_TYPE_UCHAR) ||
+		    (coltype == G_TYPE_UINT))
 			cols_is_num [i] = TRUE;
 		else
 			cols_is_num [i] = FALSE;
@@ -1729,7 +1731,7 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	for (j = 0; j < n_rows; j++) {
 		for (i = 0; i < n_cols; i++) {
 			value = gda_data_model_get_value_at (model, i, j);
-			str = value ? gda_value_stringify ((GdaValue*)value) : g_strdup ("_null_");
+			str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
 			if (str) {
 				cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
 				g_free (str);
@@ -1771,7 +1773,7 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 		for (j = 0; j < n_rows; j++) {
 			for (i = 0; i < n_cols; i++) {
 				value = gda_data_model_get_value_at (model, i, j);
-				str = value ? gda_value_stringify ((GdaValue *)value) : g_strdup ("_null_");
+				str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
 				if (i != 0)
 					g_string_append_printf (string, "%s", sep_col);
 				if (cols_is_num [i])

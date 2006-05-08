@@ -42,85 +42,39 @@
  * gda_type_to_string
  * @type: Type to convert from.
  *
- * Returns: the string representing the given #GdaValueType.
- * This is not necessarily the same string used to describe the column type in a SQL statement.
- * Use gda_connection_get_schema() with GDA_CONNECTION_SCHEMA_TYPES to get the actual types supported by the provider.
+ * Returns: the string representing the given #GType.
  */
 const gchar *
-gda_type_to_string (GdaValueType type)
+gda_type_to_string (GType type)
 {
-	switch (type) {
-	case GDA_VALUE_TYPE_NULL : return "null";
-	case GDA_VALUE_TYPE_BIGINT : return "bigint";
-	case GDA_VALUE_TYPE_BIGUINT : return "biguint";
-	case GDA_VALUE_TYPE_BLOB : return "blob";
-	case GDA_VALUE_TYPE_BINARY : return "binary";
-	case GDA_VALUE_TYPE_BOOLEAN : return "boolean";
-	case GDA_VALUE_TYPE_DATE : return "date";
-	case GDA_VALUE_TYPE_DOUBLE : return "double";
-	case GDA_VALUE_TYPE_GEOMETRIC_POINT : return "point";
-	case GDA_VALUE_TYPE_INTEGER : return "integer";
-	case GDA_VALUE_TYPE_UINTEGER : return "uinteger";
-	case GDA_VALUE_TYPE_LIST : return "list";
-	case GDA_VALUE_TYPE_NUMERIC : return "numeric";
-	case GDA_VALUE_TYPE_MONEY : return "money"; 
-	case GDA_VALUE_TYPE_SINGLE : return "single";
-	case GDA_VALUE_TYPE_SMALLINT : return "smallint";
-	case GDA_VALUE_TYPE_SMALLUINT : return "smalluint";
-	case GDA_VALUE_TYPE_STRING : return "string";
-	case GDA_VALUE_TYPE_TIME : return "time";
-	case GDA_VALUE_TYPE_TIMESTAMP : return "timestamp";
-	case GDA_VALUE_TYPE_TINYINT : return "tinyint";
-	case GDA_VALUE_TYPE_TINYUINT : return "tinyuint";
-    
-	case GDA_VALUE_TYPE_GOBJECT : return "gobject";
-	case GDA_VALUE_TYPE_TYPE : return "type";
-	case GDA_VALUE_TYPE_UNKNOWN : return "unknown";
-	default: break;
-	}
-
-	return "unknown";
+	if (type == GDA_TYPE_NULL)
+		return "null";
+	else
+		return g_type_name (type);
 }
 
 /**
  * gda_type_from_string
- * @str: the name of a #GdaValueType, as returned by gda_type_to_string().
+ * @str: the name of a #GType, as returned by gda_type_to_string().
  *
- * Returns: the #GdaValueType represented by the given @str.
+ * Returns: the #GType represented by the given @str.
  */
-GdaValueType
+GType
 gda_type_from_string (const gchar *str)
 {
-	g_return_val_if_fail (str != NULL, GDA_VALUE_TYPE_UNKNOWN);
+	GType type;
+	g_return_val_if_fail (str != NULL, G_TYPE_INVALID);
+	
+	type = g_type_from_name (str);
+	if (type == 0) {
+		if (!strcmp (str, "null"))
+			type = GDA_TYPE_NULL;
+		else
+			/* could not find a valid GType for @str */
+			type = G_TYPE_INVALID;
+	}
 
-	if (!g_strcasecmp (str, "null")) return GDA_VALUE_TYPE_NULL;
-	else if (!g_strcasecmp (str, "bigint")) return GDA_VALUE_TYPE_BIGINT;
-	else if (!g_strcasecmp (str, "biguint")) return GDA_VALUE_TYPE_BIGUINT;
-	else if (!g_strcasecmp (str, "binary")) return GDA_VALUE_TYPE_BINARY;
-	else if (!g_strcasecmp (str, "blob")) return GDA_VALUE_TYPE_BLOB;
-	else if (!g_strcasecmp (str, "boolean")) return GDA_VALUE_TYPE_BOOLEAN;
-	else if (!g_strcasecmp (str, "date")) return GDA_VALUE_TYPE_DATE;
-	else if (!g_strcasecmp (str, "double")) return GDA_VALUE_TYPE_DOUBLE;
-	else if (!g_strcasecmp (str, "point")) return GDA_VALUE_TYPE_GEOMETRIC_POINT;
-	else if (!g_strcasecmp (str, "integer")) return GDA_VALUE_TYPE_INTEGER;
-	else if (!g_strcasecmp (str, "uinteger")) return GDA_VALUE_TYPE_UINTEGER;
-	else if (!g_strcasecmp (str, "list")) return GDA_VALUE_TYPE_LIST;
-	else if (!g_strcasecmp (str, "numeric")) return GDA_VALUE_TYPE_NUMERIC;
-	else if (!g_strcasecmp (str, "money")) return GDA_VALUE_TYPE_MONEY;
-	else if (!g_strcasecmp (str, "single")) return GDA_VALUE_TYPE_SINGLE;
-	else if (!g_strcasecmp (str, "smallint")) return GDA_VALUE_TYPE_SMALLINT;
-	else if (!g_strcasecmp (str, "smalluint")) return GDA_VALUE_TYPE_SMALLUINT;  
-	else if (!g_strcasecmp (str, "string")) return GDA_VALUE_TYPE_STRING;
-	else if (!g_strcasecmp (str, "time")) return GDA_VALUE_TYPE_TIME;
-	else if (!g_strcasecmp (str, "timestamp")) return GDA_VALUE_TYPE_TIMESTAMP;
-	else if (!g_strcasecmp (str, "tinyint")) return GDA_VALUE_TYPE_TINYINT;
-	else if (!g_strcasecmp (str, "tinyuint")) return GDA_VALUE_TYPE_TINYUINT;
-  
-	else if (!g_strcasecmp (str, "gobject")) return GDA_VALUE_TYPE_GOBJECT;
-	else if (!g_strcasecmp (str, "type")) return GDA_VALUE_TYPE_TYPE;  
-	else if (!g_strcasecmp (str, "unknown")) return GDA_VALUE_TYPE_UNKNOWN;      
-  
-	return GDA_VALUE_TYPE_UNKNOWN;
+	return type;
 }
 
 /**
@@ -655,7 +609,7 @@ utility_build_decoded_id (const gchar *prefix, const gchar *id)
  * utility_check_data_model
  * @model: a #GdaDataModel object
  * @nbcols: the minimum requested number of columns
- * @Varargs: @nbcols arguments of type GdaValueType or -1 (if any data type is accepted)
+ * @Varargs: @nbcols arguments of type GType or -1 (if any data type is accepted)
  *
  * Check the column types of a GdaDataModel.
  *
@@ -676,7 +630,7 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 	/* type of each column */
 	if (nbcols > 0) {
 		GdaColumn *att;
-		GdaValueType mtype, rtype;
+		GType mtype, rtype;
 		gint argtype;
 		va_list ap;
 
@@ -686,9 +640,9 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 			att = gda_data_model_describe_column (model, i);
 			mtype = gda_column_get_gda_type (att);
 			
-			argtype = va_arg (ap, GdaValueType);
+			argtype = va_arg (ap, GType);
 			if (argtype >= 0) {
-				rtype = (GdaValueType) argtype;
+				rtype = (GType) argtype;
 				if (mtype != rtype) {
 					retval = FALSE;
 #ifdef GDA_DEBUG

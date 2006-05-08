@@ -29,7 +29,7 @@ show_table (GdaDataModel * dm)
 {
 	gint row_id;
 	gint column_id;
-	GdaValue *value;
+	GValue *value;
 	gchar *string;
 
 	for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
@@ -42,7 +42,7 @@ show_table (GdaDataModel * dm)
 		     column_id++)
 			{
 				value =
-					(GdaValue *) gda_data_model_get_value_at (dm, column_id, row_id);
+					(GValue *) gda_data_model_get_value_at (dm, column_id, row_id);
 				string = gda_value_stringify (value);
 				g_print ("%s\t", string);
 				g_free (string);
@@ -58,7 +58,7 @@ show_table2 (GdaDataModel * dm)
 {
 	gint row_id;
 	gint column_id;
-	const GdaValue *value;
+	const GValue *value;
 	GdaRow *row;
 	gchar *string;
 
@@ -280,17 +280,17 @@ play_with_parameters ()
 {
 	GdaParameterList *list;
 	GdaParameter *parameter;
-	GdaValue *value;
+	GValue *value;
 
 	list = gda_parameter_list_new (NULL);
 
-	value = gda_value_new_integer (10);
+	g_value_set_int (value = gda_value_new (G_TYPE_INT), 10);
 	parameter = gda_parameter_new_from_value ("p1", value);
 	gda_parameter_list_add_param (list, parameter);
 	gda_value_free (value);
 	g_object_unref (parameter);
 
-	value = gda_value_new_integer (2);
+	g_value_set_int (value = gda_value_new (G_TYPE_INT), 2);
 	parameter = gda_parameter_new_from_value ("p2", value);
 	gda_parameter_list_add_param (list, parameter);
 	gda_value_free (value);

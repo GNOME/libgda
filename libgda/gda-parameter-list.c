@@ -73,7 +73,7 @@ static gint gda_parameter_list_signals[LAST_SIGNAL] = { 0, 0 };
 /* private structure */
 struct _GdaParameterListPrivate
 {
-	GHashTable *param_default_values;      /* key = param, value = new GdaValue */
+	GHashTable *param_default_values;      /* key = param, value = new GValue */
 	GHashTable *param_default_aliases;     /* key = param, value = alias parameter */
 	GHashTable *aliases_default_param;     /* key = alias parameter, value = param */
 
@@ -227,7 +227,7 @@ gda_parameter_list_new (GSList *params)
  * Creates a new #GdaParameterList object from the @xml_spec
  * specifications
  *
- * Returns: a new object, or %NULL if an error occured
+ * Returns: a new object, or %NULL if an error occurred
  */
 GdaParameterList *
 gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError **error)
@@ -326,7 +326,7 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 			if (!dtype) {
 				str = xmlGetProp (cur, "gdatype");
 				if (str) {
-					GdaValueType gtype;
+					GType gtype;
 
 					gtype = gda_type_from_string (str);
 					if (prov) {
@@ -1028,11 +1028,11 @@ gda_parameter_list_real_add_param (GdaParameterList *paramlist, GdaParameter *pa
  * Creates and adds a new #GdaParameter to @paramlist. The ID and name of the new parameter
  * are set as @name. The parameter's value is set from @str.
  *
- * Returns: the new #GdaParameter for information, or %NULL if an error occured
+ * Returns: the new #GdaParameter for information, or %NULL if an error occurred
  */
 GdaParameter *
 gda_parameter_list_add_param_from_string (GdaParameterList *paramlist, const gchar *name,
-					  GdaValueType type, const gchar *str)
+					  GType type, const gchar *str)
 {
 	GdaParameter *param;
 	GdaDict *dict;
@@ -1068,10 +1068,10 @@ gda_parameter_list_add_param_from_string (GdaParameterList *paramlist, const gch
  * Creates and adds a new #GdaParameter to @paramlist. The ID and name of the new parameter
  * are set as @name. The parameter's value is a copy of @value.
  *
- * Returns: the new #GdaParameter for information, or %NULL if an error occured
+ * Returns: the new #GdaParameter for information, or %NULL if an error occurred
  */
 GdaParameter *
-gda_parameter_list_add_param_from_value (GdaParameterList *paramlist, const gchar *name, GdaValue *value)
+gda_parameter_list_add_param_from_value (GdaParameterList *paramlist, const gchar *name, GValue *value)
 {
 	GdaParameter *param;
 	GdaDict *dict;
@@ -1081,7 +1081,7 @@ gda_parameter_list_add_param_from_value (GdaParameterList *paramlist, const gcha
 	g_return_val_if_fail (G_IS_VALUE (value), NULL);
 
 	dict = gda_object_get_dict ((GdaObject*) paramlist);
-	param = g_object_new (GDA_TYPE_PARAMETER, "dict", dict, "gda_type", gda_value_get_type (value), NULL);
+	param = g_object_new (GDA_TYPE_PARAMETER, "dict", dict, "gda_type", G_VALUE_TYPE (value), NULL);
 	g_return_val_if_fail (param, NULL);
 
 	gda_parameter_set_value (param, value);
@@ -1204,13 +1204,13 @@ gda_parameter_list_is_coherent (GdaParameterList *paramlist, GError **error)
 			if (!g_slist_find (paramlist->nodes_list, list2->data)) {
 				g_set_error (error, GDA_PARAMETER_LIST_ERROR, 0,
 					     _("GdaParameterListSource references a GdaParameterListNode"
-					       "not found in the nodes list"));
+					       " not found in the nodes list"));
 				return FALSE;
 			}
 			if (GDA_PARAMETER_LIST_NODE (list2->data)->source_model != source->data_model) {
 				g_set_error (error, GDA_PARAMETER_LIST_ERROR, 0,
 					     _("GdaParameterListSource references a GdaParameterListNode"
-					       "which does not use the same data model"));
+					       " which does not use the same data model"));
 				return FALSE;
 			}
 			list2 = g_slist_next (list2);
@@ -1473,7 +1473,7 @@ gda_parameter_list_find_source (GdaParameterList *paramlist, GdaDataModel *model
  * gda_parameter_list_set_param_default_value
  * @paramlist: a #GdaParameterList object
  * @param: a #GdaParameter object, managed by @paramlist
- * @value: a #GdaValue, of the same type as @param, or %NULL
+ * @value: a #GValue, of the same type as @param, or %NULL
  *
  * Stores @value in @paramlist to make it possible for @paramlist's users to find a default value
  * for @param when one is required, instead of %NULL.
@@ -1482,17 +1482,17 @@ gda_parameter_list_find_source (GdaParameterList *paramlist, GdaDataModel *model
  * gda_parameter_list_get_param_default_value() is used is up to @paramlist's user.
  */
 void
-gda_parameter_list_set_param_default_value (GdaParameterList *paramlist, GdaParameter *param, const GdaValue *value)
+gda_parameter_list_set_param_default_value (GdaParameterList *paramlist, GdaParameter *param, const GValue *value)
 {
 	g_return_if_fail (GDA_IS_PARAMETER_LIST (paramlist));
 	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (g_slist_find (paramlist->parameters, param));
 
-	if (value && ! gda_value_is_null ((GdaValue *) value)) {
-		g_return_if_fail (gda_value_get_type ((GdaValue *) value) ==
+	if (value && ! gda_value_is_null ((GValue *) value)) {
+		g_return_if_fail (G_VALUE_TYPE ((GValue *) value) ==
 				  gda_parameter_get_gda_type (param));
 		g_hash_table_insert (paramlist->priv->param_default_values, param, 
-				     gda_value_copy ((GdaValue *) value));
+				     gda_value_copy ((GValue *) value));
 	}
 	else
 		g_hash_table_remove (paramlist->priv->param_default_values, param);
@@ -1572,12 +1572,12 @@ foreach_finalize_alias (GdaParameter *param, GdaParameter *alias, GdaParameterLi
  * using gda_parameter_list_set_param_default_value() or to store a #GdaParameter reference from which to get
  * a value using gda_parameter_list_set_param_default_alias().
  *
- * Returns: a #GdaValue, or %NULL.
+ * Returns: a #GValue, or %NULL.
  */
-const GdaValue *
+const GValue *
 gda_parameter_list_get_param_default_value  (GdaParameterList *paramlist, GdaParameter *param)
 {
-	const GdaValue *value;
+	const GValue *value;
 	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), NULL);
 	g_return_val_if_fail (paramlist->priv, NULL);
 	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);

@@ -2,7 +2,7 @@
 GdaConnectionEvent
 
 <!-- ##### SECTION Short_Description ##### -->
-Any event which has occured on a #GdaConnection
+Any event which has occurred on a #GdaConnection
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

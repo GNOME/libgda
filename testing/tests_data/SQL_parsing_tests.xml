@@ -56,17 +56,17 @@
     <test sql="SELECT repeat (unknown ('toto', id, TRUE), 10) from customers" parsed="1" rendered="SELECT repeat (unknown ('toto', id, TRUE), 10) FROM customers AS t1"/>
   </test_group>
   <test_group descr="Param spec">
-    <test sql="SELECT 'toto'[:name=&quot;first' param&quot;]" parsed="1" rendered="SELECT 'toto' [:type=&quot;string&quot; :name=&quot;first' param&quot;]"/>
-    <test sql="SELECT 10[:type=&quot;integer&quot; :descr=&quot;this is a good' description&quot; :nullok=&quot;TRUE&quot; :isparam=&quot;TRUE&quot;], id FROM customers" parsed="1" rendered="SELECT 10 [:type=&quot;integer&quot; :descr=&quot;this is a good' description&quot; :nullok=&quot;TRUE&quot;], id FROM customers AS t1"/>
-    <test sql="Select * from customers where id&gt;=2[:name=&quot;Test param&quot; :descr=&quot;Example of description&quot; :nullok=&quot;FALSE&quot; :isparam=&quot;TRUE&quot;]" parsed="1" rendered="SELECT t1.* FROM customers AS t1 WHERE id >= 2 [:type=&quot;smallint&quot; :name=&quot;Test param&quot; :descr=&quot;Example of description&quot;]"/>
+    <test sql="SELECT 'toto'[:name=&quot;first' param&quot;]" parsed="1" rendered="SELECT 'toto' [:type=&quot;gchararray&quot; :name=&quot;first' param&quot;]"/>
+    <test sql="SELECT 10[:type=&quot;gint&quot; :descr=&quot;this is a good' description&quot; :nullok=&quot;TRUE&quot; :isparam=&quot;TRUE&quot;], id FROM customers" parsed="1" rendered="SELECT 10 [:type=&quot;gint&quot; :descr=&quot;this is a good' description&quot; :nullok=&quot;TRUE&quot;], id FROM customers AS t1"/>
+    <test sql="Select * from customers where id&gt;=2[:name=&quot;Test param&quot; :descr=&quot;Example of description&quot; :nullok=&quot;FALSE&quot; :isparam=&quot;TRUE&quot;]" parsed="1" rendered="SELECT t1.* FROM customers AS t1 WHERE id >= 2 [:type=&quot;GdaShort&quot; :name=&quot;Test param&quot; :descr=&quot;Example of description&quot;]"/>
     <test sql="UPDATE customers set name='joe' where id=1 
-[:isparam=&quot;TRUE&quot; :name=&quot;Cutomer Id&quot; :nullok=&quot;FALSE&quot;]" parsed="1" rendered="UPDATE customers SET name='joe' WHERE id=1 [:type=&quot;smallint&quot; :name=&quot;Cutomer Id&quot;]"/>
-    <test sql="SELECT ## [:type=&quot;integer&quot;]" parsed="1"/>
-    <test sql="SELECT ## [:isparam=&quot;TRUE&quot; :type=&quot;integer&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;],
-	## [:isparam=&quot;TRUE&quot; :type=&quot;date&quot;]" parsed="1" rendered="SELECT ## [:type=&quot;integer&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;], ## [:type=&quot;date&quot;]"/>
+[:isparam=&quot;TRUE&quot; :name=&quot;Cutomer Id&quot; :nullok=&quot;FALSE&quot;]" parsed="1" rendered="UPDATE customers SET name='joe' WHERE id=1 [:type=&quot;GdaShort&quot; :name=&quot;Cutomer Id&quot;]"/>
+    <test sql="SELECT ## [:type=&quot;gint&quot;]" parsed="1"/>
+    <test sql="SELECT ## [:isparam=&quot;TRUE&quot; :type=&quot;gint&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;],
+	## [:isparam=&quot;TRUE&quot; :type=&quot;GDate&quot;]" parsed="1" rendered="SELECT ## [:type=&quot;gint&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;], ## [:type=&quot;GDate&quot;]"/>
     <test sql="SELECT ##" parsed="0"/>
-    <test sql="SELECT t1.name FROM salesrep AS t1 WHERE t1.id=## [:isparam=&quot;TRUE&quot; :type=&quot;integer&quot; :name=&quot;SalesRep Id&quot;] " parsed="1" rendered="SELECT t1.name FROM salesrep AS t1 WHERE t1.id=## [:type=&quot;integer&quot; :name=&quot;SalesRep Id&quot;]"/>
-    <test sql="SELECT c.name AS Customer , o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE c.id= 3[:name=&quot;cid&quot; :type=&quot;integer&quot;]" parsed="1" rendered="SELECT c.name AS Customer, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers AS c INNER JOIN orders AS o ON (c.id=o.customer) WHERE c.id=3 [:type=&quot;integer&quot; :name=&quot;cid&quot;]"/>
+    <test sql="SELECT t1.name FROM salesrep AS t1 WHERE t1.id=## [:isparam=&quot;TRUE&quot; :type=&quot;gint&quot; :name=&quot;SalesRep Id&quot;] " parsed="1" rendered="SELECT t1.name FROM salesrep AS t1 WHERE t1.id=## [:type=&quot;gint&quot; :name=&quot;SalesRep Id&quot;]"/>
+    <test sql="SELECT c.name AS Customer , o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE c.id= 3[:name=&quot;cid&quot; :type=&quot;gint&quot;]" parsed="1" rendered="SELECT c.name AS Customer, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers AS c INNER JOIN orders AS o ON (c.id=o.customer) WHERE c.id=3 [:type=&quot;gint&quot; :name=&quot;cid&quot;]"/>
   </test_group>
 
 
@@ -128,7 +128,7 @@
   </test_group>
 
   <test_group descr="Buggy ones">
-    <test sql="SELECT o.id, c.name AS &quot;Customer name&quot;, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE o.customer= ## [:name=&quot;Customer&quot; :type=&quot;integer&quot;]" parsed="1"/>
+    <test sql="SELECT o.id, c.name AS &quot;Customer name&quot;, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE o.customer= ## [:name=&quot;Customer&quot; :type=&quot;gint&quot;]" parsed="1"/>
   </test_group>
 
   <!-- INSERT -->
@@ -139,8 +139,8 @@
     <test sql="insert into customers ('id') VALUES (10)" parsed="0"/>
     <test sql="insert into customers (id) VALUES (10)" parsed="1" rendered="INSERT INTO customers (id) VALUES (10)"/>
     <test sql="insert into customers VALUES (10, 'new customer\'s name')" parsed="1" rendered="INSERT INTO customers VALUES (10, 'new customer\'s name')"/>
-    <test sql="INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:type=&quot;integer&quot; :name=&quot;Customer&quot;], date ('now'), ## [:type=&quot;date&quot; :name=&quot;_2&quot;], NULL)" parsed="1"/>
-    <test sql="INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:type=&quot;integer&quot; :name=&quot;Customer&quot;], now (), ## [:type=&quot;date&quot; :name=&quot;_2&quot;], NULL)" parsed="1"/>
+    <test sql="INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:type=&quot;gint&quot; :name=&quot;Customer&quot;], date ('now'), ## [:type=&quot;GDate&quot; :name=&quot;_2&quot;], NULL)" parsed="1"/>
+    <test sql="INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:type=&quot;gint&quot; :name=&quot;Customer&quot;], now (), ## [:type=&quot;GDate&quot; :name=&quot;_2&quot;], NULL)" parsed="1"/>
   </test_group>
 
   <!-- UPDATE -->
@@ -228,14 +228,14 @@
     <test sql="SELECT repeat (unknown ('toto', id, TRUE), 10) from customers" parsed="1" rendered="SELECT repeat (unknown ('toto', t1.id, TRUE), 10) FROM customers AS t1"/>
   </test_group>
   <test_group descr="Param spec">
-    <test sql="SELECT 'toto'[:name=&quot;first' param&quot;]" parsed="1" rendered="SELECT 'toto' [:type=&quot;string&quot; :name=&quot;first' param&quot;]"/>
+    <test sql="SELECT 'toto'[:name=&quot;first' param&quot;]" parsed="1" rendered="SELECT 'toto' [:type=&quot;gchararray&quot; :name=&quot;first' param&quot;]"/>
     <test sql="SELECT 10[:type=&quot;int2&quot; :descr=&quot;this is a good' description&quot; :nullok=&quot;TRUE&quot; :isparam=&quot;TRUE&quot;], id FROM customers" parsed="1" rendered="SELECT 10 [:type=&quot;int2&quot; :descr=&quot;this is a good' description&quot; :nullok=&quot;TRUE&quot;], t1.id FROM customers AS t1"/>
-    <test sql="Select * from customers where id&gt;=2[:name=&quot;Test param&quot; :descr=&quot;Example of description&quot; :nullok=&quot;FALSE&quot; :isparam=&quot;TRUE&quot;]" parsed="1" rendered="SELECT t1.* FROM customers AS t1 WHERE t1.id >= 2 [:type=&quot;smallint&quot; :name=&quot;Test param&quot; :descr=&quot;Example of description&quot;]"/>
+    <test sql="Select * from customers where id&gt;=2[:name=&quot;Test param&quot; :descr=&quot;Example of description&quot; :nullok=&quot;FALSE&quot; :isparam=&quot;TRUE&quot;]" parsed="1" rendered="SELECT t1.* FROM customers AS t1 WHERE t1.id >= 2 [:type=&quot;GdaShort&quot; :name=&quot;Test param&quot; :descr=&quot;Example of description&quot;]"/>
     <test sql="UPDATE customers set name='joe' where id=1 
-[:isparam=&quot;TRUE&quot; :name=&quot;Cutomer Id&quot; :nullok=&quot;FALSE&quot;]" parsed="1" rendered="UPDATE customers SET name='joe' WHERE id=1 [:type=&quot;smallint&quot; :name=&quot;Cutomer Id&quot;]"/>
+[:isparam=&quot;TRUE&quot; :name=&quot;Cutomer Id&quot; :nullok=&quot;FALSE&quot;]" parsed="1" rendered="UPDATE customers SET name='joe' WHERE id=1 [:type=&quot;GdaShort&quot; :name=&quot;Cutomer Id&quot;]"/>
     <test sql="SELECT ## [:type=&quot;int4&quot;]" parsed="1"/>
     <test sql="SELECT ## [:isparam=&quot;TRUE&quot; :type=&quot;int4&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;],
-	## [:isparam=&quot;TRUE&quot; :type=&quot;date&quot;]" parsed="1" rendered="SELECT ## [:type=&quot;int4&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;], ## [:type=&quot;date&quot;]"/>
+	## [:isparam=&quot;TRUE&quot; :type=&quot;GDate&quot;]" parsed="1" rendered="SELECT ## [:type=&quot;int4&quot; :name=&quot;Value to test&quot; :descr=&quot;Single value to test&quot;], ## [:type=&quot;GDate&quot;]"/>
     <test sql="SELECT ##" parsed="0"/>
     <test sql="SELECT t1.name FROM salesrep AS t1 WHERE t1.id=## [:isparam=&quot;TRUE&quot; :type=&quot;int4&quot; :name=&quot;SalesRep Id&quot;] " parsed="1" rendered="SELECT t1.name FROM salesrep AS t1 WHERE t1.id=## [:type=&quot;int4&quot; :name=&quot;SalesRep Id&quot;]"/>
     <test sql="SELECT c.name AS Customer , o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE c.id= 3[:name=&quot;cid&quot; :type=&quot;int4&quot;]" parsed="1" rendered="SELECT c.name AS Customer, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers AS c INNER JOIN orders AS o ON (c.id=o.customer) WHERE c.id=3 [:type=&quot;int4&quot; :name=&quot;cid&quot;]"/>
@@ -300,7 +300,7 @@
   </test_group>
 
   <test_group descr="Buggy ones">
-    <test sql="SELECT o.id, c.name AS &quot;Customer name&quot;, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE o.customer= ## [:name=&quot;Customer&quot; :type=&quot;integer&quot;]" parsed="1"/>
+    <test sql="SELECT o.id, c.name AS &quot;Customer name&quot;, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE o.customer= ## [:name=&quot;Customer&quot; :type=&quot;gint&quot;]" parsed="1"/>
   </test_group>
 
   <!-- INSERT -->
@@ -311,8 +311,8 @@
     <test sql="insert into customers ('id') VALUES (10)" parsed="0"/>
     <test sql="insert into customers (id) VALUES (10)" parsed="1" rendered="INSERT INTO customers (id) VALUES (10)"/>
     <test sql="insert into customers VALUES (10, 'new customer\'s name')" parsed="1" rendered="INSERT INTO customers (id, name) VALUES (10, 'new customer\'s name')"/>
-    <test sql="INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:type=&quot;int4&quot; :name=&quot;Customer&quot;], date ('now'), ## [:type=&quot;date&quot; :name=&quot;_2&quot;], NULL)" parsed="1"/>
-    <test sql="INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:type=&quot;int4&quot; :name=&quot;Customer&quot;], now (), ## [:type=&quot;date&quot; :name=&quot;_2&quot;], NULL)" parsed="1"/>
+    <test sql="INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:type=&quot;int4&quot; :name=&quot;Customer&quot;], date ('now'), ## [:type=&quot;GDate&quot; :name=&quot;_2&quot;], NULL)" parsed="1"/>
+    <test sql="INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:type=&quot;int4&quot; :name=&quot;Customer&quot;], now (), ## [:type=&quot;GDate&quot; :name=&quot;_2&quot;], NULL)" parsed="1"/>
   </test_group>
 
   <!-- UPDATE -->
@@ -334,7 +334,7 @@
     <test sql="delete FROM customers" parsed="1" rendered="DELETE FROM customers"/>
     <test sql="delete FROM customers WHERE name='unknown' or not id=12 AND name='john'" parsed="1" rendered="DELETE FROM customers WHERE name='unknown' OR NOT (id=12) AND name='john'"/>
     <test sql="delete FROM customers WHERE name='unknown' or not (id=12 AND name='john')" parsed="1" rendered="DELETE FROM customers WHERE name='unknown' OR NOT (id=12 AND name='john')"/>
-    <test sql="DELETE FROM orders o WHERE o.id=## [:name=&quot;_0&quot; :type=&quot;integer&quot;]" parsed="1" rendered="DELETE FROM orders WHERE id=## [:type=&quot;int4&quot; :name=&quot;_0&quot;]"/>
+    <test sql="DELETE FROM orders o WHERE o.id=## [:name=&quot;_0&quot; :type=&quot;gint&quot;]" parsed="1" rendered="DELETE FROM orders WHERE id=## [:type=&quot;gint&quot; :name=&quot;_0&quot;]"/>
   </test_group>
 
 
@@ -343,8 +343,8 @@
   <output_file name="SQL_nosql_result.html" descr="SQL which can't be understood"/>
   <test_group descr="NON Sql queries">
     <test sql="SELECT abcedf hdqsjh qkjhd qjkhdq" parsed="0"/>
-    <test sql="UPDATE abcedf hdqsjh qkjhd ## [:type=&quot;string&quot;] qjkhdq" parsed="0"/>
+    <test sql="UPDATE abcedf hdqsjh qkjhd ## [:type=&quot;gchararray&quot;] qjkhdq" parsed="0"/>
     <test sql="abcedf hdqsjh qkjhd qjkhdq" parsed="0"/>
-    <test sql="abcedf hdqsjh qkjhd qjkhdq ## [:type=&quot;integer&quot;]" parsed="0"/>
+    <test sql="abcedf hdqsjh qkjhd qjkhdq ## [:type=&quot;gint&quot;]" parsed="0"/>
   </test_group> 
 </test_scenario>

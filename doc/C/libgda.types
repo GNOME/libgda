@@ -53,14 +53,9 @@ gda_server_provider_get_type
 gda_threader_get_type
 gda_transaction_get_type
 gda_binary_get_type
-gda_date_get_type
 gda_geometricpoint_get_type
 gda_value_list_get_type
-gda_money_get_type
 gda_numeric_get_type
 gda_time_get_type
 gda_timestamp_get_type
-gda_smallint_get_type
-gda_smalluint_get_type
-gda_gdatype_get_type
 gda_xml_storage_get_type

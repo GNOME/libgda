@@ -1,3 +1,25 @@
+/* GDA library
+ * Copyright (C) 2005 - 2006 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *	Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -38,7 +60,7 @@ static void list_datasource_info (TestConfig *config, xmlNodePtr parent, gchar *
 
 static void test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, GdaConnection *cnc);
 static void test_data_handler (TestConfig *config, xmlNodePtr table1, xmlNodePtr table2, xmlNodePtr table3,
-			       GdaDataHandler *dh, GdaValueType type, GdaServerProvider *prov);
+			       GdaDataHandler *dh, GType type, GdaServerProvider *prov);
 
 
 
@@ -619,9 +641,9 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 								GdaParameterList *params;
 								GdaParameter *param;
 								gchar *tmp;
-								const GdaValue *name;
+								const GValue *name;
 								
-								param = gda_parameter_new (GDA_VALUE_TYPE_STRING);
+								param = gda_parameter_new (G_TYPE_STRING);
 								name = gda_data_model_get_value_at (model, 0, row);
 								gda_object_set_name (GDA_OBJECT (param), "name");
 								gda_parameter_set_value (param, name);
@@ -633,7 +655,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 									     GDA_CONNECTION_SCHEMA_FIELDS, params);
 								g_object_unref (params);
 								tmp = g_strdup_printf (_("Fields for '%s'"),
-										       gda_value_get_string (name));
+										       g_value_get_string (name));
 								xmlNewChild (sect, NULL, "h4", tmp);
 								g_free (tmp);
 								if (fields) {
@@ -664,9 +686,9 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 								GdaParameterList *params;
 								GdaParameter *param;
 								gchar *tmp;
-								const GdaValue *name;
+								const GValue *name;
 								
-								param = gda_parameter_new (GDA_VALUE_TYPE_STRING);
+								param = gda_parameter_new (G_TYPE_STRING);
 								name = gda_data_model_get_value_at (model, 0, row);
 								gda_object_set_name (GDA_OBJECT (param), "name");
 								gda_parameter_set_value (param, name);
@@ -678,7 +700,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 									     GDA_CONNECTION_SCHEMA_CONSTRAINTS, params);
 								g_object_unref (params);
 								tmp = g_strdup_printf (_("Constraints for '%s'"),
-										       gda_value_get_string (name));
+										       g_value_get_string (name));
 								xmlNewChild (sect, NULL, "h4", tmp);
 								g_free (tmp);
 								if (constraints) {
@@ -722,8 +744,31 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 		html_mark_node_error (HTML_CONFIG (config), node);
 	}
 	else {
-		GdaValueType type;
+		GType type;
+		gint i;
 		xmlNodePtr hnode, htable1, htable2, htable3;
+
+                #define NB_TESTED_TYPES 19
+		GType tested_types[NB_TESTED_TYPES];
+		tested_types [0] = G_TYPE_INT64;
+		tested_types [1] = G_TYPE_UINT64;
+		tested_types [2] = GDA_TYPE_BINARY;
+		tested_types [3] = GDA_TYPE_BLOB;
+		tested_types [4] = G_TYPE_BOOLEAN;
+		tested_types [5] = G_TYPE_DATE;
+		tested_types [6] = G_TYPE_DOUBLE;
+		tested_types [7] = G_TYPE_INT;
+		tested_types [8] = GDA_TYPE_NUMERIC;
+		tested_types [9] = G_TYPE_FLOAT;
+		tested_types [10] = GDA_TYPE_SHORT;
+		tested_types [11] = GDA_TYPE_USHORT;
+		tested_types [12] = G_TYPE_STRING;
+		tested_types [13] = GDA_TYPE_TIME;
+		tested_types [14] = GDA_TYPE_TIMESTAMP;
+		tested_types [15] = G_TYPE_CHAR;
+		tested_types [16] = G_TYPE_UCHAR;
+		tested_types [17] = G_TYPE_ULONG;
+		tested_types [18] = G_TYPE_UINT;
 		
 		p = xmlNewChild (node, NULL, "p", _("Data handler marked as error cannot handle the data type "
 						    "they are returned for."));
@@ -759,12 +804,11 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 		td = xmlNewChild (tr, NULL, "th", "Value converted by data handler to string");
 		td = xmlNewChild (tr, NULL, "th", "Value converted by data handler to SQL");
 
-		for (type= GDA_VALUE_TYPE_NULL;
-		     type < GDA_VALUE_TYPE_UNKNOWN;
-		     type++) {
+		for (i = 0; i < NB_TESTED_TYPES; i++) {
 			GdaDataHandler *dh;
 			const gchar *dbms_type = NULL;
 			gchar *tmp;
+			type = tested_types [i];
 
 			tr = xmlNewChild (table, NULL, "tr", NULL);
 			td = xmlNewChild (tr, NULL, "th", gda_type_to_string (type));
@@ -778,7 +822,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 				if (! gda_data_handler_accepts_gda_type (dh, type))
 					html_mark_node_error (HTML_CONFIG (config), td);
 				else {
-					GdaValue *ivalue;
+					GValue *ivalue;
 					/* extra tests for that data handler */
 					test_data_handler (config, 
 							   htable1, htable2, htable3, dh, type, provider);
@@ -819,11 +863,11 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 typedef struct {
 	gchar    *str; /* string */
 	gboolean  free_str; /* TRUE if @str is dynamically allocated */
-	GdaValue *value; /* value to compare to when converted to a value if not NULL */
+	GValue *value; /* value to compare to when converted to a value if not NULL */
 } StringValue;
 
 static void string_values_free (StringValue *values);
-static void real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GdaValueType type,
+static void real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GType type,
 				    xmlNodePtr table1, xmlNodePtr table2, xmlNodePtr table3,
 				    GSList *values, StringValue *sql_values, StringValue *str_values);
 
@@ -837,66 +881,71 @@ static void real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GdaV
 static void
 test_data_handler (TestConfig *config, 
 		   xmlNodePtr table1, xmlNodePtr table2, xmlNodePtr table3,
-		   GdaDataHandler *dh, GdaValueType type, GdaServerProvider *prov)
+		   GdaDataHandler *dh, GType type, GdaServerProvider *prov)
 {
 	GSList *values = NULL, *list;
+	GValue *tmpval;
 
 	g_assert (dh);
 
-	switch (type) {
-	case GDA_VALUE_TYPE_NULL: 
-		return;
-        case GDA_VALUE_TYPE_BIGINT: {
+	if (type == G_TYPE_INT64) {
 		StringValue int_sql_values [] = {
 			{g_strdup_printf ("%lld", G_MININT64), TRUE, NULL},
 			{g_strdup_printf ("%lld", G_MAXINT64), TRUE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_bigint (G_MININT64));
-		values = g_slist_prepend (values, gda_value_new_bigint (G_MAXINT64));
+		g_value_set_int64 (tmpval = gda_value_new (G_TYPE_INT64), G_MININT64);
+		values = g_slist_prepend (NULL, tmpval);
+		g_value_set_int64 (tmpval = gda_value_new (G_TYPE_INT64), G_MAXINT64);
+		values = g_slist_prepend (values, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, int_sql_values, int_sql_values);
 		string_values_free (int_sql_values);
-		break;
 	}
-        case GDA_VALUE_TYPE_BIGUINT: {
+        else if (type == G_TYPE_UINT64) {
 		StringValue uint_sql_values [] = {
 			{g_strdup_printf ("%llu", G_MAXUINT64), TRUE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_biguint (G_MAXUINT64));
+		g_value_set_uint64 (tmpval = gda_value_new (G_TYPE_UINT64), G_MAXUINT64);
+		values = g_slist_prepend (NULL, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, uint_sql_values, uint_sql_values);
 		string_values_free (uint_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_BLOB:
-        case GDA_VALUE_TYPE_BINARY:
-		break;
-        case GDA_VALUE_TYPE_BOOLEAN: {
+        else if (type == G_TYPE_BOOLEAN) {
 		StringValue bool_sql_values [] = {
 			{"TRUE", FALSE, NULL},
-			{"true", FALSE, gda_value_new_boolean (TRUE)},
-			{"t", FALSE, gda_value_new_boolean (TRUE)},
+			{"true", FALSE, NULL},
+			{"t", FALSE, NULL},
 			{"FALSE", FALSE, NULL},
-			{"false", FALSE, gda_value_new_boolean (FALSE)},
-			{"f", FALSE, gda_value_new_boolean (FALSE)},
+			{"false", FALSE, NULL},
+			{"f", FALSE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_boolean (TRUE));
-		values = g_slist_prepend (values, gda_value_new_boolean (FALSE));
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), TRUE);
+		values = g_slist_prepend (NULL, tmpval);
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+		values = g_slist_prepend (values, tmpval);
+
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), TRUE);
+		bool_sql_values[1].value = tmpval;
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), TRUE);
+		bool_sql_values[2].value = tmpval;
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+		bool_sql_values[4].value = tmpval;
+		g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+		bool_sql_values[5].value = tmpval;
+		
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, bool_sql_values, bool_sql_values);
 		string_values_free (bool_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_DATE: {
-		GdaDate date;
+        else if (type == G_TYPE_DATE) {
+		GDate *date;
 
 		StringValue date_sql_values [] = {
 			{"12-26-1900", FALSE, NULL},
@@ -905,87 +954,79 @@ test_data_handler (TestConfig *config,
 			{"'26/12/1900'", FALSE, NULL},
 			{NULL, FALSE, NULL}};
 
-		date.year = 1900;
-		date.month = 12;
-		date.day = 26;
-		values = g_slist_prepend (NULL, gda_value_new_date (&date));
+		date = g_date_new_dmy (26, 12, 1900);
+		g_value_set_boxed (tmpval = gda_value_new (G_TYPE_DATE), date);
+		values = g_slist_prepend (NULL, tmpval);
 		
-		date_sql_values[0].value = gda_value_new_date (&date);
-		date_sql_values[1].value = gda_value_new_date (&date);
-		date_sql_values[2].value = gda_value_new_date (&date);
-		date_sql_values[3].value = gda_value_new_date (&date);
+		g_value_set_boxed (tmpval = gda_value_new (G_TYPE_DATE), date);
+		date_sql_values[0].value = tmpval;
+		g_value_set_boxed (tmpval = gda_value_new (G_TYPE_DATE), date);
+		date_sql_values[1].value = tmpval;
+		g_value_set_boxed (tmpval = gda_value_new (G_TYPE_DATE), date);
+		date_sql_values[2].value = tmpval;
+		g_value_set_boxed (tmpval = gda_value_new (G_TYPE_DATE), date);
+		date_sql_values[3].value = tmpval;
+		g_date_free (date);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, date_sql_values, date_sql_values);
 		string_values_free (date_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_DOUBLE:
-        case GDA_VALUE_TYPE_GEOMETRIC_POINT:
-		break;
-        case GDA_VALUE_TYPE_INTEGER: {
+        else if (type == G_TYPE_INT) {
 		StringValue int_sql_values [] = {
 			{g_strdup_printf ("%d", G_MININT32), TRUE, NULL},
 			{g_strdup_printf ("%d", G_MAXINT32), TRUE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_integer (G_MININT32));
-		values = g_slist_prepend (values, gda_value_new_integer (G_MAXINT32));
+		g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), G_MININT32);
+		values = g_slist_prepend (NULL, tmpval);
+		g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), G_MAXINT32);
+		values = g_slist_prepend (values, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, int_sql_values, int_sql_values);
 		string_values_free (int_sql_values);
-		break;
 	}
-		
-        case GDA_VALUE_TYPE_UINTEGER: {
+        else if (type == G_TYPE_UINT) {
 		StringValue uint_sql_values [] = {
 			{g_strdup_printf ("%u", G_MAXUINT32), TRUE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_uinteger (G_MAXUINT32));
+		g_value_set_uint (tmpval = gda_value_new (G_TYPE_UINT), G_MAXUINT32);
+		values = g_slist_prepend (NULL, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, uint_sql_values, uint_sql_values);
 		string_values_free (uint_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_LIST:
-        case GDA_VALUE_TYPE_NUMERIC:
-        case GDA_VALUE_TYPE_MONEY:
-        case GDA_VALUE_TYPE_SINGLE:
-		break;
-        case GDA_VALUE_TYPE_SMALLINT: {
+        else if (type == GDA_TYPE_SHORT) {
 		StringValue int_sql_values [] = {
 			{g_strdup_printf ("%d", G_MINSHORT), TRUE, NULL},
 			{g_strdup_printf ("%d", G_MAXSHORT), TRUE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_smallint (G_MINSHORT));
-		values = g_slist_prepend (values, gda_value_new_smallint (G_MAXSHORT));
+		gda_value_set_short (tmpval = gda_value_new (GDA_TYPE_SHORT), G_MINSHORT);
+		values = g_slist_prepend (NULL, tmpval);
+		gda_value_set_short (tmpval = gda_value_new (GDA_TYPE_SHORT), G_MAXSHORT);
+		values = g_slist_prepend (values, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, int_sql_values, int_sql_values);
 		string_values_free (int_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_SMALLUINT: {
+        else if (type == GDA_TYPE_USHORT) {
 		StringValue uint_sql_values [] = {
 			{g_strdup_printf ("%u", G_MAXUSHORT), TRUE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_smalluint (G_MAXUSHORT));
+		gda_value_set_ushort (tmpval = gda_value_new (GDA_TYPE_USHORT), G_MAXUSHORT);
+		values = g_slist_prepend (NULL, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, uint_sql_values, uint_sql_values);
 		string_values_free (uint_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_STRING: {
+        else if (type == G_TYPE_STRING) {
 		StringValue string_sql_values [] = {
 			{"hello", FALSE, NULL},
 			{"hello ()", FALSE, NULL},
@@ -1005,16 +1046,16 @@ test_data_handler (TestConfig *config,
 			{"'CR: \n'", FALSE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_string ("hell'o"));
-		values = g_slist_prepend (values, gda_value_new_string ("hell''o"));
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "hell'o");
+		values = g_slist_prepend (NULL, tmpval);
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "hell''o");
+		values = g_slist_prepend (values, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, string_sql_values, string_sql_values);
 		string_values_free (string_sql_values);
-		break;
 	}
-		
-        case GDA_VALUE_TYPE_TIME: {
+	else if (type == GDA_TYPE_TIME) {
 		GdaTime tim;
 
 		StringValue date_sql_values [] = {
@@ -1028,23 +1069,27 @@ test_data_handler (TestConfig *config,
 		tim.minute = 50;
 		tim.second = 55;
 		tim.timezone = 0;
-		values = g_slist_prepend (NULL, gda_value_new_time (&tim));
+		gda_value_set_time (tmpval = gda_value_new (GDA_TYPE_TIME), &tim);
+		values = g_slist_prepend (NULL, tmpval);
 		tim.hour = 11;
-		values = g_slist_prepend (NULL, gda_value_new_time (&tim));
+		gda_value_set_time (tmpval = gda_value_new (GDA_TYPE_TIME), &tim);
+		values = g_slist_prepend (NULL, tmpval);
 		
-		date_sql_values[0].value = gda_value_new_time (&tim);
-		date_sql_values[2].value = gda_value_new_time (&tim);
+		gda_value_set_time (tmpval = gda_value_new (GDA_TYPE_TIME), &tim);
+		date_sql_values[0].value = tmpval;
+		gda_value_set_time (tmpval = gda_value_new (GDA_TYPE_TIME), &tim);
+		date_sql_values[2].value = tmpval;
 		tim.hour = 23;
-		date_sql_values[1].value = gda_value_new_time (&tim);
-		date_sql_values[3].value = gda_value_new_time (&tim);
+		gda_value_set_time (tmpval = gda_value_new (GDA_TYPE_TIME), &tim);
+		date_sql_values[1].value = tmpval;
+		gda_value_set_time (tmpval = gda_value_new (GDA_TYPE_TIME), &tim);
+		date_sql_values[3].value = tmpval;
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, date_sql_values, date_sql_values);
 		string_values_free (date_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_TIMESTAMP:{
+        else if (type == GDA_TYPE_TIMESTAMP){
 		GdaTimestamp stamp;
 
 		StringValue date_sql_values [] = {
@@ -1062,61 +1107,58 @@ test_data_handler (TestConfig *config,
 		stamp.second = 55;
 		stamp.fraction = 0;
 		stamp.timezone = 0;
-		values = g_slist_prepend (NULL, gda_value_new_timestamp (&stamp));
+		gda_value_set_timestamp (tmpval = gda_value_new (GDA_TYPE_TIMESTAMP), &stamp);
+		values = g_slist_prepend (NULL, tmpval);
 		stamp.hour = 11;
-		values = g_slist_prepend (NULL, gda_value_new_timestamp (&stamp));
+		gda_value_set_timestamp (tmpval = gda_value_new (GDA_TYPE_TIMESTAMP), &stamp);
+		values = g_slist_prepend (NULL, tmpval);
 		
-		date_sql_values[0].value = gda_value_new_timestamp (&stamp);
-		date_sql_values[2].value = gda_value_new_timestamp (&stamp);
+		gda_value_set_timestamp (tmpval = gda_value_new (GDA_TYPE_TIMESTAMP), &stamp);
+		date_sql_values[0].value = tmpval;
+		gda_value_set_timestamp (tmpval = gda_value_new (GDA_TYPE_TIMESTAMP), &stamp);
+		date_sql_values[2].value = tmpval;
 		stamp.hour = 23;
-		date_sql_values[1].value = gda_value_new_timestamp (&stamp);
-		date_sql_values[3].value = gda_value_new_timestamp (&stamp);
+		gda_value_set_timestamp (tmpval = gda_value_new (GDA_TYPE_TIMESTAMP), &stamp);
+		date_sql_values[1].value = tmpval;
+		gda_value_set_timestamp (tmpval = gda_value_new (GDA_TYPE_TIMESTAMP), &stamp);
+		date_sql_values[3].value = tmpval;
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, date_sql_values, date_sql_values);
 		string_values_free (date_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_TINYINT: {
+        else if (type == G_TYPE_CHAR) {
 		StringValue int_sql_values [] = {
 			{g_strdup_printf ("%d", (gchar) 0x80), TRUE, NULL},
 			{g_strdup_printf ("%d", (gchar) 0x7F), TRUE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_tinyint ((gchar) 0x7F));
-		values = g_slist_prepend (values, gda_value_new_tinyint ((gchar) 0x80));
+		g_value_set_char (tmpval = gda_value_new (G_TYPE_CHAR), (gchar) 0x7F);
+		values = g_slist_prepend (NULL, tmpval);
+		g_value_set_char (tmpval = gda_value_new (G_TYPE_CHAR), (gchar) 0x80);
+		values = g_slist_prepend (values, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, int_sql_values, int_sql_values);
 		string_values_free (int_sql_values);
-		break;
 	}
-
-        case GDA_VALUE_TYPE_TINYUINT:{
+        else if (type == G_TYPE_UCHAR){
 		StringValue uint_sql_values [] = {
 			{g_strdup_printf ("%hhu", (gchar) 0xFF), TRUE, NULL},
 			{NULL, FALSE, NULL}};
 
-		values = g_slist_prepend (NULL, gda_value_new_tinyuint ((gchar) 0xFF));
+		g_value_set_uchar (tmpval = gda_value_new (G_TYPE_UCHAR), (gchar) 0xFF);
+		values = g_slist_prepend (NULL, tmpval);
 
 		real_test_data_handler (config, dh, type, table1, table2, table3, 
 					values, uint_sql_values, uint_sql_values);
 		string_values_free (uint_sql_values);
-		break;
-	}
-
-        case GDA_VALUE_TYPE_GOBJECT:
-        case GDA_VALUE_TYPE_TYPE:
-        case GDA_VALUE_TYPE_UNKNOWN:
-        default: 
-		break;
 	}
 
 	list = values;
 	while (list) {
 		if (list->data)
-			gda_value_free ((GdaValue *) (list->data));
+			gda_value_free ((GValue *) (list->data));
 		list = g_slist_next (list);
 	}
 
@@ -1141,12 +1183,12 @@ string_values_free (StringValue *values)
 }
 
 static void
-real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GdaValueType type,
+real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GType type,
 			xmlNodePtr table1, xmlNodePtr table2, xmlNodePtr table3,
 			GSList *values, StringValue *sql_values, StringValue *str_values)
 {
 	xmlNodePtr tr, td;
-	GdaValue *value, *cmpvalue;
+	GValue *value, *cmpvalue;
 	GSList *list;
 	gchar *tmp;
 
@@ -1178,7 +1220,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GdaValueType typ
 	list = values;
 	while (list) {
 		tr = xmlNewChild (table1, NULL, "tr", NULL);
-		value = (GdaValue *) (list->data);
+		value = (GValue *) (list->data);
 
 		td = xmlNewChild (tr, NULL, "td", gda_type_to_string (type));
 

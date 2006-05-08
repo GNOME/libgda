@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -376,10 +376,12 @@ gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
  * gda_client_open_connection
  * @client: a #GdaClient object.
  * @dsn: data source name.
- * @username: user name.
- * @password: password for @username.
+ * @username: user name or %NULL
+ * @password: password for @username, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
+ *
+ * This function is the way of opening database connections with libgda.
  *
  * Establishes a connection to a data source. The connection will be opened
  * if no identical connection is available in the #GdaClient connection pool,
@@ -387,7 +389,14 @@ gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
  * specify #GDA_CONNECTION_OPTIONS_DONT_SHARE as one of the flags in
  * the @options parameter.
  *
- * This function is the way of opening database connections with libgda.
+ * The username and password used to actually open the connection are the first
+ * non-NULL string being chosen by order from
+ * <itemizedlist>
+ *  <listitem>the @username or @password</listitem>
+ *  <listitem>the username or password sprcified in the DSN definition</listitem>
+ *  <listitem>the USERNAME= and PASSWORD= parts of the connection string in the DSN definition</listitem>
+ * </itemizedlist>
+ *
  *
  * Returns: the opened connection if successful, %NULL if there is
  * an error.
@@ -463,17 +472,28 @@ gda_client_open_connection (GdaClient *client,
  * @client: a #GdaClient object.
  * @provider_id: provider ID to connect to.
  * @cnc_string: connection string.
+ * @username: user name.
+ * @password: password for @username.
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
  * Opens a connection given a provider ID and a connection string. This
  * allows applications to open connections without having to create
  * a data source in the configuration. The format of @cnc_string is
- * similar to PostgreSQL and MySQL connection strings. It is a ;-separated
- * series of key=value pairs. Do not add extra whitespace after the ; 
+ * similar to PostgreSQL and MySQL connection strings. It is a semicolumn-separated
+ * series of key=value pairs. Do not add extra whitespace after the semicolumn
  * separator. The possible keys depend on the provider, but
  * these keys should work with all providers:
  * USER, PASSWORD, HOST, DATABASE, PORT
+ *
+ * The username and password used to actually open the connection are the first
+ * non-NULL string being chosen by order from
+ * <itemizedlist>
+ *  <listitem>the @username or @password</listitem>
+ *  <listitem>the USERNAME= and PASSWORD= parts of the @cnc_string</listitem>
+ * </itemizedlist>
+ *
+
  *
  * Returns: the opened connection if successful, %NULL if there is
  * an error.
@@ -482,12 +502,13 @@ GdaConnection *
 gda_client_open_connection_from_string (GdaClient *client,
 					const gchar *provider_id,
 					const gchar *cnc_string,
+					const gchar *username,
+					const gchar *password,
 					GdaConnectionOptions options,
 					GError **error)
 {
-	GdaDataSourceInfo *dsn_info;
+	LoadedProvider *prv;
 	GdaConnection *cnc;
-	static gint count = 0;
 	GList *l;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
@@ -507,33 +528,35 @@ gda_client_open_connection_from_string (GdaClient *client,
 		}
 	}
 
-	/* create a temporary DSNInfo */
-	dsn_info = g_new (GdaDataSourceInfo, 1);
-	dsn_info->name = g_strdup_printf ("GDA-Temporary-Data-Source-%d", count++);
-	dsn_info->provider = g_strdup (provider_id);
-	dsn_info->cnc_string = g_strdup (cnc_string);
-	dsn_info->description = g_strdup (_("Temporary data source created by libgda. Don't remove it"));
-	dsn_info->username = NULL;
-	dsn_info->password = NULL;
-
-	gda_config_save_data_source (dsn_info->name,
-				     dsn_info->provider,
-				     dsn_info->cnc_string,
-				     dsn_info->description,
-				     dsn_info->username,
-				     dsn_info->password, FALSE);
-
-	/* open the connection */
-	cnc = gda_client_open_connection (client,
-					  dsn_info->name,
-					  dsn_info->username,
-					  dsn_info->password,
-					  options,
-					  error);
-
-	/* free memory */
-	gda_config_remove_data_source (dsn_info->name);
-	gda_data_source_info_free (dsn_info);
+	/* try to find provider in our hash table */
+	if (provider_id) {
+		prv = g_hash_table_lookup (client->priv->providers, provider_id);
+		if (!prv)
+			prv = find_or_load_provider (client, provider_id);
+	
+		if (prv) {
+			cnc = g_object_new (GDA_TYPE_CONNECTION, 
+					    "client", client, 
+					    "provider_obj", prv->provider, 
+					    "cnc_string", cnc_string, 
+					    "username", username, 
+					    "password", password, 
+					    "options", options, NULL);
+			if (!gda_connection_open (cnc, error)) {
+				g_object_unref (cnc);
+				cnc = NULL;
+			}
+		}
+		else 
+			g_set_error (error, GDA_CLIENT_ERROR, 0, 
+				     _("Datasource configuration error: could not find provider '%s'"),
+				     provider_id);
+	}
+	else {
+		g_warning (_("Datasource configuration error: no provider specified"));
+		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+			     _("Datasource configuration error: no provider specified"));
+	}
 
 	return cnc;
 }
@@ -666,14 +689,15 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaConnect
 {
 	GdaParameterList *params;
 	GdaParameter *param;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (error != NULL);
 
-	param = gda_parameter_new (GDA_VALUE_TYPE_GOBJECT);
+	param = gda_parameter_new (G_TYPE_OBJECT);
 	gda_object_set_name (GDA_OBJECT (param), "error");
-	value = gda_value_new_gobject (G_OBJECT (error));
+	value = g_value_init (g_new0 (GValue, 1), G_TYPE_OBJECT);
+	g_value_set_object (value, G_OBJECT (error));
 	gda_parameter_set_value (param, value);
 	gda_value_free (value);
 
@@ -732,15 +756,16 @@ gda_client_notify_transaction_started_event (GdaClient *client, GdaConnection *c
 {
 	GdaParameterList *params;
 	GdaParameter *param;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
-	param = gda_parameter_new (GDA_VALUE_TYPE_GOBJECT);
+	param = gda_parameter_new (G_TYPE_OBJECT);
 	gda_object_set_name (GDA_OBJECT (param), "transaction");
-	value = gda_value_new_gobject (G_OBJECT (xaction));
+	value = g_value_init (g_new0 (GValue, 1), G_TYPE_OBJECT);
+	g_value_set_object (value, G_OBJECT (xaction));
 	gda_parameter_set_value (param, value);
 	gda_value_free (value);
 
@@ -765,15 +790,16 @@ gda_client_notify_transaction_committed_event (GdaClient *client, GdaConnection 
 {
 	GdaParameterList *params;
 	GdaParameter *param;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
-	param = gda_parameter_new (GDA_VALUE_TYPE_GOBJECT);
+	param = gda_parameter_new (G_TYPE_OBJECT);
 	gda_object_set_name (GDA_OBJECT (param), "transaction");
-	value = gda_value_new_gobject (G_OBJECT (xaction));
+	value = g_value_init (g_new0 (GValue, 1), G_TYPE_OBJECT);
+	g_value_set_object (value, G_OBJECT (xaction));
 	gda_parameter_set_value (param, value);
 	gda_value_free (value);
 
@@ -798,15 +824,16 @@ gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection 
 {
 	GdaParameterList *params;
 	GdaParameter *param;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
-	param = gda_parameter_new (GDA_VALUE_TYPE_GOBJECT);
+	param = gda_parameter_new (G_TYPE_OBJECT);
 	gda_object_set_name (GDA_OBJECT (param), "transaction");
-	value = gda_value_new_gobject (G_OBJECT (xaction));
+	value = g_value_init (g_new0 (GValue, 1), G_TYPE_OBJECT);
+	g_value_set_object (value, G_OBJECT (xaction));
 	gda_parameter_set_value (param, value);
 	gda_value_free (value);
 
@@ -929,7 +956,7 @@ gda_client_rollback_transaction (GdaClient *client, GdaTransaction *xaction)
  * Get an XML string representing the parameters which can be present in the
  * DSN string used to open a connection.
  *
- * Returns: a string (free it after usage), or %NULL if an error occured
+ * Returns: a string (free it after usage), or %NULL if an error occurred
  *
  */
 gchar *
@@ -1001,7 +1028,7 @@ gda_client_get_provider_specs (GdaClient *client, const gchar *provider,
  *   <listitem><para>the name of the database to create, named "dbname"</para></listitem>
  * </itemizedlist>
  *
- * Returns: TRUE if no error occured and the database has been created
+ * Returns: TRUE if no error occurred and the database has been created
  */
 gboolean
 gda_client_create_database (GdaClient *client, const gchar *provider, GdaParameterList *params,
@@ -1021,13 +1048,13 @@ gda_client_create_database (GdaClient *client, const gchar *provider, GdaParamet
 			name = gda_parameter_list_find_param (params, "dbname");
 			
 			if (name && cnc) {
-				const GdaValue *cnc_v, *name_v;
+				const GValue *cnc_v, *name_v;
 				
 				cnc_v = gda_parameter_get_value (cnc);
 				name_v = gda_parameter_get_value (name);
 				return gda_server_provider_create_database_cnc (prv->provider, 
-										GDA_CONNECTION (gda_value_get_gobject ((GdaValue *) cnc_v)),
-										gda_value_get_string ((GdaValue *) name_v));
+										GDA_CONNECTION (g_value_get_object ((GValue *) cnc_v)),
+										g_value_get_string ((GValue *) name_v));
 			}
 		}
 		else
@@ -1062,7 +1089,7 @@ gda_client_create_database (GdaClient *client, const gchar *provider, GdaParamet
  *   <listitem><para>the name of the database to destroy, named "dbname"</para></listitem>
  * </itemizedlist>
  *
- * Returns: TRUE if no error occured and the database has been destroyed
+ * Returns: TRUE if no error occurred and the database has been destroyed
  */
 gboolean
 gda_client_drop_database (GdaClient *client, const gchar *provider, 
@@ -1082,13 +1109,13 @@ gda_client_drop_database (GdaClient *client, const gchar *provider,
 			name = gda_parameter_list_find_param (params, "dbname");
 			
 			if (name && cnc) {
-				const GdaValue *cnc_v, *name_v;
+				const GValue *cnc_v, *name_v;
 				
 				cnc_v = gda_parameter_get_value (cnc);
 				name_v = gda_parameter_get_value (name);
 				return gda_server_provider_drop_database_cnc (prv->provider, 
-									      GDA_CONNECTION (gda_value_get_gobject ((GdaValue *) cnc_v)),
-									      gda_value_get_string ((GdaValue *) name_v));
+									      GDA_CONNECTION (g_value_get_object ((GValue *) cnc_v)),
+									      g_value_get_string ((GValue *) name_v));
 			}
 		}
 		else

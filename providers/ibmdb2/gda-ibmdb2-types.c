@@ -32,41 +32,41 @@
 // Public functions
 /////////////////////////////////////////////////////////////////////////////
 
-const GdaValueType
+const GType
 gda_ibmdb2_get_value_type (GdaIBMDB2Field *col)
 {
-	g_return_val_if_fail (col != NULL, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (col != NULL, G_TYPE_INVALID);
 
 	switch (col->column_type) {
 		case SQL_VARCHAR:
 		case SQL_LONGVARCHAR:
 		case SQL_CHAR:
 		case SQL_DATALINK:
-			return GDA_VALUE_TYPE_STRING;
+			return G_TYPE_STRING;
 		case SQL_NUMERIC:
 		case SQL_DECIMAL:
-			return GDA_VALUE_TYPE_NUMERIC;
+			return GDA_TYPE_NUMERIC;
 		case SQL_BIGINT:
-			return GDA_VALUE_TYPE_BIGINT;
+			return G_TYPE_INT64;
 		case SQL_INTEGER:
-			return GDA_VALUE_TYPE_INTEGER;
+			return G_TYPE_INT;
 		case SQL_SMALLINT:
 		case SQL_TINYINT:
-			return GDA_VALUE_TYPE_SMALLINT;
+			return GDA_TYPE_SHORT;
 		case SQL_REAL:
-			return GDA_VALUE_TYPE_SINGLE;
+			return G_TYPE_FLOAT;
 		case SQL_DOUBLE:
 		case SQL_FLOAT:
-			return GDA_VALUE_TYPE_DOUBLE;
+			return G_TYPE_DOUBLE;
 		case SQL_TYPE_DATE:
 		case SQL_DATE:
-			return GDA_VALUE_TYPE_DATE;
+			return G_TYPE_DATE;
 		case SQL_TYPE_TIME:
 		case SQL_TIME:
-			return GDA_VALUE_TYPE_TIME;
+			return GDA_TYPE_TIME;
 		case SQL_TYPE_TIMESTAMP:
 		case SQL_TIMESTAMP:
-			return GDA_VALUE_TYPE_TIMESTAMP;
+			return GDA_TYPE_TIMESTAMP;
 		case SQL_GRAPHIC:
 		case SQL_VARGRAPHIC:
 		case SQL_LONGVARGRAPHIC:
@@ -78,24 +78,24 @@ gda_ibmdb2_get_value_type (GdaIBMDB2Field *col)
 		case SQL_VARBINARY:
 		case SQL_LONGVARBINARY:
 		case SQL_BIT:
-			return GDA_VALUE_TYPE_BINARY;
+			return GDA_TYPE_BINARY;
 		/* FIXME Unicode */
 		case SQL_WCHAR:
 		case SQL_WVARCHAR:
 		case SQL_WLONGVARCHAR:
-			return GDA_VALUE_TYPE_UNKNOWN;
+			return G_TYPE_INVALID;
 		case SQL_UNKNOWN_TYPE:
-			return GDA_VALUE_TYPE_UNKNOWN;
+			return G_TYPE_INVALID;
 		default:
-			return GDA_VALUE_TYPE_UNKNOWN;
+			return G_TYPE_INVALID;
 	}
 	
-	return GDA_VALUE_TYPE_UNKNOWN;
+	return G_TYPE_INVALID;
 
 }
 
 void
-gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field)
+gda_ibmdb2_set_gdavalue (GValue *value, GdaIBMDB2Field *field)
 {
 	GdaNumeric numeric;
 
@@ -109,20 +109,20 @@ gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field)
 		/* FIXME */
 		switch (field->column_type) {
 			case SQL_SMALLINT:
-				gda_value_set_smallint (value, *((gshort*)field->column_data));
+				gda_value_set_short (value, *((gshort*)field->column_data));
 				break;
 			case SQL_INTEGER:
-				gda_value_set_integer (value, *((gint*)field->column_data));
+				g_value_set_int (value, *((gint*)field->column_data));
 				break;
 			case SQL_BIGINT:
-				gda_value_set_bigint (value, (gint64)atoll(field->column_data));
+				g_value_set_int64 (value, (gint64)atoll(field->column_data));
 				break;
 			case SQL_REAL:
-				gda_value_set_single (value, *((gfloat*)field->column_data));
+				g_value_set_float (value, *((gfloat*)field->column_data));
 				break;
 			case SQL_DOUBLE:
 			case SQL_FLOAT:
-				gda_value_set_double (value, *((gdouble*)field->column_data));
+				g_value_set_double (value, *((gdouble*)field->column_data));
 				break;
 			case SQL_TYPE_DATE:
 			case SQL_DATE:
@@ -148,20 +148,20 @@ gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field)
 			case SQL_LONGVARCHAR:
 			case SQL_DATALINK:
 			case SQL_CHAR:
-				gda_value_set_string (value, (gchar*)field->column_data);
+				g_value_set_string (value, (gchar*)field->column_data);
 				break;
 			case SQL_BLOB:
-				gda_value_set_string (value, _("[BLOB unsupported]"));
+				g_value_set_string (value, _("[BLOB unsupported]"));
 				break;
 			default:
-				gda_value_set_string (value, _("[Unsupported data]"));
+				g_value_set_string (value, _("[Unsupported data]"));
 		}
 	}
 }
 
-void gda_ibmdb2_set_gdavalue_by_date (GdaValue *value, DATE_STRUCT *date)
+void gda_ibmdb2_set_gdavalue_by_date (GValue *value, DATE_STRUCT *date)
 {
-	GdaDate tmp;
+	GDate tmp;
 
         g_return_if_fail (value != NULL);
 	
@@ -169,10 +169,10 @@ void gda_ibmdb2_set_gdavalue_by_date (GdaValue *value, DATE_STRUCT *date)
 	tmp.month = date->month;
 	tmp.day = date->day;
 	
-	gda_value_set_date (value, &tmp);
+	g_value_set_boxed (value, &tmp);
 }
 
-void gda_ibmdb2_set_gdavalue_by_time (GdaValue *value, TIME_STRUCT *time)
+void gda_ibmdb2_set_gdavalue_by_time (GValue *value, TIME_STRUCT *time)
 {
 	GdaTime tmp;
 
@@ -186,7 +186,7 @@ void gda_ibmdb2_set_gdavalue_by_time (GdaValue *value, TIME_STRUCT *time)
 	gda_value_set_time (value, &tmp);
 }
 
-void gda_ibmdb2_set_gdavalue_by_timestamp (GdaValue *value, TIMESTAMP_STRUCT *timestamp)
+void gda_ibmdb2_set_gdavalue_by_timestamp (GValue *value, TIMESTAMP_STRUCT *timestamp)
 {
 	GdaTimestamp tmp;
 

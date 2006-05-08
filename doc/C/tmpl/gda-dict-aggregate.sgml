@@ -39,8 +39,6 @@ It implements the #GdaXmlStorage interface.
 
 @dict: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@srv: 
 
 
 <!-- ##### FUNCTION gda_dict_aggregate_set_dbms_id ##### -->

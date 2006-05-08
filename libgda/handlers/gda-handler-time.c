@@ -33,7 +33,6 @@ static void handler_compute_locale (GdaHandlerTime *hdl);
  * GtkCalendar gets months in [0-11]
  * GDate represents months in [1-12]
  * struct tm represents months in [0-11]
- * GdaDate represents months in [1-12]
  *
  * about date localization:
  * ------------------------
@@ -43,18 +42,18 @@ static void handler_compute_locale (GdaHandlerTime *hdl);
 
 /* GdaDataHandler interface */
 static void         gda_handler_time_data_handler_init      (GdaDataHandlerIface *iface);
-static gchar       *gda_handler_time_get_sql_from_value     (GdaDataHandler *dh, const GdaValue *value);
-static gchar       *gda_handler_time_get_str_from_value     (GdaDataHandler *dh, const GdaValue *value);
-static GdaValue    *gda_handler_time_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql,
-								  GdaValueType type);
-static GdaValue    *gda_handler_time_get_value_from_str     (GdaDataHandler *dh, const gchar *sql,
-								  GdaValueType type);
+static gchar       *gda_handler_time_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);
+static gchar       *gda_handler_time_get_str_from_value     (GdaDataHandler *dh, const GValue *value);
+static GValue      *gda_handler_time_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql,
+							     GType type);
+static GValue      *gda_handler_time_get_value_from_str     (GdaDataHandler *dh, const gchar *sql,
+							     GType type);
 
-static GdaValue    *gda_handler_time_get_sane_init_value    (GdaDataHandler * dh, GdaValueType type);
+static GValue      *gda_handler_time_get_sane_init_value    (GdaDataHandler * dh, GType type);
 
 static guint        gda_handler_time_get_nb_gda_types       (GdaDataHandler *dh);
-static GdaValueType gda_handler_time_get_gda_type_index     (GdaDataHandler *dh, guint index);
-static gboolean     gda_handler_time_accepts_gda_type       (GdaDataHandler * dh, GdaValueType type);
+static GType        gda_handler_time_get_gda_type_index     (GdaDataHandler *dh, guint index);
+static gboolean     gda_handler_time_accepts_gda_type       (GdaDataHandler * dh, GType type);
 
 static const gchar *gda_handler_time_get_descr              (GdaDataHandler *dh);
 
@@ -68,7 +67,7 @@ typedef struct _LocaleSetting {
 struct  _GdaHandlerTimePriv {
 	gchar          *detailled_descr;
 	guint           nb_gda_types;
-	GdaValueType   *valid_gda_types;
+	GType          *valid_gda_types;
 
 	/* for locale setting */
 	LocaleSetting  *sql_locale;
@@ -140,10 +139,10 @@ gda_handler_time_init (GdaHandlerTime *hdl)
 	hdl->priv = g_new0 (GdaHandlerTimePriv, 1);
 	hdl->priv->detailled_descr = _("Time and Date handler");
 	hdl->priv->nb_gda_types = 3;
-	hdl->priv->valid_gda_types = g_new0 (GdaValueType, 7);
-	hdl->priv->valid_gda_types[0] = GDA_VALUE_TYPE_DATE;
-	hdl->priv->valid_gda_types[1] = GDA_VALUE_TYPE_TIME;
-	hdl->priv->valid_gda_types[2] = GDA_VALUE_TYPE_TIMESTAMP;
+	hdl->priv->valid_gda_types = g_new0 (GType, 7);
+	hdl->priv->valid_gda_types[0] = G_TYPE_DATE;
+	hdl->priv->valid_gda_types[1] = GDA_TYPE_TIME;
+	hdl->priv->valid_gda_types[2] = GDA_TYPE_TIMESTAMP;
 
 	/* taking into accout the locale */
 	hdl->priv->sql_locale = g_new0 (LocaleSetting, 1);
@@ -338,46 +337,49 @@ handler_compute_locale (GdaHandlerTime *hdl)
 }
 
 /* Interface implementation */
-static gchar *render_date_locale (const GdaDate *date, LocaleSetting *locale);
+static gchar *render_date_locale (const GDate *date, LocaleSetting *locale);
 
 /* REM: SQL date format is always returned using the MM-DD-YYY format, it's up to the
  * provider to be correctly set up to accept this format.
  */
 static gchar *
-gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GdaValue *value)
+gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 {
 	gchar *retval = NULL, *str;
 	GdaHandlerTime *hdl;
-	const GdaDate *date;
-	GdaDate vdate;
-	const GdaTime *tim;
-	GdaTime vtim;
-	const GdaTimestamp *gdats;
+	GType type;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
+	type = G_VALUE_TYPE (value);
 
-	switch (gda_value_get_type ((GdaValue *) value)) {
-	case GDA_VALUE_TYPE_DATE:
-		date = gda_value_get_date ((GdaValue *) value);
+	if (type == G_TYPE_DATE) {
+		const GDate *date;
+
+		date = (GDate *) g_value_get_boxed (value);
 		str = render_date_locale (date, hdl->priv->sql_locale);
 		retval = g_strdup_printf ("'%s'", str);
 		g_free (str);
-		break;
-	case GDA_VALUE_TYPE_TIME:
-		tim = gda_value_get_time ((GdaValue *) value);
+	}
+	else if (type == GDA_TYPE_TIME) {
+		const GdaTime *tim;
+
+		tim = gda_value_get_time ((GValue *) value);
 		retval = g_strdup_printf ("'%02d:%02d:%02d'",
 					  tim->hour,
 					  tim->minute,
 					  tim->second);
-		break;
-	case GDA_VALUE_TYPE_TIMESTAMP:
-		gdats = gda_value_get_timestamp ((GdaValue *) value);
-		vdate.year = gdats->year;
-		vdate.month = gdats->month;
-		vdate.day = gdats->day;
-		str = render_date_locale (&vdate, hdl->priv->sql_locale);
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		const GdaTimestamp *gdats;
+		GDate *vdate;
+		GdaTime vtim;
+
+		gdats = gda_value_get_timestamp ((GValue *) value);
+		vdate = g_date_new_dmy (gdats->day, gdats->month, gdats->year);
+		str = render_date_locale (vdate, hdl->priv->sql_locale);
+		g_date_free (vdate);
 		vtim.hour = gdats->hour;
 		vtim.minute = gdats->minute;
 		vtim.second = gdats->second;
@@ -387,46 +389,46 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GdaValue *valu
 					  vtim.minute,
 					  vtim.second);
 		g_free (str);
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
 	}
+	else
+		g_assert_not_reached ();
 
 	return retval;
 }
 
 static gchar *strip_quotes (const gchar *str);
 static gchar *
-gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GdaValue *value)
+gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 {
 	GdaHandlerTime *hdl;
 	gchar *retval = NULL, *str;
-	const GdaDate *date;
-	const GdaTimestamp *gdats;
-	GdaDate vdate;
-	GdaTime vtime;
+	GType type;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
-	
-	switch (gda_value_get_type ((GdaValue *) value)) {
-	case GDA_VALUE_TYPE_DATE:
-		date = gda_value_get_date ((GdaValue *) value);
-		retval = render_date_locale (date, hdl->priv->str_locale);
-		break;
-	case GDA_VALUE_TYPE_TIME:
+	type = G_VALUE_TYPE (value);
+
+	if (type == G_TYPE_DATE) {
+		const GDate *date;
+
+		date = (GDate *) g_value_get_boxed (value);
+		retval = render_date_locale (date, hdl->priv->str_locale);		
+	}
+	else if (type == GDA_TYPE_TIME) {
 		str = gda_handler_time_get_sql_from_value (iface, value);
 		retval = strip_quotes (str);
 		g_free (str);
-		break;
-	case GDA_VALUE_TYPE_TIMESTAMP:
-		gdats = gda_value_get_timestamp ((GdaValue *) value);
-		vdate.year = gdats->year;
-		vdate.month = gdats->month;
-		vdate.day = gdats->day;
-		str = render_date_locale (&vdate, hdl->priv->str_locale);
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		const GdaTimestamp *gdats;
+		GDate *vdate;
+		GdaTime vtime;
+
+		gdats = gda_value_get_timestamp ((GValue *) value);
+		vdate = g_date_new_dmy (gdats->day, gdats->month, gdats->year);
+		str = render_date_locale (vdate, hdl->priv->str_locale);
+		g_date_free (vdate);
 		vtime.hour = gdats->hour;
 		vtime.minute = gdats->minute;
 		vtime.second = gdats->second;
@@ -436,17 +438,15 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GdaValue *valu
 					  vtime.minute,
 					  vtime.second);
 		g_free (str);
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
 	}
+	else
+		g_assert_not_reached ();
        
 	return retval;
 }
 
 static gchar *
-render_date_locale (const GdaDate *date, LocaleSetting *locale)
+render_date_locale (const GDate *date, LocaleSetting *locale)
 {
 	GString *string;
 	gchar *retval;
@@ -459,20 +459,21 @@ render_date_locale (const GdaDate *date, LocaleSetting *locale)
 
 		switch (locale->dmy_order[i]) {
 		case G_DATE_DAY:
-			g_string_append_printf (string, "%02d", date->day);
+			g_string_append_printf (string, "%02d", g_date_get_day (date));
 			break;
 		case G_DATE_MONTH:
-			g_string_append_printf (string, "%02d", date->month);
+			g_string_append_printf (string, "%02d", g_date_get_month (date));
 			break;
 		case G_DATE_YEAR:
 			if (locale->twodigit_years) {
-				if ((date->year >= locale->current_offset) && (date->year < locale->current_offset + 100))
-					g_string_append_printf (string, "%02d", date->year - locale->current_offset);
+				GDateYear year = g_date_get_year (date);
+				if ((year >= locale->current_offset) && (year < locale->current_offset + 100))
+					g_string_append_printf (string, "%02d", year - locale->current_offset);
 				else
-					g_string_append_printf (string, "%04d", date->year);
+					g_string_append_printf (string, "%04d", year);
 			}
 			else
-				g_string_append_printf (string, "%04d", date->year);
+				g_string_append_printf (string, "%04d", g_date_get_year (date));
 			break;
 		}
 	}
@@ -501,14 +502,14 @@ strip_quotes (const gchar *str)
         return retval;
 }
 
-static GdaValue *gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql, 
-							GdaValueType type, LocaleSetting *locale);
+static GValue *gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql, 
+							GType type, LocaleSetting *locale);
 
-static GdaValue *
-gda_handler_time_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GdaValueType type)
+static GValue *
+gda_handler_time_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
 {
 	GdaHandlerTime *hdl;
-	GdaValue *value = NULL;
+	GValue *value = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
 	hdl = GDA_HANDLER_TIME (iface);
@@ -529,8 +530,8 @@ gda_handler_time_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, Gd
 	return value;
 }
 
-static GdaValue *
-gda_handler_time_get_value_from_str (GdaDataHandler *iface, const gchar *sql, GdaValueType type)
+static GValue *
+gda_handler_time_get_value_from_str (GdaDataHandler *iface, const gchar *sql, GType type)
 {
 	GdaHandlerTime *hdl;
 
@@ -548,16 +549,16 @@ gda_handler_time_get_value_from_str (GdaDataHandler *iface, const gchar *sql, Gd
 
 static gboolean make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, 
 				const gchar *value, LocaleSetting *locale);
-static gboolean make_date (GdaHandlerTime *hdl, GdaDate *date, const gchar *value, LocaleSetting *locale);
+static gboolean make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *locale);
 static gboolean make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value);
-static GdaValue *
+static GValue *
 gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql, 
-					GdaValueType type, LocaleSetting *locale)
+					GType type, LocaleSetting *locale)
 {
 	GdaHandlerTime *hdl;
-	GdaValue *value = NULL;
+	GValue *value = NULL;
 
-	GdaDate date;
+	GDate date;
         GdaTime timegda;
         GdaTimestamp timestamp;
 
@@ -565,29 +566,26 @@ gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql,
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	switch (type) {
-	case GDA_VALUE_TYPE_DATE:
-		if (make_date (hdl, &date, sql, locale))
-			value = gda_value_new_date (&date);
-		else
-			value = NULL;
-		break;
-	case GDA_VALUE_TYPE_TIME:
-		if (make_time (hdl, &timegda, sql))
-			value = gda_value_new_time (&timegda);
-		else
-			value = NULL;
-		break;
-	case GDA_VALUE_TYPE_TIMESTAMP:
-		if (make_timestamp (hdl, &timestamp, sql, locale))
-			value = gda_value_new_timestamp (&timestamp);
-		else
-			value = NULL;
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
+	if (type == G_TYPE_DATE) {
+		if (make_date (hdl, &date, sql, locale)) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE);
+			g_value_set_boxed (value, (gconstpointer) &date);
+		}
 	}
+	else if (type == GDA_TYPE_TIME) {
+		if (make_time (hdl, &timegda, sql)) {
+			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIME);
+			gda_value_set_time (value, &timegda);
+		}
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		if (make_timestamp (hdl, &timestamp, sql, locale)) {
+			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIMESTAMP);
+			gda_value_set_timestamp (value, &timestamp);
+		}
+	}
+	else
+		g_assert_not_reached ();
 
 	return value;
 }
@@ -601,7 +599,7 @@ make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, const gchar *value
 {
 	gboolean retval;
 	gchar *str, *ptr;
-	GdaDate vdate;
+	GDate vdate;
 	GdaTime vtime;
 	char *buff;
 
@@ -629,24 +627,26 @@ make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, const gchar *value
 }
 
 
-/* Makes a GdaDate from a string like "24-12-2003" */
+/* Makes a GDate from a string like "24-12-2003" */
 static gboolean
-make_date (GdaHandlerTime *hdl, GdaDate *date, const gchar *value, LocaleSetting *locale)
+make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *locale)
 {
-	GDate *gdate;
 	gboolean retval = TRUE;
 	gushort nums[3];
 	gboolean error = FALSE;
 	gchar *ptr, *numstart, *tofree;
 	gint i;
+
+	g_date_clear (date, 1);
+	g_date_set_dmy (date, 1, 1, 1);
 	
 	/* 1st number */
 	ptr = g_strdup (value);
 	tofree = ptr;
 	numstart = ptr;
-	while (ptr && *ptr && g_ascii_isdigit (*ptr))
+	while (*ptr && g_ascii_isdigit (*ptr))
 		ptr++;
-	if (ptr && *ptr) {
+	if ((ptr != numstart) && *ptr) {
 		*ptr = 0;
 		nums[0] = atoi (numstart);
 	}
@@ -658,7 +658,7 @@ make_date (GdaHandlerTime *hdl, GdaDate *date, const gchar *value, LocaleSetting
 		numstart = ptr;
 		while (*ptr && g_ascii_isdigit (*ptr))
 			ptr++;
-		if (*ptr) {
+		if ((ptr != numstart) && *ptr) {
 			*ptr = 0;
 			nums[1] = atoi (numstart);
 		}
@@ -672,7 +672,10 @@ make_date (GdaHandlerTime *hdl, GdaDate *date, const gchar *value, LocaleSetting
 		while (*ptr && g_ascii_isdigit (*ptr))
 			ptr++;
 		*ptr = 0;
-		nums[2] = atoi (numstart);
+		if (ptr != numstart)
+			nums[2] = atoi (numstart);
+		else
+			error = TRUE;
 	}
 
 	if (!error) {
@@ -692,21 +695,12 @@ make_date (GdaHandlerTime *hdl, GdaDate *date, const gchar *value, LocaleSetting
 			}
 		
 		/* checks */
-		if (g_date_valid_day (date->day) && g_date_valid_month (date->month) && 
-		    g_date_valid_year (date->year)) {
-			gdate = g_date_new ();
-			g_date_set_day (gdate, date->day);
-			g_date_set_month (gdate, date->month);
-			g_date_set_year (gdate, date->year);
-			retval = g_date_valid (gdate);
-			g_date_free (gdate);
-		}
-		else
-			retval = FALSE;
+		retval = g_date_valid (date);
 	}
 	else
 		retval = FALSE;
 
+	g_free (tofree);
 	return retval;
 }
 
@@ -725,6 +719,8 @@ make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
 
 	str = g_strdup (value);
 	ptr = strtok_r (str, ":", &buff);
+	if (!ptr)
+		return FALSE;
         timegda->hour = atoi (ptr);
 	
         ptr = strtok_r (NULL, ":", &buff);
@@ -754,17 +750,14 @@ make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
 }
 
 
-static GdaValue *
-gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GdaValueType type)
+static GValue *
+gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerTime *hdl;
-	GdaValue *value = NULL;
+	GValue *value = NULL;
 	
 	time_t now;
 	struct tm *stm;
-	GdaDate gdate;
-	GdaTime gtime;
-	GdaTimestamp gts;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
 	hdl = GDA_HANDLER_TIME (iface);
@@ -772,21 +765,27 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GdaValueType type)
 
 	now = time (NULL);
 	stm = localtime (&now);
-	switch (type) {
-	case GDA_VALUE_TYPE_DATE:
-		gdate.year = stm->tm_year + 1900;
-		gdate.month = stm->tm_mon + 1;
-		gdate.day = stm->tm_mday;
-		value = gda_value_new_date (&gdate);
-		break;
-	case GDA_VALUE_TYPE_TIME:
+
+	if (type == G_TYPE_DATE) {
+		GDate *gdate;
+
+		gdate = g_date_new_dmy (stm->tm_mday, stm->tm_mon + 1, stm->tm_year + 1900);
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE);
+		g_value_take_boxed (value, gdate);
+	}
+	else if (type == GDA_TYPE_TIME) {
+		GdaTime gtime;
+
                 gtime.hour = stm->tm_hour;
 		gtime.minute = stm->tm_min;
 		gtime.second = stm->tm_sec;
 		gtime.timezone = 0;
-		value = gda_value_new_time (&gtime);
-		break;
-	case GDA_VALUE_TYPE_TIMESTAMP:
+		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIME);
+		gda_value_set_time (value, &gtime);
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		GdaTimestamp gts;
+
 		gts.year = stm->tm_year + 1900;
 		gts.month = stm->tm_mon + 1;
 		gts.day = stm->tm_mday;
@@ -795,12 +794,11 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GdaValueType type)
 		gts.second = stm->tm_sec;
 		gts.fraction = 0;
 		gts.timezone = 0;
-		value = gda_value_new_timestamp (&gts);
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
+		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIMESTAMP);
+		gda_value_set_timestamp (value, &gts);
 	}
+	else
+		g_assert_not_reached ();
 
 	return value;
 }
@@ -820,14 +818,14 @@ gda_handler_time_get_nb_gda_types (GdaDataHandler *iface)
 
 
 static gboolean
-gda_handler_time_accepts_gda_type (GdaDataHandler *iface, GdaValueType type)
+gda_handler_time_accepts_gda_type (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerTime *hdl;
 	guint i = 0;
 	gboolean found = FALSE;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), FALSE);
-	g_return_val_if_fail (type != GDA_VALUE_TYPE_UNKNOWN, FALSE);
+	g_return_val_if_fail (type != G_TYPE_INVALID, FALSE);
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 
@@ -840,15 +838,15 @@ gda_handler_time_accepts_gda_type (GdaDataHandler *iface, GdaValueType type)
 	return found;
 }
 
-static GdaValueType
+static GType
 gda_handler_time_get_gda_type_index (GdaDataHandler *iface, guint index)
 {
 	GdaHandlerTime *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), G_TYPE_INVALID);
 	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, GDA_VALUE_TYPE_UNKNOWN);
-	g_return_val_if_fail (index < hdl->priv->nb_gda_types, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (hdl->priv, G_TYPE_INVALID);
+	g_return_val_if_fail (index < hdl->priv->nb_gda_types, G_TYPE_INVALID);
 
 	return hdl->priv->valid_gda_types[index];
 }

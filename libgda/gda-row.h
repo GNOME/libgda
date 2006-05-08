@@ -51,8 +51,8 @@ struct _GdaRowClass {
 	GObjectClass   parent_class;
 	
 	/* signals */
-	gboolean (* value_to_change) (GdaRow *row, gint num, const GdaValue *current, const GdaValue *proposed);
-	void     (* value_changed)   (GdaRow *row, gint num, const GdaValue *old_value, const GdaValue *new_value);
+	gboolean (* value_to_change) (GdaRow *row, gint num, const GValue *current, const GValue *proposed);
+	void     (* value_changed)   (GdaRow *row, gint num, const GValue *old_value, const GValue *new_value);
 };
 
 GType         gda_row_get_type           (void);
@@ -72,8 +72,8 @@ void          gda_row_set_number     (GdaRow *row, gint number);
 const gchar  *gda_row_get_id         (GdaRow *row);
 void          gda_row_set_id         (GdaRow *row, const gchar *id);
 
-GdaValue     *gda_row_get_value      (GdaRow *row, gint num);
-gboolean      gda_row_set_value      (GdaRow *row, gint num, const GdaValue *value);
+GValue     *gda_row_get_value      (GdaRow *row, gint num);
+gboolean      gda_row_set_value      (GdaRow *row, gint num, const GValue *value);
 
 void          gda_row_set_is_default (GdaRow *row, gint num, gboolean is_default);
 gboolean      gda_row_get_is_default (GdaRow *row, gint num);

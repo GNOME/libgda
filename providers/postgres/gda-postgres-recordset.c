@@ -40,7 +40,7 @@
 struct _GdaPostgresRecordsetPrivate {
 	PGresult *pg_res;
 	GdaConnection *cnc;
-	GdaValueType *column_types;
+	GType *column_types;
 	gchar *table_name;
 	gint ncolumns;
 	gint nrows;
@@ -55,7 +55,7 @@ static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset,
 					       GdaPostgresRecordsetClass *klass);
 static void gda_postgres_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModelRow *model, gint col, gint row);
+static const GValue *gda_postgres_recordset_get_value_at    (GdaDataModelRow *model, gint col, gint row);
 static GdaColumn *gda_postgres_recordset_describe    (GdaDataModelRow *model, gint col);
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModelRow *model);
 static GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModelRow *model, gint rownum, GError **error);
@@ -118,13 +118,13 @@ gda_postgres_recordset_finalize (GObject * object)
 	parent_class->finalize (object);
 }
 
-static GdaValueType *
+static GType *
 get_column_types (GdaPostgresRecordsetPrivate *priv)
 {
 	gint i;
-	GdaValueType *types;
+	GType *types;
 
-	types = g_new (GdaValueType, priv->ncolumns);
+	types = g_new (GType, priv->ncolumns);
 	for (i = 0; i < priv->ncolumns; i++)
 		types [i] = gda_postgres_type_oid_to_gda (priv->type_data,
 							  priv->ntypes, 
@@ -137,9 +137,9 @@ static GdaRow *
 get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum, GError **error)
 {
 	gchar *thevalue;
-	GdaValueType ftype;
+	GType ftype;
 	gboolean isNull;
-	GdaValue *value;
+	GValue *value;
 	GdaRow *row;
 	gint i;
 	gchar *id;
@@ -151,7 +151,7 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum, GE
 		length = PQgetlength (priv->pg_res, rownum, i);
 		ftype = priv->column_types [i];
 		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, rownum, i);
-		value = (GdaValue *) gda_row_get_value (row, i);
+		value = (GValue *) gda_row_get_value (row, i);
 		gda_postgres_set_value (priv->cnc, value, ftype, thevalue, isNull, length);
 	}
 
@@ -312,7 +312,7 @@ gda_postgres_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError *
 	GdaPostgresConnectionData *cnc_priv_data;
 	PGconn *pg_conn;
 	gboolean status = FALSE;
-	GdaValue *value;
+	GValue *value;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), FALSE);
 	g_return_val_if_fail (recset->priv != NULL, FALSE);
@@ -538,14 +538,14 @@ gda_postgres_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError *
 	return status;
 }
 
-static const GdaValue *
+static const GValue *
 gda_postgres_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
 	PGresult *pg_res;
 	GdaRow *row_list;
-	const GdaValue *value;
+	const GValue *value;
 	GdaDataModelHashClass *class;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
@@ -677,7 +677,7 @@ gda_postgres_recordset_describe_column (GdaDataModelRow *model, gint col)
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
 	PGresult *pg_res;
-	GdaValueType ftype;
+	GType ftype;
 	gint scale;
 	GdaColumn *field_attrs;
 	gboolean ispk = FALSE, isuk = FALSE;
@@ -706,8 +706,8 @@ gda_postgres_recordset_describe_column (GdaDataModelRow *model, gint col)
 					      priv_data->ntypes, 
 					      PQftype (pg_res, col));
 
-	scale = (ftype == GDA_VALUE_TYPE_DOUBLE) ? DBL_DIG :
-		(ftype == GDA_VALUE_TYPE_SINGLE) ? FLT_DIG : 0;
+	scale = (ftype == G_TYPE_DOUBLE) ? DBL_DIG :
+		(ftype == G_TYPE_FLOAT) ? FLT_DIG : 0;
 
 	gda_column_set_scale (field_attrs, scale);
 	gda_column_set_gda_type (field_attrs, ftype);

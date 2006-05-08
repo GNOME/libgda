@@ -365,7 +365,7 @@ fetch_row (GdaOracleRecordset *recset, gint rownum)
 	for (node = g_list_first (priv->ora_values); node != NULL; 
 	     node = g_list_next (node)) {
 		GdaOracleValue *ora_value = (GdaOracleValue *) node->data;
-		GdaValue *value = gda_row_get_value (row, i);
+		GValue *value = gda_row_get_value (row, i);
 		gda_oracle_set_value (value, ora_value, priv->cnc);
 		i += 1;
 	}
@@ -418,7 +418,7 @@ gda_oracle_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 	return (const GdaRow *) fields;
 }
 
-static const GdaValue *
+static const GValue *
 gda_oracle_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
@@ -498,7 +498,7 @@ gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values)
 
 	for (l = (GList *) values, i = 0; i < priv_data->ncolumns; i += 1, l = l->next) {
 		gchar *val_str;
-		const GdaValue *val = (const GdaValue *) l->data;
+		const GValue *val = (const GValue *) l->data;
 
 		if (!val) { 
 			gda_connection_add_event_string (

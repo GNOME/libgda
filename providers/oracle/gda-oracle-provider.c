@@ -560,7 +560,7 @@ prepare_oracle_statement (GdaConnection *cnc, GdaParameterList *params, gchar *s
 
 		for (l = parm_list; l != NULL; l = l->next) {
 			const gchar *parm_name = gda_object_get_name (GDA_OBJECT (l->data));
-			const GdaValue *gda_value = gda_parameter_get_value (GDA_PARAMETER (l->data));
+			const GValue *gda_value = gda_parameter_get_value (GDA_PARAMETER (l->data));
 			GdaOracleValue *ora_value = gda_value_to_oracle_value (gda_value);
 			OCIBind *bindpp = (OCIBind *) 0;
 
@@ -1160,13 +1160,29 @@ aggregate_foreach (gpointer key, gpointer value, gpointer data)
 	gda_oracle_aggregate_t *ptr = value;
 	GList *list = NULL;
 	GList *listp;
-	list = g_list_append(list, gda_value_new_string(ptr->name));
-	list = g_list_append(list, gda_value_new_string(ptr->uid));
-	list = g_list_append(list, gda_value_new_string("SYS"));
-	list = g_list_append(list, gda_value_new_string(""));
-	list = g_list_append(list, gda_value_new_string("NUMBER"));
-	list = g_list_append(list, gda_value_new_string(ptr->args));
-	list = g_list_append(list, gda_value_new_string(""));
+	GValue *tmpval;
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), ptr->name);
+	list = g_list_append(list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), ptr->uid);
+	list = g_list_append(list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "SYS");
+	list = g_list_append(list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+	list = g_list_append(list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "NUMBER");
+	list = g_list_append(list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), ptr->args);
+	list = g_list_append(list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+	list = g_list_append(list, tmpval);
+
 	gda_data_model_append_values (GDA_DATA_MODEL(data), list, NULL);
 	for (listp = list; listp; listp = listp->next)
 		gda_value_free(listp->data);
@@ -1202,7 +1218,7 @@ get_oracle_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	if (params)
 		par = gda_parameter_list_find_param (params, "name");
 	if (par) {
-		name = (gchar *) gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+		name = (gchar *) g_value_get_string ((GValue *) gda_parameter_get_value (par));
 		uc_name = g_ascii_strup (name, -1);
 		if ((row = g_tree_lookup (priv_data->aggregates, uc_name)))
 			aggregate_foreach (uc_name, row, recset);
@@ -1223,7 +1239,7 @@ gda_oracle_table_tree (GdaConnection *cnc)
 	GList *reclist;
 	GdaDataModel *recset;
 	GdaRow *row;
-	GdaValue *value;
+	GValue *value;
 	int i;
 	gchar *name, *owner;
 
@@ -1258,7 +1274,7 @@ gda_oracle_view_tree(GdaConnection *cnc)
 	GList *reclist;
 	GdaDataModel *recset;
 	GdaRow *row;
-	GdaValue *value;
+	GValue *value;
 	int i;
 	gchar *name;
 
@@ -1308,7 +1324,7 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tbln
 	GString *colname;
 	GString *newcolname;
 	GHashTable *h_table = g_hash_table_new (g_str_hash, g_str_equal);
-	GdaValue *value;
+	GValue *value;
 	gint i;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -1364,36 +1380,36 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tbln
 	index_data = g_new0 (GdaOracleIndexData, 1);
 	references = g_string_new ("");
 
-	value = (GdaValue *)gda_data_model_get_value_at (recset, 0, 0);
-	colname = g_string_right_trim (g_string_new (gda_value_get_string (value)));
+	value = (GValue *)gda_data_model_get_value_at (recset, 0, 0);
+	colname = g_string_right_trim (g_string_new (g_value_get_string (value)));
 
 	for (i = 0; i < nrows; i += 1) {
 		gchar *constraint_type = "";
 
-		value = (GdaValue *)gda_data_model_get_value_at (recset, 1, i);
+		value = (GValue *)gda_data_model_get_value_at (recset, 1, i);
 		if (!value)
 			continue;
 		if (gda_value_is_null (value))
 			continue;
 
-		constraint_type = g_strdup (gda_value_get_string (value));
+		constraint_type = g_strdup (g_value_get_string (value));
 
 		if (!strcmp (constraint_type, "P"))
 			index_data->primary_key = TRUE;
 
-		value = (GdaValue *)gda_data_model_get_value_at (recset, 2, i);
+		value = (GValue *)gda_data_model_get_value_at (recset, 2, i);
 		if (value) 
 			if (!gda_value_is_null (value))
-				if (!strcmp (gda_value_get_string (value), "UNIQUE"))  
+				if (!strcmp (g_value_get_string (value), "UNIQUE"))  
 					index_data->unique = TRUE;
 
 		if (!strcmp (constraint_type, "R")) {
-			value = (GdaValue *)gda_data_model_get_value_at (recset, 3, i);
+			value = (GValue *)gda_data_model_get_value_at (recset, 3, i);
 			if (value)
 				if (!gda_value_is_null (value)) {
 					if (references->len > 0) 
 						references = g_string_append (references, ", ");
-					references = g_string_right_trim (g_string_append (references, gda_value_get_string (value)));
+					references = g_string_right_trim (g_string_append (references, g_value_get_string (value)));
 				}
 		}
 
@@ -1403,8 +1419,8 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tbln
 			break;
 		}
 
-		value = (GdaValue *)gda_data_model_get_value_at (recset, 0, i+1);
-		newcolname = g_string_right_trim (g_string_new (gda_value_get_string (value)));
+		value = (GValue *)gda_data_model_get_value_at (recset, 0, i+1);
+		newcolname = g_string_right_trim (g_string_new (g_value_get_string (value)));
 
 		if (strcmp (colname->str, newcolname->str)) {
 			index_data->references = g_strdup (references->str);
@@ -1477,11 +1493,20 @@ static gboolean
 get_tables_foreach (gpointer key, gpointer value, gpointer data)
 {
 	GList *cols = NULL;
-    
-	cols = g_list_append(cols, gda_value_new_string((const gchar *)key));
-	cols = g_list_append(cols, gda_value_new_string((const gchar *)value));
-	cols = g_list_append(cols, gda_value_new_string(""));
-	cols = g_list_append(cols, gda_value_new_string(""));
+	GValue *tmpval;
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), (const gchar *)key);
+	cols = g_list_append(cols, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), (const gchar *)value);
+	cols = g_list_append(cols, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+	cols = g_list_append(cols, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
+	cols = g_list_append(cols, tmpval);
+
 	gda_data_model_append_values ((GdaDataModel *)data, cols, NULL);
 
 	return FALSE;
@@ -1503,7 +1528,7 @@ get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
 		par = gda_parameter_list_find_param (params, "namespace");
 
 	if (par) {
-		namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+		namespace = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 		upc_namespace = g_ascii_strup (namespace, -1);
 	    
 		sql = g_strdup_printf ("SELECT TABLE_NAME,"
@@ -1560,7 +1585,7 @@ get_oracle_views (GdaConnection *cnc, GdaParameterList *params)
 	if (params)
 		par = gda_parameter_list_find_param (params, "namespace");
 	if (par) {
-		namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+		namespace = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 		upc_namespace = g_ascii_strup(namespace, -1);
 		
 		sql = g_strdup_printf ("SELECT VIEW_NAME AS \"%s\","
@@ -1685,31 +1710,10 @@ get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionS
 typedef struct
 {
 	const gchar  *name;
-	GdaValueType  type;
+	GType  type;
 	const gchar  *synonyms;
 } ora_native_type;
 
-static const ora_native_type ora_type_tab[] =
-{
-	{ "BFILE",     GDA_VALUE_TYPE_BINARY, NULL   },
-	{ "BLOB",      GDA_VALUE_TYPE_BINARY, NULL   },
-	{ "CHAR",      GDA_VALUE_TYPE_STRING, "CHARACTER"   },
-	{ "NCHAR",     GDA_VALUE_TYPE_STRING, NULL   },
-	{ "CLOB",      GDA_VALUE_TYPE_STRING, NULL   },
-	{ "NCLOB",     GDA_VALUE_TYPE_STRING, NULL   },
-	{ "DATE",      GDA_VALUE_TYPE_TIMESTAMP, NULL},
-	{ "NUMBER",    GDA_VALUE_TYPE_NUMERIC, "INTEGER,SMALLINT,INT,DEC,DECIMAL,NUMERIC,DOUBLE PRECISION,FLOAT,REAL"  },
-	{ "LONG",      GDA_VALUE_TYPE_STRING, NULL   },
-	{ "LONG RAW",  GDA_VALUE_TYPE_BINARY, NULL   },
-	{ "RAW",       GDA_VALUE_TYPE_BINARY, NULL   },
-	{ "ROWID",     GDA_VALUE_TYPE_STRING, NULL   },
-	{ "UROWID",    GDA_VALUE_TYPE_STRING, NULL   },
-	{ "TIMESTAMP", GDA_VALUE_TYPE_TIMESTAMP, NULL},
-	{ "VARCHAR2",  GDA_VALUE_TYPE_STRING, "VARCHAR,STRING"   },
-	{ "NVARCHAR2", GDA_VALUE_TYPE_STRING, NULL },
-};
-static const ora_native_type *
-ora_type_end = ora_type_tab+sizeof(ora_type_tab)/sizeof(ora_native_type);
 
 static GdaDataModel *
 get_oracle_types (GdaConnection *cnc, GdaParameterList *params)
@@ -1717,7 +1721,28 @@ get_oracle_types (GdaConnection *cnc, GdaParameterList *params)
 	GdaDataModelArray *recset;
 	ora_native_type   *otp;
 	GList             *value_list;
-    
+	GValue *tmpval;
+
+	ora_native_type ora_type_tab[] = {
+			{ "BFILE",     GDA_TYPE_BINARY, NULL   },
+			{ "BLOB",      GDA_TYPE_BINARY, NULL   },
+			{ "CHAR",      G_TYPE_STRING, "CHARACTER"   },
+			{ "NCHAR",     G_TYPE_STRING, NULL   },
+			{ "CLOB",      G_TYPE_STRING, NULL   },
+			{ "NCLOB",     G_TYPE_STRING, NULL   },
+			{ "DATE",      GDA_TYPE_TIMESTAMP, NULL},
+			{ "NUMBER",    GDA_TYPE_NUMERIC, "INTEGER,SMALLINT,INT,DEC,DECIMAL,NUMERIC,DOUBLE PRECISION,FLOAT,REAL"  },
+			{ "LONG",      G_TYPE_STRING, NULL   },
+			{ "LONG RAW",  GDA_TYPE_BINARY, NULL   },
+			{ "RAW",       GDA_TYPE_BINARY, NULL   },
+			{ "ROWID",     G_TYPE_STRING, NULL   },
+			{ "UROWID",    G_TYPE_STRING, NULL   },
+			{ "TIMESTAMP", GDA_TYPE_TIMESTAMP, NULL},
+			{ "VARCHAR2",  G_TYPE_STRING, "VARCHAR,STRING"   },
+			{ "NVARCHAR2", G_TYPE_STRING, NULL },
+		};
+	ora_native_type *ora_type_end = ora_type_tab+sizeof(ora_type_tab)/sizeof(ora_native_type);
+
 	/* create the recordset */
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
 				       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES)));
@@ -1726,11 +1751,20 @@ get_oracle_types (GdaConnection *cnc, GdaParameterList *params)
 	/* fill the recordset */
 	for (otp = ora_type_tab; otp < ora_type_end; otp++) {
 		value_list = NULL;
-		value_list = g_list_append (value_list, gda_value_new_string (otp->name));
-		value_list = g_list_append (value_list, gda_value_new_string ("SYS"));
-		value_list = g_list_append (value_list, gda_value_new_string ("NULL"));
-		value_list = g_list_append (value_list, gda_value_new_gdatype (otp->type));
-		value_list = g_list_append (value_list, gda_value_new_string (otp->synonyms));
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), otp->name);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "SYS");
+		value_list = g_list_append (value_list, tmpval);
+
+		value_list = g_list_append (value_list, gda_value_new_null ());
+
+		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), otp->type);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), otp->synonyms);
+		value_list = g_list_append (value_list, tmpval);
 		
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -1760,7 +1794,7 @@ get_oracle_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 	par = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (par, NULL);
 	
-	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	g_return_val_if_fail (tblname, NULL);
 	upc_tblname = g_ascii_strup (tblname, -1);
 	g_print ("tblname=#%s#, upc_tblname=#%s#\n", tblname, upc_tblname);
@@ -1807,7 +1841,7 @@ get_oracle_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 		recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
 					       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_FIELDS)));
 		gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_FIELDS);
-		if (!gda_data_model_import_from_model (recset, tmprecset, NULL, &error)) {
+		if (!gda_data_model_import_from_model (GDA_DATA_MODEL (recset), tmprecset, NULL, &error)) {
 			g_warning (_("Can't convert model for fields schema: %s"),
 				   error && error->message ?  error->message : _("No detail"));
 			g_error_free (error);

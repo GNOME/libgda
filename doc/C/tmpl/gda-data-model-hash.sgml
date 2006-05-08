@@ -57,8 +57,6 @@ until the one requested).
 @model: 
 @rownum: 
 @row: 
-<!-- # Unused Parameters # -->
-@values: 
 
 
 <!-- ##### FUNCTION gda_data_model_hash_set_n_columns ##### -->

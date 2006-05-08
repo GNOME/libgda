@@ -57,17 +57,17 @@ G_BEGIN_DECLS
 GdaConnectionEvent *gda_oracle_make_error (dvoid *hndlp, ub4 type,
 				 const gchar *file, gint line);
 
-void gda_oracle_set_value (GdaValue *value, 
+void gda_oracle_set_value (GValue *value, 
 				GdaOracleValue *thevalue,
 				GdaConnection *cnc);
 
-gchar *gda_oracle_value_to_sql_string (GdaValue *value);
+gchar *gda_oracle_value_to_sql_string (GValue *value);
 
-GdaValueType  oracle_sqltype_to_gda_type (const ub2 sqltype);
+GType  oracle_sqltype_to_gda_type (const ub2 sqltype);
 
 gchar *oracle_sqltype_to_string (const ub2 sqltype);
 
-GdaOracleValue *gda_value_to_oracle_value (const GdaValue *value);
+GdaOracleValue *gda_value_to_oracle_value (const GValue *value);
 
 gboolean gda_oracle_handle_error (gint result, 
 				  GdaConnection *cnc, 

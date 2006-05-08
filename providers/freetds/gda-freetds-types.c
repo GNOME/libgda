@@ -33,7 +33,7 @@
 #include "gda-freetds-types.h"
 
 static void
-gda_freetds_set_gdavalue_by_datetime (GdaValue     *field,
+gda_freetds_set_gdavalue_by_datetime (GValue     *field,
                                       TDS_DATETIME *dt,
                                       _TDSCOLINFO   *col
                                      )
@@ -80,7 +80,7 @@ gda_freetds_set_gdavalue_by_datetime (GdaValue     *field,
 }
 
 static void
-gda_freetds_set_gdavalue_by_datetime4 (GdaValue      *field,
+gda_freetds_set_gdavalue_by_datetime4 (GValue      *field,
                                        TDS_DATETIME4 *dt4,
                                        _TDSCOLINFO    *col
                                       )
@@ -122,19 +122,19 @@ gda_freetds_set_gdavalue_by_datetime4 (GdaValue      *field,
  * Public functions
  */
 
-const GdaValueType
+const GType
 gda_freetds_get_value_type (_TDSCOLINFO *col)
 {
-	g_return_val_if_fail (col != NULL, GDA_VALUE_TYPE_UNKNOWN);
+	g_return_val_if_fail (col != NULL, G_TYPE_INVALID);
 
 	switch (col->column_type) {
 		case SYBBIT:
 		case SYBBITN:
-			return GDA_VALUE_TYPE_BOOLEAN;
+			return G_TYPE_BOOLEAN;
 		case SYBBINARY:
 		case SYBIMAGE:
 		case SYBVARBINARY:
-			return GDA_VALUE_TYPE_BINARY;
+			return GDA_TYPE_BINARY;
 		case SYBCHAR:
 		case SYBNVARCHAR:
 		case SYBVARCHAR:
@@ -146,46 +146,46 @@ gda_freetds_get_value_type (_TDSCOLINFO *col)
 		case XSYBNCHAR:
 		case XSYBNVARCHAR:
 		*/
-			return GDA_VALUE_TYPE_STRING;
+			return G_TYPE_STRING;
 		case SYBINT4:
-			return GDA_VALUE_TYPE_INTEGER;
+			return G_TYPE_INT;
 		case SYBINT2:
-			return GDA_VALUE_TYPE_SMALLINT;
+			return GDA_TYPE_SHORT;
 		case SYBINT1:
-			return GDA_VALUE_TYPE_TINYINT;
+			return G_TYPE_CHAR;
 		case SYBINTN:
 			if (col->column_size == 1) {
-				return GDA_VALUE_TYPE_TINYINT;
+				return G_TYPE_CHAR;
 			} else if (col->column_size == 2) {
-				return GDA_VALUE_TYPE_SMALLINT;
+				return GDA_TYPE_SHORT;
 			} else if (col->column_size == 4) {
-				return GDA_VALUE_TYPE_INTEGER;
+				return G_TYPE_INT;
 			} else if (col->column_size == 8) {
-				return GDA_VALUE_TYPE_BIGINT;
+				return G_TYPE_INT64;
 			}
 			break;
 		case SYBDECIMAL:
 		case SYBNUMERIC:
-			return GDA_VALUE_TYPE_NUMERIC;
+			return GDA_TYPE_NUMERIC;
 		case SYBREAL:
-			return GDA_VALUE_TYPE_SINGLE;
+			return G_TYPE_FLOAT;
 		case SYBFLT8:
 		case SYBFLTN:
-			return GDA_VALUE_TYPE_DOUBLE;
+			return G_TYPE_DOUBLE;
 		case SYBDATETIME:
 		case SYBDATETIMN:
 		case SYBDATETIME4:
-			return GDA_VALUE_TYPE_TIMESTAMP;
+			return GDA_TYPE_TIMESTAMP;
 		default:
-			return GDA_VALUE_TYPE_UNKNOWN;
+			return G_TYPE_INVALID;
 	}
 	
-	return GDA_VALUE_TYPE_UNKNOWN;
+	return G_TYPE_INVALID;
 }
 
 
 void
-gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
+gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 			  GdaFreeTDSConnectionData *tds_cnc)
 {
 	const TDS_INT max_size = 255;
@@ -218,7 +218,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
 		switch (col->column_type) {
 			case SYBBIT:
 			case SYBBITN:
-				gda_value_set_boolean (field, (gboolean) (*(TDS_TINYINT *) val));
+				g_value_set_boolean (field, (gboolean) (*(TDS_TINYINT *) val));
 				break;
 			case SYBBINARY:
 			case SYBIMAGE:
@@ -243,29 +243,29 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
 			case XSYBNCHAR:
 			case XSYBNVARCHAR:
 			 */
-				gda_value_set_string (field, val);
+				g_value_set_string (field, val);
 				break;
 			case SYBINT4:
-				gda_value_set_integer (field, *(TDS_INT *) val);
+				g_value_set_int (field, *(TDS_INT *) val);
 				break;
 			case SYBINT2:
-				gda_value_set_smallint (field, *(TDS_SMALLINT *) val);
+				gda_value_set_short (field, *(TDS_SMALLINT *) val);
 				break;
 			case SYBINT1:
-				gda_value_set_tinyint (field, (gchar) (*(TDS_TINYINT *) val));
+				g_value_set_char (field, (gchar) (*(TDS_TINYINT *) val));
 				break;
 			case SYBINTN:
 				if (col->column_size == 1) {
-					gda_value_set_tinyint (field,
+					g_value_set_char (field,
 					                       (gchar) (*(TDS_TINYINT *) val));
 				} else if (col->column_size == 2) {
-					gda_value_set_smallint (field,
+					gda_value_set_short (field,
 					                        *(TDS_SMALLINT *) val);
 				} else if (col->column_size == 4) {
-					gda_value_set_integer (field,
+					g_value_set_int (field,
 					                        *(TDS_INT *) val);
 				} else if (col->column_size == 8) {
-					gda_value_set_bigint (field,
+					g_value_set_int64 (field,
 					                      *(long long *) val);
 				}
 				break;
@@ -284,11 +284,11 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
 				}
 				break;
 			case SYBREAL:
-				gda_value_set_single (field, *(TDS_REAL *) val);
+				g_value_set_float (field, *(TDS_REAL *) val);
 				break;
 			case SYBFLT8:
 			case SYBFLTN:
-				gda_value_set_double (field, *(TDS_FLOAT *) val);
+				g_value_set_double (field, *(TDS_FLOAT *) val);
 				break;
 			case SYBDATETIME:
 			case SYBDATETIMN:
@@ -315,9 +315,9 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
 						 col->column_type, val,
 						 col->column_size, SYBCHAR,
 						 &tds_conv) < 0) {
-					gda_value_set_string (field, "");
+					g_value_set_string (field, "");
 				} else {
-					gda_value_set_string (field, 
+					g_value_set_string (field, 
 						(tds_conv.c ? tds_conv.c : (tds_conv.ib ? tds_conv.ib : "")));
 				}
 #elif HAVE_FREETDS_VER0_60
@@ -325,7 +325,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
 				             col->column_type, val,
 				             col->column_size, SYBCHAR,
 				             col_size - 1, &tds_conv);
-				gda_value_set_string (field, 
+				g_value_set_string (field, 
 				                      (tds_conv.c
 				                        ? tds_conv.c
 				                        : (tds_conv.ib
@@ -335,7 +335,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, _TDSCOLINFO *col,
 				tds_convert (col->column_type, val,
 				             col->column_size, SYBCHAR,
 				             txt, col_size - 1);
-				gda_value_set_string (field, txt ? txt : "");
+				g_value_set_string (field, txt ? txt : "");
 #endif
 				if (txt) {
 					g_free (txt);

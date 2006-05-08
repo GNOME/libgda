@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -39,7 +39,7 @@
 struct _GdaConnectionPrivate {
 	GdaClient            *client;
 	GdaServerProvider    *provider_obj;
-	GdaConnectionOptions  options;
+	guint                 options;
 	gchar                *dsn;
 	gchar                *cnc_string;
 	gchar                *provider;
@@ -53,6 +53,14 @@ struct _GdaConnectionPrivate {
 static void gda_connection_class_init (GdaConnectionClass *klass);
 static void gda_connection_init       (GdaConnection *cnc, GdaConnectionClass *klass);
 static void gda_connection_finalize   (GObject *object);
+static void gda_connection_set_property (GObject *object,
+					 guint param_id,
+					 const GValue *value,
+					 GParamSpec *pspec);
+static void gda_connection_get_property (GObject *object,
+					 guint param_id,
+					 GValue *value,
+					 GParamSpec *pspec);
 
 enum {
 	ERROR,
@@ -64,6 +72,20 @@ enum {
 };
 
 static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
+
+/* properties */
+enum
+{
+        PROP_0,
+	PROP_CLIENT,
+        PROP_DSN,
+        PROP_CNC_STRING,
+        PROP_PROVIDER_OBJ,
+        PROP_USERNAME,
+        PROP_PASSWORD,
+        PROP_OPTIONS,
+};
+
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -118,6 +140,36 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
 
+	/* Properties */
+        object_class->set_property = gda_connection_set_property;
+        object_class->get_property = gda_connection_get_property;
+
+	g_object_class_install_property (object_class, PROP_CLIENT,
+                                         g_param_spec_pointer ("client", _("GdaClient to use"), NULL,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_DSN,
+                                         g_param_spec_string ("dsn", _("DSN to use"), NULL, NULL,
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_CNC_STRING,
+                                         g_param_spec_string ("cnc_string", _("Connection string to use"), NULL, NULL,
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_PROVIDER_OBJ,
+                                         g_param_spec_pointer ("provider_obj", _("Provider to use"), NULL,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+
+        g_object_class_install_property (object_class, PROP_USERNAME,
+                                         g_param_spec_string ("username", _("Username to use"),
+                                                              NULL, NULL,
+                                                              (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+        g_object_class_install_property (object_class, PROP_PASSWORD,
+                                         g_param_spec_string ("password", _("Password to use"),
+                                                              NULL, NULL,
+                                                              (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+        g_object_class_install_property (object_class, PROP_OPTIONS,
+                                         g_param_spec_uint ("options", _("Options (connection sharing)"),
+							    NULL, 0, G_MAXUINT, 0,
+							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	
 	object_class->finalize = gda_connection_finalize;
 }
 
@@ -131,7 +183,6 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->provider_obj = NULL;
 	cnc->priv->dsn = NULL;
 	cnc->priv->cnc_string = NULL;
-	cnc->priv->provider = NULL;
 	cnc->priv->username = NULL;
 	cnc->priv->password = NULL;
 	cnc->priv->is_open = FALSE;
@@ -154,7 +205,6 @@ gda_connection_finalize (GObject *object)
 
 	g_free (cnc->priv->dsn);
 	g_free (cnc->priv->cnc_string);
-	g_free (cnc->priv->provider);
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
 
@@ -167,6 +217,15 @@ gda_connection_finalize (GObject *object)
 
 	/* chain to parent class */
 	parent_class->finalize (object);
+}
+
+/* module error */
+GQuark gda_connection_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_connection_error");
+        return quark;
 }
 
 /**
@@ -197,6 +256,83 @@ gda_connection_get_type (void)
 	return type;
 }
 
+static void
+gda_connection_set_property (GObject *object,
+			     guint param_id,
+			     const GValue *value,
+			     GParamSpec *pspec)
+{
+	GdaConnection *cnc;
+
+        cnc = GDA_CONNECTION (object);
+        if (cnc->priv) {
+                switch (param_id) {
+                case PROP_CLIENT:
+			cnc->priv->client = g_value_get_pointer (value);
+			break;
+                case PROP_DSN:
+			gda_connection_set_dsn (cnc, g_value_get_string (value));
+                        break;
+                case PROP_CNC_STRING:
+			g_free (cnc->priv->cnc_string);
+			cnc->priv->cnc_string = NULL;
+			if (g_value_get_string (value))
+				cnc->priv->cnc_string = g_strdup (g_value_get_string (value));
+                        break;
+                case PROP_PROVIDER_OBJ:
+			cnc->priv->provider_obj = g_value_get_pointer (value);
+			g_object_ref (G_OBJECT (cnc->priv->provider_obj));
+                        break;
+                case PROP_USERNAME:
+			gda_connection_set_username (cnc, g_value_get_string (value));
+                        break;
+                case PROP_PASSWORD:
+			gda_connection_set_password (cnc, g_value_get_string (value));
+                        break;
+                case PROP_OPTIONS:
+			cnc->priv->options = g_value_get_uint (value);
+			break;
+                }
+        }	
+}
+
+static void
+gda_connection_get_property (GObject *object,
+			     guint param_id,
+			     GValue *value,
+			     GParamSpec *pspec)
+{
+	GdaConnection *cnc;
+
+        cnc = GDA_CONNECTION (object);
+        if (cnc->priv) {
+                switch (param_id) {
+                case PROP_CLIENT:
+			g_value_set_pointer (value, cnc->priv->client);
+			break;
+                case PROP_DSN:
+			g_value_set_string (value, cnc->priv->dsn);
+                        break;
+                case PROP_CNC_STRING:
+			g_value_set_string (value, cnc->priv->cnc_string);
+			break;
+                case PROP_PROVIDER_OBJ:
+			g_value_set_pointer (value, cnc->priv->provider_obj);
+                        break;
+                case PROP_USERNAME:
+			g_value_set_string (value, cnc->priv->username);
+                        break;
+                case PROP_PASSWORD:
+			g_value_set_string (value, cnc->priv->password);
+                        break;
+                case PROP_OPTIONS:
+			g_value_set_uint (value, cnc->priv->options);
+			break;
+                }
+        }	
+}
+
+
 /**
  * gda_connection_new
  * @client: a #GdaClient object.
@@ -221,28 +357,18 @@ gda_connection_new (GdaClient *client,
 		    const gchar *dsn,
 		    const gchar *username,
 		    const gchar *password,
-		    GdaConnectionOptions options)
+		    guint options)
 {
 	GdaConnection *cnc;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
-	/* create the connection object */
-	cnc = g_object_new (GDA_TYPE_CONNECTION, NULL);
-
-	gda_connection_set_client (cnc, client);
-	cnc->priv->provider_obj = provider;
-	g_object_ref (G_OBJECT (cnc->priv->provider_obj));
-
-	if (dsn)
-		cnc->priv->dsn = g_strdup (dsn);
-	if (username)
-		cnc->priv->username = g_strdup (username);
-	if (password)
-		cnc->priv->password = g_strdup (password);
-	cnc->priv->options = options;
-
+	cnc = g_object_new (GDA_TYPE_CONNECTION, "client", client, "provider_obj", provider, 
+			    "dsn", dsn, 
+			    "username", username, 
+			    "password", password, 
+			    "options", options, NULL);
 	return cnc;
 }
 
@@ -258,7 +384,7 @@ gda_connection_new (GdaClient *client,
 gboolean
 gda_connection_open (GdaConnection *cnc, GError **error)
 {
-	GdaDataSourceInfo *dsn_info;
+	GdaDataSourceInfo *dsn_info = NULL;
 	GdaQuarkList *params;
 	char *real_username = NULL;
 	char *real_password = NULL;
@@ -270,27 +396,44 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	if (cnc->priv->is_open)
 		return TRUE;
 
-	/* get the data source info */
-	dsn_info = gda_config_find_data_source (cnc->priv->dsn);
-	if (!dsn_info) {
-		gda_log_error (_("Data source %s not found in configuration"), cnc->priv->dsn);
-		g_set_error (error, 0, 0,
-			     _("Data source %s not found in configuration"), cnc->priv->dsn);
+	/* connection string */
+	if (cnc->priv->dsn) {
+		/* get the data source info */
+		dsn_info = gda_config_find_data_source (cnc->priv->dsn);
+		if (!dsn_info) {
+			gda_log_error (_("Data source %s not found in configuration"), cnc->priv->dsn);
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NONEXIST_DSN_ERROR,
+				     _("Data source %s not found in configuration"), cnc->priv->dsn);
+			return FALSE;
+		}
+
+		g_free (cnc->priv->cnc_string);
+		cnc->priv->cnc_string = g_strdup (dsn_info->cnc_string);
+	}
+	else {
+		if (!cnc->priv->cnc_string) {
+			gda_log_error (_("No DSN or connection string specified"));
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NO_CNC_SPEC_ERROR,
+				     _("No DSN or connection string specified"));
+			return FALSE;
+		}
+	}
+
+	/* provider test */
+	if (!cnc->priv->provider_obj) {
+		gda_log_error (_("No provider specified"));
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR,
+			     _("No provider specified"));
 		return FALSE;
 	}
 
-	g_free (cnc->priv->cnc_string);
-	cnc->priv->cnc_string = g_strdup (dsn_info->cnc_string);
-	g_free (cnc->priv->provider);
-	cnc->priv->provider = g_strdup (dsn_info->provider);
-
-	params = gda_quark_list_new_from_string (dsn_info->cnc_string);
+	params = gda_quark_list_new_from_string (cnc->priv->cnc_string);
 
 	/* retrieve correct username/password */
 	if (cnc->priv->username)
 		real_username = g_strdup (cnc->priv->username);
 	else {
-		if (dsn_info->username)
+		if (dsn_info && dsn_info->username)
 			real_username = g_strdup (dsn_info->username);
 		else {
 			const gchar *s;
@@ -305,7 +448,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	if (cnc->priv->password)
 		real_password = g_strdup (cnc->priv->password);
 	else {
-		if (dsn_info->password)
+		if (dsn_info && dsn_info->password)
 			real_password = g_strdup (dsn_info->password);
 		else {
 			const gchar *s;
@@ -336,7 +479,7 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 				event = GDA_CONNECTION_EVENT (l->data);
 				if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR) {
 					if (error && !(*error))
-						g_set_error (error, 0, 0,
+						g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 							     gda_connection_event_get_description (event));
 					gda_client_notify_error_event (cnc->priv->client, cnc, 
 								       GDA_CONNECTION_EVENT (l->data));
@@ -348,8 +491,11 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	}
 
 	/* free memory */
-	gda_data_source_info_free (dsn_info);
+	if (dsn_info)
+		gda_data_source_info_free (dsn_info);
 	gda_quark_list_free (params);
+	g_free (real_username);
+	g_free (real_password);
 
 	return cnc->priv->is_open;
 }
@@ -447,23 +593,6 @@ gda_connection_get_client (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_set_client
- * @cnc: a #GdaConnection object.
- * @client: a #GdaClient object.
- *
- * Associates a #GdaClient with this connection. This function is
- * not intended to be called by applications.
- */
-void
-gda_connection_set_client (GdaConnection *cnc, GdaClient *client)
-{
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (GDA_IS_CLIENT (client));
-
-	cnc->priv->client = client;
-}
-
-/**
  * gda_connection_get_options
  * @cnc: a #GdaConnection object.
  *
@@ -471,7 +600,7 @@ gda_connection_set_client (GdaConnection *cnc, GdaClient *client)
  *
  * Returns: the connection options.
  */
-GdaConnectionOptions
+guint
 gda_connection_get_options (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
@@ -639,10 +768,17 @@ gda_connection_get_cnc_string (GdaConnection *cnc)
 const gchar *
 gda_connection_get_provider (GdaConnection *cnc)
 {
+	GdaServerProviderInfo *pinfo = NULL;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 
-	return (const gchar *) cnc->priv->provider;
+	if (cnc->priv->provider_obj)
+		pinfo = gda_server_provider_get_info (cnc->priv->provider_obj, NULL);
+	if (pinfo)
+		return(const gchar *) pinfo-> provider_name;
+	else
+		return NULL;
 }
 
 /**
@@ -660,13 +796,15 @@ gda_connection_set_username (GdaConnection *cnc, const gchar *username)
 {
 	g_return_val_if_fail (cnc && GDA_IS_CONNECTION (cnc), FALSE);
         g_return_val_if_fail (cnc->priv, FALSE);
-        g_return_val_if_fail (username, FALSE);
 
         if (cnc->priv->is_open)
                 return FALSE;
 
         g_free (cnc->priv->username);
-	cnc->priv->username = g_strdup (username);
+	if (username)
+		cnc->priv->username = g_strdup (username);
+	else
+		cnc->priv->username = NULL;
         return TRUE;
 }
 
@@ -702,13 +840,15 @@ gda_connection_set_password (GdaConnection *cnc, const gchar *password)
 {
 	g_return_val_if_fail (cnc && GDA_IS_CONNECTION (cnc), FALSE);
         g_return_val_if_fail (cnc->priv, FALSE);
-        g_return_val_if_fail (password, FALSE);
 
         if (cnc->priv->is_open)
                 return FALSE;
 
         g_free (cnc->priv->password);
-	cnc->priv->password = g_strdup (password);
+	if (password)
+		cnc->priv->password = g_strdup (password);
+	else
+		cnc->priv->password = NULL;
 
         return TRUE;
 }
@@ -980,12 +1120,12 @@ gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name, gboolean
  *
  * The @params can contain the following parameters:
  * <itemizedlist>
- *   <listitem><para>a "ITER_MODEL_ONLY" parameter of type #GDA_VALUE_TYPE_BOOLEAN which, if set to TRUE
+ *   <listitem><para>a "ITER_MODEL_ONLY" parameter of type #G_TYPE_BOOLEAN which, if set to TRUE
  *             will preferably return a data model which can be accessed only using an iterator.</para></listitem>
  * </itemizedlist>
  *
  * Returns: a list of #GdaDataModel's, as returned by the underlying
- * provider, or %NULL if an error occured.
+ * provider, or %NULL if an error occurred.
  */
 GList *
 gda_connection_execute_command_l (GdaConnection *cnc, GdaCommand *cmd,
@@ -1010,7 +1150,7 @@ gda_connection_execute_command_l (GdaConnection *cnc, GdaCommand *cmd,
 	while (events && !has_error) {
 		if (gda_connection_event_get_event_type (GDA_CONNECTION_EVENT (events->data)) == 
 		    GDA_CONNECTION_EVENT_ERROR) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_EXECUTE_COMMAND_ERROR,
 				     gda_connection_event_get_description (GDA_CONNECTION_EVENT (events->data)));
 			has_error = TRUE;
 		}
@@ -1058,7 +1198,7 @@ gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
  *
  * This function lets you retrieve a simple data model from
  * the underlying difference, instead of having to retrieve
- * a list of them, as is the case with #gda_connection_execute_command_l.
+ * a list of them, as is the case with #gda_connection_execute_command_l().
  *
  * Note that if the @cmd command is composed of several SQL statements, the data model
  * returned is the one corresponding to the last statement.
@@ -1067,7 +1207,7 @@ gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
  * about the @params list of parameters.
  *
  * Returns: a #GdaDataModel containing the data returned by the
- * data source, %NULL if no data was expected, or GDA_CONNECTION_EXEC_FAILED if an error occured.
+ * data source, %NULL if no data was expected, or GDA_CONNECTION_EXEC_FAILED if an error occurred.
  */
 GdaDataModel *
 gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
@@ -1308,14 +1448,14 @@ gda_connection_fetch_blob_by_id (GdaConnection *cnc, const gchar *sql_id)
 /**
  * gda_connection_value_to_sql_string
  * @cnc: a #GdaConnection object.
- * @from: #GdaValue to convert from
+ * @from: #GValue to convert from
  *
- * Produces a fully quoted and escaped string from a GdaValue
+ * Produces a fully quoted and escaped string from a GValue
  *
  * Returns: escaped and quoted value or NULL if not supported.
  */
 gchar *
-gda_connection_value_to_sql_string (GdaConnection *cnc, GdaValue *from)
+gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);

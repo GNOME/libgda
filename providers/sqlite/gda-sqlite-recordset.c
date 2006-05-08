@@ -165,7 +165,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 					   model->priv->ncolumns);
 
 	/* computing column types and titles */
-	sres->types = g_new0 (GdaValueType, sres->ncols);
+	sres->types = g_new0 (GType, sres->ncols);
 	sres->sqlite_types = g_new0 (int, sres->ncols);
 	sres->cols_size = g_new0 (int, sres->ncols);
 	gda_sqlite_update_types_hash (scnc);
@@ -173,11 +173,11 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 	/* Gda default type & column titles */
 	for (i=0; i < sres->ncols; i++) {
 		const gchar *ctype;
-		GdaValueType gtype = GDA_VALUE_TYPE_NULL;
+		GType gtype = GDA_TYPE_NULL;
 
 		gda_data_model_set_column_title (GDA_DATA_MODEL (model), i,
 						 sqlite3_column_name (sres->stmt, i));
-		sres->types [i] = GDA_VALUE_TYPE_NULL;
+		sres->types [i] = GDA_TYPE_NULL;
 		sres->sqlite_types [i] = sqlite3_column_type (sres->stmt, i);
 		/*g_print ("SQLite Type: %d\n", sres->sqlite_types [i]);*/
 
@@ -188,20 +188,20 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 		else {
 			switch (sres->sqlite_types [i]) {
 			case SQLITE_INTEGER:
-				gtype = GDA_VALUE_TYPE_INTEGER;
+				gtype = G_TYPE_INT;
 				break;
 			case SQLITE_FLOAT:
-				gtype = GDA_VALUE_TYPE_DOUBLE;
+				gtype = G_TYPE_DOUBLE;
 				break;
 			case 0:
 			case SQLITE_TEXT:
-				gtype = GDA_VALUE_TYPE_STRING;
+				gtype = G_TYPE_STRING;
 				break;
 			case SQLITE_BLOB:
-				gtype = GDA_VALUE_TYPE_BLOB;
+				gtype = GDA_TYPE_BLOB;
 				break;
 			case SQLITE_NULL:
-				gtype = GDA_VALUE_TYPE_NULL;
+				gtype = GDA_TYPE_NULL;
 				break;
 			default:
 				g_error ("Unknown SQLite internal data type %d", sres->sqlite_types [i]);
@@ -209,7 +209,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 			}
 		}
 
-		if (gtype != GDA_VALUE_TYPE_NULL) {
+		if (gtype != GDA_TYPE_NULL) {
 			GdaColumn *column;
 			
 			sres->types [i] = gtype;
@@ -228,32 +228,29 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 			gint col;
 
 			for (col = 0; col < sres->ncols; col++) {
-				GdaValue *value = NULL;
+				GValue *value = NULL;
 				int size;
+				GType type = sres->types [col];
 
-				/* compute GdaValue */
-				switch (sres->types [col]) {
-				case GDA_VALUE_TYPE_INTEGER:
-					value = gda_value_new_integer (sqlite3_column_int (sres->stmt, col));
-					break;
-				case GDA_VALUE_TYPE_DOUBLE:
-					value = gda_value_new_double (sqlite3_column_double (sres->stmt, col));
-					break;
-				case GDA_VALUE_TYPE_STRING:
-					value = gda_value_new_string (sqlite3_column_text (sres->stmt, col));
-					break;
-				case GDA_VALUE_TYPE_BLOB:
+				/* compute GValue */
+				if (type == G_TYPE_INT)
+					g_value_set_int (value = gda_value_new (G_TYPE_INT), 
+							 sqlite3_column_int (sres->stmt, col));
+				else if (type == G_TYPE_DOUBLE)
+					g_value_set_double (value = gda_value_new (G_TYPE_DOUBLE), 
+							    sqlite3_column_double (sres->stmt, col));
+				else if (type == G_TYPE_STRING)
+					g_value_set_string (value = gda_value_new (G_TYPE_STRING), 
+							    sqlite3_column_text (sres->stmt, col));
+				else if (type == GDA_TYPE_BLOB) {
 					value = gda_value_new_null ();
-					g_error ("SQLite BLOBS not yet implemented");
-					break;
-				case GDA_VALUE_TYPE_NULL:
+					g_warning ("SQLite BLOBS not yet implemented");
+				}
+				else if (type == GDA_TYPE_NULL)
 					value = gda_value_new_null ();
-					break;
-				default:
+				else
 					g_error ("Unhandled GDA type %s in SQLite recordset", 
 						 gda_type_to_string (sres->types [col]));
-					break;
-				}
 
 				size = sqlite3_column_bytes (sres->stmt, col);
 				if (sres->cols_size [col] < size)

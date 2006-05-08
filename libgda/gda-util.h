@@ -32,8 +32,8 @@
 
 G_BEGIN_DECLS
 
-const gchar *gda_type_to_string (GdaValueType type);
-GdaValueType gda_type_from_string (const gchar *str);
+const gchar *gda_type_to_string (GType type);
+GType gda_type_from_string (const gchar *str);
 
 GList       *gda_string_hash_to_list (GHashTable *hash_table);
 

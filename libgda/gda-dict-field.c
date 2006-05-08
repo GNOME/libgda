@@ -90,7 +90,7 @@ struct _GdaDictFieldPrivate
 	GdaDictTable          *table;
 	gint                   length;     /* -1 if not applicable */
 	gint                   scale;      /* 0 if not applicable */
-	GdaValue              *default_val;/* NULL if no default value */
+	GValue              *default_val;/* NULL if no default value */
 	guint                  extra_attrs;/* OR'ed value of GdaDictFieldAttribute */
 };
 
@@ -493,26 +493,26 @@ gda_dict_field_set_data_type (GdaDictField *field, GdaDictType *type)
 /**
  * gda_dict_field_set_default_value
  * @field: a #GdaDictField object
- * @value: a #GdaValue value or NULL
+ * @value: a #GValue value or NULL
  *
  * Sets (or replace) the default value for the field. WARNING: the default value's data type can be
  * different from the field's data type (this is the case for example if the default value is a 
  * function like Postgres's default value for the SERIAL data type).
  */
 void
-gda_dict_field_set_default_value (GdaDictField *field, const GdaValue *value)
+gda_dict_field_set_default_value (GdaDictField *field, const GValue *value)
 {
 	g_return_if_fail (field && GDA_IS_DICT_FIELD (field));
 	g_return_if_fail (field->priv);
 
-	if (gda_value_compare_ext (field->priv->default_val, (GdaValue *) value)) {
+	if (gda_value_compare_ext (field->priv->default_val, (GValue *) value)) {
 		if (field->priv->default_val) {
 			gda_value_free (field->priv->default_val);
 			field->priv->default_val = NULL;
 		}
 		
 		if (value)
-			field->priv->default_val = gda_value_copy ((GdaValue *) value);
+			field->priv->default_val = gda_value_copy ((GValue *) value);
 		
 		/* signal the modification */
 		gda_object_changed (GDA_OBJECT (field));
@@ -527,7 +527,7 @@ gda_dict_field_set_default_value (GdaDictField *field, const GdaValue *value)
  *
  * Returns: the default value
  */
-const GdaValue *
+const GValue *
 gda_dict_field_get_default_value (GdaDictField *field)
 {
 	g_return_val_if_fail (field && GDA_IS_DICT_FIELD (field), NULL);
@@ -839,9 +839,9 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	if (field->priv->default_val) {
 		GdaDataHandler *dh;
-		GdaValueType vtype;
+		GType vtype;
 		
-		vtype = gda_value_get_type (field->priv->default_val);
+		vtype = G_VALUE_TYPE (field->priv->default_val);
 		xmlSetProp (node, "default_gda_type", gda_type_to_string (vtype));
 
 		dh = gda_dict_get_default_handler (gda_object_get_dict (GDA_OBJECT (field)), vtype);
@@ -914,7 +914,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 				tmp = utility_build_decoded_id (NULL, prop + 2);
 				gda_dict_type_set_sqlname (dt, tmp);
 				g_free (tmp);
-				gda_dict_type_set_gda_type (dt, GDA_VALUE_TYPE_BLOB);
+				gda_dict_type_set_gda_type (dt, GDA_TYPE_BLOB);
 				gda_object_set_description (GDA_OBJECT (dt), _("Custom data type"));
 				gda_dict_declare_custom_data_type (dict, dt);
 				gda_dict_field_set_data_type (field, dt);
@@ -943,9 +943,9 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 
 		str2 = xmlGetProp (node, "default_gda_type");
 		if (str2) {
-			GdaValueType vtype;
+			GType vtype;
 			GdaDataHandler *dh;
-			GdaValue *value;
+			GValue *value;
 			
 			vtype = gda_type_from_string (str2);			
 			dh = gda_dict_get_default_handler (dict, vtype);

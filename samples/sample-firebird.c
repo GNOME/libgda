@@ -45,7 +45,7 @@ show_schema (GdaConnection *cnc,
 	GdaParameterList *prm_list;
 	GdaParameter *prm;
 	GdaRow *row;
-	GdaValue *value;
+	GValue *value;
 	gint n_row;
 
 	prm_list = gda_parameter_list_new (NULL);
@@ -58,7 +58,7 @@ show_schema (GdaConnection *cnc,
 		for (n_row = 0; n_row < gda_data_model_get_n_rows (dm_schema); n_row++) {
 			row = (GdaRow *) gda_data_model_get_row (dm_schema, n_row);
 			value = gda_row_get_value (row, 0);	
-			g_print (" %s\n", gda_value_get_string (value));
+			g_print (" %s\n", g_value_get_string (value));
 		}
 		
 		g_print ("\n");
@@ -210,10 +210,10 @@ select_table_big (GdaConnection *cnc)
 	GdaTransaction *transaction;
 	GdaDataModel *dm;
 	GList *list, *node;
-	GdaValue *valor;
+	GValue *valor;
 	gint row_n;
 	const GdaTime *t;
-	const GdaDate *d;
+	const GDate *d;
 	const GdaTimestamp *ts;
 	const GdaNumeric *numeric;
 	
@@ -237,57 +237,57 @@ select_table_big (GdaConnection *cnc)
 				for (row_n = 0; row_n < gda_data_model_get_n_rows (dm); row_n++) {
 					g_print ("\n- Row nr %d of %d\n", (row_n+1), gda_data_model_get_n_rows (dm));	
 				
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 0, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 0, row_n);
 					g_print("%s: %d\n", gda_data_model_get_column_title (dm, 0),
-						gda_value_get_integer (valor));
+						g_value_get_int (valor));
 					
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 1, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 1, row_n);
 					g_print("%s: %s\n", gda_data_model_get_column_title (dm, 1),
-						gda_value_get_string (valor));
+						g_value_get_string (valor));
 					
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 2, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 2, row_n);
 					g_print("%s: %d\n", gda_data_model_get_column_title (dm, 2),
-						gda_value_get_smallint (valor));
+						gda_value_get_short (valor));
 					
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 3, row_n);
-					d = gda_value_get_date (valor);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 3, row_n);
+					d = (GDate*) g_value_get_boxed (valor);
 					g_print("%s: %02d/%02d/%4d\n", gda_data_model_get_column_title (dm, 3),
 						d->month, d->day, d->year);
 					
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 4, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 4, row_n);
 					t = gda_value_get_time (valor);
 					g_print("%s: %02d:%02d\n", gda_data_model_get_column_title (dm, 4),
 						t->hour, t->minute);
 	
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 5, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 5, row_n);
 					ts = gda_value_get_timestamp (valor);
 					g_print("%s: %02d/%02d/%4d %02d:%02d\n", gda_data_model_get_column_title (dm, 5),
 						ts->day, ts->month, ts->year, ts->hour, ts->minute);
 					
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 6, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 6, row_n);
 					g_print("%s: %s\n", gda_data_model_get_column_title (dm, 6),
-						gda_value_get_string (valor));
+						g_value_get_string (valor));
 
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 7, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 7, row_n);
 					numeric = gda_value_get_numeric (valor);
 					g_print("%s: %0.2f\n", gda_data_model_get_column_title (dm, 7),
 						atof (numeric->number));
 	
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 8, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 8, row_n);
 					numeric = gda_value_get_numeric (valor);
 					g_print("%s: %f\n", gda_data_model_get_column_title (dm, 8),
 						atof (numeric->number));
 	
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 9, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 9, row_n);
 					g_print("%s: %f\n", gda_data_model_get_column_title (dm, 9),
-						gda_value_get_single (valor));
+						g_value_get_float (valor));
 	
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 10, row_n);
+					valor = (GValue *) gda_data_model_get_value_at (dm, 10, row_n);
 					g_print("%s: %f\n", gda_data_model_get_column_title (dm, 10),
-						gda_value_get_double (valor));
+						g_value_get_double (valor));
 					
-					valor = (GdaValue *) gda_data_model_get_value_at (dm, 11, row_n);
-					if (gda_value_get_type (valor) == GDA_VALUE_TYPE_NULL)
+					valor = (GValue *) gda_data_model_get_value_at (dm, 11, row_n);
+					if (G_VALUE_TYPE (valor) == GDA_TYPE_NULL)
 					g_print("%s: NULL :-)\n", gda_data_model_get_column_title (dm, 11));
 
 				}

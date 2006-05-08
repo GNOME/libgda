@@ -1,5 +1,5 @@
 /* GDA mSQL Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  * 	   Danilo Schoeneberg <dj@starfire-programming.net
@@ -22,6 +22,7 @@
 
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
+#include <libgda/gda-server-provider-extra.h>
 #include <glib/gi18n-lib.h>
 #include <stdlib.h>
 #include <string.h>
@@ -488,19 +489,20 @@ get_msql_tables(GdaConnection *cnc,GdaParameterList *params)
 	sock=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
 	if (!sock) return NULL;
 	res=msqlListTables(*sock);
-	model=(GdaDataModelArray*)gda_data_model_array_new(4);
-	gda_data_model_set_column_title(GDA_DATA_MODEL(model),0,_("Name"));
-	gda_data_model_set_column_title(GDA_DATA_MODEL(model),1,_("Owner"));
-	gda_data_model_set_column_title(GDA_DATA_MODEL(model),2,_("Comments"));
-	gda_data_model_set_column_title(GDA_DATA_MODEL(model),3,"SQL");
+
+	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TABLES));
+	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_TABLES);
+
 	while ((row=msqlFetchRow(res))) {
 		GList *vlist = NULL;
-    
-		vlist=g_list_append(vlist,gda_value_new_string(row[0]));
-		vlist=g_list_append(vlist,gda_value_new_string("n/a"));
-		vlist=g_list_append(vlist,gda_value_new_string("n/a"));
-		vlist=g_list_append(vlist,gda_value_new_string("n/a"));
-		gda_data_model_append_values(GDA_DATA_MODEL(model),vlist);
+		GValue *tmpval;
+
+		tmpval = g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), row[0]);
+		vlist = g_list_append (vlist, tmpval);
+		vlist = g_list_append (vlist, gda_value_new_null ());
+		vlist = g_list_append (vlist, gda_value_new_null ());
+		vlist = g_list_append (vlist, gda_value_new_null ());
+		gda_data_model_append_values (GDA_DATA_MODEL (model), vlist);
 	}
 	msqlFreeResult(res);
 	return GDA_DATA_MODEL(model);    
@@ -515,34 +517,42 @@ get_msql_types(GdaConnection *cnc,GdaParameterList *params)
 		const gchar *name;
 		const gchar *owner;
 		const gchar *comments;
-		GdaValueType type;
+		GType type;
 	} types[] = {
-		{"char","","String of characters (or other 8bit data",GDA_VALUE_TYPE_STRING},
-		{"text","","variable length string of characters",GDA_VALUE_TYPE_STRING},
-		{"int","","Signed integer",GDA_VALUE_TYPE_INTEGER},
-		{"real","","Decimal or Scientific Notation Values",GDA_VALUE_TYPE_DOUBLE},
-		{"uint","","Unsigned integer values",GDA_VALUE_TYPE_INTEGER},
-		{"date","","Date values",GDA_VALUE_TYPE_DATE},
-		{"time","","Time values",GDA_VALUE_TYPE_TIME},
-		{"money","","Numerical values with 2 fixed decimal places",GDA_VALUE_TYPE_DOUBLE}
+		{"char","","String of characters (or other 8bit data",G_TYPE_STRING},
+		{"text","","variable length string of characters",G_TYPE_STRING},
+		{"int","","Signed integer",G_TYPE_INT},
+		{"real","","Decimal or Scientific Notation Values",G_TYPE_DOUBLE},
+		{"uint","","Unsigned integer values",G_TYPE_INT},
+		{"date","","Date values",G_TYPE_DATE},
+		{"time","","Time values",GDA_TYPE_TIME},
+		{"money","","Numerical values with 2 fixed decimal places",G_TYPE_DOUBLE}
 	};
   
 	if (!GDA_IS_CONNECTION(cnc)) return NULL;
-	rs=(GdaDataModelArray*)gda_data_model_array_new(4);
-	gda_data_model_set_column_title(GDA_DATA_MODEL(rs),0,_("Title"));
-	gda_data_model_set_column_title(GDA_DATA_MODEL(rs),1,_("Owner"));
-	gda_data_model_set_column_title(GDA_DATA_MODEL(rs),2,_("Comments"));
-	gda_data_model_set_column_title(GDA_DATA_MODEL(rs),3,_("GDA type"));
+
+	rs = (GdaDataModelArray*) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
+	gda_server_provider_init_schema_model (rs, GDA_CONNECTION_SCHEMA_TYPES);
+
 	for (i=0;i<sizeof(types)/sizeof(types[0]);i++) {
 		GList *value_list=NULL;
-    
-		value_list=g_list_append(value_list,gda_value_new_string(types[i].name));
-		value_list=g_list_append(value_list,gda_value_new_string(types[i].owner));
-		value_list=g_list_append(value_list,gda_value_new_string(types[i].comments));
-		value_list=g_list_append(value_list,gda_value_new_gdatype(types[i].type));  
-		gda_data_model_append_values(GDA_DATA_MODEL(rs),value_list);
-		g_list_foreach(value_list,(GFunc)gda_value_free,NULL);
-		g_list_free(value_list);
+		GValue *tmpval;
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].name);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].owner);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].comments);
+		value_list = g_list_append (value_list, tmpval);
+
+		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), types[i].type);
+		value_list = g_list_append (value_list, tmpval);
+
+		gda_data_model_append_values(GDA_DATA_MODEL(rs), value_list);
+		g_list_foreach (value_list, (GFunc)gda_value_free, NULL);
+		g_list_free (value_list);
 	}
 	return GDA_DATA_MODEL(rs);
 }
@@ -551,20 +561,33 @@ static GList *
 field_row_to_value_list(m_fdata *res)
 {
 	GList  *value_list = NULL;
+	GValue *tmpval;
 
 	g_return_val_if_fail(res!=NULL,NULL);
-	value_list=g_list_append(value_list,gda_value_new_string(res->field.name));
-	value_list=g_list_append(value_list,
-				 gda_value_new_string(msqlTypeNames[res->field.type]));
-	value_list=g_list_append(value_list,gda_value_new_integer(res->field.length));
-	value_list=g_list_append(value_list,gda_value_new_integer(0));
-	value_list=g_list_append(value_list,
-				 gda_value_new_boolean(IS_NOT_NULL(res->field.flags)));
-	value_list=g_list_append(value_list,gda_value_new_boolean(FALSE));
-	value_list=g_list_append(value_list,
-				 gda_value_new_boolean(IS_UNIQUE(res->field.flags)));
-	value_list=g_list_append(value_list,gda_value_new_string(""));
-	value_list=g_list_append(value_list,gda_value_new_string(""));
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), res->field.name);
+	value_list = g_list_append(value_list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), msqlTypeNames[res->field.type]);
+	value_list = g_list_append(value_list, tmpval);
+
+	g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), res->field.length);
+	value_list = g_list_append(value_list, tmpval);
+
+	g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), 0);	
+	value_list = g_list_append(value_list, tmpval);
+
+	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), IS_NOT_NULL(res->field.flags));
+	value_list = g_list_append(value_list, tmpval);
+
+	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+	value_list = g_list_append(value_list, tmpval);
+
+	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), IS_UNIQUE(res->field.flags));
+	value_list = g_list_append(value_list, tmpval);
+
+	value_list = g_list_append(value_list, gda_value_new_null ());
+	value_list = g_list_append(value_list, gda_value_new_null ());
 	return value_list;
 }
 
@@ -579,17 +602,17 @@ get_table_fields(GdaConnection *cnc,GdaParameterList *params)
 	m_result          *res;
 	struct {
 		const gchar  *name;
-		GdaValueType  type;
+		GType  type;
 	} fields_desc[] = {
-		{ N_("Field Name"),    GDA_VALUE_TYPE_STRING  },
-		{ N_("Data type"),     GDA_VALUE_TYPE_STRING  },
-		{ N_("Size"),          GDA_VALUE_TYPE_INTEGER },
-		{ N_("Scale"),         GDA_VALUE_TYPE_INTEGER },
-		{ N_("Not null"),      GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("Primary key?"),  GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("Unique index?"), GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("References"),    GDA_VALUE_TYPE_STRING  },
-		{ N_("Default value"), GDA_VALUE_TYPE_STRING  }
+		{ N_("Field Name"),    G_TYPE_STRING  },
+		{ N_("Data type"),     G_TYPE_STRING  },
+		{ N_("Size"),          G_TYPE_INT },
+		{ N_("Scale"),         G_TYPE_INT },
+		{ N_("Not null"),      G_TYPE_BOOLEAN },
+		{ N_("Primary key?"),  G_TYPE_BOOLEAN },
+		{ N_("Unique index?"), G_TYPE_BOOLEAN },
+		{ N_("References"),    G_TYPE_STRING  },
+		{ N_("Default value"), G_TYPE_STRING  }
 	};
   
 	sock=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
@@ -605,7 +628,7 @@ get_table_fields(GdaConnection *cnc,GdaParameterList *params)
 						_("Table name is needed but none specified in parameter list"));
 		return NULL;
 	}
-	table_name=gda_value_get_string((GdaValue*)gda_parameter_get_value(par));
+	table_name=g_value_get_string((GValue*)gda_parameter_get_value(par));
 	if (!table_name) {
 		gda_connection_add_event_string(cnc,
 						_("Table name is needed but none specified in parameter list"));
@@ -627,7 +650,7 @@ get_table_fields(GdaConnection *cnc,GdaParameterList *params)
 	for(r=0,fields=res->fieldData;fields;fields=fields->next) {
 		GList *value_list;
     
-		value_list=field_row_to_value_list(fields);
+		value_list = field_row_to_value_list(fields);
 		if (!value_list) {
 			g_object_unref(G_OBJECT(rs));
 			return NULL;

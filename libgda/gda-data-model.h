@@ -79,7 +79,7 @@ struct _GdaDataModelClass {
 	GdaColumn           *(* i_describe_column)  (GdaDataModel *model, gint col);
 	guint                (* i_get_access_flags) (GdaDataModel *model);
 
-	const GdaValue      *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row);
+	const GValue      *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row);
 	guint                (* i_get_attributes_at)(GdaDataModel *model, gint col, gint row);
 	GdaDataModelIter    *(* i_create_iter)      (GdaDataModel *model);
 	gboolean             (* i_iter_at_row)      (GdaDataModel *model, GdaDataModelIter *iter, gint row);
@@ -87,7 +87,7 @@ struct _GdaDataModelClass {
 	gboolean             (* i_iter_prev)        (GdaDataModel *model, GdaDataModelIter *iter);
 
 	gboolean             (* i_set_value_at)     (GdaDataModel *model, gint col, gint row, 
-						     const GdaValue *value, GError **error);
+						     const GValue *value, GError **error);
 	gboolean             (* i_set_values)       (GdaDataModel *model, gint row, GList *values,
 						     GError **error);
 	gint                 (* i_append_values)    (GdaDataModel *model, const GList *values, GError **error);
@@ -97,7 +97,7 @@ struct _GdaDataModelClass {
 
 	void                 (* i_set_notify)       (GdaDataModel *model, gboolean do_notify_changes);
 	gboolean             (* i_get_notify)       (GdaDataModel *model);
-	void                 (* i_send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value);
+	void                 (* i_send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
 
 	/* signals */
 	void                 (* row_inserted)    (GdaDataModel *model, gint row);
@@ -117,7 +117,7 @@ GdaColumn          *gda_data_model_describe_column        (GdaDataModel *model, 
 const gchar        *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
 void                gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
 
-const GdaValue     *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
+const GValue     *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
 guint               gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
 gboolean            gda_data_model_move_iter_at_row       (GdaDataModel *model, GdaDataModelIter *iter, gint row);
@@ -126,7 +126,7 @@ gboolean            gda_data_model_move_iter_prev         (GdaDataModel *model, 
 void                gda_data_model_freeze                 (GdaDataModel *model);
 void                gda_data_model_thaw                   (GdaDataModel *model);
 gboolean            gda_data_model_set_value_at           (GdaDataModel *model, gint col, gint row, 
-							   const GdaValue *value, GError **error);
+							   const GValue *value, GError **error);
 gboolean            gda_data_model_set_values             (GdaDataModel *model, gint row, 
 							   GList *values, GError **error);
 gint                gda_data_model_append_row             (GdaDataModel *model, GError **error);
@@ -134,7 +134,7 @@ gint                gda_data_model_append_values          (GdaDataModel *model, 
 gboolean            gda_data_model_remove_row             (GdaDataModel *model, gint row, GError **error);
 gint                gda_data_model_get_row_from_values    (GdaDataModel *model, GSList *values, gint *cols_index);
 
-void                gda_data_model_send_hint              (GdaDataModel *model, GdaDataModelHint hint, const GdaValue *hint_value);
+void                gda_data_model_send_hint              (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
 
 /* contents saving and loading */
 gchar              *gda_data_model_export_to_string       (GdaDataModel *model, GdaDataModelIOFormat format, 

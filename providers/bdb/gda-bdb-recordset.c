@@ -41,7 +41,7 @@ static void gda_bdb_recordset_init       (GdaBdbRecordset *recset,
 					  GdaBdbRecordsetClass *klass);
 static void gda_bdb_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_bdb_recordset_get_value_at (GdaDataModelRow *model, 
+static const GValue *gda_bdb_recordset_get_value_at (GdaDataModelRow *model, 
 						       gint col,
 						       gint row);
 static gint gda_bdb_recordset_get_n_rows 	      (GdaDataModelRow *model);
@@ -149,15 +149,15 @@ gda_bdb_recordset_get_row (GdaDataModelRow *model, gint row_num, GError **error)
 	row = gda_row_new (GDA_DATA_MODEL (model), 2);
 	bin.data = key.data;
 	bin.binary_length = key.size;
-	gda_value_set_binary ((GdaValue *) gda_row_get_value (row, 0), &bin);
+	gda_value_set_binary ((GValue *) gda_row_get_value (row, 0), &bin);
 	bin.data = data.data;
 	bin.binary_length = data.size;
-	gda_value_set_binary ((GdaValue *) gda_row_get_value (row, 1), &bin);
+	gda_value_set_binary ((GValue *) gda_row_get_value (row, 1), &bin);
 
 	return row;
 }
 
-static const GdaValue *
+static const GValue *
 gda_bdb_recordset_get_value_at (GdaDataModelRow *model, gint col_num, gint row_num)
 {
 	GdaBdbRecordset *recset;

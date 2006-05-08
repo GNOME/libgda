@@ -581,7 +581,7 @@ gda_query_field_func_set_args (GdaQueryFieldFunc *func, GSList *args)
 					args_ok = FALSE;
 			}
 			else {
-				/* GdaValueType compatibility test */
+				/* GType compatibility test */
 				if (arg->data && list->data &&
 				    list->data &&
 				    (gda_dict_type_get_gda_type (gda_query_field_get_dict_type (GDA_QUERY_FIELD (arg->data))) !=
