@@ -793,7 +793,7 @@ gda_value_reset_with_type (GValue *value, GType type)
  * #GDA_TYPE_NULL.
  */
 gboolean
-gda_value_is_null (GValue *value)
+gda_value_is_null (const GValue *value)
 {
 	g_return_val_if_fail (value, FALSE);
 	return !G_IS_VALUE (value);
@@ -809,7 +809,7 @@ gda_value_is_null (GValue *value)
  * Returns: %TRUE if a number, %FALSE otherwise.
  */
 gboolean
-gda_value_is_number (GValue *value)
+gda_value_is_number (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE(value), FALSE);
 	if(G_VALUE_HOLDS_INT(value) ||
@@ -832,7 +832,7 @@ gda_value_is_number (GValue *value)
  * Returns: a newly allocated #GValue with a copy of the data in @value.
  */
 GValue *
-gda_value_copy (GValue *value)
+gda_value_copy (const  GValue *value)
 {
 	GValue *copy;
 	
@@ -855,7 +855,7 @@ gda_value_copy (GValue *value)
  * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaBinary *
-gda_value_get_binary (GValue *value)
+gda_value_get_binary (const GValue *value)
 {
 	GdaBinary *val;
 
@@ -892,7 +892,7 @@ gda_value_set_binary (GValue *value, const GdaBinary *binary)
  * Returns: the value stored in @value.
  */
 const GdaBlob *
-gda_value_get_blob (GValue *value)
+gda_value_get_blob (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_BLOB), NULL);
@@ -925,7 +925,7 @@ gda_value_set_blob (GValue *value, const GdaBlob *val)
  * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaGeometricPoint *
-gda_value_get_geometric_point (GValue *value)
+gda_value_get_geometric_point (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_GEOMETRIC_POINT), NULL);
@@ -957,7 +957,7 @@ gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val)
  * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaValueList *
-gda_value_get_list (GValue *value)
+gda_value_get_list (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_LIST), NULL);
@@ -1005,7 +1005,7 @@ gda_value_set_null (GValue *value)
  * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaNumeric *
-gda_value_get_numeric (GValue *value)
+gda_value_get_numeric (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_NUMERIC), NULL);
@@ -1037,7 +1037,7 @@ gda_value_set_numeric (GValue *value, const GdaNumeric *val)
  * Returns: the value stored in @value.
  */
 gshort
-gda_value_get_short (GValue *value)
+gda_value_get_short (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_SHORT), -1);
@@ -1068,7 +1068,7 @@ gda_value_set_short (GValue *value, gshort val)
  * Returns: the value stored in @value.
  */
 gushort
-gda_value_get_ushort (GValue *value)
+gda_value_get_ushort (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), -1);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_USHORT), -1);
@@ -1100,7 +1100,7 @@ gda_value_set_ushort (GValue *value, gushort val)
  * Returns: the value stored in @value.
  */
 const GdaTime *
-gda_value_get_time (GValue *value)
+gda_value_get_time (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_TIME), NULL);
@@ -1132,7 +1132,7 @@ gda_value_set_time (GValue *value, const GdaTime *val)
  * Returns: the value stored in @value.
  */
 const GdaTimestamp *
-gda_value_get_timestamp (GValue *value)
+gda_value_get_timestamp (const GValue *value)
 {
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_TIMESTAMP), NULL);
@@ -1376,7 +1376,7 @@ gda_value_set_from_value (GValue *value, const GValue *from)
  * using it. 
  */
 gchar *
-gda_value_stringify (GValue *value)
+gda_value_stringify (const GValue *value)
 {
 	if (value && G_IS_VALUE (value)) {
 		if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
@@ -1419,7 +1419,7 @@ gda_value_stringify (GValue *value)
  * an integer greater than 0 if @value1 is greater than @value2.
  */
 gint
-gda_value_compare (GValue *value1, GValue *value2)
+gda_value_compare (const GValue *value1, const GValue *value2)
 {
 	GList *l1, *l2;
 	gint retval;
@@ -1584,7 +1584,7 @@ gda_value_compare (GValue *value1, GValue *value2)
  * an integer greater than 0 if @value1 is greater than @value2.
  */
 gint
-gda_value_compare_ext (GValue *value1, GValue *value2)
+gda_value_compare_ext (const GValue *value1, const GValue *value2)
 {
 	if (value1 == value2)
 		return 0;
@@ -1612,7 +1612,7 @@ gda_value_compare_ext (GValue *value1, GValue *value2)
  * because of some localization with gda_value_stingify ().
  */
 static gchar *
-to_string (GValue *value)
+to_string (const GValue *value)
 {
 	gchar *retval = NULL;
 
@@ -1640,7 +1640,7 @@ to_string (GValue *value)
  * Returns: the XML node. Once not needed anymore, you should free it.
  */
 xmlNodePtr
-gda_value_to_xml (GValue *value)
+gda_value_to_xml (const GValue *value)
 {
 	gchar *valstr;
 	xmlNodePtr retval;
