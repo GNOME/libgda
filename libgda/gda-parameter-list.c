@@ -1095,14 +1095,14 @@ gda_parameter_list_add_param_from_value (GdaParameterList *paramlist, const gcha
 
 
 /**
- * gda_parameter_list_merge_paramlist_params
+ * gda_parameter_list_merge
  * @paramlist: a #GdaParameterList object
  * @paramlist_to_merge: a #GdaParameterList object
  *
  * Add to @paramlist all the parameters of @paramlist_to_merge.
  */
 void
-gda_parameter_list_merge_paramlist_params (GdaParameterList *paramlist, GdaParameterList *paramlist_to_merge)
+gda_parameter_list_merge (GdaParameterList *paramlist, GdaParameterList *paramlist_to_merge)
 {
 	GSList *params = paramlist_to_merge->parameters;
 	g_return_if_fail (GDA_IS_PARAMETER_LIST (paramlist));
