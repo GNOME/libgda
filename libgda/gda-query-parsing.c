@@ -1517,8 +1517,12 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 			gchar *type = NULL;
 			gdaval = gda_server_provider_string_to_value (prov, cnc, value, 
 								      G_TYPE_INVALID, &type);
-			if (gdaval)
-				real_type = gda_dict_get_data_type_by_name (dict, type);
+			if (gdaval) {
+				if (type)
+					real_type = gda_dict_get_data_type_by_name (dict, type);
+				else
+					gdatype = G_VALUE_TYPE (gdaval);
+			}
 			else
 				/* Don't set error here because not finding any real type can mean that we 
 				   don't have a value in the first place */
@@ -1575,7 +1579,13 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 
 	if (real_type)
 		gdatype = gda_dict_type_get_gda_type (real_type);
-	g_assert (gdatype != G_TYPE_INVALID);
+	if (gdatype == G_TYPE_INVALID) {
+		g_set_error (error,
+			     GDA_QUERY_ERROR,
+			     GDA_QUERY_SQL_ANALYSE_ERROR,
+			     _("Data type '%s' can't be converted to a known type"), real_type);
+		return NULL;
+	}
 
 	if (!unspecvalue && !gdaval) {
 		dh = gda_dict_get_handler (dict, gdatype);

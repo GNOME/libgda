@@ -57,7 +57,6 @@ Management of connections to data sources
 </para>
 
 @gdaconnection: the object which received the signal.
-@arg1: 
 
 <!-- ##### SIGNAL GdaConnection::error ##### -->
 <para>
@@ -68,6 +67,11 @@ Management of connections to data sources
 @arg1: 
 
 <!-- ##### ARG GdaConnection:client ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaConnection:cnc-string ##### -->
 <para>
 
 </para>

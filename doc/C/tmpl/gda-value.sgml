@@ -279,6 +279,15 @@ to GDA_TYPE_NULL.
 @binary: 
 
 
+<!-- ##### FUNCTION gda_value_take_binary ##### -->
+<para>
+
+</para>
+
+@value: 
+@binary: 
+
+
 <!-- ##### FUNCTION gda_value_get_blob ##### -->
 <para>
 

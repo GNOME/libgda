@@ -9,13 +9,21 @@ gboolean diff = FALSE;
 gboolean noact = FALSE;
 gboolean silent = FALSE;
 
+gchar *dsn = NULL;
+gchar *direct = NULL;
+gchar *prov = NULL;
+
 static GOptionEntry entries[] = {
+	{ "cnc", 'c', 0, G_OPTION_ARG_STRING, &direct, "Direct connection string", NULL},
+	{ "provider", 'p', 0, G_OPTION_ARG_STRING, &prov, "Provider name", NULL},
+	{ "dsn", 's', 0, G_OPTION_ARG_STRING, &dsn, "Data source", NULL},
+
 	{ "output-file", 'o', 0, G_OPTION_ARG_STRING, &outfile, "XML output file", "output file"},
 	{ "user", 'U', 0, G_OPTION_ARG_STRING, &user, "Username", "username" },
 	{ "password", 'P', 0, G_OPTION_ARG_STRING, &pass, "Password", "password" },
 	{ "diff", 'd', 0, G_OPTION_ARG_NONE, &diff, "Show differences with existing dictionary, if any", NULL },
 	{ "no-action", 'n', 0, G_OPTION_ARG_NONE, &noact, "Don't write any dictionary file (just build it into memory)", NULL },
-	{ "silent", 's', 0, G_OPTION_ARG_NONE, &silent, "Silent mode: don't write activity indicators", NULL },
+	{ "silent", 'i', 0, G_OPTION_ARG_NONE, &silent, "Silent mode: don't write activity indicators", NULL },
 	{ NULL }
 };
 
@@ -101,13 +109,12 @@ main (int argc, char **argv)
 	GOptionContext *context;
 	GdaDict *dict;
 	GdaDictDatabase *db;
-	GdaDataSourceInfo *dsn = NULL;
 	GdaClient *client;
 	GdaConnection *cnc;
 	gchar *filename;
 
 	/* command line parsing */
-	context = g_option_context_new ("<Data source> - Create a dictionary file for a data source");
+	context = g_option_context_new ("Create a dictionary file for a data source");
 	g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
 	if (!g_option_context_parse (context, &argc, &argv, &error)) {
 		g_warning ("Can't parse arguments: %s", error->message);
@@ -115,14 +122,18 @@ main (int argc, char **argv)
 	}
 	g_option_context_free (context);
 	
-	/* fetch DSN */
-	if (argc == 2) {
-		dsn = gda_config_find_data_source (argv[1]);
-		if (!dsn)
-			g_error ("Can't find data source: %s\n", argv[1]);
+	if (direct && dsn) {
+		g_print ("DSN and connection string are exclusive\n");
+		exit (1);
 	}
-	else {
-		g_print (_("Usage: %s <Data source>\n"), argv[0]);
+
+	if (!direct && !dsn) {
+		g_print ("You must specify a connection to open either as a DSN or a connection string\n");
+		exit (1);
+	}
+
+	if (direct && !prov) {
+		g_print ("You must specify a provider when using a connection string\n");
 		exit (1);
 	}
 
@@ -130,14 +141,33 @@ main (int argc, char **argv)
 
 	/* open connection */
 	client = gda_client_new ();
-	cnc = gda_client_open_connection (client, dsn->name, 
-					  user ? user : dsn->username, 
-					  pass ? pass : ((dsn->password) ? dsn->password : ""),
-					  0, &error);
-	if (!cnc) {
-		g_warning (_("Can't open connection to DSN %s: %s\n"), dsn->name,
-			   error && error->message ? error->message : "???");
-		exit (1);
+	if (dsn) {
+		GdaDataSourceInfo *info = NULL;
+		info = gda_config_find_data_source (dsn);
+		if (!info)
+			g_error (_("DSN '%s' is not declared"), dsn);
+		else {
+			cnc = gda_client_open_connection (client, info->name, 
+							  user ? user : info->username, 
+							  pass ? pass : ((info->password) ? info->password : ""),
+							  0, &error);
+			if (!cnc) {
+				g_warning (_("Can't open connection to DSN %s: %s\n"), info->name,
+				   error && error->message ? error->message : "???");
+				exit (1);
+			}
+			gda_data_source_info_free (info);
+		}
+	}
+	else {
+		
+		cnc = gda_client_open_connection_from_string (client, prov, direct, 
+							      user, pass, 0, &error);
+		if (!cnc) {
+			g_warning (_("Can't open specified connection: %s\n"),
+				   error && error->message ? error->message : "???");
+			exit (1);
+		}
 	}
 
 	/* create dictionary */

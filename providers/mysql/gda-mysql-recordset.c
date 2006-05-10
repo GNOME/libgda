@@ -123,38 +123,48 @@ fill_gda_value (GValue *gda_value, enum enum_field_types type, gchar *value,
 	switch (type) {
 	case FIELD_TYPE_DECIMAL :
 	case FIELD_TYPE_DOUBLE :
+		gda_value_reset_with_type (gda_value, G_TYPE_DOUBLE);
 		g_value_set_double (gda_value, atof (value));
 		break;
 	case FIELD_TYPE_FLOAT :
+		gda_value_reset_with_type (gda_value, G_TYPE_FLOAT);
 		g_value_set_float (gda_value, atof (value));
 		break;
 	case FIELD_TYPE_LONG :
 		if (is_unsigned) {
+			gda_value_reset_with_type (gda_value, G_TYPE_UINT);
 			g_value_set_uint (gda_value, strtoul (value, NULL, 0));
 			break;
 		}
 	case FIELD_TYPE_YEAR :
+		gda_value_reset_with_type (gda_value, G_TYPE_INT);
 		g_value_set_int (gda_value, atol (value));
 		break;
 	case FIELD_TYPE_LONGLONG :
 	case FIELD_TYPE_INT24 :
 		if (is_unsigned) {
+			gda_value_reset_with_type (gda_value, G_TYPE_UINT64);
 			g_value_set_uint64 (gda_value, strtoull (value, NULL, 0));
 		} else {
+			gda_value_reset_with_type (gda_value, G_TYPE_INT64);
 			g_value_set_int64 (gda_value, atoll (value));
 		}
 		break;
 	case FIELD_TYPE_SHORT :
 		if (is_unsigned) {
+			gda_value_reset_with_type (gda_value, GDA_TYPE_USHORT);
 			gda_value_set_ushort (gda_value, atoi (value));
 		} else {
+			gda_value_reset_with_type (gda_value, GDA_TYPE_SHORT);
 			gda_value_set_short (gda_value, atoi (value));
 		}
 		break;
 	case FIELD_TYPE_TINY :
 		if (is_unsigned) {
+			gda_value_reset_with_type (gda_value, G_TYPE_UCHAR);
 			g_value_set_uchar (gda_value, atoi (value));
 		} else {
+			gda_value_reset_with_type (gda_value, G_TYPE_CHAR);
 			g_value_set_char (gda_value, atoi (value));
 		}
 		break;
@@ -165,6 +175,7 @@ fill_gda_value (GValue *gda_value, enum enum_field_types type, gchar *value,
 		GdaBinary bin;
 		bin.data = value;
 		bin.binary_length = length;
+		gda_value_reset_with_type (gda_value, GDA_TYPE_BINARY);
 		gda_value_set_binary (gda_value, &bin);
 		break;
 	}
@@ -173,6 +184,7 @@ fill_gda_value (GValue *gda_value, enum enum_field_types type, gchar *value,
 		/* FIXME: we might get "[VAR]CHAR(20) BINARY" type with \0 inside
 		   We should check for BINARY flag and treat it like a BLOB
 		 */
+		gda_value_reset_with_type (gda_value, G_TYPE_STRING);
 		g_value_set_string (gda_value, value);
 		break;
 	case FIELD_TYPE_DATE :
@@ -191,6 +203,7 @@ fill_gda_value (GValue *gda_value, enum enum_field_types type, gchar *value,
 	case FIELD_TYPE_NEWDATE :
 	case FIELD_TYPE_ENUM :
 	case FIELD_TYPE_SET : /* FIXME */
+		gda_value_reset_with_type (gda_value, G_TYPE_STRING);
 		g_value_set_string (gda_value, value);
 		break;
 	default :

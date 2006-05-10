@@ -849,6 +849,7 @@ gda_timestamp_copy
 gda_timestamp_free
 gda_value_get_binary
 gda_value_set_binary
+gda_value_take_binary
 gda_value_get_blob
 gda_value_set_blob
 gda_value_get_geometric_point

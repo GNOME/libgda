@@ -108,6 +108,8 @@ or destroy a database.
 @client: 
 @provider_id: 
 @cnc_string: 
+@username: 
+@password: 
 @options: 
 @error: 
 @Returns: 

@@ -908,14 +908,24 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 				gda_dict_field_set_data_type (field, dt);
 			else {
 				/* create a new custom data type */
-				gchar *tmp;
+				gchar *tmp, *tmp2;
+				xmlNodePtr tnode;
 				
 				dt = GDA_DICT_TYPE (gda_dict_type_new (dict));
 				tmp = utility_build_decoded_id (NULL, prop + 2);
 				gda_dict_type_set_sqlname (dt, tmp);
 				g_free (tmp);
 				gda_dict_type_set_gda_type (dt, GDA_TYPE_BLOB);
-				gda_object_set_description (GDA_OBJECT (dt), _("Custom data type"));
+
+				tnode = node->parent;
+				g_assert (tnode && !strcmp (tnode->name, "gda_dict_table"));
+				tmp = xmlGetProp (tnode, "name");
+				g_assert (tmp);
+				tmp2 = g_strdup_printf (_("Custom data type, declared for the %s.%s field"),
+							tmp, gda_object_get_name (GDA_OBJECT (field)));
+				xmlFree (tmp);
+				gda_object_set_description (GDA_OBJECT (dt), tmp2);
+				g_free (tmp2);
 				gda_dict_declare_custom_data_type (dict, dt);
 				gda_dict_field_set_data_type (field, dt);
 				g_object_unref (dt);

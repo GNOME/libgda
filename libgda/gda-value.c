@@ -57,9 +57,9 @@ string_to_binary (const GValue *src, GValue *dest)
 	
 	as_string = g_value_get_string (src);
 	
-	binary = (GdaBinary *) gda_value_get_binary (dest);
-	
+	binary = g_new0 (GdaBinary, 1);
 	gda_string_to_binary (as_string, binary);
+	gda_value_take_binary (dest, binary);
 }
 
 static void 
@@ -175,13 +175,16 @@ string_to_geometricpoint (const GValue *src, GValue *dest)
 			  GDA_VALUE_HOLDS_GEOMETRIC_POINT (dest));
 	
 	as_string = g_value_get_string (src);
-	point = (GdaGeometricPoint *) gda_value_get_geometric_point (dest);
+	point = g_new0 (GdaGeometricPoint, 1);
 	
 	as_string++;
 	point->x = atof (as_string);
 	as_string = strchr (as_string, ',');
 	as_string++;
 	point->y = atof (as_string);
+
+	gda_value_set_geometric_point (dest, point);
+	g_free (point);
 }
 
 GType
@@ -332,9 +335,12 @@ numeric_to_string (const GValue *src, GValue *dest)
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_NUMERIC (src));
 	
-	numeric = gda_value_get_numeric ((GValue *) src);
-	
-	g_value_set_string (dest, numeric->number);
+
+	numeric = gda_value_get_numeric (src);
+	if (numeric)
+		g_value_set_string (dest, numeric->number);
+	else
+		g_value_set_string (dest, "");
 }
 
 GType
@@ -347,7 +353,7 @@ gda_numeric_get_type (void)
 						     (GBoxedCopyFunc) gda_numeric_copy,
 						     (GBoxedFreeFunc) gda_numeric_free);
 	
-		/* FIXME: Not function to Transform from GdaNumeric to String*/
+		/* FIXME: No function to Transform String to from GdaNumeric */
 	
 		g_value_register_transform_func (type, 
 						 G_TYPE_STRING,
@@ -438,7 +444,7 @@ string_to_time (const GValue *src, GValue *dest)
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_TIME (dest));
 	
-	timegda = (GdaTime *) gda_value_get_time ((GValue *) dest);
+	timegda = g_new0 (GdaTime, 1);
 	
 	as_string = g_value_get_string (src);
 	
@@ -452,6 +458,9 @@ string_to_time (const GValue *src, GValue *dest)
 		timegda->timezone = atoi (as_string);
 	else
 		timegda->timezone = GDA_TIMEZONE_INVALID;
+
+	gda_value_set_time (dest, timegda);
+	g_free (timegda);
 }
 
 GType
@@ -511,7 +520,7 @@ string_to_timestamp (const GValue *src, GValue *dest)
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_TIMESTAMP (dest));
 	
-	timestamp = (GdaTimestamp *) gda_value_get_timestamp ((GValue *) dest);
+	timestamp = g_new0 (GdaTimestamp, 1);
 	
 	as_string = g_value_get_string (src);
 	
@@ -530,6 +539,9 @@ string_to_timestamp (const GValue *src, GValue *dest)
 	timestamp->fraction = atol (as_string) * 10; /* I have only hundredths of second */
 	as_string += 3;
 	timestamp->timezone = atol (as_string) * 60 * 60;
+
+	gda_value_set_timestamp (dest, timestamp);
+	g_free (timestamp);
 }
 
 static void 
@@ -883,6 +895,25 @@ gda_value_set_binary (GValue *value, const GdaBinary *binary)
 	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_BINARY);
 	g_value_set_boxed (value, binary);
+}
+
+/**
+ * gda_value_take_binary
+ * @value: a #GValue that will store @val.
+ * @binary: a #GdaBinary structure with the data and its size to be stored in @value.
+ *
+ * Stores @val into @value, but on the contrary to gda_value_set_binary(), the @binary
+ * argument is not copied, but used as-is and it should be considered owned by @value.
+ */
+void
+gda_value_take_binary (GValue *value, const GdaBinary *binary)
+{
+	g_return_if_fail (value);
+	g_return_if_fail (binary);
+	
+	l_g_value_unset (value);
+	g_value_init (value, GDA_TYPE_BINARY);
+	g_value_take_boxed (value, binary);
 }
 
 /**
