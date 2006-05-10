@@ -5,6 +5,7 @@
 	* libgda/gda-query-parsing.c: bug fixed
 	* libgda/gda-value.[ch]: added gda_value_take_binary()
 	* libgda/gda-value.c: bug fixes
+	* libgda/gda-dict-field.c: minor bug fixed when a gda data type does not exist
 
 2006-05-09  Murray Cumming  <murrayc@murrayc.com>
 

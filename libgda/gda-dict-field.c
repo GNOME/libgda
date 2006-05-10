@@ -957,12 +957,29 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 			GdaDataHandler *dh;
 			GValue *value;
 			
-			vtype = gda_type_from_string (str2);			
+			vtype = gda_type_from_string (str2);
+			if (vtype == G_TYPE_INVALID) {
+				g_set_error (error,
+					     GDA_DICT_FIELD_ERROR,
+					     GDA_DICT_FIELD_XML_LOAD_ERROR,
+					     _("Unknown GDA data type '%s'"), str2);
+				g_free (str2);
+				return FALSE;				
+			}
 			dh = gda_dict_get_default_handler (dict, vtype);
-			value = gda_data_handler_get_value_from_str (dh, prop, vtype);
-			gda_dict_field_set_default_value (field, value);
-			gda_value_free (value);
-
+			if (dh) {
+				value = gda_data_handler_get_value_from_str (dh, prop, vtype);
+				gda_dict_field_set_default_value (field, value);
+				gda_value_free (value);
+			}
+			else {
+				g_set_error (error,
+					     GDA_DICT_FIELD_ERROR,
+					     GDA_DICT_FIELD_XML_LOAD_ERROR,
+					     _("Could not find a data handler for data type '%s'"), str2);
+				g_free (str2);
+				return FALSE;
+			}
 			g_free (str2);
 		}
 		g_free (prop);
