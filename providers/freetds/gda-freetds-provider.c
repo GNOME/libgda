@@ -34,6 +34,8 @@
 #include "gda-freetds.h"
 #include "gda-freetds-defs.h"
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 #define OBJECT_DATA_FREETDS_HANDLE "GDA_FreeTDS_FreeTDSHandle"
@@ -950,7 +952,7 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
 	g_return_val_if_fail (tds_cnc->tds != NULL, NULL);
 
 /*	arr = gda_freetds_split_commandlist(sql); */
-	arr = g_strsplit (sql, ";", 0);
+	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		gint n = 0;
 		while (arr[n]) {

@@ -35,6 +35,8 @@
 #include "gda-sybase-types.h"
 #include <libgda/gda-data-model-private.h>
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 static void gda_sybase_provider_class_init (GdaSybaseProviderClass *klass);
@@ -666,7 +668,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 
 	// FIXME: ; in values bug
 	//        e.g. SELECT * from x where y LIKE '%foo; bar%'
-	arr = g_strsplit (sql, ";", 0);
+	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		gint n = 0;
 		while (arr[n]) {

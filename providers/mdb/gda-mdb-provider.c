@@ -29,6 +29,8 @@
 #include <libgda/gda-server-provider-extra.h>
 #include "gda-mdb.h"
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 #define OBJECT_DATA_MDB_HANDLE "GDA_Mdb_MdbHandle"
@@ -367,7 +369,7 @@ gda_mdb_provider_execute_command (GdaServerProvider *provider,
 
 	switch (gda_command_get_command_type (cmd)) {
 	case GDA_COMMAND_TYPE_SQL :
-		arr = g_strsplit (cmd->text, ";", 0);
+		arr = gda_delimiter_split_sql (cmd->text);
 		if (arr) {
 			gint i = 0;
 

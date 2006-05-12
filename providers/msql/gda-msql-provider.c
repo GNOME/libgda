@@ -30,6 +30,8 @@
 #include "gda-msql-recordset.h"
 /*#include "gda-msql-provider.h"*/
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 #define OBJECT_DATA_MSQL_HANDLE "GDA_mSQL_mSQLHandle"
 #define OBJECT_DATA_MSQL_DBNAME "GDA_mSQL_dbname"
@@ -266,8 +268,8 @@ static GList *process_sql_commands(GList *rl,GdaConnection *cnc,
 		gda_connection_add_event_string(cnc,_("Invalid mSQL handle"));
 		return NULL;
 	}
-	options=gda_connection_get_options(cnc);
-	arr=g_strsplit(sql,";",0);
+	options = gda_connection_get_options(cnc);
+	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		register gint n=0;
 

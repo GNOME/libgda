@@ -39,6 +39,9 @@ typedef enum
 	GDA_DELIMITER_SQL_INSERT,
 	GDA_DELIMITER_SQL_DELETE,
 	GDA_DELIMITER_SQL_UPDATE,
+	GDA_DELIMITER_SQL_BEGIN,
+	GDA_DELIMITER_SQL_COMMIT,
+	GDA_DELIMITER_MULTIPLE,
 	GDA_DELIMITER_UNKNOWN
 }
 GdaDelimiterStatementType;
@@ -50,7 +53,6 @@ GdaDelimiterStatementType;
 struct GdaDelimiterStatement
 {
 	GdaDelimiterStatementType  type;
-	char                      *full_query;
 	GList                     *expr_list;   /* list of GdaDelimiterExpr structures */
 	GList                     *params_specs;/* list of GList of GdaDelimiterParamSpec structures */
 };
@@ -87,11 +89,16 @@ struct GdaDelimiterParamSpec
 };
 #define GDA_DELIMITER_PARAM_SPEC(x) ((GdaDelimiterParamSpec *)(x))
 
-void  gda_delimiter_display (GdaDelimiterStatement * statement);
-int   gda_delimiter_destroy (GdaDelimiterStatement * statement);
+void                   gda_delimiter_display              (GdaDelimiterStatement *statement);
+gchar                 *gda_delimiter_to_string            (GdaDelimiterStatement *statement);
+int                    gda_delimiter_destroy              (GdaDelimiterStatement *statement);
 
-GdaDelimiterStatement *gda_delimiter_parse                (const char *sql_text);
-GdaDelimiterStatement *gda_delimiter_parse_with_error     (const char *sql_text, GError ** error);
+GList                 *gda_delimiter_parse                (const char *sql_text);
+GList                 *gda_delimiter_parse_with_error     (const char *sql_text, GError **error);
+gchar                **gda_delimiter_split_sql            (const char *sql_text);
+
+void                   gda_delimiter_free_list            (GList *statements);
+GdaDelimiterStatement *gda_delimiter_concat_list          (GList *statements);
 
 GdaDelimiterStatement *gda_delimiter_parse_copy_statement (GdaDelimiterStatement *statement, GHashTable *repl);
 

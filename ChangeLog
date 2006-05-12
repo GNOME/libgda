@@ -1,3 +1,24 @@
+2006-05-12  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sql-delimiter/*: the delimiter now returns a list of GdaDelimiterStatement
+	structures, one for each identified SQL statement (SQL statements are separated by
+	semicolon.
+	* libgda/gda-query.c: modifications to handle the changes in the SQL delimiter
+	* libgda/sql-delimiter/gda-sql-delimiter.[ch]: added gda_delimiter_concat_list() and
+	gda_delimiter_split_sql()
+	* providers/firebird/gda-firebird-provider.c:
+	* providers/freetds/gda-freetds-provider.c:
+	* providers/ibmdb2/gda-ibmdb2-provider.c:
+	* providers/mdb/gda-mdb-provider.c:
+	* providers/msql/gda-msql-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/oracle/gda-oracle-provider.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/sybase/gda-sybase-provider.c: use gda_delimiter_split_sql instead of
+	g_strsplit to delimit SQL statements which fixes bug #131040
+	* testing/gda-diagnose: really take into account username and password (passed
+	as command line arguments) when opening the connection
+
 2006-05-10  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-dict-field.c: when a new data type is created, correctly sets its description

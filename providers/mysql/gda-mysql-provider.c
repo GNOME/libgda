@@ -43,6 +43,8 @@
 #include <libgda/handlers/gda-handler-string.h>
 #include <libgda/handlers/gda-handler-type.h>
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 static void gda_mysql_provider_class_init (GdaMysqlProviderClass *klass);
@@ -431,7 +433,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 	options = gda_connection_get_options (cnc);
 
 	/* parse SQL string, which can contain several commands, separated by ';' */
-	arr = g_strsplit (sql, ";", 0);
+	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		gint n = 0;
 

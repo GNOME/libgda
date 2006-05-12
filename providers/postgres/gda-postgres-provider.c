@@ -40,6 +40,8 @@
 #include <libgda/handlers/gda-handler-type.h>
 #include <libgda/handlers/gda-handler-bin.h>
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
 					      GdaPostgresProviderClass *klass);
@@ -731,7 +733,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 
 	pconn = priv_data->pconn;
 	/* parse SQL string, which can contain several commands, separated by ';' */
-	arr = g_strsplit (sql, ";", 0);
+	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		gint n = 0;
 

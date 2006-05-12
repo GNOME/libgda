@@ -30,6 +30,6 @@ GdaDelimiterStatement   *gda_delimiter_statement_build  (GdaDelimiterStatementTy
 GdaDelimiterExpr        *gda_delimiter_expr_build       (gchar *str, GList *pspec_list);
 
 /* param spec */
-GdaDelimiterParamSpec      *gda_delimiter_param_spec_build (GdaDelimiterParamSpecType type, char *content);
+GdaDelimiterParamSpec   *gda_delimiter_param_spec_build (GdaDelimiterParamSpecType type, char *content);
 
 #endif

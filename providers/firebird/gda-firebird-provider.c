@@ -30,6 +30,8 @@
 #include "gda-firebird-recordset.h"
 #include "gda-firebird-blob.h"
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 static void 		gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass);
 static void 		gda_firebird_provider_init (GdaFirebirdProvider *provider,
 						    GdaFirebirdProviderClass *klass);
@@ -1103,7 +1105,7 @@ gda_firebird_provider_run_sql (GList *reclist,
 	recset = NULL;
 
 	/* parse SQL string, which can contain several commands, separated by ';' */
-	arr = g_strsplit (sql, ";", 0);
+	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		while (arr[n]) {
 			recset = gda_firebird_recordset_new (cnc, ftr, sql);

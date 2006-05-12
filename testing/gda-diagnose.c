@@ -1351,8 +1351,9 @@ detail_datasource (TestConfig *config, GdaDataSourceInfo *dsn)
 	list_datasource_info (config, file->body, dsn->name);
 
 	client = gda_client_new ();
-	cnc = gda_client_open_connection (client, dsn->name, dsn->username, 
-					  (dsn->password) ? dsn->password : "",
+	cnc = gda_client_open_connection (client, dsn->name, 
+					  user ? user : dsn->username, 
+					  pass ? pass : ((dsn->password) ? dsn->password : ""),
 					  0, NULL);
 	if (!cnc) {
 		xmlNodePtr p;

@@ -55,7 +55,6 @@ gda_delimiter_statement_build (GdaDelimiterStatementType type, GList *expr_list)
 	/* build returned structure */
 	retval = g_new0 (GdaDelimiterStatement, 1);
 	retval->type = type;
-	retval->full_query = NULL;
 	if (first)
 		retval->expr_list = g_list_prepend (expr_list, first);
 	else

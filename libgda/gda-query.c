@@ -1356,6 +1356,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 		err = TRUE;
 
 	if (err) {
+		GList *stm_list;
 		GdaDelimiterStatement *stm;
 		GError *local_error = NULL; /* we don't care about the error, but we don't want any output to stderr */
 
@@ -1371,12 +1372,14 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 		* If everything is OK, then create #GdaQueryFieldValue internal fields for each required
 		* parameter.
 		*/
-		stm = gda_delimiter_parse_with_error (sql, &local_error);
-	       
-		if (stm) {
+		stm_list = gda_delimiter_parse_with_error (sql, &local_error);
+		if (stm_list) {
 			GList *params;
 			gboolean allok = TRUE;
 			GdaDict *dict = gda_object_get_dict (GDA_OBJECT (query));
+
+			stm = gda_delimiter_concat_list (stm_list);
+			gda_delimiter_free_list (stm_list);
 
 			/*g_print ("DELIMITED: %s\n", sql);
 			  gda_delimiter_display (stm);*/

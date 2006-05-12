@@ -29,17 +29,25 @@ char *string_buf_ptr;
 
 		BEGIN(INITIAL);
 
-"select"	{return L_SELECT;}
-"insert"	{return L_INSERT;}
-"update" 	{return L_UPDATE;}
-"delete"        {return L_DELETE;}
 "="		{return L_EQ;}
+";"		{return L_SC;}
 
-[a-zA-Z0-9_,+-/|().!~*=]+	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
+"["             {return L_LSBRACKET;}
+"]"             {return L_RSBRACKET;}
+
+":name"         {return L_PNAME;}
+":descr"        {return L_PDESCR;}
+":type"         {return L_PTYPE;}
+":isparam"      {return L_PISPARAM;}
+":nullok"       {return L_PNULLOK;}
+"##"            {return L_UNSPECVAL;}
+
+[^ \t\n\r\'\";\[\]:]+ {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
 [ \t\n\r]	{;}
+
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}
 <STRING>\\'     {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
-<STRING>\'		{BEGIN(INITIAL);
+<STRING>\'	{BEGIN(INITIAL);
 		 *string_buf_ptr = '\0';
 		 gda_delimiterlval.str = g_strdup_printf ("'%s'", string_buf);
 		 return L_STRING;
@@ -49,18 +57,8 @@ char *string_buf_ptr;
 <STRING>\\r	{*string_buf_ptr++='\r';}
 <STRING>\\b	{*string_buf_ptr++='\b';}
 <STRING>\\f	{*string_buf_ptr++='\f';}
-<STRING>\\(.|\n)	{*string_buf_ptr++=gda_delimitertext[0];}
+<STRING>\\(.|\n) {*string_buf_ptr++=gda_delimitertext[0]; *string_buf_ptr++=gda_delimitertext[1];}
 <STRING>.	{*string_buf_ptr++=gda_delimitertext[0];}
-
-"["		{return L_LSBRACKET;}
-"]"             {return L_RSBRACKET;}
-
-":name"		{return L_PNAME;}
-":descr"        {return L_PDESCR;}
-":type"		{return L_PTYPE;}
-":isparam"	{return L_PISPARAM;}
-":nullok"       {return L_PNULLOK;}
-"##"            {return L_UNSPECVAL;}
 
 \"		{string_buf_ptr = string_buf; BEGIN(TEXTUAL);}
 <TEXTUAL>\"              {BEGIN(INITIAL);
@@ -73,7 +71,7 @@ char *string_buf_ptr;
 <TEXTUAL>\\r     {*string_buf_ptr++='\r';}
 <TEXTUAL>\\b     {*string_buf_ptr++='\b';}
 <TEXTUAL>\\f     {*string_buf_ptr++='\f';}
-<TEXTUAL>\\(.|\n)        {*string_buf_ptr++=gda_delimitertext[0];}
+<TEXTUAL>\\(.|\n) {*string_buf_ptr++=gda_delimitertext[0]; *string_buf_ptr++=gda_delimitertext[1];}
 <TEXTUAL>.       {*string_buf_ptr++=gda_delimitertext[0];}
 
 .		 {;}

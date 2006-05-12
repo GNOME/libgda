@@ -29,6 +29,8 @@
 #include "gda-ibmdb2.h"
 #include "gda-ibmdb2-recordset.h"
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 #define OBJECT_DATA_IBMDB2_HANDLE "GDA_IBMDB2_IBMDB2Handle"
@@ -453,7 +455,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 		return NULL;
 	}
 	
-	arr = g_strsplit (sql, ";", 0);
+	arr = gda_delimiter_split_sql (sql);
 	
         if (arr) {
  		gint n = 0;     

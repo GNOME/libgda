@@ -34,6 +34,8 @@
 #include "gda-oracle-provider.h"
 #include "gda-oracle-recordset.h"
 
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
+
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 #define OBJECT_DATA_ORACLE_HANDLE "GDA_Oracle_OracleHandle"
@@ -605,7 +607,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	}
 
 	/* parse SQL string, which can contain several commands, separated by ';' */
-	arr = g_strsplit (sql, ";", 0);
+	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		gint n = 0;
 

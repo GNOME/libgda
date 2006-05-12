@@ -38,7 +38,8 @@ extern void gda_delimiter_delete_buffer (void *buffer);
 
 void gda_delimitererror (char *error);
 
-GdaDelimiterStatement *sql_result;
+GdaDelimiterStatement *last_sql_result;
+GList                 *all_sql_results;
 GError **gda_sql_error;
 
 int gda_delimiterparse (void);
@@ -97,7 +98,6 @@ static void
 sql_destroy_statement (GdaDelimiterStatement *statement)
 {
 	GList *list;
-	g_free (statement->full_query);
 	list = statement->expr_list;
 	while (list) {
 		sql_destroy_expr ((GdaDelimiterExpr *)(list->data));
@@ -130,19 +130,21 @@ gda_delimiter_destroy (GdaDelimiterStatement *statement)
  * @sqlquery: A SQL query string. ie SELECT * FROM FOO
  * @error: a place where to store an error, or %NULL
  * 
- * Generate #GdaDelimiterStatement which is an in memory a structure of the 
+ * Generates a list of #GdaDelimiterStatement which is an in memory a structure of the 
  * @sqlquery in an easy to use way. It basically makes chuncks of string and
- * identifies required parameters.
+ * identifies required parameters. There is one #GdaDelimiterStatement for every
+ * chunck of string separated by a semicolon.
  * 
- * Returns: A generated GdaDelimiterStatement or %NULL on error.
+ * Returns: A list of generated GdaDelimiterStatement or %NULL on error.
  */
-GdaDelimiterStatement *
+GList *
 gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
 {
 	void *buffer;
 
 	gda_delimiterdebug = 0; /* parser debug active or not */
-	sql_result = NULL;
+	last_sql_result = NULL;
+	all_sql_results = NULL;
 	if (!sqlquery) {
 		if (error)
 			g_set_error (error, 0, 0, _("Empty query to parse"));
@@ -152,17 +154,44 @@ gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
 	gda_sql_error = error;
 	buffer = gda_delimiter_scan_string (sqlquery);
 	gda_delimiter_switch_to_buffer (buffer);
-	if (! gda_delimiterparse ()) {
-		sql_result->full_query = g_strdup (sqlquery);
+	if (gda_delimiterparse ()) {
+		g_list_foreach (all_sql_results, (GFunc) sql_destroy_statement, NULL);
+		g_list_free (all_sql_results);
+		all_sql_results = NULL;
+		last_sql_result = NULL;
 	}
 	else {
-		if (sql_result)
-			sql_destroy_statement (sql_result);
-		sql_result = NULL;
+		GList *list;
+
+		list = all_sql_results;
+		while (list) {
+			GdaDelimiterStatement *stm = (GdaDelimiterStatement *) list->data;
+
+			if (stm->expr_list) {
+				GdaDelimiterExpr *expr;
+				
+				expr = (GdaDelimiterExpr *) stm->expr_list->data;
+				if (expr->sql_text) {
+					if (! g_ascii_strcasecmp (expr->sql_text, "select"))
+						stm->type = GDA_DELIMITER_SQL_SELECT;
+					else if (! g_ascii_strcasecmp (expr->sql_text, "update"))
+						stm->type = GDA_DELIMITER_SQL_UPDATE;
+					else if (! g_ascii_strcasecmp (expr->sql_text, "insert"))
+						stm->type = GDA_DELIMITER_SQL_INSERT;
+					else if (! g_ascii_strcasecmp (expr->sql_text, "delete"))
+						stm->type = GDA_DELIMITER_SQL_DELETE;
+					else if (! g_ascii_strcasecmp (expr->sql_text, "begin"))
+						stm->type = GDA_DELIMITER_SQL_BEGIN;
+					else if (! g_ascii_strcasecmp (expr->sql_text, "commit"))
+						stm->type = GDA_DELIMITER_SQL_COMMIT;
+				}
+			}
+			list = g_list_next (list);
+		}
 	}
 	gda_delimiter_delete_buffer (buffer);
 
-	return sql_result;
+	return all_sql_results;
 }
 
 /**
@@ -175,102 +204,302 @@ gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
  *
  * Returns: A generated GdaDelimiterStatement or %NULL on error.
  */
-GdaDelimiterStatement *
+GList *
 gda_delimiter_parse (const char *sqlquery)
 {
 	return gda_delimiter_parse_with_error (sqlquery, NULL);
 }
 
-static void sql_display_expr (GdaDelimiterExpr *expr);
-static void sql_display_pspec_list (GList *pspecs);
-void
-gda_delimiter_display (GdaDelimiterStatement *statement)
+/**
+ * gda_delimiter_split_sql
+ * @sql_text:
+ *
+ * Splits @sql_text into a NULL-terminated array of SQL statements, like the g_strsplit()
+ * function.
+ *
+ * As a side note, this function returns %NULL if @sql_text is %NULL or if no statement was found.
+ *
+ * Returns: a newly-allocated NULL-terminated array of strings. Use g_strfreev() to free it.
+ */
+gchar **
+gda_delimiter_split_sql (const char *sql_text)
 {
-	GList *list;
+	GList *statements;
+	gchar **array = NULL;
+	GError *error = NULL;
 
-	if (!statement)
+	if (!sql_text)
+		return NULL;
+
+	statements = gda_delimiter_parse_with_error (sql_text, &error);
+
+	if (statements) {
+		/* no error */
+		GList *list;
+		gint i, size;
+
+		size = g_list_length (statements);
+		array = g_new0 (gchar *, size + 1);
+
+		list = statements;
+		i = 0;
+		while (list) {
+			array [i] = gda_delimiter_to_string ((GdaDelimiterStatement *) list->data);
+			list = g_list_next (list);
+			i++;
+		}
+		gda_delimiter_free_list (statements);
+	}
+	else
+		/* an error occured which is caused by an empty statement */
+		array = NULL;
+
+	if (error)
+		g_error_free (error);
+
+	return array;
+}
+
+/**
+ * gda_delimiter_free_list
+ * @statements: a list of #GdaDelimiterStatement structures
+ *
+ * Destroys all the #GdaDelimiterStatement structures in @statements, and
+ * frees the @statements list
+ */
+void
+gda_delimiter_free_list (GList *statements)
+{
+	if (!statements)
 		return;
 
-	switch (statement->type) {
-	case GDA_DELIMITER_SQL_SELECT:
-		g_print ("Select statement:\n");
-		break;
-	case GDA_DELIMITER_SQL_INSERT:
-		g_print ("Insert statement:\n");
-		break;
-	case GDA_DELIMITER_SQL_UPDATE:
-		g_print ("Update statement:\n");
-		break;
-	case GDA_DELIMITER_SQL_DELETE:
-		g_print ("Delete statement:\n");
-		break;
-	default:
-		g_print ("Unknown statement:\n");
-		break;
-	}
-
-	g_print ("Original SQL: %s\n", statement->full_query);
-	g_print ("Parsed SQL:\n");
-	list = statement->expr_list;
-	while (list) {
-		sql_display_expr ((GdaDelimiterExpr *)(list->data));
-		list = g_list_next (list);
-	}
-	g_print ("Parsed parameters:\n");
-	list = statement->params_specs;
-	while (list) {
-		sql_display_pspec_list ((GList *)(list->data));
-		list = g_list_next (list);
-	}
+	g_list_foreach (statements, (GFunc) sql_destroy_statement, NULL);
+	g_list_free (statements);
 }
 
-static void
-sql_display_expr (GdaDelimiterExpr *expr)
+/**
+ * gda_delimiter_concat_list
+ * @statements: a list of #GdaDelimiterStatement structures
+ *
+ * Creates one #GdaDelimiterStatement from all the statements in @statements
+ *
+ * Returns: a new #GdaDelimiterStatement or %NULL if @statements is %NULL
+ */
+GdaDelimiterStatement *
+gda_delimiter_concat_list (GList *statements)
 {
-	if (expr->sql_text)
-		g_print ("\t%s\n", expr->sql_text);
-	if (expr->pspec_list)
-		sql_display_pspec_list (expr->pspec_list);
+	GdaDelimiterStatement *retval, *stm, *copy;
+	GList *list = statements;
+
+	if (!statements)
+		return NULL;
+
+	retval = g_new0 (GdaDelimiterStatement, 1);
+	while (list) {
+		stm = (GdaDelimiterStatement *) list->data;
+		if (list != statements) {
+			GdaDelimiterExpr *expr;
+			expr = gda_delimiter_expr_build (g_strdup (";"), NULL);
+			retval->expr_list = g_list_append (retval->expr_list, expr);
+
+			retval->type = GDA_DELIMITER_MULTIPLE;
+		}
+		else
+			retval->type = stm->type;
+			
+		copy = gda_delimiter_parse_copy_statement (stm, NULL);
+		retval->expr_list = g_list_concat (retval->expr_list, copy->expr_list);
+		copy->expr_list = NULL;
+		retval->params_specs = g_list_concat (retval->params_specs, copy->params_specs);
+		copy->params_specs = NULL;
+		gda_delimiter_destroy (copy);
+
+		list = g_list_next (list);
+	}
+
+	return retval;
 }
 
-static void
-sql_display_pspec_list (GList *pspecs)
+/*
+ * To string
+ */
+gchar *gda_delimiter_to_string_real (GdaDelimiterStatement *statement, gboolean sep);
+
+/**
+ * gda_delimiter_to_string
+ * @statement: a #GdaDelimiterStatement
+ *
+ * Converts a statement to a string
+ */
+gchar *
+gda_delimiter_to_string (GdaDelimiterStatement *statement)
+{
+	return gda_delimiter_to_string_real (statement, FALSE);
+}
+
+static gchar * sql_to_string_expr (GdaDelimiterExpr *expr, gboolean sep);
+static gchar * sql_to_string_pspec_list (GList *pspecs, gboolean sep);
+gchar *
+gda_delimiter_to_string_real (GdaDelimiterStatement *statement, gboolean sep)
 {
 	GList *list;
+	GString *string;
+	gchar *tmp;
+
+	if (!statement)
+		return NULL;
+
+	string = g_string_new ("");
+
+	if (sep) {
+		switch (statement->type) {
+		case GDA_DELIMITER_SQL_SELECT:
+			g_string_append (string, "Select statement:\n");
+			break;
+		case GDA_DELIMITER_SQL_INSERT:
+			g_string_append (string, "Insert statement:\n");
+			break;
+		case GDA_DELIMITER_SQL_UPDATE:
+			g_string_append (string, "Update statement:\n");
+			break;
+		case GDA_DELIMITER_SQL_DELETE:
+			g_string_append (string, "Delete statement:\n");
+			break;
+		default:
+			g_string_append (string, "Unknown statement:\n");
+			break;
+		}
+	}
+
+	if (sep)
+		g_string_append (string, "Parsed SQL:\n");
+	list = statement->expr_list;
+	while (list) {
+		tmp = sql_to_string_expr ((GdaDelimiterExpr *)(list->data), sep);
+		if ((list != statement->expr_list) && !sep)
+			g_string_append_c (string, ' ');
+		g_string_append (string, tmp);
+		g_free (tmp);
+
+		list = g_list_next (list);
+	}
+
+	if (sep) {
+		if (!statement->params_specs)
+			g_string_append (string, "No parsed parameter\n");
+		else {
+			g_string_append (string, "Parsed parameters:\n");
+			list = statement->params_specs;
+			while (list) {
+				tmp = sql_to_string_pspec_list ((GList *)(list->data), sep);
+				if ((list != statement->params_specs) && !sep)
+					g_string_append_c (string, ' ');
+				g_string_append (string, tmp);
+				g_free (tmp);
+				
+				list = g_list_next (list);
+			}
+		}
+	}
+
+	tmp = string->str;
+	g_string_free (string, FALSE);
+	return tmp;
+}
+
+static gchar *
+sql_to_string_expr (GdaDelimiterExpr *expr, gboolean sep)
+{
+	GString *string;
+	gchar *tmp;
+
+	string = g_string_new ("");
+	if (expr->sql_text) {
+		if (sep)
+			tmp = g_strdup_printf ("\t%s\n", expr->sql_text);
+		else
+			tmp = g_strdup_printf ("%s", expr->sql_text);
+		g_string_append (string, tmp);
+		g_free (tmp);
+	}
+	if (expr->pspec_list) {
+		tmp = sql_to_string_pspec_list (expr->pspec_list, sep);
+		g_string_append (string, tmp);
+		g_free (tmp);
+	}
+
+	tmp = string->str;
+	g_string_free (string, FALSE);
+	return tmp;
+}
+
+static gchar *
+sql_to_string_pspec_list (GList *pspecs, gboolean sep)
+{
+	GList *list;
+	GString *string;
+	gchar *tmp;
+
+	string = g_string_new ("");
 
 	list = pspecs;
-	g_print ("\t## [");
+	if (sep)
+		g_string_append_c (string, '\t');
+	g_string_append (string, "## [");
 	while (list) {
 		GdaDelimiterParamSpec *pspec = (GdaDelimiterParamSpec *)(list->data);
 
 		if (list != pspecs)
-			g_print (" ");
+			g_string_append (string, " ");
 
 		switch (pspec->type) {
 		case GDA_DELIMITER_PARAM_NAME:
-			g_print (":name=\"%s\"", pspec->content);
+			g_string_append_printf (string, ":name=\"%s\"", pspec->content);
 			break;
 		case GDA_DELIMITER_PARAM_DESCR:
-			g_print (":descr=\"%s\"", pspec->content);
+			g_string_append_printf (string, ":descr=\"%s\"", pspec->content);
 			break;
 		case GDA_DELIMITER_PARAM_TYPE:
-			g_print (":type=\"%s\"", pspec->content);
+			g_string_append_printf (string, ":type=\"%s\"", pspec->content);
 			break;
 		case GDA_DELIMITER_PARAM_ISPARAM:
-			g_print (":isparam=\"%s\"", pspec->content);
+			g_string_append_printf (string, ":isparam=\"%s\"", pspec->content);
 			break;
 		case GDA_DELIMITER_PARAM_NULLOK:
-			g_print (":nullok=\"%s\"", pspec->content);
+			g_string_append_printf (string, ":nullok=\"%s\"", pspec->content);
 			break;
 		default:
-			g_print (":?? =\"%s\"", pspec->content);
+			g_string_append_printf (string, ":?? =\"%s\"", pspec->content);
 			break;
 		}
 		list = g_list_next (list);
 	}
-	g_print ("]\n");
+	g_string_append_c (string, ']');
+	if (sep)
+		g_string_append_c (string, '\n');
+
+	tmp = string->str;
+	g_string_free (string, FALSE);
+	return tmp;
 }
 
+/**
+ * gda_delimiter_display
+ * @statement:
+ */
+void
+gda_delimiter_display (GdaDelimiterStatement *statement)
+{
+	gchar *str;
+
+	str = gda_delimiter_to_string_real (statement, TRUE);
+	g_print ("%s\n", str);
+	g_free (str);
+}
+
+/*
+ * Copy
+ */
 
 static GdaDelimiterExpr *
 copy_expr (GdaDelimiterExpr *orig, GHashTable *repl)
@@ -314,7 +543,6 @@ gda_delimiter_parse_copy_statement (GdaDelimiterStatement *statement, GHashTable
 
 	stm = g_new0 (GdaDelimiterStatement, 1);
 	stm->type = statement->type;
-	stm->full_query = g_strdup (statement->full_query);
 	list = statement->expr_list;
 	while (list) {
 		GdaDelimiterExpr *tmp = copy_expr ((GdaDelimiterExpr *)(list->data), repl);
