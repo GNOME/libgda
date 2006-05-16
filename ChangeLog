@@ -1,3 +1,16 @@
+2006-05-  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-dict.c: set only when necessary to avoid messages such as 
+	"validity error : Validation failed: no DTD found !"
+	* providers/sqlite/gda-sqlite-provider.c: don't return a data handler for G_TYPE_DATE and
+	GDA_TYPE_TIMESTAMP as SQLite does not impose a known format for dates (there is no date data
+	type)
+	* libgda/gda-query.c: display a warning when adding a field which gda type is not handled
+	by the provider associated to the dictionary's connection.
+	* libgda/gda-value.c:
+	* libgda/gda-data-handler.c: improved documentation regarding the usage of the user's
+	locale when converting a value to a string
+
 2006-05-12  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/sql-delimiter/*: the delimiter now returns a list of GdaDelimiterStatement
