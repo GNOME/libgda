@@ -751,7 +751,6 @@ gda_connection_schema_get_type
 gda_dict_constraint_type_get_type
 gda_dict_constraint_fk_action_get_type
 gda_dict_field_attribute_get_type
-gda_value_attribute_get_type
 gda_graph_type_get_type
 gda_entity_field_state_get_type
 gda_object_ref_type_get_type
@@ -763,7 +762,6 @@ gda_query_join_type_get_type
 gda_query_target_type_get_type
 gda_renderer_options_get_type
 gda_transaction_isolation_get_type
-gda_value_type_get_type
 </SECTION>
 
 <SECTION>
@@ -824,6 +822,7 @@ GdaTime
 GdaTimestamp
 GdaBinary
 GdaValueList
+gda_value_new
 gda_value_new_null
 gda_value_new_binary
 gda_value_new_timestamp_from_timet
@@ -1263,6 +1262,7 @@ gda_entity_get_type
 <TITLE>GdaEntityField</TITLE>
 GdaEntityField
 gda_entity_field_get_entity
+gda_entity_field_get_gda_type
 gda_entity_field_get_data_type
 gda_entity_field_get_name
 gda_entity_field_get_description

@@ -1,4 +1,4 @@
-2006-05-  Vivien Malerba <malerba@gnome-db.org>
+2006-05-16  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-dict.c: set only when necessary to avoid messages such as 
 	"validity error : Validation failed: no DTD found !"
@@ -10,6 +10,9 @@
 	* libgda/gda-value.c:
 	* libgda/gda-data-handler.c: improved documentation regarding the usage of the user's
 	locale when converting a value to a string
+	* libgda/gda-entity-field.c:
+	* libgda/handlers/gda-handler-string.c: bug fixed
+	* 
 
 2006-05-12  Vivien Malerba <malerba@gnome-db.org>
 

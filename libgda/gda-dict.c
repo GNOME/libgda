@@ -900,11 +900,14 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 	if (doc) {
 		/* doc validation */
 		xmlValidCtxtPtr validc;
+		int xmlcheck;
 
 		validc = g_new0 (xmlValidCtxt, 1);
 		validc->userData = dict;
 		validc->error = xml_validity_error_func;
 		validc->warning = NULL; 
+
+		xmlcheck = xmlDoValidityCheckingDefaultValue;
 		xmlDoValidityCheckingDefaultValue = 1;
 
 		/* replace the DTD with ours */
@@ -931,8 +934,10 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 					     GDA_DICT_FILE_LOAD_ERROR,
 					     "File '%s' does not conform to DTD", xmlfile);
 
+			xmlDoValidityCheckingDefaultValue = xmlcheck;
 			return FALSE;
 		}
+		xmlDoValidityCheckingDefaultValue = xmlcheck;
 		g_free (validc);
 	}
 	else {

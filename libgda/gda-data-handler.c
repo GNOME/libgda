@@ -86,8 +86,8 @@ gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
  * @dh: an object which implements the #GdaDataHandler interface
  * @value: the value to be converted to a string
  *
- * Creates a new string which is a "user friendly" representation of the given value (usually
- * it will be in the users's locale, specially for the dates). If the value is 
+ * Creates a new string which is a "user friendly" representation of the given value
+ * (in the users's locale, specially for the dates). If the value is 
  * NULL or is of type GDA_TYPE_NULL, the returned string is a copy of "" (empty string).
  *
  * Returns: the new string.

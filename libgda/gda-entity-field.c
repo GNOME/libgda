@@ -116,7 +116,14 @@ gda_entity_field_get_gda_type (GdaEntityField *iface)
 		GdaDictType *type;	
 		type = (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_data_type) (iface);
 
-		return type ? gda_dict_type_get_gda_type (type) : G_TYPE_INVALID;
+		if (type)
+			return gda_dict_type_get_gda_type (type);
+		else {
+			if (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_gda_type)
+				return GDA_ENTITY_FIELD_GET_IFACE (iface)->get_gda_type (iface);
+			else
+				return G_TYPE_INVALID;
+		}
 	}
 	
 	return G_TYPE_INVALID;

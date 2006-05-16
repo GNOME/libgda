@@ -77,6 +77,15 @@ to GDA_TYPE_NULL.
 </para>
 
 
+<!-- ##### FUNCTION gda_value_new ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
 <!-- ##### MACRO gda_value_new_null ##### -->
 <para>
 

@@ -710,22 +710,14 @@ gda_value_new_from_string (const gchar *as_string, GType type)
 	GValue *string;
 	
 	g_return_val_if_fail (as_string, NULL);
-		
-	if(g_value_type_transformable(G_TYPE_STRING, type)) {
-		
-		string = gda_value_new(G_TYPE_STRING);
-		g_value_set_string(string, as_string);
-		
-		value = gda_value_new (type);
-		
-		g_value_transform(string, value);
-		
-		gda_value_free(string);
-		
-		return value;
-	}
 	
-	return NULL;
+	value = gda_value_new (type);
+	if (set_from_string (value, as_string))
+		return value;
+	else {
+		gda_value_free (value);
+		return NULL;
+	}
 }
 
 /**
@@ -1399,11 +1391,13 @@ gda_value_set_from_value (GValue *value, const GValue *from)
  * gda_value_stringify
  * @value: a #GValue.
  *
- * Converts a GValue to its string representation as indicated by this
- * table:
+ * Converts a GValue to its string representation which is a human readable value. Note that the
+ * returned string does not take into account the current locale of the user (on the contrary to the
+ * #GdaDataHandler objects).
  *
- * Returns: a string formatted according to the printf() style indicated in
- * the preceding table.  Free the value with a g_free() when you've finished
+ * Dates are converted in a YYYY-MM-DD format.
+ *
+ * Returns: a new string, or %NULL if the conversion cannot be done. Free the value with a g_free() when you've finished
  * using it. 
  */
 gchar *

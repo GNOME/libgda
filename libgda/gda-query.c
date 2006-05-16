@@ -2734,7 +2734,7 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 	if (!str)
 		return GDA_QUERY_EXEC_FAILED;
 
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	g_print ("GdaQueryExecute:\nSQL= %s\n", str);
 #endif
 
@@ -3380,6 +3380,7 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
 {
 	GdaQuery *query;
 	gint pos = -1;
+	GdaConnection *cnc;
 
 	g_return_if_fail (iface && GDA_IS_QUERY (iface));
 	g_return_if_fail (GDA_QUERY (iface)->priv);
@@ -3389,6 +3390,24 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
         g_return_if_fail (!g_slist_find (query->priv->fields, field));
 	g_return_if_fail (gda_entity_field_get_entity (field) == GDA_ENTITY (query));
 
+	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (query)));
+	if (cnc) {
+		/* test that the GType of @field is handled by the provider used in cnc */
+		GdaServerProvider *prov;
+
+		prov = gda_connection_get_provider_obj (cnc);
+		if (prov) {
+			GType type;
+			GdaDataHandler *handler;
+			
+			type = gda_entity_field_get_gda_type (field);
+			handler = gda_server_provider_get_data_handler_gda (prov, cnc, type);
+			if (!handler) 
+				g_warning (_("While adding to a GdaQuery: field type '%s' is not supported by the "
+					     "connection's provider and may be rendered incorrectly"), g_type_name (type));
+		}
+	}
+	
 	if (! (GDA_IS_QUERY_FIELD_VALUE (field) && 
 	       (query->priv->query_type == GDA_QUERY_TYPE_NON_PARSED_SQL)))
 		g_return_if_fail (query_sql_forget (query, NULL));

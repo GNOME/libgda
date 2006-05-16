@@ -1659,15 +1659,12 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider,
 			g_object_unref (dh);
 		}
 	}
-	else if ((type == G_TYPE_DATE) ||
-		 (type == GDA_TYPE_TIME) ||
-		 (type == GDA_TYPE_TIMESTAMP)) {
+	else if (type == GDA_TYPE_TIME) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_time_new_no_locale ();
-			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
+			/* SQLite cannot handle date or timestamp because no defined format */
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
 			g_object_unref (dh);
 		}
 	}
