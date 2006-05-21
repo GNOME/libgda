@@ -1,3 +1,8 @@
+2006-05-21  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-value.c: (set_from_string): Move this up to before it is used, to 
+	avoid an error caused by the clash with the implicit declaration.
+
 2006-05-16  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-dict.c: set only when necessary to avoid messages such as 

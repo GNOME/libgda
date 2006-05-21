@@ -75,6 +75,159 @@ binary_to_string (const GValue *src, GValue *dest)
 	g_value_set_string (dest, str);
 }
 
+static gboolean
+set_from_string (GValue *value, const gchar *as_string)
+{
+	gboolean retval;
+	gchar *endptr [1];
+	gdouble dvalue;
+	glong lvalue;
+        gulong ulvalue;
+	GType type;
+
+	g_return_val_if_fail (value, FALSE);
+	if (! G_IS_VALUE (value)) {
+		g_warning ("Can't determine the GType of a NULL GValue");
+		return FALSE;
+	}
+
+	type = G_VALUE_TYPE (value);
+	gda_value_reset_with_type (value, type);
+
+	if (g_value_type_transformable (G_TYPE_STRING, type)) {
+		/* use the GLib type transformation function */
+		GValue *string;
+
+                string = g_new0 (GValue, 1);
+                g_value_init (string, G_TYPE_STRING);
+                g_value_set_string (string, as_string);
+
+                g_value_transform (string, value);
+                gda_value_free (string);
+
+                return TRUE;
+	}
+
+	/* custom transform function */
+	retval = FALSE;
+	if (type == G_TYPE_BOOLEAN) {
+		if (g_ascii_strcasecmp (as_string, "true") == 0) {
+			g_value_set_boolean (value, TRUE);
+			retval = TRUE;
+		}
+		else {
+			if (g_ascii_strcasecmp (as_string, "false") == 0) {
+				g_value_set_boolean (value, FALSE);
+				retval = TRUE;
+			}
+		}
+	}
+	else if (type == GDA_TYPE_BINARY) {
+		GdaBinary binary;
+		retval = gda_string_to_binary (as_string, &binary);
+		if (retval)
+			gda_value_set_binary (value, &binary);
+	}
+	else if (type == G_TYPE_INT64) {
+		/* Use g_strtod instead of strtoll */
+		dvalue = g_strtod (as_string, endptr);
+		if (*as_string != '\0' && **endptr == '\0'){
+			g_value_set_int64 (value, (gint64) dvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == G_TYPE_UINT64) {
+ 	        dvalue = g_strtod (as_string, endptr);
+                if (*as_string!=0 && **endptr==0) {
+			g_value_set_uint64(value,(guint64)dvalue);
+			retval = TRUE;
+                }
+	}
+	else if (type == G_TYPE_INT) {
+		lvalue = strtol (as_string, endptr, 10);
+		if (*as_string != '\0' && **endptr == '\0'){
+			g_value_set_int (value, (gint32) lvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == G_TYPE_UINT) {
+		ulvalue = strtoul (as_string, endptr, 10);
+		if (*as_string!=0 && **endptr==0) {
+			g_value_set_uint(value,(guint32)ulvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == GDA_TYPE_SHORT) {
+		lvalue = strtol (as_string, endptr, 10);
+		if (*as_string != '\0' && **endptr == '\0'){
+			gda_value_set_short (value, (gint16) lvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == GDA_TYPE_USHORT) {
+		ulvalue = strtoul (as_string, endptr, 10);
+		if (*as_string!=0 && **endptr==0) {
+			gda_value_set_ushort(value,(guint16)ulvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == G_TYPE_CHAR) {
+		lvalue = strtol(as_string, endptr, 10);
+		if (*as_string!=0 && **endptr==0) {
+			g_value_set_char(value,(gchar)lvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == G_TYPE_UCHAR) {
+		ulvalue = strtoul(as_string,endptr, 10);
+		if (*as_string!=0 && **endptr==0) {
+			g_value_set_uchar(value,(guchar)ulvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == G_TYPE_FLOAT) {
+		dvalue = g_strtod (as_string, endptr);
+		if (*as_string != '\0' && **endptr == '\0'){
+			g_value_set_float (value, (gfloat) dvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == G_TYPE_DOUBLE) {
+		dvalue = g_strtod (as_string, endptr);
+		if (*as_string != '\0' && **endptr == '\0'){
+			g_value_set_double (value, dvalue);
+			retval = TRUE;
+		}
+	}
+	else if (type == GDA_TYPE_NUMERIC) {
+		GdaNumeric numeric;
+		/* FIXME: what test whould i do for numeric? */
+		numeric.number = g_strdup (as_string);
+		numeric.precision = 0; /* FIXME */
+		numeric.width = 0; /* FIXME */
+		gda_value_set_numeric (value, &numeric);
+		g_free (numeric.number);
+		retval = TRUE;
+	}
+	else if (type == G_TYPE_DATE) {
+		GDate *gdate;
+		gdate = g_date_new ();
+		g_date_set_parse (gdate, as_string);
+		if (g_date_valid (gdate)) {
+			g_value_take_boxed (value, gdate);
+			retval = TRUE;
+		}
+		else
+			g_date_free (gdate);
+	}
+	else if (type == GDA_TYPE_NULL)
+		gda_value_set_null (value);
+	else if (type == G_TYPE_ULONG)
+		g_value_set_ulong (value, gda_type_from_string (as_string));
+
+	return retval;
+}
+
 GType
 gda_binary_get_type (void)
 {
@@ -1178,159 +1331,6 @@ gda_value_set_timestamp (GValue *value, const GdaTimestamp *val)
 	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_TIMESTAMP);
 	g_value_set_boxed (value, val);
-}
-
-static gboolean
-set_from_string (GValue *value, const gchar *as_string)
-{
-	gboolean retval;
-	gchar *endptr [1];
-	gdouble dvalue;
-	glong lvalue;
-        gulong ulvalue;
-	GType type;
-
-	g_return_val_if_fail (value, FALSE);
-	if (! G_IS_VALUE (value)) {
-		g_warning ("Can't determine the GType of a NULL GValue");
-		return FALSE;
-	}
-
-	type = G_VALUE_TYPE (value);
-	gda_value_reset_with_type (value, type);
-
-	if (g_value_type_transformable (G_TYPE_STRING, type)) {
-		/* use the GLib type transformation function */
-		GValue *string;
-
-                string = g_new0 (GValue, 1);
-                g_value_init (string, G_TYPE_STRING);
-                g_value_set_string (string, as_string);
-
-                g_value_transform (string, value);
-                gda_value_free (string);
-
-                return TRUE;
-	}
-
-	/* custom transform function */
-	retval = FALSE;
-	if (type == G_TYPE_BOOLEAN) {
-		if (g_ascii_strcasecmp (as_string, "true") == 0) {
-			g_value_set_boolean (value, TRUE);
-			retval = TRUE;
-		}
-		else {
-			if (g_ascii_strcasecmp (as_string, "false") == 0) {
-				g_value_set_boolean (value, FALSE);
-				retval = TRUE;
-			}
-		}
-	}
-	else if (type == GDA_TYPE_BINARY) {
-		GdaBinary binary;
-		retval = gda_string_to_binary (as_string, &binary);
-		if (retval)
-			gda_value_set_binary (value, &binary);
-	}
-	else if (type == G_TYPE_INT64) {
-		/* Use g_strtod instead of strtoll */
-		dvalue = g_strtod (as_string, endptr);
-		if (*as_string != '\0' && **endptr == '\0'){
-			g_value_set_int64 (value, (gint64) dvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == G_TYPE_UINT64) {
- 	        dvalue = g_strtod (as_string, endptr);
-                if (*as_string!=0 && **endptr==0) {
-			g_value_set_uint64(value,(guint64)dvalue);
-			retval = TRUE;
-                }
-	}
-	else if (type == G_TYPE_INT) {
-		lvalue = strtol (as_string, endptr, 10);
-		if (*as_string != '\0' && **endptr == '\0'){
-			g_value_set_int (value, (gint32) lvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == G_TYPE_UINT) {
-		ulvalue = strtoul (as_string, endptr, 10);
-		if (*as_string!=0 && **endptr==0) {
-			g_value_set_uint(value,(guint32)ulvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == GDA_TYPE_SHORT) {
-		lvalue = strtol (as_string, endptr, 10);
-		if (*as_string != '\0' && **endptr == '\0'){
-			gda_value_set_short (value, (gint16) lvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == GDA_TYPE_USHORT) {
-		ulvalue = strtoul (as_string, endptr, 10);
-		if (*as_string!=0 && **endptr==0) {
-			gda_value_set_ushort(value,(guint16)ulvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == G_TYPE_CHAR) {
-		lvalue = strtol(as_string, endptr, 10);
-		if (*as_string!=0 && **endptr==0) {
-			g_value_set_char(value,(gchar)lvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == G_TYPE_UCHAR) {
-		ulvalue = strtoul(as_string,endptr, 10);
-		if (*as_string!=0 && **endptr==0) {
-			g_value_set_uchar(value,(guchar)ulvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == G_TYPE_FLOAT) {
-		dvalue = g_strtod (as_string, endptr);
-		if (*as_string != '\0' && **endptr == '\0'){
-			g_value_set_float (value, (gfloat) dvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == G_TYPE_DOUBLE) {
-		dvalue = g_strtod (as_string, endptr);
-		if (*as_string != '\0' && **endptr == '\0'){
-			g_value_set_double (value, dvalue);
-			retval = TRUE;
-		}
-	}
-	else if (type == GDA_TYPE_NUMERIC) {
-		GdaNumeric numeric;
-		/* FIXME: what test whould i do for numeric? */
-		numeric.number = g_strdup (as_string);
-		numeric.precision = 0; /* FIXME */
-		numeric.width = 0; /* FIXME */
-		gda_value_set_numeric (value, &numeric);
-		g_free (numeric.number);
-		retval = TRUE;
-	}
-	else if (type == G_TYPE_DATE) {
-		GDate *gdate;
-		gdate = g_date_new ();
-		g_date_set_parse (gdate, as_string);
-		if (g_date_valid (gdate)) {
-			g_value_take_boxed (value, gdate);
-			retval = TRUE;
-		}
-		else
-			g_date_free (gdate);
-	}
-	else if (type == GDA_TYPE_NULL)
-		gda_value_set_null (value);
-	else if (type == G_TYPE_ULONG)
-		g_value_set_ulong (value, gda_type_from_string (as_string));
-
-	return retval;
 }
 
 /**
