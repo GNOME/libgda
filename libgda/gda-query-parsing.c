@@ -1485,7 +1485,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	while (list && !real_type) {
 		if (((param_spec*) list->data)->type == PARAM_type) {
 			/* try to find a DBMS data type */
-			real_type = gda_dict_get_data_type_by_name (dict, 
+			real_type = gda_dict_get_dict_type_by_name (dict, 
 								    ((param_spec*) list->data)->content);
 			if (!real_type) {
 				/* try a generic GDA type then */
@@ -1519,7 +1519,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 								      G_TYPE_INVALID, &type);
 			if (gdaval) {
 				if (type)
-					real_type = gda_dict_get_data_type_by_name (dict, type);
+					real_type = gda_dict_get_dict_type_by_name (dict, type);
 				else
 					gdatype = G_VALUE_TYPE (gdaval);
 			}

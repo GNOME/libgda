@@ -48,6 +48,7 @@
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-data-model-filter-sql.h>
+#include <libgda/gda-server-operation.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-threader.h>
 #include <libgda/gda-transaction.h>

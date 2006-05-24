@@ -97,7 +97,7 @@ to tell from which query field the values will be taken).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_query_field_value_get_value_type ##### -->
+<!-- ##### FUNCTION gda_query_field_value_get_gda_type ##### -->
 <para>
 
 </para>

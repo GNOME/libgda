@@ -1409,15 +1409,11 @@ gda_dict_load_graphs (GdaDict *dict, xmlNodePtr graphs, GError **error)
 static void
 xml_validity_error_func (void *ctx, const char *msg, ...)
 {
-        xmlValidCtxtPtr pctxt;
         va_list args;
         gchar *str, *str2, *newerr;
 	GdaDict *dict;
 
-	pctxt = (xmlValidCtxtPtr) ctx;
-	/* FIXME: it looks like libxml does set ctx to userData... */
-	/*dict = GDA_DICT (pctxt->userData);*/
-	dict = GDA_DICT (pctxt);
+	dict = GDA_DICT (ctx);
 	str2 = g_object_get_data (G_OBJECT (dict), "xmlerror");
 
         va_start (args, msg);
@@ -2294,7 +2290,7 @@ dict_data_type_update_list (GdaDict *dict, GError **error)
 
 		value = gda_data_model_get_value_at (rs, 0, now);
 		str = gda_value_stringify ((GValue *) value);
-		dt = gda_dict_get_data_type_by_name (dict, str);
+		dt = gda_dict_get_dict_type_by_name (dict, str);
 		if (!dt) {
 			gint i = 0;
 			GSList *list;
@@ -2498,7 +2494,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 		value = gda_data_model_get_value_at (rs, 4, now);
 		str = gda_value_stringify ((GValue *) value);
 		if (*str && (*str != '-')) {
-			rettype = gda_dict_get_data_type_by_name (dict, str);
+			rettype = gda_dict_get_dict_type_by_name (dict, str);
 			if (!rettype)
 				insert = FALSE;
 		}
@@ -2517,7 +2513,7 @@ dict_functions_update_list (GdaDict *dict, GError **error)
 				if (*ptr && (*ptr == '-'))
 					dtl = g_slist_append (dtl, NULL); /* any data type will do */
 				else {
-					indt = gda_dict_get_data_type_by_name (dict, ptr);
+					indt = gda_dict_get_dict_type_by_name (dict, ptr);
 					if (indt)
 						dtl = g_slist_append (dtl, indt);
 					else 
@@ -2736,7 +2732,7 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 		value = gda_data_model_get_value_at (rs, 4, now);
 		str = gda_value_stringify ((GValue *) value);
 		if (*str && (*str != '-')) {
-			outdt = gda_dict_get_data_type_by_name (dict, str);
+			outdt = gda_dict_get_dict_type_by_name (dict, str);
 			if (!outdt)
 				insert = FALSE;
 		}
@@ -2749,7 +2745,7 @@ dict_aggregates_update_list (GdaDict *dict, GError **error)
 		str = gda_value_stringify ((GValue *) value);
 		if (str) {
 			if (*str && (*str != '-')) {
-				indt = gda_dict_get_data_type_by_name (dict, str);
+				indt = gda_dict_get_dict_type_by_name (dict, str);
 				if (!indt)
 					insert = FALSE;
 			}
@@ -3114,7 +3110,7 @@ gda_dict_get_entities_fk_constraints (GdaDict *dict, GdaEntity *entity1, GdaEnti
 }
 
 /**
- * gda_dict_get_data_types
+ * gda_dict_get_dict_types
  * @dict: a #GdaDict object
  *
  * Get the list of data types;
@@ -3122,7 +3118,7 @@ gda_dict_get_entities_fk_constraints (GdaDict *dict, GdaEntity *entity1, GdaEnti
  * Returns: the list (the caller must free the list after usage)
  */
 GSList *
-gda_dict_get_data_types (GdaDict *dict)
+gda_dict_get_dict_types (GdaDict *dict)
 {
 	g_return_val_if_fail (GDA_IS_DICT (dict), NULL);
 	g_return_val_if_fail (dict->priv, NULL);
@@ -3134,7 +3130,7 @@ gda_dict_get_data_types (GdaDict *dict)
 }
 
 /**
- * gda_dict_get_data_type_by_name
+ * gda_dict_get_dict_type_by_name
  * @dict: a #GdaDict object
  * @type_name: the name of the requested data type
  *
@@ -3143,7 +3139,7 @@ gda_dict_get_data_types (GdaDict *dict)
  * Returns: the data type or %NULL if it cannot be found
  */
 GdaDictType  *
-gda_dict_get_data_type_by_name (GdaDict *dict, const gchar *type_name)
+gda_dict_get_dict_type_by_name (GdaDict *dict, const gchar *type_name)
 {
 	GSList *list;
 	GdaDictType *datatype = NULL;
@@ -3197,7 +3193,7 @@ gda_dict_add_data_type_real (GdaDict *dict, GdaDictType *datatype)
 	g_return_if_fail (dict->priv);
 	g_return_if_fail (GDA_IS_DICT_TYPE (datatype));
 	str = gda_dict_type_get_sqlname (datatype);
-	g_return_if_fail (! gda_dict_get_data_type_by_name (dict, str));
+	g_return_if_fail (! gda_dict_get_dict_type_by_name (dict, str));
 
 	/* finding the right position for the data type */
 	list = dict->priv->data_types;
@@ -3226,7 +3222,7 @@ gda_dict_add_data_type_real (GdaDict *dict, GdaDictType *datatype)
 }
 
 /**
- * gda_dict_get_data_type_by_xml_id
+ * gda_dict_get_dict_type_by_xml_id
  * @dict: a #GdaDict object
  * @xml_id: the XML identifier of the data type to be found
  *
@@ -3235,7 +3231,7 @@ gda_dict_add_data_type_real (GdaDict *dict, GdaDictType *datatype)
  * Returns: the data type or %NULL if it cannot be found
  */
 GdaDictType  *
-gda_dict_get_data_type_by_xml_id (GdaDict *dict, const gchar *xml_id)
+gda_dict_get_dict_type_by_xml_id (GdaDict *dict, const gchar *xml_id)
 {
 	GSList *list;
 	GdaDictType *datatype = NULL;
@@ -3273,7 +3269,7 @@ gda_dict_declare_custom_data_type (GdaDict *dict, GdaDictType *type)
 	g_return_val_if_fail (dict->priv, FALSE);
 	g_return_val_if_fail (type && GDA_IS_DICT_TYPE (type), FALSE);
 
-	if (gda_dict_get_data_type_by_name (dict, gda_dict_type_get_sqlname (type)))
+	if (gda_dict_get_dict_type_by_name (dict, gda_dict_type_get_sqlname (type)))
 		return FALSE;
 	else {
 		gda_dict_add_data_type_real (dict, type);

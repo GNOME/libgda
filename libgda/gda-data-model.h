@@ -117,7 +117,7 @@ GdaColumn          *gda_data_model_describe_column        (GdaDataModel *model, 
 const gchar        *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
 void                gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
 
-const GValue     *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
+const GValue       *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
 guint               gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
 gboolean            gda_data_model_move_iter_at_row       (GdaDataModel *model, GdaDataModelIter *iter, gint row);

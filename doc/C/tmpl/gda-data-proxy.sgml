@@ -224,6 +224,16 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_proxy_row_is_inserted ##### -->
+<para>
+
+</para>
+
+@proxy: 
+@proxy_row: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_proxy_find_row_from_values ##### -->
 <para>
 

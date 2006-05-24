@@ -409,7 +409,7 @@ gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError 
 			GdaDictType *dt = NULL;
 			prop = xmlGetProp (subnode, "type");
 			if (prop) {
-				dt = gda_dict_get_data_type_by_xml_id (dict, prop);
+				dt = gda_dict_get_dict_type_by_xml_id (dict, prop);
 				g_free (prop);
 			}
 

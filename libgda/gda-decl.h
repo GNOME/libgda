@@ -1,6 +1,6 @@
 /* gda-decl.h
  *
- * Copyright (C) 2004 - 2005 Vivien Malerba
+ * Copyright (C) 2004 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -32,10 +32,14 @@ typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
 typedef struct _GdaDataHandler      GdaDataHandler;
 typedef struct _GdaDataHandlerIface GdaDataHandlerIface;
 
-typedef struct _GdaServerProvider        GdaServerProvider; /* defined in gda-server-provider.h */
+typedef struct _GdaServerProvider        GdaServerProvider; 
 typedef struct _GdaServerProviderClass   GdaServerProviderClass;
 typedef struct _GdaServerProviderPrivate GdaServerProviderPrivate;
 typedef struct _GdaServerProviderInfo    GdaServerProviderInfo;
+
+typedef struct _GdaServerOperation        GdaServerOperation; 
+typedef struct _GdaServerOperationClass   GdaServerOperationClass;
+typedef struct _GdaServerOperationPrivate GdaServerOperationPrivate;
 
 typedef struct _GdaClient        GdaClient;
 typedef struct _GdaClientClass   GdaClientClass;

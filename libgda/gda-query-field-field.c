@@ -801,7 +801,7 @@ gda_query_field_field_get_data_type (GdaEntityField *iface)
 	if (gda_query_field_field_activate (GDA_REFERER (iface))) {
 		GdaEntityField *field;
 		field = GDA_ENTITY_FIELD (gda_object_ref_get_ref_object (GDA_QUERY_FIELD_FIELD (iface)->priv->field_ref));
-		return gda_entity_field_get_data_type (field);
+		return gda_entity_field_get_dict_type (field);
 	}
 
 	return NULL;

@@ -470,7 +470,7 @@ gda_query_field_get_dict_type (GdaQueryField *qfield)
 	g_return_val_if_fail (qfield->priv, NULL);
 
 	/* it is assumed that qfield really implements the GdaEntityField interface */
-	return gda_entity_field_get_data_type (GDA_ENTITY_FIELD (qfield));
+	return gda_entity_field_get_dict_type (GDA_ENTITY_FIELD (qfield));
 }
 
 /**

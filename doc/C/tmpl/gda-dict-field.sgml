@@ -90,7 +90,7 @@ It implements the following interfaces: #GdaEntityField, #GdaXmlStorage and #Gda
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_field_set_data_type ##### -->
+<!-- ##### FUNCTION gda_dict_field_set_dict_type ##### -->
 <para>
 
 </para>

@@ -69,10 +69,10 @@ gint            gda_dict_field_get_length        (GdaDictField *field);
 void            gda_dict_field_set_scale         (GdaDictField *field, gint length);
 gint            gda_dict_field_get_scale         (GdaDictField *field);
 GSList         *gda_dict_field_get_constraints   (GdaDictField *field);
-void            gda_dict_field_set_data_type     (GdaDictField *field, GdaDictType *type);
+void            gda_dict_field_set_dict_type     (GdaDictField *field, GdaDictType *type);
 
 void            gda_dict_field_set_default_value (GdaDictField *field, const GValue *value);
-const GValue *gda_dict_field_get_default_value (GdaDictField *field);
+const GValue   *gda_dict_field_get_default_value (GdaDictField *field);
 
 gboolean        gda_dict_field_is_null_allowed   (GdaDictField *field);
 gboolean        gda_dict_field_is_pkey_part      (GdaDictField *field);

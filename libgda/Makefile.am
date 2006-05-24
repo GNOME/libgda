@@ -79,6 +79,7 @@ gda_headers = \
 	gda-renderer.h \
 	gda-row.h \
 	gda-data-model-filter-sql.h \
+	gda-server-operation.h \
 	gda-server-provider.h \
 	gda-server-provider-extra.h \
 	gda-server-provider-private.h \
@@ -145,6 +146,7 @@ libgda_sources =  \
 	gda-referer.c \
 	gda-renderer.c \
 	gda-row.c \
+	gda-server-operation.c \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \
 	gda-threader.c \
@@ -212,7 +214,7 @@ CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers) $(libgda_built_cfiles)
 
-DTD_FILES = libgda-dict.dtd libgda-array.dtd
+DTD_FILES = libgda-dict.dtd libgda-array.dtd libgda-paramlist.dtd  libgda-server-operation.dtd
 dtddir=$(LIBGDA_DTDDIR)
 dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \

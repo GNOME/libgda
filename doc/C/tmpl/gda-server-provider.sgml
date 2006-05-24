@@ -2,17 +2,19 @@
 GdaServerProvider
 
 <!-- ##### SECTION Short_Description ##### -->
-Base class for implementing new providers
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 
 </para>
 
+
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
+
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -113,6 +115,54 @@ Base class for implementing new providers
 @provider: 
 @cnc: 
 @name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_supports_operation ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_create_operation ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@type: 
+@options: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_render_operation ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@op: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_perform_operation ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@op: 
+@error: 
 @Returns: 
 
 

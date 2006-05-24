@@ -32,7 +32,16 @@ Each object implementing this interface MUST derive from the #GdaObject object.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_entity_field_get_data_type ##### -->
+<!-- ##### FUNCTION gda_entity_field_get_gda_type ##### -->
+<para>
+
+</para>
+
+@iface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_entity_field_get_dict_type ##### -->
 <para>
 
 </para>

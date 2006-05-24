@@ -180,15 +180,16 @@ main (int argc, char **argv)
 				dotfile = g_strdup_printf ("%s.dot", str);
 				graph = GDA_GRAPHVIZ (gda_graphviz_new (dict));
 				gda_graphviz_add_to_graph (graph, G_OBJECT (lptr->data));
-				if (!gda_graphviz_save_file (graph, str, &error)) {
+				if (!gda_graphviz_save_file (graph, dotfile, &error)) {
 					g_print (_("Could not write graph to '%s' (%s)\n\n"), str, error->message);
 					g_error_free (error);
 					error = NULL;
 				}
 				else {
 					g_print (_("Written graph to '%s'\n"), str);
-					g_print ("Use 'dot' to create a graphical representation: "
-						 "dot -Tps -o %s.ps %s\n\n", str, dotfile);
+					g_print ("Use 'dot' or 'neato' to create a graphical representation, for example \n"
+						 "dot -Tsvg -o %s.svg %s / neato -Tsvg -o %s.svg %s\n\n", 
+						 str, dotfile, str, dotfile);
 				}
 				g_free (dotfile);
 				g_free (str);

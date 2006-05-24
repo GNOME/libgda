@@ -23,115 +23,115 @@
       <gda_array_data>
 	<gda_array_row>
 	  <gda_value>UNICODE</gda_value>
-	  <gda_value>Unicode (UTF-8)</gda_value>
+	  <_gda_value>Unicode (UTF-8)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>SQL_ASCII</gda_value>
-	  <gda_value>ASCII</gda_value>
+	  <_gda_value>ASCII</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>EUC_JP</gda_value>
-	  <gda_value>Japanese EUC</gda_value>
+	  <_gda_value>Japanese EUC</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>EUC_CN</gda_value>
-	  <gda_value>Chinese EUC</gda_value>
+	  <_gda_value>Chinese EUC</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>EUC_KR</gda_value>
-	  <gda_value>Korean EUC</gda_value>
+	  <_gda_value>Korean EUC</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>JOHAB</gda_value>
-	  <gda_value>Korean EUC (Hangle base)</gda_value>
+	  <_gda_value>Korean EUC (Hangle base)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>EUC_TW</gda_value>
-	  <gda_value>Taiwan EUC</gda_value>
+	  <_gda_value>Taiwan EUC</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN1</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.1)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.1)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN2</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.2)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.2)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN3</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.3)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.3)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN4</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.4)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.4)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN5</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.5)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.5)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN6</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.6)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.6)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN7</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.7)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.7)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN8</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.8)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.8)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN9</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.9)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.9)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>LATIN10</gda_value>
-	  <gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.10)</gda_value>
+	  <_gda_value>ISO 8859-1/ECMA 94 (Latin alphabet no.10)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>ISO_8859_5</gda_value>
-	  <gda_value>ISO 8859-5/ECMA 113 (Latin/Cyrillic)</gda_value>
+	  <_gda_value>ISO 8859-5/ECMA 113 (Latin/Cyrillic)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>ISO_8859_6</gda_value>
-	  <gda_value>ISO 8859-6/ECMA 114 (Latin/Arabic)</gda_value>
+	  <_gda_value>ISO 8859-6/ECMA 114 (Latin/Arabic)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>ISO_8859_7</gda_value>
-	  <gda_value>ISO 8859-7/ECMA 118 (Latin/Greek)</gda_value>
+	  <_gda_value>ISO 8859-7/ECMA 118 (Latin/Greek)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>ISO_8859_8</gda_value>
-	  <gda_value>ISO 8859-8/ECMA 121 (Latin/Hebrew)</gda_value>
+	  <_gda_value>ISO 8859-8/ECMA 121 (Latin/Hebrew)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>KOI8</gda_value>
-	  <gda_value>KOI8-R(U)</gda_value>
+	  <_gda_value>KOI8-R(U)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>ALT</gda_value>
-	  <gda_value>Windows CP866</gda_value>
+	  <_gda_value>Windows CP866</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>WIN874</gda_value>
-	  <gda_value>Windows CP874 (Thai)</gda_value>
+	  <_gda_value>Windows CP874 (Thai)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>WIN1250</gda_value>
-	  <gda_value>Windows CP1250</gda_value>
+	  <_gda_value>Windows CP1250</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>WIN</gda_value>
-	  <gda_value>Windows CP1251</gda_value>
+	  <_gda_value>Windows CP1251</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>WIN1256</gda_value>
-	  <gda_value>Windows CP1256 (Arabic)</gda_value>
+	  <_gda_value>Windows CP1256 (Arabic)</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
 	  <gda_value>TCVN</gda_value>
-	  <gda_value>TCVN-5712/Windows CP1258 (Vietnamese)</gda_value>
+	  <_gda_value>TCVN-5712/Windows CP1258 (Vietnamese)</_gda_value>
 	</gda_array_row>
       </gda_array_data>
     </gda_array>

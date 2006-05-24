@@ -126,9 +126,9 @@ GdaDataHandler *gda_dict_get_handler         (GdaDict *dict, GType for_type);
 GdaDataHandler *gda_dict_get_default_handler (GdaDict *dict, GType for_type);
 
 /* GdaDictType manipulations */
-GSList         *gda_dict_get_data_types            (GdaDict *dict);
-GdaDictType    *gda_dict_get_data_type_by_name     (GdaDict *dict, const gchar *type_name);
-GdaDictType    *gda_dict_get_data_type_by_xml_id   (GdaDict *dict, const gchar *xml_id);
+GSList         *gda_dict_get_dict_types            (GdaDict *dict);
+GdaDictType    *gda_dict_get_dict_type_by_name     (GdaDict *dict, const gchar *type_name);
+GdaDictType    *gda_dict_get_dict_type_by_xml_id   (GdaDict *dict, const gchar *xml_id);
 gboolean        gda_dict_declare_custom_data_type  (GdaDict *dict, GdaDictType *type);
 
 /* GdaDictFunction manipulations */

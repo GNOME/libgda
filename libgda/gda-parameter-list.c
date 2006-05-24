@@ -20,7 +20,9 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#ifdef HAVE_LOCALE_H
 #include <locale.h>
+#endif
 #include "gda-parameter-list.h"
 #include "gda-query.h"
 #include "gda-marshal.h"
@@ -36,6 +38,8 @@
 #include "gda-connection.h"
 #include "gda-server-provider.h"
 #include "gda-util.h"
+
+extern xmlDtdPtr gda_paramlist_dtd;
 
 /* 
  * Main static functions 
@@ -218,6 +222,29 @@ gda_parameter_list_new (GSList *params)
 	return paramlist;
 }
 
+static void
+xml_validity_error_func (void *ctx, const char *msg, ...)
+{
+        va_list args;
+        gchar *str, *str2, *newerr;
+
+        va_start (args, msg);
+        str = g_strdup_vprintf (msg, args);
+        va_end (args);
+
+	str2 = *((gchar **) ctx);
+
+        if (str2) {
+                newerr = g_strdup_printf ("%s\n%s", str2, str);
+                g_free (str2);
+        }
+        else
+                newerr = g_strdup (str);
+        g_free (str);
+
+	*((gchar **) ctx) = newerr;
+}
+
 /**
  * gda_parameter_list_new_from_spec
  * @dict: a #GdaDict object, or %NULL
@@ -262,6 +289,53 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 	doc = xmlParseMemory (xml_spec, strlen (xml_spec));
 	if (!doc)
 		return NULL;
+
+	{
+                /* doc validation */
+                xmlValidCtxtPtr validc;
+                int xmlcheck;
+		gchar *err_str = NULL;
+		xmlDtdPtr old_dtd = NULL;
+
+                validc = g_new0 (xmlValidCtxt, 1);
+                validc->userData = &err_str;
+                validc->error = xml_validity_error_func;
+                validc->warning = NULL;
+
+                xmlcheck = xmlDoValidityCheckingDefaultValue;
+                xmlDoValidityCheckingDefaultValue = 1;
+
+                /* replace the DTD with ours */
+		old_dtd = doc->intSubset;
+                doc->intSubset = gda_paramlist_dtd;
+
+                if (! xmlValidateDocument (validc, doc)) {
+			doc->intSubset = old_dtd;
+                        xmlFreeDoc (doc);
+                        g_free (validc);
+			
+                        if (err_str) {
+                                g_set_error (error,
+                                             GDA_PARAMETER_LIST_ERROR,
+                                             GDA_PARAMETER_LIST_XML_SPEC_ERROR,
+                                             "XML spec. does not conform to DTD:\n%s", err_str);
+                                g_free (err_str);
+                        }
+                        else
+                                g_set_error (error,
+                                             GDA_PARAMETER_LIST_ERROR,
+                                             GDA_PARAMETER_LIST_XML_SPEC_ERROR,
+                                             "XML spec. does not conform to DTD");
+
+                        xmlDoValidityCheckingDefaultValue = xmlcheck;
+                        return NULL;
+                }
+		doc->intSubset = old_dtd;
+                xmlDoValidityCheckingDefaultValue = xmlcheck;
+                g_free (validc);
+        }
+
+	/* doc is now non NULL */
 	root = xmlDocGetRootElement (doc);
 	if (strcmp (root->name, "data-set-spec") != 0){
 		g_set_error (error, GDA_PARAMETER_LIST_ERROR, GDA_PARAMETER_LIST_XML_SPEC_ERROR,
@@ -320,7 +394,7 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 			/* find data type and create GdaParameter */
 			str = xmlGetProp(cur, "dbmstype");
 			if (str) {
-				dtype = gda_dict_get_data_type_by_name (ASSERT_DICT (dict), str);
+				dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), str);
 				g_free (str);
 			}
 			if (!dtype) {
@@ -335,7 +409,7 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 						deftype = gda_server_provider_get_default_dbms_type (prov, cnc, 
 												     gtype);
 						if (deftype)
-							dtype = gda_dict_get_data_type_by_name (ASSERT_DICT (dict), 
+							dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), 
 												deftype);
 					}	
 

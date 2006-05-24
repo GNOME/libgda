@@ -14,9 +14,24 @@
         <para>aggregation queries: of type GDA_QUERY_TYPE_UNION, GDA_QUERY_TYPE_INTERSECT and GDA_QUERY_TYPE_EXCEPT</para>
       </listitem>
       <listitem>
-        <para>any other SQL queries: when the DML query cannot be interpreted as one of the types above, its type is set to GDA_QUERY_TYPE_NON_PARSED_SQL;  This type indicates that query parsing has failed, either because the SQL statement is wrong or because it uses an unsupported extension.</para>
+        <para>any other SQL queries: when the DML query cannot be interpreted as one of the types above, its type is set to 
+	  GDA_QUERY_TYPE_NON_PARSED_SQL;  This type indicates that query parsing has failed, either because the SQL statement is wrong 
+	  or because it uses an unsupported extension.</para>
       </listitem>
     </itemizedlist>
+  </para>
+  <para>
+    The <link linkend="GdaQuery">GdaQuery</link> object adapts itself to the query it represents: if possible it will contain lists of objects 
+    (such as fields, joins, etc) and will make them available to the outside world, and if not (when the query type is GDA_QUERY_TYPE_NON_PARSED_SQL)
+    it will simply store a string representing the SQL text to execute. The limit between the two is that this object cannot "understand" very complex
+    SQL queries or "proprietary" SQL dialects.
+  </para>
+  <para>
+    Each <link linkend="GdaQuery">GdaQuery</link> object can be built either using the provided API to add individual elements, or
+    using the <link linkend="gda-query-set-sql-text">gda_query_set_sql_text()</link> method. Using the API presents the advantage
+    of being faster since it spares the SQL parsing time and using the gda_query_set_sql_text() method is slower but will work for any
+    SQL (for non "understood" SQL, it will set its type to GDA_QUERY_TYPE_NON_PARSED_SQL). See <link linkend="GdaQueryConstrExamples">this
+      section</link> for some examples.
   </para>
   <sect3>
     <title>General structure of a query</title>
@@ -99,10 +114,10 @@
       has the internal structure as represented in the following figure.
     </para>
     <mediaobject>
-      <imageobject>
-	<imagedata fileref="query01.ps" format="EPS"/>
+      <imageobject role="fo">
+	<imagedata fileref="query01.svg" format="SVG"/>
       </imageobject>
-      <imageobject>
+      <imageobject role="html">
 	<imagedata fileref="query01.png" format="PNG"/>
       </imageobject>
       <textobject>
@@ -287,5 +302,87 @@
       </itemizedlist>
     </para>
     <para>Currently, type inference is not reliably supported, so the use of the ":type" tag is strongly encouraged.</para>
+  </sect3>
+
+
+
+  <sect3 id="GdaQueryConstrExamples">
+    <title>Examples of GdaQuery object constructions </title>
+    <para>
+      <itemizedlist>
+	<listitem>
+	  <para>A very simple SELECT query named "Select1":
+	    <programlisting>SELECT t1.id, t1.name FROM customers AS t1</programlisting>
+	    <mediaobject>
+	      <imageobject role="fo">
+		<imagedata fileref="query02.svg" format="SVG"/>
+	      </imageobject>
+	      <imageobject role="html">
+		<imagedata fileref="query02.png" format="PNG"/>
+	      </imageobject>
+	    </mediaobject>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>A very simple INSERT query named "Insert1" -- note the dotted arrows (for example from the "name" field to the "(john)" value field)
+	    which means that the "name" field will be assigned the contents of the "(john)" value field (namely the "value_provider" property
+	    of the "name" field is set to the "(john)" value field); note as well that the "(john)" and "(10)" value fields are hidden (no 'V' 
+	    displayed):
+	    <programlisting>INSERT INTO customers (id, name) VALUES (10, 'john')</programlisting>
+	    <mediaobject>
+	      <imageobject role="fo">
+		<imagedata fileref="query03.svg" format="SVG"/>
+	      </imageobject>
+	      <imageobject role="html">
+		<imagedata fileref="query03.png" format="PNG"/>
+	      </imageobject>
+	    </mediaobject>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>A very simple DELETE query named "Delete1" -- note the condition object shown in the yellow box (which is the WHERE condition) and
+	    the 'P' in the (not shown) "Person Id" value field which denotes that the value field is a parameter (the parameter name and type are 
+	    not shown); also note that all the query fields are hidden:
+	    <programlisting>DELETE FROM customers WHERE id=## [:type="gint" :name="Person Id"]</programlisting>
+	    <mediaobject>
+	      <imageobject role="fo">
+		<imagedata fileref="query04.svg" format="SVG"/>
+	      </imageobject>
+	      <imageobject role="html">
+		<imagedata fileref="query04.png" format="PNG"/>
+	      </imageobject>
+	    </mediaobject>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>A very simple UPDATE query named "Update1" -- note the condition object shown in the yellow box (which is the WHERE condition);
+	    also note first that all the query fields are hidden except for the "name" field which is the table field updated and second that
+	    the value for the update is assigned to the "name" field using a dotted arrow (see the INSERT example for more information):
+	    <programlisting>UPDATE customers SET name='Joe' WHERE id=10</programlisting>
+	    <mediaobject>
+	      <imageobject role="fo">
+		<imagedata fileref="query05.svg" format="SVG"/>
+	      </imageobject>
+	      <imageobject role="html">
+		<imagedata fileref="query05.png" format="PNG"/>
+	      </imageobject>
+	    </mediaobject>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>A more complex query named "Complex" which uses a sub-query as a target entity:
+	    <programlisting>SELECT t1.f2 FROM (SELECT t1.id AS f1, t1.name AS f2 FROM customers AS t1 ) AS t1 WHERE t1.f1=2</programlisting>
+	    <mediaobject>
+	      <imageobject role="fo">
+		<imagedata fileref="query06.svg" format="SVG"/>
+	      </imageobject>
+	      <imageobject role="html">
+		<imagedata fileref="query06.png" format="PNG"/>
+	      </imageobject>
+	    </mediaobject>
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
   </sect3>
 </sect2>

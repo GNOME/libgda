@@ -25,7 +25,14 @@ libgda_postgres_la_LIBADD = \
 	$(POSTGRES_LIBS)
 
 xmldir   = $(datadir)/libgda
-xml_in_files = postgres_specs_create_db.xml.in postgres_specs_dsn.xml.in
+xml_in_files = \
+	postgres_specs_create_db.xml.in \
+	postgres_specs_dsn.xml.in \
+	postgres_specs_create_table.xml.in \
+	postgres_specs_drop_table.xml.in \
+	postgres_specs_create_index.xml.in \
+	postgres_specs_drop_index.xml.in
+
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 @INTLTOOL_XML_RULE@

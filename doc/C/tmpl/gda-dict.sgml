@@ -489,7 +489,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_data_types ##### -->
+<!-- ##### FUNCTION gda_dict_get_dict_types ##### -->
 <para>
 
 </para>
@@ -498,7 +498,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_data_type_by_name ##### -->
+<!-- ##### FUNCTION gda_dict_get_dict_type_by_name ##### -->
 <para>
 
 </para>
@@ -517,7 +517,7 @@ object for more information.
 @datatype: 
 
 
-<!-- ##### FUNCTION gda_dict_get_data_type_by_xml_id ##### -->
+<!-- ##### FUNCTION gda_dict_get_dict_type_by_xml_id ##### -->
 <para>
 
 </para>

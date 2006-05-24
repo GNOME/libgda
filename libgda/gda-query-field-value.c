@@ -60,7 +60,7 @@ static gboolean    gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xm
 /* Field interface */
 static void               gda_query_field_value_field_init      (GdaEntityFieldIface *iface);
 static GdaEntity         *gda_query_field_value_get_entity      (GdaEntityField *iface);
-static GType       gda_query_field_value_get_gda_type    (GdaEntityField *iface);
+static GType              gda_query_field_value_get_igda_type    (GdaEntityField *iface);
 static GdaDictType       *gda_query_field_value_get_data_type   (GdaEntityField *iface);
 
 /* Renderer interface */
@@ -199,7 +199,7 @@ static void
 gda_query_field_value_field_init (GdaEntityFieldIface *iface)
 {
 	iface->get_entity = gda_query_field_value_get_entity;
-	iface->get_gda_type = gda_query_field_value_get_gda_type;
+	iface->get_gda_type = gda_query_field_value_get_igda_type;
 	iface->get_data_type = gda_query_field_value_get_data_type;
 }
 
@@ -619,7 +619,7 @@ gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
 }
 
 /**
- * gda_query_field_value_get_value_type
+ * gda_query_field_value_get_gda_type
  * @field: a #GdaQueryFieldValue object
  *
  * Get the GDA type of value stored within @field
@@ -627,7 +627,7 @@ gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
  * Returns: the type
  */
 GType
-gda_query_field_value_get_value_type (GdaQueryFieldValue *field)
+gda_query_field_value_get_gda_type (GdaQueryFieldValue *field)
 {
 	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), G_TYPE_INVALID);
 	g_return_val_if_fail (field->priv, G_TYPE_INVALID);
@@ -957,7 +957,7 @@ gda_query_field_value_get_entity (GdaEntityField *iface)
 }
 
 static GType
-gda_query_field_value_get_gda_type (GdaEntityField *iface)
+gda_query_field_value_get_igda_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), G_TYPE_INVALID);
 	g_return_val_if_fail (GDA_QUERY_FIELD_VALUE (iface)->priv, G_TYPE_INVALID);
@@ -1127,7 +1127,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 	prop = xmlGetProp (node, "dict_type");
 	if (prop) {
 		GdaDictType *dict_type;
-		dict_type = gda_dict_get_data_type_by_xml_id (dict, prop);
+		dict_type = gda_dict_get_dict_type_by_xml_id (dict, prop);
 		if (dict_type) {
 			gda_query_field_value_set_dict_type (field, dict_type);
 			dh = gda_dict_get_default_handler (dict, gda_dict_type_get_gda_type (field->priv->dict_type));

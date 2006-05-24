@@ -28,6 +28,9 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-decl.h>
@@ -879,7 +882,7 @@ init_csv_import (GdaDataModelImport *model)
 					GdaDictType *dtype;
 
 					gda_column_set_dbms_type (column, dbms_t);
-					dtype = gda_dict_get_data_type_by_name (dict, dbms_t);
+					dtype = gda_dict_get_dict_type_by_name (dict, dbms_t);
 					if (dtype) {
 						GType gtype;
 						
@@ -1449,11 +1452,20 @@ static void
 xml_fetch_next_row (GdaDataModelImport *model)
 {
 	xmlTextReaderPtr reader;
-	const xmlChar *name, *xmlstr;
+	const xmlChar *name;
 	gint ret;
 
+	const gchar *lang = NULL;
+
 	GSList *columns = model->priv->columns;
+	GdaColumn *last_column = NULL;
 	GSList *values = NULL;
+
+#ifdef HAVE_LC_MESSAGES
+	lang = setlocale (LC_MESSAGES, NULL);
+#else
+	lang = setlocale (LC_CTYPE, NULL);
+#endif
 
 	if (model->priv->cursor_values) {
 		g_slist_foreach (model->priv->cursor_values, (GFunc) gda_value_free, NULL);
@@ -1482,15 +1494,37 @@ xml_fetch_next_row (GdaDataModelImport *model)
 	ret = xml_fetch_next_xml_node (reader);
 	name = (ret > 0) ? xmlTextReaderConstName (reader) : NULL;
 	while (name && !strcmp (name, "gda_value")) {
+		/* ignore this <gda_value> if the "lang" is there and is not the user locale */
+		xmlChar *this_lang;
+		this_lang = xmlTextReaderGetAttribute (reader, "xml:lang");
+		if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+			xmlFree (this_lang);
+			ret = xml_fetch_next_xml_node (reader);
+			name = (ret > 0) ? xmlTextReaderConstName (reader) : NULL;
+			continue;
+		}
+
+		/* use this <gda_value> */
 		if (!columns) 
 			add_error (model, _("Row has too many values (which are ignored)"));
 		else {
 			ret = xmlTextReaderRead (reader);
 			if (ret > 0) {
 				GValue *value;
+				GdaColumn *column;
+
+				if (this_lang)
+					column = last_column;
+				else {
+					column = (GdaColumn *) columns->data;
+					last_column = column;
+					columns = g_slist_next (columns);
+				}
 				if (xmlTextReaderNodeType (reader) == XML_TEXT_NODE) {
 					GType gtype;
-					gtype = gda_column_get_gda_type ((GdaColumn *) columns->data);
+					const xmlChar *xmlstr;
+
+					gtype = gda_column_get_gda_type (column);
 					xmlstr = xmlTextReaderConstValue (reader);
 					/* g_print ("Convert #%s# to %s\n", (gchar *) xmlstr, gda_type_to_string (gtype)); */
 					value = gda_value_new_from_string ((gchar *) xmlstr, gtype);
@@ -1508,9 +1542,14 @@ xml_fetch_next_row (GdaDataModelImport *model)
 					/* no contents => this is a NULL value */
 					value = gda_value_new_null ();
 
-				values = g_slist_prepend (values, value);
-				
-				columns = g_slist_next (columns);
+				if (this_lang) {
+					/* replace the last value (which did not have any "lang" attribute */
+					gda_value_free ((GValue *) values->data);
+					values->data = value;
+					xmlFree (this_lang);
+				}
+				else 
+					values = g_slist_prepend (values, value);
 			}
 		}
 		ret = xml_fetch_next_xml_node (reader);

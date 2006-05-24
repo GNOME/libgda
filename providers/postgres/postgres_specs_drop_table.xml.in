@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameter id="TABLE_NAME" _name="Table" _descr="Table to delete" gdatype="gchararray" null-ok="FALSE"/>
+  <parameter id="REFERENCED_ACTION" _name="Referenced action" gdatype="gchararray" source="action_cb:0"/>
+  
+  <!-- Sources -->
+  <sources>
+    <gda_array name="action_cb">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>CASCADE</gda_value>
+          <_gda_value>Automatically drop objects that depend on the table (CASCADE)</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>RESTRICT</gda_value>
+          <_gda_value>Refuse to drop the table if any objects depend on it (RESTRICT)</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+  </sources>
+</serv_op>

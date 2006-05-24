@@ -413,6 +413,132 @@ gda_server_provider_perform_action_params (GdaServerProvider *provider,
 	}
 }
 
+/**
+ * gda_server_provider_supports_operation
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object which would be used to perform an action
+ * @type: the type of operation requested
+ *
+ * Tells if @provider supports the @type of operation on the @cnc connection
+ *
+ * Returns: TRUE if the operation is supported
+ */
+gboolean
+gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, GdaServerOperationType type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	}
+	if (CLASS (provider)->supports_operation)
+		return CLASS (provider)->supports_operation (provider, cnc, type);
+	else
+		return FALSE;
+}
+
+/**
+ * gda_server_provider_create_operation
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object which will be used to perform an action
+ * @type: the type of operation requested
+ * @options: an optional list of parameters
+ * @error: a place to store an error, or %NULL
+ *
+ * Creates a new #GdaServerOperation object which can be modified in order to perform the @type type of
+ * action. The @options 
+ *
+ * Returns: a new #GdaServerOperation object, or %NULL in the provider does not support the @type type
+ * of operation or if an error occured
+ */
+GdaServerOperation *
+gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, GdaServerOperationType type, 
+				      GdaParameterList *options, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	}
+	if (CLASS (provider)->create_operation)
+		return CLASS (provider)->create_operation (provider, cnc, type, options, error);
+	else
+		return NULL;
+}
+
+/**
+ * gda_server_provider_render_operation
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object which will be used to perform an action
+ * @op: a #GdaServerOperation object
+ * @error: a place to store an error, or %NULL
+ *
+ * Creates an SQL statement (possibly using some specific extensions of the DBMS) corresponding to the
+ * @op operation.
+ *
+ * Returns: a new string, or %NULL if an error occurred.
+ */
+gchar *
+gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
+	}
+	if (CLASS (provider)->render_operation)
+		return CLASS (provider)->render_operation (provider, cnc, op, error);
+	else
+		return NULL;
+}
+
+/**
+ * gda_server_provider_perform_operation
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object which will be used to perform an action
+ * @op: a #GdaServerOperation object
+ * @error: a place to store an error, or %NULL
+ *
+ * Performs the operation described by @op.
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+				       GdaServerOperation *op, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
+	}
+	if (CLASS (provider)->perform_operation)
+		return CLASS (provider)->perform_operation (provider, cnc, op, error);
+	else {
+		/* use the SQL from the provider to perform the action */
+		gchar *sql;
+		GdaCommand *cmd;
+		GdaDataModel *model;
+
+		sql = gda_server_provider_render_operation (provider, cnc, op, error);
+		if (!sql)
+			return FALSE;
+
+		cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+		g_free (sql);
+		model = gda_connection_execute_command (cnc, cmd, NULL, error);		
+		gda_command_free (cmd);
+		if (model != GDA_CONNECTION_EXEC_FAILED) {
+			if (model)
+				g_object_unref (model);
+			return TRUE;
+		}
+		else
+			return FALSE;
+	}
+}
+
 
 /**
  * gda_server_provider_create_database_cnc

@@ -86,7 +86,7 @@ static gint                 gda_data_model_query_get_n_rows      (GdaDataModel *
 static gint                 gda_data_model_query_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_query_describe_column (GdaDataModel *model, gint col);
 static guint                gda_data_model_query_get_access_flags(GdaDataModel *model);
-static const GValue      *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row);
+static const GValue        *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row);
 static guint                gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static gboolean             gda_data_model_query_set_value_at    (GdaDataModel *model, gint col, gint row, 
@@ -360,6 +360,17 @@ gda_data_model_query_set_property (GObject *object,
 
 				if (qindex == SEL_QUERY) {
 					/* SELECT query */
+					GSList *targets, *tlist;
+
+					targets = gda_query_get_targets (model->priv->queries[qindex]);
+					tlist = targets;
+					while (tlist) {
+						g_slist_free (gda_query_expand_all_field (model->priv->queries[qindex],
+											  GDA_QUERY_TARGET (tlist->data)));
+						tlist = g_slist_next (tlist);
+					}
+					g_slist_free (targets);
+
 					g_signal_connect (model->priv->queries[qindex], "changed",
 							  G_CALLBACK (query_changed_cb), model);
 
@@ -697,28 +708,11 @@ create_columns (GdaDataModelQuery *model)
 	if (! model->priv->queries[SEL_QUERY])
 		return;
 
-	if (model->priv->data) {
-		/* copy model->priv->data's columns */
-		gint i, nb_cols;
-
-		nb_cols = gda_data_model_get_n_columns (model->priv->data);
-		for (i = 0; i < nb_cols; i++) {
-			GdaColumn *orig, *col;
-			
-			orig = gda_data_model_describe_column (model->priv->data, i);
-			col = gda_column_copy (orig);
-			gda_column_set_position (col, i);
-			model->priv->columns = g_slist_append (model->priv->columns, col);
-		}
-	}
-	else {
+	gda_referer_activate (GDA_REFERER (model->priv->queries[SEL_QUERY]));	
+	if (gda_referer_is_active (GDA_REFERER (model->priv->queries[SEL_QUERY]))) {
 		GSList *fields, *list;
 		gboolean allok = TRUE;
 
-		gda_referer_activate (GDA_REFERER (model->priv->queries[SEL_QUERY]));
-		if (! gda_referer_is_active (GDA_REFERER (model->priv->queries[SEL_QUERY])))
-			return;
-		
 		fields = gda_entity_get_fields (GDA_ENTITY (model->priv->queries[SEL_QUERY]));
 		list = fields;
 		while (list && allok) {
@@ -726,7 +720,7 @@ create_columns (GdaDataModelQuery *model)
 				allok = FALSE;
 			list = g_slist_next (list);
 		}
-		if (! allok)
+		if (! allok) 
 			return;
 
 		list = fields;
@@ -762,6 +756,22 @@ create_columns (GdaDataModelQuery *model)
 		}
 
 		g_slist_free (fields);
+	}
+	else {
+		if (model->priv->data) {
+			/* copy model->priv->data's columns */
+			gint i, nb_cols;
+			
+			nb_cols = gda_data_model_get_n_columns (model->priv->data);
+			for (i = 0; i < nb_cols; i++) {
+				GdaColumn *orig, *col;
+				
+				orig = gda_data_model_describe_column (model->priv->data, i);
+				col = gda_column_copy (orig);
+				gda_column_set_position (col, i);
+				model->priv->columns = g_slist_append (model->priv->columns, col);
+			}
+		}
 	}
 }
 
@@ -799,10 +809,11 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 	if (selmodel->priv->data) {
 		gint i;
 		for (i = INS_QUERY; i <= DEL_QUERY; i++) {
+			gboolean allok = TRUE;
+
 			if (selmodel->priv->params [i]) {
 				/* if all the parameters which are not named _[0-9]* are valid, 
 				 * then we grant the corresponding flag */
-				gboolean allok = TRUE;
 				GSList *params = selmodel->priv->params [i]->parameters;
 				while (params && allok) {
 					gint num;
@@ -817,23 +828,28 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 					params = g_slist_next (params);
 				}
 				
-				if (allok) {
-					switch (i) {
-					case INS_QUERY:
-						flags |= GDA_DATA_MODEL_ACCESS_INSERT;
-						/* g_print ("INS flag\n"); */
-						break;
-					case UPD_QUERY:
-						flags |= GDA_DATA_MODEL_ACCESS_UPDATE;
-						/* g_print ("UPD flag\n"); */
-						break;
-					case DEL_QUERY:
-						flags |= GDA_DATA_MODEL_ACCESS_DELETE;
-						/* g_print ("DEL flag\n"); */
-						break;
-					default:
-						g_assert_not_reached ();
-					}
+			}
+			else {
+				if (!selmodel->priv->queries [i])
+					allok = FALSE;
+			}
+
+			if (allok) {
+				switch (i) {
+				case INS_QUERY:
+					flags |= GDA_DATA_MODEL_ACCESS_INSERT;
+					/* g_print ("INS flag\n"); */
+					break;
+				case UPD_QUERY:
+					flags |= GDA_DATA_MODEL_ACCESS_UPDATE;
+					/* g_print ("UPD flag\n"); */
+					break;
+				case DEL_QUERY:
+					flags |= GDA_DATA_MODEL_ACCESS_DELETE;
+					/* g_print ("DEL flag\n"); */
+					break;
+				default:
+					g_assert_not_reached ();
 				}
 			}
 		}
@@ -864,7 +880,7 @@ gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
 	guint flags = 0;
 	GdaDataModelQuery *selmodel;
-	gboolean used = FALSE;
+	GdaParameter *p_used = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), 0);
 	selmodel = (GdaDataModelQuery *) model;
@@ -875,24 +891,32 @@ gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
 
 	if ((row >= 0) && selmodel->priv->queries[UPD_QUERY] && selmodel->priv->params[UPD_QUERY]) {
 		GSList *params = selmodel->priv->params[UPD_QUERY]->parameters;
-		while (params && !used) {
+		while (params && !p_used) {
 			if (GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1 == col)
-				used = TRUE;
+				p_used = (GdaParameter *) params->data;
 			params = params->next;
 		}
 	}
 
 	if ((row < 0) && selmodel->priv->queries[INS_QUERY] && selmodel->priv->params[INS_QUERY]) {
 		GSList *params = selmodel->priv->params[INS_QUERY]->parameters;
-		while (params && !used) {
+		while (params && !p_used) {
 			if (GPOINTER_TO_INT (g_object_get_data ((GObject*) params->data, "+num")) - 1 == col)
-				used = TRUE;
+				p_used = (GdaParameter *) params->data;
 			params = params->next;
 		}
 	}
-	
-	if (!used)
+
+	if (!p_used)
 		flags |= GDA_VALUE_ATTR_NO_MODIF;
+	else {
+		flags &= ~GDA_VALUE_ATTR_CAN_BE_NULL;
+		flags &= ~GDA_VALUE_ATTR_CAN_BE_DEFAULT;
+		if (! gda_parameter_get_not_null (p_used))
+			flags |= GDA_VALUE_ATTR_CAN_BE_NULL;
+		if (gda_parameter_get_default_value (p_used))
+			flags |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
+	}
 
 	return flags;
 }
@@ -1048,7 +1072,10 @@ gda_data_model_query_append_values (GdaDataModel *model, const GList *values, GE
 				/* new values only */
 				GValue *value;
 				value = g_list_nth_data ((GList *) values, num);
-				gda_parameter_set_value (GDA_PARAMETER (params->data), value);
+				if (value)
+					gda_parameter_set_value (GDA_PARAMETER (params->data), value);
+				else
+					g_object_set (G_OBJECT (params->data), "use-default-value", TRUE, NULL);
 			}
 			params = g_slist_next (params);
 		}

@@ -231,7 +231,7 @@ gda_dict_field_new (GdaDict *dict, GdaDictType *type)
 	gda_dict_field = GDA_DICT_FIELD (obj);
 
 	if (type)
-		gda_dict_field_set_data_type (gda_dict_field, type);
+		gda_dict_field_set_dict_type (gda_dict_field, type);
 	
 	return obj;
 }
@@ -463,14 +463,14 @@ gda_dict_field_get_constraints (GdaDictField *field)
 }
 
 /**
-* gda_dict_field_set_data_type
+* gda_dict_field_set_dict_type
 * @field: a #GdaDictField  object
 * @type: a #GdaDictType object
 *
 * Sets the data type of the field
 */
 void
-gda_dict_field_set_data_type (GdaDictField *field, GdaDictType *type)
+gda_dict_field_set_dict_type (GdaDictField *field, GdaDictType *type)
 {
 	g_return_if_fail (field && GDA_IS_DICT_FIELD (field));
 	g_return_if_fail (field->priv);
@@ -903,9 +903,9 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 	prop = xmlGetProp (node, "type");
 	if (prop) {
 		if ((*prop == 'D') && prop+1 && (*(prop+1) == 'T')) {
-			GdaDictType *dt = gda_dict_get_data_type_by_xml_id (dict, prop);
+			GdaDictType *dt = gda_dict_get_dict_type_by_xml_id (dict, prop);
 			if (dt) 
-				gda_dict_field_set_data_type (field, dt);
+				gda_dict_field_set_dict_type (field, dt);
 			else {
 				/* create a new custom data type */
 				gchar *tmp, *tmp2;
@@ -927,7 +927,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 				gda_object_set_description (GDA_OBJECT (dt), tmp2);
 				g_free (tmp2);
 				gda_dict_declare_custom_data_type (dict, dt);
-				gda_dict_field_set_data_type (field, dt);
+				gda_dict_field_set_dict_type (field, dt);
 				g_object_unref (dt);
 			}
 			type = TRUE;

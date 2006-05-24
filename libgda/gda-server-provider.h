@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -22,10 +22,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_server_provider_h__)
-#  define __gda_server_provider_h__
+#ifndef __GDA_SERVER_PROVIDER_H__
+#define __GDA_SERVER_PROVIDER_H__
 
 #include <libgda/gda-command.h>
+#include <libgda/gda-server-operation.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-index.h>
@@ -98,7 +99,7 @@ struct _GdaServerProviderClass {
 						     GdaConnection *cnc,
 						     GType gda_type,
 						     const gchar *dbms_type);
-	GValue              *(* string_to_value) (GdaServerProvider *provider,
+	GValue                *(* string_to_value) (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    const gchar *string, 
 						    GType prefered_type,
@@ -122,10 +123,19 @@ struct _GdaServerProviderClass {
 						    GdaConnection *cnc,
 						    const gchar *name);
 	/* actions with parameters */
-	gchar                 *(* get_specs) (GdaServerProvider *provider, GdaClientSpecsType type);
+	gchar                 *(* get_specs)        (GdaServerProvider *provider, GdaClientSpecsType type);
 	gboolean               (* perform_action_params) (GdaServerProvider *provider, 
 							  GdaParameterList *params, GdaClientSpecsType type,
 							  GError **error);
+	gboolean               (* supports_operation) (GdaServerProvider *provider, GdaConnection *cnc, 
+						       GdaServerOperationType type);
+	GdaServerOperation    *(* create_operation)   (GdaServerProvider *provider, GdaConnection *cnc, 
+						       GdaServerOperationType type, 
+						       GdaParameterList *options, GError **error);
+	gchar                 *(* render_operation)   (GdaServerProvider *provider, GdaConnection *cnc, 
+						       GdaServerOperation *op, GError **error);
+	gboolean               (* perform_operation)  (GdaServerProvider *provider, GdaConnection *cnc, 
+						       GdaServerOperation *op, GError **error);	
 
 	/* database creation and destruction */
 	gboolean               (* create_database_cnc) (GdaServerProvider *provider,
@@ -205,7 +215,7 @@ GdaDataHandler        *gda_server_provider_get_data_handler_gda (GdaServerProvid
 GdaDataHandler        *gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider,
 								  GdaConnection *cnc,
 								  const gchar *for_type);
-GValue              *gda_server_provider_string_to_value (GdaServerProvider *provider,
+GValue                *gda_server_provider_string_to_value (GdaServerProvider *provider,
 							    GdaConnection *cnc,
 							    const gchar *string, 
 							    GType prefered_type,
@@ -242,6 +252,17 @@ gboolean              gda_server_provider_perform_action_params (GdaServerProvid
 								 GdaParameterList *params, 
 								 GdaClientSpecsType action_type, 
 								 GError **error);
+
+gboolean               gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+							       GdaServerOperationType type);
+GdaServerOperation    *gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+							     GdaServerOperationType type, 
+							     GdaParameterList *options, GError **error);
+gchar                 *gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+							     GdaServerOperation *op, GError **error);
+gboolean               gda_server_provider_perform_operation(GdaServerProvider *provider, GdaConnection *cnc, 
+							     GdaServerOperation *op, GError **error);
+
 gboolean      gda_server_provider_create_database_cnc (GdaServerProvider *provider,
 						       GdaConnection *cnc, const gchar *name);
 gboolean      gda_server_provider_drop_database_cnc (GdaServerProvider *provider,

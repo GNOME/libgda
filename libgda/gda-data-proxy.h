@@ -76,6 +76,7 @@ gint              gda_data_proxy_get_proxied_model_row    (GdaDataProxy *proxy, 
 void              gda_data_proxy_delete                   (GdaDataProxy *proxy, gint proxy_row);
 void              gda_data_proxy_undelete                 (GdaDataProxy *proxy, gint proxy_row);
 gboolean          gda_data_proxy_row_is_deleted           (GdaDataProxy *proxy, gint proxy_row);
+gboolean          gda_data_proxy_row_is_inserted          (GdaDataProxy *proxy, gint proxy_row);
 
 gint              gda_data_proxy_find_row_from_values     (GdaDataProxy *proxy, GSList *values, 
 						           gint *cols_index);
@@ -99,7 +100,7 @@ void              gda_data_proxy_set_model_row_value      (GdaDataProxy *proxy, 
 							   gint proxy_row, gint extra_col, const GValue *value);
 void              gda_data_proxy_clear_model_row_value    (GdaDataProxy *proxy, GdaDataModel *model, 
 							   gint proxy_row, gint extra_col);
-const GValue   *gda_data_proxy_get_model_row_value      (GdaDataProxy *proxy, GdaDataModel *model, 
+const GValue     *gda_data_proxy_get_model_row_value      (GdaDataProxy *proxy, GdaDataModel *model, 
 							   gint proxy_row, gint extra_col);
 void              gda_data_proxy_assign_model_col         (GdaDataProxy *proxy, GdaDataModel *model, 
 							   gint proxy_col, gint model_col);

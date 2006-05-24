@@ -49,6 +49,7 @@ gda_query_join_get_type
 gda_query_target_get_type
 gda_referer_get_type
 gda_renderer_get_type
+gda_server_operation_get_type
 gda_server_provider_get_type
 gda_threader_get_type
 gda_transaction_get_type

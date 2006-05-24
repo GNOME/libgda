@@ -34,13 +34,12 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-object.h>
+#include <libgda/gda-enums.h>
 #include <string.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))
 
-
-extern xmlDtdPtr gda_array_dtd;
 static void gda_data_model_class_init (gpointer g_class);
 
 /* signals */
@@ -485,8 +484,11 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
  * gda_data_model_set_values
  * @model: a #GdaDataModel object.
  * @row: row number.
- * @values: a list of #GValue, one for each n (<nb_cols) columns of @model
+ * @values: a list of #GValue, one for each n (&lt;nb_cols) columns of @model
  * @error: a place to store errors, or %NULL
+ *
+ * If any value in @values is actually %NULL, then 
+ * it is considered as a default value.
  *
  * Returns: TRUE if the value in the data model has been updated and no error occurred
  */
@@ -560,6 +562,7 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 	gint col;
 	GdaDataModel *test;
 	gboolean update_model;
+	guint flags;
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
@@ -586,6 +589,12 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 	while (list) {
 		gda_parameter_set_value (GDA_PARAMETER (list->data), 
 					 gda_data_model_get_value_at (model, col, row));
+
+		flags = gda_data_model_get_attributes_at (model, col, row);
+		if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
+			g_object_set (G_OBJECT (list->data), "use-default-value", TRUE, NULL);
+		gda_parameter_set_exists_default_value (GDA_PARAMETER (list->data), 
+							flags & GDA_VALUE_ATTR_CAN_BE_DEFAULT);
 		list = g_slist_next (list);
 		col ++;
 	}
@@ -622,6 +631,7 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
+	guint flags;
 	
 	/* validity tests */
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
@@ -647,6 +657,11 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	while (list) {
 		gda_parameter_set_value (GDA_PARAMETER (list->data), 
 					 gda_data_model_get_value_at (model, col, row));
+		flags = gda_data_model_get_attributes_at (model, col, row);
+		if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
+			g_object_set (G_OBJECT (list->data), "use-default-value", TRUE, NULL);
+		gda_parameter_set_exists_default_value (GDA_PARAMETER (list->data), 
+							flags & GDA_VALUE_ATTR_CAN_BE_DEFAULT);
 		list = g_slist_next (list);
 		col ++;
 	}
@@ -684,6 +699,7 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
+	guint flags;
 	
 	/* validity tests */
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
@@ -707,6 +723,11 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	while (list) {
 		gda_parameter_set_value (GDA_PARAMETER (list->data), 
 					 gda_data_model_get_value_at (model, col, row));
+		flags = gda_data_model_get_attributes_at (model, col, row);
+		if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
+			g_object_set (G_OBJECT (list->data), "use-default-value", TRUE, NULL);
+		gda_parameter_set_exists_default_value (GDA_PARAMETER (list->data), 
+							flags & GDA_VALUE_ATTR_CAN_BE_DEFAULT);
 		list = g_slist_next (list);
 		col ++;
 	}
@@ -721,10 +742,11 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
  * @model: a #GdaDataModel object.
  * @values: #GList of #GValue* representing the row to add.  The
  *          length must match model's column count.  These #GValue
- *	    are value-copied.  The user is still responsible for freeing them.
+ *	    are value-copied (the user is still responsible for freeing them).
  * @error: a place to store errors, or %NULL
  *
- * Appends a row to the given data model.
+ * Appends a row to the given data model. If any value in @values is actually %NULL, then 
+ * it is considered as a default value.
  *
  * Returns: the number of the added row, or -1 if an error occurred
  */
@@ -1570,7 +1592,6 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 /**
  * gda_data_model_import_from_string
  * @model: a #GdaDataModel
- * @format: the format in which to export data
  * @string: the string to import data from
  * @cols_trans: a hash table containing which columns of @model will be imported, or %NULL for all columns
  * @options: list of options for the export
@@ -1603,7 +1624,6 @@ gda_data_model_import_from_string (GdaDataModel *model,
 /**
  * gda_data_model_import_from_file
  * @model: a #GdaDataModel
- * @format: the format in which to export data
  * @file: the filename to export to
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols

@@ -425,7 +425,7 @@ gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 			GdaDictType *dt = NULL;
 			prop = xmlGetProp (subnode, "type");
 			if (prop) {
-				dt = gda_dict_get_data_type_by_xml_id (dict, prop);
+				dt = gda_dict_get_dict_type_by_xml_id (dict, prop);
 				if (!dt) {
 					/* Add a new custom data type (this can't happen at the moment because of the DTD) */
 					TO_IMPLEMENT;

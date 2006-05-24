@@ -639,9 +639,9 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 			GdaDictType *type;
 
 			str = gda_value_stringify ((GValue *) value);
-			type = gda_dict_get_data_type_by_name (dict, str);
+			type = gda_dict_get_dict_type_by_name (dict, str);
 			if (type)
-				gda_dict_field_set_data_type (field, type);
+				gda_dict_field_set_dict_type (field, type);
 			else {
 				/* declare a custom data type */
 				gchar *descr;
@@ -654,12 +654,12 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 				gda_object_set_description (GDA_OBJECT (type), descr);
 				g_free (descr);
 				gda_dict_declare_custom_data_type (dict, type);
-				gda_dict_field_set_data_type (field, type);
+				gda_dict_field_set_dict_type (field, type);
 				g_object_unref (type);
 			}
 			g_free (str);
 		}
-		if (!gda_entity_field_get_data_type (GDA_ENTITY_FIELD (field))) {
+		if (!gda_entity_field_get_dict_type (GDA_ENTITY_FIELD (field))) {
 			if (value)
 				str = gda_value_stringify ((GValue *) value);
 			else

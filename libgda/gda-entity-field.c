@@ -81,7 +81,7 @@ gda_entity_field_get_entity (GdaEntityField *iface)
 }
 
 /**
- * gda_entity_field_get_data_type
+ * gda_entity_field_get_dict_type
  * @iface: an object which implements the #GdaEntityField interface
  *
  * Get the data type of the object implementing the #GdaEntityField interface
@@ -89,7 +89,7 @@ gda_entity_field_get_entity (GdaEntityField *iface)
  * Returns: the corresponding #GdaDictType
  */
 GdaDictType *
-gda_entity_field_get_data_type (GdaEntityField *iface)
+gda_entity_field_get_dict_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_ENTITY_FIELD (iface), NULL);
 

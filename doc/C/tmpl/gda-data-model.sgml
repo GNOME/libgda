@@ -214,6 +214,17 @@ As a side note there are also data models which wrap other data models such as:
 @title: 
 
 
+<!-- ##### FUNCTION gda_data_model_get_attributes_at ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@row: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_get_value_at ##### -->
 <para>
 
@@ -234,6 +245,18 @@ As a side note there are also data models which wrap other data models such as:
 @col: 
 @row: 
 @value: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_set_values ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+@values: 
 @error: 
 @Returns: 
 

@@ -486,6 +486,14 @@
       </para>
     </chapter>
 
+    <chapter id="libgda-tools-test-connection">
+      <title>gda-test-connection</title>
+      <para>
+	This tool is a 'ping' like tool to test connectivity to databases. Connections can either
+	be declared as DSN, or described in the command line.
+      </para>
+    </chapter>
+
     <chapter id="libgda-tools-diagnose">
       <title>gda-diagnose</title>
       <para>

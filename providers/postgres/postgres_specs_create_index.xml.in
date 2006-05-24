@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="INDEX_DEF_P" _name="">
+    <parameter id="INDEX_UNIQUE" _name="Unique" gdatype="gboolean"/>
+    <parameter id="INDEX_NAME" _name="Name" _descr="Index name" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="INDEX_ON_TABLE" _name="On table" gdatype="gchararray" source="_DICT_TABLES_"/>
+    <parameter id="INDEX_METHOD" _name="Method" gdatype="gchararray" source="method:0"/>
+    <parameter id="INDEX_TABLESPACE" _name="Tablespace" gdatype="gchararray"/>
+    <parameter id="INDEX_PREDICATE" _name="Predicate" _descr="Constraint expression for a partial index" gdatype="gchararray"/>
+  </parameters>
+
+  <!-- Index fields -->
+  <sequence id="INDEX_FIELDS_S" _name="Fields">
+    <parameter id="INDEX_FIELD" _name="Indexed field or expression" gdatype="gchararray" null-ok="FALSE" source="_INDEX_ON_TABLE/DICT_FIELDS_" custom-val="TRUE"/>
+  </sequence>
+
+  <!-- Sources -->
+  <sources>
+    <gda_array name="method">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>btree</gda_value>
+          <gda_value>Btree</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>hash</gda_value>
+          <gda_value>Hash</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>rtree</gda_value>
+          <gda_value>Rtree</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>gist</gda_value>
+          <gda_value>Gist</gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+  </sources>
+</serv_op>

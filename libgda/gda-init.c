@@ -28,6 +28,7 @@ static GMainLoop *main_loop = NULL;
 GdaDict        *default_dict = NULL; /* available in all libgda, always NOT NULL */
 xmlDtdPtr       gda_dict_dtd = NULL;
 xmlDtdPtr       gda_array_dtd = NULL;
+xmlDtdPtr       gda_paramlist_dtd = NULL;
 
 
 /**
@@ -88,6 +89,13 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	else
 		g_warning (_("Could not parse " LIBGDA_DICT_DTD_FILE ": "
 			     "XML dictionaries validation will not be performed (some weird errors may occur)"));
+#define LIBGDA_PARAMLIST_DTD_FILE DTDINSTALLDIR"/libgda-paramlist.dtd"
+	gda_paramlist_dtd = xmlParseDTD (NULL, LIBGDA_PARAMLIST_DTD_FILE);
+	if (gda_paramlist_dtd)
+		gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
+	else
+		g_warning (_("Could not parse " LIBGDA_PARAMLIST_DTD_FILE ": "
+			     "XML data import validation will not be performed (some weird errors may occur)"));
 #define LIBGDA_ARRAY_DTD_FILE DTDINSTALLDIR"/libgda-array.dtd"
 	gda_array_dtd = xmlParseDTD (NULL, LIBGDA_ARRAY_DTD_FILE);
 	if (gda_array_dtd)

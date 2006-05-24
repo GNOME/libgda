@@ -454,8 +454,10 @@ gda_data_model_get_n_columns
 gda_data_model_describe_column
 gda_data_model_get_column_title
 gda_data_model_set_column_title
+gda_data_model_get_attributes_at
 gda_data_model_get_value_at
 gda_data_model_set_value_at
+gda_data_model_set_values
 gda_data_model_create_iter
 gda_data_model_move_iter_at_row
 gda_data_model_move_iter_next
@@ -498,6 +500,7 @@ gda_data_proxy_get_proxied_model_row
 gda_data_proxy_delete
 gda_data_proxy_undelete
 gda_data_proxy_row_is_deleted
+gda_data_proxy_row_is_inserted
 gda_data_proxy_find_row_from_values
 gda_data_proxy_get_model
 gda_data_proxy_append
@@ -664,6 +667,21 @@ gda_data_model_filter_sql_get_type
 
 <SECTION>
 <FILE>gda-server-provider</FILE>
+<TITLE>GdaServerOperation</TITLE>
+GdaServerOperation
+GdaServerOperationType
+gda_server_operation_new
+<SUBSECTION Standard>
+GDA_IS_SERVER_OPERATION
+GDA_IS_SERVER_OPERATION_CLASS
+GDA_SERVER_OPERATION
+GDA_SERVER_OPERATION_CLASS
+GDA_TYPE_SERVER_OPERATION
+gda_server_operation_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-server-provider</FILE>
 <TITLE>GdaServerProvider</TITLE>
 GdaServerProvider
 GdaServerProviderInfo
@@ -675,6 +693,10 @@ gda_server_provider_close_connection
 gda_server_provider_get_server_version
 gda_server_provider_get_database
 gda_server_provider_change_database
+gda_server_provider_supports_operation
+gda_server_provider_create_operation
+gda_server_provider_render_operation
+gda_server_provider_perform_operation
 gda_server_provider_get_specs
 gda_server_provider_perform_action_params
 gda_server_provider_create_database_cnc
@@ -943,10 +965,10 @@ gda_dict_get_xml_filename
 gda_dict_load
 gda_dict_save
 gda_dict_get_entities_fk_constraints
-gda_dict_get_data_types
-gda_dict_get_data_type_by_name
+gda_dict_get_dict_types
+gda_dict_get_dict_type_by_name
 gda_connection_add_data_type
-gda_dict_get_data_type_by_xml_id
+gda_dict_get_dict_type_by_xml_id
 gda_dict_declare_custom_data_type
 gda_dict_get_functions
 gda_dict_get_functions_by_name
@@ -978,7 +1000,7 @@ gda_dict_field_get_length
 gda_dict_field_set_scale
 gda_dict_field_get_scale
 gda_dict_field_get_constraints
-gda_dict_field_set_data_type
+gda_dict_field_set_dict_type
 gda_dict_field_set_default_value
 gda_dict_field_get_default_value
 gda_dict_field_is_null_allowed
@@ -1263,7 +1285,7 @@ gda_entity_get_type
 GdaEntityField
 gda_entity_field_get_entity
 gda_entity_field_get_gda_type
-gda_entity_field_get_data_type
+gda_entity_field_get_dict_type
 gda_entity_field_get_name
 gda_entity_field_get_description
 <SUBSECTION Standard>
@@ -1282,7 +1304,7 @@ gda_query_field_value_set_value
 gda_query_field_value_get_value
 gda_query_field_value_set_default_value
 gda_query_field_value_get_default_value
-gda_query_field_value_get_value_type
+gda_query_field_value_get_gda_type
 gda_query_field_value_set_is_parameter
 gda_query_field_value_is_parameter
 gda_query_field_value_set_not_null

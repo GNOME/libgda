@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="TABLE_DEF_P" _name="Table's description">
+    <parameter id="TABLE_NAME" _name="Name" _descr="Table's name" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="TABLE_TABLESPACE" _name="Tablespace" gdatype="gchararray"/>
+    <parameter id="TABLE_WITH_OIDS" _name="With OIDs" gdatype="gboolean"/>
+    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="bool"/>
+  </parameters>
+
+  <sequence id="TABLE_PARENTS_S" _descr="Inheritage">
+    <parameter id="TABLE_PARENT_TABLE" _name="Parent table" gdatype="gchararray"/>
+  </sequence>
+
+  <!-- list of fields -->
+  <array id="FIELDS_A" _name="Table's columns">
+    <parameter id="COLUMN_NAME" _name="Field name" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" null-ok="FALSE"/>
+    <parameter id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
+    <parameter id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
+    <parameter id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
+    <parameter id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
+    <parameter id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+  </array>
+
+  <!-- foreign key spec -->
+  <sequence id="FKEY_S" _name="Foreign key">
+    <parameter id="FKEY_REF_TABLE" _name="Referenced table" gdatype="gchararray" null-ok="FALSE" source="_DICT_TABLES_"/>
+    <array id="FKEY_FIELDS_A" _descr="Fields in the foreign key">
+      <parameter id="FK_FIELD" _name="Field" gdatype="gchararray" null-ok="FALSE"/>
+      <parameter id="FK_REF_PK_FIELD" _name="Referenced field" gdatype="gchararray" null-ok="FALSE" source="_FKEY_REF_TABLE/DICT_FIELDS_"/>
+    </array>
+    <parameter id="FKEY_MATCH_TYPE" _name="Match type" _descr="Matching method if more than one field involved" gdatype="gchararray" source="match_types:0"/>
+    <parameter id="FKEY_ONUPDATE" _name="On update action" gdatype="gchararray" source="action_cb:0"/>
+    <parameter id="FKEY_ONDELETE" _name="On delete action" gdatype="gchararray" source="action_cb:0"/>
+    <parameter id="FKEY_DEFERRABLE" _name="Deferrable" gdatype="gchararray" source="defer_state:0"/>
+  </sequence>
+
+  <!-- other table constraints -->
+  <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
+    <parameter id="CONSTRAINT_STRING" name="Constrains" gdatype="gchararray" null-ok="FALSE"/>
+  </sequence>
+  
+
+  <!-- Sources -->
+  <sources>
+    <gda_array name="match_types">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>MATCH SIMPLE</gda_value>
+          <_gda_value>Match simple</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>MATCH FULL</gda_value>
+          <_gda_value>Match full</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+
+    <gda_array name="action_cb">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>NO ACTION</gda_value>
+          <_gda_value>No action</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>RESTRICT</gda_value>
+          <_gda_value>Restrict</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>CASCADE</gda_value>
+          <_gda_value>Cascade</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>SET NULL</gda_value>
+          <_gda_value>Set to NULL</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>SET DEFAULT</gda_value>
+          <_gda_value>Set to default</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+
+    <gda_array name="defer_state">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>NON DEFERRABLE</gda_value>
+          <_gda_value>Non deferrable</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>DEFERRABLE INITIALLY IMMEDIATE</gda_value>
+          <_gda_value>Deferrable initially immediate</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>DEFERRABLE INITIALLY DEFERRED</gda_value>
+          <_gda_value>Deferrable initially deferred</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+  </sources>
+</serv_op>

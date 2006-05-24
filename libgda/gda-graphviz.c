@@ -545,7 +545,7 @@ do_graph_query (GdaGraphviz *graph, GString *string, GdaQuery *query, gint tabof
 			fid = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (list->data));
 			g_string_append_printf (string, "%s\t\"%s\" ", str, fid);
 			if (gda_referer_is_active (GDA_REFERER (list->data)))
-				g_string_append_printf (string, "[shape=record, label=\"%s\", style=filled, fillcolor=light_blue];\n",
+				g_string_append_printf (string, "[shape=record, label=\"%s\", style=filled, fillcolor=deepskyblue1];\n",
 							label);
 			else
 				g_string_append_printf (string, "[shape=record, label=\"%s\", style=filled, fillcolor=indianred];\n",
@@ -735,8 +735,10 @@ render_qf_field_label (GdaGraphviz *graph, GdaQueryFieldField *field)
 	if (cstr)
 		g_string_append (retval, cstr);
 	ref = gda_query_field_field_get_ref_field (field);
-	if (ref)
-		g_string_append_printf (retval, " (%s)", gda_object_get_name (GDA_OBJECT (ref)));
+	if (ref) {
+		if (!cstr || strcmp (cstr, gda_object_get_name (GDA_OBJECT (ref))))
+			g_string_append_printf (retval, " (%s)", gda_object_get_name (GDA_OBJECT (ref)));
+	}
 
 	g_string_append (retval, " | {Field");
 
