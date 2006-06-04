@@ -8,6 +8,7 @@ libgda/gda-data-model-array.c
 libgda/gda-data-model.c
 libgda/gda-data-model-filter-sql.c
 libgda/gda-data-model-hash.c
+libgda/gda-data-model-import.c
 libgda/gda-data-model-query.c
 libgda/gda-data-model-row.c
 libgda/gda-data-proxy.c
@@ -92,6 +93,10 @@ providers/postgres/gda-postgres-provider.c
 providers/postgres/gda-postgres-recordset.c
 providers/postgres/libmain.c
 providers/postgres/postgres_specs_create_db.xml.in
+providers/postgres/postgres_specs_create_index.xml.in
+providers/postgres/postgres_specs_create_table.xml.in
+providers/postgres/postgres_specs_drop_index.xml.in
+providers/postgres/postgres_specs_drop_table.xml.in
 providers/postgres/postgres_specs_dsn.xml.in
 providers/postgres/utils.c
 providers/sqlite/gda-sqlite-provider.c
@@ -126,6 +131,7 @@ testing/gda-author-dict-file.c
 testing/gda-diagnose.c
 testing/gda-inspect-dict-file.c
 testing/gda-list-config.c
+testing/gda-test-connection.c
 testing/gda-test-models.c
 testing/gda-test-sql.c
 testing/html.c
