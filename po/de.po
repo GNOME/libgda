@@ -4,15 +4,15 @@
 # Christian Meyer <chrisime@gnome.org>, 2000, 2001, 2002.
 # Christian Neumair <chris@gnome-de.org>, 2002, 2003.
 # Frank Arnold <frank@scirocco-5v-turbo.de>, 2005.
-# Hendrik Richter <hendi@gnome-de.org>, 2005.
+# Hendrik Richter <hendrikr@gnome.org>, 2005.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-02-18 08:32+0100\n"
-"PO-Revision-Date: 2005-07-04 19:25+0200\n"
-"Last-Translator: Hendrik Richter <hendi@gnome-de.org>\n"
+"PO-Revision-Date: 2006-06-15 17:21+0200\n"
+"Last-Translator: Hendrik Richter <hendrikr@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,7 +121,7 @@ msgstr ""
 # CHECK
 #: ../libgda/gda-init.c:58
 msgid "libgda needs GModule. Finishing..."
-msgstr "libgda erfordert GModule. Fertigstellung..."
+msgstr "libgda erfordert GModule. Fertigstellung …"
 
 #: ../libgda/gda-select.c:395
 #, c-format
@@ -1291,7 +1291,7 @@ msgstr "Legt fest, ob SSL für den Verbindungsaufbau verwendet werden soll"
 
 #: ../providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
-msgstr "»SQLAllocEnv()« gescheitert..."
+msgstr "»SQLAllocEnv()« gescheitert …"
 
 #: ../providers/odbc/gda-odbc-provider.c:451
 #: ../providers/odbc/gda-odbc-provider.c:471
@@ -2550,7 +2550,7 @@ msgstr "Sprachen"
 
 #: ../testing/client.c:149 ../testing/client.c:157
 msgid "\tStarting transaction..."
-msgstr "\tTransaktion wird begonnen..."
+msgstr "\tTransaktion wird begonnen …"
 
 #: ../testing/client.c:151 ../testing/client.c:155 ../testing/client.c:159
 #: ../testing/client.c:163
@@ -2559,11 +2559,11 @@ msgstr "Fehler"
 
 #: ../testing/client.c:153
 msgid "\tFinishing transaction..."
-msgstr "\tTransaktion wird fertiggestellt..."
+msgstr "\tTransaktion wird fertiggestellt …"
 
 #: ../testing/client.c:161
 msgid "\tRolling back transaction..."
-msgstr "\tTransaktion wird rückgängig gemacht..."
+msgstr "\tTransaktion wird rückgängig gemacht …"
 
 #: ../testing/client.c:192
 msgid "Testing GDA client API"
@@ -2642,3 +2642,6 @@ msgstr "Datenbankname"
 #: ../providers/bdb/libmain.c:53
 msgid "Name of the database in the database file to be used"
 msgstr "Name der zu verwendenden Datenbank innerhalb der Datenbankdatei"
+
+
+
