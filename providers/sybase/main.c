@@ -24,7 +24,7 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
+/* #include <bonobo/bonobo-i18n.h> */
 #include "libgda/libgda.h"
 #include "gda-sybase.h"
 

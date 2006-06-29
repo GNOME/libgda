@@ -1,3 +1,12 @@
+2006-06-29  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-init.c: gda_main_run(): Documentation: 
+	Remove mention of Bonobo because libgda does not use 
+	it anymore.
+	* providers/sybase/main.c: Do not include the bonobo 
+	i18n header, because we do not depend on bonobo. I guess 
+	nobody is building this backend.
+
 2006-06-17  Gintautas Miliauskas  <gintas@akl.lt>
 
 	* configure.in: Added "lt" to ALL_LINGUAS.

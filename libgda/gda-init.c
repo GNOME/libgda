@@ -145,7 +145,7 @@ idle_cb (gpointer user_data)
  * @init_func: function to be called when everything has been initialized.
  * @user_data: data to be passed to the init function.
  *
- * Runs the GDA main loop, which is nothing more than the Bonobo main
+ * Runs the GDA main loop, which is nothing more than the glib main
  * loop, but with internally added stuff specific for applications using
  * libgda.
  *
