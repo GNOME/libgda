@@ -2,6 +2,7 @@
 # traducción de libgda al Español
 # Copyright © 2002-2003, 2006 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
+#
 # Rodrigo Moya <rmoya@chez.com>, 1999.
 # Ismael Olea <olea@hispafuentes.com>, 2000.
 # Carlos Perelló Marín <carlos@gnome-db.org>, 2001.
@@ -9,19 +10,19 @@
 # Pablo Gonzalo del Campo <pablodc@bigfoot.com>,2002-2003.
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2005, 2006.
 # Jorge Bernal <koke@amedias.org>, 2005.
-#
+# Francisco Javier F. Serrador <serrador@tecknolabs.com>, 2006.
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-26 02:45+0200\n"
-"PO-Revision-Date: 2006-05-26 02:32+0200\n"
-"Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
+"POT-Creation-Date: 2006-06-30 02:14+0200\n"
+"PO-Revision-Date: 2006-06-30 02:33+0200\n"
+"Last-Translator: Francisco Javier F. Serrador <serrador@tecknolabs.com>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.9.1\n"
+"X-Generator: KBabel 1.11.2\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../libgda/gda-client.c:293 ../libgda/gda-client.c:1067
@@ -56,8 +57,7 @@ msgstr ""
 #: ../libgda/gda-client.c:459 ../libgda/gda-client.c:461
 #: ../libgda/gda-client.c:556 ../libgda/gda-client.c:558
 msgid "Datasource configuration error: no provider specified"
-msgstr ""
-"Error de configuración de la fuente de datos: no se especificó el proveedor"
+msgstr "Error de configuración de la fuente de datos: no se especificó el proveedor"
 
 #: ../libgda/gda-config.c:1437
 #, c-format
@@ -92,6 +92,8 @@ msgstr "Descripción"
 #: ../providers/odbc/gda-odbc-provider.c:794
 #: ../providers/odbc/gda-odbc-provider.c:847
 #: ../providers/oracle/gda-oracle-provider.c:1600
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
 msgid "Name"
 msgstr "Nombre"
 
@@ -273,6 +275,110 @@ msgstr "El comando SQL no es un SELECT (es «%s»"
 msgid "Row %d not found in data model"
 msgstr "La fila %d no se encontró en el modelo de datos"
 
+#: ../libgda/gda-data-model-import.c:414
+#, c-format
+msgid "The '%s' parameter must hold a string value, ignored."
+msgstr "El parámetro '%s' debe contener un valor de cadena, ignorado."
+
+#: ../libgda/gda-data-model-import.c:435
+#, c-format
+msgid "The '%s' parameter must hold a boolean value, ignored."
+msgstr "El parámetro '%s' debe contener un valor booleano, ignorado."
+
+#: ../libgda/gda-data-model-import.c:525
+msgid "\"options\" property is not a GdaParameterList object"
+msgstr "La propiedad \"options\" no es un objeto GdaParameterList"
+
+#: ../libgda/gda-data-model-import.c:867
+#, c-format
+msgid "The '%s' parameter must hold a gda type value, ignored."
+msgstr "El parámetro '%s' debe contener un valor de tipo gda cadena, ignorado."
+
+#: ../libgda/gda-data-model-import.c:936
+#, c-format
+msgid "Character conversion at line %d, error: %s"
+msgstr "La conversión de caracteres en la línea %d, error: %s"
+
+#: ../libgda/gda-data-model-import.c:939
+msgid "no detail"
+msgstr "Sin detalles"
+
+#: ../libgda/gda-data-model-import.c:1131
+#: ../libgda/gda-data-model-import.c:1534
+#, c-format
+msgid "Could not convert '%s' to a value of type %s"
+msgstr "No se puede convertir '%s' a un valor de tipo %s"
+
+#: ../libgda/gda-data-model-import.c:1147
+#, c-format
+msgid "Row has more values than detected at line %d"
+msgstr "La fila tiene más valores que los detectados en la línea %d"
+
+#. error
+#: ../libgda/gda-data-model-import.c:1268
+msgid "Failed to read node in XML file"
+msgstr "Falló al leer el nodo en el archivo XML"
+
+#: ../libgda/gda-data-model-import.c:1287
+#, c-format
+msgid "Expected <gda_array> node in XML file, got <%s>"
+msgstr "Se esperaba un nodo <gda_array> en el archivo XML, se obtuvo <%s>"
+
+#: ../libgda/gda-data-model-import.c:1329
+#: ../libgda/gda-data-model-import.c:1618
+msgid "No \"gdatype\" attribute specified in <gda_array_field>"
+msgstr "No hay un atributo \"gdatype\" especificado en <gda_array_field>"
+
+#: ../libgda/gda-data-model-import.c:1376
+msgid "Expected <gda_array_field> in <gda_array>"
+msgstr "Se esperaba <gda_array_field> en <gda_array>"
+
+#: ../libgda/gda-data-model-import.c:1416
+#, c-format
+msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
+msgstr "Se esperaba <gda_array_data> en <gda_array>, se obtuvo <%s>"
+
+#: ../libgda/gda-data-model-import.c:1418
+msgid "Expected <gda_array_data> in <gda_array>"
+msgstr "Se esperaba <gda_array_data>, en <gda_array>"
+
+#: ../libgda/gda-data-model-import.c:1430
+msgid "Can't read the contents of the <gda_array_data> node"
+msgstr "No se puede leer el contenido del nodo <gda_array_data>"
+
+#: ../libgda/gda-data-model-import.c:1485
+#, c-format
+msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
+msgstr "Se esperaba <gda_array_row> en <gda_array_data>, se obtuvo <%s>"
+
+#: ../libgda/gda-data-model-import.c:1509
+msgid "Row has too many values (which are ignored)"
+msgstr "La fila tiene demasiados valores (los cuales se ignoran)"
+
+#: ../libgda/gda-data-model-import.c:1588
+#, c-format
+msgid "Expected <gda_array> node but got <%s>"
+msgstr "Se esperaba <gda_array> pero se obtuvo <%s>"
+
+#: ../libgda/gda-data-model-import.c:1665
+msgid "No <gda_array_field> specified in <gda_array>"
+msgstr "No hay especificado ningún <gda_array_field> especificado en <gda_array>"
+
+#: ../libgda/gda-data-model-import.c:1716
+#: ../providers/oracle/gda-oracle-provider.c:1848
+msgid "No detail"
+msgstr "Sin detalles"
+
+#: ../libgda/gda-data-model-import.c:1893
+#, c-format
+msgid "Row at line %d does not have enough values, completed with NULL values"
+msgstr "La fila en la línea %d no tiene valores suficientes, se completaron con valores NULL"
+
+#: ../libgda/gda-data-model-import.c:1913
+#, c-format
+msgid "Row at line %d does not have enough values (which are thus ignored)"
+msgstr "La fila en la línea %d no tiene suficientes valores (los cuales se ignoran)"
+
 #: ../libgda/gda-data-model-query.c:576
 msgid "Query is not a SELECT query"
 msgstr "La consulta no es una consulta SELECT"
@@ -283,13 +389,11 @@ msgstr "Tipo de consulta errónea"
 
 #: ../libgda/gda-data-model-query.c:960 ../libgda/gda-data-model-query.c:1008
 msgid "No UPDATE query specified, can't update row"
-msgstr ""
-"No se ha especificado una consulta UPDATE, no se puede actualizar la fila"
+msgstr "No se ha especificado una consulta UPDATE, no se puede actualizar la fila"
 
 #: ../libgda/gda-data-model-query.c:1059 ../libgda/gda-data-model-query.c:1107
 msgid "No INSERT query specified, can't insert row"
-msgstr ""
-"No se ha especificado una consulta INSERT, no se puede insertar la fila"
+msgstr "No se ha especificado una consulta INSERT, no se puede insertar la fila"
 
 #: ../libgda/gda-data-model-query.c:1149
 msgid "No DELETE query specified, can't delete row"
@@ -451,8 +555,7 @@ msgstr "La etiqueta XML bajo <GDA_DICT_TABLES> no es <GDA_DICT_TABLE>"
 
 #: ../libgda/gda-dict-database.c:708
 msgid "XML Tag below <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
-msgstr ""
-"La etiqueta XML bajo <GDA_DICT_CONSTRAINTS> no es <GDA_DICT_CONSTRAINT>"
+msgstr "La etiqueta XML bajo <GDA_DICT_CONSTRAINTS> no es <GDA_DICT_CONSTRAINT>"
 
 #: ../libgda/gda-dict-database.c:974 ../libgda/gda-dict-database.c:1050
 #: ../libgda/gda-dict-table.c:538
@@ -557,7 +660,7 @@ msgstr ""
 msgid ""
 ": XML data import validation will not be performed (some weird errors may "
 "occur)"
-msgstr ""
+msgstr ": la validación de la importación de datos XML no se realizará (podrían ocurrir errores extraños)"
 
 #: ../libgda/gda-object.c:304
 msgid "LibGda must be initialized before any usage."
@@ -590,8 +693,7 @@ msgstr "No se puede encontrar parámetro del origen denominado «%s»"
 
 #: ../libgda/gda-parameter-list.c:568
 #, c-format
-msgid ""
-"Parameter source specification should be \"<source name>:<field pos>\": '%s'"
+msgid "Parameter source specification should be \"<source name>:<field pos>\": '%s'"
 msgstr ""
 "La especificación del parámetro de origen debería ser \"<source name>:<field "
 "pos>: «%s»"
@@ -615,8 +717,7 @@ msgid "Missing GdaParameterListSource"
 msgstr "Falta GdaParameterListSource"
 
 #: ../libgda/gda-parameter-list.c:1240
-msgid ""
-"GdaParameterListSource does not list a GdaParameterListNode as it should"
+msgid "GdaParameterListSource does not list a GdaParameterListNode as it should"
 msgstr "GdaParameterListSource no lista un GdaParameterListNode como debería"
 
 #: ../libgda/gda-parameter-list.c:1247
@@ -626,8 +727,7 @@ msgstr "El modelo de datos GdaDataModel %p no tiene una columna %d"
 
 #: ../libgda/gda-parameter-list.c:1253
 #, c-format
-msgid ""
-"GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
+msgid "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
 msgstr ""
 "GdaParameter está restringido por una columna del tipo erróneo: %s (%s "
 "esperado)"
@@ -694,8 +794,7 @@ msgid "Error during query parsing (%s)"
 msgstr "Error al analizar la consulta (%s)"
 
 #: ../libgda/gda-query.c:1879
-msgid ""
-"The query represented by a target must be a sub-query of the current query"
+msgid "The query represented by a target must be a sub-query of the current query"
 msgstr ""
 "La consulta representada por un destino debe ser una sub-consulta de la "
 "consulta actual"
@@ -706,8 +805,7 @@ msgstr "Las consultas que actualicen datos sólo pueden tener un destino"
 
 #: ../libgda/gda-query.c:1904
 msgid "Aggregation queries may only have sub-queries, not targets."
-msgstr ""
-"Las consultas de agregados pueden tener sólo sub-peticiones, no destinos."
+msgstr "Las consultas de agregados pueden tener sólo sub-peticiones, no destinos."
 
 #: ../libgda/gda-query.c:2724
 msgid "No connection associated to query's dictionary"
@@ -745,10 +843,8 @@ msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "El ID XML para una consulta debería ser QUxxx donde xxx es un número"
 
 #: ../libgda/gda-query.c:4166
-msgid ""
-"Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
-msgstr ""
-"Faltan ambos atributos 'entity_ref' y 'table_name' de <gda_query_target>"
+msgid "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
+msgstr "Faltan ambos atributos 'entity_ref' y 'table_name' de <gda_query_target>"
 
 #: ../libgda/gda-query.c:4190
 #, c-format
@@ -810,8 +906,7 @@ msgstr ""
 
 #: ../libgda/gda-query.c:4698
 msgid "Insertion query field has incompatible value assignment"
-msgstr ""
-"El campo de la consulta de inserción tiene un valor asignado incompatible"
+msgstr "El campo de la consulta de inserción tiene un valor asignado incompatible"
 
 #: ../libgda/gda-query.c:4711
 msgid "Insertion query can't have any conditions"
@@ -829,13 +924,11 @@ msgstr ""
 
 #: ../libgda/gda-query.c:4773
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
-msgstr ""
-"Un tipo agregado (UNION, etc) de consulta no puede tener ningún destino"
+msgstr "Un tipo agregado (UNION, etc) de consulta no puede tener ningún destino"
 
 #: ../libgda/gda-query.c:4781
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
-msgstr ""
-"Un tipo agregado (UNION, etc) de consulta no puede tener ninguna condición"
+msgstr "Un tipo agregado (UNION, etc) de consulta no puede tener ninguna condición"
 
 #: ../libgda/gda-query.c:5286
 msgid "Can't correctly print the list of columns to use."
@@ -915,8 +1008,7 @@ msgstr "La etiqueta XML no es <gda_query_fagg>"
 #: ../libgda/gda-query-field-agg.c:754 ../libgda/gda-query-field-all.c:631
 #: ../libgda/gda-query-field-field.c:916 ../libgda/gda-query-field-func.c:817
 #: ../libgda/gda-query-field-value.c:1086
-msgid ""
-"XML ID for a query field should be QUxxx:QFyyy where xxx and yyy are numbers"
+msgid "XML ID for a query field should be QUxxx:QFyyy where xxx and yyy are numbers"
 msgstr ""
 
 #: ../libgda/gda-query-field-agg.c:831
@@ -1062,8 +1154,7 @@ msgstr "Cláusula ORDER BY inválida"
 #: ../libgda/gda-query-parsing.c:386
 #, c-format
 msgid "Invalid ORDER BY clause: can't find field number %d"
-msgstr ""
-"Cláusula ORDER BY inválida: no se puede encontrar el número de campo %d"
+msgstr "Cláusula ORDER BY inválida: no se puede encontrar el número de campo %d"
 
 #: ../libgda/gda-query-parsing.c:436
 msgid "Missing UPDATE target entity"
@@ -1186,8 +1277,7 @@ msgstr "Sin nombre"
 
 #: ../libgda/gda-query-target.c:747
 msgid "Can't get XML ID of target's referenced entity"
-msgstr ""
-"No se puede obtener la ID de XML de la entidad referenciada del destino"
+msgstr "No se puede obtener la ID de XML de la entidad referenciada del destino"
 
 #: ../libgda/gda-query-target.c:759
 msgid "Can't get the name of target's referenced table"
@@ -1198,8 +1288,7 @@ msgid "XML Tag is not <gda_query_target>"
 msgstr "La etiqueta XML no es <gda_query_target>"
 
 #: ../libgda/gda-query-target.c:807
-msgid ""
-"XML ID for a query target should be QUxxx:Tyyy where xxx and yyy are numbers"
+msgid "XML ID for a query target should be QUxxx:Tyyy where xxx and yyy are numbers"
 msgstr ""
 "El ID XML para un destino de consulta debería ser QUxxx:Tyyy donde xxx e yyy "
 "son números"
@@ -1239,7 +1328,7 @@ msgstr "Agregado"
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:1005
 #: ../providers/ldap/gda-ldap-provider.c:350
 #: ../providers/oracle/gda-oracle-provider.c:1600
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
 #: ../providers/sybase/gda-sybase-provider.c:1126
 msgid "Owner"
 msgstr "Propietario"
@@ -1280,14 +1369,18 @@ msgstr "Definición"
 msgid "Database"
 msgstr "Base de datos"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:97
 #: ../providers/firebird/gda-firebird-provider.c:637
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
 msgid "Field name"
 msgstr "Nombre del campo"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:98
 #: ../providers/firebird/gda-firebird-provider.c:638
 #: ../providers/msql/gda-msql-provider.c:610
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 msgid "Data type"
 msgstr "Tipo de dato"
 
@@ -1326,9 +1419,11 @@ msgstr "¿Índice único?"
 msgid "References"
 msgstr "Referencias"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:105
 #: ../providers/firebird/gda-firebird-provider.c:645
 #: ../providers/msql/gda-msql-provider.c:617
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Default value"
 msgstr "Valor predeterminado"
 
@@ -1338,6 +1433,7 @@ msgstr "Atributos adicionales"
 
 #: ../libgda/gda-server-provider-extra.c:110
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:836
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 msgid "Index"
 msgstr "Índice"
 
@@ -1356,6 +1452,7 @@ msgstr "Espacio de nombres"
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:838
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:895
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:1004
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:4
 msgid "Table"
 msgstr "Tabla"
 
@@ -1417,14 +1514,16 @@ msgstr "Usuario"
 msgid "View"
 msgstr "Vista"
 
+#. Index fields
 #: ../libgda/gda-server-provider-extra.c:177
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
 msgid "Fields"
 msgstr "Campos"
 
 #: ../libgda/gda-server-provider-extra.c:179
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:15
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:3
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:30
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:34
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:6
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:12
 msgid "Options"
@@ -1432,8 +1531,7 @@ msgstr "Opciones"
 
 #: ../libgda/gda-server-provider-extra.c:295
 msgid "Data model for schema has a wrong number of columns"
-msgstr ""
-"El modelo de datos para el esquema tiene un número de columnas equivocado"
+msgstr "El modelo de datos para el esquema tiene un número de columnas equivocado"
 
 #: ../libgda/gda-server-provider-extra.c:307
 #, c-format
@@ -1581,11 +1679,14 @@ msgstr "Conjunto de caracteres"
 msgid "Character set to be used on the connection"
 msgstr "Conjunto de caracteres usado en la conexión"
 
+#. DSN parameters
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:3
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:1
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:1
 #: ../providers/msql/msql_specs_dsn.xml.in.h:1
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:14
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:1
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:1
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:1
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:3
@@ -1602,10 +1703,15 @@ msgstr "Tamaño de página usado en la base de datos"
 
 #. FIXME: pre-set values for the SQL_DIALECT values with human readable values
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:7
+msgid "SQL Dialect"
+msgstr "Dialecto SQL"
+
+#. FIXME: pre-set values for the SQL_DIALECT values with human readable values
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:9
 msgid "SQL dialect to use on the connection"
 msgstr "Dialecto SQL usado en la conexión"
 
-#: ../providers/firebird/firebird_specs_dsn.xml.in.h:8
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:10
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:21
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:4
 #: ../providers/msql/msql_specs_dsn.xml.in.h:4
@@ -1714,8 +1820,11 @@ msgstr "¡Valor del campo de Firebird desconocido!\n"
 msgid "Provider for Firebird databases"
 msgstr "Proveedor para bases de datos FireBird"
 
+#. Connection parameters
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:2
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:9
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:2
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:2
 msgid "Database server"
@@ -1727,7 +1836,7 @@ msgid "Database server IP adress"
 msgstr "Dirección IP del servidor de base de datos"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:4
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:13
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:17
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:3
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:4
 msgid "Database server port"
@@ -1748,7 +1857,7 @@ msgstr "Activar Sybase"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:8
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:2
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:7
 msgid "Extra connection options"
@@ -1769,7 +1878,7 @@ msgstr "Archivo de configuración FreeTDS"
 #. Connection parameters
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:12
 #: ../providers/msql/msql_specs_dsn.xml.in.h:3
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:23
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:27
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:8
 msgid "Host which has the database server running"
@@ -1786,9 +1895,9 @@ msgstr "Ubicación del archivo de configuración FreeTDS"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:16
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:8
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:35
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:39
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:32
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:7
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:13
 msgid "Port"
@@ -2195,8 +2304,7 @@ msgid "Row number out of bounds"
 msgstr "Número de fila fuera de rango"
 
 #: ../providers/mysql/gda-mysql-provider.c:276
-msgid ""
-"You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
+msgid "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
 msgstr "No puede proveer un UNIX_SOCKET si también provee un HOST o un PUERTO."
 
 #: ../providers/mysql/gda-mysql-provider.c:413
@@ -2275,8 +2383,7 @@ msgstr "El nombre de la tabla no se pudo adivinar"
 #: ../providers/mysql/gda-mysql-recordset.c:577
 #: ../providers/mysql/gda-mysql-recordset.c:583
 msgid "Can not synchronize array with MySQL result set"
-msgstr ""
-"No se puede sincronizar el array con el conjunto de resultados de MySQL"
+msgstr "No se puede sincronizar el array con el conjunto de resultados de MySQL"
 
 #: ../providers/mysql/gda-mysql-recordset.c:510
 msgid "Can not append row to data model"
@@ -2353,8 +2460,7 @@ msgstr "Pseudoconjunto de códigos binario"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:7
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:4
 msgid "Character set encoding to use in the new database"
-msgstr ""
-"Codificación del conjunto de caracteres a usar en la nueva base de datos"
+msgstr "Codificación del conjunto de caracteres a usar en la nueva base de datos"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:8
 msgid "DEC West European"
@@ -2376,146 +2482,146 @@ msgstr "Ruso DOS"
 msgid "DOS West European"
 msgstr "DOS europeo del este"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:14
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
 msgid "EUC-JP Japanese"
 msgstr "Japonés EUC-JP"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:19
 msgid "EUC-KR Korean"
 msgstr "EUC-KR Coreano"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:11
 msgid "Encoding"
 msgstr "Codificación"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:17
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:21
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:4
 msgid "Full path of the UNIX socket to use for connecting locally"
 msgstr ""
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
 msgid "GB2312 Simplified Chinese"
 msgstr "Chino simplificado GB2312"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:19
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:23
 msgid "GBK Simplified Chinese"
 msgstr "Chino simplificado GBK"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
 msgid "GEOSTD8 Georgian"
 msgstr "Georgiano GEOSTD8"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:21
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:25
 msgid "HP West European"
 msgstr "HP Europa del oeste"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
 msgid "ISO 8859-1 West European"
 msgstr "ISO 8859-1 Europa del oeste"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:25
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:29
 msgid "ISO 8859-13 Baltic"
 msgstr "Báltico ISO 8859-13"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
 msgid "ISO 8859-2 Central European"
 msgstr "ISO 8859-2 Europa central"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:27
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
 msgid "ISO 8859-7 Greek"
 msgstr "ISO 8859-7 Griego"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
 msgid "ISO 8859-8 Hebrew"
 msgstr "ISO 8859-8  Hebreo"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:29
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:33
 msgid "ISO 8859-9 Turkish"
 msgstr "ISO 8859-9 Turco"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
 msgid "KOI8-R Relcom Russian"
 msgstr "KOI8-R ruso relcom"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:35
 msgid "KOI8-U Ukrainian"
 msgstr "KOI8-U ucraniano"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
 msgid "Login name (which has the rights to create databases)"
 msgstr "Nombre de usuario (que tenga derechos para crear bases de datos)"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:33
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:37
 msgid "Mac Central European"
 msgstr "Mac Centro europeo"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
 msgid "Mac West European"
 msgstr "Mac Europa del oeste"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:7
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:8
 msgid "Require SSL"
 msgstr "Requiere SSL"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:37
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:41
 msgid "SJIS for Windows Japanese"
 msgstr "SJIS para Windows japonés"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
 msgid "Shift-JIS Japanese"
 msgstr "Shift-JIS japonés"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:39
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:43
 msgid "TIS620 Thai"
 msgstr "TIS620 Tailandés"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:41
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:45
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
 msgid "The name of a database to create"
 msgstr "El nombre de la base de datos a crear"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
 msgid "UCS-2 Unicode"
 msgstr "UCS-2 Unicode"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:43
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:47
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:9
 msgid "UNIX Socket"
 msgstr "Socket UNIX"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
 msgid "US ASCII"
 msgstr "US ASCII"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:45
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:49
 msgid "UTF-8 Unicode"
 msgstr "UTF-8 Unicode"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:10
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:12
 msgid "Whether to use or not SSL for establishing the connection"
 msgstr "Indica si se debe usar o no SSL para establecer la conexión"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:47
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:51
 msgid "Windows Arabic"
 msgstr "Árabe Windows"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 msgid "Windows Baltic"
 msgstr "Báltico Windows"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:49
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:53
 msgid "Windows Central European"
 msgstr "Centro europeo Windows"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
 msgid "Windows Cyrillic"
 msgstr "Cirílico Windows"
 
@@ -2645,8 +2751,7 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: ../providers/oracle/gda-oracle-provider.c:672
 msgid "Could not get the number of columns in the result set"
-msgstr ""
-"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: ../providers/oracle/gda-oracle-provider.c:689
 msgid "Could not get the parameter descripter in the result set"
@@ -2656,8 +2761,7 @@ msgstr ""
 
 #: ../providers/oracle/gda-oracle-provider.c:701
 msgid "Could not get the column name in the result set"
-msgstr ""
-"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: ../providers/oracle/gda-oracle-provider.c:847
 #: ../providers/oracle/gda-oracle-provider.c:931
@@ -2694,10 +2798,6 @@ msgstr "No se ha podido realizar un «rollback» a la transacción de Oracle"
 #, c-format
 msgid "Can't convert model for fields schema: %s"
 msgstr "No se pueden convertir los modelos para el esquema de campos: %s"
-
-#: ../providers/oracle/gda-oracle-provider.c:1848
-msgid "No detail"
-msgstr "Sin detalles"
 
 #: ../providers/oracle/gda-oracle-provider.c:1892
 msgid "Indexes"
@@ -2825,7 +2925,7 @@ msgstr "ASCII"
 msgid "Chinese EUC"
 msgstr "Chino EUC"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:10
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:3
 msgid ""
 "Database server port (for servers running on unix domain sockets, enter the "
@@ -2833,7 +2933,7 @@ msgid ""
 msgstr ""
 
 #. Connection parameters
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:14
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:5
 msgid ""
 "Host which has the database server running (for servers running on unix "
@@ -2841,137 +2941,340 @@ msgid ""
 "empty)"
 msgstr ""
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.1)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 1)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.10)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 10)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:17
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.2)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 2)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:14
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:18
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.3)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 3)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.4)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 4)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:20
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.5)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 5)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.6)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 6)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:18
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.7)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 7)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:23
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.8)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 8)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:20
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.9)"
 msgstr "ISO 8859-1/ECMA 94 (alfabeto latino nº 9)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
 msgid "ISO 8859-5/ECMA 113 (Latin/Cyrillic)"
 msgstr "ISO 8859-5/ECMA 113 (latino/Cirílico)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
 msgid "ISO 8859-6/ECMA 114 (Latin/Arabic)"
 msgstr "ISO 8859-6/ECMA 114 (latino/árabe)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:23
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
 msgid "ISO 8859-7/ECMA 118 (Latin/Greek)"
 msgstr "ISO 8859-7/ECMA 118 (latino/griego)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:28
 msgid "ISO 8859-8/ECMA 121 (Latin/Hebrew)"
 msgstr "ISO 8859-8/ECMA 121 (latino/hebreo)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
 msgid "Japanese EUC"
 msgstr "Japonés EUC"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:30
 msgid "KOI8-R(U)"
 msgstr "KOI8-R(U)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
 msgid "Korean EUC"
 msgstr "Coreano EUC"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:28
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:32
 msgid "Korean EUC (Hangle base)"
 msgstr "Coreano EUC (base Hangle)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:34
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:38
 msgid "TCVN-5712/Windows CP1258 (Vietnamese)"
 msgstr "TCVN-5712/Windows CP1258 (Vietnamita)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
 msgid "Tablespace"
 msgstr "Espacio de tablas"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:40
 msgid "Taiwan EUC"
 msgstr "Taiwanés EUC"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
 msgid "Template"
 msgstr "Plantilla"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:40
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:44
 msgid "The name of the database user who will own the new database"
 msgstr ""
 "El nombre del usuario de la base de datos que será el propietario de la base "
 "de datos nueva"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
-msgid ""
-"The name of the tablespace that will be associated with the new database"
-msgstr ""
-"El nombre del espacio de tablas que será asociado con la base de datos nueva"
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:45
+msgid "The name of the tablespace that will be associated with the new database"
+msgstr "El nombre del espacio de tablas que será asociado con la base de datos nueva"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:42
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:46
 msgid "The name of the template from which to create the new database"
 msgstr "El nombre de la plantilla desde la que crear la base de datos nueva"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
 msgid "Unicode (UTF-8)"
 msgstr "Unicode (UTF-8)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:44
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
 msgid "Whether to require SSL or not when connecting"
 msgstr "Si se requiere SSL o no al conectar"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:45
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:49
 msgid "Windows CP1250"
 msgstr "Windows CP1250"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:46
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:50
 msgid "Windows CP1251"
 msgstr "Windows CP1251"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:51
 msgid "Windows CP1256 (Arabic)"
 msgstr "Windows CP1256 (Árabe)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:52
 msgid "Windows CP866"
 msgstr "Windows CP866"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:49
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:53
 msgid "Windows CP874 (Thai)"
 msgstr "Windows CP874 (Tai)"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:1
+msgid "Constraint expression for a partial index"
+msgstr "Expresión de restricción para un índice parcial"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
+msgid "Index name"
+msgstr "Nombre del índice"
+
+#. Index fields
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
+msgid "Indexed field or expression"
+msgstr "Campo o expresión indexado"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
+msgid "Method"
+msgstr "Método"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
+msgid "On table"
+msgstr "En tabla"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+msgid "Predicate"
+msgstr "Predicado"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+msgid "Unique"
+msgstr "Único"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:1
+msgid "Cascade"
+msgstr "Cascada"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:3
+msgid "Check"
+msgstr "Comprobar"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
+msgid "Check constraint"
+msgstr "Comprobar restricción"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+msgid "Default"
+msgstr "Predeterminado"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+msgid "Deferrable"
+msgstr "Diferible"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
+msgid "Deferrable initially deferred"
+msgstr "Diferible inicialmente diferido"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+msgid "Deferrable initially immediate"
+msgstr "Diferido inicialmente inmediato"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+msgid "Field"
+msgstr "Campo"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+msgid "Fields in the foreign key"
+msgstr "Campos en la clave externa"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+msgid "Foreign key"
+msgstr "Clave externa"
+
+#. other table constraints
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+msgid "Global constraints"
+msgstr "Restricciones globales"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
+msgid "Inheritage"
+msgstr "Herencia"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+msgid "Match full"
+msgstr "Coincidencia total"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:28
+msgid "Match simple"
+msgstr "Coincidencia simple"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
+msgid "Match type"
+msgstr "Tipo de coincidencia"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
+msgid "Matching method if more than one field involved"
+msgstr "Método de coincidencia si hay más de un campo involucrado"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
+msgid "No action"
+msgstr "Sin acción"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
+msgid "Non deferrable"
+msgstr "No diferible"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+msgid "Not NULL"
+msgstr "No NULL"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+msgid "On delete action"
+msgstr "Acción al borrar"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+msgid "On update action"
+msgstr "Acción al actualizar"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
+msgid "Parent table"
+msgstr "Tabla madre"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
+msgid "Primary key"
+msgstr "Clave primaria"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
+msgid "Referenced field"
+msgstr "Campo referenciado"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
+msgid "Referenced table"
+msgstr "Tabla referenciada"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
+msgid "Restrict"
+msgstr "Restringir"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
+msgid "Set to NULL"
+msgstr "Establecer a NULL"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:51
+msgid "Set to default"
+msgstr "Establecer a predeterminado"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:53
+msgid "Table's columns"
+msgstr "Columnas de la tabla"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
+msgid "Table's description"
+msgstr "Descripción de la tabla"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+msgid "Table's name"
+msgstr "Nombre de la tabla"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
+msgid "Temporary table"
+msgstr "Tabla temporal"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:60
+msgid "With OIDs"
+msgstr "Con OIDs"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:1
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+msgid "Automatically drop objects that depend on the table (CASCADE)"
+msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADA)"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:3
+msgid "Index to delete"
+msgstr "Índice que borrar"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:2
+msgid "Referenced action"
+msgstr "Acción referenciada"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:3
+msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
+msgstr "Rehusar a borrar la tabla si cualquier objeto depende de ella (RESTRINGIR)"
+
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
+msgid "Table to delete"
+msgstr "Tabla que borrar"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
 msgid "Search Path"
@@ -2982,8 +3285,7 @@ msgid "Search path among database's schemas"
 msgstr "Ruta de búsqueda entre los esquemas de la base de datos"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:243
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -3149,18 +3451,15 @@ msgstr ""
 
 #: ../providers/sybase/gda-sybase-provider.c:1013
 msgid "could not execute command to get current database."
-msgstr ""
-"No se ha podido ejecutar el comando para obtener la base de datos actual."
+msgstr "No se ha podido ejecutar el comando para obtener la base de datos actual."
 
 #: ../providers/sybase/gda-sybase-provider.c:1021
 msgid "could not send command to get current database."
-msgstr ""
-"No se ha podido enviar el comando para obtener la base de datos actual."
+msgstr "No se ha podido enviar el comando para obtener la base de datos actual."
 
 #: ../providers/sybase/gda-sybase-provider.c:1044
 msgid "could not bind variable to get current database."
-msgstr ""
-"No se ha podido asignar la variable para obtener la base de datos actual."
+msgstr "No se ha podido asignar la variable para obtener la base de datos actual."
 
 #: ../providers/sybase/gda-sybase-provider.c:1057
 #: ../providers/sybase/gda-sybase-provider.c:1072
@@ -3175,8 +3474,7 @@ msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:304
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr ""
-"No se ha podido asignar el modelo de datos. No se devolverán los resultados."
+msgstr "No se ha podido asignar el modelo de datos. No se devolverán los resultados."
 
 #: ../providers/sybase/gda-sybase-recordset.c:307
 msgid "ct_cancel() failed."
@@ -3195,8 +3493,7 @@ msgstr "%s ha devuelto <= 0 columnas."
 #: ../providers/sybase/gda-sybase-recordset.c:348
 #: ../providers/sybase/gda-sybase-recordset.c:538
 msgid "Could not allocate structure for column metainformation."
-msgstr ""
-"No se ha podido asignar la estructura para la meta-información de la columna."
+msgstr "No se ha podido asignar la estructura para la meta-información de la columna."
 
 #: ../providers/sybase/gda-sybase-recordset.c:352
 #: ../providers/sybase/gda-sybase-recordset.c:542
@@ -3244,12 +3541,10 @@ msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:506
 msgid "attempting to make recordset and msg count != 1 !"
-msgstr ""
-"se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
+msgstr "se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
 
 #: ../providers/sybase/gda-sybase-recordset.c:520
-msgid ""
-"An error occurred when attempting to retrieve a server message for recordset"
+msgid "An error occurred when attempting to retrieve a server message for recordset"
 msgstr ""
 "Ha ocurrido un error al intentar obtener un mensaje del servidor para el "
 "conjunto de registros"
@@ -3447,8 +3742,7 @@ msgstr ""
 
 #: ../providers/xbase/gda-xbase-provider.c:254
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr ""
-"Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
+msgstr "Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
 
 #: ../providers/xbase/gda-xbase-provider.c:283
 #: ../providers/xbase/gda-xbase-provider.c:402
@@ -3577,17 +3871,17 @@ msgstr "La base de datos está vacía"
 msgid "Provider for Berkeley databases"
 msgstr "Proveedor para bases datos Berkeley"
 
-#: ../testing/gda-author-dict-file.c:148
+#: ../testing/gda-author-dict-file.c:148 ../testing/gda-test-connection.c:62
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN '%s' no está declarado"
 
-#: ../testing/gda-author-dict-file.c:155
+#: ../testing/gda-author-dict-file.c:155 ../testing/gda-test-connection.c:69
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "No se pudo abrir la conexión a DSN %s:%s\n"
 
-#: ../testing/gda-author-dict-file.c:167
+#: ../testing/gda-author-dict-file.c:167 ../testing/gda-test-connection.c:81
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "No puede abrir la conexión especificada: %s\n"
@@ -3622,8 +3916,7 @@ msgstr "Fuentes de datos"
 
 #: ../testing/gda-diagnose.c:175
 msgid "List of data sources from the config files (user and system wide)"
-msgstr ""
-"Lista de fuentes de datos del archivo de configuración (usuario y sistema)"
+msgstr "Lista de fuentes de datos del archivo de configuración (usuario y sistema)"
 
 #: ../testing/gda-diagnose.c:236
 msgid "Providers"
@@ -3915,6 +4208,10 @@ msgstr "Parámetros del origen de datos (Nombre / Tipo / Descripción):\n"
 msgid "None provided"
 msgstr "Ninguno proporcionado"
 
+#: ../testing/gda-test-connection.c:87
+msgid "Connection successfully opened!\n"
+msgstr "Conexión abierta con éxito\n"
+
 #: ../testing/gda-test-models.c:89 ../testing/gda-test-sql.c:87
 msgid "List of SQL parsing tests"
 msgstr "Lista de pruebas de análisis léxico SQL"
@@ -3991,3 +4288,4 @@ msgstr "Copiado"
 #: ../testing/html.c:113
 msgid "Table of contents"
 msgstr "Tabla de contenido"
+
