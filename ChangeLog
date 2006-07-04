@@ -1,3 +1,10 @@
+2006-07-04  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-server-operation.h: Commented out
+	gda_server_operation_get_node_type(), gda_server_operation_get_node_plist)_, 
+	gda_server_operation_get_node_param(), gda_server_operation_get_node_datamodel(), 
+	and gda_server_operation_get_node_seq_size(), because they are not implemented.
+
 2006-06-29  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-init.c: gda_main_run(): Documentation: 

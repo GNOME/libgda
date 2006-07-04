@@ -63,19 +63,29 @@ GType                  gda_server_operation_get_type (void);
 GdaServerOperation    *gda_server_operation_new      (const gchar *xml_spec);
 gboolean               gda_server_operation_is_valid (GdaServerOperation *op, GError **error);
 
+/* Not implemented:
 GdaServerOperationNodeType gda_server_operation_get_node_type (GdaServerOperation *op, const gchar *path);
+*/
 GdaServerOperationNodeType gda_server_operation_get_node_type_v (GdaServerOperation *op, const gchar **path_array);
 
+/* Not implementd:
 GdaParameterList *gda_server_operation_get_node_plist (GdaServerOperation *op, const gchar *path);
+*/
 GdaParameterList *gda_server_operation_get_node_plist_v (GdaServerOperation *op, const gchar **path_array);
 
+/* Not implemented:
 GdaParameter *gda_server_operation_get_node_param (GdaServerOperation *op, const gchar *path);
+*/
 GdaParameter *gda_server_operation_get_node_param_v (GdaServerOperation *op, const gchar **path_array);
 
+/* Not implemented:
 GdaDataModel *gda_server_operation_get_node_datamodel (GdaServerOperation *op, const gchar *path);
+*/
 GdaDataModel *gda_server_operation_get_node_datamodel_v (GdaServerOperation *op, const gchar **path_array);
 
+/* Not implemented:
 gint gda_server_operation_get_node_seq_size (GdaServerOperation *op, const gchar *path);
+*/
 gint gda_server_operation_get_node_seq_size_v (GdaServerOperation *op, const gchar **path_array);
 
 G_END_DECLS
