@@ -3578,7 +3578,7 @@ msgstr "Không thể mở kết nối đã xác định: %s\n"
 
 #: ../testing/gda-author-dict-file.c:203
 msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
-msgstr "Đang lấy siêu dữ liêu từ trình phục vụ DBMX. Có thể kéo dài một lát...\n"
+msgstr "Đang lấy siêu dữ liệu từ trình phục vụ DBMX. Có thể kéo dài một lát...\n"
 
 #: ../testing/gda-author-dict-file.c:262
 #: ../testing/gda-test-models.c:151
