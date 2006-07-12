@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-05 03:54+0400\n"
-"PO-Revision-Date: 2006-07-04 11:55+0400\n"
+"POT-Creation-Date: 2006-07-11 04:52+0200\n"
+"PO-Revision-Date: 2006-07-11 11:44+0400\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -114,49 +114,42 @@ msgid "DSN to use"
 msgstr ""
 
 #: ../libgda/gda-connection.c:154
-#, fuzzy
 msgid "Connection string to use"
-msgstr "Строка соединения"
+msgstr "Используемая строка соединения"
 
 #: ../libgda/gda-connection.c:157
-#, fuzzy
 msgid "Provider to use"
-msgstr "Провайдеры"
+msgstr "Используемый провайдер"
 
 #: ../libgda/gda-connection.c:161
-#, fuzzy
 msgid "Username to use"
-msgstr "Имя пользователя"
+msgstr "Используемое имя пользователя"
 
 #: ../libgda/gda-connection.c:165
-#, fuzzy
 msgid "Password to use"
-msgstr "Пароль"
+msgstr "Используемый пароль"
 
 #: ../libgda/gda-connection.c:169
-#, fuzzy
 msgid "Options (connection sharing)"
-msgstr "Строка соединения"
+msgstr ""
 
 #: ../libgda/gda-connection.c:415 ../libgda/gda-connection.c:417
-#, fuzzy
 msgid "No DSN or connection string specified"
-msgstr "Не указано соединение"
+msgstr "Не указана строка соединения или DSN"
 
 #: ../libgda/gda-connection.c:424 ../libgda/gda-connection.c:426
-#, fuzzy
 msgid "No provider specified"
-msgstr "База данных не указана"
+msgstr "Не указан провайдер"
 
 #: ../libgda/gda-data-access-wrapper.c:481
-#, fuzzy, c-format
+#, c-format
 msgid "Column %d out of range 0 - %d"
-msgstr "Столбец (%d) находится вне диапазона 0 - %d"
+msgstr "Столбец %d находится вне диапазона 0 - %d"
 
 #: ../libgda/gda-data-model-array.c:75 ../libgda/gda-data-model-array.c:91
-#, fuzzy, c-format
+#, c-format
 msgid "Row %d out of range 0 - %d"
-msgstr "Строка (%d) находится вне диапазона 0 - %d"
+msgstr "Строка %d находится вне диапазона 0 - %d"
 
 #: ../libgda/gda-data-model-array.c:97 ../libgda/gda-data-model-hash.c:107
 #, c-format
@@ -170,34 +163,34 @@ msgstr "Неправильное число значений в списке"
 
 #: ../libgda/gda-data-model-array.c:192 ../libgda/gda-data-model-array.c:220
 msgid "Row not found in data model"
-msgstr ""
+msgstr "Строка не найдена в модели данных"
 
 #: ../libgda/gda-data-model.c:949
 msgid "The 'NAME' parameter must hold a string value, ignored."
-msgstr ""
+msgstr "Параметр \"NAME\" должен содержать строковое значение, игнорируется."
 
 #: ../libgda/gda-data-model.c:985
 msgid "The 'SEPARATOR' parameter must hold a string value, ignored."
-msgstr ""
+msgstr "Параметр \"SEPARATOR\" должен содержать строковое значение, игнорируется."
 
 #: ../libgda/gda-data-model.c:1061
 msgid "The 'OVERWRITE' parameter must hold a boolean value, ignored."
-msgstr ""
+msgstr "Параметр \"OVERWRITE\" должен содержать логическое значение, игнорируется."
 
 #: ../libgda/gda-data-model.c:1069
 #, c-format
 msgid "File '%s' already exists"
-msgstr ""
+msgstr "Файл \"%s\" уже существует"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: ../libgda/gda-data-model.c:1075
-#, fuzzy, c-format
+#, c-format
 msgid "Could not save file %s"
-msgstr "Не удалось создать файл %s"
+msgstr "Не удалось сохранить файл %s"
 
 #: ../libgda/gda-data-model.c:1174
 msgid "Exported Data"
-msgstr ""
+msgstr "Экспортированные данные"
 
 #: ../libgda/gda-data-model.c:1296
 #, c-format
@@ -219,9 +212,8 @@ msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr ""
 
 #: ../libgda/gda-data-model.c:1441
-#, fuzzy
 msgid "Could not get an iterator for soure data model"
-msgstr "Не удалось получить тип данных поля Oracle"
+msgstr ""
 
 #: ../libgda/gda-data-model.c:1457
 #, c-format
@@ -577,14 +569,14 @@ msgid "Custom data type, declared for the %s.%s field"
 msgstr ""
 
 #: ../libgda/gda-dict-field.c:965
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown GDA data type '%s'"
-msgstr "Неизвестный тип данных \"%s\""
+msgstr "Неизвестный тип данных GDA \"%s\""
 
 #: ../libgda/gda-dict-field.c:979
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find a data handler for data type '%s'"
-msgstr "Не удалось найти тип данных для параметра \"%s\""
+msgstr "Не удалось найти обработчик данных для данных типа \"%s\""
 
 #: ../libgda/gda-dict-field.c:1000
 msgid "Missing required attributes for <gda_dict_field>"
@@ -629,9 +621,8 @@ msgid "Missing required attributes for <gda_dict_type>"
 msgstr "Нет необходимых аттрибутов для <gda_dict_type>"
 
 #: ../libgda/gda-init.c:50
-#, fuzzy
 msgid "Attempt to re-initialize GDA library. ignored."
-msgstr "Произведена попытка инициализировать уже инициализированного клиента"
+msgstr "Произведена попытка переинициализировать библиотеку GDA, игнорируется."
 
 #: ../libgda/gda-init.c:68
 msgid "libgda needs GModule. Finishing..."
@@ -639,9 +630,8 @@ msgstr "Библиотека libgda нуждается в подсистеме G
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: ../libgda/gda-init.c:90 ../libgda/gda-init.c:97 ../libgda/gda-init.c:104
-#, fuzzy
 msgid "Could not parse "
-msgstr "Не удалось разобрать команду \"%s\""
+msgstr "Не удалось провести лексический анализ "
 
 #: ../libgda/gda-init.c:90
 msgid ""
@@ -692,9 +682,9 @@ msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: ../libgda/gda-parameter-list.c:1123
-#, fuzzy, c-format
+#, c-format
 msgid "Could not add parameter of type %s with value '%s'"
-msgstr "Не удалось получить определённый для параметра размер"
+msgstr "Не удалось добавить параметр типа \"%s\" со значением \"%s\""
 
 #: ../libgda/gda-parameter-list.c:1211
 #, c-format
@@ -742,25 +732,24 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-query.c:929
-#, fuzzy
 msgid "Can't modify the structure of a non-parsed SQL query"
 msgstr "Невозможно изменить структуру неразобранного запроса SQL"
 
 #: ../libgda/gda-query.c:1147
 msgid "Select"
-msgstr ""
+msgstr "Select (Выбор)"
 
 #: ../libgda/gda-query.c:1149
 msgid "Insert"
-msgstr ""
+msgstr "Insert (Вставка)"
 
 #: ../libgda/gda-query.c:1151
 msgid "Update"
-msgstr ""
+msgstr "Update (Обновление)"
 
 #: ../libgda/gda-query.c:1153
 msgid "Delete"
-msgstr ""
+msgstr "Delete (Удаление)"
 
 #: ../libgda/gda-query.c:1155
 msgid "Select (union)"
@@ -797,14 +786,12 @@ msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr ""
 
 #: ../libgda/gda-query.c:2724
-#, fuzzy
 msgid "No connection associated to query's dictionary"
-msgstr "Нет соединения ассоциированного со словарём"
+msgstr ""
 
 #: ../libgda/gda-query.c:2729
-#, fuzzy
 msgid "Connection associated to query's dictionary is closed"
-msgstr "Нет соединения ассоциированного со словарём"
+msgstr ""
 
 #: ../libgda/gda-query.c:2910 ../testing/gda-author-dict-file.c:184
 #: ../testing/gda-author-dict-file.c:195 ../testing/gda-author-dict-file.c:257
@@ -966,9 +953,8 @@ msgid "Wrong 'type' attribute in <gda_query_cond>"
 msgstr "Неправильный аттрибут \"type\" в <gda_query_cond>"
 
 #: ../libgda/gda-query-condition.c:1510
-#, fuzzy
 msgid "Missing ID attribute in <gda_query_cond>"
-msgstr "Нет аттрибута \"id\" в <gda_query_cond>"
+msgstr "Нет аттрибута \"ID\" в <gda_query_cond>"
 
 #: ../libgda/gda-query-condition.c:1541
 msgid "Condition is not active"
@@ -1507,9 +1493,8 @@ msgstr "Представление"
 #. Index fields
 #: ../libgda/gda-server-provider-extra.c:177
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
-#, fuzzy
 msgid "Fields"
-msgstr "Имя поля"
+msgstr "Поля"
 
 #: ../libgda/gda-server-provider-extra.c:179
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:15
@@ -1517,9 +1502,8 @@ msgstr "Имя поля"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:34
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:6
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:12
-#, fuzzy
 msgid "Options"
-msgstr "Действие"
+msgstr "Параметры"
 
 #: ../libgda/gda-server-provider-extra.c:295
 msgid "Data model for schema has a wrong number of columns"
@@ -1570,9 +1554,8 @@ msgid "Wrong 'type' attribute in <gda_graph>"
 msgstr ""
 
 #: ../libgda/graph/gda-graph.c:734
-#, fuzzy
 msgid "Missing ID attribute in <gda_graph>"
-msgstr "Нет аттрибута \"id\" в <gda_query_cond>"
+msgstr "Нет аттрибута \"ID\" в <gda_graph>"
 
 #: ../libgda/graph/gda-graph-item.c:473
 msgid "XML Tag is not <gda_graph_item>"
@@ -1661,13 +1644,12 @@ msgid "Empty query to parse"
 msgstr "Пустой запрос для разбора"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:1
-#, fuzzy
 msgid "Character Set"
-msgstr "Строка символов"
+msgstr "Набор символов"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:2
 msgid "Character set to be used on the connection"
-msgstr ""
+msgstr "Набор символов используемый для соединения"
 
 #. DSN parameters
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:3
@@ -1680,14 +1662,12 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:1
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:1
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:3
-#, fuzzy
 msgid "Database name"
-msgstr "База данных"
+msgstr "Название базы данных"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Page Size"
-msgstr "Размер"
+msgstr "Размер страницы"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:5
 msgid "Page size to use on the database"
@@ -1696,12 +1676,12 @@ msgstr ""
 #. FIXME: pre-set values for the SQL_DIALECT values with human readable values
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:7
 msgid "SQL Dialect"
-msgstr ""
+msgstr "Диалект SQL"
 
 #. FIXME: pre-set values for the SQL_DIALECT values with human readable values
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:9
 msgid "SQL dialect to use on the connection"
-msgstr ""
+msgstr "Диалект SQL используемый для соединения"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:10
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:21
@@ -1710,9 +1690,8 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:8
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:11
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:14
-#, fuzzy
 msgid "The name of a database to connect to"
-msgstr "Имя пользователя используемое для соединения"
+msgstr "Название базы данных используемое для соединения"
 
 #: ../providers/firebird/gda-firebird-blob.c:162
 #: ../providers/firebird/gda-firebird-blob.c:208
@@ -1818,26 +1797,24 @@ msgstr "Провайдер для доступа к базам данных Fire
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:9
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:2
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Database server"
-msgstr "База данных"
+msgstr "Сервер баз данных"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:3
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:3
 msgid "Database server IP adress"
-msgstr ""
+msgstr "IP-адрес сервера баз данных"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:17
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:3
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Database server port"
-msgstr "База данных пуста"
+msgstr "Порт сервера баз данных"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:5
 msgid "Dump Configuration File"
-msgstr ""
+msgstr "Дамп файла настроек"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:6
 msgid "Dump File"
@@ -1846,16 +1823,15 @@ msgstr ""
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:7
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:5
 msgid "Enable Sybase"
-msgstr ""
+msgstr "Включить Sybase"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:8
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:7
-#, fuzzy
 msgid "Extra connection options"
-msgstr "Строка соединения"
+msgstr "Дополнительные параметры соединения"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:9
 msgid "File for TDS protocol dumps"
@@ -1876,12 +1852,12 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:8
 msgid "Host which has the database server running"
-msgstr ""
+msgstr "Узел, на котором запущен сервер баз данных"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:13
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:9
 msgid "IP adress of the host which has the database server running"
-msgstr ""
+msgstr "IP-адрес узла, на котором запущен сервер баз данных"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:14
 msgid "Location of the FreeTDS config file"
@@ -1895,7 +1871,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:7
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:13
 msgid "Port"
-msgstr ""
+msgstr "Порт"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:17
 msgid "TDS Major Version"
@@ -1992,7 +1968,7 @@ msgstr ""
 #: ../providers/sybase/utils.c:502 ../providers/sybase/utils.c:540
 #: ../providers/bdb/utils.c:36
 msgid "Not available"
-msgstr "Не доступно"
+msgstr "Недоступно"
 
 #: ../providers/freetds/gda-freetds-recordset.c:366
 msgid "Error processing result rows.\n"
@@ -2117,11 +2093,11 @@ msgstr "Не удалось извлечь значение столбца"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Authentication Method"
-msgstr ""
+msgstr "Метод аутентификации"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
 msgid "Authentication method to use for connecting"
-msgstr ""
+msgstr "Метод аутенификации используемый для соединения"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:3
 msgid "Bind Domain"
@@ -2129,9 +2105,8 @@ msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
 #: ../providers/msql/msql_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Host Name"
-msgstr "Нет названия"
+msgstr "Название узла"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
 msgid "Host name of the LDAP server"
@@ -2147,7 +2122,7 @@ msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:9
 msgid "Port to use for connecting to the LDAP server"
-msgstr ""
+msgstr "Порт используемый для соединения с сервером LDAP"
 
 #: ../providers/ldap/libmain.c:43
 msgid "Provider for LDAP directory"
@@ -2254,16 +2229,13 @@ msgstr "Провайдер для доступа к файлам формата 
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:1
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:3
-#, fuzzy
 msgid "File Name"
-msgstr "Имя поля"
+msgstr "Имя файла"
 
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:2
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Full path of the file containing the database"
-msgstr ""
-"Полный путь должен быть указан в строке соединения для открытия базы данных."
+msgstr "Полный путь к файлу содержащему базу данных"
 
 #: ../providers/msql/gda-msql-libmain.c:40
 msgid "Provider for Hughes Technologies mSQL databases"
@@ -2648,14 +2620,12 @@ msgid "Provider for ODBC data sources"
 msgstr "Провайдер для доступа к источникам данных ODBC"
 
 #: ../providers/odbc/odbc_specs_dsn.xml.in.h:1
-#, fuzzy
 msgid "Connection String"
 msgstr "Строка соединения"
 
 #: ../providers/odbc/odbc_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "ODBC connection string"
-msgstr "Строка соединения"
+msgstr "Строка соединения ODBC"
 
 #: ../providers/oracle/gda-oracle-provider.c:224
 msgid "No TNS name supplied"
@@ -2882,9 +2852,8 @@ msgid "Name of the TNS configuration to use for connecting"
 msgstr ""
 
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "TNS Name"
-msgstr "Нет названия"
+msgstr ""
 
 #: ../providers/postgres/gda-postgres-blob.c:134
 #: ../providers/postgres/gda-postgres-provider.c:713
@@ -3009,7 +2978,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:30
 msgid "KOI8-R(U)"
-msgstr ""
+msgstr "KOI8-R(U)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
 msgid "Korean EUC"
@@ -3026,9 +2995,8 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
-#, fuzzy
 msgid "Tablespace"
-msgstr "Пространство имён"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:40
 msgid "Taiwan EUC"
@@ -3036,7 +3004,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
 msgid "Template"
-msgstr ""
+msgstr "Шаблон"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:44
 msgid "The name of the database user who will own the new database"
@@ -3053,7 +3021,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
 msgid "Unicode (UTF-8)"
-msgstr ""
+msgstr "Unicode (UTF-8)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
 msgid "Whether to require SSL or not when connecting"
@@ -3061,11 +3029,11 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:49
 msgid "Windows CP1250"
-msgstr ""
+msgstr "Windows CP1250"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:50
 msgid "Windows CP1251"
-msgstr ""
+msgstr "Windows CP1251"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:51
 msgid "Windows CP1256 (Arabic)"
@@ -3073,7 +3041,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:52
 msgid "Windows CP866"
-msgstr ""
+msgstr "Windows CP866"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:53
 msgid "Windows CP874 (Thai)"
@@ -3084,9 +3052,8 @@ msgid "Constraint expression for a partial index"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
-#, fuzzy
 msgid "Index name"
-msgstr "Индексы"
+msgstr "Название индекса"
 
 #. Index fields
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
@@ -3095,12 +3062,11 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
 msgid "Method"
-msgstr ""
+msgstr "Метод"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
-#, fuzzy
 msgid "On table"
-msgstr "Таблица"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
 msgid "Predicate"
@@ -3109,9 +3075,8 @@ msgstr ""
 #. list of fields
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
-#, fuzzy
 msgid "Unique"
-msgstr "Уникальный индекс?"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:1
 msgid "Cascade"
@@ -3124,13 +3089,11 @@ msgstr ""
 
 #. list of fields
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
-#, fuzzy
 msgid "Check constraint"
-msgstr "Строка соединения"
+msgstr "Проверить ограничения"
 
 #. list of fields
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
-#, fuzzy
 msgid "Default"
 msgstr "Исходное значение"
 
@@ -3149,9 +3112,8 @@ msgstr ""
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
-#, fuzzy
 msgid "Field"
-msgstr "Имя поля"
+msgstr "Поле"
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
@@ -3166,7 +3128,7 @@ msgstr ""
 #. other table constraints
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
 msgid "Global constraints"
-msgstr ""
+msgstr "Глобальные ограничения"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
 msgid "Inheritage"
@@ -3182,9 +3144,8 @@ msgstr ""
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
-#, fuzzy
 msgid "Match type"
-msgstr "Тип данных"
+msgstr "Тип совпадения"
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
@@ -3192,9 +3153,8 @@ msgid "Matching method if more than one field involved"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
-#, fuzzy
 msgid "No action"
-msgstr "Расположение"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
 msgid "Non deferrable"
@@ -3216,27 +3176,23 @@ msgid "On update action"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
-#, fuzzy
 msgid "Parent table"
-msgstr "Название параметра"
+msgstr ""
 
 #. list of fields
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
-#, fuzzy
 msgid "Primary key"
-msgstr "Первичный ключ?"
+msgstr "Первичный ключ"
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
-#, fuzzy
 msgid "Referenced field"
-msgstr "Ссылки"
+msgstr ""
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
-#, fuzzy
 msgid "Referenced table"
-msgstr "Ссылки"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
 msgid "Restrict"
@@ -3252,22 +3208,20 @@ msgstr ""
 
 #. list of fields
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:53
-#, fuzzy
 msgid "Table's columns"
-msgstr "Содержание"
+msgstr "Столбцы таблицы"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
-#, fuzzy
 msgid "Table's description"
-msgstr "Описание"
+msgstr "Описание таблицы"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
 msgid "Table's name"
-msgstr ""
+msgstr "Название таблицы"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
 msgid "Temporary table"
-msgstr ""
+msgstr "Временная таблица"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:60
 msgid "With OIDs"
@@ -3284,9 +3238,8 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:2
-#, fuzzy
 msgid "Referenced action"
-msgstr "Ссылки"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:3
@@ -3294,13 +3247,12 @@ msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
-#, fuzzy
 msgid "Table to delete"
-msgstr "Содержание"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
 msgid "Search Path"
-msgstr ""
+msgstr "Путь для поиска"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:10
 msgid "Search path among database's schemas"
@@ -3363,19 +3315,16 @@ msgid "Provider for SQLite databases"
 msgstr "Провайдер для доступа к базам данных SQLite"
 
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:1
-#, fuzzy
 msgid "Database file name"
-msgstr "База данных пуста"
+msgstr "Имя файла базы данных"
 
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:2
 msgid "File name where all the database is stored"
-msgstr ""
+msgstr "Имя файла, в котором хранятся все базы данных"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Full path of the file containing the SQLite database"
-msgstr ""
-"Полный путь должен быть указан в строке соединения для открытия базы данных."
+msgstr "Полный путь к файлу содержащему базу данных SQLite"
 
 #: ../providers/sybase/gda-sybase-provider.c:315
 msgid "Out of memory. Allocating connection structure failed."
@@ -3594,14 +3543,12 @@ msgid "Enable Sybase operative mode"
 msgstr ""
 
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:10
-#, fuzzy
 msgid "Locale"
-msgstr "Масштаб"
+msgstr "Локаль"
 
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:11
-#, fuzzy
 msgid "Locale to use in the connection"
-msgstr "Не удалось установить соединение."
+msgstr "Локаль используемая для соединения"
 
 #: ../providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -3841,15 +3788,12 @@ msgid "Berkeley DB database file to be used"
 msgstr ""
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Database file"
-msgstr "База данных"
+msgstr "Файл базы данных"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Name of the database in the database file to be used"
-msgstr ""
-"Для удаления базы данных SQLite следует вручную удалить файл базы данных"
+msgstr "Название базы данных в файле баз данных"
 
 #: ../providers/bdb/gda-bdb-provider.c:154
 msgid "The FILE parameter is not defined in the connection string."
@@ -3884,9 +3828,9 @@ msgid "Can't open connection to DSN %s: %s\n"
 msgstr ""
 
 #: ../testing/gda-author-dict-file.c:167 ../testing/gda-test-connection.c:81
-#, fuzzy, c-format
+#, c-format
 msgid "Can't open specified connection: %s\n"
-msgstr "Не удалось установить соединение."
+msgstr "Не удалось установить указанное соединение: %s\n"
 
 #: ../testing/gda-author-dict-file.c:203
 msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
@@ -3948,12 +3892,10 @@ msgid "Data source's parameters: none provided"
 msgstr "Параметры источника данных: не предоставлены"
 
 #: ../testing/gda-diagnose.c:340
-#, fuzzy
 msgid "Detailed data source's parameters"
 msgstr "Подробные параметры источника данных"
 
 #: ../testing/gda-diagnose.c:344
-#, fuzzy
 msgid "Detailed data source's parameters: none provided"
 msgstr "Подробные параметры источника данных: не предоставлены"
 
@@ -4027,14 +3969,13 @@ msgid "Error"
 msgstr "Ошибка"
 
 #: ../testing/gda-diagnose.c:702
-#, fuzzy, c-format
+#, c-format
 msgid "Constraints for '%s'"
-msgstr "Поля для \"%s\""
+msgstr "Ограничения для \"%s\""
 
 #: ../testing/gda-diagnose.c:711
-#, fuzzy
 msgid "No constraint"
-msgstr "Строка соединения"
+msgstr "Без ограничений"
 
 #: ../testing/gda-diagnose.c:725
 msgid "Nothing to return"
@@ -4049,7 +3990,7 @@ msgstr "Обработка типов данных"
 
 #: ../testing/gda-diagnose.c:743
 msgid "This provider does not support data handlers"
-msgstr ""
+msgstr "Этот провайдер  не поддерживает обработчики данных"
 
 #: ../testing/gda-diagnose.c:773
 msgid ""
@@ -4212,9 +4153,8 @@ msgid "None provided"
 msgstr ""
 
 #: ../testing/gda-test-connection.c:87
-#, fuzzy
 msgid "Connection successfully opened!\n"
-msgstr "Соединение не установлено!"
+msgstr "Соединение успешно установлено!\n"
 
 #: ../testing/gda-test-models.c:89 ../testing/gda-test-sql.c:87
 msgid "List of SQL parsing tests"
@@ -4222,7 +4162,7 @@ msgstr ""
 
 #: ../testing/gda-test-models.c:385
 msgid "Missing 'file' attribute"
-msgstr ""
+msgstr "Нет аттрибута \"file\""
 
 #: ../testing/gda-test-models.c:658
 msgid "GdaDataModel required for this action"
