@@ -1,27 +1,27 @@
-# translation of eu.po to Basque
-# translation of libgda-2_eu.po to Basque
+# translation of libgda.po to Basque
 # This file is distributed under the same license as the PACKAGE package.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
 # Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>, 2005.
-# Iñaki Larrañaga <dooteo@euskalgnu.org>, 2006.
+# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-01 12:14+0100\n"
-"PO-Revision-Date: 2006-03-01 12:21+0100\n"
-"Last-Translator: Iñaki Larrañaga <dooteo@euskalgnu.org>\n"
+"POT-Creation-Date: 2006-07-12 09:40+0000\n"
+"PO-Revision-Date: 2006-07-13 10:51+0000\n"
+"Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: Basque <itzulpena@euskalgnu.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.10.2\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n\n"
+"Plural-Forms: Plural-Forms: Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"\n"
 "\n"
 
-#: ../libgda/gda-client.c:293 ../libgda/gda-client.c:1040
-#: ../libgda/gda-client.c:1100
+#: ../libgda/gda-client.c:293 ../libgda/gda-client.c:1067
+#: ../libgda/gda-client.c:1127
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Ezin izan da aurkitu %s hornitzailea uneko konfigurazioan"
@@ -35,90 +35,123 @@ msgstr "%s hornitzaileak ez du sarrerako funtziorik inplementatua"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Ezin izan da sortu GdaServerProvider objekturik plugin-etik"
 
-#: ../libgda/gda-client.c:412 ../libgda/gda-client.c:414
-#: ../libgda/gda-client.c:590 ../libgda/gda-connection.c:292
-#: ../libgda/gda-connection.c:294
+#: ../libgda/gda-client.c:421 ../libgda/gda-client.c:423
+#: ../libgda/gda-client.c:613 ../libgda/gda-connection.c:404
+#: ../libgda/gda-connection.c:406
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "%s datu-iturburua ez da aurkitu konfigurazioan"
 
-#: ../libgda/gda-client.c:446
+#: ../libgda/gda-client.c:455 ../libgda/gda-client.c:552
 #, c-format
 msgid "Datasource configuration error: could not find provider '%s'"
 msgstr ""
 "Datu-iturburuaren konfigurazioko errorea: ezin izan da '%s' hornitzailea "
 "aurkitu"
 
-#: ../libgda/gda-client.c:450 ../libgda/gda-client.c:452
+#: ../libgda/gda-client.c:459 ../libgda/gda-client.c:461
+#: ../libgda/gda-client.c:556 ../libgda/gda-client.c:558
 msgid "Datasource configuration error: no provider specified"
 msgstr "Datu-iturburuaren konfigurazioko errorea: ez da hornitzailerik zehaztu"
 
-#: ../libgda/gda-client.c:515
-msgid "Temporary data source created by libgda. Don't remove it"
-msgstr "Aldi baterako datu-iturburua libgda-k sortutakoa da. Ez kendu."
-
-#: ../libgda/gda-config.c:1438
+#: ../libgda/gda-config.c:1437
 #, c-format
 msgid "Error: %s"
 msgstr "Errorea: %s"
 
-#: ../libgda/gda-config.c:1569 ../libgda/gda-server-provider-extra.c:84
+#: ../libgda/gda-config.c:1568 ../libgda/gda-server-provider-extra.c:84
 #: ../libgda/gda-server-provider-extra.c:128
-#: ../providers/odbc/gda-odbc-provider.c:1162
 msgid "Id"
 msgstr "Id"
 
-#: ../libgda/gda-config.c:1570 ../testing/gda-diagnose.c:282
+#: ../libgda/gda-config.c:1569 ../testing/gda-diagnose.c:305
 msgid "Location"
 msgstr "Kokalekua"
 
-#: ../libgda/gda-config.c:1571 ../libgda/gda-config.c:1866
+#: ../libgda/gda-config.c:1570 ../libgda/gda-config.c:1874
 #: ../libgda/gda-server-provider-extra.c:147
 #: ../libgda/gda-server-provider-extra.c:170
-#: ../providers/firebird/gda-firebird-provider.c:347
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:865
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:894
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:922
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1003
-#: ../providers/odbc/gda-odbc-provider.c:1273
-#: ../providers/odbc/gda-odbc-provider.c:1429 ../testing/gda-diagnose.c:283
-#: ../testing/gda-diagnose.c:292
+#: ../providers/firebird/gda-firebird-provider.c:356
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:868
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:897
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:925
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1006
+#: ../testing/gda-diagnose.c:306 ../testing/gda-diagnose.c:315
 msgid "Description"
 msgstr "Azalpena"
 
-#: ../libgda/gda-config.c:1863 ../libgda/gda-server-provider-extra.c:175
-#: ../providers/firebird/gda-firebird-provider.c:755
-#: ../providers/ldap/gda-ldap-provider.c:350
-#: ../providers/mdb/gda-mdb-provider.c:479
-#: ../providers/mdb/gda-mdb-provider.c:614
-#: ../providers/mdb/gda-mdb-provider.c:674
-#: ../providers/msql/gda-msql-provider.c:493
-#: ../providers/odbc/gda-odbc-provider.c:793
-#: ../providers/odbc/gda-odbc-provider.c:849
-#: ../providers/oracle/gda-oracle-provider.c:1920
-#: ../providers/oracle/gda-oracle-provider.c:1979
+#: ../libgda/gda-config.c:1871 ../libgda/gda-server-provider-extra.c:175
+#: ../providers/firebird/gda-firebird-provider.c:760
+#: ../providers/ldap/gda-ldap-provider.c:349
+#: ../providers/mdb/gda-mdb-provider.c:481
+#: ../providers/odbc/gda-odbc-provider.c:794
+#: ../providers/odbc/gda-odbc-provider.c:847
+#: ../providers/oracle/gda-oracle-provider.c:1600
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
 msgid "Name"
 msgstr "Izena"
 
-#: ../libgda/gda-config.c:1864
+#: ../libgda/gda-config.c:1872
 msgid "Provider"
 msgstr "Hornitzailea"
 
-#: ../libgda/gda-config.c:1865
+#: ../libgda/gda-config.c:1873
 msgid "Connection string"
 msgstr "Konexio-katea"
 
-#: ../libgda/gda-config.c:1867
+#: ../libgda/gda-config.c:1875
 msgid "Username"
 msgstr "Erabiltzaile-izena"
 
-#: ../libgda/gda-config.c:1868
+#: ../libgda/gda-config.c:1876
 msgid "Password"
 msgstr "Pasahitza"
 
-#: ../libgda/gda-config.c:1869
+#: ../libgda/gda-config.c:1877
 msgid "Global"
 msgstr "Globala"
+
+#: ../libgda/gda-connection.c:148
+msgid "GdaClient to use"
+msgstr "Erabiliko den GdaClient"
+
+#: ../libgda/gda-connection.c:151
+msgid "DSN to use"
+msgstr "Erabiliko den DSN"
+
+#: ../libgda/gda-connection.c:154
+msgid "Connection string to use"
+msgstr "Erabiliko den konexio-katea"
+
+#: ../libgda/gda-connection.c:157
+msgid "Provider to use"
+msgstr "Erabiliko den hornitzailea"
+
+#: ../libgda/gda-connection.c:161
+msgid "Username to use"
+msgstr "Erabiliko den erabiltzaile-izena"
+
+#: ../libgda/gda-connection.c:165
+msgid "Password to use"
+msgstr "Erabiliko den pasahitza"
+
+#: ../libgda/gda-connection.c:169
+msgid "Options (connection sharing)"
+msgstr "Aukerak (konexioa partekatzea)"
+
+#: ../libgda/gda-connection.c:415 ../libgda/gda-connection.c:417
+msgid "No DSN or connection string specified"
+msgstr "Ez da DSN edo konexio-katerik zehaztu"
+
+#: ../libgda/gda-connection.c:424 ../libgda/gda-connection.c:426
+msgid "No provider specified"
+msgstr "Ez da hornitzailerik zehaztu"
+
+#: ../libgda/gda-data-access-wrapper.c:481
+#, c-format
+msgid "Column %d out of range 0 - %d"
+msgstr "%d. zutabea 0 - %d barrutitik kanpo"
 
 #: ../libgda/gda-data-model-array.c:75 ../libgda/gda-data-model-array.c:91
 #, c-format
@@ -139,41 +172,82 @@ msgstr "Okerreko balioen kopurua balio-zerrendan"
 msgid "Row not found in data model"
 msgstr "Ez da errenkada datu-ereduan aurkitu"
 
-#: ../libgda/gda-data-model-array.c:372
+#: ../libgda/gda-data-model.c:949
+msgid "The 'NAME' parameter must hold a string value, ignored."
+msgstr "'NAME' parametroak kate (esaldi) bat eduki behar du, ez ikusi egin zaio."
+
+#: ../libgda/gda-data-model.c:985
+msgid "The 'SEPARATOR' parameter must hold a string value, ignored."
+msgstr "'SEPARATOR' parametroak kate (esaldi) bat eduki behar du, ez ikusi egin zaio."
+
+#: ../libgda/gda-data-model.c:1061
+msgid "The 'OVERWRITE' parameter must hold a boolean value, ignored."
+msgstr "'OVERWRITE' parametroak balio boolearra eduki behar du, ez ikusi egin zaio."
+
+#: ../libgda/gda-data-model.c:1069
 #, c-format
-msgid "Node is not <gda_array> but <%s>"
-msgstr "Nodoa ez da <gda-array>, <%s> baizik"
+msgid "File '%s' already exists"
+msgstr "'%s' fitxategia badago lehendik ere"
 
-#: ../libgda/gda-data-model-array.c:398
-msgid "No \"gdatype\" attribute specified in <gda_array_field>"
-msgstr "Ez da \"gdatype\" atributua <gda_array_field>-en zehaztu"
+#: ../libgda/gda-data-model.c:1075
+#, c-format
+msgid "Could not save file %s"
+msgstr "Ezin izan da %s fitxategia gorde"
 
-#: ../libgda/gda-data-model-array.c:444
-msgid "No <gda_array_field> specified in <gda_array>"
-msgstr "Ez da <gda_array_field> zehaztu <gda_array>-an"
-
-#: ../libgda/gda-data-model.c:1009
+#: ../libgda/gda-data-model.c:1174
 msgid "Exported Data"
 msgstr "Esportatutako datuak"
 
-#: ../libgda/gda-data-model.c:1131
+#: ../libgda/gda-data-model.c:1296
 #, c-format
 msgid "Expected tag <gda_value>, got <%s>, ignoring"
 msgstr "<gda_value> espero zen, baina <%s> lortu da. Ez ikusi egiten"
 
-#: ../libgda/gda-data-model.c:1141 ../testing/gda-test-models.c:528
+#: ../libgda/gda-data-model.c:1306 ../testing/gda-test-models.c:537
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr "Ezin da datu-motaren zutabea lortu (mota EZEZAGUNA da edo ez da zehaztu)"
 
-#: ../libgda/gda-data-model.c:1158 ../testing/gda-test-models.c:546
+#: ../libgda/gda-data-model.c:1323 ../testing/gda-test-models.c:555
 #, c-format
 msgid "Cannot interpret string as a valid %s value"
 msgstr "Ezin da katea baliozko %s balio gisa interpretatu"
 
-#: ../libgda/gda-data-model.c:1218
+#: ../libgda/gda-data-model.c:1383
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "<gda_array_data> etiketa espero zen, baina <%s> lortu da"
+
+#: ../libgda/gda-data-model.c:1441
+msgid "Could not get an iterator for soure data model"
+msgstr "Ezin izan da iturburuko datu-modeloko elementu-hautatzailea eskuratu"
+
+#: ../libgda/gda-data-model.c:1457
+#, c-format
+msgid "Inexistant column in source data model: %d"
+msgstr "Zutabea ez dago iturburuko datu-modeloan: %d"
+
+#: ../libgda/gda-data-model.c:1471
+#, c-format
+msgid ""
+"Destination column %d can't be NULL but has no correspondance in the source "
+"data model"
+msgstr "Helburuko %d. zutabeak ezin du NULL izan, baina ez dauka korrespondentziarik iturburuko datu-modeloan"
+
+#: ../libgda/gda-data-model.c:1479
+#, c-format
+msgid ""
+"Destination column %d has a gda type (%s) incompatible with source column %d "
+"type (%s)"
+msgstr "Helburuko %d zutabeak duen gda mota (%s) ez da bateragarria iturburuko %d zutabeko motarekin (%s)"
+
+#: ../libgda/gda-data-model.c:1547
+#, c-format
+msgid "Can't transform '%s' from GDA type %s to GDA type %s"
+msgstr "Ezin da '%s' bihurtu %s GDA motatik %s GDA motara"
+
+#: ../libgda/gda-data-model.c:1818
+msgid "Model does not support random access, not showing data\n"
+msgstr "Modeloak ez du ausazko sarbidetza onartzen, ez da daturik erakutsiko.\n"
 
 #: ../libgda/gda-data-model-filter-sql.c:360
 #, c-format
@@ -190,31 +264,127 @@ msgstr "SQL komandoa ez da SELECT ('%s' da"
 msgid "Row %d not found in data model"
 msgstr "%d errenkada ez da datu-ereduan aurkitu"
 
-#: ../libgda/gda-data-model-query.c:569
+#: ../libgda/gda-data-model-import.c:414
+#, c-format
+msgid "The '%s' parameter must hold a string value, ignored."
+msgstr "'%s' parametroak kate (esaldi) bat eduki behar du, ez ikusi egin zaio."
+
+#: ../libgda/gda-data-model-import.c:435
+#, c-format
+msgid "The '%s' parameter must hold a boolean value, ignored."
+msgstr "'%s' parametroak balio boolearra eduki behar du, ez ikusi egin zaio."
+
+#: ../libgda/gda-data-model-import.c:525
+msgid "\"options\" property is not a GdaParameterList object"
+msgstr "\"aukera\" ('options') propietatea ez da GdaParameterList objektua"
+
+#: ../libgda/gda-data-model-import.c:867
+#, c-format
+msgid "The '%s' parameter must hold a gda type value, ignored."
+msgstr "'%s' parametroak gda motako balioa eduki behar du, ez ikusi egin zaio."
+
+#: ../libgda/gda-data-model-import.c:936
+#, c-format
+msgid "Character conversion at line %d, error: %s"
+msgstr "Karaktere-bihurketa %d. lerroan, errorea: %s"
+
+#: ../libgda/gda-data-model-import.c:939
+msgid "no detail"
+msgstr "xehetasunik ez"
+
+#: ../libgda/gda-data-model-import.c:1131
+#: ../libgda/gda-data-model-import.c:1534
+#, c-format
+msgid "Could not convert '%s' to a value of type %s"
+msgstr "Ezin izan da '%s' bihurtu %s motako baliora"
+
+#: ../libgda/gda-data-model-import.c:1147
+#, c-format
+msgid "Row has more values than detected at line %d"
+msgstr "Errenkadak balio gehiago ditu %d lerroan atzemandakoak baino"
+
+#. error
+#: ../libgda/gda-data-model-import.c:1268
+msgid "Failed to read node in XML file"
+msgstr "Huts egin du nodoak irakurtzean XML fitxategian"
+
+#: ../libgda/gda-data-model-import.c:1287
+#, c-format
+msgid "Expected <gda_array> node in XML file, got <%s>"
+msgstr "<gda_array_data> nodoa espero zen XML fitxategian, baina <%s> lortu da"
+
+#: ../libgda/gda-data-model-import.c:1329
+#: ../libgda/gda-data-model-import.c:1618
+msgid "No \"gdatype\" attribute specified in <gda_array_field>"
+msgstr "Ez da \"gdatype\" atributua <gda_array_field>-en zehaztu"
+
+#: ../libgda/gda-data-model-import.c:1376
+msgid "Expected <gda_array_field> in <gda_array>"
+msgstr "<gda_array_field> espero zen <gda_array>-an"
+
+#: ../libgda/gda-data-model-import.c:1416
+#, c-format
+msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
+msgstr "<gda_array_data> espero zen <gda_array>-an, baina <%s> lortu da"
+
+#: ../libgda/gda-data-model-import.c:1418
+msgid "Expected <gda_array_data> in <gda_array>"
+msgstr "<gda_array_data> espero zen <gda_array>-an"
+
+#: ../libgda/gda-data-model-import.c:1430
+msgid "Can't read the contents of the <gda_array_data> node"
+msgstr "Ezin da <gda_array_data> nodoaren edukia irakurri"
+
+#: ../libgda/gda-data-model-import.c:1485
+#, c-format
+msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
+msgstr "<gda_array_data> espero zen <gda_array_data>-n, baina <%s> lortu da"
+
+#: ../libgda/gda-data-model-import.c:1509
+msgid "Row has too many values (which are ignored)"
+msgstr "Errenkadak balio gehiegi ditu (ez ikusi egin zaiena)"
+
+#: ../libgda/gda-data-model-import.c:1588
+#, c-format
+msgid "Expected <gda_array> node but got <%s>"
+msgstr "<gda_array> nodoa espero zen, baina <%s> lortu da"
+
+#: ../libgda/gda-data-model-import.c:1665
+msgid "No <gda_array_field> specified in <gda_array>"
+msgstr "Ez da <gda_array_field> zehaztu <gda_array>-an"
+
+#: ../libgda/gda-data-model-import.c:1716
+#: ../providers/oracle/gda-oracle-provider.c:1848
+msgid "No detail"
+msgstr "Xehetasunik ez"
+
+#: ../libgda/gda-data-model-import.c:1893
+#, c-format
+msgid "Row at line %d does not have enough values, completed with NULL values"
+msgstr "%d. lerroko errenkadak ez du nahikoa balio, NULL balioekin osatu da"
+
+#: ../libgda/gda-data-model-import.c:1913
+#, c-format
+msgid "Row at line %d does not have enough values (which are thus ignored)"
+msgstr "%d. lerroko errenkadak ez du nahikoa balio (ez ikusi egiten zaienak)"
+
+#: ../libgda/gda-data-model-query.c:576
 msgid "Query is not a SELECT query"
 msgstr "Kontsulta ez da SELECT motako kontsulta"
 
-#: ../libgda/gda-data-model-query.c:578 ../libgda/gda-data-model-query.c:943
-msgid "No connection specified"
-msgstr "Ez da konexiorik zehaztu"
-
-#: ../libgda/gda-data-model-query.c:586 ../libgda/gda-data-model-query.c:949
-msgid "Connection is not opened"
-msgstr "Konexioa ez da ireki"
-
-#: ../libgda/gda-data-model-query.c:668
+#: ../libgda/gda-data-model-query.c:648
 msgid "Wrong type of query"
 msgstr "Okerreko kontsulta-mota"
 
-#: ../libgda/gda-data-model-query.c:992 ../libgda/gda-data-model-query.c:1040
+#: ../libgda/gda-data-model-query.c:960 ../libgda/gda-data-model-query.c:1008
 msgid "No UPDATE query specified, can't update row"
 msgstr "Ez da UPDATE kontsultarik zehaztu, ezin da errenkada eguneratu"
 
-#: ../libgda/gda-data-model-query.c:1091 ../libgda/gda-data-model-query.c:1136
+#: ../libgda/gda-data-model-query.c:1059 ../libgda/gda-data-model-query.c:1107
 msgid "No INSERT query specified, can't insert row"
 msgstr "Ez da INSERT kontsultarik zehaztu, ezin da errenkada txertatu"
 
-#: ../libgda/gda-data-model-query.c:1178
+#: ../libgda/gda-data-model-query.c:1149
 msgid "No DELETE query specified, can't delete row"
 msgstr "Ez da DELETE kontsultarik zehaztu, ezin da errenkada ezabatu"
 
@@ -226,17 +396,21 @@ msgstr "Balio gehiegi zerrendan"
 msgid "Data model"
 msgstr "Datu-eredua"
 
-#: ../libgda/gda-data-proxy.c:2254
+#: ../libgda/gda-data-proxy.c:634
+msgid "GdaDataProxy cant' handle non random access data models"
+msgstr "GdaDataProxy ezin du kudeatu datu-modeloen ausazko sarbidea"
+
+#: ../libgda/gda-data-proxy.c:2390
 #, c-format
 msgid "Unknown GdaDataProxy column: %d"
 msgstr "GdaDataProxy zutabe ezezaguna: %d"
 
-#: ../libgda/gda-data-proxy.c:2430
+#: ../libgda/gda-data-proxy.c:2544
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Irakurtzeko soilik motako zutabea aldatzen saiatzen: %d"
 
-#: ../libgda/gda-data-proxy.c:2467
+#: ../libgda/gda-data-proxy.c:2581
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Balio-mota ez dator bat %s (%s ordez)"
@@ -264,94 +438,94 @@ msgstr "Argumentu-mota bat baino gehiago '%s' agregazioarentzat"
 msgid "Missing required attributes for <gda_dict_aggregate>"
 msgstr "<gda_dict_aggregate>-ren atributuak falta dira"
 
-#: ../libgda/gda-dict.c:426
+#: ../libgda/gda-dict.c:427
 msgid "DSN of the connection to use"
 msgstr "DSNa konexioan erabiltzeko"
 
-#: ../libgda/gda-dict.c:429
+#: ../libgda/gda-dict.c:430
 msgid "Username for the connection to use"
 msgstr "Erabiltzaile-izena konexioan erabiltzeko"
 
-#: ../libgda/gda-dict.c:1352
+#: ../libgda/gda-dict.c:1365
 msgid "gda_graph of type 'Q' must have an 'object' attribute"
 msgstr "'Q' motaren 'gda_graph'-ek 'object' atributua eduki behar du"
 
-#: ../libgda/gda-dict.c:1362
+#: ../libgda/gda-dict.c:1375
 msgid "gda_graph of type 'Q' must have valid 'object' attribute"
 msgstr "'Q' motaren 'gda_graph'-ek baliozko 'object' atributua eduki behar du"
 
-#: ../libgda/gda-dict.c:1583 ../testing/html.c:131
+#: ../libgda/gda-dict.c:1592 ../testing/html.c:131
 #, c-format
 msgid "Error writing XML file %s"
 msgstr "Errorea XML motako %s fitxategia idaztean"
 
-#: ../libgda/gda-dict.c:1594
+#: ../libgda/gda-dict.c:1603
 msgid "Can't allocate memory for XML structure."
 msgstr "Ezin da memoria alokatu XML egiturarentzako."
 
-#: ../libgda/gda-dict.c:2172
+#: ../libgda/gda-dict.c:2184
 msgid "No connection associated to the dictionary"
-msgstr "Ez da konexioarik atxikitu hiztegiari"
+msgstr "Ez da konexiorik atxikitu hiztegiari"
 
-#: ../libgda/gda-dict.c:2179
+#: ../libgda/gda-dict.c:2191
 msgid "Connection is closed"
 msgstr "Konexioa itxi egin da"
 
-#: ../libgda/gda-dict.c:2186 ../libgda/gda-dict-database.c:966
+#: ../libgda/gda-dict.c:2198 ../libgda/gda-dict-database.c:966
 msgid "Update already started!"
 msgstr "Eguneraketa jadanik hasita dago"
 
-#: ../libgda/gda-dict.c:2224 ../libgda/gda-dict-database.c:1011
+#: ../libgda/gda-dict.c:2236 ../libgda/gda-dict-database.c:1011
 msgid "Update stopped!"
 msgstr "Eguneraketa gelditu da"
 
-#: ../libgda/gda-dict.c:2251
+#: ../libgda/gda-dict.c:2263
 msgid "Can't get list of data types"
 msgstr "Ezin da datu-moten zerrenda hartu"
 
-#: ../libgda/gda-dict.c:2262
+#: ../libgda/gda-dict.c:2274
 msgid "Schema for list of data types is wrong"
 msgstr "Datu-moten zerrendaren eskema okerra da"
 
-#: ../libgda/gda-dict.c:2449
+#: ../libgda/gda-dict.c:2461
 msgid "Can't get list of functions"
 msgstr "Ezin da funtzioen zerrenda eskuratu"
 
-#: ../libgda/gda-dict.c:2464
+#: ../libgda/gda-dict.c:2476
 msgid "Schema for list of functions is wrong"
 msgstr "Funtzioen zerrendaren eskema oker dago"
 
-#: ../libgda/gda-dict.c:2688
+#: ../libgda/gda-dict.c:2702
 msgid "Can't get list of aggregates"
 msgstr "Ezin da eskuratu agregazioen zerrenda"
 
-#: ../libgda/gda-dict.c:2702
+#: ../libgda/gda-dict.c:2716
 msgid "Schema for list of aggregates is wrong"
 msgstr "Agregazioen zerrendaren eskema oker dago"
 
-#: ../libgda/gda-dict.c:2944
+#: ../libgda/gda-dict.c:2960
 #, c-format
 msgid "Error creating directory %s"
 msgstr "Errorea %s direktorioa sortzean"
 
-#: ../libgda/gda-dict-constraint.c:1200
+#: ../libgda/gda-dict-constraint.c:1201
 msgid "Constraint cannot be activated!"
 msgstr "Ezin da murriztapena aktibatu!"
 
-#: ../libgda/gda-dict-constraint.c:1282
+#: ../libgda/gda-dict-constraint.c:1283
 msgid "XML Tag is not <gda_dict_constraint>"
 msgstr "XML etiketa ez da <gda_dict_constraint>"
 
-#: ../libgda/gda-dict-constraint.c:1426
+#: ../libgda/gda-dict-constraint.c:1427
 msgid "Missing required attributes for <gda_dict_constraint>"
 msgstr "<gda_dict_constraint>en beharrezko atributuak falta dira"
 
-#: ../libgda/gda-dict-constraint.c:1431
+#: ../libgda/gda-dict-constraint.c:1432
 #, c-format
 msgid "Referenced table (%s) not found"
 msgstr "Erreferentziatutako taula (%s) ez da aurkitu"
 
-#: ../libgda/gda-dict-constraint.c:1439
+#: ../libgda/gda-dict-constraint.c:1440
 #, c-format
 msgid "Referenced field in constraint (%s) not found"
 msgstr "(%s) murriztapenean erreferentziatutako taula ez da aurkitu"
@@ -373,12 +547,12 @@ msgid "XML Tag below <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
 msgstr "<GDA_DICT_CONSTRAINTS>en azpiko XML etiketa ez da <GDA_DICT_CONSTRAINT>"
 
 #: ../libgda/gda-dict-database.c:974 ../libgda/gda-dict-database.c:1050
-#: ../libgda/gda-dict-table.c:541
+#: ../libgda/gda-dict-table.c:538
 msgid "No connection associated to dictionary!"
 msgstr "Ez zaio konexiorik atxikitu hiztegiari"
 
 #: ../libgda/gda-dict-database.c:979 ../libgda/gda-dict-database.c:1055
-#: ../libgda/gda-dict-table.c:547
+#: ../libgda/gda-dict-table.c:544
 msgid "Connection is not opened!"
 msgstr "Konexioa ez da ireki"
 
@@ -394,11 +568,22 @@ msgstr "Taulen zerrendaren eskema oker dago"
 msgid "XML Tag is not <gda_dict_field>"
 msgstr "XML etiketa ez da <gda_dict_field>"
 
-#: ../libgda/gda-dict-field.c:918
-msgid "Custom data type"
-msgstr "Datu-mota pertsonalizatua"
+#: ../libgda/gda-dict-field.c:924 ../libgda/gda-dict-table.c:651
+#, c-format
+msgid "Custom data type, declared for the %s.%s field"
+msgstr "Datu-mota pertsonalizatua, %s.%s eremuan definitua"
 
-#: ../libgda/gda-dict-field.c:973
+#: ../libgda/gda-dict-field.c:965
+#, c-format
+msgid "Unknown GDA data type '%s'"
+msgstr "'%s' GDA datu-mota ezezaguna"
+
+#: ../libgda/gda-dict-field.c:979
+#, c-format
+msgid "Could not find a data handler for data type '%s'"
+msgstr "Ezin izan da '%s' datu-motaren datu-kudeatzailerik aurkitu"
+
+#: ../libgda/gda-dict-field.c:1000
 msgid "Missing required attributes for <gda_dict_field>"
 msgstr "<gda_dict_field>en beharrezko atributuak falta dira"
 
@@ -415,25 +600,20 @@ msgstr "Itzulera-mota bat baino gehiago '%s' funtzioarentzat"
 msgid "Missing required attributes for <gda_dict_function>"
 msgstr "<gda_dict_function>en beharrezko atributuak falta dira"
 
-#: ../libgda/gda-dict-table.c:591 ../libgda/gda-dict-table.c:603
+#: ../libgda/gda-dict-table.c:588 ../libgda/gda-dict-table.c:600
 msgid "Schema for list of fields is wrong"
 msgstr "Eremuen zerrendaren eskema oker dago"
 
-#: ../libgda/gda-dict-table.c:653
-#, c-format
-msgid "Custom data type, declared for the %s.%s field"
-msgstr "Datu-mota pertsonalizatua, %s.%s eremuan definitua"
-
-#: ../libgda/gda-dict-table.c:670
+#: ../libgda/gda-dict-table.c:668
 #, c-format
 msgid "Can't find data type %s"
 msgstr "Ezin da %s datu-mota aurkitu"
 
-#: ../libgda/gda-dict-table.c:1221
+#: ../libgda/gda-dict-table.c:1210
 msgid "XML Tag is not <gda_dict_table>"
 msgstr "XML etiketa ez da <gda_dict_table>"
 
-#: ../libgda/gda-dict-table.c:1282
+#: ../libgda/gda-dict-table.c:1271
 msgid "Missing required attributes for <gda_dict_table>"
 msgstr "<gda_dict_table>ren beharrezko atributuak falta dira"
 
@@ -445,276 +625,314 @@ msgstr "XML etiketa ez da <gda_dict_type>"
 msgid "Missing required attributes for <gda_dict_type>"
 msgstr "<gda_dict_type>ren beharrezko atributuak falta dira"
 
-#: ../libgda/gda-init.c:47
-msgid "Attempt to initialize an already initialized client"
-msgstr "Dagoeneko hasieratutako bezero bat hasieratzen saiatu zara."
+#: ../libgda/gda-init.c:50
+msgid "Attempt to re-initialize GDA library. ignored."
+msgstr "GDA liburutegia berrasieratzen saiatu da. Ez ikusi egin zaio."
 
-#: ../libgda/gda-init.c:65
+#: ../libgda/gda-init.c:68
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda-k GModule behar du. Amaitzen..."
+
+#: ../libgda/gda-init.c:90 ../libgda/gda-init.c:97 ../libgda/gda-init.c:104
+msgid "Could not parse "
+msgstr "Ezin izan da analizatu "
+
+#: ../libgda/gda-init.c:90
+msgid ""
+": XML dictionaries validation will not be performed (some weird errors may "
+"occur)"
+msgstr ": ez da XML hiztegien balidaziorik egingo (zenbait errore bitxi gerta daitezke)"
+
+#: ../libgda/gda-init.c:97 ../libgda/gda-init.c:104
+msgid ""
+": XML data import validation will not be performed (some weird errors may "
+"occur)"
+msgstr ""
+": ez da XML datuen inportazioaren balidaziorik egingo (zenbait errore "
+"bitxi gerta daitezke)"
 
 #: ../libgda/gda-object.c:304
 msgid "LibGda must be initialized before any usage."
 msgstr "LibGda hasieratu egin behar da erabili aurretik."
 
-#: ../libgda/gda-parameter-list.c:259
+#: ../libgda/gda-parameter-list.c:342
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "Espezifikazio-erroko nodoa != 'data-set-spec': '%s'"
 
-#: ../libgda/gda-parameter-list.c:270
+#: ../libgda/gda-parameter-list.c:353
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Nodoaren <parametroak> falta dira: '%s'"
 
-#: ../libgda/gda-parameter-list.c:322
+#: ../libgda/gda-parameter-list.c:432
 #, c-format
 msgid "Can't find a data type for parameter '%s'"
 msgstr "Ezin da '%s' parametroarentzako datu-mota aurkitu"
 
-#: ../libgda/gda-parameter-list.c:424
+#: ../libgda/gda-parameter-list.c:544
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "%d. eremua ez da '%s' iturburuan aurkitu"
 
-#: ../libgda/gda-parameter-list.c:442
+#: ../libgda/gda-parameter-list.c:562
 #, c-format
 msgid "Can't find parameter source named '%s'"
 msgstr "Ezin da '%s' izeneko parametro-iturburua aurkitu"
 
-#: ../libgda/gda-parameter-list.c:448
+#: ../libgda/gda-parameter-list.c:568
 #, c-format
 msgid "Parameter source specification should be \"<source name>:<field pos>\": '%s'"
 msgstr ""
 "Parametro-iturburuaren adierazpena \"<iturburu-izena>:<eremua>\" izan behar "
 "du: '%s'"
 
-#: ../libgda/gda-parameter-list.c:1014
+#: ../libgda/gda-parameter-list.c:1123
+#, c-format
+msgid "Could not add parameter of type %s with value '%s'"
+msgstr "Ezin izan da %s motaren parametroa '%s' balioarekin gehitu"
+
+#: ../libgda/gda-parameter-list.c:1211
 #, c-format
 msgid "Missing GdaParameterListNode for param %p"
 msgstr "%p parametroaren GdaParameterListNode falta da"
 
-#: ../libgda/gda-parameter-list.c:1027
+#: ../libgda/gda-parameter-list.c:1224
 msgid "GdaParameterListNode has a NULL param attribute"
 msgstr "'GdaParameterListNode'-ek NULL parametroa du"
 
-#: ../libgda/gda-parameter-list.c:1038
+#: ../libgda/gda-parameter-list.c:1235
 msgid "Missing GdaParameterListSource"
 msgstr "GdaParameterListSource falta da"
 
-#: ../libgda/gda-parameter-list.c:1043
+#: ../libgda/gda-parameter-list.c:1240
 msgid "GdaParameterListSource does not list a GdaParameterListNode as it should"
 msgstr ""
 "'GdaParameterListSource'-ek ez du behar lukeen bezala GdaParameterListNode "
 "zerrendatzen"
 
-#: ../libgda/gda-parameter-list.c:1050
+#: ../libgda/gda-parameter-list.c:1247
 #, c-format
 msgid "GdaDataModel %p does not have a column %d"
 msgstr "%p GdaDataModel ez du  %d zutaberik"
 
-#: ../libgda/gda-parameter-list.c:1056
+#: ../libgda/gda-parameter-list.c:1253
 #, c-format
 msgid "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
 msgstr "GdaParameter mota okerreko zutabera murriztuta dago: %s (%s espero zen)"
 
-#: ../libgda/gda-parameter-list.c:1075
+#: ../libgda/gda-parameter-list.c:1272
 msgid "GdaParameterListSource has a NULL data model"
 msgstr "'GdaParameterListSource'-ek NULL datu-eredua du"
 
-#: ../libgda/gda-parameter-list.c:1083
+#: ../libgda/gda-parameter-list.c:1280
 msgid ""
-"GdaParameterListSource references a GdaParameterListNodenot found in the "
+"GdaParameterListSource references a GdaParameterListNode not found in the "
 "nodes list"
 msgstr ""
 "'GdaParameterListSource'-ek nodoen zerrendan aurkitu ez den "
 "GdaParameterListNode erreferentziatzen du"
 
-#: ../libgda/gda-parameter-list.c:1089
+#: ../libgda/gda-parameter-list.c:1286
 msgid ""
-"GdaParameterListSource references a GdaParameterListNodewhich does not use "
+"GdaParameterListSource references a GdaParameterListNode which does not use "
 "the same data model"
 msgstr ""
 "'GdaParameterListSource'-ek  datu-eredu desberdina erabiltzen duen "
 "GdaParameterListNode erreferentziatzen du"
 
-#: ../libgda/gda-query.c:931
+#: ../libgda/gda-query.c:929
 msgid "Can't modify the structure of a non-parsed SQL query"
 msgstr "Ezin da aldatu analizatu gabeko SQL kontsultako egitura"
 
-#: ../libgda/gda-query.c:1149
+#: ../libgda/gda-query.c:1147
 msgid "Select"
 msgstr "Hautatu"
 
-#: ../libgda/gda-query.c:1151
+#: ../libgda/gda-query.c:1149
 msgid "Insert"
 msgstr "Txertatu"
 
-#: ../libgda/gda-query.c:1153
+#: ../libgda/gda-query.c:1151
 msgid "Update"
 msgstr "Eguneratu"
 
-#: ../libgda/gda-query.c:1155
+#: ../libgda/gda-query.c:1153
 msgid "Delete"
 msgstr "Ezabatu"
 
-#: ../libgda/gda-query.c:1157
+#: ../libgda/gda-query.c:1155
 msgid "Select (union)"
 msgstr "Hautatu (batzea)"
 
-#: ../libgda/gda-query.c:1159
+#: ../libgda/gda-query.c:1157
 msgid "Select (intersection)"
 msgstr "Hautatu (intersekzioa)"
 
-#: ../libgda/gda-query.c:1161
+#: ../libgda/gda-query.c:1159
 msgid "Select (exception)"
 msgstr "Hautatu (salbuespena)"
 
-#: ../libgda/gda-query.c:1163
+#: ../libgda/gda-query.c:1161
 msgid "SQL text"
 msgstr "SQL testua"
 
-#: ../libgda/gda-query.c:1367
+#: ../libgda/gda-query.c:1366
 #, c-format
 msgid "Error during query parsing (%s)"
 msgstr "Errorea kontsulta bat analizatzean (%s)"
 
-#: ../libgda/gda-query.c:1878
+#: ../libgda/gda-query.c:1879
 msgid "The query represented by a target must be a sub-query of the current query"
 msgstr ""
 "Helburu batek adierazitako kontsultak uneko kontsultaren azpikontsulta izan "
 "behar du"
 
-#: ../libgda/gda-query.c:1893
+#: ../libgda/gda-query.c:1894
 msgid "Queries which update data can only have one target"
 msgstr "Datuak eguneratzen dituzten kontsultek helburu bakar bat izan dezakete"
 
-#: ../libgda/gda-query.c:1903
+#: ../libgda/gda-query.c:1904
 msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr "Agregazio-kontsultek ezin dute izan helbururik, azpikontsultak bakarrik"
 
-#: ../libgda/gda-query.c:2760 ../testing/gda-author-dict-file.c:154
-#: ../testing/gda-author-dict-file.c:165 ../testing/gda-author-dict-file.c:227
-#: ../testing/gda-author-dict-file.c:233 ../testing/gda-diagnose.c:602
-#: ../testing/gda-test-models.c:151 ../testing/gda-test-models.c:178
-#: ../testing/gda-test-models.c:398 ../testing/gda-test-models.c:452
-#: ../testing/gda-test-models.c:459 ../testing/gda-test-models.c:477
-#: ../testing/gda-test-models.c:558 ../testing/gda-test-models.c:589
-#: ../testing/gda-test-sql.c:144 ../testing/gda-test-sql.c:171
-#: ../testing/gda-test-sql.c:392
+#: ../libgda/gda-query.c:2724
+msgid "No connection associated to query's dictionary"
+msgstr "Ez da konexiorik atxikitu kontsultaren hiztegiari"
+
+#: ../libgda/gda-query.c:2729
+msgid "Connection associated to query's dictionary is closed"
+msgstr "Kontsultaren hiztegiari atxikitutako konexioa itxi egin da"
+
+#: ../libgda/gda-query.c:2910 ../testing/gda-author-dict-file.c:184
+#: ../testing/gda-author-dict-file.c:195 ../testing/gda-author-dict-file.c:257
+#: ../testing/gda-author-dict-file.c:263 ../testing/gda-diagnose.c:624
+#: ../testing/gda-test-models.c:152 ../testing/gda-test-models.c:179
+#: ../testing/gda-test-models.c:394 ../testing/gda-test-models.c:410
+#: ../testing/gda-test-models.c:461 ../testing/gda-test-models.c:468
+#: ../testing/gda-test-models.c:486 ../testing/gda-test-models.c:567
+#: ../testing/gda-test-models.c:598 ../testing/gda-test-sql.c:144
+#: ../testing/gda-test-sql.c:171 ../testing/gda-test-sql.c:392
 msgid "Unknown error"
 msgstr "Errore ezezaguna"
 
-#: ../libgda/gda-query.c:3890
+#: ../libgda/gda-query.c:3406
+#, c-format
+msgid ""
+"While adding to a GdaQuery: field type '%s' is not supported by the "
+"connection's provider and may be rendered incorrectly"
+msgstr "GdaQuery bati gehitzean: konexioaren hornitzaileak ez du '%s' eremu mota onartzen, eta gaizki errendatuko da"
+
+#: ../libgda/gda-query.c:4028
 msgid "XML Tag is not <gda_query>"
 msgstr "XML etiketa ez da <gda_query>"
 
-#: ../libgda/gda-query.c:3906
+#: ../libgda/gda-query.c:4044
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "Kontsultza baten XML IDa QUxxx izan beharko luke (non xxx zenbakia den)"
 
-#: ../libgda/gda-query.c:4022
+#: ../libgda/gda-query.c:4166
 msgid "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 msgstr "<gda_query_target>eko 'entity_ref' eta 'table_name' atributuak falta dira"
 
-#: ../libgda/gda-query.c:4046
+#: ../libgda/gda-query.c:4190
 #, c-format
 msgid "Can't find field '%s'"
 msgstr "Ezin da '%s' eremua aurkitu"
 
-#: ../libgda/gda-query.c:4165
+#: ../libgda/gda-query.c:4309
 msgid "Problem loading <gda_query>"
 msgstr "Arazoak <gda_query> kargatzean"
 
-#: ../libgda/gda-query.c:4287
+#: ../libgda/gda-query.c:4431
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "Bi azpontsulta baino gehiago EXCEPT kontsulta batentzat"
 
-#: ../libgda/gda-query.c:4304
+#: ../libgda/gda-query.c:4448
 msgid "Query without any SQL code"
 msgstr "SQL koderik gabeko kontsulta"
 
-#: ../libgda/gda-query.c:4359
+#: ../libgda/gda-query.c:4503
 #, c-format
 msgid "Invalid parameter '%s'"
 msgstr "'%s' parametro baliogabea"
 
-#: ../libgda/gda-query.c:4365
+#: ../libgda/gda-query.c:4509
 msgid "Missing parameters"
 msgstr "Parametroak falta dira"
 
-#: ../libgda/gda-query.c:4439
+#: ../libgda/gda-query.c:4583
 #, c-format
 msgid "Query %s is not a selection query"
 msgstr "%s kontsulta ez da hautapen-kontsulta bat"
 
-#: ../libgda/gda-query.c:4471
+#: ../libgda/gda-query.c:4615
 msgid "No target defined to apply modifications"
 msgstr "Ez da helbururik definitu aldaketak aplikatzeko"
 
-#: ../libgda/gda-query.c:4479
+#: ../libgda/gda-query.c:4623
 msgid "More than one target defined to apply modifications"
 msgstr "Helburu bat baino gehiago definitu da aldaketak aplikatzeko"
 
-#: ../libgda/gda-query.c:4490
+#: ../libgda/gda-query.c:4634
 #, c-format
 msgid "Entity %s is not writable"
 msgstr "%s entitatean ezin da idatzi"
 
-#: ../libgda/gda-query.c:4509
+#: ../libgda/gda-query.c:4653
 msgid "Modification query field has incompatible type"
 msgstr "Aldatzeko kontsulta-eremuak mota bateraezina du"
 
-#: ../libgda/gda-query.c:4528
+#: ../libgda/gda-query.c:4672
 msgid "An insertion query can only have one sub-query"
 msgstr "Txertatze-kontsultak azpikontsulta bat bakarrik izan dezake"
 
-#: ../libgda/gda-query.c:4536
+#: ../libgda/gda-query.c:4680
 msgid "Insertion query fields incompatible with sub-query's fields"
 msgstr ""
 "Txertatze-kontsultaren eremuak ez dira bateragarriak azpikontsultaren "
 "eremuekin"
 
-#: ../libgda/gda-query.c:4554
+#: ../libgda/gda-query.c:4698
 msgid "Insertion query field has incompatible value assignment"
 msgstr ""
 "Txertatze-kontsultaren eremuak ez dira bateragarriak azpikontsultaren "
 "eremuekin"
 
-#: ../libgda/gda-query.c:4567
+#: ../libgda/gda-query.c:4711
 msgid "Insertion query can't have any conditions"
 msgstr "Txertatze-kontsultak ezin du baldintzarik eduki"
 
-#: ../libgda/gda-query.c:4582
+#: ../libgda/gda-query.c:4726
 msgid "Deletion query can't have any visible field"
 msgstr "Ezabatze-kontsultak ezin du eremu ikusgairik eduki"
 
-#: ../libgda/gda-query.c:4602
+#: ../libgda/gda-query.c:4746
 msgid "Update query field has incompatible value assignment"
 msgstr "Eguneratze-kontsultaren eremuko balio-esleipen bat bateraezina da"
 
-#: ../libgda/gda-query.c:4629
+#: ../libgda/gda-query.c:4773
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "Agregazio-motako kontsultak (UNION, etab.) ezin du helbururik eduki"
 
-#: ../libgda/gda-query.c:4637
+#: ../libgda/gda-query.c:4781
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "Agregazio-motako kontsultak (UNION, etab.) ezin du baldintzarik eduki"
 
-#: ../libgda/gda-query.c:5142
+#: ../libgda/gda-query.c:5286
 msgid "Can't correctly print the list of columns to use."
 msgstr "Ezin da erabiliko diren zutabeen zerrenda ongi inprimatu."
 
-#: ../libgda/gda-query.c:5292
+#: ../libgda/gda-query.c:5435
 msgid "Missing values"
 msgstr "Balioak falta dira"
 
-#: ../libgda/gda-query.c:5538
+#: ../libgda/gda-query.c:5681
 #, c-format
 msgid "Query '%s'"
 msgstr "'%s' kontsulta"
 
-#: ../libgda/gda-query.c:5540
+#: ../libgda/gda-query.c:5683
 msgid "Unnamed Query"
 msgstr "Kontsulta izengabea"
 
@@ -723,7 +941,7 @@ msgstr "Kontsulta izengabea"
 msgid "No join condition found in '%s'"
 msgstr "Ez da Join baldintza aurkitu '%s'(e)n"
 
-#: ../libgda/gda-query-condition.c:373 ../libgda/gda-query-field.c:325
+#: ../libgda/gda-query-condition.c:373 ../libgda/gda-query-field.c:293
 #, c-format
 msgid "Error parsing '%s'"
 msgstr "Errorea '%s' analizatzean"
@@ -829,20 +1047,20 @@ msgstr "Ezin da '%s' helburua aurkitu"
 msgid "Non-activated field"
 msgstr "Aktibatu gabeko eremua"
 
-#: ../libgda/gda-query-field.c:196
+#: ../libgda/gda-query-field.c:164
 msgid "Missing 'target' attribute in <gda_query_fall>"
 msgstr "<gda_query_fall>en 'target' atributua falta da"
 
-#: ../libgda/gda-query-field.c:240
+#: ../libgda/gda-query-field.c:208
 msgid "Missing Implementation in loading <gda_query_f*>"
 msgstr "Inplemetazioa falta da <gda_query_f*> kargatzean"
 
-#: ../libgda/gda-query-field.c:305
+#: ../libgda/gda-query-field.c:273
 #, c-format
 msgid "More than one field to parse in '%s'"
 msgstr "Eremu bat baino gehiago '%s'(e)n analizatzeko"
 
-#: ../libgda/gda-query-field.c:319
+#: ../libgda/gda-query-field.c:287
 #, c-format
 msgid "No field to parse in '%s'"
 msgstr "Ez dago eremurik '%s'(e)n analizatzeko"
@@ -894,12 +1112,12 @@ msgstr "<gda_query_fval>en beharrezko gda_type falta da"
 msgid "Value field '%s' does not have a value!"
 msgstr "'%s' balio-eremuak ez du baliorik"
 
-#: ../libgda/gda-query-field-value.c:1309
+#: ../libgda/gda-query-field-value.c:1304
 #, c-format
 msgid "Invalid parameter '%s' (value: %s)"
 msgstr "Okerreko '%s' parametroa (balioa: %s)"
 
-#: ../libgda/gda-query-field-value.c:1362
+#: ../libgda/gda-query-field-value.c:1355
 msgid "No specified value"
 msgstr "Ez da baliorik zehaztu"
 
@@ -1028,7 +1246,17 @@ msgstr "'%s' datu-mota ezezaguna"
 msgid "Data type must be specified when no default value is provided"
 msgstr "Datu-mota zehaztu behar da lehenetsitako baliorik ematen ez denean"
 
-#: ../libgda/gda-query-parsing.c:1746
+#: ../libgda/gda-query-parsing.c:1586
+#, c-format
+msgid "Data type '%s' can't be converted to a known type"
+msgstr "'%s' datu-mota ezin da mota ezagunera bihurtu"
+
+#: ../libgda/gda-query-parsing.c:1598
+#, c-format
+msgid "Value '%s' can't be converted to a known type"
+msgstr "'%s' balioa ezin da mota ezagunera bihurtu"
+
+#: ../libgda/gda-query-parsing.c:1760
 msgid "Can't set aggregate or function's arguments"
 msgstr "Ezin da agregazioa edo funtzioaren argumentuak ezarri"
 
@@ -1058,11 +1286,11 @@ msgstr ""
 msgid "Error loading data from <gda_query_target> node"
 msgstr "Errorea <gda_query_target> nodoaren datuak kargatzean"
 
-#: ../libgda/gda-query-target.c:904
+#: ../libgda/gda-query-target.c:916
 msgid "Don't know how to render target"
 msgstr "Ez daki nola errendatu helburua"
 
-#: ../libgda/gda-server-provider.c:428
+#: ../libgda/gda-server-provider.c:408
 #, c-format
 msgid "Provider does not support the '%s()' method"
 msgstr "Hornitzaileak ez du '%s()' metodoa onartzen"
@@ -1077,31 +1305,20 @@ msgstr "Agregazioa"
 #: ../libgda/gda-server-provider-extra.c:146
 #: ../libgda/gda-server-provider-extra.c:157
 #: ../libgda/gda-server-provider-extra.c:169
-#: ../providers/firebird/gda-firebird-provider.c:257
-#: ../providers/firebird/gda-firebird-provider.c:346
-#: ../providers/firebird/gda-firebird-provider.c:757
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:744
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:834
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:863
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:893
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:921
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:949
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1002
-#: ../providers/ldap/gda-ldap-provider.c:351
-#: ../providers/mdb/gda-mdb-provider.c:568
-#: ../providers/mdb/gda-mdb-provider.c:615
-#: ../providers/mdb/gda-mdb-provider.c:675
-#: ../providers/msql/gda-msql-provider.c:494
-#: ../providers/msql/gda-msql-provider.c:534
-#: ../providers/odbc/gda-odbc-provider.c:1050
-#: ../providers/odbc/gda-odbc-provider.c:1163
-#: ../providers/odbc/gda-odbc-provider.c:1272
-#: ../providers/odbc/gda-odbc-provider.c:1386
-#: ../providers/odbc/gda-odbc-provider.c:1428
-#: ../providers/odbc/gda-odbc-provider.c:1480
-#: ../providers/oracle/gda-oracle-provider.c:1920
-#: ../providers/oracle/gda-oracle-provider.c:1979
-#: ../providers/sybase/gda-sybase-provider.c:1125
+#: ../providers/firebird/gda-firebird-provider.c:258
+#: ../providers/firebird/gda-firebird-provider.c:355
+#: ../providers/firebird/gda-firebird-provider.c:762
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:746
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:837
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:866
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:896
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:924
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:952
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1005
+#: ../providers/ldap/gda-ldap-provider.c:350
+#: ../providers/oracle/gda-oracle-provider.c:1600
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
+#: ../providers/sybase/gda-sybase-provider.c:1126
 msgid "Owner"
 msgstr "Jabea"
 
@@ -1109,21 +1326,12 @@ msgstr "Jabea"
 #: ../libgda/gda-server-provider-extra.c:130
 #: ../libgda/gda-server-provider-extra.c:140
 #: ../libgda/gda-server-provider-extra.c:158
-#: ../providers/firebird/gda-firebird-provider.c:258
-#: ../providers/firebird/gda-firebird-provider.c:758
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:950
-#: ../providers/ldap/gda-ldap-provider.c:352
-#: ../providers/mdb/gda-mdb-provider.c:569
-#: ../providers/mdb/gda-mdb-provider.c:616
-#: ../providers/mdb/gda-mdb-provider.c:676
-#: ../providers/msql/gda-msql-provider.c:495
-#: ../providers/msql/gda-msql-provider.c:535
-#: ../providers/odbc/gda-odbc-provider.c:1164
-#: ../providers/odbc/gda-odbc-provider.c:1387
-#: ../providers/odbc/gda-odbc-provider.c:1481
-#: ../providers/oracle/gda-oracle-provider.c:1920
-#: ../providers/oracle/gda-oracle-provider.c:1979
-#: ../providers/sybase/gda-sybase-provider.c:1127
+#: ../providers/firebird/gda-firebird-provider.c:259
+#: ../providers/firebird/gda-firebird-provider.c:763
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:953
+#: ../providers/ldap/gda-ldap-provider.c:351
+#: ../providers/oracle/gda-oracle-provider.c:1600
+#: ../providers/sybase/gda-sybase-provider.c:1128
 msgid "Comments"
 msgstr "Iruzkinak"
 
@@ -1141,87 +1349,70 @@ msgstr "Sarrera-mota"
 #: ../libgda/gda-server-provider-extra.c:148
 #: ../libgda/gda-server-provider-extra.c:171
 #: ../libgda/gda-server-provider-extra.c:178
-#: ../providers/firebird/gda-firebird-provider.c:348
-#: ../providers/mdb/gda-mdb-provider.c:573
-#: ../providers/odbc/gda-odbc-provider.c:1168
-#: ../providers/odbc/gda-odbc-provider.c:1274
-#: ../providers/odbc/gda-odbc-provider.c:1430
-#: ../providers/odbc/gda-odbc-provider.c:1482
+#: ../providers/firebird/gda-firebird-provider.c:357
 msgid "Definition"
 msgstr "Definizioa"
 
 #: ../libgda/gda-server-provider-extra.c:93
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:779
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:781
 msgid "Database"
 msgstr "Datu-basea"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:97
-#: ../providers/firebird/gda-firebird-provider.c:640
-#: ../providers/mdb/gda-mdb-provider.c:510
-#: ../providers/odbc/gda-odbc-provider.c:974
+#: ../providers/firebird/gda-firebird-provider.c:637
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
 msgid "Field name"
 msgstr "Eremu-izena"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:98
-#: ../providers/firebird/gda-firebird-provider.c:641
-#: ../providers/mdb/gda-mdb-provider.c:511
-#: ../providers/msql/gda-msql-provider.c:586
-#: ../providers/odbc/gda-odbc-provider.c:975
+#: ../providers/firebird/gda-firebird-provider.c:638
+#: ../providers/msql/gda-msql-provider.c:610
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 msgid "Data type"
 msgstr "Datu-mota"
 
 #: ../libgda/gda-server-provider-extra.c:99
-#: ../providers/firebird/gda-firebird-provider.c:642
-#: ../providers/mdb/gda-mdb-provider.c:512
-#: ../providers/msql/gda-msql-provider.c:587
-#: ../providers/odbc/gda-odbc-provider.c:976
+#: ../providers/firebird/gda-firebird-provider.c:639
+#: ../providers/msql/gda-msql-provider.c:611
 msgid "Size"
 msgstr "Tamaina"
 
 #: ../libgda/gda-server-provider-extra.c:100
-#: ../providers/firebird/gda-firebird-provider.c:643
-#: ../providers/mdb/gda-mdb-provider.c:513
-#: ../providers/msql/gda-msql-provider.c:588
-#: ../providers/odbc/gda-odbc-provider.c:977
+#: ../providers/firebird/gda-firebird-provider.c:640
+#: ../providers/msql/gda-msql-provider.c:612
 msgid "Scale"
 msgstr "Eskala"
 
 #: ../libgda/gda-server-provider-extra.c:101
-#: ../providers/firebird/gda-firebird-provider.c:644
-#: ../providers/mdb/gda-mdb-provider.c:514
-#: ../providers/odbc/gda-odbc-provider.c:978
+#: ../providers/firebird/gda-firebird-provider.c:641
 msgid "Not null?"
 msgstr "Ez da null?"
 
 #: ../libgda/gda-server-provider-extra.c:102
-#: ../providers/firebird/gda-firebird-provider.c:645
-#: ../providers/mdb/gda-mdb-provider.c:515
-#: ../providers/msql/gda-msql-provider.c:590
-#: ../providers/odbc/gda-odbc-provider.c:979
+#: ../providers/firebird/gda-firebird-provider.c:642
+#: ../providers/msql/gda-msql-provider.c:614
 msgid "Primary key?"
 msgstr "Lehen mailako gakoa?"
 
 #: ../libgda/gda-server-provider-extra.c:103
-#: ../providers/firebird/gda-firebird-provider.c:646
-#: ../providers/mdb/gda-mdb-provider.c:516
-#: ../providers/msql/gda-msql-provider.c:591
-#: ../providers/odbc/gda-odbc-provider.c:980
+#: ../providers/firebird/gda-firebird-provider.c:643
+#: ../providers/msql/gda-msql-provider.c:615
 msgid "Unique index?"
 msgstr "Indize bakarra?"
 
 #: ../libgda/gda-server-provider-extra.c:104
-#: ../providers/firebird/gda-firebird-provider.c:647
-#: ../providers/mdb/gda-mdb-provider.c:517
-#: ../providers/msql/gda-msql-provider.c:592
-#: ../providers/odbc/gda-odbc-provider.c:981
+#: ../providers/firebird/gda-firebird-provider.c:644
+#: ../providers/msql/gda-msql-provider.c:616
 msgid "References"
 msgstr "Erreferentziak"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:105
-#: ../providers/firebird/gda-firebird-provider.c:648
-#: ../providers/mdb/gda-mdb-provider.c:518
-#: ../providers/msql/gda-msql-provider.c:593
-#: ../providers/odbc/gda-odbc-provider.c:982
+#: ../providers/firebird/gda-firebird-provider.c:645
+#: ../providers/msql/gda-msql-provider.c:617
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Default value"
 msgstr "Balio lehenetsia"
 
@@ -1230,12 +1421,13 @@ msgid "Extra attributes"
 msgstr "Atributu gehigarriak"
 
 #: ../libgda/gda-server-provider-extra.c:110
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:833
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:836
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 msgid "Index"
 msgstr "Indizea"
 
 #: ../libgda/gda-server-provider-extra.c:114
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:864
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:867
 msgid "Language"
 msgstr "Lengoaia"
 
@@ -1245,31 +1437,26 @@ msgstr "Izen-lekua"
 
 #: ../libgda/gda-server-provider-extra.c:122
 #: ../libgda/gda-server-provider-extra.c:145
-#: ../providers/firebird/gda-firebird-provider.c:345
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:835
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:892
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1001
-#: ../providers/odbc/gda-odbc-provider.c:1271
+#: ../providers/firebird/gda-firebird-provider.c:354
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:838
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:895
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1004
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:4
 msgid "Table"
 msgstr "Taula"
 
 #: ../libgda/gda-server-provider-extra.c:123
 #: ../libgda/gda-server-provider-extra.c:138
-#: ../providers/odbc/gda-odbc-provider.c:1479
 msgid "Sequence"
 msgstr "Sekuentzia"
 
 #: ../libgda/gda-server-provider-extra.c:127
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:862
-#: ../providers/mdb/gda-mdb-provider.c:566
-#: ../providers/odbc/gda-odbc-provider.c:1161
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:865
 msgid "Procedure"
 msgstr "Prozedura"
 
 #: ../libgda/gda-server-provider-extra.c:131
-#: ../providers/firebird/gda-firebird-provider.c:759
-#: ../providers/mdb/gda-mdb-provider.c:570
-#: ../providers/odbc/gda-odbc-provider.c:1165
+#: ../providers/firebird/gda-firebird-provider.c:764
 msgid "Return type"
 msgstr "Itzultze-mota"
 
@@ -1278,9 +1465,7 @@ msgid "Nb args"
 msgstr "Arg.-kop."
 
 #: ../libgda/gda-server-provider-extra.c:133
-#: ../providers/firebird/gda-firebird-provider.c:760
-#: ../providers/mdb/gda-mdb-provider.c:572
-#: ../providers/odbc/gda-odbc-provider.c:1167
+#: ../providers/firebird/gda-firebird-provider.c:765
 msgid "Args types"
 msgstr "Argumentu-motak"
 
@@ -1291,21 +1476,18 @@ msgstr "Abiarazlea"
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: ../libgda/gda-server-provider-extra.c:156
 #: ../libgda/gda-server-provider-extra.c:176
-#: ../providers/firebird/gda-firebird-provider.c:256
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:948
-#: ../providers/ldap/gda-ldap-provider.c:446
-#: ../providers/odbc/gda-odbc-provider.c:1385
-#: ../providers/sybase/gda-sybase-provider.c:1123
-#: ../testing/gda-diagnose.c:293
+#: ../providers/firebird/gda-firebird-provider.c:257
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:951
+#: ../providers/ldap/gda-ldap-provider.c:452
+#: ../providers/sybase/gda-sybase-provider.c:1124
+#: ../testing/gda-diagnose.c:316
 msgid "Type"
 msgstr "Mota"
 
 #: ../libgda/gda-server-provider-extra.c:159
-#: ../providers/firebird/gda-firebird-provider.c:259
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:951
-#: ../providers/msql/gda-msql-provider.c:536
-#: ../providers/odbc/gda-odbc-provider.c:1388
-#: ../providers/sybase/gda-sybase-provider.c:1129
+#: ../providers/firebird/gda-firebird-provider.c:260
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:954
+#: ../providers/sybase/gda-sybase-provider.c:1130
 msgid "GDA type"
 msgstr "GDA mota"
 
@@ -1321,11 +1503,18 @@ msgstr "Erabiltzailea"
 msgid "View"
 msgstr "Ikusi"
 
+#. Index fields
 #: ../libgda/gda-server-provider-extra.c:177
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
 msgid "Fields"
 msgstr "Eremuak"
 
 #: ../libgda/gda-server-provider-extra.c:179
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:15
+#: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:3
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:34
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:6
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:12
 msgid "Options"
 msgstr "Aukerak"
 
@@ -1348,37 +1537,20 @@ msgstr "Eskemako datu-ereduak okerreko zutabe-izena du: '%s' '%s'(r)en ordez"
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr "Eskemako datu-ereduak okerreko gda mota du: '%s' '%s'(r)en ordez"
 
-#: ../libgda/gda-util.c:178
+#: ../libgda/gda-util.c:240
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Ezin izan da analizatu '%s' SQL komandoa"
 
-#: ../libgda/gda-util.c:211
+#: ../libgda/gda-util.c:273
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Errorea %s irakurtzean: %s"
 
-#: ../libgda/gda-util.c:237
+#: ../libgda/gda-util.c:299
 #, c-format
 msgid "Could not create file %s"
 msgstr "Ezin izan da sortu %s fitxategia"
-
-#: ../libgda/gda-value.c:2164
-msgid "TRUE"
-msgstr "EGIAZKOA"
-
-#: ../libgda/gda-value.c:2166
-msgid "FALSE"
-msgstr "FALTSUA"
-
-#: ../libgda/gda-value.c:2252
-#, c-format
-msgid "(%s %p)"
-msgstr "(%s %p)"
-
-#: ../libgda/gda-value.c:2256
-msgid "NULL GObject"
-msgstr "NULL GObject"
 
 #: ../libgda/graph/gda-graph.c:646
 msgid "XML Tag is not <gda_graph>"
@@ -1396,19 +1568,19 @@ msgstr "<gda_graph>en 'type' atributu okerra"
 msgid "Missing ID attribute in <gda_graph>"
 msgstr "<gda_graph>en ID atributua falta da"
 
-#: ../libgda/graph/gda-graph-item.c:444
+#: ../libgda/graph/gda-graph-item.c:473
 msgid "XML Tag is not <gda_graph_item>"
 msgstr "XML etiketa ez da <gda_graph_item>"
 
-#: ../libgda/handlers/gda-handler-bin.c:117
+#: ../libgda/handlers/gda-handler-bin.c:118
 msgid "Binary handler"
 msgstr "Kudeatzaile bitarra"
 
-#: ../libgda/handlers/gda-handler-bin.c:123
+#: ../libgda/handlers/gda-handler-bin.c:124
 msgid "InternalBin"
 msgstr "Berneko bitarra"
 
-#: ../libgda/handlers/gda-handler-bin.c:124
+#: ../libgda/handlers/gda-handler-bin.c:125
 msgid "Binary representation"
 msgstr "Adierazpen bitarra"
 
@@ -1432,27 +1604,27 @@ msgstr "Barneko numerikoa"
 msgid "Numerical representation"
 msgstr "Zenbakizko datuen adierazpena"
 
-#: ../libgda/handlers/gda-handler-string.c:115
+#: ../libgda/handlers/gda-handler-string.c:116
 msgid "Strings handler"
 msgstr "Kate-kudeatzailea"
 
-#: ../libgda/handlers/gda-handler-string.c:120
+#: ../libgda/handlers/gda-handler-string.c:121
 msgid "InternalString"
 msgstr "Barneko katea"
 
-#: ../libgda/handlers/gda-handler-string.c:121
+#: ../libgda/handlers/gda-handler-string.c:122
 msgid "Strings representation"
 msgstr "Kate-adierazpena"
 
-#: ../libgda/handlers/gda-handler-time.c:141
+#: ../libgda/handlers/gda-handler-time.c:140
 msgid "Time and Date handler"
 msgstr "Orduen eta daten kudeatzailea"
 
-#: ../libgda/handlers/gda-handler-time.c:165
+#: ../libgda/handlers/gda-handler-time.c:164
 msgid "InternalTime"
 msgstr "Barneko denbora"
 
-#: ../libgda/handlers/gda-handler-time.c:166
+#: ../libgda/handlers/gda-handler-time.c:165
 msgid "Time, Date and TimeStamp representation"
 msgstr "Ordu, data eta data-zigiluaren adierazpena"
 
@@ -1468,32 +1640,82 @@ msgstr "Barneko mota"
 msgid "Gda type representation"
 msgstr "Gda motaren adierazpena"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:59 ../libsql/sql_parser.c:61
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:60 ../libsql/sql_parser.c:61
 #, c-format
 msgid "Parse error near `%s'"
 msgstr "Analisi-errorea honen inguruan: `%s'"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:61 ../libsql/sql_parser.c:63
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:62 ../libsql/sql_parser.c:63
 #, c-format
 msgid "Syntax error near `%s'"
 msgstr "Sintaxi-errorea honen inguruan: `%s'"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:148 ../libsql/sql_parser.c:387
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:150 ../libsql/sql_parser.c:387
 msgid "Empty query to parse"
 msgstr "Kontsulta hutsa analizatzeko"
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:1
+msgid "Character Set"
+msgstr "Karaktere-multzoa"
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:2
+msgid "Character set to be used on the connection"
+msgstr "Karaktere-multzoa konexioan erabiltzeko"
+
+#. DSN parameters
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:3
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:1
+#: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:1
+#: ../providers/msql/msql_specs_dsn.xml.in.h:1
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:14
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:1
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:1
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:1
+#: ../providers/bdb/bdb_specs_dsn.xml.in.h:3
+msgid "Database name"
+msgstr "Datu-basearen izena"
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:4
+msgid "Page Size"
+msgstr "Orri-tamaina"
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:5
+msgid "Page size to use on the database"
+msgstr "Orrialdearen tamaina datu-basean erabiltzeko"
+
+#. FIXME: pre-set values for the SQL_DIALECT values with human readable values
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:7
+msgid "SQL Dialect"
+msgstr "SQL dialektoa"
+
+#. FIXME: pre-set values for the SQL_DIALECT values with human readable values
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:9
+msgid "SQL dialect to use on the connection"
+msgstr "SQL dialektoa konexioan erabiltzeko"
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:10
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:21
+#: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:4
+#: ../providers/msql/msql_specs_dsn.xml.in.h:4
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:8
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:11
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:14
+msgid "The name of a database to connect to"
+msgstr "Datu-basearen izena berarekin konektatzeko"
 
 #: ../providers/firebird/gda-firebird-blob.c:162
 #: ../providers/firebird/gda-firebird-blob.c:208
 #: ../providers/firebird/gda-firebird-blob.c:255
-#: ../providers/firebird/gda-firebird-provider.c:845
-#: ../providers/firebird/gda-firebird-provider.c:962
-#: ../providers/firebird/gda-firebird-provider.c:989
-#: ../providers/firebird/gda-firebird-provider.c:1008
-#: ../providers/firebird/gda-firebird-provider.c:1044
-#: ../providers/firebird/gda-firebird-provider.c:1137
-#: ../providers/firebird/gda-firebird-provider.c:1232
-#: ../providers/firebird/gda-firebird-provider.c:1266
-#: ../providers/firebird/gda-firebird-provider.c:1304
+#: ../providers/firebird/gda-firebird-provider.c:850
+#: ../providers/firebird/gda-firebird-provider.c:967
+#: ../providers/firebird/gda-firebird-provider.c:994
+#: ../providers/firebird/gda-firebird-provider.c:1013
+#: ../providers/firebird/gda-firebird-provider.c:1049
+#: ../providers/firebird/gda-firebird-provider.c:1142
+#: ../providers/firebird/gda-firebird-provider.c:1237
+#: ../providers/firebird/gda-firebird-provider.c:1271
+#: ../providers/firebird/gda-firebird-provider.c:1309
 #: ../providers/firebird/gda-firebird-recordset.c:661
 #: ../providers/firebird/gda-firebird-recordset.c:881
 msgid "Invalid Firebird handle"
@@ -1523,39 +1745,38 @@ msgstr "Ezin da blob itxi"
 msgid "Blob is closed"
 msgstr "Blob itxi da"
 
-#: ../providers/firebird/gda-firebird-provider.c:657
-#: ../providers/firebird/gda-firebird-provider.c:664
-#: ../providers/msql/gda-msql-provider.c:606
-#: ../providers/msql/gda-msql-provider.c:612
-#: ../providers/mysql/gda-mysql-provider.c:1823
-#: ../providers/mysql/gda-mysql-provider.c:1831
-#: ../providers/mysql/gda-mysql-provider.c:1911
-#: ../providers/mysql/gda-mysql-provider.c:1919
+#: ../providers/firebird/gda-firebird-provider.c:654
+#: ../providers/firebird/gda-firebird-provider.c:661
+#: ../providers/msql/gda-msql-provider.c:630
+#: ../providers/msql/gda-msql-provider.c:636
+#: ../providers/mysql/gda-mysql-provider.c:1879
+#: ../providers/mysql/gda-mysql-provider.c:1887
+#: ../providers/mysql/gda-mysql-provider.c:1983
+#: ../providers/mysql/gda-mysql-provider.c:1991
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Taula-izena behar da, baina ez da zehaztu parametro-zerrendan"
 
 #. 5th the return type
 #. 6th the argument type
-#: ../providers/firebird/gda-firebird-provider.c:733
 #: ../providers/firebird/gda-firebird-provider.c:735
+#: ../providers/firebird/gda-firebird-provider.c:738
 msgid "UNKNOWN"
 msgstr "EZEZAGUNA"
 
-#: ../providers/firebird/gda-firebird-provider.c:756
-#: ../providers/mdb/gda-mdb-provider.c:567
+#: ../providers/firebird/gda-firebird-provider.c:761
 msgid "ID"
 msgstr "IDa"
 
-#: ../providers/firebird/gda-firebird-provider.c:761
+#: ../providers/firebird/gda-firebird-provider.c:766
 msgid "SQL"
 msgstr "SQL"
 
-#: ../providers/firebird/gda-firebird-provider.c:883
+#: ../providers/firebird/gda-firebird-provider.c:888
 msgid "No database specified"
 msgstr "Ez da datu-baserik zehaztu"
 
-#: ../providers/firebird/gda-firebird-provider.c:1272
-#: ../providers/firebird/gda-firebird-provider.c:1310
+#: ../providers/firebird/gda-firebird-provider.c:1277
+#: ../providers/firebird/gda-firebird-provider.c:1315
 msgid "Invalid transaction handle"
 msgstr "Transakzio-helduleku baliogabea"
 
@@ -1580,7 +1801,106 @@ msgstr "Firebird-en eremuko balioa ezezaguna.\n"
 msgid "Provider for Firebird databases"
 msgstr "Firebird datu-baseen hornitzailea"
 
-#: ../providers/freetds/gda-freetds-provider.c:199
+#. Connection parameters
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:2
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:9
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:2
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:2
+msgid "Database server"
+msgstr "Datu-base zerbitzaria"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:3
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:3
+msgid "Database server IP adress"
+msgstr "Datu-base zerbitzariaren IP helbidea"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:4
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:17
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:3
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:4
+msgid "Database server port"
+msgstr "Datu-base zerbitzariaren ataka"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:5
+msgid "Dump Configuration File"
+msgstr "Irauli konfigurazioko fitxategia"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:6
+msgid "Dump File"
+msgstr "Irauli fitxategia"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:7
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:5
+msgid "Enable Sybase"
+msgstr "Gaitu Sybase"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:8
+#: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:7
+msgid "Extra connection options"
+msgstr "Konexio-aukera gehigarriak"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:9
+msgid "File for TDS protocol dumps"
+msgstr "Fitxategia TDS protokoloa iraultzeko"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:10
+msgid "File for TDS protocol dumps configuration"
+msgstr "TDS protokoloa iraultzeko konfigurazioaren fitxategia"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:11
+msgid "FreeTDS Config File"
+msgstr "FreeTDS konfigurazioko fitxategia"
+
+#. Connection parameters
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:12
+#: ../providers/msql/msql_specs_dsn.xml.in.h:3
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:27
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:8
+msgid "Host which has the database server running"
+msgstr "Ostalaria, datu-base zerbitzaria exekutatzen ari dena"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:13
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:9
+msgid "IP adress of the host which has the database server running"
+msgstr "Ostalariaren IP helbidea, datu-base zerbitzaria exekutatzen ari dena"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:14
+msgid "Location of the FreeTDS config file"
+msgstr "FreeTDS konfigurazioko fitxategiaren kokalekua"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:16
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:8
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:39
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:7
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:13
+msgid "Port"
+msgstr "Ataka"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:17
+msgid "TDS Major Version"
+msgstr "TDS bertsio nagusia"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:18
+msgid "TDS Minor Version"
+msgstr "TDS bertsioa lagungarria"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:19
+msgid "TDS protocol major version"
+msgstr "TDS protokoloaren bertsio nagusia"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:20
+msgid "TDS protocol minor version"
+msgstr "TDS protokoloaren bertsio lagungarria"
+
+#: ../providers/freetds/gda-freetds-provider.c:202
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -1588,53 +1908,53 @@ msgstr ""
 "Konexioa abortatuta. Gutxienez ostalaria, erabiltzaile-izena eta pasahitza "
 "eman behar dituzu DSN 'QUERY=;USER=;PASSWORD='-ekin."
 
-#: ../providers/freetds/gda-freetds-provider.c:212
+#: ../providers/freetds/gda-freetds-provider.c:215
 msgid "Error creating message container."
 msgstr "Errorea mezu-edukiontzia sortzean."
 
-#: ../providers/freetds/gda-freetds-provider.c:219
+#: ../providers/freetds/gda-freetds-provider.c:222
 msgid "Error creating error container."
 msgstr "Errorea errore-edukiontzia sortzean."
 
-#: ../providers/freetds/gda-freetds-provider.c:260
-#: ../providers/freetds/gda-freetds-provider.c:262
+#: ../providers/freetds/gda-freetds-provider.c:263
+#: ../providers/freetds/gda-freetds-provider.c:265
 msgid "Allocating tds context failed."
 msgstr "Huts egin du tds testuingurua esleitzean."
 
-#: ../providers/freetds/gda-freetds-provider.c:277
-#: ../providers/freetds/gda-freetds-provider.c:279
+#: ../providers/freetds/gda-freetds-provider.c:280
+#: ../providers/freetds/gda-freetds-provider.c:282
 msgid "Allocating tds socket failed."
 msgstr "Huts egin du tds socket-a esleitzean."
 
 #. gda_freetds_free_connection_data (tds_cnc);
-#: ../providers/freetds/gda-freetds-provider.c:285
-#: ../providers/freetds/gda-freetds-provider.c:287
-#: ../providers/freetds/gda-freetds-provider.c:294
-#: ../providers/freetds/gda-freetds-provider.c:296
+#: ../providers/freetds/gda-freetds-provider.c:288
+#: ../providers/freetds/gda-freetds-provider.c:290
+#: ../providers/freetds/gda-freetds-provider.c:297
+#: ../providers/freetds/gda-freetds-provider.c:299
 msgid "Establishing connection failed."
 msgstr "Huts egin du konexioa ezartzean."
 
-#: ../providers/freetds/gda-freetds-provider.c:310
-#: ../providers/freetds/gda-freetds-provider.c:311
+#: ../providers/freetds/gda-freetds-provider.c:313
+#: ../providers/freetds/gda-freetds-provider.c:314
 msgid "Failed getting connection info."
 msgstr "Hutz egin du konexioaren datuak  lortzean."
 
-#: ../providers/freetds/gda-freetds-provider.c:799
-#: ../providers/freetds/gda-freetds-provider.c:800
+#: ../providers/freetds/gda-freetds-provider.c:802
+#: ../providers/freetds/gda-freetds-provider.c:803
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Kontsultak ez du lortu execute_cmd() egitea."
 
-#: ../providers/freetds/gda-freetds-provider.c:813
-#: ../providers/freetds/gda-freetds-provider.c:815
+#: ../providers/freetds/gda-freetds-provider.c:816
+#: ../providers/freetds/gda-freetds-provider.c:818
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Ustekabeko emaitza-tokenak hemen: execute_cmd()."
 
-#: ../providers/freetds/gda-freetds-provider.c:823
-#: ../providers/freetds/gda-freetds-provider.c:824
+#: ../providers/freetds/gda-freetds-provider.c:826
+#: ../providers/freetds/gda-freetds-provider.c:827
 msgid "Unexpected return in execute_cmd()."
 msgstr "Ustekabeko emaitza hemen: execute_cmd()."
 
-#: ../providers/freetds/gda-freetds-provider.c:1084
+#: ../providers/freetds/gda-freetds-provider.c:1086
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -1643,10 +1963,10 @@ msgstr ""
 "%d mez., %d maila, %d egoera, %s zerbitzaria, %d lerroa\n"
 "%s\n"
 
-#: ../providers/freetds/gda-freetds-provider.c:1103
-#: ../providers/freetds/utils.c:44 ../providers/oracle/utils.c:74
+#: ../providers/freetds/gda-freetds-provider.c:1105
+#: ../providers/freetds/utils.c:44 ../providers/oracle/utils.c:76
 #: ../providers/postgres/utils.c:71 ../providers/postgres/utils.c:81
-#: ../providers/sybase/gda-sybase-provider.c:790
+#: ../providers/sybase/gda-sybase-provider.c:791
 #: ../providers/sybase/gda-sybase-recordset.c:500
 #: ../providers/sybase/gda-sybase-recordset.c:523
 #: ../providers/sybase/gda-sybase-recordset.c:581
@@ -1681,48 +2001,48 @@ msgstr "Ustekabeko freetds emaitza-kodea hemen: tds_process_result_tokens\n"
 msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "TDSn oinarritutako datu-baseen hornitzailea (FreeTDS erabiliz)"
 
-#: ../providers/freetds/utils.c:40 ../providers/oracle/utils.c:67
+#: ../providers/freetds/utils.c:40 ../providers/oracle/utils.c:70
 #: ../providers/postgres/utils.c:80 ../providers/sybase/utils.c:535
 msgid "NO DESCRIPTION"
 msgstr "AZALPENIK GABE"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:154
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:156
 msgid "Could not allocate environment handle.\n"
 msgstr "Ezin izan da esleitu inguruneko heldulekua.\n"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:213
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:215
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr ""
 "SQLGetInfo ez da onartzen. Ondorioz, IBM DB2 hornitzaileak ez du "
 "funtzionatuko.\n"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:452
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:582
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:690
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:765
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:454
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:584
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:692
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:767
 msgid "Invalid IBM DB2 handle"
 msgstr "IBM DB2 helduleku baliogabea"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:743 ../testing/gda-diagnose.c:355
-#: ../testing/gda-diagnose.c:440
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:745 ../testing/gda-diagnose.c:378
+#: ../testing/gda-diagnose.c:462
 msgid "Function"
 msgstr "Funtzioa"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:895
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:923
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1004
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:898
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:926
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1007
 msgid "SQL Definition"
 msgstr "SQL definizioa"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:920
-#: ../providers/oracle/gda-oracle-provider.c:2231
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:923
+#: ../providers/oracle/gda-oracle-provider.c:1904
 msgid "Triggers"
 msgstr "Abiarazleak"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:976
-#: ../providers/oracle/gda-oracle-provider.c:1848
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:979
+#: ../providers/oracle/gda-oracle-provider.c:1462
 msgid "Users"
 msgstr "Erabiltzaileak"
 
@@ -1738,19 +2058,19 @@ msgstr "[Onartu gabeko datuak]"
 msgid "Provider for IBMDB2 databases"
 msgstr "IBMDB2 datu-baseen hornitzailea"
 
-#: ../providers/ldap/gda-ldap-provider.c:280
-#: ../providers/ldap/gda-ldap-provider.c:516
-#: ../providers/ldap/gda-ldap-provider.c:545
-#: ../providers/ldap/gda-ldap-provider.c:574
-#: ../providers/ldap/gda-ldap-provider.c:616
+#: ../providers/ldap/gda-ldap-provider.c:279
+#: ../providers/ldap/gda-ldap-provider.c:522
+#: ../providers/ldap/gda-ldap-provider.c:551
+#: ../providers/ldap/gda-ldap-provider.c:580
+#: ../providers/ldap/gda-ldap-provider.c:622
 #: ../providers/ldap/gda-ldap-recordset.c:59
 #: ../providers/ldap/gda-ldap-recordset.c:177
 msgid "Invalid LDAP handle"
 msgstr "LDAP helduleku baliogabea"
 
 #: ../providers/ldap/gda-ldap-recordset.c:70
-#: ../providers/mysql/gda-mysql-recordset.c:228
-#: ../providers/mysql/gda-mysql-recordset.c:350
+#: ../providers/mysql/gda-mysql-recordset.c:242
+#: ../providers/mysql/gda-mysql-recordset.c:364
 #: ../providers/postgres/gda-postgres-recordset.c:197
 #: ../providers/postgres/gda-postgres-recordset.c:571
 msgid "Row number out of range"
@@ -1758,118 +2078,143 @@ msgstr "Errenkada-zenbakia barrutitik kanpo"
 
 #: ../providers/ldap/gda-ldap-recordset.c:283
 #: ../providers/msql/gda-msql-recordset.c:203
-#: ../providers/mysql/gda-mysql-recordset.c:414
-#: ../providers/oracle/gda-oracle-recordset.c:470
+#: ../providers/mysql/gda-mysql-recordset.c:428
+#: ../providers/oracle/gda-oracle-recordset.c:473
 #: ../providers/postgres/gda-postgres-recordset.c:240
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Zutabe-kopuru baliogabea duen errenkada bat sartzen saiatu zara"
 
 #: ../providers/ldap/gda-ldap-recordset.c:298
 #: ../providers/msql/gda-msql-recordset.c:215
-#: ../providers/oracle/gda-oracle-recordset.c:485
+#: ../providers/oracle/gda-oracle-recordset.c:488
 msgid "Could not retrieve column's information"
 msgstr "Ezin izan da eskuratu zutabearen informazioa"
 
 #: ../providers/ldap/gda-ldap-recordset.c:316
 #: ../providers/msql/gda-msql-recordset.c:230
-#: ../providers/oracle/gda-oracle-recordset.c:503
+#: ../providers/oracle/gda-oracle-recordset.c:506
 msgid "Could not retrieve column's value"
 msgstr "Ezin izan da eskuratu zutabearen balioa"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
+msgid "Authentication Method"
+msgstr "Autentifikazio metodoa"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
+msgid "Authentication method to use for connecting"
+msgstr "Autentifikazio metodoa konexioan erabiltzeko"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:3
+msgid "Bind Domain"
+msgstr "Lotura domeinua"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
+#: ../providers/msql/msql_specs_dsn.xml.in.h:2
+msgid "Host Name"
+msgstr "Ostalari-izena"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
+msgid "Host name of the LDAP server"
+msgstr "LDAP zerbitzariaren ostalari-izena"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
+msgid "LDAP Flags"
+msgstr "LDAP banderak"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:7
+msgid "LDAP bind domain to use for authentication"
+msgstr "LDAP lotura-domeinua autentifikazioan erabiltzeko"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:9
+msgid "Port to use for connecting to the LDAP server"
+msgstr "Ataka LDAP zerbitzariarekin konektatzeko"
 
 #: ../providers/ldap/libmain.c:43
 msgid "Provider for LDAP directory"
 msgstr "LDAP direktorioaren hornitzailea"
 
-#: ../providers/mdb/gda-mdb-provider.c:227
+#: ../providers/mdb/gda-mdb-provider.c:229
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr "Datu-base baten FITXATEGI-IZENA zehaztu behar da konexio-katean"
 
-#: ../providers/mdb/gda-mdb-provider.c:236
-#: ../providers/xbase/gda-xbase-provider.c:246
+#: ../providers/mdb/gda-mdb-provider.c:238
+#: ../providers/xbase/gda-xbase-provider.c:245
 #, c-format
 msgid "Could not open file %s"
 msgstr "%s fitxategia ezin izan da ireki"
 
-#: ../providers/mdb/gda-mdb-provider.c:260
-#: ../providers/mdb/gda-mdb-provider.c:290
-#: ../providers/mdb/gda-mdb-provider.c:312
-#: ../providers/mdb/gda-mdb-provider.c:364
-#: ../providers/mdb/gda-mdb-provider.c:710
-#: ../providers/mdb/gda-mdb-provider.c:746
+#: ../providers/mdb/gda-mdb-provider.c:262
+#: ../providers/mdb/gda-mdb-provider.c:292
+#: ../providers/mdb/gda-mdb-provider.c:314
+#: ../providers/mdb/gda-mdb-provider.c:366
+#: ../providers/mdb/gda-mdb-provider.c:719
+#: ../providers/mdb/gda-mdb-provider.c:755
 msgid "Invalid MDB handle"
 msgstr "MDB helduleku baliogabea"
 
-#: ../providers/mdb/gda-mdb-provider.c:426
-#: ../providers/mdb/gda-mdb-provider.c:436
-#: ../providers/mdb/gda-mdb-provider.c:446
+#: ../providers/mdb/gda-mdb-provider.c:428
+#: ../providers/mdb/gda-mdb-provider.c:438
+#: ../providers/mdb/gda-mdb-provider.c:448
 msgid "Transactions not supported in MDB provider"
 msgstr "Transakziorik ez da onartzen MDB hornitzailean"
 
-#: ../providers/mdb/gda-mdb-provider.c:571
-msgid "# of args"
-msgstr "Argumentu-kopurua"
-
-#: ../providers/mdb/gda-mdb-provider.c:677
-msgid "GDA Type"
-msgstr "GDA mota"
-
-#: ../providers/mdb/gda-mdb-provider.c:679
+#: ../providers/mdb/gda-mdb-provider.c:688
 msgid "Boolean type"
 msgstr "Boolear mota"
 
-#: ../providers/mdb/gda-mdb-provider.c:680
+#: ../providers/mdb/gda-mdb-provider.c:689
 msgid "1-byte integers"
 msgstr "byte 1eko osoko zenbakiak"
 
-#: ../providers/mdb/gda-mdb-provider.c:681
+#: ../providers/mdb/gda-mdb-provider.c:690
 msgid "Double precision values"
 msgstr "Doitasun bikoitzeko balioak"
 
-#: ../providers/mdb/gda-mdb-provider.c:682
+#: ../providers/mdb/gda-mdb-provider.c:691
 msgid "Single precision values"
 msgstr "Doitasun soileko balioak"
 
-#: ../providers/mdb/gda-mdb-provider.c:683
+#: ../providers/mdb/gda-mdb-provider.c:692
 msgid "32-bit integers"
 msgstr "32 biteko osoko zenbakiak"
 
-#: ../providers/mdb/gda-mdb-provider.c:684
+#: ../providers/mdb/gda-mdb-provider.c:693
 msgid "64-bit integers"
 msgstr "64 biteko osoko zenbakiak"
 
-#: ../providers/mdb/gda-mdb-provider.c:685
+#: ../providers/mdb/gda-mdb-provider.c:694
 msgid "Variable length character strings"
 msgstr "Luzera aldakorreko karaktere-kateak"
 
-#: ../providers/mdb/gda-mdb-provider.c:686
+#: ../providers/mdb/gda-mdb-provider.c:695
 msgid "Money amounts"
 msgstr "Diru-kopuruak"
 
-#: ../providers/mdb/gda-mdb-provider.c:687
+#: ../providers/mdb/gda-mdb-provider.c:696
 msgid "OLE object"
 msgstr "OLE objektua"
 
-#: ../providers/mdb/gda-mdb-provider.c:688
+#: ../providers/mdb/gda-mdb-provider.c:697
 msgid "Replication ID"
 msgstr "Erreplikazio IDa"
 
-#: ../providers/mdb/gda-mdb-provider.c:689
+#: ../providers/mdb/gda-mdb-provider.c:698
 msgid "Date/time value"
 msgstr "Data/orduaren balioa"
 
-#: ../providers/mdb/gda-mdb-provider.c:690
+#: ../providers/mdb/gda-mdb-provider.c:699
 msgid "Character strings"
 msgstr "Karaktere-kateak"
 
 #. end unsafe
-#: ../providers/mdb/gda-mdb-provider.c:757
+#: ../providers/mdb/gda-mdb-provider.c:766
 #, c-format
 msgid "Could not parse '%s' command"
 msgstr "'%s' komandoa ezin izan da analizatu"
 
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
-#: ../providers/mdb/gda-mdb-provider.c:764
+#: ../providers/mdb/gda-mdb-provider.c:773
 #, c-format
 msgid "Got no result for '%s' command"
 msgstr "Ez da emaitzarik lortu '%s' komandoarentzat"
@@ -1883,42 +2228,49 @@ msgstr "%s taula ez da aurkitu"
 msgid "Provider for Microsoft Access files"
 msgstr "Microsoft Access fitxategien hornitzailea"
 
+#: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:1
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:3
+msgid "File Name"
+msgstr "Fitxategi-izena"
+
+#: ../providers/mdb/mdb_specs_dsn.xml.in.h:2
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:4
+msgid "Full path of the file containing the database"
+msgstr "Datu-basea duen fitxategiaren bide-izen osoa"
+
 #: ../providers/msql/gda-msql-libmain.c:40
 msgid "Provider for Hughes Technologies mSQL databases"
 msgstr "Hughes Technologies-en mSQL datu-baseen hornitzailea"
 
-#: ../providers/msql/gda-msql-provider.c:266
-#: ../providers/msql/gda-msql-provider.c:310
-#: ../providers/msql/gda-msql-provider.c:331
-#: ../providers/msql/gda-msql-provider.c:600
+#: ../providers/msql/gda-msql-provider.c:268
+#: ../providers/msql/gda-msql-provider.c:312
+#: ../providers/msql/gda-msql-provider.c:333
+#: ../providers/msql/gda-msql-provider.c:624
 #: ../providers/msql/gda-msql-recordset.c:51
 #: ../providers/msql/gda-msql-recordset.c:341
 msgid "Invalid mSQL handle"
 msgstr "mSQL helduleku baliogabea"
 
-#: ../providers/msql/gda-msql-provider.c:357
+#: ../providers/msql/gda-msql-provider.c:359
 msgid "mSQL allows database creation only through the msqladmin tool."
 msgstr "msqladmin tresnarekin bakarrik sor daitezke datu-baseak mSQL-n."
 
-#: ../providers/msql/gda-msql-provider.c:371
+#: ../providers/msql/gda-msql-provider.c:373
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr "msqladmin tresnarekin bakarrik jaregin daitezke datu-baseak mSQL-n."
 
-#: ../providers/msql/gda-msql-provider.c:416
-#: ../providers/msql/gda-msql-provider.c:430
-#: ../providers/msql/gda-msql-provider.c:444
+#: ../providers/msql/gda-msql-provider.c:418
+#: ../providers/msql/gda-msql-provider.c:432
+#: ../providers/msql/gda-msql-provider.c:446
 msgid "mSQL doesn't support transactions."
 msgstr "mSQL-k ez du onartzen transakziorik."
 
-#: ../providers/msql/gda-msql-provider.c:533
-msgid "Title"
-msgstr "Titulua"
-
-#: ../providers/msql/gda-msql-provider.c:585
+#: ../providers/msql/gda-msql-provider.c:609
 msgid "Field Name"
 msgstr "Eremu-izena"
 
-#: ../providers/msql/gda-msql-provider.c:589
+#: ../providers/msql/gda-msql-provider.c:613
 msgid "Not null"
 msgstr "Ez da null"
 
@@ -1926,127 +2278,127 @@ msgstr "Ez da null"
 msgid "Row number out of bounds"
 msgstr "Errenkada-zenbakia mugaz kanpo"
 
-#: ../providers/mysql/gda-mysql-provider.c:275
+#: ../providers/mysql/gda-mysql-provider.c:276
 msgid "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
 msgstr "Ezin duzu UNIX SOCKET bat eman, OSTALARI edo ATAKA bat ere eman baduzu. "
 
-#: ../providers/mysql/gda-mysql-provider.c:412
-#: ../providers/mysql/gda-mysql-provider.c:1814
-#: ../providers/mysql/gda-mysql-provider.c:1902
-#: ../providers/mysql/gda-mysql-recordset.c:217
-#: ../providers/mysql/gda-mysql-recordset.c:290
-#: ../providers/mysql/gda-mysql-recordset.c:344
-#: ../providers/mysql/gda-mysql-recordset.c:397
-#: ../providers/mysql/gda-mysql-recordset.c:525
-#: ../providers/mysql/gda-mysql-recordset.c:684
-#: ../providers/mysql/gda-mysql-recordset.c:685
+#: ../providers/mysql/gda-mysql-provider.c:413
+#: ../providers/mysql/gda-mysql-provider.c:1870
+#: ../providers/mysql/gda-mysql-provider.c:1974
+#: ../providers/mysql/gda-mysql-recordset.c:231
+#: ../providers/mysql/gda-mysql-recordset.c:304
+#: ../providers/mysql/gda-mysql-recordset.c:358
+#: ../providers/mysql/gda-mysql-recordset.c:411
+#: ../providers/mysql/gda-mysql-recordset.c:539
+#: ../providers/mysql/gda-mysql-recordset.c:698
+#: ../providers/mysql/gda-mysql-recordset.c:699
 msgid "Invalid MySQL handle"
 msgstr "MySQL helduleku baliogabea"
 
-#: ../providers/mysql/gda-mysql-provider.c:428
-#: ../providers/mysql/gda-mysql-provider.c:539
-#: ../providers/mysql/gda-mysql-provider.c:562
-#: ../providers/mysql/gda-mysql-provider.c:722
-#: ../providers/mysql/gda-mysql-provider.c:754
-#: ../providers/mysql/gda-mysql-provider.c:796
-#: ../providers/mysql/gda-mysql-provider.c:935
-#: ../providers/mysql/gda-mysql-provider.c:974
-#: ../providers/mysql/gda-mysql-provider.c:1071
-#: ../providers/mysql/gda-mysql-provider.c:1139
-#: ../providers/mysql/gda-mysql-provider.c:1162
-#: ../providers/mysql/gda-mysql-provider.c:1219
-#: ../providers/mysql/gda-mysql-provider.c:1252
-#: ../providers/mysql/gda-mysql-provider.c:2094
+#: ../providers/mysql/gda-mysql-provider.c:429
+#: ../providers/mysql/gda-mysql-provider.c:540
+#: ../providers/mysql/gda-mysql-provider.c:563
+#: ../providers/mysql/gda-mysql-provider.c:723
+#: ../providers/mysql/gda-mysql-provider.c:755
+#: ../providers/mysql/gda-mysql-provider.c:797
+#: ../providers/mysql/gda-mysql-provider.c:934
+#: ../providers/mysql/gda-mysql-provider.c:973
+#: ../providers/mysql/gda-mysql-provider.c:1070
+#: ../providers/mysql/gda-mysql-provider.c:1138
+#: ../providers/mysql/gda-mysql-provider.c:1161
+#: ../providers/mysql/gda-mysql-provider.c:1218
+#: ../providers/mysql/gda-mysql-provider.c:1251
+#: ../providers/mysql/gda-mysql-provider.c:2280
 msgid "Invalid MYSQL handle"
 msgstr "MYSQL helduleku baliogabea"
 
-#: ../providers/mysql/gda-mysql-provider.c:668
-#: ../providers/postgres/gda-postgres-provider.c:938
+#: ../providers/mysql/gda-mysql-provider.c:669
+#: ../providers/postgres/gda-postgres-provider.c:928
 msgid "Missing parameter 'DATABASE'"
 msgstr "'DATABASE' parametroa falta da"
 
-#: ../providers/mysql/gda-mysql-provider.c:697
-#: ../providers/postgres/gda-postgres-provider.c:992
-#: ../providers/sqlite/gda-sqlite-provider.c:597
+#: ../providers/mysql/gda-mysql-provider.c:698
+#: ../providers/postgres/gda-postgres-provider.c:982
+#: ../providers/sqlite/gda-sqlite-provider.c:596
 msgid "Method not handled by this provider"
 msgstr "Hornitzaile honek ez du metodoa onartzen"
 
-#: ../providers/mysql/gda-mysql-provider.c:1167
-#: ../providers/mysql/gda-mysql-provider.c:1224
-#: ../providers/mysql/gda-mysql-provider.c:1257
-#: ../providers/oracle/gda-oracle-provider.c:889
-#: ../providers/oracle/gda-oracle-provider.c:973
-#: ../providers/oracle/gda-oracle-provider.c:1034
-#: ../providers/postgres/gda-postgres-provider.c:1384
-#: ../providers/sqlite/gda-sqlite-provider.c:696
+#: ../providers/mysql/gda-mysql-provider.c:1166
+#: ../providers/mysql/gda-mysql-provider.c:1223
+#: ../providers/mysql/gda-mysql-provider.c:1256
+#: ../providers/oracle/gda-oracle-provider.c:890
+#: ../providers/oracle/gda-oracle-provider.c:974
+#: ../providers/oracle/gda-oracle-provider.c:1035
+#: ../providers/postgres/gda-postgres-provider.c:1374
+#: ../providers/sqlite/gda-sqlite-provider.c:695
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transakziorik ez da onartzen soilik irakurtzeko moduan"
 
-#: ../providers/mysql/gda-mysql-recordset.c:297
+#: ../providers/mysql/gda-mysql-recordset.c:311
 #: ../providers/bdb/gda-bdb-recordset.c:113
 #, c-format
 msgid "Row number out of range 0 - %d"
 msgstr "Errenkada-zenbakia 0 - %d barrutitik kanpo"
 
-#: ../providers/mysql/gda-mysql-recordset.c:356
+#: ../providers/mysql/gda-mysql-recordset.c:370
 #: ../providers/postgres/gda-postgres-recordset.c:577
 #: ../providers/bdb/gda-bdb-recordset.c:175
 msgid "Column number out of range"
 msgstr "Zutabe-zenbakia barrutitik kanpo"
 
-#: ../providers/mysql/gda-mysql-recordset.c:407
-#: ../providers/mysql/gda-mysql-recordset.c:544
-#: ../providers/mysql/gda-mysql-recordset.c:546
+#: ../providers/mysql/gda-mysql-recordset.c:421
+#: ../providers/mysql/gda-mysql-recordset.c:558
+#: ../providers/mysql/gda-mysql-recordset.c:560
 msgid "Table name could not be guessed"
 msgstr "Taula-izena ezin izan da asmatu."
 
-#: ../providers/mysql/gda-mysql-recordset.c:429
-#: ../providers/mysql/gda-mysql-recordset.c:435
-#: ../providers/mysql/gda-mysql-recordset.c:561
-#: ../providers/mysql/gda-mysql-recordset.c:563
-#: ../providers/mysql/gda-mysql-recordset.c:569
+#: ../providers/mysql/gda-mysql-recordset.c:443
+#: ../providers/mysql/gda-mysql-recordset.c:449
+#: ../providers/mysql/gda-mysql-recordset.c:575
+#: ../providers/mysql/gda-mysql-recordset.c:577
+#: ../providers/mysql/gda-mysql-recordset.c:583
 msgid "Can not synchronize array with MySQL result set"
 msgstr "Ezin da array-a MySQLko emaitzen multzoarekin sinkronizatu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:496
+#: ../providers/mysql/gda-mysql-recordset.c:510
 msgid "Can not append row to data model"
 msgstr "Ezin da errenkada datu-ereduari erantsi"
 
-#: ../providers/mysql/gda-mysql-recordset.c:535
-#: ../providers/mysql/gda-mysql-recordset.c:537
-#: ../providers/mysql/gda-mysql-recordset.c:695
-#: ../providers/mysql/gda-mysql-recordset.c:697
+#: ../providers/mysql/gda-mysql-recordset.c:549
+#: ../providers/mysql/gda-mysql-recordset.c:551
+#: ../providers/mysql/gda-mysql-recordset.c:709
+#: ../providers/mysql/gda-mysql-recordset.c:711
 #: ../providers/postgres/gda-postgres-recordset.c:330
 #: ../providers/postgres/gda-postgres-recordset.c:430
 msgid "Given row doesn't belong to the model."
 msgstr "Adierazitako errenkada ez dagokio ereduari."
 
-#: ../providers/mysql/gda-mysql-recordset.c:621
-#: ../providers/mysql/gda-mysql-recordset.c:623
+#: ../providers/mysql/gda-mysql-recordset.c:635
+#: ../providers/mysql/gda-mysql-recordset.c:637
 #: ../providers/postgres/gda-postgres-recordset.c:369
 msgid "Model doesn't have at least one unique key."
 msgstr "Ereduak ez dauka gutxienez gako bakar bat."
 
-#: ../providers/mysql/gda-mysql-recordset.c:651
-#: ../providers/mysql/gda-mysql-recordset.c:653
+#: ../providers/mysql/gda-mysql-recordset.c:665
+#: ../providers/mysql/gda-mysql-recordset.c:667
 msgid "Can not remove row from data model"
 msgstr "Ezin da errenkada datu-eredutik kendu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:704
-#: ../providers/mysql/gda-mysql-recordset.c:706
+#: ../providers/mysql/gda-mysql-recordset.c:718
+#: ../providers/mysql/gda-mysql-recordset.c:720
 #: ../providers/postgres/gda-postgres-recordset.c:233
 #: ../providers/postgres/gda-postgres-recordset.c:337
 #: ../providers/postgres/gda-postgres-recordset.c:437
 msgid "Table name could not be guessed."
 msgstr "Taula-izena ezin izan da asmatu."
 
-#: ../providers/mysql/gda-mysql-recordset.c:779
-#: ../providers/mysql/gda-mysql-recordset.c:781
+#: ../providers/mysql/gda-mysql-recordset.c:793
+#: ../providers/mysql/gda-mysql-recordset.c:795
 msgid "Model does not have at least one non-modified unique key."
 msgstr "Ereduak ez dauka gutxienez aldatu gabeko gako bakar bat."
 
-#: ../providers/mysql/gda-mysql-recordset.c:790
-#: ../providers/mysql/gda-mysql-recordset.c:792
+#: ../providers/mysql/gda-mysql-recordset.c:804
+#: ../providers/mysql/gda-mysql-recordset.c:806
 msgid "Model does not have any non-unique values to update."
 msgstr "Ereduak ez dauka bakarra ez den baliorik eguneratzeko."
 
@@ -2054,245 +2406,381 @@ msgstr "Ereduak ez dauka bakarra ez den baliorik eguneratzeko."
 msgid "Provider for MySQL databases"
 msgstr "MySQL datu-baseen hornitzailea"
 
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:1
+msgid "7bit Swedish"
+msgstr "7bit suediarra"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:2
+msgid "ARMSCII-8 Armenian"
+msgstr "ARMSCII-8 Armeniarra"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:3
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:2
+msgid "Administrator login"
+msgstr "Administratzailearen saio-hasiera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:4
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:3
+msgid "Administrator password"
+msgstr "Administratzailearen pasahitza"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:5
+msgid "Big5 Traditional Chinese"
+msgstr "Big5 txinatar tradizionala"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:6
+msgid "Binary pseudo charset"
+msgstr "Kode bitarreko sasi-karaktere multzoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:4
+msgid "Character set encoding to use in the new database"
+msgstr "Karaktere-multzoaren kodeketa datu-base berrian erabiltzeko"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:8
+msgid "DEC West European"
+msgstr "DEC Europako Mendebala"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:9
+msgid "DOS Central European"
+msgstr "DOS Europako Erdialdekoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
+msgid "DOS Kamenicky Czech-Slovak"
+msgstr "DOS Kamenicky Txekiera-Slovakiera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:11
+msgid "DOS Russian"
+msgstr "DOS Errusiarra"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:12
+msgid "DOS West European"
+msgstr "DOS Europako Mendebaldekoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
+msgid "EUC-JP Japanese"
+msgstr "EUC-JP Japoniera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:19
+msgid "EUC-KR Korean"
+msgstr "EUC-KR Koreera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:11
+msgid "Encoding"
+msgstr "Kodeketa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:21
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:4
+msgid "Full path of the UNIX socket to use for connecting locally"
+msgstr "UNIX socket-aren  bide-izen osoa lokaleko konexioan erabiltzeko "
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
+msgid "GB2312 Simplified Chinese"
+msgstr "GB2312 Txinatar soildua"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:23
+msgid "GBK Simplified Chinese"
+msgstr "GBK Txinatar soildua"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
+msgid "GEOSTD8 Georgian"
+msgstr "GEOSTD8 Georgiera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:25
+msgid "HP West European"
+msgstr "HP Europako Mendebaldekoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
+msgid "ISO 8859-1 West European"
+msgstr "ISO 8859-1 Europako Mendebaldekoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:29
+msgid "ISO 8859-13 Baltic"
+msgstr "ISO 8859-13 Baltikokoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
+msgid "ISO 8859-2 Central European"
+msgstr "ISO 8859-2 Europako Erdialdekoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
+msgid "ISO 8859-7 Greek"
+msgstr "ISO 8859-7 Greziera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
+msgid "ISO 8859-8 Hebrew"
+msgstr "ISO 8859-8 Hebreera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:33
+msgid "ISO 8859-9 Turkish"
+msgstr "ISO 8859-9 Turkiera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
+msgid "KOI8-R Relcom Russian"
+msgstr "KOI8-R Relcom Errusiera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:35
+msgid "KOI8-U Ukrainian"
+msgstr "KOI8-U Ukraniera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
+msgid "Login name (which has the rights to create databases)"
+msgstr "Erabiltzaile-izena (datu-baseak sortzeko baimena duena)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:37
+msgid "Mac Central European"
+msgstr "Mac Europako Erdialdekoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
+msgid "Mac West European"
+msgstr "Mac Europako Mendebaldekoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:8
+msgid "Require SSL"
+msgstr "SSL behar du"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:41
+msgid "SJIS for Windows Japanese"
+msgstr "SJIS Windows Japoniera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
+msgid "Shift-JIS Japanese"
+msgstr "Shift-JIS Japoniera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:43
+msgid "TIS620 Thai"
+msgstr "TIS620 Thailandiera"
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:45
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
+msgid "The name of a database to create"
+msgstr "Datu-basearen izena sortzeko"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
+msgid "UCS-2 Unicode"
+msgstr "UCS-2 Unicode"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:47
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:9
+msgid "UNIX Socket"
+msgstr "UNIX socket-a"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
+msgid "US ASCII"
+msgstr "AEBko ASCII"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:49
+msgid "UTF-8 Unicode"
+msgstr "UTF-8 Unicode"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:10
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:12
+msgid "Whether to use or not SSL for establishing the connection"
+msgstr "Konexioak ezartzean SSL erabili edo ez"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:51
+msgid "Windows Arabic"
+msgstr "Windows Arabiera"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
+msgid "Windows Baltic"
+msgstr "Windows Baltikokoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:53
+msgid "Windows Central European"
+msgstr "Windows Europako Erdialdekoa"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
+msgid "Windows Cyrillic"
+msgstr "Windows Zirilikoa"
+
 #: ../providers/odbc/gda-odbc-provider.c:208
 msgid "Unable to SQLAllocEnv()..."
 msgstr "Ezin da egin: SQLAllocEnv()..."
 
-#: ../providers/odbc/gda-odbc-provider.c:476
-#: ../providers/odbc/gda-odbc-provider.c:496
-#: ../providers/odbc/gda-odbc-provider.c:526
-#: ../providers/odbc/gda-odbc-provider.c:556
-#: ../providers/odbc/gda-odbc-provider.c:587
-#: ../providers/odbc/gda-odbc-provider.c:617
+#: ../providers/odbc/gda-odbc-provider.c:479
+#: ../providers/odbc/gda-odbc-provider.c:499
+#: ../providers/odbc/gda-odbc-provider.c:529
+#: ../providers/odbc/gda-odbc-provider.c:559
+#: ../providers/odbc/gda-odbc-provider.c:590
+#: ../providers/odbc/gda-odbc-provider.c:620
 msgid "Invalid Odbc handle"
 msgstr "Odbc helduleku baliogabea"
-
-#: ../providers/odbc/gda-odbc-provider.c:1166
-msgid "# args"
-msgstr "Argumentu-kopurua"
-
-#: ../providers/odbc/gda-odbc-provider.c:1427
-#: ../providers/oracle/gda-oracle-provider.c:2235
-msgid "Views"
-msgstr "Ikuspegiak"
 
 #: ../providers/odbc/libmain.c:43
 msgid "Provider for ODBC data sources"
 msgstr "ODBC datu-iturburuen hornitzailea"
 
-#: ../providers/oracle/gda-oracle-provider.c:223
+#: ../providers/odbc/odbc_specs_dsn.xml.in.h:1
+msgid "Connection String"
+msgstr "Konexio-katea"
+
+#: ../providers/odbc/odbc_specs_dsn.xml.in.h:2
+msgid "ODBC connection string"
+msgstr "ODBC konexio-katea"
+
+#: ../providers/oracle/gda-oracle-provider.c:224
 msgid "No TNS name supplied"
 msgstr "Ez da TNS izenik eman"
 
-#: ../providers/oracle/gda-oracle-provider.c:239
+#: ../providers/oracle/gda-oracle-provider.c:240
 msgid "Could not initialize Oracle"
 msgstr "Ezin izan da Oracle hasieratu"
 
-#: ../providers/oracle/gda-oracle-provider.c:250
+#: ../providers/oracle/gda-oracle-provider.c:251
 msgid "Could not initialize the Oracle environment"
 msgstr "Oracle ingurunea ezin izan da hasieratu"
 
-#: ../providers/oracle/gda-oracle-provider.c:261
+#: ../providers/oracle/gda-oracle-provider.c:262
 msgid "Could not allocate the Oracle service handle"
 msgstr "Ezin izan da esleitu Oracle-ren zerbitzu-heldulekua"
 
-#: ../providers/oracle/gda-oracle-provider.c:271
+#: ../providers/oracle/gda-oracle-provider.c:272
 msgid "Could not allocate the Oracle error handle"
 msgstr "Ezin izan da esleitu Oracle-ren errore-heldulekua"
 
-#: ../providers/oracle/gda-oracle-provider.c:283
+#: ../providers/oracle/gda-oracle-provider.c:284
 msgid "Could not allocate the Oracle server handle"
 msgstr "Ezin izan da esleitu Oracle-ren zerbitzari-heldulekua"
 
-#: ../providers/oracle/gda-oracle-provider.c:296
+#: ../providers/oracle/gda-oracle-provider.c:297
 msgid "Could not allocate the Oracle session handle"
 msgstr "Ezin izan da esleitu Oracle-ren saio-heldulekua"
 
-#: ../providers/oracle/gda-oracle-provider.c:326
+#: ../providers/oracle/gda-oracle-provider.c:327
 msgid "Could not attach to the Oracle server"
 msgstr "Ezin izan da uztartu Oracle zerbitzariarekin"
 
-#: ../providers/oracle/gda-oracle-provider.c:342
+#: ../providers/oracle/gda-oracle-provider.c:343
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr "Ezin izan da ezarri Oracle zerbitzari-atributua zerbitzu-testuinguruan"
 
-#: ../providers/oracle/gda-oracle-provider.c:358
+#: ../providers/oracle/gda-oracle-provider.c:359
 msgid "Could not set the Oracle username attribute"
 msgstr "Ezin izan da ezarri Oracle erabiltzaile-izenaren atributua"
 
-#: ../providers/oracle/gda-oracle-provider.c:374
+#: ../providers/oracle/gda-oracle-provider.c:375
 msgid "Could not set the Oracle password attribute"
 msgstr "Ezin izan da ezarri Oracle pasahitzaren atributua"
 
-#: ../providers/oracle/gda-oracle-provider.c:389
+#: ../providers/oracle/gda-oracle-provider.c:390
 msgid "Could not begin the Oracle session"
 msgstr "Ezin izan da hasi Oracle saioa"
 
-#: ../providers/oracle/gda-oracle-provider.c:407
+#: ../providers/oracle/gda-oracle-provider.c:408
 msgid "Could not set the Oracle session attribute in the service context"
 msgstr "Ezin izan da ezarri Oracle saio-atributua zerbitzu-testuinguruan"
 
-#: ../providers/oracle/gda-oracle-provider.c:498
-#: ../providers/oracle/gda-oracle-provider.c:530
-#: ../providers/oracle/gda-oracle-provider.c:604
-#: ../providers/oracle/gda-oracle-provider.c:753
-#: ../providers/oracle/gda-oracle-provider.c:776
-#: ../providers/oracle/gda-oracle-provider.c:799
-#: ../providers/oracle/gda-oracle-provider.c:829
-#: ../providers/oracle/gda-oracle-provider.c:884
-#: ../providers/oracle/gda-oracle-provider.c:968
-#: ../providers/oracle/gda-oracle-provider.c:1029
-#: ../providers/oracle/gda-oracle-provider.c:1190
+#: ../providers/oracle/gda-oracle-provider.c:499
+#: ../providers/oracle/gda-oracle-provider.c:531
+#: ../providers/oracle/gda-oracle-provider.c:605
+#: ../providers/oracle/gda-oracle-provider.c:754
+#: ../providers/oracle/gda-oracle-provider.c:777
+#: ../providers/oracle/gda-oracle-provider.c:800
+#: ../providers/oracle/gda-oracle-provider.c:830
+#: ../providers/oracle/gda-oracle-provider.c:885
+#: ../providers/oracle/gda-oracle-provider.c:969
+#: ../providers/oracle/gda-oracle-provider.c:1030
+#: ../providers/oracle/gda-oracle-provider.c:1207
 #: ../providers/oracle/gda-oracle-recordset.c:173
-#: ../providers/oracle/gda-oracle-recordset.c:392
-#: ../providers/oracle/gda-oracle-recordset.c:591
+#: ../providers/oracle/gda-oracle-recordset.c:395
+#: ../providers/oracle/gda-oracle-recordset.c:594
 msgid "Invalid Oracle handle"
 msgstr "Oracle helduleku baliogabea"
 
-#: ../providers/oracle/gda-oracle-provider.c:541
+#: ../providers/oracle/gda-oracle-provider.c:542
 msgid "Could not allocate the Oracle statement handle"
 msgstr "Ezin izan da esleitu Oracle-ren instrukzio-heldulekua"
 
-#: ../providers/oracle/gda-oracle-provider.c:552
+#: ../providers/oracle/gda-oracle-provider.c:553
 msgid "Could not prepare the Oracle statement"
 msgstr "Ezin izan da prestatu Oracle-ren instrukzioa"
 
-#: ../providers/oracle/gda-oracle-provider.c:583
+#: ../providers/oracle/gda-oracle-provider.c:584
 msgid "Could not bind the Oracle statement parameter"
 msgstr "Ezin izan da lotu Oracle-ren instrukzio-parametroa"
 
-#: ../providers/oracle/gda-oracle-provider.c:629
+#: ../providers/oracle/gda-oracle-provider.c:630
 msgid "Could not get the Oracle statement type"
 msgstr "Ezin izan da hartu Oracle-ren instrukzio-mota"
 
-#: ../providers/oracle/gda-oracle-provider.c:641
+#: ../providers/oracle/gda-oracle-provider.c:642
 msgid "Could not set the Oracle statement pre-fetch row count"
 msgstr "Ezin izan da ezarri Oracle instrukzioaren eskuratu aurreko errenkada-kopurua"
 
-#: ../providers/oracle/gda-oracle-provider.c:658
+#: ../providers/oracle/gda-oracle-provider.c:659
 msgid "Could not execute the Oracle statement"
 msgstr "Ezin izan da exekutatu Oracle-ren instrukzioa"
 
-#: ../providers/oracle/gda-oracle-provider.c:671
+#: ../providers/oracle/gda-oracle-provider.c:672
 msgid "Could not get the number of columns in the result set"
 msgstr "Ezin izan da hartu emaitzako zutabe-kopurua"
 
-#: ../providers/oracle/gda-oracle-provider.c:688
+#: ../providers/oracle/gda-oracle-provider.c:689
 msgid "Could not get the parameter descripter in the result set"
 msgstr "Ezin izan da hartu emaitzako parametro-deskribatzailea"
 
-#: ../providers/oracle/gda-oracle-provider.c:700
+#: ../providers/oracle/gda-oracle-provider.c:701
 msgid "Could not get the column name in the result set"
 msgstr "Ezin izan da hartu emaitzako zutabe-izena"
 
-#: ../providers/oracle/gda-oracle-provider.c:846
-#: ../providers/oracle/gda-oracle-provider.c:930
-#: ../providers/oracle/gda-oracle-provider.c:985
-#: ../providers/oracle/gda-oracle-provider.c:1046
+#: ../providers/oracle/gda-oracle-provider.c:847
+#: ../providers/oracle/gda-oracle-provider.c:931
+#: ../providers/oracle/gda-oracle-provider.c:986
+#: ../providers/oracle/gda-oracle-provider.c:1047
 msgid "Could not attach the transaction to the service context"
 msgstr "Ezin izan da uztartu transakzioa zerbitzu-testuinguruarekin"
 
-#: ../providers/oracle/gda-oracle-provider.c:902
+#: ../providers/oracle/gda-oracle-provider.c:903
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "Ezin izan da esleitu Oracle-ren transakzio-heldulekua"
 
-#: ../providers/oracle/gda-oracle-provider.c:915
+#: ../providers/oracle/gda-oracle-provider.c:916
 msgid "Could not set the Oracle transaction name"
 msgstr "Ezin izan da ezarri Oracle transakzioaren izena"
 
-#: ../providers/oracle/gda-oracle-provider.c:941
+#: ../providers/oracle/gda-oracle-provider.c:942
 msgid "Could not start the Oracle transaction"
 msgstr "Ezin izan da abiarazi Oracle transakzioa"
 
-#: ../providers/oracle/gda-oracle-provider.c:994
+#: ../providers/oracle/gda-oracle-provider.c:995
 msgid "Could not prepare the transaction to commit"
 msgstr "Ezin izan da prestatu transakzioa transmititzeko"
 
-#: ../providers/oracle/gda-oracle-provider.c:1002
+#: ../providers/oracle/gda-oracle-provider.c:1003
 msgid "Could not commit the Oracle transaction"
 msgstr "Ezin izan da transmititu Oracle transakzioa"
 
-#: ../providers/oracle/gda-oracle-provider.c:1053
+#: ../providers/oracle/gda-oracle-provider.c:1054
 msgid "Could not rollback the Oracle transaction"
 msgstr "Ezin izan da eten Oracle transakzioa"
 
-#: ../providers/oracle/gda-oracle-provider.c:1464
-msgid "Could not allocate the Oracle describe handle"
-msgstr "Ezin izan da esleitu Oracle-ren deskribapen-heldulekua"
+#: ../providers/oracle/gda-oracle-provider.c:1847
+#, c-format
+msgid "Can't convert model for fields schema: %s"
+msgstr "Ezin da eskemaren eremuen eredua bihurtu: %s"
 
-#: ../providers/oracle/gda-oracle-provider.c:1474
-msgid "Could not set describe handle attribute"
-msgstr "Ezin izan da ezarri deskribapen-heldulekuaren atributua"
-
-#: ../providers/oracle/gda-oracle-provider.c:1501
-#: ../providers/oracle/gda-oracle-provider.c:1606
-msgid "Could not describe the Oracle table"
-msgstr "Ezin izan da deskribatu Oracle taula"
-
-#: ../providers/oracle/gda-oracle-provider.c:1516
-#: ../providers/oracle/gda-oracle-provider.c:1619
-msgid "Could not get the Oracle parameter handle"
-msgstr "Ezin izan da hartu Oracle-ren parametro-heldulekua"
-
-#: ../providers/oracle/gda-oracle-provider.c:1531
-msgid "Could not get described object type"
-msgstr "Ezin izan da hartu deskribatutako objektuaren mota"
-
-#: ../providers/oracle/gda-oracle-provider.c:1546
-msgid "Could not get synonym referred-to schema"
-msgstr "Ezin izan da hartu sinonimoaren erreferentziatutako eskema"
-
-#: ../providers/oracle/gda-oracle-provider.c:1559
-msgid "Could not get synonym referred-to name"
-msgstr "Ezin izan da hartu sinonimoaren erreferentziatutako izena"
-
-#: ../providers/oracle/gda-oracle-provider.c:1572
-msgid "Could not get synonym referred-to dblink"
-msgstr "Ezin izan da hartu sinonimoaren erreferentziatutako db-esteka"
-
-#: ../providers/oracle/gda-oracle-provider.c:1634
-msgid "Could not get the number of columns in the table"
-msgstr "Ezin izan da hartu taulako zutabe-kopurua"
-
-#: ../providers/oracle/gda-oracle-provider.c:1648
-msgid "Could not get the column list"
-msgstr "Ezin izan da hartu zutabe-zerrenda"
-
-#: ../providers/oracle/gda-oracle-provider.c:1679
-msgid "Could not get the Oracle column handle"
-msgstr "Ezin izan da hartu Oracle-ren zutabe-heldulekua"
-
-#: ../providers/oracle/gda-oracle-provider.c:1694
-msgid "Could not get the Oracle field name"
-msgstr "Ezin izan da hartu Oracle-ren eremu-izena"
-
-#: ../providers/oracle/gda-oracle-provider.c:1716
-msgid "Could not get the Oracle field data type"
-msgstr "Ezin izan da hartu Oracle-ren eremu-datu mota"
-
-#: ../providers/oracle/gda-oracle-provider.c:1736
-msgid "Could not get the Oracle field defined size"
-msgstr "Ezin izan da hartu Oracle-ren eremuaren tamaina definitua"
-
-#: ../providers/oracle/gda-oracle-provider.c:1755
-msgid "Could not get the Oracle field scale"
-msgstr "Ezin izan da hartu Oracle-ren eremuaren eskala"
-
-#: ../providers/oracle/gda-oracle-provider.c:1774
-msgid "Could not get the Oracle field nullable attribute"
-msgstr "Ezin izan da hartu Oracle-ren eremuaren nullable atributua"
-
-#: ../providers/oracle/gda-oracle-provider.c:2219
+#: ../providers/oracle/gda-oracle-provider.c:1892
 msgid "Indexes"
 msgstr "Indizeak"
 
-#: ../providers/oracle/gda-oracle-provider.c:2222
+#: ../providers/oracle/gda-oracle-provider.c:1895
 msgid "Procedures"
 msgstr "Prozedurak"
 
-#: ../providers/oracle/gda-oracle-provider.c:2225
+#: ../providers/oracle/gda-oracle-provider.c:1898
 msgid "Sequences"
 msgstr "Sekuentziak"
+
+#: ../providers/oracle/gda-oracle-provider.c:1908
+msgid "Views"
+msgstr "Ikuspegiak"
 
 #: ../providers/oracle/gda-oracle-recordset.c:76
 msgid "Could not get the Oracle parameter"
@@ -2323,23 +2811,23 @@ msgstr "Ezin izan da hartu Oracle-ren parametroen informazioa"
 msgid "Could not get the Oracle column name"
 msgstr "Ezin izan da hartu Oracle-ren zutabe-izena"
 
-#: ../providers/oracle/gda-oracle-recordset.c:216
+#: ../providers/oracle/gda-oracle-recordset.c:219
 msgid "Could not get the Oracle column data type"
 msgstr "Ezin izan da hartu Oracle-ren zutabe-datu mota"
 
-#: ../providers/oracle/gda-oracle-recordset.c:228
+#: ../providers/oracle/gda-oracle-recordset.c:231
 msgid "Could not get the Oracle column scale"
 msgstr "Ezin izan da hartu Oracle-ren zutabearen eskala"
 
-#: ../providers/oracle/gda-oracle-recordset.c:240
+#: ../providers/oracle/gda-oracle-recordset.c:243
 msgid "Could not get the Oracle column nullable attribute"
 msgstr "Ezin izan da hartu Oracle-ren zutabearen nullable atributua"
 
-#: ../providers/oracle/gda-oracle-recordset.c:252
+#: ../providers/oracle/gda-oracle-recordset.c:255
 msgid "Could not get the Oracle defined size"
 msgstr "Ezin izan da hartu Oracle-ren tamaina definitua"
 
-#: ../providers/oracle/gda-oracle-recordset.c:357
+#: ../providers/oracle/gda-oracle-recordset.c:360
 msgid "Could not fetch a row"
 msgstr "Errenkada bat ezin izan da eskuratu"
 
@@ -2347,25 +2835,33 @@ msgstr "Errenkada bat ezin izan da eskuratu"
 msgid "Provider for Oracle databases"
 msgstr "Oracle datu-baseen hornitzailea"
 
+#: ../providers/oracle/oracle_specs_dsn.xml.in.h:1
+msgid "Name of the TNS configuration to use for connecting"
+msgstr "TNS konfigurazioaren izena konexioan erabiltzeko"
+
+#: ../providers/oracle/oracle_specs_dsn.xml.in.h:2
+msgid "TNS Name"
+msgstr "TNS izena"
+
 #: ../providers/postgres/gda-postgres-blob.c:134
-#: ../providers/postgres/gda-postgres-provider.c:723
-#: ../providers/postgres/gda-postgres-provider.c:740
-#: ../providers/postgres/gda-postgres-provider.c:828
-#: ../providers/postgres/gda-postgres-provider.c:1346
-#: ../providers/postgres/gda-postgres-provider.c:1453
+#: ../providers/postgres/gda-postgres-provider.c:713
+#: ../providers/postgres/gda-postgres-provider.c:730
+#: ../providers/postgres/gda-postgres-provider.c:818
+#: ../providers/postgres/gda-postgres-provider.c:1336
+#: ../providers/postgres/gda-postgres-provider.c:1443
 #: ../providers/postgres/gda-postgres-recordset.c:188
 #: ../providers/postgres/gda-postgres-recordset.c:562
 #: ../providers/postgres/gda-postgres-recordset.c:692
 msgid "Invalid PostgreSQL handle"
 msgstr "PostgreSQL helduleku baliogabea"
 
-#: ../providers/postgres/gda-postgres-provider.c:1393
+#: ../providers/postgres/gda-postgres-provider.c:1383
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr ""
 "Transakziorik ez da onartzen isolatutako irakurtze-mailan eragiketa amaitu "
 "ez den bitartean"
 
-#: ../providers/postgres/gda-postgres-provider.c:1396
+#: ../providers/postgres/gda-postgres-provider.c:1386
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "Transakziorik ez da onartzen isolatutako irakurtze errepikakor mailan"
 
@@ -2386,63 +2882,451 @@ msgstr "Tuploak:\"%s\""
 msgid "Provider for PostgreSQL databases"
 msgstr "PostgreSQL datu-baseen hornitzailea"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:244
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:1
+msgid "ASCII"
+msgstr "ASCII"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:5
+msgid "Chinese EUC"
+msgstr "EUC Txinera"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:10
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:3
+msgid ""
+"Database server port (for servers running on unix domain sockets, enter the "
+"socket's file name extension (usually 5432), or leave this fiend empty)"
+msgstr ""
+"Datu-base zerbitzariaren ataka (unix domeinuko socket-etan exekutatzen diren "
+"zerbitzarien socket-en fitxategi-luzapena idatzi, normalean 5432, edo eremu hau "
+"hutsik utzi)"
+
+#. Connection parameters
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:14
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:5
+msgid ""
+"Host which has the database server running (for servers running on unix "
+"domain sockets, enter the socket's path (usually /tmp), or leave this fiend "
+"empty)"
+msgstr ""
+"Ostalaria, datu-basearen zerbitzaria exekutatzen ari dena (unix domeinuko socket-ean "
+"exekutatzen diren zerbitzarien socket-en bide-izena idatzi, normalean /tmp, edo eremu hau hutsi utzi)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.1)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 1. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.10)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 10. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:17
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.2)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 2. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:18
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.3)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 3. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.4)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 4. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:20
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.5)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 5. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.6)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 6. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.7)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 7. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:23
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.8)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 8. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.9)"
+msgstr "ISO 8859-1/ECMA 94 (Latinaren 9. alfabetoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
+msgid "ISO 8859-5/ECMA 113 (Latin/Cyrillic)"
+msgstr "ISO 8859-5/ECMA 113 (Latina/Zirilikoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
+msgid "ISO 8859-6/ECMA 114 (Latin/Arabic)"
+msgstr "ISO 8859-6/ECMA 114 (Latina/Arabiera)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
+msgid "ISO 8859-7/ECMA 118 (Latin/Greek)"
+msgstr "ISO 8859-7/ECMA 118 (Latina/Grekoa)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:28
+msgid "ISO 8859-8/ECMA 121 (Latin/Hebrew)"
+msgstr "ISO 8859-8/ECMA 121 (Latina/Hebreera)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
+msgid "Japanese EUC"
+msgstr "EUC Japoniera"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:30
+msgid "KOI8-R(U)"
+msgstr "KOI8-R(U)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
+msgid "Korean EUC"
+msgstr "EUC Koreera"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:32
+msgid "Korean EUC (Hangle base)"
+msgstr "EUC Koreera (Hangle oinarria)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:38
+msgid "TCVN-5712/Windows CP1258 (Vietnamese)"
+msgstr "TCVN-5712/Windows CP1258 (Vietnamera)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
+msgid "Tablespace"
+msgstr "Izen-lekua"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:40
+msgid "Taiwan EUC"
+msgstr "EUC Taiwan"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
+msgid "Template"
+msgstr "Txantiloia"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:44
+msgid "The name of the database user who will own the new database"
+msgstr "Datu-baseko erabiltzailearen izena, datu-base berriaren jabea izango dena"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:45
+msgid "The name of the tablespace that will be associated with the new database"
+msgstr "Izen-lekuaren izena, datu-base berriarekin elkartuko dena"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:46
+msgid "The name of the template from which to create the new database"
+msgstr "Txantiloiaren izena, datu-base berria sortzeko erabiliko dena"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
+msgid "Unicode (UTF-8)"
+msgstr "Unicode (UTF-8)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
+msgid "Whether to require SSL or not when connecting"
+msgstr "Konektatzean SSL beharrezkoa izango den edo ez"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:49
+msgid "Windows CP1250"
+msgstr "Windows CP1250"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:50
+msgid "Windows CP1251"
+msgstr "Windows CP1251"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:51
+msgid "Windows CP1256 (Arabic)"
+msgstr "Windows CP1256 (Arabiera)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:52
+msgid "Windows CP866"
+msgstr "Windows CP866"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:53
+msgid "Windows CP874 (Thai)"
+msgstr "Windows CP874 (Thailandiera)"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:1
+msgid "Constraint expression for a partial index"
+msgstr "Indize partzial baten adierazpen murriztua"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
+msgid "Index name"
+msgstr "Indizearen izena"
+
+#. Index fields
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
+msgid "Indexed field or expression"
+msgstr "Eremu edo adierazpen indexatua"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
+msgid "Method"
+msgstr "Metodoa"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
+msgid "On table"
+msgstr "Taulan"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+msgid "Predicate"
+msgstr "Predikatua"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+msgid "Unique"
+msgstr "Bakarra"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:1
+msgid "Cascade"
+msgstr "Teilakatua"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:3
+msgid "Check"
+msgstr "Egiaztatu"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
+msgid "Check constraint"
+msgstr "Egiaztatu murriztapena"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+msgid "Default"
+msgstr "Lehenetsia"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+msgid "Deferrable"
+msgstr "Atzerakorra"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
+msgid "Deferrable initially deferred"
+msgstr "Atzerakorra hasieran atzeratua"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+msgid "Deferrable initially immediate"
+msgstr "Atzerakorra hasieran berehalakoa"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+msgid "Field"
+msgstr "Eremua"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+msgid "Fields in the foreign key"
+msgstr "Kanpoko gakoaren eremuak"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+msgid "Foreign key"
+msgstr "Kanpoko gakoa"
+
+#. other table constraints
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+msgid "Global constraints"
+msgstr "Murriztapen globalak"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
+msgid "Inheritage"
+msgstr "Ondoretasuna"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+msgid "Match full"
+msgstr "Bat etortze osoa"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:28
+msgid "Match simple"
+msgstr "Bat etortze bakuna"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
+msgid "Match type"
+msgstr "Bat etortze mota"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
+msgid "Matching method if more than one field involved"
+msgstr "Bilaketa metodoa eremu bat baino gehiago badira"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
+msgid "No action"
+msgstr "Ekintzarik ez"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
+msgid "Non deferrable"
+msgstr "Atzerakaitza"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+msgid "Not NULL"
+msgstr "Ez NULL"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+msgid "On delete action"
+msgstr "Ezabatzeko ekintzan"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+msgid "On update action"
+msgstr "Eguneratzeko ekintzan"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
+msgid "Parent table"
+msgstr "Taula gurasoa"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
+msgid "Primary key"
+msgstr "Lehen mailako gakoa"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
+msgid "Referenced field"
+msgstr "Eremu erreferentziatua"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
+msgid "Referenced table"
+msgstr "Taula erreferentziatua"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
+msgid "Restrict"
+msgstr "Murriztu"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
+msgid "Set to NULL"
+msgstr "Ezarri NULL gisa"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:51
+msgid "Set to default"
+msgstr "Ezarri lehenetsira"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:53
+msgid "Table's columns"
+msgstr "Taularen zutabeak"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
+msgid "Table's description"
+msgstr "Taularen azalpena"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+msgid "Table's name"
+msgstr "Taularen izena"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
+msgid "Temporary table"
+msgstr "Aldi baterako taula"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:60
+msgid "With OIDs"
+msgstr "OID-ekin"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:1
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+msgid "Automatically drop objects that depend on the table (CASCADE)"
+msgstr "Ezabatu taularen mende dauden (teilakatuta) objektuak automatikoki"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:3
+msgid "Index to delete"
+msgstr "Indizea ezabatzeko"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:2
+msgid "Referenced action"
+msgstr "Ekintza erreferentziatua"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:3
+msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
+msgstr "Bertan behera utzi taula ezabatzea objekturen batek mendekotasuna badu taularekiko (MURRIZTU)"
+
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
+msgid "Table to delete"
+msgstr "Taula ezabatzeko"
+
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
+msgid "Search Path"
+msgstr "Bilaketaren bide-izena"
+
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:10
+msgid "Search path among database's schemas"
+msgstr "Bilaketarako bide-izena datu-baseko eskemetan zehar"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:243
 msgid "A full path must be specified on the connection string to open a database."
 msgstr "Datu-base bat irekitzeko, bide-izen osoa zehaztu behar da konexio-katean."
 
-#: ../providers/sqlite/gda-sqlite-provider.c:268
+#: ../providers/sqlite/gda-sqlite-provider.c:267
 msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "Ezin izan da ezarri empty_result_callbacks SQLite aukera"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:327
-#: ../providers/sqlite/gda-sqlite-provider.c:507
-#: ../providers/sqlite/gda-sqlite-provider.c:778
-#: ../providers/sqlite/gda-sqlite-provider.c:1155
+#: ../providers/sqlite/gda-sqlite-provider.c:326
+#: ../providers/sqlite/gda-sqlite-provider.c:506
+#: ../providers/sqlite/gda-sqlite-provider.c:777
+#: ../providers/sqlite/gda-sqlite-provider.c:1160
 msgid "Invalid SQLite handle"
 msgstr "SQLite helduleku baliogabea"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:382
-#: ../providers/sqlite/gda-sqlite-provider.c:986
-#: ../providers/sqlite/gda-sqlite-provider.c:1207
-#: ../providers/sqlite/gda-sqlite-provider.c:1244
+#: ../providers/sqlite/gda-sqlite-provider.c:381
+#: ../providers/sqlite/gda-sqlite-provider.c:994
+#: ../providers/sqlite/gda-sqlite-provider.c:1212
+#: ../providers/sqlite/gda-sqlite-provider.c:1249
+#: ../providers/sqlite/gda-sqlite-provider.c:1371
 msgid "Invalid SQLITE handle"
 msgstr "SQLITE helduleku baliogabea"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:525
+#: ../providers/sqlite/gda-sqlite-provider.c:524
 msgid "Only one database per connection is allowed"
 msgstr "Datu-base bat bakarrik onartzen da konexioko"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:571
+#: ../providers/sqlite/gda-sqlite-provider.c:570
 msgid "Missing parameter 'URI'"
 msgstr "'URI' parametroa falta da"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:614
+#: ../providers/sqlite/gda-sqlite-provider.c:613
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "SQLite datu-base bat kentzeko, kendu eskuz datu-basearen fitxategia"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1008
+#: ../providers/sqlite/gda-sqlite-provider.c:1016
+#: ../providers/sqlite/gda-sqlite-provider.c:1401
 msgid "Can't execute PRAGMA table_info()"
 msgstr "Ezin da PRAGMA table_info() exekutatu"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1117
+#: ../providers/sqlite/gda-sqlite-provider.c:1122
 #, c-format
 msgid "Can't find table %s"
 msgstr "Ezin da %s taula aurkitu"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1474
+msgid "Can't execute PRAGMA foreign_key_list()"
+msgstr "Ezin da PRAGMA foreign_key_list() exekutatu"
 
 #: ../providers/sqlite/libmain.c:42
 msgid "Provider for SQLite databases"
 msgstr "SQLite datu-baseen hornitzailea"
 
-#: ../providers/sybase/gda-sybase-provider.c:314
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:1
+msgid "Database file name"
+msgstr "Datu-basearen fitxategi-izena"
+
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:2
+msgid "File name where all the database is stored"
+msgstr "Fitxategi-izena (datu-base guztiak gordetzen dituena)"
+
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:2
+msgid "Full path of the file containing the SQLite database"
+msgstr "Bide-izen osoa (SQLite datu-basea daukan fitxategiarena)"
+
+#: ../providers/sybase/gda-sybase-provider.c:315
 msgid "Out of memory. Allocating connection structure failed."
 msgstr "Memoriarik ez. Huts egin du konexio-egitura esleitzean."
 
-#: ../providers/sybase/gda-sybase-provider.c:359
+#: ../providers/sybase/gda-sybase-provider.c:360
 #, c-format
 msgid "Locale set to '%s'."
 msgstr "Konfigurazio lokalaren ezarpena: '%s'."
 
-#: ../providers/sybase/gda-sybase-provider.c:664
+#: ../providers/sybase/gda-sybase-provider.c:665
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
@@ -2450,38 +3334,38 @@ msgstr ""
 "Cmd egitura erabiltzen ari da dagoeneko. Komandoa ez da exekutatuko, "
 "konexioa blokeatuta dagoelako."
 
-#: ../providers/sybase/gda-sybase-provider.c:678
+#: ../providers/sybase/gda-sybase-provider.c:679
 #, c-format
 msgid "Failed allocating a command structure in %s()"
 msgstr "Huts egin du komando-egitura bat esleitzean - %s()"
 
-#: ../providers/sybase/gda-sybase-provider.c:692
+#: ../providers/sybase/gda-sybase-provider.c:693
 msgid "Could not prepare command structure."
 msgstr "Ezin izan da komando-egitura prestatu."
 
-#: ../providers/sybase/gda-sybase-provider.c:702
+#: ../providers/sybase/gda-sybase-provider.c:703
 msgid "Sending sql-command failed."
 msgstr "Huts egin du sql komandoa bidaltzean."
 
-#: ../providers/sybase/gda-sybase-provider.c:729
-#: ../providers/sybase/gda-sybase-provider.c:749
-#: ../providers/sybase/gda-sybase-provider.c:816
-#: ../providers/sybase/gda-sybase-provider.c:838
+#: ../providers/sybase/gda-sybase-provider.c:730
+#: ../providers/sybase/gda-sybase-provider.c:750
+#: ../providers/sybase/gda-sybase-provider.c:817
+#: ../providers/sybase/gda-sybase-provider.c:839
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
 
 #. when you execute a stored procedure through openclient, this
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
-#: ../providers/sybase/gda-sybase-provider.c:735
+#: ../providers/sybase/gda-sybase-provider.c:736
 msgid "CS_STATUS_RESULT!"
 msgstr "CS_STATUS_RESULT!"
 
-#: ../providers/sybase/gda-sybase-provider.c:759
+#: ../providers/sybase/gda-sybase-provider.c:760
 msgid "Hit unsupported result type"
 msgstr "Onartu gabeko emaitz-mota jaso da"
 
-#: ../providers/sybase/gda-sybase-provider.c:787
+#: ../providers/sybase/gda-sybase-provider.c:788
 msgid ""
 "An error occurred when attempting to test if there is a server message for "
 "resultset"
@@ -2489,62 +3373,62 @@ msgstr ""
 "Errorea gertatu da emaitza-multzoarentzat zerbitzari-mezurik dagoen "
 "egiaztatzen saiatzean"
 
-#: ../providers/sybase/gda-sybase-provider.c:819
+#: ../providers/sybase/gda-sybase-provider.c:820
 #, c-format
 msgid "%s returned %s"
 msgstr "%s(e)k itzulitakoa: %s"
 
-#: ../providers/sybase/gda-sybase-provider.c:847
+#: ../providers/sybase/gda-sybase-provider.c:848
 msgid "Failed dropping command structure."
 msgstr "Huts egin du komando-egitura askatzean."
 
-#: ../providers/sybase/gda-sybase-provider.c:877
+#: ../providers/sybase/gda-sybase-provider.c:878
 #, c-format
 msgid "Command structure already in use. %s failed."
 msgstr "Komando-egitura dagoeneko erabiltzen ari da. %s(e)k huts egin du."
 
-#: ../providers/sybase/gda-sybase-provider.c:885
+#: ../providers/sybase/gda-sybase-provider.c:886
 msgid "Could not allocate command structure."
 msgstr "Ezin izan da komando-egitura esleitu."
 
-#: ../providers/sybase/gda-sybase-provider.c:894
+#: ../providers/sybase/gda-sybase-provider.c:895
 #, c-format
 msgid "Could not prepare command structure with %s."
 msgstr "Ezin izan da komando-egitura prestatu %s(r)ekin."
 
-#: ../providers/sybase/gda-sybase-provider.c:904
+#: ../providers/sybase/gda-sybase-provider.c:905
 msgid "Sending command failed."
 msgstr "Huts egin du komandoa bidaltzean."
 
-#: ../providers/sybase/gda-sybase-provider.c:929
-#: ../providers/sybase/gda-sybase-provider.c:946
-#: ../providers/sybase/gda-sybase-provider.c:957
+#: ../providers/sybase/gda-sybase-provider.c:930
+#: ../providers/sybase/gda-sybase-provider.c:947
+#: ../providers/sybase/gda-sybase-provider.c:958
 #, c-format
 msgid "%s: %s failed"
 msgstr "%s: %s(e)k huts egin du"
 
-#: ../providers/sybase/gda-sybase-provider.c:1001
+#: ../providers/sybase/gda-sybase-provider.c:1002
 msgid "could not allocate cmd structure to find current database."
 msgstr "ezin izan da esleitu uneko datu-basea aurkitzeko cmd egitura."
 
-#: ../providers/sybase/gda-sybase-provider.c:1012
+#: ../providers/sybase/gda-sybase-provider.c:1013
 msgid "could not execute command to get current database."
 msgstr "ezin izan da exekutatu uneko datu-basea hartzeko komandoa."
 
-#: ../providers/sybase/gda-sybase-provider.c:1020
+#: ../providers/sybase/gda-sybase-provider.c:1021
 msgid "could not send command to get current database."
 msgstr "ezin izan da bidali uneko datu-basea hartzeko komandoa."
 
-#: ../providers/sybase/gda-sybase-provider.c:1043
+#: ../providers/sybase/gda-sybase-provider.c:1044
 msgid "could not bind variable to get current database."
 msgstr "ezin izan da lotu uneko datu-basea hartzeko aldagaia."
 
-#: ../providers/sybase/gda-sybase-provider.c:1056
-#: ../providers/sybase/gda-sybase-provider.c:1071
+#: ../providers/sybase/gda-sybase-provider.c:1057
+#: ../providers/sybase/gda-sybase-provider.c:1072
 msgid "could not fetch data to find current database."
 msgstr "ezin izan dira eskuratu uneko datu-basea aurkitzeko datuak."
 
-#: ../providers/sybase/gda-sybase-provider.c:1085
+#: ../providers/sybase/gda-sybase-provider.c:1086
 msgid "could not drop cmd structure to find current database."
 msgstr "ezin izan da jaregin uneko datu-basea aurkitzeko cmd egitura."
 
@@ -2626,17 +3510,17 @@ msgstr ""
 msgid "call to ct_diag failed when attempting to clear the server messages"
 msgstr "huts egin du ct_diag deitzeak, zerbitzari-mezuak garbitzen saiatzean"
 
+#: ../providers/sybase/gda-sybase-types.c:91
 #: ../providers/sybase/gda-sybase-types.c:94
-#: ../providers/sybase/gda-sybase-types.c:97
 msgid "Attempt setting a nonnullable field to null."
 msgstr "Null izan ezin den eremu bat null gisa ezartzen saiatu da."
 
-#: ../providers/sybase/gda-sybase-types.c:208
+#: ../providers/sybase/gda-sybase-types.c:205
 #, c-format
 msgid "cslib cannot convert type %d"
 msgstr "cslib-ek ezin du %d mota bihurtu"
 
-#: ../providers/sybase/gda-sybase-types.c:223
+#: ../providers/sybase/gda-sybase-types.c:220
 #, c-format
 msgid "data conversion failed for type %d"
 msgstr "datu-bihurketak huts egin du %d motarentzat"
@@ -2644,6 +3528,18 @@ msgstr "datu-bihurketak huts egin du %d motarentzat"
 #: ../providers/sybase/libmain.c:41
 msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "Sybase datu-baseen GDA hornitzailea (OpenClient erabiliz)"
+
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:6
+msgid "Enable Sybase operative mode"
+msgstr "Gaitu Sybase eragile-modua"
+
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:10
+msgid "Locale"
+msgstr "Konfigurazio lokala"
+
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:11
+msgid "Locale to use in the connection"
+msgstr "Konfigurazio lokala konexioan erabiltzeko"
 
 #: ../providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -2711,7 +3607,7 @@ msgstr "ct_diag() huts egin du # bezero-mezuak zehaztean"
 msgid "Failed when attempting to retrieve the amount of client messages"
 msgstr "Huts egin du bezero-mezuen kopurua lortzen saiatzean"
 
-#: ../providers/sybase/utils.c:221
+#: ../providers/sybase/utils.c:221 ../providers/sybase/utils.c:460
 msgid "An error occurred when attempting to retrieve a client message"
 msgstr "Errorea gertatu da bezero-mezu bat eskuratzen saiatzean"
 
@@ -2766,10 +3662,6 @@ msgstr "Egoera"
 msgid "Line"
 msgstr "Lerroa"
 
-#: ../providers/sybase/utils.c:460
-msgid "An error occured when attempting to retrieve a client message"
-msgstr "Errorea gertatu da bezero-mezu bat eskuratzen saiatzean"
-
 #: ../providers/sybase/utils.c:473
 msgid "Layer"
 msgstr "Geruza"
@@ -2790,22 +3682,30 @@ msgstr "huts egin du ct_diag deitzeak, bezero-mezuak garbitzen saiatzean"
 msgid "Operation not possible, connection busy."
 msgstr "Eragiketa ezin da egin; konexioa okupatuta dago."
 
-#: ../providers/xbase/gda-xbase-provider.c:208
+#: ../providers/xbase/gda-xbase-provider.c:207
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr "FITXATEGI-IZENA edo DIREKTORIOA zehatz daiteke, baina ez biak edo bat ere ez"
 
-#: ../providers/xbase/gda-xbase-provider.c:255
+#: ../providers/xbase/gda-xbase-provider.c:254
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr "FITXATEGI-IZENA edo DIREKTORIOA zehaztu behar da konexio-katean"
 
-#: ../providers/xbase/gda-xbase-provider.c:284
-#: ../providers/xbase/gda-xbase-provider.c:403
+#: ../providers/xbase/gda-xbase-provider.c:283
+#: ../providers/xbase/gda-xbase-provider.c:402
 msgid "Invalid Xbase handle"
 msgstr "Xbase helduleku baliogabea"
 
 #: ../providers/xbase/libmain.c:40
 msgid "Provider for xBase (dBase, FoxPro, etc) files"
 msgstr "Xbase (dBase, FoxPro, etab.) fitxategien hornitzailea"
+
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:1
+msgid "Directory"
+msgstr "Direktorioa"
+
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:2
+msgid "Directory containing the xBase files"
+msgstr "xBase fitxategiak dituen direktorioa"
 
 #: ../report/libgda-report/gda-report-document.c:179
 msgid "Could not parse XML document"
@@ -2881,6 +3781,18 @@ msgstr ""
 "%3$s elementuaren %2$s atributuaren \"%1$s\" balioa ez dago multzo "
 "enumeratuan\n"
 
+#: ../providers/bdb/bdb_specs_dsn.xml.in.h:1
+msgid "Berkeley DB database file to be used"
+msgstr "Berkeley DB datu-basearen fitxategia erabiltzeko"
+
+#: ../providers/bdb/bdb_specs_dsn.xml.in.h:2
+msgid "Database file"
+msgstr "Datu-basearen fitxategia"
+
+#: ../providers/bdb/bdb_specs_dsn.xml.in.h:4
+msgid "Name of the database in the database file to be used"
+msgstr "Datu-basearen izena, datu-baseko fitxategian erabiltzeko"
+
 #: ../providers/bdb/gda-bdb-provider.c:154
 msgid "The FILE parameter is not defined in the connection string."
 msgstr "FITXATEGIA parametroa ez dago definituta konexio-katean."
@@ -2903,107 +3815,112 @@ msgstr "Datu-basea hutsik dago"
 msgid "Provider for Berkeley databases"
 msgstr "Berkeley datu-baseen hornitzailea"
 
-#: ../testing/gda-author-dict-file.c:125
+#: ../testing/gda-author-dict-file.c:148 ../testing/gda-test-connection.c:62
 #, c-format
-msgid "Usage: %s <Data source>\n"
-msgstr "Erabilera: %s <datu-iturburua>\n"
+msgid "DSN '%s' is not declared"
+msgstr "DSN '%s' ez dago deklaratuta"
 
-#: ../testing/gda-author-dict-file.c:138
+#: ../testing/gda-author-dict-file.c:155 ../testing/gda-test-connection.c:69
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "Ezin da %s DSN konexioa ireki: %s\n"
 
-#: ../testing/gda-author-dict-file.c:173
+#: ../testing/gda-author-dict-file.c:167 ../testing/gda-test-connection.c:81
+#, c-format
+msgid "Can't open specified connection: %s\n"
+msgstr "Ezin da zehaztutako konexioa ireki: %s\n"
+
+#: ../testing/gda-author-dict-file.c:203
 msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
 msgstr "DBMS zerbitzaritik meta-datuak eskuratzen. Denbora bat beharko du...\n"
 
-#: ../testing/gda-author-dict-file.c:232 ../testing/gda-test-models.c:150
-#: ../testing/gda-test-models.c:177 ../testing/gda-test-sql.c:143
+#: ../testing/gda-author-dict-file.c:262 ../testing/gda-test-models.c:151
+#: ../testing/gda-test-models.c:178 ../testing/gda-test-sql.c:143
 #: ../testing/gda-test-sql.c:170
 #, c-format
 msgid "Can't write dictionary to file %s: %s\n"
 msgstr "Ezin da hiztegia idatzi %s fitxategian: %s\n"
 
-#: ../testing/gda-author-dict-file.c:235
+#: ../testing/gda-author-dict-file.c:265
 #, c-format
 msgid "Dictionary file written to %s\n"
 msgstr "Hiztegiaren fitxategia %s(e)n idatzi da\n"
 
-#: ../testing/gda-diagnose.c:94 ../testing/gda-test-models.c:100
+#: ../testing/gda-diagnose.c:117 ../testing/gda-test-models.c:101
 #: ../testing/gda-test-sql.c:97
 #, c-format
 msgid "Generated @ %s"
 msgstr "@ %s sortu da"
 
-#: ../testing/gda-diagnose.c:151
+#: ../testing/gda-diagnose.c:174
 msgid "Data sources"
 msgstr "Datu-iturburuak"
 
-#: ../testing/gda-diagnose.c:152
+#: ../testing/gda-diagnose.c:175
 msgid "List of data sources from the config files (user and system wide)"
 msgstr ""
 "Erabiltzailearen eta sistemaren konfigurazioko fitxategietako datu-"
 "iturburuen zerrenda"
 
-#: ../testing/gda-diagnose.c:213
+#: ../testing/gda-diagnose.c:236
 msgid "Providers"
 msgstr "Hornitzaileak"
 
-#: ../testing/gda-diagnose.c:214
+#: ../testing/gda-diagnose.c:237
 msgid "Installed providers"
 msgstr "Instalatutako hornitzaileak"
 
-#: ../testing/gda-diagnose.c:270
+#: ../testing/gda-diagnose.c:293
 #, c-format
 msgid "Provider '%s' details"
 msgstr "'%s' hornitzailearen xehetasunak"
 
-#: ../testing/gda-diagnose.c:279
+#: ../testing/gda-diagnose.c:302
 msgid "Provider's information"
 msgstr "Hornitzailearen informazioa"
 
-#: ../testing/gda-diagnose.c:288
+#: ../testing/gda-diagnose.c:311
 msgid "Data source's parameters:"
 msgstr "Datu-iturburuaren parametroak:"
 
-#: ../testing/gda-diagnose.c:291
+#: ../testing/gda-diagnose.c:314
 msgid "Parameter name"
 msgstr "Parametroaren izena"
 
-#: ../testing/gda-diagnose.c:310
+#: ../testing/gda-diagnose.c:333
 msgid "Data source's parameters: none provided"
 msgstr "Datu-iturburuaren parametroak: ez da bat ere eman"
 
-#: ../testing/gda-diagnose.c:317
+#: ../testing/gda-diagnose.c:340
 msgid "Detailed data source's parameters"
 msgstr "Datu-iturburuaren parametroen xehetasunak"
 
-#: ../testing/gda-diagnose.c:321
+#: ../testing/gda-diagnose.c:344
 msgid "Detailed data source's parameters: none provided"
 msgstr "Datu-iturburuaren parametroen xehetasunak: ez da bat ere eman"
 
-#: ../testing/gda-diagnose.c:352
+#: ../testing/gda-diagnose.c:375
 msgid "Plugin's entry functions"
 msgstr "Plugin-aren sarrerako funtzioak"
 
-#: ../testing/gda-diagnose.c:356 ../testing/gda-diagnose.c:441
+#: ../testing/gda-diagnose.c:379 ../testing/gda-diagnose.c:463
 msgid "Present?"
 msgstr "Badago?"
 
-#: ../testing/gda-diagnose.c:360 ../testing/gda-diagnose.c:364
-#: ../testing/gda-diagnose.c:368 ../testing/gda-diagnose.c:374
-#: ../testing/gda-diagnose.c:378 ../testing/gda-diagnose.c:447
-#: ../testing/gda-diagnose.c:453 ../testing/gda-diagnose.c:464
-#: ../testing/gda-diagnose.c:492 ../testing/gda-diagnose.c:531
+#: ../testing/gda-diagnose.c:383 ../testing/gda-diagnose.c:387
+#: ../testing/gda-diagnose.c:391 ../testing/gda-diagnose.c:397
+#: ../testing/gda-diagnose.c:401 ../testing/gda-diagnose.c:469
+#: ../testing/gda-diagnose.c:475 ../testing/gda-diagnose.c:486
+#: ../testing/gda-diagnose.c:514 ../testing/gda-diagnose.c:553
 #: ../testing/html.c:293
 msgid "Yes"
 msgstr "Bai"
 
-#: ../testing/gda-diagnose.c:360 ../testing/gda-diagnose.c:364
-#: ../testing/gda-diagnose.c:368 ../testing/gda-diagnose.c:374
-#: ../testing/gda-diagnose.c:378 ../testing/gda-diagnose.c:447
-#: ../testing/gda-diagnose.c:453 ../testing/gda-diagnose.c:464
-#: ../testing/gda-diagnose.c:492 ../testing/gda-diagnose.c:531
+#: ../testing/gda-diagnose.c:383 ../testing/gda-diagnose.c:387
+#: ../testing/gda-diagnose.c:391 ../testing/gda-diagnose.c:397
+#: ../testing/gda-diagnose.c:401 ../testing/gda-diagnose.c:469
+#: ../testing/gda-diagnose.c:475 ../testing/gda-diagnose.c:486
+#: ../testing/gda-diagnose.c:514 ../testing/gda-diagnose.c:553
 #: ../testing/html.c:293
 msgid "No"
 msgstr "Ez"
@@ -3011,70 +3928,70 @@ msgstr "Ez"
 #.
 #. * Virtual functions
 #.
-#: ../testing/gda-diagnose.c:437
+#: ../testing/gda-diagnose.c:459
 msgid "GdaServerProvider object's virtual functions"
 msgstr "GdaServerProvider objektuaren funtzio birtuala"
 
-#: ../testing/gda-diagnose.c:442
+#: ../testing/gda-diagnose.c:464
 msgid "Result"
 msgstr "Emaitza"
 
-#: ../testing/gda-diagnose.c:442
+#: ../testing/gda-diagnose.c:464
 msgid "Result without any connection"
 msgstr "Emaitza (konexiorik gabekoa)"
 
-#: ../testing/gda-diagnose.c:541
+#: ../testing/gda-diagnose.c:563
 msgid "Schemas reporting"
 msgstr "Eskemen txostenak"
 
-#: ../testing/gda-diagnose.c:543
+#: ../testing/gda-diagnose.c:565
 msgid "Schemas not reported by this provider"
 msgstr "Hornitazile honek ez du eskemen berri eman"
 
-#: ../testing/gda-diagnose.c:600
+#: ../testing/gda-diagnose.c:622
 #, c-format
 msgid "Schema Error: %s"
 msgstr "Eskemaren errorea: %s"
 
-#: ../testing/gda-diagnose.c:635
+#: ../testing/gda-diagnose.c:657
 #, c-format
 msgid "Fields for '%s'"
 msgstr "'%s'(r)en eremua"
 
-#: ../testing/gda-diagnose.c:644
+#: ../testing/gda-diagnose.c:666
 msgid "No field returned"
 msgstr "Ez da eremurik itzuli"
 
-#: ../testing/gda-diagnose.c:651 ../testing/gda-diagnose.c:694
-#: ../testing/gda-diagnose.c:707
+#: ../testing/gda-diagnose.c:673 ../testing/gda-diagnose.c:716
+#: ../testing/gda-diagnose.c:729
 msgid "Error"
 msgstr "Errorea"
 
-#: ../testing/gda-diagnose.c:680
+#: ../testing/gda-diagnose.c:702
 #, c-format
 msgid "Constraints for '%s'"
 msgstr "'%s'(r)en murriztapenak"
 
-#: ../testing/gda-diagnose.c:689
+#: ../testing/gda-diagnose.c:711
 msgid "No constraint"
 msgstr "Murriztapenik ez"
 
-#: ../testing/gda-diagnose.c:703
+#: ../testing/gda-diagnose.c:725
 msgid "Nothing to return"
 msgstr "Ez dago ezer itzultzeko"
 
 #.
 #. * Data types testing
 #.
-#: ../testing/gda-diagnose.c:719
+#: ../testing/gda-diagnose.c:741
 msgid "Data types handling"
 msgstr "Datu-motak kudeatzea"
 
-#: ../testing/gda-diagnose.c:721
+#: ../testing/gda-diagnose.c:743
 msgid "This provider does not support data handlers"
 msgstr "Hornitzaile honek ez du datu-kudeatzailerik onartzen"
 
-#: ../testing/gda-diagnose.c:728
+#: ../testing/gda-diagnose.c:773
 msgid ""
 "Data handler marked as error cannot handle the data type they are returned "
 "for."
@@ -3082,43 +3999,43 @@ msgstr ""
 "Errore gisa markatutako datu-kudeatzaileak ezin du itzulitako datu-mota "
 "kudeatu. "
 
-#: ../testing/gda-diagnose.c:738
+#: ../testing/gda-diagnose.c:783
 msgid "Data handlers test"
 msgstr "Datu-kudeatzaileen proba"
 
-#: ../testing/gda-diagnose.c:739
+#: ../testing/gda-diagnose.c:784
 msgid "get_sql_from_value() and get_str_from_value()"
 msgstr "get_sql_from_value() eta get_str_from_value()"
 
-#: ../testing/gda-diagnose.c:747
+#: ../testing/gda-diagnose.c:792
 msgid "get_value_from_sql()"
 msgstr "get_value_from_sql()"
 
-#: ../testing/gda-diagnose.c:754
+#: ../testing/gda-diagnose.c:799
 msgid "get_value_from_str()"
 msgstr "get_value_from_str()"
 
-#: ../testing/gda-diagnose.c:1153
+#: ../testing/gda-diagnose.c:1204
 #, c-format
 msgid "%s (init value)"
 msgstr "%s (hasierako balioa)"
 
-#: ../testing/gda-diagnose.c:1284
+#: ../testing/gda-diagnose.c:1341
 #, c-format
 msgid "Datasource '%s' details"
 msgstr "%s datu-iturburuaren xehetasunak"
 
-#: ../testing/gda-diagnose.c:1293
+#: ../testing/gda-diagnose.c:1350
 msgid "Datasource's information"
 msgstr "Datu-iturburuaren informazioa"
 
-#: ../testing/gda-diagnose.c:1303
+#: ../testing/gda-diagnose.c:1361
 msgid "Can't open connection."
 msgstr "Ezin da konexioa ireki."
 
 #: ../testing/gda-inspect-dict-file.c:47
 #, c-format
-msgid "Usage: %s <Dictionaty XML file>\n"
+msgid "Usage: %s <Dictionary XML file>\n"
 msgstr "Erabilera: %s <XML hiztegi-fitxategia>\n"
 
 #: ../testing/gda-inspect-dict-file.c:53
@@ -3131,7 +4048,7 @@ msgstr "'%s' fitxategia ez da existitzen edo ezin da irakurri.\n"
 msgid "File '%s' is a directory!\n"
 msgstr "'%s' direktorioa da.\n"
 
-#: ../testing/gda-inspect-dict-file.c:64 ../testing/gda-test-models.c:163
+#: ../testing/gda-inspect-dict-file.c:64 ../testing/gda-test-models.c:164
 #: ../testing/gda-test-sql.c:156
 #, c-format
 msgid ""
@@ -3141,7 +4058,7 @@ msgstr ""
 "Errorea '%s' hiztegi-fitxategia kargatzean:\n"
 "%s\n"
 
-#: ../testing/gda-inspect-dict-file.c:65 ../testing/gda-test-models.c:164
+#: ../testing/gda-inspect-dict-file.c:65 ../testing/gda-test-models.c:165
 #: ../testing/gda-test-sql.c:157
 msgid "Unspecified"
 msgstr "Zehaztu gabea"
@@ -3156,8 +4073,8 @@ msgstr ""
 "%s\n"
 
 #: ../testing/gda-inspect-dict-file.c:88
-#: ../testing/gda-inspect-dict-file.c:107 ../testing/gda-test-models.c:190
-#: ../testing/gda-test-models.c:204 ../testing/gda-test-sql.c:183
+#: ../testing/gda-inspect-dict-file.c:107 ../testing/gda-test-models.c:191
+#: ../testing/gda-test-models.c:205 ../testing/gda-test-sql.c:183
 #: ../testing/gda-test-sql.c:197
 #, c-format
 msgid ""
@@ -3235,39 +4152,38 @@ msgstr "Datu-iturburuaren parametroak (Izena / Mota / Azalpena):\n"
 msgid "None provided"
 msgstr "Ez da bat ere eman"
 
-#: ../testing/gda-test-models.c:88 ../testing/gda-test-sql.c:87
+#: ../testing/gda-test-connection.c:87
+msgid "Connection successfully opened!\n"
+msgstr "Konexioa ongi ireki da\n"
+
+#: ../testing/gda-test-models.c:89 ../testing/gda-test-sql.c:87
 msgid "List of SQL parsing tests"
 msgstr "SQL analisi-proben zerrenda"
 
-#: ../testing/gda-test-models.c:388
+#: ../testing/gda-test-models.c:385
 msgid "Missing 'file' attribute"
 msgstr "'file' atributua falta da"
 
-#: ../testing/gda-test-models.c:392
-#, c-format
-msgid "Can't load file '%s'"
-msgstr "Ezin da '%s' fitxategia kargatu"
-
-#: ../testing/gda-test-models.c:649
+#: ../testing/gda-test-models.c:658
 msgid "GdaDataModel required for this action"
 msgstr "Ekintza honek GdaDataModel behar du"
 
-#: ../testing/gda-test-models.c:687
+#: ../testing/gda-test-models.c:696
 #, c-format
 msgid "Model %s (name=%s) has changed!"
 msgstr "%s eredua (izena=%s) aldatu egin da."
 
-#: ../testing/gda-test-models.c:701
+#: ../testing/gda-test-models.c:710
 #, c-format
 msgid "Model %s (name=%s): row %d inserted!"
 msgstr "%s eredua (izena=%s): %d errenkada txertatuta."
 
-#: ../testing/gda-test-models.c:715
+#: ../testing/gda-test-models.c:724
 #, c-format
 msgid "Model %s (name=%s): row %d updated!"
 msgstr "%s eredua (izena=%s): %d errenkada eguneratuta"
 
-#: ../testing/gda-test-models.c:729
+#: ../testing/gda-test-models.c:738
 #, c-format
 msgid "Model %s (name=%s): row %d removed!"
 msgstr "%s eredua (izena=%s): %d errenkada ezabatuta"
