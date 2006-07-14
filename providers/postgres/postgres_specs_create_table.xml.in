@@ -1,34 +1,45 @@
 <?xml version="1.0"?>
 <serv_op>
   <parameters id="TABLE_DEF_P" _name="Table's description">
-    <parameter id="TABLE_NAME" _name="Name" _descr="Table's name" gdatype="gchararray" null-ok="FALSE"/>
-    <parameter id="TABLE_TABLESPACE" _name="Tablespace" gdatype="gchararray"/>
+    <parameter id="TABLE_NAME" _name="Name" _descr="Table's name" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="TABLE_TABLESPACE" _name="Tablespace" gdatype="gchararray" source="match_types:0"/>
     <parameter id="TABLE_WITH_OIDS" _name="With OIDs" gdatype="gboolean"/>
-    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="bool"/>
+    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean"/>
   </parameters>
 
-  <sequence id="TABLE_PARENTS_S" _descr="Inheritage">
+  <sequence id="TABLE_PARENTS_S" _name="Parent table(s)" _descr="Inheritage" status="OPT">
     <parameter id="TABLE_PARENT_TABLE" _name="Parent table" gdatype="gchararray"/>
   </sequence>
 
   <!-- list of fields -->
-  <array id="FIELDS_A" _name="Table's columns">
-    <parameter id="COLUMN_NAME" _name="Field name" gdatype="gchararray" null-ok="FALSE"/>
-    <parameter id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" null-ok="FALSE"/>
-    <parameter id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
-    <parameter id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
-    <parameter id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
-    <parameter id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
-    <parameter id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
-  </array>
+  <gda_array id="FIELDS_A" _name="Table's columns">
+    <gda_array_field id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE"/>
+    <gda_array_field id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE"/>
+    <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
+    <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
+    <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
+    <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
+    <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+    <gda_array_data>
+        <gda_array_row>
+            <_gda_value>&lt;change me&gt;</_gda_value>
+            <gda_value>varchar</gda_value>
+            <gda_value>FALSE</gda_value>
+            <gda_value>FALSE</gda_value>
+            <gda_value>FALSE</gda_value>
+            <gda_value></gda_value>
+            <gda_value></gda_value>
+        </gda_array_row>
+    </gda_array_data>
+  </gda_array>
 
   <!-- foreign key spec -->
   <sequence id="FKEY_S" _name="Foreign key">
-    <parameter id="FKEY_REF_TABLE" _name="Referenced table" gdatype="gchararray" null-ok="FALSE" source="_DICT_TABLES_"/>
-    <array id="FKEY_FIELDS_A" _descr="Fields in the foreign key">
-      <parameter id="FK_FIELD" _name="Field" gdatype="gchararray" null-ok="FALSE"/>
-      <parameter id="FK_REF_PK_FIELD" _name="Referenced field" gdatype="gchararray" null-ok="FALSE" source="_FKEY_REF_TABLE/DICT_FIELDS_"/>
-    </array>
+    <parameter id="FKEY_REF_TABLE" _name="Referenced table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
+    <gda_array id="FKEY_FIELDS_A" _name="Fields" _descr="Fields in the foreign key">
+      <gda_array_field id="FK_FIELD" _name="Field" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field id="FK_REF_PK_FIELD" _name="Referenced field" gdatype="gchararray" nullok="FALSE" source="_FKEY_REF_TABLE/DICT_FIELDS_"/>
+    </gda_array>
     <parameter id="FKEY_MATCH_TYPE" _name="Match type" _descr="Matching method if more than one field involved" gdatype="gchararray" source="match_types:0"/>
     <parameter id="FKEY_ONUPDATE" _name="On update action" gdatype="gchararray" source="action_cb:0"/>
     <parameter id="FKEY_ONDELETE" _name="On delete action" gdatype="gchararray" source="action_cb:0"/>
@@ -37,7 +48,7 @@
 
   <!-- other table constraints -->
   <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
-    <parameter id="CONSTRAINT_STRING" name="Constrains" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray"/>
   </sequence>
   
 

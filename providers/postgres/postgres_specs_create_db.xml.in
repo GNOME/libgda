@@ -10,7 +10,7 @@
     <parameter id="REQUIRESSL" _name="Require SSL" _descr="Whether to require SSL or not when connecting" gdatype="gboolean"/>
 
     <!-- DSN parameters -->
-    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to create" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to create" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="ENCODING" _name="Encoding" _descr="Character set encoding to use in the new database" gdatype="gchararray" source="csets:0"/>
     <parameter id="OWNER" _name="Owner" _descr="The name of the database user who will own the new database" gdatype="gchararray"/>
     <parameter id="TEMPLATE" _name="Template" _descr="The name of the template from which to create the new database" gdatype="gchararray"/>

@@ -3,8 +3,8 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS)
 
-bin_PROGRAMS = gda-diagnose gda-list-config gda-inspect-dict-file gda-author-dict-file gda-test-sql gda-test-models gda-test-connection
-noinst_PROGRAMS = gda-test-sql gda-test-models
+bin_PROGRAMS = gda-diagnose gda-list-config gda-inspect-dict-file gda-author-dict-file gda-test-sql gda-test-models gda-test-connection gda-test-server-operation
+noinst_PROGRAMS = gda-test-sql gda-test-models gda-test-server-operation
 
 gda_diagnose_SOURCES = \
 	html.h \
@@ -76,6 +76,16 @@ gda_test_connection_SOURCES = \
         gda-test-connection.c
 
 gda_test_connection_LDADD = \
+        $(top_builddir)/libgda/libgda-3.la \
+        $(top_builddir)/libgda/handlers/libgda_handlers-3.la \
+        $(top_builddir)/libgda/graph/libgda_graph-3.la \
+        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.la \
+        $(LIBGDA_LIBS)
+
+gda_test_server_operation_SOURCES = \
+        gda-test-server-operation.c
+
+gda_test_server_operation_LDADD = \
         $(top_builddir)/libgda/libgda-3.la \
         $(top_builddir)/libgda/handlers/libgda_handlers-3.la \
         $(top_builddir)/libgda/graph/libgda_graph-3.la \

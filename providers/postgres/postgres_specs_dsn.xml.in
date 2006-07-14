@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="SEARCHPATH" _name="Search Path" _descr="Search path among database's schemas" gdatype="gchararray"/>
     <parameter id="HOST" _name="Database server" _descr="Host which has the database server running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this fiend empty)" gdatype="gchararray"/>
     <parameter id="PORT" _name="Port" _descr="Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this fiend empty)" gdatype="gint"/>

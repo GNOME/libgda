@@ -1203,11 +1203,12 @@ static gint xml_fetch_next_xml_node (xmlTextReaderPtr reader);
 static void xml_fetch_next_row (GdaDataModelImport *model);
 
 typedef struct {
+	xmlChar      *id;
 	xmlChar      *name;
 	xmlChar      *title;
 	xmlChar      *caption;
 	xmlChar      *dbms_type;
-	GType  gdatype;
+	GType         gdatype;
 	gint          size;
 	gint          scale;
 	gboolean      pkey;
@@ -1227,6 +1228,7 @@ clean_field_specs (GSList *fields)
 	list = fields;
 	while (list) {
 		spec = (XmlColumnSpec*)(list->data);
+		xmlFree (spec->id);
 		xmlFree (spec->name);
 		xmlFree (spec->title);
 		xmlFree (spec->caption);
@@ -1302,6 +1304,12 @@ init_xml_import (GdaDataModelImport *model)
 			gda_object_set_name (GDA_OBJECT (model), prop);
 			xmlFree (prop);
 		}
+
+		prop = xmlGetProp (node, "descr");
+		if (prop) {
+			gda_object_set_description (GDA_OBJECT (model), prop);
+			xmlFree (prop);
+		}
 		
 		/* compute fields */
 		ret = xml_fetch_next_xml_node (reader);
@@ -1313,6 +1321,7 @@ init_xml_import (GdaDataModelImport *model)
 			spec = g_new0 (XmlColumnSpec, 1);
 			fields = g_slist_append (fields, spec);
 			
+			spec->id = xmlTextReaderGetAttribute (reader, "id");
 			spec->name = xmlTextReaderGetAttribute (reader, "name");
 			spec->title = xmlTextReaderGetAttribute (reader, "title");
 			if (!spec->title && spec->name)
@@ -1389,6 +1398,7 @@ init_xml_import (GdaDataModelImport *model)
 			spec = (XmlColumnSpec *)(list->data);
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns, column);
+			g_object_set (G_OBJECT (column), "id", spec->id, NULL);
 			gda_column_set_title (column, spec->title);
 			gda_column_set_name (column, spec->name);
 			gda_column_set_defined_size (column, spec->size);
@@ -1601,7 +1611,8 @@ init_node_import (GdaDataModelImport *model)
 
 			spec = g_new0 (XmlColumnSpec, 1);
 			fields = g_slist_append (fields, spec);
-
+			
+			spec->id = xmlGetProp (cur, "id");
 			spec->name = xmlGetProp (cur, "name");
 			spec->title = xmlGetProp (cur, "title");
 			if (!spec->title && spec->name)
@@ -1661,7 +1672,7 @@ init_node_import (GdaDataModelImport *model)
 			break;
 	}
 
-	if ((nbfields == 0) || !cur) {
+	if (nbfields == 0) {
 		add_error (model, _("No <gda_array_field> specified in <gda_array>"));
 		node = model->priv->extract.node.node = NULL;
 		clean_field_specs (fields);
@@ -1683,6 +1694,12 @@ init_node_import (GdaDataModelImport *model)
 		xmlFree (str);
 	}
 
+	str = xmlGetProp (node, "descr");
+	if (str) {
+		gda_object_set_description (GDA_OBJECT (model), str);
+		xmlFree (str);
+	}
+
 	list = fields;
 	pos = 0;
 	while (list) {
@@ -1691,6 +1708,7 @@ init_node_import (GdaDataModelImport *model)
 
 		spec = (XmlColumnSpec *)(list->data);
 		column = gda_data_model_describe_column (ramodel, pos);
+		g_object_set (G_OBJECT (column), "id", spec->id, NULL);
 		gda_column_set_title (column, spec->title);
 		gda_column_set_name (column, spec->name);
 		gda_column_set_defined_size (column, spec->size);
@@ -1712,7 +1730,7 @@ init_node_import (GdaDataModelImport *model)
 	clean_field_specs (fields);
 	model->priv->columns = g_slist_reverse (model->priv->columns);
 
-	if (! gda_data_model_add_data_from_xml_node (ramodel, cur, &error)) 
+	if (cur && ! gda_data_model_add_data_from_xml_node (ramodel, cur, &error)) 
 		add_error (model, error && error->message ? error->message : _("No detail"));
 }
 
@@ -1734,7 +1752,7 @@ add_error (GdaDataModelImport *model, const gchar *err)
  * Get the list of errors which @model has to report. The returned list is a list of
  * #GError structures, and must not be modified
  *
- * Returns: the list of errors, or %NULL
+ * Returns: the list of errors (which must not be modified), or %NULL
  */
 GSList *
 gda_data_model_import_get_errors (GdaDataModelImport *model)

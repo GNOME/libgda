@@ -25,6 +25,7 @@
 
 #include <glib-object.h>
 #include <libgda/gda-decl.h>
+#include <libxml/tree.h>
 
 G_BEGIN_DECLS
 
@@ -34,59 +35,84 @@ G_BEGIN_DECLS
 #define GDA_IS_SERVER_OPERATION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_SERVER_OPERATION))
 #define GDA_IS_SERVER_OPERATION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_OPERATION))
 
+/*
+ * Types of identified operations
+ * all the providers don't implement them completely, though
+ */
 typedef enum {
 	GDA_SERVER_OPERATION_CREATE_TABLE,
 	GDA_SERVER_OPERATION_DROP_TABLE,
 	GDA_SERVER_OPERATION_CREATE_INDEX,
 	GDA_SERVER_OPERATION_DROP_INDEX,
+	GDA_SERVER_OPERATION_NB
 } GdaServerOperationType;
 
 typedef enum {
 	GDA_SERVER_OPERATION_NODE_PARAMLIST,
 	GDA_SERVER_OPERATION_NODE_DATA_MODEL,
 	GDA_SERVER_OPERATION_NODE_PARAM,
-	GDA_SERVER_OPERATION_NODE_SEQUENCE
+	GDA_SERVER_OPERATION_NODE_SEQUENCE,
+	GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM,
+
+	GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN,
+	GDA_SERVER_OPERATION_NODE_UNKNOWN
 } GdaServerOperationNodeType;
 
+typedef enum {
+	GDA_SERVER_OPERATION_STATUS_OPTIONAL,
+	GDA_SERVER_OPERATION_STATUS_REQUIRED,
+	GDA_SERVER_OPERATION_STATUS_UNKNOWN
+} GdaServerOperationNodeStatus;
+
+typedef struct _GdaServerOperationNode {
+	GdaServerOperationNodeType    type;
+	GdaServerOperationNodeStatus  status;
+	
+	GdaParameterList             *plist;
+	GdaDataModel                 *model;
+	GdaColumn                    *column;
+	GdaParameter                 *param; 
+	gpointer                      priv;
+} GdaServerOperationNode;
+
 struct _GdaServerOperation {
-	GObject                   object;
+	GObject                    object;
 	GdaServerOperationPrivate *priv;
 };
 
 struct _GdaServerOperationClass {
 	GObjectClass               parent_class;
+
+	/* signals */
+	void                     (*seq_item_added) (GdaServerOperation *op, const gchar *seq_path, gint item_index);
+	void                     (*seq_item_remove) (GdaServerOperation *op, const gchar *seq_path, gint item_index);
+
 };
 
-/* implements XML storage */
+GType                      gda_server_operation_get_type                (void);
+GdaServerOperation        *gda_server_operation_new                     (GdaServerOperationType op_type, const gchar *xml_file);
+GdaServerOperationType     gda_server_operation_get_op_type             (GdaServerOperation *op);
+GdaServerOperationNode    *gda_server_operation_get_node_info           (GdaServerOperation *op, const gchar *path);
 
-GType                  gda_server_operation_get_type (void);
-GdaServerOperation    *gda_server_operation_new      (const gchar *xml_spec);
-gboolean               gda_server_operation_is_valid (GdaServerOperation *op, GError **error);
+xmlNodePtr                 gda_server_operation_save_data_to_xml        (GdaServerOperation *op, GError **error);
+gboolean                   gda_server_operation_load_data_from_xml      (GdaServerOperation *op, 
+									 xmlNodePtr node, GError **error);
 
-/* Not implemented:
-GdaServerOperationNodeType gda_server_operation_get_node_type (GdaServerOperation *op, const gchar *path);
-*/
-GdaServerOperationNodeType gda_server_operation_get_node_type_v (GdaServerOperation *op, const gchar **path_array);
+gchar**                    gda_server_operation_get_root_nodes          (GdaServerOperation *op);
+GdaServerOperationNodeType gda_server_operation_get_node_type           (GdaServerOperation *op, const gchar *path,
+								         GdaServerOperationNodeStatus *status);
+gchar                     *gda_server_operation_get_node_parent         (GdaServerOperation *op, const gchar *path);
+gchar                     *gda_server_operation_get_node_path_portion   (GdaServerOperation *op, const gchar *path);
 
-/* Not implementd:
-GdaParameterList *gda_server_operation_get_node_plist (GdaServerOperation *op, const gchar *path);
-*/
-GdaParameterList *gda_server_operation_get_node_plist_v (GdaServerOperation *op, const gchar **path_array);
+const gchar               *gda_server_operation_get_sequence_name       (GdaServerOperation *op, const gchar *path);
+gint                       gda_server_operation_get_sequence_size       (GdaServerOperation *op, const gchar *path);
+gchar                    **gda_server_operation_get_sequence_item_names (GdaServerOperation *op, const gchar *path); 
 
-/* Not implemented:
-GdaParameter *gda_server_operation_get_node_param (GdaServerOperation *op, const gchar *path);
-*/
-GdaParameter *gda_server_operation_get_node_param_v (GdaServerOperation *op, const gchar **path_array);
+gint                       gda_server_operation_add_item_to_sequence    (GdaServerOperation *op, const gchar *path);
+gboolean                   gda_server_operation_del_item_from_sequence  (GdaServerOperation *op, const gchar *item_path);
 
-/* Not implemented:
-GdaDataModel *gda_server_operation_get_node_datamodel (GdaServerOperation *op, const gchar *path);
-*/
-GdaDataModel *gda_server_operation_get_node_datamodel_v (GdaServerOperation *op, const gchar **path_array);
-
-/* Not implemented:
-gint gda_server_operation_get_node_seq_size (GdaServerOperation *op, const gchar *path);
-*/
-gint gda_server_operation_get_node_seq_size_v (GdaServerOperation *op, const gchar **path_array);
+const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path);
+gboolean                   gda_server_operation_is_valid                (GdaServerOperation *op, GError **error);
 
 G_END_DECLS
 

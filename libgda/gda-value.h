@@ -78,6 +78,7 @@ typedef struct {
 	gushort hour;
 	gushort minute;
 	gushort second;
+	gulong fraction;
 	glong timezone;	/* # of seconds to the east UTC */
 } GdaTime;
 

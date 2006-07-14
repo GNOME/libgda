@@ -29,6 +29,7 @@ GdaDict        *default_dict = NULL; /* available in all libgda, always NOT NULL
 xmlDtdPtr       gda_dict_dtd = NULL;
 xmlDtdPtr       gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
+xmlDtdPtr       gda_server_op_dtd = NULL;
 
 
 /**
@@ -103,6 +104,14 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	else
 		g_warning (_("Could not parse " LIBGDA_ARRAY_DTD_FILE ": "
 			     "XML data import validation will not be performed (some weird errors may occur)"));
+
+#define LIBGDA_SERVER_OP_DTD_FILE DTDINSTALLDIR"/libgda-server-operation.dtd"
+	gda_server_op_dtd = xmlParseDTD (NULL, LIBGDA_SERVER_OP_DTD_FILE);
+	if (gda_server_op_dtd)
+		gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
+	else
+		g_warning (_("Could not parse " LIBGDA_SERVER_OP_DTD_FILE ": "
+			     "Validation for XML files for server operations will not be performed (some weird errors may occur)"));
 
 	initialized = TRUE;
 }

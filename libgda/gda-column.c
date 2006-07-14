@@ -33,6 +33,7 @@
 
 struct _GdaColumnPrivate {
 	gint         defined_size;
+	gchar       *id;
 	gchar       *name;
 	gchar       *title;
 
@@ -55,17 +56,35 @@ struct _GdaColumnPrivate {
 	GValue      *default_value;
 };
 
+static void gda_column_class_init (GdaColumnClass *klass);
+static void gda_column_init       (GdaColumn *column, GdaColumnClass *klass);
+static void gda_column_finalize   (GObject *object);
+
+static void gda_column_set_property (GObject *object,
+				     guint param_id,
+				     const GValue *value,
+				     GParamSpec *pspec);
+static void gda_column_get_property (GObject *object,
+				     guint param_id,
+				     GValue *value,
+				     GParamSpec *pspec);
+
+/* signals */
 enum {
 	NAME_CHANGED,
 	GDA_TYPE_CHANGED,
 	LAST_SIGNAL
 };
 
-static void gda_column_class_init (GdaColumnClass *klass);
-static void gda_column_init       (GdaColumn *column, GdaColumnClass *klass);
-static void gda_column_finalize   (GObject *object);
-
 static guint gda_column_signals[LAST_SIGNAL] = {0 , 0};
+
+/* properties */
+enum
+{
+        PROP_0,
+        PROP_ID,
+};
+
 static GObjectClass *parent_class = NULL;
 
 static void
@@ -75,6 +94,7 @@ gda_column_class_init (GdaColumnClass *klass)
 	
 	parent_class = g_type_class_peek_parent (klass);
 	
+	/* signals */
 	gda_column_signals[NAME_CHANGED] =
 		g_signal_new ("name_changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -94,6 +114,14 @@ gda_column_class_init (GdaColumnClass *klass)
 			      G_TYPE_NONE,
 			      2, G_TYPE_INT, G_TYPE_INT);
 
+	/* properties */
+        object_class->set_property = gda_column_set_property;
+        object_class->get_property = gda_column_get_property;
+
+        g_object_class_install_property (object_class, PROP_ID,
+                                         g_param_spec_string ("id", NULL, NULL,
+                                                              NULL, G_PARAM_WRITABLE | G_PARAM_READABLE));
+
 	object_class->finalize = gda_column_finalize;
 }
 
@@ -104,6 +132,7 @@ gda_column_init (GdaColumn *column, GdaColumnClass *klass)
 	
 	column->priv = g_new0 (GdaColumnPrivate, 1);
 	column->priv->defined_size = 0;
+	column->priv->id = NULL;
 	column->priv->name = NULL;
 	column->priv->table = NULL;
 	column->priv->title = NULL;
@@ -162,6 +191,50 @@ gda_column_get_type (void)
 	return type;
 }
 
+static void
+gda_column_set_property (GObject *object,
+                                   guint param_id,
+                                   const GValue *value,
+                                   GParamSpec *pspec)
+{
+        GdaColumn *col;
+
+        col = GDA_COLUMN (object);
+	if (col->priv) {
+		switch (param_id) {
+                case PROP_ID:
+			g_free (col->priv->id);
+			if (g_value_get_string (value))
+				col->priv->id = g_strdup (g_value_get_string (value));
+			else
+				col->priv->id = NULL;
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
+}
+
+static void
+gda_column_get_property (GObject *object,
+			 guint param_id,
+			 GValue *value,
+			 GParamSpec *pspec)
+{
+	GdaColumn *col;
+
+        col = GDA_COLUMN (object);
+	if (col->priv) {
+		switch (param_id) {
+                case PROP_ID:
+			g_value_set_string (value, col->priv->id);
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
+}
+
 /**
  * gda_column_new
  *
@@ -194,6 +267,8 @@ gda_column_copy (GdaColumn *column)
   	
 	column_copy = gda_column_new (); 	 
 	column_copy->priv->defined_size = column->priv->defined_size;
+	if (column->priv->id)
+		column_copy->priv->id = g_strdup (column->priv->id);
 	if (column->priv->name)
 		column_copy->priv->name = g_strdup (column->priv->name);
 	if (column->priv->title)
@@ -218,81 +293,6 @@ gda_column_copy (GdaColumn *column)
 	
 	return column_copy; 	 
 }
-
-/** 	 
- * gda_column_equal: 	 
- * @lhs: a #GdaColumn 	 
- * @rhs: another #GdaColumn 	 
- * 	 
- * Tests whether two colums are equal. 	 
- * 	 
- * Return value: %TRUE if the columns contain the same information. 	 
- */
-gboolean
-gda_column_equal (const GdaColumn *lhs, const GdaColumn *rhs) 	 
-{ 	 
-	g_return_val_if_fail (GDA_IS_COLUMN (lhs), FALSE); 	 
-	g_return_val_if_fail (GDA_IS_COLUMN (rhs), FALSE); 	 
-  	 
-	/* Compare every struct field: */ 	 
-	if ((lhs->priv->defined_size != rhs->priv->defined_size) || 	 
-	    (lhs->priv->scale != rhs->priv->scale) || 	 
-	    (lhs->priv->gda_type != rhs->priv->gda_type) || 	 
-	    (lhs->priv->allow_null != rhs->priv->allow_null) || 	 
-	    (lhs->priv->primary_key != rhs->priv->primary_key) || 	 
-	    (lhs->priv->unique_key != rhs->priv->unique_key) || 	 
-	    (lhs->priv->auto_increment != rhs->priv->auto_increment) || 	 
-	    (lhs->priv->auto_increment_step != rhs->priv->auto_increment_step) || 	 
-	    (lhs->priv->position != rhs->priv->position)) 	 
-		return FALSE; 	 
-  	 
-	/* Check the strings if they have are not null. 	 
-	   Then check whether one is null while the other is not, because strcmp can not do that. */ 	 
-	if ((lhs->priv->name && rhs->priv->name) 	 
-	    && (strcmp (lhs->priv->name, rhs->priv->name) != 0)) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->name == 0) != (rhs->priv->name == 0)) 	 
-		return FALSE; 	 
-
-	if ((lhs->priv->title && rhs->priv->title) 	 
-	    && (strcmp (lhs->priv->title, rhs->priv->title) != 0)) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->title == 0) != (rhs->priv->title == 0)) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->table && rhs->priv->table) 	 
-	    && (strcmp (lhs->priv->table, rhs->priv->table) != 0)) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->table == 0) != (rhs->priv->table == 0)) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->caption && rhs->priv->caption) 	 
-	    && (strcmp (lhs->priv->caption, rhs->priv->caption) != 0)) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->caption == 0) != (rhs->priv->caption == 0)) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->references && rhs->priv->references) 	 
-	    && (strcmp (lhs->priv->references, rhs->priv->references) != 0)) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->references == 0) != (rhs->priv->references == 0)) 	 
-		return FALSE; 	 
-  	 
-	if (lhs->priv->default_value 	 
-	    && rhs->priv->default_value 	 
-	    && gda_value_compare (lhs->priv->default_value, rhs->priv->default_value) != 0) 	 
-		return FALSE; 	 
-  	 
-	if ((lhs->priv->default_value == 0) != (rhs->priv->default_value == 0)) 	 
-		return FALSE; 	 
-  	 
-	return TRUE; 	 
- }
 
 /**
  * gda_column_get_defined_size

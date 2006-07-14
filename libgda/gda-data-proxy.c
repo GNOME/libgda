@@ -152,6 +152,7 @@ struct _GdaDataProxyPrivate
 	gint               model_nb_cols; /* = gda_data_model_get_n_columns (model) */
 	gboolean           autocommit;
 	gboolean           notify_changes;
+	guint              background_commit_id;
 
 	GSList            *all_modifs; /* list of RowModif structures, for memory management */
 	GSList            *new_rows;   /* list of RowModif, no data allocated in this list */
@@ -443,6 +444,38 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
 
+static gboolean
+background_commit_cb (GdaDataProxy *proxy)
+{
+	if (proxy->priv) {
+		GError *error = NULL;
+		if (!gda_data_proxy_apply_all_changes (proxy, &error)) {
+			g_warning (_("Could not auto-commit row change: %s"), 
+				   error && error->message ?  error->message : _("No detail"));
+			if (error)
+				g_error_free (error);
+		}
+		proxy->priv->background_commit_id = 0;
+	}
+
+	return FALSE;
+}
+
+static void
+row_changed_signal (GdaDataModel *model, gint row)
+{
+	GdaDataProxy *proxy;
+
+	proxy = GDA_DATA_PROXY (model);
+	if (!proxy->priv)
+		return;
+
+	/* the changes will be committed later in an idle high priority loop */
+	if (proxy->priv->autocommit && !proxy->priv->background_commit_id)
+		proxy->priv->background_commit_id = g_idle_add_full (G_PRIORITY_HIGH_IDLE, 
+								     (GSourceFunc) background_commit_cb, proxy, NULL);
+}
+
 static void
 gda_data_proxy_data_model_init (GdaDataModelClass *iface)
 {
@@ -468,6 +501,10 @@ gda_data_proxy_data_model_init (GdaDataModelClass *iface)
 	iface->i_set_notify = gda_data_proxy_set_notify;
 	iface->i_get_notify = gda_data_proxy_get_notify;
 	iface->i_send_hint = gda_data_proxy_send_hint;
+
+	iface->row_inserted = row_changed_signal;
+	iface->row_updated = row_changed_signal;
+	iface->row_removed = row_changed_signal;
 }
 
 static void
@@ -669,7 +706,11 @@ gda_data_proxy_set_property (GObject *object,
 		case PROP_ADD_NULL_ENTRY:
 			if (proxy->priv->add_null_entry != g_value_get_boolean (value)) {
 				proxy->priv->add_null_entry = g_value_get_boolean (value);
-				gda_object_changed (GDA_OBJECT (proxy));
+
+				if (proxy->priv->add_null_entry)
+					gda_data_model_row_inserted ((GdaDataModel *) proxy, 0);
+				else
+					gda_data_model_row_removed ((GdaDataModel *) proxy, 0);
 			}
 			break;
 		}
@@ -2324,6 +2365,9 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row)
 	g_return_val_if_fail (proxy->priv, NULL);
 	g_return_val_if_fail (proxy_row >= 0, NULL);
 
+	if ((proxy_row == 0) && proxy->priv->add_null_entry) 
+		return NULL;
+
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
 
 	/* current proxy's values (values may be different than the ones in the proxied data model) */
@@ -2397,7 +2441,7 @@ gda_data_proxy_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (model), FALSE);
 	g_return_val_if_fail (((GdaDataProxy *) model)->priv, FALSE);
 
-	return gda_data_proxy_get_value_attributes ((GdaDataProxy *) model, col, row);
+	return gda_data_proxy_get_value_attributes ((GdaDataProxy *) model, row, col);
 }
 
 static GdaDataModelIter *

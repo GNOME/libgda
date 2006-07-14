@@ -1296,29 +1296,26 @@ static void
 gda_parameter_dump (GdaParameter *parameter, guint offset)
 {
 	gchar *str;
-	guint i;
 
 	g_return_if_fail (parameter);
 	g_return_if_fail (GDA_IS_PARAMETER (parameter));
 
 	/* string for the offset */
 	str = g_new0 (gchar, offset+1);
-        for (i=0; i<offset; i++)
-                str[i] = ' ';
-        str[offset] = 0;
+	memset (str, ' ', offset);
 	
 	/* dump */
 	if (parameter->priv) {
 		GSList *list;
-		gchar *str;
+		gchar *strval;
 
-		str = gda_value_stringify ((GValue *) gda_parameter_get_value (parameter));
+		strval = gda_value_stringify ((GValue *) gda_parameter_get_value (parameter));
 		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s, %s, value=%s\n" D_COL_NOR, str, parameter,
 			 gda_object_get_name (GDA_OBJECT (parameter)), 
 			 gda_type_to_string (parameter->priv->gda_type),
 			 gda_parameter_is_valid (parameter) ? "VALID" : "INVALID",
-			 str);
-		g_free (str);
+			 strval);
+		g_free (strval);
 		
 		list = parameter->priv->param_users;
 		while (list) {

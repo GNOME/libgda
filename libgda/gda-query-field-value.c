@@ -1032,7 +1032,7 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 		xmlSetProp (node, "default_gda_type", gda_type_to_string (vtype));
 	}
 
-	xmlSetProp (node, "null_ok", field->priv->is_null_allowed ? "t" : "f");
+	xmlSetProp (node, "nullok", field->priv->is_null_allowed ? "t" : "f");
 	if (field->priv->restrict_model) {
 		str = g_strdup_printf ("DA%s:%d", 
 				       gda_object_get_name (GDA_OBJECT (field->priv->restrict_model)),
@@ -1178,7 +1178,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "null_ok");
+	prop = xmlGetProp (node, "nullok");
 	if (prop) {
 		field->priv->is_null_allowed = (*prop == 't') ? TRUE : FALSE;
 		g_free (prop);

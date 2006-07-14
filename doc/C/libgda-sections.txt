@@ -90,7 +90,6 @@ gda_column_index_get_type
 GdaColumn
 gda_column_new
 gda_column_copy
-gda_column_equal
 gda_column_get_defined_size
 gda_column_set_defined_size
 gda_column_get_name
@@ -469,6 +468,7 @@ gda_data_model_get_row_from_values
 gda_data_model_send_hint
 gda_data_model_export_to_string
 gda_data_model_export_to_file
+gda_data_model_add_data_from_xml_node
 gda_data_model_import_from_model
 gda_data_model_import_from_string
 gda_data_model_import_from_file
@@ -1440,7 +1440,7 @@ GdaParameterListNode
 GdaParameterListGroup
 GdaParameterListSource
 gda_parameter_list_new
-gda_parameter_list_new_from_spec
+gda_parameter_list_new_from_spec_string
 gda_parameter_list_get_length
 gda_parameter_list_get_spec
 gda_parameter_list_add_param

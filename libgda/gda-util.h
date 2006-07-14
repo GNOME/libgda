@@ -32,6 +32,9 @@
 
 G_BEGIN_DECLS
 
+/*
+ * Type utilities
+ */
 const gchar *gda_type_to_string (GType type);
 GType gda_type_from_string (const gchar *str);
 
@@ -60,7 +63,7 @@ gboolean  gda_file_save (const gchar *filename, const gchar *buffer, gint len);
  * which is a list of comma separated keywords
  */
 gchar *utility_table_field_attrs_stringify (guint attributes);
-guint utility_table_field_attrs_parse     (const gchar *str);
+guint  utility_table_field_attrs_parse     (const gchar *str);
 
 /*
  * XML Id encoding and decoding
@@ -69,9 +72,13 @@ gchar *utility_build_encoded_id (const gchar *prefix, const gchar *id);
 gchar *utility_build_decoded_id (const gchar *prefix, const gchar *id);
 
 /*
- * Check model columns
+ * Param & model utilities
  */
 gboolean utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
+void     utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, const gint *cols, gint nb_cols);
+void     utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources);
+GdaDictType *utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
+					       const gchar *dbms_type, const gchar *gda_type, gboolean *created);
 
 
 G_END_DECLS

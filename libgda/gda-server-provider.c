@@ -437,6 +437,28 @@ gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 		return FALSE;
 }
 
+typedef struct {
+	gchar                      *path;
+	GdaServerOperationNodeType  node_type;
+	GType                       data_type;
+} OpReq;
+
+static OpReq op_req_CREATE_TABLE [] = {
+	{"/TABLE_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
+	{"/TABLE_DEF_P/TABLE_NAME",    GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/FIELDS_A",                  GDA_SERVER_OPERATION_NODE_DATA_MODEL, 0},
+	{"/FIELDS_A/@COLUMN_NAME",     GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN, G_TYPE_STRING},
+	{"/FIELDS_A/@COLUMN_TYPE",     GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN, G_TYPE_STRING},
+	{NULL}
+};
+
+static OpReq *op_req_table [GDA_SERVER_OPERATION_NB] = {
+	op_req_CREATE_TABLE, /* GDA_SERVER_OPERATION_CREATE_TABLE */
+	NULL, /* GDA_SERVER_OPERATION_DROP_TABLE */
+	NULL, /* GDA_SERVER_OPERATION_CREATE_INDEX */
+	NULL, /* GDA_SERVER_OPERATION_DROP_INDEX */
+};
+
 /**
  * gda_server_provider_create_operation
  * @provider: a #GdaServerProvider object
@@ -460,8 +482,31 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, NULL);
 	}
-	if (CLASS (provider)->create_operation)
-		return CLASS (provider)->create_operation (provider, cnc, type, options, error);
+	if (CLASS (provider)->create_operation) {
+		GdaServerOperation *op;
+		GdaServerProviderInfo *pinfo;
+
+		pinfo = gda_server_provider_get_info (provider, cnc);
+		op = CLASS (provider)->create_operation (provider, cnc, type, options, error);
+		if (op) {
+			/* test op's conformance */
+			gint i = 0;
+			OpReq *opreq = op_req_table [type];
+			while (opreq->path) {
+				GdaServerOperationNodeType node_type;
+				node_type = gda_server_operation_get_node_type (op, opreq->path, NULL);
+				if (node_type == GDA_SERVER_OPERATION_NODE_UNKNOWN) 
+					g_warning (_("Provider %s created a GdaServerOperation without node for '%s'"),
+						   pinfo->provider_name, opreq->path);
+				else 
+					if (node_type != opreq->node_type)
+						g_warning (_("Provider %s created a GdaServerOperation with wrong node type for '%s'"),
+							   pinfo->provider_name, opreq->path);
+				opreq += 1;
+			}
+		}
+		return op;
+	}
 	else
 		return NULL;
 }

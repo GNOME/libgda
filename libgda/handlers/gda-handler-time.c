@@ -374,21 +374,28 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		const GdaTimestamp *gdats;
 		GDate *vdate;
-		GdaTime vtim;
+		GString *string;
 
 		gdats = gda_value_get_timestamp ((GValue *) value);
 		vdate = g_date_new_dmy (gdats->day, gdats->month, gdats->year);
 		str = render_date_locale (vdate, hdl->priv->sql_locale);
 		g_date_free (vdate);
-		vtim.hour = gdats->hour;
-		vtim.minute = gdats->minute;
-		vtim.second = gdats->second;
-		retval = g_strdup_printf ("'%s %02d:%02d:%02d'",
-					  str,
-					  vtim.hour,
-					  vtim.minute,
-					  vtim.second);
+
+		string = g_string_new ("");
+		g_string_append_printf (string, "%02u:%02u:%02u",
+					gdats->hour,
+					gdats->minute,
+					gdats->second);
+		if (gdats->fraction != 0)
+			g_string_append_printf (string, ".%lu", gdats->fraction);
+		
+		if (gdats->timezone != GDA_TIMEZONE_INVALID)
+			g_string_append_printf (string, "%+02d", 
+						(int) gdats->timezone / 3600);
+		
+		retval = g_strdup_printf ("'%s %s'", str, string->str);
 		g_free (str);
+		g_string_free (string, TRUE);
 	}
 	else
 		g_assert_not_reached ();
@@ -424,20 +431,28 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 		const GdaTimestamp *gdats;
 		GDate *vdate;
 		GdaTime vtime;
+		GString *string;
 
 		gdats = gda_value_get_timestamp ((GValue *) value);
 		vdate = g_date_new_dmy (gdats->day, gdats->month, gdats->year);
 		str = render_date_locale (vdate, hdl->priv->str_locale);
 		g_date_free (vdate);
-		vtime.hour = gdats->hour;
-		vtime.minute = gdats->minute;
-		vtime.second = gdats->second;
-		retval = g_strdup_printf ("%s %02d:%02d:%02d",
-					  str,
-					  vtime.hour,
-					  vtime.minute,
-					  vtime.second);
+
+		string = g_string_new ("");
+		g_string_append_printf (string, "%02u:%02u:%02u",
+					gdats->hour,
+					gdats->minute,
+					gdats->second);
+		if (gdats->fraction != 0)
+			g_string_append_printf (string, ".%lu", gdats->fraction);
+		
+		if (gdats->timezone != GDA_TIMEZONE_INVALID)
+			g_string_append_printf (string, "%+02d", 
+						(int) gdats->timezone / 3600);
+		
+		retval = g_strdup_printf ("%s %s", str, string->str);
 		g_free (str);
+		g_string_free (string, TRUE);
 	}
 	else
 		g_assert_not_reached ();
@@ -617,11 +632,13 @@ make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, const gchar *value
 			timestamp->hour = vtime.hour;
 			timestamp->minute = vtime.minute;
 			timestamp->second = vtime.second;
-			timestamp->fraction = 0;
-			timestamp->timezone = 0;
+			timestamp->fraction = vtime.fraction;
+			timestamp->timezone = vtime.timezone;
 		}
 	}
 	g_free (str);
+
+	g_print ("Value #%s# => %d\n", value, retval);
 
 	return retval;
 }
@@ -636,6 +653,9 @@ make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *
 	gboolean error = FALSE;
 	gchar *ptr, *numstart, *tofree;
 	gint i;
+
+	if (!value)
+		return FALSE;
 
 	g_date_clear (date, 1);
 	g_date_set_dmy (date, 1, 1, 1);
@@ -704,49 +724,94 @@ make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *
 	return retval;
 }
 
-/* Makes a GdaTime from a string like "12:30:15+01",
+/* Makes a GdaTime from a string like:
+ * 12:30:15+01
+ * 12:30:15-02
+ * 12:30:15.123
+ * 123015+01
+ * 123015-02
+ * 123015.123
  * taken from libgda/gda-value.h
  */
 static gboolean
 make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
 {
-	gboolean retval = TRUE;
-	gchar *str, *ptr;
-	char *buff;
+	const gchar *ptr;
 
 	if (!value)
 		return FALSE;
 
-	str = g_strdup (value);
-	ptr = strtok_r (str, ":", &buff);
-	if (!ptr)
+	/* hour */
+	timegda->fraction = 0;
+	timegda->timezone = GDA_TIMEZONE_INVALID;
+	ptr = value;
+	if ((*ptr >= '0') && (*ptr <= '9') &&
+	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
+		timegda->hour = (*ptr - '0') * 10 + *(ptr+1) - '0';
+	else
 		return FALSE;
-        timegda->hour = atoi (ptr);
+
+	/* minute */
+	ptr += 2;
+	if (! *ptr)
+		return FALSE;
+	if (*ptr == ':')
+		ptr++;
+	if ((*ptr >= '0') && (*ptr <= '9') &&
+	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
+		timegda->minute = (*ptr - '0') * 10 + *(ptr+1) - '0';
+	else
+		return FALSE;
+
+	/* second */
+	ptr += 2;
+	timegda->second = 0;
+	if (! *ptr) {
+		if ((timegda->hour > 24) || (timegda->minute > 60))
+			return FALSE;
+		else
+			return TRUE;
+	}
+	if (*ptr == ':')
+		ptr++;
+	if ((*ptr >= '0') && (*ptr <= '9') &&
+	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
+		timegda->second = (*ptr - '0') * 10 + *(ptr+1) - '0';
 	
-        ptr = strtok_r (NULL, ":", &buff);
-	if (!ptr)
-		return FALSE;
-        timegda->minute = atoi (ptr);
+	/* extra */
+	ptr += 2;
+	if (! *ptr) {
+		if ((timegda->hour > 24) || (timegda->minute > 60) || 
+		    (timegda->second > 60))
+			return FALSE;
+		else
+			return TRUE;
+	}
 
-	ptr = strtok_r (NULL, ":", &buff);
-	if (!ptr)
-		return FALSE;
-        timegda->second = atoi (ptr);
+	if (*ptr == '.') {
+		ptr ++;
+		while (*ptr && (*ptr >= '0') && (*ptr <= '9')) {
+			timegda->fraction = timegda->fraction * 10 + *ptr - '0';
+			ptr++;
+		}
+	}
 
-	ptr = strtok_r (NULL, " ", &buff);
-        if (ptr && *ptr)
-                timegda->timezone = atoi (value);
-        else
-                timegda->timezone = 0;
-	timegda->timezone = 0;
-
-	g_free (str);
-
+	if ((*ptr == '+') || (*ptr == '-')) {
+		glong sign = (*ptr == '+') ? 1 : -1;
+		ptr ++;
+		timegda->timezone = 0;
+		while (*ptr && (*ptr >= '0') && (*ptr <= '9')) {
+			timegda->timezone = timegda->timezone * 10 + sign * ((*ptr) - '0');
+			ptr++;
+		}
+		timegda->timezone *= 3600;
+	}
+	
 	/* checks */
 	if ((timegda->hour > 24) || (timegda->minute > 60) || (timegda->second > 60))
-		retval = FALSE;
-
-	return retval;
+		return FALSE;
+	else
+		return TRUE;
 }
 
 
@@ -779,7 +844,7 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
                 gtime.hour = stm->tm_hour;
 		gtime.minute = stm->tm_min;
 		gtime.second = stm->tm_sec;
-		gtime.timezone = 0;
+		gtime.timezone = GDA_TIMEZONE_INVALID;
 		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIME);
 		gda_value_set_time (value, &gtime);
 	}
@@ -793,7 +858,7 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
 		gts.minute = stm->tm_min;
 		gts.second = stm->tm_sec;
 		gts.fraction = 0;
-		gts.timezone = 0;
+		gts.timezone = GDA_TIMEZONE_INVALID;
 		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIMESTAMP);
 		gda_value_set_timestamp (value, &gts);
 	}

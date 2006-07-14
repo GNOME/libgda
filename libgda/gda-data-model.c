@@ -36,6 +36,9 @@
 #include <libgda/gda-object.h>
 #include <libgda/gda-enums.h>
 #include <string.h>
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))
@@ -1235,34 +1238,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	}
 	
 	/* add the model data to the XML output */
-	if (rows > 0) {
-		xmlNodePtr row, data, field;
-		gint r, c;
-
-		data = xmlNewChild (node, NULL, "gda_array_data", NULL);
-		for (r = 0; r < rows; r++) {
-			row = xmlNewChild (data, NULL, "gda_array_row", NULL);
-			for (c = 0; c < rnb_cols; c++) {
-				GValue *value;
-				gchar *str;
-
-				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], r);
-				if (!value || gda_value_is_null ((GValue *) value))
-					str = NULL;
-				else {
-					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
-						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
-					else
-						str = gda_value_stringify (value);
-				}
-				field = xmlNewChild (row, NULL, "gda_value", str);
-				if (!str)
-					xmlSetProp (field, "isnull", "t");
-
-				g_free (str);
-			}
-		}
-	}
+	utility_data_model_dump_data_to_xml (model, node, cols, nb_cols);
 
 	if (!cols)
 		g_free (rcols);
@@ -1281,6 +1257,13 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 	gboolean retval = TRUE;
 	gint pos = 0;
 
+	const gchar *lang = NULL;
+#ifdef HAVE_LC_MESSAGES
+	lang = setlocale (LC_MESSAGES, NULL);
+#else
+	lang = setlocale (LC_CTYPE, NULL);
+#endif
+
 	values = g_ptr_array_new ();
 	g_ptr_array_set_size (values, gda_data_model_get_n_columns (model));
 	for (xml_field = xml_row->xmlChildrenNode; xml_field != NULL; xml_field = xml_field->next) {
@@ -1288,6 +1271,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		GdaColumn *column;
 		GType gdatype;
 		gchar *isnull;
+		xmlChar *this_lang;
 
 		if (xmlNodeIsText (xml_field))
 			continue;
@@ -1296,9 +1280,18 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			g_set_error (error, 0, 0, _("Expected tag <gda_value>, got <%s>, ignoring"), xml_field->name);
 			continue;
 		}
+		
+		this_lang = xmlGetProp (xml_field, "lang");
+		if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+			xmlFree (this_lang);
+			continue;
+		}
 
 		/* create the value for this field */
-		column = gda_data_model_describe_column (model, pos);
+		if (this_lang)
+			column = gda_data_model_describe_column (model, pos - 1);
+		else
+			column = gda_data_model_describe_column (model, pos);
 		gdatype = gda_column_get_gda_type (column);
 		if ((gdatype == G_TYPE_INVALID) ||
 		    (gdatype == GDA_TYPE_NULL)) {
@@ -1330,7 +1323,10 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			g_free (isnull);
 
 		g_ptr_array_index (values, pos) = value;
-		pos ++;
+		if (this_lang)
+			xmlFree (this_lang);
+		else
+			pos ++;
 	}
 
 	if (retval) {
@@ -1630,7 +1626,7 @@ gda_data_model_import_from_string (GdaDataModel *model,
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
  *
- * Imports data contained in the @file file into @model; the format is specified using the @format argument.
+ * Imports data contained in the @file file into @model; the format is detected.
  *
  * Returns: TRUE if no error occurred
  */

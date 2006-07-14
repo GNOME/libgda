@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="STRING" _name="Connection String" _descr="ODBC connection string" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="STRING" _name="Connection String" _descr="ODBC connection string" gdatype="gchararray" nullok="FALSE"/>
   </parameters>
 </data-set-spec>

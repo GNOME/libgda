@@ -44,6 +44,11 @@ Management of #GdaDataModel column attributes
 @gdacolumn: the object which received the signal.
 @arg1: 
 
+<!-- ##### ARG GdaColumn:id ##### -->
+<para>
+
+</para>
+
 <!-- ##### FUNCTION gda_column_new ##### -->
 <para>
 
@@ -58,16 +63,6 @@ Management of #GdaDataModel column attributes
 </para>
 
 @column: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_column_equal ##### -->
-<para>
-
-</para>
-
-@lhs: 
-@rhs: 
 @Returns: 
 
 

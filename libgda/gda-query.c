@@ -276,11 +276,11 @@ gda_query_renderer_init (GdaRendererIface *iface)
 
 static void m_changed_cb (GdaQuery *query);
 static void
-gda_query_class_init (GdaQueryClass * class)
+gda_query_class_init (GdaQueryClass * klass)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (klass);
 
 	gda_query_signals[TYPE_CHANGED] =
 		g_signal_new ("type_changed",
@@ -371,17 +371,17 @@ gda_query_class_init (GdaQueryClass * class)
 			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
 			      1, G_TYPE_POINTER);
 
-	class->type_changed = m_changed_cb;
-	class->condition_changed = m_changed_cb;
-	class->target_added = (void (*) (GdaQuery *, GdaQueryTarget *)) m_changed_cb;
-	class->target_removed = NULL;
-	class->target_updated = (void (*) (GdaQuery *, GdaQueryTarget *)) m_changed_cb;
-	class->join_added = (void (*) (GdaQuery *, GdaQueryJoin *)) m_changed_cb;
-	class->join_removed = NULL;
-	class->join_updated = (void (*) (GdaQuery *, GdaQueryJoin *)) m_changed_cb;
-	class->sub_query_added = NULL;
-	class->sub_query_removed = NULL;
-	class->sub_query_updated = NULL;
+	klass->type_changed = m_changed_cb;
+	klass->condition_changed = m_changed_cb;
+	klass->target_added = (void (*) (GdaQuery *, GdaQueryTarget *)) m_changed_cb;
+	klass->target_removed = NULL;
+	klass->target_updated = (void (*) (GdaQuery *, GdaQueryTarget *)) m_changed_cb;
+	klass->join_added = (void (*) (GdaQuery *, GdaQueryJoin *)) m_changed_cb;
+	klass->join_removed = NULL;
+	klass->join_updated = (void (*) (GdaQuery *, GdaQueryJoin *)) m_changed_cb;
+	klass->sub_query_added = NULL;
+	klass->sub_query_removed = NULL;
+	klass->sub_query_updated = NULL;
 
 	object_class->dispose = gda_query_dispose;
 	object_class->finalize = gda_query_finalize;
@@ -407,9 +407,9 @@ gda_query_class_init (GdaQueryClass * class)
                                                                G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/* virtual functions */
-        GDA_QUERY_OBJECT_CLASS (class)->set_int_id = (void (*)(GdaQueryObject *, guint)) gda_query_set_int_id;
+        GDA_QUERY_OBJECT_CLASS (klass)->set_int_id = (void (*)(GdaQueryObject *, guint)) gda_query_set_int_id;
 #ifdef GDA_DEBUG
-        GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_query_dump;
+        GDA_OBJECT_CLASS (klass)->dump = (void (*)(GdaObject *, guint)) gda_query_dump;
 #endif
 
 }

@@ -55,7 +55,6 @@ struct _GdaColumnClass {
 GType           gda_column_get_type           (void);
 GdaColumn      *gda_column_new                (void);
 GdaColumn      *gda_column_copy               (GdaColumn *column);
-gboolean        gda_column_equal              (const GdaColumn *lhs, const GdaColumn *rhs);
 
 const gchar    *gda_column_get_title          (GdaColumn *column);
 void            gda_column_set_title          (GdaColumn *column, const gchar *title);
@@ -99,7 +98,7 @@ void            gda_column_set_auto_increment (GdaColumn *column, gboolean is_au
 gint            gda_column_get_position       (GdaColumn *column);
 void            gda_column_set_position       (GdaColumn *column, gint position);
 
-const GValue *gda_column_get_default_value  (GdaColumn *column);
+const GValue   *gda_column_get_default_value  (GdaColumn *column);
 void            gda_column_set_default_value  (GdaColumn *column, const GValue *default_value);
 
 G_END_DECLS

@@ -47,6 +47,7 @@ to GDA_TYPE_NULL.
 @hour: 
 @minute: 
 @second: 
+@fraction: 
 @timezone: 
 
 <!-- ##### STRUCT GdaTimestamp ##### -->

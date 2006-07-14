@@ -29,6 +29,7 @@
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-column-index.h>
+#include <libgda/gda-server-operation.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
 #include "gda-postgres-blob.h"
@@ -68,6 +69,14 @@ static gchar *gda_postgres_provider_get_specs  (GdaServerProvider *provider, Gda
 static gboolean gda_postgres_provider_perform_action_params (GdaServerProvider *provider, 
 							     GdaParameterList *params, 
 							     GdaClientSpecsType type, GError **error);
+
+static gboolean gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+							  GdaServerOperationType type);
+static GdaServerOperation *gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+								   GdaServerOperationType type, 
+								   GdaParameterList *options, GError **error);
+static gchar *gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+						      GdaServerOperation *op, GError **error);
 
 static gboolean gda_postgres_provider_create_database_cnc (GdaServerProvider *provider,
 							   GdaConnection *cnc,
@@ -195,6 +204,10 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 
 	provider_class->get_specs = gda_postgres_provider_get_specs;
 	provider_class->perform_action_params = gda_postgres_provider_perform_action_params;
+	provider_class->supports_operation = gda_postgres_provider_supports_operation;
+	provider_class->create_operation = gda_postgres_provider_create_operation;
+	provider_class->render_operation = gda_postgres_provider_render_operation;
+	provider_class->perform_operation = NULL;
 
 	provider_class->create_database_cnc = gda_postgres_provider_create_database_cnc;
 	provider_class->drop_database_cnc = gda_postgres_provider_drop_database_cnc;
@@ -985,6 +998,87 @@ gda_postgres_provider_perform_action_params (GdaServerProvider *provider,
 	
 	return retval;
 }
+
+static gboolean
+gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
+					  GdaServerOperationType type)
+{
+	switch (type) {
+	case GDA_SERVER_OPERATION_CREATE_TABLE:
+	case GDA_SERVER_OPERATION_DROP_TABLE:
+	case GDA_SERVER_OPERATION_CREATE_INDEX:
+	case GDA_SERVER_OPERATION_DROP_INDEX:
+		return TRUE;
+	default:
+		return FALSE;
+	}
+}
+
+static GdaServerOperation *
+gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+					GdaServerOperationType type, 
+					GdaParameterList *options, GError **error)
+{
+	gchar *file;
+	GdaServerOperation *op;
+	static gchar *xmlfiles[GDA_SERVER_OPERATION_NB]= {
+		"postgres_specs_create_table.xml",
+		"postgres_specs_drop_table.xml",
+		"postgres_specs_create_index.xml",
+		"postgres_specs_drop_index.xml"
+	};
+	
+	file = g_build_filename (LIBGDA_DATA_DIR, xmlfiles[type], NULL);
+	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+		g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+		return NULL;
+	}
+
+	op = gda_server_operation_new (type, file);
+	g_free (file);
+
+	return op;
+}
+
+static gchar *
+gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+					GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	gchar *sql = NULL;
+
+	string = g_string_new ("");
+	switch (gda_server_operation_get_op_type (op)) {
+	case GDA_SERVER_OPERATION_CREATE_TABLE: {
+		const GValue *value;
+		gboolean allok = TRUE;
+		g_string_append (string, "CREATE TABLE ");
+		value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_NAME");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+			g_string_append (string, g_value_get_string (value));
+			g_string_append_c (string, ' ');
+		}
+		else {
+			allok = FALSE;
+			g_set_error (error, 0, 0, _("Can't get /TABLE_DEF_P/TABLE_NAME"));
+		}
+		break;
+	}
+	case GDA_SERVER_OPERATION_DROP_TABLE:
+		break;
+	case GDA_SERVER_OPERATION_CREATE_INDEX:
+		break;
+	case GDA_SERVER_OPERATION_DROP_INDEX:
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+	return sql;
+}
+
 
 
 /* create_database_cnc handler for the GdaPostgresProvider class */

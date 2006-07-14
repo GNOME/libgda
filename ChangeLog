@@ -1,3 +1,12 @@
+2006-07-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* doc/C/*: docs update
+	* libgda/gda-server-operation.[ch]: almost fully implemented GdaServerOperation object
+	* libgda/*.dtd: cleanups
+	* providers/*/*.xml.in: changes applied because of the DTD changes
+	* testing/gda-test-server-operation.c: new test
+	* various files: minor bug fixes an improvements
+
 2006-07-04  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-server-operation.h: Commented out

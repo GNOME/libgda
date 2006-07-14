@@ -1,6 +1,6 @@
 /* gda-parameter-list.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -24,6 +24,7 @@
 
 #include <libgda/gda-object.h>
 #include "gda-value.h"
+#include <libxml/tree.h>
 
 G_BEGIN_DECLS
 
@@ -122,7 +123,8 @@ struct _GdaParameterListClass
 GType                   gda_parameter_list_get_type                 (void);
 GdaParameterList       *gda_parameter_list_new                      (GSList *params);
 
-GdaParameterList       *gda_parameter_list_new_from_spec            (GdaDict *dict, const gchar *xml_spec, GError **error);
+GdaParameterList       *gda_parameter_list_new_from_spec_string     (GdaDict *dict, const gchar *xml_spec, GError **error);
+GdaParameterList       *gda_parameter_list_new_from_spec_node       (GdaDict *dict, xmlNodePtr xml_spec, GError **error);
 gchar                  *gda_parameter_list_get_spec                 (GdaParameterList *paramlist);
 
 guint                   gda_parameter_list_get_length               (GdaParameterList *plist);
@@ -155,7 +157,7 @@ void                    gda_parameter_list_set_param_default_value  (GdaParamete
 								     GdaParameter *param, const GValue *value);
 void                    gda_parameter_list_set_param_default_alias  (GdaParameterList *paramlist, 
 								     GdaParameter *param, GdaParameter *alias);
-const GValue         *gda_parameter_list_get_param_default_value  (GdaParameterList *paramlist, GdaParameter *param);
+const GValue           *gda_parameter_list_get_param_default_value  (GdaParameterList *paramlist, GdaParameter *param);
 
 G_END_DECLS
 

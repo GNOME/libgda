@@ -113,7 +113,7 @@ gda_query_get_parameters_boxed()).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_new_from_spec ##### -->
+<!-- ##### FUNCTION gda_parameter_list_new_from_spec_string ##### -->
 <para>
 
 </para>

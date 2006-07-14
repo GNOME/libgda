@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <serv_op>
-  <parameter id="INDEX_NAME" _name="Index" _descr="Index to delete" gdatype="gchararray" null-ok="FALSE"/>
+  <parameter id="INDEX_NAME" _name="Index" _descr="Index to delete" gdatype="gchararray" nullok="FALSE"/>
   <parameter id="REFERENCED_ACTION" _name="Referenced action" gdatype="gchararray" source="action_cb:0"/>
 
   <!-- Sources -->

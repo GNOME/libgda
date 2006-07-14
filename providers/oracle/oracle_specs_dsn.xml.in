@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="TNSNAME" _name="TNS Name" _descr="Name of the TNS configuration to use for connecting" gdatype="gchararray" null-ok="FALSE"/>
+    <parameter id="TNSNAME" _name="TNS Name" _descr="Name of the TNS configuration to use for connecting" gdatype="gchararray" nullok="FALSE"/>
   </parameters>
 </data-set-spec>

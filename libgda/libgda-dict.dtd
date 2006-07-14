@@ -228,7 +228,7 @@
           default CDATA #IMPLIED
 	  default_gda_type NMTOKEN #IMPLIED
 	  is_param (t|f) #IMPLIED
-	  null_ok (t|f) #IMPLIED
+	  nullok (t|f) #IMPLIED
           restrict NMTOKEN #IMPLIED
           alias CDATA #IMPLIED
 	  plugin NMTOKENS #IMPLIED>

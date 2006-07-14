@@ -660,3 +660,207 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 	return retval;
 
 }
+
+/**
+ * utility_data_model_dump_data_to_xml
+ * @model: 
+ * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
+ * @nb_cols: the number of columns in @cols
+ * @name: name to use for the XML resulting table.
+ *
+ * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
+ */
+void
+utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, const gint *cols, gint nb_cols)
+{
+	gint rows, i;
+	gint *rcols, rnb_cols;
+
+	/* compute columns if not provided */
+	if (!cols) {
+		rnb_cols = gda_data_model_get_n_columns (model);
+		rcols = g_new (gint, rnb_cols);
+		for (i = 0; i < rnb_cols; i++)
+			rcols [i] = i;
+	}
+	else {
+		rcols = (gint *) cols;
+		rnb_cols = nb_cols;
+	}
+
+	/* add the model data to the XML output */
+	rows = gda_data_model_get_n_rows (model);
+	if (rows > 0) {
+		xmlNodePtr row, data, field;
+		gint r, c;
+
+		data = xmlNewChild (parent, NULL, "gda_array_data", NULL);
+		for (r = 0; r < rows; r++) {
+			row = xmlNewChild (data, NULL, "gda_array_row", NULL);
+			for (c = 0; c < rnb_cols; c++) {
+				GValue *value;
+				gchar *str;
+
+				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], r);
+				if (!value || gda_value_is_null ((GValue *) value))
+					str = NULL;
+				else {
+					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
+						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
+					else
+						str = gda_value_stringify (value);
+				}
+				field = xmlNewChild (row, NULL, "gda_value", str);
+				if (!str)
+					xmlSetProp (field, "isnull", "t");
+
+				g_free (str);
+			}
+		}
+	}
+}
+
+/**
+ * utility_parameter_load_attributes
+ * @param:
+ * @node: an xmlNodePtr with a &lt;parameter&gt; tag
+ * @sources: a list of #GdaDataModel
+ *
+ * WARNING: may set the "source" custom string property 
+ */
+void
+utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources)
+{
+	xmlChar *str;
+
+	/* set properties from the XML spec */
+	str = xmlGetProp (node, BAD_CAST "id");
+	if (str) {
+		g_object_set (G_OBJECT (param), "string_id", str, NULL);
+		xmlFree (str);
+	}	
+
+	str = xmlGetProp (node, BAD_CAST "name");
+	if (str) {
+		gda_object_set_name (GDA_OBJECT (param), str);
+		xmlFree (str);
+	}
+	str = xmlGetProp (node, BAD_CAST "descr");
+	if (str) {
+		gda_object_set_description (GDA_OBJECT (param), str);
+		xmlFree (str);
+	}
+	str = xmlGetProp (node, BAD_CAST "nullok");
+	if (str) {
+		gda_parameter_set_not_null (param, (*str == 'T') || (*str == 't') ? FALSE : TRUE);
+		xmlFree (str);
+	}
+	else
+		gda_parameter_set_not_null (param, FALSE);
+	str = xmlGetProp (node, BAD_CAST "plugin");
+	if (str) {
+		g_object_set (G_OBJECT (param), "entry_plugin", str, NULL);
+		xmlFree (str);
+	}
+	
+	str = xmlGetProp (node, BAD_CAST "source");
+	if (str) 
+		g_object_set_data_full (G_OBJECT (param), "source", str, g_free);
+
+	/* set restricting source if specified */
+	if (str && sources) {
+		gchar *ptr1, *ptr2 = NULL, *tok;
+		gchar *source;
+			
+		source = g_strdup (str);
+		ptr1 = strtok_r (source, ":", &tok);
+		if (ptr1)
+			ptr2 = strtok_r (NULL, ":", &tok);
+		
+		if (ptr1 && ptr2) {
+			GSList *tmp = sources;
+			GdaDataModel *model = NULL;
+			while (tmp && !model) {
+				if (!strcmp (gda_object_get_name (GDA_OBJECT (tmp->data)), ptr1))
+					model = GDA_DATA_MODEL (tmp->data);
+				tmp = g_slist_next (tmp);
+			}
+			
+			if (model) {
+				gint fno;
+				
+				fno = atoi (ptr2);
+				if ((fno < 0) ||
+				    (fno >= gda_data_model_get_n_columns (model))) 
+					g_warning (_("Field number %d not found in source named '%s'"), fno, ptr1); 
+				else {
+					if (gda_parameter_restrict_values (param, model, fno, NULL)) {
+						/* rename the wrapper with the current param's name */
+						g_object_set_data_full (G_OBJECT (model), "newname", 
+									g_strdup ((gchar *)gda_object_get_name (GDA_OBJECT (param))),
+									g_free);
+						g_object_set_data_full (G_OBJECT (model), "newdescr", 
+									g_strdup ((gchar *)gda_object_get_description (GDA_OBJECT (param))),
+									g_free);
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * @dict:
+ * @prov:
+ * @cnc:
+ * @dbms_type:
+ * @gda_type:
+ * @created: a place to return if the data type has been created and is thus considered as a custom
+ *           data type. Can't be %NULL!
+ *
+ * Finds or creates anew GdaDictType if possible. if @created is returned as TRUE, then the
+ * caller of this function _does_ have a reference on the returned object.
+ *
+ * Returns: a #GdaDictType, or %NULL if it was not possible to find and create one
+ */
+GdaDictType *
+utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
+				  const gchar *dbms_type, const gchar *gda_type, gboolean *created)
+{
+	GdaDictType *dtype = NULL;
+
+	g_return_val_if_fail (created, NULL);
+	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
+	g_return_val_if_fail (!prov || GDA_IS_SERVER_PROVIDER (prov), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+
+	*created = FALSE;
+	if (dbms_type)
+		dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), dbms_type);
+
+	if (!dtype) {
+		if (gda_type) {
+			GType gtype;
+			
+			gtype = gda_type_from_string (gda_type);
+			if (prov) {
+				const gchar *deftype;
+				
+				deftype = gda_server_provider_get_default_dbms_type (prov, cnc, gtype);
+				if (deftype)
+					dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), deftype);
+			}	
+			
+			if (!dtype) {
+				/* create a GdaDictType for that 'gda-type' */
+				dtype = GDA_DICT_TYPE (gda_dict_type_new (ASSERT_DICT (dict)));
+				gda_dict_type_set_sqlname (dtype, gda_type);
+				gda_dict_type_set_gda_type (dtype, gtype);
+				gda_dict_declare_custom_data_type (ASSERT_DICT (dict), dtype);
+				*created = TRUE;
+			}
+		}
+	}
+
+	return dtype;
+}

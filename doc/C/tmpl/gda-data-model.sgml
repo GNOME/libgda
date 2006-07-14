@@ -382,6 +382,17 @@ As a side note there are also data models which wrap other data models such as:
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_add_data_from_xml_node ##### -->
+<para>
+
+</para>
+
+@model: 
+@node: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_import_from_model ##### -->
 <para>
 

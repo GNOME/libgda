@@ -1466,7 +1466,7 @@ gda_config_get_provider_list (void)
 				GError *error = NULL;
 				
 				info->dsn_spec = plugin_get_dsn_spec ();
-				info->gda_params = gda_parameter_list_new_from_spec (NULL, info->dsn_spec, &error);
+				info->gda_params = gda_parameter_list_new_from_spec_string (NULL, info->dsn_spec, &error);
 				if (!info->gda_params) {
 					g_warning ("Invalid format for provider '%s' DSN spec : %s",
 						   info->id,

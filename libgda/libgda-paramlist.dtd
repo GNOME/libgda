@@ -12,8 +12,10 @@
 <!ELEMENT parameters (parameter*)>
 <!ATTLIST parameters
 	  id NMTOKEN #IMPLIED
-	  name NMTOKEN #IMPLIED
-	  descr NMTOKEN #IMPLIED>
+	  name CDATA #IMPLIED
+	  xml:lang CDATA #IMPLIED
+	  descr CDATA #IMPLIED
+	  status (OPT|REQ) #IMPLIED>
 
 <!ELEMENT parameter EMPTY>
 <!ATTLIST parameter
@@ -23,9 +25,11 @@
 	  name CDATA #IMPLIED
 	  xml:lang CDATA #IMPLIED
 	  descr CDATA #IMPLIED
-	  null-ok (TRUE|FALSE) #IMPLIED
+	  nullok (TRUE|FALSE) #IMPLIED
 	  plugin NMTOKENS #IMPLIED
-	  source NMTOKENS #IMPLIED>
+	  source CDATA #IMPLIED
+	  hint NMTOKENS #IMPLIED
+	  status (OPT|REQ) #IMPLIED>
 
 <!ELEMENT sources (gda_array*)>
 	  

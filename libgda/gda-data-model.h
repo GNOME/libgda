@@ -79,7 +79,7 @@ struct _GdaDataModelClass {
 	GdaColumn           *(* i_describe_column)  (GdaDataModel *model, gint col);
 	guint                (* i_get_access_flags) (GdaDataModel *model);
 
-	const GValue      *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row);
+	const GValue        *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row);
 	guint                (* i_get_attributes_at)(GdaDataModel *model, gint col, gint row);
 	GdaDataModelIter    *(* i_create_iter)      (GdaDataModel *model);
 	gboolean             (* i_iter_at_row)      (GdaDataModel *model, GdaDataModelIter *iter, gint row);

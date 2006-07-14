@@ -246,7 +246,7 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
 }
 
 /**
- * gda_parameter_list_new_from_spec
+ * gda_parameter_list_new_from_spec_string
  * @dict: a #GdaDict object, or %NULL
  * @xml_spec: a string
  * @error: a place to store the error, or %NULL
@@ -257,33 +257,13 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
  * Returns: a new object, or %NULL if an error occurred
  */
 GdaParameterList *
-gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError **error)
+gda_parameter_list_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, GError **error)
 {
-	GdaParameterList *plist = NULL;
-	GSList *params = NULL, *sources = NULL;
-	GSList *list;
-	const gchar *lang;
-
 	xmlDocPtr doc;
-	xmlNodePtr root, cur;
-	gboolean allok = TRUE;
-	gchar *str;
-
-	GdaServerProvider *prov = NULL;
-        GdaConnection *cnc = NULL;
+	xmlNodePtr root;
+	GdaParameterList *plist;
 
 	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
-
-#ifdef HAVE_LC_MESSAGES
-	lang = setlocale (LC_MESSAGES, NULL);
-#else
-	lang = setlocale (LC_CTYPE, NULL);
-#endif
-
-	if (dict)
-		cnc = gda_dict_get_connection (dict);
-        if (cnc)
-                prov = gda_connection_get_provider_obj (cnc);
 
 	/* string parsing */
 	doc = xmlParseMemory (xml_spec, strlen (xml_spec));
@@ -348,144 +328,63 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 	while (xmlNodeIsText (root)) 
 		root = root->next; 
 
-	if (strcmp (root->name, "parameters") != 0){
+	plist = gda_parameter_list_new_from_spec_node (dict, root, error);
+	xmlFreeDoc(doc);
+	return plist;
+}
+
+
+/**
+ * gda_parameter_list_new_from_spec_node
+ * @dict: a #GdaDict object, or %NULL
+ * @xml_spec: a #xmlNodePtr for a &lt;parameters&gt; tag
+ * @error: a place to store the error, or %NULL
+ *
+ * Creates a new #GdaParameterList object from the @xml_spec
+ * specifications
+ *
+ * Returns: a new object, or %NULL if an error occurred
+ */
+GdaParameterList *
+gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GError **error)
+{
+	GdaParameterList *plist = NULL;
+	GSList *params = NULL, *sources = NULL;
+	GSList *list;
+	const gchar *lang;
+
+	xmlNodePtr cur;
+	gboolean allok = TRUE;
+	gchar *str;
+
+	GdaServerProvider *prov = NULL;
+        GdaConnection *cnc = NULL;
+
+	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
+
+#ifdef HAVE_LC_MESSAGES
+	lang = setlocale (LC_MESSAGES, NULL);
+#else
+	lang = setlocale (LC_CTYPE, NULL);
+#endif
+
+	if (dict)
+		cnc = gda_dict_get_connection (dict);
+        if (cnc)
+                prov = gda_connection_get_provider_obj (cnc);
+
+	if (strcmp (xml_spec->name, "parameters") != 0){
 		g_set_error (error, GDA_PARAMETER_LIST_ERROR, GDA_PARAMETER_LIST_XML_SPEC_ERROR,
-			     _("Missing node <parameters>: '%s'"), root->name);
+			     _("Missing node <parameters>: '%s'"), xml_spec->name);
 		return NULL;
 	}
 
-	for (cur = root->xmlChildrenNode; cur && allok; cur = cur->next) {
-		if (xmlNodeIsText (cur)) 
-			continue;
-
-		if (!strcmp (cur->name, "parameter")) {
-			GdaParameter *param = NULL;
-			GdaDictType *dtype = NULL;
-			gchar *str, *id;
-			gboolean dtype_created = FALSE;
-			xmlChar *this_lang;
-
-			/* don't care about entries for the wrong locale */
-			this_lang = xmlGetProp (cur, "lang");
-			if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
-				g_free (this_lang);
-				continue;
-			}
-
-			/* find if there is already a param with the same ID */
-			id = xmlGetProp (cur, "id");
-			list = params;
-			while (list && !param) {
-				g_object_get (G_OBJECT (list->data), "string_id", &str, NULL);
-				if (str && id && !strcmp (str, id))
-					param = (GdaParameter *) list->data;
-				g_free (str);
-				list = g_slist_next (list);
-			}
-
-			if (param && !this_lang) {
-				g_free (id);
-				g_free (this_lang);
-				continue;
-			}
-			g_free (this_lang);
-			
-
-			/* find data type and create GdaParameter */
-			str = xmlGetProp(cur, "dbmstype");
-			if (str) {
-				dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), str);
-				g_free (str);
-			}
-			if (!dtype) {
-				str = xmlGetProp (cur, "gdatype");
-				if (str) {
-					GType gtype;
-
-					gtype = gda_type_from_string (str);
-					if (prov) {
-						const gchar *deftype;
-
-						deftype = gda_server_provider_get_default_dbms_type (prov, cnc, 
-												     gtype);
-						if (deftype)
-							dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), 
-												deftype);
-					}	
-
-					if (!dtype) {
-						/* create a GdaDictType for that 'gda-type' */
-						dtype = GDA_DICT_TYPE (gda_dict_type_new (ASSERT_DICT (dict)));
-						gda_dict_type_set_sqlname (dtype, str);
-						gda_dict_type_set_gda_type (dtype, gtype);
-						gda_dict_declare_custom_data_type (ASSERT_DICT (dict), dtype);
-						dtype_created = TRUE;
-					}
-					g_free (str);					
-				}
-			}
-
-			if (!dtype) {
-				str = xmlGetProp(cur, "name");
-				
-				g_set_error (error, GDA_PARAMETER_LIST_ERROR, GDA_PARAMETER_LIST_XML_SPEC_ERROR,
-					     _("Can't find a data type for parameter '%s'"), str ? str : "unnamed");
-				g_free (str);
-
-				allok = FALSE;
-				continue;
-			}
-
-			if (!param) {
-				param = GDA_PARAMETER (g_object_new (GDA_TYPE_PARAMETER, "dict", dict,
-								     "gda_type", gda_dict_type_get_gda_type (dtype),
-								     NULL));
-				params = g_slist_append (params, param);
-			}
-			if (dtype_created)
-				g_object_unref (dtype);
-			
-			/* set parameter's attributes */
-			if (id) {
-				g_object_set (G_OBJECT (param), "string_id", id, NULL);
-				g_free (id);
-			}
-
-			str = xmlGetProp(cur, "name");
-			if (str) {
-				gda_object_set_name (GDA_OBJECT (param), str);
-				g_free (str);
-			}
-			str = xmlGetProp(cur, "descr");
-			if (str) {
-				gda_object_set_description (GDA_OBJECT (param), str);
-				g_free (str);
-			}
-			str = xmlGetProp(cur, "null-ok");
-			if (str) {
-				gda_parameter_set_not_null (param, (*str == 'T') || (*str == 't') ? FALSE : TRUE);
-				g_free (str);
-			}
-			else
-				gda_parameter_set_not_null (param, FALSE);
-			str = xmlGetProp(cur, "plugin");
-			if (str) {
-				g_object_set (G_OBJECT (param), "entry_plugin", str, NULL);
-				g_free (str);
-			}
-
-			str = xmlGetProp(cur, "source");
-			if (str) 
-				g_object_set_data (G_OBJECT (param), "source", str);
-		}
-	}
-
-	/* Parameters' sources, not mandatory */
-	root = root->next;
-	while (xmlNodeIsText (root)) 
-		root = root->next; 
-	if (allok && root && !strcmp (root->name, "sources")){
-		for (cur = root->xmlChildrenNode; (cur != NULL) && allok; cur = cur->next) {
+	/* Parameters' sources, not mandatory: makes the @sources list */
+	cur = xml_spec->next;
+	while (cur && (xmlNodeIsText (cur) || strcmp (cur->name, "sources"))) 
+		cur = cur->next; 
+	if (allok && cur && !strcmp (cur->name, "sources")){
+		for (cur = cur->xmlChildrenNode; (cur != NULL) && allok; cur = cur->next) {
 			if (xmlNodeIsText (cur)) 
 				continue;
 
@@ -512,68 +411,81 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 				}
 			}
 		}
-	}
-	
-	/* affecting parameters' sources fields to each parameter */
-	list = params;
-	while (list && allok) {
-		str = g_object_get_data (G_OBJECT (list->data), "source");
-		if (str) {
-			gchar *ptr1, *ptr2=NULL, *tok;
-			
-			ptr1 = strtok_r (str, ":", &tok);
-			if (ptr1)
-				ptr2 = strtok_r (NULL, ":", &tok);
-			
-			if (ptr1 && ptr2) {
-				GSList *tmp = sources;
-				GdaDataModel *model = NULL;
-				while (tmp && !model) {
-					if (!strcmp (gda_object_get_name (GDA_OBJECT (tmp->data)), ptr1))
-						model = GDA_DATA_MODEL (tmp->data);
-					tmp = g_slist_next (tmp);
-				}
+	}	
 
-				if (model) {
-					gint fno;
+	/* parameters */
+	for (cur = xml_spec->xmlChildrenNode; cur && allok; cur = cur->next) {
+		if (xmlNodeIsText (cur)) 
+			continue;
 
-					fno = atoi (ptr2);
-					if ((fno < 0) ||
-					    (fno >= gda_data_model_get_n_columns (model))) {
-						g_set_error (error, GDA_PARAMETER_LIST_ERROR, GDA_PARAMETER_LIST_XML_SPEC_ERROR,
-							     _("Field number %d not found in source named '%s'"), fno, ptr1); 
-						allok = FALSE;	
-					}
-					else {
-						if (!gda_parameter_restrict_values (GDA_PARAMETER (list->data),
-										    model, fno, NULL))
-							allok = FALSE;
-						else {
-							/* rename the wrapper with the current param's name */
-							g_object_set_data (G_OBJECT (model), "newname", 
-									   (gchar *)gda_object_get_name (GDA_OBJECT (list->data)));
-							g_object_set_data (G_OBJECT (model), "newdescr", 
-									   (gchar *)gda_object_get_description (GDA_OBJECT (list->data)));
-						}
-					}
-				}
-				else {
-					g_set_error (error, GDA_PARAMETER_LIST_ERROR, GDA_PARAMETER_LIST_XML_SPEC_ERROR,
-						     _("Can't find parameter source named '%s'"), ptr1); 
-					allok = FALSE;
-				}
+		if (!strcmp (cur->name, "parameter")) {
+			GdaParameter *param = NULL;
+			GdaDictType *dtype = NULL;
+			gchar *str, *id;
+			gboolean dtype_created = FALSE;
+			xmlChar *this_lang;
+			xmlChar *dbmstype, *gdatype;
+			xmlChar *xmlstr;
+
+			/* don't care about entries for the wrong locale */
+			this_lang = xmlGetProp (cur, "lang");
+			if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+				g_free (this_lang);
+				continue;
 			}
-			else {
+
+			/* find if there is already a param with the same ID */
+			id = xmlGetProp (cur, "id");
+			list = params;
+			while (list && !param) {
+				g_object_get (G_OBJECT (list->data), "string_id", &str, NULL);
+				if (str && id && !strcmp (str, id))
+					param = (GdaParameter *) list->data;
+				g_free (str);
+				list = g_slist_next (list);
+			}
+			if (id) 
+				xmlFree (id);
+
+			if (param && !this_lang) {
+				xmlFree (this_lang);
+				continue;
+			}
+			g_free (this_lang);
+			
+
+			/* find data type and create GdaParameter */
+			dbmstype = xmlGetProp (cur, BAD_CAST "dbmstype");
+			gdatype = xmlGetProp (cur, BAD_CAST "gdatype");
+			dtype = utility_find_or_create_data_type (dict, prov, cnc,
+								  dbmstype, gdatype, &dtype_created);
+			if (dbmstype) xmlFree (dbmstype);
+			if (gdatype) xmlFree (gdatype);
+
+			if (!dtype) {
+				xmlstr = xmlGetProp(cur, BAD_CAST "name");
+				
 				g_set_error (error, GDA_PARAMETER_LIST_ERROR, GDA_PARAMETER_LIST_XML_SPEC_ERROR,
-					     _("Parameter source specification should be \"<source name>:<field pos>\": '%s'"), 
-					     str);
+					     _("Can't find a data type for parameter '%s'"), 
+					     xmlstr ? (gchar *) xmlstr : "unnamed");
+				xmlFree (xmlstr);
+
 				allok = FALSE;
+				continue;
 			}
 
-			g_object_set_data (G_OBJECT (list->data), "source", NULL);
-			g_free (str);
+			if (!param) {
+				param = GDA_PARAMETER (g_object_new (GDA_TYPE_PARAMETER, "dict", dict,
+								     "gda_type", gda_dict_type_get_gda_type (dtype),
+								     NULL));
+				params = g_slist_append (params, param);
+			}
+			if (dtype_created)
+				g_object_unref (dtype);
+			
+			/* set parameter's attributes */
+			utility_parameter_load_attributes (param, cur, sources);
 		}
-		list = g_slist_next (list);
 	}
 
 	/* setting prepared new names from sources (models) */
@@ -595,15 +507,31 @@ gda_parameter_list_new_from_spec (GdaDict *dict, const gchar *xml_spec, GError *
 	/* parameters' values, constraints: TODO */
 	
 	/* GdaParameterList creation */
-	if (allok)
+	if (allok) {
+		xmlChar *prop;;
 		plist = gda_parameter_list_new (params);
+
+		prop = xmlGetProp (xml_spec, "id");
+		if (prop) {
+			gda_object_set_id (GDA_OBJECT (plist), prop);
+			xmlFree (prop);
+		}
+		prop = xmlGetProp (xml_spec, "name");
+		if (prop) {
+			gda_object_set_name (GDA_OBJECT (plist), prop);
+			xmlFree (prop);
+		}
+		prop = xmlGetProp (xml_spec, "descr");
+		if (prop) {
+			gda_object_set_description (GDA_OBJECT (plist), prop);
+			xmlFree (prop);
+		}
+	}
 
 	g_slist_foreach (params, (GFunc) g_object_unref, NULL);
 	g_slist_free (params);
 	g_slist_foreach (sources, (GFunc) g_object_unref, NULL);
 	g_slist_free (sources);
-
-	xmlFreeDoc(doc);
 
 	return plist;
 }
@@ -628,7 +556,7 @@ gda_parameter_list_get_length (GdaParameterList *paramlist)
  * gda_parameter_list_get_spec
  * @paramlist: a #GdaParameterList object
  *
- * Get the specification as an XML string. See the gda_parameter_list_new_from_spec()
+ * Get the specification as an XML string. See the gda_parameter_list_new_from_spec_string()
  * form more information about the XML specification string format.
  *
  * Returns: a new string
@@ -679,7 +607,7 @@ gda_parameter_list_get_spec (GdaParameterList *paramlist)
 /* 		} */
 		xmlSetProp (node, "gdatype", gda_type_to_string (gda_parameter_get_gda_type (param)));
 
-		xmlSetProp (node, "null-ok", gda_parameter_get_not_null (param) ? "FALSE" : "TRUE");
+		xmlSetProp (node, "nullok", gda_parameter_get_not_null (param) ? "FALSE" : "TRUE");
 		g_object_get (G_OBJECT (param), "entry_plugin", &str, NULL);
 		if (str) {
 			xmlSetProp (node, "plugin", str);
@@ -1723,7 +1651,6 @@ gda_parameter_list_dump (GdaParameterList *paramlist, guint offset)
 /* 			} */
 /* 			list = g_slist_next (list); */
 /* 		} */
-		TO_IMPLEMENT;
 	}
         else
                 g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, paramlist);

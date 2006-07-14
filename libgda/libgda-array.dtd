@@ -7,15 +7,22 @@
 <!ELEMENT gda_array (gda_array_field*, gda_array_data?)>
 <!ATTLIST gda_array
 	  id NMTOKEN #IMPLIED
-	  name CDATA #IMPLIED>
+          name CDATA #IMPLIED
+          xml:lang CDATA #IMPLIED
+          descr CDATA #IMPLIED
+          status (OPT|REQ) #IMPLIED>
 
 <!ELEMENT gda_array_field EMPTY>
 <!ATTLIST gda_array_field
 	  id NMTOKEN #IMPLIED
 	  name CDATA #IMPLIED
+	  xml:lang CDATA #IMPLIED
 	  title CDATA #IMPLIED
 	  gdatype NMTOKEN #REQUIRED
 	  size NMTOKEN #IMPLIED
+	  hint NMTOKENS #IMPLIED
+	  descr CDATA #IMPLIED
+	  source CDATA #IMPLIED
 	  nullok (TRUE|FALSE) #IMPLIED>
 
 <!ELEMENT gda_array_data (gda_array_row*)>
@@ -23,4 +30,6 @@
 <!ELEMENT gda_array_row (gda_value*)>
 
 <!ELEMENT gda_value (#PCDATA)>
+<!ATTLIST gda_value
+	  xml:lang CDATA #IMPLIED>
 

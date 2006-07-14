@@ -87,15 +87,20 @@ gda_data_model_array_get_value_at (GdaDataModelRow *model, gint col, gint row)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 
+	if (GDA_DATA_MODEL_ARRAY (model)->priv->rows->len == 0) {
+		g_warning (_("No row in data model"));
+		return NULL;
+	}
+
 	if (row >= GDA_DATA_MODEL_ARRAY (model)->priv->rows->len) {
 		g_warning (_("Row %d out of range 0 - %d"), row, 
-			   GDA_DATA_MODEL_ARRAY (model)->priv->rows->len);
+			   GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 		return NULL;
 	}
 
 	if (col >= GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns) {
 		g_warning (_("Column out %d of range 0 - %d"), col, 
-			   GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns);
+			   GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns - 1);
 		return NULL;
 	}
 
@@ -332,10 +337,13 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 	gda_object_set_description (GDA_OBJECT (model), gda_object_get_description (GDA_OBJECT (src)));
 	for (i = 0; i < nbfields; i++) {
 		GdaColumn *copycol, *srccol;
+		gchar *colid;
 
 		srccol = gda_data_model_describe_column (src, i);
 		copycol = gda_data_model_describe_column (model, i);
 
+		g_object_get (G_OBJECT (srccol), "id", &colid, NULL);
+		g_object_set (G_OBJECT (copycol), "id", colid, NULL);
 		gda_column_set_title (copycol, gda_column_get_title (srccol));
 		gda_column_set_defined_size (copycol, gda_column_get_defined_size (srccol));
 		gda_column_set_name (copycol, gda_column_get_name (srccol));
@@ -350,8 +358,8 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 		g_object_unref (model);
 		model = NULL;
 	}
-	else
-		gda_data_model_dump (model, stdout);
+	/*else
+	  gda_data_model_dump (model, stdout);*/
 
 	return model;
 }
