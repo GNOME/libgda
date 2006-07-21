@@ -9,12 +9,10 @@ GdaServerProvider
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -126,6 +124,7 @@ GdaServerProvider
 @provider: 
 @cnc: 
 @type: 
+@options: 
 @Returns: 
 
 
@@ -184,6 +183,55 @@ GdaServerProvider
 @provider: 
 @params: 
 @action_type: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_supports_operation ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@type: 
+@options: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_create_operation ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@type: 
+@options: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_render_operation ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@op: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_perform_operation ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@op: 
 @error: 
 @Returns: 
 

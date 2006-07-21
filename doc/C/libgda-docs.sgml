@@ -59,6 +59,8 @@
 <!ENTITY libgda-GdaRow SYSTEM "xml/gda-row.xml">
 <!ENTITY libgda-GdaDataModelFilterSQL SYSTEM "xml/gda-data-model-filter-sql.xml">
 <!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
+<!ENTITY libgda-GdaServerOperation SYSTEM "xml/gda-server-operation.xml">
+<!ENTITY libgda-serverop-intro SYSTEM "server-operation.xml">
 <!ENTITY libgda-transaction SYSTEM "xml/gda-transaction.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
 <!ENTITY libgda-GValue SYSTEM "xml/gda-value.xml">
@@ -190,7 +192,7 @@
     </authorgroup>
     <date>1999 February</date>
     <copyright>
-      <year>1999-2005</year>
+      <year>1999 - 2006</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
@@ -433,6 +435,12 @@
       &libgda-GdaQueryFieldAgg;
       &libgda-GdaQueryFieldValue;
       &libgda-GdaQueryCondition;
+    </chapter>
+
+    <chapter>
+      <title>Data definition (DDL) queries</title>
+      &libgda-serverop-intro;
+      &libgda-GdaServerOperation;
     </chapter>
 
     <chapter id="misc">

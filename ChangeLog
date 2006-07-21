@@ -1,3 +1,14 @@
+2006-07-21  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query-target.c
+	* libgda/gda-query-field-field.c: add double quotes around the SQL if name starts 
+	with a number
+	* doc/C: added documentation for the GdaServerOperation object
+	* providers/postgres/gda-postgres-provider.c: more work on SQL rendering
+	for CREATE TABLE query
+	* libgda/gda-server-operation.c: major improvements
+	* various small improvements
+
 2006-07-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* doc/C/*: docs update

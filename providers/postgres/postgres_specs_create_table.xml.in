@@ -1,14 +1,29 @@
 <?xml version="1.0"?>
 <serv_op>
   <parameters id="TABLE_DEF_P" _name="Table's description">
-    <parameter id="TABLE_NAME" _name="Name" _descr="Table's name" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="TABLE_TABLESPACE" _name="Tablespace" gdatype="gchararray" source="match_types:0"/>
-    <parameter id="TABLE_WITH_OIDS" _name="With OIDs" gdatype="gboolean"/>
-    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean"/>
+    <parameter id="TABLE_NAME" _name="Name" _descr="Table's name" gdatype="gchararray" nullok="FALSE">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter id="TABLE_TABLESPACE" _name="Tablespace" gdatype="gchararray"/>
+    <parameter id="TABLE_WITH_OIDS" _name="With OIDs" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="TABLE_COMMENT" _name="Temporary table" gdatype="gchararray"/>
   </parameters>
 
   <sequence id="TABLE_PARENTS_S" _name="Parent table(s)" _descr="Inheritage" status="OPT">
-    <parameter id="TABLE_PARENT_TABLE" _name="Parent table" gdatype="gchararray"/>
+    <parameter id="TABLE_PARENT_TABLE" _name="Parent table" gdatype="gchararray">
+      <gda_value>parent_table</gda_value>
+    </parameter>
+    <parameter id="TABLE_PARENT_COPY" _name="Keep coupled" _descr="Use INHERIT instead of LIKE" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="TABLE_PARENT_COPY_DEFAULTS" _name="Copy defaults" _descr="Copy default expressions" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
   </sequence>
 
   <!-- list of fields -->
@@ -20,13 +35,14 @@
     <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
     <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
     <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+    <gda_array_field id="COLUMN_COMMENT" _name="Comment" gdatype="gchararray"/>
     <gda_array_data>
         <gda_array_row>
-            <_gda_value>&lt;change me&gt;</_gda_value>
-            <gda_value>varchar</gda_value>
+            <gda_value>id</gda_value>
+            <gda_value>serial</gda_value>
             <gda_value>FALSE</gda_value>
             <gda_value>FALSE</gda_value>
-            <gda_value>FALSE</gda_value>
+            <gda_value>TRUE</gda_value>
             <gda_value></gda_value>
             <gda_value></gda_value>
         </gda_array_row>
@@ -35,20 +51,38 @@
 
   <!-- foreign key spec -->
   <sequence id="FKEY_S" _name="Foreign key">
-    <parameter id="FKEY_REF_TABLE" _name="Referenced table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
+    <parameter id="FKEY_REF_TABLE" _name="Referenced table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_">
+      <gda_value>ref_table</gda_value>
+    </parameter>
     <gda_array id="FKEY_FIELDS_A" _name="Fields" _descr="Fields in the foreign key">
       <gda_array_field id="FK_FIELD" _name="Field" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_field id="FK_REF_PK_FIELD" _name="Referenced field" gdatype="gchararray" nullok="FALSE" source="_FKEY_REF_TABLE/DICT_FIELDS_"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>id_ref</gda_value>
+          <gda_value>id</gda_value>
+        </gda_array_row>
+      </gda_array_data>
     </gda_array>
-    <parameter id="FKEY_MATCH_TYPE" _name="Match type" _descr="Matching method if more than one field involved" gdatype="gchararray" source="match_types:0"/>
-    <parameter id="FKEY_ONUPDATE" _name="On update action" gdatype="gchararray" source="action_cb:0"/>
-    <parameter id="FKEY_ONDELETE" _name="On delete action" gdatype="gchararray" source="action_cb:0"/>
-    <parameter id="FKEY_DEFERRABLE" _name="Deferrable" gdatype="gchararray" source="defer_state:0"/>
+    <parameter id="FKEY_MATCH_TYPE" _name="Match type" _descr="Matching method if more than one field involved" gdatype="gchararray" source="match_types:0">
+      <gda_value>MATCH SIMPLE</gda_value>
+    </parameter>
+    <parameter id="FKEY_ONUPDATE" _name="On update action" gdatype="gchararray" source="action_cb:0">
+      <gda_value>NO ACTION</gda_value>
+    </parameter>
+    <parameter id="FKEY_ONDELETE" _name="On delete action" gdatype="gchararray" source="action_cb:0">
+      <gda_value>NO ACTION</gda_value>
+    </parameter>
+    <parameter id="FKEY_DEFERRABLE" _name="Deferrable" gdatype="gchararray" source="defer_state:0">
+      <gda_value>NOT DEFERRABLE</gda_value>
+    </parameter>
   </sequence>
 
   <!-- other table constraints -->
   <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
-    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray"/>
+    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray">
+      <gda_value>CHECK (column > 0)</gda_value>
+    </parameter>
   </sequence>
   
 
@@ -101,8 +135,8 @@
       <gda_array_field name="text" gdatype="gchararray"/>
       <gda_array_data>
 	<gda_array_row>
-          <gda_value>NON DEFERRABLE</gda_value>
-          <_gda_value>Non deferrable</_gda_value>
+          <gda_value>NOT DEFERRABLE</gda_value>
+          <_gda_value>Not deferrable</_gda_value>
 	</gda_array_row>
 	<gda_array_row>
           <gda_value>DEFERRABLE INITIALLY IMMEDIATE</gda_value>

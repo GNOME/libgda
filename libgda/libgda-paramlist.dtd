@@ -17,7 +17,7 @@
 	  descr CDATA #IMPLIED
 	  status (OPT|REQ) #IMPLIED>
 
-<!ELEMENT parameter EMPTY>
+<!ELEMENT parameter (gda_value*)>
 <!ATTLIST parameter
 	  id NMTOKEN #REQUIRED
 	  dbmstype NMTOKEN #IMPLIED

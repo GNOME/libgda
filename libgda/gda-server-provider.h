@@ -128,7 +128,7 @@ struct _GdaServerProviderClass {
 							  GdaParameterList *params, GdaClientSpecsType type,
 							  GError **error);
 	gboolean               (* supports_operation) (GdaServerProvider *provider, GdaConnection *cnc, 
-						       GdaServerOperationType type);
+						       GdaServerOperationType type, GdaParameterList *options);
 	GdaServerOperation    *(* create_operation)   (GdaServerProvider *provider, GdaConnection *cnc, 
 						       GdaServerOperationType type, 
 						       GdaParameterList *options, GError **error);
@@ -254,7 +254,7 @@ gboolean              gda_server_provider_perform_action_params (GdaServerProvid
 								 GError **error);
 
 gboolean               gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
-							       GdaServerOperationType type);
+							       GdaServerOperationType type, GdaParameterList *options);
 GdaServerOperation    *gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
 							     GdaServerOperationType type, 
 							     GdaParameterList *options, GError **error);

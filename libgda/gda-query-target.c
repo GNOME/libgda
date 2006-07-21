@@ -883,7 +883,8 @@ gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, g
 
 			tname = (gchar *) gda_object_get_name (GDA_OBJECT (entity));
 			tmp = g_utf8_strdown (tname, -1);
-			if (strcmp (tmp, tname)) {
+			if (((*tmp <= '9') && (*tmp >= '0')) || 
+			    strcmp (tmp, tname)) {
 				g_free (tmp);
 				tmp = tname;
 				tname = g_strdup_printf ("\"%s\"", tmp);

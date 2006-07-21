@@ -1,0 +1,244 @@
+<sect2>
+  <title>General words about DDL queries</title>
+  <para>
+    On the contrary to data manipulation (DML) queries, data definition queries are not very well standardized (the SQL veries a 
+    lot from one DBMS to the other), and &LIBGDA; proposes to bypass the SQL usage and uses a different approach based on the 
+    information required to perform a task (or operation, thus the <link linkend="GdaServerOperation">GdaServerOperation</link>
+    object).
+  </para>
+  <para>
+    To be able to perform an operation, using the connection's associated <link linkend="GdaServerProvider">GdaServerProvider</link> 
+    object, the &LIBGDA;'s user has to:
+    <itemizedlist>
+      <listitem>
+        <para>Make sure the provider supports the requested operation using the 
+	  <link linkend="gda-server-provider-supports-operation">gda_server_provider_supports_operation()</link> method</para>
+      </listitem>
+      <listitem>
+        <para>Ask the provider for a <link linkend="GdaServerOperation">GdaServerOperation</link> object
+	  using the <link linkend="gda-server-provider-create-operation">gda_server_provider_create_operation()</link> method. 
+	  The resulting new object will hold all the information required (and some optional) to perform the requested
+	  operation. For example to create a table, the required information will be the table name and the description of its
+	  columns, and the optional information might be the schema in which to create the table for a PostgreSQL provider.</para>
+      </listitem>
+      <listitem>
+        <para>Fill in the values (required or optional) of the <link linkend="GdaServerOperation">GdaServerOperation</link> 
+	  object (see the GdaServerOperation object's <link linkend="GdaServerOperation">documentation</link> for more information).
+	</para>
+      </listitem>
+      <listitem>
+        <para>Use that object to request the actual operation to be done using the 
+	  <link linkend="gda-server-provider-perform-operation">gda_server_provider_perform_operation()</link> method.
+	Afterwards that object can be discarded using <link linkend="g-object-unref">g_object_unref()</link></para>
+      </listitem>
+    </itemizedlist>
+    
+    The information stored within a <link linkend="GdaServerOperation">GdaServerOperation</link> object can also be stored within 
+    an XML structure and re-loaded later, which for example allows to create "scripts" of operations to do.
+  </para>
+
+  <sect3>
+    <title>Organization of the required information</title>
+    <para>
+      The required information to perform an operation is stored entirely in a 
+      <link linkend="GdaServerOperation">GdaServerOperation</link> object using named paths which are strings like 
+      "/TABLE_DEF_P/TABLE_NAME" or "/TABLE_CONSTRAINTS_S/0/CONSTRAINT_STRING". Each path is similar to a Unix file path
+      (names separated by a '/'). Each part of the path corresponds to a node (represented as a 
+      <link linkend="GdaServerOperationNode">GdaServerOperationNode</link> structure) which has a type listed as 
+      a <link linkend="GdaServerOperationNodeType">GdaServerOperationNodeType</link>; basically the types of node are:
+      <itemizedlist>
+	<listitem>
+          <para>a node containing a <link linkend="GdaParameter">GdaParameter</link> object which just contains one value</para>
+	</listitem>
+	<listitem>
+          <para>a node containing a <link linkend="GdaParameterList">GdaParameterList</link> object which is just a list
+	    of named parameters (for example all the attributes of the table to create such as the table's name and 
+	    storage type for a MySQL provider)</para>
+	</listitem>
+	<listitem>
+          <para>a node containing a <link linkend="GdaDataModel">GdaDataModel</link> object when the needed information
+	  is tabular (rows and columns), for example the definition of all the columns to create in a table, each column having 
+	  a name, type, CHECK constraint, etc</para>
+	</listitem>
+	<listitem>
+          <para>a node defining a sequence of other nodes: the node can have zero or more lists of nodes. For example when 
+	  defining the foreign keys for a new table, a sequence node can be created which can contain zero or more foreign key
+	  definition (each composed of the referenced table, the referenced fields, the referential integrity rules, etc)</para>
+	</listitem>
+	<listitem>
+          <para>a node representing an 'item' in a sequence node.</para>
+	</listitem>
+	<listitem>
+          <para>a node representing a data model's column.</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Note: the list and complete structure of the information required to perform an operation is imposed by each provider and cannot
+      be modified. The information stored in each node can be modified (depending on the node's type):
+    </para>
+  </sect3>
+
+  <sect3>
+    <title>Minimum required information</title>
+    <para>
+      For most of the possible operations, the required information from one provider to the other does not vary, only the
+      optional features correspond to optional information, so &LIBGDA; imposes the names of the required information for
+      some of the most common operations, which is shown next. Some optional information which is shared by several providers
+      is also named but not enforced.
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>GDA_SERVER_OPERATION_CREATE_TABLE:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/TABLE_DEF_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>X</entry>
+                  <entry>Table's description</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_DEF_P/TABLE_TABLESPACE</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>Tablespace in which to create the table (string)</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_DEF_P/TABLE_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>X</entry>
+                  <entry>Table's name (string)</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_DEF_P/TABLE_TEMP</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>TRUE if the table to create is temporary (boolean)</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A</entry>
+                  <entry>DATA_MODEL</entry>
+		  <entry>X</entry>
+                  <entry>Table's fields description</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A/@COLUMN_NAME</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry>X</entry>
+                  <entry>A table's field name (string)</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A/@COLUMN_TYPE</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry>X</entry>
+                  <entry>A table's field type (string)</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A/@COLUMN_NNUL</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>TRUE if table's field can't be NULL (boolean)</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A/@COLUMN_UNIQUE</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>TRUE if table's field must be unique (boolean)</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A/@COLUMN_PKEY</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>TRUE if table's field is a primary key (boolean)</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A/@COLUMN_DEFAULT</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>A table's field default value (string)</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A/@COLUMN_CHECK</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>A table's field CHECK condition (string)</entry>
+		</row>
+		<row>
+                  <entry>/FKEY_S</entry>
+                  <entry>DATA_SEQUENCE</entry>
+		  <entry></entry>
+                  <entry>Sequence representing foreign keys description</entry>
+		</row>
+		<row>
+                  <entry>/FKEY_S/FKEY_REF_TABLE</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>The foreign key's referenced table (string)</entry>
+		</row>
+		<row>
+                  <entry>/FKEY_S/FKEY_FIELDS_A</entry>
+                  <entry>DATA_MODEL</entry>
+		  <entry></entry>
+                  <entry>The foreign key's field's being used</entry>
+		</row>
+		<row>
+                  <entry>/FKEY_S/FKEY_FIELDS_A/@FK_FIELD</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>A foreign key's field's from the table to create</entry>
+		</row>
+		<row>
+                  <entry>/FKEY_S/FKEY_FIELDS_A/@FK_REF_PK_FIELD</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>A foreign key's field's from the referenced table</entry>
+		</row>
+		<row>
+                  <entry>/FKEY_S/FKEY_ONUPDATE</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>The action to take when the referenced field is updated (string)</entry>
+		</row>
+		<row>
+                  <entry>/FKEY_S/FKEY_ONDELETE</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>The action to take when the referenced field is deleted (string)</entry>
+		</row>
+		<row>
+                  <entry>/FKEY_S/FKEY_DEFERRABLE</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>TRUE if the foreign key is deferrable until the end of a transaction (boolean)</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_CONSTRAINTS_S</entry>
+                  <entry>SEQUENCE</entry>
+		  <entry></entry>
+                  <entry>Sequence representing table constraints</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_CONSTRAINTS_S/CONSTRAINT_STRING</entry>
+                  <entry>SEQUENCE</entry>
+		  <entry></entry>
+                  <entry>A table constraint (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+      </listitem>
+    </itemizedlist>
+  </sect3>
+  
+</sect2>

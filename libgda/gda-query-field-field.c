@@ -1040,7 +1040,8 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 		gchar *tmp;
 
 		tmp = g_utf8_strdown (fname, -1);
-		if (strcmp (tmp, fname)) {
+		if (((*tmp <= '9') && (*tmp >= '0')) || 
+		    strcmp (tmp, fname)) {
 			g_free (tmp);
 			tmp = fname;
 			fname = g_strdup_printf ("\"%s\"", tmp);

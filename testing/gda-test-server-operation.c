@@ -122,7 +122,7 @@ main (int argc, char **argv)
 			g_error ("Connection's provider and tested provider are different!");
 
 	/* test the GdaServerOperation object here */
-	if (!gda_server_provider_supports_operation (provider, cnc, type)) {
+	if (!gda_server_provider_supports_operation (provider, cnc, type, NULL)) {
 		g_print ("Operation not supported by provider\n");
 		exit (0);
 	}

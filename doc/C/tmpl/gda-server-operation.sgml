@@ -1,0 +1,286 @@
+<!-- ##### SECTION Title ##### -->
+GdaServerOperation
+
+<!-- ##### SECTION Short_Description ##### -->
+Handles any DDL query in an abstract way
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaServerOperation ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaServerOperation::sequence-item-added ##### -->
+<para>
+
+</para>
+
+@gdaserveroperation: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL GdaServerOperation::sequence-item-remove ##### -->
+<para>
+
+</para>
+
+@gdaserveroperation: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### ARG GdaServerOperation:connection ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaServerOperation:dict ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaServerOperation:op-type ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaServerOperation:provider-obj ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaServerOperation:spec-file ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GdaServerOperationType ##### -->
+<para>
+
+</para>
+
+@GDA_SERVER_OPERATION_CREATE_TABLE: 
+@GDA_SERVER_OPERATION_DROP_TABLE: 
+@GDA_SERVER_OPERATION_CREATE_INDEX: 
+@GDA_SERVER_OPERATION_DROP_INDEX: 
+@GDA_SERVER_OPERATION_NB: 
+
+<!-- ##### ENUM GdaServerOperationNodeType ##### -->
+<para>
+
+</para>
+
+@GDA_SERVER_OPERATION_NODE_PARAMLIST: 
+@GDA_SERVER_OPERATION_NODE_DATA_MODEL: 
+@GDA_SERVER_OPERATION_NODE_PARAM: 
+@GDA_SERVER_OPERATION_NODE_SEQUENCE: 
+@GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM: 
+@GDA_SERVER_OPERATION_NODE_DATA_MODEL_COLUMN: 
+@GDA_SERVER_OPERATION_NODE_UNKNOWN: 
+
+<!-- ##### ENUM GdaServerOperationNodeStatus ##### -->
+<para>
+
+</para>
+
+@GDA_SERVER_OPERATION_STATUS_OPTIONAL: 
+@GDA_SERVER_OPERATION_STATUS_REQUIRED: 
+@GDA_SERVER_OPERATION_STATUS_UNKNOWN: 
+
+<!-- ##### STRUCT GdaServerOperationNode ##### -->
+<para>
+
+</para>
+
+@type: 
+@status: 
+@plist: 
+@model: 
+@column: 
+@param: 
+@priv: 
+
+<!-- ##### FUNCTION gda_server_operation_new ##### -->
+<para>
+
+</para>
+
+@op_type: 
+@xml_file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_op_type ##### -->
+<para>
+
+</para>
+
+@op: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_op_type_to_string ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_node_info ##### -->
+<para>
+
+</para>
+
+@op: 
+@path_format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_save_data_to_xml ##### -->
+<para>
+
+</para>
+
+@op: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_load_data_from_xml ##### -->
+<para>
+
+</para>
+
+@op: 
+@node: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_root_nodes ##### -->
+<para>
+
+</para>
+
+@op: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_node_type ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@status: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_node_parent ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_node_path_portion ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_name ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_size ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_item_names ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_add_item_to_sequence ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_del_item_from_sequence ##### -->
+<para>
+
+</para>
+
+@op: 
+@item_path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_value_at ##### -->
+<para>
+
+</para>
+
+@op: 
+@path_format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_is_valid ##### -->
+<para>
+
+</para>
+
+@op: 
+@xml_file: 
+@error: 
+@Returns: 
+
+

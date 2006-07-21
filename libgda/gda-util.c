@@ -37,6 +37,9 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-dict-field.h>
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
 
 /**
  * gda_type_to_string
@@ -732,6 +735,7 @@ void
 utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources)
 {
 	xmlChar *str;
+	xmlNodePtr vnode;
 
 	/* set properties from the XML spec */
 	str = xmlGetProp (node, BAD_CAST "id");
@@ -805,6 +809,68 @@ utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList 
 					}
 				}
 			}
+		}
+	}
+
+	/* specified value */
+	vnode = node->children;
+	if (vnode) {
+		xmlChar *this_lang, *isnull;
+		const gchar *lang;
+		GType gdatype;
+
+		gdatype = gda_parameter_get_gda_type (param);
+#ifdef HAVE_LC_MESSAGES
+		lang = setlocale (LC_MESSAGES, NULL);
+#else
+		lang = setlocale (LC_CTYPE, NULL);
+#endif
+		while (vnode) {
+			if (xmlNodeIsText (vnode)) {
+				vnode = vnode->next;
+				continue;
+			}
+
+			if (strcmp (vnode->name, "gda_value")) {
+				vnode = vnode->next;
+				continue;
+			}
+
+			/* don't care about entries for the wrong locale */
+			this_lang = xmlGetProp (vnode, "lang");
+			if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+				g_free (this_lang);
+				vnode = vnode->next;
+				continue;
+			}
+			
+			isnull = xmlGetProp (vnode, "isnull");
+			if (isnull) {
+				if ((*isnull == 'f') || (*isnull == 'F')) {
+					xmlFree (isnull);
+					isnull = NULL;
+				}
+			}
+			
+			if (!isnull) {
+				GValue *value;
+
+				value = g_new0 (GValue, 1);
+				if (! gda_value_set_from_string (value, xmlNodeGetContent (vnode), gdatype)) {
+					/* error */
+					g_free (value);
+				}
+				else {
+					gda_parameter_set_value (param, value);
+					gda_value_free (value);
+				}
+			}
+			else {
+				gda_parameter_set_value (param, NULL);
+				xmlFree (isnull);
+			}
+			
+			vnode = vnode->next;
 		}
 	}
 }

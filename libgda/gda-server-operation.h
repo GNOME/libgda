@@ -92,7 +92,8 @@ struct _GdaServerOperationClass {
 GType                      gda_server_operation_get_type                (void);
 GdaServerOperation        *gda_server_operation_new                     (GdaServerOperationType op_type, const gchar *xml_file);
 GdaServerOperationType     gda_server_operation_get_op_type             (GdaServerOperation *op);
-GdaServerOperationNode    *gda_server_operation_get_node_info           (GdaServerOperation *op, const gchar *path);
+const gchar               *gda_server_operation_op_type_to_string       (GdaServerOperationType type);
+GdaServerOperationNode    *gda_server_operation_get_node_info           (GdaServerOperation *op, const gchar *path_format, ...);
 
 xmlNodePtr                 gda_server_operation_save_data_to_xml        (GdaServerOperation *op, GError **error);
 gboolean                   gda_server_operation_load_data_from_xml      (GdaServerOperation *op, 
@@ -111,8 +112,8 @@ gchar                    **gda_server_operation_get_sequence_item_names (GdaServ
 gint                       gda_server_operation_add_item_to_sequence    (GdaServerOperation *op, const gchar *path);
 gboolean                   gda_server_operation_del_item_from_sequence  (GdaServerOperation *op, const gchar *item_path);
 
-const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path);
-gboolean                   gda_server_operation_is_valid                (GdaServerOperation *op, GError **error);
+const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path_format, ...);
+gboolean                   gda_server_operation_is_valid                (GdaServerOperation *op, const gchar *xml_file, GError **error);
 
 G_END_DECLS
 

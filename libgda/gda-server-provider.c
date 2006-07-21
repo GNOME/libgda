@@ -418,13 +418,16 @@ gda_server_provider_perform_action_params (GdaServerProvider *provider,
  * @provider: a #GdaServerProvider object
  * @cnc: a #GdaConnection object which would be used to perform an action
  * @type: the type of operation requested
+ * @options: a list of named parameters, or %NULL
  *
- * Tells if @provider supports the @type of operation on the @cnc connection
+ * Tells if @provider supports the @type of operation on the @cnc connection, using the
+ * (optional) @options parameters.
  *
  * Returns: TRUE if the operation is supported
  */
 gboolean
-gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, GdaServerOperationType type)
+gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+					GdaServerOperationType type, GdaParameterList *options)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	if (cnc) {
@@ -432,7 +435,7 @@ gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 		g_return_val_if_fail (gda_connection_get_provider_obj (cnc) == provider, FALSE);
 	}
 	if (CLASS (provider)->supports_operation)
-		return CLASS (provider)->supports_operation (provider, cnc, type);
+		return CLASS (provider)->supports_operation (provider, cnc, type, options);
 	else
 		return FALSE;
 }
