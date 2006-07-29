@@ -9,6 +9,8 @@ AM_CPPFLAGS = \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_postgres_la_SOURCES = \
+	gda-postgres-ddl.c \
+	gda-postgres-ddl.h \
 	gda-postgres-provider.c \
 	gda-postgres-provider.h \
 	gda-postgres-recordset.c \

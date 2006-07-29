@@ -232,6 +232,26 @@ Handles any DDL query in an abstract way
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_operation_get_sequence_max_size ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_get_sequence_min_size ##### -->
+<para>
+
+</para>
+
+@op: 
+@path: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_operation_get_sequence_item_names ##### -->
 <para>
 

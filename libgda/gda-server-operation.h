@@ -106,10 +106,12 @@ gchar                     *gda_server_operation_get_node_parent         (GdaServ
 gchar                     *gda_server_operation_get_node_path_portion   (GdaServerOperation *op, const gchar *path);
 
 const gchar               *gda_server_operation_get_sequence_name       (GdaServerOperation *op, const gchar *path);
-gint                       gda_server_operation_get_sequence_size       (GdaServerOperation *op, const gchar *path);
+guint                      gda_server_operation_get_sequence_size       (GdaServerOperation *op, const gchar *path);
+guint                      gda_server_operation_get_sequence_max_size   (GdaServerOperation *op, const gchar *path);
+guint                      gda_server_operation_get_sequence_min_size   (GdaServerOperation *op, const gchar *path);
 gchar                    **gda_server_operation_get_sequence_item_names (GdaServerOperation *op, const gchar *path); 
 
-gint                       gda_server_operation_add_item_to_sequence    (GdaServerOperation *op, const gchar *path);
+guint                      gda_server_operation_add_item_to_sequence    (GdaServerOperation *op, const gchar *path);
 gboolean                   gda_server_operation_del_item_from_sequence  (GdaServerOperation *op, const gchar *item_path);
 
 const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path_format, ...);

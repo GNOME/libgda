@@ -45,6 +45,16 @@ An implementation of #GdaDataModel based on an array
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_array_new_with_types ##### -->
+<para>
+
+</para>
+
+@cols: 
+@Varargs: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_array_copy_model ##### -->
 <para>
 

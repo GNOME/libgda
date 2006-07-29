@@ -104,7 +104,7 @@
 		<row>
                   <entry>/TABLE_DEF_P</entry>
                   <entry>PARAMLIST</entry>
-		  <entry>X</entry>
+		  <entry>Yes</entry>
                   <entry>Table's description</entry>
 		</row>
 		<row>
@@ -116,8 +116,8 @@
 		<row>
                   <entry>/TABLE_DEF_P/TABLE_NAME</entry>
                   <entry>PARAM</entry>
-		  <entry>X</entry>
-                  <entry>Table's name (string)</entry>
+		  <entry>Yes</entry>
+                  <entry>Table name (string)</entry>
 		</row>
 		<row>
                   <entry>/TABLE_DEF_P/TABLE_TEMP</entry>
@@ -128,19 +128,19 @@
 		<row>
                   <entry>/FIELDS_A</entry>
                   <entry>DATA_MODEL</entry>
-		  <entry>X</entry>
+		  <entry>Yes</entry>
                   <entry>Table's fields description</entry>
 		</row>
 		<row>
                   <entry>/FIELDS_A/@COLUMN_NAME</entry>
                   <entry>DATA_MODEL_COLUMN</entry>
-		  <entry>X</entry>
+		  <entry>Yes</entry>
                   <entry>A table's field name (string)</entry>
 		</row>
 		<row>
                   <entry>/FIELDS_A/@COLUMN_TYPE</entry>
                   <entry>DATA_MODEL_COLUMN</entry>
-		  <entry>X</entry>
+		  <entry>Yes</entry>
                   <entry>A table's field type (string)</entry>
 		</row>
 		<row>
@@ -232,6 +232,129 @@
                   <entry>SEQUENCE</entry>
 		  <entry></entry>
                   <entry>A table constraint (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>GDA_SERVER_OPERATION_DROP_TABLE:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/TABLE_DESC_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>Table's description</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_DESC_P/TABLE_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Table's name (string)</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_DESC_P/REFERENCED_ACTION</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>Action to perform for objects referencing the table to drop (CASCADE, RESTRICT, ...) (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>GDA_SERVER_OPERATION_CREATE_INDEX:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/INDEX_DEF_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>Index's description</entry>
+		</row>
+		<row>
+                  <entry>/INDEX_DEF_P/INDEX_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Index name (string)</entry>
+		</row>
+		<row>
+                  <entry>/INDEX_DEF_P/INDEX_ON_TABLE</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Table on which the index is applied (string)</entry>
+		</row>
+		<row>
+                  <entry>/INDEX_FIELDS_S</entry>
+                  <entry>SEQUENCE</entry>
+		  <entry>Yes</entry>
+                  <entry>List of fields on which the index is applied (min: 1 item)</entry>
+		</row>
+		<row>
+                  <entry>/INDEX_FIELDS_S/INDEX_FIELD</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>A field on which the index is applied (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>GDA_SERVER_OPERATION_DROP_INDEX:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/INDEX_DESC_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>Index's description</entry>
+		</row>
+		<row>
+                  <entry>/INDEX_DESC_P/INDEX_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Index's name (string)</entry>
+		</row>
+		<row>
+                  <entry>/INDEX_DESC_P/REFERENCED_ACTION</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>Action to perform for objects referencing the index to drop (CASCADE, RESTRICT, ...) (string)</entry>
 		</row>
 	      </tbody>
 	    </tgroup>

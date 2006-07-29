@@ -89,6 +89,8 @@ typedef struct _Node {
 		GdaParameter         *param; 
 		struct {
 			GSList       *seq_tmpl; /* list of Node templates */
+			guint         min_items;
+			guint         max_items;
 			GSList       *seq_items; /* list of Node of type GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM */
 			gchar        *name;
 			gchar        *descr;
@@ -619,7 +621,8 @@ gda_server_operation_set_property (GObject *object,
 		}
 	}
 
-	if (op->priv->xml_spec_doc && op->priv->dict && op->priv->cnc_set && op->priv->prov_set)
+	if (op->priv->xml_spec_doc && op->priv->dict && op->priv->cnc_set && op->priv->prov_set) 
+		/* load XML file */
 		op->priv->topnodes = load_xml_spec (op, xmlDocGetRootElement (op->priv->xml_spec_doc), NULL);
 }
 
@@ -797,6 +800,8 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 
 			opnode = node_new (parent, GDA_SERVER_OPERATION_NODE_SEQUENCE, path_name);
 			opnode->d.seq.seq_tmpl = NULL;
+			opnode->d.seq.min_items = 0;
+			opnode->d.seq.max_items = G_MAXUINT;
 			opnode->d.seq.seq_items = NULL;
 			opnode->d.seq.xml_spec = node;
 			
@@ -809,6 +814,19 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 			prop = xmlGetProp (node, "descr");
 			if (prop) {
 				opnode->d.seq.descr = g_strdup (prop);
+				xmlFree (prop);
+			}
+
+			
+			prop = xmlGetProp (node, "minitems");
+			if (prop) {
+				opnode->d.seq.min_items = atoi (prop);
+				xmlFree (prop);
+			}
+
+			prop = xmlGetProp (node, "maxitems");
+			if (prop) {
+				opnode->d.seq.max_items = atoi (prop);
 				xmlFree (prop);
 			}
 
@@ -867,6 +885,16 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 				if (!strcmp (status, "OPT"))
 					opnode->status = GDA_SERVER_OPERATION_STATUS_OPTIONAL;
 				xmlFree (status);
+			}
+
+			if (opnode->type == GDA_SERVER_OPERATION_NODE_SEQUENCE) {
+				/* add sequence items if necessary */
+				if (opnode->d.seq.min_items > 0) {
+					guint i;
+					
+					for (i = 0; i < opnode->d.seq.min_items; i++)
+						gda_server_operation_add_item_to_sequence (op, complete_path);
+				}
 			}
 		}
 		
@@ -1540,7 +1568,7 @@ gda_server_operation_get_sequence_name (GdaServerOperation *op, const gchar *pat
  *
  * Returns: the number of items in the sequence at @path, or 0 if @path is not a sequence node
  */
-gint
+guint
 gda_server_operation_get_sequence_size (GdaServerOperation *op, const gchar *path)
 {
 	Node *node;
@@ -1554,6 +1582,51 @@ gda_server_operation_get_sequence_size (GdaServerOperation *op, const gchar *pat
 
 	return g_slist_length (node->d.seq.seq_items);
 }
+
+/**
+ * gda_server_operation_get_sequence_max_size
+ * @op: a #GdaServerOperation object
+ * @path: a complete path to a sequence node (starting with "/")
+ *
+ * Returns: the maximum number of items in the sequence at @path, or 0 if @path is not a sequence node
+ */
+guint
+gda_server_operation_get_sequence_max_size (GdaServerOperation *op, const gchar *path)
+{
+	Node *node;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
+	g_return_val_if_fail (op->priv, 0);
+
+	node = node_find (op, path);
+	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE))
+		return 0;
+
+	return node->d.seq.max_items;
+}
+
+/**
+ * gda_server_operation_get_sequence_min_size
+ * @op: a #GdaServerOperation object
+ * @path: a complete path to a sequence node (starting with "/")
+ *
+ * Returns: the minimum number of items in the sequence at @path, or 0 if @path is not a sequence node
+ */
+guint
+gda_server_operation_get_sequence_min_size (GdaServerOperation *op, const gchar *path)
+{
+	Node *node;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
+	g_return_val_if_fail (op->priv, 0);
+
+	node = node_find (op, path);
+	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE))
+		return 0;
+
+	return node->d.seq.min_items;
+}
+
 
 #ifdef GDA_DEBUG_NO
 static void
@@ -1587,19 +1660,23 @@ dump (GdaServerOperation *op)
  * Returns: the index of the new entry in the sequence (like 5 for example if a 6th item has
  *          been added to the sequence.
  */
-gint
+guint
 gda_server_operation_add_item_to_sequence (GdaServerOperation *op, const gchar *seq_path)
 {
 	Node *node;
 
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), -1);
-	g_return_val_if_fail (op->priv, -1);
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
+	g_return_val_if_fail (op->priv, 0);
 	
 	node = node_find (op, seq_path);
 	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE)) 
-		return -1;
+		return 0;
+
+	if (g_slist_length (node->d.seq.seq_items) == node->d.seq.max_items)
+		return 0;
 
 	sequence_add_item (op, node);
+
 #ifdef GDA_DEBUG_NO
 	dump (op);
 #endif
@@ -1632,7 +1709,9 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
 	}
 
 	node = node_find (op, seq_path);
-	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE)) {
+	if (!node || 
+	    (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE) ||
+	    (g_slist_length (node->d.seq.seq_items) == node->d.seq.min_items)) {
 		g_free (seq_path);
 		return FALSE;
 	}

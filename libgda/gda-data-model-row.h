@@ -53,7 +53,7 @@ struct _GdaDataModelRowClass {
 	gint                (* get_n_rows)      (GdaDataModelRow *model);
 	gint                (* get_n_columns)   (GdaDataModelRow *model);
 	GdaRow             *(* get_row)         (GdaDataModelRow *model, gint row, GError **error);
-	const GValue     *(* get_value_at)    (GdaDataModelRow *model, gint col, gint row);
+	const GValue       *(* get_value_at)    (GdaDataModelRow *model, gint col, gint row);
 	
 	gboolean            (* is_updatable)    (GdaDataModelRow *model);
 

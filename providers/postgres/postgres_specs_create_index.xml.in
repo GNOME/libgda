@@ -1,17 +1,21 @@
 <?xml version="1.0"?>
 <serv_op>
-  <parameters id="INDEX_DEF_P" _name="">
-    <parameter id="INDEX_UNIQUE" _name="Unique" gdatype="gboolean"/>
+  <parameters id="INDEX_DEF_P" _name="Index description">
+    <parameter id="INDEX_UNIQUE" _name="Unique" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
     <parameter id="INDEX_NAME" _name="Name" _descr="Index name" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="INDEX_ON_TABLE" _name="On table" gdatype="gchararray" source="_DICT_TABLES_"/>
+    <parameter id="INDEX_ON_TABLE" _name="On table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
     <parameter id="INDEX_METHOD" _name="Method" gdatype="gchararray" source="method:0"/>
     <parameter id="INDEX_TABLESPACE" _name="Tablespace" gdatype="gchararray"/>
     <parameter id="INDEX_PREDICATE" _name="Predicate" _descr="Constraint expression for a partial index" gdatype="gchararray"/>
   </parameters>
 
   <!-- Index fields -->
-  <sequence id="INDEX_FIELDS_S" _name="Fields">
-    <parameter id="INDEX_FIELD" _name="Indexed field or expression" gdatype="gchararray" nullok="FALSE" source="_INDEX_ON_TABLE/DICT_FIELDS_" custom-val="TRUE"/>
+  <sequence id="INDEX_FIELDS_S" _name="Indexed field(s)" minitems="1" maxitems="3">
+    <parameter id="INDEX_FIELD" _name="Indexed field or expression" gdatype="gchararray" nullok="FALSE" source="_INDEX_ON_TABLE/DICT_FIELDS_">
+      <gda_value>indexed_field</gda_value>
+    </parameter>
   </sequence>
 
   <!-- Sources -->

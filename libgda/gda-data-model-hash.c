@@ -362,7 +362,9 @@ gda_data_model_hash_insert_row (GdaDataModelHash *model,
  * @cols: the number of columns for rows inserted in @model.
  *
  * Sets the number of columns for rows inserted in this model.
- * @cols must be greater than or equal to 0.
+ * @cols must be greater than or equal to 0. 
+ *
+ * Also clears @model's contents.
  *
  * This function calls #gda_data_model_hash_clear to free the
  * existing rows if any.
@@ -373,8 +375,8 @@ gda_data_model_hash_set_n_columns (GdaDataModelHash *model, gint cols)
 	g_return_if_fail (GDA_IS_DATA_MODEL_HASH (model));
 	g_return_if_fail (cols >= 0);
 
-	model->priv->number_of_columns = cols;
 	gda_data_model_hash_clear (model);
+	model->priv->number_of_columns = cols;
 }
 
 /**
@@ -413,5 +415,6 @@ gda_data_model_hash_clear (GdaDataModelHash *model)
         for (i = 0; i < model->priv->number_of_hash_table_rows; i++)
                 g_array_append_val (model->priv->row_map, i);
 
+	/* FIXME: signal changes */
 }
 

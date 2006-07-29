@@ -265,6 +265,7 @@ gda_data_model_array_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
 	/* free memory */
+	gda_data_model_freeze (model);
 	gda_data_model_array_clear (model);
 	g_ptr_array_free (model->priv->rows, TRUE);
 
@@ -301,6 +302,9 @@ gda_data_model_array_get_type (void)
  * gda_data_model_array_new
  * @cols: number of columns for rows in this data model.
  *
+ * Creates a new #GdaDataModel object without initializing the column
+ * types. Using gda_data_model_array_new_with_types() is usually better.
+ *
  * Returns: a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
@@ -310,6 +314,40 @@ gda_data_model_array_new (gint cols)
 
 	model = g_object_new (GDA_TYPE_DATA_MODEL_ARRAY, NULL);
 	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (model), cols);
+	return model;
+}
+
+/**
+ * gda_data_model_array_new_with_types
+ * @cols: number of columns for rows in this data model.
+ * @...: types of the columns of the model to create
+ * 
+ * Creates a new #GdaDataModel object with the column types as
+ * specified.
+ *
+ * Returns: a pointer to the newly created #GdaDataModel.
+ */
+GdaDataModel *
+gda_data_model_array_new_with_types (gint cols, ...)
+{
+	GdaDataModel *model;
+	va_list args;
+	gint i;
+
+	model = gda_data_model_array_new (cols);
+	va_start (args, cols);
+	i = 0;
+	while (i < cols) {
+		gint argtype;
+
+		argtype = va_arg (args, GType);
+		g_assert (argtype >= 0);
+
+		gda_column_set_gda_type (gda_data_model_describe_column (model, i), 
+					 (GType) argtype);
+		i++;
+	}
+	va_end (args);
 	return model;
 }
 
@@ -371,20 +409,23 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
  *
  * Sets the number of columns for rows inserted in this model. 
  * @cols must be greated than or equal to 0.
+ *
+ * Also clears @model's contents.
  */
 void
 gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
+
+	gda_data_model_array_clear (model);
 	model->priv->number_of_columns = cols;
-	/* FIXME: should rebuild the internal array, removing/adding empty cols */
 }
 
 /**
  * gda_data_model_array_clear
  * @model: the model to clear.
  *
- * Frees all the rows inserted in @model.
+ * Frees all the rows in @model.
  */
 void
 gda_data_model_array_clear (GdaDataModelArray *model)
@@ -392,10 +433,8 @@ gda_data_model_array_clear (GdaDataModelArray *model)
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
 	while (model->priv->rows->len > 0) {
-		GdaRow *row = (GdaRow *) g_ptr_array_index (model->priv->rows, 0);
+		GdaRow *row = (GdaRow *) g_ptr_array_index (model->priv->rows, model->priv->rows->len-1);
 
-		if (row != NULL)
-			g_object_unref (row);
-		g_ptr_array_remove_index (model->priv->rows, 0);
+		gda_data_model_array_remove_row (model, row, NULL);
 	}
 }

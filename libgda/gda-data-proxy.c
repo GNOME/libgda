@@ -1893,6 +1893,33 @@ adjust_displayed_chunck (GdaDataProxy *proxy)
                                0, proxy->priv->sample_first_row, proxy->priv->sample_last_row);	
 
 	/*
+	 * signal rows addition or removal
+	 */
+	if (old_nb_rows < new_nb_rows) {
+		/*
+		 * insert the missing rows in the idle loop
+		 */
+		proxy->priv->idle_add_event_source = g_idle_add ((GSourceFunc) idle_add_model_rows, proxy);
+
+		proxy->priv->current_nb_rows = old_nb_rows;
+	}
+	else {
+		/*
+		 * delete all the remaining rows:
+		 * emit the GdaDataModel::"row_removed" signal for all the new rows 
+		 * (using the same row number!) 
+		 */
+		i = old_nb_rows < new_nb_rows ? old_nb_rows : new_nb_rows;
+		gint rownb = model_row_to_proxy_row (proxy, proxy->priv->sample_first_row + i);
+		for (; i < old_nb_rows; i++) 
+			if (proxy->priv->notify_changes) {
+				proxy->priv->current_nb_rows = new_nb_rows + old_nb_rows  - i - 1;
+				gda_data_model_row_removed ((GdaDataModel *) proxy, rownb);
+			}
+		proxy->priv->current_nb_rows = new_nb_rows;
+	}
+
+	/*
 	 * emit the GdaDataModel::"row_updated" signal for all the rows which already existed
 	 */
 	for (i=0; (i < old_nb_rows) && (i < new_nb_rows); i++) {
@@ -1909,28 +1936,7 @@ adjust_displayed_chunck (GdaDataProxy *proxy)
 						    model_row_to_proxy_row (proxy, proxy->priv->sample_first_row + i));
 	}
 	
-	if (old_nb_rows < new_nb_rows) {
-		/*
-		 * insert the missing rows in the idle loop
-		 */
-		proxy->priv->idle_add_event_source = g_idle_add ((GSourceFunc) idle_add_model_rows, proxy);
 
-		proxy->priv->current_nb_rows = old_nb_rows;
-	}
-	else {
-		/*
-		 * delete all the remaining rows:
-		 * emit the GdaDataModel::"row_removed" signal for all the new rows 
-		 * (using the same row number!) 
-		 */
-		gint rownb = model_row_to_proxy_row (proxy, proxy->priv->sample_first_row + i);
-		for (; i < old_nb_rows; i++) 
-			if (proxy->priv->notify_changes) {
-				proxy->priv->current_nb_rows = new_nb_rows + old_nb_rows  - i - 1;
-				gda_data_model_row_removed ((GdaDataModel *) proxy, rownb);
-			}
-		proxy->priv->current_nb_rows = new_nb_rows;
-	}
 
 	/* re-enable the emision of the "changed" signal each time a "row_*" signal is
 	 * emitted */

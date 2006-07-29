@@ -455,11 +455,28 @@ static OpReq op_req_CREATE_TABLE [] = {
 	{NULL}
 };
 
+static OpReq op_req_DROP_TABLE [] = {
+	{"/TABLE_DESC_P/TABLE_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
+static OpReq op_req_CREATE_INDEX [] = {
+	{"/INDEX_DEF_P/INDEX_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/INDEX_DEF_P/INDEX_ON_TABLE",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/INDEX_FIELDS_S",               GDA_SERVER_OPERATION_NODE_SEQUENCE, NULL},
+	{NULL}
+};
+
+static OpReq op_req_DROP_INDEX [] = {
+	{"/INDEX_DESC_P/INDEX_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
 static OpReq *op_req_table [GDA_SERVER_OPERATION_NB] = {
 	op_req_CREATE_TABLE, /* GDA_SERVER_OPERATION_CREATE_TABLE */
-	NULL, /* GDA_SERVER_OPERATION_DROP_TABLE */
-	NULL, /* GDA_SERVER_OPERATION_CREATE_INDEX */
-	NULL, /* GDA_SERVER_OPERATION_DROP_INDEX */
+	op_req_DROP_TABLE, /* GDA_SERVER_OPERATION_DROP_TABLE */
+	op_req_CREATE_INDEX, /* GDA_SERVER_OPERATION_CREATE_INDEX */
+	op_req_DROP_INDEX, /* GDA_SERVER_OPERATION_DROP_INDEX */
 };
 
 /**
@@ -495,7 +512,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 			/* test op's conformance */
 			gint i = 0;
 			OpReq *opreq = op_req_table [type];
-			while (opreq->path) {
+			while (opreq && opreq->path) {
 				GdaServerOperationNodeType node_type;
 				node_type = gda_server_operation_get_node_type (op, opreq->path, NULL);
 				if (node_type == GDA_SERVER_OPERATION_NODE_UNKNOWN) 

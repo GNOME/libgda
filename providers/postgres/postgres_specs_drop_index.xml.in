@@ -1,7 +1,11 @@
 <?xml version="1.0"?>
 <serv_op>
-  <parameter id="INDEX_NAME" _name="Index" _descr="Index to delete" gdatype="gchararray" nullok="FALSE"/>
-  <parameter id="REFERENCED_ACTION" _name="Referenced action" gdatype="gchararray" source="action_cb:0"/>
+  <parameters id="INDEX_DESC_P">
+    <parameter id="INDEX_NAME" _name="Index" _descr="Index to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_INDEXES_"/>
+    <parameter id="REFERENCED_ACTION" _name="References" _descr="What to do with references" gdatype="gchararray" nullok="FALSE" source="action_cb:0">
+      <gda_value>RESTRICT</gda_value>
+    </parameter>
+  </parameters>
 
   <!-- Sources -->
   <sources>

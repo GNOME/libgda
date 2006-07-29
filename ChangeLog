@@ -1,3 +1,18 @@
+2006-07-29  Vivien Malerba <malerba@gnome-db.org>
+	
+	* libgda/libgda-server-operation.dtd: added the possibility specify a value
+	for a parameter
+	* providers/postgres/gda-postgres-ddl.[ch]: new files which implement DDL queries
+	for the PostgreSQL provider
+	* providers/postgres/postgres_specs_*: updated DDL queries spec files
+	* po/POTFILES.in: added missing files to translate
+	* doc/C: documentation updates
+	* libgda/gda-data-model-array.[ch]:
+	* libgda/gda-data-model-hash.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-server-operation.[ch]:
+	* libgda/gda-server-provider.c: various bug fixes and updates
+
 2006-07-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-query-target.c

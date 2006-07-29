@@ -15,6 +15,7 @@
 	  name CDATA #IMPLIED
 	  xml:lang CDATA #IMPLIED
 	  descr CDATA #IMPLIED
+	  minitems NMTOKEN #IMPLIED
 	  maxitems NMTOKEN #IMPLIED
 	  status (OPT|REQ) #IMPLIED>
 
