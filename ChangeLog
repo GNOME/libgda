@@ -1,4 +1,9 @@
 2006-07-29  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql/gda-mysql-recordset.c: applied patch from
+	Carlos Savoretti
+
+2006-07-29  Vivien Malerba <malerba@gnome-db.org>
 	
 	* libgda/libgda-server-operation.dtd: added the possibility specify a value
 	for a parameter

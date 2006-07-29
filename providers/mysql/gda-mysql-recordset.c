@@ -123,6 +123,7 @@ fill_gda_value (GValue *gda_value, enum enum_field_types type, gchar *value,
 	switch (type) {
 	case FIELD_TYPE_DECIMAL :
 	case FIELD_TYPE_DOUBLE :
+	case FIELD_TYPE_NEWDECIMAL :
 		gda_value_reset_with_type (gda_value, G_TYPE_DOUBLE);
 		g_value_set_double (gda_value, atof (value));
 		break;
@@ -927,3 +928,4 @@ gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql)
 
 	return model;
 }
+
