@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-03 14:07+0200\n"
-"PO-Revision-Date: 2005-08-03 14:09+0200\n"
+"POT-Creation-Date: 2006-08-03 17:31+0200\n"
+"PO-Revision-Date: 2006-08-03 17:35+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -1079,10 +1079,8 @@ msgid "File Name"
 msgstr "Filnavn"
 
 #: ../providers/mdb/libmain.c:46 ../providers/xbase/libmain.c:49
-#, fuzzy
 msgid "Full path of the file containing the database"
-msgstr ""
-"En full sti må spesifiseres i tilkoblingsstrengen for å åpne en database."
+msgstr "Full sti til filen som inneholder databasen"
 
 #: ../providers/msql/gda-msql-libmain.c:45
 msgid "Provider for Hughes Technologies mSQL databases"
@@ -1092,7 +1090,7 @@ msgstr "Tilbyder for Hughes Technologies mSQL-databaser"
 #: ../providers/postgres/libmain.c:59 ../providers/sybase/libmain.c:54
 #: ../providers/sybase/libmain.c:58
 msgid "Name of the host to connect to"
-msgstr ""
+msgstr "Navnet på verten det skal kobles til"
 
 #: ../providers/msql/gda-msql-provider.c:242
 #: ../providers/msql/gda-msql-provider.c:286
@@ -1177,15 +1175,15 @@ msgstr "Tilbyder for MySQL-databaser"
 
 #: ../providers/mysql/libmain.c:52
 msgid "Name of the database to connect to"
-msgstr ""
+msgstr "Navnet på databasen som skal kobles til"
 
 #: ../providers/mysql/libmain.c:60
 msgid "Port number to use for connecting"
-msgstr ""
+msgstr "Portnummer som skal brukes for tilkobling"
 
 #: ../providers/mysql/libmain.c:63
 msgid "UNIX Socket"
-msgstr ""
+msgstr "UNIX-socket"
 
 #: ../providers/mysql/libmain.c:64
 msgid "Full path of the UNIX socket to use for connecting locally"
@@ -1193,7 +1191,7 @@ msgstr ""
 
 #: ../providers/mysql/libmain.c:67
 msgid "Use Secure Connection"
-msgstr ""
+msgstr "Bruk sikker tilkobling"
 
 #: ../providers/mysql/libmain.c:68
 msgid "Whether to use or not SSL for establishing the connection"
@@ -1538,7 +1536,7 @@ msgstr "TNS-navn"
 
 #: ../providers/oracle/libmain.c:44
 msgid "Name of the TNS configuration to use for connecting"
-msgstr ""
+msgstr "Navn på TNS-konfigurasjon som skal brukes for tilkobling"
 
 #: ../providers/postgres/gda-postgres-provider.c:588
 #: ../providers/postgres/gda-postgres-provider.c:605
@@ -1615,11 +1613,11 @@ msgstr "Tilbyder for PostgreSQL-databaser"
 
 #: ../providers/postgres/libmain.c:54
 msgid "Search Path"
-msgstr ""
+msgstr "Søkesti"
 
 #: ../providers/postgres/libmain.c:55
 msgid "Search path"
-msgstr ""
+msgstr "Søkesti"
 
 #: ../providers/postgres/libmain.c:67
 msgid "Extra PostgreSQL options to use for the connection"
@@ -1631,15 +1629,15 @@ msgstr ""
 
 #: ../providers/postgres/libmain.c:74
 msgid "Require SSL"
-msgstr ""
+msgstr "Krev SSL"
 
 #: ../providers/postgres/libmain.c:75
 msgid "Whether to require SSL or not when connecting"
-msgstr ""
+msgstr "Om SSL skal kreves ved tilkobling"
 
 #: ../providers/postgres/libmain.c:78 ../providers/postgres/libmain.c:79
 msgid "TTY"
-msgstr ""
+msgstr "TTY"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:199
 msgid ""
@@ -1690,7 +1688,7 @@ msgstr ""
 
 #: ../providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr ""
+msgstr "Ikke mer nminne. Allokering av tilkoblingsstruktur feilet."
 
 #: ../providers/sybase/gda-sybase-provider.c:336
 #, c-format
@@ -1721,7 +1719,7 @@ msgstr "Sending av sql-kommando feilet."
 #: ../providers/sybase/gda-sybase-provider.c:790
 #: ../providers/sybase/gda-sybase-provider.c:811
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
-msgstr ""
+msgstr "GDA_IS_SYBASE_RECORDSET =! TRUE"
 
 #. when you execute a stored procedure through openclient, this
 #. part of the result set loop is where you fetch the return status
@@ -1905,7 +1903,7 @@ msgstr "Locale"
 
 #: ../providers/sybase/libmain.c:81
 msgid "Locale to use in the connection"
-msgstr ""
+msgstr "Locale som skal brukes for tilkoblingen"
 
 #: ../providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -2070,11 +2068,11 @@ msgstr "Tilbyder for Xbase-filer (dBase, FoxPro, etc)"
 
 #: ../providers/xbase/libmain.c:52
 msgid "Directory"
-msgstr ""
+msgstr "Katalog"
 
 #: ../providers/xbase/libmain.c:53
 msgid "Directory containing the xBase files"
-msgstr ""
+msgstr "Katalog som inneholder xBase-filene"
 
 #: ../providers/xml/gda-xml-provider.c:191
 msgid ""
@@ -2481,13 +2479,12 @@ msgstr "Databasefil"
 
 #: ../providers/bdb/libmain.c:49
 msgid "Berkeley DB database file to be used"
-msgstr ""
+msgstr "Berkeley DB databasefil som skal brukes"
 
 #: ../providers/bdb/libmain.c:52
 msgid "Database name"
 msgstr "Databasenavn"
 
 #: ../providers/bdb/libmain.c:53
-#, fuzzy
 msgid "Name of the database in the database file to be used"
-msgstr "For å fjerne SQLite-databasen må du slette databasefilene for hånd"
+msgstr "Navn på databasen i databasefilen som skal brukes"
