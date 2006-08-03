@@ -3188,7 +3188,7 @@
 2003-04-19  Steve Fosdick  <gnomedb@pelvoux.demon.co.uk>
 
 	* libgda/providers/oracle/gda-oracle-provider.c: Fixed a bug where
-	the index data was not being correctly retreived including
+	the index data was not being correctly retrieved including
 	updating the get_oracle_index_data to take the name of the table
 	owner for which it is to find index data.
 
