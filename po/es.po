@@ -15,14 +15,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-30 02:14+0200\n"
-"PO-Revision-Date: 2006-06-30 02:33+0200\n"
-"Last-Translator: Francisco Javier F. Serrador <serrador@tecknolabs.com>\n"
+"POT-Creation-Date: 2006-08-03 16:58+0200\n"
+"PO-Revision-Date: 2006-08-03 17:08+0200\n"
+"Last-Translator: Francisco Javier F. Serrador <serrador@cvs.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.2\n"
+"X-Generator: KBabel 1.11.1\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../libgda/gda-client.c:293 ../libgda/gda-client.c:1067
@@ -92,8 +92,8 @@ msgstr "Descripción"
 #: ../providers/odbc/gda-odbc-provider.c:794
 #: ../providers/odbc/gda-odbc-provider.c:847
 #: ../providers/oracle/gda-oracle-provider.c:1600
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:40
 msgid "Name"
 msgstr "Nombre"
 
@@ -158,82 +158,86 @@ msgstr "Sin proveedor especificado"
 msgid "Column %d out of range 0 - %d"
 msgstr "Columna %d fuera de rango 0 - %d"
 
-#: ../libgda/gda-data-model-array.c:75 ../libgda/gda-data-model-array.c:91
+#: ../libgda/gda-data-model-array.c:75 ../libgda/gda-data-model-array.c:96
 #, c-format
 msgid "Row %d out of range 0 - %d"
 msgstr "Fila %d fuera de rango 0 - %d"
 
-#: ../libgda/gda-data-model-array.c:97 ../libgda/gda-data-model-hash.c:107
+#: ../libgda/gda-data-model-array.c:91
+msgid "No row in data model"
+msgstr "No hay ninguna fila en el modelo de datos"
+
+#: ../libgda/gda-data-model-array.c:102 ../libgda/gda-data-model-hash.c:107
 #, c-format
 msgid "Column out %d of range 0 - %d"
 msgstr "Columna %d fuera de rango 0 - %d"
 
-#: ../libgda/gda-data-model-array.c:132 ../libgda/gda-data-model-hash.c:133
+#: ../libgda/gda-data-model-array.c:137 ../libgda/gda-data-model-hash.c:133
 #: ../libgda/gda-data-model-hash.c:204
 msgid "Wrong number of values in values list"
 msgstr "Número de valores erróneos en la lista de valores"
 
-#: ../libgda/gda-data-model-array.c:192 ../libgda/gda-data-model-array.c:220
+#: ../libgda/gda-data-model-array.c:197 ../libgda/gda-data-model-array.c:225
 msgid "Row not found in data model"
 msgstr "No se encontró la fila en el modelo de datos"
 
-#: ../libgda/gda-data-model.c:949
+#: ../libgda/gda-data-model.c:952
 msgid "The 'NAME' parameter must hold a string value, ignored."
 msgstr "El parámetro 'NAME' debe contener un valor de cadena, ignorado."
 
-#: ../libgda/gda-data-model.c:985
+#: ../libgda/gda-data-model.c:988
 msgid "The 'SEPARATOR' parameter must hold a string value, ignored."
 msgstr "El parámetro 'SEPARATOR' debe contener un valor de cadena, ignorado."
 
-#: ../libgda/gda-data-model.c:1061
+#: ../libgda/gda-data-model.c:1064
 msgid "The 'OVERWRITE' parameter must hold a boolean value, ignored."
 msgstr "El parámetro 'OVERWRITE' debe contener un valor booleano, ignorado."
 
-#: ../libgda/gda-data-model.c:1069
+#: ../libgda/gda-data-model.c:1072
 #, c-format
 msgid "File '%s' already exists"
 msgstr "EL archivo «%s» ya existe"
 
-#: ../libgda/gda-data-model.c:1075
+#: ../libgda/gda-data-model.c:1078
 #, c-format
 msgid "Could not save file %s"
 msgstr "No se ha podido guardar el archivo %s"
 
-#: ../libgda/gda-data-model.c:1174
+#: ../libgda/gda-data-model.c:1177
 msgid "Exported Data"
 msgstr "Datos exportados"
 
-#: ../libgda/gda-data-model.c:1296
+#: ../libgda/gda-data-model.c:1280
 #, c-format
 msgid "Expected tag <gda_value>, got <%s>, ignoring"
 msgstr "Se esperaba la etiqueta <gda_value>, se obtuvo <%s>, ignorando"
 
-#: ../libgda/gda-data-model.c:1306 ../testing/gda-test-models.c:537
+#: ../libgda/gda-data-model.c:1299 ../testing/gda-test-models.c:537
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "No puede recuperar el tipo de datos de la columna (el tipo es DESCONOCIDO o "
 "no ha sido especificado)"
 
-#: ../libgda/gda-data-model.c:1323 ../testing/gda-test-models.c:555
+#: ../libgda/gda-data-model.c:1316 ../testing/gda-test-models.c:555
 #, c-format
 msgid "Cannot interpret string as a valid %s value"
 msgstr "No se puede interpretar la cadena como un valor %s válido"
 
-#: ../libgda/gda-data-model.c:1383
+#: ../libgda/gda-data-model.c:1379
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Se esperaba la etiqueta <gda_array_data>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model.c:1441
+#: ../libgda/gda-data-model.c:1437
 msgid "Could not get an iterator for soure data model"
 msgstr "No se ha podido obtener iterador para el modelo de datos de origen"
 
-#: ../libgda/gda-data-model.c:1457
+#: ../libgda/gda-data-model.c:1453
 #, c-format
 msgid "Inexistant column in source data model: %d"
 msgstr "Columna inexistente en el modelo de datos origen: %d"
 
-#: ../libgda/gda-data-model.c:1471
+#: ../libgda/gda-data-model.c:1467
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondance in the source "
@@ -242,7 +246,7 @@ msgstr ""
 "La columna de destino %d no puede ser NULL pero no tiene ninguna "
 "correspondencia en el modelo de datos origen"
 
-#: ../libgda/gda-data-model.c:1479
+#: ../libgda/gda-data-model.c:1475
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -251,12 +255,12 @@ msgstr ""
 "La columna de destino %d tiene un tipo gda (%s) incompatible con el  de la "
 "columna de origen %d (tipo %s)"
 
-#: ../libgda/gda-data-model.c:1547
+#: ../libgda/gda-data-model.c:1543
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "No se puede transformar «%s» del tipo GDA %s al tipo GDA %s"
 
-#: ../libgda/gda-data-model.c:1818
+#: ../libgda/gda-data-model.c:1814
 msgid "Model does not support random access, not showing data\n"
 msgstr "El modelo no soporta acceso aleatorio, no se mostrarán los datos\n"
 
@@ -304,7 +308,7 @@ msgid "no detail"
 msgstr "Sin detalles"
 
 #: ../libgda/gda-data-model-import.c:1131
-#: ../libgda/gda-data-model-import.c:1534
+#: ../libgda/gda-data-model-import.c:1544
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "No se puede convertir '%s' a un valor de tipo %s"
@@ -315,66 +319,69 @@ msgid "Row has more values than detected at line %d"
 msgstr "La fila tiene más valores que los detectados en la línea %d"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1268
+#: ../libgda/gda-data-model-import.c:1270
 msgid "Failed to read node in XML file"
 msgstr "Falló al leer el nodo en el archivo XML"
 
-#: ../libgda/gda-data-model-import.c:1287
+#: ../libgda/gda-data-model-import.c:1289
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "Se esperaba un nodo <gda_array> en el archivo XML, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1329
-#: ../libgda/gda-data-model-import.c:1618
+#: ../libgda/gda-data-model-import.c:1338
+#: ../libgda/gda-data-model-import.c:1629
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "No hay un atributo \"gdatype\" especificado en <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1376
+#: ../libgda/gda-data-model-import.c:1385
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Se esperaba <gda_array_field> en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1416
+#: ../libgda/gda-data-model-import.c:1426
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "Se esperaba <gda_array_data> en <gda_array>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1418
+#: ../libgda/gda-data-model-import.c:1428
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Se esperaba <gda_array_data>, en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1430
+#: ../libgda/gda-data-model-import.c:1440
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "No se puede leer el contenido del nodo <gda_array_data>"
 
-#: ../libgda/gda-data-model-import.c:1485
+#: ../libgda/gda-data-model-import.c:1495
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr "Se esperaba <gda_array_row> en <gda_array_data>, se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1509
+#: ../libgda/gda-data-model-import.c:1519
 msgid "Row has too many values (which are ignored)"
 msgstr "La fila tiene demasiados valores (los cuales se ignoran)"
 
-#: ../libgda/gda-data-model-import.c:1588
+#: ../libgda/gda-data-model-import.c:1598
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Se esperaba <gda_array> pero se obtuvo <%s>"
 
-#: ../libgda/gda-data-model-import.c:1665
+#: ../libgda/gda-data-model-import.c:1676
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "No hay especificado ningún <gda_array_field> especificado en <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1716
+#: ../libgda/gda-data-model-import.c:1734 ../libgda/gda-data-proxy.c:454
+#: ../libgda/gda-server-operation.c:771
 #: ../providers/oracle/gda-oracle-provider.c:1848
 msgid "No detail"
 msgstr "Sin detalles"
 
-#: ../libgda/gda-data-model-import.c:1893
+#: ../libgda/gda-data-model-import.c:1911
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
-msgstr "La fila en la línea %d no tiene valores suficientes, se completaron con valores NULL"
+msgstr ""
+"La fila en la línea %d no tiene valores suficientes, se completaron con "
+"valores NULL"
 
-#: ../libgda/gda-data-model-import.c:1913
+#: ../libgda/gda-data-model-import.c:1931
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "La fila en la línea %d no tiene suficientes valores (los cuales se ignoran)"
@@ -403,25 +410,30 @@ msgstr "No se ha especificado una consulta DELETE, no se puede borrar la fila"
 msgid "Too many values in list"
 msgstr "Demasiados valores en la lista"
 
-#: ../libgda/gda-data-proxy.c:435
+#: ../libgda/gda-data-proxy.c:436
 msgid "Data model"
 msgstr "Modelo de datos"
 
-#: ../libgda/gda-data-proxy.c:634
+#: ../libgda/gda-data-proxy.c:453
+#, c-format
+msgid "Could not auto-commit row change: %s"
+msgstr "No se pudo auto-efectuar el cambio de fila: %s"
+
+#: ../libgda/gda-data-proxy.c:671
 msgid "GdaDataProxy cant' handle non random access data models"
 msgstr "GdaDataProxy no puede manipular modelos de acceso a dato no aleatorios"
 
-#: ../libgda/gda-data-proxy.c:2390
+#: ../libgda/gda-data-proxy.c:2440
 #, c-format
 msgid "Unknown GdaDataProxy column: %d"
 msgstr "Columna GdaDataProxy desconocida: %d"
 
-#: ../libgda/gda-data-proxy.c:2544
+#: ../libgda/gda-data-proxy.c:2594
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "intentando cambiar una columna de sólo lectura: %d"
 
-#: ../libgda/gda-data-proxy.c:2581
+#: ../libgda/gda-data-proxy.c:2631
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Tipo del valor no coincide %s en lugar de %s"
@@ -636,19 +648,20 @@ msgstr "La etiqueta XML no es <gda_dict_type>"
 msgid "Missing required attributes for <gda_dict_type>"
 msgstr "Faltan atributos requeridos por <gda_dict_type>"
 
-#: ../libgda/gda-init.c:50
+#: ../libgda/gda-init.c:51
 msgid "Attempt to re-initialize GDA library. ignored."
 msgstr "Se ha intentado reinicializar la biblioteca GDA. ignorado"
 
-#: ../libgda/gda-init.c:68
+#: ../libgda/gda-init.c:69
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda necesita GModule. Terminando..."
 
-#: ../libgda/gda-init.c:90 ../libgda/gda-init.c:97 ../libgda/gda-init.c:104
+#: ../libgda/gda-init.c:91 ../libgda/gda-init.c:98 ../libgda/gda-init.c:105
+#: ../libgda/gda-init.c:113
 msgid "Could not parse "
 msgstr "No se ha podido analizar "
 
-#: ../libgda/gda-init.c:90
+#: ../libgda/gda-init.c:91
 msgid ""
 ": XML dictionaries validation will not be performed (some weird errors may "
 "occur)"
@@ -656,87 +669,78 @@ msgstr ""
 ": La validación de diccionarios XML no será efectuada (podrían ocurrir "
 "algunos errores raros)"
 
-#: ../libgda/gda-init.c:97 ../libgda/gda-init.c:104
+#: ../libgda/gda-init.c:98 ../libgda/gda-init.c:105
 msgid ""
 ": XML data import validation will not be performed (some weird errors may "
 "occur)"
-msgstr ": la validación de la importación de datos XML no se realizará (podrían ocurrir errores extraños)"
+msgstr ""
+": la validación de la importación de datos XML no se realizará (podrían "
+"ocurrir errores extraños)"
+
+#: ../libgda/gda-init.c:113
+msgid ""
+": Validation for XML files for server operations will not be performed (some "
+"weird errors may occur)"
+msgstr ": La validación para los archivos XML de operaciones del servidor no será efectuada (podrían ocurrir algunos errores raros)"
 
 #: ../libgda/gda-object.c:304
 msgid "LibGda must be initialized before any usage."
 msgstr "LibGda debe inicializarse antes de cualquier uso."
 
-#: ../libgda/gda-parameter-list.c:342
+#: ../libgda/gda-parameter-list.c:322
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
 msgstr "Nodo raíz de las especificaciones != 'data-set-spec': «%s»"
 
-#: ../libgda/gda-parameter-list.c:353
+#: ../libgda/gda-parameter-list.c:378
 #, c-format
 msgid "Missing node <parameters>: '%s'"
 msgstr "Faltan <parameters> del nodo: «%s»"
 
-#: ../libgda/gda-parameter-list.c:432
+#: ../libgda/gda-parameter-list.c:469 ../libgda/gda-server-operation.c:854
 #, c-format
 msgid "Can't find a data type for parameter '%s'"
 msgstr "No se puede encontrar un tipo de dato para el parámetro «%s»"
 
-#: ../libgda/gda-parameter-list.c:544
-#, c-format
-msgid "Field number %d not found in source named '%s'"
-msgstr "Número del campo %d no encontrado en origen denominado «%s»"
-
-#: ../libgda/gda-parameter-list.c:562
-#, c-format
-msgid "Can't find parameter source named '%s'"
-msgstr "No se puede encontrar parámetro del origen denominado «%s»"
-
-#: ../libgda/gda-parameter-list.c:568
-#, c-format
-msgid "Parameter source specification should be \"<source name>:<field pos>\": '%s'"
-msgstr ""
-"La especificación del parámetro de origen debería ser \"<source name>:<field "
-"pos>: «%s»"
-
-#: ../libgda/gda-parameter-list.c:1123
+#: ../libgda/gda-parameter-list.c:1051
 #, c-format
 msgid "Could not add parameter of type %s with value '%s'"
 msgstr "No se ha podido añadir el parámetro de tipo %s con el valor «%s»"
 
-#: ../libgda/gda-parameter-list.c:1211
+#: ../libgda/gda-parameter-list.c:1139
 #, c-format
 msgid "Missing GdaParameterListNode for param %p"
 msgstr "Falta GdaParameterListNode para el parámetro %p"
 
-#: ../libgda/gda-parameter-list.c:1224
+#: ../libgda/gda-parameter-list.c:1152
 msgid "GdaParameterListNode has a NULL param attribute"
 msgstr "GdaParameterListNode tiene un parámetro atributo NULL"
 
-#: ../libgda/gda-parameter-list.c:1235
+#: ../libgda/gda-parameter-list.c:1163
 msgid "Missing GdaParameterListSource"
 msgstr "Falta GdaParameterListSource"
 
-#: ../libgda/gda-parameter-list.c:1240
+#: ../libgda/gda-parameter-list.c:1168
 msgid "GdaParameterListSource does not list a GdaParameterListNode as it should"
 msgstr "GdaParameterListSource no lista un GdaParameterListNode como debería"
 
-#: ../libgda/gda-parameter-list.c:1247
+#: ../libgda/gda-parameter-list.c:1175
 #, c-format
 msgid "GdaDataModel %p does not have a column %d"
 msgstr "El modelo de datos GdaDataModel %p no tiene una columna %d"
 
-#: ../libgda/gda-parameter-list.c:1253
+#: ../libgda/gda-parameter-list.c:1181
 #, c-format
 msgid "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
 msgstr ""
 "GdaParameter está restringido por una columna del tipo erróneo: %s (%s "
 "esperado)"
 
-#: ../libgda/gda-parameter-list.c:1272
+#: ../libgda/gda-parameter-list.c:1200
 msgid "GdaParameterListSource has a NULL data model"
 msgstr "GdaParameterListSource tiene un modelo de datos NULL"
 
-#: ../libgda/gda-parameter-list.c:1280
+#: ../libgda/gda-parameter-list.c:1208
 msgid ""
 "GdaParameterListSource references a GdaParameterListNode not found in the "
 "nodes list"
@@ -744,7 +748,7 @@ msgstr ""
 "GdaParameterListSource referencia un GdaParameterListNode no encontrado en "
 "la lista de nodos"
 
-#: ../libgda/gda-parameter-list.c:1286
+#: ../libgda/gda-parameter-list.c:1214
 msgid ""
 "GdaParameterListSource references a GdaParameterListNode which does not use "
 "the same data model"
@@ -832,7 +836,7 @@ msgstr "Error desconocido"
 msgid ""
 "While adding to a GdaQuery: field type '%s' is not supported by the "
 "connection's provider and may be rendered incorrectly"
-msgstr ""
+msgstr "Al añadir a un GdaQuery: el tipo de campo «%s» no está soportado por el proveedor de la conexión y puede ser renderizado incorrectamente"
 
 #: ../libgda/gda-query.c:4028
 msgid "XML Tag is not <gda_query>"
@@ -1297,14 +1301,96 @@ msgstr ""
 msgid "Error loading data from <gda_query_target> node"
 msgstr "Error cargando datos desde el nodo <gda_query_target>"
 
-#: ../libgda/gda-query-target.c:916
+#: ../libgda/gda-query-target.c:917
 msgid "Don't know how to render target"
 msgstr "No se sabe cómo renderizar el destino"
+
+#: ../libgda/gda-server-operation.c:565
+#, c-format
+msgid "GdaServerOperation: could not find file '%s'"
+msgstr ""
+"GdaServerOperation: no se pudo encontrar el "
+"archivo «%s»"
+
+#: ../libgda/gda-server-operation.c:595
+#, c-format
+msgid ""
+"GdaServerOperation: file '%s' does not conform to DTD:\n"
+"%s"
+msgstr ""
+"GdaServerOperation: el archivo «%s» no es conforme al DTD:\n"
+"%s"
+
+#: ../libgda/gda-server-operation.c:601
+#, c-format
+msgid "GdaServerOperation: file '%s' does not conform to DTD"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:614
+#, c-format
+msgid "GdaServerOperation: could not load file '%s'"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:770
+#, c-format
+msgid "GdaServerOperation: error loading GdaParameterList spec %s: '%s'"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:855
+msgid "unnamed"
+msgstr "anónima"
+
+#: ../libgda/gda-server-operation.c:1083
+msgid "Non handled GdaServerOperationType, please report error"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:1253
+#, c-format
+msgid "Expected tag <serv_op_data>, got <%s>"
+msgstr "Se esperaba la etiqueta <serv_op_data>, se obtuvo <%s>"
+
+#: ../libgda/gda-server-operation.c:1267
+#, c-format
+msgid "Expected tag <op_data>, got <%s>"
+msgstr "Se esperaba la etiqueta <op_data>, se obtuvo <%s>"
+
+#: ../libgda/gda-server-operation.c:1298
+msgid "Parameterlist values can only be set for individual parameters within it"
+msgstr "Los valores de la lista de parámetros sólo se pueden establecer para parámetros individuales dentro de ella"
+
+#: ../libgda/gda-server-operation.c:1310 ../libgda/gda-server-operation.c:1329
+#, c-format
+msgid "Could not set parameter '%s' to value '%s'"
+msgstr "No se ha podido establecer el parámetro «%s» al valor «%s»"
+
+#: ../libgda/gda-server-operation.c:1351
+msgid "Missing attribute named 'path'"
+msgstr "Falta el atributo llamado 'path'"
+
+#: ../libgda/gda-server-operation.c:1855
+#, c-format
+msgid "Missing required value for '%s'"
+msgstr "Falta el valor requerido para «%s»"
+
+#: ../libgda/gda-server-operation.c:1866
+#, c-format
+msgid "Missing required value for list of parameters '%s'"
+msgstr "Falta el valor requerido para la lista de parámetros «%s»"
 
 #: ../libgda/gda-server-provider.c:408
 #, c-format
 msgid "Provider does not support the '%s()' method"
 msgstr "El proveedor no soporta el método '%s()'"
+
+#: ../libgda/gda-server-provider.c:519
+#, c-format
+msgid "Provider %s created a GdaServerOperation without node for '%s'"
+msgstr ""
+
+#: ../libgda/gda-server-provider.c:523
+#, c-format
+msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
+msgstr ""
 
 #: ../libgda/gda-server-provider-extra.c:83
 msgid "Aggregate"
@@ -1372,7 +1458,7 @@ msgstr "Base de datos"
 #. list of fields
 #: ../libgda/gda-server-provider-extra.c:97
 #: ../providers/firebird/gda-firebird-provider.c:637
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
 msgid "Field name"
 msgstr "Nombre del campo"
 
@@ -1380,7 +1466,7 @@ msgstr "Nombre del campo"
 #: ../libgda/gda-server-provider-extra.c:98
 #: ../providers/firebird/gda-firebird-provider.c:638
 #: ../providers/msql/gda-msql-provider.c:610
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Data type"
 msgstr "Tipo de dato"
 
@@ -1416,6 +1502,8 @@ msgstr "¿Índice único?"
 #: ../libgda/gda-server-provider-extra.c:104
 #: ../providers/firebird/gda-firebird-provider.c:644
 #: ../providers/msql/gda-msql-provider.c:616
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:2
 msgid "References"
 msgstr "Referencias"
 
@@ -1423,7 +1511,7 @@ msgstr "Referencias"
 #: ../libgda/gda-server-provider-extra.c:105
 #: ../providers/firebird/gda-firebird-provider.c:645
 #: ../providers/msql/gda-msql-provider.c:617
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
 msgid "Default value"
 msgstr "Valor predeterminado"
 
@@ -1514,9 +1602,9 @@ msgstr "Usuario"
 msgid "View"
 msgstr "Vista"
 
-#. Index fields
+#. foreign key spec
 #: ../libgda/gda-server-provider-extra.c:177
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
 msgid "Fields"
 msgstr "Campos"
 
@@ -1554,20 +1642,25 @@ msgstr ""
 "El modelo de datos para el esquema tiene un tipo gda erróneo: «%s» en vez de "
 "«%s»"
 
-#: ../libgda/gda-util.c:240
+#: ../libgda/gda-util.c:243
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "No se ha podido analizar el comando SQL «%s»"
 
-#: ../libgda/gda-util.c:273
+#: ../libgda/gda-util.c:276
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Error leyendo %s: %s"
 
-#: ../libgda/gda-util.c:299
+#: ../libgda/gda-util.c:302
 #, c-format
 msgid "Could not create file %s"
 msgstr "No se ha podido crear el archivo %s"
+
+#: ../libgda/gda-util.c:799
+#, c-format
+msgid "Field number %d not found in source named '%s'"
+msgstr "Número del campo %d no encontrado en origen denominado «%s»"
 
 #: ../libgda/graph/gda-graph.c:646
 msgid "XML Tag is not <gda_graph>"
@@ -2088,8 +2181,8 @@ msgid "Invalid LDAP handle"
 msgstr "Manejador LDAP inválido"
 
 #: ../providers/ldap/gda-ldap-recordset.c:70
-#: ../providers/mysql/gda-mysql-recordset.c:242
-#: ../providers/mysql/gda-mysql-recordset.c:364
+#: ../providers/mysql/gda-mysql-recordset.c:243
+#: ../providers/mysql/gda-mysql-recordset.c:365
 #: ../providers/postgres/gda-postgres-recordset.c:197
 #: ../providers/postgres/gda-postgres-recordset.c:571
 msgid "Row number out of range"
@@ -2097,7 +2190,7 @@ msgstr "Número de fila fuera de rango"
 
 #: ../providers/ldap/gda-ldap-recordset.c:283
 #: ../providers/msql/gda-msql-recordset.c:203
-#: ../providers/mysql/gda-mysql-recordset.c:428
+#: ../providers/mysql/gda-mysql-recordset.c:429
 #: ../providers/oracle/gda-oracle-recordset.c:473
 #: ../providers/postgres/gda-postgres-recordset.c:240
 msgid "Attempt to insert a row with an invalid number of columns"
@@ -2310,13 +2403,13 @@ msgstr "No puede proveer un UNIX_SOCKET si también provee un HOST o un PUERTO."
 #: ../providers/mysql/gda-mysql-provider.c:413
 #: ../providers/mysql/gda-mysql-provider.c:1870
 #: ../providers/mysql/gda-mysql-provider.c:1974
-#: ../providers/mysql/gda-mysql-recordset.c:231
-#: ../providers/mysql/gda-mysql-recordset.c:304
-#: ../providers/mysql/gda-mysql-recordset.c:358
-#: ../providers/mysql/gda-mysql-recordset.c:411
-#: ../providers/mysql/gda-mysql-recordset.c:539
-#: ../providers/mysql/gda-mysql-recordset.c:698
+#: ../providers/mysql/gda-mysql-recordset.c:232
+#: ../providers/mysql/gda-mysql-recordset.c:305
+#: ../providers/mysql/gda-mysql-recordset.c:359
+#: ../providers/mysql/gda-mysql-recordset.c:412
+#: ../providers/mysql/gda-mysql-recordset.c:540
 #: ../providers/mysql/gda-mysql-recordset.c:699
+#: ../providers/mysql/gda-mysql-recordset.c:700
 msgid "Invalid MySQL handle"
 msgstr "Manejador MySQL inválido"
 
@@ -2338,12 +2431,12 @@ msgid "Invalid MYSQL handle"
 msgstr "Manejador MYSQL inválido"
 
 #: ../providers/mysql/gda-mysql-provider.c:669
-#: ../providers/postgres/gda-postgres-provider.c:928
+#: ../providers/postgres/gda-postgres-provider.c:942
 msgid "Missing parameter 'DATABASE'"
 msgstr "Falta el parámetro 'DATABASE'"
 
 #: ../providers/mysql/gda-mysql-provider.c:698
-#: ../providers/postgres/gda-postgres-provider.c:982
+#: ../providers/postgres/gda-postgres-provider.c:996
 #: ../providers/sqlite/gda-sqlite-provider.c:596
 msgid "Method not handled by this provider"
 msgstr "Método no manipulado por este proveedor"
@@ -2354,76 +2447,76 @@ msgstr "Método no manipulado por este proveedor"
 #: ../providers/oracle/gda-oracle-provider.c:890
 #: ../providers/oracle/gda-oracle-provider.c:974
 #: ../providers/oracle/gda-oracle-provider.c:1035
-#: ../providers/postgres/gda-postgres-provider.c:1374
+#: ../providers/postgres/gda-postgres-provider.c:1472
 #: ../providers/sqlite/gda-sqlite-provider.c:695
 msgid "Transactions are not supported in read-only mode"
 msgstr "Las transacciones no están soportadas en el modo de sólo lectura"
 
-#: ../providers/mysql/gda-mysql-recordset.c:311
+#: ../providers/mysql/gda-mysql-recordset.c:312
 #: ../providers/bdb/gda-bdb-recordset.c:113
 #, c-format
 msgid "Row number out of range 0 - %d"
 msgstr "Número de fila fuera de rango 0 - %d"
 
-#: ../providers/mysql/gda-mysql-recordset.c:370
+#: ../providers/mysql/gda-mysql-recordset.c:371
 #: ../providers/postgres/gda-postgres-recordset.c:577
 #: ../providers/bdb/gda-bdb-recordset.c:175
 msgid "Column number out of range"
 msgstr "Número de columna fuera de rango"
 
-#: ../providers/mysql/gda-mysql-recordset.c:421
-#: ../providers/mysql/gda-mysql-recordset.c:558
-#: ../providers/mysql/gda-mysql-recordset.c:560
+#: ../providers/mysql/gda-mysql-recordset.c:422
+#: ../providers/mysql/gda-mysql-recordset.c:559
+#: ../providers/mysql/gda-mysql-recordset.c:561
 msgid "Table name could not be guessed"
 msgstr "El nombre de la tabla no se pudo adivinar"
 
-#: ../providers/mysql/gda-mysql-recordset.c:443
-#: ../providers/mysql/gda-mysql-recordset.c:449
-#: ../providers/mysql/gda-mysql-recordset.c:575
-#: ../providers/mysql/gda-mysql-recordset.c:577
-#: ../providers/mysql/gda-mysql-recordset.c:583
+#: ../providers/mysql/gda-mysql-recordset.c:444
+#: ../providers/mysql/gda-mysql-recordset.c:450
+#: ../providers/mysql/gda-mysql-recordset.c:576
+#: ../providers/mysql/gda-mysql-recordset.c:578
+#: ../providers/mysql/gda-mysql-recordset.c:584
 msgid "Can not synchronize array with MySQL result set"
 msgstr "No se puede sincronizar el array con el conjunto de resultados de MySQL"
 
-#: ../providers/mysql/gda-mysql-recordset.c:510
+#: ../providers/mysql/gda-mysql-recordset.c:511
 msgid "Can not append row to data model"
 msgstr "No se puede añadir la fila al modelo de datos"
 
-#: ../providers/mysql/gda-mysql-recordset.c:549
-#: ../providers/mysql/gda-mysql-recordset.c:551
-#: ../providers/mysql/gda-mysql-recordset.c:709
-#: ../providers/mysql/gda-mysql-recordset.c:711
+#: ../providers/mysql/gda-mysql-recordset.c:550
+#: ../providers/mysql/gda-mysql-recordset.c:552
+#: ../providers/mysql/gda-mysql-recordset.c:710
+#: ../providers/mysql/gda-mysql-recordset.c:712
 #: ../providers/postgres/gda-postgres-recordset.c:330
 #: ../providers/postgres/gda-postgres-recordset.c:430
 msgid "Given row doesn't belong to the model."
 msgstr "La fila dada no pertenece al modelo."
 
-#: ../providers/mysql/gda-mysql-recordset.c:635
-#: ../providers/mysql/gda-mysql-recordset.c:637
+#: ../providers/mysql/gda-mysql-recordset.c:636
+#: ../providers/mysql/gda-mysql-recordset.c:638
 #: ../providers/postgres/gda-postgres-recordset.c:369
 msgid "Model doesn't have at least one unique key."
 msgstr "El modelo no tiene al menos una clave única."
 
-#: ../providers/mysql/gda-mysql-recordset.c:665
-#: ../providers/mysql/gda-mysql-recordset.c:667
+#: ../providers/mysql/gda-mysql-recordset.c:666
+#: ../providers/mysql/gda-mysql-recordset.c:668
 msgid "Can not remove row from data model"
 msgstr "No se puede quitar la fila del modelo de datos"
 
-#: ../providers/mysql/gda-mysql-recordset.c:718
-#: ../providers/mysql/gda-mysql-recordset.c:720
+#: ../providers/mysql/gda-mysql-recordset.c:719
+#: ../providers/mysql/gda-mysql-recordset.c:721
 #: ../providers/postgres/gda-postgres-recordset.c:233
 #: ../providers/postgres/gda-postgres-recordset.c:337
 #: ../providers/postgres/gda-postgres-recordset.c:437
 msgid "Table name could not be guessed."
 msgstr "El nombre de la tabla no pudo ser adivinado."
 
-#: ../providers/mysql/gda-mysql-recordset.c:793
-#: ../providers/mysql/gda-mysql-recordset.c:795
+#: ../providers/mysql/gda-mysql-recordset.c:794
+#: ../providers/mysql/gda-mysql-recordset.c:796
 msgid "Model does not have at least one non-modified unique key."
 msgstr "El modelo no tiene al menos una clave única no modificada."
 
-#: ../providers/mysql/gda-mysql-recordset.c:804
-#: ../providers/mysql/gda-mysql-recordset.c:806
+#: ../providers/mysql/gda-mysql-recordset.c:805
+#: ../providers/mysql/gda-mysql-recordset.c:807
 msgid "Model does not have any non-unique values to update."
 msgstr "El modelo no tiene ningún valor no único para actualizar."
 
@@ -2498,7 +2591,7 @@ msgstr "Codificación"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:21
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:4
 msgid "Full path of the UNIX socket to use for connecting locally"
-msgstr ""
+msgstr "Ruta completa del socket UNIX para usar para conectar localmente"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
 msgid "GB2312 Simplified Chinese"
@@ -2877,24 +2970,30 @@ msgid "TNS Name"
 msgstr "Nombre TNS"
 
 #: ../providers/postgres/gda-postgres-blob.c:134
-#: ../providers/postgres/gda-postgres-provider.c:713
-#: ../providers/postgres/gda-postgres-provider.c:730
-#: ../providers/postgres/gda-postgres-provider.c:818
-#: ../providers/postgres/gda-postgres-provider.c:1336
-#: ../providers/postgres/gda-postgres-provider.c:1443
+#: ../providers/postgres/gda-postgres-provider.c:727
+#: ../providers/postgres/gda-postgres-provider.c:744
+#: ../providers/postgres/gda-postgres-provider.c:832
+#: ../providers/postgres/gda-postgres-provider.c:1434
+#: ../providers/postgres/gda-postgres-provider.c:1541
 #: ../providers/postgres/gda-postgres-recordset.c:188
 #: ../providers/postgres/gda-postgres-recordset.c:562
 #: ../providers/postgres/gda-postgres-recordset.c:692
 msgid "Invalid PostgreSQL handle"
 msgstr "Manejador PostgreSQL inválido"
 
-#: ../providers/postgres/gda-postgres-provider.c:1383
+#: ../providers/postgres/gda-postgres-provider.c:1034
+#: ../providers/postgres/gda-postgres-provider.c:1059
+#, c-format
+msgid "Missing spec. file '%s'"
+msgstr "Falta el archivo spec. «%s»"
+
+#: ../providers/postgres/gda-postgres-provider.c:1481
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr ""
 "Las transacciones no están soportadas en el nivel de aislamiento de lectura "
 "no efectuada"
 
-#: ../providers/postgres/gda-postgres-provider.c:1386
+#: ../providers/postgres/gda-postgres-provider.c:1484
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr ""
 "Las transacciones no están soportadas en el nivel de aislamiento de lectura "
@@ -3018,8 +3117,8 @@ msgid "TCVN-5712/Windows CP1258 (Vietnamese)"
 msgstr "TCVN-5712/Windows CP1258 (Vietnamita)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
 msgid "Tablespace"
 msgstr "Espacio de tablas"
 
@@ -3077,30 +3176,39 @@ msgstr "Windows CP874 (Tai)"
 msgid "Constraint expression for a partial index"
 msgstr "Expresión de restricción para un índice parcial"
 
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:2
+msgid "Index description"
+msgstr "Descripción del índice"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
 msgid "Index name"
 msgstr "Nombre del índice"
 
 #. Index fields
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:5
 msgid "Indexed field or expression"
 msgstr "Campo o expresión indexado"
 
+#. Index fields
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
+msgid "Indexed field(s)"
+msgstr "Campo o expresión indexado(s)"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
 msgid "Method"
 msgstr "Método"
 
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
 msgid "On table"
 msgstr "En tabla"
 
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 msgid "Predicate"
 msgstr "Predicado"
 
 #. list of fields
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
 msgid "Unique"
 msgstr "Único"
 
@@ -3119,158 +3227,183 @@ msgid "Check constraint"
 msgstr "Comprobar restricción"
 
 #. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+msgid "Comment"
+msgstr "Comentario"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
+msgid "Copy default expressions"
+msgstr "Copiar expresiones predeterminadas"
+
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+msgid "Copy defaults"
+msgstr "Copiar predeterminados"
+
+#. list of fields
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Default"
 msgstr "Predeterminado"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
 msgid "Deferrable"
 msgstr "Diferible"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:18
 msgid "Deferrable initially deferred"
 msgstr "Diferible inicialmente diferido"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
 msgid "Deferrable initially immediate"
 msgstr "Diferido inicialmente inmediato"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
 msgid "Field"
 msgstr "Campo"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
 msgid "Fields in the foreign key"
 msgstr "Campos en la clave externa"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
 msgid "Foreign key"
 msgstr "Clave externa"
 
 #. other table constraints
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
 msgid "Global constraints"
 msgstr "Restricciones globales"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 msgid "Inheritage"
 msgstr "Herencia"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+msgid "Keep coupled"
+msgstr "Mantener acopladas"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
 msgid "Match full"
 msgstr "Coincidencia total"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:28
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
 msgid "Match simple"
 msgstr "Coincidencia simple"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
 msgid "Match type"
 msgstr "Tipo de coincidencia"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
 msgid "Matching method if more than one field involved"
 msgstr "Método de coincidencia si hay más de un campo involucrado"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
 msgid "No action"
 msgstr "Sin acción"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
-msgid "Non deferrable"
-msgstr "No diferible"
-
 #. list of fields
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
 msgid "Not NULL"
 msgstr "No NULL"
 
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
+msgid "Not deferrable"
+msgstr "No diferible"
+
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 msgid "On delete action"
 msgstr "Acción al borrar"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
 msgid "On update action"
 msgstr "Acción al actualizar"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
 msgid "Parent table"
 msgstr "Tabla madre"
 
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
+msgid "Parent table(s)"
+msgstr "Tabla(s) madre(s)"
+
 #. list of fields
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 msgid "Primary key"
 msgstr "Clave primaria"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
 msgid "Referenced field"
 msgstr "Campo referenciado"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
 msgid "Referenced table"
 msgstr "Tabla referenciada"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
 msgid "Restrict"
 msgstr "Restringir"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
 msgid "Set to NULL"
 msgstr "Establecer a NULL"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:51
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
 msgid "Set to default"
 msgstr "Establecer a predeterminado"
 
 #. list of fields
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:53
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:61
 msgid "Table's columns"
 msgstr "Columnas de la tabla"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:62
 msgid "Table's description"
 msgstr "Descripción de la tabla"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
 msgid "Table's name"
 msgstr "Nombre de la tabla"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
 msgid "Temporary table"
 msgstr "Tabla temporal"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:60
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
+msgid "Use INHERIT instead of LIKE"
+msgstr "Usar INHERIT en lugar de LIKE"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
 msgid "With OIDs"
 msgstr "Con OIDs"
 
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
 msgid "Automatically drop objects that depend on the table (CASCADE)"
-msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADA)"
+msgstr "Borrar automáticamente los objetos que dependan de la tabla (CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:3
 msgid "Index to delete"
 msgstr "Índice que borrar"
 
-#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
-#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:2
-msgid "Referenced action"
-msgstr "Acción referenciada"
-
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:3
 msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
-msgstr "Rehusar a borrar la tabla si cualquier objeto depende de ella (RESTRINGIR)"
+msgstr "Rehusar a borrar la tabla si cualquier objeto depende de ella (RESTRICT)"
+
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:6
+msgid "What to do with references"
+msgstr "Qué hacer con las referencias"
 
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
 msgid "Table to delete"
@@ -3872,16 +4005,19 @@ msgid "Provider for Berkeley databases"
 msgstr "Proveedor para bases datos Berkeley"
 
 #: ../testing/gda-author-dict-file.c:148 ../testing/gda-test-connection.c:62
+#: ../testing/gda-test-server-operation.c:73
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN '%s' no está declarado"
 
 #: ../testing/gda-author-dict-file.c:155 ../testing/gda-test-connection.c:69
+#: ../testing/gda-test-server-operation.c:80
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "No se pudo abrir la conexión a DSN %s:%s\n"
 
 #: ../testing/gda-author-dict-file.c:167 ../testing/gda-test-connection.c:81
+#: ../testing/gda-test-server-operation.c:92
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "No puede abrir la conexión especificada: %s\n"
