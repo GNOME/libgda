@@ -9,6 +9,7 @@ AM_CPPFLAGS = \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_freetds_la_SOURCES = \
+	gda-freetds-defs.h \
 	gda-freetds-provider.c \
 	gda-freetds-provider.h \
 	gda-freetds-recordset.c \
