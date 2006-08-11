@@ -1,0 +1,392 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="TABLE_DEF_P" _name="Table's description">
+    <parameter id="TABLE_NAME" _name="Name" _descr="Table's name" gdatype="gchararray" nullok="FALSE">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="TABLE_IFNOTEXISTS" _name="Only if not exists" _descr="Create table only if it does not yet exist" gdatype="gboolean">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="TABLE_COMMENT" _name="Comment" _descr="Table's comment" gdatype="gchararray"/>
+  </parameters>
+
+  <!-- list of fields -->
+  <gda_array id="FIELDS_A" _name="Table's columns">
+    <gda_array_field id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE"/>
+    <gda_array_field id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE"/>
+    <gda_array_field id="COLUMN_AUTOINC" _name="Auto increment" gdatype="gboolean"/>
+    <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
+    <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
+    <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
+    <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
+    <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+    <gda_array_field id="COLUMN_COMMENT" _name="Comment" _descr="Check constraint" gdatype="gchararray"/>
+    <gda_array_data>
+        <gda_array_row>
+            <gda_value>id</gda_value>
+            <gda_value>int</gda_value>
+            <gda_value>TRUE</gda_value>
+            <gda_value>FALSE</gda_value>
+            <gda_value>FALSE</gda_value>
+            <gda_value>TRUE</gda_value>
+            <gda_value></gda_value>
+            <gda_value></gda_value>
+            <gda_value>Primary key</gda_value>
+        </gda_array_row>
+    </gda_array_data>
+  </gda_array>
+
+  <!-- foreign key spec -->
+  <sequence id="FKEY_S" _name="Foreign key">
+    <parameter id="FKEY_REF_TABLE" _name="Referenced table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_">
+      <gda_value>ref_table</gda_value>
+    </parameter>
+    <gda_array id="FKEY_FIELDS_A" _name="Fields" _descr="Fields in the foreign key">
+      <gda_array_field id="FK_FIELD" _name="Field" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field id="FK_REF_PK_FIELD" _name="Referenced field" gdatype="gchararray" nullok="FALSE" source="_FKEY_REF_TABLE/DICT_FIELDS_"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>id_ref</gda_value>
+          <gda_value>id</gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
+    <parameter id="FKEY_MATCH_TYPE" _name="Match type" _descr="Matching method if more than one field involved" gdatype="gchararray" source="match_types:0">
+      <gda_value>MATCH SIMPLE</gda_value>
+    </parameter>
+    <parameter id="FKEY_ONUPDATE" _name="On update action" gdatype="gchararray" source="action_cb:0">
+      <gda_value>NO ACTION</gda_value>
+    </parameter>
+    <parameter id="FKEY_ONDELETE" _name="On delete action" gdatype="gchararray" source="action_cb:0">
+      <gda_value>NO ACTION</gda_value>
+    </parameter>
+  </sequence>
+
+  <!-- other table constraints -->
+  <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
+    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+
+  <!-- other table options -->
+  <parameters id="TABLE_OPTIONS_P" _name="Table's options">
+    <parameter id="TABLE_ENGINE" _name="Engine" _descr="Table's engine (or type)" gdatype="gchararray" source="engines:0">
+      <gda_value>MyISAM</gda_value>
+    </parameter>
+    <parameter id="TABLE_AUTOINC_VALUE" _name="Auto increment value" _descr="Counter for auto incremented fields is incremented by this value + 1 (DEFAULT: 0)" gdatype="gint"/>
+    <parameter id="TABLE_AVG_ROW_LENGTH" _name="Average row length" _descr="An approximation of the average row length for your table" gdatype="gint"/>
+    <parameter id="TABLE_CSET" _name="Character set" gdatype="gchararray" source="csets:0">
+      <gda_value>utf8</gda_value>
+    </parameter>
+    <parameter id="TABLE_COLLATION" _name="Collation" gdatype="gchararray"/>
+    <parameter id="TABLE_CHECKSUM" _name="Checksum" gdatype="gboolean"/>
+    <parameter id="TABLE_MIN_ROWS" _name="Min rows" gdatype="gint"/>
+    <parameter id="TABLE_MAX_ROWS" _name="Max rows" gdatype="gint"/>
+    <parameter id="TABLE_PACK_KEYS" _name="Pack keys" gdatype="gchararray" source="pack_keys"/>
+    <parameter id="TABLE_DELAY_KEY_WRITE" _name="Delay key write" gdatype="gboolean"/>
+    <parameter id="TABLE_PASSWORD" _name="Password" gdatype="gchararray"/>
+    <parameter id="TABLE_ROW_FORMAT" _name="Row format" gdatype="gchararray" source="row_format:0"/>
+    <parameter id="TABLE_UNION" _name="Union" _descr="tbl_name[,tbl_name]...: only with MERGE engine" gdatype="gchararray"/>
+    <parameter id="TABLE_INSERT_METHOD" _name="Insert method" _descr="FIRST, LAST or NO: only with MERGE engine" gdatype="gchararray"/>
+    <parameter id="TABLE_DATA_DIR" _name="Data directory" _descr="" gdatype="gchararray"/>
+    <parameter id="TABLE_INDEX_DIR" _name="Index directory" _descr="" gdatype="gchararray"/>
+  </parameters>
+  
+
+  <!-- Sources -->
+  <sources>
+    <gda_array name="match_types">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>MATCH SIMPLE</gda_value>
+          <_gda_value>Match simple</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>MATCH PARTIAL</gda_value>
+          <_gda_value>Match partial</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>MATCH FULL</gda_value>
+          <_gda_value>Match full</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+
+    <gda_array name="action_cb">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>NO ACTION</gda_value>
+          <_gda_value>No action</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>RESTRICT</gda_value>
+          <_gda_value>Restrict</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>CASCADE</gda_value>
+          <_gda_value>Cascade</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>SET NULL</gda_value>
+          <_gda_value>Set to NULL</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+
+    <gda_array name="pack_keys">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>0</gda_value>
+          <_gda_value>Don't pack keys</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>1</gda_value>
+          <_gda_value>Pack keys</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>DEFAULT</gda_value>
+          <_gda_value>Only pack long CHAR/VARCHAR columns</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+
+    <gda_array name="engines">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>MyISAM</gda_value>
+          <_gda_value>MyISAM (default)</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>ISAM</gda_value>
+          <_gda_value>ISAM</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>ARCHIVE</gda_value>
+          <_gda_value>Archive</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>BDB</gda_value>
+          <_gda_value>Berkeley DB</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>CSV</gda_value>
+          <_gda_value>Comma Separated Value (CSV)</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>EXAMPLE</gda_value>
+          <_gda_value>Example</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>FEDERATED</gda_value>
+          <_gda_value>Federated</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>MEMORY</gda_value>
+          <_gda_value>In Memory (MEMORY/HEAP)</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>InnoDB</gda_value>
+          <_gda_value>InnoDB</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>MERGE</gda_value>
+          <_gda_value>Merge</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>NDBCLUSTER</gda_value>
+          <_gda_value>Clustered, fault-tolerant, memory-based</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+
+    <gda_array name="row_format">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>DEFAULT</gda_value>
+          <_gda_value>Default</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>DYNAMIC</gda_value>
+          <_gda_value>Dynamic</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>FIXED</gda_value>
+          <_gda_value>Fixed</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>COMPRESSED</gda_value>
+          <_gda_value>Compressed</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>REDUNDANT</gda_value>
+          <_gda_value>Redundant</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>COMPACT</gda_value>
+          <_gda_value>Compact</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+
+    <gda_array name="csets">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>utf8</gda_value>
+          <_gda_value>UTF-8 Unicode</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>latin1</gda_value>
+          <_gda_value>ISO 8859-1 West European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>latin2</gda_value>
+          <_gda_value>ISO 8859-2 Central European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>ascii</gda_value>
+          <_gda_value>US ASCII</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>big5</gda_value>
+          <_gda_value>Big5 Traditional Chinese</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>dec8</gda_value>
+          <_gda_value>DEC West European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp850</gda_value>
+          <_gda_value>DOS West European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>hp8</gda_value>
+          <_gda_value>HP West European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>koi8r</gda_value>
+          <_gda_value>KOI8-R Relcom Russian</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>swe7</gda_value>
+          <_gda_value>7bit Swedish</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>ujis</gda_value>
+          <_gda_value>EUC-JP Japanese</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>sjis</gda_value>
+          <_gda_value>Shift-JIS Japanese</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>hebrew</gda_value>
+          <_gda_value>ISO 8859-8 Hebrew</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>tis620</gda_value>
+          <_gda_value>TIS620 Thai</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>euckr</gda_value>
+          <_gda_value>EUC-KR Korean</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>koi8u</gda_value>
+          <_gda_value>KOI8-U Ukrainian</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>gb2312</gda_value>
+          <_gda_value>GB2312 Simplified Chinese</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>greek</gda_value>
+          <_gda_value>ISO 8859-7 Greek</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp1250</gda_value>
+          <_gda_value>Windows Central European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>gbk</gda_value>
+          <_gda_value>GBK Simplified Chinese</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>latin5</gda_value>
+          <_gda_value>ISO 8859-9 Turkish</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>armscii8</gda_value>
+          <_gda_value>ARMSCII-8 Armenian</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>ucs2</gda_value>
+          <_gda_value>UCS-2 Unicode</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp866</gda_value>
+          <_gda_value>DOS Russian</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>keybcs2</gda_value>
+          <_gda_value>DOS Kamenicky Czech-Slovak</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>macce</gda_value>
+          <_gda_value>Mac Central European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>macroman</gda_value>
+          <_gda_value>Mac West European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp852</gda_value>
+          <_gda_value>DOS Central European</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>latin7</gda_value>
+          <_gda_value>ISO 8859-13 Baltic</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp1251</gda_value>
+          <_gda_value>Windows Cyrillic</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp1256</gda_value>
+          <_gda_value>Windows Arabic</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp1257</gda_value>
+          <_gda_value>Windows Baltic</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>binary</gda_value>
+          <_gda_value>Binary pseudo charset</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>geostd8</gda_value>
+          <_gda_value>GEOSTD8 Georgian</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>cp932</gda_value>
+          <_gda_value>SJIS for Windows Japanese</_gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
+  </sources>
+</serv_op>

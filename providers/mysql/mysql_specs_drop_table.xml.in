@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="TABLE_DESC_P">
+    <parameter id="TABLE_NAME" _name="Table" _descr="Table to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
+    <parameter id="TABLE_TEMP" _name="Temporary table" _descr="Drop table only if it is temporary" gdatype="gboolean"/>
+    <parameter id="TABLE_IFEXISTS" _name="If exists" _descr="Drop table only if it exists" gdatype="gboolean"/>
+    <parameter id="REFERENCED_ACTION" _name="References" _descr="What to do with references" gdatype="gchararray" nullok="FALSE" source="action_cb:0">
+      <gda_value>RESTRICT</gda_value>
+    </parameter>
+  </parameters>
+
+  <!-- Sources -->
+  <sources>
+    <gda_array name="action_cb">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+	<gda_array_row>
+          <gda_value>CASCADE</gda_value>
+          <_gda_value>Automatically drop objects that depend on the table (CASCADE)</_gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>RESTRICT</gda_value>
+          <_gda_value>Refuse to drop the table if any objects depend on it (RESTRICT)</_gda_value>
+	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+  </sources>
+</serv_op>

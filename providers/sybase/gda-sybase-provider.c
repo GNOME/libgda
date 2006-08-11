@@ -62,12 +62,6 @@ static gboolean gda_sybase_provider_change_database (GdaServerProvider *provider
 static gboolean gda_sybase_provider_commit_transaction (GdaServerProvider *provider,
                                                         GdaConnection *cnc,
                                                         GdaTransaction *xaction);
-static gboolean gda_sybase_provider_create_database_cnc (GdaServerProvider *provider,
-                                                         GdaConnection *cnc,
-                                                         const gchar *name);
-static gboolean gda_sybase_provider_drop_database_cnc (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       const gchar *name);
 static GList *gda_sybase_provider_execute_command (GdaServerProvider *provider,
                                                    GdaConnection *cnc,
                                                    GdaCommand *cmd,
@@ -125,15 +119,10 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 	provider_class->get_database = gda_sybase_provider_get_database;
 	provider_class->change_database = gda_sybase_provider_change_database;
 
-	provider_class->get_specs = NULL;
-	provider_class->perform_action_params = NULL;
-
-	provider_class->create_database_cnc = gda_sybase_provider_create_database_cnc;
-	provider_class->drop_database_cnc = gda_sybase_provider_drop_database_cnc;
-	provider_class->create_table = NULL;
-	provider_class->drop_table = NULL;
-	provider_class->create_index = NULL;
-	provider_class->drop_index = NULL;
+	provider_class->supports_operation = NULL;
+        provider_class->create_operation = NULL;
+        provider_class->render_operation = NULL;
+        provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_sybase_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
@@ -584,22 +573,6 @@ gda_sybase_provider_commit_transaction (GdaServerProvider *provider,
                                         GdaTransaction *xaction)
 {
 	return ( gda_sybase_execute_cmd(cnc,"commit transaction") );		
-}
-
-static gboolean 
-gda_sybase_provider_create_database_cnc (GdaServerProvider *provider,
-                                         GdaConnection *cnc,
-                                         const gchar *name)
-{
-	return FALSE;
-}
-
-static gboolean 
-gda_sybase_provider_drop_database_cnc (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       const gchar *name)
-{
-	return FALSE;
 }
 
 static GList *

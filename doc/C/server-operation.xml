@@ -89,6 +89,86 @@
     </para>
     <itemizedlist>
       <listitem>
+        <para>GDA_SERVER_OPERATION_CREATE_DB:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/DB_DEF_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>Database's description</entry>
+		</row>
+		<row>
+                  <entry>/DB_DEF_P/DB_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Database name (string)</entry>
+		</row>
+                <row>
+                  <entry>/DB_DEF_P/DB_CSET</entry>
+                  <entry>PARAM</entry>
+                  <entry></entry>
+                  <entry>Character set (string)</entry>
+                </row>
+		<row>
+                  <entry>/DB_DEF_P/DB_OWNER</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>Database owner (string)</entry>
+		</row>
+		<row>
+                  <entry>/DB_DEF_P/DB_TABLESPACE</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>Tablespace the database is in (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>GDA_SERVER_OPERATION_DROP_DB:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/DB_DESC_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>Database's description</entry>
+		</row>
+		<row>
+                  <entry>/DB_DESC_P/DB_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Database name (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+      </listitem>
+
+      <listitem>
         <para>GDA_SERVER_OPERATION_CREATE_TABLE:
 	  <table frame="all">
             <tgroup cols="4" colsep="1" rowsep="1" align="justify">
@@ -125,6 +205,12 @@
 		  <entry></entry>
                   <entry>TRUE if the table to create is temporary (boolean)</entry>
 		</row>
+                <row>
+                  <entry>/TABLE_DEF_P/TABLE_COMMENT</entry>
+                  <entry>PARAM</entry>
+                  <entry></entry>
+                  <entry>Comment on a table (string)</entry>
+                </row>
 		<row>
                   <entry>/FIELDS_A</entry>
                   <entry>DATA_MODEL</entry>
@@ -149,6 +235,12 @@
 		  <entry></entry>
                   <entry>TRUE if table's field can't be NULL (boolean)</entry>
 		</row>
+                <row>
+                  <entry>/FIELDS_A/@COLUMN_AUTOINC</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+                  <entry></entry>
+                  <entry>TRUE if table's field must be auto incremented (boolean)</entry>
+                </row>
 		<row>
                   <entry>/FIELDS_A/@COLUMN_UNIQUE</entry>
                   <entry>DATA_MODEL_COLUMN</entry>
@@ -173,6 +265,12 @@
 		  <entry></entry>
                   <entry>A table's field CHECK condition (string)</entry>
 		</row>
+                <row>
+                  <entry>/FIELDS_A/@COLUMN_COMMENT</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+                  <entry></entry>
+                  <entry>A comment on the table's field (string)</entry>
+                </row>
 		<row>
                   <entry>/FKEY_S</entry>
                   <entry>DATA_SEQUENCE</entry>
@@ -301,6 +399,12 @@
 		  <entry>Yes</entry>
                   <entry>Index name (string)</entry>
 		</row>
+                <row>
+                  <entry>/INDEX_DEF_P/INDEX_TYPE</entry>
+                  <entry>PARAM</entry>
+                  <entry></entry>
+                  <entry>Index type: UNIQUE, etc (string)</entry>
+                </row>
 		<row>
                   <entry>/INDEX_DEF_P/INDEX_ON_TABLE</entry>
                   <entry>PARAM</entry>
@@ -350,6 +454,12 @@
 		  <entry>Yes</entry>
                   <entry>Index's name (string)</entry>
 		</row>
+                <row>
+                  <entry>/INDEX_DEF_P/INDEX_ON_TABLE</entry>
+                  <entry>PARAM</entry>
+                  <entry></entry>
+                  <entry>Table on which the index is applied (string)</entry>
+                </row>
 		<row>
                   <entry>/INDEX_DESC_P/REFERENCED_ACTION</entry>
                   <entry>PARAM</entry>

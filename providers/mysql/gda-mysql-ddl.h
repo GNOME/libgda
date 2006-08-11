@@ -1,4 +1,4 @@
-/* GDA Postgres Provider
+/* GDA Mysql Provider
  * Copyright (C) 2006 The GNOME Foundation
  *
  * AUTHORS:
@@ -19,25 +19,25 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __GDA_POSTGRES_DDL_H__
-#define __GDA_POSTGRES_DDL_H__
+#ifndef __GDA_MYSQL_DDL_H__
+#define __GDA_MYSQL_DDL_H__
 
 #include <libgda/gda-server-provider.h>
 
 G_BEGIN_DECLS
 
-gchar *gda_postgres_render_CREATE_DB    (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_DROP_DB      (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
-gchar *gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
-					 GdaServerOperation *op, GError **error);
+gchar *gda_mysql_render_CREATE_DB    (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error);
+gchar *gda_mysql_render_DROP_DB      (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error);
+gchar *gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error);
+gchar *gda_mysql_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error);
+gchar *gda_mysql_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error);
+gchar *gda_mysql_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error);
 
 G_END_DECLS
 

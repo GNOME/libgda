@@ -150,14 +150,6 @@ void                 gda_connection_clear_events_list    (GdaConnection *cnc);
 const GList         *gda_connection_get_events           (GdaConnection *cnc);
 
 gboolean             gda_connection_change_database      (GdaConnection *cnc, const gchar *name);
-gboolean             gda_connection_create_table         (GdaConnection *cnc, const gchar *table_name,
-							  const GList *attributes_list,
-							  const GList *index_list);
-gboolean             gda_connection_drop_table           (GdaConnection *cnc, const gchar *table_name);
-gboolean             gda_connection_create_index         (GdaConnection *cnc, const GdaDataModelIndex *index,
-							  const gchar *table_name);
-gboolean             gda_connection_drop_index           (GdaConnection *cnc, const gchar *index_name,
-							  gboolean primary_key, const gchar *table_name);
 
 #define              GDA_CONNECTION_EXEC_FAILED ((void *) -1)
 GdaDataModel        *gda_connection_execute_command      (GdaConnection *cnc, GdaCommand *cmd,

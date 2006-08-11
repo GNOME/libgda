@@ -7,7 +7,7 @@
 <!ENTITY % paramlist-dtd SYSTEM "libgda-paramlist.dtd">
 %paramlist-dtd;
 
-<!ELEMENT serv_op ((parameters|gda_array|sequence|parameter)*, sources)>
+<!ELEMENT serv_op ((parameters|gda_array|sequence|parameter)*, sources?)>
 
 <!ELEMENT sequence ((parameters|parameter|gda_array|sequence)*)>
 <!ATTLIST sequence

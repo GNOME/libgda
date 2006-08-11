@@ -1,3 +1,36 @@
+2006-08-11  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/libgda-array.dtd:
+	* libgda/gda-data-model.c:
+	* libgda/gda-util.c: individual values in XML representation of arrays 
+	can now be stored in <gda_array_value> nodes (rather than in 
+	<gda_value> nodes) where the column id for the value can be specified
+	* libgda/gda-data-proxy.c: bug fixed when removing sevaral rows at once:
+	the change signals were not correctly emitted.
+	* providers/postgres:
+	* providers/mysql: added the gda-*-ddl.[ch] files which actually render the
+	GdaServerOperation objects into SQL.
+	* libgda/gda-server-provider.[ch]: removed gda_server_provider_create_table(),
+	gda_server_provider_drop_table(), gda_server_provider_create_index() and
+	gda_server_provider_drop_index() as this functionnality is now done through the
+	GdaServerOperation object
+	* providers/*/gda-*-provider.c: removed reference to the create_table(), 
+	drop_table(), create_index() and drop_index() GdaServerProvider's virtual
+	functions as they don't exist anymore
+	* libgda/gda-connection.[ch]: removed gda_connection_create_table(),
+	gda_connection_drop_table(), gda_connection_create_index() and
+	gda_connection_drop_index() as this functionnality is now done through the
+	GdaServerOperation object
+	* libgda/gda-client.[ch]: replaced gda_client_get_provider_specs() 
+	with gda_client_prepare_create_database() and gda_client_prepare_drop_database()
+	and replaced gda_client_create_database() with gda_client_perform_create_database()
+	and gda_client_drop_database() with gda_client_perform_drop_database()
+	* libgda/gda-server-provider.[ch]: removed gda_server_provider_create_database_cnc()
+	and gda_server_provider_drop_database_cnc() as this functionnality is now 
+	done through the GdaServerOperation object
+	* testing/gda-diagnose.c: updated the GdaServerProvider classes test with
+	new methods
+
 2006-07-29  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql/gda-mysql-recordset.c: applied patch from

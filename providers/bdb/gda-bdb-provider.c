@@ -67,6 +67,11 @@ gda_bdb_provider_class_init (GdaBdbProviderClass *klass)
 	provider_class->get_server_version = gda_bdb_provider_get_server_version;
 	provider_class->get_database = gda_bdb_provider_get_database;
 	provider_class->get_schema = gda_bdb_provider_get_schema;
+
+	provider_class->supports_operation = NULL;
+        provider_class->create_operation = NULL;
+        provider_class->render_operation = NULL;
+        provider_class->perform_operation = NULL;
 }
 
 static void

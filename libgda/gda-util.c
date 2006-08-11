@@ -674,10 +674,12 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
  */
 void
-utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, const gint *cols, gint nb_cols)
+utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
+				     const gint *cols, gint nb_cols, gboolean use_col_ids)
 {
 	gint rows, i;
 	gint *rcols, rnb_cols;
+	gchar **col_ids = NULL;
 
 	/* compute columns if not provided */
 	if (!cols) {
@@ -689,6 +691,22 @@ utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, con
 	else {
 		rcols = (gint *) cols;
 		rnb_cols = nb_cols;
+	}
+
+	if (use_col_ids) {
+		gint c;
+		col_ids = g_new0 (gchar *, rnb_cols);
+		for (c = 0; c < rnb_cols; c++) {
+			GdaColumn *column;
+			const gchar *id;
+		
+			column = gda_data_model_describe_column (model, rcols [c]);
+			g_object_get (G_OBJECT (column), "id", &id, NULL);
+			if (id && *id)
+				col_ids [c] = g_strdup (id);
+			else
+				col_ids [c] = g_strdup_printf ("_%d", c);
+		}
 	}
 
 	/* add the model data to the XML output */
@@ -713,13 +731,25 @@ utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, con
 					else
 						str = gda_value_stringify (value);
 				}
-				field = xmlNewChild (row, NULL, "gda_value", str);
+				if (!use_col_ids) 
+					field = xmlNewChild (row, NULL, "gda_value", str);
+				else {
+					field = xmlNewChild (row, NULL, "gda_array_value", str);
+					xmlSetProp (field, "colid", col_ids [c]);
+				}
 				if (!str)
 					xmlSetProp (field, "isnull", "t");
 
 				g_free (str);
 			}
 		}
+	}
+
+	if (use_col_ids) {
+		gint c;
+		for (c = 0; c < rnb_cols; c++) 
+			g_free (col_ids [c]);
+		g_free (col_ids);
 	}
 }
 

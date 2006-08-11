@@ -65,12 +65,6 @@ static const gchar *gda_postgres_provider_get_server_version (GdaServerProvider 
 static const gchar *gda_postgres_provider_get_database (GdaServerProvider *provider,
 							GdaConnection *cnc);
 
-static gchar *gda_postgres_provider_get_specs  (GdaServerProvider *provider, GdaClientSpecsType type);
-
-static gboolean gda_postgres_provider_perform_action_params (GdaServerProvider *provider, 
-							     GdaParameterList *params, 
-							     GdaClientSpecsType type, GError **error);
-
 static gboolean gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
 							  GdaServerOperationType type, GdaParameterList *options);
 static GdaServerOperation *gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -78,35 +72,8 @@ static GdaServerOperation *gda_postgres_provider_create_operation (GdaServerProv
 								   GdaParameterList *options, GError **error);
 static gchar *gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
 						      GdaServerOperation *op, GError **error);
-
-static gboolean gda_postgres_provider_create_database_cnc (GdaServerProvider *provider,
-							   GdaConnection *cnc,
-							   const gchar *name);
-
-static gboolean gda_postgres_provider_drop_database_cnc (GdaServerProvider *provider,
-							 GdaConnection *cnc,
-							 const gchar *name);
-
-static gboolean gda_postgres_provider_create_table (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    const gchar *table_name,
-						    const GList *attributes_list,
-						    const GList *index_list);
-
-static gboolean gda_postgres_provider_drop_table (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     const gchar *table_name);
-
-static gboolean gda_postgres_provider_create_index (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    const GdaDataModelIndex *index,
-						    const gchar *table_name);
-
-static gboolean gda_postgres_provider_drop_index (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     const gchar *index_name,
-						     gboolean primary_key,
-						     const gchar *table_name);
+static gboolean gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+							 GdaServerOperation *op, GError **error);
 
 static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider,
 						     GdaConnection *cnc,
@@ -203,19 +170,10 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->get_database = gda_postgres_provider_get_database;
 	provider_class->change_database = NULL;
 
-	provider_class->get_specs = gda_postgres_provider_get_specs;
-	provider_class->perform_action_params = gda_postgres_provider_perform_action_params;
 	provider_class->supports_operation = gda_postgres_provider_supports_operation;
 	provider_class->create_operation = gda_postgres_provider_create_operation;
 	provider_class->render_operation = gda_postgres_provider_render_operation;
-	provider_class->perform_operation = NULL;
-
-	provider_class->create_database_cnc = gda_postgres_provider_create_database_cnc;
-	provider_class->drop_database_cnc = gda_postgres_provider_drop_database_cnc;
-	provider_class->create_table = gda_postgres_provider_create_table;
-	provider_class->drop_table = gda_postgres_provider_drop_table;
-	provider_class->create_index = gda_postgres_provider_create_index;
-	provider_class->drop_index = gda_postgres_provider_drop_index;
+	provider_class->perform_operation = gda_postgres_provider_perform_operation;
 
 	provider_class->execute_command = gda_postgres_provider_execute_command;
 	provider_class->get_last_insert_id = gda_postgres_provider_get_last_insert_id;
@@ -836,175 +794,13 @@ gda_postgres_provider_get_database (GdaServerProvider *provider,
 	return (const char *) PQdb ((const PGconn *) priv_data->pconn);
 }
 
-/* get_specs handler for the GdaPostgresProvider class */ 
-static gchar *
-gda_postgres_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType type)
-{
-	gchar *specs, *file;
-	gint len;
-	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
-
-	switch (type) {
-	case GDA_CLIENT_SPECS_CREATE_DATABASE:
-		file = g_build_filename (LIBGDA_DATA_DIR, "postgres_specs_create_db.xml", NULL);
-		if (g_file_get_contents (file, &specs, &len, NULL)) 
-			return specs;
-		else
-			return NULL;
-		break;
-	default:
-		return NULL;
-	}
-}
-
-#define string_from_string_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
-	g_value_get_string ((GValue *) gda_parameter_get_value (param)) : NULL
-
-#define int_from_int_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
-	g_value_get_int ((GValue *) gda_parameter_get_value (param)) : -1
-
-#define bool_from_bool_param(param) \
-	(param && gda_parameter_get_value (param) && !gda_value_is_null ((GValue *) gda_parameter_get_value (param))) ? \
-	g_value_get_boolean ((GValue *) gda_parameter_get_value (param)) : FALSE
-
-
-/* perform_action_params handler for the GdaPostgresProvider class */ 
-static gboolean
-gda_postgres_provider_perform_action_params (GdaServerProvider *provider,
-					     GdaParameterList *params, 
-					     GdaClientSpecsType type, GError **error)
-{
-	const gchar *pq_host;
-	const gchar *pq_db;
-	gint         pq_port = -1;
-	const gchar *pq_options = NULL;
-	const gchar *pq_user = NULL;
-	const gchar *pq_pwd = NULL;
-	gboolean     pq_ssl = FALSE;
-
-	const gchar *pq_newdb = NULL;
-	const gchar *pq_enc = NULL;
-	const gchar *pq_owner = NULL;
-	const gchar *pq_tspace = NULL;
-
-	GString *string;
-	PGconn *pconn;
-	PGresult *pg_res;
-	
-	gboolean retval = TRUE;
-	GdaParameter *param = NULL;
-	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-	
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
-
-	switch (type) {
-	case GDA_CLIENT_SPECS_CREATE_DATABASE:
-		if (params) {
-			param = gda_parameter_list_find_param (params, "HOST");
-			pq_host = string_from_string_param (param);
-			
-			param = gda_parameter_list_find_param (params, "PORT");
-			pq_port = int_from_int_param (param);
-			
-			param = gda_parameter_list_find_param (params, "OPTIONS");
-			pq_options = string_from_string_param (param);
-			
-			param = gda_parameter_list_find_param (params, "ADM_LOGIN");
-			pq_user = string_from_string_param (param);
-			
-			param = gda_parameter_list_find_param (params, "ADM_PASSWORD");
-			pq_pwd = string_from_string_param (param);
-			
-			param = gda_parameter_list_find_param (params, "TEMPLATE");
-			pq_db = string_from_string_param (param);
-			
-			param = gda_parameter_list_find_param (params, "REQUIRESSL");
-			pq_ssl = bool_from_bool_param (param);
-			
-			param = gda_parameter_list_find_param (params, "DATABASE");
-			pq_newdb = string_from_string_param (param);
-			
-			param = gda_parameter_list_find_param (params, "ENCODING");
-			pq_enc = string_from_string_param (param);
-			
-			param = gda_parameter_list_find_param (params, "OWNER");
-			pq_owner = string_from_string_param (param);
-			
-			param = gda_parameter_list_find_param (params, "TABLESPACE");
-			pq_tspace = string_from_string_param (param);
-		}
-		if (!pq_newdb) {
-			g_set_error (error, 0, 0,
-				     _("Missing parameter 'DATABASE'"));
-			return FALSE;
-		}
-		
-		/* open a connection with the administrator settings */
-		string = g_string_new ("");
-		if (pq_host && *pq_host)
-			g_string_append_printf (string, "host=%s", pq_host);
-		if (pq_port > 0)
-			g_string_append_printf (string, " port=%d", pq_port);
-		g_string_append_printf (string, " dbname=%s", pq_db ? pq_db : "template1");
-		if (pq_options && *pq_options)
-			g_string_append_printf (string, " options=%s", pq_options);
-		if (pq_user && *pq_user)
-			g_string_append_printf (string, " user=%s", pq_user);
-		if (pq_pwd && *pq_pwd)
-			g_string_append_printf (string, " password=%s", pq_pwd);
-		if (pq_ssl)
-			g_string_append (string, " requiressl=1");
-		
-		pconn = PQconnectdb (string->str);
-		g_string_free (string, TRUE);
-		
-		if (PQstatus (pconn) != CONNECTION_OK) {
-			g_set_error (error, 0, 0, PQerrorMessage (pconn));
-			PQfinish(pconn);
-			
-			return FALSE;
-		}
-		
-		/* Ask to create a database */
-		string = g_string_new ("CREATE DATABASE ");
-		g_string_append (string, pq_newdb);
-		if (pq_owner)
-			g_string_append_printf (string, " OWNER=%s", pq_owner);
-		if (pq_db)
-			g_string_append_printf (string, " TEMPLATE=%s", pq_db);
-		if (pq_enc)
-			g_string_append_printf (string, " ENCODING='%s'", pq_enc);
-		if (pq_tspace)
-			g_string_append_printf (string, " TABLESPACE=%s", pq_tspace);
-		
-		pg_res = PQexec (pconn, string->str);
-		g_string_free (string, TRUE);
-		
-		if (!pg_res || PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
-			g_set_error (error, 0, 0, PQresultErrorMessage (pg_res));
-			retval = FALSE;
-		}
-		
-		PQfinish(pconn);
-		break;
-	default:
-		g_set_error (error, 0, 0,
-			     _("Method not handled by this provider"));
-		return FALSE;
-	}
-	
-	return retval;
-}
-
 static gboolean
 gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
 					  GdaServerOperationType type, GdaParameterList *options)
 {
 	switch (type) {
+	case GDA_SERVER_OPERATION_CREATE_DB:
+	case GDA_SERVER_OPERATION_DROP_DB:
 	case GDA_SERVER_OPERATION_CREATE_TABLE:
 	case GDA_SERVER_OPERATION_DROP_TABLE:
 	case GDA_SERVER_OPERATION_CREATE_INDEX:
@@ -1066,8 +862,15 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 	g_free (file);
 
 	switch (gda_server_operation_get_op_type (op)) {
+	case GDA_SERVER_OPERATION_CREATE_DB:
+		sql = gda_postgres_render_CREATE_DB (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_DB:
+		sql = gda_postgres_render_DROP_DB (provider, cnc, op, error);
+		break;
 	case GDA_SERVER_OPERATION_CREATE_TABLE:
 		sql = gda_postgres_render_CREATE_TABLE (provider, cnc, op, error);
+		break;
 	case GDA_SERVER_OPERATION_DROP_TABLE:
 		sql = gda_postgres_render_DROP_TABLE (provider, cnc, op, error);
 		break;
@@ -1083,302 +886,121 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 	return sql;
 }
 
-
-
-/* create_database_cnc handler for the GdaPostgresProvider class */
 static gboolean
-gda_postgres_provider_create_database_cnc (GdaServerProvider *provider,
-					   GdaConnection *cnc,
-					   const gchar *name)
+gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+					 GdaServerOperation *op, GError **error)
 {
-	gboolean retval;
-	gchar *sql;
+	GdaServerOperationType optype;
 
-	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	optype = gda_server_operation_get_op_type (op);
+	if (!cnc && 
+	    ((optype == GDA_SERVER_OPERATION_CREATE_DB) ||
+	     (optype == GDA_SERVER_OPERATION_DROP_DB))) {
+		GValue *value;
+		PGconn *pconn;
+		PGresult *pg_res;
+		GString *string;
 
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		const gchar *pq_host = NULL;
+		const gchar *pq_db = NULL;
+		gint         pq_port = -1;
+		const gchar *pq_options = NULL;
+		const gchar *pq_user = NULL;
+		const gchar *pq_pwd = NULL;
+		gboolean     pq_ssl = FALSE;
 
-	sql = g_strdup_printf ("CREATE DATABASE %s", name);
-	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
-	g_free (sql);
-
-	return retval;
-}
-
-/* drop_database_cnc handler for the GdaPostgresProvider class */
-static gboolean
-gda_postgres_provider_drop_database_cnc (GdaServerProvider *provider,
-					 GdaConnection *cnc,
-					 const gchar *name)
-{
-	gboolean retval;
-	gchar *sql;
-
-	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	sql = g_strdup_printf ("DROP DATABASE %s", name);
-	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
-	g_free (sql);
-
-	return retval;
-}
-
-/* create_table handler for the GdaPostgresProvider class */
-static gboolean
-gda_postgres_provider_create_table (GdaServerProvider *provider,
-				    GdaConnection *cnc,
-				    const gchar *table_name,
-				    const GList *attributes_list,
-				    const GList *index_list)
-{
-	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-	GdaColumn *dmca;
-	GdaDataModelIndex *dmi;
-	GString *sql;
-	gint i;
-	gchar *postgres_data_type, *default_value, *references;
-	GType value_type;
-	gboolean retval;
-
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-	g_return_val_if_fail (attributes_list != NULL, FALSE);
-
-	/* prepare the SQL command */
-	sql = g_string_new ("CREATE TABLE ");
-	g_string_append_printf (sql, "%s (", table_name);
-
-	/* step through list */
-	for (i=0; i<g_list_length ((GList *) attributes_list); i++) {
-
-		if (i>0)
-			g_string_append_printf (sql, ", ");
-			
-		dmca = (GdaColumn *) g_list_nth_data ((GList *) attributes_list, i);
-
-		/* name */	
-		g_string_append_printf (sql, "\"%s\" ", gda_column_get_name (dmca));
-
-		/* data type; force serial to be used when auto_increment is set */
-		if (gda_column_get_auto_increment (dmca) == TRUE) {
-			g_string_append_printf (sql, "serial");
-			value_type = G_TYPE_INT;
-		} else {
-			value_type = gda_column_get_gda_type (dmca);
-			postgres_data_type = postgres_name_from_gda_type (value_type);
-			g_string_append_printf (sql, "%s", postgres_data_type);
-			g_free(postgres_data_type);
-		}
-
-		/* size */
-		if (value_type == G_TYPE_STRING)
-			g_string_append_printf (sql, "(%ld)", gda_column_get_defined_size (dmca));
-		else if (value_type == GDA_TYPE_NUMERIC)
-			g_string_append_printf (sql, "(%ld,%ld)", 
-				gda_column_get_defined_size (dmca),
-				gda_column_get_scale (dmca));
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/HOST");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			pq_host = g_value_get_string (value);
 		
-		/* NULL */
-		if (gda_column_get_allow_null (dmca) == TRUE)
-			g_string_append_printf (sql, " NULL");
-		else
-			g_string_append_printf (sql, " NOT NULL");
-	
-		/* (primary) key */
-		if (gda_column_get_primary_key (dmca) == TRUE)
-			g_string_append_printf (sql, " PRIMARY KEY");
-		else
-			if (gda_column_get_unique_key (dmca) == TRUE)
-				g_string_append_printf (sql, " UNIQUE");
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/PORT");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_INT) && (g_value_get_int (value) > 0))
+			pq_port = g_value_get_int (value);
 
-		/* default value (in case of string, user needs to add "'" around the field) */
-		if (gda_column_get_default_value (dmca) != NULL) {
-			default_value = gda_value_stringify ((GValue *) gda_column_get_default_value (dmca));
-			if ((default_value != NULL) && (*default_value != '\0'))
-				g_string_append_printf (sql, " DEFAULT %s", default_value);
-		}
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/OPTIONS");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			pq_options = g_value_get_string (value);
 
-		/* any additional parameters */			
-		if (gda_column_get_references (dmca) != NULL) {
-			references = (gchar *) gda_column_get_references (dmca);
-			if ((references != NULL) && (*references != '\0'))
-				g_string_append_printf (sql, " %s", references);
-		}
-	}
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/TEMPLATE");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			pq_db = g_value_get_string (value);
 
-	/* finish the SQL command */
-	g_string_append_printf (sql, ")");
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/USE_SSL");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+			pq_ssl = TRUE;
 
-	/* execute sql command */
-	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql->str);
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_LOGIN");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			pq_user = g_value_get_string (value);
 
-	/* clean up */
-	g_string_free (sql, TRUE);
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_PASSWORD");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			pq_pwd = g_value_get_string (value);
 
-	/* Create indexes */
-	if (index_list != NULL) {
+		string = g_string_new ("");
+                if (pq_host && *pq_host)
+                        g_string_append_printf (string, "host=%s", pq_host);
+                if (pq_port > 0)
+                        g_string_append_printf (string, " port=%d", pq_port);
+                g_string_append_printf (string, " dbname=%s", pq_db ? pq_db : "template1");
+                if (pq_options && *pq_options)
+                        g_string_append_printf (string, " options=%s", pq_options);
+                if (pq_user && *pq_user)
+                        g_string_append_printf (string, " user=%s", pq_user);
+                if (pq_pwd && *pq_pwd)
+                        g_string_append_printf (string, " password=%s", pq_pwd);
+                if (pq_ssl)
+                        g_string_append (string, " requiressl=1");
 
-		/* step through index_list */
-		for (i=0; i<g_list_length ((GList *) index_list); i++) {
+                pconn = PQconnectdb (string->str);
+                g_string_free (string, TRUE);
 
-			/* get index */
-			dmi = (GdaDataModelIndex *) g_list_nth_data ((GList *) index_list, i);
+		if (PQstatus (pconn) != CONNECTION_OK) {
+                        g_set_error (error, 0, 0, PQerrorMessage (pconn));
+                        PQfinish(pconn);
 
-			/* create index */
-			retval = gda_postgres_provider_create_index (provider, cnc, dmi, table_name);
-			if (retval == FALSE)
+                        return FALSE;
+                }
+		else {
+			gchar *sql;
+
+			sql = gda_server_provider_render_operation (provider, cnc, op, error);
+			if (!sql)
 				return FALSE;
-		}
-	}
-
-	/* return */
-	return retval;
-}
-
-/* drop_table handler for the GdaPostgresProvider class */
-static gboolean
-gda_postgres_provider_drop_table (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  const gchar *table_name)
-{
-	gboolean retval;
-	gchar *sql;
-
-	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-
-	sql = g_strdup_printf ("DROP TABLE %s", table_name);
-
-	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
-	g_free (sql);
-
-	return retval;
-}
-
-/* create_index handler for the GdaPostgresProvider class */
-static gboolean
-gda_postgres_provider_create_index (GdaServerProvider *provider,
-				    GdaConnection *cnc,
-				    const GdaDataModelIndex *index,
-				    const gchar *table_name)
-{
-	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-	GdaColumnIndex *dmcia;
-	GString *sql;
-	GList *col_list;
-	gchar *index_name, *col_ref, *idx_ref;
-	gint i;
-	gboolean retval;
-
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (index != NULL, FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-
-	/* the 'CREATE INDEX' command in PostgreSQL is limited to
-	secondary non-primary indices only. Therefore use 'ALTER TABLE'
-	for PRIMARY and UNIQUE */
-
-	/* prepare the SQL command */
-	sql = g_string_new (" ");
-
-	/* get index name */
-	index_name = (gchar *) gda_data_model_index_get_name ((GdaDataModelIndex *) index);
-
-	/* determine type of index (PRIMARY, UNIQUE or INDEX) */
-	if (gda_data_model_index_get_primary_key ((GdaDataModelIndex *) index) == TRUE)
-		g_string_append_printf (sql, "ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY (", table_name, index_name);
-	else if (gda_data_model_index_get_unique_key ((GdaDataModelIndex *) index) == TRUE)
-		g_string_append_printf (sql, "ALTER TABLE %s ADD CONSTRAINT %s UNIQUE (", table_name, index_name);
-	else
-		g_string_append_printf (sql, "CREATE INDEX %s ON %s (", index_name, table_name);
-
-	/* get the list of index columns */
-	col_list = gda_data_model_index_get_column_index_list ((GdaDataModelIndex *) index);
-
-	/* step through list */
-	for (i = 0; i < g_list_length ((GList *) col_list); i++) {
-
-		if (i > 0)
-			g_string_append_printf (sql, ", ");
+			pg_res = PQexec (pconn, sql);
+			g_free (sql);
+			if (!pg_res || PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
+				g_set_error (error, 0, 0, PQresultErrorMessage (pg_res));
+				PQfinish (pconn);
+				return FALSE;
+			}
 			
-		dmcia = (GdaColumnIndex *) g_list_nth_data ((GList *) col_list, i);
-
-		/* name */	
-		g_string_append_printf (sql, "\"%s\" ", gda_column_index_get_column_name (dmcia));
-
-		/* any additional column parameters */
-		if (gda_column_index_get_references (dmcia) != NULL) {
-			col_ref = (gchar *) gda_column_index_get_references (dmcia);
-			if ((col_ref != NULL) && (*col_ref != '\0'))
-				g_string_append_printf (sql, " %s ", col_ref);
+			PQfinish (pconn);
+			return TRUE;
 		}
 	}
-
-	/* finish the SQL column(s) section command */
-	g_string_append_printf (sql, ")");
-
-	/* any additional index parameters */
-	if (gda_data_model_index_get_references ((GdaDataModelIndex *) index) != NULL) {
-		idx_ref = (gchar *) gda_data_model_index_get_references ((GdaDataModelIndex *) index);
-		if ((idx_ref != NULL) && (*idx_ref != '\0'))
-			g_string_append_printf (sql, " %s ", idx_ref);
+	else {
+		/* use the SQL from the provider to perform the action */
+		gchar *sql;
+		GdaCommand *cmd;
+		GdaDataModel *model;
+		
+		sql = gda_server_provider_render_operation (provider, cnc, op, error);
+		if (!sql)
+			return FALSE;
+		
+		cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+		g_free (sql);
+		model = gda_connection_execute_command (cnc, cmd, NULL, error);		
+		gda_command_free (cmd);
+		if (model != GDA_CONNECTION_EXEC_FAILED) {
+			if (model)
+				g_object_unref (model);
+			return TRUE;
+		}
+		else
+			return FALSE;
 	}
-
-	/* execute sql command */
-	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql->str);
-
-	/* clean up */
-	g_string_free (sql, TRUE);
-
-	return retval;
-}
-
-/* drop_index handler for the GdaPostgresProvider class */
-static gboolean
-gda_postgres_provider_drop_index (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  const gchar *index_name,
-				  gboolean primary_key,
-				  const gchar *table_name)
-{
-	gboolean retval = FALSE, retval_temp;
-	gchar *sql_alter;
-	gchar *sql_drop;
-
-	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (index_name != NULL, FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-
-	/* In PostgreSQL PRIMARY can only and UNIQUE can as well be defined as
-	   constraints. Therefore use 2 methods for removal */
-	sql_alter = g_strdup_printf ("ALTER TABLE %s DROP CONSTRAINT %s", table_name, index_name);
-	sql_drop  = g_strdup_printf ("DROP INDEX %s", index_name);
-
-	retval_temp = gda_postgres_provider_single_command (pg_prv, cnc, sql_alter);
-	if (retval_temp == TRUE)
-		retval = TRUE;
-
-	retval_temp = gda_postgres_provider_single_command (pg_prv, cnc, sql_drop);
-	if (retval_temp == TRUE)
-		retval = TRUE;
-
-	/* clean up */
-	g_free (sql_alter);
-	g_free (sql_drop);
-
-	return retval;
 }
 
 /* execute_command handler for the GdaPostgresProvider class */

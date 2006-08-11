@@ -22,10 +22,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_client_h__)
-#  define __gda_client_h__
+#ifndef __GDA_CLIENT_H__
+#define __GDA_CLIENT_H__
 
 #include <libgda/gda-connection.h>
+#include <libgda/gda-server-operation.h>
 
 G_BEGIN_DECLS
 
@@ -49,11 +50,6 @@ typedef enum {
 	GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, /* params: "transaction" */
 	GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, /* params: "transaction" */
 } GdaClientEvent;
-
-typedef enum {
-	GDA_CLIENT_SPECS_CREATE_DATABASE,
-	GDA_CLIENT_SPECS_DROP_DATABASE
-} GdaClientSpecsType;
 
 struct _GdaClient {
 	GObject           object;
@@ -121,12 +117,12 @@ gchar         *gda_client_get_dsn_specs                      (GdaClient *client,
 /*
  * Database creation and destruction functions
  */
-gchar         *gda_client_get_provider_specs                 (GdaClient *client, const gchar *provider,
-							      GdaClientSpecsType type);
-gboolean       gda_client_create_database                    (GdaClient *client, const gchar *provider, 
-							      GdaParameterList *params, GError **error);
-gboolean       gda_client_drop_database                      (GdaClient *client, const gchar *provider,
-							      GdaParameterList *params, GError **error);
+GdaServerOperation *gda_client_prepare_create_database       (GdaClient *client, const gchar *provider);
+gboolean       gda_client_perform_create_database            (GdaClient *client, const gchar *provider, 
+							      GdaServerOperation *op, GError **error);
+GdaServerOperation *gda_client_prepare_drop_database         (GdaClient *client, const gchar *provider);
+gboolean       gda_client_perform_drop_database              (GdaClient *client, const gchar *provider,
+							      GdaServerOperation *op, GError **error);
 
 /*
  * Connection stack functions

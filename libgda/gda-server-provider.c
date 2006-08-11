@@ -81,16 +81,11 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->get_database = NULL;
 	klass->change_database = NULL;
 
-	klass->get_specs = NULL;
-	klass->perform_action_params = NULL;
+	klass->supports_operation = NULL;
+	klass->create_operation = NULL;
+	klass->render_operation = NULL;
+	klass->perform_operation = NULL;
 
-	klass->create_database_cnc = NULL;
-	klass->drop_database_cnc = NULL;
-
-	klass->create_table = NULL;
-	klass->drop_table = NULL;
-	klass->create_index = NULL;
-	klass->drop_index = NULL;
 	klass->execute_command = NULL;
 	klass->get_last_insert_id = NULL;
 	klass->begin_transaction = NULL;
@@ -354,66 +349,6 @@ gda_server_provider_change_database (GdaServerProvider *provider,
 }
 
 /**
- * gda_server_provider_get_specs
- * @provider: a #GdaServerProvider object
- * @action_type: what action the specs are for
- *
- * Fetch a list of parameters required to create a database for the specific
- * @provider provider.
- *
- * The list of parameters is returned as an XML string listing each paraleter, its type,
- * its name, etc.
- *
- * Returns: a new XML string, or %NULL if @provider does not implement that method.
- */
-gchar *
-gda_server_provider_get_specs  (GdaServerProvider *provider,
-				GdaClientSpecsType action_type)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-
-	if (CLASS (provider)->get_specs)
-		return CLASS (provider)->get_specs (provider, action_type);
-	else
-		return NULL;
-}
-
-/**
- * gda_server_provider_perform_action_params
- * @provider: a #GdaServerProvider object
- * @params: a list of parameters required to create a database
- * @action_type: action to perform
- * @error: a place to store an error, or %NULL
- *
- * Performs a specific action specified by the @action_type argument
- * using the parameters listed in @params (the list of parameters may have
- * been obtained using the gda_server_provider_get_specs() method).
- *
- * Returns: TRUE if no error occurred
- */
-gboolean
-gda_server_provider_perform_action_params (GdaServerProvider *provider, 
-					   GdaParameterList *params, 
-					   GdaClientSpecsType action_type,
-					   GError **error)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-
-	if (CLASS (provider)->perform_action_params)
-		return CLASS (provider)->perform_action_params (provider, params, action_type,
-								error);
-	else {
-		gchar *str;
-
-		str = g_strdup_printf (_("Provider does not support the '%s()' method"), 
-				       "perform_action_params");
-		g_set_error (error, 0, 0, str);
-		g_free (str);
-		return FALSE;
-	}
-}
-
-/**
  * gda_server_provider_supports_operation
  * @provider: a #GdaServerProvider object
  * @cnc: a #GdaConnection object which would be used to perform an action
@@ -446,6 +381,18 @@ typedef struct {
 	GType                       data_type;
 } OpReq;
 
+static OpReq op_req_CREATE_DB [] = {
+	{"/DB_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
+	{"/DB_DEF_P/DB_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
+static OpReq op_req_DROP_DB [] = {
+	{"/DB_DESC_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
+	{"/DB_DESC_P/DB_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
 static OpReq op_req_CREATE_TABLE [] = {
 	{"/TABLE_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
 	{"/TABLE_DEF_P/TABLE_NAME",    GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
@@ -463,7 +410,7 @@ static OpReq op_req_DROP_TABLE [] = {
 static OpReq op_req_CREATE_INDEX [] = {
 	{"/INDEX_DEF_P/INDEX_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/INDEX_DEF_P/INDEX_ON_TABLE",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
-	{"/INDEX_FIELDS_S",               GDA_SERVER_OPERATION_NODE_SEQUENCE, NULL},
+	{"/INDEX_FIELDS_S",               GDA_SERVER_OPERATION_NODE_SEQUENCE, 0},
 	{NULL}
 };
 
@@ -473,10 +420,12 @@ static OpReq op_req_DROP_INDEX [] = {
 };
 
 static OpReq *op_req_table [GDA_SERVER_OPERATION_NB] = {
-	op_req_CREATE_TABLE, /* GDA_SERVER_OPERATION_CREATE_TABLE */
-	op_req_DROP_TABLE, /* GDA_SERVER_OPERATION_DROP_TABLE */
-	op_req_CREATE_INDEX, /* GDA_SERVER_OPERATION_CREATE_INDEX */
-	op_req_DROP_INDEX, /* GDA_SERVER_OPERATION_DROP_INDEX */
+	op_req_CREATE_DB,
+	op_req_DROP_DB,
+	op_req_CREATE_TABLE,
+	op_req_DROP_TABLE,
+	op_req_CREATE_INDEX,
+	op_req_DROP_INDEX,
 };
 
 /**
@@ -491,7 +440,7 @@ static OpReq *op_req_table [GDA_SERVER_OPERATION_NB] = {
  * action. The @options 
  *
  * Returns: a new #GdaServerOperation object, or %NULL in the provider does not support the @type type
- * of operation or if an error occured
+ * of operation or if an error occurred
  */
 GdaServerOperation *
 gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, GdaServerOperationType type, 
@@ -510,7 +459,6 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 		op = CLASS (provider)->create_operation (provider, cnc, type, options, error);
 		if (op) {
 			/* test op's conformance */
-			gint i = 0;
 			OpReq *opreq = op_req_table [type];
 			while (opreq && opreq->path) {
 				GdaServerOperationNodeType node_type;
@@ -602,163 +550,6 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		else
 			return FALSE;
 	}
-}
-
-
-/**
- * gda_server_provider_create_database_cnc
- * @provider: a #GdaServerProvider object.
- * @name: database name.
- * @cnc: a #GdaConnection object.
- *
- * Creates a database named @name using the @cnc connection.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_server_provider_create_database_cnc (GdaServerProvider *provider,
-					 GdaConnection *cnc,
-					 const gchar *name)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (name != NULL, FALSE);
-	g_return_val_if_fail (CLASS (provider)->create_database_cnc != NULL, FALSE);
-
-	return CLASS (provider)->create_database_cnc (provider, cnc, name);
-}
-
-/**
- * gda_server_provider_drop_database_cnc
- * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaConnection object.
- * @name: database name.
- *
- * Destroy the database named @name using the @cnc connection.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_server_provider_drop_database_cnc (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       const gchar *name)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (name != NULL, FALSE);
-	g_return_val_if_fail (CLASS (provider)->drop_database_cnc != NULL, FALSE);
-
-	return CLASS (provider)->drop_database_cnc (provider, cnc, name);
-}
-
-
-/**
- * gda_server_provider_create_table:
- * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaConnection object.
- * @table_name: name of the table to create.
- * @attributes_list: list of #GdaColumn for all fields in the table.
- * @index_list: list of #GdaDataModelIndex for all (additional) indexes in the table.
- *
- * Proxy the call to the create_table method on the #GdaServerProvider class
- * to the corresponding provider.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_server_provider_create_table (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  const gchar *table_name,
-				  const GList *attributes_list,
-				  const GList *index_list)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-	g_return_val_if_fail (attributes_list != NULL, FALSE);
-	g_return_val_if_fail (CLASS (provider)->create_table != NULL, FALSE);
-
-	return CLASS (provider)->create_table (provider, cnc, table_name, attributes_list, index_list);
-}
-
-/**
- * gda_server_provider_drop_table:
- * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaConnection object.
- * @table_name: name of the table to remove.
- *
- * Proxy the call to the drop_table method on the #GdaServerProvider class
- * to the corresponding provider.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_server_provider_drop_table (GdaServerProvider *provider,
-				GdaConnection *cnc,
-				const gchar *table_name)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-	g_return_val_if_fail (CLASS (provider)->drop_table != NULL, FALSE);
-
-	return CLASS (provider)->drop_table (provider, cnc, table_name);
-}
-
-/**
- * gda_server_provider_create_index:
- * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaConnection object.
- * @index: a #GdaDataModelIndex object containing all index information.
- * @table_name: name of the table to create index for.
- *
- * Proxy the call to the create_index method on the #GdaServerProvider class
- * to the corresponding provider.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_server_provider_create_index (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  const GdaDataModelIndex *index,
-				  const gchar *table_name)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-	g_return_val_if_fail (index != NULL, FALSE);
-	g_return_val_if_fail (CLASS (provider)->create_index != NULL, FALSE);
-
-	return CLASS (provider)->create_index (provider, cnc, index, table_name);
-}
-
-/**
- * gda_server_provider_drop_index:
- * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaConnection object.
- * @index_name: name of the index to remove.
- * @primary_key: if index is a PRIMARY KEY.
- * @table_name: name of the table index to remove from.
- *
- * Proxy the call to the drop_index method on the #GdaServerProvider class
- * to the corresponding provider.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_server_provider_drop_index (GdaServerProvider *provider,
-				GdaConnection *cnc,
-				const gchar *index_name,
-				gboolean primary_key,
-				const gchar *table_name)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (index_name != NULL, FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-	g_return_val_if_fail (CLASS (provider)->drop_index != NULL, FALSE);
-
-	return CLASS (provider)->drop_index (provider, cnc, index_name, primary_key, table_name);
 }
 
 /**
@@ -1076,7 +867,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,
 					}
 					else {
 						if (dbms_type)
-							*dbms_type = gda_server_provider_get_default_dbms_type (provider, 
+							*dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (provider, 
 														cnc, prefered_type);
 					}
 
@@ -1122,7 +913,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider,
 						}
 						else {
 							if (dbms_type)
-								*dbms_type = gda_server_provider_get_default_dbms_type (provider, 
+								*dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (provider, 
 															cnc, types[i]);
 						}
 						g_free (tmp);

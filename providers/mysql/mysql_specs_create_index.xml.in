@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 <serv_op>
   <parameters id="INDEX_DEF_P" _name="Index description">
-    <parameter id="INDEX_NAME" _name="Name" _descr="Index name" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="INDEX_TYPE" _name="Unique" gdatype="gchararray" source="types:0">
+    <parameter id="INDEX_TYPE" _name="Type" gdatype="gchararray" source="types:0">
       <gda_value>UNIQUE</gda_value>
     </parameter>
+    <parameter id="INDEX_NAME" _name="Name" _descr="Index name" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="INDEX_ON_TABLE" _name="On table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
-    <parameter id="INDEX_METHOD" _name="Method" gdatype="gchararray" source="method:0"/>
-    <parameter id="INDEX_TABLESPACE" _name="Tablespace" gdatype="gchararray"/>
-    <parameter id="INDEX_PREDICATE" _name="Predicate" _descr="Constraint expression for a partial index" gdatype="gchararray"/>
+    <parameter id="INDEX_METHOD" _name="Method" _descr="Index type (depending on table storage engine)" gdatype="gchararray" source="method:0"/>
   </parameters>
 
   <!-- Index fields -->
@@ -16,22 +14,43 @@
     <parameter id="INDEX_FIELD" _name="Indexed field or expression" gdatype="gchararray" nullok="FALSE" source="_INDEX_ON_TABLE/DICT_FIELDS_">
       <gda_value>indexed_field</gda_value>
     </parameter>
+    <parameter id="INDEX_LENGTH" _name="Length" _descr="The number of characters the index is on for columns of type CHAR or VARCHAR" gdatype="gint"/>
+    <parameter id="INDEX_SORT_ORDER" _name="Sort type" gdatype="gchararray" source="sort:0"/>
   </sequence>
 
   <!-- Sources -->
   <sources>
+    <gda_array name="sort">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>ASC</gda_value>
+          <gda_value>Ascending</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>DESC</gda_value>
+          <gda_value>Descending</gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
+
     <gda_array name="types">
       <gda_array_field name="id" gdatype="gchararray"/>
       <gda_array_field name="text" gdatype="gchararray"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>UNIQUE</gda_value>
-          <gda_value>Enforce unicity of indexed data</gda_value>
+          <gda_value>Unique</gda_value>
 	</gda_array_row>
-        <gda_array_row>
-          <gda_value></gda_value>
-          <gda_value>Allow non unicity of indexed data</gda_value>
-        </gda_array_row>
+	<gda_array_row>
+          <gda_value>FULLTEXT</gda_value>
+          <gda_value>Fulltext</gda_value>
+	</gda_array_row>
+	<gda_array_row>
+          <gda_value>SPATIAL</gda_value>
+          <gda_value>Spatial</gda_value>
+	</gda_array_row>
       </gda_array_data>
     </gda_array>
 
@@ -46,14 +65,6 @@
 	<gda_array_row>
           <gda_value>hash</gda_value>
           <gda_value>Hash</gda_value>
-	</gda_array_row>
-	<gda_array_row>
-          <gda_value>rtree</gda_value>
-          <gda_value>Rtree</gda_value>
-	</gda_array_row>
-	<gda_array_row>
-          <gda_value>gist</gda_value>
-          <gda_value>Gist</gda_value>
 	</gda_array_row>
       </gda_array_data>
     </gda_array>

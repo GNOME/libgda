@@ -6,7 +6,12 @@ Handles any DDL query in an abstract way
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+Basically this object is just a named data store: it can store named values, the values being
+organized hirarchically. A value can be read from its path (similar to a Unix file path) using the
+gda_server_operation_get_value_at() method.
+</para>
+<para>
+See the global introduction about how to use this object.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -71,6 +76,8 @@ Handles any DDL query in an abstract way
 
 </para>
 
+@GDA_SERVER_OPERATION_CREATE_DB: 
+@GDA_SERVER_OPERATION_DROP_DB: 
 @GDA_SERVER_OPERATION_CREATE_TABLE: 
 @GDA_SERVER_OPERATION_DROP_TABLE: 
 @GDA_SERVER_OPERATION_CREATE_INDEX: 

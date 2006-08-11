@@ -29,6 +29,7 @@ libgda_postgres_la_LIBADD = \
 xmldir   = $(datadir)/libgda
 xml_in_files = \
 	postgres_specs_create_db.xml.in \
+	postgres_specs_drop_db.xml.in \
 	postgres_specs_dsn.xml.in \
 	postgres_specs_create_table.xml.in \
 	postgres_specs_drop_table.xml.in \

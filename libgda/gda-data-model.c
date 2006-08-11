@@ -1238,13 +1238,41 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	}
 	
 	/* add the model data to the XML output */
-	utility_data_model_dump_data_to_xml (model, node, cols, nb_cols);
+	utility_data_model_dump_data_to_xml (model, node, cols, nb_cols, FALSE);
 
 	if (!cols)
 		g_free (rcols);
 
 	g_free (arrayid);
 	return node;
+}
+
+static GdaColumn *
+find_column_from_id (GdaDataModel *model, const gchar *colid, gint *pos)
+{
+	GdaColumn *column = NULL;
+	gint c, nbcols;
+	
+	/* assume @colid is the ID of a column */
+	nbcols = gda_data_model_get_n_columns (model);
+	for (c = 0; !column && (c < nbcols); c++) {
+		const gchar *id;
+		column = gda_data_model_describe_column (model, c);
+		g_object_get (column, "id", &id, NULL);
+		if (!id || strcmp (id, colid)) 
+			column = NULL;
+		else
+			*pos = c;
+	}
+
+	/* if no column has been found, assumr @colid is like "_%d" where %d is a column number */
+	if (!column && (*colid == '_')) {
+		column = gda_data_model_describe_column (model, atoi (colid + 1));
+		if (column)
+			*pos = atoi (colid + 1);
+	}
+
+	return column;
 }
 
 static gboolean
@@ -1272,12 +1300,14 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		GType gdatype;
 		gchar *isnull;
 		xmlChar *this_lang;
+		xmlChar *colid;
 
 		if (xmlNodeIsText (xml_field))
 			continue;
 
-		if (strcmp (xml_field->name, "gda_value")) {
-			g_set_error (error, 0, 0, _("Expected tag <gda_value>, got <%s>, ignoring"), xml_field->name);
+		if (strcmp (xml_field->name, "gda_value") && strcmp (xml_field->name, "gda_array_value")) {
+			g_set_error (error, 0, 0, _("Expected tag <gda_value> or <gda_array_value>, "
+						    "got <%s>, ignoring"), xml_field->name);
 			continue;
 		}
 		
@@ -1287,11 +1317,22 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			continue;
 		}
 
+		colid = xmlGetProp (xml_field, "colid");
+
 		/* create the value for this field */
-		if (this_lang)
-			column = gda_data_model_describe_column (model, pos - 1);
-		else
-			column = gda_data_model_describe_column (model, pos);
+		if (!colid) {
+			if (this_lang)
+				column = gda_data_model_describe_column (model, pos - 1);
+			else
+				column = gda_data_model_describe_column (model, pos);
+		}
+		else {
+			column = find_column_from_id (model, colid, &pos);
+			xmlFree (colid);
+			if (!column)
+				continue;
+		}
+
 		gdatype = gda_column_get_gda_type (column);
 		if ((gdatype == G_TYPE_INVALID) ||
 		    (gdatype == GDA_TYPE_NULL)) {
@@ -1359,7 +1400,8 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
  * @model: a #GdaDataModel.
  * @node: a XML node representing a &lt;gda_array_data&gt; XML node.
  *
- * Adds the data from a XML node to the given data model.
+ * Adds the data from a XML node to the given data model (see the DTD for that node
+ * in the $prefix/share/libgda/dtd/libgda-array.dtd file).
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */

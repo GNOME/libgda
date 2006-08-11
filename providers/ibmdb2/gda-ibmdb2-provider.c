@@ -58,12 +58,6 @@ static const gchar *gda_ibmdb2_provider_get_database (GdaServerProvider *provide
 static gboolean gda_ibmdb2_provider_change_database (GdaServerProvider *provider,
                                                      GdaConnection *cnc,
                                                      const gchar *name);
-static gboolean gda_ibmdb2_provider_create_database_cnc (GdaServerProvider *provider,
-                                                         GdaConnection *cnc,
-                                                         const gchar *name);
-static gboolean gda_ibmdb2_provider_drop_database_cnc (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       const gchar *name);
 static GList *gda_ibmdb2_provider_execute_command (GdaServerProvider *provider,
                                                    GdaConnection *cnc,
                                                    GdaCommand *cmd,
@@ -364,55 +358,6 @@ gda_ibmdb2_provider_single_command (GdaIBMDB2ConnectionData *conn_data,
                 return FALSE;
 	}
 	return TRUE;
-}
-
-
-static gboolean
-gda_ibmdb2_provider_create_database_cnc (GdaServerProvider *provider,                                                    
-				         GdaConnection *cnc,
-                                         const gchar *name)
-{
-	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
-	GdaIBMDB2ConnectionData *conn_data = NULL;
-	gchar *sql;
-	gboolean retval;
-
-	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	
-        conn_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
-        g_return_val_if_fail (conn_data != NULL, FALSE);
-	
-	sql = g_strdup_printf("CREATE DATABASE %s", name);
-	retval = gda_ibmdb2_provider_single_command (conn_data, cnc, sql);	
-	g_free(sql);
-	
-	return retval;
-}
-
-
-
-static gboolean
-gda_ibmdb2_provider_drop_database_cnc (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       const gchar *name)
-{
-	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
-	GdaIBMDB2ConnectionData *conn_data = NULL;
-	gchar *sql;
-	gboolean retval;
-
-	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	
-        conn_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
-        g_return_val_if_fail (conn_data != NULL, FALSE);
-	
-	sql = g_strdup_printf("DROP DATABASE %s", name);
-	retval = gda_ibmdb2_provider_single_command (conn_data, cnc, sql);	
-	g_free(sql);
-	
-	return retval;
 }
 
 static const gboolean 
@@ -1076,15 +1021,10 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 	provider_class->get_database = gda_ibmdb2_provider_get_database;
 	provider_class->change_database = gda_ibmdb2_provider_change_database;
 
-	provider_class->get_specs = NULL;
-	provider_class->perform_action_params = NULL;
-
-	provider_class->create_database_cnc = gda_ibmdb2_provider_create_database_cnc;
-	provider_class->drop_database_cnc = gda_ibmdb2_provider_drop_database_cnc;
-	provider_class->create_table = NULL;
-	provider_class->drop_table = NULL;
-	provider_class->create_index = NULL;
-	provider_class->drop_index = NULL;
+	provider_class->supports_operation = NULL;
+        provider_class->create_operation = NULL;
+        provider_class->render_operation = NULL;
+        provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_ibmdb2_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;

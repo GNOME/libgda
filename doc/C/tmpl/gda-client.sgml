@@ -61,14 +61,6 @@ or destroy a database.
 @GDA_CLIENT_EVENT_TRANSACTION_COMMITTED: 
 @GDA_CLIENT_EVENT_TRANSACTION_CANCELLED: 
 
-<!-- ##### ENUM GdaClientSpecsType ##### -->
-<para>
-
-</para>
-
-@GDA_CLIENT_SPECS_CREATE_DATABASE: 
-@GDA_CLIENT_SPECS_DROP_DATABASE: 
-
 <!-- ##### FUNCTION gda_client_new ##### -->
 <para>
 
@@ -253,37 +245,46 @@ or destroy a database.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_client_get_provider_specs ##### -->
+<!-- ##### FUNCTION gda_client_prepare_create_database ##### -->
 <para>
 
 </para>
 
 @client: 
 @provider: 
-@type: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_client_create_database ##### -->
+<!-- ##### FUNCTION gda_client_perform_create_database ##### -->
 <para>
 
 </para>
 
 @client: 
 @provider: 
-@params: 
+@op: 
 @error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_client_drop_database ##### -->
+<!-- ##### FUNCTION gda_client_prepare_drop_database ##### -->
 <para>
 
 </para>
 
 @client: 
 @provider: 
-@params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_perform_drop_database ##### -->
+<para>
+
+</para>
+
+@client: 
+@provider: 
+@op: 
 @error: 
 @Returns: 
 

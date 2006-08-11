@@ -111,15 +111,10 @@ gda_odbc_provider_class_init (GdaOdbcProviderClass *klass)
 	provider_class->get_database = gda_odbc_provider_get_database;
 	provider_class->change_database = gda_odbc_provider_change_database;
 
-	provider_class->get_specs = NULL;
-	provider_class->perform_action_params = NULL;
-
-	provider_class->create_database_cnc = NULL;
-	provider_class->drop_database_cnc = NULL;
-	provider_class->create_table = NULL;
-	provider_class->drop_table = NULL;
-	provider_class->create_index = NULL;
-	provider_class->drop_index = NULL;
+	provider_class->supports_operation = NULL;
+        provider_class->create_operation = NULL;
+        provider_class->render_operation = NULL;
+        provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_odbc_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;

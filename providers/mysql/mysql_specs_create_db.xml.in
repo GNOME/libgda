@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<data-set-spec>
-  <parameters>
+<serv_op>
+  <parameters id="SERVER_CNX_P" _name="Server access parameters">
     <!-- Connection parameters -->
     <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="gchararray"/>
     <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="gint"/>
@@ -8,11 +8,14 @@
     <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to use or not SSL for establishing the connection" gdatype="gboolean"/>
     <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray"/>
     <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray"/>
-
+  </parameters>
 
     <!-- DSN parameters -->
-    <parameter id="DATABASE" _name="Database name" _descr="The name of a database to create" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="ENCODING" _name="Encoding" _descr="Character set encoding to use in the new database" gdatype="gchararray" source="csets:1"/>
+  <parameters id="DB_DEF_P" _name="Database's description">
+    <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to create" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="DB_IFNOTEXISTS" _name="Only if not exists" _descr="Create database only if it does not yet exist" gdatype="gboolean"/>
+    <parameter id="DB_CSET" _name="Character set" _descr="Character set encoding to use in the new database" gdatype="gchararray" source="csets:0"/>
+    <parameter id="DB_COLLATION" _name="Encoding" _descr="Character set encoding to use in the new database" gdatype="gchararray"/>
   </parameters>
   <sources>
     <gda_array name="csets">
@@ -162,4 +165,4 @@
       </gda_array_data>
     </gda_array>
   </sources>
-</data-set-spec>
+</serv_op>

@@ -75,7 +75,8 @@ gchar *utility_build_decoded_id (const gchar *prefix, const gchar *id);
  * Param & model utilities
  */
 gboolean utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
-void     utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, const gint *cols, gint nb_cols);
+void     utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
+					      const gint *cols, gint nb_cols, gboolean use_col_ids);
 void     utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources);
 GdaDictType *utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
 					       const gchar *dbms_type, const gchar *gda_type, gboolean *created);

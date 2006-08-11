@@ -178,7 +178,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 							      NULL, G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_OP_TYPE,
 					 g_param_spec_int ("op_type", NULL, NULL, 
-							   GDA_SERVER_OPERATION_CREATE_TABLE, GDA_SERVER_OPERATION_DROP_INDEX, 
+							   0, GDA_SERVER_OPERATION_NB - 1, 
 							   0, G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 }
 
@@ -1071,6 +1071,10 @@ const gchar *
 gda_server_operation_op_type_to_string (GdaServerOperationType type)
 {
 	switch (type) {
+	case GDA_SERVER_OPERATION_CREATE_DB:
+		return "CREATE_DB";
+	case GDA_SERVER_OPERATION_DROP_DB:
+		return "DROP_DB";
 	case GDA_SERVER_OPERATION_CREATE_TABLE:
 		return "CREATE_TABLE";
 	case GDA_SERVER_OPERATION_DROP_TABLE:
@@ -1157,7 +1161,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL:
 		node = xmlNewChild (parent, NULL, BAD_CAST "op_data", NULL);
 		xmlSetProp (node, "path", complete_path);
-		utility_data_model_dump_data_to_xml (opnode->d.model, node, NULL, 0);
+		utility_data_model_dump_data_to_xml (opnode->d.model, node, NULL, 0, TRUE);
 		break;
 	case GDA_SERVER_OPERATION_NODE_PARAM: {
 		const GValue *value;
@@ -1207,7 +1211,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
  * Loads the contents of @node into @op. The XML tree passed through the @node
  * argument must correspond to an XML tree saved using gda_server_operation_save_data_to_xml().
  *
- * Returns: %TRUE if no error occured
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node, GError **error)
@@ -1305,7 +1309,8 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 						if (contents && xmlNodeIsText (contents)) {
 							GdaParameter *param;
 							param = gda_parameter_list_find_param (opnode->d.plist, extension);
-							if (!gda_parameter_set_value_str (param, contents->content)) {
+							if (param && 
+							    !gda_parameter_set_value_str (param, contents->content)) {
 								g_set_error (error, 0, 0,
 									     _("Could not set parameter '%s' to value '%s'"), 
 									     prop, cur->content);

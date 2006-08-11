@@ -55,10 +55,6 @@ static const gchar *gda_msql_provider_get_database(GdaServerProvider*,
                                                    GdaConnection*);
 static gboolean gda_msql_provider_change_database(GdaServerProvider*,
                                                   GdaConnection*,const gchar*);
-static gboolean gda_msql_provider_create_database_cnc(GdaServerProvider*,
-                                                      GdaConnection*,const gchar*);
-static gboolean gda_msql_provider_drop_database(GdaServerProvider*,
-                                                GdaConnection*,const gchar*);
 static GList *gda_msql_provider_execute_command(GdaServerProvider*,
                                                 GdaConnection*,
                                                 GdaCommand*,
@@ -89,45 +85,40 @@ static GObjectClass *parent_class = NULL;
 static void gda_msql_provider_class_init(GdaMsqlProviderClass *cl)
 {
 	GObjectClass *ocl           = G_OBJECT_CLASS(cl);
-	GdaServerProviderClass *pcl = GDA_SERVER_PROVIDER_CLASS(cl);
+	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS(cl);
 
 	parent_class=g_type_class_peek_parent(cl);
 	ocl->finalize=gda_msql_provider_finalize;
 
-	pcl->get_version = gda_msql_provider_get_version;
-	pcl->get_server_version = gda_msql_provider_get_server_version;
-	pcl->get_info = NULL;
-	pcl->supports = gda_msql_provider_supports;
-	pcl->get_schema = gda_msql_provider_get_schema;
+	provider_class->get_version = gda_msql_provider_get_version;
+	provider_class->get_server_version = gda_msql_provider_get_server_version;
+	provider_class->get_info = NULL;
+	provider_class->supports = gda_msql_provider_supports;
+	provider_class->get_schema = gda_msql_provider_get_schema;
 
-	pcl->get_data_handler = NULL;
-	pcl->string_to_value = NULL;
-	pcl->get_def_dbms_type = NULL;
+	provider_class->get_data_handler = NULL;
+	provider_class->string_to_value = NULL;
+	provider_class->get_def_dbms_type = NULL;
 
-	pcl->open_connection = gda_msql_provider_open_connection;
-	pcl->close_connection = gda_msql_provider_close_connection;
-	pcl->get_database = gda_msql_provider_get_database;
-	pcl->change_database = gda_msql_provider_change_database;
+	provider_class->open_connection = gda_msql_provider_open_connection;
+	provider_class->close_connection = gda_msql_provider_close_connection;
+	provider_class->get_database = gda_msql_provider_get_database;
+	provider_class->change_database = gda_msql_provider_change_database;
 
-	pcl->get_specs = NULL;
-	pcl->perform_action_params = NULL;
+	provider_class->supports_operation = NULL;
+        provider_class->create_operation = NULL;
+        provider_class->render_operation = NULL;
+        provider_class->perform_operation = NULL;
 
-	pcl->create_database_cnc = gda_msql_provider_create_database_cnc;
-	pcl->drop_database_cnc = NULL;
-	pcl->create_table = NULL;
-	pcl->drop_table = gda_msql_provider_drop_database;
-	pcl->create_index = NULL;
-	pcl->drop_index = NULL;
+	provider_class->execute_command = gda_msql_provider_execute_command;
+	provider_class->get_last_insert_id = NULL;
 
-	pcl->execute_command = gda_msql_provider_execute_command;
-	pcl->get_last_insert_id = NULL;
-
-	pcl->begin_transaction = gda_msql_provider_begin_transaction;
-	pcl->commit_transaction = gda_msql_provider_commit_transaction;
-	pcl->rollback_transaction = gda_msql_provider_rollback_transaction;
+	provider_class->begin_transaction = gda_msql_provider_begin_transaction;
+	provider_class->commit_transaction = gda_msql_provider_commit_transaction;
+	provider_class->rollback_transaction = gda_msql_provider_rollback_transaction;
 	
-	pcl->create_blob = NULL;
-	pcl->fetch_blob = NULL;	
+	provider_class->create_blob = NULL;
+	provider_class->fetch_blob = NULL;	
 }
 
 static void 
@@ -344,34 +335,6 @@ gda_msql_provider_change_database(GdaServerProvider *p,GdaConnection *cnc,
 	g_free(dbname);  
 	g_object_set_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_DBNAME,g_strdup(name));
 	return TRUE;
-}
-
-static gboolean
-gda_msql_provider_create_database_cnc(GdaServerProvider *p,
-                                      GdaConnection *cnc,
-                                      const gchar *name)
-{
-	GdaMsqlProvider *mp=(GdaMsqlProvider*)p;
-
-	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
-	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_event_string(cnc,
-					_("mSQL allows database creation only through the msqladmin tool."));
-	return FALSE;
-}
-
-static gboolean
-gda_msql_provider_drop_database(GdaServerProvider *p,
-                                GdaConnection *cnc,
-                                const gchar *name)
-{
-	GdaMsqlProvider *mp=(GdaMsqlProvider*)p;
-
-	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
-	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_event_string(cnc,
-					_("mSQL allows database drops only through the msqladmin tool."));
-	return FALSE;
 }
 
 static GList *

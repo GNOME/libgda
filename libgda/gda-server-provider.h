@@ -122,11 +122,7 @@ struct _GdaServerProviderClass {
 	gboolean               (* change_database) (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    const gchar *name);
-	/* actions with parameters */
-	gchar                 *(* get_specs)        (GdaServerProvider *provider, GdaClientSpecsType type);
-	gboolean               (* perform_action_params) (GdaServerProvider *provider, 
-							  GdaParameterList *params, GdaClientSpecsType type,
-							  GError **error);
+	/* operations */
 	gboolean               (* supports_operation) (GdaServerProvider *provider, GdaConnection *cnc, 
 						       GdaServerOperationType type, GdaParameterList *options);
 	GdaServerOperation    *(* create_operation)   (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -137,33 +133,6 @@ struct _GdaServerProviderClass {
 	gboolean               (* perform_operation)  (GdaServerProvider *provider, GdaConnection *cnc, 
 						       GdaServerOperation *op, GError **error);	
 
-	/* database creation and destruction */
-	gboolean               (* create_database_cnc) (GdaServerProvider *provider,
-							GdaConnection *cnc, const gchar *name);
-	gboolean               (* drop_database_cnc) (GdaServerProvider *provider, 
-						      GdaConnection *cnc, const gchar *name);
-
-	/* tables creation and destroying */
-	gboolean      (* create_table) (GdaServerProvider *provider, 
-					GdaConnection *cnc, 
-					const gchar *table_name,
-					const GList *attributes_list,
-					const GList *index_list);
-	gboolean      (* drop_table) (GdaServerProvider *provider,
-				      GdaConnection *cnc,
-				      const gchar *table_name);
-
-	/* index creation and destroying */
-	gboolean      (* create_index) (GdaServerProvider *provider,
-					GdaConnection *cnc,
-					const GdaDataModelIndex *index,
-					const gchar *table_name);
-	gboolean      (* drop_index) (GdaServerProvider *provider,
-				      GdaConnection *cnc,
-				      const gchar *index_name,
-				      gboolean primary_key,
-				      const gchar *table_name);
-	
 	/* commands */
 	GList                  *(* execute_command) (GdaServerProvider *provider,
 						     GdaConnection *cnc,
@@ -246,13 +215,6 @@ gboolean               gda_server_provider_change_database (GdaServerProvider *p
 							    const gchar *name);
 
 /* actions with parameters */
-gchar                *gda_server_provider_get_specs  (GdaServerProvider *provider,
-						      GdaClientSpecsType action_type);
-gboolean              gda_server_provider_perform_action_params (GdaServerProvider *provider, 
-								 GdaParameterList *params, 
-								 GdaClientSpecsType action_type, 
-								 GError **error);
-
 gboolean               gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc, 
 							       GdaServerOperationType type, GdaParameterList *options);
 GdaServerOperation    *gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -262,28 +224,6 @@ gchar                 *gda_server_provider_render_operation (GdaServerProvider *
 							     GdaServerOperation *op, GError **error);
 gboolean               gda_server_provider_perform_operation(GdaServerProvider *provider, GdaConnection *cnc, 
 							     GdaServerOperation *op, GError **error);
-
-gboolean      gda_server_provider_create_database_cnc (GdaServerProvider *provider,
-						       GdaConnection *cnc, const gchar *name);
-gboolean      gda_server_provider_drop_database_cnc (GdaServerProvider *provider,
-						     GdaConnection *cnc, const gchar *name);
-gboolean      gda_server_provider_create_table (GdaServerProvider *provider,
-						GdaConnection *cnc,
-						const gchar *table_name,
-						const GList *attributes_list,
-						const GList *index_list);
-gboolean      gda_server_provider_drop_table (GdaServerProvider *provider,
-					      GdaConnection *cnc,
-					      const gchar *table_name);
-gboolean      gda_server_provider_create_index (GdaServerProvider *provider,
-						GdaConnection *cnc,
-						const GdaDataModelIndex *index,
-						const gchar *table_name);
-gboolean      gda_server_provider_drop_index (GdaServerProvider *provider,
-					      GdaConnection *cnc,
-					      const gchar *index_name,
-					      gboolean primary_key,
-					      const gchar *table_name);
 
 GList        *gda_server_provider_execute_command (GdaServerProvider *provider,
 						   GdaConnection *cnc,

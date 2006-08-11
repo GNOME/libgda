@@ -160,7 +160,6 @@ struct _GdaDataProxyPrivate
 
 	gboolean           ignore_proxied_changes;
 	gboolean           proxy_has_changed;
-	gboolean           multiple_rows_changes;
 
 	gboolean           add_null_entry; /* artificially add a NULL entry at the beginning of the tree model */
 
@@ -449,6 +448,7 @@ background_commit_cb (GdaDataProxy *proxy)
 {
 	if (proxy->priv) {
 		GError *error = NULL;
+
 		if (!gda_data_proxy_apply_all_changes (proxy, &error)) {
 			g_warning (_("Could not auto-commit row change: %s"), 
 				   error && error->message ?  error->message : _("No detail"));
@@ -457,7 +457,6 @@ background_commit_cb (GdaDataProxy *proxy)
 		}
 		proxy->priv->background_commit_id = 0;
 	}
-
 	return FALSE;
 }
 
@@ -471,9 +470,11 @@ row_changed_signal (GdaDataModel *model, gint row)
 		return;
 
 	/* the changes will be committed later in an idle high priority loop */
-	if (proxy->priv->autocommit && !proxy->priv->background_commit_id)
-		proxy->priv->background_commit_id = g_idle_add_full (G_PRIORITY_HIGH_IDLE, 
-								     (GSourceFunc) background_commit_cb, proxy, NULL);
+	if (proxy->priv->autocommit && !proxy->priv->background_commit_id) {
+		proxy->priv->background_commit_id = g_timeout_add_full (G_PRIORITY_HIGH_IDLE, 10,
+									(GSourceFunc) background_commit_cb, 
+									proxy, NULL);
+	}
 }
 
 static void
@@ -515,10 +516,10 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 	proxy->priv->notify_changes = TRUE;
 	proxy->priv->ignore_proxied_changes = FALSE;
 	proxy->priv->proxy_has_changed = FALSE;
-	proxy->priv->multiple_rows_changes = FALSE;
 
 	proxy->priv->add_null_entry = FALSE;
 	proxy->priv->idle_add_event_source = 0;
+	proxy->priv->background_commit_id = 0;
 
 	proxy->priv->sample_first_row = 0;
 	proxy->priv->sample_last_row = 0;
@@ -1492,6 +1493,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 {
 	gboolean err = FALSE;
 	gboolean freedone = FALSE;
+	gboolean ignore_proxied_changes;
 
 	if (!rm)
 		return TRUE;
@@ -1506,16 +1508,13 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 	 * -4- re-enable handling of proxied model modifications
 	 */
 
+	ignore_proxied_changes = proxy->priv->ignore_proxied_changes;
 	proxy->priv->ignore_proxied_changes = TRUE;
 
 	if (rm->to_be_deleted) {
 		/* delete the row */
 		g_assert (rm->model_row >= 0);
-		if (gda_data_model_remove_row (proxy->priv->model, rm->model_row, error)) {
-			if (!proxy->priv->multiple_rows_changes)
-				adjust_displayed_chunck (proxy);
-		}
-		else
+		if (!gda_data_model_remove_row (proxy->priv->model, rm->model_row, error))
 			err = TRUE;
 	}
 	else {
@@ -1632,9 +1631,11 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 		row_modifs_free (rm);
 	}
 
-	proxy->priv->ignore_proxied_changes = FALSE;
+	proxy->priv->ignore_proxied_changes = ignore_proxied_changes;
 	if (proxy->priv->proxy_has_changed) 
 		proxied_model_data_changed_cb (proxy->priv->model, proxy);
+
+	adjust_displayed_chunck (proxy);
 
 	return !err;
 }
@@ -2043,26 +2044,14 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
 	g_return_val_if_fail (proxy->priv, FALSE);
 
-	/* disable the emision of the "changed" signal each time a "row_*" signal is
-	 * emitted, and instead send that signal only once at the end */
-	gda_object_block_changed (GDA_OBJECT (proxy->priv->model));
-
 	gda_data_model_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_START_BATCH_UPDATE, NULL);
 
-	proxy->priv->multiple_rows_changes = TRUE;
+	proxy->priv->ignore_proxied_changes = TRUE;
 	while (proxy->priv->all_modifs && allok)
 		allok = commit_row_modif (proxy, ROW_MODIF (proxy->priv->all_modifs->data), error);
-
+	proxy->priv->ignore_proxied_changes = FALSE;
 
 	gda_data_model_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_END_BATCH_UPDATE, NULL);
-
-	/* re-enable the emision of the "changed" signal each time a "row_*" signal is
-	 * emitted */
-	gda_object_unblock_changed (GDA_OBJECT (proxy->priv->model));
-	gda_data_model_changed ((GdaDataModel *) proxy->priv->model);
-
-	proxy->priv->multiple_rows_changes = FALSE;
-	adjust_displayed_chunck (proxy);
 
 	return allok;
 }

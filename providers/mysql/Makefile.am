@@ -10,6 +10,8 @@ AM_CPPFLAGS = \
 	-DGDA_PACKAGE_VERSION=\""$(PACKAGE_VERSION)"\"
 
 libgda_mysql_la_SOURCES = \
+	gda-mysql-ddl.c \
+        gda-mysql-ddl.h \
 	gda-mysql-provider.c \
 	gda-mysql-provider.h \
 	gda-mysql-recordset.c \
@@ -24,7 +26,15 @@ libgda_mysql_la_LIBADD = \
 	$(MYSQL_LIBS)
 
 xmldir   = $(datadir)/libgda
-xml_in_files = mysql_specs_create_db.xml.in mysql_specs_dsn.xml.in
+xml_in_files = \
+	mysql_specs_create_db.xml.in \
+	mysql_specs_drop_db.xml.in \
+	mysql_specs_dsn.xml.in \
+	mysql_specs_create_table.xml.in \
+        mysql_specs_drop_table.xml.in \
+        mysql_specs_create_index.xml.in \
+        mysql_specs_drop_index.xml.in
+
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 @INTLTOOL_XML_RULE@

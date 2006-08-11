@@ -1010,96 +1010,6 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
 }
 
 /**
- * gda_connection_create_table
- * @cnc: a #GdaConnection object.
- * @table_name: name of the table to be created.
- * @attributes_list: list of #GdaColumn for all fields in the table.
- * @index_list: list of #GdaDataModelIndex of all (multi column) index entries of a table.
- *
- * Creates a table on the given connection from the specified set of fields. In case of
- * none or single column index only, the various index fields can be set in #GdaColumn
- * and @index_list can be set to NULL. Index related values set in #GdaColumn
- * should not overlap settings in @index_list. A table can only have one Primary Key for instance.
- * Either set it in #GdaColumn that is part of @attributes_list or in 
- * #GdaColumnIndex that is part of @index_list.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_connection_create_table (GdaConnection *cnc, const gchar *table_name, const GList *attributes_list, const GList *index_list)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (cnc->priv, FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-	g_return_val_if_fail (attributes_list != NULL, FALSE);
-
-	return gda_server_provider_create_table (cnc->priv->provider_obj, cnc, table_name, attributes_list, index_list);
-}
-
-/**
- * gda_connection_drop_table
- * @cnc: a #GdaConnection object.
- * @table_name: name of the table to be removed.
- *
- * Drops a table from the database.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_connection_drop_table (GdaConnection *cnc, const gchar *table_name)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (cnc->priv, FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-
-	return gda_server_provider_drop_table (cnc->priv->provider_obj, cnc, table_name);
-}
-
-/**
- * gda_connection_create_index
- * @cnc: a #GdaConnection object.
- * @index: a #GdaDataModelIndex object containing all index details.
- * @table_name: name of the table to create index for.
- *
- * Creates an index for a given table on the given connection from the specified set of fields.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_connection_create_index (GdaConnection *cnc, const GdaDataModelIndex *index, const gchar *table_name)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (cnc->priv, FALSE);
-	g_return_val_if_fail (index != NULL, FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-
-	return gda_server_provider_create_index (cnc->priv->provider_obj, cnc, index, table_name);
-}
-
-/**
- * gda_connection_drop_index
- * @cnc: a #GdaConnection object.
- * @index_name: name of the index to be removed.
- * @primary_key: if the index is a primary key.
- * @table_name: name of the table of index to be removed from.
- *
- * Drops an index from a table from the database. Some data providers do not allow to assign a name
- * to a PRIMARY KEY. To be able to drop a PRIMARY KEY, the parameter @primary_key can be set to %TRUE.
- *
- * Returns: %TRUE if successful, %FALSE otherwise.
- */
-gboolean
-gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name, gboolean primary_key, const gchar *table_name)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (cnc->priv, FALSE);
-	g_return_val_if_fail (index_name != NULL, FALSE);
-	g_return_val_if_fail (table_name != NULL, FALSE);
-
-	return gda_server_provider_drop_index (cnc->priv->provider_obj, cnc, index_name, primary_key, table_name);
-}
-
-/**
  * gda_connection_execute_command_l
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
@@ -1390,7 +1300,7 @@ gda_connection_get_schema (GdaConnection *cnc,
  * gda_connection_get_events
  * @cnc: a #GdaConnection.
  *
- * Retrieves a list of the last errors ocurred in the connection.
+ * Retrieves a list of the last errors occurred in the connection.
  * You can make a copy of the list using #gda_connection_event_list_copy.
  * 
  * Returns: a GList of #GdaConnectionEvent.

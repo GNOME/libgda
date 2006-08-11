@@ -62,10 +62,6 @@ static const gchar *gda_sqlite_provider_get_database (GdaServerProvider *provide
 static gboolean gda_sqlite_provider_change_database (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     const gchar *name);
-static gchar *gda_sqlite_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType type);
-static gboolean gda_sqlite_provider_perform_action_params (GdaServerProvider *provider,
-							   GdaParameterList *params, 
-							   GdaClientSpecsType type, GError **error);
 static gboolean gda_sqlite_provider_drop_database_cnc (GdaServerProvider *provider,
 						       GdaConnection *cnc,
 						       const gchar *name);
@@ -142,15 +138,10 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->get_database = gda_sqlite_provider_get_database;
 	provider_class->change_database = gda_sqlite_provider_change_database;
 
-	provider_class->get_specs = gda_sqlite_provider_get_specs;
-	provider_class->perform_action_params = gda_sqlite_provider_perform_action_params;
-
-	provider_class->create_database_cnc = NULL;
-	provider_class->drop_database_cnc = gda_sqlite_provider_drop_database_cnc;
-	provider_class->create_table = NULL;
-	provider_class->drop_table = NULL;
-	provider_class->create_index = NULL;
-	provider_class->drop_index = NULL;
+	provider_class->supports_operation = NULL;
+	provider_class->create_operation = NULL;
+	provider_class->render_operation = NULL;
+	provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_sqlite_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
@@ -522,95 +513,6 @@ gda_sqlite_provider_change_database (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	gda_connection_add_event_string (cnc, _("Only one database per connection is allowed"));
-	return FALSE;
-}
-
-/* get_specs handler for the GdaSqliteProvider class */
-static gchar *
-gda_sqlite_provider_get_specs (GdaServerProvider *provider, GdaClientSpecsType type)
-{
-	gchar *specs, *file;
-        gint len;
-	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
-
-	switch (type) {
-	case GDA_CLIENT_SPECS_CREATE_DATABASE:
-		file = g_build_filename (LIBGDA_DATA_DIR, "sqlite_specs_create_db.xml", NULL);
-		if (g_file_get_contents (file, &specs, &len, NULL))
-			return specs;
-		else
-			return NULL;
-		break;
-	default:
-		return NULL;
-	}
-}
-
-/* create_database handler for the GdaSqliteProvider class */
-static gboolean
-gda_sqlite_provider_perform_action_params (GdaServerProvider *provider,
-					   GdaParameterList *params, 
-					   GdaClientSpecsType type,
-					   GError **error)
-{
-	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
-	gboolean retval;
-	GdaParameter *param = NULL;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
-	
-	switch (type) {
-	case GDA_CLIENT_SPECS_CREATE_DATABASE:
-		if (params)
-			param = gda_parameter_list_find_param (params, "URI");
-		if (!param) {
-			g_set_error (error, 0, 0,
-				     _("Missing parameter 'URI'"));
-			retval = FALSE;
-		}
-		else {
-			SQLITEcnc *scnc;
-			gint errmsg;
-			gchar *filename;
-			
-			filename = (gchar *) g_value_get_string ((GValue *) gda_parameter_get_value (param));
-			
-			scnc = g_new0 (SQLITEcnc, 1);
-			errmsg = sqlite3_open (filename, &scnc->connection);
-			
-			if (errmsg != SQLITE_OK) {
-				g_set_error (error, 0, 0,
-					     sqlite3_errmsg (scnc->connection));
-				retval = FALSE;
-			}
-			else
-				retval = TRUE;
-			sqlite3_close (scnc->connection);
-			g_free (scnc);
-		}
-		break;
-	default:
-		g_set_error (error, 0, 0,
-			     _("Method not handled by this provider"));
-		return FALSE;
-	}
-
-	return retval;
-}
-
-static gboolean
-gda_sqlite_provider_drop_database_cnc (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       const gchar *name)
-{
-	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	gda_connection_add_event_string (cnc, _("To remove a SQLite database you should remove the database file by hand"));
 	return FALSE;
 }
 

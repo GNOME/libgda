@@ -57,12 +57,6 @@ static const gchar *gda_oracle_provider_get_server_version (GdaServerProvider *p
 							    GdaConnection *cnc);
 static const gchar *gda_oracle_provider_get_database (GdaServerProvider *provider,
 						      GdaConnection *cnc);
-static gboolean gda_oracle_provider_create_database (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     const gchar *name);
-static gboolean gda_oracle_provider_drop_database_cnc (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       const gchar *name);
 static GList *gda_oracle_provider_execute_command (GdaServerProvider *provider,
 						   GdaConnection *cnc,
 						   GdaCommand *cmd,
@@ -125,15 +119,10 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	provider_class->get_database = gda_oracle_provider_get_database;
 	provider_class->change_database = NULL;
 
-	provider_class->get_specs = NULL;
-	provider_class->perform_action_params = NULL;
-
-	provider_class->create_database_cnc = gda_oracle_provider_create_database;
-	provider_class->drop_database_cnc = gda_oracle_provider_drop_database_cnc;
-	provider_class->create_table = NULL;
-	provider_class->drop_table = NULL;
-	provider_class->create_index = NULL;
-	provider_class->drop_index = NULL;
+	provider_class->supports_operation = NULL;
+        provider_class->create_operation = NULL;
+        provider_class->render_operation = NULL;
+        provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_oracle_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
@@ -757,52 +746,6 @@ gda_oracle_provider_get_database (GdaServerProvider *provider,
 
 	/* don't know what to do here yet. */
 	return NULL;
-}
-
-/* create_database handler for the GdaOracleProvider class */
-static gboolean
-gda_oracle_provider_create_database (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     const gchar *name)
-{
-	GdaOracleConnectionData *priv_data;
-	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (name != NULL, FALSE);
-
-	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
-	if (!priv_data) {
-		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
-		return FALSE;
-	}
-
-	/* don't know what to do here yet. */
-	return FALSE;
-}
-
-/* drop_database_cnc handler for the GdaOracleProvider class */
-static gboolean
-gda_oracle_provider_drop_database_cnc (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       const gchar *name)
-{
-	GdaOracleConnectionData *priv_data;
-	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (name != NULL, FALSE);
-
-	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
-	if (!priv_data) {
-		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
-		return FALSE;
-	}
-
-	/* don't know what to do here yet. */
-	return FALSE;
 }
 
 /* execute_command handler for the GdaMysqlProvider class */

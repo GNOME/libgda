@@ -81,7 +81,7 @@
   <!-- other table constraints -->
   <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
     <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray">
-      <gda_value>CHECK (column > 0)</gda_value>
+      <gda_value>CHECK (column &gt; 0)</gda_value>
     </parameter>
   </sequence>
   

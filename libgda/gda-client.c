@@ -977,24 +977,19 @@ gda_client_get_dsn_specs (GdaClient *client, const gchar *provider)
 }
 
 /**
- * gda_client_get_provider_specs
+ * gda_client_prepare_create_database
  * @client: a #GdaClient object.
  * @provider: a provider
- * @type: a #GdaClientSpecsType type
  *
- * Get an XML string representing the parameters required to perform a specific action
- * using the @provider provider. The action to perform is chosen by the @type argument.
- * 
- * For example to create a database, make a list of #GdaParameter
- * objects for each parameter listed in the returned XML string, and use it to call
- * gda_client_create_database().
+ * Creates a new #GdaServerOperation object which contains the specifications required
+ * to create a database. Once these specifications provided, use 
+ * gda_client_perform_create_database() to perform the database creation.
  *
- * Returns: a string (free it after usage), or %NULL if the provider does not implement database
+ * Returns: new #GdaServerOperation object, or %NULL if the provider does not support database
  * creation
  */
-gchar *
-gda_client_get_provider_specs (GdaClient *client, const gchar *provider,
-			       GdaClientSpecsType type)
+GdaServerOperation *
+gda_client_prepare_create_database (GdaClient *client, const gchar *provider)
 {
 	LoadedProvider *prv;
 
@@ -1005,128 +1000,102 @@ gda_client_get_provider_specs (GdaClient *client, const gchar *provider,
 
 	prv = find_or_load_provider (client, provider);
 	if (prv && prv->provider) 
-		return gda_server_provider_get_specs (prv->provider, type);
+		return gda_server_provider_create_operation (prv->provider, NULL, 
+							     GDA_SERVER_OPERATION_CREATE_DB, 
+							     NULL, NULL);
 	else
 		return NULL;
 }
 
 /**
- * gda_client_create_database
+ * gda_client_prepare_drop_database
  * @client: a #GdaClient object.
  * @provider: a provider
- * @params:
+ *
+ * Creates a new #GdaServerOperation object which contains the specifications required
+ * to drop a database. Once these specifications provided, use 
+ * gda_client_perform_drop_database() to perform the database creation.
+ *
+ * Returns: new #GdaServerOperation object, or %NULL if the provider does not support database
+ * destruction
+ */
+GdaServerOperation *
+gda_client_prepare_drop_database (GdaClient *client, const gchar *provider)
+{
+	LoadedProvider *prv;
+
+	g_return_val_if_fail (client && GDA_IS_CLIENT (client), NULL);
+
+	if (!provider || !*provider)
+		return NULL;
+
+	prv = find_or_load_provider (client, provider);
+	if (prv && prv->provider) 
+		return gda_server_provider_create_operation (prv->provider, NULL,
+							     GDA_SERVER_OPERATION_DROP_DB, 
+							     NULL, NULL);
+	else
+		return NULL;
+}
+
+/**
+ * gda_client_perform_create_database
+ * @client: a #GdaClient object.
+ * @provider: a provider
+ * @op: a #GdaServerOperation object obtained using gda_client_prepare_server_operation()
  * @error: a place to store en error, or %NULL
  *
- * Creates a new database using the specifications in @params. The list of parameters to
- * provide to create a database depends of the provider being used, and can be obtained using
- * the gda_client_get_provider_specs() function.
- *
- * For the providers which do not yet implement the gda_client_get_provider_specs()
- * method, create a list with a #GdaParameter object for
- * <itemizedlist>
- *   <listitem><para>an opened #GdaConnection object, named "cnc"</para></listitem>
- *   <listitem><para>the name of the database to create, named "dbname"</para></listitem>
- * </itemizedlist>
+ * Creates a new database using the specifications in @op. 
  *
  * Returns: TRUE if no error occurred and the database has been created
  */
 gboolean
-gda_client_create_database (GdaClient *client, const gchar *provider, GdaParameterList *params,
-			    GError **error)
+gda_client_perform_create_database (GdaClient *client, const gchar *provider, GdaServerOperation *op,
+				    GError **error)
 {
 	LoadedProvider *prv;
 
-	g_return_val_if_fail (client && GDA_IS_CLIENT (client), FALSE);
+	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 
 	prv = find_or_load_provider (client, provider);
-	if (prv && prv->provider) {
-		/* see if we have only 2 parameters which are "cnc" and "name" */
-		if (params && (gda_parameter_list_get_length (params) == 2)) {
-			GdaParameter *cnc, *name;
-			
-			cnc = gda_parameter_list_find_param (params, "cnc");
-			name = gda_parameter_list_find_param (params, "dbname");
-			
-			if (name && cnc) {
-				const GValue *cnc_v, *name_v;
-				
-				cnc_v = gda_parameter_get_value (cnc);
-				name_v = gda_parameter_get_value (name);
-				return gda_server_provider_create_database_cnc (prv->provider, 
-										GDA_CONNECTION (g_value_get_object ((GValue *) cnc_v)),
-										g_value_get_string ((GValue *) name_v));
-			}
-		}
-		else
-			return gda_server_provider_perform_action_params (prv->provider, params, 
-									  GDA_CLIENT_SPECS_CREATE_DATABASE,
-									  error);
-	}
+	if (prv && prv->provider) 
+		return gda_server_provider_perform_operation (prv->provider, NULL, 
+							      op, error);
 	else {
 		g_set_error (error, GDA_CLIENT_ERROR, 0, 
 			     _("Could not find provider %s in the current setup"), provider); 
 		return FALSE;
 	}
-
-	return FALSE;
 }
 
 /**
- * gda_client_drop_database
+ * gda_client_perform_drop_database
  * @client: a #GdaClient object.
  * @provider: a provider
- * @dbname: the name of the database to destroy
+ * @op: a #GdaServerOperation object obtained using gda_client_prepare_server_operation()
  * @error: a place to store en error, or %NULL
  *
- * Destroys an existing database using the specifications in @params. The list of parameters to
- * provide to destroy a database depends of the provider being used, and can be obtained using
- * the gda_client_get_provider_specs() function.
- *
- * For the providers which do not yet implement the gda_client_get_provider_specs()
- * method, create a list with a #GdaParameter object for
- * <itemizedlist>
- *   <listitem><para>an opened #GdaConnection object, named "cnc"</para></listitem>
- *   <listitem><para>the name of the database to destroy, named "dbname"</para></listitem>
- * </itemizedlist>
+ * Destroys an existing database using the specifications in @op. 
  *
  * Returns: TRUE if no error occurred and the database has been destroyed
  */
 gboolean
-gda_client_drop_database (GdaClient *client, const gchar *provider, 
-			  GdaParameterList *params, GError **error)
+gda_client_perform_drop_database (GdaClient *client, const gchar *provider, 
+				  GdaServerOperation *op, GError **error)
 {
 	LoadedProvider *prv;
 
-	g_return_val_if_fail (client && GDA_IS_CLIENT (client), FALSE);
+	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 
 	prv = find_or_load_provider (client, provider);
-	if (prv && prv->provider) {
-		/* see if we have only 2 parameters which are "cnc" and "name" */
-		if (params && (gda_parameter_list_get_length (params) == 2)) {
-			GdaParameter *cnc, *name;
-			
-			cnc = gda_parameter_list_find_param (params, "cnc");
-			name = gda_parameter_list_find_param (params, "dbname");
-			
-			if (name && cnc) {
-				const GValue *cnc_v, *name_v;
-				
-				cnc_v = gda_parameter_get_value (cnc);
-				name_v = gda_parameter_get_value (name);
-				return gda_server_provider_drop_database_cnc (prv->provider, 
-									      GDA_CONNECTION (g_value_get_object ((GValue *) cnc_v)),
-									      g_value_get_string ((GValue *) name_v));
-			}
-		}
-		else
-			return gda_server_provider_perform_action_params (prv->provider, params, 
-									  GDA_CLIENT_SPECS_CREATE_DATABASE, error);
-	}
+	if (prv && prv->provider) 
+		return gda_server_provider_perform_operation (prv->provider, NULL, 
+							      op, error);
 	else {
 		g_set_error (error, GDA_CLIENT_ERROR, 0, 
 			     _("Could not find provider %s in the current setup"), provider); 
 		return FALSE;
 	}
-
-	return FALSE;
 }

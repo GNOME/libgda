@@ -424,27 +424,33 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 	gint i;
 	
 	ProviderFunc func_test [] = {
+		{"get_version", (GFunc) class->get_version, TRUE},
+		{"get_server_version", (GFunc) class->get_server_version, TRUE},
+		{"get_info", (GFunc) class->get_info, TRUE},
+		{"supports", (GFunc) class->supports, TRUE},
 		{"get_schema", (GFunc) class->get_schema, TRUE},
+
 		{"get_data_handler", (GFunc) class->get_data_handler, TRUE},
 		{"string_to_value", (GFunc) class->string_to_value, FALSE},
-		{"get_def_dbms_type", (GFunc) class->get_def_dbms_type, TRUE},
+		{"get_def_dbms_type", (GFunc) class->get_def_dbms_type, FALSE},
+
 		{"open_connection", (GFunc) class->open_connection, TRUE},
 		{"close_connection", (GFunc) class->close_connection, TRUE},
 		{"get_database", (GFunc) class->get_database, TRUE},
 		{"change_database", (GFunc) class->change_database, FALSE},
-		{"get_specs", (GFunc) class->get_specs, TRUE},
-		{"perform_action_params", (GFunc) class->perform_action_params, TRUE},
-		{"create_database_cnc", (GFunc) class->create_database_cnc, FALSE},
-		{"drop_database_cnc", (GFunc) class->drop_database_cnc, FALSE},
-		{"create_table", (GFunc) class->create_table, FALSE},
-		{"drop_table", (GFunc) class->drop_table, FALSE},
-		{"create_index", (GFunc) class->create_index, FALSE},
-		{"drop_index", (GFunc) class->drop_index, FALSE},
+
+		{"supports_operation", (GFunc) class->supports_operation, FALSE},
+		{"create_operation", (GFunc) class->create_operation, FALSE},
+		{"render_operation", (GFunc) class->render_operation, FALSE},
+		{"perform_operation", (GFunc) class->perform_operation, FALSE},
+
 		{"execute_command", (GFunc) class->execute_command, TRUE},
 		{"get_last_insert_id", (GFunc) class->get_last_insert_id, FALSE},
+
 		{"begin_transaction", (GFunc) class->begin_transaction, FALSE},
 		{"commit_transaction", (GFunc) class->commit_transaction, FALSE},
 		{"rollback_transaction", (GFunc) class->rollback_transaction, FALSE},
+
 		{"create_blob", (GFunc) class->create_blob, FALSE},
 		{"fetch_blob", (GFunc) class->fetch_blob, FALSE},
 	};

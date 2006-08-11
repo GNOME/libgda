@@ -10,13 +10,9 @@
     <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to require SSL or not when connecting" gdatype="gboolean"/>
   </parameters>
 
-  <parameters id="DB_DEF_P" _name="Database's description">
+  <parameters id="DB_DESC_P" _name="Database's description">
     <!-- DSN parameters -->
-    <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to create" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="DB_CSET" _name="Encoding" _descr="Character set encoding to use in the new database" gdatype="gchararray" source="csets:0"/>
-    <parameter id="DB_OWNER" _name="Owner" _descr="The name of the database user who will own the new database" gdatype="gchararray"/>
-    <parameter id="TEMPLATE" _name="Template" _descr="The name of the template from which to create the new database" gdatype="gchararray"/>
-    <parameter id="DB_TABLESPACE" _name="Tablespace" _descr="The name of the tablespace that will be associated with the new database" gdatype="gchararray"/>
+    <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to drop" gdatype="gchararray" nullok="FALSE"/>
   </parameters>
   <sources>
     <gda_array name="csets">

@@ -55,12 +55,6 @@ static const gchar *gda_mdb_provider_get_database (GdaServerProvider *provider,
 static gboolean gda_mdb_provider_change_database (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  const gchar *name);
-static gboolean gda_mdb_provider_create_database_cnc (GdaServerProvider *provider,
-						      GdaConnection *cnc,
-						      const gchar *name);
-static gboolean gda_mdb_provider_drop_database_cnc (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    const gchar *name);
 static GList *gda_mdb_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
@@ -120,15 +114,10 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	provider_class->get_database = gda_mdb_provider_get_database;
 	provider_class->change_database = gda_mdb_provider_change_database;
 
-	provider_class->get_specs = NULL;
-	provider_class->perform_action_params = NULL;
-
-	provider_class->create_database_cnc = gda_mdb_provider_create_database_cnc;
-	provider_class->drop_database_cnc = gda_mdb_provider_drop_database_cnc;
-	provider_class->create_table = NULL;
-	provider_class->drop_table = NULL;
-	provider_class->create_index = NULL;
-	provider_class->drop_index = NULL;
+	provider_class->supports_operation = NULL;
+        provider_class->create_operation = NULL;
+        provider_class->render_operation = NULL;
+        provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_mdb_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
@@ -323,24 +312,6 @@ static gboolean
 gda_mdb_provider_change_database (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  const gchar *name)
-{
-	return FALSE;
-}
-
-/* create_database_cnc handler for the GdaMdbProvider class */
-static gboolean
-gda_mdb_provider_create_database_cnc (GdaServerProvider *provider,
-				      GdaConnection *cnc,
-				      const gchar *name)
-{
-	return FALSE;
-}
-
-/* drop_database handler for the GdaMdbProvider class */
-static gboolean
-gda_mdb_provider_drop_database_cnc (GdaServerProvider *provider,
-				    GdaConnection *cnc,
-				    const gchar *name)
 {
 	return FALSE;
 }

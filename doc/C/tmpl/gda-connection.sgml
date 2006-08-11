@@ -383,51 +383,6 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_create_table ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@table_name: 
-@attributes_list: 
-@index_list: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_drop_table ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@table_name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_create_index ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@index: 
-@table_name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_drop_index ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@index_name: 
-@primary_key: 
-@table_name: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_connection_execute_command ##### -->
 <para>
 

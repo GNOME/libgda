@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="INDEX_DESC_P">
+    <parameter id="INDEX_NAME" _name="Index" _descr="Index to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_INDEXES_"/>
+    <parameter id="INDEX_ON_TABLE" _name="On table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
+  </parameters>
+</serv_op>
