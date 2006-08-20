@@ -167,7 +167,7 @@ GdaBlob             *gda_connection_fetch_blob_by_id     (GdaConnection *cnc, co
 
 gchar               *gda_connection_value_to_sql_string  (GdaConnection *cnc, GValue *from);
 
-gboolean             gda_connection_supports             (GdaConnection *cnc, GdaConnectionFeature feature);
+gboolean             gda_connection_supports_feature             (GdaConnection *cnc, GdaConnectionFeature feature);
 GdaDataModel        *gda_connection_get_schema           (GdaConnection *cnc, GdaConnectionSchema schema,
 							  GdaParameterList *params, GError **error);
 

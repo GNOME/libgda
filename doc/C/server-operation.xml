@@ -20,6 +20,9 @@
 	  The resulting new object will hold all the information required (and some optional) to perform the requested
 	  operation. For example to create a table, the required information will be the table name and the description of its
 	  columns, and the optional information might be the schema in which to create the table for a PostgreSQL provider.</para>
+	<para>
+	  Additionnally some options can be passed when using that function in the form of named parameters, see <link linkend="gda-server-op-information">this section</link> for more information.
+	</para>
       </listitem>
       <listitem>
         <para>Fill in the values (required or optional) of the <link linkend="GdaServerOperation">GdaServerOperation</link> 
@@ -79,8 +82,8 @@
     </para>
   </sect3>
 
-  <sect3>
-    <title>Minimum required information</title>
+  <sect3 id="gda-server-op-information">
+    <title>Standard named information</title>
     <para>
       For most of the possible operations, the required information from one provider to the other does not vary, only the
       optional features correspond to optional information, so &LIBGDA; imposes the names of the required information for
@@ -89,7 +92,7 @@
     </para>
     <itemizedlist>
       <listitem>
-        <para>GDA_SERVER_OPERATION_CREATE_DB:
+        <para>Named and required information for GDA_SERVER_OPERATION_CREATE_DB:
 	  <table frame="all">
             <tgroup cols="4" colsep="1" rowsep="1" align="justify">
               <thead>
@@ -138,7 +141,7 @@
       </listitem>
 
       <listitem>
-        <para>GDA_SERVER_OPERATION_DROP_DB:
+        <para>Named and required information for GDA_SERVER_OPERATION_DROP_DB:
 	  <table frame="all">
             <tgroup cols="4" colsep="1" rowsep="1" align="justify">
               <thead>
@@ -169,7 +172,7 @@
       </listitem>
 
       <listitem>
-        <para>GDA_SERVER_OPERATION_CREATE_TABLE:
+        <para>Named and required information for GDA_SERVER_OPERATION_CREATE_TABLE:
 	  <table frame="all">
             <tgroup cols="4" colsep="1" rowsep="1" align="justify">
               <thead>
@@ -338,7 +341,7 @@
       </listitem>
 
       <listitem>
-        <para>GDA_SERVER_OPERATION_DROP_TABLE:
+        <para>Named and required information for GDA_SERVER_OPERATION_DROP_TABLE:
 	  <table frame="all">
             <tgroup cols="4" colsep="1" rowsep="1" align="justify">
               <thead>
@@ -371,11 +374,32 @@
 	      </tbody>
 	    </tgroup>
 	  </table>
+	<para>
+	  Optional parameters for the creation of a GdaServerOperation object for such an operation type:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Id</entry>
+                  <entry>Type</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>TABLE_DESC_P/TABLE_NAME</entry>
+                  <entry>string</entry>
+                  <entry>Name of the table to delete</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
 	</para>
       </listitem>
 
       <listitem>
-        <para>GDA_SERVER_OPERATION_CREATE_INDEX:
+        <para>Named and required information for GDA_SERVER_OPERATION_CREATE_INDEX:
 	  <table frame="all">
             <tgroup cols="4" colsep="1" rowsep="1" align="justify">
               <thead>
@@ -430,7 +454,7 @@
       </listitem>
 
       <listitem>
-        <para>GDA_SERVER_OPERATION_DROP_INDEX:
+        <para>Named and required information for GDA_SERVER_OPERATION_DROP_INDEX:
 	  <table frame="all">
             <tgroup cols="4" colsep="1" rowsep="1" align="justify">
               <thead>

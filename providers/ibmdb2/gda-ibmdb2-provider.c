@@ -1009,7 +1009,7 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 	provider_class->get_version = gda_ibmdb2_provider_get_version;
 	provider_class->get_server_version = gda_ibmdb2_provider_get_server_version;
 	provider_class->get_info = NULL;
-	provider_class->supports = gda_ibmdb2_provider_supports;
+	provider_class->supports_feature = gda_ibmdb2_provider_supports;
 	provider_class->get_schema = gda_ibmdb2_provider_get_schema;
 
 	provider_class->get_data_handler = NULL;

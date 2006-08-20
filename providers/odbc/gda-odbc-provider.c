@@ -99,7 +99,7 @@ gda_odbc_provider_class_init (GdaOdbcProviderClass *klass)
 	provider_class->get_version = gda_odbc_provider_get_version;
 	provider_class->get_server_version = gda_odbc_provider_get_server_version;
 	provider_class->get_info = NULL;
-	provider_class->supports = gda_odbc_provider_supports;
+	provider_class->supports_feature = gda_odbc_provider_supports;
 	provider_class->get_schema = gda_odbc_provider_get_schema;
 
 	provider_class->get_data_handler = NULL;

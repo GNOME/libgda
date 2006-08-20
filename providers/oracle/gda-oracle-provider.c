@@ -107,7 +107,7 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	provider_class->get_version = gda_oracle_provider_get_version;
 	provider_class->get_server_version = gda_oracle_provider_get_server_version;
 	provider_class->get_info = gda_oracle_provider_get_info;
-	provider_class->supports = gda_oracle_provider_supports;
+	provider_class->supports_feature = gda_oracle_provider_supports;
 	provider_class->get_schema = gda_oracle_provider_get_schema;
 
 	provider_class->get_data_handler = NULL;

@@ -427,7 +427,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 		{"get_version", (GFunc) class->get_version, TRUE},
 		{"get_server_version", (GFunc) class->get_server_version, TRUE},
 		{"get_info", (GFunc) class->get_info, TRUE},
-		{"supports", (GFunc) class->supports, TRUE},
+		{"supports", (GFunc) class->supports_feature, TRUE},
 		{"get_schema", (GFunc) class->get_schema, TRUE},
 
 		{"get_data_handler", (GFunc) class->get_data_handler, TRUE},
@@ -517,8 +517,8 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 	/* supports */
 	tr = xmlNewChild (table, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", "supports()");
-	td = xmlNewChild (tr, NULL, "td",  class->supports ? _("Yes") : _("No"));
-	if (class->supports) {
+	td = xmlNewChild (tr, NULL, "td",  class->supports_feature ? _("Yes") : _("No"));
+	if (class->supports_feature) {
 		xmlNodePtr ul;
 		GdaConnectionFeature feature;
 		const gchar *feature_name[] = {"Aggregates",
@@ -543,7 +543,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 		     feature <= GDA_CONNECTION_FEATURE_XML_QUERIES;
 		     feature++) 
 			html_render_attribute_bool (ul, "li", feature_name[feature],
-					       (class->supports) (provider, cnc, feature));
+					       (class->supports_feature) (provider, cnc, feature));
 	}
 	else 
 		html_mark_node_error (HTML_CONFIG (config), td);
@@ -615,7 +615,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 				xmlNodePtr sect;
 				
 				if ((current->feature == -1) ||
-				    (class->supports && (class->supports) (provider, cnc, current->feature))) {
+				    (class->supports_feature && (class->supports_feature) (provider, cnc, current->feature))) {
 					sect = xmlNewChild (node, NULL, "h3", schema_name[current->schema]);
 					xmlNewChild (node, NULL, "p", "\n");
 					

@@ -13,6 +13,8 @@ AM_CPPFLAGS = \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
 
 libgda_sqlite_la_SOURCES = \
+	gda-sqlite-ddl.c \
+	gda-sqlite-ddl.h \
 	gda-sqlite-provider.c \
 	gda-sqlite-provider.h \
 	gda-sqlite-recordset.c \
@@ -28,7 +30,15 @@ libgda_sqlite_la_LIBADD = \
 	$(LIBGDA_LIBS)
 
 xmldir   = $(datadir)/libgda
-xml_in_files = sqlite_specs_create_db.xml.in sqlite_specs_dsn.xml.in
+xml_in_files = sqlite_specs_create_db.xml.in \
+	sqlite_specs_dsn.xml.in \
+	sqlite_specs_create_db.xml.in \
+	sqlite_specs_drop_db.xml.in \
+	sqlite_specs_create_table.xml.in \
+	sqlite_specs_drop_table.xml.in \
+	sqlite_specs_create_index.xml.in \
+	sqlite_specs_drop_index.xml.in
+
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 @INTLTOOL_XML_RULE@

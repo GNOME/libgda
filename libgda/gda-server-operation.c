@@ -346,10 +346,8 @@ node_find (GdaServerOperation *op, const gchar *path)
 	Node *node = NULL;
 	GSList *list;
 
-	if (!path || !*path)
+	if (!path || !*path || (*path != '/'))
 		return NULL;
-
-	g_return_val_if_fail (*path == '/', NULL);
 
 	list = op->priv->allnodes;
 	while (list && !node) {
@@ -373,7 +371,7 @@ node_find_or_create (GdaServerOperation *op, const gchar *path)
 {
 	Node *node;
 	
-	if (!path || !*path)
+	if (!path || !*path || (*path != '/'))
 		return NULL;
 
 	node = node_find (op, path);

@@ -447,7 +447,7 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_supports ##### -->
+<!-- ##### FUNCTION gda_connection_supports_feature ##### -->
 <para>
 
 </para>

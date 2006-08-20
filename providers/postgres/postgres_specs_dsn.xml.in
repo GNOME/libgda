@@ -6,6 +6,6 @@
     <parameter id="HOST" _name="Database server" _descr="Host which has the database server running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this fiend empty)" gdatype="gchararray"/>
     <parameter id="PORT" _name="Port" _descr="Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this fiend empty)" gdatype="gint"/>
     <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray"/>
-    <parameter id="REQUIRESSL" _name="Require SSL" _descr="Whether to use or not SSL for establishing the connection" gdatype="gboolean"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to use or not SSL for establishing the connection" gdatype="gboolean"/>
   </parameters>
 </data-set-spec>

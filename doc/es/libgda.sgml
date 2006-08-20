@@ -899,7 +899,7 @@
 	soportados por cada proveedor &GDA;, además un proveedor específico 
 	no tiene porque soportar uno de éstos. Para comprobar que cualquier 
 	esquema está soportado, vea la función 
-	<function>gda_connection_supports()</function>.
+	<function>gda_connection_supports_feature()</function>.
       </para>
       <!-- fix tables -->
       <table frame="all">

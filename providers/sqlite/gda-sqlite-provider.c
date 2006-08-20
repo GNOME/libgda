@@ -22,11 +22,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if defined(HAVE_CONFIG_H)
-#endif
-
 #include <stdlib.h>
+#include <errno.h>
 #include <glib/gi18n-lib.h>
+#include <glib/gstdio.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-parameter-list.h>
@@ -34,6 +33,7 @@
 #include "gda-sqlite.h"
 #include "gda-sqlite-provider.h"
 #include "gda-sqlite-recordset.h"
+#include "gda-sqlite-ddl.h"
 #include "sqliteInt.h"
 #include <libgda/handlers/gda-handler-numerical.h>
 #include <libgda/handlers/gda-handler-bin.h>
@@ -41,6 +41,8 @@
 #include <libgda/handlers/gda-handler-time.h>
 #include <libgda/handlers/gda-handler-string.h>
 #include <libgda/handlers/gda-handler-type.h>
+
+#define FILE_EXTENSION ".db"
 
 static void gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass);
 static void gda_sqlite_provider_init       (GdaSqliteProvider *provider,
@@ -62,9 +64,17 @@ static const gchar *gda_sqlite_provider_get_database (GdaServerProvider *provide
 static gboolean gda_sqlite_provider_change_database (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     const gchar *name);
-static gboolean gda_sqlite_provider_drop_database_cnc (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       const gchar *name);
+
+static gboolean gda_sqlite_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                                          GdaServerOperationType type, GdaParameterList *options);
+static GdaServerOperation *gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                                                   GdaServerOperationType type,
+                                                                   GdaParameterList *options, GError **error);
+static gchar *gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                                      GdaServerOperation *op, GError **error);
+
+static gboolean gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                                      GdaServerOperation *op, GError **error);
 
 static GList *gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 						   GdaConnection *cnc,
@@ -126,7 +136,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->get_version = gda_sqlite_provider_get_version;
 	provider_class->get_server_version = gda_sqlite_provider_get_server_version;
 	provider_class->get_info = gda_sqlite_provider_get_info;
-	provider_class->supports = gda_sqlite_provider_supports;
+	provider_class->supports_feature = gda_sqlite_provider_supports;
 	provider_class->get_schema = gda_sqlite_provider_get_schema;
 
 	provider_class->get_data_handler = gda_sqlite_provider_get_data_handler;
@@ -138,10 +148,10 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->get_database = gda_sqlite_provider_get_database;
 	provider_class->change_database = gda_sqlite_provider_change_database;
 
-	provider_class->supports_operation = NULL;
-	provider_class->create_operation = NULL;
-	provider_class->render_operation = NULL;
-	provider_class->perform_operation = NULL;
+	provider_class->supports_operation = gda_sqlite_provider_supports_operation;
+        provider_class->create_operation = gda_sqlite_provider_create_operation;
+        provider_class->render_operation = gda_sqlite_provider_render_operation;
+        provider_class->perform_operation = gda_sqlite_provider_perform_operation;
 
 	provider_class->execute_command = gda_sqlite_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
@@ -218,7 +228,8 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 				     const gchar *username,
 				     const gchar *password)
 {
-	const gchar *t_filename = NULL;
+	gchar *filename = NULL, *tmp;
+	const gchar *dirname = NULL, *dbname = NULL;
 	gint errmsg;
 	SQLITEcnc *scnc;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
@@ -227,19 +238,22 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
-	t_filename = gda_quark_list_find (params, "URI");
+	dirname = gda_quark_list_find (params, "DB_DIR");
+	dbname = gda_quark_list_find (params, "DB_NAME");
 
-	if (!t_filename || *t_filename != '/') {
+	if (!g_file_test (dirname, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)) {
 		gda_connection_add_event_string (cnc,
-						 _("A full path must be specified on the "
-						   "connection string to open a database."));
-		return FALSE;
+						 _("The DB_DIR part of the connection string must point "
+						   "to a valid directory"));
 	}
 
+	tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+	filename = g_build_filename (dirname, tmp, NULL);
+	g_free (tmp);
 	scnc = g_new0 (SQLITEcnc, 1);
 
-	errmsg = sqlite3_open (t_filename, &scnc->connection);
-	scnc->file = g_strdup (t_filename);
+	errmsg = sqlite3_open (filename, &scnc->connection);
+	scnc->file = g_strdup (filename);
 
 	if (errmsg != SQLITE_OK) {
 		printf("error %s", sqlite3_errmsg (scnc->connection));
@@ -514,6 +528,189 @@ gda_sqlite_provider_change_database (GdaServerProvider *provider,
 
 	gda_connection_add_event_string (cnc, _("Only one database per connection is allowed"));
 	return FALSE;
+}
+
+static gboolean
+gda_sqlite_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                       GdaServerOperationType type, GdaParameterList *options)
+{
+        switch (type) {
+        case GDA_SERVER_OPERATION_CREATE_DB:
+        case GDA_SERVER_OPERATION_DROP_DB:
+        case GDA_SERVER_OPERATION_CREATE_TABLE:
+        case GDA_SERVER_OPERATION_DROP_TABLE:
+        case GDA_SERVER_OPERATION_CREATE_INDEX:
+        case GDA_SERVER_OPERATION_DROP_INDEX:
+                return TRUE;
+        default:
+                return FALSE;
+        }
+}
+
+static GdaServerOperation *
+gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                     GdaServerOperationType type,
+                                     GdaParameterList *options, GError **error)
+{
+        gchar *file;
+        GdaServerOperation *op;
+        gchar *str;
+
+        file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
+        str = g_strdup_printf ("sqlite_specs_%s.xml", file);
+        g_free (file);
+        file = g_build_filename (LIBGDA_DATA_DIR, str, NULL);
+        g_free (str);
+
+        if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+                return NULL;
+        }
+
+        op = gda_server_operation_new (type, file);
+        g_free (file);
+
+        return op;
+}
+
+static gchar *
+gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                     GdaServerOperation *op, GError **error)
+{
+        gchar *sql = NULL;
+        gchar *file;
+        gchar *str;
+
+        file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
+        str = g_strdup_printf ("sqlite_specs_%s.xml", file);
+        g_free (file);
+        file = g_build_filename (LIBGDA_DATA_DIR, str, NULL);
+        g_free (str);
+
+        if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+                g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+                return NULL;
+        }
+        if (!gda_server_operation_is_valid (op, file, error)) {
+                g_free (file);
+                return NULL;
+        }
+        g_free (file);
+
+        switch (gda_server_operation_get_op_type (op)) {
+        case GDA_SERVER_OPERATION_CREATE_DB:
+        case GDA_SERVER_OPERATION_DROP_DB:
+		sql = NULL;
+                break;
+        case GDA_SERVER_OPERATION_CREATE_TABLE:
+                sql = gda_sqlite_render_CREATE_TABLE (provider, cnc, op, error);
+                break;
+        case GDA_SERVER_OPERATION_DROP_TABLE:
+                sql = gda_sqlite_render_DROP_TABLE (provider, cnc, op, error);
+                break;
+        case GDA_SERVER_OPERATION_CREATE_INDEX:
+                sql = gda_sqlite_render_CREATE_INDEX (provider, cnc, op, error);
+                break;
+        case GDA_SERVER_OPERATION_DROP_INDEX:
+                sql = gda_sqlite_render_DROP_INDEX (provider, cnc, op, error);
+                break;
+        default:
+                g_assert_not_reached ();
+        }
+        return sql;
+}
+
+static gboolean
+gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                      GdaServerOperation *op, GError **error)
+{
+        GdaServerOperationType optype;
+
+        optype = gda_server_operation_get_op_type (op);
+	switch (optype) {
+	case GDA_SERVER_OPERATION_CREATE_DB: {
+		const GValue *value;
+		const gchar *dbname = NULL;
+		const gchar *dir = NULL;
+		SQLITEcnc *scnc;
+		gint errmsg;
+		gchar *filename, *tmp;
+		gboolean retval = TRUE;
+		
+		value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_NAME");
+                if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+                        dbname = g_value_get_string (value);
+		value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_DIR");
+                if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+                        dir = g_value_get_string (value);
+  	 
+		tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+		filename = g_build_filename (dir, tmp, NULL);
+		g_free (tmp);
+
+		scnc = g_new0 (SQLITEcnc, 1);
+		errmsg = sqlite3_open (filename, &scnc->connection);
+		g_free (filename);
+
+		if (errmsg != SQLITE_OK) {
+			g_set_error (error, 0, 0, sqlite3_errmsg (scnc->connection)); 
+			retval = FALSE;
+		}
+		sqlite3_close (scnc->connection); 	 
+		g_free (scnc);
+
+		return retval;
+        }
+	case GDA_SERVER_OPERATION_DROP_DB: {
+		const GValue *value;
+		const gchar *dbname = NULL;
+		const gchar *dir = NULL;
+		gchar *filename, *tmp;
+		gboolean retval = TRUE;
+
+		value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_NAME");
+                if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+                        dbname = g_value_get_string (value);
+		value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_DIR");
+                if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+                        dir = g_value_get_string (value);
+
+		tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+		filename = (gchar *) g_build_filename (dir, tmp, NULL);
+		g_free (tmp);
+
+		if (g_unlink (filename)) {
+			g_set_error (error, 0, 0,
+				     sys_errlist [errno]);
+			retval = FALSE;
+		}
+		g_free (filename);
+		
+		return retval;
+	}
+        default: {
+                /* use the SQL from the provider to perform the action */
+                gchar *sql;
+                GdaCommand *cmd;
+                GdaDataModel *model;
+
+                sql = gda_server_provider_render_operation (provider, cnc, op, error);
+                if (!sql)
+                        return FALSE;
+
+                cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+                g_free (sql);
+                model = gda_connection_execute_command (cnc, cmd, NULL, error);
+                gda_command_free (cmd);
+                if (model != GDA_CONNECTION_EXEC_FAILED) {
+                        if (model)
+                                g_object_unref (model);
+                        return TRUE;
+                }
+                else
+                        return FALSE;
+        }
+	}
 }
 
 /* execute_command handler for the GdaSqliteProvider class */
@@ -1057,17 +1254,34 @@ get_tables (GdaConnection *cnc, GdaParameterList *params, gboolean views)
 	gchar *sql;
 	GdaDataModel *model;
 
+	GdaParameter *par = NULL;
+	const gchar *tablename = NULL;
+	gchar *part = NULL;
+	
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	if (params) {
+		par = gda_parameter_list_find_param (params, "name");
+		if (par)
+			tablename = g_value_get_string ((GValue *) gda_parameter_get_value (par));
+	}
+
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!scnc) {
 		gda_connection_add_event_string (cnc, _("Invalid SQLite handle"));
 		return NULL;
 	}
 
+	if (tablename)
+		part = g_strdup_printf ("AND name = '%s'", tablename);
 	sql = g_strdup_printf ("SELECT name as 'Table', 'system' as Owner, ' ' as Description, sql as Definition "
 			       " FROM (SELECT * FROM sqlite_master UNION ALL "
 			       "       SELECT * FROM sqlite_temp_master) "
-			       " WHERE type = '%s' AND name not like 'sqlite_%%'"
-			       " ORDER BY name", views ? "view": "table");
+			       " WHERE type = '%s' %s AND name not like 'sqlite_%%'"
+			       " ORDER BY name", views ? "view": "table",
+			       part ? part : "");
+	if (part)
+		g_free (part);
 
 	reclist = process_sql_commands (NULL, cnc, sql, 0);
 	g_free (sql);

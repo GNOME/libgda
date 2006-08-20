@@ -2219,7 +2219,7 @@ gda_dict_update_dbms_data (GdaDict *dict, GError **error)
                 retval = dict_aggregates_update_list (dict, error);
 	
 	/* tables, fields, etc */
-	retval = gda_dict_database_update_dbms_data (dict->priv->database, error);
+	retval = gda_dict_database_update_dbms_data (dict->priv->database, GDA_DICT_UPDATE_ALL, NULL, error);
 
 #ifdef GDA_DEBUG_signal
         g_print (">> 'DATA_UPDATE_FINISHED' from %s\n", __FUNCTION__);

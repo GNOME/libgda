@@ -498,7 +498,7 @@ gda_dict_table_get_pk_constraint (GdaDictTable *table)
 }
 
 /**
- * gda_dict_database_update_dbms_data
+ * gda_dict_table_update_dbms_data
  * @table: a #GdaDictTable object
  * @error: location to store error, or %NULL
  *

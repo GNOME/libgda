@@ -221,7 +221,7 @@ GdaServerProvider
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_supports ##### -->
+<!-- ##### FUNCTION gda_server_provider_supports_feature ##### -->
 <para>
 
 </para>

@@ -591,6 +591,57 @@
 	in the <filename>gda-server-provider.h</filename> file. They are
 	explained in detail in the following subsections.
       </para>
+
+      <sect1 id="libgda-provider-get-version">
+	<title>get_version</title>
+	<para>
+	  Returns a string containing the version of the provider
+	</para>
+      </sect1>
+
+      <sect1 id="libgda-provider-get-server-version">
+	<title>get_server_version</title>
+	<para>
+	  Returns a string containing the version of the server if the connection
+	  is opened
+	</para>
+      </sect1>
+
+      <sect1 id="libgda-provider-get-info">
+	<title>get_info</title>
+	<para>
+	  Get some information about the provider, as a <link linkend="GdaServerProviderInfo">GdaServerProviderInfo</link>
+	  structure
+	</para>
+      </sect1>
+
+      <sect1 id="libgda-provider-supports-feature">
+	<title>supports_feature</title>
+	<para>
+	  Tests if a given feature is supported by the provider and the
+	  DB back-end. You can view the list of features in <filename>
+	    gda-connection.h</filename>, enumeration GdaConnectionFeature.
+	</para>
+      </sect1>
+
+      <sect1 id="libgda-provider-get-data-handler">
+	<title>get_data_handler</title>
+	<para>
+	</para>
+      </sect1>
+
+      <sect1 id="libgda-provider-string-to-handler">
+	<title>string_to_handler</title>
+	<para>
+	</para>
+      </sect1>
+
+      <sect1 id="libgda-provider-get-def-dbms-type">
+	<title>get_def_dbms_type</title>
+	<para>
+	</para>
+      </sect1>
+
       <sect1 id="libgda-provider-open-connection">
 	<title>open_connection</title>
 	<para>
@@ -619,32 +670,31 @@
 	  Change the database being used in the active connection.
 	</para>
       </sect1>
-      <sect1 id="libgda-provider-get-specs">
-	<title>get_specs</title>
+
+      <sect1 id="libgda-provider-supports-operation">
+	<title>supports_operation</title>
 	<para>
-	  Returns the parameters which would be required to perform a specific
-	  action (such as create a database)
 	</para>
       </sect1>
-      <sect1 id="libgda-provider-perform-action-params">
-	<title>perform_action_params</title>
+
+      <sect1 id="libgda-provider-create-operation">
+	<title>create_operation</title>
 	<para>
-	  Actually perform an action (such as create a database) using parameters
-	  for which a list has been obtained using the get_specs() virtual method.
 	</para>
       </sect1>
-      <sect1 id="libgda-provider-create-database-cnc">
-	<title>create_database_cnc</title>
+
+      <sect1 id="libgda-provider-render-operation">
+	<title>render_operation</title>
 	<para>
-	  Creates a new database whose name is received in a parameter.	
 	</para>
       </sect1>
-      <sect1 id="libgda-provider-drop-database-cnc">
-	<title>drop_database_cnc</title>
+
+      <sect1 id="libgda-provider-perform-operation">
+	<title>perform_operation</title>
 	<para>
-	  Drops an existing database whose name is received in a parameter.
 	</para>
       </sect1>
+
       <sect1 id="libgda-provider-execute-command">
 	<title>execute_command</title>
 	<para>
@@ -652,6 +702,13 @@
 	  results.
 	</para>
       </sect1>
+
+      <sect1 id="get-last-insert-id">
+	<title>get_last_insert_id</title>
+	<para>
+	</para>
+      </sect1>
+
       <sect1 id="libgda-provider-begin-transaction">
 	<title>begin_transaction</title>
 	<para>
@@ -670,14 +727,19 @@
 	  Rollback a transaction if the DB back-end supports transactions.
 	</para>
       </sect1>
-      <sect1 id="libgda-provider-supports">
-	<title>supports</title>
+
+      <sect1 id="create-blob">
+	<title>create_blob</title>
 	<para>
-	  Tests if a given feature is supported by the provider and the
-	  DB back-end. You can view the list of features in <filename>
-	    gda-connection.h</filename>, enumeration GdaConnectionFeature.
 	</para>
       </sect1>
+
+      <sect1 id="fetch-blob">
+	<title>fetch_blob</title>
+	<para>
+	</para>
+      </sect1>
+
       <sect1 id="libgda-provider-get-schema">
 	<title>get_schema</title>
 	<para>

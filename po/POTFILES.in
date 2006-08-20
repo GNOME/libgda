@@ -108,10 +108,16 @@ providers/postgres/postgres_specs_drop_index.xml.in
 providers/postgres/postgres_specs_drop_table.xml.in
 providers/postgres/postgres_specs_dsn.xml.in
 providers/postgres/utils.c
+providers/sqlite/gda-sqlite-ddl.c
 providers/sqlite/gda-sqlite-provider.c
 providers/sqlite/gda-sqlite-recordset.c
 providers/sqlite/libmain.c
 providers/sqlite/sqlite_specs_create_db.xml.in
+providers/sqlite/sqlite_specs_create_index.xml.in
+providers/sqlite/sqlite_specs_create_table.xml.in
+providers/sqlite/sqlite_specs_drop_db.xml.in
+providers/sqlite/sqlite_specs_drop_index.xml.in
+providers/sqlite/sqlite_specs_drop_table.xml.in
 providers/sqlite/sqlite_specs_dsn.xml.in
 providers/sybase/gda-sybase-provider.c
 providers/sybase/gda-sybase-recordset.c

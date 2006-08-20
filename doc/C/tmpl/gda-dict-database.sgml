@@ -181,7 +181,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @cstr: 
 
 
@@ -190,7 +190,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @Returns: 
 
 
@@ -199,7 +199,9 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
+@flags: 
+@obj_name: 
 @error: 
 @Returns: 
 
@@ -209,7 +211,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 
 
 <!-- ##### FUNCTION gda_dict_database_get_tables ##### -->
@@ -217,7 +219,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @Returns: 
 
 
@@ -226,7 +228,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @name: 
 @Returns: 
 
@@ -236,7 +238,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @xml_id: 
 @Returns: 
 
@@ -246,7 +248,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @fullname: 
 @Returns: 
 
@@ -256,7 +258,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @xml_id: 
 @Returns: 
 
@@ -266,7 +268,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @name: 
 @Returns: 
 
@@ -276,7 +278,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @xml_id: 
 @Returns: 
 
@@ -286,7 +288,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @field: 
 @Returns: 
 
@@ -296,7 +298,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @seq: 
 @field: 
 
@@ -306,7 +308,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @seq: 
 @field: 
 
@@ -316,7 +318,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @Returns: 
 
 
@@ -325,7 +327,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @table: 
 @Returns: 
 
@@ -335,7 +337,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @Returns: 
 
 
@@ -344,7 +346,7 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 
 </para>
 
-@mgdb: 
+@db: 
 @table1: 
 @table2: 
 @table1_has_fk: 

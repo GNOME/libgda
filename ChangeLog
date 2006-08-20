@@ -1,3 +1,19 @@
+2006-08-20  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/*.xml.in: new files for server operation
+	* providers/sqlite/gda-sqlite-ddl.[ch]: new files which implement the SQL
+	for server operations
+	* doc/C/: documentation update
+	* s/gda_connection_supports/gda_connection_supports_feature/
+	* s/gda_server_provider_supports/gda_server_provider_supports_feature/	
+	* libgda/gda-enums.h:
+	* libgda/gda-dict-database.[hc]: added an option to update the information
+	from the database only on a given table.
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/postgres/gda-postgres-provider.c: corrected the tables schema
+	listing for when only one table was requested.
+
 2006-08-11  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/libgda-array.dtd:

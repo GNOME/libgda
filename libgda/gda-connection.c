@@ -1171,7 +1171,7 @@ gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
  *
  * Before starting a transaction, you can check whether the underlying
  * provider does support transactions or not by using the
- * #gda_connection_supports function.
+ * #gda_connection_supports_feature function.
  *
  * Returns: %TRUE if the transaction was started successfully, %FALSE
  * otherwise.
@@ -1248,7 +1248,7 @@ gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction
 }
 
 /**
- * gda_connection_supports
+ * gda_connection_supports_feature
  * @cnc: a #GdaConnection object.
  * @feature: feature to ask for.
  *
@@ -1257,12 +1257,12 @@ gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction
  * Returns: %TRUE if the provider supports it, %FALSE if not.
  */
 gboolean
-gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature)
+gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature feature)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
 
-	return gda_server_provider_supports (cnc->priv->provider_obj, cnc, feature);
+	return gda_server_provider_supports_feature (cnc->priv->provider_obj, cnc, feature);
 }
 
 /**

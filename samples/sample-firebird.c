@@ -352,7 +352,7 @@ run_tests (void)
 			g_print ("Server Version: %s\n", gda_connection_get_server_version (connection));			
 		}
 	
-		if (gda_connection_supports (connection, GDA_CONNECTION_FEATURE_TRANSACTIONS)) {
+		if (gda_connection_supports_feature (connection, GDA_CONNECTION_FEATURE_TRANSACTIONS)) {
 			g_print ("Provider support transactions :-)\n");
 		} else {
 			g_print ("Provider doesn't support transactions :-(\nProgram exit with errors.\n");

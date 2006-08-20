@@ -47,6 +47,18 @@ typedef enum {
 	GDA_ENTITY_FIELD_ANY       = GDA_ENTITY_FIELD_VISIBLE | GDA_ENTITY_FIELD_INVISIBLE
 } GdaEntityFieldState;
 
+/* maybe global? */
+typedef enum
+{
+	GDA_DICT_UPDATE_TABLES      = 1 << 0,
+	GDA_DICT_UPDATE_SEQUENCES   = 1 << 1,
+	GDA_DICT_UPDATE_CONSTRAINTS = 1 << 2,
+	GDA_DICT_UPDATE_TYPES       = 1 << 3,
+	GDA_DICT_UPDATE_FUNCTIONS   = 1 << 4,
+
+	GDA_DICT_UPDATE_ALL         = 65535
+} GdaDictUpdateKind;
+
 #endif
 
 

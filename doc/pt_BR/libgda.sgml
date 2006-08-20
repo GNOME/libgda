@@ -696,7 +696,7 @@
         A tabela que segue mostra os esquemas "padr&otilde;es" que devem ser
 	suportados por cada provedor GDA, entretanto um provedor espec&iacute;fico
 	pode n&atilde;o suportar alguns desses. Para testar se um esquema &eacute; suportado,
-	veja a fun&ccedil;&atilde;o <function>gda_connection_supports()</function>.
+	veja a fun&ccedil;&atilde;o <function>gda_connection_supports_feature()</function>.
       </para>
       <table frame=all><title>Esquemas padr&otilde;es e limitantes suportados</title>
         <tgroup cols=2 align=left colsep=1 rowsep=1>

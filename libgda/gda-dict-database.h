@@ -48,8 +48,6 @@ enum
 	GDA_DICT_DATABASE_SEQUENCES_ERROR
 };
 
-
-
 /* struct for the object's data */
 struct _GdaDictDatabase
 {
@@ -90,32 +88,33 @@ struct _GdaDictDatabaseClass
 GType              gda_dict_database_get_type                  (void);
 GObject           *gda_dict_database_new                       (GdaDict *dict);
 
-GdaDict            *gda_dict_database_get_dict                  (GdaDictDatabase *mgdb);
+GdaDict            *gda_dict_database_get_dict                  (GdaDictDatabase *db);
 
-gboolean           gda_dict_database_update_dbms_data          (GdaDictDatabase *mgdb, GError **error);
-void               gda_dict_database_stop_update_dbms_data     (GdaDictDatabase *mgdb);
+gboolean           gda_dict_database_update_dbms_data          (GdaDictDatabase *db, 
+								guint flags, const gchar *obj_name, 
+								GError **error);
+void               gda_dict_database_stop_update_dbms_data     (GdaDictDatabase *db);
 
-GSList            *gda_dict_database_get_tables                (GdaDictDatabase *mgdb);
-GdaDictTable      *gda_dict_database_get_table_by_name         (GdaDictDatabase *mgdb, const gchar *name);
-GdaDictTable      *gda_dict_database_get_table_by_xml_id       (GdaDictDatabase *mgdb, const gchar *xml_id);
-GdaDictField      *gda_dict_database_get_field_by_name         (GdaDictDatabase *mgdb, const gchar *fullname);
-GdaDictField      *gda_dict_database_get_field_by_xml_id       (GdaDictDatabase *mgdb, const gchar *xml_id);
+GSList            *gda_dict_database_get_tables                (GdaDictDatabase *db);
+GdaDictTable      *gda_dict_database_get_table_by_name         (GdaDictDatabase *db, const gchar *name);
+GdaDictTable      *gda_dict_database_get_table_by_xml_id       (GdaDictDatabase *db, const gchar *xml_id);
+GdaDictField      *gda_dict_database_get_field_by_name         (GdaDictDatabase *db, const gchar *fullname);
+GdaDictField      *gda_dict_database_get_field_by_xml_id       (GdaDictDatabase *db, const gchar *xml_id);
 
-GdaDictSequence   *gda_dict_database_get_sequence_by_name      (GdaDictDatabase *mgdb, const gchar *name);
-GdaDictSequence   *gda_dict_database_get_sequence_by_xml_id    (GdaDictDatabase *mgdb, const gchar *xml_id);
-GdaDictSequence   *gda_dict_database_get_sequence_to_field     (GdaDictDatabase *mgdb, GdaDictField *field);
-void               gda_dict_database_link_sequence             (GdaDictDatabase *mgdb, 
+GdaDictSequence   *gda_dict_database_get_sequence_by_name      (GdaDictDatabase *db, const gchar *name);
+GdaDictSequence   *gda_dict_database_get_sequence_by_xml_id    (GdaDictDatabase *db, const gchar *xml_id);
+GdaDictSequence   *gda_dict_database_get_sequence_to_field     (GdaDictDatabase *db, GdaDictField *field);
+void               gda_dict_database_link_sequence             (GdaDictDatabase *db, 
 								GdaDictSequence *seq, GdaDictField *field);
-void               gda_dict_database_unlink_sequence           (GdaDictDatabase *mgdb, 
+void               gda_dict_database_unlink_sequence           (GdaDictDatabase *db, 
 								GdaDictSequence *seq, GdaDictField *field);
 
-void               gda_dict_database_add_constraint            (GdaDictDatabase *mgdb, GdaDictConstraint *cstr);
-GSList            *gda_dict_database_get_all_constraints       (GdaDictDatabase *mgdb);
-GSList            *gda_dict_database_get_all_fk_constraints    (GdaDictDatabase *mgdb);
-GSList            *gda_dict_database_get_table_constraints     (GdaDictDatabase *mgdb, GdaDictTable *table);
-GSList            *gda_dict_database_get_tables_fk_constraints (GdaDictDatabase *mgdb, GdaDictTable *table1, 
-								GdaDictTable *table2,
-								gboolean table1_has_fk);
+void               gda_dict_database_add_constraint            (GdaDictDatabase *db, GdaDictConstraint *cstr);
+GSList            *gda_dict_database_get_all_constraints       (GdaDictDatabase *db);
+GSList            *gda_dict_database_get_all_fk_constraints    (GdaDictDatabase *db);
+GSList            *gda_dict_database_get_table_constraints     (GdaDictDatabase *db, GdaDictTable *table);
+GSList            *gda_dict_database_get_tables_fk_constraints (GdaDictDatabase *db, GdaDictTable *table1, 
+								GdaDictTable *table2, gboolean table1_has_fk);
 
 G_END_DECLS
 

@@ -102,7 +102,7 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	provider_class->get_version = gda_mdb_provider_get_version;
 	provider_class->get_server_version = gda_mdb_provider_get_server_version;
 	provider_class->get_info = NULL;
-	provider_class->supports = gda_mdb_provider_supports;
+	provider_class->supports_feature = gda_mdb_provider_supports;
 	provider_class->get_schema = gda_mdb_provider_get_schema;
 
 	provider_class->get_data_handler = NULL;

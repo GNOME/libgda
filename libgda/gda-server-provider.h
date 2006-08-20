@@ -85,9 +85,9 @@ struct _GdaServerProviderClass {
 						       GdaConnection *cnc);
 	GdaServerProviderInfo *(* get_info) (GdaServerProvider *provider,
 					     GdaConnection *cnc);
-	gboolean               (* supports) (GdaServerProvider *provider,
-					     GdaConnection *cnc,
-					     GdaConnectionFeature feature);
+	gboolean               (* supports_feature) (GdaServerProvider *provider,
+					             GdaConnection *cnc,
+					             GdaConnectionFeature feature);
 	
 	GdaDataModel          *(* get_schema) (GdaServerProvider *provider,
 					       GdaConnection *cnc,
@@ -169,7 +169,7 @@ const gchar           *gda_server_provider_get_server_version (GdaServerProvider
 							       GdaConnection *cnc);
 GdaServerProviderInfo *gda_server_provider_get_info (GdaServerProvider *provider,
 						     GdaConnection *cnc);
-gboolean               gda_server_provider_supports (GdaServerProvider *provider,
+gboolean               gda_server_provider_supports_feature (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     GdaConnectionFeature feature);
 GdaDataModel          *gda_server_provider_get_schema (GdaServerProvider *provider,

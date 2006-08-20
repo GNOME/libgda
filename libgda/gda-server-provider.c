@@ -27,6 +27,7 @@
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-server-provider-private.h>
 #include <libgda/gda-data-handler.h>
+#include <libgda/gda-parameter-list.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
@@ -70,7 +71,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->get_version = NULL;
 	klass->get_server_version = NULL;
 	klass->get_info = NULL;
-	klass->supports = NULL;
+	klass->supports_feature = NULL;
 	klass->get_schema = NULL;
 
 	klass->get_data_handler = NULL;
@@ -437,13 +438,18 @@ static OpReq *op_req_table [GDA_SERVER_OPERATION_NB] = {
  * @error: a place to store an error, or %NULL
  *
  * Creates a new #GdaServerOperation object which can be modified in order to perform the @type type of
- * action. The @options 
+ * action. The @options can contain:
+ * <itemizedlist>
+ *  <listitem>parameters which ID is a path in the resulting GdaServerOperation object, to initialize some value</listitem>
+ *  <listitem>parameters which may change the contents of the GdaServerOperation, see <link linkend="gda-server-op-information">this section</link> for more information</listitem>
+ * </itemizedlist>
  *
  * Returns: a new #GdaServerOperation object, or %NULL in the provider does not support the @type type
  * of operation or if an error occurred
  */
 GdaServerOperation *
-gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, GdaServerOperationType type, 
+gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperationType type, 
 				      GdaParameterList *options, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
@@ -472,6 +478,31 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 							   pinfo->provider_name, opreq->path);
 				opreq += 1;
 			}
+
+			if (options) {
+				/* pre-init parameters depending on the @options argument */
+				GSList *list;
+				xmlNodePtr top, node;
+
+				top =  xmlNewNode (NULL, BAD_CAST "serv_op_data");
+				for (list = options->parameters; list; list = list->next) {
+					const gchar *id;
+					gchar *str = NULL;
+					const GValue *value;
+
+					id = gda_object_get_id (GDA_OBJECT (list->data));
+					value = gda_parameter_get_value (GDA_PARAMETER (list->data));
+					if (value)
+						str = gda_value_stringify (value);
+					node = xmlNewChild (top, NULL, BAD_CAST "op_data", BAD_CAST str);
+					g_free (str);
+					xmlSetProp (node, BAD_CAST "path", BAD_CAST id);
+				}
+
+				if (! gda_server_operation_load_data_from_xml (op, top, error))
+					g_warning ("Incorrect options");
+				xmlFreeNode (top);
+			}
 		}
 		return op;
 	}
@@ -489,7 +520,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
  * Creates an SQL statement (possibly using some specific extensions of the DBMS) corresponding to the
  * @op operation.
  *
- * Returns: a new string, or %NULL if an error occurred.
+ * Returns: a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
  */
 gchar *
 gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -671,7 +702,7 @@ gda_server_provider_rollback_transaction (GdaServerProvider *provider,
 }
 
 /**
- * gda_server_provider_supports
+ * gda_server_provider_supports_feature
  * @provider:
  * @cnc:
  * @feature:
@@ -679,27 +710,30 @@ gda_server_provider_rollback_transaction (GdaServerProvider *provider,
  * Returns:
  */
 gboolean
-gda_server_provider_supports (GdaServerProvider *provider,
+gda_server_provider_supports_feature (GdaServerProvider *provider,
 			      GdaConnection *cnc,
 			      GdaConnectionFeature feature)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	if (cnc)
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (CLASS (provider)->supports != NULL, FALSE);
+	g_return_val_if_fail (CLASS (provider)->supports_feature != NULL, FALSE);
 
-	return CLASS (provider)->supports (provider, cnc, feature);
+	return CLASS (provider)->supports_feature (provider, cnc, feature);
 }
 
 /**
  * gda_server_provider_get_schema
- * @provider:
- * @cnc:
- * @schema:
- * @params:
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object, or %NULL
+ * @schema: the requested kind of information
+ * @params: optional parameters
  *
- * Returns:
- * 
+ * Get a #GdaDataModel containing the requested information. See <link linkend="libgda-provider-get-schema">this section</link> for more 
+ * information on the columns of the returned #GdaDataModel depending on requested @schema, and for the possible
+ * parameters of @params.
+ *
+ * Returns: a new #GdaDataModel, or %NULL if an error occurred.
  */
 GdaDataModel *
 gda_server_provider_get_schema (GdaServerProvider *provider,

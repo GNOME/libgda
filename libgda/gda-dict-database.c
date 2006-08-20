@@ -52,22 +52,22 @@ static gchar      *gda_dict_database_get_xml_id (GdaXmlStorage *iface);
 static xmlNodePtr  gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError **error);
 static gboolean    gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error);
 
-static void gda_dict_database_add_table (GdaDictDatabase *mgdb, GdaDictTable *table, gint pos);
-static void gda_dict_database_add_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, gint pos);
+static void gda_dict_database_add_table (GdaDictDatabase *db, GdaDictTable *table, gint pos);
+static void gda_dict_database_add_sequence (GdaDictDatabase *db, GdaDictSequence *seq, gint pos);
 
-static void destroyed_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb);
-static void destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb);
-static void destroyed_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb);
+static void destroyed_table_cb (GdaDictTable *table, GdaDictDatabase *db);
+static void destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *db);
+static void destroyed_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *db);
 
-static void updated_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb);
-static void table_field_added_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb);
-static void table_field_updated_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb);
-static void table_field_removed_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb);
-static void updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb);
-static void updated_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb);
+static void updated_table_cb (GdaDictTable *table, GdaDictDatabase *db);
+static void table_field_added_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db);
+static void table_field_updated_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db);
+static void table_field_removed_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db);
+static void updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *db);
+static void updated_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *db);
 
 #ifdef GDA_DEBUG
-static void gda_dict_database_dump (GdaDictDatabase *mgdb, gint offset);
+static void gda_dict_database_dump (GdaDictDatabase *db, gint offset);
 #endif
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -518,20 +518,20 @@ static xmlNodePtr
 gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError **error)
 {
 	xmlNodePtr toptree, tree;
-	GdaDictDatabase *mgdb;
+	GdaDictDatabase *db;
 	GSList *list;
 
 	g_return_val_if_fail (iface && GDA_IS_DICT_DATABASE (iface), NULL);
 	g_return_val_if_fail (GDA_DICT_DATABASE (iface)->priv, NULL);
 
-	mgdb = GDA_DICT_DATABASE (iface);
+	db = GDA_DICT_DATABASE (iface);
 
 	/* main node */
         toptree = xmlNewNode (NULL, "gda_dict_database");
 	
 	/* Tables */
 	tree = xmlNewChild (toptree, NULL, "gda_dict_tables", NULL);
-	list = mgdb->priv->tables;
+	list = db->priv->tables;
 	while (list) {
 		xmlNodePtr table;
 		
@@ -548,9 +548,9 @@ gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError **error)
 	}
 
 	/* Sequences */
-	if (mgdb->priv->sequences) {
+	if (db->priv->sequences) {
 		tree = xmlNewChild (toptree, NULL, "gda_dict_sequences", NULL);
-		list = mgdb->priv->sequences;
+		list = db->priv->sequences;
 		while (list) {
 			xmlNodePtr table;
 			
@@ -569,7 +569,7 @@ gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	/* Constraints */
 	tree = xmlNewChild (toptree, NULL, "gda_dict_constraints", NULL);
-	list = mgdb->priv->constraints;
+	list = db->priv->constraints;
 	while (list) {
 		xmlNodePtr cstr;
 		
@@ -593,16 +593,16 @@ static gboolean gda_dict_database_load_from_xml_constraints (GdaXmlStorage *ifac
 static gboolean
 gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 {
-	GdaDictDatabase *mgdb;
+	GdaDictDatabase *db;
 	xmlNodePtr subnode;
 
 	g_return_val_if_fail (iface && GDA_IS_DICT_DATABASE (iface), FALSE);
 	g_return_val_if_fail (GDA_DICT_DATABASE (iface)->priv, FALSE);
 	g_return_val_if_fail (node, FALSE);
 
-	mgdb = GDA_DICT_DATABASE (iface);
+	db = GDA_DICT_DATABASE (iface);
 
-	if (mgdb->priv->tables || mgdb->priv->sequences || mgdb->priv->constraints) {
+	if (db->priv->tables || db->priv->sequences || db->priv->constraints) {
 		g_set_error (error,
 			     GDA_DICT_DATABASE_ERROR,
 			     GDA_DICT_DATABASE_XML_LOAD_ERROR,
@@ -616,14 +616,14 @@ gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 			     _("XML Tag is not <gda_dict_database>"));
 		return FALSE;
 	}
-	mgdb->priv->xml_loading = TRUE;
+	db->priv->xml_loading = TRUE;
 	subnode = node->children;
 	while (subnode) {
 		gboolean done = FALSE;
 
 		if (!strcmp (subnode->name, "gda_dict_tables")) {
 			if (!gda_dict_database_load_from_xml_tables (iface, subnode, error)) {
-				mgdb->priv->xml_loading = FALSE;
+				db->priv->xml_loading = FALSE;
 				return FALSE;
 			}
 
@@ -637,7 +637,7 @@ gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 
 		if (!done && !strcmp (subnode->name, "gda_dict_constraints")) {
 			if (!gda_dict_database_load_from_xml_constraints (iface, subnode, error)) {
-				mgdb->priv->xml_loading = FALSE;
+				db->priv->xml_loading = FALSE;
 				return FALSE;
 			}
 
@@ -646,7 +646,7 @@ gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 
 		subnode = subnode->next;
 	}
-	mgdb->priv->xml_loading = FALSE;
+	db->priv->xml_loading = FALSE;
 	
 	return TRUE;
 }
@@ -683,7 +683,7 @@ gda_dict_database_load_from_xml_tables (GdaXmlStorage *iface, xmlNodePtr node, G
 	return allok;
 }
 
-static void gda_dict_database_add_constraint_real (GdaDictDatabase *mgdb, GdaDictConstraint *cstr, gboolean force_user_constraint);
+static void gda_dict_database_add_constraint_real (GdaDictDatabase *db, GdaDictConstraint *cstr, gboolean force_user_constraint);
 static gboolean
 gda_dict_database_load_from_xml_constraints (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 {
@@ -719,34 +719,34 @@ gda_dict_database_load_from_xml_constraints (GdaXmlStorage *iface, xmlNodePtr no
  * pos = -1 to append the table to the list
  */
 static void
-gda_dict_database_add_table (GdaDictDatabase *mgdb, GdaDictTable *table, gint pos)
+gda_dict_database_add_table (GdaDictDatabase *db, GdaDictTable *table, gint pos)
 {
 	gchar *str;
 	g_return_if_fail (table);
-	g_return_if_fail (!g_slist_find (mgdb->priv->tables, table));
+	g_return_if_fail (!g_slist_find (db->priv->tables, table));
 
-	g_object_set (G_OBJECT (table), "database", mgdb, NULL);
-	mgdb->priv->tables = g_slist_insert (mgdb->priv->tables, table, pos);
+	g_object_set (G_OBJECT (table), "database", db, NULL);
+	db->priv->tables = g_slist_insert (db->priv->tables, table, pos);
 
 	g_object_ref (G_OBJECT (table));
-	gda_object_connect_destroy (table, G_CALLBACK (destroyed_table_cb), mgdb);
+	gda_object_connect_destroy (table, G_CALLBACK (destroyed_table_cb), db);
 
 	g_signal_connect (G_OBJECT (table), "changed",
-			  G_CALLBACK (updated_table_cb), mgdb);
+			  G_CALLBACK (updated_table_cb), db);
 	g_signal_connect (G_OBJECT (table), "field_added",
-			  G_CALLBACK (table_field_added_cb), mgdb);
+			  G_CALLBACK (table_field_added_cb), db);
 	g_signal_connect (G_OBJECT (table), "field_updated",
-			  G_CALLBACK (table_field_updated_cb), mgdb);
+			  G_CALLBACK (table_field_updated_cb), db);
 	g_signal_connect (G_OBJECT (table), "field_removed",
-			  G_CALLBACK (table_field_removed_cb), mgdb);
+			  G_CALLBACK (table_field_removed_cb), db);
 
 	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (table));
-	g_hash_table_insert (mgdb->priv->tables_hash, str, table);
+	g_hash_table_insert (db->priv->tables_hash, str, table);
 
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'TABLE_ADDED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[TABLE_ADDED], 0, table);
+	g_signal_emit (G_OBJECT (db), gda_dict_database_signals[TABLE_ADDED], 0, table);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'TABLE_ADDED' from %s\n", __FUNCTION__);
 #endif
@@ -756,24 +756,24 @@ gda_dict_database_add_table (GdaDictDatabase *mgdb, GdaDictTable *table, gint po
  * pos = -1 to append the table to the list
  */
 static void
-gda_dict_database_add_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, gint pos)
+gda_dict_database_add_sequence (GdaDictDatabase *db, GdaDictSequence *seq, gint pos)
 {
 	g_return_if_fail (seq);
-	g_return_if_fail (!g_slist_find (mgdb->priv->sequences, seq));
+	g_return_if_fail (!g_slist_find (db->priv->sequences, seq));
 
-	g_object_set (G_OBJECT (seq), "database", mgdb, NULL);
-	mgdb->priv->sequences = g_slist_insert (mgdb->priv->sequences, seq, pos);
+	g_object_set (G_OBJECT (seq), "database", db, NULL);
+	db->priv->sequences = g_slist_insert (db->priv->sequences, seq, pos);
 
 	g_object_ref (G_OBJECT (seq));
-	gda_object_connect_destroy (seq, G_CALLBACK (destroyed_sequence_cb), mgdb);
+	gda_object_connect_destroy (seq, G_CALLBACK (destroyed_sequence_cb), db);
 	g_signal_connect (G_OBJECT (seq), "changed",
-			  G_CALLBACK (updated_sequence_cb), mgdb);
+			  G_CALLBACK (updated_sequence_cb), db);
 
 
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'SEQUENCE_ADDED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[SEQUENCE_ADDED], 0, seq);
+	g_signal_emit (G_OBJECT (db), gda_dict_database_signals[SEQUENCE_ADDED], 0, seq);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'SEQUENCE_ADDED' from %s\n", __FUNCTION__);
 #endif
@@ -781,33 +781,33 @@ gda_dict_database_add_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, gin
 
 /**
  * gda_dict_database_add_constraint
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @cstr: a #GdaDictConstraint
  *
  * Add the @cstr constraint to the database. The @cstr constraint is a user-defined constraint
  * (which is not part of the database structure itself).
  */
 void
-gda_dict_database_add_constraint (GdaDictDatabase *mgdb, GdaDictConstraint *cstr)
+gda_dict_database_add_constraint (GdaDictDatabase *db, GdaDictConstraint *cstr)
 {
-	gda_dict_database_add_constraint_real (mgdb, cstr, TRUE);
+	gda_dict_database_add_constraint_real (db, cstr, TRUE);
 }
 
 static void
-gda_dict_database_add_constraint_real (GdaDictDatabase *mgdb, GdaDictConstraint *cstr, gboolean force_user_constraint)
+gda_dict_database_add_constraint_real (GdaDictDatabase *db, GdaDictConstraint *cstr, gboolean force_user_constraint)
 {
 	GdaDictConstraint *ptr = NULL;
 
-	g_return_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb));
-	g_return_if_fail (mgdb->priv);
+	g_return_if_fail (db && GDA_IS_DICT_DATABASE (db));
+	g_return_if_fail (db->priv);
 	g_return_if_fail (cstr);
 
 	/* Try to activate the constraints here */
 	gda_referer_activate (GDA_REFERER (cstr));
 
 	/* try to find if a similar constraint is there, if we are not loading from an XML file */
-	if (!mgdb->priv->xml_loading) {
-		GSList *list = mgdb->priv->constraints;
+	if (!db->priv->xml_loading) {
+		GSList *list = db->priv->constraints;
 		while (list && !ptr) {
 			if (gda_dict_constraint_equal (cstr, GDA_DICT_CONSTRAINT (list->data)))
 				ptr = GDA_DICT_CONSTRAINT (list->data);
@@ -830,22 +830,22 @@ gda_dict_database_add_constraint_real (GdaDictDatabase *mgdb, GdaDictConstraint 
 			g_object_set (G_OBJECT (cstr), "user_constraint", TRUE, NULL);
 
 		/* add @cstr to the list of constraints */
-		mgdb->priv->constraints = g_slist_append (mgdb->priv->constraints, cstr);
+		db->priv->constraints = g_slist_append (db->priv->constraints, cstr);
 		g_object_ref (G_OBJECT (cstr));
-		gda_object_connect_destroy (cstr, G_CALLBACK (destroyed_constraint_cb), mgdb);
+		gda_object_connect_destroy (cstr, G_CALLBACK (destroyed_constraint_cb), db);
 		g_signal_connect (G_OBJECT (cstr), "changed",
-				  G_CALLBACK (updated_constraint_cb), mgdb);
+				  G_CALLBACK (updated_constraint_cb), db);
 
 		/* add the constraint to the 'constraints_hash' */
 		table = gda_dict_constraint_get_table (cstr);
-		list = g_hash_table_lookup (mgdb->priv->constraints_hash, table);
+		list = g_hash_table_lookup (db->priv->constraints_hash, table);
 		list = g_slist_append (list, cstr);
-		g_hash_table_insert (mgdb->priv->constraints_hash, table, list);
+		g_hash_table_insert (db->priv->constraints_hash, table, list);
 
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'CONSTRAINT_ADDED' from %s\n", __FUNCTION__);
 #endif
-		g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[CONSTRAINT_ADDED], 0, cstr);
+		g_signal_emit (G_OBJECT (db), gda_dict_database_signals[CONSTRAINT_ADDED], 0, cstr);
 #ifdef GDA_DEBUG_signal
 		g_print ("<< 'CONSTRAINT_ADDED' from %s\n", __FUNCTION__);
 #endif
@@ -854,13 +854,13 @@ gda_dict_database_add_constraint_real (GdaDictDatabase *mgdb, GdaDictConstraint 
 
 #ifdef GDA_DEBUG
 static void 
-gda_dict_database_dump (GdaDictDatabase *mgdb, gint offset)
+gda_dict_database_dump (GdaDictDatabase *db, gint offset)
 {
 	gchar *str;
 	guint i;
 	GSList *list;
 
-	g_return_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb));
+	g_return_if_fail (db && GDA_IS_DICT_DATABASE (db));
 	
 	/* string for the offset */
 	str = g_new0 (gchar, offset+1);
@@ -869,13 +869,13 @@ gda_dict_database_dump (GdaDictDatabase *mgdb, gint offset)
         str[offset] = 0;
 	
 	/* dump */
-	if (mgdb->priv) 
-		g_print ("%s" D_COL_H1 "GdaDictDatabase %p\n" D_COL_NOR, str, mgdb);
+	if (db->priv) 
+		g_print ("%s" D_COL_H1 "GdaDictDatabase %p\n" D_COL_NOR, str, db);
 	else
-		g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, mgdb);
+		g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, db);
 
 	/* tables */
-	list = mgdb->priv->tables;
+	list = db->priv->tables;
 	if (list) {
 		g_print ("%sTables:\n", str);
 		while (list) {
@@ -887,7 +887,7 @@ gda_dict_database_dump (GdaDictDatabase *mgdb, gint offset)
 		g_print ("%sNo Table defined\n", str);
 
 	/* sequences */
-	list = mgdb->priv->sequences;
+	list = db->priv->sequences;
 	if (list) {
 		g_print ("%sSequences:\n", str);
 		while (list) {
@@ -900,7 +900,7 @@ gda_dict_database_dump (GdaDictDatabase *mgdb, gint offset)
 
 
 	/* constraints */
-	list = mgdb->priv->constraints;
+	list = db->priv->constraints;
 	if (list) {
 		g_print ("%sConstraints:\n", str);
 		while (list) {
@@ -920,54 +920,56 @@ gda_dict_database_dump (GdaDictDatabase *mgdb, gint offset)
 
 /**
  * gda_dict_database_get_dict
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  *
  * Fetch the GdaDict object to which the GdaDictDatabase belongs.
  *
  * Returns: the GdaDict object
  */
 GdaDict *
-gda_dict_database_get_dict (GdaDictDatabase *mgdb)
+gda_dict_database_get_dict (GdaDictDatabase *db)
 {
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
-	g_return_val_if_fail (mgdb->priv, NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
+	g_return_val_if_fail (db->priv, NULL);
 
-	return gda_object_get_dict (GDA_OBJECT (mgdb));
+	return gda_object_get_dict (GDA_OBJECT (db));
 }
 
 
 
-static gboolean database_tables_update_list (GdaDictDatabase * mgdb, GError **error);
-static gboolean database_sequences_update_list (GdaDictDatabase * mgdb, GError **error);
-static gboolean database_constraints_update_list (GdaDictDatabase * mgdb, GError **error);
+static gboolean database_tables_update_list (GdaDictDatabase * db, const gchar *table_name, GError **error);
+static gboolean database_sequences_update_list (GdaDictDatabase * db, GError **error);
+static gboolean database_constraints_update_list (GdaDictDatabase * db, GError **error);
 /**
  * gda_dict_database_update_dbms_data
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
+ * @flags: flags indicating what needs to be updated (see #GdaDictUpdateKind)
+ * @obj_name: the name of an object to update, or %NULL
  * @error: location to store error, or %NULL
  *
- * Synchronises the Database representation with the database structure which is stored in
+ * Synchronises the database representation with the database structure which is stored in
  * the DBMS. For this operation to succeed, the connection to the DBMS server MUST be opened
  * (using the corresponding #GdaConnection object).
  *
  * Returns: TRUE if no error
  */
 gboolean
-gda_dict_database_update_dbms_data (GdaDictDatabase *mgdb, GError **error)
+gda_dict_database_update_dbms_data (GdaDictDatabase *db, guint flags, const gchar *obj_name, GError **error)
 {
 	gboolean retval = TRUE;
 	GdaConnection *cnc;
 	GdaDict *dict;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), FALSE);
-	g_return_val_if_fail (mgdb->priv, FALSE);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), FALSE);
+	g_return_val_if_fail (db->priv, FALSE);
 	
-	if (mgdb->priv->update_in_progress) {
+	if (db->priv->update_in_progress) {
 		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_META_DATA_UPDATE,
 			     _("Update already started!"));
 		return FALSE;
 	}
 
-	dict = gda_object_get_dict (GDA_OBJECT (mgdb));
+	dict = gda_object_get_dict (GDA_OBJECT (db));
 	cnc = gda_dict_get_connection (dict);
 	if (!cnc) {
 		g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_TABLE_META_DATA_UPDATE,
@@ -980,33 +982,36 @@ gda_dict_database_update_dbms_data (GdaDictDatabase *mgdb, GError **error)
 		return FALSE;
 	}
 
-	mgdb->priv->update_in_progress = TRUE;
-	mgdb->priv->stop_update = FALSE;
+	db->priv->update_in_progress = TRUE;
+	db->priv->stop_update = FALSE;
 
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'DATA_UPDATE_STARTED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[DATA_UPDATE_STARTED], 0);
+	g_signal_emit (G_OBJECT (db), gda_dict_database_signals[DATA_UPDATE_STARTED], 0);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'DATA_UPDATE_STARTED' from %s\n", __FUNCTION__);
 #endif
 
-	retval = database_tables_update_list (mgdb, error);
-	if (retval && !mgdb->priv->stop_update) 
-		retval = database_sequences_update_list (mgdb, error);
-	if (retval && !mgdb->priv->stop_update) 
-		retval = database_constraints_update_list (mgdb, error);
+	if (flags & GDA_DICT_UPDATE_TABLES)
+		retval = database_tables_update_list (db, obj_name, error);
+
+	if (retval && !db->priv->stop_update && (flags & GDA_DICT_UPDATE_SEQUENCES)) 
+		retval = database_sequences_update_list (db, error);
+
+	if (retval && !db->priv->stop_update && (flags & GDA_DICT_UPDATE_CONSTRAINTS)) 
+		retval = database_constraints_update_list (db, error);
 
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'DATA_UPDATE_FINISHED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit (G_OBJECT (mgdb), gda_dict_database_signals[DATA_UPDATE_FINISHED], 0);
+	g_signal_emit (G_OBJECT (db), gda_dict_database_signals[DATA_UPDATE_FINISHED], 0);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'DATA_UPDATE_FINISHED' from %s\n", __FUNCTION__);
 #endif
 
-	mgdb->priv->update_in_progress = FALSE;
-	if (mgdb->priv->stop_update) {
+	db->priv->update_in_progress = FALSE;
+	if (db->priv->stop_update) {
 		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_META_DATA_UPDATE_USER_STOPPED,
 			     _("Update stopped!"));
 		return FALSE;
@@ -1018,22 +1023,22 @@ gda_dict_database_update_dbms_data (GdaDictDatabase *mgdb, GError **error)
 
 /**
  * gda_dict_database_stop_update_dbms_data
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  *
  * When the database updates its internal lists of DBMS objects, a call to this function will 
  * stop that update process. It has no effect when the database is not updating its DBMS data.
  */
 void
-gda_dict_database_stop_update_dbms_data (GdaDictDatabase *mgdb)
+gda_dict_database_stop_update_dbms_data (GdaDictDatabase *db)
 {
-	g_return_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb));
-	g_return_if_fail (mgdb->priv);
+	g_return_if_fail (db && GDA_IS_DICT_DATABASE (db));
+	g_return_if_fail (db->priv);
 
-	mgdb->priv->stop_update = TRUE;
+	db->priv->stop_update = TRUE;
 }
 
 static gboolean
-database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
+database_tables_update_list (GdaDictDatabase *db, const gchar *table_name, GError **error)
 {
 	GSList *list;
 	GdaDataModel *rs;
@@ -1043,8 +1048,9 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 	GdaConnection *cnc;
 	GdaDictTable *table;
 	GSList *constraints;
-
-	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (mgdb)));
+	GdaParameterList *options = NULL;
+	
+	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (db)));
 	if (!cnc) {
 		g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_TABLE_META_DATA_UPDATE,
                              _("No connection associated to dictionary!"));
@@ -1056,7 +1062,14 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
                 return FALSE;
         }
 
-	rs = gda_connection_get_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, NULL, NULL);
+	if (table_name) {
+		options = gda_parameter_list_new (NULL);
+		gda_parameter_list_add_param_from_string (options, "name", G_TYPE_STRING, table_name);
+	}
+	rs = gda_connection_get_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, options, NULL);
+	if (options)
+		g_object_unref (options);
+
 	if (!rs) {
 		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_TABLES_ERROR,
 			     _("Can't get list of tables"));
@@ -1076,25 +1089,25 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 
 	total = gda_data_model_get_n_rows (rs);
 	now = 0;		
-	while ((now < total) && !mgdb->priv->stop_update) {
+	while ((now < total) && !db->priv->stop_update) {
 		const GValue *value;
 		gboolean newtable = FALSE;
 		gint i = -1;
 
 		value = gda_data_model_get_value_at (rs, 0, now);
 		str = gda_value_stringify ((GValue *) value);
-		table = gda_dict_database_get_table_by_name (mgdb, str);
+		table = gda_dict_database_get_table_by_name (db, str);
 		if (!table) {
 			gboolean found = FALSE;
 
 			i = 0;
 			/* table name */
-			table = GDA_DICT_TABLE (gda_dict_table_new (gda_object_get_dict (GDA_OBJECT (mgdb))));
+			table = GDA_DICT_TABLE (gda_dict_table_new (gda_object_get_dict (GDA_OBJECT (db))));
 			gda_object_set_name (GDA_OBJECT (table), str);
 			newtable = TRUE;
 			
 			/* finding the right position for the table */
-			list = mgdb->priv->tables;
+			list = db->priv->tables;
 			while (list && !found) {
 				if (strcmp (str, gda_object_get_name (GDA_OBJECT (list->data))) < 0)
 					found = TRUE;
@@ -1130,7 +1143,7 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 			gda_object_set_owner (GDA_OBJECT (table), NULL);
 				
 		/* fields */
-		g_object_set (G_OBJECT (table), "database", mgdb, NULL);
+		g_object_set (G_OBJECT (table), "database", db, NULL);
 		if (!gda_dict_table_update_dbms_data (table, error)) {
 			g_object_unref (G_OBJECT (rs));
 			return FALSE;
@@ -1138,7 +1151,7 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 
 		/* signal if the DT is new */
 		if (newtable) {
-			gda_dict_database_add_table (mgdb, table, i);
+			gda_dict_database_add_table (db, table, i);
 			g_object_unref (G_OBJECT (table));
 		}
 
@@ -1148,7 +1161,7 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 			GSList *list = constraints;
 
 			while (list) {
-				gda_dict_database_add_constraint_real (mgdb, GDA_DICT_CONSTRAINT (list->data), FALSE);
+				gda_dict_database_add_constraint_real (db, GDA_DICT_CONSTRAINT (list->data), FALSE);
 				g_object_set (G_OBJECT (list->data), "user_constraint", FALSE, NULL);
 				g_object_unref (G_OBJECT (list->data));
 				list = g_slist_next (list);
@@ -1157,7 +1170,7 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 			g_object_set_data (G_OBJECT (table), "pending_constraints", NULL);
 		}
 
-		g_signal_emit_by_name (G_OBJECT (mgdb), "update_progress", "TABLES",
+		g_signal_emit_by_name (G_OBJECT (db), "update_progress", "TABLES",
 				       now, total);
 		now++;
 	}
@@ -1165,25 +1178,25 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 	g_object_unref (G_OBJECT (rs));
 	
 	/* remove the tables not existing anymore */
-	list = mgdb->priv->tables;
-	while (list) {
+	for (list = db->priv->tables; list; list = list->next) {
+		if (table_name && strcmp (gda_object_get_name (GDA_OBJECT (list->data)), table_name))
+			continue;
+
 		if (!g_slist_find (updated_tables, list->data)) {
 			gda_object_destroy (GDA_OBJECT (list->data));
-			list = mgdb->priv->tables;
+			list = db->priv->tables;
 		}
-		else
-			list = g_slist_next (list);
 	}
 	g_slist_free (updated_tables);
 	
-	g_signal_emit_by_name (G_OBJECT (mgdb), "update_progress", NULL, 0, 0);
+	g_signal_emit_by_name (G_OBJECT (db), "update_progress", NULL, 0, 0);
 
 	/* activate all the constraints here */
-	list = mgdb->priv->constraints;
+	list = db->priv->constraints;
 	while (list) {
 		if (!gda_referer_activate (GDA_REFERER (list->data))) {
 			gda_object_destroy (GDA_OBJECT (list->data));
-			list = mgdb->priv->constraints;
+			list = db->priv->constraints;
 		}
 		else
 			list = g_slist_next (list);
@@ -1194,32 +1207,32 @@ database_tables_update_list (GdaDictDatabase *mgdb, GError **error)
 
 
 static void
-destroyed_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb)
+destroyed_table_cb (GdaDictTable *table, GdaDictDatabase *db)
 {
 	gchar *str;
-	g_return_if_fail (g_slist_find (mgdb->priv->tables, table));
+	g_return_if_fail (g_slist_find (db->priv->tables, table));
 
-	mgdb->priv->tables = g_slist_remove (mgdb->priv->tables, table);
+	db->priv->tables = g_slist_remove (db->priv->tables, table);
 
 	g_signal_handlers_disconnect_by_func (G_OBJECT (table), 
-					      G_CALLBACK (destroyed_table_cb), mgdb);
+					      G_CALLBACK (destroyed_table_cb), db);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (table), 
-					      G_CALLBACK (updated_table_cb), mgdb);
+					      G_CALLBACK (updated_table_cb), db);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (table),
-					      G_CALLBACK (table_field_added_cb), mgdb);
+					      G_CALLBACK (table_field_added_cb), db);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (table),
-					      G_CALLBACK (table_field_updated_cb), mgdb);
+					      G_CALLBACK (table_field_updated_cb), db);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (table),
-					      G_CALLBACK (table_field_removed_cb), mgdb);
+					      G_CALLBACK (table_field_removed_cb), db);
 
 	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (table));
-	g_hash_table_remove (mgdb->priv->tables_hash, str);
+	g_hash_table_remove (db->priv->tables_hash, str);
 	g_free (str);
 
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'TABLE_REMOVED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "table_removed", table);
+	g_signal_emit_by_name (G_OBJECT (db), "table_removed", table);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'TABLE_REMOVED' from %s\n", __FUNCTION__);
 #endif
@@ -1228,48 +1241,48 @@ destroyed_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb)
 }
 
 static void
-updated_table_cb (GdaDictTable *table, GdaDictDatabase *mgdb)
+updated_table_cb (GdaDictTable *table, GdaDictDatabase *db)
 {
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'TABLE_UPDATED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "table_updated", table);
+	g_signal_emit_by_name (G_OBJECT (db), "table_updated", table);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'TABLE_UPDATED' from %s\n", __FUNCTION__);
 #endif	
 }
 
 static void
-table_field_added_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb)
+table_field_added_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db)
 {
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELD_ADDED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "field_added", field);
+	g_signal_emit_by_name (G_OBJECT (db), "field_added", field);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELD_ADDED' from %s\n", __FUNCTION__);
 #endif	
 }
 
 static void
-table_field_updated_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb)
+table_field_updated_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db)
 {
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "field_updated", field);
+	g_signal_emit_by_name (G_OBJECT (db), "field_updated", field);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif	
 }
 
 static void
-table_field_removed_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *mgdb)
+table_field_removed_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db)
 {
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'FIELD_REMOVED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "field_removed", field);
+	g_signal_emit_by_name (G_OBJECT (db), "field_removed", field);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'FIELD_REMOVED' from %s\n", __FUNCTION__);
 #endif	
@@ -1278,7 +1291,7 @@ table_field_removed_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabas
 
 
 static gboolean
-database_sequences_update_list (GdaDictDatabase *mgdb, GError **error)
+database_sequences_update_list (GdaDictDatabase *db, GError **error)
 {
 	TO_IMPLEMENT;
 	
@@ -1286,20 +1299,20 @@ database_sequences_update_list (GdaDictDatabase *mgdb, GError **error)
 }
 
 static void
-destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb)
+destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *db)
 {
-	g_return_if_fail (g_slist_find (mgdb->priv->sequences, seq));
-	mgdb->priv->sequences = g_slist_remove (mgdb->priv->sequences, seq);
+	g_return_if_fail (g_slist_find (db->priv->sequences, seq));
+	db->priv->sequences = g_slist_remove (db->priv->sequences, seq);
 
 	g_signal_handlers_disconnect_by_func (G_OBJECT (seq), 
-					      G_CALLBACK (destroyed_sequence_cb), mgdb);
+					      G_CALLBACK (destroyed_sequence_cb), db);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (seq), 
-					      G_CALLBACK (updated_sequence_cb), mgdb);
+					      G_CALLBACK (updated_sequence_cb), db);
 
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'SEQUENCE_REMOVED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "sequence_removed", seq);
+	g_signal_emit_by_name (G_OBJECT (db), "sequence_removed", seq);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'SEQUENCE_REMOVED' from %s\n", __FUNCTION__);
 #endif
@@ -1309,12 +1322,12 @@ destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb)
 
 
 static void
-updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb)
+updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *db)
 {
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'SEQUENCE_UPDATED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "sequence_updated", seq);
+	g_signal_emit_by_name (G_OBJECT (db), "sequence_updated", seq);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'SEQUENCE_UPDATED' from %s\n", __FUNCTION__);
 #endif	
@@ -1322,7 +1335,7 @@ updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *mgdb)
 
 
 static gboolean
-database_constraints_update_list (GdaDictDatabase *mgdb, GError **error)
+database_constraints_update_list (GdaDictDatabase *db, GError **error)
 {
 	TO_IMPLEMENT;
 	/* To be implemented when Libgda has a dedicated schema to fetch constraints */
@@ -1332,33 +1345,33 @@ database_constraints_update_list (GdaDictDatabase *mgdb, GError **error)
 
 
 static void
-destroyed_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb)
+destroyed_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *db)
 {
-	g_return_if_fail (g_slist_find (mgdb->priv->constraints, cons));
-	mgdb->priv->constraints = g_slist_remove (mgdb->priv->constraints, cons);
+	g_return_if_fail (g_slist_find (db->priv->constraints, cons));
+	db->priv->constraints = g_slist_remove (db->priv->constraints, cons);
 
 	g_signal_handlers_disconnect_by_func (G_OBJECT (cons), 
-					      G_CALLBACK (destroyed_constraint_cb), mgdb);
+					      G_CALLBACK (destroyed_constraint_cb), db);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (cons), 
-					      G_CALLBACK (updated_constraint_cb), mgdb);
+					      G_CALLBACK (updated_constraint_cb), db);
 	
-	if (mgdb->priv->constraints_hash) {
+	if (db->priv->constraints_hash) {
 		GdaDictTable *table;
 		GSList *list;
 
 		table = gda_dict_constraint_get_table (cons);
-		list = g_hash_table_lookup (mgdb->priv->constraints_hash, table);
+		list = g_hash_table_lookup (db->priv->constraints_hash, table);
 		list = g_slist_remove (list, cons);
 		if (list)
-			g_hash_table_insert (mgdb->priv->constraints_hash, table, list);
+			g_hash_table_insert (db->priv->constraints_hash, table, list);
 		else
-			g_hash_table_remove (mgdb->priv->constraints_hash, table);
+			g_hash_table_remove (db->priv->constraints_hash, table);
 	}
 
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'CONSTRAINT_REMOVED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "constraint_removed", cons);
+	g_signal_emit_by_name (G_OBJECT (db), "constraint_removed", cons);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'CONSTRAINT_REMOVED' from %s\n", __FUNCTION__);
 #endif
@@ -1366,12 +1379,12 @@ destroyed_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb)
 }
 
 static void
-updated_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb)
+updated_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *db)
 {
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'CONSTRAINT_UPDATED' from %s\n", __FUNCTION__);
 #endif
-	g_signal_emit_by_name (G_OBJECT (mgdb), "constraint_updated", cons);
+	g_signal_emit_by_name (G_OBJECT (db), "constraint_updated", cons);
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'CONSTRAINT_UPDATED' from %s\n", __FUNCTION__);
 #endif	
@@ -1380,24 +1393,24 @@ updated_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *mgdb)
 
 /**
  * gda_dict_database_get_tables
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  *
- * Get a list of all the tables within @mgdb
+ * Get a list of all the tables within @db
  *
  * Returns: a new list of all the #GdaDictTable objects
  */
 GSList *
-gda_dict_database_get_tables(GdaDictDatabase *mgdb)
+gda_dict_database_get_tables(GdaDictDatabase *db)
 {
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
-	g_return_val_if_fail (mgdb->priv, NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
+	g_return_val_if_fail (db->priv, NULL);
 
-	return g_slist_copy (mgdb->priv->tables);
+	return g_slist_copy (db->priv->tables);
 }
 
 /**
  * gda_dict_database_get_table_by_name
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @name: the name of the requested table
  *
  * Get a reference to a GdaDictTable using its name.
@@ -1405,25 +1418,25 @@ gda_dict_database_get_tables(GdaDictDatabase *mgdb)
  * Returns: The GdaDictTable pointer or NULL if the requested table does not exist.
  */
 GdaDictTable *
-gda_dict_database_get_table_by_name (GdaDictDatabase *mgdb, const gchar *name)
+gda_dict_database_get_table_by_name (GdaDictDatabase *db, const gchar *name)
 {
 	GdaDictTable *table = NULL;
 	GSList *tables;
 	gchar *cmpstr = NULL;
 	gchar *cmpstr2;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
-	g_return_val_if_fail (mgdb->priv, NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
+	g_return_val_if_fail (db->priv, NULL);
 	g_return_val_if_fail (name && *name, NULL);
 
-	if (mgdb->priv->lc_names)
+	if (db->priv->lc_names)
 		cmpstr = g_utf8_strdown (name, -1);
 	else
 		cmpstr = (gchar *) name;
 
-	tables = mgdb->priv->tables;
+	tables = db->priv->tables;
 	while (!table && tables) {
-		if (mgdb->priv->lc_names) {
+		if (db->priv->lc_names) {
 			cmpstr2 = g_utf8_strdown (gda_object_get_name (GDA_OBJECT (tables->data)), -1);
 			if (!strcmp (cmpstr2, cmpstr))
 				table = GDA_DICT_TABLE (tables->data);
@@ -1436,7 +1449,7 @@ gda_dict_database_get_table_by_name (GdaDictDatabase *mgdb, const gchar *name)
 		tables = g_slist_next (tables);
 	}
 
-	if (mgdb->priv->lc_names)
+	if (db->priv->lc_names)
 		g_free (cmpstr);
 	
 	return table;
@@ -1444,7 +1457,7 @@ gda_dict_database_get_table_by_name (GdaDictDatabase *mgdb, const gchar *name)
 
 /**
  * gda_dict_database_get_table_by_xml_id
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @xml_id: the XML id of the requested table
  *
  * Get a reference to a GdaDictTable using its XML id.
@@ -1452,17 +1465,17 @@ gda_dict_database_get_table_by_name (GdaDictDatabase *mgdb, const gchar *name)
  * Returns: The GdaDictTable pointer or NULL if the requested table does not exist.
  */
 GdaDictTable *
-gda_dict_database_get_table_by_xml_id (GdaDictDatabase *mgdb, const gchar *xml_id)
+gda_dict_database_get_table_by_xml_id (GdaDictDatabase *db, const gchar *xml_id)
 {
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
 	g_return_val_if_fail (xml_id && *xml_id, NULL);
 
-	return g_hash_table_lookup (mgdb->priv->tables_hash, xml_id);
+	return g_hash_table_lookup (db->priv->tables_hash, xml_id);
 }
 
 /**
  * gda_dict_database_get_field_by_name
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @fullname: the name of the requested table field
  *
  * Get a reference to a GdaDictField specifying the full name (table_name.field_name)
@@ -1471,18 +1484,18 @@ gda_dict_database_get_table_by_xml_id (GdaDictDatabase *mgdb, const gchar *xml_i
  * Returns: The GdaDictField pointer or NULL if the requested field does not exist.
  */
 GdaDictField *
-gda_dict_database_get_field_by_name (GdaDictDatabase *mgdb, const gchar *fullname)
+gda_dict_database_get_field_by_name (GdaDictDatabase *db, const gchar *fullname)
 {
 	gchar *str, *tok, *ptr;
 	GdaDictTable *ref_table;
 	GdaDictField *ref_field = NULL;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
 	g_return_val_if_fail (fullname && *fullname, NULL);
 
 	str = g_strdup (fullname);
 	ptr = strtok_r (str, ".", &tok);
-	ref_table = gda_dict_database_get_table_by_name (mgdb, ptr);
+	ref_table = gda_dict_database_get_table_by_name (db, ptr);
 	if (ref_table) {
 		gpointer data;
 		ptr = strtok_r (NULL, ".", &tok);
@@ -1500,7 +1513,7 @@ gda_dict_database_get_field_by_name (GdaDictDatabase *mgdb, const gchar *fullnam
 
 /**
  * gda_dict_database_get_field_by_xml_id
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @xml_id: the XML id of the requested table field
  *
  * Get a reference to a GdaDictField specifying its XML id
@@ -1508,15 +1521,15 @@ gda_dict_database_get_field_by_name (GdaDictDatabase *mgdb, const gchar *fullnam
  * Returns: The GdaDictField pointer or NULL if the requested field does not exist.
  */
 GdaDictField *
-gda_dict_database_get_field_by_xml_id (GdaDictDatabase *mgdb, const gchar *xml_id)
+gda_dict_database_get_field_by_xml_id (GdaDictDatabase *db, const gchar *xml_id)
 {
 	GdaDictField *field = NULL;
 	GSList *tables;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
 	g_return_val_if_fail (xml_id && *xml_id, NULL);
 
-	tables = mgdb->priv->tables;
+	tables = db->priv->tables;
 	while (tables && !field) {
 		gpointer data;
 		data = gda_entity_get_field_by_xml_id (GDA_ENTITY (tables->data), xml_id);
@@ -1530,7 +1543,7 @@ gda_dict_database_get_field_by_xml_id (GdaDictDatabase *mgdb, const gchar *xml_i
 
 /**
  * gda_dict_database_get_sequence_by_name
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @name: the name of the requested sequence
  *
  * Get a reference to a GdaDictSequence specifying its name
@@ -1538,11 +1551,11 @@ gda_dict_database_get_field_by_xml_id (GdaDictDatabase *mgdb, const gchar *xml_i
  * Returns: The GdaDictSequence pointer or NULL if the requested sequence does not exist.
  */
 GdaDictSequence *
-gda_dict_database_get_sequence_by_name (GdaDictDatabase *mgdb, const gchar *name)
+gda_dict_database_get_sequence_by_name (GdaDictDatabase *db, const gchar *name)
 {
 	GdaDictSequence *seq = NULL;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
 	g_return_val_if_fail (name && *name, NULL);
 
 	TO_IMPLEMENT;
@@ -1551,7 +1564,7 @@ gda_dict_database_get_sequence_by_name (GdaDictDatabase *mgdb, const gchar *name
 
 /**
  * gda_dict_database_get_sequence_by_xml_id
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @xml_id: the XML id of the requested sequence
  *
  * Get a reference to a GdaDictSequence specifying its XML id.
@@ -1559,11 +1572,11 @@ gda_dict_database_get_sequence_by_name (GdaDictDatabase *mgdb, const gchar *name
  * Returns: The GdaDictSequence pointer or NULL if the requested sequence does not exist.
  */
 GdaDictSequence *
-gda_dict_database_get_sequence_by_xml_id (GdaDictDatabase *mgdb, const gchar *xml_id)
+gda_dict_database_get_sequence_by_xml_id (GdaDictDatabase *db, const gchar *xml_id)
 {
 	GdaDictSequence *seq = NULL;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
 	g_return_val_if_fail (xml_id && *xml_id, NULL);
 
 	TO_IMPLEMENT;
@@ -1572,7 +1585,7 @@ gda_dict_database_get_sequence_by_xml_id (GdaDictDatabase *mgdb, const gchar *xm
 
 /** 
  * gda_dict_database_get_sequence_to_field
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @field: a #GdaDictField object
  *
  * Get a reference to a GdaDictSequence which is "linked" to the GdaDictField given as parameter.
@@ -1581,11 +1594,11 @@ gda_dict_database_get_sequence_by_xml_id (GdaDictDatabase *mgdb, const gchar *xm
  * Returns: The GdaDictSequence pointer or NULL if there is no sequence for this job.
  */
 GdaDictSequence *
-gda_dict_database_get_sequence_to_field  (GdaDictDatabase *mgdb, GdaDictField *field)
+gda_dict_database_get_sequence_to_field  (GdaDictDatabase *db, GdaDictField *field)
 {
 	GdaDictSequence *seq = NULL;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
 	g_return_val_if_fail (field && GDA_IS_ENTITY_FIELD (field), NULL);
 
 	TO_IMPLEMENT;
@@ -1595,7 +1608,7 @@ gda_dict_database_get_sequence_to_field  (GdaDictDatabase *mgdb, GdaDictField *f
 
 /**
  * gda_dict_database_link_sequence
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @seq:
  * @field:
  *
@@ -1604,9 +1617,9 @@ gda_dict_database_get_sequence_to_field  (GdaDictDatabase *mgdb, GdaDictField *f
  * primary key for example).
  */
 void
-gda_dict_database_link_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, GdaDictField *field)
+gda_dict_database_link_sequence (GdaDictDatabase *db, GdaDictSequence *seq, GdaDictField *field)
 {
-	g_return_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb));
+	g_return_if_fail (db && GDA_IS_DICT_DATABASE (db));
 	/*g_return_if_fail (seq && IS_GNOME_DB_SEQUENCE (seq));*/
 	g_return_if_fail (field && GDA_IS_ENTITY_FIELD (field));
 
@@ -1615,7 +1628,7 @@ gda_dict_database_link_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, Gd
 
 /**
  * gda_dict_database_unlink_sequence
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @seq:
  * @field:
  *
@@ -1624,9 +1637,9 @@ gda_dict_database_link_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, Gd
  * primary key for example). This is the opposite of the gda_dict_database_link_sequence() method.
  */
 void
-gda_dict_database_unlink_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, GdaDictField *field)
+gda_dict_database_unlink_sequence (GdaDictDatabase *db, GdaDictSequence *seq, GdaDictField *field)
 {
-	g_return_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb));
+	g_return_if_fail (db && GDA_IS_DICT_DATABASE (db));
 	/*g_return_if_fail (seq && IS_GNOME_DB_SEQUENCE (seq));*/
 	g_return_if_fail (field && GDA_IS_ENTITY_FIELD (field));
 
@@ -1635,7 +1648,7 @@ gda_dict_database_unlink_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, 
 
 /**
  * gda_dict_database_get_all_constraints
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  *
  * Get a list of all the constraints applied to the database. Constraints are represented
  * as #GdaDictConstraint objects and represent any type of constraint.
@@ -1643,31 +1656,31 @@ gda_dict_database_unlink_sequence (GdaDictDatabase *mgdb, GdaDictSequence *seq, 
  * Returns: a new list of the constraints
  */
 GSList *
-gda_dict_database_get_all_constraints (GdaDictDatabase *mgdb)
+gda_dict_database_get_all_constraints (GdaDictDatabase *db)
 {
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
-	g_return_val_if_fail (mgdb->priv, NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
+	g_return_val_if_fail (db->priv, NULL);
 
-	return g_slist_copy (mgdb->priv->constraints);
+	return g_slist_copy (db->priv->constraints);
 }
 
 /**
  * gda_dict_database_get_table_constraints
- * @mgdb: a #GdaDictDatabase object
- * @table: a #GdaDictTable, part of @mgdb
+ * @db: a #GdaDictDatabase object
+ * @table: a #GdaDictTable, part of @db
  *
  * Get all the constraints applicable to @table
  *
  * Returns: a new GSList of #GdaDictConstraint objects
  */
 GSList *
-gda_dict_database_get_table_constraints (GdaDictDatabase *mgdb, GdaDictTable *table)
+gda_dict_database_get_table_constraints (GdaDictDatabase *db, GdaDictTable *table)
 {
 	GSList *list;
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
-	g_return_val_if_fail (mgdb->priv, NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
+	g_return_val_if_fail (db->priv, NULL);
 
-	list = g_hash_table_lookup (mgdb->priv->constraints_hash, table);
+	list = g_hash_table_lookup (db->priv->constraints_hash, table);
 	if (list) 
 		return g_slist_copy (list);
 	else
@@ -1676,7 +1689,7 @@ gda_dict_database_get_table_constraints (GdaDictDatabase *mgdb, GdaDictTable *ta
 
 /**
  * gda_dict_database_get_all_fk_constraints
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  *
  * Get a list of all the constraints applied to the database which represent a foreign constrains. 
  * Constraints are represented as #GdaDictConstraint objects.
@@ -1684,14 +1697,14 @@ gda_dict_database_get_table_constraints (GdaDictDatabase *mgdb, GdaDictTable *ta
  * Returns: a new list of the constraints
  */
 GSList *
-gda_dict_database_get_all_fk_constraints (GdaDictDatabase *mgdb)
+gda_dict_database_get_all_fk_constraints (GdaDictDatabase *db)
 {
 	GSList *retval = NULL, *list;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
-	g_return_val_if_fail (mgdb->priv, NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
+	g_return_val_if_fail (db->priv, NULL);
 
-	list = mgdb->priv->constraints;
+	list = db->priv->constraints;
 	while (list) {
 		if (gda_dict_constraint_get_constraint_type (GDA_DICT_CONSTRAINT (list->data)) == 
 		    CONSTRAINT_FOREIGN_KEY)
@@ -1705,7 +1718,7 @@ gda_dict_database_get_all_fk_constraints (GdaDictDatabase *mgdb)
 
 /**
  * gda_dict_database_get_tables_fk_constraints
- * @mgdb: a #GdaDictDatabase object
+ * @db: a #GdaDictDatabase object
  * @table1: a #GdaDictTable, or %NULL
  * @table2: a #GdaDictTable, or %NULL
  * @table1_has_fk: TRUE if the returned constraints are the one for which @table1 contains the foreign key
@@ -1719,14 +1732,14 @@ gda_dict_database_get_all_fk_constraints (GdaDictDatabase *mgdb)
  * Returns: a new list of the constraints
  */
 GSList *
-gda_dict_database_get_tables_fk_constraints (GdaDictDatabase *mgdb, GdaDictTable *table1, GdaDictTable *table2, 
+gda_dict_database_get_tables_fk_constraints (GdaDictDatabase *db, GdaDictTable *table1, GdaDictTable *table2, 
 				       gboolean table1_has_fk)
 {
 	GSList *retval = NULL, *list;
 	GdaDictConstraint *fkptr;
 
-	g_return_val_if_fail (mgdb && GDA_IS_DICT_DATABASE (mgdb), NULL);
-	g_return_val_if_fail (mgdb->priv, NULL);
+	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
+	g_return_val_if_fail (db->priv, NULL);
 	if (table1)
 		g_return_val_if_fail (GDA_IS_DICT_TABLE (table1), NULL);
 	if (table2)
@@ -1737,7 +1750,7 @@ gda_dict_database_get_tables_fk_constraints (GdaDictDatabase *mgdb, GdaDictTable
 	if (table1_has_fk) {
 		if (table1) {
 			/* we want the FK constraints where @table1 is the FK table */
-			list = g_hash_table_lookup (mgdb->priv->constraints_hash, table1);
+			list = g_hash_table_lookup (db->priv->constraints_hash, table1);
 			while (list) {
 				fkptr = GDA_DICT_CONSTRAINT (list->data);
 				if ((gda_dict_constraint_get_constraint_type (fkptr) == CONSTRAINT_FOREIGN_KEY) &&
@@ -1748,7 +1761,7 @@ gda_dict_database_get_tables_fk_constraints (GdaDictDatabase *mgdb, GdaDictTable
 		}
 		else {
 			/* we want all the FK constraints where @table2 is the ref_pk table */
-			list = mgdb->priv->constraints;
+			list = db->priv->constraints;
 			while (list) {
 				fkptr = GDA_DICT_CONSTRAINT (list->data);
 				if ((gda_dict_constraint_get_constraint_type (fkptr) == CONSTRAINT_FOREIGN_KEY) &&
@@ -1759,7 +1772,7 @@ gda_dict_database_get_tables_fk_constraints (GdaDictDatabase *mgdb, GdaDictTable
 		}
 	}
 	else {
-		list = mgdb->priv->constraints;
+		list = db->priv->constraints;
 		while (list) {
 			fkptr = GDA_DICT_CONSTRAINT (list->data);
 			if (gda_dict_constraint_get_constraint_type (fkptr) == CONSTRAINT_FOREIGN_KEY) {

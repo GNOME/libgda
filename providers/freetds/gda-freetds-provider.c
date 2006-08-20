@@ -963,7 +963,7 @@ gda_freetds_provider_class_init (GdaFreeTDSProviderClass *klass)
 	provider_class->get_version = gda_freetds_provider_get_version;
 	provider_class->get_server_version = gda_freetds_provider_get_server_version;
 	provider_class->get_info = NULL;
-	provider_class->supports = gda_freetds_provider_supports;
+	provider_class->supports_feature = gda_freetds_provider_supports;
 	provider_class->get_schema = gda_freetds_provider_get_schema;
 
 	provider_class->get_data_handler = NULL;

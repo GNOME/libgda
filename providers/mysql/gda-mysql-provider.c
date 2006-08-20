@@ -142,7 +142,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->get_version = gda_mysql_provider_get_version;
 	provider_class->get_server_version = gda_mysql_provider_get_server_version;
 	provider_class->get_info = gda_mysql_provider_get_info;
-	provider_class->supports = gda_mysql_provider_supports;
+	provider_class->supports_feature = gda_mysql_provider_supports;
 	provider_class->get_schema = gda_mysql_provider_get_schema;
 
 	provider_class->get_data_handler = gda_mysql_provider_get_data_handler;
@@ -281,8 +281,8 @@ real_open_connection (const gchar *host, gint port, const gchar *socket,
 #if MYSQL_VERSION_ID < 32200
 	err = mysql_select_db (mysql, db);
 	if (err != 0) {
-		g_set_error (error, 0, 0, mysql_error (mysql))
-			mysql_close (mysql);
+		g_set_error (error, 0, 0, mysql_error (mysql));
+		mysql_close (mysql);
 		
 		return NULL;
 	}
@@ -317,7 +317,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 
 	/* get all parameters received */
 	t_host = gda_quark_list_find (params, "HOST");
-	t_db = gda_quark_list_find (params, "DATABASE");
+	t_db = gda_quark_list_find (params, "DB_NAME");
 	t_user = gda_quark_list_find (params, "USER");
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_port = gda_quark_list_find (params, "PORT");
@@ -1153,8 +1153,16 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 	GdaMysqlRecordset *recset;
 	GdaDataModel *model;
 	gint rows, r;
-
+	GdaParameter *par = NULL;
+	const gchar *tablename = NULL;
+	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	if (params) {
+		par = gda_parameter_list_find_param (params, "name");
+		if (par)
+			tablename = g_value_get_string ((GValue *) gda_parameter_get_value (par));
+	}
 
 	reclist = process_sql_commands (NULL, cnc, "show table status");
 	if (!reclist)
@@ -1175,6 +1183,14 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 		const gchar *name;
 		gchar *str;
 		GValue *tmpval;
+
+		if (tablename) {
+			const GValue *cvalue;
+			
+			cvalue = gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 0, r);
+			if (strcmp (tablename, g_value_get_string (cvalue)))
+				continue;
+		}
 
 		/* 1st, the name of the table */
 		tmpval = gda_value_copy ((GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 0, r));

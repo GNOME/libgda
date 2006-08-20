@@ -158,7 +158,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->get_version = gda_postgres_provider_get_version;
 	provider_class->get_server_version = gda_postgres_provider_get_server_version;
 	provider_class->get_info = gda_postgres_provider_get_info;
-	provider_class->supports = gda_postgres_provider_supports;
+	provider_class->supports_feature = gda_postgres_provider_supports;
 	provider_class->get_schema = gda_postgres_provider_get_schema;
 
 	provider_class->get_data_handler = gda_postgres_provider_get_data_handler;
@@ -513,7 +513,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	/* parse connection string */
 	pq_host = gda_quark_list_find (params, "HOST");
 	pq_hostaddr = gda_quark_list_find (params, "HOSTADDR");
-	pq_db = gda_quark_list_find (params, "DATABASE");
+	pq_db = gda_quark_list_find (params, "DB_NAME");
 	pg_searchpath = gda_quark_list_find (params, "SEARCHPATH");
 	pq_port = gda_quark_list_find (params, "PORT");
 	pq_options = gda_quark_list_find (params, "OPTIONS");
@@ -528,7 +528,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	else
 		pq_pwd = password;
 
-	pq_requiressl = gda_quark_list_find (params, "REQUIRESSL");
+	pq_requiressl = gda_quark_list_find (params, "USE_SSL");
 
 	conn_string = g_strconcat ("",
 				   pq_host ? "host=" : "",
@@ -1437,14 +1437,19 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 	GdaDataModel *recset;
 	GdaParameter *par = NULL;
 	const gchar *namespace = NULL;
+	const gchar *tablename = NULL;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	if (params)
+	if (params) {
 		par = gda_parameter_list_find_param (params, "namespace");
+		if (par)
+			namespace = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 
-	if (par)
-		namespace = g_value_get_string ((GValue *) gda_parameter_get_value (par));
+		par = gda_parameter_list_find_param (params, "name");
+		if (par)
+			tablename = g_value_get_string ((GValue *) gda_parameter_get_value (par));
+	}
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (priv_data->version_float < 7.3) {
@@ -1457,30 +1462,48 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 	}
 	else {
 		if (namespace) {
+			gchar *part = NULL;
 			gchar *query;
+
+			if (tablename)
+				part = g_strdup_printf ("AND c.relname = '%s' ", tablename);
 
 			query = g_strdup_printf ("SELECT c.relname, u.usename, pg_catalog.obj_description(c.oid), NULL "
 						 "FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
 						 "WHERE u.usesysid=c.relowner AND c.relkind = 'r' "
 						 "AND c.relnamespace=n.oid "
+						 "%s"
 						 "AND n.nspname ='%s' "
 						 "AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
-						 "ORDER BY relname", namespace);
+						 "ORDER BY relname", part ? part : "", namespace);
+			if (part) g_free (part);
 			reclist = process_sql_commands (NULL, cnc,
 							query,
 							GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 			g_free (query);
 		}
-		else
-			reclist = process_sql_commands (
-				    NULL, cnc,
-				    "SELECT c.relname, u.usename, pg_catalog.obj_description(c.oid), NULL "
-				    "FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
-				    "WHERE u.usesysid=c.relowner AND c.relkind = 'r' "
-				    "AND c.relnamespace=n.oid AND pg_catalog.pg_table_is_visible (c.oid) "
-				    "AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
-				    "ORDER BY relname",
-				    GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+		else {
+			gchar *part = NULL;
+			gchar *query;
+
+			if (tablename)
+				part = g_strdup_printf ("AND c.relname = '%s' ", tablename);
+
+			query = g_strdup_printf ("SELECT c.relname, u.usename, pg_catalog.obj_description(c.oid), NULL "
+						 "FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
+						 "WHERE u.usesysid=c.relowner AND c.relkind = 'r' "
+						 "AND c.relnamespace=n.oid "
+						 "%s"
+						 "AND pg_catalog.pg_table_is_visible (c.oid) "
+						 "AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
+						 "ORDER BY relname", 
+						 part ? part : "");
+			if (part) g_free (part);
+			reclist = process_sql_commands (NULL, cnc,
+							query,
+							GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+			g_free (query);
+		}
 	}
 
 	if (!reclist)
