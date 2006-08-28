@@ -33,7 +33,6 @@ gda_mysql_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	gchar *sql = NULL;
 	gboolean first = TRUE;
 
-	/* CREATE DATABASE */
 	string = g_string_new ("CREATE DATABASE ");
 
 	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_IFNOTEXISTS");
@@ -74,9 +73,7 @@ gda_mysql_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
-	gboolean first = TRUE;
 
-	/* CREATE DATABASE */
 	string = g_string_new ("DROP DATABASE ");
 
 	value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_IFEXISTS");
@@ -109,7 +106,6 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	gint nbpkfields = 0;
 	gchar *sql = NULL;
 
-	/* CREATE TABLE */
 	string = g_string_new ("CREATE ");
 	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_TEMP");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
@@ -448,7 +444,6 @@ gda_mysql_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	const GValue *value;
 	gchar *sql = NULL;
 
-	/* DROP TABLE */
 	string = g_string_new ("DROP");
 
 	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_TEMP");
@@ -479,6 +474,153 @@ gda_mysql_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 }
 
 gchar *
+gda_mysql_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+			       GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NEW_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, " RENAME TO ");
+	g_string_append (string, g_value_get_string (value));
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+gchar *
+gda_mysql_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
+			     GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	g_string_append (string, " ADD COLUMN ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_TYPE");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append_c (string, ' ');
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_DEFAULT");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		const gchar *str = g_value_get_string (value);
+		if (str && *str) {
+			g_string_append (string, " DEFAULT ");
+			g_string_append (string, str);
+		}
+	}
+	
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_NNUL");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " NOT NULL");
+	
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_AUTOINC");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " AUTO_INCREMENT");
+	
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_UNIQUE");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " UNIQUE");
+	
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_PKEY");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " PRIMARY KEY");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_COMMENT");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		GdaDataHandler *dh;
+		gchar *str;
+		
+		dh = gda_server_provider_get_data_handler_gda (provider, cnc, G_TYPE_STRING);
+		str = gda_data_handler_get_sql_from_value (dh, value);
+		if (str) {
+			if (*str) {
+				g_string_append (string, " COMMENT ");
+				g_string_append (string, str);
+			}
+			g_free (str);
+		}
+	}
+	
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_CHECK");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		const gchar *str = g_value_get_string (value);
+		if (str && *str) {
+			g_string_append (string, " CHECK (");
+			g_string_append (string, str);
+			g_string_append_c (string, ')');
+		}
+	}
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_FIRST");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " FIRST");
+	else {
+		value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_AFTER");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+			const gchar *str = g_value_get_string (value);
+			if (str && *str) {
+				g_string_append (string, " AFTER ");
+				g_string_append (string, str);
+			}
+		}
+	}
+		
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+gchar *
+gda_mysql_render_DROP_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
+			      GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/COLUMN_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, " DROP COLUMN ");
+	g_string_append (string, g_value_get_string (value));
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+
+gchar *
 gda_mysql_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
 			       GdaServerOperation *op, GError **error)
 {
@@ -488,7 +630,6 @@ gda_mysql_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 	GdaServerOperationNode *node;
 	gint nrows, i;
 
-	/* CREATE INDEX */
 	string = g_string_new ("CREATE ");
 
 	value = gda_server_operation_get_value_at (op, "/INDEX_DEF_P/INDEX_TYPE");
@@ -557,7 +698,6 @@ gda_mysql_render_DROP_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 	const GValue *value;
 	gchar *sql = NULL;
 
-	/* DROP INDEX */
 	string = g_string_new ("DROP INDEX ");
 
 	value = gda_server_operation_get_value_at (op, "/INDEX_DESC_P/INDEX_NAME");

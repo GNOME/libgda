@@ -45,60 +45,12 @@ object for more information.
 </para>
 
 
-<!-- ##### SIGNAL GdaDict::aggregate-added ##### -->
-<para>
-
-</para>
-
-@gdadict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::aggregate-removed ##### -->
-<para>
-
-</para>
-
-@gdadict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::aggregate-updated ##### -->
-<para>
-
-</para>
-
-@gdadict: the object which received the signal.
-@arg1: 
-
 <!-- ##### SIGNAL GdaDict::changed ##### -->
 <para>
 
 </para>
 
 @dbdict: the object which received the signal.
-
-<!-- ##### SIGNAL GdaDict::data-type-added ##### -->
-<para>
-
-</para>
-
-@gdadict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::data-type-removed ##### -->
-<para>
-
-</para>
-
-@gdadict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::data-type-updated ##### -->
-<para>
-
-</para>
-
-@gdadict: the object which received the signal.
-@arg1: 
 
 <!-- ##### SIGNAL GdaDict::data-update-finished ##### -->
 <para>
@@ -114,7 +66,7 @@ object for more information.
 
 @gdadict: the object which received the signal.
 
-<!-- ##### SIGNAL GdaDict::function-added ##### -->
+<!-- ##### SIGNAL GdaDict::object-act-changed ##### -->
 <para>
 
 </para>
@@ -122,7 +74,7 @@ object for more information.
 @gdadict: the object which received the signal.
 @arg1: 
 
-<!-- ##### SIGNAL GdaDict::function-removed ##### -->
+<!-- ##### SIGNAL GdaDict::object-added ##### -->
 <para>
 
 </para>
@@ -130,7 +82,7 @@ object for more information.
 @gdadict: the object which received the signal.
 @arg1: 
 
-<!-- ##### SIGNAL GdaDict::function-updated ##### -->
+<!-- ##### SIGNAL GdaDict::object-removed ##### -->
 <para>
 
 </para>
@@ -138,52 +90,12 @@ object for more information.
 @gdadict: the object which received the signal.
 @arg1: 
 
-<!-- ##### SIGNAL GdaDict::graph-added ##### -->
+<!-- ##### SIGNAL GdaDict::object-updated ##### -->
 <para>
 
 </para>
 
-@dbdict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::graph-removed ##### -->
-<para>
-
-</para>
-
-@dbdict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::graph-updated ##### -->
-<para>
-
-</para>
-
-@dbdict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::query-added ##### -->
-<para>
-
-</para>
-
-@dbdict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::query-removed ##### -->
-<para>
-
-</para>
-
-@dbdict: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDict::query-updated ##### -->
-<para>
-
-</para>
-
-@dbdict: the object which received the signal.
+@gdadict: the object which received the signal.
 @arg1: 
 
 <!-- ##### SIGNAL GdaDict::update-progress ##### -->
@@ -201,22 +113,7 @@ object for more information.
 
 </para>
 
-<!-- ##### ARG GdaDict:graph-serial ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaDict:query-serial ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdaDict:username ##### -->
-<para>
-
-</para>
-
-<!-- ##### ARG GdaDict:with-functions ##### -->
 <para>
 
 </para>
@@ -229,158 +126,12 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_load_xml_file ##### -->
+<!-- ##### FUNCTION gda_dict_extend_with_functions ##### -->
 <para>
 
 </para>
 
 @dict: 
-@xmlfile: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_save_xml_file ##### -->
-<para>
-
-</para>
-
-@dict: 
-@xmlfile: 
-@error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_handler ##### -->
-<para>
-
-</para>
-
-@dict: 
-@for_type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_default_handler ##### -->
-<para>
-
-</para>
-
-@dict: 
-@for_type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_declare_query ##### -->
-<para>
-
-</para>
-
-@dict: 
-@query: 
-
-
-<!-- ##### FUNCTION gda_dict_assume_query ##### -->
-<para>
-
-</para>
-
-@dict: 
-@query: 
-
-
-<!-- ##### FUNCTION gda_dict_unassume_query ##### -->
-<para>
-
-</para>
-
-@dict: 
-@query: 
-
-
-<!-- ##### FUNCTION gda_dict_get_queries ##### -->
-<para>
-
-</para>
-
-@dict: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_query_by_xml_id ##### -->
-<para>
-
-</para>
-
-@dict: 
-@xml_id: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_declare_graph ##### -->
-<para>
-
-</para>
-
-@dict: 
-@graph: 
-
-
-<!-- ##### FUNCTION gda_dict_assume_graph ##### -->
-<para>
-
-</para>
-
-@dict: 
-@graph: 
-
-
-<!-- ##### FUNCTION gda_dict_unassume_graph ##### -->
-<para>
-
-</para>
-
-@dict: 
-@graph: 
-
-
-<!-- ##### FUNCTION gda_dict_get_graphs ##### -->
-<para>
-
-</para>
-
-@dict: 
-@type_of_graphs: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_graph_by_xml_id ##### -->
-<para>
-
-</para>
-
-@dict: 
-@xml_id: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_graph_for_object ##### -->
-<para>
-
-</para>
-
-@dict: 
-@obj: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_connection ##### -->
-<para>
-
-</para>
-
-@dict: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_dict_set_connection ##### -->
@@ -392,6 +143,15 @@ object for more information.
 @cnc: 
 
 
+<!-- ##### FUNCTION gda_dict_get_connection ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_dict_get_database ##### -->
 <para>
 
@@ -401,12 +161,24 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_dump ##### -->
+<!-- ##### FUNCTION gda_dict_declare_object_string_id_change ##### -->
 <para>
 
 </para>
 
 @dict: 
+@obj: 
+@oldid: 
+
+
+<!-- ##### FUNCTION gda_dict_get_object_by_string_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@strid: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_dict_update_dbms_data ##### -->
@@ -415,6 +187,8 @@ object for more information.
 </para>
 
 @dict: 
+@limit_to_type: 
+@limit_obj_name: 
 @error: 
 @Returns: 
 
@@ -477,19 +251,49 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_entities_fk_constraints ##### -->
+<!-- ##### FUNCTION gda_dict_load_xml_file ##### -->
 <para>
 
 </para>
 
 @dict: 
-@entity1: 
-@entity2: 
-@entity1_has_fk: 
+@xmlfile: 
+@error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_dict_types ##### -->
+<!-- ##### FUNCTION gda_dict_save_xml_file ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xmlfile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_handler ##### -->
+<para>
+
+</para>
+
+@dict: 
+@for_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_default_handler ##### -->
+<para>
+
+</para>
+
+@dict: 
+@for_type: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_dict_get_queries ##### -->
 <para>
 
 </para>
@@ -498,26 +302,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_dict_type_by_name ##### -->
-<para>
-
-</para>
-
-@dict: 
-@type_name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_add_data_type ##### -->
-<para>
-
-</para>
-
-@dict: 
-@datatype: 
-
-
-<!-- ##### FUNCTION gda_dict_get_dict_type_by_xml_id ##### -->
+<!-- ##### MACRO gda_dict_get_query_by_xml_id ##### -->
 <para>
 
 </para>
@@ -527,17 +312,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_declare_custom_data_type ##### -->
-<para>
-
-</para>
-
-@dict: 
-@type: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_functions ##### -->
+<!-- ##### MACRO gda_dict_get_dict_types ##### -->
 <para>
 
 </para>
@@ -546,7 +321,36 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_functions_by_name ##### -->
+<!-- ##### MACRO gda_dict_get_dict_type_by_name ##### -->
+<para>
+
+</para>
+
+@dict: 
+@type_name: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_dict_get_dict_type_by_xml_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_dict_get_functions ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_dict_get_functions_by_name ##### -->
 <para>
 
 </para>
@@ -556,7 +360,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_function_by_name_arg ##### -->
+<!-- ##### MACRO gda_dict_get_function_by_name_arg ##### -->
 <para>
 
 </para>
@@ -567,17 +371,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_function_by_dbms_id ##### -->
-<para>
-
-</para>
-
-@dict: 
-@dbms_id: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_function_by_xml_id ##### -->
+<!-- ##### MACRO gda_dict_get_function_by_xml_id ##### -->
 <para>
 
 </para>
@@ -587,37 +381,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_aggregates ##### -->
-<para>
-
-</para>
-
-@dict: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_aggregates_by_name ##### -->
-<para>
-
-</para>
-
-@dict: 
-@aggname: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_aggregate_by_name_arg ##### -->
-<para>
-
-</para>
-
-@dict: 
-@aggname: 
-@argtype: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_get_aggregate_by_dbms_id ##### -->
+<!-- ##### MACRO gda_dict_get_function_by_dbms_id ##### -->
 <para>
 
 </para>
@@ -627,12 +391,111 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_get_aggregate_by_xml_id ##### -->
+<!-- ##### MACRO gda_dict_get_aggregates ##### -->
 <para>
 
 </para>
 
 @dict: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_dict_get_aggregates_by_name ##### -->
+<para>
+
+</para>
+
+@dict: 
+@aggname: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_dict_get_aggregate_by_name_arg ##### -->
+<para>
+
+</para>
+
+@dict: 
+@argname: 
+@argtype: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_dict_get_aggregate_by_xml_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@xml_id: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_dict_get_aggregate_by_dbms_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@dbmsid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_declare_object ##### -->
+<para>
+
+</para>
+
+@dict: 
+@object: 
+
+
+<!-- ##### FUNCTION gda_dict_assume_object ##### -->
+<para>
+
+</para>
+
+@dict: 
+@object: 
+
+
+<!-- ##### FUNCTION gda_dict_unassume_object ##### -->
+<para>
+
+</para>
+
+@dict: 
+@object: 
+
+
+<!-- ##### FUNCTION gda_dict_get_objects ##### -->
+<para>
+
+</para>
+
+@dict: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_object_by_name ##### -->
+<para>
+
+</para>
+
+@dict: 
+@type: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dict_get_object_by_xml_id ##### -->
+<para>
+
+</para>
+
+@dict: 
+@type: 
 @xml_id: 
 @Returns: 
 

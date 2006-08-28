@@ -133,7 +133,7 @@ main (int argc, char **argv)
 
 	if (show_queries) {
 		/* queries listing */
-		list = gda_dict_get_queries (dict);
+		list = gda_dict_get_objects (dict, GDA_TYPE_QUERY);
 		if (list) 
 			g_print (_("List of queries in this file:\n"));
 		else

@@ -49,6 +49,11 @@ gda_headers = \
 	gda-dict-field.h \
 	gda-dict-function.h \
 	gda-dict.h \
+	gda-dict-private.h \
+	gda-dict-reg-queries.h \
+	gda-dict-reg-types.h \
+	gda-dict-reg-aggregates.h \
+	gda-dict-reg-functions.h \
 	gda-dict-table.h \
 	gda-dict-type.h \
 	gda-entity-field.h \
@@ -120,6 +125,10 @@ libgda_sources =  \
 	gda-dict-function.c \
 	gda-dict-table.c \
 	gda-dict-type.c \
+	gda-dict-reg-queries.c \
+	gda-dict-reg-types.c \
+	gda-dict-reg-aggregates.c \
+	gda-dict-reg-functions.c \
 	gda-entity.c \
 	gda-entity-field.c \
 	gda-graphviz.c \

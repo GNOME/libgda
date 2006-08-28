@@ -65,6 +65,11 @@ There are restrictions on the types of objects which can be handled:
 
 </para>
 
+<!-- ##### ARG GdaObjectRef:obj-name ##### -->
+<para>
+
+</para>
+
 <!-- ##### ENUM GdaObjectRefType ##### -->
 <para>
 
@@ -147,6 +152,15 @@ There are restrictions on the types of objects which can be handled:
 @ref: 
 @ref_type: 
 @type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_object_ref_get_ref_object_name ##### -->
+<para>
+
+</para>
+
+@ref: 
 @Returns: 
 
 

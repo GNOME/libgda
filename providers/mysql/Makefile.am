@@ -33,7 +33,10 @@ xml_in_files = \
 	mysql_specs_create_table.xml.in \
         mysql_specs_drop_table.xml.in \
         mysql_specs_create_index.xml.in \
-        mysql_specs_drop_index.xml.in
+        mysql_specs_drop_index.xml.in \
+	mysql_specs_rename_table.xml.in \
+	mysql_specs_add_column.xml.in \
+	mysql_specs_drop_column.xml.in
 
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 

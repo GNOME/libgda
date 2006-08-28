@@ -567,7 +567,7 @@ gda_query_field_field_get_property (GObject *object,
 static GObject *
 gda_query_field_field_copy (GdaQueryField *orig)
 {
-	GdaQueryFieldField *qf;
+	GdaQueryFieldField *qf, *newqf;
 	GObject *obj;
 	GdaObject *ref;
 	
@@ -577,31 +577,40 @@ gda_query_field_field_copy (GdaQueryField *orig)
 	obj = g_object_new (GDA_TYPE_QUERY_FIELD_FIELD, 
 			    "dict", gda_object_get_dict (GDA_OBJECT (qf)), 
 			    "query", qf->priv->query, NULL);
+	newqf = GDA_QUERY_FIELD_FIELD (obj);
 	
 	ref = gda_object_ref_get_ref_object (qf->priv->target_ref);
 	if (ref)
-		gda_object_ref_set_ref_object (GDA_QUERY_FIELD_FIELD (obj)->priv->target_ref, ref);
+		gda_object_ref_set_ref_object (newqf->priv->target_ref, ref);
 	else {
 		const gchar *ref_str;
 		GdaObjectRefType ref_type;
 		GType ref_gtype;
 
+		ref_str = gda_object_ref_get_ref_object_name (qf->priv->target_ref);
+		if (ref_str)
+			g_object_set (G_OBJECT (newqf->priv->target_ref), "obj_name", ref_str, NULL);
+
 		ref_str = gda_object_ref_get_ref_name (qf->priv->target_ref, &ref_gtype, &ref_type);
 		if (ref_str)
-			gda_object_ref_set_ref_name (GDA_QUERY_FIELD_FIELD (obj)->priv->target_ref, ref_gtype, ref_type, ref_str);
+			gda_object_ref_set_ref_name (newqf->priv->target_ref, ref_gtype, ref_type, ref_str);
 	}
 
 	ref = gda_object_ref_get_ref_object (qf->priv->field_ref);
 	if (ref)
-		gda_object_ref_set_ref_object (GDA_QUERY_FIELD_FIELD (obj)->priv->field_ref, ref);
+		gda_object_ref_set_ref_object (newqf->priv->field_ref, ref);
 	else {
 		const gchar *ref_str;
 		GdaObjectRefType ref_type;
 		GType ref_gtype;
 
+		ref_str = gda_object_ref_get_ref_object_name (qf->priv->field_ref);
+		if (ref_str)
+			g_object_set (G_OBJECT (newqf->priv->field_ref), "obj_name", ref_str, NULL);
+
 		ref_str = gda_object_ref_get_ref_name (qf->priv->field_ref, &ref_gtype, &ref_type);
 		if (ref_str)
-			gda_object_ref_set_ref_name (GDA_QUERY_FIELD_FIELD (obj)->priv->field_ref, ref_gtype, ref_type, ref_str);
+			gda_object_ref_set_ref_name (newqf->priv->field_ref, ref_gtype, ref_type, ref_str);
 	}
 	
 	if (gda_object_get_name (GDA_OBJECT (orig)))
@@ -620,7 +629,7 @@ gda_query_field_field_copy (GdaQueryField *orig)
 	}
 
 	if (qf->priv->plugin)
-		GDA_QUERY_FIELD_FIELD (obj)->priv->plugin = g_strdup (qf->priv->plugin);
+		newqf->priv->plugin = g_strdup (qf->priv->plugin);
 
 	return obj;
 }
@@ -1032,8 +1041,11 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	fobj = gda_object_ref_get_ref_object (field->priv->field_ref);
 	if (fobj)
 		fname = gda_object_get_name (fobj);
-	else
-		fname = gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL);
+	else {
+		fname = gda_object_ref_get_ref_object_name (field->priv->field_ref);
+		if (!fname)
+			fname = gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL);
+	}
 	
 	if (fname) {
 		/* see if we need quotes around returned string */

@@ -32,7 +32,6 @@ gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	const GValue *value;
 	gchar *sql = NULL;
 
-	/* CREATE DATABASE */
 	string = g_string_new ("CREATE DATABASE ");
 
 	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_NAME");
@@ -84,7 +83,6 @@ gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	const GValue *value;
 	gchar *sql = NULL;
 
-	/* CREATE DATABASE */
 	string = g_string_new ("DROP DATABASE ");
 
 	value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_NAME");
@@ -96,6 +94,7 @@ gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 
 	return sql;	
 }
+
 
 gchar *
 gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -112,7 +111,6 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 	gint nbpkfields = 0;
 	gchar *sql = NULL;
 
-	/* CREATE TABLE */
 	string = g_string_new ("CREATE ");
 	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_TEMP");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
@@ -358,7 +356,6 @@ gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cn
 	const GValue *value;
 	gchar *sql = NULL;
 
-	/* DROP TABLE */
 	string = g_string_new ("DROP TABLE ");
 
 	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
@@ -378,6 +375,133 @@ gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cn
 }
 
 gchar *
+gda_postgres_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+				  GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NEW_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, " RENAME TO ");
+	g_string_append (string, g_value_get_string (value));
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+
+gchar *
+gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
+				GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/TABLE_ONLY");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, "ONLY ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	g_string_append (string, " ADD COLUMN ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_TYPE");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append_c (string, ' ');
+	g_string_append (string, g_value_get_string (value));
+				
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_DEFAULT");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		const gchar *str = g_value_get_string (value);
+		if (str && *str) {
+			g_string_append (string, " DEFAULT ");
+			g_string_append (string, str);
+		}
+	}
+				
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_NNUL");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " NOT NULL");
+				
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_UNIQUE");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " UNIQUE");
+	
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_PKEY");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " PRIMARY KEY");
+				
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_CHECK");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		const gchar *str = g_value_get_string (value);
+		if (str && *str) {
+			g_string_append (string, " CHECK (");
+			g_string_append (string, str);
+			g_string_append_c (string, ')');
+		}
+	}
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+gchar *
+gda_postgres_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
+				  GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/COLUMN_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, " DROP COLUMN ");
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DESC_P/REFERENCED_ACTION");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		const gchar *str = g_value_get_string (value);
+		if (str && *str) {
+			g_string_append_c (string, ' ');
+			g_string_append (string, str);
+		}
+	}
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+
+gchar *
 gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
 				  GdaServerOperation *op, GError **error)
 {
@@ -387,7 +511,6 @@ gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cn
 	GdaServerOperationNode *node;
 	gint nrows, i;
 
-	/* CREATE INDEX */
 	string = g_string_new ("CREATE ");
 
 	value = gda_server_operation_get_value_at (op, "/INDEX_DEF_P/INDEX_TYPE");
@@ -458,7 +581,6 @@ gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cn
 	const GValue *value;
 	gchar *sql = NULL;
 
-	/* DROP INDEX */
 	string = g_string_new ("DROP INDEX ");
 
 	value = gda_server_operation_get_value_at (op, "/INDEX_DESC_P/INDEX_NAME");

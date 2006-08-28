@@ -375,7 +375,7 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 	gboolean is_non_parsed;
 
 	query = (GdaQuery *) gda_query_new_from_sql (config->dict, sql, &error);
-	gda_dict_assume_query (config->dict, query);
+	gda_dict_assume_object (config->dict, (GdaObject *) query);
 	g_object_unref (query);
 
 	tr = xmlNewChild (table, NULL, "tr", NULL);

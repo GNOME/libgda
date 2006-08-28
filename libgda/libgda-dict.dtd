@@ -1,14 +1,14 @@
 <!--      libgda-dict.dtd
           DTD for libgda
-          Version 1.33
-          Copyright (C) 2000 - 2005 Vivien Malerba
+          Version 1.34
+          Copyright (C) 2000 - 2006 Vivien Malerba
           Copyright (C) 2001 - 2002 Fernando Martins
 
 	  Note: encoding of XML ID strings is done using a derivative of BASE64.
 -->
-<!ELEMENT gda_dict (gda_dsn_info?, gda_dict_types?, gda_dict_procedures?, gda_dict_aggregates?, gda_dict_database?, gda_queries*, gda_graphs?)>
+<!ELEMENT gda_dict ANY>
 <!ATTLIST gda_dict
-	  with_functions (t|f) #IMPLIED>
+	  with_functions (t|f) #IMPLIED> <!-- deprecated, not used anymore -->
 
 
 <!--
@@ -303,6 +303,6 @@
 
 <!ELEMENT gda_graph_item EMPTY>
 <!ATTLIST gda_graph_item
-          object IDREF #IMPLIED
+          object NMTOKEN #IMPLIED
 	  xpos CDATA #IMPLIED
 	  ypos CDATA #IMPLIED>

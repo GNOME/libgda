@@ -1,3 +1,4 @@
+
 /* GDA MySQL provider
  * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
@@ -318,6 +319,22 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	/* get all parameters received */
 	t_host = gda_quark_list_find (params, "HOST");
 	t_db = gda_quark_list_find (params, "DB_NAME");
+	if (!t_db) {
+		const gchar *str;
+
+		str = gda_quark_list_find (params, "DATABASE");
+		if (!str) {
+			gda_connection_add_event_string (cnc,
+							 _("The connection string must contain a DB_NAME value"));
+			return FALSE;
+		}
+		else {
+			g_warning (_("The connection string format has changed: replace DATABASE with "
+				     "DB_NAME and the same contents"));
+			t_db = str;
+		}
+	}
+
 	t_user = gda_quark_list_find (params, "USER");
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_port = gda_quark_list_find (params, "PORT");
@@ -552,8 +569,14 @@ gda_mysql_provider_supports_operation (GdaServerProvider *provider, GdaConnectio
 	switch (type) {
 	case GDA_SERVER_OPERATION_CREATE_DB:
 	case GDA_SERVER_OPERATION_DROP_DB:
+
 	case GDA_SERVER_OPERATION_CREATE_TABLE:
 	case GDA_SERVER_OPERATION_DROP_TABLE:
+	case GDA_SERVER_OPERATION_RENAME_TABLE:
+
+	case GDA_SERVER_OPERATION_ADD_COLUMN:
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
+
 	case GDA_SERVER_OPERATION_CREATE_INDEX:
 	case GDA_SERVER_OPERATION_DROP_INDEX:
 		return TRUE;
@@ -624,6 +647,15 @@ gda_mysql_provider_render_operation (GdaServerProvider *provider, GdaConnection 
 		break;
 	case GDA_SERVER_OPERATION_DROP_TABLE:
 		sql = gda_mysql_render_DROP_TABLE (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_RENAME_TABLE:
+		sql = gda_mysql_render_RENAME_TABLE (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_ADD_COLUMN:
+		sql = gda_mysql_render_ADD_COLUMN (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
+		sql = gda_mysql_render_DROP_COLUMN (provider, cnc, op, error);
 		break;
 	case GDA_SERVER_OPERATION_CREATE_INDEX:
 		sql = gda_mysql_render_CREATE_INDEX (provider, cnc, op, error);

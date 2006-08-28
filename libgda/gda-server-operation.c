@@ -1081,6 +1081,12 @@ gda_server_operation_op_type_to_string (GdaServerOperationType type)
 		return "CREATE_INDEX";
         case GDA_SERVER_OPERATION_DROP_INDEX:
 		return "DROP_INDEX";
+        case GDA_SERVER_OPERATION_RENAME_TABLE:
+		return "RENAME_TABLE";
+        case GDA_SERVER_OPERATION_ADD_COLUMN:
+		return "ADD_COLUMN";
+        case GDA_SERVER_OPERATION_DROP_COLUMN:
+		return "DROP_COLUMN";
 	default:
 		g_error (_("Non handled GdaServerOperationType, please report error"));
 		return "";

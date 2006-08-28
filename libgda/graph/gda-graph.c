@@ -26,6 +26,8 @@
 #include <libgda/gda-xml-storage.h>
 #include "gda-graph-item.h"
 
+#include "gda-dict-reg-graphs.h"
+
 /* 
  * Main static functions 
  */
@@ -236,20 +238,28 @@ gda_graph_new (GdaDict *dict, GdaGraphType type)
 	GdaGraph *graph;
 	guint id;
 	gchar *str;
+	GdaDictRegisterStruct *reg;
 
 	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
 
 	obj = g_object_new (GDA_TYPE_GRAPH, "dict", ASSERT_DICT (dict), NULL);
 	graph = GDA_GRAPH (obj);
 
-	g_object_get (G_OBJECT (ASSERT_DICT (dict)), "graph_serial", &id, NULL);
+	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_GRAPH);
+	if (!reg) {
+		/* register if not yet registered */
+		reg = gda_graphs_get_register();
+		gda_dict_register_object_type (dict, reg);
+	}
+
+	id = gda_graphs_get_serial (reg);
 	str = g_strdup_printf ("GR%u", id);
 	gda_object_set_id (GDA_OBJECT (obj), str);
 	g_free (str);
 
 	graph->priv->type = type;
 
-	gda_dict_declare_graph (ASSERT_DICT (dict), graph);
+	gda_dict_declare_object (ASSERT_DICT (dict), (GdaObject *) graph);
 
 	return obj;
 }
@@ -631,13 +641,16 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 	GdaGraph *graph;
         gchar *prop;
 	xmlNodePtr children;
-	gboolean id=FALSE;
+	gboolean id = FALSE;
+	GdaDictRegisterStruct *reg;
 
         g_return_val_if_fail (iface && GDA_IS_GRAPH (iface), FALSE);
         g_return_val_if_fail (GDA_GRAPH (iface)->priv, FALSE);
         g_return_val_if_fail (node, FALSE);
 
 	graph = GDA_GRAPH (iface);
+	reg = gda_dict_get_object_type_registration (gda_object_get_dict ((GdaObject *)graph), GDA_TYPE_GRAPH);
+	g_assert (reg);
 
 	if (strcmp (node->name, "gda_graph")) {
                 g_set_error (error,
@@ -657,6 +670,7 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                         return FALSE;
                 }
                 gda_object_set_id (GDA_OBJECT (graph), prop);
+		gda_graphs_declare_serial (reg, atol (prop+3));
 		id = TRUE;
                 g_free (prop);
         }

@@ -1466,19 +1466,28 @@ gda_config_get_provider_list (void)
 				GError *error = NULL;
 				
 				info->dsn_spec = plugin_get_dsn_spec ();
-				info->gda_params = gda_parameter_list_new_from_spec_string (NULL, info->dsn_spec, &error);
-				if (!info->gda_params) {
-					g_warning ("Invalid format for provider '%s' DSN spec : %s",
-						   info->id,
-						   error ? error->message : "Unknown error");
-					if (error)
-						g_error_free (error);
+				if (info->dsn_spec) {
+					info->gda_params = gda_parameter_list_new_from_spec_string (NULL, info->dsn_spec, &error);
+					if (!info->gda_params) {
+						g_warning ("Invalid format for provider '%s' DSN spec : %s",
+							   info->id,
+							   error ? error->message : "Unknown error");
+						if (error)
+							g_error_free (error);
+					}
+				}
+				else {
+					/* there may be traces of the provider installed but some parts are missing,
+					 forget about that provider... */
+					gda_provider_info_free (info);
+					info = NULL;
 				}
 			}
 			else 
 				g_warning ("Provider '%s' does not provide a DSN spec", info->id);
 			
-			list = g_list_append (list, info);
+			if (info)
+				list = g_list_append (list, info);
 			
 			g_module_close (handle);
 		}

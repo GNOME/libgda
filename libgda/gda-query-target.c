@@ -281,6 +281,10 @@ gda_query_target_new_copy (GdaQueryTarget *orig)
 		GdaObjectRefType ref_type;
 		GType ref_gtype;
 
+		ref_str = gda_object_ref_get_ref_object_name (orig->priv->entity_ref);
+		if (ref_str)
+			g_object_set (G_OBJECT (target->priv->entity_ref), "obj_name", ref_str, NULL);
+
 		ref_str = gda_object_ref_get_ref_name (orig->priv->entity_ref, &ref_gtype, &ref_type);
 		if (ref_str)
 			gda_object_ref_set_ref_name (target->priv->entity_ref, ref_gtype, ref_type, ref_str);
@@ -500,8 +504,12 @@ gda_query_target_get_represented_table_name (GdaQueryTarget *target)
 		else
 			return NULL;
 	}
-	else
-		return gda_object_ref_get_ref_name (target->priv->entity_ref, NULL, NULL);
+	else {
+		if (gda_object_ref_get_ref_object_name (target->priv->entity_ref))
+			return gda_object_ref_get_ref_object_name (target->priv->entity_ref);
+		else
+			return gda_object_ref_get_ref_name (target->priv->entity_ref, NULL, NULL);
+	}
 }
 
 /**

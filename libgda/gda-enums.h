@@ -23,15 +23,15 @@
 
 /* status of a value */
 typedef enum  {
-        GDA_VALUE_ATTR_IS_NULL        = 1 << 0, /* READ | WRITE */
-        GDA_VALUE_ATTR_CAN_BE_NULL    = 1 << 1, /* READ | WRITE */
-        GDA_VALUE_ATTR_IS_DEFAULT     = 1 << 2, /* READ | WRITE */
-        GDA_VALUE_ATTR_CAN_BE_DEFAULT = 1 << 3, /* READ | WRITE */
-        GDA_VALUE_ATTR_IS_UNCHANGED   = 1 << 4, /* READ | WRITE */
-        GDA_VALUE_ATTR_ACTIONS_SHOWN  = 1 << 5, /* READ | WRITE */
-        GDA_VALUE_ATTR_DATA_NON_VALID = 1 << 6, /* READ */
-        GDA_VALUE_ATTR_HAS_VALUE_ORIG = 1 << 7, /* READ */
-	GDA_VALUE_ATTR_NO_MODIF       = 1 << 8, /* READ | WRITE */
+        GDA_VALUE_ATTR_IS_NULL        = 1 << 0,
+        GDA_VALUE_ATTR_CAN_BE_NULL    = 1 << 1,
+        GDA_VALUE_ATTR_IS_DEFAULT     = 1 << 2,
+        GDA_VALUE_ATTR_CAN_BE_DEFAULT = 1 << 3,
+        GDA_VALUE_ATTR_IS_UNCHANGED   = 1 << 4,
+        GDA_VALUE_ATTR_ACTIONS_SHOWN  = 1 << 5,
+        GDA_VALUE_ATTR_DATA_NON_VALID = 1 << 6,
+        GDA_VALUE_ATTR_HAS_VALUE_ORIG = 1 << 7,
+	GDA_VALUE_ATTR_NO_MODIF       = 1 << 8,
 } GValueAttribute;
 
 /* different possible types for a GdaGraph object */
@@ -45,19 +45,7 @@ typedef enum {
 	GDA_ENTITY_FIELD_VISIBLE   = 1 << 0,
 	GDA_ENTITY_FIELD_INVISIBLE = 1 << 1,
 	GDA_ENTITY_FIELD_ANY       = GDA_ENTITY_FIELD_VISIBLE | GDA_ENTITY_FIELD_INVISIBLE
-} GdaEntityFieldState;
-
-/* maybe global? */
-typedef enum
-{
-	GDA_DICT_UPDATE_TABLES      = 1 << 0,
-	GDA_DICT_UPDATE_SEQUENCES   = 1 << 1,
-	GDA_DICT_UPDATE_CONSTRAINTS = 1 << 2,
-	GDA_DICT_UPDATE_TYPES       = 1 << 3,
-	GDA_DICT_UPDATE_FUNCTIONS   = 1 << 4,
-
-	GDA_DICT_UPDATE_ALL         = 65535
-} GdaDictUpdateKind;
+} GdaQueryFieldState;
 
 #endif
 

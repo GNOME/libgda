@@ -1,6 +1,6 @@
 /* gda-object-ref.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -72,6 +72,7 @@ GObject        *gda_object_ref_new_copy           (GdaObjectRef *orig);
 void            gda_object_ref_set_ref_name       (GdaObjectRef *ref, GType ref_type, 
 						   GdaObjectRefType type, const gchar *name);
 const gchar    *gda_object_ref_get_ref_name       (GdaObjectRef *ref, GType *ref_type, GdaObjectRefType *type);
+const gchar    *gda_object_ref_get_ref_object_name (GdaObjectRef *ref);
 GType           gda_object_ref_get_ref_type       (GdaObjectRef *ref);
 
 void            gda_object_ref_set_ref_object     (GdaObjectRef *ref, GdaObject *object);

@@ -18,12 +18,6 @@
  * USA
  */
 
-
-/*
- * This object manages the objects used my mergeant (for tables, queries, etc),
- * but not what is specific to Mergeant's own GUI.
- */
-
 #ifndef __GDA_DICT_H_
 #define __GDA_DICT_H_
 
@@ -68,110 +62,86 @@ struct _GdaDictClass
 {
 	GObjectClass     parent_class;
 
-        /* signal the addition or removal of a query in the queries list */
-        void (*query_added)      (GdaDict * dict, GdaQuery *new_query);
-        void (*query_removed)    (GdaDict * dict, GdaQuery *old_query);
-        void (*query_updated)    (GdaDict * dict, GdaQuery *query);
+	/* signals the addition, removal or update of objects */
+	void    (*object_added)         (GdaDict *dict, GdaObject *obj);
+	void    (*object_removed)       (GdaDict *dict, GdaObject *obj);
+	void    (*object_updated)       (GdaDict *dict, GdaObject *obj);
+	void    (*object_act_changed)   (GdaDict *dict, GdaObject *obj);
 
-        /* signal the addition or removal of a graph in the graphs list */
-        void (*graph_added)      (GdaDict * dict, GdaGraph *new_graph);
-        void (*graph_removed)    (GdaDict * dict, GdaGraph *old_graph);
-        void (*graph_updated)    (GdaDict * dict, GdaGraph *graph);
-
-	void (*data_type_added)      (GdaDict *obj, GdaDictType *type);
-        void (*data_type_removed)    (GdaDict *obj, GdaDictType *type);
-        void (*data_type_updated)    (GdaDict *obj, GdaDictType *type);
-
-        void (*function_added)       (GdaDict *obj, GdaDictFunction *function);
-        void (*function_removed)     (GdaDict *obj, GdaDictFunction *function);
-        void (*function_updated)     (GdaDict *obj, GdaDictFunction *function);
-
-        void (*aggregate_added)      (GdaDict *obj, GdaDictAggregate *aggregate);
-        void (*aggregate_removed)    (GdaDict *obj, GdaDictAggregate *aggregate);
-        void (*aggregate_updated)    (GdaDict *obj, GdaDictAggregate *aggregate);
-
-        void (*data_update_started)       (GdaDict *obj);
-        void (*update_progress)           (GdaDict *obj, gchar * msg, guint now, guint total);
-        void (*data_update_finished)      (GdaDict *obj);
+        void    (*data_update_started)  (GdaDict *dict);
+        void    (*update_progress)      (GdaDict *dict, gchar * msg, guint now, guint total);
+        void    (*data_update_finished) (GdaDict *dict);
 
 	/* signal that a change in the whole dictionary has occurred */
-	void (*changed)          (GdaDict * dict);
+	void    (*changed)              (GdaDict * dict);
+
+	/* class variable */
+	GSList   *class_registry_list; /* list of GdaDictRegFunc functions */
+	gpointer  reserved1;
+	gpointer  reserved2;
 };
 
-GType           gda_dict_get_type            (void);
-GObject        *gda_dict_new                 (void);
+GType             gda_dict_get_type                        (void);
+GObject          *gda_dict_new                             (void);
+void              gda_dict_extend_with_functions           (GdaDict *dict);
 
-void            gda_dict_set_connection      (GdaDict *dict, GdaConnection *cnc);
-GdaConnection  *gda_dict_get_connection      (GdaDict *dict);
+void              gda_dict_set_connection                  (GdaDict *dict, GdaConnection *cnc);
+GdaConnection    *gda_dict_get_connection                  (GdaDict *dict);
+GdaDictDatabase  *gda_dict_get_database                    (GdaDict *dict);
 
-guint           gda_dict_get_id_serial       (GdaDict *dict);
-void            gda_dict_set_id_serial       (GdaDict *dict, guint value);
+void              gda_dict_declare_object_string_id_change (GdaDict *dict, GdaObject *obj, const gchar *oldid);
+GdaObject        *gda_dict_get_object_by_string_id         (GdaDict *dict, const gchar *strid);
 
-void            gda_dict_declare_object_string_id_change (GdaDict *dict, GdaObject *obj, const gchar *oldid);
-GdaObject      *gda_dict_get_object_by_string_id (GdaDict *dict, const gchar *strid);
+gboolean          gda_dict_update_dbms_data                (GdaDict *dict, GType limit_to_type, const gchar *limit_obj_name, 
+							    GError **error);
+void              gda_dict_stop_update_dbms_data           (GdaDict *dict);
 
-gboolean        gda_dict_update_dbms_data    (GdaDict *dict, GError **error);
-void            gda_dict_stop_update_dbms_data (GdaDict *dict);
+gchar            *gda_dict_compute_xml_filename            (GdaDict *dict, const gchar *datasource, 
+							    const gchar *app_id, GError **error);
+void              gda_dict_set_xml_filename                (GdaDict *dict, const gchar *xmlfile);
+const gchar      *gda_dict_get_xml_filename                (GdaDict *dict);
+gboolean          gda_dict_load                            (GdaDict *dict, GError **error);
+gboolean          gda_dict_save                            (GdaDict *dict, GError **error);
+gboolean          gda_dict_load_xml_file                   (GdaDict *dict, const gchar *xmlfile, GError **error);
+gboolean          gda_dict_save_xml_file                   (GdaDict *dict, const gchar *xmlfile, GError **error);
 
-gchar          *gda_dict_compute_xml_filename(GdaDict *dict, const gchar *datasource, 
-					      const gchar *app_id, GError **error);
-void            gda_dict_set_xml_filename    (GdaDict *dict, const gchar *xmlfile);
-const gchar    *gda_dict_get_xml_filename    (GdaDict *dict);
-gboolean        gda_dict_load                (GdaDict *dict, GError **error);
-gboolean        gda_dict_save                (GdaDict *dict, GError **error);
-gboolean        gda_dict_load_xml_file       (GdaDict *dict, const gchar *xmlfile, GError **error);
-gboolean        gda_dict_save_xml_file       (GdaDict *dict, const gchar *xmlfile, GError **error);
-
-GdaDataHandler *gda_dict_get_handler         (GdaDict *dict, GType for_type);
-GdaDataHandler *gda_dict_get_default_handler (GdaDict *dict, GType for_type);
-
-/* GdaDictType manipulations */
-GSList         *gda_dict_get_dict_types            (GdaDict *dict);
-GdaDictType    *gda_dict_get_dict_type_by_name     (GdaDict *dict, const gchar *type_name);
-GdaDictType    *gda_dict_get_dict_type_by_xml_id   (GdaDict *dict, const gchar *xml_id);
-gboolean        gda_dict_declare_custom_data_type  (GdaDict *dict, GdaDictType *type);
-
-/* GdaDictFunction manipulations */
-GSList           *gda_dict_get_functions             (GdaDict *dict);
-GSList           *gda_dict_get_functions_by_name     (GdaDict *dict, const gchar *funcname);
-GdaDictFunction  *gda_dict_get_function_by_name_arg  (GdaDict *dict, const gchar *funcname,
-						      const GSList *argtypes);
-GdaDictFunction  *gda_dict_get_function_by_xml_id    (GdaDict *dict, const gchar *xml_id);
-GdaDictFunction  *gda_dict_get_function_by_dbms_id   (GdaDict *dict, const gchar *dbms_id);
-
-/* GdaDictAggregate manipulations */
-GSList           *gda_dict_get_aggregates            (GdaDict *dict);
-GSList           *gda_dict_get_aggregates_by_name    (GdaDict *dict, const gchar *aggname);
-GdaDictAggregate *gda_dict_get_aggregate_by_name_arg (GdaDict *dict, const gchar *aggname,
-								GdaDictType *argtype);
-GdaDictAggregate *gda_dict_get_aggregate_by_xml_id   (GdaDict *dict, const gchar *xml_id);
-GdaDictAggregate *gda_dict_get_aggregate_by_dbms_id  (GdaDict *dict, const gchar *dbms_id);
+GdaDataHandler   *gda_dict_get_handler                     (GdaDict *dict, GType for_type);
+GdaDataHandler   *gda_dict_get_default_handler             (GdaDict *dict, GType for_type);
 
 /* GdaQuery manipulations */
-void            gda_dict_declare_query       (GdaDict *dict, GdaQuery *query);
-void            gda_dict_assume_query        (GdaDict *dict, GdaQuery *query);
-void            gda_dict_unassume_query      (GdaDict *dict, GdaQuery *query);
-GSList         *gda_dict_get_queries         (GdaDict *dict);
-GdaQuery        *gda_dict_get_query_by_xml_id (GdaDict *dict, const gchar *xml_id);
+#define gda_dict_get_queries(dict) gda_dict_get_objects((dict), GDA_TYPE_QUERY)
+#define gda_dict_get_query_by_xml_id(dict,xml_id) ((GdaQuery*)gda_dict_get_object_by_xml_id((dict), GDA_TYPE_QUERY, (xml_id)))
 
-/* GdaGraph manipulations */
-void            gda_dict_declare_graph       (GdaDict *dict, GdaGraph *graph);
-void            gda_dict_assume_graph        (GdaDict *dict, GdaGraph *graph);
-void            gda_dict_unassume_graph      (GdaDict *dict, GdaGraph *graph);
-GSList         *gda_dict_get_graphs          (GdaDict *dict, GdaGraphType type_of_graphs);
-GdaGraph        *gda_dict_get_graph_by_xml_id (GdaDict *dict, const gchar *xml_id);
-GdaGraph        *gda_dict_get_graph_for_object(GdaDict *dict, GObject *obj);
+/* GdaDictType manipulations */
+#define gda_dict_get_dict_types(dict) gda_dict_get_objects((dict), GDA_TYPE_DICT_TYPE)
+#define gda_dict_get_dict_type_by_name(dict,type_name) ((GdaDictType*)gda_dict_get_object_by_name((dict), GDA_TYPE_DICT_TYPE, (type_name)))
+#define gda_dict_get_dict_type_by_xml_id(dict,xml_id) ((GdaDictType*)gda_dict_get_object_by_xml_id((dict), GDA_TYPE_DICT_TYPE, (xml_id)))
 
-GdaDictDatabase  *gda_dict_get_database        (GdaDict *dict);
+/* GdaDictFunction manipulations */
+#define gda_dict_get_functions(dict) gda_dict_get_objects ((dict), GDA_TYPE_DICT_FUNCTION)
+#define gda_dict_get_functions_by_name(dict,funcname) gda_functions_get_by_name ((dict), (funcname))
+#define gda_dict_get_function_by_name_arg(dict,funcname,argtypes) gda_functions_get_by_name_arg ((dict), (funcname), (argtypes))
+#define gda_dict_get_function_by_xml_id(dict,xml_id) gda_dict_get_object_by_xml_id ((dict), GDA_TYPE_DICT_FUNCTION, (xml_id))
+#define gda_dict_get_function_by_dbms_id(dict,dbms_id) gda_functions_get_by_dbms_id ((dict), (dbms_id))
 
-GSList         *gda_dict_get_entities_fk_constraints (GdaDict *dict, GdaEntity *entity1, GdaEntity *entity2,
- 						     gboolean entity1_has_fk);
+/* GdaDictAggregate manipulations */
+#define gda_dict_get_aggregates(dict) gda_dict_get_objects((dict), GDA_TYPE_DICT_AGGREGATE)
+#define gda_dict_get_aggregates_by_name(dict,aggname) gda_aggregates_get_by_name((dict), (aggname))
+#define gda_dict_get_aggregate_by_name_arg(dict,argname,argtype) gda_aggregates_get_by_name_arg ((dict), (argname), (argtype))
+#define gda_dict_get_aggregate_by_xml_id(dict,xml_id) gda_dict_get_object_by_xml_id((dict), GDA_TYPE_DICT_AGGREGATE, (xml_id))
+#define gda_dict_get_aggregate_by_dbms_id(dict,dbmsid) gda_aggregates_get_by_dbms_id((dict),(dbmsid))
+
+
+void              gda_dict_declare_object                  (GdaDict *dict, GdaObject *object);
+void              gda_dict_assume_object                   (GdaDict *dict, GdaObject *object);
+void              gda_dict_unassume_object                 (GdaDict *dict, GdaObject *object);
+GSList           *gda_dict_get_objects                     (GdaDict *dict, GType type);
+GdaObject        *gda_dict_get_object_by_name              (GdaDict *dict, GType type, const gchar *name);
+GdaObject        *gda_dict_get_object_by_xml_id            (GdaDict *dict, GType type, const gchar *xml_id);
 
 #ifdef GDA_DEBUG
-void            gda_dict_dump                (GdaDict *dict);
+void              gda_dict_dump                            (GdaDict *dict);
 #endif
 G_END_DECLS
-
-void            gda_connection_add_data_type (GdaDict *dict, GdaDictType *datatype);
 
 #endif

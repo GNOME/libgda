@@ -793,6 +793,47 @@ parsed_create_target_sql_table (GdaQuery *query, ParseData *pdata, sql_table *ta
 	return target;
 }
 
+/*
+ * @dict: a #GdaDict object
+ * @entity1: an object implementing the #GdaEntity interface
+ * @entity2: an object implementing the #GdaEntity interface
+ * @entity1_has_fk: TRUE if the returned constraints are the one for which @entity1 contains the foreign key
+ *
+ * Get a list of all the constraints which represent a foreign constrains, between
+ * @entity1 and @entity2. If @entity1 and @entity2 are #GdaDictTable objects, then the
+ * constraints are the ones from the database.
+ *
+ * Constraints are represented as #GdaDictConstraint objects.
+ *
+ * Returns: a new list of the constraints
+ */
+GSList *
+dict_get_entities_fk_constraints (GdaDict *dict, GdaEntity *entity1, GdaEntity *entity2,
+				     gboolean entity1_has_fk)
+{
+	GSList *retval = NULL;
+
+	g_return_val_if_fail (dict && GDA_IS_DICT (dict), NULL);
+	g_return_val_if_fail (dict->priv, NULL);
+	g_return_val_if_fail (entity1 && GDA_IS_ENTITY (entity1), NULL);
+	g_return_val_if_fail (entity2 && GDA_IS_ENTITY (entity2), NULL);
+	if (entity1 == entity2)
+		return NULL;
+
+	if (GDA_IS_DICT_TABLE (entity1)) {
+		if (GDA_IS_DICT_TABLE (entity2)) {
+			GdaDictDatabase *db;
+			db = gda_dict_get_database (dict);
+			retval = gda_dict_database_get_tables_fk_constraints (db,
+									      GDA_DICT_TABLE (entity1), GDA_DICT_TABLE (entity2),
+									      entity1_has_fk);
+		}
+	}
+
+	return retval;
+}
+
+
 /* 
  * parsed_create_join_sql_table
  * @query: the query to work on
@@ -872,7 +913,7 @@ parsed_create_join_sql_table (GdaQuery *query, ParseData *pdata,
 					GSList *list = NULL;
 					left_ent = gda_query_target_get_represented_entity (GDA_QUERY_TARGET (targets->data));
 					if (left_ent) {
-						list = gda_dict_get_entities_fk_constraints (gda_object_get_dict ((GdaObject*) query),
+						list = dict_get_entities_fk_constraints (gda_object_get_dict ((GdaObject*) query),
 											     ent, left_ent, FALSE);
 						if (list) {
 							if (g_slist_length (list) != 1) {
@@ -1583,7 +1624,8 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		g_set_error (error,
 			     GDA_QUERY_ERROR,
 			     GDA_QUERY_SQL_ANALYSE_ERROR,
-			     _("Data type '%s' can't be converted to a known type"), real_type);
+			     _("Data type '%s' can't be converted to a known type"), 
+			     gda_object_get_name (GDA_OBJECT (real_type)));
 		return NULL;
 	}
 

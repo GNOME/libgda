@@ -53,17 +53,14 @@ static xmlNodePtr  gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError *
 static gboolean    gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error);
 
 static void gda_dict_database_add_table (GdaDictDatabase *db, GdaDictTable *table, gint pos);
-static void gda_dict_database_add_sequence (GdaDictDatabase *db, GdaDictSequence *seq, gint pos);
 
 static void destroyed_table_cb (GdaDictTable *table, GdaDictDatabase *db);
-static void destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *db);
 static void destroyed_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *db);
 
 static void updated_table_cb (GdaDictTable *table, GdaDictDatabase *db);
 static void table_field_added_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db);
 static void table_field_updated_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db);
 static void table_field_removed_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabase *db);
-static void updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *db);
 static void updated_constraint_cb (GdaDictConstraint *cons, GdaDictDatabase *db);
 
 #ifdef GDA_DEBUG
@@ -85,18 +82,13 @@ enum
 	FIELD_ADDED,
 	FIELD_REMOVED,
 	FIELD_UPDATED,
-	SEQUENCE_ADDED,
-	SEQUENCE_REMOVED,
-	SEQUENCE_UPDATED,
 	CONSTRAINT_ADDED,
 	CONSTRAINT_REMOVED,
 	CONSTRAINT_UPDATED,
-	FS_LINK_ADDED,
-	FS_LINK_REMOVED,
 	LAST_SIGNAL
 };
 
-static gint gda_dict_database_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+static gint gda_dict_database_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /* properties */
 enum
@@ -111,7 +103,6 @@ struct _GdaDictDatabasePrivate
 {
 	/* Db structure */
 	GSList                 *tables;
-	GSList                 *sequences;
 	GSList                 *constraints;
 	GHashTable             *constraints_hash; /* key=table, value=GSList of constraints on that table */
 	GHashTable             *tables_hash;
@@ -236,30 +227,6 @@ gda_dict_database_class_init (GdaDictDatabaseClass * class)
                               NULL, NULL,
                               gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
-        gda_dict_database_signals[SEQUENCE_ADDED] =
-                g_signal_new ("sequence_added",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdaDictDatabaseClass, sequence_added),
-                              NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
-        gda_dict_database_signals[SEQUENCE_REMOVED] =
-                g_signal_new ("sequence_removed",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdaDictDatabaseClass, sequence_removed),
-                              NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
-        gda_dict_database_signals[SEQUENCE_UPDATED] =
-                g_signal_new ("sequence_updated",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdaDictDatabaseClass, sequence_updated),
-                              NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
         gda_dict_database_signals[CONSTRAINT_ADDED] =
                 g_signal_new ("constraint_added",
                               G_TYPE_FROM_CLASS (object_class),
@@ -284,22 +251,6 @@ gda_dict_database_class_init (GdaDictDatabaseClass * class)
                               NULL, NULL,
                               gda_marshal_VOID__POINTER,
                               G_TYPE_NONE, 1, G_TYPE_POINTER);
-	gda_dict_database_signals[FS_LINK_ADDED] =
-                g_signal_new ("fs_link_added",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdaDictDatabaseClass, fs_link_added),
-                              NULL, NULL,
-                              gda_marshal_VOID__POINTER_POINTER,
-                              G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
-	gda_dict_database_signals[FS_LINK_REMOVED] =
-                g_signal_new ("fs_link_removed",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdaDictDatabaseClass, fs_link_removed),
-                              NULL, NULL,
-                              gda_marshal_VOID__POINTER_POINTER,
-                              G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
 	gda_dict_database_signals[DATA_UPDATE_STARTED] =
                 g_signal_new ("data_update_started",
                               G_TYPE_FROM_CLASS (object_class),
@@ -331,14 +282,9 @@ gda_dict_database_class_init (GdaDictDatabaseClass * class)
 	class->field_added = NULL;
 	class->field_removed = NULL;
 	class->field_updated = NULL;
-	class->sequence_added = NULL;
-	class->sequence_removed = NULL;
-	class->sequence_updated = NULL;
 	class->constraint_added = NULL;
 	class->constraint_removed = NULL;
 	class->constraint_updated = NULL;
-	class->fs_link_added = NULL;
-	class->fs_link_removed = NULL;
         class->data_update_started = NULL;
         class->data_update_finished = NULL;
         class->update_progress = NULL;
@@ -365,7 +311,6 @@ gda_dict_database_init (GdaDictDatabase * gda_dict_database)
 {
 	gda_dict_database->priv = g_new0 (GdaDictDatabasePrivate, 1);
 	gda_dict_database->priv->tables = NULL;
-        gda_dict_database->priv->sequences = NULL;
         gda_dict_database->priv->constraints = NULL;
 	gda_dict_database->priv->constraints_hash = g_hash_table_new (NULL, NULL);
 
@@ -432,10 +377,6 @@ gda_dict_database_dispose (GObject *object)
 		/* getting rid of the constraints */
 		while (gda_dict_database->priv->constraints) 
 			gda_object_destroy (GDA_OBJECT (gda_dict_database->priv->constraints->data));
-
-		/* getting rid of the sequences */
-		while (gda_dict_database->priv->sequences) 
-			gda_object_destroy (GDA_OBJECT (gda_dict_database->priv->sequences->data));
 		
 		/* getting rid of the tables */
 		while (gda_dict_database->priv->tables) 
@@ -547,26 +488,6 @@ gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError **error)
 		list = g_slist_next (list);
 	}
 
-	/* Sequences */
-	if (db->priv->sequences) {
-		tree = xmlNewChild (toptree, NULL, "gda_dict_sequences", NULL);
-		list = db->priv->sequences;
-		while (list) {
-			xmlNodePtr table;
-			
-			table = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (list->data), error);
-			
-			if (table)
-				xmlAddChild (tree, table);
-			else {
-				xmlFreeNode (tree);
-				return NULL;
-			}
-			
-			list = g_slist_next (list);
-		}
-	}
-
 	/* Constraints */
 	tree = xmlNewChild (toptree, NULL, "gda_dict_constraints", NULL);
 	list = db->priv->constraints;
@@ -602,7 +523,7 @@ gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 
 	db = GDA_DICT_DATABASE (iface);
 
-	if (db->priv->tables || db->priv->sequences || db->priv->constraints) {
+	if (db->priv->tables || db->priv->constraints) {
 		g_set_error (error,
 			     GDA_DICT_DATABASE_ERROR,
 			     GDA_DICT_DATABASE_XML_LOAD_ERROR,
@@ -627,11 +548,6 @@ gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 				return FALSE;
 			}
 
-			done = TRUE;
-		}
-
-		if (!done && !strcmp (subnode->name, "gda_dict_sequences")) {
-			TO_IMPLEMENT;
 			done = TRUE;
 		}
 
@@ -752,33 +668,6 @@ gda_dict_database_add_table (GdaDictDatabase *db, GdaDictTable *table, gint pos)
 #endif
 }
 
-/*
- * pos = -1 to append the table to the list
- */
-static void
-gda_dict_database_add_sequence (GdaDictDatabase *db, GdaDictSequence *seq, gint pos)
-{
-	g_return_if_fail (seq);
-	g_return_if_fail (!g_slist_find (db->priv->sequences, seq));
-
-	g_object_set (G_OBJECT (seq), "database", db, NULL);
-	db->priv->sequences = g_slist_insert (db->priv->sequences, seq, pos);
-
-	g_object_ref (G_OBJECT (seq));
-	gda_object_connect_destroy (seq, G_CALLBACK (destroyed_sequence_cb), db);
-	g_signal_connect (G_OBJECT (seq), "changed",
-			  G_CALLBACK (updated_sequence_cb), db);
-
-
-#ifdef GDA_DEBUG_signal
-	g_print (">> 'SEQUENCE_ADDED' from %s\n", __FUNCTION__);
-#endif
-	g_signal_emit (G_OBJECT (db), gda_dict_database_signals[SEQUENCE_ADDED], 0, seq);
-#ifdef GDA_DEBUG_signal
-	g_print ("<< 'SEQUENCE_ADDED' from %s\n", __FUNCTION__);
-#endif
-}
-
 /**
  * gda_dict_database_add_constraint
  * @db: a #GdaDictDatabase object
@@ -886,19 +775,6 @@ gda_dict_database_dump (GdaDictDatabase *db, gint offset)
 	else
 		g_print ("%sNo Table defined\n", str);
 
-	/* sequences */
-	list = db->priv->sequences;
-	if (list) {
-		g_print ("%sSequences:\n", str);
-		while (list) {
-			gda_object_dump (GDA_OBJECT (list->data), offset+5);
-			list = g_slist_next (list);
-		}
-	}
-	else
-		g_print ("%sNo Sequence defined\n", str);
-
-
 	/* constraints */
 	list = db->priv->constraints;
 	if (list) {
@@ -938,13 +814,12 @@ gda_dict_database_get_dict (GdaDictDatabase *db)
 
 
 static gboolean database_tables_update_list (GdaDictDatabase * db, const gchar *table_name, GError **error);
-static gboolean database_sequences_update_list (GdaDictDatabase * db, GError **error);
 static gboolean database_constraints_update_list (GdaDictDatabase * db, GError **error);
 /**
  * gda_dict_database_update_dbms_data
  * @db: a #GdaDictDatabase object
- * @flags: flags indicating what needs to be updated (see #GdaDictUpdateKind)
- * @obj_name: the name of an object to update, or %NULL
+ * @limit_to_type: limit the DBMS update to this type, or 0 for no limit
+ * @limit_obj_name: limit the DBMS update to objects of this name, or %NULL for no limit
  * @error: location to store error, or %NULL
  *
  * Synchronises the database representation with the database structure which is stored in
@@ -954,7 +829,7 @@ static gboolean database_constraints_update_list (GdaDictDatabase * db, GError *
  * Returns: TRUE if no error
  */
 gboolean
-gda_dict_database_update_dbms_data (GdaDictDatabase *db, guint flags, const gchar *obj_name, GError **error)
+gda_dict_database_update_dbms_data (GdaDictDatabase *db, GType limit_to_type, const gchar *limit_obj_name, GError **error)
 {
 	gboolean retval = TRUE;
 	GdaConnection *cnc;
@@ -993,13 +868,11 @@ gda_dict_database_update_dbms_data (GdaDictDatabase *db, guint flags, const gcha
 	g_print ("<< 'DATA_UPDATE_STARTED' from %s\n", __FUNCTION__);
 #endif
 
-	if (flags & GDA_DICT_UPDATE_TABLES)
-		retval = database_tables_update_list (db, obj_name, error);
+	if (!limit_to_type || (limit_to_type == GDA_TYPE_DICT_TABLE))
+		retval = database_tables_update_list (db, limit_obj_name, error);
 
-	if (retval && !db->priv->stop_update && (flags & GDA_DICT_UPDATE_SEQUENCES)) 
-		retval = database_sequences_update_list (db, error);
-
-	if (retval && !db->priv->stop_update && (flags & GDA_DICT_UPDATE_CONSTRAINTS)) 
+	if (retval && !db->priv->stop_update && 
+	    (!limit_to_type || (limit_to_type == GDA_TYPE_DICT_CONSTRAINT)))
 		retval = database_constraints_update_list (db, error);
 
 #ifdef GDA_DEBUG_signal
@@ -1288,52 +1161,6 @@ table_field_removed_cb (GdaDictTable *table, GdaDictField *field, GdaDictDatabas
 #endif	
 }
 
-
-
-static gboolean
-database_sequences_update_list (GdaDictDatabase *db, GError **error)
-{
-	TO_IMPLEMENT;
-	
-	return TRUE;
-}
-
-static void
-destroyed_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *db)
-{
-	g_return_if_fail (g_slist_find (db->priv->sequences, seq));
-	db->priv->sequences = g_slist_remove (db->priv->sequences, seq);
-
-	g_signal_handlers_disconnect_by_func (G_OBJECT (seq), 
-					      G_CALLBACK (destroyed_sequence_cb), db);
-	g_signal_handlers_disconnect_by_func (G_OBJECT (seq), 
-					      G_CALLBACK (updated_sequence_cb), db);
-
-#ifdef GDA_DEBUG_signal
-	g_print (">> 'SEQUENCE_REMOVED' from %s\n", __FUNCTION__);
-#endif
-	g_signal_emit_by_name (G_OBJECT (db), "sequence_removed", seq);
-#ifdef GDA_DEBUG_signal
-	g_print ("<< 'SEQUENCE_REMOVED' from %s\n", __FUNCTION__);
-#endif
-
-	g_object_unref (G_OBJECT (seq));
-}
-
-
-static void
-updated_sequence_cb (GdaDictSequence *seq, GdaDictDatabase *db)
-{
-#ifdef GDA_DEBUG_signal
-	g_print (">> 'SEQUENCE_UPDATED' from %s\n", __FUNCTION__);
-#endif
-	g_signal_emit_by_name (G_OBJECT (db), "sequence_updated", seq);
-#ifdef GDA_DEBUG_signal
-	g_print ("<< 'SEQUENCE_UPDATED' from %s\n", __FUNCTION__);
-#endif	
-}
-
-
 static gboolean
 database_constraints_update_list (GdaDictDatabase *db, GError **error)
 {
@@ -1539,111 +1366,6 @@ gda_dict_database_get_field_by_xml_id (GdaDictDatabase *db, const gchar *xml_id)
 	}
 
 	return field;
-}
-
-/**
- * gda_dict_database_get_sequence_by_name
- * @db: a #GdaDictDatabase object
- * @name: the name of the requested sequence
- *
- * Get a reference to a GdaDictSequence specifying its name
- *
- * Returns: The GdaDictSequence pointer or NULL if the requested sequence does not exist.
- */
-GdaDictSequence *
-gda_dict_database_get_sequence_by_name (GdaDictDatabase *db, const gchar *name)
-{
-	GdaDictSequence *seq = NULL;
-
-	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
-	g_return_val_if_fail (name && *name, NULL);
-
-	TO_IMPLEMENT;
-	return seq;
-}
-
-/**
- * gda_dict_database_get_sequence_by_xml_id
- * @db: a #GdaDictDatabase object
- * @xml_id: the XML id of the requested sequence
- *
- * Get a reference to a GdaDictSequence specifying its XML id.
- *
- * Returns: The GdaDictSequence pointer or NULL if the requested sequence does not exist.
- */
-GdaDictSequence *
-gda_dict_database_get_sequence_by_xml_id (GdaDictDatabase *db, const gchar *xml_id)
-{
-	GdaDictSequence *seq = NULL;
-
-	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
-	g_return_val_if_fail (xml_id && *xml_id, NULL);
-
-	TO_IMPLEMENT;
-	return seq;
-}
-
-/** 
- * gda_dict_database_get_sequence_to_field
- * @db: a #GdaDictDatabase object
- * @field: a #GdaDictField object
- *
- * Get a reference to a GdaDictSequence which is "linked" to the GdaDictField given as parameter.
- * This "link" means that each new value of the field will be given by the returned sequence
- *
- * Returns: The GdaDictSequence pointer or NULL if there is no sequence for this job.
- */
-GdaDictSequence *
-gda_dict_database_get_sequence_to_field  (GdaDictDatabase *db, GdaDictField *field)
-{
-	GdaDictSequence *seq = NULL;
-
-	g_return_val_if_fail (db && GDA_IS_DICT_DATABASE (db), NULL);
-	g_return_val_if_fail (field && GDA_IS_ENTITY_FIELD (field), NULL);
-
-	TO_IMPLEMENT;
-	return seq;
-}
-
-
-/**
- * gda_dict_database_link_sequence
- * @db: a #GdaDictDatabase object
- * @seq:
- * @field:
- *
- * Tells the database that each new value of the field given as argument should be
- * obtained from the specified sequence (this is usefull when the field is a simple
- * primary key for example).
- */
-void
-gda_dict_database_link_sequence (GdaDictDatabase *db, GdaDictSequence *seq, GdaDictField *field)
-{
-	g_return_if_fail (db && GDA_IS_DICT_DATABASE (db));
-	/*g_return_if_fail (seq && IS_GNOME_DB_SEQUENCE (seq));*/
-	g_return_if_fail (field && GDA_IS_ENTITY_FIELD (field));
-
-	TO_IMPLEMENT;	
-}
-
-/**
- * gda_dict_database_unlink_sequence
- * @db: a #GdaDictDatabase object
- * @seq:
- * @field:
- *
- * Tells the database that each new value of the field given as argument should not be
- * obtained from the specified sequence (this is usefull when the field is a simple
- * primary key for example). This is the opposite of the gda_dict_database_link_sequence() method.
- */
-void
-gda_dict_database_unlink_sequence (GdaDictDatabase *db, GdaDictSequence *seq, GdaDictField *field)
-{
-	g_return_if_fail (db && GDA_IS_DICT_DATABASE (db));
-	/*g_return_if_fail (seq && IS_GNOME_DB_SEQUENCE (seq));*/
-	g_return_if_fail (field && GDA_IS_ENTITY_FIELD (field));
-
-	TO_IMPLEMENT;	
 }
 
 /**

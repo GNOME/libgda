@@ -51,6 +51,8 @@
 #include "gda-query-private.h"
 #include "gda-query-parsing.h"
 
+#include "gda-dict-reg-queries.h"
+
 /* 
  * Main static functions 
  */
@@ -461,15 +463,17 @@ gda_query_new (GdaDict *dict)
 	GObject *obj;
 	GdaQuery *gda_query;
 	guint id;
+	GdaDictRegisterStruct *reg;
 
 	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
 	obj = g_object_new (GDA_TYPE_QUERY, "dict", ASSERT_DICT (dict), NULL);
 	gda_query = GDA_QUERY (obj);
 
-	g_object_get (G_OBJECT (ASSERT_DICT (dict)), "query_serial", &id, NULL);
+	reg = gda_dict_get_object_type_registration (ASSERT_DICT (dict), GDA_TYPE_QUERY);
+	id = gda_queries_get_serial (reg);
 	gda_query_object_set_int_id (GDA_QUERY_OBJECT (obj), id);
 
-	gda_dict_declare_query (ASSERT_DICT (dict), gda_query);	
+	gda_dict_declare_object (ASSERT_DICT (dict), (GdaObject *) gda_query);
 
 	return obj;
 }
@@ -494,6 +498,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 	GSList *list;
 	guint id;
 	gint order_pos;
+	GdaDictRegisterStruct *reg;
 
 	g_return_val_if_fail (orig && GDA_IS_QUERY (orig), NULL);
 
@@ -503,9 +508,10 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 
 	gda_query->priv->internal_transaction ++;
 
-	g_object_get (G_OBJECT (dict), "query_serial", &id, NULL);
+	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_QUERY);
+	id = gda_queries_get_serial (reg);
 	gda_query_object_set_int_id (GDA_QUERY_OBJECT (obj), id);
-	gda_dict_declare_query (dict, gda_query);	
+	gda_dict_declare_object (dict, (GdaObject *) gda_query);
 
 	/* hash table for replacements */
 	if (!replacements)
@@ -1523,7 +1529,7 @@ gda_query_get_parent_query (GdaQuery *query)
  * @query: a #GdaQuery object
  * @target: a #GdaQueryTarget, or %NULL
  * @ref_field: a #GdaEntityField object
- * @field_state: tells about the status of the requested field
+ * @field_state: tells about the status of the requested field, see #GdaQueryFieldState
  *
  * Finds the first #GdaQueryField object in @query which represents @ref_field.
  * The returned object will be a #GdaQueryFieldField object which represents @ref_field.
@@ -1533,7 +1539,7 @@ gda_query_get_parent_query (GdaQuery *query)
  * Returns: a #GdaQueryFieldField object or %NULL
  */
 GdaQueryField *
-gda_query_get_field_by_ref_field (GdaQuery *query, GdaQueryTarget *target, GdaEntityField *ref_field, GdaEntityFieldState field_state)
+gda_query_get_field_by_ref_field (GdaQuery *query, GdaQueryTarget *target, GdaEntityField *ref_field, GdaQueryFieldState field_state)
 {
 	GdaQueryField *field = NULL;
 	GSList *list;
@@ -2922,10 +2928,14 @@ static void
 gda_query_set_int_id (GdaQueryObject *query, guint id)
 {
 	gchar *str;
+	GdaDictRegisterStruct *reg;
 
 	str = g_strdup_printf ("QU%u", id);
 	gda_object_set_id (GDA_OBJECT (query), str);
 	g_free (str);
+
+	reg = gda_dict_get_object_type_registration (gda_object_get_dict ((GdaObject *)query), GDA_TYPE_QUERY);
+	gda_queries_declare_serial (reg, id);
 }
 
 /**
@@ -3401,10 +3411,12 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
 			GdaDataHandler *handler;
 			
 			type = gda_entity_field_get_gda_type (field);
-			handler = gda_server_provider_get_data_handler_gda (prov, cnc, type);
-			if (!handler) 
-				g_warning (_("While adding to a GdaQuery: field type '%s' is not supported by the "
-					     "connection's provider and may be rendered incorrectly"), g_type_name (type));
+			if (type != G_TYPE_INVALID) {
+				handler = gda_server_provider_get_data_handler_gda (prov, cnc, type);
+				if (!handler) 
+					g_warning (_("While adding to a GdaQuery: field type '%s' is not supported by the "
+						     "connection's provider and may be rendered incorrectly"), g_type_name (type));
+			}
 		}
 	}
 	
@@ -3872,14 +3884,25 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 
-
-	/* query itself */
 	node = xmlNewNode (NULL, "gda_query");
 	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (query));
 	xmlSetProp (node, "id", str);
 	g_free (str);
 	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (query)));
         xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (query)));
+
+	/* save as SQL text if query is not active */
+	if (! gda_referer_activate (GDA_REFERER (query))) {
+		str = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 0, error);
+		if (!str)
+			return NULL;
+		xmlNewChild (node, NULL, "gda_query_text", BAD_CAST str);
+		g_free (str);
+		xmlSetProp (node, "query_type", "TXT");
+
+		return node;
+	}
+
 	type = convert_query_type_to_str (query->priv->query_type);
 	xmlSetProp (node, "query_type", type);
 

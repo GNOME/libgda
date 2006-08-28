@@ -18,6 +18,9 @@ libgda/gda-dict-constraint.c
 libgda/gda-dict-database.c
 libgda/gda-dict-field.c
 libgda/gda-dict-function.c
+libgda/gda-dict-reg-aggregates.c
+libgda/gda-dict-reg-functions.c
+libgda/gda-dict-reg-types.c
 libgda/gda-dict-table.c
 libgda/gda-dict-type.c
 libgda/gda-init.c

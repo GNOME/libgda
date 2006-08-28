@@ -653,7 +653,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 							 gda_object_get_name (GDA_OBJECT (field)));
 				gda_object_set_description (GDA_OBJECT (type), descr);
 				g_free (descr);
-				gda_dict_declare_custom_data_type (dict, type);
+				gda_dict_declare_object (dict, (GdaObject *) type);
 				gda_dict_field_set_dict_type (field, type);
 				g_object_unref (type);
 			}

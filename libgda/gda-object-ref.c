@@ -1,6 +1,6 @@
 /* gda-object-ref.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -85,6 +85,7 @@ enum
 {
 	PROP_0,
 	PROP_HELPER_REF,
+	PROP_OBJ_NAME
 };
 
 
@@ -95,7 +96,8 @@ struct _GdaObjectRefPrivate
 	GdaObject             *ref_object;
 	GType                  requested_type;
 	GdaObjectRefType       ref_type;
-	gchar                 *name;
+	gchar                 *ref_name; /* reference as provided by gda_object_ref_set_ref_name() */
+	gchar                 *obj_name; /* real name of the object as returned by gda_object_get_name() */
 	gboolean               block_signals;
 	GdaObject             *helper_ref; /* a GdaQuery (for target resolution) or a GdaObjectRef (for a field resolution) */
 };
@@ -171,7 +173,11 @@ gda_object_ref_class_init (GdaObjectRefClass * class)
 							       "resolution, or a GdaObjectRef referencing a target"
 							       "for a field resolution",
 							       NULL, 
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (object_class, PROP_OBJ_NAME,
+					 g_param_spec_string ("obj_name", "Name of the object as when it was last found",
+							      NULL, NULL,
+							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/* virtual functions */
 #ifdef GDA_DEBUG
@@ -187,7 +193,8 @@ gda_object_ref_init (GdaObjectRef * ref)
 	ref->priv->ref_object = NULL;
 	ref->priv->requested_type = 0;
 	ref->priv->ref_type = REFERENCE_BY_XML_ID;
-	ref->priv->name = NULL;
+	ref->priv->ref_name = NULL;
+	ref->priv->obj_name = NULL;
 	ref->priv->block_signals = FALSE;
 	ref->priv->helper_ref = NULL;
 }
@@ -263,6 +270,14 @@ gda_object_ref_new_copy (GdaObjectRef *orig)
 	obj = g_object_new (GDA_TYPE_OBJECT_REF, "dict", gda_object_get_dict (GDA_OBJECT (orig)), NULL);
 	ref = GDA_OBJECT_REF (obj);
 
+	ref->priv->increase_ref_object = orig->priv->increase_ref_object;
+	ref->priv->requested_type = orig->priv->requested_type;
+	ref->priv->ref_type = orig->priv->ref_type;
+	if (orig->priv->ref_name) 
+		ref->priv->ref_name = g_strdup (orig->priv->ref_name);
+	if (orig->priv->obj_name)
+		ref->priv->obj_name = g_strdup (orig->priv->obj_name);
+
 	if (orig->priv->ref_object) {
 		GObject *obj = G_OBJECT (orig->priv->ref_object);
 
@@ -281,12 +296,6 @@ gda_object_ref_new_copy (GdaObjectRef *orig)
 #endif
 		}
 	}
-
-	ref->priv->increase_ref_object = orig->priv->increase_ref_object;
-	ref->priv->requested_type = orig->priv->requested_type;
-	ref->priv->ref_type = orig->priv->ref_type;
-	if (orig->priv->name) 
-		ref->priv->name = g_strdup (orig->priv->name);
 
 	return obj;	
 }
@@ -325,9 +334,13 @@ gda_object_ref_dispose (GObject *object)
 
 		if (ref->priv->ref_object)
 			destroyed_object_cb (G_OBJECT (ref->priv->ref_object), ref);
-		if (ref->priv->name) {
-			g_free (ref->priv->name);
-			ref->priv->name = NULL;
+		if (ref->priv->ref_name) {
+			g_free (ref->priv->ref_name);
+			ref->priv->ref_name = NULL;
+		}
+		if (ref->priv->obj_name) {
+			g_free (ref->priv->obj_name);
+			ref->priv->obj_name = NULL;
 		}
 		if (ref->priv->helper_ref)
 			helper_ref_destroyed_cb (ref->priv->helper_ref, ref);
@@ -390,6 +403,12 @@ gda_object_ref_set_property (GObject *object,
 				}
 			}
 			break;
+		case PROP_OBJ_NAME:
+			g_free (ref->priv->obj_name);
+			ref->priv->obj_name = NULL;
+			if (g_value_get_string (value))
+				ref->priv->obj_name = g_strdup (g_value_get_string (value));
+			break;
 		}
 	}
 }
@@ -407,6 +426,9 @@ gda_object_ref_get_property (GObject *object,
 		switch (param_id) {
 		case PROP_HELPER_REF:
 			g_value_set_pointer (value, ref->priv->helper_ref);
+			break;
+		case PROP_OBJ_NAME:
+			g_value_set_string (value, ref->priv->obj_name);
 			break;
 		}	
 	}
@@ -498,7 +520,7 @@ gda_object_ref_set_ref_name (GdaObjectRef *ref, GType ref_type, GdaObjectRefType
 	g_return_if_fail (ref_type);
 
 	/* Is there anything to change ? */
-	if (ref->priv->name && name && !strcmp (ref->priv->name, name) &&
+	if (ref->priv->ref_name && name && !strcmp (ref->priv->ref_name, name) &&
 	    (ref_type == ref->priv->requested_type) && (ref->priv->ref_type == type)) {
 		gda_object_ref_activate (ref);
 		return;
@@ -507,12 +529,12 @@ gda_object_ref_set_ref_name (GdaObjectRef *ref, GType ref_type, GdaObjectRefType
 	gda_object_ref_deactivate (ref);
 	
 	ref->priv->ref_type = type;
-	if (ref->priv->name) {
-		g_free (ref->priv->name);
-		ref->priv->name = NULL;
+	if (ref->priv->ref_name) {
+		g_free (ref->priv->ref_name);
+		ref->priv->ref_name = NULL;
 	}
 	if (name)
-		ref->priv->name = g_strdup (name);
+		ref->priv->ref_name = g_strdup (name);
 	ref->priv->requested_type = ref_type;
 
 	gda_object_ref_activate (ref);
@@ -541,12 +563,12 @@ gda_object_ref_set_ref_object_type (GdaObjectRef *ref, GdaObject *object, GType 
 	gda_object_ref_deactivate (ref);
 
 	ref->priv->ref_type =  REFERENCE_BY_XML_ID;
-	if (ref->priv->name) {
-		g_free (ref->priv->name);
-		ref->priv->name = NULL;
+	if (ref->priv->ref_name) {
+		g_free (ref->priv->ref_name);
+		ref->priv->ref_name = NULL;
 	}
 	
-	ref->priv->name = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (object));
+	ref->priv->ref_name = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (object));
 	ref->priv->requested_type = type;
 
 	/* Object treatment */
@@ -554,6 +576,10 @@ gda_object_ref_set_ref_object_type (GdaObjectRef *ref, GdaObject *object, GType 
 		g_object_ref (object);
 	gda_object_connect_destroy (object, G_CALLBACK (destroyed_object_cb), ref);
 	ref->priv->ref_object = object;
+
+	g_free (ref->priv->obj_name);
+	ref->priv->obj_name = g_strdup (gda_object_get_name (object));
+
 	if (! ref->priv->block_signals) {
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'REF_FOUND' from %s\n", __FUNCTION__);
@@ -630,15 +656,32 @@ gda_object_ref_replace_ref_object (GdaObjectRef *ref, GHashTable *replacements)
 const gchar *
 gda_object_ref_get_ref_name (GdaObjectRef *ref, GType *ref_type, GdaObjectRefType *type)
 {
-	g_return_val_if_fail (GDA_IS_OBJECT_REF (ref), 0);
-	g_return_val_if_fail (ref->priv, 0);
+	g_return_val_if_fail (GDA_IS_OBJECT_REF (ref), NULL);
+	g_return_val_if_fail (ref->priv, NULL);
 
 	if (ref_type)
 		*ref_type = ref->priv->requested_type;
 	if (type)
 		*type = ref->priv->ref_type;
 
-	return ref->priv->name;
+	return ref->priv->ref_name;
+}
+
+/**
+ * gda_object_ref_get_ref_object_name
+ * @ref: a #GdaObjectRef object
+ *
+ * Get the name (as returned by gda_object_get_name()) of the last object referenced
+ *
+ * Returns: the name of the object (to be interpreted with @type)
+ */
+const gchar *
+gda_object_ref_get_ref_object_name (GdaObjectRef *ref)
+{
+	g_return_val_if_fail (GDA_IS_OBJECT_REF (ref), NULL);
+	g_return_val_if_fail (ref->priv, NULL);
+
+	return ref->priv->obj_name;
 }
 
 /**
@@ -697,7 +740,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 	g_return_val_if_fail (GDA_IS_OBJECT_REF (ref), FALSE);
 	g_return_val_if_fail (ref->priv, FALSE);
 
-	if (!ref->priv->name)
+	if (!ref->priv->ref_name)
 		/* no object reference set, so we consider ourselve active */
 		return TRUE;
 
@@ -713,9 +756,9 @@ gda_object_ref_activate (GdaObjectRef *ref)
 		done = TRUE;
 		db = gda_dict_get_database (gda_object_get_dict (GDA_OBJECT (ref)));
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID)
-			table = gda_dict_database_get_table_by_xml_id (db, ref->priv->name);
+			table = gda_dict_database_get_table_by_xml_id (db, ref->priv->ref_name);
 		else
-			table = gda_dict_database_get_table_by_name (db, ref->priv->name);
+			table = gda_dict_database_get_table_by_name (db, ref->priv->ref_name);
 
 		if (table)
 			obj = GDA_OBJECT (table);
@@ -729,9 +772,9 @@ gda_object_ref_activate (GdaObjectRef *ref)
 		done = TRUE;
 		db = gda_dict_get_database (gda_object_get_dict (GDA_OBJECT (ref)));
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID)
-			field = gda_dict_database_get_field_by_xml_id (db, ref->priv->name);
+			field = gda_dict_database_get_field_by_xml_id (db, ref->priv->ref_name);
 		else
-			field = gda_dict_database_get_field_by_name (db, ref->priv->name);
+			field = gda_dict_database_get_field_by_name (db, ref->priv->ref_name);
 
 		if (field)
 			obj = GDA_OBJECT (field);
@@ -743,7 +786,9 @@ gda_object_ref_activate (GdaObjectRef *ref)
 
 		done = TRUE;
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID)
-			query = gda_dict_get_query_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), ref->priv->name);
+			query = gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+							       GDA_TYPE_QUERY,
+							       ref->priv->ref_name);
 		else
 			TO_IMPLEMENT; /* not really needed, anyway */
 		if (query)
@@ -755,16 +800,17 @@ gda_object_ref_activate (GdaObjectRef *ref)
 		GdaQuery *query;
 		gchar *str, *ptr, *tok;
 
-		str = g_strdup (ref->priv->name);
+		str = g_strdup (ref->priv->ref_name);
 		ptr = strtok_r (str, ":", &tok);
 		
 		done = TRUE;
-		query = gda_dict_get_query_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), ptr);
+		query = gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+						       GDA_TYPE_QUERY, ptr);
 		
 		if (query) {
 			GdaEntityField *field;
 			
-			field = gda_entity_get_field_by_xml_id (GDA_ENTITY (query), ref->priv->name);
+			field = gda_entity_get_field_by_xml_id (GDA_ENTITY (query), ref->priv->ref_name);
 			if (field)
 				obj = GDA_OBJECT (field);
 		}
@@ -779,14 +825,15 @@ gda_object_ref_activate (GdaObjectRef *ref)
 			gchar *str, *ptr, *tok;
 			GdaQuery *query;
 			
-			str = g_strdup (ref->priv->name);
+			str = g_strdup (ref->priv->ref_name);
 			ptr = strtok_r (str, ":", &tok);
-			query = gda_dict_get_query_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), ptr);
+			query = gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+							       GDA_TYPE_QUERY, ptr);
 			g_free (str);
 			if (query) {
 				GdaQueryTarget *target;
 				
-				target = gda_query_get_target_by_xml_id (query, ref->priv->name);
+				target = gda_query_get_target_by_xml_id (query, ref->priv->ref_name);
 				if (target)
 					obj = GDA_OBJECT (target);
 			}
@@ -799,7 +846,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 					g_warning ("GdaObjectRef helper object must be a GdaQuery for target resolution");
 				else
 					target = (GdaQueryTarget *) gda_query_get_target_by_alias (GDA_QUERY (ref->priv->helper_ref), 
-												   ref->priv->name);
+												   ref->priv->ref_name);
 
 				if (target)
 					obj = GDA_OBJECT (target);
@@ -813,7 +860,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 	if (!done && (ref->priv->requested_type == GDA_TYPE_ENTITY_FIELD)) {
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID) {
 			gchar *str, *ptr, *tok;
-			str = g_strdup (ref->priv->name);
+			str = g_strdup (ref->priv->ref_name);
 			ptr = strtok_r (str, ":", &tok);
 			if ((*ptr == 'T') && (*(ptr+1) == 'V')) {
 				/* we are really looking for a table's field */
@@ -823,7 +870,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 				done = TRUE;
 				
 				db = gda_dict_get_database (gda_object_get_dict (GDA_OBJECT (ref)));
-				field = gda_dict_database_get_field_by_xml_id (db, ref->priv->name);
+				field = gda_dict_database_get_field_by_xml_id (db, ref->priv->ref_name);
 				
 				if (field)
 					obj = GDA_OBJECT (field);
@@ -834,12 +881,13 @@ gda_object_ref_activate (GdaObjectRef *ref)
 				GdaQuery *query;
 				
 				done = TRUE;
-				query = gda_dict_get_query_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), ptr);
+				query = gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+								       GDA_TYPE_QUERY, ptr);
 				
 				if (query) {
 					GdaEntityField *field;
 					
-					field = gda_entity_get_field_by_xml_id (GDA_ENTITY (query), ref->priv->name);
+					field = gda_entity_get_field_by_xml_id (GDA_ENTITY (query), ref->priv->ref_name);
 					if (field)
 						obj = GDA_OBJECT (field);
 				}
@@ -861,7 +909,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 
 					ent = gda_query_target_get_represented_entity (target);
 					if (ent)
-						tmp = gda_entity_get_field_by_name (ent, ref->priv->name);
+						tmp = gda_entity_get_field_by_name (ent, ref->priv->ref_name);
 					if (tmp)
 						obj = GDA_OBJECT (tmp);
 				}
@@ -880,7 +928,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 		done = TRUE;
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID)
 			func = gda_dict_get_function_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
-								ref->priv->name);
+								ref->priv->ref_name);
 		else {
 			/* Find the list of functions by its name, and if there is more than one, 
 			 * then we don't make a choice, and say that we did not find it because
@@ -888,7 +936,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 			GSList *list;
 
 			list = gda_dict_get_functions_by_name (gda_object_get_dict (GDA_OBJECT (ref)), 
-								ref->priv->name);
+								ref->priv->ref_name);
 			if (g_slist_length (list) ==  1) 
 				func = GDA_DICT_FUNCTION (list->data);
 			g_slist_free (list);
@@ -904,7 +952,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 		done = TRUE;
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID)
 			agg = gda_dict_get_aggregate_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
-								ref->priv->name);
+								ref->priv->ref_name);
 		else {
 			/* Find the list of functions by its name, and if there is more than one, 
 			 * then we don't make a choice, and say that we did not find it because
@@ -912,7 +960,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
 			GSList *list;
 
 			list = gda_dict_get_aggregates_by_name (gda_object_get_dict (GDA_OBJECT (ref)), 
-								ref->priv->name);
+								ref->priv->ref_name);
 			if (g_slist_length (list) ==  1) 
 				agg = GDA_DICT_AGGREGATE (list->data);
 			g_slist_free (list);
@@ -928,6 +976,10 @@ gda_object_ref_activate (GdaObjectRef *ref)
 
 		gda_object_connect_destroy (obj, G_CALLBACK (destroyed_object_cb), ref);
 		ref->priv->ref_object = obj;
+
+		g_free (ref->priv->obj_name);
+		ref->priv->obj_name = g_strdup (gda_object_get_name (obj));
+
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
@@ -952,7 +1004,7 @@ gda_object_ref_deactivate (GdaObjectRef *ref)
 	g_return_if_fail (GDA_IS_OBJECT_REF (ref));
 	g_return_if_fail (ref->priv);
 
-	if (!ref->priv->name)
+	if (!ref->priv->ref_name)
 		return;
 	
 	if (! ref->priv->ref_object)
@@ -990,7 +1042,7 @@ gda_object_ref_is_active (GdaObjectRef *ref)
 	g_return_val_if_fail (GDA_IS_OBJECT_REF (ref), FALSE);
 	g_return_val_if_fail (ref->priv, FALSE);
 	
-	if (!ref->priv->name)
+	if (!ref->priv->ref_name)
 		/* no object reference set, so we consider ourselve active */
 		return TRUE;
 
@@ -1016,11 +1068,11 @@ gda_object_ref_dump (GdaObjectRef *ref, guint offset)
 
 	if (ref->priv->ref_object) {
 		g_print ("%s" D_COL_H1 "GdaObjectRef" D_COL_NOR " Active, points to id='%s': %p\n", str, 
-			 ref->priv->name, ref->priv->ref_object);
+			 ref->priv->ref_name, ref->priv->ref_object);
 		/*gda_object_dump (GDA_OBJECT (ref->priv->ref_object), offset);*/
 	}
 	else 
-		g_print ("%s" D_COL_ERR "BaseRef to id '%s' not active\n" D_COL_NOR, str, ref->priv->name);
+		g_print ("%s" D_COL_ERR "BaseRef to id '%s' not active\n" D_COL_NOR, str, ref->priv->ref_name);
 }
 #endif
 

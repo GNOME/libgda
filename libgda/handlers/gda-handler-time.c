@@ -638,7 +638,7 @@ make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp, const gchar *value
 	}
 	g_free (str);
 
-	g_print ("Value #%s# => %d\n", value, retval);
+	/*g_print ("Value #%s# => %d\n", value, retval);*/
 
 	return retval;
 }

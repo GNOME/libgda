@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="COLUMN_DESC_P" _name="Column's description">
+    <parameter id="TABLE_NAME" _name="Table" _descr="Table's name" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE"/>
+  </parameters>
+</serv_op>

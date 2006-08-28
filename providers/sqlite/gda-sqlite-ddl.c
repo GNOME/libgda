@@ -221,6 +221,88 @@ gda_sqlite_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 }
 
 gchar *
+gda_sqlite_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+				GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	/* DROP TABLE */
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NEW_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, " RENAME TO ");
+	g_string_append (string, g_value_get_string (value));
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+gchar *
+gda_sqlite_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
+			      GdaServerOperation *op, GError **error)
+{
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	/* DROP TABLE */
+	string = g_string_new ("ALTER TABLE ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/TABLE_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	g_string_append (string, " ADD COLUMN ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_TYPE");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append_c (string, ' ');
+	g_string_append (string, g_value_get_string (value));
+				
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_DEFAULT");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		const gchar *str = g_value_get_string (value);
+		if (str && *str) {
+			g_string_append (string, " DEFAULT ");
+			g_string_append (string, str);
+		}
+	}
+				
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_NNUL");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, " NOT NULL");
+				
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_CHECK");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		const gchar *str = g_value_get_string (value);
+		if (str && *str) {
+			g_string_append (string, " CHECK (");
+			g_string_append (string, str);
+			g_string_append_c (string, ')');
+		}
+	}
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
+}
+
+
+gchar *
 gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
 			       GdaServerOperation *op, GError **error)
 {

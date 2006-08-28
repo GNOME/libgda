@@ -79,6 +79,7 @@
 <!ENTITY libgda-report-result SYSTEM "xml/gda-report-result.xml">
 <!ENTITY libgda-report-valid SYSTEM "xml/gda-report-valid.xml">
 <!ENTITY libgda-GdaDict SYSTEM "xml/gda-dict.xml">
+<!ENTITY libgda-GdaDictExtend SYSTEM "xml/gda-dict-extend.xml">
 <!ENTITY libgda-GdaConnection SYSTEM "xml/gda-connection.xml">
 <!ENTITY libgda-GdaObject SYSTEM "xml/gda-object.xml">
 <!ENTITY libgda-GdaXmlStorage SYSTEM "xml/gda-xml-storage.xml">
@@ -420,6 +421,7 @@
       &libgda-GdaDictTable;
       &libgda-GdaDictField;
       &libgda-GdaDictConstraint;
+      &libgda-GdaDictExtend;
     </chapter>
 
     <chapter>

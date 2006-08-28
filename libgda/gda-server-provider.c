@@ -408,6 +408,28 @@ static OpReq op_req_DROP_TABLE [] = {
 	{NULL}
 };
 
+static OpReq op_req_RENAME_TABLE [] = {
+	{"/TABLE_DESC_P",                  GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
+	{"/TABLE_DESC_P/TABLE_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/TABLE_DESC_P/TABLE_NEW_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
+static OpReq op_req_ADD_COLUMN [] = {
+	{"/COLUMN_DEF_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
+	{"/COLUMN_DEF_P/TABLE_NAME",    GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/COLUMN_DEF_P/COLUMN_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/COLUMN_DEF_P/COLUMN_TYPE",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
+static OpReq op_req_DROP_COLUMN [] = {
+	{"/COLUMN_DESC_P",               GDA_SERVER_OPERATION_NODE_PARAMLIST, 0},
+	{"/COLUMN_DESC_P/TABLE_NAME",    GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/COLUMN_DESC_P/COLUMN_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL}
+};
+
 static OpReq op_req_CREATE_INDEX [] = {
 	{"/INDEX_DEF_P/INDEX_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{"/INDEX_DEF_P/INDEX_ON_TABLE",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
@@ -418,15 +440,6 @@ static OpReq op_req_CREATE_INDEX [] = {
 static OpReq op_req_DROP_INDEX [] = {
 	{"/INDEX_DESC_P/INDEX_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{NULL}
-};
-
-static OpReq *op_req_table [GDA_SERVER_OPERATION_NB] = {
-	op_req_CREATE_DB,
-	op_req_DROP_DB,
-	op_req_CREATE_TABLE,
-	op_req_DROP_TABLE,
-	op_req_CREATE_INDEX,
-	op_req_DROP_INDEX,
 };
 
 /**
@@ -452,6 +465,25 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 				      GdaServerOperationType type, 
 				      GdaParameterList *options, GError **error)
 {
+	OpReq **op_req_table = NULL;
+
+	if (! op_req_table) {
+		op_req_table = g_new0 (OpReq *, GDA_SERVER_OPERATION_NB);
+
+		op_req_table [GDA_SERVER_OPERATION_CREATE_DB] = op_req_CREATE_DB;
+		op_req_table [GDA_SERVER_OPERATION_DROP_DB] = op_req_DROP_DB;
+		
+		op_req_table [GDA_SERVER_OPERATION_CREATE_TABLE] = op_req_CREATE_TABLE;
+		op_req_table [GDA_SERVER_OPERATION_DROP_TABLE] = op_req_DROP_TABLE;
+		op_req_table [GDA_SERVER_OPERATION_RENAME_TABLE] = op_req_RENAME_TABLE;
+
+		op_req_table [GDA_SERVER_OPERATION_ADD_COLUMN] = op_req_ADD_COLUMN;
+		op_req_table [GDA_SERVER_OPERATION_DROP_COLUMN] = op_req_DROP_COLUMN;
+
+		op_req_table [GDA_SERVER_OPERATION_CREATE_INDEX] = op_req_CREATE_INDEX;
+		op_req_table [GDA_SERVER_OPERATION_DROP_INDEX] = op_req_DROP_INDEX;
+	}
+
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);

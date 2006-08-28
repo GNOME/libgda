@@ -34,7 +34,10 @@ xml_in_files = \
 	postgres_specs_create_table.xml.in \
 	postgres_specs_drop_table.xml.in \
 	postgres_specs_create_index.xml.in \
-	postgres_specs_drop_index.xml.in
+	postgres_specs_drop_index.xml.in \
+	postgres_specs_rename_table.xml.in \
+	postgres_specs_add_column.xml.in \
+	postgres_specs_drop_column.xml.in
 
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 

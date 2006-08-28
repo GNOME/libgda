@@ -86,48 +86,6 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 @dbdatabase: the object which received the signal.
 @arg1: 
 
-<!-- ##### SIGNAL GdaDictDatabase::fs-link-added ##### -->
-<para>
-
-</para>
-
-@dbdatabase: the object which received the signal.
-@arg1: 
-@arg2: 
-
-<!-- ##### SIGNAL GdaDictDatabase::fs-link-removed ##### -->
-<para>
-
-</para>
-
-@dbdatabase: the object which received the signal.
-@arg1: 
-@arg2: 
-
-<!-- ##### SIGNAL GdaDictDatabase::sequence-added ##### -->
-<para>
-
-</para>
-
-@dbdatabase: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDictDatabase::sequence-removed ##### -->
-<para>
-
-</para>
-
-@dbdatabase: the object which received the signal.
-@arg1: 
-
-<!-- ##### SIGNAL GdaDictDatabase::sequence-updated ##### -->
-<para>
-
-</para>
-
-@dbdatabase: the object which received the signal.
-@arg1: 
-
 <!-- ##### SIGNAL GdaDictDatabase::table-added ##### -->
 <para>
 
@@ -200,8 +158,8 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 </para>
 
 @db: 
-@flags: 
-@obj_name: 
+@limit_to_type: 
+@limit_obj_name: 
 @error: 
 @Returns: 
 
@@ -261,56 +219,6 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 @db: 
 @xml_id: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_database_get_sequence_by_name ##### -->
-<para>
-
-</para>
-
-@db: 
-@name: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_database_get_sequence_by_xml_id ##### -->
-<para>
-
-</para>
-
-@db: 
-@xml_id: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_database_get_sequence_to_field ##### -->
-<para>
-
-</para>
-
-@db: 
-@field: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_dict_database_link_sequence ##### -->
-<para>
-
-</para>
-
-@db: 
-@seq: 
-@field: 
-
-
-<!-- ##### FUNCTION gda_dict_database_unlink_sequence ##### -->
-<para>
-
-</para>
-
-@db: 
-@seq: 
-@field: 
 
 
 <!-- ##### FUNCTION gda_dict_database_get_all_constraints ##### -->

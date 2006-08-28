@@ -233,6 +233,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	gint errmsg;
 	SQLITEcnc *scnc;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
+	gchar *dup = NULL;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -241,14 +242,62 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	dirname = gda_quark_list_find (params, "DB_DIR");
 	dbname = gda_quark_list_find (params, "DB_NAME");
 
+	if (!dirname || !dbname) {
+		const gchar *str;
+
+		str = gda_quark_list_find (params, "URI");
+		if (!str) {
+			gda_connection_add_event_string (cnc,
+							 _("The connection string must contain DB_DIR and DB_NAME values"));
+			return FALSE;
+		}
+		else {
+			gint len = strlen (str);
+
+			if ((len > 4) && (str[len-1] == 'b') && (str[len-2] == 'd') && (str[len-3] == '.')) {
+				gchar *ptr;
+
+				dup = strdup (str);
+				dup [len-3] = 0;
+				ptr = dup + (len - 4);
+				while ((ptr >= dup) && (*ptr != '/'))
+					ptr--;
+				dbname = ptr;
+				if (*ptr == '/')
+					dbname ++;
+
+				if ((*ptr == '/') && (ptr > dup)) {
+					dirname = dup;
+					while ((ptr >= dup) && (*ptr != '/'))
+						ptr--;
+					*ptr = 0;
+				}
+			}
+			if (!dbname || !dirname) {
+				gda_connection_add_event_string (cnc,
+								 _("The connection string format has changed: replace URI with "
+								   "DB_DIR (the path to the database file) and DB_NAME "
+								   "(the database file without the '.db' at the end)."));
+				return FALSE;
+			}
+			else 
+				g_warning (_("The connection string format has changed: replace URI with "
+					     "DB_DIR (the path to the database file) and DB_NAME "
+					     "(the database file without the '.db' at the end)."));
+		}
+	}
+
 	if (!g_file_test (dirname, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)) {
 		gda_connection_add_event_string (cnc,
 						 _("The DB_DIR part of the connection string must point "
 						   "to a valid directory"));
+		g_free (dup);
+		return FALSE;
 	}
 
 	tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
 	filename = g_build_filename (dirname, tmp, NULL);
+	g_free (dup);
 	g_free (tmp);
 	scnc = g_new0 (SQLITEcnc, 1);
 
@@ -537,8 +586,13 @@ gda_sqlite_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
         switch (type) {
         case GDA_SERVER_OPERATION_CREATE_DB:
         case GDA_SERVER_OPERATION_DROP_DB:
+
         case GDA_SERVER_OPERATION_CREATE_TABLE:
         case GDA_SERVER_OPERATION_DROP_TABLE:
+        case GDA_SERVER_OPERATION_RENAME_TABLE:
+
+        case GDA_SERVER_OPERATION_ADD_COLUMN:
+
         case GDA_SERVER_OPERATION_CREATE_INDEX:
         case GDA_SERVER_OPERATION_DROP_INDEX:
                 return TRUE;
@@ -607,6 +661,12 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
                 break;
         case GDA_SERVER_OPERATION_DROP_TABLE:
                 sql = gda_sqlite_render_DROP_TABLE (provider, cnc, op, error);
+                break;
+        case GDA_SERVER_OPERATION_RENAME_TABLE:
+                sql = gda_sqlite_render_RENAME_TABLE (provider, cnc, op, error);
+                break;
+        case GDA_SERVER_OPERATION_ADD_COLUMN:
+                sql = gda_sqlite_render_ADD_COLUMN (provider, cnc, op, error);
                 break;
         case GDA_SERVER_OPERATION_CREATE_INDEX:
                 sql = gda_sqlite_render_CREATE_INDEX (provider, cnc, op, error);

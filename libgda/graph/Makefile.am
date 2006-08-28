@@ -8,7 +8,8 @@ AM_CPPFLAGS = \
 libgda_graph_headers = \
 	gda-graph.h \
 	gda-graph-item.h \
-	gda-graph-query.h
+	gda-graph-query.h \
+	gda-dict-reg-graphs.h
 
 libgda_graphincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda/graph
 libgda_graphinclude_HEADERS=$(libgda_graph_headers)
@@ -17,6 +18,7 @@ libgda_graph_3_la_SOURCES = \
 	$(libgda_graph_headers) \
 	gda-graph.c \
         gda-graph-item.c \
-        gda-graph-query.c
+        gda-graph-query.c \
+	gda-dict-reg-graphs.c
 
 libgda_graph_3_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)

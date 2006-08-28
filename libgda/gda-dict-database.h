@@ -69,20 +69,16 @@ struct _GdaDictDatabaseClass
 	void   (*field_removed)             (GdaDictDatabase *obj, GdaDictField *field);
 	void   (*field_updated)             (GdaDictDatabase *obj, GdaDictField *field);
 
-	void   (*sequence_added)            (GdaDictDatabase *obj, GdaDictSequence *seq);
-	void   (*sequence_removed)          (GdaDictDatabase *obj, GdaDictSequence *seq);
-	void   (*sequence_updated)          (GdaDictDatabase *obj, GdaDictSequence *seq);
-
 	void   (*constraint_added)          (GdaDictDatabase *obj, GdaDictConstraint *cstr);
 	void   (*constraint_removed)        (GdaDictDatabase *obj, GdaDictConstraint *cstr);
 	void   (*constraint_updated)        (GdaDictDatabase *obj, GdaDictConstraint *cstr);
 	
-	void   (*fs_link_added)             (GdaDictDatabase *obj, GdaDictSequence *seq, GdaDictField *field);
-	void   (*fs_link_removed)           (GdaDictDatabase *obj, GdaDictSequence *seq, GdaDictField *field);
-
 	void   (*data_update_started)       (GdaDictDatabase *obj);
 	void   (*update_progress)           (GdaDictDatabase *obj, gchar * msg, guint now, guint total);
 	void   (*data_update_finished)      (GdaDictDatabase *obj);
+
+	gpointer reserved1;
+	gpointer reserved2;
 };
 
 GType              gda_dict_database_get_type                  (void);
@@ -91,7 +87,7 @@ GObject           *gda_dict_database_new                       (GdaDict *dict);
 GdaDict            *gda_dict_database_get_dict                  (GdaDictDatabase *db);
 
 gboolean           gda_dict_database_update_dbms_data          (GdaDictDatabase *db, 
-								guint flags, const gchar *obj_name, 
+								GType limit_to_type, const gchar *limit_obj_name, 
 								GError **error);
 void               gda_dict_database_stop_update_dbms_data     (GdaDictDatabase *db);
 
@@ -100,14 +96,6 @@ GdaDictTable      *gda_dict_database_get_table_by_name         (GdaDictDatabase 
 GdaDictTable      *gda_dict_database_get_table_by_xml_id       (GdaDictDatabase *db, const gchar *xml_id);
 GdaDictField      *gda_dict_database_get_field_by_name         (GdaDictDatabase *db, const gchar *fullname);
 GdaDictField      *gda_dict_database_get_field_by_xml_id       (GdaDictDatabase *db, const gchar *xml_id);
-
-GdaDictSequence   *gda_dict_database_get_sequence_by_name      (GdaDictDatabase *db, const gchar *name);
-GdaDictSequence   *gda_dict_database_get_sequence_by_xml_id    (GdaDictDatabase *db, const gchar *xml_id);
-GdaDictSequence   *gda_dict_database_get_sequence_to_field     (GdaDictDatabase *db, GdaDictField *field);
-void               gda_dict_database_link_sequence             (GdaDictDatabase *db, 
-								GdaDictSequence *seq, GdaDictField *field);
-void               gda_dict_database_unlink_sequence           (GdaDictDatabase *db, 
-								GdaDictSequence *seq, GdaDictField *field);
 
 void               gda_dict_database_add_constraint            (GdaDictDatabase *db, GdaDictConstraint *cstr);
 GSList            *gda_dict_database_get_all_constraints       (GdaDictDatabase *db);

@@ -514,6 +514,21 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	pq_host = gda_quark_list_find (params, "HOST");
 	pq_hostaddr = gda_quark_list_find (params, "HOSTADDR");
 	pq_db = gda_quark_list_find (params, "DB_NAME");
+	if (!pq_db) {
+		const gchar *str;
+
+		str = gda_quark_list_find (params, "DATABASE");
+		if (!str) {
+			gda_connection_add_event_string (cnc,
+							 _("The connection string must contain a DB_NAME value"));
+			return FALSE;
+		}
+		else {
+			g_warning (_("The connection string format has changed: replace DATABASE with "
+				     "DB_NAME and the same contents"));
+			pq_db = str;
+		}
+	}
 	pg_searchpath = gda_quark_list_find (params, "SEARCHPATH");
 	pq_port = gda_quark_list_find (params, "PORT");
 	pq_options = gda_quark_list_find (params, "OPTIONS");
@@ -801,8 +816,14 @@ gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnec
 	switch (type) {
 	case GDA_SERVER_OPERATION_CREATE_DB:
 	case GDA_SERVER_OPERATION_DROP_DB:
+
 	case GDA_SERVER_OPERATION_CREATE_TABLE:
 	case GDA_SERVER_OPERATION_DROP_TABLE:
+	case GDA_SERVER_OPERATION_RENAME_TABLE:
+
+	case GDA_SERVER_OPERATION_ADD_COLUMN:
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
+
 	case GDA_SERVER_OPERATION_CREATE_INDEX:
 	case GDA_SERVER_OPERATION_DROP_INDEX:
 		return TRUE;
@@ -873,6 +894,15 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 		break;
 	case GDA_SERVER_OPERATION_DROP_TABLE:
 		sql = gda_postgres_render_DROP_TABLE (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_RENAME_TABLE:
+		sql = gda_postgres_render_RENAME_TABLE (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_ADD_COLUMN:
+		sql = gda_postgres_render_ADD_COLUMN (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
+		sql = gda_postgres_render_DROP_COLUMN (provider, cnc, op, error);
 		break;
 	case GDA_SERVER_OPERATION_CREATE_INDEX:
 		sql = gda_postgres_render_CREATE_INDEX (provider, cnc, op, error);

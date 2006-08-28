@@ -23,6 +23,15 @@ Parent class for any query's field
 </para>
 
 
+<!-- ##### ENUM GdaQueryFieldState ##### -->
+<para>
+
+</para>
+
+@GDA_ENTITY_FIELD_VISIBLE: 
+@GDA_ENTITY_FIELD_INVISIBLE: 
+@GDA_ENTITY_FIELD_ANY: 
+
 <!-- ##### FUNCTION gda_query_field_new_from_xml ##### -->
 <para>
 

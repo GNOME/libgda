@@ -24,6 +24,7 @@
 #include <libgda/gda-dict.h>
 #include <libgda/gda-query.h>
 #include <libgda/gda-query-target.h>
+#include <libgda/graph/gda-dict-reg-graphs.h>
 
 /* 
  * Main static functions 
@@ -109,19 +110,23 @@ gda_graph_query_new (GdaQuery *query)
 	guint id;
 	GdaDict *dict;
 	gchar *str;
+	GdaDictRegisterStruct *reg;
 
 	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
 	dict = gda_object_get_dict (GDA_OBJECT (query));
 
+	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_GRAPH);
+	g_assert (reg);
+
 	obj = g_object_new (GDA_TYPE_GRAPH_QUERY, "dict", dict, NULL);
 	graph = GDA_GRAPH_QUERY (obj);
 
-	g_object_get (G_OBJECT (dict), "graph_serial", &id, NULL);
+	id = gda_graphs_get_serial (reg);
 	str = g_strdup_printf ("GR%u", id);
 	gda_object_set_id (GDA_OBJECT (obj), str);
 	g_free (str);
 
-	gda_dict_declare_graph (dict, GDA_GRAPH (graph));
+	gda_dict_declare_object (dict, (GdaObject *) graph);
 	g_object_set (obj, "graph_type", GDA_GRAPH_QUERY_JOINS, "ref_object", query, NULL);
 
 	/* REM: we don't need to catch @query's nullification because #GdaGraph already does it. */

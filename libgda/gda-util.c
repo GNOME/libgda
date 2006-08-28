@@ -952,7 +952,7 @@ utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaCon
 				dtype = GDA_DICT_TYPE (gda_dict_type_new (ASSERT_DICT (dict)));
 				gda_dict_type_set_sqlname (dtype, gda_type);
 				gda_dict_type_set_gda_type (dtype, gtype);
-				gda_dict_declare_custom_data_type (ASSERT_DICT (dict), dtype);
+				gda_dict_declare_object (ASSERT_DICT (dict), (GdaObject *) dtype);
 				*created = TRUE;
 			}
 		}

@@ -97,10 +97,6 @@ typedef struct _GdaDictField GdaDictField;
 typedef struct _GdaDictFieldClass GdaDictFieldClass;
 typedef struct _GdaDictFieldPrivate GdaDictFieldPrivate;
 
-typedef struct _GdaDictSequence GdaDictSequence;
-typedef struct _GdaDictSequenceClass GdaDictSequenceClass;
-typedef struct _GdaDictSequencePrivate GdaDictSequencePrivate;
-
 typedef struct _GdaDictConstraint GdaDictConstraint;
 typedef struct _GdaDictConstraintClass GdaDictConstraintClass;
 typedef struct _GdaDictConstraintPrivate GdaDictConstraintPrivate;

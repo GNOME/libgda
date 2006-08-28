@@ -248,9 +248,9 @@ gda_threader_start_thread (GdaThreader *thread, GThreadFunc func, gpointer func_
 
 		g_hash_table_insert (thread->priv->jobs, GUINT_TO_POINTER (job->id), job);
 		if (! thread->priv->idle_func_id) 
-			thread->priv->idle_func_id = g_idle_add_full (150,
-								      (GSourceFunc) idle_catch_threads_end, 
-								      thread, NULL);
+			thread->priv->idle_func_id = g_timeout_add_full (G_PRIORITY_HIGH_IDLE, 150,
+									 (GSourceFunc) idle_catch_threads_end, 
+									 thread, NULL);
 		
 		return job->id;
 	}

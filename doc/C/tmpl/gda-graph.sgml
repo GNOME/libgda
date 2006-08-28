@@ -30,6 +30,15 @@ then the graph object will also automaticallu be destroyed.
 @object: 
 @priv: 
 
+<!-- ##### ENUM GdaGraphType ##### -->
+<para>
+
+</para>
+
+@GDA_GRAPH_DB_RELATIONS: 
+@GDA_GRAPH_QUERY_JOINS: 
+@GDA_GRAPH_MODELLING: 
+
 <!-- ##### FUNCTION gda_graph_new ##### -->
 <para>
 

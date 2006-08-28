@@ -435,6 +435,10 @@ gda_query_field_agg_copy (GdaQueryField *orig)
 		GdaObjectRefType ref_type;
 		GType ref_gtype;
 
+		ref_str = gda_object_ref_get_ref_object_name (qf->priv->agg_ref);
+		if (ref_str)
+			g_object_set (G_OBJECT (GDA_QUERY_FIELD_AGG (obj)->priv->agg_ref), "obj_name", ref_str, NULL);
+
 		ref_str = gda_object_ref_get_ref_name (qf->priv->agg_ref, &ref_gtype, &ref_type);
 		if (ref_str)
 			gda_object_ref_set_ref_name (GDA_QUERY_FIELD_AGG (obj)->priv->agg_ref, ref_gtype, ref_type, ref_str);

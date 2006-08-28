@@ -155,7 +155,7 @@ GdaQueryField     *gda_query_add_field_from_sql     (GdaQuery *query, const gcha
 GSList            *gda_query_get_all_fields         (GdaQuery *query);
 GdaQueryField     *gda_query_get_field_by_sql_naming        (GdaQuery *query, const gchar *sql_naming);
 GdaQueryField     *gda_query_get_field_by_ref_field         (GdaQuery *query, GdaQueryTarget *target, GdaEntityField *ref_field, 
-								 GdaEntityFieldState field_state);
+								 GdaQueryFieldState field_state);
 GdaQueryField     *gda_query_get_first_field_for_target     (GdaQuery *query, GdaQueryTarget *target);
 GSList            *gda_query_expand_all_field               (GdaQuery *query, GdaQueryTarget *target);
 void               gda_query_order_fields_using_join_conds  (GdaQuery *query);

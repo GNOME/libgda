@@ -197,8 +197,8 @@ main (int argc, char **argv)
 		}
 		g_assert (gda_dict_save_xml_file (dict, "/tmp/old", &error));
 	}
-	else
-		g_object_set (G_OBJECT (dict), "with_functions", TRUE, NULL);
+	else 
+		gda_dict_extend_with_functions (dict);
 
 	g_print (_("Fetching meta-data from the DBMS server. This may take some time...\n"));
 
@@ -208,25 +208,11 @@ main (int argc, char **argv)
 				  G_CALLBACK (update_progress_cb), NULL);
 
 	if (diff) {
-		g_signal_connect (G_OBJECT (dict), "data_type_added",
+		g_signal_connect (G_OBJECT (dict), "object_added",
 				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (1));
-		g_signal_connect (G_OBJECT (dict), "data_type_updated",
+		g_signal_connect (G_OBJECT (dict), "object_updated",
 				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (2));
-		g_signal_connect (G_OBJECT (dict), "data_type_removed",
-				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (3));
-
-		g_signal_connect (G_OBJECT (dict), "function_added",
-				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (1));
-		g_signal_connect (G_OBJECT (dict), "function_updated",
-				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (2));
-		g_signal_connect (G_OBJECT (dict), "function_removed",
-				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (3));
-
-		g_signal_connect (G_OBJECT (dict), "aggregate_added",
-				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (1));
-		g_signal_connect (G_OBJECT (dict), "aggregate_updated",
-				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (2));
-		g_signal_connect (G_OBJECT (dict), "aggregate_removed",
+		g_signal_connect (G_OBJECT (dict), "object_removed",
 				  G_CALLBACK (dict_change_cb), GINT_TO_POINTER (3));
 
 		g_signal_connect (G_OBJECT (db), "table_added",
@@ -252,7 +238,7 @@ main (int argc, char **argv)
 	}
 
 	/* update DBMS data */
-	if (!gda_dict_update_dbms_data (dict, &error))
+	if (!gda_dict_update_dbms_data (dict, 0, NULL, &error))
 		g_warning ("Could not update DBMS data: %s", error ? error->message:
 			   _("Unknown error"));
 

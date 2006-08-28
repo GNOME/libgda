@@ -1,3 +1,30 @@
+2006-08-28  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/postgres/gda-postgres-provider.c: accept "DATABASE" instead of "DB_NAME"
+	and "URI" instead of "DB_DIR" and "DB_NAME" in connection strings, and show a warning
+	* libgda/gda-threader.c: use a timeout instead of an idle function for shorter
+	notification time
+	* libgda/gda-server-operation.[ch]:
+	* providers/sqlite:
+	* providers/mysql:
+	* providers/postgres: Added support to rename a table and add a column to a table
+	* libgda/gda-dict.[ch]: replaced the "*_added", "*_removed" and "*_updated" signals 
+	with "object_added", "object_removed" and "object_updated" signals (impacts other
+	files as well).
+	* libgda/gda-dict-private.h:
+	* libgda/gda-dict-reg-*.[ch]:
+	* libgda/gda-dict.[ch]: make that object reference types, functions, aggregates 
+	and queries in a generic way to reduce code and enable future extensions 
+	without API/ABI breakage
+	* libgda/gda-dict-database.[ch]: code cleanups
+	* libgda/gda-dict.c:
+	* libgda/gda-dict-database.c: allow to update only some kind of meta-data
+	with the DBMS
+	* other files: changes required by the above changes, and minor bug fixes.
+	
+
 2006-08-20  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/*.xml.in: new files for server operation
