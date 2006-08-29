@@ -116,6 +116,9 @@ static GdaDataHandler *gda_postgres_provider_get_data_handler (GdaServerProvider
 							       GdaConnection *cnc,
 							       GType gda_type,
 							       const gchar *dbms_type);
+static const gchar* gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider,
+								 GdaConnection *cnc,
+								 GType type);
 
 static GdaBlob *gda_postgres_provider_create_blob (GdaServerProvider *provider,
 						   GdaConnection *cnc);
@@ -163,7 +166,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 
 	provider_class->get_data_handler = gda_postgres_provider_get_data_handler;
 	provider_class->string_to_value = NULL;
-	provider_class->get_def_dbms_type = NULL;
+	provider_class->get_def_dbms_type = gda_postgres_provider_get_default_dbms_type;
 
 	provider_class->open_connection = gda_postgres_provider_open_connection;
 	provider_class->close_connection = gda_postgres_provider_close_connection;
@@ -266,61 +269,6 @@ postgres_name_to_gda_type (const gchar *name)
 		return GDA_TYPE_BINARY;
 
 	return G_TYPE_STRING;
-}
-
-static gchar *
-postgres_name_from_gda_type (const GType type)
-{
-	if (type == GDA_TYPE_NULL)
-		return g_strdup_printf ("text");
-	if (type == G_TYPE_INT64)
-		return g_strdup_printf ("int8");
-	if (type == G_TYPE_UINT64)
-		return g_strdup_printf ("int8");
-	if (type == GDA_TYPE_BINARY)
-		return g_strdup_printf ("bytea");
-	if (type == GDA_TYPE_BLOB)
-		return g_strdup_printf ("oid");
-	if (type == G_TYPE_BOOLEAN)
-		return g_strdup_printf ("bool");
-	if (type == G_TYPE_DATE)
-		return g_strdup_printf ("date");
-	if (type == G_TYPE_DOUBLE)
-		return g_strdup_printf ("float8");
-	if (type == GDA_TYPE_GEOMETRIC_POINT)
-		return g_strdup_printf ("point");
-	if (type == G_TYPE_OBJECT)
-		return g_strdup_printf ("text");
-	if (type == G_TYPE_INT)
-		return g_strdup_printf ("int4");
-	if (type == GDA_TYPE_LIST)
-		return g_strdup_printf ("text");
-	if (type == GDA_TYPE_NUMERIC)
-		return g_strdup_printf ("numeric");
-	if (type == G_TYPE_FLOAT)
-		return g_strdup_printf ("float4");
-	if (type == GDA_TYPE_SHORT)
-		return g_strdup_printf ("int2");
-	if (type == GDA_TYPE_USHORT)
-		return g_strdup_printf ("int2");
-	if (type == G_TYPE_STRING)
-		return g_strdup_printf ("varchar");
-	if (type == GDA_TYPE_TIME)
-		return g_strdup_printf ("time");
-	if (type == GDA_TYPE_TIMESTAMP)
-		return g_strdup_printf ("timestamp");
-	if (type == G_TYPE_CHAR)
-		return g_strdup_printf ("smallint");
-	if (type == G_TYPE_UCHAR)
-		return g_strdup_printf ("smallint");
-	if (type == G_TYPE_ULONG)
-		return g_strdup_printf ("int2");
-        if (type == G_TYPE_UINT)
-		return g_strdup_printf ("int4");
-	if (type == G_TYPE_INVALID)
-		return g_strdup_printf ("text");
-
-	return g_strdup_printf ("text");
 }
 
 static int
@@ -2601,13 +2549,8 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 {
 	GdaDataHandler *dh = NULL;
 	GdaPostgresProvider *pg_prv = GDA_POSTGRES_PROVIDER (provider);
-	GdaPostgresConnectionData *priv_data = NULL;
 
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	if (cnc) {
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
-	}
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
         if ((type == G_TYPE_INT64) ||
 	    (type == G_TYPE_UINT64) ||
@@ -2687,6 +2630,12 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 	}
 	else {
 		if (dbms_type) {
+			GdaPostgresConnectionData *priv_data = NULL;
+
+			if (cnc) {
+				g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+				priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+			}
 			if (priv_data) {
 				gint i;
 				GdaPostgresTypeOid *td = NULL;
@@ -2714,3 +2663,59 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 	return dh;
 }
 	
+static const gchar* 
+gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider,
+					     GdaConnection *cnc,
+					     GType type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+	if (type == G_TYPE_INT64)
+		return "int8";
+	if (type == G_TYPE_UINT64)
+		return "int8";
+	if (type == GDA_TYPE_BINARY)
+		return "bytea";
+	if (type == GDA_TYPE_BLOB)
+		return "oid";
+	if (type == G_TYPE_BOOLEAN)
+		return "bool";
+	if (type == G_TYPE_DATE)
+		return "date";
+	if (type == G_TYPE_DOUBLE)
+		return "float8";
+	if (type == GDA_TYPE_GEOMETRIC_POINT)
+		return "point";
+	if (type == G_TYPE_OBJECT)
+		return "text";
+	if (type == G_TYPE_INT)
+		return "int4";
+	if (type == GDA_TYPE_LIST)
+		return "text";
+	if (type == GDA_TYPE_NUMERIC)
+		return "numeric";
+	if (type == G_TYPE_FLOAT)
+		return "float4";
+	if (type == GDA_TYPE_SHORT)
+		return "int2";
+	if (type == GDA_TYPE_USHORT)
+		return "int2";
+	if (type == G_TYPE_STRING)
+		return "varchar";
+	if (type == GDA_TYPE_TIME)
+		return "time";
+	if (type == GDA_TYPE_TIMESTAMP)
+		return "timestamp";
+	if (type == G_TYPE_CHAR)
+		return "smallint";
+	if (type == G_TYPE_UCHAR)
+		return "smallint";
+	if (type == G_TYPE_ULONG)
+		return "int2";
+        if (type == G_TYPE_UINT)
+		return "int4";
+	if (type == G_TYPE_INVALID)
+		return "text";
+
+	return "text";
+}

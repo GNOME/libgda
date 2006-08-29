@@ -450,6 +450,16 @@ object for more information.
 @object: 
 
 
+<!-- ##### FUNCTION gda_dict_declare_object_as ##### -->
+<para>
+
+</para>
+
+@dict: 
+@object: 
+@as_type: 
+
+
 <!-- ##### FUNCTION gda_dict_assume_object ##### -->
 <para>
 
@@ -457,6 +467,16 @@ object for more information.
 
 @dict: 
 @object: 
+
+
+<!-- ##### FUNCTION gda_dict_assume_object_as ##### -->
+<para>
+
+</para>
+
+@dict: 
+@object: 
+@as_type: 
 
 
 <!-- ##### FUNCTION gda_dict_unassume_object ##### -->

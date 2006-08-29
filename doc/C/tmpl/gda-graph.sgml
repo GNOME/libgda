@@ -27,8 +27,40 @@ then the graph object will also automaticallu be destroyed.
 
 </para>
 
-@object: 
-@priv: 
+
+<!-- ##### SIGNAL GdaGraph::item-added ##### -->
+<para>
+
+</para>
+
+@gdagraph: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaGraph::item-dropped ##### -->
+<para>
+
+</para>
+
+@gdagraph: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaGraph::item-moved ##### -->
+<para>
+
+</para>
+
+@gdagraph: the object which received the signal.
+@arg1: 
+
+<!-- ##### ARG GdaGraph:graph-type ##### -->
+<para>
+
+</para>
+
+<!-- ##### ARG GdaGraph:ref-object ##### -->
+<para>
+
+</para>
 
 <!-- ##### ENUM GdaGraphType ##### -->
 <para>

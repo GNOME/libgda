@@ -377,7 +377,7 @@
 	<para>
 	  Optional parameters for the creation of a GdaServerOperation object for such an operation type:
 	  <table frame="all">
-            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+            <tgroup cols="3" colsep="1" rowsep="1" align="justify">
               <thead>
 		<row>
                   <entry>Id</entry>
@@ -395,6 +395,127 @@
 	    </tgroup>
 	  </table>
 	</para>
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>Named and required information for GDA_SERVER_OPERATION_RENAME_TABLE:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/TABLE_DESC_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>Table's description</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_DESC_P/TABLE_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Table's name (string)</entry>
+		</row>
+		<row>
+                  <entry>/TABLE_DESC_P/TABLE_NEW_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Table's new name (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>Named and required information for GDA_SERVER_OPERATION_ADD_COLUMN:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/COLUMN_DEF_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>Column's description</entry>
+		</row>
+		<row>
+                  <entry>/COLUMN_DEF_P/TABLE_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Name of the table to add a column to (string)</entry>
+		</row>
+		<row>
+                  <entry>/COLUMN_DEF_P/COLUMN_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>New column's name (string)</entry>
+		</row>
+		<row>
+                  <entry>/COLUMN_DEF_P/COLUMN_TYPE</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>New column's type (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
+	</para>
+	<para>
+	  The other bits of information for the column description, which are not required, are the same as for "/FIELDS_A" array of 
+	  the GDA_SERVER_OPERATION_CREATE_TABLE (replace "/FIELDS_A" with "/COLUMN_DEF_P").
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>Named and required information for GDA_SERVER_OPERATION_DROP_COLUMN:
+	  <table frame="all">
+            <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Required?</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/COLUMN_DESC_P</entry>
+                  <entry>PARAMLIST</entry>
+		  <entry>Yes</entry>
+                  <entry>Column's description</entry>
+		</row>
+		<row>
+                  <entry>/COLUMN_DESC_P/TABLE_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Name of the table to remove a column from (string)</entry>
+		</row>
+		<row>
+                  <entry>/COLUMN_DESC_P/COLUMN_NAME</entry>
+                  <entry>PARAM</entry>
+		  <entry>Yes</entry>
+                  <entry>Name of the column to remove (string)</entry>
+		</row>
+	      </tbody>
+	    </tgroup>
+	  </table>
 	</para>
       </listitem>
 

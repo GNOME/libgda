@@ -120,9 +120,9 @@ graphs_load_xml_tree (GdaDict *dict, xmlNodePtr graphs, GError **error)
 
 			if (allok) {
 				if (!graph)
-					graph = GDA_GRAPH (gda_graph_new (dict, GDA_GRAPH_DB_RELATIONS)); /* type is checked next line */
+					graph = GDA_GRAPH (gda_graph_new (dict, GDA_GRAPH_DB_RELATIONS));
 				allok = gda_xml_storage_load_from_xml (GDA_XML_STORAGE (graph), qnode, error);
-				gda_dict_assume_object (dict, (GdaObject *) graph);
+				gda_dict_assume_object_as (dict, (GdaObject *) graph, GDA_TYPE_GRAPH);
 				g_object_unref (G_OBJECT (graph));
 			}
 		}

@@ -266,7 +266,7 @@ GdaServerProvider
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_server_provider_get_data_handler_gda ##### -->
+<!-- ##### FUNCTION gda_server_provider_get_data_handler_gtype ##### -->
 <para>
 
 </para>
@@ -319,7 +319,7 @@ GdaServerProvider
 
 @provider: 
 @cnc: 
-@gda_type: 
+@type: 
 @Returns: 
 
 

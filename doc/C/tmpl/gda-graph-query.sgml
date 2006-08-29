@@ -2,7 +2,7 @@
 GdaGraphQuery
 
 <!-- ##### SECTION Short_Description ##### -->
-
+A graph specialized in displaying query components
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -22,8 +22,6 @@ GdaGraphQuery
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### FUNCTION gda_graph_query_new ##### -->
 <para>

@@ -60,3 +60,6 @@ gda_numeric_get_type
 gda_time_get_type
 gda_timestamp_get_type
 gda_xml_storage_get_type
+gda_graph_get_type
+gda_graph_query_get_type
+gda_graph_item_get_type

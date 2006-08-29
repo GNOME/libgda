@@ -3412,7 +3412,7 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
 			
 			type = gda_entity_field_get_gda_type (field);
 			if (type != G_TYPE_INVALID) {
-				handler = gda_server_provider_get_data_handler_gda (prov, cnc, type);
+				handler = gda_server_provider_get_data_handler_gtype (prov, cnc, type);
 				if (!handler) 
 					g_warning (_("While adding to a GdaQuery: field type '%s' is not supported by the "
 						     "connection's provider and may be rendered incorrectly"), g_type_name (type));

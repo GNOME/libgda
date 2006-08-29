@@ -126,7 +126,7 @@ gda_graph_query_new (GdaQuery *query)
 	gda_object_set_id (GDA_OBJECT (obj), str);
 	g_free (str);
 
-	gda_dict_declare_object (dict, (GdaObject *) graph);
+	gda_dict_declare_object_as (dict, (GdaObject *) graph, GDA_TYPE_GRAPH);
 	g_object_set (obj, "graph_type", GDA_GRAPH_QUERY_JOINS, "ref_object", query, NULL);
 
 	/* REM: we don't need to catch @query's nullification because #GdaGraph already does it. */

@@ -50,6 +50,7 @@ struct _GdaDictPrivate
 	GSList            *registry_list; /* list of GdaDictRegisterStruct */
 	GHashTable        *registry; /* key = GType, value = GdaDictRegisterStruct ("referenced" here) */
 	GHashTable        *registry_xml_groups; /* key = XML group tag, value = GdaDictRegisterStruct (not "referenced" here) */
+	GHashTable        *objects_as_hash; /* key = object, value = GType as which it has been assumed */
 };
 
 

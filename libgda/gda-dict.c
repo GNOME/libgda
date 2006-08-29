@@ -291,6 +291,7 @@ gda_dict_init (GdaDict * dict)
 	dict->priv->registry_list = NULL;
 	dict->priv->registry = g_hash_table_new (uint_hash, uint_equal);
 	dict->priv->registry_xml_groups = g_hash_table_new (g_str_hash, g_str_equal);
+	dict->priv->objects_as_hash = g_hash_table_new (NULL, NULL);
 }
 
 /**
@@ -382,6 +383,11 @@ gda_dict_dispose (GObject   * object)
 	dict = GDA_DICT (object);
 	if (dict->priv) {
 		/* generic registered objects */
+		if (dict->priv->objects_as_hash) {
+			g_hash_table_destroy (dict->priv->objects_as_hash);
+			dict->priv->objects_as_hash = NULL;
+		}
+
 		if (dict->priv->registry_xml_groups) {
 			g_hash_table_destroy (dict->priv->registry_xml_groups);
 			dict->priv->registry_xml_groups = NULL;
@@ -1521,7 +1527,7 @@ gda_dict_get_handler (GdaDict *dict, GType for_type)
 
 		prov = gda_connection_get_provider_obj (dict->priv->cnc);
 		if (prov)
-			handler = gda_server_provider_get_data_handler_gda (prov, dict->priv->cnc, for_type);
+			handler = gda_server_provider_get_data_handler_gtype (prov, dict->priv->cnc, for_type);
 	}
 
 	if (handler)
@@ -1666,16 +1672,32 @@ reg_object_weak_ref_notify (GdaDict *dict, GdaObject *object)
 void
 gda_dict_declare_object (GdaDict *dict, GdaObject *object)
 {
+	g_return_if_fail (G_IS_OBJECT (object));
+	gda_dict_declare_object_as (dict, object, G_OBJECT_TYPE (object));
+}
+
+/**
+ * gda_dict_declare_object_as
+ * @dict: a #GdaDict object
+ * @object: a #GdaObject object
+ * @as_type: type parent type of @object to take into account
+ *
+ * Same as gda_dict_declare_object() but forces to use the @as_type type instead of
+ * @object's realtype
+ */
+void
+gda_dict_declare_object_as (GdaDict *dict, GdaObject *object, GType as_type)
+{
 	GdaDictRegisterStruct *reg;
 
 	g_return_if_fail (GDA_IS_DICT (dict));
 	g_return_if_fail (dict->priv);
 	g_return_if_fail (GDA_IS_OBJECT (object));
 	
-	reg = gda_dict_get_object_type_registration (dict, G_OBJECT_TYPE (object));
+	reg = gda_dict_get_object_type_registration (dict, as_type);
 	if (!reg) {
 		g_warning (_("Trying to declare an object when object class %s is not registered in the dictionary"),
-			   G_OBJECT_TYPE_NAME (object));
+			   g_type_name (as_type));
 		return;
 	}
 	
@@ -1739,17 +1761,34 @@ deactivated_object_cb (GdaReferer *object, GdaDict *dict)
 void
 gda_dict_assume_object (GdaDict *dict, GdaObject *object)
 {
+	g_return_if_fail (G_IS_OBJECT (object));
+
+	gda_dict_assume_object_as (dict, object, G_OBJECT_TYPE (object));
+}
+
+/**
+ * gda_dict_assume_object_as
+ * @dict: a #GdaDict object
+ * @object: a #GdaObject object
+ * @as_type: parent type of @object to take into account
+ *
+ * Same as gda_dict_assume_object() but forces to use the @as_type type instead of
+ * @object's realtype
+ */
+void
+gda_dict_assume_object_as (GdaDict *dict, GdaObject *object, GType as_type)
+{
 	GdaDictRegisterStruct *reg;
 
 	g_return_if_fail (GDA_IS_DICT (dict));
 	g_return_if_fail (dict->priv);
 	g_return_if_fail (GDA_IS_OBJECT (object));
 
-	gda_dict_declare_object (dict, object);
-	reg = gda_dict_get_object_type_registration (dict, G_OBJECT_TYPE (object));
+	gda_dict_declare_object_as (dict, object, as_type);
+	reg = gda_dict_get_object_type_registration (dict, as_type);
 	if (!reg) {
 		g_warning (_("Trying to make an object assumed when object class %s is not registered in the dictionary"),
-			   G_OBJECT_TYPE_NAME (object));
+			   g_type_name (as_type));
 		return;
 	}
 
@@ -1761,7 +1800,7 @@ gda_dict_assume_object (GdaDict *dict, GdaObject *object)
 		gint i = -1;
 		GdaDictRegisterStruct *reg;
 
-		reg = gda_dict_get_object_type_registration (dict, G_OBJECT_TYPE (object));
+		reg = gda_dict_get_object_type_registration (dict, as_type);
 		if (!reg) {
 			g_warning (_("Trying to assume an object when object class is not registered in the dictionary"));
 			return;
@@ -1791,6 +1830,8 @@ gda_dict_assume_object (GdaDict *dict, GdaObject *object)
 		}
 		
 		reg->assumed_objects = g_slist_insert (reg->assumed_objects, object, i);
+		if (G_OBJECT_TYPE (object) != as_type)
+			g_hash_table_insert (dict->priv->objects_as_hash, object, GUINT_TO_POINTER (as_type));
 		
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'OBJECT_ADDED' from %s\n", __FUNCTION__);
@@ -1820,9 +1861,16 @@ gda_dict_unassume_object (GdaDict *dict, GdaObject *object)
 
 	reg = gda_dict_get_object_type_registration (dict, G_OBJECT_TYPE (object));
 	if (!reg) {
-		g_warning (_("Trying to make an object unassumed when object class %s is not registered in the dictionary"),
-			   G_OBJECT_TYPE_NAME (object));
-		return;
+		GType as_type;
+
+		as_type = GPOINTER_TO_UINT (g_hash_table_lookup (dict->priv->objects_as_hash, object));
+		if (as_type)
+			reg = gda_dict_get_object_type_registration (dict, as_type);
+		if (reg) {
+			g_warning (_("Trying to make an object unassumed when object class %s is not registered in the dictionary"),
+				   G_OBJECT_TYPE_NAME (object));
+			return;
+		}
 	}
 
 	if (g_slist_find (reg->assumed_objects, object)) {
@@ -1836,6 +1884,7 @@ gda_dict_unassume_object (GdaDict *dict, GdaObject *object)
 			g_signal_handlers_disconnect_by_func (G_OBJECT (object), G_CALLBACK (activated_object_cb), dict);
 			g_signal_handlers_disconnect_by_func (G_OBJECT (object), G_CALLBACK (deactivated_object_cb), dict);
 		}
+		g_hash_table_remove (dict->priv->objects_as_hash, object);
 
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'OBJECT_REMOVED' from %s\n", __FUNTCION__);

@@ -118,10 +118,13 @@ static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaConnectionSchema schema,
 						    GdaParameterList *params);
-GdaDataHandler *gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
+static GdaDataHandler *gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     GType gda_type,
 						     const gchar *dbms_type);
+static const gchar* gda_mysql_provider_get_default_dbms_type (GdaServerProvider *provider,
+							      GdaConnection *cnc,
+							      GType type);
 
 
 static GObjectClass *parent_class = NULL;
@@ -148,7 +151,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 
 	provider_class->get_data_handler = gda_mysql_provider_get_data_handler;
 	provider_class->string_to_value = NULL;
-	provider_class->get_def_dbms_type = NULL;
+	provider_class->get_def_dbms_type = gda_mysql_provider_get_default_dbms_type;
 
 	provider_class->open_connection = gda_mysql_provider_open_connection;
 	provider_class->close_connection = gda_mysql_provider_close_connection;
@@ -1353,14 +1356,14 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		GType type;
 		const gchar *synonyms;
 	} types[] = {
-		{ "bool", "", "Boolean type", GDA_TYPE_BINARY, "boolean" },
-		{ "blob", "", "Binary blob (up to 65535 bytes)", GDA_TYPE_BINARY, NULL },
+		{ "bool", "", "Boolean type", G_TYPE_BOOLEAN, "boolean" },
+		{ "blob", "", "Binary blob (up to 65535 bytes)", GDA_TYPE_BLOB, NULL },
 		{ "bigint", "", "Big integer, range is -9223372036854775808 to 9223372036854775807", G_TYPE_INT64, NULL  },
-		{ "bigint unsigned", "", "Big unsigned integer, range is 0 to 18446744073709551615", G_TYPE_INT64, NULL  },
+		{ "bigint unsigned", "", "Big unsigned integer, range is 0 to 18446744073709551615", G_TYPE_UINT64, NULL  },
 		{ "char", "", "Char", G_TYPE_STRING, "binary"  },
 		{ "date", "", "Date", G_TYPE_DATE, NULL  },
 		{ "datetime", "", "Date and time", GDA_TYPE_TIMESTAMP, NULL  },
-		{ "decimal", "", "Decimal number", G_TYPE_DOUBLE, "dec,numeric,fixed"  },
+		{ "decimal", "", "Decimal number", GDA_TYPE_NUMERIC, "dec,numeric,fixed"  },
 		{ "double", "", "Double precision number", G_TYPE_DOUBLE, "double precision,real"  },
 		{ "double unsigned", "", "Unsigned double precision number", G_TYPE_DOUBLE, "double precision unsigned,real unsigned"  },
 		{ "enum", "", "Enumeration: a string object that can have only one value, chosen from the list of values 'value1', 'value2', ..., NULL or the special '' error value. An ENUM column can have a maximum of 65,535 distinct values", G_TYPE_STRING, NULL  },
@@ -1368,17 +1371,18 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		{ "float unsigned", "", "Unsigned floating point number", G_TYPE_FLOAT , NULL },
 		{ "int", "", "Integer, range is -2147483648 to 2147483647", G_TYPE_INT, "integer"  },
 		{ "int unsigned", "", "Unsigned integer, range is 0 to 4294967295", G_TYPE_UINT, "integer unsigned"  },
-		{ "long", "", "Long integer", G_TYPE_INT, NULL  },
-		{ "longblob", "", "Long blob (up to 4Gb)", GDA_TYPE_BINARY, NULL  },
+		{ "long", "", "Long integer", G_TYPE_LONG, NULL  },
+		{ "long unsigned", "", "Long unsigned integer", G_TYPE_ULONG, NULL  },
+		{ "longblob", "", "Long blob (up to 4Gb)", GDA_TYPE_BLOB, NULL  },
 		{ "longtext", "", "Long text (up to 4Gb characters)", GDA_TYPE_BINARY, NULL  },
 		{ "mediumint", "", "Medium integer, range is -8388608 to 8388607", G_TYPE_INT, NULL  },
 		{ "mediumint unsigned", "", "Medium unsigned integer, range is 0 to 16777215", G_TYPE_INT, NULL  },
-		{ "mediumblob", "", "Medium blob (up to 16777215 bytes)", GDA_TYPE_BINARY, NULL  },
+		{ "mediumblob", "", "Medium blob (up to 16777215 bytes)", GDA_TYPE_BLOB, NULL  },
 		{ "mediumtext", "", "Medium text (up to 16777215 characters)", GDA_TYPE_BINARY, NULL  },				
 		{ "set", "", "Set: a string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET column can have a maximum of 64 members", G_TYPE_STRING, NULL  },
 		{ "smallint", "", "Small integer, range is -32768 to 32767", GDA_TYPE_SHORT, NULL  },
-		{ "smallint unsigned", "", "Small unsigned integer, range is 0 to 65535", GDA_TYPE_SHORT, NULL  },
-		{ "text", "", "Text (up to 65535 characters)", GDA_TYPE_BLOB, NULL  },
+		{ "smallint unsigned", "", "Small unsigned integer, range is 0 to 65535", GDA_TYPE_USHORT, NULL  },
+		{ "text", "", "Text (up to 65535 characters)", G_TYPE_STRING, NULL  },
 		{ "tinyint", "", "Tiny integer, range is -128 to 127", G_TYPE_CHAR, NULL  },
 		{ "tinyint unsigned", "", "Tiny unsigned integer, range is 0 to 255", G_TYPE_UCHAR, NULL  },
 		{ "tinyblob", "", "Tiny blob (up to 255 bytes)", GDA_TYPE_BINARY, NULL  },
@@ -1987,7 +1991,7 @@ gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont 
 	return ret;
 }
 
-GdaDataHandler *
+static GdaDataHandler *
 gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 				     GdaConnection *cnc,
 				     GType type, const gchar *dbms_type)
@@ -2081,4 +2085,61 @@ gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 	}
 
 	return dh;
+}
+
+static const gchar*
+gda_mysql_provider_get_default_dbms_type (GdaServerProvider *provider,
+					  GdaConnection *cnc,
+					  GType type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+	if (type == G_TYPE_INT64)
+		return "bigint";
+	if (type == G_TYPE_UINT64)
+		return "bigint unsigned";
+	if (type == GDA_TYPE_BINARY)
+		return "longtext";
+	if (type == GDA_TYPE_BLOB)
+		return "oid";
+	if (type == G_TYPE_BOOLEAN)
+		return "blob";
+	if (type == G_TYPE_DATE)
+		return "date";
+	if (type == G_TYPE_DOUBLE)
+		return "double";
+	if (type == GDA_TYPE_GEOMETRIC_POINT)
+		return "varchar";
+	if (type == G_TYPE_OBJECT)
+		return "text";
+	if (type == G_TYPE_INT)
+		return "int";
+	if (type == GDA_TYPE_LIST)
+		return "text";
+	if (type == GDA_TYPE_NUMERIC)
+		return "decimal";
+	if (type == G_TYPE_FLOAT)
+		return "float";
+	if (type == GDA_TYPE_SHORT)
+		return "smallint";
+	if (type == GDA_TYPE_USHORT)
+		return "smallint unsigned";
+	if (type == G_TYPE_STRING)
+		return "varchar";
+	if (type == GDA_TYPE_TIME)
+		return "time";
+	if (type == GDA_TYPE_TIMESTAMP)
+		return "timestamp";
+	if (type == G_TYPE_CHAR)
+		return "tinyint";
+	if (type == G_TYPE_UCHAR)
+		return "tinyint unsigned";
+	if (type == G_TYPE_ULONG)
+		return "bigint unsigned";
+        if (type == G_TYPE_UINT)
+		return "int unsigned";
+	if (type == G_TYPE_INVALID)
+		return "text";
+
+	return "text";
 }

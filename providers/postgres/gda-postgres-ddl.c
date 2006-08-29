@@ -55,7 +55,7 @@ gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 		GdaDataHandler *dh;
 		gchar *str;
 		
-		dh = gda_server_provider_get_data_handler_gda (provider, cnc, G_TYPE_STRING);
+		dh = gda_server_provider_get_data_handler_gtype (provider, cnc, G_TYPE_STRING);
 		str = gda_data_handler_get_sql_from_value (dh, value);
 
 		g_string_append (string, " ENCODING ");

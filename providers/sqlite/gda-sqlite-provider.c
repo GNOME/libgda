@@ -112,6 +112,10 @@ static GdaDataHandler *gda_sqlite_provider_get_data_handler (GdaServerProvider *
 							     GType gda_type,
 							     const gchar *dbms_type);
 
+static const gchar* gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider,
+							       GdaConnection *cnc,
+							       GType type);
+
 static GObjectClass *parent_class = NULL;
 
 typedef struct {
@@ -141,7 +145,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 
 	provider_class->get_data_handler = gda_sqlite_provider_get_data_handler;
 	provider_class->string_to_value = NULL;
-	provider_class->get_def_dbms_type = NULL;
+	provider_class->get_def_dbms_type = gda_sqlite_provider_get_default_dbms_type;
 
 	provider_class->open_connection = gda_sqlite_provider_open_connection;
 	provider_class->close_connection = gda_sqlite_provider_close_connection;
@@ -1867,4 +1871,45 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider,
 	}
 
 	return dh;	
+}
+
+static const gchar*
+gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider,
+					   GdaConnection *cnc,
+					   GType type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+	if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == GDA_TYPE_USHORT) ||
+	    (type == G_TYPE_CHAR) ||
+	    (type == G_TYPE_UCHAR) ||
+	    (type == G_TYPE_ULONG) ||
+	    (type == G_TYPE_UINT) ||
+	    (type == G_TYPE_UINT64)) 
+		return "integer";
+
+	if ((type == GDA_TYPE_BINARY) ||
+	    (type == GDA_TYPE_BLOB))
+		return "blob";
+
+	if ((type == G_TYPE_BOOLEAN) ||
+	    (type == G_TYPE_DATE) || 
+	    (type == GDA_TYPE_GEOMETRIC_POINT) ||
+	    (type == G_TYPE_OBJECT) ||
+	    (type == GDA_TYPE_LIST) ||
+	    (type == G_TYPE_STRING) ||
+	    (type == GDA_TYPE_TIME) ||
+	    (type == GDA_TYPE_TIMESTAMP) ||
+	    (type == G_TYPE_INVALID))
+		return "string";
+
+	if ((type == G_TYPE_DOUBLE) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT))
+		return "real";
+	
+	return "string";
 }

@@ -1,3 +1,13 @@
+2006-08-29  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-dict.[ch]: added gda_dict_object_{assume,declare}_as()
+	* all files: s/gda_server_provider_get_data_handler_gda/
+	gda_server_provider_get_data_handler_gtype/g
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/sqlite/gda-sqlite-provider.c: implemented the get_def_dbms_type()
+	virtual method
+
 2006-08-28  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/gda-sqlite-provider.c:
