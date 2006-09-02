@@ -233,6 +233,18 @@
                   <entry>A table's field type (string)</entry>
 		</row>
 		<row>
+                  <entry>/FIELDS_A/@COLUMN_SIZE</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>A table's field defined size (unsigned integer)</entry>
+		</row>
+		<row>
+                  <entry>/FIELDS_A/@COLUMN_SCALE</entry>
+                  <entry>DATA_MODEL_COLUMN</entry>
+		  <entry></entry>
+                  <entry>A table's field number of decimals (unsigned integer)</entry>
+		</row>
+		<row>
                   <entry>/FIELDS_A/@COLUMN_NNUL</entry>
                   <entry>DATA_MODEL_COLUMN</entry>
 		  <entry></entry>
@@ -471,6 +483,18 @@
                   <entry>PARAM</entry>
 		  <entry>Yes</entry>
                   <entry>New column's type (string)</entry>
+		</row>
+		<row>
+                  <entry>/COLUMN_DEF_P/COLUMN_SIZE</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>New column's defined size (unsigned integer)</entry>
+		</row>
+		<row>
+                  <entry>/COLUMN_DEF_P/COLUMN_SCALE</entry>
+                  <entry>PARAM</entry>
+		  <entry></entry>
+                  <entry>New column's number of decimals (unsigned integer)</entry>
 		</row>
 	      </tbody>
 	    </tgroup>

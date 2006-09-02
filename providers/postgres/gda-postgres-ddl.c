@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
+ *         Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -116,7 +117,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, "TEMP ");
 	g_string_append (string, "TABLE ");
-		
+
 	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_NAME");
 	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
 	g_string_append (string, g_value_get_string (value));
@@ -149,11 +150,24 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 				g_string_append (string, ", ");
 				
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_NAME/%d", i);
+			g_string_append_c (string, '\"');
 			g_string_append (string, g_value_get_string (value));
+			g_string_append_c (string, '\"');
 			g_string_append_c (string, ' ');
 				
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
 			g_string_append (string, g_value_get_string (value));
+				
+			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_SIZE/%d", i);
+			if (value && G_VALUE_HOLDS (value, G_TYPE_UINT)) {
+				g_string_append_printf (string, "(%d", g_value_get_uint (value));
+
+				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_SCALE/%d", i);
+				if (value && G_VALUE_HOLDS (value, G_TYPE_UINT))
+					g_string_append_printf (string, ",%d)", g_value_get_uint (value));
+				else
+					g_string_append (string, ")");
+			}
 				
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_DEFAULT/%d", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
@@ -428,7 +442,18 @@ gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
 	g_string_append_c (string, ' ');
 	g_string_append (string, g_value_get_string (value));
-				
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_SIZE");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_UINT)) {
+		g_string_append_printf (string, "(%d", g_value_get_uint (value));
+
+		value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_SCALE");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_UINT))
+			g_string_append_printf (string, ",%d)", g_value_get_uint (value));
+		else
+			g_string_append (string, ")");
+	}
+
 	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_DEFAULT");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
 		const gchar *str = g_value_get_string (value);

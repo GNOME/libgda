@@ -11,6 +11,12 @@
     <parameter id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE">
       <gda_value>integer</gda_value>
     </parameter>
+    <parameter id="COLUMN_SIZE" _name="Size" gdatype="guint">
+      <gda_value>guint</gda_value>
+    </parameter>
+    <parameter id="COLUMN_SCALE" _name="Scale" gdatype="guint">
+      <gda_value>guint</gda_value>
+    </parameter>
     <parameter id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean">
       <gda_value>FALSE</gda_value>
     </parameter>

@@ -30,6 +30,8 @@
   <gda_array id="FIELDS_A" _name="Table's columns">
     <gda_array_field id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE"/>
     <gda_array_field id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE"/>
+    <gda_array_field id="COLUMN_SIZE" _name="Size" gdatype="guint"/>
+    <gda_array_field id="COLUMN_SCALE" _name="Scale" gdatype="guint"/>
     <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
     <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
     <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>

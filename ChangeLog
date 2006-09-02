@@ -1,3 +1,13 @@
+2006-09-02  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-ddl.c:
+	* providers/postgres/postgres_specs_add_column.xml.in:
+	* providers/postgres/postgres_specs_create_table.xml.in:
+	* doc/C/server-operation.xml: added COLUMN_TYPE and COLUMN_SIZE paths for
+	create table and add column operation for postgres and 
+	surrounded column names with double quote (") to allow for reserved names
+	as column name.
+
 2006-08-29  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-dict.[ch]: added gda_dict_object_{assume,declare}_as()
