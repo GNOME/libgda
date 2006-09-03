@@ -1,8 +1,9 @@
 /* GDA MDB provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -32,7 +33,7 @@ gda_mdb_type_to_gda (int col_type)
 	case MDB_FLOAT : return G_TYPE_FLOAT;
 	case MDB_INT : return G_TYPE_INT;
 	case MDB_LONGINT : return G_TYPE_INT64;
-	case MDB_MEMO : return GDA_TYPE_BINARY;
+	case MDB_MEMO : return G_TYPE_STRING;
 	case MDB_MONEY : return G_TYPE_DOUBLE;
 	case MDB_NUMERIC : return GDA_TYPE_NUMERIC;
 	case MDB_OLE : return GDA_TYPE_BINARY;

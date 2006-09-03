@@ -2443,7 +2443,7 @@ static GdaDataModelIter *
 gda_data_proxy_create_iter (GdaDataModel *model)
 {
 	GdaDataProxy *proxy;
-	GdaDataModelIter *iter;
+	GdaDataModelIter *iter, *iter2;
 
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (model), FALSE);
 	proxy = GDA_DATA_PROXY (model);
@@ -2453,6 +2453,26 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 						  "dict", gda_object_get_dict (GDA_OBJECT (proxy->priv->model)), 
 						  "data_model", proxy->priv->model, NULL);
 	g_object_set (G_OBJECT (iter), "forced_model", proxy, NULL);
+
+	iter2 = gda_data_model_create_iter (proxy->priv->model);
+	if (iter2) {
+		GSList *plist1, *plist2;
+
+		plist1 = GDA_PARAMETER_LIST (iter)->parameters;
+		plist2 = GDA_PARAMETER_LIST (iter2)->parameters;
+		for (; plist1 && plist2; plist1 = plist1->next, plist2 = plist2->next) {
+			gchar *plugin;
+
+			g_object_get (G_OBJECT (plist2->data), "entry_plugin", &plugin, NULL);
+			if (plugin) {
+				g_object_set (G_OBJECT (plist1->data), "entry_plugin", plugin, NULL);
+				g_free (plugin);
+			}
+		}
+		if (plist1 || plist2)
+			g_warning ("Proxy iterator does not have the same length as proxied model's iterator");
+		g_object_unref (iter2);
+	}
 
 	return iter;
 }

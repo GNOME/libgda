@@ -340,7 +340,6 @@ LC_NAMES (GdaDict *dict)
                 sinfo = gda_connection_get_infos (cnc);
 
 	return (sinfo && sinfo->is_case_insensitive);
-
 }
 
 

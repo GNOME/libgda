@@ -2,7 +2,7 @@
 GdaHandlerString
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Default handler for strings
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -22,16 +22,12 @@ GdaHandlerString
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerString ##### -->
 <para>
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerStringClass ##### -->
 <para>

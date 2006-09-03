@@ -32,6 +32,8 @@ GdaServerProvider
 @is_case_insensitive: 
 @implicit_data_types_casts: 
 @alias_needs_as_keyword: 
+@supports_alias: 
+@supports_prefixed_fields: 
 
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>

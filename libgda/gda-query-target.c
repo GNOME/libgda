@@ -937,12 +937,14 @@ gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, g
 		cnc = gda_dict_get_connection (dict);
 		if (cnc)
 			sinfo = gda_connection_get_infos (cnc);
-		
-		if (!sinfo || (sinfo->alias_needs_as_keyword))
-			g_string_append (string, " AS ");
-		else
-			g_string_append_c (string, ' ');
-		g_string_append (string, gda_query_target_get_alias (target));
+	
+		if (!sinfo || sinfo->supports_alias) {
+			if (!sinfo || sinfo->alias_needs_as_keyword)
+				g_string_append (string, " AS ");
+			else
+				g_string_append_c (string, ' ');
+			g_string_append (string, gda_query_target_get_alias (target));
+		}
 		
 		str = string->str;
 	}

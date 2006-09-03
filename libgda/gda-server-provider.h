@@ -64,6 +64,14 @@ struct _GdaServerProviderInfo {
          * "... FROM mytable alias..."
          */
         gboolean       alias_needs_as_keyword;
+
+	/* TRUE is tables can be aliased in SELECT queries*/
+	gboolean       supports_alias;
+
+	/* TRUE if it is possible to write "SELECT table.field ..." or if it is only possible
+	 * to write "SELECT field..."
+	 */
+	gboolean       supports_prefixed_fields;
 };
 
 struct _GdaServerProvider {
@@ -76,8 +84,10 @@ struct _GdaServerProviderClass {
 
 	/* signals */
 	void                   (* last_connection_gone) (GdaServerProvider *provider);
-	gpointer                  reserved1;
-	gpointer                  reserved2;
+	gpointer                  sig_reserved1;
+	gpointer                  sig_reserved2;
+	gpointer                  sig_reserved3;
+	gpointer                  sig_reserved4;
 
 	/* virtual methods */
 
@@ -161,6 +171,11 @@ struct _GdaServerProviderClass {
 
 	GdaBlob                *(* fetch_blob) (GdaServerProvider *provider,
 						GdaConnection *cnc, const gchar *sql_id);
+
+	gpointer                   reserved1; /* is_reserved_word() ? */
+	gpointer                   reserved2; /* ping_or_reconnect() ? */
+	gpointer                   reserved3;
+	gpointer                   reserved4;
 };
 
 GType                  gda_server_provider_get_type (void);

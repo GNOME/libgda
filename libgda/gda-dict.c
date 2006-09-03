@@ -383,6 +383,12 @@ gda_dict_dispose (GObject   * object)
 	dict = GDA_DICT (object);
 	if (dict->priv) {
 		/* generic registered objects */
+		if (dict->priv->registry) {
+			g_hash_table_foreach (dict->priv->registry, (GHFunc) registry_hash_foreach_cb, dict);
+			g_hash_table_destroy (dict->priv->registry);
+			dict->priv->registry = NULL;
+		}
+
 		if (dict->priv->objects_as_hash) {
 			g_hash_table_destroy (dict->priv->objects_as_hash);
 			dict->priv->objects_as_hash = NULL;
@@ -398,11 +404,6 @@ gda_dict_dispose (GObject   * object)
 			dict->priv->registry_list = NULL;
 		}
 
-		if (dict->priv->registry) {
-			g_hash_table_foreach (dict->priv->registry, (GHFunc) registry_hash_foreach_cb, dict);
-			g_hash_table_destroy (dict->priv->registry);
-			dict->priv->registry = NULL;
-		}
 
 		/* database */
 		if (dict->priv->database) {
@@ -1248,7 +1249,8 @@ gda_dict_update_dbms_data (GdaDict *dict, GType limit_to_type, const gchar *limi
 
 	/* functions */
 	if (!dict->priv->stop_update && 
-	    (!limit_to_type || (limit_to_type == GDA_TYPE_DICT_FUNCTION))) {
+	    (!limit_to_type || (limit_to_type == GDA_TYPE_DICT_FUNCTION)) &&
+	    gda_connection_supports_feature (dict->priv->cnc, GDA_CONNECTION_FEATURE_PROCEDURES)) {
 		reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_FUNCTION);
 		if (reg) 
 			retval = (reg->dbms_sync) (dict, limit_obj_name, error);
@@ -1256,7 +1258,8 @@ gda_dict_update_dbms_data (GdaDict *dict, GType limit_to_type, const gchar *limi
 
 	/* aggregates */
 	if (!dict->priv->stop_update && 
-	    (!limit_to_type || (limit_to_type == GDA_TYPE_DICT_AGGREGATE))) {
+	    (!limit_to_type || (limit_to_type == GDA_TYPE_DICT_AGGREGATE)) && 
+	    gda_connection_supports_feature (dict->priv->cnc, GDA_CONNECTION_FEATURE_AGGREGATES)) {
 		reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_AGGREGATE);
 		if (reg) 
 			retval = (reg->dbms_sync) (dict, limit_obj_name, error);
@@ -1264,9 +1267,9 @@ gda_dict_update_dbms_data (GdaDict *dict, GType limit_to_type, const gchar *limi
 	
 	/* tables, fields, etc */
 	if (!dict->priv->stop_update && 
+	    retval &&
 	    (!limit_to_type || 
 	     (limit_to_type == GDA_TYPE_DICT_TABLE) ||
-	     /* (limit_to_type == GDA_TYPE_DICT_SEQUENCE) || */
 	     (limit_to_type == GDA_TYPE_DICT_CONSTRAINT)))
 		retval = gda_dict_database_update_dbms_data (dict->priv->database, limit_to_type, limit_obj_name, error);
 
@@ -1500,11 +1503,10 @@ gda_dict_save (GdaDict *dict, GError **error)
  * @dict : a #GdaDict object
  * @for_type: a #GType type
  *
- * Obtain a pointer to a #GdaDataHandler which can manage
- * #GValue values of type @for_type.
+ * Obtain a pointer to a #GdaDataHandler which can convert #GValue values of type @for_type.
  *
- * Unlike the gda_dict_get_default_handler() method, this method asks the provider for
- * the connection assigned to @dict using gda_dict_set_connection() if there is any.
+ * Unlike the gda_dict_get_default_handler() method, this method asks the provider (for
+ * the connection assigned to @dict using gda_dict_set_connection()) if there is any.
  *
  * It fallbacks to the same data handler as
  * gda_dict_get_default_handler() if no connection has been assigned, or if the assigned'd provider

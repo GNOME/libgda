@@ -2,7 +2,7 @@
 GdaHandlerTime
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Default handler for time, date and timestamp
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -22,16 +22,12 @@ GdaHandlerTime
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerTime ##### -->
 <para>
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerTimeClass ##### -->
 <para>

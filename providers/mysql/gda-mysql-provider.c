@@ -974,6 +974,8 @@ gda_mysql_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
 		TRUE, 
 		TRUE,
 		TRUE,
+		TRUE,
+		TRUE
 	};
 	
 	return &info;

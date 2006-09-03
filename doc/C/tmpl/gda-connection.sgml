@@ -149,6 +149,7 @@ Management of connections to data sources
 @GDA_CONNECTION_SCHEMA_USERS: 
 @GDA_CONNECTION_SCHEMA_VIEWS: 
 @GDA_CONNECTION_SCHEMA_CONSTRAINTS: 
+@GDA_CONNECTION_SCHEMA_TABLE_CONTENTS: 
 
 <!-- ##### FUNCTION gda_connection_new ##### -->
 <para>

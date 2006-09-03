@@ -2,7 +2,7 @@
 GdaHandlerBoolean
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Default handler for booleans
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -22,16 +22,12 @@ GdaHandlerBoolean
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerBoolean ##### -->
 <para>
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerBooleanClass ##### -->
 <para>

@@ -2,7 +2,7 @@
 GdaHandlerType
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Default handler for GType values
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -22,16 +22,12 @@ GdaHandlerType
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerType ##### -->
 <para>
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerTypeClass ##### -->
 <para>

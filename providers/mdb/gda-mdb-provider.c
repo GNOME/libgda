@@ -27,7 +27,15 @@
 #include <libgda/gda-data-model-private.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-parameter-list.h>
 #include "gda-mdb.h"
+
+#include <libgda/handlers/gda-handler-numerical.h>
+#include <libgda/handlers/gda-handler-boolean.h>
+#include <libgda/handlers/gda-handler-time.h>
+#include <libgda/handlers/gda-handler-string.h>
+#include <libgda/handlers/gda-handler-type.h>
+#include <libgda/handlers/gda-handler-bin.h>
 
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
 
@@ -71,10 +79,19 @@ static gboolean gda_mdb_provider_rollback_transaction (GdaServerProvider *provid
 static gboolean gda_mdb_provider_supports (GdaServerProvider *provider,
 					     GdaConnection *cnc,
 					     GdaConnectionFeature feature);
+
+static GdaServerProviderInfo *gda_mdb_provider_get_info (GdaServerProvider *provider,
+							 GdaConnection *cnc);
+
 static GdaDataModel *gda_mdb_provider_get_schema (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaConnectionSchema schema,
 						    GdaParameterList *params);
+
+static GdaDataHandler *gda_mdb_provider_get_data_handler (GdaServerProvider *provider,
+							  GdaConnection *cnc,
+							  GType gda_type,
+							  const gchar *dbms_type);
 
 static GObjectClass *parent_class = NULL;
 static gint loaded_providers = 0;
@@ -101,11 +118,11 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 
 	provider_class->get_version = gda_mdb_provider_get_version;
 	provider_class->get_server_version = gda_mdb_provider_get_server_version;
-	provider_class->get_info = NULL;
+	provider_class->get_info = gda_mdb_provider_get_info;
 	provider_class->supports_feature = gda_mdb_provider_supports;
 	provider_class->get_schema = gda_mdb_provider_get_schema;
 
-	provider_class->get_data_handler = NULL;
+	provider_class->get_data_handler = gda_mdb_provider_get_data_handler;
 	provider_class->string_to_value = NULL;
 	provider_class->get_def_dbms_type = NULL;
 
@@ -439,6 +456,23 @@ gda_mdb_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
+static GdaServerProviderInfo *
+gda_mdb_provider_get_info (GdaServerProvider *provider,
+			   GdaConnection *cnc)
+{
+	static GdaServerProviderInfo info = {
+		"Mdb",
+		TRUE, 
+		TRUE,
+		FALSE,
+		FALSE,
+		FALSE
+	};
+	
+	return &info;
+}
+
+
 static GdaDataModel *
 get_mdb_databases (GdaMdbConnection *mdb_cnc)
 {
@@ -467,12 +501,13 @@ get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
 	MdbCatalogEntry *entry;
 	MdbTableDef *mdb_table;
 	MdbColumn *mdb_col;
+	MdbIndex *mdb_idx;
 	gint i, j;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	par = gda_parameter_list_find (params, "name");
+	par = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
 	table_name = g_value_get_string ((GValue *) gda_parameter_get_value (par));
@@ -489,6 +524,16 @@ get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
 		    !strcmp (entry->object_name, table_name)) {
 			mdb_table = mdb_read_table (entry);
 			mdb_read_columns (mdb_table);
+			mdb_read_indices (mdb_table);
+
+			mdb_idx = NULL;
+			for (j = 0; !mdb_idx && (j < mdb_table->num_idxs); j++) {
+				mdb_idx = g_ptr_array_index (mdb_table->indices, j);
+				/*g_print ("=======\n");
+				  mdb_index_dump (mdb_table, mdb_idx);*/
+				if (mdb_idx->index_type != 1)
+					mdb_idx = NULL;
+			}
 
 			for (j = 0; j < mdb_table->num_cols; j++) {
 				GList *value_list = NULL;
@@ -500,7 +545,8 @@ get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
 				value_list = g_list_append (value_list, tmpval);
 
 				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), 
-						    mdb_get_objtype_string (mdb_col->col_type));
+						    mdb_get_coltype_string (mdb_cnc->mdb->default_backend,
+									    mdb_col->col_type));
 				value_list = g_list_append (value_list, tmpval);
 
 				g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), mdb_col->col_size);
@@ -509,15 +555,30 @@ get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
 				g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), mdb_col->col_scale);
 				value_list = g_list_append (value_list, tmpval);
 
-				g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+				g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), 
+						     mdb_col->is_fixed ? TRUE : FALSE);
+				value_list = g_list_append (value_list, tmpval);
+
+				/* PK */
+				tmpval = gda_value_new (G_TYPE_BOOLEAN);
+				if (mdb_idx) {
+					int k;
+					gboolean ispk = FALSE;
+
+					for (k = 0; !ispk && (k < mdb_idx->num_keys) ; k++) {
+						if (j == mdb_idx->key_col_num[k]-1)
+							ispk = TRUE;
+					}
+					g_value_set_boolean (tmpval, ispk);
+				}
+				else
+					g_value_set_boolean (tmpval, FALSE);
 				value_list = g_list_append (value_list, tmpval);
 
 				g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
 				value_list = g_list_append (value_list, tmpval);
 
-				g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
-				value_list = g_list_append (value_list, tmpval);
-
+				value_list = g_list_append (value_list, gda_value_new_null ());
 				value_list = g_list_append (value_list, gda_value_new_null ());
 				value_list = g_list_append (value_list, gda_value_new_null ());
 
@@ -536,17 +597,16 @@ static GdaDataModel *
 get_mdb_procedures (GdaMdbConnection *mdb_cnc)
 {
 	gint i;
-	GdaDataModelArray *model;
+	GdaDataModel *model;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
 	/* create the data model */
-	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_PROCEDURES));
+	model =  gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_PROCEDURES));
 	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_PROCEDURES);
 
 	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
-		GValue *value;
 		MdbCatalogEntry *entry;
 
 		entry = g_ptr_array_index (mdb_cnc->mdb->catalog, i);
@@ -567,7 +627,7 @@ get_mdb_procedures (GdaMdbConnection *mdb_cnc)
 			value_list = g_list_append (value_list, gda_value_new_null ());
 			value_list = g_list_append (value_list, gda_value_new_null ());
 
-			gda_data_model_append_values (GDA_DATA_MODEL (model), value_list, NULL);
+			gda_data_model_append_values (model, value_list, NULL);
 
 			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 			g_list_free (value_list);
@@ -581,16 +641,15 @@ static GdaDataModel *
 get_mdb_tables (GdaMdbConnection *mdb_cnc)
 {
 	gint i;
-	GdaDataModelArray *model;
+	GdaDataModel *model;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	model = (GdaDataModelArray *) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TABLES));
+	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TABLES));
 	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_TABLES);
 
 	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
-		GValue *value;
 		MdbCatalogEntry *entry;
 
 		entry = g_ptr_array_index (mdb_cnc->mdb->catalog, i);
@@ -622,7 +681,7 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 
 static void
 add_type (GdaDataModel *model, const gchar *typname, const gchar *owner,
-	  const gchar *comments, GType type)
+	  const gchar *comments, GType type, const gchar *synonyms)
 {
 	GList *value_list = NULL;
 	GValue *tmpval;
@@ -637,6 +696,9 @@ add_type (GdaDataModel *model, const gchar *typname, const gchar *owner,
 	value_list = g_list_append (value_list, tmpval);
 
 	g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), type);
+	value_list = g_list_append (value_list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), synonyms);
 	value_list = g_list_append (value_list, tmpval);
 
 	gda_data_model_append_values (model, value_list, NULL);
@@ -656,18 +718,19 @@ get_mdb_types (GdaMdbConnection *mdb_cnc)
 	model = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
 	gda_server_provider_init_schema_model (model, GDA_CONNECTION_SCHEMA_TYPES);
 
-	add_type (model, "boolean", NULL, _("Boolean type"), G_TYPE_BOOLEAN);
-	add_type (model, "byte", NULL, _("1-byte integers"), G_TYPE_CHAR);
-	add_type (model, "double", NULL, _("Double precision values"), G_TYPE_DOUBLE);
-	add_type (model, "float", NULL, _("Single precision values"), G_TYPE_FLOAT);
-	add_type (model, "int", NULL, _("32-bit integers"), G_TYPE_INT);
-	add_type (model, "longint", NULL, _("64-bit integers"), G_TYPE_INT64);
-	add_type (model, "memo", NULL, _("Variable length character strings"), GDA_TYPE_BINARY);
-	add_type (model, "money", NULL, _("Money amounts"), G_TYPE_DOUBLE);
-	add_type (model, "ole", NULL, _("OLE object"), GDA_TYPE_BINARY);
-	add_type (model, "repid", NULL, _("Replication ID"), GDA_TYPE_BINARY);
-	add_type (model, "sdatetime", NULL, _("Date/time value"), GDA_TYPE_TIMESTAMP);
-	add_type (model, "text", NULL, _("Character strings"), G_TYPE_STRING);
+	add_type (model, "boolean", NULL, _("Boolean type"), G_TYPE_BOOLEAN, NULL);
+	add_type (model, "byte", NULL, _("1-byte integers"), G_TYPE_CHAR, NULL);
+	add_type (model, "integer", NULL, _("32-bit integers"), G_TYPE_INT, "int");
+	add_type (model, "long integer", NULL, _("64-bit integers"), G_TYPE_INT64, "longint");
+	add_type (model, "currency", NULL, _("Money amounts"), G_TYPE_DOUBLE, "money");
+	add_type (model, "single", NULL, _("Single precision values"), G_TYPE_FLOAT, "float");
+	add_type (model, "double", NULL, _("Double precision values"), G_TYPE_DOUBLE, NULL);
+	add_type (model, "datetime", NULL, _("Date/time value"), GDA_TYPE_TIMESTAMP, "dateTime (short)");
+	add_type (model, "text", NULL, _("Character strings"), G_TYPE_STRING, NULL);
+	add_type (model, "ole", NULL, _("OLE object"), GDA_TYPE_BINARY, NULL);
+	add_type (model, "memo", NULL, _("Variable length character strings"), G_TYPE_STRING, "memo/hyperlink,hyperlink");
+	add_type (model, "repid", NULL, _("Replication ID"), GDA_TYPE_BINARY, NULL);
+	add_type (model, "numeric", NULL, _("Numeric"), GDA_TYPE_NUMERIC, NULL);
 
 	return model;
 }
@@ -716,6 +779,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	gint c, r;
 	GdaMdbConnection *mdb_cnc;
 	GdaDataModel *model;
+	GType *coltypes;
 
 	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdbprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -729,7 +793,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 
 	/* parse the SQL command */
 	mdb_SQL->mdb = mdb_cnc->mdb;
-	g_input_ptr = sql;
+	g_input_ptr = (char *) sql;
 	/* begin unsafe */
 	_mdb_sql (mdb_SQL);
 	if (yyparse ()) {
@@ -749,21 +813,30 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	g_object_set (G_OBJECT (model), 
 		      "command_text", sql, NULL);
 
-	/* allocate bound data */
-	for (c = 0; c < mdb_SQL->num_columns; c++) {
-		MdbSQLColumn *sqlcol;
+	MdbTableDef *mdb_table;
+	
+	mdb_table = mdb_SQL->cur_table;
+	mdb_read_columns (mdb_table);
+	
+	coltypes = g_new0 (GType, mdb_table->num_cols);
+	for (c = 0; c < mdb_table->num_cols; c++) {
+		MdbColumn *mdb_col;
 		GdaColumn *fa;
-
+		
+		/* column type */
+		mdb_col = g_ptr_array_index (mdb_table->columns, c);
+		coltypes [c] = gda_mdb_type_to_gda (mdb_col->col_type);
+		
+		/* allocate bound data */
 		bound_data[c] = (gchar *) malloc (MDB_BIND_SIZE);
 		bound_data[c][0] = '\0';
-		mdbsql_bind_column (mdb_SQL, c + 1, bound_data[c]);
-
+		mdb_sql_bind_column (mdb_SQL, c + 1, bound_data[c], NULL);
+		
 		/* set description for the field */
-		sqlcol = g_ptr_array_index (mdb_SQL->columns, c);
 		fa = gda_data_model_describe_column (model, c);
-		gda_column_set_name (fa, sqlcol->name);
-		gda_column_set_defined_size (fa, sqlcol->disp_size);
-		gda_column_set_gda_type (fa, gda_mdb_type_to_gda (sqlcol->bind_type));
+		gda_column_set_name (fa, mdb_col->name);
+		gda_column_set_gda_type (fa, coltypes [c]);
+		gda_column_set_defined_size (fa, mdb_col->col_size);
 	}
 
 	/* read data */
@@ -774,7 +847,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 
 		r++;
 		for (c = 0; c < mdb_SQL->num_columns; c++) {
-			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), bound_data[c]);
+			gda_value_set_from_string ((tmpval = gda_value_new (coltypes [c])), bound_data[c], coltypes [c]);
 			value_list = g_list_append (value_list, tmpval);
 		}
 
@@ -785,8 +858,105 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	}
 
 	/* free memory */
+	g_free (coltypes);
 	for (c = 0; c < mdb_SQL->num_columns; c++)
 		free (bound_data[c]);
 	mdb_sql_reset (mdb_SQL);
 	return model;
+}
+
+static GdaDataHandler *
+gda_mdb_provider_get_data_handler (GdaServerProvider *provider,
+				   GdaConnection *cnc,
+				   GType type,
+				   const gchar *dbms_type)
+{
+	GdaDataHandler *dh = NULL;
+	GdaMdbProvider *mdb_prv = GDA_MDB_PROVIDER (provider);
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+        if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_UINT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == GDA_TYPE_USHORT) ||
+	    (type == G_TYPE_CHAR) ||
+	    (type == G_TYPE_UCHAR) ||
+	    (type == G_TYPE_UINT)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_numerical_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_FLOAT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_SHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_USHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_CHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UCHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT, NULL);
+			g_object_unref (dh);
+		}
+	}
+        else if ((type == GDA_TYPE_BINARY) ||
+		 (type == GDA_TYPE_BLOB)) {
+		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
+		if (!dh) {
+			dh = gda_handler_bin_new_with_prov (provider, cnc);
+			if (dh) {
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
+				g_object_unref (dh);
+			}
+		}
+	}
+        else if (type == G_TYPE_BOOLEAN) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_boolean_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_BOOLEAN, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if ((type == G_TYPE_DATE) ||
+		 (type == GDA_TYPE_TIME) ||
+		 (type == GDA_TYPE_TIMESTAMP)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_time_new_no_locale ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if (type == G_TYPE_STRING) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_string_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_STRING, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if (type == G_TYPE_ULONG) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_type_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_ULONG, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else {
+		if (dbms_type) {
+			TO_IMPLEMENT;
+		}
+	}
+
+	return dh;
 }

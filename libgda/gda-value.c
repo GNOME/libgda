@@ -240,11 +240,11 @@ gda_binary_get_type (void)
 		
 		g_value_register_transform_func (G_TYPE_STRING,
 						 type,
-						 binary_to_string);
+						 string_to_binary);
 		
 		g_value_register_transform_func (type, 
 						 G_TYPE_STRING,
-						 string_to_binary);
+						 binary_to_string);
 	}
 	
 	return type;
@@ -352,11 +352,11 @@ gda_geometricpoint_get_type (void)
 		
 		g_value_register_transform_func (G_TYPE_STRING,
 						 type,
-						 geometric_point_to_string);
+						 string_to_geometricpoint);
 		
 		g_value_register_transform_func (type, 
 						 G_TYPE_STRING,
-						 string_to_geometricpoint);
+						 geometric_point_to_string);
 	}
 	
 	return type;
@@ -442,10 +442,10 @@ gda_value_list_get_type(void)
 						     (GBoxedCopyFunc) gda_value_list_copy,
 						     (GBoxedFreeFunc) gda_value_list_free);
 		
-		g_value_register_transform_func (G_TYPE_STRING,
-						 type,
+		g_value_register_transform_func (type, 
+						 G_TYPE_STRING,
 						 list_to_string);
-		/* FIXME: No function to transform from GdaValueList to a String*/
+		/* FIXME: No function to transform from string to a GdaValueList */
 	}
 
 	return type;
@@ -771,7 +771,6 @@ string_to_timestamp (const GValue *src, GValue *dest)
 static void 
 timestamp_to_string (const GValue *src, GValue *dest) 
 {
-	gchar *str;
 	GdaTimestamp *timestamp;
 	GString *string;
 	
@@ -793,7 +792,7 @@ timestamp_to_string (const GValue *src, GValue *dest)
 	if (timestamp->timezone != GDA_TIMEZONE_INVALID)
 		g_string_append_printf (string, "%+02d",
 					(int) timestamp->timezone/3600);
-	g_value_take_string (dest, str);
+	g_value_take_string (dest, string->str);
 	g_string_free (string, FALSE);
 }
 

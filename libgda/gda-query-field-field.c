@@ -29,6 +29,9 @@
 #include "gda-object-ref.h"
 #include "gda-query.h"
 #include "gda-query-target.h"
+#include "gda-dict.h"
+#include "gda-connection.h"
+#include "gda-server-provider.h"
 
 /* 
  * Main static functions 
@@ -93,7 +96,7 @@ enum
 	PROP_QUERY,
 	PROP_VALUE_PROVIDER_OBJECT,
 	PROP_VALUE_PROVIDER_XML_ID,
-	PROP_HANDLER_PLUGIN,
+	PROP_PLUGIN,
 	PROP_TARGET_OBJ,
 	PROP_TARGET_NAME,
 	PROP_TARGET_ID,
@@ -234,7 +237,7 @@ gda_query_field_field_class_init (GdaQueryFieldFieldClass * class)
 	g_object_class_install_property (object_class, PROP_VALUE_PROVIDER_XML_ID,
 					 g_param_spec_string ("value_provider_xml_id", NULL, NULL, NULL,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	g_object_class_install_property (object_class, PROP_HANDLER_PLUGIN,
+	g_object_class_install_property (object_class, PROP_PLUGIN,
                                          g_param_spec_string ("entry_plugin", NULL, NULL, NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
@@ -472,7 +475,7 @@ gda_query_field_field_set_property (GObject *object,
 				}
 			}
 			break;
-		case PROP_HANDLER_PLUGIN:
+		case PROP_PLUGIN:
 			val =  g_value_get_string (value);
 			if (ffield->priv->plugin) {
 				g_free (ffield->priv->plugin);
@@ -544,8 +547,19 @@ gda_query_field_field_get_property (GObject *object,
 			else
 				g_value_set_string (value, NULL);
 			break;
-		case PROP_HANDLER_PLUGIN:
+		case PROP_PLUGIN:
 			g_value_set_string (value, ffield->priv->plugin);
+			if (! ffield->priv->plugin) {
+				/* try to use the referenced field plugin */
+				GdaObject *obj;
+				obj = gda_object_ref_get_ref_object (ffield->priv->field_ref);
+				if (obj) {
+					gchar *plugin;
+					g_object_get ((GObject*) obj, "entry_plugin", &plugin, NULL);
+					if (plugin) 
+						g_value_take_string (value, plugin);
+				}
+			}
 			break;
 		case PROP_TARGET_OBJ:
 			g_value_set_pointer (value, gda_object_ref_get_ref_object (ffield->priv->target_ref));
@@ -1022,21 +1036,31 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	GdaObject *fobj;
 	const gchar *tname = NULL, *fname = NULL;
 	gchar *retval = NULL;
+	GdaServerProviderInfo *sinfo = NULL;
+	GdaDict *dict;
+	GdaConnection *cnc;
 
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_FIELD (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_FIELD_FIELD (iface)->priv, NULL);
 	field = GDA_QUERY_FIELD_FIELD (iface);
 	g_return_val_if_fail (field->priv, NULL);
 
-	if (! (options & GDA_RENDERER_FIELDS_NO_TARGET_ALIAS)) {
-		GdaObject *tobj;
+	dict = gda_object_get_dict (GDA_OBJECT (iface));
+	cnc = gda_dict_get_connection (dict);
+	if (cnc)
+		sinfo = gda_connection_get_infos (cnc);
 
-		tobj = gda_object_ref_get_ref_object (field->priv->target_ref);
-		if (tobj)
-			tname = gda_query_target_get_alias (GDA_QUERY_TARGET (tobj));
-		else
-			tname = gda_object_ref_get_ref_name (field->priv->target_ref, NULL, NULL);
-	}		
+	if (!sinfo || sinfo->supports_prefixed_fields) {
+		if (! (options & GDA_RENDERER_FIELDS_NO_TARGET_ALIAS)) {
+			GdaObject *tobj;
+			
+			tobj = gda_object_ref_get_ref_object (field->priv->target_ref);
+			if (tobj)
+				tname = gda_query_target_get_alias (GDA_QUERY_TARGET (tobj));
+			else
+				tname = gda_object_ref_get_ref_name (field->priv->target_ref, NULL, NULL);
+		}
+	}
 		
 	fobj = gda_object_ref_get_ref_object (field->priv->field_ref);
 	if (fobj)
@@ -1055,7 +1079,7 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 		if (((*tmp <= '9') && (*tmp >= '0')) || 
 		    strcmp (tmp, fname)) {
 			g_free (tmp);
-			tmp = fname;
+			tmp = (gchar*) fname;
 			fname = g_strdup_printf ("\"%s\"", tmp);
 		}
 		else
@@ -1089,7 +1113,7 @@ gda_query_field_field_render_as_str (GdaRenderer *iface, GdaParameterList *conte
 		GdaEntity *ent = gda_query_target_get_represented_entity (GDA_QUERY_TARGET (tobj));
 		if (ent)
 			tname = g_strdup_printf ("%s(%s)", 
-						 gda_object_get_name (ent), 
+						 gda_object_get_name (GDA_OBJECT (ent)), 
 						 gda_query_target_get_alias (GDA_QUERY_TARGET (tobj)));
 		else
 			tname = g_strdup (gda_query_target_get_alias (GDA_QUERY_TARGET (tobj)));

@@ -2,7 +2,7 @@
 GdaHandlerBin
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Default handler for binary values
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -22,16 +22,12 @@ GdaHandlerBin
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerBin ##### -->
 <para>
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerBinClass ##### -->
 <para>

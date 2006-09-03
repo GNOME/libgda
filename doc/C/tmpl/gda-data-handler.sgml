@@ -22,14 +22,6 @@ Only one object which implements this interface is needed for any given data typ
 methods to manage values (as #GValue structures). The #GnomeDbDataEntry interface is complementary to this one since
 it it implemented by widgets where the user can enter or modify some data.
 </para>
-<para>
-For a given data type, the #GdaConnection (found in the correspoding #GdaDict object) will provide a reference to a valid
-#GdaDataHandler to handle values of that data type.
-</para>
-<para>
-Libmergeant provides some default #GdaDataHandler objects for the most common data types (strings with a #GdaHandlerString, 
-booleans with a #GdaHandlerBoolean, etc) and some other as plugins.
-</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>

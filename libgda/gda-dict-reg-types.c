@@ -129,7 +129,7 @@ types_save_xml_tree (GdaDict *dict, xmlNodePtr group, GError **error)
 		qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (alltypes->data), error);
 		if (qnode) {
 			xmlAddChild (group, qnode);
-			if (! g_slist_find (list, list->data))
+			if (! g_slist_find (list, alltypes->data))
 				xmlSetProp (qnode, "custom", "t");
 		}
 		else 
@@ -157,31 +157,68 @@ types_get_objects (GdaDict *dict)
 	return retval;
 }
 
+static gboolean
+LC_NAMES (GdaDict *dict)
+{
+        GdaConnection *cnc;
+        GdaServerProviderInfo *sinfo = NULL;
+
+        cnc = gda_dict_get_connection (dict);
+        if (cnc)
+                sinfo = gda_connection_get_infos (cnc);
+
+        return (sinfo && sinfo->is_case_insensitive);
+}
+
 static GdaObject *
 types_get_by_name (GdaDict *dict, const gchar *name)
 {
 	GSList *list;
 	GdaDictType *datatype = NULL;
 	GdaDictRegisterStruct *reg;
-
+	gchar *cmpstr1, *cmpstr2;
+	gboolean ci;
+	
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_TYPE);
 	g_assert (reg);
 
 	/* compare the data types names */
-	for (list = reg->all_objects; list && !datatype; list = list->next) 
-		if (!strcmp (gda_dict_type_get_sqlname (GDA_DICT_TYPE (list->data)),
-			     name))
+	ci = LC_NAMES (dict);
+	if (ci)
+		cmpstr1 = g_utf8_strdown (name, -1);
+	else
+		cmpstr1 = (gchar *) name;
+
+	for (list = reg->all_objects; list && !datatype; list = list->next) {
+		if (ci)
+			cmpstr2 = g_utf8_strdown (gda_dict_type_get_sqlname (GDA_DICT_TYPE (list->data)), -1);
+		else
+			cmpstr2 = (gchar *) gda_dict_type_get_sqlname (GDA_DICT_TYPE (list->data));
+		if (!strcmp (cmpstr1, cmpstr2))
 			datatype = GDA_DICT_TYPE (list->data);
+		if (ci)
+			g_free (cmpstr2);
+	}
 	
 	/* if not found, then compare with the synonyms */
 	for (list = reg->all_objects; list && !datatype; list = list->next) {
 		const GSList *synlist = gda_dict_type_get_synonyms (GDA_DICT_TYPE (list->data));
 		while (synlist && !datatype) {
-			if (!strcmp ((gchar *) (synlist->data), name))
+			if (ci)
+				cmpstr2 = g_utf8_strdown ((gchar *) (synlist->data), -1);
+			else
+				cmpstr2 = (gchar *) (synlist->data);
+
+			if (!strcmp (cmpstr1, cmpstr2))
 				datatype = GDA_DICT_TYPE (list->data);
+			if (ci)
+				g_free (cmpstr2);
 			synlist = g_slist_next (synlist);
 		}
 	}
+
+	if (ci)
+		g_free (cmpstr1);
 
 	return (GdaObject *) datatype;
 }
@@ -315,7 +352,7 @@ types_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **error)
 
 		if (newdt) {
 			gda_dict_assume_object (dict, (GdaObject*) dt);
-			g_object_unref ((GObject *) newdt);
+			g_object_unref ((GObject *) dt);
 		}
 
 		g_signal_emit_by_name (G_OBJECT (dict), "update_progress", SYNC_KEY,

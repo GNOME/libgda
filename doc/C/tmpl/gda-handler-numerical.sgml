@@ -2,7 +2,7 @@
 GdaHandlerNumerical
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Default handler for numeric values
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -22,16 +22,12 @@ GdaHandlerNumerical
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerNumerical ##### -->
 <para>
 
 </para>
 
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaHandlerNumericalClass ##### -->
 <para>

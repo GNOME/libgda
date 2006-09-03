@@ -79,19 +79,21 @@ static GObjectClass  *parent_class = NULL;
 enum
 {
 	PROP_0,
-	PROP_DB_TABLE
+	PROP_DB_TABLE,
+	PROP_PLUGIN
 };
 
 
 /* private structure */
 struct _GdaDictFieldPrivate
 {
-	GdaDictType *data_type;
-	GdaDictTable          *table;
-	gint                   length;     /* -1 if not applicable */
-	gint                   scale;      /* 0 if not applicable */
-	GValue              *default_val;/* NULL if no default value */
-	guint                  extra_attrs;/* OR'ed value of GdaDictFieldAttribute */
+	GdaDictType     *data_type;
+	GdaDictTable    *table;
+	gint             length;     /* -1 if not applicable */
+	gint             scale;      /* 0 if not applicable */
+	GValue          *default_val;/* NULL if no default value */
+	guint            extra_attrs;/* OR'ed value of GdaDictFieldAttribute */
+	gchar           *plugin;
 };
 
 /* module error */
@@ -188,7 +190,9 @@ gda_dict_field_class_init (GdaDictFieldClass * class)
 	g_object_class_install_property (object_class, PROP_DB_TABLE,
 					 g_param_spec_pointer ("db_table", NULL, NULL, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-
+	g_object_class_install_property (object_class, PROP_PLUGIN,
+                                         g_param_spec_string ("entry_plugin", NULL, NULL, NULL,
+                                                              (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* virtual functions */
 #ifdef GDA_DEBUG
         GDA_OBJECT_CLASS (class)->dump = (void (*)(GdaObject *, guint)) gda_dict_field_dump;
@@ -205,6 +209,7 @@ gda_dict_field_init (GdaDictField * gda_dict_field)
 	gda_dict_field->priv->length = -1;
 	gda_dict_field->priv->scale = 0;
 	gda_dict_field->priv->extra_attrs = 0;
+	gda_dict_field->priv->plugin = NULL;
 }
 
 
@@ -272,7 +277,7 @@ gda_dict_field_dispose (GObject *object)
 }
 
 static void
-gda_dict_field_finalize (GObject   * object)
+gda_dict_field_finalize (GObject *object)
 {
 	GdaDictField *gda_dict_field;
 
@@ -281,7 +286,8 @@ gda_dict_field_finalize (GObject   * object)
 
 	gda_dict_field = GDA_DICT_FIELD (object);
 	if (gda_dict_field->priv) {
-
+		g_free (gda_dict_field->priv->plugin);
+		
 		g_free (gda_dict_field->priv);
 		gda_dict_field->priv = NULL;
 	}
@@ -293,9 +299,9 @@ gda_dict_field_finalize (GObject   * object)
 
 static void 
 gda_dict_field_set_property (GObject *object,
-			guint param_id,
-			const GValue *value,
-			GParamSpec *pspec)
+			     guint param_id,
+			     const GValue *value,
+			     GParamSpec *pspec)
 {
 	gpointer ptr;
 	GdaDictField *gda_dict_field;
@@ -317,6 +323,13 @@ gda_dict_field_set_property (GObject *object,
 							 G_CALLBACK (destroyed_object_cb), gda_dict_field);
 			}
 			break;
+		case PROP_PLUGIN:
+			g_free (gda_dict_field->priv->plugin);
+			if (g_value_get_string (value))
+				gda_dict_field->priv->plugin = g_strdup (g_value_get_string (value));
+			else
+				gda_dict_field->priv->plugin = NULL;
+			break;
 		}
 	}
 }
@@ -334,6 +347,9 @@ gda_dict_field_get_property (GObject *object,
 		switch (param_id) {
 		case PROP_DB_TABLE:
 			g_value_set_pointer (value, gda_dict_field->priv->table);
+			break;
+		case PROP_PLUGIN:
+			g_value_set_string (value, gda_dict_field->priv->plugin);
 			break;
 		}	
 	}
@@ -856,6 +872,9 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 		g_free (str);
 	}
 
+	if (field->priv->plugin && *(field->priv->plugin)) 
+		xmlSetProp (node, "plugin", field->priv->plugin);
+
 	return node;
 }
 
@@ -885,19 +904,19 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 	if (prop) {
 		name = TRUE;
 		gda_object_set_name (GDA_OBJECT (field), prop);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (field), prop);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "owner");
 	if (prop) {
 		gda_object_set_owner (GDA_OBJECT (field), prop);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "type");
@@ -932,19 +951,19 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 			}
 			type = TRUE;
 		}
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "length");
 	if (prop) {
 		field->priv->length = atoi (prop);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "scale");
 	if (prop) {
 		field->priv->scale = atoi (prop);
-		g_free (prop);
+		xmlFree (prop);
 	}
 	
 	prop = xmlGetProp (node, "default");
@@ -963,7 +982,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 					     GDA_DICT_FIELD_ERROR,
 					     GDA_DICT_FIELD_XML_LOAD_ERROR,
 					     _("Unknown GDA data type '%s'"), str2);
-				g_free (str2);
+				xmlFree (str2);
 				return FALSE;				
 			}
 			dh = gda_dict_get_default_handler (dict, vtype);
@@ -977,18 +996,24 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 					     GDA_DICT_FIELD_ERROR,
 					     GDA_DICT_FIELD_XML_LOAD_ERROR,
 					     _("Could not find a data handler for data type '%s'"), str2);
-				g_free (str2);
+				xmlFree (str2);
 				return FALSE;
 			}
-			g_free (str2);
+			xmlFree (str2);
 		}
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "extra_attr");
 	if (prop) {
 		gda_dict_field_set_attributes (field, utility_table_field_attrs_parse (prop));
-		g_free (prop);
+		xmlFree (prop);
+	}
+
+	prop = xmlGetProp (node, "plugin");
+	if (prop) {
+		g_object_set (G_OBJECT (field), "entry_plugin", prop, NULL);
+		xmlFree (prop);
 	}
 
 	if (name && type)

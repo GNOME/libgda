@@ -401,6 +401,49 @@
       &libgda-GdaColumnIndex;
     </chapter>
 
+    <chapter id="data_conv">
+      <title>Data conversions</title>
+      <para>
+	A single piece of data can have several representations
+	depending on its usage: a string represantation, an SQL representation and of course a 
+	<link linkend="GValue">GValue</link> representation. Conversions from one representation to
+	the other is DBMS dependant as each database can have its own SQL representation rules. Thus the
+	<link linkend="GdaDataHandler">GdaDataHandler</link> object was created.
+      </para>
+      <para>
+	To convert a data, one needs to get a pointer to a <link linkend="GdaDataHandler">GdaDataHandler</link> object (no
+	need to unref() it after usage, data handler objects are stateless). To obtain such a pointer one can:
+	<itemizedlist>
+	  <listitem>
+	    <para>Ask a <link linkend="GdaDict">GdaDict</link> object for one using the 
+	      <link linkend="gda-dict-get-default-handler">gda_dict_get_default_handler()</link>: the returned data handler
+	      is a generic one and should not be used to convert data to use with any connection, but only to have
+	      a portable way of storing and loading data in a locale independant fashion.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Ask a <link linkend="GdaDict">GdaDict</link> object for one using the 
+	      <link linkend="gda-dict-get-handler">gda_dict_get_handler()</link>: the returned data handler can safely be used
+	      to convert data to use with the connection assigned to the dictionary (see this method's documentation
+	      for more information)</para>
+	  </listitem>
+	  <listitem>
+	    <para>Ask a <link linkend="GdaServerProvider">GdaServerProvider</link> object for one using the
+	    <link linkend="gda-server-provider-get-data-handler-gtype">gda_server_provider_get_data_handler_gtype()</link>
+	    or <link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link>:
+	    the returned data handler can then safely be used to convert any data to be used with any connection
+	    relying on the GdaServerProvider object.</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+      &libgda-GdaDataHandler;
+      &libgda-GdaHandlerString;
+      &libgda-GdaHandlerBoolean;
+      &libgda-GdaHandlerTime;
+      &libgda-GdaHandlerNumerical;
+      &libgda-GdaHandlerBin;
+      &libgda-GdaHandlerType;
+    </chapter>
+
     <chapter>
       <title>Dictionary and related objects</title>
       &libgda-GdaDict;

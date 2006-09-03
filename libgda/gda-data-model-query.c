@@ -89,6 +89,8 @@ static guint                gda_data_model_query_get_access_flags(GdaDataModel *
 static const GValue        *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row);
 static guint                gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
+static GdaDataModelIter    *gda_data_model_query_create_iter     (GdaDataModel *model);
+
 static gboolean             gda_data_model_query_set_value_at    (GdaDataModel *model, gint col, gint row, 
 								   const GValue *value, GError **error);
 static gboolean             gda_data_model_query_set_values      (GdaDataModel *model, gint row, 
@@ -198,7 +200,7 @@ gda_data_model_query_data_model_init (GdaDataModelClass *iface)
 	iface->i_get_value_at = gda_data_model_query_get_value_at;
 	iface->i_get_attributes_at = gda_data_model_query_get_attributes_at;
 
-	iface->i_create_iter = NULL; 
+	iface->i_create_iter = gda_data_model_query_create_iter; 
 	iface->i_iter_at_row = NULL;
 	iface->i_iter_next = NULL;
 	iface->i_iter_prev = NULL;
@@ -520,7 +522,8 @@ gda_data_model_query_new (GdaQuery *query)
 
 	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 
-	model = g_object_new (GDA_TYPE_DATA_MODEL_QUERY, "dict", gda_object_get_dict (GDA_OBJECT (query)),
+	model = g_object_new (GDA_TYPE_DATA_MODEL_QUERY, 
+			      "dict", gda_object_get_dict (GDA_OBJECT (query)),
 			      "query", query, NULL);
 
 	return GDA_DATA_MODEL (model);
@@ -727,7 +730,6 @@ create_columns (GdaDataModelQuery *model)
 		while (list) {
 			GdaColumn *col;
 			GdaEntityField *field = (GdaEntityField *) list->data;
-			
 
 			col = gda_column_new ();
 			gda_column_set_name (col, gda_object_get_name (GDA_OBJECT (field)));
@@ -919,6 +921,40 @@ gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	}
 
 	return flags;
+}
+
+static GdaDataModelIter *
+gda_data_model_query_create_iter (GdaDataModel *model)
+{
+	GdaDataModelIter *iter;
+
+	iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
+						  "dict", gda_object_get_dict (GDA_OBJECT (model)), 
+						  "data_model", model, NULL);
+	/* set the "entry_plugin" for all the parameters depending on the SELECT query field */
+	if (gda_query_is_select_query (GDA_DATA_MODEL_QUERY (model)->priv->queries[SEL_QUERY])) {
+		GSList *list, *fields;
+		GSList *params;
+
+		fields = gda_entity_get_fields (GDA_ENTITY (GDA_DATA_MODEL_QUERY (model)->priv->queries[SEL_QUERY]));
+		params = GDA_PARAMETER_LIST (iter)->parameters;
+
+		for (list = fields; list; list = list->next, params = params->next) {
+			GdaEntityField *field = (GdaEntityField *) list->data;
+			if (GDA_IS_QUERY_FIELD_FIELD (field)) {
+				gchar *plugin;
+
+			        g_object_get (G_OBJECT (field), "entry_plugin", &plugin, NULL);
+				if (plugin) {
+					g_object_set (G_OBJECT (params->data), "entry_plugin", plugin, NULL);
+					g_free (plugin);
+				}
+			}
+		}
+		g_slist_free (fields);
+	}
+
+	return iter;
 }
 
 static gboolean

@@ -1037,6 +1037,8 @@ gda_oracle_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
 		TRUE, 
 		TRUE,
 		FALSE,
+		TRUE,
+		TRUE
 	};
 	
 	return &info;
