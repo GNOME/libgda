@@ -41,6 +41,8 @@
         <gda_array_row>
             <gda_value>id</gda_value>
             <gda_value>serial</gda_value>
+            <gda_value></gda_value>
+            <gda_value></gda_value>
             <gda_value>FALSE</gda_value>
             <gda_value>FALSE</gda_value>
             <gda_value>TRUE</gda_value>

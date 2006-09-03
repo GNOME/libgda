@@ -1,9 +1,27 @@
+2006-09-03  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/mysql/gda-mysql-ddl.c:
+	* providers/mysql/mysql_specs_add_column.xml.in:
+	* providers/mysql/mysql_specs_create_table.xml.in: added COLUMN_SIZE and 
+	COLUMN_SCALE paths for create table and add column operation for mysql and 
+	surrounded column names with back quote (`) to allow for reserved names
+	as column name.
+
+	* providers/sqlite/gda-sqlite-ddl.c:
+	* providers/sqlite/sqlite_specs_add_column.xml.in:
+	* providers/sqlite/sqlite_specs_create_table.xml.in: added COLUMN_SIZE and 
+	COLUMN_SCALE paths for create table and add column operation for sqlite.
+
+	* providers/postgres/postgres_specs_add_column.xml.in: removed default values.
+	* providers/postgres/postgres_specs_create_table.xml.in: added missing gda_value 
+	tags for COLUMN_SIZE and COLUMN_SCALE.
+	
 2006-09-02  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-ddl.c:
 	* providers/postgres/postgres_specs_add_column.xml.in:
 	* providers/postgres/postgres_specs_create_table.xml.in:
-	* doc/C/server-operation.xml: added COLUMN_TYPE and COLUMN_SIZE paths for
+	* doc/C/server-operation.xml: added COLUMN_SIZE and COLUMN_SCALE paths for
 	create table and add column operation for postgres and 
 	surrounded column names with double quote (") to allow for reserved names
 	as column name.
