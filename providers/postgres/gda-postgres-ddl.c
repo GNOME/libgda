@@ -573,7 +573,9 @@ gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cn
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
 			if (i != 0)
 				g_string_append (string, ", ");
+			g_string_append_c (string, '\"');
 			g_string_append (string, g_value_get_string (value));
+			g_string_append_c (string, '\"');
 		}
 	}
 

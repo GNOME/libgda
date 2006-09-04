@@ -693,7 +693,9 @@ gda_mysql_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
 			if (i != 0)
 				g_string_append (string, ", ");
+			g_string_append_c (string, '`');
 			g_string_append (string, g_value_get_string (value));
+			g_string_append_c (string, '`');
 			
 			value = gda_server_operation_get_value_at (op, "/INDEX_FIELDS_S/%d/INDEX_LENGTH", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_INT) && (g_value_get_int (value) > 0))
