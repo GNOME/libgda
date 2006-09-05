@@ -231,7 +231,9 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 		while (list) {
 			if (list != pkfields)
 				g_string_append (string, ", ");
+			g_string_append_c (string, '`');
 			g_string_append (string, g_value_get_string ((GValue*) list->data));
+			g_string_append_c (string, '`');
 			list = list->next;
 		}
 		g_string_append_c (string, ')');
@@ -261,7 +263,11 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 						value = gda_server_operation_get_value_at (op, 
 											   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", i, j);
 						if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+						{
+							g_string_append_c (string, '`');
 							g_string_append (string, g_value_get_string (value));
+							g_string_append_c (string, '`');
+						}
 						else {
 							allok = FALSE;
 							g_set_error (error, 0, 0, 
@@ -285,7 +291,11 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 					value = gda_server_operation_get_value_at (op, 
 										   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", i, j);
 					if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+					{
+						g_string_append_c (string, '`');
 						g_string_append (string, g_value_get_string (value));
+						g_string_append_c (string, '`');
+					}
 					else {
 						allok = FALSE;
 						g_set_error (error, 0, 0, 

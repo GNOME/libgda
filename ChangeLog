@@ -1,3 +1,13 @@
+2006-09-05  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/mysql/gda-mysql-ddl.c:
+	Surrounded column names in create table operation for PRIMARY/FOREIGN KEY
+	and REFERENCES with back quote (`) to allow for reserved names as column name.
+
+	* providers/postgres/gda-postgres-ddl.c:
+	Surrounded column names in create table operation for PRIMARY/FOREIGN KEY
+	and REFERENCES with double quote (") to allow for reserved names as column name.
+
 2006-09-04  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/mysql/gda-mysql-ddl.c:
