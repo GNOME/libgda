@@ -635,14 +635,14 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 	g_return_val_if_fail (CLASS (provider)->execute_command != NULL, NULL);
-
+#ifdef GDA_DEBUG
 	{
 		GdaServerProviderInfo *info;
 
 		info = gda_server_provider_get_info (provider, cnc);
 		g_print ("==> %s (Provider %s on cnx %p)\n", cmd->text, info->provider_name, cnc);
 	}
-
+#endif
 	return CLASS (provider)->execute_command (provider, cnc, cmd, params);
 }
 

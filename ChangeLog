@@ -1,5 +1,8 @@
 2006-09-05  Bas Driessen <bas.driessen@xobas.com>
 
+	* libgda/gda-server-provider.c: Set GDA_DEBUG to prevent SQL screen output in
+	a non debug environment.
+
 	* providers/mysql/gda-mysql-ddl.c:
 	Surrounded column names in create table operation for PRIMARY/FOREIGN KEY
 	and REFERENCES with back quote (`) to allow for reserved names as column name.
