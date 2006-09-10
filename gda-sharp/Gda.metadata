@@ -1,11 +1,17 @@
 <?xml version="1.0"?>
 <metadata>
+  <attr path="/api/namespace/class[@name='Main']" name="hidden">1</attr>
   <attr path="/api/namespace/class[@cname='GdaType_']" name="hidden">1</attr>
+  <attr path="/api/namespace/class[@name='Value']" name="hidden">1</attr>
   <attr path="/api/namespace/interface[@cname='GdaDataModel']/method[@name='Foreach']/*/*[@name='func']" name="scope">call</attr>
   <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='BeginUpdate']" name="name">BeganUpdate</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='CancelUpdate']" name="name">CanceledUpdat</attr>
+  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='CancelUpdate']" name="name">CanceledUpdate</attr>
   <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='CommitUpdate']" name="name">CommittedUpdate</attr>
   <attr path="/api/namespace/object[@cname='GdaDataModelArray']/method[@name='SetNColumns']" name="new_flag">1</attr>
   <attr path="/api/namespace/object[@cname='GdaDataModelHash']/method[@name='SetNColumns']" name="new_flag">1</attr>
+  <attr path="/api/namespace/object[@cname='GdaQueryFieldValue']/method[@name='IsParameter']" name="name">GetIsParameter</attr>
+  <attr path="/api/namespace/object[@cname='GdaParameter']/constructor[@cname='gda_parameter_new']" name="hidden">1</attr>
+  <attr path="/api/namespace/enum[@cname='GdaDataModelAccessFlags']/member[@name='Write']" name="value">Insert | Update | Delete</attr>
+  <attr path="/api/namespace/enum[@cname='GdaQueryFieldState']/member[@name='Any']" name="value">Visible | Invisible</attr>
 </metadata>
 

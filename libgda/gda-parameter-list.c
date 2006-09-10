@@ -18,6 +18,7 @@
  * USA
  */
 
+#include <stdarg.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #ifdef HAVE_LOCALE_H
@@ -220,6 +221,87 @@ gda_parameter_list_new (GSList *params)
 	compute_public_data (paramlist);
 
 	return paramlist;
+}
+
+/**
+ * gda_parameter_list_new_inline
+ * @dict: a #GdaDict object, or %NULL
+ * @...: a serie of a (const gchar*) name, (GType) type, and value, terminated by a %NULL
+ *
+ * Creates a new #GdaParameterList containing parameters defined by each serie in @...
+ *
+ * Returns: a new #GdaParameterList object
+ */ 
+GdaParameterList *
+gda_parameter_list_new_inline (GdaDict *dict, ...)
+{
+	GdaParameterList *plist;
+	GSList *params = NULL;
+	va_list ap;
+	gchar *name;
+
+	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
+
+	/* build the list of parameters */
+	va_start  (ap, dict);
+	name = va_arg (ap, char *);
+	while (name) {
+		GType type;
+		GdaParameter *param;
+		GValue *value;
+
+		type = va_arg (ap, GType);
+		param = (GdaParameter *) g_object_new (GDA_TYPE_PARAMETER, 
+						       "dict", ASSERT_DICT (dict), "gda_type", type, NULL);
+		value = gda_value_new (type);
+		if (type == G_TYPE_BOOLEAN) 
+			g_value_set_boolean (value, va_arg (ap, int));
+                else if (type == G_TYPE_STRING)
+			g_value_set_string (value, va_arg (ap, gchar *));
+                else if (type == G_TYPE_OBJECT)
+			g_value_set_object (value, va_arg (ap, gpointer));
+		else if (type == G_TYPE_INT)
+			g_value_set_int (value, va_arg (ap, gint));
+		else if (type == G_TYPE_UINT)
+			g_value_set_uint (value, va_arg (ap, guint));
+		else if (type == GDA_TYPE_BINARY)
+			gda_value_set_binary (value, va_arg (ap, GdaBinary *));
+		else if (type == G_TYPE_INT64)
+			g_value_set_int64 (value, va_arg (ap, gint64));
+		else if (type == G_TYPE_UINT64)
+			g_value_set_uint64 (value, va_arg (ap, guint64));
+		else if (type == GDA_TYPE_SHORT)
+			gda_value_set_short (value, va_arg (ap, int));
+		else if (type == GDA_TYPE_USHORT)
+			gda_value_set_ushort (value, va_arg (ap, uint));
+		else if (type == G_TYPE_CHAR)
+			g_value_set_char (value, va_arg (ap, int));
+		else if (type == G_TYPE_UCHAR)
+			g_value_set_uchar (value, va_arg (ap, uint));
+		else if (type == G_TYPE_FLOAT)
+			g_value_set_float (value, va_arg (ap, double));
+		else if (type == G_TYPE_DOUBLE)
+			g_value_set_double (value, va_arg (ap, gdouble));
+		else if (type == GDA_TYPE_NUMERIC)
+			gda_value_set_numeric (value, va_arg (ap, GdaNumeric *));
+		else if (type == G_TYPE_DATE)
+			g_value_set_boxed (value, va_arg (ap, GDate *));
+		else
+			g_warning ("%s() does not handle values of type %s, value will not be assigned.",
+				   __FUNCTION__, g_type_name (type));
+
+		name = va_arg (ap, char *);
+        }
+	va_end (ap);
+
+	/* create the plist */
+	plist = gda_parameter_list_new (params);
+	if (params) {
+		g_slist_foreach (params, (GFunc) g_object_unref, NULL);
+		g_slist_free (params);
+	}
+
+	return plist;
 }
 
 static void
@@ -668,7 +750,7 @@ static void
 changed_param_cb (GdaParameter *param, GdaParameterList *paramlist)
 {
 	/* signal the parameter change */
-	gda_object_changed (GDA_OBJECT (paramlist));
+	gda_object_signal_emit_changed (GDA_OBJECT (paramlist));
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'PARAM_CHANGED' from %s\n", __FUNCTION__);
 #endif

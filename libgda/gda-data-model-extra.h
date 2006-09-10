@@ -28,7 +28,7 @@
 
 G_BEGIN_DECLS
 
-void     gda_data_model_changed             (GdaDataModel *model);
+void     gda_data_model_signal_emit_changed             (GdaDataModel *model);
 
 void     gda_data_model_row_inserted        (GdaDataModel *model, gint row);
 void     gda_data_model_row_updated         (GdaDataModel *model, gint row);

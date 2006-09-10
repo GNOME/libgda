@@ -681,9 +681,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			pg_res = PQexec(pconn, arr[n]);
 			if (pg_res == NULL) {
 				gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
-				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
-				g_list_free (reclist);
-				reclist = NULL;
+				reclist = g_list_append (reclist, NULL);
 				break;
 			} 
 			
@@ -702,9 +700,13 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					gda_connection_event_set_description (event, str);
 					g_free (str);
 					gda_connection_add_event (cnc, event);
+					reclist = g_list_append (reclist, 
+					  gda_parameter_list_new_inline (NULL, 
+									 "IMPACTED_ROWS", G_TYPE_INT, 
+									 atoi (PQcmdTuples (pg_res)),
+									 NULL));
 				}
-				
-				if (status == PGRES_TUPLES_OK) {
+				else if (status == PGRES_TUPLES_OK) {
 					recset = gda_postgres_recordset_new (cnc, pg_res);
 					if (GDA_IS_DATA_MODEL (recset)) {
 						g_object_set (G_OBJECT (recset), 
@@ -716,15 +718,15 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					
 						reclist = g_list_append (reclist, recset);
 					}
+					else
+						reclist = g_list_append (reclist, NULL);	
 				}
 				else
 					reclist = g_list_append (reclist, NULL);
 			}
 			else {
 				gda_connection_add_event (cnc, gda_postgres_make_error (pconn, pg_res));
-				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
-				g_list_free (reclist);
-				reclist = NULL;
+				reclist = g_list_append (reclist, NULL);
 				break;
 			}
 
@@ -961,7 +963,6 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 		/* use the SQL from the provider to perform the action */
 		gchar *sql;
 		GdaCommand *cmd;
-		GdaDataModel *model;
 		
 		sql = gda_server_provider_render_operation (provider, cnc, op, error);
 		if (!sql)
@@ -969,15 +970,14 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 		
 		cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		g_free (sql);
-		model = gda_connection_execute_command (cnc, cmd, NULL, error);		
-		gda_command_free (cmd);
-		if (model != GDA_CONNECTION_EXEC_FAILED) {
-			if (model)
-				g_object_unref (model);
+		if (gda_connection_execute_non_select_command (cnc, cmd, NULL, error) != -1) {
+			gda_command_free (cmd);
 			return TRUE;
 		}
-		else
+		else {
+			gda_command_free (cmd);
 			return FALSE;
+		}
 	}
 }
 
@@ -2607,7 +2607,7 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 		 (type == GDA_TYPE_TIMESTAMP)) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
-			dh = gda_handler_time_new_no_locale ();
+			dh = gda_handler_time_new ();
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);

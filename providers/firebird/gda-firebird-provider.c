@@ -292,7 +292,7 @@ fb_get_tables (GdaConnection *cnc,
 	       GdaParameterList *params,
 	       gboolean show_views)
 {
-	GList *reclist, *value_list;
+	GList *value_list;
 	GdaDataModel *recset = NULL;
 	GdaTransaction *transaction;
 	GdaCommand *command;
@@ -307,7 +307,8 @@ fb_get_tables (GdaConnection *cnc,
 
 	transaction = gda_transaction_new ("temp_transaction");
 	if (gda_connection_begin_transaction (cnc, transaction)) {
-
+		GdaDataModel *recmodel;
+		
 		/* Find parameters */
 		if (params)
 			par = gda_parameter_list_find (params, "systables");
@@ -336,20 +337,16 @@ fb_get_tables (GdaConnection *cnc,
 		/* Execute statement */
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);		
-		reclist = gda_connection_execute_command_l (cnc, command, NULL, NULL);
-
-		if (reclist) {
+		recmodel = gda_connection_execute_select_command (cnc, command, NULL, NULL);
+		if (recmodel) {
 			recset = gda_data_model_array_new (4);
-			gda_data_model_set_column_title (recset, 0, _("Table"));
-			gda_data_model_set_column_title (recset, 1, _("Owner"));
-			gda_data_model_set_column_title (recset, 2, _("Description"));
-			gda_data_model_set_column_title (recset, 3, _("Definition"));			
-			for (i = 0; i < gda_data_model_get_n_rows (GDA_DATA_MODEL (reclist->data)); i++) {
+			gda_server_provider_init_schema_model (recset, GDA_CONNECTION_SCHEMA_TABLES);
+			for (i = 0; i < gda_data_model_get_n_rows (recmodel); i++) {
 				value_list = NULL;
 				GValue *tmpval;
 
 				/* Get name of table */
-				row = (GdaRow *) gda_data_model_get_row (GDA_DATA_MODEL (reclist->data), i);
+				row = (GdaRow *) gda_data_model_get_row (recmodel, i);
 				value = gda_row_get_value (row, 0);
 				value_list = g_list_append (value_list, gda_value_copy (value));
 
@@ -369,7 +366,7 @@ fb_get_tables (GdaConnection *cnc,
 				g_list_free (value_list);
 			}
 
-			g_list_free (reclist);
+			g_object_unref (recmodel);
 		}
 
 		g_free (sql);
@@ -438,7 +435,6 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 	GdaCommand *command;
 	gchar *sql, *field_name, *recset_field_name;
 	gint i,j;
-	GList *reclist;
 	GValue *value, *recset_value;
 	
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
@@ -446,6 +442,7 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 
 	transaction = gda_transaction_new ("tmp_transaction_mdata");
 	if (gda_connection_begin_transaction (cnc, transaction)) {
+		GdaDataModel *recmodel;
 		sql = g_strdup_printf (
 				"SELECT A.RDB$FIELD_NAME, I.RDB$UNIQUE_FLAG, B.RDB$CONSTRAINT_TYPE "
 				"FROM RDB$INDEX_SEGMENTS A, RDB$RELATION_CONSTRAINTS B, RDB$INDICES I "
@@ -456,13 +453,13 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 				table_name);
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		reclist = gda_connection_execute_command_l (cnc, command, NULL, NULL);
-		if (reclist) {
+		recmodel = gda_connection_execute_select_command (cnc, command, NULL, NULL);
+		if (recmodel) {
 			gda_data_model_freeze (recset);
 			
 			/* For each index or unique field in statement */
-			for (i = 0; i < gda_data_model_get_n_rows (GDA_DATA_MODEL (reclist->data)); i++) {
-				value = (GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 0, i);
+			for (i = 0; i < gda_data_model_get_n_rows (recmodel); i++) {
+				value = (GValue *) gda_data_model_get_value_at (recmodel, 0, i);
 				field_name = (gchar *) g_value_get_string (value);
 				j = -1;
 
@@ -471,13 +468,14 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 					j++;
 					recset_value = (GValue *) gda_data_model_get_value_at (recset, 0, j);
 					recset_field_name = (gchar *) g_value_get_string (recset_value);
-				} while (strcmp (recset_field_name, field_name) && (j < gda_data_model_get_n_rows (recset)));
+				} while (strcmp (recset_field_name, field_name) && 
+					 (j < gda_data_model_get_n_rows (recset)));
 				
 				/* Set recset values */
 				if (!strcmp (recset_field_name, field_name)) {
 					
 					/* Get primary key value from statement */
-					value = (GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data),
+					value = (GValue *) gda_data_model_get_value_at (recmodel,
 											  2,
 											  i);
 					
@@ -490,7 +488,7 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 										"PRIMARY KEY")));
 					
 					/* Get unique index value from statement */
-					value = (GValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data),
+					value = (GValue *) gda_data_model_get_value_at (recmodel,
 											  1,
 											  i);
 					
@@ -503,7 +501,7 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 			}
 			
 			gda_data_model_thaw (recset);
-			g_list_free (reclist);
+			g_object_unref (recmodel);
 		}
 		
 		g_free (sql);
@@ -653,6 +651,7 @@ fb_get_fields_metadata (GdaConnection *cnc,
 	
 	transaction = gda_transaction_new ("temp_transaction");
 	if (gda_connection_begin_transaction (cnc, transaction)) {
+		GdaDataModel *recmodel;
 		sql = g_strdup_printf (
 				"SELECT A.RDB$FIELD_NAME, C.RDB$TYPE_NAME, B.RDB$FIELD_LENGTH, "
 				"B.RDB$FIELD_PRECISION, B.RDB$FIELD_SCALE, A.RDB$NULL_FLAG "
@@ -663,8 +662,8 @@ fb_get_fields_metadata (GdaConnection *cnc,
 				table_name);
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		reclist = gda_connection_execute_command_l (cnc, command, NULL, NULL);
-		if (reclist) {
+		recmodel = gda_connection_execute_select_command (cnc, command, NULL, NULL);
+		if (recmodel) {
 			/* Create and fill recordset to be returned */
 			recset = (GdaDataModelArray *) gda_data_model_array_new (9);
 			for (i = 0; i < (sizeof (fields_desc) / sizeof (fields_desc[0])); i++)
@@ -685,7 +684,7 @@ fb_get_fields_metadata (GdaConnection *cnc,
 			}
 			
 			fb_set_index_field_metadata (cnc, (GdaDataModel *) recset, table_name);
-			g_list_free (reclist);
+			g_object_unref (recmodel);
 		}
 
 		g_free (sql);

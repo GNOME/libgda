@@ -440,7 +440,7 @@ cond_changed_cb (GdaQueryCondition *cond, GdaQueryJoin *join)
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'CONDITION_CHANGED' from %s\n", __FUNCTION__);
 #endif
-	gda_object_changed (GDA_OBJECT (join));
+	gda_object_signal_emit_changed (GDA_OBJECT (join));
 }
 
 static void
@@ -635,7 +635,7 @@ gda_query_join_set_join_type (GdaQueryJoin *join, GdaQueryJoinType type)
 #ifdef GDA_DEBUG_signal
 		g_print ("<< 'TYPE_CHANGED' from %s\n", __FUNCTION__);
 #endif
-		gda_object_changed (GDA_OBJECT (join));
+		gda_object_signal_emit_changed (GDA_OBJECT (join));
 	}
 }
 
@@ -984,7 +984,7 @@ gda_query_join_set_condition (GdaQueryJoin *join, GdaQueryCondition *cond)
 #ifdef GDA_DEBUG_signal
 		g_print ("<< 'CONDITION_CHANGED' from %s\n", __FUNCTION__);
 #endif
-		gda_object_changed (GDA_OBJECT (join));
+		gda_object_signal_emit_changed (GDA_OBJECT (join));
 	}
 
 	return TRUE;

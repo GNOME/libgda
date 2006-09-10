@@ -130,7 +130,7 @@ main(int argc, char *argv[])
 
         /* 5. Our first query with results */
         cmd = gda_command_new ("SELECT * from test1", GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-        res_cmd = gda_connection_execute_command_l (con, cmd, NULL);
+        res_cmd = gda_connection_execute_command (con, cmd, NULL);
 
         if (res_cmd != NULL)
 		for (node = g_list_first (res_cmd); node != NULL; node = g_list_next (node)) {
@@ -151,7 +151,7 @@ main(int argc, char *argv[])
 
         /* 6. Our first query with no SQL results to analyze */
         cmd = gda_command_new ("INSERT INTO test1 VALUES ('fool_txt')", GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-        (gda_connection_execute_command (con, cmd, NULL, NULL) == GDA_CONNECTION_EXEC_FAILED)
+        (gda_connection_execute_select_command (con, cmd, NULL, NULL) == GDA_CONNECTION_EXEC_FAILED)
 		get_errors (con);
         gda_command_free (cmd);
 

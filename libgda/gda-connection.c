@@ -32,6 +32,7 @@
 #include <libgda/gda-dict.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-parameter-list.h>
 #include "gda-marshal.h"
 
 #define PARENT_TYPE G_TYPE_OBJECT
@@ -1010,7 +1011,7 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
 }
 
 /**
- * gda_connection_execute_command_l
+ * gda_connection_execute_command
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
  * @params: parameter list for the commands
@@ -1022,11 +1023,10 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
  * a list of commands in its "text" property (usually a set
  * of SQL commands separated by ';').
  *
- * The return value is a GList of #GdaDataModel's, which you
+ * The return value is a GList of #GdaDataModel's, and #GdaParameterList which you
  * are responsible to free when not needed anymore (and unref the
- * data models when they are not used anymore). Note that some nodes of the
- * returned list may actually not point to a GdaDataModel but may be NULL (which
- * corresponds to a command which did not return a data set, like UPDATE commands).
+ * data models and parameter lists when they are not used anymore). See the documentation
+ * of gda_server_provider_execute_command() for more information about the returned list.
  *
  * The @params can contain the following parameters:
  * <itemizedlist>
@@ -1034,12 +1034,12 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
  *             will preferably return a data model which can be accessed only using an iterator.</para></listitem>
  * </itemizedlist>
  *
- * Returns: a list of #GdaDataModel's, as returned by the underlying
+ * Returns: a list of #GdaDataModel and #GdaParameterList or %NULL, as returned by the underlying
  * provider, or %NULL if an error occurred.
  */
 GList *
-gda_connection_execute_command_l (GdaConnection *cnc, GdaCommand *cmd,
-				  GdaParameterList *params, GError **error)
+gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
+				GdaParameterList *params, GError **error)
 {
 	GList *retval, *events;
 	gboolean has_error = FALSE;
@@ -1067,7 +1067,11 @@ gda_connection_execute_command_l (GdaConnection *cnc, GdaCommand *cmd,
 		events = g_list_next (events);
 	}
 	if (has_error) {
-		g_list_foreach (retval, (GFunc) g_object_unref, NULL);
+		GList *list;
+
+		for (list = retval; list; list = list->next)
+			if (list->data)
+				g_object_unref ((GObject*) list->data);
 		g_list_free (retval);
 		retval = NULL;
 	}
@@ -1098,43 +1102,47 @@ gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
 }
 
 /**
- * gda_connection_execute_command
+ * gda_connection_execute_select_command
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
  * @params: parameter list for the command
  * @error: a place to store an error, or %NULL
  *
- * Executes a single command on the given connection.
+ * Executes a selection command on the given connection.
  *
- * This function lets you retrieve a simple data model from
- * the underlying difference, instead of having to retrieve
- * a list of them, as is the case with #gda_connection_execute_command_l().
+ * This function returns a #GdaDataModel resulting from the SELECT statement, or %NULL
+ * if an error occurred.
  *
- * Note that if the @cmd command is composed of several SQL statements, the data model
- * returned is the one corresponding to the last statement.
+ * Note that no check is made regarding the actual number of statements in @cmd or if it really contains a SELECT
+ * statement. This function is just a convenience function around the gda_connection_execute_command()
+ * function. If @cmd contains several statements, the last #GdaDataModel is returned.
  *
- * See the documentation of the gda_connection_execute_command_l() for information
+ * See the documentation of the gda_connection_execute_command() for information
  * about the @params list of parameters.
  *
  * Returns: a #GdaDataModel containing the data returned by the
- * data source, %NULL if no data was expected, or GDA_CONNECTION_EXEC_FAILED if an error occurred.
+ * data source, or %NULL if an error occurred
  */
 GdaDataModel *
-gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
-				GdaParameterList *params, GError **error)
+gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
+				       GdaParameterList *params, GError **error)
 {
 	GList *reclist, *list;
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
-	reclist = gda_connection_execute_command_l (cnc, cmd, params, error);
+	reclist = gda_connection_execute_command (cnc, cmd, params, error);
 	if (!reclist)
-		return GDA_CONNECTION_EXEC_FAILED;
+		return NULL;
 
-	model = GDA_DATA_MODEL (g_list_last (reclist)->data);
+	for (list = g_list_last (reclist); list && !model; list = list->prev) {
+		model = (GdaDataModel *) (g_list_last (reclist)->data);
+		if (!GDA_IS_DATA_MODEL (model))
+			model = NULL;
+	}
 	if (model) {
 		GdaConnectionEvent *event;
 		gchar *str;
@@ -1159,6 +1167,74 @@ gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
 	g_list_free (reclist);
 
 	return model;
+}
+
+/**
+ * gda_connection_execute_non_select_command
+ * @cnc: a #GdaConnection object.
+ * @cmd: a #GdaCommand.
+ * @params: parameter list for the command
+ * @error: a place to store an error, or %NULL
+ *
+ * Executes a selection command on the given connection.
+ *
+ * This function returns the number of rows impacted by the execution of @cmd, or -1
+ * if an error occurred, or -2 if the provider does not return the number of rows impacted.
+ *
+ * Note that no check is made regarding the actual number of statements in @cmd or if it really contains a non SELECT
+ * statement. This function is just a convenience function around the gda_connection_execute_command()
+ * function. If @cmd contains several statements, the last #GdaParameterList is returned.
+ *
+ * See the documentation of the gda_connection_execute_command() for information
+ * about the @params list of parameters.
+ *
+ * Returns: the number of rows impacted (&gt;=0) or -1 or -2 
+ */
+gint
+gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
+					   GdaParameterList *params, GError **error)
+{
+	GList *reclist, *list;
+	GdaParameterList *plist = NULL;
+	gint retval = 0;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (cnc->priv, -1);
+	g_return_val_if_fail (cmd != NULL, -1);
+
+	reclist = gda_connection_execute_command (cnc, cmd, params, error);
+	if (!reclist)
+		return -1;
+
+	for (list = g_list_last (reclist); list && !plist; list = list->prev) {
+		plist = (GdaParameterList *) (g_list_last (reclist)->data);
+		if (!GDA_IS_PARAMETER_LIST (plist))
+			plist = NULL;
+	}
+	if (plist) {
+		GdaParameter *param;
+
+		param = gda_parameter_list_find_param (plist, "IMPACTED_ROWS");
+		if (param) {
+			const GValue *value;
+
+			value = gda_parameter_get_value (param);
+			if (G_VALUE_TYPE (value) == G_TYPE_INT)
+				retval = g_value_get_int (value);
+			else
+				retval = -2;
+		} 
+		else
+			retval = -2;
+	}
+
+	list = reclist;
+	for (list = reclist; list; list = g_list_next (list))
+		if (list->data)
+			g_object_unref (list->data);
+	g_list_free (reclist);
+
+	return retval;
 }
 
 /**

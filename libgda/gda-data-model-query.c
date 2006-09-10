@@ -502,7 +502,7 @@ param_changed_cb (GdaParameterList *paramlist, GdaParameter *param, GdaDataModel
 			g_object_unref (model->priv->data);
 			model->priv->data = NULL;
 		}
-		gda_data_model_changed ((GdaDataModel *) model);
+		gda_data_model_signal_emit_changed ((GdaDataModel *) model);
 	}
 }
 
@@ -592,7 +592,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 		return FALSE;
 	}
 
-	gda_data_model_changed ((GdaDataModel *) model);
+	gda_data_model_signal_emit_changed ((GdaDataModel *) model);
 	return model->priv->data ? TRUE : FALSE;
 }
 
@@ -719,8 +719,11 @@ create_columns (GdaDataModelQuery *model)
 		fields = gda_entity_get_fields (GDA_ENTITY (model->priv->queries[SEL_QUERY]));
 		list = fields;
 		while (list && allok) {
-			if (gda_entity_field_get_gda_type (GDA_ENTITY_FIELD (list->data)) == G_TYPE_INVALID)
+			if (gda_entity_field_get_gda_type (GDA_ENTITY_FIELD (list->data)) == G_TYPE_INVALID) {
 				allok = FALSE;
+				g_warning (_("Can't determine the GType for field '%s', please fill a bug report"), 
+					   gda_object_get_name (GDA_OBJECT (list->data)));
+			}
 			list = g_slist_next (list);
 		}
 		if (! allok) 
@@ -939,7 +942,7 @@ gda_data_model_query_create_iter (GdaDataModel *model)
 		fields = gda_entity_get_fields (GDA_ENTITY (GDA_DATA_MODEL_QUERY (model)->priv->queries[SEL_QUERY]));
 		params = GDA_PARAMETER_LIST (iter)->parameters;
 
-		for (list = fields; list; list = list->next, params = params->next) {
+		for (list = fields; list && params; list = list->next, params = params->next) {
 			GdaEntityField *field = (GdaEntityField *) list->data;
 			if (GDA_IS_QUERY_FIELD_FIELD (field)) {
 				gchar *plugin;

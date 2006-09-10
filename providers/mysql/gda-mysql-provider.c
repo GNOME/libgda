@@ -446,6 +446,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 				    g_ascii_strncasecmp (s, "show", strlen ("show"))) {
 					gda_connection_add_event_string (
 						cnc, "Command '%s' cannot be executed in read-only mode", arr[n]);
+					reclist = g_list_append (reclist, NULL);
 					break;
 				}
 
@@ -456,6 +457,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 			rc = mysql_real_query (mysql, arr[n], strlen (arr[n]));
 			if (rc != 0) {
 				gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
+				reclist = g_list_append (reclist, NULL);
 				break;
 			}
 
@@ -474,17 +476,21 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 						      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
 					reclist = g_list_append (reclist, recset);
 				}
+				else
+					reclist = g_list_append (reclist, NULL);
 			}
 			else {
 				int changes;
 				GdaConnectionEvent *event;
 				gchar *str, *tmp, *ptr;
-				
-				/* don't return a data model */
-				reclist = g_list_append (reclist, NULL);
-				
-				/* generate a notice about changes */
+								
 				changes = mysql_affected_rows (mysql);
+				reclist = g_list_append (reclist, 
+					  gda_parameter_list_new_inline (NULL, 
+									 "IMPACTED_ROWS", G_TYPE_INT, changes,
+									 NULL));
+
+				/* generate a notice about changes */
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
 				ptr = tststr;
 				while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
@@ -744,7 +750,6 @@ gda_mysql_provider_perform_operation (GdaServerProvider *provider, GdaConnection
 		/* use the SQL from the provider to perform the action */
 		gchar *sql;
 		GdaCommand *cmd;
-		GdaDataModel *model;
 		
 		sql = gda_server_provider_render_operation (provider, cnc, op, error);
 		if (!sql)
@@ -752,15 +757,14 @@ gda_mysql_provider_perform_operation (GdaServerProvider *provider, GdaConnection
 		
 		cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		g_free (sql);
-		model = gda_connection_execute_command (cnc, cmd, NULL, error);		
-		gda_command_free (cmd);
-		if (model != GDA_CONNECTION_EXEC_FAILED) {
-			if (model)
-				g_object_unref (model);
+		if (gda_connection_execute_non_select_command (cnc, cmd, NULL, error) != -1) {
+			gda_command_free (cmd);
 			return TRUE;
 		}
-		else
+		else {
+			gda_command_free (cmd);
 			return FALSE;
+		}
 	}
 }
 
@@ -2057,7 +2061,7 @@ gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 		 (type == GDA_TYPE_TIMESTAMP)) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
-			dh = gda_handler_time_new_no_locale ();
+			dh = gda_handler_time_new ();
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);

@@ -120,7 +120,7 @@ enum
         PROP_0,
 	PROP_RANDOM_ACCESS,
         PROP_FILENAME,
-	PROP_DATA,
+	PROP_DATA_STRING,
 	PROP_XML_NODE,
 	PROP_OPTIONS,
 };
@@ -216,8 +216,8 @@ gda_data_model_import_class_init (GdaDataModelImportClass *klass)
                                          g_param_spec_string ("filename", "File to import", NULL, NULL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
-	g_object_class_install_property (object_class, PROP_DATA,
-                                         g_param_spec_string ("data", "String to import", NULL, NULL,
+	g_object_class_install_property (object_class, PROP_DATA_STRING,
+                                         g_param_spec_string ("data_string", "String to import", NULL, NULL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_XML_NODE,
@@ -502,7 +502,7 @@ gda_data_model_import_set_property (GObject *object,
 				model->priv->data_length = model->priv->src.mapped.length;
 			}
 			break;
-		case PROP_DATA:
+		case PROP_DATA_STRING:
 			string = g_value_get_string (value);
 			if (!string)
 				return;
@@ -606,7 +606,7 @@ gda_data_model_import_get_property (GObject *object,
 			else
 				g_value_set_string (value, NULL);
 			break;
-		case PROP_DATA:
+		case PROP_DATA_STRING:
 			if (model->priv->is_mapped)
 				g_value_set_string (value, NULL);
 			else

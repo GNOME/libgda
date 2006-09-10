@@ -80,7 +80,7 @@ void         gda_object_destroy         (GdaObject *object); /* force the object
 void         gda_object_destroy_check   (GdaObject *object); 
 gulong       gda_object_connect_destroy (gpointer object, GCallback callback, gpointer data);
 
-void         gda_object_changed         (GdaObject *object);
+void         gda_object_signal_emit_changed         (GdaObject *object);
 void         gda_object_block_changed   (GdaObject *object);
 void         gda_object_unblock_changed (GdaObject *object);
 

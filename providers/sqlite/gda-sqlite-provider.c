@@ -36,7 +36,7 @@
 #include "gda-sqlite-ddl.h"
 #include "sqliteInt.h"
 #include <libgda/handlers/gda-handler-numerical.h>
-#include <libgda/handlers/gda-handler-bin.h>
+#include "gda-sqlite-handler-bin.h"
 #include <libgda/handlers/gda-handler-boolean.h>
 #include <libgda/handlers/gda-handler-time.h>
 #include <libgda/handlers/gda-handler-string.h>
@@ -479,22 +479,27 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					
 					/* actually execute the command */
 					status = sqlite3_step (sres->stmt);
+					newchanges = sqlite3_total_changes (scnc->connection);
 					if (status != SQLITE_DONE) {
 						GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 						gda_connection_event_set_description (error, sqlite3_errmsg (scnc->connection));
 						gda_connection_add_event (cnc, error);
 						gda_sqlite_free_result (sres);
+						reclist = g_list_append (reclist, NULL);
 						break;
 					}
 					else {
 						/* don't return a data model */
-						reclist = g_list_append (reclist, NULL);
+						reclist = g_list_append (reclist, 
+							  gda_parameter_list_new_inline (NULL, 
+									 "IMPACTED_ROWS", G_TYPE_INT, newchanges,
+											 NULL));
 					}
 
 					gda_sqlite_free_result (sres);
 
 					/* generate a notice about changes */
-					newchanges = sqlite3_total_changes (scnc->connection);
+					
 					event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
 					ptr = tststr;
 					while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
@@ -523,7 +528,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				gda_connection_event_set_description (error, sqlite3_errmsg (scnc->connection));
 				gda_connection_add_event (cnc, error);
 				gda_sqlite_free_result (sres);
-
+				reclist = g_list_append (reclist, NULL);
 				break;
 			}
 
@@ -756,7 +761,6 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
                 /* use the SQL from the provider to perform the action */
                 gchar *sql;
                 GdaCommand *cmd;
-                GdaDataModel *model;
 
                 sql = gda_server_provider_render_operation (provider, cnc, op, error);
                 if (!sql)
@@ -764,15 +768,14 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 
                 cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
                 g_free (sql);
-                model = gda_connection_execute_command (cnc, cmd, NULL, error);
-                gda_command_free (cmd);
-                if (model != GDA_CONNECTION_EXEC_FAILED) {
-                        if (model)
-                                g_object_unref (model);
+                if (gda_connection_execute_non_select_command (cnc, cmd, NULL, error) != -1) {
+			gda_command_free (cmd);
                         return TRUE;
-                }
-                else
+		}
+                else {
+			gda_command_free (cmd);
                         return FALSE;
+		}
         }
 	}
 }
@@ -1405,7 +1408,7 @@ get_types (GdaConnection *cnc, GdaParameterList *params)
 	add_type_row (recset, "integer", "system", "Signed integer, stored in 1, 2, 3, 4, 6, or 8 bytes depending on the magnitude of the value", G_TYPE_INT);
 	add_type_row (recset, "real", "system", "Floating point value, stored as an 8-byte IEEE floating point number", G_TYPE_DOUBLE);
 	add_type_row (recset, "string", "system", "Text string, stored using the database encoding", G_TYPE_STRING);
-	add_type_row (recset, "blob", "system", "Blob of data, stored exactly as it was input", GDA_TYPE_BLOB);
+	add_type_row (recset, "blob", "system", "Blob of data, stored exactly as it was input", GDA_TYPE_BINARY);
 
 
 	/* scan the data types of all the columns of all the tables */
@@ -1825,7 +1828,7 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider,
 		 (type == GDA_TYPE_BLOB)) {
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
-			dh = gda_handler_bin_new_with_prov (provider, cnc);
+			dh = gda_sqlite_handler_bin_new ();
 			if (dh) {
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
@@ -1844,7 +1847,7 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider,
 	else if (type == GDA_TYPE_TIME) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
-			dh = gda_handler_time_new_no_locale ();
+			dh = gda_handler_time_new ();
 			/* SQLite cannot handle date or timestamp because no defined format */
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
 			g_object_unref (dh);

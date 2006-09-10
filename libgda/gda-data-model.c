@@ -124,7 +124,7 @@ do_notify_changes (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_changed
+ * gda_data_model_signal_emit_changed
  * @model: a #GdaDataModel object.
  *
  * Notifies listeners of the given data model object of changes
@@ -134,12 +134,12 @@ do_notify_changes (GdaDataModel *model)
  * or removed from the data model.
  */
 void
-gda_data_model_changed (GdaDataModel *model)
+gda_data_model_signal_emit_changed (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	
 	if (do_notify_changes (model)) 
-		gda_object_changed (GDA_OBJECT (model));
+		gda_object_signal_emit_changed (GDA_OBJECT (model));
 }
 
 /**
@@ -176,7 +176,7 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 			       gda_data_model_signals[ROW_INSERTED],
 			       0, row);
 
-		gda_data_model_changed (model);
+		gda_data_model_signal_emit_changed (model);
 	}
 }
 
@@ -197,7 +197,7 @@ gda_data_model_row_updated (GdaDataModel *model, gint row)
 			       gda_data_model_signals[ROW_UPDATED],
 			       0, row);
 
-		gda_data_model_changed (model);
+		gda_data_model_signal_emit_changed (model);
 	}
 }
 
@@ -218,7 +218,7 @@ gda_data_model_row_removed (GdaDataModel *model, gint row)
 			       gda_data_model_signals[ROW_REMOVED],
 			       0, row);
 
-		gda_data_model_changed (model);
+		gda_data_model_signal_emit_changed (model);
 	}
 }
 

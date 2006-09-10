@@ -8,7 +8,8 @@ METADATA = Gda.metadata
 ASSEMBLY_NAME = gda-sharp
 ASSEMBLY = $(ASSEMBLY_NAME).dll
 
-build_sources = AssemblyInfo.cs
+build_sources = AssemblyInfo.cs \
+                Application.cs
 
 customs = 
 

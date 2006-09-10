@@ -355,7 +355,7 @@ gda_query_field_set_alias (GdaQueryField *qfield, const gchar *alias)
 	
 	if (alias)
 		qfield->priv->alias = g_strdup (alias);
-	gda_object_changed (GDA_OBJECT (qfield));
+	gda_object_signal_emit_changed (GDA_OBJECT (qfield));
 }
 
 /**
@@ -401,7 +401,7 @@ gda_query_field_set_visible (GdaQueryField *qfield, gboolean visible)
 			g_signal_emit_by_name (G_OBJECT (query), "field_added", GDA_ENTITY_FIELD (qfield));
 		else
 			g_signal_emit_by_name (G_OBJECT (query), "field_removed", GDA_ENTITY_FIELD (qfield));
-		gda_object_changed (GDA_OBJECT (query));
+		gda_object_signal_emit_changed (GDA_OBJECT (query));
 	}
 }
 

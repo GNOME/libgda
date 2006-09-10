@@ -595,7 +595,7 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		/* use the SQL from the provider to perform the action */
 		gchar *sql;
 		GdaCommand *cmd;
-		GdaDataModel *model;
+		GList *reslist;
 
 		sql = gda_server_provider_render_operation (provider, cnc, op, error);
 		if (!sql)
@@ -603,11 +603,14 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 
 		cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		g_free (sql);
-		model = gda_connection_execute_command (cnc, cmd, NULL, error);		
+		reslist = gda_connection_execute_command (cnc, cmd, NULL, error);		
 		gda_command_free (cmd);
-		if (model != GDA_CONNECTION_EXEC_FAILED) {
-			if (model)
-				g_object_unref (model);
+		if (reslist) {
+			GList *list;
+			for (list = reslist; list; list = list->next)
+				if (list->data)
+					g_object_unref (list->data);
+			g_list_free (reslist);
 			return TRUE;
 		}
 		else
@@ -617,13 +620,32 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 
 /**
  * gda_server_provider_execute_command
- * @provider:
- * @cnc:
- * @cmd:
- * @params:
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object using 
+ * @cmd: a #GdaCommand 
+ * @params: a #GdaParameterList containing a list of optional parameters
  *
- * Returns:
- * 
+ * Executes one or more SQL statements stored in @command, and returns a list of
+ * #GdaDataModel and/or #GdaParameterList (or %NULL) objects for each SQL statement
+ * in @command following the rule:
+ * <itemizedlist>
+ *   <listitem><para>A #GdaDataModel is in the list if the statement was a SELECT statement and the statement was successufully executed</para></listitem>
+ *   <listitem><para>A #GdaParameterList is in the list if the statement was not a SELECT 
+ *        statement and the statement was successufully executed. In this case
+ *        (if the provider supports it), then the #GdaParameterList may contain:
+ *        <itemizedlist>
+ *          <listitem><para>a (gint) #GdaParameter named "IMPACTED_ROWS"</para></listitem>
+ *          <listitem><para>a (GObject) #GdaParameter named "EVENT" which contains a GdaConnectionEvent</para></listitem>
+ *        </itemizedlist>
+ *   </para></listitem>
+ *   <listitem><para>%NULL is in the list if the correcponding statement could not be executed</para></listitem>
+ * </itemizedlist>
+ *
+ * For every executed statement, a #GdaDataModel, a #GdaParameterList or %NULL will be appended to the returned list.
+ * The returned list may contain fewer items than the @cmd command contained statements depending on the
+ * options of @command (see gda_command_set_options()).
+ *
+ * Returns: a new list, or %NULL
  */
 GList *
 gda_server_provider_execute_command (GdaServerProvider *provider,
@@ -633,8 +655,8 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cmd != NULL, NULL);
 	g_return_val_if_fail (CLASS (provider)->execute_command != NULL, NULL);
+
 #ifdef GDA_DEBUG
 	{
 		GdaServerProviderInfo *info;
@@ -643,6 +665,7 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 		g_print ("==> %s (Provider %s on cnx %p)\n", cmd->text, info->provider_name, cnc);
 	}
 #endif
+
 	return CLASS (provider)->execute_command (provider, cnc, cmd, params);
 }
 

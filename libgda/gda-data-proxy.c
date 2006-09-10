@@ -1942,7 +1942,7 @@ adjust_displayed_chunck (GdaDataProxy *proxy)
 	/* re-enable the emision of the "changed" signal each time a "row_*" signal is
 	 * emitted */
 	gda_object_unblock_changed (GDA_OBJECT (proxy));
-	gda_data_model_changed ((GdaDataModel *) proxy);
+	gda_data_model_signal_emit_changed ((GdaDataModel *) proxy);
 
 #ifdef GDA_DEBUG_NO
 	g_print ("//GdaDataProxy adjusted sample: %d<->%d (=%d / %d rows, %s)\n", proxy->priv->sample_first_row, 

@@ -106,14 +106,6 @@ As a side note there are also data models which wrap other data models such as:
 @GDA_DATA_MODEL_IO_DATA_ARRAY_XML: 
 @GDA_DATA_MODEL_IO_TEXT_SEPARATED: 
 
-<!-- ##### FUNCTION gda_data_model_changed ##### -->
-<para>
-
-</para>
-
-@model: 
-
-
 <!-- ##### FUNCTION gda_data_model_row_inserted ##### -->
 <para>
 

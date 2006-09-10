@@ -98,7 +98,7 @@ process_accounts (GdaConnection * connection)
 				   GDA_COMMAND_TYPE_SQL,
 				   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	gda_command_set_transaction (command, transaction_one);
-	gda_connection_execute_command (connection, command, NULL);
+	gda_connection_execute_select_command (connection, command, NULL);
 	gda_command_free (command);
 
 	command = gda_command_new ("UPDATE accounts SET balance=balance-50"
@@ -106,7 +106,7 @@ process_accounts (GdaConnection * connection)
 				   GDA_COMMAND_TYPE_SQL,
 				   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	gda_command_set_transaction (command, transaction_one);
-	gda_connection_execute_command (connection, command, NULL);
+	gda_connection_execute_select_command (connection, command, NULL);
 	gda_command_free (command);
 
 	gda_connection_commit_transaction (connection, transaction_one);
@@ -122,7 +122,7 @@ process_accounts (GdaConnection * connection)
 				   GDA_COMMAND_TYPE_SQL,
 				   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	gda_command_set_transaction (command, transaction_two);
-	gda_connection_execute_command (connection, command, NULL);
+	gda_connection_execute_select_command (connection, command, NULL);
 	gda_command_free (command);
 
 	command = gda_command_new ("UPDATE accounts SET balance=balance-400"
@@ -130,7 +130,7 @@ process_accounts (GdaConnection * connection)
 				   GDA_COMMAND_TYPE_SQL,
 				   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	gda_command_set_transaction (command, transaction_two);
-	gda_connection_execute_command (connection, command, NULL);
+	gda_connection_execute_select_command (connection, command, NULL);
 	gda_command_free (command);
 
 	gda_connection_rollback_transaction (connection, transaction_two);
@@ -151,22 +151,21 @@ execute_sql_command (GdaConnection * connection, const gchar * buffer)
 	GdaDataModel *dm;
 
 
-	command =
-		gda_command_new (buffer, GDA_COMMAND_TYPE_SQL,
-				 GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-	list = gda_connection_execute_command_l (connection, command, NULL);
-	if (list != NULL)
-		for (node = g_list_first (list); node != NULL; node = g_list_next (node)) {
-			dm = (GdaDataModel *) node-&gt;data;
-			if (dm == NULL)	{
-				errors = TRUE;
-				get_errors (connection);
-			}
-			else {
+	command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL,
+				   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	list = gda_connection_execute_command (connection, command, NULL);
+	if (list != NULL) {
+		for (node = list; node != NULL; node = g_list_next (node)) {
+			if (GDA_IS_DATA_MODEL (list->data)) {
+				dm = (GdaDataModel *) node-&gt;data;
 				show_table2 (dm);
 				g_object_unref (dm);
 			}
+			else if (list->data)
+				g_object_unref (list->data);
 		}
+		g_list_free (list);
+	}
 	else {
 		errors = TRUE;
 		get_errors (connection);
@@ -186,7 +185,7 @@ execute_sql (GdaConnection * connection, const gchar * buffer)
 
 	command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL,
 				   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-	gda_connection_execute_command (connection, command, NULL);
+	gda_connection_execute_select_command (connection, command, NULL);
 
 	gda_command_free (command);
 }

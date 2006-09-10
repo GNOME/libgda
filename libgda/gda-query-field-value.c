@@ -555,7 +555,7 @@ gda_query_field_value_set_value (GdaQueryFieldValue *field, const GValue *val)
 
 	if (val)
 		field->priv->value = gda_value_copy ((GValue *)val);
-	gda_object_changed (GDA_OBJECT (field));
+	gda_object_signal_emit_changed (GDA_OBJECT (field));
 }
 
 /**
@@ -863,7 +863,7 @@ gda_query_field_value_set_dict_type (GdaQueryFieldValue *field, GdaDictType *typ
 	}
 
 	/* signal a change */
-	gda_object_changed (GDA_OBJECT (field));
+	gda_object_signal_emit_changed (GDA_OBJECT (field));
 }
 
 /**

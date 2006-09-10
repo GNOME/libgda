@@ -152,10 +152,11 @@ const GList         *gda_connection_get_events           (GdaConnection *cnc);
 
 gboolean             gda_connection_change_database      (GdaConnection *cnc, const gchar *name);
 
-#define              GDA_CONNECTION_EXEC_FAILED ((void *) -1)
-GdaDataModel        *gda_connection_execute_command      (GdaConnection *cnc, GdaCommand *cmd,
-							  GdaParameterList *params, GError **error);
-GList               *gda_connection_execute_command_l    (GdaConnection *cnc, GdaCommand *cmd,
+GdaDataModel        *gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
+							    GdaParameterList *params, GError **error);
+gint                 gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
+								GdaParameterList *params, GError **error);
+GList               *gda_connection_execute_command    (GdaConnection *cnc, GdaCommand *cmd,
 							  GdaParameterList *params, GError **error);
 gchar               *gda_connection_get_last_insert_id   (GdaConnection *cnc, GdaDataModel *recset);
 

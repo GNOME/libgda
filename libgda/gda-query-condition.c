@@ -459,7 +459,7 @@ destroyed_child_cb (GdaQueryCondition *child, GdaQueryCondition *cond)
 	g_object_unref (G_OBJECT (child));
 	cond->priv->cond_children = g_slist_remove (cond->priv->cond_children, child);
 	if (! cond->priv->internal_transaction)
-		gda_object_changed (GDA_OBJECT (cond));
+		gda_object_signal_emit_changed (GDA_OBJECT (cond));
 }
 
 
@@ -552,7 +552,7 @@ gda_query_condition_set_property (GObject *object,
 				return;
 
 			condition->priv->type = g_value_get_int (value);
-			gda_object_changed (GDA_OBJECT (condition));
+			gda_object_signal_emit_changed (GDA_OBJECT (condition));
 			break;
 		}
 	}
@@ -624,7 +624,7 @@ gda_query_condition_set_cond_type (GdaQueryCondition *condition, GdaQueryConditi
 
 	condition->priv->type = type;
 	if (! condition->priv->internal_transaction)
-		gda_object_changed (GDA_OBJECT (condition));
+		gda_object_signal_emit_changed (GDA_OBJECT (condition));
 }
 
 /**
@@ -811,7 +811,7 @@ gda_query_condition_node_add_child_pos (GdaQueryCondition *condition, GdaQueryCo
 			  G_CALLBACK (child_cond_changed_cb), condition);
 
 	if (! condition->priv->internal_transaction)
-		gda_object_changed (GDA_OBJECT (condition));
+		gda_object_signal_emit_changed (GDA_OBJECT (condition));
 
 	return TRUE;
 }
@@ -821,7 +821,7 @@ static void
 child_cond_changed_cb (GdaQueryCondition *child, GdaQueryCondition *cond)
 {
 	if (! cond->priv->internal_transaction)
-		gda_object_changed (GDA_OBJECT (cond));
+		gda_object_signal_emit_changed (GDA_OBJECT (cond));
 }
 
 /**

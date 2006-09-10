@@ -116,21 +116,21 @@ create_some_stuff (GdaConnection *cnc)
 					   GDA_COMMAND_TYPE_SQL,
 					   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		gda_connection_execute_command (cnc, command, NULL, NULL);
+		gda_connection_execute_non_select_command (cnc, command, NULL, NULL);
 		gda_command_free (command);
 		
 		command = gda_command_new ("CREATE TABLE CHICA(EN_ESPANIOL INTEGER NOT NULL)",
 					   GDA_COMMAND_TYPE_SQL,
 					   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		gda_connection_execute_command (cnc, command, NULL, NULL);
+		gda_connection_execute_non_select_command (cnc, command, NULL, NULL);
 		gda_command_free (command);
 
 		command = gda_command_new ("CREATE TABLE KLEINE(AUS_DEUTSCHE INTEGER NOT NULL)",
 					   GDA_COMMAND_TYPE_SQL,
 					   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		gda_connection_execute_command (cnc, command, NULL, NULL);
+		gda_connection_execute_non_select_command (cnc, command, NULL, NULL);
 		gda_command_free (command);
 		
 		command = gda_command_new ("CREATE VIEW LIST_BIG AS "
@@ -138,7 +138,7 @@ create_some_stuff (GdaConnection *cnc)
 					   GDA_COMMAND_TYPE_SQL,
 					   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		gda_connection_execute_command (cnc, command, NULL, NULL);
+		gda_connection_execute_nonselect_command (cnc, command, NULL, NULL);
 		gda_command_free (command);
 		gda_connection_commit_transaction (cnc, transaction);
 
@@ -170,7 +170,7 @@ populate_table_big (GdaConnection *cnc)
 					   GDA_COMMAND_TYPE_SQL,
 					   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		gda_connection_execute_command (cnc, command, NULL, NULL);
+		gda_connection_execute_non_select_command (cnc, command, NULL, NULL);
 		gda_command_free (command);
 
 		command = gda_command_new ("INSERT INTO BIG VALUES(22,'Some other varying string',2,'8-Dec-1977',"
@@ -179,7 +179,7 @@ populate_table_big (GdaConnection *cnc)
 					   GDA_COMMAND_TYPE_SQL,
 					   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		gda_connection_execute_command (cnc, command, NULL, NULL);
+		gda_connection_execute_non_select_command (cnc, command, NULL, NULL);
 		gda_command_free (command);
 
 
@@ -189,7 +189,7 @@ populate_table_big (GdaConnection *cnc)
 					   GDA_COMMAND_TYPE_SQL,
 					   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		gda_command_set_transaction (command, transaction);
-		gda_connection_execute_command (cnc, command, NULL, NULL);
+		gda_connection_execute_non_select_command (cnc, command, NULL, NULL);
 		gda_command_free (command);
 	
 		gda_connection_commit_transaction (cnc, transaction);
@@ -226,7 +226,7 @@ select_table_big (GdaConnection *cnc)
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		
 		gda_command_set_transaction (command, transaction);
-		list = gda_connection_execute_command_l (cnc, command, NULL);
+		list = gda_connection_execute_command (cnc, command, NULL, NULL);
 		if (list != NULL) {
 			g_print ("OK\n");
 			for (node = g_list_first (list); node != NULL; node = g_list_next (node)) {

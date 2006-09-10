@@ -34,6 +34,7 @@
 #include "gda-oracle.h"
 #include "gda-oracle-provider.h"
 #include "gda-oracle-recordset.h"
+#include "gda-oracle-ddl.h"
 
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
 
@@ -887,7 +888,6 @@ gda_oracle_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		/* use the SQL from the provider to perform the action */
 		gchar *sql;
 		GdaCommand *cmd;
-		GdaDataModel *model;
 		
 		sql = gda_server_provider_render_operation (provider, cnc, op, error);
 		if (!sql)
@@ -895,15 +895,15 @@ gda_oracle_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		
 		cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 		g_free (sql);
-		model = gda_connection_execute_command (cnc, cmd, NULL, error);		
-		gda_command_free (cmd);
-		if (model != GDA_CONNECTION_EXEC_FAILED) {
-			if (model)
-				g_object_unref (model);
-			return TRUE;
-		}
-		else
-			return FALSE;
+
+		if (gda_connection_execute_non_select_command (cnc, cmd, NULL, error) != -1) {
+                        gda_command_free (cmd);
+                        return TRUE;
+                }
+                else {
+                        gda_command_free (cmd);
+                        return FALSE;
+                }
 	}
 }
 

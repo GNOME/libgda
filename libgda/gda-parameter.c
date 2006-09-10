@@ -720,7 +720,7 @@ gda_parameter_set_value (GdaParameter *param, const GValue *value)
 			g_object_get (G_OBJECT (param), "changed_blocked", &changed_blocked, NULL);
 			if (!changed_blocked) {
 				g_object_set_data (G_OBJECT (param), "changed_pending", NULL);
-				gda_object_changed (GDA_OBJECT (param));
+				gda_object_signal_emit_changed (GDA_OBJECT (param));
 			}
 		}
 		return;
@@ -754,7 +754,7 @@ gda_parameter_set_value (GdaParameter *param, const GValue *value)
 		if (changed_blocked)
 			g_object_set_data (G_OBJECT (param), "changed_pending", GINT_TO_POINTER (TRUE));
 		else
-			gda_object_changed (GDA_OBJECT (param));
+			gda_object_signal_emit_changed (GDA_OBJECT (param));
 	}
 }
 
@@ -831,7 +831,7 @@ gda_parameter_declare_invalid (GdaParameter *param)
 	if (param->priv->alias_of) 
 		gda_parameter_declare_invalid (param->priv->alias_of);
 	else 
-		gda_object_changed (GDA_OBJECT (param));
+		gda_object_signal_emit_changed (GDA_OBJECT (param));
 }
 
 
@@ -978,7 +978,7 @@ gda_parameter_set_not_null (GdaParameter *param, gboolean not_null)
 		    (!param->priv->value || gda_value_is_null (param->priv->value)))
 			param->priv->valid = FALSE;
 
-		gda_object_changed (GDA_OBJECT (param));
+		gda_object_signal_emit_changed (GDA_OBJECT (param));
 	}
 }
 
@@ -1224,7 +1224,7 @@ gda_parameter_set_full_bind_param (GdaParameter *param, GdaParameter *alias_of)
 		}
 
 		if (!equal)
-			gda_object_changed (GDA_OBJECT (param));
+			gda_object_signal_emit_changed (GDA_OBJECT (param));
 	}
 	else {
 		/* restore the value that was in the previous alias parameter, 
@@ -1253,7 +1253,7 @@ alias_of_changed_cb (GdaParameter *alias_of, GdaParameter *param)
 {
 	if ((gpointer) alias_of == (gpointer) param->priv->alias_of) {
 		/* callback used as full bind */
-		gda_object_changed (GDA_OBJECT (param));
+		gda_object_signal_emit_changed (GDA_OBJECT (param));
 	}
 	else {
 		/* callback used as simple bind */

@@ -15,6 +15,8 @@ AM_CPPFLAGS = \
 libgda_sqlite_la_SOURCES = \
 	gda-sqlite-ddl.c \
 	gda-sqlite-ddl.h \
+	gda-sqlite-handler-bin.c \
+	gda-sqlite-handler-bin.h \
 	gda-sqlite-provider.c \
 	gda-sqlite-provider.h \
 	gda-sqlite-recordset.c \

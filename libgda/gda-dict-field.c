@@ -382,7 +382,7 @@ gda_dict_field_set_length (GdaDictField *field, gint length)
 
 	/* signal the modification */
 	if (changed)
-		gda_object_changed (GDA_OBJECT (field));
+		gda_object_signal_emit_changed (GDA_OBJECT (field));
 }
 
 /**
@@ -427,7 +427,7 @@ gda_dict_field_set_scale (GdaDictField *field, gint scale)
 
 	/* signal the modification */
 	if (changed)
-		gda_object_changed (GDA_OBJECT (field));
+		gda_object_signal_emit_changed (GDA_OBJECT (field));
 }
 
 /**
@@ -501,7 +501,7 @@ gda_dict_field_set_dict_type (GdaDictField *field, GdaDictType *type)
 		gda_object_connect_destroy (type, G_CALLBACK (destroyed_object_cb), field);
 		
 		/* signal the modification */
-		gda_object_changed (GDA_OBJECT (field));
+		gda_object_signal_emit_changed (GDA_OBJECT (field));
 	}
 }
 
@@ -531,7 +531,7 @@ gda_dict_field_set_default_value (GdaDictField *field, const GValue *value)
 			field->priv->default_val = gda_value_copy ((GValue *) value);
 		
 		/* signal the modification */
-		gda_object_changed (GDA_OBJECT (field));
+		gda_object_signal_emit_changed (GDA_OBJECT (field));
 	}
 }
 

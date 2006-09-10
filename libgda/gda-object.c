@@ -171,10 +171,10 @@ gda_object_class_init (GdaObjectClass * class)
 			      gda_marshal_VOID__VOID, G_TYPE_NONE,
 			      0);
 	class->changed = NULL;
-	class->name_changed = gda_object_changed;
-	class->id_changed = gda_object_changed;
-	class->descr_changed = gda_object_changed;
-	class->owner_changed = gda_object_changed;
+	class->name_changed = gda_object_signal_emit_changed;
+	class->id_changed = gda_object_signal_emit_changed;
+	class->descr_changed = gda_object_signal_emit_changed;
+	class->owner_changed = gda_object_signal_emit_changed;
 	class->destroyed = NULL;
 	class->to_be_destroyed = NULL;
 
@@ -686,14 +686,14 @@ gda_object_connect_destroy (gpointer gdaobj, GCallback callback, gpointer data)
 }
 
 /**
- * gda_object_changed
+ * gda_object_signal_emit_changed
  * @gdaobj: a #GdaObject object
  *
  * Force emission of the "changed" signal, except if gda_object_block_changed() has
  * been called.
  */
 void
-gda_object_changed (GdaObject *gdaobj)
+gda_object_signal_emit_changed (GdaObject *gdaobj)
 {
 	g_return_if_fail (GDA_IS_OBJECT (gdaobj));
 	g_return_if_fail (gdaobj->priv);

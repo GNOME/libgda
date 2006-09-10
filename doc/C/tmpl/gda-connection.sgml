@@ -384,7 +384,7 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_execute_command ##### -->
+<!-- ##### FUNCTION gda_connection_execute_select_command ##### -->
 <para>
 
 </para>
@@ -396,7 +396,19 @@ Management of connections to data sources
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_connection_execute_command_l ##### -->
+<!-- ##### FUNCTION gda_connection_execute_non_select_command ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@cmd: 
+@params: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_execute_command ##### -->
 <para>
 
 </para>

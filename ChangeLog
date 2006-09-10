@@ -1,3 +1,26 @@
+2006-09-10  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-sharp: make Gda# work (Daniel Espinosa)
+	* libgda/gda-dict-type.c: return an error of the GType cannot be correctly
+	found
+	* libgda/gda-data-model-query.c: show a warning if the GType of a field
+	is invalid
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/sqlite/gda-sqlite-provider.c: in the get_data_handler() virtual
+	function, make sure the dates are represented using the current locale
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/sqlite/gda-sqlite-handler-bin.[ch]: new GdaDataHandler for the
+	SQLite to handle binary strings
+	* libgda/gda-server-provider.c:
+	* libgda/gda-connection.[ch]:
+	* libgda/providers/postgres:
+	* libgda/providers/mysql:
+	* libgda/providers/sqlite: Added gda_connection_execute_select_command(),
+	gda_connection_execute_non_select_command() and renamed
+	gda_connection_execute_command_l() to gda_connection_execute_command().
+	* other files: minor changes
+	
 2006-09-10  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/oracle/oracle_specs_drop_table.xml.in:

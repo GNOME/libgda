@@ -26,9 +26,9 @@
 	  xml:lang CDATA #IMPLIED
 	  descr CDATA #IMPLIED
 	  nullok (TRUE|FALSE) #IMPLIED
-	  plugin NMTOKENS #IMPLIED
+	  plugin CDATA #IMPLIED
 	  source CDATA #IMPLIED
-	  hint NMTOKENS #IMPLIED
+	  hint CDATA #IMPLIED
 	  status (OPT|REQ) #IMPLIED>
 
 <!ELEMENT sources (gda_array*)>

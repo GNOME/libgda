@@ -420,7 +420,7 @@ static void
 m_changed_cb (GdaQuery *query)
 {
 	if (!query->priv->internal_transaction)
-		gda_object_changed (GDA_OBJECT (query));
+		gda_object_signal_emit_changed (GDA_OBJECT (query));
 }
 
 static void
@@ -771,7 +771,7 @@ gda_query_clean (GdaQuery *gda_query)
 	g_assert (!gda_query->priv->all_conds);
 
 	if (!gda_query->priv->internal_transaction)
-		gda_object_changed (GDA_OBJECT (gda_query));
+		gda_object_signal_emit_changed (GDA_OBJECT (gda_query));
 }
 
 static void
@@ -1071,7 +1071,7 @@ query_clean_junk (GdaQuery *query)
 
 	query->priv->internal_transaction--;
 
-	gda_object_changed (GDA_OBJECT (query));
+	gda_object_signal_emit_changed (GDA_OBJECT (query));
 }
 
 static void
@@ -1478,7 +1478,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 	/* close internal transaction */	
 	query->priv->internal_transaction --;
 	
-	gda_object_changed (GDA_OBJECT (query));
+	gda_object_signal_emit_changed (GDA_OBJECT (query));
 }
 
 /**
@@ -2607,7 +2607,7 @@ changed_cond_cb (GdaQueryCondition *cond, GdaQuery *query)
 	}
 	    
 	if (! query->priv->internal_transaction)
-		gda_object_changed (GDA_OBJECT (query));
+		gda_object_signal_emit_changed (GDA_OBJECT (query));
 }
 
 static void
@@ -2750,7 +2750,7 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 		gda_parameter_list_add_param_from_string (options, "ITER_MODEL_ONLY", 
 							  G_TYPE_BOOLEAN, "TRUE");
 	}
-	list = gda_connection_execute_command_l (cnc, cmde, options, error);
+	list = gda_connection_execute_command (cnc, cmde, options, error);
 	if (list) {
 		GList *plist;
 
@@ -2976,7 +2976,7 @@ gda_query_set_order_by_field (GdaQuery *query, GdaQueryField *field, gint order,
 	}
 
 	if (!query->priv->internal_transaction)
-		gda_object_changed (GDA_OBJECT (query));
+		gda_object_signal_emit_changed (GDA_OBJECT (query));
 }
 
 /**
@@ -3495,7 +3495,7 @@ changed_field_cb (GdaEntityField *field, GdaQuery *query)
 #ifdef GDA_DEBUG_signal
         g_print ("<< 'FIELD_UPDATED' from %s\n", __FUNCTION__);
 #endif
-	gda_object_changed (GDA_OBJECT (query));
+	gda_object_signal_emit_changed (GDA_OBJECT (query));
 }
 
 
@@ -3529,7 +3529,7 @@ gda_query_swap_fields (GdaEntity *iface, GdaEntityField *field1, GdaEntityField 
         g_print ("<< 'FIELDS_ORDER_CHANGED' from %s\n", __FUNCTION__);
 #endif
 
-	gda_object_changed (GDA_OBJECT (query));
+	gda_object_signal_emit_changed (GDA_OBJECT (query));
 }
 
 static void

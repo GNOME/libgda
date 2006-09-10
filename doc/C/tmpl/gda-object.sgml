@@ -237,14 +237,6 @@ This class also introduces common attributes that can be exploited by the classe
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_object_changed ##### -->
-<para>
-
-</para>
-
-@object: 
-
-
 <!-- ##### FUNCTION gda_object_block_changed ##### -->
 <para>
 

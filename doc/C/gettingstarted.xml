@@ -293,7 +293,7 @@
           
           
           command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-          list = gda_connection_execute_command (connection, command, NULL);
+          list = gda_connection_execute_select_command (connection, command, NULL);
           if (list!=NULL)
           for (node=g_list_first(list); node != NULL; node=g_list_next(node))
           {

@@ -198,7 +198,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 				gtype = G_TYPE_STRING;
 				break;
 			case SQLITE_BLOB:
-				gtype = GDA_TYPE_BLOB;
+				gtype = GDA_TYPE_BINARY;
 				break;
 			case SQLITE_NULL:
 				gtype = GDA_TYPE_NULL;
@@ -242,9 +242,20 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 				else if (type == G_TYPE_STRING)
 					g_value_set_string (value = gda_value_new (G_TYPE_STRING), 
 							    sqlite3_column_text (sres->stmt, col));
-				else if (type == GDA_TYPE_BLOB) {
-					value = gda_value_new_null ();
-					g_warning ("SQLite BLOBS not yet implemented");
+				else if (type == GDA_TYPE_BINARY) {
+					GdaBinary *bin;
+
+					bin = g_new0 (GdaBinary, 1);
+					bin->binary_length = sqlite3_column_bytes (sres->stmt, col);
+					if (bin->binary_length > 0) {
+						bin->data = g_new (guchar, bin->binary_length);
+						memcpy (bin->data, sqlite3_column_blob (sres->stmt, col),
+							bin->binary_length);
+					}
+					else
+						bin->binary_length = 0;
+					value = gda_value_new (GDA_TYPE_BINARY);
+					gda_value_take_binary (value, bin);
 				}
 				else if (type == GDA_TYPE_NULL)
 					value = gda_value_new_null ();

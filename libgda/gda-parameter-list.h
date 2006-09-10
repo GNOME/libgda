@@ -122,6 +122,7 @@ struct _GdaParameterListClass
 
 GType                   gda_parameter_list_get_type                 (void);
 GdaParameterList       *gda_parameter_list_new                      (GSList *params);
+GdaParameterList       *gda_parameter_list_new_inline               (GdaDict *dict, ...);
 
 GdaParameterList       *gda_parameter_list_new_from_spec_string     (GdaDict *dict, const gchar *xml_spec, GError **error);
 GdaParameterList       *gda_parameter_list_new_from_spec_node       (GdaDict *dict, xmlNodePtr xml_spec, GError **error);

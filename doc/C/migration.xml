@@ -118,7 +118,7 @@
 			     linkend="gda-connection-execute-non-query">non queries</link>, you
         must not use several semicolon-separated sentences, because you
         have a special function to do this<footnote><para><link
-							     linkend="gda-connection-execute-command">gda_connection_execute_command
+							     linkend="gda-connection-execute-command">gda_connection_execute_select_command
               ()</link></para></footnote>, but it is not recommended.
       </para>
     </sect2>

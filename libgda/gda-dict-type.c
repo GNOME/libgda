@@ -344,8 +344,14 @@ dict_type_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 
 	prop = xmlGetProp (node, "gdatype");
 	if (prop) {
-		pgdatype = TRUE;
 		dt->priv->gda_type = gda_type_from_string (prop);
+		if (dt->priv->gda_type == G_TYPE_INVALID)
+			g_set_error (error,
+				     GDA_DICT_TYPE_ERROR,
+				     GDA_DICT_TYPE_XML_LOAD_ERROR,
+				     _("Unknown GType '%s'"), prop);
+		else
+			pgdatype = TRUE;
 		g_free (prop);
 	}
 
@@ -371,10 +377,11 @@ dict_type_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 	if (pname && pnparam && pgdatype)
 		return TRUE;
 	else {
-		g_set_error (error,
-			     GDA_DICT_TYPE_ERROR,
-			     GDA_DICT_TYPE_XML_LOAD_ERROR,
-			     _("Missing required attributes for <gda_dict_type>"));
+		if (error && !*error)
+			g_set_error (error,
+				     GDA_DICT_TYPE_ERROR,
+				     GDA_DICT_TYPE_XML_LOAD_ERROR,
+				     _("Missing required attributes for <gda_dict_type>"));
 		return FALSE;
 	}
 }

@@ -97,7 +97,7 @@
           default CDATA #IMPLIED
 	  default_gda_type NMTOKEN #IMPLIED
 	  extra_attr NMTOKENS #IMPLIED
-          plugin NMTOKENS #IMPLIED>
+          plugin CDATA #IMPLIED>
 
 <!ELEMENT gda_dict_constraints (gda_dict_constraint*)>
 
