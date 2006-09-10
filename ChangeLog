@@ -1,3 +1,11 @@
+2006-09-10  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/oracle/oracle_specs_drop_table.xml.in:
+	* providers/oracle/gda-oracle-ddl.[ch]:
+	* providers/oracle/gda-oracle-provider.c:
+	* providers/oracle/Makefile.am: Start implementing server operations
+	for the oracle provider starting with the relatively small drop_table operation.
+
 2006-09-05  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/gda-server-provider.c: Set GDA_DEBUG to prevent SQL screen output in

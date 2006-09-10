@@ -5,6 +5,7 @@
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Tim Coleman <tim@timcoleman.com>
  *      Vivien Malerba <malerba@gnome-db.org>
+ *      Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -57,6 +58,15 @@ static const gchar *gda_oracle_provider_get_server_version (GdaServerProvider *p
 							    GdaConnection *cnc);
 static const gchar *gda_oracle_provider_get_database (GdaServerProvider *provider,
 						      GdaConnection *cnc);
+static gboolean gda_oracle_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
+							GdaServerOperationType type, GdaParameterList *options);
+static GdaServerOperation *gda_oracle_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
+								 GdaServerOperationType type,
+								 GdaParameterList *options, GError **error);
+static gchar *gda_oracle_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc,
+					            GdaServerOperation *op, GError **error);
+static gboolean gda_oracle_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                                       GdaServerOperation *op, GError **error);
 static GList *gda_oracle_provider_execute_command (GdaServerProvider *provider,
 						   GdaConnection *cnc,
 						   GdaCommand *cmd,
@@ -81,6 +91,11 @@ static GdaDataModel *gda_oracle_provider_get_schema (GdaServerProvider *provider
 						     GdaConnection *cnc,
 						     GdaConnectionSchema schema,
 						     GdaParameterList *params);
+
+static const gchar* gda_oracle_provider_get_default_dbms_type (GdaServerProvider *provider,
+							      GdaConnection *cnc,
+							      GType type);
+
 
 static GObjectClass *parent_class = NULL;
 
@@ -112,17 +127,17 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 
 	provider_class->get_data_handler = NULL;
 	provider_class->string_to_value = NULL;
-	provider_class->get_def_dbms_type = NULL;
+	provider_class->get_def_dbms_type = gda_oracle_provider_get_default_dbms_type;
 
 	provider_class->open_connection = gda_oracle_provider_open_connection;
 	provider_class->close_connection = gda_oracle_provider_close_connection;
 	provider_class->get_database = gda_oracle_provider_get_database;
 	provider_class->change_database = NULL;
 
-	provider_class->supports_operation = NULL;
-        provider_class->create_operation = NULL;
-        provider_class->render_operation = NULL;
-        provider_class->perform_operation = NULL;
+	provider_class->supports_operation = gda_oracle_provider_supports_operation;
+        provider_class->create_operation = gda_oracle_provider_create_operation;
+        provider_class->render_operation = gda_oracle_provider_render_operation;
+        provider_class->perform_operation = gda_oracle_provider_perform_operation;
 
 	provider_class->execute_command = gda_oracle_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
@@ -746,6 +761,150 @@ gda_oracle_provider_get_database (GdaServerProvider *provider,
 
 	/* don't know what to do here yet. */
 	return NULL;
+}
+
+static gboolean
+gda_oracle_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                        GdaServerOperationType type, GdaParameterList *options)
+{
+	switch (type) {
+	case GDA_SERVER_OPERATION_CREATE_DB:
+	case GDA_SERVER_OPERATION_DROP_DB:
+
+	case GDA_SERVER_OPERATION_CREATE_TABLE:
+	case GDA_SERVER_OPERATION_DROP_TABLE:
+	case GDA_SERVER_OPERATION_RENAME_TABLE:
+
+	case GDA_SERVER_OPERATION_ADD_COLUMN:
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
+
+	case GDA_SERVER_OPERATION_CREATE_INDEX:
+	case GDA_SERVER_OPERATION_DROP_INDEX:
+		return TRUE;
+	default:
+		return FALSE;
+	}
+}
+static GdaServerOperation *
+gda_oracle_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
+                                      GdaServerOperationType type,
+                                      GdaParameterList *options, GError **error)
+{
+	gchar *file;
+	GdaServerOperation *op;
+	gchar *str;
+
+	file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
+	str = g_strdup_printf ("oracle_specs_%s.xml", file);
+	g_free (file);
+	file = g_build_filename (LIBGDA_DATA_DIR, str, NULL);
+	g_free (str);
+
+	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+		g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+		return NULL;
+	}
+
+	op = gda_server_operation_new (type, file);
+	g_free (file);
+
+	return op;
+}
+
+static gchar *
+gda_oracle_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error)
+{
+	gchar *sql = NULL;
+	gchar *file;
+	gchar *str;
+	
+	file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
+	str = g_strdup_printf ("oracle_specs_%s.xml", file);
+	g_free (file);
+	file = g_build_filename (LIBGDA_DATA_DIR, str, NULL);
+	g_free (str);
+
+	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+		g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
+		return NULL;
+	}
+	if (!gda_server_operation_is_valid (op, file, error)) {
+		g_free (file);
+		return NULL;
+	}
+	g_free (file);
+
+	switch (gda_server_operation_get_op_type (op)) {
+	case GDA_SERVER_OPERATION_CREATE_DB:
+		sql = gda_oracle_render_CREATE_DB (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_DB:
+		sql = gda_oracle_render_DROP_DB (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_CREATE_TABLE:
+		sql = gda_oracle_render_CREATE_TABLE (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_TABLE:
+		sql = gda_oracle_render_DROP_TABLE (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_RENAME_TABLE:
+		sql = gda_oracle_render_RENAME_TABLE (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_ADD_COLUMN:
+		sql = gda_oracle_render_ADD_COLUMN (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_COLUMN:
+		sql = gda_oracle_render_DROP_COLUMN (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_CREATE_INDEX:
+		sql = gda_oracle_render_CREATE_INDEX (provider, cnc, op, error);
+		break;
+	case GDA_SERVER_OPERATION_DROP_INDEX:
+		sql = gda_oracle_render_DROP_INDEX (provider, cnc, op, error);
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+	return sql;
+}
+
+static gboolean
+gda_oracle_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc, 
+				       GdaServerOperation *op, GError **error)
+{
+	GdaServerOperationType optype;
+
+	optype = gda_server_operation_get_op_type (op);
+	if (!cnc && 
+	    ((optype == GDA_SERVER_OPERATION_CREATE_DB) ||
+	     (optype == GDA_SERVER_OPERATION_DROP_DB))) {
+
+		/* Not yet implemented */
+		return FALSE;
+	}
+	else {
+		/* use the SQL from the provider to perform the action */
+		gchar *sql;
+		GdaCommand *cmd;
+		GdaDataModel *model;
+		
+		sql = gda_server_provider_render_operation (provider, cnc, op, error);
+		if (!sql)
+			return FALSE;
+		
+		cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+		g_free (sql);
+		model = gda_connection_execute_command (cnc, cmd, NULL, error);		
+		gda_command_free (cmd);
+		if (model != GDA_CONNECTION_EXEC_FAILED) {
+			if (model)
+				g_object_unref (model);
+			return TRUE;
+		}
+		else
+			return FALSE;
+	}
 }
 
 /* execute_command handler for the GdaMysqlProvider class */
@@ -1864,3 +2023,61 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
   c-basic-offset: 8
   End:
 */
+
+static const gchar*
+gda_oracle_provider_get_default_dbms_type (GdaServerProvider *provider,
+					     GdaConnection *cnc,
+					     GType type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+	if (type == G_TYPE_INT64)
+		return "NUMBER(38)";
+	if (type == G_TYPE_UINT64)
+		return "NUMBER(38)";
+	if (type == GDA_TYPE_BINARY)
+		return "BFILE";
+	if (type == GDA_TYPE_BLOB)
+		return "BLOB";
+	if (type == G_TYPE_BOOLEAN)
+		return "NUMBER(1)";
+	if (type == G_TYPE_DATE)
+		return "DATE";
+	if (type == G_TYPE_DOUBLE)
+		return "NUMBER";
+	if (type == GDA_TYPE_GEOMETRIC_POINT)
+		return "SDO_GEOMETRY";
+	if (type == G_TYPE_OBJECT)
+		return "CLOB";
+	if (type == G_TYPE_INT)
+		return "NUMBER(38)";
+	if (type == GDA_TYPE_LIST)
+		return "CLOB";
+	if (type == GDA_TYPE_NUMERIC)
+		return "NUMBER";
+	if (type == G_TYPE_FLOAT)
+		return "NUMBER";
+	if (type == GDA_TYPE_SHORT)
+		return "NUMBER(38)";
+	if (type == GDA_TYPE_USHORT)
+		return "NUMBER(38)";
+	if (type == G_TYPE_STRING)
+		return "VARCHAR2";
+	if (type == GDA_TYPE_TIME)
+		return "DATE";
+	if (type == GDA_TYPE_TIMESTAMP)
+		return "TIMESTAMP";
+	if (type == G_TYPE_CHAR)
+		return "CHAR";
+	if (type == G_TYPE_UCHAR)
+		return "CHAR";
+	if (type == G_TYPE_ULONG)
+		return "NUMBER(38)";
+        if (type == G_TYPE_UINT)
+		return "NUMBER(38)";
+	if (type == G_TYPE_INVALID)
+		return "CLOB";
+
+	return "CLOB";
+}
+
