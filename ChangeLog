@@ -1,3 +1,16 @@
+2006-09-11  Murray Cumming  <murrayc@murrayc.com>
+
+	* providers/postgres/gda-postgres-provider.c:
+	(gda_postgres_provider_create_database,
+	gda_postgres_provider_create_database): When using 
+	CREATE DATABASE or DROP DATABASE, quote the database name, 
+	to allow, for instance, - characters. Possibly some other 
+	characters should be escaped too, but I can not find 
+	any description of the allowed characters in a 
+	postgres database name.
+	Very possibly, the other providers should quote their 
+	database names too.
+
 2006-04-18  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* configure.in: Remove obsolete entry for no_NO

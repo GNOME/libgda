@@ -694,7 +694,7 @@ gda_postgres_provider_create_database (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	sql = g_strdup_printf ("CREATE DATABASE %s", name);
+	sql = g_strdup_printf ("CREATE DATABASE \"%s\"", name);
 	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
 	g_free (sql);
 
@@ -715,7 +715,7 @@ gda_postgres_provider_drop_database (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	sql = g_strdup_printf ("DROP DATABASE %s", name);
+	sql = g_strdup_printf ("DROP DATABASE \"%s\"", name);
 	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
 	g_free (sql);
 
