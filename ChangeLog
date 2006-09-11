@@ -1,3 +1,10 @@
+2006-09-11  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/oracle/oracle_specs_drop_index.xml.in:
+	* providers/oracle/gda-oracle-ddl.c:
+	* providers/oracle/Makefile.am: implement server operation
+	drop_table for the oracle provider.
+
 2006-09-10  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-sharp: make Gda# work (Daniel Espinosa)

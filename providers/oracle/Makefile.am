@@ -50,7 +50,8 @@ libgda_oracle_la_LIBADD = \
 
 xmldir   = $(datadir)/libgda
 xml_in_files =	oracle_specs_dsn.xml.in \
-		oracle_specs_drop_table.xml.in 
+		oracle_specs_drop_table.xml.in \
+		oracle_specs_drop_index.xml.in
 
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 

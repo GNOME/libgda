@@ -107,6 +107,25 @@ gchar *
 gda_oracle_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 
 				GdaServerOperation *op, GError **error)
 {
-	return NULL;
+	GString *string;
+	const GValue *value;
+	gchar *sql = NULL;
+
+	string = g_string_new ("DROP INDEX ");
+
+	value = gda_server_operation_get_value_at (op, "/INDEX_DESC_P/INDEX_NAME");
+	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
+	g_string_append (string, g_value_get_string (value));
+
+	value = gda_server_operation_get_value_at (op, "/INDEX_DESC_P/REFERENCED_ACTION");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		g_string_append_c (string, ' ');
+		g_string_append (string, g_value_get_string (value));
+	}
+
+	sql = string->str;
+	g_string_free (string, FALSE);
+
+	return sql;
 }
 
