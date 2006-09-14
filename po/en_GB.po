@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-10 17:39+0100\n"
-"PO-Revision-Date: 2006-09-10 17:49-0000\n"
+"POT-Creation-Date: 2006-09-14 21:12+0100\n"
+"PO-Revision-Date: 2006-09-14 21:12-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English/GB <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -88,15 +88,15 @@ msgstr "Description"
 #: ../providers/firebird/gda-firebird-provider.c:748
 #: ../providers/ldap/gda-ldap-provider.c:344
 #: ../providers/mdb/gda-mdb-provider.c:486
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:79
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
 #: ../providers/odbc/gda-odbc-provider.c:789
 #: ../providers/odbc/gda-odbc-provider.c:842
 #: ../providers/oracle/gda-oracle-provider.c:1704
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:38
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:12
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 msgid "Name"
 msgstr "Name"
 
@@ -112,8 +112,9 @@ msgstr "Connection string"
 msgid "Username"
 msgstr "Username"
 
+#. other table options
 #: ../libgda/gda-config.c:1885
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:121
 msgid "Password"
 msgstr "Password"
 
@@ -1477,7 +1478,7 @@ msgstr "Aggregate"
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:950
 #: ../providers/ldap/gda-ldap-provider.c:345
 #: ../providers/oracle/gda-oracle-provider.c:1704
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:32
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
 #: ../providers/sybase/gda-sybase-provider.c:1099
 msgid "Owner"
 msgstr "Owner"
@@ -1517,52 +1518,56 @@ msgstr "Definition"
 msgid "Database"
 msgstr "Database"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:97
 #: ../providers/firebird/gda-firebird-provider.c:624
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:43
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:64
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:8
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:7
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:12
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:23
 msgid "Field name"
 msgstr "Field name"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:98
 #: ../providers/firebird/gda-firebird-provider.c:625
 #: ../providers/msql/gda-msql-provider.c:573
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:30
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:44
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:4
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:9
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:17
 msgid "Data type"
 msgstr "Data type"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:99
 #: ../providers/firebird/gda-firebird-provider.c:626
 #: ../providers/msql/gda-msql-provider.c:574
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:17
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:98
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:138
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:61
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:10
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:35
 msgid "Size"
 msgstr "Size"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:100
 #: ../providers/firebird/gda-firebird-provider.c:627
 #: ../providers/msql/gda-msql-provider.c:575
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:16
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:95
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:134
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:38
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:33
 msgid "Scale"
 msgstr "Scale"
 
@@ -1593,14 +1598,15 @@ msgstr "Unique index?"
 msgid "References"
 msgstr "References"
 
+#. list of fields
 #: ../libgda/gda-server-provider-extra.c:105
 #: ../providers/firebird/gda-firebird-provider.c:632
 #: ../providers/msql/gda-msql-provider.c:580
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:12
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:32
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:48
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
 msgid "Default value"
 msgstr "Default value"
 
@@ -1678,8 +1684,8 @@ msgstr "Trigger"
 #: ../providers/firebird/gda-firebird-provider.c:246
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:896
 #: ../providers/ldap/gda-ldap-provider.c:447
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:13
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 #: ../providers/sybase/gda-sybase-provider.c:1097
 #: ../testing/gda-diagnose.c:316
 msgid "Type"
@@ -1704,17 +1710,18 @@ msgstr "User"
 msgid "View"
 msgstr "View"
 
+#. foreign key spec
 #: ../libgda/gda-server-provider-extra.c:177
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:44
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:66
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
 msgid "Fields"
 msgstr "Fields"
 
 #: ../libgda/gda-server-provider-extra.c:179
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:15
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:3
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:29
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:33
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:6
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:12
 msgid "Options"
@@ -1880,16 +1887,19 @@ msgstr "Character Set"
 msgid "Character set to be used on the connection"
 msgstr "Character set to be used on the connection"
 
+#. DSN parameters
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:3
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:1
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:1
 #: ../providers/msql/msql_specs_dsn.xml.in.h:1
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:17
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:3
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:23
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:4
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:1
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:6
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:1
-#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:1
-#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:1
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:1
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:3
@@ -1906,10 +1916,15 @@ msgstr "Page size to use on the database"
 
 #. FIXME: pre-set values for the SQL_DIALECT values with human readable values
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:7
+msgid "SQL Dialect"
+msgstr "SQL Dialect"
+
+#. FIXME: pre-set values for the SQL_DIALECT values with human readable values
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:9
 msgid "SQL dialect to use on the connection"
 msgstr "SQL dialect to use on the connection"
 
-#: ../providers/firebird/firebird_specs_dsn.xml.in.h:8
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:10
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:21
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:4
 #: ../providers/msql/msql_specs_dsn.xml.in.h:4
@@ -2016,8 +2031,13 @@ msgstr "Unknown Firebird's field value!\n"
 msgid "Provider for Firebird databases"
 msgstr "Provider for Firebird databases"
 
+#. Connection parameters
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:2
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:25
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:6
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:9
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:2
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:2
 msgid "Database server"
@@ -2029,8 +2049,8 @@ msgid "Database server IP adress"
 msgstr "Database server IP adress"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:4
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:4
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:7
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:3
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:4
 msgid "Database server port"
@@ -2051,8 +2071,8 @@ msgstr "Enable Sybase"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:8
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:2
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:9
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:13
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:11
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:7
 msgid "Extra connection options"
@@ -2073,8 +2093,8 @@ msgstr "FreeTDS Config File"
 #. Connection parameters
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:12
 #: ../providers/msql/msql_specs_dsn.xml.in.h:3
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:29
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:10
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:37
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:14
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:8
 msgid "Host which has the database server running"
@@ -2091,11 +2111,11 @@ msgstr "Location of the FreeTDS config file"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:16
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:8
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:13
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:51
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:18
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:30
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:34
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:7
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:13
 msgid "Port"
@@ -2671,27 +2691,30 @@ msgstr "After column"
 msgid "As first column"
 msgstr "As first column"
 
+#. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:5
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:8
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
 msgid "Auto increment"
 msgstr "Auto increment"
 
+#. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:6
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:13
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:20
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:1
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:1
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
 msgid "Check"
 msgstr "Check"
 
+#. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:7
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:14
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:22
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
 msgid "Check constraint"
 msgstr "Check constraint"
 
@@ -2703,64 +2726,70 @@ msgstr "Check constraint"
 msgid "Column's description"
 msgstr "Column's description"
 
+#. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:9
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:19
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:30
 msgid "Comment"
 msgstr "Comment"
 
+#. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:46
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
 msgid "Default"
 msgstr "Default"
 
+#. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:14
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:81
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:111
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:28
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:16
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
 msgid "Not NULL"
 msgstr "Not NULL"
 
+#. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:15
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:88
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:123
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:18
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
 msgid "Primary key"
 msgstr "Primary key"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:19
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:105
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:146
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:45
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:39
 msgid "Table's name"
 msgstr "Table's name"
 
+#. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:20
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:113
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:156
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
 msgid "Unique"
 msgstr "Unique"
 
+#. other table options
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:1
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:2
 msgid "7bit Swedish"
 msgstr "7bit Swedish"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:2
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:2
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:3
 msgid "ARMSCII-8 Armenian"
 msgstr "ARMSCII-8 Armenian"
 
@@ -2779,271 +2808,279 @@ msgid "Administrator password"
 msgstr "Administrator password"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:5
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:9
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:14
 msgid "Big5 Traditional Chinese"
 msgstr "Big5 Traditional Chinese"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:6
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:10
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
 msgid "Binary pseudo charset"
 msgstr "Binary pseudo charset"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:7
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:12
+#. DSN parameters
+#. other table options
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:8
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:18
 msgid "Character set"
 msgstr "Character set"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:8
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:4
 msgid "Character set encoding to use in the new database"
 msgstr "Character set encoding to use in the new database"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:9
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:17
+#. DSN parameters
+#. other table options
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:12
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
 msgid "Collation"
 msgstr "Collation"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:14
 msgid "Collation method to use in the new database"
 msgstr "Collation method to use in the new database"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:11
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 msgid "Create database only if it does not yet exist"
 msgstr "Create database only if it does not yet exist"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:12
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:24
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:17
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:36
 msgid "DEC West European"
 msgstr "DEC West European"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:13
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:25
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
 msgid "DOS Central European"
 msgstr "DOS Central European"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:14
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:26
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:19
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:38
 msgid "DOS Kamenicky Czech-Slovak"
 msgstr "DOS Kamenicky Czech-Slovak"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
 msgid "DOS Russian"
 msgstr "DOS Russian"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:28
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:21
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:40
 msgid "DOS West European"
 msgstr "DOS West European"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:6
-#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:3
-#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:3
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:11
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:4
 msgid "Database's description"
 msgstr "Database's description"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:21
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:36
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:29
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
 msgid "EUC-JP Japanese"
 msgstr "EUC-JP Japanese"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:54
 msgid "EUC-KR Korean"
 msgstr "EUC-KR Korean"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:23
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:8
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:4
 msgid "Full path of the UNIX socket to use for connecting locally"
 msgstr "Full path of the UNIX socket to use for connecting locally"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:49
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:72
 msgid "GB2312 Simplified Chinese"
 msgstr "GB2312 Simplified Chinese"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:25
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:50
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:33
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:73
 msgid "GBK Simplified Chinese"
 msgstr "GBK Simplified Chinese"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:74
 msgid "GEOSTD8 Georgian"
 msgstr "GEOSTD8 Georgian"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:27
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:54
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:35
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
 msgid "HP West European"
 msgstr "HP West European"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:56
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:79
 msgid "ISO 8859-1 West European"
 msgstr "ISO 8859-1 West European"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:39
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:80
 msgid "ISO 8859-13 Baltic"
 msgstr "ISO 8859-13 Baltic"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:58
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:81
 msgid "ISO 8859-2 Central European"
 msgstr "ISO 8859-2 Central European"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:33
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:59
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:41
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:82
 msgid "ISO 8859-7 Greek"
 msgstr "ISO 8859-7 Greek"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
 msgid "ISO 8859-8 Hebrew"
 msgstr "ISO 8859-8 Hebrew"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:35
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:61
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:43
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:84
 msgid "ISO 8859-9 Turkish"
 msgstr "ISO 8859-9 Turkish"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:66
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
 msgid "KOI8-R Relcom Russian"
 msgstr "KOI8-R Relcom Russian"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:37
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:67
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:45
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:92
 msgid "KOI8-U Ukrainian"
 msgstr "KOI8-U Ukrainian"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:30
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:28
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:34
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:32
 msgid "Login name (which has the rights to create databases)"
 msgstr "Login name (which has the rights to create databases)"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:39
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:68
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:47
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:93
 msgid "Mac Central European"
 msgstr "Mac Central European"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:69
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:94
 msgid "Mac West European"
 msgstr "Mac West European"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:41
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:84
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:17
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:116
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:14
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:29
 msgid "Only if not exists"
 msgstr "Only if not exists"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:43
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:14
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:19
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:7
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:34
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:31
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:38
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:35
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:8
 msgid "Require SSL"
 msgstr "Require SSL"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:94
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:53
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:132
 msgid "SJIS for Windows Japanese"
 msgstr "SJIS for Windows Japanese"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:45
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:32
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:36
 msgid "Server access parameters"
 msgstr "Server access parameters"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:97
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:55
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:136
 msgid "Shift-JIS Japanese"
 msgstr "Shift-JIS Japanese"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:47
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:99
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
 msgid "TIS620 Thai"
 msgstr "TIS620 Thai"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
-#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:6
-#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:6
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:58
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:22
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:45
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:10
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
 msgid "The name of a database to create"
 msgstr "The name of a database to create"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:49
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:109
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:59
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:150
 msgid "UCS-2 Unicode"
 msgstr "UCS-2 Unicode"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:60
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:23
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:9
 msgid "UNIX Socket"
 msgstr "UNIX Socket"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:51
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:61
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:151
 msgid "US ASCII"
 msgstr "US ASCII"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:111
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:152
 msgid "UTF-8 Unicode"
 msgstr "UTF-8 Unicode"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:53
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:63
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:10
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:12
 msgid "Whether to use or not SSL for establishing the connection"
 msgstr "Whether to use or not SSL for establishing the connection"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:114
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
 msgid "Windows Arabic"
 msgstr "Windows Arabic"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:55
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:115
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:65
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:158
 msgid "Windows Baltic"
 msgstr "Windows Baltic"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:116
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:159
 msgid "Windows Central European"
 msgstr "Windows Central European"
 
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:57
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:117
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:67
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:160
 msgid "Windows Cyrillic"
 msgstr "Windows Cyrillic"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:2
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:6
 msgid "Index description"
 msgstr "Index description"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 msgid "Index name"
 msgstr "Index name"
 
@@ -3051,314 +3088,346 @@ msgstr "Index name"
 msgid "Index type (depending on table storage engine)"
 msgstr "Index type (depending on table storage engine)"
 
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:4
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:6
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:5
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
 msgid "Indexed field or expression"
 msgstr "Indexed field or expression"
 
 #. Index fields
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:8
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
 msgid "Indexed field(s)"
 msgstr "Indexed field(s)"
 
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
 msgid "Length"
 msgstr "Length"
 
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:8
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
 msgid "Method"
 msgstr "Method"
 
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:10
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:12
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:3
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
 msgid "On table"
 msgstr "On table"
 
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:12
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:14
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:16
 msgid "Sort type"
 msgstr "Sort type"
 
-#: ../providers/mysql/mysql_specs_create_index.xml.in.h:12
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:16
 msgid "The number of characters the index is on for columns of type CHAR or VARCHAR"
 msgstr "The number of characters the index is on for columns of type CHAR or VARCHAR"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:3
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
 msgid "An approximation of the average row length for your table"
 msgstr "An approximation of the average row length for your table"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:4
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
 msgid "Archive"
 msgstr "Archive"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:10
 msgid "Auto increment value"
 msgstr "Auto increment value"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:7
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:12
 msgid "Average row length"
 msgstr "Average row length"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:8
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:13
 msgid "Berkeley DB"
 msgstr "Berkeley DB"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:11
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:16
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:1
 msgid "Cascade"
 msgstr "Cascade"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:24
 msgid "Checksum"
 msgstr "Checksum"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:16
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:25
 msgid "Clustered, fault-tolerant, memory-based"
 msgstr "Clustered, fault-tolerant, memory-based"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:18
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:28
 msgid "Comma Separated Value (CSV)"
 msgstr "Comma Separated Value (CSV)"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:20
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 msgid "Compact"
 msgstr "Compact"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:21
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:32
 msgid "Compressed"
 msgstr "Compressed"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:22
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:34
 msgid "Counter for auto incremented fields is incremented by this value + 1 (DEFAULT: 0)"
 msgstr "Counter for auto incremented fields is incremented by this value + 1 (DEFAULT: 0)"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:23
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:15
 msgid "Create table only if it does not yet exist"
 msgstr "Create table only if it does not yet exist"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:42
 msgid "Data directory"
 msgstr "Data directory"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:33
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:50
 msgid "Delay key write"
 msgstr "Delay key write"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:34
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
 msgid "Don't pack keys"
 msgstr "Don't pack keys"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:52
 msgid "Dynamic"
 msgstr "Dynamic"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:38
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:56
 msgid "Engine"
 msgstr "Engine"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 msgid "Example"
 msgstr "Example"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:40
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:59
 msgid "FIRST, LAST or NO: only with MERGE engine"
 msgstr "FIRST, LAST or NO: only with MERGE engine"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:41
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
 msgid "Federated"
 msgstr "Federated"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:42
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:62
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
 msgid "Field"
 msgstr "Field"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:45
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:68
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
 msgid "Fields in the foreign key"
 msgstr "Fields in the foreign key"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:46
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:69
 msgid "Fixed"
 msgstr "Fixed"
 
 #. foreign key spec
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:48
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
 msgid "Foreign key"
 msgstr "Foreign key"
 
 #. other table constraints
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:14
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:76
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:25
 msgid "Global constraints"
 msgstr "Global constraints"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:55
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:78
 msgid "ISAM"
 msgstr "ISAM"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:62
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:85
 msgid "In Memory (MEMORY/HEAP)"
 msgstr "In Memory (MEMORY/HEAP)"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:63
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
 msgid "Index directory"
 msgstr "Index directory"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:64
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:88
 msgid "InnoDB"
 msgstr "InnoDB"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:65
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:90
 msgid "Insert method"
 msgstr "Insert method"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:70
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:22
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:95
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 msgid "Match full"
 msgstr "Match full"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:96
 msgid "Match partial"
 msgstr "Match partial"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:72
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:97
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
 msgid "Match simple"
 msgstr "Match simple"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:73
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:24
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:99
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
 msgid "Match type"
 msgstr "Match type"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:74
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:101
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
 msgid "Matching method if more than one field involved"
 msgstr "Matching method if more than one field involved"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:75
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
 msgid "Max rows"
 msgstr "Max rows"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:76
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:104
 msgid "Merge"
 msgstr "Merge"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
 msgid "Min rows"
 msgstr "Min rows"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:78
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
 msgid "MyISAM (default)"
 msgstr "MyISAM (default)"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:80
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:109
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
 msgid "No action"
 msgstr "No action"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:82
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:113
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
 msgid "On delete action"
 msgstr "On delete action"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:115
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 msgid "On update action"
 msgstr "On update action"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:85
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:117
 msgid "Only pack long CHAR/VARCHAR columns"
 msgstr "Only pack long CHAR/VARCHAR columns"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:86
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:119
 msgid "Pack keys"
 msgstr "Pack keys"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:89
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:124
 msgid "Redundant"
 msgstr "Redundant"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:90
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:126
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 msgid "Referenced field"
 msgstr "Referenced field"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:36
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:128
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
 msgid "Referenced table"
 msgstr "Referenced table"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:92
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:129
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
 msgid "Restrict"
 msgstr "Restrict"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:93
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:131
 msgid "Row format"
 msgstr "Row format"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:96
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
 msgid "Set to NULL"
 msgstr "Set to NULL"
 
 #. list of fields
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:101
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:37
 msgid "Table's columns"
 msgstr "Table's columns"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:102
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:142
 msgid "Table's comment"
 msgstr "Table's comment"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:23
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:38
 msgid "Table's description"
 msgstr "Table's description"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:104
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
 msgid "Table's engine (or type)"
 msgstr "Table's engine (or type)"
 
 #. other table options
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:148
 msgid "Table's options"
 msgstr "Table's options"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:47
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:25
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
 msgid "Temporary table"
 msgstr "Temporary table"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:112
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:154
 msgid "Union"
 msgstr "Union"
 
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:118
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:162
 msgid "tbl_name[,tbl_name]...: only with MERGE engine"
 msgstr "tbl_name[,tbl_name]...: only with MERGE engine"
 
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:7
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:11
 msgid "Drop database only if it exists"
 msgstr "Drop database only if it exists"
 
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
 msgid "Only if exists"
 msgstr "Only if exists"
 
@@ -3721,177 +3790,177 @@ msgstr "ASCII"
 msgid "Chinese EUC"
 msgstr "Chinese EUC"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:6
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:5
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:10
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:9
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:3
 msgid "Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this fiend empty)"
 msgstr "Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this fiend empty)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
 msgid "Encoding"
 msgstr "Encoding"
 
 #. Connection parameters
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:11
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:13
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:5
 msgid "Host which has the database server running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this fiend empty)"
 msgstr "Host which has the database server running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this fiend empty)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:14
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.1)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.1)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:13
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:17
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:15
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.10)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.10)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:14
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:18
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:16
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.2)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.2)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:17
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.3)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.3)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:14
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:20
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:18
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.4)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.4)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:17
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:19
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.5)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.5)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:18
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:16
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:20
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.6)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.6)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:23
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:21
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.7)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.7)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:20
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:18
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:22
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.8)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.8)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:19
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:23
 msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.9)"
 msgstr "ISO 8859-1/ECMA 94 (Latin alphabet no.9)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:20
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:24
 msgid "ISO 8859-5/ECMA 113 (Latin/Cyrillic)"
 msgstr "ISO 8859-5/ECMA 113 (Latin/Cyrillic)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:23
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:21
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:25
 msgid "ISO 8859-6/ECMA 114 (Latin/Arabic)"
 msgstr "ISO 8859-6/ECMA 114 (Latin/Arabic)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:22
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:28
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:26
 msgid "ISO 8859-7/ECMA 118 (Latin/Greek)"
 msgstr "ISO 8859-7/ECMA 118 (Latin/Greek)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:23
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:27
 msgid "ISO 8859-8/ECMA 121 (Latin/Hebrew)"
 msgstr "ISO 8859-8/ECMA 121 (Latin/Hebrew)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:24
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:30
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:28
 msgid "Japanese EUC"
 msgstr "Japanese EUC"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:25
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:29
 msgid "KOI8-R(U)"
 msgstr "KOI8-R(U)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:28
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:26
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:32
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:30
 msgid "Korean EUC"
 msgstr "Korean EUC"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:27
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:31
 msgid "Korean EUC (Hangle base)"
 msgstr "Korean EUC (Hangle base)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:33
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:40
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:37
 msgid "TCVN-5712/Windows CP1258 (Vietnamese)"
 msgstr "TCVN-5712/Windows CP1258 (Vietnamese)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
 msgid "Tablespace"
 msgstr "Tablespace"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:38
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:34
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:42
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:38
 msgid "Taiwan EUC"
 msgstr "Taiwan EUC"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
 msgid "Template"
 msgstr "Template"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:42
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:46
 msgid "The name of the database user who will own the new database"
 msgstr "The name of the database user who will own the new database"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
 msgid "The name of the tablespace that will be associated with the new database"
 msgstr "The name of the tablespace that will be associated with the new database"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:44
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
 msgid "The name of the template from which to create the new database"
 msgstr "The name of the template from which to create the new database"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:45
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:37
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:49
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:41
 msgid "Unicode (UTF-8)"
 msgstr "Unicode (UTF-8)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:46
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:38
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:50
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:42
 msgid "Whether to require SSL or not when connecting"
 msgstr "Whether to require SSL or not when connecting"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:51
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:43
 msgid "Windows CP1250"
 msgstr "Windows CP1250"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:52
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:44
 msgid "Windows CP1251"
 msgstr "Windows CP1251"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:49
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:53
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:45
 msgid "Windows CP1256 (Arabic)"
 msgstr "Windows CP1256 (Arabic)"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:50
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:42
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:54
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:46
 msgid "Windows CP866"
 msgstr "Windows CP866"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:51
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:43
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:55
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:47
 msgid "Windows CP874 (Thai)"
 msgstr "Windows CP874 (Thai)"
 
@@ -3899,59 +3968,60 @@ msgstr "Windows CP874 (Thai)"
 msgid "Constraint expression for a partial index"
 msgstr "Constraint expression for a partial index"
 
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 msgid "Predicate"
 msgstr "Predicate"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:4
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
 msgid "Copy default expressions"
 msgstr "Copy default expressions"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 msgid "Copy defaults"
 msgstr "Copy defaults"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
 msgid "Deferrable"
 msgstr "Deferrable"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:16
 msgid "Deferrable initially deferred"
 msgstr "Deferrable initially deferred"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
 msgid "Deferrable initially immediate"
 msgstr "Deferrable initially immediate"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:20
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
 msgid "Inheritage"
 msgstr "Inheritage"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
 msgid "Keep coupled"
 msgstr "Keep coupled"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
 msgid "Not deferrable"
 msgstr "Not deferrable"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:47
 msgid "Parent table"
 msgstr "Parent table"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
 msgid "Parent table(s)"
 msgstr "Parent table(s)"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:40
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
 msgid "Set to default"
 msgstr "Set to default"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
 msgid "Use INHERIT instead of LIKE"
 msgstr "Use INHERIT instead of LIKE"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
 msgid "With OIDs"
 msgstr "With OIDs"
 
@@ -3968,7 +4038,7 @@ msgid "What to do with references on the column to delete"
 msgstr "What to do with references on the column to delete"
 
 #. DSN parameters
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:36
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
 msgid "The name of a database to drop"
 msgstr "The name of a database to drop"
 
@@ -4038,37 +4108,45 @@ msgstr "Provider for SQLite databases"
 msgid "Default value, mandatory if column is NOT NULL"
 msgstr "Default value, mandatory if column is NOT NULL"
 
-#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:4
-#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:4
+#. DSN parameters
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:2
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:1
 msgid "Directory"
 msgstr "Directory"
 
-#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:5
-#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:5
+#. DSN parameters
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:8
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:8
 msgid "Directory where the database file will be"
 msgstr "Directory where the database file will be"
 
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:1
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
+#. Index fields
+#. list of fields
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
 msgid "Collation name (BINARY|NOCASE)"
 msgstr "Collation name (BINARY|NOCASE)"
 
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:5
+#. Index fields
+#. list of fields
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:10
 msgid "Compare method"
 msgstr "Compare method"
 
-#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:5
 msgid "Create index only if it does not yet exist"
 msgstr "Create index only if it does not yet exist"
 
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
+#. list of fields
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:12
 msgid "Conflict"
 msgstr "Conflict"
 
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:7
+#. list of fields
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:14
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
 msgstr "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
 
