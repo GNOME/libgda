@@ -1,6 +1,6 @@
 /* gda-query-condition.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -248,7 +248,7 @@ gda_query_condition_init (GdaQueryCondition *condition)
  *
  * Returns: the newly created object
  */
-GObject *
+GdaQueryCondition *
 gda_query_condition_new (GdaQuery *query, GdaQueryConditionType type)
 {
 	GObject *obj;
@@ -258,7 +258,7 @@ gda_query_condition_new (GdaQuery *query, GdaQueryConditionType type)
 	obj = g_object_new (GDA_TYPE_QUERY_CONDITION, "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 			    "query", query, "cond_type", type, NULL);
 
-	return obj;
+	return (GdaQueryCondition*) obj;
 }
 
 static void
@@ -281,7 +281,7 @@ ops_ref_lost_cb (GdaObjectRef *refbase, GdaQueryCondition *cond)
  *
  * Returns: the new object
  */
-GObject *
+GdaQueryCondition *
 gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
 {
 	GObject *obj;
@@ -324,7 +324,7 @@ gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
 		list = g_slist_next (list);
 	}
 
-	return obj;
+	return newcond;
 }
 
 /**
@@ -339,7 +339,7 @@ gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
  *
  * Returns: a new #GdaQueryCondition, or %NULL if there was an error in @sql_cond
  */
-GObject *
+GdaQueryCondition *
 gda_query_condition_new_from_sql (GdaQuery *query, const gchar *sql_cond, GSList **targets, GError **error)
 {
 	gchar *sql;
@@ -373,7 +373,7 @@ gda_query_condition_new_from_sql (GdaQuery *query, const gchar *sql_cond, GSList
 				     _("Error parsing '%s'"), sql_cond);
 	g_free (sql);
 
-	return G_OBJECT (newcond);
+	return newcond;
 }
 
 static void
@@ -1491,7 +1491,7 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 		if (!strcmp (children->name, "gda_query_cond")) {
 			GdaQueryCondition *scond;
 
-			scond = GDA_QUERY_CONDITION (gda_query_condition_new (cond->priv->query, GDA_QUERY_CONDITION_NODE_AND));
+			scond = gda_query_condition_new (cond->priv->query, GDA_QUERY_CONDITION_NODE_AND);
 			if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (scond), children, error)) {
 				gda_query_condition_node_add_child (cond, scond, NULL);
 				g_object_unref (G_OBJECT (scond));

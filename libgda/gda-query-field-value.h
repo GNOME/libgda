@@ -1,6 +1,6 @@
 /* gda-query-field-value.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -60,13 +60,13 @@ struct _GdaQueryFieldValueClass
 };
 
 GType             gda_query_field_value_get_type            (void);
-GObject          *gda_query_field_value_new                 (GdaQuery *query, GType type);
+GdaQueryField    *gda_query_field_value_new                 (GdaQuery *query, GType type);
 
 void              gda_query_field_value_set_value           (GdaQueryFieldValue *field, const GValue *val);
-const GValue   *gda_query_field_value_get_value           (GdaQueryFieldValue *field);
+const GValue     *gda_query_field_value_get_value           (GdaQueryFieldValue *field);
 void              gda_query_field_value_set_default_value   (GdaQueryFieldValue *field, const GValue *default_val);
-const GValue   *gda_query_field_value_get_default_value   (GdaQueryFieldValue *field);
-GType      gda_query_field_value_get_gda_type      (GdaQueryFieldValue *field);
+const GValue     *gda_query_field_value_get_default_value   (GdaQueryFieldValue *field);
+GType             gda_query_field_value_get_gda_type        (GdaQueryFieldValue *field);
 
 void              gda_query_field_value_set_dict_type       (GdaQueryFieldValue *field, GdaDictType *type);
 GdaDictType      *gda_query_field_value_get_dict_type       (GdaQueryFieldValue *field);

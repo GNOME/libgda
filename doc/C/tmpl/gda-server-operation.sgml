@@ -11,7 +11,7 @@ organized hirarchically. A value can be read from its path (similar to a Unix fi
 gda_server_operation_get_value_at() method.
 </para>
 <para>
-See the global introduction about how to use this object.
+See the <link linkend="DDLIntro">global introduction about DDL</link> about how to use this object.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -161,6 +161,30 @@ See the global introduction about how to use this object.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_operation_get_value_at ##### -->
+<para>
+
+</para>
+
+@op: 
+@path_format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_operation_set_value_at ##### -->
+<para>
+
+</para>
+
+@op: 
+@value: 
+@error: 
+@path_format: 
+@Varargs: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_operation_save_data_to_xml ##### -->
 <para>
 
@@ -289,17 +313,6 @@ See the global introduction about how to use this object.
 
 @op: 
 @item_path: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_operation_get_value_at ##### -->
-<para>
-
-</para>
-
-@op: 
-@path_format: 
-@Varargs: 
 @Returns: 
 
 

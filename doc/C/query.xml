@@ -184,7 +184,7 @@
       <link linkend="gda-query-get-parameters">gda_query_get_parameters()</link> method.
       However, it is usually better to use a <link linkend="GdaParameterList">GdaParameterList</link>
       object which stores the parameters, and organises them in a convenient way. The function that returns a
-      GdaParameterList object is <link linkend="gda-query-get-parameters-boxed">gda_query_get_parameters_boxed()</link>.
+      GdaParameterList object is <link linkend="gda-query-get-parameter-list">gda_query_get_parameter_list()</link>.
     </para>
   </sect3>
   <sect3>
@@ -282,7 +282,7 @@
       if the "10" value has not been replaced by another value.  A <link linkend="GdaParameter">GdaParameter</link> object 
       (obtained through a <link linkend="GdaParameterList">GdaParameterList</link> object) can replace the "10" value with another value. See the 
       <link linkend="gda-query-get-parameters">gda_query_get_parameters()</link> and
-      <link linkend="gda-query-get-parameters-boxed">gda_query_get_parameters_boxed()</link> methods for more information.
+      <link linkend="gda-query-get-parameter-list">gda_query_get_parameter_list()</link> methods for more information.
     </para>
     <para>
       The following SQL gives the same result as the previous example except that the variable has no default value:

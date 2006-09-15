@@ -256,7 +256,7 @@
 
 <!ELEMENT gda_query_text (#PCDATA)>
 
-<!ELEMENT gda_param_sources ((gda_query|gda_array)*)>
+<!ELEMENT gda_param_sources ((gda_model_query|gda_array)*)>
 
 <!--      Storage of some raw data
 	  ID construction for:
@@ -285,6 +285,13 @@
 <!ELEMENT gda_array_data (gda_array_row*)>
 <!ELEMENT gda_array_row (gda_value*)>
 <!ELEMENT gda_value (#PCDATA)>
+
+<!--      Storage of some data based on a GdaQuery
+          ID construction for:
+             * gda_model_query: "DQ" + array ident (ex: id="DQ15")
+-->
+
+<!ELEMENT gda_model_query (gda_query*)>
 
 
 <!--      Information specific to the GUI part of the program 

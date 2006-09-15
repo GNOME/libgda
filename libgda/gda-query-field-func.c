@@ -1,6 +1,6 @@
 /* gda-query-field-func.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -260,7 +260,7 @@ gda_query_field_func_init (GdaQueryFieldFunc *gda_query_field_func)
  *
  * Returns: the new object
  */
-GObject*
+GdaQueryField*
 gda_query_field_func_new (GdaQuery *query, const gchar *func_name)
 {
 	GObject *obj;
@@ -271,7 +271,7 @@ gda_query_field_func_new (GdaQuery *query, const gchar *func_name)
 	obj = g_object_new (GDA_TYPE_QUERY_FIELD_FUNC, "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 			    "query", query, "function_name", func_name, NULL);
 
-	return obj;
+	return (GdaQueryField *) obj;
 }
 
 static void 

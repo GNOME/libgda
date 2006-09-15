@@ -301,7 +301,7 @@ It implements the #GdaEntity, #GdaXmlStorage, #GdaReferer and #GdaRenderer inter
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_query_get_parameters_boxed ##### -->
+<!-- ##### FUNCTION gda_query_get_parameter_list ##### -->
 <para>
 
 </para>
@@ -340,6 +340,16 @@ It implements the #GdaEntity, #GdaXmlStorage, #GdaReferer and #GdaRenderer inter
 @target: 
 @ref_field: 
 @field_state: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_query_get_field_by_param_name ##### -->
+<para>
+
+</para>
+
+@query: 
+@param_name: 
 @Returns: 
 
 

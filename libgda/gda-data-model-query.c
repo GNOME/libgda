@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-decl.h>
 #include <libgda/gda-data-model-query.h>
@@ -45,6 +46,8 @@ struct _GdaDataModelQueryPrivate {
 	gboolean          defer_refresh;
 	gboolean          refresh_pending;
 	GSList           *columns;
+
+	gboolean          auto_compute;
 };
 
 /* properties */
@@ -54,7 +57,8 @@ enum
         PROP_SEL_QUERY,
 	PROP_INS_QUERY,
 	PROP_UPD_QUERY,
-	PROP_DEL_QUERY
+	PROP_DEL_QUERY,
+	PROP_AUTO_COMPUTE_QUERIES
 };
 
 enum 
@@ -105,6 +109,8 @@ static void                 gda_data_model_query_send_hint       (GdaDataModel *
 static void create_columns (GdaDataModelQuery *model);
 static void to_be_destroyed_query_cb (GdaQuery *query, GdaDataModelQuery *model);
 static void param_changed_cb (GdaParameterList *paramlist, GdaParameter *param, GdaDataModelQuery *model);
+
+static gboolean auto_compute_modif_queries (GdaDataModelQuery *model, GError **error);
 
 #ifdef GDA_DEBUG
 static void gda_data_model_query_dump (GdaDataModelQuery *select, guint offset);
@@ -179,6 +185,13 @@ gda_data_model_query_class_init (GdaDataModelQueryClass *klass)
 							       "DELETE Query to be executed to remove data",
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 
+	g_object_class_install_property (object_class, PROP_AUTO_COMPUTE_QUERIES,
+					 g_param_spec_boolean ("auto_compute", "Auto compute modifications query", 
+							       "Set to TRUE to make the object automatically "
+							       "compute modification queries from a SELECT query", 
+							       FALSE,
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+
 	/* virtual functions */
 	object_class->dispose = gda_data_model_query_dispose;
 	object_class->finalize = gda_data_model_query_finalize;
@@ -229,6 +242,8 @@ gda_data_model_query_init (GdaDataModelQuery *model, GdaDataModelQueryClass *kla
 	/* model refreshing is performed as soon as any modification is done */
 	model->priv->defer_refresh = FALSE;
 	model->priv->refresh_pending = FALSE;
+
+	model->priv->auto_compute = FALSE;
 }
 
 static void
@@ -358,7 +373,7 @@ gda_data_model_query_set_property (GObject *object,
 				g_signal_connect (model->priv->queries[qindex], "to_be_destroyed",
 						  G_CALLBACK (to_be_destroyed_query_cb), model);
 				
-				model->priv->params[qindex] = gda_query_get_parameters_boxed (model->priv->queries[qindex]);
+				model->priv->params[qindex] = gda_query_get_parameter_list (model->priv->queries[qindex]);
 
 				if (qindex == SEL_QUERY) {
 					/* SELECT query */
@@ -379,6 +394,8 @@ gda_data_model_query_set_property (GObject *object,
 					if (model->priv->params[qindex])
 						g_signal_connect (model->priv->params[qindex], "param_changed",
 								  G_CALLBACK (param_changed_cb), model);
+					if (model->priv->auto_compute)
+						auto_compute_modif_queries (model, NULL);
 				}
 				else {
 					/* other queries: for all the parameters in the param list, 
@@ -420,6 +437,9 @@ gda_data_model_query_set_property (GObject *object,
 				}
 			}
 			break;
+		case PROP_AUTO_COMPUTE_QUERIES:
+			model->priv->auto_compute = g_value_get_boolean (value);
+			break;
 		default:
 			g_assert_not_reached ();
 			break;
@@ -444,6 +464,9 @@ gda_data_model_query_get_property (GObject *object,
 		case PROP_UPD_QUERY:
 		case PROP_DEL_QUERY:
 			g_value_set_pointer (value, model->priv->queries[qindex]);
+			break;
+		case PROP_AUTO_COMPUTE_QUERIES:
+			g_value_set_boolean (value, model->priv->auto_compute);
 			break;
 		default:
 			g_assert_not_reached ();
@@ -530,16 +553,16 @@ gda_data_model_query_new (GdaQuery *query)
 }
 
 /**
- * gda_data_model_query_get_param_list
+ * gda_data_model_query_get_parameter_list
  * @model: a #GdaDataModelQuery data model
  *
  * If some parameters are required to execute the SELECT query used in the @model data model, then
- * creates a new #GdaParameterList; otherwise does nothing and returns %NULL.
+ * returns the #GdaParameterList used; otherwise does nothing and returns %NULL.
  *
- * Returns: a new #GdaParameterList object, or %NULL
+ * Returns: a #GdaParameterList object, or %NULL
  */
 GdaParameterList *
-gda_data_model_query_get_param_list (GdaDataModelQuery *model)
+gda_data_model_query_get_parameter_list (GdaDataModelQuery *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), NULL);
 	g_return_val_if_fail (model->priv, NULL);
@@ -629,7 +652,7 @@ gda_data_model_query_set_modification_query (GdaDataModelQuery *model, const gch
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), FALSE);
 	g_return_val_if_fail (model->priv, FALSE);
 
-	aq = GDA_QUERY (gda_query_new_from_sql (gda_object_get_dict ((GdaObject *) model), query, NULL));
+	aq = gda_query_new_from_sql (gda_object_get_dict ((GdaObject *) model), query, NULL);
 	if (gda_query_is_insert_query (aq)) {
 		g_object_set (model, "insert_query", aq, NULL);
 		done = TRUE;
@@ -654,12 +677,38 @@ gda_data_model_query_set_modification_query (GdaDataModelQuery *model, const gch
 	return TRUE;
 }
 
+/*
+ * auto_compute_modif_queries
+ *
+ * Try to compute the INSERT, DELETE and UPDATE queries from a SELECT query
+ */
+static gboolean
+auto_compute_modif_queries (GdaDataModelQuery *model, GError **error)
+{
+	return FALSE;
+}
 
 #ifdef GDA_DEBUG
 static void
 gda_data_model_query_dump (GdaDataModelQuery *select, guint offset)
 {
-	TO_IMPLEMENT;
+	gchar *str;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_QUERY (select));
+	
+        /* string for the offset */
+        str = g_new (gchar, offset+1);
+	memset (str, ' ', offset);
+        str[offset] = 0;
+	g_print ("%s" D_COL_H1 "GdaDataModelQuery %p" D_COL_NOR "\n", str, select);
+
+	if (select->priv->queries [SEL_QUERY])
+		gda_object_dump (GDA_OBJECT (select->priv->queries [SEL_QUERY]), offset + 5);
+
+	if (select->priv->params [SEL_QUERY]) 
+		gda_object_dump (GDA_OBJECT (select->priv->params [SEL_QUERY]), offset+5);
+		
+	g_free (str);
 }
 #endif
 
@@ -777,6 +826,10 @@ create_columns (GdaDataModelQuery *model)
 				model->priv->columns = g_slist_append (model->priv->columns, col);
 			}
 		}
+		else
+			g_warning (_("Can't compute the list of columns because the "
+				   "SELECT query is not active (you can use a dictionary to correct this) "
+				   "and the model does not contain any data"));
 	}
 }
 

@@ -231,6 +231,7 @@ gda_delimiter_split_sql (const char *sql_text)
 	if (!sql_text)
 		return NULL;
 
+	/*g_print ("%s(): %s#\n", __FUNCTION__, sql_text);*/
 	statements = gda_delimiter_parse_with_error (sql_text, &error);
 
 	if (statements) {

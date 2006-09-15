@@ -138,10 +138,12 @@ void                gda_data_model_send_hint              (GdaDataModel *model, 
 
 /* contents saving and loading */
 gchar              *gda_data_model_export_to_string       (GdaDataModel *model, GdaDataModelIOFormat format, 
-							   const gint *cols, gint nb_cols, GdaParameterList *options);
+							   const gint *cols, gint nb_cols, 
+							   const gint *rows, gint nb_rows, GdaParameterList *options);
 gboolean            gda_data_model_export_to_file         (GdaDataModel *model, GdaDataModelIOFormat format, 
 							   const gchar *file,
 							   const gint *cols, gint nb_cols, 
+							   const gint *rows, gint nb_rows, 
 							   GdaParameterList *options, GError **error);
 
 gboolean            gda_data_model_import_from_model      (GdaDataModel *to, GdaDataModel *from, 

@@ -1,6 +1,6 @@
 /* gda-query-join.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -263,7 +263,7 @@ gda_query_join_init (GdaQueryJoin * join)
  *
  * Returns: the new object
  */
-GObject*
+GdaQueryJoin*
 gda_query_join_new_with_targets (GdaQuery *query, GdaQueryTarget *target_1, GdaQueryTarget *target_2)
 {
 	GObject *obj;
@@ -281,7 +281,7 @@ gda_query_join_new_with_targets (GdaQuery *query, GdaQueryTarget *target_1, GdaQ
 			    "target1", target_1,
 			    "target2", target_2, NULL);
 	
-	return obj;
+	return (GdaQueryJoin*) obj;
 }
 
 /**
@@ -296,7 +296,7 @@ gda_query_join_new_with_targets (GdaQuery *query, GdaQueryTarget *target_1, GdaQ
  *
  * Returns: the new object
  */
-GObject *
+GdaQueryJoin *
 gda_query_join_new_with_xml_ids (GdaQuery *query, const gchar *target_1_xml_id, const gchar *target_2_xml_id)
 {
 	GObject *obj;
@@ -325,7 +325,7 @@ gda_query_join_new_with_xml_ids (GdaQuery *query, const gchar *target_1_xml_id, 
 			    "query", query,
 			    "target1_id", target_1_xml_id,
 			    "target2_id", target_2_xml_id, NULL);
-	return obj;
+	return (GdaQueryJoin*) obj;
 }
 
 /**
@@ -337,7 +337,7 @@ gda_query_join_new_with_xml_ids (GdaQuery *query, const gchar *target_1_xml_id, 
  *
  * Returns: a the new copy of @orig
  */
-GObject *
+GdaQueryJoin *
 gda_query_join_new_copy (GdaQueryJoin *orig, GHashTable *replacements)
 {
 	GObject *obj;
@@ -388,14 +388,14 @@ gda_query_join_new_copy (GdaQueryJoin *orig, GHashTable *replacements)
 
 	/* join condition */
 	if (orig->priv->cond) {
-		GdaQueryCondition *cond = GDA_QUERY_CONDITION (gda_query_condition_new_copy (orig->priv->cond, replacements));
+		GdaQueryCondition *cond = gda_query_condition_new_copy (orig->priv->cond, replacements);
 		gda_query_join_set_condition (join, cond);
 		g_object_unref (G_OBJECT (cond));
 		if (replacements)
 			g_hash_table_insert (replacements, orig->priv->cond, cond);
 	}
 
-	return obj;	
+	return join;	
 }
 
 static void
@@ -811,7 +811,7 @@ gda_query_join_set_condition_from_fkcons (GdaQueryJoin *join)
 	/* condition creation */
 	fklist = gda_dict_constraint_fkey_get_fields (cons);
 	if (g_slist_length (fklist) > 1)
-		jcond = GDA_QUERY_CONDITION (gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_NODE_AND));
+		jcond = gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_NODE_AND);
 	list = fklist;
 	while (list) {
 		GdaDictConstraintFkeyPair *pair = GDA_DICT_CONSTRAINT_FK_PAIR (list->data);
@@ -820,11 +820,11 @@ gda_query_join_set_condition_from_fkcons (GdaQueryJoin *join)
 		GdaDictField *dbfield;
 
 		if (!jcond) {
-			jcond = GDA_QUERY_CONDITION (gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_LEAF_EQUAL));
+			jcond = gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_LEAF_EQUAL);
 			cond = jcond;
 		}
 		else {
-			cond = GDA_QUERY_CONDITION (gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_LEAF_EQUAL));
+			cond = gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_LEAF_EQUAL);
 			g_assert (gda_query_condition_node_add_child (jcond, cond, NULL));
 			g_object_unref (cond);
 		}
@@ -898,7 +898,7 @@ gda_query_join_set_condition_from_sql (GdaQueryJoin *join, const gchar *cond, GE
 	g_return_val_if_fail (join->priv, FALSE);
 	g_return_val_if_fail (cond && *cond, FALSE);
 
-	newcond = (GdaQueryCondition *) gda_query_condition_new_from_sql (join->priv->query, cond, &targets, error);
+	newcond = gda_query_condition_new_from_sql (join->priv->query, cond, &targets, error);
 	if (newcond) {
 		/* test nb of targets */
 		if (g_slist_length (targets) != 2) {
@@ -1316,7 +1316,7 @@ gda_query_join_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		if (!strcmp (children->name, "gda_query_cond")) {
 			GdaQueryCondition *cond;
 
-			cond = GDA_QUERY_CONDITION (gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_NODE_AND));
+			cond = gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_NODE_AND);
 			if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (cond), children, error)) {
 				gda_query_join_set_condition (join, cond);
 				g_object_unref (G_OBJECT (cond));

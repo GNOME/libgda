@@ -296,7 +296,7 @@ gda_query_field_field_init (GdaQueryFieldField *gda_query_field_field)
  *
  * Returns: the new object
  */
-GObject *
+GdaQueryField *
 gda_query_field_field_new (GdaQuery *query, const gchar *field)
 {
 	GObject *obj;
@@ -307,7 +307,7 @@ gda_query_field_field_new (GdaQuery *query, const gchar *field)
 	obj = g_object_new (GDA_TYPE_QUERY_FIELD_FIELD, 
 			    "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 			    "query", query, "field_name", field, NULL);
-	return obj;
+	return (GdaQueryField *) obj;
 }
 
 static void 

@@ -1,6 +1,6 @@
 /* gda-query-field-field.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -58,7 +58,7 @@ struct _GdaQueryFieldFieldClass
 };
 
 GType             gda_query_field_field_get_type            (void);
-GObject          *gda_query_field_field_new                 (GdaQuery *query, const gchar *field);
+GdaQueryField    *gda_query_field_field_new                 (GdaQuery *query, const gchar *field);
 
 gchar            *gda_query_field_field_get_ref_field_name  (GdaQueryFieldField *field);
 GdaEntityField   *gda_query_field_field_get_ref_field       (GdaQueryFieldField *field);

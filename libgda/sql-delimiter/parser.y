@@ -48,6 +48,15 @@ statement: expr_list		     {$$ = gda_delimiter_statement_build (GDA_DELIMITER_UN
 
 expr_list: expr           {$$ = g_list_prepend (NULL, $1);}
 	| expr expr_list  {$$ = g_list_prepend ($2, $1);}
+	| expr_list expr  {$$ = g_list_append ($1, $2);}
+	| expr_list L_LSBRACKET expr_list L_RSBRACKET { GdaDelimiterExpr *expr1, *expr2;
+							GList *tmp;
+							expr1 = gda_delimiter_expr_build (g_strdup ("["), NULL);
+							expr2 = gda_delimiter_expr_build (g_strdup ("]"), NULL);
+							tmp = g_list_append ($1, expr1);
+							tmp = g_list_concat (tmp, $3);
+							tmp = g_list_append (tmp, expr2);
+						      }
         ;
 
 expr: L_TEXTUAL                   {$$ = gda_delimiter_expr_build (g_strdup_printf ("\"%s\"", $1), NULL); g_free ($1);}

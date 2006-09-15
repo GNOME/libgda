@@ -488,6 +488,16 @@ object for more information.
 @object: 
 
 
+<!-- ##### FUNCTION gda_dict_object_is_assumed ##### -->
+<para>
+
+</para>
+
+@dict: 
+@object: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_dict_get_objects ##### -->
 <para>
 

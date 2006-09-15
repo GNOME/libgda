@@ -34,7 +34,7 @@ A #GdaParameterList is in a way only a better than GList list of #GdaParameter o
 <para>
 Some queries require arguments before they can be executed. For such queries, the arguments are passed using 
 #GdaParameter objects (the list of parameters can be obtained using gda_query_get_parameters() or
-gda_query_get_parameters_boxed()). 
+gda_query_get_parameter_list()). 
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -110,6 +110,16 @@ gda_query_get_parameters_boxed()).
 </para>
 
 @params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_new_inline ##### -->
+<para>
+
+</para>
+
+@dict: 
+@Varargs: 
 @Returns: 
 
 

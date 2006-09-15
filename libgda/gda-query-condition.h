@@ -87,9 +87,9 @@ struct _GdaQueryConditionClass
 };
 
 GType                 gda_query_condition_get_type                (void);
-GObject              *gda_query_condition_new                     (GdaQuery *query, GdaQueryConditionType type);
-GObject              *gda_query_condition_new_copy                (GdaQueryCondition *orig, GHashTable *replacements);
-GObject              *gda_query_condition_new_from_sql            (GdaQuery *query, const gchar *sql_cond, 
+GdaQueryCondition    *gda_query_condition_new                     (GdaQuery *query, GdaQueryConditionType type);
+GdaQueryCondition    *gda_query_condition_new_copy                (GdaQueryCondition *orig, GHashTable *replacements);
+GdaQueryCondition    *gda_query_condition_new_from_sql            (GdaQuery *query, const gchar *sql_cond, 
 								   GSList **targets, GError **error);
 
 void                  gda_query_condition_set_cond_type           (GdaQueryCondition *condition, GdaQueryConditionType type);

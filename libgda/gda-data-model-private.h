@@ -45,7 +45,7 @@ GdaCommandType                gda_data_model_get_command_type       (GdaDataMode
 gboolean                      gda_data_model_set_command_type       (GdaDataModel *model, GdaCommandType type);
 
 xmlNodePtr                    gda_data_model_to_xml_node            (GdaDataModel *model, const gint *cols, gint nb_cols, 
-								     const gchar *name);
+								     const gint *rows, gint nb_rows, const gchar *name);
 gboolean                      gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GError **error);
 
 G_END_DECLS

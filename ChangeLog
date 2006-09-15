@@ -1,3 +1,30 @@
+2006-09-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* libsql/parser.y: parameter specifications can now be enclosed in single
+	quotes (double quotes are still accepted)
+	* libgda/gda-dic-reg-types.c:
+	* libgda/gda-dic-reg-aggregates.c:
+	* libgda/gda-dic-reg-functions.c: corrected a bug in XML saving
+	* libgda/sql-delimiter/lexer.l:
+	* libgda/sql-delimiter/parser.y: bug fixes in the SQL delimiter
+	* all files: improved API consistency:
+	s/gda_query_get_parameters_boxed/gda_query_get_parameter_list/
+	s/gda_data_model_query_get_param_list/gda_data_model_query_get_parameter_list/
+	gda_query_new_*() now return a GdaQuery*
+	gda_query_target_new_*() now return a GdaQueryTarget*
+	gda_query_condition_new_*() now return a GdaQueryCondition*
+	gda_query_join_new_*() now return a GdaQueryJoin*
+	gda_query_field_*_new() now return a GdaQueryField*
+	* libgda/gda-query-target.h: removed obsolete and unused GdaQueryTargetType enum
+	* libgda/gda-util.[ch]:
+	* libgda/gda-data-model.[ch]: when exporting to text or XML, one can now 
+	specify which rows need to be exported
+	* libgda/libgda-dict.dtd:
+	* libgda/gda-query.c: fixed a bug in query's parameter sources save and
+	load to and from XML
+	* libgda/gda-server-operation.[ch]: added gda_server_operation_set_value_at()
+	* minor bug fixes
+
 2006-09-11  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/oracle/oracle_specs_drop_index.xml.in:

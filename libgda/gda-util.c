@@ -669,15 +669,19 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * @model: 
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
+ * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
+ * @nb_rows: the number of rows in @rows
  * @name: name to use for the XML resulting table.
  *
  * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
  */
 void
 utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
-				     const gint *cols, gint nb_cols, gboolean use_col_ids)
+				     const gint *cols, gint nb_cols, 
+				     const gint *rows, gint nb_rows,
+				     gboolean use_col_ids)
 {
-	gint rows, i;
+	gint nrows, i;
 	gint *rcols, rnb_cols;
 	gchar **col_ids = NULL;
 
@@ -710,19 +714,22 @@ utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 	}
 
 	/* add the model data to the XML output */
-	rows = gda_data_model_get_n_rows (model);
-	if (rows > 0) {
+	if (!rows)
+		nrows = gda_data_model_get_n_rows (model);
+	else
+		nrows = nb_rows;
+	if (nrows > 0) {
 		xmlNodePtr row, data, field;
 		gint r, c;
 
 		data = xmlNewChild (parent, NULL, "gda_array_data", NULL);
-		for (r = 0; r < rows; r++) {
+		for (r = 0; r < nrows; r++) {
 			row = xmlNewChild (data, NULL, "gda_array_row", NULL);
 			for (c = 0; c < rnb_cols; c++) {
 				GValue *value;
 				gchar *str;
 
-				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], r);
+				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], rows ? rows [r] : r);
 				if (!value || gda_value_is_null ((GValue *) value))
 					str = NULL;
 				else {

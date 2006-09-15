@@ -94,21 +94,32 @@ aggregates_save_xml_tree (GdaDict *dict, xmlNodePtr group, GError **error)
 	g_assert (reg);
 
 	list = reg->assumed_objects;
-	allaggregates = reg->all_objects;
+	allaggregates = g_slist_copy (reg->all_objects);
 
-	for (; allaggregates; allaggregates = allaggregates->next) {
+	for (; list; list = list->next) {
 		xmlNodePtr qnode;
-		
-		qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (allaggregates->data), error);
+		qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (list->data), error);
+		if (qnode)
+			xmlAddChild (group, qnode);
+		else 
+			/* error handling */
+			retval = FALSE;
+		allaggregates = g_slist_remove (allaggregates, list->data);
+	}
+	
+	
+	for (list = allaggregates; list; list = list->next) {
+		xmlNodePtr qnode;
+		qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (list->data), error);
 		if (qnode) {
 			xmlAddChild (group, qnode);
-			if (! g_slist_find (list, list->data))
-				xmlSetProp (qnode, BAD_CAST "custom", BAD_CAST "t");
+			xmlSetProp (qnode, "custom", "t");
 		}
 		else 
 			/* error handling */
 			retval = FALSE;
 	}
+	g_slist_free (allaggregates);
 
 	return retval;
 }

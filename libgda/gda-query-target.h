@@ -1,6 +1,6 @@
 /* gda-query-target.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -37,16 +37,6 @@ G_BEGIN_DECLS
 extern GQuark gda_query_target_error_quark (void);
 #define GDA_QUERY_TARGET_ERROR gda_query_target_error_quark ()
 
-/* different possible types for a query */
-typedef enum {
-        GDA_QUERY_TARGET_TYPE_INNER,
-	GDA_QUERY_TARGET_TYPE_LEFT_OUTER,
-	GDA_QUERY_TARGET_TYPE_RIGHT_OUTER,
-	GDA_QUERY_TARGET_TYPE_FULL_OUTER,
-        GDA_QUERY_TARGET_TYPE_CROSS,
-        GDA_QUERY_TARGET_TYPE_LAST
-} GdaQueryTargetType;
-
 enum
 {
 	GDA_QUERY_TARGET_XML_LOAD_ERROR,
@@ -71,8 +61,8 @@ struct _GdaQueryTargetClass
 
 GType           gda_query_target_get_type               (void);
 
-GObject        *gda_query_target_new                    (GdaQuery *query, const gchar *table);
-GObject        *gda_query_target_new_copy               (GdaQueryTarget *orig);
+GdaQueryTarget *gda_query_target_new                    (GdaQuery *query, const gchar *table);
+GdaQueryTarget *gda_query_target_new_copy               (GdaQueryTarget *orig);
 
 GdaQuery       *gda_query_target_get_query              (GdaQueryTarget *target);
 GdaEntity      *gda_query_target_get_represented_entity (GdaQueryTarget *target);

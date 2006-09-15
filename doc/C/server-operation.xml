@@ -1,4 +1,4 @@
-<sect2>
+<sect2 id="DDLIntro">
   <title>General words about DDL queries</title>
   <para>
     On the contrary to data manipulation (DML) queries, data definition queries are not very well standardized (the SQL veries a 
@@ -64,12 +64,14 @@
 	  a name, type, CHECK constraint, etc</para>
 	</listitem>
 	<listitem>
-          <para>a node defining a sequence of other nodes: the node can have zero or more lists of nodes. For example when 
+          <para>a node defining a sequence of items: the sequence node can have zero or more items composed of nodes. 
+	    For example when 
 	  defining the foreign keys for a new table, a sequence node can be created which can contain zero or more foreign key
-	  definition (each composed of the referenced table, the referenced fields, the referential integrity rules, etc)</para>
+	  definition items (each composed of the referenced table, the referenced fields, the referential integrity rules, etc)
+	  </para>
 	</listitem>
 	<listitem>
-          <para>a node representing an 'item' in a sequence node.</para>
+          <para>a node representing an 'item' in a sequence node (that is a list of nodes).</para>
 	</listitem>
 	<listitem>
           <para>a node representing a data model's column.</para>

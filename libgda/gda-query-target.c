@@ -1,6 +1,6 @@
 /* gda-query-target.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -236,7 +236,7 @@ gda_query_target_init (GdaQueryTarget *target)
  *
  * Returns: the new object
  */
-GObject *
+GdaQueryTarget *
 gda_query_target_new (GdaQuery *query, const gchar *table)
 {
 	GObject *obj;
@@ -247,7 +247,7 @@ gda_query_target_new (GdaQuery *query, const gchar *table)
 	obj = g_object_new (GDA_TYPE_QUERY_TARGET, 
 			    "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 			    "query", query, "entity_name", table, NULL);
-	return obj;
+	return (GdaQueryTarget*) obj;
 }
 
 
@@ -259,7 +259,7 @@ gda_query_target_new (GdaQuery *query, const gchar *table)
  *
  * Returns: the new object
  */
-GObject *
+GdaQueryTarget *
 gda_query_target_new_copy (GdaQueryTarget *orig)
 {
 	GObject *obj;
@@ -290,7 +290,7 @@ gda_query_target_new_copy (GdaQueryTarget *orig)
 			gda_object_ref_set_ref_name (target->priv->entity_ref, ref_gtype, ref_type, ref_str);
 	}
 
-	return obj;	
+	return target;	
 }
 
 

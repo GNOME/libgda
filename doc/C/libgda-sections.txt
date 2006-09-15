@@ -324,7 +324,7 @@ GdaDataModelQuery
 GdaDataModelQueryClass
 GdaDataModelQueryPrivate
 gda_data_model_query_new
-gda_data_model_query_get_param_list
+gda_data_model_query_get_parameter_list
 gda_data_model_query_refresh
 gda_data_model_query_set_modification_query
 <SUBSECTION Standard>
@@ -676,6 +676,8 @@ gda_server_operation_new
 gda_server_operation_get_op_type
 gda_server_operation_op_type_to_string
 gda_server_operation_get_node_info
+gda_server_operation_get_value_at
+gda_server_operation_set_value_at
 gda_server_operation_save_data_to_xml
 gda_server_operation_load_data_from_xml
 gda_server_operation_get_root_nodes
@@ -689,7 +691,6 @@ gda_server_operation_get_sequence_min_size
 gda_server_operation_get_sequence_item_names
 gda_server_operation_add_item_to_sequence
 gda_server_operation_del_item_from_sequence
-gda_server_operation_get_value_at
 gda_server_operation_is_valid
 <SUBSECTION Standard>
 GDA_IS_SERVER_OPERATION
@@ -930,6 +931,7 @@ gda_dict_declare_object_as
 gda_dict_assume_object
 gda_dict_assume_object_as
 gda_dict_unassume_object
+gda_dict_object_is_assumed
 gda_dict_get_objects
 gda_dict_get_object_by_name
 gda_dict_get_object_by_xml_id
@@ -1354,10 +1356,11 @@ gda_query_is_modif_query
 gda_query_set_sql_text
 gda_query_get_sql_text
 gda_query_get_parameters
-gda_query_get_parameters_boxed
+gda_query_get_parameter_list
 gda_query_execute
 gda_query_get_parent_query
 gda_query_get_field_by_ref_field
+gda_query_get_field_by_param_name
 gda_query_get_first_field_for_target
 gda_query_get_sub_queries
 gda_query_add_param_source
@@ -1512,7 +1515,6 @@ gda_query_field_get_type
 <FILE>gda-query-target</FILE>
 <TITLE>GdaQueryTarget</TITLE>
 GdaQueryTarget
-GdaQueryTargetType
 gda_query_target_new
 gda_query_target_new_copy
 gda_query_target_get_query

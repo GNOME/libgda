@@ -355,6 +355,8 @@ As a side note there are also data models which wrap other data models such as:
 @format: 
 @cols: 
 @nb_cols: 
+@rows: 
+@nb_rows: 
 @options: 
 @Returns: 
 
@@ -369,6 +371,8 @@ As a side note there are also data models which wrap other data models such as:
 @file: 
 @cols: 
 @nb_cols: 
+@rows: 
+@nb_rows: 
 @options: 
 @error: 
 @Returns: 

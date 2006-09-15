@@ -670,7 +670,10 @@ gda_parameter_set_value (GdaParameter *param, const GValue *value)
 {
 	gboolean changed = TRUE;
 	const GValue *current_val;
-#ifdef GDA_DEBUG_NO
+#define DEBUG_PARAM
+#undef DEBUG_PARAM
+
+#ifdef DEBUG_PARAM
 	gboolean was_valid = gda_parameter_is_valid (param);
 #endif
 
@@ -703,7 +706,7 @@ gda_parameter_set_value (GdaParameter *param, const GValue *value)
 	    (G_VALUE_TYPE ((GValue *)value) != param->priv->gda_type))
 		param->priv->valid = FALSE;
 
-#ifdef GDA_DEBUG_NO
+#ifdef DEBUG_PARAM
 	g_print ("Changed param %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
 		 param, gda_object_get_name (param),
 		 current_val ? gda_value_stringify ((GValue *)current_val) : "_NULL_",
@@ -731,7 +734,7 @@ gda_parameter_set_value (GdaParameter *param, const GValue *value)
 
 	/* real setting of the value */
 	if (param->priv->alias_of) {
-#ifdef GDA_DEBUG_NO
+#ifdef DEBUG_PARAM
 		g_print ("Param %p is alias of param %p => propagating changes to param %p\n",
 			 param, param->priv->alias_of, param->priv->alias_of);
 #endif
@@ -1341,8 +1344,9 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 			g_print ("\n");
 
 		if (parameter->priv->restrict_model) {
-				g_print ("%sValues restrictions: COLUMN %d\n", str, 
-					 parameter->priv->restrict_col);
+				g_print ("%sParameter restricted by column %d of data model %p\n", str,
+					 parameter->priv->restrict_col,
+					 parameter->priv->restrict_model);
 				gda_object_dump (GDA_OBJECT (parameter->priv->restrict_model), offset+5);
 		}
 

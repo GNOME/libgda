@@ -1,6 +1,6 @@
 /* gda-query-join.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -74,25 +74,25 @@ struct _GdaQueryJoinClass
 	void   (*condition_changed)    (GdaQueryJoin *join);
 };
 
-GType           gda_query_join_get_type                  (void);
-GObject        *gda_query_join_new_with_targets          (GdaQuery *query, GdaQueryTarget *target_1, GdaQueryTarget *target_2);
-GObject        *gda_query_join_new_with_xml_ids          (GdaQuery *query, const gchar *target_1_xml_id, const gchar *target_2_xml_id);
-GObject        *gda_query_join_new_copy                  (GdaQueryJoin *orig, GHashTable *replacements);
+GType              gda_query_join_get_type                  (void);
+GdaQueryJoin      *gda_query_join_new_with_targets          (GdaQuery *query, GdaQueryTarget *target_1, GdaQueryTarget *target_2);
+GdaQueryJoin      *gda_query_join_new_with_xml_ids          (GdaQuery *query, const gchar *target_1_xml_id, const gchar *target_2_xml_id);
+GdaQueryJoin      *gda_query_join_new_copy                  (GdaQueryJoin *orig, GHashTable *replacements);
 
-void            gda_query_join_set_join_type             (GdaQueryJoin *join, GdaQueryJoinType type);
-GdaQueryJoinType      gda_query_join_get_join_type             (GdaQueryJoin *join);
-GdaQuery        *gda_query_join_get_query                 (GdaQueryJoin *join);
+void               gda_query_join_set_join_type             (GdaQueryJoin *join, GdaQueryJoinType type);
+GdaQueryJoinType   gda_query_join_get_join_type             (GdaQueryJoin *join);
+GdaQuery          *gda_query_join_get_query                 (GdaQueryJoin *join);
 
-GdaQueryTarget       *gda_query_join_get_target_1              (GdaQueryJoin *join);
-GdaQueryTarget       *gda_query_join_get_target_2              (GdaQueryJoin *join);
-void            gda_query_join_swap_targets              (GdaQueryJoin *join);
+GdaQueryTarget    *gda_query_join_get_target_1              (GdaQueryJoin *join);
+GdaQueryTarget    *gda_query_join_get_target_2              (GdaQueryJoin *join);
+void               gda_query_join_swap_targets              (GdaQueryJoin *join);
 
-gboolean        gda_query_join_set_condition             (GdaQueryJoin *join, GdaQueryCondition *cond);
-GdaQueryCondition    *gda_query_join_get_condition             (GdaQueryJoin *join);
-gboolean        gda_query_join_set_condition_from_fkcons (GdaQueryJoin *join);
-gboolean        gda_query_join_set_condition_from_sql    (GdaQueryJoin *join, const gchar *cond, GError **error);
+gboolean           gda_query_join_set_condition             (GdaQueryJoin *join, GdaQueryCondition *cond);
+GdaQueryCondition *gda_query_join_get_condition             (GdaQueryJoin *join);
+gboolean           gda_query_join_set_condition_from_fkcons (GdaQueryJoin *join);
+gboolean           gda_query_join_set_condition_from_sql    (GdaQueryJoin *join, const gchar *cond, GError **error);
 
-const gchar    *gda_query_join_render_type               (GdaQueryJoin *join);
+const gchar       *gda_query_join_render_type               (GdaQueryJoin *join);
 
 G_END_DECLS
 

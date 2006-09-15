@@ -1165,7 +1165,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL:
 		node = xmlNewChild (parent, NULL, BAD_CAST "op_data", NULL);
 		xmlSetProp (node, "path", complete_path);
-		utility_data_model_dump_data_to_xml (opnode->d.model, node, NULL, 0, TRUE);
+		utility_data_model_dump_data_to_xml (opnode->d.model, node, NULL, 0, NULL, 0, TRUE);
 		break;
 	case GDA_SERVER_OPERATION_NODE_PARAM: {
 		const GValue *value;
@@ -1349,8 +1349,8 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 				}
 			}
 
-			xmlFree (prop);
 			g_free (extension);
+			xmlFree (prop);
 
 			if (!allok)
 				return FALSE;
@@ -1756,8 +1756,10 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
  * gda_server_operation_get_value_at
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/")
+ * @...: arguments to use with @path_format to make a complete path
  *
- * Get the value for the node at @path
+ * Get the value for the node at the path formed using @path_format and ... (the rules are the same as
+ * for g_strdup_printf())
  *
  * Returns: a constant #GValue if a value has been defined, or %NULL if the value is undefined or
  * if the @path is not defined or @path does not hold any value.
@@ -1820,6 +1822,179 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 
 	g_free (path);
 	return value;
+}
+
+/**
+ * gda_server_operation_set_value_at
+ * @op: a #GdaServerOperation object
+ * @value: a string
+ * @error: a place to store errors or %NULL
+ * @path_format: a complete path to a node (starting with "/")
+ * @...: arguments to use with @path_format to make a complete path
+ *
+ * Set the value for the node at the path formed using @path_format and ... the rules are the same as
+ * for g_strdup_printf())
+ *
+ * Here are the corner cases:
+ * <itemizedlist>
+ *  <listitem><para>If the path corresponds to a #GdaParameter, then the parameter is set to @value</para></listitem>
+ *  <listitem><para>If the path corresponds to a sequence item like for example "/SEQUENCE_NAME/5/NAME" for
+ *     the "NAME" value of the 6th item of the "SEQUENCE_NAME" sequence then:
+ *     <itemizedlist>
+ *        <listitem><para>if the sequence already has 6 or more items, then the value is just set to the corresponding 
+ *           value in the 6th item of the sequence</para></listitem>
+ *        <listitem><para>if the sequence has less then 6 items, then items are added up to the 6th one before setting
+ *           the value to the corresponding in the 6th item of the sequence</para></listitem>
+ *     </itemizedlist>
+ *  </para></listitem>
+ *  <listitem><para>If the path corresponds to a #GdaDataModel, like for example "/ARRAY/@COLUMN/5" for the value at the
+ *     6th row of the "COLUMN" column of the "ARRAY" data model, then:
+ *     <itemizedlist>
+ *        <listitem><para>if the data model already contains 6 or more rows, then the value is just set</para></listitem>
+ *        <listitem><para>if the data model has less than 6 rows, then rows are added up to the 6th one before setting
+ *           the value</para></listitem>
+ *     </itemizedlist>
+ *  </para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, GError **error,
+				   const gchar *path_format, ...)
+{
+	gchar *path;
+	va_list args;
+
+	Node *opnode;
+	gchar *extension = NULL;
+	gchar *colname = NULL;
+	gboolean allok = TRUE;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	g_return_val_if_fail (op->priv, FALSE);
+
+	/* build path */
+	va_start (args, path_format);
+	path = g_strdup_vprintf (path_format, args);
+	va_end (args);
+
+	/* set the value */
+	opnode = node_find_or_create (op, path);
+	if (!opnode) {
+		/* try to see if the "parent" is a real node */
+		gchar *str;
+		
+		str = gda_server_operation_get_node_parent (op, path);
+		if (str) {
+			opnode = node_find (op, str);
+			if (opnode) {
+				if (opnode->type != GDA_SERVER_OPERATION_NODE_PARAMLIST)
+					opnode = NULL; /* ignore opnode */
+			}
+			else {
+				gchar *str2;
+
+				str2 = gda_server_operation_get_node_parent (op, str);
+				opnode = node_find (op, str2);
+				if (opnode) {
+					if (opnode->type != GDA_SERVER_OPERATION_NODE_DATA_MODEL)
+						opnode = NULL; /* ignore opnode */
+					else 
+						colname = gda_server_operation_get_node_path_portion (op, str);
+				}
+				g_free (str2);
+			}
+			g_free (str);
+		}
+		if (opnode)
+			extension = gda_server_operation_get_node_path_portion (op, path);
+	}
+	
+	if (opnode) {
+		switch (opnode->type) {
+		case GDA_SERVER_OPERATION_NODE_PARAMLIST:
+			if (!extension) {
+				g_set_error (error, 0, 0,
+					     _("Parameterlist values can only be set for individual parameters within it"));
+				allok = FALSE;
+			}
+			else {
+				GdaParameter *param;
+				param = gda_parameter_list_find_param (opnode->d.plist, extension);
+				if (param && 
+				    !gda_parameter_set_value_str (param, value)) {
+					g_set_error (error, 0, 0,
+						     _("Could not set parameter '%s' to value '%s'"), 
+						     path, value);
+					allok = FALSE;
+				}
+			}
+			break;
+		case GDA_SERVER_OPERATION_NODE_DATA_MODEL: {
+			GdaColumn *column = NULL;
+
+			if (colname && (*colname == '@')) {
+				gint i, nbcols;
+
+				nbcols = gda_data_model_get_n_columns (opnode->d.model);
+				for (i = 0; (i<nbcols) && !column; i++) {
+					gchar *colid = NULL;
+					column = gda_data_model_describe_column (opnode->d.model, i);
+					g_object_get (G_OBJECT (column), "id", &colid, NULL);
+					if (!colid || strcmp (colid, colname +1))
+						column = NULL;
+				}
+				if (column) {
+					gchar *ptr;
+					gint row;
+					row = strtol (extension, &ptr, 10);
+					if (ptr && *ptr)
+						row = -1;
+					if (row >= 0) {
+						gint i = gda_data_model_get_n_rows (opnode->d.model);
+						
+						if (i <= row) {
+							for (; allok && (i <= row); i++) 
+								if (gda_data_model_append_row (opnode->d.model, error) < 0)
+									allok = FALSE;
+						}
+						
+						if (allok) {
+							GValue *gvalue;
+							gvalue = gda_value_new_from_string (value, 
+											    gda_column_get_gda_type (column));
+							allok = gda_data_model_set_value_at (opnode->d.model,
+											     gda_column_get_position (column), 
+											     row, gvalue, error);
+							gda_value_free (gvalue);
+						}
+					}
+				}
+			}
+			break;
+		}
+		case GDA_SERVER_OPERATION_NODE_PARAM: {
+			if (!gda_parameter_set_value_str (opnode->d.param, value)) {
+				g_set_error (error, 0, 0,
+					     _("Could not set parameter '%s' to value '%s'"), 
+					     path, value);
+				allok = FALSE;
+			}
+			break;
+		}
+		case GDA_SERVER_OPERATION_NODE_SEQUENCE:
+			break;
+		case GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM:
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+	}
+
+	g_free (extension);
+	g_free (colname);
+	return allok;
 }
 
 /**

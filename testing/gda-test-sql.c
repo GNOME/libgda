@@ -374,7 +374,7 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 	gchar *sql2, *str;
 	gboolean is_non_parsed;
 
-	query = (GdaQuery *) gda_query_new_from_sql (config->dict, sql, &error);
+	query = gda_query_new_from_sql (config->dict, sql, &error);
 	gda_dict_assume_object (config->dict, (GdaObject *) query);
 	g_object_unref (query);
 
@@ -421,8 +421,8 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 		show_params (query, td);
 		
 		/* copy test */
-		copy = (GdaQuery *) gda_query_new_copy (query, NULL);
-		copy2 = (GdaQuery *) gda_query_new_copy (copy, NULL);
+		copy = gda_query_new_copy (query, NULL);
+		copy2 = gda_query_new_copy (copy, NULL);
 		tr = xmlNewChild (table, NULL, "tr", NULL);
 		actiontd_c = xmlNewChild (tr, NULL, "td", _("Copied"));
 		td = xmlNewChild (tr, NULL, "td", gda_object_get_id (GDA_OBJECT (copy2)));
@@ -479,7 +479,7 @@ show_params (GdaQuery *query, xmlNodePtr parent)
 {
 	GdaParameterList *params;
 
-	params = gda_query_get_parameters_boxed (query);
+	params = gda_query_get_parameter_list (query);
 	if (params) {
 		xmlNodePtr pul;
 		GSList *list;

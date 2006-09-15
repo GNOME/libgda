@@ -38,20 +38,29 @@ typedef struct _GdaDataModelQuery        GdaDataModelQuery;
 typedef struct _GdaDataModelQueryClass   GdaDataModelQueryClass;
 typedef struct _GdaDataModelQueryPrivate GdaDataModelQueryPrivate;
 
+/* error reporting */
+extern GQuark gda_data_model_query_error_quark (void);
+#define GDA_DATA_MODEL_QUERY_ERROR gda_data_model_query_error_quark ()
+
+enum
+{
+        GDA_DATA_MODEL_QUERY_XML_LOAD_ERROR,
+};
+
 struct _GdaDataModelQuery {
 	GdaObject                  object;
-	GdaDataModelQueryPrivate *priv;
+	GdaDataModelQueryPrivate  *priv;
 };
 
 struct _GdaDataModelQueryClass {
 	GdaObjectClass             parent_class;
 };
 
-GType             gda_data_model_query_get_type       (void);
-GdaDataModel     *gda_data_model_query_new            (GdaQuery *query);
+GType             gda_data_model_query_get_type              (void);
+GdaDataModel     *gda_data_model_query_new                   (GdaQuery *query);
 
-GdaParameterList *gda_data_model_query_get_param_list (GdaDataModelQuery *model);
-gboolean          gda_data_model_query_refresh        (GdaDataModelQuery *model, GError **error);
+GdaParameterList *gda_data_model_query_get_parameter_list    (GdaDataModelQuery *model);
+gboolean          gda_data_model_query_refresh               (GdaDataModelQuery *model, GError **error);
 gboolean          gda_data_model_query_set_modification_query(GdaDataModelQuery *model, 
 							      const gchar *query, GError **error);
 

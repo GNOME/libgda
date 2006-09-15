@@ -74,8 +74,11 @@ main (int argc, char **argv)
 		/* testing saving back the dictionary */
 		gchar *tmpfile, *cmde, *chout = NULL, *cherr = NULL;
 		gint chstatus;
+		gchar *dirname;
 
-		tmpfile = g_build_filename (g_get_tmp_dir(), "gda_inspect_dictXXXXXX", NULL);
+		dirname = g_path_get_dirname (filename);
+		tmpfile = g_build_filename (dirname, ".temp", NULL);
+		g_free (dirname);
 		mkstemp (tmpfile);
 		if (!gda_dict_save_xml_file (dict, tmpfile, &error)) {
 			g_print (_("Error saving dictionary to file '%s':\n%s\n"), tmpfile, error->message);
@@ -122,7 +125,7 @@ main (int argc, char **argv)
 			gchar *str = g_strdup_printf ("%s~", filename);
 			if (! g_rename (filename, str)) {
 				if (g_rename (tmpfile, filename))
-					g_warning ("Cant' rename dictionery '%s' to '%s'", filename, str);
+					g_warning ("Cant' rename dictionary '%s' to '%s'", tmpfile, filename);
 			}
 			else
 				g_warning ("Cant' rename '%s' to '%s', dictionary not overwritten!", filename, str);
@@ -163,7 +166,7 @@ main (int argc, char **argv)
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (lptr->data));
 			g_print ("XML Id: %s\n", str);
 			g_free (str);
-			context = gda_query_get_parameters_boxed (GDA_QUERY (lptr->data));
+			context = gda_query_get_parameter_list (GDA_QUERY (lptr->data));
 			if (context) {
 				if (!gda_parameter_list_is_coherent (context, &error)) {
 					g_print ("Generated context is not coherent: %s\n", error->message);

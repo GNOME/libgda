@@ -457,7 +457,7 @@ gda_query_init (GdaQuery * gda_query)
  *
  * Returns: the new object
  */
-GObject*
+GdaQuery*
 gda_query_new (GdaDict *dict)
 {
 	GObject *obj;
@@ -475,7 +475,7 @@ gda_query_new (GdaDict *dict)
 
 	gda_dict_declare_object (ASSERT_DICT (dict), (GdaObject *) gda_query);
 
-	return obj;
+	return gda_query;
 }
 
 
@@ -488,7 +488,7 @@ gda_query_new (GdaDict *dict)
  *
  * Returns: a the new copy of @orig
  */
-GObject *
+GdaQuery *
 gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 {
 	GObject *obj;
@@ -536,7 +536,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 	/* copy sub queries */
 	list = orig->priv->sub_queries;
 	while (list) {
-		GdaQuery *copy = GDA_QUERY (gda_query_new_copy (GDA_QUERY (list->data), repl));
+		GdaQuery *copy = gda_query_new_copy (GDA_QUERY (list->data), repl);
 		gda_referer_replace_refs (GDA_REFERER (copy), repl);
 		gda_query_add_sub_query (gda_query, copy);
 		g_object_unref (G_OBJECT (copy));
@@ -555,7 +555,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 	list = orig->priv->targets;
 	while (list) {
 		guint id;
-		GdaQueryTarget *target = GDA_QUERY_TARGET (gda_query_target_new_copy (GDA_QUERY_TARGET (list->data)));
+		GdaQueryTarget *target = gda_query_target_new_copy (GDA_QUERY_TARGET (list->data));
 
 		gda_referer_replace_refs (GDA_REFERER (target), repl);
 		gda_query_add_target (gda_query, target, NULL);
@@ -602,7 +602,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 	/* copy joins */
 	list = orig->priv->joins_flat;
 	while (list) {
-		GdaQueryJoin *join = GDA_QUERY_JOIN (gda_query_join_new_copy (GDA_QUERY_JOIN (list->data), repl));
+		GdaQueryJoin *join = gda_query_join_new_copy (GDA_QUERY_JOIN (list->data), repl);
 		gda_referer_replace_refs (GDA_REFERER (join), repl);
 		gda_query_add_join (gda_query, join);
 		g_object_unref (G_OBJECT (join));
@@ -615,7 +615,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 		GdaQueryCondition *cond;
 		guint id;
 
-		cond = GDA_QUERY_CONDITION (gda_query_condition_new_copy (orig->priv->cond, repl));
+		cond = gda_query_condition_new_copy (orig->priv->cond, repl);
 		g_object_get (G_OBJECT (gda_query), "cond_serial", &id, NULL);
 		gda_referer_replace_refs (GDA_REFERER (cond), repl);
 		gda_query_object_set_int_id (GDA_QUERY_OBJECT (cond), id);
@@ -654,7 +654,7 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 	gda_object_dump (GDA_OBJECT (gda_query), 2);
 #endif
 
-	return obj;	
+	return gda_query;	
 }
 
 /**
@@ -675,15 +675,15 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
  *
  * Returns: a new #GdaQuery
  */
-GObject *
+GdaQuery *
 gda_query_new_from_sql (GdaDict *dict, const gchar *sql, GError **error) 
 {
 	GdaQuery *query;
 
-	query = (GdaQuery *) gda_query_new (dict);
+	query = gda_query_new (dict);
 	gda_query_set_sql_text (query, sql, error);
 
-	return (GObject*) query;
+	return query;
 }
 
 
@@ -2664,7 +2664,7 @@ gda_query_get_parameters (GdaQuery *query)
 }
 
 /**
- * gda_query_get_parameters_boxed
+ * gda_query_get_parameter_list
  * @query: a #GdaQuery object
  *
  * Like the gda_query_get_parameters() method, get a list of parameters which the query accepts,
@@ -2674,7 +2674,7 @@ gda_query_get_parameters (GdaQuery *query)
  * Returns: a new #GdaParameterList object, or %NULL if @query does not accept any parameter.
  */
 GdaParameterList *
-gda_query_get_parameters_boxed (GdaQuery *query)
+gda_query_get_parameter_list (GdaQuery *query)
 {
 	GdaParameterList *dataset = NULL;
 	GSList *list, *params;
@@ -2701,7 +2701,7 @@ gda_query_get_parameters_boxed (GdaQuery *query)
 /**
  * gda_query_execute
  * @query: the #GdaQuery to execute
- * @params: a #GdaParameterList object obtained using gda_query_get_parameters_boxed()
+ * @params: a #GdaParameterList object obtained using gda_query_get_parameter_list()
  * @iter_model_only_requested: set to TRUE if the returned data model will only be accessed using an iterator
  * @error: a place to store errors, or %NULL
  *
@@ -2858,8 +2858,6 @@ gda_query_dump (GdaQuery *query, guint offset)
 		/* joins */
 		if (query->priv->joins_flat)
 			g_print ("%sJoins:\n", str);
-		else
-			g_print ("%sNo join defined.\n", str);
 		list = query->priv->joins_flat;
 		while (list) {
 			gda_object_dump (GDA_OBJECT (list->data), offset+5);
@@ -2872,8 +2870,6 @@ gda_query_dump (GdaQuery *query, guint offset)
 			g_print ("%sCondition:\n", str);
 			gda_object_dump (GDA_OBJECT (query->priv->cond), offset+5);
 		}
-		else
-			g_print ("%sNo Condition defined.\n", str);
 
 		if (0 && query->priv->all_conds) {
 			g_print ("%sReferenced conditions:\n", str);
@@ -2888,8 +2884,6 @@ gda_query_dump (GdaQuery *query, guint offset)
 		/* sub queries */
 		if (query->priv->sub_queries)
 			g_print ("%sSub-queries:\n", str);
-		else
-			g_print ("%sNo sub-query defined.\n", str);
 		list = query->priv->sub_queries;
 		while (list) {
 			gda_object_dump (GDA_OBJECT (list->data), offset+5);
@@ -2901,7 +2895,8 @@ gda_query_dump (GdaQuery *query, guint offset)
 			g_print ("%sParameters sources:\n", str);
 		list = query->priv->param_sources;
 		while (list) {
-			gda_object_dump (GDA_OBJECT (list->data), offset+5);
+			g_print ("%s     GdaDataModel %p\n", str, list->data);
+			/* gda_object_dump (GDA_OBJECT (list->data), offset+5); */
 			list = g_slist_next (list);
 		}
 
@@ -3055,6 +3050,36 @@ gda_query_get_field_by_sql_naming (GdaQuery *query, const gchar *sql_name) {
 	return gda_query_get_field_by_sql_naming_fields (query, sql_name, query->priv->fields);
 }
 
+/**
+ * @query: a #GdaQuery object
+ * @param_name: a parameter name
+ *
+ * Get a pointer to the #GdaQueryFieldValue object which is a parameter named @param_name
+ *
+ * Returns: a pointer to the requested query field, or %NULL if it was not found
+ */
+GdaQueryField *
+gda_query_get_field_by_param_name (GdaQuery *query, const gchar *param_name)
+{
+	GdaQueryField *qf;
+	GSList *allfields;
+
+	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (query->priv, NULL);
+	g_return_val_if_fail (param_name, NULL);
+
+	for (qf = NULL, allfields = query->priv->fields; allfields && !qf; allfields = allfields->next) {
+		qf = GDA_QUERY_FIELD (allfields->data);
+		if (!GDA_IS_QUERY_FIELD_VALUE (qf) || !gda_query_field_value_is_parameter ((GdaQueryFieldValue*) qf))
+			qf = NULL;
+		else {
+			if (strcmp (gda_object_get_name (GDA_OBJECT (qf)), param_name))
+				qf = NULL;
+		}
+	}
+
+	return qf;
+}
 
 /**
  * gda_query_get_field_by_sql_naming_fields
@@ -3613,10 +3638,8 @@ gda_query_append_condition (GdaQuery *query, GdaQueryCondition *cond, gboolean a
 			GdaQueryCondition *nodecond, *oldcond;
 
 			oldcond = query->priv->cond;
-			nodecond = GDA_QUERY_CONDITION (gda_query_condition_new (query,
-									       append_as_and ? 
-									       GDA_QUERY_CONDITION_NODE_AND : 
-									       GDA_QUERY_CONDITION_NODE_OR));
+			nodecond = gda_query_condition_new (query, append_as_and ? 
+							    GDA_QUERY_CONDITION_NODE_AND : GDA_QUERY_CONDITION_NODE_OR);
 			g_object_ref (G_OBJECT (oldcond));
 			query->priv->internal_transaction ++;
 			gda_query_set_condition (query, nodecond);
@@ -3914,16 +3937,35 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 	while (list) {
 		xmlNodePtr sub = NULL;
 		if (GDA_IS_DATA_MODEL_QUERY (list->data)) {
-			/* GdaDataModelQuery: dump the query */
 			GdaQuery *query;
+			xmlNodePtr qnode;
+
+			sub = xmlNewNode (NULL, "gda_model_query");
 
 			g_object_get (G_OBJECT (list->data), "query", &query, NULL);
 			g_assert (query);
-			sub = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
+			qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
+			xmlAddChild (sub, qnode);
+
+			g_object_get (G_OBJECT (list->data), "insert_query", &query, NULL);
+			if (query) {
+				qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
+				xmlAddChild (sub, qnode);
+			}
+			g_object_get (G_OBJECT (list->data), "update_query", &query, NULL);
+			if (query) {
+				qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
+				xmlAddChild (sub, qnode);
+			}
+			g_object_get (G_OBJECT (list->data), "delete_query", &query, NULL);
+			if (query) {
+				qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
+				xmlAddChild (sub, qnode);
+			}
 		}
 		else 
-			/* simple data model */
-			sub = gda_data_model_to_xml_node (GDA_DATA_MODEL (list->data), NULL, 0, 
+			/* simple raw data model */
+			sub = gda_data_model_to_xml_node (GDA_DATA_MODEL (list->data), NULL, 0, NULL, 0,
 							  gda_object_get_name (GDA_OBJECT (list->data)));
 
 		if (sub)
@@ -4103,21 +4145,46 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 			GdaDict *dict = gda_object_get_dict (GDA_OBJECT (query));
 			xmlNodePtr sparams = children->children;
 			while (sparams) {
-				if (!strcmp (sparams->name, "gda_query")) {
-					GdaQuery *squery;
-					
-					squery = GDA_QUERY (gda_query_new (dict));
-					if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (squery), sparams, error)) {
-						GdaDataModel *model;
+				if (!strcmp (sparams->name, "gda_model_query")) {
+					GdaDataModel *model = NULL;
+					xmlNodePtr qnode;
 
-						model = gda_data_model_query_new (squery);
-						gda_query_add_param_source (query, model);
-						g_object_unref (G_OBJECT (model));
-						g_object_unref (G_OBJECT (squery));
-					}
-					else {
-						g_object_unref (G_OBJECT (squery));
-						return FALSE;
+					qnode = sparams->children;
+					while (qnode) {
+						if (!strcmp (qnode->name, "gda_query")) {
+							GdaQuery *squery;
+							squery = gda_query_new (dict);
+							if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (squery), 
+											   qnode, error)) {
+								if (!model) {
+									if (!gda_query_is_select_query (squery)) {
+										g_set_error (error,
+											     GDA_QUERY_ERROR,
+											     GDA_QUERY_XML_LOAD_ERROR,
+											     _("First query of <gda_model_query> "
+											       "must be a SELECT query"));
+										return FALSE;
+									}
+									model = gda_data_model_query_new (squery);
+									gda_query_add_param_source (query, model);
+									g_object_unref (G_OBJECT (model));
+								}
+								else {
+									if (gda_query_is_insert_query (squery))
+										g_object_set (model, "insert_query", squery, NULL);
+									else if (gda_query_is_update_query (squery))
+										g_object_set (model, "update_query", squery, NULL);
+									else if (gda_query_is_delete_query (squery))
+										g_object_set (model, "delete_query", squery, NULL);
+								}
+								g_object_unref (G_OBJECT (squery));
+							}
+							else {
+								g_object_unref (G_OBJECT (squery));
+								return FALSE;
+							}
+						}
+						qnode = qnode->next;
 					}
 				}
 				else {
@@ -4254,7 +4321,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 			t2 = xmlGetProp (children, "target2");
 
 			if (t1 && t2) {
-				join = GDA_QUERY_JOIN (gda_query_join_new_with_xml_ids (query, t1, t2));
+				join = gda_query_join_new_with_xml_ids (query, t1, t2);
 				g_free (t1);
 				g_free (t2);
 				if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (join), children, error)) {
@@ -4273,7 +4340,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 		if (!done && !strcmp (children->name, "gda_query_cond")) {
 			GdaQueryCondition *cond;
 
-			cond = GDA_QUERY_CONDITION (gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_AND));
+			cond = gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_AND);
 			if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (cond), children, error)) {
 				gda_query_set_condition (query, cond);
 				g_object_unref (G_OBJECT (cond));
@@ -4301,7 +4368,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 			GdaQuery *squery;
 			GdaDict *dict = gda_object_get_dict (GDA_OBJECT (query));
 
-			squery = GDA_QUERY (gda_query_new (dict));
+			squery = gda_query_new (dict);
 			if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (squery), children, error)) {
 				gda_query_add_sub_query (query, squery);
 				g_object_unref (G_OBJECT (squery));

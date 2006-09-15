@@ -253,6 +253,9 @@ gda_parameter_list_new_inline (GdaDict *dict, ...)
 		type = va_arg (ap, GType);
 		param = (GdaParameter *) g_object_new (GDA_TYPE_PARAMETER, 
 						       "dict", ASSERT_DICT (dict), "gda_type", type, NULL);
+		gda_object_set_name (GDA_OBJECT (param), name);
+		gda_object_set_id (GDA_OBJECT (param), name);
+
 		value = gda_value_new (type);
 		if (type == G_TYPE_BOOLEAN) 
 			g_value_set_boolean (value, va_arg (ap, int));
@@ -289,6 +292,10 @@ gda_parameter_list_new_inline (GdaDict *dict, ...)
 		else
 			g_warning ("%s() does not handle values of type %s, value will not be assigned.",
 				   __FUNCTION__, g_type_name (type));
+
+		gda_parameter_set_value (param, value);
+		gda_value_free (value);
+		params = g_slist_append (params, param);
 
 		name = va_arg (ap, char *);
         }

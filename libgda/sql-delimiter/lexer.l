@@ -25,6 +25,9 @@ char *string_buf_ptr;
 %option caseless
 %x STRING
 %x TEXTUAL
+
+CHAR [^ \t\n\r\'\";\[\]:]+
+
 %%
 
 		BEGIN(INITIAL);
@@ -42,7 +45,8 @@ char *string_buf_ptr;
 ":nullok"       {return L_PNULLOK;}
 "##"            {return L_UNSPECVAL;}
 
-[^ \t\n\r\'\";\[\]:]+ {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
+{CHAR}	 	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
+::		{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
 [ \t\n\r]	{;}
 
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}

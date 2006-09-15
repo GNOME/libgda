@@ -1,6 +1,6 @@
 /* gda-query-field-agg.h
  *
- * Copyright (C) 2005 Vivien Malerba
+ * Copyright (C) 2005 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -58,7 +58,7 @@ struct _GdaQueryFieldAggClass
 };
 
 GType                   gda_query_field_agg_get_type         (void);
-GObject                *gda_query_field_agg_new              (GdaQuery *query, const gchar *agg_name);
+GdaQueryField          *gda_query_field_agg_new              (GdaQuery *query, const gchar *agg_name);
 
 GdaDictAggregate       *gda_query_field_agg_get_ref_agg      (GdaQueryFieldAgg *agg);
 gboolean                gda_query_field_agg_set_arg          (GdaQueryFieldAgg *agg, GdaQueryField *arg);

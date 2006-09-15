@@ -25,6 +25,11 @@ one provided th the #GdaDict object to which the query relates.
 </para>
 
 
+<!-- ##### ARG GdaDataModelQuery:auto-compute ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaDataModelQuery:delete-query ##### -->
 <para>
 
@@ -67,7 +72,7 @@ one provided th the #GdaDict object to which the query relates.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_query_get_param_list ##### -->
+<!-- ##### FUNCTION gda_data_model_query_get_parameter_list ##### -->
 <para>
 
 </para>

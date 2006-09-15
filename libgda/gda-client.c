@@ -508,7 +508,7 @@ gda_client_open_connection_from_string (GdaClient *client,
 					GError **error)
 {
 	LoadedProvider *prv;
-	GdaConnection *cnc;
+	GdaConnection *cnc = NULL;
 	GList *l;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);

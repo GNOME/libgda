@@ -53,18 +53,6 @@ It implements the #GdaXmlStorage, #GdaReferer and #GdaRenderer interfaces.
 
 </para>
 
-<!-- ##### ENUM GdaQueryTargetType ##### -->
-<para>
-
-</para>
-
-@GDA_QUERY_TARGET_TYPE_INNER: 
-@GDA_QUERY_TARGET_TYPE_LEFT_OUTER: 
-@GDA_QUERY_TARGET_TYPE_RIGHT_OUTER: 
-@GDA_QUERY_TARGET_TYPE_FULL_OUTER: 
-@GDA_QUERY_TARGET_TYPE_CROSS: 
-@GDA_QUERY_TARGET_TYPE_LAST: 
-
 <!-- ##### FUNCTION gda_query_target_new ##### -->
 <para>
 

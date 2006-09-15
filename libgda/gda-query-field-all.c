@@ -1,6 +1,6 @@
 /* gda-query-field-all.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -256,7 +256,7 @@ gda_query_field_all_init (GdaQueryFieldAll *gda_query_field_all)
  *
  * Returns: the new object
  */
-GObject *
+GdaQueryField *
 gda_query_field_all_new (GdaQuery *query, const gchar *target)
 {
 	GObject *obj;
@@ -268,7 +268,7 @@ gda_query_field_all_new (GdaQuery *query, const gchar *target)
 			    "query", query, 
 			    "target_name", target, NULL);
 
-	return obj;	
+	return (GdaQueryField *) obj;	
 }
 
 static void 

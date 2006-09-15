@@ -883,7 +883,7 @@ parsed_create_join_sql_table (GdaQuery *query, ParseData *pdata,
 					if (left_target == target)
 						left_target = (GdaQueryTarget *) g_slist_next (targets)->data;
 					
-					join = GDA_QUERY_JOIN (gda_query_join_new_with_targets (query, left_target, target));
+					join = gda_query_join_new_with_targets (query, left_target, target);
 					has_error = !gda_query_add_join (query, join);
 					gda_query_join_set_join_type (join, parse_join_converter [table->join_type]);
 					g_object_unref (G_OBJECT (join));
@@ -957,7 +957,7 @@ parsed_create_join_sql_table (GdaQuery *query, ParseData *pdata,
 			}
 			
 			if (left_target && !has_error) {
-				join = GDA_QUERY_JOIN (gda_query_join_new_with_targets (query, left_target, target));
+				join = gda_query_join_new_with_targets (query, left_target, target);
 				has_error = !gda_query_add_join (query, join);
 				gda_query_join_set_join_type (join, parse_join_converter [table->join_type]);
 				g_object_unref (G_OBJECT (join));
@@ -1018,7 +1018,7 @@ parsed_create_target_sub_select (GdaQuery *query, ParseData *pdata, sql_select_s
 	
 	if (!target) {
 		/* create new sub query and target */
-		subq = GDA_QUERY (gda_query_new (gda_object_get_dict (GDA_OBJECT (query))));
+		subq = gda_query_new (gda_object_get_dict (GDA_OBJECT (query)));
 		err = !parsed_create_select_query (subq, select, error);
 		if (!err) {
 			gda_query_add_sub_query (query, subq);
@@ -1618,16 +1618,30 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		}
 	}
 
-	if (real_type)
+	if (real_type) {
 		gdatype = gda_dict_type_get_gda_type (real_type);
-	if (gdatype == G_TYPE_INVALID) {
-		g_set_error (error,
-			     GDA_QUERY_ERROR,
-			     GDA_QUERY_SQL_ANALYSE_ERROR,
-			     _("Data type '%s' can't be converted to a known type"), 
-			     gda_object_get_name (GDA_OBJECT (real_type)));
-		return NULL;
+		if (gdaval && G_VALUE_TYPE (gdaval) != gdatype) {
+			/* convert gdaval to be a value of type gdatype because we otherwise have a coherence 
+			   problem */
+			GValue *ngdaval;
+
+			ngdaval = gda_value_new (gdatype);
+			if (! g_value_transform (gdaval, ngdaval)) {
+				gda_value_free (ngdaval);
+				g_print (_("Could not convert data from %s to %s for DBMS type %s, "
+					   "forget about the DBMS type"),
+					 g_type_name (G_VALUE_TYPE (gdaval)), g_type_name (gdatype),
+					 gda_object_get_name (GDA_OBJECT (real_type)));
+				gdatype = G_VALUE_TYPE (gdaval);
+				real_type = NULL;
+			}
+			else {
+				gda_value_free (gdaval);
+				gdaval = ngdaval;
+			}
+		}
 	}
+	g_assert (gdatype != G_TYPE_INVALID);
 
 	if (!unspecvalue && !gdaval) {
 		dh = gda_dict_get_handler (dict, gdatype);
@@ -1835,7 +1849,7 @@ parsed_create_complex_condition (GdaQuery *query, ParseData *pdata, sql_where *w
 		tmpcond = parsed_create_complex_condition (query, pdata, where->d.negated, 
 							   try_existing_field, targets_return, error);
 		if (tmpcond) {
-			cond = (GdaQueryCondition*) gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_NOT);
+			cond = gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_NOT);
 			if (! gda_query_condition_node_add_child (cond, tmpcond, error)) {
 				g_object_unref (G_OBJECT (cond));
 				cond = NULL;
@@ -1852,10 +1866,10 @@ parsed_create_complex_condition (GdaQuery *query, ParseData *pdata, sql_where *w
 			if (tmpcond2) {
 				switch (where->d.pair.op) {
 				case SQL_and:
-					cond = (GdaQueryCondition*) gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_AND);
+					cond = gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_AND);
 					break;
 				case SQL_or:
-					cond = (GdaQueryCondition*) gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_OR);
+					cond = gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_OR);
 					break;
 				default:
 					g_assert_not_reached ();
@@ -1973,14 +1987,14 @@ parsed_create_simple_condition (GdaQuery *query, ParseData *pdata, sql_condition
 
 	/* from now on, all the required GdaQueryField objects do exist */
 	/* cond creation */
-	cond = (GdaQueryCondition*) gda_query_condition_new (query, condtype);
+	cond = gda_query_condition_new (query, condtype);
 	gda_query_condition_leaf_set_operator (cond, GDA_QUERY_CONDITION_OP_LEFT, GDA_QUERY_FIELD (fields[0]));
 	gda_query_condition_leaf_set_operator (cond, GDA_QUERY_CONDITION_OP_RIGHT, GDA_QUERY_FIELD (fields[1]));
 	if (condtype == GDA_QUERY_CONDITION_LEAF_BETWEEN)
 		gda_query_condition_leaf_set_operator (cond, GDA_QUERY_CONDITION_OP_RIGHT2, GDA_QUERY_FIELD (fields[2]));
 
 	if (sqlcond->negated) {
-		GdaQueryCondition *cond2 = (GdaQueryCondition*) gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_NOT);
+		GdaQueryCondition *cond2 = gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_NOT);
 		gda_query_condition_node_add_child (cond2, cond, NULL);
 		g_object_unref (G_OBJECT (cond));
 		cond = cond2;

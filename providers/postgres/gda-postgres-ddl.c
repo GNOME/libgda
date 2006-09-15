@@ -37,7 +37,7 @@ gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 
 	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_NAME");
 	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	g_string_append_printf (string, "\"%s\"", g_value_get_string (value));
 
 	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/OWNER");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
@@ -88,7 +88,7 @@ gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 
 	value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_NAME");
 	g_assert (value && G_VALUE_HOLDS (value, G_TYPE_STRING));
-	g_string_append (string, g_value_get_string (value));
+	g_string_append_printf (string, "\"%s\"", g_value_get_string (value));
 
 	sql = string->str;
 	g_string_free (string, FALSE);

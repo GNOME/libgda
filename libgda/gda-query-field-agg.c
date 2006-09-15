@@ -1,6 +1,6 @@
 /* gda-query-field-agg.c
  *
- * Copyright (C) 2005 Vivien Malerba
+ * Copyright (C) 2005 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -260,7 +260,7 @@ gda_query_field_agg_init (GdaQueryFieldAgg *gda_query_field_agg)
  *
  * Returns: the new object
  */
-GObject*
+GdaQueryField*
 gda_query_field_agg_new (GdaQuery *query, const gchar *agg_name)
 {
 	GObject *obj;
@@ -271,7 +271,7 @@ gda_query_field_agg_new (GdaQuery *query, const gchar *agg_name)
 	obj = g_object_new (GDA_TYPE_QUERY_FIELD_AGG, "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 			    "query", query, "aggregate_name", agg_name, NULL);
 
-	return obj;
+	return (GdaQueryField*) obj;
 }
 
 static void 

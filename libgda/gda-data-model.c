@@ -901,7 +901,8 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
 		(GDA_DATA_MODEL_GET_CLASS (model)->i_send_hint) (model, hint, hint_value);
 }
 
-static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, gchar sep);
+static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, 
+					const gint *rows, gint nb_rows, gchar sep);
 
 
 /**
@@ -910,6 +911,8 @@ static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, g
  * @format: the format in which to export data
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
+ * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
+ * @nb_rows: the number of rows in @rows
  * @options: list of options for the export
  *
  * Exports data contained in @model to a string; the format is specified using the @format argument.
@@ -925,7 +928,8 @@ static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, g
  */
 gchar *
 gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat format, 
-				 const gint *cols, gint nb_cols, GdaParameterList *options)
+				 const gint *cols, gint nb_cols, 
+				 const gint *rows, gint nb_rows, GdaParameterList *options)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 	g_return_val_if_fail (!options || GDA_IS_PARAMETER_LIST (options), NULL);
@@ -955,7 +959,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 
 		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 		
-		xml_node = gda_data_model_to_xml_node (model, cols, nb_cols, name);
+		xml_node = gda_data_model_to_xml_node (model, cols, nb_cols, rows, nb_rows, name);
 		xml_doc = xmlNewDoc ("1.0");
 		xmlDocSetRootElement (xml_doc, xml_node);
 		
@@ -990,7 +994,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		}
 
 		if (cols)
-			return export_to_text_separated (model, cols, nb_cols, sep);
+			return export_to_text_separated (model, cols, nb_cols, rows, nb_rows, sep);
 		else {
 			gchar *retval;
 			gint *rcols, rnb_cols, i;
@@ -1001,7 +1005,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 			rcols = g_new (gint, rnb_cols);
 			for (i = 0; i < rnb_cols; i++)
 				rcols[i] = i;
-			retval = export_to_text_separated (model, rcols, rnb_cols, sep);
+			retval = export_to_text_separated (model, rcols, rnb_cols, rows, nb_rows, sep);
 			g_free (rcols);
 			
 			return retval;
@@ -1021,6 +1025,8 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  * @file: the filename to export to
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
+ * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
+ * @nb_rows: the number of rows in @rows
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
  *
@@ -1041,6 +1047,7 @@ gboolean
 gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format, 
 			       const gchar *file,
 			       const gint *cols, gint nb_cols, 
+			       const gint *rows, gint nb_rows, 
 			       GdaParameterList *options, GError **error)
 {
 	gchar *body;
@@ -1050,7 +1057,7 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 	g_return_val_if_fail (!options || GDA_IS_PARAMETER_LIST (options), FALSE);
 	g_return_val_if_fail (file, FALSE);
 
-	body = gda_data_model_export_to_string (model, format, cols, nb_cols, options);
+	body = gda_data_model_export_to_string (model, format, cols, nb_cols, rows, nb_cols, options);
 	if (options) {
 		GdaParameter *param;
 		
@@ -1085,18 +1092,21 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 }
 
 static gchar *
-export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, gchar sep)
+export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, const gint *rows, gint nb_rows, gchar sep)
 {
 	GString *str;
 	gchar *retval;
-	gint c, rows, r;
+	gint c, nbrows, r;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	str = g_string_new ("");
-	rows = gda_data_model_get_n_rows (model);
+	if (!rows)
+		nbrows = gda_data_model_get_n_rows (model);
+	else
+		nbrows = nb_rows;
 
-	for (r = 0; r < rows; r++) {
+	for (r = 0; r < nbrows; r++) {
 		if (r > 0)
 			str = g_string_append_c (str, '\n');
 
@@ -1104,7 +1114,7 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, g
 			GValue *value;
 			gchar *txt;
 
-			value = (GValue *) gda_data_model_get_value_at (model, cols[c], r);
+			value = (GValue *) gda_data_model_get_value_at (model, cols[c], rows ? rows[r] : r);
 			if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 				txt = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
 			else
@@ -1145,6 +1155,8 @@ xml_set_int (xmlNodePtr node, const gchar *name, gint value)
  * @model: a #GdaDataModel object.
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
+ * @rows: an array containing which rows of @model will be exported, or %NULL for all rows
+ * @nb_rows: the number of rows in @rows
  * @name: name to use for the XML resulting table.
  *
  * Converts a #GdaDataModel into a xmlNodePtr (as used in libxml).
@@ -1152,10 +1164,11 @@ xml_set_int (xmlNodePtr node, const gchar *name, gint value)
  * Returns: a xmlNodePtr representing the whole data model.
  */
 xmlNodePtr
-gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols, const gchar *name)
+gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols, 
+			    const gint *rows, gint nb_rows, const gchar *name)
 {
 	xmlNodePtr node;
-	gint rows, i;
+	gint i;
 	gint *rcols, rnb_cols;
 	gchar *arrayid;
 	gchar *str;
@@ -1189,7 +1202,6 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	}
 
 	/* set the table structure */
-	rows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < rnb_cols; i++) {
 		GdaColumn *column;
 		xmlNodePtr field;
@@ -1238,7 +1250,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	}
 	
 	/* add the model data to the XML output */
-	utility_data_model_dump_data_to_xml (model, node, cols, nb_cols, FALSE);
+	utility_data_model_dump_data_to_xml (model, node, cols, nb_cols, rows, nb_rows, FALSE);
 
 	if (!cols)
 		g_free (rcols);

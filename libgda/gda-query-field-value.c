@@ -289,7 +289,7 @@ gda_query_field_value_init (GdaQueryFieldValue *gda_query_field_value)
  *
  * Returns: the new object
  */
-GObject*
+GdaQueryField*
 gda_query_field_value_new (GdaQuery *query, GType type)
 {
 	GObject *obj;
@@ -299,7 +299,7 @@ gda_query_field_value_new (GdaQuery *query, GType type)
 	obj = g_object_new (GDA_TYPE_QUERY_FIELD_VALUE, "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 			    "query", query, "gda_type", type, NULL);
 
-	return obj;
+	return (GdaQueryField*) obj;
 }
 
 
@@ -471,8 +471,9 @@ gda_query_field_value_copy (GdaQueryField *orig)
 	g_assert (GDA_IS_QUERY_FIELD_VALUE (orig));
 	qf = GDA_QUERY_FIELD_VALUE (orig);
 
-	obj = gda_query_field_value_new (qf->priv->query, qf->priv->gda_type);
-	nqf = GDA_QUERY_FIELD_VALUE (obj);
+	nqf = (GdaQueryFieldValue *) gda_query_field_value_new (qf->priv->query, qf->priv->gda_type);
+	obj = (GObject *) nqf;
+
 	if (qf->priv->dict_type)
 		gda_query_field_value_set_dict_type (nqf, qf->priv->dict_type);
 
@@ -696,10 +697,23 @@ gda_query_field_value_get_params (GdaQueryField *qfield)
 		if (field->priv->plugin)
 			g_object_set (G_OBJECT (param), "entry_plugin", field->priv->plugin, NULL);
 
-		/* possible values in a sub query */
+		/* possible values in a data model */
 		if (field->priv->restrict_model && (field->priv->restrict_col >= 0)) {
 			gda_parameter_restrict_values (param, field->priv->restrict_model,
 						       field->priv->restrict_col, NULL);
+			if (GDA_IS_DATA_MODEL_QUERY (field->priv->restrict_model)) {
+				GdaParameterList *params;
+
+				params = gda_data_model_query_get_parameter_list 
+					(GDA_DATA_MODEL_QUERY (field->priv->restrict_model));
+				if (params) {
+					GSList *tmp;
+
+					tmp = g_slist_copy (params->parameters);
+					g_slist_foreach (tmp, (GFunc) g_object_ref, NULL);
+					list = g_slist_concat (list, tmp);
+				}
+			}
 		}
 
 		list = g_slist_append (list, param);
@@ -888,7 +902,6 @@ static void
 gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset)
 {
 	gchar *str;
-	gint i;
 	GdaDataHandler *dh;
 	GdaDict *dict;
 
@@ -896,9 +909,8 @@ gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset)
 	dict = gda_object_get_dict (GDA_OBJECT (field));
 	
         /* string for the offset */
-        str = g_new0 (gchar, offset+1);
-        for (i=0; i<offset; i++)
-                str[i] = ' ';
+        str = g_new (gchar, offset+1);
+	memset (str, ' ', offset);
         str[offset] = 0;
 
         /* dump */
@@ -934,7 +946,9 @@ gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset)
 		g_print ("\n");
 
 		if (field->priv->restrict_model) {
-			g_print ("%sValues restrictions: COLUMN %d\n", str, field->priv->restrict_col);
+			g_print ("%sValue restricted by column %d of data model %p:\n", str, 
+				 field->priv->restrict_col,
+				 field->priv->restrict_model);
 			gda_object_dump (GDA_OBJECT (field->priv->restrict_model), offset+5);
 		}
 	}
@@ -1033,12 +1047,29 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 	}
 
 	xmlSetProp (node, "nullok", field->priv->is_null_allowed ? "t" : "f");
+
 	if (field->priv->restrict_model) {
-		str = g_strdup_printf ("DA%s:%d", 
-				       gda_object_get_name (GDA_OBJECT (field->priv->restrict_model)),
-				       field->priv->restrict_col);
-		xmlSetProp (node, "restrict", str);
-		g_free (str);
+		GSList *psources = (GSList *) gda_query_get_param_sources (field->priv->query);
+		str = NULL;
+		if (g_slist_find (psources, field->priv->restrict_model))
+			/* restricting model is in query's params sources */
+			str = g_strdup_printf ("_%d:%d", g_slist_index (psources, field->priv->restrict_model), 
+					       field->priv->restrict_col);
+		else {
+			if (gda_dict_object_is_assumed (gda_object_get_dict ((GdaObject*) field), 
+							GDA_OBJECT (field->priv->restrict_model)))
+				str = g_strdup_printf ("DA%s:%d", 
+						       gda_object_get_name (GDA_OBJECT (field->priv->restrict_model)),
+						       field->priv->restrict_col);
+			else {
+				g_warning (_("GdaDataModelQuery data model restricting GdaQueryFieldValue "
+					     "is not saved in the dictionary"));
+			}
+		}
+		if (str) {
+			xmlSetProp (node, "restrict", str);
+			g_free (str);
+		}
 	}
 
 	cstr = gda_query_field_get_alias (GDA_QUERY_FIELD (field));
@@ -1087,38 +1118,38 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 			return FALSE;
 		}
 		gda_query_object_set_int_id (GDA_QUERY_OBJECT (field), atoi (ptr+2));
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "name");
 	if (prop) {
 		gda_object_set_name (GDA_OBJECT (field), prop);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (field), prop);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "is_visible");
 	if (prop) {
 		gda_query_field_set_visible (GDA_QUERY_FIELD (field), (*prop == 't') ? TRUE : FALSE);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "is_internal");
 	if (prop) {
 		gda_query_field_set_internal (GDA_QUERY_FIELD (field), (*prop == 't') ? TRUE : FALSE);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "gda_type");
 	if (prop) {
 		field->priv->gda_type = gda_type_from_string (prop);
 		dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
-		g_free (prop);
+		xmlFree (prop);
 
 		if (field->priv->gda_type == GDA_TYPE_NULL)
 			field->priv->value = gda_value_new_null ();
@@ -1132,7 +1163,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 			gda_query_field_value_set_dict_type (field, dict_type);
 			dh = gda_dict_get_default_handler (dict, gda_dict_type_get_gda_type (field->priv->dict_type));
 		}
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "value");
@@ -1144,12 +1175,12 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 					     GDA_QUERY_FIELD_VALUE_ERROR,
 					     GDA_QUERY_FIELD_VALUE_XML_LOAD_ERROR,
 					     _("Can't interpret '%s' as a value"), prop);
-				g_free (prop);
+				xmlFree (prop);
 				return FALSE;
 			}
 		}
 
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "default");
@@ -1167,21 +1198,21 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 			value = gda_data_handler_get_value_from_str (dh2, prop, vtype);
 			field->priv->default_value = value;
 
-			g_free (str2);
+			xmlFree (str2);
 		}
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "is_param");
 	if (prop) {
 		field->priv->is_parameter = (*prop == 't') ? TRUE : FALSE;
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "nullok");
 	if (prop) {
 		field->priv->is_null_allowed = (*prop == 't') ? TRUE : FALSE;
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "plugin");
@@ -1190,18 +1221,61 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 
 	prop = xmlGetProp (node, "restrict");
 	if (prop) {
-		GdaDataModel *model;
-		gint col;
-		TO_IMPLEMENT; /* find data model from name */
-		if (!gda_query_field_value_restrict (field, model, col, error))
+		GdaDataModel *model = NULL;
+		gint col = -1;
+
+		if (*prop == '_') {
+			/* restriction is done by a query's param source */
+			gchar *ptr;
+			gint pos;
+
+			for (ptr = prop + 1; *ptr && (*ptr != ':'); ptr++);
+			if (*ptr == ':') {
+				*ptr = 0;
+				pos = atoi (prop + 1);
+				col = atoi (ptr+1);
+
+				model = g_slist_nth_data ((GSList *) gda_query_get_param_sources (field->priv->query), pos);
+				if (!model) {
+					g_set_error (error, GDA_QUERY_FIELD_VALUE_ERROR,
+						     GDA_QUERY_FIELD_VALUE_XML_LOAD_ERROR,
+						     _("Query's param sources has no data model at position %d"), pos);
+					err = TRUE;	
+				}
+			}
+			else {
+				g_set_error (error, GDA_QUERY_FIELD_VALUE_ERROR,
+					     GDA_QUERY_FIELD_VALUE_XML_LOAD_ERROR,
+					     _("'restrict' attribute has a wrong format"));
+				err = TRUE;
+			}
+		}
+		else {
+			if (strlen (prop) <= 2)
+				err = TRUE;
+			else {
+				TO_IMPLEMENT; /* find data model from name */
+				g_set_error (error, GDA_QUERY_FIELD_VALUE_ERROR,
+					     GDA_QUERY_FIELD_VALUE_XML_LOAD_ERROR,
+					     _("Feature not yet implemented, see %s(), line %d"), 
+					     __FUNCTION__, __LINE__);
+			}
+		}
+			
+		if (model) {
+			if (!gda_query_field_value_restrict (field, model, col, error))
+				err = TRUE;
+		}
+		else
 			err = TRUE;
-		g_free (prop);
+
+		xmlFree (prop);
 	}
 
 	prop = xmlGetProp (node, "alias");
 	if (prop) {
 		gda_query_field_set_alias (GDA_QUERY_FIELD (field), prop);
-		g_free (prop);
+		xmlFree (prop);
 	}
 
 	if (!dh && (field->priv->gda_type != GDA_TYPE_NULL)) {

@@ -137,6 +137,7 @@ void              gda_dict_declare_object_as               (GdaDict *dict, GdaOb
 void              gda_dict_assume_object                   (GdaDict *dict, GdaObject *object);
 void              gda_dict_assume_object_as                (GdaDict *dict, GdaObject *object, GType as_type);
 void              gda_dict_unassume_object                 (GdaDict *dict, GdaObject *object);
+gboolean          gda_dict_object_is_assumed               (GdaDict *dict, GdaObject *object);
 GSList           *gda_dict_get_objects                     (GdaDict *dict, GType type);
 GdaObject        *gda_dict_get_object_by_name              (GdaDict *dict, GType type, const gchar *name);
 GdaObject        *gda_dict_get_object_by_xml_id            (GdaDict *dict, GType type, const gchar *xml_id);

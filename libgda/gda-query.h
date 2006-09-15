@@ -95,9 +95,9 @@ struct _GdaQueryClass
 };
 
 GType              gda_query_get_type               (void);
-GObject           *gda_query_new                    (GdaDict *dict);
-GObject           *gda_query_new_copy               (GdaQuery *orig, GHashTable *replacements);
-GObject           *gda_query_new_from_sql           (GdaDict *dict, const gchar *sql, GError **error);
+GdaQuery          *gda_query_new                    (GdaDict *dict);
+GdaQuery          *gda_query_new_copy               (GdaQuery *orig, GHashTable *replacements);
+GdaQuery          *gda_query_new_from_sql           (GdaDict *dict, const gchar *sql, GError **error);
 
 void               gda_query_set_query_type         (GdaQuery *query, GdaQueryType type);
 GdaQueryType       gda_query_get_query_type         (GdaQuery *query);
@@ -110,7 +110,7 @@ gboolean           gda_query_is_modif_query         (GdaQuery *query);
 GdaQuery          *gda_query_get_parent_query       (GdaQuery *query);
 
 GSList            *gda_query_get_parameters         (GdaQuery *query);
-GdaParameterList  *gda_query_get_parameters_boxed   (GdaQuery *query);
+GdaParameterList  *gda_query_get_parameter_list   (GdaQuery *query);
 #define            GDA_QUERY_EXEC_FAILED ((void *) -1)
 GdaDataModel      *gda_query_execute                (GdaQuery *query, GdaParameterList *params,
 						     gboolean iter_model_only_requested, GError **error);
@@ -154,8 +154,10 @@ GdaQueryField     *gda_query_add_field_from_sql     (GdaQuery *query, const gcha
 
 GSList            *gda_query_get_all_fields         (GdaQuery *query);
 GdaQueryField     *gda_query_get_field_by_sql_naming        (GdaQuery *query, const gchar *sql_naming);
-GdaQueryField     *gda_query_get_field_by_ref_field         (GdaQuery *query, GdaQueryTarget *target, GdaEntityField *ref_field, 
-								 GdaQueryFieldState field_state);
+GdaQueryField     *gda_query_get_field_by_param_name        (GdaQuery *query, const gchar *param_name);
+GdaQueryField     *gda_query_get_field_by_ref_field         (GdaQuery *query, GdaQueryTarget *target, 
+							     GdaEntityField *ref_field, 
+							     GdaQueryFieldState field_state);
 GdaQueryField     *gda_query_get_first_field_for_target     (GdaQuery *query, GdaQueryTarget *target);
 GSList            *gda_query_expand_all_field               (GdaQuery *query, GdaQueryTarget *target);
 void               gda_query_order_fields_using_join_conds  (GdaQuery *query);
