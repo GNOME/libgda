@@ -1,7 +1,22 @@
+2006-09-23  Vivien Malerba <malerba@gnome-db.org>
+
+	* testing/gda-diagnose.c:
+	* libgda/gda-client.c: don't try to use the plugin_get_connection_params()
+	function as it does not exist anymore.
+	* libgda/gda-dict.[ch]: gda_dict_new() now return a GdaDict*
+	* configure.in: fixed IBM DB2 detection problem
+	* providers/sqlite/gda-sqlite-provider.c: corrected a bug with the reported
+	number of impacted rows after a non SELECT query
+	* providers/sqlite/gda-sqlite-recordset.c: corrected a bug with NULL values
+	* doc/C: doc. improvements
+	* libgda/gda-init.c: make sure GDate object type is really
+	initialized
+	* providers/ibmdb2/*: make the IBMDB2 provider compile again
+
 2006-09-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* libsql/parser.y: parameter specifications can now be enclosed in single
-	quotes (double quotes are still accepted)
+	quotes (double quotes are still accepted
 	* libgda/gda-dic-reg-types.c:
 	* libgda/gda-dic-reg-aggregates.c:
 	* libgda/gda-dic-reg-functions.c: corrected a bug in XML saving

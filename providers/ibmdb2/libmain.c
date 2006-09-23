@@ -1,5 +1,5 @@
 /* GDA IBMDB2 Provider
- * Copyright (C) 2002 - 2005 The GNOME Foundation
+ * Copyright (C) 2002 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Holger Thon <holger.thon@gnome-db.org>

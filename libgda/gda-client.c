@@ -41,7 +41,6 @@ typedef struct {
 	/* entry points to the plugin */
 	const gchar        *(*plugin_get_name) (void);
 	const gchar        *(*plugin_get_description) (void);
-	GList              *(*plugin_get_connection_params) (void);
 	GdaServerProvider  *(*plugin_create_provider) (void);
 	gchar              *(*get_dsn_spec) (void);
 } LoadedProvider;
@@ -311,8 +310,6 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 			 (gpointer) &prv->plugin_get_name);
 	g_module_symbol (prv->handle, "plugin_get_description",
 			 (gpointer) &prv->plugin_get_description);
-	g_module_symbol (prv->handle, "plugin_get_connection_params",
-			 (gpointer) &prv->plugin_get_connection_params);
 	g_module_symbol (prv->handle, "plugin_create_provider",
 			 (gpointer) &prv->plugin_create_provider);
 	g_module_symbol (prv->handle, "plugin_get_dsn_spec",

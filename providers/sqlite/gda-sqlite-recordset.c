@@ -233,7 +233,10 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 				GType type = sres->types [col];
 
 				/* compute GValue */
-				if (type == G_TYPE_INT)
+				if ((sqlite3_column_type (sres->stmt, col) == SQLITE_NULL) ||
+				    (type == GDA_TYPE_NULL))
+					value = gda_value_new_null ();
+				else if (type == G_TYPE_INT)
 					g_value_set_int (value = gda_value_new (G_TYPE_INT), 
 							 sqlite3_column_int (sres->stmt, col));
 				else if (type == G_TYPE_DOUBLE)
@@ -257,8 +260,6 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 					value = gda_value_new (GDA_TYPE_BINARY);
 					gda_value_take_binary (value, bin);
 				}
-				else if (type == GDA_TYPE_NULL)
-					value = gda_value_new_null ();
 				else
 					g_error ("Unhandled GDA type %s in SQLite recordset", 
 						 gda_type_to_string (sres->types [col]));

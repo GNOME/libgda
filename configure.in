@@ -503,7 +503,7 @@ AC_ARG_WITH(ibmdb2,
 if test $withval = no
 then
 	try_ibmdb2=false
-elif test $withval=yes
+elif test $withval = yes
 then
 	if test -z "$DB2DIR"
 	then
@@ -518,31 +518,48 @@ fi
 if test $try_ibmdb2 = true
 then
 	AC_MSG_CHECKING(for IBM DB2 files)
-	if test -f "$dir/include/sqlcli1.h" -a -e "$dir/$lib/libdb2.so"
+	if test -f "$dir/include/sqlcli1.h"
 	then
-		ibmdb2dir="$dir"
-		break
-	fi
-	for d in /usr/IBMdb2 /usr/local/IBMdb2 /opt/IBMdb2 /opt/packages/IBMdb2
-	do
-		for v in V5.0 V.6.1 V7.1
+		if test -e "$dir/lib/libdb2.so"
+		then
+			ibmdb2dir="$dir"
+			ibmdb2libdir="lib"
+			break
+		fi
+		if test -e "$dir/lib32/libdb2.so"
+		then
+			ibmdb2dir="$dir"
+                        ibmdb2libdir="lib32"
+                        break
+		fi
+	else
+		for d in /usr/IBMdb2 /usr/local/IBMdb2 /opt/IBMdb2 /opt/packages/IBMdb2 /opt/ibm/db2
 		do
-			if test -f "$d/$v/include/sqlcli1.h" -a -e "$d/$v/$lib/libdb2.so"
-			then
-				ibmdb2dir="$d/$v"
-				break
-			fi
+			for v in V5.0 V.6.1 V7.1 V9.1
+			do
+				if test -f "$d/$v/include/sqlcli1.h" -a -e "$d/$v/lib/libdb2.so"
+				then
+					ibmdb2dir="$d/$v"
+					ibmdb2libdir="lib"
+					break
+				fi
+				if test -f "$d/$v/include/sqlcli1.h" -a -e "$d/$v/lib32/libdb2.so"
+                                then
+                                        ibmdb2dir="$d/$v"
+                                        ibmdb2libdir="lib32"
+                                        break
+                                fi
+			done
 		done
-	done
+	fi
 	if test x$ibmdb2dir = x
 	then
 		AC_MSG_WARN(IBM DB2 backend not used)
 	else
 		AC_MSG_RESULT(found IBM DB2 in $ibmdb2dir)
 		AC_DEFINE(HAVE_IBMDB2, 1, [Have IBM DB2])
-		AC_MSG_WARN(IBM DB2 Provider does not work yet)
 		IBMDB2_CFLAGS="-DIBMDB2_DIR=\\\"${ibmdb2dir}\\\" -I${ibmdb2dir}/include"
-		IBMDB2_LIBS="-L${ibmdb2dir}/lib -Wl,-rpath,${ibmdb2dir}/lib -ldb2"
+		IBMDB2_LIBS="-L${ibmdb2dir}/${ibmdb2libdir} -Wl,-rpath,${ibmdb2dir}/${ibmdb2libdir} -ldb2"
 	fi
 fi
 

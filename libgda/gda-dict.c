@@ -301,7 +301,7 @@ gda_dict_init (GdaDict * dict)
  *
  * Returns: the newly created object.
  */
-GObject   *
+GdaDict   *
 gda_dict_new ()
 {
 	GObject *obj;
@@ -320,7 +320,7 @@ gda_dict_new ()
 	for (; list; list = list->next) 
 		gda_dict_register_object_type (dict, ((GdaDictRegFunc)(list->data)) ());
 
-	return obj;
+	return dict;
 }
 
 /**

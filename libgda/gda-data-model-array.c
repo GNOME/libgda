@@ -320,7 +320,7 @@ gda_data_model_array_new (gint cols)
 /**
  * gda_data_model_array_new_with_types
  * @cols: number of columns for rows in this data model.
- * @...: types of the columns of the model to create
+ * @...: types of the columns of the model to create as #GType
  * 
  * Creates a new #GdaDataModel object with the column types as
  * specified.

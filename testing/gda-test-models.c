@@ -159,7 +159,7 @@ test_and_destroy_dict (TestConfig *config)
 			GdaDict *loaded_dict;
 
 			/* g_print (_("Dictionary file written to temporary location %s\n"), dictfile); */
-			loaded_dict = GDA_DICT (gda_dict_new ());
+			loaded_dict = gda_dict_new ();
 			if (!gda_dict_load_xml_file (loaded_dict, dictfile, &error)) {
 				g_print (_("Error loading dictionary file '%s':\n%s\n"), dictfile,
 					 error ? error->message : _("Unspecified"));
@@ -261,7 +261,7 @@ test_models (TestConfig *config)
 			gchar *filename = xmlGetProp (subnode, "name");
 			test_and_destroy_dict (config);			
 			if (filename) {
-				config->dict = GDA_DICT (gda_dict_new ());
+				config->dict = gda_dict_new ();
 				g_print ("Loading dictionary %s\n", filename);
 				if (!gda_dict_load_xml_file (config->dict, filename, &error)) {
 					g_print ("Error occurred:\n\t%s\n", error->message);

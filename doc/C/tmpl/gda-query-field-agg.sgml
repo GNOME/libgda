@@ -2,7 +2,7 @@
 GdaQueryFieldAgg
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Represents a function (selected by a GdaDictAggregate object)
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

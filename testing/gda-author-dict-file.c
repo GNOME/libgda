@@ -171,7 +171,7 @@ main (int argc, char **argv)
 	}
 
 	/* create dictionary */
-	dict = GDA_DICT (gda_dict_new ());
+	dict = gda_dict_new ();
 	gda_dict_set_connection (dict, cnc);
 	db = gda_dict_get_database (dict);
 

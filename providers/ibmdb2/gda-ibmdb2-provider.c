@@ -79,7 +79,7 @@ static GdaDataModel *gda_ibmdb2_provider_get_schema (GdaServerProvider *provider
                                                      GdaConnectionSchema schema,
                                                      GdaParameterList *params);
 
-static const gboolean gda_ibmdb2_provider_update_database (GdaIBMDB2ConnectionData *conn_data);
+static gboolean gda_ibmdb2_provider_update_database (GdaIBMDB2ConnectionData *conn_data);
 
 static const gchar *gda_ibmdb2_provider_get_version (GdaServerProvider *provider);
 static const gchar *gda_ibmdb2_provider_get_server_version (GdaServerProvider *provider,
@@ -87,8 +87,97 @@ static const gchar *gda_ibmdb2_provider_get_server_version (GdaServerProvider *p
 static gboolean gda_ibmdb2_provider_single_command (GdaIBMDB2ConnectionData *conn_data,
 						    GdaConnection *cnc,
 						    const gchar *command);
-									    
-							   
+		
+/**********************************************************************/
+#define CHECK_HANDLE( htype, hndl, rc ) if ( rc != SQL_SUCCESS )	\
+		{check_error(htype,hndl,rc,__LINE__,__FILE__);}
+
+
+/******************************************************************/
+/* print_error                                                    */
+/* calls SQLGetDiagRec() displays SQLSTATE and message            */
+/******************************************************************/
+void print_error( SQLSMALLINT htype, /* A handle type */
+		  SQLHANDLE   hndl,  /* A handle */
+		  SQLRETURN   frc,   /* Return code */
+		  int         line,  /* error from line */
+		  char *      file   /* error from file */)
+{
+	SQLCHAR     buffer[SQL_MAX_MESSAGE_LENGTH + 1] ;
+	SQLCHAR     sqlstate[SQL_SQLSTATE_SIZE + 1] ;
+	SQLINTEGER  sqlcode ;
+	SQLSMALLINT length, i ;
+	SQLRETURN   prc;
+
+	printf("rc=%d reported from file:%s, line:%d\n",
+	       frc,
+	       file,
+	       line
+	       ) ;
+	i = 1 ;
+	while ( SQLGetDiagRec( htype,
+			       hndl,
+			       i,
+			       sqlstate,
+			       &sqlcode,
+			       buffer,
+			       SQL_MAX_MESSAGE_LENGTH + 1,
+			       &length
+			       ) == SQL_SUCCESS ) {
+		printf( "SQLSTATE: %s\n", sqlstate ) ;
+		printf( "Native Error Code: %ld\n", sqlcode ) ;
+		printf( "buffer: %s \n", buffer ) ;
+		i++ ;
+	}
+}
+
+/******************************************************************/
+/* check_error                                                    */
+/******************************************************************/
+/*   RETCODE values   from sqlcli.h                               */
+/*#define  SQL_SUCCESS             0                              */
+/*#define  SQL_SUCCESS_WITH_INFO   1                              */
+/*#define  SQL_NO_DATA_FOUND       100                            */
+/*#define  SQL_NEED_DATA           99                             */
+/*#define  SQL_NO_DATA             SQL_NO_DATA_FOUND              */
+/*#define  SQL_STILL_EXECUTING     2       not currently returned */
+/*#define  SQL_ERROR               -1                             */
+/*#define  SQL_INVALID_HANDLE      -2                             */
+/******************************************************************/
+void check_error( SQLSMALLINT htype, /* A handle type */
+		  SQLHANDLE   hndl,  /* A handle */
+		  SQLRETURN   frc,   /* Return code */
+		  int         line,  /* Line error issued */
+		  char *      file   /* file error issued */)
+ {
+	SQLCHAR         cli_sqlstate[SQL_SQLSTATE_SIZE + 1];
+	SQLINTEGER      cli_sqlcode;
+	SQLSMALLINT     length;
+
+	switch (frc) {
+	case SQL_SUCCESS:
+		break;
+	case SQL_INVALID_HANDLE:
+		printf("check_error> SQL_INVALID HANDLE \n");
+		break;
+	case SQL_ERROR:
+		printf("check_error> SQL_ERROR\n");
+		break;
+	case SQL_SUCCESS_WITH_INFO:
+		printf("check_error>  SQL_SUCCESS_WITH_INFO\n");
+		break;
+	case SQL_NO_DATA_FOUND:
+		printf("check_error> SQL_NO_DATA_FOUND\n");
+		break;
+	default:
+		printf("check_error> Received rc from api rc=%i\n",frc);
+		break;
+	}
+
+	print_error(htype,hndl,frc,line,file);
+}	    
+/********************************************************************************/
+
 static gboolean
 gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
                                      GdaConnection *cnc,
@@ -132,7 +221,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		gda_connection_add_event_string (cnc, _("You must at least provide host, user and password to connect."));
 		return FALSE;
 	}*/
-	
+
 	conn_data = g_new0 (GdaIBMDB2ConnectionData, 1);
 	g_return_val_if_fail (conn_data != NULL, FALSE);
 	conn_data->henv = SQL_NULL_HANDLE;
@@ -141,9 +230,9 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	
 	conn_data->rc = SQLAllocHandle (SQL_HANDLE_ENV, SQL_NULL_HANDLE, &conn_data->henv);
 	if (conn_data->rc != SQL_SUCCESS) {
-		if (conn_data->henv != SQL_NULL_HANDLE) {
+		if (conn_data->henv != SQL_NULL_HANDLE) 
 			SQLFreeHandle (SQL_HANDLE_ENV, conn_data->henv);
-		}
+
 		g_free (conn_data);
 		conn_data = NULL;
 		
@@ -151,17 +240,21 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 	conn_data->rc = SQLAllocHandle (SQL_HANDLE_DBC, conn_data->henv, &conn_data->hdbc);
-	if (conn_data->rc != SQL_SUCCESS) {
-		if (conn_data->hdbc != SQL_NULL_HANDLE) {
+	CHECK_HANDLE( SQL_HANDLE_DBC, conn_data->hdbc, conn_data->rc );
+	if ((conn_data->rc != SQL_SUCCESS) && (conn_data->rc != SQL_SUCCESS_WITH_INFO)){
+		if (conn_data->hdbc != SQL_NULL_HANDLE) 
 			conn_data->rc = SQLFreeHandle (SQL_HANDLE_DBC, conn_data->hdbc);
-		}
+
 		conn_data->rc = SQLFreeHandle (SQL_HANDLE_ENV, conn_data->henv);
+		gda_ibmdb2_emit_error (cnc, conn_data->henv, SQL_NULL_HANDLE, SQL_NULL_HANDLE);
+
 		g_free (conn_data);
 		conn_data = NULL;
 		
-		gda_ibmdb2_emit_error (cnc, conn_data->henv, SQL_NULL_HANDLE, SQL_NULL_HANDLE);
-		
 		return FALSE;
+	}
+	if (conn_data->rc != SQL_SUCCESS_WITH_INFO) {
+		g_print ("With info...\n");
 	}
 	/* IBM DB2 use autocommit for all DML commands by default.
 	   See gda_ibmdb2_provider_begin_transaction and gda_ibmdb2_provider_begin_transaction
@@ -289,8 +382,8 @@ gda_ibmdb2_provider_close_connection (GdaServerProvider *provider,
 	return retval;
 }
 
-static const gchar
-*gda_ibmdb2_provider_get_database (GdaServerProvider *provider,
+static const gchar *
+gda_ibmdb2_provider_get_database (GdaServerProvider *provider,
                                    GdaConnection *cnc)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
@@ -360,7 +453,7 @@ gda_ibmdb2_provider_single_command (GdaIBMDB2ConnectionData *conn_data,
 	return TRUE;
 }
 
-static const gboolean 
+static gboolean 
 gda_ibmdb2_provider_update_database (GdaIBMDB2ConnectionData *conn_data)
 {
 	SQLRETURN   rc = SQL_SUCCESS;
@@ -387,7 +480,8 @@ gda_ibmdb2_provider_update_database (GdaIBMDB2ConnectionData *conn_data)
 }
 
 static GList *
-process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaCommandOptions options)
+process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, 
+		      GdaCommandOptions options)
 {
 	GdaIBMDB2ConnectionData *conn_data = NULL;
         gchar **arr;
@@ -409,9 +503,11 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 		
 			g_assert(conn_data->hstmt == SQL_NULL_HANDLE);
 			
-			conn_data->rc = SQLAllocHandle (SQL_HANDLE_STMT, conn_data->hdbc, &conn_data->hstmt);
+			conn_data->rc = SQLAllocHandle (SQL_HANDLE_STMT, 
+							conn_data->hdbc, &conn_data->hstmt);
 			if (conn_data->rc != SQL_SUCCESS) {
-				gda_ibmdb2_emit_error(cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+				gda_ibmdb2_emit_error(cnc, conn_data->henv, 
+						      conn_data->hdbc, SQL_NULL_HANDLE);
 				conn_data->hstmt = SQL_NULL_HANDLE;
 				
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
@@ -425,11 +521,13 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 					
 			conn_data->rc = SQLExecDirect(conn_data->hstmt,(SQLCHAR*)arr[n], SQL_NTS);
 			if (conn_data->rc != SQL_SUCCESS) {
-				gda_ibmdb2_emit_error(cnc, conn_data->henv, conn_data->hdbc, conn_data->hstmt);
+				gda_ibmdb2_emit_error (cnc, conn_data->henv, 
+						       conn_data->hdbc, conn_data->hstmt);
 				
 				conn_data->rc = SQLFreeHandle(SQL_HANDLE_STMT, conn_data->hstmt);
 				if (conn_data->rc != SQL_SUCCESS) {
-					gda_ibmdb2_emit_error(cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+					gda_ibmdb2_emit_error (cnc, conn_data->henv, 
+							       conn_data->hdbc, SQL_NULL_HANDLE);
 				}
 				conn_data->hstmt = SQL_NULL_HANDLE;
 				
@@ -437,7 +535,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 				g_list_free (reclist);
 
 				if (options == GDA_COMMAND_OPTION_STOP_ON_ERRORS) {
-					g_strfreev(arr);
+					g_strfreev (arr);
 					return NULL;
 				}
 			}
@@ -456,10 +554,11 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 			
 			conn_data->rc = SQLFreeHandle(SQL_HANDLE_STMT, conn_data->hstmt);
 			if (conn_data->rc != SQL_SUCCESS) {
-				gda_ibmdb2_emit_error(cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+				gda_ibmdb2_emit_error (cnc, conn_data->henv, 
+						       conn_data->hdbc, SQL_NULL_HANDLE);
 				
 				if (options == GDA_COMMAND_OPTION_STOP_ON_ERRORS) {
-					g_strfreev(arr);
+					g_strfreev (arr);
 					return NULL;
 				}
 			}
@@ -473,11 +572,11 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 	return reclist;
 }
 				
-static GList
-*gda_ibmdb2_provider_execute_command (GdaServerProvider *provider,
-                                      GdaConnection *cnc,
-                                      GdaCommand *cmd,
-                                      GdaParameterList *params)
+static GList *
+gda_ibmdb2_provider_execute_command (GdaServerProvider *provider,
+				     GdaConnection *cnc,
+				     GdaCommand *cmd,
+				     GdaParameterList *params)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 	GdaCommandOptions options;
@@ -668,8 +767,8 @@ gda_ibmdb2_provider_supports (GdaServerProvider *provider,
 }
 
 					
-static GdaDataModel
-*get_db2_aggregates(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_aggregates(GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModel *recset;
 	GList *reclist;
@@ -693,8 +792,8 @@ static GdaDataModel
 	return recset;
 }
 
-static GdaDataModel
-*get_db2_databases(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_databases(GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaIBMDB2ConnectionData *conn_data = NULL;
 	SQLCHAR alias[SQL_MAX_DSN_LENGTH + 1];
@@ -725,14 +824,13 @@ static GdaDataModel
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Database"));
 
-	for (i = 0; conn_data->rc != SQL_NO_DATA_FOUND; i++)
-	{
+	for (i = 0; conn_data->rc != SQL_NO_DATA_FOUND; i++) {
 		GValue *tmpval;
 		str = g_strndup(alias, alias_len);
 	    
 		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), str);
 	    	value_list = g_list_append (NULL, tmpval);
-	    	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+	    	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 	   
 	    	g_free(str);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -752,14 +850,14 @@ static GdaDataModel
 	return GDA_DATA_MODEL (recset);
 }
 
-static GdaDataModel
-*get_db2_fields(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_fields(GdaConnection *cnc, GdaParameterList *params)
 {
 	return NULL;
 }
 
-static GdaDataModel
-*get_db2_indexes(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_indexes(GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModel *recset;
 	GList *reclist;
@@ -785,8 +883,8 @@ static GdaDataModel
 	return recset;
 }
 
-static GdaDataModel
-*get_db2_procedures(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_procedures(GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModel *recset;
 	GList *reclist;
@@ -816,8 +914,8 @@ static GdaDataModel
 }
 
 
-static GdaDataModel
-*get_db2_tables(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_tables(GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModel *recset;
 	GList *reclist;
@@ -845,8 +943,8 @@ static GdaDataModel
 	return recset;
 }
 
-static GdaDataModel
-*get_db2_triggers(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_triggers(GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModel *recset;
 	GList *reclist;
@@ -873,8 +971,8 @@ static GdaDataModel
 	return recset;
 }
 
-static GdaDataModel
-*get_db2_types(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_types(GdaConnection *cnc, GdaParameterList *params)
 {
         GdaDataModel *recset;
 	GList *reclist;
@@ -926,8 +1024,8 @@ get_db2_users (GdaConnection *cnc, GdaParameterList *params)
         return recset;
 }
 
-static GdaDataModel
-*get_db2_views(GdaConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_db2_views(GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModel *recset;
 	GList *reclist;
@@ -955,11 +1053,11 @@ static GdaDataModel
 }
 
 
-static GdaDataModel
-*gda_ibmdb2_provider_get_schema (GdaServerProvider *provider,
-				 GdaConnection *cnc,
-                                 GdaConnectionSchema schema,
-                                 GdaParameterList *params)
+static GdaDataModel *
+gda_ibmdb2_provider_get_schema (GdaServerProvider *provider,
+				GdaConnection *cnc,
+				GdaConnectionSchema schema,
+				GdaParameterList *params)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 	

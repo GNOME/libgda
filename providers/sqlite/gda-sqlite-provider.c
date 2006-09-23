@@ -449,14 +449,12 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			SQLITEresult *sres;
 			GdaDataModel *recset;
 			gint status;
-			int changes;
 			const char *left;
 
 			sres = g_new0 (SQLITEresult, 1);
-			changes = sqlite3_total_changes (scnc->connection);
 
 			status = sqlite3_prepare (scnc->connection, arr [n], -1, &(sres->stmt), &left);
-			/*g_print ("SQlite SQL: %s\n", arr [n]);*/
+			g_print ("SQlite SQL: %s (REMAIN:%s)\n", arr [n], left);
 			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS ||
 			    status == SQLITE_OK) {
 				gchar *tststr;
@@ -473,13 +471,13 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					reclist = g_list_append (reclist, recset);
 				}
 				else {
-					int newchanges;
 					GdaConnectionEvent *event;
 					gchar *str, *tmp, *ptr;
+					int changes;
 					
 					/* actually execute the command */
 					status = sqlite3_step (sres->stmt);
-					newchanges = sqlite3_total_changes (scnc->connection);
+					changes = sqlite3_changes (scnc->connection);
 					if (status != SQLITE_DONE) {
 						GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 						gda_connection_event_set_description (error, sqlite3_errmsg (scnc->connection));
@@ -492,7 +490,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 						/* don't return a data model */
 						reclist = g_list_append (reclist, 
 							  gda_parameter_list_new_inline (NULL, 
-									 "IMPACTED_ROWS", G_TYPE_INT, newchanges,
+									 "IMPACTED_ROWS", G_TYPE_INT, changes,
 											 NULL));
 					}
 
@@ -509,14 +507,14 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					tmp = g_ascii_strup (tststr, -1);
 					if (!strcmp (tmp, "DELETE"))
 						str = g_strdup_printf ("%s %d (see SQLite documentation for a \"DELETE * FROM table\" query)", 
-								       tmp, (newchanges - changes));
+								       tmp, changes);
 					else {
 						if (!strcmp (tmp, "INSERT"))
 							str = g_strdup_printf ("%s %lld %d", tmp, 
 									       sqlite3_last_insert_rowid (scnc->connection),
-									       (newchanges - changes));
+									       changes);
 						else
-							str = g_strdup_printf ("%s %d", tmp, (newchanges - changes));
+							str = g_strdup_printf ("%s %d", tmp, changes);
 					}
 					gda_connection_event_set_description (event, str);
 					g_free (str);

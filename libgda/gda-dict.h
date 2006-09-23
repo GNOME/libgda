@@ -82,7 +82,7 @@ struct _GdaDictClass
 };
 
 GType             gda_dict_get_type                        (void);
-GObject          *gda_dict_new                             (void);
+GdaDict          *gda_dict_new                             (void);
 void              gda_dict_extend_with_functions           (GdaDict *dict);
 
 void              gda_dict_set_connection                  (GdaDict *dict, GdaConnection *cnc);

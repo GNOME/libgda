@@ -1,8 +1,9 @@
 /* GNOME DB IBM DB2 Provider
- * Copyright (C) 2003 The GNOME Foundation
+ * Copyright (C) 2003 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Sergey N. Belinsky <sergey_be@mail.ru>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,11 +29,7 @@
 #include "gda-ibmdb2.h"
 #include "gda-ibmdb2-types.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// Public functions
-/////////////////////////////////////////////////////////////////////////////
-
-const GType
+GType
 gda_ibmdb2_get_value_type (GdaIBMDB2Field *col)
 {
 	g_return_val_if_fail (col != NULL, G_TYPE_INVALID);

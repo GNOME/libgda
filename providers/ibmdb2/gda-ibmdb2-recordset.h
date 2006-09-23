@@ -21,8 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_ibmdb2_recordset_h__)
-#  define __gda_ibmdb2_recordset_h__
+#ifndef __GDA_IBMDB2_RECORDSET_H__
+#define __GDA_IBMDB2_RECORDSET_H__
 
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-value.h>
@@ -42,12 +42,12 @@ typedef struct _GdaIBMDB2RecordsetPrivate GdaIBMDB2RecordsetPrivate;
 typedef struct _GdaIBMDB2Field            GdaIBMDB2Field;
 
 struct _GdaIBMDB2Recordset {
-	GdaDataModelRow model;
+	GdaDataModelRow            model;
 	GdaIBMDB2RecordsetPrivate *priv;
 };
 
 struct _GdaIBMDB2RecordsetClass {
-	GdaDataModelRowClass parent_class;
+	GdaDataModelRowClass       parent_class;
 };
 
 struct _GdaIBMDB2RecordsetPrivate
@@ -80,7 +80,7 @@ struct _GdaIBMDB2Field {
 };
 																		
 
-GType gda_ibmdb2_recordset_get_type (void);
+GType         gda_ibmdb2_recordset_get_type (void);
 GdaDataModel *gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt);
 
 G_END_DECLS

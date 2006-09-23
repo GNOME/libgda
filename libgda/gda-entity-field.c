@@ -105,7 +105,7 @@ gda_entity_field_get_dict_type (GdaEntityField *iface)
  *
  * Get the gda type of the object implementing the #GdaEntityField interface
  *
- * Returns: the corresponding #GdaDictType
+ * Returns: the corresponding #GType or #G_TYPE_INVALID if the gda type is unknown
  */
 GType
 gda_entity_field_get_gda_type (GdaEntityField *iface)

@@ -78,10 +78,11 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	type = GDA_TYPE_SHORT;
 	type = GDA_TYPE_USHORT;
 	type = GDA_TYPE_TIME;
+	type = G_TYPE_DATE;
 	type = GDA_TYPE_TIMESTAMP;
 
 	/* create a default dictionary */
-	default_dict = GDA_DICT (gda_dict_new ());
+	default_dict = gda_dict_new ();
 
 #define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
 	gda_dict_dtd = xmlParseDTD (NULL, LIBGDA_DICT_DTD_FILE);

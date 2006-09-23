@@ -59,7 +59,7 @@ main (int argc, char **argv)
 		exit (1);
 	}       
 
-	dict = GDA_DICT (gda_dict_new ());
+	dict = gda_dict_new ();
 	if (!gda_dict_load_xml_file (dict, filename, &error)) {
 		g_print (_("Error loading dictionary file '%s':\n%s\n"), filename, 
 			 error ? error->message : _("Unspecified"));

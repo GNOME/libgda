@@ -270,7 +270,6 @@ typedef struct {
 	/* entry points to the plugin */
 	const gchar        *(*plugin_get_name) (void);
 	const gchar        *(*plugin_get_description) (void);
-	GList              *(*plugin_get_connection_params) (void);
 	GdaServerProvider  *(*plugin_create_provider) (void);
 	gchar              *(*get_dsn_spec) (void);
 } LoadedProvider;
@@ -356,8 +355,6 @@ detail_provider (TestConfig *config, const gchar *provider)
 			 (gpointer) &prv->plugin_get_name);
 	g_module_symbol (prv->handle, "plugin_get_description",
 			 (gpointer) &prv->plugin_get_description);
-	g_module_symbol (prv->handle, "plugin_get_connection_params",
-			 (gpointer) &prv->plugin_get_connection_params);
 	g_module_symbol (prv->handle, "plugin_create_provider",
 			 (gpointer) &prv->plugin_create_provider);
 	g_module_symbol (prv->handle, "plugin_get_dsn_spec",
@@ -385,13 +382,7 @@ detail_provider (TestConfig *config, const gchar *provider)
 		tr = xmlNewChild (table, NULL, "tr", NULL);
 		td = xmlNewChild (tr, NULL, "td", "plugin_get_description()");
 		td = xmlNewChild (tr, NULL, "td", prv->plugin_get_description ? _("Yes") : _("No"));
-		
-		tr = xmlNewChild (table, NULL, "tr", NULL);
-		td = xmlNewChild (tr, NULL, "td", "plugin_get_connection_params()");
-		td = xmlNewChild (tr, NULL, "td", prv->plugin_get_connection_params ? _("Yes") : _("No"));
-		if (prv->plugin_get_connection_params)
-			html_mark_node_error (HTML_CONFIG (config), td);
-		
+				
 		tr = xmlNewChild (table, NULL, "tr", NULL);
 		td = xmlNewChild (tr, NULL, "td", "plugin_create_provider()");
 		td = xmlNewChild (tr, NULL, "td", prv->plugin_create_provider ? _("Yes") : _("No"));
@@ -1342,7 +1333,8 @@ detail_datasource (TestConfig *config, GdaDataSourceInfo *dsn)
 	GdaConnection *cnc;
 	xmlNodePtr node;
 	GdaServerProvider *provider;
-	
+	GError *error = NULL;
+
 	filestr = g_strdup_printf ("%s.html", dsn->name);
 	title = g_strdup_printf (_("Datasource '%s' details"), dsn->name);
 	file = html_file_new (HTML_CONFIG (config), filestr, title);
@@ -1360,12 +1352,17 @@ detail_datasource (TestConfig *config, GdaDataSourceInfo *dsn)
 	cnc = gda_client_open_connection (client, dsn->name, 
 					  user ? user : dsn->username, 
 					  pass ? pass : ((dsn->password) ? dsn->password : ""),
-					  0, NULL);
+					  0, &error);
 	if (!cnc) {
 		xmlNodePtr p;
 
 		p = xmlNewChild (node, NULL, "p", _("Can't open connection."));
 		html_mark_node_error (HTML_CONFIG (config), p);
+
+		g_warning (_("Can't open connection to DSN %s: %s\n"), dsn->name,
+			   error && error->message ? error->message : "???");
+		g_error_free (error);
+
 		return;
 	}
 

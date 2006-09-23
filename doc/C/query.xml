@@ -16,7 +16,7 @@
       <listitem>
         <para>any other SQL queries: when the DML query cannot be interpreted as one of the types above, its type is set to 
 	  GDA_QUERY_TYPE_NON_PARSED_SQL;  This type indicates that query parsing has failed, either because the SQL statement is wrong 
-	  or because it uses an unsupported extension.</para>
+	  or because it uses unsupported SQL constructions and/or keywords.</para>
       </listitem>
     </itemizedlist>
   </para>
@@ -33,18 +33,23 @@
     SQL (for non "understood" SQL, it will set its type to GDA_QUERY_TYPE_NON_PARSED_SQL). See <link linkend="GdaQueryConstrExamples">this
       section</link> for some examples.
   </para>
+  <para>
+    The <link linkend="GdaQuery">GdaQuery</link> object implements the <link linkend="GdaEntity">GdaEntity</link> interface, 
+    and all its fields, which inherit from <link linkend="GdaQueryField">GdaQueryField</link>, implement the 
+    <link linkend="GdaEntityField">GdaEntityField</link> interface.
+  </para>
   <sect3>
     <title>General structure of a query</title>
     <para>
-      The general structure of a query:
+      A query is composed of the following (each object is owned by the query object):
       <itemizedlist>
 	<listitem>
           <para>A list of targets (as <link linkend="GdaQueryTarget">GdaQueryTarget</link> objects). Each GdaQueryTarget object
             represents an entity (= an object which implements the <link linkend="GdaEntity">GdaEntity</link>
             interface, for example a database table or another query);
             A single entity can be represented
-            several times by different GdaQueryTarget objects. FIXME: In the example above there are two GdaQueryTarget objects
-            representing the "person" and "title" entities.</para>
+            several times by different GdaQueryTarget objects (for instance for queries which involve a same table multiple times).
+          </para>
           <para>If a target that represents a <link linkend="GdaQuery">GdaQuery</link> object is added to a query,
             then the represented query MUST BE a sub-query of the query the target is added to. In the following query:
             <quote>"SELECT firstname, lastname FROM (SELECT * FROM person WHERE type=1)"</quote>, 
@@ -61,9 +66,9 @@
 	</listitem>
 	<listitem>
           <para>A list of fields (as <link linkend="GdaQueryField">GdaQueryField</link> objects). There are
-            several different types of GdaQueryField objects to represent the different uses of fields in data manipulation queries. 
-            FIXME: In the example
-            query, there are three query fields, all representing an entity's field: "firstname", "lastname" and "title".</para>
+            several different types of GdaQueryField objects to represent the different uses of fields in data manipulation queries:
+	    a field can represent a table.field field, or a function. The different types of query fields are: 
+            </para>
           <itemizedlist>
             <listitem><link linkend="GdaQueryFieldAll">GdaQueryFieldAll</link></listitem>
             <listitem><link linkend="GdaQueryFieldField">GdaQueryFieldField</link></listitem>
@@ -72,7 +77,9 @@
             <listitem><link linkend="GdaQueryFieldValue">GdaQueryFieldValue</link></listitem>
           </itemizedlist>
           <para>Query fields can be either visible or invisible (in which case they are only there to be used by other query
-            fields, but they do not participate directly in the query).</para>
+            fields, but they do not participate directly in the query). For instance in the <quote>SELECT count (id) FROM mytable</quote>,
+	  the query is composed of a GdaQueryTarget for the "mytable" table, of a GdaQueryField for the "count()" function, and
+	  of a last GdaQueryField for the "id" table field. </para>
           <para>Some types of query fields have a "value_provider" property which can point to another query field.
             In this case, when the query is executed, the query field which is pointed at is used to provide a value. This is
             particularly the case of modification queries: in a query such as 
