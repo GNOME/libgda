@@ -82,7 +82,7 @@ gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
 		gda_column_set_title (attribs, name);
 	gda_column_set_name (attribs, name);
 	gda_column_set_scale (attribs, colinfo->scale);
-	gda_column_set_gda_type (attribs,
+	gda_column_set_g_type (attribs,
 				gda_sybase_get_value_type (colinfo->datatype));
 	gda_column_set_defined_size (attribs, colinfo->maxlength);
 

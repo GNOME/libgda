@@ -1400,9 +1400,9 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 						dtype = gda_dict_get_dict_type_by_name (dict,
 							      GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
 						if (!dtype) 
-							gtype = gda_type_from_string (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
+							gtype = g_type_from_string (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
 						else
-							gtype = gda_dict_type_get_gda_type (dtype);
+							gtype = gda_dict_type_get_g_type (dtype);
 					}
 					pspecs = g_list_next (pspecs);
 				}
@@ -3435,7 +3435,7 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
 			GType type;
 			GdaDataHandler *handler;
 			
-			type = gda_entity_field_get_gda_type (field);
+			type = gda_entity_field_get_g_type (field);
 			if (type != G_TYPE_INVALID) {
 				handler = gda_server_provider_get_data_handler_gtype (prov, cnc, type);
 				if (!handler) 

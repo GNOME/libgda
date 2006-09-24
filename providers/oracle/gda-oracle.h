@@ -63,7 +63,7 @@ void gda_oracle_set_value (GValue *value,
 
 gchar *gda_oracle_value_to_sql_string (GValue *value);
 
-GType  oracle_sqltype_to_gda_type (const ub2 sqltype);
+GType  oracle_sqltype_to_g_type (const ub2 sqltype);
 
 gchar *oracle_sqltype_to_string (const ub2 sqltype);
 

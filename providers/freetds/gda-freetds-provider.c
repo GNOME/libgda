@@ -640,7 +640,7 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 {
 	GdaDataModel *model = NULL;
 	_TDSCOLINFO col;
-	GType gda_type;
+	GType g_type;
 	GValue     *value = NULL;
 	gint i = 1;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -654,7 +654,7 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 		for (i = 0; i < gda_data_model_get_n_rows (model); i++) {
 			GdaRow *row = (GdaRow *) gda_data_model_get_row (model, i);
 			
-			/* first fix gda_type */
+			/* first fix g_type */
 			if (row) {
 				value = gda_row_get_value (row, 2);
 				if (G_VALUE_TYPE (value) == G_TYPE_INT)
@@ -668,10 +668,10 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 				else 
 					col.column_type = g_value_get_char (value);
 				
-				gda_type = gda_freetds_get_value_type (&col);
+				g_type = gda_freetds_get_value_type (&col);
 				
 				/* col 3: type */
-				g_value_set_ulong (value, gda_type);
+				g_value_set_ulong (value, g_type);
 				
 				/* col 2: comment */
 				value = gda_row_get_value (row, 2);

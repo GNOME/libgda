@@ -24,6 +24,6 @@
 
 #include "gda-dict.h"
 
-GdaDictRegisterStruct *gda_types_get_register ();
+GdaDictRegisterStruct *g_types_get_register ();
 
 #endif

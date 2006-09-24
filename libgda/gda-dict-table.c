@@ -595,7 +595,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 		GdaColumn *att;
 		att = gda_data_model_describe_column (GDA_DATA_MODEL (rs), 9);
 		
-		if (gda_column_get_gda_type (att) != G_TYPE_STRING) {
+		if (gda_column_get_g_type (att) != G_TYPE_STRING) {
 			g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_FIELDS_ERROR,
 				     _("Schema for list of fields is wrong"));
 			g_object_unref (G_OBJECT (rs));
@@ -647,7 +647,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 				gchar *descr;
 				type = gda_dict_type_new (dict);
 				gda_dict_type_set_sqlname (type, str);
-				gda_dict_type_set_gda_type (type, GDA_TYPE_BLOB);
+				gda_dict_type_set_g_type (type, GDA_TYPE_BLOB);
 				descr = g_strdup_printf (_("Custom data type, declared for the %s.%s field"),
 							 gda_object_get_name (GDA_OBJECT (table)),
 							 gda_object_get_name (GDA_OBJECT (field)));

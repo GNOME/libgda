@@ -1,6 +1,6 @@
 /* gda-dict-aggregate.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -56,16 +56,16 @@ struct _GdaDictAggregateClass
 	GdaObjectClass                    parent_class;
 };
 
-GType             gda_dict_aggregate_get_type      (void);
-GObject          *gda_dict_aggregate_new           (GdaDict *dict);
-void              gda_dict_aggregate_set_dbms_id   (GdaDictAggregate *agg, const gchar *id);
-gchar            *gda_dict_aggregate_get_dbms_id   (GdaDictAggregate *agg);
-void              gda_dict_aggregate_set_sqlname   (GdaDictAggregate *agg, const gchar *sqlname);
-const gchar      *gda_dict_aggregate_get_sqlname   (GdaDictAggregate *agg);
-void              gda_dict_aggregate_set_arg_type  (GdaDictAggregate *agg, GdaDictType *dt);
-GdaDictType      *gda_dict_aggregate_get_arg_type  (GdaDictAggregate *agg);
-void              gda_dict_aggregate_set_ret_type  (GdaDictAggregate *agg, GdaDictType *dt);
-GdaDictType      *gda_dict_aggregate_get_ret_type  (GdaDictAggregate *agg);
+GType             gda_dict_aggregate_get_type           (void);
+GObject          *gda_dict_aggregate_new                (GdaDict *dict);
+void              gda_dict_aggregate_set_dbms_id        (GdaDictAggregate *agg, const gchar *id);
+gchar            *gda_dict_aggregate_get_dbms_id        (GdaDictAggregate *agg);
+void              gda_dict_aggregate_set_sqlname        (GdaDictAggregate *agg, const gchar *sqlname);
+const gchar      *gda_dict_aggregate_get_sqlname        (GdaDictAggregate *agg);
+void              gda_dict_aggregate_set_arg_dict_type  (GdaDictAggregate *agg, GdaDictType *dt);
+GdaDictType      *gda_dict_aggregate_get_arg_dict_type  (GdaDictAggregate *agg);
+void              gda_dict_aggregate_set_ret_dict_type  (GdaDictAggregate *agg, GdaDictType *dt);
+GdaDictType      *gda_dict_aggregate_get_ret_dict_type  (GdaDictAggregate *agg);
 
 G_END_DECLS
 

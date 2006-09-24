@@ -35,22 +35,16 @@ G_BEGIN_DECLS
 /*
  * Type utilities
  */
-const gchar *gda_type_to_string (GType type);
-GType gda_type_from_string (const gchar *str);
+const gchar *g_type_to_string (GType type);
+GType        g_type_from_string (const gchar *str);
 
 GList       *gda_string_hash_to_list (GHashTable *hash_table);
 
 /* 
  * SQL escaping
  */
-gchar *gda_default_escape_chars (const gchar *string);
-gchar *gda_default_unescape_chars (const gchar *string);
-
-/*
- * SQL parsing utilities
- */
-
-gchar *gda_sql_replace_placeholders (const gchar *sql, GdaParameterList *params);
+gchar       *gda_default_escape_chars (const gchar *string);
+gchar       *gda_default_unescape_chars (const gchar *string);
 
 /*
  * File management utility functions
@@ -80,7 +74,7 @@ void     utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr pa
 					      gboolean use_col_ids);
 void     utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources);
 GdaDictType *utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
-					       const gchar *dbms_type, const gchar *gda_type, gboolean *created);
+					       const gchar *dbms_type, const gchar *g_type, gboolean *created);
 
 
 G_END_DECLS

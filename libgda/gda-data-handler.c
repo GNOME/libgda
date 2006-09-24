@@ -127,7 +127,7 @@ GValue *
 gda_data_handler_get_value_from_sql (GdaDataHandler *dh, const gchar *sql, GType type)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (gda_data_handler_accepts_gda_type (GDA_DATA_HANDLER (dh), type), NULL);
+	g_return_val_if_fail (gda_data_handler_accepts_g_type (GDA_DATA_HANDLER (dh), type), NULL);
 
 	if (!sql)
 		return gda_value_new_null ();
@@ -159,7 +159,7 @@ GValue *
 gda_data_handler_get_value_from_str (GdaDataHandler *dh, const gchar *str, GType type)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (gda_data_handler_accepts_gda_type (GDA_DATA_HANDLER (dh), type), NULL);
+	g_return_val_if_fail (gda_data_handler_accepts_g_type (GDA_DATA_HANDLER (dh), type), NULL);
 
 	if (!str)
 		return gda_value_new_null ();
@@ -191,7 +191,7 @@ GValue *
 gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (gda_data_handler_accepts_gda_type (GDA_DATA_HANDLER (dh), type), NULL);
+	g_return_val_if_fail (gda_data_handler_accepts_g_type (GDA_DATA_HANDLER (dh), type), NULL);
 
 	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_sane_init_value)
 		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_sane_init_value) (dh, type);
@@ -200,7 +200,7 @@ gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
 }
 
 /**
- * gda_data_handler_get_nb_gda_types
+ * gda_data_handler_get_nb_g_types
  * @dh: an object which implements the #GdaDataHandler interface
  *
  * Get the number of GType types the GdaDataHandler can handle correctly
@@ -208,18 +208,18 @@ gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
  * Returns: the number.
  */
 guint
-gda_data_handler_get_nb_gda_types (GdaDataHandler *dh)
+gda_data_handler_get_nb_g_types (GdaDataHandler *dh)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), 0);
 
-	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_nb_gda_types)
-		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_nb_gda_types) (dh);
+	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_nb_g_types)
+		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_nb_g_types) (dh);
 	
 	return 0;
 }
 
 /**
- * gda_data_handler_accepts_gda_type
+ * gda_data_handler_accepts_g_type
  * @dh: an object which implements the #GdaDataHandler interface
  * @type:
  *
@@ -228,18 +228,18 @@ gda_data_handler_get_nb_gda_types (GdaDataHandler *dh)
  * Returns: TRUE if the gda type can be handled
  */
 gboolean
-gda_data_handler_accepts_gda_type (GdaDataHandler *dh, GType type)
+gda_data_handler_accepts_g_type (GdaDataHandler *dh, GType type)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), FALSE);
 
-	if (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_gda_type)
-		return (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_gda_type) (dh, type);
+	if (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type)
+		return (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type) (dh, type);
 	
 	return FALSE;
 }
 
 /**
- * gda_data_handler_get_gda_type_index
+ * gda_data_handler_get_g_type_index
  * @dh: an object which implements the #GdaDataHandler interface
  * @index: 
  *
@@ -248,14 +248,14 @@ gda_data_handler_accepts_gda_type (GdaDataHandler *dh, GType type)
  * Returns: the GType
  */
 GType
-gda_data_handler_get_gda_type_index (GdaDataHandler *dh, guint index)
+gda_data_handler_get_g_type_index (GdaDataHandler *dh, guint index)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), G_TYPE_INVALID);
-	g_return_val_if_fail (index < gda_data_handler_get_nb_gda_types (dh),
+	g_return_val_if_fail (index < gda_data_handler_get_nb_g_types (dh),
 			      G_TYPE_INVALID);
 
-	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_gda_type_index)
-		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_gda_type_index) (dh, index);
+	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_g_type_index)
+		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_g_type_index) (dh, index);
 	
 	return G_TYPE_INVALID;
 }

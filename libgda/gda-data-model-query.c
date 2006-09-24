@@ -768,7 +768,7 @@ create_columns (GdaDataModelQuery *model)
 		fields = gda_entity_get_fields (GDA_ENTITY (model->priv->queries[SEL_QUERY]));
 		list = fields;
 		while (list && allok) {
-			if (gda_entity_field_get_gda_type (GDA_ENTITY_FIELD (list->data)) == G_TYPE_INVALID) {
+			if (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (list->data)) == G_TYPE_INVALID) {
 				allok = FALSE;
 				g_warning (_("Can't determine the GType for field '%s', please fill a bug report"), 
 					   gda_object_get_name (GDA_OBJECT (list->data)));
@@ -786,7 +786,7 @@ create_columns (GdaDataModelQuery *model)
 			col = gda_column_new ();
 			gda_column_set_name (col, gda_object_get_name (GDA_OBJECT (field)));
 			gda_column_set_title (col, gda_object_get_name (GDA_OBJECT (field)));
-			gda_column_set_gda_type (col, gda_entity_field_get_gda_type (field));
+			gda_column_set_g_type (col, gda_entity_field_get_g_type (field));
 			if (GDA_IS_QUERY_FIELD_FIELD (field)) {
 				GdaEntityField *ref_field;
 

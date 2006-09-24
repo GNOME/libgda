@@ -95,7 +95,7 @@
           length NMTOKEN #REQUIRED
 	  scale NMTOKEN #REQUIRED
           default CDATA #IMPLIED
-	  default_gda_type NMTOKEN #IMPLIED
+	  default_g_type NMTOKEN #IMPLIED
 	  extra_attr NMTOKENS #IMPLIED
           plugin CDATA #IMPLIED>
 
@@ -222,11 +222,11 @@
 	  descr CDATA #IMPLIED
           is_visible (t|f) #IMPLIED
           is_internal (t|f) #IMPLIED
-	  gda_type NMTOKEN #REQUIRED
+	  g_type NMTOKEN #REQUIRED
           dict_type IDREF #IMPLIED
 	  value CDATA #IMPLIED
           default CDATA #IMPLIED
-	  default_gda_type NMTOKEN #IMPLIED
+	  default_g_type NMTOKEN #IMPLIED
 	  is_param (t|f) #IMPLIED
 	  nullok (t|f) #IMPLIED
           restrict NMTOKEN #IMPLIED

@@ -78,7 +78,7 @@ static GObjectClass *parent_class = NULL;
 /*******************************/
 
 static GType
-fb_sql_type_to_gda_type (const gshort field_type, gboolean has_decimals)
+fb_sql_type_to_g_type (const gshort field_type, gboolean has_decimals)
 {
 	switch (field_type && ~1) {
 		case SQL_BLOB:
@@ -853,7 +853,7 @@ gda_firebird_recordset_describe_column (GdaDataModel *model, gint col)
 	gda_column_set_defined_size (fa, (glong) recset->priv->sql_result->sqlvar[col].sqllen);
 	gda_column_set_table (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].relname);
 	gda_column_set_scale (fa, (glong) (recset->priv->sql_result->sqlvar[col].sqlscale * -1));
-	gda_column_set_gda_type (fa, fb_sql_type_to_gda_type (
+	gda_column_set_g_type (fa, fb_sql_type_to_g_type (
 							recset->priv->sql_result->sqlvar[col].sqltype,
 							(recset->priv->sql_result->sqlvar[col].sqlscale < 0)));
 	gda_column_set_position (fa, col);

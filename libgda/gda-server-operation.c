@@ -855,7 +855,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 			}
 			else {
 				param = GDA_PARAMETER (g_object_new (GDA_TYPE_PARAMETER, "dict", op->priv->dict,
-								     "gda_type", gda_dict_type_get_gda_type (dtype),
+								     "g_type", gda_dict_type_get_g_type (dtype),
 								     NULL));
 				if (dtype_created)
 					g_object_unref (dtype);
@@ -1963,7 +1963,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 						if (allok) {
 							GValue *gvalue;
 							gvalue = gda_value_new_from_string (value, 
-											    gda_column_get_gda_type (column));
+											    gda_column_get_g_type (column));
 							allok = gda_data_model_set_value_at (opnode->d.model,
 											     gda_column_get_position (column), 
 											     row, gvalue, error);

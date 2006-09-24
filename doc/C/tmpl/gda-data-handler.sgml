@@ -83,7 +83,7 @@ The #GdaDictType class an the #GnomeDbDataEntry interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_handler_get_nb_gda_types ##### -->
+<!-- ##### FUNCTION gda_data_handler_get_nb_g_types ##### -->
 <para>
 
 </para>
@@ -92,7 +92,7 @@ The #GdaDictType class an the #GnomeDbDataEntry interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_handler_accepts_gda_type ##### -->
+<!-- ##### FUNCTION gda_data_handler_accepts_g_type ##### -->
 <para>
 
 </para>
@@ -102,7 +102,7 @@ The #GdaDictType class an the #GnomeDbDataEntry interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_handler_get_gda_type_index ##### -->
+<!-- ##### FUNCTION gda_data_handler_get_g_type_index ##### -->
 <para>
 
 </para>

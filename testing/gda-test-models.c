@@ -531,7 +531,7 @@ action_set_value (TestConfig *config, GdaDataModel *model, xmlNodePtr node, gboo
 	else {
 		GType gdatype;
 
-		gdatype = gda_column_get_gda_type (column);
+		gdatype = gda_column_get_g_type (column);
 		if ((gdatype == G_TYPE_INVALID) ||
 		    (gdatype == GDA_TYPE_NULL)) {
 			errmsg = g_strdup (_("Cannot retrieve column data type (type is UNKNOWN or not specified)"));
@@ -553,7 +553,7 @@ action_set_value (TestConfig *config, GdaDataModel *model, xmlNodePtr node, gboo
 				if (!gda_value_set_from_string (value, xmlNodeGetContent (vnode), gdatype)) {
 					g_free (value);
 					errmsg = g_strdup_printf (_("Cannot interpret string as a valid %s value"), 
-								   gda_type_to_string (gdatype));
+								   g_type_to_string (gdatype));
 				}
 			}
 			else

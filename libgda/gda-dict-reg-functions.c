@@ -248,7 +248,7 @@ functions_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **err
 			func = gda_functions_get_by_name_arg_in_list (dict, original_functions, str, dtl);
 			g_free (str);
 
-			if (func && (gda_dict_function_get_ret_type (func) != rettype))
+			if (func && (gda_dict_function_get_ret_dict_type (func) != rettype))
 				func = NULL;
 		}
 
@@ -265,7 +265,7 @@ functions_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **err
 				gboolean isequal = TRUE;
 				GSList *hlist;
 				
-				list = (GSList *) gda_dict_function_get_arg_types (func);
+				list = (GSList *) gda_dict_function_get_arg_dict_types (func);
 				hlist = dtl;
 				while (list && hlist && isequal) {
 					if (list->data != hlist->data)
@@ -273,7 +273,7 @@ functions_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **err
 					list = g_slist_next (list);
 					hlist = g_slist_next (hlist);
 				}
-				if (isequal && (gda_dict_function_get_ret_type (func) != rettype)) 
+				if (isequal && (gda_dict_function_get_ret_dict_type (func) != rettype)) 
 					isequal = FALSE;
 				
 				if (isequal) {
@@ -289,8 +289,8 @@ functions_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **err
 			if (!func) {
 				/* creating new ServerFunction object */
 				func = GDA_DICT_FUNCTION (gda_dict_function_new (dict));
-				gda_dict_function_set_ret_type (func, rettype);
-				gda_dict_function_set_arg_types (func, dtl);
+				gda_dict_function_set_ret_dict_type (func, rettype);
+				gda_dict_function_set_arg_dict_types (func, dtl);
 
 				/* mark function as updated */
 				updated_fn = g_slist_append (updated_fn, func);
@@ -441,13 +441,13 @@ gda_functions_get_by_name_arg_in_list (GdaDict *dict, GSList *functions,
 	while (list && !func) {
 		gboolean argsok = TRUE;
 		gboolean func_any_type = FALSE;
-		gboolean func_gda_type = FALSE;
+		gboolean func_g_type = FALSE;
 		GSList *funcargs, *list2;
 		GdaDictFunction *tmp = NULL;
 
 		/* arguments comparison */
 		list2 = (GSList *) argtypes;
-		funcargs = (GSList *) gda_dict_function_get_arg_types (GDA_DICT_FUNCTION (list->data));
+		funcargs = (GSList *) gda_dict_function_get_arg_dict_types (GDA_DICT_FUNCTION (list->data));
 		while (funcargs && list2 && argsok) {
 			gboolean tmpok = FALSE;
 
@@ -461,10 +461,10 @@ gda_functions_get_by_name_arg_in_list (GdaDict *dict, GSList *functions,
 				else {
 					if (funcargs->data && list2->data &&
 					    sinfo && sinfo->implicit_data_types_casts &&
-					    (gda_dict_type_get_gda_type (funcargs->data) == 
-					     gda_dict_type_get_gda_type (list2->data))) {
+					    (gda_dict_type_get_g_type (funcargs->data) == 
+					     gda_dict_type_get_g_type (list2->data))) {
 						tmpok = TRUE;
-						func_gda_type = TRUE;
+						func_g_type = TRUE;
 					}
 				}
 			}
@@ -494,7 +494,7 @@ gda_functions_get_by_name_arg_in_list (GdaDict *dict, GSList *functions,
 			if (func_any_type)
 				anytypefunc = tmp;
 			else {
-				if (func_gda_type)
+				if (func_g_type)
 					gdatypefunc = tmp;
 				else
 					func = tmp;

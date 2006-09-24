@@ -67,16 +67,16 @@ It implements the #GdaXmlStorage interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_type_set_gda_type ##### -->
+<!-- ##### FUNCTION gda_dict_type_set_g_type ##### -->
 <para>
 
 </para>
 
 @dt: 
-@gda_type: 
+@g_type: 
 
 
-<!-- ##### FUNCTION gda_dict_type_get_gda_type ##### -->
+<!-- ##### FUNCTION gda_dict_type_get_g_type ##### -->
 <para>
 
 </para>

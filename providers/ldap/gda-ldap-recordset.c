@@ -193,7 +193,7 @@ gda_ldap_recordset_describe_column (GdaDataModel *model, gint col)
 		gda_column_set_name (attrs, ldap_fields[col].name);
 	gda_column_set_defined_size (attrs, ldap_fields[col].max_length);
 	gda_column_set_scale (attrs, ldap_fields[col].decimals);
-	gda_column_set_gda_type (attrs, gda_ldap_type_to_gda (ldap_fields[col].type));
+	gda_column_set_g_type (attrs, gda_ldap_type_to_gda (ldap_fields[col].type));
 */
 	return attrs;
 }

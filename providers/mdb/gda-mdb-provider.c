@@ -90,7 +90,7 @@ static GdaDataModel *gda_mdb_provider_get_schema (GdaServerProvider *provider,
 
 static GdaDataHandler *gda_mdb_provider_get_data_handler (GdaServerProvider *provider,
 							  GdaConnection *cnc,
-							  GType gda_type,
+							  GType g_type,
 							  const gchar *dbms_type);
 
 static GObjectClass *parent_class = NULL;
@@ -835,7 +835,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 		/* set description for the field */
 		fa = gda_data_model_describe_column (model, c);
 		gda_column_set_name (fa, mdb_col->name);
-		gda_column_set_gda_type (fa, coltypes [c]);
+		gda_column_set_g_type (fa, coltypes [c]);
 		gda_column_set_defined_size (fa, mdb_col->col_size);
 	}
 

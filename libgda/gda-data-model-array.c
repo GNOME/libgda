@@ -303,7 +303,7 @@ gda_data_model_array_get_type (void)
  * @cols: number of columns for rows in this data model.
  *
  * Creates a new #GdaDataModel object without initializing the column
- * types. Using gda_data_model_array_new_with_types() is usually better.
+ * types. Using gda_data_model_array_new_with_g_types() is usually better.
  *
  * Returns: a pointer to the newly created #GdaDataModel.
  */
@@ -318,7 +318,7 @@ gda_data_model_array_new (gint cols)
 }
 
 /**
- * gda_data_model_array_new_with_types
+ * gda_data_model_array_new_with_g_types
  * @cols: number of columns for rows in this data model.
  * @...: types of the columns of the model to create as #GType
  * 
@@ -328,7 +328,7 @@ gda_data_model_array_new (gint cols)
  * Returns: a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
-gda_data_model_array_new_with_types (gint cols, ...)
+gda_data_model_array_new_with_g_types (gint cols, ...)
 {
 	GdaDataModel *model;
 	va_list args;
@@ -343,7 +343,7 @@ gda_data_model_array_new_with_types (gint cols, ...)
 		argtype = va_arg (args, GType);
 		g_assert (argtype >= 0);
 
-		gda_column_set_gda_type (gda_data_model_describe_column (model, i), 
+		gda_column_set_g_type (gda_data_model_describe_column (model, i), 
 					 (GType) argtype);
 		i++;
 	}
@@ -388,7 +388,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 		gda_column_set_caption (copycol, gda_column_get_caption (srccol));
 		gda_column_set_scale (copycol, gda_column_get_scale (srccol));
 		gda_column_set_dbms_type (copycol, gda_column_get_dbms_type (srccol));
-		gda_column_set_gda_type (copycol, gda_column_get_gda_type (srccol));
+		gda_column_set_g_type (copycol, gda_column_get_g_type (srccol));
 		gda_column_set_position (copycol, gda_column_get_position (srccol));
 	}
 

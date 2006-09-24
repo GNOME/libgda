@@ -42,7 +42,7 @@ struct _GdaColumnPrivate {
 	gint         scale;
 
 	gchar       *dbms_type;
-	GType        gda_type;
+	GType        g_type;
 
 	gboolean     allow_null;
 	gboolean     primary_key;
@@ -105,10 +105,10 @@ gda_column_class_init (GdaColumnClass *klass)
 			      G_TYPE_NONE,
 			      1, G_TYPE_STRING);
 	gda_column_signals[GDA_TYPE_CHANGED] =
-		g_signal_new ("gda_type_changed",
+		g_signal_new ("g_type_changed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
-			      G_STRUCT_OFFSET (GdaColumnClass, gda_type_changed),
+			      G_STRUCT_OFFSET (GdaColumnClass, g_type_changed),
 			      NULL, NULL,
 			      gda_marshal_VOID__INT_INT,
 			      G_TYPE_NONE,
@@ -138,7 +138,7 @@ gda_column_init (GdaColumn *column, GdaColumnClass *klass)
 	column->priv->title = NULL;
 	column->priv->caption = NULL;
 	column->priv->scale = 0;
-	column->priv->gda_type = G_TYPE_INVALID;
+	column->priv->g_type = G_TYPE_INVALID;
 	column->priv->allow_null = TRUE;
 	column->priv->primary_key = FALSE;
 	column->priv->unique_key = FALSE;
@@ -278,7 +278,7 @@ gda_column_copy (GdaColumn *column)
 	if (column->priv->caption)
 		column_copy->priv->caption = g_strdup (column->priv->caption);
 	column_copy->priv->scale = column->priv->scale;
-	column_copy->priv->gda_type = column->priv->gda_type;
+	column_copy->priv->g_type = column->priv->g_type;
 	column_copy->priv->allow_null = column->priv->allow_null;
 	column_copy->priv->primary_key = column->priv->primary_key;
 	column_copy->priv->unique_key = column->priv->unique_key;
@@ -510,34 +510,34 @@ gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type)
 }
 
 /**
- * gda_column_get_gda_type
+ * gda_column_get_g_type
  * @column: a #GdaColumn.
  *
  * Returns: the type of @column.
  */
 GType
-gda_column_get_gda_type (GdaColumn *column)
+gda_column_get_g_type (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), GDA_TYPE_NULL);
-	return column->priv->gda_type;
+	return column->priv->g_type;
 }
 
 /**
- * gda_column_set_gda_type
+ * gda_column_set_g_type
  * @column: a #GdaColumn.
  * @type: the new type of @column.
  *
  * Sets the type of @column to @type.
  */
 void
-gda_column_set_gda_type (GdaColumn *column, GType type)
+gda_column_set_g_type (GdaColumn *column, GType type)
 {
 	GType old_type;
 
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
-	old_type = column->priv->gda_type;
-	column->priv->gda_type = type;
+	old_type = column->priv->g_type;
+	column->priv->g_type = type;
 
 	g_signal_emit (G_OBJECT (column),
 		       gda_column_signals[GDA_TYPE_CHANGED],

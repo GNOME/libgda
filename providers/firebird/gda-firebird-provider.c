@@ -381,7 +381,7 @@ fb_get_tables (GdaConnection *cnc,
 
 
 /*
- *  fb_type_name_to_gda_type
+ *  fb_type_name_to_g_type
  *
  *  Function convert a string containing the name of Firebird's
  *  data type to it's corresponding gda data type.
@@ -390,7 +390,7 @@ fb_get_tables (GdaConnection *cnc,
  *           type
  */
 static GType
-fb_type_name_to_gda_type (const gchar *name)
+fb_type_name_to_g_type (const gchar *name)
 {
 	if (!strcmp (name, "CHAR") || !strcmp (name, "VARCHAR"))
 		return G_TYPE_STRING;
@@ -548,11 +548,11 @@ fb_set_field_metadata (GdaRow *row)
 
 	/* Set size */
 	short_value = 0;
-	if (fb_type_name_to_gda_type (the_value) == G_TYPE_STRING) {
+	if (fb_type_name_to_g_type (the_value) == G_TYPE_STRING) {
 		value = gda_row_get_value (row, 2);
 		short_value = gda_value_get_short (value);
 	}
-	else if (fb_type_name_to_gda_type (the_value) == GDA_TYPE_NUMERIC) {
+	else if (fb_type_name_to_g_type (the_value) == GDA_TYPE_NUMERIC) {
 		value = gda_row_get_value (row, 3);
 		short_value = gda_value_get_short (value);
 	}

@@ -114,7 +114,7 @@ static GdaDataModel *gda_postgres_provider_get_schema (GdaServerProvider *provid
 
 static GdaDataHandler *gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 							       GdaConnection *cnc,
-							       GType gda_type,
+							       GType g_type,
 							       const gchar *dbms_type);
 static const gchar* gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider,
 								 GdaConnection *cnc,
@@ -239,7 +239,7 @@ gda_postgres_provider_new (void)
 }
 
 static GType
-postgres_name_to_gda_type (const gchar *name)
+postgres_name_to_g_type (const gchar *name)
 {
 	if (!strcmp (name, "bool"))
 		return G_TYPE_BOOLEAN;
@@ -349,7 +349,7 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	for (i = 0; i < nrows; i++) {
 		td[i].name = g_strdup (PQgetvalue (pg_res, i, 1));
 		td[i].oid = atoi (PQgetvalue (pg_res, i, 0));
-		td[i].type = postgres_name_to_gda_type (td[i].name);
+		td[i].type = postgres_name_to_g_type (td[i].name);
 		td[i].comments = g_strdup (PQgetvalue (pg_res, i, 3));
 		td[i].owner = g_strdup (PQgetvalue (pg_res, i, 2));
 		g_hash_table_insert (h_table, td[i].name, &td[i].type);
@@ -2655,7 +2655,7 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 			}
 			else {
 				dh = gda_postgres_provider_get_data_handler (provider, cnc, 
-									     postgres_name_to_gda_type (dbms_type), NULL);
+									     postgres_name_to_g_type (dbms_type), NULL);
 				gda_server_provider_handler_declare (provider, dh, cnc, 
 								     G_TYPE_INVALID, dbms_type);
 			}

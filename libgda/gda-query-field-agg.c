@@ -536,7 +536,7 @@ gda_query_field_agg_set_arg (GdaQueryFieldAgg *agg, GdaQueryField *arg)
 		GdaDict *dict;
 		GdaConnection *cnc;
 		GdaDictAggregate *sagg = GDA_DICT_AGGREGATE (gda_object_ref_get_ref_object (agg->priv->agg_ref));
-		GdaDictType *argtype = gda_dict_aggregate_get_arg_type (sagg);
+		GdaDictType *argtype = gda_dict_aggregate_get_arg_dict_type (sagg);
 
 		dict = gda_object_get_dict (GDA_OBJECT (agg));
 		cnc = gda_dict_get_connection (dict);
@@ -551,8 +551,8 @@ gda_query_field_agg_set_arg (GdaQueryFieldAgg *agg, GdaQueryField *arg)
 			}
 			else {
 				/* GType compatibility test */
-				if (gda_dict_type_get_gda_type (gda_query_field_get_dict_type (GDA_QUERY_FIELD (arg))) !=
-				    gda_dict_type_get_gda_type (argtype))
+				if (gda_dict_type_get_g_type (gda_query_field_get_dict_type (GDA_QUERY_FIELD (arg))) !=
+				    gda_dict_type_get_g_type (argtype))
 					arg_ok = FALSE;
 			}
 		}
@@ -657,7 +657,7 @@ gda_query_field_agg_get_data_type (GdaEntityField *iface)
 	if (gda_query_field_agg_activate (GDA_REFERER (iface))) {
 		GdaDictAggregate *agg;
 		agg = GDA_DICT_AGGREGATE (gda_object_ref_get_ref_object (GDA_QUERY_FIELD_AGG (iface)->priv->agg_ref));
-		return gda_dict_aggregate_get_ret_type (agg);
+		return gda_dict_aggregate_get_ret_dict_type (agg);
 	}
 
 	return NULL;

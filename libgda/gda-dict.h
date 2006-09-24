@@ -1,6 +1,6 @@
 /* gda-dict.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -92,9 +92,9 @@ GdaDictDatabase  *gda_dict_get_database                    (GdaDict *dict);
 void              gda_dict_declare_object_string_id_change (GdaDict *dict, GdaObject *obj, const gchar *oldid);
 GdaObject        *gda_dict_get_object_by_string_id         (GdaDict *dict, const gchar *strid);
 
-gboolean          gda_dict_update_dbms_data                (GdaDict *dict, GType limit_to_type, const gchar *limit_obj_name, 
+gboolean          gda_dict_update_dbms_meta_data           (GdaDict *dict, GType limit_to_type, const gchar *limit_obj_name, 
 							    GError **error);
-void              gda_dict_stop_update_dbms_data           (GdaDict *dict);
+void              gda_dict_stop_update_dbms_meta_data      (GdaDict *dict);
 
 gchar            *gda_dict_compute_xml_filename            (GdaDict *dict, const gchar *datasource, 
 							    const gchar *app_id, GError **error);

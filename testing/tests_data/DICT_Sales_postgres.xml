@@ -5775,7 +5775,7 @@
         <gda_dict_field id="TVWmJ1Zw:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVY3VzdG9tZXJz" name="customers" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVY3VzdG9tZXJz:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.customers_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVY3VzdG9tZXJz:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_g_type="gchararray" default="nextval('public.customers_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVY3VzdG9tZXJz:FIbmFtZQ" name="name" descr="" type="DTdmFyY2hhcg" length="35" scale="0"/>
         <gda_dict_field id="TVY3VzdG9tZXJz:FIZGVmYXVsdF9zZXJ2ZWRfYnk" name="default_served_by" descr="" type="DTaW50NA" length="4" scale="0"/>
         <gda_dict_field id="TVY3VzdG9tZXJz:FIY291bnRyeQ" name="country" descr="" type="DTdmFyY2hhcg" length="20" scale="0"/>
@@ -5789,13 +5789,13 @@
       <gda_dict_table id="TVb3JkZXJfY29udGVudHM" name="order_contents" owner="vivien" descr="" is_view="f">
         <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIb3JkZXJfaWQ" name="order_id" descr="" type="DTaW50NA" length="4" scale="0"/>
         <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIcHJvZHVjdF9yZWY" name="product_ref" descr="" type="DTdmFyY2hhcg" length="15" scale="0"/>
-        <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIcXVhbnRpdHk" name="quantity" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="1"/>
-        <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIZGlzY291bnQ" name="discount" descr="" type="DTZmxvYXQ4" length="8" scale="0" default_gda_type="gchararray" default="0"/>
+        <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIcXVhbnRpdHk" name="quantity" descr="" type="DTaW50NA" length="4" scale="0" default_g_type="gchararray" default="1"/>
+        <gda_dict_field id="TVb3JkZXJfY29udGVudHM:FIZGlzY291bnQ" name="discount" descr="" type="DTZmxvYXQ4" length="8" scale="0" default_g_type="gchararray" default="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVb3JkZXJz" name="orders" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVb3JkZXJz:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.orders_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVb3JkZXJz:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_g_type="gchararray" default="nextval('public.orders_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVb3JkZXJz:FIY3VzdG9tZXI" name="customer" descr="" type="DTaW50NA" length="4" scale="0"/>
-        <gda_dict_field id="TVb3JkZXJz:FIY3JlYXRpb25fZGF0ZQ" name="creation_date" descr="" type="DTZGF0ZQ" length="4" scale="0" default_gda_type="gchararray" default="now()"/>
+        <gda_dict_field id="TVb3JkZXJz:FIY3JlYXRpb25fZGF0ZQ" name="creation_date" descr="" type="DTZGF0ZQ" length="4" scale="0" default_g_type="gchararray" default="now()"/>
         <gda_dict_field id="TVb3JkZXJz:FIZGVsaXZlcnlfYmVmb3Jl" name="delivery_before" descr="" type="DTZGF0ZQ" length="4" scale="0"/>
         <gda_dict_field id="TVb3JkZXJz:FIZGVsaXZlcnlfZGF0ZQ" name="delivery_date" descr="" type="DTZGF0ZQ" length="4" scale="0"/>
       </gda_dict_table>
@@ -5806,7 +5806,7 @@
         <gda_dict_field id="TVcHJvZHVjdHM:FId2hfc3RvcmVk" name="wh_stored" descr="" type="DTaW50NA" length="4" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVcm9sZXM" name="roles" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVcm9sZXM:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.roles_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVcm9sZXM:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_g_type="gchararray" default="nextval('public.roles_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVcm9sZXM:FIcm9sZQ" name="role" descr="" type="DTdmFyY2hhcg" length="30" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVc2FsZXNfb3JnYQ" name="sales_orga" owner="vivien" descr="" is_view="f">
@@ -5815,17 +5815,17 @@
         <gda_dict_field id="TVc2FsZXNfb3JnYQ:FIbm90ZQ" name="note" descr="" type="DTdGV4dA" length="-1" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVc2FsZXNyZXA" name="salesrep" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVc2FsZXNyZXA:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.salesrep_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVc2FsZXNyZXA:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_g_type="gchararray" default="nextval('public.salesrep_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVc2FsZXNyZXA:FIbmFtZQ" name="name" descr="" type="DTdmFyY2hhcg" length="30" scale="0"/>
         <gda_dict_field id="TVc2FsZXNyZXA:FIeWVhcl9zYWxhcnk" name="year_salary" descr="" type="DTZmxvYXQ4" length="8" scale="0"/>
         <gda_dict_field id="TVc2FsZXNyZXA:FIZGF0ZV9lbXBs" name="date_empl" descr="" type="DTZGF0ZQ" length="4" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVdGVzdF9sYXN0X2lk" name="test_last_id" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVdGVzdF9sYXN0X2lk:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.test_last_id_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVdGVzdF9sYXN0X2lk:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_g_type="gchararray" default="nextval('public.test_last_id_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVdGVzdF9sYXN0X2lk:FIbmFtZQ" name="name" descr="" type="DTdmFyY2hhcg" length="20" scale="0"/>
       </gda_dict_table>
       <gda_dict_table id="TVd2FyZWhvdXNlcw" name="warehouses" owner="vivien" descr="" is_view="f">
-        <gda_dict_field id="TVd2FyZWhvdXNlcw:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_gda_type="gchararray" default="nextval('public.warehouses_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
+        <gda_dict_field id="TVd2FyZWhvdXNlcw:FIaWQ" name="id" descr="" type="DTaW50NA" length="4" scale="0" default_g_type="gchararray" default="nextval('public.warehouses_id_seq'::text)" extra_attr="AUTO_INCREMENT"/>
         <gda_dict_field id="TVd2FyZWhvdXNlcw:FIbmFtZQ" name="name" descr="" type="DTdmFyY2hhcg" length="30" scale="0"/>
         <gda_dict_field id="TVd2FyZWhvdXNlcw:FIY291bnRyeQ" name="country" descr="" type="DTdmFyY2hhcg" length="20" scale="0"/>
         <gda_dict_field id="TVd2FyZWhvdXNlcw:FIY2l0eQ" name="city" descr="" type="DTdmFyY2hhcg" length="30" scale="0"/>

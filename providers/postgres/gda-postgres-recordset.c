@@ -710,7 +710,7 @@ gda_postgres_recordset_describe_column (GdaDataModelRow *model, gint col)
 		(ftype == G_TYPE_FLOAT) ? FLT_DIG : 0;
 
 	gda_column_set_scale (field_attrs, scale);
-	gda_column_set_gda_type (field_attrs, ftype);
+	gda_column_set_g_type (field_attrs, ftype);
 
 	/* PQfsize() == -1 => variable length */
 	gda_column_set_defined_size (field_attrs,

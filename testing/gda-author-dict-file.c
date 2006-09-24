@@ -238,7 +238,7 @@ main (int argc, char **argv)
 	}
 
 	/* update DBMS data */
-	if (!gda_dict_update_dbms_data (dict, 0, NULL, &error))
+	if (!gda_dict_update_dbms_meta_data (dict, 0, NULL, &error))
 		g_warning ("Could not update DBMS data: %s", error ? error->message:
 			   _("Unknown error"));
 

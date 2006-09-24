@@ -17,7 +17,7 @@ Utility functions
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### FUNCTION gda_type_to_string ##### -->
+<!-- ##### FUNCTION g_type_to_string ##### -->
 <para>
 
 </para>
@@ -26,7 +26,7 @@ Utility functions
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_type_from_string ##### -->
+<!-- ##### FUNCTION g_type_from_string ##### -->
 <para>
 
 </para>

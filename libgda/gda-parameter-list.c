@@ -252,7 +252,7 @@ gda_parameter_list_new_inline (GdaDict *dict, ...)
 
 		type = va_arg (ap, GType);
 		param = (GdaParameter *) g_object_new (GDA_TYPE_PARAMETER, 
-						       "dict", ASSERT_DICT (dict), "gda_type", type, NULL);
+						       "dict", ASSERT_DICT (dict), "g_type", type, NULL);
 		gda_object_set_name (GDA_OBJECT (param), name);
 		gda_object_set_id (GDA_OBJECT (param), name);
 
@@ -565,7 +565,7 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 
 			if (!param) {
 				param = GDA_PARAMETER (g_object_new (GDA_TYPE_PARAMETER, "dict", dict,
-								     "gda_type", gda_dict_type_get_gda_type (dtype),
+								     "g_type", gda_dict_type_get_g_type (dtype),
 								     NULL));
 				params = g_slist_append (params, param);
 			}
@@ -689,12 +689,12 @@ gda_parameter_list_get_spec (GdaParameterList *paramlist)
 		if (cstr)
 			xmlSetProp (node, "descr", cstr);		
 
-		/* dtype = gda_parameter_get_gda_type (param); */
+		/* dtype = gda_parameter_get_g_type (param); */
 /* 		if (dtype) { */
 /* 			xmlSetProp (node, "dbmstype", gda_dict_type_get_sqlname (dtype)); */
-/* 			xmlSetProp (node, "gdatype", gda_type_to_string (gda_dict_type_get_gda_type (dtype))); */
+/* 			xmlSetProp (node, "gdatype", g_type_to_string (gda_dict_type_get_g_type (dtype))); */
 /* 		} */
-		xmlSetProp (node, "gdatype", gda_type_to_string (gda_parameter_get_gda_type (param)));
+		xmlSetProp (node, "gdatype", g_type_to_string (gda_parameter_get_g_type (param)));
 
 		xmlSetProp (node, "nullok", gda_parameter_get_not_null (param) ? "FALSE" : "TRUE");
 		g_object_get (G_OBJECT (param), "entry_plugin", &str, NULL);
@@ -1132,13 +1132,13 @@ gda_parameter_list_add_param_from_string (GdaParameterList *paramlist, const gch
 	g_return_val_if_fail (paramlist->priv, NULL);
 
 	dict = gda_object_get_dict ((GdaObject*) paramlist);
-	param = g_object_new (GDA_TYPE_PARAMETER, "dict", dict, "gda_type", type, NULL);
+	param = g_object_new (GDA_TYPE_PARAMETER, "dict", dict, "g_type", type, NULL);
 	g_return_val_if_fail (param, NULL);
 
 	if (! gda_parameter_set_value_str (param, str)) {
 		g_object_unref (param);
 		g_warning (_("Could not add parameter of type %s with value '%s'"), 
-			   gda_type_to_string (type), str);
+			   g_type_to_string (type), str);
 		return NULL;
 	}
 
@@ -1172,7 +1172,7 @@ gda_parameter_list_add_param_from_value (GdaParameterList *paramlist, const gcha
 	g_return_val_if_fail (G_IS_VALUE (value), NULL);
 
 	dict = gda_object_get_dict ((GdaObject*) paramlist);
-	param = g_object_new (GDA_TYPE_PARAMETER, "dict", dict, "gda_type", G_VALUE_TYPE (value), NULL);
+	param = g_object_new (GDA_TYPE_PARAMETER, "dict", dict, "g_type", G_VALUE_TYPE (value), NULL);
 	g_return_val_if_fail (param, NULL);
 
 	gda_parameter_set_value (param, value);
@@ -1265,12 +1265,12 @@ gda_parameter_list_is_coherent (GdaParameterList *paramlist, GError **error)
 					     node->source_model, node->source_column);
 				return FALSE;
 			}
-			if (gda_column_get_gda_type (col) != gda_parameter_get_gda_type (node->param)) {
+			if (gda_column_get_g_type (col) != gda_parameter_get_g_type (node->param)) {
 				g_set_error (error, GDA_PARAMETER_LIST_ERROR, 0,
 					     _("GdaParameter is restricted by a column of the wrong type: "
 					       "%s (%s expected)"),
-					     gda_type_to_string (gda_parameter_get_gda_type (node->param)),
-					     gda_type_to_string (gda_column_get_gda_type (col)));
+					     g_type_to_string (gda_parameter_get_g_type (node->param)),
+					     g_type_to_string (gda_column_get_g_type (col)));
 				return FALSE;
 			}
 		}
@@ -1581,7 +1581,7 @@ gda_parameter_list_set_param_default_value (GdaParameterList *paramlist, GdaPara
 
 	if (value && ! gda_value_is_null ((GValue *) value)) {
 		g_return_if_fail (G_VALUE_TYPE ((GValue *) value) ==
-				  gda_parameter_get_gda_type (param));
+				  gda_parameter_get_g_type (param));
 		g_hash_table_insert (paramlist->priv->param_default_values, param, 
 				     gda_value_copy ((GValue *) value));
 	}
@@ -1621,8 +1621,8 @@ gda_parameter_list_set_param_default_alias (GdaParameterList *paramlist, GdaPara
 	if (alias) {
 		g_return_if_fail (alias != param);
 		g_return_if_fail (alias && GDA_IS_PARAMETER (alias));
-		g_return_if_fail (gda_parameter_get_gda_type (param) == 
-				  gda_parameter_get_gda_type (alias));
+		g_return_if_fail (gda_parameter_get_g_type (param) == 
+				  gda_parameter_get_g_type (alias));
 		g_hash_table_insert (paramlist->priv->param_default_aliases, param, alias);
 		g_hash_table_insert (paramlist->priv->aliases_default_param, alias, param);
 		gda_object_connect_destroy (alias, G_CALLBACK (destroyed_alias_cb), paramlist);

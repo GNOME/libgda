@@ -43,7 +43,7 @@
 G_BEGIN_DECLS
 
 void gda_odbc_emit_error ( GdaConnection *cnc, SQLHANDLE env, SQLHANDLE con, SQLHANDLE stmt );
-GType odbc_to_gda_type ( int odbc_type );
+GType odbc_to_g_type ( int odbc_type );
 
 G_END_DECLS
 

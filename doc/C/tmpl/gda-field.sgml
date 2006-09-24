@@ -24,7 +24,7 @@ Management of #GdaDataModel fields
 @table: 
 @caption: 
 @scale: 
-@gda_type: 
+@g_type: 
 @allow_null: 
 @primary_key: 
 @unique_key: 
@@ -177,7 +177,7 @@ Management of #GdaDataModel fields
 @scale: 
 
 
-<!-- ##### FUNCTION gda_column_get_gda_type ##### -->
+<!-- ##### FUNCTION gda_column_get_g_type ##### -->
 <para>
 
 </para>
@@ -186,7 +186,7 @@ Management of #GdaDataModel fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_column_set_gda_type ##### -->
+<!-- ##### FUNCTION gda_column_set_g_type ##### -->
 <para>
 
 </para>

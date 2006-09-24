@@ -1283,7 +1283,7 @@ get_types_rs(GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset, const 
 					&ival, sizeof(ival), &ind);
 
 		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), 
-				   SQL_SUCCEEDED (rc) && (ind >= 0) ? odbc_to_gda_type (ival) : G_TYPE_INVALID);
+				   SQL_SUCCEEDED (rc) && (ind >= 0) ? odbc_to_g_type (ival) : G_TYPE_INVALID);
 		value_list = g_list_append (value_list, tmpval);
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);

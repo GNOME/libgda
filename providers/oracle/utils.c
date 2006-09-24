@@ -122,7 +122,7 @@ gda_oracle_handle_error(gint result, GdaConnection *cnc,
 }
 
 GType 
-oracle_sqltype_to_gda_type (const ub2 sqltype)
+oracle_sqltype_to_g_type (const ub2 sqltype)
 {
 	/* an incomplete list of all the oracle types */
 	switch (sqltype) {
@@ -320,11 +320,11 @@ gda_value_to_oracle_value (const GValue *value)
 
 	ora_value = g_new0 (GdaOracleValue, 1);
 
-	ora_value->gda_type = G_VALUE_TYPE (value);
+	ora_value->g_type = G_VALUE_TYPE (value);
 	ora_value->indicator = 0;
 	ora_value->hdef = (OCIDefine *) 0;
 	ora_value->pard = (OCIParam *) 0;
-	type = ora_value->gda_type;
+	type = ora_value->g_type;
 
 	if (type == GDA_TYPE_NULL)
 		ora_value->indicator = -1;
@@ -401,7 +401,7 @@ gda_oracle_set_value (GValue *value,
 		return;
 	}
 
-	type = ora_value->gda_type;
+	type = ora_value->g_type;
 	if (type == G_TYPE_BOOLEAN) 
 		g_value_set_boolean (value, (atoi (ora_value->value)) ? TRUE: FALSE);
 	else if (type == G_TYPE_STRING) {

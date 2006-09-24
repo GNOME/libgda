@@ -120,7 +120,7 @@ static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
 						    GdaParameterList *params);
 static GdaDataHandler *gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 						     GdaConnection *cnc,
-						     GType gda_type,
+						     GType g_type,
 						     const gchar *dbms_type);
 static const gchar* gda_mysql_provider_get_default_dbms_type (GdaServerProvider *provider,
 							      GdaConnection *cnc,

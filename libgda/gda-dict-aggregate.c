@@ -192,8 +192,8 @@ gda_dict_aggregate_dispose (GObject *object)
 	if (gda_dict_aggregate->priv) {
 		gda_object_destroy_check (GDA_OBJECT (object));
 
-		gda_dict_aggregate_set_ret_type (gda_dict_aggregate, NULL);
-		gda_dict_aggregate_set_arg_type (gda_dict_aggregate, NULL);
+		gda_dict_aggregate_set_ret_dict_type (gda_dict_aggregate, NULL);
+		gda_dict_aggregate_set_arg_dict_type (gda_dict_aggregate, NULL);
 	}
 
 	/* parent class */
@@ -433,7 +433,7 @@ gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError 
 							     gda_object_get_name (GDA_OBJECT (agg)));
 						return FALSE;
 					}
-					gda_dict_aggregate_set_ret_type (agg, dt);
+					gda_dict_aggregate_set_ret_dict_type (agg, dt);
 				}
 				else {
 					if (agg->priv->arg_type) {
@@ -444,7 +444,7 @@ gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError 
 							     gda_object_get_name (GDA_OBJECT (agg)));
 						return FALSE;
 					}
-					gda_dict_aggregate_set_arg_type (agg, dt);
+					gda_dict_aggregate_set_arg_dict_type (agg, dt);
 				}
 				g_free (prop);
 			}
@@ -542,7 +542,7 @@ gda_dict_aggregate_get_sqlname (GdaDictAggregate *agg)
 static void destroyed_data_type_cb (GdaDictType *dt, GdaDictAggregate *agg);
 
 /**
- * gda_dict_aggregate_set_arg_type
+ * gda_dict_aggregate_set_arg_dict_type
  * @agg: a #GdaDictAggregate object
  * @dt: a #GdaDictType objects or #NULL value to represent the data type
  * of the aggregate's unique argument .
@@ -550,7 +550,7 @@ static void destroyed_data_type_cb (GdaDictType *dt, GdaDictAggregate *agg);
  * Set the argument type of a aggregate
  */
 void 
-gda_dict_aggregate_set_arg_type (GdaDictAggregate *agg, GdaDictType *dt)
+gda_dict_aggregate_set_arg_dict_type (GdaDictAggregate *agg, GdaDictType *dt)
 {
 	g_return_if_fail (agg && GDA_IS_DICT_AGGREGATE (agg));
 	g_return_if_fail (agg->priv);
@@ -571,7 +571,7 @@ gda_dict_aggregate_set_arg_type (GdaDictAggregate *agg, GdaDictType *dt)
 }
 
 /**
- * gda_dict_aggregate_get_arg_type
+ * gda_dict_aggregate_get_arg_dict_type
  * @agg: a #GdaDictAggregate object
  * 
  * To consult the list of arguments types (and number) of a aggregate.
@@ -579,7 +579,7 @@ gda_dict_aggregate_set_arg_type (GdaDictAggregate *agg, GdaDictType *dt)
  * Returns: a list of #GdaDictType objects, the list MUST NOT be modified.
  */
 GdaDictType *
-gda_dict_aggregate_get_arg_type (GdaDictAggregate *agg)
+gda_dict_aggregate_get_arg_dict_type (GdaDictAggregate *agg)
 {
 	g_return_val_if_fail (agg && GDA_IS_DICT_AGGREGATE (agg), NULL);
 	g_return_val_if_fail (agg->priv, NULL);
@@ -588,14 +588,14 @@ gda_dict_aggregate_get_arg_type (GdaDictAggregate *agg)
 }
 
 /**
- * gda_dict_aggregate_set_ret_type
+ * gda_dict_aggregate_set_ret_dict_type
  * @agg: a #GdaDictAggregate object
  * @dt: a #GdaDictType object or #NULL
  *
  * Set the return type of a aggregate
  */
 void 
-gda_dict_aggregate_set_ret_type  (GdaDictAggregate *agg, GdaDictType *dt)
+gda_dict_aggregate_set_ret_dict_type  (GdaDictAggregate *agg, GdaDictType *dt)
 {
 	g_return_if_fail (agg && GDA_IS_DICT_AGGREGATE (agg));
 	g_return_if_fail (agg->priv);
@@ -622,7 +622,7 @@ destroyed_data_type_cb (GdaDictType *dt, GdaDictAggregate *agg)
 }
 
 /**
- * gda_dict_aggregate_get_ret_type
+ * gda_dict_aggregate_get_ret_dict_type
  * @agg: a #GdaDictAggregate object
  * 
  * To consult the return type of a aggregate.
@@ -630,7 +630,7 @@ destroyed_data_type_cb (GdaDictType *dt, GdaDictAggregate *agg)
  * Returns: a #GdaDictType object.
  */
 GdaDictType *
-gda_dict_aggregate_get_ret_type  (GdaDictAggregate *agg)
+gda_dict_aggregate_get_ret_dict_type  (GdaDictAggregate *agg)
 {
 	g_return_val_if_fail (agg && GDA_IS_DICT_AGGREGATE (agg), NULL);
 	g_return_val_if_fail (agg->priv, NULL);

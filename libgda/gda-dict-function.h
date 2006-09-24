@@ -1,6 +1,6 @@
 /* gda-dict-function.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -56,18 +56,18 @@ struct _GdaDictFunctionClass
 	GdaObjectClass                    parent_class;
 };
 
-GType             gda_dict_function_get_type      (void);
-GObject          *gda_dict_function_new           (GdaDict *dict);
-void              gda_dict_function_set_dbms_id   (GdaDictFunction *func, const gchar *id);
-gchar            *gda_dict_function_get_dbms_id   (GdaDictFunction *func);
-void              gda_dict_function_set_sqlname   (GdaDictFunction *func, const gchar *sqlname);
-const gchar      *gda_dict_function_get_sqlname   (GdaDictFunction *func);
-void              gda_dict_function_set_arg_types (GdaDictFunction *func, const GSList *arg_types);
-const GSList     *gda_dict_function_get_arg_types (GdaDictFunction *func);
-void              gda_dict_function_set_ret_type  (GdaDictFunction *func, GdaDictType *dt);
-GdaDictType      *gda_dict_function_get_ret_type  (GdaDictFunction *func);
+GType             gda_dict_function_get_type                (void);
+GObject          *gda_dict_function_new                     (GdaDict *dict);
+void              gda_dict_function_set_dbms_id             (GdaDictFunction *func, const gchar *id);
+gchar            *gda_dict_function_get_dbms_id             (GdaDictFunction *func);
+void              gda_dict_function_set_sqlname             (GdaDictFunction *func, const gchar *sqlname);
+const gchar      *gda_dict_function_get_sqlname             (GdaDictFunction *func);
+void              gda_dict_function_set_arg_dict_types      (GdaDictFunction *func, const GSList *arg_types);
+const GSList     *gda_dict_function_get_arg_dict_types      (GdaDictFunction *func);
+void              gda_dict_function_set_ret_dict_type       (GdaDictFunction *func, GdaDictType *dt);
+GdaDictType      *gda_dict_function_get_ret_dict_type       (GdaDictFunction *func);
 
-gboolean          gda_dict_function_accepts_args  (GdaDictFunction *func, const GSList *arg_types);
+gboolean          gda_dict_function_accepts_arg_dict_types  (GdaDictFunction *func, const GSList *arg_types);
 
 G_END_DECLS
 

@@ -76,7 +76,7 @@ struct _GdaIBMDB2Field {
         SQLSMALLINT  column_scale;
 	SQLSMALLINT  column_nullable;
         SQLPOINTER   column_data;
-	GType gda_type;
+ 	 GType        g_type;
 };
 																		
 

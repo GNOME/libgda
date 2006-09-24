@@ -65,7 +65,7 @@ gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name)
 
 		fa = gda_data_model_describe_column (model, i);
 		gda_column_set_name (fa, mdb_col->name);
-		gda_column_set_gda_type (fa, gda_mdb_type_to_gda (mdb_col->col_type));
+		gda_column_set_g_type (fa, gda_mdb_type_to_gda (mdb_col->col_type));
 		gda_column_set_defined_size (fa, mdb_col->col_size);
 	}
 

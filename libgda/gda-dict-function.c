@@ -193,8 +193,8 @@ gda_dict_function_dispose (GObject *object)
 	if (gda_dict_function->priv) {
 		gda_object_destroy_check (GDA_OBJECT (object));
 
-		gda_dict_function_set_ret_type (gda_dict_function, NULL);
-		gda_dict_function_set_arg_types (gda_dict_function, NULL);
+		gda_dict_function_set_ret_dict_type (gda_dict_function, NULL);
+		gda_dict_function_set_arg_dict_types (gda_dict_function, NULL);
 	}
 
 	/* parent class */
@@ -444,7 +444,7 @@ gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 							     gda_object_get_name (GDA_OBJECT (func)));
 						return FALSE;
 					}
-					gda_dict_function_set_ret_type (func, dt);
+					gda_dict_function_set_ret_dict_type (func, dt);
 				}
 				else 
 					argtypes = g_slist_prepend (argtypes, dt);
@@ -455,7 +455,7 @@ gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 	}
 
 	argtypes = g_slist_reverse (argtypes);
-	gda_dict_function_set_arg_types (func, argtypes);
+	gda_dict_function_set_arg_dict_types (func, argtypes);
 	g_slist_free (argtypes);
 
 	if (pname && pid)
@@ -548,7 +548,7 @@ gda_dict_function_get_sqlname (GdaDictFunction *func)
 static void destroyed_data_type_cb (GdaDictType *dt, GdaDictFunction *func);
 
 /**
- * gda_dict_function_set_arg_types
+ * gda_dict_function_set_arg_dict_types
  * @func: a #GdaDictFunction object
  * @arg_types: a list of #GdaDictType objects or #NULL values ordered to represent the data types
  * of the function's arguments .
@@ -556,7 +556,7 @@ static void destroyed_data_type_cb (GdaDictType *dt, GdaDictFunction *func);
  * Set the arguments types of a function
  */
 void 
-gda_dict_function_set_arg_types (GdaDictFunction *func, const GSList *arg_types)
+gda_dict_function_set_arg_dict_types (GdaDictFunction *func, const GSList *arg_types)
 {
 	GSList *list;
 
@@ -590,7 +590,7 @@ gda_dict_function_set_arg_types (GdaDictFunction *func, const GSList *arg_types)
 }
 
 /**
- * gda_dict_function_get_arg_types
+ * gda_dict_function_get_arg_dict_types
  * @func: a #GdaDictFunction object
  * 
  * To consult the list of arguments types (and number) of a function.
@@ -598,7 +598,7 @@ gda_dict_function_set_arg_types (GdaDictFunction *func, const GSList *arg_types)
  * Returns: a list of #GdaDictType objects, the list MUST NOT be modified.
  */
 const GSList *
-gda_dict_function_get_arg_types (GdaDictFunction *func)
+gda_dict_function_get_arg_dict_types (GdaDictFunction *func)
 {
 	g_return_val_if_fail (func && GDA_IS_DICT_FUNCTION (func), NULL);
 	g_return_val_if_fail (func->priv, NULL);
@@ -607,14 +607,14 @@ gda_dict_function_get_arg_types (GdaDictFunction *func)
 }
 
 /**
- * gda_dict_function_set_ret_type
+ * gda_dict_function_set_ret_dict_type
  * @func: a #GdaDictFunction object
  * @dt: a #GdaDictType object or #NULL
  *
  * Set the return type of a function
  */
 void 
-gda_dict_function_set_ret_type  (GdaDictFunction *func, GdaDictType *dt)
+gda_dict_function_set_ret_dict_type  (GdaDictFunction *func, GdaDictType *dt)
 {
 	g_return_if_fail (func && GDA_IS_DICT_FUNCTION (func));
 	g_return_if_fail (func->priv);
@@ -642,7 +642,7 @@ destroyed_data_type_cb (GdaDictType *dt, GdaDictFunction *func)
 }
 
 /**
- * gda_dict_function_get_ret_type
+ * gda_dict_function_get_ret_dict_type
  * @func: a #GdaDictFunction object
  * 
  * To consult the return type of a function.
@@ -650,7 +650,7 @@ destroyed_data_type_cb (GdaDictType *dt, GdaDictFunction *func)
  * Returns: a #GdaDictType object.
  */
 GdaDictType *
-gda_dict_function_get_ret_type  (GdaDictFunction *func)
+gda_dict_function_get_ret_dict_type  (GdaDictFunction *func)
 {
 	g_return_val_if_fail (func && GDA_IS_DICT_FUNCTION (func), NULL);
 	g_return_val_if_fail (func->priv, NULL);
@@ -660,7 +660,7 @@ gda_dict_function_get_ret_type  (GdaDictFunction *func)
 
 
 /**
- * gda_dict_function_accepts_args
+ * gda_dict_function_accepts_arg_dict_types
  * @func: a #GdaDictFunction object
  * @arg_types: a list of #GdaDictType objects or #NULL values, ordered
  *
@@ -673,7 +673,7 @@ gda_dict_function_get_ret_type  (GdaDictFunction *func)
  * Returns: TRUE if accepted
  */
 gboolean
-gda_dict_function_accepts_args (GdaDictFunction *func, const GSList *arg_types)
+gda_dict_function_accepts_arg_dict_types (GdaDictFunction *func, const GSList *arg_types)
 {
 	GSList *arg = (GSList *) arg_types, *list;
 	gboolean args_ok = TRUE;
@@ -688,7 +688,7 @@ gda_dict_function_accepts_args (GdaDictFunction *func, const GSList *arg_types)
 	cnc = gda_dict_get_connection (dict);
 	if (cnc) 
 		sinfo = gda_connection_get_infos (cnc);
-	list = (GSList *) gda_dict_function_get_arg_types (func);
+	list = (GSList *) gda_dict_function_get_arg_dict_types (func);
 	
 	if (g_slist_length (arg) != g_slist_length (list))
 		return FALSE;
@@ -703,8 +703,8 @@ gda_dict_function_accepts_args (GdaDictFunction *func, const GSList *arg_types)
 		else {
 			/* GType compatibility test */
 			if (arg->data && list->data &&
-			    (gda_dict_type_get_gda_type (GDA_DICT_TYPE (arg->data)) !=
-			     gda_dict_type_get_gda_type (GDA_DICT_TYPE (list->data))))
+			    (gda_dict_type_get_g_type (GDA_DICT_TYPE (arg->data)) !=
+			     gda_dict_type_get_g_type (GDA_DICT_TYPE (list->data))))
 				args_ok = FALSE;
 		}
 		

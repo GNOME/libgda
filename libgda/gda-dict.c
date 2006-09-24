@@ -248,7 +248,7 @@ gda_dict_class_init (GdaDictClass * class)
 	/* class variable */
 	class->class_registry_list = NULL;
 	class->class_registry_list = g_slist_append (class->class_registry_list, 
-						     gda_types_get_register);
+						     g_types_get_register);
 	class->class_registry_list = g_slist_append (class->class_registry_list, 
 						     gda_queries_get_register);
 }
@@ -1185,7 +1185,7 @@ gda_dict_dump (GdaDict *dict)
 #endif
 
 /**
- * gda_dict_update_dbms_data
+ * gda_dict_update_dbms_meta_data
  * @dict: a #GdaDict object
  * @limit_to_type: limit the DBMS update to this type, or 0 for no limit
  * @limit_obj_name: limit the DBMS update to objects of this name, or %NULL for no limit
@@ -1198,7 +1198,7 @@ gda_dict_dump (GdaDict *dict)
  * Returns: TRUE if no error
  */
 gboolean
-gda_dict_update_dbms_data (GdaDict *dict, GType limit_to_type, const gchar *limit_obj_name, GError **error)
+gda_dict_update_dbms_meta_data (GdaDict *dict, GType limit_to_type, const gchar *limit_obj_name, GError **error)
 {
 	gboolean retval = TRUE;
 	GdaDictRegisterStruct *reg;
@@ -1313,14 +1313,14 @@ gda_dict_update_dbms_data (GdaDict *dict, GType limit_to_type, const gchar *limi
 
 
 /**
- * gda_dict_stop_update_dbms_data
+ * gda_dict_stop_update_dbms_meta_data
  * @dict: a #GdaDict object
  *
  * When the dictionary updates its internal lists of DBMS objects, a call to this function will 
  * stop that update process. It has no effect when the dictionary is not updating its DBMS data.
  */
 void
-gda_dict_stop_update_dbms_data (GdaDict *dict)
+gda_dict_stop_update_dbms_meta_data (GdaDict *dict)
 {
 	g_return_if_fail (GDA_IS_DICT (dict));
 	g_return_if_fail (dict->priv);

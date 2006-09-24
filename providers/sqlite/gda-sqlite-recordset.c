@@ -214,7 +214,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 			
 			sres->types [i] = gtype;
 			column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
-			gda_column_set_gda_type (column, gtype);
+			gda_column_set_g_type (column, gtype);
 		}
 	}
 
@@ -262,7 +262,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 				}
 				else
 					g_error ("Unhandled GDA type %s in SQLite recordset", 
-						 gda_type_to_string (sres->types [col]));
+						 g_type_to_string (sres->types [col]));
 
 				size = sqlite3_column_bytes (sres->stmt, col);
 				if (sres->cols_size [col] < size)
@@ -303,7 +303,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 	if (0) {
 		for (i = 0; i < sres->ncols; i++) 
 			g_print ("Type for col %d: (GDA:%s) (SQLite:%d)\n",
-				 i, gda_type_to_string (sres->types [i]),
+				 i, g_type_to_string (sres->types [i]),
 				 sres->sqlite_types [i]);
 		
 		gda_data_model_dump (GDA_DATA_MODEL (model), stdout);

@@ -294,7 +294,7 @@ gda_freetds_recordset_describe_column (GdaDataModel *model, gint col)
 
 	gda_column_set_name (attribs, name);
 	gda_column_set_scale (attribs, colinfo->column_scale);
-	gda_column_set_gda_type (attribs,
+	gda_column_set_g_type (attribs,
 	                                  gda_freetds_get_value_type (colinfo));
 	gda_column_set_defined_size (attribs, colinfo->column_size);
 

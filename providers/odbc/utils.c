@@ -115,7 +115,7 @@ gda_odbc_emit_error ( GdaConnection *cnc,
  */
 
 GType
-odbc_to_gda_type ( int odbc_type )
+odbc_to_g_type ( int odbc_type )
 {
 	switch ( odbc_type ) {
 	case SQL_CHAR:

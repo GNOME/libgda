@@ -433,7 +433,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
 			xmlSetProp (td, "class", "error");
                 }
 		else
-			td = xmlNewChild (tr, NULL, "td", gda_type_to_string (gda_column_get_gda_type (column)));
+			td = xmlNewChild (tr, NULL, "td", g_type_to_string (gda_column_get_g_type (column)));
         }
 
 	/* NOT NULL */

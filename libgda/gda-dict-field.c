@@ -858,7 +858,7 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 		GType vtype;
 		
 		vtype = G_VALUE_TYPE (field->priv->default_val);
-		xmlSetProp (node, "default_gda_type", gda_type_to_string (vtype));
+		xmlSetProp (node, "default_g_type", g_type_to_string (vtype));
 
 		dh = gda_dict_get_default_handler (gda_object_get_dict (GDA_OBJECT (field)), vtype);
 		str = gda_data_handler_get_str_from_value (dh, field->priv->default_val);
@@ -934,7 +934,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 				tmp = utility_build_decoded_id (NULL, prop + 2);
 				gda_dict_type_set_sqlname (dt, tmp);
 				g_free (tmp);
-				gda_dict_type_set_gda_type (dt, GDA_TYPE_BLOB);
+				gda_dict_type_set_g_type (dt, GDA_TYPE_BLOB);
 
 				tnode = node->parent;
 				g_assert (tnode && !strcmp (tnode->name, "gda_dict_table"));
@@ -970,13 +970,13 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 	if (prop) {
 		gchar *str2;
 
-		str2 = xmlGetProp (node, "default_gda_type");
+		str2 = xmlGetProp (node, "default_g_type");
 		if (str2) {
 			GType vtype;
 			GdaDataHandler *dh;
 			GValue *value;
 			
-			vtype = gda_type_from_string (str2);
+			vtype = g_type_from_string (str2);
 			if (vtype == G_TYPE_INVALID) {
 				g_set_error (error,
 					     GDA_DICT_FIELD_ERROR,

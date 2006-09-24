@@ -42,13 +42,13 @@
 #endif
 
 /**
- * gda_type_to_string
+ * g_type_to_string
  * @type: Type to convert from.
  *
  * Returns: the string representing the given #GType.
  */
 const gchar *
-gda_type_to_string (GType type)
+g_type_to_string (GType type)
 {
 	if (type == GDA_TYPE_NULL)
 		return "null";
@@ -57,13 +57,13 @@ gda_type_to_string (GType type)
 }
 
 /**
- * gda_type_from_string
- * @str: the name of a #GType, as returned by gda_type_to_string().
+ * g_type_from_string
+ * @str: the name of a #GType, as returned by g_type_to_string().
  *
  * Returns: the #GType represented by the given @str.
  */
 GType
-gda_type_from_string (const gchar *str)
+g_type_from_string (const gchar *str)
 {
 	GType type;
 	g_return_val_if_fail (str != NULL, G_TYPE_INVALID);
@@ -215,38 +215,6 @@ gda_string_hash_to_list (GHashTable *hash_table)
 
         g_hash_table_foreach (hash_table, (GHFunc) add_string_key_to_list, &list);
         return list;
-}
-
-/**
- * gda_sql_replace_placeholders
- * @sql: a SQL command containing placeholders for values.
- * @params: a list of values for the placeholders.
- *
- * Replaces the placeholders (:name) in the given SQL command with
- * the values from the #GdaParameterList specified as the @params
- * argument.
- *
- * Returns: the SQL string with all placeholders replaced, or %NULL
- * on error. On success, the returned string must be freed by the caller
- * when no longer needed.
- */
-gchar *
-gda_sql_replace_placeholders (const gchar *sql, GdaParameterList *params)
-{
-	sql_statement *sql_stmt;
-
-	g_return_val_if_fail (sql != NULL, NULL);
-
-	/* parse the string */
-	sql_stmt = sql_parse (sql);
-	if (!sql_stmt) {
-		gda_log_error (_("Could not parse SQL command '%s'"), sql);
-		return NULL;
-	}
-
-	/* FIXME */
-
-	return NULL;
 }
 
 /**
@@ -641,7 +609,7 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 		i = 0;
 		while ((i<nbcols) && retval) {
 			att = gda_data_model_describe_column (model, i);
-			mtype = gda_column_get_gda_type (att);
+			mtype = gda_column_get_g_type (att);
 			
 			argtype = va_arg (ap, GType);
 			if (argtype >= 0) {
@@ -650,7 +618,7 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 					retval = FALSE;
 #ifdef GDA_DEBUG
 					g_print ("Column %d: Expected %s, got %s\n",
-						 i, gda_type_to_string (rtype), gda_type_to_string (mtype));
+						 i, g_type_to_string (rtype), g_type_to_string (mtype));
 #endif
 				}
 			}
@@ -856,7 +824,7 @@ utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList 
 		const gchar *lang;
 		GType gdatype;
 
-		gdatype = gda_parameter_get_gda_type (param);
+		gdatype = gda_parameter_get_g_type (param);
 #ifdef HAVE_LC_MESSAGES
 		lang = setlocale (LC_MESSAGES, NULL);
 #else
@@ -917,7 +885,7 @@ utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList 
  * @prov:
  * @cnc:
  * @dbms_type:
- * @gda_type:
+ * @g_type:
  * @created: a place to return if the data type has been created and is thus considered as a custom
  *           data type. Can't be %NULL!
  *
@@ -928,7 +896,7 @@ utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList 
  */
 GdaDictType *
 utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
-				  const gchar *dbms_type, const gchar *gda_type, gboolean *created)
+				  const gchar *dbms_type, const gchar *g_type, gboolean *created)
 {
 	GdaDictType *dtype = NULL;
 
@@ -942,10 +910,10 @@ utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaCon
 		dtype = gda_dict_get_dict_type_by_name (ASSERT_DICT (dict), dbms_type);
 
 	if (!dtype) {
-		if (gda_type) {
+		if (g_type) {
 			GType gtype;
 			
-			gtype = gda_type_from_string (gda_type);
+			gtype = g_type_from_string (g_type);
 			if (prov) {
 				const gchar *deftype;
 				
@@ -957,8 +925,8 @@ utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaCon
 			if (!dtype) {
 				/* create a GdaDictType for that 'gda-type' */
 				dtype = GDA_DICT_TYPE (gda_dict_type_new (ASSERT_DICT (dict)));
-				gda_dict_type_set_sqlname (dtype, gda_type);
-				gda_dict_type_set_gda_type (dtype, gtype);
+				gda_dict_type_set_sqlname (dtype, g_type);
+				gda_dict_type_set_g_type (dtype, gtype);
 				gda_dict_declare_object (ASSERT_DICT (dict), (GdaObject *) dtype);
 				*created = TRUE;
 			}

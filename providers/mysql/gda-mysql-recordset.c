@@ -917,7 +917,7 @@ gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql)
 			gda_column_set_defined_size (column, mysql_field->length);
 			gda_column_set_table (column, mysql_field->table);
 			gda_column_set_scale (column, mysql_field->decimals);
-			gda_column_set_gda_type (column, gda_mysql_type_to_gda (mysql_field->type,
+			gda_column_set_g_type (column, gda_mysql_type_to_gda (mysql_field->type,
 									       mysql_field->flags & UNSIGNED_FLAG));
 			gda_column_set_allow_null (column, !IS_NOT_NULL (mysql_field->flags));
 			gda_column_set_primary_key (column, IS_PRI_KEY (mysql_field->flags));

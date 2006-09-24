@@ -1380,7 +1380,7 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 		def = gda_column_get_default_value (column);
 		if (def) {
 			flags |= (GDA_VALUE_ATTR_IS_DEFAULT | GDA_VALUE_ATTR_CAN_BE_DEFAULT);
-			if (G_VALUE_TYPE (def) == gda_column_get_gda_type (column))
+			if (G_VALUE_TYPE (def) == gda_column_get_g_type (column))
 				rv->value = gda_value_copy (def);
 		}
 		if (gda_column_get_allow_null (column))
@@ -2635,11 +2635,11 @@ gda_data_proxy_set_values (GdaDataModel *model, gint row, GList *values, GError 
 		if (value && !gda_value_is_null (value)) {
 			GdaColumn *column;
 			column = gda_data_model_describe_column (model, col);
-			if (gda_column_get_gda_type (column) != G_VALUE_TYPE (value)) {
+			if (gda_column_get_g_type (column) != G_VALUE_TYPE (value)) {
 				g_set_error (error, 0, 0,
 					     _("Value type mismatch %s instead of %s"),
-					     gda_type_to_string (G_VALUE_TYPE (value)),
-					     gda_type_to_string (gda_column_get_gda_type (column)));
+					     g_type_to_string (G_VALUE_TYPE (value)),
+					     g_type_to_string (gda_column_get_g_type (column)));
 				err = TRUE;
 			}
 		}

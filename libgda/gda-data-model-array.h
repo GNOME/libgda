@@ -49,7 +49,7 @@ struct _GdaDataModelArrayClass {
 };
 
 GType         gda_data_model_array_get_type          (void);
-GdaDataModel *gda_data_model_array_new_with_types    (gint cols, ...);
+GdaDataModel *gda_data_model_array_new_with_g_types  (gint cols, ...);
 GdaDataModel *gda_data_model_array_new               (gint cols);
 GdaDataModel *gda_data_model_array_copy_model        (GdaDataModel *src, GError **error);
 void          gda_data_model_array_set_n_columns     (GdaDataModelArray *model, gint cols);

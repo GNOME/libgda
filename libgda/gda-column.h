@@ -49,7 +49,7 @@ struct _GdaColumnClass {
 	
 	/* signals */
 	void (* name_changed)     (GdaColumn *column, const gchar *old_name);
-	void (* gda_type_changed) (GdaColumn *column, GType old_type, GType new_type);
+	void (* g_type_changed) (GdaColumn *column, GType old_type, GType new_type);
 };
 
 GType           gda_column_get_type           (void);
@@ -77,8 +77,8 @@ void            gda_column_set_scale          (GdaColumn *column, glong scale);
 const gchar*    gda_column_get_dbms_type      (GdaColumn *column);
 void            gda_column_set_dbms_type      (GdaColumn *column, const gchar *dbms_type);
 
-GType           gda_column_get_gda_type        (GdaColumn *column);
-void            gda_column_set_gda_type        (GdaColumn *column, GType type);
+GType           gda_column_get_g_type         (GdaColumn *column);
+void            gda_column_set_g_type         (GdaColumn *column, GType type);
 
 gboolean        gda_column_get_allow_null     (GdaColumn *column);
 void            gda_column_set_allow_null     (GdaColumn *column, gboolean allow);

@@ -126,7 +126,7 @@ The #GdaParameter object offers other features such as:
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_get_gda_type ##### -->
+<!-- ##### FUNCTION gda_parameter_get_g_type ##### -->
 <para>
 
 </para>

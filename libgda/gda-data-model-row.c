@@ -163,13 +163,13 @@ gda_data_model_row_init (GdaDataModelRow *model, GdaDataModelRowClass *klass)
 	model->priv->read_only = FALSE;
 }
 
-static void column_gda_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelRow *model);
+static void column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelRow *model);
 
 static void
 hash_free_column (gpointer key, GdaColumn *column, GdaDataModelRow *model)
 {
 	g_signal_handlers_disconnect_by_func (G_OBJECT (column),
-					      G_CALLBACK (column_gda_type_changed_cb), model);
+					      G_CALLBACK (column_g_type_changed_cb), model);
 	g_object_unref (column);
 }
 
@@ -314,8 +314,8 @@ gda_data_model_row_describe_column (GdaDataModel *model, gint col)
 				      GINT_TO_POINTER (col));
 	if (!column) {
 		column = gda_column_new ();
-		g_signal_connect (G_OBJECT (column), "gda_type_changed",
-				  G_CALLBACK (column_gda_type_changed_cb), model);
+		g_signal_connect (G_OBJECT (column), "g_type_changed",
+				  G_CALLBACK (column_g_type_changed_cb), model);
 		gda_column_set_position (column, col);
 		g_hash_table_insert (GDA_DATA_MODEL_ROW (model)->priv->column_spec,
 				     GINT_TO_POINTER (col), column);
@@ -325,7 +325,7 @@ gda_data_model_row_describe_column (GdaDataModel *model, gint col)
 }
 
 static void
-column_gda_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelRow *model)
+column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelRow *model)
 {
 	/* emit a warning if there are GValues which are not compatible with the new type */
 	gint i, nrows, col;
@@ -355,8 +355,8 @@ column_gda_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataMode
 					str = gda_value_stringify ((GValue *) value);
 					g_warning ("Value of type %s not compatible with new"
 						   " column type %s (value=%s)",
-						   gda_type_to_string (G_VALUE_TYPE ((GValue *) value)), 
-						   gda_type_to_string (new), str);
+						   g_type_to_string (G_VALUE_TYPE ((GValue *) value)), 
+						   g_type_to_string (new), str);
 					g_free (str);
 				}
 			}

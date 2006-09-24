@@ -44,7 +44,7 @@ typedef gboolean (*sybase_conv_Func) (GdaSybaseConnectionData *scnc,
 typedef struct _sybase_Types {
   gchar            *name;
   CS_INT           sql_type;
-  GType     gda_type;
+  GType     g_type;
 //  sybase_conv_Func conv_sql2gda;
 } sybase_Types;
 
@@ -52,7 +52,7 @@ typedef struct _sybase_Types {
 extern const sybase_Types gda_sybase_type_list[GDA_SYBASE_TYPE_CNT];
 
 const GType gda_sybase_get_value_type (const CS_INT sql_type);
-const CS_INT gda_sybase_get_sql_type (const GType gda_type);
+const CS_INT gda_sybase_get_sql_type (const GType g_type);
 
 void gda_sybase_set_value_by_datetime(GValue *value, CS_DATETIME *dt);
 void gda_sybase_set_value_by_datetime4(GValue *value, CS_DATETIME4 *dt);

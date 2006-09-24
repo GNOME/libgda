@@ -118,7 +118,7 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 			ora_value->value = g_malloc0 (ora_value->defined_size+1);
 		ora_value->hdef = (OCIDefine *) 0;
 		ora_value->indicator = 0;
-		ora_value->gda_type = oracle_sqltype_to_gda_type (ora_value->sql_type);
+		ora_value->g_type = oracle_sqltype_to_g_type (ora_value->sql_type);
 		result = OCIDefineByPos ((OCIStmt *) priv->hstmt,
 					 (OCIDefine **) &(ora_value->hdef),
 					 (OCIError *) priv->cdata->herr,
@@ -259,7 +259,7 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 	
 	gda_column_set_name (field_attrs, name_buffer);
 	gda_column_set_scale (field_attrs, scale);
-	gda_column_set_gda_type (field_attrs, oracle_sqltype_to_gda_type (sql_type));
+	gda_column_set_g_type (field_attrs, oracle_sqltype_to_g_type (sql_type));
 	gda_column_set_defined_size (field_attrs, defined_size);
 	
 	/* FIXME */

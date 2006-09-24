@@ -100,7 +100,7 @@ gda_entity_field_get_dict_type (GdaEntityField *iface)
 }
 
 /**
- * gda_entity_field_get_gda_type
+ * gda_entity_field_get_g_type
  * @iface: an object which implements the #GdaEntityField interface
  *
  * Get the gda type of the object implementing the #GdaEntityField interface
@@ -108,7 +108,7 @@ gda_entity_field_get_dict_type (GdaEntityField *iface)
  * Returns: the corresponding #GType or #G_TYPE_INVALID if the gda type is unknown
  */
 GType
-gda_entity_field_get_gda_type (GdaEntityField *iface)
+gda_entity_field_get_g_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_ENTITY_FIELD (iface), G_TYPE_INVALID);
 
@@ -117,10 +117,10 @@ gda_entity_field_get_gda_type (GdaEntityField *iface)
 		type = (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_data_type) (iface);
 
 		if (type)
-			return gda_dict_type_get_gda_type (type);
+			return gda_dict_type_get_g_type (type);
 		else {
-			if (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_gda_type)
-				return GDA_ENTITY_FIELD_GET_IFACE (iface)->get_gda_type (iface);
+			if (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_g_type)
+				return GDA_ENTITY_FIELD_GET_IFACE (iface)->get_g_type (iface);
 			else
 				return G_TYPE_INVALID;
 		}

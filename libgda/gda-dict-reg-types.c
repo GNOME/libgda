@@ -52,7 +52,7 @@ static GSList  *types_get_objects  (GdaDict *dict);
 static GdaObject *types_get_by_name (GdaDict *dict, const gchar *name);
 
 GdaDictRegisterStruct *
-gda_types_get_register ()
+g_types_get_register ()
 {
 	GdaDictRegisterStruct *reg = NULL;
 
@@ -330,10 +330,10 @@ types_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **error)
 		else
 			gda_object_set_owner (GDA_OBJECT (dt), NULL);
 				
-		/* gda_type */
+		/* g_type */
 		value = gda_data_model_get_value_at (rs, 3, now);
 		if (value && !gda_value_is_null ((GValue *) value)) 
-			gda_dict_type_set_gda_type (dt, g_value_get_ulong ((GValue *) value));
+			gda_dict_type_set_g_type (dt, g_value_get_ulong ((GValue *) value));
 		
 		/* data type synomyms */
 		gda_dict_type_clear_synonyms (dt);

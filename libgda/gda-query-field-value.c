@@ -60,7 +60,7 @@ static gboolean    gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xm
 /* Field interface */
 static void               gda_query_field_value_field_init      (GdaEntityFieldIface *iface);
 static GdaEntity         *gda_query_field_value_get_entity      (GdaEntityField *iface);
-static GType              gda_query_field_value_get_igda_type    (GdaEntityField *iface);
+static GType              gda_query_field_value_get_ig_type    (GdaEntityField *iface);
 static GdaDictType       *gda_query_field_value_get_data_type   (GdaEntityField *iface);
 
 /* Renderer interface */
@@ -110,7 +110,7 @@ enum
 struct _GdaQueryFieldValuePrivate
 {
 	GdaQuery              *query;
-	GType                  gda_type;
+	GType                  g_type;
 	GdaDictType           *dict_type;
 
 	GValue                *value;        /* MUST either be NULL, or of type GDA_VALUE_NULL or 'type' */
@@ -199,7 +199,7 @@ static void
 gda_query_field_value_field_init (GdaEntityFieldIface *iface)
 {
 	iface->get_entity = gda_query_field_value_get_entity;
-	iface->get_gda_type = gda_query_field_value_get_igda_type;
+	iface->get_g_type = gda_query_field_value_get_ig_type;
 	iface->get_data_type = gda_query_field_value_get_data_type;
 }
 
@@ -239,7 +239,7 @@ gda_query_field_value_class_init (GdaQueryFieldValueClass * class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
         g_object_class_install_property (object_class, PROP_GDA_TYPE,
-                                         g_param_spec_ulong ("gda_type", "Gda data type", NULL,
+                                         g_param_spec_ulong ("g_type", "Gda data type", NULL,
 							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_RESTRICT_MODEL,
@@ -267,7 +267,7 @@ gda_query_field_value_init (GdaQueryFieldValue *gda_query_field_value)
 {
 	gda_query_field_value->priv = g_new0 (GdaQueryFieldValuePrivate, 1);
 	gda_query_field_value->priv->query = NULL;
-	gda_query_field_value->priv->gda_type = G_TYPE_INVALID;
+	gda_query_field_value->priv->g_type = G_TYPE_INVALID;
 	gda_query_field_value->priv->dict_type = NULL;
 	gda_query_field_value->priv->value = NULL;
 	gda_query_field_value->priv->default_value = NULL;
@@ -297,7 +297,7 @@ gda_query_field_value_new (GdaQuery *query, GType type)
 	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 
 	obj = g_object_new (GDA_TYPE_QUERY_FIELD_VALUE, "dict", gda_object_get_dict (GDA_OBJECT (query)), 
-			    "query", query, "gda_type", type, NULL);
+			    "query", query, "g_type", type, NULL);
 
 	return (GdaQueryField*) obj;
 }
@@ -410,7 +410,7 @@ gda_query_field_value_set_property (GObject *object,
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (field), id);
 			break;
 		case PROP_GDA_TYPE:
-			field->priv->gda_type = g_value_get_ulong (value);
+			field->priv->g_type = g_value_get_ulong (value);
 			break;
 		case PROP_RESTRICT_MODEL:
 			ptr = g_value_get_pointer (value);
@@ -448,7 +448,7 @@ gda_query_field_value_get_property (GObject *object,
 			g_value_set_pointer (value, field->priv->query);
 			break;
 		case PROP_GDA_TYPE:
-			g_value_set_ulong (value, field->priv->gda_type);
+			g_value_set_ulong (value, field->priv->g_type);
 			break;
 		case PROP_RESTRICT_MODEL:
 			g_value_set_pointer (value, field->priv->restrict_model);
@@ -471,7 +471,7 @@ gda_query_field_value_copy (GdaQueryField *orig)
 	g_assert (GDA_IS_QUERY_FIELD_VALUE (orig));
 	qf = GDA_QUERY_FIELD_VALUE (orig);
 
-	nqf = (GdaQueryFieldValue *) gda_query_field_value_new (qf->priv->query, qf->priv->gda_type);
+	nqf = (GdaQueryFieldValue *) gda_query_field_value_new (qf->priv->query, qf->priv->g_type);
 	obj = (GObject *) nqf;
 
 	if (qf->priv->dict_type)
@@ -547,7 +547,7 @@ gda_query_field_value_set_value (GdaQueryFieldValue *field, const GValue *val)
 	g_return_if_fail (field->priv);	
 
 	if (val)
-		g_return_if_fail (G_VALUE_TYPE ((GValue *)val) == field->priv->gda_type);
+		g_return_if_fail (G_VALUE_TYPE ((GValue *)val) == field->priv->g_type);
 
 	if (field->priv->value) {
 		gda_value_free (field->priv->value);
@@ -620,7 +620,7 @@ gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
 }
 
 /**
- * gda_query_field_value_get_gda_type
+ * gda_query_field_value_get_g_type
  * @field: a #GdaQueryFieldValue object
  *
  * Get the GDA type of value stored within @field
@@ -628,12 +628,12 @@ gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
  * Returns: the type
  */
 GType
-gda_query_field_value_get_gda_type (GdaQueryFieldValue *field)
+gda_query_field_value_get_g_type (GdaQueryFieldValue *field)
 {
 	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), G_TYPE_INVALID);
 	g_return_val_if_fail (field->priv, G_TYPE_INVALID);
 
-	return field->priv->gda_type;
+	return field->priv->g_type;
 }
 
 /**
@@ -681,7 +681,7 @@ gda_query_field_value_get_params (GdaQueryField *qfield)
 
 		param = GDA_PARAMETER (g_object_new (GDA_TYPE_PARAMETER, 
 						     "dict", gda_object_get_dict (GDA_OBJECT (qfield)),
-						     "gda_type", field->priv->gda_type, NULL));
+						     "g_type", field->priv->g_type, NULL));
 		gda_parameter_declare_param_user (param, GDA_OBJECT (qfield));
 		
 		/* parameter's attributes */
@@ -870,9 +870,9 @@ gda_query_field_value_set_dict_type (GdaQueryFieldValue *field, GdaDictType *typ
 		gda_object_connect_destroy (type,
 					    G_CALLBACK (destroyed_type_cb), field);
 		
-		if (field->priv->gda_type != gda_dict_type_get_gda_type (type)) {
+		if (field->priv->g_type != gda_dict_type_get_g_type (type)) {
 			g_warning ("GdaQueryFieldValue: setting to GDA type incompatible dict type");
-			field->priv->gda_type = gda_dict_type_get_gda_type (type);
+			field->priv->g_type = gda_dict_type_get_g_type (type);
 		}
 	}
 
@@ -916,7 +916,7 @@ gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset)
         /* dump */
         if (field->priv) {
 		gchar *val;
-		dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
+		dh = gda_dict_get_default_handler (dict, field->priv->g_type);
                 g_print ("%s" D_COL_H1 "GdaQueryFieldValue" D_COL_NOR " \"%s\" (%p, id=%s) ",
                          str, gda_object_get_name (GDA_OBJECT (field)), field, 
 			 gda_object_get_id (GDA_OBJECT (field)));
@@ -971,12 +971,12 @@ gda_query_field_value_get_entity (GdaEntityField *iface)
 }
 
 static GType
-gda_query_field_value_get_igda_type (GdaEntityField *iface)
+gda_query_field_value_get_ig_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), G_TYPE_INVALID);
 	g_return_val_if_fail (GDA_QUERY_FIELD_VALUE (iface)->priv, G_TYPE_INVALID);
 
-	return GDA_QUERY_FIELD_VALUE (iface)->priv->gda_type;
+	return GDA_QUERY_FIELD_VALUE (iface)->priv->g_type;
 }
 
 static GdaDictType *
@@ -1022,15 +1022,15 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 		xmlSetProp (node, "is_internal", "t");
 
 	xmlSetProp (node, "is_param", field->priv->is_parameter ? "t" : "f");
-	xmlSetProp (node, "gda_type",  gda_type_to_string (field->priv->gda_type));
+	xmlSetProp (node, "g_type",  g_type_to_string (field->priv->g_type));
 	if (field->priv->dict_type) {
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (field->priv->dict_type));
 		xmlSetProp (node, "dict_type",  str);
 		g_free (str);
 	}
 
-	dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
-	if (field->priv->value && (field->priv->gda_type != GDA_TYPE_NULL)) {
+	dh = gda_dict_get_default_handler (dict, field->priv->g_type);
+	if (field->priv->value && (field->priv->g_type != GDA_TYPE_NULL)) {
 		str = gda_data_handler_get_str_from_value (dh, field->priv->value);
 		xmlSetProp (node, "value", str);
 		g_free (str);
@@ -1043,7 +1043,7 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 		xmlSetProp (node, "default", str);
 		g_free (str);
 		vtype = G_VALUE_TYPE (field->priv->default_value);
-		xmlSetProp (node, "default_gda_type", gda_type_to_string (vtype));
+		xmlSetProp (node, "default_g_type", g_type_to_string (vtype));
 	}
 
 	xmlSetProp (node, "nullok", field->priv->is_null_allowed ? "t" : "f");
@@ -1145,13 +1145,13 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "gda_type");
+	prop = xmlGetProp (node, "g_type");
 	if (prop) {
-		field->priv->gda_type = gda_type_from_string (prop);
-		dh = gda_dict_get_default_handler (dict, field->priv->gda_type);
+		field->priv->g_type = g_type_from_string (prop);
+		dh = gda_dict_get_default_handler (dict, field->priv->g_type);
 		xmlFree (prop);
 
-		if (field->priv->gda_type == GDA_TYPE_NULL)
+		if (field->priv->g_type == GDA_TYPE_NULL)
 			field->priv->value = gda_value_new_null ();
 	}
 
@@ -1161,7 +1161,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		dict_type = gda_dict_get_dict_type_by_xml_id (dict, prop);
 		if (dict_type) {
 			gda_query_field_value_set_dict_type (field, dict_type);
-			dh = gda_dict_get_default_handler (dict, gda_dict_type_get_gda_type (field->priv->dict_type));
+			dh = gda_dict_get_default_handler (dict, gda_dict_type_get_g_type (field->priv->dict_type));
 		}
 		xmlFree (prop);
 	}
@@ -1169,7 +1169,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 	prop = xmlGetProp (node, "value");
 	if (prop) {
 		if (dh) {
-			field->priv->value = gda_data_handler_get_value_from_str (dh, prop, field->priv->gda_type);
+			field->priv->value = gda_data_handler_get_value_from_str (dh, prop, field->priv->g_type);
 			if (!field->priv->value) {
 				g_set_error (error,
 					     GDA_QUERY_FIELD_VALUE_ERROR,
@@ -1187,13 +1187,13 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 	if (prop) {
 		gchar *str2;
 
-		str2 = xmlGetProp (node, "default_gda_type");
+		str2 = xmlGetProp (node, "default_g_type");
 		if (str2) {
 			GdaDataHandler *dh2;
 			GType vtype;
 			GValue *value;
 			
-			vtype = gda_type_from_string (str2);			
+			vtype = g_type_from_string (str2);			
 			dh2 = gda_dict_get_default_handler (dict, vtype);
 			value = gda_data_handler_get_value_from_str (dh2, prop, vtype);
 			field->priv->default_value = value;
@@ -1278,12 +1278,12 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		xmlFree (prop);
 	}
 
-	if (!dh && (field->priv->gda_type != GDA_TYPE_NULL)) {
+	if (!dh && (field->priv->g_type != GDA_TYPE_NULL)) {
 		err = TRUE;
 		g_set_error (error,
 			     GDA_QUERY_FIELD_VALUE_ERROR,
 			     GDA_QUERY_FIELD_VALUE_XML_LOAD_ERROR,
-			     _("Missing required gda_type for <gda_query_fval>"));
+			     _("Missing required g_type for <gda_query_fval>"));
 	}
 
 	if (!err) {
@@ -1410,7 +1410,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 				if (value && (G_VALUE_TYPE ((GValue *)value) != GDA_TYPE_NULL)) {
 					GdaDataHandler *dh;
 					
-					dh = gda_dict_get_handler (dict, field->priv->gda_type);
+					dh = gda_dict_get_handler (dict, field->priv->g_type);
 					if (dh)
 						str = gda_data_handler_get_sql_from_value (dh, value);
 				}
@@ -1439,7 +1439,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 		if (value && (G_VALUE_TYPE ((GValue *)value) != GDA_TYPE_NULL)) {
 			GdaDataHandler *dh;
 			
-			dh = gda_dict_get_handler (dict, field->priv->gda_type);
+			dh = gda_dict_get_handler (dict, field->priv->g_type);
 			if (dh)
 				str = gda_data_handler_get_sql_from_value (dh, value);
 			else
@@ -1469,8 +1469,8 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			g_string_append_printf (extra, ":type=\"%s\"", 
 						gda_object_get_name (GDA_OBJECT (field->priv->dict_type)));
 		else
-			/* print gda_type instead */
-			g_string_append_printf (extra, ":type=\"%s\"", gda_type_to_string (field->priv->gda_type));
+			/* print g_type instead */
+			g_string_append_printf (extra, ":type=\"%s\"", g_type_to_string (field->priv->g_type));
 
 		tmpstr = gda_object_get_name (GDA_OBJECT (field));
 		if (tmpstr && *tmpstr) {

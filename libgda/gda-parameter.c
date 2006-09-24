@@ -100,7 +100,7 @@ enum
 struct _GdaParameterPrivate
 {
 	GSList                *param_users; /* list of #GdaObject using that parameter */
-	GType                  gda_type;
+	GType                  g_type;
 	GdaParameter          *alias_of;     /* FULL bind to param */
 	GdaParameter          *change_with;  /* SIMPLE bind to param */
 	
@@ -198,7 +198,7 @@ gda_parameter_class_init (GdaParameterClass *class)
 	object_class->set_property = gda_parameter_set_property;
 	object_class->get_property = gda_parameter_get_property;
         g_object_class_install_property (object_class, PROP_GDA_TYPE,
-                                         g_param_spec_ulong ("gda_type", NULL, NULL,
+                                         g_param_spec_ulong ("g_type", NULL, NULL,
 							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | 
 							    G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
@@ -231,7 +231,7 @@ gda_parameter_init (GdaParameter *parameter)
 {
 	parameter->priv = g_new0 (GdaParameterPrivate, 1);
 	parameter->priv->param_users = NULL;
-	parameter->priv->gda_type = G_TYPE_INVALID;
+	parameter->priv->g_type = G_TYPE_INVALID;
 	parameter->priv->alias_of = NULL;
 	parameter->priv->change_with = NULL;
 
@@ -263,7 +263,7 @@ gda_parameter_new (GType type)
 
 	g_return_val_if_fail (type != G_TYPE_INVALID, NULL);
 
-        obj = g_object_new (GDA_TYPE_PARAMETER, "gda_type", type, NULL);
+        obj = g_object_new (GDA_TYPE_PARAMETER, "g_type", type, NULL);
 
         return (GdaParameter *) obj;
 }
@@ -288,7 +288,7 @@ gda_parameter_new_copy (GdaParameter *orig)
 	g_return_val_if_fail (orig->priv, NULL);
 
 	dict = gda_object_get_dict (GDA_OBJECT (orig));
-	obj = g_object_new (GDA_TYPE_PARAMETER, "dict", dict,"gda_type", orig->priv->gda_type, NULL);
+	obj = g_object_new (GDA_TYPE_PARAMETER, "dict", dict,"g_type", orig->priv->g_type, NULL);
 	param = GDA_PARAMETER (obj);
 
 	gda_object_set_name (GDA_OBJECT (param), gda_object_get_name (GDA_OBJECT (orig)));
@@ -416,7 +416,7 @@ gda_parameter_dispose (GObject *object)
 		while (parameter->priv->param_users)
 			gda_parameter_del_user (parameter, GDA_OBJECT (parameter->priv->param_users->data));
 
-		parameter->priv->gda_type = G_TYPE_INVALID;
+		parameter->priv->g_type = G_TYPE_INVALID;
 
 		if (parameter->priv->value) {
 			gda_value_free (parameter->priv->value);
@@ -468,7 +468,7 @@ gda_parameter_set_property    (GObject *object,
 	if (parameter->priv) {
 		switch (param_id) {
 		case PROP_GDA_TYPE:
-			parameter->priv->gda_type = g_value_get_ulong (value);
+			parameter->priv->g_type = g_value_get_ulong (value);
 			break;
 		case PROP_PLUGIN:
 			ptr = g_value_get_string (value);
@@ -523,7 +523,7 @@ gda_parameter_get_property    (GObject *object,
 	if (parameter->priv) {
 		switch (param_id) {
 		case PROP_GDA_TYPE:
-			g_value_set_ulong (value, parameter->priv->gda_type);
+			g_value_set_ulong (value, parameter->priv->g_type);
 		case PROP_PLUGIN:
 			g_value_set_string (value, parameter->priv->plugin);
 			break;
@@ -610,7 +610,7 @@ gda_parameter_replace_param_users (GdaParameter *param, GHashTable *replacements
 }
 
 /**
- * gda_parameter_get_gda_type
+ * gda_parameter_get_g_type
  * @param: a #GdaParameter object
  * 
  * Get the requested data type for @param.
@@ -618,12 +618,12 @@ gda_parameter_replace_param_users (GdaParameter *param, GHashTable *replacements
  * Returns: the data type
  */
 GType
-gda_parameter_get_gda_type (GdaParameter *param)
+gda_parameter_get_g_type (GdaParameter *param)
 {
 	g_return_val_if_fail (GDA_IS_PARAMETER (param), G_TYPE_INVALID);
 	g_return_val_if_fail (param->priv, G_TYPE_INVALID);
 
-	return param->priv->gda_type;
+	return param->priv->g_type;
 }
 
 
@@ -703,7 +703,7 @@ gda_parameter_set_value (GdaParameter *param, const GValue *value)
 
 	if (value &&
 	    (G_VALUE_TYPE ((GValue *)value) != GDA_TYPE_NULL) &&
-	    (G_VALUE_TYPE ((GValue *)value) != param->priv->gda_type))
+	    (G_VALUE_TYPE ((GValue *)value) != param->priv->g_type))
 		param->priv->valid = FALSE;
 
 #ifdef DEBUG_PARAM
@@ -788,9 +788,9 @@ gda_parameter_set_value_str (GdaParameter *param, const gchar *value)
 		GdaDataHandler *dh;
 
 		dict = gda_object_get_dict (GDA_OBJECT (param));
-		dh = gda_dict_get_handler (dict, param->priv->gda_type);
+		dh = gda_dict_get_handler (dict, param->priv->g_type);
 		if (dh)
-			gdaval = gda_data_handler_get_value_from_str (dh, value, param->priv->gda_type);
+			gdaval = gda_data_handler_get_value_from_str (dh, value, param->priv->g_type);
 		
 		if (gdaval) {
 			gda_parameter_set_value (param, gdaval);
@@ -1111,7 +1111,7 @@ gda_parameter_bind_to_param (GdaParameter *param, GdaParameter *bind_to)
 	if (bind_to) {
 		g_return_if_fail (bind_to && GDA_IS_PARAMETER (bind_to));
 		g_return_if_fail (bind_to->priv);
-		g_return_if_fail (param->priv->gda_type == bind_to->priv->gda_type);
+		g_return_if_fail (param->priv->g_type == bind_to->priv->g_type);
 		cvalue = gda_parameter_get_value (bind_to);
 		if (cvalue && !gda_value_is_null ((GValue*)cvalue))
 			value2 = gda_value_copy ((GValue*)cvalue);
@@ -1181,7 +1181,7 @@ gda_parameter_set_full_bind_param (GdaParameter *param, GdaParameter *alias_of)
 	if (alias_of) {
 		g_return_if_fail (alias_of && GDA_IS_PARAMETER (alias_of));
 		g_return_if_fail (alias_of->priv);
-		g_return_if_fail (param->priv->gda_type == alias_of->priv->gda_type);
+		g_return_if_fail (param->priv->g_type == alias_of->priv->g_type);
 		cvalue = gda_parameter_get_value (alias_of);
 		if (cvalue && !gda_value_is_null ((GValue*)cvalue))
 			value2 = gda_value_copy ((GValue*)cvalue);
@@ -1315,7 +1315,7 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 		strval = gda_value_stringify ((GValue *) gda_parameter_get_value (parameter));
 		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s, %s, value=%s\n" D_COL_NOR, str, parameter,
 			 gda_object_get_name (GDA_OBJECT (parameter)), 
-			 gda_type_to_string (parameter->priv->gda_type),
+			 g_type_to_string (parameter->priv->g_type),
 			 gda_parameter_is_valid (parameter) ? "VALID" : "INVALID",
 			 strval);
 		g_free (strval);

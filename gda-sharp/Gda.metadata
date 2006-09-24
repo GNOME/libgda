@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <metadata>
   <attr path="/api/namespace/class[@name='Main']" name="hidden">1</attr>
-  <attr path="/api/namespace/class[@cname='GdaType_']" name="hidden">1</attr>
+  <attr path="/api/namespace/class[@cname='GType_']" name="hidden">1</attr>
   <attr path="/api/namespace/class[@name='Value']" name="hidden">1</attr>
   <attr path="/api/namespace/interface[@cname='GdaDataModel']/method[@name='Foreach']/*/*[@name='func']" name="scope">call</attr>
   <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='BeginUpdate']" name="name">BeganUpdate</attr>

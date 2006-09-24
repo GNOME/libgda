@@ -318,27 +318,27 @@
           <parameter type="GType" name="type" />
         </parameters>
       </virtual_method>
-      <virtual_method name="GetNbGdaTypes" cname="get_nb_gda_types">
+      <virtual_method name="GetNbGTypes" cname="get_nb_g_types">
         <return-type type="guint" />
         <parameters>
           <parameter type="GdaDataHandler*" name="dh" />
         </parameters>
       </virtual_method>
-      <virtual_method name="GetGdaTypeIndex" cname="get_gda_type_index">
+      <virtual_method name="GetGTypeIndex" cname="get_g_type_index">
         <return-type type="GType" />
         <parameters>
           <parameter type="GdaDataHandler*" name="dh" />
           <parameter type="guint" name="index" />
         </parameters>
       </virtual_method>
-      <virtual_method name="AcceptsGdaType" cname="accepts_gda_type">
+      <virtual_method name="AcceptsGType" cname="accepts_g_type">
         <return-type type="gboolean" />
         <parameters>
           <parameter type="GdaDataHandler*" name="dh" />
           <parameter type="GType" name="type" />
         </parameters>
       </virtual_method>
-      <method name="AcceptsGdaType" cname="gda_data_handler_accepts_gda_type">
+      <method name="AcceptsGType" cname="gda_data_handler_accepts_g_type">
         <return-type type="gboolean" />
         <parameters>
           <parameter type="GType" name="type" />
@@ -347,13 +347,13 @@
       <method name="GetDescr" cname="gda_data_handler_get_descr">
         <return-type type="const-gchar*" />
       </method>
-      <method name="GetGdaTypeIndex" cname="gda_data_handler_get_gda_type_index">
+      <method name="GetGTypeIndex" cname="gda_data_handler_get_g_type_index">
         <return-type type="GType" />
         <parameters>
           <parameter type="guint" name="index" />
         </parameters>
       </method>
-      <method name="GetNbGdaTypes" cname="gda_data_handler_get_nb_gda_types">
+      <method name="GetNbGTypes" cname="gda_data_handler_get_nb_g_types">
         <return-type type="guint" />
       </method>
       <method name="GetSaneInitValue" cname="gda_data_handler_get_sane_init_value">
@@ -906,7 +906,7 @@
           <parameter type="GdaEntityField*" name="iface" />
         </parameters>
       </virtual_method>
-      <virtual_method name="GetGdaType" cname="get_gda_type">
+      <virtual_method name="GetGType" cname="get_g_type">
         <return-type type="GType" />
         <parameters>
           <parameter type="GdaEntityField*" name="iface" />
@@ -927,7 +927,7 @@
       <method name="GetEntity" cname="gda_entity_field_get_entity">
         <return-type type="GdaEntity*" />
       </method>
-      <method name="GetGdaType" cname="gda_entity_field_get_gda_type">
+      <method name="GetGType" cname="gda_entity_field_get_g_type">
         <return-type type="GType" />
       </method>
       <method name="GetName" cname="gda_entity_field_get_name">
@@ -1355,7 +1355,7 @@
           <parameter type="const-gchar*" name="old_name" />
         </parameters>
       </signal>
-      <signal name="GdaTypeChanged" cname="gda_type_changed" when="LAST">
+      <signal name="GTypeChanged" cname="g_type_changed" when="LAST">
         <return-type type="void" />
         <parameters>
           <parameter type="GdaColumn*" name="column" />
@@ -1385,7 +1385,7 @@
       <method name="GetDefinedSize" cname="gda_column_get_defined_size">
         <return-type type="glong" />
       </method>
-      <method name="GetGdaType" cname="gda_column_get_gda_type">
+      <method name="GetGType" cname="gda_column_get_g_type">
         <return-type type="GType" />
       </method>
       <method name="GetName" cname="gda_column_get_name">
@@ -1452,7 +1452,7 @@
           <parameter type="glong" name="size" />
         </parameters>
       </method>
-      <method name="SetGdaType" cname="gda_column_set_gda_type">
+      <method name="SetGType" cname="gda_column_set_g_type">
         <return-type type="void" />
         <parameters>
           <parameter type="GType" name="type" />
@@ -1900,7 +1900,7 @@
           <parameter type="gint" name="cols" />
         </parameters>
       </constructor>
-      <constructor cname="gda_data_model_array_new_with_types">
+      <constructor cname="gda_data_model_array_new_with_g_types">
         <parameters>
           <parameter type="gint" name="cols" />
           <parameter ellipsis="true" />
@@ -2624,7 +2624,7 @@
           <parameter type="const-gchar*" name="xmlfile" />
         </parameters>
       </method>
-      <method name="StopUpdateDbmsData" cname="gda_dict_stop_update_dbms_data">
+      <method name="StopUpdateDbmsData" cname="gda_dict_stop_update_dbms_meta_data">
         <return-type type="void" />
       </method>
       <method name="UnassumeObject" cname="gda_dict_unassume_object">
@@ -2633,7 +2633,7 @@
           <parameter type="GdaObject*" name="object" />
         </parameters>
       </method>
-      <method name="UpdateDbmsData" cname="gda_dict_update_dbms_data">
+      <method name="UpdateDbmsData" cname="gda_dict_update_dbms_meta_data">
         <return-type type="gboolean" />
         <parameters>
           <parameter type="GType" name="limit_to_type" />
@@ -2648,13 +2648,13 @@
       <implements>
         <interface cname="GdaXmlStorage" />
       </implements>
-      <method name="GetArgType" cname="gda_dict_aggregate_get_arg_type">
+      <method name="GetArgType" cname="gda_dict_aggregate_get_arg_dict_type">
         <return-type type="GdaDictType*" />
       </method>
       <method name="GetDbmsId" cname="gda_dict_aggregate_get_dbms_id">
         <return-type type="gchar*" />
       </method>
-      <method name="GetRetType" cname="gda_dict_aggregate_get_ret_type">
+      <method name="GetRetType" cname="gda_dict_aggregate_get_ret_dict_type">
         <return-type type="GdaDictType*" />
       </method>
       <method name="GetSqlname" cname="gda_dict_aggregate_get_sqlname">
@@ -2668,7 +2668,7 @@
           <parameter type="GdaDict*" name="dict" />
         </parameters>
       </constructor>
-      <method name="SetArgType" cname="gda_dict_aggregate_set_arg_type">
+      <method name="SetArgType" cname="gda_dict_aggregate_set_arg_dict_type">
         <return-type type="void" />
         <parameters>
           <parameter type="GdaDictType*" name="dt" />
@@ -2680,7 +2680,7 @@
           <parameter type="const-gchar*" name="id" />
         </parameters>
       </method>
-      <method name="SetRetType" cname="gda_dict_aggregate_set_ret_type">
+      <method name="SetRetType" cname="gda_dict_aggregate_set_ret_dict_type">
         <return-type type="void" />
         <parameters>
           <parameter type="GdaDictType*" name="dt" />
@@ -3035,19 +3035,19 @@
       <implements>
         <interface cname="GdaXmlStorage" />
       </implements>
-      <method name="AcceptsArgs" cname="gda_dict_function_accepts_args">
+      <method name="AcceptsArgs" cname="gda_dict_function_accepts_arg_dict_types">
         <return-type type="gboolean" />
         <parameters>
           <parameter type="const-GSList*" name="arg_types" />
         </parameters>
       </method>
-      <method name="GetArgTypes" cname="gda_dict_function_get_arg_types">
+      <method name="GetArgTypes" cname="gda_dict_function_get_arg_dict_types">
         <return-type type="const-GSList*" />
       </method>
       <method name="GetDbmsId" cname="gda_dict_function_get_dbms_id">
         <return-type type="gchar*" />
       </method>
-      <method name="GetRetType" cname="gda_dict_function_get_ret_type">
+      <method name="GetRetType" cname="gda_dict_function_get_ret_dict_type">
         <return-type type="GdaDictType*" />
       </method>
       <method name="GetSqlname" cname="gda_dict_function_get_sqlname">
@@ -3061,7 +3061,7 @@
           <parameter type="GdaDict*" name="dict" />
         </parameters>
       </constructor>
-      <method name="SetArgTypes" cname="gda_dict_function_set_arg_types">
+      <method name="SetArgTypes" cname="gda_dict_function_set_arg_dict_types">
         <return-type type="void" />
         <parameters>
           <parameter type="const-GSList*" name="arg_types" />
@@ -3073,7 +3073,7 @@
           <parameter type="const-gchar*" name="id" />
         </parameters>
       </method>
-      <method name="SetRetType" cname="gda_dict_function_set_ret_type">
+      <method name="SetRetType" cname="gda_dict_function_set_ret_dict_type">
         <return-type type="void" />
         <parameters>
           <parameter type="GdaDictType*" name="dt" />
@@ -3137,7 +3137,7 @@
       <method name="ClearSynonyms" cname="gda_dict_type_clear_synonyms">
         <return-type type="void" />
       </method>
-      <method name="GetGdaType" cname="gda_dict_type_get_gda_type">
+      <method name="GetGType" cname="gda_dict_type_get_g_type">
         <return-type type="GType" />
       </method>
       <method name="GetSqlname" cname="gda_dict_type_get_sqlname">
@@ -3154,10 +3154,10 @@
           <parameter type="GdaDict*" name="dict" />
         </parameters>
       </constructor>
-      <method name="SetGdaType" cname="gda_dict_type_set_gda_type">
+      <method name="SetGType" cname="gda_dict_type_set_g_type">
         <return-type type="void" />
         <parameters>
-          <parameter type="GType" name="gda_type" />
+          <parameter type="GType" name="g_type" />
         </parameters>
       </method>
       <method name="SetSqlname" cname="gda_dict_type_set_sqlname">
@@ -3407,7 +3407,7 @@
           <parameter type="GdaParameter*" name="param" />
         </parameters>
       </signal>
-      <property name="GdaType" cname="gda_type" type="ulong" readable="true" writeable="true" construct-only="true" />
+      <property name="GType" cname="g_type" type="ulong" readable="true" writeable="true" construct-only="true" />
       <property name="EntryPlugin" cname="entry_plugin" type="gchar*" readable="true" writeable="true" />
       <property name="UseDefaultValue" cname="use_default_value" type="gboolean" readable="true" writeable="true" />
       <property name="SimpleBind" cname="simple_bind" type="gpointer" readable="true" writeable="true" />
@@ -3441,7 +3441,7 @@
       <method name="GetExistsDefaultValue" cname="gda_parameter_get_exists_default_value">
         <return-type type="gboolean" />
       </method>
-      <method name="GetGdaType" cname="gda_parameter_get_gda_type">
+      <method name="GetGType" cname="gda_parameter_get_g_type">
         <return-type type="GType" />
       </method>
       <method name="GetNotNull" cname="gda_parameter_get_not_null">
@@ -4350,7 +4350,7 @@
     <object name="QueryFieldValue" cname="GdaQueryFieldValue" parent="GdaQueryField">
       <field name="Priv" cname="priv" type="GdaQueryFieldValuePrivate*" />
       <property name="Query" cname="query" type="gpointer" readable="true" writeable="true" construct-only="true" />
-      <property name="GdaType" cname="gda_type" type="ulong" readable="true" writeable="true" />
+      <property name="GType" cname="g_type" type="ulong" readable="true" writeable="true" />
       <property name="RestrictModel" cname="restrict_model" type="gpointer" readable="true" writeable="true" />
       <property name="RestrictColumn" cname="restrict_column" type="gint" readable="true" writeable="true" />
       <property name="EntryPlugin" cname="entry_plugin" type="gchar*" readable="true" writeable="true" />
@@ -4364,7 +4364,7 @@
       <method name="GetDictType" cname="gda_query_field_value_get_dict_type">
         <return-type type="GdaDictType*" />
       </method>
-      <method name="GetGdaType" cname="gda_query_field_value_get_gda_type">
+      <method name="GetGType" cname="gda_query_field_value_get_g_type">
         <return-type type="GType" />
       </method>
       <method name="GetNotNull" cname="gda_query_field_value_get_not_null">
@@ -4868,7 +4868,7 @@
         <parameters>
           <parameter type="GdaServerProvider*" name="provider" />
           <parameter type="GdaConnection*" name="cnc" />
-          <parameter type="GType" name="gda_type" />
+          <parameter type="GType" name="g_type" />
           <parameter type="const-gchar*" name="dbms_type" />
         </parameters>
       </virtual_method>
@@ -5129,7 +5129,7 @@
         <parameters>
           <parameter type="GdaDataHandler*" name="dh" />
           <parameter type="GdaConnection*" name="cnc" />
-          <parameter type="GType" name="gda_type" />
+          <parameter type="GType" name="g_type" />
           <parameter type="const-gchar*" name="dbms_type" />
         </parameters>
       </method>
@@ -5137,7 +5137,7 @@
         <return-type type="GdaDataHandler*" />
         <parameters>
           <parameter type="GdaConnection*" name="cnc" />
-          <parameter type="GType" name="gda_type" />
+          <parameter type="GType" name="g_type" />
           <parameter type="const-gchar*" name="dbms_type" />
         </parameters>
       </method>
@@ -5605,7 +5605,7 @@
     <struct name="ServerOperationNode" cname="GdaServerOperationNode" opaque="true" />
     <struct name="ServerProviderHandlerInfo" cname="GdaServerProviderHandlerInfo">
       <field name="Cnc" cname="cnc" type="GdaConnection*" />
-      <field name="GdaType" cname="gda_type" type="GType" />
+      <field name="GType" cname="g_type" type="GType" />
       <field name="DbmsType" cname="dbms_type" type="gchar*" />
       <method name="EqualFunc" cname="gda_server_provider_handler_info_equal_func">
         <return-type type="gboolean" />
@@ -6006,7 +6006,7 @@
           <parameter type="GdaBinary*" name="bin" />
         </parameters>
       </method>
-      <method name="TypesGetRegister" cname="gda_types_get_register" shared="true">
+      <method name="TypesGetRegister" cname="g_types_get_register" shared="true">
         <return-type type="GdaDictRegisterStruct*" />
       </method>
       <method name="UshortGetType" cname="gda_ushort_get_type" shared="true">
@@ -6043,14 +6043,14 @@
         </parameters>
       </method>
     </class>
-    <class name="Type" cname="GdaType_">
-      <method name="FromString" cname="gda_type_from_string" shared="true">
+    <class name="Type" cname="GType_">
+      <method name="FromString" cname="g_type_from_string" shared="true">
         <return-type type="GType" />
         <parameters>
           <parameter type="const-gchar*" name="str" />
         </parameters>
       </method>
-      <method name="ToString" cname="gda_type_to_string" shared="true">
+      <method name="ToString" cname="g_type_to_string" shared="true">
         <return-type type="const-gchar*" />
         <parameters>
           <parameter type="GType" name="type" />

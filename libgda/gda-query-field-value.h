@@ -66,7 +66,7 @@ void              gda_query_field_value_set_value           (GdaQueryFieldValue 
 const GValue     *gda_query_field_value_get_value           (GdaQueryFieldValue *field);
 void              gda_query_field_value_set_default_value   (GdaQueryFieldValue *field, const GValue *default_val);
 const GValue     *gda_query_field_value_get_default_value   (GdaQueryFieldValue *field);
-GType             gda_query_field_value_get_gda_type        (GdaQueryFieldValue *field);
+GType             gda_query_field_value_get_g_type          (GdaQueryFieldValue *field);
 
 void              gda_query_field_value_set_dict_type       (GdaQueryFieldValue *field, GdaDictType *type);
 GdaDictType      *gda_query_field_value_get_dict_type       (GdaQueryFieldValue *field);

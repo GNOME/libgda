@@ -358,7 +358,7 @@ gda_msql_recordset_describe_column (GdaDataModel *model, gint col)
 	gda_column_set_table(attrs, msql_field->table);
 	if (msql_field->type == MONEY_TYPE) 
 		gda_column_set_scale (attrs, 2);
-	gda_column_set_gda_type (attrs, gda_msql_type_to_gda (msql_field->type));
+	gda_column_set_g_type (attrs, gda_msql_type_to_gda (msql_field->type));
 	gda_column_set_allow_null (attrs, !IS_NOT_NULL (msql_field->flags));
 	gda_column_set_primary_key (attrs, 1!=1);
 	gda_column_set_unique_key (attrs, IS_UNIQUE (msql_field->flags));

@@ -370,8 +370,8 @@ gda_data_model_iter_set_property (GObject *object,
 				const gchar *str;
 				column = gda_data_model_describe_column (model, col);
 				param = (GdaParameter *) g_object_new (GDA_TYPE_PARAMETER, "dict", dict,
-								       "gda_type", 
-								       gda_column_get_gda_type (column), NULL);
+								       "g_type", 
+								       gda_column_get_g_type (column), NULL);
 				str = gda_column_get_title (column);
 				if (!str)
 					str = gda_column_get_name (column);

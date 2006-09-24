@@ -32,7 +32,7 @@ Each object implementing this interface MUST derive from the #GdaObject object.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_entity_field_get_gda_type ##### -->
+<!-- ##### FUNCTION gda_entity_field_get_g_type ##### -->
 <para>
 
 </para>

@@ -51,9 +51,9 @@ static GValue      *gda_handler_time_get_value_from_str     (GdaDataHandler *dh,
 
 static GValue      *gda_handler_time_get_sane_init_value    (GdaDataHandler * dh, GType type);
 
-static guint        gda_handler_time_get_nb_gda_types       (GdaDataHandler *dh);
-static GType        gda_handler_time_get_gda_type_index     (GdaDataHandler *dh, guint index);
-static gboolean     gda_handler_time_accepts_gda_type       (GdaDataHandler * dh, GType type);
+static guint        gda_handler_time_get_nb_g_types       (GdaDataHandler *dh);
+static GType        gda_handler_time_get_g_type_index     (GdaDataHandler *dh, guint index);
+static gboolean     gda_handler_time_accepts_g_type       (GdaDataHandler * dh, GType type);
 
 static const gchar *gda_handler_time_get_descr              (GdaDataHandler *dh);
 
@@ -66,8 +66,8 @@ typedef struct _LocaleSetting {
 
 struct  _GdaHandlerTimePriv {
 	gchar          *detailled_descr;
-	guint           nb_gda_types;
-	GType          *valid_gda_types;
+	guint           nb_g_types;
+	GType          *valid_g_types;
 
 	/* for locale setting */
 	LocaleSetting  *sql_locale;
@@ -115,9 +115,9 @@ gda_handler_time_data_handler_init (GdaDataHandlerIface *iface)
 	iface->get_value_from_sql = gda_handler_time_get_value_from_sql;
 	iface->get_value_from_str = gda_handler_time_get_value_from_str;
 	iface->get_sane_init_value = gda_handler_time_get_sane_init_value;
-	iface->get_nb_gda_types = gda_handler_time_get_nb_gda_types;
-	iface->accepts_gda_type = gda_handler_time_accepts_gda_type;
-	iface->get_gda_type_index = gda_handler_time_get_gda_type_index;
+	iface->get_nb_g_types = gda_handler_time_get_nb_g_types;
+	iface->accepts_g_type = gda_handler_time_accepts_g_type;
+	iface->get_g_type_index = gda_handler_time_get_g_type_index;
 	iface->get_descr = gda_handler_time_get_descr;
 }
 
@@ -138,11 +138,11 @@ gda_handler_time_init (GdaHandlerTime *hdl)
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerTimePriv, 1);
 	hdl->priv->detailled_descr = _("Time and Date handler");
-	hdl->priv->nb_gda_types = 3;
-	hdl->priv->valid_gda_types = g_new0 (GType, 7);
-	hdl->priv->valid_gda_types[0] = G_TYPE_DATE;
-	hdl->priv->valid_gda_types[1] = GDA_TYPE_TIME;
-	hdl->priv->valid_gda_types[2] = GDA_TYPE_TIMESTAMP;
+	hdl->priv->nb_g_types = 3;
+	hdl->priv->valid_g_types = g_new0 (GType, 7);
+	hdl->priv->valid_g_types[0] = G_TYPE_DATE;
+	hdl->priv->valid_g_types[1] = GDA_TYPE_TIME;
+	hdl->priv->valid_g_types[2] = GDA_TYPE_TIMESTAMP;
 
 	/* taking into accout the locale */
 	hdl->priv->sql_locale = g_new0 (LocaleSetting, 1);
@@ -178,8 +178,8 @@ gda_handler_time_dispose (GObject *object)
 	if (hdl->priv) {
 		gda_object_destroy_check (GDA_OBJECT (object));
 
-		g_free (hdl->priv->valid_gda_types);
-		hdl->priv->valid_gda_types = NULL;
+		g_free (hdl->priv->valid_g_types);
+		hdl->priv->valid_g_types = NULL;
 
 		g_free (hdl->priv->str_locale);
 		g_free (hdl->priv->sql_locale);
@@ -870,7 +870,7 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
 
 
 static guint
-gda_handler_time_get_nb_gda_types (GdaDataHandler *iface)
+gda_handler_time_get_nb_g_types (GdaDataHandler *iface)
 {
 	GdaHandlerTime *hdl;
 
@@ -878,12 +878,12 @@ gda_handler_time_get_nb_gda_types (GdaDataHandler *iface)
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 
-	return hdl->priv->nb_gda_types;
+	return hdl->priv->nb_g_types;
 }
 
 
 static gboolean
-gda_handler_time_accepts_gda_type (GdaDataHandler *iface, GType type)
+gda_handler_time_accepts_g_type (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerTime *hdl;
 	guint i = 0;
@@ -894,8 +894,8 @@ gda_handler_time_accepts_gda_type (GdaDataHandler *iface, GType type)
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, 0);
 
-	while (!found && (i < hdl->priv->nb_gda_types)) {
-		if (hdl->priv->valid_gda_types [i] == type)
+	while (!found && (i < hdl->priv->nb_g_types)) {
+		if (hdl->priv->valid_g_types [i] == type)
 			found = TRUE;
 		i++;
 	}
@@ -904,16 +904,16 @@ gda_handler_time_accepts_gda_type (GdaDataHandler *iface, GType type)
 }
 
 static GType
-gda_handler_time_get_gda_type_index (GdaDataHandler *iface, guint index)
+gda_handler_time_get_g_type_index (GdaDataHandler *iface, guint index)
 {
 	GdaHandlerTime *hdl;
 
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), G_TYPE_INVALID);
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, G_TYPE_INVALID);
-	g_return_val_if_fail (index < hdl->priv->nb_gda_types, G_TYPE_INVALID);
+	g_return_val_if_fail (index < hdl->priv->nb_g_types, G_TYPE_INVALID);
 
-	return hdl->priv->valid_gda_types[index];
+	return hdl->priv->valid_g_types[index];
 }
 
 static const gchar *

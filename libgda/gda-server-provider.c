@@ -1054,7 +1054,7 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
  * Get the name of the most common data type which has @type type.
 
  * The returned value may be %NULL either if the provider does not implement that method, or if
- * there is no DBMS data type which could contain data of the @gda_type type (for example %NULL may be
+ * there is no DBMS data type which could contain data of the @g_type type (for example %NULL may be
  * returned if a DBMS has integers only up to 4 bytes and a G_TYPE_INT64 is requested).
  *
  * Returns: the name of the DBMS type, or %NULL

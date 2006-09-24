@@ -181,7 +181,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_update_dbms_data ##### -->
+<!-- ##### FUNCTION gda_dict_update_dbms_meta_data ##### -->
 <para>
 
 </para>
@@ -193,7 +193,7 @@ object for more information.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_stop_update_dbms_data ##### -->
+<!-- ##### FUNCTION gda_dict_stop_update_dbms_meta_data ##### -->
 <para>
 
 </para>

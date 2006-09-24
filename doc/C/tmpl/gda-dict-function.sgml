@@ -84,7 +84,7 @@ It implements the #GdaXmlStorage interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_function_set_arg_types ##### -->
+<!-- ##### FUNCTION gda_dict_function_set_arg_dict_types ##### -->
 <para>
 
 </para>
@@ -93,7 +93,7 @@ It implements the #GdaXmlStorage interface.
 @arg_types: 
 
 
-<!-- ##### FUNCTION gda_dict_function_get_arg_types ##### -->
+<!-- ##### FUNCTION gda_dict_function_get_arg_dict_types ##### -->
 <para>
 
 </para>
@@ -102,7 +102,7 @@ It implements the #GdaXmlStorage interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_function_set_ret_type ##### -->
+<!-- ##### FUNCTION gda_dict_function_set_ret_dict_type ##### -->
 <para>
 
 </para>
@@ -111,7 +111,7 @@ It implements the #GdaXmlStorage interface.
 @dt: 
 
 
-<!-- ##### FUNCTION gda_dict_function_get_ret_type ##### -->
+<!-- ##### FUNCTION gda_dict_function_get_ret_dict_type ##### -->
 <para>
 
 </para>
@@ -120,7 +120,7 @@ It implements the #GdaXmlStorage interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_dict_function_accepts_args ##### -->
+<!-- ##### FUNCTION gda_dict_function_accepts_arg_dict_types ##### -->
 <para>
 
 </para>

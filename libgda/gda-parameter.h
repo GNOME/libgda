@@ -1,6 +1,6 @@
 /* gda-parameter.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2006 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -58,7 +58,7 @@ struct _GdaParameterClass
 GType                  gda_parameter_get_type                (void);
 GdaParameter          *gda_parameter_new                     (GType type);
 GdaParameter          *gda_parameter_new_copy                (GdaParameter *orig);
-GType                  gda_parameter_get_gda_type            (GdaParameter *param);
+GType                  gda_parameter_get_g_type              (GdaParameter *param);
 
 GdaParameter          *gda_parameter_new_string              (const gchar *name, const gchar *str);
 GdaParameter          *gda_parameter_new_boolean             (const gchar *name, gboolean value);

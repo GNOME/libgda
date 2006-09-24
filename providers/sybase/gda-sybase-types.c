@@ -312,21 +312,21 @@ const GType gda_sybase_get_value_type (const CS_INT sql_type)
 	
 	while ((i < GDA_SYBASE_TYPE_CNT)) {
 		if (gda_sybase_type_list[i].sql_type == sql_type) {
-			return gda_sybase_type_list[i].gda_type;
+			return gda_sybase_type_list[i].g_type;
 		}
 		i++;
 	}
 	
-	return gda_sybase_type_list[GDA_SYBASE_TYPE_CNT - 1].gda_type;
+	return gda_sybase_type_list[GDA_SYBASE_TYPE_CNT - 1].g_type;
 }
 
-const CS_INT gda_sybase_get_sql_type (const GType gda_type)
+const CS_INT gda_sybase_get_sql_type (const GType g_type)
 {
 	gint i = 0;
 
 	while ((i < GDA_SYBASE_TYPE_CNT)) {
-		if (gda_sybase_type_list[i].gda_type == gda_type) {
-			return gda_sybase_type_list[i].gda_type;
+		if (gda_sybase_type_list[i].g_type == g_type) {
+			return gda_sybase_type_list[i].g_type;
 		}
 		i++;
 	}

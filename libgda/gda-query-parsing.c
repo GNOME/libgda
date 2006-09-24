@@ -1396,7 +1396,7 @@ parsed_create_field_query_field (GdaQuery *query, gboolean add_to_query,
 					qfield = (GdaEntityField *) g_object_new (GDA_TYPE_QUERY_FIELD_VALUE, 
 										  "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 										  "query", query,	  
-										  "gda_type", GDA_TYPE_NULL, NULL);
+										  "g_type", GDA_TYPE_NULL, NULL);
 				}
 				else {
 					while (targets && !has_error) {
@@ -1530,7 +1530,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 								    ((param_spec*) list->data)->content);
 			if (!real_type) {
 				/* try a generic GDA type then */
-				gdatype = gda_type_from_string (((param_spec*) list->data)->content);
+				gdatype = g_type_from_string (((param_spec*) list->data)->content);
 				if (gdatype == G_TYPE_INVALID) {
 					g_set_error (error,
 						     GDA_QUERY_ERROR,
@@ -1619,7 +1619,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	}
 
 	if (real_type) {
-		gdatype = gda_dict_type_get_gda_type (real_type);
+		gdatype = gda_dict_type_get_g_type (real_type);
 		if (gdaval && G_VALUE_TYPE (gdaval) != gdatype) {
 			/* convert gdaval to be a value of type gdatype because we otherwise have a coherence 
 			   problem */

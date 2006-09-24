@@ -738,7 +738,7 @@ gda_data_model_import_dump (GdaDataModelImport *model, guint offset)
 		for (i = 0; i < n_cols; i++) {
 			GdaColumn *col = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
                         g_print ("%sModel col %d has type %s\n", stroff, i, 
-				 gda_type_to_string (gda_column_get_gda_type (col)));
+				 g_type_to_string (gda_column_get_g_type (col)));
 		}
 
 		for (i = 0; i < n_cols; i++) {
@@ -850,7 +850,7 @@ init_csv_import (GdaDataModelImport *model)
 				arrvalue ++;
 			}
 
-			gda_column_set_gda_type (column, G_TYPE_STRING);
+			gda_column_set_g_type (column, G_TYPE_STRING);
 			if (model->priv->options) {
 				gchar *pname;
 				GdaParameter *param;
@@ -870,7 +870,7 @@ init_csv_import (GdaDataModelImport *model)
 							GType gtype;
 							
 							gtype = g_value_get_ulong ((GValue *) value);
-							gda_column_set_gda_type (column, gtype);
+							gda_column_set_g_type (column, gtype);
 						}
 					}
 				}
@@ -886,8 +886,8 @@ init_csv_import (GdaDataModelImport *model)
 					if (dtype) {
 						GType gtype;
 						
-						gtype = gda_dict_type_get_gda_type (dtype);
-						gda_column_set_gda_type (column, gtype);
+						gtype = gda_dict_type_get_g_type (dtype);
+						gda_column_set_g_type (column, gtype);
 					}
 				}
 				g_free (pname);
@@ -1123,13 +1123,13 @@ csv_compute_row_values (GdaDataModelImport *model)
 		GType gtype;
 		GValue *value;
 
-		gtype = gda_column_get_gda_type ((GdaColumn *) columns->data);
+		gtype = gda_column_get_g_type ((GdaColumn *) columns->data);
 		value = gda_value_new_from_string (*arrvalue, gtype);
 		if (!value) {
 			gchar *str;
 
 			str = g_strdup_printf (_("Could not convert '%s' to a value of type %s"), 
-					       *arrvalue, gda_type_to_string (gtype));
+					       *arrvalue, g_type_to_string (gtype));
 			add_error (model, str);
 			g_free (str);
 			value = gda_value_new_null ();
@@ -1331,7 +1331,7 @@ init_xml_import (GdaDataModelImport *model)
 			spec->dbms_type = xmlTextReaderGetAttribute (reader, "dbms_type");
 			str = xmlTextReaderGetAttribute (reader, "gdatype");
 			if (str) {
-				spec->gdatype = gda_type_from_string (str);
+				spec->gdatype = g_type_from_string (str);
 				xmlFree (str);
 			}
 			else {
@@ -1405,7 +1405,7 @@ init_xml_import (GdaDataModelImport *model)
 			gda_column_set_caption (column, spec->caption);
 			gda_column_set_dbms_type (column, spec->dbms_type);
 			gda_column_set_scale (column, spec->scale);
-			gda_column_set_gda_type (column, spec->gdatype);
+			gda_column_set_g_type (column, spec->gdatype);
 			gda_column_set_allow_null (column, spec->nullok);
 			gda_column_set_primary_key (column, spec->pkey);
 			gda_column_set_unique_key (column, spec->unique);
@@ -1534,15 +1534,15 @@ xml_fetch_next_row (GdaDataModelImport *model)
 					GType gtype;
 					const xmlChar *xmlstr;
 
-					gtype = gda_column_get_gda_type (column);
+					gtype = gda_column_get_g_type (column);
 					xmlstr = xmlTextReaderConstValue (reader);
-					/* g_print ("Convert #%s# to %s\n", (gchar *) xmlstr, gda_type_to_string (gtype)); */
+					/* g_print ("Convert #%s# to %s\n", (gchar *) xmlstr, g_type_to_string (gtype)); */
 					value = gda_value_new_from_string ((gchar *) xmlstr, gtype);
 					if (!value) {
 						gchar *str;
 						
 						str = g_strdup_printf (_("Could not convert '%s' to a value of type %s"), 
-								       (gchar *) xmlstr, gda_type_to_string (gtype));
+								       (gchar *) xmlstr, g_type_to_string (gtype));
 						add_error (model, str);
 						g_free (str);
 						value = gda_value_new_null ();
@@ -1622,7 +1622,7 @@ init_node_import (GdaDataModelImport *model)
 			spec->dbms_type = xmlGetProp (cur, "dbms_type");
 			str = xmlGetProp (cur, "gdatype");
 			if (str) {
-				spec->gdatype = gda_type_from_string (str);
+				spec->gdatype = g_type_from_string (str);
 				xmlFree (str);
 			}
 			else {
@@ -1715,7 +1715,7 @@ init_node_import (GdaDataModelImport *model)
 		gda_column_set_caption (column, spec->caption);
 		gda_column_set_dbms_type (column, spec->dbms_type);
 		gda_column_set_scale (column, spec->scale);
-		gda_column_set_gda_type (column, spec->gdatype);
+		gda_column_set_g_type (column, spec->gdatype);
 		gda_column_set_allow_null (column, spec->nullok);
 		gda_column_set_primary_key (column, spec->pkey);
 		gda_column_set_unique_key (column, spec->unique);

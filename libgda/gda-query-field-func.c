@@ -563,7 +563,7 @@ gda_query_field_func_set_args (GdaQueryFieldFunc *func, GSList *args)
 	if (args && gda_object_ref_activate (func->priv->func_ref)) {
 		/* test for the right arguments */
 		GdaDictFunction *sfunc = GDA_DICT_FUNCTION (gda_object_ref_get_ref_object (func->priv->func_ref));
-		GSList *arg = args, *list = (GSList *) gda_dict_function_get_arg_types (sfunc);
+		GSList *arg = args, *list = (GSList *) gda_dict_function_get_arg_dict_types (sfunc);
 		GdaServerProviderInfo *sinfo = NULL;
 		GdaDict *dict;
 		GdaConnection *cnc;
@@ -588,8 +588,8 @@ gda_query_field_func_set_args (GdaQueryFieldFunc *func, GSList *args)
 				/* GType compatibility test */
 				if (arg->data && list->data &&
 				    list->data &&
-				    (gda_dict_type_get_gda_type (gda_query_field_get_dict_type (GDA_QUERY_FIELD (arg->data))) !=
-				     gda_dict_type_get_gda_type (GDA_DICT_TYPE (list->data))))
+				    (gda_dict_type_get_g_type (gda_query_field_get_dict_type (GDA_QUERY_FIELD (arg->data))) !=
+				     gda_dict_type_get_g_type (GDA_DICT_TYPE (list->data))))
 					args_ok = FALSE;
 			}
 
@@ -717,7 +717,7 @@ gda_query_field_func_get_data_type (GdaEntityField *iface)
 	if (gda_query_field_func_activate (GDA_REFERER (iface))) {
 		GdaDictFunction *func;
 		func = GDA_DICT_FUNCTION (gda_object_ref_get_ref_object (GDA_QUERY_FIELD_FUNC (iface)->priv->func_ref));
-		return gda_dict_function_get_ret_type (func);
+		return gda_dict_function_get_ret_dict_type (func);
 	}
 
 	return NULL;
@@ -898,7 +898,7 @@ gda_query_field_func_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErro
 		ref = gda_object_ref_get_ref_object (func->priv->func_ref);
 		if (ref && 
 		    (g_slist_length (func->priv->args) != 
-		     g_slist_length ((GSList *) gda_dict_function_get_arg_types (GDA_DICT_FUNCTION (ref))))) {
+		     g_slist_length ((GSList *) gda_dict_function_get_arg_dict_types (GDA_DICT_FUNCTION (ref))))) {
 			g_set_error (error,
 				     GDA_QUERY_FIELD_FUNC_ERROR,
 				     GDA_QUERY_FIELD_FUNC_XML_LOAD_ERROR,

@@ -1,3 +1,29 @@
+2006-09-24  Vivien Malerba <malerba@gnome-db.org>
+
+	* all files: improved API consistency:
+	s/get_gda_type/get_g_type/
+	s/set_gda_type/set_g_type/
+	s/gda_data_model_array_new_with_types/gda_data_model_array_new_with_g_types/
+	s/gda_type_to_string/g_type_to_string/
+	s/gda_type_from_string/g_type_from_string/
+	s/get_nb_gda_types/get_nb_g_types/
+	s/get_gda_type_index/get_g_type_index/
+	s/accepts_gda_type/accepts_g_type/
+	s/gda_dict_aggregate_set_arg_type/gda_dict_aggregate_set_arg_dict_type/
+	s/gda_dict_aggregate_get_arg_type/gda_dict_aggregate_get_arg_dict_type/
+	s/gda_dict_aggregate_set_ret_type/gda_dict_aggregate_set_ret_dict_type/
+	s/gda_dict_aggregate_get_ret_type/gda_dict_aggregate_get_ret_dict_type/
+	s/gda_dict_function_get_ret_type/gda_dict_function_get_ret_dict_type/
+	s/gda_dict_function_set_ret_type/gda_dict_function_set_ret_dict_type/
+	s/gda_dict_function_set_arg_types/gda_dict_function_set_arg_dict_types/
+	s/gda_dict_function_get_arg_types/gda_dict_function_get_arg_dict_types/
+	s/gda_dict_function_accepts_args/gda_dict_function_accepts_arg_dict_types/
+	s/gda_dict_type_set_gda_type/gda_dict_type_set_g_type/
+	s/gda_dict_type_get_gda_type/gda_dict_type_get_g_type/
+	s/gda_dict_update_dbms_data/gda_dict_update_dbms_meta_data/
+	s/gda_dict_stop_update_dbms_data/gda_dict_stop_update_dbms_meta_data/
+	s/gda_type/g_type/
+
 2006-09-23  Vivien Malerba <malerba@gnome-db.org>
 
 	* testing/gda-diagnose.c:

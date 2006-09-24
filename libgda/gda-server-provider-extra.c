@@ -265,7 +265,7 @@ gda_server_provider_init_schema_model (GdaDataModel *model, GdaConnectionSchema 
 
                 gda_column_set_title (column, spec[i].col_name);
                 gda_column_set_name (column, spec[i].col_name);
-                gda_column_set_gda_type (column, spec[i].data_type);
+                gda_column_set_g_type (column, spec[i].data_type);
         }
 
 	return TRUE;
@@ -316,11 +316,11 @@ gda_server_provider_test_schema_model (GdaDataModel *model, GdaConnectionSchema 
 			return FALSE;
 		}
 
-		if (gda_column_get_gda_type (column) != spec[i].data_type) {
+		if (gda_column_get_g_type (column) != spec[i].data_type) {
 			g_set_error (error, 0, 0,
 				     _("Data model for schema has a wrong gda type: %s instead of %s"),
-				     gda_type_to_string (gda_column_get_gda_type (column)), 
-				     gda_type_to_string (spec[i].data_type));
+				     g_type_to_string (gda_column_get_g_type (column)), 
+				     g_type_to_string (spec[i].data_type));
 			return FALSE;
 		}
         }
@@ -332,7 +332,7 @@ gda_server_provider_handler_info_hash_func  (GdaServerProviderHandlerInfo *key)
 {
 	guint hash;
 
-	hash = g_int_hash (&(key->gda_type));
+	hash = g_int_hash (&(key->g_type));
 	if (key->dbms_type)
 		hash += g_str_hash (key->dbms_type);
 	hash += GPOINTER_TO_UINT (key->cnc);
@@ -343,7 +343,7 @@ gda_server_provider_handler_info_hash_func  (GdaServerProviderHandlerInfo *key)
 gboolean
 gda_server_provider_handler_info_equal_func (GdaServerProviderHandlerInfo *a, GdaServerProviderHandlerInfo *b)
 {
-	if ((a->gda_type == b->gda_type) &&
+	if ((a->g_type == b->g_type) &&
 	    (a->cnc == b->cnc) &&
 	    ((!a->dbms_type && !b->dbms_type) || !strcmp (a->dbms_type, b->dbms_type)))
 		return TRUE;
@@ -360,13 +360,13 @@ gda_server_provider_handler_info_free (GdaServerProviderHandlerInfo *info)
 
 GdaDataHandler *
 gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc, 
-				  GType gda_type, const gchar *dbms_type)
+				  GType g_type, const gchar *dbms_type)
 {
 	GdaDataHandler *dh;
 	GdaServerProviderHandlerInfo info;
 
 	info.cnc = cnc;
-	info.gda_type = gda_type;
+	info.g_type = g_type;
 	info.dbms_type = (gchar *) dbms_type;
 
 	dh = g_hash_table_lookup (prov->priv->data_handlers, &info);
@@ -376,14 +376,14 @@ gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc,
 void
 gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh,
 				     GdaConnection *cnc, 
-				     GType gda_type, const gchar *dbms_type)
+				     GType g_type, const gchar *dbms_type)
 {
 	GdaServerProviderHandlerInfo *info;
 	g_return_if_fail (GDA_IS_DATA_HANDLER (dh));
 	
 	info = g_new (GdaServerProviderHandlerInfo, 1);
 	info->cnc = cnc;
-	info->gda_type = gda_type;
+	info->g_type = g_type;
 	info->dbms_type = dbms_type ? g_strdup (dbms_type) : NULL;
 	
 	g_hash_table_insert (prov->priv->data_handlers, info, dh);

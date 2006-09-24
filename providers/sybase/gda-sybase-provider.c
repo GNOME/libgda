@@ -1114,7 +1114,7 @@ gda_sybase_provider_get_types (GdaConnection *cnc,
 			value_list = g_list_append (value_list, gda_value_new_null ());
 			value_list = g_list_append (value_list, gda_value_new_null ());
 
-			g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), gda_sybase_type_list[i].gda_type);
+			g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), gda_sybase_type_list[i].g_type);
 			value_list = g_list_append (value_list, tmpval);
 			
 			gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);

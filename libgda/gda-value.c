@@ -223,7 +223,7 @@ set_from_string (GValue *value, const gchar *as_string)
 	else if (type == GDA_TYPE_NULL)
 		gda_value_set_null (value);
 	else if (type == G_TYPE_ULONG)
-		g_value_set_ulong (value, gda_type_from_string (as_string));
+		g_value_set_ulong (value, g_type_from_string (as_string));
 
 	return retval;
 }

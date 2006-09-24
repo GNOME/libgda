@@ -62,7 +62,7 @@ enum
 struct _GdaDictTypePrivate
 {
 	guint              numparams;
-	GType       gda_type;
+	GType       g_type;
 	GSList            *synonyms; /* list of gchar* */
 };
 
@@ -138,7 +138,7 @@ gda_dict_type_init (GdaDictType * gda_dict_type)
 {
 	gda_dict_type->priv = g_new0 (GdaDictTypePrivate, 1);
 	gda_dict_type->priv->numparams = -1;
-	gda_dict_type->priv->gda_type = 0;
+	gda_dict_type->priv->g_type = 0;
 	gda_dict_type->priv->synonyms = NULL;
 }
 
@@ -276,7 +276,7 @@ dict_type_save_to_xml (GdaXmlStorage *iface, GError **error)
 	str = g_strdup_printf ("%d", dt->priv->numparams);
 	xmlSetProp (node, "nparam", str);
 	g_free (str);
-	xmlSetProp (node, "gdatype", gda_type_to_string (dt->priv->gda_type));
+	xmlSetProp (node, "gdatype", g_type_to_string (dt->priv->g_type));
 
 	if (dt->priv->synonyms) {
 		GSList *list = dt->priv->synonyms;
@@ -344,8 +344,8 @@ dict_type_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 
 	prop = xmlGetProp (node, "gdatype");
 	if (prop) {
-		dt->priv->gda_type = gda_type_from_string (prop);
-		if (dt->priv->gda_type == G_TYPE_INVALID)
+		dt->priv->g_type = g_type_from_string (prop);
+		if (dt->priv->g_type == G_TYPE_INVALID)
 			g_set_error (error,
 				     GDA_DICT_TYPE_ERROR,
 				     GDA_DICT_TYPE_XML_LOAD_ERROR,
@@ -421,23 +421,23 @@ gda_dict_type_get_sqlname (GdaDictType *dt)
 }
 
 /**
- * gda_dict_type_set_gda_type
+ * gda_dict_type_set_g_type
  * @dt: a #GdaDictType object
- * @gda_type: 
+ * @g_type: 
  *
  * Set the gda type for a data type
  */
 void
-gda_dict_type_set_gda_type (GdaDictType *dt, GType gda_type)
+gda_dict_type_set_g_type (GdaDictType *dt, GType g_type)
 {
 	g_return_if_fail (dt && GDA_IS_DICT_TYPE (dt));
 	g_return_if_fail (dt->priv);
 
-	dt->priv->gda_type = gda_type;
+	dt->priv->g_type = g_type;
 }
 
 /**
- * gda_dict_type_get_gda_type
+ * gda_dict_type_get_g_type
  * @dt: a #GdaDictType object
  *
  * Get the gda type of a data type
@@ -445,12 +445,12 @@ gda_dict_type_set_gda_type (GdaDictType *dt, GType gda_type)
  * Returns: the gda type
  */
 GType
-gda_dict_type_get_gda_type (GdaDictType *dt)
+gda_dict_type_get_g_type (GdaDictType *dt)
 {
 	g_return_val_if_fail (dt && GDA_IS_DICT_TYPE (dt), G_TYPE_INVALID);
 	g_return_val_if_fail (dt->priv, G_TYPE_INVALID);
 
-	return dt->priv->gda_type;
+	return dt->priv->g_type;
 }
 
 /**

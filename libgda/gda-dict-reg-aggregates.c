@@ -235,7 +235,7 @@ aggregates_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **er
 			agg = gda_aggregates_get_by_name_arg_in_list (dict, original_aggregates, str, indt);
 			g_free (str);
 
-			if (agg && (gda_dict_aggregate_get_ret_type (agg) != outdt))
+			if (agg && (gda_dict_aggregate_get_ret_dict_type (agg) != outdt))
 				agg = NULL;
 		}
 
@@ -246,9 +246,9 @@ aggregates_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **er
 				/* does the aggregate we found have the same outdt and indt
 				   as the one we have now? */
 				gboolean isequal = TRUE;
-				if (gda_dict_aggregate_get_arg_type (agg) != indt)
+				if (gda_dict_aggregate_get_arg_dict_type (agg) != indt)
 					isequal = FALSE;
-				if (isequal && (gda_dict_aggregate_get_ret_type (agg) != outdt)) 
+				if (isequal && (gda_dict_aggregate_get_ret_dict_type (agg) != outdt)) 
 					isequal = FALSE;
 				
 				if (isequal) {
@@ -262,8 +262,8 @@ aggregates_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **er
 			if (!agg) {
 				/* creating new ServerAggregate object */
 				agg = GDA_DICT_AGGREGATE (gda_dict_aggregate_new (dict));
-				gda_dict_aggregate_set_ret_type (agg, outdt);
-				gda_dict_aggregate_set_arg_type (agg, indt);
+				gda_dict_aggregate_set_ret_dict_type (agg, outdt);
+				gda_dict_aggregate_set_arg_dict_type (agg, indt);
 				
 				/* mark aggregate as updated */
 				updated_aggs = g_slist_append (updated_aggs, agg);
@@ -408,7 +408,7 @@ gda_aggregates_get_by_name_arg_in_list (GdaDict *dict, GSList *aggregates, const
 
 	list = aggregates;
 	while (list && !agg) {
-		GdaDictType *testdt = gda_dict_aggregate_get_arg_type (GDA_DICT_AGGREGATE (list->data));
+		GdaDictType *testdt = gda_dict_aggregate_get_arg_dict_type (GDA_DICT_AGGREGATE (list->data));
 		GdaDictAggregate *tmp = NULL;
 		gint mode = 0;
 
@@ -424,8 +424,8 @@ gda_aggregates_get_by_name_arg_in_list (GdaDict *dict, GSList *aggregates, const
 			else {
 				if (argtype && testdt &&
 				    sinfo && sinfo->implicit_data_types_casts &&
-				    (gda_dict_type_get_gda_type (testdt) == 
-				     gda_dict_type_get_gda_type (argtype))) {
+				    (gda_dict_type_get_g_type (testdt) == 
+				     gda_dict_type_get_g_type (argtype))) {
 					tmp = GDA_DICT_AGGREGATE (list->data);
 					mode = 3;
 				}

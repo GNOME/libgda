@@ -266,7 +266,7 @@ gda_ibmdb2_recordset_describe (GdaDataModelRow *model, gint col)
 	
 	gda_column_set_name (attribs, field->column_name);
 	gda_column_set_scale (attribs, field->column_scale);
-        gda_column_set_gda_type (attribs, gda_ibmdb2_get_value_type (field));
+        gda_column_set_g_type (attribs, gda_ibmdb2_get_value_type (field));
         gda_column_set_defined_size (attribs, field->column_size);
 
         gda_column_set_unique_key (attribs, FALSE);

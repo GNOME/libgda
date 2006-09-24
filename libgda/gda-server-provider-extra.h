@@ -41,7 +41,7 @@ gboolean  gda_server_provider_test_schema_model     (GdaDataModel *model, GdaCon
  */
 typedef struct {
 	GdaConnection *cnc;
-	GType   gda_type;
+	GType          g_type;
 	gchar         *dbms_type;
 } GdaServerProviderHandlerInfo;
 
@@ -51,10 +51,10 @@ gboolean        gda_server_provider_handler_info_equal_func (GdaServerProviderHa
 void            gda_server_provider_handler_info_free       (GdaServerProviderHandlerInfo *info);
 
 GdaDataHandler *gda_server_provider_handler_find            (GdaServerProvider *prov, GdaConnection *cnc, 
-							     GType gda_type, const gchar *dbms_type);
+							     GType g_type, const gchar *dbms_type);
 void            gda_server_provider_handler_declare         (GdaServerProvider *prov, GdaDataHandler *dh,
 							     GdaConnection *cnc, 
-							     GType gda_type, const gchar *dbms_type);
+							     GType g_type, const gchar *dbms_type);
 
 G_END_DECLS
 

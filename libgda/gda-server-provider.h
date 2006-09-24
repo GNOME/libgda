@@ -109,7 +109,7 @@ struct _GdaServerProviderClass {
 	/* types and values manipulation */
 	GdaDataHandler        *(* get_data_handler) (GdaServerProvider *provider,
 						     GdaConnection *cnc,
-						     GType gda_type,
+						     GType g_type,
 						     const gchar *dbms_type);
 	GValue                *(* string_to_value) (GdaServerProvider *provider,
 						    GdaConnection *cnc,
@@ -118,7 +118,7 @@ struct _GdaServerProviderClass {
 						    gchar **dbms_type);
 	const gchar           *(*get_def_dbms_type) (GdaServerProvider *provider,
 						     GdaConnection *cnc,
-						     GType gda_type);
+						     GType g_type);
 
 	/* connections management */
 	gboolean               (* open_connection) (GdaServerProvider *provider,
