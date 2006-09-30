@@ -1,0 +1,119 @@
+<!-- ##### SECTION Title ##### -->
+Convenient functions
+
+<!-- ##### SECTION Short_Description ##### -->
+Do quickly some actions
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gda_open_connection ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@username: 
+@password: 
+@options: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_execute_select_command ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@sql: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_execute_sql_command ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@sql: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_create_table ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@table_name: 
+@num_columns: 
+@error: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_drop_table ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@table_name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_insert_row_into_table ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@table_name: 
+@error: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_update_value_in_table ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@table_name: 
+@search_for_column: 
+@condition: 
+@column_name: 
+@new_value: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_update_values_in_table ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@table_name: 
+@condition_column_name: 
+@condition: 
+@error: 
+@Varargs: 
+@Returns: 
+
+

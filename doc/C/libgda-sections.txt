@@ -450,10 +450,12 @@ gda_data_model_get_access_flags
 gda_data_model_get_n_rows
 gda_data_model_get_n_columns
 gda_data_model_describe_column
+gda_data_model_get_column_index_by_name
 gda_data_model_get_column_title
 gda_data_model_set_column_title
 gda_data_model_get_attributes_at
 gda_data_model_get_value_at
+gda_data_model_get_value_at_col_name
 gda_data_model_set_value_at
 gda_data_model_set_values
 gda_data_model_create_iter
@@ -2441,4 +2443,17 @@ gda_report_types_number_new
 gda_report_types_number_to_double
 gda_report_types_number_to_value
 gda_report_types_value_to_number
+</SECTION>
+
+<SECTION>
+<FILE>gda-convenient</FILE>
+<TITLE>Convenient functions</TITLE>
+gda_open_connection
+gda_execute_select_command
+gda_execute_sql_command
+gda_create_table
+gda_drop_table
+gda_insert_row_into_table
+gda_update_value_in_table
+gda_update_values_in_table
 </SECTION>

@@ -13,5 +13,10 @@
   <attr path="/api/namespace/object[@cname='GdaParameter']/constructor[@cname='gda_parameter_new']" name="hidden">1</attr>
   <attr path="/api/namespace/enum[@cname='GdaDataModelAccessFlags']/member[@name='Write']" name="value">Insert | Update | Delete</attr>
   <attr path="/api/namespace/enum[@cname='GdaQueryFieldState']/member[@name='Any']" name="value">Visible | Invisible</attr>
+  <attr path="/api/namespace/object[@cname='GdaColumn']/method[@name='SetGType']" name="name">SetValueType</attr>
+  <attr path="/api/namespace/object[@cname='GdaColumn']/method[@name='GetGType']" name="name">GetValueType</attr>
+  <attr path="/api/namespace/object[@cname='GdaDictType']/method[@name='SetGType']" name="name">SetValueType</attr>
+  <attr path="/api/namespace/object[@cname='GdaDictType']/method[@name='GetGType']" name="name">GetValueType</attr>
+  <attr path="/api/namespace/struct[@cname='GdaServerProviderHandlerInfo']/field[@name='GType']" name="name">ValueType</attr>
 </metadata>
 

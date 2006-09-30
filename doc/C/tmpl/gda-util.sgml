@@ -53,16 +53,6 @@ Utility functions
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_sql_replace_placeholders ##### -->
-<para>
-
-</para>
-
-@sql: 
-@params: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_file_load ##### -->
 <para>
 

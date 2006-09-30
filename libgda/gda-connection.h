@@ -156,7 +156,7 @@ GdaDataModel        *gda_connection_execute_select_command (GdaConnection *cnc, 
 							    GdaParameterList *params, GError **error);
 gint                 gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
 								GdaParameterList *params, GError **error);
-GList               *gda_connection_execute_command    (GdaConnection *cnc, GdaCommand *cmd,
+GList               *gda_connection_execute_command      (GdaConnection *cnc, GdaCommand *cmd,
 							  GdaParameterList *params, GError **error);
 gchar               *gda_connection_get_last_insert_id   (GdaConnection *cnc, GdaDataModel *recset);
 
@@ -169,7 +169,7 @@ GdaBlob             *gda_connection_fetch_blob_by_id     (GdaConnection *cnc, co
 
 gchar               *gda_connection_value_to_sql_string  (GdaConnection *cnc, GValue *from);
 
-gboolean             gda_connection_supports_feature             (GdaConnection *cnc, GdaConnectionFeature feature);
+gboolean             gda_connection_supports_feature     (GdaConnection *cnc, GdaConnectionFeature feature);
 GdaDataModel        *gda_connection_get_schema           (GdaConnection *cnc, GdaConnectionSchema schema,
 							  GdaParameterList *params, GError **error);
 

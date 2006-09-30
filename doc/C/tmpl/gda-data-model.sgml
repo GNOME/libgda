@@ -186,6 +186,16 @@ As a side note there are also data models which wrap other data models such as:
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_get_column_index_by_name ##### -->
+<para>
+
+</para>
+
+@model: 
+@name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_get_column_title ##### -->
 <para>
 
@@ -224,6 +234,17 @@ As a side note there are also data models which wrap other data models such as:
 
 @model: 
 @col: 
+@row: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_get_value_at_col_name ##### -->
+<para>
+
+</para>
+
+@model: 
+@column_name: 
 @row: 
 @Returns: 
 

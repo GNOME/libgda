@@ -122,6 +122,7 @@
 <!ENTITY libgda-GdaGraphQuery SYSTEM "xml/gda-graph-query.xml">
 <!ENTITY libgda-GdaGraphItem SYSTEM "xml/gda-graph-item.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
+<!ENTITY libgda-convenient SYSTEM "xml/gda-convenient.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 <!ENTITY libgda-TreeIndex SYSTEM "xml/tree_index.sgml">
 ]>
@@ -339,6 +340,7 @@
       &libgda-GdaConnection;
       &libgda-GdaConnection-event;
       &libgda-GdaCommand;
+      &libgda-convenient;
     </chapter>
 
     <chapter id="data_models">

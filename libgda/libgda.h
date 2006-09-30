@@ -100,12 +100,54 @@
 
 G_BEGIN_DECLS
 
+extern GQuark gda_general_error_quark (void);
+#define GDA_GENERAL_ERROR gda_general_error_quark ()
+
+enum {
+    GDA_GENERAL_OBJECT_NAME_ERROR,
+    GDA_GENERAL_INCORRECT_VALUE_ERROR
+};
+
 void     gda_init             (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
 GdaDict *gda_get_default_dict (void);
 
 typedef  void (* GdaInitFunc) (gpointer user_data);
 void     gda_main_run         (GdaInitFunc init_func, gpointer user_data);
 void     gda_main_quit        (void);
+
+/* Convenient Functions */
+
+GdaConnection*      gda_open_connection        (const gchar *dsn, 
+						const gchar *username, 
+						const gchar *password, 
+						GdaConnectionOptions options, 
+						GError **error);
+
+gboolean            gda_insert_row_into_table  (GdaConnection *cnn, 
+						const gchar *table_name, 
+						GError **error, ...);
+gboolean            gda_update_value_in_table  (GdaConnection *cnn, 
+						const gchar *table_name, 
+						const gchar *search_for_column, 
+						const GValue *condition, 
+						const gchar *column_name, 
+						const GValue *new_value, GError **error);
+gboolean            gda_update_values_in_table (GdaConnection *cnn, 
+						const gchar *table_name, 
+						const gchar *condition_column_name, 
+						const GValue *condition, 
+						GError **error, ...);
+
+GdaDataModel*       gda_execute_select_command (GdaConnection *cnn, const gchar *sql, 
+						GError **error);
+gint                gda_execute_sql_command    (GdaConnection *cnn, const gchar *sql, 
+						GError **error);
+
+gboolean            gda_create_table           (GdaConnection *cnn, 
+						const gchar *table_name, gint num_columns, 
+						GError **error, ...);
+gboolean            gda_drop_table             (GdaConnection *cnn, 
+						const gchar *table_name, GError **error);
 
 G_END_DECLS
 

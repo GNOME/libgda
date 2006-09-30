@@ -1,3 +1,15 @@
+2006-09-30  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-init.c: applied a correction from Carlos to force the
+	declaration of some data types in GLib.
+	* doc/C: doc update
+
+2006-09-29  Daniel Espinosa <esodan@gmail.com>
+
+	* libgda/gda-init.c,libgda.h: Added Convenient functions to easy use of
+	libgda
+	* gdasharp: improved to fit the new API
+
 2006-09-24  Vivien Malerba <malerba@gnome-db.org>
 
 	* all files: improved API consistency:

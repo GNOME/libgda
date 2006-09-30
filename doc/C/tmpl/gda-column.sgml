@@ -23,7 +23,7 @@ Management of #GdaDataModel column attributes
 </para>
 
 
-<!-- ##### SIGNAL GdaColumn::gda-type-changed ##### -->
+<!-- ##### SIGNAL GdaColumn::g-type-changed ##### -->
 <para>
 
 </para>

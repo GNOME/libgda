@@ -1766,7 +1766,7 @@ string_to_short(const GValue *src, GValue *dest)
 	
 	const gchar *as_string;
 	long int lvalue;
-	gchar *endptr;
+	gchar *endptr[1];
 
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  (GDA_VALUE_HOLDS_SHORT (dest) || GDA_VALUE_HOLDS_USHORT (dest)));
@@ -1775,7 +1775,7 @@ string_to_short(const GValue *src, GValue *dest)
 	
 	lvalue = strtol (as_string, &endptr, 10);
 	
-	if (*as_string != '\0' && !endptr) {
+	if (*as_string != '\0' && **endptr == '\0') {
 		if (GDA_VALUE_HOLDS_SHORT (dest))
 			gda_value_set_short (dest, (gshort) lvalue);
 		else

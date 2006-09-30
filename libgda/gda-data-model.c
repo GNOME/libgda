@@ -363,6 +363,37 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 }
 
 /**
+ * gda_data_model_get_column_index_by_name
+ * @model: a #GdaDataModel object.
+ * @name: a column name
+ *
+ * Get the index of the column named @name in @model
+ *
+ * Returns: the column index, or -1 if no column named @name was found
+ */
+gint
+gda_data_model_get_column_index_by_name (GdaDataModel *model, const gchar *name)
+{
+	gint nbcols, ncol, ret;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
+	g_return_val_if_fail (name, -1);
+	
+	ret = -1;
+	nbcols = gda_data_model_get_n_columns (model);
+	for(ncol = 0; ncol < nbcols; ncol++) {
+		if(g_str_equal (name, gda_data_model_get_column_title (model, ncol))) {
+			
+			ret = ncol;
+			break;
+		}
+	}
+	
+	return ret;
+}
+
+
+/**
  * gda_data_model_get_column_title
  * @model: a #GdaDataModel object.
  * @col: column number.
@@ -437,6 +468,35 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 /**
+ * gda_data_model_get_value_at_col_name
+ * @model: a #GdaDataModel object.
+ * @col_name: a valid column name.
+ * @row: a valid row number.
+ *
+ * Retrieves the data stored in the given position (identified by
+ * the @col_name column and @row parameters) on a data model.
+ *
+ * See also gda_data_model_get_value_at().
+ *
+ * Returns: a #GValue containing the value stored in the given
+ * position, or %NULL on error (out-of-bound position, etc).
+ */
+const GValue *
+gda_data_model_get_value_at_col_name (GdaDataModel *model, 
+				      const gchar *column_name, gint row)
+{
+	gint ncol;
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+	g_return_val_if_fail (column_name, NULL);
+
+	ncol = gda_data_model_get_column_index_by_name (model, column_name);
+	if (ncol == -1)
+		return NULL;
+	else
+		return gda_data_model_get_value_at (model, ncol, row);
+}
+
+/**
  * gda_data_model_get_attributes_at
  * @model: a #GdaDataModel object
  * @col: a valid column number
@@ -447,7 +507,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
  * @row is -1, then the attributes returned correspond to a "would be" value
  * if a row was added to @model.
  *
- * Returns: the attributes
+ * Returns: the attributes as an ORed value of #GValueAttribute
  */
 guint
 gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
