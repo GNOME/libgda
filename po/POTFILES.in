@@ -100,6 +100,8 @@ providers/odbc/odbc_specs_dsn.xml.in
 providers/oracle/gda-oracle-provider.c
 providers/oracle/gda-oracle-recordset.c
 providers/oracle/libmain.c
+providers/oracle/oracle_specs_drop_index.xml.in
+providers/oracle/oracle_specs_drop_table.xml.in
 providers/oracle/oracle_specs_dsn.xml.in
 providers/oracle/utils.c
 providers/postgres/gda-postgres-blob.c
@@ -119,6 +121,7 @@ providers/postgres/postgres_specs_dsn.xml.in
 providers/postgres/postgres_specs_rename_table.xml.in
 providers/postgres/utils.c
 providers/sqlite/gda-sqlite-ddl.c
+providers/sqlite/gda-sqlite-handler-bin.c
 providers/sqlite/gda-sqlite-provider.c
 providers/sqlite/gda-sqlite-recordset.c
 providers/sqlite/libmain.c
