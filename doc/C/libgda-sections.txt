@@ -182,6 +182,7 @@ gda_config_get_provider_model
 gda_provider_parameter_info_new_full
 gda_provider_parameter_info_copy
 gda_provider_parameter_info_free
+<SUBSECTION>
 gda_provider_info_copy
 gda_provider_info_free
 gda_config_get_data_source_list

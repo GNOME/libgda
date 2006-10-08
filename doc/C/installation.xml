@@ -247,17 +247,6 @@
         available on your system. For doing this, you should, as for now, use
         &GNOMEDB;, which is a front-end to &LIBGDA; for the 
         <ulink url="http://www.gnome.org" type="http">GNOME project</ulink>.
-        <footnote>
-	  <para>
-	    It would be a good idea to add a command-line tool for managing
-            the configuration, as now, using <systemitem class="resource">
-              GConf</systemitem>, is not a matter of hacking on a config text
-            file, as it was before with <function>gnome_config</function>.
-            The &API; for doing so is already available in the <filename>
-              libgda-common</filename>library, so it would be really easy.
-            Volunteers?
-	  </para>
-	</footnote>
       </para>
       <para>
 	Command-line tools will be provided in &LIBGDA; for doing so in a
@@ -287,12 +276,12 @@
 	    <area id="password" coords="6"/>
           </areaspec>
 	  <programlisting>
-	    [sales]
-	    Provider=MySQL
-            DSN=DATABASE=test;HOST=localhost;PORT=1111
-	    Description=MySQL Test Database in native mode
-	    Username=username
-	    Password=password
+[sales]
+Provider=MySQL
+DSN=DATABASE=test;HOST=localhost;PORT=1111
+Description=MySQL Test Database in native mode
+Username=username
+Password=password
 	  </programlisting>
 	  <calloutlist>
 	    <callout arearefs="provider">
@@ -360,24 +349,24 @@
 	&GNOMEDB; library. For our example, a configuarion file is:
       </para>
       <programlisting>
-	&lt;?xml version="1.0"?&gt;
-	&lt;libgda-config&gt;
-	&lt;section path="/apps/libgda/Datasources/sales"&gt;
-	&lt;entry name="DSN" type="string" value="PORT=1111;DATABASE=test;HOST=localhost"/&gt;
-	&lt;entry name="Description" type="string" value="MySQL Test Database in native mode"/&gt;
-	&lt;entry name="Password" type="string" value="password"/&gt;
-	&lt;entry name="Provider" type="string" value="MySQL"/&gt;
-	&lt;entry name="Username" type="string" value="username"/&gt;
-	&lt;/section&gt;
-	&lt;/libgda-config&gt;
+&lt;?xml version="1.0"?&gt;
+&lt;libgda-config&gt;
+  &lt;section path="/apps/libgda/Datasources/sales"&gt;
+    &lt;entry name="DSN" type="string" value="PORT=1111;DATABASE=test;HOST=localhost"/&gt;
+    &lt;entry name="Description" type="string" value="MySQL Test Database in native mode"/&gt;
+    &lt;entry name="Password" type="string" value="password"/&gt;
+    &lt;entry name="Provider" type="string" value="MySQL"/&gt;
+    &lt;entry name="Username" type="string" value="username"/&gt;
+  &lt;/section&gt;
+&lt;/libgda-config&gt;
       </programlisting>
       <sect3 id="data-sources-API-functions">
         <title>Managing data sources with API functions</title>
         <sect4>
           <title>Create data sources</title>
           <para>
-            To create a data source you must use the function <link
-								 linkend="gda-config-save-data-source"><emphasis>gda-config-save-data-source ()
+            To create a data source you must use the function 
+	    <link linkend="gda-config-save-data-source"><emphasis>gda-config-save-data-source ()
             </emphasis></link>
           </para>
           <para>
@@ -386,23 +375,14 @@
             enter the database, you could put <emphasis>NULL</emphasis>.
           </para>
           <programlisting>
-            gda_config_save_data_source ("foo_ds", "PostgreSQL", "DATABASE=foo_db",
-            "description of foo_ds", "foo_username", "foo_password");
-            gda_config_save_data_source ("other_foo_ds", "MySQL", "DATABASE=other_foo_db,HOST=db.foo.com",
-            "description of other_foo_ds", "foo", NULL);
+gda_config_save_data_source ("foo_ds", "PostgreSQL", "DATABASE=foo_db",
+                             "description of foo_ds", "foo_username", "foo_password", FALSE);
+gda_config_save_data_source ("other_foo_ds", "MySQL", "DATABASE=other_foo_db,HOST=db.foo.com",
+                             "description of other_foo_ds", "foo", NULL, TRUE);
           </programlisting>
           <para>
             For more details about provider specific information see in the section about
             <link linkend="installation-provider">providers specific information</link>.
-          </para>
-          <para>
-            There was a little bug<footnote><para>It can be fixed, but it
-		is better not to run the risk of it.</para></footnote>, and it
-	    is that <link
-		       linkend="gda-config-save-data-source">gda_config_save_data_source()</link> 
-            does not create the configuration directory <filename
-							   class="directory">~/.libgda</filename>, so you have to do
-	    it.
           </para>
           <para>
             There is no problem about calling several times to this
@@ -413,8 +393,8 @@
         <sect4>
           <title>Removing data sources</title>
           <para>
-            To remove a data source you must use the function <link
-								 linkend="gda-config-remove-data-source"><emphasis>gda-config-remove-data-source ()
+            To remove a data source you must use the function 
+	    <link linkend="gda-config-remove-data-source"><emphasis>gda-config-remove-data-source ()
             </emphasis></link>
           </para>
           <para>
@@ -428,8 +408,8 @@
         <sect4>
           <title>Listing available data sources</title>
           <para>
-            To list available data sources you must use the function <link
-									linkend="gda-config-get-data-source-list"><emphasis>gda_config_get_data_source_list ()
+            To list available data sources you must use the function 
+	    <link linkend="gda-config-get-data-source-list"><emphasis>gda_config_get_data_source_list ()
             </emphasis></link>
           </para>
           <para>
@@ -441,31 +421,26 @@
               <area id="gda-config-get-data-source-list-2" coords="21 1"/>
             </areaspec>
             <programlisting>
-              void
-              list_datasources (void)
-              {
-              GList *ds_list;
-              GList *node;
-              GdaDataSourceInfo *info;
-              
-              ds_list = gda_config_get_data_source_list ();
-              
-              g_print ("\n");
-              for (node = g_list_first (ds_list); node != NULL; node = g_list_next (node))
-              {
-              info = (GdaDataSourceInfo *) node->data;
-              
-              g_print
-              ("NAME: %s PROVIDER: %s CNC: %s DESC: %s USER: %s PASSWORD: %s\n",
-              info->name, info->provider, info->cnc_string, info->description,
-              info->username, info->password);
-              
-              }
-              g_print ("\n");
-              
-              gda_config_free_data_source_list (ds_list);
-              
-              }
+void
+list_datasources (void)
+{
+    GList *ds_list;
+    GList *node;
+    GdaDataSourceInfo *info;
+
+    ds_list = gda_config_get_data_source_list ();
+    g_print ("\n");
+    for (node = g_list_first (ds_list); node != NULL; node = g_list_next (node)) {
+        info = (GdaDataSourceInfo *) node->data;
+
+        g_print ("NAME: %s PROVIDER: %s CNC: %s DESC: %s USER: %s PASSWORD: %s\n",
+                 info->name, info->provider, info->cnc_string, info->description,
+                 info->username, info->password);
+    }
+    g_print ("\n");
+
+    gda_config_free_data_source_list (ds_list);
+}
             </programlisting>
             <calloutlist>
               <callout arearefs="gda-config-get-data-source-list-1">
@@ -480,8 +455,8 @@
         <sect4>
           <title>Listing available providers</title>
           <para>
-            To list the available providers you must use the function <link
-									 linkend="gda-config-get-provider-list"><emphasis>gda_config_get_provider_list ()
+            To list the available providers you must use the function 
+	    <link linkend="gda-config-get-provider-list"><emphasis>gda_config_get_provider_list ()
             </emphasis></link>
           </para>
           <para>
@@ -493,27 +468,22 @@
               <area id="gda-config-get-provider-list-2" coords="19 1"/>
             </areaspec>
             <programlisting>
-              void
-              list_providers (void)
-              {
-              GList *prov_list;
-              GList *node;
-              GdaProviderInfo *info;
-              
-              prov_list = gda_config_get_provider_list ();
-              
-              for (node = g_list_first (prov_list); node != NULL;
-              node = g_list_next (node))
-              {
-              info = (GdaProviderInfo *) node->data;
-              
-              g_print ("ID: %s\n", info->id);
-              
-              }
-              
-              gda_config_free_provider_list (prov_list);
-              
-              }
+void
+list_providers (void)
+{
+    GList *prov_list;
+    GList *node;
+    GdaProviderInfo *info;
+
+    prov_list = gda_config_get_provider_list ();
+
+    for (node = g_list_first (prov_list); node != NULL; node = node->next) {
+        info = (GdaProviderInfo *) node->data;
+        g_print ("ID: %s\n", info->id);
+    }
+
+    gda_config_free_provider_list (prov_list);
+}
             </programlisting>
             <calloutlist>
               <callout arearefs="gda-config-get-provider-list-1">
@@ -536,15 +506,11 @@
       <sect3 id="installation-provider-default">
 	<title>Default provider</title>
 	<para>
-	  The &GDA; default provider is always installed 
+	  The &GDA; default provider (based on an SQLite database file) is always installed 
           with &LIBGDA;, which means that you've got always a default
-	  database system available for you. To connect to a default 
-          provider's database, you only need to specify, in the &DSN; string,
-          a string of the form "URI=/path/to/the/database/file". When
-          you	first connect to the new data source, the &GDA; default 
-          provider will create the database, in the path you specified
-          in the &DSN; string, if it does not exist. This default provider
-	  uses XML as the format for that file.
+	  database system available for you. Specifically the first time you use
+	  &LIBGDA;, a test database is copied into <filename>$HOME/.libgda</filename> and
+	  named "SalesTest". 
 	</para>
       </sect3>
       <sect3 id="installation-provider-odbc">
@@ -571,170 +537,16 @@
 	  interesting to give it a try.
 	</para>
       </sect3>
-      <sect3 id="installation-provider-postgres">
-	<title>&PGSQL; Provider</title>
+      <sect3 id="installation-provider-all">
+	<title>Common to all rovider</title>
 	<para>
-	  To use the &GDA; &PGSQL; provider, you'll need
-	  the <application>gda-postgres</application> package.	
-	</para>
-	<para>
-	  The &PGSQL; provider accepts the following
-	  arguments in the &GDA; data source's &DSN; string:
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-	        HOST: name of the host where
-		the database server is running. If it begins with a slash
-		then the protocol used is Unix-domain instead of TCP/IP and
-		its value is the name of the directory where the file is
-		stored. By default: /tmp.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-		HOSTADDR: IP of the host where the database server is
-		running (avoids DNS lookup). If this option has a value,
-		TCP/IP communications is used.
-
-		If neither a host name or host address is specified, the
-		connection will be established using a local Unix domain
-		socket.
-	      </para>
-	    </listitem>
-	    <listitem>
-	      <para>
-	        PORT: Port number or socket filename extension for
-		Unix-domain connections.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-		DATABASE: name of the database you want to access. This one
-		is called 'dbname' in the &PGSQL; documentation.
-	      </para>
-	    </listitem>
-	    <listitem>
-	      <para>
-	        USER: user name to connect as.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        PASSWORD: password if the connection requires it.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        OPTIONS: trace/debug options to be sent to the server.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        TTY: a file or tty for optional debug output from the
-		back-end.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        REQUIRESSL: set to '1' to force SSL connection to the
-		back-end. Set to '0' to negotiate with server.
-	      </para>
-            </listitem>
-	  </itemizedlist>
-	  The description of the parameters is almost copied from the
-	  &PGSQL; documentation. Refer to it for details on how some
-	  environment variables can also set these parameters.
-	</para>
-      </sect3>
-      <sect3 id="installation-provider-mysql">
-        <title>&MYSQL; Provider</title>
-        <para>
-	  To configure a data source to access a &MYSQL; database,
-	  you'll need to install the &GDA; &MYSQL; provider (package
-	  <filename>gda-mysql</filename>).
-        </para>
-	<para>
-	  It accepts the following arguments in the &DSN;
-	  string:	
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-	        HOST: name of the host where the database server is running.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        PORT: port number for connecting to the database server.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        UNIX_SOCKET: socket file for connecting to the database server
-	        (should not be defined with HOST and/or PORT).
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        DATABASE: name of the database you want to access.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        USER: employ the specified user name for logging in to the
-	        server.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        PASSWORD: employ the specified password when connecting to the 
-	        database server.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        USE_SSL: will use SSL (encrypted protocol) if specified and set to 1.
-	      </para>
-            </listitem>
-	  </itemizedlist>
-	</para>
-      </sect3>
-      <sect3 id="installation-provider-sybase">
-	<title>&SYBASE; Provider</title>
-	<para>
-	  To use the &GDA; &SYBASE; provider, you'll need
-	  the <application>gda-sybase</application> package.	
-	</para>
-	<para>
-	  The &SYBASE; provider accepts the following
-	  arguments in the &GDA; data source's &DSN; string:
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		HOST: name of the host where the database server is
-		running.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        USERNAME: user name to connect as.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        APPNAME:
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-	        PASSWORD: password if the connection requires it.
-	      </para>
-            </listitem>
-	    <listitem>
-	      <para>
-		DATABASE:
-	      </para>
-	    </listitem>
-	  </itemizedlist>
+	  Each provider exports a list of the arguments it requires in 
+	  its connection string which is used internally by &LIBGDA; to
+	  establish each connection. If you don't use a GUI which proposes
+	  you valid choices (such as &GNOMEDB;), you can get that list in
+	  each file named <filename>&lt;provider_name&gt;_specs_dsn.xml</filename>
+	  installed in the <filename>$PREFIX/share/libgda</filename> directory.
+	  This file is easy to parse and read.
 	</para>
       </sect3>
     </sect2>

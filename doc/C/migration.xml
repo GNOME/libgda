@@ -1,205 +1,93 @@
 <chapter id="migration">
   <title>Migration from older versions</title>
-  <sect1 id="migration-compilation">
-    <title>Compiling and initialising</title>
-    <para>
-      To <link linkend="compiling">compile</link> you do not need to link
-      with many libraries and configure directories of headers files, only
-      capture the output of <emphasis>pkg-config</emphasis> as follows:
-      <programlisting>
-        <systemitem class="prompt">$</systemitem> <userinput> gcc -o main `pkg-config --cflags --libs libgda` main.c</userinput>
-      </programlisting>
+  <sect1><title>GdaValue and GdaDataModel changes</title>
+    <para>Libgda values were stored in <classname>GdaValue</classname> structures, this is no longer the case
+      as the standard <classname>GValue</classname> container is now used. As a consequence data types are now
+      identified by their <classname>GType</classname> identifier, there is thus no more any 
+      <classname>GdaType</classname> definition.</para>
+    <para>The <classname>GdaDataModel</classname> has been transformed into an interface (as defined by the Glib 
+      object system), and the old <classname>GdaDataModel</classname> has been replaced by the 
+      <classname>GdaDataModelRow</classname> class. No code using the <classname>GdaDataModel</classname> should
+      assume that data is internally stored as rows (vectors) of values as it was the case in the previous
+      stable release.
+    </para>
+    <para>In the new version, many objects implement the 
+      <classname>GdaDataModel</classname> interface for various usages which did not exist in the previous version
+      such as data import and filtering. <classname>GdaDataModel</classname> objects should now be considered
+      as non writable, and if they need to be modified, the modifications permissions should be checked
+      using the <function>gda_data_model_get_attributes_at()</function> function. See the
+      <link linkend="datamodels">section about the various data models</link> for more information. 
+    </para>
+    
+    <para> The following UML schema shows the various implementations of the <classname>GdaDataModel</classname> 
+      interface and what they are for. Note that the
+      <classname>GdaDataModelRow</classname> should not be instanciated directly but either
+      used as a base class, or used through its children classes.
     </para>
     <para>
-      Further more, you only need to include one <link
-						    linkend="installation-development">headers file</link> and it is:
-      <programlisting>
-	#include &lt;libgda/libgda.h&gt;
-      </programlisting>
-    </para>
-    <para>
-      As in the old version, you need to call <link
-						 linkend="gda-init"><emphasis>gda_init()</emphasis></link> to
-      <link linkend="initializing">initialise</link> the library:
-      <programlisting>
-        gda_init ("TestGDA", "0.1", argc, argv);
-      </programlisting>
-    </para>
-  </sect1>
-  <sect1 id="migration-configuration">
-    <title>Configuration and connections</title>
-    <para>
-      If you before created connections directly to data sources, you
-      will now use a <emphasis>connections pool</emphasis> and will be
-      necessary to <link linkend="installation-client">create the data
-        source</link> because you create connection using the data source
-      identifier.
-    </para>
-    <sect2 id="migration-data-sources">
-      <title>Creating data sources</title>
-      <para>
-        You have two ways to do this, one of them is creating them using
-        some <link linkend="installation-client">utility of
-          &GNOMEDB;</link> or using <link
-				       linkend="data-sources-API-functions">API functions</link>.
-        Remember the little <link
-			       linkend="data-sources-API-functions">bug</link>.
-      </para>
-      <para>
-        There is no problem about calling several times to this
-        function because if you save an existing data source, it
-        is replaced, so it could be advisable<footnote><para>But you must think
-            of security if you distribute the source code because people would see
-            the passwords of your databases.</para></footnote> to save the data source
-        each time you want to create the connection.
-      </para>
-    </sect2>
-    <sect2 id="migration-connections">
-      <title>Creating connections</title>
-      <para>
-        You can see <link linkend="connections">how to create a
-          connection</link> easily in a chapter above.
-      </para>
-    </sect2>
-  </sect1>
-  <sect1 id="migration-executing-commands">
-    <title>Executing commands</title>
-    <sect2 id="migration-creating-commands">
-      <title>Creating commands</title>
-      <para>
-        It can be made, more or less, as in the old version, using
-        <link linkend="gda-command-new">gda_command_new()</link>, but
-        now, this function needs a few parameters and, in this version,
-        you do not link a command to a connection, so you execute a
-        command in a connection as we'll see <link
-						linkend="migration-executing-non-queries">later</link>. You
-        can see how to create commands and examples about this <link
-								  linkend="building-commands">here</link>.
-      </para>
-    </sect2>
-    <sect2 id="migration-executing-non-queries">
-      <title>Executing <emphasis>non queries</emphasis></title>
-      <para>
-        <emphasis>Non queries</emphasis> are queries that do not return
-        data, as insertions, deletions, and so on. The function we use is
-        <link
-           linkend="gda-connection-execute-non-query">gda_connection_execute_non_query
-          ()</link> and returns the number of affected tuples or -1 in case
-        of error. <link linkend="making-queries">Here</link> you see an
-        example.
-      </para>
-      <para>
-        It is better not to execute more than one &SQL; sentence for each
-        command because the result can be unexpected.
-      </para>
-    </sect2>
-    <sect2 id="migration-executing-normal-queries">
-      <title>Executing normal queries</title>
-      <para>
-        A normal query is a query that return data. This is made as a
-        <link linkend="GdaDataModel">data model</link>, analogous
-        to <emphasis>GdaRecordset</emphasis> in the old
-        version<footnote><para>Now you have a <link
-						 linkend="libgda-provider-recordset">GdaRecordset</link> class,
-            but it is not recommended.</para></footnote>.
-      </para>
-      <para>
-        As you can see in the following example, the function we use to
-        obtain data from a &SQL; sentence is <link
-						linkend="gda-connection-execute-single-command">gda_connection_execute_single_command
-          ()</link> and needs the parameters of <link
-						   linkend="migration-executing-non-queries">non queries</link>. The
-        difference is that now the function returns the <link
-							   linkend="GdaDataModel">data model</link> or
-        <emphasis>NULL</emphasis> in case of error.
-      </para>
-      <para>
-        As in the case of <link
-			     linkend="gda-connection-execute-non-query">non queries</link>, you
-        must not use several semicolon-separated sentences, because you
-        have a special function to do this<footnote><para><link
-							     linkend="gda-connection-execute-command">gda_connection_execute_select_command
-              ()</link></para></footnote>, but it is not recommended.
-      </para>
-    </sect2>
-  </sect1>
-  <sect1>
-    <title>Managing data</title>
-    <para>
-      As we have said before, data is obtained as <link
-						     linkend="GdaDataModel">data models</link>. We can consider
-      it as a representation of the table.
-    </para>
-    <para>
-      We can access the table at <link
-				    linkend="data-model-row-access">row level</link> or <link
-											   linkend="data-model-table-access">table level</link>. We will focus
-      on <link linkend="data-model-row-access">row level</link> because
-      it is the most similar to the old version.
-    </para>
-    <para>
-      As you can see in the <link
-			       linkend="data-model-row-access">example</link>, the access is made
-      with the <emphasis>C</emphasis> style using a
-      <literal>for</literal> to obtain data from rows and columns.
-    </para>
-    <para>
-      We talk about <link linkend="data-model-table-access">table
-        access</link> only saying that the access is made in a very similar
-      way. The only difference is that <link
-					  linkend="gda-data-model-get-value-at">gda_data_model_get_value_at
-        ()</link> returns a <literal>const</literal> and we have not to
-      free it.
-    </para>
-    <sect2>
-      <title>Something important about data models</title>
-      <para>
-        As you can see viewing <link
-				  linkend="GdaDataModel">GdaDataModel</link> class, it has
-        not a <link linkend="data-model-free">free</link> method, so we
-        have to free it using <literal>g_object_unref</literal>.
-      </para>
-      <para>
-        Theoretically, you could modify data models and dump changes over
-        the database, but it is not recommended because you might make
-        changes using &SQL;, so we consider data models not to be
-        modifiable.
-      </para>
-    </sect2>
-    <sect2>
-      <title>Accessing directly to columns</title>
-      <para>
-        There is not exist a function to access columns directly using
-        the column name, but you can obtain its index using <link
-							       linkend="gda-data-model-get-column-position">gda_data_model_get_column_position
-          ()</link>, as you can see in this example:
-        <programlisting>
-          value=gda_row_get_value(row,
-          gda_data_model_get_column_position(data_model,"id_product"));
-        </programlisting>
-      </para>
-    </sect2>
-  </sect1>
-  <sect1>
-    <title>Managing errors</title>
-    <para>
-      There is a function very similar to the last version and you can
-      see a very clear <link linkend="managing-errors">example</link> in
-      the <link linkend="managing-errors">Managing errors section</link>.
+      <mediaobject>
+	<imageobject role="html">
+          <imagedata fileref="DataModels.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+          <phrase>Various implementations of the GdaDataModel interface</phrase>
+	</textobject>
+      </mediaobject>
     </para>
   </sect1>
-  <sect1>
-    <title>Managing transactions</title>
+  
+  <sect1><title>GdaClient, GdaConnection and GdaError</title>
+    <para>The <classname>GdaClient</classname> usage has remained unchanged except for some small API alterations and
+      a specific API has been defined to create and destroy databases.</para>
+    <para>The <classname>GdaError</classname> class has been renamed to <classname>GdaConnectionEvent</classname> and
+      can now convey not only errors but also other kind of events which have happened on a connection</para>
+    <para>The <classname>GdaConnection</classname> usage has remained by far unchanged, but some of its API have had
+      some alterations (finding the equivalent is trivial). The most noticeable change being that
+      the <function>gda_connection_escape_string()</function> has been removed because string escaping is 
+      now done by a <classname>GdaDataHandler</classname> object which each 
+      <classname>GdaServerProvider</classname> provides for each data type.
+    </para>
+  </sect1>
+
+  <sect1><title>Various API changes</title>
     <para>
-      In the old version, to manage transactions was more simple but less
-      powerful. In the new version it is supposed that we can launch
-      several transactions over the same connection but some database
-      drivers, as	&PGSQL;, do not implement it, so we do not recommend
-      it. If you want to launch several transactions, you must open
-      several connections, but you can do it over the same
-      <emphasis>pool</emphasis>. You can see a clear <link
-							linkend="transactions">example</link> in the <link
-													linkend="transactions">Transactions section</link>.
+      <itemizedlist>
+	<listitem>
+          <para><classname>GdaFieldAttributes</classname> has been renamed <classname>GdaColumn</classname></para>
+	</listitem>
+	<listitem>
+          <para>The <classname>GdaParameter</classname> is now an object, and it is extensively used within 
+	    <classname>GdaParameterList</classname> objects. Each <classname>GdaParameterList</classname> object represent a 
+	    vector of parameters (which may or may not have values assigned) and is the base of the
+	    <classname>GdaDataModelIter</classname> iterator object. The <classname>GdaParameter</classname> API has been
+	    altered.</para>
+	</listitem>
+	<listitem>
+          <para>The <classname>GdaExport</classname> class has been removed, the features it offered are now implemented
+	    in each <classname>GdaDataModel</classname> object.</para>
+	</listitem>
+	<listitem>
+          <para><classname>GdaSelect</classname> has been renamed 
+	    <classname>GdaDataModelFilterSQL</classname></para>
+	</listitem>
+	<listitem>
+          <para>The <classname>GdaTable</classname> class has been replaced by the
+	    <classname>GdaDataModelQuery</classname> class: it's a data model which can refresh itself and can be
+	    configured to be updatable, it's not limited to a database table.</para>
+	</listitem>
+	<listitem>
+          <para>The <classname>GdaXmlDatabase</classname> has been removed and the default database is now SQLite
+	    which is a complete RDBMS in a file</para>
+	</listitem>
+	<listitem>
+          <para>All the <function>gda_xql_*()</function> functions have been removed because they were unused and unmaintained.
+	  </para>
+	</listitem>
+	<listitem>
+          <para>The 'xml' provider has been removed as it did not work correctly and has been replaced by the SQLite provider
+	    as the provider to have serverless databases.</para>
+	</listitem>
+      </itemizedlist>
     </para>
   </sect1>
 </chapter>

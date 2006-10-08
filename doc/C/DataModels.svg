@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="54cm" height="31cm" viewBox="4 6 54 31">
+  <rect style="fill: #ffffff" x="23.582" y="6.2" width="6.5" height="2.2"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="23.582" y="6.2" width="6.5" height="2.2"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="26.832" y="6.85">&lt;&lt;interface&gt;&gt;</text>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: normal; font-weight: 700" x="26.832" y="7.85">GdaDataModel</text>
+  <rect style="fill: #ffffff" x="22.75" y="11.75" width="8.16406" height="1.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="22.75" y="11.75" width="8.16406" height="1.4"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: italic; font-weight: 700" x="26.832" y="12.75">GdaDataModelRow</text>
+  <rect style="fill: #ffffff" x="17.65" y="18.05" width="8.7" height="1.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="17.65" y="18.05" width="8.7" height="1.4"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: normal; font-weight: 700" x="22" y="19.05">GdaDataModelArray</text>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.4; stroke: #000000" points="26.832,9.3118 26.832,11.6996 26.832,11.6996 "/>
+  <polygon style="fill: #ffffff" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="26.832,14.0618 26.832,15.6 22,15.6 22,18.05 "/>
+  <polygon style="fill: #ffffff" points="27.232,14.0618 26.832,13.2618 26.432,14.0618 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.232,14.0618 26.832,13.2618 26.432,14.0618 "/>
+  <rect style="fill: #ffffff" x="27.37" y="18.05" width="8.5" height="1.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="27.37" y="18.05" width="8.5" height="1.4"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: normal; font-weight: 700" x="31.62" y="19.05">GdaDataModelHash</text>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="26.832,14.0618 26.832,15.6 31.62,15.6 31.62,18.05 "/>
+  <polygon style="fill: #ffffff" points="27.232,14.0618 26.832,13.2618 26.432,14.0618 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.232,14.0618 26.832,13.2618 26.432,14.0618 "/>
+  <polygon style="fill: #ffffff" points="17.45,22.45 25.8,22.45 26.4,23.05 26.4,24.95 17.45,24.95 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="17.45,22.45 25.8,22.45 26.4,23.05 26.4,24.95 17.45,24.95 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.05; stroke: #000000" points="25.8,22.45 25.8,23.05 26.4,23.05 "/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="17.8" y="23.65">Data is stored as rows</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="17.8" y="24.45">in an array (GPtrArray)</text>
+  <rect style="fill: #ffffff" x="6.32" y="11.75" width="8.9" height="1.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="6.32" y="11.75" width="8.9" height="1.4"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: normal; font-weight: 700" x="10.77" y="12.75">GdaDataModelQuery</text>
+  <rect style="fill: #ffffff" x="6.32" y="13.15" width="8.9" height="3.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="6.32" y="13.15" width="8.9" height="3.4"/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="6.47" y="14.05">+SELECT query</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="6.47" y="14.85">+INSERT query</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="6.47" y="15.65">+UPDATE query</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="6.47" y="16.45">+DELETE query</text>
+  <polygon style="fill: #ffffff" points="27.47,22.5 37.57,22.5 38.17,23.1 38.17,25 27.47,25 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.47,22.5 37.57,22.5 38.17,23.1 38.17,25 27.47,25 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.05; stroke: #000000" points="37.57,22.5 37.57,23.1 38.17,23.1 "/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="27.82" y="23.7">Data is stored as rows</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="27.82" y="24.5">in a hash table (GHashTable)</text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.2; stroke: #000000" x1="21.925" y1="22.45" x2="21.9878" y2="19.9367"/>
+  <polygon style="fill: #000000" points="21.9972,19.5618 22.2346,20.0679 21.9878,19.9367 21.7348,20.0554 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="21.9972,19.5618 22.2346,20.0679 21.9878,19.9367 21.7348,20.0554 "/>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.2; stroke: #000000" x1="32.4572" y1="22.4498" x2="31.7509" y2="19.9189"/>
+  <polygon style="fill: #000000" points="31.6501,19.5577 32.0253,19.9721 31.7509,19.9189 31.5437,20.1065 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="31.6501,19.5577 32.0253,19.9721 31.7509,19.9189 31.5437,20.1065 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.4; stroke: #000000" points="26.832,9.3118 26.832,10.8 10.77,10.8 10.77,11.75 "/>
+  <polygon style="fill: #ffffff" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: #ffffff" points="4.75,19.55 13.8,19.55 14.4,20.15 14.4,23.65 4.75,23.65 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="4.75,19.55 13.8,19.55 14.4,20.15 14.4,23.65 4.75,23.65 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.05; stroke: #000000" points="13.8,19.55 13.8,20.15 14.4,20.15 "/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="5.1" y="20.75">Data comes from a SELECT</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="5.1" y="21.55">query and can be modified</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="5.1" y="22.35">if INSERT, UPDATE and/or </text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="5.1" y="23.15">DELETE queries are given</text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.2; stroke: #000000" x1="9.575" y1="19.55" x2="10.5899" y2="17.0022"/>
+  <polygon style="fill: #000000" points="10.7286,16.6539 10.7759,17.2109 10.5899,17.0022 10.3113,17.0259 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="10.7286,16.6539 10.7759,17.2109 10.5899,17.0022 10.3113,17.0259 "/>
+  <rect style="fill: #ffffff" x="39.47" y="11.75" width="9.15" height="1.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="39.47" y="11.75" width="9.15" height="1.4"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: normal; font-weight: 700" x="44.045" y="12.75">GdaDataModelImport</text>
+  <rect style="fill: #ffffff" x="39.47" y="13.15" width="9.15" height="1"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="39.47" y="13.15" width="9.15" height="1"/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="39.62" y="14.05">+File or string</text>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.4; stroke: #000000" points="26.832,9.3118 26.832,10.8 44.045,10.8 44.045,11.7002 "/>
+  <polygon style="fill: #ffffff" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: #ffffff" points="40.45,22.05 48.8,22.05 49.4,22.65 49.4,25.35 40.45,25.35 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="40.45,22.05 48.8,22.05 49.4,22.65 49.4,25.35 40.45,25.35 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.05; stroke: #000000" points="48.8,22.05 48.8,22.65 49.4,22.65 "/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="40.8" y="23.25">Data is imported</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="40.8" y="24.05">from a string or a file</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="40.8" y="24.85">in CSV or XML format</text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.2; stroke: #000000" x1="44.925" y1="22.05" x2="44.0989" y2="14.6338"/>
+  <polygon style="fill: #000000" points="44.0574,14.2611 44.3612,14.7304 44.0989,14.6338 43.8643,14.7857 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="44.0574,14.2611 44.3612,14.7304 44.0989,14.6338 43.8643,14.7857 "/>
+  <rect style="fill: #ffffff" x="50.07" y="11.75" width="6.25" height="1.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="50.07" y="11.75" width="6.25" height="1.4"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: normal; font-weight: 700" x="53.195" y="12.75">GdaDataProxy</text>
+  <rect style="fill: #ffffff" x="50.07" y="13.15" width="6.25" height="1"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="50.07" y="13.15" width="6.25" height="1"/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="50.22" y="14.05">+Data model</text>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.4; stroke: #000000" points="26.832,9.3118 26.832,10.8 53.195,10.8 53.195,11.75 "/>
+  <polygon style="fill: #ffffff" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: #ffffff" points="45.8701,16.1 57.7201,16.1 58.3201,16.7 58.3201,21 45.8701,21 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="45.8701,16.1 57.7201,16.1 58.3201,16.7 58.3201,21 45.8701,21 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.05; stroke: #000000" points="57.7201,16.1 57.7201,16.7 58.3201,16.7 "/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="46.2201" y="17.3">Data comes from another</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="46.2201" y="18.1">GdaDataModel, and modifications</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="46.2201" y="18.9">are stored locally in the model</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="46.2201" y="19.7">before changes to the other model</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="46.2201" y="20.5">are made.</text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.2; stroke: #000000" x1="52.0951" y1="16.1" x2="52.9558" y2="14.574"/>
+  <polygon style="fill: #000000" points="53.1401,14.2474 53.1122,14.8057 52.9558,14.574 52.6767,14.5601 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="53.1401,14.2474 53.1122,14.8057 52.9558,14.574 52.6767,14.5601 "/>
+  <rect style="fill: #ffffff" x="11.6201" y="27.4" width="9.9" height="1.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="11.6201" y="27.4" width="9.9" height="1.4"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: normal; font-weight: 700" x="16.5701" y="28.4">GdaDataModelFilterSql</text>
+  <rect style="fill: #ffffff" x="11.6201" y="28.8" width="9.9" height="1"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="11.6201" y="28.8" width="9.9" height="1"/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="11.7701" y="29.7">+Data model</text>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.4; stroke: #000000" points="26.832,9.3118 26.832,10.8 16.5701,10.8 16.5701,27.3501 "/>
+  <polygon style="fill: #ffffff" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.232,9.3118 26.832,8.5118 26.432,9.3118 "/>
+  <polygon style="fill: #ffffff" points="11.3201,32.3 21.4201,32.3 22.0201,32.9 22.0201,36.4 11.3201,36.4 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="11.3201,32.3 21.4201,32.3 22.0201,32.9 22.0201,36.4 11.3201,36.4 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.05; stroke: #000000" points="21.4201,32.3 21.4201,32.9 22.0201,32.9 "/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="11.6701" y="33.5">Data comes from one or more</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="11.6701" y="34.3">other GdaDataModel and is</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="11.6701" y="35.1">filtered using a very simple</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="11.6701" y="35.9">SQL SELECT query</text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.2; stroke: #000000" x1="16.6701" y1="32.3" x2="16.5896" y2="30.2864"/>
+  <polygon style="fill: #000000" points="16.5746,29.9117 16.8444,30.4013 16.5896,30.2864 16.3448,30.4213 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="16.5746,29.9117 16.8444,30.4013 16.5896,30.2864 16.3448,30.4213 "/>
+  <rect style="fill: #ffffff" x="33.7201" y="27.4" width="10.3375" height="1.4"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="33.7201" y="27.4" width="10.3375" height="1.4"/>
+  <text style="fill: #000000; text-anchor:middle; font-size: 1; font-family: sans; font-style: normal; font-weight: 700" x="38.8889" y="28.4">GdaDataAccessWrapper</text>
+  <rect style="fill: #ffffff" x="33.7201" y="28.8" width="10.3375" height="1"/>
+  <rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="33.7201" y="28.8" width="10.3375" height="1"/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="33.8701" y="29.7">+Data model</text>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.4; stroke: #000000" points="26.832,9.3611 26.832,10.8 38.8889,10.8 38.8889,27.4 "/>
+  <polygon style="fill: #ffffff" points="27.232,9.3611 26.832,8.5611 26.432,9.3611 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="27.232,9.3611 26.832,8.5611 26.432,9.3611 "/>
+  <polygon style="fill: #ffffff" points="31.2701,32.3 45.9201,32.3 46.5201,32.9 46.5201,36.4 31.2701,36.4 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="31.2701,32.3 45.9201,32.3 46.5201,32.9 46.5201,36.4 31.2701,36.4 "/>
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 0.05; stroke: #000000" points="45.9201,32.3 45.9201,32.9 46.5201,32.9 "/>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="31.6201" y="33.5">Data comes from another</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="31.6201" y="34.3">GdaDataModel which may only be accessed</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="31.6201" y="35.1">using an iterator (no random access), and</text>
+  <text style="fill: #000000; text-anchor:start; font-size: 0.8; font-family: monospace; font-style: normal; font-weight: normal" x="31.6201" y="35.9">providers random access itself</text>
+  <line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke-dasharray: 0.2; stroke: #000000" x1="38.8951" y1="32.3" x2="38.8901" y2="30.2868"/>
+  <polygon style="fill: #000000" points="38.8891,29.9118 39.1404,30.4112 38.8901,30.2868 38.6404,30.4124 "/>
+  <polygon style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" points="38.8891,29.9118 39.1404,30.4112 38.8901,30.2868 38.6404,30.4124 "/>
+</svg>

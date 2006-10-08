@@ -16,53 +16,42 @@
 						   linkend="gda-main-quit">gda_main_quit()</link> in order to finish the program.
     </para>
     <programlisting>
-      void
-      do_stuff ()
-      {
-      GdaClient *client;
-      GdaConnection *connection;
+void
+do_stuff () {
+	GdaClient *client;
+	GdaConnection *connection;
       
-      list_providers ();
-      list_datasources ();
+	list_providers ();
+	list_datasources ();
       
-      client = gda_client_new ();
+	client = gda_client_new ();
       
-      g_print ("CONNECTING\n");
-      connection = gda_client_open_connection (client, "calvaris", NULL, NULL,
-      GDA_CONNECTION_OPTIONS_READ_ONLY);
+	g_print ("CONNECTING\n");
+	connection = gda_client_open_connection (client, "calvaris", NULL, NULL,
+						 GDA_CONNECTION_OPTIONS_READ_ONLY);
 
-      g_print ("CONNECTED\n");
+	g_print ("CONNECTED\n");
       
-      execute_some_queries (connection);
+	execute_some_queries (connection);
 
-      g_print ("ERRORS PROVED!\n");
+	g_print ("ERRORS PROVED!\n");
       
-      process_accounts(connection);
+	process_accounts (connection);
       
-      gda_client_close_all_connections (client);
+	g_object_unref (G_OBJECT (client));
+}
+      
+      
+int
+main (int argc, char **argv)
+{
+	g_print ("STARTING\n");
 
-      g_object_unref(G_OBJECT(client));
+	gda_init ("TestGDA", "0.1", argc, argv);
+      	do_stuff();
 
-      play_with_parameters();
-
-      gda_main_quit();
-      }
-      
-      
-      int
-      main (int argc, char **argv)
-      {
-      
-      g_print ("STARTING\n");
-      gda_init ("TestGDA", "0.1", argc, argv);
-      
-      save_ds ();
-      
-      gda_main_run ((GdaInitFunc) do_stuff, (gpointer) NULL);
-      /* do_stuff(); */
-      g_print("ENDING\n");
-      
-      }
+	g_print("ENDING\n");      
+}
     </programlisting>
   </sect1>
   <sect1 id="connections">

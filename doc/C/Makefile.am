@@ -43,7 +43,7 @@ MKDB_OPTIONS=--sgml-mode --output-format=xml
 content_files = fdl-appendix.sgml 
 
 # Images to copy into HTML directory
-HTML_IMAGES = query01.png query02.png query03.png query04.png query05.png query06.png
+HTML_IMAGES = query01.png query02.png query03.png query04.png query05.png query06.png DataModels.png
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
@@ -53,5 +53,5 @@ include $(top_srcdir)/gtk-doc.make
 # Other files to distribute
 EXTRA_DIST += examples/full_example.c installation.xml migration.xml query.xml query-fields.xml \
 	server-operation.xml gettingstarted.xml \
-	query01.svg query02.svg query03.svg query04.svg query05.svg query06.svg
+	query01.svg query02.svg query03.svg query04.svg query05.svg query06.svg DataModels.svg
 
