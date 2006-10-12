@@ -19,18 +19,27 @@ libsqlite_la_SOURCES = \
 	date.c \
 	delete.c \
 	expr.c \
+	fts1.c \
+	fts1.h \
+	fts1_hash.c \
+	fts1_hash.h \
+	fts1_porter.c \
+	fts1_tokenizer1.c \
+	fts1_tokenizer.h \
 	func.c \
 	hash.c \
 	hash.h \
 	insert.c \
 	keywordhash.h \
 	legacy.c \
+	loadext.c \
 	main.c \
 	opcodes.c \
 	opcodes.h \
 	os.c \
 	os_common.h \
 	os.h \
+	os_os2.c \
 	os_unix.c \
 	os_win.c \
 	pager.c \
@@ -42,6 +51,7 @@ libsqlite_la_SOURCES = \
 	printf.c \
 	random.c \
 	select.c \
+	sqlite3ext.h \
 	sqlite3.h \
 	sqliteInt.h \
 	table.c \
@@ -58,4 +68,5 @@ libsqlite_la_SOURCES = \
 	vdbe.h \
 	vdbeInt.h \
 	vdbemem.c \
-	where.c 
+	vtab.c \
+	where.c

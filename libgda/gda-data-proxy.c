@@ -336,10 +336,13 @@ row_modifs_new (GdaDataProxy *proxy, gint proxy_row)
 		rm->orig_values_size = proxy->priv->model_nb_cols;
 		model_row = proxy_row_to_model_row (proxy, proxy_row);
 		
-		for (i=0; i<proxy->priv->model_nb_cols; i++)
-			rm->orig_values [i] = 
-				gda_value_copy ((GValue *)gda_data_proxy_get_value_at ((GdaDataModel *)proxy, 
-											 i, model_row));
+		for (i=0; i<proxy->priv->model_nb_cols; i++) {
+			const GValue *oval;
+
+			oval = gda_data_proxy_get_value_at ((GdaDataModel *)proxy, i, model_row);
+			if (oval)
+				rm->orig_values [i] = gda_value_copy ((GValue *) oval);
+		}
 	}
 	
 	return rm;
@@ -971,10 +974,9 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 
 	model_column = col % proxy->priv->model_nb_cols;
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
-	if (model_row >= 0)
-		flags = gda_data_model_get_attributes_at (proxy->priv->model, model_column, model_row);
-	else
-		flags = GDA_VALUE_ATTR_IS_NULL;
+	flags = gda_data_model_get_attributes_at (proxy->priv->model, model_column, model_row);
+	if (model_row < 0)
+		flags |= GDA_VALUE_ATTR_IS_NULL;
 
 	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
 	if (rm) {
@@ -991,7 +993,6 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 			}
 			if (rv) {
 				value_has_modifs = TRUE;
-				flags &= ~GDA_VALUE_ATTR_NO_MODIF; /* filter only that attribute */
 				flags |= g_value_get_uint (rv->attributes);
 				if (rv->value && !gda_value_is_null (rv->value))
 					flags &= ~GDA_VALUE_ATTR_IS_NULL;
@@ -1009,7 +1010,7 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 		if ((flags & GDA_VALUE_ATTR_IS_NULL) && !(flags & GDA_VALUE_ATTR_IS_DEFAULT))
 			flags |= GDA_VALUE_ATTR_DATA_NON_VALID;
 	}
-	
+
 	return flags;
 }
 
@@ -1383,8 +1384,13 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 			if (G_VALUE_TYPE (def) == gda_column_get_g_type (column))
 				rv->value = gda_value_copy (def);
 		}
-		if (gda_column_get_allow_null (column))
-			flags |= GDA_VALUE_ATTR_CAN_BE_NULL;
+		if (gda_column_get_allow_null (column)) {
+			guint attributes;
+			
+			attributes = gda_data_model_get_attributes_at (proxy->priv->model, col, -1);;
+			if (attributes & GDA_VALUE_ATTR_CAN_BE_NULL)
+				flags |= GDA_VALUE_ATTR_CAN_BE_NULL;
+		}
 
 		if (gda_column_get_auto_increment (column))
 			flags |= (GDA_VALUE_ATTR_IS_DEFAULT | GDA_VALUE_ATTR_CAN_BE_DEFAULT);
@@ -2497,11 +2503,16 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 {
 	gint row;
 	GdaDataProxy *proxy;
+	guint att;
 
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (model), FALSE);
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, FALSE);
 	g_return_val_if_fail (proxy_row >= 0, FALSE);
+
+	att = gda_data_proxy_get_value_attributes (proxy, proxy_row, col);
+	if (att & GDA_VALUE_ATTR_NO_MODIF)
+		return FALSE;
 
 	row = proxy_row;
 	if ((row == 0) && proxy->priv->add_null_entry) {

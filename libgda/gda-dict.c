@@ -1239,9 +1239,8 @@ gda_dict_update_dbms_meta_data (GdaDict *dict, GType limit_to_type, const gchar 
         g_print ("<< 'DATA_UPDATE_STARTED' from %s\n", __FUNCTION__);
 #endif
 	
-	/* types */
-	if (!dict->priv->stop_update && 
-	    (!limit_to_type || (limit_to_type == GDA_TYPE_DICT_TYPE))) {
+	/* types, always updated */
+	if (!dict->priv->stop_update) {
 		reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_TYPE);
 		g_assert (reg);
 		retval = (reg->dbms_sync) (dict, limit_obj_name, error);

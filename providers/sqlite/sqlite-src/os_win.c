@@ -128,19 +128,19 @@ int sqlite3_os_type = 0;
 ** is obtained from sqliteMalloc.
 */
 static WCHAR *utf8ToUnicode(const char *zFilename){
-  int nByte;
+  int nChar;
   WCHAR *zWideFilename;
 
   if( !isNT() ){
     return 0;
   }
-  nByte = MultiByteToWideChar(CP_UTF8, 0, zFilename, -1, NULL, 0)*sizeof(WCHAR);
-  zWideFilename = sqliteMalloc( nByte*sizeof(zWideFilename[0]) );
+  nChar = MultiByteToWideChar(CP_UTF8, 0, zFilename, -1, NULL, 0);
+  zWideFilename = sqliteMalloc( nChar*sizeof(zWideFilename[0]) );
   if( zWideFilename==0 ){
     return 0;
   }
-  nByte = MultiByteToWideChar(CP_UTF8, 0, zFilename, -1, zWideFilename, nByte);
-  if( nByte==0 ){
+  nChar = MultiByteToWideChar(CP_UTF8, 0, zFilename, -1, zWideFilename, nChar);
+  if( nChar==0 ){
     sqliteFree(zWideFilename);
     zWideFilename = 0;
   }
@@ -476,22 +476,40 @@ static BOOL winceLockFileEx(
 #endif /* OS_WINCE */
 
 /*
-** Delete the named file
+** Delete the named file.
+**
+** Note that windows does not allow a file to be deleted if some other
+** process has it open.  Sometimes a virus scanner or indexing program
+** will open a journal file shortly after it is created in order to do
+** whatever it is it does.  While this other process is holding the
+** file open, we will be unable to delete it.  To work around this
+** problem, we delay 100 milliseconds and try to delete again.  Up
+** to MX_DELETION_ATTEMPTs deletion attempts are run before giving
+** up and returning an error.
 */
+#define MX_DELETION_ATTEMPTS 3
 int sqlite3WinDelete(const char *zFilename){
   WCHAR *zWide = utf8ToUnicode(zFilename);
+  int cnt = 0;
+  int rc;
   if( zWide ){
-    DeleteFileW(zWide);
+    do{
+      rc = DeleteFileW(zWide);
+    }while( rc==0 && GetFileAttributesW(zWide)!=0xffffffff 
+            && cnt++ < MX_DELETION_ATTEMPTS && (Sleep(100), 1) );
     sqliteFree(zWide);
   }else{
 #if OS_WINCE
     return SQLITE_NOMEM;
 #else
-    DeleteFileA(zFilename);
+    do{
+      rc = DeleteFileA(zFilename);
+    }while( rc==0 && GetFileAttributesA(zFilename)!=0xffffffff
+            && cnt++ < MX_DELETION_ATTEMPTS && (Sleep(100), 1) );
 #endif
   }
   TRACE2("DELETE \"%s\"\n", zFilename);
-  return SQLITE_OK;
+  return rc!=0 ? SQLITE_OK : SQLITE_IOERR;
 }
 
 /*
@@ -550,7 +568,7 @@ int sqlite3WinOpenReadWrite(
     if( h==INVALID_HANDLE_VALUE ){
       h = CreateFileW(zWide,
          GENERIC_READ,
-         FILE_SHARE_READ,
+         FILE_SHARE_READ | FILE_SHARE_WRITE,
          NULL,
          OPEN_ALWAYS,
          FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS,
@@ -587,7 +605,7 @@ int sqlite3WinOpenReadWrite(
     if( h==INVALID_HANDLE_VALUE ){
       h = CreateFileA(zFilename,
          GENERIC_READ,
-         FILE_SHARE_READ,
+         FILE_SHARE_READ | FILE_SHARE_WRITE,
          NULL,
          OPEN_ALWAYS,
          FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS,
@@ -624,6 +642,12 @@ int sqlite3WinOpenReadWrite(
 ** On success, write the file handle into *id and return SQLITE_OK.
 **
 ** On failure, return SQLITE_CANTOPEN.
+**
+** Sometimes if we have just deleted a prior journal file, windows
+** will fail to open a new one because there is a "pending delete".
+** To work around this bug, we pause for 100 milliseconds and attempt
+** a second open after the first one fails.  The whole operation only
+** fails if both open attempts are unsuccessful.
 */
 int sqlite3WinOpenExclusive(const char *zFilename, OsFile **pId, int delFlag){
   winFile f;
@@ -638,27 +662,33 @@ int sqlite3WinOpenExclusive(const char *zFilename, OsFile **pId, int delFlag){
   }
 #endif
   if( zWide ){
-    h = CreateFileW(zWide,
-       GENERIC_READ | GENERIC_WRITE,
-       0,
-       NULL,
-       CREATE_ALWAYS,
-       fileflags,
-       NULL
-    );
+    int cnt = 0;
+    do{
+      h = CreateFileW(zWide,
+         GENERIC_READ | GENERIC_WRITE,
+         0,
+         NULL,
+         CREATE_ALWAYS,
+         fileflags,
+         NULL
+      );
+    }while( h==INVALID_HANDLE_VALUE && cnt++ < 2 && (Sleep(100), 1) );
     sqliteFree(zWide);
   }else{
 #if OS_WINCE
     return SQLITE_NOMEM;
 #else
-    h = CreateFileA(zFilename,
-       GENERIC_READ | GENERIC_WRITE,
-       0,
-       NULL,
-       CREATE_ALWAYS,
-       fileflags,
-       NULL
-    );
+    int cnt = 0;
+    do{
+      h = CreateFileA(zFilename,
+        GENERIC_READ | GENERIC_WRITE,
+        0,
+        NULL,
+        CREATE_ALWAYS,
+        fileflags,
+        NULL
+      );
+    }while( h==INVALID_HANDLE_VALUE && cnt++ < 2 && (Sleep(100), 1) );
 #endif /* OS_WINCE */
   }
   if( h==INVALID_HANDLE_VALUE ){
@@ -796,12 +826,24 @@ int sqlite3WinTempFileName(char *zBuf){
 
 /*
 ** Close a file.
+**
+** It is reported that an attempt to close a handle might sometimes
+** fail.  This is a very unreasonable result, but windows is notorious
+** for being unreasonable so I do not doubt that it might happen.  If
+** the close fails, we pause for 100 milliseconds and try again.  As
+** many as MX_CLOSE_ATTEMPT attempts to close the handle are made before
+** giving up and returning an error.
 */
+#define MX_CLOSE_ATTEMPT 3
 static int winClose(OsFile **pId){
   winFile *pFile;
+  int rc = 1;
   if( pId && (pFile = (winFile*)*pId)!=0 ){
+    int rc, cnt = 0;
     TRACE2("CLOSE %d\n", pFile->h);
-    CloseHandle(pFile->h);
+    do{
+      rc = CloseHandle(pFile->h);
+    }while( rc==0 && cnt++ < MX_CLOSE_ATTEMPT && (Sleep(100), 1) );
 #if OS_WINCE
     winceDestroyLock(pFile);
     if( pFile->zDeleteOnClose ){
@@ -813,7 +855,7 @@ static int winClose(OsFile **pId){
     sqliteFree(pFile);
     *pId = 0;
   }
-  return SQLITE_OK;
+  return rc ? SQLITE_OK : SQLITE_IOERR;
 }
 
 /*
@@ -824,7 +866,7 @@ static int winClose(OsFile **pId){
 static int winRead(OsFile *id, void *pBuf, int amt){
   DWORD got;
   assert( id!=0 );
-  SimulateIOError(SQLITE_IOERR);
+  SimulateIOError(return SQLITE_IOERR);
   TRACE3("READ %d lock=%d\n", ((winFile*)id)->h, ((winFile*)id)->locktype);
   if( !ReadFile(((winFile*)id)->h, pBuf, amt, &got, 0) ){
     got = 0;
@@ -844,8 +886,8 @@ static int winWrite(OsFile *id, const void *pBuf, int amt){
   int rc = 0;
   DWORD wrote;
   assert( id!=0 );
-  SimulateIOError(SQLITE_IOERR);
-  SimulateDiskfullError;
+  SimulateIOError(return SQLITE_IOERR);
+  SimulateDiskfullError(return SQLITE_FULL);
   TRACE3("WRITE %d lock=%d\n", ((winFile*)id)->h, ((winFile*)id)->locktype);
   assert( amt>0 );
   while( amt>0 && (rc = WriteFile(((winFile*)id)->h, pBuf, amt, &wrote, 0))!=0
@@ -875,7 +917,7 @@ static int winSeek(OsFile *id, i64 offset){
   DWORD rc;
   assert( id!=0 );
 #ifdef SQLITE_TEST
-  if( offset ) SimulateDiskfullError
+  if( offset ) SimulateDiskfullError(return SQLITE_FULL);
 #endif
   SEEK(offset/1024 + 1);
   rc = SetFilePointer(((winFile*)id)->h, lowerBits, &upperBits, FILE_BEGIN);
@@ -904,7 +946,7 @@ static int winSync(OsFile *id, int dataOnly){
 ** than UNIX.
 */
 int sqlite3WinSyncDirectory(const char *zDirname){
-  SimulateIOError(SQLITE_IOERR);
+  SimulateIOError(return SQLITE_IOERR);
   return SQLITE_OK;
 }
 
@@ -915,7 +957,7 @@ static int winTruncate(OsFile *id, i64 nByte){
   LONG upperBits = nByte>>32;
   assert( id!=0 );
   TRACE3("TRUNCATE %d %lld\n", ((winFile*)id)->h, nByte);
-  SimulateIOError(SQLITE_IOERR);
+  SimulateIOError(return SQLITE_IOERR);
   SetFilePointer(((winFile*)id)->h, nByte, &upperBits, FILE_BEGIN);
   SetEndOfFile(((winFile*)id)->h);
   return SQLITE_OK;
@@ -927,7 +969,7 @@ static int winTruncate(OsFile *id, i64 nByte){
 static int winFileSize(OsFile *id, i64 *pSize){
   DWORD upperBits, lowerBits;
   assert( id!=0 );
-  SimulateIOError(SQLITE_IOERR);
+  SimulateIOError(return SQLITE_IOERR);
   lowerBits = GetFileSize(((winFile*)id)->h, &upperBits);
   *pSize = (((i64)upperBits)<<32) + lowerBits;
   return SQLITE_OK;

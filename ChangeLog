@@ -1,3 +1,21 @@
+2006-10-12  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-query.c: fixed bug in gda_data_model_query_get_attributes_at()
+	* libgda/gda-data-proxy.c: fixed bug in gda_data_proxy_get_value_attributes()
+	* providers/sqlite/sqlite-src: updated to SQLite 3.3.8
+	* libgda/gda-dict.c: make sure data types are always synced before anything else
+	
+2006-10-11  Daniel Espinosa <esodan@gmail.org>
+	
+	* libgda/gda-init.c, gda-init.h: API change: gda_insert_row_into_table renamed to
+	gda_insert_row_into_table_from_string; and added gda_insert_row_into_table wich spect
+	for GValue pointers instead strings, this is for powerfull insert row mecanish and 
+	avoid miss operations in string to GValue convertions.
+	
+	Improved Convenient Functions's Error messages 
+	
+	Added a new convenient function: gda_delete_row_from_table
+	
 2006-10-08  Vivien Malerba <malerba@gnome-db.org>
 
 	* doc/C: documentation cleanups and improvements

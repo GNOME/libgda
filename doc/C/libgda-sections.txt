@@ -518,6 +518,9 @@ gda_data_proxy_get_sample_start
 gda_data_proxy_get_sample_end
 gda_data_proxy_apply_all_changes
 gda_data_proxy_cancel_all_changes
+gda_data_proxy_assign_model_col
+gda_data_proxy_get_assigned_model_col
+gda_data_proxy_clear_model_row_value
 <SUBSECTION Standard>
 GDA_DATA_PROXY
 GDA_DATA_PROXY_CLASS
@@ -2455,6 +2458,8 @@ gda_execute_sql_command
 gda_create_table
 gda_drop_table
 gda_insert_row_into_table
+gda_insert_row_into_table_from_string
 gda_update_value_in_table
 gda_update_values_in_table
+gda_delete_row_from_table
 </SECTION>

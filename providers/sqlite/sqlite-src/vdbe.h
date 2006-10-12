@@ -69,7 +69,9 @@ typedef struct VdbeOpList VdbeOpList;
 #define P3_KEYINFO  (-6)  /* P3 is a pointer to a KeyInfo structure */
 #define P3_VDBEFUNC (-7)  /* P3 is a pointer to a VdbeFunc structure */
 #define P3_MEM      (-8)  /* P3 is a pointer to a Mem*    structure */
-#define P3_TRANSIENT (-9)  /* P3 is a pointer to a transient string */
+#define P3_TRANSIENT (-9) /* P3 is a pointer to a transient string */
+#define P3_VTAB     (-10) /* P3 is a pointer to an sqlite3_vtab structure */
+#define P3_MPRINTF  (-11) /* P3 is a string obtained from sqlite3_mprintf() */
 
 /* When adding a P3 argument using P3_KEYINFO, a copy of the KeyInfo structure
 ** is made.  That copy is freed when the Vdbe is finalized.  But if the
@@ -117,6 +119,7 @@ int sqlite3VdbeAddOpList(Vdbe*, int nOp, VdbeOpList const *aOp);
 void sqlite3VdbeChangeP1(Vdbe*, int addr, int P1);
 void sqlite3VdbeChangeP2(Vdbe*, int addr, int P2);
 void sqlite3VdbeJumpHere(Vdbe*, int addr);
+void sqlite3VdbeChangeToNoop(Vdbe*, int addr, int N);
 void sqlite3VdbeChangeP3(Vdbe*, int addr, const char *zP1, int N);
 VdbeOp *sqlite3VdbeGetOp(Vdbe*, int);
 int sqlite3VdbeMakeLabel(Vdbe*);

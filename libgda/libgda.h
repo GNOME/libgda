@@ -126,6 +126,9 @@ GdaConnection*      gda_open_connection        (const gchar *dsn,
 gboolean            gda_insert_row_into_table  (GdaConnection *cnn, 
 						const gchar *table_name, 
 						GError **error, ...);
+gboolean            gda_insert_row_into_table_from_string  (GdaConnection *cnn, 
+						const gchar *table_name, 
+						GError **error, ...);
 gboolean            gda_update_value_in_table  (GdaConnection *cnn, 
 						const gchar *table_name, 
 						const gchar *search_for_column, 
@@ -137,6 +140,9 @@ gboolean            gda_update_values_in_table (GdaConnection *cnn,
 						const gchar *condition_column_name, 
 						const GValue *condition, 
 						GError **error, ...);
+gboolean            gda_delete_row_from_table (GdaConnection *cnn, const gchar *table_name, 
+					       const gchar *condition_column_name, const GValue *condition, 
+					       GError **error);
 
 GdaDataModel*       gda_execute_select_command (GdaConnection *cnn, const gchar *sql, 
 						GError **error);

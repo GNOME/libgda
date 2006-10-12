@@ -454,7 +454,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			sres = g_new0 (SQLITEresult, 1);
 
 			status = sqlite3_prepare (scnc->connection, arr [n], -1, &(sres->stmt), &left);
-			g_print ("SQlite SQL: %s (REMAIN:%s)\n", arr [n], left);
+			if (left && (*left != 0))
+				g_warning ("SQlite SQL: %s (REMAIN:%s)\n", arr [n], left);
+
 			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS ||
 			    status == SQLITE_OK) {
 				gchar *tststr;

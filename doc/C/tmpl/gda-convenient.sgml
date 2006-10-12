@@ -88,6 +88,18 @@ Do quickly some actions
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_insert_row_into_table_from_string ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@table_name: 
+@error: 
+@Varargs: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_update_value_in_table ##### -->
 <para>
 
@@ -114,6 +126,19 @@ Do quickly some actions
 @condition: 
 @error: 
 @Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_delete_row_from_table ##### -->
+<para>
+
+</para>
+
+@cnn: 
+@table_name: 
+@condition_column_name: 
+@condition: 
+@error: 
 @Returns: 
 
 

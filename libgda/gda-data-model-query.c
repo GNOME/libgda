@@ -419,6 +419,12 @@ gda_data_model_query_set_property (GObject *object,
 											   GINT_TO_POINTER (num + 1));
 								g_object_set_data ((GObject*) params->data, "_num",
 										   GINT_TO_POINTER (num + 1));
+								GdaColumn *col;
+								col = gda_data_model_describe_column (model, num);
+								if (col) 
+									gda_parameter_set_not_null 
+										((GdaParameter *)(params->data),
+										 !gda_column_get_allow_null (col));
 							}
 							else {
 								if (pname && model->priv->params [SEL_QUERY]) {
@@ -968,6 +974,7 @@ gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	if (!p_used)
 		flags |= GDA_VALUE_ATTR_NO_MODIF;
 	else {
+		flags &= ~GDA_VALUE_ATTR_NO_MODIF;
 		flags &= ~GDA_VALUE_ATTR_CAN_BE_NULL;
 		flags &= ~GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 		if (! gda_parameter_get_not_null (p_used))
@@ -975,6 +982,8 @@ gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
 		if (gda_parameter_get_default_value (p_used))
 			flags |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 	}
+
+	/*g_print ("%d,%d: %d\n", col, row, flags);*/
 
 	return flags;
 }

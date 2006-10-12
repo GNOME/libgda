@@ -412,6 +412,7 @@
 
     <chapter id="init_config">
       <title>Initialization and configuration</title>
+      <para>Configuration examples are given in <link linkend="installation-configuring">this introduction section</link></para>
       &libgda-init;
       &libgda-config;
     </chapter>
