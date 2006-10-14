@@ -208,8 +208,8 @@ gda_main_quit (void)
 }
 
 /*
-* Convenient Functions
-*/
+ * Convenient Functions
+ */
 
 
 /* module error */
@@ -234,21 +234,21 @@ GQuark gda_general_error_quark (void)
 GdaDataModel *          
 gda_execute_select_command (GdaConnection *cnn, const gchar *sql, GError **error)
 {
-    GdaCommand *cmd;
-    GdaDataModel *model;
+	GdaCommand *cmd;
+	GdaDataModel *model;
     
-    g_return_val_if_fail (sql != NULL 
-			  || GDA_IS_CONNECTION (cnn) 
-			  || !gda_connection_is_opened (cnn)
-			  || g_str_has_prefix (sql, "SELECT"),
-			  NULL);
+	g_return_val_if_fail (sql != NULL 
+			      || GDA_IS_CONNECTION (cnn) 
+			      || !gda_connection_is_opened (cnn)
+			      || g_str_has_prefix (sql, "SELECT"),
+			      NULL);
     
-    cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
     
-    model = gda_connection_execute_select_command (cnn, cmd, NULL, error);
-    gda_command_free (cmd);
+	model = gda_connection_execute_select_command (cnn, cmd, NULL, error);
+	gda_command_free (cmd);
 
-    return model;
+	return model;
 }
 
 /**
@@ -264,15 +264,15 @@ gda_execute_select_command (GdaConnection *cnn, const gchar *sql, GError **error
 gint
 gda_execute_sql_command (GdaConnection *cnn, const gchar *sql, GError **error)
 {
-    GdaCommand *cmd;
+	GdaCommand *cmd;
     
-    g_return_val_if_fail (sql != NULL 
-			  || GDA_IS_CONNECTION (cnn) 
-			  || !gda_connection_is_opened (cnn), -1);
+	g_return_val_if_fail (sql != NULL 
+			      || GDA_IS_CONNECTION (cnn) 
+			      || !gda_connection_is_opened (cnn), -1);
     
-    cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	cmd = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
     
-    return gda_connection_execute_non_select_command(cnn, cmd, NULL, error);
+	return gda_connection_execute_non_select_command(cnn, cmd, NULL, error);
     
 }
 
@@ -282,25 +282,26 @@ gda_execute_sql_command (GdaConnection *cnn, const gchar *sql, GError **error)
  * @table_name:
  * @num_columns
  * @error: a place to store errors, or %NULL
- * @...: pairs of column name and GType, finish with -1
+ * @...: pairs of column name and #GType, finish with NULL
  * 
  * Create a Table over an opened connection using a pair list of colum name and 
- * GType as arguments, you need to finish the list using -1.
+ * GType as arguments, you need to finish the list using NULL.
  *
  * This is just a convenient function to create tables quickly, 
- * using defaults for the provider and convertin the GType passed to corresponding 
- * type in the provider; to use a custom type or more
- * advanced characteristics in a specific provider use the #GdaServerOperation framework.
+ * using defaults for the provider and converting the #GType passed to the corresponding 
+ * type in the provider; to use a custom type or more advanced characteristics in a 
+ * specific provider use the #GdaServerOperation framework.
  *
- * Returns: TRUE if the table was created
+ * Returns: TRUE if the table was created; FALSE and set @error otherwise
  */
 gboolean
-gda_create_table (GdaConnection *cnn, const gchar *table_name, gint num_columns, 
-		  GError **error, ...)
+gda_create_table (GdaConnection *cnn, const gchar *table_name, GError **error, ...)
 {
 	GdaServerOperation *op;
 	GdaServerProvider *server;
-	gboolean retval = TRUE;
+	
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnn), FALSE);
+	g_return_val_if_fail (gda_connection_is_opened (cnn), FALSE);
 	
 	server = gda_connection_get_provider_obj(cnn);
 	
@@ -315,14 +316,14 @@ gda_create_table (GdaConnection *cnn, const gchar *table_name, gint num_columns,
 		xmlNodePtr root;
 		xmlNodePtr table, op_data, array_data, array_row, array_value;
 		
-		gint ncol;
+		if (table_name == NULL) {
+			g_message("Table name is NULL!");      
+			g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
+				    "Couldn't create table with a NULL string");
+			return FALSE;    
+		}
 		
-		g_return_val_if_fail (table_name != NULL 
-				      || num_columns > 0 
-				      || !gda_connection_is_opened (cnn), FALSE);
-		
-		
-		
+	
 		/* Initation of the xmlDoc */
 		parameters = xmlNewDoc ("1.0");
 		
@@ -339,27 +340,19 @@ gda_create_table (GdaConnection *cnn, const gchar *table_name, gint num_columns,
 		type = 0;
 		arg = NULL;
 		
-		for (ncol = 0; ncol < num_columns; ncol++) {
-			arg = va_arg (args, gchar*);
-
-			if (arg == NULL) {
-				g_message ("Error the number of columns are incorrect; couldn't create the table");
-				break;
-			}
-			
+		while ((arg = va_arg (args, gchar*))) {
+			g_message("Getting the arguments...");			
 			type = va_arg (args, GType);
 			if (type == 0) {
-				g_message("Error the number of arguments are incorrect; couldn't create the table");
-				break;
+				g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
+					    "Error the number of arguments are incorrect; couldn't create the table");
+				g_object_unref (op);
+				xmlFreeDoc(parameters);
+				return FALSE;
 			}
 			
 			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server, 
 											 cnn, type);
-			
-#ifdef GDA_DEBUG_NO
-			g_message("create_table: argument pair #%d 'column name' = '%s'\n   'type' = '%d' dbms_type = '%s'", ncol, arg, (int) type, dbms_type);
-#endif			
-		    
 			array_row = xmlNewChild (array_data, NULL, "gda_array_row", NULL);
 			array_value = xmlNewChild (array_row, NULL, "gda_array_value", arg);
 			xmlSetProp (array_value, "colid", "COLUMN_NAME");
@@ -371,31 +364,34 @@ gda_create_table (GdaConnection *cnn, const gchar *table_name, gint num_columns,
 		
 		va_end(args);
 		
-#ifdef GDA_DEBUG_NO
-		gchar* buffer; 
-		gint   buffer_s ize;
-		xmlKeepBlanksDefault (0);
-		xmlDocDumpFormatMemory (parameters, &buffer, &buffer_size, 1);
-		g_message ("XML to Create New Table:\n%s", buffer);
-		xmlFree (buffer);
-#endif		
-		
-		if (!gda_server_operation_load_data_from_xml (op, root, error))
+		if (!gda_server_operation_load_data_from_xml (op, root, error)) {
 			/* error */
-			retval = FALSE;
-		else {
-			if (gda_server_provider_perform_operation (server, cnn, op, error))
-				/* error */
-				retval = FALSE;
+			g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OPERATION_ERROR, 
+				     "The XML operation doesn't exist or could't be loaded");
+			g_object_unref (op);
+			xmlFreeDoc(parameters);
+			return FALSE;
 		}
+		else {
+			if (gda_server_provider_perform_operation (server, cnn, op, error)) {
+				/* error */
+				g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OPERATION_ERROR, 
+					    "The Server couldn't perform the CREATE TABLE operation!");
+				g_object_unref (op);
+				xmlFreeDoc(parameters);
+				return FALSE;
+			}
+		}
+		
 		g_object_unref (op);
+		xmlFreeDoc(parameters);
 	}
 	else {
-		g_message("The Server doesn't support the CREATE TABLE operation!\n\n");
-		retval = FALSE;
+		g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
+			    "The Server doesn't support the CREATE TABLE operation!");
+		return FALSE;
 	}
-
-	return retval;
+	return TRUE;
 }
 
 /**
@@ -435,23 +431,21 @@ gda_drop_table (GdaConnection *cnn, const gchar *table_name, GError **error)
 		table = xmlNewChild (root, NULL, "op_data", table_name);
 		xmlSetProp (table, "path", "/TABLE_DESC_P/TABLE_NAME");
 	    
-#ifdef GDA_DEBUG
-		gchar *buffer;
-		gint   buffer_size;
-		xmlKeepBlanksDefault (0);
-		xmlDocDumpFormatMemory (parameters, &buffer, &buffer_size, 1);
-		g_message ("XML to Create New Table:\n%s", buffer);
-		xmlFree (buffer);
-#endif
-		if (!gda_server_operation_load_data_from_xml (op, root, error))
+		if (!gda_server_operation_load_data_from_xml (op, root, error)) {
 			/* error */
+			g_object_unref (op);
+			xmlFreeDoc(parameters);
 			retval = FALSE;
+		}
 		else {
 			if (gda_server_provider_perform_operation (server, cnn, op, error))
 				/* error */
-				retval = FALSE;
+				g_object_unref (op);
+		        xmlFreeDoc(parameters);
+			return FALSE;
 		}
 		g_object_unref (op);
+		xmlFreeDoc(parameters);
 	}
 	else {
 		g_message("The Server doesn't support the DROP TABLE operation!\n\n");
@@ -536,10 +530,10 @@ gda_insert_row_into_table_from_string (GdaConnection *cnn, const gchar *table_na
 	
 	/* Getting the Table from the Dictionary */
 	table = gda_dict_database_get_table_by_name (db, table_name);
-	if (!GDA_IS_DICT_TABLE (table)) {
+	if(!GDA_IS_DICT_TABLE(table)) {
 		g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
 			     "The table '%s' doesn't exist", table_name);
-		g_object_unref (dict);
+		g_object_unref (G_OBJECT(dict));
 		return FALSE;
 	}
     
@@ -551,8 +545,8 @@ gda_insert_row_into_table_from_string (GdaConnection *cnn, const gchar *table_na
 	GdaValueArgument *ra;
     
 	va_start (args, error);
-	table_fields = gda_entity_get_fields (GDA_ENTITY (table));
-    	while ((arg = va_arg (args, gchar*))) {
+	table_fields = gda_entity_get_fields (GDA_ENTITY(table));
+	while ((arg = va_arg (args, gchar*))) {
 		GdaDictField *tfield;
         
 		ra = g_new0 (GdaValueArgument, 1);
@@ -560,24 +554,27 @@ gda_insert_row_into_table_from_string (GdaConnection *cnn, const gchar *table_na
 		flist = table_fields;
 		while(flist) {
 			tfield = GDA_DICT_FIELD (flist->data);
-			if (g_str_equal(arg, gda_object_get_name (GDA_OBJECT (tfield))))
+			if (g_str_equal (arg, gda_object_get_name (GDA_OBJECT (tfield))))
 				break;
-			flist = g_slist_next(flist);
+			flist = g_slist_next (flist);
 		}
         
 		if(flist) {
-			arg = va_arg(args, gchar*);
+			arg = va_arg (args, gchar*);
 			ra->value = gda_value_new_from_string (arg, 
-					  gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)));
+							       gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)));
 			values = g_list_prepend (values, ra);
 		}
 		else {
 			g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
 				    "The column '%s' doesn't exist in the table '%s'", arg, table_name);
-			g_object_unref (dict);
+			if (values)
+				g_list_free (values);
+			g_free (ra);
+			g_object_unref (G_OBJECT(dict));
 			return FALSE;
 		}
-		values = g_list_prepend(values, ra);
+		values = g_list_prepend (values, ra);
 	}
 
 	/* Constructing the INSERT GdaQuery */
@@ -621,33 +618,33 @@ gda_insert_row_into_table_from_string (GdaConnection *cnn, const gchar *table_na
 						    NULL);
 			gda_object_set_name (GDA_OBJECT (qfieldfield), 
 					     gda_object_get_name (GDA_OBJECT (tfield)));
-		    gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (qfieldfield));
+			gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (qfieldfield));
 
-		    /* Set the value asociated with that field; 
-		       part of the VALUES in the INSERT command */
-		    qfieldvalue = (GdaQueryFieldValue *) gda_query_field_value_new (query, 
-				  gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)));
-		    gda_query_field_set_visible (GDA_QUERY_FIELD (qfieldvalue), FALSE);
-		    str = g_strdup_printf ("+%d", i++);
-		    gda_object_set_name (GDA_OBJECT (qfieldvalue), str);
-		    g_free (str);
-		    gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
-							    TRUE);
-		    gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
-							!gda_dict_field_is_null_allowed (tfield));
-		    ar = (GdaValueArgument*) vlist->data;
+			/* Set the value asociated with that field; 
+			   part of the VALUES in the INSERT command */
+			qfieldvalue = (GdaQueryFieldValue *) gda_query_field_value_new (query, 
+											gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)));
+			gda_query_field_set_visible (GDA_QUERY_FIELD (qfieldvalue), FALSE);
+			str = g_strdup_printf ("+%d", i++);
+			gda_object_set_name (GDA_OBJECT (qfieldvalue), str);
+			g_free (str);
+			gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
+								TRUE);
+			gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
+							    !gda_dict_field_is_null_allowed (tfield));
+			ar = (GdaValueArgument*) vlist->data;
 		    
-		    if (G_IS_VALUE (ar->value))
-			    gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
-							     ar->value);
-		    else
-			    gda_query_field_value_set_default_value (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
-								     gda_dict_field_get_default_value (tfield));            
-		    gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (qfieldvalue));
-		    g_object_set (qfieldfield, "value-provider", qfieldvalue, NULL);
+			if (G_IS_VALUE (ar->value))
+				gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
+								 ar->value);
+			else
+				gda_query_field_value_set_default_value (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
+									 gda_dict_field_get_default_value (tfield));            
+			gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (qfieldvalue));
+			g_object_set (qfieldfield, "value-provider", qfieldvalue, NULL);
 		    
-		    g_object_unref (G_OBJECT (qfieldvalue));
-		    g_object_unref (G_OBJECT (qfieldfield));
+			g_object_unref (G_OBJECT (qfieldvalue));
+			g_object_unref (G_OBJECT (qfieldfield));
 		}
         
 		flist = g_slist_next (flist);
@@ -703,10 +700,10 @@ gda_insert_row_into_table (GdaConnection *cnn, const gchar *table_name, GError *
 	
 	/* Getting the Table from the Dictionary */
 	table = gda_dict_database_get_table_by_name (db, table_name);
-	if(!GDA_IS_DICT_TABLE(table)) {
-		g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
-			    "The table '%s' doesn't exist", table_name);
-		g_object_unref (dict);
+	if(!GDA_IS_DICT_TABLE (table)) {
+		g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
+			     "The table '%s' doesn't exist", table_name);
+		g_object_unref (G_OBJECT(dict));
 		return FALSE;
 	}
     
@@ -730,13 +727,14 @@ gda_insert_row_into_table (GdaConnection *cnn, const gchar *table_name, GError *
 			tfield = GDA_DICT_FIELD (flist->data);
 			if (g_str_equal (arg, gda_object_get_name (GDA_OBJECT (tfield))))
 				break;
-			flist = flist->next;
+			flist = g_slist_next (flist);
 		}
         
 		if (flist) {
 			val = va_arg (args, GValue*);
             
 			if (G_IS_VALUE (val)) {
+	                                    
 				if (G_VALUE_TYPE (val) == 
 				    gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))) {
 					ra->value = gda_value_copy (val);
@@ -748,24 +746,29 @@ gda_insert_row_into_table (GdaConnection *cnn, const gchar *table_name, GError *
 						     g_type_name (G_VALUE_TYPE (val)),
 						     gda_object_get_name (GDA_OBJECT(tfield)), 
 						     g_type_name (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))));
-					g_object_unref (dict);
+					
+					if (values)
+						g_list_free(values);
+					g_free (ra);
+					g_object_unref (G_OBJECT(dict));
 					return FALSE;
 				}
 			}
 			else {
 				g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
-					    "The Given Argument Value is invalid");
-				g_object_unref (dict);
+					     "The Given Argument Value is invalid");
+				g_free (ra);
+				g_object_unref (G_OBJECT(dict));
 				return FALSE;
 			}
 		}
 		else {
 			g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
 				     "The column '%s' doesn't exist in the table '%s'", arg, table_name);
-			g_object_unref (dict);
+			g_object_unref (G_OBJECT(dict));
 			return FALSE;
 		}
-		values = g_list_prepend (values, ra);
+		values = g_list_prepend(values, ra);
 	}
 
 	/* Constructing the INSERT GdaQuery */
@@ -810,11 +813,11 @@ gda_insert_row_into_table (GdaConnection *cnn, const gchar *table_name, GError *
 			gda_object_set_name (GDA_OBJECT (qfieldfield), 
 					     gda_object_get_name (GDA_OBJECT (tfield)));
 			gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (qfieldfield));
-			
+
 			/* Set the value asociated with that field; 
 			   part of the VALUES in the INSERT command */
 			qfieldvalue = (GdaQueryFieldValue *) gda_query_field_value_new (query, 
-							     gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)));
+											gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)));
 			gda_query_field_set_visible (GDA_QUERY_FIELD (qfieldvalue), FALSE);
 			str = g_strdup_printf ("+%d", i++);
 			gda_object_set_name (GDA_OBJECT (qfieldvalue), str);
@@ -824,7 +827,7 @@ gda_insert_row_into_table (GdaConnection *cnn, const gchar *table_name, GError *
 			gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
 							    !gda_dict_field_is_null_allowed (tfield));
 			ar = (GdaValueArgument*) vlist->data;
-			
+		    
 			if (G_IS_VALUE (ar->value))
 				gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
 								 ar->value);
@@ -833,7 +836,7 @@ gda_insert_row_into_table (GdaConnection *cnn, const gchar *table_name, GError *
 									 gda_dict_field_get_default_value (tfield));            
 			gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (qfieldvalue));
 			g_object_set (qfieldfield, "value-provider", qfieldvalue, NULL);
-			
+		    
 			g_object_unref (G_OBJECT (qfieldvalue));
 			g_object_unref (G_OBJECT (qfieldfield));
 		}
@@ -879,6 +882,9 @@ gboolean
 gda_delete_row_from_table (GdaConnection *cnn, const gchar *table_name, const gchar *condition_column_name, 
 			   const GValue *condition, GError **error)
 {
+    
+	/**************** Setting up the table to delete from ***********************/
+	
 	GdaDict         *dict;
 	GdaDictDatabase *db;
 	GdaDictTable    *table;
@@ -886,28 +892,29 @@ gda_delete_row_from_table (GdaConnection *cnn, const gchar *table_name, const gc
 	/* Setting up the Dictionary for the connection */
 	dict = gda_dict_new ();
 	gda_dict_set_connection (dict, cnn);
-	
+    
 	db = gda_dict_get_database (dict);
-	
+    
 	gda_dict_update_dbms_meta_data (dict, GDA_TYPE_DICT_TABLE, table_name, NULL);
-	
+    
 	/* Getting the Table from the Dictionary */
-	table = gda_dict_database_get_table_by_name (db, table_name);	
-	if (!GDA_IS_DICT_TABLE (table)) {
-		g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
-			    "The table '%s' doesn't exist", table_name);
-		g_object_unref (dict);
+	table = gda_dict_database_get_table_by_name (db, table_name);
+	if(!GDA_IS_DICT_TABLE (table)) {
+		g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
+			     "The table '%s' doesn't exist", table_name);
+		g_object_unref (G_OBJECT(dict));
 		return FALSE;
 	}
     
- 	/* Constructing the DELETE GdaQuery */
+ 
+	/************** Constructing the DELETE GdaQuery *************************/
 	GdaQuery        *query;
 	GdaQueryTarget  *target;
 	GSList          *table_fields = NULL, *flist = NULL;
 	GdaQueryFieldField *fcond;
 	GdaQueryFieldValue *condvalue;
 	GdaQueryCondition    *cond, *newcond;
-	
+    
 	gint i;
     
 	query = gda_query_new (dict);
@@ -915,19 +922,19 @@ gda_delete_row_from_table (GdaConnection *cnn, const gchar *table_name, const gc
 	target = gda_query_target_new (query, table_name);
 	gda_query_add_target (query, target, NULL);
     
-	table_fields = gda_entity_get_fields (GDA_ENTITY (table));
+	table_fields = gda_entity_get_fields (GDA_ENTITY(table));
     
 	cond = gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_AND);
     
 	flist = table_fields;
 	i = 0;
-	while (flist) {
+	while(flist) {
 		GdaDictField *tfield;
-	   	gchar *str;
+		gchar *str;
 	    	                    
 		tfield = GDA_DICT_FIELD (flist->data);
 
-		if (g_str_equal (condition_column_name, gda_object_get_name (GDA_OBJECT(tfield)))) {
+		if (g_str_equal(condition_column_name, gda_object_get_name (GDA_OBJECT(tfield)))) {
 			if (G_IS_VALUE (condition)) {
 				/* Set the field in the DELETE FROM table_name WHERE field */
 				fcond = g_object_new (GDA_TYPE_QUERY_FIELD_FIELD,
@@ -939,39 +946,41 @@ gda_delete_row_from_table (GdaConnection *cnn, const gchar *table_name, const gc
 				gda_object_set_name (GDA_OBJECT (fcond), gda_object_get_name (GDA_OBJECT (tfield)));
 	   	        
 				condvalue = GDA_QUERY_FIELD_VALUE (gda_query_field_value_new (query, 
-							 gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))));
+											      gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))));
 				gda_query_field_set_visible (GDA_QUERY_FIELD (condvalue), FALSE);
 				str = g_strdup_printf ("-%d", i++);
 				gda_object_set_name (GDA_OBJECT (condvalue), str);
 				g_free (str);
 	               
+	               
 				gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (condvalue), TRUE);
 				gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (condvalue), 
 								    !gda_dict_field_is_null_allowed (tfield));
 	            								    
-				if (G_VALUE_TYPE (condition) == gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)))
-					gda_query_field_value_set_value(GDA_QUERY_FIELD_VALUE(condvalue), condition);
+				if(G_VALUE_TYPE (condition) == gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)))
+					gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (condvalue), condition);
 				else {
 					g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
-						     "The given Condition Value's Type '%s', doesn't correspond "
-						     "with the field '%s''s type: '%s'",
-						     g_type_name (G_VALUE_TYPE (condition)), 
-						     gda_object_get_name (GDA_OBJECT (tfield)),
-						     g_type_name (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))));
-					g_object_unref (dict);
+						     "The given Condition Value is invalid");
+					g_object_unref (fcond);
+					g_object_unref (condvalue);
+					g_object_unref (cond);
+					g_object_unref (G_OBJECT(dict));
 					return FALSE;
 				}
 			}
 			else {
 				g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
 					     "The given Condition Value is invalid");
-				g_object_unref (dict);
+				g_object_unref (cond);
+				g_object_unref (G_OBJECT(dict));
 				return FALSE;
 			}
 	        
-			newcond = gda_query_condition_new (query, GDA_QUERY_CONDITION_LEAF_EQUAL);
+			newcond = gda_query_condition_new(query, GDA_QUERY_CONDITION_LEAF_EQUAL);
 			gda_query_condition_leaf_set_operator (newcond, GDA_QUERY_CONDITION_OP_LEFT, GDA_QUERY_FIELD (fcond));
 			gda_query_condition_leaf_set_operator (newcond, GDA_QUERY_CONDITION_OP_RIGHT, GDA_QUERY_FIELD (condvalue));
+            
 			gda_query_condition_node_add_child (cond, newcond, NULL);
 	        
 			g_object_unref (newcond);
@@ -979,12 +988,14 @@ gda_delete_row_from_table (GdaConnection *cnn, const gchar *table_name, const gc
 			g_object_unref (fcond);
 		}
         
+        
 		flist = g_slist_next (flist);
-	}
+	} 
     
 	gda_query_set_condition (query, cond);
 	g_object_unref (cond);
     
+      
 	/* Execute the GdaQuery */
 	gda_query_execute (query, NULL, FALSE, error);
     
@@ -992,7 +1003,8 @@ gda_delete_row_from_table (GdaConnection *cnn, const gchar *table_name, const gc
 	g_object_unref (G_OBJECT (query));
 	g_object_unref (G_OBJECT (dict));
     
-	if (error)
+    
+	if(error)
 		return FALSE;
 	else 
 		return TRUE;
@@ -1008,7 +1020,6 @@ gda_delete_row_from_table (GdaConnection *cnn, const gchar *table_name, const gc
  * @column_name: the column containing the value to be updated
  * @new_value: the new value to update to; the @GValue must correspond with the GType of the column to update
  * @error: a place to store errors, or %NULL
- * @...: a list of strings to be converted as value, finished by %NULL
  * 
  * This is just a convenient function to update values in a table on a given column where
  * the row is fitting the given condition.
@@ -1042,7 +1053,7 @@ gda_update_value_in_table (GdaConnection *cnn,
 	if (!GDA_IS_DICT_TABLE (table)) {
 		g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
 			    "The table '%s' doesn't exist", table_name);
-		g_object_unref (dict);
+		g_object_unref (G_OBJECT(dict));
 		return FALSE;
 	}
     
@@ -1061,6 +1072,7 @@ gda_update_value_in_table (GdaConnection *cnn,
 	gda_query_add_target (query, target, NULL);
 	table_fields = gda_entity_get_fields (GDA_ENTITY(table));
 	cond = gda_query_condition_new(query, GDA_QUERY_CONDITION_NODE_AND);
+	
 	flist = table_fields;
 	i = 0;
     
@@ -1090,7 +1102,7 @@ gda_update_value_in_table (GdaConnection *cnn,
 				/* Set the value asociated with that field; 
 				   part of the SET field = value in the UPDATE command */
 				qfieldvalue = (GdaQueryFieldValue *) gda_query_field_value_new (query, 
-					      gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)));
+												gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)));
 				gda_query_field_set_visible (GDA_QUERY_FIELD (qfieldvalue), FALSE);
 				str = g_strdup_printf ("+%d", i++);
 				gda_object_set_name (GDA_OBJECT (qfieldvalue), str);
@@ -1099,7 +1111,7 @@ gda_update_value_in_table (GdaConnection *cnn,
 				gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (qfieldvalue), 
 	    							    !gda_dict_field_is_null_allowed (tfield));
     
-				if (G_VALUE_TYPE(new_value) == gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)))
+				if(G_VALUE_TYPE(new_value) == gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield)))
 					gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (qfieldvalue), new_value);
 				else {
 					g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
@@ -1108,9 +1120,10 @@ gda_update_value_in_table (GdaConnection *cnn,
 						    gda_object_get_name (GDA_OBJECT(tfield)), 
 						    g_type_name (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))));
 					
-					g_object_unref (dict);
 					g_object_unref (G_OBJECT (qfieldvalue));
 					g_object_unref (G_OBJECT (qfieldfield));
+					g_object_unref (G_OBJECT (cond));
+					g_object_unref (G_OBJECT (dict));
 					return FALSE;
 				}
         		    
@@ -1123,14 +1136,15 @@ gda_update_value_in_table (GdaConnection *cnn,
 			}
 			else {
 				g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
-					    "The given Argument Value is invalid");
-				g_object_unref (dict);
+					     "The given Argument Value is invalid");
+				g_object_unref (G_OBJECT (cond));
+				g_object_unref (G_OBJECT (dict));
 				return FALSE;
 			}
 		}
         
 		if (g_str_equal (search_for_column, gda_object_get_name (GDA_OBJECT (tfield)))) {
-			if (G_IS_VALUE (condition)) {
+			if(G_IS_VALUE(condition)) {
 				/* Set the field in the UPDATE table_name WHERE field */
 				fcond = g_object_new (GDA_TYPE_QUERY_FIELD_FIELD,
 						      "dict", dict,
@@ -1161,14 +1175,16 @@ gda_update_value_in_table (GdaConnection *cnn,
 						    g_type_name (G_VALUE_TYPE (condition)),
 						    gda_object_get_name (GDA_OBJECT(tfield)),
 						    g_type_name (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))));
-					g_object_unref (dict);
+					g_object_unref (G_OBJECT (cond));
+					g_object_unref (G_OBJECT (dict));
 					return FALSE;
 				}
 			}
 			else {
 				g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
 					    "The given Condition Value is invalid");
-				g_object_unref (dict);
+				g_object_unref (G_OBJECT (cond));
+				g_object_unref (G_OBJECT (dict));
 				return FALSE;
 			}
 	        
@@ -1180,8 +1196,8 @@ gda_update_value_in_table (GdaConnection *cnn,
 			gda_query_condition_node_add_child (cond, newcond, NULL);
 			
 			g_object_unref (newcond);
-			g_object_unref (condvalue);
-			g_object_unref (fcond);
+			g_object_unref(condvalue);
+			g_object_unref(fcond);
 		}
         
 		flist = g_slist_next (flist);
@@ -1193,11 +1209,12 @@ gda_update_value_in_table (GdaConnection *cnn,
 	/* Execute the GdaQuery */
 	gda_query_execute (query, NULL, FALSE, error);
     
-	g_object_unref(G_OBJECT (target));
-	g_object_unref(G_OBJECT (query));
-	g_object_unref(G_OBJECT (dict));
+	g_object_unref (G_OBJECT (target));
+	g_object_unref (G_OBJECT (query));
+	g_object_unref (G_OBJECT (cond));
+	g_object_unref (G_OBJECT (dict));
 	
-	if (error)
+	if(error)
 		return FALSE;
 	else
 		return TRUE;
@@ -1246,7 +1263,7 @@ gda_update_values_in_table (GdaConnection *cnn, const gchar *table_name,
         if (!GDA_IS_DICT_TABLE (table)) {
 		g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
 			    "The table '%s' doesn't exist", table_name);
-		g_object_unref (dict);
+		g_object_unref (G_OBJECT(dict));
 		return FALSE;
 	}
     
@@ -1271,7 +1288,7 @@ gda_update_values_in_table (GdaConnection *cnn, const gchar *table_name,
 			tfield = GDA_DICT_FIELD (flist->data);
 			if (g_str_equal (arg, gda_object_get_name (GDA_OBJECT(tfield))))
 				break;
-			flist = g_slist_next(flist);
+			flist = g_slist_next (flist);
 		}
         
 		if (flist) {
@@ -1290,21 +1307,30 @@ gda_update_values_in_table (GdaConnection *cnn, const gchar *table_name,
 						     g_type_name (G_VALUE_TYPE (val)),
 						     gda_object_get_name (GDA_OBJECT(tfield)),
 						     g_type_name (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))));
-					g_object_unref (dict);
+					if (values)
+						g_list_free(values);
+					g_free(ra);
+					g_object_unref (G_OBJECT(dict));
 					return FALSE;
 				}
 			}
 			else {
 				g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
-					    "The Given Argument Value is invalid");
-				g_object_unref (dict);
+					     "The Given Argument Value is invalid");
+				if (values)
+					g_list_free(values);
+				g_free(ra);
+				g_object_unref (G_OBJECT(dict));
 				return FALSE;
 			}
 		}
 		else {
 			g_set_error (error, GDA_GENERAL_ERROR, GDA_GENERAL_OBJECT_NAME_ERROR, 
 				     "The column '%s' doesn't exist in the table '%s'", arg, table_name);
-			g_object_unref (dict);
+			if (values)
+				g_list_free(values);
+			g_free(ra);
+			g_object_unref (G_OBJECT(dict));
 			return FALSE;
 		}
 	}
@@ -1418,7 +1444,7 @@ gda_update_values_in_table (GdaConnection *cnn, const gchar *table_name,
 						     g_type_name (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (tfield))));
 					g_object_unref (condvalue);
 					g_object_unref (fcond);
-					g_object_unref (dict);
+					g_object_unref (G_OBJECT(dict));
 					return FALSE;
 				}
 				newcond = gda_query_condition_new (query, 
@@ -1439,7 +1465,7 @@ gda_update_values_in_table (GdaConnection *cnn, const gchar *table_name,
 			else {
 				g_set_error(error, GDA_GENERAL_ERROR, GDA_GENERAL_INCORRECT_VALUE_ERROR, 
 					    "The given Condition Value is invalid");
-				g_object_unref (dict);
+				g_object_unref (G_OBJECT (dict));
 				return FALSE;
 			}
 		}
@@ -1450,13 +1476,15 @@ gda_update_values_in_table (GdaConnection *cnn, const gchar *table_name,
 	g_object_unref (cond);
     
 	/* Execute the GdaQuery */
+	/*g_print("===> SQL update Values is %s \n", gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 0, NULL) ); */
 	gda_query_execute (query, NULL, FALSE, error);
     
 	g_object_unref (G_OBJECT (target));
 	g_object_unref (G_OBJECT (query));
+	g_object_unref (G_OBJECT (cond));
 	g_object_unref (G_OBJECT (dict));
     
-	if (error)
+	if(error)
 		return FALSE;
 	else 
 		return TRUE;

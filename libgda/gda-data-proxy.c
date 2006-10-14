@@ -2131,7 +2131,7 @@ dump_extra_store (GdaDataProxy *proxy)
  * @proxy_row: a valid row number in @proxy
  * @col:
  * 
- * Retreive a value stored in @proxy using the gda_data_proxy_store_extra_value() method
+ * Retreive a value stored in @proxy using the gda_data_proxy_assign_model_col() method
  * 
  * Returns: the stored #GValue, or %NULL if no value was stored.
  */
@@ -2164,7 +2164,7 @@ gda_data_proxy_get_model_row_value (GdaDataProxy *proxy, GdaDataModel *model, gi
  * @col:
  * @value:
  * 
- * Retreive a value stored in @proxy using the gda_data_proxy_store_extra_value() method
+ * Retreive a value stored in @proxy using the gda_data_proxy_assign_model_col() method
  * 
  * Returns: the stored #GValue, or %NULL if no value was stored.
  */
@@ -2306,7 +2306,7 @@ gda_data_proxy_get_n_columns (GdaDataModel *model)
 
 
 typedef struct {
-	gchar        *name;
+	gchar *name;
 	GType  type;
 } ExtraColAttrs;
 

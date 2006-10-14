@@ -105,7 +105,8 @@ extern GQuark gda_general_error_quark (void);
 
 enum {
     GDA_GENERAL_OBJECT_NAME_ERROR,
-    GDA_GENERAL_INCORRECT_VALUE_ERROR
+    GDA_GENERAL_INCORRECT_VALUE_ERROR,
+    GDA_GENERAL_OPERATION_ERROR
 };
 
 void     gda_init             (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
@@ -150,8 +151,7 @@ gint                gda_execute_sql_command    (GdaConnection *cnn, const gchar 
 						GError **error);
 
 gboolean            gda_create_table           (GdaConnection *cnn, 
-						const gchar *table_name, gint num_columns, 
-						GError **error, ...);
+						const gchar *table_name, GError **error, ...);
 gboolean            gda_drop_table             (GdaConnection *cnn, 
 						const gchar *table_name, GError **error);
 
