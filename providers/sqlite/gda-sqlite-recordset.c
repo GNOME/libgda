@@ -22,6 +22,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <stdarg.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-sqlite.h"
@@ -133,90 +134,22 @@ gda_sqlite_recordset_get_type (void)
 	return type;
 }
 
-/*
- * the @sres struct is modified and transfered to the new data model created in
- * this function
- */
-GdaDataModel *
-gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
+
+static GType fuzzy_get_gtype (SQLITEcnc *scnc, SQLITEresult *sres, gint colnum);
+static void
+gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITEresult *sres)
 {
-	GdaSqliteRecordset *model;
-	SQLITEcnc *scnc;
 	gint i;
 	int rc;
 	gboolean end = FALSE;
-	gboolean types_done = FALSE;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (sres != NULL, NULL);
+	SQLITEcnc *scnc;
 
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
-	
-	/* completing sres */
-	sres->ncols = sqlite3_column_count (sres->stmt);
-	sres->nrows = 0;
 
-	/* model creation */
-	model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, NULL);
-	model->priv->sres = sres;
-	model->priv->cnc = cnc;
-	model->priv->ncolumns = sres->ncols;
-	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
-					   model->priv->ncolumns);
-
-	/* computing column types and titles */
-	sres->types = g_new0 (GType, sres->ncols);
-	sres->sqlite_types = g_new0 (int, sres->ncols);
-	sres->cols_size = g_new0 (int, sres->ncols);
-	gda_sqlite_update_types_hash (scnc);
-
-	/* Gda default type & column titles */
-	for (i=0; i < sres->ncols; i++) {
-		const gchar *ctype;
-		GType gtype = GDA_TYPE_NULL;
-
+	/* Column titles */
+	for (i=0; i < sres->ncols; i++)
 		gda_data_model_set_column_title (GDA_DATA_MODEL (model), i,
 						 sqlite3_column_name (sres->stmt, i));
-		sres->types [i] = GDA_TYPE_NULL;
-		sres->sqlite_types [i] = sqlite3_column_type (sres->stmt, i);
-		/*g_print ("SQLite Type: %d\n", sres->sqlite_types [i]);*/
-
-		/* Gda type */
-		ctype = sqlite3_column_decltype (sres->stmt, i);
-		if (ctype)
-			gtype = GPOINTER_TO_INT (g_hash_table_lookup (scnc->types, ctype));
-		else {
-			switch (sres->sqlite_types [i]) {
-			case SQLITE_INTEGER:
-				gtype = G_TYPE_INT;
-				break;
-			case SQLITE_FLOAT:
-				gtype = G_TYPE_DOUBLE;
-				break;
-			case 0:
-			case SQLITE_TEXT:
-				gtype = G_TYPE_STRING;
-				break;
-			case SQLITE_BLOB:
-				gtype = GDA_TYPE_BINARY;
-				break;
-			case SQLITE_NULL:
-				gtype = GDA_TYPE_NULL;
-				break;
-			default:
-				g_error ("Unknown SQLite internal data type %d", sres->sqlite_types [i]);
-				break;
-			}
-		}
-
-		if (gtype != GDA_TYPE_NULL) {
-			GdaColumn *column;
-			
-			sres->types [i] = gtype;
-			column = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
-			gda_column_set_g_type (column, gtype);
-		}
-	}
 
 	/* filling the model with GValues, and computing data types */
 	i = 0;
@@ -231,6 +164,17 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 				GValue *value = NULL;
 				int size;
 				GType type = sres->types [col];
+
+				if (type == GDA_TYPE_NULL) {
+					type = fuzzy_get_gtype (scnc, sres, col);
+					if (type != GDA_TYPE_NULL) {
+						GdaColumn *column;
+						
+						sres->types [col] = type;
+						column = gda_data_model_describe_column (GDA_DATA_MODEL (model), col);
+						gda_column_set_g_type (column, type);
+					}
+				}
 
 				/* compute GValue */
 				if ((sqlite3_column_type (sres->stmt, col) == SQLITE_NULL) ||
@@ -277,7 +221,6 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 			g_list_foreach (row_values, (GFunc) gda_value_free, NULL);
 			g_list_free (row_values);
 			
-			types_done = TRUE;
 			i++;
 
 			break;
@@ -302,9 +245,8 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 	/* show types */
 	if (0) {
 		for (i = 0; i < sres->ncols; i++) 
-			g_print ("Type for col %d: (GDA:%s) (SQLite:%d)\n",
-				 i, g_type_to_string (sres->types [i]),
-				 sres->sqlite_types [i]);
+			g_print ("Type for col %d: (GDA:%s)\n",
+				 i, g_type_to_string (sres->types [i]));
 		
 		gda_data_model_dump (GDA_DATA_MODEL (model), stdout);
 	}
@@ -321,7 +263,129 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
 		gda_column_set_unique_key (column, FALSE);
 		gda_column_set_allow_null (column, TRUE);
 		gda_column_set_auto_increment (column, FALSE);
-	}
+	}	
+}
+
+/*
+ * the @sres struct is modified and transfered to the new data model created in
+ * this function
+ */
+GdaDataModel *
+gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLITEresult *sres, gint nbcols, ...)
+{
+	GdaSqliteRecordset *model;
+	SQLITEcnc *scnc;
+	gint i;
+	va_list ap;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (sres != NULL, NULL);
+
+	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
+	
+	/* completing sres */
+	sres->ncols = sqlite3_column_count (sres->stmt);
+	g_return_val_if_fail (sres->ncols < nbcols, NULL);
+	sres->nrows = 0;
+
+	/* model creation */
+	model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, NULL);
+	model->priv->sres = sres;
+	model->priv->cnc = cnc;
+	model->priv->ncolumns = sres->ncols;
+	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
+					   model->priv->ncolumns);
+
+	/* computing column types and titles */
+	sres->types = g_new0 (GType, sres->ncols);
+	sres->cols_size = g_new0 (int, sres->ncols);
+	gda_sqlite_update_types_hash (scnc);
+
+	/* Gda type */
+	va_start (ap, nbcols);
+	for (i = 0; i < nbcols; i++) 
+		sres->types [i] = va_arg (ap, GType);
+	
+	gda_sqlite_recordset_fill (model, cnc, sres);
 
 	return GDA_DATA_MODEL (model);
+}
+
+
+/*
+ * the @sres struct is modified and transfered to the new data model created in
+ * this function
+ */
+GdaDataModel *
+gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres)
+{
+	GdaSqliteRecordset *model;
+	SQLITEcnc *scnc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (sres != NULL, NULL);
+
+	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
+	
+	/* completing sres */
+	sres->ncols = sqlite3_column_count (sres->stmt);
+	sres->nrows = 0;
+
+	/* model creation */
+	model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, NULL);
+	model->priv->sres = sres;
+	model->priv->cnc = cnc;
+	model->priv->ncolumns = sres->ncols;
+	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
+					   model->priv->ncolumns);
+
+	/* computing column types and titles */
+	sres->types = g_new0 (GType, sres->ncols); /* all types are initialized to GDA_TYPE_NULL */
+	sres->cols_size = g_new0 (int, sres->ncols);
+	gda_sqlite_update_types_hash (scnc);
+
+	gda_sqlite_recordset_fill (model, cnc, sres);
+
+	return GDA_DATA_MODEL (model);
+}
+
+static GType
+fuzzy_get_gtype (SQLITEcnc *scnc, SQLITEresult *sres, gint colnum)
+{
+	const gchar *ctype;
+	GType gtype = GDA_TYPE_NULL;
+
+	if (sres->types [colnum] != GDA_TYPE_NULL)
+		return sres->types [colnum];
+	
+	ctype = sqlite3_column_decltype (sres->stmt, colnum);
+	if (ctype)
+		gtype = GPOINTER_TO_INT (g_hash_table_lookup (scnc->types, ctype));
+	else {
+		int stype;
+		stype = sqlite3_column_type (sres->stmt, colnum);
+
+		switch (stype) {
+		case SQLITE_INTEGER:
+			gtype = G_TYPE_INT;
+			break;
+		case SQLITE_FLOAT:
+			gtype = G_TYPE_DOUBLE;
+			break;
+		case 0:
+		case SQLITE_TEXT:
+			gtype = G_TYPE_STRING;
+			break;
+		case SQLITE_BLOB:
+			gtype = GDA_TYPE_BINARY;
+			break;
+		case SQLITE_NULL:
+			gtype = GDA_TYPE_NULL;
+			break;
+		default:
+			g_error ("Unknown SQLite internal data type %d", stype);
+			break;
+		}
+	}
+	return gtype;
 }

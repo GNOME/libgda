@@ -1522,7 +1522,7 @@ field_row_to_value_list (MYSQL *mysql, MYSQL_ROW mysql_row)
 	value_list = g_list_append (value_list, tmpval);
 
 	/* references */
-	if (*mysql->server_version < 5) {
+	if (atoi (mysql->server_version) < 5) {
 		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
 		value_list = g_list_append (value_list, tmpval);
 	}
@@ -1591,7 +1591,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	}
 
 	/* execute command on server */	
-	if (*mysql->server_version < 5)
+	if (atoi (mysql->server_version) < 5)
 		cmd_str = g_strdup_printf ("SHOW COLUMNS FROM %s", table_name);
 	else {
 		/* with MySQL >= 5.0 there are foreign keys: add support for those */
@@ -1812,7 +1812,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 	/* 
 	 * taking care of foreign keys if possible 
 	 */
-	if (*mysql->server_version >= 5) {
+	if (atoi (mysql->server_version) >= 5) {
 		gchar *current_cname = NULL;
 		GString *ref_string = NULL;
 		GList *value_list = NULL;

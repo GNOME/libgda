@@ -123,7 +123,9 @@ fill_gda_value (GValue *gda_value, enum enum_field_types type, gchar *value,
 	switch (type) {
 	case FIELD_TYPE_DECIMAL :
 	case FIELD_TYPE_DOUBLE :
+#if NDB_VERSION_MAJOR >= 5
 	case FIELD_TYPE_NEWDECIMAL :
+#endif
 		gda_value_reset_with_type (gda_value, G_TYPE_DOUBLE);
 		g_value_set_double (gda_value, atof (value));
 		break;

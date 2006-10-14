@@ -1059,14 +1059,12 @@ sqlite_find_field_unique_index (GdaConnection *cnc, const gchar *tblname, const 
 	if (model) {
 		int i, nrows;
 		const GValue *value;
-		const gchar *str;
 
 		nrows = gda_data_model_get_n_rows (model);
 		for (i = 0; !retval && (i < nrows) ; i++) {
 			value = gda_data_model_get_value_at (model, 2, i);
 			
-			str = g_value_get_string ((GValue *) value);
-			if (str && (*str == '1')) {
+			if (g_value_get_int ((GValue *) value)) {
 				const gchar *uidx_name;
 				GdaDataModel *contents_model = NULL;
 
@@ -1237,15 +1235,13 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 
 		/* not null */
 		value = gda_row_get_value (row, 5);
-		str = (gchar *) g_value_get_string ((GValue *) value);
-		is_pk = str && (*str == '1') ? TRUE : FALSE;
+		is_pk = g_value_get_int ((GValue *) value) ? TRUE : FALSE;
 		if (is_pk)
 			g_value_set_boolean (nvalue = gda_value_new (G_TYPE_BOOLEAN), TRUE);
 		else {
 			value = gda_row_get_value (row, 3);
-			str = (gchar *) g_value_get_string ((GValue *) value);
 			g_value_set_boolean (nvalue = gda_value_new (G_TYPE_BOOLEAN), 
-					     str && (*str == '0') ? FALSE : TRUE);
+					     g_value_get_int ((GValue *) value) ? FALSE : TRUE);
 		}
 		rowlist = g_list_append (rowlist, nvalue);
 
@@ -1343,7 +1339,7 @@ get_tables (GdaConnection *cnc, GdaParameterList *params, gboolean views)
 
 	if (tablename)
 		part = g_strdup_printf ("AND name = '%s'", tablename);
-	sql = g_strdup_printf ("SELECT name as 'Table', 'system' as Owner, ' ' as Description, sql as Definition "
+	sql = g_strdup_printf ("SELECT name as 'Table', 'system' as 'Owner', ' ' as 'Description', sql as 'Definition' "
 			       " FROM (SELECT * FROM sqlite_master UNION ALL "
 			       "       SELECT * FROM sqlite_temp_master) "
 			       " WHERE type = '%s' %s AND name not like 'sqlite_%%'"
@@ -1546,7 +1542,7 @@ get_constraints (GdaConnection *cnc, GdaParameterList *params)
 	int i, nrows;
 
 	/* current constraint */
-	gchar *cid = NULL;
+	gint cid;
 	GString *cfields = NULL;
 	GString *cref_fields = NULL;
 	GdaRow *crow = NULL;
@@ -1594,13 +1590,11 @@ get_constraints (GdaConnection *cnc, GdaParameterList *params)
 	for (i = 0; i < nrows; i++) {
 		GdaRow *row;
 		GValue *value;
-		gchar *str;
 		row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (pragmamodel), i, NULL);
 		g_assert (row);
 
 		value = gda_row_get_value (row, 5);
-		str = (gchar *) g_value_get_string ((GValue *) value);
-		if (str && (*str == '1')) {
+		if (g_value_get_int ((GValue *) value)) {
 			if (!crow) {
 				gint new_row_num;
 				
@@ -1661,7 +1655,7 @@ get_constraints (GdaConnection *cnc, GdaParameterList *params)
 	}
 
 	/* analysing the returned data model for the PRAGMA command */
-	cid = NULL;
+	cid = 0;
 	cfields = NULL;
 	cref_fields = NULL;
 	crow = NULL;
@@ -1669,15 +1663,13 @@ get_constraints (GdaConnection *cnc, GdaParameterList *params)
 	for (i = 0; i < nrows; i++) {
 		GdaRow *row;
 		GValue *value;
-		gchar *str;
 		row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (pragmamodel), i, NULL);
 		g_assert (row);
 
 		value = gda_row_get_value (row, 0);
-		str = (gchar *) g_value_get_string (value);
-		if (!cid || strcmp (cid, str)) {
+		if (!cid || (cid != g_value_get_int ((GValue *) value))) {
 			gint new_row_num;
-			cid = str;
+			cid = g_value_get_int ((GValue *) value);
 
 			/* record current constraint */
 			if (crow) {

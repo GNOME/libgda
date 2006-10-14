@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	   Rodrigo Moya <rodrigo@gnome-db.org>
@@ -51,8 +51,9 @@ struct _GdaSqliteRecordsetClass {
 	GdaDataModelHashClass      parent_class;
 };
 
-GType         gda_sqlite_recordset_get_type (void);
-GdaDataModel *gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres);
+GType         gda_sqlite_recordset_get_type       (void);
+GdaDataModel *gda_sqlite_recordset_new            (GdaConnection *cnc, SQLITEresult *sres);
+GdaDataModel *gda_sqlite_recordset_new_with_types (GdaConnection *cnc, SQLITEresult *sres, gint nbcols, ...);
 
 G_END_DECLS
 

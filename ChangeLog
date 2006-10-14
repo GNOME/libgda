@@ -1,3 +1,12 @@
+2006-10-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: 
+	* providers/mysql/: applied patches from Stian Skjelstad to
+	solve #357502, #357504 and #361802
+	* providers/sqlite/gda-sqlite-recordset.c:
+	* providers/sqlite/gda-sqlite-provider.c: bug fixes with column type recognition
+	* libgda/gda-init.c: improvements in the convenience functions (Daniel)
+
 2006-10-12  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model-query.c: fixed bug in gda_data_model_query_get_attributes_at()
