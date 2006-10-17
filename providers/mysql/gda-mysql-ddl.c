@@ -46,7 +46,7 @@ gda_mysql_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 
 	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_CSET");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
-		g_string_append (string, " CHARECTER SET ");
+		g_string_append (string, " CHARACTER SET ");
 		g_string_append (string, g_value_get_string (value));
 		first = FALSE;
 	}
