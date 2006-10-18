@@ -1,5 +1,5 @@
 lib_LTLIBRARIES = libgda_sql_delimiter-3.la
-bin_PROGRAMS = gda-test-delimiter
+noinst_PROGRAMS = gda-test-delimiter
 
 SUBDIRS = 
 

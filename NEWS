@@ -1,3 +1,20 @@
+libgda 1.99.0, 2006-10-18
+-------------------------
+ - Database providers fixes (Bas, Vivien)
+ - Gda# fixes (Daniel)
+ - Oracle provider improvements (Bas)
+ - API cleanups and made more coherent (Vivien)
+ - New convenience functions for some common tasks (Daniel)
+ - SQLite provider now relies on SQLite 3.3.8 (Vivien)
+ - Improved documentation about migration from previous versions (Vivien)
+ - Many bug fixes and small improvements
+ - Translations:
+	- en_GB (David Lodge)
+	- fi (Ilkka)
+	- ne (Pawan Chitrakar)
+	- ja (Ryoichi INAGAKI)
+	- vi (Clytie)
+
 libgda 1.9.103, 2006-09-03
 --------------------------
  - Added Data Definition queries to be handled by the providers as no SQL standard exists

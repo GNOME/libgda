@@ -518,9 +518,6 @@ gda_data_proxy_get_sample_start
 gda_data_proxy_get_sample_end
 gda_data_proxy_apply_all_changes
 gda_data_proxy_cancel_all_changes
-gda_data_proxy_assign_model_col
-gda_data_proxy_get_assigned_model_col
-gda_data_proxy_clear_model_row_value
 <SUBSECTION Standard>
 GDA_DATA_PROXY
 GDA_DATA_PROXY_CLASS

@@ -358,36 +358,3 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_proxy_assign_model_col ##### -->
-<para>
-
-</para>
-
-@proxy: 
-@model: 
-@proxy_col: 
-@model_col: 
-
-
-<!-- ##### FUNCTION gda_data_proxy_get_assigned_model_col ##### -->
-<para>
-
-</para>
-
-@proxy: 
-@model: 
-@model_col: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_proxy_clear_model_row_value ##### -->
-<para>
-
-</para>
-
-@proxy: 
-@model: 
-@proxy_row: 
-@extra_col: 
-
-

@@ -173,38 +173,8 @@ struct _GdaDataProxyPrivate
 	
 	/* for ALL the columns of proxy */
 	GdaColumn        **columns;
-
-	/* attributes to implement the gda_data_proxy_store_model_row_value() and similar functions */
-	GHashTable        *extra_store; /* key = (model,col), value = a GValue */
 };
 
-/*
- * Functions specific for proxy->priv->extra_store
- */
-typedef struct {
-	GdaDataModel *model;
-	gint          col;
-} ExtraStore;
-
-static guint
-custom_hash_func (ExtraStore *es)
-{
-	guint ret;
-
-	ret = GPOINTER_TO_UINT (es->model);
-	ret += (es->col) << 16;
-
-	return ret;
-}
-
-static gboolean
-custom_equal_func (ExtraStore *es1, ExtraStore *es2)
-{
-	if ((es1->model == es2->model) && (es1->col == es2->col))
-		return TRUE;
-	else
-		return FALSE;
-}
 
 /*
  * The model_row_to_proxy_row() and proxy_row_to_model_row() convert row numbers between GdaDataModel
@@ -529,10 +499,6 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 	proxy->priv->sample_size = 300;
 	proxy->priv->current_nb_rows = 0;
 	proxy->priv->columns = NULL;
-
-	proxy->priv->extra_store = g_hash_table_new_full ((GHashFunc) custom_hash_func, 
-							  (GEqualFunc) custom_equal_func,
-							  g_free, (GDestroyNotify) gda_value_free);
 }
 
 static void adjust_displayed_chunck (GdaDataProxy *proxy);
@@ -616,11 +582,6 @@ gda_data_proxy_dispose (GObject *object)
 			gda_data_proxy_cancel_all_changes (proxy);
 			g_hash_table_destroy (proxy->priv->modif_rows);
 			proxy->priv->modif_rows = NULL;
-		}
-
-		if (proxy->priv->extra_store) {
-			g_hash_table_destroy (proxy->priv->extra_store);
-			proxy->priv->extra_store = NULL;
 		}
 	}
 
@@ -2111,167 +2072,6 @@ gda_data_proxy_cancel_all_changes (GdaDataProxy *proxy)
 	return TRUE;
 }
 
-
-static void
-store_dump_foreach (ExtraStore *key, GValue *value, gpointer data)
-{
-	g_print ("%p, C=%d, val= %s\n", key->model, key->col, gda_value_stringify (value));
-}
-
-static void
-dump_extra_store (GdaDataProxy *proxy)
-{
-	g_hash_table_foreach (proxy->priv->extra_store, (GHFunc) store_dump_foreach, NULL);
-}
-
-/**
- * gda_data_proxy_get_model_row_value
- * @proxy: a #GdaDataProxy object
- * @model: a #GdaDataModel object
- * @proxy_row: a valid row number in @proxy
- * @col:
- * 
- * Retreive a value stored in @proxy using the gda_data_proxy_assign_model_col() method
- * 
- * Returns: the stored #GValue, or %NULL if no value was stored.
- */
-const GValue *
-gda_data_proxy_get_model_row_value (GdaDataProxy *proxy, GdaDataModel *model, gint proxy_row, gint extra_col)
-{
-	ExtraStore es;
-	const GValue *value = NULL;
-
-	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), NULL);
-	g_return_val_if_fail (proxy->priv, NULL);
-
-	es.model = model;
-	es.col = extra_col;
-	value = g_hash_table_lookup (proxy->priv->extra_store, &es);
-	if (value) {
-		gint proxy_col;
-		proxy_col = g_value_get_int ((GValue *) value);
-		value = gda_data_model_get_value_at ((GdaDataModel *) proxy, proxy_col, proxy_row);
-	}
-	
-	return value;
-}
-
-/**
- * gda_data_proxy_set_model_row_value
- * @proxy: a #GdaDataProxy object
- * @model: a #GdaDataModel object
- * @proxy_row: a valid row number in @proxy
- * @col:
- * @value:
- * 
- * Retreive a value stored in @proxy using the gda_data_proxy_assign_model_col() method
- * 
- * Returns: the stored #GValue, or %NULL if no value was stored.
- */
-void
-gda_data_proxy_set_model_row_value (GdaDataProxy *proxy, GdaDataModel *model, 
-				    gint proxy_row, gint extra_col, const GValue *value)
-{
-	ExtraStore es;
-	const GValue *colval;
-
-	g_return_if_fail (GDA_IS_DATA_PROXY (proxy));
-	g_return_if_fail (proxy->priv);
-
-	es.model = model;
-	es.col = extra_col;
-	colval = g_hash_table_lookup (proxy->priv->extra_store, &es);
-	if (colval) {
-		gint proxy_col;
-
-		proxy_col = g_value_get_int ((GValue *) colval);
-		g_assert (gda_data_model_set_value_at ((GdaDataModel *) proxy, proxy_col, proxy_row, 
-						       (GValue *) value, NULL));
-	}
-}
-
-/**
- * gda_data_proxy_clear_model_row_value
- */
-void
-gda_data_proxy_clear_model_row_value (GdaDataProxy *proxy, GdaDataModel *model, 
-				      gint proxy_row, gint extra_col)
-{
-	ExtraStore es;
-	const GValue *colval;
-
-	g_return_if_fail (GDA_IS_DATA_PROXY (proxy));
-	g_return_if_fail (proxy->priv);
-
-	es.model = model;
-	es.col = extra_col;
-	colval = g_hash_table_lookup (proxy->priv->extra_store, &es);
-	if (colval) {
-		gint proxy_col;
-		const GValue *value;
-
-		proxy_col = g_value_get_int ((GValue *) colval);
-		value = gda_data_model_get_value_at ((GdaDataModel *) proxy, 
-						     proxy_col + proxy->priv->model_nb_cols, proxy_row);
-		g_assert (gda_data_model_set_value_at ((GdaDataModel *) proxy, proxy_col, proxy_row, 
-						       (GValue *) value, NULL));
-	}
-}
-
-
-/**
- * gda_data_proxy_assign_model_col
- * @proxy: a #GdaDataProxy object
- * @model: a #GdaDataModel object
- * @proxy_col: a valid column number in @proxy
- * @model_col: a valid column number in @model
- *
- * Instructs @proxy about what to do if a call to gda_data_proxy_get_model_row_value(@proxy, @model, a_row, @model_col)
- * fails to return a non %NULL value. If that case appears, then @proxy will return the value stored in @proxy at
- * column @proxy_col and row 'a_row'.
- */
-void
-gda_data_proxy_assign_model_col (GdaDataProxy *proxy, GdaDataModel *model, gint proxy_col, gint model_col)
-{
-	ExtraStore *es;
-	GValue *value;
-
-	g_return_if_fail (GDA_IS_DATA_PROXY (proxy));
-	g_return_if_fail (proxy->priv);
-	if (proxy->priv->model_nb_cols > 0)
-		g_return_if_fail (proxy_col < proxy->priv->model_nb_cols);
-
-	es = g_new (ExtraStore, 1);
-	es->model = model;
-	es->col = model_col;
-
-	value = g_value_init (g_new0 (GValue, 1), G_TYPE_INT);
-	g_value_set_int (value, proxy_col);
-	g_hash_table_insert (proxy->priv->extra_store, es, value);
-
-	dump_extra_store (proxy);
-}
- 
-/**
- * gda_data_proxy_get_assigned_model_col
- */
-gint
-gda_data_proxy_get_assigned_model_col (GdaDataProxy *proxy, GdaDataModel *model, gint model_col)
-{
-	ExtraStore es;
-	const GValue *colval;
-
-	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), -1);
-	g_return_val_if_fail (proxy->priv, -1);
-
-	es.model = model;
-	es.col = model_col;
-	colval = g_hash_table_lookup (proxy->priv->extra_store, &es);
-	if (colval)
-		return g_value_get_int ((GValue *) colval);
-	else
-		return -1;
-}
 
 /* 
  * GdaDataModel interface implementation

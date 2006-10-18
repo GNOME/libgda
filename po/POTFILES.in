@@ -157,12 +157,13 @@ providers/bdb/gda-bdb-provider.c
 providers/bdb/gda-bdb-recordset.c
 providers/bdb/libmain.c
 providers/bdb/utils.c
-testing/gda-author-dict-file.c
-testing/gda-diagnose.c
-testing/gda-inspect-dict-file.c
-testing/gda-list-config.c
 testing/gda-test-connection.c
 testing/gda-test-models.c
 testing/gda-test-server-operation.c
 testing/gda-test-sql.c
 testing/html.c
+tools/gda-author-dict-file.c
+tools/gda-diagnose.c
+tools/gda-inspect-dict-file.c
+tools/gda-list-config.c
+tools/html.c
