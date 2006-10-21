@@ -37,13 +37,13 @@ G_BEGIN_DECLS
 extern GQuark gda_query_field_value_error_quark (void);
 #define GDA_QUERY_FIELD_VALUE_ERROR gda_query_field_value_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_QUERY_FIELD_VALUE_XML_LOAD_ERROR,
 	GDA_QUERY_FIELD_VALUE_RENDER_ERROR,
 	GDA_QUERY_FIELD_VALUE_PARAM_ERROR,
 	GDA_QUERY_FIELD_VALUE_DEFAULT_PARAM_ERROR
-};
+} GdaQueryFieldValueError;
 
 
 /* struct for the object's data */

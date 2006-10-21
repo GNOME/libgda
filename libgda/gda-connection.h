@@ -47,7 +47,7 @@ G_BEGIN_DECLS
 extern GQuark gda_connection_error_quark (void);
 #define GDA_CONNECTION_ERROR gda_connection_error_quark ()
 
-enum {
+typedef enum {
         GDA_CONNECTION_CONN_OPEN_ERROR,
         GDA_CONNECTION_DO_QUERY_ERROR,
 	GDA_CONNECTION_NONEXIST_DSN_ERROR,
@@ -55,7 +55,7 @@ enum {
 	GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR,
 	GDA_CONNECTION_OPEN_ERROR,
 	GDA_CONNECTION_EXECUTE_COMMAND_ERROR
-};
+} GdaConnectionError;
 
 struct _GdaConnection {
 	GObject               object;

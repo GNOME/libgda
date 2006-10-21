@@ -38,10 +38,10 @@ G_BEGIN_DECLS
 extern GQuark gda_dict_field_error_quark (void);
 #define GDA_DICT_FIELD_ERROR gda_dict_field_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_DICT_FIELD_XML_LOAD_ERROR
-};
+} GdaDictFieldError;
 
 
 /* struct for the object's data */

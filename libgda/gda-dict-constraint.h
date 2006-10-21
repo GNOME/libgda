@@ -37,11 +37,11 @@ G_BEGIN_DECLS
 extern GQuark gda_dict_constraint_error_quark (void);
 #define GDA_DICT_CONSTRAINT_ERROR gda_dict_constraint_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_DICT_CONSTRAINT_XML_SAVE_ERROR,
 	GDA_DICT_CONSTRAINT_XML_LOAD_ERROR
-};
+} GdaDictConstraintError;
 
 typedef enum
 {

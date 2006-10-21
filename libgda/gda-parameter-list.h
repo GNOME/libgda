@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 extern GQuark gda_parameter_list_error_quark (void);
 #define GDA_PARAMETER_LIST_ERROR gda_parameter_list_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_PARAMETER_LIST_NO_NODE_ERROR,
 	GDA_PARAMETER_LIST_NODE_OUTDATED_ERROR,
@@ -49,7 +49,7 @@ enum
 	GDA_PARAMETER_LIST_DEPENDENCY_NOT_IN_PARAMLIST_ERROR,
 	GDA_PARAMETER_LIST_DEPENDENCY_POSITION_ERROR,
 	GDA_PARAMETER_LIST_XML_SPEC_ERROR
-};
+} GdaParameterListError;
 
 typedef enum {
 	GDA_PARAMETER_LIST_PARAM_READ_ONLY = 1 << 0, /* param should not be affected by user modifications */

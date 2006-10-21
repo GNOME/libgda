@@ -37,10 +37,10 @@ G_BEGIN_DECLS
 extern GQuark gda_dict_type_error_quark (void);
 #define GDA_DICT_TYPE_ERROR gda_dict_type_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_DICT_TYPE_XML_LOAD_ERROR
-};
+} GdaDictTypeError;
 
 
 /* struct for the object's data */

@@ -42,10 +42,10 @@ typedef struct _GdaDataModelQueryPrivate GdaDataModelQueryPrivate;
 extern GQuark gda_data_model_query_error_quark (void);
 #define GDA_DATA_MODEL_QUERY_ERROR gda_data_model_query_error_quark ()
 
-enum
+typedef enum
 {
         GDA_DATA_MODEL_QUERY_XML_LOAD_ERROR,
-};
+} GdaDataModelQueryError;
 
 struct _GdaDataModelQuery {
 	GdaObject                  object;

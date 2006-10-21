@@ -103,11 +103,11 @@ G_BEGIN_DECLS
 extern GQuark gda_general_error_quark (void);
 #define GDA_GENERAL_ERROR gda_general_error_quark ()
 
-enum {
+typedef enum  {
     GDA_GENERAL_OBJECT_NAME_ERROR,
     GDA_GENERAL_INCORRECT_VALUE_ERROR,
     GDA_GENERAL_OPERATION_ERROR
-};
+} GdaGeneralError;
 
 void     gda_init             (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
 GdaDict *gda_get_default_dict (void);

@@ -38,12 +38,12 @@ G_BEGIN_DECLS
 extern GQuark gda_dict_table_error_quark (void);
 #define GDA_DICT_TABLE_ERROR gda_dict_table_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_DICT_TABLE_XML_LOAD_ERROR,
 	GDA_DICT_TABLE_META_DATA_UPDATE,
 	GDA_DICT_FIELDS_ERROR
-};
+} GdaDictTableError;
 
 
 /* struct for the object's data */

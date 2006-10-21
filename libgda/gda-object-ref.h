@@ -41,10 +41,10 @@ typedef enum
 	REFERENCE_BY_NAME
 } GdaObjectRefType;
 
-enum
+typedef enum
 {
 	GDA_OBJECT_REF_XML_LOAD_ERROR
-};
+} GdaObjectRefError;
 
 
 /* struct for the object's data */

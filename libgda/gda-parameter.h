@@ -36,9 +36,9 @@ G_BEGIN_DECLS
 extern GQuark gda_parameter_error_quark (void);
 #define GDA_PARAMETER_ERROR gda_parameter_error_quark ()
 
-enum {
+typedef enum {
 	GDA_PARAMETER_QUERY_LIMIT_ERROR
-};
+} GdaParameterError;
 
 /* struct for the object's data */
 struct _GdaParameter

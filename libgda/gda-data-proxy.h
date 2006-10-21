@@ -38,9 +38,9 @@ G_BEGIN_DECLS
 extern GQuark gda_data_proxy_error_quark (void);
 #define GDA_DATA_PROXY_ERROR gda_data_proxy_error_quark ()
 
-enum {
+typedef enum {
 	GDA_DATA_PROXY_COMMIT_ERROR
-};
+} GdaDataProxyError;
 
 /* struct for the object's data */
 struct _GdaDataProxy

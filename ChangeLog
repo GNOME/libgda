@@ -1,3 +1,42 @@
+2006-10-21  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-connection.h:
+	* libgda/gda-data-model-iter.h:
+	* libgda/gda-data-model-query.h:
+	* libgda/gda-data-proxy.h:
+	* libgda/gda-dict-aggregate.h:
+	* libgda/gda-dict-constraint.h:
+	* libgda/gda-dict-database.h:
+	* libgda/gda-dict-field.h:
+	* libgda/gda-dict-function.h:
+	* libgda/gda-dict-table.h:
+	* libgda/gda-dict-type.h:
+	* libgda/gda-dict.h:
+	* libgda/gda-object-ref.h:
+	* libgda/gda-parameter-list.h:
+	* libgda/gda-parameter.h:
+	* libgda/gda-query-condition.h:
+	* libgda/gda-query-field-agg.h:
+	* libgda/gda-query-field-all.h:
+	* libgda/gda-query-field-field.h:
+	* libgda/gda-query-field-func.h:
+	* libgda/gda-query-field-value.h:
+	* libgda/gda-query-field.h:
+	* libgda/gda-query-join.h:
+	* libgda/gda-query-target.h:
+	* libgda/gda-query.h:
+	* libgda/graph/gda-graph-item.h:
+	* libgda/graph/gda-graph.h:
+	* libgda/libgda.h: Added a name for the error 
+	enum. This is required by language bindings.
+	* libgda/gda-graphviz.h: Commented-out 
+	GDA_GRAPHVIZ_ERROR because it is not used.
+	* libgda/graph/gda-graph-query.h: Commented-out 
+	GDA_GRAPH_QUERY_ERROR because it is not used.
+	* libgda/gda-client.c: (gda_client_perform_drop_database):
+	* libgda/gda-client.h: Added an enum for the GError, 
+	and used its code value instead of 0.
+
 2006-10-18  Vivien Malerba <malerba@gnome-db.org>
 
 	Released 1.99.0 (AKA 2.0 Beta2).

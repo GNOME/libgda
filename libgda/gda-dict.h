@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 extern GQuark gda_dict_error_quark (void);
 #define GDA_DICT_ERROR gda_dict_error_quark ()
 
-enum {
+typedef enum {
 	GDA_DICT_META_DATA_UPDATE_ERROR,
 	GDA_DICT_META_DATA_UPDATE_USER_STOPPED,
 	GDA_DICT_LOAD_FILE_NOT_EXIST_ERROR,
@@ -47,7 +47,7 @@ enum {
 	GDA_DICT_DATATYPE_ERROR,
 	GDA_DICT_FUNCTIONS_ERROR,
 	GDA_DICT_AGGREGATES_ERROR,
-};
+} GdaDictError;
 
 
 /* struct for the object's data */

@@ -70,6 +70,11 @@ struct _GdaClientClass {
 extern GQuark gda_client_error_quark (void);
 #define GDA_CLIENT_ERROR gda_client_error_quark ()
 
+typedef enum
+{
+  GDA_CLIENT_GENERAL_ERROR
+} GdaClientError;
+
 GType          gda_client_get_type                           (void);
 GdaClient     *gda_client_new                                (void);
 

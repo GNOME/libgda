@@ -65,12 +65,12 @@ typedef enum {
 	GDA_QUERY_CONDITION_OP_RIGHT2 = 2
 } GdaQueryConditionOperator;
 
-enum
+typedef enum
 {
 	GDA_QUERY_CONDITION_XML_LOAD_ERROR,
 	GDA_QUERY_CONDITION_RENDERER_ERROR,
 	GDA_QUERY_CONDITION_PARENT_ERROR
-};
+} GdaQueryConditionError;
 
 
 /* struct for the object's data */

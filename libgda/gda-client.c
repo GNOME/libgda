@@ -1091,7 +1091,7 @@ gda_client_perform_drop_database (GdaClient *client, const gchar *provider,
 		return gda_server_provider_perform_operation (prv->provider, NULL, 
 							      op, error);
 	else {
-		g_set_error (error, GDA_CLIENT_ERROR, 0, 
+		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_GENERAL_ERROR, 
 			     _("Could not find provider %s in the current setup"), provider); 
 		return FALSE;
 	}

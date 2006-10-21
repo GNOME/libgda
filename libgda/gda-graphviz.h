@@ -36,13 +36,15 @@ typedef struct _GdaGraphvizPrivate GdaGraphvizPrivate;
 #define GDA_IS_GRAPHVIZ(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_graphviz_get_type ())
 
 /* error reporting */
+/*
 extern GQuark gda_graphviz_error_quark (void);
 #define GDA_GRAPHVIZ_ERROR gda_graphviz_error_quark ()
 
-enum
+typedef enum
 {
         GDA_GRAPHVIZ_SAVE_ERROR
-};
+} GdaGraphvizError;
+*/
 
 
 /* struct for the object's data */

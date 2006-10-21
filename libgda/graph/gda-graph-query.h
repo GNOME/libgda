@@ -32,9 +32,15 @@ G_BEGIN_DECLS
 #define GDA_IS_GRAPH_QUERY(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_graph_query_get_type ())
 
 /* error reporting */
+/*
 extern GQuark gda_graph_query_error_quark (void);
 #define GDA_GRAPH_QUERY_ERROR gda_graph_query_error_quark ()
 
+typedef enum
+{
+	GDA_GRAPH_QUERY_GENERAL_ERROR
+} GdaGraphQueryError;
+*/
 
 /* struct for the object's data */
 struct _GdaGraphQuery

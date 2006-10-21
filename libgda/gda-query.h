@@ -49,7 +49,7 @@ typedef enum {
         GDA_QUERY_TYPE_NON_PARSED_SQL
 } GdaQueryType;
 
-enum
+typedef enum
 {
 	GDA_QUERY_XML_LOAD_ERROR,
 	GDA_QUERY_META_DATA_UPDATE,
@@ -62,7 +62,7 @@ enum
 	GDA_QUERY_SQL_ANALYSE_ERROR,
 	GDA_QUERY_NO_CNC_ERROR,
 	GDA_QUERY_CNC_CLOSED_ERROR
-};
+} GdaQueryError;
 
 
 /* struct for the object's data */

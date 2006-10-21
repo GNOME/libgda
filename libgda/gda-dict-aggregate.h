@@ -37,10 +37,10 @@ G_BEGIN_DECLS
 extern GQuark gda_dict_aggregate_error_quark (void);
 #define GDA_DICT_AGGREGATE_ERROR gda_dict_aggregate_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_DICT_AGGREGATE_XML_LOAD_ERROR
-};
+} GdaDictAggregateError;
 
 
 /* struct for the object's data */

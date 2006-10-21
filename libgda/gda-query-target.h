@@ -37,13 +37,13 @@ G_BEGIN_DECLS
 extern GQuark gda_query_target_error_quark (void);
 #define GDA_QUERY_TARGET_ERROR gda_query_target_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_QUERY_TARGET_XML_LOAD_ERROR,
 	GDA_QUERY_TARGET_XML_SAVE_ERROR,
 	GDA_QUERY_TARGET_META_DATA_UPDATE,
 	GDA_QUERY_TARGET_FIELDS_ERROR
-};
+} GdaQueryTargetError;
 
 
 /* struct for the object's data */

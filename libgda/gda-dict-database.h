@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 extern GQuark gda_dict_database_error_quark (void);
 #define GDA_DICT_DATABASE_ERROR gda_dict_database_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_DICT_DATABASE_XML_SAVE_ERROR,
 	GDA_DICT_DATABASE_XML_LOAD_ERROR,
@@ -46,7 +46,7 @@ enum
 	GDA_DICT_DATABASE_META_DATA_UPDATE_USER_STOPPED,
 	GDA_DICT_DATABASE_TABLES_ERROR,
 	GDA_DICT_DATABASE_SEQUENCES_ERROR
-};
+} GdaDictDatabaseError;
 
 /* struct for the object's data */
 struct _GdaDictDatabase

@@ -38,10 +38,10 @@ G_BEGIN_DECLS
 extern GQuark gda_graph_item_error_quark (void);
 #define GDA_GRAPH_ITEM_ERROR gda_graph_item_error_quark ()
 
-enum
+typedef enum
 {
 	GDA_GRAPH_ITEM_XML_LOAD_ERROR
-};
+} GdaGraphItemError;
 
 
 /* struct for the object's data */

@@ -47,14 +47,14 @@ typedef enum {
         GDA_QUERY_JOIN_TYPE_LAST
 } GdaQueryJoinType;
 
-enum
+typedef enum
 {
 	GDA_QUERY_JOIN_XML_LOAD_ERROR,
 	GDA_QUERY_JOIN_META_DATA_UPDATE,
 	GDA_QUERY_JOIN_FIELDS_ERROR,
 	GDA_QUERY_JOIN_SQL_ANALYSE_ERROR,
 	GDA_QUERY_JOIN_PARSE_ERROR
-};
+} GdaQueryJoinError;
 
 
 /* struct for the object's data */
