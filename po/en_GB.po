@@ -8,49 +8,49 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-16 09:50+0100\n"
-"PO-Revision-Date: 2006-09-16 09:50-0000\n"
+"POT-Creation-Date: 2006-10-22 10:48+0100\n"
+"PO-Revision-Date: 2006-10-22 10:48-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English/GB <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../libgda/gda-client.c:293
-#: ../libgda/gda-client.c:1067
-#: ../libgda/gda-client.c:1098
+#: ../libgda/gda-client.c:292
+#: ../libgda/gda-client.c:1064
+#: ../libgda/gda-client.c:1095
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Could not find provider %s in the current setup"
 
-#: ../libgda/gda-client.c:323
+#: ../libgda/gda-client.c:320
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Provider %s does not implement entry function"
 
-#: ../libgda/gda-client.c:332
+#: ../libgda/gda-client.c:329
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Could not create GdaServerProvider object from plugin"
 
-#: ../libgda/gda-client.c:421
-#: ../libgda/gda-client.c:423
-#: ../libgda/gda-client.c:613
+#: ../libgda/gda-client.c:418
+#: ../libgda/gda-client.c:420
+#: ../libgda/gda-client.c:610
 #: ../libgda/gda-connection.c:405
 #: ../libgda/gda-connection.c:407
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Data source %s not found in configuration"
 
-#: ../libgda/gda-client.c:455
-#: ../libgda/gda-client.c:552
+#: ../libgda/gda-client.c:452
+#: ../libgda/gda-client.c:549
 #, c-format
 msgid "Datasource configuration error: could not find provider '%s'"
 msgstr "Datasource configuration error: could not find provider '%s'"
 
-#: ../libgda/gda-client.c:459
-#: ../libgda/gda-client.c:461
-#: ../libgda/gda-client.c:556
-#: ../libgda/gda-client.c:558
+#: ../libgda/gda-client.c:456
+#: ../libgda/gda-client.c:458
+#: ../libgda/gda-client.c:553
+#: ../libgda/gda-client.c:555
 msgid "Datasource configuration error: no provider specified"
 msgstr "Datasource configuration error: no provider specified"
 
@@ -66,7 +66,7 @@ msgid "Id"
 msgstr "Id"
 
 #: ../libgda/gda-config.c:1578
-#: ../testing/gda-diagnose.c:305
+#: ../tools/gda-diagnose.c:304
 msgid "Location"
 msgstr "Location"
 
@@ -74,12 +74,12 @@ msgstr "Location"
 #: ../libgda/gda-config.c:1883
 #: ../libgda/gda-server-provider-extra.c:147
 #: ../libgda/gda-server-provider-extra.c:170
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:813
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:842
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:870
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:951
-#: ../testing/gda-diagnose.c:306
-#: ../testing/gda-diagnose.c:315
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:911
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:940
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:968
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1049
+#: ../tools/gda-diagnose.c:305
+#: ../tools/gda-diagnose.c:314
 msgid "Description"
 msgstr "Description"
 
@@ -192,78 +192,78 @@ msgstr "Wrong number of values in values list"
 msgid "Row not found in data model"
 msgstr "Row not found in data model"
 
-#: ../libgda/gda-data-model.c:956
+#: ../libgda/gda-data-model.c:1016
 msgid "The 'NAME' parameter must hold a string value, ignored."
 msgstr "The 'NAME' parameter must hold a string value, ignored."
 
-#: ../libgda/gda-data-model.c:992
+#: ../libgda/gda-data-model.c:1052
 msgid "The 'SEPARATOR' parameter must hold a string value, ignored."
 msgstr "The 'SEPARATOR' parameter must hold a string value, ignored."
 
-#: ../libgda/gda-data-model.c:1071
+#: ../libgda/gda-data-model.c:1131
 msgid "The 'OVERWRITE' parameter must hold a boolean value, ignored."
 msgstr "The 'OVERWRITE' parameter must hold a boolean value, ignored."
 
-#: ../libgda/gda-data-model.c:1079
+#: ../libgda/gda-data-model.c:1139
 #, c-format
 msgid "File '%s' already exists"
 msgstr "File '%s' already exists"
 
-#: ../libgda/gda-data-model.c:1085
+#: ../libgda/gda-data-model.c:1145
 #, c-format
 msgid "Could not save file %s"
 msgstr "Could not save file %s"
 
-#: ../libgda/gda-data-model.c:1190
+#: ../libgda/gda-data-model.c:1250
 msgid "Exported Data"
 msgstr "Exported Data"
 
-#: ../libgda/gda-data-model.c:1321
+#: ../libgda/gda-data-model.c:1381
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 
-#: ../libgda/gda-data-model.c:1352
+#: ../libgda/gda-data-model.c:1412
 #: ../testing/gda-test-models.c:537
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 
-#: ../libgda/gda-data-model.c:1369
+#: ../libgda/gda-data-model.c:1429
 #: ../testing/gda-test-models.c:555
 #, c-format
 msgid "Cannot interpret string as a valid %s value"
 msgstr "Cannot interpret string as a valid %s value"
 
-#: ../libgda/gda-data-model.c:1433
+#: ../libgda/gda-data-model.c:1493
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Expected tag <gda_array_data>, got <%s>"
 
-#: ../libgda/gda-data-model.c:1491
+#: ../libgda/gda-data-model.c:1551
 msgid "Could not get an iterator for soure data model"
 msgstr "Could not get an iterator for soure data model"
 
-#: ../libgda/gda-data-model.c:1507
+#: ../libgda/gda-data-model.c:1567
 #, c-format
 msgid "Inexistant column in source data model: %d"
 msgstr "Inexistant column in source data model: %d"
 
-#: ../libgda/gda-data-model.c:1521
+#: ../libgda/gda-data-model.c:1581
 #, c-format
 msgid "Destination column %d can't be NULL but has no correspondance in the source data model"
 msgstr "Destination column %d can't be NULL but has no correspondance in the source data model"
 
-#: ../libgda/gda-data-model.c:1529
+#: ../libgda/gda-data-model.c:1589
 #, c-format
 msgid "Destination column %d has a gda type (%s) incompatible with source column %d type (%s)"
 msgstr "Destination column %d has a gda type (%s) incompatible with source column %d type (%s)"
 
-#: ../libgda/gda-data-model.c:1597
+#: ../libgda/gda-data-model.c:1657
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Can't transform '%s' from GDA type %s to GDA type %s"
 
-#: ../libgda/gda-data-model.c:1868
+#: ../libgda/gda-data-model.c:1928
 msgid "Model does not support random access, not showing data\n"
 msgstr "Model does not support random access, not showing data\n"
 
@@ -372,7 +372,7 @@ msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "No <gda_array_field> specified in <gda_array>"
 
 #: ../libgda/gda-data-model-import.c:1734
-#: ../libgda/gda-data-proxy.c:454
+#: ../libgda/gda-data-proxy.c:427
 #: ../libgda/gda-server-operation.c:769
 #: ../providers/oracle/gda-oracle-provider.c:1952
 msgid "No detail"
@@ -388,34 +388,34 @@ msgstr "Row at line %d does not have enough values, completed with NULL values"
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "Row at line %d does not have enough values (which are thus ignored)"
 
-#: ../libgda/gda-data-model-query.c:602
+#: ../libgda/gda-data-model-query.c:608
 msgid "Query is not a SELECT query"
 msgstr "Query is not a SELECT query"
 
-#: ../libgda/gda-data-model-query.c:674
+#: ../libgda/gda-data-model-query.c:680
 msgid "Wrong type of query"
 msgstr "Wrong type of query"
 
-#: ../libgda/gda-data-model-query.c:773
+#: ../libgda/gda-data-model-query.c:779
 #, c-format
 msgid "Can't determine the GType for field '%s', please fill a bug report"
 msgstr "Can't determine the GType for field '%s', please fill a bug report"
 
-#: ../libgda/gda-data-model-query.c:830
+#: ../libgda/gda-data-model-query.c:836
 msgid "Can't compute the list of columns because the SELECT query is not active (you can use a dictionary to correct this) and the model does not contain any data"
 msgstr "Can't compute the list of columns because the SELECT query is not active (you can use a dictionary to correct this) and the model does not contain any data"
 
-#: ../libgda/gda-data-model-query.c:1052
-#: ../libgda/gda-data-model-query.c:1100
+#: ../libgda/gda-data-model-query.c:1061
+#: ../libgda/gda-data-model-query.c:1109
 msgid "No UPDATE query specified, can't update row"
 msgstr "No UPDATE query specified, can't update row"
 
-#: ../libgda/gda-data-model-query.c:1151
-#: ../libgda/gda-data-model-query.c:1199
+#: ../libgda/gda-data-model-query.c:1160
+#: ../libgda/gda-data-model-query.c:1208
 msgid "No INSERT query specified, can't insert row"
 msgstr "No INSERT query specified, can't insert row"
 
-#: ../libgda/gda-data-model-query.c:1241
+#: ../libgda/gda-data-model-query.c:1250
 msgid "No DELETE query specified, can't delete row"
 msgstr "No DELETE query specified, can't delete row"
 
@@ -423,30 +423,30 @@ msgstr "No DELETE query specified, can't delete row"
 msgid "Too many values in list"
 msgstr "Too many values in list"
 
-#: ../libgda/gda-data-proxy.c:435
+#: ../libgda/gda-data-proxy.c:408
 msgid "Data model"
 msgstr "Data model"
 
-#: ../libgda/gda-data-proxy.c:453
+#: ../libgda/gda-data-proxy.c:426
 #, c-format
 msgid "Could not auto-commit row change: %s"
 msgstr "Could not auto-commit row change: %s"
 
-#: ../libgda/gda-data-proxy.c:672
+#: ../libgda/gda-data-proxy.c:636
 msgid "GdaDataProxy cant' handle non random access data models"
 msgstr "GdaDataProxy cant' handle non random access data models"
 
-#: ../libgda/gda-data-proxy.c:2429
+#: ../libgda/gda-data-proxy.c:2235
 #, c-format
 msgid "Unknown GdaDataProxy column: %d"
 msgstr "Unknown GdaDataProxy column: %d"
 
-#: ../libgda/gda-data-proxy.c:2603
+#: ../libgda/gda-data-proxy.c:2414
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Trying to change read-only column: %d"
 
-#: ../libgda/gda-data-proxy.c:2640
+#: ../libgda/gda-data-proxy.c:2451
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Value type mismatch %s instead of %s"
@@ -494,6 +494,7 @@ msgstr "Could not save XML data for %s (no registered save function)"
 
 #: ../libgda/gda-dict.c:1037
 #: ../testing/html.c:131
+#: ../tools/html.c:131
 #, c-format
 msgid "Error writing XML file %s"
 msgstr "Error writing XML file %s"
@@ -515,66 +516,66 @@ msgstr "Connection is closed"
 msgid "Update already started!"
 msgstr "Update already started!"
 
-#: ../libgda/gda-dict.c:1307
+#: ../libgda/gda-dict.c:1306
 #: ../libgda/gda-dict-database.c:889
 msgid "Update stopped!"
 msgstr "Update stopped!"
 
-#: ../libgda/gda-dict.c:1387
+#: ../libgda/gda-dict.c:1386
 #, c-format
 msgid "Error creating directory %s"
 msgstr "Error creating directory %s"
 
-#: ../libgda/gda-dict.c:1639
+#: ../libgda/gda-dict.c:1638
 #, c-format
 msgid "Cannot register object type %s a second time"
 msgstr "Cannot register object type %s a second time"
 
-#: ../libgda/gda-dict.c:1643
+#: ../libgda/gda-dict.c:1642
 #, c-format
 msgid "Cannot register object type %s: no XML group tag specified"
 msgstr "Cannot register object type %s: no XML group tag specified"
 
-#: ../libgda/gda-dict.c:1710
+#: ../libgda/gda-dict.c:1709
 #, c-format
 msgid "Trying to declare an object when object class %s is not registered in the dictionary"
 msgstr "Trying to declare an object when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1803
+#: ../libgda/gda-dict.c:1802
 #, c-format
 msgid "Trying to make an object assumed when object class %s is not registered in the dictionary"
 msgstr "Trying to make an object assumed when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1818
+#: ../libgda/gda-dict.c:1817
 msgid "Trying to assume an object when object class is not registered in the dictionary"
 msgstr "Trying to assume an object when object class is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1883
+#: ../libgda/gda-dict.c:1882
 #, c-format
 msgid "Trying to make an object unassumed when object class %s is not registered in the dictionary"
 msgstr "Trying to make an object unassumed when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1938
+#: ../libgda/gda-dict.c:1937
 #, c-format
 msgid "Trying to make if an object is assumed when object class %s is not registered in the dictionary"
 msgstr "Trying to make if an object is assumed when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1967
+#: ../libgda/gda-dict.c:1966
 #, c-format
 msgid "Trying to get a list of objects when object class %s is not registered in the dictionary"
 msgstr "Trying to get a list of objects when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:2001
+#: ../libgda/gda-dict.c:2000
 #, c-format
 msgid "Trying to get an object by name when object class %s is not registered in the dictionary"
 msgstr "Trying to get an object by name when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:2045
+#: ../libgda/gda-dict.c:2044
 #, c-format
 msgid "Trying to get an object by its XML Id when object class %s is not registered in the dictionary"
 msgstr "Trying to get an object by its XML Id when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:2053
+#: ../libgda/gda-dict.c:2052
 msgid "Trying to get an object from its XML Id when object class does not implement GdaXmlStorage"
 msgstr "Trying to get an object from its XML Id when object class does not implement GdaXmlStorage"
 
@@ -748,23 +749,23 @@ msgstr "Attempt to re-initialise GDA library. ignored."
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda needs GModule. Finishing..."
 
-#: ../libgda/gda-init.c:91
-#: ../libgda/gda-init.c:98
-#: ../libgda/gda-init.c:105
-#: ../libgda/gda-init.c:113
+#: ../libgda/gda-init.c:103
+#: ../libgda/gda-init.c:110
+#: ../libgda/gda-init.c:117
+#: ../libgda/gda-init.c:125
 msgid "Could not parse "
 msgstr "Could not parse "
 
-#: ../libgda/gda-init.c:91
+#: ../libgda/gda-init.c:103
 msgid ": XML dictionaries validation will not be performed (some weird errors may occur)"
 msgstr ": XML dictionaries validation will not be performed (some weird errors may occur)"
 
-#: ../libgda/gda-init.c:98
-#: ../libgda/gda-init.c:105
+#: ../libgda/gda-init.c:110
+#: ../libgda/gda-init.c:117
 msgid ": XML data import validation will not be performed (some weird errors may occur)"
 msgstr ": XML data import validation will not be performed (some weird errors may occur)"
 
-#: ../libgda/gda-init.c:113
+#: ../libgda/gda-init.c:125
 msgid ": Validation for XML files for server operations will not be performed (some weird errors may occur)"
 msgstr ": Validation for XML files for server operations will not be performed (some weird errors may occur)"
 
@@ -894,11 +895,6 @@ msgid "Connection associated to query's dictionary is closed"
 msgstr "Connection associated to query's dictionary is closed"
 
 #: ../libgda/gda-query.c:2911
-#: ../testing/gda-author-dict-file.c:184
-#: ../testing/gda-author-dict-file.c:195
-#: ../testing/gda-author-dict-file.c:243
-#: ../testing/gda-author-dict-file.c:249
-#: ../testing/gda-diagnose.c:630
 #: ../testing/gda-test-models.c:152
 #: ../testing/gda-test-models.c:179
 #: ../testing/gda-test-models.c:394
@@ -911,6 +907,11 @@ msgstr "Connection associated to query's dictionary is closed"
 #: ../testing/gda-test-sql.c:144
 #: ../testing/gda-test-sql.c:171
 #: ../testing/gda-test-sql.c:392
+#: ../tools/gda-author-dict-file.c:184
+#: ../tools/gda-author-dict-file.c:195
+#: ../tools/gda-author-dict-file.c:243
+#: ../tools/gda-author-dict-file.c:249
+#: ../tools/gda-diagnose.c:621
 msgid "Unknown error"
 msgstr "Unknown error"
 
@@ -1220,8 +1221,8 @@ msgid "Feature not yet implemented, see %s(), line %d"
 msgstr "Feature not yet implemented, see %s(), line %d"
 
 #: ../libgda/gda-query-field-value.c:1286
-msgid "Missing required gda_type for <gda_query_fval>"
-msgstr "Missing required gda_type for <gda_query_fval>"
+msgid "Missing required g_type for <gda_query_fval>"
+msgstr "Missing required g_type for <gda_query_fval>"
 
 #: ../libgda/gda-query-field-value.c:1296
 #, c-format
@@ -1503,13 +1504,13 @@ msgstr "Aggregate"
 #: ../libgda/gda-server-provider-extra.c:169
 #: ../providers/firebird/gda-firebird-provider.c:247
 #: ../providers/firebird/gda-firebird-provider.c:750
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:691
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:782
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:811
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:841
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:869
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:897
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:950
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:790
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:880
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:909
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:939
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:967
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:995
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1048
 #: ../providers/ldap/gda-ldap-provider.c:345
 #: ../providers/oracle/gda-oracle-provider.c:1704
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
@@ -1523,7 +1524,7 @@ msgstr "Owner"
 #: ../libgda/gda-server-provider-extra.c:158
 #: ../providers/firebird/gda-firebird-provider.c:248
 #: ../providers/firebird/gda-firebird-provider.c:751
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:898
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:996
 #: ../providers/ldap/gda-ldap-provider.c:346
 #: ../providers/oracle/gda-oracle-provider.c:1704
 #: ../providers/sybase/gda-sybase-provider.c:1101
@@ -1548,7 +1549,7 @@ msgid "Definition"
 msgstr "Definition"
 
 #: ../libgda/gda-server-provider-extra.c:93
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:726
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:825
 msgid "Database"
 msgstr "Database"
 
@@ -1626,6 +1627,8 @@ msgstr "Unique index?"
 #: ../providers/firebird/gda-firebird-provider.c:631
 #: ../providers/msql/gda-msql-provider.c:579
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:5
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:4
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:4
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:2
@@ -1649,15 +1652,16 @@ msgid "Extra attributes"
 msgstr "Extra attributes"
 
 #: ../libgda/gda-server-provider-extra.c:110
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:781
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:879
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
 msgid "Index"
 msgstr "Index"
 
 #: ../libgda/gda-server-provider-extra.c:114
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:812
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:910
 msgid "Language"
 msgstr "Language"
 
@@ -1667,13 +1671,14 @@ msgstr "Namespace"
 
 #: ../libgda/gda-server-provider-extra.c:122
 #: ../libgda/gda-server-provider-extra.c:145
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:783
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:840
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:949
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:881
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:938
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1047
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:18
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:3
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:7
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:4
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:14
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:6
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:4
@@ -1690,7 +1695,7 @@ msgid "Sequence"
 msgstr "Sequence"
 
 #: ../libgda/gda-server-provider-extra.c:127
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:810
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:908
 msgid "Procedure"
 msgstr "Procedure"
 
@@ -1716,18 +1721,18 @@ msgstr "Trigger"
 #: ../libgda/gda-server-provider-extra.c:156
 #: ../libgda/gda-server-provider-extra.c:176
 #: ../providers/firebird/gda-firebird-provider.c:246
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:896
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:994
 #: ../providers/ldap/gda-ldap-provider.c:447
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 #: ../providers/sybase/gda-sybase-provider.c:1097
-#: ../testing/gda-diagnose.c:316
+#: ../tools/gda-diagnose.c:315
 msgid "Type"
 msgstr "Type"
 
 #: ../libgda/gda-server-provider-extra.c:159
 #: ../providers/firebird/gda-firebird-provider.c:249
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:899
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:997
 #: ../providers/sybase/gda-sybase-provider.c:1103
 msgid "GDA type"
 msgstr "GDA type"
@@ -1780,22 +1785,17 @@ msgstr "Data model for schema has a wrong column name: '%s' instead of '%s'"
 msgid "Data model for schema has a wrong gda type: %s instead of %s"
 msgstr "Data model for schema has a wrong gda type: %s instead of %s"
 
-#: ../libgda/gda-util.c:243
-#, c-format
-msgid "Could not parse SQL command '%s'"
-msgstr "Could not parse SQL command '%s'"
-
-#: ../libgda/gda-util.c:276
+#: ../libgda/gda-util.c:244
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Error while reading %s: %s"
 
-#: ../libgda/gda-util.c:302
+#: ../libgda/gda-util.c:270
 #, c-format
 msgid "Could not create file %s"
 msgstr "Could not create file %s"
 
-#: ../libgda/gda-util.c:836
+#: ../libgda/gda-util.c:804
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "Field number %d not found in source named '%s'"
@@ -1829,6 +1829,7 @@ msgid "XML Tag is not <gda_graph_item>"
 msgstr "XML Tag is not <gda_graph_item>"
 
 #: ../libgda/handlers/gda-handler-bin.c:118
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:115
 msgid "Binary handler"
 msgstr "Binary handler"
 
@@ -2284,50 +2285,50 @@ msgstr "Provider for TDS-based databases (using FreeTDS)"
 msgid "NO DESCRIPTION"
 msgstr "NO DESCRIPTION"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:150
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:239
 msgid "Could not allocate environment handle.\n"
 msgstr "Could not allocate environment handle.\n"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:209
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:302
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:399
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:529
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:637
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:712
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:493
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:628
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:736
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:811
 msgid "Invalid IBM DB2 handle"
 msgstr "Invalid IBM DB2 handle"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:690
-#: ../testing/gda-diagnose.c:378
-#: ../testing/gda-diagnose.c:468
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:789
+#: ../tools/gda-diagnose.c:375
+#: ../tools/gda-diagnose.c:459
 msgid "Function"
 msgstr "Function"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:843
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:871
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:952
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:941
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:969
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1050
 msgid "SQL Definition"
 msgstr "SQL Definition"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:868
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:966
 #: ../providers/oracle/gda-oracle-provider.c:2008
 msgid "Triggers"
 msgstr "Triggers"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:924
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1022
 #: ../providers/oracle/gda-oracle-provider.c:1566
 msgid "Users"
 msgstr "Users"
 
-#: ../providers/ibmdb2/gda-ibmdb2-types.c:154
+#: ../providers/ibmdb2/gda-ibmdb2-types.c:151
 msgid "[BLOB unsupported]"
 msgstr "[BLOB unsupported]"
 
-#: ../providers/ibmdb2/gda-ibmdb2-types.c:157
+#: ../providers/ibmdb2/gda-ibmdb2-types.c:154
 msgid "[Unsupported data]"
 msgstr "[Unsupported data]"
 
@@ -2346,8 +2347,8 @@ msgid "Invalid LDAP handle"
 msgstr "Invalid LDAP handle"
 
 #: ../providers/ldap/gda-ldap-recordset.c:70
-#: ../providers/mysql/gda-mysql-recordset.c:243
-#: ../providers/mysql/gda-mysql-recordset.c:365
+#: ../providers/mysql/gda-mysql-recordset.c:245
+#: ../providers/mysql/gda-mysql-recordset.c:367
 #: ../providers/postgres/gda-postgres-recordset.c:197
 #: ../providers/postgres/gda-postgres-recordset.c:571
 msgid "Row number out of range"
@@ -2355,7 +2356,7 @@ msgstr "Row number out of range"
 
 #: ../providers/ldap/gda-ldap-recordset.c:283
 #: ../providers/msql/gda-msql-recordset.c:203
-#: ../providers/mysql/gda-mysql-recordset.c:429
+#: ../providers/mysql/gda-mysql-recordset.c:431
 #: ../providers/oracle/gda-oracle-recordset.c:473
 #: ../providers/postgres/gda-postgres-recordset.c:240
 msgid "Attempt to insert a row with an invalid number of columns"
@@ -2593,13 +2594,13 @@ msgstr "The connection string format has changed: replace DATABASE with DB_NAME 
 #: ../providers/mysql/gda-mysql-provider.c:405
 #: ../providers/mysql/gda-mysql-provider.c:1572
 #: ../providers/mysql/gda-mysql-provider.c:1676
-#: ../providers/mysql/gda-mysql-recordset.c:232
-#: ../providers/mysql/gda-mysql-recordset.c:305
-#: ../providers/mysql/gda-mysql-recordset.c:359
-#: ../providers/mysql/gda-mysql-recordset.c:412
-#: ../providers/mysql/gda-mysql-recordset.c:540
-#: ../providers/mysql/gda-mysql-recordset.c:699
-#: ../providers/mysql/gda-mysql-recordset.c:700
+#: ../providers/mysql/gda-mysql-recordset.c:234
+#: ../providers/mysql/gda-mysql-recordset.c:307
+#: ../providers/mysql/gda-mysql-recordset.c:361
+#: ../providers/mysql/gda-mysql-recordset.c:414
+#: ../providers/mysql/gda-mysql-recordset.c:542
+#: ../providers/mysql/gda-mysql-recordset.c:701
+#: ../providers/mysql/gda-mysql-recordset.c:702
 msgid "Invalid MySQL handle"
 msgstr "Invalid MySQL handle"
 
@@ -2637,71 +2638,71 @@ msgstr "Missing spec. file '%s'"
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transactions are not supported in read-only mode"
 
-#: ../providers/mysql/gda-mysql-recordset.c:312
+#: ../providers/mysql/gda-mysql-recordset.c:314
 #: ../providers/bdb/gda-bdb-recordset.c:113
 #, c-format
 msgid "Row number out of range 0 - %d"
 msgstr "Row number out of range 0 - %d"
 
-#: ../providers/mysql/gda-mysql-recordset.c:371
+#: ../providers/mysql/gda-mysql-recordset.c:373
 #: ../providers/postgres/gda-postgres-recordset.c:577
 #: ../providers/bdb/gda-bdb-recordset.c:175
 msgid "Column number out of range"
 msgstr "Column number out of range"
 
-#: ../providers/mysql/gda-mysql-recordset.c:422
-#: ../providers/mysql/gda-mysql-recordset.c:559
+#: ../providers/mysql/gda-mysql-recordset.c:424
 #: ../providers/mysql/gda-mysql-recordset.c:561
+#: ../providers/mysql/gda-mysql-recordset.c:563
 msgid "Table name could not be guessed"
 msgstr "Table name could not be guessed"
 
-#: ../providers/mysql/gda-mysql-recordset.c:444
-#: ../providers/mysql/gda-mysql-recordset.c:450
-#: ../providers/mysql/gda-mysql-recordset.c:576
+#: ../providers/mysql/gda-mysql-recordset.c:446
+#: ../providers/mysql/gda-mysql-recordset.c:452
 #: ../providers/mysql/gda-mysql-recordset.c:578
-#: ../providers/mysql/gda-mysql-recordset.c:584
+#: ../providers/mysql/gda-mysql-recordset.c:580
+#: ../providers/mysql/gda-mysql-recordset.c:586
 msgid "Can not synchronize array with MySQL result set"
 msgstr "Can not synchronise array with MySQL result set"
 
-#: ../providers/mysql/gda-mysql-recordset.c:511
+#: ../providers/mysql/gda-mysql-recordset.c:513
 msgid "Can not append row to data model"
 msgstr "Can not append row to data model"
 
-#: ../providers/mysql/gda-mysql-recordset.c:550
 #: ../providers/mysql/gda-mysql-recordset.c:552
-#: ../providers/mysql/gda-mysql-recordset.c:710
+#: ../providers/mysql/gda-mysql-recordset.c:554
 #: ../providers/mysql/gda-mysql-recordset.c:712
+#: ../providers/mysql/gda-mysql-recordset.c:714
 #: ../providers/postgres/gda-postgres-recordset.c:330
 #: ../providers/postgres/gda-postgres-recordset.c:430
 msgid "Given row doesn't belong to the model."
 msgstr "Given row doesn't belong to the model."
 
-#: ../providers/mysql/gda-mysql-recordset.c:636
 #: ../providers/mysql/gda-mysql-recordset.c:638
+#: ../providers/mysql/gda-mysql-recordset.c:640
 #: ../providers/postgres/gda-postgres-recordset.c:369
 msgid "Model doesn't have at least one unique key."
 msgstr "Model doesn't have at least one unique key."
 
-#: ../providers/mysql/gda-mysql-recordset.c:666
 #: ../providers/mysql/gda-mysql-recordset.c:668
+#: ../providers/mysql/gda-mysql-recordset.c:670
 msgid "Can not remove row from data model"
 msgstr "Can not remove row from data model"
 
-#: ../providers/mysql/gda-mysql-recordset.c:719
 #: ../providers/mysql/gda-mysql-recordset.c:721
+#: ../providers/mysql/gda-mysql-recordset.c:723
 #: ../providers/postgres/gda-postgres-recordset.c:233
 #: ../providers/postgres/gda-postgres-recordset.c:337
 #: ../providers/postgres/gda-postgres-recordset.c:437
 msgid "Table name could not be guessed."
 msgstr "Table name could not be guessed."
 
-#: ../providers/mysql/gda-mysql-recordset.c:794
 #: ../providers/mysql/gda-mysql-recordset.c:796
+#: ../providers/mysql/gda-mysql-recordset.c:798
 msgid "Model does not have at least one non-modified unique key."
 msgstr "Model does not have at least one non-modified unique key."
 
-#: ../providers/mysql/gda-mysql-recordset.c:805
 #: ../providers/mysql/gda-mysql-recordset.c:807
+#: ../providers/mysql/gda-mysql-recordset.c:809
 msgid "Model does not have any non-unique values to update."
 msgstr "Model does not have any non-unique values to update."
 
@@ -3466,6 +3467,7 @@ msgid "Only if exists"
 msgstr "Only if exists"
 
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:2
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:3
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:4
 msgid "Index to delete"
@@ -3499,12 +3501,15 @@ msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
 msgstr "Refuse to drop the table if any objects depend on it (RESTRICT)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:8
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:4
 msgid "Table to delete"
 msgstr "Table to delete"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:5
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:6
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:6
 msgid "What to do with references"
@@ -3760,6 +3765,18 @@ msgstr "Could not fetch a row"
 #: ../providers/oracle/libmain.c:40
 msgid "Provider for Oracle databases"
 msgstr "Provider for Oracle databases"
+
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:1
+msgid "Drop the domain index even if the indextype routine invocation returns an error or the index is marked 'in progress'. (FORCE)"
+msgstr "Drop the domain index even if the indextype routine invocation returns an error or the index is marked 'in progress'. (FORCE)"
+
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:1
+msgid "Automatically drop objects that depend on the table (CASCADE CONSTRAINTS)"
+msgstr "Automatically drop objects that depend on the table (CASCADE CONSTRAINTS)"
+
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:3
+msgid "Release the space associated with the table. (PURGE)"
+msgstr "Release the space associated with the table. (PURGE)"
 
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:1
 msgid "Name of the TNS configuration to use for connecting"
@@ -4084,6 +4101,14 @@ msgstr "Search Path"
 msgid "Search path among database's schemas"
 msgstr "Search path among database's schemas"
 
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:120
+msgid "SqliteBin"
+msgstr "SqliteBin"
+
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:121
+msgid "SQlite binary representation"
+msgstr "SQlite binary representation"
+
 #: ../providers/sqlite/gda-sqlite-provider.c:255
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "The connection string must contain DB_DIR and DB_NAME values"
@@ -4104,15 +4129,15 @@ msgstr "Could not set empty_result_callbacks SQLite option"
 #: ../providers/sqlite/gda-sqlite-provider.c:384
 #: ../providers/sqlite/gda-sqlite-provider.c:569
 #: ../providers/sqlite/gda-sqlite-provider.c:943
-#: ../providers/sqlite/gda-sqlite-provider.c:1340
+#: ../providers/sqlite/gda-sqlite-provider.c:1336
 msgid "Invalid SQLite handle"
 msgstr "Invalid SQLite handle"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:439
-#: ../providers/sqlite/gda-sqlite-provider.c:1162
-#: ../providers/sqlite/gda-sqlite-provider.c:1397
-#: ../providers/sqlite/gda-sqlite-provider.c:1434
-#: ../providers/sqlite/gda-sqlite-provider.c:1556
+#: ../providers/sqlite/gda-sqlite-provider.c:1160
+#: ../providers/sqlite/gda-sqlite-provider.c:1393
+#: ../providers/sqlite/gda-sqlite-provider.c:1430
+#: ../providers/sqlite/gda-sqlite-provider.c:1552
 msgid "Invalid SQLITE handle"
 msgstr "Invalid SQLITE handle"
 
@@ -4120,17 +4145,17 @@ msgstr "Invalid SQLITE handle"
 msgid "Only one database per connection is allowed"
 msgstr "Only one database per connection is allowed"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1184
-#: ../providers/sqlite/gda-sqlite-provider.c:1586
+#: ../providers/sqlite/gda-sqlite-provider.c:1182
+#: ../providers/sqlite/gda-sqlite-provider.c:1582
 msgid "Can't execute PRAGMA table_info()"
 msgstr "Can't execute PRAGMA table_info()"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1290
+#: ../providers/sqlite/gda-sqlite-provider.c:1286
 #, c-format
 msgid "Can't find table %s"
 msgstr "Can't find table %s"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1659
+#: ../providers/sqlite/gda-sqlite-provider.c:1653
 msgid "Can't execute PRAGMA foreign_key_list()"
 msgstr "Can't execute PRAGMA foreign_key_list()"
 
@@ -4671,361 +4696,27 @@ msgstr "Database is empty"
 msgid "Provider for Berkeley databases"
 msgstr "Provider for Berkeley databases"
 
-#: ../testing/gda-author-dict-file.c:148
 #: ../testing/gda-test-connection.c:62
 #: ../testing/gda-test-server-operation.c:73
+#: ../tools/gda-author-dict-file.c:148
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN '%s' is not declared"
 
-#: ../testing/gda-author-dict-file.c:155
 #: ../testing/gda-test-connection.c:69
 #: ../testing/gda-test-server-operation.c:80
+#: ../tools/gda-author-dict-file.c:155
+#: ../tools/gda-diagnose.c:1362
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "Can't open connection to DSN %s: %s\n"
 
-#: ../testing/gda-author-dict-file.c:167
 #: ../testing/gda-test-connection.c:81
 #: ../testing/gda-test-server-operation.c:92
+#: ../tools/gda-author-dict-file.c:167
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "Can't open specified connection: %s\n"
-
-#: ../testing/gda-author-dict-file.c:203
-msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
-msgstr "Fetching meta-data from the DBMS server. This may take some time...\n"
-
-#: ../testing/gda-author-dict-file.c:248
-#: ../testing/gda-test-models.c:151
-#: ../testing/gda-test-models.c:178
-#: ../testing/gda-test-sql.c:143
-#: ../testing/gda-test-sql.c:170
-#, c-format
-msgid "Can't write dictionary to file %s: %s\n"
-msgstr "Can't write dictionary to file %s: %s\n"
-
-#: ../testing/gda-author-dict-file.c:251
-#, c-format
-msgid "Dictionary file written to %s\n"
-msgstr "Dictionary file written to %s\n"
-
-#: ../testing/gda-diagnose.c:117
-#: ../testing/gda-test-models.c:101
-#: ../testing/gda-test-sql.c:97
-#, c-format
-msgid "Generated @ %s"
-msgstr "Generated @ %s"
-
-#: ../testing/gda-diagnose.c:174
-msgid "Data sources"
-msgstr "Data sources"
-
-#: ../testing/gda-diagnose.c:175
-msgid "List of data sources from the config files (user and system wide)"
-msgstr "List of data sources from the config files (user and system wide)"
-
-#: ../testing/gda-diagnose.c:236
-msgid "Providers"
-msgstr "Providers"
-
-#: ../testing/gda-diagnose.c:237
-msgid "Installed providers"
-msgstr "Installed providers"
-
-#: ../testing/gda-diagnose.c:293
-#, c-format
-msgid "Provider '%s' details"
-msgstr "Provider '%s' details"
-
-#: ../testing/gda-diagnose.c:302
-msgid "Provider's information"
-msgstr "Provider's information"
-
-#: ../testing/gda-diagnose.c:311
-msgid "Data source's parameters:"
-msgstr "Data source's parameters:"
-
-#: ../testing/gda-diagnose.c:314
-msgid "Parameter name"
-msgstr "Parameter name"
-
-#: ../testing/gda-diagnose.c:333
-msgid "Data source's parameters: none provided"
-msgstr "Data source's parameters: none provided"
-
-#: ../testing/gda-diagnose.c:340
-msgid "Detailed data source's parameters"
-msgstr "Detailed data source's parameters"
-
-#: ../testing/gda-diagnose.c:344
-msgid "Detailed data source's parameters: none provided"
-msgstr "Detailed data source's parameters: none provided"
-
-#: ../testing/gda-diagnose.c:375
-msgid "Plugin's entry functions"
-msgstr "Plugin's entry functions"
-
-#: ../testing/gda-diagnose.c:379
-#: ../testing/gda-diagnose.c:469
-msgid "Present?"
-msgstr "Present?"
-
-#: ../testing/gda-diagnose.c:383
-#: ../testing/gda-diagnose.c:387
-#: ../testing/gda-diagnose.c:391
-#: ../testing/gda-diagnose.c:397
-#: ../testing/gda-diagnose.c:401
-#: ../testing/gda-diagnose.c:475
-#: ../testing/gda-diagnose.c:481
-#: ../testing/gda-diagnose.c:492
-#: ../testing/gda-diagnose.c:520
-#: ../testing/gda-diagnose.c:559
-#: ../testing/html.c:293
-msgid "Yes"
-msgstr "Yes"
-
-#: ../testing/gda-diagnose.c:383
-#: ../testing/gda-diagnose.c:387
-#: ../testing/gda-diagnose.c:391
-#: ../testing/gda-diagnose.c:397
-#: ../testing/gda-diagnose.c:401
-#: ../testing/gda-diagnose.c:475
-#: ../testing/gda-diagnose.c:481
-#: ../testing/gda-diagnose.c:492
-#: ../testing/gda-diagnose.c:520
-#: ../testing/gda-diagnose.c:559
-#: ../testing/html.c:293
-msgid "No"
-msgstr "No"
-
-#.
-#. * Virtual functions
-#.
-#: ../testing/gda-diagnose.c:465
-msgid "GdaServerProvider object's virtual functions"
-msgstr "GdaServerProvider object's virtual functions"
-
-#: ../testing/gda-diagnose.c:470
-msgid "Result"
-msgstr "Result"
-
-#: ../testing/gda-diagnose.c:470
-msgid "Result without any connection"
-msgstr "Result without any connection"
-
-#: ../testing/gda-diagnose.c:569
-msgid "Schemas reporting"
-msgstr "Schemas reporting"
-
-#: ../testing/gda-diagnose.c:571
-msgid "Schemas not reported by this provider"
-msgstr "Schemas not reported by this provider"
-
-#: ../testing/gda-diagnose.c:628
-#, c-format
-msgid "Schema Error: %s"
-msgstr "Schema Error: %s"
-
-#: ../testing/gda-diagnose.c:663
-#, c-format
-msgid "Fields for '%s'"
-msgstr "Fields for '%s'"
-
-#: ../testing/gda-diagnose.c:672
-msgid "No field returned"
-msgstr "No field returned"
-
-#: ../testing/gda-diagnose.c:679
-#: ../testing/gda-diagnose.c:722
-#: ../testing/gda-diagnose.c:735
-msgid "Error"
-msgstr "Error"
-
-#: ../testing/gda-diagnose.c:708
-#, c-format
-msgid "Constraints for '%s'"
-msgstr "Constraints for '%s'"
-
-#: ../testing/gda-diagnose.c:717
-msgid "No constraint"
-msgstr "No constraint"
-
-#: ../testing/gda-diagnose.c:731
-msgid "Nothing to return"
-msgstr "Nothing to return"
-
-#.
-#. * Data types testing
-#.
-#: ../testing/gda-diagnose.c:747
-msgid "Data types handling"
-msgstr "Data types handling"
-
-#: ../testing/gda-diagnose.c:749
-msgid "This provider does not support data handlers"
-msgstr "This provider does not support data handlers"
-
-#: ../testing/gda-diagnose.c:779
-msgid "Data handler marked as error cannot handle the data type they are returned for."
-msgstr "Data handler marked as error cannot handle the data type they are returned for."
-
-#: ../testing/gda-diagnose.c:789
-msgid "Data handlers test"
-msgstr "Data handlers test"
-
-#: ../testing/gda-diagnose.c:790
-msgid "get_sql_from_value() and get_str_from_value()"
-msgstr "get_sql_from_value() and get_str_from_value()"
-
-#: ../testing/gda-diagnose.c:798
-msgid "get_value_from_sql()"
-msgstr "get_value_from_sql()"
-
-#: ../testing/gda-diagnose.c:805
-msgid "get_value_from_str()"
-msgstr "get_value_from_str()"
-
-#: ../testing/gda-diagnose.c:1210
-#, c-format
-msgid "%s (init value)"
-msgstr "%s (init value)"
-
-#: ../testing/gda-diagnose.c:1347
-#, c-format
-msgid "Datasource '%s' details"
-msgstr "Datasource '%s' details"
-
-#: ../testing/gda-diagnose.c:1356
-msgid "Datasource's information"
-msgstr "Datasource's information"
-
-#: ../testing/gda-diagnose.c:1367
-msgid "Can't open connection."
-msgstr "Can't open connection."
-
-#: ../testing/gda-inspect-dict-file.c:47
-#, c-format
-msgid "Usage: %s <Dictionary XML file>\n"
-msgstr "Usage: %s <Dictionary XML file>\n"
-
-#: ../testing/gda-inspect-dict-file.c:53
-#, c-format
-msgid "File '%s' does not exist or can't be read!\n"
-msgstr "File '%s' does not exist or can't be read!\n"
-
-#: ../testing/gda-inspect-dict-file.c:58
-#, c-format
-msgid "File '%s' is a directory!\n"
-msgstr "File '%s' is a directory!\n"
-
-#: ../testing/gda-inspect-dict-file.c:64
-#: ../testing/gda-test-models.c:164
-#: ../testing/gda-test-sql.c:156
-#, c-format
-msgid ""
-"Error loading dictionary file '%s':\n"
-"%s\n"
-msgstr ""
-"Error loading dictionary file '%s':\n"
-"%s\n"
-
-#: ../testing/gda-inspect-dict-file.c:65
-#: ../testing/gda-test-models.c:165
-#: ../testing/gda-test-sql.c:157
-msgid "Unspecified"
-msgstr "Unspecified"
-
-#: ../testing/gda-inspect-dict-file.c:84
-#, c-format
-msgid ""
-"Error saving dictionary to file '%s':\n"
-"%s\n"
-msgstr ""
-"Error saving dictionary to file '%s':\n"
-"%s\n"
-
-#: ../testing/gda-inspect-dict-file.c:91
-#: ../testing/gda-inspect-dict-file.c:110
-#: ../testing/gda-test-models.c:191
-#: ../testing/gda-test-models.c:205
-#: ../testing/gda-test-sql.c:183
-#: ../testing/gda-test-sql.c:197
-#, c-format
-msgid ""
-"Can't run command '%s':\n"
-"%s\n"
-msgstr ""
-"Can't run command '%s':\n"
-"%s\n"
-
-#: ../testing/gda-inspect-dict-file.c:141
-msgid "List of queries in this file:\n"
-msgstr "List of queries in this file:\n"
-
-#: ../testing/gda-inspect-dict-file.c:143
-msgid "There is no query in this file.\n"
-msgstr "There is no query in this file.\n"
-
-#: ../testing/gda-inspect-dict-file.c:151
-#, c-format
-msgid "########### Query \"%s\" ###########\n"
-msgstr "########### Query \"%s\" ###########\n"
-
-#: ../testing/gda-inspect-dict-file.c:154
-msgid "## SQL:\n"
-msgstr "## SQL:\n"
-
-#: ../testing/gda-inspect-dict-file.c:160
-#, c-format
-msgid "SQL ERROR: %s\n"
-msgstr "SQL ERROR: %s\n"
-
-#: ../testing/gda-inspect-dict-file.c:165
-msgid "## information:\n"
-msgstr "## information:\n"
-
-#: ../testing/gda-inspect-dict-file.c:182
-#, c-format
-msgid "Query_%02d"
-msgstr "Query_%02d"
-
-#: ../testing/gda-inspect-dict-file.c:187
-#, c-format
-msgid ""
-"Could not write graph to '%s' (%s)\n"
-"\n"
-msgstr ""
-"Could not write graph to '%s' (%s)\n"
-"\n"
-
-#: ../testing/gda-inspect-dict-file.c:192
-#, c-format
-msgid "Written graph to '%s'\n"
-msgstr "Written graph to '%s'\n"
-
-#: ../testing/gda-list-config.c:102
-#, c-format
-msgid "Provider: %s\n"
-msgstr "Provider: %s\n"
-
-#: ../testing/gda-list-config.c:103
-#, c-format
-msgid "Description: %s\n"
-msgstr "Description: %s\n"
-
-#: ../testing/gda-list-config.c:104
-#, c-format
-msgid "Location: %s\n"
-msgstr "Location: %s\n"
-
-#: ../testing/gda-list-config.c:105
-msgid "Data source's parameters (Name / Type / Description):\n"
-msgstr "Data source's parameters (Name / Type / Description):\n"
-
-#: ../testing/gda-list-config.c:121
-msgid "None provided"
-msgstr "None provided"
 
 #: ../testing/gda-test-connection.c:87
 msgid "Connection successfully opened!\n"
@@ -5035,6 +4726,53 @@ msgstr "Connection successfully opened!\n"
 #: ../testing/gda-test-sql.c:87
 msgid "List of SQL parsing tests"
 msgstr "List of SQL parsing tests"
+
+#: ../testing/gda-test-models.c:101
+#: ../testing/gda-test-sql.c:97
+#: ../tools/gda-diagnose.c:117
+#, c-format
+msgid "Generated @ %s"
+msgstr "Generated @ %s"
+
+#: ../testing/gda-test-models.c:151
+#: ../testing/gda-test-models.c:178
+#: ../testing/gda-test-sql.c:143
+#: ../testing/gda-test-sql.c:170
+#: ../tools/gda-author-dict-file.c:248
+#, c-format
+msgid "Can't write dictionary to file %s: %s\n"
+msgstr "Can't write dictionary to file %s: %s\n"
+
+#: ../testing/gda-test-models.c:164
+#: ../testing/gda-test-sql.c:156
+#: ../tools/gda-inspect-dict-file.c:64
+#, c-format
+msgid ""
+"Error loading dictionary file '%s':\n"
+"%s\n"
+msgstr ""
+"Error loading dictionary file '%s':\n"
+"%s\n"
+
+#: ../testing/gda-test-models.c:165
+#: ../testing/gda-test-sql.c:157
+#: ../tools/gda-inspect-dict-file.c:65
+msgid "Unspecified"
+msgstr "Unspecified"
+
+#: ../testing/gda-test-models.c:191
+#: ../testing/gda-test-models.c:205
+#: ../testing/gda-test-sql.c:183
+#: ../testing/gda-test-sql.c:197
+#: ../tools/gda-inspect-dict-file.c:91
+#: ../tools/gda-inspect-dict-file.c:110
+#, c-format
+msgid ""
+"Can't run command '%s':\n"
+"%s\n"
+msgstr ""
+"Can't run command '%s':\n"
+"%s\n"
 
 #: ../testing/gda-test-models.c:385
 msgid "Missing 'file' attribute"
@@ -5106,9 +4844,300 @@ msgstr "Copied"
 
 #. toc
 #: ../testing/html.c:113
+#: ../tools/html.c:113
 msgid "Table of contents"
 msgstr "Table of contents"
 
+#: ../testing/html.c:293
+#: ../tools/gda-diagnose.c:380
+#: ../tools/gda-diagnose.c:384
+#: ../tools/gda-diagnose.c:388
+#: ../tools/gda-diagnose.c:392
+#: ../tools/gda-diagnose.c:466
+#: ../tools/gda-diagnose.c:472
+#: ../tools/gda-diagnose.c:483
+#: ../tools/gda-diagnose.c:511
+#: ../tools/gda-diagnose.c:550
+#: ../tools/html.c:293
+msgid "Yes"
+msgstr "Yes"
+
+#: ../testing/html.c:293
+#: ../tools/gda-diagnose.c:380
+#: ../tools/gda-diagnose.c:384
+#: ../tools/gda-diagnose.c:388
+#: ../tools/gda-diagnose.c:392
+#: ../tools/gda-diagnose.c:466
+#: ../tools/gda-diagnose.c:472
+#: ../tools/gda-diagnose.c:483
+#: ../tools/gda-diagnose.c:511
+#: ../tools/gda-diagnose.c:550
+#: ../tools/html.c:293
+msgid "No"
+msgstr "No"
+
+#: ../tools/gda-author-dict-file.c:203
+msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
+msgstr "Fetching meta-data from the DBMS server. This may take some time...\n"
+
+#: ../tools/gda-author-dict-file.c:251
+#, c-format
+msgid "Dictionary file written to %s\n"
+msgstr "Dictionary file written to %s\n"
+
+#: ../tools/gda-diagnose.c:174
+msgid "Data sources"
+msgstr "Data sources"
+
+#: ../tools/gda-diagnose.c:175
+msgid "List of data sources from the config files (user and system wide)"
+msgstr "List of data sources from the config files (user and system wide)"
+
+#: ../tools/gda-diagnose.c:236
+msgid "Providers"
+msgstr "Providers"
+
+#: ../tools/gda-diagnose.c:237
+msgid "Installed providers"
+msgstr "Installed providers"
+
+#: ../tools/gda-diagnose.c:292
+#, c-format
+msgid "Provider '%s' details"
+msgstr "Provider '%s' details"
+
+#: ../tools/gda-diagnose.c:301
+msgid "Provider's information"
+msgstr "Provider's information"
+
+#: ../tools/gda-diagnose.c:310
+msgid "Data source's parameters:"
+msgstr "Data source's parameters:"
+
+#: ../tools/gda-diagnose.c:313
+msgid "Parameter name"
+msgstr "Parameter name"
+
+#: ../tools/gda-diagnose.c:332
+msgid "Data source's parameters: none provided"
+msgstr "Data source's parameters: none provided"
+
+#: ../tools/gda-diagnose.c:339
+msgid "Detailed data source's parameters"
+msgstr "Detailed data source's parameters"
+
+#: ../tools/gda-diagnose.c:343
+msgid "Detailed data source's parameters: none provided"
+msgstr "Detailed data source's parameters: none provided"
+
+#: ../tools/gda-diagnose.c:372
+msgid "Plugin's entry functions"
+msgstr "Plugin's entry functions"
+
+#: ../tools/gda-diagnose.c:376
+#: ../tools/gda-diagnose.c:460
+msgid "Present?"
+msgstr "Present?"
+
+#.
+#. * Virtual functions
+#.
+#: ../tools/gda-diagnose.c:456
+msgid "GdaServerProvider object's virtual functions"
+msgstr "GdaServerProvider object's virtual functions"
+
+#: ../tools/gda-diagnose.c:461
+msgid "Result"
+msgstr "Result"
+
+#: ../tools/gda-diagnose.c:461
+msgid "Result without any connection"
+msgstr "Result without any connection"
+
+#: ../tools/gda-diagnose.c:560
+msgid "Schemas reporting"
+msgstr "Schemas reporting"
+
+#: ../tools/gda-diagnose.c:562
+msgid "Schemas not reported by this provider"
+msgstr "Schemas not reported by this provider"
+
+#: ../tools/gda-diagnose.c:619
+#, c-format
+msgid "Schema Error: %s"
+msgstr "Schema Error: %s"
+
+#: ../tools/gda-diagnose.c:654
+#, c-format
+msgid "Fields for '%s'"
+msgstr "Fields for '%s'"
+
+#: ../tools/gda-diagnose.c:663
+msgid "No field returned"
+msgstr "No field returned"
+
+#: ../tools/gda-diagnose.c:670
+#: ../tools/gda-diagnose.c:713
+#: ../tools/gda-diagnose.c:726
+msgid "Error"
+msgstr "Error"
+
+#: ../tools/gda-diagnose.c:699
+#, c-format
+msgid "Constraints for '%s'"
+msgstr "Constraints for '%s'"
+
+#: ../tools/gda-diagnose.c:708
+msgid "No constraint"
+msgstr "No constraint"
+
+#: ../tools/gda-diagnose.c:722
+msgid "Nothing to return"
+msgstr "Nothing to return"
+
+#.
+#. * Data types testing
+#.
+#: ../tools/gda-diagnose.c:738
+msgid "Data types handling"
+msgstr "Data types handling"
+
+#: ../tools/gda-diagnose.c:740
+msgid "This provider does not support data handlers"
+msgstr "This provider does not support data handlers"
+
+#: ../tools/gda-diagnose.c:770
+msgid "Data handler marked as error cannot handle the data type they are returned for."
+msgstr "Data handler marked as error cannot handle the data type they are returned for."
+
+#: ../tools/gda-diagnose.c:780
+msgid "Data handlers test"
+msgstr "Data handlers test"
+
+#: ../tools/gda-diagnose.c:781
+msgid "get_sql_from_value() and get_str_from_value()"
+msgstr "get_sql_from_value() and get_str_from_value()"
+
+#: ../tools/gda-diagnose.c:789
+msgid "get_value_from_sql()"
+msgstr "get_value_from_sql()"
+
+#: ../tools/gda-diagnose.c:796
+msgid "get_value_from_str()"
+msgstr "get_value_from_str()"
+
+#: ../tools/gda-diagnose.c:1201
+#, c-format
+msgid "%s (init value)"
+msgstr "%s (init value)"
+
+#: ../tools/gda-diagnose.c:1339
+#, c-format
+msgid "Datasource '%s' details"
+msgstr "Datasource '%s' details"
+
+#: ../tools/gda-diagnose.c:1348
+msgid "Datasource's information"
+msgstr "Datasource's information"
+
+#: ../tools/gda-diagnose.c:1359
+msgid "Can't open connection."
+msgstr "Can't open connection."
+
+#: ../tools/gda-inspect-dict-file.c:47
+#, c-format
+msgid "Usage: %s <Dictionary XML file>\n"
+msgstr "Usage: %s <Dictionary XML file>\n"
+
+#: ../tools/gda-inspect-dict-file.c:53
+#, c-format
+msgid "File '%s' does not exist or can't be read!\n"
+msgstr "File '%s' does not exist or can't be read!\n"
+
+#: ../tools/gda-inspect-dict-file.c:58
+#, c-format
+msgid "File '%s' is a directory!\n"
+msgstr "File '%s' is a directory!\n"
+
+#: ../tools/gda-inspect-dict-file.c:84
+#, c-format
+msgid ""
+"Error saving dictionary to file '%s':\n"
+"%s\n"
+msgstr ""
+"Error saving dictionary to file '%s':\n"
+"%s\n"
+
+#: ../tools/gda-inspect-dict-file.c:141
+msgid "List of queries in this file:\n"
+msgstr "List of queries in this file:\n"
+
+#: ../tools/gda-inspect-dict-file.c:143
+msgid "There is no query in this file.\n"
+msgstr "There is no query in this file.\n"
+
+#: ../tools/gda-inspect-dict-file.c:151
+#, c-format
+msgid "########### Query \"%s\" ###########\n"
+msgstr "########### Query \"%s\" ###########\n"
+
+#: ../tools/gda-inspect-dict-file.c:154
+msgid "## SQL:\n"
+msgstr "## SQL:\n"
+
+#: ../tools/gda-inspect-dict-file.c:160
+#, c-format
+msgid "SQL ERROR: %s\n"
+msgstr "SQL ERROR: %s\n"
+
+#: ../tools/gda-inspect-dict-file.c:165
+msgid "## information:\n"
+msgstr "## information:\n"
+
+#: ../tools/gda-inspect-dict-file.c:182
+#, c-format
+msgid "Query_%02d"
+msgstr "Query_%02d"
+
+#: ../tools/gda-inspect-dict-file.c:187
+#, c-format
+msgid ""
+"Could not write graph to '%s' (%s)\n"
+"\n"
+msgstr ""
+"Could not write graph to '%s' (%s)\n"
+"\n"
+
+#: ../tools/gda-inspect-dict-file.c:192
+#, c-format
+msgid "Written graph to '%s'\n"
+msgstr "Written graph to '%s'\n"
+
+#: ../tools/gda-list-config.c:102
+#, c-format
+msgid "Provider: %s\n"
+msgstr "Provider: %s\n"
+
+#: ../tools/gda-list-config.c:103
+#, c-format
+msgid "Description: %s\n"
+msgstr "Description: %s\n"
+
+#: ../tools/gda-list-config.c:104
+#, c-format
+msgid "Location: %s\n"
+msgstr "Location: %s\n"
+
+#: ../tools/gda-list-config.c:105
+msgid "Data source's parameters (Name / Type / Description):\n"
+msgstr "Data source's parameters (Name / Type / Description):\n"
+
+#: ../tools/gda-list-config.c:121
+msgid "None provided"
+msgstr "None provided"
+
+#~ msgid "Could not parse SQL command '%s'"
+#~ msgstr "Could not parse SQL command '%s'"
 #~ msgid "Data type '%s' can't be converted to a known type"
 #~ msgstr "Data type '%s' can't be converted to a known type"
 #~ msgid "Temporary data source created by libgda. Don't remove it"
