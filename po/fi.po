@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-03 09:49+0300\n"
-"PO-Revision-Date: 2006-10-03 10:00+0300\n"
+"POT-Creation-Date: 2006-10-22 08:09+0300\n"
+"PO-Revision-Date: 2006-10-08 17:42+0300\n"
 "Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "Virhe: %s"
 msgid "Id"
 msgstr "Tunniste"
 
-#: ../libgda/gda-config.c:1578 ../testing/gda-diagnose.c:304
+#: ../libgda/gda-config.c:1578 ../tools/gda-diagnose.c:304
 msgid "Location"
 msgstr "Sijainti"
 
@@ -69,8 +69,8 @@ msgstr "Sijainti"
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:911
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:940
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:968
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1049
-#: ../testing/gda-diagnose.c:305 ../testing/gda-diagnose.c:314
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1049 ../tools/gda-diagnose.c:305
+#: ../tools/gda-diagnose.c:314
 msgid "Description"
 msgstr "Kuvaus"
 
@@ -365,7 +365,7 @@ msgstr "Oletettiin merkintää <gda_array>, saatiin <%s>"
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "Kenttää <gda_array_field> ei ole määritelty listassa <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1734 ../libgda/gda-data-proxy.c:454
+#: ../libgda/gda-data-model-import.c:1734 ../libgda/gda-data-proxy.c:427
 #: ../libgda/gda-server-operation.c:769
 #: ../providers/oracle/gda-oracle-provider.c:1952
 msgid "No detail"
@@ -381,35 +381,35 @@ msgstr "Rivillä %d ei ole tarpeeksi arvoja, täytetään NULL-arvoilla"
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "Rivillä %d ei ole tarpeeksi arvoja (jotka jätetään huomioimatta)"
 
-#: ../libgda/gda-data-model-query.c:602
+#: ../libgda/gda-data-model-query.c:608
 msgid "Query is not a SELECT query"
 msgstr "Kysely ei ole SELECT-kysely"
 
-#: ../libgda/gda-data-model-query.c:674
+#: ../libgda/gda-data-model-query.c:680
 msgid "Wrong type of query"
 msgstr "Virheellinen kyselyn tyyppi"
 
-#: ../libgda/gda-data-model-query.c:773
+#: ../libgda/gda-data-model-query.c:779
 #, c-format
 msgid "Can't determine the GType for field '%s', please fill a bug report"
 msgstr "Kentän \"%s\" GTypeä ei voi selvittää, ole hyvä ja tee vikailmoitus"
 
-#: ../libgda/gda-data-model-query.c:830
+#: ../libgda/gda-data-model-query.c:836
 msgid ""
 "Can't compute the list of columns because the SELECT query is not active "
 "(you can use a dictionary to correct this) and the model does not contain "
 "any data"
 msgstr ""
 
-#: ../libgda/gda-data-model-query.c:1052 ../libgda/gda-data-model-query.c:1100
+#: ../libgda/gda-data-model-query.c:1061 ../libgda/gda-data-model-query.c:1109
 msgid "No UPDATE query specified, can't update row"
 msgstr "UPDATE-kyselyä ei ollut määritelty, riviä ei voi päivittää"
 
-#: ../libgda/gda-data-model-query.c:1151 ../libgda/gda-data-model-query.c:1199
+#: ../libgda/gda-data-model-query.c:1160 ../libgda/gda-data-model-query.c:1208
 msgid "No INSERT query specified, can't insert row"
 msgstr "INSERT-kyselyä ei ollut määritelty, riviä ei voi lisätä"
 
-#: ../libgda/gda-data-model-query.c:1241
+#: ../libgda/gda-data-model-query.c:1250
 msgid "No DELETE query specified, can't delete row"
 msgstr "DELETE-kyselyä ei ollut määritelty, riviä ei voi poistaa"
 
@@ -417,32 +417,32 @@ msgstr "DELETE-kyselyä ei ollut määritelty, riviä ei voi poistaa"
 msgid "Too many values in list"
 msgstr "Liian monta arvoa listassa"
 
-#: ../libgda/gda-data-proxy.c:435
+#: ../libgda/gda-data-proxy.c:408
 msgid "Data model"
 msgstr "Tietomalli"
 
-#: ../libgda/gda-data-proxy.c:453
+#: ../libgda/gda-data-proxy.c:426
 #, c-format
 msgid "Could not auto-commit row change: %s"
 msgstr "Rivin muutosta ei voitu toteuttaa automaattisesti: %s"
 
-#: ../libgda/gda-data-proxy.c:672
+#: ../libgda/gda-data-proxy.c:636
 msgid "GdaDataProxy cant' handle non random access data models"
 msgstr ""
 "GdaDataProxy ei voi käsitellä tietomalleja, joita ei voi käsitellä "
 "satunnaisella haulla"
 
-#: ../libgda/gda-data-proxy.c:2429
+#: ../libgda/gda-data-proxy.c:2235
 #, c-format
 msgid "Unknown GdaDataProxy column: %d"
 msgstr "Tuntematon GdaDataProxy-sarake: %d"
 
-#: ../libgda/gda-data-proxy.c:2603
+#: ../libgda/gda-data-proxy.c:2414
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Yritettiin muuttaa vain luettavissa olevaa saraketta: %d"
 
-#: ../libgda/gda-data-proxy.c:2640
+#: ../libgda/gda-data-proxy.c:2451
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Arvotyypit %s ja %s eivät täsmää"
@@ -491,7 +491,7 @@ msgstr ""
 "XML-tietoja kentällä %s ei voi tallentaa (ei rekisteröityä "
 "tallennusfunktiota)"
 
-#: ../libgda/gda-dict.c:1037 ../testing/html.c:131
+#: ../libgda/gda-dict.c:1037 ../testing/html.c:131 ../tools/html.c:131
 #, c-format
 msgid "Error writing XML file %s"
 msgstr "Virhe kirjoitettaessa XML-tiedostoa %s"
@@ -512,27 +512,27 @@ msgstr "Yhteys on suljettu"
 msgid "Update already started!"
 msgstr "Päivitys n jo käynnistetty!"
 
-#: ../libgda/gda-dict.c:1307 ../libgda/gda-dict-database.c:889
+#: ../libgda/gda-dict.c:1306 ../libgda/gda-dict-database.c:889
 msgid "Update stopped!"
 msgstr "Päivitys pysäytetty!"
 
-#: ../libgda/gda-dict.c:1387
+#: ../libgda/gda-dict.c:1386
 #, c-format
 msgid "Error creating directory %s"
 msgstr "Virhe luotaessa kansiota %s"
 
-#: ../libgda/gda-dict.c:1639
+#: ../libgda/gda-dict.c:1638
 #, c-format
 msgid "Cannot register object type %s a second time"
 msgstr "Oliotyyppiä %s ei voi rekisteröidä toiseen kertaan"
 
-#: ../libgda/gda-dict.c:1643
+#: ../libgda/gda-dict.c:1642
 #, c-format
 msgid "Cannot register object type %s: no XML group tag specified"
 msgstr ""
 "Oliotyyppiä %s ei voi rekisteröidä: XML-ryhmämerkintää ei ole määritelty"
 
-#: ../libgda/gda-dict.c:1710
+#: ../libgda/gda-dict.c:1709
 #, c-format
 msgid ""
 "Trying to declare an object when object class %s is not registered in the "
@@ -541,7 +541,7 @@ msgstr ""
 "Yritettiin määritellä oliota, kun olioluokkaa %s ei ole rekisteröity "
 "kirjastoon"
 
-#: ../libgda/gda-dict.c:1803
+#: ../libgda/gda-dict.c:1802
 #, c-format
 msgid ""
 "Trying to make an object assumed when object class %s is not registered in "
@@ -550,13 +550,13 @@ msgstr ""
 "Yriteltiin merkitä oliota omaksutuksi, kun olioluokkaa %s ei ole "
 "rekisteröity kirjastoon"
 
-#: ../libgda/gda-dict.c:1818
+#: ../libgda/gda-dict.c:1817
 msgid ""
 "Trying to assume an object when object class is not registered in the "
 "dictionary"
 msgstr "Yritettiin omaksua olio, kun olioluokka ei ole rekisteröity kirjastoon"
 
-#: ../libgda/gda-dict.c:1883
+#: ../libgda/gda-dict.c:1882
 #, c-format
 msgid ""
 "Trying to make an object unassumed when object class %s is not registered in "
@@ -565,7 +565,7 @@ msgstr ""
 "Yritettiin perua olion omaksuminen, kun olioluokka %s ei ole rekisteröity "
 "kirjastoon"
 
-#: ../libgda/gda-dict.c:1938
+#: ../libgda/gda-dict.c:1937
 #, c-format
 msgid ""
 "Trying to make if an object is assumed when object class %s is not "
@@ -574,7 +574,7 @@ msgstr ""
 "Yritettiin merkitä oliota omaksutuksi, kun olioluokkaa %s ei ole "
 "rekisteröity sanakirjaan"
 
-#: ../libgda/gda-dict.c:1967
+#: ../libgda/gda-dict.c:1966
 #, c-format
 msgid ""
 "Trying to get a list of objects when object class %s is not registered in "
@@ -582,7 +582,7 @@ msgid ""
 msgstr ""
 "Yritettiin omaksutuksi, kun olioluokkaa %s ei ole rekisteröity kirjastoon"
 
-#: ../libgda/gda-dict.c:2001
+#: ../libgda/gda-dict.c:2000
 #, c-format
 msgid ""
 "Trying to get an object by name when object class %s is not registered in "
@@ -591,7 +591,7 @@ msgstr ""
 "Yriteltiin hakea oliota nimellä, kun olioluokkaa %s ei ole rekisteröity "
 "kirjastoon"
 
-#: ../libgda/gda-dict.c:2045
+#: ../libgda/gda-dict.c:2044
 #, c-format
 msgid ""
 "Trying to get an object by its XML Id when object class %s is not registered "
@@ -600,7 +600,7 @@ msgstr ""
 "Yriteltiin hakea oliota XML-tunisteella, kun olioluokkaa %s ei ole "
 "rekisteröity kirjastoon"
 
-#: ../libgda/gda-dict.c:2053
+#: ../libgda/gda-dict.c:2052
 msgid ""
 "Trying to get an object from its XML Id when object class does not implement "
 "GdaXmlStorage"
@@ -783,30 +783,6 @@ msgstr "libgda tarvitsee GModulen. Lopetetaan..."
 msgid "Could not parse "
 msgstr "Ei voi jäsentää "
 
-#: ../libgda/gda-init.c:103
-msgid ""
-": XML dictionaries validation will not be performed (some weird errors may "
-"occur)"
-msgstr ""
-": XML-sanakirjan validointia ei suoriteta, joten saattaa syntyä hassuja "
-"virheitä"
-
-#: ../libgda/gda-init.c:110 ../libgda/gda-init.c:117
-msgid ""
-": XML data import validation will not be performed (some weird errors may "
-"occur)"
-msgstr ""
-": tuotavan XML-tiedon validointia ei suoriteta, jjoten saattaa syntyä "
-"hassuja virheitä"
-
-#: ../libgda/gda-init.c:125
-msgid ""
-": Validation for XML files for server operations will not be performed (some "
-"weird errors may occur)"
-msgstr ""
-": Palvelintoimenpiteiden XML-tiedostojen validointia ei suoriteta, joten "
-"saattaa esiintyä joitakin virheitä"
-
 #: ../libgda/gda-object.c:304
 msgid "LibGda must be initialized before any usage."
 msgstr "LibGda täytyy alustaa ennen käyttöä."
@@ -944,15 +920,15 @@ msgstr "Kyselyn sanakirjaan ei ole liitetty yhteyttä"
 msgid "Connection associated to query's dictionary is closed"
 msgstr "Kyselyn sanakirjaan liitetty yhteys on suljettu"
 
-#: ../libgda/gda-query.c:2911 ../testing/gda-author-dict-file.c:184
-#: ../testing/gda-author-dict-file.c:195 ../testing/gda-author-dict-file.c:243
-#: ../testing/gda-author-dict-file.c:249 ../testing/gda-diagnose.c:621
-#: ../testing/gda-test-models.c:152 ../testing/gda-test-models.c:179
-#: ../testing/gda-test-models.c:394 ../testing/gda-test-models.c:410
-#: ../testing/gda-test-models.c:461 ../testing/gda-test-models.c:468
-#: ../testing/gda-test-models.c:486 ../testing/gda-test-models.c:567
-#: ../testing/gda-test-models.c:598 ../testing/gda-test-sql.c:144
-#: ../testing/gda-test-sql.c:171 ../testing/gda-test-sql.c:392
+#: ../libgda/gda-query.c:2911 ../testing/gda-test-models.c:152
+#: ../testing/gda-test-models.c:179 ../testing/gda-test-models.c:394
+#: ../testing/gda-test-models.c:410 ../testing/gda-test-models.c:461
+#: ../testing/gda-test-models.c:468 ../testing/gda-test-models.c:486
+#: ../testing/gda-test-models.c:567 ../testing/gda-test-models.c:598
+#: ../testing/gda-test-sql.c:144 ../testing/gda-test-sql.c:171
+#: ../testing/gda-test-sql.c:392 ../tools/gda-author-dict-file.c:184
+#: ../tools/gda-author-dict-file.c:195 ../tools/gda-author-dict-file.c:243
+#: ../tools/gda-author-dict-file.c:249 ../tools/gda-diagnose.c:621
 msgid "Unknown error"
 msgstr "Tuntematon virhe"
 
@@ -1421,6 +1397,8 @@ msgid ""
 "Could not convert data from %s to %s for DBMS type %s, forget about the DBMS "
 "type"
 msgstr ""
+"Tietoa ei voitu muuntaa muodosta %s muotoon %s tietokannalle %s, unohda "
+"tietokannan tyyppi"
 
 #: ../libgda/gda-query-parsing.c:1654
 #, c-format
@@ -1781,8 +1759,7 @@ msgstr "Liipaisin"
 #: ../providers/ldap/gda-ldap-provider.c:447
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
-#: ../providers/sybase/gda-sybase-provider.c:1097
-#: ../testing/gda-diagnose.c:315
+#: ../providers/sybase/gda-sybase-provider.c:1097 ../tools/gda-diagnose.c:315
 msgid "Type"
 msgstr "Tyyppi"
 
@@ -2350,8 +2327,8 @@ msgstr "SQLGetInfoa ei tueta. Siispä IBM DB2 -tarjoaja ei toimi.\n"
 msgid "Invalid IBM DB2 handle"
 msgstr "Virheellinen IBM DB2 -kahva"
 
-#: ../providers/ibmdb2/gda-ibmdb2-provider.c:789 ../testing/gda-diagnose.c:375
-#: ../testing/gda-diagnose.c:459
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:789 ../tools/gda-diagnose.c:375
+#: ../tools/gda-diagnose.c:459
 msgid "Function"
 msgstr "Funktio"
 
@@ -2394,8 +2371,8 @@ msgid "Invalid LDAP handle"
 msgstr "Virheellinen LDAP-kahva"
 
 #: ../providers/ldap/gda-ldap-recordset.c:70
-#: ../providers/mysql/gda-mysql-recordset.c:243
-#: ../providers/mysql/gda-mysql-recordset.c:365
+#: ../providers/mysql/gda-mysql-recordset.c:245
+#: ../providers/mysql/gda-mysql-recordset.c:367
 #: ../providers/postgres/gda-postgres-recordset.c:197
 #: ../providers/postgres/gda-postgres-recordset.c:571
 msgid "Row number out of range"
@@ -2403,7 +2380,7 @@ msgstr "Rivinumero yli rajojen"
 
 #: ../providers/ldap/gda-ldap-recordset.c:283
 #: ../providers/msql/gda-msql-recordset.c:203
-#: ../providers/mysql/gda-mysql-recordset.c:429
+#: ../providers/mysql/gda-mysql-recordset.c:431
 #: ../providers/oracle/gda-oracle-recordset.c:473
 #: ../providers/postgres/gda-postgres-recordset.c:240
 msgid "Attempt to insert a row with an invalid number of columns"
@@ -2647,13 +2624,13 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-provider.c:405
 #: ../providers/mysql/gda-mysql-provider.c:1572
 #: ../providers/mysql/gda-mysql-provider.c:1676
-#: ../providers/mysql/gda-mysql-recordset.c:232
-#: ../providers/mysql/gda-mysql-recordset.c:305
-#: ../providers/mysql/gda-mysql-recordset.c:359
-#: ../providers/mysql/gda-mysql-recordset.c:412
-#: ../providers/mysql/gda-mysql-recordset.c:540
-#: ../providers/mysql/gda-mysql-recordset.c:699
-#: ../providers/mysql/gda-mysql-recordset.c:700
+#: ../providers/mysql/gda-mysql-recordset.c:234
+#: ../providers/mysql/gda-mysql-recordset.c:307
+#: ../providers/mysql/gda-mysql-recordset.c:361
+#: ../providers/mysql/gda-mysql-recordset.c:414
+#: ../providers/mysql/gda-mysql-recordset.c:542
+#: ../providers/mysql/gda-mysql-recordset.c:701
+#: ../providers/mysql/gda-mysql-recordset.c:702
 msgid "Invalid MySQL handle"
 msgstr "Virheellinen MySQL-kahva"
 
@@ -2674,8 +2651,8 @@ msgstr "Virheellinen MySQL-kahva"
 #: ../providers/oracle/gda-oracle-provider.c:830
 #: ../providers/postgres/gda-postgres-provider.c:801
 #: ../providers/postgres/gda-postgres-provider.c:826
-#: ../providers/sqlite/gda-sqlite-provider.c:627
-#: ../providers/sqlite/gda-sqlite-provider.c:652
+#: ../providers/sqlite/gda-sqlite-provider.c:629
+#: ../providers/sqlite/gda-sqlite-provider.c:654
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "Puuttuva määrittelytiedosto \"%s\""
@@ -2687,75 +2664,75 @@ msgstr "Puuttuva määrittelytiedosto \"%s\""
 #: ../providers/oracle/gda-oracle-provider.c:1076
 #: ../providers/oracle/gda-oracle-provider.c:1137
 #: ../providers/postgres/gda-postgres-provider.c:1072
-#: ../providers/sqlite/gda-sqlite-provider.c:859
+#: ../providers/sqlite/gda-sqlite-provider.c:861
 msgid "Transactions are not supported in read-only mode"
 msgstr "Pelkkä luku -tilassa ei tueta transaktioita"
 
-#: ../providers/mysql/gda-mysql-recordset.c:312
+#: ../providers/mysql/gda-mysql-recordset.c:314
 #: ../providers/bdb/gda-bdb-recordset.c:113
 #, c-format
 msgid "Row number out of range 0 - %d"
 msgstr "Rivinumero ylitti alueen 0 - %d"
 
-#: ../providers/mysql/gda-mysql-recordset.c:371
+#: ../providers/mysql/gda-mysql-recordset.c:373
 #: ../providers/postgres/gda-postgres-recordset.c:577
 #: ../providers/bdb/gda-bdb-recordset.c:175
 msgid "Column number out of range"
 msgstr "Sarakenumero yli rajojen"
 
-#: ../providers/mysql/gda-mysql-recordset.c:422
-#: ../providers/mysql/gda-mysql-recordset.c:559
+#: ../providers/mysql/gda-mysql-recordset.c:424
 #: ../providers/mysql/gda-mysql-recordset.c:561
+#: ../providers/mysql/gda-mysql-recordset.c:563
 msgid "Table name could not be guessed"
 msgstr "Taulun nimeä ei voi arvata"
 
-#: ../providers/mysql/gda-mysql-recordset.c:444
-#: ../providers/mysql/gda-mysql-recordset.c:450
-#: ../providers/mysql/gda-mysql-recordset.c:576
+#: ../providers/mysql/gda-mysql-recordset.c:446
+#: ../providers/mysql/gda-mysql-recordset.c:452
 #: ../providers/mysql/gda-mysql-recordset.c:578
-#: ../providers/mysql/gda-mysql-recordset.c:584
+#: ../providers/mysql/gda-mysql-recordset.c:580
+#: ../providers/mysql/gda-mysql-recordset.c:586
 msgid "Can not synchronize array with MySQL result set"
 msgstr "Listaa ei voida synkronoida MySQL-tulosjoukon kanssa"
 
-#: ../providers/mysql/gda-mysql-recordset.c:511
+#: ../providers/mysql/gda-mysql-recordset.c:513
 msgid "Can not append row to data model"
 msgstr "Riviä ei voida lisätä tietomalliin"
 
-#: ../providers/mysql/gda-mysql-recordset.c:550
 #: ../providers/mysql/gda-mysql-recordset.c:552
-#: ../providers/mysql/gda-mysql-recordset.c:710
+#: ../providers/mysql/gda-mysql-recordset.c:554
 #: ../providers/mysql/gda-mysql-recordset.c:712
+#: ../providers/mysql/gda-mysql-recordset.c:714
 #: ../providers/postgres/gda-postgres-recordset.c:330
 #: ../providers/postgres/gda-postgres-recordset.c:430
 msgid "Given row doesn't belong to the model."
 msgstr "Annettu rivi ei kuulu malliin."
 
-#: ../providers/mysql/gda-mysql-recordset.c:636
 #: ../providers/mysql/gda-mysql-recordset.c:638
+#: ../providers/mysql/gda-mysql-recordset.c:640
 #: ../providers/postgres/gda-postgres-recordset.c:369
 msgid "Model doesn't have at least one unique key."
 msgstr "Mallissa ei ole vähintään yhtä yksikäsitteistä avainta."
 
-#: ../providers/mysql/gda-mysql-recordset.c:666
 #: ../providers/mysql/gda-mysql-recordset.c:668
+#: ../providers/mysql/gda-mysql-recordset.c:670
 msgid "Can not remove row from data model"
 msgstr "Riviä ei voida poistaa tietomallista"
 
-#: ../providers/mysql/gda-mysql-recordset.c:719
 #: ../providers/mysql/gda-mysql-recordset.c:721
+#: ../providers/mysql/gda-mysql-recordset.c:723
 #: ../providers/postgres/gda-postgres-recordset.c:233
 #: ../providers/postgres/gda-postgres-recordset.c:337
 #: ../providers/postgres/gda-postgres-recordset.c:437
 msgid "Table name could not be guessed."
 msgstr "Taulun nimeä ei voi arvata."
 
-#: ../providers/mysql/gda-mysql-recordset.c:794
 #: ../providers/mysql/gda-mysql-recordset.c:796
+#: ../providers/mysql/gda-mysql-recordset.c:798
 msgid "Model does not have at least one non-modified unique key."
 msgstr "Mallissa ei ole vähintään yhtä muokkaamatonta yksikäsitteistä avainta."
 
-#: ../providers/mysql/gda-mysql-recordset.c:805
 #: ../providers/mysql/gda-mysql-recordset.c:807
+#: ../providers/mysql/gda-mysql-recordset.c:809
 msgid "Model does not have any non-unique values to update."
 msgstr "Mallissa ei ole arvoja päivitettäväksi."
 
@@ -3834,12 +3811,12 @@ msgstr ""
 msgid ""
 "Automatically drop objects that depend on the table (CASCADE CONSTRAINTS)"
 msgstr ""
-"Poista automaattisesti kohteet, jotka riippuvat taulusta (CASCADE CONSTRAINTS)"
+"Poista automaattisesti kohteet, jotka riippuvat taulusta (CASCADE "
+"CONSTRAINTS)"
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:3
 msgid "Release the space associated with the table. (PURGE)"
-msgstr ""
-"Vapauta tauluun liittyvä tila (PURGE)"
+msgstr "Vapauta tauluun liittyvä tila (PURGE)"
 
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:1
 msgid "Name of the TNS configuration to use for connecting"
@@ -4210,35 +4187,35 @@ msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "SQLite-valitsinta empty_result_callbacks ei voi asettaa"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:384
-#: ../providers/sqlite/gda-sqlite-provider.c:567
-#: ../providers/sqlite/gda-sqlite-provider.c:941
-#: ../providers/sqlite/gda-sqlite-provider.c:1338
+#: ../providers/sqlite/gda-sqlite-provider.c:569
+#: ../providers/sqlite/gda-sqlite-provider.c:943
+#: ../providers/sqlite/gda-sqlite-provider.c:1336
 msgid "Invalid SQLite handle"
 msgstr "Virheellinen SQLite-kahva"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:439
 #: ../providers/sqlite/gda-sqlite-provider.c:1160
-#: ../providers/sqlite/gda-sqlite-provider.c:1395
-#: ../providers/sqlite/gda-sqlite-provider.c:1432
-#: ../providers/sqlite/gda-sqlite-provider.c:1554
+#: ../providers/sqlite/gda-sqlite-provider.c:1393
+#: ../providers/sqlite/gda-sqlite-provider.c:1430
+#: ../providers/sqlite/gda-sqlite-provider.c:1552
 msgid "Invalid SQLITE handle"
 msgstr "Virheellinen SQLite-kahva"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:585
+#: ../providers/sqlite/gda-sqlite-provider.c:587
 msgid "Only one database per connection is allowed"
 msgstr "Vain yksi tietokanta yhteyttä kohti sallitaan"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1182
-#: ../providers/sqlite/gda-sqlite-provider.c:1584
+#: ../providers/sqlite/gda-sqlite-provider.c:1582
 msgid "Can't execute PRAGMA table_info()"
 msgstr "PRAGMA:a table_info() ei voida suorittaa"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1288
+#: ../providers/sqlite/gda-sqlite-provider.c:1286
 #, c-format
 msgid "Can't find table %s"
 msgstr "Taulua %s ei löydy"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1657
+#: ../providers/sqlite/gda-sqlite-provider.c:1653
 msgid "Can't execute PRAGMA foreign_key_list()"
 msgstr "PRAGMA:a foreign_key_list() ei voida suorittaa"
 
@@ -4791,345 +4768,26 @@ msgstr "Tietokanta on tyhjä"
 msgid "Provider for Berkeley databases"
 msgstr "Tarjoaja Berkeley-tietokannoille"
 
-#: ../testing/gda-author-dict-file.c:148 ../testing/gda-test-connection.c:62
+#: ../testing/gda-test-connection.c:62
 #: ../testing/gda-test-server-operation.c:73
+#: ../tools/gda-author-dict-file.c:148
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN \"%s\" ei ole määritelty"
 
-#: ../testing/gda-author-dict-file.c:155 ../testing/gda-diagnose.c:1362
 #: ../testing/gda-test-connection.c:69
 #: ../testing/gda-test-server-operation.c:80
+#: ../tools/gda-author-dict-file.c:155 ../tools/gda-diagnose.c:1362
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "yhteyttä DSN:ään %s ei voi avata: %s\n"
 
-#: ../testing/gda-author-dict-file.c:167 ../testing/gda-test-connection.c:81
+#: ../testing/gda-test-connection.c:81
 #: ../testing/gda-test-server-operation.c:92
+#: ../tools/gda-author-dict-file.c:167
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "Määriteltyä yhteyttä ei voi avata: %s\n"
-
-#: ../testing/gda-author-dict-file.c:203
-msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
-msgstr ""
-"Haetaan metatietoja tietokantapalvelimelta. Tämä voi kestää hetken...\n"
-
-#: ../testing/gda-author-dict-file.c:248 ../testing/gda-test-models.c:151
-#: ../testing/gda-test-models.c:178 ../testing/gda-test-sql.c:143
-#: ../testing/gda-test-sql.c:170
-#, c-format
-msgid "Can't write dictionary to file %s: %s\n"
-msgstr "Sanakirjaa ei voida kirjoittaa iedostoon \"%s\": %s\n"
-
-#: ../testing/gda-author-dict-file.c:251
-#, c-format
-msgid "Dictionary file written to %s\n"
-msgstr "Sanakirjatiedosto kirjoitettu tiedostoon %s\n"
-
-#: ../testing/gda-diagnose.c:117 ../testing/gda-test-models.c:101
-#: ../testing/gda-test-sql.c:97
-#, c-format
-msgid "Generated @ %s"
-msgstr "Luotu @ %s"
-
-#: ../testing/gda-diagnose.c:174
-msgid "Data sources"
-msgstr "Tietolähteet"
-
-#: ../testing/gda-diagnose.c:175
-msgid "List of data sources from the config files (user and system wide)"
-msgstr ""
-"Lista asetustiedostoissa määritellyistä tietolähteistä (käyttäjän ja "
-"järjestelmän määrittelemät)"
-
-#: ../testing/gda-diagnose.c:236
-msgid "Providers"
-msgstr "Tarjoajat"
-
-#: ../testing/gda-diagnose.c:237
-msgid "Installed providers"
-msgstr "Asennetut tarjoajat"
-
-#: ../testing/gda-diagnose.c:292
-#, c-format
-msgid "Provider '%s' details"
-msgstr "Tarjoajan \"%s\" yksityiskohdat"
-
-#: ../testing/gda-diagnose.c:301
-msgid "Provider's information"
-msgstr "Tietoja tarjoajasta"
-
-#: ../testing/gda-diagnose.c:310
-msgid "Data source's parameters:"
-msgstr "Tietolähteen parametrit:"
-
-#: ../testing/gda-diagnose.c:313
-msgid "Parameter name"
-msgstr "Parametrin nimi"
-
-#: ../testing/gda-diagnose.c:332
-msgid "Data source's parameters: none provided"
-msgstr "Tietolähteen parametrit: parametreja ei ole määritelty"
-
-#: ../testing/gda-diagnose.c:339
-msgid "Detailed data source's parameters"
-msgstr "Tietolähteen yksityiskohtaiset parametrit"
-
-#: ../testing/gda-diagnose.c:343
-msgid "Detailed data source's parameters: none provided"
-msgstr "Tietolähteen yksityiskohtaiset parametrit: mitään ei annettu"
-
-#: ../testing/gda-diagnose.c:372
-msgid "Plugin's entry functions"
-msgstr "Liitännäisen rajapintafunktiot"
-
-#: ../testing/gda-diagnose.c:376 ../testing/gda-diagnose.c:460
-msgid "Present?"
-msgstr "Käytettävissä?"
-
-#: ../testing/gda-diagnose.c:380 ../testing/gda-diagnose.c:384
-#: ../testing/gda-diagnose.c:388 ../testing/gda-diagnose.c:392
-#: ../testing/gda-diagnose.c:466 ../testing/gda-diagnose.c:472
-#: ../testing/gda-diagnose.c:483 ../testing/gda-diagnose.c:511
-#: ../testing/gda-diagnose.c:550 ../testing/html.c:293
-msgid "Yes"
-msgstr "Kyllä"
-
-#: ../testing/gda-diagnose.c:380 ../testing/gda-diagnose.c:384
-#: ../testing/gda-diagnose.c:388 ../testing/gda-diagnose.c:392
-#: ../testing/gda-diagnose.c:466 ../testing/gda-diagnose.c:472
-#: ../testing/gda-diagnose.c:483 ../testing/gda-diagnose.c:511
-#: ../testing/gda-diagnose.c:550 ../testing/html.c:293
-msgid "No"
-msgstr "Ei"
-
-#.
-#. * Virtual functions
-#.
-#: ../testing/gda-diagnose.c:456
-msgid "GdaServerProvider object's virtual functions"
-msgstr "GdaServerProvider-olion virtuaalifunktiot"
-
-#: ../testing/gda-diagnose.c:461
-msgid "Result"
-msgstr "Tulos"
-
-#: ../testing/gda-diagnose.c:461
-msgid "Result without any connection"
-msgstr "Tulos ilman yhteyttä"
-
-#: ../testing/gda-diagnose.c:560
-msgid "Schemas reporting"
-msgstr "Skeeman raportointi"
-
-#: ../testing/gda-diagnose.c:562
-msgid "Schemas not reported by this provider"
-msgstr "Muut kuin tämän tarjoajan tarjoamat skeemat"
-
-#: ../testing/gda-diagnose.c:619
-#, c-format
-msgid "Schema Error: %s"
-msgstr "Skeemavirhe: %s"
-
-#: ../testing/gda-diagnose.c:654
-#, c-format
-msgid "Fields for '%s'"
-msgstr "\"%s\" kentät"
-
-#: ../testing/gda-diagnose.c:663
-msgid "No field returned"
-msgstr "Ei palautettua kenttää"
-
-#: ../testing/gda-diagnose.c:670 ../testing/gda-diagnose.c:713
-#: ../testing/gda-diagnose.c:726
-msgid "Error"
-msgstr "Virhe"
-
-#: ../testing/gda-diagnose.c:699
-#, c-format
-msgid "Constraints for '%s'"
-msgstr "\"%s\":n rajoitteet"
-
-#: ../testing/gda-diagnose.c:708
-msgid "No constraint"
-msgstr "Ei rajoitetta"
-
-#: ../testing/gda-diagnose.c:722
-msgid "Nothing to return"
-msgstr "Ei mitään palautettavaa"
-
-#.
-#. * Data types testing
-#.
-#: ../testing/gda-diagnose.c:738
-msgid "Data types handling"
-msgstr "Tietotyyppien käsittely"
-
-#: ../testing/gda-diagnose.c:740
-msgid "This provider does not support data handlers"
-msgstr "Tämä tarjoaja ei tue menetelmää tietojen käsittelijöitä"
-
-#: ../testing/gda-diagnose.c:770
-msgid ""
-"Data handler marked as error cannot handle the data type they are returned "
-"for."
-msgstr ""
-"Virheelliseksi merkityt tiedonkäsittelijät eivät voi käsitellä typpiä, "
-"joiden käyttöön ne palautetaan."
-
-#: ../testing/gda-diagnose.c:780
-msgid "Data handlers test"
-msgstr "Tiedonkäsittelijöiden testi"
-
-#: ../testing/gda-diagnose.c:781
-msgid "get_sql_from_value() and get_str_from_value()"
-msgstr "get_sql_from_value() ja get_str_from_value()"
-
-#: ../testing/gda-diagnose.c:789
-msgid "get_value_from_sql()"
-msgstr "get_value_from_sql()"
-
-#: ../testing/gda-diagnose.c:796
-msgid "get_value_from_str()"
-msgstr "get_value_from_str()"
-
-#: ../testing/gda-diagnose.c:1201
-#, c-format
-msgid "%s (init value)"
-msgstr "%s (alkuarvo)"
-
-#: ../testing/gda-diagnose.c:1339
-#, c-format
-msgid "Datasource '%s' details"
-msgstr "Tietolähteen \"%s\" yksityiskohdat"
-
-#: ../testing/gda-diagnose.c:1348
-msgid "Datasource's information"
-msgstr "Tietoja tietolähteestä"
-
-#: ../testing/gda-diagnose.c:1359
-msgid "Can't open connection."
-msgstr "Yhteyttä ei voi avata."
-
-#: ../testing/gda-inspect-dict-file.c:47
-#, c-format
-msgid "Usage: %s <Dictionary XML file>\n"
-msgstr "Käyttö: %s <XML-sanakirjatiedosto>\n"
-
-#: ../testing/gda-inspect-dict-file.c:53
-#, c-format
-msgid "File '%s' does not exist or can't be read!\n"
-msgstr "Tiedosto \"%s\" ei ole olemassa tai sitä ei voi lukea!\n"
-
-#: ../testing/gda-inspect-dict-file.c:58
-#, c-format
-msgid "File '%s' is a directory!\n"
-msgstr "Tiedosto \"%s\" on kansio!\n"
-
-#: ../testing/gda-inspect-dict-file.c:64 ../testing/gda-test-models.c:164
-#: ../testing/gda-test-sql.c:156
-#, c-format
-msgid ""
-"Error loading dictionary file '%s':\n"
-"%s\n"
-msgstr ""
-"Virhe ladattaessa sanakirjatiedostoa \"%s\":\n"
-"%s\n"
-
-#: ../testing/gda-inspect-dict-file.c:65 ../testing/gda-test-models.c:165
-#: ../testing/gda-test-sql.c:157
-msgid "Unspecified"
-msgstr "Määrittelemätön"
-
-#: ../testing/gda-inspect-dict-file.c:84
-#, c-format
-msgid ""
-"Error saving dictionary to file '%s':\n"
-"%s\n"
-msgstr ""
-"Virhe tallennettaessa sanakirjatiedostoa \"%s\":\n"
-"%s\n"
-
-#: ../testing/gda-inspect-dict-file.c:91
-#: ../testing/gda-inspect-dict-file.c:110 ../testing/gda-test-models.c:191
-#: ../testing/gda-test-models.c:205 ../testing/gda-test-sql.c:183
-#: ../testing/gda-test-sql.c:197
-#, c-format
-msgid ""
-"Can't run command '%s':\n"
-"%s\n"
-msgstr ""
-"Komentoa \"%s\" ei voi suorittaa:\n"
-"%s\n"
-
-#: ../testing/gda-inspect-dict-file.c:141
-msgid "List of queries in this file:\n"
-msgstr "Lista kyselyistä tässä tiedostossa:\n"
-
-#: ../testing/gda-inspect-dict-file.c:143
-msgid "There is no query in this file.\n"
-msgstr "Tiedosto ei sisällä kyselyitä.\n"
-
-#: ../testing/gda-inspect-dict-file.c:151
-#, c-format
-msgid "########### Query \"%s\" ###########\n"
-msgstr "########### Kysely \"%s\" ###########\n"
-
-#: ../testing/gda-inspect-dict-file.c:154
-msgid "## SQL:\n"
-msgstr "## SQL:\n"
-
-#: ../testing/gda-inspect-dict-file.c:160
-#, c-format
-msgid "SQL ERROR: %s\n"
-msgstr "SQL-virhe: %s\n"
-
-#: ../testing/gda-inspect-dict-file.c:165
-msgid "## information:\n"
-msgstr "## tietoja:\n"
-
-#: ../testing/gda-inspect-dict-file.c:182
-#, c-format
-msgid "Query_%02d"
-msgstr "Kysely_%02d"
-
-#: ../testing/gda-inspect-dict-file.c:187
-#, c-format
-msgid ""
-"Could not write graph to '%s' (%s)\n"
-"\n"
-msgstr ""
-"Kaaviota ei voi kirjoittaa tiedostoon \"%s\" (%s)\n"
-"\n"
-
-#: ../testing/gda-inspect-dict-file.c:192
-#, c-format
-msgid "Written graph to '%s'\n"
-msgstr "Kirjoitettiin kaavio tiedostoon \"%s\"\n"
-
-#: ../testing/gda-list-config.c:102
-#, c-format
-msgid "Provider: %s\n"
-msgstr " Tarjoaja: %s\n"
-
-#: ../testing/gda-list-config.c:103
-#, c-format
-msgid "Description: %s\n"
-msgstr "Kuvaus: %s\n"
-
-#: ../testing/gda-list-config.c:104
-#, c-format
-msgid "Location: %s\n"
-msgstr "Sijainti: %s\n"
-
-#: ../testing/gda-list-config.c:105
-msgid "Data source's parameters (Name / Type / Description):\n"
-msgstr "Tietolähteen parametrin (nimi/tyyppi/kuvaus):\n"
-
-#: ../testing/gda-list-config.c:121
-msgid "None provided"
-msgstr "Mitään ei annettu"
 
 #: ../testing/gda-test-connection.c:87
 msgid "Connection successfully opened!\n"
@@ -5138,6 +4796,45 @@ msgstr "Yhteyden avaus onnistui!\n"
 #: ../testing/gda-test-models.c:89 ../testing/gda-test-sql.c:87
 msgid "List of SQL parsing tests"
 msgstr "Lista SQL-tulkinnan testeistä"
+
+#: ../testing/gda-test-models.c:101 ../testing/gda-test-sql.c:97
+#: ../tools/gda-diagnose.c:117
+#, c-format
+msgid "Generated @ %s"
+msgstr "Luotu @ %s"
+
+#: ../testing/gda-test-models.c:151 ../testing/gda-test-models.c:178
+#: ../testing/gda-test-sql.c:143 ../testing/gda-test-sql.c:170
+#: ../tools/gda-author-dict-file.c:248
+#, c-format
+msgid "Can't write dictionary to file %s: %s\n"
+msgstr "Sanakirjaa ei voida kirjoittaa iedostoon \"%s\": %s\n"
+
+#: ../testing/gda-test-models.c:164 ../testing/gda-test-sql.c:156
+#: ../tools/gda-inspect-dict-file.c:64
+#, c-format
+msgid ""
+"Error loading dictionary file '%s':\n"
+"%s\n"
+msgstr ""
+"Virhe ladattaessa sanakirjatiedostoa \"%s\":\n"
+"%s\n"
+
+#: ../testing/gda-test-models.c:165 ../testing/gda-test-sql.c:157
+#: ../tools/gda-inspect-dict-file.c:65
+msgid "Unspecified"
+msgstr "Määrittelemätön"
+
+#: ../testing/gda-test-models.c:191 ../testing/gda-test-models.c:205
+#: ../testing/gda-test-sql.c:183 ../testing/gda-test-sql.c:197
+#: ../tools/gda-inspect-dict-file.c:91 ../tools/gda-inspect-dict-file.c:110
+#, c-format
+msgid ""
+"Can't run command '%s':\n"
+"%s\n"
+msgstr ""
+"Komentoa \"%s\" ei voi suorittaa:\n"
+"%s\n"
 
 #: ../testing/gda-test-models.c:385
 msgid "Missing 'file' attribute"
@@ -5208,9 +4905,311 @@ msgid "Copied"
 msgstr "Kopioitu"
 
 #. toc
-#: ../testing/html.c:113
+#: ../testing/html.c:113 ../tools/html.c:113
 msgid "Table of contents"
 msgstr "Sisällysluettelo"
+
+#: ../testing/html.c:293 ../tools/gda-diagnose.c:380
+#: ../tools/gda-diagnose.c:384 ../tools/gda-diagnose.c:388
+#: ../tools/gda-diagnose.c:392 ../tools/gda-diagnose.c:466
+#: ../tools/gda-diagnose.c:472 ../tools/gda-diagnose.c:483
+#: ../tools/gda-diagnose.c:511 ../tools/gda-diagnose.c:550 ../tools/html.c:293
+msgid "Yes"
+msgstr "Kyllä"
+
+#: ../testing/html.c:293 ../tools/gda-diagnose.c:380
+#: ../tools/gda-diagnose.c:384 ../tools/gda-diagnose.c:388
+#: ../tools/gda-diagnose.c:392 ../tools/gda-diagnose.c:466
+#: ../tools/gda-diagnose.c:472 ../tools/gda-diagnose.c:483
+#: ../tools/gda-diagnose.c:511 ../tools/gda-diagnose.c:550 ../tools/html.c:293
+msgid "No"
+msgstr "Ei"
+
+#: ../tools/gda-author-dict-file.c:203
+msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
+msgstr ""
+"Haetaan metatietoja tietokantapalvelimelta. Tämä voi kestää hetken...\n"
+
+#: ../tools/gda-author-dict-file.c:251
+#, c-format
+msgid "Dictionary file written to %s\n"
+msgstr "Sanakirjatiedosto kirjoitettu tiedostoon %s\n"
+
+#: ../tools/gda-diagnose.c:174
+msgid "Data sources"
+msgstr "Tietolähteet"
+
+#: ../tools/gda-diagnose.c:175
+msgid "List of data sources from the config files (user and system wide)"
+msgstr ""
+"Lista asetustiedostoissa määritellyistä tietolähteistä (käyttäjän ja "
+"järjestelmän määrittelemät)"
+
+#: ../tools/gda-diagnose.c:236
+msgid "Providers"
+msgstr "Tarjoajat"
+
+#: ../tools/gda-diagnose.c:237
+msgid "Installed providers"
+msgstr "Asennetut tarjoajat"
+
+#: ../tools/gda-diagnose.c:292
+#, c-format
+msgid "Provider '%s' details"
+msgstr "Tarjoajan \"%s\" yksityiskohdat"
+
+#: ../tools/gda-diagnose.c:301
+msgid "Provider's information"
+msgstr "Tietoja tarjoajasta"
+
+#: ../tools/gda-diagnose.c:310
+msgid "Data source's parameters:"
+msgstr "Tietolähteen parametrit:"
+
+#: ../tools/gda-diagnose.c:313
+msgid "Parameter name"
+msgstr "Parametrin nimi"
+
+#: ../tools/gda-diagnose.c:332
+msgid "Data source's parameters: none provided"
+msgstr "Tietolähteen parametrit: parametreja ei ole määritelty"
+
+#: ../tools/gda-diagnose.c:339
+msgid "Detailed data source's parameters"
+msgstr "Tietolähteen yksityiskohtaiset parametrit"
+
+#: ../tools/gda-diagnose.c:343
+msgid "Detailed data source's parameters: none provided"
+msgstr "Tietolähteen yksityiskohtaiset parametrit: mitään ei annettu"
+
+#: ../tools/gda-diagnose.c:372
+msgid "Plugin's entry functions"
+msgstr "Liitännäisen rajapintafunktiot"
+
+#: ../tools/gda-diagnose.c:376 ../tools/gda-diagnose.c:460
+msgid "Present?"
+msgstr "Käytettävissä?"
+
+#.
+#. * Virtual functions
+#.
+#: ../tools/gda-diagnose.c:456
+msgid "GdaServerProvider object's virtual functions"
+msgstr "GdaServerProvider-olion virtuaalifunktiot"
+
+#: ../tools/gda-diagnose.c:461
+msgid "Result"
+msgstr "Tulos"
+
+#: ../tools/gda-diagnose.c:461
+msgid "Result without any connection"
+msgstr "Tulos ilman yhteyttä"
+
+#: ../tools/gda-diagnose.c:560
+msgid "Schemas reporting"
+msgstr "Skeeman raportointi"
+
+#: ../tools/gda-diagnose.c:562
+msgid "Schemas not reported by this provider"
+msgstr "Muut kuin tämän tarjoajan tarjoamat skeemat"
+
+#: ../tools/gda-diagnose.c:619
+#, c-format
+msgid "Schema Error: %s"
+msgstr "Skeemavirhe: %s"
+
+#: ../tools/gda-diagnose.c:654
+#, c-format
+msgid "Fields for '%s'"
+msgstr "\"%s\" kentät"
+
+#: ../tools/gda-diagnose.c:663
+msgid "No field returned"
+msgstr "Ei palautettua kenttää"
+
+#: ../tools/gda-diagnose.c:670 ../tools/gda-diagnose.c:713
+#: ../tools/gda-diagnose.c:726
+msgid "Error"
+msgstr "Virhe"
+
+#: ../tools/gda-diagnose.c:699
+#, c-format
+msgid "Constraints for '%s'"
+msgstr "\"%s\":n rajoitteet"
+
+#: ../tools/gda-diagnose.c:708
+msgid "No constraint"
+msgstr "Ei rajoitetta"
+
+#: ../tools/gda-diagnose.c:722
+msgid "Nothing to return"
+msgstr "Ei mitään palautettavaa"
+
+#.
+#. * Data types testing
+#.
+#: ../tools/gda-diagnose.c:738
+msgid "Data types handling"
+msgstr "Tietotyyppien käsittely"
+
+#: ../tools/gda-diagnose.c:740
+msgid "This provider does not support data handlers"
+msgstr "Tämä tarjoaja ei tue menetelmää tietojen käsittelijöitä"
+
+#: ../tools/gda-diagnose.c:770
+msgid ""
+"Data handler marked as error cannot handle the data type they are returned "
+"for."
+msgstr ""
+"Virheelliseksi merkityt tiedonkäsittelijät eivät voi käsitellä typpiä, "
+"joiden käyttöön ne palautetaan."
+
+#: ../tools/gda-diagnose.c:780
+msgid "Data handlers test"
+msgstr "Tiedonkäsittelijöiden testi"
+
+#: ../tools/gda-diagnose.c:781
+msgid "get_sql_from_value() and get_str_from_value()"
+msgstr "get_sql_from_value() ja get_str_from_value()"
+
+#: ../tools/gda-diagnose.c:789
+msgid "get_value_from_sql()"
+msgstr "get_value_from_sql()"
+
+#: ../tools/gda-diagnose.c:796
+msgid "get_value_from_str()"
+msgstr "get_value_from_str()"
+
+#: ../tools/gda-diagnose.c:1201
+#, c-format
+msgid "%s (init value)"
+msgstr "%s (alkuarvo)"
+
+#: ../tools/gda-diagnose.c:1339
+#, c-format
+msgid "Datasource '%s' details"
+msgstr "Tietolähteen \"%s\" yksityiskohdat"
+
+#: ../tools/gda-diagnose.c:1348
+msgid "Datasource's information"
+msgstr "Tietoja tietolähteestä"
+
+#: ../tools/gda-diagnose.c:1359
+msgid "Can't open connection."
+msgstr "Yhteyttä ei voi avata."
+
+#: ../tools/gda-inspect-dict-file.c:47
+#, c-format
+msgid "Usage: %s <Dictionary XML file>\n"
+msgstr "Käyttö: %s <XML-sanakirjatiedosto>\n"
+
+#: ../tools/gda-inspect-dict-file.c:53
+#, c-format
+msgid "File '%s' does not exist or can't be read!\n"
+msgstr "Tiedosto \"%s\" ei ole olemassa tai sitä ei voi lukea!\n"
+
+#: ../tools/gda-inspect-dict-file.c:58
+#, c-format
+msgid "File '%s' is a directory!\n"
+msgstr "Tiedosto \"%s\" on kansio!\n"
+
+#: ../tools/gda-inspect-dict-file.c:84
+#, c-format
+msgid ""
+"Error saving dictionary to file '%s':\n"
+"%s\n"
+msgstr ""
+"Virhe tallennettaessa sanakirjatiedostoa \"%s\":\n"
+"%s\n"
+
+#: ../tools/gda-inspect-dict-file.c:141
+msgid "List of queries in this file:\n"
+msgstr "Lista kyselyistä tässä tiedostossa:\n"
+
+#: ../tools/gda-inspect-dict-file.c:143
+msgid "There is no query in this file.\n"
+msgstr "Tiedosto ei sisällä kyselyitä.\n"
+
+#: ../tools/gda-inspect-dict-file.c:151
+#, c-format
+msgid "########### Query \"%s\" ###########\n"
+msgstr "########### Kysely \"%s\" ###########\n"
+
+#: ../tools/gda-inspect-dict-file.c:154
+msgid "## SQL:\n"
+msgstr "## SQL:\n"
+
+#: ../tools/gda-inspect-dict-file.c:160
+#, c-format
+msgid "SQL ERROR: %s\n"
+msgstr "SQL-virhe: %s\n"
+
+#: ../tools/gda-inspect-dict-file.c:165
+msgid "## information:\n"
+msgstr "## tietoja:\n"
+
+#: ../tools/gda-inspect-dict-file.c:182
+#, c-format
+msgid "Query_%02d"
+msgstr "Kysely_%02d"
+
+#: ../tools/gda-inspect-dict-file.c:187
+#, c-format
+msgid ""
+"Could not write graph to '%s' (%s)\n"
+"\n"
+msgstr ""
+"Kaaviota ei voi kirjoittaa tiedostoon \"%s\" (%s)\n"
+"\n"
+
+#: ../tools/gda-inspect-dict-file.c:192
+#, c-format
+msgid "Written graph to '%s'\n"
+msgstr "Kirjoitettiin kaavio tiedostoon \"%s\"\n"
+
+#: ../tools/gda-list-config.c:102
+#, c-format
+msgid "Provider: %s\n"
+msgstr " Tarjoaja: %s\n"
+
+#: ../tools/gda-list-config.c:103
+#, c-format
+msgid "Description: %s\n"
+msgstr "Kuvaus: %s\n"
+
+#: ../tools/gda-list-config.c:104
+#, c-format
+msgid "Location: %s\n"
+msgstr "Sijainti: %s\n"
+
+#: ../tools/gda-list-config.c:105
+msgid "Data source's parameters (Name / Type / Description):\n"
+msgstr "Tietolähteen parametrin (nimi/tyyppi/kuvaus):\n"
+
+#: ../tools/gda-list-config.c:121
+msgid "None provided"
+msgstr "Mitään ei annettu"
+
+#~ msgid ""
+#~ ": XML dictionaries validation will not be performed (some weird errors "
+#~ "may occur)"
+#~ msgstr ""
+#~ ": XML-sanakirjan validointia ei suoriteta, joten saattaa syntyä hassuja "
+#~ "virheitä"
+
+#~ msgid ""
+#~ ": XML data import validation will not be performed (some weird errors may "
+#~ "occur)"
+#~ msgstr ""
+#~ ": tuotavan XML-tiedon validointia ei suoriteta, jjoten saattaa syntyä "
+#~ "hassuja virheitä"
+
+#~ msgid ""
+#~ ": Validation for XML files for server operations will not be performed "
+#~ "(some weird errors may occur)"
+#~ msgstr ""
+#~ ": Palvelintoimenpiteiden XML-tiedostojen validointia ei suoriteta, joten "
+#~ "saattaa esiintyä joitakin virheitä"
 
 #~ msgid "Data type '%s' can't be converted to a known type"
 #~ msgstr "Tietotyyppiä \"%s\" ei voi muuntaa tunnettuun tyyppiin"
