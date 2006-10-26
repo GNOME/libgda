@@ -1064,6 +1064,7 @@ gda_graph_item_get_type
 <SECTION>
 <FILE>gda-data-handler</FILE>
 <TITLE>Default Data handlers</TITLE>
+GdaDataHandler
 gda_data_handler_get_sql_from_value
 gda_data_handler_get_str_from_value
 gda_data_handler_get_value_from_sql

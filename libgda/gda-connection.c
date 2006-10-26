@@ -1017,6 +1017,12 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
  * @params: parameter list for the commands
  * @error: a place to store an error, or %NULL
  *
+ * If you know what to expect from @command (ie if you know it contains a query which will return
+ * a data set or a query which will not return a data set) and if @command contains only one query,
+ * then you should use
+ * gda_connection_execute_select_command() and gda_connection_execute_non_select_command() which are easier
+ * to use.
+ *
  * This function provides the way to send several commands
  * at once to the data source being accessed by the given
  * #GdaConnection object. The #GdaCommand specified can contain

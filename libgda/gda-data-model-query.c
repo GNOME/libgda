@@ -613,7 +613,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
 
 	model->priv->data = gda_query_execute (model->priv->queries[SEL_QUERY], model->priv->params [SEL_QUERY],
 					       TRUE, &model->priv->refresh_error);
-	if (!model->priv->data || (model->priv->data == GDA_QUERY_EXEC_FAILED)) {
+	if (!model->priv->data || !GDA_IS_DATA_MODEL (model->priv->data)) {
 		model->priv->data = NULL;
 		g_assert (model->priv->refresh_error);
 		if (error) 
@@ -1026,13 +1026,12 @@ static gboolean
 run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 {
 	gboolean retval = FALSE;
-	GdaDataModel *model;
-	model = gda_query_execute (selmodel->priv->queries[query_type], 
+	GdaParameterList *plist;
+	plist = gda_query_execute (selmodel->priv->queries[query_type], 
 				   selmodel->priv->params [query_type], TRUE, error);
-	if (model != GDA_QUERY_EXEC_FAILED) {
+	if (plist) {
 		retval = TRUE;
-		if (model)
-			g_object_unref (model);
+		g_object_unref (plist);
 	}
 
 	if (retval && !selmodel->priv->defer_refresh)

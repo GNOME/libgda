@@ -1465,7 +1465,8 @@ gda_value_set_from_value (GValue *value, const GValue *from)
  *
  * Converts a GValue to its string representation which is a human readable value. Note that the
  * returned string does not take into account the current locale of the user (on the contrary to the
- * #GdaDataHandler objects).
+ * #GdaDataHandler objects). Using this function should be limited to debugging and values serialization
+ * purposes.
  *
  * Dates are converted in a YYYY-MM-DD format.
  *

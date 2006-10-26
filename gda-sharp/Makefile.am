@@ -1,5 +1,3 @@
-if BUILD_GDA_SHARP
-
 GAPI_SOURCE = gda-sources.xml
 RAW_API = gda-api.raw
 API = gda-api.xml
@@ -8,8 +6,8 @@ METADATA = Gda.metadata
 ASSEMBLY_NAME = gda-sharp
 ASSEMBLY = $(ASSEMBLY_NAME).dll
 
-build_sources = AssemblyInfo.cs \
-                Application.cs
+sources = Application.cs
+build_sources = $(addprefix $(srcdir)/, $(sources)) AssemblyInfo.cs 
 
 customs = 
 
@@ -42,8 +40,7 @@ EXTRA_DIST =			\
 	$(RAW_API)		\
 	$(METADATA)		\
 	$(customs)		\
+	$(sources)		\
 	AssemblyInfo.cs.in	\
 	gda-sharp-2.0.pc.in	\
 	gda-sharp.dll.config.in
-
-endif

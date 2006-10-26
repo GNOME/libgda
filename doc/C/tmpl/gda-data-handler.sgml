@@ -31,6 +31,12 @@ The #GdaDictType class an the #GnomeDbDataEntry interface.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### STRUCT GdaDataHandler ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION gda_data_handler_get_sql_from_value ##### -->
 <para>
 

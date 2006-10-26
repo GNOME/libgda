@@ -627,7 +627,9 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
  *
  * Executes one or more SQL statements stored in @command, and returns a list of
  * #GdaDataModel and/or #GdaParameterList (or %NULL) objects for each SQL statement
- * in @command following the rule:
+ * in @command following the rule (the number and order of items contained in the returned list is the 
+ * same as the number and order of SQL queries in @command if there is no error, 
+ * otherwise it depends on the execution options in @params):
  * <itemizedlist>
  *   <listitem><para>A #GdaDataModel is in the list if the statement was a SELECT statement and the statement was successufully executed</para></listitem>
  *   <listitem><para>A #GdaParameterList is in the list if the statement was not a SELECT 

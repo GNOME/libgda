@@ -111,8 +111,7 @@ GdaQuery          *gda_query_get_parent_query       (GdaQuery *query);
 
 GSList            *gda_query_get_parameters         (GdaQuery *query);
 GdaParameterList  *gda_query_get_parameter_list   (GdaQuery *query);
-#define            GDA_QUERY_EXEC_FAILED ((void *) -1)
-GdaDataModel      *gda_query_execute                (GdaQuery *query, GdaParameterList *params,
+GdaObject         *gda_query_execute                (GdaQuery *query, GdaParameterList *params,
 						     gboolean iter_model_only_requested, GError **error);
 
 

@@ -28,9 +28,10 @@ libgda_ibmdb2_la_LIBADD = \
 
 xmldir   = $(datadir)/libgda
 xml_in_files = ibmdb2_specs_dsn.xml.in
-xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 @INTLTOOL_XML_RULE@
+
+xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 EXTRA_DIST = $(xml_in_files)
 DISTCLEANFILES = $(xml_DATA)

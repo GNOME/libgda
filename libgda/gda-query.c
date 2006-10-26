@@ -2705,11 +2705,15 @@ gda_query_get_parameter_list (GdaQuery *query)
  * @iter_model_only_requested: set to TRUE if the returned data model will only be accessed using an iterator
  * @error: a place to store errors, or %NULL
  *
- * Executes @query and optionnaly returns a #GdaDataModel as a result.
+ * Executes @query and returns #GdaDataModel if @query's execution yields to a data set, or a
+ * #GdaParameterList object otherwise, or %NULL if an error occurred. You can test the return value
+ * using GObject's introscpection features such as GDA_IS_DATA_MODEL() or GDA_IS_PARAMETER_LIST().
  *
- * Returns: a #GdaDataModel pointer or %NULL if no error occurred, or GDA_QUERY_EXEC_FAILED if an error occurred
+ * For more information about the returned value, see gda_server_provider_execute_command().
+ *
+ * Returns: a #GdaDataModel, a #GdaParameterList or %NULL.
  */
-GdaDataModel *
+GdaObject *
 gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_model_only_requested, GError **error)
 {
 	gchar *str;
@@ -2717,28 +2721,28 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 	GdaConnection *cnc;
 	GdaDict *dict;
 	GList *list;
-	GdaDataModel *model = NULL;
 	GdaParameterList *options = NULL;
+	GdaObject *retval = NULL;
 
-	g_return_val_if_fail (GDA_IS_QUERY (query), GDA_QUERY_EXEC_FAILED);
-	g_return_val_if_fail (!params || GDA_IS_PARAMETER_LIST (params), GDA_QUERY_EXEC_FAILED);
+	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
+	g_return_val_if_fail (!params || GDA_IS_PARAMETER_LIST (params), NULL);
 
 	dict = gda_object_get_dict (GDA_OBJECT (query));
 	cnc = gda_dict_get_connection (dict);
 	if (!cnc) {
 		g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_NO_CNC_ERROR,
 			     _("No connection associated to query's dictionary"));
-		return GDA_QUERY_EXEC_FAILED;
+		return NULL;
 	}
 	if (!gda_connection_is_opened (cnc)) {
 		g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_CNC_CLOSED_ERROR,
 			     _("Connection associated to query's dictionary is closed"));
-		return GDA_QUERY_EXEC_FAILED;
+		return NULL;
 	}
 
 	str = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 0, error);
 	if (!str)
-		return GDA_QUERY_EXEC_FAILED;
+		return NULL;
 
 #ifdef GDA_DEBUG_NO
 	g_print ("GdaQueryExecute:\nSQL= %s\n", str);
@@ -2754,24 +2758,22 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 	if (list) {
 		GList *plist;
 
-		model = (GdaDataModel*) g_list_last (list)->data;
-		if (model)
-			g_object_ref (model);
+		retval = (GdaObject*) g_list_last (list)->data;
+		if (retval)
+			g_object_ref (retval);
 		plist = list;
-		for (plist = list; plist; plist = g_list_next (plist))
+		for (plist = list; plist; plist = plist->next)
 			if (plist->data)
 				g_object_unref (plist->data);
 		g_list_free (list);
 	}
-	else
-		model = GDA_QUERY_EXEC_FAILED;
 
 	if (options)
 		g_object_unref (options);
 	gda_command_free (cmde);
 	g_free (str);
 
-	return model;
+	return retval;
 }
 
 

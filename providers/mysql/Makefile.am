@@ -38,9 +38,9 @@ xml_in_files = \
 	mysql_specs_add_column.xml.in \
 	mysql_specs_drop_column.xml.in
 
-xml_DATA = $(xml_in_files:.xml.in=.xml)
-
 @INTLTOOL_XML_RULE@
+
+xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 EXTRA_DIST = $(xml_in_files)
 DISTCLEANFILES = $(xml_DATA)

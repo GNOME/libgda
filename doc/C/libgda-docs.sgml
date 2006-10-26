@@ -501,20 +501,22 @@
       <title>Data conversions</title>
       <para>
 	A single piece of data can have several representations
-	depending on its usage: a string represantation, an SQL representation and of course a 
+	depending on its usage: a string representation, an SQL representation and of course a 
 	<link linkend="GValue">GValue</link> representation. Conversions from one representation to
-	the other is DBMS dependant as each database can have its own SQL representation rules. Thus the
-	<link linkend="GdaDataHandler">GdaDataHandler</link> object was created.
+	the other is DBMS dependant as each database can have its own SQL representation rules. The
+	<link linkend="GdaDataHandler">GdaDataHandler</link> object's purpose is to do all these conversions in a easy way.
+	Except when mentionned otherwise, conversions take into account locale settings and DBMS specifications.
       </para>
       <para>
-	To convert a data, one needs to get a pointer to a <link linkend="GdaDataHandler">GdaDataHandler</link> object (no
-	need to unref() it after usage, data handler objects are stateless). To obtain such a pointer one can:
+	To convert a data, one needs to instanciate a new data handler from one of the many classes which implement this interface, or
+	better to get a pointer to a <link linkend="GdaDataHandler">GdaDataHandler</link> object (no
+	need to unref() it after usage, data handler objects are stateless), and so to obtain such a pointer one can:
 	<itemizedlist>
 	  <listitem>
 	    <para>Ask a <link linkend="GdaDict">GdaDict</link> object for one using the 
 	      <link linkend="gda-dict-get-default-handler">gda_dict_get_default_handler()</link>: the returned data handler
 	      is a generic one and should not be used to convert data to use with any connection, but only to have
-	      a portable way of storing and loading data in a locale independant fashion.</para>
+	      a portable way of storing and loading data in a locale independant fashion (for serialization purposes).</para>
 	  </listitem>
 	  <listitem>
 	    <para>Ask a <link linkend="GdaDict">GdaDict</link> object for one using the 

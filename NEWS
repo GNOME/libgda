@@ -1,5 +1,18 @@
+libgda 1.99.1, 2006-10-26
+-------------------------
+
+ - Database providers compilation fixes (Marc-Andre)
+ - General corrections (Murray)
+ - Possibility to avoid compiling C# bindings (Vivien)
+ - Gda# packaging corrections (Vivien)
+ - Translations:
+	- it (Marco Ciampa)
+	- en_GB (David Lodge)
+	- fi (Ilkka)
+
 libgda 1.99.0, 2006-10-18
 -------------------------
+
  - Database providers fixes (Bas, Vivien)
  - Gda# fixes (Daniel)
  - Oracle provider improvements (Bas)
@@ -17,6 +30,7 @@ libgda 1.99.0, 2006-10-18
 
 libgda 1.9.103, 2006-09-03
 --------------------------
+
  - Added Data Definition queries to be handled by the providers as no SQL standard exists
    in this area (for the PostgreSQL, MySQL and SQLite providers which now implement database 
    creation and destruction, table creation and destruction, table renaming, and column addition

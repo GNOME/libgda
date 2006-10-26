@@ -1,5 +1,9 @@
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 
+if BUILD_GDA_SHARP
+GDA_SHARP_DIRECTORY=gda-sharp
+endif
+
 SUBDIRS = \
 	po \
 	libsql \
@@ -7,7 +11,7 @@ SUBDIRS = \
 	providers \
 	report \
 	tools \
-	gda-sharp \
+	$(GDA_SHARP_DIRECTORY) \
 	testing \
 	data \
 	doc

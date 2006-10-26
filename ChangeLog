@@ -1,3 +1,29 @@
+2006-10-26  Vivien Malerba <malerba@gnome-db.org>
+
+	Released 1.99.1 (AKA 2.0 Beta3).
+
+2006-10-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/bdb/Makefile.am:
+	* providers/firebird/Makefile.am:
+	* providers/freetds/Makefile.am:
+	* providers/ibmdb2/Makefile.am:
+	* providers/ldap/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/msql/Makefile.am:
+	* providers/mysql/Makefile.am:
+	* providers/odbc/Makefile.am:
+	* providers/oracle/Makefile.am:
+	* providers/postgres/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/sybase/Makefile.am:
+	* providers/xbase/Makefile.am: applied a patch by Marc-Andre Lureau
+	to fix #362898
+	* configure.in: added a --enable-csharp option to enable or disable
+	the building of C# bindings
+	* gda-sharp/Makefile.am: packaging corrections and now "make distcheck" works
+	* libgda/gda-query.[ch]: changed the returned value of gda_query_execute()
+
 2006-10-21  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-connection.h:
