@@ -335,17 +335,17 @@
 	      queries;</para>
           </listitem>
           <listitem>
-            <para>Firebird: unknown state;</para>
+            <para>Firebird: compiles, needs testing;</para>
           </listitem>
           <listitem>
             <para>IBM DB2: compiles but is not useable, work in progress;</para>
           </listitem>
           <listitem>
-            <para>Microsoft SQL Server and Sybase: uses the <ulink url="http://www.freetds.org/">FreeTDS</ulink> library,
-	      uknown state;</para>
+            <para>Microsoft SQL Server and Sybase using the <ulink url="http://www.freetds.org/">FreeTDS</ulink> library:
+	      compiles, needs testing;</para>
           </listitem>
           <listitem>
-            <para>mSQL: unknown state;</para>
+            <para>mSQL: compiles, needs testing;</para>
           </listitem>
           <listitem>
             <para>MySQL: fully functionnal;</para>
@@ -363,10 +363,10 @@
             <para>SQLite: fully functionnal;</para>
           </listitem>
           <listitem>
-            <para>Sybase: unknown state;</para>
+            <para>Sybase: compiles, needs testing;</para>
           </listitem>
           <listitem>
-            <para>Xbase: unknown state;</para>
+            <para>Xbase: compiles, needs testing</para>
           </listitem>
 	</itemizedlist>
       </para>

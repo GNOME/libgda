@@ -1,3 +1,11 @@
+2006-10-30  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: bumped to 1.99.2
+	* providers/msql:
+	* providers/sybase: make these providers compile again
+	* doc/C/libgda-docs.sgml: updated providers' status
+	* autogen.sh: make sure we call bash because edgy uses dash
+
 2006-10-26  Vivien Malerba <malerba@gnome-db.org>
 
 	Released 1.99.1 (AKA 2.0 Beta3).

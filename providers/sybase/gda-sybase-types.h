@@ -51,16 +51,16 @@ typedef struct _sybase_Types {
 #define GDA_SYBASE_TYPE_CNT 23
 extern const sybase_Types gda_sybase_type_list[GDA_SYBASE_TYPE_CNT];
 
-const GType gda_sybase_get_value_type (const CS_INT sql_type);
-const CS_INT gda_sybase_get_sql_type (const GType g_type);
+GType gda_sybase_get_value_type (const CS_INT sql_type);
+CS_INT gda_sybase_get_sql_type (const GType g_type);
 
 void gda_sybase_set_value_by_datetime(GValue *value, CS_DATETIME *dt);
 void gda_sybase_set_value_by_datetime4(GValue *value, CS_DATETIME4 *dt);
 
-const gboolean gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
+gboolean gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
                                          GValue *value, 
                                          GdaSybaseField *field);
-const gboolean gda_sybase_set_value_general (GdaSybaseConnectionData *scnc,
+gboolean gda_sybase_set_value_general (GdaSybaseConnectionData *scnc,
                                              GValue                *value,
                                              GdaSybaseField          *field);
 

@@ -22,6 +22,7 @@
 
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
+#include <libgda/gda-parameter-list.h>
 #include <libgda/gda-server-provider-extra.h>
 #include <glib/gi18n-lib.h>
 #include <stdlib.h>
@@ -36,7 +37,6 @@
 #define OBJECT_DATA_MSQL_HANDLE "GDA_mSQL_mSQLHandle"
 #define OBJECT_DATA_MSQL_DBNAME "GDA_mSQL_dbname"
 
-/*----[ Forwards ]----------------------------------------------------------*/
 
 static void gda_msql_provider_class_init(GdaMsqlProviderClass*);
 static void gda_msql_provider_init(GdaMsqlProvider*,GdaMsqlProviderClass*);
@@ -355,11 +355,11 @@ gda_msql_provider_execute_command(GdaServerProvider *p,
 		rl=process_sql_commands(rl,cnc,gda_command_get_text(cmd));
 		break;
 	case GDA_COMMAND_TYPE_TABLE:
-		str=g_strdup_printf("SELECT * FROM %s",gda_command_get_text(cmd));
-		rl=process_sql_commands(rl,cnc,str);
-		if (rl && GDA_IS_DATA_MODEL(rl->data))
+		str = g_strdup_printf("SELECT * FROM %s",gda_command_get_text(cmd));
+		rl = process_sql_commands (rl, cnc, str);
+		if (rl && GDA_IS_DATA_MODEL (rl->data))
 			g_object_set (G_OBJECT (rl->data), 
-				      "command_text", arr[n],
+				      "command_text", str,
 				      "command_type", GDA_COMMAND_TYPE_TABLE, NULL);
 		g_free(str);
 		break;
@@ -447,7 +447,7 @@ get_msql_tables(GdaConnection *cnc,GdaParameterList *params)
 {
 	gint  *sock;
 	m_row  row;
-	GdaDataModelArray *model;
+	GdaDataModel *model;
 	m_result *res;
   
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
@@ -462,12 +462,12 @@ get_msql_tables(GdaConnection *cnc,GdaParameterList *params)
 		GList *vlist = NULL;
 		GValue *tmpval;
 
-		tmpval = g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), row[0]);
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), row[0]);
 		vlist = g_list_append (vlist, tmpval);
 		vlist = g_list_append (vlist, gda_value_new_null ());
 		vlist = g_list_append (vlist, gda_value_new_null ());
 		vlist = g_list_append (vlist, gda_value_new_null ());
-		gda_data_model_append_values (GDA_DATA_MODEL (model), vlist);
+		gda_data_model_append_values (model, vlist, NULL);
 	}
 	msqlFreeResult(res);
 	return GDA_DATA_MODEL(model);    
@@ -476,7 +476,7 @@ get_msql_tables(GdaConnection *cnc,GdaParameterList *params)
 static GdaDataModel *
 get_msql_types(GdaConnection *cnc,GdaParameterList *params)
 {
-	GdaDataModelArray *rs;
+	GdaDataModel *rs;
 	gint               i;
 	struct {
 		const gchar *name;
@@ -496,7 +496,7 @@ get_msql_types(GdaConnection *cnc,GdaParameterList *params)
   
 	if (!GDA_IS_CONNECTION(cnc)) return NULL;
 
-	rs = (GdaDataModelArray*) gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
+	rs = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
 	gda_server_provider_init_schema_model (rs, GDA_CONNECTION_SCHEMA_TYPES);
 
 	for (i=0;i<sizeof(types)/sizeof(types[0]);i++) {
@@ -515,11 +515,11 @@ get_msql_types(GdaConnection *cnc,GdaParameterList *params)
 		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), types[i].type);
 		value_list = g_list_append (value_list, tmpval);
 
-		gda_data_model_append_values(GDA_DATA_MODEL(rs), value_list);
+		gda_data_model_append_values(rs, value_list, NULL);
 		g_list_foreach (value_list, (GFunc)gda_value_free, NULL);
 		g_list_free (value_list);
 	}
-	return GDA_DATA_MODEL(rs);
+	return rs;
 }
 
 static GList *
@@ -587,7 +587,7 @@ get_table_fields(GdaConnection *cnc,GdaParameterList *params)
 		gda_connection_add_event_string(cnc,_("Invalid mSQL handle"));
 		return NULL;
 	}
-	par=gda_parameter_list_find(params,"name");
+	par=gda_parameter_list_find_param (params, "name");
 	if (!par) {
 		gda_connection_add_event_string(cnc,
 						_("Table name is needed but none specified in parameter list"));
@@ -620,7 +620,7 @@ get_table_fields(GdaConnection *cnc,GdaParameterList *params)
 			g_object_unref(G_OBJECT(rs));
 			return NULL;
 		}
-		gda_data_model_append_values(GDA_DATA_MODEL(rs),(const GList*)value_list);
+		gda_data_model_append_values(GDA_DATA_MODEL(rs),(const GList*)value_list, NULL);
 		g_list_foreach(value_list,(GFunc)gda_value_free,NULL);
 		g_list_free(value_list);
 	}

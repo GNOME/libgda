@@ -139,9 +139,9 @@ sybase_check_messages(GdaConnection *cnc)
 	else {
 		sconn->mret = cs_diag (sconn->context,
 		                       CS_STATUS,
-																									CS_CLIENTMSG_TYPE,
-																									CS_UNUSED,
-																									&msgcnt);
+				       CS_CLIENTMSG_TYPE,
+				       CS_UNUSED,
+				       &msgcnt);
 	}
 	if (sconn->mret != CS_SUCCEED) {
 		sybase_debug_msg (_("ct_diag() failed determining # of client messages."));
@@ -198,7 +198,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 		       CS_UNUSED, 
 		       &msgcnt);   
 	if ( ret != CS_SUCCEED ) { 
-		error = gda_connection_event_new();
+		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 		g_return_val_if_fail (error != NULL, FALSE);
 		
 		gda_connection_event_set_description (error, _("Failed when attempting to retrieve the amount of client messages"));
@@ -216,7 +216,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 			       msgcur, 
 			       &msg); 
 		if ( ret != CS_SUCCEED ) { 
-			error = gda_connection_event_new();
+			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			g_return_val_if_fail (error != NULL, FALSE);
 			gda_connection_event_set_description (error, _("An error occurred when attempting to retrieve a client message"));
 			gda_connection_event_set_code (error, -1);
@@ -232,7 +232,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 							    msg.osnumber,
 							    _(") Message: "),
 							    msg.osstring);
-				error = gda_connection_event_new();
+				error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				g_return_val_if_fail (error != NULL, FALSE);
 				gda_connection_event_set_description (error,tempspace);
 				gda_connection_event_set_code (error, -1);
@@ -248,7 +248,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 							    (long) CS_ORIGIN(msg.msgnumber),
 							    (long) CS_LAYER(msg.msgnumber),
 							    (msg.msgstring) ? msg.msgstring : "");
-				error = gda_connection_event_new();
+				error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				g_return_val_if_fail (error != NULL, FALSE);
 				gda_connection_event_set_description (error,tempspace);
 				gda_connection_event_set_code (error, -1);
@@ -268,7 +268,7 @@ sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 			       CS_UNUSED, 
 			       NULL);   
 		if ( ret != CS_SUCCEED ) { 
-			error = gda_connection_event_new();
+			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			g_return_val_if_fail (error != NULL, FALSE);
 			gda_connection_event_set_description (error, _("call to cs_diag failed when attempting to clear the client messages"));
 			gda_connection_event_set_code (error, -1);
@@ -309,7 +309,7 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 		       CS_UNUSED, 
 		       &msgcnt);   
 	if ( ret != CS_SUCCEED ) { 
-		error = gda_connection_event_new();
+		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 		g_return_val_if_fail (error != NULL, FALSE);
 		gda_connection_event_set_description (error, _("Failed when attempting to retrieve the amount of server messages"));
 		gda_connection_event_set_code (error, -1);
@@ -326,7 +326,7 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 			       msgcur, 
 			       &msg); 
 		if ( ret != CS_SUCCEED ) { 
-			error = gda_connection_event_new();
+			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			g_return_val_if_fail (error != NULL, FALSE);
 			gda_connection_event_set_description (error, _("An error occurred when attempting to retrieve a server message"));
 			gda_connection_event_set_code (error, -1);
@@ -340,45 +340,45 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 				returner = TRUE;
 				if (msg.svrnlen > 0) 
 					servername = g_strdup_printf("%s %s",
-																																		_("Server:"),
-																																		msg.svrname); 
+								     _("Server:"),
+								     msg.svrname); 
 				if (msg.proclen > 0) 
 					procname = g_strdup_printf("%s %s",
-																																_("Stored Procedure:"),
-																																msg.proc);
+								   _("Stored Procedure:"),
+								   msg.proc);
 					
 				messagenumber = g_strdup_printf("%s (%ld)",
-																																				_("Number"),
-																																				msg.msgnumber); 
+								_("Number"),
+								msg.msgnumber); 
 				severity = g_strdup_printf("%s (%ld)",
-																															_("Severity"),
-																															msg.severity); 
+							   _("Severity"),
+							   msg.severity); 
 				state = g_strdup_printf("%s (%ld)",
-																												_("State"),
-																												msg.state); 
+							_("State"),
+							msg.state); 
 				line = g_strdup_printf("%s (%ld)",
-																											_("Line"),
-																											msg.line);
+						       _("Line"),
+						       msg.line);
 				if ( procname)
 					error_msg = 
 						g_strdup_printf("Sybase Server Message:%s %s %s %s %s %s %s", 
-																						servername, 
-																						severity, 
-																						state, 
-																						procname, 
-																						messagenumber, 
-																						line,
-																						msg.text);           
+								servername, 
+								severity, 
+								state, 
+								procname, 
+								messagenumber, 
+								line,
+								msg.text);           
 				else
 					error_msg = 
 						g_strdup_printf("Sybase Server Message:%s %s %s %s %s %s", 
-																						servername, 
-																						severity, 
-																						state, 
-																						messagenumber, 
-																						line,
-																						msg.text);           
-				error = gda_connection_event_new();
+								servername, 
+								severity, 
+								state, 
+								messagenumber, 
+								line,
+								msg.text);           
+				error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				g_return_val_if_fail (error != NULL, FALSE);
 				gda_connection_event_set_description (error, error_msg);
 				gda_connection_event_set_code (error, -1);
@@ -404,7 +404,7 @@ gboolean sybase_add_server_errors_to_list(GdaConnection *cnc)
 			       CS_UNUSED, 
 			       NULL);   
 		if ( ret != CS_SUCCEED ) { 
-			error = gda_connection_event_new();
+			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			g_return_val_if_fail (error != NULL, FALSE);
 			gda_connection_event_set_description (error, _("call to ct_diag failed when attempting to clear the server messages"));
 			gda_connection_event_set_code (error, -1);
@@ -438,7 +438,7 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 		       CS_UNUSED, 
 		       &msgcnt);   
 	if ( ret != CS_SUCCEED ) { 
-		error = gda_connection_event_new();
+		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 		g_return_val_if_fail (error != NULL, FALSE);
 		gda_connection_event_set_description (error, _("Failed when attempting to retrieve the amount of client messages"));
 		gda_connection_event_set_code (error, -1);
@@ -455,7 +455,7 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 			       msgcur, 
 			       &msg); 
 		if ( ret != CS_SUCCEED ) { 
-			error = gda_connection_event_new();
+			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			g_return_val_if_fail (error != NULL, FALSE);
 			gda_connection_event_set_description (error, _("An error occurred when attempting to retrieve a client message"));
 			gda_connection_event_set_code (error, -1);
@@ -478,7 +478,7 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 						    (long) CS_NUMBER (msg.msgnumber),
 						    msg.msgstring,
 						    msg.osstring);
-			error = gda_connection_event_new();
+			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			g_return_val_if_fail (error != NULL, FALSE);
 			gda_connection_event_set_description (error, tempspace);
 			gda_connection_event_set_code (error, -1);
@@ -494,7 +494,7 @@ gboolean sybase_add_client_errors_to_list(GdaConnection *cnc)
 		       CS_UNUSED, 
 		       NULL);   
 	if ( ret != CS_SUCCEED ) { 
-		error = gda_connection_event_new();
+		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 		g_return_val_if_fail (error != NULL, FALSE);
 		gda_connection_event_set_description (error, _("call to ct_diag failed when attempting to clear the client messages"));
 		gda_connection_event_set_code (error, -1);
@@ -522,7 +522,7 @@ gda_sybase_make_error (GdaSybaseConnectionData *scnc, gchar *fmt, ...)
 		}
 	}
 	
-	error = gda_connection_event_new();
+	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	if (error) {
 		if (fmt) {
 			va_start(args, fmt);

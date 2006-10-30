@@ -32,48 +32,111 @@
 #include "gda-sybase.h"
 #include "gda-sybase-types.h"
 
-// NULL means we have no corresponding server type name
-// illegal type should always be last type
-const sybase_Types gda_sybase_type_list[GDA_SYBASE_TYPE_CNT] = {
-  // Binary types
-  { "binary",        CS_BINARY_TYPE,      GDA_TYPE_BINARY },    //   1
-  { NULL,            CS_LONGBINARY_TYPE,  GDA_TYPE_BINARY },    //   2
-  { "varbinary",     CS_VARBINARY_TYPE,   GDA_TYPE_BINARY },    //   3
-  // Boolean types
-  { "boolean",       CS_BIT_TYPE,         G_TYPE_BOOLEAN },   //   4
-  // Character types
-  { "char",          CS_CHAR_TYPE,        G_TYPE_STRING },    //   5
-  { NULL,            CS_LONGCHAR_TYPE,    G_TYPE_STRING },    //   6
-  { "varchar",       CS_VARCHAR_TYPE,     G_TYPE_STRING },    //   7
-  // Datetime types
-  { "datetime",      CS_DATETIME_TYPE,    GDA_TYPE_TIMESTAMP }, //   8
-  { "smalldatetime", CS_DATETIME4_TYPE,   GDA_TYPE_TIMESTAMP }, //   9
-  // Numeric types
-  { "tinyint",       CS_TINYINT_TYPE,     G_TYPE_CHAR },   //  10
-  { "smallint",      CS_SMALLINT_TYPE,    GDA_TYPE_SHORT },  //  11
-  { "int",           CS_INT_TYPE,         G_TYPE_INT },   //  12
-  { "decimal",       CS_DECIMAL_TYPE,     GDA_TYPE_NUMERIC },   //  13
-  { "numeric",       CS_NUMERIC_TYPE,     GDA_TYPE_NUMERIC },   //  14
-  { "float",         CS_FLOAT_TYPE,       G_TYPE_DOUBLE },    //  15
-  { "real",          CS_REAL_TYPE,        G_TYPE_FLOAT },    //  16
-  { "text",          CS_TEXT_TYPE,        G_TYPE_STRING },    //  17
-  { "image",         CS_IMAGE_TYPE,       GDA_TYPE_BINARY },    //  18
+static sybase_Types *
+get_sybase_types ()
+{
+	static sybase_Types *sybase_types = NULL;
+	if (!sybase_types) {
+		/* NULL means we have no corresponding server type name */
+		/* illegal type should always be last type */
+		sybase_types = g_new0 (sybase_Types, GDA_SYBASE_TYPE_CNT);
+		
+		sybase_types[0].name = "binary";
+		sybase_types[0].sql_type = CS_BINARY_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_BINARY;
 
-  // Security types
-  { "boundary",      CS_BOUNDARY_TYPE,    GDA_TYPE_BINARY },    //  19
-  { "sensitivity",   CS_SENSITIVITY_TYPE, GDA_TYPE_BINARY },    //  20
+		sybase_types[0].name = NULL;
+		sybase_types[0].sql_type = CS_LONGBINARY_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_BINARY;
 
-// Types unsupported by gda-srv are reported as varchar and at the end
-// of this list
-	// Money types
-  { "money",         CS_MONEY_TYPE,       G_TYPE_STRING },    //  21
-  { "smallmoney",    CS_MONEY4_TYPE,      G_TYPE_STRING },    //  22
-	
-  { NULL,            CS_ILLEGAL_TYPE,     G_TYPE_INVALID }    //  23
-};
+		sybase_types[0].name = "varbinary";
+		sybase_types[0].sql_type = CS_VARBINARY_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_BINARY;
 
+		sybase_types[0].name = "boolean";
+		sybase_types[0].sql_type = CS_BIT_TYPE;
+		sybase_types[0].g_type = G_TYPE_BOOLEAN;
 
-const gboolean
+		sybase_types[0].name = "char";
+		sybase_types[0].sql_type = CS_CHAR_TYPE;
+		sybase_types[0].g_type = G_TYPE_STRING;
+
+		sybase_types[0].name = NULL;
+		sybase_types[0].sql_type = CS_LONGCHAR_TYPE;
+		sybase_types[0].g_type = G_TYPE_STRING;
+
+		sybase_types[0].name = "varchar";
+		sybase_types[0].sql_type = CS_VARCHAR_TYPE;
+		sybase_types[0].g_type = G_TYPE_STRING;
+
+		sybase_types[0].name = "datetime";
+		sybase_types[0].sql_type = CS_DATETIME_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_TIMESTAMP;
+
+		sybase_types[0].name = "smalldatetime";
+		sybase_types[0].sql_type = CS_DATETIME4_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_TIMESTAMP;
+
+		sybase_types[0].name = "tinyint";
+		sybase_types[0].sql_type = CS_TINYINT_TYPE;
+		sybase_types[0].g_type = G_TYPE_CHAR;
+
+		sybase_types[0].name = "smallint";
+		sybase_types[0].sql_type = CS_SMALLINT_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_SHORT;
+
+		sybase_types[0].name = "int";
+		sybase_types[0].sql_type = CS_INT_TYPE;
+		sybase_types[0].g_type = G_TYPE_INT;
+
+		sybase_types[0].name = "decimal";
+		sybase_types[0].sql_type = CS_DECIMAL_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_NUMERIC;
+
+		sybase_types[0].name = "numeric";
+		sybase_types[0].sql_type = CS_NUMERIC_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_NUMERIC;
+
+		sybase_types[0].name = "float";
+		sybase_types[0].sql_type = CS_FLOAT_TYPE;
+		sybase_types[0].g_type = G_TYPE_DOUBLE;
+
+		sybase_types[0].name = "real";
+		sybase_types[0].sql_type = CS_REAL_TYPE;
+		sybase_types[0].g_type = G_TYPE_FLOAT;
+
+		sybase_types[0].name = "text";
+		sybase_types[0].sql_type = CS_TEXT_TYPE;
+		sybase_types[0].g_type = G_TYPE_STRING;
+
+		sybase_types[0].name = "image";
+		sybase_types[0].sql_type = CS_IMAGE_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_BINARY;
+
+		sybase_types[0].name = "boundary";
+		sybase_types[0].sql_type = CS_BOUNDARY_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_BINARY;
+
+		sybase_types[0].name = "sensitivity";
+		sybase_types[0].sql_type = CS_SENSITIVITY_TYPE;
+		sybase_types[0].g_type = GDA_TYPE_BINARY;
+
+		sybase_types[0].name = "money";
+		sybase_types[0].sql_type = CS_MONEY_TYPE;
+		sybase_types[0].g_type = G_TYPE_STRING;
+
+		sybase_types[0].name = "smallmoney";
+		sybase_types[0].sql_type = CS_MONEY4_TYPE;
+		sybase_types[0].g_type = G_TYPE_STRING;
+
+		sybase_types[0].name = NULL;
+		sybase_types[0].sql_type = CS_ILLEGAL_TYPE;
+		sybase_types[0].g_type = G_TYPE_INVALID;
+	}
+	return sybase_types;
+}
+
+gboolean
 gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
                           GValue *value, GdaSybaseField *field)
 {
@@ -176,7 +239,7 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 
 #define SYBASE_CONVBUF_SIZE 1024
 
-const gboolean
+gboolean
 gda_sybase_set_value_general (GdaSybaseConnectionData *scnc,
                               GValue                *value,
                               GdaSybaseField          *field)
@@ -306,32 +369,32 @@ gda_sybase_set_value_by_datetime4(GValue *value, CS_DATETIME4 *dt4)
 	}
 }
 
-const GType gda_sybase_get_value_type (const CS_INT sql_type)
+GType gda_sybase_get_value_type (const CS_INT sql_type)
 {
 	gint i = 0;
 	
 	while ((i < GDA_SYBASE_TYPE_CNT)) {
-		if (gda_sybase_type_list[i].sql_type == sql_type) {
-			return gda_sybase_type_list[i].g_type;
+		if (get_sybase_types ()[i].sql_type == sql_type) {
+			return get_sybase_types ()[i].g_type;
 		}
 		i++;
 	}
 	
-	return gda_sybase_type_list[GDA_SYBASE_TYPE_CNT - 1].g_type;
+	return get_sybase_types ()[GDA_SYBASE_TYPE_CNT - 1].g_type;
 }
 
-const CS_INT gda_sybase_get_sql_type (const GType g_type)
+CS_INT gda_sybase_get_sql_type (const GType g_type)
 {
 	gint i = 0;
 
 	while ((i < GDA_SYBASE_TYPE_CNT)) {
-		if (gda_sybase_type_list[i].g_type == g_type) {
-			return gda_sybase_type_list[i].g_type;
+		if (get_sybase_types ()[i].g_type == g_type) {
+			return get_sybase_types ()[i].g_type;
 		}
 		i++;
 	}
 
-	return gda_sybase_type_list[GDA_SYBASE_TYPE_CNT - 1].sql_type;
+	return get_sybase_types ()[GDA_SYBASE_TYPE_CNT - 1].sql_type;
 }
 
 

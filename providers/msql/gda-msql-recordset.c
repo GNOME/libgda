@@ -1,5 +1,5 @@
 /* GDA mSQL Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  * 	   Danilo Schoeneberg <dj@starfire-programming.net
@@ -25,7 +25,7 @@
 #include <string.h>
 #include "gda-msql.h"
 #include "gda-msql-recordset.h"
-#include "gda-data-model-private.h"
+#include <libgda/gda-data-model-private.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
@@ -73,7 +73,7 @@ fetch_row (GdaMsqlRecordset *rs,gulong rownum)
 		case INT_TYPE:  g_value_set_int(field, (s_val) ? atol(s_val) : 0);
 			break;
 		case UINT_TYPE: g_value_set_uint(field,
-						       (s_val) ? (guint)atol(s_val) : 0);
+						 (s_val) ? (guint)atol(s_val) : 0);
 			break;
 		case REAL_TYPE:  g_value_set_double(field,(s_val) ? atof(s_val) : 0.0);
 			break;
@@ -83,22 +83,22 @@ fetch_row (GdaMsqlRecordset *rs,gulong rownum)
 		case IPV4_TYPE:  g_value_set_string(field,(s_val) ? s_val : "");
 			break;
 		case INT64_TYPE: g_value_set_int64(field,
-						      (s_val) ? (gint64)atof(s_val) : 0);
+						   (s_val) ? (gint64)atof(s_val) : 0);
 			break;
 		case UINT64_TYPE: g_value_set_uint64(field,
-							(s_val) ? (guint64)atof(s_val) : 0);
+						     (s_val) ? (guint64)atof(s_val) : 0);
                         break;
 		case INT16_TYPE:  gda_value_set_short(field,
-							 (s_val) ? (gshort)atol(s_val) : 0);
+						      (s_val) ? (gshort)atol(s_val) : 0);
                         break;
 		case UINT16_TYPE: gda_value_set_ushort(field,
-							  (s_val) ? (gushort)atol(s_val) : 0);
+						       (s_val) ? (gushort)atol(s_val) : 0);
                         break;
 		case INT8_TYPE:   g_value_set_char(field,
-							(s_val) ? (gchar)atol(s_val) : 0);
+						   (s_val) ? (gchar)atol(s_val) : 0);
                         break;
 		case UINT8_TYPE:  g_value_set_uchar(field,
-							 (s_val) ? (guchar)atol(s_val) : 0);
+						    (s_val) ? (guchar)atol(s_val) : 0);
                         break;
 #endif
 		default:
@@ -113,7 +113,7 @@ fetch_row (GdaMsqlRecordset *rs,gulong rownum)
  */
 
 static gint 
-gda_msql_recordset_numrows(GdaDataModel *model) 
+gda_msql_recordset_numrows(GdaDataModelRow *model) 
 {
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
@@ -123,7 +123,7 @@ gda_msql_recordset_numrows(GdaDataModel *model)
 }
 
 static gint
-gda_msql_recordset_numcols(GdaDataModel *model) 
+gda_msql_recordset_numcols(GdaDataModelRow *model) 
 {
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
@@ -132,7 +132,7 @@ gda_msql_recordset_numcols(GdaDataModel *model)
 	return msqlNumFields(rs->res);
 }
 
-static const GdaRow *
+static GdaRow *
 gda_msql_recordset_get_row(GdaDataModelRow *model, gint row, GError **error) 
 {
 	gint              rows, fetched_rows;
@@ -145,7 +145,7 @@ gda_msql_recordset_get_row(GdaDataModelRow *model, gint row, GError **error)
 	fetched_rows=rs->rows->len;
 	if (row>=rows) return NULL;
 	if (row<fetched_rows) {
-		return (const GdaRow*)g_ptr_array_index(rs->rows,row);
+		return (GdaRow *) g_ptr_array_index(rs->rows,row);
 	}
 	gda_data_model_freeze(GDA_DATA_MODEL(rs));
 	for(i=fetched_rows;i<=row;i++) {
@@ -154,7 +154,7 @@ gda_msql_recordset_get_row(GdaDataModelRow *model, gint row, GError **error)
 		g_ptr_array_add(rs->rows,fields);
 	}
 	gda_data_model_thaw(GDA_DATA_MODEL(rs));
-	return (const GdaRow*)fields;
+	return (GdaRow *) fields;
 }
 
 static const GValue *
@@ -183,8 +183,8 @@ gda_msql_recordset_is_updatable(GdaDataModelRow *model)
 	return (cmd_type==GDA_COMMAND_TYPE_TABLE) ? TRUE : FALSE;
 }
 
-static const GdaRow *
-gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values) 
+static GdaRow *
+gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values, GError **error) 
 {
 	GString          *sql;
 	GdaRow           *row;
@@ -194,7 +194,7 @@ gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values)
 	GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
 	if ((!GDA_IS_MSQL_RECORDSET(rs)) ||
-	    (!values) || (!gda_data_model_is_updatable(model))) {
+	    (!values) || (!gda_data_model_is_updatable ((GdaDataModel*) model))) {
 		return NULL;
 	}
 	cols=msqlNumFields(rs->res);
@@ -204,12 +204,12 @@ gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values)
 		return NULL;
 	}
 	sql=g_string_new("INSERT INTO ");
-	sql=g_string_append(sql,gda_data_model_get_command_text(model));
+	sql=g_string_append(sql,gda_data_model_get_command_text((GdaDataModel*) model));
 	sql=g_string_append(sql,"(");
 	for(i=0;i<cols;i++) {
 		GdaColumn *fa;
     
-		fa= gda_data_model_describe_column(model,i);
+		fa= gda_data_model_describe_column((GdaDataModel*) model,i);
 		if (!fa) {
 			gda_connection_add_event_string(rs->cnc,
 							_("Could not retrieve column's information"));
@@ -243,19 +243,19 @@ gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values)
 		gda_connection_add_event(rs->cnc,gda_msql_make_error(rc));
 		return NULL;
 	}
-	row=gda_row_new_from_list(model,values);
+	row=gda_row_new_from_list((GdaDataModel*) model,values);
 	g_ptr_array_add(rs->rows,row);
-	return (const GdaRow*)row;
+	return (GdaRow *) row;
 }
 
 static gboolean 
-gda_msql_recordset_remove_row (GdaDataModelRow *model,const GdaRow *row) 
+gda_msql_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error) 
 {
 	return FALSE;
 }
 
 static gboolean
-gda_msql_recordset_update_row (GdaDataModelRow *model,const GdaRow *row) 
+gda_msql_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError **error) 
 {
 	return FALSE;
 }
@@ -343,7 +343,7 @@ gda_msql_recordset_describe_column (GdaDataModel *model, gint col)
 	}
 
 	field_count = msqlNumFields (rs->res);
-	if (col> = field_count) return NULL;
+	if (col >= field_count) return;
 	attrs = gda_data_model_describe_column (model, col);
 
 	msqlFieldSeek (rs->res, col);
@@ -363,7 +363,7 @@ gda_msql_recordset_describe_column (GdaDataModel *model, gint col)
 	gda_column_set_primary_key (attrs, 1!=1);
 	gda_column_set_unique_key (attrs, IS_UNIQUE (msql_field->flags));
 	gda_column_set_auto_increment (attrs, 1!=1);
-	return attrs;
+	return;
 }
 
 GdaMsqlRecordset *

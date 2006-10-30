@@ -756,7 +756,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 						       &msgcnt);
 					
 					if ( ret != CS_SUCCEED ) {
-						error = gda_connection_event_new();
+						error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 						g_return_val_if_fail (error != NULL, FALSE);
 						gda_connection_event_set_description (error, _("An error occurred when attempting to test if there is a server message for resultset"));
 						gda_connection_event_set_code (error, -1);
@@ -1117,7 +1117,7 @@ gda_sybase_provider_get_types (GdaConnection *cnc,
 			g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), gda_sybase_type_list[i].g_type);
 			value_list = g_list_append (value_list, tmpval);
 			
-			gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
+			gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 			g_list_free (value_list);
 		}
@@ -1195,7 +1195,9 @@ gda_sybase_provider_get_schema (GdaServerProvider *provider,
 	case GDA_CONNECTION_SCHEMA_PARENT_TABLES:
 	case GDA_CONNECTION_SCHEMA_SEQUENCES:
 	case GDA_CONNECTION_SCHEMA_LANGUAGES:
-	case	GDA_CONNECTION_SCHEMA_NAMESPACES:
+	case GDA_CONNECTION_SCHEMA_NAMESPACES:
+	case GDA_CONNECTION_SCHEMA_CONSTRAINTS:
+	case GDA_CONNECTION_SCHEMA_TABLE_CONTENTS:
 		return NULL;
 		break;
 	}
@@ -1297,12 +1299,13 @@ gda_sybase_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_TRIGGERS:
 		return TRUE;
 
-		//FIXME: Implement missing 
 	case GDA_CONNECTION_FEATURE_AGGREGATES:
 	case GDA_CONNECTION_FEATURE_INHERITANCE:
 	case GDA_CONNECTION_FEATURE_SEQUENCES:
 	case GDA_CONNECTION_FEATURE_XML_QUERIES:
 	case GDA_CONNECTION_FEATURE_NAMESPACES:
+	case GDA_CONNECTION_FEATURE_BLOBS:
+	case GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR:
 		return FALSE;
 	}
 	
