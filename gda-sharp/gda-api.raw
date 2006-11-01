@@ -23,6 +23,9 @@
       <member cname="GDA_BLOB_MODE_WRITE" name="Write" value="1 &lt;&lt; 1" />
       <member cname="GDA_BLOB_MODE_RDWR" name="Rdwr" value="0x03" />
     </enum>
+    <enum name="ClientError" cname="GdaClientError" gtype="gda_client_error_get_type" type="enum">
+      <member cname="GDA_CLIENT_GENERAL_ERROR" name="Error" />
+    </enum>
     <enum name="ClientEvent" cname="GdaClientEvent" gtype="gda_client_event_get_type" type="enum">
       <member cname="GDA_CLIENT_EVENT_INVALID" name="Invalid" />
       <member cname="GDA_CLIENT_EVENT_ERROR" name="Error" />
@@ -44,6 +47,15 @@
       <member cname="GDA_COMMAND_TYPE_TABLE" name="Table" />
       <member cname="GDA_COMMAND_TYPE_SCHEMA" name="Schema" />
       <member cname="GDA_COMMAND_TYPE_INVALID" name="Invalid" />
+    </enum>
+    <enum name="ConnectionError" cname="GdaConnectionError" gtype="gda_connection_error_get_type" type="enum">
+      <member cname="GDA_CONNECTION_CONN_OPEN_ERROR" name="ConnOpenError" />
+      <member cname="GDA_CONNECTION_DO_QUERY_ERROR" name="DoQueryError" />
+      <member cname="GDA_CONNECTION_NONEXIST_DSN_ERROR" name="NonexistDsnError" />
+      <member cname="GDA_CONNECTION_NO_CNC_SPEC_ERROR" name="NoCncSpecError" />
+      <member cname="GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR" name="NoProviderSpecError" />
+      <member cname="GDA_CONNECTION_OPEN_ERROR" name="OpenError" />
+      <member cname="GDA_CONNECTION_EXECUTE_COMMAND_ERROR" name="ExecuteCommandError" />
     </enum>
     <enum name="ConnectionEventCode" cname="GdaConnectionEventCode" gtype="gda_connection_event_code_get_type" type="enum">
       <member cname="GDA_CONNECTION_EVENT_CODE_CONSTRAINT_VIOLATION" name="ConstraintViolation" />
@@ -127,6 +139,22 @@
       <member cname="GDA_DATA_MODEL_IO_DATA_ARRAY_XML" name="DataArrayXml" />
       <member cname="GDA_DATA_MODEL_IO_TEXT_SEPARATED" name="TextSeparated" />
     </enum>
+    <enum name="DataModelIterError" cname="GdaDataModelIterError" gtype="gda_data_model_iter_error_get_type" type="enum">
+      <member cname="GDA_DATA_MODEL_ITER_WHAT_ERROR" name="Error" />
+    </enum>
+    <enum name="DataModelQueryError" cname="GdaDataModelQueryError" gtype="gda_data_model_query_error_get_type" type="enum">
+      <member cname="GDA_DATA_MODEL_QUERY_XML_LOAD_ERROR" name="Error" />
+    </enum>
+    <enum name="DataProxyError" cname="GdaDataProxyError" gtype="gda_data_proxy_error_get_type" type="enum">
+      <member cname="GDA_DATA_PROXY_COMMIT_ERROR" name="Error" />
+    </enum>
+    <enum name="DictAggregateError" cname="GdaDictAggregateError" gtype="gda_dict_aggregate_error_get_type" type="enum">
+      <member cname="GDA_DICT_AGGREGATE_XML_LOAD_ERROR" name="Error" />
+    </enum>
+    <enum name="DictConstraintError" cname="GdaDictConstraintError" gtype="gda_dict_constraint_error_get_type" type="enum">
+      <member cname="GDA_DICT_CONSTRAINT_XML_SAVE_ERROR" name="SaveError" />
+      <member cname="GDA_DICT_CONSTRAINT_XML_LOAD_ERROR" name="LoadError" />
+    </enum>
     <enum name="DictConstraintFkAction" cname="GdaDictConstraintFkAction" gtype="gda_dict_constraint_fk_action_get_type" type="enum">
       <member cname="CONSTRAINT_FK_ACTION_CASCADE" name="Cascade" />
       <member cname="CONSTRAINT_FK_ACTION_SET_NULL" name="SetNull" />
@@ -144,21 +172,80 @@
       <member cname="CONSTRAINT_CHECK_SETOF_LIST" name="CheckSetofList" />
       <member cname="CONSTRAINT_UNKNOWN" name="Unknown" />
     </enum>
+    <enum name="DictDatabaseError" cname="GdaDictDatabaseError" gtype="gda_dict_database_error_get_type" type="enum">
+      <member cname="GDA_DICT_DATABASE_XML_SAVE_ERROR" name="XmlSaveError" />
+      <member cname="GDA_DICT_DATABASE_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_DICT_DATABASE_META_DATA_UPDATE" name="MetaDataUpdate" />
+      <member cname="GDA_DICT_DATABASE_META_DATA_UPDATE_USER_STOPPED" name="MetaDataUpdateUserStopped" />
+      <member cname="GDA_DICT_DATABASE_TABLES_ERROR" name="TablesError" />
+      <member cname="GDA_DICT_DATABASE_SEQUENCES_ERROR" name="SequencesError" />
+    </enum>
+    <enum name="DictError" cname="GdaDictError" gtype="gda_dict_error_get_type" type="enum">
+      <member cname="GDA_DICT_META_DATA_UPDATE_ERROR" name="MetaDataUpdateError" />
+      <member cname="GDA_DICT_META_DATA_UPDATE_USER_STOPPED" name="MetaDataUpdateUserStopped" />
+      <member cname="GDA_DICT_LOAD_FILE_NOT_EXIST_ERROR" name="LoadFileNotExistError" />
+      <member cname="GDA_DICT_FILE_LOAD_ERROR" name="FileLoadError" />
+      <member cname="GDA_DICT_FILE_SAVE_ERROR" name="FileSaveError" />
+      <member cname="GDA_DICT_DATATYPE_ERROR" name="DatatypeError" />
+      <member cname="GDA_DICT_FUNCTIONS_ERROR" name="FunctionsError" />
+      <member cname="GDA_DICT_AGGREGATES_ERROR" name="AggregatesError" />
+    </enum>
     <enum name="DictFieldAttribute" cname="GdaDictFieldAttribute" gtype="gda_dict_field_attribute_get_type" type="flags">
       <member cname="FIELD_AUTO_INCREMENT" name="Increment" value="1 &lt;&lt; 0" />
+    </enum>
+    <enum name="DictFieldError" cname="GdaDictFieldError" gtype="gda_dict_field_error_get_type" type="enum">
+      <member cname="GDA_DICT_FIELD_XML_LOAD_ERROR" name="Error" />
+    </enum>
+    <enum name="DictFunctionError" cname="GdaDictFunctionError" gtype="gda_dict_function_error_get_type" type="enum">
+      <member cname="GDA_DICT_FUNCTION_XML_LOAD_ERROR" name="Error" />
+    </enum>
+    <enum name="DictTableError" cname="GdaDictTableError" gtype="gda_dict_table_error_get_type" type="enum">
+      <member cname="GDA_DICT_TABLE_XML_LOAD_ERROR" name="TableXmlLoadError" />
+      <member cname="GDA_DICT_TABLE_META_DATA_UPDATE" name="TableMetaDataUpdate" />
+      <member cname="GDA_DICT_FIELDS_ERROR" name="FieldsError" />
+    </enum>
+    <enum name="DictTypeError" cname="GdaDictTypeError" gtype="gda_dict_type_error_get_type" type="enum">
+      <member cname="GDA_DICT_TYPE_XML_LOAD_ERROR" name="Error" />
+    </enum>
+    <enum name="GeneralError" cname="GdaGeneralError" gtype="gda_general_error_get_type" type="enum">
+      <member cname="GDA_GENERAL_OBJECT_NAME_ERROR" name="ObjectNameError" />
+      <member cname="GDA_GENERAL_INCORRECT_VALUE_ERROR" name="IncorrectValueError" />
+      <member cname="GDA_GENERAL_OPERATION_ERROR" name="OperationError" />
     </enum>
     <enum name="GraphType" cname="GdaGraphType" gtype="gda_graph_type_get_type" type="enum">
       <member cname="GDA_GRAPH_DB_RELATIONS" name="DbRelations" />
       <member cname="GDA_GRAPH_QUERY_JOINS" name="QueryJoins" />
       <member cname="GDA_GRAPH_MODELLING" name="Modelling" />
     </enum>
+    <enum name="ObjectRefError" cname="GdaObjectRefError" gtype="gda_object_ref_error_get_type" type="enum">
+      <member cname="GDA_OBJECT_REF_XML_LOAD_ERROR" name="Error" />
+    </enum>
     <enum name="ObjectRefType" cname="GdaObjectRefType" gtype="gda_object_ref_type_get_type" type="enum">
       <member cname="REFERENCE_BY_XML_ID" name="XmlId" />
       <member cname="REFERENCE_BY_NAME" name="Name" />
     </enum>
+    <enum name="ParameterError" cname="GdaParameterError" gtype="gda_parameter_error_get_type" type="enum">
+      <member cname="GDA_PARAMETER_QUERY_LIMIT_ERROR" name="Error" />
+    </enum>
+    <enum name="ParameterListError" cname="GdaParameterListError" gtype="gda_parameter_list_error_get_type" type="enum">
+      <member cname="GDA_PARAMETER_LIST_NO_NODE_ERROR" name="NoNodeError" />
+      <member cname="GDA_PARAMETER_LIST_NODE_OUTDATED_ERROR" name="NodeOutdatedError" />
+      <member cname="GDA_PARAMETER_LIST_VALUE_PROV_OBJ_TYPE_ERROR" name="ValueProvObjTypeError" />
+      <member cname="GDA_PARAMETER_LIST_VALUE_PROV_DATA_TYPE_ERROR" name="ValueProvDataTypeError" />
+      <member cname="GDA_PARAMETER_LIST_VALUE_PROV_INVISIBLE_ERROR" name="ValueProvInvisibleError" />
+      <member cname="GDA_PARAMETER_LIST_VALUE_PROV_QUERY_TYPE_ERROR" name="ValueProvQueryTypeError" />
+      <member cname="GDA_PARAMETER_LIST_DEPENDENCY_NOT_IN_PARAMLIST_ERROR" name="DependencyNotInParamlistError" />
+      <member cname="GDA_PARAMETER_LIST_DEPENDENCY_POSITION_ERROR" name="DependencyPositionError" />
+      <member cname="GDA_PARAMETER_LIST_XML_SPEC_ERROR" name="XmlSpecError" />
+    </enum>
     <enum name="ParameterListParamHint" cname="GdaParameterListParamHint" gtype="gda_parameter_list_param_hint_get_type" type="flags">
       <member cname="GDA_PARAMETER_LIST_PARAM_READ_ONLY" name="ReadOnly" value="1 &lt;&lt; 0" />
       <member cname="GDA_PARAMETER_LIST_PARAM_HIDE" name="Hide" value="1 &lt;&lt; 1" />
+    </enum>
+    <enum name="QueryConditionError" cname="GdaQueryConditionError" gtype="gda_query_condition_error_get_type" type="enum">
+      <member cname="GDA_QUERY_CONDITION_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_CONDITION_RENDERER_ERROR" name="RendererError" />
+      <member cname="GDA_QUERY_CONDITION_PARENT_ERROR" name="ParentError" />
     </enum>
     <enum name="QueryConditionOperator" cname="GdaQueryConditionOperator" gtype="gda_query_condition_operator_get_type" type="enum">
       <member cname="GDA_QUERY_CONDITION_OP_LEFT" name="Left" />
@@ -185,10 +272,55 @@
       <member cname="GDA_QUERY_CONDITION_LEAF_BETWEEN" name="LeafBetween" />
       <member cname="GDA_QUERY_CONDITION_TYPE_UNKNOWN" name="TypeUnknown" />
     </enum>
+    <enum name="QueryError" cname="GdaQueryError" gtype="gda_query_error_get_type" type="enum">
+      <member cname="GDA_QUERY_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_META_DATA_UPDATE" name="MetaDataUpdate" />
+      <member cname="GDA_QUERY_FIELDS_ERROR" name="FieldsError" />
+      <member cname="GDA_QUERY_TARGETS_ERROR" name="TargetsError" />
+      <member cname="GDA_QUERY_RENDER_ERROR" name="RenderError" />
+      <member cname="GDA_QUERY_PARSE_ERROR" name="ParseError" />
+      <member cname="GDA_QUERY_SYNTAX_ERROR" name="SyntaxError" />
+      <member cname="GDA_QUERY_STRUCTURE_ERROR" name="StructureError" />
+      <member cname="GDA_QUERY_SQL_ANALYSE_ERROR" name="SqlAnalyseError" />
+      <member cname="GDA_QUERY_NO_CNC_ERROR" name="NoCncError" />
+      <member cname="GDA_QUERY_CNC_CLOSED_ERROR" name="CncClosedError" />
+    </enum>
+    <enum name="QueryFieldAggError" cname="GdaQueryFieldAggError" gtype="gda_query_field_agg_error_get_type" type="enum">
+      <member cname="GDA_QUERY_FIELD_AGG_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_FIELD_AGG_RENDER_ERROR" name="RenderError" />
+    </enum>
+    <enum name="QueryFieldAllError" cname="GdaQueryFieldAllError" gtype="gda_query_field_all_error_get_type" type="enum">
+      <member cname="GDA_QUERY_FIELD_ALL_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_FIELD_ALL_RENDER_ERROR" name="RenderError" />
+    </enum>
+    <enum name="QueryFieldError" cname="GdaQueryFieldError" gtype="gda_query_field_error_get_type" type="enum">
+      <member cname="GDA_QUERY_FIELD_XML_LOAD_ERROR" name="Error" />
+    </enum>
+    <enum name="QueryFieldFieldError" cname="GdaQueryFieldFieldError" gtype="gda_query_field_field_error_get_type" type="enum">
+      <member cname="GDA_QUERY_FIELD_FIELD_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_FIELD_FIELD_RENDER_ERROR" name="RenderError" />
+    </enum>
+    <enum name="QueryFieldFuncError" cname="GdaQueryFieldFuncError" gtype="gda_query_field_func_error_get_type" type="enum">
+      <member cname="GDA_QUERY_FIELD_FUNC_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_FIELD_FUNC_RENDER_ERROR" name="RenderError" />
+    </enum>
     <enum name="QueryFieldState" cname="GdaQueryFieldState" gtype="gda_query_field_state_get_type" type="flags">
       <member cname="GDA_ENTITY_FIELD_VISIBLE" name="Visible" value="1 &lt;&lt; 0" />
       <member cname="GDA_ENTITY_FIELD_INVISIBLE" name="Invisible" value="1 &lt;&lt; 1" />
       <member cname="GDA_ENTITY_FIELD_ANY" name="Any" value="GDA_ENTITY_FIELD_VISIBLE | GDA_ENTITY_FIELD_INVISIBLE" />
+    </enum>
+    <enum name="QueryFieldValueError" cname="GdaQueryFieldValueError" gtype="gda_query_field_value_error_get_type" type="enum">
+      <member cname="GDA_QUERY_FIELD_VALUE_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_FIELD_VALUE_RENDER_ERROR" name="RenderError" />
+      <member cname="GDA_QUERY_FIELD_VALUE_PARAM_ERROR" name="ParamError" />
+      <member cname="GDA_QUERY_FIELD_VALUE_DEFAULT_PARAM_ERROR" name="DefaultParamError" />
+    </enum>
+    <enum name="QueryJoinError" cname="GdaQueryJoinError" gtype="gda_query_join_error_get_type" type="enum">
+      <member cname="GDA_QUERY_JOIN_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_JOIN_META_DATA_UPDATE" name="MetaDataUpdate" />
+      <member cname="GDA_QUERY_JOIN_FIELDS_ERROR" name="FieldsError" />
+      <member cname="GDA_QUERY_JOIN_SQL_ANALYSE_ERROR" name="SqlAnalyseError" />
+      <member cname="GDA_QUERY_JOIN_PARSE_ERROR" name="ParseError" />
     </enum>
     <enum name="QueryJoinType" cname="GdaQueryJoinType" gtype="gda_query_join_type_get_type" type="enum">
       <member cname="GDA_QUERY_JOIN_TYPE_INNER" name="Inner" />
@@ -197,6 +329,12 @@
       <member cname="GDA_QUERY_JOIN_TYPE_FULL_OUTER" name="FullOuter" />
       <member cname="GDA_QUERY_JOIN_TYPE_CROSS" name="Cross" />
       <member cname="GDA_QUERY_JOIN_TYPE_LAST" name="Last" />
+    </enum>
+    <enum name="QueryTargetError" cname="GdaQueryTargetError" gtype="gda_query_target_error_get_type" type="enum">
+      <member cname="GDA_QUERY_TARGET_XML_LOAD_ERROR" name="XmlLoadError" />
+      <member cname="GDA_QUERY_TARGET_XML_SAVE_ERROR" name="XmlSaveError" />
+      <member cname="GDA_QUERY_TARGET_META_DATA_UPDATE" name="MetaDataUpdate" />
+      <member cname="GDA_QUERY_TARGET_FIELDS_ERROR" name="FieldsError" />
     </enum>
     <enum name="QueryType" cname="GdaQueryType" gtype="gda_query_type_get_type" type="enum">
       <member cname="GDA_QUERY_TYPE_SELECT" name="Select" />
@@ -606,6 +744,12 @@
           <parameter type="gint" name="row" />
         </parameters>
       </method>
+      <method name="GetColumnIndexByName" cname="gda_data_model_get_column_index_by_name">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="const-gchar*" name="name" />
+        </parameters>
+      </method>
       <method name="GetColumnTitle" cname="gda_data_model_get_column_title">
         <return-type type="const-gchar*" />
         <parameters>
@@ -632,6 +776,13 @@
         <return-type type="const-GValue*" />
         <parameters>
           <parameter type="gint" name="col" />
+          <parameter type="gint" name="row" />
+        </parameters>
+      </method>
+      <method name="GetValueAtColName" cname="gda_data_model_get_value_at_col_name">
+        <return-type type="const-GValue*" />
+        <parameters>
+          <parameter type="const-gchar*" name="column_name" />
           <parameter type="gint" name="row" />
         </parameters>
       </method>
@@ -2281,14 +2432,6 @@
           <parameter type="GError**" name="error" />
         </parameters>
       </method>
-      <method name="AssignModelCol" cname="gda_data_proxy_assign_model_col">
-        <return-type type="void" />
-        <parameters>
-          <parameter type="GdaDataModel*" name="model" />
-          <parameter type="gint" name="proxy_col" />
-          <parameter type="gint" name="model_col" />
-        </parameters>
-      </method>
       <method name="CancelAllChanges" cname="gda_data_proxy_cancel_all_changes">
         <return-type type="gboolean" />
       </method>
@@ -2297,14 +2440,6 @@
         <parameters>
           <parameter type="gint" name="proxy_row" />
           <parameter type="gint" name="col" />
-        </parameters>
-      </method>
-      <method name="ClearModelRowValue" cname="gda_data_proxy_clear_model_row_value">
-        <return-type type="void" />
-        <parameters>
-          <parameter type="GdaDataModel*" name="model" />
-          <parameter type="gint" name="proxy_row" />
-          <parameter type="gint" name="extra_col" />
         </parameters>
       </method>
       <method name="Delete" cname="gda_data_proxy_delete">
@@ -2318,21 +2453,6 @@
         <parameters>
           <parameter type="GSList*" name="values" />
           <parameter type="gint*" name="cols_index" />
-        </parameters>
-      </method>
-      <method name="GetAssignedModelCol" cname="gda_data_proxy_get_assigned_model_col">
-        <return-type type="gint" />
-        <parameters>
-          <parameter type="GdaDataModel*" name="model" />
-          <parameter type="gint" name="model_col" />
-        </parameters>
-      </method>
-      <method name="GetModelRowValue" cname="gda_data_proxy_get_model_row_value">
-        <return-type type="const-GValue*" />
-        <parameters>
-          <parameter type="GdaDataModel*" name="model" />
-          <parameter type="gint" name="proxy_row" />
-          <parameter type="gint" name="extra_col" />
         </parameters>
       </method>
       <method name="GetNNewRows" cname="gda_data_proxy_get_n_new_rows">
@@ -2407,15 +2527,6 @@
         <return-type type="gboolean" />
         <parameters>
           <parameter type="gint" name="proxy_row" />
-        </parameters>
-      </method>
-      <method name="SetModelRowValue" cname="gda_data_proxy_set_model_row_value">
-        <return-type type="void" />
-        <parameters>
-          <parameter type="GdaDataModel*" name="model" />
-          <parameter type="gint" name="proxy_row" />
-          <parameter type="gint" name="extra_col" />
-          <parameter type="const-GValue*" name="value" />
         </parameters>
       </method>
       <method name="SetSampleSize" cname="gda_data_proxy_set_sample_size">
@@ -3846,7 +3957,7 @@
         </parameters>
       </method>
       <method name="Execute" cname="gda_query_execute">
-        <return-type type="GdaDataModel*" />
+        <return-type type="GdaObject*" />
         <parameters>
           <parameter type="GdaParameterList*" name="params" />
           <parameter type="gboolean" name="iter_model_only_requested" />
@@ -5945,6 +6056,83 @@
         </parameters>
       </method>
     </class>
+    <class name="Global" cname="GdaGlobal">
+      <method name="CreateTable" cname="gda_create_table" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="GError**" name="error" />
+          <parameter ellipsis="true" />
+        </parameters>
+      </method>
+      <method name="DeleteRowFromTable" cname="gda_delete_row_from_table" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="const-gchar*" name="condition_column_name" />
+          <parameter type="const-GValue*" name="condition" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="DropTable" cname="gda_drop_table" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="ExecuteSelectCommand" cname="gda_execute_select_command" shared="true">
+        <return-type type="GdaDataModel*" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="sql" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="ExecuteSqlCommand" cname="gda_execute_sql_command" shared="true">
+        <return-type type="gint" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="sql" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="GetDefaultDict" cname="gda_get_default_dict" shared="true">
+        <return-type type="GdaDict*" />
+      </method>
+      <method name="OpenConnection" cname="gda_open_connection" shared="true">
+        <return-type type="GdaConnection*" />
+        <parameters>
+          <parameter type="const-gchar*" name="dsn" />
+          <parameter type="const-gchar*" name="username" />
+          <parameter type="const-gchar*" name="password" />
+          <parameter type="GdaConnectionOptions" name="options" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="ShortGetType" cname="gda_short_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+      <method name="StringHashToList" cname="gda_string_hash_to_list" shared="true">
+        <return-type type="GList*" />
+        <parameters>
+          <parameter type="GHashTable*" name="hash_table" />
+        </parameters>
+      </method>
+      <method name="StringToBinary" cname="gda_string_to_binary" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="const-gchar*" name="str" />
+          <parameter type="GdaBinary*" name="bin" />
+        </parameters>
+      </method>
+      <method name="UshortGetType" cname="gda_ushort_get_type" shared="true">
+        <return-type type="GType" />
+      </method>
+    </class>
     <class name="Default" cname="GdaDefault_">
       <method name="EscapeChars" cname="gda_default_escape_chars" shared="true">
         <return-type type="gchar*" />
@@ -6011,28 +6199,24 @@
         <return-type type="GdaDictRegisterStruct*" />
       </method>
     </class>
-    <class name="Global" cname="GdaGlobal">
-      <method name="GetDefaultDict" cname="gda_get_default_dict" shared="true">
-        <return-type type="GdaDict*" />
-      </method>
-      <method name="ShortGetType" cname="gda_short_get_type" shared="true">
-        <return-type type="GType" />
-      </method>
-      <method name="StringHashToList" cname="gda_string_hash_to_list" shared="true">
-        <return-type type="GList*" />
-        <parameters>
-          <parameter type="GHashTable*" name="hash_table" />
-        </parameters>
-      </method>
-      <method name="StringToBinary" cname="gda_string_to_binary" shared="true">
+    <class name="Insert" cname="GdaInsert_">
+      <method name="RowIntoTable" cname="gda_insert_row_into_table" shared="true">
         <return-type type="gboolean" />
         <parameters>
-          <parameter type="const-gchar*" name="str" />
-          <parameter type="GdaBinary*" name="bin" />
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="GError**" name="error" />
+          <parameter ellipsis="true" />
         </parameters>
       </method>
-      <method name="UshortGetType" cname="gda_ushort_get_type" shared="true">
-        <return-type type="GType" />
+      <method name="RowIntoTableFromString" cname="gda_insert_row_into_table_from_string" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="GError**" name="error" />
+          <parameter ellipsis="true" />
+        </parameters>
       </method>
     </class>
     <class name="Main" cname="GdaMain_">
@@ -6062,6 +6246,31 @@
         <return-type type="guint" />
         <parameters>
           <parameter type="GdaDictRegisterStruct*" name="reg" />
+        </parameters>
+      </method>
+    </class>
+    <class name="Update" cname="GdaUpdate_">
+      <method name="ValueInTable" cname="gda_update_value_in_table" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="const-gchar*" name="search_for_column" />
+          <parameter type="const-GValue*" name="condition" />
+          <parameter type="const-gchar*" name="column_name" />
+          <parameter type="const-GValue*" name="new_value" />
+          <parameter type="GError**" name="error" />
+        </parameters>
+      </method>
+      <method name="ValuesInTable" cname="gda_update_values_in_table" shared="true">
+        <return-type type="gboolean" />
+        <parameters>
+          <parameter type="GdaConnection*" name="cnn" />
+          <parameter type="const-gchar*" name="table_name" />
+          <parameter type="const-gchar*" name="condition_column_name" />
+          <parameter type="const-GValue*" name="condition" />
+          <parameter type="GError**" name="error" />
+          <parameter ellipsis="true" />
         </parameters>
       </method>
     </class>

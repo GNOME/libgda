@@ -1,5 +1,5 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2006 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
@@ -432,7 +432,11 @@ fb_gda_value_fill (GValue *gda_value,
 	GdaBlob *blob = NULL;
 	struct tm *a_date_time;
 	gpointer tmp_big, field_data;
+#if FB_API_VER < 20
 	struct vary *var_text;
+#else
+	PARAMVARY *var_text;
+#endif
 	gdouble i64_n;
 	XSQLDA *sql_result;
 	
@@ -509,7 +513,11 @@ fb_gda_value_fill (GValue *gda_value,
 			break;
 		case SQL_VARYING:
 		case SQL_VARYING+1:
+#if FB_API_VER < 20
 			var_text = (struct vary *) field_data;
+#else
+			var_text = (PARAMVARY *) field_data;
+#endif
 			var_text->vary_string[var_text->vary_length] = '\0';
 
 			g_value_set_string (gda_value, (const gchar *) var_text->vary_string);

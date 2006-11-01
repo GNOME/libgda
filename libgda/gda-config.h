@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -20,8 +20,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_config_h__)
-#  define __gda_config_h__
+#ifndef __GDA_CONFIG_H__
+#define __GDA_CONFIG_H__
 
 #include <glib/gmacros.h>
 #include <libgda/gda-data-model.h>

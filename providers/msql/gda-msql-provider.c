@@ -172,11 +172,12 @@ static const gchar *gda_msql_provider_get_version(GdaServerProvider *p1)
 	return PACKAGE_VERSION;
 }
 
-static gboolean gda_msql_provider_open_connection(GdaServerProvider *p1,
-                                                  GdaConnection *cnc,
-                                                  GdaQuarkList *params,
-                                                  const gchar *username,
-                                                  const gchar *password)
+static gboolean
+gda_msql_provider_open_connection(GdaServerProvider *p1,
+				  GdaConnection *cnc,
+				  GdaQuarkList *params,
+				  const gchar *username,
+				  const gchar *password)
 {
 	const gchar *_host = NULL;
 	const gchar *_db = NULL;
@@ -187,20 +188,22 @@ static gboolean gda_msql_provider_open_connection(GdaServerProvider *p1,
   
 	if (!GDA_IS_MSQL_PROVIDER(p)) return FALSE;
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	_host=gda_quark_list_find(params,"HOST");
-	_db=gda_quark_list_find(params,"DATABASE");
-	if (!_host) _host="localhost";
-	sock=msqlConnect((char*)_host);
-	if (sock<0) {
-		error=gda_msql_make_error(sock);
-		gda_connection_add_event(cnc,error);
+	_host = gda_quark_list_find(params,"HOST");
+	_db = gda_quark_list_find(params,"DATABASE");
+
+	sock = msqlConnect ((char*) _host);
+	if (sock < 0)
+	if (sock < 0) {
+		error = gda_msql_make_error (sock);
+		gda_connection_add_event (cnc,error);
 		return FALSE;
 	}
-	rc=msqlSelectDB(sock,(char*)_db);
-	if (rc<0) {
-		error=gda_msql_make_error(rc);
-		if (cnc) gda_connection_add_event(cnc,error);
-		msqlClose(sock);
+	rc = msqlSelectDB (sock, (char*) _db);
+	if (rc < 0) {
+		error = gda_msql_make_error (rc);
+		if (cnc) 
+			gda_connection_add_event (cnc,error);
+		msqlClose (sock);
 		return FALSE;
 	}
 	sock_ptr=g_new0(gint,1);
@@ -210,8 +213,9 @@ static gboolean gda_msql_provider_open_connection(GdaServerProvider *p1,
 	return TRUE;
 }
 
-static gboolean gda_msql_provider_close_connection(GdaServerProvider *p1,
-                                                   GdaConnection     *cnc)
+static gboolean
+gda_msql_provider_close_connection(GdaServerProvider *p1,
+				   GdaConnection     *cnc)
 {
 	gint *sock_ptr;
 	GdaMsqlProvider *p=(GdaMsqlProvider*)p1;
@@ -234,21 +238,23 @@ static gboolean gda_msql_provider_close_connection(GdaServerProvider *p1,
  * some reasons i think we should use a check anyways.
  */
 static const gchar *
-gda_msql_provider_get_server_version(GdaServerProvider *p1,
-				     GdaConnection     *cnc)
+gda_msql_provider_get_server_version (GdaServerProvider *p1,
+				      GdaConnection     *cnc)
 {
 	gint *sock_ptr;
 	GdaMsqlProvider *p=(GdaMsqlProvider*)p1;
   
 	if (!GDA_IS_MSQL_PROVIDER(p)) return FALSE;
 	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	sock_ptr=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
-	if (!sock_ptr) return NULL;
-	return (const gchar*)msqlGetServerInfo();
+	sock_ptr=g_object_get_data (G_OBJECT(cnc), OBJECT_DATA_MSQL_HANDLE);
+	if (!sock_ptr)
+		return NULL;
+	return (const gchar*) msqlGetServerInfo ();
 }
 
-static GList *process_sql_commands(GList *rl,GdaConnection *cnc,
-                                   const gchar *sql)
+static GList *
+process_sql_commands (GList *rl,GdaConnection *cnc,
+		      const gchar *sql)
 {
 	gchar    **arr;
 	gint      *sock;
@@ -443,7 +449,7 @@ get_msql_databases(GdaConnection *cnc,GdaParameterList *params)
 }
 
 static GdaDataModel *
-get_msql_tables(GdaConnection *cnc,GdaParameterList *params)
+get_msql_tables (GdaConnection *cnc,GdaParameterList *params)
 {
 	gint  *sock;
 	m_row  row;
@@ -474,32 +480,33 @@ get_msql_tables(GdaConnection *cnc,GdaParameterList *params)
 }
 
 static GdaDataModel *
-get_msql_types(GdaConnection *cnc,GdaParameterList *params)
+get_msql_types (GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModel *rs;
-	gint               i;
+	gint i;
 	struct {
 		const gchar *name;
 		const gchar *owner;
 		const gchar *comments;
 		GType type;
+		const gchar *syn;
 	} types[] = {
-		{"char","","String of characters (or other 8bit data",G_TYPE_STRING},
-		{"text","","variable length string of characters",G_TYPE_STRING},
-		{"int","","Signed integer",G_TYPE_INT},
-		{"real","","Decimal or Scientific Notation Values",G_TYPE_DOUBLE},
-		{"uint","","Unsigned integer values",G_TYPE_INT},
-		{"date","","Date values",G_TYPE_DATE},
-		{"time","","Time values",GDA_TYPE_TIME},
-		{"money","","Numerical values with 2 fixed decimal places",G_TYPE_DOUBLE}
+		{"char", "", "String of characters (or other 8bit data", G_TYPE_STRING, NULL},
+		{"text", "", "variable length string of characters", G_TYPE_STRING, NULL},
+		{"int", "", "Signed integer", G_TYPE_INT, NULL},
+		{"real", "", "Decimal or Scientific Notation Values", G_TYPE_DOUBLE, NULL},
+		{"uint", "", "Unsigned integer values", G_TYPE_INT, NULL},
+		{"date", "", "Date values", G_TYPE_DATE, NULL},
+		{"time", "", "Time values", GDA_TYPE_TIME, NULL},
+		{"money", "", "Numerical values with 2 fixed decimal places", G_TYPE_DOUBLE, NULL},
+		{"ipv4", "", "An Internet address in the format of 'aaa.bbb.ccc.ddd'", G_TYPE_STRING, NULL},
+		{"cird4", "", "An Internet network address block specified in CIDR format 'aaa.bbb.ccc.ddd/length'", G_TYPE_STRING, NULL}
 	};
   
-	if (!GDA_IS_CONNECTION(cnc)) return NULL;
-
 	rs = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_TYPES));
 	gda_server_provider_init_schema_model (rs, GDA_CONNECTION_SCHEMA_TYPES);
 
-	for (i=0;i<sizeof(types)/sizeof(types[0]);i++) {
+	for (i = 0; i < sizeof(types)/sizeof(types[0]); i++) {
 		GList *value_list=NULL;
 		GValue *tmpval;
 
@@ -515,8 +522,11 @@ get_msql_types(GdaConnection *cnc,GdaParameterList *params)
 		g_value_set_ulong (tmpval = gda_value_new (G_TYPE_ULONG), types[i].type);
 		value_list = g_list_append (value_list, tmpval);
 
-		gda_data_model_append_values(rs, value_list, NULL);
-		g_list_foreach (value_list, (GFunc)gda_value_free, NULL);
+		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), types[i].syn);
+		value_list = g_list_append (value_list, tmpval);
+
+		gda_data_model_append_values (rs, value_list, NULL);
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
 	}
 	return rs;
@@ -528,7 +538,7 @@ field_row_to_value_list(m_fdata *res)
 	GList  *value_list = NULL;
 	GValue *tmpval;
 
-	g_return_val_if_fail(res!=NULL,NULL);
+	g_return_val_if_fail (res!=NULL,NULL);
 
 	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), res->field.name);
 	value_list = g_list_append(value_list, tmpval);
@@ -542,22 +552,24 @@ field_row_to_value_list(m_fdata *res)
 	g_value_set_int (tmpval = gda_value_new (G_TYPE_INT), 0);	
 	value_list = g_list_append(value_list, tmpval);
 
-	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), IS_NOT_NULL(res->field.flags));
+	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), IS_NOT_NULL (res->field.flags));
 	value_list = g_list_append(value_list, tmpval);
 
 	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), FALSE);
 	value_list = g_list_append(value_list, tmpval);
 
-	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), IS_UNIQUE(res->field.flags));
+	g_value_set_boolean (tmpval = gda_value_new (G_TYPE_BOOLEAN), IS_UNIQUE (res->field.flags));
 	value_list = g_list_append(value_list, tmpval);
 
 	value_list = g_list_append(value_list, gda_value_new_null ());
 	value_list = g_list_append(value_list, gda_value_new_null ());
+	value_list = g_list_append(value_list, gda_value_new_null ());
+
 	return value_list;
 }
 
 static GdaDataModel *
-get_table_fields(GdaConnection *cnc,GdaParameterList *params)
+get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 {
 	const gchar       *table_name;
 	gint              *sock,r;
@@ -565,87 +577,70 @@ get_table_fields(GdaConnection *cnc,GdaParameterList *params)
 	GdaDataModelArray *rs;
 	m_fdata           *fields;
 	m_result          *res;
-	struct {
-		const gchar  *name;
-		GType  type;
-	} fields_desc[] = {
-		{ N_("Field Name"),    G_TYPE_STRING  },
-		{ N_("Data type"),     G_TYPE_STRING  },
-		{ N_("Size"),          G_TYPE_INT },
-		{ N_("Scale"),         G_TYPE_INT },
-		{ N_("Not null"),      G_TYPE_BOOLEAN },
-		{ N_("Primary key?"),  G_TYPE_BOOLEAN },
-		{ N_("Unique index?"), G_TYPE_BOOLEAN },
-		{ N_("References"),    G_TYPE_STRING  },
-		{ N_("Default value"), G_TYPE_STRING  }
-	};
   
-	sock=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
-	g_return_val_if_fail(GDA_IS_CONNECTION(cnc),NULL);
-	g_return_val_if_fail(params!=NULL,NULL);
-	if ((!sock) || (*sock<0)) {
-		gda_connection_add_event_string(cnc,_("Invalid mSQL handle"));
+	sock=g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MSQL_HANDLE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (params != NULL, NULL);
+	if ((!sock) || (*sock < 0)) {
+		gda_connection_add_event_string (cnc, _("Invalid mSQL handle"));
 		return NULL;
 	}
-	par=gda_parameter_list_find_param (params, "name");
+	par = gda_parameter_list_find_param (params, "name");
 	if (!par) {
 		gda_connection_add_event_string(cnc,
 						_("Table name is needed but none specified in parameter list"));
 		return NULL;
 	}
-	table_name=g_value_get_string((GValue*)gda_parameter_get_value(par));
+	table_name = g_value_get_string ((GValue*) gda_parameter_get_value (par));
 	if (!table_name) {
 		gda_connection_add_event_string(cnc,
 						_("Table name is needed but none specified in parameter list"));
 		return NULL;
 	}
-	res=msqlListFields(*sock,(char*)table_name);
+	res = msqlListFields (*sock, (char*) table_name);
 	if (!res) {
-		gda_connection_add_event(cnc,gda_msql_make_error(*sock));
+		gda_connection_add_event (cnc, gda_msql_make_error (*sock));
 		return NULL;
 	}
-	rs=(GdaDataModelArray*)gda_data_model_array_new(9);
-	for(r=0;r<sizeof(fields_desc)/sizeof(fields_desc[0]);r++) {
-		gda_data_model_set_column_title(GDA_DATA_MODEL(rs),r,
-						_(fields_desc[r].name));
-		/*gda_server_recordset_model_set_field_scale(rs,r,0);
-		  gda_server_recordset_model_set_field_gdatype(rs,r,_fields_desc[r].type);
-		*/
-	}
-	for(r=0,fields=res->fieldData;fields;fields=fields->next) {
+
+	rs= (GdaDataModelArray*) gda_data_model_array_new (9);
+	rs = gda_data_model_array_new (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_FIELDS));
+	gda_server_provider_init_schema_model (rs, GDA_CONNECTION_SCHEMA_FIELDS);
+
+	for (r = 0, fields = res->fieldData ; fields ; fields = fields->next) {
 		GList *value_list;
     
-		value_list = field_row_to_value_list(fields);
+		value_list = field_row_to_value_list (fields);
 		if (!value_list) {
-			g_object_unref(G_OBJECT(rs));
+			g_object_unref (G_OBJECT(rs));
 			return NULL;
 		}
-		gda_data_model_append_values(GDA_DATA_MODEL(rs),(const GList*)value_list, NULL);
-		g_list_foreach(value_list,(GFunc)gda_value_free,NULL);
-		g_list_free(value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL(rs),(const GList*) value_list, NULL);
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
 	}
 	msqlFreeResult(res);
 	return GDA_DATA_MODEL(rs);
 } 
 
 static GdaDataModel *
-gda_msql_provider_get_schema(GdaServerProvider *p,
-			     GdaConnection *cnc,
-			     GdaConnectionSchema schema,
-			     GdaParameterList *params)
+gda_msql_provider_get_schema (GdaServerProvider *p,
+			      GdaConnection *cnc,
+			      GdaConnectionSchema schema,
+			      GdaParameterList *params)
 {
   
 	g_return_val_if_fail(GDA_IS_SERVER_PROVIDER(p),NULL);
 	g_return_val_if_fail(GDA_IS_CONNECTION(cnc),NULL);
 	switch(schema) {
 	case GDA_CONNECTION_SCHEMA_DATABASES:
-		return get_msql_databases(cnc,params);
+		return get_msql_databases (cnc,params);
 	case GDA_CONNECTION_SCHEMA_FIELDS:
-		return get_table_fields(cnc,params);
+		return get_table_fields (cnc,params);
 	case GDA_CONNECTION_SCHEMA_TABLES:
-		return get_msql_tables(cnc,params);
+		return get_msql_tables (cnc,params);
 	case GDA_CONNECTION_SCHEMA_TYPES:
-		return get_msql_types(cnc,params);
+		return get_msql_types (cnc,params);
 	default:;
 	}
 	return NULL;

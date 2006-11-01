@@ -2,6 +2,6 @@
 <data-set-spec>
   <parameters>
     <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="HOST" _name="Host Name" _descr="Host which has the database server running" gdatype="gchararray"/>
+    <parameter id="HOST" _name="Host Name" _descr="Host which has the database server running (leave empty for a local connection using a UNIX domain socket, or use 'localhost' for a TCP/IP connection on the local machine) " gdatype="gchararray"/>
   </parameters>
 </data-set-spec>
