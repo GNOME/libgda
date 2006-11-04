@@ -1,3 +1,10 @@
+2006-11-04  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql/gda-mysql-provider.c: fixed types errors 
+	("int unsigned" was detected as "int" and "text" was incorrectly 
+	interpreted as G_TYPE_STRING when MySQL considers it a BLOB)
+	* providers/mysql/gda-mysql-provider.c: use UTF-8 as character set
+
 2006-11-01  Vivien Malerba <malerba@gnome-db.org>
 
 	* AUTHORS: added Daniel Espinosa

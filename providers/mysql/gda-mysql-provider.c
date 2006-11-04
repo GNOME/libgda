@@ -291,6 +291,12 @@ real_open_connection (const gchar *host, gint port, const gchar *socket,
 		return NULL;
 	}
 #endif
+
+#if MYSQL_VERSION_ID >= 50007
+	if (mysql_set_character_set (mysql, "utf8"))
+		g_warning ("Could not set client character set to UTF8 (using %s), expect problems with non UTF-8 characters\n", 
+			   mysql_character_set_name (mysql));
+#endif
 	
 	return mysql;
 }
@@ -1388,11 +1394,11 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		{ "set", "", "Set: a string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET column can have a maximum of 64 members", G_TYPE_STRING, NULL  },
 		{ "smallint", "", "Small integer, range is -32768 to 32767", GDA_TYPE_SHORT, NULL  },
 		{ "smallint unsigned", "", "Small unsigned integer, range is 0 to 65535", GDA_TYPE_USHORT, NULL  },
-		{ "text", "", "Text (up to 65535 characters)", G_TYPE_STRING, NULL  },
+		{ "text", "", "Text (up to 65535 characters)", GDA_TYPE_BINARY, NULL  },
 		{ "tinyint", "", "Tiny integer, range is -128 to 127", G_TYPE_CHAR, NULL  },
 		{ "tinyint unsigned", "", "Tiny unsigned integer, range is 0 to 255", G_TYPE_UCHAR, NULL  },
 		{ "tinyblob", "", "Tiny blob (up to 255 bytes)", GDA_TYPE_BINARY, NULL  },
-		{ "tinytext", "", "Tiny text (up to 255 characters)", GDA_TYPE_BLOB, NULL  },		
+		{ "tinytext", "", "Tiny text (up to 255 characters)", GDA_TYPE_BINARY, NULL  },		
 		{ "time", "", "Time", GDA_TYPE_TIME, NULL  },
 		{ "timestamp", "", "Time stamp", GDA_TYPE_TIMESTAMP, NULL  },
 		{ "varchar", "", "Variable Length Char", G_TYPE_STRING, "varbinary"  },
@@ -1448,7 +1454,7 @@ field_row_to_value_list (MYSQL *mysql, MYSQL_ROW mysql_row)
 	value_list = g_list_append (value_list, tmpval);
 
 	/* type and size */
-	arr = g_strsplit ((const gchar *) mysql_row[1], "(", 0);
+	arr = g_strsplit_set ((const gchar *) mysql_row[1], "() ", 0);
 	if (!arr) {
 		g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "");
 		value_list = g_list_append (value_list, tmpval);
@@ -1467,7 +1473,17 @@ field_row_to_value_list (MYSQL *mysql, MYSQL_ROW mysql_row)
 		}
 		else {
 			if (arr[0] && arr[1]) {
-				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), arr[0]);
+				gint i, len;
+				len = g_strv_length (arr);
+				for (i = 2; (i < len) && strcmp (arr[i], "unsigned"); i++);
+				if (i < len) {
+					gchar *type;
+
+					type = g_strdup_printf ("%s unsigned", arr[0]);
+					g_value_take_string (tmpval = gda_value_new (G_TYPE_STRING), type);
+				}
+				else
+					g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), arr[0]);
 				value_list = g_list_append (value_list, tmpval);
 
 				/* if arr[0] is an int type, hard code its size instead of
