@@ -31,13 +31,9 @@
 #include <libgda/gda-decl.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-value.h>
+#include <libgda/gda-data-model-extra.h>
 
 G_BEGIN_DECLS
-
-void                          gda_data_model_signal_emit_changed                (GdaDataModel *model);
-void                          gda_data_model_row_inserted           (GdaDataModel *model, gint row);
-void                          gda_data_model_row_updated            (GdaDataModel *model, gint row);
-void                          gda_data_model_row_removed            (GdaDataModel *model, gint row);
 
 const gchar                  *gda_data_model_get_command_text       (GdaDataModel *model);
 gboolean                      gda_data_model_set_command_text       (GdaDataModel *model, const gchar *txt);
