@@ -1,5 +1,12 @@
 2006-11-07  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-enums.h: Rename GValueAttribute to GdaValueAttribute, because 
+	we do not own the G namespace, and because this confuses language bindings.
+
+2006-11-07  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-data-model-private.h: #include gda-data-models-extra.h 
 	instead of redeclaring functions.
 

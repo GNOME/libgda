@@ -126,7 +126,7 @@ typedef struct
 	RowModif      *row_modif;    /* RowModif in which this structure instance appears */
 	gint           model_column; /* column index in the GdaDataModel */
         GValue        *value;        /* can also be GDA_TYPE_LIST for multiple values; values are owned here */
-        GValue        *attributes;   /* holds a GUINT of GValueAttribute */
+        GValue        *attributes;   /* holds a GUINT of GdaValueAttribute */
 } RowValue;
 #define ROW_VALUE(x) ((RowValue *)(x))
 
@@ -147,7 +147,7 @@ typedef struct
 struct _GdaDataProxyPrivate
 {
 	GdaDataModel      *model; /* Gda model which is proxied */
-	GValue           **columns_attrs; /* Each GValue holds a GUINT of GValueAttribute to proxy cols. attributes */
+	GValue           **columns_attrs; /* Each GValue holds a GUINT of GdaValueAttribute to proxy cols. attributes */
 
 	gint               model_nb_cols; /* = gda_data_model_get_n_columns (model) */
 	gboolean           autocommit;
@@ -916,7 +916,7 @@ gda_data_proxy_get_values (GdaDataProxy *proxy, gint proxy_row, gint *cols_index
  * @col: a valid proxy column
  *
  * Get the attributes of the value stored at (proxy_row, col) in @proxy, which
- * is an ORed value of #GValueAttribute flags
+ * is an ORed value of #GdaValueAttribute flags
  *
  * Returns: the attribute
  */

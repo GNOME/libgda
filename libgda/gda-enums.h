@@ -32,7 +32,7 @@ typedef enum  {
         GDA_VALUE_ATTR_DATA_NON_VALID = 1 << 6,
         GDA_VALUE_ATTR_HAS_VALUE_ORIG = 1 << 7,
 	GDA_VALUE_ATTR_NO_MODIF       = 1 << 8,
-} GValueAttribute;
+} GdaValueAttribute;
 
 /* different possible types for a GdaGraph object */
 typedef enum {

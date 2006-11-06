@@ -503,11 +503,11 @@ gda_data_model_get_value_at_col_name (GdaDataModel *model,
  * @row: a valid row number, or -1
  *
  * Get the attributes of the value stored at (row, col) in @proxy, which
- * is an ORed value of #GValueAttribute flags. As a special case, if
+ * is an ORed value of #GdaValueAttribute flags. As a special case, if
  * @row is -1, then the attributes returned correspond to a "would be" value
  * if a row was added to @model.
  *
- * Returns: the attributes as an ORed value of #GValueAttribute
+ * Returns: the attributes as an ORed value of #GdaValueAttribute
  */
 guint
 gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
