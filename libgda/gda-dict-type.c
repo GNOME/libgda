@@ -251,7 +251,7 @@ dict_type_get_xml_id (GdaXmlStorage *iface)
 	g_return_val_if_fail (iface && GDA_IS_DICT_TYPE (iface), NULL);
 	g_return_val_if_fail (GDA_DICT_TYPE (iface)->priv, NULL);
 
-	return utility_build_encoded_id ("DT", gda_object_get_name (GDA_OBJECT (iface)));
+	return gda_utility_build_encoded_id ("DT", gda_object_get_name (GDA_OBJECT (iface)));
 }
 
 static xmlNodePtr
@@ -276,7 +276,7 @@ dict_type_save_to_xml (GdaXmlStorage *iface, GError **error)
 	str = g_strdup_printf ("%d", dt->priv->numparams);
 	xmlSetProp (node, "nparam", str);
 	g_free (str);
-	xmlSetProp (node, "gdatype", g_type_to_string (dt->priv->g_type));
+	xmlSetProp (node, "gdatype", gda_g_type_to_string (dt->priv->g_type));
 
 	if (dt->priv->synonyms) {
 		GSList *list = dt->priv->synonyms;
@@ -344,7 +344,7 @@ dict_type_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 
 	prop = xmlGetProp (node, "gdatype");
 	if (prop) {
-		dt->priv->g_type = g_type_from_string (prop);
+		dt->priv->g_type = gda_g_type_from_string (prop);
 		if (dt->priv->g_type == G_TYPE_INVALID)
 			g_set_error (error,
 				     GDA_DICT_TYPE_ERROR,

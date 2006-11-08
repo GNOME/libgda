@@ -553,7 +553,7 @@ action_set_value (TestConfig *config, GdaDataModel *model, xmlNodePtr node, gboo
 				if (!gda_value_set_from_string (value, xmlNodeGetContent (vnode), gdatype)) {
 					g_free (value);
 					errmsg = g_strdup_printf (_("Cannot interpret string as a valid %s value"), 
-								   g_type_to_string (gdatype));
+								   gda_g_type_to_string (gdatype));
 				}
 			}
 			else

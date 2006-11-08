@@ -843,7 +843,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 			/* find data type and create GdaParameter */
 			dbmstype = xmlGetProp (node, BAD_CAST "dbmstype");
 			gdatype = xmlGetProp (node, BAD_CAST "gdatype");
-			dtype = utility_find_or_create_data_type (op->priv->dict, op->priv->prov, op->priv->cnc,
+			dtype = gda_utility_find_or_create_data_type (op->priv->dict, op->priv->prov, op->priv->cnc,
 								  dbmstype, gdatype, &dtype_created);
 			if (dbmstype) xmlFree (dbmstype);
 			if (gdatype) xmlFree (gdatype);
@@ -861,7 +861,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 					g_object_unref (dtype);
 			
 				/* set parameter's attributes */
-				utility_parameter_load_attributes (param, node, op->priv->sources);
+				gda_utility_parameter_load_attributes (param, node, op->priv->sources);
 
 				opnode = node_new (parent, GDA_SERVER_OPERATION_NODE_PARAM, path_name);
 				opnode->d.param = param;
@@ -1165,7 +1165,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL:
 		node = xmlNewChild (parent, NULL, BAD_CAST "op_data", NULL);
 		xmlSetProp (node, "path", complete_path);
-		utility_data_model_dump_data_to_xml (opnode->d.model, node, NULL, 0, NULL, 0, TRUE);
+		gda_utility_data_model_dump_data_to_xml (opnode->d.model, node, NULL, 0, NULL, 0, TRUE);
 		break;
 	case GDA_SERVER_OPERATION_NODE_PARAM: {
 		const GValue *value;

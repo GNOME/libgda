@@ -2449,8 +2449,8 @@ gda_data_proxy_set_values (GdaDataModel *model, gint row, GList *values, GError 
 			if (gda_column_get_g_type (column) != G_VALUE_TYPE (value)) {
 				g_set_error (error, 0, 0,
 					     _("Value type mismatch %s instead of %s"),
-					     g_type_to_string (G_VALUE_TYPE (value)),
-					     g_type_to_string (gda_column_get_g_type (column)));
+					     gda_g_type_to_string (G_VALUE_TYPE (value)),
+					     gda_g_type_to_string (gda_column_get_g_type (column)));
 				err = TRUE;
 			}
 		}

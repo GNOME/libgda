@@ -264,7 +264,7 @@ types_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **error)
 	}
 
 
-	if (!utility_check_data_model (rs, 4, 
+	if (!gda_utility_check_data_model (rs, 4, 
 				       G_TYPE_STRING, 
 				       G_TYPE_STRING,
 				       G_TYPE_STRING,
@@ -274,7 +274,7 @@ types_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **error)
 		g_object_unref (G_OBJECT (rs));
 		return FALSE;
 	}
-	has_synonyms = utility_check_data_model (rs, 5, 
+	has_synonyms = gda_utility_check_data_model (rs, 5, 
 						 G_TYPE_STRING, 
 						 G_TYPE_STRING,
 						 G_TYPE_STRING,

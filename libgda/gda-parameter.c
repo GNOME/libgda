@@ -1315,7 +1315,7 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 		strval = gda_value_stringify ((GValue *) gda_parameter_get_value (parameter));
 		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s, %s, value=%s\n" D_COL_NOR, str, parameter,
 			 gda_object_get_name (GDA_OBJECT (parameter)), 
-			 g_type_to_string (parameter->priv->g_type),
+			 gda_g_type_to_string (parameter->priv->g_type),
 			 gda_parameter_is_valid (parameter) ? "VALID" : "INVALID",
 			 strval);
 		g_free (strval);

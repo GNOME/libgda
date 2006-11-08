@@ -814,7 +814,7 @@ gda_dict_field_get_xml_id (GdaXmlStorage *iface)
 	g_return_val_if_fail (GDA_DICT_FIELD (iface)->priv, NULL);
 
 	t_xml_id = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (GDA_DICT_FIELD (iface)->priv->table));
-	tmp = utility_build_encoded_id ("FI", gda_object_get_name (GDA_OBJECT (iface)));
+	tmp = gda_utility_build_encoded_id ("FI", gda_object_get_name (GDA_OBJECT (iface)));
 	xml_id = g_strconcat (t_xml_id, ":", tmp, NULL);
 	g_free (t_xml_id);
 	g_free (tmp);
@@ -858,7 +858,7 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 		GType vtype;
 		
 		vtype = G_VALUE_TYPE (field->priv->default_val);
-		xmlSetProp (node, "default_g_type", g_type_to_string (vtype));
+		xmlSetProp (node, "default_g_type", gda_g_type_to_string (vtype));
 
 		dh = gda_dict_get_default_handler (gda_object_get_dict (GDA_OBJECT (field)), vtype);
 		str = gda_data_handler_get_str_from_value (dh, field->priv->default_val);
@@ -866,7 +866,7 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 		g_free (str);
 	}
 
-	str = utility_table_field_attrs_stringify (field->priv->extra_attrs);
+	str = gda_utility_table_field_attrs_stringify (field->priv->extra_attrs);
 	if (str) {
 		xmlSetProp (node, "extra_attr", str);
 		g_free (str);
@@ -931,7 +931,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 				xmlNodePtr tnode;
 				
 				dt = GDA_DICT_TYPE (gda_dict_type_new (dict));
-				tmp = utility_build_decoded_id (NULL, prop + 2);
+				tmp = gda_utility_build_decoded_id (NULL, prop + 2);
 				gda_dict_type_set_sqlname (dt, tmp);
 				g_free (tmp);
 				gda_dict_type_set_g_type (dt, GDA_TYPE_BLOB);
@@ -976,7 +976,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 			GdaDataHandler *dh;
 			GValue *value;
 			
-			vtype = g_type_from_string (str2);
+			vtype = gda_g_type_from_string (str2);
 			if (vtype == G_TYPE_INVALID) {
 				g_set_error (error,
 					     GDA_DICT_FIELD_ERROR,
@@ -1006,7 +1006,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 
 	prop = xmlGetProp (node, "extra_attr");
 	if (prop) {
-		gda_dict_field_set_attributes (field, utility_table_field_attrs_parse (prop));
+		gda_dict_field_set_attributes (field, gda_utility_table_field_attrs_parse (prop));
 		xmlFree (prop);
 	}
 

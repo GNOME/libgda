@@ -172,7 +172,7 @@ functions_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **err
 	}
 
 
-	if (!utility_check_data_model (rs, 8, 
+	if (!gda_utility_check_data_model (rs, 8, 
 				       G_TYPE_STRING,
 				       G_TYPE_STRING,
 				       G_TYPE_STRING,

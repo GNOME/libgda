@@ -616,7 +616,7 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 
 			switch (i) {
 			default:
-				id = utility_build_encoded_id (upd_prefix [i], name);
+				id = gda_utility_build_encoded_id (upd_prefix [i], name);
 				break;
 			case 4: {
 				/* GDA_ENTITY_FIELD has a composed ID */
@@ -625,7 +625,7 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 
 				g_assert (parent);
 				tableid = xmlGetProp (parent, "id");
-				tmp = utility_build_encoded_id (upd_prefix [i], name);
+				tmp = gda_utility_build_encoded_id (upd_prefix [i], name);
 				id = g_strconcat (tableid, ":", tmp, NULL);
 				g_free (tmp);
 				xmlFree (tableid);
@@ -634,7 +634,7 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 			case 1:
 			case 2: 
 				/* GNOME_DB_FUNCTION and GNOME_DB_AGGREGATE encode their DBMS id */
-				id = utility_build_encoded_id (upd_prefix [i], oid+2);
+				id = gda_utility_build_encoded_id (upd_prefix [i], oid+2);
 				break;
 			}
 
@@ -812,7 +812,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 					if (id && name) {
 						gchar *tmp;
 
-						tmp = utility_build_encoded_id ("DT", name);
+						tmp = gda_utility_build_encoded_id ("DT", name);
 						if (strcmp (tmp, id)) {
 							g_print ("Updating XML IDs and IDREFs of this dictionary...\n");
 							xml_id_update_tree (doc);

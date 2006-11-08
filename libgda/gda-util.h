@@ -35,8 +35,8 @@ G_BEGIN_DECLS
 /*
  * Type utilities
  */
-const gchar *g_type_to_string (GType type);
-GType        g_type_from_string (const gchar *str);
+const gchar *gda_g_type_to_string (GType type);
+GType        gda_g_type_from_string (const gchar *str);
 
 GList       *gda_string_hash_to_list (GHashTable *hash_table);
 
@@ -56,24 +56,24 @@ gboolean  gda_file_save (const gchar *filename, const gchar *buffer, gint len);
  * utilities dealing with storing and retreiving GdaDictField's attributes
  * which is a list of comma separated keywords
  */
-gchar *utility_table_field_attrs_stringify (guint attributes);
-guint  utility_table_field_attrs_parse     (const gchar *str);
+gchar *gda_utility_table_field_attrs_stringify (guint attributes);
+guint  gda_utility_table_field_attrs_parse     (const gchar *str);
 
 /*
  * XML Id encoding and decoding
  */
-gchar *utility_build_encoded_id (const gchar *prefix, const gchar *id);
-gchar *utility_build_decoded_id (const gchar *prefix, const gchar *id);
+gchar *gda_utility_build_encoded_id (const gchar *prefix, const gchar *id);
+gchar *gda_utility_build_decoded_id (const gchar *prefix, const gchar *id);
 
 /*
  * Param & model utilities
  */
-gboolean utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
-void     utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
+gboolean gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...);
+void     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
 					      const gint *cols, gint nb_cols, const gint *rows, gint nb_rows,
 					      gboolean use_col_ids);
-void     utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources);
-GdaDictType *utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
+void     gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources);
+GdaDictType *gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
 					       const gchar *dbms_type, const gchar *g_type, gboolean *created);
 
 

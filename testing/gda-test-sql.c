@@ -492,7 +492,7 @@ show_params (GdaQuery *query, xmlNodePtr parent)
 
 			str = g_strdup_printf ("Parameter \"%s\": %s",
 					       gda_object_get_name (GDA_OBJECT (list->data)),
-					       g_type_to_string (gda_parameter_get_g_type (GDA_PARAMETER (list->data))));
+					       gda_g_type_to_string (gda_parameter_get_g_type (GDA_PARAMETER (list->data))));
 			xmlNewChild (pul, NULL, "li", str);
 			g_free (str);
 			list = g_slist_next (list);

@@ -1288,7 +1288,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 		cstr = gda_column_get_dbms_type (column);
 		if (cstr && *cstr)
 			xmlSetProp (field, "dbms_type", cstr);
-		xmlSetProp (field, "gdatype", g_type_to_string (gda_column_get_g_type (column)));
+		xmlSetProp (field, "gdatype", gda_g_type_to_string (gda_column_get_g_type (column)));
 		if (gda_column_get_defined_size (column) != 0)
 			xml_set_int (field, "size", gda_column_get_defined_size (column));
 		if (gda_column_get_scale (column) != 0)
@@ -1310,7 +1310,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 	}
 	
 	/* add the model data to the XML output */
-	utility_data_model_dump_data_to_xml (model, node, cols, nb_cols, rows, nb_rows, FALSE);
+	gda_utility_data_model_dump_data_to_xml (model, node, cols, nb_cols, rows, nb_rows, FALSE);
 
 	if (!cols)
 		g_free (rcols);
@@ -1427,7 +1427,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			if (!gda_value_set_from_string (value, xmlNodeGetContent (xml_field), gdatype)) {
 				g_free (value);
 				g_set_error (error, 0, 0, _("Cannot interpret string as a valid %s value"), 
-					     g_type_to_string (gdatype));
+					     gda_g_type_to_string (gdatype));
 				retval = FALSE;
 				break;
 			}
@@ -1588,9 +1588,9 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 				g_set_error (error, 0, 0,
 					     _("Destination column %d has a gda type (%s) incompatible with "
 					       "source column %d type (%s)"), i,
-					     g_type_to_string (gda_column_get_g_type (column)),
+					     gda_g_type_to_string (gda_column_get_g_type (column)),
 					     col,
-					     g_type_to_string (gda_parameter_get_g_type (param)));
+					     gda_g_type_to_string (gda_parameter_get_g_type (param)));
 				return FALSE;
 			}
 		}
@@ -1656,8 +1656,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 						g_set_error (error, 0, 0,
 							     _("Can't transform '%s' from GDA type %s to GDA type %s"),
 							     str, 
-							     g_type_to_string (G_VALUE_TYPE (value)),
-							     g_type_to_string (G_VALUE_TYPE ((GValue *) (avlist->data))));
+							     gda_g_type_to_string (G_VALUE_TYPE (value)),
+							     gda_g_type_to_string (G_VALUE_TYPE ((GValue *) (avlist->data))));
 						g_free (str);
 						retval = FALSE;
 					}
@@ -1829,7 +1829,7 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 #ifdef GDA_DEBUG_NO
 		{
 			GdaColumn *col = gda_data_model_describe_column (model, i);
-			g_print ("Model col %d has type %s\n", i, g_type_to_string (gda_column_get_g_type (col)));
+			g_print ("Model col %d has type %s\n", i, gda_g_type_to_string (gda_column_get_g_type (col)));
 		}
 #endif
 
@@ -1841,7 +1841,7 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 
 		gdacol = gda_data_model_describe_column (model, i);
 		coltype = gda_column_get_g_type (gdacol);
-		/*g_string_append_printf (string, "COL %d is a %s\n", i+1, g_type_to_string (coltype));*/
+		/*g_string_append_printf (string, "COL %d is a %s\n", i+1, gda_g_type_to_string (coltype));*/
 		if ((coltype == G_TYPE_INT64) ||
 		    (coltype == G_TYPE_UINT64) ||
 		    (coltype == G_TYPE_INT) ||

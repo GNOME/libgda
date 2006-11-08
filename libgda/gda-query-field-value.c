@@ -1022,7 +1022,7 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 		xmlSetProp (node, "is_internal", "t");
 
 	xmlSetProp (node, "is_param", field->priv->is_parameter ? "t" : "f");
-	xmlSetProp (node, "g_type",  g_type_to_string (field->priv->g_type));
+	xmlSetProp (node, "g_type",  gda_g_type_to_string (field->priv->g_type));
 	if (field->priv->dict_type) {
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (field->priv->dict_type));
 		xmlSetProp (node, "dict_type",  str);
@@ -1043,7 +1043,7 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 		xmlSetProp (node, "default", str);
 		g_free (str);
 		vtype = G_VALUE_TYPE (field->priv->default_value);
-		xmlSetProp (node, "default_g_type", g_type_to_string (vtype));
+		xmlSetProp (node, "default_g_type", gda_g_type_to_string (vtype));
 	}
 
 	xmlSetProp (node, "nullok", field->priv->is_null_allowed ? "t" : "f");
@@ -1147,7 +1147,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 
 	prop = xmlGetProp (node, "g_type");
 	if (prop) {
-		field->priv->g_type = g_type_from_string (prop);
+		field->priv->g_type = gda_g_type_from_string (prop);
 		dh = gda_dict_get_default_handler (dict, field->priv->g_type);
 		xmlFree (prop);
 
@@ -1193,7 +1193,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 			GType vtype;
 			GValue *value;
 			
-			vtype = g_type_from_string (str2);			
+			vtype = gda_g_type_from_string (str2);			
 			dh2 = gda_dict_get_default_handler (dict, vtype);
 			value = gda_data_handler_get_value_from_str (dh2, prop, vtype);
 			field->priv->default_value = value;
@@ -1470,7 +1470,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 						gda_object_get_name (GDA_OBJECT (field->priv->dict_type)));
 		else
 			/* print g_type instead */
-			g_string_append_printf (extra, ":type=\"%s\"", g_type_to_string (field->priv->g_type));
+			g_string_append_printf (extra, ":type=\"%s\"", gda_g_type_to_string (field->priv->g_type));
 
 		tmpstr = gda_object_get_name (GDA_OBJECT (field));
 		if (tmpstr && *tmpstr) {

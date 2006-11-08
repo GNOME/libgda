@@ -546,7 +546,7 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 			/* find data type and create GdaParameter */
 			dbmstype = xmlGetProp (cur, BAD_CAST "dbmstype");
 			gdatype = xmlGetProp (cur, BAD_CAST "gdatype");
-			dtype = utility_find_or_create_data_type (dict, prov, cnc,
+			dtype = gda_utility_find_or_create_data_type (dict, prov, cnc,
 								  dbmstype, gdatype, &dtype_created);
 			if (dbmstype) xmlFree (dbmstype);
 			if (gdatype) xmlFree (gdatype);
@@ -573,7 +573,7 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 				g_object_unref (dtype);
 			
 			/* set parameter's attributes */
-			utility_parameter_load_attributes (param, cur, sources);
+			gda_utility_parameter_load_attributes (param, cur, sources);
 		}
 	}
 
@@ -692,9 +692,9 @@ gda_parameter_list_get_spec (GdaParameterList *paramlist)
 		/* dtype = gda_parameter_get_g_type (param); */
 /* 		if (dtype) { */
 /* 			xmlSetProp (node, "dbmstype", gda_dict_type_get_sqlname (dtype)); */
-/* 			xmlSetProp (node, "gdatype", g_type_to_string (gda_dict_type_get_g_type (dtype))); */
+/* 			xmlSetProp (node, "gdatype", gda_g_type_to_string (gda_dict_type_get_g_type (dtype))); */
 /* 		} */
-		xmlSetProp (node, "gdatype", g_type_to_string (gda_parameter_get_g_type (param)));
+		xmlSetProp (node, "gdatype", gda_g_type_to_string (gda_parameter_get_g_type (param)));
 
 		xmlSetProp (node, "nullok", gda_parameter_get_not_null (param) ? "FALSE" : "TRUE");
 		g_object_get (G_OBJECT (param), "entry_plugin", &str, NULL);
@@ -1138,7 +1138,7 @@ gda_parameter_list_add_param_from_string (GdaParameterList *paramlist, const gch
 	if (! gda_parameter_set_value_str (param, str)) {
 		g_object_unref (param);
 		g_warning (_("Could not add parameter of type %s with value '%s'"), 
-			   g_type_to_string (type), str);
+			   gda_g_type_to_string (type), str);
 		return NULL;
 	}
 
@@ -1269,8 +1269,8 @@ gda_parameter_list_is_coherent (GdaParameterList *paramlist, GError **error)
 				g_set_error (error, GDA_PARAMETER_LIST_ERROR, 0,
 					     _("GdaParameter is restricted by a column of the wrong type: "
 					       "%s (%s expected)"),
-					     g_type_to_string (gda_parameter_get_g_type (node->param)),
-					     g_type_to_string (gda_column_get_g_type (col)));
+					     gda_g_type_to_string (gda_parameter_get_g_type (node->param)),
+					     gda_g_type_to_string (gda_column_get_g_type (col)));
 				return FALSE;
 			}
 		}

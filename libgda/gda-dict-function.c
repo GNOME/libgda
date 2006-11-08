@@ -489,7 +489,7 @@ gda_dict_function_set_dbms_id (GdaDictFunction *func, const gchar *id)
 	if (func->priv->objectid)
 		g_free (func->priv->objectid);
 
-	func->priv->objectid = utility_build_encoded_id (NULL, id);
+	func->priv->objectid = gda_utility_build_encoded_id (NULL, id);
 }
 
 
@@ -507,7 +507,7 @@ gda_dict_function_get_dbms_id (GdaDictFunction *func)
 	g_return_val_if_fail (func && GDA_IS_DICT_FUNCTION (func), NULL);
 	g_return_val_if_fail (func->priv, NULL);
 
-	return utility_build_decoded_id (NULL, func->priv->objectid);
+	return gda_utility_build_decoded_id (NULL, func->priv->objectid);
 }
 
 

@@ -355,8 +355,8 @@ column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelR
 					str = gda_value_stringify ((GValue *) value);
 					g_warning ("Value of type %s not compatible with new"
 						   " column type %s (value=%s)",
-						   g_type_to_string (G_VALUE_TYPE ((GValue *) value)), 
-						   g_type_to_string (new), str);
+						   gda_g_type_to_string (G_VALUE_TYPE ((GValue *) value)), 
+						   gda_g_type_to_string (new), str);
 					g_free (str);
 				}
 			}

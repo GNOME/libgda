@@ -323,7 +323,7 @@ detail_provider (TestConfig *config, const gchar *provider)
 			td = xmlNewChild (tr, NULL, "td", tmp);
 			td = xmlNewChild (tr, NULL, "td", gda_object_get_name (GDA_OBJECT (params->data)));
 			td = xmlNewChild (tr, NULL, "td", 
-					  g_type_to_string (gda_parameter_get_g_type (GDA_PARAMETER (params->data))));
+					  gda_g_type_to_string (gda_parameter_get_g_type (GDA_PARAMETER (params->data))));
 
 			params = g_slist_next (params);
 		}
@@ -808,9 +808,9 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 			type = tested_types [i];
 
 			tr = xmlNewChild (table, NULL, "tr", NULL);
-			td = xmlNewChild (tr, NULL, "th", g_type_to_string (type));
+			td = xmlNewChild (tr, NULL, "th", gda_g_type_to_string (type));
 			
-			tmp = g_strdup_printf ("/providers/%p/%s", provider, g_type_to_string (type));
+			tmp = g_strdup_printf ("/providers/%p/%s", provider, gda_g_type_to_string (type));
 			html_declare_node_own (HTML_CONFIG (config), tmp, td);
 
 			dh = (class->get_data_handler) (provider, cnc, type, NULL);
@@ -1195,7 +1195,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GType type,
 		gchar *str;
 		tr = xmlNewChild (table1, NULL, "tr", NULL);
 
-		td = xmlNewChild (tr, NULL, "td", g_type_to_string (type));
+		td = xmlNewChild (tr, NULL, "td", gda_g_type_to_string (type));
 
 		tmp = gda_value_stringify (value);
 		str = g_strdup_printf (_("%s (init value)"), tmp);
@@ -1219,7 +1219,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GType type,
 		tr = xmlNewChild (table1, NULL, "tr", NULL);
 		value = (GValue *) (list->data);
 
-		td = xmlNewChild (tr, NULL, "td", g_type_to_string (type));
+		td = xmlNewChild (tr, NULL, "td", gda_g_type_to_string (type));
 
 		tmp = gda_value_stringify (value);
 		td = xmlNewChild (tr, NULL, "td", tmp);
@@ -1244,7 +1244,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GType type,
 		sql = sql_values[i].str;
 		while (sql) {
 			tr = xmlNewChild (table2, NULL, "tr", "\n");
-			td = xmlNewChild (tr, NULL, "td", g_type_to_string (type));
+			td = xmlNewChild (tr, NULL, "td", gda_g_type_to_string (type));
 			td = xmlNewChild (tr, NULL, "td", sql);
 
 			value = gda_data_handler_get_value_from_sql (dh, sql, type);
@@ -1282,7 +1282,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GType type,
 		sql = str_values[i].str;
 		while (sql) {
 			tr = xmlNewChild (table3, NULL, "tr", NULL);
-			td = xmlNewChild (tr, NULL, "td", g_type_to_string (type));
+			td = xmlNewChild (tr, NULL, "td", gda_g_type_to_string (type));
 			td = xmlNewChild (tr, NULL, "td", sql);
 
 			value = gda_data_handler_get_value_from_str (dh, sql, type);

@@ -319,8 +319,8 @@ gda_server_provider_test_schema_model (GdaDataModel *model, GdaConnectionSchema 
 		if (gda_column_get_g_type (column) != spec[i].data_type) {
 			g_set_error (error, 0, 0,
 				     _("Data model for schema has a wrong gda type: %s instead of %s"),
-				     g_type_to_string (gda_column_get_g_type (column)), 
-				     g_type_to_string (spec[i].data_type));
+				     gda_g_type_to_string (gda_column_get_g_type (column)), 
+				     gda_g_type_to_string (spec[i].data_type));
 			return FALSE;
 		}
         }

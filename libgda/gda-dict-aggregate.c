@@ -483,7 +483,7 @@ gda_dict_aggregate_set_dbms_id (GdaDictAggregate *agg, const gchar *id)
 	if (agg->priv->objectid)
 		g_free (agg->priv->objectid);
 
-	agg->priv->objectid = utility_build_encoded_id (NULL, id);
+	agg->priv->objectid = gda_utility_build_encoded_id (NULL, id);
 }
 
 
@@ -501,7 +501,7 @@ gda_dict_aggregate_get_dbms_id (GdaDictAggregate *agg)
 	g_return_val_if_fail (agg && GDA_IS_DICT_AGGREGATE (agg), NULL);
 	g_return_val_if_fail (agg->priv, NULL);
 
-	return utility_build_decoded_id (NULL, agg->priv->objectid);
+	return gda_utility_build_decoded_id (NULL, agg->priv->objectid);
 }
 
 

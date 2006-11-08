@@ -1065,7 +1065,7 @@ gda_dict_constraint_get_xml_id (GdaXmlStorage *iface)
 	g_return_val_if_fail (GDA_DICT_CONSTRAINT (iface)->priv->table, NULL);
 
 	t_xml_id = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (GDA_DICT_CONSTRAINT (iface)->priv->table));
-	tmp = utility_build_encoded_id ("FI", gda_object_get_name (GDA_OBJECT (iface)));
+	tmp = gda_utility_build_encoded_id ("FI", gda_object_get_name (GDA_OBJECT (iface)));
 	xml_id = g_strdup_printf ("%s:%s", t_xml_id, tmp);
 	g_free (t_xml_id);
 	g_free (tmp);

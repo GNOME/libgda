@@ -42,13 +42,13 @@
 #endif
 
 /**
- * g_type_to_string
+ * gda_g_type_to_string
  * @type: Type to convert from.
  *
  * Returns: the string representing the given #GType.
  */
 const gchar *
-g_type_to_string (GType type)
+gda_g_type_to_string (GType type)
 {
 	if (type == GDA_TYPE_NULL)
 		return "null";
@@ -57,13 +57,13 @@ g_type_to_string (GType type)
 }
 
 /**
- * g_type_from_string
- * @str: the name of a #GType, as returned by g_type_to_string().
+ * gda_g_type_from_string
+ * @str: the name of a #GType, as returned by gda_g_type_to_string().
  *
  * Returns: the #GType represented by the given @str.
  */
 GType
-g_type_from_string (const gchar *str)
+gda_g_type_from_string (const gchar *str)
 {
 	GType type;
 	g_return_val_if_fail (str != NULL, G_TYPE_INVALID);
@@ -278,10 +278,10 @@ gda_file_save (const gchar *filename, const gchar *buffer, gint len)
 }
 
 /**
- * utility_table_field_attrs_stringify
+ * gda_utility_table_field_attrs_stringify
  */
 gchar *
-utility_table_field_attrs_stringify (guint attributes)
+gda_utility_table_field_attrs_stringify (guint attributes)
 {
 	if (attributes & FIELD_AUTO_INCREMENT)
 		return g_strdup ("AUTO_INCREMENT");
@@ -290,10 +290,10 @@ utility_table_field_attrs_stringify (guint attributes)
 }
 
 /**
- * utility_table_field_attrs_parse
+ * gda_utility_table_field_attrs_parse
  */
 guint
-utility_table_field_attrs_parse (const gchar *str)
+gda_utility_table_field_attrs_parse (const gchar *str)
 {
 	if (!str)
 		return 0;
@@ -306,7 +306,7 @@ utility_table_field_attrs_parse (const gchar *str)
 
 
 /**
- * utility_build_encoded_id
+ * gda_utility_build_encoded_id
  *
  * Creates a BASE64 kind encoded string. It's not really a BASE64 because:
  * - the characters + and / of BASE64 are replaced with - and _
@@ -321,7 +321,7 @@ to_uchar (gchar ch)
 }
 
 gchar *
-utility_build_encoded_id (const gchar *prefix, const gchar *id)
+gda_utility_build_encoded_id (const gchar *prefix, const gchar *id)
 {
 	const gchar conv[64] = 
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -520,12 +520,12 @@ static const signed char b64[0x100] = {
 
 
 /**
- * utility_build_decoded_id
+ * gda_utility_build_decoded_id
  *
- * Reverse of utility_build_encoded_id()
+ * Reverse of gda_utility_build_encoded_id()
  */
 gchar *
-utility_build_decoded_id (const gchar *prefix, const gchar *id)
+gda_utility_build_decoded_id (const gchar *prefix, const gchar *id)
 {
 	gchar *str;
 	gchar *out;
@@ -577,7 +577,7 @@ utility_build_decoded_id (const gchar *prefix, const gchar *id)
 
 
 /**
- * utility_check_data_model
+ * gda_utility_check_data_model
  * @model: a #GdaDataModel object
  * @nbcols: the minimum requested number of columns
  * @Varargs: @nbcols arguments of type GType or -1 (if any data type is accepted)
@@ -587,7 +587,7 @@ utility_build_decoded_id (const gchar *prefix, const gchar *id)
  * Returns: TRUE if the data model's columns match the provided data types and number
  */
 gboolean
-utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
+gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 {
 	gboolean retval = TRUE;
 	gint i;
@@ -618,7 +618,7 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 					retval = FALSE;
 #ifdef GDA_DEBUG
 					g_print ("Column %d: Expected %s, got %s\n",
-						 i, g_type_to_string (rtype), g_type_to_string (mtype));
+						 i, gda_g_type_to_string (rtype), gda_g_type_to_string (mtype));
 #endif
 				}
 			}
@@ -633,7 +633,7 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
 }
 
 /**
- * utility_data_model_dump_data_to_xml
+ * gda_utility_data_model_dump_data_to_xml
  * @model: 
  * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
@@ -644,7 +644,7 @@ utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * Dump the data in a #GdaDataModel into a xmlNodePtr (as used in libxml).
  */
 void
-utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
+gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
 				     const gint *cols, gint nb_cols, 
 				     const gint *rows, gint nb_rows,
 				     gboolean use_col_ids)
@@ -729,7 +729,7 @@ utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 }
 
 /**
- * utility_parameter_load_attributes
+ * gda_utility_parameter_load_attributes
  * @param:
  * @node: an xmlNodePtr with a &lt;parameter&gt; tag
  * @sources: a list of #GdaDataModel
@@ -737,7 +737,7 @@ utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
  * WARNING: may set the "source" custom string property 
  */
 void
-utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources)
+gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources)
 {
 	xmlChar *str;
 	xmlNodePtr vnode;
@@ -895,7 +895,7 @@ utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList 
  * Returns: a #GdaDictType, or %NULL if it was not possible to find and create one
  */
 GdaDictType *
-utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
+gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
 				  const gchar *dbms_type, const gchar *g_type, gboolean *created)
 {
 	GdaDictType *dtype = NULL;
@@ -913,7 +913,7 @@ utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaCon
 		if (g_type) {
 			GType gtype;
 			
-			gtype = g_type_from_string (g_type);
+			gtype = gda_g_type_from_string (g_type);
 			if (prov) {
 				const gchar *deftype;
 				

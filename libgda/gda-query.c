@@ -1400,7 +1400,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 						dtype = gda_dict_get_dict_type_by_name (dict,
 							      GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
 						if (!dtype) 
-							gtype = g_type_from_string (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
+							gtype = gda_g_type_from_string (GDA_DELIMITER_PARAM_SPEC (pspecs->data)->content);
 						else
 							gtype = gda_dict_type_get_g_type (dtype);
 					}

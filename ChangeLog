@@ -1,5 +1,51 @@
 2006-11-08  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-util.h:
+	* libgda/gda-util.c:
+	Renamed g_type_to_string() to gda_g_type_to_string(),
+	g_type_from_string() to gda_g_type_from_string(),
+	utility_table_field_attrs_stringify() to gda_utility_table_field_attrs_stringify(),
+	utility_table_field_attrs_parse() to gda_utility_table_field_attrs_parse(),
+	utility_build_encoded_id() to gda_utility_build_encoded_id(),
+	utility_build_decoded_id() to gda_utility_build_decoded_id(),
+	utility_check_data_model() to gda_utility_check_data_model(),
+	utility_data_model_dump_data_to_xml() to gda_utility_data_model_dump_data_to_xml(),
+	utility_parameter_load_attributes() to gda_utility_parameter_load_attributes(),
+	utility_find_or_create_data_type() to gda_utility_find_or_create_data_type()
+	so they are correctly namespaced.
+	* libgda/gda-data-model-import.c:
+	* libgda/gda-data-model-row.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-dict-aggregate.c:
+	* libgda/gda-dict-constraint.c:
+	* libgda/gda-dict-database.c:
+	* libgda/gda-dict-field.c:
+	* libgda/gda-dict-function.c:
+	* libgda/gda-dict-reg-aggregates.c: 
+	* libgda/gda-dict-reg-functions.c:
+	* libgda/gda-dict-reg-types.c: 
+	* libgda/gda-dict-table.c:
+	* libgda/gda-dict-type.c:
+	* libgda/gda-parameter-list.c::
+	* libgda/gda-parameter.c:
+	* libgda/gda-query-field-value.c:
+	* libgda/gda-query-parsing.c: 
+	* libgda/gda-query.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-server-provider-extra.c:
+	* libgda/gda-value.c:
+	* libgda/handlers/gda-handler-type.c:
+	* providers/sqlite/gda-sqlite-recordset.c:
+	* testing/gda-test-models.c:
+	* testing/gda-test-sql.c:
+	* testing/html.c:
+	* tools/gda-diagnose.c:
+	* tools/gda-list-config.c:
+	* tools/html.c:: Used renamed functions.
+
+2006-11-08  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-server-provider.h: gda_server_provider_reset_connection(): 
 	Remove this function because there is no implementation and no documentation 
 	suggesting what it might do.

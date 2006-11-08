@@ -111,7 +111,7 @@ detail_provider (const gchar *provider)
 
 			g_object_get (G_OBJECT (params->data), "string_id", &tmp, NULL);
 			g_print ("  %s / %s / %s\n", tmp,
-				 g_type_to_string (gda_parameter_get_g_type (GDA_PARAMETER (params->data))),
+				 gda_g_type_to_string (gda_parameter_get_g_type (GDA_PARAMETER (params->data))),
 				 gda_object_get_name (GDA_OBJECT (params->data)));
 			
 			params = g_slist_next (params);

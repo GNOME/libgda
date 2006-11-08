@@ -949,7 +949,7 @@ database_tables_update_list (GdaDictDatabase *db, const gchar *table_name, GErro
 		return FALSE;
 	}
 
-	if (!utility_check_data_model (rs, 4, 
+	if (!gda_utility_check_data_model (rs, 4, 
 				       G_TYPE_STRING, 
 				       G_TYPE_STRING,
 				       G_TYPE_STRING,

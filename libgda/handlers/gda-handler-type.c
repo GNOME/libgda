@@ -173,7 +173,7 @@ gda_handler_type_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 
 	if (value) {
 		const gchar *str;
-		str = g_type_to_string (g_value_get_ulong (value));
+		str = gda_g_type_to_string (g_value_get_ulong (value));
 		retval = g_strdup_printf ("'%s'", str);
 	}
 	else
@@ -193,7 +193,7 @@ gda_handler_type_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (value) 
-		retval = g_strdup (g_type_to_string (g_value_get_ulong (value)));
+		retval = g_strdup (gda_g_type_to_string (g_value_get_ulong (value)));
 	else
 		retval = g_strdup (NULL);
 
@@ -216,7 +216,7 @@ gda_handler_type_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GT
 			gchar *str = g_strdup (sql);
 			GType type;
 			str[i-1] = 0;
-			type = g_type_from_string (str+1);
+			type = gda_g_type_from_string (str+1);
 			g_free (str);
 			value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
 			g_value_set_ulong (value, type);
@@ -238,7 +238,7 @@ gda_handler_type_get_value_from_str (GdaDataHandler *iface, const gchar *str, GT
 	hdl = GDA_HANDLER_TYPE (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	vtype = g_type_from_string (str);
+	vtype = gda_g_type_from_string (str);
 	value = g_value_init (g_new0 (GValue, 1), G_TYPE_ULONG);
 	g_value_set_ulong (value, vtype);
 

@@ -574,7 +574,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 	g_object_unref (paramlist);
 
 	/* Result set analysis */
-	if (!utility_check_data_model (rs, 9, 
+	if (!gda_utility_check_data_model (rs, 9, 
 				       G_TYPE_STRING,
 				       G_TYPE_STRING,
 				       G_TYPE_INT,
@@ -843,7 +843,7 @@ gda_dict_table_update_dbms_data (GdaDictTable *table, GError **error)
 			
 			if (! gda_value_is_null ((GValue *) value))
 				gda_dict_field_set_attributes (field, 
-					 utility_table_field_attrs_parse (g_value_get_string ((GValue *) value)));
+					 gda_utility_table_field_attrs_parse (g_value_get_string ((GValue *) value)));
 		}
 		
 		now++;
@@ -1121,7 +1121,7 @@ gda_dict_table_get_xml_id (GdaXmlStorage *iface)
 	g_return_val_if_fail (iface && GDA_IS_DICT_TABLE (iface), NULL);
 	g_return_val_if_fail (GDA_DICT_TABLE (iface)->priv, NULL);
 
-	return utility_build_encoded_id ("TV", gda_object_get_name (GDA_OBJECT (iface)));
+	return gda_utility_build_encoded_id ("TV", gda_object_get_name (GDA_OBJECT (iface)));
 }
 
 static xmlNodePtr

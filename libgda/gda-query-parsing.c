@@ -1530,7 +1530,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 								    ((param_spec*) list->data)->content);
 			if (!real_type) {
 				/* try a generic GDA type then */
-				gdatype = g_type_from_string (((param_spec*) list->data)->content);
+				gdatype = gda_g_type_from_string (((param_spec*) list->data)->content);
 				if (gdatype == G_TYPE_INVALID) {
 					g_set_error (error,
 						     GDA_QUERY_ERROR,

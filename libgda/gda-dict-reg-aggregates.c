@@ -172,7 +172,7 @@ aggregates_dbms_sync (GdaDict *dict, const gchar *limit_object_name, GError **er
 	}
 
 
-	if (!utility_check_data_model (rs, 7, 
+	if (!gda_utility_check_data_model (rs, 7, 
 				       G_TYPE_STRING,
 				       G_TYPE_STRING,
 				       G_TYPE_STRING,
