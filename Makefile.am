@@ -25,7 +25,7 @@ EXTRA_DIST = \
 	mkinstalldirs
 
 pkgconfigdir=$(libdir)/pkgconfig
-pkgconfig_DATA = libgda-2.0.pc
+pkgconfig_DATA = libgda-3.0.pc
 
 all-local: libgda.spec
 

@@ -19,7 +19,7 @@ libgda_msql_la_SOURCES = \
 libgda_msql_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_msql_la_LIBADD = \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-3.la \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(MSQL_LIBS)
 
 xmldir   = $(datadir)/libgda

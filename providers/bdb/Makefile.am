@@ -18,7 +18,7 @@ libgda_bdb_la_SOURCES = \
 	libmain.c
 libgda_bdb_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
 libgda_bdb_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-3.la \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \
 	$(BDB_LIBS)
 
@@ -26,7 +26,7 @@ libgda_bdb_la_LIBADD = \
 #gda_bdb_test_SOURCES = gda-bdb-test.c
 #gda_bdb_test_LDADD = \
 #	$(LIBGDA_LIBS) \
-#	$(top_builddir)/libgda/libgda-3.la \
+#	$(top_builddir)/libgda/libgda-3.0.la \
 #	$(BDB_LIBS)
 
 xmldir   = $(datadir)/libgda

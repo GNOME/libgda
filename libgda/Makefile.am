@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libgda-3.la
+lib_LTLIBRARIES = libgda-3.0.la
 
 SUBDIRS = handlers sql-delimiter graph
 
@@ -201,14 +201,14 @@ libgda_built_headers = gda-marshal.h gda-enum-types.h
 libgda_built_cfiles = gda-enum-types.c
 
 # Don't build the library until we have built the headers that it needs:
-$(OBJECTS) $(libgda_3_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles)
+$(OBJECTS) $(libgda_3_0_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles)
 
-libgda_3_la_SOURCES = \
+libgda_3_0_la_SOURCES = \
 	$(libgda_built_cfiles) \
 	$(libgda_sources)
 
-libgda_3_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) -no-undefined
-libgda_3_la_LIBADD = $(LIBGDA_LIBS) $(FAM_LIBS) $(top_builddir)/libsql/libgdasql.la
+libgda_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) -no-undefined
+libgda_3_0_la_LIBADD = $(LIBGDA_LIBS) $(FAM_LIBS) $(top_builddir)/libsql/libgdasql.la
 
 gdaincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)

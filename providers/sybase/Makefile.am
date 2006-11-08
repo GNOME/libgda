@@ -24,7 +24,7 @@ libgda_sybase_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_sybase_la_LIBADD = \
 	$(SYBASE_LIBS) \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-3.la 
+	$(top_builddir)/libgda/libgda-3.0.la 
 
 xmldir   = $(datadir)/libgda
 xml_in_files = sybase_specs_dsn.xml.in

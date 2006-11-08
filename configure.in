@@ -1,4 +1,4 @@
-m4_define(major, 1)
+m4_define(major, 2)
 m4_define(minor, 99)
 m4_define(micro, 2)
 
@@ -36,7 +36,7 @@ AC_SUBST(GDA_AGE)
 
 AC_PROG_INTLTOOL([0.30])
 
-AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-3")
+AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-3.0")
 
 dnl ******************************
 dnl Checks for programs
@@ -59,7 +59,7 @@ AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 dnl ******************************
 dnl Translations
 dnl ******************************
-GETTEXT_PACKAGE=libgda-3
+GETTEXT_PACKAGE=libgda-3.0
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 ALL_LINGUAS="az ca cs da de el en_CA en_GB es eu fa fi fr ga gl hr hu it ja ko lt ml ms nb ne nl no pl pt pt_BR ru rw sk sl sq sr sr@Latn sv tr uk vi zh_CN zh_HK zh_TW"
@@ -1011,7 +1011,7 @@ AC_SUBST(REBUILD)
 AC_OUTPUT([
 Makefile
 libgda.spec
-libgda-2.0.pc
+libgda-3.0.pc
 po/Makefile.in
 libsql/Makefile
 libgda/Makefile
@@ -1041,7 +1041,7 @@ report/testing/Makefile
 tools/Makefile
 gda-sharp/Makefile
 gda-sharp/gda-sharp.dll.config
-gda-sharp/gda-sharp-2.0.pc
+gda-sharp/gda-sharp-3.0.pc
 gda-sharp/AssemblyInfo.cs
 testing/Makefile
 doc/Makefile

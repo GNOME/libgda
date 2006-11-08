@@ -22,7 +22,7 @@ libgda_mysql_la_SOURCES = \
 libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_mysql_la_LIBADD = \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-3.la \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(MYSQL_LIBS)
 
 xmldir   = $(datadir)/libgda

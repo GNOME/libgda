@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libgda_sql_delimiter-3.la
+lib_LTLIBRARIES = libgda_sql_delimiter-3.0.la
 noinst_PROGRAMS = gda-test-delimiter
 
 SUBDIRS = 
@@ -20,7 +20,7 @@ libgda_sql_delimiter_headers = \
 libgda_sql_delimiterincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/sql-delimiter
 libgda_sql_delimiterinclude_HEADERS=$(libgda_sql_delimiter_headers)
 
-libgda_sql_delimiter_3_la_SOURCES = \
+libgda_sql_delimiter_3_0_la_SOURCES = \
 	$(libgda_sql_delimiter_headers) \
 	parser.c \
         lexer.c \
@@ -29,11 +29,11 @@ libgda_sql_delimiter_3_la_SOURCES = \
 	gda-delimiter-tree.h \
         gda-delimiter-tree.c
 
-libgda_sql_delimiter_3_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
+libgda_sql_delimiter_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 
 EXTRA_DIST=parser.y lexer.l
 
 gda_test_delimiter_SOURCES = gda-test-delimiter.c
-gda_test_delimiter_LDADD = libgda_sql_delimiter-3.la $(LIBGDA_LIBS)
+gda_test_delimiter_LDADD = libgda_sql_delimiter-3.0.la $(LIBGDA_LIBS)
 
 CLEANFILES = parser.h parser.c lexer.c parser.output

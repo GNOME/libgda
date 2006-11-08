@@ -12,10 +12,10 @@ gda_test_sql_SOURCES = \
         gda-test-sql.c
 
 gda_test_sql_LDADD = \
-        $(top_builddir)/libgda/libgda-3.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.la \
+        $(top_builddir)/libgda/libgda-3.0.la \
+        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
+        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
+        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
 gda_test_models_SOURCES = \
@@ -24,30 +24,30 @@ gda_test_models_SOURCES = \
         gda-test-models.c
 
 gda_test_models_LDADD = \
-        $(top_builddir)/libgda/libgda-3.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.la \
+        $(top_builddir)/libgda/libgda-3.0.la \
+        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
+        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
+        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
 gda_test_connection_SOURCES = \
         gda-test-connection.c
 
 gda_test_connection_LDADD = \
-        $(top_builddir)/libgda/libgda-3.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.la \
+        $(top_builddir)/libgda/libgda-3.0.la \
+        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
+        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
+        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
 gda_test_server_operation_SOURCES = \
         gda-test-server-operation.c
 
 gda_test_server_operation_LDADD = \
-        $(top_builddir)/libgda/libgda-3.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.la \
+        $(top_builddir)/libgda/libgda-3.0.la \
+        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
+        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
+        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
 EXTRA_DIST = 

@@ -1,3 +1,42 @@
+2006-11-08  Murray Cumming <murrayc@murrayc.com>
+
+	* Makefile.am:
+	* configure.in:
+	* doc/C/Makefile.am:
+	* gda-sharp/Makefile.am:
+	* gda-sharp/gda-sharp-2.0.pc.in: Renamed to:
+	* gda-sharp/gda-sharp-3.0.pc.in:
+	* libgda-2.0.pc.in: Renamed to:
+	* libgda-3.0.pc.in:
+	* libgda/Makefile.am:
+	* libgda/graph/Makefile.am:
+	* libgda/handlers/Makefile.am:
+	* libgda/sql-delimiter/Makefile.am:
+	* providers/bdb/Makefile.am:
+	* providers/firebird/Makefile.am:
+	* providers/freetds/Makefile.am:
+	* providers/ibmdb2/Makefile.am:
+	* providers/ldap/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/msql/Makefile.am:
+	* providers/mysql/Makefile.am:
+	* providers/odbc/Makefile.am:
+	* providers/oracle/Makefile.am:
+	* providers/postgres/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/sybase/Makefile.am:
+	* providers/xbase/Makefile.am:
+	* report/libgda-report/Makefile.am:
+	* report/testing/Makefile.am:
+	* testing/Makefile.am:
+	* tools/Makefile.am:
+	Change the tarball version from 1.99.x to 2.99.x, to become
+	3.0.x when the API/ABI is declared stable.
+	Change the pkg-config name from libgda-2.0 to libgda-3.0.
+	Change the include path from libgda-2.0 to libgda-3.0.
+	Change the library name from libgda-2 to libgda-3.0.
+	Now all the version numbers are sane.
+
 2006-11-08  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-util.h:

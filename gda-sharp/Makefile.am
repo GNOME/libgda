@@ -33,7 +33,7 @@ gda-sharp.dll: $(build_sources) generated-stamp
 		$(build_sources) generated/*.cs -out:gda-sharp.dll
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gda-sharp-2.0.pc
+pkgconfig_DATA = gda-sharp-3.0.pc
 
 EXTRA_DIST =			\
 	$(GAPI_SOURCE)		\
@@ -42,5 +42,5 @@ EXTRA_DIST =			\
 	$(customs)		\
 	$(sources)		\
 	AssemblyInfo.cs.in	\
-	gda-sharp-2.0.pc.in	\
+	gda-sharp-3.0.pc.in	\
 	gda-sharp.dll.config.in

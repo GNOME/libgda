@@ -23,7 +23,7 @@ libgda_ibmdb2_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_ibmdb2_la_LIBADD = \
 	$(IBMDB2_LIBS) \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-3.la 
+	$(top_builddir)/libgda/libgda-3.0.la 
 
 
 xmldir   = $(datadir)/libgda

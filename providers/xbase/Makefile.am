@@ -17,7 +17,7 @@ libgda_xbase_la_SOURCES = \
 
 libgda_xbase_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
 libgda_xbase_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-3.la \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \
 	$(XBASE_LIBS)
 

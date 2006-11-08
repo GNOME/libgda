@@ -18,7 +18,7 @@ libgda_odbc_la_SOURCES = \
 	libmain.c
 libgda_odbc_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
 libgda_odbc_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-3.la \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \
 	$(ODBC_LIBS)
 

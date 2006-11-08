@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libgda-2.0
+Name: libgda-3.0
 Description: GDA (GNOME Data Access) library
 Requires: glib-2.0 libxml-2.0 libxslt
 Version: @VERSION@
-Libs: -L${libdir} -lgda-3 -lgda_handlers-3 -lgda_graph-3 -lgda_sql_delimiter-3 -lgda-report-3
+Libs: -L${libdir} -lgda-3.0 -lgda_handlers-3.0 -lgda_graph-3.0 -lgda_sql_delimiter-3.0 -lgda-report-3.0
 Cflags: -I${includedir}/libgda-@GDA_MAJOR_VERSION@.@GDA_MINOR_VERSION@

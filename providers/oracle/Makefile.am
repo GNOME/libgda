@@ -45,7 +45,7 @@ libgda_oracle_la_SOURCES = \
 libgda_oracle_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_oracle_la_LIBADD = \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-3.la \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(ORACLE_LIBS)
 
 xmldir   = $(datadir)/libgda

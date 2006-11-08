@@ -27,7 +27,7 @@ libgda_sqlite_la_SOURCES = \
 
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
 libgda_sqlite_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-3.la \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la \
 	$(LIBGDA_LIBS)
 
