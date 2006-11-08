@@ -220,8 +220,7 @@ gboolean               gda_server_provider_open_connection  (GdaServerProvider *
 							     GdaQuarkList *params,
 							     const gchar *username,
 							     const gchar *password);
-gboolean               gda_server_provider_reset_connection (GdaServerProvider *provider,
-							     GdaConnection *cnc);
+
 gboolean               gda_server_provider_close_connection (GdaServerProvider *provider,
 							     GdaConnection *cnc);
 

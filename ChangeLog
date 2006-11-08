@@ -1,3 +1,9 @@
+2006-11-08  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-server-provider.h: gda_server_provider_reset_connection(): 
+	Remove this function because there is no implementation and no documentation 
+	suggesting what it might do.
+
 2006-11-07  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-data-model.c:
