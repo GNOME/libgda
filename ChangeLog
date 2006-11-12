@@ -1,3 +1,25 @@
+2006-11-12  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-value.c: handle timestamps that aren't fully compliant
+	(Stian Skjelstad)
+	* gda-mysql-provider.c: mysql 4.x GET_CONSTRAINTS support, mysql 5.x
+	should now give full data on complex foreign keys (Stian Skjelstad)
+	* libgda/gda-transaction-status-private.h:
+	* libgda/gda-transaction-status.[ch]: new object to report on
+	connection's current transaction status
+	* libgda/gda-transaction.[ch]: removed obsolete object
+	* libgda/gda-server-provider.[ch]:
+	* libgda/gda-enums.h:
+	* libgda/gda-client.[ch]:
+	* libgda/gda-command.[ch]:
+	* providers/: GdaConnection now keeps track of the current transaction status
+	* libgda/gda-query.c: minor bug fixed
+	* libgda/gda-query-target.c:
+	* libgda/gda-query-field-field.c: added an option in providers to specify
+	if non LC identifiers must be rendered between double quotes.
+	* libgda/gda-decl.h: added GdaConnectionEvent declaration
+	* libgda/gda-sharp/gda-sharp-3.0.pc.in: fixed required gtk-sharp version
+
 2006-11-08  Murray Cumming <murrayc@murrayc.com>
 
 	* Makefile.am:

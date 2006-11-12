@@ -25,6 +25,7 @@
 
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
+#include <libgda/gda-parameter-list.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <glib.h>
@@ -69,13 +70,14 @@ static GList *gda_freetds_provider_execute_command (GdaServerProvider *provider,
                                                     GdaParameterList *params);
 static gboolean gda_freetds_provider_begin_transaction (GdaServerProvider *provider,
                                                         GdaConnection *cnc,
-                                                        GdaTransaction *xaction);
+                                                        const gchar *name, GdaTransactionIsolation *level,
+							GError **error);
 static gboolean gda_freetds_provider_commit_transaction (GdaServerProvider *provider,
                                                          GdaConnection *cnc,
-                                                         GdaTransaction *xaction);
+                                                         const gchar *name, GError **error);
 static gboolean gda_freetds_provider_rollback_transaction (GdaServerProvider *provider,
                                                            GdaConnection *cnc,
-                                                           GdaTransaction *xaction);
+                                                           const gchar *name, GError **error);
 static const gchar *gda_freetds_provider_get_server_version (GdaServerProvider *provider,
                                                              GdaConnection *cnc);
 static const gchar *gda_freetds_provider_get_version (GdaServerProvider *provider);
@@ -193,7 +195,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	/* sanity check */
 	/* FreeTDS SIGSEGV on NULL pointers */
 	if ((t_user == NULL) || (t_host == NULL) || (t_password == NULL)) {
-		error = gda_freetds_make_error(NULL, _("Connection aborted. You must provide at least a host, username and password using DSN 'QUERY=;USER=;PASSWORD='."));
+		error = gda_freetds_make_error(NULL, _("Connection aborted. You must provide at least a host, username and password using DSN 'USER=;USER=;PASSWORD='."));
 		gda_connection_add_event(cnc, error);
 
 		return FALSE;
@@ -523,7 +525,8 @@ static GList
 static gboolean
 gda_freetds_provider_begin_transaction (GdaServerProvider *provider,
                                         GdaConnection *cnc,
-                                        GdaTransaction *xaction)
+                                        const gchar *name, GdaTransactionIsolation *level,
+					GError **error)
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 
@@ -536,7 +539,7 @@ gda_freetds_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean
 gda_freetds_provider_commit_transaction (GdaServerProvider *provider,
                                          GdaConnection *cnc,
-                                         GdaTransaction *xaction)
+                                         const gchar *name, GError **error)
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 
@@ -549,7 +552,7 @@ gda_freetds_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean
 gda_freetds_provider_rollback_transaction (GdaServerProvider *provider,
                                            GdaConnection *cnc,
-                                           GdaTransaction *xaction)
+                                           const gchar *name, GError **error)
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 
@@ -569,24 +572,22 @@ gda_freetds_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), FALSE);
 
 	switch (feature) {
-		case GDA_CONNECTION_FEATURE_PROCEDURES:
-		case GDA_CONNECTION_FEATURE_SQL:
-		case GDA_CONNECTION_FEATURE_USERS:
-		case GDA_CONNECTION_FEATURE_VIEWS:
-			return TRUE;
-
-	/* FIXME: Implement missing */
-		case GDA_CONNECTION_FEATURE_AGGREGATES:
-		case GDA_CONNECTION_FEATURE_INDEXES:
-		case GDA_CONNECTION_FEATURE_INHERITANCE:
-		case GDA_CONNECTION_FEATURE_SEQUENCES:
-		case GDA_CONNECTION_FEATURE_TRANSACTIONS:
-		case GDA_CONNECTION_FEATURE_TRIGGERS:
-		case GDA_CONNECTION_FEATURE_XML_QUERIES:
+	case GDA_CONNECTION_FEATURE_PROCEDURES:
+	case GDA_CONNECTION_FEATURE_SQL:
+	case GDA_CONNECTION_FEATURE_USERS:
+	case GDA_CONNECTION_FEATURE_VIEWS:
+		return TRUE;
+		
+	case GDA_CONNECTION_FEATURE_AGGREGATES:
+	case GDA_CONNECTION_FEATURE_INDEXES:
+	case GDA_CONNECTION_FEATURE_INHERITANCE:
+	case GDA_CONNECTION_FEATURE_SEQUENCES:
+	case GDA_CONNECTION_FEATURE_TRANSACTIONS:
+	case GDA_CONNECTION_FEATURE_TRIGGERS:
+	case GDA_CONNECTION_FEATURE_XML_QUERIES:
+	default:
 			return FALSE;
 	}
-	
-	return FALSE;
 }
 
 static const gchar
@@ -652,7 +653,7 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 	
 	if (model) {
 		for (i = 0; i < gda_data_model_get_n_rows (model); i++) {
-			GdaRow *row = (GdaRow *) gda_data_model_get_row (model, i);
+			GdaRow *row = (GdaRow *) gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (model), i, NULL);
 			
 			/* first fix g_type */
 			if (row) {
@@ -690,7 +691,6 @@ gda_freetds_provider_get_schema (GdaServerProvider *provider,
                                   GdaParameterList *params)
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
-	gchar        *query = NULL;
 	GdaDataModel *recset = NULL;
 	
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
@@ -700,50 +700,50 @@ gda_freetds_provider_get_schema (GdaServerProvider *provider,
 		return NULL;
 
 	switch (schema) {
-		case GDA_CONNECTION_SCHEMA_DATABASES:
-			return gda_freetds_get_databases (cnc, params);
-			break;
-		case GDA_CONNECTION_SCHEMA_FIELDS:
-			return gda_freetds_get_fields (cnc, params);
-			break;
-		case GDA_CONNECTION_SCHEMA_PROCEDURES:
-			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_PROCEDURES);
-			TDS_FIXMODEL_SCHEMA_PROCEDURES (recset)
+	case GDA_CONNECTION_SCHEMA_DATABASES:
+		return gda_freetds_get_databases (cnc, params);
+		break;
+	case GDA_CONNECTION_SCHEMA_FIELDS:
+		return gda_freetds_get_fields (cnc, params);
+		break;
+	case GDA_CONNECTION_SCHEMA_PROCEDURES:
+		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_PROCEDURES);
+		TDS_FIXMODEL_SCHEMA_PROCEDURES (recset)
 			
 			return recset;
-			break;
-		case GDA_CONNECTION_SCHEMA_TABLES:
-			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TABLES);
-			TDS_FIXMODEL_SCHEMA_TABLES (recset)
+		break;
+	case GDA_CONNECTION_SCHEMA_TABLES:
+		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TABLES);
+		TDS_FIXMODEL_SCHEMA_TABLES (recset)
 			
 			return recset;
-			break;
-		case GDA_CONNECTION_SCHEMA_TYPES:
-			recset = gda_freetds_provider_get_types (cnc, params);
+		break;
+	case GDA_CONNECTION_SCHEMA_TYPES:
+		recset = gda_freetds_provider_get_types (cnc, params);
 
-			return recset;
-			break;
-		case GDA_CONNECTION_SCHEMA_USERS:
-			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_USERS);
-			TDS_FIXMODEL_SCHEMA_USERS (recset)
+		return recset;
+		break;
+	case GDA_CONNECTION_SCHEMA_USERS:
+		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_USERS);
+		TDS_FIXMODEL_SCHEMA_USERS (recset)
 				
 			return recset;
-			break;
-		case GDA_CONNECTION_SCHEMA_VIEWS:
-			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_VIEWS);
-			TDS_FIXMODEL_SCHEMA_VIEWS (recset)
+		break;
+	case GDA_CONNECTION_SCHEMA_VIEWS:
+		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_VIEWS);
+		TDS_FIXMODEL_SCHEMA_VIEWS (recset)
 
 			return recset;
-			break;
+		break;
 
-		/* FIXME: Implement aggregates, indexes, sequences and triggers */
-		case GDA_CONNECTION_SCHEMA_AGGREGATES:
-		case GDA_CONNECTION_SCHEMA_INDEXES:
-		case GDA_CONNECTION_SCHEMA_PARENT_TABLES:
-		case GDA_CONNECTION_SCHEMA_SEQUENCES:
-		case GDA_CONNECTION_SCHEMA_TRIGGERS:
-			return NULL;
-			break;
+	case GDA_CONNECTION_SCHEMA_AGGREGATES:
+	case GDA_CONNECTION_SCHEMA_INDEXES:
+	case GDA_CONNECTION_SCHEMA_PARENT_TABLES:
+	case GDA_CONNECTION_SCHEMA_SEQUENCES:
+	case GDA_CONNECTION_SCHEMA_TRIGGERS:
+	default:
+		return NULL;
+		break;
 	}
 	
 	return NULL;
@@ -754,9 +754,6 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
 	GdaConnectionEvent *error;
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
-	int result_type = 0;
-#endif
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (sql != NULL, FALSE);
@@ -888,7 +885,7 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
 
-	parameter = gda_parameter_list_find (params, "name");
+	parameter = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (parameter != NULL, NULL);
 
 	table = g_value_get_string ((GValue *) gda_parameter_get_value (parameter));
@@ -986,6 +983,9 @@ gda_freetds_provider_class_init (GdaFreeTDSProviderClass *klass)
 	provider_class->begin_transaction = gda_freetds_provider_begin_transaction;
 	provider_class->commit_transaction = gda_freetds_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_freetds_provider_rollback_transaction;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;	

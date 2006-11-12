@@ -56,15 +56,6 @@ static GdaDataModel *gda_ldap_provider_get_schema (GdaServerProvider *provider,
 			       GdaConnection *cnc,
 			       GdaConnectionSchema schema,
 			       GdaParameterList *params);
-static gboolean gda_ldap_provider_begin_transaction (GdaServerProvider *provider,
-				      GdaConnection *cnc,
-				      GdaTransaction *xaction);
-static gboolean gda_ldap_provider_commit_transaction (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       GdaTransaction *xaction);
-static gboolean gda_ldap_provider_rollback_transaction (GdaServerProvider *provider,
-					 GdaConnection *cnc,
-					 GdaTransaction *xaction);
 static const gchar *gda_ldap_provider_get_version (GdaServerProvider *provider);
 static const gchar *gda_ldap_provider_get_server_version (GdaServerProvider *provider,
 							      GdaConnection *cnc);
@@ -108,9 +99,12 @@ gda_ldap_provider_class_init (GdaLdapProviderClass *klass)
 	provider_class->execute_command = NULL;
 	provider_class->get_last_insert_id = NULL;
 
-	provider_class->begin_transaction = gda_ldap_provider_begin_transaction;
-	provider_class->commit_transaction = gda_ldap_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_ldap_provider_rollback_transaction;
+	provider_class->begin_transaction = NULL;
+	provider_class->commit_transaction = NULL;
+	provider_class->rollback_transaction = NULL;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;	
@@ -497,93 +491,6 @@ gda_ldap_provider_get_schema (GdaServerProvider *provider,
 	}
 
 	return NULL;
-}
-
-/* begin_transaction handler for the GdaLdapProvider class */
-static gboolean
-gda_ldap_provider_begin_transaction (GdaServerProvider *provider,
-				      GdaConnection *cnc,
-				      GdaTransaction *xaction)
-{
-	LDAP *ldap;
-/*	gint rc;*/
-	GdaLdapProvider *myprv = (GdaLdapProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (myprv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
-	if (!ldap) {
-		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
-		return FALSE;
-	}
-
-/*	rc = ldap_real_query (ldap, "BEGIN", strlen ("BEGIN"));
-	if (rc != 0) {
-		gda_connection_add_event (cnc, gda_ldap_make_error (ldap));
-		return FALSE;
-	}
-
-	return TRUE;*/
-	return FALSE;
-}
-
-/* commit_transaction handler for the GdaLdapProvider class */
-static gboolean
-gda_ldap_provider_commit_transaction (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       GdaTransaction *xaction)
-{
-	LDAP *ldap;
-	/*gint rc;*/
-	GdaLdapProvider *myprv = (GdaLdapProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (myprv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
-	if (!ldap) {
-		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
-		return FALSE;
-	}
-
-/*	rc = ldap_real_query (ldap, "COMMIT", strlen ("COMMIT"));
-	if (rc != 0) {
-		gda_connection_add_event (cnc, gda_ldap_make_error (ldap));
-		return FALSE;
-	}
-
-	return TRUE;*/
-	return FALSE;
-}
-
-/* rollback_transaction handler for the GdaLdapProvider class */
-static gboolean
-gda_ldap_provider_rollback_transaction (GdaServerProvider *provider,
-					 GdaConnection *cnc,
-					 GdaTransaction *xaction)
-{
-	LDAP *ldap;
-	/*gint rc;*/
-	GdaLdapProvider *myprv = (GdaLdapProvider *) provider;
-
-	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (myprv), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	ldap = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_LDAP_HANDLE);
-	if (!ldap) {
-		gda_connection_add_event_string (cnc, _("Invalid LDAP handle"));
-		return FALSE;
-	}
-
-/*	rc = ldap_real_query (ldap, "ROLLBACK", strlen ("ROLLBACK"));
-	if (rc != 0) {
-		gda_connection_add_event (cnc, gda_ldap_make_error (ldap));
-		return FALSE;
-	}
-
-	return TRUE;*/
-	return FALSE;
 }
 
 /* get_version handler for the GdaLDAPProvider class */

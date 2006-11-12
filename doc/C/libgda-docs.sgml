@@ -61,7 +61,7 @@
 <!ENTITY libgda-GdaServerProvider SYSTEM "xml/gda-server-provider.xml">
 <!ENTITY libgda-GdaServerOperation SYSTEM "xml/gda-server-operation.xml">
 <!ENTITY libgda-serverop-intro SYSTEM "server-operation.xml">
-<!ENTITY libgda-transaction SYSTEM "xml/gda-transaction.xml">
+<!ENTITY libgda-transaction-status SYSTEM "xml/gda-transaction-status.xml">
 <!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
 <!ENTITY libgda-GValue SYSTEM "xml/gda-value.xml">
 <!ENTITY libgda-report-types SYSTEM "xml/gda-report-types.xml">
@@ -591,7 +591,7 @@
       &libgda-util;
       &libgda-log;
       &libgda-quark-list;
-      &libgda-transaction;
+      &libgda-transaction-status;
       &libgda-GdaBlob;
       &libgda-GdaObject;
       &libgda-GdaObjectRef;

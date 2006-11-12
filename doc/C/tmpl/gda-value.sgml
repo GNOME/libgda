@@ -22,21 +22,6 @@ to GDA_TYPE_NULL.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### ENUM GValueAttribute ##### -->
-<para>
-
-</para>
-
-@GDA_VALUE_ATTR_IS_NULL: 
-@GDA_VALUE_ATTR_CAN_BE_NULL: 
-@GDA_VALUE_ATTR_IS_DEFAULT: 
-@GDA_VALUE_ATTR_CAN_BE_DEFAULT: 
-@GDA_VALUE_ATTR_IS_UNCHANGED: 
-@GDA_VALUE_ATTR_ACTIONS_SHOWN: 
-@GDA_VALUE_ATTR_DATA_NON_VALID: 
-@GDA_VALUE_ATTR_HAS_VALUE_ORIG: 
-@GDA_VALUE_ATTR_NO_MODIF: 
-
 <!-- ##### STRUCT GdaGeometricPoint ##### -->
 <para>
 

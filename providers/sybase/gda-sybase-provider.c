@@ -55,13 +55,14 @@ static gboolean gda_sybase_provider_close_connection (GdaServerProvider *provide
 
 static gboolean gda_sybase_provider_begin_transaction (GdaServerProvider *provider,
                                                        GdaConnection *cnc,
-                                                       GdaTransaction *xaction);
+                                                       const gchar *name, GdaTransactionIsolation level,
+						       GError **error);
 static gboolean gda_sybase_provider_change_database (GdaServerProvider *provider,
                                                      GdaConnection *cnc,
                                                      const gchar *name);
 static gboolean gda_sybase_provider_commit_transaction (GdaServerProvider *provider,
                                                         GdaConnection *cnc,
-                                                        GdaTransaction *xaction);
+                                                        const gchar *name, GError **error);
 static GList *gda_sybase_provider_execute_command (GdaServerProvider *provider,
                                                    GdaConnection *cnc,
                                                    GdaCommand *cmd,
@@ -77,7 +78,7 @@ static const gchar *gda_sybase_provider_get_server_version (GdaServerProvider *p
 static const gchar *gda_sybase_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_sybase_provider_rollback_transaction (GdaServerProvider *provider,
                                                           GdaConnection *cnc,
-                                                          GdaTransaction *xaction);
+                                                          const gchar *name, GError **error);
 static gboolean gda_sybase_provider_supports (GdaServerProvider *provider,
                                               GdaConnection *cnc,
                                               GdaConnectionFeature feature);
@@ -130,6 +131,9 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 	provider_class->begin_transaction = gda_sybase_provider_begin_transaction;
 	provider_class->commit_transaction = gda_sybase_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_sybase_provider_rollback_transaction;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;
@@ -543,9 +547,10 @@ gda_sybase_provider_close_connection (GdaServerProvider *provider,
 static gboolean
 gda_sybase_provider_begin_transaction(GdaServerProvider *provider,
                                       GdaConnection *cnc,
-                                      GdaTransaction *xaction)
+                                      const gchar *name, GdaTransactionIsolation level,
+				      GError **error)
 {
-	return ( gda_sybase_execute_cmd(cnc,"begin transaction") );
+	return (gda_sybase_execute_cmd (cnc, "begin transaction"));
 }
 
 static gboolean
@@ -570,9 +575,9 @@ gda_sybase_provider_change_database (GdaServerProvider *provider,
 static gboolean 
 gda_sybase_provider_commit_transaction (GdaServerProvider *provider,
                                         GdaConnection *cnc,
-                                        GdaTransaction *xaction)
+                                        const gchar *name, GError **error)
 {
-	return ( gda_sybase_execute_cmd(cnc,"commit transaction") );		
+	return (gda_sybase_execute_cmd (cnc, "commit transaction"));		
 }
 
 static GList *
@@ -1275,9 +1280,9 @@ gda_sybase_provider_get_version (GdaServerProvider *provider)
 static gboolean 
 gda_sybase_provider_rollback_transaction (GdaServerProvider *provider,
                                           GdaConnection *cnc,
-                                          GdaTransaction *xaction)
+                                          const gchar *name, GError **error)
 {
-	return ( gda_sybase_execute_cmd(cnc,"rollback transaction") );		
+	return (gda_sybase_execute_cmd (cnc, "rollback transaction"));		
 }
 
 static gboolean 

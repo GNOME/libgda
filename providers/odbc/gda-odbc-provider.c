@@ -39,45 +39,46 @@ static void gda_odbc_provider_finalize   (GObject *object);
 
 static const gchar *gda_odbc_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_odbc_provider_open_connection (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       GdaQuarkList *params,
-						       const gchar *username,
-						       const gchar *password);
+						   GdaConnection *cnc,
+						   GdaQuarkList *params,
+						   const gchar *username,
+						   const gchar *password);
 
 static gboolean gda_odbc_provider_close_connection (GdaServerProvider *provider,
-							GdaConnection *cnc);
+						    GdaConnection *cnc);
 static const gchar *gda_odbc_provider_get_server_version (GdaServerProvider *provider,
-							      GdaConnection *cnc);
+							  GdaConnection *cnc);
 static const gchar *gda_odbc_provider_get_database (GdaServerProvider *provider,
-							GdaConnection *cnc);
+						    GdaConnection *cnc);
 static gboolean gda_odbc_provider_change_database (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       const gchar *name);
+						   GdaConnection *cnc,
+						   const gchar *name);
 static GList *gda_odbc_provider_execute_command (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     GdaCommand *cmd,
-						     GdaParameterList *params);
+						 GdaConnection *cnc,
+						 GdaCommand *cmd,
+						 GdaParameterList *params);
 
 static gboolean gda_odbc_provider_begin_transaction (GdaServerProvider *provider,
-							 GdaConnection *cnc,
-							 GdaTransaction *xaction);
+						     GdaConnection *cnc,
+						     const gchar *name, GdaTransactionIsolation level,
+						     GError **error);
 
 static gboolean gda_odbc_provider_commit_transaction (GdaServerProvider *provider,
-							  GdaConnection *cnc,
-							  GdaTransaction *xaction);
+						      GdaConnection *cnc,
+						      const gchar *name, GError **error);
 
 static gboolean gda_odbc_provider_rollback_transaction (GdaServerProvider *provider,
-							    GdaConnection *cnc,
-							    GdaTransaction *xaction);
+							GdaConnection *cnc,
+							const gchar *name, GError **error);
 
 static gboolean gda_odbc_provider_supports (GdaServerProvider *provider,
-						GdaConnection *cnc,
-						GdaConnectionFeature feature);
+					    GdaConnection *cnc,
+					    GdaConnectionFeature feature);
 
 static GdaDataModel *gda_odbc_provider_get_schema (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       GdaConnectionSchema schema,
-						       GdaParameterList *params);
+						   GdaConnection *cnc,
+						   GdaConnectionSchema schema,
+						   GdaParameterList *params);
 
 
 static GObjectClass *parent_class = NULL;
@@ -122,6 +123,9 @@ gda_odbc_provider_class_init (GdaOdbcProviderClass *klass)
 	provider_class->begin_transaction = gda_odbc_provider_begin_transaction;
 	provider_class->commit_transaction = gda_odbc_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_odbc_provider_rollback_transaction;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;
@@ -539,8 +543,9 @@ gda_odbc_provider_change_database (GdaServerProvider *provider,
 
 static gboolean 
 gda_odbc_provider_begin_transaction (GdaServerProvider *provider,
-							 GdaConnection *cnc,
-							 GdaTransaction *xaction)
+				     GdaConnection *cnc,
+				     const gchar *name, GdaTransactionIsolation level,
+				     GError **error)
 {
 	GdaOdbcProvider *prv = (GdaOdbcProvider *) provider;
 	GdaOdbcConnectionData *priv_data;
@@ -555,23 +560,23 @@ gda_odbc_provider_begin_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = SQLSetConnectOption(priv_data->hdbc, SQL_AUTOCOMMIT, 
-		       SQL_AUTOCOMMIT_OFF);
+	rc = SQLSetConnectOption (priv_data->hdbc, SQL_AUTOCOMMIT, 
+				  SQL_AUTOCOMMIT_OFF);
 
 	if (SQL_SUCCEEDED(rc)) {
 		return TRUE;
 	}
 	else {
 		gda_odbc_emit_error (cnc, priv_data->henv,
-					priv_data->hdbc, NULL);
+				     priv_data->hdbc, NULL);
 		return FALSE;
 	}
 }
 
 static gboolean 
 gda_odbc_provider_commit_transaction (GdaServerProvider *provider,
-							  GdaConnection *cnc,
-							  GdaTransaction *xaction)
+				      GdaConnection *cnc,
+				      const gchar *name, GError **error)
 {
 	GdaOdbcProvider *prv = (GdaOdbcProvider *) provider;
 	GdaOdbcConnectionData *priv_data;
@@ -586,22 +591,22 @@ gda_odbc_provider_commit_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = SQLTransact(priv_data->henv, priv_data->hdbc, SQL_COMMIT);
+	rc = SQLTransact (priv_data->henv, priv_data->hdbc, SQL_COMMIT);
 
-	if (SQL_SUCCEEDED(rc)) {
+	if (SQL_SUCCEEDED (rc)) {
 		return TRUE;
 	}
 	else {
 		gda_odbc_emit_error (cnc, priv_data->henv,
-					priv_data->hdbc, NULL);
+				     priv_data->hdbc, NULL);
 		return FALSE;
 	}
 }
 
 static gboolean 
 gda_odbc_provider_rollback_transaction (GdaServerProvider *provider,
-							    GdaConnection *cnc,
-							    GdaTransaction *xaction)
+					GdaConnection *cnc,
+					const gchar *name, GError **error)
 {
 	GdaOdbcProvider *prv = (GdaOdbcProvider *) provider;
 	GdaOdbcConnectionData *priv_data;

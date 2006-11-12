@@ -67,15 +67,6 @@ static GList *gda_mdb_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
 						  GdaParameterList *params);
-static gboolean gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    GdaTransaction *xaction);
-static gboolean gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     GdaTransaction *xaction);
-static gboolean gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       GdaTransaction *xaction);
 static gboolean gda_mdb_provider_supports (GdaServerProvider *provider,
 					     GdaConnection *cnc,
 					     GdaConnectionFeature feature);
@@ -139,9 +130,12 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	provider_class->execute_command = gda_mdb_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
 
-	provider_class->begin_transaction = gda_mdb_provider_begin_transaction;
-	provider_class->commit_transaction = gda_mdb_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_mdb_provider_rollback_transaction;
+	provider_class->begin_transaction = NULL;
+	provider_class->commit_transaction = NULL;
+	provider_class->rollback_transaction = NULL;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;
@@ -407,36 +401,6 @@ gda_mdb_provider_execute_command (GdaServerProvider *provider,
 	return reclist;
 }
 
-/* begin_transaction handler for the GdaMdbProvider class */
-static gboolean
-gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
-				    GdaConnection *cnc,
-				    GdaTransaction *xaction)
-{
-	gda_connection_add_event_string (cnc, _("Transactions not supported in MDB provider"));
-	return FALSE;
-}
-
-/* commit_transaction handler for the GdaMdbProvider class */
-static gboolean
-gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     GdaTransaction *xaction)
-{
-	gda_connection_add_event_string (cnc, _("Transactions not supported in MDB provider"));
-	return FALSE;
-}
-
-/* rollback_transaction handler for the GdaMdbProvider class */
-static gboolean
-gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       GdaTransaction *xaction)
-{
-	gda_connection_add_event_string (cnc, _("Transactions not supported in MDB provider"));
-	return FALSE;
-}
-
 /* supports handler for the GdaMdbProvider class */
 static gboolean
 gda_mdb_provider_supports (GdaServerProvider *provider,
@@ -466,7 +430,8 @@ gda_mdb_provider_get_info (GdaServerProvider *provider,
 		TRUE,
 		FALSE,
 		FALSE,
-		FALSE
+		FALSE,
+		TRUE
 	};
 	
 	return &info;

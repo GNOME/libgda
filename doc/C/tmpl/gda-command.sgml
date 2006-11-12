@@ -70,7 +70,6 @@ table names.
 @text: 
 @type: 
 @options: 
-@xaction: 
 
 <!-- ##### FUNCTION gda_command_new ##### -->
 <para>
@@ -152,23 +151,5 @@ table names.
 
 @cmd: 
 @options: 
-
-
-<!-- ##### FUNCTION gda_command_get_transaction ##### -->
-<para>
-
-</para>
-
-@cmd: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_command_set_transaction ##### -->
-<para>
-
-</para>
-
-@cmd: 
-@xaction: 
 
 

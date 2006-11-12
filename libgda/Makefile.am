@@ -28,6 +28,7 @@ gda_headers = \
 	gda-config.h \
 	gda-connection-event.h \
 	gda-connection.h \
+	gda-connection-private.h \
 	gda-data-handler.h \
 	gda-data-model-array.h \
 	gda-data-model-row.h \
@@ -89,7 +90,8 @@ gda_headers = \
 	gda-server-provider-extra.h \
 	gda-server-provider-private.h \
 	gda-threader.h \
-	gda-transaction.h \
+	gda-transaction-status.h \
+	gda-transaction-status-private.h \
 	gda-util.h \
 	gda-value.h \
 	gda-xml-storage.h \
@@ -159,7 +161,7 @@ libgda_sources =  \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \
 	gda-threader.c \
-	gda-transaction.c \
+	gda-transaction-status.c \
 	gda-util.c \
 	gda-value.c \
 	gda-xml-storage.c 

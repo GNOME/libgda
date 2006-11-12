@@ -1039,6 +1039,7 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	GdaServerProviderInfo *sinfo = NULL;
 	GdaDict *dict;
 	GdaConnection *cnc;
+	gchar *tmp = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_FIELD (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_FIELD_FIELD (iface)->priv, NULL);
@@ -1071,19 +1072,14 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			fname = gda_object_ref_get_ref_name (field->priv->field_ref, NULL, NULL);
 	}
 	
-	if (fname) {
+	if (fname && (!sinfo || sinfo->quote_non_lc_identifiers)) {
 		/* see if we need quotes around returned string */
-		gchar *tmp;
-
 		tmp = g_utf8_strdown (fname, -1);
-		if (((*tmp <= '9') && (*tmp >= '0')) || 
-		    strcmp (tmp, fname)) {
+		if (((*tmp <= '9') && (*tmp >= '0')) || strcmp (tmp, fname)) {
 			g_free (tmp);
+			fname = g_strdup_printf ("\"%s\"", fname);
 			tmp = (gchar*) fname;
-			fname = g_strdup_printf ("\"%s\"", tmp);
 		}
-		else
-			g_free (tmp);
 	}
 
 	if (tname && fname)
@@ -1092,6 +1088,7 @@ gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 		if (fname)
 			retval = g_strdup (fname);
 	}
+	g_free (tmp);
 
 	return retval;
 }

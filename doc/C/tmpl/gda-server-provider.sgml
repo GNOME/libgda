@@ -34,6 +34,8 @@ GdaServerProvider
 @alias_needs_as_keyword: 
 @supports_alias: 
 @supports_prefixed_fields: 
+@quote_non_lc_identifiers: 
+@reserved: 
 
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>
@@ -64,16 +66,6 @@ GdaServerProvider
 @params: 
 @username: 
 @password: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_reset_connection ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
 @Returns: 
 
 
@@ -197,7 +189,9 @@ GdaServerProvider
 
 @provider: 
 @cnc: 
-@xaction: 
+@name: 
+@level: 
+@error: 
 @Returns: 
 
 
@@ -208,7 +202,8 @@ GdaServerProvider
 
 @provider: 
 @cnc: 
-@xaction: 
+@name: 
+@error: 
 @Returns: 
 
 
@@ -219,7 +214,44 @@ GdaServerProvider
 
 @provider: 
 @cnc: 
-@xaction: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_add_savepoint ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_rollback_savepoint ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_delete_savepoint ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@name: 
+@error: 
 @Returns: 
 
 

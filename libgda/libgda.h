@@ -34,6 +34,7 @@
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection-event.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-data-model-index.h>
@@ -51,7 +52,8 @@
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-threader.h>
-#include <libgda/gda-transaction.h>
+#include <libgda/gda-transaction-status.h>
+#include <libgda/gda-transaction-status-private.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-decl.h>

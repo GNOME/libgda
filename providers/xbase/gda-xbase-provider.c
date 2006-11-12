@@ -52,15 +52,6 @@ static GList *gda_xbase_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
 						  GdaParameterList *params);
-static gboolean gda_xbase_provider_begin_transaction (GdaServerProvider *provider,
-						      GdaConnection *cnc,
-						      GdaTransaction *xaction);
-static gboolean gda_xbase_provider_commit_transaction (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       GdaTransaction *xaction);
-static gboolean gda_xbase_provider_rollback_transaction (GdaServerProvider *provider,
-							 GdaConnection *cnc,
-							 GdaTransaction *xaction);
 static gboolean gda_xbase_provider_supports (GdaServerProvider *provider,
 					     GdaConnection *cnc,
 					     GdaConnectionFeature feature);
@@ -113,9 +104,12 @@ gda_xbase_provider_class_init (GdaXbaseProviderClass *klass)
 	provider_class->execute_command = gda_xbase_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
 
-	provider_class->begin_transaction = gda_xbase_provider_begin_transaction;
-	provider_class->commit_transaction = gda_xbase_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_xbase_provider_rollback_transaction;
+	provider_class->begin_transaction = NULL;
+	provider_class->commit_transaction = NULL;
+	provider_class->rollback_transaction = NULL;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;
@@ -312,30 +306,6 @@ gda_xbase_provider_execute_command (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					GdaCommand *cmd,
 					GdaParameterList *params)
-{
-}
-
-/* begin_transaction handler for the GdaXbaseProvider class */
-static gboolean
-gda_xbase_provider_begin_transaction (GdaServerProvider *provider,
-					  GdaConnection *cnc,
-					  GdaTransaction *xaction)
-{
-}
-
-/* commit_transaction handler for the GdaXbaseProvider class */
-static gboolean
-gda_xbase_provider_commit_transaction (GdaServerProvider *provider,
-					   GdaConnection *cnc,
-					   GdaTransaction *xaction)
-{
-}
-
-/* rollback_transaction handler for the GdaXbaseProvider class */
-static gboolean
-gda_xbase_provider_rollback_transaction (GdaServerProvider *provider,
-					     GdaConnection *cnc,
-					     GdaTransaction *xaction)
 {
 }
 

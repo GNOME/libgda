@@ -97,15 +97,16 @@ static gchar *gda_mysql_provider_get_last_insert_id (GdaServerProvider *provider
 
 static gboolean gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 						      GdaConnection *cnc,
-						      GdaTransaction *xaction);
+						      const gchar *name, GdaTransactionIsolation level,
+						      GError **error);
 
 static gboolean gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 						       GdaConnection *cnc,
-						       GdaTransaction *xaction);
+						       const gchar *name, GError **error);
 
 static gboolean gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 							 GdaConnection *cnc,
-							 GdaTransaction *xaction);
+							 const gchar *name, GError **error);
 
 static gboolean gda_mysql_provider_supports (GdaServerProvider *provider,
 					     GdaConnection *cnc,
@@ -169,6 +170,9 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->begin_transaction = gda_mysql_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mysql_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_mysql_provider_rollback_transaction;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;
@@ -835,7 +839,8 @@ gda_mysql_provider_get_last_insert_id (GdaServerProvider *provider,
 static gboolean
 gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 				      GdaConnection *cnc,
-				      GdaTransaction *xaction)
+				      const gchar *name, GdaTransactionIsolation level,
+				      GError **error)
 {
 	MYSQL *mysql;
 	gint rc;
@@ -843,7 +848,6 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
@@ -857,7 +861,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 	}
 
 	/* set isolation level */
-	switch (gda_transaction_get_isolation_level (xaction)) {
+	switch (level) {
 	case GDA_TRANSACTION_ISOLATION_READ_COMMITTED :
 		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL READ COMMITTED", 46);
 		break;
@@ -893,7 +897,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean
 gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
-				       GdaTransaction *xaction)
+				       const gchar *name, GError **error)
 {
 	MYSQL *mysql;
 	gint rc;
@@ -926,7 +930,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean
 gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 					 GdaConnection *cnc,
-					 GdaTransaction *xaction)
+					 const gchar *name, GError **error)
 {
 	MYSQL *mysql;
 	gint rc;
@@ -985,7 +989,8 @@ gda_mysql_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
 		TRUE,
 		TRUE,
 		TRUE,
-		TRUE
+		TRUE,
+		FALSE
 	};
 	
 	return &info;
@@ -1369,7 +1374,7 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		const gchar *synonyms;
 	} types[] = {
 		{ "bool", "", "Boolean type", G_TYPE_BOOLEAN, "boolean" },
-		{ "blob", "", "Binary blob (up to 65535 bytes)", GDA_TYPE_BLOB, NULL },
+		{ "blob", "", "Binary blob (up to 65535 bytes)", GDA_TYPE_BINARY, NULL },
 		{ "bigint", "", "Big integer, range is -9223372036854775808 to 9223372036854775807", G_TYPE_INT64, NULL  },
 		{ "bigint unsigned", "", "Big unsigned integer, range is 0 to 18446744073709551615", G_TYPE_UINT64, NULL  },
 		{ "char", "", "Char", G_TYPE_STRING, "binary"  },
@@ -1385,11 +1390,11 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		{ "int unsigned", "", "Unsigned integer, range is 0 to 4294967295", G_TYPE_UINT, "integer unsigned"  },
 		{ "long", "", "Long integer", G_TYPE_LONG, NULL  },
 		{ "long unsigned", "", "Long unsigned integer", G_TYPE_ULONG, NULL  },
-		{ "longblob", "", "Long blob (up to 4Gb)", GDA_TYPE_BLOB, NULL  },
+		{ "longblob", "", "Long blob (up to 4Gb)", GDA_TYPE_BINARY, NULL  },
 		{ "longtext", "", "Long text (up to 4Gb characters)", GDA_TYPE_BINARY, NULL  },
 		{ "mediumint", "", "Medium integer, range is -8388608 to 8388607", G_TYPE_INT, NULL  },
 		{ "mediumint unsigned", "", "Medium unsigned integer, range is 0 to 16777215", G_TYPE_INT, NULL  },
-		{ "mediumblob", "", "Medium blob (up to 16777215 bytes)", GDA_TYPE_BLOB, NULL  },
+		{ "mediumblob", "", "Medium blob (up to 16777215 bytes)", GDA_TYPE_BINARY, NULL  },
 		{ "mediumtext", "", "Medium text (up to 16777215 characters)", GDA_TYPE_BINARY, NULL  },				
 		{ "set", "", "Set: a string object that can have zero or more values, each of which must be chosen from the list of values 'value1', 'value2', ... A SET column can have a maximum of 64 members", G_TYPE_STRING, NULL  },
 		{ "smallint", "", "Small integer, range is -32768 to 32767", GDA_TYPE_SHORT, NULL  },
@@ -1666,8 +1671,199 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	}
 
 	mysql_free_result (mysql_res);
-
+	
 	return GDA_DATA_MODEL (recset);
+}
+
+static void
+mysql_get_constraints_form_create_table_line (GdaDataModelArray *recset, gchar *pos)
+{
+	/* try to parse a line like this:
+	 * "  CONSTRAINT `name` FOREIGN KEY (`fid1`,`fid2`) REFERENCES othertable(`id1`,`id2`)"
+	 */
+	gchar *cname = 0, *start, *stop;
+	GString *kname;
+	gchar *tname = 0;
+	GString *fname;
+	GList *value_list;
+	gchar *temp;
+	GValue *tmpval;
+
+	/* remove prefix spaces */
+	while ( *pos==' ')
+		pos++;
+
+	/* "CONSTRAINT "? */
+	if ( strncmp (pos, "CONSTRAINT ", 11) )
+		return;
+
+	pos += 11; /* strlen("CONSTRAINT ") */ 
+
+	/* find the start of the constraint name.. it should be a ` char */
+	if ( ! ( start = strchr (pos, '`') ) )
+		return;
+	/* we want the first character from the name */
+	start++;
+
+	/* find the ending constraint name.. it should be a ` char */
+	if ( ! ( stop = strchr (start, '`') ) )
+		return;
+
+	/* allocate cname, and store the constraint name */
+	cname = g_malloc ( stop - start  + 1);
+	g_strlcpy (cname, start, stop - start + 1);
+
+	pos = stop + 1;
+
+	/* remove spaces again */
+	while ( *pos == ' ' )
+		pos++;
+
+	/* "FOREIGN KEY "? */
+	if ( strncmp (pos, "FOREIGN KEY ", 12) )
+		goto cname_out;
+	/* this is a foreign key constraint */
+	pos += 12; /* strlen("FOREIGN KEY ") */
+
+	/* we should be able to locate a ( inside our string */
+	if ( ! ( pos = strchr (pos, '(') ) )
+		goto cname_out;
+	pos++;
+
+	/* we should now be at the character behind the ( */
+
+	kname = g_string_new (NULL);
+
+	while (1) {
+		/* find all the entries.. they are in this format "`a`, `b`, `c`".
+		 * The list is terminated by a ) character */
+		if ( ! ( start = strchr (pos, '`') ) )
+			goto kname_out;
+		start++;
+		if ( ! ( stop = strchr (start, '`') ) )
+			goto kname_out;
+		if ( kname->len )
+			g_string_append_c (kname, ',');
+		g_string_append_len (kname, start, stop - start);
+
+		pos = stop + 1;
+
+		while ( *pos == ' ')
+			pos++;
+		if ( *pos == ',' )
+			pos++;
+		else /* if (*pos==')')*/
+			break;
+	}
+	/* pass by the ) character.. but if we had an unexpected \0 character, don't crash */
+	if (*pos)
+		pos++;
+
+	/* remove spaces again */
+	while ( *pos == ' ' )
+		pos++;
+
+	/* we now expected the REFERENCES text */
+	if ( strncmp (pos, "REFERENCES ", 11) )
+		goto kname_out;
+
+	pos += 11;
+
+	/* and yeah... remove spaces */
+	while ( *pos == ' ' )
+		pos++;
+
+	/* we should now hit the name of the foreign table. It is embedded inside ` characters */
+	if ( ! ( start = strchr (pos, '`') ) )
+		goto kname_out;
+	start++;
+
+	if ( ! ( stop = strchr (start, '`') ) )
+		goto kname_out;
+	/* store it in tname */
+	tname = g_malloc ( stop - start + 1);
+	g_strlcpy (tname, start, stop - start + 1);
+
+	pos = stop + 1;
+
+	/* we now should find a ( character */
+	if ( ! ( start = strchr (pos, '(') ) )
+		goto tname_out;
+	pos = start + 1;
+
+	fname = g_string_new (NULL);
+
+	while (1) {
+		/* and after this character we find a list like above with keys */
+		if ( ! ( start = strchr (pos, '`') ) )
+			goto kname_out;
+		start++;
+		if ( ! ( stop = strchr (start, '`') ) )
+			goto kname_out;
+		if (fname->len)
+			g_string_append_c (fname, ',');
+		g_string_append_len (fname, start, stop - start);
+
+		pos = stop + 1;
+		while ( *pos == ' ')
+			pos++;
+		if ( *pos == ',' )
+			pos++;
+		else /* if (*pos==')')*/
+			break;
+	}
+	/* fill in the result into the result table */
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), cname);
+	value_list = g_list_append (NULL, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "FOREIGN_KEY");
+	value_list = g_list_append (value_list, tmpval);
+
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), kname->str);
+	value_list = g_list_append (value_list, tmpval);
+	
+	temp = g_strdup_printf ("%s(%s)", tname, fname->str);
+	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), temp);
+	value_list = g_list_append (value_list, tmpval);
+	
+	value_list = g_list_append (value_list, gda_value_new_null ());
+
+	gda_data_model_append_values (GDA_DATA_MODEL (recset),
+	                              (const GList *) value_list, NULL);
+		
+	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+	g_list_free (value_list);
+
+fname_out:
+	g_string_free (fname, TRUE);
+tname_out:
+	g_free (tname);
+kname_out:
+	g_string_free (kname, TRUE);
+cname_out:
+	g_free (cname);
+}
+
+static void
+mysql_get_constraints_from_create_table (GdaDataModelArray *recset, gchar *pos)
+{
+	/* skip the first line. nothing of interrest there */
+	if (pos=strchr(pos, '\n'))
+		pos++;
+	else
+		return;
+	while (*pos)
+	{
+		gchar *next;
+		if ( next = strchr (pos, '\n') )
+		{
+			*next=0;
+			next++;
+		} else
+			next = pos + strlen (pos);
+		mysql_get_constraints_form_create_table_line (recset, pos);
+		pos=next;
+	}
 }
 
 static GdaDataModel *
@@ -1716,7 +1912,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 
 	/* 
 	 * Obtaining list of columns 
-	 */	
+	 */
 	cmd_str = g_strdup_printf ("SHOW COLUMNS FROM %s", table_name);
 	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
 	g_free (cmd_str);
@@ -1831,6 +2027,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 	if (atoi (mysql->server_version) >= 5) {
 		gchar *current_cname = NULL;
 		GString *ref_string = NULL;
+		GString *src_string = NULL;
 		GList *value_list = NULL;
 		
 		cmd_str = g_strdup_printf ("SELECT CONSTRAINT_NAME, COLUMN_NAME, ORDINAL_POSITION, REFERENCED_TABLE_SCHEMA, "
@@ -1861,12 +2058,16 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 
 				return NULL;
 			}
-		
-	
+
+
 			if ((! current_cname) || strcmp (current_cname, mysql_row[0])) {
 				/* new constraint */
 				if (value_list) {
 					/* complete and store current row */
+					g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), src_string->str);
+					value_list = g_list_append (value_list, tmpval);
+					g_string_free (src_string, TRUE);
+
 					g_string_append_c (ref_string, ')');
 					g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), ref_string->str);
 					value_list = g_list_append (value_list, tmpval);
@@ -1876,13 +2077,13 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 
 					gda_data_model_append_values (GDA_DATA_MODEL (recset),
 								      (const GList *) value_list, NULL);
-				
+
 					g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 					g_list_free (value_list);
 				}
 				if (current_cname) 
 					g_free (current_cname);
-			
+
 				/* prepare new constraint */
 				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mysql_row[0]);
 				value_list = g_list_append (NULL, tmpval);
@@ -1890,9 +2091,8 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "FOREIGN_KEY");
 				value_list = g_list_append (value_list, tmpval);
 
-				g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), mysql_row[1]);
-				value_list = g_list_append (value_list, tmpval);
-			
+				src_string = g_string_new (mysql_row[1]);
+
 				ref_string = g_string_new (mysql_row[4]);
 				g_string_append_c (ref_string, '(');
 				g_string_append (ref_string, mysql_row[5]);
@@ -1901,11 +2101,17 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 			else {
 				g_string_append_c (ref_string, ',');
 				g_string_append (ref_string, mysql_row[5]);
+				g_string_append_c (src_string, ',');
+				g_string_append (src_string, mysql_row[1]);
 			}
 		}
 
 		if (value_list) {
 			/* complete and store current row */
+			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), src_string->str);
+			value_list = g_list_append (value_list, tmpval);
+			g_string_free (src_string, TRUE);
+
 			g_string_append_c (ref_string, ')');
 			g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), ref_string->str);
 			value_list = g_list_append (value_list, tmpval);
@@ -1919,6 +2125,33 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 			g_list_free (value_list);
 		}
+		if (current_cname)
+			g_free(current_cname);
+		mysql_free_result (mysql_res);
+	} else {
+		gchar *temp;
+		MYSQL_ROW mysql_row;
+		cmd_str = g_strdup_printf ("SHOW CREATE TABLE %s",
+					   table_name);
+		rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
+		g_free (cmd_str);
+		if (rc != 0) {
+			gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
+			return NULL;
+		}
+		mysql_res = mysql_store_result (mysql);
+		
+		mysql_row = mysql_fetch_row (mysql_res);
+		if (!mysql_row) {
+			mysql_free_result (mysql_res);
+			g_object_unref (G_OBJECT (recset));
+
+			return NULL;
+		}
+		temp = g_strdup ( mysql_row[1] );
+		mysql_get_constraints_from_create_table (recset, mysql_row[1]);
+		g_free (temp);
+		mysql_free_result (mysql_res);
 	}
 
 	return GDA_DATA_MODEL (recset);

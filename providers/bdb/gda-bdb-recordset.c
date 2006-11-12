@@ -45,7 +45,7 @@ static const GValue *gda_bdb_recordset_get_value_at (GdaDataModelRow *model,
 						       gint col,
 						       gint row);
 static gint gda_bdb_recordset_get_n_rows 	      (GdaDataModelRow *model);
-static const GdaRow *gda_bdb_recordset_get_row 	      (GdaDataModelRow *model,
+static GdaRow *gda_bdb_recordset_get_row 	      (GdaDataModelRow *model,
 						       gint rownum, GError **error);
 
 static GObjectClass *parent_class = NULL;
@@ -93,7 +93,7 @@ gda_bdb_recordset_finalize (GObject * object)
 	parent_class->finalize (object);
 }
 
-static const GdaRow *
+static GdaRow *
 gda_bdb_recordset_get_row (GdaDataModelRow *model, gint row_num, GError **error)
 {
 	GdaBdbRecordset *recset;
@@ -119,9 +119,9 @@ gda_bdb_recordset_get_row (GdaDataModelRow *model, gint row_num, GError **error)
 		return NULL;
 	}
 
-	row = (GdaRow *) gda_data_model_hash_get_row (model, row_num);
+	row = (GdaRow *) gda_data_model_row_get_row (model, row_num, NULL);
 	if (row != NULL)
-		return (const GdaRow *) row;
+		return row;
 
 	/* move cursor to the right record (we can't use DB_SET_RECNO
 	   since it can be used only with Btree schemas, and won't

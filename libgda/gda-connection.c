@@ -27,6 +27,7 @@
 #include <libgda/gda-client.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-connection-private.h>
 #include <libgda/gda-connection-event.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-dict.h>
@@ -34,6 +35,8 @@
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-parameter-list.h>
 #include "gda-marshal.h"
+#include <libgda/gda-transaction-status-private.h>
+#include <string.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
@@ -49,10 +52,13 @@ struct _GdaConnectionPrivate {
 	gboolean              is_open;
 	GList                *events_list;
 	GList                *recset_list;
+
+	GdaTransactionStatus *trans_status;
 };
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
 static void gda_connection_init       (GdaConnection *cnc, GdaConnectionClass *klass);
+static void gda_connection_dispose    (GObject *object);
 static void gda_connection_finalize   (GObject *object);
 static void gda_connection_set_property (GObject *object,
 					 guint param_id,
@@ -171,6 +177,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 							    NULL, 0, G_MAXUINT, 0,
 							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
+	object_class->dispose = gda_connection_dispose;
 	object_class->finalize = gda_connection_finalize;
 }
 
@@ -189,6 +196,37 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->is_open = FALSE;
 	cnc->priv->events_list = NULL;
 	cnc->priv->recset_list = NULL;
+	cnc->priv->trans_status = NULL; /* no transaction yet */
+}
+
+static void
+gda_connection_dispose (GObject *object)
+{
+	GdaConnection *cnc = (GdaConnection *) object;
+
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	/* free memory */
+	gda_connection_close_no_warning (cnc);
+
+	if (cnc->priv->provider_obj) {
+		g_object_unref (G_OBJECT (cnc->priv->provider_obj));
+		cnc->priv->provider_obj = NULL;
+	}
+
+	if (cnc->priv->events_list)
+		gda_connection_event_list_free (cnc->priv->events_list);
+
+	if (cnc->priv->recset_list)
+		g_list_foreach (cnc->priv->recset_list, (GFunc) g_object_unref, NULL);
+	
+	if (cnc->priv->trans_status) {
+		g_object_unref (cnc->priv->trans_status);
+		cnc->priv->trans_status = NULL;
+	}
+
+	/* chain to parent class */
+	parent_class->dispose (object);
 }
 
 static void
@@ -199,19 +237,10 @@ gda_connection_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
 	/* free memory */
-	gda_connection_close_no_warning (cnc);
-
-	g_object_unref (G_OBJECT (cnc->priv->provider_obj));
-	cnc->priv->provider_obj = NULL;
-
 	g_free (cnc->priv->dsn);
 	g_free (cnc->priv->cnc_string);
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
-
-	gda_connection_event_list_free (cnc->priv->events_list);
-
-	g_list_foreach (cnc->priv->recset_list, (GFunc) g_object_unref, NULL);
 
 	g_free (cnc->priv);
 	cnc->priv = NULL;
@@ -1246,7 +1275,9 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
 /**
  * gda_connection_begin_transaction
  * @cnc: a #GdaConnection object.
- * @xaction: a #GdaTransaction object.
+ * @name: the name of the transation to start
+ * @level:
+ * @error: a place to store errors, or %NULL
  *
  * Starts a transaction on the data source, identified by the
  * @xaction parameter.
@@ -1259,17 +1290,17 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
  * otherwise.
  */
 gboolean
-gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
+gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTransactionIsolation level,
+				  GError **error)
 {
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
-	retval = gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, xaction);
+	retval = gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, name, level, error);
 	if (retval)
-		gda_client_notify_transaction_started_event (cnc->priv->client, cnc, xaction);
+		gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, NULL);
 
 	return retval;
 }
@@ -1277,7 +1308,8 @@ gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 /**
  * gda_connection_commit_transaction
  * @cnc: a #GdaConnection object.
- * @xaction: a #GdaTransaction object.
+ * @name: the name of the transation to commit
+ * @error: a place to store errors, or %NULL
  *
  * Commits the given transaction to the backend database.  You need to do 
  * gda_connection_begin_transaction() first.
@@ -1286,17 +1318,16 @@ gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
  * %FALSE otherwise.
  */
 gboolean
-gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
+gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError **error)
 {
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
-	retval = gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, xaction);
+	retval = gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, name, error);
 	if (retval)
-		gda_client_notify_transaction_committed_event (cnc->priv->client, cnc, xaction);
+		gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, NULL);
 
 	return retval;
 }
@@ -1304,7 +1335,8 @@ gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 /**
  * gda_connection_rollback_transaction
  * @cnc: a #GdaConnection object.
- * @xaction: a #GdaTransaction object.
+ * @name: the name of the transation to commit
+ * @error: a place to store errors, or %NULL
  *
  * Rollbacks the given transaction. This means that all changes
  * made to the underlying data source since the last call to
@@ -1314,19 +1346,89 @@ gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
  * Returns: %TRUE if the operation was successful, %FALSE otherwise.
  */
 gboolean
-gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction)
+gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *name, GError **error)
 {
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
-	retval = gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, xaction);
+	retval = gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, name, error);
 	if (retval)
-		gda_client_notify_transaction_cancelled_event (cnc->priv->client, cnc, xaction);
+		gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, NULL);
 
 	return retval;
+}
+
+/**
+ * gda_connection_add_savepoint
+ * @cnc: a #GdaConnection object
+ * @name: name of the savepoint to add
+ * @error: a place to store errors or %NULL
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_connection_add_savepoint (GdaConnection *cnc, const gchar *name, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (cnc->priv, FALSE);
+	
+	return gda_server_provider_add_savepoint (cnc->priv->provider_obj, cnc, name, error);
+}
+
+/**
+ * gda_connection_rollback_savepoint
+ * @cnc: a #GdaConnection object
+ * @name: name of the savepoint to rollback to
+ * @error: a place to store errors or %NULL
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_connection_rollback_savepoint (GdaConnection *cnc, const gchar *name, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (cnc->priv, FALSE);
+	
+	return gda_server_provider_rollback_savepoint (cnc->priv->provider_obj, cnc, name, error);
+}
+
+/**
+ * gda_connection_delete_savepoint
+ * @cnc: a #GdaConnection object
+ * @name: name of the savepoint to delete
+ * @error: a place to store errors or %NULL
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_connection_delete_savepoint (GdaConnection *cnc, const gchar *name, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (cnc->priv, FALSE);
+	
+	return gda_server_provider_delete_savepoint (cnc->priv->provider_obj, cnc, name, error);
+}
+
+/**
+ * gda_connection_get_transaction_status
+ * @cnc: a #GdaConnection object
+ *
+ * Get the status of @cnc regarding transactions. The returned object should not be modified
+ * or destroyed; however it may be destroyed by the connection itself.
+ *
+ * If %NULL is returned, then no transaction has been associated with @cnc
+ *
+ * Returns: a #GdaTransactionStatus object, or %NULL
+ */
+GdaTransactionStatus *
+gda_connection_get_transaction_status (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv, NULL);
+
+	return cnc->priv->trans_status;
 }
 
 /**
@@ -1455,4 +1557,177 @@ gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
 
 	/* execute the command on the provider */
 	return gda_server_provider_value_to_sql_string (cnc->priv->provider_obj, cnc, from);
+}
+
+/*
+ * Internal functions to keep track
+ * of the transactional status of the connection
+ */
+void
+gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *parent_trans, const gchar *trans_name, 
+					     GdaTransactionIsolation isol_level)
+{
+	GdaTransactionStatus *parent, *st;
+
+	st = gda_transaction_status_new (trans_name);
+	st->isolation_level = isol_level;
+	parent = gda_transaction_status_find (cnc->priv->trans_status, parent_trans, NULL);
+	if (!parent)
+		cnc->priv->trans_status = st;
+	else {
+		gda_transaction_status_add_event_sub (parent, st);
+		g_object_unref (st);
+	}
+#ifdef GDA_DEBUG
+	if (cnc->priv->trans_status)
+		gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif
+}
+
+void 
+gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar *trans_name)
+{
+	GdaTransactionStatus *st = NULL;
+	GdaTransactionStatusEvent *ev = NULL;
+
+	if (cnc->priv->trans_status)
+		st = gda_transaction_status_find (cnc->priv->trans_status, trans_name, &ev);
+	if (st) {
+		if (ev) {
+			/* there is a parent transaction */
+			gda_transaction_status_free_events (ev->trans, ev, TRUE);
+		}
+		else {
+			/* no parent transaction */
+			g_object_unref (cnc->priv->trans_status);
+			cnc->priv->trans_status = NULL;
+		}
+	}
+	else
+		g_warning (_("Connection transaction status tracking: no transaction exists for ROLLBACK"));
+#ifdef GDA_DEBUG
+	if (cnc->priv->trans_status)
+		gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif
+}
+
+void 
+gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *trans_name)
+{
+	GdaTransactionStatus *st = NULL;
+	GdaTransactionStatusEvent *ev = NULL;
+
+	if (cnc->priv->trans_status)
+		st = gda_transaction_status_find (cnc->priv->trans_status, trans_name, &ev);
+	if (st) {
+		if (ev) {
+			/* there is a parent transaction */
+			gda_transaction_status_free_events (ev->trans, ev, TRUE);
+		}
+		else {
+			/* no parent transaction */
+			g_object_unref (cnc->priv->trans_status);
+			cnc->priv->trans_status = NULL;
+		}
+	}
+	else
+		g_warning (_("Connection transaction status tracking: no transaction exists for COMMIT"));
+#ifdef GDA_DEBUG
+	if (cnc->priv->trans_status)
+		gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif
+}
+
+void
+gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error)
+{
+	GdaTransactionStatus *st = NULL;
+	
+	if (cnc->priv->trans_status)
+		st = gda_transaction_status_find_current (cnc->priv->trans_status, NULL, FALSE);
+	if (st)
+		gda_transaction_status_add_event_sql (st, sql, error);
+#ifdef GDA_DEBUG
+	if (cnc->priv->trans_status)
+		gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif
+}
+
+void
+gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent_trans, const gchar *svp_name)
+{
+	GdaTransactionStatus *st;
+
+	st = gda_transaction_status_find (cnc->priv->trans_status, parent_trans, NULL);
+	if (st)
+		gda_transaction_status_add_event_svp (st, svp_name);
+	else
+		g_warning (_("Connection transaction status tracking: no transaction exists for ADD SAVEPOINT"));
+#ifdef GDA_DEBUG
+	if (cnc->priv->trans_status)
+		gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif
+}
+
+void
+gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *svp_name)
+{
+	GdaTransactionStatus *st;
+	GdaTransactionStatusEvent *ev = NULL;
+
+	st = gda_transaction_status_find (cnc->priv->trans_status, svp_name, &ev);
+	if (st)
+		gda_transaction_status_free_events (st, ev, TRUE);
+	else
+		g_warning (_("Connection transaction status tracking: no transaction exists for ROLLBACK SAVEPOINT"));
+#ifdef GDA_DEBUG
+	if (cnc->priv->trans_status)
+		gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif	
+}
+
+void
+gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_name)
+{
+	GdaTransactionStatus *st;
+	GdaTransactionStatusEvent *ev = NULL;
+
+	st = gda_transaction_status_find (cnc->priv->trans_status, svp_name, &ev);
+	if (st)
+		gda_transaction_status_free_events (st, ev, FALSE);
+	else
+		g_warning (_("Connection transaction status tracking: no transaction exists for REMOVE SAVEPOINT"));
+#ifdef GDA_DEBUG
+	if (cnc->priv->trans_status)
+		gda_transaction_status_dump (cnc->priv->trans_status, 5);
+#endif		
+}
+
+
+void
+gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error)
+{
+	gchar *lsql;
+	gboolean done = FALSE;
+
+	lsql = g_utf8_strup (sql, -1);
+
+	if (!error || (error && (gda_connection_event_get_event_type (error) != GDA_CONNECTION_EVENT_ERROR))) {
+		if (!strncmp (lsql, "BEGIN", 5)) {
+			gda_connection_internal_transaction_started (cnc, NULL, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN);
+			done = TRUE;
+		}
+		else if (!strncmp (lsql, "COMMIT", 6)) {
+			gda_connection_internal_transaction_committed (cnc, NULL);
+			done = TRUE;
+		}
+		else if (!strncmp (lsql, "ROLLBACK", 8)) {
+			gda_connection_internal_transaction_rolledback (cnc, NULL);
+			done = TRUE;
+		}
+	}
+	
+	if (!done)
+		gda_connection_internal_sql_executed (cnc, sql, error);
+	g_free (lsql);
 }

@@ -1318,6 +1318,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 {
 	sql_statement *result;
 	gboolean err = FALSE;
+	GError *local_error = NULL; /* we don't care about the error, but we don't want any output to stderr */
 
 	g_return_if_fail (query && GDA_IS_QUERY (query));
 	g_return_if_fail (query->priv);
@@ -1337,7 +1338,11 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 	query->priv->internal_transaction ++;
 
 	/* try to parse the SQL */
-	result = sql_parse_with_error (sql, error);
+	result = sql_parse_with_error (sql, error ? error : &local_error);
+	if (!error && local_error) {
+		g_error_free (local_error);
+		local_error = NULL;
+	}
 	if (result) {
 #ifdef GDA_DEBUG_NO
 		sql_display (result);
@@ -1364,7 +1369,6 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 	if (err) {
 		GList *stm_list;
 		GdaDelimiterStatement *stm;
-		GError *local_error = NULL; /* we don't care about the error, but we don't want any output to stderr */
 
 		/* the query can't be parsed with libgda's parser */
 		if (error && !(*error))
@@ -2744,7 +2748,7 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 	if (!str)
 		return NULL;
 
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 	g_print ("GdaQueryExecute:\nSQL= %s\n", str);
 #endif
 

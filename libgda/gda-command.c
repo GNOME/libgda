@@ -1,8 +1,9 @@
 /* GDA Common Library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -59,7 +60,6 @@ gda_command_new (const gchar *text, GdaCommandType type, GdaCommandOptions optio
 	cmd = g_new0 (GdaCommand, 1);
 	gda_command_set_text (cmd, text);
 	gda_command_set_command_type (cmd, type);
-	cmd->xaction = NULL;
 
 	cmd->options = GDA_COMMAND_OPTION_BAD_OPTION;
 	gda_command_set_options (cmd, options);
@@ -81,11 +81,6 @@ gda_command_free (GdaCommand *cmd)
 	g_return_if_fail (cmd != NULL);
 
 	g_free (cmd->text);
-	if (GDA_IS_TRANSACTION (cmd->xaction)) {
-		g_object_unref (G_OBJECT (cmd->xaction));
-		cmd->xaction = NULL;
-	}
-
 	g_free (cmd);
 }
 
@@ -104,11 +99,8 @@ gda_command_copy (GdaCommand *cmd)
 	
 	g_return_val_if_fail (cmd != NULL, NULL);
 	new_cmd = gda_command_new (gda_command_get_text (cmd),
-				       gda_command_get_command_type (cmd),
-				       gda_command_get_options (cmd));
-
-	gda_command_set_transaction (new_cmd,
-				     gda_command_get_transaction (cmd));
+				   gda_command_get_command_type (cmd),
+				   gda_command_get_options (cmd));
 	return new_cmd;
 }
 
@@ -215,42 +207,3 @@ gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options)
 
 	cmd->options = options;
 }
-
-/**
- * gda_command_get_transaction
- * @cmd: a #GdaCommand.
- *
- * Gets the #GdaTransaction associated with the given #GdaCommand.
- *
- * Returns: the transaction for the command.
- */
-GdaTransaction *
-gda_command_get_transaction (GdaCommand *cmd)
-{
-	g_return_val_if_fail (cmd != NULL, NULL);
-	return cmd->xaction;
-}
-
-/**
- * gda_command_set_transaction
- * @cmd: a #GdaCommand.
- * @xaction: a #GdaTransaction object.
- *
- * Sets the #GdaTransaction associated with the given #GdaCommand.
- */
-void
-gda_command_set_transaction (GdaCommand *cmd, GdaTransaction *xaction)
-{
-	g_return_if_fail (cmd != NULL);
-
-	if (GDA_IS_TRANSACTION (cmd->xaction))
-		g_object_unref (G_OBJECT (cmd->xaction));
-
-	if (GDA_IS_TRANSACTION (xaction)) {
-		g_object_ref (G_OBJECT (xaction));
-		cmd->xaction = xaction;
-	}
-	else
-		cmd->xaction = NULL;
-}
-

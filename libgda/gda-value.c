@@ -759,11 +759,14 @@ string_to_timestamp (const GValue *src, GValue *dest)
 	timestamp->minute = atoi (as_string);
 	as_string += 3;
 	timestamp->second = atoi (as_string);
-	as_string += 3;
-	timestamp->fraction = atol (as_string) * 10; /* I have only hundredths of second */
-	as_string += 3;
-	timestamp->timezone = atol (as_string) * 60 * 60;
-
+	if (strlen(as_string)>=3) {
+		as_string += 3;
+		timestamp->fraction = atol (as_string) * 10; /* I have only hundredths of second */
+		if (strlen(as_string)>=3) {
+			as_string += 3;
+			timestamp->timezone = atol (as_string) * 60 * 60;
+		}
+	}
 	gda_value_set_timestamp (dest, timestamp);
 	g_free (timestamp);
 }
@@ -1767,7 +1770,7 @@ string_to_short(const GValue *src, GValue *dest)
 	
 	const gchar *as_string;
 	long int lvalue;
-	gchar *endptr[1];
+	gchar *endptr;
 
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  (GDA_VALUE_HOLDS_SHORT (dest) || GDA_VALUE_HOLDS_USHORT (dest)));
@@ -1776,7 +1779,7 @@ string_to_short(const GValue *src, GValue *dest)
 	
 	lvalue = strtol (as_string, &endptr, 10);
 	
-	if (*as_string != '\0' && **endptr == '\0') {
+	if (*as_string != '\0' && *endptr == '\0') {
 		if (GDA_VALUE_HOLDS_SHORT (dest))
 			gda_value_set_short (dest, (gshort) lvalue);
 		else

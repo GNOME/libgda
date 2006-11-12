@@ -64,13 +64,14 @@ static GList *gda_ibmdb2_provider_execute_command (GdaServerProvider *provider,
                                                    GdaParameterList *params);
 static gboolean gda_ibmdb2_provider_begin_transaction (GdaServerProvider *provider,
                                                        GdaConnection *cnc,
-                                                       GdaTransaction *xaction);
+                                                       const gchar *name, GdaTransactionIsolation level,
+							GError **error);
 static gboolean gda_ibmdb2_provider_commit_transaction (GdaServerProvider *provider,
                                                         GdaConnection *cnc,
-                                                        GdaTransaction *xaction);
+                                                        const gchar *name, GError **error);
 static gboolean gda_ibmdb2_provider_rollback_transaction (GdaServerProvider *provider,
                                                           GdaConnection *cnc,
-                                                          GdaTransaction *xaction);
+                                                          const gchar *name, GError **error);
 static gboolean gda_ibmdb2_provider_supports (GdaServerProvider *provider,
                                               GdaConnection *cnc,
                                               GdaConnectionFeature feature);
@@ -615,7 +616,8 @@ gda_ibmdb2_provider_execute_command (GdaServerProvider *provider,
 static gboolean
 gda_ibmdb2_provider_begin_transaction (GdaServerProvider *provider,
                                        GdaConnection *cnc,
-                                       GdaTransaction *xaction)
+                                       const gchar *name, GdaTransactionIsolation level,
+				       GError **error)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 	GdaIBMDB2ConnectionData *conn_data = NULL;
@@ -645,7 +647,7 @@ gda_ibmdb2_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean
 gda_ibmdb2_provider_commit_transaction (GdaServerProvider *provider,
                                         GdaConnection *cnc,
-                                        GdaTransaction *xaction)
+                                        const gchar *name, GError **error)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 	GdaIBMDB2ConnectionData *conn_data = NULL;
@@ -679,7 +681,7 @@ gda_ibmdb2_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean
 gda_ibmdb2_provider_rollback_transaction (GdaServerProvider *provider,
                                           GdaConnection *cnc,
-                                          GdaTransaction *xaction)
+                                          const gchar *name, GError **error)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 	GdaIBMDB2ConnectionData *conn_data = NULL;
@@ -1130,6 +1132,9 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 	provider_class->begin_transaction = gda_ibmdb2_provider_begin_transaction;
 	provider_class->commit_transaction = gda_ibmdb2_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_ibmdb2_provider_rollback_transaction;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;

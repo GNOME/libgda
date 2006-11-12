@@ -31,7 +31,6 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-index.h>
 #include <libgda/gda-quark-list.h>
-#include <libgda/gda-transaction.h>
 #include <libgda/gda-client.h>
 
 G_BEGIN_DECLS
@@ -72,6 +71,15 @@ struct _GdaServerProviderInfo {
 	 * to write "SELECT field..."
 	 */
 	gboolean       supports_prefixed_fields;
+
+	/* TRUE if non lower case identifiers must be surrounded by double quotes to distinguish them
+	 * with their lower case equivalent, that is TRUE if by default the non lower case identifiers
+	 * are converted into lower case.
+	 */
+	gboolean       quote_non_lc_identifiers;
+
+	/* reserved for extensions */
+	gboolean       reserved[20];
 };
 
 struct _GdaServerProvider {
@@ -157,13 +165,23 @@ struct _GdaServerProviderClass {
 	/* transactions */
 	gboolean                (* begin_transaction) (GdaServerProvider *provider,
 						       GdaConnection *cnc,
-						       GdaTransaction *xaction);
+						       const gchar *name, GdaTransactionIsolation level,
+						       GError **error);
 	gboolean                (* commit_transaction) (GdaServerProvider *provider,
 							GdaConnection *cnc,
-							GdaTransaction *xaction);
+							const gchar *name, GError **error);
 	gboolean                (* rollback_transaction) (GdaServerProvider *provider,
 							  GdaConnection *cnc,
-							  GdaTransaction *xaction);
+							  const gchar *name, GError **error);
+	gboolean                (* add_savepoint)      (GdaServerProvider *provider,
+							GdaConnection *cnc,
+							const gchar *name, GError **error);
+	gboolean                (* rollback_savepoint) (GdaServerProvider *provider,
+							GdaConnection *cnc,
+							const gchar *name, GError **error);
+	gboolean                (* delete_savepoint)   (GdaServerProvider *provider,
+							GdaConnection *cnc,
+							const gchar *name, GError **error);
 
 	/* blobs */
 	GdaBlob                *(* create_blob) (GdaServerProvider *provider,
@@ -253,13 +271,20 @@ gchar        *gda_server_provider_get_last_insert_id (GdaServerProvider *provide
 /* transactions */
 gboolean      gda_server_provider_begin_transaction    (GdaServerProvider *provider,
 							GdaConnection *cnc,
-							GdaTransaction *xaction);
+							const gchar *name, GdaTransactionIsolation level,
+							GError **error);
 gboolean      gda_server_provider_commit_transaction   (GdaServerProvider *provider,
 							GdaConnection *cnc,
-							GdaTransaction *xaction);
+							const gchar *name, GError **error);
 gboolean      gda_server_provider_rollback_transaction (GdaServerProvider *provider,
 							GdaConnection *cnc,
-							GdaTransaction *xaction);
+							const gchar *name, GError **error);
+gboolean      gda_server_provider_add_savepoint        (GdaServerProvider *provider, GdaConnection *cnc, 
+							const gchar *name, GError **error);
+gboolean      gda_server_provider_rollback_savepoint   (GdaServerProvider *provider, GdaConnection *cnc, 
+							const gchar *name, GError **error);
+gboolean      gda_server_provider_delete_savepoint     (GdaServerProvider *provider, GdaConnection *cnc, 
+							const gchar *name, GError **error);
 
 /* blobs */
 GdaBlob      *gda_server_provider_create_blob          (GdaServerProvider *provider,

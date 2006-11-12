@@ -740,111 +740,11 @@ gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc
 }
 
 /**
- * gda_client_notify_transaction_started_event
- * @client: a #GdaClient object.
- * @cnc: a #GdaConnection object.
- * @xaction: a #GdaTransaction object.
- *
- * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_STARTED
- * event.
- */
-void
-gda_client_notify_transaction_started_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
-{
-	GdaParameterList *params;
-	GdaParameter *param;
-	GValue *value;
-
-	g_return_if_fail (GDA_IS_CLIENT (client));
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
-
-	param = gda_parameter_new (G_TYPE_OBJECT);
-	gda_object_set_name (GDA_OBJECT (param), "transaction");
-	value = g_value_init (g_new0 (GValue, 1), G_TYPE_OBJECT);
-	g_value_set_object (value, G_OBJECT (xaction));
-	gda_parameter_set_value (param, value);
-	gda_value_free (value);
-
-	params = gda_parameter_list_new (NULL);
-	gda_parameter_list_add_param (params, param);
-	g_object_unref (param);
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, params);
-	g_object_unref (params);
-}
-
-/**
- * gda_client_notify_transaction_committed_event
- * @client: a #GdaClient object.
- * @cnc: a #GdaConnection object.
- * @xaction: a #GdaTransaction object.
- *
- * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_COMMITTED
- * event.
- */
-void
-gda_client_notify_transaction_committed_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
-{
-	GdaParameterList *params;
-	GdaParameter *param;
-	GValue *value;
-
-	g_return_if_fail (GDA_IS_CLIENT (client));
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
-
-	param = gda_parameter_new (G_TYPE_OBJECT);
-	gda_object_set_name (GDA_OBJECT (param), "transaction");
-	value = g_value_init (g_new0 (GValue, 1), G_TYPE_OBJECT);
-	g_value_set_object (value, G_OBJECT (xaction));
-	gda_parameter_set_value (param, value);
-	gda_value_free (value);
-
-	params = gda_parameter_list_new (NULL);
-	gda_parameter_list_add_param (params, param);
-	g_object_unref (param);
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, params);
-	g_object_unref (params);
-}
-
-/**
- * gda_client_notify_transaction_cancelled_event
- * @client: a #GdaClient object.
- * @cnc: a #GdaConnection object.
- * @xaction: a #GdaTransaction object.
- *
- * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_CANCELLED 
- * event.
- */
-void
-gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
-{
-	GdaParameterList *params;
-	GdaParameter *param;
-	GValue *value;
-
-	g_return_if_fail (GDA_IS_CLIENT (client));
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
-
-	param = gda_parameter_new (G_TYPE_OBJECT);
-	gda_object_set_name (GDA_OBJECT (param), "transaction");
-	value = g_value_init (g_new0 (GValue, 1), G_TYPE_OBJECT);
-	g_value_set_object (value, G_OBJECT (xaction));
-	gda_parameter_set_value (param, value);
-	gda_value_free (value);
-
-	params = gda_parameter_list_new (NULL);
-	gda_parameter_list_add_param (params, param);
-	g_object_unref (param);
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, params);
-	g_object_unref (params);
-}
-
-/**
  * gda_client_begin_transaction
  * @client: a #GdaClient object.
- * @xaction: a #GdaTransaction object.
+ * @name: the name of the transation to start
+ * @level:
+ * @error: a place to store errors, or %NULL
  *
  * Starts a transaction on all connections being managed by the given
  * #GdaClient. It is important to note that this operates on all
@@ -859,16 +759,16 @@ gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection 
  * or %FALSE if one of them fails.
  */
 gboolean
-gda_client_begin_transaction (GdaClient *client, GdaTransaction *xaction)
+gda_client_begin_transaction (GdaClient *client, const gchar *name, GdaTransactionIsolation level,
+			      GError **error)
 {
 	GList *l;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	for (l = client->priv->connections; l != NULL; l = l->next) {
-		if (!gda_connection_begin_transaction (GDA_CONNECTION (l->data), xaction)) {
-			gda_client_rollback_transaction (client, xaction);
+		if (!gda_connection_begin_transaction (GDA_CONNECTION (l->data), name, level, error)) {
+			gda_client_rollback_transaction (client, name, NULL);
 			return FALSE;
 		}
 	}
@@ -879,7 +779,8 @@ gda_client_begin_transaction (GdaClient *client, GdaTransaction *xaction)
 /**
  * gda_client_commit_transaction
  * @client: a #GdaClient object.
- * @xaction: a #GdaTransaction object.
+ * @name: the name of the transation to commit
+ * @error: a place to store errors, or %NULL
  *
  * Commits a running transaction on all connections being managed by the given
  * #GdaClient. It is important to note that this operates on all
@@ -894,16 +795,15 @@ gda_client_begin_transaction (GdaClient *client, GdaTransaction *xaction)
  * or %FALSE if one of them fails.
  */
 gboolean
-gda_client_commit_transaction (GdaClient *client, GdaTransaction *xaction)
+gda_client_commit_transaction (GdaClient *client, const gchar *name, GError **error)
 {
 	GList *l;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	for (l = client->priv->connections; l != NULL; l = l->next) {
-		if (!gda_connection_commit_transaction (GDA_CONNECTION (l->data), xaction)) {
-			gda_client_rollback_transaction (client, xaction);
+		if (!gda_connection_commit_transaction (GDA_CONNECTION (l->data), name, error)) {
+			gda_client_rollback_transaction (client, name, NULL);
 			return FALSE;
 		}
 	}
@@ -914,7 +814,8 @@ gda_client_commit_transaction (GdaClient *client, GdaTransaction *xaction)
 /**
  * gda_client_rollback_transaction
  * @client: a #GdaClient object.
- * @xaction: a #GdaTransaction object.
+ * @name: the name of the transation to rollback
+ * @error: a place to store errors, or %NULL
  *
  * Cancels a running transaction on all connections being managed by the given
  * #GdaClient. It is important to note that this operates on all
@@ -929,16 +830,15 @@ gda_client_commit_transaction (GdaClient *client, GdaTransaction *xaction)
  * or %FALSE if one of them fails.
  */
 gboolean
-gda_client_rollback_transaction (GdaClient *client, GdaTransaction *xaction)
+gda_client_rollback_transaction (GdaClient *client, const gchar *name, GError **error)
 {
 	GList *l;
 	gint failures = 0;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	for (l = client->priv->connections; l != NULL; l = l->next) {
-		if (!gda_connection_rollback_transaction (GDA_CONNECTION (l->data), xaction))
+		if (!gda_connection_rollback_transaction (GDA_CONNECTION (l->data), name, error))
 			failures++;
 	}
 

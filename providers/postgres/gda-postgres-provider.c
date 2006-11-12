@@ -86,15 +86,16 @@ static gchar *gda_postgres_provider_get_last_insert_id (GdaServerProvider *provi
 
 static gboolean gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 							 GdaConnection *cnc,
-							 GdaTransaction *xaction);
+							 const gchar *name, GdaTransactionIsolation level,
+							 GError **error);
 
 static gboolean gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
 							  GdaConnection *cnc,
-							  GdaTransaction *xaction);
+							  const gchar *name, GError **error);
 
 static gboolean gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 							    GdaConnection *cnc,
-							    GdaTransaction *xaction);
+							    const gchar *name, GError **error);
 
 static gboolean gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 						      GdaConnection *cnc,
@@ -184,6 +185,9 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
 	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = gda_postgres_provider_create_blob;
 	provider_class->fetch_blob = gda_postgres_provider_fetch_blob;
@@ -1049,7 +1053,8 @@ gda_postgres_provider_get_last_insert_id (GdaServerProvider *provider,
 static gboolean 
 gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 				         GdaConnection *cnc,
-					 GdaTransaction *xaction)
+					 const gchar *name, GdaTransactionIsolation level,
+					 GError **error)
 {
         gboolean result;
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
@@ -1060,7 +1065,6 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (priv_data->version_float >= 6.5){
@@ -1073,7 +1077,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 				return FALSE;
 			}
 		}
-		switch (gda_transaction_get_isolation_level (xaction)) {
+		switch (level) {
 		case GDA_TRANSACTION_ISOLATION_READ_COMMITTED :
 		        isolation_level = g_strconcat ("SET TRANSACTION ISOLATION LEVEL READ COMMITTED ", write_option, NULL);
 		        break;
@@ -1103,7 +1107,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean 
 gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
 					  GdaConnection *cnc,
-					  GdaTransaction *xaction)
+					  const gchar *name, GError **error)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
@@ -1116,7 +1120,7 @@ gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean 
 gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 					    GdaConnection *cnc,
-					    GdaTransaction *xaction)
+					    const gchar *name, GError **error)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
@@ -1205,6 +1209,7 @@ gda_postgres_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
 	static GdaServerProviderInfo info = {
 		"PostgreSQL",
 		TRUE, 
+		TRUE,
 		TRUE,
 		TRUE,
 		TRUE,

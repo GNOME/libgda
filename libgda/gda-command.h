@@ -1,8 +1,9 @@
 /* GDA Common Library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,12 +21,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_command_h__)
-#  define __gda_command_h__
+#ifndef __GDA_COMMAND_H__
+#define __GDA_COMMAND_H__
 
+#include <glib-object.h>
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
-#include <libgda/gda-transaction.h>
 
 G_BEGIN_DECLS
 
@@ -49,10 +50,9 @@ typedef enum {
 typedef struct _GdaCommand GdaCommand;
 
 struct _GdaCommand {
-	gchar *text;
-	GdaCommandType type;
-	GdaCommandOptions options;
-	GdaTransaction *xaction;
+	gchar             *text;
+	GdaCommandType     type;
+	GdaCommandOptions  options;
 };
 
 #define GDA_TYPE_COMMAND (gda_command_get_type ())
@@ -69,8 +69,6 @@ GdaCommandType    gda_command_get_command_type (GdaCommand *cmd);
 void              gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type);
 GdaCommandOptions gda_command_get_options (GdaCommand *cmd);
 void              gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options);
-GdaTransaction   *gda_command_get_transaction (GdaCommand *cmd);
-void              gda_command_set_transaction (GdaCommand *cmd, GdaTransaction *xaction);
 
 G_END_DECLS
 

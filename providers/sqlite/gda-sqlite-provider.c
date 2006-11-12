@@ -41,6 +41,7 @@
 #include <libgda/handlers/gda-handler-time.h>
 #include <libgda/handlers/gda-handler-string.h>
 #include <libgda/handlers/gda-handler-type.h>
+#include <libgda/gda-connection-private.h>
 
 #define FILE_EXTENSION ".db"
 
@@ -83,13 +84,14 @@ static GList *gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 
 static gboolean gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 						       GdaConnection *cnc,
-						       GdaTransaction *xaction);
+						       const gchar *name, GdaTransactionIsolation level,
+						       GError **error);
 static gboolean gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
 							GdaConnection *cnc,
-							GdaTransaction *xaction);
+							const gchar *name, GError **error);
 static gboolean gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 							  GdaConnection * cnc,
-							  GdaTransaction *xaction);
+							  const gchar *name, GError **error);
 
 static gboolean gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 						    GdaConnection *cnc,
@@ -163,6 +165,9 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->begin_transaction = gda_sqlite_provider_begin_transaction;
 	provider_class->commit_transaction = gda_sqlite_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_sqlite_provider_rollback_transaction;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;
@@ -444,13 +449,17 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	arr = sql_split (sql);
 	if (arr) {
 		gint n = 0;
+		gboolean allok = TRUE;
 
-		while (arr[n]) {
+		while (arr[n] && allok) {
 			SQLITEresult *sres;
 			GdaDataModel *recset;
 			gint status;
 			const char *left;
+			gchar *copy;
+			GdaConnectionEvent *error = NULL;
 
+			copy = g_strdup (arr[n]);
 			sres = g_new0 (SQLITEresult, 1);
 
 			status = sqlite3_prepare (scnc->connection, arr [n], -1, &(sres->stmt), &left);
@@ -481,12 +490,11 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					status = sqlite3_step (sres->stmt);
 					changes = sqlite3_changes (scnc->connection);
 					if (status != SQLITE_DONE) {
-						GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+						error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 						gda_connection_event_set_description (error, sqlite3_errmsg (scnc->connection));
 						gda_connection_add_event (cnc, error);
-						gda_sqlite_free_result (sres);
 						reclist = g_list_append (reclist, NULL);
-						break;
+						allok = FALSE;
 					}
 					else {
 						/* don't return a data model */
@@ -499,39 +507,44 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					gda_sqlite_free_result (sres);
 
 					/* generate a notice about changes */
-					
-					event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
-					ptr = tststr;
-					while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
-					       (*ptr != '\n'))
-						ptr++;
-					*ptr = 0;
-					tmp = g_ascii_strup (tststr, -1);
-					if (!strcmp (tmp, "DELETE"))
-						str = g_strdup_printf ("%s %d (see SQLite documentation for a \"DELETE * FROM table\" query)", 
-								       tmp, changes);
-					else {
-						if (!strcmp (tmp, "INSERT"))
-							str = g_strdup_printf ("%s %lld %d", tmp, 
-									       sqlite3_last_insert_rowid (scnc->connection),
-									       changes);
-						else
-							str = g_strdup_printf ("%s %d", tmp, changes);
+					if (allok) {
+						event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+						ptr = tststr;
+						while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
+						       (*ptr != '\n'))
+							ptr++;
+						*ptr = 0;
+						tmp = g_ascii_strup (tststr, -1);
+						if (!strncmp (tmp, "DELETE", 6))
+							str = g_strdup_printf ("%s %d (see SQLite documentation for a \"DELETE * FROM table\" query)", 
+									       tmp, changes);
+						else {
+							if (!strncmp (tmp, "INSERT", 6))
+								str = g_strdup_printf ("%s %lld %d", tmp, 
+										       sqlite3_last_insert_rowid (scnc->connection),
+										       changes);
+							else
+								str = g_strdup_printf ("%s %d", tmp, changes);
+						}
+						
+						
+						gda_connection_event_set_description (event, str);
+						g_free (str);
+						gda_connection_add_event (cnc, event);
 					}
-					gda_connection_event_set_description (event, str);
-					g_free (str);
-					gda_connection_add_event (cnc, event);
 				}
 			} 
 			else {
-				GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+				error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (error, sqlite3_errmsg (scnc->connection));
 				gda_connection_add_event (cnc, error);
 				gda_sqlite_free_result (sres);
 				reclist = g_list_append (reclist, NULL);
-				break;
+				allok = FALSE;
 			}
 
+			gda_connection_internal_treat_sql (cnc, copy, error);
+			g_free (copy);
 			n++;
 		}
 
@@ -846,23 +859,21 @@ gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 static gboolean
 gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
-				       GdaTransaction *xaction)
+				       const gchar *name, GdaTransactionIsolation level,
+				       GError **error)
 {
 	gboolean status;
 	gchar *sql;
-	const gchar *name;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
 		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 
-	name = gda_transaction_get_name (xaction);
 	if (name)
 		sql = g_strdup_printf ("BEGIN TRANSACTION %s", name);
 	else
@@ -877,18 +888,15 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean
 gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
 					GdaConnection *cnc,
-					GdaTransaction *xaction)
+					const gchar *name, GError **error)
 {
 	gboolean status;
 	gchar *sql;
-	const gchar *name;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
-	name = gda_transaction_get_name (xaction);
 	if (name)
 		sql = g_strdup_printf ("COMMIT TRANSACTION %s", name);
 	else
@@ -903,18 +911,15 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean
 gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 					  GdaConnection *cnc,
-					  GdaTransaction *xaction)
+					  const gchar *name, GError **error)
 {
 	gboolean status;
 	gchar *sql;
-	const gchar *name;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
-	name = gda_transaction_get_name (xaction);
 	if (name)
 		sql = g_strdup_printf ("ROLLBACK TRANSACTION %s", name);
 	else
@@ -989,6 +994,7 @@ gda_sqlite_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
 	static GdaServerProviderInfo info = {
 		"SQLite",
 		TRUE, 
+		TRUE,
 		TRUE,
 		TRUE,
 		TRUE,

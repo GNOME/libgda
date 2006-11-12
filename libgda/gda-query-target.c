@@ -879,6 +879,14 @@ gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, g
 	GdaQueryTarget *target;
 	GdaEntity *entity;
 	gboolean err = FALSE;
+	GdaServerProviderInfo *sinfo = NULL;
+	GdaDict *dict;
+	GdaConnection *cnc;
+	
+	dict = gda_object_get_dict (GDA_OBJECT (iface));
+	cnc = gda_dict_get_connection (dict);
+	if (cnc)
+		sinfo = gda_connection_get_infos (cnc);
 
 	g_return_val_if_fail (GDA_IS_QUERY_TARGET (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_TARGET (iface)->priv, NULL);
@@ -887,19 +895,19 @@ gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, g
 	entity = gda_query_target_get_represented_entity (target);
 	if (entity) {
 		if (GDA_IS_DICT_TABLE (entity)) {
-			gchar *tmp, *tname;
+			gchar *tmp = NULL, *tname;
 
 			tname = (gchar *) gda_object_get_name (GDA_OBJECT (entity));
-			tmp = g_utf8_strdown (tname, -1);
-			if (((*tmp <= '9') && (*tmp >= '0')) || 
-			    strcmp (tmp, tname)) {
-				g_free (tmp);
-				tmp = tname;
-				tname = g_strdup_printf ("\"%s\"", tmp);
+			if (!sinfo || sinfo->quote_non_lc_identifiers) {
+				tmp = g_utf8_strdown (tname, -1);
+				if (((*tmp <= '9') && (*tmp >= '0')) || strcmp (tmp, tname)) {
+					g_free (tmp);
+					tname = g_strdup_printf ("\"%s\"", tname);
+					tmp = tname;
+				}
 			}
-			else
-				g_free (tmp);
-			string = g_string_new (tname);
+			string = g_string_new (tname);			
+			g_free (tmp);
 		}
 		
 		if (GDA_IS_QUERY (entity)) {
@@ -928,16 +936,7 @@ gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, g
 	}
 
 	if (!err) {
-		/* adding alias */
-		GdaServerProviderInfo *sinfo = NULL;
-		GdaDict *dict;
-		GdaConnection *cnc;
-		
-		dict = gda_object_get_dict (GDA_OBJECT (target));
-		cnc = gda_dict_get_connection (dict);
-		if (cnc)
-			sinfo = gda_connection_get_infos (cnc);
-	
+		/* adding alias */	
 		if (!sinfo || sinfo->supports_alias) {
 			if (!sinfo || sinfo->alias_needs_as_keyword)
 				g_string_append (string, " AS ");

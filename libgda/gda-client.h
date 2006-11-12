@@ -104,15 +104,6 @@ void           gda_client_notify_event                       (GdaClient *client,
 void           gda_client_notify_error_event                 (GdaClient *client, GdaConnection *cnc, GdaConnectionEvent *error);
 void           gda_client_notify_connection_opened_event     (GdaClient *client, GdaConnection *cnc);
 void           gda_client_notify_connection_closed_event     (GdaClient *client, GdaConnection *cnc);
-void           gda_client_notify_transaction_started_event   (GdaClient *client,
-							      GdaConnection *cnc,
-							      GdaTransaction *xaction);
-void           gda_client_notify_transaction_committed_event (GdaClient *client,
-							      GdaConnection *cnc,
-							      GdaTransaction *xaction);
-void           gda_client_notify_transaction_cancelled_event (GdaClient *client,
-							      GdaConnection *cnc,
-							      GdaTransaction *xaction);
 
 /*
  * General provider information
@@ -133,9 +124,10 @@ gboolean       gda_client_perform_drop_database              (GdaClient *client,
  * Connection stack functions
  */
 
-gboolean       gda_client_begin_transaction                  (GdaClient *client, GdaTransaction *xaction);
-gboolean       gda_client_commit_transaction                 (GdaClient *client, GdaTransaction *xaction);
-gboolean       gda_client_rollback_transaction               (GdaClient *client, GdaTransaction *xaction);
+gboolean       gda_client_begin_transaction                  (GdaClient *client, const gchar *name, GdaTransactionIsolation level,
+							      GError **error);
+gboolean       gda_client_commit_transaction                 (GdaClient *client, const gchar *name, GError **error);
+gboolean       gda_client_rollback_transaction               (GdaClient *client, const gchar *name, GError **error);
 
 
 

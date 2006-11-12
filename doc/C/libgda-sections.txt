@@ -36,9 +36,6 @@ gda_client_notify_event
 gda_client_notify_error_event
 gda_client_notify_connection_opened_event
 gda_client_notify_connection_closed_event
-gda_client_notify_transaction_started_event
-gda_client_notify_transaction_committed_event
-gda_client_notify_transaction_cancelled_event
 gda_client_begin_transaction
 gda_client_commit_transaction
 gda_client_rollback_transaction
@@ -145,8 +142,6 @@ gda_command_get_command_type
 gda_command_set_command_type
 gda_command_get_options
 gda_command_set_options
-gda_command_get_transaction
-gda_command_set_transaction
 <SUBSECTION Standard>
 GDA_COMMAND_DEFAULT_OPTION
 GDA_TYPE_COMMAND
@@ -284,6 +279,10 @@ gda_connection_get_last_insert_id
 gda_connection_begin_transaction
 gda_connection_commit_transaction
 gda_connection_rollback_transaction
+gda_connection_add_savepoint
+gda_connection_rollback_savepoint
+gda_connection_delete_savepoint
+gda_connection_get_transaction_status
 gda_connection_supports_feature
 gda_connection_get_schema
 gda_connection_create_blob
@@ -726,6 +725,9 @@ gda_server_provider_get_last_insert_id
 gda_server_provider_begin_transaction
 gda_server_provider_commit_transaction
 gda_server_provider_rollback_transaction
+gda_server_provider_add_savepoint
+gda_server_provider_rollback_savepoint
+gda_server_provider_delete_savepoint
 gda_server_provider_supports_feature
 gda_server_provider_get_schema
 gda_server_provider_create_blob
@@ -760,22 +762,18 @@ gda_threader_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gda-transaction</FILE>
-<TITLE>GdaTransaction</TITLE>
-GdaTransaction
+<FILE>gda-transaction-status</FILE>
+<TITLE>GdaTransactionStatus</TITLE>
+GdaTransactionStatus
 GdaTransactionIsolation
-gda_transaction_new
-gda_transaction_get_isolation_level
-gda_transaction_set_isolation_level
-gda_transaction_get_name
-gda_transaction_set_name
+gda_transaction_status_new
 <SUBSECTION Standard>
 GDA_IS_TRANSACTION
 GDA_IS_TRANSACTION_CLASS
 GDA_TRANSACTION
 GDA_TRANSACTION_CLASS
 GDA_TYPE_TRANSACTION
-gda_transaction_get_type
+gda_transaction__status_get_type
 </SECTION>
 
 <SECTION>

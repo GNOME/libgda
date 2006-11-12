@@ -29,6 +29,10 @@ typedef struct _GdaConnection        GdaConnection;
 typedef struct _GdaConnectionClass   GdaConnectionClass;
 typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
 
+typedef struct _GdaConnectionEvent        GdaConnectionEvent;
+typedef struct _GdaConnectionEventClass   GdaConnectionEventClass;
+typedef struct _GdaConnectionEventPrivate GdaConnectionEventPrivate;
+
 typedef struct _GdaDataHandler      GdaDataHandler;
 typedef struct _GdaDataHandlerIface GdaDataHandlerIface;
 

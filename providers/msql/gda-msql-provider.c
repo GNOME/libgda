@@ -59,15 +59,6 @@ static GList *gda_msql_provider_execute_command(GdaServerProvider*,
                                                 GdaConnection*,
                                                 GdaCommand*,
                                                 GdaParameterList*);
-static gboolean gda_msql_provider_begin_transaction(GdaServerProvider*,
-                                                    GdaConnection*,
-                                                    GdaTransaction*);
-static gboolean gda_msql_provider_commit_transaction(GdaServerProvider*,
-                                                     GdaConnection*,
-                                                     GdaTransaction*);
-static gboolean gda_msql_provider_rollback_transaction(GdaServerProvider*,
-                                                       GdaConnection*,
-                                                       GdaTransaction*);
 static gboolean gda_msql_provider_supports(GdaServerProvider*,
                                            GdaConnection*,
                                            GdaConnectionFeature);
@@ -113,9 +104,12 @@ static void gda_msql_provider_class_init(GdaMsqlProviderClass *cl)
 	provider_class->execute_command = gda_msql_provider_execute_command;
 	provider_class->get_last_insert_id = NULL;
 
-	provider_class->begin_transaction = gda_msql_provider_begin_transaction;
-	provider_class->commit_transaction = gda_msql_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_msql_provider_rollback_transaction;
+	provider_class->begin_transaction = NULL;
+	provider_class->commit_transaction = NULL;
+	provider_class->rollback_transaction = NULL;
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
 	
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;	
@@ -372,48 +366,6 @@ gda_msql_provider_execute_command(GdaServerProvider *p,
 	default:;
 	}
 	return rl;
-}
-
-static gboolean 
-gda_msql_provider_begin_transaction(GdaServerProvider *p,
-                                    GdaConnection *cnc,
-                                    GdaTransaction *xaction)
-{
-	GdaMsqlProvider *mp=(GdaMsqlProvider*)p;
-
-	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
-	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_event_string(cnc,
-					_("mSQL doesn't support transactions."));
-	return FALSE;
-}
-
-static gboolean 
-gda_msql_provider_commit_transaction(GdaServerProvider *p,
-                                     GdaConnection *cnc,
-                                     GdaTransaction *xaction)
-{
-	GdaMsqlProvider *mp=(GdaMsqlProvider*)p;
-
-	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
-	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_event_string(cnc,
-					_("mSQL doesn't support transactions."));
-	return FALSE;
-}
-
-static gboolean 
-gda_msql_provider_rollback_transaction(GdaServerProvider *p,
-                                       GdaConnection *cnc,
-                                       GdaTransaction *xaction)
-{
-	GdaMsqlProvider *mp=(GdaMsqlProvider*)p;
-
-	if (!GDA_IS_MSQL_PROVIDER(mp)) return FALSE;
-	if (!GDA_IS_CONNECTION(cnc)) return FALSE;
-	gda_connection_add_event_string(cnc,
-					_("mSQL doesn't support transactions."));
-	return FALSE;
 }
 
 static gboolean 

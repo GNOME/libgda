@@ -1,5 +1,5 @@
 /* GDA server library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -22,10 +22,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_connection_event_h__)
-#  define __gda_connection_event_h__
+#ifndef __GDA_CONNECTION_EVENT_H__
+#define __GDA_CONNECTION_EVENT_H__
 
 #include <glib-object.h>
+#include <libgda/gda-decl.h>
 
 G_BEGIN_DECLS
 
@@ -34,10 +35,6 @@ G_BEGIN_DECLS
 #define GDA_CONNECTION_EVENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION_EVENT, GdaConnectionEventClass))
 #define GDA_IS_CONNECTION_EVENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION_EVENT))
 #define GDA_IS_CONNECTION_EVENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION_EVENT))
-
-typedef struct _GdaConnectionEvent        GdaConnectionEvent;
-typedef struct _GdaConnectionEventClass   GdaConnectionEventClass;
-typedef struct _GdaConnectionEventPrivate GdaConnectionEventPrivate;
 
 struct _GdaConnectionEvent {
 	GObject object;

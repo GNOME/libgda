@@ -175,43 +175,15 @@ or destroy a database.
 @cnc: 
 
 
-<!-- ##### FUNCTION gda_client_notify_transaction_started_event ##### -->
-<para>
-
-</para>
-
-@client: 
-@cnc: 
-@xaction: 
-
-
-<!-- ##### FUNCTION gda_client_notify_transaction_committed_event ##### -->
-<para>
-
-</para>
-
-@client: 
-@cnc: 
-@xaction: 
-
-
-<!-- ##### FUNCTION gda_client_notify_transaction_cancelled_event ##### -->
-<para>
-
-</para>
-
-@client: 
-@cnc: 
-@xaction: 
-
-
 <!-- ##### FUNCTION gda_client_begin_transaction ##### -->
 <para>
 
 </para>
 
 @client: 
-@xaction: 
+@name: 
+@level: 
+@error: 
 @Returns: 
 
 
@@ -221,7 +193,8 @@ or destroy a database.
 </para>
 
 @client: 
-@xaction: 
+@name: 
+@error: 
 @Returns: 
 
 
@@ -231,7 +204,8 @@ or destroy a database.
 </para>
 
 @client: 
-@xaction: 
+@name: 
+@error: 
 @Returns: 
 
 

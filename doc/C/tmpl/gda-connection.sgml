@@ -123,6 +123,7 @@ Management of connections to data sources
 @GDA_CONNECTION_FEATURE_SEQUENCES: 
 @GDA_CONNECTION_FEATURE_SQL: 
 @GDA_CONNECTION_FEATURE_TRANSACTIONS: 
+@GDA_CONNECTION_FEATURE_SAVEPOINTS: 
 @GDA_CONNECTION_FEATURE_TRIGGERS: 
 @GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR: 
 @GDA_CONNECTION_FEATURE_USERS: 
@@ -436,7 +437,9 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@xaction: 
+@name: 
+@level: 
+@error: 
 @Returns: 
 
 
@@ -446,7 +449,8 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@xaction: 
+@name: 
+@error: 
 @Returns: 
 
 
@@ -456,7 +460,50 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@xaction: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_add_savepoint ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_rollback_savepoint ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_delete_savepoint ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_transaction_status ##### -->
+<para>
+
+</para>
+
+@cnc: 
 @Returns: 
 
 

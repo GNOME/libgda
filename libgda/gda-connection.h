@@ -33,7 +33,7 @@
 #include <libgda/gda-data-model-index.h>
 #include <libgda/gda-connection-event.h>
 #include <libgda/gda-parameter.h>
-#include <libgda/gda-transaction.h>
+#include <libgda/gda-transaction-status.h>
 
 G_BEGIN_DECLS
 
@@ -88,6 +88,7 @@ typedef enum {
 	GDA_CONNECTION_FEATURE_SEQUENCES,
 	GDA_CONNECTION_FEATURE_SQL,
 	GDA_CONNECTION_FEATURE_TRANSACTIONS,
+	GDA_CONNECTION_FEATURE_SAVEPOINTS,
 	GDA_CONNECTION_FEATURE_TRIGGERS,
 	GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR,
 	GDA_CONNECTION_FEATURE_USERS,
@@ -160,9 +161,16 @@ GList               *gda_connection_execute_command      (GdaConnection *cnc, Gd
 							  GdaParameterList *params, GError **error);
 gchar               *gda_connection_get_last_insert_id   (GdaConnection *cnc, GdaDataModel *recset);
 
-gboolean             gda_connection_begin_transaction    (GdaConnection *cnc, GdaTransaction *xaction);
-gboolean             gda_connection_commit_transaction   (GdaConnection *cnc, GdaTransaction *xaction);
-gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction);
+gboolean             gda_connection_begin_transaction    (GdaConnection *cnc, const gchar *name, 
+							  GdaTransactionIsolation level, GError **error);
+gboolean             gda_connection_commit_transaction   (GdaConnection *cnc, const gchar *name, GError **error);
+gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *name, GError **error);
+
+gboolean             gda_connection_add_savepoint        (GdaConnection *cnc, const gchar *name, GError **error);
+gboolean             gda_connection_rollback_savepoint   (GdaConnection *cnc, const gchar *name, GError **error);
+gboolean             gda_connection_delete_savepoint     (GdaConnection *cnc, const gchar *name, GError **error);
+
+GdaTransactionStatus *gda_connection_get_transaction_status (GdaConnection *cnc);
 
 GdaBlob             *gda_connection_create_blob          (GdaConnection *cnc);
 GdaBlob             *gda_connection_fetch_blob_by_id     (GdaConnection *cnc, const gchar *sql_id);

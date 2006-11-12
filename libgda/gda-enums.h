@@ -21,6 +21,15 @@
 #ifndef __GDA_ENUMS__
 #define __GDA_ENUMS__
 
+/* Isolation state of a transaction */
+typedef enum {
+	GDA_TRANSACTION_ISOLATION_UNKNOWN,
+	GDA_TRANSACTION_ISOLATION_READ_COMMITTED,
+	GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED,
+	GDA_TRANSACTION_ISOLATION_REPEATABLE_READ,
+	GDA_TRANSACTION_ISOLATION_SERIALIZABLE
+} GdaTransactionIsolation;
+
 /* status of a value */
 typedef enum  {
         GDA_VALUE_ATTR_IS_NULL        = 1 << 0,

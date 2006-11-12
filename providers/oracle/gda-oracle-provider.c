@@ -41,6 +41,7 @@
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 #define OBJECT_DATA_ORACLE_HANDLE "GDA_Oracle_OracleHandle"
+#define OBJECT_TRANS_ORACLE_HANDLE "GDA_Oracle_OracleTrans"
 
 static void gda_oracle_provider_class_init (GdaOracleProviderClass *klass);
 static void gda_oracle_provider_init       (GdaOracleProvider *provider,
@@ -74,13 +75,14 @@ static GList *gda_oracle_provider_execute_command (GdaServerProvider *provider,
 						   GdaParameterList *params);
 static gboolean gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 						       GdaConnection *cnc,
-						       GdaTransaction *xaction);
+						       const gchar *name, GdaTransactionIsolation level,
+						       GError **error);
 static gboolean gda_oracle_provider_commit_transaction (GdaServerProvider *provider,
 							GdaConnection *cnc,
-							GdaTransaction *xaction);
+							const gchar *name, GError **error);
 static gboolean gda_oracle_provider_rollback_transaction (GdaServerProvider *provider,
 							  GdaConnection *cnc,
-							  GdaTransaction *xaction);
+							  const gchar *name, GError **error);
 static gboolean gda_oracle_provider_supports (GdaServerProvider *provider,
 					      GdaConnection *cnc,
 					      GdaConnectionFeature feature);
@@ -146,7 +148,10 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	provider_class->begin_transaction = gda_oracle_provider_begin_transaction;
 	provider_class->commit_transaction = gda_oracle_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_oracle_provider_rollback_transaction;
-	
+	provider_class->add_savepoint = NULL;
+	provider_class->rollback_savepoint = NULL;
+	provider_class->delete_savepoint = NULL;
+
 	provider_class->create_blob = NULL;
 	provider_class->fetch_blob = NULL;
 }
@@ -921,7 +926,6 @@ gda_oracle_provider_execute_command (GdaServerProvider *provider,
 	gint result;
 
 	GdaCommandOptions options;
-	GdaTransaction *xaction;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -934,21 +938,17 @@ gda_oracle_provider_execute_command (GdaServerProvider *provider,
 	}
 
 	options = gda_command_get_options (cmd);
-	xaction = gda_command_get_transaction (cmd);
 
-	if (xaction != NULL) {
-		GdaOracleTransaction *ora_xaction = g_object_get_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE);
-		/* attach a transaction */
-		result = OCIAttrSet ((dvoid *) priv_data->hservice,
-				     OCI_HTYPE_SVCCTX,
-				     (dvoid *) ora_xaction->txnhp,
-				     0,
-				     OCI_ATTR_TRANS,
-				     priv_data->herr);
-		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
-					      _("Could not attach the transaction to the service context")))
-			return NULL;
-	}
+	GdaOracleTransaction *ora_xaction = g_object_get_data (G_OBJECT (cnc), OBJECT_TRANS_ORACLE_HANDLE);
+	/* attach a transaction */
+	result = OCIAttrSet ((dvoid *) priv_data->hservice,
+			     OCI_HTYPE_SVCCTX,
+			     (dvoid *) ora_xaction->txnhp,
+			     0,
+			     OCI_ATTR_TRANS,
+			     priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+				      _("Could not attach the transaction to the service context")))
 
 	switch (gda_command_get_command_type (cmd)) {
 	case GDA_COMMAND_TYPE_SQL:
@@ -970,17 +970,16 @@ gda_oracle_provider_execute_command (GdaServerProvider *provider,
 static gboolean
 gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
-				       GdaTransaction *xaction)
+				       const gchar *name, GdaTransactionIsolation level,
+				       GError **error)
 {
 	GdaOracleConnectionData *priv_data;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleTransaction *ora_xaction;
-	const gchar *xaction_name;
 	gint result;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (xaction != NULL, FALSE);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
@@ -1006,12 +1005,11 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 		return FALSE;
 
 	/* set the transaction name if applicable */
- 	xaction_name = gda_transaction_get_name (xaction);
-	if (xaction_name) {
+	if (name) {
 		result = OCIAttrSet ((dvoid *) ora_xaction->txnhp,
 				     OCI_HTYPE_TRANS,
-				     (text *) xaction_name,
-				     strlen (xaction_name),
+				     (text *) name,
+				     strlen (name),
 				     OCI_ATTR_TRANS_NAME,
 				     priv_data->herr);
 		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
@@ -1046,7 +1044,7 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 		return FALSE; 
 	}
 
-	g_object_set_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE, ora_xaction);
+	g_object_set_data (G_OBJECT (cnc), OBJECT_TRANS_ORACLE_HANDLE, ora_xaction);
 	return TRUE;
 }
 
@@ -1054,7 +1052,7 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean
 gda_oracle_provider_commit_transaction (GdaServerProvider *provider,
 					GdaConnection *cnc,
-					GdaTransaction *xaction)
+					const gchar *name, GError **error)
 {
 	GdaOracleConnectionData *priv_data;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
@@ -1063,10 +1061,9 @@ gda_oracle_provider_commit_transaction (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (xaction != NULL, FALSE);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
-	ora_xaction = g_object_get_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE);
+	ora_xaction = g_object_get_data (G_OBJECT (cnc), OBJECT_TRANS_ORACLE_HANDLE);
 	if (!priv_data || !ora_xaction) {
 		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
@@ -1114,7 +1111,7 @@ gda_oracle_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean
 gda_oracle_provider_rollback_transaction (GdaServerProvider *provider,
 					  GdaConnection *cnc,
-					  GdaTransaction *xaction)
+					  const gchar *name, GError **error)
 {
 	GdaOracleConnectionData *priv_data;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
@@ -1123,11 +1120,9 @@ gda_oracle_provider_rollback_transaction (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (xaction != NULL, FALSE);
-
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
-	ora_xaction = g_object_get_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE);
+	ora_xaction = g_object_get_data (G_OBJECT (cnc), OBJECT_TRANS_ORACLE_HANDLE);
 	if (!priv_data || !ora_xaction) {
 		gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
@@ -1196,6 +1191,7 @@ gda_oracle_provider_get_info (GdaServerProvider *provider, GdaConnection *cnc)
 		TRUE, 
 		TRUE,
 		FALSE,
+		TRUE,
 		TRUE,
 		TRUE
 	};

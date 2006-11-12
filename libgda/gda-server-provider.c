@@ -699,63 +699,125 @@ gda_server_provider_get_last_insert_id (GdaServerProvider *provider, GdaConnecti
  * gda_server_provider_begin_transaction
  * @provider:
  * @cnc:
- * @xaction:
+ * @name: the name of the transation to start
+ * @level:
+ * @error: a place to store errors, or %NULL
  *
  * Returns:
- * 
  */
 gboolean
 gda_server_provider_begin_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
-				       GdaTransaction *xaction)
+				       const gchar *name, GdaTransactionIsolation level,
+				       GError **error)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->begin_transaction != NULL, FALSE);
 
-	return CLASS (provider)->begin_transaction (provider, cnc, xaction);
+	return CLASS (provider)->begin_transaction (provider, cnc, name, level, error);
 }
 
 /**
  * gda_server_provider_commit_transaction
  * @provider:
  * @cnc:
- * @xaction:
+ * @name: the name of the transation to commit
+ * @error: a place to store errors, or %NULL
  *
  * Returns:
- * 
  */
 gboolean
 gda_server_provider_commit_transaction (GdaServerProvider *provider,
 					GdaConnection *cnc,
-					GdaTransaction *xaction)
+					const gchar *name, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->commit_transaction != NULL, FALSE);
 
-	return CLASS (provider)->commit_transaction (provider, cnc, xaction);
+	return CLASS (provider)->commit_transaction (provider, cnc, name, error);
 }
 
 /**
  * gda_server_provider_rollback_transaction
  * @provider:
  * @cnc:
- * @xaction:
+ * @name: the name of the transation to commit
+ * @error: a place to store errors, or %NULL
  *
  * Returns:
- * 
  */
 gboolean
 gda_server_provider_rollback_transaction (GdaServerProvider *provider,
 					  GdaConnection *cnc,
-					  GdaTransaction *xaction)
+					  const gchar *name, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->rollback_transaction != NULL, FALSE);
 
-	return CLASS (provider)->rollback_transaction (provider, cnc, xaction);
+	return CLASS (provider)->rollback_transaction (provider, cnc, name, error);
+}
+
+/**
+ * gda_server_provider_add_savepoint
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object
+ * @name: name of the savepoint to add
+ * @error: a place to store errors or %NULL
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_server_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *cnc, 
+				   const gchar *name, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (CLASS (provider)->add_savepoint != NULL, FALSE);
+
+	return CLASS (provider)->add_savepoint (provider, cnc, name, error);
+}
+
+/**
+ * gda_server_provider_rollback_savepoint
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object
+ * @name: name of the savepoint to rollback to
+ * @error: a place to store errors or %NULL
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_server_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnection *cnc, 
+					const gchar *name, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (CLASS (provider)->rollback_savepoint != NULL, FALSE);
+
+	return CLASS (provider)->rollback_savepoint (provider, cnc, name, error);
+}
+
+/**
+ * gda_server_provider_delete_savepoint
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object
+ * @name: name of the savepoint to delete
+ * @error: a place to store errors or %NULL
+ *
+ * Returns: TRUE if no error occurred
+ */
+gboolean
+gda_server_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection *cnc, 
+				      const gchar *name, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (CLASS (provider)->delete_savepoint != NULL, FALSE);
+
+	return CLASS (provider)->delete_savepoint (provider, cnc, name, error);
 }
 
 /**
