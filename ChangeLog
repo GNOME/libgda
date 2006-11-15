@@ -1,3 +1,17 @@
+2006-11-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* libgda/Makefile.am:
+	* libgda/sql-transaction/*: new simple parser to recognize transaction
+	operations SQL
+	* libgda/gda-transaction-status.[ch]:
+	* libgda/gda-connection.[ch]:
+	* providers/sqlite/gda-sqlite-provider.c: improvements in the way the
+	GdaConnection object copes with the transaction status
+	* libgda/gda-client.[ch]: the name of the provider in
+	gda_client_perform_create_database() and
+	gda_client_perform_drop_database() is not required anymore
+
 2006-11-12  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-value.c: handle timestamps that aren't fully compliant

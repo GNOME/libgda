@@ -1017,6 +1017,7 @@ libsql/Makefile
 libgda/Makefile
 libgda/handlers/Makefile
 libgda/sql-delimiter/Makefile
+libgda/sql-transaction/Makefile
 libgda/graph/Makefile
 providers/Makefile
 providers/bdb/Makefile

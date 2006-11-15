@@ -941,7 +941,8 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 	gboolean result;
 	gint status;
 	gchar *errmsg = NULL;
-	
+	GdaConnectionEvent *error = NULL;
+
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 
 	if (!scnc) {
@@ -953,13 +954,13 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 	if (status == SQLITE_OK)
 		result = TRUE;
 	else {
-		GdaConnectionEvent *error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+		error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_description (error, errmsg);
 		gda_connection_add_event (cnc, error);
-
 		result = FALSE;
 	}
 	free (errmsg);
+	gda_connection_internal_treat_sql (cnc, command, error);
 
 	return result;
 }

@@ -71,6 +71,7 @@ struct _GdaConnectionClass {
         void   (*conn_to_close)             (GdaConnection *obj);
         void   (*conn_closed)               (GdaConnection *obj);
 	void   (*dsn_changed)               (GdaConnection *obj);
+	void   (*transaction_status_changed)(GdaConnection *obj);
 };
 
 typedef enum {

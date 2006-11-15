@@ -71,6 +71,7 @@ struct _GdaTransactionStatus {
 
 struct _GdaTransactionStatusClass {
 	GObjectClass             parent_class;
+	gpointer                 reserved[10];
 };
 
 GType                 gda_transaction_status_get_type (void);

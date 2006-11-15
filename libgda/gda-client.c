@@ -331,7 +331,7 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 		return NULL;
 	}
 	
-	g_object_ref (G_OBJECT (prv->provider)); /* vivien: usefull? */
+	g_object_ref (G_OBJECT (prv->provider));
 	g_object_weak_ref (G_OBJECT (prv->provider), (GWeakNotify) provider_weak_cb, client);
 	g_hash_table_insert (client->priv->providers,
 			     g_strdup (provider),
@@ -896,10 +896,15 @@ gda_client_prepare_create_database (GdaClient *client, const gchar *provider)
 		return NULL;
 
 	prv = find_or_load_provider (client, provider);
-	if (prv && prv->provider) 
-		return gda_server_provider_create_operation (prv->provider, NULL, 
-							     GDA_SERVER_OPERATION_CREATE_DB, 
-							     NULL, NULL);
+	if (prv && prv->provider) {
+		GdaServerOperation *op;
+		op = gda_server_provider_create_operation (prv->provider, NULL, 
+							   GDA_SERVER_OPERATION_CREATE_DB, 
+							   NULL, NULL);
+		if (op)
+			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", prv->provider, g_object_unref);
+		return op;
+	}
 	else
 		return NULL;
 }
@@ -927,10 +932,15 @@ gda_client_prepare_drop_database (GdaClient *client, const gchar *provider)
 		return NULL;
 
 	prv = find_or_load_provider (client, provider);
-	if (prv && prv->provider) 
-		return gda_server_provider_create_operation (prv->provider, NULL,
-							     GDA_SERVER_OPERATION_DROP_DB, 
-							     NULL, NULL);
+	if (prv && prv->provider) {
+		GdaServerOperation *op;
+		op = gda_server_provider_create_operation (prv->provider, NULL,
+							   GDA_SERVER_OPERATION_DROP_DB, 
+							   NULL, NULL);
+		if (op)
+			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", prv->provider, g_object_unref);
+		return op;
+	}
 	else
 		return NULL;
 }
@@ -938,30 +948,29 @@ gda_client_prepare_drop_database (GdaClient *client, const gchar *provider)
 /**
  * gda_client_perform_create_database
  * @client: a #GdaClient object.
- * @provider: a provider
- * @op: a #GdaServerOperation object obtained using gda_client_prepare_server_operation()
+ * @op: a #GdaServerOperation object obtained using gda_client_prepare_create_database()
  * @error: a place to store en error, or %NULL
  *
- * Creates a new database using the specifications in @op. 
+ * Creates a new database using the specifications in @op, which must have been obtained using
+ * gda_client_prepare_create_database ()
  *
  * Returns: TRUE if no error occurred and the database has been created
  */
 gboolean
-gda_client_perform_create_database (GdaClient *client, const gchar *provider, GdaServerOperation *op,
-				    GError **error)
+gda_client_perform_create_database (GdaClient *client, GdaServerOperation *op, GError **error)
 {
-	LoadedProvider *prv;
+	GdaServerProvider *provider;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 
-	prv = find_or_load_provider (client, provider);
-	if (prv && prv->provider) 
-		return gda_server_provider_perform_operation (prv->provider, NULL, 
-							      op, error);
+	provider = g_object_get_data (G_OBJECT (op), "_gda_provider_name");
+	if (provider) 
+		return gda_server_provider_perform_operation (provider, NULL, op, error);
 	else {
 		g_set_error (error, GDA_CLIENT_ERROR, 0, 
-			     _("Could not find provider %s in the current setup"), provider); 
+			     _("Could not find operation's associated provider, "
+			       "did you use gda_client_prepare_create_database() ?")); 
 		return FALSE;
 	}
 }
@@ -969,30 +978,29 @@ gda_client_perform_create_database (GdaClient *client, const gchar *provider, Gd
 /**
  * gda_client_perform_drop_database
  * @client: a #GdaClient object.
- * @provider: a provider
- * @op: a #GdaServerOperation object obtained using gda_client_prepare_server_operation()
+ * @op: a #GdaServerOperation object obtained using gda_client_prepare_drop_database()
  * @error: a place to store en error, or %NULL
  *
- * Destroys an existing database using the specifications in @op. 
+ * Destroys an existing database using the specifications in @op,  which must have been obtained using
+ * gda_client_prepare_drop_database ()
  *
  * Returns: TRUE if no error occurred and the database has been destroyed
  */
 gboolean
-gda_client_perform_drop_database (GdaClient *client, const gchar *provider, 
-				  GdaServerOperation *op, GError **error)
+gda_client_perform_drop_database (GdaClient *client, GdaServerOperation *op, GError **error)
 {
-	LoadedProvider *prv;
+	GdaServerProvider *provider;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 
-	prv = find_or_load_provider (client, provider);
-	if (prv && prv->provider) 
-		return gda_server_provider_perform_operation (prv->provider, NULL, 
-							      op, error);
+	provider = g_object_get_data (G_OBJECT (op), "_gda_provider_name");
+	if (provider) 
+		return gda_server_provider_perform_operation (provider, NULL, op, error);
 	else {
 		g_set_error (error, GDA_CLIENT_ERROR, GDA_CLIENT_GENERAL_ERROR, 
-			     _("Could not find provider %s in the current setup"), provider); 
+			     _("Could not find operation's associated provider, "
+			       "did you use gda_client_prepare_drop_database() ?")); 
 		return FALSE;
 	}
 }

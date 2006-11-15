@@ -240,7 +240,10 @@ gda_transaction_status_find (GdaTransactionStatus *tstatus, const gchar *str, Gd
 		*destev = NULL;
 
 	if (!str)
-		return gda_transaction_status_find_current (tstatus, destev, TRUE);
+		return gda_transaction_status_find_current (tstatus, destev, FALSE);
+
+	if (!strcmp (tstatus->name, str))
+		return tstatus;
 
 	for (evlist = tstatus->events; evlist && !trans; evlist = evlist->next) {
 		GdaTransactionStatusEvent *ev = (GdaTransactionStatusEvent *)(evlist->data);
@@ -303,6 +306,12 @@ gda_transaction_status_dump (GdaTransactionStatus *tstatus, guint offset)
 {
 	gchar *str;
 	GList *evlist;
+	gchar *levels[] = {"GDA_TRANSACTION_ISOLATION_UNKNOWN",
+			   "GDA_TRANSACTION_ISOLATION_READ_COMMITTED",
+			   "GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED",
+			   "GDA_TRANSACTION_ISOLATION_REPEATABLE_READ",
+			   "GDA_TRANSACTION_ISOLATION_SERIALIZABLE"};
+#define level_str(lev) ((lev < 4) ? levels[lev] : "UNKNOWN ISOLATION LEVEL")
 
 	g_return_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus));
 
@@ -310,7 +319,8 @@ gda_transaction_status_dump (GdaTransactionStatus *tstatus, guint offset)
 	memset (str, ' ', offset);
 	str [offset] = 0;
 
-	g_print ("%s" D_COL_H1 "GdaTransactionStatus: %s (%p)\n" D_COL_NOR, str, tstatus->name ? tstatus->name : "(NONAME)", tstatus);
+	g_print ("%s" D_COL_H1 "GdaTransactionStatus: %s (%s, %p)\n" D_COL_NOR, str, tstatus->name ? tstatus->name : "(NONAME)", 
+		 level_str (tstatus->isolation_level), tstatus);
 	for (evlist = tstatus->events; evlist; evlist = evlist->next) {
 		GdaTransactionStatusEvent *ev = (GdaTransactionStatusEvent *) (evlist->data);
 		switch (ev->type) {

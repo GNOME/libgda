@@ -235,7 +235,6 @@ or destroy a database.
 </para>
 
 @client: 
-@provider: 
 @op: 
 @error: 
 @Returns: 
@@ -257,7 +256,6 @@ or destroy a database.
 </para>
 
 @client: 
-@provider: 
 @op: 
 @error: 
 @Returns: 

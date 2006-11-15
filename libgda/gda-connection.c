@@ -37,6 +37,7 @@
 #include "gda-marshal.h"
 #include <libgda/gda-transaction-status-private.h>
 #include <string.h>
+#include <libgda/sql-transaction/gda-sql-transaction-parser.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
@@ -75,10 +76,11 @@ enum {
         CONN_TO_CLOSE,
         CONN_CLOSED,
 	DSN_CHANGED,
+	TRANSACTION_STATUS_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
+static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0 };
 
 /* properties */
 enum
@@ -143,6 +145,14 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaConnectionClass, dsn_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+	gda_connection_signals[TRANSACTION_STATUS_CHANGED] =
+		g_signal_new ("transaction_status_changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaConnectionClass, transaction_status_changed),
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
@@ -1578,6 +1588,14 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
 		gda_transaction_status_add_event_sub (parent, st);
 		g_object_unref (st);
 	}
+#ifdef GDA_DEBUG_signal
+        g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+        g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+        g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+
 #ifdef GDA_DEBUG
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
@@ -1602,6 +1620,13 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
 			g_object_unref (cnc->priv->trans_status);
 			cnc->priv->trans_status = NULL;
 		}
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
 	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for ROLLBACK"));
@@ -1629,6 +1654,13 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 			g_object_unref (cnc->priv->trans_status);
 			cnc->priv->trans_status = NULL;
 		}
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
 	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for COMMIT"));
@@ -1647,6 +1679,13 @@ gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql, GdaC
 		st = gda_transaction_status_find_current (cnc->priv->trans_status, NULL, FALSE);
 	if (st)
 		gda_transaction_status_add_event_sql (st, sql, error);
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
 #ifdef GDA_DEBUG
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
@@ -1659,8 +1698,16 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
 	GdaTransactionStatus *st;
 
 	st = gda_transaction_status_find (cnc->priv->trans_status, parent_trans, NULL);
-	if (st)
+	if (st) {
 		gda_transaction_status_add_event_svp (st, svp_name);
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for ADD SAVEPOINT"));
 #ifdef GDA_DEBUG
@@ -1676,8 +1723,16 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
 	GdaTransactionStatusEvent *ev = NULL;
 
 	st = gda_transaction_status_find (cnc->priv->trans_status, svp_name, &ev);
-	if (st)
+	if (st) {
 		gda_transaction_status_free_events (st, ev, TRUE);
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for ROLLBACK SAVEPOINT"));
 #ifdef GDA_DEBUG
@@ -1693,8 +1748,16 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 	GdaTransactionStatusEvent *ev = NULL;
 
 	st = gda_transaction_status_find (cnc->priv->trans_status, svp_name, &ev);
-	if (st)
+	if (st) {
 		gda_transaction_status_free_events (st, ev, FALSE);
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for REMOVE SAVEPOINT"));
 #ifdef GDA_DEBUG
@@ -1707,27 +1770,41 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 void
 gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error)
 {
-	gchar *lsql;
 	gboolean done = FALSE;
 
-	lsql = g_utf8_strup (sql, -1);
-
 	if (!error || (error && (gda_connection_event_get_event_type (error) != GDA_CONNECTION_EVENT_ERROR))) {
-		if (!strncmp (lsql, "BEGIN", 5)) {
-			gda_connection_internal_transaction_started (cnc, NULL, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN);
-			done = TRUE;
-		}
-		else if (!strncmp (lsql, "COMMIT", 6)) {
-			gda_connection_internal_transaction_committed (cnc, NULL);
-			done = TRUE;
-		}
-		else if (!strncmp (lsql, "ROLLBACK", 8)) {
-			gda_connection_internal_transaction_rolledback (cnc, NULL);
+		GdaSqlTransaction *trans;
+
+		trans = gda_sql_transaction_parse_with_error (sql, NULL);
+		if (trans) {
+			switch (trans->trans_type) {
+			case GDA_SQL_TRANSACTION_BEGIN:
+				gda_connection_internal_transaction_started (cnc, NULL, trans->trans_name, 
+									     GDA_TRANSACTION_ISOLATION_UNKNOWN);
+				break;
+			case GDA_SQL_TRANSACTION_COMMIT:
+				gda_connection_internal_transaction_committed (cnc, trans->trans_name);
+				break;
+			case GDA_SQL_TRANSACTION_ROLLBACK:
+				gda_connection_internal_transaction_rolledback (cnc, trans->trans_name);
+				break;
+			case GDA_SQL_TRANSACTION_SAVEPOINT_ADD:
+				gda_connection_internal_savepoint_added (cnc, NULL, trans->trans_name);
+				break;
+			case GDA_SQL_TRANSACTION_SAVEPOINT_REMOVE:
+				gda_connection_internal_savepoint_removed (cnc, trans->trans_name);
+				break;
+			case GDA_SQL_TRANSACTION_SAVEPOINT_ROLLBACK:
+				gda_connection_internal_savepoint_rolledback (cnc, trans->trans_name);
+				break;
+			default:
+				g_assert_not_reached ();
+			}
+			gda_sql_transaction_destroy (trans);
 			done = TRUE;
 		}
 	}
 	
 	if (!done)
 		gda_connection_internal_sql_executed (cnc, sql, error);
-	g_free (lsql);
 }

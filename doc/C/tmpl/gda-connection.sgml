@@ -66,6 +66,13 @@ Management of connections to data sources
 @gdaconnection: the object which received the signal.
 @arg1: 
 
+<!-- ##### SIGNAL GdaConnection::transaction-status-changed ##### -->
+<para>
+
+</para>
+
+@gdaconnection: the object which received the signal.
+
 <!-- ##### ARG GdaConnection:client ##### -->
 <para>
 
