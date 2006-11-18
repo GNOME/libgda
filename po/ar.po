@@ -1,0 +1,5530 @@
+# Arabic translations for PACKAGE package.
+# Copyright (C) 2006 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-17 21:15+0000\n"
+"PO-Revision-Date: 2006-11-17 22:28+0100\n"
+"Last-Translator: Djihed Afifi <djihed@gmail.com>\n"
+"Language-Team: Arabic <doc@arabeyes.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n == 0 ? 0 : n == 1 ? 1 : n == 2 ? 2 : n >= 3 && n <= 10 ? 3 : n >= 11 && n <= 99 ? 4 : 5;\n"
+"X-Poedit-Language: Arabic\n"
+
+#: ../tools/gda-inspect-dict-file.c:154
+#, fuzzy
+msgid "## SQL:\n"
+msgstr "SQL"
+
+#: ../tools/gda-inspect-dict-file.c:165
+#, fuzzy
+msgid "## information:\n"
+msgstr "معلومات %s"
+
+#: ../tools/gda-inspect-dict-file.c:151
+#, fuzzy, c-format
+msgid "########### Query \"%s\" ###########\n"
+msgstr "بحث"
+
+#: ../tools/gda-diagnose.c:1201
+#, fuzzy, c-format
+msgid "%s (init value)"
+msgstr "قيمة التحجيم"
+
+#: ../providers/sybase/gda-sybase-recordset.c:425
+#, fuzzy, c-format
+msgid "%s failed on row %d"
+msgstr "فشل عند الرّسالة %d"
+
+#: ../providers/sybase/gda-sybase-recordset.c:320
+#, fuzzy, c-format
+msgid "%s failed while processing a row result."
+msgstr "ق ٪ بينما لم التوالي نتيجة المعالجه."
+
+#: ../providers/sybase/gda-sybase-provider.c:798
+#, fuzzy, c-format
+msgid "%s returned %s"
+msgstr "أرجع الاستعلام الاستثناء %s\n"
+
+#: ../providers/sybase/gda-sybase-recordset.c:328
+#, fuzzy, c-format
+msgid "%s returned <= 0 columns."
+msgstr "عدد الأعمدة:"
+
+#: ../providers/sybase/gda-sybase-recordset.c:452
+#, fuzzy, c-format
+msgid "%s terminated with unexpected return code."
+msgstr "المائة او انهائها مع العائدين القانون."
+
+#: ../providers/sybase/gda-sybase-provider.c:908
+#: ../providers/sybase/gda-sybase-provider.c:925
+#: ../providers/sybase/gda-sybase-provider.c:936
+#, fuzzy, c-format
+msgid "%s: %s failed"
+msgstr "فشل"
+
+#: ../libgda/gda-query-field-value.c:1249
+msgid "'restrict' attribute has a wrong format"
+msgstr ""
+
+#: ../providers/sybase/utils.c:233
+#, fuzzy
+msgid ") Message: "
+msgstr "رسالة"
+
+#: ../providers/bdb/gda-bdb-provider.c:190
+#, fuzzy
+msgid "-"
+msgstr "-"
+
+#: ../providers/mdb/gda-mdb-provider.c:687
+#, fuzzy
+msgid "1-byte integers"
+msgstr "%s (%llu بايت)"
+
+#: ../providers/mdb/gda-mdb-provider.c:688
+#, fuzzy
+msgid "32-bit integers"
+msgstr "رقم صحيح موجب بسعة 32 بت"
+
+#: ../providers/mdb/gda-mdb-provider.c:689
+#, fuzzy
+msgid "64-bit integers"
+msgstr "عدد صحيح بقيمة 16 بت غير موقع"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:1
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:2
+#, fuzzy
+msgid "7bit Swedish"
+msgstr "ا-ص|سويدي (فنلندا)"
+
+#: ../libgda/gda-query-condition.c:799
+msgid "A NOT node can only have one child"
+msgstr ""
+
+#: ../providers/mdb/gda-mdb-provider.c:229
+msgid "A database FILENAME must be specified in the connection_string"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:2
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:3
+#, fuzzy
+msgid "ARMSCII-8 Armenian"
+msgstr "أرمني (ARMSCII-8)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:1
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:1
+#, fuzzy
+msgid "ASCII"
+msgstr "انجليزي (US-ASCII)"
+
+#: ../testing/gda-test-sql.c:289
+#, fuzzy
+msgid "Action"
+msgstr "حدث"
+
+#: ../testing/gda-test-sql.c:364
+#, fuzzy
+msgid "Active"
+msgstr "نشط"
+
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:1
+#, fuzzy
+msgid "Add the column after the specified column"
+msgstr "تعليم كمراجع بعد المهلة المحدّدة"
+
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:2
+msgid "Add the column as the first column of the table"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:3
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:1
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:2
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:2
+#, fuzzy
+msgid "Administrator login"
+msgstr "شاشة الدخول:"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:4
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:3
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:3
+#, fuzzy
+msgid "Administrator password"
+msgstr "جودة كلمة السر:"
+
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:3
+#, fuzzy
+msgid "After column"
+msgstr "عمود لاحق"
+
+#: ../libgda/gda-query-field-agg.c:908
+#, fuzzy, c-format
+msgid "Aggregate '%s' has no argument"
+msgstr "ليس للمضيف عنوان"
+
+#: ../libgda/gda-server-provider-extra.c:83
+#, fuzzy
+msgid "Aggregate"
+msgstr "تجمع دالات"
+
+#: ../libgda/gda-dict-reg-aggregates.c:47
+msgid "Aggregates analysis"
+msgstr ""
+
+#: ../libgda/gda-query.c:1914
+msgid "Aggregation queries may only have sub-queries, not targets."
+msgstr ""
+
+#: ../providers/freetds/gda-freetds-provider.c:259
+#: ../providers/freetds/gda-freetds-provider.c:261
+msgid "Allocating tds context failed."
+msgstr ""
+
+#: ../providers/freetds/gda-freetds-provider.c:276
+#: ../providers/freetds/gda-freetds-provider.c:278
+msgid "Allocating tds socket failed."
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:1415
+#, fuzzy, c-format
+msgid "Ambiguous field '%s'"
+msgstr "حقل ال_قيمة"
+
+#: ../libgda/gda-query-parsing.c:1450
+#, fuzzy
+msgid "Ambiguous field '*'"
+msgstr "حقل ال_قيمة"
+
+#: ../libgda/gda-query-parsing.c:923
+msgid "Ambiguous join: multiple possible foreign key constraints"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:931
+msgid "Ambiguous join: multiple possible targets to join with"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:954
+msgid "Ambiguous join: no target to join with"
+msgstr ""
+
+#: ../libgda/gda-query.c:4877
+msgid "An aggregate type (UNION, etc) of query can't have any conditions"
+msgstr ""
+
+#: ../libgda/gda-query.c:4869
+msgid "An aggregate type (UNION, etc) of query can't have any targets"
+msgstr ""
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
+msgid "An approximation of the average row length for your table"
+msgstr ""
+
+#: ../report/libgda-report/gda-report-item-detail.c:160
+#: ../report/libgda-report/gda-report-item-pagefooter.c:171
+#: ../report/libgda-report/gda-report-item-pageheader.c:160
+#: ../report/libgda-report/gda-report-item-report.c:155
+#: ../report/libgda-report/gda-report-item-reportfooter.c:172
+#: ../report/libgda-report/gda-report-item-reportheader.c:171
+#, c-format
+msgid "An element with ID %s already exists in the report"
+msgstr ""
+
+#: ../providers/sybase/utils.c:221
+#: ../providers/sybase/utils.c:460
+msgid "An error occurred when attempting to retrieve a client message"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-recordset.c:497
+msgid "An error occurred when attempting to retrieve a server message count for resultset"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-recordset.c:520
+msgid "An error occurred when attempting to retrieve a server message for recordset"
+msgstr ""
+
+#: ../providers/sybase/utils.c:331
+msgid "An error occurred when attempting to retrieve a server message"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:766
+msgid "An error occurred when attempting to test if there is a server message for resultset"
+msgstr ""
+
+#: ../libgda/gda-query.c:4768
+msgid "An insertion query can only have one sub-query"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
+#, fuzzy
+msgid "Archive"
+msgstr "_محفوظة:"
+
+#: ../libgda/gda-server-provider-extra.c:133
+#: ../providers/firebird/gda-firebird-provider.c:742
+#, fuzzy
+msgid "Args types"
+msgstr "الأنواع الأساسية"
+
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:4
+#, fuzzy
+msgid "As first column"
+msgstr "عمود لون الخلفيّة"
+
+#: ../providers/sybase/gda-sybase-types.c:154
+#: ../providers/sybase/gda-sybase-types.c:157
+msgid "Attempt setting a nonnullable field to null."
+msgstr ""
+
+#: ../providers/ldap/gda-ldap-recordset.c:283
+#: ../providers/msql/gda-msql-recordset.c:203
+#: ../providers/mysql/gda-mysql-recordset.c:431
+#: ../providers/oracle/gda-oracle-recordset.c:473
+#: ../providers/postgres/gda-postgres-recordset.c:240
+msgid "Attempt to insert a row with an invalid number of columns"
+msgstr ""
+
+#: ../libgda/gda-init.c:51
+msgid "Attempt to re-initialize GDA library. ignored."
+msgstr ""
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
+#, fuzzy
+msgid "Authentication Method"
+msgstr "طريقة NAT"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
+msgid "Authentication method to use for connecting"
+msgstr ""
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:10
+#, fuzzy
+msgid "Auto increment value"
+msgstr "قيمة التكبير المحلي"
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:5
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:8
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
+#, fuzzy
+msgid "Auto increment"
+msgstr "زيادة درجية"
+
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:1
+msgid "Automatically drop objects that depend on the column (CASCADE)"
+msgstr ""
+
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:1
+msgid "Automatically drop objects that depend on the table (CASCADE CONSTRAINTS)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:1
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+msgid "Automatically drop objects that depend on the table (CASCADE)"
+msgstr ""
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:12
+#, fuzzy
+msgid "Average row length"
+msgstr "تجاوز طول المسار"
+
+#: ../providers/bdb/bdb_specs_dsn.xml.in.h:1
+msgid "Berkeley DB database file to be used"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:13
+msgid "Berkeley DB"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:5
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:14
+#, fuzzy
+msgid "Big5 Traditional Chinese"
+msgstr "صيني تقليدي (Big5-HKSCS)"
+
+#: ../libgda/handlers/gda-handler-bin.c:118
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:115
+#, fuzzy
+msgid "Binary handler"
+msgstr "معالج الوحدات"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:6
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
+#, fuzzy
+msgid "Binary pseudo charset"
+msgstr "شبه الأنواع للمنتقي "
+
+#: ../libgda/handlers/gda-handler-bin.c:125
+#, fuzzy
+msgid "Binary representation"
+msgstr "أظهر الملفات ال_ثنائية"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:3
+#, fuzzy
+msgid "Bind Domain"
+msgstr " النّطاق:"
+
+#: ../providers/firebird/gda-firebird-blob.c:178
+#, fuzzy
+msgid "Blob already open"
+msgstr "افتح عنصر التاريخ %s"
+
+#: ../providers/firebird/gda-firebird-blob.c:274
+#, fuzzy
+msgid "Blob is closed"
+msgstr "موسع·مغلق·للبيكسبف"
+
+#: ../libgda/handlers/gda-handler-boolean.c:122
+#, fuzzy
+msgid "Boolean representation"
+msgstr "قيمة منطقية"
+
+#: ../providers/mdb/gda-mdb-provider.c:686
+#, fuzzy
+msgid "Boolean type"
+msgstr "نوع التّنبيه"
+
+#: ../libgda/handlers/gda-handler-boolean.c:116
+#, fuzzy
+msgid "Boolean values handler"
+msgstr "handler عنوان غير صالح"
+
+#: ../providers/sybase/utils.c:53
+#, c-format
+msgid ""
+"CS-Library error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+
+#. when you execute a stored procedure through openclient, this
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#: ../providers/sybase/gda-sybase-provider.c:714
+#, fuzzy
+msgid "CS_STATUS_RESULT!"
+msgstr "فشل"
+
+#: ../providers/sybase/utils.c:75
+#, c-format
+msgid ""
+"CT-Client error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+
+#: ../providers/sybase/utils.c:95
+#, c-format
+msgid ""
+"CT-Server message:\n"
+"\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
+msgstr ""
+
+#: ../providers/sybase/utils.c:70
+#, fuzzy
+msgid "Call: Client callback."
+msgstr "شهادة عميل SSL"
+
+#: ../providers/sybase/utils.c:48
+#, fuzzy
+msgid "Call: csmsg callback"
+msgstr "وضع المكالمة الواردة"
+
+#: ../providers/sybase/utils.c:90
+#, fuzzy
+msgid "Call: server callback"
+msgstr "مسح نادل STUN"
+
+#: ../providers/mysql/gda-mysql-recordset.c:513
+msgid "Can not append row to data model"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-recordset.c:668
+#: ../providers/mysql/gda-mysql-recordset.c:670
+msgid "Can not remove row from data model"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-recordset.c:446
+#: ../providers/mysql/gda-mysql-recordset.c:452
+#: ../providers/mysql/gda-mysql-recordset.c:578
+#: ../providers/mysql/gda-mysql-recordset.c:580
+#: ../providers/mysql/gda-mysql-recordset.c:586
+msgid "Can not synchronize array with MySQL result set"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1048
+msgid "Can't allocate memory for XML structure."
+msgstr ""
+
+#: ../libgda/gda-data-model-query.c:836
+msgid "Can't compute the list of columns because the SELECT query is not active (you can use a dictionary to correct this) and the model does not contain any data"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:1947
+#, c-format
+msgid "Can't convert model for fields schema: %s"
+msgstr ""
+
+#: ../libgda/gda-query.c:5382
+msgid "Can't correctly print the list of columns to use."
+msgstr ""
+
+#: ../libgda/gda-data-model-query.c:779
+#, c-format
+msgid "Can't determine the GType for field '%s', please fill a bug report"
+msgstr ""
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1660
+msgid "Can't execute PRAGMA foreign_key_list()"
+msgstr ""
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1189
+#: ../providers/sqlite/gda-sqlite-provider.c:1589
+msgid "Can't execute PRAGMA table_info()"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:558
+#: ../libgda/gda-server-operation.c:852
+#, c-format
+msgid "Can't find a data type for parameter '%s'"
+msgstr ""
+
+#: ../libgda/gda-query-field-agg.c:920
+#, fuzzy, c-format
+msgid "Can't find aggregate '%s'"
+msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+
+#: ../libgda/gda-dict-table.c:668
+#, fuzzy, c-format
+msgid "Can't find data type %s"
+msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+
+#: ../libgda/gda-dict-aggregate.c:420
+#, c-format
+msgid "Can't find data type for aggregate '%s'"
+msgstr ""
+
+#: ../libgda/gda-query.c:4286
+#, fuzzy, c-format
+msgid "Can't find field '%s'"
+msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+
+#: ../libgda/gda-query-field-agg.c:900
+#: ../libgda/gda-query-field-func.c:980
+#, fuzzy, c-format
+msgid "Can't find referenced field '%s'"
+msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:1293
+#, fuzzy, c-format
+msgid "Can't find table %s"
+msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+
+#: ../libgda/gda-query-field-all.c:706
+#, fuzzy, c-format
+msgid "Can't find target '%s'"
+msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+
+#: ../libgda/gda-query-target.c:755
+msgid "Can't get XML ID of target's referenced entity"
+msgstr ""
+
+#: ../libgda/gda-dict-reg-aggregates.c:170
+#, fuzzy
+msgid "Can't get list of aggregates"
+msgstr "لا يمكن تلقي اسم المستخدم"
+
+#: ../libgda/gda-dict-reg-types.c:262
+msgid "Can't get list of data types"
+msgstr ""
+
+#: ../libgda/gda-dict-reg-functions.c:170
+#, fuzzy
+msgid "Can't get list of functions"
+msgstr "لا يمكن تلقي اسم المستخدم"
+
+#: ../libgda/gda-dict-database.c:948
+#, fuzzy
+msgid "Can't get list of tables"
+msgstr "لا يمكن تلقي اسم المستخدم"
+
+#: ../libgda/gda-query-target.c:767
+msgid "Can't get the name of target's referenced table"
+msgstr ""
+
+#: ../libgda/gda-query-field-value.c:1177
+#, fuzzy, c-format
+msgid "Can't interpret '%s' as a value"
+msgstr "لا يمكن وضع السيمة كقيمة\n"
+
+#: ../libgda/gda-query.c:935
+msgid "Can't modify the structure of a non-parsed SQL query"
+msgstr ""
+
+#: ../testing/gda-test-connection.c:69
+#: ../testing/gda-test-server-operation.c:80
+#: ../tools/gda-author-dict-file.c:155
+#: ../tools/gda-diagnose.c:1362
+#, c-format
+msgid "Can't open connection to DSN %s: %s\n"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:1359
+#, fuzzy
+msgid "Can't open connection."
+msgstr "%s: لا يمكن فتح fifo!"
+
+#: ../testing/gda-test-connection.c:81
+#: ../testing/gda-test-server-operation.c:92
+#: ../tools/gda-author-dict-file.c:167
+#, fuzzy, c-format
+msgid "Can't open specified connection: %s\n"
+msgstr "لا يمكن فتح الملف"
+
+#: ../providers/firebird/gda-firebird-blob.c:235
+#, fuzzy
+msgid "Can't read a closed Blob"
+msgstr "لا يمكن قراءة أية لوحة مفاتيح!"
+
+#: ../libgda/gda-data-model-import.c:1440
+msgid "Can't read the contents of the <gda_array_data> node"
+msgstr ""
+
+#: ../testing/gda-test-models.c:191
+#: ../testing/gda-test-models.c:205
+#: ../testing/gda-test-sql.c:183
+#: ../testing/gda-test-sql.c:197
+#: ../tools/gda-inspect-dict-file.c:91
+#: ../tools/gda-inspect-dict-file.c:110
+#, fuzzy, c-format
+msgid ""
+"Can't run command '%s':\n"
+"%s\n"
+msgstr "لا يمكن تشغيل الأمر  '%s': %s."
+
+#: ../libgda/gda-query-parsing.c:1816
+msgid "Can't set aggregate or function's arguments"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1657
+#, c-format
+msgid "Can't transform '%s' from GDA type %s to GDA type %s"
+msgstr ""
+
+#: ../testing/gda-test-models.c:151
+#: ../testing/gda-test-models.c:178
+#: ../testing/gda-test-sql.c:143
+#: ../testing/gda-test-sql.c:170
+#: ../tools/gda-author-dict-file.c:248
+#, fuzzy, c-format
+msgid "Can't write dictionary to file %s: %s\n"
+msgstr "تعذّر الكتابة في ملف BMP "
+
+#: ../libgda/gda-data-model.c:1429
+#: ../testing/gda-test-models.c:555
+#, c-format
+msgid "Cannot interpret string as a valid %s value"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1638
+#, c-format
+msgid "Cannot register object type %s a second time"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1642
+#, c-format
+msgid "Cannot register object type %s: no XML group tag specified"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1412
+#: ../testing/gda-test-models.c:537
+msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:16
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:1
+msgid "Cascade"
+msgstr ""
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:1
+#, fuzzy
+msgid "Character Set"
+msgstr "مجموعة رموز مجهولة: %s"
+
+#: ../libgda/gda-data-model-import.c:936
+#, c-format
+msgid "Character conversion at line %d, error: %s"
+msgstr ""
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:4
+msgid "Character set encoding to use in the new database"
+msgstr ""
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:2
+msgid "Character set to be used on the connection"
+msgstr ""
+
+#. DSN parameters
+#. other table options
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:8
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:18
+#, fuzzy
+msgid "Character set"
+msgstr "مجموعة رموز مجهولة: %s"
+
+#: ../providers/mdb/gda-mdb-provider.c:694
+#, fuzzy
+msgid "Character strings"
+msgstr "تشفيرة الرموز"
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:7
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:22
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
+#, fuzzy
+msgid "Check constraint"
+msgstr "تثبت من تهجيئ الكلمات"
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:6
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:20
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:1
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
+#, fuzzy
+msgid "Check"
+msgstr "تثبت من تهجيئ الكلمات"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:24
+#, fuzzy
+msgid "Checksum"
+msgstr "%s: خطأ في checksum"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:5
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:4
+#, fuzzy
+msgid "Chinese EUC"
+msgstr "صيني تقليدي (EUC-TW)"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:25
+msgid "Clustered, fault-tolerant, memory-based"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:643
+msgid "Cmd structure already in use. Command will not be executed because of blocked connection."
+msgstr ""
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:14
+msgid "Collation method to use in the new database"
+msgstr ""
+
+#. Index fields
+#. list of fields
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
+msgid "Collation name (BINARY|NOCASE)"
+msgstr ""
+
+#. DSN parameters
+#. other table options
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:12
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
+msgid "Collation"
+msgstr ""
+
+#: ../libgda/gda-data-access-wrapper.c:481
+#, fuzzy, c-format
+msgid "Column %d out of range 0 - %d"
+msgstr "قيمة خارج المجال.\n"
+
+#: ../providers/mysql/gda-mysql-recordset.c:373
+#: ../providers/postgres/gda-postgres-recordset.c:577
+#: ../providers/bdb/gda-bdb-recordset.c:175
+#, fuzzy
+msgid "Column number out of range"
+msgstr "الرمز خارج حدود UTF-8"
+
+#: ../libgda/gda-data-model-array.c:102
+#: ../libgda/gda-data-model-hash.c:107
+#, fuzzy, c-format
+msgid "Column out %d of range 0 - %d"
+msgstr "قيمة خارج المجال.\n"
+
+#: ../providers/oracle/gda-oracle-recordset.c:179
+#: ../providers/postgres/gda-postgres-recordset.c:698
+#, fuzzy
+msgid "Column out of range"
+msgstr "قيمة خارج المجال.\n"
+
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:8
+#: ../providers/mysql/mysql_specs_drop_column.xml.in.h:1
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:3
+#, fuzzy
+msgid "Column's description"
+msgstr "الوصف الميسر لعمود الجدول"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:28
+msgid "Comma Separated Value (CSV)"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:856
+#, c-format
+msgid "Command structure already in use. %s failed."
+msgstr ""
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:9
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:30
+#, fuzzy
+msgid "Comment"
+msgstr "ملاحظة"
+
+#: ../libgda/gda-server-provider-extra.c:86
+#: ../libgda/gda-server-provider-extra.c:130
+#: ../libgda/gda-server-provider-extra.c:140
+#: ../libgda/gda-server-provider-extra.c:158
+#: ../providers/firebird/gda-firebird-provider.c:252
+#: ../providers/firebird/gda-firebird-provider.c:740
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:998
+#: ../providers/ldap/gda-ldap-provider.c:340
+#: ../providers/oracle/gda-oracle-provider.c:1700
+#: ../providers/sybase/gda-sybase-provider.c:1106
+#, fuzzy
+msgid "Comments"
+msgstr "_تعليقات:"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
+#, fuzzy
+msgid "Compact"
+msgstr "_نسق مُتَضَام"
+
+#. Index fields
+#. list of fields
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:10
+#, fuzzy
+msgid "Compare method"
+msgstr "طريقة NAT"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:32
+msgid "Compressed"
+msgstr ""
+
+#: ../libgda/gda-query-join.c:925
+#, c-format
+msgid "Condition '%s' does not involve the same entities as the join"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:1596
+msgid "Condition 'BETWEEN' must have three arguments"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:1541
+#, fuzzy
+msgid "Condition is not active"
+msgstr "الواجهة %s ليست نشطة"
+
+#: ../libgda/gda-query-condition.c:1565
+#, fuzzy
+msgid "Condition must have at least one argument"
+msgstr "يجب أن يكون لك شريط واحد على الأقل."
+
+#: ../libgda/gda-query-condition.c:1586
+msgid "Condition must have two arguments"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:1555
+msgid "Condition operator 'NOT' must have one argument"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:790
+#, fuzzy
+msgid "Conditions hierarchy error"
+msgstr "حدث خطأ خلال فتح %s."
+
+#. list of fields
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:14
+msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
+msgstr ""
+
+#. list of fields
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:12
+#, fuzzy
+msgid "Conflict"
+msgstr "تضارب"
+
+#: ../providers/odbc/odbc_specs_dsn.xml.in.h:1
+#, fuzzy
+msgid "Connection String"
+msgstr "سلسلة البحث"
+
+#: ../providers/freetds/gda-freetds-provider.c:198
+msgid "Connection aborted. You must provide at least a host, username and password using DSN 'USER=;USER=;PASSWORD='."
+msgstr ""
+
+#: ../libgda/gda-query.c:2743
+msgid "Connection associated to query's dictionary is closed"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1219
+#, fuzzy
+msgid "Connection is closed"
+msgstr "موسع·مغلق·للبيكسبف"
+
+#: ../libgda/gda-dict-database.c:856
+#: ../libgda/gda-dict-database.c:934
+#: ../libgda/gda-dict-table.c:544
+#, fuzzy
+msgid "Connection is not opened!"
+msgstr "%s لم يمكن فتحه"
+
+#: ../libgda/gda-connection.c:171
+#, fuzzy
+msgid "Connection string to use"
+msgstr "ال_اسم المستخدم للاتصال:"
+
+#: ../libgda/gda-config.c:1882
+#, fuzzy
+msgid "Connection string"
+msgstr "سلسلة البحث"
+
+#: ../testing/gda-test-connection.c:87
+#, fuzzy
+msgid "Connection successfully opened!\n"
+msgstr "تم فتح جهاز الفيديو %s، القناة %d بنجاح"
+
+#: ../libgda/gda-connection.c:1712
+msgid "Connection transaction status tracking: no transaction exists for ADD SAVEPOINT"
+msgstr ""
+
+#: ../libgda/gda-connection.c:1666
+msgid "Connection transaction status tracking: no transaction exists for COMMIT"
+msgstr ""
+
+#: ../libgda/gda-connection.c:1762
+msgid "Connection transaction status tracking: no transaction exists for REMOVE SAVEPOINT"
+msgstr ""
+
+#: ../libgda/gda-connection.c:1737
+msgid "Connection transaction status tracking: no transaction exists for ROLLBACK SAVEPOINT"
+msgstr ""
+
+#: ../libgda/gda-connection.c:1632
+msgid "Connection transaction status tracking: no transaction exists for ROLLBACK"
+msgstr ""
+
+#: ../libgda/gda-dict-constraint.c:1201
+#, fuzzy
+msgid "Constraint cannot be activated!"
+msgstr "لا يمكن فتح الحوض `%s' : %s"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:1
+msgid "Constraint expression for a partial index"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:699
+#, fuzzy, c-format
+msgid "Constraints for '%s'"
+msgstr "ل_لّغة:"
+
+#: ../testing/gda-test-sql.c:427
+msgid "Copied"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
+#, fuzzy
+msgid "Copy default expressions"
+msgstr "عرض الفيديو الافتراضي"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#, fuzzy
+msgid "Copy defaults"
+msgstr "نسخ ال_كل"
+
+#: ../libgda/gda-parameter-list.c:1140
+#, c-format
+msgid "Could not add parameter of type %s with value '%s'"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:864
+#, fuzzy
+msgid "Could not allocate command structure."
+msgstr "لم يمكن الاتّصال باستخدام الأمر \"%s\": %s"
+
+#: ../providers/sybase/gda-sybase-recordset.c:380
+#, c-format
+msgid "Could not allocate data placeholder for column %d"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-recordset.c:304
+msgid "Could not allocate datamodel. No results will be returned."
+msgstr ""
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:240
+#, fuzzy
+msgid "Could not allocate environment handle.\n"
+msgstr "%s: لم يمكن ضبط البيئة لـ %s. إلغاء"
+
+#: ../providers/sybase/gda-sybase-recordset.c:348
+#: ../providers/sybase/gda-sybase-recordset.c:538
+msgid "Could not allocate structure for column metainformation."
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:282
+msgid "Could not allocate the Oracle error handle"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:294
+msgid "Could not allocate the Oracle server handle"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:272
+msgid "Could not allocate the Oracle service handle"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:307
+msgid "Could not allocate the Oracle session handle"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:552
+msgid "Could not allocate the Oracle statement handle"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:1004
+msgid "Could not allocate the Oracle transaction handle"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:951
+#: ../providers/oracle/gda-oracle-provider.c:1031
+#: ../providers/oracle/gda-oracle-provider.c:1085
+#: ../providers/oracle/gda-oracle-provider.c:1144
+msgid "Could not attach the transaction to the service context"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:337
+#, fuzzy
+msgid "Could not attach to the Oracle server"
+msgstr "لم يمكن الإتّصال بنادل البروكسي"
+
+#: ../libgda/gda-data-proxy.c:426
+#, c-format
+msgid "Could not auto-commit row change: %s"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:400
+#, fuzzy
+msgid "Could not begin the Oracle session"
+msgstr "%s: لم يمكن قراءة هوية الجلسة"
+
+#: ../providers/oracle/gda-oracle-provider.c:594
+msgid "Could not bind the Oracle statement parameter"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-recordset.c:352
+#: ../providers/sybase/gda-sybase-recordset.c:542
+#, c-format
+msgid "Could not call %s while processing row resultset."
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:1102
+msgid "Could not commit the Oracle transaction"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1131
+#: ../libgda/gda-data-model-import.c:1544
+#, c-format
+msgid "Could not convert '%s' to a value of type %s"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:1631
+#, c-format
+msgid "Could not convert data from %s to %s for DBMS type %s, forget about the DBMS type"
+msgstr ""
+
+#: ../libgda/gda-client.c:329
+msgid "Could not create GdaServerProvider object from plugin"
+msgstr ""
+
+#: ../libgda/gda-util.c:270
+#, fuzzy, c-format
+msgid "Could not create file %s"
+msgstr "لم يمكن إنشاء ملف الإقفال لـ %s: %s"
+
+#: ../providers/oracle/gda-oracle-recordset.c:134
+#, fuzzy
+msgid "Could not define by position"
+msgstr "لا يمكن تلقي موقع القطعة الحالي"
+
+#: ../providers/oracle/gda-oracle-provider.c:669
+#, fuzzy
+msgid "Could not execute the Oracle statement"
+msgstr "تعذّر تنفيذ %s: لم يرسل البريد."
+
+#: ../providers/oracle/gda-oracle-recordset.c:360
+#, fuzzy
+msgid "Could not fetch a row"
+msgstr "تعذّر تشغيل التّطبيق"
+
+#: ../libgda/gda-dict-field.c:998
+#, c-format
+msgid "Could not find a data handler for data type '%s'"
+msgstr ""
+
+#: ../libgda/gda-client.c:972
+msgid "Could not find operation's associated provider, did you use gda_client_prepare_create_database() ?"
+msgstr ""
+
+#: ../libgda/gda-client.c:1002
+msgid "Could not find operation's associated provider, did you use gda_client_prepare_drop_database() ?"
+msgstr ""
+
+#: ../libgda/gda-client.c:292
+#, c-format
+msgid "Could not find provider %s in the current setup"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1551
+msgid "Could not get an iterator for soure data model"
+msgstr ""
+
+#: ../report/libgda-report/gda-report-document.c:221
+#, fuzzy, c-format
+msgid "Could not get file from %s"
+msgstr "لم أستطع تلقي معلومات عن الملف '%s': %s"
+
+#: ../providers/oracle/gda-oracle-recordset.c:219
+msgid "Could not get the Oracle column data type"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-recordset.c:201
+msgid "Could not get the Oracle column name"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-recordset.c:243
+msgid "Could not get the Oracle column nullable attribute"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-recordset.c:231
+msgid "Could not get the Oracle column scale"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-recordset.c:255
+msgid "Could not get the Oracle defined size"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-recordset.c:191
+#, fuzzy
+msgid "Could not get the Oracle parameter information"
+msgstr "لم أستطع تلقي معلومات عن الملف '%s': %s"
+
+#: ../providers/oracle/gda-oracle-recordset.c:76
+#, fuzzy
+msgid "Could not get the Oracle parameter"
+msgstr ""
+"لم يمكن جلب تذكرة كرْبِروس:\n"
+"%s"
+
+#: ../providers/oracle/gda-oracle-provider.c:640
+msgid "Could not get the Oracle statement type"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:711
+msgid "Could not get the column name in the result set"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:682
+msgid "Could not get the number of columns in the result set"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-recordset.c:99
+msgid "Could not get the parameter data type"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-recordset.c:86
+msgid "Could not get the parameter defined size"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:699
+msgid "Could not get the parameter descripter in the result set"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:250
+#, fuzzy
+msgid "Could not initialize Oracle"
+msgstr "لم يمكن تشغيل بونوبو"
+
+#: ../providers/oracle/gda-oracle-provider.c:261
+#, fuzzy
+msgid "Could not initialize the Oracle environment"
+msgstr "لم يمكن تشغيل واجهة مستخدم بونوبو"
+
+#: ../libgda/gda-dict.c:867
+#, c-format
+msgid "Could not load XML data for %s (no registered load function)"
+msgstr ""
+
+#: ../providers/mdb/gda-mdb-provider.c:238
+#: ../providers/xbase/gda-xbase-provider.c:228
+#, fuzzy, c-format
+msgid "Could not open file %s"
+msgstr "لم يمكن فتح الملف %s: %s"
+
+#: ../libgda/gda-init.c:103
+#: ../libgda/gda-init.c:110
+#: ../libgda/gda-init.c:117
+#: ../libgda/gda-init.c:125
+#, fuzzy
+msgid "Could not parse "
+msgstr "لم يمكن اعراب: %s"
+
+#. end unsafe
+#: ../providers/mdb/gda-mdb-provider.c:766
+#, fuzzy, c-format
+msgid "Could not parse '%s' command"
+msgstr "يم يمكن إعراب سطر الأوامر '%s':·%s"
+
+#: ../libgda/gda-data-model-filter-sql.c:360
+#, fuzzy, c-format
+msgid "Could not parse SQL string '%s'"
+msgstr "لم يمكن اعراب السلسلة \"%s\" كلوحة ألوان\n"
+
+#: ../report/libgda-report/gda-report-document.c:179
+#, fuzzy
+msgid "Could not parse XML document"
+msgstr "لم يمكن إعراب مستند XML %s المشوه"
+
+#: ../providers/sybase/gda-sybase-provider.c:873
+#, c-format
+msgid "Could not prepare command structure with %s."
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:671
+#, fuzzy
+msgid "Could not prepare command structure."
+msgstr "لم يمكن الاتّصال باستخدام الأمر \"%s\": %s"
+
+#: ../providers/oracle/gda-oracle-provider.c:563
+msgid "Could not prepare the Oracle statement"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:1094
+msgid "Could not prepare the transaction to commit"
+msgstr ""
+
+#: ../providers/ldap/gda-ldap-recordset.c:298
+#: ../providers/msql/gda-msql-recordset.c:215
+#: ../providers/oracle/gda-oracle-recordset.c:488
+#, fuzzy
+msgid "Could not retrieve column's information"
+msgstr "لم أستطع تلقي معلومات عن الملف"
+
+#: ../providers/ldap/gda-ldap-recordset.c:316
+#: ../providers/msql/gda-msql-recordset.c:230
+#: ../providers/oracle/gda-oracle-recordset.c:506
+#, fuzzy
+msgid "Could not retrieve column's value"
+msgstr ""
+"لم يمكن تزمين القيمة. كان الخطأ:\n"
+"%s"
+
+#: ../providers/oracle/gda-oracle-provider.c:1151
+msgid "Could not rollback the Oracle transaction"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-recordset.c:371
+#: ../providers/sybase/gda-sybase-recordset.c:392
+#, fuzzy, c-format
+msgid "Could not run %s on column %d"
+msgstr "لم يمكن عرض حوار التشغيل"
+
+#: ../providers/sybase/gda-sybase-recordset.c:409
+#, c-format
+msgid "Could not run %s to cancel processing row resultset."
+msgstr ""
+
+#: ../libgda/gda-dict.c:1016
+#, c-format
+msgid "Could not save XML data for %s (no registered save function)"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1145
+#, fuzzy, c-format
+msgid "Could not save file %s"
+msgstr "لا يمكن حفظ الملف %s."
+
+#: ../providers/sqlite/gda-sqlite-provider.c:330
+msgid "Could not set empty_result_callbacks SQLite option"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:1319
+#: ../libgda/gda-server-operation.c:1338
+#: ../libgda/gda-server-operation.c:1928
+#: ../libgda/gda-server-operation.c:1980
+#, c-format
+msgid "Could not set parameter '%s' to value '%s'"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:385
+msgid "Could not set the Oracle password attribute"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:353
+msgid "Could not set the Oracle server attribute in the service context"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:418
+msgid "Could not set the Oracle session attribute in the service context"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:652
+msgid "Could not set the Oracle statement pre-fetch row count"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:1016
+msgid "Could not set the Oracle transaction name"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:369
+msgid "Could not set the Oracle username attribute"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:1042
+#, fuzzy
+msgid "Could not start the Oracle transaction"
+msgstr "لم أستطع بدء قناة الحالة: %s"
+
+#: ../tools/gda-inspect-dict-file.c:187
+#, fuzzy, c-format
+msgid ""
+"Could not write graph to '%s' (%s)\n"
+"\n"
+msgstr "لم يمكن إعادة تسمية المجلّد %s إلى %s: %s"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:34
+msgid "Counter for auto incremented fields is incremented by this value + 1 (DEFAULT: 0)"
+msgstr ""
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
+msgid "Create database only if it does not yet exist"
+msgstr ""
+
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:5
+msgid "Create index only if it does not yet exist"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:15
+msgid "Create table only if it does not yet exist"
+msgstr ""
+
+#: ../libgda/gda-dict-field.c:943
+#: ../libgda/gda-dict-table.c:651
+#, c-format
+msgid "Custom data type, declared for the %s.%s field"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:17
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:36
+#, fuzzy
+msgid "DEC West European"
+msgstr "وسط أوروبا (MacCE)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
+#, fuzzy
+msgid "DOS Central European"
+msgstr "وسط أوروبا (MacCE)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:19
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:38
+msgid "DOS Kamenicky Czech-Slovak"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
+#, fuzzy
+msgid "DOS Russian"
+msgstr "الإتّحاد الروسي"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:21
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:40
+#, fuzzy
+msgid "DOS West European"
+msgstr "وسط أوروبا (MacCE)"
+
+#: ../testing/gda-test-connection.c:62
+#: ../testing/gda-test-server-operation.c:73
+#: ../tools/gda-author-dict-file.c:148
+#, fuzzy, c-format
+msgid "DSN '%s' is not declared"
+msgstr "“%s” لا يجيب"
+
+#: ../libgda/gda-dict.c:238
+#, fuzzy
+msgid "DSN of the connection to use"
+msgstr "ال_اسم المستخدم للاتصال:"
+
+#: ../libgda/gda-connection.c:168
+#, fuzzy
+msgid "DSN to use"
+msgstr "قاعدة البيانات المستعملة"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:42
+#, fuzzy
+msgid "Data directory"
+msgstr "دليل المستخدمين"
+
+#: ../tools/gda-diagnose.c:770
+msgid "Data handler marked as error cannot handle the data type they are returned for."
+msgstr ""
+
+#: ../tools/gda-diagnose.c:780
+#, fuzzy
+msgid "Data handlers test"
+msgstr "إختبار طباعة المراسَل"
+
+#: ../libgda/gda-server-provider-extra.c:314
+#, c-format
+msgid "Data model for schema has a wrong column name: '%s' instead of '%s'"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:307
+#, c-format
+msgid "Data model for schema has a wrong column title: '%s' instead of '%s'"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:321
+#, c-format
+msgid "Data model for schema has a wrong gda type: %s instead of %s"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:295
+msgid "Data model for schema has a wrong number of columns"
+msgstr ""
+
+#: ../libgda/gda-data-proxy.c:408
+#, fuzzy
+msgid "Data model"
+msgstr "<b>نسق اللغة:</b>"
+
+#: ../libgda/gda-client.c:418
+#: ../libgda/gda-client.c:420
+#: ../libgda/gda-client.c:610
+#: ../libgda/gda-connection.c:444
+#: ../libgda/gda-connection.c:446
+#, fuzzy, c-format
+msgid "Data source %s not found in configuration"
+msgstr "بيانات فاسدة في قاعدة بيانات مصدر الاعدادات"
+
+#: ../tools/gda-list-config.c:105
+msgid "Data source's parameters (Name / Type / Description):\n"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:332
+msgid "Data source's parameters: none provided"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:310
+#, fuzzy
+msgid "Data source's parameters:"
+msgstr "عنوان مصدر POP"
+
+#: ../tools/gda-diagnose.c:174
+#, fuzzy
+msgid "Data sources"
+msgstr "البيانات الشخصية"
+
+#: ../libgda/gda-query-parsing.c:1552
+msgid "Data type must be specified when no default value is provided"
+msgstr ""
+
+#. list of fields
+#: ../libgda/gda-server-provider-extra.c:98
+#: ../providers/firebird/gda-firebird-provider.c:618
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:44
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:17
+#, fuzzy
+msgid "Data type"
+msgstr "نوع البيانات"
+
+#: ../libgda/gda-dict-reg-types.c:63
+#, fuzzy
+msgid "Data types analysis"
+msgstr "كل الفئات المدعومة"
+
+#. * Data types testing
+#: ../tools/gda-diagnose.c:738
+#, fuzzy
+msgid "Data types handling"
+msgstr "كل الفئات المدعومة"
+
+#: ../libgda/gda-dict-database.c:530
+#, fuzzy
+msgid "Database already contains data"
+msgstr "يحوي الملف بيانات فاسدة."
+
+#: ../providers/bdb/bdb_specs_dsn.xml.in.h:2
+#, fuzzy
+msgid "Database file"
+msgstr "إنتقاء ملف"
+
+#: ../providers/bdb/gda-bdb-recordset.c:255
+#, fuzzy
+msgid "Database is empty"
+msgstr "المستند فارغ."
+
+#. DSN parameters
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:3
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:1
+#: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:1
+#: ../providers/msql/msql_specs_dsn.xml.in.h:1
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:23
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:4
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:1
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:6
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:1
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:1
+#: ../providers/bdb/bdb_specs_dsn.xml.in.h:3
+#, fuzzy
+msgid "Database name"
+msgstr "اسم الموصول"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:3
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:3
+#, fuzzy
+msgid "Database server IP adress"
+msgstr "تعديل تفضيلات خادم قاعدة بياناتك للأقراص المدمجة"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:10
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:9
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:3
+msgid "Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this fiend empty)"
+msgstr ""
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:4
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:7
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:3
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:4
+#, fuzzy
+msgid "Database server port"
+msgstr "قاعدة بيانات الأقراص المدمجة"
+
+#. Connection parameters
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:2
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:25
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:6
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:9
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:2
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:2
+#, fuzzy
+msgid "Database server"
+msgstr "خادم قاعدة بيانات"
+
+#: ../libgda/gda-server-provider-extra.c:93
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:827
+#, fuzzy
+msgid "Database"
+msgstr "قاعدة بيانات"
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:11
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:4
+#, fuzzy
+msgid "Database's description"
+msgstr "الوصف يحتوي على"
+
+#: ../tools/gda-diagnose.c:1339
+#, fuzzy, c-format
+msgid "Datasource '%s' details"
+msgstr "اظهار التفاصيل"
+
+#: ../libgda/gda-client.c:452
+#: ../libgda/gda-client.c:549
+#, c-format
+msgid "Datasource configuration error: could not find provider '%s'"
+msgstr ""
+
+#: ../libgda/gda-client.c:456
+#: ../libgda/gda-client.c:458
+#: ../libgda/gda-client.c:553
+#: ../libgda/gda-client.c:555
+msgid "Datasource configuration error: no provider specified"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:1348
+#, fuzzy
+msgid "Datasource's information"
+msgstr "بيانات سيّئة"
+
+#: ../providers/mdb/gda-mdb-provider.c:693
+#, fuzzy
+msgid "Date/time value"
+msgstr "إدراج التاريخ/الوقت"
+
+#. list of fields
+#: ../libgda/gda-server-provider-extra.c:105
+#: ../providers/firebird/gda-firebird-provider.c:625
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:12
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:48
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
+#, fuzzy
+msgid "Default value"
+msgstr "القيمة الإفتراضية: %s\n"
+
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:6
+msgid "Default value, mandatory if column is NOT NULL"
+msgstr ""
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:46
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
+#, fuzzy
+msgid "Default"
+msgstr "الافتراضي"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:16
+msgid "Deferrable initially deferred"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+#, fuzzy
+msgid "Deferrable initially immediate"
+msgstr "فيما إذا سيفعل الحذف الفوري"
+
+#. foreign key spec
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+msgid "Deferrable"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:89
+#: ../libgda/gda-server-provider-extra.c:134
+#: ../libgda/gda-server-provider-extra.c:141
+#: ../libgda/gda-server-provider-extra.c:148
+#: ../libgda/gda-server-provider-extra.c:171
+#: ../libgda/gda-server-provider-extra.c:178
+#, fuzzy
+msgid "Definition"
+msgstr "وصف التعريف"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:50
+#, fuzzy
+msgid "Delay key write"
+msgstr "لا يمكن الكتابة على %s: %s"
+
+#: ../libgda/gda-query.c:1159
+#, fuzzy
+msgid "Delete"
+msgstr "حذف"
+
+#: ../libgda/gda-query.c:4822
+msgid "Deletion query can't have any visible field"
+msgstr ""
+
+#: ../libgda/gda-config.c:1579
+#: ../libgda/gda-config.c:1883
+#: ../libgda/gda-server-provider-extra.c:147
+#: ../libgda/gda-server-provider-extra.c:170
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:913
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:942
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:970
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1051
+#: ../tools/gda-diagnose.c:305
+#: ../tools/gda-diagnose.c:314
+#, fuzzy
+msgid "Description"
+msgstr "الوصف"
+
+#: ../tools/gda-list-config.c:103
+#, fuzzy, c-format
+msgid "Description: %s\n"
+msgstr "الوصف:"
+
+#: ../libgda/gda-data-model.c:1581
+#, c-format
+msgid "Destination column %d can't be NULL but has no correspondance in the source data model"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1589
+#, c-format
+msgid "Destination column %d has a gda type (%s) incompatible with source column %d type (%s)"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:339
+#, fuzzy
+msgid "Detailed data source's parameters"
+msgstr "بيانات فاسدة في قاعدة بيانات مصدر الاعدادات"
+
+#: ../tools/gda-diagnose.c:343
+msgid "Detailed data source's parameters: none provided"
+msgstr ""
+
+#: ../tools/gda-author-dict-file.c:251
+#, fuzzy, c-format
+msgid "Dictionary file written to %s\n"
+msgstr "_تصدير علامات المواقع إلى ملف"
+
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:2
+#, fuzzy
+msgid "Directory containing the xBase files"
+msgstr "هيكل الدلائل للملفات"
+
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:3
+msgid "Directory where the database file is stored"
+msgstr ""
+
+#. DSN parameters
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:8
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:8
+msgid "Directory where the database file will be"
+msgstr ""
+
+#. DSN parameters
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:2
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:1
+#, fuzzy
+msgid "Directory"
+msgstr "دليل"
+
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
+msgid "Don't add the column to descendants of the table"
+msgstr ""
+
+#: ../libgda/gda-query-field-func.c:949
+msgid "Don't know how to render function"
+msgstr ""
+
+#: ../libgda/gda-query-target.c:933
+msgid "Don't know how to render target"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
+#, fuzzy
+msgid "Don't pack keys"
+msgstr "_سرد المفاتيح الحديثة"
+
+#: ../providers/mdb/gda-mdb-provider.c:692
+#, fuzzy
+msgid "Double precision values"
+msgstr "ترقّب اللاعب القيم"
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:11
+msgid "Drop database only if it exists"
+msgstr ""
+
+#: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:1
+msgid "Drop index only if it exists"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+msgid "Drop table only if it exists"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:3
+msgid "Drop table only if it is temporary"
+msgstr ""
+
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:1
+msgid "Drop the domain index even if the indextype routine invocation returns an error or the index is marked 'in progress'. (FORCE)"
+msgstr ""
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:5
+#, fuzzy
+msgid "Dump Configuration File"
+msgstr ""
+"ملف الإعدادات هو:\n"
+"    %s\n"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:6
+#, fuzzy
+msgid "Dump File"
+msgstr "إنتقاء ملف"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:52
+msgid "Dynamic"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:29
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
+#, fuzzy
+msgid "EUC-JP Japanese"
+msgstr "ياباني (EUC-JP)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:54
+#, fuzzy
+msgid "EUC-KR Korean"
+msgstr "كوري (EUC-KR)"
+
+#: ../providers/xbase/gda-xbase-provider.c:190
+msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
+msgstr ""
+
+#: ../providers/xbase/gda-xbase-provider.c:237
+msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-ddl.c:274
+#: ../providers/postgres/gda-postgres-ddl.c:282
+msgid "Empty field specified in foreign key constraint"
+msgstr ""
+
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:150
+#: ../libsql/sql_parser.c:387
+#, fuzzy
+msgid "Empty query to parse"
+msgstr "تعبير الاستعلام لالتقييم"
+
+#: ../providers/mysql/gda-mysql-ddl.c:302
+#: ../providers/postgres/gda-postgres-ddl.c:310
+msgid "Empty referenced field specified in foreign key constraint"
+msgstr ""
+
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:6
+#, fuzzy
+msgid "Enable Sybase operative mode"
+msgstr "تغعيل/تعطيل نسق النّابض"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:7
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:5
+#, fuzzy
+msgid "Enable Sybase"
+msgstr "مكّن ال_تّسجيل"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
+#, fuzzy
+msgid "Encoding"
+msgstr "التشفيرة"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:56
+#, fuzzy
+msgid "Engine"
+msgstr "دافعة ال_محرّك:"
+
+#: ../libgda/gda-query.c:4730
+#, fuzzy, c-format
+msgid "Entity %s is not writable"
+msgstr "لا يمكن الكتابة على الدليل “%s”"
+
+#: ../libgda/gda-dict.c:1386
+#, fuzzy, c-format
+msgid "Error creating directory %s"
+msgstr "خطأ عند إنشاء الدليل '%s' :  %s "
+
+#: ../providers/freetds/gda-freetds-provider.c:218
+#, fuzzy
+msgid "Error creating error container."
+msgstr "خطأ عند إنشاء الدليل '%s' :  %s "
+
+#: ../providers/freetds/gda-freetds-provider.c:211
+#, fuzzy
+msgid "Error creating message container."
+msgstr "خطأ إنشاء أنبوب الإشارة."
+
+#: ../libgda/gda-query.c:1376
+#, fuzzy, c-format
+msgid "Error during query parsing (%s)"
+msgstr "خطأ أثناء إعراب أمر البحث."
+
+#: ../providers/firebird/gda-firebird-blob.c:231
+#, fuzzy
+msgid "Error getting blob segment."
+msgstr "خطأ عند تلقّي المشهد الكتابي"
+
+#: ../libgda/gda-query-target.c:865
+msgid "Error loading data from <gda_query_target> node"
+msgstr ""
+
+#: ../testing/gda-test-models.c:164
+#: ../testing/gda-test-sql.c:156
+#: ../tools/gda-inspect-dict-file.c:64
+#, fuzzy, c-format
+msgid ""
+"Error loading dictionary file '%s':\n"
+"%s\n"
+msgstr "خطأ أثناء قراءة ملف البريد: %s"
+
+#: ../libgda/gda-query-condition.c:373
+#: ../libgda/gda-query-field.c:293
+#, fuzzy, c-format
+msgid "Error parsing '%s'"
+msgstr "خطأ أثناء ترجمة المصفات: %s: %s"
+
+#: ../providers/freetds/gda-freetds-recordset.c:366
+#, fuzzy
+msgid "Error processing result rows.\n"
+msgstr "تم أيقاف الإجراء المطلوب: خطأ في المعالجة"
+
+#: ../providers/freetds/gda-freetds-recordset.c:383
+#, fuzzy
+msgid "Error processing results.\n"
+msgstr "_حفظ النتائج كـ..."
+
+#: ../tools/gda-inspect-dict-file.c:84
+#, fuzzy, c-format
+msgid ""
+"Error saving dictionary to file '%s':\n"
+"%s\n"
+msgstr "فشلت الكتابة إلى ملف الصورة: %s"
+
+#: ../report/libgda-report/gda-report-item.c:276
+msgid "Error setting parent -> child relation"
+msgstr ""
+
+#: ../report/libgda-report/gda-report-item.c:375
+#, c-format
+msgid "Error setting value %s to attribute %s of item %s"
+msgstr ""
+
+#: ../report/libgda-report/gda-report-valid.c:231
+#, fuzzy, c-format
+msgid "Error validating element %s"
+msgstr "عنصر جذري ل HTML"
+
+#: ../libgda/gda-util.c:244
+#, fuzzy, c-format
+msgid "Error while reading %s: %s"
+msgstr "خطأ في قراءة الملف '%s': %s"
+
+#: ../libgda/gda-dict.c:1037
+#: ../testing/html.c:131
+#: ../tools/html.c:131
+#, fuzzy, c-format
+msgid "Error writing XML file %s"
+msgstr "خطأ كتابة ملف الجلسة '%s': %s\n"
+
+#: ../tools/gda-diagnose.c:670
+#: ../tools/gda-diagnose.c:713
+#: ../tools/gda-diagnose.c:726
+#, fuzzy
+msgid "Error"
+msgstr "خطأ"
+
+#: ../libgda/gda-config.c:1437
+#, fuzzy, c-format
+msgid "Error: %s"
+msgstr "خطأ: %s"
+
+#. gda_freetds_free_connection_data (tds_cnc);
+#: ../providers/freetds/gda-freetds-provider.c:284
+#: ../providers/freetds/gda-freetds-provider.c:286
+#: ../providers/freetds/gda-freetds-provider.c:293
+#: ../providers/freetds/gda-freetds-provider.c:295
+#, fuzzy
+msgid "Establishing connection failed."
+msgstr "فشل تسجيل %s إلى %s"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
+#, fuzzy
+msgid "Example"
+msgstr "مثال: *.o; *.bak"
+
+#: ../libgda/gda-data-model-import.c:1598
+#, c-format
+msgid "Expected <gda_array> node but got <%s>"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1289
+#, c-format
+msgid "Expected <gda_array> node in XML file, got <%s>"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1428
+msgid "Expected <gda_array_data> in <gda_array>"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1426
+#, c-format
+msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1385
+msgid "Expected <gda_array_field> in <gda_array>"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1495
+#, c-format
+msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1493
+#, c-format
+msgid "Expected tag <gda_array_data>, got <%s>"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1381
+#, c-format
+msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:1275
+#, c-format
+msgid "Expected tag <op_data>, got <%s>"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:1261
+#, c-format
+msgid "Expected tag <serv_op_data>, got <%s>"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1250
+#, fuzzy
+msgid "Exported Data"
+msgstr "البيانات الشخصية"
+
+#: ../libgda/gda-server-provider-extra.c:106
+#, fuzzy
+msgid "Extra attributes"
+msgstr "اعرض الخواص"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:8
+#: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:13
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:11
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:7
+#, fuzzy
+msgid "Extra connection options"
+msgstr "خيارات اضافية لـ Xnest"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:59
+msgid "FIRST, LAST or NO: only with MERGE engine"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:657
+#, c-format
+msgid "Failed allocating a command structure in %s()"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:826
+#, fuzzy
+msgid "Failed dropping command structure."
+msgstr "فشل تشغيل الأمر"
+
+#: ../providers/freetds/gda-freetds-provider.c:309
+#: ../providers/freetds/gda-freetds-provider.c:310
+#, fuzzy
+msgid "Failed getting connection info."
+msgstr "تعذر الحصول على معلومات حزمة المفاتيح"
+
+#. error
+#: ../libgda/gda-data-model-import.c:1270
+msgid "Failed to read node in XML file"
+msgstr ""
+
+#: ../providers/sybase/utils.c:204
+#: ../providers/sybase/utils.c:443
+msgid "Failed when attempting to retrieve the amount of client messages"
+msgstr ""
+
+#: ../providers/sybase/utils.c:314
+msgid "Failed when attempting to retrieve the amount of server messages"
+msgstr ""
+
+#: ../libgda/gda-query-field-value.c:1260
+#, c-format
+msgid "Feature not yet implemented, see %s(), line %d"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
+msgid "Federated"
+msgstr ""
+
+#: ../tools/gda-author-dict-file.c:203
+msgid "Fetching meta-data from the DBMS server. This may take some time...\n"
+msgstr ""
+
+#. list of fields
+#: ../libgda/gda-server-provider-extra.c:97
+#: ../providers/firebird/gda-firebird-provider.c:617
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:64
+#: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:7
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:23
+#, fuzzy
+msgid "Field name"
+msgstr "إسم الحقل"
+
+#: ../libgda/gda-util.c:804
+#, c-format
+msgid "Field number %d not found in source named '%s'"
+msgstr ""
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:62
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
+#, fuzzy
+msgid "Field"
+msgstr "الحقل"
+
+#: ../tools/gda-diagnose.c:654
+#, fuzzy, c-format
+msgid "Fields for '%s'"
+msgstr "ل_لّغة:"
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:68
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+#, fuzzy
+msgid "Fields in the foreign key"
+msgstr "البحث في أ_سماء المفاتيح أيضاً"
+
+#. foreign key spec
+#: ../libgda/gda-server-provider-extra.c:177
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:66
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+#, fuzzy
+msgid "Fields"
+msgstr "_حقول الشهادة"
+
+#: ../libgda/gda-data-model.c:1139
+#, fuzzy, c-format
+msgid "File '%s' already exists"
+msgstr "الملف موجود مسبّقا."
+
+#: ../tools/gda-inspect-dict-file.c:53
+#, c-format
+msgid "File '%s' does not exist or can't be read!\n"
+msgstr ""
+
+#: ../tools/gda-inspect-dict-file.c:58
+#, fuzzy, c-format
+msgid "File '%s' is a directory!\n"
+msgstr "ملف فارغ"
+
+#: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:3
+#, fuzzy
+msgid "File Name"
+msgstr "إسم الملف:"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:10
+msgid "File for TDS protocol dumps configuration"
+msgstr ""
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:9
+msgid "File for TDS protocol dumps"
+msgstr ""
+
+#: ../providers/firebird/gda-firebird-recordset.c:457
+msgid "Firebird's ARRAY datatype not supported yet!\n"
+msgstr ""
+
+#: ../libgda/gda-query.c:4170
+msgid "First query of <gda_model_query> must be a SELECT query"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:69
+#, fuzzy
+msgid "Fixed"
+msgstr "_عرض ثابت:"
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+#, fuzzy
+msgid "Foreign key"
+msgstr "اتفاق على المفتاح"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:11
+#, fuzzy
+msgid "FreeTDS Config File"
+msgstr "حفظ الملف كـ"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:4
+msgid "Full path of the UNIX socket to use for connecting locally"
+msgstr ""
+
+#: ../providers/mdb/mdb_specs_dsn.xml.in.h:2
+#: ../providers/xbase/xbase_specs_dsn.xml.in.h:4
+msgid "Full path of the file containing the database"
+msgstr ""
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:791
+#: ../tools/gda-diagnose.c:375
+#: ../tools/gda-diagnose.c:459
+#, fuzzy
+msgid "Function"
+msgstr "الوظيفة"
+
+#: ../libgda/gda-dict-reg-functions.c:47
+#, fuzzy
+msgid "Functions analysis"
+msgstr "تعديل الوظائف"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:72
+#, fuzzy
+msgid "GB2312 Simplified Chinese"
+msgstr "صيني مبسط (GBK)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:33
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:73
+#, fuzzy
+msgid "GBK Simplified Chinese"
+msgstr "صيني مبسط (GBK)"
+
+#: ../providers/sybase/libmain.c:41
+msgid "GDA provider for sybase databases (using OpenClient)"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:159
+#: ../providers/firebird/gda-firebird-provider.c:253
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:999
+#: ../providers/sybase/gda-sybase-provider.c:1108
+#, fuzzy
+msgid "GDA type"
+msgstr "نوع التّنبيه"
+
+#: ../providers/sybase/gda-sybase-provider.c:708
+#: ../providers/sybase/gda-sybase-provider.c:728
+#: ../providers/sybase/gda-sybase-provider.c:795
+#: ../providers/sybase/gda-sybase-provider.c:817
+msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:74
+#, fuzzy
+msgid "GEOSTD8 Georgian"
+msgstr "جورجي (GEOSTD8)"
+
+#: ../libgda/handlers/gda-handler-type.c:114
+#, fuzzy
+msgid "Gda type handler"
+msgstr "handler عنوان غير صالح"
+
+#: ../libgda/handlers/gda-handler-type.c:120
+#, fuzzy
+msgid "Gda type representation"
+msgstr "نوع جهاز الخرج"
+
+#: ../libgda/gda-connection.c:165
+#, fuzzy
+msgid "GdaClient to use"
+msgstr "قاعدة البيانات المستعملة"
+
+#: ../libgda/gda-parameter-list.c:1264
+#, fuzzy, c-format
+msgid "GdaDataModel %p does not have a column %d"
+msgstr "لا ينتهي بـ"
+
+#: ../testing/gda-test-models.c:658
+#, fuzzy
+msgid "GdaDataModel required for this action"
+msgstr "\"افعل هذا الحدث دوما\" تفعيل-تعطيل للتشغيل الآلي"
+
+#: ../libgda/gda-query-field-value.c:1065
+msgid "GdaDataModelQuery data model restricting GdaQueryFieldValue is not saved in the dictionary"
+msgstr ""
+
+#: ../libgda/gda-data-proxy.c:636
+msgid "GdaDataProxy cant' handle non random access data models"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:1270
+#, c-format
+msgid "GdaParameter is restricted by a column of the wrong type: %s (%s expected)"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:1241
+msgid "GdaParameterListNode has a NULL param attribute"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:1257
+msgid "GdaParameterListSource does not list a GdaParameterListNode as it should"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:1289
+msgid "GdaParameterListSource has a NULL data model"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:1297
+msgid "GdaParameterListSource references a GdaParameterListNode not found in the nodes list"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:1303
+msgid "GdaParameterListSource references a GdaParameterListNode which does not use the same data model"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:563
+#, fuzzy, c-format
+msgid "GdaServerOperation: could not find file '%s'"
+msgstr "لا يوجد ملف البكسمب '%s'\n"
+
+#: ../libgda/gda-server-operation.c:612
+#, fuzzy, c-format
+msgid "GdaServerOperation: could not load file '%s'"
+msgstr "لم أتمكن من تحميل ملف glade"
+
+#: ../libgda/gda-server-operation.c:768
+#, c-format
+msgid "GdaServerOperation: error loading GdaParameterList spec %s: '%s'"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:599
+#, c-format
+msgid "GdaServerOperation: file '%s' does not conform to DTD"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:593
+#, c-format
+msgid ""
+"GdaServerOperation: file '%s' does not conform to DTD:\n"
+"%s"
+msgstr ""
+
+#. * Virtual functions
+#: ../tools/gda-diagnose.c:456
+msgid "GdaServerProvider object's virtual functions"
+msgstr ""
+
+#: ../testing/gda-test-models.c:101
+#: ../testing/gda-test-sql.c:97
+#: ../tools/gda-diagnose.c:117
+#, fuzzy, c-format
+msgid "Generated @ %s"
+msgstr "محتوى مولّد"
+
+#: ../providers/mysql/gda-mysql-recordset.c:552
+#: ../providers/mysql/gda-mysql-recordset.c:554
+#: ../providers/mysql/gda-mysql-recordset.c:712
+#: ../providers/mysql/gda-mysql-recordset.c:714
+#: ../providers/postgres/gda-postgres-recordset.c:330
+#: ../providers/postgres/gda-postgres-recordset.c:430
+msgid "Given row doesn't belong to the model."
+msgstr ""
+
+#. other table constraints
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:76
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:25
+#, fuzzy
+msgid "Global constraints"
+msgstr "وظائف عالمية"
+
+#: ../libgda/gda-config.c:1886
+#, fuzzy
+msgid "Global"
+msgstr "شامل"
+
+#. parsing went fine, but there is no result
+#. (e.g. because of an invalid column name)
+#: ../providers/mdb/gda-mdb-provider.c:773
+#, fuzzy, c-format
+msgid "Got no result for '%s' command"
+msgstr "صفات النتائج غير محددة لـ %s"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:35
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
+#, fuzzy
+msgid "HP West European"
+msgstr "وسط أوروبا (MacCE)"
+
+#: ../providers/sybase/gda-sybase-provider.c:738
+msgid "Hit unsupported result type"
+msgstr ""
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
+#: ../providers/msql/msql_specs_dsn.xml.in.h:2
+#, fuzzy
+msgid "Host Name"
+msgstr "اسم المستضيف:"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
+#, fuzzy
+msgid "Host name of the LDAP server"
+msgstr "النّفاذ إلى خادم LDAP كشخص مجهول"
+
+#. Connection parameters
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:13
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:5
+msgid "Host which has the database server running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this fiend empty)"
+msgstr ""
+
+#: ../providers/msql/msql_specs_dsn.xml.in.h:3
+msgid "Host which has the database server running (leave empty for a local connection using a UNIX domain socket, or use 'localhost' for a TCP/IP connection on the local machine) "
+msgstr ""
+
+#. Connection parameters
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:12
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:37
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:14
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:8
+msgid "Host which has the database server running"
+msgstr ""
+
+#: ../providers/firebird/gda-firebird-provider.c:738
+#, fuzzy
+msgid "ID"
+msgstr "الهوية"
+
+#: ../libgda/gda-query-parsing.c:669
+msgid "INSERT expression is a target field"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:574
+msgid "INSERT field does not have a valid syntax"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:597
+#: ../libgda/gda-query-parsing.c:618
+msgid "INSERT has more expression values than insert fields"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:604
+msgid "INSERT has more insert fields than expression values"
+msgstr ""
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:13
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:9
+msgid "IP adress of the host which has the database server running"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:78
+msgid "ISAM"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:79
+#, fuzzy
+msgid "ISO 8859-1 West European"
+msgstr "جنوب اوروبا (ISO-8859-3)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:16
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:14
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.1)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:17
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:15
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.10)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:18
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:16
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.2)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:17
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.3)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:20
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:18
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.4)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:19
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.5)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:20
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.6)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:23
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:21
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.7)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:22
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.8)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:23
+msgid "ISO 8859-1/ECMA 94 (Latin alphabet no.9)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:39
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:80
+#, fuzzy
+msgid "ISO 8859-13 Baltic"
+msgstr "بلطيقي (ISO-8859-13)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:81
+#, fuzzy
+msgid "ISO 8859-2 Central European"
+msgstr "أوروبا الوسطى (ISO-8859-2)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:24
+msgid "ISO 8859-5/ECMA 113 (Latin/Cyrillic)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:25
+msgid "ISO 8859-6/ECMA 114 (Latin/Arabic)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:41
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:82
+#, fuzzy
+msgid "ISO 8859-7 Greek"
+msgstr "يوناني (ISO-8859-7)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:28
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:26
+msgid "ISO 8859-7/ECMA 118 (Latin/Greek)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
+#, fuzzy
+msgid "ISO 8859-8 Hebrew"
+msgstr "عبري مرئي (ISO-8859-8)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:27
+msgid "ISO 8859-8/ECMA 121 (Latin/Hebrew)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:43
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:84
+#, fuzzy
+msgid "ISO 8859-9 Turkish"
+msgstr "تركي (ISO-8859-9)"
+
+#: ../libgda/gda-config.c:1577
+#: ../libgda/gda-server-provider-extra.c:84
+#: ../libgda/gda-server-provider-extra.c:128
+#, fuzzy
+msgid "Id"
+msgstr "الهوية"
+
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:2
+#, fuzzy
+msgid "If exists"
+msgstr "الملف موجود"
+
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:9
+#, fuzzy
+msgid "Ignore descendants"
+msgstr "تج_اهل الحالة"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:85
+#, fuzzy
+msgid "In Memory (MEMORY/HEAP)"
+msgstr "ذاكرة غير كافية"
+
+#: ../libgda/gda-server-provider-extra.c:88
+msgid "InType"
+msgstr ""
+
+#: ../testing/gda-test-sql.c:364
+#, fuzzy
+msgid "Inactive"
+msgstr "غير نشط"
+
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:1
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:6
+#, fuzzy
+msgid "Index description"
+msgstr "الوصف يحتوي على"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
+#, fuzzy
+msgid "Index directory"
+msgstr "دليل المستخدمين"
+
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:2
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
+#, fuzzy
+msgid "Index name"
+msgstr "اسم الموصول"
+
+#: ../providers/mysql/mysql_specs_drop_index.xml.in.h:2
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:3
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:4
+#, fuzzy
+msgid "Index to delete"
+msgstr "فشل مسح \"%s\": %s"
+
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:3
+msgid "Index type (depending on table storage engine)"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:110
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:881
+#: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:2
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
+#, fuzzy
+msgid "Index"
+msgstr "فهرس"
+
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:5
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
+msgid "Indexed field or expression"
+msgstr ""
+
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
+#, fuzzy
+msgid "Indexed field(s)"
+msgstr "حقل ال_قيمة"
+
+#: ../providers/oracle/gda-oracle-provider.c:1992
+msgid "Indexes"
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1567
+#, c-format
+msgid "Inexistant column in source data model: %d"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
+msgid "Inheritage"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:88
+msgid "InnoDB"
+msgstr ""
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:90
+#, fuzzy
+msgid "Insert method"
+msgstr "طريقة NAT"
+
+#: ../libgda/gda-query.c:1155
+#, fuzzy
+msgid "Insert"
+msgstr "أدرج"
+
+#: ../libgda/gda-query.c:4807
+msgid "Insertion query can't have any conditions"
+msgstr ""
+
+#: ../libgda/gda-query.c:4794
+msgid "Insertion query field has incompatible value assignment"
+msgstr ""
+
+#: ../libgda/gda-query.c:4776
+msgid "Insertion query fields incompatible with sub-query's fields"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:237
+#, fuzzy
+msgid "Installed providers"
+msgstr "الخط %s غير مثبت."
+
+#: ../libgda/gda-query-parsing.c:859
+msgid "Internal error: can't find target"
+msgstr ""
+
+#: ../libgda/handlers/gda-handler-bin.c:124
+msgid "InternalBin"
+msgstr ""
+
+#: ../libgda/handlers/gda-handler-boolean.c:121
+msgid "InternalBoolean"
+msgstr ""
+
+#: ../libgda/handlers/gda-handler-numerical.c:130
+msgid "InternalNumerical"
+msgstr ""
+
+#: ../libgda/handlers/gda-handler-string.c:121
+msgid "InternalString"
+msgstr ""
+
+#: ../libgda/handlers/gda-handler-time.c:164
+msgid "InternalTime"
+msgstr ""
+
+#: ../libgda/handlers/gda-handler-type.c:119
+msgid "InternalType"
+msgstr ""
+
+#: ../providers/bdb/gda-bdb-provider.c:250
+#: ../providers/bdb/gda-bdb-provider.c:271
+#: ../providers/bdb/gda-bdb-provider.c:297
+#, fuzzy
+msgid "Invalid BDB handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/firebird/gda-firebird-blob.c:162
+#: ../providers/firebird/gda-firebird-blob.c:208
+#: ../providers/firebird/gda-firebird-blob.c:255
+#: ../providers/firebird/gda-firebird-provider.c:827
+#: ../providers/firebird/gda-firebird-provider.c:944
+#: ../providers/firebird/gda-firebird-provider.c:971
+#: ../providers/firebird/gda-firebird-provider.c:990
+#: ../providers/firebird/gda-firebird-provider.c:1026
+#: ../providers/firebird/gda-firebird-provider.c:1119
+#: ../providers/firebird/gda-firebird-provider.c:1206
+#: ../providers/firebird/gda-firebird-provider.c:1240
+#: ../providers/firebird/gda-firebird-provider.c:1278
+#: ../providers/firebird/gda-firebird-recordset.c:669
+#: ../providers/firebird/gda-firebird-recordset.c:889
+#, fuzzy
+msgid "Invalid Firebird handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:494
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:630
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:738
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:813
+msgid "Invalid IBM DB2 handle"
+msgstr ""
+
+#: ../providers/ldap/gda-ldap-provider.c:268
+#: ../providers/ldap/gda-ldap-provider.c:524
+#: ../providers/ldap/gda-ldap-recordset.c:59
+#: ../providers/ldap/gda-ldap-recordset.c:177
+#, fuzzy
+msgid "Invalid LDAP handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/mdb/gda-mdb-provider.c:262
+#: ../providers/mdb/gda-mdb-provider.c:292
+#: ../providers/mdb/gda-mdb-provider.c:314
+#: ../providers/mdb/gda-mdb-provider.c:348
+#: ../providers/mdb/gda-mdb-provider.c:718
+#: ../providers/mdb/gda-mdb-provider.c:755
+#, fuzzy
+msgid "Invalid MDB handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/mysql/gda-mysql-provider.c:431
+#: ../providers/mysql/gda-mysql-provider.c:548
+#: ../providers/mysql/gda-mysql-provider.c:571
+#: ../providers/mysql/gda-mysql-provider.c:831
+#: ../providers/mysql/gda-mysql-provider.c:854
+#: ../providers/mysql/gda-mysql-provider.c:911
+#: ../providers/mysql/gda-mysql-provider.c:944
+#: ../providers/mysql/gda-mysql-provider.c:2231
+#, fuzzy
+msgid "Invalid MYSQL handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/mysql/gda-mysql-provider.c:415
+#: ../providers/mysql/gda-mysql-provider.c:1593
+#: ../providers/mysql/gda-mysql-provider.c:1888
+#: ../providers/mysql/gda-mysql-recordset.c:234
+#: ../providers/mysql/gda-mysql-recordset.c:307
+#: ../providers/mysql/gda-mysql-recordset.c:361
+#: ../providers/mysql/gda-mysql-recordset.c:414
+#: ../providers/mysql/gda-mysql-recordset.c:542
+#: ../providers/mysql/gda-mysql-recordset.c:701
+#: ../providers/mysql/gda-mysql-recordset.c:702
+#, fuzzy
+msgid "Invalid MySQL handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../libgda/gda-query-parsing.c:374
+msgid "Invalid ORDER BY clause"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:386
+#, c-format
+msgid "Invalid ORDER BY clause: can't find field number %d"
+msgstr ""
+
+#: ../providers/odbc/gda-odbc-provider.c:478
+#: ../providers/odbc/gda-odbc-provider.c:498
+#: ../providers/odbc/gda-odbc-provider.c:528
+#: ../providers/odbc/gda-odbc-provider.c:559
+#: ../providers/odbc/gda-odbc-provider.c:590
+#: ../providers/odbc/gda-odbc-provider.c:620
+#, fuzzy
+msgid "Invalid Odbc handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/oracle/gda-oracle-provider.c:509
+#: ../providers/oracle/gda-oracle-provider.c:541
+#: ../providers/oracle/gda-oracle-provider.c:615
+#: ../providers/oracle/gda-oracle-provider.c:764
+#: ../providers/oracle/gda-oracle-provider.c:936
+#: ../providers/oracle/gda-oracle-provider.c:986
+#: ../providers/oracle/gda-oracle-provider.c:1068
+#: ../providers/oracle/gda-oracle-provider.c:1127
+#: ../providers/oracle/gda-oracle-provider.c:1307
+#: ../providers/oracle/gda-oracle-recordset.c:173
+#: ../providers/oracle/gda-oracle-recordset.c:395
+#: ../providers/oracle/gda-oracle-recordset.c:594
+#, fuzzy
+msgid "Invalid Oracle handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/postgres/gda-postgres-blob.c:134
+#: ../providers/postgres/gda-postgres-provider.c:652
+#: ../providers/postgres/gda-postgres-provider.c:669
+#: ../providers/postgres/gda-postgres-provider.c:759
+#: ../providers/postgres/gda-postgres-provider.c:1038
+#: ../providers/postgres/gda-postgres-provider.c:1145
+#: ../providers/postgres/gda-postgres-recordset.c:188
+#: ../providers/postgres/gda-postgres-recordset.c:562
+#: ../providers/postgres/gda-postgres-recordset.c:692
+#, fuzzy
+msgid "Invalid PostgreSQL handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:444
+#: ../providers/sqlite/gda-sqlite-provider.c:1167
+#: ../providers/sqlite/gda-sqlite-provider.c:1400
+#: ../providers/sqlite/gda-sqlite-provider.c:1437
+#: ../providers/sqlite/gda-sqlite-provider.c:1559
+#, fuzzy
+msgid "Invalid SQLITE handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:389
+#: ../providers/sqlite/gda-sqlite-provider.c:582
+#: ../providers/sqlite/gda-sqlite-provider.c:949
+#: ../providers/sqlite/gda-sqlite-provider.c:1343
+#, fuzzy
+msgid "Invalid SQLite handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../providers/xbase/gda-xbase-provider.c:266
+#: ../providers/xbase/gda-xbase-provider.c:343
+#, fuzzy
+msgid "Invalid Xbase handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../libgda/gda-query-parsing.c:1300
+#, fuzzy
+msgid "Invalid empty field name"
+msgstr "الطّول الأقصى لإسم الحقل"
+
+#: ../libgda/gda-query-parsing.c:1344
+#, fuzzy, c-format
+msgid "Invalid field '%s.%s'"
+msgstr "حقل ال_قيمة"
+
+#: ../libgda/gda-query-parsing.c:1305
+#, fuzzy, c-format
+msgid "Invalid field name '%s'"
+msgstr "اسم صورة غير صحيح: \"%s\"."
+
+#: ../libgda/gda-query-parsing.c:1260
+#, fuzzy, c-format
+msgid "Invalid field name: %s"
+msgstr "اسم صورة غير صحيح: \"%s\"."
+
+#: ../providers/msql/gda-msql-provider.c:259
+#: ../providers/msql/gda-msql-provider.c:303
+#: ../providers/msql/gda-msql-provider.c:324
+#: ../providers/msql/gda-msql-provider.c:537
+#: ../providers/msql/gda-msql-recordset.c:51
+#: ../providers/msql/gda-msql-recordset.c:341
+#, fuzzy
+msgid "Invalid mSQL handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../libgda/gda-query-field-value.c:1378
+#, fuzzy, c-format
+msgid "Invalid parameter '%s' (value: %s)"
+msgstr "قيمة VGA غير صالحة"
+
+#: ../libgda/gda-query.c:4599
+#, fuzzy, c-format
+msgid "Invalid parameter '%s'"
+msgstr "عوامل التنفيذ"
+
+#: ../providers/firebird/gda-firebird-provider.c:1246
+#: ../providers/firebird/gda-firebird-provider.c:1284
+#, fuzzy
+msgid "Invalid transaction handle"
+msgstr "معالجة سيئة للملفّ"
+
+#: ../report/libgda-report/gda-report-item-detail.c:185
+#: ../report/libgda-report/gda-report-item-pagefooter.c:196
+#: ../report/libgda-report/gda-report-item-pageheader.c:185
+#: ../report/libgda-report/gda-report-item-report.c:711
+#: ../report/libgda-report/gda-report-item-reportfooter.c:197
+#: ../report/libgda-report/gda-report-item-reportheader.c:196
+#, c-format
+msgid "Item with ID %s is not a label"
+msgstr ""
+
+#: ../report/libgda-report/gda-report-item-detail.c:214
+#: ../report/libgda-report/gda-report-item-pagefooter.c:224
+#: ../report/libgda-report/gda-report-item-pageheader.c:214
+#: ../report/libgda-report/gda-report-item-report.c:739
+#: ../report/libgda-report/gda-report-item-reportfooter.c:225
+#: ../report/libgda-report/gda-report-item-reportheader.c:224
+#, c-format
+msgid "Item with ID %s is not a repfield"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:30
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:28
+#, fuzzy
+msgid "Japanese EUC"
+msgstr "ياباني (EUC-JP)"
+
+#: ../libgda/gda-query-join.c:908
+#: ../libgda/gda-query-parsing.c:876
+msgid "Join condition must be between two entities"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
+#, fuzzy
+msgid "KOI8-R Relcom Russian"
+msgstr "تصميم الجورجية الروسية"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:29
+#, fuzzy
+msgid "KOI8-R(U)"
+msgstr "سيريالي (KOI8-R)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:45
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:92
+#, fuzzy
+msgid "KOI8-U Ukrainian"
+msgstr "سيريالي / اوكراني (KOI8-U)"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
+#, fuzzy
+msgid "Keep coupled"
+msgstr "إبقاء الاستبانة"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:31
+msgid "Korean EUC (Hangle base)"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:32
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:30
+#, fuzzy
+msgid "Korean EUC"
+msgstr "كوري (EUC-KR)"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
+#, fuzzy
+msgid "LDAP Flags"
+msgstr "شارات البريمجات"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:7
+msgid "LDAP bind domain to use for authentication"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:114
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:912
+#, fuzzy
+msgid "Language"
+msgstr "لغة"
+
+#: ../providers/sybase/utils.c:473
+#, fuzzy
+msgid "Layer"
+msgstr "طبقة"
+
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
+#, fuzzy
+msgid "Length"
+msgstr "المدة"
+
+#: ../libgda/gda-object.c:304
+msgid "LibGda must be initialized before any usage."
+msgstr ""
+
+#: ../providers/sybase/utils.c:360
+#, fuzzy
+msgid "Line"
+msgstr "لف السّطور"
+
+#: ../testing/gda-test-models.c:89
+#: ../testing/gda-test-sql.c:87
+msgid "List of SQL parsing tests"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:175
+msgid "List of data sources from the config files (user and system wide)"
+msgstr ""
+
+#: ../tools/gda-inspect-dict-file.c:141
+msgid "List of queries in this file:\n"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:353
+#, fuzzy, c-format
+msgid "Locale set to '%s'."
+msgstr "كلمة السّر مضبوطة لـى:"
+
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:11
+#, fuzzy
+msgid "Locale to use in the connection"
+msgstr "ال_اسم المستخدم للاتصال:"
+
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:10
+#, fuzzy
+msgid "Locale"
+msgstr "التشفيرة الحالية (%s)"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:14
+#, fuzzy
+msgid "Location of the FreeTDS config file"
+msgstr "ترتيب قائمة الملفات بحسب الموقع"
+
+#: ../libgda/gda-config.c:1578
+#: ../tools/gda-diagnose.c:304
+#, fuzzy
+msgid "Location"
+msgstr "الموقع"
+
+#: ../tools/gda-list-config.c:104
+#, fuzzy, c-format
+msgid "Location: %s\n"
+msgstr "الموقع"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:34
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:32
+msgid "Login name (which has the rights to create databases)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:47
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:93
+#, fuzzy
+msgid "Mac Central European"
+msgstr "وسط أوروبا (MacCE)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:94
+#, fuzzy
+msgid "Mac West European"
+msgstr "وسط أوروبا (MacCE)"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:95
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
+#, fuzzy
+msgid "Match full"
+msgstr "كامل الشاشة"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:96
+#, fuzzy
+msgid "Match partial"
+msgstr "ضباب جزئي"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:97
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+#, fuzzy
+msgid "Match simple"
+msgstr "مطابقة التّعبير النّظامي"
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:99
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
+#, fuzzy
+msgid "Match type"
+msgstr "نوع التّنبيه"
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:101
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+msgid "Matching method if more than one field involved"
+msgstr ""
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
+#, fuzzy
+msgid "Max rows"
+msgstr "سطور مجموعة الإطارات"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:104
+msgid "Merge"
+msgstr ""
+
+#: ../providers/sybase/utils.c:477
+#, fuzzy
+msgid "Message Number"
+msgstr "رقم ال_حساب:"
+
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
+#, fuzzy
+msgid "Method"
+msgstr "<b>ال_طريقة:</b>"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
+#, fuzzy
+msgid "Min rows"
+msgstr "سطور مجموعة الإطارات"
+
+#: ../testing/gda-test-models.c:385
+#, fuzzy
+msgid "Missing 'file' attribute"
+msgstr "الملف المطلوب غير موجود"
+
+#: ../libgda/gda-query-field.c:164
+msgid "Missing 'target' attribute in <gda_query_fall>"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:720
+msgid "Missing DELETE target entity"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:1228
+#, c-format
+msgid "Missing GdaParameterListNode for param %p"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:1252
+#, fuzzy
+msgid "Missing GdaParameterListSource"
+msgstr "معلوملت غير موجودة"
+
+#: ../libgda/graph/gda-graph.c:748
+msgid "Missing ID attribute in <gda_graph>"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:1510
+msgid "Missing ID attribute in <gda_query_cond>"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:548
+msgid "Missing INSERT target entity"
+msgstr ""
+
+#: ../libgda/gda-query-field.c:208
+msgid "Missing Implementation in loading <gda_query_f*>"
+msgstr ""
+
+#: ../libgda/gda-query-parsing.c:436
+msgid "Missing UPDATE target entity"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:1360
+msgid "Missing attribute named 'path'"
+msgstr ""
+
+#: ../libgda/gda-query.c:4262
+msgid "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
+msgstr ""
+
+#: ../libgda/gda-parameter-list.c:467
+#, fuzzy, c-format
+msgid "Missing node <parameters>: '%s'"
+msgstr "تجاهل عقدة XML `%s': %s"
+
+#: ../libgda/gda-query.c:4605
+#, fuzzy
+msgid "Missing parameters"
+msgstr "باراميترات غير صالحة"
+
+#: ../libgda/gda-dict-aggregate.c:461
+msgid "Missing required attributes for <gda_dict_aggregate>"
+msgstr ""
+
+#: ../libgda/gda-dict-constraint.c:1427
+msgid "Missing required attributes for <gda_dict_constraint>"
+msgstr ""
+
+#: ../libgda/gda-dict-field.c:1025
+msgid "Missing required attributes for <gda_dict_field>"
+msgstr ""
+
+#: ../libgda/gda-dict-function.c:467
+msgid "Missing required attributes for <gda_dict_function>"
+msgstr ""
+
+#: ../libgda/gda-dict-table.c:1271
+msgid "Missing required attributes for <gda_dict_table>"
+msgstr ""
+
+#: ../libgda/gda-dict-type.c:384
+msgid "Missing required attributes for <gda_dict_type>"
+msgstr ""
+
+#: ../libgda/gda-query-field-agg.c:848
+msgid "Missing required attributes for <gda_query_fagg>"
+msgstr ""
+
+#: ../libgda/gda-query-field-all.c:677
+msgid "Missing required attributes for <gda_query_fall>"
+msgstr ""
+
+#: ../libgda/gda-query-field-field.c:1022
+msgid "Missing required attributes for <gda_query_ffield>"
+msgstr ""
+
+#: ../libgda/gda-query-field-func.c:914
+msgid "Missing required attributes for <gda_query_ffunc>"
+msgstr ""
+
+#: ../libgda/gda-query-field-value.c:1286
+msgid "Missing required g_type for <gda_query_fval>"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:2039
+#, fuzzy, c-format
+msgid "Missing required value for '%s'"
+msgstr "خطأ تلقي قيمة لـ '%s': %s"
+
+#: ../libgda/gda-server-operation.c:2050
+#, c-format
+msgid "Missing required value for list of parameters '%s'"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-provider.c:623
+#: ../providers/mysql/gda-mysql-provider.c:648
+#: ../providers/oracle/gda-oracle-provider.c:810
+#: ../providers/oracle/gda-oracle-provider.c:835
+#: ../providers/postgres/gda-postgres-provider.c:805
+#: ../providers/postgres/gda-postgres-provider.c:830
+#: ../providers/sqlite/gda-sqlite-provider.c:642
+#: ../providers/sqlite/gda-sqlite-provider.c:667
+#, fuzzy, c-format
+msgid "Missing spec. file '%s'"
+msgstr "الملف المطلوب غير موجود"
+
+#: ../libgda/gda-query-parsing.c:483
+msgid "Missing target fields to update"
+msgstr ""
+
+#: ../libgda/gda-query.c:5531
+#, fuzzy
+msgid "Missing values"
+msgstr "<b>القيم النسبيّة</b>"
+
+#: ../testing/gda-test-models.c:696
+#, fuzzy, c-format
+msgid "Model %s (name=%s) has changed!"
+msgstr "تَغَيّر اسم المستضيف"
+
+#: ../testing/gda-test-models.c:710
+#, c-format
+msgid "Model %s (name=%s): row %d inserted!"
+msgstr ""
+
+#: ../testing/gda-test-models.c:738
+#, c-format
+msgid "Model %s (name=%s): row %d removed!"
+msgstr ""
+
+#: ../testing/gda-test-models.c:724
+#, c-format
+msgid "Model %s (name=%s): row %d updated!"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-recordset.c:807
+#: ../providers/mysql/gda-mysql-recordset.c:809
+msgid "Model does not have any non-unique values to update."
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-recordset.c:796
+#: ../providers/mysql/gda-mysql-recordset.c:798
+msgid "Model does not have at least one non-modified unique key."
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1928
+msgid "Model does not support random access, not showing data\n"
+msgstr ""
+
+#: ../providers/postgres/gda-postgres-recordset.c:500
+msgid "Model doesn't have any non-unique values to update."
+msgstr ""
+
+#: ../providers/postgres/gda-postgres-recordset.c:496
+msgid "Model doesn't have at least one non-modified unique key."
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-recordset.c:638
+#: ../providers/mysql/gda-mysql-recordset.c:640
+#: ../providers/postgres/gda-postgres-recordset.c:369
+msgid "Model doesn't have at least one unique key."
+msgstr ""
+
+#: ../libgda/gda-query.c:4749
+msgid "Modification query field has incompatible type"
+msgstr ""
+
+#: ../providers/mdb/gda-mdb-provider.c:690
+msgid "Money amounts"
+msgstr ""
+
+#: ../libgda/gda-query-field-agg.c:835
+#, c-format
+msgid "More than one argument for aggregate %s"
+msgstr ""
+
+#: ../libgda/gda-dict-aggregate.c:443
+#, c-format
+msgid "More than one argument type for aggregate '%s'"
+msgstr ""
+
+#: ../libgda/gda-query-field.c:273
+#, c-format
+msgid "More than one field to parse in '%s'"
+msgstr ""
+
+#: ../libgda/gda-dict-aggregate.c:432
+#, c-format
+msgid "More than one return type for aggregate '%s'"
+msgstr ""
+
+#: ../libgda/gda-dict-function.c:443
+#, c-format
+msgid "More than one return type for function '%s'"
+msgstr ""
+
+#: ../libgda/gda-query.c:4719
+msgid "More than one target defined to apply modifications"
+msgstr ""
+
+#: ../libgda/gda-query.c:4527
+msgid "More than two sub-queries for an EXCEPT query"
+msgstr ""
+
+#: ../providers/freetds/gda-freetds-provider.c:1049
+#, c-format
+msgid ""
+"Msg %d, Level %d, State %d, Server %s, Line %d\n"
+"%s\n"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
+#, fuzzy
+msgid "MyISAM (default)"
+msgstr "إفتراض الحروف"
+
+#: ../providers/freetds/utils.c:40
+#: ../providers/oracle/utils.c:70
+#: ../providers/postgres/utils.c:80
+#: ../providers/sybase/utils.c:535
+#, fuzzy
+msgid "NO DESCRIPTION"
+msgstr "لا وصف"
+
+#: ../providers/oracle/oracle_specs_dsn.xml.in.h:1
+msgid "Name of the TNS configuration to use for connecting"
+msgstr ""
+
+#: ../providers/bdb/bdb_specs_dsn.xml.in.h:4
+msgid "Name of the database in the database file to be used"
+msgstr ""
+
+#: ../libgda/gda-config.c:1880
+#: ../libgda/gda-server-provider-extra.c:175
+#: ../providers/firebird/gda-firebird-provider.c:737
+#: ../providers/ldap/gda-ldap-provider.c:338
+#: ../providers/mdb/gda-mdb-provider.c:451
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
+#: ../providers/odbc/gda-odbc-provider.c:794
+#: ../providers/odbc/gda-odbc-provider.c:847
+#: ../providers/oracle/gda-oracle-provider.c:1700
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:38
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:12
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
+#, fuzzy
+msgid "Name"
+msgstr "اسم"
+
+#: ../libgda/gda-server-provider-extra.c:118
+#, fuzzy
+msgid "Namespace"
+msgstr "المجال المجرّد"
+
+#: ../libgda/gda-server-provider-extra.c:132
+msgid "Nb args"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
+#, fuzzy
+msgid "New name"
+msgstr "اسم دليل جديد"
+
+#: ../providers/mysql/mysql_specs_rename_table.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_table.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:2
+#, fuzzy
+msgid "New table name"
+msgstr "اسم دليل جديد"
+
+#: ../libgda/gda-data-model-import.c:1676
+msgid "No <gda_array_field> specified in <gda_array>"
+msgstr ""
+
+#: ../libgda/gda-data-model-query.c:1249
+msgid "No DELETE query specified, can't delete row"
+msgstr ""
+
+#: ../libgda/gda-connection.c:455
+#: ../libgda/gda-connection.c:457
+msgid "No DSN or connection string specified"
+msgstr ""
+
+#: ../libgda/gda-data-model-query.c:1159
+#: ../libgda/gda-data-model-query.c:1207
+msgid "No INSERT query specified, can't insert row"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:234
+#, fuzzy
+msgid "No TNS name supplied"
+msgstr "لم يحدَّد إسم مجلّد."
+
+#: ../libgda/gda-data-model-query.c:1060
+#: ../libgda/gda-data-model-query.c:1108
+msgid "No UPDATE query specified, can't update row"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1338
+#: ../libgda/gda-data-model-import.c:1629
+msgid "No \"gdatype\" attribute specified in <gda_array_field>"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:109
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+#, fuzzy
+msgid "No action"
+msgstr "لا عمل إفتراضي مربوط"
+
+#: ../libgda/gda-dict-database.c:851
+#: ../libgda/gda-dict-database.c:929
+#: ../libgda/gda-dict-table.c:538
+#, fuzzy
+msgid "No connection associated to dictionary!"
+msgstr "لا اتّصال بخادم القاموس على '%s:%d'"
+
+#: ../libgda/gda-query.c:2738
+#, fuzzy
+msgid "No connection associated to query's dictionary"
+msgstr "لا اتّصال بخادم القاموس على '%s:%d'"
+
+#: ../libgda/gda-dict.c:1212
+#, fuzzy
+msgid "No connection associated to the dictionary"
+msgstr "لا اتّصال بخادم القاموس على '%s:%d'"
+
+#: ../tools/gda-diagnose.c:708
+#, fuzzy
+msgid "No constraint"
+msgstr "لا تاريخ"
+
+#: ../providers/firebird/gda-firebird-provider.c:865
+#, fuzzy
+msgid "No database specified"
+msgstr "لم يحدّد عنوان"
+
+#: ../report/libgda-report/gda-report-valid.c:269
+#, fuzzy, c-format
+msgid "No declaration for attribute %s of element %s\n"
+msgstr "لا صفة \"اسم\" على العنصر <%s>"
+
+#: ../libgda/gda-data-model-import.c:1734
+#: ../libgda/gda-data-proxy.c:427
+#: ../libgda/gda-server-operation.c:769
+#: ../providers/oracle/gda-oracle-provider.c:1948
+#, fuzzy
+msgid "No detail"
+msgstr "لا تاريخ"
+
+#: ../tools/gda-diagnose.c:663
+#, fuzzy
+msgid "No field returned"
+msgstr "أرجع الاستعلام الاستثناء %s\n"
+
+#: ../providers/mysql/gda-mysql-ddl.c:257
+#: ../providers/postgres/gda-postgres-ddl.c:265
+msgid "No field specified in foreign key constraint"
+msgstr ""
+
+#: ../libgda/gda-query-field.c:287
+#, c-format
+msgid "No field to parse in '%s'"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:367
+#, fuzzy, c-format
+msgid "No join condition found in '%s'"
+msgstr "لا توجد صور في الأرشيف %s"
+
+#: ../libgda/gda-query-target.c:596
+#: ../libgda/gda-query-target.c:604
+#, fuzzy
+msgid "No name"
+msgstr "لا يوجد اسم"
+
+#: ../libgda/gda-connection.c:464
+#: ../libgda/gda-connection.c:466
+#, fuzzy
+msgid "No provider specified"
+msgstr "لم يحدّد عنوان"
+
+#: ../providers/mysql/gda-mysql-ddl.c:284
+#: ../providers/postgres/gda-postgres-ddl.c:292
+msgid "No referenced table specified in foreign key constraint"
+msgstr ""
+
+#: ../libgda/gda-data-model-array.c:91
+msgid "No row in data model"
+msgstr ""
+
+#: ../libgda/gda-query-field-value.c:1429
+#, fuzzy
+msgid "No specified value"
+msgstr "(لا قيمة ضبطت)"
+
+#: ../libgda/gda-query.c:4711
+msgid "No target defined to apply modifications"
+msgstr ""
+
+#: ../testing/html.c:293
+#: ../tools/gda-diagnose.c:380
+#: ../tools/gda-diagnose.c:384
+#: ../tools/gda-diagnose.c:388
+#: ../tools/gda-diagnose.c:392
+#: ../tools/gda-diagnose.c:466
+#: ../tools/gda-diagnose.c:472
+#: ../tools/gda-diagnose.c:483
+#: ../tools/gda-diagnose.c:511
+#: ../tools/gda-diagnose.c:550
+#: ../tools/html.c:293
+#, fuzzy
+msgid "No"
+msgstr "لا"
+
+#: ../libgda/gda-query-parsing.c:1383
+#, fuzzy, c-format
+msgid "Non declared target '%s'"
+msgstr "عرض هدف الشاشة"
+
+#: ../libgda/gda-server-operation.c:1091
+msgid "Non handled GdaServerOperationType, please report error"
+msgstr ""
+
+#: ../libgda/gda-query-field-agg.c:979
+#, fuzzy
+msgid "Non-activated aggregate"
+msgstr "مفتاح غير قياسي"
+
+#: ../libgda/gda-query-field-all.c:730
+#, fuzzy
+msgid "Non-activated field"
+msgstr "أي حقل يحوي"
+
+#: ../libgda/gda-query-field-func.c:1048
+#, fuzzy
+msgid "Non-activated function"
+msgstr "استدعاء التابع ملغى"
+
+#: ../libgda/gda-query-parsing.c:1326
+#, fuzzy, c-format
+msgid "Non-declared target '%s'"
+msgstr "عرض هدف الشاشة"
+
+#: ../tools/gda-list-config.c:121
+#, fuzzy
+msgid "None provided"
+msgstr "<small><i>لا شيء</i></small>"
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:14
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:111
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
+#, fuzzy
+msgid "Not NULL"
+msgstr "غير صحيح"
+
+#: ../providers/freetds/gda-freetds-provider.c:1068
+#: ../providers/freetds/utils.c:44
+#: ../providers/oracle/utils.c:76
+#: ../providers/postgres/utils.c:71
+#: ../providers/postgres/utils.c:81
+#: ../providers/sybase/gda-sybase-provider.c:769
+#: ../providers/sybase/gda-sybase-recordset.c:500
+#: ../providers/sybase/gda-sybase-recordset.c:523
+#: ../providers/sybase/gda-sybase-recordset.c:581
+#: ../providers/sybase/utils.c:207
+#: ../providers/sybase/utils.c:224
+#: ../providers/sybase/utils.c:240
+#: ../providers/sybase/utils.c:256
+#: ../providers/sybase/utils.c:276
+#: ../providers/sybase/utils.c:317
+#: ../providers/sybase/utils.c:334
+#: ../providers/sybase/utils.c:386
+#: ../providers/sybase/utils.c:412
+#: ../providers/sybase/utils.c:446
+#: ../providers/sybase/utils.c:463
+#: ../providers/sybase/utils.c:486
+#: ../providers/sybase/utils.c:502
+#: ../providers/sybase/utils.c:540
+#: ../providers/bdb/utils.c:36
+#, fuzzy
+msgid "Not available"
+msgstr "غير موجود"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
+#, fuzzy
+msgid "Not deferrable"
+msgstr "غير صحيح"
+
+#: ../libgda/gda-server-provider-extra.c:101
+#: ../providers/firebird/gda-firebird-provider.c:621
+#, fuzzy
+msgid "Not null?"
+msgstr "غير صحيح"
+
+#: ../tools/gda-diagnose.c:722
+#, fuzzy
+msgid "Nothing to return"
+msgstr "ارجع لتسجيل الدخول السابق"
+
+#: ../providers/sybase/utils.c:351
+#, fuzzy
+msgid "Number"
+msgstr "الرقم"
+
+#: ../providers/mdb/gda-mdb-provider.c:698
+#, fuzzy
+msgid "Numeric"
+msgstr "رقمي"
+
+#: ../libgda/handlers/gda-handler-numerical.c:131
+msgid "Numerical representation"
+msgstr ""
+
+#: ../providers/odbc/odbc_specs_dsn.xml.in.h:2
+#, fuzzy
+msgid "ODBC connection string"
+msgstr "سلسلة هندسة غير سليمة \"%s\"\n"
+
+#: ../providers/mdb/gda-mdb-provider.c:695
+#, fuzzy
+msgid "OLE object"
+msgstr "مميّز الجسم (%s)"
+
+#: ../providers/sybase/utils.c:60
+#, fuzzy, c-format
+msgid "OS error: %s"
+msgstr ""
+"خطأ GConf:\n"
+"  %s"
+
+#: ../providers/sybase/utils.c:231
+#, fuzzy
+msgid "OS_Error:("
+msgstr ""
+"خطأ GConf:\n"
+"  %s"
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:113
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
+#, fuzzy
+msgid "On delete action"
+msgstr "عمل GOK للحذف"
+
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:12
+#: ../providers/mysql/mysql_specs_drop_index.xml.in.h:3
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
+#, fuzzy
+msgid "On table"
+msgstr "جسم الجدول"
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:115
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
+#, fuzzy
+msgid "On update action"
+msgstr "تراجع عن العمل الأخير"
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
+#, fuzzy
+msgid "Only if exists"
+msgstr "_اضافة فقط اذا كان اجد"
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:116
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:14
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:29
+#, fuzzy
+msgid "Only if not exists"
+msgstr "_اضافة فقط اذا كان اجد"
+
+#: ../providers/sqlite/gda-sqlite-provider.c:600
+msgid "Only one database per connection is allowed"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:117
+msgid "Only pack long CHAR/VARCHAR columns"
+msgstr ""
+
+#: ../providers/sybase/utils.c:520
+msgid "Operation not possible, connection busy."
+msgstr ""
+
+#: ../libgda/gda-connection.c:186
+#, fuzzy
+msgid "Options (connection sharing)"
+msgstr "<b>إعدادات مشاركة ويندوز</b>"
+
+#: ../libgda/gda-server-provider-extra.c:179
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:15
+#: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:3
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:33
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:6
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:12
+#, fuzzy
+msgid "Options"
+msgstr "خيارات"
+
+#: ../providers/sybase/utils.c:475
+msgid "Origin"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:308
+msgid "Out of memory. Allocating connection structure failed."
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:87
+msgid "OutType"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:85
+#: ../libgda/gda-server-provider-extra.c:129
+#: ../libgda/gda-server-provider-extra.c:139
+#: ../libgda/gda-server-provider-extra.c:146
+#: ../libgda/gda-server-provider-extra.c:157
+#: ../libgda/gda-server-provider-extra.c:169
+#: ../providers/firebird/gda-firebird-provider.c:251
+#: ../providers/firebird/gda-firebird-provider.c:739
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:792
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:882
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:911
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:941
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:969
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:997
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1050
+#: ../providers/ldap/gda-ldap-provider.c:339
+#: ../providers/oracle/gda-oracle-provider.c:1700
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
+#: ../providers/sybase/gda-sybase-provider.c:1104
+#, fuzzy
+msgid "Owner"
+msgstr "المالك"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:119
+#, fuzzy
+msgid "Pack keys"
+msgstr "<b>مفاتيح التحول</b>"
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:4
+#, fuzzy
+msgid "Page Size"
+msgstr "حجم الصفحة"
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:5
+#, fuzzy
+msgid "Page size to use on the database"
+msgstr "انقر مرتان على قاعدة البيانات المستخدمة"
+
+#: ../tools/gda-diagnose.c:313
+#, fuzzy
+msgid "Parameter name"
+msgstr "اسم الموصول"
+
+#: ../libgda/gda-server-operation.c:1306
+#: ../libgda/gda-server-operation.c:1919
+msgid "Parameterlist values can only be set for individual parameters within it"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:47
+#, fuzzy
+msgid "Parent table"
+msgstr "جسم الجدول"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
+#, fuzzy
+msgid "Parent table(s)"
+msgstr "جسم الجدول"
+
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:60
+#: ../libsql/sql_parser.c:61
+#, fuzzy, c-format
+msgid "Parse error near `%s'"
+msgstr "المراسلون القريبون مني"
+
+#: ../testing/gda-test-sql.c:387
+#, fuzzy
+msgid "Parsing"
+msgstr "خطأ أثناء ترجمة المصفات: %s: %s"
+
+#: ../libgda/gda-connection.c:182
+#, fuzzy
+msgid "Password to use"
+msgstr "قاعدة البيانات المستعملة"
+
+#. other table options
+#: ../libgda/gda-config.c:1885
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:121
+#, fuzzy
+msgid "Password"
+msgstr "كلمة السّر"
+
+#: ../tools/gda-diagnose.c:372
+#, fuzzy
+msgid "Plugin's entry functions"
+msgstr "وظائف تنقيب البيانات"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:9
+msgid "Port to use for connecting to the LDAP server"
+msgstr ""
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:16
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:8
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:51
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:34
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:7
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:13
+#, fuzzy
+msgid "Port"
+msgstr "المَنْفذ"
+
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
+msgid "Predicate"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:376
+#: ../tools/gda-diagnose.c:460
+#, fuzzy
+msgid "Present?"
+msgstr "اعرض الخواص"
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:15
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:123
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
+#, fuzzy
+msgid "Primary key"
+msgstr "اتفاق على المفتاح"
+
+#: ../libgda/gda-server-provider-extra.c:102
+#: ../providers/firebird/gda-firebird-provider.c:622
+#, fuzzy
+msgid "Primary key?"
+msgstr "اتفاق على المفتاح"
+
+#: ../libgda/gda-query.c:4405
+#, fuzzy
+msgid "Problem loading <gda_query>"
+msgstr "واجه الشريط مشكلة أثناء تحميل \"%s\"."
+
+#: ../libgda/gda-query-join.c:1336
+msgid "Problem loading <gda_query_join>"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:127
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:910
+msgid "Procedure"
+msgstr ""
+
+#: ../providers/oracle/gda-oracle-provider.c:1995
+msgid "Procedures"
+msgstr ""
+
+#: ../libgda/gda-server-provider.c:509
+#, c-format
+msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
+msgstr ""
+
+#: ../libgda/gda-server-provider.c:505
+#, c-format
+msgid "Provider %s created a GdaServerOperation without node for '%s'"
+msgstr ""
+
+#: ../libgda/gda-client.c:320
+#, c-format
+msgid "Provider %s does not implement entry function"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:292
+#, fuzzy, c-format
+msgid "Provider '%s' details"
+msgstr "اظهار التفاصيل"
+
+#: ../providers/bdb/libmain.c:40
+#, fuzzy
+msgid "Provider for Berkeley databases"
+msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+
+#: ../providers/firebird/libmain.c:41
+#, fuzzy
+msgid "Provider for Firebird databases"
+msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+
+#: ../providers/msql/gda-msql-libmain.c:40
+msgid "Provider for Hughes Technologies mSQL databases"
+msgstr ""
+
+#: ../providers/ibmdb2/libmain.c:40
+#, fuzzy
+msgid "Provider for IBMDB2 databases"
+msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+
+#: ../providers/ldap/libmain.c:43
+#, fuzzy
+msgid "Provider for LDAP directory"
+msgstr "هيكل الدلائل للملفات"
+
+#: ../providers/mdb/libmain.c:42
+msgid "Provider for Microsoft Access files"
+msgstr ""
+
+#: ../providers/mysql/libmain.c:42
+#, fuzzy
+msgid "Provider for MySQL databases"
+msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+
+#: ../providers/odbc/libmain.c:43
+msgid "Provider for ODBC data sources"
+msgstr ""
+
+#: ../providers/oracle/libmain.c:40
+#, fuzzy
+msgid "Provider for Oracle databases"
+msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+
+#: ../providers/postgres/libmain.c:42
+#, fuzzy
+msgid "Provider for PostgreSQL databases"
+msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+
+#: ../providers/sqlite/libmain.c:42
+#, fuzzy
+msgid "Provider for SQLite databases"
+msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+
+#: ../providers/freetds/libmain.c:40
+msgid "Provider for TDS-based databases (using FreeTDS)"
+msgstr ""
+
+#: ../providers/xbase/libmain.c:40
+msgid "Provider for xBase (dBase, FoxPro, etc) files"
+msgstr ""
+
+#: ../libgda/gda-connection.c:174
+#, fuzzy
+msgid "Provider to use"
+msgstr "قاعدة البيانات المستعملة"
+
+#: ../libgda/gda-config.c:1881
+msgid "Provider"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:301
+#, fuzzy
+msgid "Provider's information"
+msgstr "بيانات سيّئة"
+
+#: ../tools/gda-list-config.c:102
+#, c-format
+msgid "Provider: %s\n"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:236
+msgid "Providers"
+msgstr ""
+
+#: ../libgda/gda-query.c:1904
+msgid "Queries which update data can only have one target"
+msgstr ""
+
+#: ../libgda/gda-query.c:4679
+#, fuzzy, c-format
+msgid "Query %s is not a selection query"
+msgstr "“%s” لا يجيب"
+
+#: ../libgda/gda-query.c:5777
+#, fuzzy, c-format
+msgid "Query '%s'"
+msgstr "بحث"
+
+#: ../testing/gda-test-sql.c:291
+#, fuzzy
+msgid "Query Name"
+msgstr "اسم الموصول"
+
+#: ../testing/gda-test-sql.c:293
+#, fuzzy
+msgid "Query Status"
+msgstr "ضبط الحالة"
+
+#: ../providers/freetds/gda-freetds-provider.c:767
+#: ../providers/freetds/gda-freetds-provider.c:768
+msgid "Query did not succeed in execute_cmd()."
+msgstr ""
+
+#: ../libgda/gda-data-model-query.c:608
+#, fuzzy
+msgid "Query is not a SELECT query"
+msgstr "لا أستطيع اختيار ملف"
+
+#: ../libgda/gda-query.c:4544
+msgid "Query without any SQL code"
+msgstr ""
+
+#: ../libgda/gda-query-field-value.c:1242
+#, c-format
+msgid "Query's param sources has no data model at position %d"
+msgstr ""
+
+#: ../tools/gda-inspect-dict-file.c:182
+#, fuzzy, c-format
+msgid "Query_%02d"
+msgstr "(%d:%02d:%d متبقيّة)"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:124
+#, fuzzy
+msgid "Redundant"
+msgstr "جسم فائض"
+
+#: ../libgda/gda-dict-constraint.c:1440
+#, c-format
+msgid "Referenced field in constraint (%s) not found"
+msgstr ""
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:126
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
+#, fuzzy
+msgid "Referenced field"
+msgstr "حقل ال_قيمة"
+
+#: ../libgda/gda-dict-constraint.c:1432
+#, fuzzy, c-format
+msgid "Referenced table (%s) not found"
+msgstr "خطأ: مستخدم غير موجود"
+
+#. foreign key spec
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:128
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
+#, fuzzy
+msgid "Referenced table"
+msgstr "جسم الجدول"
+
+#: ../libgda/gda-server-provider-extra.c:104
+#: ../providers/firebird/gda-firebird-provider.c:624
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:5
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:4
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:2
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:4
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:2
+#, fuzzy
+msgid "References"
+msgstr "خ_يارات"
+
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:5
+msgid "Refuse to drop the column if any objects depend on it (RESTRICT)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:6
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:3
+msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
+msgstr ""
+
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:3
+msgid "Release the space associated with the table. (PURGE)"
+msgstr ""
+
+#: ../testing/gda-test-sql.c:295
+#, fuzzy
+msgid "Rendered SQL"
+msgstr "عبارات SQL"
+
+#: ../providers/mdb/gda-mdb-provider.c:697
+#, fuzzy
+msgid "Replication ID"
+msgstr "هوية البوّاب:"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:19
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:38
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:35
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:8
+#, fuzzy
+msgid "Require SSL"
+msgstr "SSL غير متوفّر"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:129
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+msgid "Restrict"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:461
+msgid "Result without any connection"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:461
+#, fuzzy
+msgid "Result"
+msgstr "نتيجة الاختبار"
+
+#: ../libgda/gda-server-provider-extra.c:131
+#: ../providers/firebird/gda-firebird-provider.c:741
+#, fuzzy
+msgid "Return type"
+msgstr "نوع التّنبيه"
+
+#: ../libgda/gda-data-model-hash.c:90
+#, c-format
+msgid "Row %d not found in data model"
+msgstr ""
+
+#: ../libgda/gda-data-model-array.c:75
+#: ../libgda/gda-data-model-array.c:96
+#, fuzzy, c-format
+msgid "Row %d out of range 0 - %d"
+msgstr "قيمة خارج المجال.\n"
+
+#: ../libgda/gda-data-model-import.c:1931
+#, c-format
+msgid "Row at line %d does not have enough values (which are thus ignored)"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1911
+#, c-format
+msgid "Row at line %d does not have enough values, completed with NULL values"
+msgstr ""
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:131
+#, fuzzy
+msgid "Row format"
+msgstr "تنسيق الفيديو"
+
+#: ../libgda/gda-data-model-import.c:1147
+#, c-format
+msgid "Row has more values than detected at line %d"
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:1519
+msgid "Row has too many values (which are ignored)"
+msgstr ""
+
+#: ../libgda/gda-data-model-array.c:197
+#: ../libgda/gda-data-model-array.c:225
+msgid "Row not found in data model"
+msgstr ""
+
+#: ../providers/msql/gda-msql-recordset.c:58
+#, fuzzy
+msgid "Row number out of bounds"
+msgstr "%s: أولوية زائدة عن الحد، تم تغييرها إلى %d"
+
+#: ../providers/mysql/gda-mysql-recordset.c:314
+#: ../providers/bdb/gda-bdb-recordset.c:113
+#, fuzzy, c-format
+msgid "Row number out of range 0 - %d"
+msgstr "الرمز خارج حدود UTF-8"
+
+#: ../providers/ldap/gda-ldap-recordset.c:70
+#: ../providers/mysql/gda-mysql-recordset.c:245
+#: ../providers/mysql/gda-mysql-recordset.c:367
+#: ../providers/postgres/gda-postgres-recordset.c:197
+#: ../providers/postgres/gda-postgres-recordset.c:571
+#, fuzzy
+msgid "Row number out of range"
+msgstr "الرمز خارج حدود UTF-8"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:53
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:132
+#, fuzzy
+msgid "SJIS for Windows Japanese"
+msgstr "ياباني"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:943
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:971
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1052
+#, fuzzy
+msgid "SQL Definition"
+msgstr "وصف التعريف"
+
+#. FIXME: pre-set values for the SQL_DIALECT values with human readable values
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:7
+#, fuzzy
+msgid "SQL Dialect"
+msgstr "عبارات SQL"
+
+#: ../tools/gda-inspect-dict-file.c:160
+#, fuzzy, c-format
+msgid "SQL ERROR: %s\n"
+msgstr ""
+"خطأ GConf:\n"
+"  %s"
+
+#: ../libgda/gda-data-model-filter-sql.c:364
+#, fuzzy, c-format
+msgid "SQL command is not a SELECT (is '%s'"
+msgstr "أمر المُطْلِق غير محدد."
+
+#. FIXME: pre-set values for the SQL_DIALECT values with human readable values
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:9
+msgid "SQL dialect to use on the connection"
+msgstr ""
+
+#: ../testing/gda-test-sql.c:286
+#, fuzzy
+msgid "SQL tested"
+msgstr "عبارات SQL"
+
+#: ../libgda/gda-query.c:1167
+#, fuzzy
+msgid "SQL text"
+msgstr "نص العلامة."
+
+#: ../providers/firebird/gda-firebird-provider.c:743
+#, fuzzy
+msgid "SQL"
+msgstr "SQL"
+
+#. GetInfo is needed for obtaining database name
+#. is needed for tables schema
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:303
+msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
+msgstr ""
+
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:121
+#, fuzzy
+msgid "SQlite binary representation"
+msgstr "أظهر الملفات ال_ثنائية"
+
+#. list of fields
+#: ../libgda/gda-server-provider-extra.c:100
+#: ../providers/firebird/gda-firebird-provider.c:620
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:16
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:134
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:33
+#, fuzzy
+msgid "Scale"
+msgstr "القياس"
+
+#: ../tools/gda-diagnose.c:619
+#, fuzzy, c-format
+msgid "Schema Error: %s"
+msgstr "خطأ ضبط السيمة لـ `%s': %s"
+
+#: ../libgda/gda-dict-reg-aggregates.c:184
+msgid "Schema for list of aggregates is wrong"
+msgstr ""
+
+#: ../libgda/gda-dict-reg-types.c:273
+msgid "Schema for list of data types is wrong"
+msgstr ""
+
+#: ../libgda/gda-dict-table.c:588
+#: ../libgda/gda-dict-table.c:600
+msgid "Schema for list of fields is wrong"
+msgstr ""
+
+#: ../libgda/gda-dict-reg-functions.c:185
+msgid "Schema for list of functions is wrong"
+msgstr ""
+
+#: ../libgda/gda-dict-database.c:958
+msgid "Schema for list of tables is wrong"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:562
+msgid "Schemas not reported by this provider"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:560
+msgid "Schemas reporting"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
+#, fuzzy
+msgid "Search Path"
+msgstr "مسار الجهاز"
+
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:10
+msgid "Search path among database's schemas"
+msgstr ""
+
+#: ../libgda/gda-query.c:1165
+#, fuzzy
+msgid "Select (exception)"
+msgstr "إرجاع إستثناء: %s"
+
+#: ../libgda/gda-query.c:1163
+#, fuzzy
+msgid "Select (intersection)"
+msgstr "إنتقاء ملف"
+
+#: ../libgda/gda-query.c:1161
+#, fuzzy
+msgid "Select (union)"
+msgstr "إنتقاء ملف"
+
+#: ../libgda/gda-query.c:1153
+#, fuzzy
+msgid "Select"
+msgstr "انتقاء"
+
+#: ../providers/sybase/gda-sybase-provider.c:883
+#, fuzzy
+msgid "Sending command failed."
+msgstr "فشل أمر IMAP: %s"
+
+#: ../providers/sybase/gda-sybase-provider.c:681
+#, fuzzy
+msgid "Sending sql-command failed."
+msgstr "فشل تشغيل الأمر"
+
+#: ../libgda/gda-server-provider-extra.c:123
+#: ../libgda/gda-server-provider-extra.c:138
+#, fuzzy
+msgid "Sequence"
+msgstr "<b>متتالية</b>"
+
+#: ../providers/oracle/gda-oracle-provider.c:1998
+msgid "Sequences"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:36
+#, fuzzy
+msgid "Server access parameters"
+msgstr "تعذّر الوصول إلى سلّة المهملات."
+
+#: ../providers/sybase/utils.c:343
+#, fuzzy
+msgid "Server:"
+msgstr "ال_خادم:"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
+#, fuzzy
+msgid "Set to NULL"
+msgstr "كلمة السّر مضبوطة لـى:"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+#, fuzzy
+msgid "Set to default"
+msgstr "الإ_فتراضي: \"أهلا بك في %n\""
+
+#: ../providers/sybase/utils.c:354
+#: ../providers/sybase/utils.c:471
+msgid "Severity"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:55
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:136
+#, fuzzy
+msgid "Shift-JIS Japanese"
+msgstr "ياباني (Shift_JIS)"
+
+#: ../providers/mdb/gda-mdb-provider.c:691
+#, fuzzy
+msgid "Single precision values"
+msgstr "ترقّب اللاعب القيم"
+
+#. list of fields
+#: ../libgda/gda-server-provider-extra.c:99
+#: ../providers/firebird/gda-firebird-provider.c:619
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:17
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:138
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:61
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:35
+#, fuzzy
+msgid "Size"
+msgstr "الحجم"
+
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:14
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:16
+#, fuzzy
+msgid "Sort type"
+msgstr "نوع التّنبيه"
+
+#: ../libgda/gda-parameter-list.c:411
+#, c-format
+msgid "Spec's root node != 'data-set-spec': '%s'"
+msgstr ""
+
+#: ../providers/sqlite/gda-sqlite-handler-bin.c:120
+msgid "SqliteBin"
+msgstr ""
+
+#: ../providers/sybase/utils.c:357
+#, fuzzy
+msgid "State"
+msgstr "الحالة"
+
+#: ../providers/firebird/gda-firebird-recordset.c:342
+#: ../providers/firebird/gda-firebird-recordset.c:383
+#, fuzzy
+msgid "Statement already prepared."
+msgstr "الشهادة موجودة مسبقا."
+
+#: ../providers/sybase/utils.c:347
+#, fuzzy
+msgid "Stored Procedure:"
+msgstr "مكّن إجراء الت_شغيل السريع"
+
+#: ../libgda/handlers/gda-handler-string.c:116
+#, fuzzy
+msgid "Strings handler"
+msgstr "معالج الوحدات"
+
+#: ../libgda/handlers/gda-handler-string.c:122
+msgid "Strings representation"
+msgstr ""
+
+#: ../providers/sybase/utils.c:245
+#, c-format
+msgid "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %s"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:160
+msgid "Synonyms"
+msgstr ""
+
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:62
+#: ../libsql/sql_parser.c:63
+#, fuzzy, c-format
+msgid "Syntax error near `%s'"
+msgstr "خطأ صياغي، أمر غير معروف"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:40
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:37
+msgid "TCVN-5712/Windows CP1258 (Vietnamese)"
+msgstr ""
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:17
+#, fuzzy
+msgid "TDS Major Version"
+msgstr "اطبع إصدارة GDM"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:18
+#, fuzzy
+msgid "TDS Minor Version"
+msgstr "اطبع إصدارة GDM"
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:19
+msgid "TDS protocol major version"
+msgstr ""
+
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:20
+msgid "TDS protocol minor version"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
+#, fuzzy
+msgid "TIS620 Thai"
+msgstr "التالندية الكدمانية"
+
+#: ../providers/oracle/oracle_specs_dsn.xml.in.h:2
+#, fuzzy
+msgid "TNS Name"
+msgstr "اسم الموصول"
+
+#: ../providers/mdb/gda-mdb-table.c:50
+#, fuzzy, c-format
+msgid "Table %s not found"
+msgstr "لم يعثر على المستخدم"
+
+#: ../providers/mysql/gda-mysql-recordset.c:424
+#: ../providers/mysql/gda-mysql-recordset.c:561
+#: ../providers/mysql/gda-mysql-recordset.c:563
+msgid "Table name could not be guessed"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-recordset.c:721
+#: ../providers/mysql/gda-mysql-recordset.c:723
+#: ../providers/postgres/gda-postgres-recordset.c:233
+#: ../providers/postgres/gda-postgres-recordset.c:337
+#: ../providers/postgres/gda-postgres-recordset.c:437
+msgid "Table name could not be guessed."
+msgstr ""
+
+#: ../providers/firebird/gda-firebird-provider.c:634
+#: ../providers/firebird/gda-firebird-provider.c:641
+#: ../providers/msql/gda-msql-provider.c:543
+#: ../providers/msql/gda-msql-provider.c:549
+#: ../providers/mysql/gda-mysql-provider.c:1602
+#: ../providers/mysql/gda-mysql-provider.c:1610
+#: ../providers/mysql/gda-mysql-provider.c:1897
+#: ../providers/mysql/gda-mysql-provider.c:1905
+msgid "Table name is needed but none specified in parameter list"
+msgstr ""
+
+#. toc
+#: ../testing/html.c:113
+#: ../tools/html.c:113
+#, fuzzy
+msgid "Table of contents"
+msgstr "جدول المحتويات"
+
+#: ../providers/mysql/gda-mysql-ddl.c:323
+#: ../providers/postgres/gda-postgres-ddl.c:357
+#: ../providers/sqlite/gda-sqlite-ddl.c:198
+msgid "Table to create must have at least one row"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:8
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:5
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:4
+#, fuzzy
+msgid "Table to delete"
+msgstr "فشل مسح \"%s\": %s"
+
+#: ../providers/mysql/mysql_specs_rename_table.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_table.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:4
+#, fuzzy
+msgid "Table to rename"
+msgstr "إعادة تسمية المجلّد \"%s\" إلى:"
+
+#: ../libgda/gda-server-provider-extra.c:122
+#: ../libgda/gda-server-provider-extra.c:145
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:883
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:940
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1049
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:18
+#: ../providers/mysql/mysql_specs_drop_column.xml.in.h:3
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:7
+#: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:4
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:14
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
+#: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
+#, fuzzy
+msgid "Table"
+msgstr "جدول"
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:37
+#, fuzzy
+msgid "Table's columns"
+msgstr "عنوان أعمدة الجدول"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:142
+#, fuzzy
+msgid "Table's comment"
+msgstr "التّعليق يحتوي على"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:38
+#, fuzzy
+msgid "Table's description"
+msgstr "الوصف الميسر لعمود الجدول"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
+msgid "Table's engine (or type)"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:19
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:146
+#: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:39
+#, fuzzy
+msgid "Table's name"
+msgstr "اسم الموصول"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:148
+#, fuzzy
+msgid "Table's options"
+msgstr "جدول خيارات Popt"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
+msgid "Tablespace"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:42
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:38
+#, fuzzy
+msgid "Taiwan EUC"
+msgstr "ا-ص|الصين (تايوان)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
+#, fuzzy
+msgid "Template"
+msgstr "قالب"
+
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
+#, fuzzy
+msgid "Temporary table"
+msgstr "جسم الجدول"
+
+#: ../libgda/gda-data-model-import.c:435
+#, c-format
+msgid "The '%s' parameter must hold a boolean value, ignored."
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:867
+#, c-format
+msgid "The '%s' parameter must hold a gda type value, ignored."
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:414
+#, c-format
+msgid "The '%s' parameter must hold a string value, ignored."
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1016
+msgid "The 'NAME' parameter must hold a string value, ignored."
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1131
+msgid "The 'OVERWRITE' parameter must hold a boolean value, ignored."
+msgstr ""
+
+#: ../libgda/gda-data-model.c:1052
+msgid "The 'SEPARATOR' parameter must hold a string value, ignored."
+msgstr ""
+
+#: ../providers/sqlite/gda-sqlite-provider.c:301
+msgid "The DB_DIR part of the connection string must point to a valid directory"
+msgstr ""
+
+#: ../providers/bdb/gda-bdb-provider.c:159
+msgid "The FILE parameter is not defined in the connection string."
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-provider.c:345
+#: ../providers/postgres/gda-postgres-provider.c:479
+msgid "The connection string format has changed: replace DATABASE with DB_NAME and the same contents"
+msgstr ""
+
+#: ../providers/sqlite/gda-sqlite-provider.c:287
+#: ../providers/sqlite/gda-sqlite-provider.c:293
+msgid "The connection string format has changed: replace URI with DB_DIR (the path to the database file) and DB_NAME (the database file without the '.db' at the end)."
+msgstr ""
+
+#: ../providers/sqlite/gda-sqlite-provider.c:260
+msgid "The connection string must contain DB_DIR and DB_NAME values"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-provider.c:341
+#: ../providers/postgres/gda-postgres-provider.c:475
+msgid "The connection string must contain a DB_NAME value"
+msgstr ""
+
+#: ../providers/firebird/firebird_specs_dsn.xml.in.h:10
+#: ../providers/freetds/freetds_specs_dsn.xml.in.h:21
+#: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:4
+#: ../providers/msql/msql_specs_dsn.xml.in.h:4
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:8
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:11
+#: ../providers/sybase/sybase_specs_dsn.xml.in.h:14
+#, fuzzy
+msgid "The name of a database to connect to"
+msgstr "اتصال بالموقع الغير موثوق؟"
+
+#. DSN parameters
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:58
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:22
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:45
+#: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:10
+#: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
+#, fuzzy
+msgid "The name of a database to create"
+msgstr "لم يمكن فتح المقبس"
+
+#. DSN parameters
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
+#, fuzzy
+msgid "The name of a database to drop"
+msgstr "الزّر للإسقاط."
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:46
+msgid "The name of the database user who will own the new database"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
+msgid "The name of the tablespace that will be associated with the new database"
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
+msgid "The name of the template from which to create the new database"
+msgstr ""
+
+#. Index fields
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:16
+msgid "The number of characters the index is on for columns of type CHAR or VARCHAR"
+msgstr ""
+
+#: ../libgda/gda-query.c:1889
+msgid "The query represented by a target must be a sub-query of the current query"
+msgstr ""
+
+#: ../tools/gda-inspect-dict-file.c:143
+msgid "There is no query in this file.\n"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:740
+msgid "This provider does not support data handlers"
+msgstr ""
+
+#: ../libgda/handlers/gda-handler-time.c:140
+#, fuzzy
+msgid "Time and Date handler"
+msgstr "تاريخ ولحظة التغيير"
+
+#: ../libgda/handlers/gda-handler-time.c:165
+#, fuzzy
+msgid "Time, Date and TimeStamp representation"
+msgstr "أد_خل التاريخ و الوقت..."
+
+#: ../libgda/gda-data-model-row.c:487
+#, fuzzy
+msgid "Too many values in list"
+msgstr "عدد المستخدمين كبير جدا لعرضه هنا..."
+
+#: ../providers/firebird/gda-firebird-recordset.c:346
+#, fuzzy
+msgid "Transaction not initialized."
+msgstr "تعذّر العثور على '%s'"
+
+#: ../providers/postgres/gda-postgres-provider.c:1085
+msgid "Transactions are not supported in read uncommitted isolation level"
+msgstr ""
+
+#: ../providers/mysql/gda-mysql-provider.c:859
+#: ../providers/mysql/gda-mysql-provider.c:916
+#: ../providers/mysql/gda-mysql-provider.c:949
+#: ../providers/oracle/gda-oracle-provider.c:991
+#: ../providers/oracle/gda-oracle-provider.c:1073
+#: ../providers/oracle/gda-oracle-provider.c:1132
+#: ../providers/postgres/gda-postgres-provider.c:1076
+#: ../providers/sqlite/gda-sqlite-provider.c:873
+msgid "Transactions are not supported in read-only mode"
+msgstr ""
+
+#: ../providers/postgres/gda-postgres-provider.c:1088
+msgid "Transactions are not supported in repeatable read isolation level"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:152
+#, fuzzy
+msgid "Trigger"
+msgstr "الإجراء/المحفّز"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:968
+#: ../providers/oracle/gda-oracle-provider.c:2004
+msgid "Triggers"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1817
+msgid "Trying to assume an object when object class is not registered in the dictionary"
+msgstr ""
+
+#: ../libgda/gda-data-proxy.c:2414
+#, c-format
+msgid "Trying to change read-only column: %d"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1709
+#, c-format
+msgid "Trying to declare an object when object class %s is not registered in the dictionary"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1966
+#, c-format
+msgid "Trying to get a list of objects when object class %s is not registered in the dictionary"
+msgstr ""
+
+#: ../libgda/gda-dict.c:2044
+#, c-format
+msgid "Trying to get an object by its XML Id when object class %s is not registered in the dictionary"
+msgstr ""
+
+#: ../libgda/gda-dict.c:2000
+#, c-format
+msgid "Trying to get an object by name when object class %s is not registered in the dictionary"
+msgstr ""
+
+#: ../libgda/gda-dict.c:2052
+msgid "Trying to get an object from its XML Id when object class does not implement GdaXmlStorage"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1802
+#, c-format
+msgid "Trying to make an object assumed when object class %s is not registered in the dictionary"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1882
+#, c-format
+msgid "Trying to make an object unassumed when object class %s is not registered in the dictionary"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1937
+#, c-format
+msgid "Trying to make if an object is assumed when object class %s is not registered in the dictionary"
+msgstr ""
+
+#: ../providers/postgres/gda-postgres-recordset.c:812
+#, c-format
+msgid "Tuples:\"%s\""
+msgstr ""
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: ../libgda/gda-server-provider-extra.c:156
+#: ../libgda/gda-server-provider-extra.c:176
+#: ../providers/firebird/gda-firebird-provider.c:250
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:996
+#: ../providers/ldap/gda-ldap-provider.c:441
+#: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
+#: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
+#: ../providers/sybase/gda-sybase-provider.c:1102
+#: ../tools/gda-diagnose.c:315
+#, fuzzy
+msgid "Type"
+msgstr "النّوع"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:59
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:150
+#, fuzzy
+msgid "UCS-2 Unicode"
+msgstr " (يونيكود غير صحيح)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:60
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:23
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:9
+#, fuzzy
+msgid "UNIX Socket"
+msgstr "السوكت المحلّية"
+
+#. 5th the return type
+#. 6th the argument type
+#: ../providers/firebird/gda-firebird-provider.c:712
+#: ../providers/firebird/gda-firebird-provider.c:715
+#, fuzzy
+msgid "UNKNOWN"
+msgstr "مجهول"
+
+#: ../libgda/gda-query-parsing.c:471
+msgid "UPDATE target field is not an entity's field"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:61
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:151
+#, fuzzy
+msgid "US ASCII"
+msgstr "انجليزي (US-ASCII)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:152
+#, fuzzy
+msgid "UTF-8 Unicode"
+msgstr "يونيكود (يو تي اف-8)"
+
+#: ../providers/odbc/gda-odbc-provider.c:207
+#, fuzzy
+msgid "Unable to SQLAllocEnv()..."
+msgstr "لا يمكن تحميل·'%s':·%s"
+
+#: ../providers/firebird/gda-firebird-blob.c:271
+#, fuzzy
+msgid "Unable to close blob."
+msgstr "فشل غلق الملف `%s': %s"
+
+#: ../providers/firebird/gda-firebird-blob.c:167
+#, fuzzy
+msgid "Unable to start transaction"
+msgstr "اختر خادم X للتشغيل"
+
+#: ../providers/freetds/gda-freetds-recordset.c:390
+msgid "Unexpected freetds return code in tds_process_result_tokens\n"
+msgstr ""
+
+#: ../providers/freetds/gda-freetds-recordset.c:373
+msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
+msgstr ""
+
+#: ../providers/freetds/gda-freetds-provider.c:781
+#: ../providers/freetds/gda-freetds-provider.c:783
+msgid "Unexpected result tokens in execute_cmd()."
+msgstr ""
+
+#: ../providers/freetds/gda-freetds-provider.c:791
+#: ../providers/freetds/gda-freetds-provider.c:792
+msgid "Unexpected return in execute_cmd()."
+msgstr ""
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:49
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:41
+#, fuzzy
+msgid "Unicode (UTF-8)"
+msgstr "يونيكود (يو تي أف 8)"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:154
+msgid "Union"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:103
+#: ../providers/firebird/gda-firebird-provider.c:623
+#, fuzzy
+msgid "Unique index?"
+msgstr "الفهرس النهائي"
+
+#. list of fields
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:20
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:156
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
+#, fuzzy
+msgid "Unique"
+msgstr "الهويّة الفريدة للمُصدر"
+
+#: ../providers/firebird/gda-firebird-recordset.c:571
+#, fuzzy
+msgid "Unknown Firebird's field value!\n"
+msgstr "قيمة مجهولة \"%s\" للتّوصيف \"%s\" على العنصر <%s>"
+
+#: ../libgda/gda-dict-field.c:984
+#, fuzzy, c-format
+msgid "Unknown GDA data type '%s'"
+msgstr "مؤشّر لبيانات خارجيّة مجهولة (فئة \"%s\")"
+
+#: ../libgda/gda-dict-type.c:352
+#, fuzzy, c-format
+msgid "Unknown GType '%s'"
+msgstr "NAT غير معروف"
+
+#: ../libgda/gda-data-proxy.c:2235
+#, fuzzy, c-format
+msgid "Unknown GdaDataProxy column: %d"
+msgstr "حُرِّر جدول مجهول %d"
+
+#: ../libgda/gda-query-parsing.c:1538
+#, fuzzy, c-format
+msgid "Unknown data type '%s'"
+msgstr "نوع بيانات غير صحيح"
+
+#: ../libgda/gda-query.c:2917
+#: ../testing/gda-test-models.c:152
+#: ../testing/gda-test-models.c:179
+#: ../testing/gda-test-models.c:394
+#: ../testing/gda-test-models.c:410
+#: ../testing/gda-test-models.c:461
+#: ../testing/gda-test-models.c:468
+#: ../testing/gda-test-models.c:486
+#: ../testing/gda-test-models.c:567
+#: ../testing/gda-test-models.c:598
+#: ../testing/gda-test-sql.c:144
+#: ../testing/gda-test-sql.c:171
+#: ../testing/gda-test-sql.c:392
+#: ../tools/gda-author-dict-file.c:184
+#: ../tools/gda-author-dict-file.c:195
+#: ../tools/gda-author-dict-file.c:243
+#: ../tools/gda-author-dict-file.c:249
+#: ../tools/gda-diagnose.c:621
+#, fuzzy
+msgid "Unknown error"
+msgstr "خطأ مجهول"
+
+#: ../libgda/gda-query.c:5779
+#, fuzzy
+msgid "Unnamed Query"
+msgstr "أرسل الإستفسار"
+
+#: ../testing/gda-test-models.c:165
+#: ../testing/gda-test-sql.c:157
+#: ../tools/gda-inspect-dict-file.c:65
+msgid "Unspecified"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1226
+#: ../libgda/gda-dict-database.c:843
+#, fuzzy
+msgid "Update already started!"
+msgstr "بدأت لعبة جديدة"
+
+#: ../libgda/gda-query.c:4842
+msgid "Update query field has incompatible value assignment"
+msgstr ""
+
+#: ../libgda/gda-dict.c:1306
+#: ../libgda/gda-dict-database.c:889
+#, fuzzy
+msgid "Update stopped!"
+msgstr "اوقفت العمليّة"
+
+#: ../libgda/gda-query.c:1157
+#, fuzzy
+msgid "Update"
+msgstr "تحديث"
+
+#: ../tools/gda-inspect-dict-file.c:47
+#, fuzzy, c-format
+msgid "Usage: %s <Dictionary XML file>\n"
+msgstr "خطأ في إعراب ملف XML"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
+#, fuzzy
+msgid "Use INHERIT instead of LIKE"
+msgstr "ا_ستخدم وحدات النظام المتري عوض النظام الانكليزي"
+
+#: ../libgda/gda-server-provider-extra.c:164
+#, fuzzy
+msgid "User"
+msgstr "مستخدم"
+
+#: ../libgda/gda-dict.c:241
+#, fuzzy
+msgid "Username for the connection to use"
+msgstr "ال_اسم المستخدم للاتصال:"
+
+#: ../libgda/gda-connection.c:178
+#, fuzzy
+msgid "Username to use"
+msgstr "قاعدة البيانات المستعملة"
+
+#: ../libgda/gda-config.c:1884
+#, fuzzy
+msgid "Username"
+msgstr "إسم المستخدم"
+
+#: ../providers/ibmdb2/gda-ibmdb2-provider.c:1024
+#: ../providers/oracle/gda-oracle-provider.c:1562
+#, fuzzy
+msgid "Users"
+msgstr "مستخدمون"
+
+#: ../libgda/gda-query-parsing.c:1654
+#, c-format
+msgid "Value '%s' can't be converted to a known type"
+msgstr ""
+
+#: ../report/libgda-report/gda-report-valid.c:283
+#, c-format
+msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
+msgstr ""
+
+#: ../libgda/gda-query-field-value.c:1296
+#, fuzzy, c-format
+msgid "Value field '%s' does not have a value!"
+msgstr "لا ينتهي بـ"
+
+#: ../libgda/gda-data-proxy.c:2451
+#, fuzzy, c-format
+msgid "Value type mismatch %s instead of %s"
+msgstr "خاضية ملغات، إستعمل shadow_type عوضا عنها"
+
+#: ../providers/mdb/gda-mdb-provider.c:696
+msgid "Variable length character strings"
+msgstr ""
+
+#: ../libgda/gda-server-provider-extra.c:168
+#, fuzzy
+msgid "View"
+msgstr "عرض"
+
+#: ../providers/oracle/gda-oracle-provider.c:2008
+#, fuzzy
+msgid "Views"
+msgstr "المشاهد"
+
+#: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
+msgid "What to do with references on the column to delete"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
+#: ../providers/oracle/oracle_specs_drop_index.xml.in.h:5
+#: ../providers/oracle/oracle_specs_drop_table.xml.in.h:6
+#: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
+#: ../providers/postgres/postgres_specs_drop_table.xml.in.h:6
+#, fuzzy
+msgid "What to do with references"
+msgstr "ما الذي سيفعل بالعناوين المتغيّرة"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:50
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:42
+msgid "Whether to require SSL or not when connecting"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:63
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:10
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:12
+msgid "Whether to use or not SSL for establishing the connection"
+msgstr ""
+
+#: ../libgda/gda-query.c:3448
+#, c-format
+msgid "While adding to a GdaQuery: field type '%s' is not supported by the connection's provider and may be rendered incorrectly"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
+#, fuzzy
+msgid "Windows Arabic"
+msgstr "عربي (Windows-1256)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:65
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:158
+#, fuzzy
+msgid "Windows Baltic"
+msgstr "بلطيقي (Windows-1257)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:51
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:43
+#, fuzzy
+msgid "Windows CP1250"
+msgstr "نوافذ قافزة"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:52
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:44
+#, fuzzy
+msgid "Windows CP1251"
+msgstr "نوافذ قافزة"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:53
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:45
+#, fuzzy
+msgid "Windows CP1256 (Arabic)"
+msgstr "عربي (Windows-1256)"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:54
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:46
+#, fuzzy
+msgid "Windows CP866"
+msgstr "نوافذ قافزة"
+
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:55
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:47
+#, fuzzy
+msgid "Windows CP874 (Thai)"
+msgstr "بلطيقي (Windows-1257)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:159
+#, fuzzy
+msgid "Windows Central European"
+msgstr "وسط أوروباط (Windows-1250)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:67
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:160
+#, fuzzy
+msgid "Windows Cyrillic"
+msgstr "سيريالي (Windows-1251)"
+
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
+#, fuzzy
+msgid "With OIDs"
+msgstr "الفتح بـاستخدام"
+
+#: ../tools/gda-inspect-dict-file.c:192
+#, fuzzy, c-format
+msgid "Written graph to '%s'\n"
+msgstr "ا_ستعادة الحالة الأصلية"
+
+#: ../libgda/graph/gda-graph.c:669
+msgid "Wrong 'id' attribute in <gda_graph>"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:1445
+msgid "Wrong 'id' attribute in <gda_query_cond>"
+msgstr ""
+
+#: ../libgda/graph/gda-graph.c:706
+msgid "Wrong 'type' attribute in <gda_graph>"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:1460
+msgid "Wrong 'type' attribute in <gda_query_cond>"
+msgstr ""
+
+#: ../libgda/gda-query-field-func.c:905
+#, c-format
+msgid "Wrong number of arguments for function %s"
+msgstr ""
+
+#: ../libgda/gda-data-model-array.c:137
+#: ../libgda/gda-data-model-hash.c:133
+#: ../libgda/gda-data-model-hash.c:204
+#, fuzzy
+msgid "Wrong number of values in values list"
+msgstr "تلقي عدد العناصر في مفتاح قائمة."
+
+#: ../libgda/gda-data-model-query.c:680
+#, fuzzy
+msgid "Wrong type of query"
+msgstr "<li> له نوع خاطىء %s"
+
+#: ../libgda/gda-query-field-agg.c:758
+#: ../libgda/gda-query-field-all.c:631
+#: ../libgda/gda-query-field-field.c:939
+#: ../libgda/gda-query-field-func.c:821
+#: ../libgda/gda-query-field-value.c:1117
+msgid "XML ID for a query field should be QUxxx:QFyyy where xxx and yyy are numbers"
+msgstr ""
+
+#: ../libgda/gda-query.c:4115
+msgid "XML ID for a query should be QUxxx where xxx is a number"
+msgstr ""
+
+#: ../libgda/gda-query-target.c:815
+msgid "XML ID for a query target should be QUxxx:Tyyy where xxx and yyy are numbers"
+msgstr ""
+
+#: ../libgda/gda-dict-database.c:624
+msgid "XML Tag below <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
+msgstr ""
+
+#: ../libgda/gda-dict-database.c:592
+msgid "XML Tag below <GDA_DICT_TABLES> is not <GDA_DICT_TABLE>"
+msgstr ""
+
+#: ../libgda/gda-dict-aggregate.c:370
+msgid "XML Tag is not <gda_dict_aggregate>"
+msgstr ""
+
+#: ../libgda/gda-dict-constraint.c:1283
+msgid "XML Tag is not <gda_dict_constraint>"
+msgstr ""
+
+#: ../libgda/gda-dict-database.c:537
+msgid "XML Tag is not <gda_dict_database>"
+msgstr ""
+
+#: ../libgda/gda-dict-field.c:899
+msgid "XML Tag is not <gda_dict_field>"
+msgstr ""
+
+#: ../libgda/gda-dict-function.c:386
+msgid "XML Tag is not <gda_dict_function>"
+msgstr ""
+
+#: ../libgda/gda-dict-table.c:1210
+msgid "XML Tag is not <gda_dict_table>"
+msgstr ""
+
+#: ../libgda/gda-dict-type.c:315
+msgid "XML Tag is not <gda_dict_type>"
+msgstr ""
+
+#: ../libgda/graph/gda-graph.c:659
+msgid "XML Tag is not <gda_graph>"
+msgstr ""
+
+#: ../libgda/graph/gda-graph-item.c:473
+msgid "XML Tag is not <gda_graph_item>"
+msgstr ""
+
+#: ../libgda/gda-query.c:4099
+msgid "XML Tag is not <gda_query>"
+msgstr ""
+
+#: ../libgda/gda-query-condition.c:1432
+msgid "XML Tag is not <gda_query_cond>"
+msgstr ""
+
+#: ../libgda/gda-query-field-agg.c:745
+msgid "XML Tag is not <gda_query_fagg>"
+msgstr ""
+
+#: ../libgda/gda-query-field-all.c:618
+msgid "XML Tag is not <gda_query_fall>"
+msgstr ""
+
+#: ../libgda/gda-query-field-field.c:926
+msgid "XML Tag is not <gda_query_ffield>"
+msgstr ""
+
+#: ../libgda/gda-query-field-func.c:808
+msgid "XML Tag is not <gda_query_ffunc>"
+msgstr ""
+
+#: ../libgda/gda-query-field-value.c:1104
+msgid "XML Tag is not <gda_query_fval>"
+msgstr ""
+
+#: ../libgda/gda-query-join.c:1285
+msgid "XML Tag is not <gda_query_join>"
+msgstr ""
+
+#: ../libgda/gda-query-target.c:794
+msgid "XML Tag is not <gda_query_target>"
+msgstr ""
+
+#: ../report/libgda-report/gda-report-document.c:189
+#, fuzzy
+msgid "XML document is not valid"
+msgstr "الموقع المدخل ليس سليماً."
+
+#: ../testing/html.c:293
+#: ../tools/gda-diagnose.c:380
+#: ../tools/gda-diagnose.c:384
+#: ../tools/gda-diagnose.c:388
+#: ../tools/gda-diagnose.c:392
+#: ../tools/gda-diagnose.c:466
+#: ../tools/gda-diagnose.c:472
+#: ../tools/gda-diagnose.c:483
+#: ../tools/gda-diagnose.c:511
+#: ../tools/gda-diagnose.c:550
+#: ../tools/html.c:293
+#, fuzzy
+msgid "Yes"
+msgstr "نعم"
+
+#: ../providers/mysql/gda-mysql-provider.c:256
+msgid "You cannot provide a UNIX SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+
+#: ../providers/ibmdb2/gda-ibmdb2-types.c:151
+#, fuzzy
+msgid "[BLOB unsupported]"
+msgstr "منصّة غير مدعومة"
+
+#: ../providers/ibmdb2/gda-ibmdb2-types.c:154
+#, fuzzy
+msgid "[Unsupported data]"
+msgstr "البيانات الشخصية"
+
+#: ../libgda/gda-data-model-import.c:525
+msgid "\"options\" property is not a GdaParameterList object"
+msgstr ""
+
+#: ../providers/sybase/utils.c:103
+#, fuzzy, c-format
+msgid "\tProcedure name: %s\n"
+msgstr "اسم الموصول"
+
+#: ../providers/sybase/utils.c:100
+#, fuzzy, c-format
+msgid "\tServer name: %s\n"
+msgstr "اسم الموصول"
+
+#: ../providers/sybase/gda-sybase-recordset.c:506
+msgid "attempting to make recordset and msg count != 1 !"
+msgstr ""
+
+#: ../providers/sybase/utils.c:273
+msgid "call to cs_diag failed when attempting to clear the client messages"
+msgstr ""
+
+#: ../providers/sybase/utils.c:499
+msgid "call to ct_diag failed when attempting to clear the client messages"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-recordset.c:578
+#: ../providers/sybase/utils.c:409
+msgid "call to ct_diag failed when attempting to clear the server messages"
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:980
+msgid "could not allocate cmd structure to find current database."
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:1022
+msgid "could not bind variable to get current database."
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:1064
+msgid "could not drop cmd structure to find current database."
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:991
+msgid "could not execute command to get current database."
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-provider.c:1035
+#: ../providers/sybase/gda-sybase-provider.c:1050
+msgid "could not fetch data to find current database."
+msgstr ""
+
+#: ../report/libgda-report/gda-report-valid.c:130
+#, fuzzy, c-format
+msgid "could not get DTD from %s"
+msgstr "لم يمكن قراءة التّحيّة من %s: %s"
+
+#: ../providers/sybase/gda-sybase-provider.c:999
+msgid "could not send command to get current database."
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-types.c:268
+#, fuzzy, c-format
+msgid "cslib cannot convert type %d"
+msgstr "لم يمكن تحويل fallback '%s' الى مجموعة المحارف '%s'"
+
+#: ../providers/sybase/gda-sybase-recordset.c:307
+#, fuzzy
+msgid "ct_cancel() failed."
+msgstr "فشل تسجيل %s إلى %s"
+
+#: ../providers/sybase/utils.c:147
+msgid "ct_diag() failed determining # of client messages."
+msgstr ""
+
+#: ../providers/sybase/gda-sybase-types.c:283
+#, fuzzy, c-format
+msgid "data conversion failed for type %d"
+msgstr "فشل التحويل الرمزي ل \"%s\""
+
+#: ../libgda/graph/gda-dict-reg-graphs.c:100
+msgid "gda_graph of type 'Q' must have an 'object' attribute"
+msgstr ""
+
+#: ../libgda/graph/gda-dict-reg-graphs.c:112
+msgid "gda_graph of type 'Q' must have valid 'object' attribute"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:781
+msgid "get_sql_from_value() and get_str_from_value()"
+msgstr ""
+
+#: ../tools/gda-diagnose.c:789
+#, fuzzy
+msgid "get_value_from_sql()"
+msgstr "فشل تلقي القيمة: %s."
+
+#: ../tools/gda-diagnose.c:796
+#, fuzzy
+msgid "get_value_from_str()"
+msgstr "فشل تلقي القيمة: %s."
+
+#: ../libgda/gda-init.c:69
+msgid "libgda needs GModule. Finishing..."
+msgstr ""
+
+#: ../libgda/gda-data-model-import.c:939
+#, fuzzy
+msgid "no detail"
+msgstr "لا تاريخ"
+
+#: ../testing/gda-test-sql.c:362
+#, fuzzy
+msgid "non-parsed"
+msgstr "غير مشارك"
+
+#. other table options
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:162
+msgid "tbl_name[,tbl_name]...: only with MERGE engine"
+msgstr ""
+
+#: ../libgda/gda-server-operation.c:853
+#, fuzzy
+msgid "unnamed"
+msgstr "غير مسمّى"
+
