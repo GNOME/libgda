@@ -53,6 +53,7 @@ libgda/handlers/gda-handler-string.c
 libgda/handlers/gda-handler-time.c
 libgda/handlers/gda-handler-type.c
 libgda/sql-delimiter/gda-sql-delimiter.c
+libgda/sql-transaction/gda-sql-transaction-parser.c
 libsql/sql_parser.c
 providers/firebird/firebird_specs_dsn.xml.in
 providers/firebird/gda-firebird-blob.c

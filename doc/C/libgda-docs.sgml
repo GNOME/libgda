@@ -422,6 +422,7 @@
       &libgda-GdaClient;
       &libgda-GdaConnection;
       &libgda-GdaConnection-event;
+      &libgda-transaction-status;
       &libgda-GdaCommand;
       &libgda-convenient;
     </chapter>
@@ -591,7 +592,6 @@
       &libgda-util;
       &libgda-log;
       &libgda-quark-list;
-      &libgda-transaction-status;
       &libgda-GdaBlob;
       &libgda-GdaObject;
       &libgda-GdaObjectRef;

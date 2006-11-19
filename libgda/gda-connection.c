@@ -1294,7 +1294,7 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,
  *
  * Before starting a transaction, you can check whether the underlying
  * provider does support transactions or not by using the
- * #gda_connection_supports_feature function.
+ * #gda_connection_supports_feature() function.
  *
  * Returns: %TRUE if the transaction was started successfully, %FALSE
  * otherwise.
@@ -1321,7 +1321,7 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTran
  * @name: the name of the transation to commit
  * @error: a place to store errors, or %NULL
  *
- * Commits the given transaction to the backend database.  You need to do 
+ * Commits the given transaction to the backend database. You need to call
  * gda_connection_begin_transaction() first.
  *
  * Returns: %TRUE if the transaction was finished successfully,
@@ -1350,7 +1350,7 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError
  *
  * Rollbacks the given transaction. This means that all changes
  * made to the underlying data source since the last call to
- * #gda_connection_begin_transaction or #gda_connection_commit_transaction
+ * #gda_connection_begin_transaction() or #gda_connection_commit_transaction()
  * will be discarded.
  *
  * Returns: %TRUE if the operation was successful, %FALSE otherwise.
@@ -1376,6 +1376,8 @@ gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *name, GErr
  * @name: name of the savepoint to add
  * @error: a place to store errors or %NULL
  *
+ * Adds a SAVEPOINT named @name.
+ *
  * Returns: TRUE if no error occurred
  */
 gboolean
@@ -1392,6 +1394,8 @@ gda_connection_add_savepoint (GdaConnection *cnc, const gchar *name, GError **er
  * @cnc: a #GdaConnection object
  * @name: name of the savepoint to rollback to
  * @error: a place to store errors or %NULL
+ *
+ * Rollback all the modifications made after the SAVEPOINT named @name.
  *
  * Returns: TRUE if no error occurred
  */
@@ -1410,6 +1414,8 @@ gda_connection_rollback_savepoint (GdaConnection *cnc, const gchar *name, GError
  * @name: name of the savepoint to delete
  * @error: a place to store errors or %NULL
  *
+ * Delete the SAVEPOINT named @name when not used anymore.
+ *
  * Returns: TRUE if no error occurred
  */
 gboolean
@@ -1426,7 +1432,7 @@ gda_connection_delete_savepoint (GdaConnection *cnc, const gchar *name, GError *
  * @cnc: a #GdaConnection object
  *
  * Get the status of @cnc regarding transactions. The returned object should not be modified
- * or destroyed; however it may be destroyed by the connection itself.
+ * or destroyed; however it may be modified or destroyed by the connection itself.
  *
  * If %NULL is returned, then no transaction has been associated with @cnc
  *

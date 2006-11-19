@@ -1,0 +1,74 @@
+<!-- ##### SECTION Title ##### -->
+GdaTransactionStatus
+
+<!-- ##### SECTION Short_Description ##### -->
+Keeps track of the transactional status of a connection
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+On any connection (as a #GdaConnection object), if the database provider used by the connection
+supports it, transactions may be started, committed or rolledback, or savepoints added, removed or rolledback.
+These operations can be performed using Libgda's API (such as gda_connection_begin_transaction()), or directly
+using some SQL on the connection (usually a "BEGIN;" command). The #GdaTransactionStatus's aim is to 
+make it easy to keep track of all the commands which have been issued on a connection regarding transactions.
+</para>
+<para>
+One #GdaTransactionStatus object is automatically attached to a #GdaConnection when a transaction is started, and
+is destroyed when the transaction is finished. A pointer to this object can be fetched using
+gda_connection_get_transaction_status() (beware that it should then not be modified).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaTransactionStatus ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GdaTransactionIsolation ##### -->
+<para>
+
+</para>
+
+@GDA_TRANSACTION_ISOLATION_UNKNOWN: 
+@GDA_TRANSACTION_ISOLATION_READ_COMMITTED: 
+@GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED: 
+@GDA_TRANSACTION_ISOLATION_REPEATABLE_READ: 
+@GDA_TRANSACTION_ISOLATION_SERIALIZABLE: 
+
+<!-- ##### STRUCT GdaTransactionStatusEvent ##### -->
+<para>
+
+</para>
+
+@trans: 
+@type: 
+@conn_event: 
+@reserved1: 
+@reserved2: 
+
+<!-- ##### ENUM GdaTransactionStatusEventType ##### -->
+<para>
+
+</para>
+
+@GDA_TRANSACTION_STATUS_EVENT_SAVEPOINT: 
+@GDA_TRANSACTION_STATUS_EVENT_SQL: 
+@GDA_TRANSACTION_STATUS_EVENT_SUB_TRANSACTION: 
+
+<!-- ##### FUNCTION gda_transaction_status_new ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+

@@ -766,6 +766,8 @@ gda_threader_get_type
 <TITLE>GdaTransactionStatus</TITLE>
 GdaTransactionStatus
 GdaTransactionIsolation
+GdaTransactionStatusEvent
+GdaTransactionStatusEventType
 gda_transaction_status_new
 <SUBSECTION Standard>
 GDA_IS_TRANSACTION

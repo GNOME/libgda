@@ -833,12 +833,44 @@ gda_server_provider_supports_feature (GdaServerProvider *provider,
 			      GdaConnection *cnc,
 			      GdaConnectionFeature feature)
 {
+	gboolean retval;
+
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	if (cnc)
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->supports_feature != NULL, FALSE);
 
-	return CLASS (provider)->supports_feature (provider, cnc, feature);
+	retval = CLASS (provider)->supports_feature (provider, cnc, feature);
+
+	if (retval) {
+		switch (feature) {
+		case GDA_CONNECTION_FEATURE_TRANSACTIONS:
+			if (!CLASS (provider)->begin_transaction ||
+			    !CLASS (provider)->commit_transaction ||
+			    !CLASS (provider)->rollback_transaction)
+				retval = FALSE;
+			break;
+		case GDA_CONNECTION_FEATURE_SAVEPOINTS:
+			if (!CLASS (provider)->add_savepoint ||
+			    !CLASS (provider)->rollback_savepoint)
+				retval = FALSE;
+			break;
+		case GDA_CONNECTION_FEATURE_SAVEPOINTS_REMOVE:
+			if (!CLASS (provider)->delete_savepoint)
+				retval = FALSE;
+			break;
+		case GDA_CONNECTION_FEATURE_BLOBS:
+			if (!CLASS (provider)->create_blob ||
+			    !CLASS (provider)->fetch_blob)
+				retval = FALSE;
+			break;
+		default:
+			break;
+		}
+	}
+
+	return retval;
+
 }
 
 /**

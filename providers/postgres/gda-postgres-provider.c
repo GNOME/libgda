@@ -43,6 +43,7 @@
 #include <libgda/handlers/gda-handler-bin.h>
 
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
+#include <libgda/gda-connection-private.h>
 
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
@@ -96,6 +97,21 @@ static gboolean gda_postgres_provider_commit_transaction (GdaServerProvider *pro
 static gboolean gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 							    GdaConnection *cnc,
 							    const gchar *name, GError **error);
+
+static gboolean gda_postgres_provider_add_savepoint (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     const gchar *name,
+						     GError **error);
+
+static gboolean gda_postgres_provider_rollback_savepoint (GdaServerProvider *provider,
+							  GdaConnection *cnc,
+							  const gchar *name,
+							  GError **error);
+
+static gboolean gda_postgres_provider_delete_savepoint (GdaServerProvider *provider,
+							GdaConnection *cnc,
+							const gchar *name,
+							GError **error);
 
 static gboolean gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 						      GdaConnection *cnc,
@@ -185,9 +201,9 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
 	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
-	provider_class->add_savepoint = NULL;
-	provider_class->rollback_savepoint = NULL;
-	provider_class->delete_savepoint = NULL;
+	provider_class->add_savepoint = gda_postgres_provider_add_savepoint;
+	provider_class->rollback_savepoint = gda_postgres_provider_rollback_savepoint;
+	provider_class->delete_savepoint = gda_postgres_provider_delete_savepoint;
 	
 	provider_class->create_blob = gda_postgres_provider_create_blob;
 	provider_class->fetch_blob = gda_postgres_provider_fetch_blob;
@@ -675,65 +691,71 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		gint n = 0;
+		gboolean allok = TRUE;
 
-		while (arr[n]) {
+		while (arr[n] && allok) {
 			PGresult *pg_res;
 			GdaDataModel *recset;
 			gint status;
 			gint i;
+			GdaConnectionEvent *error = NULL;
 
 			pg_res = PQexec(pconn, arr[n]);
 			if (pg_res == NULL) {
-				gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
+				error = gda_postgres_make_error (pconn, NULL);
+				gda_connection_add_event (cnc, error);
 				reclist = g_list_append (reclist, NULL);
-				break;
+				allok = FALSE;
 			} 
-			
-			status = PQresultStatus (pg_res);
-			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS	||
-			    status == PGRES_EMPTY_QUERY			||
-			    status == PGRES_TUPLES_OK 			||
-			    status == PGRES_COMMAND_OK) {
+			else {
+				status = PQresultStatus (pg_res);
+				if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS	||
+				    status == PGRES_EMPTY_QUERY			||
+				    status == PGRES_TUPLES_OK 			||
+				    status == PGRES_COMMAND_OK) {
+					
+					if (status == PGRES_COMMAND_OK) {
+						gchar *str;
+						GdaConnectionEvent *event;
 
-				if (status == PGRES_COMMAND_OK) {
-					GdaConnectionEvent *event;
-					gchar *str;
-					
-					event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
-					str = g_strdup (PQcmdStatus (pg_res));
-					gda_connection_event_set_description (event, str);
-					g_free (str);
-					gda_connection_add_event (cnc, event);
-					reclist = g_list_append (reclist, 
-					  gda_parameter_list_new_inline (NULL, 
-									 "IMPACTED_ROWS", G_TYPE_INT, 
-									 atoi (PQcmdTuples (pg_res)),
-									 NULL));
-				}
-				else if (status == PGRES_TUPLES_OK) {
-					recset = gda_postgres_recordset_new (cnc, pg_res);
-					if (GDA_IS_DATA_MODEL (recset)) {
-						g_object_set (G_OBJECT (recset), 
-							      "command_text", arr[n],
-							      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
-						for (i = PQnfields (pg_res) - 1; i >= 0; i--)
-							gda_data_model_set_column_title (recset, i, 
-											 PQfname (pg_res, i));
-					
-						reclist = g_list_append (reclist, recset);
+						event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+						str = g_strdup (PQcmdStatus (pg_res));
+						gda_connection_event_set_description (event, str);
+						g_free (str);
+						gda_connection_add_event (cnc, event);
+						reclist = g_list_append (reclist, 
+									 gda_parameter_list_new_inline (NULL, 
+													"IMPACTED_ROWS", G_TYPE_INT, 
+													atoi (PQcmdTuples (pg_res)),
+													NULL));
+					}
+					else if (status == PGRES_TUPLES_OK) {
+						recset = gda_postgres_recordset_new (cnc, pg_res);
+						if (GDA_IS_DATA_MODEL (recset)) {
+							g_object_set (G_OBJECT (recset), 
+								      "command_text", arr[n],
+								      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
+							for (i = PQnfields (pg_res) - 1; i >= 0; i--)
+								gda_data_model_set_column_title (recset, i, 
+												 PQfname (pg_res, i));
+							
+							reclist = g_list_append (reclist, recset);
+						}
+						else
+							reclist = g_list_append (reclist, NULL);	
 					}
 					else
-						reclist = g_list_append (reclist, NULL);	
+						reclist = g_list_append (reclist, NULL);
 				}
-				else
+				else {
+					error = gda_postgres_make_error (pconn, pg_res);
+					gda_connection_add_event (cnc, error);
 					reclist = g_list_append (reclist, NULL);
+					allok = FALSE;
+				}
 			}
-			else {
-				gda_connection_add_event (cnc, gda_postgres_make_error (pconn, pg_res));
-				reclist = g_list_append (reclist, NULL);
-				break;
-			}
-
+			
+			gda_connection_internal_treat_sql (cnc, arr[n], error);
 			n++;
 		}
 
@@ -893,31 +915,31 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 		const gchar *pq_pwd = NULL;
 		gboolean     pq_ssl = FALSE;
 
-		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/HOST");
+		value = (GValue *) gda_server_operation_get_value_at (op, "/SERVER_CNX_P/HOST");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
 			pq_host = g_value_get_string (value);
 		
-		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/PORT");
+		value = (GValue *) gda_server_operation_get_value_at (op, "/SERVER_CNX_P/PORT");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_INT) && (g_value_get_int (value) > 0))
 			pq_port = g_value_get_int (value);
 
-		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/OPTIONS");
+		value = (GValue *) gda_server_operation_get_value_at (op, "/SERVER_CNX_P/OPTIONS");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
 			pq_options = g_value_get_string (value);
 
-		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/TEMPLATE");
+		value = (GValue *) gda_server_operation_get_value_at (op, "/SERVER_CNX_P/TEMPLATE");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
 			pq_db = g_value_get_string (value);
 
-		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/USE_SSL");
+		value = (GValue *) gda_server_operation_get_value_at (op, "/SERVER_CNX_P/USE_SSL");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 			pq_ssl = TRUE;
 
-		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_LOGIN");
+		value = (GValue *) gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_LOGIN");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
 			pq_user = g_value_get_string (value);
 
-		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_PASSWORD");
+		value = (GValue *) gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_PASSWORD");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
 			pq_pwd = g_value_get_string (value);
 
@@ -1130,6 +1152,64 @@ gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 	return gda_postgres_provider_single_command (pg_prv, cnc, "ROLLBACK"); 
 }
 
+static gboolean
+gda_postgres_provider_add_savepoint (GdaServerProvider *provider,
+				     GdaConnection *cnc,
+				     const gchar *name,
+				     GError **error)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	gchar *str;
+	gboolean retval;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	str = g_strdup_printf ("SAVEPOINT %s", name);
+	retval = gda_postgres_provider_single_command (pg_prv, cnc, str); 
+	g_free (str);
+	return retval;
+}
+
+static gboolean
+gda_postgres_provider_rollback_savepoint (GdaServerProvider *provider,
+					  GdaConnection *cnc,
+					  const gchar *name,
+					  GError **error)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	gchar *str;
+	gboolean retval;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	str = g_strdup_printf ("ROLLBACK TO SAVEPOINT %s", name);
+	retval = gda_postgres_provider_single_command (pg_prv, cnc, str); 
+	g_free (str);
+	return retval;
+
+}
+
+static gboolean
+gda_postgres_provider_delete_savepoint (GdaServerProvider *provider,
+					GdaConnection *cnc,
+					const gchar *name,
+					GError **error)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	gchar *str;
+	gboolean retval;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	str = g_strdup_printf ("RELEASE SAVEPOINT %s", name);
+	retval = gda_postgres_provider_single_command (pg_prv, cnc, str); 
+	g_free (str);
+	return retval;
+}
+
 static gboolean 
 gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 				      GdaConnection *cnc,
@@ -1139,6 +1219,7 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 	PGconn *pconn;
 	PGresult *pg_res;
 	gboolean result;
+	GdaConnectionEvent *error = NULL;
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
@@ -1151,14 +1232,18 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 	pg_res = PQexec (pconn, command);
 	if (pg_res != NULL){		
 		result = PQresultStatus (pg_res) == PGRES_COMMAND_OK;
-		if (result == FALSE)
-			gda_connection_add_event (cnc, gda_postgres_make_error (pconn, pg_res));
+		if (result == FALSE) {
+			error = gda_postgres_make_error (pconn, pg_res);
+			gda_connection_add_event (cnc, error);
+		}
 
 		PQclear (pg_res);
 	}
-	else 
-		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
-
+	else {
+		error = gda_postgres_make_error (pconn, NULL);
+		gda_connection_add_event (cnc, error);
+	}
+	gda_connection_internal_treat_sql (cnc, command, error);
 
 	return result;
 }
@@ -1175,19 +1260,21 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);	
 
 	switch (feature) {
-	case GDA_CONNECTION_FEATURE_AGGREGATES :
-	case GDA_CONNECTION_FEATURE_INDEXES :
-	case GDA_CONNECTION_FEATURE_INHERITANCE :
-	case GDA_CONNECTION_FEATURE_PROCEDURES :
-	case GDA_CONNECTION_FEATURE_SEQUENCES :
-	case GDA_CONNECTION_FEATURE_SQL :
-	case GDA_CONNECTION_FEATURE_TRANSACTIONS :
-	case GDA_CONNECTION_FEATURE_TRIGGERS :
-	case GDA_CONNECTION_FEATURE_USERS :
-	case GDA_CONNECTION_FEATURE_VIEWS :
-	case GDA_CONNECTION_FEATURE_BLOBS :
+	case GDA_CONNECTION_FEATURE_AGGREGATES:
+	case GDA_CONNECTION_FEATURE_INDEXES:
+	case GDA_CONNECTION_FEATURE_INHERITANCE:
+	case GDA_CONNECTION_FEATURE_PROCEDURES:
+	case GDA_CONNECTION_FEATURE_SEQUENCES:
+	case GDA_CONNECTION_FEATURE_SQL:
+	case GDA_CONNECTION_FEATURE_TRANSACTIONS:
+	case GDA_CONNECTION_FEATURE_SAVEPOINTS:
+	case GDA_CONNECTION_FEATURE_SAVEPOINTS_REMOVE:
+	case GDA_CONNECTION_FEATURE_TRIGGERS:
+	case GDA_CONNECTION_FEATURE_USERS:
+	case GDA_CONNECTION_FEATURE_VIEWS:
+	case GDA_CONNECTION_FEATURE_BLOBS:
 		return TRUE;
-	case GDA_CONNECTION_FEATURE_NAMESPACES :
+	case GDA_CONNECTION_FEATURE_NAMESPACES:
 		if (cnc) {
 			g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 			priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -1196,7 +1283,7 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 		}
 		else
 			return FALSE;
-	default :
+	default:
 		break;
 	}
  
@@ -2495,57 +2582,6 @@ gda_postgres_provider_fetch_blob (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	return gda_postgres_blob_new_with_id (cnc, sql_id);
-}
-
-
-/* FIXME: not used anymore, make sure the data handlers do the same */
-gchar *
-gda_postgres_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont actually use this!*/
-					   GdaConnection *cnc,
-					   GValue *from)
-{
-	gchar *val_str;
-	gchar *ret;
-	GType type;
-
-	g_return_val_if_fail (from != NULL, NULL);
-
-	val_str = gda_value_stringify (from);
-	if (!val_str)
-		return NULL;
-
-	type = G_VALUE_TYPE (from);
-	if ((type == G_TYPE_INT64 ) ||
-	    (type == G_TYPE_DOUBLE ) ||
-	    (type == G_TYPE_INT ) ||
-	    (type == GDA_TYPE_NUMERIC ) ||
-	    (type == G_TYPE_FLOAT ) ||
-	    (type == GDA_TYPE_SHORT ) ||
-	    (type == G_TYPE_CHAR ))
-		ret = g_strdup (val_str);
-	else if ((type == GDA_TYPE_TIMESTAMP) ||
-		 (type == G_TYPE_DATE ) ||
-		 (type == GDA_TYPE_TIME ))
-			ret = g_strdup_printf ("\"%s\"", val_str);
-	else if (type == GDA_TYPE_BINARY) {
-		int qlen;
-		char *quoted;
-		quoted = PQescapeBytea(val_str, (size_t) strlen(val_str), &qlen);
-		ret = g_strdup_printf ("\"%s\"", quoted);
-		PQfreemem(quoted);
-	}
-	else {
-		char *quoted;
-		quoted = ret = g_malloc(strlen(val_str) * 2 + 3);
-		*quoted++     	= '\'';
-		quoted += PQescapeString (quoted, val_str, (size_t) strlen (val_str));
-		*quoted++     	= '\'';
-		*quoted++     	= '\0';
-		ret = g_realloc(ret, quoted - ret + 1);
-	}
-	g_free (val_str);
-
-	return ret;
 }
 
 static GdaDataHandler *

@@ -46,6 +46,7 @@
 #include <libgda/handlers/gda-handler-type.h>
 
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
+#include <libgda/gda-connection-private.h>
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
@@ -438,12 +439,14 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 	arr = gda_delimiter_split_sql (sql);
 	if (arr) {
 		gint n = 0;
+		gboolean allok = TRUE;
 
-		while (arr[n]) {
+		while (arr[n] && allok) {
 			gint rc;
 			MYSQL_RES *mysql_res;
 			GdaMysqlRecordset *recset;
 			gchar *tststr;
+			GdaConnectionEvent *error = NULL;
 
 			/* if the connection is in read-only mode, just allow SELECT,
 			   SHOW commands */
@@ -457,6 +460,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 					gda_connection_add_event_string (
 						cnc, "Command '%s' cannot be executed in read-only mode", arr[n]);
 					reclist = g_list_append (reclist, NULL);
+					allok = FALSE;
 					break;
 				}
 
@@ -466,63 +470,66 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 			/* execute the command on the server */
 			rc = mysql_real_query (mysql, arr[n], strlen (arr[n]));
 			if (rc != 0) {
-				gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
+				error = gda_mysql_make_error (mysql);
+				gda_connection_add_event (cnc, error);
 				reclist = g_list_append (reclist, NULL);
-				break;
-			}
-
-			/* command was executed OK */
-			g_strchug (arr[n]);
-			tststr = arr[n];
-			if (! g_ascii_strncasecmp (tststr, "SELECT", 6) ||
-			    ! g_ascii_strncasecmp (tststr, "SHOW", 4) ||
-			    ! g_ascii_strncasecmp (tststr, "DESCRIBE", 6) ||
-			    ! g_ascii_strncasecmp (tststr, "EXPLAIN", 7)) {
-				mysql_res = mysql_store_result (mysql);
-				recset = gda_mysql_recordset_new (cnc, mysql_res, mysql);
-				if (GDA_IS_MYSQL_RECORDSET (recset)) {
-					g_object_set (G_OBJECT (recset), 
-						      "command_text", arr[n],
-						      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
-					reclist = g_list_append (reclist, recset);
-				}
-				else
-					reclist = g_list_append (reclist, NULL);
+				allok = FALSE;
 			}
 			else {
-				int changes;
-				GdaConnectionEvent *event;
-				gchar *str, *tmp, *ptr;
-								
-				changes = mysql_affected_rows (mysql);
-				reclist = g_list_append (reclist, 
-					  gda_parameter_list_new_inline (NULL, 
-									 "IMPACTED_ROWS", G_TYPE_INT, changes,
-									 NULL));
-
-				/* generate a notice about changes */
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
-				ptr = tststr;
-				while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
-				       (*ptr != '\n'))
-					ptr++;
-				*ptr = 0;
-				tmp = g_ascii_strup (tststr, -1);
-				if (!strcmp (tmp, "INSERT")) {
-					if (mysql_insert_id (mysql) != 0)
-						str = g_strdup_printf ("%s %lld %d", tmp, 
-								       mysql_insert_id (mysql),
-								       changes);
+				/* command was executed OK */
+				g_strchug (arr[n]);
+				tststr = arr[n];
+				if (! g_ascii_strncasecmp (tststr, "SELECT", 6) ||
+				    ! g_ascii_strncasecmp (tststr, "SHOW", 4) ||
+				    ! g_ascii_strncasecmp (tststr, "DESCRIBE", 6) ||
+				    ! g_ascii_strncasecmp (tststr, "EXPLAIN", 7)) {
+					mysql_res = mysql_store_result (mysql);
+					recset = gda_mysql_recordset_new (cnc, mysql_res, mysql);
+					if (GDA_IS_MYSQL_RECORDSET (recset)) {
+						g_object_set (G_OBJECT (recset), 
+							      "command_text", arr[n],
+							      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
+						reclist = g_list_append (reclist, recset);
+					}
 					else
-						str = g_strdup_printf ("%s NOID %d", tmp, changes);
+						reclist = g_list_append (reclist, NULL);
 				}
-				else
-					str = g_strdup_printf ("%s %d", tmp, changes);
-				gda_connection_event_set_description (event, str);
-				g_free (str);
-				gda_connection_add_event (cnc, event);
+				else {
+					int changes;
+					GdaConnectionEvent *event;
+					gchar *str, *tmp, *ptr;
+					
+					changes = mysql_affected_rows (mysql);
+					reclist = g_list_append (reclist, 
+								 gda_parameter_list_new_inline (NULL, 
+												"IMPACTED_ROWS", G_TYPE_INT, changes,
+												NULL));
+					
+					/* generate a notice about changes */
+					event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+					ptr = tststr;
+					while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
+					       (*ptr != '\n'))
+						ptr++;
+					*ptr = 0;
+					tmp = g_ascii_strup (tststr, -1);
+					if (!strcmp (tmp, "INSERT")) {
+						if (mysql_insert_id (mysql) != 0)
+							str = g_strdup_printf ("%s %lld %d", tmp, 
+									       mysql_insert_id (mysql),
+									       changes);
+						else
+							str = g_strdup_printf ("%s NOID %d", tmp, changes);
+					}
+					else
+						str = g_strdup_printf ("%s %d", tmp, changes);
+					gda_connection_event_set_description (event, str);
+					g_free (str);
+					gda_connection_add_event (cnc, event);
+				}
 			}
 
+			gda_connection_internal_treat_sql (cnc, arr[n], error);
 			n++;
 		}
 
@@ -845,6 +852,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 	MYSQL *mysql;
 	gint rc;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+	GdaConnectionEvent *event = NULL;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -879,18 +887,20 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 	}
 
 	if (rc != 0) {
-		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
-		return FALSE;
+		event = gda_mysql_make_error (mysql);
+		gda_connection_add_event (cnc, event);
 	}
-
-	/* start the transaction */
-	rc = mysql_real_query (mysql, "BEGIN", strlen ("BEGIN"));
-	if (rc != 0) {
-		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
-		return FALSE;
+	else {
+		/* start the transaction */
+		rc = mysql_real_query (mysql, "BEGIN", strlen ("BEGIN"));
+		if (rc != 0) {
+			event = gda_mysql_make_error (mysql);
+			gda_connection_add_event (cnc, event);
+		}
 	}
-
-	return TRUE;
+	
+	gda_connection_internal_treat_sql (cnc, "BEGIN", event);
+	return event ? FALSE : TRUE;
 }
 
 /* commit_transaction handler for the GdaMysqlProvider class */
@@ -902,6 +912,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 	MYSQL *mysql;
 	gint rc;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+	GdaConnectionEvent *event = NULL;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -919,11 +930,12 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 
 	rc = mysql_real_query (mysql, "COMMIT", strlen ("COMMIT"));
 	if (rc != 0) {
-		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
-		return FALSE;
+		event = gda_mysql_make_error (mysql);
+		gda_connection_add_event (cnc, event);
 	}
 
-	return TRUE;
+	gda_connection_internal_treat_sql (cnc, "COMMIT", event);
+	return event ? FALSE : TRUE;
 }
 
 /* rollback_transaction handler for the GdaMysqlProvider class */
@@ -935,6 +947,7 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 	MYSQL *mysql;
 	gint rc;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+	GdaConnectionEvent *event = NULL;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -952,11 +965,12 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 
 	rc = mysql_real_query (mysql, "ROLLBACK", strlen ("ROLLBACK"));
 	if (rc != 0) {
-		gda_connection_add_event (cnc, gda_mysql_make_error (mysql));
-		return FALSE;
+		event = gda_mysql_make_error (mysql);
+		gda_connection_add_event (cnc, event);
 	}
 
-	return TRUE;
+	gda_connection_internal_treat_sql (cnc, "ROLLBACK", event);
+	return event ? FALSE : TRUE;
 }
 
 /* supports handler for the GdaMysqlProvider class */
