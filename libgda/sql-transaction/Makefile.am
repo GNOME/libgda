@@ -5,10 +5,10 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS)
 
-noinst_LIBRARIES = libsqltransaction.a
+lib_LTLIBRARIES = libsqltransaction.la
 noinst_PROGRAMS = sql_parser_test
 
-libsqltransaction_a_SOURCES = \
+libsqltransaction_la_SOURCES = \
 	parser.c \
 	parser.h \
 	lexer.c \
@@ -26,8 +26,8 @@ lexer.c: lexer.l parser.c
 libsqltransactionincdir = $(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libsql
 
 sql_parser_test_SOURCES=sql_parser_test.c
-sql_parser_test_DEPENDENCIES = libsqltransaction.a
-sql_parser_test_LDADD = libsqltransaction.a $(LIBGDA_LIBS)
+sql_parser_test_DEPENDENCIES = libsqltransaction.la
+sql_parser_test_LDADD = libsqltransaction.la $(LIBGDA_LIBS)
 
 EXTRA_DIST=parser.y lexer.l
 CLEANFILES = lexer.c parser.h parser.c parser.output

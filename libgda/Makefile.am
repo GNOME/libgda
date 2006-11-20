@@ -210,7 +210,7 @@ libgda_3_0_la_SOURCES = \
 	$(libgda_sources)
 
 libgda_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) -no-undefined
-libgda_3_0_la_LIBADD = $(LIBGDA_LIBS) $(FAM_LIBS) $(top_builddir)/libsql/libgdasql.la sql-transaction/libsqltransaction.a
+libgda_3_0_la_LIBADD = $(LIBGDA_LIBS) $(FAM_LIBS) $(top_builddir)/libsql/libgdasql.la sql-transaction/libsqltransaction.la
 
 gdaincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)
