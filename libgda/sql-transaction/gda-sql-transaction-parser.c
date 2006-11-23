@@ -78,6 +78,7 @@ GdaSqlTransaction *
 gda_sql_transaction_parse_with_error (const char *sqlquery, GError ** error)
 {
 	void *buffer;
+	GError *local_error = NULL;
 
 	if (sqlquery == NULL) {
 		if (error)
@@ -90,6 +91,9 @@ gda_sql_transaction_parse_with_error (const char *sqlquery, GError ** error)
 	}
 
 	tran_error = error;
+	if (!tran_error)
+		tran_error = &local_error;
+
 	buffer = tran_scan_string (sqlquery);
 	tran_switch_to_buffer (buffer);
 
@@ -99,9 +103,8 @@ gda_sql_transaction_parse_with_error (const char *sqlquery, GError ** error)
 		return tran_result;
 	}
 	else {
-		if (!error)
-			fprintf (stderr, "Error on SQL statement: %s\n",
-				 sqlquery);
+		if (!error && local_error)
+			g_error_free (local_error);
 		tran_delete_buffer (buffer);
 		return NULL;
 	}
