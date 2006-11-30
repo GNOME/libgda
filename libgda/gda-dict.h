@@ -22,9 +22,11 @@
 #define __GDA_DICT_H_
 
 #include <glib-object.h>
-#include "gda-decl.h"
-#include "gda-value.h"
-#include "gda-enums.h"
+#include <libgda/gda-decl.h>
+#include <libgda/gda-value.h>
+#include <libgda/gda-enums.h>
+
+/* #include <libgda/gda-dict-reg-aggregates.h> */
 
 G_BEGIN_DECLS
 

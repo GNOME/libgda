@@ -1,3 +1,8 @@
+2006-11-30  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-dict-reg-aggregates.h: Added the macros for extern "C",
+	so we can use this from C++.
+
 2006-11-23  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/sql-transaction/gda-sql-transaction-parser.c: don't print

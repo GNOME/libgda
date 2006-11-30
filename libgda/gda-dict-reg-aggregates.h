@@ -22,7 +22,9 @@
 #ifndef __GDA_DICT_REG_AGGREGATES_H_
 #define __GDA_DICT_REG_AGGREGATES_H_
 
-#include "gda-dict-private.h"
+#include <libgda/gda-dict-private.h>
+
+G_BEGIN_DECLS
 
 GdaDictRegisterStruct *gda_aggregates_get_register ();
 
@@ -32,5 +34,7 @@ GdaDictAggregate      *gda_aggregates_get_by_name_arg (GdaDict *dict,
 GdaDictAggregate      *gda_aggregates_get_by_name_arg_in_list (GdaDict *dict, GSList *aggregates, 
 							       const gchar *aggname, GdaDictType *argtype);
 GdaDictAggregate      *gda_aggregates_get_by_dbms_id (GdaDict *dict, const gchar *dbms_id);
+
+G_END_DECLS
 
 #endif
