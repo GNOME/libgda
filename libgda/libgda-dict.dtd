@@ -18,7 +18,7 @@
 -->
 <!ELEMENT gda_dsn_info EMPTY>
 <!ATTLIST gda_dsn_info
-	  dsn NMTOKEN #REQUIRED
+	  dsn NMTOKENS #REQUIRED
 	  user CDATA #IMPLIED>
 
 <!--      

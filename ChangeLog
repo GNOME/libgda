@@ -1,3 +1,11 @@
+2006-12-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/libgda-dict.dtd: correction to allow more types of characters
+	in the DSN
+	* libgda/gda-dict-table.c:
+	* libgda/gda-dict-database.c: make sure the VIEWS are also handled when
+	doing a dictionary sync. with the database structure
+	
 2006-11-30  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-dict-reg-aggregates.h: Added the macros for extern "C",

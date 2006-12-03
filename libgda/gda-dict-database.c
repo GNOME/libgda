@@ -910,44 +910,16 @@ gda_dict_database_stop_update_dbms_data (GdaDictDatabase *db)
 	db->priv->stop_update = TRUE;
 }
 
-static gboolean
-database_tables_update_list (GdaDictDatabase *db, const gchar *table_name, GError **error)
+static GSList *
+database_tables_n_views_update_treat_schema_result (GdaDictDatabase *db, GdaDataModel *rs, 
+						    gboolean for_views, GError **error)
 {
-	GSList *list;
-	GdaDataModel *rs;
-	gchar *str;
-	guint now, total;
 	GSList *updated_tables = NULL;
-	GdaConnection *cnc;
+	guint now, total;
+	gchar *str;
 	GdaDictTable *table;
 	GSList *constraints;
-	GdaParameterList *options = NULL;
-	
-	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (db)));
-	if (!cnc) {
-		g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_TABLE_META_DATA_UPDATE,
-                             _("No connection associated to dictionary!"));
-                return FALSE;
-	}
-	if (!gda_connection_is_opened (cnc)) {
-                g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_TABLE_META_DATA_UPDATE,
-                             _("Connection is not opened!"));
-                return FALSE;
-        }
-
-	if (table_name) {
-		options = gda_parameter_list_new (NULL);
-		gda_parameter_list_add_param_from_string (options, "name", G_TYPE_STRING, table_name);
-	}
-	rs = gda_connection_get_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, options, NULL);
-	if (options)
-		g_object_unref (options);
-
-	if (!rs) {
-		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_TABLES_ERROR,
-			     _("Can't get list of tables"));
-		return FALSE;
-	}
+	GSList *list;
 
 	if (!gda_utility_check_data_model (rs, 4, 
 				       G_TYPE_STRING, 
@@ -978,6 +950,8 @@ database_tables_update_list (GdaDictDatabase *db, const gchar *table_name, GErro
 			table = GDA_DICT_TABLE (gda_dict_table_new (gda_object_get_dict (GDA_OBJECT (db))));
 			gda_object_set_name (GDA_OBJECT (table), str);
 			newtable = TRUE;
+			if (for_views)
+				g_object_set (G_OBJECT (table), "is-view", TRUE, NULL);
 			
 			/* finding the right position for the table */
 			list = db->priv->tables;
@@ -1043,12 +1017,69 @@ database_tables_update_list (GdaDictDatabase *db, const gchar *table_name, GErro
 			g_object_set_data (G_OBJECT (table), "pending_constraints", NULL);
 		}
 
-		g_signal_emit_by_name (G_OBJECT (db), "update_progress", "TABLES",
+		g_signal_emit_by_name (G_OBJECT (db), "update_progress", for_views ? "VIEWS" : "TABLES",
 				       now, total);
 		now++;
 	}
+
+	return updated_tables;
+}
+
+static gboolean
+database_tables_update_list (GdaDictDatabase *db, const gchar *table_name, GError **error)
+{
+	GSList *list;
+	GdaDataModel *rs;
+
+	GSList *updated_tables, *updated_views;
+	GdaConnection *cnc;
+	GdaParameterList *options = NULL;
 	
+	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (db)));
+	if (!cnc) {
+		g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_TABLE_META_DATA_UPDATE,
+                             _("No connection associated to dictionary!"));
+                return FALSE;
+	}
+	if (!gda_connection_is_opened (cnc)) {
+                g_set_error (error, GDA_DICT_TABLE_ERROR, GDA_DICT_TABLE_META_DATA_UPDATE,
+                             _("Connection is not opened!"));
+                return FALSE;
+        }
+
+	if (table_name) {
+		options = gda_parameter_list_new (NULL);
+		gda_parameter_list_add_param_from_string (options, "name", G_TYPE_STRING, table_name);
+	}
+
+	/* tables */
+	rs = gda_connection_get_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, options, NULL);
+	if (options)
+		g_object_unref (options);
+	if (!rs) {
+		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_TABLES_ERROR,
+			     _("Can't get list of tables"));
+		return FALSE;
+	}
+	updated_tables = database_tables_n_views_update_treat_schema_result (db, rs, FALSE, error);
 	g_object_unref (G_OBJECT (rs));
+	g_signal_emit_by_name (G_OBJECT (db), "update_progress", NULL, 0, 0);
+
+	/* views */
+	rs = gda_connection_get_schema (cnc, GDA_CONNECTION_SCHEMA_VIEWS, options, NULL);
+	if (options)
+		g_object_unref (options);
+	if (!rs) {
+		g_set_error (error, GDA_DICT_DATABASE_ERROR, GDA_DICT_DATABASE_TABLES_ERROR,
+			     _("Can't get list of views"));
+		g_slist_free (updated_tables);
+		return FALSE;
+	}
+	updated_views = database_tables_n_views_update_treat_schema_result (db, rs, TRUE, error);
+	g_object_unref (G_OBJECT (rs));
+	g_signal_emit_by_name (G_OBJECT (db), "update_progress", NULL, 0, 0);
+
+	updated_tables = g_slist_concat (updated_tables, updated_views);
 	
 	/* remove the tables not existing anymore */
 	for (list = db->priv->tables; list; list = list->next) {

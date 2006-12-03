@@ -95,7 +95,8 @@ static GObjectClass  *parent_class = NULL;
 enum
 {
 	PROP_0,
-	PROP_DB
+	PROP_DB,
+	PROP_IS_VIEW
 };
 
 
@@ -196,6 +197,9 @@ gda_dict_table_class_init (GdaDictTableClass * class)
 	object_class->get_property = gda_dict_table_get_property;
 	g_object_class_install_property (object_class, PROP_DB,
 					 g_param_spec_pointer ("database", NULL, NULL, 
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_IS_VIEW,
+					 g_param_spec_boolean ("is-view", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* virtual functions */
 #ifdef GDA_DEBUG
@@ -350,6 +354,9 @@ gda_dict_table_set_property (GObject *object,
 			ptr = g_value_get_pointer (value);
 			gda_dict_table_set_database (gda_dict_table, GDA_DICT_DATABASE (ptr));
 			break;
+		case PROP_IS_VIEW:
+			gda_dict_table->priv->is_view = g_value_get_boolean (value);
+			break;
 		}
 	}
 }
@@ -367,6 +374,9 @@ gda_dict_table_get_property (GObject *object,
 		switch (param_id) {
 		case PROP_DB:
 			g_value_set_pointer (value, gda_dict_table->priv->db);
+			break;
+		case PROP_IS_VIEW:
+			g_value_set_boolean (value, gda_dict_table->priv->is_view);
 			break;
 		}	
 	}
