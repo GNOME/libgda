@@ -44,6 +44,10 @@ xmlNodePtr                    gda_data_model_to_xml_node            (GdaDataMode
 								     const gint *rows, gint nb_rows, const gchar *name);
 gboolean                      gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GError **error);
 
+gboolean                      gda_data_model_move_iter_at_row       (GdaDataModel *model, GdaDataModelIter *iter, gint row);
+gboolean                      gda_data_model_move_iter_next         (GdaDataModel *model, GdaDataModelIter *iter);
+gboolean                      gda_data_model_move_iter_prev         (GdaDataModel *model, GdaDataModelIter *iter);
+
 G_END_DECLS
 
 #endif

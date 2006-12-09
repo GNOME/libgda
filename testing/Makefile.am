@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS)
 
 bin_PROGRAMS = gda-test-connection
-noinst_PROGRAMS = gda-test-sql gda-test-models gda-test-server-operation
+noinst_PROGRAMS = gda-test-sql gda-test-models gda-test-server-operation gda-test-model-query
 
 gda_test_sql_SOURCES = \
 	html.h \
@@ -44,6 +44,18 @@ gda_test_server_operation_SOURCES = \
         gda-test-server-operation.c
 
 gda_test_server_operation_LDADD = \
+        $(top_builddir)/libgda/libgda-3.0.la \
+        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
+        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
+        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
+        $(LIBGDA_LIBS)
+
+gda_test_model_query_SOURCES = \
+	html.h \
+	html.c \
+        gda-test-model-query.c
+
+gda_test_model_query_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
         $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
         $(top_builddir)/libgda/graph/libgda_graph-3.0.la \

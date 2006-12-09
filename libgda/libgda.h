@@ -61,7 +61,6 @@
 #include <libgda/gda-dict.h>
 #include <libgda/gda-enums.h>
 #include <libgda/gda-graphviz.h>
-#include <libgda/gda-data-model-private.h>
 #include <libgda/graph/gda-graph-query.h>
 #include <libgda/graph/gda-graph.h>
 #include <libgda/graph/gda-graph-item.h>

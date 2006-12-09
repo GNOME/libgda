@@ -42,10 +42,14 @@ typedef struct _GdaDataModelQueryPrivate GdaDataModelQueryPrivate;
 extern GQuark gda_data_model_query_error_quark (void);
 #define GDA_DATA_MODEL_QUERY_ERROR gda_data_model_query_error_quark ()
 
-typedef enum
-{
+typedef enum {
         GDA_DATA_MODEL_QUERY_XML_LOAD_ERROR,
+	GDA_DATA_MODEL_QUERY_COMPUTE_MODIF_QUERIES_ERROR
 } GdaDataModelQueryError;
+
+typedef enum {
+	GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK = 1 << 0
+} GdaDataModelQueryOptions;
 
 struct _GdaDataModelQuery {
 	GdaObject                  object;
@@ -56,13 +60,15 @@ struct _GdaDataModelQueryClass {
 	GdaObjectClass             parent_class;
 };
 
-GType             gda_data_model_query_get_type              (void);
-GdaDataModel     *gda_data_model_query_new                   (GdaQuery *query);
+GType             gda_data_model_query_get_type                     (void);
+GdaDataModel     *gda_data_model_query_new                          (GdaQuery *query);
 
-GdaParameterList *gda_data_model_query_get_parameter_list    (GdaDataModelQuery *model);
-gboolean          gda_data_model_query_refresh               (GdaDataModelQuery *model, GError **error);
-gboolean          gda_data_model_query_set_modification_query(GdaDataModelQuery *model, 
-							      const gchar *query, GError **error);
+GdaParameterList *gda_data_model_query_get_parameter_list           (GdaDataModelQuery *model);
+gboolean          gda_data_model_query_refresh                      (GdaDataModelQuery *model, GError **error);
+gboolean          gda_data_model_query_set_modification_query       (GdaDataModelQuery *model, 
+								     const gchar *query, GError **error);
+gboolean          gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, const gchar *target,
+								     GdaDataModelQueryOptions options, GError **error);
 
 
 G_END_DECLS

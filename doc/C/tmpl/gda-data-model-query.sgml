@@ -25,11 +25,6 @@ one provided th the #GdaDict object to which the query relates.
 </para>
 
 
-<!-- ##### ARG GdaDataModelQuery:auto-compute ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdaDataModelQuery:delete-query ##### -->
 <para>
 
@@ -98,6 +93,18 @@ one provided th the #GdaDict object to which the query relates.
 
 @model: 
 @query: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_query_compute_modification_queries ##### -->
+<para>
+
+</para>
+
+@model: 
+@target: 
+@options: 
 @error: 
 @Returns: 
 

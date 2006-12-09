@@ -228,6 +228,40 @@ gda_handler_time_new_no_locale (void)
 	return (GdaDataHandler *) obj;
 }
 
+/**
+ * gda_handler_time_set_sql_spec
+ * @dh: a #GdaHandlerTime object
+ * @first:
+ * @sec:
+ * @third:
+ * @separator:
+ * @twodigits_years: TRUE if year part of date must be rendered on 2 digits
+ *
+ * Specifies the SQL output style of the @dh data handler. The general format is "FIRSTsSECsTHIRD"
+ * where FIRST, SEC and THIRD are specified by @first, @sec and @trird and 's' is the separator,
+ * specified by @separator.
+ *
+ * The default implementation is FIRST=G_DATE_MONTH, SEC=G_DATE_DAY and THIRD=G_DATE_YEAR (the year is
+ * rendered on 4 digits) and the separator is '-'
+ */
+void
+gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec,
+				GDateDMY third, gchar separator, gboolean twodigits_years)
+{
+	g_return_if_fail (GDA_IS_HANDLER_TIME (dh));
+	g_return_if_fail (dh->priv);
+	g_return_if_fail (first != sec);
+	g_return_if_fail (sec != third);
+	g_return_if_fail (first != third);
+
+	dh->priv->sql_locale->dmy_order[0] = first;
+	dh->priv->sql_locale->dmy_order[1] = sec;
+	dh->priv->sql_locale->dmy_order[2] = third;
+	dh->priv->sql_locale->twodigit_years = twodigits_years;
+	dh->priv->sql_locale->separator = separator;
+}
+
+
 static void
 handler_compute_locale (GdaHandlerTime *hdl)
 {
@@ -359,8 +393,12 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 
 		date = (GDate *) g_value_get_boxed (value);
 		str = render_date_locale (date, hdl->priv->sql_locale);
-		retval = g_strdup_printf ("'%s'", str);
-		g_free (str);
+		if (!str)
+			retval = g_strdup ("NULL");
+		else {
+			retval = g_strdup_printf ("'%s'", str);
+			g_free (str);
+		}
 	}
 	else if (type == GDA_TYPE_TIME) {
 		const GdaTime *tim;
@@ -374,28 +412,32 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		const GdaTimestamp *gdats;
 		GDate *vdate;
-		GString *string;
 
 		gdats = gda_value_get_timestamp ((GValue *) value);
 		vdate = g_date_new_dmy (gdats->day, gdats->month, gdats->year);
 		str = render_date_locale (vdate, hdl->priv->sql_locale);
 		g_date_free (vdate);
 
-		string = g_string_new ("");
-		g_string_append_printf (string, "%02u:%02u:%02u",
-					gdats->hour,
-					gdats->minute,
-					gdats->second);
-		if (gdats->fraction != 0)
-			g_string_append_printf (string, ".%lu", gdats->fraction);
-		
-		if (gdats->timezone != GDA_TIMEZONE_INVALID)
-			g_string_append_printf (string, "%+02d", 
-						(int) gdats->timezone / 3600);
-		
-		retval = g_strdup_printf ("'%s %s'", str, string->str);
-		g_free (str);
-		g_string_free (string, TRUE);
+		if (str) {
+			GString *string;
+			string = g_string_new ("");
+			g_string_append_printf (string, "%02u:%02u:%02u",
+						gdats->hour,
+						gdats->minute,
+						gdats->second);
+			if (gdats->fraction != 0)
+				g_string_append_printf (string, ".%lu", gdats->fraction);
+			
+			if (gdats->timezone != GDA_TIMEZONE_INVALID)
+				g_string_append_printf (string, "%+02d", 
+							(int) gdats->timezone / 3600);
+			
+			retval = g_strdup_printf ("'%s %s'", str, string->str);
+			g_free (str);
+			g_string_free (string, TRUE);
+		}
+		else
+			retval = g_strdup ("NULL");	
 	}
 	else
 		g_assert_not_reached ();
@@ -420,7 +462,9 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 		const GDate *date;
 
 		date = (GDate *) g_value_get_boxed (value);
-		retval = render_date_locale (date, hdl->priv->str_locale);		
+		retval = render_date_locale (date, hdl->priv->str_locale);
+		if (!retval)
+			retval = g_strdup ("");
 	}
 	else if (type == GDA_TYPE_TIME) {
 		str = gda_handler_time_get_sql_from_value (iface, value);
@@ -430,29 +474,32 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		const GdaTimestamp *gdats;
 		GDate *vdate;
-		GdaTime vtime;
-		GString *string;
 
 		gdats = gda_value_get_timestamp ((GValue *) value);
 		vdate = g_date_new_dmy (gdats->day, gdats->month, gdats->year);
 		str = render_date_locale (vdate, hdl->priv->str_locale);
 		g_date_free (vdate);
 
-		string = g_string_new ("");
-		g_string_append_printf (string, "%02u:%02u:%02u",
-					gdats->hour,
-					gdats->minute,
-					gdats->second);
-		if (gdats->fraction != 0)
-			g_string_append_printf (string, ".%lu", gdats->fraction);
-		
-		if (gdats->timezone != GDA_TIMEZONE_INVALID)
-			g_string_append_printf (string, "%+02d", 
-						(int) gdats->timezone / 3600);
-		
-		retval = g_strdup_printf ("%s %s", str, string->str);
-		g_free (str);
-		g_string_free (string, TRUE);
+		if (str) {
+			GString *string;
+			string = g_string_new ("");
+			g_string_append_printf (string, "%02u:%02u:%02u",
+						gdats->hour,
+						gdats->minute,
+						gdats->second);
+			if (gdats->fraction != 0)
+				g_string_append_printf (string, ".%lu", gdats->fraction);
+			
+			if (gdats->timezone != GDA_TIMEZONE_INVALID)
+				g_string_append_printf (string, "%+02d", 
+							(int) gdats->timezone / 3600);
+			
+			retval = g_strdup_printf ("%s %s", str, string->str);
+			g_free (str);
+			g_string_free (string, TRUE);
+		}
+		else
+			retval = g_strdup ("");	
 	}
 	else
 		g_assert_not_reached ();
@@ -466,6 +513,9 @@ render_date_locale (const GDate *date, LocaleSetting *locale)
 	GString *string;
 	gchar *retval;
 	gint i;
+
+	if (!date)
+		return NULL;
 
 	string = g_string_new ("");
 	for (i=0; i<3; i++) {

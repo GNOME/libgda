@@ -131,6 +131,11 @@
     <test sql="SELECT o.id, c.name AS &quot;Customer name&quot;, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE o.customer= ## [:name=&quot;Customer&quot; :type=&quot;gint&quot;]" parsed="1"/>
   </test_group>
 
+  <test_group descr="With IN clause">
+    <test sql="SELECT c.id FROM customers c WHERE c.id IN (1, 2)" parsed="1"/>
+    <test sql="SELECT c.id FROM customers c WHERE c.id IN (SELECT c1.id FROM customers c1)" parsed="1"/>
+  </test_group>
+
   <!-- INSERT -->
   <output_file name="SQL_INSERT_empty_dict.html" descr="INSERT queries testing - empty dictionary"/>
 
@@ -301,6 +306,11 @@
 
   <test_group descr="Buggy ones">
     <test sql="SELECT o.id, c.name AS &quot;Customer name&quot;, o.creation_date AS &quot;Creation Date&quot;, o.delivery_before AS &quot;Deliver before&quot;, o.delivery_date AS &quot;Delivery Date&quot; FROM customers c INNER JOIN orders o ON (c.id=o.customer) WHERE o.customer= ## [:name=&quot;Customer&quot; :type=&quot;gint&quot;]" parsed="1"/>
+  </test_group>
+
+  <test_group descr="With IN clause">
+    <test sql="SELECT c.id FROM customers c WHERE c.id in (1, 2)" parsed="1"/>
+    <test sql="SELECT c.id FROM customers c WHERE c.id in (SELECT c1.id FROM customers c1)" parsed="1"/>
   </test_group>
 
   <!-- INSERT -->

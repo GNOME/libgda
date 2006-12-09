@@ -610,6 +610,10 @@ gboolean
 gda_data_model_move_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+
+	if ((gda_data_model_iter_get_row (iter) != row) && ! gda_data_model_iter_can_be_moved (iter))
+		return FALSE;
+
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
 	else 
@@ -679,6 +683,10 @@ gboolean
 gda_data_model_move_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+
+	if (! gda_data_model_iter_can_be_moved (iter))
+		return FALSE;
+
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next) (model, iter);
 	else 
@@ -747,6 +755,10 @@ gboolean
 gda_data_model_move_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+
+	if (! gda_data_model_iter_can_be_moved (iter))
+		return FALSE;
+
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev) (model, iter);
 	else 

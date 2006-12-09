@@ -1556,8 +1556,24 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		/* FIXME: Does compare() make sense with BLOBs? Yes, use the same way of Binary comparison */
 		return 0;
 
-	else if (type == G_TYPE_DATE)
-		return g_date_compare ((GDate *) g_value_get_boxed (value1), (GDate *) g_value_get_boxed (value2));
+	else if (type == G_TYPE_DATE) {
+		GDate *d1, *d2;
+
+		d1 = (GDate *) g_value_get_boxed (value1);
+		d2 = (GDate *) g_value_get_boxed (value2);
+		if (d1 && d2)
+			return g_date_compare (d1, d2);
+		else {
+			if (d1)
+				return 1;
+			else {
+				if (d2)
+					return -1;
+				else
+					return 0;
+			}
+		}
+	}
 
 	else if (type == G_TYPE_DOUBLE) {
 		gdouble v1, v2;

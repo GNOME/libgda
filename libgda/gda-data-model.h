@@ -123,9 +123,6 @@ const GValue       *gda_data_model_get_value_at_col_name  (GdaDataModel *model,
 							   const gchar *column_name, gint row);
 guint               gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
-gboolean            gda_data_model_move_iter_at_row       (GdaDataModel *model, GdaDataModelIter *iter, gint row);
-gboolean            gda_data_model_move_iter_next         (GdaDataModel *model, GdaDataModelIter *iter);
-gboolean            gda_data_model_move_iter_prev         (GdaDataModel *model, GdaDataModelIter *iter);
 void                gda_data_model_freeze                 (GdaDataModel *model);
 void                gda_data_model_thaw                   (GdaDataModel *model);
 gboolean            gda_data_model_set_value_at           (GdaDataModel *model, gint col, gint row, 

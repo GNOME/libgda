@@ -76,11 +76,6 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @gdadataproxy: the object which received the signal.
 @arg1: 
 
-<!-- ##### ARG GdaDataProxy:autocommit ##### -->
-<para>
-
-</para>
-
 <!-- ##### ARG GdaDataProxy:model ##### -->
 <para>
 

@@ -1862,15 +1862,14 @@ static void
 mysql_get_constraints_from_create_table (GdaDataModelArray *recset, gchar *pos)
 {
 	/* skip the first line. nothing of interrest there */
-	if (pos=strchr(pos, '\n'))
+	if ((pos=strchr(pos, '\n')))
 		pos++;
 	else
 		return;
 	while (*pos)
 	{
 		gchar *next;
-		if ( next = strchr (pos, '\n') )
-		{
+		if ((next = strchr (pos, '\n'))) {
 			*next=0;
 			next++;
 		} else
@@ -2325,6 +2324,9 @@ gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_time_new ();
+			gda_handler_time_set_sql_spec (GDA_HANDLER_TIME (dh), 
+						       G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY,
+						       '-', FALSE);
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);

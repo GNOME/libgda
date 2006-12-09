@@ -1,3 +1,35 @@
+2006-12-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-query.[ch]: added a 
+	gda_data_model_query_compute_modification_queries() method to make
+	the GdaDataModelQuery compute the INSERT, DELETE and UPDATE queries
+	(it does only work if the modified table has its PK listed in the SELECT
+	query).
+	* testing/Makefile.am:
+	* testing/gda-test-model-query.c:
+	* testing/tests_data/SQL_model_query_tests.xml: test for the new
+	gda_data_model_query_compute_modification_queries() function
+	* libgda/gda-data-model-query.c: correctly set the "not null" property
+	for each parameter composing a GdaDataModelIter when creating one
+	* gda-data-model-iter.[ch]: added a new "row_to_change" and a new 
+	gda_data_model_iter_row_can_change() to allow customers objects to react
+	(and even maybe stop) the iter to change its row
+	* libgda/gda-data-model.[hc]:
+	* libgda/libgda.h
+	* libgda/gda-data-model-private.h: moved some methods to private API
+	* libgda/gda-data-model-array.c: corrected a bug in the copy operation
+	where the "not NULL" attribute of columns was not copied
+	* libgda/gda-data-proxy.c: when writing back new rows to the proxied
+	data model, don't anymore emit a "row_removed" signal for the created
+	row
+	* libgda/gda-transaction-status.c: crash bug fixed
+	* libgda/gda-connection.c: removed transaction's status debug messages
+	* libgda/gda-value.c: fixed GDate comparison method
+	* libgda/data-entries/gda-handler-time.[ch]: added gda_handler_time_set_sql_spec()
+	to allow customizations of the way the SQL is rendered
+	* providers/mysql/gda-mysql-provider.c: modified the date data handler to
+	make it render SQL as 'YYYY-MM-DD'
+	
 2006-12-03  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/libgda-dict.dtd: correction to allow more types of characters

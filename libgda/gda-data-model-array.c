@@ -390,6 +390,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 		gda_column_set_dbms_type (copycol, gda_column_get_dbms_type (srccol));
 		gda_column_set_g_type (copycol, gda_column_get_g_type (srccol));
 		gda_column_set_position (copycol, gda_column_get_position (srccol));
+		gda_column_set_allow_null (copycol, gda_column_get_allow_null (srccol));
 	}
 
 	if (! gda_data_model_import_from_model (model, src, NULL, error)) {

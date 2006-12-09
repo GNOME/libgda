@@ -38,6 +38,15 @@ GdaDataModelIter
 @gdadatamodeliter: the object which received the signal.
 @arg1: 
 
+<!-- ##### SIGNAL GdaDataModelIter::row-to-change ##### -->
+<para>
+
+</para>
+
+@gdadatamodeliter: the object which received the signal.
+@arg1: 
+@Returns: 
+
 <!-- ##### ARG GdaDataModelIter:current-row ##### -->
 <para>
 

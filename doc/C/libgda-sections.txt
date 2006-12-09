@@ -327,6 +327,7 @@ gda_data_model_query_new
 gda_data_model_query_get_parameter_list
 gda_data_model_query_refresh
 gda_data_model_query_set_modification_query
+gda_data_model_query_compute_modification_queries
 <SUBSECTION Standard>
 GDA_DATA_MODEL_QUERY
 GDA_DATA_MODEL_QUERY_CLASS
@@ -459,9 +460,6 @@ gda_data_model_get_value_at_col_name
 gda_data_model_set_value_at
 gda_data_model_set_values
 gda_data_model_create_iter
-gda_data_model_move_iter_at_row
-gda_data_model_move_iter_next
-gda_data_model_move_iter_prev
 gda_data_model_append_values
 gda_data_model_append_row
 gda_data_model_remove_row
@@ -1120,6 +1118,7 @@ GdaHandlerTimeClass
 GdaHandlerTimePriv
 gda_handler_time_new
 gda_handler_time_new_no_locale
+gda_handler_time_set_sql_spec
 <SUBSECTION Standard>
 GDA_HANDLER_TIME
 GDA_HANDLER_TIME_CLASS

@@ -220,6 +220,7 @@ gda_transaction_status_free_events (GdaTransactionStatus *tstatus, GdaTransactio
 			event_free ((GdaTransactionStatusEvent *)(list->data));
 			tmp = list->prev;
 			tstatus->events = g_list_delete_link (tstatus->events, list);
+			list = tmp;
 		}
 	}
 	event_free (event);
@@ -242,7 +243,7 @@ gda_transaction_status_find (GdaTransactionStatus *tstatus, const gchar *str, Gd
 	if (!str)
 		return gda_transaction_status_find_current (tstatus, destev, FALSE);
 
-	if (!strcmp (tstatus->name, str))
+	if (tstatus->name && !strcmp (tstatus->name, str))
 		return tstatus;
 
 	for (evlist = tstatus->events; evlist && !trans; evlist = evlist->next) {

@@ -283,37 +283,6 @@ As a side note there are also data models which wrap other data models such as:
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_move_iter_at_row ##### -->
-<para>
-
-</para>
-
-@model: 
-@iter: 
-@row: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_move_iter_next ##### -->
-<para>
-
-</para>
-
-@model: 
-@iter: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_move_iter_prev ##### -->
-<para>
-
-</para>
-
-@model: 
-@iter: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_model_append_values ##### -->
 <para>
 

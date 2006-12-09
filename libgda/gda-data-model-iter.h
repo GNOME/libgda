@@ -55,6 +55,7 @@ struct _GdaDataModelIterClass
 {
 	GdaParameterListClass      parent_class;
 
+	gboolean                (* row_to_change)    (GdaDataModelIter *iter, gint row);
 	void                    (* row_changed)      (GdaDataModelIter *iter, gint row);
 	void                    (* end_of_data)      (GdaDataModelIter *iter);
 };
@@ -67,6 +68,7 @@ gboolean          gda_data_model_iter_move_next            (GdaDataModelIter *it
 gboolean          gda_data_model_iter_move_prev            (GdaDataModelIter *iter);
 gint              gda_data_model_iter_get_row              (GdaDataModelIter *iter);
 
+gboolean          gda_data_model_iter_can_be_moved       (GdaDataModelIter *iter);
 void              gda_data_model_iter_invalidate_contents  (GdaDataModelIter *iter);
 gboolean          gda_data_model_iter_is_valid             (GdaDataModelIter *iter);
 

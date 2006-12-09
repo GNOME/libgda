@@ -22,7 +22,9 @@
 #include <string.h>
 #include "gda-data-model-iter.h"
 #include "gda-data-model.h"
+#include "gda-data-model-private.h"
 #include "gda-parameter.h"
+#include "gda-marshal.h"
 
 /* 
  * Main static functions 
@@ -61,12 +63,13 @@ static GObjectClass  *parent_class = NULL;
 /* signals */
 enum
 {
+	ROW_TO_CHANGE,
         ROW_CHANGED,
 	END_OF_DATA,
         LAST_SIGNAL
 };
 
-static gint gda_data_model_iter_signals[LAST_SIGNAL] = { 0, 0 };
+static gint gda_data_model_iter_signals[LAST_SIGNAL] = { 0, 0, 0 };
 
 /* properties */
 enum
@@ -97,7 +100,6 @@ GQuark gda_data_model_iter_error_quark (void)
 	return quark;
 }
 
-
 GType
 gda_data_model_iter_get_type (void)
 {
@@ -122,6 +124,26 @@ gda_data_model_iter_get_type (void)
 	return type;
 }
 
+static gboolean
+row_to_change_accumulator (GSignalInvocationHint *ihint,
+			   GValue *return_accu,
+			   const GValue *handler_return,
+			   gpointer data)
+{
+	gboolean thisvalue;
+
+	thisvalue = g_value_get_boolean (handler_return);
+	g_value_set_boolean (return_accu, thisvalue);
+
+	return thisvalue; /* stop signal if 'thisvalue' is FALSE */
+}
+
+static gboolean
+m_row_to_change (GdaDataModelIter *iter, gint row)
+{
+	return TRUE; /* defaults allows row to change */
+}
+
 static void
 gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 {
@@ -130,6 +152,13 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 
 	parent_class = g_type_class_peek_parent (class);
 
+	gda_data_model_iter_signals [ROW_TO_CHANGE] =
+                g_signal_new ("row_to_change",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelIterClass, row_to_change),
+                              row_to_change_accumulator, NULL,
+                              gda_marshal_BOOLEAN__INT, G_TYPE_BOOLEAN, 1, G_TYPE_INT);
 	gda_data_model_iter_signals [ROW_CHANGED] =
                 g_signal_new ("row_changed",
                               G_TYPE_FROM_CLASS (object_class),
@@ -145,6 +174,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
+	class->row_to_change = m_row_to_change;
 	class->row_changed = NULL;
 	class->end_of_data = NULL;
 
@@ -372,6 +402,7 @@ gda_data_model_iter_set_property (GObject *object,
 				param = (GdaParameter *) g_object_new (GDA_TYPE_PARAMETER, "dict", dict,
 								       "g_type", 
 								       gda_column_get_g_type (column), NULL);
+				gda_parameter_set_not_null (param, !gda_column_get_allow_null (column));
 				str = gda_column_get_title (column);
 				if (!str)
 					str = gda_column_get_name (column);
@@ -405,11 +436,11 @@ gda_data_model_iter_set_property (GObject *object,
 			break;
 		case PROP_CURRENT_ROW:
 			if (iter->priv->row != g_value_get_int (value)) {
-				iter->priv->row = g_value_get_int (value);
-				g_signal_emit (G_OBJECT (iter),
-					       gda_data_model_iter_signals[ROW_CHANGED],
-					       0, iter->priv->row);
-			}
+                                iter->priv->row = g_value_get_int (value);
+                                g_signal_emit (G_OBJECT (iter),
+                                               gda_data_model_iter_signals[ROW_CHANGED],
+                                               0, iter->priv->row);
+                        }
 			break;
 		case PROP_UPDATE_MODEL:
 			iter->priv->keep_param_changes = ! g_value_get_boolean (value);
@@ -440,6 +471,35 @@ gda_data_model_iter_get_property (GObject *object,
 			break;
 		}	
 	}
+}
+
+/**
+ * gda_data_model_iter_can_be_moved
+ * @iter: a #GdaDataModelIter object
+ *
+ * Tells if @iter can point to another row. Note the @iter by itself will not refuse
+ * a row change, but that the row change may be refused by another object using
+ * @iter.
+ *
+ * Returns: TRUE if the row represented by @iter can be changed
+ */
+gboolean
+gda_data_model_iter_can_be_moved (GdaDataModelIter *iter)
+{
+	gboolean move_ok = TRUE;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+	g_return_val_if_fail (iter->priv, FALSE);
+
+	if (!gda_data_model_iter_is_valid (iter))
+		return TRUE;
+
+	/* optionaly validate the row change */
+	g_signal_emit (G_OBJECT (iter),
+		       gda_data_model_iter_signals[ROW_TO_CHANGE],
+		       0, iter->priv->row, &move_ok);
+
+	return move_ok;
 }
 
 /**

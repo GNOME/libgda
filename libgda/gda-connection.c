@@ -1602,7 +1602,7 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
         g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
 
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
 #endif
@@ -1636,7 +1636,7 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
 	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for ROLLBACK"));
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
 #endif
@@ -1670,7 +1670,7 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for COMMIT"));
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
 #endif
@@ -1692,7 +1692,7 @@ gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql, GdaC
 #ifdef GDA_DEBUG_signal
 		g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
 #endif
@@ -1716,7 +1716,7 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
 	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for ADD SAVEPOINT"));
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
 #endif
@@ -1741,7 +1741,7 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
 	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for ROLLBACK SAVEPOINT"));
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
 #endif	
@@ -1766,7 +1766,7 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 	}
 	else
 		g_warning (_("Connection transaction status tracking: no transaction exists for REMOVE SAVEPOINT"));
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 	if (cnc->priv->trans_status)
 		gda_transaction_status_dump (cnc->priv->trans_status, 5);
 #endif		

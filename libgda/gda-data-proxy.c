@@ -100,7 +100,6 @@ enum
 {
 	PROP_0,
 	PROP_MODEL,
-	PROP_AUTOCOMMIT,
 	PROP_ADD_NULL_ENTRY,
 };
 
@@ -150,9 +149,7 @@ struct _GdaDataProxyPrivate
 	GValue           **columns_attrs; /* Each GValue holds a GUINT of GdaValueAttribute to proxy cols. attributes */
 
 	gint               model_nb_cols; /* = gda_data_model_get_n_columns (model) */
-	gboolean           autocommit;
 	gboolean           notify_changes;
-	guint              background_commit_id;
 
 	GSList            *all_modifs; /* list of RowModif structures, for memory management */
 	GSList            *new_rows;   /* list of RowModif, no data allocated in this list */
@@ -160,6 +157,9 @@ struct _GdaDataProxyPrivate
 
 	gboolean           ignore_proxied_changes;
 	gboolean           proxy_has_changed;
+	gint               deferred_nb_rows; /* if >0 it means that the proxy "advertises" more rows than it really has,
+						it can only be a transitory state, to avoid remoing new rows when
+						they have been comitted */
 
 	gboolean           add_null_entry; /* artificially add a NULL entry at the beginning of the tree model */
 
@@ -408,46 +408,9 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 					 g_param_spec_pointer ("model", _("Data model"), NULL,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
-	g_object_class_install_property (object_class, PROP_AUTOCOMMIT,
-					 g_param_spec_boolean ("autocommit", NULL, NULL, FALSE,
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
 					 g_param_spec_boolean ("prepend_null_entry", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-}
-
-static gboolean
-background_commit_cb (GdaDataProxy *proxy)
-{
-	if (proxy->priv) {
-		GError *error = NULL;
-
-		if (!gda_data_proxy_apply_all_changes (proxy, &error)) {
-			g_warning (_("Could not auto-commit row change: %s"), 
-				   error && error->message ?  error->message : _("No detail"));
-			if (error)
-				g_error_free (error);
-		}
-		proxy->priv->background_commit_id = 0;
-	}
-	return FALSE;
-}
-
-static void
-row_changed_signal (GdaDataModel *model, gint row)
-{
-	GdaDataProxy *proxy;
-
-	proxy = GDA_DATA_PROXY (model);
-	if (!proxy->priv)
-		return;
-
-	/* the changes will be committed later in an idle high priority loop */
-	if (proxy->priv->autocommit && !proxy->priv->background_commit_id) {
-		proxy->priv->background_commit_id = g_timeout_add_full (G_PRIORITY_HIGH_IDLE, 10,
-									(GSourceFunc) background_commit_cb, 
-									proxy, NULL);
-	}
 }
 
 static void
@@ -476,9 +439,9 @@ gda_data_proxy_data_model_init (GdaDataModelClass *iface)
 	iface->i_get_notify = gda_data_proxy_get_notify;
 	iface->i_send_hint = gda_data_proxy_send_hint;
 
-	iface->row_inserted = row_changed_signal;
-	iface->row_updated = row_changed_signal;
-	iface->row_removed = row_changed_signal;
+	iface->row_inserted = NULL;
+	iface->row_updated = NULL;
+	iface->row_removed = NULL;
 }
 
 static void
@@ -492,7 +455,6 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 
 	proxy->priv->add_null_entry = FALSE;
 	proxy->priv->idle_add_event_source = 0;
-	proxy->priv->background_commit_id = 0;
 
 	proxy->priv->sample_first_row = 0;
 	proxy->priv->sample_last_row = 0;
@@ -665,9 +627,6 @@ gda_data_proxy_set_property (GObject *object,
 			
 			adjust_displayed_chunck (proxy);
 			break;
-		case PROP_AUTOCOMMIT:
-			proxy->priv->autocommit = g_value_get_boolean (value);
-			break;
 		case PROP_ADD_NULL_ENTRY:
 			if (proxy->priv->add_null_entry != g_value_get_boolean (value)) {
 				proxy->priv->add_null_entry = g_value_get_boolean (value);
@@ -693,9 +652,6 @@ gda_data_proxy_get_property (GObject *object,
 	proxy = GDA_DATA_PROXY (object);
 	if (proxy->priv) {
 		switch (param_id) {
-		case PROP_AUTOCOMMIT:
-			g_value_set_boolean (value, proxy->priv->autocommit);
-			break;
 		case PROP_ADD_NULL_ENTRY:
 			g_value_set_boolean (value, proxy->priv->add_null_entry);
 			break;
@@ -715,6 +671,7 @@ gda_data_proxy_get_property (GObject *object,
 static void
 proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 {
+	gint nb_new_rows = 0;
 	if (proxy->priv->ignore_proxied_changes) {
 		proxy->priv->proxy_has_changed = TRUE;
 		return;
@@ -736,14 +693,7 @@ proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 		proxy->priv->all_modifs = g_slist_delete_link (proxy->priv->all_modifs, proxy->priv->all_modifs);
 	}
 	if (proxy->priv->new_rows) {/* new rows removing (no memory de-allocation here, though) */
-		gint i, j, rowsig;
-		j = g_slist_length (proxy->priv->new_rows);
-		rowsig = proxy->priv->current_nb_rows + (proxy->priv->add_null_entry ? 1 : 0);
-		/* emit a "delete" signal USING the SAME row number for all of them */
-		for (i = 0; i < j ; i++) {
-			if (proxy->priv->notify_changes)
-				gda_data_model_row_removed ((GdaDataModel *) proxy, rowsig);
-		}
+		nb_new_rows = g_slist_length (proxy->priv->new_rows);
 		g_slist_free (proxy->priv->new_rows);
 		proxy->priv->new_rows = NULL;
 	}
@@ -759,6 +709,7 @@ proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 		g_assert_not_reached ();
 	}
 
+	proxy->priv->deferred_nb_rows += nb_new_rows;
 	adjust_displayed_chunck (proxy);
 }
 
@@ -1369,11 +1320,10 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 /**
  * gda_data_proxy_cancel_row_changes
  * @proxy: a #GdaDataProxy object
- * @col:
- * @row:
+ * @col: the column to cancel changes, or less than 0 to cancel any change on the @row row
+ * @row: the row to cancel changes
  *
- * Resets data at the corresponding row and column. @row and @col can be <0 if all the corresponding
- * rows and columns are to be resetted.
+ * Resets data at the corresponding row and column.
  */
 void
 gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col)
@@ -1382,7 +1332,8 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 	g_return_if_fail (proxy->priv);
 	g_return_if_fail (proxy_row >= 0);
 
-	if ((col >= 0) && (col < proxy->priv->model_nb_cols)) {
+	if (((col >= 0) && (col < proxy->priv->model_nb_cols)) ||
+	    (col < 0)) {
 		RowModif *rm;
 
 		rm = find_row_modif_for_proxy_row (proxy, proxy_row);
@@ -1392,30 +1343,36 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 			RowValue *rv = NULL;
 			
 			list = rm->modif_values;
-			while (list && !rv) {
-				if (ROW_VALUE (list->data)->model_column == col)
+			while (list && (!rv || (col < 0))) {
+				if ((col < 0) || (ROW_VALUE (list->data)->model_column == col)) {
 					rv = ROW_VALUE (list->data);
-				list = g_slist_next (list);
-			}
-			if (rv) {
-				/* remove this RowValue from the RowList */
-				rm->modif_values = g_slist_remove (rm->modif_values, rv);
-				if (!rm->modif_values && !rm->to_be_deleted) {
-					/* remove this RowList as well */
-					proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
-					if (rm->model_row < 0) 
-						proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
-					else
-						g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
-					row_modifs_free (rm);
 
-					if (proxy->priv->notify_changes)
-						gda_data_model_row_removed ((GdaDataModel *) proxy, proxy_row);
+					/* remove this RowValue from the RowList */
+					rm->modif_values = g_slist_remove (rm->modif_values, rv);
+					if (!rm->modif_values && !rm->to_be_deleted) {
+						/* remove this RowList as well */
+						proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
+						if (rm->model_row < 0) 
+							proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
+						else
+							g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
+						row_modifs_free (rm);
+						rm = NULL;
+						
+						if (proxy->priv->notify_changes)
+							gda_data_model_row_removed ((GdaDataModel *) proxy, proxy_row);
+					}
+					else {
+						if (proxy->priv->notify_changes)
+							gda_data_model_row_updated ((GdaDataModel *) proxy, proxy_row);
+					}
+					if (rm)
+						list = rm->modif_values;
+					else
+						list = NULL;
 				}
-				else {
-					if (proxy->priv->notify_changes)
-						gda_data_model_row_updated ((GdaDataModel *) proxy, proxy_row);
-				}
+				else
+					list = list->next;
 			}
 		}
 	}
@@ -1575,17 +1532,14 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 			g_free (free_val);
 
 			if (!err) {
-				/* emit a "delete" signal for that row because when rm is
-				 * removed it means the corresponding row will have been removed,
-				 * and if we don't emit that signal, then there will be a problem. 
+				/* Don't yet emit a "delete" signal for that row, but increment 
+				 * proxy->priv->deferred_nb_rows
 				 */
-				gint rowsig = find_proxy_row_for_row_modif (proxy, rm);
-
 				proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 				proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
 				row_modifs_free (rm);
 
-				gda_data_model_row_removed ((GdaDataModel *) proxy, rowsig);
+				proxy->priv->deferred_nb_rows ++;
 				freedone = TRUE;
 			}
 		}
@@ -1601,8 +1555,8 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 	proxy->priv->ignore_proxied_changes = ignore_proxied_changes;
 	if (proxy->priv->proxy_has_changed) 
 		proxied_model_data_changed_cb (proxy->priv->model, proxy);
-
-	adjust_displayed_chunck (proxy);
+	else
+		adjust_displayed_chunck (proxy);
 
 	return !err;
 }
@@ -1782,7 +1736,9 @@ gda_data_proxy_get_sample_end (GdaDataProxy *proxy)
 
 /*
  * Adjusts the values of the first and last rows to be displayed depending
- * on the sample size
+ * on the sample size.
+ *
+ * Some rows may be added or removed during the adjustment.
  */
 static void
 adjust_displayed_chunck (GdaDataProxy *proxy)
@@ -1810,7 +1766,9 @@ adjust_displayed_chunck (GdaDataProxy *proxy)
 	old_start = proxy->priv->sample_first_row;
 	old_end = proxy->priv->sample_last_row;
 
-	old_nb_rows = proxy->priv->current_nb_rows;
+	old_nb_rows = proxy->priv->current_nb_rows + proxy->priv->deferred_nb_rows;
+	proxy->priv->deferred_nb_rows = 0;
+
 	model_nb_rows = gda_data_model_get_n_rows (proxy->priv->model);
 
 	if (model_nb_rows > 0) {
