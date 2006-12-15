@@ -196,12 +196,14 @@ gda_query_target_class_init (GdaQueryTargetClass * class)
 	object_class->set_property = gda_query_target_set_property;
 	object_class->get_property = gda_query_target_get_property;
 	g_object_class_install_property (object_class, PROP_QUERY,
-					 g_param_spec_pointer ("query", "Query to which the target belongs", NULL, 
+					 g_param_spec_object ("query", "Query to which the target belongs", NULL, 
+                                                               GDA_TYPE_QUERY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 
 	g_object_class_install_property (object_class, PROP_ENTITY_OBJ,
-					 g_param_spec_pointer ("entity", "A pointer to a GdaEntity", NULL, 
+					 g_param_spec_object ("entity", "A pointer to a GdaEntity", NULL, 
+                                                               GDA_TYPE_ENTITY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_ENTITY_NAME,
 					 g_param_spec_string ("entity_name", "Name an entity", NULL, NULL,
@@ -358,7 +360,6 @@ gda_query_target_set_property (GObject *object,
 			       const GValue *value,
 			       GParamSpec *pspec)
 {
-	gpointer ptr;
 	GdaQueryTarget *target;
 	guint id;
 	const gchar *str;
@@ -367,8 +368,8 @@ gda_query_target_set_property (GObject *object,
 	target = GDA_QUERY_TARGET (object);
 	if (target->priv) {
 		switch (param_id) {
-		case PROP_QUERY:
-			ptr = g_value_get_pointer (value);
+		case PROP_QUERY: {
+			GdaQuery* ptr = GDA_QUERY (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY (ptr));
 			g_return_if_fail (gda_object_get_dict (GDA_OBJECT (ptr)) == gda_object_get_dict (GDA_OBJECT (target)));
 			
@@ -389,11 +390,13 @@ gda_query_target_set_property (GObject *object,
 			g_object_get (G_OBJECT (ptr), "target_serial", &id, NULL);
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (target), id);
 			break;
-		case PROP_ENTITY_OBJ:
-			ptr = g_value_get_pointer (value);
+                }
+		case PROP_ENTITY_OBJ: {
+			GdaEntity* ptr = GDA_ENTITY (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_ENTITY (ptr));
 			gda_object_ref_set_ref_object (target->priv->entity_ref, GDA_OBJECT (ptr));
 			break;
+                }
 		case PROP_ENTITY_NAME:
 			str = g_value_get_string (value);
 			gda_object_ref_set_ref_name (target->priv->entity_ref, GDA_TYPE_DICT_TABLE, 
@@ -425,10 +428,10 @@ gda_query_target_get_property (GObject *object,
 	if (target->priv) {
 		switch (param_id) {
 		case PROP_QUERY:
-			g_value_set_pointer (value, target->priv->query);
+			g_value_set_object (value, G_OBJECT (target->priv->query));
 			break;
 		case PROP_ENTITY_OBJ:
-			g_value_set_pointer (value, gda_object_ref_get_ref_object (target->priv->entity_ref));
+			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (target->priv->entity_ref)));
 			break;
 		case PROP_ENTITY_NAME:
 		case PROP_ENTITY_ID:

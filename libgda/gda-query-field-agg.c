@@ -217,12 +217,14 @@ gda_query_field_agg_class_init (GdaQueryFieldAggClass * class)
 	object_class->set_property = gda_query_field_agg_set_property;
 	object_class->get_property = gda_query_field_agg_get_property;
 	g_object_class_install_property (object_class, PROP_QUERY,
-					 g_param_spec_pointer ("query", "Query to which the field belongs", NULL, 
+					 g_param_spec_object ("query", "Query to which the field belongs", NULL, 
+                                                               GDA_TYPE_QUERY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 
 	g_object_class_install_property (object_class, PROP_AGG_OBJ,
-					 g_param_spec_pointer ("aggregate", "A pointer to a GdaDictAggregate", NULL, 
+					 g_param_spec_object ("aggregate", "A pointer to a GdaDictAggregate", NULL,
+                                                               GDA_TYPE_DICT_AGGREGATE, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_AGG_NAME,
 					 g_param_spec_string ("aggregate_name", "Name of the aggregate to represent", NULL, NULL,
@@ -339,15 +341,14 @@ gda_query_field_agg_set_property (GObject *object,
 			GParamSpec *pspec)
 {
 	GdaQueryFieldAgg *fagg;
-	gpointer ptr;
 	guint id;
 	const gchar *str;
 
 	fagg = GDA_QUERY_FIELD_AGG (object);
 	if (fagg->priv) {
 		switch (param_id) {
-		case PROP_QUERY:
-			ptr = g_value_get_pointer (value);
+		case PROP_QUERY: {
+			GdaQuery* ptr = GDA_QUERY (g_value_get_object (value));
 			g_return_if_fail (ptr && GDA_IS_QUERY (ptr));
 
 			if (fagg->priv->query) {
@@ -367,11 +368,13 @@ gda_query_field_agg_set_property (GObject *object,
 			g_object_get (G_OBJECT (ptr), "field_serial", &id, NULL);
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (fagg), id);
 			break;
-		case PROP_AGG_OBJ:
-			ptr = g_value_get_pointer (value);
+                }
+		case PROP_AGG_OBJ: {
+			GdaDictAggregate* ptr = GDA_DICT_AGGREGATE(g_value_get_object (value));
 			g_return_if_fail (GDA_IS_DICT_AGGREGATE (ptr));
 			gda_object_ref_set_ref_object (fagg->priv->agg_ref, GDA_OBJECT (ptr));
 			break;
+                }
 		case PROP_AGG_NAME:
 			str = g_value_get_string (value);
 			gda_object_ref_set_ref_name (fagg->priv->agg_ref, GDA_TYPE_DICT_AGGREGATE, 
@@ -398,10 +401,10 @@ gda_query_field_agg_get_property (GObject *object,
 	if (fagg->priv) {
 		switch (param_id) {
 		case PROP_QUERY:
-			g_value_set_pointer (value, fagg->priv->query);
+			g_value_set_object (value, G_OBJECT (fagg->priv->query));
 			break;
 		case PROP_AGG_OBJ:
-			g_value_set_pointer (value, gda_object_ref_get_ref_object (fagg->priv->agg_ref));
+			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (fagg->priv->agg_ref)));
 			break;
 		case PROP_AGG_NAME:
 		case PROP_AGG_ID:

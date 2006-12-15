@@ -186,11 +186,13 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 	object_class->set_property = gda_data_model_iter_set_property;
 	object_class->get_property = gda_data_model_iter_get_property;
 	g_object_class_install_property (object_class, PROP_DATA_MODEL,
-					 g_param_spec_pointer ("data_model", "Data model for which the iter is for", NULL, 
+					 g_param_spec_object ("data_model", "Data model for which the iter is for", NULL,
+                                                               GDA_TYPE_DATA_MODEL, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_FORCED_MODEL,
-					 g_param_spec_pointer ("forced_model", NULL, NULL, 
+					 g_param_spec_object ("forced_model", NULL, NULL, 
+                                                               GDA_TYPE_DATA_MODEL,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_CURRENT_ROW,
 					 g_param_spec_int ("current_row", "Current represented row in the data model", 
@@ -375,7 +377,6 @@ gda_data_model_iter_set_property (GObject *object,
 				  GParamSpec *pspec)
 {
 	GdaDataModelIter *iter;
-	gpointer ptr;
 
 	iter = GDA_DATA_MODEL_ITER (object);
 	if (iter->priv) {
@@ -387,7 +388,7 @@ gda_data_model_iter_set_property (GObject *object,
 			GdaDict *dict;
 			GdaColumn *column;
 
-			ptr = g_value_get_pointer (value);
+			GObject* ptr = g_value_get_object (value);
 			g_return_if_fail (ptr && GDA_IS_DATA_MODEL (ptr));
 			model = GDA_DATA_MODEL (ptr);
 			
@@ -415,8 +416,8 @@ gda_data_model_iter_set_property (GObject *object,
 							    G_CALLBACK (destroyed_param_cb), iter);
 			}
 		}
-		case PROP_FORCED_MODEL:
-			ptr = g_value_get_pointer (value);
+		case PROP_FORCED_MODEL: {
+			GdaDataModel* ptr = g_value_get_object (value);
 			g_return_if_fail (ptr && GDA_IS_DATA_MODEL (ptr));
 
 			if (iter->priv->data_model) {
@@ -434,6 +435,7 @@ gda_data_model_iter_set_property (GObject *object,
 			iter->priv->model_changes_signals [1] = g_signal_connect (G_OBJECT (ptr), "row_removed",
 										  G_CALLBACK (model_row_removed_cb), iter);
 			break;
+                }
 		case PROP_CURRENT_ROW:
 			if (iter->priv->row != g_value_get_int (value)) {
                                 iter->priv->row = g_value_get_int (value);
@@ -461,7 +463,7 @@ gda_data_model_iter_get_property (GObject *object,
 		switch (param_id) {
 		case PROP_DATA_MODEL:
 		case PROP_FORCED_MODEL:
-			g_value_set_pointer (value, iter->priv->data_model);
+			g_value_set_object (value, G_OBJECT (iter->priv->data_model));
 			break;
 		case PROP_CURRENT_ROW:
 			g_value_set_int (value, iter->priv->row);

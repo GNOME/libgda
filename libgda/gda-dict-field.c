@@ -188,7 +188,8 @@ gda_dict_field_class_init (GdaDictFieldClass * class)
 	object_class->set_property = gda_dict_field_set_property;
 	object_class->get_property = gda_dict_field_get_property;
 	g_object_class_install_property (object_class, PROP_DB_TABLE,
-					 g_param_spec_pointer ("db_table", NULL, NULL, 
+					 g_param_spec_object ("db_table", NULL, NULL, 
+                                                               GDA_TYPE_DICT_TABLE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_PLUGIN,
                                          g_param_spec_string ("entry_plugin", NULL, NULL, NULL,
@@ -303,26 +304,26 @@ gda_dict_field_set_property (GObject *object,
 			     const GValue *value,
 			     GParamSpec *pspec)
 {
-	gpointer ptr;
 	GdaDictField *gda_dict_field;
 
 	gda_dict_field = GDA_DICT_FIELD (object);
 	if (gda_dict_field->priv) {
 		switch (param_id) {
-		case PROP_DB_TABLE:
+		case PROP_DB_TABLE: {
 			if (gda_dict_field->priv->table) {
 				g_signal_handlers_disconnect_by_func (G_OBJECT (gda_dict_field->priv->table),
 								      G_CALLBACK (destroyed_object_cb), gda_dict_field);
-				gda_dict_field->priv->table = NULL;
+				gda_dict_field->priv->table = NULL; /* TODO: unref it? */
 			}
 
-			ptr = g_value_get_pointer (value);
+			GdaDictTable* ptr = GDA_DICT_TABLE (g_value_get_object (value));
 			if (ptr && GDA_IS_DICT_TABLE (ptr)) {
-				gda_dict_field->priv->table = GDA_DICT_TABLE (ptr);
+				gda_dict_field->priv->table = GDA_DICT_TABLE (ptr); /* TODO: ref it? */
 				gda_object_connect_destroy (ptr,
 							 G_CALLBACK (destroyed_object_cb), gda_dict_field);
 			}
 			break;
+                }
 		case PROP_PLUGIN:
 			g_free (gda_dict_field->priv->plugin);
 			if (g_value_get_string (value))
@@ -346,7 +347,7 @@ gda_dict_field_get_property (GObject *object,
 	if (gda_dict_field->priv) {
 		switch (param_id) {
 		case PROP_DB_TABLE:
-			g_value_set_pointer (value, gda_dict_field->priv->table);
+			g_value_set_object (value, G_OBJECT (gda_dict_field->priv->table));
 			break;
 		case PROP_PLUGIN:
 			g_value_set_string (value, gda_dict_field->priv->plugin);

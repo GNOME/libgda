@@ -129,7 +129,8 @@ gda_data_access_wrapper_class_init (GdaDataAccessWrapperClass *klass)
 	object_class->set_property = gda_data_access_wrapper_set_property;
         object_class->get_property = gda_data_access_wrapper_get_property;
 	g_object_class_install_property (object_class, PROP_MODEL,
-                                         g_param_spec_pointer ("model", "Data model being worked on", NULL,
+                                         g_param_spec_object ("model", "Data model being worked on", NULL,
+                                                              GDA_TYPE_DATA_MODEL,
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 
@@ -259,9 +260,7 @@ gda_data_access_wrapper_set_property (GObject *object,
 	if (model->priv) {
 		switch (param_id) {
 		case PROP_MODEL: {
-			GdaDataModel *mod;
-
-			mod = g_value_get_pointer (value);
+			GdaDataModel *mod = g_value_get_object(value);
 			if (mod) {
 				g_return_if_fail (GDA_IS_DATA_MODEL (mod));
 				model->priv->model_access_flags = gda_data_model_get_access_flags (mod);
@@ -276,6 +275,10 @@ gda_data_access_wrapper_set_property (GObject *object,
 					model->priv->rows = g_hash_table_new_full (g_direct_hash, g_direct_equal,
 										   NULL, (GDestroyNotify) g_object_unref);
 				}
+  
+                                if(model->priv->model)
+                                  g_object_unref(model->priv->model);
+
 				model->priv->model = mod;
 				g_object_ref (mod);
 				gda_object_connect_destroy (GDA_OBJECT (mod), 
@@ -303,7 +306,7 @@ gda_data_access_wrapper_get_property (GObject *object,
 	if (model->priv) {
 		switch (param_id) {
 		case PROP_MODEL:
-			g_value_set_pointer (value, model->priv->model);
+			g_value_set_object (value, G_OBJECT (model->priv->model));
 			break;
 		default:
 			g_assert_not_reached ();

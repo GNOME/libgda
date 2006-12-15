@@ -196,7 +196,8 @@ gda_dict_table_class_init (GdaDictTableClass * class)
 	object_class->set_property = gda_dict_table_set_property;
 	object_class->get_property = gda_dict_table_get_property;
 	g_object_class_install_property (object_class, PROP_DB,
-					 g_param_spec_pointer ("database", NULL, NULL, 
+					 g_param_spec_object ("database", NULL, NULL, 
+                                                               GDA_TYPE_DICT_DATABASE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_IS_VIEW,
 					 g_param_spec_boolean ("is-view", NULL, NULL, FALSE,
@@ -344,16 +345,16 @@ gda_dict_table_set_property (GObject *object,
 			const GValue *value,
 			GParamSpec *pspec)
 {
-	gpointer ptr;
 	GdaDictTable *gda_dict_table;
 
 	gda_dict_table = GDA_DICT_TABLE (object);
 	if (gda_dict_table->priv) {
 		switch (param_id) {
-		case PROP_DB:
-			ptr = g_value_get_pointer (value);
+		case PROP_DB: {
+			GdaDictDatabase* ptr = g_value_get_object (value);
 			gda_dict_table_set_database (gda_dict_table, GDA_DICT_DATABASE (ptr));
 			break;
+                }
 		case PROP_IS_VIEW:
 			gda_dict_table->priv->is_view = g_value_get_boolean (value);
 			break;
@@ -373,7 +374,7 @@ gda_dict_table_get_property (GObject *object,
 	if (gda_dict_table->priv) {
 		switch (param_id) {
 		case PROP_DB:
-			g_value_set_pointer (value, gda_dict_table->priv->db);
+			g_value_set_object (value, G_OBJECT (gda_dict_table->priv->db));
 			break;
 		case PROP_IS_VIEW:
 			g_value_set_boolean (value, gda_dict_table->priv->is_view);

@@ -165,13 +165,16 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 	object_class->get_property = gda_server_operation_get_property;
 
 	g_object_class_install_property (object_class, PROP_DICT,
-					 g_param_spec_pointer ("dict", NULL, NULL, 
+					 g_param_spec_object ("dict", NULL, NULL, 
+                                                               GDA_TYPE_DICT,
 							       G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_CNC,
-					 g_param_spec_pointer ("connection", NULL, NULL, 
+					 g_param_spec_object ("connection", NULL, NULL, 
+                                                               GDA_TYPE_CONNECTION,
 							       G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_PROV,
-					 g_param_spec_pointer ("provider_obj", NULL, NULL, 
+					 g_param_spec_object ("provider_obj", NULL, NULL, 
+                                                               GDA_TYPE_SERVER_PROVIDER,
 							       G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_SPEC_FILE,
 					 g_param_spec_string ("spec_file", NULL, NULL, 
@@ -516,14 +519,14 @@ gda_server_operation_set_property (GObject *object,
 			if (op->priv->dict)
 				g_object_unref (op->priv->dict);
 
-			op->priv->dict = ASSERT_DICT (g_value_get_pointer (value));
+			op->priv->dict = ASSERT_DICT (g_value_get_object (value));
 			g_object_ref (op->priv->dict);
 			break;
 		case PROP_CNC:
 			if (op->priv->cnc)
 				g_object_unref (op->priv->cnc);
 
-			op->priv->cnc = g_value_get_pointer (value);
+			op->priv->cnc = GDA_CONNECTION( g_value_get_object (value));
 			op->priv->cnc_set = TRUE;
 
 			if (op->priv->cnc) {
@@ -539,10 +542,10 @@ gda_server_operation_set_property (GObject *object,
 			}
 			break;
 		case PROP_PROV:
-			if (g_value_get_pointer (value)) {
+			if (g_value_get_object (value)) {
 				if (op->priv->prov)
 					g_object_unref (op->priv->prov);
-				op->priv->prov = g_value_get_pointer (value);
+				op->priv->prov = g_value_get_object(value);
 				g_object_ref (op->priv->prov);
 			}
 			op->priv->prov_set = TRUE;

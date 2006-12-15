@@ -106,8 +106,13 @@ gda_row_class_init (GdaRowClass *klass)
         object_class->get_property = gda_row_get_property;
 
 	g_object_class_install_property (object_class, PROP_MODEL,
-                                         g_param_spec_pointer ("model", NULL, NULL, 
+                                         g_param_spec_object ("model", NULL, NULL, 
+                                                               GDA_TYPE_DATA_MODEL,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+
+        /* Note that this is actually a GList*, 
+         * but there does not seem to be a way to define that in the properties system:
+         */
 	g_object_class_install_property (object_class, PROP_VALUES,
                                          g_param_spec_pointer ("values", NULL, NULL, 
 							       G_PARAM_WRITABLE));
@@ -181,7 +186,7 @@ gda_row_set_property (GObject *object,
         if (row->priv) {
                 switch (param_id) {
                 case PROP_MODEL:
-			gda_row_set_model (row, g_value_get_pointer (value));
+			gda_row_set_model (row, GDA_DATA_MODEL (g_value_get_object(value)));
                         break;
                 case PROP_VALUES: {
 			const GList *l;
@@ -235,7 +240,7 @@ gda_row_get_property (GObject *object,
         if (row->priv) {
                 switch (param_id) {
                 case PROP_MODEL:
-			g_value_set_pointer (value, gda_row_get_model (row));
+			g_value_set_object (value, G_OBJECT (gda_row_get_model (row)));
                         break;
                 case PROP_VALUES:
 		case PROP_NB_VALUES:

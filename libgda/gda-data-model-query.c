@@ -169,25 +169,29 @@ gda_data_model_query_class_init (GdaDataModelQueryClass *klass)
 	object_class->set_property = gda_data_model_query_set_property;
         object_class->get_property = gda_data_model_query_get_property;
 	g_object_class_install_property (object_class, PROP_SEL_QUERY,
-                                         g_param_spec_pointer ("query", "SELECT query", 
+                                         g_param_spec_object ("query", "SELECT query", 
 							       "SELECT Query to be executed to populate "
 							       "the model with data", 
+                                                               GDA_TYPE_QUERY,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE |
 							       G_PARAM_CONSTRUCT_ONLY));
 
 	g_object_class_install_property (object_class, PROP_INS_QUERY,
-                                         g_param_spec_pointer ("insert_query", "INSERT query", 
+                                         g_param_spec_object ("insert_query", "INSERT query", 
 							       "INSERT Query to be executed to add data",
+                                                               GDA_TYPE_QUERY,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_UPD_QUERY,
-                                         g_param_spec_pointer ("update_query", "UPDATE query", 
+                                         g_param_spec_object ("update_query", "UPDATE query", 
 							       "UPDATE Query to be executed to update data",
+                                                               GDA_TYPE_QUERY,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_DEL_QUERY,
-                                         g_param_spec_pointer ("delete_query", "DELETE query", 
+                                         g_param_spec_object ("delete_query", "DELETE query", 
 							       "DELETE Query to be executed to remove data",
+                                                               GDA_TYPE_QUERY,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/* virtual functions */
@@ -363,7 +367,7 @@ gda_data_model_query_set_property (GObject *object,
 			}
 
 			/* use @query without making a copy of it */
-			model->priv->queries[qindex] = (GdaQuery *) g_value_get_pointer (value);
+			model->priv->queries[qindex] = (GdaQuery *) g_value_get_object (value);
 			if (model->priv->queries[qindex]) {
 				g_object_ref (model->priv->queries[qindex]);
 				g_signal_connect (model->priv->queries[qindex], "to_be_destroyed",
@@ -461,7 +465,7 @@ gda_data_model_query_get_property (GObject *object,
 		case PROP_INS_QUERY:
 		case PROP_UPD_QUERY:
 		case PROP_DEL_QUERY:
-			g_value_set_pointer (value, model->priv->queries[qindex]);
+			g_value_set_object (value, G_OBJECT (model->priv->queries[qindex]));
 			break;
 		default:
 			g_assert_not_reached ();

@@ -169,10 +169,11 @@ gda_object_ref_class_init (GdaObjectRefClass * class)
 	object_class->set_property = gda_object_ref_set_property;
 	object_class->get_property = gda_object_ref_get_property;
 	g_object_class_install_property (object_class, PROP_HELPER_REF,
-					 g_param_spec_pointer ("helper_ref", "Pointer to a Query object for target "
+					 g_param_spec_object ("helper_ref", "Pointer to a Query object for target "
 							       "resolution, or a GdaObjectRef referencing a target"
 							       "for a field resolution",
 							       NULL, 
+                                                               GDA_TYPE_OBJECT, /* Either a GdaQuery or a GdaObjectRef */
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_OBJ_NAME,
 					 g_param_spec_string ("obj_name", "Name of the object as when it was last found",
@@ -384,15 +385,13 @@ gda_object_ref_set_property (GObject *object,
 			     const GValue *value,
 			     GParamSpec *pspec)
 {
-	gpointer ptr;
-	GdaObjectRef *ref;
+	GdaObjectRef* ref = GDA_OBJECT_REF (object);
 
-	ref = GDA_OBJECT_REF (object);
 	if (ref->priv) {
 		switch (param_id) {
-		case PROP_HELPER_REF:
-			ptr = g_value_get_pointer (value);
-			if ((gpointer) ref->priv->helper_ref != ptr) {
+		case PROP_HELPER_REF: {
+			GdaObject* ptr = g_value_get_object (value);
+			if (ref->priv->helper_ref != ptr) {
 				if (ref->priv->helper_ref) 
 					helper_ref_destroyed_cb (ref->priv->helper_ref, ref);
 				
@@ -403,6 +402,7 @@ gda_object_ref_set_property (GObject *object,
 				}
 			}
 			break;
+                }
 		case PROP_OBJ_NAME:
 			g_free (ref->priv->obj_name);
 			ref->priv->obj_name = NULL;
@@ -425,7 +425,7 @@ gda_object_ref_get_property (GObject *object,
 	if (ref->priv) {
 		switch (param_id) {
 		case PROP_HELPER_REF:
-			g_value_set_pointer (value, ref->priv->helper_ref);
+			g_value_set_object (value, G_OBJECT (ref->priv->helper_ref));
 			break;
 		case PROP_OBJ_NAME:
 			g_value_set_string (value, ref->priv->obj_name);

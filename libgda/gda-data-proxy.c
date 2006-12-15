@@ -405,7 +405,8 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 	object_class->get_property = gda_data_proxy_get_property;
 
 	g_object_class_install_property (object_class, PROP_MODEL,
-					 g_param_spec_pointer ("model", _("Data model"), NULL,
+					 g_param_spec_object ("model", _("Data model"), NULL,
+                                                               GDA_TYPE_DATA_MODEL,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
@@ -591,7 +592,7 @@ gda_data_proxy_set_property (GObject *object,
 		switch (param_id) {
 		case PROP_MODEL:
 			g_assert (!proxy->priv->model);
-			model = (GdaDataModel*) g_value_get_pointer (value);
+			model = (GdaDataModel*) g_value_get_object (value);
 			g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
 			if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM)) {

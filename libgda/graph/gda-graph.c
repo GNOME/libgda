@@ -186,7 +186,8 @@ gda_graph_class_init (GdaGraphClass * class)
 	object_class->get_property = gda_graph_get_property;
 
 	g_object_class_install_property (object_class, PROP_REF_OBJECT,
-					 g_param_spec_pointer ("ref_object", NULL, NULL, 
+					 g_param_spec_object ("ref_object", NULL, NULL, 
+                                                               GDA_TYPE_OBJECT_REF,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_GRAPH_TYPE,
 					 g_param_spec_int ("graph_type", NULL, NULL, 
@@ -336,7 +337,6 @@ gda_graph_set_property (GObject *object,
 		       GParamSpec *pspec)
 {
 	GdaGraph *graph;
-	gpointer ptr;
 
 	graph = GDA_GRAPH (object);
 	if (graph->priv) {
@@ -346,7 +346,7 @@ gda_graph_set_property (GObject *object,
 				init_ref_object (graph);
 
 			if (graph->priv->ref_object) {
-				ptr = g_value_get_pointer (value);
+				GdaObject* ptr = GDA_OBJECT (g_value_get_object (value));
 				g_signal_handlers_block_by_func (G_OBJECT (graph->priv->ref_object),
 								 G_CALLBACK (ref_object_ref_lost_cb), graph);
 				gda_object_ref_set_ref_object (graph->priv->ref_object, ptr);
@@ -374,10 +374,10 @@ gda_graph_get_property (GObject *object,
                 switch (param_id) {
                 case PROP_REF_OBJECT:
 			if (graph->priv->ref_object) 
-				g_value_set_pointer (value, 
+				g_value_set_object (value, 
 						     gda_object_ref_get_ref_object (graph->priv->ref_object));
 			else
-				g_value_set_pointer (value, NULL);
+				g_value_set_object (value, NULL);
                         break;
 		case PROP_GRAPH_TYPE:
 			g_value_set_int (value, graph->priv->type);

@@ -209,13 +209,16 @@ gda_parameter_class_init (GdaParameterClass *class)
 					 g_param_spec_boolean ("use_default_value", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_SIMPLE_BIND,
-					 g_param_spec_pointer ("simple_bind", NULL, NULL, 
+					 g_param_spec_object ("simple_bind", NULL, NULL, 
+                                                               GDA_TYPE_PARAMETER,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_FULL_BIND,
-					 g_param_spec_pointer ("full_bind", NULL, NULL, 
+					 g_param_spec_object ("full_bind", NULL, NULL, 
+                                                               GDA_TYPE_PARAMETER,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_RESTRICT_MODEL,
-                                         g_param_spec_pointer ("restrict_model", NULL, NULL,
+                                         g_param_spec_object ("restrict_model", NULL, NULL,
+                                                               GDA_TYPE_DATA_MODEL,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_RESTRICT_COLUMN,
                                          g_param_spec_int ("restrict_column", NULL, NULL,
@@ -494,16 +497,17 @@ gda_parameter_set_property    (GObject *object,
 
 			break;
 		case PROP_SIMPLE_BIND:
-			gda_parameter_bind_to_param (parameter, g_value_get_pointer (value));
+			gda_parameter_bind_to_param (parameter, GDA_PARAMETER (g_value_get_object (value)));
 			break;
 		case PROP_FULL_BIND:
-			gda_parameter_set_full_bind_param (parameter, g_value_get_pointer (value));
+			gda_parameter_set_full_bind_param (parameter, GDA_PARAMETER (g_value_get_object (value)));
 			break;
-		case PROP_RESTRICT_MODEL:
-			ptr = g_value_get_pointer (value);
+		case PROP_RESTRICT_MODEL: {
+			GdaDataModel* ptr = g_value_get_object (value);
 			g_return_if_fail (gda_parameter_restrict_values (parameter, 
 									 (GdaDataModel *)ptr, -1, NULL));
 			break;
+                }
 		case PROP_RESTRICT_COLUMN:
 			parameter->priv->restrict_col = g_value_get_int (value);
 			break;
@@ -531,13 +535,13 @@ gda_parameter_get_property    (GObject *object,
 			g_value_set_boolean (value, parameter->priv->default_forced);
 			break;
 		case PROP_SIMPLE_BIND:
-			g_value_set_pointer (value, parameter->priv->change_with);
+			g_value_set_object (value, G_OBJECT (parameter->priv->change_with));
 			break;
 		case PROP_FULL_BIND:
-			g_value_set_pointer (value, parameter->priv->alias_of);
+			g_value_set_object (value, G_OBJECT (parameter->priv->alias_of));
 			break;
 		case PROP_RESTRICT_MODEL:
-			g_value_set_pointer (value, parameter->priv->restrict_model);
+			g_value_set_object (value, G_OBJECT (parameter->priv->restrict_model));
 			break;
 		case PROP_RESTRICT_COLUMN:
 			g_value_set_int (value, parameter->priv->restrict_col);

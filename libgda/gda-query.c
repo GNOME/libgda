@@ -400,6 +400,10 @@ gda_query_class_init (GdaQueryClass * klass)
 	g_object_class_install_property (object_class, PROP_SERIAL_COND,
 					 g_param_spec_uint ("cond_serial", NULL, NULL, 
 							    1, G_MAXUINT, 1, G_PARAM_READABLE));
+
+        /* Note that this is actually a GSList*, 
+         * but there does not seem to be a way to define that in the properties system:
+         */
 	g_object_class_install_property (object_class, PROP_REALLY_ALL_FIELDS,
 					 g_param_spec_pointer ("really_all_fields", NULL, NULL, G_PARAM_READABLE));
 

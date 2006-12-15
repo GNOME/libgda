@@ -218,12 +218,14 @@ gda_query_field_func_class_init (GdaQueryFieldFuncClass * class)
 	object_class->set_property = gda_query_field_func_set_property;
 	object_class->get_property = gda_query_field_func_get_property;
 	g_object_class_install_property (object_class, PROP_QUERY,
-					 g_param_spec_pointer ("query", "Query to which the field belongs", NULL, 
+					 g_param_spec_object ("query", "Query to which the field belongs", NULL, 
+                                                               GDA_TYPE_QUERY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 
 	g_object_class_install_property (object_class, PROP_FUNC_OBJ,
-					 g_param_spec_pointer ("function", "A pointer to a GdaDictFunction", NULL, 
+					 g_param_spec_object ("function", "A pointer to a GdaDictFunction", NULL,
+                                                               GDA_TYPE_DICT_FUNCTION, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_FUNC_NAME,
 					 g_param_spec_string ("function_name", "Name of the function to represent", NULL, NULL,
@@ -344,15 +346,14 @@ gda_query_field_func_set_property (GObject *object,
 				   GParamSpec *pspec)
 {
 	GdaQueryFieldFunc *ffunc;
-	gpointer ptr;
 	guint id;
 	const gchar *str;
 
 	ffunc = GDA_QUERY_FIELD_FUNC (object);
 	if (ffunc->priv) {
 		switch (param_id) {
-		case PROP_QUERY:
-			ptr = g_value_get_pointer (value);
+		case PROP_QUERY: {
+			GdaQuery* ptr = GDA_QUERY (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY (ptr));
 
 			if (ffunc->priv->query) {
@@ -372,11 +373,13 @@ gda_query_field_func_set_property (GObject *object,
 			g_object_get (G_OBJECT (ptr), "field_serial", &id, NULL);
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (ffunc), id);
 			break;
-		case PROP_FUNC_OBJ:
-			ptr = g_value_get_pointer (value);
+                }
+		case PROP_FUNC_OBJ: {
+			GdaDictFunction* ptr = GDA_DICT_FUNCTION (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_DICT_FUNCTION (ptr));
 			gda_object_ref_set_ref_object (ffunc->priv->func_ref, GDA_OBJECT (ptr));
 			break;
+                }
 		case PROP_FUNC_NAME:
 			str = g_value_get_string (value);
 			gda_object_ref_set_ref_name (ffunc->priv->func_ref, GDA_TYPE_DICT_FUNCTION, 
@@ -403,10 +406,10 @@ gda_query_field_func_get_property (GObject *object,
 	if (ffunc->priv) {
 		switch (param_id) {
 		case PROP_QUERY:
-			g_value_set_pointer (value, ffunc->priv->query);
+			g_value_set_object (value, G_OBJECT (ffunc->priv->query));
 			break;
 		case PROP_FUNC_OBJ:
-			g_value_set_pointer (value, gda_object_ref_get_ref_object (ffunc->priv->func_ref));
+			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (ffunc->priv->func_ref)));
 			break;
 		case PROP_FUNC_NAME:
 		case PROP_FUNC_ID:

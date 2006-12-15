@@ -227,12 +227,14 @@ gda_query_field_field_class_init (GdaQueryFieldFieldClass * class)
 	object_class->set_property = gda_query_field_field_set_property;
 	object_class->get_property = gda_query_field_field_get_property;
 	g_object_class_install_property (object_class, PROP_QUERY,
-					 g_param_spec_pointer ("query", "Query to which the field belongs", NULL, 
+					 g_param_spec_object ("query", "Query to which the field belongs", NULL, 
+                                                               GDA_TYPE_QUERY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 
 	g_object_class_install_property (object_class, PROP_VALUE_PROVIDER_OBJECT,
-					 g_param_spec_pointer ("value_provider", NULL, NULL, 
+					 g_param_spec_object ("value_provider", NULL, NULL, 
+                                                               GDA_TYPE_QUERY_FIELD,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_VALUE_PROVIDER_XML_ID,
 					 g_param_spec_string ("value_provider_xml_id", NULL, NULL, NULL,
@@ -242,7 +244,8 @@ gda_query_field_field_class_init (GdaQueryFieldFieldClass * class)
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	g_object_class_install_property (object_class, PROP_TARGET_OBJ,
-					 g_param_spec_pointer ("target", "A pointer to a GdaQueryTarget", NULL, 
+					 g_param_spec_object ("target", "A pointer to a GdaQueryTarget", NULL, 
+                                                               GDA_TYPE_QUERY_TARGET,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_TARGET_NAME,
 					 g_param_spec_string ("target_name", "Name or alias of a query target", NULL, NULL,
@@ -252,7 +255,8 @@ gda_query_field_field_class_init (GdaQueryFieldFieldClass * class)
 							      G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_FIELD_OBJ,
-					 g_param_spec_pointer ("field", "A pointer to a GdaEntityField", NULL, 
+					 g_param_spec_object ("field", "A pointer to a GdaEntityField", NULL, 
+                                                               GDA_TYPE_ENTITY_FIELD,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_FIELD_NAME,
 					 g_param_spec_string ("field_name", "Name of an entity field", NULL, NULL,
@@ -393,7 +397,6 @@ gda_query_field_field_set_property (GObject *object,
 				    GParamSpec *pspec)
 {
 	GdaQueryFieldField *ffield;
-	gpointer ptr;
 	const gchar *val;
 	GdaDict *dict;
 	guint id;
@@ -402,8 +405,8 @@ gda_query_field_field_set_property (GObject *object,
 	ffield = GDA_QUERY_FIELD_FIELD (object);
 	if (ffield->priv) {
 		switch (param_id) {
-		case PROP_QUERY:
-			ptr = g_value_get_pointer (value);
+		case PROP_QUERY: {
+			GdaQuery* ptr = GDA_QUERY (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY (ptr));
 			g_return_if_fail (gda_object_get_dict (GDA_OBJECT (ptr)) == gda_object_get_dict (GDA_OBJECT (ffield)));
 
@@ -433,8 +436,9 @@ gda_query_field_field_set_property (GObject *object,
 			g_object_get (G_OBJECT (ptr), "field_serial", &id, NULL);
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (ffield), id);
 			break;
-		case PROP_VALUE_PROVIDER_OBJECT:
-			ptr = g_value_get_pointer (value);
+                }
+		case PROP_VALUE_PROVIDER_OBJECT: {
+			GdaQueryField* ptr = GDA_QUERY_FIELD (g_value_get_object (value));
 			if (ptr) {
 				g_return_if_fail (GDA_IS_QUERY_FIELD (ptr));
 				g_return_if_fail (gda_entity_field_get_entity (GDA_ENTITY_FIELD (ptr)) == 
@@ -442,7 +446,7 @@ gda_query_field_field_set_property (GObject *object,
 				if (!ffield->priv->value_prov_ref)
 					ffield->priv->value_prov_ref = GDA_OBJECT_REF (gda_object_ref_new (gda_object_get_dict (GDA_OBJECT (ffield))));
 				gda_object_ref_set_ref_object_type (ffield->priv->value_prov_ref,
-								 ptr, GDA_TYPE_ENTITY_FIELD);
+								 GDA_OBJECT(ptr), GDA_TYPE_ENTITY_FIELD);
 			}
 			else {
 				if (ffield->priv->value_prov_ref) {
@@ -451,6 +455,7 @@ gda_query_field_field_set_property (GObject *object,
 				}
 			}
 			break;
+                }
 		case PROP_VALUE_PROVIDER_XML_ID:
 			val = g_value_get_string (value);
 			if (val && *val) {
@@ -484,11 +489,12 @@ gda_query_field_field_set_property (GObject *object,
 			if (val)
 				ffield->priv->plugin = g_strdup (val);
 			break;
-		case PROP_TARGET_OBJ:
-			ptr = g_value_get_pointer (value);
+		case PROP_TARGET_OBJ: {
+			GdaQueryTarget* ptr = GDA_QUERY_TARGET (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY_TARGET (ptr));
 			gda_object_ref_set_ref_object (ffield->priv->target_ref, GDA_OBJECT (ptr));
 			break;
+                }
 		case PROP_TARGET_NAME:
 			str = g_value_get_string (value);
 			gda_object_ref_set_ref_name (ffield->priv->target_ref, GDA_TYPE_QUERY_TARGET, 
@@ -499,11 +505,12 @@ gda_query_field_field_set_property (GObject *object,
 			gda_object_ref_set_ref_name (ffield->priv->target_ref, GDA_TYPE_QUERY_TARGET, 
 						     REFERENCE_BY_XML_ID, str);
 			break;
-		case PROP_FIELD_OBJ:
-			ptr = g_value_get_pointer (value);
+		case PROP_FIELD_OBJ: {
+			GdaEntityField* ptr = GDA_ENTITY_FIELD (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_ENTITY_FIELD (ptr));
 			gda_object_ref_set_ref_object (ffield->priv->field_ref, GDA_OBJECT (ptr));
 			break;
+                }
 		case PROP_FIELD_NAME:
 			str = g_value_get_string (value);
 			gda_object_ref_set_ref_name (ffield->priv->field_ref, GDA_TYPE_ENTITY_FIELD, 
@@ -530,14 +537,14 @@ gda_query_field_field_get_property (GObject *object,
 	if (ffield->priv) {
 		switch (param_id) {
 		case PROP_QUERY:
-			g_value_set_pointer (value, ffield->priv->query);
+			g_value_set_object (value, G_OBJECT (ffield->priv->query));
 			break;
 		case PROP_VALUE_PROVIDER_OBJECT:
 			if (ffield->priv->value_prov_ref)
-				g_value_set_pointer (value, 
-						     gda_object_ref_get_ref_object (ffield->priv->value_prov_ref));
+				g_value_set_object (value, 
+						     G_OBJECT (gda_object_ref_get_ref_object (ffield->priv->value_prov_ref)));
 			else
-				g_value_set_pointer (value, NULL);
+				g_value_set_object (value, NULL);
 			break;
 		case PROP_VALUE_PROVIDER_XML_ID:
 			if (ffield->priv->value_prov_ref)
@@ -562,10 +569,10 @@ gda_query_field_field_get_property (GObject *object,
 			}
 			break;
 		case PROP_TARGET_OBJ:
-			g_value_set_pointer (value, gda_object_ref_get_ref_object (ffield->priv->target_ref));
+			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (ffield->priv->target_ref)));
 			break;
 		case PROP_FIELD_OBJ:
-			g_value_set_pointer (value, gda_object_ref_get_ref_object (ffield->priv->field_ref));
+			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (ffield->priv->field_ref)));
 			break;
 		case PROP_TARGET_NAME:
 		case PROP_TARGET_ID:

@@ -225,7 +225,8 @@ gda_data_model_import_class_init (GdaDataModelImportClass *klass)
 							      G_PARAM_READABLE | G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_OPTIONS,
-                                         g_param_spec_pointer ("options", "Options to configure the import", NULL,
+                                         g_param_spec_object ("options", "Options to configure the import", NULL,
+                                                               GDA_TYPE_PARAMETER_LIST,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE |
 							       G_PARAM_CONSTRUCT_ONLY));
 
@@ -454,7 +455,6 @@ gda_data_model_import_set_property (GObject *object,
 {
 	GdaDataModelImport *model;
 	const gchar *string;
-	gpointer data;
 
 	model = GDA_DATA_MODEL_IMPORT (object);
 	if (model->priv) {
@@ -511,15 +511,19 @@ gda_data_model_import_set_property (GObject *object,
 			model->priv->data_start = model->priv->src.string;
 			model->priv->data_length = strlen (model->priv->src.string);
 			break;
-		case PROP_XML_NODE:
-			data = g_value_get_pointer (value);
+		case PROP_XML_NODE: {
+			gpointer data = g_value_get_pointer (value);
 			if (!data)
 				return;
 			model->priv->format = FORMAT_XML_NODE;
-			model->priv->extract.node.node = g_value_get_pointer (value);
+			model->priv->extract.node.node = data;
 			break;
+                }
 		case PROP_OPTIONS:
-			model->priv->options = g_value_get_pointer (value);
+                        if(model->priv->options)
+                          g_object_unref(model->priv->options);
+
+			model->priv->options = g_value_get_object (value);
 			if (model->priv->options) {
 				if (!GDA_IS_PARAMETER_LIST (model->priv->options)) {
 					g_warning (_("\"options\" property is not a GdaParameterList object"));

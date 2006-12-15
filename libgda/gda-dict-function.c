@@ -136,6 +136,11 @@ gda_dict_function_class_init (GdaDictFunctionClass * class)
 	/* Properties */
 	object_class->set_property = gda_dict_function_set_property;
 	object_class->get_property = gda_dict_function_get_property;
+
+        /* TODO: What kind of object is this meant to be?
+           When we know, we should use g_param_spec_object() instead of g_param_spec_pointer().
+           murrayc.
+         */
 	g_object_class_install_property (object_class, PROP,
 					 g_param_spec_pointer ("prop", NULL, NULL, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 

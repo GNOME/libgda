@@ -135,6 +135,11 @@ gda_dict_aggregate_class_init (GdaDictAggregateClass * class)
 	/* Properties */
 	object_class->set_property = gda_dict_aggregate_set_property;
 	object_class->get_property = gda_dict_aggregate_get_property;
+
+        /* TODO: What kind of object is this meant to be?
+           When we know, we should use g_param_spec_object() instead of g_param_spec_pointer().
+           murrayc.
+         */
 	g_object_class_install_property (object_class, PROP,
 					 g_param_spec_pointer ("prop", NULL, NULL, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
@@ -226,16 +231,16 @@ gda_dict_aggregate_set_property (GObject *object,
 			const GValue *value,
 			GParamSpec *pspec)
 {
-	gpointer ptr;
 	GdaDictAggregate *gda_dict_aggregate;
 
 	gda_dict_aggregate = GDA_DICT_AGGREGATE (object);
 	if (gda_dict_aggregate->priv) {
 		switch (param_id) {
-		case PROP:
+		case PROP: {
 			/* FIXME */
-			ptr = g_value_get_pointer (value);
+			gpointer ptr = g_value_get_pointer (value);
 			break;
+                }
 		}
 	}
 }

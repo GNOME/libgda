@@ -214,19 +214,22 @@ gda_query_join_class_init (GdaQueryJoinClass * class)
 	object_class->get_property = gda_query_join_get_property;
 
 	g_object_class_install_property (object_class, PROP_QUERY,
-					 g_param_spec_pointer ("query", "Query to which the field belongs", NULL, 
+					 g_param_spec_object ("query", "Query to which the field belongs", NULL, 
+                                                               GDA_TYPE_QUERY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 
 	g_object_class_install_property (object_class, PROP_TARGET1_OBJ,
-					 g_param_spec_pointer ("target1", "A pointer to a GdaQueryTarget", NULL, 
+					 g_param_spec_object ("target1", "A pointer to a GdaQueryTarget", NULL, 
+                                                               GDA_TYPE_QUERY_TARGET,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_TARGET1_ID,
 					 g_param_spec_string ("target1_id", "XML ID of a target", NULL, NULL,
 							      G_PARAM_WRITABLE));
 
 	g_object_class_install_property (object_class, PROP_TARGET2_OBJ,
-					 g_param_spec_pointer ("target2", "A pointer to a GdaQueryTarget", NULL, 
+					 g_param_spec_object ("target2", "A pointer to a GdaQueryTarget", NULL, 
+                                                               GDA_TYPE_QUERY_TARGET,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_TARGET2_ID,
 					 g_param_spec_string ("target2_id", "XML ID of a target", NULL, NULL,
@@ -520,7 +523,6 @@ gda_query_join_set_property (GObject *object,
 			     const GValue *value,
 			     GParamSpec *pspec)
 {
-	gpointer ptr;
 	GdaQueryJoin *join;
 	GdaDict *dict;
 	const gchar *str;
@@ -528,8 +530,8 @@ gda_query_join_set_property (GObject *object,
 	join = GDA_QUERY_JOIN (object);
 	if (join->priv) {
 		switch (param_id) {
-		case PROP_QUERY:
-			ptr = g_value_get_pointer (value);
+		case PROP_QUERY: {
+			GdaQuery* ptr = GDA_QUERY (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY (ptr));
 			dict = gda_object_get_dict (GDA_OBJECT (join));
 			g_return_if_fail (gda_object_get_dict (GDA_OBJECT (ptr)) == dict);
@@ -562,21 +564,24 @@ gda_query_join_set_property (GObject *object,
 					  G_CALLBACK (target_ref_lost_cb), join);
 
 			break;
-		case PROP_TARGET1_OBJ:
-			ptr = g_value_get_pointer (value);
+                }
+		case PROP_TARGET1_OBJ: {
+			GdaQueryTarget* ptr = GDA_QUERY_TARGET (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY_TARGET (ptr));
 			gda_object_ref_set_ref_object (join->priv->target1, GDA_OBJECT (ptr));
 			break;
+                }
 		case PROP_TARGET1_ID:
 			str = g_value_get_string (value);
 			gda_object_ref_set_ref_name (join->priv->target1, GDA_TYPE_QUERY_TARGET, 
 						     REFERENCE_BY_XML_ID, str);
 			break;
-		case PROP_TARGET2_OBJ:
-			ptr = g_value_get_pointer (value);
+		case PROP_TARGET2_OBJ: {
+			GdaQueryTarget* ptr = GDA_QUERY_TARGET (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY_TARGET (ptr));
 			gda_object_ref_set_ref_object (join->priv->target2, GDA_OBJECT (ptr));
 			break;
+                }
 		case PROP_TARGET2_ID:
 			str = g_value_get_string (value);
 			gda_object_ref_set_ref_name (join->priv->target2, GDA_TYPE_QUERY_TARGET, 
@@ -598,13 +603,13 @@ gda_query_join_get_property (GObject *object,
 	if (join->priv) {
 		switch (param_id) {
 			case PROP_QUERY:
-			g_value_set_pointer (value, join->priv->query);
+			g_value_set_object (value, G_OBJECT (join->priv->query));
 			break;
 		case PROP_TARGET1_OBJ:
-			g_value_set_pointer (value, gda_object_ref_get_ref_object (join->priv->target1));
+			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (join->priv->target1)));
 			break;
 		case PROP_TARGET2_OBJ:
-			g_value_set_pointer (value, gda_object_ref_get_ref_object (join->priv->target2));
+			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (join->priv->target2)));
 			break;
 		default:
 			g_assert_not_reached ();

@@ -214,12 +214,14 @@ gda_query_field_all_class_init (GdaQueryFieldAllClass * class)
 	object_class->set_property = gda_query_field_all_set_property;
 	object_class->get_property = gda_query_field_all_get_property;
 	g_object_class_install_property (object_class, PROP_QUERY,
-					 g_param_spec_pointer ("query", "Query to which the field belongs", NULL, 
+					 g_param_spec_object ("query", "Query to which the field belongs", NULL, 
+                                                               GDA_TYPE_QUERY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE | 
 								G_PARAM_CONSTRUCT_ONLY)));
 
 	g_object_class_install_property (object_class, PROP_TARGET_OBJ,
-					 g_param_spec_pointer ("target", "A pointer to a GdaQueryTarget", NULL, 
+					 g_param_spec_object ("target", "A pointer to a GdaQueryTarget", NULL,
+                                                               GDA_TYPE_QUERY_TARGET, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_TARGET_NAME,
 					 g_param_spec_string ("target_name", "Name or alias of a query target", NULL, NULL,
@@ -342,15 +344,14 @@ gda_query_field_all_set_property (GObject *object,
 				  GParamSpec *pspec)
 {
 	GdaQueryFieldAll *fall;
-	gpointer ptr;
 	const gchar *str;
 	guint id;
 
 	fall = GDA_QUERY_FIELD_ALL (object);
 	if (fall->priv) {
 		switch (param_id) {
-		case PROP_QUERY:
-			ptr = g_value_get_pointer (value);
+		case PROP_QUERY: {
+			GdaQuery* ptr = GDA_QUERY (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY (ptr));
 			g_return_if_fail (gda_object_get_dict (GDA_OBJECT (ptr)) == gda_object_get_dict (GDA_OBJECT (fall)));
 
@@ -377,11 +378,13 @@ gda_query_field_all_set_property (GObject *object,
 			g_object_get (G_OBJECT (ptr), "field_serial", &id, NULL);
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (fall), id);
 			break;
-		case PROP_TARGET_OBJ:
-			ptr = g_value_get_pointer (value);
+                }
+		case PROP_TARGET_OBJ: {
+			GdaQueryTarget* ptr = GDA_QUERY_TARGET (g_value_get_object (value));
 			g_return_if_fail (GDA_IS_QUERY_TARGET (ptr));
 			gda_object_ref_set_ref_object (fall->priv->target_ref, GDA_OBJECT (ptr));
 			break;
+                }
 		case PROP_TARGET_NAME:
 			str = g_value_get_string (value);
 			gda_object_ref_set_ref_name (fall->priv->target_ref, GDA_TYPE_QUERY_TARGET, 
@@ -408,10 +411,10 @@ gda_query_field_all_get_property (GObject *object,
 	if (fall->priv) {
 		switch (param_id) {
 		case PROP_QUERY:
-			g_value_set_pointer (value, fall->priv->query);
+			g_value_set_object (value, G_OBJECT (fall->priv->query));
 			break;
 		case PROP_TARGET_OBJ:
-			g_value_set_pointer (value, gda_object_ref_get_ref_object (fall->priv->target_ref));
+			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (fall->priv->target_ref)));
 			break;
 		case PROP_TARGET_NAME:
 		case PROP_TARGET_ID:

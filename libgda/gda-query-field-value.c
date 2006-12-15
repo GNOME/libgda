@@ -235,7 +235,8 @@ gda_query_field_value_class_init (GdaQueryFieldValueClass * class)
 	object_class->set_property = gda_query_field_value_set_property;
 	object_class->get_property = gda_query_field_value_get_property;
 	g_object_class_install_property (object_class, PROP_QUERY,
-					 g_param_spec_pointer ("query", "Query to which the field belongs", NULL, 
+					 g_param_spec_object ("query", "Query to which the field belongs", NULL, 
+                                                               GDA_TYPE_QUERY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
         g_object_class_install_property (object_class, PROP_GDA_TYPE,
@@ -243,7 +244,8 @@ gda_query_field_value_class_init (GdaQueryFieldValueClass * class)
 							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_RESTRICT_MODEL,
-                                         g_param_spec_pointer ("restrict_model", NULL, NULL,
+                                         g_param_spec_object ("restrict_model", NULL, NULL,
+                                                               GDA_TYPE_DATA_MODEL,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_RESTRICT_COLUMN,
                                          g_param_spec_int ("restrict_column", NULL, NULL,
@@ -384,15 +386,14 @@ gda_query_field_value_set_property (GObject *object,
 				    GParamSpec *pspec)
 {
 	GdaQueryFieldValue *field;
-	gpointer ptr;
 	const gchar *str;
 	guint id;
 
 	field = GDA_QUERY_FIELD_VALUE (object);
 	if (field->priv) {
 		switch (param_id) {
-		case PROP_QUERY:
-			ptr = g_value_get_pointer (value);
+		case PROP_QUERY: {
+			GdaQuery* ptr = GDA_QUERY (g_value_get_object (value));
 			g_return_if_fail (ptr && GDA_IS_QUERY (ptr));
 
 			if (field->priv->query) {
@@ -409,15 +410,17 @@ gda_query_field_value_set_property (GObject *object,
 			g_object_get (G_OBJECT (ptr), "field_serial", &id, NULL);
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (field), id);
 			break;
+                }
 		case PROP_GDA_TYPE:
 			field->priv->g_type = g_value_get_ulong (value);
 			break;
-		case PROP_RESTRICT_MODEL:
-			ptr = g_value_get_pointer (value);
+		case PROP_RESTRICT_MODEL: {
+			GdaDataModel* ptr = GDA_DATA_MODEL (g_value_get_object (value));
 			g_return_if_fail (gda_query_field_value_restrict (field, 
-									  (GdaDataModel *)ptr, -1,
+									  ptr, -1,
 									  NULL));
 			break;
+                }
 		case PROP_RESTRICT_COLUMN:
 			field->priv->restrict_col = g_value_get_int (value);
 			break;
@@ -445,13 +448,13 @@ gda_query_field_value_get_property (GObject *object,
 	if (field->priv) {
 		switch (param_id) {
 		case PROP_QUERY:
-			g_value_set_pointer (value, field->priv->query);
+			g_value_set_object (value, G_OBJECT (field->priv->query));
 			break;
 		case PROP_GDA_TYPE:
 			g_value_set_ulong (value, field->priv->g_type);
 			break;
 		case PROP_RESTRICT_MODEL:
-			g_value_set_pointer (value, field->priv->restrict_model);
+			g_value_set_object (value, G_OBJECT (field->priv->restrict_model));
 			break;
 		case PROP_RESTRICT_COLUMN:
 			g_value_set_int (value, field->priv->restrict_col);

@@ -194,8 +194,9 @@ gda_object_class_init (GdaObjectClass * class)
 	object_class->set_property = gda_object_set_property;
 	object_class->get_property = gda_object_get_property;
 	g_object_class_install_property (object_class, PROP_DICT,
-					 g_param_spec_pointer ("dict", "GdaDict", 
+					 g_param_spec_object ("dict", "GdaDict", 
 							       "Dictionary to which the object is related", 
+                                                               GDA_TYPE_DICT,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE | 
 								G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_BLOCK_CHANGED,
@@ -291,21 +292,22 @@ gda_object_set_property (GObject *object,
 			 const GValue *value,
 			 GParamSpec *pspec)
 {
-	gpointer ptr;
 	GdaObject *gdaobj;
 
 	gdaobj = GDA_OBJECT (object);
 	if (gdaobj->priv) {
 		switch (param_id) {
-		case PROP_DICT:
-			ptr = g_value_get_pointer (value);
-			gdaobj->priv->dict = ASSERT_DICT (ptr);
+		case PROP_DICT: {
+			GdaDict* ptr = g_value_get_object (value);
+
+			gdaobj->priv->dict = ASSERT_DICT (ptr); /* TODO: Check/unref the existing value? */
 			if (!gdaobj->priv->dict)
 				g_error (_("LibGda must be initialized before any usage."));
 
 			g_object_add_weak_pointer (G_OBJECT (gdaobj->priv->dict),
 						   (gpointer) & (gdaobj->priv->dict));
 			break;
+                }
 		case PROP_BLOCK_CHANGED:
 			if (g_value_get_boolean (value))
 				gda_object_block_changed (gdaobj);
@@ -331,7 +333,7 @@ gda_object_get_property (GObject *object,
 	if (gdaobj->priv) {
 		switch (param_id) {
 		case PROP_DICT:
-			g_value_set_pointer (value, gdaobj->priv->dict);
+			g_value_set_object (value, G_OBJECT (gdaobj->priv->dict));
 			break;
 		case PROP_BLOCK_CHANGED:
 			g_value_set_boolean (value, gdaobj->priv->changed_locked);

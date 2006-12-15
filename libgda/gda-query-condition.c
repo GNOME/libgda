@@ -204,11 +204,13 @@ gda_query_condition_class_init (GdaQueryConditionClass * class)
 	object_class->set_property = gda_query_condition_set_property;
 	object_class->get_property = gda_query_condition_get_property;
 	g_object_class_install_property (object_class, PROP_QUERY,
-					 g_param_spec_pointer ("query", "Query to which the condition belongs", NULL, 
+					 g_param_spec_object ("query", "Query to which the condition belongs", NULL, 
+                                                               GDA_TYPE_QUERY,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT_ONLY)));
 	g_object_class_install_property (object_class, PROP_JOIN,
-					 g_param_spec_pointer ("join", NULL, NULL, 
+					 g_param_spec_object ("join", NULL, NULL, 
+                                                               GDA_TYPE_QUERY_JOIN,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_COND_TYPE,
 					 g_param_spec_int ("cond_type", "Type of condition", NULL,
@@ -497,8 +499,8 @@ gda_query_condition_set_property (GObject *object,
 	condition = GDA_QUERY_CONDITION (object);
 	if (condition->priv) {
 		switch (param_id) {
-		case PROP_QUERY:
-			ptr = g_value_get_pointer (value);
+		case PROP_QUERY: {
+			GdaQuery* ptr = g_value_get_object (value);
                         g_return_if_fail (ptr && GDA_IS_QUERY (ptr));
 
                         if (condition->priv->query) {
@@ -515,7 +517,7 @@ gda_query_condition_set_property (GObject *object,
 			gda_object_connect_destroy (ptr, G_CALLBACK (destroyed_object_cb), condition);
 			gda_query_declare_condition (condition->priv->query, condition);
 
-			dict = gda_object_get_dict (ptr);
+			dict = gda_object_get_dict (GDA_OBJECT(ptr));
 			for (i=0; i<3; i++) {
 				condition->priv->ops[i] = GDA_OBJECT_REF (gda_object_ref_new (dict));
 				g_signal_connect (G_OBJECT (condition->priv->ops[i]), "ref_lost",
@@ -525,8 +527,9 @@ gda_query_condition_set_property (GObject *object,
 			g_object_get (G_OBJECT (ptr), "cond_serial", &id, NULL);
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (object), id);			
 			break;
-		case PROP_JOIN:
-			ptr = g_value_get_pointer (value);
+                }
+		case PROP_JOIN: {
+			GdaQueryJoin* ptr = GDA_QUERY_JOIN (g_value_get_object (value));
 			if (ptr) {
 				g_return_if_fail (GDA_IS_QUERY_JOIN (ptr));
 				g_return_if_fail (gda_query_join_get_query (GDA_QUERY_JOIN (ptr)) == condition->priv->query);
@@ -547,6 +550,7 @@ gda_query_condition_set_property (GObject *object,
 				gda_object_connect_destroy (ptr, G_CALLBACK (destroyed_object_cb), condition);
 			}
 			break;
+                }
 		case PROP_COND_TYPE:
 			if (condition->priv->type == g_value_get_int (value))
 				return;
@@ -570,10 +574,10 @@ gda_query_condition_get_property (GObject *object,
         if (condition->priv) {
                 switch (param_id) {
                 case PROP_QUERY:
-			g_value_set_pointer (value, condition->priv->query);
+			g_value_set_object (value, G_OBJECT (condition->priv->query));
                         break;
 		case PROP_JOIN:
-			g_value_set_pointer (value, condition->priv->join);
+			g_value_set_object (value, G_OBJECT (condition->priv->join));
                         break;
 		case PROP_COND_TYPE:
 			g_value_set_int (value, condition->priv->type);

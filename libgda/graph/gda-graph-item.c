@@ -151,7 +151,8 @@ gda_graph_item_class_init (GdaGraphItemClass * class)
 	object_class->get_property = gda_graph_item_get_property;
 
 	g_object_class_install_property (object_class, PROP_REF_OBJECT,
-					 g_param_spec_pointer ("ref_object", NULL, NULL, 
+					 g_param_spec_object ("ref_object", NULL, NULL, 
+                                                               GDA_TYPE_OBJECT_REF,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */
@@ -258,7 +259,6 @@ gda_graph_item_set_property (GObject *object,
 			   GParamSpec *pspec)
 {
 	GdaGraphItem *graph;
-	gpointer ptr;
 
 	graph = GDA_GRAPH_ITEM (object);
 	if (graph->priv) {
@@ -266,7 +266,7 @@ gda_graph_item_set_property (GObject *object,
 		case PROP_REF_OBJECT:
 			g_assert (graph->priv->ref_object);
 			if (graph->priv->ref_object) {
-				ptr = g_value_get_pointer (value);
+				GObject* ptr = g_value_get_object (value);
 				gda_object_ref_set_ref_object (graph->priv->ref_object, ptr);
 			}
 			break;
@@ -287,7 +287,7 @@ gda_graph_item_get_property (GObject *object,
                 switch (param_id) {
                 case PROP_REF_OBJECT:
 			g_assert (graph->priv->ref_object);
-			g_value_set_pointer (value, 
+			g_value_set_object (value, 
 					     gda_object_ref_get_ref_object (graph->priv->ref_object));
                         break;
                 }
