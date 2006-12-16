@@ -240,6 +240,7 @@ gda_query_field_new_copy (GdaQueryField *orig)
 	newfield->priv->visible = orig->priv->visible;
 	newfield->priv->internal = orig->priv->internal;
 
+	g_object_unref (query);
 	return newfield;
 }
 
@@ -403,6 +404,7 @@ gda_query_field_set_visible (GdaQueryField *qfield, gboolean visible)
 			g_signal_emit_by_name (G_OBJECT (query), "field_removed", GDA_ENTITY_FIELD (qfield));
 		gda_object_signal_emit_changed (GDA_OBJECT (query));
 	}
+	g_object_unref (query);
 }
 
 
@@ -522,9 +524,12 @@ gda_query_field_is_equal (GdaQueryField *qfield1, GdaQueryField *qfield2)
 		return TRUE;
 
 	g_object_get (G_OBJECT (qfield1), "query", &q1, NULL);
-	g_object_get (G_OBJECT (qfield2), "query", &q2, NULL);
 	g_return_val_if_fail (q1, FALSE);
+	g_object_unref (q1);
+
+	g_object_get (G_OBJECT (qfield2), "query", &q2, NULL);
 	g_return_val_if_fail (q2, FALSE);
+	g_object_unref (q2);
 
 	if (q1 != q2)
 		return FALSE;

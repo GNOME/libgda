@@ -647,6 +647,7 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 	
 	g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
 	g_return_val_if_fail (test == model, FALSE);
+	g_object_unref (test);
 	
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update_model", &update_model, NULL);
@@ -712,7 +713,8 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	
 	g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
 	g_return_val_if_fail (test == model, FALSE);
-	
+	g_object_unref (test);
+
 	g_object_get (G_OBJECT (iter), "current_row", &row, NULL);
 	row++;
 	if (row >= gda_data_model_get_n_rows (model)) {
@@ -784,7 +786,8 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	
 	g_object_get (G_OBJECT (iter), "data_model", &test, NULL);
 	g_return_val_if_fail (test == model, FALSE);
-	
+	g_object_unref (test);
+
 	g_object_get (G_OBJECT (iter), "current_row", &row, NULL);
 	row--;
 	if (row < 0)
@@ -1520,6 +1523,7 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
  * gda_data_model_import_from_model
  * @to: the destination #GdaDataModel
  * @from: the source #GdaDataModel
+ * @overwrite: TRUE if @to is completely overwritten by @from's data, and FALSE if @from's data is appended to @to
  * @cols_trans: a #GHashTable for columns translating, or %NULL
  * @error: a place to store errors, or %NULL
  *
@@ -1533,11 +1537,11 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
  * Returns: TRUE if no error occurred.
  */
 gboolean
-gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTable *cols_trans, GError **error)
+gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean overwrite, GHashTable *cols_trans, GError **error)
 {
 	GdaDataModelIter *from_iter;
 	gboolean retval = TRUE;
-	gint to_nb_cols;
+	gint to_nb_cols, to_nb_rows, to_row = -1;;
 	gint from_nb_cols;
 	GSList *copy_params = NULL;
 	gint i;
@@ -1645,7 +1649,12 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 	/* actual data copy (no memory allocation is needed here) */
 	gda_data_model_send_hint (to, GDA_DATA_MODEL_HINT_START_BATCH_UPDATE, NULL);
 	
-	gda_data_model_move_iter_next (from, from_iter); /* move to first row */
+	if (overwrite) {
+		to_row = 0;
+		to_nb_rows = gda_data_model_get_n_rows (to);
+	}
+
+	gda_data_model_iter_move_next (from_iter); /* move to first row */
 	while (retval && gda_data_model_iter_is_valid (from_iter)) {
 		GList *values = NULL;
 		GList *avlist = append_values;
@@ -1686,8 +1695,20 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 		}
 
 		if (retval) {
-			if (gda_data_model_append_values (to, values, error) < 0) 
-				retval = FALSE;
+			if (to_row >= 0) {
+				if (!gda_data_model_set_values (to, to_row, values, error))
+					retval = FALSE;
+				else {
+					to_row ++;
+					if (to_row >= to_nb_rows)
+						/* we have finished modifying the existng rows */
+						to_row = -1;
+				}
+			}
+			else {
+				if (gda_data_model_append_values (to, values, error) < 0) 
+					retval = FALSE;
+			}
 		}
 		
 		g_list_free (values);
@@ -1705,6 +1726,14 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, GHashTab
 			vlist = g_list_next (vlist);
 		}
 		g_free (append_types);
+	}
+
+	if (retval && (to_row >= 0)) {
+		/* remove extra rows */
+		for (; retval && (to_row < to_nb_rows); to_row++) {
+			if (!gda_data_model_remove_row (to, to_row, error))
+				retval = FALSE;
+		}
 	}
 
 	gda_data_model_send_hint (to, GDA_DATA_MODEL_HINT_END_BATCH_UPDATE, NULL);
@@ -1737,7 +1766,7 @@ gda_data_model_import_from_string (GdaDataModel *model,
 		return TRUE;
 
 	import = gda_data_model_import_new_mem (string, FALSE, options);
-	retval = gda_data_model_import_from_model (model, import, cols_trans, error);
+	retval = gda_data_model_import_from_model (model, import, FALSE, cols_trans, error);
 	g_object_unref (import);
 
 	return retval;
@@ -1770,7 +1799,7 @@ gda_data_model_import_from_file (GdaDataModel *model,
 		return TRUE;
 
 	import = gda_data_model_import_new_file (file, FALSE, options);
-	retval = gda_data_model_import_from_model (model, import, cols_trans, error);
+	retval = gda_data_model_import_from_model (model, import, FALSE, cols_trans, error);
 	g_object_unref (import);
 
 	return retval;

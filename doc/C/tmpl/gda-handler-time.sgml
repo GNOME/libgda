@@ -58,3 +58,16 @@ Default handler for time, date and timestamp
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_handler_time_set_sql_spec ##### -->
+<para>
+
+</para>
+
+@dh: 
+@first: 
+@sec: 
+@third: 
+@separator: 
+@twodigits_years: 
+
+

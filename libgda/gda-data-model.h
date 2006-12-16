@@ -146,7 +146,7 @@ gboolean            gda_data_model_export_to_file         (GdaDataModel *model, 
 							   const gint *rows, gint nb_rows, 
 							   GdaParameterList *options, GError **error);
 
-gboolean            gda_data_model_import_from_model      (GdaDataModel *to, GdaDataModel *from, 
+gboolean            gda_data_model_import_from_model      (GdaDataModel *to, GdaDataModel *from, gboolean overwrite,
 							   GHashTable *cols_trans, GError **error);
 gboolean            gda_data_model_import_from_string     (GdaDataModel *model,
 							   const gchar *string, GHashTable *cols_trans,

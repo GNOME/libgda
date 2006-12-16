@@ -1943,7 +1943,7 @@ get_oracle_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 		recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
 					       (gda_server_provider_get_schema_nb_columns (GDA_CONNECTION_SCHEMA_FIELDS)));
 		gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_FIELDS);
-		if (!gda_data_model_import_from_model (GDA_DATA_MODEL (recset), tmprecset, NULL, &error)) {
+		if (!gda_data_model_import_from_model (GDA_DATA_MODEL (recset), tmprecset, FALSE, NULL, &error)) {
 			g_warning (_("Can't convert model for fields schema: %s"),
 				   error && error->message ?  error->message : _("No detail"));
 			g_error_free (error);

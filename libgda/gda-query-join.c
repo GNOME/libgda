@@ -357,6 +357,7 @@ gda_query_join_new_copy (GdaQueryJoin *orig, GHashTable *replacements)
 	dict = gda_object_get_dict (GDA_OBJECT (orig));
 	obj = g_object_new (GDA_TYPE_QUERY_JOIN, "dict", dict, 
 			    "query", query, NULL);
+	g_object_unref (query);
 	join = GDA_QUERY_JOIN (obj);
 	if (replacements)
 		g_hash_table_insert (replacements, orig, join);

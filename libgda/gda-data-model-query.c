@@ -342,6 +342,17 @@ param_name_to_int (const gchar *pname, gint *result, gboolean *old_val)
 }
 
 static void
+check_param_type (GdaParameter *param, GType type)
+{
+	if (type !=  gda_parameter_get_g_type (param)) {
+		g_warning (_("Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery object will now work correctly"),
+			   gda_object_get_name (GDA_OBJECT (param)), 
+			   g_type_name (gda_parameter_get_g_type (param)),
+			   g_type_name (type));
+	}
+}
+
+static void
 gda_data_model_query_set_property (GObject *object,
 				   guint param_id,
 				   const GValue *value,
@@ -374,7 +385,6 @@ gda_data_model_query_set_property (GObject *object,
 						  G_CALLBACK (to_be_destroyed_query_cb), model);
 				
 				model->priv->params[qindex] = gda_query_get_parameter_list (model->priv->queries[qindex]);
-
 				if (qindex == SEL_QUERY) {
 					/* SELECT query */
 					GSList *targets, *tlist;
@@ -406,6 +416,7 @@ gda_data_model_query_set_property (GObject *object,
 						GSList *params = model->priv->params [qindex]->parameters;
 						while (params) {
 							const gchar *pname = gda_object_get_name (GDA_OBJECT (params->data));
+							GdaParameter *param = GDA_PARAMETER (params->data);
 							gboolean old_val;
 							
 							if (param_name_to_int (pname, &num, &old_val)) {
@@ -420,10 +431,12 @@ gda_data_model_query_set_property (GObject *object,
 								GdaColumn *col;
 								col = gda_data_model_describe_column ((GdaDataModel *) model,
 												      num);
-								if (col) 
+								if (col) {
+									check_param_type (param, gda_column_get_g_type (col));
 									gda_parameter_set_not_null 
 										((GdaParameter *)(params->data),
 										 !gda_column_get_allow_null (col));
+								}
 							}
 							else {
 								if (pname && model->priv->params [SEL_QUERY]) {
@@ -431,9 +444,18 @@ gda_data_model_query_set_property (GObject *object,
 									bind_to = gda_parameter_list_find_param 
 										(model->priv->params [SEL_QUERY],
 										 pname);
-									if (bind_to)
+									if (bind_to) {
+										check_param_type (param,
+												  gda_parameter_get_g_type (bind_to));
 										g_object_set_data ((GObject*) params->data, 
 												   "_bind", bind_to);
+									}
+									else
+										g_warning (_("Could not find a parameter named "
+											     "'%s' among the SELECT query's "
+											     "parameters, the specified "
+											     "modification query will not be executable"),
+											   pname);
 								}
 							}
 							params = g_slist_next (params);
@@ -652,7 +674,7 @@ gda_data_model_query_set_modification_query (GdaDataModelQuery *model, const gch
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), FALSE);
 	g_return_val_if_fail (model->priv, FALSE);
 
-	aq = gda_query_new_from_sql (gda_object_get_dict ((GdaObject *) model), query, NULL);
+	aq = gda_query_new_from_sql (gda_object_get_dict ((GdaObject *) model), query, error);
 	if (gda_query_is_insert_query (aq)) {
 		g_object_set (model, "insert_query", aq, NULL);
 		done = TRUE;

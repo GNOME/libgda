@@ -1,5 +1,22 @@
-2006-12-15  Murray Cumming,,,  <set EMAIL_ADDRESS environment variable>
+2006-12-16  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/gda-enums.h:
+	* libgda/gda-data-proxy.c: added a new value attribute to tell
+	when a value won't be used
+	* libgda/gda-data-model.[ch]: added an option to gda_data_model_import_from_model()
+	to specify that either the receiving data model must be overwritten, or
+	data must be appended to the receiving data model
+	* libgda/gda-config.c: minor corrections with FAM and the save order of the
+	declared datasources
+	* libgda/sql-delimiter/payser.y: make the parameters be reconized if its
+	attributes are in single quotes the same way as if they are in double quotes
+	* libgda/gda-data-model-query.c: display a warning if INSERT|DELETE|UPDATE queries'
+	parameters are not of the correct GType
+	* other files: corrected bug fixed introduced by the properties change (because
+	g_object_get() then returned objects with a new reference on them which was not the
+	case with gpointer properties).
+
+2006-12-15  Murray Cumming <murrayc@murrayc.com>
 
 	* libgda/gda-connection.c:
 	* libgda/gda-data-access-wrapper.c:

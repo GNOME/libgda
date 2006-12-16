@@ -206,7 +206,6 @@ gda_graphs_get_graph_for_object (GdaDict *dict, GObject *obj)
 	GdaGraph *graph = NULL;
 
 	GSList *list;
-	GObject *ref_obj;
 	GdaDictRegisterStruct *reg;
 
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_GRAPH);
@@ -214,9 +213,12 @@ gda_graphs_get_graph_for_object (GdaDict *dict, GObject *obj)
 
         list = reg->assumed_objects;
         while (list && !graph) {
+		GObject *ref_obj;
 		g_object_get (G_OBJECT (list->data), "ref_object", &ref_obj, NULL);
 		if (ref_obj == obj)
                         graph = GDA_GRAPH (list->data);
+		if (ref_obj)
+			g_object_unref (ref_obj);
                 list = g_slist_next (list);
         }
 

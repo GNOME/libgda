@@ -443,7 +443,6 @@ gda_graph_get_item_from_obj (GdaGraph *graph, GdaObject *ref_obj, gboolean creat
 {
 	GdaGraphItem *item = NULL;
 	GSList *list;
-	GdaObject *obj;
 
 	g_return_val_if_fail (graph && GDA_IS_GRAPH (graph), NULL);
 	g_return_val_if_fail (graph->priv, NULL);
@@ -451,9 +450,12 @@ gda_graph_get_item_from_obj (GdaGraph *graph, GdaObject *ref_obj, gboolean creat
 
 	list = graph->priv->graph_items;
 	while (list && !item) {
+		GdaObject *obj;
 		g_object_get (G_OBJECT (list->data), "ref_object", &obj, NULL);
 		if (obj == ref_obj)
 			item = GDA_GRAPH_ITEM (list->data);
+		if (obj)
+			g_object_unref (obj);
 		list = g_slist_next (list);
 	}
 

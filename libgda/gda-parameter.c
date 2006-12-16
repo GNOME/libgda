@@ -707,8 +707,9 @@ gda_parameter_set_value (GdaParameter *param, const GValue *value)
 
 	if (value &&
 	    (G_VALUE_TYPE ((GValue *)value) != GDA_TYPE_NULL) &&
-	    (G_VALUE_TYPE ((GValue *)value) != param->priv->g_type))
+	    (G_VALUE_TYPE ((GValue *)value) != param->priv->g_type)) {
 		param->priv->valid = FALSE;
+	}
 
 #ifdef DEBUG_PARAM
 	g_print ("Changed param %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 

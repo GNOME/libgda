@@ -513,7 +513,7 @@ gda_data_model_iter_can_be_moved (GdaDataModelIter *iter)
  *
  * If @row < 0 then @iter is not bound to any row of the data model it iters through.
  *
- * Returns: TRUE if no error occures
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_iter_set_at_row (GdaDataModelIter *iter, gint row)
@@ -541,7 +541,7 @@ gda_data_model_iter_set_at_row (GdaDataModelIter *iter, gint row)
  * Moves @iter one row further than where it already is (synchronizes the values of the parameters in @iter 
  * with the values at the new row).
  *
- * Returns: TRUE if no error occures
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_iter_move_next (GdaDataModelIter *iter)
@@ -559,7 +559,7 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
  * Moves @iter one row before where it already is (synchronizes the values of the parameters in @iter 
  * with the values at the new row).
  *
- * Returns: TRUE if no error occures
+ * Returns: TRUE if no error occurred
  */
 gboolean
 gda_data_model_iter_move_prev (GdaDataModelIter *iter)
@@ -604,10 +604,6 @@ gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)
 	iter->priv->keep_param_changes = TRUE;
 	list = GDA_PARAMETER_LIST (iter)->parameters;
 	while (list) {
-		/* GdaParameter *tmp; */
-/* 		g_object_get (G_OBJECT (list->data), "simple_bind", &tmp, NULL); */
-/* 		if (! tmp) */
-/* 			gda_parameter_declare_invalid (GDA_PARAMETER (list->data)); */
 		gda_parameter_declare_invalid (GDA_PARAMETER (list->data));
 		list = g_slist_next (list);
 	}
@@ -618,7 +614,7 @@ gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)
  * gda_data_model_iter_is_valid
  * @iter: a #GdaDataModelIter object
  *
- * Tells if @iter is a valid iterator.
+ * Tells if @iter is a valid iterator (if it actually corresponds to a valid row in the model)
  *
  * Returns: TRUE if @iter is valid
  */

@@ -38,6 +38,9 @@
 #ifdef HAVE_FAM
 #include <fam.h>
 #include <glib/giochannel.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #endif
 #ifdef LIBGDA_WIN32
 #include <io.h>
@@ -68,7 +71,7 @@ typedef struct {
 	GList *user;   /* list of GdaConfigSection */
 } GdaConfigClient;
 
-static GdaConfigClient *config_client;
+static GdaConfigClient *config_client = NULL;
 static gboolean         can_modif_global_conf; /* TRUE if the current user can modify the system wide config file */
 static gboolean         lock_write_notify = FALSE;
 static void             do_notify (const gchar *path);
@@ -79,9 +82,12 @@ static void             do_notify (const gchar *path);
 #ifdef HAVE_FAM
 static FAMConnection *fam_connection = NULL;
 static gint           fam_watch_id = 0;
-gboolean              lock_fam = FALSE;
-FAMRequest           *fam_conf_user = NULL;
-FAMRequest           *fam_conf_global = NULL;
+static gboolean       lock_fam = FALSE;
+static FAMRequest    *fam_conf_user = NULL;
+static FAMRequest    *fam_conf_global = NULL;
+static time_t         last_mtime = 0;
+static time_t         last_ctime = 0;
+static off_t          last_size = 0;
 
 static gboolean       fam_callback (GIOChannel *source, GIOCondition condition, gpointer data);
 static void           fam_lock_notify ();
@@ -276,14 +282,14 @@ get_config_client ()
 			file = fopen (LIBGDA_GLOBAL_CONFIG_FILE, "a");
 			if (file) {
 				can_modif_global_conf = TRUE;
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 				g_print ("Can write system wide config file\n");
 #endif
 				fclose (file);
 			}
 			else {
 				can_modif_global_conf = FALSE;
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 				g_print ("Cannot write system wide config file\n");
 #endif			
 			}
@@ -295,7 +301,7 @@ get_config_client ()
 			GIOChannel *ioc;
 			int res;
 	
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 			g_print ("Using FAM to monitor configuration files changes.\n");
 #endif
 			fam_connection = g_malloc0 (sizeof (FAMConnection));
@@ -313,7 +319,7 @@ get_config_client ()
 				fam_conf_global = g_new0 (FAMRequest, 1);
 				res = FAMMonitorFile (fam_connection, LIBGDA_GLOBAL_CONFIG_FILE, fam_conf_global, 
 						      GINT_TO_POINTER (TRUE));
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 				g_print ("Monitoring changes on file %s: %s\n", 
 					 LIBGDA_GLOBAL_CONFIG_FILE, res ? "ERROR" : "Ok");
 #endif
@@ -322,7 +328,7 @@ get_config_client ()
 					fam_conf_user = g_new0 (FAMRequest, 1);
 					res = FAMMonitorFile (fam_connection, user_config, fam_conf_user, 
 							      GINT_TO_POINTER (FALSE));
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_NO
 					g_print ("Monitoring changes on file %s: %s\n", 
 						 user_config, res ? "ERROR" : "Ok");
 #endif
@@ -468,7 +474,20 @@ fam_callback (GIOChannel *source, GIOCondition condition, gpointer data)
 
 		is_global = GPOINTER_TO_INT (ev.userdata);
 		switch (ev.code) {
-		case FAMChanged:
+		case FAMChanged: {
+			struct stat stat;
+			if (lstat (ev.filename, &stat))
+				break;
+			if ((stat.st_mtime != last_mtime) ||
+			    (stat.st_ctime != last_ctime) ||
+			    (stat.st_size != last_size)) {
+				last_mtime = stat.st_mtime;
+				last_ctime = stat.st_ctime;
+				last_size = stat.st_size;
+			}
+			else
+				break;
+		}
 		case FAMDeleted:
 		case FAMCreated:
 #ifdef GDA_DEBUG_NO
@@ -2032,13 +2051,15 @@ gda_config_save_data_source (const gchar *name,
 	g_assert (section);
 	section->is_global = is_global;
 
-	cfg_client->user = g_list_remove (cfg_client->user, section);
-	cfg_client->global = g_list_remove (cfg_client->global, section);
-
-	if (!g_list_find (cfg_client->global, section) && is_global)
+	if (section->is_global && (!g_list_find (cfg_client->global, section))) {
 		cfg_client->global = g_list_append (cfg_client->global, section);
-	if (!g_list_find (cfg_client->user, section) && !is_global)
+		cfg_client->user = g_list_remove (cfg_client->user, section);
+	}
+
+	if (!section->is_global && (!g_list_find (cfg_client->user, section))) {
 		cfg_client->user = g_list_append (cfg_client->user, section);
+		cfg_client->global = g_list_remove (cfg_client->global, section);
+	}
 
 	g_string_free (str, TRUE);
 

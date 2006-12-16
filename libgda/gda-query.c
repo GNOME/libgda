@@ -3955,22 +3955,26 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 			g_object_get (G_OBJECT (list->data), "query", &query, NULL);
 			g_assert (query);
 			qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
+			g_object_unref (query);
 			xmlAddChild (sub, qnode);
 
 			g_object_get (G_OBJECT (list->data), "insert_query", &query, NULL);
 			if (query) {
 				qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
 				xmlAddChild (sub, qnode);
+				g_object_unref (query);
 			}
 			g_object_get (G_OBJECT (list->data), "update_query", &query, NULL);
 			if (query) {
 				qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
 				xmlAddChild (sub, qnode);
+				g_object_unref (query);
 			}
 			g_object_get (G_OBJECT (list->data), "delete_query", &query, NULL);
 			if (query) {
 				qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (query), error);
 				xmlAddChild (sub, qnode);
+				g_object_unref (query);
 			}
 		}
 		else 
@@ -4798,6 +4802,8 @@ assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, 
 							     _("Insertion query field has incompatible value assignment"));
 						retval = FALSE;
 					}
+					if (value_prov)
+						g_object_unref (value_prov);
 				}
 				list = g_slist_next (list);
 			}
@@ -4846,6 +4852,8 @@ assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, 
 						     _("Update query field has incompatible value assignment"));
 					retval = FALSE;
 				}
+				if (value_prov)
+					g_object_unref (value_prov);
 			}
 			list = g_slist_next (list);
 		}
@@ -5340,6 +5348,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 				else
 					str = g_strdup ("NULL");
 			}
+			g_object_unref (value_prov);
 			
 			if (add_field) {
 				gchar *tmpstr;
@@ -5526,6 +5535,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 					else
 						g_string_append (sql, "NULL");
 				}
+				g_object_unref (value_prov);
 			}
 			else {
 				/* signal an error */

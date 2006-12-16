@@ -326,6 +326,7 @@ gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
 		list = g_slist_next (list);
 	}
 
+	g_object_unref (query);
 	return newcond;
 }
 
@@ -870,6 +871,8 @@ gda_query_condition_leaf_set_operator (GdaQueryCondition *condition, GdaQueryCon
 	g_object_get (G_OBJECT (field), "query", &query2, NULL);
 	g_return_if_fail (query1);
 	g_return_if_fail (query1 == query2);
+	g_object_unref (query1);
+	g_object_unref (query2);
 
 	gda_object_ref_set_ref_object_type (condition->priv->ops[op], GDA_OBJECT (field), GDA_TYPE_QUERY_FIELD);
 }

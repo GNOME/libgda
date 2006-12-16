@@ -327,7 +327,7 @@ gda_connection_set_property (GObject *object,
 				cnc->priv->cnc_string = g_strdup (g_value_get_string (value));
                         break;
                 case PROP_PROVIDER_OBJ:
-                        if(cnc->priv->provider_obj)
+                        if (cnc->priv->provider_obj)
                           g_object_unref(cnc->priv->provider_obj);
 
 			cnc->priv->provider_obj = g_value_get_object (value);

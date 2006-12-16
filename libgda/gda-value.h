@@ -95,7 +95,7 @@ typedef struct {
 
 typedef struct {
 	guchar *data;
-	glong  binary_length;
+	glong   binary_length;
 } GdaBinary;
 
 typedef GList GdaValueList;
@@ -121,6 +121,7 @@ GValue                           *gda_value_copy (const GValue *value);
 G_CONST_RETURN GdaBinary         *gda_value_get_binary (const GValue *value);
 void                              gda_value_set_binary (GValue *value, const GdaBinary *binary);
 void                              gda_value_take_binary (GValue *value, const GdaBinary *binary);
+
 G_CONST_RETURN GdaBlob           *gda_value_get_blob (const GValue *value);
 void                              gda_value_set_blob (GValue *value, const GdaBlob *val);
 G_CONST_RETURN GdaGeometricPoint *gda_value_get_geometric_point (const GValue *value);

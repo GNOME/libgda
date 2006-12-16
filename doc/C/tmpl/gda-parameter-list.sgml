@@ -59,6 +59,14 @@ gda_query_get_parameter_list()).
 @dbdataset: the object which received the signal.
 @arg1: 
 
+<!-- ##### SIGNAL GdaParameterList::param-plugin-changed ##### -->
+<para>
+
+</para>
+
+@gdaparameterlist: the object which received the signal.
+@arg1: 
+
 <!-- ##### SIGNAL GdaParameterList::public-data-changed ##### -->
 <para>
 

@@ -393,7 +393,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 		gda_column_set_allow_null (copycol, gda_column_get_allow_null (srccol));
 	}
 
-	if (! gda_data_model_import_from_model (model, src, NULL, error)) {
+	if (! gda_data_model_import_from_model (model, src, FALSE, NULL, error)) {
 		g_object_unref (model);
 		model = NULL;
 	}

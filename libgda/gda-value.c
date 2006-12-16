@@ -270,7 +270,7 @@ gda_binary_copy (gpointer boxed)
 	copy = g_new0 (GdaBinary, 1);
 	copy->data = g_memdup (src->data, src->binary_length);
 	copy->binary_length = src->binary_length;
-
+	
 	return copy;
 }
 
@@ -289,9 +289,6 @@ gda_binary_free (gpointer boxed)
 		
 	g_free (binary->data);
 }
-
-
-
 
 /* 
  * Register the GdaGeometricPoint type in the GType system 

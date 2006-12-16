@@ -116,8 +116,9 @@ struct _GdaParameterListClass
 {
 	GdaObjectClass          parent_class;
 
-	void                  (*param_changed) (GdaParameterList *paramlist, GdaParameter *param);
-	void                  (*public_data_changed) (GdaParameterList *paramlist);
+	void                  (*param_changed)        (GdaParameterList *paramlist, GdaParameter *param);
+	void                  (*public_data_changed)  (GdaParameterList *paramlist);
+	void                  (*param_plugin_changed) (GdaParameterList *paramlist, GdaParameter *param);
 };
 
 GType                   gda_parameter_list_get_type                 (void);

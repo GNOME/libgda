@@ -10,6 +10,59 @@
 int gda_delimitererror (char *);
 int gda_delimiterlex ();
 
+static gchar *
+remove_quotes (gchar *str)
+{
+        glong total;
+        gchar *ptr;
+        glong offset = 0;
+
+        total = strlen (str);
+        g_assert (*str == '\'');
+        g_assert (str[total-1] == '\'');
+        g_memmove (str, str+1, total-2);
+        total -=2;
+        str[total] = 0;
+
+        ptr = (gchar *) str;
+        while (offset < total) {
+                /* we accept the "''" as a synonym of "\'" */
+                if (*ptr == '\'') {
+                        if (*(ptr+1) == '\'') {
+                                g_memmove (ptr+1, ptr+2, total - offset);
+                                offset += 2;
+                        }
+                        else {
+                                *str = 0;
+                                return str;
+                        }
+                }
+                if (*ptr == '\\') {
+                        if (*(ptr+1) == '\\') {
+                                g_memmove (ptr+1, ptr+2, total - offset);
+                                offset += 2;
+                        }
+                        else {
+                                if (*(ptr+1) == '\'') {
+                                        *ptr = '\'';
+                                        g_memmove (ptr+1, ptr+2, total - offset);
+                                        offset += 2;
+                                }
+                                else {
+                                        *str = 0;
+                                        return str;
+                                }
+                        }
+                }
+                else
+                        offset ++;
+
+                ptr++;
+        }
+
+        return str;
+}
+
 GList                        *all_sql_results; /* list of GdaDelimiterStatement */
 extern GdaDelimiterStatement *last_sql_result; /* last GdaDelimiterStatement identified */
 #define YYDEBUG 1
@@ -79,5 +132,10 @@ param_spec_item: L_PNAME L_EQ L_TEXTUAL      	{$$ = gda_delimiter_param_spec_bui
 	| L_PTYPE L_EQ L_TEXTUAL		{$$ = gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_TYPE, $3);}
 	| L_PISPARAM L_EQ L_TEXTUAL		{$$ = gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_ISPARAM, $3);}
 	| L_PNULLOK L_EQ L_TEXTUAL		{$$ = gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_NULLOK, $3);}
+	| L_PNAME L_EQ L_STRING            	{$$ = gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_NAME, remove_quotes ($3));}
+        | L_PDESCR L_EQ L_STRING                {$$ = gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_DESCR, remove_quotes ($3));}
+        | L_PTYPE L_EQ L_STRING                 {$$ = gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_TYPE, remove_quotes ($3));}
+        | L_PISPARAM L_EQ L_STRING              {$$ = gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_ISPARAM, remove_quotes ($3));}
+        | L_PNULLOK L_EQ L_STRING               {$$ = gda_delimiter_param_spec_build (GDA_DELIMITER_PARAM_NULLOK, remove_quotes ($3));}
 	;
 %%

@@ -56,6 +56,7 @@ static void paramlist_remove_source (GdaParameterList *paramlist, GdaParameterLi
 static void destroyed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 static void changed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 static void restrict_changed_param_cb (GdaParameter *param, GdaParameterList *dataset);
+static void notify_param_cb (GdaParameter *param, GParamSpec *pspec, GdaParameterList *dataset);
 
 #ifdef GDA_DEBUG
 static void gda_parameter_list_dump                     (GdaParameterList *paramlist, guint offset);
@@ -69,10 +70,11 @@ enum
 {
 	PARAM_CHANGED,
 	PUBLIC_DATA_CHANGED,
+	PARAM_PLUGIN_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gda_parameter_list_signals[LAST_SIGNAL] = { 0, 0 };
+static gint gda_parameter_list_signals[LAST_SIGNAL] = { 0, 0, 0 };
 
 
 /* private structure */
@@ -136,6 +138,14 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 			      NULL, NULL,
 			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
 			      G_TYPE_OBJECT);
+	gda_parameter_list_signals[PARAM_PLUGIN_CHANGED] =
+		g_signal_new ("param_plugin_changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GdaParameterListClass, param_plugin_changed),
+			      NULL, NULL,
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
+			      G_TYPE_OBJECT);
 	gda_parameter_list_signals[PUBLIC_DATA_CHANGED] =
 		g_signal_new ("public_data_changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -145,6 +155,7 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 			      gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	class->param_changed = NULL;
+	class->param_plugin_changed = NULL;
 	class->public_data_changed = NULL;
 
 	object_class->dispose = gda_parameter_list_dispose;
@@ -728,6 +739,8 @@ destroyed_param_cb (GdaParameter *param, GdaParameterList *paramlist)
 					      G_CALLBACK (changed_param_cb), paramlist);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (param),
 					      G_CALLBACK (restrict_changed_param_cb), paramlist);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (param),
+					      G_CALLBACK (notify_param_cb), paramlist);
 
 	/* now destroy the GdaParameterListNode and the GdaParameterListSource if necessary */
 	node = gda_parameter_list_find_node_for_param (paramlist, param);
@@ -751,6 +764,20 @@ static void
 restrict_changed_param_cb (GdaParameter *param, GdaParameterList *paramlist)
 {
 	compute_public_data (paramlist);
+}
+
+static void
+notify_param_cb (GdaParameter *param, GParamSpec *pspec, GdaParameterList *paramlist)
+{
+	if (!strcmp (pspec->name, "entry-plugin")) {
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'PARAM_PLUGIN_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (paramlist), gda_parameter_list_signals[PARAM_PLUGIN_CHANGED], 0, param);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'PARAM_PLUGIN_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	}
 }
 
 static void
@@ -1103,6 +1130,8 @@ gda_parameter_list_real_add_param (GdaParameterList *paramlist, GdaParameter *pa
 				  G_CALLBACK (changed_param_cb), paramlist);
 		g_signal_connect (G_OBJECT (param), "restrict_changed",
 				  G_CALLBACK (restrict_changed_param_cb), paramlist);
+		g_signal_connect (G_OBJECT (param), "notify",
+				  G_CALLBACK (notify_param_cb), paramlist);
 
 		g_object_ref (G_OBJECT (param));
 		gda_parameter_replace_param_users (param, paramlist->priv->param_repl);

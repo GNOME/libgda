@@ -390,6 +390,7 @@ get_depend_query (GdaQuery *query, GSList **deplist, GSList **alldisplayed)
 				GdaQuery *dquery = GDA_QUERY (gda_entity_field_get_entity (GDA_ENTITY_FIELD (base)));
 				if (!g_slist_find (*alldisplayed, dquery) && (dquery != query))
 					*deplist = g_slist_append (*deplist, dquery);
+				g_object_unref (base);
 			}
 		}
 		list = g_slist_next (list);
@@ -592,6 +593,7 @@ do_graph_query (GdaGraphviz *graph, GString *string, GdaQuery *query, gint tabof
 					g_string_append_printf (string, "%s\t\"%s\" -> \"%s\" [style=dotted];\n", str, fid, bid);
 					g_free (fid);
 					g_free (bid);
+					g_object_unref (base);
 				}
 			}
 			
