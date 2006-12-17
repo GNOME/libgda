@@ -159,6 +159,7 @@ providers/bdb/gda-bdb-recordset.c
 providers/bdb/libmain.c
 providers/bdb/utils.c
 testing/gda-test-connection.c
+testing/gda-test-model-query.c
 testing/gda-test-models.c
 testing/gda-test-server-operation.c
 testing/gda-test-sql.c
