@@ -1,3 +1,13 @@
+2006-12-20  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/handlers/gda-handler-time.c: improved date conversion
+	* libgda/gda-config.c: removed the 'password' column from the
+	gda_config_get_data_source_model()'s returned data model as is was always
+	'*****'
+	* libgda/gda-quark-list.[ch]: added gda_quark_list_foreach()
+	* libsql/lexex.l:
+	* libsql/parser.y: allow numerical values with a decimal part
+
 2006-12-16  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-enums.h:

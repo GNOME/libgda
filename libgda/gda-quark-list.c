@@ -1,8 +1,9 @@
 /* GDA Common Library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2006 The GNOME Foundation.
  *
  * Authors:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -245,4 +246,21 @@ gda_quark_list_remove (GdaQuarkList *qlist, const gchar *name)
 		g_free (orig_key);
 		g_free (orig_value);
 	}
+}
+
+/**
+ * gda_quark_list_foreach
+ * @qlist: a #GdaQuarkList structure.
+ * @func: the function to call for each key/value pair
+ * @user_data: user data to pass to the function
+ *
+ * Calls the given function for each of the key/value pairs in @qlist. The function is passed the key and value 
+ * of each pair, and the given user_data parameter. @qlist may not be modified while iterating over it.
+ */
+void
+gda_quark_list_foreach (GdaQuarkList *qlist, GHFunc func, gpointer user_data)
+{
+	g_return_if_fail (qlist != NULL);
+
+	g_hash_table_foreach (qlist->hash_table, func, user_data);
 }

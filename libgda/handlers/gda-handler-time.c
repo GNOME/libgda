@@ -749,21 +749,20 @@ make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *
 	}
 
 	if (!error) {
-		for (i=0; i<3; i++) 
+		for (i=0; i<3; i++) {
 			switch (locale->dmy_order[i]) {
 			case G_DATE_DAY:
-				date->day = nums[i];
+				g_date_set_day (date, nums[i]);
 				break;
 			case G_DATE_MONTH:
-				date->month = nums[i];
+				g_date_set_month (date, nums[i]);
 				break;
 			case G_DATE_YEAR:
-				date->year = nums[i];
-				if (date->year < 100)
-					date->year += locale->current_offset;
+				g_date_set_year (date, nums[i] < 100 ? nums[i] + locale->current_offset : nums[i]);
 				break;
 			}
-		
+		}
+
 		/* checks */
 		retval = g_date_valid (date);
 	}
@@ -771,6 +770,7 @@ make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *
 		retval = FALSE;
 
 	g_free (tofree);
+
 	return retval;
 }
 

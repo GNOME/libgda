@@ -68,6 +68,7 @@ GSList                *gda_parameter_get_param_users         (GdaParameter *para
 void                   gda_parameter_replace_param_users     (GdaParameter *param, GHashTable *replacements);
 
 const GValue          *gda_parameter_get_value               (GdaParameter *param);
+gchar                 *gda_parameter_get_value_str           (GdaParameter *param);
 void                   gda_parameter_set_value               (GdaParameter *param, const GValue *value);
 gboolean               gda_parameter_set_value_str           (GdaParameter *param, const gchar *value);
 

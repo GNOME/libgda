@@ -6,6 +6,7 @@
   <output_file name="SQL_SELECT_empty_dict.html" descr="Non parsed queries with parameters"/>
 
   <test_group descr="Lots of parameters">
+    <test sql="INSERT INTO products (ref, category, name, price, wh_stored) VALUES (##[:name='+0' :type='gchararray'],  ##[:name='+1' :type='gint'], ##[:name='+2' :type='gchararray'], 31.4159, .1234 [:name='+4' :type='gfloat'])" parsed="1"/>
     <test sql="DELETE CASE field1 FROM order_contents WHERE order_id = ## [:name='oid' :type='gint'] AND product_ref = ## [:name='-0' :type='gint'] AND quantity = ## [:name='-2' :type='gint'] AND discount = ## [:name='-3' :type='gfloat']" parsed="0"/>
     <test sql="DELETE FROM order_contents WHERE order_id = ## [:name=&quot;oid&quot; :type=&quot;gint&quot;] AND product_ref = ## [:name=&quot;-0&quot; :type=&quot;gint&quot;] AND quantity = ## [:name=&quot;-2&quot; :type=&quot;gint&quot;] AND discount = ## [:name=&quot;-3&quot; :type=&quot;gfloat&quot;]" parsed="1"/>
     <test sql="UPDATE order_contents SET product_ref = ## [:name='+0' :type='gint'], quantity = ## [:name='+2' :type='gint'], discount = ## [:name='+3' :type='gfloat'] WHERE order_id = ## [:name='oid' :type='gint'] AND product_ref = ## [:name='-0' :type='gint'] AND quantity = ## [:name='-2' :type='gint'] AND discount = ## [:name='-3' :type='gfloat'])" parsed="0"/>

@@ -654,6 +654,39 @@ gda_parameter_get_value (GdaParameter *param)
 		return gda_parameter_get_value (param->priv->alias_of);
 }
 
+/**
+ * gda_parameter_get_value_str
+ * @param: a #GdaParameter object
+ * 
+ * Get a string representation of the value stored in @param. Calling
+ * gda_parameter_set_value_str () with this value will restore @param's current
+ * state.
+ *
+ * Returns: a new string, or %NULL if @param's value is NULL
+ */
+gchar *
+gda_parameter_get_value_str (GdaParameter *param)
+{
+	const GValue *current_val;
+
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
+	g_return_val_if_fail (param->priv, NULL);
+
+	current_val = gda_parameter_get_value (param);
+	if (!current_val)
+		return NULL;
+	else {
+		GdaDict *dict;
+		GdaDataHandler *dh;
+
+		dict = gda_object_get_dict (GDA_OBJECT (param));
+		dh = gda_dict_get_handler (dict, param->priv->g_type);
+		if (dh)
+			return gda_data_handler_get_str_from_value (dh, current_val);
+		else
+			return NULL;
+	}
+}
 
 /*
  * gda_parameter_set_value
@@ -783,7 +816,7 @@ gda_parameter_set_value_str (GdaParameter *param, const gchar *value)
 	g_return_val_if_fail (GDA_IS_PARAMETER (param), FALSE);
 	g_return_val_if_fail (param->priv, FALSE);
 
-	if (!value) {
+	if (!value || !g_ascii_strcasecmp (value, "NULL")) {
 		gda_parameter_set_value (param, NULL);	
 		return TRUE;
 	}

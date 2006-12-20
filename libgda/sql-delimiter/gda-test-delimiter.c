@@ -30,7 +30,7 @@ main (int argc, char **argv) {
 	test_string ("SELECT CASE 'pg_catalog.\"any\"'::pg_catalog.regtype");
 	test_string ("toto CASE p.proargtypes[0] When ");
 	test_string ("SELECT p.proname, p.oid, u.usename, pg_catalog.obj_description(p.oid),typo.typname,CASE p.proargtypes WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype THEN CAST('-' AS pg_catalog.text) ELSE typi.typname END,NULL FROM pg_catalog.pg_proc p, pg_catalog.pg_user u, pg_catalog.pg_namespace n, pg_catalog.pg_type typi, pg_catalog.pg_type typo WHERE u.usesysid=p.proowner AND n.oid = p.pronamespace AND p.prorettype = typo.oid AND (typo.oid NOT IN (22, 24, 26, 27, 28, 29, 30, 210, 705, 1790, 2202, 2203, 2204, 2205, 2206, 2249, 2275, 2276, 2277, 2278, 2279, 2280, 2281, 2282, 2283) OR typo.oid='2276') AND p.proargtypes[0] = typi.oid AND (typi.oid NOT IN (22, 24, 26, 27, 28, 29, 30, 210, 705, 1790, 2202, 2203, 2204, 2205, 2206, 2249, 2275, 2276, 2277, 2278, 2279, 2280, 2281, 2282, 2283) OR typi.oid='2276') AND p.proisagg AND pg_catalog.pg_function_is_visible(p.oid) ORDER BY 2");
-
+	test_string ("SELECT 1.2 [:type='gfloat'] , ## [:type='int4'];");
 	
 	return 0;
 }

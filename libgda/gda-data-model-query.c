@@ -903,7 +903,7 @@ gda_data_model_query_get_access_flags (GdaDataModel *model)
 					allok = FALSE;
 			}
 
-			if (allok) {
+			if (allok && selmodel->priv->params [i]) {
 				switch (i) {
 				case INS_QUERY:
 					flags |= GDA_DATA_MODEL_ACCESS_INSERT;

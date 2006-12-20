@@ -85,7 +85,7 @@ sql_order_field *of;
 %token L_SELECT L_FROM L_WHERE L_AS L_ON L_ORDER L_BY L_ORDER_ASC L_ORDER_DSC
 %token L_DISTINCT L_BETWEEN L_IN L_GROUP L_INSERT L_INTO L_VALUES L_UPDATE L_SET
 %token L_DOT L_COMMA L_NULL L_LBRACKET L_RBRACKET
-%token L_IDENT
+%token L_IDENT L_NUM
 %token L_EQ L_IS L_LIKE L_GT L_LT L_GEQ L_LEQ L_DIFF L_REGEXP L_REGEXP_CI L_NOTREGEXP L_NOTREGEXP_CI L_SIMILAR
 %token L_NOT L_AND L_OR
 %token L_MINUS L_PLUS L_TIMES L_DIV
@@ -98,7 +98,7 @@ sql_order_field *of;
 %token L_UNSPECVAL
 
 %type <v> select_statement insert_statement update_statement delete_statement
-%type <str> L_IDENT L_STRING L_TEXTUAL
+%type <str> L_IDENT L_STRING L_TEXTUAL L_NUM
 %type <list> fields_list targets_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list param_spec param_spec_list order_fields_list
 %type <f> field
 %type <fi> field_raw
@@ -239,11 +239,13 @@ field_raw: field_name			{$$ = sql_field_item_build ($1);}
         | L_IDENT L_LBRACKET L_RBRACKET     {$$ = sql_field_build_function($1, NULL); }
 	;
 
-field: field_raw                                {$$ = sql_field_build ($1);}
+field:    field_raw                             {$$ = sql_field_build ($1);}
         | field_raw L_AS L_IDENT                {$$ = sql_field_set_as (sql_field_build ($1), $3);}
         | field_raw L_AS L_TEXTUAL              {$$ = sql_field_set_as (sql_field_build ($1), $3);}
         | field_raw param_spec                  {$$ = sql_field_set_param_spec (sql_field_build ($1), $2);}
         | field_raw param_spec L_AS L_IDENT     {$$ = sql_field_set_as (sql_field_set_param_spec (sql_field_build ($1), $2), $4);}
+	| L_NUM					{$$ = sql_field_build (sql_field_item_build (g_list_append (NULL, memsql_strdup ($1)))); memsql_free ($1);}
+	| L_NUM param_spec			{$$ = sql_field_set_param_spec (sql_field_build (sql_field_item_build (g_list_append (NULL, memsql_strdup ($1)))), $2); memsql_free ($1);}
 	;
 
 where_list: where_item				{$$ = sql_where_build_single ($1);}

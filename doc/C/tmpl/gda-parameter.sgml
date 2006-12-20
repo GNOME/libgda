@@ -162,6 +162,15 @@ The #GdaParameter object offers other features such as:
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_parameter_get_value_str ##### -->
+<para>
+
+</para>
+
+@param: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_parameter_set_value ##### -->
 <para>
 

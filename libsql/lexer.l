@@ -84,6 +84,7 @@ char *string_buf_ptr;
 "+"		{return L_PLUS;}
 "/"		{return L_DIV;}
 
+[0-9\.]+	{sqllval.str = memsql_strdup (sqltext); return L_NUM;}
 [a-zA-Z0-9_]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
 [ \t\n\r]	{;}
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}

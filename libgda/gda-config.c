@@ -1763,7 +1763,7 @@ gda_config_find_data_source (const gchar *name)
 	for (l = dsnlist; l != NULL; l = l->next) {
 		GdaDataSourceInfo *tmp_info = (GdaDataSourceInfo *) l->data;
 
-		if (tmp_info && !g_strcasecmp (tmp_info->name, name)) {
+		if (tmp_info && !g_ascii_strcasecmp (tmp_info->name, name)) {
 			info = gda_data_source_info_copy (tmp_info);
 			break;
 		}
@@ -1882,9 +1882,8 @@ gda_config_free_data_source_list (GList *list)
  * Fills and returns a new #GdaDataModel object using information from all 
  * data sources which are currently configured in the system.
  *
- * Rows are separated in 7 columns: 
- * 'Name', 'Provider', 'Connection string', 'Description', 'Username',
- * 'Password' and 'Global'.
+ * Rows are separated in 6 columns: 
+ * 'Name', 'Provider', 'Connection string', 'Description', 'Username' and 'Global'.
  *
  * Returns: a new #GdaDataModel object. 
  */
@@ -1895,14 +1894,13 @@ gda_config_get_data_source_model (void)
 	GList *l;
 	GdaDataModel *model;
 
-	model = gda_data_model_array_new (7);
+	model = gda_data_model_array_new (6);
 	gda_data_model_set_column_title (model, 0, _("Name"));
 	gda_data_model_set_column_title (model, 1, _("Provider"));
 	gda_data_model_set_column_title (model, 2, _("Connection string"));
 	gda_data_model_set_column_title (model, 3, _("Description"));
 	gda_data_model_set_column_title (model, 4, _("Username"));
-	gda_data_model_set_column_title (model, 5, _("Password"));
-	gda_data_model_set_column_title (model, 6, _("Global"));
+	gda_data_model_set_column_title (model, 5, _("Global"));
 	
 	/* convert the returned GList into a GdaDataModelArray */
 	dsn_list = gda_config_get_data_source_list ();
@@ -1931,10 +1929,6 @@ gda_config_get_data_source_model (void)
 
 		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
 		g_value_set_string (value, dsn_info->username);
-		value_list = g_list_append (value_list, value);
-
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-		g_value_set_string (value, "******");
 		value_list = g_list_append (value_list, value);
 
 		value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
