@@ -876,17 +876,21 @@ gda_client_get_dsn_specs (GdaClient *client, const gchar *provider)
 /**
  * gda_client_prepare_create_database
  * @client: a #GdaClient object.
+ * @db_name: the name of the database to create, or %NULL
  * @provider: a provider
  *
  * Creates a new #GdaServerOperation object which contains the specifications required
  * to create a database. Once these specifications provided, use 
  * gda_client_perform_create_database() to perform the database creation.
  *
+ * If @db_name is left %NULL, then the name of the database to create will have to be set in the
+ * returned #GdaServerOperation using gda_server_operation_set_value_at().
+ *
  * Returns: new #GdaServerOperation object, or %NULL if the provider does not support database
  * creation
  */
 GdaServerOperation *
-gda_client_prepare_create_database (GdaClient *client, const gchar *provider)
+gda_client_prepare_create_database (GdaClient *client, const gchar *db_name, const gchar *provider)
 {
 	LoadedProvider *prv;
 
@@ -901,8 +905,13 @@ gda_client_prepare_create_database (GdaClient *client, const gchar *provider)
 		op = gda_server_provider_create_operation (prv->provider, NULL, 
 							   GDA_SERVER_OPERATION_CREATE_DB, 
 							   NULL, NULL);
-		if (op)
-			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", prv->provider, g_object_unref);
+		if (op) {
+			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", 
+						prv->provider, g_object_unref);
+			if (db_name)
+				gda_server_operation_set_value_at (op, db_name, 
+								   NULL, "/DB_DEF_P/DB_NAME");
+		}
 		return op;
 	}
 	else
@@ -912,17 +921,21 @@ gda_client_prepare_create_database (GdaClient *client, const gchar *provider)
 /**
  * gda_client_prepare_drop_database
  * @client: a #GdaClient object.
+ * @db_name: the name of the database to drop, or %NULL
  * @provider: a provider
  *
  * Creates a new #GdaServerOperation object which contains the specifications required
  * to drop a database. Once these specifications provided, use 
  * gda_client_perform_drop_database() to perform the database creation.
  *
+ * If @db_name is left %NULL, then the name of the database to drop will have to be set in the
+ * returned #GdaServerOperation using gda_server_operation_set_value_at().
+ *
  * Returns: new #GdaServerOperation object, or %NULL if the provider does not support database
  * destruction
  */
 GdaServerOperation *
-gda_client_prepare_drop_database (GdaClient *client, const gchar *provider)
+gda_client_prepare_drop_database (GdaClient *client, const gchar *db_name, const gchar *provider)
 {
 	LoadedProvider *prv;
 
@@ -937,8 +950,13 @@ gda_client_prepare_drop_database (GdaClient *client, const gchar *provider)
 		op = gda_server_provider_create_operation (prv->provider, NULL,
 							   GDA_SERVER_OPERATION_DROP_DB, 
 							   NULL, NULL);
-		if (op)
-			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", prv->provider, g_object_unref);
+		if (op) {
+			g_object_set_data_full (G_OBJECT (op), "_gda_provider_name", 
+						prv->provider, g_object_unref);
+			if (db_name)
+				gda_server_operation_set_value_at (op, db_name, 
+								   NULL, "/DB_DESC_P/DB_NAME");
+		}
 		return op;
 	}
 	else

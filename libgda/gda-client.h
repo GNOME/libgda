@@ -113,9 +113,11 @@ gchar         *gda_client_get_dsn_specs                      (GdaClient *client,
 /*
  * Database creation and destruction functions
  */
-GdaServerOperation *gda_client_prepare_create_database       (GdaClient *client, const gchar *provider);
+GdaServerOperation *gda_client_prepare_create_database       (GdaClient *client, const gchar *db_name, 
+							      const gchar *provider);
 gboolean       gda_client_perform_create_database            (GdaClient *client, GdaServerOperation *op, GError **error);
-GdaServerOperation *gda_client_prepare_drop_database         (GdaClient *client, const gchar *provider);
+GdaServerOperation *gda_client_prepare_drop_database         (GdaClient *client, const gchar *db_name, 
+							      const gchar *provider);
 gboolean       gda_client_perform_drop_database              (GdaClient *client, GdaServerOperation *op, GError **error);
 
 /*
