@@ -53,6 +53,10 @@ struct _GdaParameterClass
 {
 	GdaObjectClass             parent_class;
 	void                     (*restrict_changed)         (GdaParameter *param);
+	void                     (*reserved_0)               (GdaParameter *param);
+	void                     (*reserved_1)               (GdaParameter *param);
+	void                     (*reserved_2)               (GdaParameter *param);
+	void                     (*reserved_3)               (GdaParameter *param);
 };
 
 GType                  gda_parameter_get_type                (void);

@@ -25,6 +25,8 @@
 #include "gda-data-model-private.h"
 #include "gda-parameter.h"
 #include "gda-marshal.h"
+#include "gda-data-proxy.h"
+#include "gda-enums.h"
 
 /* 
  * Main static functions 
@@ -52,6 +54,7 @@ static void model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIte
 static void model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
 
 static void param_changed_cb (GdaParameterList *paramlist, GdaParameter *param);
+static void param_attr_changed_cb (GdaParameterList *paramlist, GdaParameter *param);
 
 #ifdef GDA_DEBUG
 static void gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset);
@@ -181,6 +184,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 	object_class->dispose = gda_data_model_iter_dispose;
 	object_class->finalize = gda_data_model_iter_finalize;
 	paramlist_class->param_changed = param_changed_cb;
+	paramlist_class->param_attr_changed = param_attr_changed_cb;
 
 	/* Properties */
 	object_class->set_property = gda_data_model_iter_set_property;
@@ -310,6 +314,47 @@ param_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
 		((GdaParameterListClass *) parent_class)->param_changed (paramlist, param);
 }
 
+/*
+ * This function is called when a parameter in @paramlist has its attributes changed
+ * to make sure the change is propagated to the GdaDataModel
+ * paramlist is an iter for
+ */
+static void
+param_attr_changed_cb (GdaParameterList *paramlist, GdaParameter *param)
+{
+	GdaDataModelIter *iter;
+	gint col;
+	gboolean toset;
+
+	iter = GDA_DATA_MODEL_ITER (paramlist);
+	if (iter->priv->keep_param_changes ||
+	    (iter->priv->row < 0))
+		return;
+
+	if (!GDA_IS_DATA_PROXY (iter->priv->data_model))
+		return;
+
+	g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [0]);
+	g_signal_handler_block (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+
+	/* propagate the value update to the data model */
+	col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
+	g_return_if_fail (col >= 0);
+
+	g_object_get (G_OBJECT (param), "use-default-value", &toset, NULL);
+	if (toset && gda_parameter_get_exists_default_value (param))
+		gda_data_proxy_alter_value_attributes (GDA_DATA_PROXY (iter->priv->data_model), 
+						       iter->priv->row, col, 
+						       GDA_VALUE_ATTR_CAN_BE_DEFAULT | GDA_VALUE_ATTR_IS_DEFAULT);
+	
+	g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [0]);
+	g_signal_handler_unblock (iter->priv->data_model, iter->priv->model_changes_signals [1]);
+
+	/* for the parent class */
+	if (((GdaParameterListClass *) parent_class)->param_attr_changed)
+		((GdaParameterListClass *) parent_class)->param_attr_changed (paramlist, param);
+}
+
 static void 
 destroyed_object_cb (GdaObject *obj, GdaDataModelIter *iter)
 {
@@ -403,12 +448,16 @@ gda_data_model_iter_set_property (GObject *object,
 				param = (GdaParameter *) g_object_new (GDA_TYPE_PARAMETER, "dict", dict,
 								       "g_type", 
 								       gda_column_get_g_type (column), NULL);
+
 				gda_parameter_set_not_null (param, !gda_column_get_allow_null (column));
 				str = gda_column_get_title (column);
 				if (!str)
 					str = gda_column_get_name (column);
 				if (str)
 					gda_object_set_name (GDA_OBJECT (param), str);
+				if (gda_column_get_default_value (column) || 
+				    gda_column_get_auto_increment (column))
+					gda_parameter_set_exists_default_value (param, TRUE);
 				gda_parameter_list_add_param ((GdaParameterList *) iter, param);
 				g_object_set_data (G_OBJECT (param), "model_col", GINT_TO_POINTER (col + 1));
 				g_object_unref (param);

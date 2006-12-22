@@ -187,7 +187,7 @@ gda_graph_class_init (GdaGraphClass * class)
 
 	g_object_class_install_property (object_class, PROP_REF_OBJECT,
 					 g_param_spec_object ("ref_object", NULL, NULL, 
-                                                               GDA_TYPE_OBJECT_REF,
+                                                               GDA_TYPE_OBJECT,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_GRAPH_TYPE,
 					 g_param_spec_int ("graph_type", NULL, NULL, 

@@ -621,6 +621,8 @@ gda_data_model_move_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gi
 		return gda_data_model_move_iter_at_row_default (model, iter, row);
 }
 
+static void set_param_attributes (GdaParameter *param, guint flags);
+
 gboolean
 gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row)
 {
@@ -629,7 +631,6 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 	gint col;
 	GdaDataModel *test;
 	gboolean update_model;
-	guint flags;
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
@@ -658,16 +659,28 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 		gda_parameter_set_value (GDA_PARAMETER (list->data), 
 					 gda_data_model_get_value_at (model, col, row));
 
-		flags = gda_data_model_get_attributes_at (model, col, row);
-		if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
-			g_object_set (G_OBJECT (list->data), "use-default-value", TRUE, NULL);
-		gda_parameter_set_exists_default_value (GDA_PARAMETER (list->data), 
-							flags & GDA_VALUE_ATTR_CAN_BE_DEFAULT);
+		set_param_attributes (GDA_PARAMETER (list->data), 
+				      gda_data_model_get_attributes_at (model, col, row));
 		list = g_slist_next (list);
 		col ++;
 	}
 	g_object_set (G_OBJECT (iter), "current_row", row, "update_model", update_model, NULL);
 	return TRUE;
+}
+
+static void
+set_param_attributes (GdaParameter *param, guint flags)
+{
+	if (!gda_parameter_get_default_value (param))
+		gda_parameter_set_exists_default_value (param, 
+							flags & GDA_VALUE_ATTR_CAN_BE_DEFAULT);
+	if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
+		g_object_set (G_OBJECT (param), "use-default-value", TRUE, NULL);
+	gda_parameter_set_not_null (param, ! (flags & GDA_VALUE_ATTR_CAN_BE_NULL));
+	if (flags & GDA_VALUE_ATTR_IS_NULL)
+		gda_parameter_set_value (param, NULL);
+	if (flags & GDA_VALUE_ATTR_DATA_NON_VALID)
+		gda_parameter_declare_invalid (param);
 }
 
 /**
@@ -703,7 +716,6 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
-	guint flags;
 	
 	/* validity tests */
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
@@ -730,11 +742,8 @@ gda_data_model_move_iter_next_default (GdaDataModel *model, GdaDataModelIter *it
 	while (list) {
 		gda_parameter_set_value (GDA_PARAMETER (list->data), 
 					 gda_data_model_get_value_at (model, col, row));
-		flags = gda_data_model_get_attributes_at (model, col, row);
-		if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
-			g_object_set (G_OBJECT (list->data), "use-default-value", TRUE, NULL);
-		gda_parameter_set_exists_default_value (GDA_PARAMETER (list->data), 
-							flags & GDA_VALUE_ATTR_CAN_BE_DEFAULT);
+		set_param_attributes (GDA_PARAMETER (list->data), 
+				      gda_data_model_get_attributes_at (model, col, row));
 		list = g_slist_next (list);
 		col ++;
 	}
@@ -776,7 +785,6 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
-	guint flags;
 	
 	/* validity tests */
 	if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM))
@@ -801,11 +809,8 @@ gda_data_model_move_iter_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	while (list) {
 		gda_parameter_set_value (GDA_PARAMETER (list->data), 
 					 gda_data_model_get_value_at (model, col, row));
-		flags = gda_data_model_get_attributes_at (model, col, row);
-		if (flags & GDA_VALUE_ATTR_IS_DEFAULT)
-			g_object_set (G_OBJECT (list->data), "use-default-value", TRUE, NULL);
-		gda_parameter_set_exists_default_value (GDA_PARAMETER (list->data), 
-							flags & GDA_VALUE_ATTR_CAN_BE_DEFAULT);
+		set_param_attributes (GDA_PARAMETER (list->data), 
+				      gda_data_model_get_attributes_at (model, col, row));
 		list = g_slist_next (list);
 		col ++;
 	}
@@ -1805,6 +1810,8 @@ gda_data_model_import_from_file (GdaDataModel *model,
 	return retval;
 }
 
+static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes);
+
 /**
  * gda_data_model_dump
  * @model: a #GdaDataModel.
@@ -1823,6 +1830,10 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 	str = gda_data_model_dump_as_string (model);
 	g_fprintf (to_stream, "%s", str);
 	g_free (str);
+
+	str= real_gda_data_model_dump_as_string (model, TRUE);
+	g_fprintf (to_stream, "%s", str);
+	g_free (str);
 }
 
 /**
@@ -1836,6 +1847,14 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 gchar *
 gda_data_model_dump_as_string (GdaDataModel *model)
 {
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	return real_gda_data_model_dump_as_string (model, FALSE);
+}
+
+static gchar *
+real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes)
+{
 	GString *string;
 	gchar *offstr, *str;
 	gint n_cols, n_rows;
@@ -1848,8 +1867,6 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	const GValue *value;
 
 	gint offset = 0;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	string = g_string_new ("");
 
@@ -1880,30 +1897,43 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 		else
 			cols_size [i] = 6; /* for "<none>" */
 
-		gdacol = gda_data_model_describe_column (model, i);
-		coltype = gda_column_get_g_type (gdacol);
-		/*g_string_append_printf (string, "COL %d is a %s\n", i+1, gda_g_type_to_string (coltype));*/
-		if ((coltype == G_TYPE_INT64) ||
-		    (coltype == G_TYPE_UINT64) ||
-		    (coltype == G_TYPE_INT) ||
-		    (coltype == GDA_TYPE_NUMERIC) ||
-		    (coltype == G_TYPE_FLOAT) ||
-		    (coltype == GDA_TYPE_SHORT) ||
-		    (coltype == GDA_TYPE_USHORT) ||
-		    (coltype == G_TYPE_CHAR) ||
-		    (coltype == G_TYPE_UCHAR) ||
-		    (coltype == G_TYPE_UINT))
-			cols_is_num [i] = TRUE;
+		if (! dump_attributes) {
+			gdacol = gda_data_model_describe_column (model, i);
+			coltype = gda_column_get_g_type (gdacol);
+			/*g_string_append_printf (string, "COL %d is a %s\n", i+1, gda_g_type_to_string (coltype));*/
+			if ((coltype == G_TYPE_INT64) ||
+			    (coltype == G_TYPE_UINT64) ||
+			    (coltype == G_TYPE_INT) ||
+			    (coltype == GDA_TYPE_NUMERIC) ||
+			    (coltype == G_TYPE_FLOAT) ||
+			    (coltype == GDA_TYPE_SHORT) ||
+			    (coltype == GDA_TYPE_USHORT) ||
+			    (coltype == G_TYPE_CHAR) ||
+			    (coltype == G_TYPE_UCHAR) ||
+			    (coltype == G_TYPE_UINT))
+				cols_is_num [i] = TRUE;
+			else
+				cols_is_num [i] = FALSE;
+		}
 		else
-			cols_is_num [i] = FALSE;
+			cols_is_num [i] = TRUE;
 	}
 
 	/* ... and using column data */
 	for (j = 0; j < n_rows; j++) {
 		for (i = 0; i < n_cols; i++) {
-			value = gda_data_model_get_value_at (model, i, j);
-			str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
-			if (str) {
+			if (! dump_attributes) {
+				value = gda_data_model_get_value_at (model, i, j);
+				str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
+				if (str) {
+					cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
+					g_free (str);
+				}
+			}
+			else {
+				guint attrs;
+				attrs = gda_data_model_get_attributes_at (model, i, j);
+				str = g_strdup_printf ("%u", attrs);
 				cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
 				g_free (str);
 			}
@@ -1943,8 +1973,15 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	if (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM) {
 		for (j = 0; j < n_rows; j++) {
 			for (i = 0; i < n_cols; i++) {
-				value = gda_data_model_get_value_at (model, i, j);
-				str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
+				if (!dump_attributes) {
+					value = gda_data_model_get_value_at (model, i, j);
+					str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
+				}
+				else {
+					guint attrs;
+					attrs = gda_data_model_get_attributes_at (model, i, j);
+					str = g_strdup_printf ("%u", attrs);
+				}
 				if (i != 0)
 					g_string_append_printf (string, "%s", sep_col);
 				if (cols_is_num [i])

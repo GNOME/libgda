@@ -436,6 +436,10 @@ gda_data_model_query_set_property (GObject *object,
 									gda_parameter_set_not_null 
 										((GdaParameter *)(params->data),
 										 !gda_column_get_allow_null (col));
+									if (gda_column_get_auto_increment (col) ||
+									    gda_column_get_default_value (col))
+										gda_parameter_set_exists_default_value
+										 ((GdaParameter *)(params->data), TRUE);
 								}
 							}
 							else {
@@ -984,7 +988,8 @@ gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
 		flags &= ~GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 		if (! gda_parameter_get_not_null (p_used))
 			flags |= GDA_VALUE_ATTR_CAN_BE_NULL;
-		if (gda_parameter_get_default_value (p_used))
+		if (gda_parameter_get_default_value (p_used) ||
+		    gda_parameter_get_exists_default_value (p_used))
 			flags |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 	}
 

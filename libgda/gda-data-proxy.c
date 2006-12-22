@@ -981,8 +981,13 @@ gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint
 				
 				rm->modif_values = g_slist_prepend (rm->modif_values, rv);	
 			}
-			else
+			else {
 				flags = g_value_get_uint (rv->attributes);
+				if (rv->value) {
+					gda_value_free (rv->value);
+					rv->value = NULL;
+				}
+			}
 			flags |= GDA_VALUE_ATTR_IS_DEFAULT;
 			g_value_set_uint (rv->attributes, flags);
 

@@ -152,7 +152,7 @@ gda_graph_item_class_init (GdaGraphItemClass * class)
 
 	g_object_class_install_property (object_class, PROP_REF_OBJECT,
 					 g_param_spec_object ("ref_object", NULL, NULL, 
-                                                               GDA_TYPE_OBJECT_REF,
+                                                               GDA_TYPE_OBJECT,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/* virtual functions */

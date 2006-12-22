@@ -71,10 +71,11 @@ enum
 	PARAM_CHANGED,
 	PUBLIC_DATA_CHANGED,
 	PARAM_PLUGIN_CHANGED,
+	PARAM_ATTR_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gda_parameter_list_signals[LAST_SIGNAL] = { 0, 0, 0 };
+static gint gda_parameter_list_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
 
 
 /* private structure */
@@ -146,6 +147,14 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 			      NULL, NULL,
 			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
 			      G_TYPE_OBJECT);
+	gda_parameter_list_signals[PARAM_ATTR_CHANGED] =
+		g_signal_new ("param_attr_changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_FIRST,
+			      G_STRUCT_OFFSET (GdaParameterListClass, param_attr_changed),
+			      NULL, NULL,
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
+			      G_TYPE_OBJECT);
 	gda_parameter_list_signals[PUBLIC_DATA_CHANGED] =
 		g_signal_new ("public_data_changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -156,6 +165,7 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 
 	class->param_changed = NULL;
 	class->param_plugin_changed = NULL;
+	class->param_attr_changed = NULL;
 	class->public_data_changed = NULL;
 
 	object_class->dispose = gda_parameter_list_dispose;
@@ -776,6 +786,15 @@ notify_param_cb (GdaParameter *param, GParamSpec *pspec, GdaParameterList *param
 		g_signal_emit (G_OBJECT (paramlist), gda_parameter_list_signals[PARAM_PLUGIN_CHANGED], 0, param);
 #ifdef GDA_DEBUG_signal
 		g_print ("<< 'PARAM_PLUGIN_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	}
+	if (!strcmp (pspec->name, "use-default-value")) {
+#ifdef GDA_DEBUG_signal
+		g_print (">> 'PARAM_ATTR_CHANGED' from %s\n", __FUNCTION__);
+#endif
+		g_signal_emit (G_OBJECT (paramlist), gda_parameter_list_signals[PARAM_ATTR_CHANGED], 0, param);
+#ifdef GDA_DEBUG_signal
+		g_print ("<< 'PARAM_ATTR_CHANGED' from %s\n", __FUNCTION__);
 #endif
 	}
 }

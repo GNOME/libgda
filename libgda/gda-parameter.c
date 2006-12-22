@@ -93,6 +93,7 @@ enum
 	PROP_RESTRICT_MODEL,
 	PROP_RESTRICT_COLUMN,
 	PROP_GDA_TYPE,
+	PROP_NOT_NULL,
 	PROP_DICT_TYPE /* TO ADD */
 };
 
@@ -207,6 +208,9 @@ gda_parameter_class_init (GdaParameterClass *class)
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_USE_DEFAULT_VALUE,
 					 g_param_spec_boolean ("use_default_value", NULL, NULL, FALSE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_NOT_NULL,
+					 g_param_spec_boolean ("not_null", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_SIMPLE_BIND,
 					 g_param_spec_object ("simple_bind", NULL, NULL, 
@@ -483,6 +487,9 @@ gda_parameter_set_property    (GObject *object,
 				parameter->priv->plugin = g_strdup (ptr);
 			break;
 		case PROP_USE_DEFAULT_VALUE:
+			if (g_value_get_boolean (value) == parameter->priv->default_forced)
+				break;
+
 			if (g_value_get_boolean (value)) {
 				if (!parameter->priv->has_default_value)
 					g_warning ("Can't force parameter to use default value if there "
@@ -494,8 +501,26 @@ gda_parameter_set_property    (GObject *object,
 			}
 			else
 				parameter->priv->default_forced = FALSE;
-
+			gda_object_signal_emit_changed (GDA_OBJECT (parameter));
 			break;
+		case PROP_NOT_NULL: {
+			gboolean not_null = g_value_get_boolean (value);
+			if (not_null != parameter->priv->not_null) {
+				parameter->priv->not_null = not_null;
+				
+				/* updating the parameter's validity regarding the NULL value */
+				if (!not_null && 
+				    (!parameter->priv->value || gda_value_is_null (parameter->priv->value)))
+					parameter->priv->valid = TRUE;
+				
+				if (not_null && 
+				    (!parameter->priv->value || gda_value_is_null (parameter->priv->value)))
+					parameter->priv->valid = FALSE;
+				
+				gda_object_signal_emit_changed (GDA_OBJECT (parameter));
+			}
+			break;
+		}
 		case PROP_SIMPLE_BIND:
 			gda_parameter_bind_to_param (parameter, GDA_PARAMETER (g_value_get_object (value)));
 			break;
@@ -533,6 +558,9 @@ gda_parameter_get_property    (GObject *object,
 			break;
 		case PROP_USE_DEFAULT_VALUE:
 			g_value_set_boolean (value, parameter->priv->default_forced);
+			break;
+		case PROP_NOT_NULL:
+			g_value_set_boolean (value, gda_parameter_get_not_null (parameter));
 			break;
 		case PROP_SIMPLE_BIND:
 			g_value_set_object (value, G_OBJECT (parameter->priv->change_with));
@@ -899,7 +927,7 @@ gda_parameter_is_valid (GdaParameter *param)
 		}
 
 		if (param->priv->default_forced) {
-			return param->priv->default_value ? TRUE : FALSE;
+			return (param->priv->default_value || param->priv->has_default_value) ? TRUE : FALSE;
 		}
 		else {
 			return param->priv->valid;
@@ -1007,20 +1035,7 @@ gda_parameter_set_not_null (GdaParameter *param, gboolean not_null)
 	g_return_if_fail (GDA_IS_PARAMETER (param));
 	g_return_if_fail (param->priv);
 
-	if (not_null != param->priv->not_null) {
-		param->priv->not_null = not_null;
-
-		/* updating the parameter's validity regarding the NULL value */
-		if (!not_null && 
-		    (!param->priv->value || gda_value_is_null (param->priv->value)))
-			param->priv->valid = TRUE;
-
-		if (not_null && 
-		    (!param->priv->value || gda_value_is_null (param->priv->value)))
-			param->priv->valid = FALSE;
-
-		gda_object_signal_emit_changed (GDA_OBJECT (param));
-	}
+	g_object_set (G_OBJECT (param), "not_null", not_null, NULL);
 }
 
 /**
