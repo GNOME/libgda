@@ -1,3 +1,21 @@
+libgda 2.99.2, 2006-12-22
+-------------------------
+
+ - Make all the providers compile again (Vivien)
+ - C# bindings corrections (Daniel)
+ - MySQL provider fixes (Vivien, Stian)
+ - API renaming to avoid using the G namespace (Murray)
+ - Code cleanups (Murray)
+ - Change version to 2.99.x to become 3.0.x when the API/ABI is declared stable (Murray)
+ - Lots of corrections and small improvements (Stian, Vivien)
+ - Make connections keep track of the current transaction status (Vivien)
+ - Doc. improvements (Vivien)
+ - 64 bits corrections (Bas)
+ - Improved code to make bindings easier (Murray)
+ - Translations:
+	- new Arabic transtation (Djihed Afifi)
+	- it (Marco Ciampa)
+
 libgda 1.99.1, 2006-10-26
 -------------------------
 

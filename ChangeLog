@@ -1,5 +1,9 @@
 2006-12-22  Vivien Malerba <malerba@gnome-db.org>
 
+	Released 2.99.2 (AKA 3.0 Beta4).
+
+2006-12-22  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-data-model-iter.c:
 	* libgda/gda-data-model-query.c:
 	* libgda/gda-data-model.c:
