@@ -1,5 +1,26 @@
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-connection.c:
+	* libgda/gda-data-model.c: (gda_data_model_import_from_model):
+	* providers/firebird/firebird_specs_dsn.xml.in:
+	* providers/freetds/freetds_specs_dsn.xml.in:
+	* providers/ldap/ldap_specs_dsn.xml.in:
+	* providers/mdb/mdb_specs_dsn.xml.in:
+	* providers/msql/msql_specs_dsn.xml.in:
+	* providers/mysql/mysql_specs_create_db.xml.in:
+	* providers/mysql/mysql_specs_drop_db.xml.in:
+	* providers/mysql/mysql_specs_dsn.xml.in:
+	* providers/oracle/oracle_specs_dsn.xml.in:
+	* providers/postgres/postgres_specs_create_db.xml.in:
+	* providers/postgres/postgres_specs_drop_db.xml.in:
+	* providers/postgres/postgres_specs_dsn.xml.in:
+	* providers/sybase/sybase_specs_dsn.xml.in:
+	* providers/xbase/xbase_specs_dsn.xml.in:
+	Correct spellings and grammar in translatable strings. 
+	Suggestions by  Clytie Siddall in bug #352122.
+
+2006-12-27  Murray Cumming  <murrayc@murrayc.com>
+
 	* Makefile.am:
 	* configure.in:
 	* libgda-3.0.pc.in:

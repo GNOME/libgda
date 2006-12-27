@@ -2,12 +2,12 @@
 <serv_op>
   <parameters id="SERVER_CNX_P" _name="Server access parameters">
     <!-- Connection parameters -->
-    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="gchararray"/>
+    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running" gdatype="gchararray"/>
     <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="gint"/>
-    <parameter id="UNIX_SOCKET" _name="UNIX Socket" _descr="Full path of the UNIX socket to use for connecting locally" gdatype="gchararray"/>
+    <parameter id="UNIX_SOCKET" _name="UNIX Socket" _descr="Full path of the UNIX socket to use when connecting locally" gdatype="gchararray"/>
     <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray"/>
     <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray"/>
-    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to use or not SSL for establishing the connection" gdatype="gboolean"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
   </parameters>
 
     <!-- DSN parameters -->

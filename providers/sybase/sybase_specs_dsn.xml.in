@@ -2,12 +2,12 @@
 <data-set-spec>
   <parameters>
     <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running" gdatype="gchararray"/>
-    <parameter id="HOSTADDR" _name="Database server IP adress" _descr="IP adress of the host which has the database server running" gdatype="gchararray"/>
+    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running" gdatype="gchararray"/>
+    <parameter id="HOSTADDR" _name="Database server IP address" _descr="IP address of the host on which the database server is running" gdatype="gchararray"/>
     <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="gint"/>
     <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray"/>
 
     <parameter id="SYBASE" _name="Enable Sybase" _descr="Enable Sybase operative mode" gdatype="gboolean"/>
-    <parameter id="LOCALE" _name="Locale" _descr="Locale to use in the connection" gdatype="gchararray"/>
+    <parameter id="LOCALE" _name="Locale" _descr="Locale to use during the connection" gdatype="gchararray"/>
   </parameters>
 </data-set-spec>

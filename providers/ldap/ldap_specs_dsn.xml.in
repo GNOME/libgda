@@ -3,8 +3,8 @@
   <parameters>
     <parameter id="FLAGS" _name="LDAP Flags" _descr="LDAP Flags" gdatype="gchararray"/>
     <parameter id="HOST" _name="Host Name" _descr="Host name of the LDAP server" gdatype="gchararray"/>
-    <parameter id="PORT" _name="Port" _descr="Port to use for connecting to the LDAP server" gdatype="gint"/>
+    <parameter id="PORT" _name="Port" _descr="Port to use when connecting to the LDAP server" gdatype="gint"/>
     <parameter id="BINDDN" _name="Bind Domain" _descr="LDAP bind domain to use for authentication" gdatype="gchararray"/>
-    <parameter id="AUTHMETHOD" _name="Authentication Method" _descr="Authentication method to use for connecting" gdatype="gchararray"/>
+    <parameter id="AUTHMETHOD" _name="Authentication Method" _descr="Authentication method to use when connecting" gdatype="gchararray"/>
   </parameters>
 </data-set-spec>

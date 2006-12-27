@@ -3,9 +3,9 @@
   <parameters>
     <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="SEARCHPATH" _name="Search Path" _descr="Search path among database's schemas" gdatype="gchararray"/>
-    <parameter id="HOST" _name="Database server" _descr="Host which has the database server running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this fiend empty)" gdatype="gchararray"/>
-    <parameter id="PORT" _name="Port" _descr="Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this fiend empty)" gdatype="gint"/>
+    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this field empty)" gdatype="gchararray"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty)" gdatype="gint"/>
     <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray"/>
-    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to use or not SSL for establishing the connection" gdatype="gboolean"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
   </parameters>
 </data-set-spec>

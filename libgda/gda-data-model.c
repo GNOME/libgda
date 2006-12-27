@@ -1569,7 +1569,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean
 	from_iter = gda_data_model_create_iter (from);
 	if (!from_iter) {
 		g_set_error (error, 0, 0,
-			     _("Could not get an iterator for soure data model"));
+			     _("Could not get an iterator for source data model"));
 		return FALSE;
 	}
 
@@ -1585,7 +1585,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean
 			if (col >= from_nb_cols) {
 				g_slist_free (copy_params);
 				g_set_error (error, 0, 0,
-					     _("Inexistant column in source data model: %d"), col);
+					     _("Inexistent column in source data model: %d"), col);
 				return FALSE;
 			}
 		}
@@ -1599,7 +1599,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean
 		if (! gda_column_get_allow_null (column) && !param) {
 			g_slist_free (copy_params);
 			g_set_error (error, 0, 0,
-				     _("Destination column %d can't be NULL but has no correspondance in the "
+				     _("Destination column %d can't be NULL but has no correspondence in the "
 				       "source data model"), i);
 			return FALSE;
 		}

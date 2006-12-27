@@ -1510,7 +1510,7 @@ gda_connection_get_schema (GdaConnection *cnc,
  * gda_connection_get_events
  * @cnc: a #GdaConnection.
  *
- * Retrieves a list of the last errors occurred in the connection.
+ * Retrieves a list of the last errors occurred during the connection.
  * You can make a copy of the list using #gda_connection_event_list_copy.
  * 
  * Returns: a GList of #GdaConnectionEvent.

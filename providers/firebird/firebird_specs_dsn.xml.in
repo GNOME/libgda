@@ -2,9 +2,9 @@
 <data-set-spec>
   <parameters>
     <parameter id="DATABASE" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="CHARACTER_SET" _name="Character Set" _descr="Character set to be used on the connection" gdatype="gchararray"/>
+    <parameter id="CHARACTER_SET" _name="Character Set" _descr="Character set to be used during the connection" gdatype="gchararray"/>
     <!-- FIXME: pre-set values for the SQL_DIALECT values with human readable values -->
-    <parameter id="SQL_DIALECT" _name="SQL Dialect" _descr="SQL dialect to use on the connection" gdatype="gint"/>
+    <parameter id="SQL_DIALECT" _name="SQL Dialect" _descr="SQL dialect to use during the connection" gdatype="gint"/>
     <parameter id="PAGE_SIZE" _name="Page Size" _descr="Page size to use on the database" gdatype="gint"/>
   </parameters>
 </data-set-spec>
