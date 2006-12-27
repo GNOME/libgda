@@ -1,5 +1,11 @@
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-data-model-import.c:
+	(gda_data_model_import_set_property): Replace use of deprecated 
+	sys_errlist() with strerror(). Patch from Joseph Sacco in bug #353729. 
+
+2006-12-27  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-connection.c:
 	* libgda/gda-data-model.c: (gda_data_model_import_from_model):
 	* providers/firebird/firebird_specs_dsn.xml.in:

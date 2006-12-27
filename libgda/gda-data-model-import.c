@@ -476,7 +476,7 @@ gda_data_model_import_set_property (GObject *object,
 			model->priv->src.mapped.fd = open (model->priv->src.mapped.filename, O_RDONLY);
 			if (model->priv->src.mapped.fd < 0) {
 				/* error */
-				add_error (model, sys_errlist [errno]);
+				add_error (model, strerror(errno));
 				return;
 			}
 			else {
@@ -485,7 +485,7 @@ gda_data_model_import_set_property (GObject *object,
 
 				if (fstat (model->priv->src.mapped.fd, &_stat) < 0) {
 					/* error */
-					add_error (model, sys_errlist [errno]);
+					add_error (model, strerror(errno));
 					return;
 				}
 				model->priv->src.mapped.length = _stat.st_size;
@@ -494,7 +494,7 @@ gda_data_model_import_set_property (GObject *object,
 								      model->priv->src.mapped.fd, 0);
 				if (model->priv->src.mapped.start == MAP_FAILED) {
 					/* error */
-					add_error (model, sys_errlist [errno]);
+					add_error (model, strerror(errno));
 					model->priv->src.mapped.start = NULL;
 					return;
 				}
