@@ -1,5 +1,12 @@
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
+	* idl/.cvsignore:
+	* idl/GNOME_Database.idl:
+	* idl/Makefile.am: Removed these from cvs. They are not used, and they make people 
+	think that we require or use CORBA.
+
+2006-12-27  Murray Cumming  <murrayc@murrayc.com>
+
 	* gda-sharp/gda-sharp.dll.config.in: Refer to correct .so name.
 
 	Fixes for 64-bit systems:
