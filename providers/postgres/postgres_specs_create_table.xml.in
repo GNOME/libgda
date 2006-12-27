@@ -14,7 +14,7 @@
     <parameter id="TABLE_COMMENT" _name="Temporary table" gdatype="gchararray"/>
   </parameters>
 
-  <sequence id="TABLE_PARENTS_S" _name="Parent table(s)" _descr="Inheritage" status="OPT">
+  <sequence id="TABLE_PARENTS_S" _name="Parent table(s)" _descr="Inheritance" status="OPT">
     <parameter id="TABLE_PARENT_TABLE" _name="Parent table" gdatype="gchararray">
       <gda_value>parent_table</gda_value>
     </parameter>

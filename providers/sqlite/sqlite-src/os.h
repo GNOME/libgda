@@ -383,7 +383,7 @@ struct sqlite3OsVtbl {
   int (*xAllocationSize)(void *);
 };
 
-/* Macro used to comment out routines that do not exists when there is
+/* Macro used to comment out routines that do not exist when there is
 ** no disk I/O 
 */
 #ifdef SQLITE_OMIT_DISKIO

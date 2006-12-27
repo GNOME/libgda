@@ -7,7 +7,7 @@
     <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean">
       <gda_value>FALSE</gda_value>
     </parameter>
-    <parameter id="TABLE_IFNOTEXISTS" _name="Only if not exists" _descr="Create table only if it does not yet exist" gdatype="gboolean">
+    <parameter id="TABLE_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create table only if it does not yet exist" gdatype="gboolean">
       <gda_value>FALSE</gda_value>
     </parameter>
     <parameter id="TABLE_COMMENT" _name="Comment" _descr="Table's comment" gdatype="gchararray"/>
