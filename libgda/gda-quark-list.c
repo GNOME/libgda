@@ -188,7 +188,7 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist,
 			gchar **pair;
 
 			pair = (gchar **) g_strsplit (arr[n], "=", 2);
-			if (pair) {
+			if (pair && pair[0]) {
 				gchar *name = pair[0];
 				gchar *value = pair[1];
 				g_hash_table_insert (qlist->hash_table,

@@ -1,5 +1,11 @@
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-quark-list.c: (gda_quark_list_add_from_string):
+	Prevent a crash when the connection string has a final ; character.
+	Bug #317831 from Andrea Zagli.
+
+2006-12-27  Murray Cumming  <murrayc@murrayc.com>
+
 	* providers/mysql/mysql_specs_create_db.xml.in:
 	* providers/mysql/mysql_specs_create_table.xml.in:
 	* providers/mysql/mysql_specs_drop_db.xml.in:
