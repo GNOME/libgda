@@ -1,5 +1,11 @@
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-query.c: (render_sql_insert): Use g_string_append() instead 
+	of g_string_append_printf() with only 2 parameters, to avoid runtime 
+	memory corruption. Patch from Chris Shoemaker in bug #341061.
+
+2006-12-27  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-quark-list.c: (gda_quark_list_add_from_string):
 	Prevent a crash when the connection string has a final ; character.
 	Bug #317831 from Andrea Zagli.

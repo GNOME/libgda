@@ -5456,7 +5456,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 					g_string_append (sql, ", ");
 			}
 			
-			g_string_append_printf (sql, (gchar *) list->data);
+			g_string_append (sql, (gchar *) list->data);
 
 			list = g_slist_next (list);
 		}
