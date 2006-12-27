@@ -3,7 +3,7 @@ SUBDIRS = libgda-report testing
 DTD_FILES=gda-report.dtd \
           gda-report-result.dtd
 	  
-dtddir=$(datadir)/libgda/xml
+dtddir=$(datadir)/libgda-3.0/xml
 dtd_DATA=$(DTD_FILES)
 
 EXTRA_DIST = \

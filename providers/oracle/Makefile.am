@@ -30,7 +30,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(ORACLE_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_oracle_la_SOURCES = \
 	gda-oracle-ddl.c \
@@ -48,7 +48,7 @@ libgda_oracle_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(ORACLE_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files =	oracle_specs_dsn.xml.in \
 		oracle_specs_drop_table.xml.in \
 		oracle_specs_drop_index.xml.in

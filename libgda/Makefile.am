@@ -8,8 +8,8 @@ AM_CPPFLAGS = \
 	$(LIBGDA_CFLAGS) \
 	-DLIBGDA_PLUGINDIR=\""$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers"\" \
 	-DLIBGDA_LOCALEDIR=\""$(datadir)/locale"\" \
-	-DLIBGDA_GLOBAL_CONFIG_FILE=\""$(sysconfdir)/libgda/config"\" \
-	-DLIBGDA_GLOBAL_CONFIG_DIR=\""$(sysconfdir)/libgda"\" \
+	-DLIBGDA_GLOBAL_CONFIG_FILE=\""$(sysconfdir)/libgda-3.0/config"\" \
+	-DLIBGDA_GLOBAL_CONFIG_DIR=\""$(sysconfdir)/libgda-3.0"\" \
 	-DDTDINSTALLDIR=\""$(LIBGDA_DTDDIR)"\"
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c

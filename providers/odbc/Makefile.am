@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(ODBC_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_odbc_la_SOURCES = \
 	gda-odbc-provider.c \
@@ -22,7 +22,7 @@ libgda_odbc_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(ODBC_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = odbc_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@

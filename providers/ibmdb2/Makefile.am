@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_ibmdb2_la_SOURCES = \
 	gda-ibmdb2-provider.c \
@@ -26,7 +26,7 @@ libgda_ibmdb2_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la 
 
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = ibmdb2_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@

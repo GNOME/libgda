@@ -7,7 +7,7 @@ AM_CPPFLAGS = \
 	-I. \
 	$(LIBGDA_CFLAGS) \
 	$(LDAP_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_ldap_la_SOURCES = \
 	gda-ldap-provider.c \
@@ -23,7 +23,7 @@ libgda_ldap_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(LDAP_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = ldap_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@

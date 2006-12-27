@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(MSQL_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_msql_la_SOURCES = \
 	gda-msql-provider.c \
@@ -22,7 +22,7 @@ libgda_msql_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(MSQL_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = msql_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@

@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/providers/sqlite/sqlite-src \
 	-I$(top_builddir)/providers/sqlite/sqlite-src \
 	$(SQLITE_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_sqlite_la_SOURCES = \
 	gda-sqlite-ddl.c \
@@ -31,7 +31,7 @@ libgda_sqlite_la_LIBADD = \
 	$(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la \
 	$(LIBGDA_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = sqlite_specs_create_db.xml.in \
 	sqlite_specs_dsn.xml.in \
 	sqlite_specs_create_db.xml.in \

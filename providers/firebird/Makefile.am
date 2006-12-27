@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(FIREBIRD_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_firebird_la_SOURCES = \
 	gda-firebird-provider.c \
@@ -23,7 +23,7 @@ libgda_firebird_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(FIREBIRD_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = firebird_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@

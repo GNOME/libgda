@@ -1,5 +1,29 @@
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
+	* data/Makefile.am:
+	* libgda/Makefile.am:
+	* providers/bdb/Makefile.am:
+	* providers/firebird/Makefile.am:
+	* providers/freetds/Makefile.am:
+	* providers/ibmdb2/Makefile.am:
+	* providers/ldap/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/msql/Makefile.am:
+	* providers/mysql/Makefile.am:
+	* providers/odbc/Makefile.am:
+	* providers/oracle/Makefile.am:
+	* providers/postgres/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/sybase/Makefile.am:
+	* providers/xbase/Makefile.am:
+	* report/Makefile.am:
+	* report/libgda-report/Makefile.am: 
+	Change the sysconfdir (<prefix>/etc/) and datadir (<prefix>/share/) installation 
+	directories from libgda to libgda-3.0, to avoid parallel-install conflicts with 
+	libgda 1.2. As noticed by yselkowitz in bug #314732. 
+
+2006-12-27  Murray Cumming  <murrayc@murrayc.com>
+
 	* idl/.cvsignore:
 	* idl/GNOME_Database.idl:
 	* idl/Makefile.am: Removed these from cvs. They are not used, and they make people 

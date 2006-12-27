@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	$(LIBGDA_CFLAGS) \
-	-DLIBGDA_REPORT_DTDDIR=\""$(datadir)/libgda/xml"\"
+	-DLIBGDA_REPORT_DTDDIR=\""$(datadir)/libgda-3.0/xml"\"
 
 
 gda_report_headers = \

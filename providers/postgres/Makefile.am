@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(POSTGRES_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_postgres_la_SOURCES = \
 	gda-postgres-ddl.c \
@@ -26,7 +26,7 @@ libgda_postgres_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(POSTGRES_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = \
 	postgres_specs_create_db.xml.in \
 	postgres_specs_drop_db.xml.in \

@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(XBASE_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_xbase_la_SOURCES = \
 	gda-xbase-database.cpp \
@@ -21,7 +21,7 @@ libgda_xbase_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(XBASE_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = xbase_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@

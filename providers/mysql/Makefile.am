@@ -6,7 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(MYSQL_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda"\" \
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\" \
 	-DGDA_PACKAGE_VERSION=\""$(PACKAGE_VERSION)"\"
 
 libgda_mysql_la_SOURCES = \
@@ -25,7 +25,7 @@ libgda_mysql_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(MYSQL_LIBS)
 
-xmldir   = $(datadir)/libgda
+xmldir   = $(datadir)/libgda-3.0
 xml_in_files = \
 	mysql_specs_create_db.xml.in \
 	mysql_specs_drop_db.xml.in \
