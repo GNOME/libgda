@@ -529,7 +529,7 @@ gda_odbc_provider_change_database (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = SQLSetConnectOption(priv_data->hdbc, SQL_CURRENT_QUALIFIER, (UDWORD) name);
+	rc = SQLSetConnectOption(priv_data->hdbc, SQL_CURRENT_QUALIFIER, (unsigned long) name);
 
 	if (SQL_SUCCEEDED(rc)) {
 		return TRUE;

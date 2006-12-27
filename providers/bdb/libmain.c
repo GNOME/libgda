@@ -21,6 +21,7 @@
  */
 
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-config.h>
 #include "gda-bdb.h"
 
 const gchar       *plugin_get_name (void);
