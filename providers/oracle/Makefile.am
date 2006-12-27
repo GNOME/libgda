@@ -42,10 +42,10 @@ libgda_oracle_la_SOURCES = \
 	gda-oracle.h \
 	libmain.c \
 	utils.c
-libgda_oracle_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_oracle_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_oracle_la_LIBADD = \
-	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.0.la \
+	$(LIBGDA_LIBS) \
 	$(ORACLE_LIBS)
 
 xmldir   = $(datadir)/libgda-3.0

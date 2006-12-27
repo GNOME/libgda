@@ -11,8 +11,8 @@ AUTOMAKE=automake-1.9
 REQUIRED_AUTOMAKE_VERSION=1.9
 
 (test -f $srcdir/configure.in \
-  && test -d $srcdir/idl \
-  && test -f $srcdir/idl/GNOME_Database.idl) || {
+  && test -d $srcdir/libgda \
+  && test -f $srcdir/libgda/gda-config.h) || {
     echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
     echo " top-level GDA directory"
     exit 1

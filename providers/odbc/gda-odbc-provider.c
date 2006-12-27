@@ -797,7 +797,7 @@ get_odbc_databases (GdaConnection *cnc, GdaParameterList *params)
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 
 	/* any parameters */
-	if (params && (par = gda_parameter_list_find (params, "name"))) {
+	if (params && (par = gda_parameter_list_find_param (params, "name"))) {
 		tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	}
 	else 
@@ -949,7 +949,7 @@ get_odbc_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
 
-	par = gda_parameter_list_find (params, "name");
+	par = gda_parameter_list_find_param (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
 	tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
@@ -1105,7 +1105,7 @@ get_procedure_rs(GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset)
 		value_list = g_list_append (value_list, tmpval);
 
 		/* Definition */
-		value_list = g_list_append (value_list, gda_valuen_new_null ());
+		value_list = g_list_append (value_list, gda_value_new_null ());
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list, NULL);
 
@@ -1135,7 +1135,7 @@ get_odbc_procedures (GdaConnection *cnc, GdaParameterList *params)
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 
 	/* any parameters */
-	if (params && (par = gda_parameter_list_find (params, "name"))) {
+	if (params && (par = gda_parameter_list_find_param (params, "name"))) {
 		procname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	}
 	else 
@@ -1227,7 +1227,7 @@ get_odbc_tables (GdaConnection *cnc, GdaParameterList *params)
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 
 	/* any parameters */
-	if (params && (par = gda_parameter_list_find (params, "name"))) {
+	if (params && (par = gda_parameter_list_find_param (params, "name"))) {
 		tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	}
 	else
@@ -1313,7 +1313,7 @@ get_odbc_types (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* any parameters */
-	if (params && (par = gda_parameter_list_find (params, "name"))) {
+	if (params && (par = gda_parameter_list_find_param (params, "name"))) {
 		typname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	}
 	else 
@@ -1364,7 +1364,7 @@ get_odbc_views (GdaConnection *cnc, GdaParameterList *params)
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
 
 	/* any parameters */
-	if (params && (par = gda_parameter_list_find (params, "name"))) {
+	if (params && (par = gda_parameter_list_find_param (params, "name"))) {
 		tblname = g_value_get_string ((GValue *) gda_parameter_get_value (par));
 	}
 	else 

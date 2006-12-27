@@ -1,5 +1,53 @@
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
+	* Makefile.am:
+	* configure.in:
+	* libgda-3.0.pc.in:
+	* libgda/Makefile.am:
+	* libgda/graph/Makefile.am:
+	* libgda/handlers/Makefile.am:
+	* libgda/sql-delimiter/Makefile.am:
+	* libgda/sql-transaction/Makefile.am:
+	* libsql/Makefile.am:
+	- Rename libsqltransaction.la to libgda_sql_transaction-3.0.la.  Add it to
+libgda-3.0.pc.in.  Build it and libgda_sql_delimiter-3.0 before libgda-3.0,
+since the former are not interdependent with the latter.
+	- Rename libgdasql.la to libgdasql-3.0.la.  Add it to libgda-3.0.pc.in.
+	* providers/bdb/Makefile.am:
+	* providers/firebird/Makefile.am:
+	* providers/freetds/Makefile.am:
+	* providers/freetds/gda-freetds-provider.c:
+	(gda_freetds_free_connection_data):
+	* providers/ibmdb2/Makefile.am:
+	* providers/ldap/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/mdb/gda-mdb-provider.c: (gda_mdb_provider_execute_sql):
+	- Fix mdb provider for mdbtools-0.6pre1 (which is already required for
+	MDB_WRITABLE).
+	* providers/msql/Makefile.am:
+	* providers/mysql/Makefile.am:
+	* providers/odbc/Makefile.am:
+	* providers/odbc/gda-odbc-provider.c: (get_odbc_databases),
+	(get_odbc_fields_metadata), (get_procedure_rs),
+	(get_odbc_procedures), (get_odbc_tables), (get_odbc_types),
+	(get_odbc_views):
+	- Port odbc provider to 3.0 API (PLEASE VERIFY).
+	* providers/oracle/Makefile.am:
+	* providers/postgres/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/sybase/Makefile.am:
+	* providers/xbase/Makefile.am:
+	* providers/xbase/gda-xbase-provider.c:
+	(gda_xbase_provider_open_connection):
+	- Fix xbase provider for non-existant provider API (PLEASE VERIFY).
+
+	- Fix gda-sharp.dll.config on Cygwin (yes, mono and Gtk# do work on Cygwin, but
+I haven't pushed the patches upstream yet).
+	- Fix provider dependencies (for the Cygwin-supported databases).
+	Patch by yselkowitz in bug #314732.
+
+2006-12-27  Murray Cumming  <murrayc@murrayc.com>
+
 	* data/Makefile.am:
 	* libgda/Makefile.am:
 	* providers/bdb/Makefile.am:

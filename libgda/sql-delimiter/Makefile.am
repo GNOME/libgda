@@ -29,7 +29,8 @@ libgda_sql_delimiter_3_0_la_SOURCES = \
 	gda-delimiter-tree.h \
         gda-delimiter-tree.c
 
-libgda_sql_delimiter_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
+libgda_sql_delimiter_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
+libgda_sql_delimiter_3_0_la_LIBADD = $(LIBGDA_LIBS)
 
 EXTRA_DIST=parser.y lexer.l
 

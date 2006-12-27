@@ -16,10 +16,10 @@ libgda_msql_la_SOURCES = \
 	gda-msql.h \
 	gda-msql-libmain.c \
 	gda-msql-utils.c
-libgda_msql_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_msql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_msql_la_LIBADD = \
-	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.0.la \
+	$(LIBGDA_LIBS) \
 	$(MSQL_LIBS)
 
 xmldir   = $(datadir)/libgda-3.0

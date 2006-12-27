@@ -17,10 +17,10 @@ libgda_firebird_la_SOURCES = \
 	gda-firebird-blob.h \
 	libmain.c
 
-libgda_firebird_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_firebird_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_firebird_la_LIBADD = \
-	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-3.0.la \
+	$(LIBGDA_LIBS) \
 	$(FIREBIRD_LIBS)
 
 xmldir   = $(datadir)/libgda-3.0

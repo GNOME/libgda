@@ -16,8 +16,10 @@ libgda_mdb_la_SOURCES = \
 	gda-mdb.h \
 	libmain.c \
 	util.c
-libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
+libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_mdb_la_LIBADD = \
+	$(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
+	$(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \
 	$(MDB_LIBS)

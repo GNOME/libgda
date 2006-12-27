@@ -202,7 +202,7 @@ gda_xbase_provider_open_connection (GdaServerProvider *provider,
 		pdata->using_directory = FALSE;
 		xdb = gda_xbase_database_open (cnc, p_filename);
 		if (xdb) {
-			g_hash_table_insert (pdata->databases, gda_xbase_database_get_name (xdb), xdb);
+			g_hash_table_insert (pdata->databases, p_filename, xdb);
 		} else {
 			gda_xbase_provider_close_connection (provider, cnc);
 			return FALSE;
@@ -223,7 +223,7 @@ gda_xbase_provider_open_connection (GdaServerProvider *provider,
 			gchar *s = g_build_path (p_directory, p_filename);
 			xdb = gda_xbase_database_open (cnc, p_filename);
 			if (xdb) {
-				g_hash_table_insert (pdata->databases, gda_xbase_database_get_name (xdb), xdb);
+				g_hash_table_insert (pdata->databases, p_filename, xdb);
 			} else {
 				gda_connection_add_event_string (cnc, _("Could not open file %s"), s);
 			}

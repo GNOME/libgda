@@ -19,10 +19,12 @@ libgda_mysql_la_SOURCES = \
 	gda-mysql.h \
 	libmain.c \
 	utils.c
-libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_mysql_la_LIBADD = \
-	$(LIBGDA_LIBS) \
+	$(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
+	$(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
 	$(top_builddir)/libgda/libgda-3.0.la \
+	$(LIBGDA_LIBS) \
 	$(MYSQL_LIBS)
 
 xmldir   = $(datadir)/libgda-3.0

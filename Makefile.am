@@ -6,6 +6,7 @@ endif
 
 SUBDIRS = \
 	po \
+	win32 \
 	libsql \
 	libgda \
 	providers \

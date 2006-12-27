@@ -20,11 +20,11 @@ libgda_sybase_la_SOURCES = \
 	libmain.c \
 	utils.c
 
-libgda_sybase_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_sybase_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sybase_la_LIBADD = \
-	$(SYBASE_LIBS) \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-3.0.la 
+	$(SYBASE_LIBS)
 
 xmldir   = $(datadir)/libgda-3.0
 xml_in_files = sybase_specs_dsn.xml.in

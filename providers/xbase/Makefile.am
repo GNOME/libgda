@@ -15,7 +15,7 @@ libgda_xbase_la_SOURCES = \
 	gda-xbase-provider.h \
 	libmain.c
 
-libgda_xbase_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
+libgda_xbase_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_xbase_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \

@@ -359,7 +359,7 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 	}
 	if (tds_cnc->config) {
 #if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
-		tds_free_connect (tds_cnc->config);
+		tds_free_connection (tds_cnc->config);
 #else
 		tds_free_config(tds_cnc->config);
 #endif

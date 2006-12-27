@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libgda-3.0.la
 
-SUBDIRS = handlers sql-delimiter sql-transaction graph
+SUBDIRS = sql-delimiter sql-transaction . graph handlers
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -11,6 +11,12 @@ AM_CPPFLAGS = \
 	-DLIBGDA_GLOBAL_CONFIG_FILE=\""$(sysconfdir)/libgda-3.0/config"\" \
 	-DLIBGDA_GLOBAL_CONFIG_DIR=\""$(sysconfdir)/libgda-3.0"\" \
 	-DDTDINSTALLDIR=\""$(LIBGDA_DTDDIR)"\"
+
+if PLATFORM_WIN32
+WIN32_BOOTSTRAP_LIBS = \
+	$(top_builddir)/win32/libgda_graph-3.0.la \
+	$(top_builddir)/win32/libgda_handlers-3.0.la
+endif
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -209,8 +215,11 @@ libgda_3_0_la_SOURCES = \
 	$(libgda_built_cfiles) \
 	$(libgda_sources)
 
-libgda_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) -no-undefined
-libgda_3_0_la_LIBADD = $(LIBGDA_LIBS) $(FAM_LIBS) $(top_builddir)/libsql/libgdasql.la sql-transaction/libsqltransaction.la
+libgda_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
+libgda_3_0_la_LIBADD = sql-transaction/libgda_sql_transaction-3.0.la \
+	sql-delimiter/libgda_sql_delimiter-3.0.la \
+	$(top_builddir)/libsql/libgdasql-3.0.la \
+	$(WIN32_BOOTSTRAP_LIBS) $(LIBGDA_LIBS) $(FAM_LIBS)
 
 gdaincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)

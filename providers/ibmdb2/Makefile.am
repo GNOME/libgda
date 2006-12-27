@@ -19,11 +19,11 @@ libgda_ibmdb2_la_SOURCES = \
 	libmain.c \
 	utils.c
 
-libgda_ibmdb2_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_ibmdb2_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_ibmdb2_la_LIBADD = \
-	$(IBMDB2_LIBS) \
+	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-3.0.la 
+	$(IBMDB2_LIBS)
 
 
 xmldir   = $(datadir)/libgda-3.0

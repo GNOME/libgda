@@ -17,7 +17,7 @@ libgda_ldap_la_SOURCES = \
 	gda-ldap-recordset.h \
 	libmain.c \
 	utils.c
-libgda_ldap_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
+libgda_ldap_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_ldap_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \

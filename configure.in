@@ -81,6 +81,33 @@ AC_SUBST(LIBGDA_CFLAGS)
 AC_SUBST(LIBGDA_LIBS)
 
 dnl ******************************
+dnl Check for Win32
+dnl ******************************
+
+AC_MSG_CHECKING([for some Win32 platform])
+case "$host" in
+*-cygwin*)
+    platform_win32=yes
+    NO_UNDEFINED='-no-undefined'
+    SOPREFIX='cyg'
+    ;;
+*-mingw*)
+    platform_win32=yes
+    NO_UNDEFINED='-no-undefined'
+    SOPREFIX='lib'
+    ;;
+*)
+    platform_win32=no
+    NO_UNDEFINED=''
+    SOPREFIX='lib'
+    ;;
+esac
+AC_MSG_RESULT([$platform_win32])
+AM_CONDITIONAL(PLATFORM_WIN32, [test $platform_win32 = yes])
+AC_SUBST(NO_UNDEFINED)
+AC_SUBST(SOPREFIX)
+
+dnl ******************************
 dnl Checking for FAM or gamin
 dnl ******************************
 FAM_LIBS=
@@ -921,13 +948,23 @@ if test "$build_gda_sharp" = "true"; then
 	AC_PATH_PROG(GAPI_FIXUP, gapi2-fixup, no)
 	AC_PATH_PROG(GAPI_CODEGEN, gapi2-codegen, no)
 
-	if test `uname -s` = "Darwin"; then
-		LIB_PREFIX=
+	case `uname -s` in
+	  Darwin)
+		LIB_PREFIX=lib
+		LIB_SONAME=.
 		LIB_SUFFIX=.dylib
-	else
-		LIB_PREFIX=.so
+		;;
+	  CYGWIN*)
+		LIB_PREFIX=cyg
+		LIB_SONAME=-
+		LIB_SUFFIX=.dll
+		;;
+	  *)
+		LIB_PREFIX=lib
+		LIB_SONAME=.so.
 		LIB_SUFFIX=
-	fi
+		;;
+	esac
 else
 	AC_MSG_NOTICE("Not building gda-sharp")
 fi
@@ -935,6 +972,7 @@ AC_SUBST(MONO)
 AC_SUBST(MCS)
 AC_SUBST(GAPI)
 AC_SUBST(LIB_PREFIX)
+AC_SUBST(LIB_SONAME)
 AC_SUBST(LIB_SUFFIX)
 AC_SUBST(GTK_SHARP_CFLAGS)
 AC_SUBST(GTK_SHARP_LIBS)
@@ -1013,6 +1051,7 @@ Makefile
 libgda.spec
 libgda-3.0.pc
 po/Makefile.in
+win32/Makefile
 libsql/Makefile
 libgda/Makefile
 libgda/handlers/Makefile

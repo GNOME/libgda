@@ -20,9 +20,11 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres.h \
 	libmain.c \
 	utils.c
-libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version -no-undefined
+libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_postgres_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
+	$(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
+	$(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
 	$(LIBGDA_LIBS) \
 	$(POSTGRES_LIBS)
 
