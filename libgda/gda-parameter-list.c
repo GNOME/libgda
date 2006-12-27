@@ -20,6 +20,9 @@
 
 #include <stdarg.h>
 #include <string.h>
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
 #include <glib/gi18n-lib.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
