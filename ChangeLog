@@ -1,5 +1,10 @@
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/sql-delimiter/parser.y: Fix compilation on Darwin (MacOS X), by 
+	using the extern keyword. Patch from Min Sik Kim in bug #382933.
+
+2006-12-27  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-parameter-list.c: Fix compilation on Darwin (MacOS X), by 
 	ifdefing the including of sys/types.h. 
 	Patch from Min Sik Kim in bug #382936.  

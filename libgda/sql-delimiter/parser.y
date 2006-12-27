@@ -63,7 +63,7 @@ remove_quotes (gchar *str)
         return str;
 }
 
-GList                        *all_sql_results; /* list of GdaDelimiterStatement */
+extern GList                        *all_sql_results; /* list of GdaDelimiterStatement */
 extern GdaDelimiterStatement *last_sql_result; /* last GdaDelimiterStatement identified */
 #define YYDEBUG 1
 %}
