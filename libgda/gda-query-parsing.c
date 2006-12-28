@@ -52,6 +52,9 @@
 #include "gda-query-private.h"
 #include "gda-query-parsing.h"
 
+#include "gda-dict-reg-aggregates.h" /* For gda_aggregates_get_by_name() */
+#include "gda-dict-reg-functions.h" /* For gda_functions_get_by_name() */
+
 
 static void       clean_old_targets (GdaQuery *query, ParseData *pdata);
 static void       clean_old_fields (GdaQuery *query, ParseData *pdata);

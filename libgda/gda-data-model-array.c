@@ -265,7 +265,7 @@ gda_data_model_array_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
 	/* free memory */
-	gda_data_model_freeze (model);
+	gda_data_model_freeze (GDA_DATA_MODEL(model));
 	gda_data_model_array_clear (model);
 	g_ptr_array_free (model->priv->rows, TRUE);
 
@@ -436,6 +436,6 @@ gda_data_model_array_clear (GdaDataModelArray *model)
 	while (model->priv->rows->len > 0) {
 		GdaRow *row = (GdaRow *) g_ptr_array_index (model->priv->rows, model->priv->rows->len-1);
 
-		gda_data_model_array_remove_row (model, row, NULL);
+		gda_data_model_array_remove_row (GDA_DATA_MODEL_ROW(model), row, NULL);
 	}
 }

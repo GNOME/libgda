@@ -1,5 +1,29 @@
 2006-12-28  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-dict-field.c: (gda_dict_field_load_from_xml):
+	* libgda/gda-dict.h: Add a note about the current need to include 
+	libgda/gda-dict-reg-aggregates.h and libgda/gda-dict-reg-functions.h when 
+	using this header.
+	* libgda/gda-object-ref.c: 
+	* libgda/gda-query-parsing.c: Include the extra headers to avoid  
+	integer-to-pointer warnings caused by implicit function declarations.
+
+	* libgda/gda-util.c: In the isbase64 macro, do not check that the uchar is less than 
+	256 because this causes a compiler warning about this always being true.
+
+	* libgda/sql-delimiter/lexer.l:
+	* libgda/sql-transaction/lexer.l: Comment-out the #warning lines.
+
+	* libgda/gda-data-model-array.c: (gda_data_model_array_finalize),
+	(gda_data_model_array_clear): 
+	* libgda/gda-query-condition.c: (gda_query_condition_new_copy):
+	* libgda/graph/gda-graph-item.c: (gda_graph_item_set_property): 
+	Use cast macros to avoid compiler warnings.
+
+	I think this fixes all the warnings apart from the ones in the providers.
+
+2006-12-28  Murray Cumming  <murrayc@murrayc.com>
+
 	* libsql/lexer.l:
 	* libsql/mem.c: (memsql_strdup_printf_raw), (memsql_alloc_raw),
 	(memsql_calloc_raw), (memsql_realloc_raw), (memsql_strappend_raw),

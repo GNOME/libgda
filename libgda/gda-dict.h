@@ -26,7 +26,14 @@
 #include <libgda/gda-value.h>
 #include <libgda/gda-enums.h>
 
-/* #include <libgda/gda-dict-reg-aggregates.h> */
+/* 
+You will need to include these when including gda-dict.h, 
+to use some functions.
+TODO: Avoid this awkwarness:
+#include <libgda/gda-dict-reg-aggregates.h>
+#include <libgda/gda-dict-reg-functions.h>
+*/
+
 
 G_BEGIN_DECLS
 

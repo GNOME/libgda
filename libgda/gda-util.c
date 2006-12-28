@@ -516,7 +516,14 @@ static const signed char b64[0x100] = {
   B64 (252), B64 (253), B64 (254), B64 (255)
 };
 
-#define isbase64(x) ((to_uchar (x) <= 255) && (0 <= b64[to_uchar (x)]))
+/* This is the previous version:
+ * It caused a warning: "comparison is always true due to limited range of data type"
+ *
+ * #define isbase64(x) ((to_uchar (x) <= 255) && (0 <= b64[to_uchar (x)]))
+ *
+ * murrayc
+ */
+#define isbase64(x) ((0 <= b64[to_uchar (x)]))
 
 
 /**

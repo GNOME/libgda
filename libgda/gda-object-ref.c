@@ -34,6 +34,8 @@
 #include "gda-connection.h"
 #include "gda-dict-function.h"
 #include "gda-dict-aggregate.h"
+#include "gda-dict-reg-aggregates.h" /* For gda_aggregates_get_by_name() */
+#include "gda-dict-reg-functions.h" /* For gda_functions_get_by_name() */
 
 #include "gda-query-field-all.h"
 #include "gda-query-field-field.h"
@@ -786,9 +788,9 @@ gda_object_ref_activate (GdaObjectRef *ref)
 
 		done = TRUE;
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID)
-			query = gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+			query = GDA_QUERY (gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
 							       GDA_TYPE_QUERY,
-							       ref->priv->ref_name);
+							       ref->priv->ref_name));
 		else
 			TO_IMPLEMENT; /* not really needed, anyway */
 		if (query)
@@ -804,8 +806,8 @@ gda_object_ref_activate (GdaObjectRef *ref)
 		ptr = strtok_r (str, ":", &tok);
 		
 		done = TRUE;
-		query = gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
-						       GDA_TYPE_QUERY, ptr);
+		query = GDA_QUERY (gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+						       GDA_TYPE_QUERY, ptr));
 		
 		if (query) {
 			GdaEntityField *field;
@@ -827,8 +829,8 @@ gda_object_ref_activate (GdaObjectRef *ref)
 			
 			str = g_strdup (ref->priv->ref_name);
 			ptr = strtok_r (str, ":", &tok);
-			query = gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
-							       GDA_TYPE_QUERY, ptr);
+			query = GDA_QUERY (gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+							       GDA_TYPE_QUERY, ptr));
 			g_free (str);
 			if (query) {
 				GdaQueryTarget *target;
@@ -881,8 +883,8 @@ gda_object_ref_activate (GdaObjectRef *ref)
 				GdaQuery *query;
 				
 				done = TRUE;
-				query = gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
-								       GDA_TYPE_QUERY, ptr);
+				query = GDA_QUERY (gda_dict_get_object_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+								       GDA_TYPE_QUERY, ptr));
 				
 				if (query) {
 					GdaEntityField *field;
@@ -927,8 +929,8 @@ gda_object_ref_activate (GdaObjectRef *ref)
 
 		done = TRUE;
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID)
-			func = gda_dict_get_function_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
-								ref->priv->ref_name);
+			func = GDA_DICT_FUNCTION (gda_dict_get_function_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+								ref->priv->ref_name));
 		else {
 			/* Find the list of functions by its name, and if there is more than one, 
 			 * then we don't make a choice, and say that we did not find it because
@@ -951,8 +953,8 @@ gda_object_ref_activate (GdaObjectRef *ref)
 
 		done = TRUE;
 		if (ref->priv->ref_type == REFERENCE_BY_XML_ID)
-			agg = gda_dict_get_aggregate_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
-								ref->priv->ref_name);
+			agg = GDA_DICT_AGGREGATE (gda_dict_get_aggregate_by_xml_id (gda_object_get_dict (GDA_OBJECT (ref)), 
+								ref->priv->ref_name));
 		else {
 			/* Find the list of functions by its name, and if there is more than one, 
 			 * then we don't make a choice, and say that we did not find it because

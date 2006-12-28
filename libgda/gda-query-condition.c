@@ -320,7 +320,7 @@ gda_query_condition_new_copy (GdaQueryCondition *orig, GHashTable *replacements)
 	while (list) {
 		GObject *ccond;
 
-		ccond = gda_query_condition_new_copy (GDA_QUERY_CONDITION (list->data), replacements);
+		ccond = G_OBJECT (gda_query_condition_new_copy (GDA_QUERY_CONDITION (list->data), replacements));
 		gda_query_condition_node_add_child (newcond, GDA_QUERY_CONDITION (ccond), NULL);
 		g_object_unref (ccond);
 		list = g_slist_next (list);

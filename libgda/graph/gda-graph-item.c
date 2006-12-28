@@ -267,7 +267,7 @@ gda_graph_item_set_property (GObject *object,
 			g_assert (graph->priv->ref_object);
 			if (graph->priv->ref_object) {
 				GObject* ptr = g_value_get_object (value);
-				gda_object_ref_set_ref_object (graph->priv->ref_object, ptr);
+				gda_object_ref_set_ref_object (graph->priv->ref_object, GDA_OBJECT(ptr));
 			}
 			break;
 		}

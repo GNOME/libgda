@@ -946,7 +946,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 				xmlFree (tmp);
 				gda_object_set_description (GDA_OBJECT (dt), tmp2);
 				g_free (tmp2);
-				gda_dict_declare_object (dict, dt);
+				gda_dict_declare_object (dict, GDA_OBJECT(dt));
 				gda_dict_field_set_dict_type (field, dt);
 				g_object_unref (dt);
 			}
