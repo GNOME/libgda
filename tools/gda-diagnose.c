@@ -206,7 +206,7 @@ list_datasource_info (TestConfig *config, xmlNodePtr parent, gchar *dsn)
 		GList *l;
 		
 		ul = xmlNewChild (parent, NULL, "ul", NULL);
-		xmlSetProp (ul, "class", "none");
+		xmlSetProp(ul, "class", (xmlChar*)"none");
 		for (l = keys; l != NULL; l = l->next) {
 			gchar *value;
 			gchar *key = (gchar *) l->data;
@@ -490,7 +490,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 
 			td = xmlNewChild (tr, NULL, "td",  NULL);
 			ul = xmlNewChild (td, NULL, "ul",  NULL);
-			xmlSetProp (ul, "class", "none");
+			xmlSetProp(ul, "class", (xmlChar*)"none");
 
 			html_render_attribute_str (ul, "li", "provider_name", pinfo->provider_name);
 			html_render_attribute_bool (ul, "li", "is_case_insensitive", pinfo->is_case_insensitive);
@@ -529,7 +529,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 
 		td = xmlNewChild (tr, NULL, "td",  NULL);
 		ul = xmlNewChild (td, NULL, "ul",  NULL);
-		xmlSetProp (ul, "class", "none");
+		xmlSetProp(ul, "class", (xmlChar*)"none");
 		for (feature=GDA_CONNECTION_FEATURE_AGGREGATES; 
 		     feature <= GDA_CONNECTION_FEATURE_XML_QUERIES;
 		     feature++) 
@@ -832,7 +832,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 					}
 					else {
 						td = xmlNewChild (tr, NULL, "td", "none");
-						xmlSetProp (td, "class", "null");
+						xmlSetProp(td, "class", (xmlChar*)"null");
 					}
 				}
 			}
@@ -847,7 +847,7 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 				if (dh && !dbms_type)
 					html_mark_node_error (HTML_CONFIG (config), td);
 				else
-					xmlSetProp (td, "class", "null");
+					xmlSetProp(td, "class", (xmlChar*)"null");
 			}
 			else
 				td = xmlNewChild (tr, NULL, "td", "");
@@ -1266,7 +1266,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GType type,
 			}
 			else {
 				td = xmlNewChild (tr, NULL, "td", "NULL");
-				xmlSetProp (td, "class", "null");
+				xmlSetProp(td, "class", (xmlChar*)"null");
 			}
 
 			i++;
@@ -1310,7 +1310,7 @@ real_test_data_handler (TestConfig *config, GdaDataHandler *dh, GType type,
 			}
 			else {
 				td = xmlNewChild (tr, NULL, "td", "NULL");
-				xmlSetProp (td, "class", "null");
+				xmlSetProp(td, "class", (xmlChar*)"null");
 			}
 
 			i++;

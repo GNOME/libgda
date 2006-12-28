@@ -145,11 +145,11 @@ gda_query_field_new_from_xml (GdaQuery *query, xmlNodePtr node, GError **error)
 	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (node, NULL);
 
-	if (!strcmp (node->name, "gda_query_fall")) {
+	if (!strcmp ((gchar*)node->name, "gda_query_fall")) {
 		gchar *target;
 		
 		done = TRUE;
-		target = xmlGetProp (node, "target");
+		target = (gchar*)xmlGetProp(node, (xmlChar*)"target");
 		if (target) {
 			obj = (GdaQueryField *) g_object_new (GDA_TYPE_QUERY_FIELD_ALL, 
 							      "dict", gda_object_get_dict (GDA_OBJECT (query)), 
@@ -166,28 +166,28 @@ gda_query_field_new_from_xml (GdaQuery *query, xmlNodePtr node, GError **error)
 		}
 	}
 
-	if (!done && !strcmp (node->name, "gda_query_ffield")) {
+	if (!done && !strcmp ((gchar*)node->name, "gda_query_ffield")) {
 		done = TRUE;
 		obj = (GdaQueryField *) g_object_new (GDA_TYPE_QUERY_FIELD_FIELD, 
 						      "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 						      "query", query, NULL);
 	}
 
-	if (!done && !strcmp (node->name, "gda_query_fagg")) {
+	if (!done && !strcmp ((gchar*)node->name, "gda_query_fagg")) {
 		done = TRUE;
 		obj = (GdaQueryField *) g_object_new (GDA_TYPE_QUERY_FIELD_AGG, 
 						      "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 						      "query", query, NULL);
 	}
 
-	if (!done && !strcmp (node->name, "gda_query_ffunc")) {
+	if (!done && !strcmp ((gchar*)node->name, "gda_query_ffunc")) {
 		done = TRUE;
 		obj = (GdaQueryField *) g_object_new (GDA_TYPE_QUERY_FIELD_FUNC, 
 						      "dict", gda_object_get_dict (GDA_OBJECT (query)), 
 						      "query", query, NULL);
 	}
 
-	if (!done && !strcmp (node->name, "gda_query_fval")) {
+	if (!done && !strcmp ((gchar*)node->name, "gda_query_fval")) {
 		done = TRUE;
 		obj = (GdaQueryField *) g_object_new (GDA_TYPE_QUERY_FIELD_VALUE, 
 						      "dict", gda_object_get_dict (GDA_OBJECT (query)), 

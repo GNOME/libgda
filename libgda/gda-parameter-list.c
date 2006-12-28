@@ -430,7 +430,7 @@ gda_parameter_list_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, G
 
 	/* doc is now non NULL */
 	root = xmlDocGetRootElement (doc);
-	if (strcmp (root->name, "data-set-spec") != 0){
+	if (strcmp ((gchar*)root->name, "data-set-spec") != 0){
 		g_set_error (error, GDA_PARAMETER_LIST_ERROR, GDA_PARAMETER_LIST_XML_SPEC_ERROR,
 			     _("Spec's root node != 'data-set-spec': '%s'"), root->name);
 		return NULL;
@@ -486,7 +486,7 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
         if (cnc)
                 prov = gda_connection_get_provider_obj (cnc);
 
-	if (strcmp (xml_spec->name, "parameters") != 0){
+	if (strcmp ((gchar*)xml_spec->name, "parameters") != 0){
 		g_set_error (error, GDA_PARAMETER_LIST_ERROR, GDA_PARAMETER_LIST_XML_SPEC_ERROR,
 			     _("Missing node <parameters>: '%s'"), xml_spec->name);
 		return NULL;
@@ -494,14 +494,14 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 
 	/* Parameters' sources, not mandatory: makes the @sources list */
 	cur = xml_spec->next;
-	while (cur && (xmlNodeIsText (cur) || strcmp (cur->name, "sources"))) 
+	while (cur && (xmlNodeIsText (cur) || strcmp ((gchar*)cur->name, "sources"))) 
 		cur = cur->next; 
-	if (allok && cur && !strcmp (cur->name, "sources")){
+	if (allok && cur && !strcmp ((gchar*)cur->name, "sources")){
 		for (cur = cur->xmlChildrenNode; (cur != NULL) && allok; cur = cur->next) {
 			if (xmlNodeIsText (cur)) 
 				continue;
 
-			if (!strcmp (cur->name, "gda_array")) {
+			if (!strcmp ((gchar*)cur->name, "gda_array")) {
 				GdaDataModel *model;
 				GSList *errors;
 
@@ -516,7 +516,7 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 				}
 				else  {
 					sources = g_slist_prepend (sources, model);
-					str = xmlGetProp(cur, "name");
+					str = (gchar*)xmlGetProp(cur, (xmlChar*)"name");
 					if (str) {
 						gda_object_set_name (GDA_OBJECT (model), str);
 						g_free (str);
@@ -531,7 +531,7 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 		if (xmlNodeIsText (cur)) 
 			continue;
 
-		if (!strcmp (cur->name, "parameter")) {
+		if (!strcmp ((gchar*)cur->name, "parameter")) {
 			GdaParameter *param = NULL;
 			GdaDictType *dtype = NULL;
 			gchar *str, *id;
@@ -541,14 +541,14 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 			xmlChar *xmlstr;
 
 			/* don't care about entries for the wrong locale */
-			this_lang = xmlGetProp (cur, "lang");
-			if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+			this_lang = xmlGetProp(cur, (xmlChar*)"lang");
+			if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
 				g_free (this_lang);
 				continue;
 			}
 
 			/* find if there is already a param with the same ID */
-			id = xmlGetProp (cur, "id");
+			id = (gchar*)xmlGetProp(cur, (xmlChar*)"id");
 			list = params;
 			while (list && !param) {
 				g_object_get (G_OBJECT (list->data), "string_id", &str, NULL);
@@ -571,7 +571,7 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 			dbmstype = xmlGetProp (cur, BAD_CAST "dbmstype");
 			gdatype = xmlGetProp (cur, BAD_CAST "gdatype");
 			dtype = gda_utility_find_or_create_data_type (dict, prov, cnc,
-								  dbmstype, gdatype, &dtype_created);
+								  (gchar*)dbmstype, (gchar*)gdatype, &dtype_created);
 			if (dbmstype) xmlFree (dbmstype);
 			if (gdatype) xmlFree (gdatype);
 
@@ -624,19 +624,19 @@ gda_parameter_list_new_from_spec_node (GdaDict *dict, xmlNodePtr xml_spec, GErro
 		xmlChar *prop;;
 		plist = gda_parameter_list_new (params);
 
-		prop = xmlGetProp (xml_spec, "id");
+		prop = xmlGetProp(xml_spec, (xmlChar*)"id");
 		if (prop) {
-			gda_object_set_id (GDA_OBJECT (plist), prop);
+			gda_object_set_id (GDA_OBJECT (plist), (gchar*)prop);
 			xmlFree (prop);
 		}
-		prop = xmlGetProp (xml_spec, "name");
+		prop = xmlGetProp(xml_spec, (xmlChar*)"name");
 		if (prop) {
-			gda_object_set_name (GDA_OBJECT (plist), prop);
+			gda_object_set_name (GDA_OBJECT (plist), (gchar*)prop);
 			xmlFree (prop);
 		}
-		prop = xmlGetProp (xml_spec, "descr");
+		prop = xmlGetProp(xml_spec, (xmlChar*)"descr");
 		if (prop) {
-			gda_object_set_description (GDA_OBJECT (plist), prop);
+			gda_object_set_description (GDA_OBJECT (plist), (gchar*)prop);
 			xmlFree (prop);
 		}
 	}
@@ -685,9 +685,9 @@ gda_parameter_list_get_spec (GdaParameterList *paramlist)
 
 	g_return_val_if_fail (GDA_IS_PARAMETER_LIST (paramlist), NULL);
 
-	doc = xmlNewDoc ("1.0");
+	doc = xmlNewDoc ((xmlChar*)"1.0");
 	g_return_val_if_fail (doc, NULL);
-	root = xmlNewDocNode (doc, NULL, "data-set-spec", NULL);
+	root = xmlNewDocNode (doc, NULL, (xmlChar*)"data-set-spec", NULL);
 	xmlDocSetRootElement (doc, root);
 
 	/* parameters list */
@@ -699,31 +699,31 @@ gda_parameter_list_get_spec (GdaParameterList *paramlist)
 		gchar *str;
 		const gchar *cstr;
 
-		node = xmlNewTextChild (root, NULL, "parameter", NULL);
+		node = xmlNewTextChild (root, NULL, (xmlChar*)"parameter", NULL);
 		g_object_get (G_OBJECT (param), "string_id", &str, NULL);
 		if (str) {
-			xmlSetProp (node, "id", str);
+			xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 			g_free (str);
 		}
 
 		cstr = gda_object_get_name (GDA_OBJECT (param));
 		if (cstr)
-			xmlSetProp (node, "name", cstr);		
+			xmlSetProp(node, (xmlChar*)"name", (xmlChar*)cstr);		
 		cstr = gda_object_get_description (GDA_OBJECT (param));
 		if (cstr)
-			xmlSetProp (node, "descr", cstr);		
+			xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)cstr);		
 
 		/* dtype = gda_parameter_get_g_type (param); */
 /* 		if (dtype) { */
-/* 			xmlSetProp (node, "dbmstype", gda_dict_type_get_sqlname (dtype)); */
-/* 			xmlSetProp (node, "gdatype", gda_g_type_to_string (gda_dict_type_get_g_type (dtype))); */
+/* 			xmlSetProp(node, (xmlChar*)"dbmstype", gda_dict_type_get_sqlname (dtype)); */
+/* 			xmlSetProp(node, (xmlChar*)"gdatype", gda_g_type_to_string (gda_dict_type_get_g_type (dtype))); */
 /* 		} */
-		xmlSetProp (node, "gdatype", gda_g_type_to_string (gda_parameter_get_g_type (param)));
+		xmlSetProp(node, (xmlChar*)"gdatype", (xmlChar*)gda_g_type_to_string (gda_parameter_get_g_type (param)));
 
-		xmlSetProp (node, "nullok", gda_parameter_get_not_null (param) ? "FALSE" : "TRUE");
+		xmlSetProp(node, (xmlChar*)"nullok", (xmlChar*)(gda_parameter_get_not_null (param) ? "FALSE" : "TRUE"));
 		g_object_get (G_OBJECT (param), "entry_plugin", &str, NULL);
 		if (str) {
-			xmlSetProp (node, "plugin", str);
+			xmlSetProp(node, (xmlChar*)"plugin", (xmlChar*)str);
 			g_free (str);
 		}
 		

@@ -237,6 +237,7 @@ find_row_modif_for_proxy_row (GdaDataProxy *proxy, gint proxy_row)
 	return rm;
 }
 
+/* Not used:
 static gint
 find_proxy_row_for_row_modif (GdaDataProxy *proxy, RowModif *rm)
 {
@@ -250,6 +251,7 @@ find_proxy_row_for_row_modif (GdaDataProxy *proxy, RowModif *rm)
 			(proxy->priv->add_null_entry ? 1 : 0);
 	}
 }
+*/
 
 /*
  * Free a RowModif structure

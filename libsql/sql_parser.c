@@ -1328,7 +1328,7 @@ sql_statement_get_tables(sql_statement * statement)
 {
 	GList *retval = NULL;
 	GList *walk;
-	gchar *temp1, *temp2;
+	gchar *temp2;
 	sql_table *table;
 	sql_select_statement *select;
 

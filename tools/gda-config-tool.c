@@ -340,7 +340,7 @@ parse_config_file (const gchar *buffer, int len)
 		return NULL;
 	}
 
-	if (strcmp (cur->name, "libgda-config") != 0){
+	if (strcmp ((gchar*)cur->name, "libgda-config") != 0){
 		g_error ("root node != 'libgda-config' -> '%s'", cur->name);
 		xmlFreeDoc (doc);
 		return NULL;
@@ -350,7 +350,7 @@ parse_config_file (const gchar *buffer, int len)
 	while (cur != NULL) {
 		if (!strcmp(cur->name, "section")){
 			section = g_new0 (gda_config_section, 1);
-			section->path = xmlGetProp (cur, "path");
+			section->path = xmlGetProp(cur, (xmlChar*)"path");
 			if (section->path != NULL){
 				section->entries = config_read_entries (cur);
 				list = g_list_append (list, section);
@@ -957,9 +957,9 @@ add_xml_entry (xmlNodePtr parent, gda_config_entry *entry)
 	xmlNodePtr new_node;
 
 	new_node = xmlNewTextChild (parent, NULL, "entry", NULL);
-	xmlSetProp (new_node, "name", entry->name);
-	xmlSetProp (new_node, "type", entry->type);
-	xmlSetProp (new_node, "value", entry->value);
+	xmlSetProp(new_node, (xmlChar*)"name", entry->name);
+	xmlSetProp(new_node, (xmlChar*)"type", entry->type);
+	xmlSetProp(new_node, (xmlChar*)"value", entry->value);
 }
 
 static xmlNodePtr
@@ -968,7 +968,7 @@ add_xml_section (xmlNodePtr parent, gda_config_section *section)
 	xmlNodePtr new_node;
 
 	new_node = xmlNewTextChild (parent, NULL, "section", NULL);
-	xmlSetProp (new_node, "path", section->path);
+	xmlSetProp(new_node, (xmlChar*)"path", section->path);
 	return new_node;
 }
 

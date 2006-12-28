@@ -22,6 +22,10 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
+
+/* define GDA_DEBUG so we can use gda_object_dump() here: */
+#define GDA_DEBUG 1
+
 #include <libgda/gda-decl.h>
 #include <libgda/gda-data-model-query.h>
 #include <libgda/gda-data-model-private.h>
@@ -35,6 +39,8 @@
 #include <libgda/gda-connection.h>
 #include <libgda/gda-renderer.h>
 #include <libgda/gda-referer.h>
+
+
 
 struct _GdaDataModelQueryPrivate {
 	GdaQuery         *queries[4]; /* indexed by SEL_* */

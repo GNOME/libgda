@@ -249,7 +249,7 @@ test_models (TestConfig *config)
 	GError *error = NULL;
 
 	node = xmlDocGetRootElement (config->tests_doc);
-        if (strcmp (node->name, "test_scenario")) {
+        if (strcmp ((gchar*)node->name, "test_scenario")) {
                 g_print ("XML file top node is not <test_scenario>\n");
                 exit (1);
         }
@@ -258,7 +258,7 @@ test_models (TestConfig *config)
 	while (subnode) {
 		/* new dictionary */
 		if (!strcmp (subnode->name, "dictionary")) {
-			gchar *filename = xmlGetProp (subnode, "name");
+			gchar *filename = xmlGetProp(subnode, (xmlChar*)"name");
 			test_and_destroy_dict (config);			
 			if (filename) {
 				config->dict = gda_dict_new ();
@@ -274,8 +274,8 @@ test_models (TestConfig *config)
 		
 		/* new output file */
 		if (!strcmp (subnode->name, "output_file")) {
-			gchar *filename = xmlGetProp (subnode, "name");
-			gchar *descr = xmlGetProp (subnode, "descr");
+			gchar *filename = xmlGetProp(subnode, (xmlChar*)"name");
+			gchar *descr = xmlGetProp(subnode, (xmlChar*)"descr");
 			xmlNodePtr li;
 			gchar *tmp;
 
@@ -292,7 +292,7 @@ test_models (TestConfig *config)
 
 		/* header */
 		if (!strcmp (subnode->name, "header")) {
-			gchar *descr = xmlGetProp (subnode, "descr");
+			gchar *descr = xmlGetProp(subnode, (xmlChar*)"descr");
 
 			html_add_header (HTML_CONFIG (config), config->file, descr);
 			g_free (descr);
@@ -300,10 +300,10 @@ test_models (TestConfig *config)
 
 		/* actions */
 		if (!strcmp (subnode->name, "action")) {
-			gchar *descr = xmlGetProp (subnode, "descr");
-			gchar *type = xmlGetProp (subnode, "type");
-			gchar *model_name = xmlGetProp (subnode, "model");
-			gchar *expect_str = xmlGetProp (subnode, "expect");
+			gchar *descr = xmlGetProp(subnode, (xmlChar*)"descr");
+			gchar *type = xmlGetProp(subnode, (xmlChar*)"type");
+			gchar *model_name = xmlGetProp(subnode, (xmlChar*)"model");
+			gchar *expect_str = xmlGetProp(subnode, (xmlChar*)"expect");
 			gboolean done = FALSE;
 			gboolean expect_res;
 			GdaDataModel *model = NULL;
@@ -380,7 +380,7 @@ action_load_file (TestConfig *config, const gchar *model_name, xmlNodePtr node, 
 	gchar *file;
 	gchar *errmsg = NULL;
 
-	file = xmlGetProp (node, "file");
+	file = xmlGetProp(node, (xmlChar*)"file");
 	if (!file)
 		errmsg = g_strdup (_("Missing 'file' attribute"));
 	else {
@@ -422,7 +422,7 @@ action_create_proxy (TestConfig *config, const gchar *proxy_name, xmlNodePtr nod
 	GdaDataModel *proxy, *proxied;
 	gchar *str;
 
-	str = xmlGetProp (node, "proxied_model");
+	str = xmlGetProp(node, (xmlChar*)"proxied_model");
 	if (!str) {
 		g_warning ("%s(): test error: attibute 'proxied_model' not found", __FUNCTION__);
 		return;
@@ -450,7 +450,7 @@ action_apply_proxy (TestConfig *config, GdaDataModel *model, xmlNodePtr node, gb
 	g_return_if_fail (model_check (config, model));
 	g_return_if_fail (GDA_IS_DATA_PROXY (model));
 
-	str = xmlGetProp (node, "row");
+	str = xmlGetProp(node, (xmlChar*)"row");
 	if (str) {
 		row = atoi (str);
 		g_free (str);
@@ -502,7 +502,7 @@ action_set_value (TestConfig *config, GdaDataModel *model, xmlNodePtr node, gboo
 
 	g_return_if_fail (model_check (config, model));
 
-	str = xmlGetProp (node, "row");
+	str = xmlGetProp(node, (xmlChar*)"row");
 	if (!str) {
 		g_warning ("%s(): test error: attibute 'row' not found", __FUNCTION__);
 		return;
@@ -510,7 +510,7 @@ action_set_value (TestConfig *config, GdaDataModel *model, xmlNodePtr node, gboo
 	row = atoi (str);
 	g_free (str);
 
-	str = xmlGetProp (node, "col");
+	str = xmlGetProp(node, (xmlChar*)"col");
 	if (!str) {
 		g_warning ("%s(): test error: attibute 'col' not found", __FUNCTION__);
 		return;
@@ -540,7 +540,7 @@ action_set_value (TestConfig *config, GdaDataModel *model, xmlNodePtr node, gboo
 			gchar *isnull;
 			GValue *value = NULL;
 
-			isnull = xmlGetProp (vnode, "isnull");
+			isnull = xmlGetProp(vnode, (xmlChar*)"isnull");
 			if (isnull) {
 				if ((*isnull == 'f') || (*isnull == 'F')) {
 					g_free (isnull);
@@ -588,7 +588,7 @@ action_remove_row (TestConfig *config, GdaDataModel *model, xmlNodePtr node, gbo
 
 	g_return_if_fail (model_check (config, model));
 
-	str = xmlGetProp (node, "row");
+	str = xmlGetProp(node, (xmlChar*)"row");
 	if (!str) {
 		g_warning ("%s(): test error: attibute 'row' not found", __FUNCTION__);
 		return;
@@ -633,7 +633,7 @@ action_idle (TestConfig *config, xmlNodePtr node)
 	gchar *str;
 	gint wait_sec;
 
-	str = xmlGetProp (node, "wait_sec");
+	str = xmlGetProp(node, (xmlChar*)"wait_sec");
 	if (!str) {
 		g_warning ("%s(): test error: attibute 'wait_sec' not found", __FUNCTION__);
 		return;

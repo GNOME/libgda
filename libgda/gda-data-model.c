@@ -1040,13 +1040,13 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 		
 		xml_node = gda_data_model_to_xml_node (model, cols, nb_cols, rows, nb_rows, name);
-		xml_doc = xmlNewDoc ("1.0");
+		xml_doc = xmlNewDoc ((xmlChar*)"1.0");
 		xmlDocSetRootElement (xml_doc, xml_node);
 		
 		xmlDocDumpMemory (xml_doc, &xml_contents, &size);
 		xmlFreeDoc (xml_doc);
 		
-		xml = g_strdup (xml_contents);
+		xml = g_strdup ((gchar*)xml_contents);
 		xmlFree (xml_contents);
 		
 		return xml;
@@ -1218,7 +1218,7 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols, c
 static void
 xml_set_boolean (xmlNodePtr node, const gchar *name, gboolean value)
 {
-	xmlSetProp (node, name, value ? "TRUE" : "FALSE");
+	xmlSetProp (node, (xmlChar*)name, value ? (xmlChar*)"TRUE" : (xmlChar*)"FALSE");
 }
 
 static void
@@ -1227,7 +1227,7 @@ xml_set_int (xmlNodePtr node, const gchar *name, gint value)
 	char s[80];
 
 	sprintf (s, "%d", value);
-	xmlSetProp (node, name, s);
+	xmlSetProp (node, (xmlChar*)name, (xmlChar*)s);
 }
 
 /**
@@ -1255,19 +1255,19 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	node = xmlNewNode (NULL, "gda_array");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_array");
 	
 	str = (gchar *) gda_object_get_id (GDA_OBJECT (model));
 	if (str)
 		arrayid = g_strdup_printf ("DA%s", str);
 	else
 		arrayid = g_strdup ("EXPORT");
-	xmlSetProp (node, "id", arrayid);
+	xmlSetProp (node, (xmlChar*)"id", (xmlChar*)arrayid);
 
 	if (name)
-		xmlSetProp (node, "name", name);
+		xmlSetProp (node, (xmlChar*)"name", (xmlChar*)name);
 	else
-		xmlSetProp (node, "name", _("Exported Data"));
+		xmlSetProp (node, (xmlChar*)"name", (xmlChar*)_("Exported Data"));
 
 	/* compute columns if not provided */
 	if (!cols) {
@@ -1294,21 +1294,21 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 			return NULL;
 		}
 
-		field = xmlNewChild (node, NULL, "gda_array_field", NULL);
+		field = xmlNewChild (node, NULL, (xmlChar*)"gda_array_field", NULL);
 		str = g_strdup_printf ("%s:FI%d", arrayid, i);
-		xmlSetProp (field, "id", str);
+		xmlSetProp (field, (xmlChar*)"id", (xmlChar*)str);
 		g_free (str);
-		xmlSetProp (field, "name", gda_column_get_name (column));
+		xmlSetProp (field, (xmlChar*)"name", (xmlChar*)gda_column_get_name (column));
 		cstr = gda_column_get_title (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, "title", cstr);
+			xmlSetProp (field, (xmlChar*)"title", (xmlChar*)cstr);
 		cstr = gda_column_get_caption (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, "caption", cstr);
+			xmlSetProp (field, (xmlChar*)"caption", (xmlChar*)cstr);
 		cstr = gda_column_get_dbms_type (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, "dbms_type", cstr);
-		xmlSetProp (field, "gdatype", gda_g_type_to_string (gda_column_get_g_type (column)));
+			xmlSetProp (field, (xmlChar*)"dbms_type", (xmlChar*)cstr);
+		xmlSetProp (field, (xmlChar*)"gdatype", (xmlChar*)gda_g_type_to_string (gda_column_get_g_type (column)));
 		if (gda_column_get_defined_size (column) != 0)
 			xml_set_int (field, "size", gda_column_get_defined_size (column));
 		if (gda_column_get_scale (column) != 0)
@@ -1323,10 +1323,10 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols,
 			xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (column));
 		cstr = gda_column_get_references (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, "ref", cstr);
+			xmlSetProp (field, (xmlChar*)"ref", (xmlChar*)cstr);
 		cstr = gda_column_get_table (column);
 		if (cstr && *cstr)
-			xmlSetProp (field, "table", cstr);
+			xmlSetProp (field, (xmlChar*)"table", (xmlChar*)cstr);
 	}
 	
 	/* add the model data to the XML output */
@@ -1388,28 +1388,28 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 	g_ptr_array_set_size (values, gda_data_model_get_n_columns (model));
 	for (xml_field = xml_row->xmlChildrenNode; xml_field != NULL; xml_field = xml_field->next) {
 		GValue *value = NULL;
-		GdaColumn *column;
+		GdaColumn *column = NULL;
 		GType gdatype;
-		gchar *isnull;
-		xmlChar *this_lang;
-		xmlChar *colid;
+		gchar *isnull = NULL;
+		xmlChar *this_lang = NULL;
+		xmlChar *colid = NULL;
 
 		if (xmlNodeIsText (xml_field))
 			continue;
 
-		if (strcmp (xml_field->name, "gda_value") && strcmp (xml_field->name, "gda_array_value")) {
+		if (strcmp ((gchar*)xml_field->name, "gda_value") && strcmp ((gchar*)xml_field->name, "gda_array_value")) {
 			g_set_error (error, 0, 0, _("Expected tag <gda_value> or <gda_array_value>, "
-						    "got <%s>, ignoring"), xml_field->name);
+						    "got <%s>, ignoring"), (gchar*)xml_field->name);
 			continue;
 		}
 		
-		this_lang = xmlGetProp (xml_field, "lang");
-		if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+		this_lang = xmlGetProp (xml_field, (xmlChar*)"lang");
+		if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
 			xmlFree (this_lang);
 			continue;
 		}
 
-		colid = xmlGetProp (xml_field, "colid");
+		colid = xmlGetProp (xml_field, (xmlChar*)"colid");
 
 		/* create the value for this field */
 		if (!colid) {
@@ -1419,7 +1419,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 				column = gda_data_model_describe_column (model, pos);
 		}
 		else {
-			column = find_column_from_id (model, colid, &pos);
+			column = find_column_from_id (model, (gchar*)colid, &pos);
 			xmlFree (colid);
 			if (!column)
 				continue;
@@ -1434,7 +1434,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 			break;
 		}
 
-		isnull = xmlGetProp (xml_field, "isnull");
+		isnull = (gchar*)xmlGetProp (xml_field, (xmlChar*)"isnull");
 		if (isnull) {
 			if ((*isnull == 'f') || (*isnull == 'F')) {
 				g_free (isnull);
@@ -1444,7 +1444,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 
 		if (!isnull) {
 			value = g_new0 (GValue, 1);
-			if (!gda_value_set_from_string (value, xmlNodeGetContent (xml_field), gdatype)) {
+			if (!gda_value_set_from_string (value, (gchar*)xmlNodeGetContent (xml_field), gdatype)) {
 				g_free (value);
 				g_set_error (error, 0, 0, _("Cannot interpret string as a valid %s value"), 
 					     gda_g_type_to_string (gdatype));
@@ -1508,14 +1508,14 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
 	while (xmlNodeIsText (node))
 		node = node->next;
 
-	if (strcmp (node->name, "gda_array_data")) {
+	if (strcmp ((gchar*)node->name, "gda_array_data")) {
 		g_set_error (error, 0, 0,
 			     _("Expected tag <gda_array_data>, got <%s>"), node->name);
 		return FALSE;
 	}
 
 	for (children = node->xmlChildrenNode; children != NULL; children = children->next) {
-		if (!strcmp (children->name, "gda_array_row")) {
+		if (!strcmp ((gchar*)children->name, "gda_array_row")) {
 			if (!add_xml_row (model, children, error))
 				return FALSE;
 		}

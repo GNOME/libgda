@@ -743,15 +743,15 @@ gda_query_field_func_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	func = GDA_QUERY_FIELD_FUNC (iface);
 
-	node = xmlNewNode (NULL, "gda_query_ffunc");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_query_ffunc");
 	
 	str = gda_xml_storage_get_xml_id (iface);
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
 
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (func)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (func)));
 	if (gda_object_get_description (GDA_OBJECT (func)) && *gda_object_get_description (GDA_OBJECT (func)))
-		xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (func)));
+		xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (func)));
 
 	obj = NULL;
 	if (gda_object_ref_activate (func->priv->func_ref))
@@ -760,32 +760,32 @@ gda_query_field_func_save_to_xml (GdaXmlStorage *iface, GError **error)
 	if (obj) {
 		gchar *xmlid;
 		xmlid = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (obj));
-		xmlSetProp (node, "func", xmlid);
+		xmlSetProp(node, (xmlChar*)"func", (xmlChar*)xmlid);
 	}
 	else {
 		const gchar *cstr;
 
 		cstr = gda_object_ref_get_ref_name (func->priv->func_ref, NULL, NULL);
 		if (cstr)
-			xmlSetProp (node, "func_name", cstr);
+			xmlSetProp(node, (xmlChar*)"func_name", (xmlChar*)cstr);
 	}
 
 	if (! gda_query_field_is_visible (GDA_QUERY_FIELD (func)))
-		xmlSetProp (node, "is_visible",  "f");
+		xmlSetProp(node, (xmlChar*)"is_visible",  (xmlChar*)"f");
 	if (gda_query_field_is_internal (GDA_QUERY_FIELD (func)))
-		xmlSetProp (node, "is_internal", "t");
+		xmlSetProp(node, (xmlChar*)"is_internal", (xmlChar*)"t");
 
 	str = (gchar *) gda_query_field_get_alias (GDA_QUERY_FIELD (func));
 	if (str && *str) 
-		xmlSetProp (node, "alias", str);
+		xmlSetProp(node, (xmlChar*)"alias", (xmlChar*)str);
 
 	/* function's arguments */
 	list = func->priv->args;
 	while (list) {
 		xmlNodePtr argnode;
 
-		argnode = xmlNewChild (node, NULL, "gda_query_field_ref", NULL);
-		xmlSetProp (argnode, "object", gda_object_ref_get_ref_name (GDA_OBJECT_REF (list->data), NULL, NULL));
+		argnode = xmlNewChild (node, NULL, (xmlChar*)"gda_query_field_ref", NULL);
+		xmlSetProp(argnode, (xmlChar*)"object", (xmlChar*)gda_object_ref_get_ref_name (GDA_OBJECT_REF (list->data), NULL, NULL));
 		list = g_slist_next (list);
 	}
 
@@ -804,7 +804,7 @@ gda_query_field_func_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErro
 	g_return_val_if_fail (node, FALSE);
 
 	func = GDA_QUERY_FIELD_FUNC (iface);
-	if (strcmp (node->name, "gda_query_ffunc")) {
+	if (strcmp ((gchar*)node->name, "gda_query_ffunc")) {
 		g_set_error (error,
 			     GDA_QUERY_FIELD_FUNC_ERROR,
 			     GDA_QUERY_FIELD_FUNC_XML_LOAD_ERROR,
@@ -812,7 +812,7 @@ gda_query_field_func_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErro
 		return FALSE;
 	}
 
-	prop = xmlGetProp (node, "id");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"id");
 	if (prop) {
 		gchar *ptr, *tok;
 		ptr = strtok_r (prop, ":", &tok);
@@ -828,26 +828,26 @@ gda_query_field_func_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErro
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
 	if (prop) {
 		gda_object_set_name (GDA_OBJECT (func), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "descr");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (func), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "func");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"func");
 	if (prop) {
 		funcref = TRUE;
 		gda_object_ref_set_ref_name (func->priv->func_ref, GDA_TYPE_DICT_FUNCTION, REFERENCE_BY_XML_ID, prop);
 		g_free (prop);
 	}
 	else {
-		prop = xmlGetProp (node, "func_name");
+		prop = (gchar*)xmlGetProp(node, (xmlChar*)"func_name");
 		if (prop) {
 			funcref = TRUE;
 			gda_object_ref_set_ref_name (func->priv->func_ref, GDA_TYPE_DICT_FUNCTION, REFERENCE_BY_NAME, prop);
@@ -855,19 +855,19 @@ gda_query_field_func_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErro
 		}
 	}
 
-	prop = xmlGetProp (node, "is_visible");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"is_visible");
 	if (prop) {
 		gda_query_field_set_visible (GDA_QUERY_FIELD (func), (*prop == 't') ? TRUE : FALSE);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "is_internal");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"is_internal");
 	if (prop) {
 		gda_query_field_set_internal (GDA_QUERY_FIELD (func), (*prop == 't') ? TRUE : FALSE);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "alias");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"alias");
 	if (prop) {
 		gda_query_field_set_alias (GDA_QUERY_FIELD (func), prop);
 		g_free (prop);
@@ -879,8 +879,8 @@ gda_query_field_func_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErro
 		xmlNodePtr argnode = node->children;
 		dict = gda_object_get_dict (GDA_OBJECT (func));
 		while (argnode) {
-			if (!strcmp (argnode->name, "gda_query_field_ref")) {
-				prop = xmlGetProp (argnode, "object");
+			if (!strcmp ((gchar*)argnode->name, "gda_query_field_ref")) {
+				prop = (gchar*)xmlGetProp(argnode, (xmlChar*)"object");
 				if (prop) {
 					GdaObjectRef *ref;
 

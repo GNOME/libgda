@@ -82,11 +82,11 @@ types_load_xml_tree (GdaDict *dict, xmlNodePtr types, GError **error)
 	gboolean allok = TRUE;
 	
 	while (qnode && allok) {
-		if (!strcmp (qnode->name, XML_ELEM_TAG)) {
+		if (!strcmp ((gchar*)qnode->name, XML_ELEM_TAG)) {
 			gchar *prop;
 			gboolean load = TRUE;
 
-			prop = xmlGetProp (qnode, "custom");
+			prop = (gchar*)xmlGetProp(qnode, (xmlChar*)"custom");
 			if (prop) {
 				if (*prop == 't')
 					load = FALSE;
@@ -140,7 +140,7 @@ types_save_xml_tree (GdaDict *dict, xmlNodePtr group, GError **error)
 		qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (list->data), error);
 		if (qnode) {
 			xmlAddChild (group, qnode);
-			xmlSetProp (qnode, "custom", "t");
+			xmlSetProp(qnode, (xmlChar*)"custom", (xmlChar*)"t");
 		}
 		else 
 			/* error handling */

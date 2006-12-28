@@ -270,18 +270,18 @@ dict_type_save_to_xml (GdaXmlStorage *iface, GError **error)
 	g_return_val_if_fail (GDA_DICT_TYPE (iface)->priv, NULL);
 	dt = GDA_DICT_TYPE (iface);
 
-	node = xmlNewNode (NULL, "gda_dict_type");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_dict_type");
 	
 	str = dict_type_get_xml_id (iface);
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (dt)));
-	xmlSetProp (node, "owner", gda_object_get_owner (GDA_OBJECT (dt)));
-	xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (dt)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (dt)));
+	xmlSetProp(node, (xmlChar*)"owner", (xmlChar*)gda_object_get_owner (GDA_OBJECT (dt)));
+	xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (dt)));
 	str = g_strdup_printf ("%d", dt->priv->numparams);
-	xmlSetProp (node, "nparam", str);
+	xmlSetProp(node, (xmlChar*)"nparam", (xmlChar*)str);
 	g_free (str);
-	xmlSetProp (node, "gdatype", gda_g_type_to_string (dt->priv->g_type));
+	xmlSetProp(node, (xmlChar*)"gdatype", (xmlChar*)gda_g_type_to_string (dt->priv->g_type));
 
 	if (dt->priv->synonyms) {
 		GSList *list = dt->priv->synonyms;
@@ -294,7 +294,7 @@ dict_type_save_to_xml (GdaXmlStorage *iface, GError **error)
 			g_string_append (string, (gchar *) list->data);
 			list = g_slist_next (list);			
 		}
-		xmlSetProp (node, "synonyms", string->str);
+		xmlSetProp(node, (xmlChar*)"synonyms", (xmlChar*)string->str);
 		g_string_free (string, TRUE);
 	}
 
@@ -313,7 +313,7 @@ dict_type_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 	g_return_val_if_fail (node, FALSE);
 
 	dt = GDA_DICT_TYPE (iface);
-	if (strcmp (node->name, "gda_dict_type")) {
+	if (strcmp ((gchar*)node->name, "gda_dict_type")) {
 		g_set_error (error,
 			     GDA_DICT_TYPE_ERROR,
 			     GDA_DICT_TYPE_XML_LOAD_ERROR,
@@ -321,33 +321,33 @@ dict_type_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 		return FALSE;
 	}
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
 	if (prop) {
 		pname = TRUE;
 		gda_object_set_name (GDA_OBJECT (dt), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "descr");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (dt), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "owner");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"owner");
 	if (prop) {
 		gda_object_set_owner (GDA_OBJECT (dt), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "nparam");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"nparam");
 	if (prop) {
 		pnparam = TRUE;
 		dt->priv->numparams = atoi (prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "gdatype");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"gdatype");
 	if (prop) {
 		dt->priv->g_type = gda_g_type_from_string (prop);
 		if (dt->priv->g_type == G_TYPE_INVALID)
@@ -360,7 +360,7 @@ dict_type_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "synonyms");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"synonyms");
 	if (prop) {
 		gchar *tok;
 		gchar *buf;

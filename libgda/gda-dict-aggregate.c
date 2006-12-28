@@ -35,6 +35,8 @@ static void gda_dict_aggregate_init (GdaDictAggregate * agg);
 static void gda_dict_aggregate_dispose (GObject   * object);
 static void gda_dict_aggregate_finalize (GObject   * object);
 
+#if 0
+This object has no properties:
 static void gda_dict_aggregate_set_property (GObject *object,
 					     guint param_id,
 					     const GValue *value,
@@ -43,6 +45,7 @@ static void gda_dict_aggregate_get_property (GObject *object,
 					     guint param_id,
 					     GValue *value,
 					     GParamSpec *pspec);
+#endif
 
 #ifdef GDA_DEBUG
 static void gda_dict_aggregate_dump (GdaDictAggregate *agg, guint offset);
@@ -56,12 +59,15 @@ static gboolean    gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNo
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
+#if 0
+This object does not have any properties.
 /* properties */
 enum
 {
 	PROP_0,
 	PROP
 };
+#endif
 
 
 /* private structure */
@@ -132,6 +138,8 @@ gda_dict_aggregate_class_init (GdaDictAggregateClass * class)
 	object_class->dispose = gda_dict_aggregate_dispose;
 	object_class->finalize = gda_dict_aggregate_finalize;
 
+        #if 0
+        This object does not have any properties:
 	/* Properties */
 	object_class->set_property = gda_dict_aggregate_set_property;
 	object_class->get_property = gda_dict_aggregate_get_property;
@@ -142,6 +150,7 @@ gda_dict_aggregate_class_init (GdaDictAggregateClass * class)
          */
 	g_object_class_install_property (object_class, PROP,
 					 g_param_spec_pointer ("prop", NULL, NULL, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+        #endif
 
 	/* virtual functions */
 #ifdef GDA_DEBUG
@@ -224,7 +233,8 @@ gda_dict_aggregate_finalize (GObject   * object)
 	parent_class->finalize (object);
 }
 
-
+#if 0
+This object does not have any properties.
 static void 
 gda_dict_aggregate_set_property (GObject *object,
 			guint param_id,
@@ -263,6 +273,7 @@ gda_dict_aggregate_get_property (GObject *object,
 		}	
 	}
 }
+#endif
 
 #ifdef GDA_DEBUG
 static void
@@ -321,33 +332,33 @@ gnome_db_aggregate_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	agg = GDA_DICT_AGGREGATE (iface);
 
-	node = xmlNewNode (NULL, "gda_dict_aggregate");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_dict_aggregate");
 
 	str = gnome_db_aggregate_get_xml_id (iface);
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (agg)));
-	xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (agg)));
-	xmlSetProp (node, "owner", gda_object_get_owner (GDA_OBJECT (agg)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (agg)));
+	xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (agg)));
+	xmlSetProp(node, (xmlChar*)"owner", (xmlChar*)gda_object_get_owner (GDA_OBJECT (agg)));
 
 	/* return type */
 	if (agg->priv->result_type) {
-		subnode = xmlNewChild (node, NULL, "gda_func_param", NULL);
+		subnode = xmlNewChild (node, NULL, (xmlChar*)"gda_func_param", NULL);
 		
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (agg->priv->result_type));
-		xmlSetProp (subnode, "type", str);
+		xmlSetProp(subnode, (xmlChar*)"type", (xmlChar*)str);
 		g_free (str);
-		xmlSetProp (subnode, "way", "out");
+		xmlSetProp(subnode, (xmlChar*)"way", (xmlChar*)"out");
 	}
 
 	/* argument type */
 	if (agg->priv->arg_type) {
-		subnode = xmlNewChild (node, NULL, "gda_func_param", NULL);
+		subnode = xmlNewChild (node, NULL, (xmlChar*)"gda_func_param", NULL);
 		
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (agg->priv->arg_type));
-		xmlSetProp (subnode, "type", str);
+		xmlSetProp(subnode, (xmlChar*)"type", (xmlChar*)str);
 		g_free (str);
-		xmlSetProp (subnode, "way", "in");
+		xmlSetProp(subnode, (xmlChar*)"way", (xmlChar*)"in");
 	}
 
 	return node;
@@ -368,7 +379,7 @@ gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError 
 
 	agg = GDA_DICT_AGGREGATE (iface);
 	dict = gda_object_get_dict (GDA_OBJECT (agg));
-	if (strcmp (node->name, "gda_dict_aggregate")) {
+	if (strcmp ((gchar*)node->name, "gda_dict_aggregate")) {
 		g_set_error (error,
 			     GDA_DICT_AGGREGATE_ERROR,
 			     GDA_DICT_AGGREGATE_XML_LOAD_ERROR,
@@ -377,7 +388,7 @@ gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError 
 	}
 
 	/* aggregate's attributes */
-	prop = xmlGetProp (node, "id");
+	prop = (gchar*)xmlGetProp (node, (xmlChar*)"id");
 	if (prop) {
 		if ((*prop == 'A') && (*(prop+1)=='G')) {
 			pid = TRUE;
@@ -388,20 +399,20 @@ gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError 
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp (node, (xmlChar*)"name");
 	if (prop) {
 		pname = TRUE;
 		gda_object_set_name (GDA_OBJECT (agg), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "descr");
+	prop = (gchar*)xmlGetProp (node, (xmlChar*)"descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (agg), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "owner");
+	prop = (gchar*)xmlGetProp (node, (xmlChar*)"owner");
 	if (prop) {
 		gda_object_set_owner (GDA_OBJECT (agg), prop);
 		g_free (prop);
@@ -410,9 +421,9 @@ gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError 
 	/* arguments and return type */
 	subnode = node->children;
 	while (subnode) {
-		if (!strcmp (subnode->name, "gda_func_param")) {
+		if (!strcmp ((gchar*)subnode->name, "gda_func_param")) {
 			GdaDictType *dt = NULL;
-			prop = xmlGetProp (subnode, "type");
+			prop = (gchar*)xmlGetProp (subnode, (xmlChar*)"type");
 			if (prop) {
 				dt = gda_dict_get_dict_type_by_xml_id (dict, prop);
 				g_free (prop);
@@ -427,7 +438,7 @@ gnome_db_aggregate_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError 
 				return FALSE;
 			}
 			
-			prop = xmlGetProp (subnode, "way");
+			prop = (gchar*)xmlGetProp (subnode, (xmlChar*)"way");
 			if (prop) {
 				if (*prop == 'o') {
 					if (agg->priv->result_type) {

@@ -588,13 +588,13 @@ gda_graph_save_to_xml (GdaXmlStorage *iface, GError **error)
 
         graph = GDA_GRAPH (iface);
 
-        node = xmlNewNode (NULL, "gda_graph");
+        node = xmlNewNode (NULL, (xmlChar*)"gda_graph");
 
         str = gda_graph_get_xml_id (iface);
-        xmlSetProp (node, "id", str);
+        xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
         g_free (str);
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (graph)));
-        xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (graph)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (graph)));
+        xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (graph)));
 
 	switch (graph->priv->type) {
 	case GDA_GRAPH_DB_RELATIONS:
@@ -610,13 +610,13 @@ gda_graph_save_to_xml (GdaXmlStorage *iface, GError **error)
 		g_assert_not_reached ();
 		break;
 	}
-        xmlSetProp (node, "type", str);
+        xmlSetProp(node, (xmlChar*)"type", (xmlChar*)str);
 	
 	if (graph->priv->ref_object) {
 		GdaObject *base = gda_object_ref_get_ref_object (graph->priv->ref_object);
 		if (base) {
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (base));
-			xmlSetProp (node, "object", str);
+			xmlSetProp(node, (xmlChar*)"object", (xmlChar*)str);
 			g_free (str);
 		}
 	}
@@ -654,7 +654,7 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 	reg = gda_dict_get_object_type_registration (gda_object_get_dict ((GdaObject *)graph), GDA_TYPE_GRAPH);
 	g_assert (reg);
 
-	if (strcmp (node->name, "gda_graph")) {
+	if (strcmp ((gchar*)node->name, "gda_graph")) {
                 g_set_error (error,
                              GDA_GRAPH_ERROR,
                              GDA_GRAPH_XML_LOAD_ERROR,
@@ -662,7 +662,7 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 return FALSE;
         }
 
-	prop = xmlGetProp (node, "id");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"id");
         if (prop) {
                 if (strlen (prop) <= 2) {
                         g_set_error (error,
@@ -677,19 +677,19 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 g_free (prop);
         }
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
         if (prop) {
                 gda_object_set_name (GDA_OBJECT (graph), prop);
                 g_free (prop);
         }
 
-        prop = xmlGetProp (node, "descr");
+        prop = (gchar*)xmlGetProp(node, (xmlChar*)"descr");
         if (prop) {
                 gda_object_set_description (GDA_OBJECT (graph), prop);
                 g_free (prop);
         }
 
-	prop = xmlGetProp (node, "type");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"type");
         if (prop) {
 		switch (*prop) {
 		case 'R':
@@ -712,7 +712,7 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 g_free (prop);
         }
 
-	prop = xmlGetProp (node, "object");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"object");
 	if (prop) {
 		if (!graph->priv->ref_object)
 			init_ref_object (graph);
@@ -728,7 +728,7 @@ gda_graph_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 	/* items nodes */
 	children = node->children;
 	while (children) {
-		if (!strcmp (children->name, "gda_graph_item")) {
+		if (!strcmp ((gchar*)children->name, "gda_graph_item")) {
 			GdaGraphItem *item;
 			
 			item = GDA_GRAPH_ITEM (gda_graph_item_new (gda_object_get_dict (GDA_OBJECT (graph)), NULL));

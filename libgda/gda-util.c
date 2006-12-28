@@ -697,9 +697,9 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 		xmlNodePtr row, data, field;
 		gint r, c;
 
-		data = xmlNewChild (parent, NULL, "gda_array_data", NULL);
+		data = xmlNewChild (parent, NULL, (xmlChar*)"gda_array_data", NULL);
 		for (r = 0; r < nrows; r++) {
-			row = xmlNewChild (data, NULL, "gda_array_row", NULL);
+			row = xmlNewChild (data, NULL,  (xmlChar*)"gda_array_row", NULL);
 			for (c = 0; c < rnb_cols; c++) {
 				GValue *value;
 				gchar *str;
@@ -714,13 +714,13 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 						str = gda_value_stringify (value);
 				}
 				if (!use_col_ids) 
-					field = xmlNewChild (row, NULL, "gda_value", str);
+					field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", (xmlChar*)str);
 				else {
-					field = xmlNewChild (row, NULL, "gda_array_value", str);
-					xmlSetProp (field, "colid", col_ids [c]);
+					field = xmlNewChild (row, NULL,  (xmlChar*)"gda_array_value", (xmlChar*)str);
+					xmlSetProp(field, (xmlChar*)"colid",  (xmlChar*)col_ids [c]);
 				}
 				if (!str)
-					xmlSetProp (field, "isnull", "t");
+					xmlSetProp(field,  (xmlChar*)"isnull", (xmlChar*)"t");
 
 				g_free (str);
 			}
@@ -752,18 +752,18 @@ gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSL
 	/* set properties from the XML spec */
 	str = xmlGetProp (node, BAD_CAST "id");
 	if (str) {
-		g_object_set (G_OBJECT (param), "string_id", str, NULL);
+		g_object_set (G_OBJECT (param), "string_id", (gchar*)str, NULL);
 		xmlFree (str);
 	}	
 
 	str = xmlGetProp (node, BAD_CAST "name");
 	if (str) {
-		gda_object_set_name (GDA_OBJECT (param), str);
+		gda_object_set_name (GDA_OBJECT (param), (gchar*)str);
 		xmlFree (str);
 	}
 	str = xmlGetProp (node, BAD_CAST "descr");
 	if (str) {
-		gda_object_set_description (GDA_OBJECT (param), str);
+		gda_object_set_description (GDA_OBJECT (param), (gchar*)str);
 		xmlFree (str);
 	}
 	str = xmlGetProp (node, BAD_CAST "nullok");
@@ -775,20 +775,20 @@ gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSL
 		gda_parameter_set_not_null (param, FALSE);
 	str = xmlGetProp (node, BAD_CAST "plugin");
 	if (str) {
-		g_object_set (G_OBJECT (param), "entry_plugin", str, NULL);
+		g_object_set (G_OBJECT (param), "entry_plugin", (gchar*)str, NULL);
 		xmlFree (str);
 	}
 	
 	str = xmlGetProp (node, BAD_CAST "source");
 	if (str) 
-		g_object_set_data_full (G_OBJECT (param), "source", str, g_free);
+		g_object_set_data_full (G_OBJECT (param), "source", (gchar*)str, g_free);
 
 	/* set restricting source if specified */
 	if (str && sources) {
 		gchar *ptr1, *ptr2 = NULL, *tok;
 		gchar *source;
 			
-		source = g_strdup (str);
+		source = g_strdup ((gchar*)str);
 		ptr1 = strtok_r (source, ":", &tok);
 		if (ptr1)
 			ptr2 = strtok_r (NULL, ":", &tok);
@@ -843,20 +843,20 @@ gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSL
 				continue;
 			}
 
-			if (strcmp (vnode->name, "gda_value")) {
+			if (strcmp ((gchar*)vnode->name, "gda_value")) {
 				vnode = vnode->next;
 				continue;
 			}
 
 			/* don't care about entries for the wrong locale */
-			this_lang = xmlGetProp (vnode, "lang");
-			if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+			this_lang = xmlGetProp(vnode, (xmlChar*)"lang");
+			if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
 				g_free (this_lang);
 				vnode = vnode->next;
 				continue;
 			}
 			
-			isnull = xmlGetProp (vnode, "isnull");
+			isnull = xmlGetProp(vnode, (xmlChar*)"isnull");
 			if (isnull) {
 				if ((*isnull == 'f') || (*isnull == 'F')) {
 					xmlFree (isnull);
@@ -868,7 +868,7 @@ gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSL
 				GValue *value;
 
 				value = g_new0 (GValue, 1);
-				if (! gda_value_set_from_string (value, xmlNodeGetContent (vnode), gdatype)) {
+				if (! gda_value_set_from_string (value, (gchar*)xmlNodeGetContent (vnode), gdatype)) {
 					/* error */
 					g_free (value);
 				}

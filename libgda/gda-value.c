@@ -963,13 +963,13 @@ gda_value_new_from_xml (const xmlNodePtr node)
 	g_return_val_if_fail (node, NULL);
 
 	/* parse the XML */
-	if (!node || !(node->name) || (node && strcmp (node->name, "value"))) 
+	if (!node || !(node->name) || (node && strcmp ((gchar*)node->name, "value"))) 
 		return NULL;
 
 	value = g_new0 (GValue, 1);
 	if (!gda_value_set_from_string (value,
-					xmlNodeGetContent (node),
-					g_type_from_name (xmlGetProp (node, "gdatype")))) {
+					(gchar*)xmlNodeGetContent (node),
+					g_type_from_name ((gchar*)xmlGetProp(node, (xmlChar*)"gdatype")))) {
 		g_free (value);
 		value = NULL;
 	}
@@ -1763,9 +1763,9 @@ gda_value_to_xml (const GValue *value)
 
 	valstr = to_string (value);
 
-	retval = xmlNewNode (NULL, "value");
-	xmlSetProp (retval, "type", g_type_name (G_VALUE_TYPE (value)));
-	xmlNodeSetContent (retval, valstr);
+	retval = xmlNewNode (NULL, (xmlChar*)"value");
+	xmlSetProp(retval, (xmlChar*)"type", (xmlChar*)g_type_name (G_VALUE_TYPE (value)));
+	xmlNodeSetContent (retval, (xmlChar*)valstr);
 
 	g_free (valstr);
 
@@ -1914,7 +1914,7 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 		return g_strdup ("");
 
 	/* compute number of char rewrites */
-	ptr = bin->data;
+	ptr = (gchar*)bin->data;
 	while (offset < realsize) {
 		unichar = g_utf8_get_char_validated (ptr, -1);
 		if ((*ptr == '\n') ||
@@ -2026,7 +2026,7 @@ gda_string_to_binary (const gchar *str, GdaBinary *bin)
 		len ++;
 	}
 
-	bin->data = retval;
+	bin->data = (guchar*)retval;
 	bin->binary_length = len;
 
 	return TRUE;

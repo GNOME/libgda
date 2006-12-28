@@ -87,7 +87,7 @@ queries_load_xml_tree (GdaDict *dict, xmlNodePtr queries, GError **error)
 	g_assert (reg);
 
 	while (qnode && allok) {
-		if (!strcmp (qnode->name, XML_ELEM_TAG)) {
+		if (!strcmp ((gchar*)qnode->name, XML_ELEM_TAG)) {
 			GdaQuery *query;
 
 			query = gda_query_new (dict);

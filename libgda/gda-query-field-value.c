@@ -1010,32 +1010,32 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 	field = GDA_QUERY_FIELD_VALUE (iface);
 	dict = gda_object_get_dict (GDA_OBJECT (field));
 
-	node = xmlNewNode (NULL, "gda_query_fval");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_query_fval");
 	
 	str = gda_xml_storage_get_xml_id (iface);
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
 
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (field)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (field)));
 	if (gda_object_get_description (GDA_OBJECT (field)) && *gda_object_get_description (GDA_OBJECT (field)))
-		xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (field)));
+		xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (field)));
 	if (! gda_query_field_is_visible (GDA_QUERY_FIELD (field)))
-		xmlSetProp (node, "is_visible",  "f");
+		xmlSetProp(node, (xmlChar*)"is_visible",  (xmlChar*)"f");
 	if (gda_query_field_is_internal (GDA_QUERY_FIELD (field)))
-		xmlSetProp (node, "is_internal", "t");
+		xmlSetProp(node, (xmlChar*)"is_internal", (xmlChar*)"t");
 
-	xmlSetProp (node, "is_param", field->priv->is_parameter ? "t" : "f");
-	xmlSetProp (node, "g_type",  gda_g_type_to_string (field->priv->g_type));
+	xmlSetProp(node, (xmlChar*)"is_param", (xmlChar*)(field->priv->is_parameter ? "t" : "f"));
+	xmlSetProp(node, (xmlChar*)"g_type",  (xmlChar*)gda_g_type_to_string (field->priv->g_type));
 	if (field->priv->dict_type) {
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (field->priv->dict_type));
-		xmlSetProp (node, "dict_type",  str);
+		xmlSetProp(node, (xmlChar*)"dict_type", (xmlChar*)str);
 		g_free (str);
 	}
 
 	dh = gda_dict_get_default_handler (dict, field->priv->g_type);
 	if (field->priv->value && (field->priv->g_type != GDA_TYPE_NULL)) {
 		str = gda_data_handler_get_str_from_value (dh, field->priv->value);
-		xmlSetProp (node, "value", str);
+		xmlSetProp(node, (xmlChar*)"value", (xmlChar*)str);
 		g_free (str);
 	}
 	if (field->priv->default_value) {
@@ -1043,13 +1043,13 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 		GType vtype;
 		
 		str = gda_data_handler_get_str_from_value (dhd, field->priv->default_value);
-		xmlSetProp (node, "default", str);
+		xmlSetProp(node, (xmlChar*)"default", (xmlChar*)str);
 		g_free (str);
 		vtype = G_VALUE_TYPE (field->priv->default_value);
-		xmlSetProp (node, "default_g_type", gda_g_type_to_string (vtype));
+		xmlSetProp(node, (xmlChar*)"default_g_type", (xmlChar*)gda_g_type_to_string (vtype));
 	}
 
-	xmlSetProp (node, "nullok", field->priv->is_null_allowed ? "t" : "f");
+	xmlSetProp(node, (xmlChar*)"nullok", (xmlChar*)(field->priv->is_null_allowed ? "t" : "f"));
 
 	if (field->priv->restrict_model) {
 		GSList *psources = (GSList *) gda_query_get_param_sources (field->priv->query);
@@ -1070,17 +1070,17 @@ gda_query_field_value_save_to_xml (GdaXmlStorage *iface, GError **error)
 			}
 		}
 		if (str) {
-			xmlSetProp (node, "restrict", str);
+			xmlSetProp(node, (xmlChar*)"restrict", (xmlChar*)str);
 			g_free (str);
 		}
 	}
 
 	cstr = gda_query_field_get_alias (GDA_QUERY_FIELD (field));
 	if (cstr && *cstr) 
-		xmlSetProp (node, "alias", cstr);
+		xmlSetProp(node, (xmlChar*)"alias", (xmlChar*)cstr);
 	
 	if (field->priv->plugin)
-		xmlSetProp (node, "plugin", field->priv->plugin);
+		xmlSetProp(node, (xmlChar*)"plugin", (xmlChar*)field->priv->plugin);
 
 	return node;
 }
@@ -1100,7 +1100,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 
 	field = GDA_QUERY_FIELD_VALUE (iface);
 	dict = gda_object_get_dict (GDA_OBJECT (field));
-	if (strcmp (node->name, "gda_query_fval")) {
+	if (strcmp ((gchar*)node->name, "gda_query_fval")) {
 		g_set_error (error,
 			     GDA_QUERY_FIELD_VALUE_ERROR,
 			     GDA_QUERY_FIELD_VALUE_XML_LOAD_ERROR,
@@ -1108,7 +1108,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		return FALSE;
 	}
 
-	prop = xmlGetProp (node, "id");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"id");
 	if (prop) {
 		gchar *ptr, *tok;
 		ptr = strtok_r (prop, ":", &tok);
@@ -1124,31 +1124,31 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
 	if (prop) {
 		gda_object_set_name (GDA_OBJECT (field), prop);
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "descr");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (field), prop);
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "is_visible");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"is_visible");
 	if (prop) {
 		gda_query_field_set_visible (GDA_QUERY_FIELD (field), (*prop == 't') ? TRUE : FALSE);
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "is_internal");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"is_internal");
 	if (prop) {
 		gda_query_field_set_internal (GDA_QUERY_FIELD (field), (*prop == 't') ? TRUE : FALSE);
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "g_type");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"g_type");
 	if (prop) {
 		field->priv->g_type = gda_g_type_from_string (prop);
 		dh = gda_dict_get_default_handler (dict, field->priv->g_type);
@@ -1158,7 +1158,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 			field->priv->value = gda_value_new_null ();
 	}
 
-	prop = xmlGetProp (node, "dict_type");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"dict_type");
 	if (prop) {
 		GdaDictType *dict_type;
 		dict_type = gda_dict_get_dict_type_by_xml_id (dict, prop);
@@ -1169,7 +1169,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "value");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"value");
 	if (prop) {
 		if (dh) {
 			field->priv->value = gda_data_handler_get_value_from_str (dh, prop, field->priv->g_type);
@@ -1186,11 +1186,11 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "default");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"default");
 	if (prop) {
 		gchar *str2;
 
-		str2 = xmlGetProp (node, "default_g_type");
+		str2 = (gchar*)xmlGetProp(node, (xmlChar*)"default_g_type");
 		if (str2) {
 			GdaDataHandler *dh2;
 			GType vtype;
@@ -1206,23 +1206,23 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "is_param");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"is_param");
 	if (prop) {
 		field->priv->is_parameter = (*prop == 't') ? TRUE : FALSE;
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "nullok");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"nullok");
 	if (prop) {
 		field->priv->is_null_allowed = (*prop == 't') ? TRUE : FALSE;
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "plugin");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"plugin");
 	if (prop) 
 		field->priv->plugin = prop;
 
-	prop = xmlGetProp (node, "restrict");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"restrict");
 	if (prop) {
 		GdaDataModel *model = NULL;
 		gint col = -1;
@@ -1275,7 +1275,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "alias");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"alias");
 	if (prop) {
 		gda_query_field_set_alias (GDA_QUERY_FIELD (field), prop);
 		xmlFree (prop);

@@ -30,6 +30,7 @@
 #include <libgda/gda-parameter-list.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-data-model-private.h> /* For #include <libgda/gda-dict.h>() */
 #include "gda-util.h"
 #include <string.h>
 #ifdef HAVE_LOCALE_H
@@ -696,14 +697,14 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 		GSList *sources = NULL;
 	
 		node = specnode->children;
-		while (node && (xmlNodeIsText (node) || strcmp (node->name, "sources"))) 
+		while (node && (xmlNodeIsText (node) || strcmp ((gchar*)node->name, "sources"))) 
 		node = node->next; 
-		if (node && !strcmp (node->name, "sources")){
+		if (node && !strcmp ((gchar*)node->name, "sources")){
 			for (node = node->xmlChildrenNode; (node != NULL); node = node->next) {
 				if (xmlNodeIsText (node)) 
 					continue;
 				
-				if (!strcmp (node->name, "gda_array")) {
+				if (!strcmp ((gchar*)node->name, "gda_array")) {
 					GdaDataModel *model;
 					GSList *errors;
 					
@@ -716,9 +717,9 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 					else  {
 						xmlChar *str;
 						sources = g_slist_prepend (sources, model);
-						str = xmlGetProp (node, "name");
+						str = xmlGetProp(node, (xmlChar*)"name");
 						if (str) {
-							gda_object_set_name (GDA_OBJECT (model), str);
+							gda_object_set_name (GDA_OBJECT (model), (gchar*)str);
 							xmlFree (str);
 						}
 					}
@@ -743,8 +744,8 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 		}
 
 		/* don't care about entries for the wrong locale */
-		this_lang = xmlGetProp (node, "lang");
-		if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+		this_lang = xmlGetProp(node, (xmlChar*)"lang");
+		if (this_lang && strncmp ((gchar*)this_lang, lang, strlen ((gchar*)this_lang))) {
 			g_free (this_lang);
 			node = node->next;
 			continue;
@@ -752,7 +753,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 
 		id = xmlGetProp (node, BAD_CAST "id");
 		complete_path = g_strdup_printf ("%s/%s", root ? root : "", id);
-		path_name = g_strdup (id);
+		path_name = g_strdup ((gchar*)id);
 		if (id)
 			xmlFree (id);
 
@@ -763,7 +764,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 		}
 
 		/* GDA_SERVER_OPERATION_NODE_PARAMLIST */
-		if (!strcmp (node->name, "parameters")) {
+		if (!strcmp ((gchar*)node->name, "parameters")) {
 			GdaParameterList *plist;
 
 			plist = gda_parameter_list_new_from_spec_node (NULL, node, &error);
@@ -778,7 +779,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 			}
 		}
 		/* GDA_SERVER_OPERATION_NODE_DATA_MODEL */
-		else if (!strcmp (node->name, "gda_array")) {
+		else if (!strcmp ((gchar*)node->name, "gda_array")) {
 			GdaDataModel *import;
 
 			import = gda_data_model_import_new_xml_node (node);
@@ -795,7 +796,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 		}
 
 		/* GDA_SERVER_OPERATION_NODE_SEQUENCE */
-		else if (!strcmp (node->name, "sequence")) {
+		else if (!strcmp ((gchar*)node->name, "sequence")) {
 			GSList *seq_tmpl = NULL;
 			xmlChar *prop;
 
@@ -806,28 +807,28 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 			opnode->d.seq.seq_items = NULL;
 			opnode->d.seq.xml_spec = node;
 			
-			prop = xmlGetProp (node, "name");
+			prop = xmlGetProp(node, (xmlChar*)"name");
 			if (prop) {
-				opnode->d.seq.name = g_strdup (prop);
+				opnode->d.seq.name = g_strdup ((gchar*)prop);
 				xmlFree (prop);
 			}
 			
-			prop = xmlGetProp (node, "descr");
+			prop = xmlGetProp(node, (xmlChar*)"descr");
 			if (prop) {
-				opnode->d.seq.descr = g_strdup (prop);
+				opnode->d.seq.descr = g_strdup ((gchar*)prop);
 				xmlFree (prop);
 			}
 
 			
-			prop = xmlGetProp (node, "minitems");
+			prop = xmlGetProp(node, (xmlChar*)"minitems");
 			if (prop) {
-				opnode->d.seq.min_items = atoi (prop);
+				opnode->d.seq.min_items = atoi ((gchar*)prop);
 				xmlFree (prop);
 			}
 
-			prop = xmlGetProp (node, "maxitems");
+			prop = xmlGetProp(node, (xmlChar*)"maxitems");
 			if (prop) {
-				opnode->d.seq.max_items = atoi (prop);
+				opnode->d.seq.max_items = atoi ((gchar*)prop);
 				xmlFree (prop);
 			}
 
@@ -836,7 +837,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 		}
 
 		/* GDA_SERVER_OPERATION_NODE_PARAM */
-		else if (!strcmp (node->name, "parameter")) {
+		else if (!strcmp ((gchar*)node->name, "parameter")) {
 			GdaParameter *param = NULL;
 			GdaDictType *dtype = NULL;
 			xmlChar *dbmstype, *gdatype;
@@ -847,7 +848,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 			dbmstype = xmlGetProp (node, BAD_CAST "dbmstype");
 			gdatype = xmlGetProp (node, BAD_CAST "gdatype");
 			dtype = gda_utility_find_or_create_data_type (op->priv->dict, op->priv->prov, op->priv->cnc,
-								  dbmstype, gdatype, &dtype_created);
+								  (gchar*)dbmstype, (gchar*)gdatype, &dtype_created);
 			if (dbmstype) xmlFree (dbmstype);
 			if (gdatype) xmlFree (gdatype);
 			if (!dtype) {
@@ -883,7 +884,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root)
 			/* status */
 			status = xmlGetProp (node, BAD_CAST "status");
 			if (status) {
-				if (!strcmp (status, "OPT"))
+				if (!strcmp ((gchar*)status, "OPT"))
 					opnode->status = GDA_SERVER_OPERATION_STATUS_OPTIONAL;
 				xmlFree (status);
 			}
@@ -1155,11 +1156,11 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 				else
 					str = gda_value_stringify (value);
 			}
-			node = xmlNewChild (parent, NULL, BAD_CAST "op_data", str);
+			node = xmlNewChild (parent, NULL, BAD_CAST "op_data", (xmlChar*)str);
 			g_free (str);
 
 			path = g_strdup_printf ("%s/%s", complete_path, gda_object_get_id (GDA_OBJECT (list->data)));
-			xmlSetProp (node, "path", path);
+			xmlSetProp(node, (xmlChar*)"path", (xmlChar*)path);
 			g_free (path);
 
 			list = g_slist_next (list);
@@ -1167,7 +1168,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 		break;
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL:
 		node = xmlNewChild (parent, NULL, BAD_CAST "op_data", NULL);
-		xmlSetProp (node, "path", complete_path);
+		xmlSetProp(node, (xmlChar*)"path", (xmlChar*)complete_path);
 		gda_utility_data_model_dump_data_to_xml (opnode->d.model, node, NULL, 0, NULL, 0, TRUE);
 		break;
 	case GDA_SERVER_OPERATION_NODE_PARAM: {
@@ -1183,9 +1184,9 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 			else
 				str = gda_value_stringify (value);
 		}
-		node = xmlNewChild (parent, NULL, BAD_CAST "op_data", str);
+		node = xmlNewChild (parent, NULL, BAD_CAST "op_data", (xmlChar*)str);
 		g_free (str);
-		xmlSetProp (node, "path", complete_path);
+		xmlSetProp(node, (xmlChar*)"path", (xmlChar*)complete_path);
 		break;
 	}
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE: {
@@ -1259,7 +1260,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 	}
 
 	/* actual data loading */
-	if (strcmp (node->name, "serv_op_data")) {
+	if (strcmp ((gchar*)node->name, "serv_op_data")) {
 		g_set_error (error, 0, 0,
 			     _("Expected tag <serv_op_data>, got <%s>"), node->name);
 		return FALSE;
@@ -1273,24 +1274,24 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 			continue;
 		}
 
-		if (strcmp (cur->name, "op_data")) {
+		if (strcmp ((gchar*)cur->name, "op_data")) {
 			g_set_error (error, 0, 0,
 				     _("Expected tag <op_data>, got <%s>"), cur->name);
 			return FALSE;
 		}
 
-		prop = xmlGetProp (cur, "path");
+		prop = xmlGetProp(cur, (xmlChar*)"path");
 		if (prop) {
 			Node *opnode;
 			gchar *extension = NULL;
 			gboolean allok = TRUE;
 
-			opnode = node_find_or_create (op, prop);
+			opnode = node_find_or_create (op, (gchar*)prop);
 			if (!opnode) {
 				/* try to see if the "parent" is a real node */
 				gchar *str;
 
-				str = gda_server_operation_get_node_parent (op, prop);
+				str = gda_server_operation_get_node_parent (op, (gchar*)prop);
 				if (str) {
 					opnode = node_find (op, str);
 					if (opnode && (opnode->type != GDA_SERVER_OPERATION_NODE_PARAMLIST))
@@ -1298,7 +1299,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 					g_free (str);
 				}
 				if (opnode)
-					extension = gda_server_operation_get_node_path_portion (op, prop);
+					extension = gda_server_operation_get_node_path_portion (op, (gchar*)prop);
 			}
 
 			if (opnode) {
@@ -1317,7 +1318,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 							GdaParameter *param;
 							param = gda_parameter_list_find_param (opnode->d.plist, extension);
 							if (param && 
-							    !gda_parameter_set_value_str (param, contents->content)) {
+							    !gda_parameter_set_value_str (param, (gchar*)contents->content)) {
 								g_set_error (error, 0, 0,
 									     _("Could not set parameter '%s' to value '%s'"), 
 									     prop, cur->content);
@@ -1336,7 +1337,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 
 					contents = cur->children;
 					if (contents && xmlNodeIsText (contents) && 
-					    !gda_parameter_set_value_str (opnode->d.param, contents->content)) {
+					    !gda_parameter_set_value_str (opnode->d.param, (gchar*)contents->content)) {
 						g_set_error (error, 0, 0,
 							     _("Could not set parameter '%s' to value '%s'"), prop, cur->content);
 						allok = FALSE;

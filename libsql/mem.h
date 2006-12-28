@@ -34,7 +34,10 @@ int memsql_display (void);
 #define memsql_realloc(a,b) g_realloc(a, b)
 #define memsql_free(a) g_free(a)
 
-#define memsql_display() printf("")
+/* TODO: What is the point of this?
+ * Previously it was just printf(""), which probably has no effect, but which caused a warning.
+ */
+#define memsql_display() printf("%s", "")
 
 #define memsql_strappend(a,b) memsql_strappend_raw (GET_FUNC_DETAILS, a, b)
 #define memsql_strappend_free(a,b) memsql_strappend_free_raw (GET_FUNC_DETAILS, a, b)

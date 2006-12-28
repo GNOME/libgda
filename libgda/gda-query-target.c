@@ -736,10 +736,10 @@ gda_query_target_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	target = GDA_QUERY_TARGET (iface);
 
-	node = xmlNewNode (NULL, "gda_query_target");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_query_target");
 	
 	str = gda_xml_storage_get_xml_id (iface);
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
 	
 	if (target->priv->entity_ref) {
@@ -749,7 +749,7 @@ gda_query_target_save_to_xml (GdaXmlStorage *iface, GError **error)
 		if (base) {
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (base));
 			if (str) {
-				xmlSetProp (node, "entity_ref", str);
+				xmlSetProp(node, (xmlChar*)"entity_ref", (xmlChar*)str);
 				g_free (str);
 			}
 			else {
@@ -763,7 +763,7 @@ gda_query_target_save_to_xml (GdaXmlStorage *iface, GError **error)
 		else {
 			str = (gchar *) gda_object_ref_get_ref_name (target->priv->entity_ref, NULL, NULL);
 			if (str) 
-				xmlSetProp (node, "table_name", str);
+				xmlSetProp(node, (xmlChar*)"table_name", (xmlChar*)str);
 			else {
 				g_set_error (error, GDA_QUERY_TARGET_ERROR,
 					     GDA_QUERY_TARGET_XML_SAVE_ERROR,
@@ -790,7 +790,7 @@ gda_query_target_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **
 	g_return_val_if_fail (node, FALSE);
 
 	target = GDA_QUERY_TARGET (iface);
-	if (strcmp (node->name, "gda_query_target")) {
+	if (strcmp ((gchar*)node->name, "gda_query_target")) {
 		g_set_error (error,
 			     GDA_QUERY_TARGET_ERROR,
 			     GDA_QUERY_TARGET_XML_LOAD_ERROR,
@@ -798,7 +798,7 @@ gda_query_target_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **
 		return FALSE;
 	}
 
-	str = xmlGetProp (node, "id");
+	str = (gchar*)xmlGetProp(node, (xmlChar*)"id");
 	if (str) {
 		gchar *tok, *ptr;
 
@@ -821,7 +821,7 @@ gda_query_target_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **
 		g_free (str);
 	}
 
-	str = xmlGetProp (node, "entity_ref");
+	str = (char*)xmlGetProp(node, (xmlChar*)"entity_ref");
 	if (str) {
 		GType target_ref;
 		const gchar *name;
@@ -847,7 +847,7 @@ gda_query_target_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **
 		g_free (str);
 	}
 	else {
-		str = xmlGetProp (node, "table_name");
+		str = (gchar*)xmlGetProp(node, (xmlChar*)"table_name");
 		if (str) {
 			g_assert (target->priv->entity_ref);
 			gda_object_ref_set_ref_name (target->priv->entity_ref, GDA_TYPE_DICT_TABLE, 

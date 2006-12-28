@@ -1150,18 +1150,18 @@ gda_dict_table_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	table = GDA_DICT_TABLE (iface);
 
-	node = xmlNewNode (NULL, "gda_dict_table");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_dict_table");
 	
 	str = gda_dict_table_get_xml_id (iface);
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (table)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (table)));
 	cstr = gda_object_get_owner (GDA_OBJECT (table));
 	if (cstr && *cstr)
-		xmlSetProp (node, "owner", cstr);
-	xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (table)));
+		xmlSetProp(node, (xmlChar*)"owner", (xmlChar*)cstr);
+	xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (table)));
 
-	xmlSetProp (node, "is_view", table->priv->is_view ? "t" : "f");
+	xmlSetProp(node, (xmlChar*)"is_view", (xmlChar*)(table->priv->is_view ? "t" : "f"));
 
 	/* parent tables */
 	i = 0;
@@ -1170,13 +1170,13 @@ gda_dict_table_save_to_xml (GdaXmlStorage *iface, GError **error)
 		xmlNodePtr parent;
 		gchar *str;
 
-		parent = xmlNewChild (node, NULL, "gda_dict_parent_table", NULL);
+		parent = xmlNewChild (node, NULL, (xmlChar*)"gda_dict_parent_table", NULL);
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (list->data));
-		xmlSetProp (parent, "table", str);
+		xmlSetProp(parent, (xmlChar*)"table", (xmlChar*)str);
 		g_free (str);
 
 		str = g_strdup_printf ("%d", i);
-		xmlSetProp (parent, "order", str);
+		xmlSetProp(parent, (xmlChar*)"order", (xmlChar*)str);
 		g_free (str);
 
 		list = g_slist_next (list);
@@ -1214,7 +1214,7 @@ gda_dict_table_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 	g_return_val_if_fail (node, FALSE);
 
 	table = GDA_DICT_TABLE (iface);
-	if (strcmp (node->name, "gda_dict_table")) {
+	if (strcmp ((gchar*)node->name, "gda_dict_table")) {
 		g_set_error (error,
 			     GDA_DICT_TABLE_ERROR,
 			     GDA_DICT_TABLE_XML_LOAD_ERROR,
@@ -1222,27 +1222,27 @@ gda_dict_table_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		return FALSE;
 	}
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
 	if (prop) {
 		name = TRUE;
 		gda_object_set_name (GDA_OBJECT (table), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "descr");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (table), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "owner");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"owner");
 	if (prop) {
 		gda_object_set_owner (GDA_OBJECT (table), prop);
 		g_free (prop);
 	}
 
 	table->priv->is_view = FALSE;
-	prop = xmlGetProp (node, "is_view");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"is_view");
 	if (prop) {
 		table->priv->is_view = (*prop == 't') ? TRUE : FALSE;
 		g_free (prop);
@@ -1253,12 +1253,12 @@ gda_dict_table_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		gboolean done = FALSE;
 
 		/* parent table */
-		if (!strcmp (children->name, "gda_dict__parent_table")) {
+		if (!strcmp ((gchar*)children->name, "gda_dict__parent_table")) {
 			TO_IMPLEMENT;
 			done = TRUE;
 		}
 		/* fields */
-		if (!done && !strcmp (children->name, "gda_dict_field")) {
+		if (!done && !strcmp ((gchar*)children->name, "gda_dict_field")) {
 			GdaDictField *field;
 			field = GDA_DICT_FIELD (gda_dict_field_new (gda_object_get_dict (GDA_OBJECT (iface)), NULL));
 			if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (field), children, error)) {

@@ -404,22 +404,22 @@ gda_graph_item_save_to_xml (GdaXmlStorage *iface, GError **error)
 
         item = GDA_GRAPH_ITEM (iface);
 
-        node = xmlNewNode (NULL, "gda_graph_item");
+        node = xmlNewNode (NULL, (xmlChar*)"gda_graph_item");
 
 	g_assert (item->priv->ref_object);
 	base = gda_object_ref_get_ref_object (item->priv->ref_object);
 	if (base) {
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (base));
-		xmlSetProp (node, "object", str);
+		xmlSetProp(node, (xmlChar*)"object", (xmlChar*)str);
 		g_free (str);
 	}
 	
 	str = g_strdup_printf ("%d.%03d", (int) item->priv->x, (int) ((item->priv->x - (int) item->priv->x) * 1000.));
-	xmlSetProp (node, "xpos", str);
+	xmlSetProp(node, (xmlChar*)"xpos", (xmlChar*)str);
 	g_free (str);
 
 	str = g_strdup_printf ("%d.%03d", (int) item->priv->y, (int) ((item->priv->y - (int) item->priv->y) * 1000.));
-	xmlSetProp (node, "ypos", str);
+	xmlSetProp(node, (xmlChar*)"ypos", (xmlChar*)str);
 	g_free (str);
 
         return node;
@@ -466,7 +466,7 @@ gda_graph_item_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 
 	item = GDA_GRAPH_ITEM (iface);
 
-	if (strcmp (node->name, "gda_graph_item")) {
+	if (strcmp ((gchar*)node->name, "gda_graph_item")) {
                 g_set_error (error,
                              GDA_GRAPH_ITEM_ERROR,
                              GDA_GRAPH_ITEM_XML_LOAD_ERROR,
@@ -474,20 +474,20 @@ gda_graph_item_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
                 return FALSE;
         }
 
-	prop = xmlGetProp (node, "object");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"object");
 	if (prop) {
 		g_assert (item->priv->ref_object);
 		gda_object_ref_set_ref_name (item->priv->ref_object, 0/* FIXME */, REFERENCE_BY_XML_ID, prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "xpos");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"xpos");
 	if (prop) {
 		item->priv->x = parse_float (prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "ypos");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"ypos");
 	if (prop) {
 		item->priv->y = parse_float (prop);
 		g_free (prop);

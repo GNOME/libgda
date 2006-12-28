@@ -44,6 +44,7 @@
 #include <libgda/gda-parameter-list.h>
 #include <libgda/gda-dict.h>
 #include <libgda/gda-dict-type.h>
+#include <libgda/gda-data-model-private.h> /* For gda_data_model_add_data_from_xml_node() */
 
 #include <libxml/xmlreader.h>
 
@@ -1286,7 +1287,7 @@ init_xml_import (GdaDataModelImport *model)
 			return;
 
 		name = xmlTextReaderConstName (reader);
-		if (strcmp (name, "gda_array")) {
+		if (strcmp ((gchar*)name, "gda_array")) {
 			/* error */
 			gchar *str;
 
@@ -1298,18 +1299,18 @@ init_xml_import (GdaDataModelImport *model)
 		}
 		node = xmlTextReaderCurrentNode (reader);
 		
-		prop = xmlGetProp (node, "id");
+		prop = (gchar*)xmlGetProp (node, (xmlChar*)"id");
 		if (prop) {
 			gda_object_set_id (GDA_OBJECT (model), prop);
 			xmlFree (prop);
 		}
-		prop = xmlGetProp (node, "name");
+		prop = (gchar*)xmlGetProp (node, (xmlChar*)"name");
 		if (prop) {
 			gda_object_set_name (GDA_OBJECT (model), prop);
 			xmlFree (prop);
 		}
 
-		prop = xmlGetProp (node, "descr");
+		prop = (gchar*)xmlGetProp (node, (xmlChar*)"descr");
 		if (prop) {
 			gda_object_set_description (GDA_OBJECT (model), prop);
 			xmlFree (prop);
@@ -1318,22 +1319,22 @@ init_xml_import (GdaDataModelImport *model)
 		/* compute fields */
 		ret = xml_fetch_next_xml_node (reader);
 		name = (ret > 0) ? xmlTextReaderConstName (reader) : NULL;
-		while (name && !strcmp (name, "gda_array_field")) {
+		while (name && !strcmp ((char*)name, "gda_array_field")) {
 			XmlColumnSpec *spec;
 			gchar *str;
 
 			spec = g_new0 (XmlColumnSpec, 1);
 			fields = g_slist_append (fields, spec);
 			
-			spec->id = xmlTextReaderGetAttribute (reader, "id");
-			spec->name = xmlTextReaderGetAttribute (reader, "name");
-			spec->title = xmlTextReaderGetAttribute (reader, "title");
+			spec->id = xmlTextReaderGetAttribute (reader, (xmlChar*)"id");
+			spec->name = xmlTextReaderGetAttribute (reader, (xmlChar*)"name");
+			spec->title = xmlTextReaderGetAttribute (reader, (xmlChar*)"title");
 			if (!spec->title && spec->name)
-				spec->title = g_strdup (spec->name);
+				spec->title = xmlStrdup (spec->name);
 			
-			spec->caption = xmlTextReaderGetAttribute (reader, "caption");
-			spec->dbms_type = xmlTextReaderGetAttribute (reader, "dbms_type");
-			str = xmlTextReaderGetAttribute (reader, "gdatype");
+			spec->caption = xmlTextReaderGetAttribute (reader, (xmlChar*)"caption");
+			spec->dbms_type = xmlTextReaderGetAttribute (reader, (xmlChar*)"dbms_type");
+			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"gdatype");
 			if (str) {
 				spec->gdatype = gda_g_type_from_string (str);
 				xmlFree (str);
@@ -1345,39 +1346,39 @@ init_xml_import (GdaDataModelImport *model)
 				model->priv->extract.xml.reader = NULL;
 				return;
 			}
-			str = xmlTextReaderGetAttribute (reader, "size");
+			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"size");
 			if (str) {
 				spec->size = atoi (str);
 				xmlFree (str);
 			}
-			str = xmlTextReaderGetAttribute (reader, "scale");
+			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"scale");
 			if (str) {
 				spec->scale = atoi (str);
 				xmlFree (str);
 			}
-			str = xmlTextReaderGetAttribute (reader, "pkey");
+			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"pkey");
 			if (str) {
 				spec->pkey = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
 			}
-			str = xmlTextReaderGetAttribute (reader, "unique");
+			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"unique");
 			if (str) {
 				spec->unique = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
 			}
-			str = xmlTextReaderGetAttribute (reader, "nullok");
+			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"nullok");
 			spec->nullok = TRUE;
 			if (str) {
 				spec->nullok = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
 			}
-			str = xmlTextReaderGetAttribute (reader, "auto_increment");
+			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"auto_increment");
 			if (str) {
 				spec->autoinc = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
 			}
-			spec->table = xmlTextReaderGetAttribute (reader, "table");
-			spec->ref = xmlTextReaderGetAttribute (reader, "ref");
+			spec->table = xmlTextReaderGetAttribute (reader, (xmlChar*)"table");
+			spec->ref = xmlTextReaderGetAttribute (reader, (xmlChar*)"ref");
 			
 			nbfields ++;
 
@@ -1403,18 +1404,18 @@ init_xml_import (GdaDataModelImport *model)
 			column = gda_column_new ();
 			model->priv->columns = g_slist_append (model->priv->columns, column);
 			g_object_set (G_OBJECT (column), "id", spec->id, NULL);
-			gda_column_set_title (column, spec->title);
-			gda_column_set_name (column, spec->name);
+			gda_column_set_title (column, (gchar*)spec->title);
+			gda_column_set_name (column, (gchar*)spec->name);
 			gda_column_set_defined_size (column, spec->size);
-			gda_column_set_caption (column, spec->caption);
-			gda_column_set_dbms_type (column, spec->dbms_type);
+			gda_column_set_caption (column, (gchar*)spec->caption);
+			gda_column_set_dbms_type (column, (gchar*)spec->dbms_type);
 			gda_column_set_scale (column, spec->scale);
 			gda_column_set_g_type (column, spec->gdatype);
 			gda_column_set_allow_null (column, spec->nullok);
 			gda_column_set_primary_key (column, spec->pkey);
 			gda_column_set_unique_key (column, spec->unique);
-			gda_column_set_table (column, spec->table);
-			gda_column_set_references (column, spec->ref);
+			gda_column_set_table (column, (gchar*)spec->table);
+			gda_column_set_references (column, (gchar*)spec->ref);
 			
 			list = g_slist_next (list);
 			pos++;
@@ -1423,7 +1424,7 @@ init_xml_import (GdaDataModelImport *model)
 
 		/* move to find the <gda_array_data> tag */
 		name = (ret > 0) ? xmlTextReaderConstName (reader) : NULL;
-		if (!name || strcmp (name, "gda_array_data")) {
+		if (!name || strcmp ((gchar*)name, "gda_array_data")) {
 			gchar *str;
 
 			if (name)
@@ -1493,7 +1494,7 @@ xml_fetch_next_row (GdaDataModelImport *model)
 
 	/* we must now have a <gda_array_row> tag */
 	name = xmlTextReaderConstName (reader);
-	if (!name || strcmp (name, "gda_array_row")) {
+	if (!name || strcmp ((gchar*)name, "gda_array_row")) {
 		gchar *str;
 
 		str = g_strdup_printf (_("Expected <gda_array_row> in <gda_array_data>, got <%s>"), name);
@@ -1507,11 +1508,11 @@ xml_fetch_next_row (GdaDataModelImport *model)
 	/* compute values */
 	ret = xml_fetch_next_xml_node (reader);
 	name = (ret > 0) ? xmlTextReaderConstName (reader) : NULL;
-	while (name && !strcmp (name, "gda_value")) {
+	while (name && !strcmp ((gchar*)name, "gda_value")) {
 		/* ignore this <gda_value> if the "lang" is there and is not the user locale */
 		xmlChar *this_lang;
-		this_lang = xmlTextReaderGetAttribute (reader, "xml:lang");
-		if (this_lang && strncmp (this_lang, lang, strlen (this_lang))) {
+		this_lang = xmlTextReaderGetAttribute (reader, (xmlChar*)"xml:lang");
+		if (this_lang && strncmp ((gchar*)this_lang, (gchar*)lang, strlen ((gchar*)this_lang))) {
 			xmlFree (this_lang);
 			ret = xml_fetch_next_xml_node (reader);
 			name = (ret > 0) ? xmlTextReaderConstName (reader) : NULL;
@@ -1596,7 +1597,7 @@ init_node_import (GdaDataModelImport *model)
 	if (!node)
 		return;
 
-	if (strcmp (node->name, "gda_array")) {
+	if (strcmp ((gchar*)node->name, "gda_array")) {
 		gchar *str;
 
 		str = g_strdup_printf (_("Expected <gda_array> node but got <%s>"), node->name);
@@ -1610,21 +1611,21 @@ init_node_import (GdaDataModelImport *model)
 	for (cur = node->children; cur; cur=cur->next) {
 		if (xmlNodeIsText (cur))
 			continue;
-		if (!strcmp (cur->name, "gda_array_field")) {
+		if (!strcmp ((gchar*)cur->name, "gda_array_field")) {
 			XmlColumnSpec *spec;
 
 			spec = g_new0 (XmlColumnSpec, 1);
 			fields = g_slist_append (fields, spec);
 			
-			spec->id = xmlGetProp (cur, "id");
-			spec->name = xmlGetProp (cur, "name");
-			spec->title = xmlGetProp (cur, "title");
+			spec->id = xmlGetProp (cur, (xmlChar*)"id");
+			spec->name = xmlGetProp (cur, (xmlChar*)"name");
+			spec->title = xmlGetProp (cur, (xmlChar*)"title");
 			if (!spec->title && spec->name)
-				spec->title = g_strdup (spec->name);
+				spec->title = xmlStrdup (spec->name);
 
-			spec->caption = xmlGetProp (cur, "caption");
-			spec->dbms_type = xmlGetProp (cur, "dbms_type");
-			str = xmlGetProp (cur, "gdatype");
+			spec->caption = xmlGetProp (cur, (xmlChar*)"caption");
+			spec->dbms_type = xmlGetProp (cur, (xmlChar*)"dbms_type");
+			str = (gchar*)xmlGetProp (cur, (xmlChar*)"gdatype");
 			if (str) {
 				spec->gdatype = gda_g_type_from_string (str);
 				xmlFree (str);
@@ -1635,44 +1636,44 @@ init_node_import (GdaDataModelImport *model)
 				node = model->priv->extract.node.node = NULL;
 				return;
 			}
-			str = xmlGetProp (cur, "size");
+			str = (gchar*)xmlGetProp (cur, (xmlChar*)"size");
 			if (str) {
 				spec->size = atoi (str);
 				xmlFree (str);
 			}
-			str = xmlGetProp (cur, "scale");
+			str = (gchar*)xmlGetProp (cur, (xmlChar*)"scale");
 			if (str) {
 				spec->scale = atoi (str);
 				xmlFree (str);
 			}
-			str = xmlGetProp (cur, "pkey");
+			str = (gchar*)xmlGetProp (cur, (xmlChar*)"pkey");
 			if (str) {
 				spec->pkey = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
 			}
-			str = xmlGetProp (cur, "unique");
+			str = (gchar*)xmlGetProp (cur, (xmlChar*)"unique");
 			if (str) {
 				spec->unique = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
 			}
-			str = xmlGetProp (cur, "nullok");
+			str = (gchar*)xmlGetProp (cur, (xmlChar*)"nullok");
 			spec->nullok = TRUE;
 			if (str) {
 				spec->nullok = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
 			}
-			str = xmlGetProp (cur, "auto_increment");
+			str = (gchar*)xmlGetProp (cur, (xmlChar*)"auto_increment");
 			if (str) {
 				spec->autoinc = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
 			}
-			spec->table = xmlGetProp (cur, "table");
-			spec->ref = xmlGetProp (cur, "ref");
+			spec->table = xmlGetProp (cur, (xmlChar*)"table");
+			spec->ref = xmlGetProp (cur, (xmlChar*)"ref");
 
 			nbfields ++;
 			continue;
 		}
-		if (!strcmp (cur->name, "gda_array_data"))
+		if (!strcmp ((gchar*)cur->name, "gda_array_data"))
 			break;
 	}
 
@@ -1686,19 +1687,19 @@ init_node_import (GdaDataModelImport *model)
 	/* random access model creation */
 	ramodel = gda_data_model_array_new (nbfields);
 	model->priv->random_access_model = ramodel;
-	str = xmlGetProp (node, "id");
+	str = (gchar*)xmlGetProp (node, (xmlChar*)"id");
 	if (str) {
 		/* FIXME: use str+2 only if str is like "DA%d", otherwise simply use str */
 		gda_object_set_id (GDA_OBJECT (model), str+2);
 		xmlFree (str);
 	}
-	str = xmlGetProp (node, "name");
+	str = (gchar*)xmlGetProp (node, (xmlChar*)"name");
 	if (str) {
 		gda_object_set_name (GDA_OBJECT (model), str);
 		xmlFree (str);
 	}
 
-	str = xmlGetProp (node, "descr");
+	str = (gchar*)xmlGetProp (node, (xmlChar*)"descr");
 	if (str) {
 		gda_object_set_description (GDA_OBJECT (model), str);
 		xmlFree (str);
@@ -1713,18 +1714,18 @@ init_node_import (GdaDataModelImport *model)
 		spec = (XmlColumnSpec *)(list->data);
 		column = gda_data_model_describe_column (ramodel, pos);
 		g_object_set (G_OBJECT (column), "id", spec->id, NULL);
-		gda_column_set_title (column, spec->title);
-		gda_column_set_name (column, spec->name);
+		gda_column_set_title (column, (gchar*)spec->title);
+		gda_column_set_name (column, (gchar*)spec->name);
 		gda_column_set_defined_size (column, spec->size);
-		gda_column_set_caption (column, spec->caption);
-		gda_column_set_dbms_type (column, spec->dbms_type);
+		gda_column_set_caption (column, (gchar*)spec->caption);
+		gda_column_set_dbms_type (column, (gchar*)spec->dbms_type);
 		gda_column_set_scale (column, spec->scale);
 		gda_column_set_g_type (column, spec->gdatype);
 		gda_column_set_allow_null (column, spec->nullok);
 		gda_column_set_primary_key (column, spec->pkey);
 		gda_column_set_unique_key (column, spec->unique);
-		gda_column_set_table (column, spec->table);
-		gda_column_set_references (column, spec->ref);
+		gda_column_set_table (column, (gchar*)spec->table);
+		gda_column_set_references (column, (gchar*)spec->ref);
 
 		model->priv->columns = g_slist_prepend (model->priv->columns, gda_column_copy (column));
 

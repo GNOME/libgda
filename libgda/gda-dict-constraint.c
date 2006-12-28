@@ -1201,14 +1201,14 @@ gda_dict_constraint_save_to_xml (GdaXmlStorage *iface, GError **error)
 			     _("Constraint cannot be activated!"));
 		return NULL;
 	}
-	node = xmlNewNode (NULL, "gda_dict_constraint");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_dict_constraint");
 	
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (cstr)));
-	xmlSetProp (node, "user_defined", cstr->priv->user_defined ? "t" : "f");
-	xmlSetProp (node, "type", constraint_type_to_str (cstr->priv->type));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (cstr)));
+	xmlSetProp(node, (xmlChar*)"user_defined", (xmlChar*)(cstr->priv->user_defined ? "t" : "f"));
+	xmlSetProp(node, (xmlChar*)"type", (xmlChar*)constraint_type_to_str (cstr->priv->type));
 
 	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (cstr->priv->table));
-	xmlSetProp (node, "table", str);
+	xmlSetProp(node, (xmlChar*)"table", (xmlChar*)str);
 	g_free (str);
 
 	switch (cstr->priv->type) {
@@ -1216,9 +1216,9 @@ gda_dict_constraint_save_to_xml (GdaXmlStorage *iface, GError **error)
 	case CONSTRAINT_PRIMARY_KEY:
 		list = cstr->priv->multiple_fields;
 		while (list) {
-			child = xmlNewChild (node, NULL, "gda_dict_constraint_field", NULL);
+			child = xmlNewChild (node, NULL, (xmlChar*)"gda_dict_constraint_field", NULL);
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (list->data));
-			xmlSetProp (child, "field", str);
+			xmlSetProp(child, (xmlChar*)"field", (xmlChar*)str);
 			g_free (str);
 			list = g_slist_next (list);
 		}
@@ -1226,24 +1226,24 @@ gda_dict_constraint_save_to_xml (GdaXmlStorage *iface, GError **error)
 	case CONSTRAINT_FOREIGN_KEY:
 		list = cstr->priv->fk_pairs;
 		while (list) {
-			child = xmlNewChild (node, NULL, "gda_dict_constraint_pair", NULL);
+			child = xmlNewChild (node, NULL, (xmlChar*)"gda_dict_constraint_pair", NULL);
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (GDA_DICT_CONSTRAINT_FK_PAIR (list->data)->fkey));
-			xmlSetProp (child, "field", str);
+			xmlSetProp(child, (xmlChar*)"field", (xmlChar*)str);
 			g_free (str);
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (GDA_DICT_CONSTRAINT_FK_PAIR (list->data)->ref_pkey));
-			xmlSetProp (child, "ref", str);
+			xmlSetProp(child, (xmlChar*)"ref", (xmlChar*)str);
 			g_free (str);
 			list = g_slist_next (list);
 		}
 
-		xmlSetProp (node, "on_update", constraint_action_to_str (cstr->priv->on_update));
-		xmlSetProp (node, "on_delete", constraint_action_to_str (cstr->priv->on_delete));
+		xmlSetProp(node, (xmlChar*)"on_update", (xmlChar*)constraint_action_to_str (cstr->priv->on_update));
+		xmlSetProp(node, (xmlChar*)"on_delete", (xmlChar*)constraint_action_to_str (cstr->priv->on_delete));
 		break;
 	case CONSTRAINT_NOT_NULL:
-		child = xmlNewChild (node, NULL, "gda_dict_constraint_field", NULL);
+		child = xmlNewChild (node, NULL, (xmlChar*)"gda_dict_constraint_field", NULL);
 		if (cstr->priv->single_field)
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (cstr->priv->single_field));
-		xmlSetProp (child, "field", str);
+		xmlSetProp(child, (xmlChar*)"field", (xmlChar*)str);
 		g_free (str);
 		break;
 	case CONSTRAINT_CHECK_EXPR:
@@ -1276,7 +1276,7 @@ gda_dict_constraint_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 	g_return_val_if_fail (db, FALSE);
 
 	cstr = GDA_DICT_CONSTRAINT (iface);
-	if (strcmp (node->name, "gda_dict_constraint")) {
+	if (strcmp ((gchar*)node->name, "gda_dict_constraint")) {
 		g_set_error (error,
 			     GDA_DICT_CONSTRAINT_ERROR,
 			     GDA_DICT_CONSTRAINT_XML_LOAD_ERROR,
@@ -1284,13 +1284,13 @@ gda_dict_constraint_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 		return FALSE;
 	}
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
 	if (prop) {
 		gda_object_set_name (GDA_OBJECT (cstr), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "table");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"table");
 	if (prop) {
 		table = gda_dict_database_get_table_by_xml_id (db, prop);
 		if (table) {
@@ -1306,27 +1306,27 @@ gda_dict_constraint_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 			ref_pb = prop;
 	}
 	
-	prop = xmlGetProp (node, "user_defined");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"user_defined");
 	if (prop) {
 		cstr->priv->user_defined = (*prop && (*prop == 't')) ? TRUE : FALSE;
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "type");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"type");
 	if (prop) {
 		cstr->priv->type = constraint_str_to_type (prop);
 		g_free (prop);
 		type = TRUE;
 	}
 	
-	prop = xmlGetProp (node, "on_update");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"on_update");
 	if (prop) {
 		cstr->priv->on_update = constraint_str_to_action (prop);
 		g_free (prop);
 		type = TRUE;
 	}
 
-	prop = xmlGetProp (node, "on_delete");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"on_delete");
 	if (prop) {
 		cstr->priv->on_delete = constraint_str_to_action (prop);
 		g_free (prop);
@@ -1337,9 +1337,9 @@ gda_dict_constraint_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 	contents = NULL;
 	subnode = node->children;
 	while (subnode) {
-		if (!strcmp (subnode->name, "gda_dict_constraint_field")) {
+		if (!strcmp ((gchar*)subnode->name, "gda_dict_constraint_field")) {
 			GdaDictField *field = NULL;
-			prop = xmlGetProp (subnode, "field");
+			prop = (gchar*)xmlGetProp(subnode, (xmlChar*)"field");
 			if (prop) {
 				field = gda_dict_database_get_field_by_xml_id (db, prop);
 				g_free (prop);
@@ -1348,18 +1348,18 @@ gda_dict_constraint_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 				contents = g_slist_append (contents, field);
 			else {
 				field_error = TRUE;
-				ref_pb = xmlGetProp (subnode, "field");
+				ref_pb = (gchar*)xmlGetProp(subnode, (xmlChar*)"field");
 			}
 		}
 		
-		if (!strcmp (subnode->name, "gda_dict_constraint_pair")) {
+		if (!strcmp((gchar*)subnode->name, "gda_dict_constraint_pair")) {
 			GdaDictField *field = NULL, *ref = NULL;
-			prop = xmlGetProp (subnode, "field");
+			prop = (gchar*)xmlGetProp(subnode, (xmlChar*)"field");
 			if (prop) {
 				field = gda_dict_database_get_field_by_xml_id (db, prop);
 				g_free (prop);
 			}
-			prop = xmlGetProp (subnode, "ref");
+			prop = (gchar*)xmlGetProp(subnode, (xmlChar*)"ref");
 			if (prop) {
 				ref = gda_dict_database_get_field_by_xml_id (db, prop);
 				g_free (prop);
@@ -1376,9 +1376,9 @@ gda_dict_constraint_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 			else {
 				field_error = TRUE;
 				if (!field)
-					ref_pb = xmlGetProp (subnode, "field");
+					ref_pb = (gchar*)xmlGetProp(subnode, (xmlChar*)"field");
 				else
-					ref_pb = xmlGetProp (subnode, "ref");
+					ref_pb = (gchar*)xmlGetProp(subnode, (xmlChar*)"ref");
 			}
 		}
 		subnode = subnode->next;

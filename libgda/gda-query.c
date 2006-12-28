@@ -3917,32 +3917,32 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 
-	node = xmlNewNode (NULL, "gda_query");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_query");
 	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (query));
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (query)));
-        xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (query)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (query)));
+        xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (query)));
 
 	/* save as SQL text if query is not active */
 	if (! gda_referer_activate (GDA_REFERER (query))) {
 		str = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 0, error);
 		if (!str)
 			return NULL;
-		xmlNewChild (node, NULL, "gda_query_text", BAD_CAST str);
+		xmlNewChild (node, NULL, (xmlChar*)"gda_query_text", BAD_CAST str);
 		g_free (str);
-		xmlSetProp (node, "query_type", "TXT");
+		xmlSetProp(node, (xmlChar*)"query_type", (xmlChar*)"TXT");
 
 		return node;
 	}
 
 	type = convert_query_type_to_str (query->priv->query_type);
-	xmlSetProp (node, "query_type", type);
+	xmlSetProp(node, (xmlChar*)"query_type", (xmlChar*)type);
 
 	/* param sources */
 	list = query->priv->param_sources;
 	if (list) 
-		psources = xmlNewChild (node, NULL, "gda_param_sources", NULL);
+		psources = xmlNewChild (node, NULL, (xmlChar*)"gda_param_sources", NULL);
 	
 	while (list) {
 		xmlNodePtr sub = NULL;
@@ -3950,7 +3950,7 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 			GdaQuery *query;
 			xmlNodePtr qnode;
 
-			sub = xmlNewNode (NULL, "gda_model_query");
+			sub = xmlNewNode (NULL, (xmlChar*)"gda_model_query");
 
 			g_object_get (G_OBJECT (list->data), "query", &query, NULL);
 			g_assert (query);
@@ -3993,7 +3993,7 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	if (query->priv->query_type != GDA_QUERY_TYPE_NON_PARSED_SQL) {
 		if (query->priv->global_distinct)
-			xmlSetProp (node, "distinct", "t");
+			xmlSetProp(node, (xmlChar*)"distinct", (xmlChar*)"t");
 		
 		/* targets */
 		list = query->priv->targets;
@@ -4047,18 +4047,18 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 		
 		/* fields ORDER BY */
 		if (query->priv->fields_order_by) {
-			xmlNodePtr sub = xmlNewChild (node, NULL, "gda_query_fields_order", NULL);
+			xmlNodePtr sub = xmlNewChild (node, NULL, (xmlChar*)"gda_query_fields_order", NULL);
 			
 			list = query->priv->fields_order_by;
 			while (list) {
-				xmlNodePtr order = xmlNewChild (sub, NULL, "gda_query_field_ref", NULL);
+				xmlNodePtr order = xmlNewChild (sub, NULL, (xmlChar*)"(xmlChar*)gda_query_field_ref", NULL);
 				
 				str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (list->data));
-				xmlSetProp (order, "object", str);
+				xmlSetProp(order, (xmlChar*)"object", (xmlChar*)str);
 				g_free (str);
 				
-				xmlSetProp (order, "order", 
-					    g_object_get_data (G_OBJECT (list->data), "order_by_asc") ? "ASC" : "DES");
+				xmlSetProp(order, (xmlChar*)"order", 
+					    (xmlChar*)(g_object_get_data (G_OBJECT (list->data), "order_by_asc") ? "ASC" : "DES"));
 				list = g_slist_next (list);
 			}
 		}
@@ -4078,7 +4078,7 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 	}
 	else {
 		/* Text if SQL query */
-		xmlNewChild (node, NULL, "gda_query_text", query->priv->sql);
+		xmlNewChild (node, NULL, (xmlChar*)"gda_query_text", (xmlChar*)query->priv->sql);
 	}
 
 	return node;
@@ -4100,7 +4100,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 	gda_query_clean (query);
 	g_return_val_if_fail (query_sql_forget (query, error), FALSE);
 
-	if (strcmp (node->name, "gda_query")) {
+	if (strcmp ((gchar*)node->name, "gda_query")) {
 		g_set_error (error,
 			     GDA_QUERY_ERROR,
 			     GDA_QUERY_XML_LOAD_ERROR,
@@ -4109,7 +4109,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 	}
 
 	/* query itself */
-	prop = xmlGetProp (node, "id");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"id");
 	if (prop) {
 		if ((*prop == 'Q') && (*(prop+1) == 'U')) {
 			gda_query_object_set_int_id (GDA_QUERY_OBJECT (query), atoi (prop+2));
@@ -4125,25 +4125,25 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 		}
 	}	
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
         if (prop) {
                 gda_object_set_name (GDA_OBJECT (query), prop);
                 g_free (prop);
         }
 
-        prop = xmlGetProp (node, "descr");
+        prop = (gchar*)xmlGetProp(node, (xmlChar*)"descr");
         if (prop) {
                 gda_object_set_description (GDA_OBJECT (query), prop);
                 g_free (prop);
         }
 
-	prop = xmlGetProp (node, "query_type");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"query_type");
 	if (prop) {
 		query->priv->query_type = convert_str_to_query_type (prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "distinct");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"distinct");
 	if (prop) {
 		query->priv->global_distinct = *prop == 't' ? TRUE : FALSE;
 		g_free (prop);
@@ -4155,17 +4155,17 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 		gboolean done = FALSE;
 
 		/* parameters sources */
-		if (!done && !strcmp (children->name, "gda_param_sources")) {
+		if (!done && !strcmp ((gchar*)children->name, "gda_param_sources")) {
 			GdaDict *dict = gda_object_get_dict (GDA_OBJECT (query));
 			xmlNodePtr sparams = children->children;
 			while (sparams) {
-				if (!strcmp (sparams->name, "gda_model_query")) {
+				if (!strcmp ((gchar*)sparams->name, "gda_model_query")) {
 					GdaDataModel *model = NULL;
 					xmlNodePtr qnode;
 
 					qnode = sparams->children;
 					while (qnode) {
-						if (!strcmp (qnode->name, "gda_query")) {
+						if (!strcmp ((gchar*)qnode->name, "gda_query")) {
 							GdaQuery *squery;
 							squery = gda_query_new (dict);
 							if (gda_xml_storage_load_from_xml (GDA_XML_STORAGE (squery), 
@@ -4202,7 +4202,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 					}
 				}
 				else {
-					if (!strcmp (sparams->name, "gda_array")) {
+					if (!strcmp ((gchar*)sparams->name, "gda_array")) {
 						GdaDataModel *model;
 						GSList *errors;
 
@@ -4227,11 +4227,11 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 }
 
 		/* targets */
-		if (!done && !strcmp (children->name, "gda_query_target")) {
+		if (!done && !strcmp ((gchar*)children->name, "gda_query_target")) {
                         GdaQueryTarget *target;
 			gchar *str;
 
-			str = xmlGetProp (children, "entity_ref");
+			str = (gchar*)xmlGetProp(children, (xmlChar*)"entity_ref");
 			if (str) {
 				target = g_object_new (GDA_TYPE_QUERY_TARGET, 
 						       "dict", gda_object_get_dict (GDA_OBJECT (query)), 
@@ -4248,7 +4248,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 					return FALSE;
 			}
 			else {
-				str = xmlGetProp (children, "table_name");
+				str = (gchar*)xmlGetProp(children, (xmlChar*)"table_name");
 				if (str) {
 					target = g_object_new (GDA_TYPE_QUERY_TARGET, 
 							       "dict", gda_object_get_dict (GDA_OBJECT (query)), 
@@ -4275,16 +4275,16 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 }
 
 		/* fields ORDER BY */
-		if (!done && !strcmp (children->name, "gda_query_fields_order")) {
+		if (!done && !strcmp ((gchar*)children->name, "gda_query_fields_order")) {
 			xmlNodePtr order = children->children;
 			gint pos = 0;
 
 			while (order) {
-				if (!strcmp (order->name, "gda_query_field_ref")) {
+				if (!strcmp ((gchar*)order->name, "gda_query_field_ref")) {
 					GdaEntityField *field = NULL;
 					gboolean asc = TRUE;
 
-					prop = xmlGetProp (order, "object");
+					prop = (gchar*)xmlGetProp(order, (xmlChar*)"object");
 					if (prop) {
 						field = gda_entity_get_field_by_xml_id (GDA_ENTITY (query), prop);
 						if (!field)
@@ -4296,7 +4296,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 						pos ++;
 					}
 					
-					prop = xmlGetProp (order, "order");
+					prop = (gchar*)xmlGetProp(order, (xmlChar*)"order");
 					if (prop) {
 						asc = (*prop == 'A');
 						g_free (prop);
@@ -4313,7 +4313,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 }
 
 		/* fields */
-		if (!done && g_str_has_prefix (children->name, "gda_query_f")) {
+		if (!done && g_str_has_prefix ((gchar*)children->name, "gda_query_f")) {
 			GdaQueryField *obj;
 
 			obj = gda_query_field_new_from_xml (query, children, error);
@@ -4327,12 +4327,12 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 }
 
 		/* joins */
-		if (!done && !strcmp (children->name, "gda_query_join")) {
+		if (!done && !strcmp ((gchar*)children->name, "gda_query_join")) {
                         GdaQueryJoin *join;
 			gchar *t1, *t2;
 
-			t1 = xmlGetProp (children, "target1");
-			t2 = xmlGetProp (children, "target2");
+			t1 = (gchar*)xmlGetProp(children, (xmlChar*)"target1");
+			t2 = (gchar*)xmlGetProp(children, (xmlChar*)"target2");
 
 			if (t1 && t2) {
 				join = gda_query_join_new_with_xml_ids (query, t1, t2);
@@ -4351,7 +4351,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 }
 
 		/* condition */
-		if (!done && !strcmp (children->name, "gda_query_cond")) {
+		if (!done && !strcmp ((gchar*)children->name, "gda_query_cond")) {
 			GdaQueryCondition *cond;
 
 			cond = gda_query_condition_new (query, GDA_QUERY_CONDITION_NODE_AND);
@@ -4365,11 +4365,11 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 }
 
 		/* textual query */
-		if (!done && !strcmp (children->name, "gda_query_text")) {
+		if (!done && !strcmp ((gchar*)children->name, "gda_query_text")) {
 			gchar *contents;
 			GError *error = NULL;
 
-			contents = xmlNodeGetContent (children);
+			contents = (gchar*)xmlNodeGetContent (children);
 			gda_query_set_sql_text (query, contents, &error);
 			if (error)
 				g_error_free (error);
@@ -4378,7 +4378,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
                 }
 
 		/* sub queries */
-		if (!done && !strcmp (children->name, "gda_query")) {
+		if (!done && !strcmp ((gchar*)children->name, "gda_query")) {
 			GdaQuery *squery;
 			GdaDict *dict = gda_object_get_dict (GDA_OBJECT (query));
 

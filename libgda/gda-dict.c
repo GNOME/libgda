@@ -607,7 +607,7 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 
 	/* update this node'id if necessary */
 	for (i = 0; i < 5; i++) {
-		if (!strcmp (node->name, upd_nodes [i])) {
+		if (!strcmp ((gchar*)node->name, upd_nodes [i])) {
 			xmlChar *oid, *id, *name;
 			
 			name = xmlGetProp (node, BAD_CAST "name");
@@ -616,7 +616,7 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 
 			switch (i) {
 			default:
-				id = gda_utility_build_encoded_id (upd_prefix [i], name);
+				id = (xmlChar*)gda_utility_build_encoded_id (upd_prefix [i], (gchar*)name);
 				break;
 			case 4: {
 				/* GDA_ENTITY_FIELD has a composed ID */
@@ -624,9 +624,9 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 				xmlNodePtr parent = node->parent;
 
 				g_assert (parent);
-				tableid = xmlGetProp (parent, "id");
-				tmp = gda_utility_build_encoded_id (upd_prefix [i], name);
-				id = g_strconcat (tableid, ":", tmp, NULL);
+				tableid = (gchar*)xmlGetProp (parent, (xmlChar*)"id");
+				tmp = gda_utility_build_encoded_id (upd_prefix [i], (gchar*)name);
+				id = (xmlChar*)g_strconcat (tableid, ":", tmp, NULL);
 				g_free (tmp);
 				xmlFree (tableid);
 				break;
@@ -634,11 +634,11 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 			case 1:
 			case 2: 
 				/* GNOME_DB_FUNCTION and GNOME_DB_AGGREGATE encode their DBMS id */
-				id = gda_utility_build_encoded_id (upd_prefix [i], oid+2);
+				id = (xmlChar*)gda_utility_build_encoded_id (upd_prefix [i], (gchar*)(oid + 2)); /* TODO: What is this + 2? murrayc */
 				break;
 			}
 
-			xmlSetProp (node, "id", id);
+			xmlSetProp(node, (xmlChar*)"id", id);
 			/*g_print ("UPDATE ID %s: \tname=%s, oldid=%s, id=%s\n", upd_nodes [i], name, oid, id);*/
 
 			g_hash_table_insert (keys, oid, id); /* don't free oid and id as they will be when hash is destroyed */
@@ -652,11 +652,11 @@ xml_id_update_tree_recurs (xmlDocPtr doc, xmlNodePtr node, GHashTable *keys)
 	while (attr) {
 		gchar *oid, *id;
 		
-		oid = xmlGetProp (node, attr->name);
+		oid = (gchar*)xmlGetProp (node, attr->name);
 		g_assert (oid);
 		id = g_hash_table_lookup (keys, oid);
 		if (id) {
-			xmlSetProp (node, attr->name, id);
+			xmlSetProp (node, attr->name, (xmlChar*)id);
 			/*g_print ("replace ref %s: \tattr=%s, oldref=%s, newref=%s\n", attr->name, node->name, oid, id);*/
 		}
 		xmlFree (oid);
@@ -767,7 +767,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 
 	/* doc is now OK */
 	node = xmlDocGetRootElement (doc);
-	if (strcmp (node->name, "gda_dict")) {
+	if (strcmp ((gchar*)node->name, "gda_dict")) {
 		g_set_error (error,
 			     GDA_DICT_ERROR,
 			     GDA_DICT_FILE_LOAD_ERROR,
@@ -794,7 +794,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 		if (xpathCtx) {
 			xmlXPathObjectPtr xpathObj; 
 
-			xpathObj = xmlXPathEvalExpression("//gda_datatype", xpathCtx);
+			xpathObj = xmlXPathEvalExpression((xmlChar*)"//gda_datatype", xpathCtx);
 			if (xpathObj) {
 				xmlNodeSetPtr nodes;
 				xmlNodePtr node = NULL;
@@ -806,8 +806,8 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 				if (node) {
 					gchar *id, *name;
 
-					id = xmlGetProp (node, "id");
-					name = xmlGetProp (node, "name");
+					id = (gchar*)xmlGetProp(node, (xmlChar*)"id");
+					name = (gchar*)xmlGetProp(node, (xmlChar*)"name");
 					
 					if (id && name) {
 						gchar *tmp;
@@ -836,25 +836,25 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 	while (subnode) {
 		gboolean done = FALSE;
 		/* Datasource */
-		if (!strcmp (subnode->name, "gda_dsn_info")) {
+		if (!strcmp ((gchar*)subnode->name, "gda_dsn_info")) {
 			g_free (dict->priv->dsn);			
 			g_free (dict->priv->user);
 
-			dict->priv->dsn = xmlGetProp (subnode, "dsn");
-			dict->priv->user = xmlGetProp (subnode, "user");
+			dict->priv->dsn = (gchar*)xmlGetProp(subnode, (xmlChar*)"dsn");
+			dict->priv->user = (gchar*)xmlGetProp(subnode, (xmlChar*)"user");
 			done = TRUE;
 		}
 
 		/* GdaDictDatabase object */
-		if (!done && !strcmp (subnode->name, "gda_dict_database")) {
+		if (!done && !strcmp ((gchar*)subnode->name, "gda_dict_database")) {
 			if (!gda_xml_storage_load_from_xml (GDA_XML_STORAGE (dict->priv->database), subnode, error))
 				return FALSE;
 			done = TRUE;
 		}
 
 		/* If a <gda-dict-aggregates> or a <gda-dict-procedures> is found, then make GdaDict handle functions */
-		if (!done && (!strcmp (subnode->name, "gda_dict_aggregates") ||
-			      !strcmp (subnode->name, "gda_dict_procedures")))
+		if (!done && (!strcmp ((gchar*)subnode->name, "gda_dict_aggregates") ||
+			      !strcmp ((gchar*)subnode->name, "gda_dict_procedures")))
 			gda_dict_extend_with_functions (dict);
 
 		/* generic objects */
@@ -929,22 +929,22 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 	g_return_val_if_fail (dict && GDA_IS_DICT (dict), FALSE);
 	g_return_val_if_fail (dict->priv, FALSE);
 		
-	doc = xmlNewDoc ("1.0");
+	doc = xmlNewDoc ((xmlChar*)"1.0");
 	if (doc) {
 		xmlNodePtr topnode, node;
 
 		/* DTD insertion */
-                xmlCreateIntSubset(doc, "gda_dict", NULL, "libgda-dict.dtd"/*LIBGDA_DICT_DTD_FILE*/);
+                xmlCreateIntSubset(doc, (xmlChar*)"gda_dict", NULL, (xmlChar*)"libgda-dict.dtd"/*LIBGDA_DICT_DTD_FILE*/);
 
 		/* Top node */
-		topnode = xmlNewDocNode (doc, NULL, "gda_dict", NULL);
+		topnode = xmlNewDocNode (doc, NULL, (xmlChar*)"gda_dict", NULL);
 		xmlDocSetRootElement (doc, topnode);
 
 		/* DSN information */
 		if (dict->priv->dsn) {
-			node = xmlNewChild (topnode, NULL, "gda_dsn_info", NULL);
-			xmlSetProp (node, "dsn", dict->priv->dsn);
-			xmlSetProp (node, "user", dict->priv->user ? dict->priv->user : "");
+			node = xmlNewChild (topnode, NULL, (xmlChar*)"gda_dsn_info", NULL);
+			xmlSetProp(node, (xmlChar*)"dsn", (xmlChar*)dict->priv->dsn);
+			xmlSetProp(node, (xmlChar*)"user", (xmlChar*)dict->priv->user ? (xmlChar*)dict->priv->user : (xmlChar*)"");
 		}
 
 		/* GdaDictType objects */
@@ -952,7 +952,7 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 			GdaDictRegisterStruct *reg;
 
 			reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_TYPE);
-			node = xmlNewChild (topnode, NULL, reg->xml_group_tag, NULL);
+			node = xmlNewChild (topnode, NULL, (xmlChar*)reg->xml_group_tag, NULL);
 			if ((reg->save_xml_tree) (dict, node, error))
 				xmlAddChild (topnode, node);
 			else 
@@ -966,7 +966,7 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 
 			reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_FUNCTION);
 			if (reg) {
-				node = xmlNewChild (topnode, NULL, reg->xml_group_tag, NULL);
+				node = xmlNewChild (topnode, NULL, (xmlChar*)reg->xml_group_tag, NULL);
 				if ((reg->save_xml_tree) (dict, node, error))
 					xmlAddChild (topnode, node);
 				else 
@@ -980,7 +980,7 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 
 			reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_AGGREGATE);
 			if (reg) {
-				node = xmlNewChild (topnode, NULL, reg->xml_group_tag, NULL);
+				node = xmlNewChild (topnode, NULL, (xmlChar*)reg->xml_group_tag, NULL);
 				if ((reg->save_xml_tree) (dict, node, error))
 					xmlAddChild (topnode, node);
 				else 
@@ -1018,7 +1018,7 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 				}
 				else {
 					xmlNodePtr node;
-					node = xmlNewChild (topnode, NULL, reg->xml_group_tag, NULL);
+					node = xmlNewChild (topnode, NULL, (xmlChar*)reg->xml_group_tag, NULL);
 					if ((reg->save_xml_tree) (dict, node, error))
 						xmlAddChild (topnode, node);
 					else

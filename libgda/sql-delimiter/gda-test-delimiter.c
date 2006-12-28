@@ -50,8 +50,7 @@ test_string (const gchar *str)
 	if (statements) {
 		GList *list = statements;
 		while (list) {
-			GdaDelimiterStatement *statement, *copy;
-			gchar *str;
+			GdaDelimiterStatement *statement;
 
 			statement = (GdaDelimiterStatement *) list->data;
 			g_print ("#### STATEMENT:\n");

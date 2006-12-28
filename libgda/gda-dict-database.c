@@ -473,10 +473,10 @@ gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError **error)
 	db = GDA_DICT_DATABASE (iface);
 
 	/* main node */
-        toptree = xmlNewNode (NULL, "gda_dict_database");
+        toptree = xmlNewNode (NULL, (xmlChar*)"gda_dict_database");
 	
 	/* Tables */
-	tree = xmlNewChild (toptree, NULL, "gda_dict_tables", NULL);
+	tree = xmlNewChild (toptree, NULL, (xmlChar*)"gda_dict_tables", NULL);
 	list = db->priv->tables;
 	while (list) {
 		xmlNodePtr table;
@@ -494,7 +494,7 @@ gda_dict_database_save_to_xml (GdaXmlStorage *iface, GError **error)
 	}
 
 	/* Constraints */
-	tree = xmlNewChild (toptree, NULL, "gda_dict_constraints", NULL);
+	tree = xmlNewChild (toptree, NULL, (xmlChar*)"gda_dict_constraints", NULL);
 	list = db->priv->constraints;
 	while (list) {
 		xmlNodePtr cstr;
@@ -535,7 +535,7 @@ gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 			     _("Database already contains data"));
 		return FALSE;
 	}
-	if (strcmp (node->name, "gda_dict_database")) {
+	if (strcmp ((gchar*)node->name, "gda_dict_database")) {
 		g_set_error (error,
 			     GDA_DICT_DATABASE_ERROR,
 			     GDA_DICT_DATABASE_XML_LOAD_ERROR,
@@ -547,7 +547,7 @@ gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 	while (subnode) {
 		gboolean done = FALSE;
 
-		if (!strcmp (subnode->name, "gda_dict_tables")) {
+		if (!strcmp ((gchar*)subnode->name, "gda_dict_tables")) {
 			if (!gda_dict_database_load_from_xml_tables (iface, subnode, error)) {
 				db->priv->xml_loading = FALSE;
 				return FALSE;
@@ -556,7 +556,7 @@ gda_dict_database_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 			done = TRUE;
 		}
 
-		if (!done && !strcmp (subnode->name, "gda_dict_constraints")) {
+		if (!done && !strcmp ((gchar*)subnode->name, "gda_dict_constraints")) {
 			if (!gda_dict_database_load_from_xml_constraints (iface, subnode, error)) {
 				db->priv->xml_loading = FALSE;
 				return FALSE;
@@ -580,7 +580,7 @@ gda_dict_database_load_from_xml_tables (GdaXmlStorage *iface, xmlNodePtr node, G
 
 	while (subnode && allok) {
 		if (! xmlNodeIsText (subnode)) {
-			if (!strcmp (subnode->name, "gda_dict_table")) {
+			if (!strcmp ((gchar*)subnode->name, "gda_dict_table")) {
 				GdaDictTable *table;
 				
 				table = GDA_DICT_TABLE (gda_dict_table_new (gda_object_get_dict (GDA_OBJECT (iface))));
@@ -613,7 +613,7 @@ gda_dict_database_load_from_xml_constraints (GdaXmlStorage *iface, xmlNodePtr no
 
 	while (subnode && allok) {
 		if (! xmlNodeIsText (subnode)) {
-			if (!strcmp (subnode->name, "gda_dict_constraint")) {
+			if (!strcmp ((gchar*)subnode->name, "gda_dict_constraint")) {
 				GdaDictConstraint *cstr;
 				
 				cstr = GDA_DICT_CONSTRAINT (gda_dict_constraint_new_with_db (GDA_DICT_DATABASE (iface)));

@@ -835,23 +835,23 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	field = GDA_DICT_FIELD (iface);
 
-	node = xmlNewNode (NULL, "gda_dict_field");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_dict_field");
 	
 	str = gda_dict_field_get_xml_id (iface);
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (field)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (field)));
 	if (gda_object_get_owner (GDA_OBJECT (field)))
-		xmlSetProp (node, "owner", gda_object_get_owner (GDA_OBJECT (field)));
-	xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (field)));
+		xmlSetProp(node, (xmlChar*)"owner", (xmlChar*)gda_object_get_owner (GDA_OBJECT (field)));
+	xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (field)));
 	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (field->priv->data_type));
-	xmlSetProp (node, "type", str);
+	xmlSetProp(node, (xmlChar*)"type", (xmlChar*)str);
 	g_free (str);
 	str = g_strdup_printf ("%d", field->priv->length);
-	xmlSetProp (node, "length", str);
+	xmlSetProp(node, (xmlChar*)"length", (xmlChar*)str);
 	g_free (str);
 	str = g_strdup_printf ("%d", field->priv->scale);
-	xmlSetProp (node, "scale", str);
+	xmlSetProp(node, (xmlChar*)"scale", (xmlChar*)str);
 	g_free (str);
 
 	if (field->priv->default_val) {
@@ -859,22 +859,22 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 		GType vtype;
 		
 		vtype = G_VALUE_TYPE (field->priv->default_val);
-		xmlSetProp (node, "default_g_type", gda_g_type_to_string (vtype));
+		xmlSetProp(node, (xmlChar*)"default_g_type", (xmlChar*)gda_g_type_to_string (vtype));
 
 		dh = gda_dict_get_default_handler (gda_object_get_dict (GDA_OBJECT (field)), vtype);
 		str = gda_data_handler_get_str_from_value (dh, field->priv->default_val);
-		xmlSetProp (node, "default", str);
+		xmlSetProp(node, (xmlChar*)"default", (xmlChar*)str);
 		g_free (str);
 	}
 
 	str = gda_utility_table_field_attrs_stringify (field->priv->extra_attrs);
 	if (str) {
-		xmlSetProp (node, "extra_attr", str);
+		xmlSetProp(node, (xmlChar*)"extra_attr", (xmlChar*)str);
 		g_free (str);
 	}
 
 	if (field->priv->plugin && *(field->priv->plugin)) 
-		xmlSetProp (node, "plugin", field->priv->plugin);
+		xmlSetProp(node, (xmlChar*)"plugin", (xmlChar*)field->priv->plugin);
 
 	return node;
 }
@@ -893,7 +893,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 
 	field = GDA_DICT_FIELD (iface);
 	dict = gda_object_get_dict (GDA_OBJECT (field));
-	if (strcmp (node->name, "gda_dict_field")) {
+	if (strcmp ((gchar*)node->name, "gda_dict_field")) {
 		g_set_error (error,
 			     GDA_DICT_FIELD_ERROR,
 			     GDA_DICT_FIELD_XML_LOAD_ERROR,
@@ -901,26 +901,26 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		return FALSE;
 	}
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
 	if (prop) {
 		name = TRUE;
 		gda_object_set_name (GDA_OBJECT (field), prop);
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "descr");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (field), prop);
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "owner");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"owner");
 	if (prop) {
 		gda_object_set_owner (GDA_OBJECT (field), prop);
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "type");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"type");
 	if (prop) {
 		if ((*prop == 'D') && prop+1 && (*(prop+1) == 'T')) {
 			GdaDictType *dt = gda_dict_get_dict_type_by_xml_id (dict, prop);
@@ -938,10 +938,10 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 				gda_dict_type_set_g_type (dt, GDA_TYPE_BLOB);
 
 				tnode = node->parent;
-				g_assert (tnode && !strcmp (tnode->name, "gda_dict_table"));
-				tmp = xmlGetProp (tnode, "name");
+				g_assert (tnode && !strcmp ((gchar*)tnode->name, "gda_dict_table"));
+				tmp = (gchar*)xmlGetProp(tnode, (xmlChar*)"name");
 				g_assert (tmp);
-				tmp2 = g_strdup_printf (_("Custom data type, declared for the %s.%s field"),
+				tmp2 = (gchar*)g_strdup_printf (_("Custom data type, declared for the %s.%s field"),
 							tmp, gda_object_get_name (GDA_OBJECT (field)));
 				xmlFree (tmp);
 				gda_object_set_description (GDA_OBJECT (dt), tmp2);
@@ -955,23 +955,23 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "length");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"length");
 	if (prop) {
 		field->priv->length = atoi (prop);
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "scale");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"scale");
 	if (prop) {
 		field->priv->scale = atoi (prop);
 		xmlFree (prop);
 	}
 	
-	prop = xmlGetProp (node, "default");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"default");
 	if (prop) {
 		gchar *str2;
 
-		str2 = xmlGetProp (node, "default_g_type");
+		str2 = (gchar*)xmlGetProp(node, (xmlChar*)"default_g_type");
 		if (str2) {
 			GType vtype;
 			GdaDataHandler *dh;
@@ -1005,13 +1005,13 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "extra_attr");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"extra_attr");
 	if (prop) {
 		gda_dict_field_set_attributes (field, gda_utility_table_field_attrs_parse (prop));
 		xmlFree (prop);
 	}
 
-	prop = xmlGetProp (node, "plugin");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"plugin");
 	if (prop) {
 		g_object_set (G_OBJECT (field), "entry_plugin", prop, NULL);
 		xmlFree (prop);

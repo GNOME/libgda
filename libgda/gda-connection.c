@@ -38,6 +38,7 @@
 #include <libgda/gda-transaction-status-private.h>
 #include <string.h>
 #include <libgda/sql-transaction/gda-sql-transaction-parser.h>
+#include <libgda/sql-transaction/gda-sql-transaction-tree.h> /* For gda_sql_transaction_destroy(). */
 
 #define PARENT_TYPE G_TYPE_OBJECT
 

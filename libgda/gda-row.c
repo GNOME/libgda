@@ -289,9 +289,7 @@ gda_row_get_type (void)
 GdaRow *
 gda_row_new (GdaDataModel *model, gint count)
 {
-	GdaRow *row;
-	gint i;
-        GValue *value;
+	GdaRow *row = NULL;
 
 	if (model)
 		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);

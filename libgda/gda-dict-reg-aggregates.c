@@ -113,7 +113,7 @@ aggregates_save_xml_tree (GdaDict *dict, xmlNodePtr group, GError **error)
 		qnode = gda_xml_storage_save_to_xml (GDA_XML_STORAGE (list->data), error);
 		if (qnode) {
 			xmlAddChild (group, qnode);
-			xmlSetProp (qnode, "custom", "t");
+			xmlSetProp(qnode, (xmlChar*)"custom", (xmlChar*)"t");
 		}
 		else 
 			/* error handling */

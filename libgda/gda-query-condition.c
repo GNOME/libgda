@@ -492,7 +492,6 @@ gda_query_condition_set_property (GObject *object,
 				  GParamSpec *pspec)
 {
 	GdaQueryCondition *condition;
-	gpointer ptr;
 	guint id;
 	gint i;
 	GdaDict *dict;
@@ -1373,32 +1372,32 @@ gda_query_condition_save_to_xml (GdaXmlStorage *iface, GError **error)
 
         cond = GDA_QUERY_CONDITION (iface);
 
-        node = xmlNewNode (NULL, "gda_query_cond");
+        node = xmlNewNode (NULL, (xmlChar*)"gda_query_cond");
 
         str = gda_xml_storage_get_xml_id (iface);
-        xmlSetProp (node, "id", str);
+        xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
         g_free (str);
 
-        xmlSetProp (node, "type", condition_type_to_str (cond->priv->type));
+        xmlSetProp(node, (xmlChar*)"type", (xmlChar*)condition_type_to_str (cond->priv->type));
 
 	base = gda_object_ref_get_ref_object (cond->priv->ops[GDA_QUERY_CONDITION_OP_LEFT]);
 	if (base) {
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (base));
-		xmlSetProp (node, "l_op", str);
+		xmlSetProp(node, (xmlChar*)"l_op", (xmlChar*)str);
 		g_free (str);
 	}
 
 	base = gda_object_ref_get_ref_object (cond->priv->ops[GDA_QUERY_CONDITION_OP_RIGHT]);
 	if (base) {
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (base));
-		xmlSetProp (node, "r_op", str);
+		xmlSetProp(node, (xmlChar*)"r_op", (xmlChar*)str);
 		g_free (str);
 	}
 
 	base = gda_object_ref_get_ref_object (cond->priv->ops[GDA_QUERY_CONDITION_OP_RIGHT2]);
 	if (base) {
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (base));
-		xmlSetProp (node, "r_op2", str);
+		xmlSetProp(node, (xmlChar*)"r_op2", (xmlChar*)str);
 		g_free (str);
 	}
 
@@ -1432,7 +1431,7 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 
 	cond = GDA_QUERY_CONDITION (iface);
 
-	if (strcmp (node->name, "gda_query_cond")) {
+	if (strcmp ((gchar*)node->name, "gda_query_cond")) {
                 g_set_error (error,
                              GDA_QUERY_CONDITION_ERROR,
                              GDA_QUERY_CONDITION_XML_LOAD_ERROR,
@@ -1440,7 +1439,7 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
                 return FALSE;
         }
 
-	prop = xmlGetProp (node, "id");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"id");
         if (prop) {
                 gchar *ptr, *tok;
                 ptr = strtok_r (prop, ":", &tok);
@@ -1457,7 +1456,7 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
                 g_free (prop);
         }
 
-	prop = xmlGetProp (node, "type");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"type");
         if (prop) {
 		cond->priv->type = condition_str_to_type (prop);
 		if (cond->priv->type == GDA_QUERY_CONDITION_TYPE_UNKNOWN) {
@@ -1470,7 +1469,7 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
                 g_free (prop);
         }
 
-	prop = xmlGetProp (node, "l_op");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"l_op");
 	if (prop) {
 		gda_object_ref_set_ref_name (cond->priv->ops[GDA_QUERY_CONDITION_OP_LEFT], GDA_TYPE_QUERY_FIELD,
 					  REFERENCE_BY_XML_ID, prop);
@@ -1478,14 +1477,14 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 	}
 
 
-	prop = xmlGetProp (node, "r_op");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"r_op");
 	if (prop) {
 		gda_object_ref_set_ref_name (cond->priv->ops[GDA_QUERY_CONDITION_OP_RIGHT], GDA_TYPE_QUERY_FIELD,
 					  REFERENCE_BY_XML_ID, prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "r_op2");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"r_op2");
 	if (prop) {
 		gda_object_ref_set_ref_name (cond->priv->ops[GDA_QUERY_CONDITION_OP_RIGHT2], GDA_TYPE_QUERY_FIELD,
 					  REFERENCE_BY_XML_ID, prop);
@@ -1495,7 +1494,7 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 	/* children nodes */
 	children = node->children;
 	while (children) {
-		if (!strcmp (children->name, "gda_query_cond")) {
+		if (!strcmp ((gchar*)children->name, "gda_query_cond")) {
 			GdaQueryCondition *scond;
 
 			scond = gda_query_condition_new (cond->priv->query, GDA_QUERY_CONDITION_NODE_AND);

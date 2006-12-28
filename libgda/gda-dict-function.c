@@ -334,34 +334,34 @@ gnome_db_function_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	func = GDA_DICT_FUNCTION (iface);
 
-	node = xmlNewNode (NULL, "gda_dict_function");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_dict_function");
 
 	str = gnome_db_function_get_xml_id (iface);
-	xmlSetProp (node, "id", str);
+	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)str);
 	g_free (str);
-	xmlSetProp (node, "name", gda_object_get_name (GDA_OBJECT (func)));
-	xmlSetProp (node, "descr", gda_object_get_description (GDA_OBJECT (func)));
-	xmlSetProp (node, "owner", gda_object_get_owner (GDA_OBJECT (func)));
+	xmlSetProp(node, (xmlChar*)"name", (xmlChar*)gda_object_get_name (GDA_OBJECT (func)));
+	xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (func)));
+	xmlSetProp(node, (xmlChar*)"owner", (xmlChar*)gda_object_get_owner (GDA_OBJECT (func)));
 
 	/* return type */
 	if (func->priv->result_type) {
-		subnode = xmlNewChild (node, NULL, "gda_func_param", NULL);
+		subnode = xmlNewChild (node, NULL, (xmlChar*)"gda_func_param", NULL);
 		
 		str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (func->priv->result_type));
-		xmlSetProp (subnode, "type", str);
+		xmlSetProp(subnode, (xmlChar*)"type", (xmlChar*)str);
 		g_free (str);
-		xmlSetProp (subnode, "way", "out");
+		xmlSetProp(subnode, (xmlChar*)"way", (xmlChar*)"out");
 	}
 
 	/* argument types */
 	list = func->priv->arg_types;
 	while (list) {
-		subnode = xmlNewChild (node, NULL, "gda_func_param", NULL);
+		subnode = xmlNewChild (node, NULL, (xmlChar*)"gda_func_param", NULL);
 		if (list->data) {
 			str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (list->data));
-			xmlSetProp (subnode, "type", str);
+			xmlSetProp(subnode, (xmlChar*)"type", (xmlChar*)str);
 		}
-		xmlSetProp (subnode, "way", "in");
+		xmlSetProp(subnode, (xmlChar*)"way", (xmlChar*)"in");
 		list = g_slist_next (list);
 	}
 
@@ -384,7 +384,7 @@ gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 
 	func = GDA_DICT_FUNCTION (iface);
 	dict = gda_object_get_dict (GDA_OBJECT (func));
-	if (strcmp (node->name, "gda_dict_function")) {
+	if (strcmp ((gchar*)node->name, "gda_dict_function")) {
 		g_set_error (error,
 			     GDA_DICT_FUNCTION_ERROR,
 			     GDA_DICT_FUNCTION_XML_LOAD_ERROR,
@@ -393,7 +393,7 @@ gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 	}
 
 	/* function's attributes */
-	prop = xmlGetProp (node, "id");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"id");
 	if (prop) {
 		if ((*prop == 'P') && (*(prop+1)=='R')) {
 			pid = TRUE;
@@ -404,20 +404,20 @@ gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "name");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"name");
 	if (prop) {
 		pname = TRUE;
 		gda_object_set_name (GDA_OBJECT (func), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "descr");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"descr");
 	if (prop) {
 		gda_object_set_description (GDA_OBJECT (func), prop);
 		g_free (prop);
 	}
 
-	prop = xmlGetProp (node, "owner");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"owner");
 	if (prop) {
 		gda_object_set_owner (GDA_OBJECT (func), prop);
 		g_free (prop);
@@ -426,9 +426,9 @@ gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 	/* arguments and return type */
 	subnode = node->children;
 	while (subnode) {
-		if (!strcmp (subnode->name, "gda_func_param")) {
+		if (!strcmp ((gchar*)subnode->name, "gda_func_param")) {
 			GdaDictType *dt = NULL;
-			prop = xmlGetProp (subnode, "type");
+			prop = (gchar*)xmlGetProp(subnode, (xmlChar*)"type");
 			if (prop) {
 				dt = gda_dict_get_dict_type_by_xml_id (dict, prop);
 				if (!dt) {
@@ -438,7 +438,7 @@ gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError *
 				g_free (prop);
 			}
 			
-			prop = xmlGetProp (subnode, "way");
+			prop = (gchar*)xmlGetProp(subnode, (xmlChar*)"way");
 			if (prop) {
 				if (*prop == 'o') {
 					if (func->priv->result_type) {

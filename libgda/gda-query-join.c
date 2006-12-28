@@ -1217,7 +1217,7 @@ gda_query_join_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	join = GDA_QUERY_JOIN (iface);
 
-	node = xmlNewNode (NULL, "gda_query_join");
+	node = xmlNewNode (NULL, (xmlChar*)"gda_query_join");
 	
 	/* targets */
 	if (join->priv->target1) {
@@ -1231,7 +1231,7 @@ gda_query_join_save_to_xml (GdaXmlStorage *iface, GError **error)
 			str = g_strdup (gda_object_ref_get_ref_name (join->priv->target1, NULL, NULL));
 		
 		if (str) {
-			xmlSetProp (node, "target1", str);
+			xmlSetProp(node, (xmlChar*)"target1", (xmlChar*)str);
 			g_free (str);
 		}
 	}
@@ -1247,14 +1247,14 @@ gda_query_join_save_to_xml (GdaXmlStorage *iface, GError **error)
 			str = g_strdup (gda_object_ref_get_ref_name (join->priv->target2, NULL, NULL));
 		
 		if (str) {
-			xmlSetProp (node, "target2", str);
+			xmlSetProp(node, (xmlChar*)"target2", (xmlChar*)str);
 			g_free (str);
 		}
 	}
 
 	/* join type */
 	type = convert_join_type_to_str (join->priv->join_type);
-	xmlSetProp (node, "join_type", type);
+	xmlSetProp(node, (xmlChar*)"join_type", (xmlChar*)type);
 
 	/* join condition */
 	if (join->priv->cond) {
@@ -1284,7 +1284,7 @@ gda_query_join_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 	g_return_val_if_fail (node, FALSE);
 
 	join = GDA_QUERY_JOIN (iface);
-	if (strcmp (node->name, "gda_query_join")) {
+	if (strcmp ((gchar*)node->name, "gda_query_join")) {
 		g_set_error (error,
 			     GDA_QUERY_JOIN_ERROR,
 			     GDA_QUERY_JOIN_XML_LOAD_ERROR,
@@ -1292,7 +1292,7 @@ gda_query_join_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		return FALSE;
 	}
 
-	prop = xmlGetProp (node, "target1");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"target1");
 	if (prop) {
 		if (join->priv->target1) {
 			gda_object_ref_set_ref_name (join->priv->target1, GDA_TYPE_QUERY_TARGET, 
@@ -1301,7 +1301,7 @@ gda_query_join_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		}
 		g_free (prop);
 	}
-	prop = xmlGetProp (node, "target2");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"target2");
 	if (prop) {
 		if (join->priv->target2) {
 			gda_object_ref_set_ref_name (join->priv->target2, GDA_TYPE_QUERY_TARGET, 
@@ -1310,7 +1310,7 @@ gda_query_join_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		}
 		g_free (prop);
 	}
-	prop = xmlGetProp (node, "join_type");
+	prop = (gchar*)xmlGetProp(node, (xmlChar*)"join_type");
 	if (prop) {
 		join->priv->join_type = convert_str_to_join_type (prop);
 		g_free (prop);
@@ -1319,7 +1319,7 @@ gda_query_join_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 	/* children nodes */
 	children = node->children;
 	while (children) {
-		if (!strcmp (children->name, "gda_query_cond")) {
+		if (!strcmp ((gchar*)children->name, "gda_query_cond")) {
 			GdaQueryCondition *cond;
 
 			cond = gda_query_condition_new (join->priv->query, GDA_QUERY_CONDITION_NODE_AND);

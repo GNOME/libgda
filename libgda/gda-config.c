@@ -129,21 +129,21 @@ gda_config_read_entries (xmlNodePtr cur)
 	list = NULL;
 	cur = cur->xmlChildrenNode;
 	while (cur != NULL){
-		if (!strcmp(cur->name, "entry")){
+		if (!strcmp((gchar*)cur->name, "entry")){
 			entry = g_new0 (GdaConfigEntry, 1);
-			entry->name = xmlGetProp(cur, "name");
+			entry->name = (gchar*)xmlGetProp(cur, (xmlChar*)"name");
 			if (entry->name == NULL){
 				g_warning ("NULL 'name' in an entry");
 				entry->name = g_strdup ("");
 			}
 
-			entry->type =  xmlGetProp(cur, "type");
+			entry->type = (gchar*)xmlGetProp(cur, (xmlChar*)"type");
 			if (entry->type == NULL){
 				g_warning ("NULL 'type' in an entry");
 				entry->type = g_strdup ("");
 			}
 
-			entry->value =  xmlGetProp(cur, "value");
+			entry->value = (gchar*)xmlGetProp(cur, (xmlChar*)"value");
 			if (entry->value == NULL){
 				g_warning ("NULL 'value' in an entry");
 				entry->value = g_strdup ("");
@@ -151,7 +151,7 @@ gda_config_read_entries (xmlNodePtr cur)
 
 			list = g_list_append (list, entry);
 		} else {
-			g_warning ("'entry' expected, got '%s'. Ignoring...", cur->name);
+			g_warning ("'entry' expected, got '%s'. Ignoring...", (gchar*)cur->name);
 		}
 		cur = cur->next;
 	}
@@ -212,8 +212,8 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 		return NULL;
 	}
 
-	if (strcmp (cur->name, "libgda-config") != 0){
-		g_warning ("root node != 'libgda-config' -> '%s'", cur->name);
+	if (strcmp ((gchar*)cur->name, "libgda-config") != 0){
+		g_warning ("root node != 'libgda-config' -> '%s'", (gchar*)cur->name);
 		xmlFreeDoc (doc);
 		xmlMemSetup (old_free,
 			     old_malloc,
@@ -226,14 +226,14 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 		if (xmlNodeIsText (cur)) 
 			continue;
 
-		if (strcmp (cur->name, "section")) {
-			if (strcmp (cur->name, "comment"))
-				g_warning ("'section' expected, got '%s'. Ignoring...", cur->name);
+		if (strcmp ((gchar*)cur->name, "section")) {
+			if (strcmp ((gchar*)cur->name, "comment"))
+				g_warning ("'section' expected, got '%s'. Ignoring...", (gchar*)cur->name);
 			continue;
 		}
 
 		section = g_new0 (GdaConfigSection, 1);
-		section->path = xmlGetProp (cur, "path");
+		section->path = (gchar*)xmlGetProp (cur, (xmlChar*)"path");
 		if (section->path != NULL &&
 		    !strncmp (section->path, section_path, sp_len)){
 			section->entries = gda_config_read_entries (cur);
@@ -266,10 +266,10 @@ get_config_client ()
 	 *	  wait until the operation finishes
 	 */
 	if (! config_client) {
-		gint len;
-		gchar *full_file;
+		guint len = 0;
+		gchar *full_file = NULL;
 		gchar *user_config = NULL;
-		gboolean has_user_config;
+		gboolean has_user_config = FALSE;
 
 		has_user_config = g_get_home_dir () ? TRUE : FALSE;
 		if (has_user_config)
@@ -674,10 +674,10 @@ add_xml_entry (xmlNodePtr parent, GdaConfigEntry *entry)
 {
 	xmlNodePtr new_node;
 
-	new_node = xmlNewTextChild (parent, NULL, "entry", NULL);
-	xmlSetProp (new_node, "name", entry->name);
-	xmlSetProp (new_node, "type", entry->type);
-	xmlSetProp (new_node, "value", entry->value);
+	new_node = xmlNewTextChild (parent, NULL, (xmlChar*)"entry", NULL);
+	xmlSetProp (new_node, (xmlChar*)"name", (xmlChar*)entry->name);
+	xmlSetProp (new_node, (xmlChar*)"type", (xmlChar*)entry->type);
+	xmlSetProp (new_node, (xmlChar*)"value", (xmlChar*)entry->value);
 }
 
 static xmlNodePtr
@@ -685,8 +685,8 @@ add_xml_section (xmlNodePtr parent, GdaConfigSection *section)
 {
 	xmlNodePtr new_node;
 
-	new_node = xmlNewTextChild (parent, NULL, "section", NULL);
-	xmlSetProp (new_node, "path", section->path ? section->path : "");
+	new_node = xmlNewTextChild (parent, NULL, (xmlChar*)"section", NULL);
+	xmlSetProp (new_node, (xmlChar*)"path", (xmlChar*)(section->path ? section->path : ""));
 	return new_node;
 }
 
@@ -708,9 +708,9 @@ write_config_file ()
 
 	/* user specific data sources */
 	cfg_client = get_config_client ();
-	doc = xmlNewDoc ("1.0");
+	doc = xmlNewDoc ((xmlChar*)"1.0");
 	g_return_if_fail (doc != NULL);
-	root = xmlNewDocNode (doc, NULL, "libgda-config", NULL);
+	root = xmlNewDocNode (doc, NULL, (xmlChar*)"libgda-config", NULL);
 	xmlDocSetRootElement (doc, root);
 	for (ls = cfg_client->user; ls; ls = ls->next){
 		section = ls->data;
@@ -741,9 +741,9 @@ write_config_file ()
 
 	/* system wide data sources */
 	if (can_modif_global_conf) {
-		doc = xmlNewDoc ("1.0");
+		doc = xmlNewDoc ((xmlChar*)"1.0");
 		g_return_if_fail (doc != NULL);
-		root = xmlNewDocNode (doc, NULL, "libgda-config", NULL);
+		root = xmlNewDocNode (doc, NULL, (xmlChar*)"libgda-config", NULL);
 		xmlDocSetRootElement (doc, root);
 		for (ls = cfg_client->global; ls; ls = ls->next){
 			section = ls->data;

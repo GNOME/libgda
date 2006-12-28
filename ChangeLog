@@ -1,5 +1,57 @@
 2006-12-28  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-config.c:
+	* libgda/gda-connection.c:
+	* libgda/gda-data-model-import.c:
+	* libgda/gda-data-model-query.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-dict-aggregate.c: 
+	* libgda/gda-dict-constraint.c:
+	* libgda/gda-dict-database.c:
+	* libgda/gda-dict-field.c
+	* libgda/gda-dict-function.c:
+	* libgda/gda-dict-reg-aggregates.c:
+	* libgda/gda-dict-reg-functions.c:
+	* libgda/gda-dict-reg-queries.c:
+	* libgda/gda-dict-reg-types.c:
+	* libgda/gda-dict-table.c:
+	* libgda/gda-dict-type.c:
+	* libgda/gda-dict.c:
+	* libgda/gda-init.c:
+	* libgda/gda-parameter-list.c:
+	* libgda/gda-query-condition.c:
+	* libgda/gda-query-field-agg.c:
+	* libgda/gda-query-field-all.c:
+	* libgda/gda-query-field-field.c:
+	* libgda/gda-query-field-func.c:
+	* libgda/gda-query-field-value.c:
+	* libgda/gda-query-field.c:
+	* libgda/gda-query-join.c:
+	* libgda/gda-query-target.c:
+	* libgda/gda-query.c:
+	* libgda/gda-row.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-util.c:
+	* libgda/gda-value.c:
+	* libgda/graph/gda-dict-reg-graphs.c:
+	* libgda/graph/gda-graph-item.c:
+	* libgda/graph/gda-graph.c:
+	* libgda/sql-delimiter/gda-test-delimiter.c:
+	* libsql/mem.h:
+	* libsql/sql_parser.c:
+	* testing/gda-test-model-query.c: 
+	* testing/gda-test-models.c:
+	* testing/gda-test-sql.c:
+	* testing/html.c:
+	* tools/gda-config-tool.c: 
+	* tools/gda-diagnose.c:
+	* tools/html.c: Many fixes for -Wall -Werror warnings, mostly 
+	xmlChar* <-> gchar* casts, and some unused variables and implicitly 
+	declared functions.
+
+2006-12-28  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-dict-field.c: (gda_dict_field_load_from_xml):
 	* libgda/gda-dict.h: Add a note about the current need to include 
 	libgda/gda-dict-reg-aggregates.h and libgda/gda-dict-reg-functions.h when 

@@ -229,7 +229,7 @@ test_all_queries (TestConfig *config)
 	GError *error = NULL;
 
 	node = xmlDocGetRootElement (config->tests_doc);
-        if (strcmp (node->name, "test_scenario")) {
+        if (strcmp ((gchar*)node->name, "test_scenario")) {
                 g_print ("XML file top node is not <test_scenario>\n");
                 exit (1);
         }
@@ -238,7 +238,7 @@ test_all_queries (TestConfig *config)
 	while (subnode) {
 		/* new dictionary */
 		if (!strcmp (subnode->name, "dictionary")) {
-			gchar *filename = xmlGetProp (subnode, "name");
+			gchar *filename = xmlGetProp(subnode, (xmlChar*)"name");
 			test_and_destroy_dict (config);			
 			if (filename) {
 				config->dict = gda_dict_new ();
@@ -254,8 +254,8 @@ test_all_queries (TestConfig *config)
 		
 		/* new output file */
 		if (!strcmp (subnode->name, "output_file")) {
-			gchar *filename = xmlGetProp (subnode, "name");
-			gchar *descr = xmlGetProp (subnode, "descr");
+			gchar *filename = xmlGetProp(subnode, (xmlChar*)"name");
+			gchar *descr = xmlGetProp(subnode, (xmlChar*)"descr");
 			xmlNodePtr li;
 			gchar *tmp;
 
@@ -273,14 +273,14 @@ test_all_queries (TestConfig *config)
 		if (!strcmp (subnode->name, "test_group")) {
 			xmlNodePtr table, tr, td;
 			xmlNodePtr test;
-			gchar *descr = xmlGetProp (subnode, "descr");
+			gchar *descr = xmlGetProp(subnode, (xmlChar*)"descr");
 			
 			html_add_header (HTML_CONFIG (config), config->file, descr);
 			table = xmlNewChild (config->file->body, NULL, "table", NULL);
-			xmlSetProp (table, "width", "100%");
+			xmlSetProp(table, "width", (xmlChar*)"100%");
 			tr = xmlNewChild (table, NULL, "tr", NULL);
 			td = xmlNewChild (tr, NULL, "th", _("SQL tested"));
-			xmlSetProp (td, "colspan", "3");
+			xmlSetProp(td, "colspan", (xmlChar*)"3");
 			tr = xmlNewChild (table, NULL, "tr", NULL);
 			td = xmlNewChild (tr, NULL, "th", _("UPDATE query"));
 			td = xmlNewChild (tr, NULL, "th", _("INSERT query"));
@@ -290,7 +290,7 @@ test_all_queries (TestConfig *config)
 			test = subnode->children;
 			while (test) {
 				if (!strcmp (test->name, "test")) {
-					gchar *sql = xmlGetProp (test, "sql");
+					gchar *sql = xmlGetProp(test, (xmlChar*)"sql");
 
 					if (sql) {
 						make_query_test (config, sql, table);
@@ -326,14 +326,14 @@ make_query_test (TestConfig *config, const gchar *sql, xmlNodePtr table)
 
 	tr = xmlNewChild (table, NULL, "tr", NULL);
 	td = xmlNewChild (tr, NULL, "td", sql);
-	xmlSetProp (td, "colspan", "3");
+	xmlSetProp(td, "colspan", (xmlChar*)"3");
 
 	/* compute queries, and display the results */
 	model = gda_data_model_query_new (query);
 	tr = xmlNewChild (table, NULL, "tr", NULL);
 	if (!gda_data_model_query_compute_modification_queries (GDA_DATA_MODEL_QUERY (model), NULL, 0, &error)) {
 		td = xmlNewChild (tr, NULL, "td", error && error->message ? error->message : "???");
-		xmlSetProp (td, "colspan", "3");
+		xmlSetProp(td, "colspan", (xmlChar*)"3");
 		html_mark_node_warning (HTML_CONFIG (config), td);
 		g_error_free (error);
 	}
@@ -349,7 +349,7 @@ make_query_test (TestConfig *config, const gchar *sql, xmlNodePtr table)
 		}
 		else {
 			td = xmlNewChild (tr, NULL, "td", error && error->message ? error->message : "???");
-			xmlSetProp (td, "colspan", "3");
+			xmlSetProp(td, "colspan", (xmlChar*)"3");
 			g_error_free (error);
 			error = NULL;
 		}
@@ -362,7 +362,7 @@ make_query_test (TestConfig *config, const gchar *sql, xmlNodePtr table)
 		}
 		else {
 			td = xmlNewChild (tr, NULL, "td", error && error->message ? error->message : "???");
-			xmlSetProp (td, "colspan", "3");
+			xmlSetProp(td, "colspan", (xmlChar*)"3");
 			g_error_free (error);
 			error = NULL;
 		}
@@ -375,7 +375,7 @@ make_query_test (TestConfig *config, const gchar *sql, xmlNodePtr table)
 		}
 		else {
 			td = xmlNewChild (tr, NULL, "td", error && error->message ? error->message : "???");
-			xmlSetProp (td, "colspan", "3");
+			xmlSetProp(td, "colspan", (xmlChar*)"3");
 			g_error_free (error);
 			error = NULL;
 		}

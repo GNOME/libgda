@@ -96,21 +96,21 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	default_dict = gda_dict_new ();
 
 #define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
-	gda_dict_dtd = xmlParseDTD (NULL, LIBGDA_DICT_DTD_FILE);
+	gda_dict_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_DICT_DTD_FILE);
 	if (gda_dict_dtd)
 		gda_dict_dtd->name = xmlStrdup((xmlChar*) "gda_dict");
 	else
 		g_warning (_("Could not parse " LIBGDA_DICT_DTD_FILE ": "
 			     "XML dictionaries validation will not be performed (some weird errors may occur)"));
 #define LIBGDA_PARAMLIST_DTD_FILE DTDINSTALLDIR"/libgda-paramlist.dtd"
-	gda_paramlist_dtd = xmlParseDTD (NULL, LIBGDA_PARAMLIST_DTD_FILE);
+	gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_PARAMLIST_DTD_FILE);
 	if (gda_paramlist_dtd)
 		gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
 	else
 		g_warning (_("Could not parse " LIBGDA_PARAMLIST_DTD_FILE ": "
 			     "XML data import validation will not be performed (some weird errors may occur)"));
 #define LIBGDA_ARRAY_DTD_FILE DTDINSTALLDIR"/libgda-array.dtd"
-	gda_array_dtd = xmlParseDTD (NULL, LIBGDA_ARRAY_DTD_FILE);
+	gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_ARRAY_DTD_FILE);
 	if (gda_array_dtd)
 		gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
 	else
@@ -118,7 +118,7 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 			     "XML data import validation will not be performed (some weird errors may occur)"));
 
 #define LIBGDA_SERVER_OP_DTD_FILE DTDINSTALLDIR"/libgda-server-operation.dtd"
-	gda_server_op_dtd = xmlParseDTD (NULL, LIBGDA_SERVER_OP_DTD_FILE);
+	gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_SERVER_OP_DTD_FILE);
 	if (gda_server_op_dtd)
 		gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
 	else
@@ -325,16 +325,16 @@ gda_create_table (GdaConnection *cnn, const gchar *table_name, GError **error, .
 		
 	
 		/* Initation of the xmlDoc */
-		parameters = xmlNewDoc ("1.0");
+		parameters = xmlNewDoc ((xmlChar*)"1.0");
 		
-		root = xmlNewDocNode (parameters, NULL, "serv_op_data", NULL);
+		root = xmlNewDocNode (parameters, NULL, (xmlChar*)"serv_op_data", NULL);
 		xmlDocSetRootElement (parameters, root);
-		table = xmlNewChild (root, NULL, "op_data", table_name);
-		xmlSetProp (table, "path", "/TABLE_DEF_P/TABLE_NAME");
+		table = xmlNewChild (root, NULL, (xmlChar*)"op_data", (xmlChar*)table_name);
+		xmlSetProp(table, (xmlChar*)"path", (xmlChar*)"/TABLE_DEF_P/TABLE_NAME");
 
-		op_data = xmlNewChild (root, NULL, "op_data", NULL);
-		xmlSetProp (op_data, "path", "/FIELDS_A");
-		array_data = xmlNewChild (op_data, NULL, "gda_array_data", NULL);
+		op_data = xmlNewChild (root, NULL, (xmlChar*)"op_data", NULL);
+		xmlSetProp(op_data, (xmlChar*)"path", (xmlChar*)"/FIELDS_A");
+		array_data = xmlNewChild (op_data, NULL, (xmlChar*)"gda_array_data", NULL);
 			
 		va_start (args, error);
 		type = 0;
@@ -353,12 +353,12 @@ gda_create_table (GdaConnection *cnn, const gchar *table_name, GError **error, .
 			
 			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server, 
 											 cnn, type);
-			array_row = xmlNewChild (array_data, NULL, "gda_array_row", NULL);
-			array_value = xmlNewChild (array_row, NULL, "gda_array_value", arg);
-			xmlSetProp (array_value, "colid", "COLUMN_NAME");
+			array_row = xmlNewChild (array_data, NULL, (xmlChar*)"gda_array_row", NULL);
+			array_value = xmlNewChild (array_row, NULL, (xmlChar*)"gda_array_value", (xmlChar*)arg);
+			xmlSetProp(array_value, (xmlChar*)"colid", (xmlChar*)"COLUMN_NAME");
 		
-			array_value = xmlNewChild(array_row, NULL, "gda_array_value", dbms_type);
-			xmlSetProp(array_value, "colid", "COLUMN_TYPE");
+			array_value = xmlNewChild(array_row, NULL, (xmlChar*)"gda_array_value", (xmlChar*)dbms_type);
+			xmlSetProp(array_value, (xmlChar*)"colid", (xmlChar*)"COLUMN_TYPE");
 			
 		}
 		
@@ -425,11 +425,11 @@ gda_drop_table (GdaConnection *cnn, const gchar *table_name, GError **error)
 				      || GDA_IS_CONNECTION (cnn) 
 				      || !gda_connection_is_opened (cnn), FALSE);
     
-		parameters = xmlNewDoc ("1.0");
-		root = xmlNewDocNode (parameters, NULL, "serv_op_data", NULL);
+		parameters = xmlNewDoc ((xmlChar*)"1.0");
+		root = xmlNewDocNode (parameters, NULL, (xmlChar*)"serv_op_data", NULL);
 		xmlDocSetRootElement (parameters, root);
-		table = xmlNewChild (root, NULL, "op_data", table_name);
-		xmlSetProp (table, "path", "/TABLE_DESC_P/TABLE_NAME");
+		table = xmlNewChild (root, NULL, (xmlChar*)"op_data", (xmlChar*)table_name);
+		xmlSetProp(table, (xmlChar*)"path", (xmlChar*)"/TABLE_DESC_P/TABLE_NAME");
 	    
 		if (!gda_server_operation_load_data_from_xml (op, root, error)) {
 			/* error */

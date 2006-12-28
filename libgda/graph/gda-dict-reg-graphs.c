@@ -85,13 +85,13 @@ graphs_load_xml_tree (GdaDict *dict, xmlNodePtr graphs, GError **error)
 	gboolean allok = TRUE;
 	
 	while (qnode && allok) {
-		if (!strcmp (qnode->name, "gda_graph")) {
+		if (!strcmp ((gchar*)qnode->name, "gda_graph")) {
 			GdaGraph *graph = NULL;
 			gchar *prop;
 
-			prop = xmlGetProp (qnode, "type");
+			prop = (gchar*)xmlGetProp(qnode, (xmlChar*)"type");
 			if (prop) {
-				gchar *oprop = xmlGetProp (qnode, "object");
+				gchar *oprop = (gchar*)xmlGetProp(qnode, (xmlChar*)"object");
 				if (!oprop && (*prop == 'Q')) {
 					allok = FALSE;
 					g_set_error (error,

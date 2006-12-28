@@ -27,8 +27,8 @@ html_file_new (HtmlConfig *config, const gchar *name, const gchar *title)
 	head = xmlNewChild (topnode, NULL, "head", NULL);
 
 	node = xmlNewChild (head, NULL, "meta", NULL);
-	xmlSetProp (node, "content", "charset=ISO-8859-1");
-	xmlSetProp (node, "http-equiv", "content-type");
+	xmlSetProp(node, "content", (xmlChar*)"charset=ISO-8859-1");
+	xmlSetProp(node, "http-equiv", (xmlChar*)"content-type");
 
 	node = xmlNewChild (head, NULL, "title", title);
 	node = xmlNewChild (head, NULL, "style", 
@@ -107,11 +107,11 @@ html_file_new (HtmlConfig *config, const gchar *name, const gchar *title)
 
 	/* title */
 	node = xmlNewChild (file->body, NULL, "h1", title);
-	xmlSetProp (node, "class", "title");
+	xmlSetProp(node, "class", (xmlChar*)"title");
 
 	/* toc */
 	file->toc = xmlNewChild (file->body, NULL, "ul", _("Table of contents"));
-	xmlSetProp (file->toc, "class", "none");
+	xmlSetProp(file->toc, "class", (xmlChar*)"none");
 
 	/* add to @config's list of files */
 	config->all_files = g_slist_append (config->all_files, file);
@@ -173,7 +173,7 @@ real_html_add_link_to_node (xmlNodePtr node, const gchar *text, const gchar *lin
 	xmlNodePtr href;
 	gchar *tmp;
 
-	href = xmlNewNode (NULL, "a");
+	href = xmlNewNode (NULL, (xmlChar*)"a");
 	tmp = g_strdup_printf (" [%s] ", text);
 	xmlNodeSetContent (href, tmp);
 	g_free (tmp);
@@ -192,11 +192,11 @@ real_html_add_link_to_node (xmlNodePtr node, const gchar *text, const gchar *lin
 		xmlAddChild (node, href);
 	if (*link_to == '/') {
 		tmp = g_strdup_printf ("#%s", link_to);
-		xmlSetProp (href, "href", tmp);
+		xmlSetProp(href, (xmlChar*)"href", tmp);
 		g_free (tmp);
 	}
 	else
-		xmlSetProp (href, "href", link_to);
+		xmlSetProp(href, (xmlChar*)"href", link_to);
 }
 
 void
@@ -232,7 +232,7 @@ html_add_header (HtmlConfig *config, HtmlFile *file, const gchar *text)
 	tmp = g_strdup_printf ("/a/%d", counter++);
 	html_add_to_toc (config, file, text, tmp);
 	ntmp = xmlNewChild (hnode, NULL, "a", "");
-	xmlSetProp (ntmp, "name", tmp);
+	xmlSetProp(ntmp, (xmlChar*)"name", tmp);
 	g_free (tmp);
 	
 	return hnode;
@@ -254,19 +254,19 @@ html_mark_path_error (HtmlConfig *config, const gchar *nodepath)
 void
 html_mark_node_error (HtmlConfig *config, xmlNodePtr node)
 {
-	xmlSetProp (node, "class", "error");
+	xmlSetProp(node, "class", (xmlChar*)"error");
 }
 
 void
 html_mark_node_warning (HtmlConfig *config, xmlNodePtr node)
 {
-	xmlSetProp (node, "class", "warning");
+	xmlSetProp(node, "class", (xmlChar*)"warning");
 }
 
 void
 html_mark_node_notice (HtmlConfig *config, xmlNodePtr node)
 {
-	xmlSetProp (node, "class", "notice");
+	xmlSetProp(node, "class", (xmlChar*)"notice");
 }
 
 xmlNodePtr
@@ -339,7 +339,7 @@ html_render_data_model (xmlNodePtr parent, GdaDataModel *model)
 					xmlNodePtr p;
 					td = xmlNewChild (tr, NULL, "td", NULL);
 					p = xmlNewChild (td, NULL, "p", "NULL");
-					xmlSetProp (p, "class", "null");
+					xmlSetProp(p, "class", (xmlChar*)"null");
 				}
 				else {
 					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
@@ -385,7 +385,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "th", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "th", gda_column_get_name (column));
@@ -400,7 +400,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_title (column));
@@ -415,7 +415,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_dbms_type (column));
@@ -430,7 +430,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_g_type_to_string (gda_column_get_g_type (column)));
@@ -445,7 +445,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_allow_null (column) ? "FALSE" : "TRUE");
@@ -460,7 +460,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_primary_key (column) ? "YES" : "NO");
@@ -475,7 +475,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_unique_key (column) ? "YES" : "NO");
@@ -490,7 +490,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_references (column));
@@ -505,7 +505,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_auto_increment (column) ? "YES" : "NO");
@@ -520,7 +520,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else {
 			gchar *str;
@@ -539,7 +539,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_table (column));
@@ -554,7 +554,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else {
 			gchar *str = NULL;
@@ -580,7 +580,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else
 			td = xmlNewChild (tr, NULL, "td", gda_column_get_caption (column));
@@ -595,7 +595,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else {
 			gchar *str;
@@ -614,7 +614,7 @@ html_render_data_model_all (xmlNodePtr parent, GdaDataModel *model)
                 column = gda_data_model_describe_column (model, i);
                 if (!column) {
 			td = xmlNewChild (tr, NULL, "td", "Error");
-			xmlSetProp (td, "class", "error");
+			xmlSetProp(td, "class", (xmlChar*)"error");
                 }
 		else {
 			gchar *str;
