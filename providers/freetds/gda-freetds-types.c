@@ -191,7 +191,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 	const TDS_INT max_size = 255;
 	TDS_INT col_size = 0;
 	gchar *txt = NULL;
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63) 
+#if FREETDS_VERSION > 6000
 	CONV_RESULT tds_conv;
 #endif
 	GdaNumeric numeric;
@@ -203,7 +203,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 	/* perhaps remove ifdef later on
 	 * tds_cnc is just needed for context structure of 0.6x api for now
 	 */
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63) 
+#if FREETDS_VERSION > 6000
 	g_return_if_fail (tds_cnc != NULL);
 	g_return_if_fail (tds_cnc->ctx != NULL);
 
@@ -218,6 +218,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 		switch (col->column_type) {
 			case SYBBIT:
 			case SYBBITN:
+				g_value_init (field, G_TYPE_BOOLEAN);
 				g_value_set_boolean (field, (gboolean) (*(TDS_TINYINT *) val));
 				break;
 			case SYBBINARY:
@@ -227,7 +228,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 				gda_value_set_binary (field, &bin);
 				break;
 			case SYBVARBINARY:
-				bin.data = (&((TDS_VARBINARY *) val)->array);
+				bin.data = (guchar *)(&((TDS_VARBINARY *) val)->array);
 				bin.binary_length = ((TDS_VARBINARY *) val)->len;
 				gda_value_set_binary (field, &bin);
 				break;
@@ -243,28 +244,36 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 			case XSYBNCHAR:
 			case XSYBNVARCHAR:
 			 */
-				g_value_set_string (field, val);
+				g_value_init (field, G_TYPE_STRING);
+				txt = g_strndup (val, col->column_cur_size);
+				g_value_set_string (field, txt);
+				g_free (txt);
 				break;
 			case SYBINT4:
+				g_value_init (field, G_TYPE_INT);
 				g_value_set_int (field, *(TDS_INT *) val);
 				break;
 			case SYBINT2:
 				gda_value_set_short (field, *(TDS_SMALLINT *) val);
 				break;
 			case SYBINT1:
+				g_value_init (field, G_TYPE_CHAR);
 				g_value_set_char (field, (gchar) (*(TDS_TINYINT *) val));
 				break;
 			case SYBINTN:
 				if (col->column_size == 1) {
+					g_value_init (field, G_TYPE_CHAR);
 					g_value_set_char (field,
 					                       (gchar) (*(TDS_TINYINT *) val));
 				} else if (col->column_size == 2) {
 					gda_value_set_short (field,
 					                        *(TDS_SMALLINT *) val);
 				} else if (col->column_size == 4) {
+					g_value_init (field, G_TYPE_INT);
 					g_value_set_int (field,
 					                        *(TDS_INT *) val);
 				} else if (col->column_size == 8) {
+					g_value_init (field, G_TYPE_INT64);
 					g_value_set_int64 (field,
 					                      *(long long *) val);
 				}
@@ -284,10 +293,12 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 				}
 				break;
 			case SYBREAL:
+				g_value_init (field, G_TYPE_FLOAT);
 				g_value_set_float (field, *(TDS_REAL *) val);
 				break;
 			case SYBFLT8:
 			case SYBFLTN:
+				g_value_init (field, G_TYPE_DOUBLE);
 				g_value_set_double (field, *(TDS_FLOAT *) val);
 				break;
 			case SYBDATETIME:
@@ -302,6 +313,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 				                                       col);
 				break;
 			default:
+				g_value_init (field, G_TYPE_STRING);
 				if (col->column_size > max_size) {
 					col_size = max_size + 1;
 				} else {
@@ -310,7 +322,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 				txt = g_new0 (gchar, col_size);
 
 				/* tds_convert api changed to 0.6x */
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63) 
+#if FREETDS_VERSION > 6000
 				if (tds_convert (tds_cnc->ctx,
 						 col->column_type, val,
 						 col->column_size, SYBCHAR,
@@ -320,7 +332,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 					g_value_set_string (field, 
 						(tds_conv.c ? tds_conv.c : (tds_conv.ib ? tds_conv.ib : "")));
 				}
-#elif HAVE_FREETDS_VER0_60
+#elif FREETDS_VERSION == 6000
 				tds_convert (tds_cnc->ctx, 
 				             col->column_type, val,
 				             col->column_size, SYBCHAR,

@@ -1,3 +1,37 @@
+2006-12-28  Leonardo Boshell <p@kapcoweb.com>
+
+	* configure.in: Set FREETDS_VERSION_MAJOR and FREETDS_VERSION_MINOR
+	instead of HAVE_FREETDS_VER*.
+	* providers/freetds/gda-freetds-defs.h: Define FREETDS_VERSION and use
+	that macro instead of HAVE_FREETDS_VER*.
+	* providers/freetds/gda-freetds-provider.c: Use FREETDS_VERSION. FreeTDS
+	0.64 compatibility.
+	(gda_freetds_get_procedures): New. Verify that column #1 has the right
+	GType.
+	(gda_freetds_provider_get_types): Verify that columns have the right
+	GType.
+	(gda_freetds_provider_get_schema): Use gda_freetds_get_procedures().
+	(gda_freetds_execute_cmd): Check tds_cnc->tds->res_info before
+	tds_cnc->tds->res_info->rows_exist.
+	(gda_freetds_get_fields):
+	s/gda_parameter_list_find/gda_parameter_list_find_param/. Verify that
+	all columns have the right GType.
+	(gda_freetds_provider_tds_handle_err_msg),
+	(gda_freetds_provider_tds_handle_info_msg): Added 'const' to the first
+	parameter, as per the current FreeTDS API.
+	(gda_freetds_provider_begin_transaction): Fixed the signature of the
+	'level' parameter.
+	* providers/freetds/gda-freetds-provider.h: Use FREETDS_VERSION.
+	* providers/freetds/gda-freetds-recordset.c: Use FREETDS_VERSION.
+	FreeTDS 0.64 compatibility.
+	* providers/freetds/gda-freetds-types.c: Use FREETDS_VERSION.
+	(gda_freetds_set_gdavalue): Initialise 'field' with g_value_init()
+	before calling g_value_set_*() on it. When handling strings, make sure
+	the string is at most col->column_cur_size characters long. Cast to the
+	right type when handling SYBVARBINARY values.
+	* providers/freetds/gda-tds-schemas.h: Remove ambiguity from SQL
+	commands.
+
 2006-12-27  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-query.c: (render_sql_insert): Use g_string_append() instead 

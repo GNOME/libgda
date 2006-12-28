@@ -70,7 +70,7 @@ static GList *gda_freetds_provider_execute_command (GdaServerProvider *provider,
                                                     GdaParameterList *params);
 static gboolean gda_freetds_provider_begin_transaction (GdaServerProvider *provider,
                                                         GdaConnection *cnc,
-                                                        const gchar *name, GdaTransactionIsolation *level,
+                                                        const gchar *name, GdaTransactionIsolation level,
 							GError **error);
 static gboolean gda_freetds_provider_commit_transaction (GdaServerProvider *provider,
                                                          GdaConnection *cnc,
@@ -104,7 +104,7 @@ static gchar *gda_freetds_get_stringresult_of_query (GdaConnection *cnc,
                                                      const gint col,
                                                      const gint row);
 
-#ifdef HAVE_FREETDS_VER0_5X
+#if FREETDS_VERSION < 6000
   static gboolean tds_cbs_initialized = FALSE;
   extern int (*g_tds_msg_handler)();
   extern int (*g_tds_err_handler)();
@@ -117,11 +117,11 @@ static gboolean gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql);
 static int gda_freetds_provider_tds_handle_message (void *aStruct,
 						    void *bStruct,
                                                     const gboolean is_err_msg);
-#if defined(HAVE_FREETDS_VER0_63) || defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_60)
-  static int gda_freetds_provider_tds_handle_info_msg (TDSCONTEXT *,
+#if FREETDS_VERSION >= 6000
+  static int gda_freetds_provider_tds_handle_info_msg (const TDSCONTEXT *,
                                                        TDSSOCKET *,
                                                        _TDSMSGINFO *);
-  static int gda_freetds_provider_tds_handle_err_msg (TDSCONTEXT *,
+  static int gda_freetds_provider_tds_handle_err_msg (const TDSCONTEXT *,
                                                       TDSSOCKET *,
                                                       _TDSMSGINFO *);
 #else
@@ -253,8 +253,12 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	tds_set_packet(tds_cnc->login, 512);
 
 	/* Version 0.60 api uses context additionaly */
-#if defined(HAVE_FREETDS_VER0_63) || defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_60)
+#if FREETDS_VERSION >= 6000
+#if FREETDS_VERSION >= 6400
+	tds_cnc->ctx = tds_alloc_context(NULL);
+#else
 	tds_cnc->ctx = tds_alloc_context();
+#endif
 	if (! tds_cnc->ctx) {
 		gda_log_error (_("Allocating tds context failed."));
 		gda_freetds_free_connection_data (tds_cnc);
@@ -268,9 +272,9 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 #endif
 
 	/* establish connection; change in 0.6x api */
-#if defined(HAVE_FREETDS_VER0_60)
+#if FREETDS_VERSION == 6000
 	tds_cnc->tds = tds_connect(tds_cnc->login, tds_cnc->ctx, NULL);
-#elif defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
+#elif FREETDS_VERSION > 6000
 	tds_cnc->tds = tds_alloc_socket(tds_cnc->ctx, 512);
 	if (! tds_cnc->tds) {
 		gda_log_error (_("Allocating tds socket failed."));
@@ -298,9 +302,9 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	/* try to receive connection info for sanity check */
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
+#if FREETDS_VERSION > 6000
 	/* do nothing */
-#elif defined(HAVE_FREETDS_VER0_60)
+#elif FREETDS_VERSION == 6000
 	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login, tds_cnc->ctx->locale);
 #else
 	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login);
@@ -358,8 +362,10 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 		tds_cnc->database = NULL;
 	}
 	if (tds_cnc->config) {
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
+#if FREETDS_VERSION >= 6300
 		tds_free_connection (tds_cnc->config);
+#elif FREETDS_VERSION > 6000
+		tds_free_connect (tds_cnc->config);
 #else
 		tds_free_config(tds_cnc->config);
 #endif
@@ -371,7 +377,7 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 		tds_free_socket (tds_cnc->tds);
 		tds_cnc->tds = NULL;
 	}
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63) || defined(HAVE_FREETDS_VER0_60)
+#if FREETDS_VERSION >= 6000
 	if (tds_cnc->ctx) {
 		/* Clear callback handler */
 		tds_cnc->ctx->msg_handler = NULL;
@@ -525,7 +531,7 @@ static GList
 static gboolean
 gda_freetds_provider_begin_transaction (GdaServerProvider *provider,
                                         GdaConnection *cnc,
-                                        const gchar *name, GdaTransactionIsolation *level,
+                                        const gchar *name, GdaTransactionIsolation level,
 					GError **error)
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
@@ -636,49 +642,113 @@ static const gchar
 }
 
 static GdaDataModel *
+gda_freetds_get_procedures (GdaConnection    *cnc)
+{
+	GdaDataModel *recset;
+	GdaColumn *gda_col;
+	GValue    *value = NULL;
+	gchar *id_str;
+	int i;
+
+	recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_PROCEDURES);
+	TDS_FIXMODEL_SCHEMA_PROCEDURES (recset)
+
+	gda_col = gda_data_model_describe_column (recset, 1);
+	if (gda_column_get_gda_type (gda_col) == G_TYPE_STRING)
+		return recset;
+
+	/* Fix the type of column 1 */
+	for (i = 0; i < gda_data_model_get_n_rows (recset); i++) {
+		GdaRow *row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW(recset), i, NULL);
+
+		if (!row)
+			continue;
+
+		value = gda_row_get_value (row, 1);
+		id_str = gda_value_stringify (value);
+		g_value_unset (value);
+		g_value_init (value, G_TYPE_STRING);
+		g_value_set_string (value, id_str);
+		g_free (id_str);
+	}
+
+	gda_column_set_gda_type (gda_col, G_TYPE_STRING);
+
+	return recset;
+}
+
+static GdaDataModel *
 gda_freetds_provider_get_types (GdaConnection    *cnc,
 				GdaParameterList *params)
 {
 	GdaDataModel *model = NULL;
+	GdaColumn *gda_col;
 	_TDSCOLINFO col;
 	GType g_type;
-	GValue     *value = NULL;
+	GValue  *value = NULL;
+	GValue  *valuetmp = NULL;
+	gboolean col2_is_string;
+	gboolean col3_is_ulong;
 	gint i = 1;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	model = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
 	TDS_FIXMODEL_SCHEMA_TYPES (model);
 
 	memset (&col, 0, sizeof (col));
-	
-	if (model) {
-		for (i = 0; i < gda_data_model_get_n_rows (model); i++) {
-			GdaRow *row = (GdaRow *) gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (model), i, NULL);
-			
-			/* first fix g_type */
-			if (row) {
-				value = gda_row_get_value (row, 2);
-				if (G_VALUE_TYPE (value) == G_TYPE_INT)
-					col.column_size = g_value_get_int (value);
-				else
-					col.column_size = 0;
-				
-				value = gda_row_get_value (row, 3);
-				if (G_VALUE_TYPE (value) != G_TYPE_CHAR)
-					col.column_type = SYBVARIANT;
-				else 
-					col.column_type = g_value_get_char (value);
-				
-				g_type = gda_freetds_get_value_type (&col);
-				
-				/* col 3: type */
-				g_value_set_ulong (value, g_type);
-				
-				/* col 2: comment */
-				value = gda_row_get_value (row, 2);
-				g_value_set_string (value, "");
+
+	if (! model)
+		return NULL;
+
+	gda_col = gda_data_model_describe_column (model, 2);
+	col2_is_string = (gda_column_get_gda_type (gda_col) == G_TYPE_STRING);
+	gda_col = gda_data_model_describe_column (model, 3);
+	col3_is_ulong = (gda_column_get_gda_type (gda_col) == G_TYPE_ULONG);
+
+	for (i = 0; i < gda_data_model_get_n_rows (model); i++) {
+		GdaRow *row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (model), i, NULL);
+
+		/* first fix g_type */
+		if (row) {
+			value = gda_row_get_value (row, 2);
+			if (G_VALUE_TYPE (value) == G_TYPE_INT)
+				col.column_size = g_value_get_int (value);
+			else
+				col.column_size = 0;
+
+			value = gda_row_get_value (row, 3);
+			if (G_VALUE_TYPE (value) != G_TYPE_CHAR)
+				col.column_type = SYBVARIANT;
+			else
+				col.column_type = g_value_get_char (value);
+
+			g_type = gda_freetds_get_value_type (&col);
+
+			/* col 3: type */
+			if (!col3_is_ulong) {
+				g_value_unset (value);
+				g_value_init (value, G_TYPE_ULONG);
 			}
+			g_value_set_ulong (value, g_type);
+
+			/* col 2: comment */
+			value = gda_row_get_value (row, 2);
+			if (!col2_is_string) {
+				g_value_unset (value);
+				g_value_init (value, G_TYPE_STRING);
+			}
+			g_value_set_string (value, "");
 		}
+	}
+
+	if (!col2_is_string) {
+		gda_col = gda_data_model_describe_column (model, 2);
+		gda_column_set_gda_type (gda_col, G_TYPE_STRING);
+	}
+	if (!col3_is_ulong) {
+		gda_col = gda_data_model_describe_column (model, 3);
+		gda_column_set_gda_type (gda_col, G_TYPE_ULONG);
 	}
 
 	return model;
@@ -692,7 +762,7 @@ gda_freetds_provider_get_schema (GdaServerProvider *provider,
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 	GdaDataModel *recset = NULL;
-	
+
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
 	if (cnc)
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -708,15 +778,15 @@ gda_freetds_provider_get_schema (GdaServerProvider *provider,
 		break;
 	case GDA_CONNECTION_SCHEMA_PROCEDURES:
 		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_PROCEDURES);
-		TDS_FIXMODEL_SCHEMA_PROCEDURES (recset)
-			
-			return recset;
+		TDS_FIXMODEL_SCHEMA_PROCEDURES (recset);
+
+		return recset;
 		break;
 	case GDA_CONNECTION_SCHEMA_TABLES:
 		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TABLES);
-		TDS_FIXMODEL_SCHEMA_TABLES (recset)
-			
-			return recset;
+		TDS_FIXMODEL_SCHEMA_TABLES (recset);
+
+		return recset;
 		break;
 	case GDA_CONNECTION_SCHEMA_TYPES:
 		recset = gda_freetds_provider_get_types (cnc, params);
@@ -725,15 +795,15 @@ gda_freetds_provider_get_schema (GdaServerProvider *provider,
 		break;
 	case GDA_CONNECTION_SCHEMA_USERS:
 		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_USERS);
-		TDS_FIXMODEL_SCHEMA_USERS (recset)
-				
-			return recset;
+		TDS_FIXMODEL_SCHEMA_USERS (recset);
+
+		return recset;
 		break;
 	case GDA_CONNECTION_SCHEMA_VIEWS:
 		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_VIEWS);
-		TDS_FIXMODEL_SCHEMA_VIEWS (recset)
+		TDS_FIXMODEL_SCHEMA_VIEWS (recset);
 
-			return recset;
+		return recset;
 		break;
 
 	case GDA_CONNECTION_SCHEMA_AGGREGATES:
@@ -745,7 +815,7 @@ gda_freetds_provider_get_schema (GdaServerProvider *provider,
 		return NULL;
 		break;
 	}
-	
+
 	return NULL;
 }
 
@@ -771,13 +841,17 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	}
 
 	/* there should not be any result tokens */
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
+#if FREETDS_VERSION >= 6400
+	while ((tds_cnc->rc = tds_process_tokens (tds_cnc->tds, &tds_cnc->result_type, NULL, TDS_RETURN_ROWFMT | TDS_RETURN_COMPUTEFMT | TDS_RETURN_DONE | TDS_STOPAT_ROW | TDS_STOPAT_COMPUTE | TDS_RETURN_PROC))
+#elif FREETDS_VERSION >= 6200
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds, &tds_cnc->result_type, NULL))
+#elif FREETDS_VERSION > 6000
+	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds, &tds_cnc->result_type))
 #else
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds)) 
 #endif
 	       == TDS_SUCCEED) {
-		if (tds_cnc->tds->res_info->rows_exist) {
+		if (tds_cnc->tds->res_info && tds_cnc->tds->res_info->rows_exist) {
 			gda_log_error (_("Unexpected result tokens in execute_cmd()."));
 			error = gda_freetds_make_error (tds_cnc->tds,
 			                                _("Unexpected result tokens in execute_cmd()."));
@@ -879,8 +953,11 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModel *recset;
 	GdaParameter *parameter;
+	GdaColumn    *gda_col;
+	GValue       *value = NULL;
 	gchar *query;
 	const gchar *table;
+	int i;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
@@ -899,6 +976,29 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 	if (GDA_IS_FREETDS_RECORDSET (recset)) {
 		TDS_FIXMODEL_SCHEMA_FIELDS (recset)
 	}
+
+	if (gda_data_model_get_n_columns (recset) < 2) {
+		return recset;
+	}
+
+	gda_col = gda_data_model_describe_column (recset, 2);
+	if (gda_column_get_gda_type (gda_col) == G_TYPE_INT)
+		return recset;
+
+	for (i = 0; i < gda_data_model_get_n_rows (recset); i++) {
+		GdaRow *row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW(recset), i, NULL);
+
+		if (!row)
+			continue;
+
+		value = gda_row_get_value (row, 2);
+		g_value_unset (value);
+		g_value_init (value, G_TYPE_INT);
+		if (G_VALUE_TYPE (value) == GDA_TYPE_SHORT)
+			g_value_set_int (value, gda_value_get_short (value));
+	}
+
+	gda_column_set_gda_type (gda_col, G_TYPE_INT);
 
 	return recset;
 }
@@ -991,7 +1091,7 @@ gda_freetds_provider_class_init (GdaFreeTDSProviderClass *klass)
 	provider_class->fetch_blob = NULL;	
 	
 
-#ifdef HAVE_FREETDS_VER0_5X
+#if FREETDS_VERSION < 6000
 	if (tds_cbs_initialized == FALSE) {
 		tds_cbs_initialized = TRUE;
 
@@ -1014,7 +1114,7 @@ gda_freetds_provider_finalize (GObject *object)
 
 	g_return_if_fail (GDA_IS_FREETDS_PROVIDER (provider));
 
-#ifdef HAVE_FREETDS_VER0_5X
+#if FREETDS_VERSION < 6000
 	tds_cbs_initialized = FALSE;
 	g_tds_msg_handler = NULL;
 	g_tds_err_handler = NULL;
@@ -1047,9 +1147,15 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	                      TDS_SUCCEED);
 
 	msg = g_strdup_printf(_("Msg %d, Level %d, State %d, Server %s, Line %d\n%s\n"),
+#if FREETDS_VERSION >= 6400
+	                      msg_info->msgno,
+	                      msg_info->severity,
+	                      msg_info->state,
+#else
 	                      msg_info->msg_number,
 	                      msg_info->msg_level,
 	                      msg_info->msg_state,
+#endif
 	                      (msg_info->server ? msg_info->server : ""),
 	                      msg_info->line_number,
 	                      msg_info->message ? msg_info->message : "");
@@ -1059,7 +1165,11 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 		if (cnc != NULL) {
 			error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (error, msg);
+#if FREETDS_VERSION >= 6400
+			gda_connection_event_set_code (error, msg_info->msgno);
+#else
 			gda_connection_event_set_code (error, msg_info->msg_number);
+#endif
 			gda_connection_event_set_source (error, "gda-freetds");
 			if (msg_info->sql_state != NULL) {
 				gda_connection_event_set_sqlstate (error,
@@ -1084,14 +1194,14 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	return TDS_SUCCEED;
 }
 
-#if defined(HAVE_FREETDS_VER0_63) || defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_60)
+#if FREETDS_VERSION >= 6000
 /* FIXME: rewrite tds_handle_message as well/use new parameters here */
 static int
-gda_freetds_provider_tds_handle_info_msg (TDSCONTEXT *ctx, TDSSOCKET *tds,
+gda_freetds_provider_tds_handle_info_msg (const TDSCONTEXT *ctx, TDSSOCKET *tds,
                                           _TDSMSGINFO *msg)
 {
 	return gda_freetds_provider_tds_handle_message ((void *) tds,
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
+#if FREETDS_VERSION > 6000
 							(void *) msg,
 #else
 							(void *) tds->msg_info,
@@ -1106,14 +1216,14 @@ gda_freetds_provider_tds_handle_info_msg (void *aStruct)
 }
 #endif
 
-#if defined(HAVE_FREETDS_VER0_63) || defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_60)
+#if FREETDS_VERSION >= 6000
 /* FIXME: rewrite tds_handle_message as well/use new parameters here */
 static int
-gda_freetds_provider_tds_handle_err_msg (TDSCONTEXT *ctx, TDSSOCKET *tds,
+gda_freetds_provider_tds_handle_err_msg (const TDSCONTEXT *ctx, TDSSOCKET *tds,
                                          _TDSMSGINFO *msg)
 {
 	return gda_freetds_provider_tds_handle_message ((void *) tds,
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
+#if FREETDS_VERSION > 6000
 							(void *) msg,
 #else
 							(void *) tds->msg_info,

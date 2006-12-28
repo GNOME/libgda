@@ -33,13 +33,13 @@
 G_BEGIN_DECLS
 
 /* Compatibility macros */
-#ifdef HAVE_FREETDS_VER0_63
+#if FREETDS_VERSION >= 6300
 
 #define TDSCONNECTINFO TDSCONNECTION
 #define TDSCOLINFO     TDSCOLUMN
 #define TDSMSGINFO     TDSMESSAGE
 
-#endif  /* HAVE_FREETDS_VER0_63 */
+#endif  /* FREETDS_VERSION >= 6300 */
 
 #define GDA_TYPE_FREETDS_PROVIDER            (gda_freetds_provider_get_type())
 #define GDA_FREETDS_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FREETDS_PROVIDER, GdaFreeTDSProvider))
@@ -70,7 +70,7 @@ struct _GdaFreeTDSConnectionData {
 	gchar           *database;  /* database we are connected to */
 	
 	TDSLOGIN        *login;     /* tds login struct */
-#if defined(HAVE_FREETDS_VER0_63) || defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_60)
+#if FREETDS_VERSION >= 6000
 	TDSCONTEXT      *ctx;       /* tds context */
 #endif
 	TDSSOCKET       *tds;       /* connection handle */

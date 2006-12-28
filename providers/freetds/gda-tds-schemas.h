@@ -135,7 +135,7 @@ G_BEGIN_DECLS
         "  FROM sysobjects o, sysusers u" \
 	" WHERE ((o.type = 'P') OR (o.type = 'XP')) " \
 	"   AND (o.uid = u.uid) " \
-	" ORDER BY name"
+	" ORDER BY o.name"
 
 
 #define TDS_FIXMODEL_SCHEMA_TABLES(model) \
@@ -156,7 +156,7 @@ G_BEGIN_DECLS
 	"        (o.name NOT LIKE 'spt_%') AND " \
 	"        (o.name != 'syblicenseslog')) " \
 	"   AND (o.uid = u.uid) " \
-	" ORDER BY name"
+	" ORDER BY o.name"
 
 
 #define TDS_FIXMODEL_SCHEMA_TYPES(model) \
@@ -174,7 +174,7 @@ G_BEGIN_DECLS
 	"SELECT t.name, u.name AS owner, t.length, t.type " \
 	"  FROM systypes t, sysusers u " \
 	" WHERE (t.uid = u.uid) " \
-	" ORDER BY name"
+	" ORDER BY t.name"
 
 
 #define TDS_FIXMODEL_SCHEMA_USERS(model) \
@@ -203,7 +203,7 @@ G_BEGIN_DECLS
 	"SELECT o.name, u.name, '', '' " \
 	"  FROM sysobjects o, sysusers u " \
 	" WHERE (o.type = 'V') AND (o.uid = u.uid)" \
-	" ORDER BY name"
+	" ORDER BY o.name"
 
 G_END_DECLS
 

@@ -230,7 +230,7 @@ gda_freetds_dup_tdscolinfo (_TDSCOLINFO *col)
 		
 		/* set pointers to NULL */
 		copy->column_nullbind = NULL;
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
+#if FREETDS_VERSION > 6000
 		copy->column_varaddr = NULL;
 #else
 		copy->varaddr = NULL;
@@ -329,14 +329,29 @@ gda_freetds_recordset_new (GdaConnection *cnc, gboolean fetchall)
 	recset->priv->tds_cnc = tds_cnc;
 	recset->priv->res = tds_cnc->tds->res_info;
 
-#if defined(HAVE_FREETDS_VER0_61_62) || defined(HAVE_FREETDS_VER0_63)
+#if FREETDS_VERSION > 6000
+#if FREETDS_VERSION >= 6400
+	while ((tds_cnc->rc = tds_process_tokens (tds_cnc->tds,
+							 &tds_cnc->result_type, NULL,
+							 TDS_RETURN_ROWFMT | TDS_RETURN_COMPUTEFMT |
+							 TDS_RETURN_DONE | TDS_STOPAT_ROW |
+							 TDS_STOPAT_COMPUTE | TDS_RETURN_PROC))
+#elif FREETDS_VERSION >= 6200
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds,
 							 &tds_cnc->result_type, NULL))
+#else
+	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds,
+							 &tds_cnc->result_type))
+#endif  /* FREETDS_VERSION >= 6400 */
 	       == TDS_SUCCEED) {
 		if (tds_cnc->result_type == TDS_ROW_RESULT) {
 			gint row_type, compute_id;
 
+#if FREETDS_VERSION >= 6400
+			while ((tds_cnc->rc = tds_process_tokens(tds_cnc->tds, &row_type, &compute_id, TDS_STOPAT_ROWFMT | TDS_RETURN_DONE | TDS_RETURN_ROW | TDS_RETURN_COMPUTE))
+#else
 			while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->tds, &row_type, &compute_id))
+#endif
 #else
 			       while ((tds_cnc->rc = tds_process_result_tokens(tds_cnc->tds))
 	       == TDS_SUCCEED) {
@@ -368,7 +383,11 @@ gda_freetds_recordset_new (GdaConnection *cnc, gboolean fetchall)
 				g_object_unref (recset);
 				recset = NULL;
 				return NULL;
+#if FREETDS_VERSION >= 6400
+			} else if (tds_cnc->rc != TDS_NO_MORE_RESULTS) {
+#else
 			} else if (tds_cnc->rc != TDS_NO_MORE_ROWS) {
+#endif
 				error = gda_freetds_make_error(tds_cnc->tds,
 				                               _("Unexpected freetds return code in tds_process_row_tokens().\n"));
 				gda_connection_add_event (cnc, error);

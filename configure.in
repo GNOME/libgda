@@ -478,45 +478,23 @@ then
 		AC_MSG_WARN(tds backend not used)
 	else
 		AC_MSG_CHECKING(for freetds version)
-		freetdsvercheck="`grep \"^#define \(VERSION_NO \|TDS_VERSION_NO \)\" $freetds_incdir/tdsver.h|sed 's|^.*"\(.*\)"|\1|'`"
+		freetdsvercheck="`grep \"^#define \(VERSION_NO \|TDS_VERSION_NO \)\" $freetds_incdir/tdsver.h|sed 's|^.*".*v\(.*\)"|\1|'`"
 		if test "x$freetdsvercheck" = "x"
 		then
 			AC_MSG_WARN(freetds version check failed - backend not used)
 			freetdsdir=""
 			freetds_incdir=""
 		else
-			case "$freetdsvercheck" in
-				*v0.5*) AC_MSG_RESULT($freetdsvercheck - using v0.5x api)
-					AC_DEFINE(HAVE_FREETDS_VER0_5X, 1, [Have freetds v0.5x API])
-					FREETDS_CFLAGS="-I${freetds_incdir}"
-					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
-					AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
-					;;
-				*v0.60) AC_MSG_RESULT($freetdsvercheck - using v0.60 api)
-					AC_DEFINE(HAVE_FREETDS_VER0_60, 1, [Have freetds v0.60 API])
-					FREETDS_CFLAGS="-I${freetds_incdir}"
-					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
-					AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
-					;;
-				*v0.6[[3-9]]*) AC_MSG_RESULT($freetdsvercheck - using v0.63 api)
-					AC_DEFINE(HAVE_FREETDS_VER0_63, 1, [Have freetds v0.63 API])
-					AC_DEFINE(HAVE_FREETDS_VER0_6X, 1, [Have freetds v0.6x API])
-					FREETDS_CFLAGS="-I${freetds_incdir}"
-					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
-					AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
-					;;
-				*v0.6*) AC_MSG_RESULT($freetdsvercheck - using v0.6x api)
-					AC_DEFINE(HAVE_FREETDS_VER0_6X, 1, [Have freetds v0.6x API])
-					FREETDS_CFLAGS="-I${freetds_incdir}"
-					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
-					AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
-					;;
-				*)	AC_MSG_WARN($freetdsvercheck not supported - backend not used)
-					freetdsdir=""
-					freetds_incdir=""
-					;;
-			esac
-					
+			AC_MSG_RESULT($freetdsvercheck)
+			FREETDS_CFLAGS="-I${freetds_incdir}"
+			FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
+			AC_DEFINE(HAVE_FREETDS, 1, [Have freetds])
+
+			freetds_version_major="`echo $freetdsvercheck|sed 's:^\([[^.]]*\).*:\1:'`"
+			freetds_version_minor="`echo $freetdsvercheck|sed 's:^[[^.]]*\.\([[^.]]*\).*:\1:'`"
+
+			AC_DEFINE_UNQUOTED(FREETDS_VERSION_MAJOR, [$freetds_version_major])
+			AC_DEFINE_UNQUOTED(FREETDS_VERSION_MINOR, [$freetds_version_minor])
 		fi	
 	fi
 fi
