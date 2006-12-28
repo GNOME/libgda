@@ -56,7 +56,7 @@ static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset,
 static void gda_postgres_recordset_finalize   (GObject *object);
 
 static const GValue *gda_postgres_recordset_get_value_at    (GdaDataModelRow *model, gint col, gint row);
-static GdaColumn *gda_postgres_recordset_describe    (GdaDataModelRow *model, gint col);
+static void gda_postgres_recordset_describe_column    (GdaDataModelRow *model, gint col);
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModelRow *model);
 static GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModelRow *model, gint rownum, GError **error);
 static gboolean gda_postgres_recordset_append_row	      (GdaDataModelRow *model, GdaRow *row, GError **error);
@@ -180,7 +180,7 @@ gda_postgres_recordset_get_row (GdaDataModelRow *model, gint row, GError **error
 	row_list = (GdaRow *) GDA_DATA_MODEL_ROW_CLASS (parent_class)->get_row (model, row, 
 										error);
 	if (row_list != NULL)
-		return (const GdaRow *)row_list;
+		return row_list;
 
 	priv_data = recset->priv;
 	if (!priv_data->pg_res) {
@@ -202,7 +202,7 @@ gda_postgres_recordset_get_row (GdaDataModelRow *model, gint row, GError **error
 	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
 					row, row_list);
 
-	return (const GdaRow *) row_list;
+	return row_list;
 }
 
 static gboolean
@@ -306,13 +306,12 @@ gda_postgres_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError *
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
-	gint colnum, uk, i;
+	gint colnum, uk;
 	PGresult *pg_res, *pg_rm_res;
 	gchar *query, *query_where, *tmp;
 	GdaPostgresConnectionData *cnc_priv_data;
 	PGconn *pg_conn;
 	gboolean status = FALSE;
-	GValue *value;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), FALSE);
 	g_return_val_if_fail (recset->priv != NULL, FALSE);
@@ -546,7 +545,6 @@ gda_postgres_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 	PGresult *pg_res;
 	GdaRow *row_list;
 	const GValue *value;
-	GdaDataModelHashClass *class;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
@@ -699,7 +697,7 @@ gda_postgres_recordset_describe_column (GdaDataModelRow *model, gint col)
 		return;
 	}
 
-	field_attrs = gda_data_model_describe_column (model, col);
+	field_attrs = gda_data_model_describe_column (GDA_DATA_MODEL (model), col);
 	gda_column_set_name (field_attrs, PQfname (pg_res, col));
 
 	ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
@@ -819,7 +817,7 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 
 	/* set GdaColumn attributes */
 	for (i = 0; i < model->priv->ncolumns; i++)
-		gda_postgres_recordset_describe_column (GDA_DATA_MODEL (model), i);
+		gda_postgres_recordset_describe_column (GDA_DATA_MODEL_ROW (model), i);
 
 	return GDA_DATA_MODEL (model);
 }

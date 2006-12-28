@@ -360,7 +360,6 @@ static gchar *
 gda_postgres_blob_get_sql_id (GdaBlob *blob)
 {
 	GdaPostgresBlob *pblob;
-	PGconn *pconn;
 
 	g_return_val_if_fail (blob && GDA_IS_POSTGRES_BLOB (blob), NULL);
 	pblob = GDA_POSTGRES_BLOB (blob);

@@ -2591,8 +2591,7 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 					const gchar *dbms_type)
 {
 	GdaDataHandler *dh = NULL;
-	GdaPostgresProvider *pg_prv = GDA_POSTGRES_PROVIDER (provider);
-
+	
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
         if ((type == G_TYPE_INT64) ||

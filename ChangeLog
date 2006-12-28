@@ -1,5 +1,20 @@
 2006-12-28  Murray Cumming  <murrayc@murrayc.com>
 
+	* providers/postgres/gda-postgres-blob.c:
+	(gda_postgres_blob_get_sql_id):
+	* providers/postgres/gda-postgres-provider.c:
+	(gda_postgres_provider_get_data_handler):
+	* providers/postgres/gda-postgres-recordset.c:
+	(gda_postgres_recordset_get_row),
+	(gda_postgres_recordset_remove_row),
+	(gda_postgres_recordset_get_value_at),
+	(gda_postgres_recordset_describe_column),
+	(gda_postgres_recordset_new):
+	* providers/postgres/utils.c: (gda_postgres_set_value): 
+	Fix warnings by adding casts and removing unnused variables.
+
+2006-12-28  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-config.c:
 	* libgda/gda-connection.c:
 	* libgda/gda-data-model-import.c:

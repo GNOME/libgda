@@ -268,7 +268,10 @@ gda_postgres_set_value (GdaConnection *cnc,
 		 */
 		GdaBinary bin;
 		guchar *unescaped;
-		unescaped = PQunescapeBytea (thevalue, &(bin.binary_length));
+                size_t pqlength = 0;
+		unescaped = PQunescapeBytea ((guchar*)thevalue, &pqlength);
+                bin.binary_length = pqlength;
+
 		if (unescaped != NULL) {
 			bin.data = unescaped;
 			gda_value_set_binary (value, &bin);
