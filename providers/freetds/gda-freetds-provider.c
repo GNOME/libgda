@@ -357,7 +357,9 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 		tds_cnc->database = NULL;
 	}
 	if (tds_cnc->config) {
-#ifdef HAVE_FREETDS_VER0_6X
+#ifdef HAVE_FREETDS_VER0_63
+		tds_free_connection (tds_cnc->config);
+#elif defined(HAVE_FREETDS_VER0_6X)
 		tds_free_connect (tds_cnc->config);
 #else
 		tds_free_config(tds_cnc->config);
@@ -802,7 +804,9 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	}
 
 	/* there should not be any result tokens */
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_63)
+	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds, &tds_cnc->result_type, NULL))
+#elif defined(HAVE_FREETDS_VER0_6X)
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds, &tds_cnc->result_type))
 #else
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds)) 

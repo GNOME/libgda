@@ -1,3 +1,12 @@
+2006-12-28  Murray Cumming  <murrayc@murrayc.com>
+
+	* providers/freetds/gda-freetds-provider.c:
+	(gda_freetds_free_connection_data), (gda_freetds_execute_cmd):
+	* providers/freetds/gda-freetds-recordset.c: 
+	Fix build when using libfreetds 0.63
+	Patch from Gustavo R. Montesino in bug #330939. Note that 
+	the HEAD branch does not need this.  
+
 2006-09-11  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/gda-postgres-provider.c:
