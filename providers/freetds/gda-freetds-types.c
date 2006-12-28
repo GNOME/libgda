@@ -122,7 +122,7 @@ gda_freetds_set_gdavalue_by_datetime4 (GValue      *field,
  * Public functions
  */
 
-const GType
+GType
 gda_freetds_get_value_type (_TDSCOLINFO *col)
 {
 	g_return_val_if_fail (col != NULL, G_TYPE_INVALID);
@@ -185,7 +185,7 @@ gda_freetds_get_value_type (_TDSCOLINFO *col)
 
 
 void
-gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
+gda_freetds_set_gdavalue (GValue *field, guchar *val, _TDSCOLINFO *col,
 			  GdaFreeTDSConnectionData *tds_cnc)
 {
 	const TDS_INT max_size = 255;
@@ -245,7 +245,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 			case XSYBNVARCHAR:
 			 */
 				g_value_init (field, G_TYPE_STRING);
-				txt = g_strndup (val, col->column_cur_size);
+				txt = g_strndup ((gchar *)val, col->column_cur_size);
 				g_value_set_string (field, txt);
 				g_free (txt);
 				break;
@@ -281,7 +281,8 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 			case SYBDECIMAL:
 			case SYBNUMERIC:
 				memset (&numeric, 0, sizeof (numeric));
-				numeric.number = g_strdup(((TDS_NUMERIC *) val)->array);
+				numeric.number = g_strdup((gchar *)
+				                          ((TDS_NUMERIC *) val)->array);
 				numeric.precision = ((TDS_NUMERIC *) val)->precision;
 				numeric.width = strlen (numeric.number);
 
@@ -324,7 +325,7 @@ gda_freetds_set_gdavalue (GValue *field, gchar *val, _TDSCOLINFO *col,
 				/* tds_convert api changed to 0.6x */
 #if FREETDS_VERSION > 6000
 				if (tds_convert (tds_cnc->ctx,
-						 col->column_type, val,
+						 col->column_type, (TDS_CHAR *) val,
 						 col->column_size, SYBCHAR,
 						 &tds_conv) < 0) {
 					g_value_set_string (field, "");

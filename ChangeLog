@@ -1,3 +1,26 @@
+2006-12-28  Leonardo Boshell <lb@kmc.com.co>
+
+	* providers/freetds/gda-freetds-provider.c:
+	(gda_freetds_get_procedures), (gda_freetds_provider_get_types),
+	(gda_freetds_get_fields):
+	s/gda_column_[gs]et_gda_type/gda_column_[gs]et_g_type/.
+	(gda_freetds_provider_get_types): Remove unused variable 'valuetmp'.
+	(gda_freetds_provider_get_schema): Actually use
+	gda_freetds_get_procedures().
+	(gda_freetds_provider_tds_handle_message): Remove unused variable
+	'tds_cnc'.
+	* providers/freetds/gda-freetds-recordset.c:
+	(gda_freetds_recordset_get_row): Remove the 'const' qualifier from the
+	return signature to properly match the API from gda-data-model-row.h.
+	(gda_freetds_get_current_row): Declare 'val' as 'guchar *' to hold the
+	value we get from res->current_row without casting.
+	* providers/freetds/gda-freetds-types.h:
+	* providers/freetds/gda-freetds-types.c: (gda_freetds_get_value_type):
+	Drop the 'const' qualifier from the return signature since it's not a
+	reference.
+	(gda_freetds_set_gdavalue): Changed the type of the 'val' parameter from
+	'gchar *' to 'guchar *'. Fix warnings regarding signedness.
+
 2006-12-28  Murray Cumming  <murrayc@murrayc.com>
 
 	* providers/postgres/gda-postgres-blob.c:

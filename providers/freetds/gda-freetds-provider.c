@@ -654,7 +654,7 @@ gda_freetds_get_procedures (GdaConnection    *cnc)
 	TDS_FIXMODEL_SCHEMA_PROCEDURES (recset)
 
 	gda_col = gda_data_model_describe_column (recset, 1);
-	if (gda_column_get_gda_type (gda_col) == G_TYPE_STRING)
+	if (gda_column_get_g_type (gda_col) == G_TYPE_STRING)
 		return recset;
 
 	/* Fix the type of column 1 */
@@ -672,7 +672,7 @@ gda_freetds_get_procedures (GdaConnection    *cnc)
 		g_free (id_str);
 	}
 
-	gda_column_set_gda_type (gda_col, G_TYPE_STRING);
+	gda_column_set_g_type (gda_col, G_TYPE_STRING);
 
 	return recset;
 }
@@ -686,7 +686,6 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 	_TDSCOLINFO col;
 	GType g_type;
 	GValue  *value = NULL;
-	GValue  *valuetmp = NULL;
 	gboolean col2_is_string;
 	gboolean col3_is_ulong;
 	gint i = 1;
@@ -702,9 +701,9 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 		return NULL;
 
 	gda_col = gda_data_model_describe_column (model, 2);
-	col2_is_string = (gda_column_get_gda_type (gda_col) == G_TYPE_STRING);
+	col2_is_string = (gda_column_get_g_type (gda_col) == G_TYPE_STRING);
 	gda_col = gda_data_model_describe_column (model, 3);
-	col3_is_ulong = (gda_column_get_gda_type (gda_col) == G_TYPE_ULONG);
+	col3_is_ulong = (gda_column_get_g_type (gda_col) == G_TYPE_ULONG);
 
 	for (i = 0; i < gda_data_model_get_n_rows (model); i++) {
 		GdaRow *row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (model), i, NULL);
@@ -744,11 +743,11 @@ gda_freetds_provider_get_types (GdaConnection    *cnc,
 
 	if (!col2_is_string) {
 		gda_col = gda_data_model_describe_column (model, 2);
-		gda_column_set_gda_type (gda_col, G_TYPE_STRING);
+		gda_column_set_g_type (gda_col, G_TYPE_STRING);
 	}
 	if (!col3_is_ulong) {
 		gda_col = gda_data_model_describe_column (model, 3);
-		gda_column_set_gda_type (gda_col, G_TYPE_ULONG);
+		gda_column_set_g_type (gda_col, G_TYPE_ULONG);
 	}
 
 	return model;
@@ -777,10 +776,7 @@ gda_freetds_provider_get_schema (GdaServerProvider *provider,
 		return gda_freetds_get_fields (cnc, params);
 		break;
 	case GDA_CONNECTION_SCHEMA_PROCEDURES:
-		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_PROCEDURES);
-		TDS_FIXMODEL_SCHEMA_PROCEDURES (recset);
-
-		return recset;
+        return gda_freetds_get_procedures (cnc);
 		break;
 	case GDA_CONNECTION_SCHEMA_TABLES:
 		recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TABLES);
@@ -982,7 +978,7 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 	}
 
 	gda_col = gda_data_model_describe_column (recset, 2);
-	if (gda_column_get_gda_type (gda_col) == G_TYPE_INT)
+	if (gda_column_get_g_type (gda_col) == G_TYPE_INT)
 		return recset;
 
 	for (i = 0; i < gda_data_model_get_n_rows (recset); i++) {
@@ -998,7 +994,7 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 			g_value_set_int (value, gda_value_get_short (value));
 	}
 
-	gda_column_set_gda_type (gda_col, G_TYPE_INT);
+	gda_column_set_g_type (gda_col, G_TYPE_INT);
 
 	return recset;
 }
@@ -1134,7 +1130,6 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	TDSSOCKET *tds = (TDSSOCKET *) aStruct;
 	_TDSMSGINFO *msg_info = (_TDSMSGINFO *) bStruct;
 	GdaConnection *cnc = NULL;
-	GdaFreeTDSConnectionData *tds_cnc = NULL;
 	GdaConnectionEvent *error = NULL;
 	gchar *msg = NULL;
 
