@@ -73,7 +73,7 @@ memsql_strdup_raw (char *funcname, int linenum, char *file, char *string)
 }
 
 void *
-memsql_strdup_printf_raw (char *funcname, int linenum, char *file,
+memsql_strdup_printf_raw (const char *funcname, int linenum, const char *file,
 			  const char *fmt, ...)
 {
 	void *retptr;
@@ -87,7 +87,7 @@ memsql_strdup_printf_raw (char *funcname, int linenum, char *file,
 }
 
 void *
-memsql_alloc_raw (char *funcname, int linenum, char *file, int count)
+memsql_alloc_raw (const char *funcname, int linenum, const char *file, int count)
 {
 	int real_size;
 	memsql_pre_info *pre;
@@ -124,7 +124,7 @@ memsql_alloc_raw (char *funcname, int linenum, char *file, int count)
 }
 
 void *
-memsql_calloc_raw (char *funcname, int linenum, char *file, int count)
+memsql_calloc_raw (const char *funcname, int linenum, const char *file, int count)
 {
 	void *ptr;
 
@@ -136,7 +136,7 @@ memsql_calloc_raw (char *funcname, int linenum, char *file, int count)
 }
 
 void *
-memsql_realloc_raw (char *funcname, int linenum, char *file, void *mem,
+memsql_realloc_raw (const char *funcname, int linenum, const char *file, void *mem,
 		    int count)
 {
 	void *new_mem;
@@ -234,8 +234,8 @@ memsql_display (void)
 #endif
 
 char *
-memsql_strappend_raw (char *funcname, int linenum, char *file, char *string1,
-		      char *string2)
+memsql_strappend_raw (const char *funcname, int linenum, const char *file, const char *string1,
+		      const char *string2)
 {
 	int len = 0;
 	char *retval;
@@ -267,7 +267,7 @@ memsql_strappend_raw (char *funcname, int linenum, char *file, char *string1,
 }
 
 char *
-memsql_strappend_free_raw (char *funcname, int linenum, char *file,
+memsql_strappend_free_raw (const char *funcname, int linenum, const char *file,
 			   char *str1, char *str2)
 {
 	char *retval;

@@ -1,3 +1,20 @@
+2006-12-28  Murray Cumming  <murrayc@murrayc.com>
+
+	* libsql/lexer.l:
+	* libsql/mem.c: (memsql_strdup_printf_raw), (memsql_alloc_raw),
+	(memsql_calloc_raw), (memsql_realloc_raw), (memsql_strappend_raw),
+	(memsql_strappend_free_raw):
+	* libsql/mem.h:
+	* libsql/sql_parser.c: (sqlerror):
+	* libsql/sql_parser.h:
+	* libsql/sql_tree.c: (sql_field_build_function), (sql_table_build),
+	(sql_table_build_function):
+	* libsql/sql_tree.h: Some const corrections to allow building with 
+	CFLAGS=-Werror.
+	Note that sql_build_function() still takes non-const char*, because that is later 
+	freed by sql_destroy_table(), but I do not think that this is expected everywhere, 
+	so there may be double frees.
+
 2006-12-28  Leonardo Boshell <p@kapcoweb.com>
 
 	* configure.in: Set FREETDS_VERSION_MAJOR and FREETDS_VERSION_MINOR

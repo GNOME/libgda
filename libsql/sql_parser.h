@@ -167,7 +167,7 @@ struct sql_table
 		sql_select_statement *select;
 		struct
 			{
-			gchar *funcname;
+			char *funcname; /* Takes ownership: freed in sql_destroy_table(). */
 			GList *funcarglist;
 			}
 		function;

@@ -32,7 +32,7 @@ extern void sql_switch_to_buffer(void *buffer);
 extern void *sql_scan_string(const char *string);
 extern void sql_delete_buffer (void *buffer);
 
-void sqlerror(char *error);
+void sqlerror(const char *error);
 
 sql_statement *sql_result;
 GError **sql_error;
@@ -53,7 +53,7 @@ static char *sql_field_stringify(sql_field * field);
  * Internal function for displaying error messages used by the lexer parser.
  */
 void
-sqlerror(char *string)
+sqlerror(const char *string)
 {
 	if (sql_error)
 		{

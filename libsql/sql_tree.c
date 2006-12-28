@@ -78,7 +78,7 @@ sql_delete_statement_build (sql_table * table, sql_where * where)
 }
 
 sql_field_item *
-sql_field_build_function (gchar * funcname, GList * funcarglist)
+sql_field_build_function (char * funcname, GList * funcarglist)
 {
 	sql_field_item *item;
 
@@ -171,7 +171,7 @@ param_spec_build (param_spec_type type, char *content)
 }
 
 sql_table *
-sql_table_build (char *tablename)
+sql_table_build (const char *tablename)
 {
 	sql_table *retval;
 
@@ -189,7 +189,7 @@ sql_table_build (char *tablename)
 }
 
 sql_table *
-sql_table_build_function (gchar * funcname, GList * funcarglist)
+sql_table_build_function (char * funcname, GList * funcarglist)
 {
 	sql_table *item;
 

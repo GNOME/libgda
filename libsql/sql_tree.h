@@ -26,7 +26,9 @@ sql_field_item *sql_field_item_build_equation (sql_field_item * left,
 					       sql_field_item * right,
 					       sql_field_operator op);
 sql_field_item *sql_field_item_build_select (sql_select_statement * select);
-sql_field_item *sql_field_build_function (gchar * funcname,
+
+/* Takes ownership of funcname. */
+sql_field_item *sql_field_build_function (char * funcname,
 					  GList * funcarglist);
 
 /* field */
@@ -35,8 +37,11 @@ sql_field *sql_field_set_as (sql_field * field, char *as);
 sql_field *sql_field_set_param_spec (sql_field * field, GList * param_spec);
 
 /* table */
-sql_table *sql_table_build (char *tablename);
-sql_table *sql_table_build_function (gchar * funcname, GList * funcarglist);
+sql_table *sql_table_build (const char *tablename);
+
+/* takes ownership of funcname. */
+sql_table *sql_table_build_function (char * funcname, GList * funcarglist);
+
 sql_table *sql_table_set_join (sql_table * table, sql_join_type join_type, sql_where * cond);
 sql_table *sql_table_build_select (sql_select_statement * select);
 sql_table *sql_table_set_as (sql_table * table, char *as);
