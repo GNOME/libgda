@@ -30,9 +30,11 @@ human readable text
 </para>
 
 @GDA_RENDERER_EXTRA_PRETTY_SQL: The rendered statement will output easy to read SQL
-@GDA_RENDERER_EXTRA_VAL_ATTRS: The rendered statement will include some extra text (not part of SQL) for parameters desecription
+@GDA_RENDERER_PARAMS_AS_DETAILED: 
 @GDA_RENDERER_ERROR_IF_DEFAULT: 
 @GDA_RENDERER_FIELDS_NO_TARGET_ALIAS: 
+@GDA_RENDERER_PARAMS_AS_COLON: 
+@GDA_RENDERER_PARAMS_AS_DOLLAR: 
 
 <!-- ##### FUNCTION gda_renderer_render_as_sql ##### -->
 <para>

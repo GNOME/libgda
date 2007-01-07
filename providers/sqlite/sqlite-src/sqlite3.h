@@ -31,7 +31,7 @@ extern "C" {
 #ifdef SQLITE_VERSION
 # undef SQLITE_VERSION
 #endif
-#define SQLITE_VERSION         "3.3.8"
+#define SQLITE_VERSION         "3.3.9"
 
 /*
 ** The format of the version string is "X.Y.Z<trailing string>", where
@@ -48,7 +48,7 @@ extern "C" {
 #ifdef SQLITE_VERSION_NUMBER
 # undef SQLITE_VERSION_NUMBER
 #endif
-#define SQLITE_VERSION_NUMBER 3003008
+#define SQLITE_VERSION_NUMBER 3003009
 
 /*
 ** The version string is also compiled into the library so that a program
@@ -685,6 +685,31 @@ int sqlite3_prepare(
   const char **pzTail     /* OUT: Pointer to unused portion of zSql */
 );
 int sqlite3_prepare16(
+  sqlite3 *db,            /* Database handle */
+  const void *zSql,       /* SQL statement, UTF-16 encoded */
+  int nBytes,             /* Length of zSql in bytes. */
+  sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
+  const void **pzTail     /* OUT: Pointer to unused portion of zSql */
+);
+
+/*
+** Newer versions of the prepare API work just like the legacy versions
+** but with one exception:  The a copy of the SQL text is saved in the
+** sqlite3_stmt structure that is returned.  If this copy exists, it
+** modifieds the behavior of sqlite3_step() slightly.  First, sqlite3_step()
+** will no longer return an SQLITE_SCHEMA error but will instead automatically
+** rerun the compiler to rebuild the prepared statement.  Secondly, 
+** sqlite3_step() now turns a full result code - the result code that
+** use used to have to call sqlite3_reset() to get.
+*/
+int sqlite3_prepare_v2(
+  sqlite3 *db,            /* Database handle */
+  const char *zSql,       /* SQL statement, UTF-8 encoded */
+  int nBytes,             /* Length of zSql in bytes. */
+  sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
+  const char **pzTail     /* OUT: Pointer to unused portion of zSql */
+);
+int sqlite3_prepare16_v2(
   sqlite3 *db,            /* Database handle */
   const void *zSql,       /* SQL statement, UTF-16 encoded */
   int nBytes,             /* Length of zSql in bytes. */

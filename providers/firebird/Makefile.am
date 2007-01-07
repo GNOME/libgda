@@ -13,8 +13,6 @@ libgda_firebird_la_SOURCES = \
 	gda-firebird-provider.h \
 	gda-firebird-recordset.c \
 	gda-firebird-recordset.h \
-	gda-firebird-blob.c \
-	gda-firebird-blob.h \
 	libmain.c
 
 libgda_firebird_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)

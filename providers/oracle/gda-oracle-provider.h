@@ -1,5 +1,5 @@
 /* GNOME DB Oracle Provider
- * Copyright (C) 2000-2002 The GNOME Foundation
+ * Copyright (C) 2000 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Rodrigo Moya <rodrigo@gnome-db.org>
@@ -20,8 +20,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_oracle_provider_h__)
-#  define __gda_oracle_provider_h__
+#ifndef __GDA_ORACLE_PROVIDER_H__
+#define __GDA_ORACLE_PROVIDER_H__
 
 #include <libgda/gda-server-provider.h>
 #include <oci.h>
@@ -43,6 +43,9 @@ struct _GdaOracleProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
+/*
+ * Connection data
+ */
 typedef struct {
 	OCIEnv *henv;
 	OCIError *herr;
@@ -50,16 +53,9 @@ typedef struct {
 	OCISvcCtx *hservice;
 	OCISession *hsession;
 	sword stmt_type;
-        gchar *schema;
-        GTree *tables;
-        GTree *views;
-	GTree *aggregates;
-	GTree *procedures;
+        gchar *schema; /* the same as the username which opened the connection */
 } GdaOracleConnectionData;
 
-typedef struct {
-	OCITrans *txnhp;
-} GdaOracleTransaction;
 
 G_BEGIN_DECLS
 

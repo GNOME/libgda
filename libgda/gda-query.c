@@ -1,6 +1,6 @@
 /* gda-query.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -1508,7 +1508,7 @@ gda_query_get_sql_text (GdaQuery *query)
 	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
-	return gda_query_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_EXTRA_VAL_ATTRS, NULL);
+	return gda_query_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_PARAMS_AS_DETAILED, NULL);
 }
 
 
@@ -2731,6 +2731,7 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 	GList *list;
 	GdaParameterList *options = NULL;
 	GdaObject *retval = NULL;
+	GdaServerProvider *prov;
 
 	g_return_val_if_fail (GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (!params || GDA_IS_PARAMETER_LIST (params), NULL);
@@ -2748,11 +2749,39 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 		return NULL;
 	}
 
+	/* try to use the execute_query() virtual method of the provider if implemented */
+	prov = gda_connection_get_provider_obj (cnc);
+	g_assert (prov);
+	if (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (prov))->execute_query) {
+		GList *list;
+		GList *errors_before = NULL;
+		const GList *errors_after;
+
+		if (error) {
+			list = (GList *) gda_connection_get_events (cnc);
+			if (list)
+				errors_before = gda_connection_event_list_copy (list);
+		}
+		retval = gda_server_provider_execute_query (prov, cnc, query, params);
+		if (error) {
+			errors_after = gda_connection_get_events (cnc);
+			for (list = g_list_last ((GList *) errors_after); list && !(*error); list = list->prev) {
+				if (!g_list_find (errors_before, list->data)) 
+					g_set_error (error, GDA_QUERY_ERROR, GDA_QUERY_EXEC_ERROR,
+						     gda_connection_event_get_description (GDA_CONNECTION_EVENT (list->data)));
+			}
+			if (errors_before)
+				gda_connection_event_list_free (errors_before);
+		}
+		return retval;
+	}
+
+	/* use SQL and execute_command() virtual method of the provider */
 	str = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 0, error);
 	if (!str)
 		return NULL;
 
-#ifdef GDA_DEBUG
+#ifdef GDA_DEBUG_no
 	g_print ("GdaQueryExecute:\nSQL= %s\n", str);
 #endif
 
@@ -2911,7 +2940,7 @@ gda_query_dump (GdaQuery *query, guint offset)
 		}
 
 		/* Rendered version of the query */
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_EXTRA_VAL_ATTRS, &error);
+		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 		if (sql) {
 			g_print ("%sSQL=%s\n", str, sql);
 			g_free (sql);
@@ -3230,7 +3259,7 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 static gboolean
 gda_query_has_field (GdaEntity *iface, GdaEntityField *field)
 {
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), FALSE);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, FALSE);
 	g_return_val_if_fail (field && GDA_IS_QUERY_FIELD (field), FALSE);
 
@@ -3247,7 +3276,7 @@ gda_query_get_fields (GdaEntity *iface)
 	GdaQuery *query;
 	GSList *list, *fields = NULL;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 
@@ -3270,7 +3299,7 @@ gda_query_get_field_by_name (GdaEntity *iface, const gchar *name)
 	GdaEntityField *field = NULL;
 	gboolean err = FALSE;
 	
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 	
@@ -3302,7 +3331,7 @@ gda_query_get_field_by_xml_id (GdaEntity *iface, const gchar *xml_id)
 	GdaEntityField *field = NULL;
 	gchar *str;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 	
@@ -3325,7 +3354,7 @@ gda_query_get_field_by_index (GdaEntity *iface, gint index)
 	GdaEntityField *field = NULL;
 	gint i = -1;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 	
@@ -3350,7 +3379,7 @@ gda_query_get_field_index (GdaEntity *iface, GdaEntityField *field)
 	GSList *list;
 	gint current, pos = -1;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), -1);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), -1);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, -1);
 	g_return_val_if_fail (field && GDA_IS_QUERY_FIELD (field), -1);
 	query = GDA_QUERY (iface);
@@ -3427,7 +3456,7 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
 	gint pos = -1;
 	GdaConnection *cnc;
 
-	g_return_if_fail (iface && GDA_IS_QUERY (iface));
+	g_return_if_fail (GDA_IS_QUERY (iface));
 	g_return_if_fail (GDA_QUERY (iface)->priv);
 	query = GDA_QUERY (iface);
 
@@ -3446,7 +3475,12 @@ gda_query_add_field_before (GdaEntity *iface, GdaEntityField *field, GdaEntityFi
 			GdaDataHandler *handler;
 			
 			type = gda_entity_field_get_g_type (field);
-			if (type != G_TYPE_INVALID) {
+			if (type == GDA_TYPE_BLOB) {
+				if (! gda_server_provider_supports_feature (prov, cnc, GDA_CONNECTION_FEATURE_BLOBS))
+					g_warning (_("While adding to a GdaQuery: Blobs are not supported by the "
+						     "connection's provider and may be rendered incorrectly"));
+			}
+			if ((type != G_TYPE_INVALID) && (type != GDA_TYPE_BLOB)){
 				handler = gda_server_provider_get_data_handler_gtype (prov, cnc, type);
 				if (!handler) 
 					g_warning (_("While adding to a GdaQuery: field type '%s' is not supported by the "
@@ -3540,7 +3574,7 @@ gda_query_swap_fields (GdaEntity *iface, GdaEntityField *field1, GdaEntityField 
 	GdaQuery *query;
 	GSList *ptr1, *ptr2;
 
-	g_return_if_fail (iface && GDA_IS_QUERY (iface));
+	g_return_if_fail (GDA_IS_QUERY (iface));
 	g_return_if_fail (GDA_QUERY (iface)->priv);
 	query = GDA_QUERY (iface);
 	g_return_if_fail (query_sql_forget (query, NULL));
@@ -3572,7 +3606,7 @@ gda_query_remove_field (GdaEntity *iface, GdaEntityField *field)
 {
 	GdaQuery *query;
 
-	g_return_if_fail (iface && GDA_IS_QUERY (iface));
+	g_return_if_fail (GDA_IS_QUERY (iface));
 	g_return_if_fail (GDA_QUERY (iface)->priv);
 	query = GDA_QUERY (iface);
 	g_return_if_fail (field && GDA_IS_QUERY_FIELD (field));
@@ -3584,7 +3618,7 @@ gda_query_remove_field (GdaEntity *iface, GdaEntityField *field)
 static gboolean
 gda_query_is_writable (GdaEntity *iface)
 {
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), FALSE);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, FALSE);
 	
 	return FALSE;
@@ -3674,7 +3708,7 @@ gda_query_activate (GdaReferer *iface)
 	GdaQuery *query;
 	GSList *list;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), FALSE);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, FALSE);
 	query = GDA_QUERY (iface);
 
@@ -3714,7 +3748,7 @@ gda_query_deactivate (GdaReferer *iface)
 	GdaQuery *query;
 	GSList *list;
 
-	g_return_if_fail (iface && GDA_IS_QUERY (iface));
+	g_return_if_fail (GDA_IS_QUERY (iface));
 	g_return_if_fail (GDA_QUERY (iface)->priv);
 	query = GDA_QUERY (iface);
 
@@ -3767,7 +3801,7 @@ gda_query_is_active (GdaReferer *iface)
 	GdaQuery *query;
 	GSList *list;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), FALSE);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, FALSE);
 	query = GDA_QUERY (iface);
 
@@ -3806,7 +3840,7 @@ gda_query_get_ref_objects (GdaReferer *iface)
 
 	/* FIXME: do not take care of the objects which belong to the query itself */
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 
@@ -3859,7 +3893,7 @@ gda_query_replace_refs (GdaReferer *iface, GHashTable *replacements)
 	GSList *list;
 	GdaQuery *query;
 
-	g_return_if_fail (iface && GDA_IS_QUERY (iface));
+	g_return_if_fail (GDA_IS_QUERY (iface));
 	g_return_if_fail (GDA_QUERY (iface)->priv);
 	query = GDA_QUERY (iface);
 
@@ -3913,7 +3947,7 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 	const gchar *type;
 	GSList *list;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 
@@ -4093,7 +4127,7 @@ gda_query_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **error)
 	gboolean id = FALSE;
 	xmlNodePtr children;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), FALSE);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, FALSE);
 	g_return_val_if_fail (node, FALSE);
 	query = GDA_QUERY (iface);
@@ -4487,13 +4521,55 @@ static gboolean assert_coherence_data_select_query (GdaQuery *query, GdaParamete
 static gboolean assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, GError **error);
 static gboolean assert_coherence_aggregate_query (GdaQuery *query, GdaParameterList *context, GError **error);
 
+/**
+ * gda_query_is_well_formed
+ * @query: a #GdaQuery object
+ * @context: a #GdaParameterList obtained using gda_query_get_parameter_list(), or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Tells if @query is well formed, and if @context is not %NULL, also tells if rendering to
+ * SQL can be done without error
+ *
+ * Returns: FALSE if @query is not well formed
+ */
+gboolean
+gda_query_is_well_formed (GdaQuery *query, GdaParameterList *context, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (query->priv, FALSE);
+
+	if (context) {
+		g_return_val_if_fail (GDA_IS_PARAMETER_LIST (context), FALSE);
+		if (!assert_coherence_all_params_present (query, context, error))
+			return FALSE;
+	}
+
+	switch (query->priv->query_type) {
+	case GDA_QUERY_TYPE_SELECT:
+		return assert_coherence_data_select_query (query, context, error);
+	case GDA_QUERY_TYPE_INSERT:
+	case GDA_QUERY_TYPE_UPDATE:
+	case GDA_QUERY_TYPE_DELETE:
+		return assert_coherence_data_modify_query (query, context, error);
+	case GDA_QUERY_TYPE_UNION:
+	case GDA_QUERY_TYPE_INTERSECT:
+	case GDA_QUERY_TYPE_EXCEPT:
+		return assert_coherence_aggregate_query (query, context, error);
+	case GDA_QUERY_TYPE_NON_PARSED_SQL:
+		return TRUE;
+	default:
+		g_assert_not_reached ();
+	}	
+	return FALSE;
+}
+
 static gchar *
 gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
 {
 	GdaQuery *query;
 	gchar *sql = NULL;
 	
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 
@@ -4553,7 +4629,7 @@ gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint op
 		break;
 	default:
 		g_assert_not_reached ();
-	}
+	}	
 
 	return sql;
 }
@@ -5782,7 +5858,7 @@ gda_query_render_as_str (GdaRenderer *iface, GdaParameterList *context)
 	gchar *str;
 	const gchar *cstr;
 
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), NULL);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, NULL);
 	query = GDA_QUERY (iface);
 
@@ -5798,7 +5874,7 @@ gda_query_render_as_str (GdaRenderer *iface, GdaParameterList *context)
 static gboolean
 gda_query_is_valid (GdaRenderer *iface, GdaParameterList *context, GError **error)
 {
-	g_return_val_if_fail (iface && GDA_IS_QUERY (iface), FALSE);
+	g_return_val_if_fail (GDA_IS_QUERY (iface), FALSE);
 	g_return_val_if_fail (GDA_QUERY (iface)->priv, FALSE);
 
 	return assert_coherence_all_params_present (GDA_QUERY (iface), context, error);

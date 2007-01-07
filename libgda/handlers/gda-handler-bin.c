@@ -1,6 +1,6 @@
 /* gda-handler-bin.c
  *
- * Copyright (C) 2005 - 2006 Vivien Malerba
+ * Copyright (C) 2005 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -116,10 +116,9 @@ gda_handler_bin_init (GdaHandlerBin * hdl)
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerBinPriv, 1);
 	hdl->priv->detailled_descr = _("Binary handler");
-	hdl->priv->nb_g_types = 2;
-	hdl->priv->valid_g_types = g_new0 (GType, 2);
+	hdl->priv->nb_g_types = 1;
+	hdl->priv->valid_g_types = g_new0 (GType, 1);
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
-	hdl->priv->valid_g_types[1] = GDA_TYPE_BLOB;
 
 	gda_object_set_name (GDA_OBJECT (hdl), _("InternalBin"));
 	gda_object_set_description (GDA_OBJECT (hdl), _("Binary representation"));
@@ -205,21 +204,7 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (value) {
-		if (gda_value_isa ((GValue *) value, GDA_TYPE_BLOB)) {
-			gchar *sql_id;
-			GdaBlob *blob;
-
-			blob = (GdaBlob *) gda_value_get_blob ((GValue *) value);
-			sql_id = gda_blob_get_sql_id (blob);
-			if (sql_id)
-				retval = sql_id;
-			else {
-				/* copy the blob in memory and translate it */
-				TO_IMPLEMENT;
-				retval = NULL;
-			}
-		}
-		else {
+		if (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY)) {
 			gchar *str, *str2;
 			str = gda_binary_to_string (gda_value_get_binary ((GValue *) value), 0);
 			str2 = gda_default_escape_chars (str);
@@ -227,6 +212,8 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 			retval = g_strdup_printf ("'%s'", str2);
 			g_free (str2);
 		}
+		else
+			retval = g_strdup ("**BLOB**");	
 	}
 	else
 		retval = g_strdup (NULL);
@@ -245,21 +232,7 @@ gda_handler_bin_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (value) {
-		if (gda_value_isa ((GValue *) value, GDA_TYPE_BLOB)) {
-			gchar *sql_id;
-			GdaBlob *blob;
-			
-			blob = (GdaBlob *) gda_value_get_blob ((GValue *) value);
-			sql_id = gda_blob_get_sql_id (blob);
-			if (sql_id)
-				retval = sql_id;
-			else {
-				/* copy the blob in memory and translate it */
-				TO_IMPLEMENT;
-				retval = NULL;
-			}
-		}
-		else
+		if (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY))
 			retval = gda_binary_to_string (gda_value_get_binary ((GValue *) value), 0);
 	}
 	else
@@ -312,19 +285,6 @@ gda_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *str, GTy
 		if (gda_string_to_binary (str, &bin)) {
 			value = gda_value_new_binary (bin.data, bin.binary_length);
 			g_free (bin.data);
-		}
-	}
-	else if (type == GDA_TYPE_BLOB) {
-		GdaBlob *blob = NULL;
-		
-		if (hdl->priv->prov) 
-			blob = gda_server_provider_fetch_blob_by_id (hdl->priv->prov,
-								     hdl->priv->cnc,
-								     str);
-		if (blob) {
-			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_BLOB);
-			gda_value_set_blob (value, blob);
-			g_object_unref (blob);
 		}
 	}
 	else

@@ -27,11 +27,6 @@ It implements the #GdaXmlStorage interface.
 </para>
 
 
-<!-- ##### ARG GdaDictAggregate:prop ##### -->
-<para>
-
-</para>
-
 <!-- ##### FUNCTION gda_dict_aggregate_new ##### -->
 <para>
 

@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -27,10 +27,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gda-postgres.h"
-#include "gda-postgres-blob.h"
+#include "gda-postgres-blob-op.h"
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
+#include <libpq/libpq-fs.h>
 
 GdaConnectionEventCode
 gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)
@@ -284,9 +285,15 @@ gda_postgres_set_value (GdaConnection *cnc,
 	}
 	else if (type == GDA_TYPE_BLOB) {
 		GdaBlob *blob;
-		blob = gda_postgres_blob_new (cnc);
-		gda_postgres_blob_set_id (GDA_POSTGRES_BLOB (blob), atoi (thevalue));
-		gda_value_set_blob (value, blob);
+		GdaPostgresConnectionData *priv_data;
+		GdaPostgresBlobOp *op;
+		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+		blob = g_new0 (GdaBlob, 1);
+		op = gda_postgres_blob_op_new_with_id (cnc, thevalue);
+		gda_blob_set_op (blob, op);
+		g_object_unref (op);
+
+		gda_value_take_blob (value, blob);
 	}
 	else {
 		gda_value_reset_with_type (value, G_TYPE_STRING);

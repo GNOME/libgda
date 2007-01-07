@@ -1,6 +1,6 @@
 /* gda-query-field-value.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -44,13 +44,13 @@ static void gda_query_field_value_dispose (GObject *object);
 static void gda_query_field_value_finalize (GObject *object);
 
 static void gda_query_field_value_set_property (GObject *object,
-				    guint param_id,
-				    const GValue *value,
-				    GParamSpec *pspec);
+						guint param_id,
+						const GValue *value,
+						GParamSpec *pspec);
 static void gda_query_field_value_get_property (GObject *object,
-				    guint param_id,
-				    GValue *value,
-				    GParamSpec *pspec);
+						guint param_id,
+						GValue *value,
+						GParamSpec *pspec);
 
 /* XML storage interface */
 static void        gda_query_field_value_xml_storage_init (GdaXmlStorageIface *iface);
@@ -85,7 +85,7 @@ static void destroyed_restrict_cb (GdaObject *obj, GdaQueryFieldValue *field);
 static GSList   *gda_query_field_value_get_params (GdaQueryField *qfield);
 
 static gboolean gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameterList *context,
-					       const GValue **value_found, GdaParameter **param_source);
+							 const GValue **value_found, GdaParameter **param_source);
 
 #ifdef GDA_DEBUG
 static void gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset);
@@ -900,6 +900,39 @@ gda_query_field_value_get_dict_type (GdaQueryFieldValue *field)
 	return field->priv->dict_type;
 }
 
+/**
+ * gda_query_field_value_get_parameter_index
+ * @field: a #GdaQueryFieldValue object
+ *
+ * Get the index of @field in the query it belongs, among all the parameters.
+ *
+ * Returns: the index (starting at 1), or -1 if @field is not a parameter field.
+ */
+gint
+gda_query_field_value_get_parameter_index (GdaQueryFieldValue *field)
+{
+	GdaQuery *query;
+	GSList *fields, *list;
+	gint index = -1;
+
+	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), -1);
+	g_return_val_if_fail (field->priv, -1);
+
+	query = GDA_QUERY (gda_entity_field_get_entity (GDA_ENTITY_FIELD (field)));
+	g_object_get (G_OBJECT (query), "really_all_fields", &fields, NULL);
+	for (list = fields; list; list = list->next) {
+		if (GDA_IS_QUERY_FIELD_VALUE (list->data) && 
+		    gda_query_field_value_is_parameter (GDA_QUERY_FIELD_VALUE (list->data)))
+			index++;
+		if (list->data == (gpointer) field)
+			break;
+	}
+		
+	if (index >= 0) index++;
+	return index;
+}
+
+
 #ifdef GDA_DEBUG
 static void
 gda_query_field_value_dump (GdaQueryFieldValue *field, guint offset)
@@ -1312,7 +1345,7 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
 
 static gboolean
 gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameterList *context, 
-			       const GValue **value_found, GdaParameter **param_source)
+					 const GValue **value_found, GdaParameter **param_source)
 {
 	const GValue *cvalue = NULL;
 	gboolean found = FALSE;
@@ -1357,7 +1390,6 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	gchar *str = NULL;
 	GdaQueryFieldValue *field;
 	const GValue *value = NULL;
-	gboolean sqlext = options & GDA_RENDERER_EXTRA_VAL_ATTRS;
 	GdaDict *dict;
 
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), NULL);
@@ -1452,7 +1484,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			str = g_strdup ("NULL");	
 	}
 
-	if (sqlext && field->priv->is_parameter) {
+	if (field->priv->is_parameter && (options & GDA_RENDERER_PARAMS_AS_DETAILED)) {
 		GString *extra = g_string_new ("");
 		const gchar *tmpstr;
 		gchar *str2;
@@ -1508,6 +1540,17 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 		str = str2;
 
 		g_string_free (extra, TRUE);
+	}
+
+	if (field->priv->is_parameter && (options & (GDA_RENDERER_PARAMS_AS_COLON | GDA_RENDERER_PARAMS_AS_DOLLAR))) {
+		gint i;
+
+		g_free (str);
+		i = gda_query_field_value_get_parameter_index (field);
+		if (options & GDA_RENDERER_PARAMS_AS_COLON)
+			str = g_strdup_printf (":%d", i);
+		else
+			str = g_strdup_printf ("$%d", i);
 	}
 
 	return str;

@@ -160,6 +160,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
         provider_class->perform_operation = gda_sqlite_provider_perform_operation;
 
 	provider_class->execute_command = gda_sqlite_provider_execute_command;
+	provider_class->execute_query = NULL;
 	provider_class->get_last_insert_id = NULL;
 
 	provider_class->begin_transaction = gda_sqlite_provider_begin_transaction;
@@ -168,9 +169,6 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
-	
-	provider_class->create_blob = NULL;
-	provider_class->fetch_blob = NULL;
 }
 
 static void
@@ -1823,14 +1821,12 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider,
 			g_object_unref (dh);
 		}
 	}
-        else if ((type == GDA_TYPE_BINARY) ||
-		 (type == GDA_TYPE_BLOB)) {
+        else if (type == GDA_TYPE_BINARY) {
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
 			dh = gda_sqlite_handler_bin_new ();
 			if (dh) {
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
-				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
 				g_object_unref (dh);
 			}
 		}
@@ -1895,8 +1891,7 @@ gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider,
 	    (type == G_TYPE_UINT64)) 
 		return "integer";
 
-	if ((type == GDA_TYPE_BINARY) ||
-	    (type == GDA_TYPE_BLOB))
+	if (type == GDA_TYPE_BINARY)
 		return "blob";
 
 	if ((type == G_TYPE_BOOLEAN) ||

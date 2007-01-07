@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -960,8 +960,11 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
  * Adds a new error to the given connection object. This is just a convenience
  * function that simply creates a #GdaConnectionEvent and then calls
  * #gda_server_connection_add_error.
+ *
+ * Returns: a new #GdaConnectionEvent object, however the caller does not hold a reference to the returned
+ * object, and if need be the caller must call g_object_ref() on it.
  */
-void
+GdaConnectionEvent *
 gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 {
 	GdaConnectionEvent *error;
@@ -985,6 +988,8 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	gda_connection_event_set_sqlstate (error, "-1");
 	
 	gda_connection_add_event (cnc, error);
+
+	return error;
 }
 
 /**
@@ -1492,10 +1497,11 @@ gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature featur
  * schema required, and @params, which is a list of parameters that can
  * be used to give more detail about the objects to be returned.
  *
- * The list of parameters is specific to each schema type.
+ * The list of parameters is specific to each schema type, see the
+ * <link linkend="libgda-provider-get-schema">get_schema() virtual method for providers</link> for more details.
  *
  * Returns: a #GdaDataModel containing the data required. The caller is responsible
- * of freeing the returned model.
+ * of freeing the returned model using g_object_unref().
  */
 GdaDataModel *
 gda_connection_get_schema (GdaConnection *cnc,
@@ -1524,46 +1530,6 @@ gda_connection_get_events (GdaConnection *cnc)
 	g_return_val_if_fail (cnc->priv, FALSE);
 
 	return cnc->priv->events_list;
-}
-
-/**
- * gda_connection_create_blob
- * @cnc: a #GdaConnection object.
- * @blob: a user-allocated #GdaBlob structure.
- *
- * Creates a BLOB (Binary Large OBject) with read/write access.
- *
- * Returns: %FALSE if the database does not support BLOBs. %TRUE otherwise
- * and the GdaBlob is created and ready to be used.
- */
-GdaBlob *
-gda_connection_create_blob (GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (cnc->priv, FALSE);
-
-	return gda_server_provider_create_blob (cnc->priv->provider_obj, cnc);
-}
-
-/**
- * gda_connection_create_blob
- * @cnc: a #GdaConnection object.
- * @blob: a user-allocated #GdaBlob structure.
- * @sql_id: the SQL ID of the blob to fetch
- *
- * Fetch an existing BLOB (Binary Large OBject) using its SQL ID.
- *
- * Returns: %FALSE if the database does not support BLOBs. %TRUE otherwise
- * and the GdaBlob is created and ready to be used.
- */
-GdaBlob *
-gda_connection_fetch_blob_by_id (GdaConnection *cnc, const gchar *sql_id)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (cnc->priv, FALSE);
-	g_return_val_if_fail (sql_id, FALSE);
-
-	return gda_server_provider_fetch_blob_by_id (cnc->priv->provider_obj, cnc, sql_id);
 }
 
 /**

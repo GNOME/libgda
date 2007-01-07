@@ -1830,10 +1830,11 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 	str = gda_data_model_dump_as_string (model);
 	g_fprintf (to_stream, "%s", str);
 	g_free (str);
-
+#ifdef GDA_DEBUG_model_attributes
 	str= real_gda_data_model_dump_as_string (model, TRUE);
 	g_fprintf (to_stream, "%s", str);
 	g_free (str);
+#endif
 }
 
 /**
@@ -1884,7 +1885,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		GdaColumn *gdacol;
 		GType coltype;
 
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 		{
 			GdaColumn *col = gda_data_model_describe_column (model, i);
 			g_print ("Model col %d has type %s\n", i, gda_g_type_to_string (gda_column_get_g_type (col)));

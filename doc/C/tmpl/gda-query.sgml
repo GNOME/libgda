@@ -273,6 +273,17 @@ It implements the #GdaEntity, #GdaXmlStorage, #GdaReferer and #GdaRenderer inter
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_query_is_well_formed ##### -->
+<para>
+
+</para>
+
+@query: 
+@context: 
+@error: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_query_set_sql_text ##### -->
 <para>
 

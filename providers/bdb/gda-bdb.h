@@ -1,5 +1,5 @@
 /* GDA Berkeley-DB Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Laurent Sansonetti <lrz@gnome.org>  
@@ -19,8 +19,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_bdb_h__)
-#  define __gda_bdb_h__
+#ifndef __GDA_BDB_H__
+#define __GDA_BDB_H__
 
 #if defined(HAVE_CONFIG_H)
 #endif
@@ -28,7 +28,6 @@
 #include <glib/gmacros.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
-#include <libgda/gda-blob.h>
 #include <db.h>
 
 #include "gda-bdb-provider.h"

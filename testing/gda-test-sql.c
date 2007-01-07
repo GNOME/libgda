@@ -403,7 +403,7 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 
 	/* 2nd: rendering */
 	sql2 = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 
-					   GDA_RENDERER_EXTRA_VAL_ATTRS, &error);
+					   GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 	if (sql2) {
 		/* rendering OK */
 		GdaQuery *copy, *copy2;
@@ -432,7 +432,7 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 		
 		/* rendering */
 		sql3 = gda_renderer_render_as_sql (GDA_RENDERER (copy2), NULL, 
-						   GDA_RENDERER_EXTRA_VAL_ATTRS, &error);
+						   GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 		if (sql3) {
 			g_strchomp (sql3);
 			td = xmlNewChild (tr, NULL, "td", sql3);

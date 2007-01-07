@@ -441,9 +441,6 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 		{"begin_transaction", (GFunc) class->begin_transaction, FALSE},
 		{"commit_transaction", (GFunc) class->commit_transaction, FALSE},
 		{"rollback_transaction", (GFunc) class->rollback_transaction, FALSE},
-
-		{"create_blob", (GFunc) class->create_blob, FALSE},
-		{"fetch_blob", (GFunc) class->fetch_blob, FALSE},
 	};
 
 	g_assert (provider);
@@ -525,14 +522,12 @@ test_provider (TestConfig *config, HtmlFile *file, GdaServerProvider *provider, 
 					       "Updatable cursors",
 					       "Users",
 					       "Views",
-					       "XML queries"};
+					       "XML queries", NULL};
 
 		td = xmlNewChild (tr, NULL, "td",  NULL);
 		ul = xmlNewChild (td, NULL, "ul",  NULL);
 		xmlSetProp(ul, "class", (xmlChar*)"none");
-		for (feature=GDA_CONNECTION_FEATURE_AGGREGATES; 
-		     feature <= GDA_CONNECTION_FEATURE_XML_QUERIES;
-		     feature++) 
+		for (feature = GDA_CONNECTION_FEATURE_AGGREGATES; feature_name[feature] != NULL; feature++) 
 			html_render_attribute_bool (ul, "li", feature_name[feature],
 					       (class->supports_feature) (provider, cnc, feature));
 	}

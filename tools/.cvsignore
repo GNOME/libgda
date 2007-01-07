@@ -6,3 +6,7 @@ Makefile.in
 *.lo
 gda-run
 gda-config-tool
+gda-diagnose
+gda-author-dict-file
+gda-inspect-dict-file
+gda-list-config

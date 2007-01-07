@@ -169,6 +169,9 @@ typedef struct _GdaQueryFieldAgg GdaQueryFieldAgg;
 typedef struct _GdaQueryFieldAggClass GdaQueryFieldAggClass;
 typedef struct _GdaQueryFieldAggPrivate GdaQueryFieldAggPrivate;
 
+typedef struct _GdaBlobOp GdaBlobOp;
+typedef struct _GdaBlobOpClass GdaBlobOpClass;
+
 /*
  * Graphing part
  */

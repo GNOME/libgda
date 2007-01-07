@@ -25,8 +25,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_oracle_recordset_h__)
-#  define __gda_oracle_recordset_h__
+#ifndef __GDA_ORACLE_RECORDSET_H__
+#define __GDA_ORACLE_RECORDSET_H__
 
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-value.h>
@@ -68,7 +68,8 @@ struct _GdaOracleValue {
 
 
 GType               gda_oracle_recordset_get_type (void);
-GdaOracleRecordset *gda_oracle_recordset_new (GdaConnection *cnc, GdaOracleConnectionData *cdata, OCIStmt *stmthp);
+GdaOracleRecordset *gda_oracle_recordset_new (GdaConnection *cnc, GdaOracleConnectionData *cdata, 
+					      OCIStmt *stmthp, GArray *col_size_array);
 
 G_END_DECLS
 

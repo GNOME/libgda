@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -158,6 +158,10 @@ struct _GdaServerProviderClass {
 						     GdaConnection *cnc,
 						     GdaCommand *cmd,
 						     GdaParameterList *params);
+	GdaObject              *(* execute_query) (GdaServerProvider *provider,
+						   GdaConnection *cnc,
+						   GdaQuery *query,
+						   GdaParameterList *params);
 	char                   *(* get_last_insert_id) (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							GdaDataModel *recset);
@@ -184,12 +188,6 @@ struct _GdaServerProviderClass {
 							const gchar *name, GError **error);
 
 	/* blobs */
-	GdaBlob                *(* create_blob) (GdaServerProvider *provider,
-						 GdaConnection *cnc);
-
-	GdaBlob                *(* fetch_blob) (GdaServerProvider *provider,
-						GdaConnection *cnc, const gchar *sql_id);
-
 	gpointer                   reserved1; /* is_reserved_word() ? */
 	gpointer                   reserved2; /* ping_or_reconnect() ? */
 	gpointer                   reserved3;
@@ -264,6 +262,10 @@ GList        *gda_server_provider_execute_command    (GdaServerProvider *provide
 						      GdaConnection *cnc,
 						      GdaCommand *cmd,
 						      GdaParameterList *params);
+GdaObject    *gda_server_provider_execute_query    (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    GdaQuery *query,
+						    GdaParameterList *params);
 gchar        *gda_server_provider_get_last_insert_id (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      GdaDataModel *recset);

@@ -166,6 +166,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->perform_operation = gda_mysql_provider_perform_operation;
 
 	provider_class->execute_command = gda_mysql_provider_execute_command;
+	provider_class->execute_query = NULL;
 	provider_class->get_last_insert_id = gda_mysql_provider_get_last_insert_id;
 
 	provider_class->begin_transaction = gda_mysql_provider_begin_transaction;
@@ -174,9 +175,6 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
-	
-	provider_class->create_blob = NULL;
-	provider_class->fetch_blob = NULL;
 }
 
 static void

@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
@@ -23,6 +23,7 @@
 
 #include <glib/gi18n-lib.h>
 #include <stdlib.h>
+#include <string.h>
 #include "gda-oracle.h"
 #include "gda-oracle-recordset.h"
 #include "gda-oracle-provider.h"
@@ -57,7 +58,7 @@ static GObjectClass *parent_class = NULL;
  */
 
 static GList *
-define_columns (GdaOracleRecordsetPrivate *priv)
+define_columns (GdaOracleRecordsetPrivate *priv, GArray *col_size_array)
 {
 	GList *fields = NULL;
 	gint i;
@@ -72,8 +73,8 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 				      priv->cdata->herr,
 				      (dvoid **) &(ora_value->pard),
 				      (ub4) i+1);
-		if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-					      _("Could not get the Oracle parameter")))
+		if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+					     _("Could not get the Oracle parameter")))
 			return NULL;
 
 		result = OCIAttrGet ((dvoid *) (ora_value->pard),
@@ -82,8 +83,8 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 				     0,
 				     OCI_ATTR_DATA_SIZE,
 				     priv->cdata->herr);
-		if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-					      _("Could not get the parameter defined size"))) {
+		if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+					     _("Could not get the parameter defined size"))) {
 			OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
 			return NULL;
 		}
@@ -95,8 +96,8 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 				     OCI_ATTR_DATA_TYPE,
 				     priv->cdata->herr);
 		
-		if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-					      _("Could not get the parameter data type"))) {
+		if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+					     _("Could not get the parameter data type"))) {
 			OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
 			return NULL;
 		}
@@ -112,7 +113,14 @@ define_columns (GdaOracleRecordsetPrivate *priv)
                         break;
                 }
 
-		if (ora_value->defined_size == 0)
+		if (col_size_array && (i < col_size_array->len)) {
+			ub2 size;
+			
+			size = g_array_index (col_size_array, ub2, i);
+			if (size > 0)
+				ora_value->defined_size = size;
+		}
+		if (ora_value->defined_size == 0) 
 			ora_value->value = NULL;
 		else
 			ora_value->value = g_malloc0 (ora_value->defined_size+1);
@@ -124,14 +132,14 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 					 (OCIError *) priv->cdata->herr,
 					 (ub4) i + 1,
 					 ora_value->value,
-					 ora_value->defined_size+1,
-					 (ub2) fake_type,
+					 ora_value->value ? ora_value->defined_size+1 : 0,
+					 (ub2) fake_type, /* check that this is SQLT_BLOB or SQLT_CLOB */
 					 (dvoid *) &(ora_value->indicator),
 					 (ub2 *) 0,
 					 (ub2 *) 0, 
 					 (ub4) OCI_DEFAULT);
-		if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-					      _("Could not define by position"))) {
+		if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+					     _("Could not define by position"))) {
 			OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
 			return NULL;
 		}
@@ -187,8 +195,8 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 			      (OCIError *) priv_data->cdata->herr,
 			      (dvoid **) &pard,
 			      (ub4) col + 1);
-	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				      _("Could not get the Oracle parameter information")))
+	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+				     _("Could not get the Oracle parameter information")))
 		return;
 
 	result = OCIAttrGet ((dvoid *) pard,
@@ -197,8 +205,8 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 			     (ub4 *) & col_name_len,
 			     (ub4) OCI_ATTR_NAME,
 			     (OCIError *) priv_data->cdata->herr);
-	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				      _("Could not get the Oracle column name"))) {
+	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+				     _("Could not get the Oracle column name"))) {
 		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
 		return;
 	}
@@ -215,8 +223,8 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 			     (ub4 *) 0,
 			     (ub4) OCI_ATTR_DATA_TYPE,
 			     (OCIError *) priv_data->cdata->herr);
-	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				      _("Could not get the Oracle column data type"))) {
+	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+				     _("Could not get the Oracle column data type"))) {
 		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
 		return;
 	}
@@ -227,8 +235,8 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 			     (ub4 *) 0,
 			     (ub4) OCI_ATTR_SCALE,
 			     (OCIError *) priv_data->cdata->herr);
-	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				      _("Could not get the Oracle column scale"))) {
+	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+				     _("Could not get the Oracle column scale"))) {
 		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
 		return;
 	}
@@ -239,8 +247,8 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 			     (ub4 *) 0,
 			     (ub4) OCI_ATTR_IS_NULL,
 			     (OCIError *) priv_data->cdata->herr);
-	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				      _("Could not get the Oracle column nullable attribute"))) {
+	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+				     _("Could not get the Oracle column nullable attribute"))) {
 		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
 		return;
 	}
@@ -251,8 +259,8 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 			     0,
 			     OCI_ATTR_DATA_SIZE,
 			     priv_data->cdata->herr);
-	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
-				      _("Could not get the Oracle defined size"))) {
+	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+				     _("Could not get the Oracle defined size"))) {
 		OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
 		return;
 	}
@@ -297,10 +305,10 @@ gda_oracle_recordset_get_n_rows (GdaDataModelRow *model)
 	while (result == OCI_SUCCESS) {
 		nrows += 1;
 		result = OCIStmtFetch (priv_data->hstmt,
-					priv_data->cdata->herr,
-					(ub4) 1,
-					(ub2) OCI_FETCH_NEXT,
-					(ub4) OCI_DEFAULT);
+				       priv_data->cdata->herr,
+				       (ub4) 1,
+				       (ub2) OCI_FETCH_NEXT,
+				       (ub4) OCI_DEFAULT);
 	}
 
 	/* reset the result set to the beginning */
@@ -313,8 +321,8 @@ gda_oracle_recordset_get_n_rows (GdaDataModelRow *model)
 				(OCISnapshot *) NULL,
 				OCI_DEFAULT);
 	
-	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, 
-		OCI_HTYPE_ERROR, "Could not execute Oracle statement")) {
+	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, 
+				     OCI_HTYPE_ERROR, "Could not execute Oracle statement")) {
 		return 0;
 	}
 
@@ -356,8 +364,8 @@ fetch_row (GdaOracleRecordset *recset, gint rownum)
 	if (result == OCI_NO_DATA) 
 		return NULL;
 
-	if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
-			_("Could not fetch a row"))) 
+	if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+				     _("Could not fetch a row"))) 
 		return NULL;
 
 
@@ -376,7 +384,7 @@ fetch_row (GdaOracleRecordset *recset, gint rownum)
 	return row;
 }
 
-static const GdaRow *
+static GdaRow *
 gda_oracle_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
@@ -402,7 +410,7 @@ gda_oracle_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 		return NULL;
 
 	if (row < fetched_rows) 
-		return (const GdaRow *) g_ptr_array_index (priv_data->rows, row);
+		return (GdaRow *) g_ptr_array_index (priv_data->rows, row);
 
 	gda_data_model_freeze (GDA_DATA_MODEL (recset));
 
@@ -415,7 +423,7 @@ gda_oracle_recordset_get_row (GdaDataModelRow *model, gint row, GError **error)
 
 	gda_data_model_thaw (GDA_DATA_MODEL (recset));
 
-	return (const GdaRow *) fields;
+	return fields;
 }
 
 static const GValue *
@@ -450,8 +458,8 @@ gda_oracle_recordset_is_updatable (GdaDataModelRow *model)
 	return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;
 }
 
-static const GdaRow *
-gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values)
+static GdaRow *
+gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values, GError **error)
 {
 	GString *sql;
 	GdaRow *row;
@@ -510,7 +518,7 @@ gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values)
 
 		if (i != 0) 
 			sql = g_string_append (sql, ", ");
-		val_str = gda_oracle_value_to_sql_string (val);
+		val_str = gda_oracle_value_to_sql_string ((GValue*) val);
 		sql = g_string_append (sql, val_str);
 
 		g_free (val_str);
@@ -525,17 +533,17 @@ gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values)
 	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
 	g_ptr_array_add (recset->priv->rows, row);
 
-	return (const GdaRow *) row;
+	return row;
 }
 
 static gboolean
-gda_oracle_recordset_remove_row (GdaDataModelRow *model, const GdaRow *row)
+gda_oracle_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	return FALSE;
 }
 
 static gboolean
-gda_oracle_recordset_update_row (GdaDataModelRow *model, const GdaRow *row)
+gda_oracle_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	return FALSE;
 }
@@ -640,7 +648,7 @@ gda_oracle_recordset_get_type (void)
 GdaOracleRecordset *
 gda_oracle_recordset_new (GdaConnection *cnc, 
 			  GdaOracleConnectionData *cdata,
-			  OCIStmt *stmthp)
+			  OCIStmt *stmthp, GArray *col_size_array)
 {
 	GdaOracleRecordset *recset;
 	ub4 parcount;
@@ -662,7 +670,7 @@ gda_oracle_recordset_new (GdaConnection *cnc,
 	recset->priv->cdata = cdata;
 	recset->priv->hstmt = stmthp;
 	recset->priv->ncolumns = parcount;
-	recset->priv->ora_values = define_columns (recset->priv);
+	recset->priv->ora_values = define_columns (recset->priv, col_size_array);
 	recset->priv->nrows = gda_oracle_recordset_get_n_rows (GDA_DATA_MODEL_ROW (recset));
 
 	/* define GdaColumn attributes */

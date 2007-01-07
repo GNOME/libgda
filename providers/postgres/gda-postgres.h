@@ -1,5 +1,5 @@
 /* GDA Postgres Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -21,16 +21,12 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_postgres_h__)
-#  define __gda_postgres_h__
-
-#if defined(HAVE_CONFIG_H)
-#endif
+#ifndef __GDA_POSTGRES_H__
+#define __GDA_POSTGRES_H__
 
 #include <glib/gmacros.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-server-provider.h>
-#include <libgda/gda-blob.h>
 #include "gda-postgres-provider.h"
 #include "gda-postgres-recordset.h"
 

@@ -1,5 +1,5 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
@@ -24,7 +24,6 @@
 
 #include "gda-firebird-recordset.h"
 #include "gda-firebird-provider.h"
-#include "gda-firebird-blob.h"
 #include <libgda/gda-quark-list.h>
 #include <glib/gi18n-lib.h>
 #include <glib/gprintf.h>
@@ -459,10 +458,10 @@ fb_gda_value_fill (GValue *gda_value,
 			break;
 		case SQL_BLOB:
 		case SQL_BLOB+1:
-			blob = gda_firebird_blob_new (recset->priv->cnc);
+			/*blob = gda_firebird_blob_new (recset->priv->cnc);
 			gda_firebird_blob_set_id (GDA_FIREBIRD_BLOB (blob), 
 						  (const ISC_QUAD *) field_data);
-			gda_value_set_blob (gda_value, (const GdaBlob *) blob);
+						  gda_value_set_blob (gda_value, (const GdaBlob *) blob);*/
 			break;
 		case SQL_TIMESTAMP:
 		case SQL_TIMESTAMP+1:

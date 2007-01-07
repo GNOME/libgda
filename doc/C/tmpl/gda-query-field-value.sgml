@@ -124,6 +124,15 @@ to tell from which query field the values will be taken).
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_query_field_value_get_parameter_index ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_query_field_value_set_not_null ##### -->
 <para>
 

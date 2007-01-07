@@ -171,6 +171,18 @@ GdaServerProvider
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_execute_query ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@query: 
+@params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_get_last_insert_id ##### -->
 <para>
 
@@ -276,27 +288,6 @@ GdaServerProvider
 @schema: 
 @params: 
 @error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_create_blob ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_provider_fetch_blob_by_id ##### -->
-<para>
-
-</para>
-
-@provider: 
-@cnc: 
-@sql_id: 
 @Returns: 
 
 

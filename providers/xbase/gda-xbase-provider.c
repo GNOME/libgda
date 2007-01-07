@@ -1,5 +1,5 @@
 /* GDA Xbase Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Rodrigo Moya <rodrigo@gnome-db.org>
@@ -102,6 +102,7 @@ gda_xbase_provider_class_init (GdaXbaseProviderClass *klass)
         provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_xbase_provider_execute_command;
+	provider_class->execute_query = NULL;
 	provider_class->get_last_insert_id = NULL;
 
 	provider_class->begin_transaction = NULL;
@@ -110,9 +111,6 @@ gda_xbase_provider_class_init (GdaXbaseProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
-	
-	provider_class->create_blob = NULL;
-	provider_class->fetch_blob = NULL;
 }
 
 static void

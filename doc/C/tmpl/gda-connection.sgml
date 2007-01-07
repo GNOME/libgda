@@ -355,6 +355,7 @@ Management of connections to data sources
 @cnc: 
 @str: 
 @Varargs: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_add_events_list ##### -->
@@ -534,25 +535,6 @@ Management of connections to data sources
 @schema: 
 @params: 
 @error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_create_blob ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_fetch_blob_by_id ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@sql_id: 
 @Returns: 
 
 

@@ -253,6 +253,7 @@ gda_parameter_list_new (GSList *params)
  * @...: a serie of a (const gchar*) name, (GType) type, and value, terminated by a %NULL
  *
  * Creates a new #GdaParameterList containing parameters defined by each serie in @...
+ * For each triplet, the value must be of the correct type (gchar * if type is G_STRING, ...)
  *
  * Returns: a new #GdaParameterList object
  */ 

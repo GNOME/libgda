@@ -26,7 +26,7 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
 
 gda_headers = \
-	gda-blob.h \
+	gda-blob-op.h \
 	gda-client.h \
 	gda-column.h \
 	gda-column-index.h \
@@ -105,7 +105,7 @@ gda_headers = \
 
 libgda_sources =  \
 	$(gda_headers) \
-	gda-blob.c \
+	gda-blob-op.c \
 	gda-client.c \
 	gda-column.c \
 	gda-column-index.c \

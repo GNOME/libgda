@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
@@ -34,46 +34,14 @@
 #include <glib/gstring.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-value.h>
+#include <libgda/gda-blob-op.h>
 #include <libgda/gda-util.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
 #define l_g_value_unset(val) if G_IS_VALUE (val) g_value_unset (val)
 
-/* 
- * Register the GdaBinary type in the GType system 
- */
 
-/* Transform a String GValue to a GdaBinary*/
-static void 
-string_to_binary (const GValue *src, GValue *dest) 
-{
-	/* FIXME: add more checks*/
-	GdaBinary *binary;
-	const gchar *as_string;
-	
-	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
-			  GDA_VALUE_HOLDS_BINARY (dest));
-	
-	as_string = g_value_get_string (src);
-	
-	binary = g_new0 (GdaBinary, 1);
-	gda_string_to_binary (as_string, binary);
-	gda_value_take_binary (dest, binary);
-}
-
-static void 
-binary_to_string (const GValue *src, GValue *dest) 
-{
-	gchar *str;
-	
-	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
-			  GDA_VALUE_HOLDS_BINARY (src));
-	
-	str = gda_binary_to_string (gda_value_get_binary ((GValue *) src), 0);
-	
-	g_value_set_string (dest, str);
-}
 
 static gboolean
 set_from_string (GValue *value, const gchar *as_string)
@@ -127,6 +95,12 @@ set_from_string (GValue *value, const gchar *as_string)
 		retval = gda_string_to_binary (as_string, &binary);
 		if (retval)
 			gda_value_set_binary (value, &binary);
+	}
+	else if (type == GDA_TYPE_BLOB) {
+		GdaBlob blob;
+		retval = gda_string_to_blob (as_string, &blob);
+		if (retval)
+			gda_value_set_blob (value, &blob);
 	}
 	else if (type == G_TYPE_INT64) {
 		/* Use g_strtod instead of strtoll */
@@ -228,6 +202,41 @@ set_from_string (GValue *value, const gchar *as_string)
 	return retval;
 }
 
+/* 
+ * Register the GdaBinary type in the GType system 
+ */
+
+/* Transform a String GValue to a GdaBinary*/
+static void 
+string_to_binary (const GValue *src, GValue *dest) 
+{
+	/* FIXME: add more checks*/
+	GdaBinary *binary;
+	const gchar *as_string;
+	
+	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
+			  GDA_VALUE_HOLDS_BINARY (dest));
+	
+	as_string = g_value_get_string (src);
+	
+	binary = g_new0 (GdaBinary, 1);
+	gda_string_to_binary (as_string, binary);
+	gda_value_take_binary (dest, binary);
+}
+
+static void 
+binary_to_string (const GValue *src, GValue *dest) 
+{
+	gchar *str;
+	
+	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
+			  GDA_VALUE_HOLDS_BINARY (src));
+	
+	str = gda_binary_to_string (gda_value_get_binary ((GValue *) src), 0);
+	
+	g_value_set_string (dest, str);
+}
+
 GType
 gda_binary_get_type (void)
 {
@@ -288,6 +297,126 @@ gda_binary_free (gpointer boxed)
 	g_return_if_fail (binary);
 		
 	g_free (binary->data);
+}
+
+/* 
+ * Register the GdaBlob type in the GType system 
+ */
+/* Transform a String GValue to a GdaBlob*/
+static void 
+string_to_blob (const GValue *src, GValue *dest) 
+{
+	/* FIXME: add more checks*/
+	GdaBlob *blob;
+	const gchar *as_string;
+	
+	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
+			  GDA_VALUE_HOLDS_BLOB (dest));
+	
+	as_string = g_value_get_string (src);
+	
+	blob = g_new0 (GdaBlob, 1);
+	gda_string_to_blob (as_string, blob);
+	gda_value_take_blob (dest, blob);
+}
+
+static void 
+blob_to_string (const GValue *src, GValue *dest) 
+{
+	gchar *str;
+	
+	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
+			  GDA_VALUE_HOLDS_BLOB (src));
+	
+	str = gda_blob_to_string ((GdaBlob *) gda_value_get_blob ((GValue *) src), 0);
+	
+	g_value_set_string (dest, str);
+}
+
+GType
+gda_blob_get_type (void)
+{
+	static GType type = 0;
+	
+	if (G_UNLIKELY (type == 0)) {
+		type = g_boxed_type_register_static ("GdaBlob",
+						     (GBoxedCopyFunc) gda_blob_copy,
+						     (GBoxedFreeFunc) gda_blob_free);
+		
+		g_value_register_transform_func (G_TYPE_STRING,
+						 type,
+						 string_to_blob);
+		
+		g_value_register_transform_func (type, 
+						 G_TYPE_STRING,
+						 blob_to_string);
+	}
+	
+	return type;
+}
+
+/**
+ * gda_blob_copy
+ * @src: source to get a copy from.
+ *
+ * Creates a new #GdaBlob structure from an existing one.
+
+ * Returns: a newly allocated #GdaBlob which contains a copy of
+ * information in @src.
+ */
+gpointer
+gda_blob_copy (gpointer boxed)
+{
+	GdaBlob *src = (GdaBlob*) boxed;
+	GdaBlob *copy = NULL;
+
+	g_return_val_if_fail (src, NULL);
+
+	copy = g_new0 (GdaBlob, 1);
+	((GdaBinary *)copy)->data = g_memdup (((GdaBinary *)src)->data, ((GdaBinary *)src)->binary_length);
+	((GdaBinary *)copy)->binary_length = ((GdaBinary *)src)->binary_length;
+	gda_blob_set_op (copy, src->op);
+	
+	return copy;
+}
+
+/**
+ * gda_blob_free
+ * @boxed: #GdaBlob to free.
+ *
+ * Deallocates all memory associated to the given #GdaBlob.
+ */
+void
+gda_blob_free (gpointer boxed)
+{
+	GdaBlob *blob = (GdaBlob*) boxed;
+	
+	g_return_if_fail (blob);
+		
+	if (blob->op)
+		g_object_unref (blob->op);
+	gda_binary_free ((GdaBinary *) blob);
+}
+
+/**
+ * gda_blob_set_op 
+ * @blob: a #GdaBlob value
+ * @op: a #GdaBlobOp object, or %NULL
+ *
+ * correctly assigns @op to @blob
+ */
+void
+gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
+{
+	if (blob->op) {
+		g_object_unref (blob->op);
+		blob->op = NULL;
+	}
+	if (op) {
+		g_return_if_fail (GDA_IS_BLOB_OP (op));
+		blob->op = op;
+		g_object_ref (op);
+	}
 }
 
 /* 
@@ -484,13 +613,57 @@ numeric_to_string (const GValue *src, GValue *dest)
 	
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_NUMERIC (src));
-	
 
 	numeric = gda_value_get_numeric (src);
 	if (numeric)
 		g_value_set_string (dest, numeric->number);
 	else
 		g_value_set_string (dest, "");
+}
+
+static void 
+numeric_to_int (const GValue *src, GValue *dest) 
+{
+	const GdaNumeric *numeric;
+	
+	g_return_if_fail (G_VALUE_HOLDS_INT (dest) &&
+			  GDA_VALUE_HOLDS_NUMERIC (src));
+
+	numeric = gda_value_get_numeric (src);
+	if (numeric)
+		g_value_set_int (dest, atol (numeric->number));
+	else
+		g_value_set_int (dest, 0);
+}
+
+static void 
+numeric_to_uint (const GValue *src, GValue *dest) 
+{
+	const GdaNumeric *numeric;
+	
+	g_return_if_fail (G_VALUE_HOLDS_UINT (dest) &&
+			  GDA_VALUE_HOLDS_NUMERIC (src));
+
+	numeric = gda_value_get_numeric (src);
+	if (numeric)
+		g_value_set_uint (dest, atol (numeric->number));
+	else
+		g_value_set_uint (dest, 0);
+}
+
+static void 
+numeric_to_boolean (const GValue *src, GValue *dest) 
+{
+	const GdaNumeric *numeric;
+	
+	g_return_if_fail (G_VALUE_HOLDS_BOOLEAN (dest) &&
+			  GDA_VALUE_HOLDS_NUMERIC (src));
+
+	numeric = gda_value_get_numeric (src);
+	if (numeric)
+		g_value_set_boolean (dest, atoi (numeric->number));
+	else
+		g_value_set_boolean (dest, 0);
 }
 
 GType
@@ -505,9 +678,10 @@ gda_numeric_get_type (void)
 	
 		/* FIXME: No function to Transform String to from GdaNumeric */
 	
-		g_value_register_transform_func (type, 
-						 G_TYPE_STRING,
-						 numeric_to_string);
+		g_value_register_transform_func (type, G_TYPE_STRING, numeric_to_string);
+		g_value_register_transform_func (type, G_TYPE_INT, numeric_to_int);
+		g_value_register_transform_func (type, G_TYPE_UINT, numeric_to_uint);
+		g_value_register_transform_func (type, G_TYPE_BOOLEAN, numeric_to_boolean);
 	}
 	
 	return type;
@@ -729,7 +903,6 @@ void gda_time_free (gpointer boxed)
 /* 
  * Register the GdaTimestamp type in the GType system 
  */
-
 /* Transform a String GValue to a GdaTimestamp from a string like "2003-12-13 13:12:01.12+01" */
 static void
 string_to_timestamp (const GValue *src, GValue *dest)
@@ -881,6 +1054,33 @@ gda_value_new_binary (guchar *val, glong size)
 
         value = g_new0 (GValue, 1);
         gda_value_set_binary (value, &binary);
+
+        return value;
+}
+
+/**
+ * gda_value_new_blob
+ * @val: value to set for the new #GValue.
+ * @size: the size of the memory pool pointer to by @val.
+ *
+ * Makes a new #GValue of type #GDA_TYPE_BLOB with value @val.
+ *
+ * Returns: the newly created #GValue.
+ */
+GValue *
+gda_value_new_blob (guchar *val, glong size)
+{
+	GValue *value;
+	GdaBlob blob;
+	GdaBinary *bin;
+
+	bin = (GdaBinary*)(&blob);
+        bin->data = val;
+        bin->binary_length = size;
+	blob.op = NULL;
+
+        value = g_new0 (GValue, 1);
+        gda_value_set_blob (value, &blob);
 
         return value;
 }
@@ -1096,6 +1296,7 @@ gda_value_get_binary (const GValue *value)
 	return val;
 }
 
+
 /**
  * gda_value_set_binary
  * @value: a #GValue that will store @val.
@@ -1134,36 +1335,59 @@ gda_value_take_binary (GValue *value, const GdaBinary *binary)
 }
 
 /**
+ * gda_value_set_blob
+ * @value: a #GValue that will store @val.
+ * @blob: a #GdaBlob structure with the data and its size to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_blob (GValue *value, const GdaBlob *blob)
+{
+	g_return_if_fail (value);
+	g_return_if_fail (blob);
+	
+	l_g_value_unset (value);
+	g_value_init (value, GDA_TYPE_BLOB);
+	g_value_set_boxed (value, blob);
+}
+
+/**
  * gda_value_get_blob
  * @value: a #GValue whose value we want to get.
  *
  * Returns: the value stored in @value.
  */
-const GdaBlob *
+G_CONST_RETURN GdaBlob *
 gda_value_get_blob (const GValue *value)
 {
+	GdaBlob *val;
+
 	g_return_val_if_fail (value && G_IS_VALUE (value), NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_BLOB), NULL);
-	return (const GdaBlob *) g_value_get_object (value);
+
+	val = (GdaBlob*) g_value_get_boxed (value);
+
+	return val;
 }
 
 /**
- * gda_value_set_blob
+ * gda_value_take_blob
  * @value: a #GValue that will store @val.
- * @val: value to be stored in @value.
+ * @blob: a #GdaBlob structure with the data and its size to be stored in @value.
  *
- * Stores @val into @value.
+ * Stores @val into @value, but on the contrary to gda_value_set_blob(), the @blob
+ * argument is not copied, but used as-is and it should be considered owned by @value.
  */
 void
-gda_value_set_blob (GValue *value, const GdaBlob *val)
+gda_value_take_blob (GValue *value, const GdaBlob *blob)
 {
 	g_return_if_fail (value);
-	g_return_if_fail (GDA_IS_BLOB (val));
+	g_return_if_fail (blob);
 	
 	l_g_value_unset (value);
 	g_value_init (value, GDA_TYPE_BLOB);
-	
-	g_value_set_object (value, (gpointer) val);
+	g_value_take_boxed (value, blob);
 }
 
 /**
@@ -1549,9 +1773,15 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	else if (type == G_TYPE_BOOLEAN)
 		return g_value_get_boolean (value1) - g_value_get_boolean (value2);
 
-	else if (type == GDA_TYPE_BLOB)
-		/* FIXME: Does compare() make sense with BLOBs? Yes, use the same way of Binary comparison */
-		return 0;
+	else if (type == GDA_TYPE_BLOB) {
+		const GdaBlob *blob1 = gda_value_get_blob (value1);
+		const GdaBlob *blob2 = gda_value_get_blob (value2);
+		if (blob1 && blob2 && (((GdaBinary *)blob1)->binary_length == ((GdaBinary *)blob2)->binary_length))
+			return memcmp (((GdaBinary *)blob1)->data, ((GdaBinary *)blob2)->data, 
+				       ((GdaBinary *)blob1)->binary_length) ;
+		else
+			return -1;
+	}
 
 	else if (type == G_TYPE_DATE) {
 		GDate *d1, *d2;
@@ -2032,3 +2262,38 @@ gda_string_to_binary (const gchar *str, GdaBinary *bin)
 	return TRUE;
 }
 
+/**
+ * gda_blob_to_string
+ * @blob: a correctly filled @GdaBlob structure
+ * @maxlen: a maximum len used to truncate, or 0 for no maximum length
+ *
+ * Converts all the non printable characters of blob->data into the \xxx representation
+ * where xxx is the octal representation of the byte, and the '\' (backslash) character
+ * is converted to "\\".
+ *
+ * Returns: a new string from @blob
+ */
+gchar *
+gda_blob_to_string (GdaBlob *blob, guint maxlen)
+{
+	if (!((GdaBinary *)blob)->data && blob->op) {
+		/* fetch some data first (limited amount of data) */
+		gda_blob_op_read (blob->op, blob, 0, 40);
+	}
+	return gda_binary_to_string ((GdaBinary*) blob, maxlen);
+}
+
+/**
+ * gda_string_to_blob
+ * @str: a string to convert
+ * @blob: a non filled @GdaBlob structure
+ *
+ * Performs the reverse of gda_blob_to_string().
+ *
+ * Returns: TRUE if no error were found in @str, or FALSE otherwise
+ */
+gboolean
+gda_string_to_blob (const gchar *str, GdaBlob *blob)
+{
+	return gda_string_to_binary (str, (GdaBinary*) blob);
+}

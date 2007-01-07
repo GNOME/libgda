@@ -752,19 +752,29 @@ make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value, LocaleSetting *
 		for (i=0; i<3; i++) {
 			switch (locale->dmy_order[i]) {
 			case G_DATE_DAY:
-				g_date_set_day (date, nums[i]);
+				if (g_date_valid_day (nums[i]))
+					g_date_set_day (date, nums[i]);
+				else
+					retval = FALSE;
 				break;
 			case G_DATE_MONTH:
-				g_date_set_month (date, nums[i]);
+				if (g_date_valid_month (nums[i]))
+					g_date_set_month (date, nums[i]);
+				else
+					retval = FALSE;
 				break;
 			case G_DATE_YEAR:
-				g_date_set_year (date, nums[i] < 100 ? nums[i] + locale->current_offset : nums[i]);
+				if (g_date_valid_year (nums[i] < 100 ? nums[i] + locale->current_offset : nums[i]))
+					g_date_set_year (date, nums[i] < 100 ? nums[i] + locale->current_offset : nums[i]);
+				else
+					retval = FALSE;
 				break;
 			}
 		}
 
 		/* checks */
-		retval = g_date_valid (date);
+		if (retval)
+			retval = g_date_valid (date);
 	}
 	else
 		retval = FALSE;

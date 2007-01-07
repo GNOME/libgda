@@ -9,14 +9,14 @@ AM_CPPFLAGS = \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_postgres_la_SOURCES = \
+	gda-postgres-blob-op.c \
+	gda-postgres-blob-op.h \
 	gda-postgres-ddl.c \
 	gda-postgres-ddl.h \
 	gda-postgres-provider.c \
 	gda-postgres-provider.h \
 	gda-postgres-recordset.c \
 	gda-postgres-recordset.h \
-	gda-postgres-blob.c \
-	gda-postgres-blob.h \
 	gda-postgres.h \
 	libmain.c \
 	utils.c

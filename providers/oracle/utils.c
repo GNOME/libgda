@@ -31,6 +31,7 @@
 #include <string.h>
 #include "gda-oracle.h"
 #include "gda-oracle-provider.h"
+#include "gda-oracle-blob-op.h"
 
 /* 
  * gda_oracle_make_error
@@ -56,21 +57,21 @@ gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 
 	if (hndlp != NULL) {
 		OCIErrorGet ((dvoid *) hndlp,
-				(ub4) 1, 
-				(text *) NULL, 
-				&errcode, 
+			     (ub4) 1, 
+			     (text *) NULL, 
+			     &errcode, 
 				errbuf, 
-				(ub4) sizeof (errbuf), 
-				(ub4) type);
+			     (ub4) sizeof (errbuf), 
+			     (ub4) type);
 	
 		gda_connection_event_set_description (error, errbuf);
-		g_warning ("Oracle error:%s", errbuf);
+		/*g_warning ("Oracle error:%s", errbuf);*/
 	} 
 	else 
 		gda_connection_event_set_description (error, _("NO DESCRIPTION"));
 	
 	gda_connection_event_set_code (error, errcode);
-	source = g_strdup_printf("gda-oracle:%s:%d", file, line);
+	source = g_strdup_printf ("gda-oracle:%s:%d", file, line);
 	gda_connection_event_set_source (error, source);
 	g_free(source);
 	gda_connection_event_set_sqlstate (error, _("Not available"));
@@ -93,32 +94,38 @@ gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
  * Oracle error message using gda_oracle_make_error.  Otherwise,
  * make an error using the given message.
  */
-gboolean 
-gda_oracle_handle_error(gint result, GdaConnection *cnc, 
-			GdaOracleConnectionData *priv_data,
-			ub4 type, const gchar *msg,
-			const gchar *file, gint line)
+GdaConnectionEvent * 
+gda_oracle_handle_error (gint result, GdaConnection *cnc, 
+			 GdaOracleConnectionData *priv_data,
+			 ub4 type, const gchar *msg,
+			 const gchar *file, gint line)
 {
+	GdaConnectionEvent *error = NULL;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	switch (result) {
 	case OCI_SUCCESS:
 	case OCI_SUCCESS_WITH_INFO:
-		return TRUE;
+		return NULL;
 	case OCI_ERROR:
 		switch(type) {
 		case OCI_HTYPE_ERROR:
-			gda_connection_add_event (cnc, gda_oracle_make_error (priv_data->herr, type, file, line));
+			error = gda_oracle_make_error (priv_data->herr, type, file, line);
+			gda_connection_add_event (cnc, error);
 			break;
 		case OCI_HTYPE_ENV:
-			gda_connection_add_event (cnc, gda_oracle_make_error (priv_data->henv, type, file, line));
-		default: ;
+			error = gda_oracle_make_error (priv_data->henv, type, file, line);
+			gda_connection_add_event (cnc, error);
+			break;
+		default:
+			break;
 		}
 		break;
 	default:
-		gda_connection_add_event_string (cnc, msg);
+		error = gda_connection_add_event_string (cnc, msg);
 	}
-	return FALSE;
+
+	return error;
 }
 
 GType 
@@ -136,14 +143,15 @@ oracle_sqltype_to_g_type (const ub2 sqltype)
 	case SQLT_AVC:
 	case SQLT_LAB:
 	case SQLT_VST:
-	case SQLT_CLOB:
 	case SQLT_CFILEE:
+	case SQLT_CLOB:
 		return G_TYPE_STRING;
 	case SQLT_NUM:
 		return GDA_TYPE_NUMERIC;
 	case SQLT_INT:
-	case SQLT_UIN:
 		return G_TYPE_INT;
+	case SQLT_UIN:
+		return G_TYPE_UINT;
 	case SQLT_FLT:
 		return G_TYPE_FLOAT;
 	case SQLT_VBI:
@@ -152,12 +160,14 @@ oracle_sqltype_to_g_type (const ub2 sqltype)
 	case SQLT_LVB:
 	case SQLT_BLOB:
 	case SQLT_BFILEE:
-		return GDA_TYPE_BINARY;
+		return GDA_TYPE_BLOB;
 	case SQLT_DAT:
 	case SQLT_ODT:
 	case SQLT_DATE:
+		return G_TYPE_DATE;
 	case SQLT_TIME:
 	case SQLT_TIME_TZ:
+		return GDA_TYPE_TIME;
 	case SQLT_TIMESTAMP:
 	case SQLT_TIMESTAMP_TZ:
 	case SQLT_TIMESTAMP_LTZ:
@@ -380,8 +390,8 @@ gda_value_to_oracle_value (const GValue *value)
 
 void
 gda_oracle_set_value (GValue *value, 
-			GdaOracleValue *ora_value,
-			GdaConnection *cnc)
+		      GdaOracleValue *ora_value,
+		      GdaConnection *cnc)
 {
 	GdaTime gtime;
 	GdaTimestamp timestamp;
@@ -402,6 +412,7 @@ gda_oracle_set_value (GValue *value,
 	}
 
 	type = ora_value->g_type;
+	gda_value_reset_with_type (value, type);
 	if (type == G_TYPE_BOOLEAN) 
 		g_value_set_boolean (value, (atoi (ora_value->value)) ? TRUE: FALSE);
 	else if (type == G_TYPE_STRING) {
@@ -418,6 +429,8 @@ gda_oracle_set_value (GValue *value,
 		g_value_set_int64 (value, atoll (ora_value->value));
 	else if (type == G_TYPE_INT)
 		g_value_set_int (value, atol (ora_value->value));
+	else if (type == G_TYPE_UINT)
+		g_value_set_uint (value, atol (ora_value->value));
 	else if (type == GDA_TYPE_SHORT)
 		gda_value_set_short (value, atoi (ora_value->value));
 	else if (type == G_TYPE_FLOAT)
@@ -476,14 +489,20 @@ gda_oracle_set_value (GValue *value,
 		gtime.second = sec;
 		gda_value_set_time (value, &gtime);
 	}
-	else if (type == GDA_TYPE_BINARY) {/* FIXME */}
+	else if (type == GDA_TYPE_BINARY) {
+		g_warning ("GdaBinary type is not supported by Oracle");
+	}
+	else if (type == GDA_TYPE_BLOB) {
+		GdaBlob *blob;
+		GdaBlobOp *op;
+		blob = g_new0 (GdaBlob, 1);
+		op = gda_oracle_blob_op_new (cnc);
+		gda_blob_set_op (blob, op);
+		g_object_unref (op);
+
+		/* FIXME: make a "copy" of @ora_value->value (which is a OCILobLocator* (?)) into ops->lobl */
+		gda_value_take_blob (value, blob);
+	}
 	else
 		g_value_set_string (value, ora_value->value);
 }
-
-/*
-  Local Variables:
-  mode:C
-  c-basic-offset: 8
-  End:
-*/

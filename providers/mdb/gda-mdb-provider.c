@@ -128,6 +128,7 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
         provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_mdb_provider_execute_command;
+	provider_class->execute_query = NULL;
 	provider_class->get_last_insert_id = NULL;
 
 	provider_class->begin_transaction = NULL;
@@ -136,9 +137,6 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
-	
-	provider_class->create_blob = NULL;
-	provider_class->fetch_blob = NULL;
 }
 
 static void

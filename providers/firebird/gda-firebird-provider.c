@@ -1,9 +1,10 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -28,7 +29,6 @@
 #include <string.h>
 #include "gda-firebird-provider.h"
 #include "gda-firebird-recordset.h"
-#include "gda-firebird-blob.h"
 
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
 
@@ -74,8 +74,6 @@ static GdaDataModel	*gda_firebird_provider_get_schema (GdaServerProvider *provid
 							   GdaConnectionSchema schema,
 							   GdaParameterList *params);
 
-static GdaBlob          *gda_firebird_provider_create_blob (GdaServerProvider *provider,
-							    GdaConnection *cnc);
 
 static GObjectClass *parent_class = NULL;
 
@@ -112,6 +110,7 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
         provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_firebird_provider_execute_command;
+	provider_class->execute_query = NULL;
 	provider_class->get_last_insert_id = NULL;
 
 	provider_class->begin_transaction = gda_firebird_provider_begin_transaction;
@@ -120,9 +119,6 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
-	
-	provider_class->create_blob = gda_firebird_provider_create_blob;
-	provider_class->fetch_blob = NULL;
 }
 
 static void
@@ -1358,14 +1354,4 @@ gda_firebird_provider_get_schema (GdaServerProvider *provider,
 	}
 
 	return NULL;
-}
-
-
-static GdaBlob *
-gda_firebird_provider_create_blob (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	return gda_firebird_blob_new (cnc);
 }

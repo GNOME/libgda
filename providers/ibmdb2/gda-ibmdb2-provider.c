@@ -1127,6 +1127,7 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
         provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_ibmdb2_provider_execute_command;
+	provider_class->execute_query = NULL;
 	provider_class->get_last_insert_id = NULL;
 
 	provider_class->begin_transaction = gda_ibmdb2_provider_begin_transaction;
@@ -1135,10 +1136,6 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
-	
-	provider_class->create_blob = NULL;
-	provider_class->fetch_blob = NULL;
-
 }
 
 static void

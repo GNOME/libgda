@@ -1,25 +1,4 @@
 <SECTION>
-<FILE>gda-blob</FILE>
-<TITLE>GdaBlob</TITLE>
-GdaBlob
-GdaBlobMode
-gda_blob_open
-gda_blob_read
-gda_blob_write
-gda_blob_lseek
-gda_blob_close
-gda_blob_remove
-gda_blob_get_sql_id
-<SUBSECTION Standard>
-GDA_BLOB
-GDA_BLOB_CLASS
-GDA_IS_BLOB
-GDA_IS_BLOB_CLASS
-GDA_TYPE_BLOB
-gda_blob_get_type
-</SECTION>
-
-<SECTION>
 <FILE>gda-client</FILE>
 <TITLE>GdaClient</TITLE>
 GdaClient
@@ -285,8 +264,6 @@ gda_connection_delete_savepoint
 gda_connection_get_transaction_status
 gda_connection_supports_feature
 gda_connection_get_schema
-gda_connection_create_blob
-gda_connection_fetch_blob_by_id
 gda_connection_value_to_sql_string
 <SUBSECTION Standard>
 GDA_CONNECTION
@@ -721,6 +698,7 @@ gda_server_provider_create_operation
 gda_server_provider_render_operation
 gda_server_provider_perform_operation
 gda_server_provider_execute_command
+gda_server_provider_execute_query
 gda_server_provider_get_last_insert_id
 gda_server_provider_begin_transaction
 gda_server_provider_commit_transaction
@@ -730,8 +708,6 @@ gda_server_provider_rollback_savepoint
 gda_server_provider_delete_savepoint
 gda_server_provider_supports_feature
 gda_server_provider_get_schema
-gda_server_provider_create_blob
-gda_server_provider_fetch_blob_by_id
 gda_server_provider_get_data_handler_gtype
 gda_server_provider_get_data_handler_dbms
 gda_server_provider_string_to_value
@@ -802,10 +778,12 @@ GdaNumeric
 GdaTime
 GdaTimestamp
 GdaBinary
+GdaBlob
 GdaValueList
 gda_value_new
 gda_value_new_null
 gda_value_new_binary
+gda_value_new_blob
 gda_value_new_timestamp_from_timet
 gda_value_new_from_string
 gda_value_new_from_xml
@@ -817,6 +795,8 @@ gda_value_isa
 gda_value_copy
 gda_binary_copy
 gda_binary_free
+gda_blob_copy
+gda_blob_free
 gda_geometricpoint_copy
 gda_geometricpoint_free
 gda_value_list_copy
@@ -832,6 +812,7 @@ gda_value_set_binary
 gda_value_take_binary
 gda_value_get_blob
 gda_value_set_blob
+gda_value_take_blob
 gda_value_get_geometric_point
 gda_value_set_geometric_point
 gda_value_get_list
@@ -857,6 +838,7 @@ gda_binary_to_string
 gda_string_to_binary
 <SUBSECTION Standard>
 gda_binary_get_type
+gda_blob_get_type
 gda_geometricpoint_get_type
 gda_value_list_get_type
 gda_numeric_get_type
@@ -1278,6 +1260,7 @@ gda_query_field_value_get_default_value
 gda_query_field_value_get_g_type
 gda_query_field_value_set_is_parameter
 gda_query_field_value_is_parameter
+gda_query_field_value_get_parameter_index
 gda_query_field_value_set_not_null
 gda_query_field_value_get_not_null
 gda_query_field_value_is_value_null
@@ -1357,6 +1340,7 @@ gda_query_is_insert_query
 gda_query_is_update_query
 gda_query_is_delete_query
 gda_query_is_modif_query
+gda_query_is_well_formed
 gda_query_set_sql_text
 gda_query_get_sql_text
 gda_query_get_parameters

@@ -72,6 +72,14 @@ to GDA_TYPE_NULL.
 @data: 
 @binary_length: 
 
+<!-- ##### STRUCT GdaBlob ##### -->
+<para>
+
+</para>
+
+@data: 
+@op: 
+
 <!-- ##### TYPEDEF GdaValueList ##### -->
 <para>
 
@@ -96,6 +104,16 @@ to GDA_TYPE_NULL.
 
 
 <!-- ##### FUNCTION gda_value_new_binary ##### -->
+<para>
+
+</para>
+
+@val: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_blob ##### -->
 <para>
 
 </para>
@@ -196,6 +214,23 @@ to GDA_TYPE_NULL.
 
 
 <!-- ##### FUNCTION gda_binary_free ##### -->
+<para>
+
+</para>
+
+@boxed: 
+
+
+<!-- ##### FUNCTION gda_blob_copy ##### -->
+<para>
+
+</para>
+
+@boxed: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_blob_free ##### -->
 <para>
 
 </para>
@@ -313,7 +348,16 @@ to GDA_TYPE_NULL.
 </para>
 
 @value: 
-@val: 
+@blob: 
+
+
+<!-- ##### FUNCTION gda_value_take_blob ##### -->
+<para>
+
+</para>
+
+@value: 
+@blob: 
 
 
 <!-- ##### FUNCTION gda_value_get_geometric_point ##### -->

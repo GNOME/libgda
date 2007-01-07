@@ -1,5 +1,5 @@
 /* GDA client library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -148,7 +148,7 @@ const gchar         *gda_connection_get_password         (GdaConnection *cnc);
 gboolean             gda_connection_set_password         (GdaConnection *srv, const gchar *password);
 
 void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *error);
-void                 gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);
+GdaConnectionEvent  *gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);
 void                 gda_connection_add_events_list      (GdaConnection *cnc, GList *events_list);
 void                 gda_connection_clear_events_list    (GdaConnection *cnc);
 const GList         *gda_connection_get_events           (GdaConnection *cnc);
@@ -173,9 +173,6 @@ gboolean             gda_connection_rollback_savepoint   (GdaConnection *cnc, co
 gboolean             gda_connection_delete_savepoint     (GdaConnection *cnc, const gchar *name, GError **error);
 
 GdaTransactionStatus *gda_connection_get_transaction_status (GdaConnection *cnc);
-
-GdaBlob             *gda_connection_create_blob          (GdaConnection *cnc);
-GdaBlob             *gda_connection_fetch_blob_by_id     (GdaConnection *cnc, const gchar *sql_id);
 
 gchar               *gda_connection_value_to_sql_string  (GdaConnection *cnc, GValue *from);
 

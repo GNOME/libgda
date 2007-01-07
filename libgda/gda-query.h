@@ -61,7 +61,8 @@ typedef enum
 	GDA_QUERY_STRUCTURE_ERROR,
 	GDA_QUERY_SQL_ANALYSE_ERROR,
 	GDA_QUERY_NO_CNC_ERROR,
-	GDA_QUERY_CNC_CLOSED_ERROR
+	GDA_QUERY_CNC_CLOSED_ERROR,
+	GDA_QUERY_EXEC_ERROR
 } GdaQueryError;
 
 
@@ -107,6 +108,7 @@ gboolean           gda_query_is_insert_query        (GdaQuery *query);
 gboolean           gda_query_is_update_query        (GdaQuery *query);
 gboolean           gda_query_is_delete_query        (GdaQuery *query);
 gboolean           gda_query_is_modif_query         (GdaQuery *query);
+gboolean           gda_query_is_well_formed         (GdaQuery *query, GdaParameterList *context, GError **error);
 GdaQuery          *gda_query_get_parent_query       (GdaQuery *query);
 
 GSList            *gda_query_get_parameters         (GdaQuery *query);

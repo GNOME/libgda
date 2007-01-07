@@ -1,9 +1,9 @@
 /* GDA LDAP provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
- *	    Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *      German Poo-Caaman~o <gpoo@ubiobio.cl>
  *
@@ -97,6 +97,7 @@ gda_ldap_provider_class_init (GdaLdapProviderClass *klass)
         provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = NULL;
+	provider_class->execute_query = NULL;
 	provider_class->get_last_insert_id = NULL;
 
 	provider_class->begin_transaction = NULL;
@@ -105,9 +106,6 @@ gda_ldap_provider_class_init (GdaLdapProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
-	
-	provider_class->create_blob = NULL;
-	provider_class->fetch_blob = NULL;	
 }
 
 static void

@@ -1,6 +1,6 @@
 /* gda-query-field-value.h
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -73,7 +73,7 @@ GdaDictType      *gda_query_field_value_get_dict_type       (GdaQueryFieldValue 
 
 void              gda_query_field_value_set_is_parameter    (GdaQueryFieldValue *field, gboolean is_param);
 gboolean          gda_query_field_value_is_parameter        (GdaQueryFieldValue *field);
-
+gint              gda_query_field_value_get_parameter_index (GdaQueryFieldValue *field);
 void              gda_query_field_value_set_not_null        (GdaQueryFieldValue *field, gboolean not_null);
 gboolean          gda_query_field_value_get_not_null        (GdaQueryFieldValue *field);
 gboolean          gda_query_field_value_is_value_null       (GdaQueryFieldValue *field, GdaParameterList *context);

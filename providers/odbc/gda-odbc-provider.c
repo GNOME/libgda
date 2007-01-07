@@ -1,5 +1,5 @@
 /* GNOME DB ODBC Provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Michael Lausch <michael@lausch.at>
@@ -118,6 +118,7 @@ gda_odbc_provider_class_init (GdaOdbcProviderClass *klass)
         provider_class->perform_operation = NULL;
 
 	provider_class->execute_command = gda_odbc_provider_execute_command;
+	provider_class->execute_query = NULL;
 	provider_class->get_last_insert_id = NULL;
 
 	provider_class->begin_transaction = gda_odbc_provider_begin_transaction;
@@ -126,9 +127,6 @@ gda_odbc_provider_class_init (GdaOdbcProviderClass *klass)
 	provider_class->add_savepoint = NULL;
 	provider_class->rollback_savepoint = NULL;
 	provider_class->delete_savepoint = NULL;
-	
-	provider_class->create_blob = NULL;
-	provider_class->fetch_blob = NULL;
 }
 
 static void

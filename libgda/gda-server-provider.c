@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -28,6 +28,7 @@
 #include <libgda/gda-server-provider-private.h>
 #include <libgda/gda-data-handler.h>
 #include <libgda/gda-parameter-list.h>
+#include <libgda/gda-renderer.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
@@ -44,20 +45,6 @@ static GObjectClass *parent_class = NULL;
 /*
  * GdaServerProvider class implementation
  */
-
-static GdaBlob *
-_gda_server_provider_create_blob (GdaServerProvider *provider,
-				  GdaConnection *cnc)
-{
-	return NULL;
-}
-
-static GdaBlob *
-_gda_server_provider_fetch_blob (GdaServerProvider *provider,
-				 GdaConnection *cnc, const gchar *sql_id)
-{
-	return NULL;
-}
 
 static void
 gda_server_provider_class_init (GdaServerProviderClass *klass)
@@ -92,8 +79,6 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->begin_transaction = NULL;
 	klass->commit_transaction = NULL;
 	klass->rollback_transaction = NULL;
-	klass->create_blob = _gda_server_provider_create_blob;
-	klass->fetch_blob = _gda_server_provider_fetch_blob;
 }
 
 static void
@@ -664,12 +649,68 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 		GdaServerProviderInfo *info;
 
 		info = gda_server_provider_get_info (provider, cnc);
-		g_print ("==> %s (Provider %s on cnx %p)\n", cmd->text, info->provider_name, cnc);
+		g_print ("COMMAND> %s (Provider %s on cnx %p)\n", cmd->text, info->provider_name, cnc);
 	}
 #endif
 
 	return CLASS (provider)->execute_command (provider, cnc, cmd, params);
 }
+
+/**
+ * gda_server_provider_execute_query
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object using 
+ * @query: a #GdaQuery 
+ * @params: a #GdaParameterList object obtained using gda_query_get_parameter_list(@query)
+ *
+ * Executes the @query query, and returns:
+ * <itemizedlist>
+ *   <listitem><para>A #GdaDataModel if the query was a SELECT statement and the statement was successufully executed</para></listitem>
+ *   <listitem><para>A #GdaParameterList if the query was not a SELECT 
+ *        query and the query was successufully executed. In this case
+ *        (if the provider supports it), then the #GdaParameterList may contain:
+ *        <itemizedlist>
+ *          <listitem><para>a (gint) #GdaParameter named "IMPACTED_ROWS"</para></listitem>
+ *          <listitem><para>a (GObject) #GdaParameter named "EVENT" which contains a GdaConnectionEvent</para></listitem>
+ *        </itemizedlist>
+ *   </para></listitem>
+ *   <listitem><para>%NULL is in the list if the query could not be executed</para></listitem>
+ * </itemizedlist>
+ *
+ * The differences between this function and gda_server_provider_execute_command() are:
+ * <itemizedlist>
+ *   <listitem><para>Only one query can be executed at a time</para></listitem>
+ *   <listitem><para>If the database provider supports it, prepared statements can be used</para></listitem>
+ *   <listitem><para>Blobs are handled correctly (because blobs are usually not handled using SQL)</para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: a new (#GdaDataModel or #GdaParameterList) object, or %NULL
+ */
+GdaObject *
+gda_server_provider_execute_query (GdaServerProvider *provider,
+				   GdaConnection *cnc,
+				   GdaQuery *query,
+				   GdaParameterList *params)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (CLASS (provider)->execute_query != NULL, NULL);
+
+#ifdef GDA_DEBUG
+	{
+		GdaServerProviderInfo *info;
+		gchar *sql;
+
+		info = gda_server_provider_get_info (provider, cnc);
+		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 0, NULL);
+		g_print ("QUERY> %s (Provider %s on cnx %p)\n", sql, info->provider_name, cnc);
+		g_free (sql);
+	}
+#endif
+	
+	return CLASS (provider)->execute_query (provider, cnc, query, params);
+}
+
 
 /**
  * gda_server_provider_get_last_insert_id
@@ -859,11 +900,6 @@ gda_server_provider_supports_feature (GdaServerProvider *provider,
 			if (!CLASS (provider)->delete_savepoint)
 				retval = FALSE;
 			break;
-		case GDA_CONNECTION_FEATURE_BLOBS:
-			if (!CLASS (provider)->create_blob ||
-			    !CLASS (provider)->fetch_blob)
-				retval = FALSE;
-			break;
 		default:
 			break;
 		}
@@ -882,7 +918,8 @@ gda_server_provider_supports_feature (GdaServerProvider *provider,
  *
  * Get a #GdaDataModel containing the requested information. See <link linkend="libgda-provider-get-schema">this section</link> for more 
  * information on the columns of the returned #GdaDataModel depending on requested @schema, and for the possible
- * parameters of @params.
+ * parameters of @params, see the
+ * <link linkend="libgda-provider-get-schema">get_schema() virtual method for providers</link> for more details.
  *
  * Returns: a new #GdaDataModel, or %NULL if an error occurred.
  */
@@ -906,49 +943,6 @@ gda_server_provider_get_schema (GdaServerProvider *provider,
 		gda_server_provider_test_schema_model (model, schema, error);
 
 	return model;
-}
-
-
-/**
- * gda_server_provider_create_blob
- * @provider: a server provider.
- * @cnc: a #GdaConnection object.
- *
- * Creates a BLOB (Binary Large OBject) with read/write access.
- *
- * Returns: a new #GdaBlob object, or %NULL if the database (or the libgda's provider)
- * does not support BLOBS
- */
-GdaBlob *
-gda_server_provider_create_blob (GdaServerProvider *provider,
-				 GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	return CLASS (provider)->create_blob (provider, cnc);
-}
-
-/**
- * gda_server_provider_fetch_blob_by_id
- * @provider: a server provider.
- * @cnc: a #GdaConnection object.
- * @sql_id: the SQL ID of the blob to fetch
- *
- * Fetch an existing BLOB (Binary Large OBject) using its SQL ID.
- *
- * Returns: a new #GdaBlob object, or %NULL if the database (or the libgda's provider)
- * does not support BLOBS
- */
-GdaBlob *
-gda_server_provider_fetch_blob_by_id (GdaServerProvider *provider,
-				      GdaConnection *cnc, const gchar *sql_id)
-{
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (sql_id, FALSE);
-
-	return CLASS (provider)->fetch_blob (provider, cnc, sql_id);
 }
 
 /**

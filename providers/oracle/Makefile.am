@@ -1,5 +1,5 @@
 # GDA Oracle provider
-# Copyright (C) 1998-2006 The GNOME Foundation
+# Copyright (C) 1998 - 2007 The GNOME Foundation
 #
 # AUTHORS:
 #	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -33,6 +33,8 @@ AM_CPPFLAGS = \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_oracle_la_SOURCES = \
+	gda-oracle-blob-op.c \
+	gda-oracle-blob-op.h \
 	gda-oracle-ddl.c \
 	gda-oracle-ddl.h \
 	gda-oracle-provider.c \

@@ -47,6 +47,7 @@ CHAR [^ \t\n\r\'\";\[\]:]+
 
 {CHAR}	 	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
 ::		{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
+:[A-Za-z0-9_-]+	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
 [ \t\n\r]	{;}
 
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}

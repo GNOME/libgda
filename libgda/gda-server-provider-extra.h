@@ -56,6 +56,16 @@ void            gda_server_provider_handler_declare         (GdaServerProvider *
 							     GdaConnection *cnc, 
 							     GType g_type, const gchar *dbms_type);
 
+/*
+ * misc
+ */
+gboolean       gda_server_provider_blob_list_for_update     (GdaConnection *cnc, GdaQuery *query, 
+							     GdaQuery **out_select, GError **error);
+gboolean       gda_server_provider_blob_list_for_delete     (GdaConnection *cnc, GdaQuery *query, 
+							     GdaQuery **out_select, GError **error);
+gboolean       gda_server_provider_split_update_query       (GdaConnection *cnc, GdaQuery *query, 
+							     GdaQuery **out_query, GError **error);
+
 G_END_DECLS
 
 #endif

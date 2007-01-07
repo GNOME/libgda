@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
@@ -25,8 +25,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_oracle_h__)
-#  define __gda_oracle_h__
+#ifndef __GDA_ORACLE_H__
+#define __GDA_ORACLE_H__
 
 #if defined(HAVE_CONFIG_H)
 #endif
@@ -40,13 +40,14 @@
 #include "gda-oracle-recordset.h"
 #include <oci.h>
 
-#define GDA_ORACLE_PROVIDER_ID          "GDA Oracle provider"
-#define ORA_NAME_BUFFER_SIZE		30
+#define OBJECT_DATA_ORACLE_HANDLE "GDA_Oracle_OracleHandle"
+#define GDA_ORACLE_PROVIDER_ID    "GDA Oracle provider"
+#define ORA_NAME_BUFFER_SIZE	  30
 
 #define gda_oracle_check_result(result, cnc, priv_data, type, msg) \
-    (((result) == OCI_SUCCESS || (result) == OCI_SUCCESS_WITH_INFO) \
-    ? TRUE : gda_oracle_handle_error(result, cnc, priv_data,       \
-				     type, msg, __FILE__, __LINE__))
+	(((result) == OCI_SUCCESS || (result) == OCI_SUCCESS_WITH_INFO) \
+	 ? NULL : gda_oracle_handle_error(result, cnc, priv_data,       \
+					  type, msg, __FILE__, __LINE__))
     
 G_BEGIN_DECLS
 
@@ -55,7 +56,7 @@ G_BEGIN_DECLS
  */
 
 GdaConnectionEvent *gda_oracle_make_error (dvoid *hndlp, ub4 type,
-				 const gchar *file, gint line);
+					   const gchar *file, gint line);
 
 void gda_oracle_set_value (GValue *value, 
 				GdaOracleValue *thevalue,
@@ -69,13 +70,13 @@ gchar *oracle_sqltype_to_string (const ub2 sqltype);
 
 GdaOracleValue *gda_value_to_oracle_value (const GValue *value);
 
-gboolean gda_oracle_handle_error (gint result, 
-				  GdaConnection *cnc, 
-				  GdaOracleConnectionData *priv_data,
-				  ub4 type, 
-				  const gchar *msg,
-				  const gchar *file,
-				  gint line);
+GdaConnectionEvent *gda_oracle_handle_error (gint result, 
+					     GdaConnection *cnc, 
+					     GdaOracleConnectionData *priv_data,
+					     ub4 type, 
+					     const gchar *msg,
+					     const gchar *file,
+					     gint line);
 
 
 G_END_DECLS

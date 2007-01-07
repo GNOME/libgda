@@ -395,6 +395,7 @@ gda_delimiter_to_string_real (GdaDelimiterStatement *statement, gboolean sep)
 				tmp = sql_to_string_pspec_list ((GList *)(list->data), sep);
 				if ((list != statement->params_specs) && !sep)
 					g_string_append_c (string, ' ');
+				g_string_append (string, "## ");
 				g_string_append (string, tmp);
 				g_free (tmp);
 				
@@ -425,6 +426,8 @@ sql_to_string_expr (GdaDelimiterExpr *expr, gboolean sep)
 	}
 	if (expr->pspec_list) {
 		tmp = sql_to_string_pspec_list (expr->pspec_list, sep);
+		if (! expr->sql_text)
+			g_string_append (string, "## ");
 		g_string_append (string, tmp);
 		g_free (tmp);
 	}
@@ -446,7 +449,7 @@ sql_to_string_pspec_list (GList *pspecs, gboolean sep)
 	list = pspecs;
 	if (sep)
 		g_string_append_c (string, '\t');
-	g_string_append (string, "## [");
+	g_string_append (string, "[");
 	while (list) {
 		GdaDelimiterParamSpec *pspec = (GdaDelimiterParamSpec *)(list->data);
 
