@@ -1,4 +1,20 @@
 2007-01-07 Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query.c: bug fixed in XML saving code where a "(xmlChar*)" was
+	not a cast but in the string.
+	* doc/C: adjusted the svn:ignore property
+	
+2007-01-07 Leonardo Boshell <lb@kmc.com.co>
+
+	* libgda/gda-connection-event.c:
+	* libgda/gda-data-model-hash.c:
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-query.c:
+	* libgda/gda-dict.c: Made *_new functions only call g_object_new by
+	moving some code to *_init and introducing properties that are set
+	upon construction, for bug #321724
+
+2007-01-07 Vivien Malerba <malerba@gnome-db.org>
 	
 	* libgda/sql-delimiter/*: don't remove the ':' char from ':[A-Za-z0-9_-]+'
 	identifiers, and allow to have parameter definitions with values, instead

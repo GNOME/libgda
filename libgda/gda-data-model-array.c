@@ -40,10 +40,18 @@ struct _GdaDataModelArrayPrivate {
 	GPtrArray *rows;
 };
 
-static void gda_data_model_array_class_init (GdaDataModelArrayClass *klass);
-static void gda_data_model_array_init       (GdaDataModelArray *model,
-					     GdaDataModelArrayClass *klass);
-static void gda_data_model_array_finalize   (GObject *object);
+enum {
+	PROP_0,
+
+	PROP_N_COLUMNS
+};
+
+static void gda_data_model_array_class_init   (GdaDataModelArrayClass *klass);
+static void gda_data_model_array_init         (GdaDataModelArray *model,
+					       GdaDataModelArrayClass *klass);
+static void gda_data_model_array_finalize     (GObject *object);
+static void gda_data_model_array_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
+static void gda_data_model_array_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 
 static GObjectClass *parent_class = NULL;
 
@@ -235,6 +243,8 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_data_model_array_finalize;
+	object_class->get_property = gda_data_model_array_get_property;
+	object_class->set_property = gda_data_model_array_set_property;
 	model_class->get_n_rows = gda_data_model_array_get_n_rows;
 	model_class->get_n_columns = gda_data_model_array_get_n_columns;
 	model_class->get_row = gda_data_model_array_get_row;
@@ -244,6 +254,16 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->append_row = gda_data_model_array_append_row;
 	model_class->update_row = gda_data_model_array_update_row;
 	model_class->remove_row = gda_data_model_array_remove_row;
+
+	g_object_class_install_property (object_class,
+	                                 PROP_N_COLUMNS,
+	                                 g_param_spec_uint ("n-columns",
+	                                                    "Number of columns",
+	                                                    "The number of columns in the model",
+	                                                    0,
+	                                                    G_MAXUINT,
+	                                                    0,
+	                                                    G_PARAM_READWRITE));
 }
 
 static void
@@ -274,6 +294,43 @@ gda_data_model_array_finalize (GObject *object)
 
 	/* chain to parent class */
 	parent_class->finalize (object);
+}
+
+static void
+gda_data_model_array_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+{
+	GdaDataModelArray *model;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (object));
+	model = GDA_DATA_MODEL_ARRAY (object);
+
+	switch (prop_id)
+	{
+	case PROP_N_COLUMNS:
+		gda_data_model_array_set_n_columns(model, g_value_get_uint(value));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void gda_data_model_array_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+{
+	GdaDataModelArray *model;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (object));
+	model = GDA_DATA_MODEL_ARRAY (object);
+
+	switch (prop_id)
+	{
+	case PROP_N_COLUMNS:
+		g_value_set_uint(value, model->priv->number_of_columns);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
 }
 
 GType
@@ -312,8 +369,7 @@ gda_data_model_array_new (gint cols)
 {
 	GdaDataModel *model;
 
-	model = g_object_new (GDA_TYPE_DATA_MODEL_ARRAY, NULL);
-	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (model), cols);
+	model = g_object_new (GDA_TYPE_DATA_MODEL_ARRAY, "n-columns", cols, NULL);
 	return model;
 }
 
@@ -420,6 +476,8 @@ gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols)
 
 	gda_data_model_array_clear (model);
 	model->priv->number_of_columns = cols;
+
+	g_object_notify (G_OBJECT (model), "n-columns");
 }
 
 /**

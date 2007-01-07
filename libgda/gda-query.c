@@ -57,6 +57,9 @@
  * Main static functions 
  */
 static void gda_query_class_init (GdaQueryClass * class);
+static GObject *gda_query_constructor (GType type,
+                                       guint n_construct_properties,
+		                       GObjectConstructParam *construct_properties);
 static void gda_query_init (GdaQuery * srv);
 static void gda_query_dispose (GObject   * object);
 static void gda_query_finalize (GObject   * object);
@@ -281,7 +284,6 @@ static void
 gda_query_class_init (GdaQueryClass * klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
-
 	parent_class = g_type_class_peek_parent (klass);
 
 	gda_query_signals[TYPE_CHANGED] =
@@ -385,6 +387,7 @@ gda_query_class_init (GdaQueryClass * klass)
 	klass->sub_query_removed = NULL;
 	klass->sub_query_updated = NULL;
 
+	object_class->constructor = gda_query_constructor;
 	object_class->dispose = gda_query_dispose;
 	object_class->finalize = gda_query_finalize;
 
@@ -427,6 +430,33 @@ m_changed_cb (GdaQuery *query)
 		gda_object_signal_emit_changed (GDA_OBJECT (query));
 }
 
+static GObject *
+gda_query_constructor (GType type,
+                       guint n_construct_properties,
+		       GObjectConstructParam *construct_properties)
+{
+	GObject* obj;
+	GdaDict* dict;
+	guint id;
+	GdaDictRegisterStruct *reg;
+
+	GdaQueryClass* klass;
+	klass = GDA_QUERY_CLASS(g_type_class_peek(GDA_TYPE_QUERY));
+
+	obj = parent_class->constructor (type, n_construct_properties,
+	                                 construct_properties);
+
+	g_object_get(obj, "dict", &dict, NULL);
+	reg = gda_dict_get_object_type_registration (ASSERT_DICT (dict), GDA_TYPE_QUERY);
+	
+	id = gda_queries_get_serial (reg);
+	gda_query_object_set_int_id (GDA_QUERY_OBJECT (obj), id);
+	
+	gda_dict_declare_object (ASSERT_DICT (dict), GDA_OBJECT (obj));
+
+	return obj;
+}
+
 static void
 gda_query_init (GdaQuery * gda_query)
 {
@@ -466,18 +496,10 @@ gda_query_new (GdaDict *dict)
 {
 	GObject *obj;
 	GdaQuery *gda_query;
-	guint id;
-	GdaDictRegisterStruct *reg;
 
 	g_return_val_if_fail (!dict || GDA_IS_DICT (dict), NULL);
 	obj = g_object_new (GDA_TYPE_QUERY, "dict", ASSERT_DICT (dict), NULL);
 	gda_query = GDA_QUERY (obj);
-
-	reg = gda_dict_get_object_type_registration (ASSERT_DICT (dict), GDA_TYPE_QUERY);
-	id = gda_queries_get_serial (reg);
-	gda_query_object_set_int_id (GDA_QUERY_OBJECT (obj), id);
-
-	gda_dict_declare_object (ASSERT_DICT (dict), (GdaObject *) gda_query);
 
 	return gda_query;
 }
@@ -4085,7 +4107,7 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 			
 			list = query->priv->fields_order_by;
 			while (list) {
-				xmlNodePtr order = xmlNewChild (sub, NULL, (xmlChar*)"(xmlChar*)gda_query_field_ref", NULL);
+				xmlNodePtr order = xmlNewChild (sub, NULL, (xmlChar*)"gda_query_field_ref", NULL);
 				
 				str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (list->data));
 				xmlSetProp(order, (xmlChar*)"object", (xmlChar*)str);

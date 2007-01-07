@@ -280,6 +280,8 @@ uint_hash (gconstpointer  v)
 static void
 gda_dict_init (GdaDict * dict)
 {
+	GSList *list;
+
 	dict->priv = g_new0 (GdaDictPrivate, 1);
 	dict->priv->database = NULL;
 	dict->priv->cnc = NULL;
@@ -292,6 +294,15 @@ gda_dict_init (GdaDict * dict)
 	dict->priv->registry = g_hash_table_new (uint_hash, uint_equal);
 	dict->priv->registry_xml_groups = g_hash_table_new (g_str_hash, g_str_equal);
 	dict->priv->objects_as_hash = g_hash_table_new (NULL, NULL);
+
+	/* Server and database objects creation */
+	dict->priv->cnc = NULL;
+	dict->priv->database = GDA_DICT_DATABASE (gda_dict_database_new (dict));
+
+	/* register basic functionality */
+	list = GDA_DICT_CLASS (G_OBJECT_GET_CLASS (dict))->class_registry_list;
+	for (; list; list = list->next) 
+		gda_dict_register_object_type (dict, ((GdaDictRegFunc)(list->data)) ());
 }
 
 /**
@@ -306,19 +317,9 @@ gda_dict_new ()
 {
 	GObject *obj;
 	GdaDict *dict;
-	GSList *list;
 
 	obj = g_object_new (GDA_TYPE_DICT, NULL);
 	dict = GDA_DICT (obj);
-
-	/* Server and database objects creation */
-	dict->priv->cnc = NULL;
-	dict->priv->database = GDA_DICT_DATABASE (gda_dict_database_new (dict));
-
-	/* register basic functionality */
-	list = GDA_DICT_CLASS (G_OBJECT_GET_CLASS (obj))->class_registry_list;
-	for (; list; list = list->next) 
-		gda_dict_register_object_type (dict, ((GdaDictRegFunc)(list->data)) ());
 
 	return dict;
 }

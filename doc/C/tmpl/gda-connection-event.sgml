@@ -25,6 +25,11 @@ gda_connection_get_events() function.
 </para>
 
 
+<!-- ##### ARG GdaConnectionEvent:type ##### -->
+<para>
+
+</para>
+
 <!-- ##### STRUCT GdaConnectionEventPrivate ##### -->
 <para>
 

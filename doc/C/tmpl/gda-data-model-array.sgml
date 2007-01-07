@@ -23,6 +23,11 @@ An implementation of #GdaDataModel based on an array
 </para>
 
 
+<!-- ##### ARG GdaDataModelArray:n-columns ##### -->
+<para>
+
+</para>
+
 <!-- ##### STRUCT GdaDataModelArrayClass ##### -->
 <para>
 

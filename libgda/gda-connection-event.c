@@ -34,9 +34,17 @@ struct _GdaConnectionEventPrivate {
 	GdaConnectionEventType  type; /* default is GDA_CONNECTION_EVENT_ERROR */
 };
 
-static void gda_connection_event_class_init (GdaConnectionEventClass *klass);
-static void gda_connection_event_init       (GdaConnectionEvent *event, GdaConnectionEventClass *klass);
-static void gda_connection_event_finalize   (GObject *object);
+enum {
+	PROP_0,
+
+	PROP_TYPE
+};
+
+static void gda_connection_event_class_init   (GdaConnectionEventClass *klass);
+static void gda_connection_event_init         (GdaConnectionEvent *event, GdaConnectionEventClass *klass);
+static void gda_connection_event_finalize     (GObject *object);
+static void gda_connection_event_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
+static void gda_connection_event_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 
 static GObjectClass *parent_class = NULL;
 
@@ -74,6 +82,18 @@ gda_connection_event_class_init (GdaConnectionEventClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_connection_event_finalize;
+	object_class->set_property = gda_connection_event_set_property;
+	object_class->get_property = gda_connection_event_get_property;
+
+	g_object_class_install_property(object_class,
+	                                PROP_TYPE,
+	                                g_param_spec_int("type",
+	                                                 "Type",
+	                                                 "Connection event type",
+	                                                 0,
+	                                                 2,
+	                                                 GDA_CONNECTION_EVENT_ERROR,
+	                                                 G_PARAM_READWRITE));
 }
 
 static void
@@ -97,8 +117,7 @@ gda_connection_event_new (GdaConnectionEventType type)
 {
 	GdaConnectionEvent *event;
 
-	event = GDA_CONNECTION_EVENT (g_object_new (GDA_TYPE_CONNECTION_EVENT, NULL));
-	event->priv->type = type;
+	event = GDA_CONNECTION_EVENT (g_object_new (GDA_TYPE_CONNECTION_EVENT, "type", (int)type, NULL));
 	return event;
 }
 
@@ -122,6 +141,42 @@ gda_connection_event_finalize (GObject *object)
 
 	/* chain to parent class */
 	parent_class->finalize (object);
+}
+
+static void gda_connection_event_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+{
+	GdaConnectionEvent *event;
+
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (object));
+	event = GDA_CONNECTION_EVENT (object);
+
+	switch(prop_id)
+	{
+	case PROP_TYPE:
+		event->priv->type = g_value_get_int (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
+static void gda_connection_event_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+{
+	GdaConnectionEvent *event;
+
+	g_return_if_fail (GDA_IS_CONNECTION_EVENT (object));
+	event = GDA_CONNECTION_EVENT (object);
+
+	switch(prop_id)
+	{
+	case PROP_TYPE:
+		g_value_set_int(value, event->priv->type);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
 }
 
 /**
@@ -188,6 +243,7 @@ gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEve
 	g_return_if_fail (event->priv);
 
 	event->priv->type = type;
+	g_object_notify (G_OBJECT (event), "type");
 }
 
 /**
