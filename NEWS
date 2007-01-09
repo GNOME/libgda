@@ -1,3 +1,11 @@
+libgda 1.2.4, 2007-01-09
+------------------------
+
+ - Freetds provider: Fix build.
+   (Gustavo R. Montesino in bug #330939)
+ - Postgres provider: Quote database names to allow use 
+   of all characters. (Murray Cumming)
+
 libgda 1.2.3, 2005-10-31
 ------------------------
 
