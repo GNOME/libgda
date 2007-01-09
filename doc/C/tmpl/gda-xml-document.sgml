@@ -61,8 +61,6 @@ Base class for XML document management
 @xmldoc: 
 @uri: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@filename: 
 
 
 <!-- ##### FUNCTION gda_xml_document_stringify ##### -->

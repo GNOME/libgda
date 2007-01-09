@@ -105,8 +105,6 @@ table names.
 @type: 
 @options: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@option: 
 
 
 <!-- ##### FUNCTION gda_command_free ##### -->

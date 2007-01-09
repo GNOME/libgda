@@ -134,8 +134,6 @@ XML database representation (used for import/export and in the default provider)
 @xmldb: 
 @uri: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@filename: 
 
 
 <!-- ##### FUNCTION gda_xml_database_to_string ##### -->
@@ -204,7 +202,5 @@ XML database representation (used for import/export and in the default provider)
 @xmldb: 
 @node: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@xmlnode: 
 
 

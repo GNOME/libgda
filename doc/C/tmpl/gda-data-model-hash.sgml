@@ -72,8 +72,6 @@ until the one requested).
 @model: 
 @rownum: 
 @row: 
-<!-- # Unused Parameters # -->
-@values: 
 
 
 <!-- ##### FUNCTION gda_data_model_hash_get_row ##### -->

@@ -113,8 +113,6 @@ Management of database fields
 
 @fa: 
 @size: 
-<!-- # Unused Parameters # -->
-@fs: 
 
 
 <!-- ##### FUNCTION gda_field_attributes_get_name ##### -->

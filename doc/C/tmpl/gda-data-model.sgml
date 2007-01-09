@@ -227,8 +227,6 @@ Basic data model class
 @model: 
 @attrs: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@col: 
 
 
 <!-- ##### FUNCTION gda_data_model_update_column ##### -->
@@ -364,8 +362,6 @@ Basic data model class
 
 @model: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@recset: 
 
 
 <!-- ##### FUNCTION gda_data_model_set_command_text ##### -->
@@ -375,8 +371,6 @@ Basic data model class
 
 @model: 
 @txt: 
-<!-- # Unused Parameters # -->
-@recset: 
 
 
 <!-- ##### FUNCTION gda_data_model_get_command_type ##### -->
@@ -386,8 +380,6 @@ Basic data model class
 
 @model: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@recset: 
 
 
 <!-- ##### FUNCTION gda_data_model_set_command_type ##### -->
@@ -397,7 +389,5 @@ Basic data model class
 
 @model: 
 @type: 
-<!-- # Unused Parameters # -->
-@recset: 
 
 

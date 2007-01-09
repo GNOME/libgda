@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Run this to generate all the initial makefiles, etc.
 
 srcdir=`dirname $0`
@@ -7,7 +7,7 @@ test -z "$srcdir" && srcdir=.
 PKG_NAME="GNOME Data Access"
 AUTOCONF=autoconf
 REQUIRED_AUTOCONF_VERSION=2.59
-AUTOMAKE=automake
+AUTOMAKE=automake-1.9
 REQUIRED_AUTOMAKE_VERSION=1.9
 
 (test -f $srcdir/configure.in \

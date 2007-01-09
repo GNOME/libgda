@@ -61,8 +61,6 @@ Utility functions
 
 @filename: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@uri: 
 
 
 <!-- ##### FUNCTION gda_file_save ##### -->
@@ -74,7 +72,5 @@ Utility functions
 @buffer: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@uri: 
 
 
