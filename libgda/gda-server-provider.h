@@ -288,12 +288,6 @@ gboolean      gda_server_provider_rollback_savepoint   (GdaServerProvider *provi
 gboolean      gda_server_provider_delete_savepoint     (GdaServerProvider *provider, GdaConnection *cnc, 
 							const gchar *name, GError **error);
 
-/* blobs */
-GdaBlob      *gda_server_provider_create_blob          (GdaServerProvider *provider,
-							GdaConnection *cnc);
-GdaBlob      *gda_server_provider_fetch_blob_by_id     (GdaServerProvider *provider,
-							GdaConnection *cnc, const gchar *sql_id);
-
 G_END_DECLS
 
 #endif

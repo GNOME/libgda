@@ -91,6 +91,7 @@ gda_blob_op_finalize (GObject *object)
  *
  * Opens an existing BLOB. The BLOB must be initialized by
  * #gda_connection_create_blob or obtained from a #GValue.
+ * FIXME: gda_connection_create_blob() no longer exists.
  * 
  * Returns: the length of the blob in bytes. In case of error, -1 is returned and the
  * provider should have added an error (a #GdaConnectionEvent) to the connection.

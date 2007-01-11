@@ -1,3 +1,11 @@
+2007-01-11  Murray Cumming  <murrayc@murryac.com>
+
+	* libgda/gda-blob-op.c: Add a FIXME comment to documentation that advises use of 
+	gda_connection_create_blob(), which no longer exists.
+	* libgda/gda-server-provider.h: Removed declarations of 
+	gda_server_provider_create_blob() and gda_server_provider_fetch_blob_by_id() because the 
+	functions (implementations) no longer exist.
+
 2007-01-07 Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-query.c: bug fixed in XML saving code where a "(xmlChar*)" was
