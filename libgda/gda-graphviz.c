@@ -47,6 +47,7 @@ static void gda_graphviz_init (GdaGraphviz * srv);
 static void gda_graphviz_dispose (GObject   * object);
 static void gda_graphviz_finalize (GObject   * object);
 
+#if 0 /* This object does not have any properties. */
 static void gda_graphviz_set_property (GObject *object,
 				    guint param_id,
 				    const GValue *value,
@@ -55,18 +56,20 @@ static void gda_graphviz_get_property (GObject *object,
 				    guint param_id,
 				    GValue *value,
 				    GParamSpec *pspec);
+#endif
 
 static void weak_obj_notify (GdaGraphviz *graph, GObject *obj);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
-
+#if 0 /* This object does not have any properties. */
 /* properties */
 enum
 {
 	PROP_0,
 	PROP
 };
+#endif
 
 
 /* private structure */
@@ -119,6 +122,7 @@ gda_graphviz_class_init (GdaGraphvizClass * class)
 	object_class->dispose = gda_graphviz_dispose;
 	object_class->finalize = gda_graphviz_finalize;
 
+        #if 0 /* This object does not have any properties. */
 	/* Properties */
 	object_class->set_property = gda_graphviz_set_property;
 	object_class->get_property = gda_graphviz_get_property;
@@ -130,6 +134,7 @@ gda_graphviz_class_init (GdaGraphvizClass * class)
 	g_object_class_install_property (object_class, PROP,
 					 g_param_spec_pointer ("prop", NULL, NULL, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+        #endif
 }
 
 static void
@@ -200,7 +205,7 @@ gda_graphviz_finalize (GObject   * object)
 	parent_class->finalize (object);
 }
 
-
+#if 0 /* This object does not have any properties. */
 static void 
 gda_graphviz_set_property (GObject *object,
 			guint param_id,
@@ -236,6 +241,7 @@ gda_graphviz_get_property (GObject *object,
 		}	
 	}
 }
+#endif
 
 /**
  * gda_graphviz_add_to_graph

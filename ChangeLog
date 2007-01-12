@@ -1,3 +1,11 @@
+2007-01-12  Murray Cumming  <murrayc@murryac.com>
+
+	* libgda/gda-dict-database.c: (gda_dict_database_class_init):
+	* libgda/gda-dict-function.c: (gda_dict_function_class_init):
+	* libgda/gda-dict-type.c: (gda_dict_type_class_init):
+	* libgda/gda-graphviz.c: (gda_graphviz_class_init): Remove nonsense unused PROP ("prop") properties 
+	with #if 0. I would prefer to delete the code, but I guess someone found these placeholders useful once.
+
 2007-01-11  Murray Cumming  <murrayc@murryac.com>
 
 	* libgda/gda-blob-op.c: Add a FIXME comment to documentation that advises use of 

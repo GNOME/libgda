@@ -35,6 +35,7 @@ static void gda_dict_function_init (GdaDictFunction * srv);
 static void gda_dict_function_dispose (GObject   * object);
 static void gda_dict_function_finalize (GObject   * object);
 
+#if 0 /* This object does not have any properties. */
 static void gda_dict_function_set_property (GObject *object,
 					     guint param_id,
 					     const GValue *value,
@@ -43,6 +44,7 @@ static void gda_dict_function_get_property (GObject *object,
 					     guint param_id,
 					     GValue *value,
 					     GParamSpec *pspec);
+#endif
 
 #ifdef GDA_DEBUG
 static void gda_dict_function_dump (GdaDictFunction *func, guint offset);
@@ -56,13 +58,14 @@ static gboolean    gnome_db_function_load_from_xml (GdaXmlStorage *iface, xmlNod
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
-
+#if 0 /* This object does not have any properties. */
 /* properties */
 enum
 {
 	PROP_0,
 	PROP
 };
+#endif
 
 
 /* private structure */
@@ -133,6 +136,7 @@ gda_dict_function_class_init (GdaDictFunctionClass * class)
 	object_class->dispose = gda_dict_function_dispose;
 	object_class->finalize = gda_dict_function_finalize;
 
+        #if 0 /* This object does not have any properties. */
 	/* Properties */
 	object_class->set_property = gda_dict_function_set_property;
 	object_class->get_property = gda_dict_function_get_property;
@@ -143,6 +147,7 @@ gda_dict_function_class_init (GdaDictFunctionClass * class)
          */
 	g_object_class_install_property (object_class, PROP,
 					 g_param_spec_pointer ("prop", NULL, NULL, (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+        #endif
 
 	/* virtual functions */
 #ifdef GDA_DEBUG
@@ -225,7 +230,7 @@ gda_dict_function_finalize (GObject   * object)
 	parent_class->finalize (object);
 }
 
-
+#if 0 /* This object does not have any properties. */
 static void 
 gda_dict_function_set_property (GObject *object,
 			guint param_id,
@@ -264,6 +269,7 @@ gda_dict_function_get_property (GObject *object,
 		}	
 	}
 }
+#endif
 
 #ifdef GDA_DEBUG
 static void
