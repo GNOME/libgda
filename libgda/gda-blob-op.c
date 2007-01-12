@@ -109,7 +109,7 @@ gda_blob_op_get_length (GdaBlobOp *op)
 
 /**
  * gda_blob_op_read
- * @op: a #GdaBlobOp which is opened with the flag GDA_BLOB_OP_MODE_READ set.
+ * @op: a #GdaBlobOp
  * @blob: a #GdaBlob to read data to
  * @offset: offset to read from the start of the blob (starts at 0)
  * @size: maximum number of bytes to read.
@@ -131,8 +131,27 @@ gda_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 }
 
 /**
+ * gda_blob_op_read_all
+ * @op: a #GdaBlobOp
+ * @blob: a #GdaBlob to read data to
+ *
+ * Reads the whole contents of the blob manipulated by @op into @blob
+ */
+void
+gda_blob_op_read_all (GdaBlobOp *op, GdaBlob *blob)
+{
+	glong len;
+	g_return_if_fail (GDA_IS_BLOB_OP (op));
+	g_return_if_fail (blob);
+
+	len = gda_blob_op_get_length (blob->op);
+	if (len != ((GdaBinary *)blob)->binary_length)
+		gda_blob_op_read (blob->op, blob, 0, len);
+}
+
+/**
  * gda_blob_op_write
- * @op: a #GdaBlobOp which is opened with the flag GDA_BLOB_OP_MODE_WRITE set.
+ * @op: a #GdaBlobOp
  * @blob: a #GdaBlob which contains the data to write
  * @offset: offset to write from the start of the blob (starts at 0)
  *

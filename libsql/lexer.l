@@ -102,14 +102,14 @@ char *string_buf_ptr;
 <STRING>\\(.|\n)	{*string_buf_ptr++=sqltext[0];}
 <STRING>.	{*string_buf_ptr++=sqltext[0];}
 
-"["		{return L_LSBRACKET;}
-"]"             {return L_RSBRACKET;}
+"/*"		{return L_LSBRACKET;}
+"*/"            {return L_RSBRACKET;}
 
-":name"		{return L_PNAME;}
-":descr"        {return L_PDESCR;}
-":type"		{return L_PTYPE;}
-":isparam"	{return L_PISPARAM;}
-":nullok"       {return L_PNULLOK;}
+"name:"		{return L_PNAME;}
+"descr:"        {return L_PDESCR;}
+"type:"		{return L_PTYPE;}
+"isparam:"	{return L_PISPARAM;}
+"nullok:"       {return L_PNULLOK;}
 "##"            {return L_UNSPECVAL;}
 
 \"		{string_buf_ptr = string_buf; BEGIN(TEXTUAL);}

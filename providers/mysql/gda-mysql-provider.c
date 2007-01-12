@@ -1412,7 +1412,7 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		{ "smallint", "", "Small integer, range is -32768 to 32767", GDA_TYPE_SHORT, NULL  },
 		{ "smallint unsigned", "", "Small unsigned integer, range is 0 to 65535", GDA_TYPE_USHORT, NULL  },
 		{ "text", "", "Text (up to 65535 characters)", GDA_TYPE_BINARY, NULL  },
-		{ "tinyint", "", "Tiny integer, range is -128 to 127", G_TYPE_CHAR, NULL  },
+		{ "tinyint", "", "Tiny integer, range is -128 to 127", G_TYPE_CHAR, "bit" },
 		{ "tinyint unsigned", "", "Tiny unsigned integer, range is 0 to 255", G_TYPE_UCHAR, NULL  },
 		{ "tinyblob", "", "Tiny blob (up to 255 bytes)", GDA_TYPE_BINARY, NULL  },
 		{ "tinytext", "", "Tiny text (up to 255 characters)", GDA_TYPE_BINARY, NULL  },		
@@ -2045,7 +2045,7 @@ get_mysql_constraints (GdaConnection *cnc, GdaParameterList *params)
 					   "REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME "
 					   "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE "
 					   "WHERE TABLE_NAME = '%s' AND TABLE_SCHEMA = DATABASE() AND "
-					   "CONSTRAINT_NAME != 'PRIMARY' "
+					   "CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_TABLE_NAME IS NOT NULL "
 					   "ORDER BY CONSTRAINT_NAME, ORDINAL_POSITION", 
 					   table_name);
 		rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
@@ -2296,14 +2296,12 @@ gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
 			g_object_unref (dh);
 		}
 	}
-        else if ((type == GDA_TYPE_BINARY) ||
-		 (type == GDA_TYPE_BLOB)) {
+        else if (type == GDA_TYPE_BINARY) {
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
 			dh = gda_handler_bin_new_with_prov (provider, cnc);
 			if (dh) {
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
-				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
 				g_object_unref (dh);
 			}
 		}
@@ -2369,10 +2367,8 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider *provider,
 		return "bigint unsigned";
 	if (type == GDA_TYPE_BINARY)
 		return "longtext";
-	if (type == GDA_TYPE_BLOB)
-		return "oid";
 	if (type == G_TYPE_BOOLEAN)
-		return "blob";
+		return "bool";
 	if (type == G_TYPE_DATE)
 		return "date";
 	if (type == G_TYPE_DOUBLE)

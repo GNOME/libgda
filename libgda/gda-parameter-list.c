@@ -28,6 +28,7 @@
 #include <locale.h>
 #endif
 #include "gda-parameter-list.h"
+#include "gda-parameter-util.h"
 #include "gda-query.h"
 #include "gda-marshal.h"
 #include "gda-data-model.h"

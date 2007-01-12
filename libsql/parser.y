@@ -166,6 +166,9 @@ order_fields_list: order_field			{$$ = g_list_append (NULL, $1);}
 order_field: field_name			{$$ = sql_order_field_build ($1, SQL_asc);}
 	| field_name L_ORDER_ASC	{$$ = sql_order_field_build ($1, SQL_asc);}
 	| field_name L_ORDER_DSC        {$$ = sql_order_field_build ($1, SQL_desc);} 
+	| L_NUM 			{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_asc);}
+	| L_NUM L_ORDER_ASC		{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_asc);}
+	| L_NUM L_ORDER_DSC		{$$ = sql_order_field_build (g_list_append (NULL, $1), SQL_desc);}
 	;
 
 opt_groupby: L_GROUP L_BY fields_list 	{$$ = $3;}
@@ -290,15 +293,20 @@ param_spec_list: param_spec_item 			{$$ = g_list_append (NULL, $1);}
 	;
 
 
-param_spec_item: L_PNAME L_EQ L_TEXTUAL      	{$$ = param_spec_build (PARAM_name, $3);}
-        | L_PNAME L_EQ L_STRING			{$$ = param_spec_build (PARAM_name, remove_quotes ($3));}
-	| L_PDESCR L_EQ L_TEXTUAL		{$$ = param_spec_build (PARAM_descr, $3);}
-	| L_PDESCR L_EQ L_STRING                {$$ = param_spec_build (PARAM_descr, remove_quotes ($3));}
-	| L_PTYPE L_EQ L_TEXTUAL		{$$ = param_spec_build (PARAM_type, $3);}
-	| L_PTYPE L_EQ L_STRING                 {$$ = param_spec_build (PARAM_type, remove_quotes ($3));}
-	| L_PISPARAM L_EQ L_TEXTUAL		{$$ = param_spec_build (PARAM_isparam, $3);}
-	| L_PISPARAM L_EQ L_STRING              {$$ = param_spec_build (PARAM_isparam, remove_quotes ($3));}
-	| L_PNULLOK L_EQ L_TEXTUAL		{$$ = param_spec_build (PARAM_nullok, $3);}
-	| L_PNULLOK L_EQ L_STRING               {$$ = param_spec_build (PARAM_nullok, remove_quotes ($3));}
+param_spec_item: L_PNAME L_TEXTUAL      	{$$ = param_spec_build (PARAM_name, $2);}
+        | L_PNAME L_STRING			{$$ = param_spec_build (PARAM_name, remove_quotes ($2));}
+	| L_PNAME L_IDENT              		{$$ = param_spec_build (PARAM_name, $2);}
+	| L_PDESCR L_TEXTUAL			{$$ = param_spec_build (PARAM_descr, $2);}
+	| L_PDESCR L_STRING                	{$$ = param_spec_build (PARAM_descr, remove_quotes ($2));}
+	| L_PDESCR L_IDENT                      {$$ = param_spec_build (PARAM_descr, $2);}
+	| L_PTYPE L_TEXTUAL			{$$ = param_spec_build (PARAM_type, $2);}
+	| L_PTYPE L_STRING                 	{$$ = param_spec_build (PARAM_type, remove_quotes ($2));}
+	| L_PTYPE L_IDENT                       {$$ = param_spec_build (PARAM_type, $2);}
+	| L_PISPARAM L_TEXTUAL			{$$ = param_spec_build (PARAM_isparam, $2);}
+	| L_PISPARAM L_STRING              	{$$ = param_spec_build (PARAM_isparam, remove_quotes ($2));}
+	| L_PISPARAM L_IDENT                    {$$ = param_spec_build (PARAM_isparam, $2);}
+	| L_PNULLOK L_TEXTUAL			{$$ = param_spec_build (PARAM_nullok, $2);}
+	| L_PNULLOK L_STRING               	{$$ = param_spec_build (PARAM_nullok, remove_quotes ($2));}
+	| L_PNULLOK L_IDENT                     {$$ = param_spec_build (PARAM_nullok, $2);}
 	;
 %%

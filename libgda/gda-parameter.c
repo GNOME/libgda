@@ -1,6 +1,6 @@
 /* gda-parameter.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -20,6 +20,7 @@
 
 #include <string.h>
 #include "gda-parameter.h"
+#include "gda-parameter-util.h"
 #include "gda-dict.h"
 #include "gda-dict-type.h"
 #include "gda-query.h"

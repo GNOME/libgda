@@ -1,6 +1,6 @@
 /* gda-handler-string.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -22,6 +22,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-util.h>
+#include <libgda/gda-server-provider.h>
 
 static void gda_handler_string_class_init (GdaHandlerStringClass * class);
 static void gda_handler_string_init (GdaHandlerString * wid);
@@ -45,9 +46,12 @@ static gboolean     gda_handler_string_accepts_g_type       (GdaDataHandler * dh
 static const gchar *gda_handler_string_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerStringPriv {
-	gchar          *detailled_descr;
-	guint           nb_g_types;
-	GType          *valid_g_types;
+	gchar             *detailled_descr;
+	guint              nb_g_types;
+	GType             *valid_g_types;
+
+	GdaServerProvider *prov;
+	GdaConnection     *cnc;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -138,6 +142,11 @@ gda_handler_string_dispose (GObject   * object)
 		g_free (hdl->priv->valid_g_types);
 		hdl->priv->valid_g_types = NULL;
 
+		if (hdl->priv->prov)
+			g_object_remove_weak_pointer (G_OBJECT (hdl->priv->prov), (gpointer) &(hdl->priv->prov));
+		if (hdl->priv->cnc)
+			g_object_remove_weak_pointer (G_OBJECT (hdl->priv->cnc), (gpointer) &(hdl->priv->cnc));
+
 		g_free (hdl->priv);
 		hdl->priv = NULL;
 	}
@@ -148,7 +157,7 @@ gda_handler_string_dispose (GObject   * object)
 
 /**
  * gda_handler_string_new
-  *
+ *
  * Creates a data handler for strings
  *
  * Returns: the new object
@@ -159,6 +168,39 @@ gda_handler_string_new (void)
 	GObject *obj;
 
 	obj = g_object_new (GDA_TYPE_HANDLER_STRING, "dict", NULL, NULL);
+
+	return (GdaDataHandler *) obj;
+}
+
+/**
+ * gda_handler_string_new_with_provider
+ * @prov: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object, or %NULL
+ *
+ * Creates a data handler for strings, which will use some specific methods implemented
+ * by the @prov object (possibly also @cnc).
+ *
+ * Returns: the new object
+ */
+GdaDataHandler *
+gda_handler_string_new_with_provider (GdaServerProvider *prov, GdaConnection *cnc)
+{
+	GObject *obj;
+	GdaHandlerString *dh;
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+
+	obj = g_object_new (GDA_TYPE_HANDLER_STRING, "dict", NULL, NULL);
+	dh = (GdaHandlerString*) obj;
+
+	dh->priv->prov = prov;
+	if (cnc)
+		dh->priv->cnc = cnc;
+
+	g_object_add_weak_pointer (G_OBJECT (prov), (gpointer) &(dh->priv->prov));
+	if (cnc)
+		g_object_add_weak_pointer (G_OBJECT (cnc), (gpointer) &(dh->priv->cnc));
 
 	return (GdaDataHandler *) obj;
 }
@@ -175,7 +217,10 @@ gda_handler_string_get_sql_from_value (GdaDataHandler *iface, const GValue *valu
 
 	str = gda_value_stringify ((GValue *) value);
 	if (str) {
-		str2 = gda_default_escape_chars (str);
+		if (hdl->priv->prov) 
+			str2 = gda_server_provider_escape_string (hdl->priv->prov, hdl->priv->cnc, str);
+		else 
+			str2 = gda_default_escape_string (str);
 		retval = g_strdup_printf ("'%s'", str2);
 		g_free (str2);
 		g_free (str);
@@ -215,7 +260,10 @@ gda_handler_string_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, 
 			gchar *unstr;
 
 			str[i-1] = 0;
-			unstr = gda_default_unescape_chars (str+1);
+			if (hdl->priv->prov)
+				unstr = gda_server_provider_unescape_string (hdl->priv->prov, hdl->priv->cnc, str+1);
+			else
+				unstr = gda_default_unescape_string (str+1);
 			if (unstr) {
 				value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
 				g_value_take_string (value, unstr);

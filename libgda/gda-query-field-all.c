@@ -1,6 +1,6 @@
 /* gda-query-field-all.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -59,7 +59,8 @@ static GdaDictType *gda_query_field_all_get_data_type   (GdaEntityField *iface);
 
 /* Renderer interface */
 static void            gda_query_field_all_renderer_init      (GdaRendererIface *iface);
-static gchar          *gda_query_field_all_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
+static gchar          *gda_query_field_all_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
+							    GSList **out_params_used, guint options, GError **error);
 static gchar          *gda_query_field_all_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Referer interface */
@@ -689,7 +690,8 @@ gda_query_field_all_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
  */
 
 static gchar *
-gda_query_field_all_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
+gda_query_field_all_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
+				   GSList **out_params_used, guint options, GError **error)
 {
 	gchar *str = NULL;
 	GdaObject *base;

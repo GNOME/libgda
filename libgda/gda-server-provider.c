@@ -29,6 +29,7 @@
 #include <libgda/gda-data-handler.h>
 #include <libgda/gda-parameter-list.h>
 #include <libgda/gda-renderer.h>
+#include <libgda/gda-util.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 
@@ -702,7 +703,7 @@ gda_server_provider_execute_query (GdaServerProvider *provider,
 		gchar *sql;
 
 		info = gda_server_provider_get_info (provider, cnc);
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 0, NULL);
+		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, NULL, 0, NULL);
 		g_print ("QUERY> %s (Provider %s on cnx %p)\n", sql, info->provider_name, cnc);
 		g_free (sql);
 	}
@@ -1133,6 +1134,61 @@ gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 		return gda_data_handler_get_sql_from_value (dh, from);
 	else
 		return NULL;
+}
+
+/**
+ * gda_server_provider_escape_string
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object, or %NULL
+ * @str: a string to escape
+ *
+ * Escapes @str for use within an SQL command (to avoid SQL injection attacks). Note that the returned value still needs
+ * to be enclosed in single quotes before being used in an SQL statement.
+ *
+ * Returns: a new string suitable to use in SQL statements
+ */
+gchar *
+gda_server_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	if (CLASS (provider)->escape_string) {
+		if (! CLASS (provider)->unescape_string)
+			g_warning (_("GdaServerProvider object implements the escape_string() virtual method but "
+				     "does not implement the unescape_string() one, please report this bug."));
+		return (CLASS (provider)->escape_string)(provider, cnc, str);
+	}
+	else 
+		return gda_default_escape_string (str);
+}
+
+/**
+ * gda_server_provider_unescape_string
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object, or %NULL
+ * @str: a string to escape
+ *
+ * Unescapes @str for use within an SQL command. This is the exact opposite of gda_server_provider_escape_string().
+ *
+ * Returns: a new string
+ */
+gchar *
+gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	if (CLASS (provider)->unescape_string) {
+		if (! CLASS (provider)->escape_string)
+			g_warning (_("GdaServerProvider object implements the unescape_string() virtual method but "
+				     "does not implement the escape_string() one, please report this bug."));
+		return (CLASS (provider)->unescape_string)(provider, cnc, str);
+	}
+	else
+		return gda_default_unescape_string (str);
 }
 
 /**

@@ -1868,6 +1868,12 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 
 	else if (type == GDA_TYPE_SHORT)
 		return gda_value_get_short (value1) - gda_value_get_short (value2);
+
+	else if (type == G_TYPE_ULONG)
+		return g_value_get_ulong (value1) - g_value_get_ulong (value2);
+
+	else if (type == G_TYPE_LONG)
+		return g_value_get_long (value1) - g_value_get_long (value2);
 	
 	else if (type == GDA_TYPE_USHORT)
 		return gda_value_get_ushort (value1) - gda_value_get_ushort (value2);

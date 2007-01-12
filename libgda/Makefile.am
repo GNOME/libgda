@@ -73,6 +73,7 @@ gda_headers = \
 	gda-object-ref.h \
 	gda-parameter.h \
 	gda-parameter-list.h \
+	gda-parameter-util.h \
 	gda-quark-list.h \
 	gda-query-condition.h \
 	gda-query-field-agg.h \

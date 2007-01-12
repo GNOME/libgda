@@ -1,6 +1,6 @@
 /* gda-query-target.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -63,7 +63,8 @@ static void        gda_query_target_replace_refs        (GdaReferer *iface, GHas
 
 /* Renderer interface */
 static void        gda_query_target_renderer_init   (GdaRendererIface *iface);
-static gchar      *gda_query_target_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
+static gchar      *gda_query_target_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
+						     GSList **out_params_used, guint options, GError **error);
 static gchar      *gda_query_target_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Alias interface */
@@ -875,7 +876,8 @@ gda_query_target_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **
  */
 
 static gchar *
-gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
+gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
+				GSList **out_params_used, guint options, GError **error)
 {
 	gchar *str;
 	GString *string = NULL;
@@ -915,7 +917,7 @@ gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, g
 		
 		if (GDA_IS_QUERY (entity)) {
 			string = g_string_new ("(");
-			str = gda_renderer_render_as_sql (GDA_RENDERER (entity), context, options, error);
+			str = gda_renderer_render_as_sql (GDA_RENDERER (entity), context, out_params_used, options, error);
 			if (str) {
 				g_string_append (string, str);
 				g_free (str);

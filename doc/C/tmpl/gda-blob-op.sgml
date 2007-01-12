@@ -1,0 +1,67 @@
+<!-- ##### SECTION Title ##### -->
+Blobs
+
+<!-- ##### SECTION Short_Description ##### -->
+Blobs handling
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This object is a base class for individual database providers which support BLOB types. It supports
+operations to read and write data in a BLOB.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GdaBlobOp ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_blob_op_get_length ##### -->
+<para>
+
+</para>
+
+@op: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_blob_op_read ##### -->
+<para>
+
+</para>
+
+@op: 
+@blob: 
+@offset: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_blob_op_read_all ##### -->
+<para>
+
+</para>
+
+@op: 
+@blob: 
+
+
+<!-- ##### FUNCTION gda_blob_op_write ##### -->
+<para>
+
+</para>
+
+@op: 
+@blob: 
+@offset: 
+@Returns: 
+
+

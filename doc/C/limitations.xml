@@ -1,0 +1,36 @@
+<chapter id="limitations">
+  <title>Limitations</title>
+  <sect1><title>For PostgreSQL</title>
+    <para>
+      The following limitations apply to PostgreSQL databases accessed via Libgda:
+    </para>
+    <sect2><title>BLOB handling</title>
+      <para>
+	<itemizedlist>
+	  <listitem><para>Postgres uses the "Oid" data type to internally store BLOBs, but this type is also used
+	      to store other information within the database. Libgda assumes that any column of type "Oid" represents a
+	      blob. If this is not the case, then you must cast it to the correct data type within your SQL query (for example
+	      as "SELECT oid::varchar FROM...")</para></listitem>
+	  <listitem><para>As Libgda tries as much as possible to avoid orphaned BLOBs, it assumes that any BLOB Oid is
+	      present in at most one column of a table (and if not
+	      present, then the BLOB is orphaned); if a same BLOB is present in more than one column of a table, then
+	      expect some problems.</para></listitem>
+	  <listitem><para>BLOB manipulations can only occur within a transaction, 
+	      so you should start a transaction before any operation
+	      on BLOBs, otherwise Libgda will automatically start one</para></listitem>
+	</itemizedlist>
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1><title>For Oracle</title>
+    <para>
+      The following limitations apply to Oracle databases accessed via Libgda:
+      <itemizedlist>
+	<listitem><para>At the moment tables' fields shema information retreival is very slow, so as a work around, use a dictionary
+	to store the database schema and do incremental updates on modified/created tables.</para></listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
+  
+</chapter>

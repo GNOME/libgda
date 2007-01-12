@@ -13,6 +13,8 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres-blob-op.h \
 	gda-postgres-ddl.c \
 	gda-postgres-ddl.h \
+	gda-postgres-handler-bin.c \
+	gda-postgres-handler-bin.h \
 	gda-postgres-provider.c \
 	gda-postgres-provider.h \
 	gda-postgres-recordset.c \

@@ -262,7 +262,7 @@
       </para>
     </sect4>
   </sect3>
-  <sect3>
+  <sect3 ID="SQL_queries">
     <title>SQL queries</title>
     <para>
       Since it is sometimes easier to define a query using an SQL statement, a <link linkend="GdaQuery">GdaQuery</link>
@@ -271,44 +271,55 @@
       argument must be a single SQL statement, not several statements separated by a colon.
     </para>
     <para>
-      To define variables in the SQL statement, use
-      the following extension syntax right after a constant value or a "##" keyword in the SQL string: [:attribute="value", ...]. If this syntax follows
-      a constant value, then that value will be the default value for this parameter.  If this syntax follows the "##" keyword, then the
-      parameter will not have any default value. For example,
-      the following SQL:
-    </para>
-    <programlisting>
-      SELECT 10[:name="var01" :type="integer"], id FROM customers
-    </programlisting>
-    <para>
-      creates a query structure similar to "SELECT 10, t1.id FROM customers AS t1",
-      but also specifies that the "10" value is in fact a variable named "var01" of type "integer".
+      To define variables in the SQL statement, just add a parameter definition (type, name, description,...) in C-style comments
+      right after the value which must be a parameter, such as in the following SQL where the value "10" is in fact a parameter
+      names var01 of type integer (the default value for the parameter will be 10):
+      <programlisting>
+	SELECT 10 /* name:var01 type:integer */, id FROM customers
+      </programlisting>
+      To avoid specifying a value altogether (the parameter will not have any default value), replace the "10" with "##" as:
+      <programlisting>
+	SELECT ## /* name:var01 type:integer */, id FROM customers
+      </programlisting>
     </para>
     <para>
-      So, when the query is executed, the real executed SQL statement will be "SELECT 10, t1.id FROM customers AS t1"
+      So, in the first case when the query is executed, the real executed SQL statement will be 
+      <programlisting>
+      "SELECT 10, t1.id FROM customers AS t1"
+      </programlisting>
       if the "10" value has not been replaced by another value.  A <link linkend="GdaParameter">GdaParameter</link> object 
-      (obtained through a <link linkend="GdaParameterList">GdaParameterList</link> object) can replace the "10" value with another value. See the 
+      (obtained through a <link linkend="GdaParameterList">GdaParameterList</link> object) can replace the "10" 
+      value with another value. See the 
       <link linkend="gda-query-get-parameters">gda_query_get_parameters()</link> and
       <link linkend="gda-query-get-parameter-list">gda_query_get_parameter_list()</link> methods for more information.
+      In the second case, if no value has been specified by a <link linkend="GdaParameter">GdaParameter</link>, then the query
+      will be:
+      <programlisting>
+      "SELECT NULL, t1.id FROM customers AS t1"
+      </programlisting>
     </para>
     <para>
-      The following SQL gives the same result as the previous example except that the variable has no default value:
-    </para>
-    <programlisting>
-      SELECT ##[:name="var01" :type="integer"], id FROM customers
-    </programlisting>
-    <para>
-      The available extension "tags" are:
+      The available parameter specification attributes are:
       <itemizedlist>
-	<listitem><para>":name" fixes the value's name</para></listitem>
-	<listitem><para>":descr" fixes the value's description</para></listitem>
-	<listitem><para>":type" fixes the value's <link linkend="GdaValueType">GdaValueType</link> or <link linkend="GdaDictType">GdaDictType</link>
+	<listitem><para>"name:" fixes the value's name</para></listitem>
+	<listitem><para>"descr:" fixes the value's description</para></listitem>
+	<listitem><para>"type:" fixes the value's <link linkend="GType">GType</link> or 
+	    <link linkend="GdaDictType">GdaDictType</link>
 	    </para></listitem>
-	<listitem><para>":isparam" tells if value is a variable (a parameter) or not (example: ":isparam="FALSE"").  The default is that it is a parameter.</para></listitem>
-	<listitem><para>":nullok" tells if value may be NULL (example: ":nullok="FALSE"")</para></listitem>
+	<listitem><para>"isparam:" tells if value is a variable (a parameter) or not (example: "isparam:FALSE").  
+	    The default is that it is a parameter.</para></listitem>
+	<listitem><para>"nullok:" tells if value may be NULL (example: "nullok:FALSE")</para></listitem>
       </itemizedlist>
     </para>
-    <para>Currently, type inference is not reliably supported, so the use of the ":type" tag is strongly encouraged.</para>
+    <para>
+      Note that each attribute can contain more than one word if the attribute value is enclosed in single or double quotes, such
+      as:
+      <programlisting>
+	SELECT ## /* name:"This is quite a long name" type:integer */, id FROM customers
+	SELECT ## /* name:'This is quite a long name' type:integer */, id FROM customers
+      </programlisting>
+    </para>
+    <para>Currently, type inference is not reliably supported, so the use of the "type:" tag is strongly encouraged.</para>
   </sect3>
 
 
@@ -350,7 +361,7 @@
 	  <para>A very simple DELETE query named "Delete1" -- note the condition object shown in the yellow box (which is the WHERE condition) and
 	    the 'P' in the (not shown) "Person Id" value field which denotes that the value field is a parameter (the parameter name and type are 
 	    not shown); also note that all the query fields are hidden:
-	    <programlisting>DELETE FROM customers WHERE id=## [:type="gint" :name="Person Id"]</programlisting>
+	    <programlisting>DELETE FROM customers WHERE id=## /*type:gint name:"Person Id"*/</programlisting>
 	    <mediaobject>
 	      <imageobject role="fo">
 		<imagedata fileref="query04.svg" format="SVG"/>

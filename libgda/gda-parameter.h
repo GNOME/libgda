@@ -67,10 +67,6 @@ GType                  gda_parameter_get_g_type              (GdaParameter *para
 GdaParameter          *gda_parameter_new_string              (const gchar *name, const gchar *str);
 GdaParameter          *gda_parameter_new_boolean             (const gchar *name, gboolean value);
 
-void                   gda_parameter_declare_param_user      (GdaParameter *param, GdaObject *user);
-GSList                *gda_parameter_get_param_users         (GdaParameter *param);
-void                   gda_parameter_replace_param_users     (GdaParameter *param, GHashTable *replacements);
-
 const GValue          *gda_parameter_get_value               (GdaParameter *param);
 gchar                 *gda_parameter_get_value_str           (GdaParameter *param);
 void                   gda_parameter_set_value               (GdaParameter *param, const GValue *value);

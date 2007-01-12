@@ -62,7 +62,8 @@ static GdaDictType *gda_query_field_field_get_data_type   (GdaEntityField *iface
 
 /* Renderer interface */
 static void         gda_query_field_field_renderer_init   (GdaRendererIface *iface);
-static gchar       *gda_query_field_field_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
+static gchar       *gda_query_field_field_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
+							   GSList **out_params_used, guint options, GError **error);
 static gchar       *gda_query_field_field_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Referer interface */
@@ -260,7 +261,7 @@ gda_query_field_field_class_init (GdaQueryFieldFieldClass * class)
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_FIELD_NAME,
 					 g_param_spec_string ("field_name", "Name of an entity field", NULL, NULL,
-							      G_PARAM_WRITABLE));
+							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_FIELD_ID,
 					 g_param_spec_string ("field_id", "XML ID of an entity field", NULL, NULL,
 							      G_PARAM_WRITABLE));
@@ -574,9 +575,11 @@ gda_query_field_field_get_property (GObject *object,
 		case PROP_FIELD_OBJ:
 			g_value_set_object (value, G_OBJECT (gda_object_ref_get_ref_object (ffield->priv->field_ref)));
 			break;
+		case PROP_FIELD_NAME:
+			g_value_set_string (value, gda_object_ref_get_ref_name (ffield->priv->field_ref, NULL, NULL));
+			break;
 		case PROP_TARGET_NAME:
 		case PROP_TARGET_ID:
-		case PROP_FIELD_NAME:
 		case PROP_FIELD_ID:
 			/* NO READ */
 			g_assert_not_reached ();
@@ -1037,7 +1040,8 @@ gda_query_field_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
  */
 
 static gchar *
-gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
+gda_query_field_field_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
+				     GSList **out_params_used, guint options, GError **error)
 {
 	GdaQueryFieldField *field;
 	GdaObject *fobj;

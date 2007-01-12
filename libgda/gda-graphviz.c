@@ -1,6 +1,6 @@
 /* gda-graphviz.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -38,6 +38,7 @@
 #include "gda-referer.h"
 #include "gda-parameter-list.h"
 #include "gda-parameter.h"
+#include "gda-parameter-util.h"
 
 /* 
  * Main static functions 
@@ -669,7 +670,7 @@ do_graph_query (GdaGraphviz *graph, GString *string, GdaQuery *query, gint tabof
 		gchar *strcond;
 		GError *error = NULL;
 
-		strcond = gda_renderer_render_as_sql (GDA_RENDERER (cond), NULL, 0, &error);
+		strcond = gda_renderer_render_as_sql (GDA_RENDERER (cond), NULL, NULL, 0, &error);
 		if (error) {
 			g_string_append_printf (string, "%s\t\"%s:Cond\" [label=\"%s\" style=filled fillcolor=yellow];\n", str, qid,
 						error->message);
@@ -694,7 +695,7 @@ do_graph_query (GdaGraphviz *graph, GString *string, GdaQuery *query, gint tabof
 
 
 	/* query attributes */
-	sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 0, NULL);
+	sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, 0, NULL);
 	g_string_append_printf (string, "\n%s\tlabel = \"%s Query %d: %s\";\n", str, qtype,
 				gda_query_object_get_int_id (GDA_QUERY_OBJECT (query)), 
 				gda_object_get_name (GDA_OBJECT (query)));

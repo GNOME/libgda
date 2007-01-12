@@ -50,13 +50,3 @@ Default handler for binary values
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_handler_bin_new_with_prov ##### -->
-<para>
-
-</para>
-
-@prov: 
-@cnc: 
-@Returns: 
-
-

@@ -1,3 +1,66 @@
+2007-01-12  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-query.c: Declare the object explicitely as GDA_TYPE_QUERY
+	in constructor to allow subclassing GdaQuery. Also removed object
+	declaration from gda_dict_query_copy() because it is already done in
+	constructor.
+
+2007-01-12 Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql/gda-mysql-provider.c: fixed a bug related to FK reporting
+	in the CONSTRAINTS schema report, added the "bit" data type as a synonym to
+	"tinyint", removed and GDA_TYPE_BLOB reference as MySQL does not support blobs
+	(it supports binary data)
+	* providers/postgres/gda-postgres-provider.c: map the "oid" data type to G_TYPE_ULONG
+	and better detect the GType associated to custom data types
+	* testing/gda-test-blob.c
+	* testing/tests_data/SQL_parsing_tests.xml
+	* libgda/sql-delimiter/parser.y
+	* libgda/sql-delimiter/gda-sql-delimiter.c
+	* libgda/sql-delimiter/gda-test-delimiter.c
+	* libgda/sql-delimiter/lexer.l
+	* libgda/gda-data-model-query.c
+	* libgda/gda-query-field-value.c
+	* libgda/gda-server-provider-extra.c
+	* libsql/parser.y
+	* libsql/lexer.l: changed the syntax to insert parameters in SQL queries to
+	have simpler parsers and an easier to read syntax, and bug fixes
+	* doc/C: improved documentation about binary and blob data types
+	* libgda/gda-query-field-field.c: made the "field_name" property readable
+	* libgda/gda-dict-field.c:
+	* libgda/gda-graphviz.c:
+	* libgda/gda-init.c:
+	* libgda/gda-query.c:
+	* libgda/gda-query-condition.c:
+	* libgda/gda-query-field-agg.c:
+	* libgda/gda-query-field-all.c:
+	* libgda/gda-query-field-field.c:
+	* libgda/gda-query-field-func.c:
+	* libgda/gda-query-field-value.c:
+	* libgda/gda-query-target.c:
+	* libgda/gda-renderer.c:
+	* libgda/gda-renderer.h:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-server-provider-extra.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* testing/gda-test-model-query.c:
+	* testing/gda-test-sql.c:
+	* tools/gda-inspect-dict-file.c: changed the signature of the gda_renderer_render_as_sql()
+	method to allow to return a list of GdaParameter objects actually used to do the rendering
+	* libgda/gda-server-provide.[ch]: added the escape_string() and unescape_string() virtual methods
+	* libgda/handlers/gda-handler-string.[ch]: take into account the new virtual methods for
+	the providers when escaping and unescaping strings
+	* libgda/handlers/gda-handler-bin.[ch]: code cleanup
+	* providers/postgres/gda-postgres-handler-bin.[ch]: new object to handle GdaBinary representations
+	for the postgres provider
+	* all files: s/gda_default_escape_chars/gda_default_escape_string/ and
+	s/gda_default_unescape_chars/gda_default_unescape_string/
+	* providers/sqlite/sqlite-src: use Sqlite 3.3.10 sources
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/gda-postgres-recordset.c:
+	* providers/postgres/gda-postgres-blob-op.c:
+	* providers/postgres/util.c: code cleanups un event reporting
+
 2007-01-12  Murray Cumming  <murrayc@murryac.com>
 
 	* libgda/gda-dict-database.c: (gda_dict_database_class_init):

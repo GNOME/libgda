@@ -121,12 +121,15 @@ blob_op_open (GdaPostgresBlobOp *pgop)
 	if (pgop->priv->fd >= 0)
 		return TRUE;
 
+	/* add a savepoint to prevent a blob open failure from rendering the transaction unuseable */
+	gda_connection_add_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 	pgop->priv->fd = lo_open (get_pconn (pgop->priv->cnc), pgop->priv->blobid, INV_READ | INV_WRITE);
 	if (pgop->priv->fd < 0) {
-		GdaConnectionEvent *error = gda_postgres_make_error (get_pconn (pgop->priv->cnc), NULL);
-		gda_connection_add_event (pgop->priv->cnc, error);
+		gda_postgres_make_error (pgop->priv->cnc, get_pconn (pgop->priv->cnc), NULL);
+		gda_connection_rollback_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 		return FALSE;
 	}
+	gda_connection_delete_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 	return TRUE;
 }
 
@@ -191,9 +194,7 @@ gda_postgres_blob_op_declare_blob (GdaPostgresBlobOp *pgop)
 		PGconn *pconn = get_pconn (pgop->priv->cnc);
 		pgop->priv->blobid = lo_creat (pconn, INV_READ | INV_WRITE);
 		if (pgop->priv->blobid == InvalidOid) {
-			GdaConnectionEvent *event;
-			event = gda_postgres_make_error (pconn, NULL);
-			gda_connection_add_event (pgop->priv->cnc, event);
+			gda_postgres_make_error (pgop->priv->cnc, pconn, NULL);
 			return FALSE;
 		}
 	}
@@ -283,8 +284,7 @@ gda_postgres_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong siz
 
 	pconn = get_pconn (pgop->priv->cnc);
 	if (lo_lseek (pconn, pgop->priv->fd, offset, SEEK_SET) < 0) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (pgop->priv->cnc, error);
+		gda_postgres_make_error (pgop->priv->cnc, pconn, NULL);
 		return -1;
 	}
 
@@ -315,16 +315,14 @@ gda_postgres_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 
 	pconn = get_pconn (pgop->priv->cnc);
 	if (lo_lseek (pconn, pgop->priv->fd, offset, SEEK_SET) < 0) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (pgop->priv->cnc, error);
+		gda_postgres_make_error (pgop->priv->cnc, pconn, NULL);
 		return -1;
 	}
 
 	bin = (GdaBinary *) blob;
 	nbwritten = lo_write (pconn, pgop->priv->fd, (char*) bin->data, bin->binary_length);
 	if (nbwritten == -1) {
-		GdaConnectionEvent *error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (pgop->priv->cnc, error);
+		gda_postgres_make_error (pgop->priv->cnc, pconn, NULL);
 		return -1;
 	}
 

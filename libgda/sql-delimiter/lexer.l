@@ -26,28 +26,25 @@ char *string_buf_ptr;
 %x STRING
 %x TEXTUAL
 
-CHAR [^ \t\n\r\'\";\[\]:]+
+CHAR [^ \t\n\r\'\";/]+
 
 %%
 
 		BEGIN(INITIAL);
 
-"="		{return L_EQ;}
 ";"		{return L_SC;}
 
-"["             {return L_LSBRACKET;}
-"]"             {return L_RSBRACKET;}
+"/*"             {return L_LSBRACKET;}
+"*/"             {return L_RSBRACKET;}
 
-":name"         {return L_PNAME;}
-":descr"        {return L_PDESCR;}
-":type"         {return L_PTYPE;}
-":isparam"      {return L_PISPARAM;}
-":nullok"       {return L_PNULLOK;}
+"name:"         {return L_PNAME;}
+"descr:"        {return L_PDESCR;}
+"type:"         {return L_PTYPE;}
+"isparam:"      {return L_PISPARAM;}
+"nullok:"       {return L_PNULLOK;}
 "##"            {return L_UNSPECVAL;}
 
-{CHAR}	 	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
-::		{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
-:[A-Za-z0-9_-]+	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_IDENT;}
+{CHAR}	 	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_WORD;}
 [ \t\n\r]	{;}
 
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}

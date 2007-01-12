@@ -47,6 +47,11 @@ typedef enum {
 	GDA_TRANSACTION_STATUS_EVENT_SUB_TRANSACTION,
 } GdaTransactionStatusEventType;
 
+typedef enum {
+	GDA_TRANSACTION_STATUS_STATE_OK,
+	GDA_TRANSACTION_STATUS_STATE_FAILED
+} GdaTransactionStatusState;
+
 struct _GdaTransactionStatusEvent {
 	GdaTransactionStatus         *trans;
 	GdaTransactionStatusEventType type;
@@ -62,11 +67,12 @@ struct _GdaTransactionStatusEvent {
 };
 
 struct _GdaTransactionStatus {
-	GObject                  object;
+	GObject                    object;
 	
-	gchar                   *name;
-	GdaTransactionIsolation  isolation_level;
-	GList                   *events;
+	gchar                     *name;
+	GdaTransactionIsolation    isolation_level;
+	GdaTransactionStatusState  state;
+	GList                     *events;
 };
 
 struct _GdaTransactionStatusClass {

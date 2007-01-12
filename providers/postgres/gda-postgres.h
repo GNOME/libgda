@@ -38,7 +38,7 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaConnectionEvent *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
+GdaConnectionEvent *gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res);
 void gda_postgres_set_value (GdaConnection *cnc,
 			     GValue *value, 
 			     GType type, 
@@ -56,7 +56,7 @@ GType gda_postgres_type_name_to_gda (GHashTable *h_table,
 
 const gchar *gda_data_type_to_string (GType type);
 gchar *gda_postgres_value_to_sql_string (GValue *value);
-
+gboolean gda_postgres_check_transaction_started (GdaConnection *cnc);
 G_END_DECLS
 
 #endif

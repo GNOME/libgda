@@ -1,6 +1,6 @@
 /* gda-query-field-func.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -62,7 +62,8 @@ static GdaDictType *gda_query_field_func_get_data_type   (GdaEntityField *iface)
 
 /* Renderer interface */
 static void            gda_query_field_func_renderer_init   (GdaRendererIface *iface);
-static gchar          *gda_query_field_func_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
+static gchar          *gda_query_field_func_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
+							     GSList **out_params_used, guint options, GError **error);
 static gchar          *gda_query_field_func_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Referer interface */
@@ -925,7 +926,8 @@ gda_query_field_func_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErro
  */
 
 static gchar *
-gda_query_field_func_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
+gda_query_field_func_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
+				    GSList **out_params_used, guint options, GError **error)
 {
 	gchar *str = NULL;
 	GdaObject *base;
@@ -966,7 +968,7 @@ gda_query_field_func_render_as_sql (GdaRenderer *iface, GdaParameterList *contex
 		argbase = gda_object_ref_get_ref_object (GDA_OBJECT_REF (list->data));
 		if (argbase) {
 			argstr = gda_renderer_render_as_sql (GDA_RENDERER (argbase), context, 
-							     options, error);
+							     out_params_used, options, error);
 			if (argstr) {
 				g_string_append (string, argstr);
 				g_free (argstr);

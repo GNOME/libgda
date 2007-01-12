@@ -229,16 +229,6 @@ gda_query_get_parameter_list()).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_find_param_for_user ##### -->
-<para>
-
-</para>
-
-@paramlist: 
-@user: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_parameter_list_find_node_for_param ##### -->
 <para>
 

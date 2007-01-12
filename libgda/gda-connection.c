@@ -972,9 +972,9 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	va_list args;
 	gchar sz[2048];
 
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	g_return_if_fail (cnc->priv);
-	g_return_if_fail (str != NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv, NULL);
+	g_return_val_if_fail (str != NULL, NULL);
 
 	/* build the message string */
 	va_start (args, str);

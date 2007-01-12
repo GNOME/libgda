@@ -39,8 +39,8 @@ typedef enum {
 	GDA_RENDERER_PARAMS_AS_DETAILED     = 1 << 1,
 	GDA_RENDERER_ERROR_IF_DEFAULT       = 1 << 2,
 	GDA_RENDERER_FIELDS_NO_TARGET_ALIAS = 1 << 3,
-	GDA_RENDERER_PARAMS_AS_COLON        = 1 << 4,
-	GDA_RENDERER_PARAMS_AS_DOLLAR       = 1 << 5
+	GDA_RENDERER_PARAMS_AS_COLON        = 1 << 4,/* params as :param_name */
+	GDA_RENDERER_PARAMS_AS_DOLLAR       = 1 << 5 /* params as $1, $2, etc (starts at $1) */
 } GdaRendererOptions;
 
 /* struct for the interface */
@@ -49,14 +49,16 @@ struct _GdaRendererIface
 	GTypeInterface           g_iface;
 
 	/* virtual table */
-	gchar      *(* render_as_sql)   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error); 
+	gchar      *(* render_as_sql)   (GdaRenderer *iface, GdaParameterList *context, GSList **out_params_used, 
+					 guint options, GError **error); 
 	gchar      *(* render_as_str)   (GdaRenderer *iface, GdaParameterList *context);
 	gboolean    (* is_valid)        (GdaRenderer *iface, GdaParameterList *context, GError **error);
 };
 
 GType           gda_renderer_get_type        (void) G_GNUC_CONST;
 
-gchar          *gda_renderer_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
+gchar          *gda_renderer_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, GSList **out_params_used,
+					      guint options, GError **error);
 gchar          *gda_renderer_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 gboolean        gda_renderer_is_valid        (GdaRenderer *iface, GdaParameterList *context, GError **error);
 

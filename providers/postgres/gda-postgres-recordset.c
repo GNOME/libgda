@@ -280,21 +280,18 @@ gda_postgres_recordset_append_row (GdaDataModelRow *model, GdaRow *row, GError *
 	if (pg_res != NULL) {
 		/* update ok! */
 		if (PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
-			gda_connection_add_event (priv_data->cnc,
-						  gda_postgres_make_error (pg_conn, pg_res));
+			gda_postgres_make_error (priv_data->cnc, pg_conn, pg_res);
 			PQclear (pg_res);
 			return FALSE;
 		}
 		PQclear (pg_res);
 	}
 	else
-		gda_connection_add_event (priv_data->cnc,
-					  gda_postgres_make_error (pg_conn, NULL));
+		gda_postgres_make_error (priv_data->cnc, pg_conn, NULL);
 
 	/* append row in hash table */
 	if (! GDA_DATA_MODEL_ROW_CLASS (parent_class)->append_row (model, row, error)) {
-		gda_connection_add_event (priv_data->cnc,
-					  gda_postgres_make_error (pg_conn, pg_res));
+		gda_postgres_make_error (priv_data->cnc, pg_conn, pg_res);
 		return FALSE;
 	}
 
@@ -382,13 +379,11 @@ gda_postgres_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError *
 			if (PQresultStatus (pg_rm_res) == PGRES_COMMAND_OK)
 				status = TRUE;
 			else
-				gda_connection_add_event (priv_data->cnc,
-							  gda_postgres_make_error (pg_conn, pg_rm_res));
+				gda_postgres_make_error (priv_data->cnc, pg_conn, pg_rm_res);
 			PQclear (pg_rm_res);
 		}
 		else
-			gda_connection_add_event (priv_data->cnc,
-						  gda_postgres_make_error (pg_conn, NULL));
+			gda_postgres_make_error (priv_data->cnc, pg_conn, NULL);
 	}
 
 	g_free (query_where);
@@ -519,13 +514,11 @@ gda_postgres_recordset_update_row (GdaDataModelRow *model, GdaRow *row, GError *
 			if (PQresultStatus (pg_upd_res) == PGRES_COMMAND_OK)
 				status = TRUE;
 			else
-				gda_connection_add_event (priv_data->cnc,
-			        	                  gda_postgres_make_error (pg_conn, pg_upd_res));
+				gda_postgres_make_error (priv_data->cnc, pg_conn, pg_upd_res);
 			PQclear (pg_upd_res);
 		}
 		else
-			gda_connection_add_event (priv_data->cnc,
-			       	                  gda_postgres_make_error (pg_conn, NULL));
+			gda_postgres_make_error (priv_data->cnc, pg_conn, NULL);
 	}
 	
 	g_free (query_set);

@@ -409,7 +409,7 @@ copy_condition (GdaQuery *source, GdaQuery *dest, GError **error)
 	if (!cond)
 		return TRUE;
 
-	sql = gda_renderer_render_as_sql (GDA_RENDERER (cond), NULL, GDA_RENDERER_PARAMS_AS_DETAILED, error);
+	sql = gda_renderer_render_as_sql (GDA_RENDERER (cond), NULL, NULL, GDA_RENDERER_PARAMS_AS_DETAILED, error);
 	if (!sql) 
 		return FALSE;
 
@@ -709,9 +709,9 @@ get_blob_field_names (GdaConnection *cnc, GdaDict *dict, const gchar *table_name
  * After execution, @out_select contains a new GdaQuery, or %NULL if the update query does not have any
  * BLOB to update.
  *
- * For example UPDATE blobs set name = ##[:name='name' :type='gchararray'], data = ##[:name='theblob' :type='GdaBlob'] WHERE id= ##[:name='id' :type='gint']
+ * For example UPDATE blobs set name = ##/ *name:'name' type:gchararray* /, data = ##/ *name:'theblob' type:'GdaBlob'* / WHERE id= ##/ *name:'id' type:gint* /
  * will create:
- * SELECT t1.data FROM blobs AS t1 WHERE id= ##[:name='id' :type='gint']
+ * SELECT t1.data FROM blobs AS t1 WHERE id= ##/ *name:'id' type:gint* /
  *
  * Returns: TRUE if no error occurred.
  */
@@ -825,9 +825,9 @@ gda_server_provider_blob_list_for_update (GdaConnection *cnc, GdaQuery *query, G
  * After execution, @out_select contains a new GdaQuery, or %NULL if the delete query does not have any
  * BLOB to delete.
  *
- * For example DELETE FROM blobs WHERE id= ##[:name='id' :type='gint']
+ * For example DELETE FROM blobs WHERE id= ##/ *name:'id' type:gint* /
  * will create:
- * SELECT t1.data FROM blobs AS t1 WHERE id= ##[:name='id' :type='gint']
+ * SELECT t1.data FROM blobs AS t1 WHERE id= ##/ *name:'id' type:gint* /
  *
  * Returns: TRUE if no error occurred.
  */
@@ -913,9 +913,9 @@ gda_server_provider_blob_list_for_delete (GdaConnection *cnc, GdaQuery *query, G
  *
  * After execution, @out_select contains a new GdaQuery, or %NULL if it is not possible to create the update query.
  *
- * For example UPDATE blobs set name = ##[:name='name' :type='gchararray'], data = ##[:name='theblob' :type='GdaBlob'] WHERE name= ##[:name='oname' :type='gchararray']
+ * For example UPDATE blobs set name = ##/ *name:'name' type:gchararray* /, data = ##/ *name:'theblob' type:'GdaBlob'* / WHERE name= ##/ *name:'oname' type:gchararray* /
  * will create (if 'id' is a PK of the table to update):
- * UPDATE blobs set name = ##[:name='name' :type='gchararray'], data = ##[:name='theblob' :type='GdaBlob'] WHERE id= ##[:name='oid' :type='gint']
+ * UPDATE blobs set name = ##/ *name:'name' type:gchararray* /, data = ##/ *name:'theblob' type:'GdaBlob'* / WHERE id= ##/ *name:'oid' type:gint* /
  *
  * Returns: TRUE if no error occurred.
  */
@@ -1007,4 +1007,73 @@ gda_server_provider_split_update_query (GdaConnection *cnc, GdaQuery *query, Gda
 
 	*out_query = nquery;
 	return retval;
+}
+
+/**
+ * gda_server_provider_select_query_has_blobs
+ * 
+ * Determines if @query (which must be a SELECT query) returns a data model with some BLOB data
+ */
+gboolean
+gda_server_provider_select_query_has_blobs (GdaConnection *cnc, GdaQuery *query, GError **error)
+{
+	gboolean has_blobs = FALSE;
+	GSList *targets, *tlist;
+
+	g_return_val_if_fail (GDA_IS_QUERY (query), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_query_is_select_query (query), FALSE);
+
+	targets = gda_query_get_targets (query);
+	for (tlist = targets; tlist && !has_blobs; tlist=tlist->next) {
+		GdaQueryTarget *target = GDA_QUERY_TARGET (tlist->data);
+		const gchar *tname;
+
+		tname = gda_query_target_get_represented_table_name (target);
+		if (tname) {
+			GSList *fields;
+
+			fields = gda_query_get_fields_by_target (query, target, TRUE);
+			if (fields) {
+				/* there is at least one field of the tname table which is visible */
+				GSList *vis_names;
+
+				vis_names = get_blob_field_names (cnc, gda_object_get_dict (GDA_OBJECT (query)), 
+								  tname, error);
+				if (vis_names) {
+					GSList *names, *list;
+					for (names = vis_names; names && !has_blobs; names = names->next) {
+						for (list = fields; list && !has_blobs; list = list->next) {
+							if (GDA_IS_QUERY_FIELD_FIELD (list->data)) {
+								gchar *fname;
+								GdaObject *fobj;
+
+								g_object_get (G_OBJECT (list->data), 
+									      "field", &fobj, NULL);
+								if (fobj) {
+									fname = gda_object_get_name (fobj);
+									g_object_unref (fobj);
+								}
+								else
+									g_object_get (G_OBJECT (list->data), 
+										      "field_name", &fname, NULL);
+								if (!strcmp (fname, (gchar *) (names->data)))
+									has_blobs = TRUE;
+								if (!fobj)
+									g_free (fname);
+							}
+							else if (GDA_IS_QUERY_FIELD_ALL (list->data))
+								has_blobs = TRUE;
+						}
+					}
+					g_slist_foreach (vis_names, (GFunc) g_free, NULL);
+					g_slist_free (vis_names);
+				}
+				g_slist_free (fields);
+			}
+		}
+	}
+	g_slist_free (targets);
+
+	return has_blobs;
 }

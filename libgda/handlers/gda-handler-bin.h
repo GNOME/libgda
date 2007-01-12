@@ -1,6 +1,6 @@
 /* gda-handler-bin.h
  *
- * Copyright (C) 2005 Vivien Malerba
+ * Copyright (C) 2005 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -54,7 +54,6 @@ struct _GdaHandlerBinClass
 
 GType           gda_handler_bin_get_type      (void);
 GdaDataHandler *gda_handler_bin_new           (void);
-GdaDataHandler *gda_handler_bin_new_with_prov (GdaServerProvider *prov, GdaConnection *cnc);
 
 G_END_DECLS
 

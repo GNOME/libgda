@@ -1,6 +1,6 @@
 /* gda-query-condition.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -66,7 +66,8 @@ static gboolean    gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlN
 
 /* Renderer interface */
 static void            gda_query_condition_renderer_init      (GdaRendererIface *iface);
-static gchar          *gda_query_condition_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
+static gchar          *gda_query_condition_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
+							    GSList **out_params_used, guint options, GError **error);
 static gchar          *gda_query_condition_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Referer interface */
@@ -1526,7 +1527,8 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
  */
 
 static gchar *
-gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
+gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
+				   GSList **out_params_used, guint options, GError **error)
 {
         gchar *retval = NULL, *str;
 	GString *string;
@@ -1696,7 +1698,7 @@ gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context
 						g_string_append (string, "(");
 
 					str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, 
-									 options, error);
+									  out_params_used, options, error);
 					if (!str) {
 						g_string_free (string, TRUE);
 						return NULL;
@@ -1713,7 +1715,7 @@ gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context
 			else { /* type = NOT */
 				g_string_append_printf (string, "%s", link);
 				str = gda_renderer_render_as_sql (GDA_RENDERER (cond->priv->cond_children->data), 
-								 context, options, error);
+								  context, out_params_used, options, error);
 				if (!str) {
 					g_string_free (string, TRUE);
 					return NULL;
@@ -1726,7 +1728,7 @@ gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context
 		}
 		else {
 			str = gda_renderer_render_as_sql (GDA_RENDERER (ops[GDA_QUERY_CONDITION_OP_LEFT]), context, 
-							 options, error);
+							  out_params_used, options, error);
 			if (!str) {
 				g_string_free (string, TRUE);
 				return NULL;
@@ -1735,7 +1737,7 @@ gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context
 			g_free (str);
 			g_string_append_printf (string, "%s", link);
 			str = gda_renderer_render_as_sql (GDA_RENDERER (ops[GDA_QUERY_CONDITION_OP_RIGHT]), context, 
-							 options, error);
+							  out_params_used, options, error);
 			if (!str) {
 				g_string_free (string, TRUE);
 				return NULL;
@@ -1747,7 +1749,7 @@ gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context
 
 	if (cond->priv->type == GDA_QUERY_CONDITION_LEAF_BETWEEN) {
 		str = gda_renderer_render_as_sql (GDA_RENDERER (ops[GDA_QUERY_CONDITION_OP_RIGHT2]), context, 
-						 options, error);
+						  out_params_used, options, error);
 		if (!str) {
 			g_string_free (string, TRUE);
 			return NULL;
@@ -1770,7 +1772,7 @@ gda_query_condition_render_as_str (GdaRenderer *iface, GdaParameterList *context
         g_return_val_if_fail (iface && GDA_IS_QUERY_CONDITION (iface), NULL);
         g_return_val_if_fail (GDA_QUERY_CONDITION (iface)->priv, NULL);
 
-        str = gda_query_condition_render_as_sql (iface, context, 0, NULL);
+        str = gda_query_condition_render_as_sql (iface, context, NULL, 0, NULL);
         if (!str)
                 str = g_strdup ("???");
         return str;

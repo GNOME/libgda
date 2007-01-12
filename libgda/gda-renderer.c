@@ -1,6 +1,6 @@
 /* gda-renderer.c
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -60,7 +60,8 @@ gda_renderer_iface_init (gpointer g_class)
 /**
  * gda_renderer_render_as_sql
  * @iface: an object which implements the #GdaRenderer interface
- * @context: rendering context
+ * @context: a #GdaParameterList containing values for @iface's parameters, or %NULL
+ * @out_params_used: a place to append #GdaParameter which have been used during the rendering process, or %NULL
  * @options: OR'ed flags from #GdaRendererOptions to give some rendering options
  * @error: location to store error, or %NULL
  *
@@ -69,15 +70,21 @@ gda_renderer_iface_init (gpointer g_class)
  * If @context is %NULL, then no error related to missing parameters (which should be in the
  * context) is returned, and missing values are replaced by 'human readable' SQL.
  *
+ * If @out_params_used is not %NULL, then pointers to the #GdaParameter objects used to actually
+ * render the SQL statement are appended to the list (in case a parameter object is used several times,
+ * it is only once listed in the resulting list).
+ *
  * Returns: the new SQL statement (new string), or %NULL in case of error
  */
 gchar *
-gda_renderer_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
+gda_renderer_render_as_sql (GdaRenderer *iface, GdaParameterList *context, GSList **out_params_used,
+			    guint options, GError **error)
 {
 	g_return_val_if_fail (iface && GDA_IS_RENDERER (iface), NULL);
 
 	if (GDA_RENDERER_GET_IFACE (iface)->render_as_sql)
-		return (GDA_RENDERER_GET_IFACE (iface)->render_as_sql) (iface, context, options, error);
+		return (GDA_RENDERER_GET_IFACE (iface)->render_as_sql) (iface, context, out_params_used, 
+									options, error);
 	
 	return NULL;
 }

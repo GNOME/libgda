@@ -127,6 +127,10 @@ struct _GdaServerProviderClass {
 	const gchar           *(*get_def_dbms_type) (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     GType g_type);
+	gchar                 *(*escape_string)     (GdaServerProvider *provider,
+						     GdaConnection *cnc, const gchar *str);
+	gchar                 *(*unescape_string)   (GdaServerProvider *provider,
+						     GdaConnection *cnc, const gchar *str);
 
 	/* connections management */
 	gboolean               (* open_connection) (GdaServerProvider *provider,
@@ -228,7 +232,10 @@ gchar                 *gda_server_provider_value_to_sql_string   (GdaServerProvi
 const gchar           *gda_server_provider_get_default_dbms_type (GdaServerProvider *provider,
 								  GdaConnection *cnc,
 								  GType type);
-
+gchar                 *gda_server_provider_escape_string         (GdaServerProvider *provider,
+								  GdaConnection *cnc, const gchar *str);
+gchar                 *gda_server_provider_unescape_string       (GdaServerProvider *provider,
+								  GdaConnection *cnc, const gchar *str);
 
 /* connections management */
 gboolean               gda_server_provider_open_connection  (GdaServerProvider *provider,

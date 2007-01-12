@@ -1,5 +1,5 @@
 /* GDA Library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -1476,7 +1476,7 @@ gda_update_values_in_table (GdaConnection *cnn, const gchar *table_name,
 	g_object_unref (cond);
     
 	/* Execute the GdaQuery */
-	/*g_print("===> SQL update Values is %s \n", gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 0, NULL) ); */
+	/*g_print("===> SQL update Values is %s \n", gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, 0, NULL) ); */
 	gda_query_execute (query, NULL, FALSE, error);
     
 	g_object_unref (G_OBJECT (target));

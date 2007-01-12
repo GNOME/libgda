@@ -553,8 +553,6 @@ gda_parameter_new_copy
 gda_parameter_new_string
 gda_parameter_new_boolean
 gda_parameter_get_g_type
-gda_parameter_declare_param_user
-gda_parameter_get_param_users
 gda_parameter_get_value
 gda_parameter_get_value_str
 gda_parameter_set_value
@@ -569,7 +567,6 @@ gda_parameter_set_not_null
 gda_parameter_get_not_null
 gda_parameter_restrict_values
 gda_parameter_has_restrict_values
-gda_parameter_replace_param_users
 gda_parameter_bind_to_param
 gda_parameter_get_bind_param
 <SUBSECTION Standard>
@@ -713,6 +710,8 @@ gda_server_provider_get_data_handler_dbms
 gda_server_provider_string_to_value
 gda_server_provider_value_to_sql_string
 gda_server_provider_get_default_dbms_type
+gda_server_provider_escape_string
+gda_server_provider_unescape_string
 <SUBSECTION Standard>
 GDA_IS_SERVER_PROVIDER
 GDA_IS_SERVER_PROVIDER_CLASS
@@ -741,17 +740,19 @@ gda_threader_get_type
 <FILE>gda-transaction-status</FILE>
 <TITLE>GdaTransactionStatus</TITLE>
 GdaTransactionStatus
+_GdaTransactionStatus
 GdaTransactionIsolation
 GdaTransactionStatusEvent
 GdaTransactionStatusEventType
+GdaTransactionStatusState
 gda_transaction_status_new
 <SUBSECTION Standard>
-GDA_IS_TRANSACTION
-GDA_IS_TRANSACTION_CLASS
-GDA_TRANSACTION
-GDA_TRANSACTION_CLASS
-GDA_TYPE_TRANSACTION
-gda_transaction__status_get_type
+GDA_IS_TRANSACTION_STATUS
+GDA_IS_TRANSACTION_STATUS_CLASS
+GDA_TRANSACTION_STATUS
+GDA_TRANSACTION_STATUS_CLASS
+GDA_TYPE_TRANSACTION_STATUS
+gda_transaction_status_get_type
 </SECTION>
 
 <SECTION>
@@ -760,13 +761,30 @@ gda_transaction__status_get_type
 g_type_to_string
 g_type_from_string
 gda_string_hash_to_list
-gda_default_escape_chars
+gda_default_escape_string
 gda_sql_replace_placeholders
 gda_file_load
 gda_file_save
 gda_server_provider_get_schema_nb_columns
 gda_server_provider_init_schema_model
 <SUBSECTION Standard>
+</SECTION>
+
+<SECTION>
+<FILE>gda-blob-op</FILE>
+<TITLE>GdaBlobOp</TITLE>
+GdaBlobOp
+gda_blob_op_get_length
+gda_blob_op_read
+gda_blob_op_read_all
+gda_blob_op_write
+<SUBSECTION Standard>
+GDA_IS_BLOB_OP
+GDA_IS_BLOB_OP_CLASS
+GDA_BLOB_OP
+GDA_BLOB_OP_CLASS
+GDA_TYPE_BLOB_OP
+gda_blob_op_get_type
 </SECTION>
 
 <SECTION>
@@ -838,7 +856,6 @@ gda_binary_to_string
 gda_string_to_binary
 <SUBSECTION Standard>
 gda_binary_get_type
-gda_blob_get_type
 gda_geometricpoint_get_type
 gda_value_list_get_type
 gda_numeric_get_type
@@ -1070,6 +1087,7 @@ GdaHandlerString
 GdaHandlerStringClass
 GdaHandlerStringPriv
 gda_handler_string_new
+gda_handler_string_new_with_provider
 <SUBSECTION Standard>
 GDA_HANDLER_STRING
 GDA_HANDLER_STRING_CLASS
@@ -1132,7 +1150,6 @@ GdaHandlerBin
 GdaHandlerBinClass
 GdaHandlerBinPriv
 gda_handler_bin_new
-gda_handler_bin_new_with_prov
 <SUBSECTION Standard>
 GDA_HANDLER_BIN
 GDA_HANDLER_BIN_CLASS
@@ -1407,7 +1424,6 @@ gda_parameter_list_merge_paramlist_params
 gda_parameter_list_is_coherent
 gda_parameter_list_is_valid
 gda_parameter_list_find_param
-gda_parameter_list_find_param_for_user
 gda_parameter_list_find_node_for_param
 gda_parameter_list_find_source_for_param
 gda_parameter_list_find_source

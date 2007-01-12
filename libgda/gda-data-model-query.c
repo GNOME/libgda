@@ -671,7 +671,7 @@ gda_data_model_query_refresh (GdaDataModelQuery *model, GError **error)
  * Please note that the "+0" and "-0" parameters names are valid and will respectively 
  * take the new and old values of the first column of @model.
  *
- * Examples of queries are: "INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## [:name="Customer" :type="integer"], date('now'), ## [:name="+2" :type="date" :nullok="TRUE"], NULL)", "DELETE FROM orders WHERE id = ## [:name="-0" :type="integer"]" and "UPDATE orders set id=## [:name="+0" :type="integer"], delivery_before=## [:name="+2" :type="date" :nullok="TRUE"], delivery_date=## [:name="+3" :type="date" :nullok="TRUE"] WHERE id=## [:name="-0" :type="integer"]"
+ * Examples of queries are: "INSERT INTO orders (customer, creation_date, delivery_before, delivery_date) VALUES (## / *name:'Customer' type:integer* /, date('now'), ## / *name:"+2" type:date nullok:TRUE * /, NULL)", "DELETE FROM orders WHERE id = ## / *name:"-0" type:integer* /" and "UPDATE orders set id=## / *name:"+0" type:integer* /, delivery_before=## / *name:"+2" type:date nullok:TRUE* /, delivery_date=## / *name:"+3" type:date nullok:TRUE* / WHERE id=## / *name:"-0" type:integer* /"
  *
  * Returns: TRUE if no error occurred.
  */

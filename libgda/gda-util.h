@@ -43,8 +43,8 @@ GList       *gda_string_hash_to_list (GHashTable *hash_table);
 /* 
  * SQL escaping
  */
-gchar       *gda_default_escape_chars (const gchar *string);
-gchar       *gda_default_unescape_chars (const gchar *string);
+gchar       *gda_default_escape_string (const gchar *string);
+gchar       *gda_default_unescape_string (const gchar *string);
 
 /*
  * File management utility functions

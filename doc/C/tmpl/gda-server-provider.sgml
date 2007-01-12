@@ -348,3 +348,14 @@ GdaServerProvider
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_escape_string ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@str: 
+@Returns: 
+
+

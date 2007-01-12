@@ -55,6 +55,7 @@ gda_transaction_status_init (GdaTransactionStatus *tstatus, GdaTransactionStatus
 	tstatus->name = NULL;
 	tstatus->isolation_level = GDA_TRANSACTION_ISOLATION_UNKNOWN;
 	tstatus->events = NULL;
+	tstatus->state = GDA_TRANSACTION_STATUS_STATE_OK;
 }
 
 static void

@@ -29,6 +29,7 @@
 #include "gda-query.h"
 #include "gda-data-handler.h"
 #include "gda-parameter.h"
+#include "gda-parameter-util.h"
 #include "gda-object-ref.h"
 #include "gda-parameter-list.h"
 #include "gda-connection.h"
@@ -65,7 +66,8 @@ static GdaDictType       *gda_query_field_value_get_data_type   (GdaEntityField 
 
 /* Renderer interface */
 static void            gda_query_field_value_renderer_init      (GdaRendererIface *iface);
-static gchar          *gda_query_field_value_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
+static gchar          *gda_query_field_value_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
+							      GSList **out_params_used, guint options, GError **error);
 static gchar          *gda_query_field_value_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Referer interface */
@@ -1343,12 +1345,29 @@ gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GErr
  * GdaRenderer interface implementation
  */
 
+static GdaParameter *
+gda_query_field_value_render_find_param (GdaQueryFieldValue *field, GdaParameterList *context)
+{
+	GSList *list, *for_fields;
+	if (!context)
+		return NULL;
+		
+	for (list = context->parameters; list; list = list->next) {
+		for_fields = gda_parameter_get_param_users (GDA_PARAMETER (list->data));
+		if (g_slist_find (for_fields, field))
+			return GDA_PARAMETER (list->data);
+	}
+
+	return NULL;
+}
+
 static gboolean
 gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameterList *context, 
 					 const GValue **value_found, GdaParameter **param_source)
 {
 	const GValue *cvalue = NULL;
 	gboolean found = FALSE;
+	GdaParameter *param;
 
 	if (param_source)
 		*param_source = NULL;
@@ -1356,20 +1375,12 @@ gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameter
 		*value_found = NULL;
 
 	/* looking for a value into the context first */
-	if (context) {
-		GSList *list = context->parameters;
-		GSList *for_fields;
-		
-		while (list && !found) {
-			for_fields = gda_parameter_get_param_users (GDA_PARAMETER (list->data));
-			if (g_slist_find (for_fields, field)) {
-				if (param_source)
-					*param_source = GDA_PARAMETER (list->data);
-				found = TRUE;
-				cvalue = gda_parameter_get_value (GDA_PARAMETER (list->data));
-			}
-			list = g_slist_next (list);
-		}
+	param = gda_query_field_value_render_find_param (field, context);
+	if (param) {
+		if (param_source)
+			*param_source = param;
+		cvalue = gda_parameter_get_value (param);
+		found = TRUE;
 	}
 	
 	/* using the field's value, if available */
@@ -1385,7 +1396,8 @@ gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameter
 }
 
 static gchar *
-gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
+gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
+				     GSList **out_params_used, guint options, GError **error)
 {
 	gchar *str = NULL;
 	GdaQueryFieldValue *field;
@@ -1397,6 +1409,47 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 	field = GDA_QUERY_FIELD_VALUE (iface);
 
 	dict = gda_object_get_dict (GDA_OBJECT (field));
+
+	/* specific rendering of parameters, where actual value is not used */
+	if (field->priv->is_parameter && (options & (GDA_RENDERER_PARAMS_AS_COLON | GDA_RENDERER_PARAMS_AS_DOLLAR))) {
+		gint i;
+		GdaParameter *param_source;
+
+		g_return_val_if_fail (out_params_used, NULL);
+
+		param_source = gda_query_field_value_render_find_param (field, context);
+		if (param_source) {
+			gboolean use_default;
+			g_object_get (G_OBJECT (param_source), "use_default_value", &use_default, NULL);
+			if (use_default) {
+				if (options & GDA_RENDERER_ERROR_IF_DEFAULT) {
+					g_set_error (error,
+						     GDA_QUERY_FIELD_VALUE_ERROR,
+						     GDA_QUERY_FIELD_VALUE_DEFAULT_PARAM_ERROR,
+						     _("Default value requested"));
+					return NULL;
+				}
+			}
+
+			if (!g_slist_find (*out_params_used, param_source))
+				*out_params_used = g_slist_append (*out_params_used, param_source);
+			
+			i = g_slist_index (*out_params_used, param_source) + 1;
+			if (options & GDA_RENDERER_PARAMS_AS_COLON)
+				str = g_strdup_printf (":%d", i);
+			else
+				str = g_strdup_printf ("$%d", i);
+			return str;
+		}
+		else {
+			g_set_error (error,
+				     GDA_QUERY_FIELD_VALUE_ERROR,
+				     GDA_QUERY_FIELD_VALUE_RENDER_ERROR,
+				     _("Could not find GdaParameter in context for value field '%s'"), 
+				     gda_object_get_name (GDA_OBJECT (field)));
+			return NULL;
+		}
+	}
 
 	if (field->priv->is_parameter) {
 		gboolean value_found;
@@ -1434,10 +1487,10 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 						g_set_error (error,
 							     GDA_QUERY_FIELD_VALUE_ERROR,
 							     GDA_QUERY_FIELD_VALUE_DEFAULT_PARAM_ERROR,
-							     "Default value requested");
+							     _("Default value requested"));
 						return NULL;
 					}
-					else
+					else 
 						str = g_strdup ("DEFAULT");
 				}
 			}
@@ -1450,8 +1503,10 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 						str = gda_data_handler_get_sql_from_value (dh, value);
 				}
 				if (!str)
-					str = g_strdup ("NULL");	
+					str = g_strdup ("NULL");
 			}
+			if (out_params_used && !g_slist_find (*out_params_used, param_source))
+				*out_params_used = g_slist_append (*out_params_used, param_source);
 		}
 		else {
 			if (field->priv->is_null_allowed)
@@ -1492,7 +1547,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 
 		/* add extra information about the value, as an extension of SQL */
 		if (! field->priv->is_parameter) {
-			g_string_append (extra, ":isparam=\"FALSE\"");
+			g_string_append (extra, "isparam:\"FALSE\"");
 			isfirst = FALSE;
 		}
 
@@ -1501,11 +1556,11 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 		else
 			g_string_append (extra, " ");
 		if (field->priv->dict_type)
-			g_string_append_printf (extra, ":type=\"%s\"", 
+			g_string_append_printf (extra, "type:\"%s\"", 
 						gda_object_get_name (GDA_OBJECT (field->priv->dict_type)));
 		else
 			/* print g_type instead */
-			g_string_append_printf (extra, ":type=\"%s\"", gda_g_type_to_string (field->priv->g_type));
+			g_string_append_printf (extra, "type:\"%s\"", gda_g_type_to_string (field->priv->g_type));
 
 		tmpstr = gda_object_get_name (GDA_OBJECT (field));
 		if (tmpstr && *tmpstr) {
@@ -1514,7 +1569,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			else
 				g_string_append (extra, " ");
 
-			g_string_append_printf (extra, ":name=\"%s\"", tmpstr);
+			g_string_append_printf (extra, "name:\"%s\"", tmpstr);
 		}
 
 
@@ -1524,7 +1579,7 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 				isfirst = FALSE;
 			else
 				g_string_append (extra, " ");
-			g_string_append_printf (extra, ":descr=\"%s\"", tmpstr);
+			g_string_append_printf (extra, "descr:\"%s\"", tmpstr);
 		}
 
 		if (field->priv->is_null_allowed) {
@@ -1532,25 +1587,14 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 				isfirst = FALSE;
 			else
 				g_string_append (extra, " ");
-			g_string_append (extra, ":nullok=\"TRUE\"");
+			g_string_append (extra, "nullok:TRUE");
 		}
 
-		str2 = g_strdup_printf ("%s [%s]", str, extra->str);
+		str2 = g_strdup_printf ("%s /* %s */", str, extra->str);
 		g_free (str);
 		str = str2;
 
 		g_string_free (extra, TRUE);
-	}
-
-	if (field->priv->is_parameter && (options & (GDA_RENDERER_PARAMS_AS_COLON | GDA_RENDERER_PARAMS_AS_DOLLAR))) {
-		gint i;
-
-		g_free (str);
-		i = gda_query_field_value_get_parameter_index (field);
-		if (options & GDA_RENDERER_PARAMS_AS_COLON)
-			str = g_strdup_printf (":%d", i);
-		else
-			str = g_strdup_printf ("$%d", i);
 	}
 
 	return str;
@@ -1564,7 +1608,7 @@ gda_query_field_value_render_as_str (GdaRenderer *iface, GdaParameterList *conte
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_FIELD_VALUE (iface)->priv, NULL);
 	
-	str = gda_query_field_value_render_as_sql (iface, context, 0, NULL);
+	str = gda_query_field_value_render_as_sql (iface, context, NULL, 0, NULL);
 	if (!str)
 		str = g_strdup ("???");
 	return str;

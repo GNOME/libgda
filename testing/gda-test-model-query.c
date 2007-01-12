@@ -341,7 +341,7 @@ make_query_test (TestConfig *config, const gchar *sql, xmlNodePtr table)
 		GdaQuery *query;
 		gchar *sql;
 		g_object_get (G_OBJECT (model), "insert_query", &query, NULL);
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
+		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 		g_object_unref (query);
 		if (sql) {
 			td = xmlNewChild (tr, NULL, "td", sql);	
@@ -354,7 +354,7 @@ make_query_test (TestConfig *config, const gchar *sql, xmlNodePtr table)
 			error = NULL;
 		}
 		g_object_get (G_OBJECT (model), "update_query", &query, NULL);
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
+		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 		g_object_unref (query);
 		if (sql) {
 			td = xmlNewChild (tr, NULL, "td", sql);	
@@ -367,7 +367,7 @@ make_query_test (TestConfig *config, const gchar *sql, xmlNodePtr table)
 			error = NULL;
 		}
 		g_object_get (G_OBJECT (model), "delete_query", &query, NULL);
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
+		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 		g_object_unref (query);
 		if (sql) {
 			td = xmlNewChild (tr, NULL, "td", sql);	

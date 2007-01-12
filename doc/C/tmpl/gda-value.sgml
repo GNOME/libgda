@@ -6,17 +6,39 @@ Single value stored in a #GdaDataModel
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-&LIBGDA; manages each individual value within an opaque #GValue structure. Any GValue type can be used,
-and &LIBGDA; adds a few more data types usually found in DBMS such as NUMERIC, TIME, TIMESTAMP, GEOMETRIC POINT and BINARY.
+  &LIBGDA; manages each individual value within an opaque #GValue structure. Any GValue type can be used,
+  and &LIBGDA; adds a few more data types usually found in DBMS such as NUMERIC, TIME, TIMESTAMP, GEOMETRIC POINT, BINARY and BLOB.
 </para>
 <para>
-The NULL value is a special case value: it is represented by to a zero-filled (uninitialized) #GValue and has a type equal
-to GDA_TYPE_NULL.
+  Libgda makes a distinction between binary and blob types
+  <itemizedlist>
+    <listitem><para>binary data can be inserted into an SQL statement using a
+	(DBMS dependant) syntax, such as "X'ABCD'" syntax for SQLite or the binary strings syntax for PostgreSQL. Binary data
+	is manipulated using a #GdaBinary structure (which is basically a bytes buffer and a length attribute).
+    </para></listitem>
+    <listitem><para>blob data are a special feature that some DBMS have which requires some non SQL code to manipulate them.
+	Usually only a reference is stored in each table containing a blob, and the actual blob data resides somewhere on the disk
+	(while still being managed transparently by the database). For example PotsgreSQL stores blobs as files on the disk and
+	references them using object identifiers (Oid). Blob data
+	is manipulated using a #GdaBlob structure which encapsulates a #GdaBinary structure and adds a reference to a
+	#GdaBlobOp object used to read and write data from and to the blob.
+    </para></listitem>
+  </itemizedlist>
+  Please note that is distinction between binary data and blobs is Libgda only and does not reflect the DBMS's documentations; 
+  for instance MySQL has several BLOB types but Libgda interprets them as binary types.
+</para>
+<para>
+  Each provider or connection can be queried about its blob support using the gda_server_provider_supports_feature() or
+  gda_connection_supports_feature() methods.
+</para>
+<para>
+  The NULL value is a special case value: it is represented by to a zero-filled (uninitialized) #GValue and has a type equal
+  to GDA_TYPE_NULL.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+  The #GdaBlobOp object which operates on blobs
 </para>
 
 <!-- ##### SECTION Stability_Level ##### -->

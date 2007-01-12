@@ -47,9 +47,6 @@ struct  _GdaHandlerBinPriv {
 	gchar             *detailled_descr;
 	guint              nb_g_types;
 	GType             *valid_g_types;
-
-	GdaServerProvider *prov;
-	GdaConnection     *cnc;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -116,9 +113,10 @@ gda_handler_bin_init (GdaHandlerBin * hdl)
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerBinPriv, 1);
 	hdl->priv->detailled_descr = _("Binary handler");
-	hdl->priv->nb_g_types = 1;
+	hdl->priv->nb_g_types = 2;
 	hdl->priv->valid_g_types = g_new0 (GType, 1);
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
+	hdl->priv->valid_g_types[1] = GDA_TYPE_BLOB;
 
 	gda_object_set_name (GDA_OBJECT (hdl), _("InternalBin"));
 	gda_object_set_description (GDA_OBJECT (hdl), _("Binary representation"));
@@ -165,33 +163,6 @@ gda_handler_bin_new (void)
 	return (GdaDataHandler *) obj;
 }
 
-/**
- * gda_handler_bin_new_with_prov
- *
- * Creates a data handler for binary values
- *
- * Returns: the new object
- */
-GdaDataHandler *
-gda_handler_bin_new_with_prov (GdaServerProvider *prov, GdaConnection *cnc)
-{
-	GdaHandlerBin *dh;
-
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
-	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
-
-	dh = GDA_HANDLER_BIN (gda_handler_bin_new ());
-	
-	dh->priv->prov = prov;
-	if (cnc)
-		dh->priv->cnc = cnc;
-
-	g_object_add_weak_pointer (G_OBJECT (prov), (gpointer) &(dh->priv->prov));
-	if (cnc)
-		g_object_add_weak_pointer (G_OBJECT (cnc), (gpointer) &(dh->priv->cnc));
-
-	return (GdaDataHandler *) dh;
-}
 
 static gchar *
 gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
@@ -207,7 +178,7 @@ gda_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		if (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY)) {
 			gchar *str, *str2;
 			str = gda_binary_to_string (gda_value_get_binary ((GValue *) value), 0);
-			str2 = gda_default_escape_chars (str);
+			str2 = gda_default_escape_string (str);
 			g_free (str);
 			retval = g_strdup_printf ("'%s'", str2);
 			g_free (str2);
@@ -232,8 +203,10 @@ gda_handler_bin_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (value) {
-		if (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY))
+		if (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY)) 
 			retval = gda_binary_to_string (gda_value_get_binary ((GValue *) value), 0);
+		else
+			retval = g_strdup ("**BLOB**");	
 	}
 	else
 		retval = g_strdup (NULL);
@@ -251,19 +224,21 @@ gda_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GTy
 	hdl = GDA_HANDLER_BIN (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	if (sql && *sql) {
-		gint i = strlen (sql);
-		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
-			gchar *str = g_strdup (sql);
-			gchar *unstr;
-
-			str[i-1] = 0;
-			unstr = gda_default_unescape_chars (str+1);
-			if (unstr) {
-				value = gda_handler_bin_get_value_from_str (iface, unstr, type);
-				g_free (unstr);
+	if (type == GDA_TYPE_BINARY) {
+		if (sql && *sql) {
+			gint i = strlen (sql);
+			if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
+				gchar *str = g_strdup (sql);
+				gchar *unstr;
+				
+				str[i-1] = 0;
+				unstr = gda_default_unescape_string (str+1);
+				if (unstr) {
+					value = gda_handler_bin_get_value_from_str (iface, unstr, type);
+					g_free (unstr);
+				}
+				g_free (str);
 			}
-			g_free (str);
 		}
 	}
 
@@ -287,8 +262,6 @@ gda_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *str, GTy
 			g_free (bin.data);
 		}
 	}
-	else
-		g_assert_not_reached ();
 
 	return value;
 }

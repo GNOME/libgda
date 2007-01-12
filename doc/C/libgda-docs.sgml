@@ -33,7 +33,7 @@
 <!ENTITY install SYSTEM "installation.xml">
 <!ENTITY examples SYSTEM "gettingstarted.xml">
 <!ENTITY migration SYSTEM "migration.xml">
-<!ENTITY libgda-GdaBlob SYSTEM "xml/gda-blob.xml">
+<!ENTITY limitations SYSTEM "limitations.xml">
 <!ENTITY libgda-GdaClient SYSTEM "xml/gda-client.xml">
 <!ENTITY libgda-GdaCommand SYSTEM "xml/gda-command.xml">
 <!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
@@ -119,6 +119,7 @@
 <!ENTITY libgda-GdaParameterList SYSTEM "xml/gda-parameter-list.xml">
 <!ENTITY libgda-GdaGraphviz SYSTEM "xml/gda-graphviz.xml">
 <!ENTITY libgda-GdaGraph SYSTEM "xml/gda-graph.xml">
+<!ENTITY libgda-GdaBlobOp SYSTEM "xml/gda-blob-op.xml">
 <!ENTITY libgda-GdaGraphQuery SYSTEM "xml/gda-graph-query.xml">
 <!ENTITY libgda-GdaGraphItem SYSTEM "xml/gda-graph-item.xml">
 <!ENTITY libgda-Enums SYSTEM "xml/gda-enums.xml">
@@ -288,7 +289,7 @@
     <chapter id="features">
       <title>&LIBGDA; features</title>
       <para>
-	This section presents the main features of the 2.0 version of Libgda.
+	This section presents the main features of the 3.0 version of Libgda.
       </para>
       <para>
 	Libgda is a low-level database abstraction layer built on top of each database C API. In terms of abstraction, 
@@ -317,12 +318,18 @@
 	      object</para>
           </listitem>
           <listitem>
-            <para>Define and store query objects which are transformed into SQL before being rexecuted and for which it is 
+            <para>Define and store query objects which are transformed into SQL before being executed and for which it is 
 	      possible to know if they use only defined database objects. Query objects can be defined by hand coded
 	      construction or by parsing SQL.</para>
           </listitem>
           <listitem>
             <para>Easy to extend data models for custom requirements which can integrate within the Libgnomedb library</para>
+          </listitem>
+          <listitem>
+            <para>Support for binary data and for BLOBs in a transparent way, see the <link linkend="libgda-Gda-Value">Gda value section</link></para>
+          </listitem>
+          <listitem>
+            <para>Support for detailed parameters in SQL queries, see the <link linkend="SQL_queries">SQL queries section</link></para>
           </listitem>
 	</itemizedlist>
       </para>
@@ -398,6 +405,7 @@
     &install;
     &examples;
     &migration;
+    &limitations;
   </part>  
   <part id="part_libgda_api">
     <title>Client API Reference</title>
@@ -471,6 +479,7 @@
 	</itemizedlist>
       </para>
       &libgda-GValue;
+      &libgda-GdaBlobOp;
       &libgda-GdaParameter;
       &libgda-GdaParameterList;
       &libgda-GdaDataModel;
@@ -592,7 +601,6 @@
       &libgda-util;
       &libgda-log;
       &libgda-quark-list;
-      &libgda-GdaBlob;
       &libgda-GdaObject;
       &libgda-GdaObjectRef;
       &libgda-GdaGraphviz;

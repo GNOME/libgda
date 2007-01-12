@@ -149,7 +149,7 @@ main (int argc, char **argv)
 			
 			gchar *str;
 			g_print (_("########### Query \"%s\" ###########\n"), gda_object_get_name (GDA_OBJECT (lptr->data)));
-			str = gda_renderer_render_as_sql (GDA_RENDERER (lptr->data), NULL, 
+			str = gda_renderer_render_as_sql (GDA_RENDERER (lptr->data), NULL, NULL,
 							  GDA_RENDERER_EXTRA_PRETTY_SQL | GDA_RENDERER_PARAMS_AS_DETAILED,
 							  &error);
 			g_print (_("## SQL:\n"));

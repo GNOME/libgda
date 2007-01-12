@@ -402,7 +402,7 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 		xmlSetProp(td, "id", (xmlChar*)"inactive");
 
 	/* 2nd: rendering */
-	sql2 = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 
+	sql2 = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL,
 					   GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 	if (sql2) {
 		/* rendering OK */
@@ -431,7 +431,7 @@ make_query_test (TestConfig *config, const gchar *sql, gboolean parsed, const gc
 			xmlSetProp(td, "id", (xmlChar*)"inactive");
 		
 		/* rendering */
-		sql3 = gda_renderer_render_as_sql (GDA_RENDERER (copy2), NULL, 
+		sql3 = gda_renderer_render_as_sql (GDA_RENDERER (copy2), NULL, NULL,
 						   GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 		if (sql3) {
 			g_strchomp (sql3);

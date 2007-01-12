@@ -81,14 +81,14 @@ gda_g_type_from_string (const gchar *str)
 }
 
 /**
- * gda_default_escape_chars
+ * gda_default_escape_string
  * @string: string to escape
  *
  * Escapes @string to make it understandable by a DBMS. The escape method is very common and replaces any
  * occurence of "'" with "\'" and "\" with "\\".
  */
 gchar *
-gda_default_escape_chars (const gchar *string)
+gda_default_escape_string (const gchar *string)
 {
 	gchar *ptr, *ret, *retptr;
 	gint size;
@@ -128,16 +128,16 @@ gda_default_escape_chars (const gchar *string)
 }
 
 /**
- * gda_default_unescape_chars
+ * gda_default_unescape_string
  * @string: string to unescape
  *
- * Do the reverse of gda_default_escape_chars(): transforms any "\'" into "'" and any
+ * Do the reverse of gda_default_escape_string(): transforms any "\'" into "'" and any
  * "\\" into "\". 
  *
  * Returns: a new unescaped string, or %NULL in an error was found in @string
  */
 gchar *
-gda_default_unescape_chars (const gchar *string)
+gda_default_unescape_string (const gchar *string)
 {
 	glong total;
 	gchar *ptr;

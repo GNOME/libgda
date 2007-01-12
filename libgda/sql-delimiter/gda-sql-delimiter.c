@@ -449,7 +449,7 @@ sql_to_string_pspec_list (GList *pspecs, gboolean sep)
 	list = pspecs;
 	if (sep)
 		g_string_append_c (string, '\t');
-	g_string_append (string, "[");
+	g_string_append (string, "/*");
 	while (list) {
 		GdaDelimiterParamSpec *pspec = (GdaDelimiterParamSpec *)(list->data);
 
@@ -458,19 +458,19 @@ sql_to_string_pspec_list (GList *pspecs, gboolean sep)
 
 		switch (pspec->type) {
 		case GDA_DELIMITER_PARAM_NAME:
-			g_string_append_printf (string, ":name=\"%s\"", pspec->content);
+			g_string_append_printf (string, "name:\"%s\"", pspec->content);
 			break;
 		case GDA_DELIMITER_PARAM_DESCR:
-			g_string_append_printf (string, ":descr=\"%s\"", pspec->content);
+			g_string_append_printf (string, "descr:\"%s\"", pspec->content);
 			break;
 		case GDA_DELIMITER_PARAM_TYPE:
-			g_string_append_printf (string, ":type=\"%s\"", pspec->content);
+			g_string_append_printf (string, "type:\"%s\"", pspec->content);
 			break;
 		case GDA_DELIMITER_PARAM_ISPARAM:
-			g_string_append_printf (string, ":isparam=\"%s\"", pspec->content);
+			g_string_append_printf (string, "isparam:\"%s\"", pspec->content);
 			break;
 		case GDA_DELIMITER_PARAM_NULLOK:
-			g_string_append_printf (string, ":nullok=\"%s\"", pspec->content);
+			g_string_append_printf (string, "nullok:\"%s\"", pspec->content);
 			break;
 		default:
 			g_string_append_printf (string, ":?? =\"%s\"", pspec->content);
@@ -478,7 +478,7 @@ sql_to_string_pspec_list (GList *pspecs, gboolean sep)
 		}
 		list = g_list_next (list);
 	}
-	g_string_append_c (string, ']');
+	g_string_append (string, "*/");
 	if (sep)
 		g_string_append_c (string, '\n');
 

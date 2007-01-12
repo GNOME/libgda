@@ -140,24 +140,6 @@ The #GdaParameter object offers other features such as:
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_declare_param_user ##### -->
-<para>
-
-</para>
-
-@param: 
-@user: 
-
-
-<!-- ##### FUNCTION gda_parameter_get_param_users ##### -->
-<para>
-
-</para>
-
-@param: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_parameter_get_value ##### -->
 <para>
 
@@ -287,15 +269,6 @@ The #GdaParameter object offers other features such as:
 @model: 
 @col: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_parameter_replace_param_users ##### -->
-<para>
-
-</para>
-
-@param: 
-@replacements: 
 
 
 <!-- ##### FUNCTION gda_parameter_bind_to_param ##### -->

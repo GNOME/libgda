@@ -65,6 +65,7 @@ gboolean       gda_server_provider_blob_list_for_delete     (GdaConnection *cnc,
 							     GdaQuery **out_select, GError **error);
 gboolean       gda_server_provider_split_update_query       (GdaConnection *cnc, GdaQuery *query, 
 							     GdaQuery **out_query, GError **error);
+gboolean       gda_server_provider_select_query_has_blobs   (GdaConnection *cnc, GdaQuery *query, GError **error);
 
 G_END_DECLS
 

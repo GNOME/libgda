@@ -53,6 +53,7 @@ GType    gda_blob_op_get_type  (void);
 
 glong    gda_blob_op_get_length (GdaBlobOp *op);
 glong    gda_blob_op_read       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
+void     gda_blob_op_read_all   (GdaBlobOp *op, GdaBlob *blob);
 glong    gda_blob_op_write      (GdaBlobOp *op, GdaBlob *blob, glong offset);
 
 G_END_DECLS

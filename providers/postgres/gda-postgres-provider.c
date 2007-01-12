@@ -31,11 +31,13 @@
 #include <libgda/gda-column-index.h>
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-query.h>
+#include <libgda/gda-util.h>
 #include <libgda/gda-renderer.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
 #include "gda-postgres-ddl.h"
 #include "gda-postgres-blob-op.h"
+#include "gda-postgres-handler-bin.h"
 #include <libpq/libpq-fs.h>
 
 #include <libgda/handlers/gda-handler-numerical.h>
@@ -143,6 +145,10 @@ static GdaDataHandler *gda_postgres_provider_get_data_handler (GdaServerProvider
 static const gchar* gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider,
 								 GdaConnection *cnc,
 								 GType type);
+static gchar *gda_postgres_provider_escape_string (GdaServerProvider *provider, 
+						   GdaConnection *cnc, const gchar *str);
+static gchar *gda_postgres_provider_unescape_string (GdaServerProvider *provider, 
+						   GdaConnection *cnc, const gchar *str);
 				 		 
 typedef struct {
 	gint ncolumns;
@@ -186,6 +192,8 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->get_data_handler = gda_postgres_provider_get_data_handler;
 	provider_class->string_to_value = NULL;
 	provider_class->get_def_dbms_type = gda_postgres_provider_get_default_dbms_type;
+	provider_class->escape_string = gda_postgres_provider_escape_string;
+	provider_class->unescape_string = gda_postgres_provider_unescape_string;
 
 	provider_class->open_connection = gda_postgres_provider_open_connection;
 	provider_class->close_connection = gda_postgres_provider_close_connection;
@@ -259,8 +267,9 @@ gda_postgres_provider_new (void)
 }
 
 static GType
-postgres_name_to_g_type (const gchar *name)
+postgres_name_to_g_type (const gchar *name, const gchar *conv_func_name)
 {
+	/* default built in data types */
 	if (!strcmp (name, "bool"))
 		return G_TYPE_BOOLEAN;
 	else if (!strcmp (name, "int8"))
@@ -288,6 +297,32 @@ postgres_name_to_g_type (const gchar *name)
 	else if (!strcmp (name, "bytea"))
 		return GDA_TYPE_BINARY;
 
+	/* other data types, using the conversion function name as a hint */
+	if (!conv_func_name)
+		return G_TYPE_STRING;
+
+	if (!strncmp (conv_func_name, "int2", 4))
+		return GDA_TYPE_SHORT;
+	if (!strncmp (conv_func_name, "int4", 4))
+		return G_TYPE_INT;
+	if (!strncmp (conv_func_name, "int8", 4))
+		return G_TYPE_INT64;
+	if (!strncmp (conv_func_name, "float4", 6))
+		return G_TYPE_FLOAT;
+	if (!strncmp (conv_func_name, "float8", 6))
+		return G_TYPE_DOUBLE;
+	if (!strncmp (conv_func_name, "timestamp", 9))
+		return GDA_TYPE_TIMESTAMP;
+	if (!strncmp (conv_func_name, "time", 4))
+		return GDA_TYPE_TIME;
+	if (!strncmp (conv_func_name, "date", 4))
+		return G_TYPE_DATE;
+	if (!strncmp (conv_func_name, "bool", 4))
+		return G_TYPE_BOOLEAN;
+	if (!strncmp (conv_func_name, "oid", 3))
+		return GDA_TYPE_BLOB;
+	if (!strncmp (conv_func_name, "bytea", 5))
+		return GDA_TYPE_BINARY;
 	return G_TYPE_STRING;
 }
 
@@ -324,7 +359,7 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 
 		/* main query to fetch infos about the data types */
 		query = g_strdup_printf (
-                          "SELECT t.oid, t.typname, u.usename, pg_catalog.obj_description(t.oid) "
+                          "SELECT t.oid, t.typname, u.usename, pg_catalog.obj_description(t.oid), t.typinput "
 			  "FROM pg_catalog.pg_type t, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
 			  "WHERE t.typowner=u.usesysid "
 			  "AND n.oid = t.typnamespace "
@@ -367,9 +402,12 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	td = g_new (GdaPostgresTypeOid, nrows);
 	h_table = g_hash_table_new (g_str_hash, g_str_equal);
 	for (i = 0; i < nrows; i++) {
+		gchar *conv_func_name = NULL;
+		if (PQnfields (pg_res) >= 5)
+			conv_func_name = PQgetvalue (pg_res, i, 4);
 		td[i].name = g_strdup (PQgetvalue (pg_res, i, 1));
 		td[i].oid = atoi (PQgetvalue (pg_res, i, 0));
-		td[i].type = postgres_name_to_g_type (td[i].name);
+		td[i].type = postgres_name_to_g_type (td[i].name, conv_func_name);
 		td[i].comments = g_strdup (PQgetvalue (pg_res, i, 3));
 		td[i].owner = g_strdup (PQgetvalue (pg_res, i, 2));
 		g_hash_table_insert (h_table, td[i].name, &td[i].type);
@@ -540,8 +578,8 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	g_free(conn_string);
 
 	if (PQstatus (pconn) != CONNECTION_OK) {
-		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
-		PQfinish(pconn);
+		gda_postgres_make_error (cnc, pconn, NULL);
+		PQfinish (pconn);
 		return FALSE;
 	}
 
@@ -605,7 +643,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	priv_data->version = version;
 	priv_data->version_float = version_float;
 	if (get_connection_type_list (priv_data) != 0) {
-		gda_connection_add_event (cnc, gda_postgres_make_error (pconn, NULL));
+		gda_postgres_make_error (cnc, pconn, NULL);
 		PQfinish (pconn);
 		g_free (priv_data);
 		return FALSE;
@@ -678,10 +716,8 @@ compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql,
 	GdaConnectionEvent *error = NULL;
 	GdaObject *retval = NULL;
 
-	if (pg_res == NULL) {
-		error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (cnc, error);
-	} 
+	if (pg_res == NULL) 
+		error = gda_postgres_make_error (cnc, pconn, NULL);
 	else {
 		gint status = PQresultStatus (pg_res);
 		if (status == PGRES_EMPTY_QUERY ||
@@ -723,8 +759,7 @@ compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql,
 			}
 		}
 		else {
-			error = gda_postgres_make_error (pconn, pg_res);
-			gda_connection_add_event (cnc, error);
+			error = gda_postgres_make_error (cnc, pconn, pg_res);
 			PQclear (pg_res);
 		}
 	}
@@ -1099,7 +1134,7 @@ fetch_existing_blobs (GdaConnection *cnc, PGconn *pconn, GdaQuery *query, GdaPar
 				}
 			}
 
-			sql = gda_renderer_render_as_sql (GDA_RENDERER (select), plist, 0, &error);
+			sql = gda_renderer_render_as_sql (GDA_RENDERER (select), plist, NULL, 0, &error);
 			if (plist)
 				g_object_unref (plist);
 			g_object_unref (select);
@@ -1116,9 +1151,7 @@ fetch_existing_blobs (GdaConnection *cnc, PGconn *pconn, GdaQuery *query, GdaPar
 			pg_update_blobs = PQexec (pconn, sql);
 			g_free (sql);
 			if (!pg_update_blobs || (PQresultStatus (pg_update_blobs) != PGRES_TUPLES_OK)) {
-				GdaConnectionEvent *event = NULL;
-				event = gda_postgres_make_error (pconn, pg_update_blobs);
-				gda_connection_add_event (cnc, event);
+				gda_postgres_make_error (cnc, pconn, pg_update_blobs);
 				return NULL;
 			}
 		}
@@ -1209,10 +1242,6 @@ split_and_execute_update_query (GdaServerProvider *provider, GdaConnection *cnc,
 	}
 
 	return (GdaObject *) ret;
-	/*g_warning (_("Updating more than one BLOB at a time will lead to database corruption: the Postgres database "
-	  "allows to have the same BLOB referenced by multiple rows, but LibGda tries have a common "
-	  "representation of BLOB handling where there a BLOB can only be referenced in one row (as "
-	  "other databases do and as good database desing recommends)."));*/	
 }
 
 static GdaObject *
@@ -1222,7 +1251,6 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 				     GdaParameterList *params)
 {
 	GSList *list;
-	GdaParameterList *plist = NULL;
 	GdaObject *retval = NULL;
 	gchar *pseudo_sql;
 
@@ -1233,9 +1261,12 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 	PGresult *pg_res;
 	gchar *prep_stm_name;
 	gint nb_params = 0;
-	char **param_values = NULL;
-	gint status;
 	gboolean allok = TRUE;
+	GSList *used_params = NULL;
+
+	char **param_values = NULL;
+	int *param_lengths = NULL;
+	int *param_formats = NULL;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -1248,9 +1279,18 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 	}
 	pconn = priv_data->pconn;
 	
-	pseudo_sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 0, NULL);
+#ifdef GDA_DEBUG_NO
+	pseudo_sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, NULL, GDA_RENDERER_PARAMS_AS_DETAILED , NULL);
 	g_print ("Execute_query: %s\n", pseudo_sql);
 	g_free (pseudo_sql);
+#endif
+
+	/* if the query is a SELECT, we need to start a transaction if the query returns BLOB fields */
+	if (gda_query_is_select_query (query) && 
+	    gda_server_provider_select_query_has_blobs (cnc, query, NULL))
+		if (!gda_postgres_check_transaction_started (cnc))
+			return NULL;
+
 
 	/* if query is an update query, then create a SELECT query to be able to fetch blob references, if
 	 * there are any blob parameters */
@@ -1270,7 +1310,7 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 		GError *error = NULL;
 		GdaConnectionEvent *event = NULL;
 
-		pseudo_sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 
+		pseudo_sql = gda_renderer_render_as_sql (GDA_RENDERER (query), params, &used_params, 
 							 GDA_RENDERER_PARAMS_AS_DOLLAR, &error);
 		if (!pseudo_sql) {
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
@@ -1282,103 +1322,92 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 		prep_stm_name = g_strdup_printf ("gda_query_prep_stm");
 		pg_res = PQprepare (pconn, prep_stm_name, pseudo_sql, 0, NULL);
 		if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK))
-			event = gda_postgres_make_error (pconn, pg_res);
+			event = gda_postgres_make_error (cnc, pconn, pg_res);
 		PQclear (pg_res);
 
-		if (event) {
-			gda_connection_add_event (cnc, event);
+		if (event) 
 			return NULL;
-		}
 	}
 
 	/* bind parameters to the prepared statement */
-	plist = gda_query_get_parameter_list (query);
-	if (plist && plist->parameters) {
+	if (used_params) {
 		gint index, blob_index;
-		nb_params = g_slist_length (plist->parameters);
+		nb_params = g_slist_length (used_params);
 		param_values = g_new0 (char *, nb_params + 1);
+		param_lengths = g_new0 (int, nb_params + 1);
+		param_formats = g_new0 (int, nb_params + 1);
 		
-		for (index = 0, blob_index = 0, list = plist->parameters; list && allok; list = list->next, index++) {
+		for (index = 0, blob_index = 0, list = used_params; list && allok; list = list->next, index++) {
 			GdaParameter *param = GDA_PARAMETER (list->data);
-			GdaParameter *inc_param;
-			
-			inc_param = gda_parameter_list_find_param (params, gda_object_get_name (GDA_OBJECT (param)));
-			if (!inc_param) {
-				/* missing parameter */
-				GdaConnectionEvent *event = NULL;
-				gchar *str;
-				str = g_strdup_printf (_("Missing parameter for '%s'"), 
-						       gda_object_get_name (GDA_OBJECT (param)));
-				event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-				gda_connection_event_set_description (event, str);
-				gda_connection_add_event (cnc, event);
-				g_free (str);
-				allok = FALSE;
-			}
-			else {
-				const GValue *value;
+			const GValue *value;
 				
-				value = gda_parameter_get_value (inc_param);
-				if (!value && gda_value_is_null (value))
-					param_values [index] = NULL;
+			value = gda_parameter_get_value (param);
+			if (!value && gda_value_is_null (value))
+				param_values [index] = NULL;
+			else {
+				GType type = G_VALUE_TYPE (value);
+				if (type == GDA_TYPE_BLOB) {
+					/* specific BLOB treatment */
+					GdaBlob *blob = (GdaBlob*) gda_value_get_blob ((GValue *) value);
+					GdaPostgresBlobOp *op;
+					
+					/* Postgres requires that a transaction be started for LOB operations */
+					allok = gda_postgres_check_transaction_started (cnc);
+					if (!allok)
+						continue;
+					
+					/* create GdaBlobOp */
+					op = (GdaPostgresBlobOp *) gda_postgres_blob_op_new (cnc);
+					
+					/* always create a new blob as there is no way to truncate an existing blob */
+					if (gda_postgres_blob_op_declare_blob (op) &&
+					    gda_blob_op_write ((GdaBlobOp*) op, blob, 0)) 
+						param_values [index] = gda_postgres_blob_op_get_id (op);
+					else
+						param_values [index] = NULL;
+					g_object_unref (op);
+					blob_index++;
+				}
+				else if (type == GDA_TYPE_BINARY) {
+					/* directly bin binary data */
+					GdaBinary *bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
+					param_values [index] = bin->data;
+					param_lengths [index] = bin->binary_length;
+					param_formats [index] = 1; /* binary format */
+				}
 				else {
-					if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
-						/* specific BLOB treatment */
-						GdaTransactionStatus *trans;					       
-						GdaBlob *blob = (GdaBlob*) gda_value_get_blob ((GValue *) value);
-						GdaPostgresBlobOp *op;
-
-						/* Postgres requires that a transaction be started for LOB operations */
-						trans = gda_connection_get_transaction_status (cnc);
-						if (!trans && !gda_server_provider_begin_transaction (provider, cnc, NULL,
-							       GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
-							allok = FALSE;
-						if (!allok)
-							continue;
-						
-						/* create GdaBlobOp */
-						op = (GdaPostgresBlobOp *) gda_postgres_blob_op_new (cnc);
-
-						/* always create a new blob as there is no way to truncate an existing blob */
-						if (gda_postgres_blob_op_declare_blob (op) &&
-						    gda_blob_op_write ((GdaBlobOp*) op, blob, 0))
-							param_values [index] = gda_postgres_blob_op_get_id (op);
-						else
-							param_values [index] = NULL;
-						g_object_unref (op);
-						blob_index++;
-					}
-					else {
-						GdaDataHandler *dh;
-						
-						dh = gda_server_provider_get_data_handler_gtype (provider, cnc, 
-												 G_VALUE_TYPE (value));
-						if (dh)
-							param_values [index] = gda_data_handler_get_str_from_value (dh, value);
-						else
-							param_values [index] = NULL;
-					}
+					GdaDataHandler *dh;
+					
+					dh = gda_server_provider_get_data_handler_gtype (provider, cnc, 
+											 G_VALUE_TYPE (value));
+					if (dh) 
+						param_values [index] = gda_data_handler_get_str_from_value (dh, value);
+					else
+						param_values [index] = NULL;
 				}
 			}
 		}
-		
+		g_slist_free (used_params);
 	}
-	if (plist)
-		g_object_unref (plist);
 
 	if (!allok) {
 		g_free (prep_stm_name);
 		gda_postgres_provider_single_command (pg_prv, cnc, "DEALLOCATE gda_query_prep_stm"); 
 		g_strfreev (param_values);
+		g_free (param_lengths);
+		g_free (param_formats);
 		if (pg_existing_blobs) 
 			PQclear (pg_existing_blobs);
 		return NULL;
 	}
 
-	pg_res = PQexecPrepared (pconn, prep_stm_name, nb_params, param_values, NULL, NULL, 0);
+	pg_res = PQexecPrepared (pconn, prep_stm_name, nb_params, (const char * const *) param_values, 
+				 param_lengths, param_formats, 0);
 	g_free (prep_stm_name);
 	gda_postgres_provider_single_command (pg_prv, cnc, "DEALLOCATE gda_query_prep_stm"); 
 	g_strfreev (param_values);
+	g_free (param_lengths);
+	g_free (param_formats);
 	retval = compute_retval_from_pg_res (cnc, pconn, pseudo_sql, pg_res);
 
 	if (retval) {
@@ -1392,7 +1421,7 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 					if (PQftype (pg_existing_blobs, col) == 26 /*OIDOID*/) {
 						gchar *blobid = PQgetvalue (pg_existing_blobs, row, col);
 						if (atoi (blobid) != InvalidOid)
-						lo_unlink (pconn, atoi (blobid));
+							lo_unlink (pconn, atoi (blobid));
 					}
 					else
 						ncols = col;
@@ -1596,17 +1625,14 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 	pg_res = PQexec (pconn, command);
 	if (pg_res != NULL){		
 		result = PQresultStatus (pg_res) == PGRES_COMMAND_OK;
-		if (result == FALSE) {
-			error = gda_postgres_make_error (pconn, pg_res);
-			gda_connection_add_event (cnc, error);
-		}
+		if (result == FALSE) 
+			error = gda_postgres_make_error (cnc, pconn, pg_res);
 
 		PQclear (pg_res);
 	}
-	else {
-		error = gda_postgres_make_error (pconn, NULL);
-		gda_connection_add_event (cnc, error);
-	}
+	else
+		error = gda_postgres_make_error (cnc, pconn, NULL);
+
 	gda_connection_internal_treat_sql (cnc, command, error);
 
 	return result;
@@ -2119,7 +2145,7 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	if (priv_data->version_float < 7.3) {
 		reclist = process_sql_commands (
 			   NULL, cnc, 
-			   "(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname, t1.typname, NULL "
+			   "(SELECT a.aggname, a.oid::varchar, usename, obj_description (a.oid), t2.typname, t1.typname, NULL "
 			   "FROM pg_aggregate a, pg_type t1, pg_type t2, pg_user u "
 			   "WHERE a.aggbasetype = t1.oid AND a.aggfinaltype = t2.oid AND u.usesysid=aggowner) UNION "
 			   "(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname , '-', NULL "
@@ -2139,7 +2165,7 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 			gchar *query;
 
 			query = g_strdup_printf (
-                                  "SELECT p.proname, p.oid, u.usename, pg_catalog.obj_description(p.oid),"
+                                  "SELECT p.proname, p.oid::varchar, u.usename, pg_catalog.obj_description(p.oid),"
 				  "typo.typname,"
 				  "CASE p.proargtypes[0] "
 				  "WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype "
@@ -2966,12 +2992,14 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 			g_object_unref (dh);
 		}
 	}
-        else if (type == GDA_TYPE_BINARY) { 
+        else if ((type == GDA_TYPE_BINARY) ||
+		 (type == GDA_TYPE_BLOB)){ 
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
-			dh = gda_handler_bin_new_with_prov (provider, cnc);
+			dh = gda_postgres_handler_bin_new (cnc);
 			if (dh) {
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
+				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
 				g_object_unref (dh);
 			}
 		}
@@ -2999,7 +3027,7 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 	else if (type == G_TYPE_STRING) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
-			dh = gda_handler_string_new ();
+			dh = gda_handler_string_new_with_provider (provider, cnc);
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_STRING, NULL);
 			g_object_unref (dh);
 		}
@@ -3037,7 +3065,8 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 			}
 			else {
 				dh = gda_postgres_provider_get_data_handler (provider, cnc, 
-									     postgres_name_to_g_type (dbms_type), NULL);
+									     postgres_name_to_g_type (dbms_type, NULL), 
+									     NULL);
 				gda_server_provider_handler_declare (provider, dh, cnc, 
 								     G_TYPE_INVALID, dbms_type);
 			}
@@ -3095,11 +3124,49 @@ gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider,
 	if (type == G_TYPE_UCHAR)
 		return "smallint";
 	if (type == G_TYPE_ULONG)
-		return "int2";
+		return "int8";
         if (type == G_TYPE_UINT)
 		return "int4";
 	if (type == G_TYPE_INVALID)
 		return "text";
 
 	return "text";
+}
+
+static gchar *
+gda_postgres_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
+{
+	GdaPostgresConnectionData *priv_data = NULL;
+	gchar *dest;
+	gint length;
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if (cnc) {
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+		
+		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+		if (!priv_data) {
+			gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
+			return NULL;
+		}
+	}
+
+	length = strlen (str);
+	dest = g_new (gchar, 2*length + 1);
+	if (0 && priv_data) {
+		/* FIXME: use this call but it's only defined for Postgres >= 8.1 */
+		/*PQescapeStringConn (priv_data->pconnpconn, dest, str, length, NULL);*/
+	}
+	else
+		PQescapeString (dest, str, length);
+
+	return dest;
+}
+
+static gchar *
+gda_postgres_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+	return gda_default_unescape_string (str);
 }

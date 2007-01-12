@@ -52,11 +52,12 @@ gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)
 }
 
 GdaConnectionEvent *
-gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
+gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res)
 {
 	GdaConnectionEvent *error;
 	GdaConnectionEventCode gda_code;
 	gchar *sqlstate;
+	GdaTransactionStatus *trans;
 
 	error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 	if (pconn != NULL) {
@@ -85,6 +86,17 @@ gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 
 	gda_connection_event_set_code (error, -1);
 	gda_connection_event_set_source (error, "gda-postgres");
+	gda_connection_add_event (cnc, error);
+
+	/* change the transaction status if there is a problem */
+	trans = gda_connection_get_transaction_status (cnc);
+	if (trans) {
+		if ((PQtransactionStatus (pconn) == PQTRANS_INERROR) &&
+		    (trans->state != GDA_TRANSACTION_STATUS_STATE_FAILED)) {
+			trans->state = GDA_TRANSACTION_STATUS_STATE_FAILED;
+			g_signal_emit_by_name (cnc, "transaction_status_changed");
+		}
+	}
 
 	return error;
 }
@@ -214,6 +226,10 @@ gda_postgres_set_value (GdaConnection *cnc,
 		g_value_set_string (value, thevalue);
 	else if (type == G_TYPE_INT64)
 		g_value_set_int64 (value, atoll (thevalue));
+	else if (type == G_TYPE_ULONG)
+		g_value_set_ulong (value, atoll (thevalue));
+	else if (type == G_TYPE_LONG)
+		g_value_set_ulong (value, atoll (thevalue));
 	else if (type == G_TYPE_INT)
 		g_value_set_int (value, atol (thevalue));
 	else if (type == GDA_TYPE_SHORT)
@@ -267,26 +283,22 @@ gda_postgres_set_value (GdaConnection *cnc,
 		/*
 		 * Requires PQunescapeBytea in libpq (present since 7.3.x)
 		 */
-		GdaBinary bin;
 		guchar *unescaped;
                 size_t pqlength = 0;
-		unescaped = PQunescapeBytea ((guchar*)thevalue, &pqlength);
-                bin.binary_length = pqlength;
 
+		unescaped = PQunescapeBytea ((guchar*)thevalue, &pqlength);
 		if (unescaped != NULL) {
+			GdaBinary bin;
 			bin.data = unescaped;
+			bin.binary_length = pqlength;
 			gda_value_set_binary (value, &bin);
 			PQfreemem (unescaped);
-		} 
-		else {
-			g_warning ("Error unescaping string: %s\n", thevalue);
-			g_value_set_string (value, thevalue);
 		}
 	}
 	else if (type == GDA_TYPE_BLOB) {
 		GdaBlob *blob;
 		GdaPostgresConnectionData *priv_data;
-		GdaPostgresBlobOp *op;
+		GdaBlobOp *op;
 		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 		blob = g_new0 (GdaBlob, 1);
 		op = gda_postgres_blob_op_new_with_id (cnc, thevalue);
@@ -295,7 +307,10 @@ gda_postgres_set_value (GdaConnection *cnc,
 
 		gda_value_take_blob (value, blob);
 	}
+	else if (type == G_TYPE_STRING) 
+		g_value_set_string (value, thevalue);
 	else {
+		g_warning ("Type %s not translated for value '%s' => set as string", g_type_name (type), thevalue);
 		gda_value_reset_with_type (value, G_TYPE_STRING);
 		g_value_set_string (value, thevalue);
 	}
@@ -330,4 +345,16 @@ gda_postgres_value_to_sql_string (GValue *value)
 	g_free (val_str);
 
 	return ret;
+}
+
+gboolean
+gda_postgres_check_transaction_started (GdaConnection *cnc)
+{
+	GdaTransactionStatus *trans;
+	trans = gda_connection_get_transaction_status (cnc);
+	if (!trans && !gda_connection_begin_transaction (cnc, NULL,
+							  GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL))
+		return FALSE;
+	else
+		return TRUE;
 }

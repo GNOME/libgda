@@ -1,6 +1,6 @@
 /* gda-handler-string.h
  *
- * Copyright (C) 2003 - 2005 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -52,8 +52,9 @@ struct _GdaHandlerStringClass
 };
 
 
-GType           gda_handler_string_get_type      (void);
-GdaDataHandler *gda_handler_string_new           (void);
+GType           gda_handler_string_get_type          (void);
+GdaDataHandler *gda_handler_string_new               (void);
+GdaDataHandler *gda_handler_string_new_with_provider (GdaServerProvider *prov, GdaConnection *cnc);
 
 G_END_DECLS
 

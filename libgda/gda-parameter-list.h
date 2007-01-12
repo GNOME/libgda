@@ -1,6 +1,6 @@
 /* gda-parameter-list.h
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -145,8 +145,6 @@ gboolean                gda_parameter_list_is_valid                 (GdaParamete
 
 GdaParameter           *gda_parameter_list_find_param               (GdaParameterList *paramlist, 
 								     const gchar *param_name);
-GdaParameter           *gda_parameter_list_find_param_for_user      (GdaParameterList *paramlist, 
-								     GdaObject *user);
 GdaParameterListNode   *gda_parameter_list_find_node_for_param      (GdaParameterList *paramlist, 
 								     GdaParameter *param);
 GdaParameterListSource *gda_parameter_list_find_source              (GdaParameterList *paramlist, 

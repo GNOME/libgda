@@ -36,6 +36,7 @@
 #include "gda-referer.h"
 #include "gda-renderer.h"
 #include "gda-parameter.h"
+#include "gda-parameter-util.h"
 #include "gda-marshal.h"
 #include "gda-query-join.h"
 #include "gda-parameter-list.h"
@@ -101,7 +102,8 @@ static void        gda_query_replace_refs        (GdaReferer *iface, GHashTable 
 
 /* Renderer interface */
 static void        gda_query_renderer_init   (GdaRendererIface *iface);
-static gchar      *gda_query_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error);
+static gchar      *gda_query_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
+					      GSList **out_params_used, guint options, GError **error);
 static gchar      *gda_query_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 static gboolean    gda_query_is_valid        (GdaRenderer *iface, GdaParameterList *context, GError **error);
 
@@ -452,7 +454,7 @@ gda_query_constructor (GType type,
 	id = gda_queries_get_serial (reg);
 	gda_query_object_set_int_id (GDA_QUERY_OBJECT (obj), id);
 	
-	gda_dict_declare_object (ASSERT_DICT (dict), GDA_OBJECT (obj));
+	gda_dict_declare_object_as (ASSERT_DICT (dict), GDA_OBJECT (obj), GDA_TYPE_QUERY);
 
 	return obj;
 }
@@ -537,7 +539,6 @@ gda_query_new_copy (GdaQuery *orig, GHashTable *replacements)
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_QUERY);
 	id = gda_queries_get_serial (reg);
 	gda_query_object_set_int_id (GDA_QUERY_OBJECT (obj), id);
-	gda_dict_declare_object (dict, (GdaObject *) gda_query);
 
 	/* hash table for replacements */
 	if (!replacements)
@@ -1530,7 +1531,7 @@ gda_query_get_sql_text (GdaQuery *query)
 	g_return_val_if_fail (query && GDA_IS_QUERY (query), NULL);
 	g_return_val_if_fail (query->priv, NULL);
 
-	return gda_query_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_PARAMS_AS_DETAILED, NULL);
+	return gda_query_render_as_sql (GDA_RENDERER (query), NULL, NULL, GDA_RENDERER_PARAMS_AS_DETAILED, NULL);
 }
 
 
@@ -2799,7 +2800,7 @@ gda_query_execute (GdaQuery *query, GdaParameterList *params, gboolean iter_mode
 	}
 
 	/* use SQL and execute_command() virtual method of the provider */
-	str = gda_renderer_render_as_sql (GDA_RENDERER (query), params, 0, error);
+	str = gda_renderer_render_as_sql (GDA_RENDERER (query), params, NULL, 0, error);
 	if (!str)
 		return NULL;
 
@@ -2962,7 +2963,7 @@ gda_query_dump (GdaQuery *query, guint offset)
 		}
 
 		/* Rendered version of the query */
-		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
+		sql = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, GDA_RENDERER_PARAMS_AS_DETAILED, &error);
 		if (sql) {
 			g_print ("%sSQL=%s\n", str, sql);
 			g_free (sql);
@@ -3982,7 +3983,7 @@ gda_query_save_to_xml (GdaXmlStorage *iface, GError **error)
 
 	/* save as SQL text if query is not active */
 	if (! gda_referer_activate (GDA_REFERER (query))) {
-		str = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, 0, error);
+		str = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL, 0, error);
 		if (!str)
 			return NULL;
 		xmlNewChild (node, NULL, (xmlChar*)"gda_query_text", BAD_CAST str);
@@ -4527,14 +4528,22 @@ convert_str_to_query_type (const gchar *str)
  * GdaRenderer interface implementation
  */
 
-static gchar *render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GError **error);
-static gchar *render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GError **error);
-static gchar *render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GError **error);
-static gchar *render_sql_delete (GdaQuery *query, GdaParameterList *context, guint options, GError **error);
-static gchar *render_sql_union (GdaQuery *query, GdaParameterList *context, guint options, GError **error);
-static gchar *render_sql_intersect (GdaQuery *query, GdaParameterList *context, guint options, GError **error);
-static gchar *render_sql_except (GdaQuery *query, GdaParameterList *context, guint options, GError **error);
-static gchar *render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, guint options, GError **error);
+static gchar *render_sql_select (GdaQuery *query, GdaParameterList *context, 
+				 GSList **out_params_used, guint options, GError **error);
+static gchar *render_sql_insert (GdaQuery *query, GdaParameterList *context, 
+				 GSList **out_params_used, guint options, GError **error);
+static gchar *render_sql_update (GdaQuery *query, GdaParameterList *context, 
+				 GSList **out_params_used, guint options, GError **error);
+static gchar *render_sql_delete (GdaQuery *query, GdaParameterList *context, 
+				 GSList **out_params_used, guint options, GError **error);
+static gchar *render_sql_union (GdaQuery *query, GdaParameterList *context, 
+				GSList **out_params_used, guint options, GError **error);
+static gchar *render_sql_intersect (GdaQuery *query, GdaParameterList *context, 
+				    GSList **out_params_used, guint options, GError **error);
+static gchar *render_sql_except (GdaQuery *query, GdaParameterList *context, 
+				 GSList **out_params_used, guint options, GError **error);
+static gchar *render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, 
+						 GSList **out_params_used, guint options, GError **error);
 
 static gboolean assert_coherence_all_params_present (GdaQuery *query, GdaParameterList *context, GError **error);
 static gboolean assert_coherence_entities_same_fields (GdaEntity *ent1, GdaEntity *ent2);
@@ -4586,7 +4595,8 @@ gda_query_is_well_formed (GdaQuery *query, GdaParameterList *context, GError **e
 }
 
 static gchar *
-gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint options, GError **error)
+gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
+			 GSList **out_params_used, guint options, GError **error)
 {
 	GdaQuery *query;
 	gchar *sql = NULL;
@@ -4602,27 +4612,27 @@ gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint op
 	switch (query->priv->query_type) {
 	case GDA_QUERY_TYPE_SELECT:
 		if (assert_coherence_data_select_query (query, context, error))
-			sql = render_sql_select (query, context, options, error);
+			sql = render_sql_select (query, context, out_params_used, options, error);
 		break;
 	case GDA_QUERY_TYPE_INSERT:
 		if (assert_coherence_data_modify_query (query, context, error))
-			sql = render_sql_insert (query, context, options, error);
+			sql = render_sql_insert (query, context, out_params_used, options, error);
 		break;
 	case GDA_QUERY_TYPE_UPDATE:
 		if (assert_coherence_data_modify_query (query, context, error))
-			sql = render_sql_update (query, context, options, error);
+			sql = render_sql_update (query, context, out_params_used, options, error);
 		break;
 	case GDA_QUERY_TYPE_DELETE:
 		if (assert_coherence_data_modify_query (query, context, error))
-			sql = render_sql_delete (query, context, options, error);
+			sql = render_sql_delete (query, context, out_params_used, options, error);
 		break;
 	case GDA_QUERY_TYPE_UNION:
 		if (assert_coherence_aggregate_query (query, context, error))
-			sql = render_sql_union (query, context, options, error);
+			sql = render_sql_union (query, context, out_params_used, options, error);
 		break;
 	case GDA_QUERY_TYPE_INTERSECT:
 		if (assert_coherence_aggregate_query (query, context, error))
-			sql = render_sql_intersect (query, context, options, error);
+			sql = render_sql_intersect (query, context, out_params_used, options, error);
 		break;
 	case GDA_QUERY_TYPE_EXCEPT:
 		if (assert_coherence_aggregate_query (query, context, error)) {
@@ -4632,14 +4642,14 @@ gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context, guint op
 					     GDA_QUERY_RENDER_ERROR,
 					     _("More than two sub-queries for an EXCEPT query"));
 			else
-				sql = render_sql_except (query, context, options, error);
+				sql = render_sql_except (query, context, out_params_used, options, error);
 		}
 		break;
 	case GDA_QUERY_TYPE_NON_PARSED_SQL:
 		if (query->priv->sql && *(query->priv->sql)) {
 			if (query->priv->sql_exprs && query->priv->sql_exprs->params_specs &&
 			    assert_coherence_all_params_present (query, context, NULL))
-				sql = render_sql_non_parsed_with_params (query, context, options, error);
+				sql = render_sql_non_parsed_with_params (query, context, out_params_used, options, error);
 			else
 				sql = g_strdup (query->priv->sql);
 		}
@@ -5005,9 +5015,10 @@ typedef struct {
 } JoinRenderNode;
 #define JOIN_RENDER_NODE(x) ((JoinRenderNode *) x)
 
-static gchar *render_join_condition (GdaQueryJoin *join, GdaParameterList *context, guint options, GError **error, GSList *fk_constraints);
+static gchar *render_join_condition (GdaQueryJoin *join, GdaParameterList *context, 
+				     GSList **out_params_used, guint options, GError **error, GSList *fk_constraints);
 static gchar *
-render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GError **error)
+render_sql_select (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
 {
 	GString *sql;
 	gchar *retval, *str;
@@ -5044,7 +5055,8 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GE
 					g_string_append (sql, ", ");
 			}
 
-			str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, options, error);
+			str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, out_params_used, 
+							  options, error);
 			if (str) {
 				g_string_append (sql, str);
 				g_free (str);
@@ -5136,7 +5148,8 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GE
 				}
 
 				/* render the join condition in 'node->cond' */
-				str = render_join_condition (join, context, options, error, fk_constraints);
+				str = render_join_condition (join, context, out_params_used, 
+							     options, error, fk_constraints);
 				if (str) {
 					if (!node->cond)
 						node->cond = g_string_new ("");
@@ -5168,7 +5181,7 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GE
 
 				/* target */
 				str = gda_renderer_render_as_sql (GDA_RENDERER (JOIN_RENDER_NODE (list->data)->target), 
-								 context, options, error);
+								  context, out_params_used, options, error);
 				
 				if (str) {
 					g_string_append (sql, str);
@@ -5215,7 +5228,7 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GE
 				else
 					g_string_append (sql, ", ");
 				str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, 
-								 options, error);
+								  out_params_used, options, error);
 				if (str) {
 					g_string_append (sql, str);
 					g_free (str);
@@ -5238,7 +5251,8 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GE
 			g_string_append (sql, "\nWHERE ");
 		else
 			g_string_append (sql, "WHERE ");
-		str = gda_renderer_render_as_sql (GDA_RENDERER (query->priv->cond), context, options, error);
+		str = gda_renderer_render_as_sql (GDA_RENDERER (query->priv->cond), context, 
+						  out_params_used, options, error);
 		if (str) {
 			g_string_append (sql, str);
 			g_string_append (sql, " ");
@@ -5269,7 +5283,8 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GE
 			}
 		}
 		else { /* render using field names */
-			str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, options, error);
+			str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, 
+							  out_params_used, options, error);
 			if (str) {
 				if (list == query->priv->fields_order_by){ 
 					if (pprint)
@@ -5302,7 +5317,8 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, guint options, GE
 }
 
 static gchar *
-render_join_condition (GdaQueryJoin *join, GdaParameterList *context, guint options, GError **error, GSList *fk_constraints)
+render_join_condition (GdaQueryJoin *join, GdaParameterList *context, GSList **out_params_used, 
+		       guint options, GError **error, GSList *fk_constraints)
 {
 	GString *string;
 	gchar *retval = NULL;
@@ -5313,7 +5329,7 @@ render_join_condition (GdaQueryJoin *join, GdaParameterList *context, guint opti
 	string = g_string_new ("");
 	
 	if ((cond = gda_query_join_get_condition (join))) {
-		gchar *str = gda_renderer_render_as_sql (GDA_RENDERER (cond), context, options, error);
+		gchar *str = gda_renderer_render_as_sql (GDA_RENDERER (cond), context, out_params_used, options, error);
 		joincond = TRUE;
 
 		if (!str)
@@ -5400,7 +5416,7 @@ render_join_condition (GdaQueryJoin *join, GdaParameterList *context, guint opti
 
 
 static gchar *
-render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GError **error)
+render_sql_insert (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
 {
 	GString *sql;
 	gchar *retval;
@@ -5427,7 +5443,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 
 			g_object_get (G_OBJECT (list->data), "value_provider", &value_prov, NULL);
 			g_assert (value_prov);
-			str = gda_renderer_render_as_sql (GDA_RENDERER (value_prov), context, 
+			str = gda_renderer_render_as_sql (GDA_RENDERER (value_prov), context, out_params_used,
 							  options | GDA_RENDERER_ERROR_IF_DEFAULT, &my_error);
 			if (!str) {
 				if (my_error) {
@@ -5438,7 +5454,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 					else {
 						/* make sure @error is set */
 						gda_renderer_render_as_sql (GDA_RENDERER (value_prov), context, 
-									    options, error);
+									    out_params_used, options, error);
 						err = TRUE;
 					}
 					g_error_free (my_error);
@@ -5450,7 +5466,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 			
 			if (add_field) {
 				gchar *tmpstr;
-				tmpstr = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, 
+				tmpstr = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, out_params_used,
 								     options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, NULL);
 				if (tmpstr) {
 					printed_fields = g_slist_append (printed_fields, list->data);
@@ -5513,7 +5529,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 				else
 					g_string_append (sql, ", ");
 			}
-			tmpstr = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, 
+			tmpstr = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, out_params_used,
 							     options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, NULL);
 			g_string_append (sql, tmpstr);
 			g_free (tmpstr);
@@ -5530,7 +5546,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 	/* list of values */
 	if (query->priv->sub_queries) {
 		gchar *str = gda_query_render_as_sql (GDA_RENDERER (query->priv->sub_queries->data), context, 
-						      options, error);
+						      out_params_used, options, error);
 		if (str) {
 			g_string_append (sql, str);
 			g_free (str);
@@ -5574,7 +5590,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, guint options, GE
 }
 
 static gchar *
-render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GError **error)
+render_sql_update (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
 {
 	GString *sql;
 	gchar *retval;
@@ -5608,7 +5624,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 				else
 					g_string_append (sql, ", ");
 			}
-			str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context,
+			str = gda_renderer_render_as_sql (GDA_RENDERER (list->data), context, out_params_used,
 							  options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, error);
 			if (str) {
 				g_string_append (sql, str);
@@ -5622,7 +5638,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 			if (value_prov) {
 				gchar *str;
 				str = gda_renderer_render_as_sql (GDA_RENDERER (value_prov), context, 
-								 options, error);
+								  out_params_used, options, error);
 				if (str) {
 					g_string_append (sql, str);
 					g_free (str);
@@ -5655,7 +5671,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 			g_string_append (sql, "\nWHERE ");
 		else
 			g_string_append (sql, "WHERE ");
-		str = gda_renderer_render_as_sql (GDA_RENDERER (query->priv->cond), context, 
+		str = gda_renderer_render_as_sql (GDA_RENDERER (query->priv->cond), context, out_params_used, 
 						  options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, error);
 		if (str) {
 			g_string_append (sql, str);
@@ -5675,7 +5691,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, guint options, GE
 }
 
 static gchar *
-render_sql_delete (GdaQuery *query, GdaParameterList *context, guint options, GError **error)
+render_sql_delete (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
 {
 	GString *sql;
 	gchar *retval;
@@ -5695,7 +5711,7 @@ render_sql_delete (GdaQuery *query, GdaParameterList *context, guint options, GE
 	if (query->priv->cond) {
 		gchar *str;
 		g_string_append (sql, " WHERE ");
-		str = gda_renderer_render_as_sql (GDA_RENDERER (query->priv->cond), context, 
+		str = gda_renderer_render_as_sql (GDA_RENDERER (query->priv->cond), context, out_params_used,
 						  options | GDA_RENDERER_FIELDS_NO_TARGET_ALIAS, error);
 		if (str) {
 			g_string_append (sql, str);
@@ -5715,7 +5731,7 @@ render_sql_delete (GdaQuery *query, GdaParameterList *context, guint options, GE
 }
 
 static gchar *
-render_sql_union (GdaQuery *query, GdaParameterList *context, guint options, GError **error)
+render_sql_union (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
 {
 	GString *sql;
 	gchar *retval, *str;
@@ -5731,7 +5747,8 @@ render_sql_union (GdaQuery *query, GdaParameterList *context, guint options, GEr
 			first = FALSE;
 		else
 			g_string_append (sql, " UNION ");
-		str = gda_query_render_as_sql (GDA_RENDERER (list->data), context, options, error);
+		str = gda_query_render_as_sql (GDA_RENDERER (list->data), context, out_params_used,
+					       options, error);
 		if (str) {
 			g_string_append_printf (sql, "(%s)", str);
 			g_free (str);
@@ -5751,7 +5768,7 @@ render_sql_union (GdaQuery *query, GdaParameterList *context, guint options, GEr
 }
 
 static gchar *
-render_sql_intersect (GdaQuery *query, GdaParameterList *context, guint options, GError **error)
+render_sql_intersect (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
 {
 	GString *sql;
 	gchar *retval, *str;
@@ -5767,7 +5784,8 @@ render_sql_intersect (GdaQuery *query, GdaParameterList *context, guint options,
 			first = FALSE;
 		else
 			g_string_append (sql, " INTERSECT ");
-		str = gda_query_render_as_sql (GDA_RENDERER (list->data), context, options, error);
+		str = gda_query_render_as_sql (GDA_RENDERER (list->data), context, 
+					       out_params_used, options, error);
 		if (str) {
 			g_string_append_printf (sql, "(%s)", str);
 			g_free (str);
@@ -5787,7 +5805,7 @@ render_sql_intersect (GdaQuery *query, GdaParameterList *context, guint options,
 }
 
 static gchar *
-render_sql_except (GdaQuery *query, GdaParameterList *context, guint options, GError **error)
+render_sql_except (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
 {
 	GString *sql;
 	gchar *retval, *str;
@@ -5803,7 +5821,8 @@ render_sql_except (GdaQuery *query, GdaParameterList *context, guint options, GE
 			first = FALSE;
 		else
 			g_string_append (sql, " EXCEPT ");
-		str = gda_query_render_as_sql (GDA_RENDERER (list->data), context, options, error);
+		str = gda_query_render_as_sql (GDA_RENDERER (list->data), context, 
+					       out_params_used, options, error);
 		if (str) {
 			g_string_append_printf (sql, "(%s)", str);
 			g_free (str);
@@ -5823,7 +5842,7 @@ render_sql_except (GdaQuery *query, GdaParameterList *context, guint options, GE
 }
 
 static gchar *
-render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, guint options, GError **error)
+render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
 {
 	GString *string;
 	gchar *retval;
@@ -5856,7 +5875,8 @@ render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, g
 			}
 			
 			if (found) 
-				str = gda_renderer_render_as_sql (GDA_RENDERER (found), context, options, error);
+				str = gda_renderer_render_as_sql (GDA_RENDERER (found), context, out_params_used,
+								  options, error);
 			
 			if (!str) {
 				g_string_free (string, TRUE);
