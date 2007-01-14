@@ -24,21 +24,11 @@ of one or more query internals. The .dot file can be processed with the GraphViz
 </para>
 
 
-<!-- ##### ARG GdaGraphviz:prop ##### -->
-<para>
-
-</para>
-
 <!-- ##### STRUCT GdaGraphviz ##### -->
 <para>
 
 </para>
 
-
-<!-- ##### ARG GdaGraphviz:prop ##### -->
-<para>
-
-</para>
 
 <!-- ##### STRUCT GdaGraphvizClass ##### -->
 <para>

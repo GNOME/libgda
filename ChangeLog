@@ -1,3 +1,13 @@
+2007-01-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-connection-private.h:
+	* libgda/gda-connection.c: added a private function to change the state of the
+	current transaction, to be used by providers' implementations
+	* providers/postgres/gda-postgres-blob-op.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/utils.c: corrected an error which made the current transaction
+	fail when trying to delete a nonexisting blob Oid
+	
 2007-01-12  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/gda-query.c: Declare the object explicitely as GDA_TYPE_QUERY
@@ -5,7 +15,7 @@
 	declaration from gda_dict_query_copy() because it is already done in
 	constructor.
 
-2007-01-12 Vivien Malerba <malerba@gnome-db.org>
+2007-01-12  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql/gda-mysql-provider.c: fixed a bug related to FK reporting
 	in the CONSTRAINTS schema report, added the "bit" data type as a synonym to

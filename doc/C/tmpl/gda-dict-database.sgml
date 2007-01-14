@@ -120,11 +120,6 @@ with objects such as #GdaDictTable (composed of #GdaDictfield objects) and #GdaD
 @arg2: 
 @arg3: 
 
-<!-- ##### ARG GdaDictDatabase:prop ##### -->
-<para>
-
-</para>
-
 <!-- ##### FUNCTION gda_dict_database_new ##### -->
 <para>
 

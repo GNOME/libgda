@@ -50,3 +50,13 @@ Default handler for strings
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_handler_string_new_with_provider ##### -->
+<para>
+
+</para>
+
+@prov: 
+@cnc: 
+@Returns: 
+
+

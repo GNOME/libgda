@@ -35,6 +35,8 @@ void gda_connection_internal_sql_executed (GdaConnection *cnc, const gchar *sql,
 void gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent_trans, const gchar *svp_name);
 void gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *svp_name);
 void gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_name);
+void gda_connection_internal_change_transaction_state (GdaConnection *cnc,
+						       GdaTransactionStatusState newstate);
 
 /* helper function, fuzzy analysis of "standard" SQL for transactions */
 void gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, GdaConnectionEvent *error);

@@ -125,7 +125,6 @@ blob_op_open (GdaPostgresBlobOp *pgop)
 	gda_connection_add_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 	pgop->priv->fd = lo_open (get_pconn (pgop->priv->cnc), pgop->priv->blobid, INV_READ | INV_WRITE);
 	if (pgop->priv->fd < 0) {
-		gda_postgres_make_error (pgop->priv->cnc, get_pconn (pgop->priv->cnc), NULL);
 		gda_connection_rollback_savepoint (pgop->priv->cnc, "__gda_blob_read_svp", NULL);
 		return FALSE;
 	}
@@ -140,7 +139,7 @@ gda_postgres_blob_op_finalize (GObject * object)
 
 	g_return_if_fail (GDA_IS_POSTGRES_BLOB_OP (pgop));
 
-	if (pgop->priv->fd >= 0) 
+	if (pgop->priv->fd >= 0)
 		lo_close (get_pconn (pgop->priv->cnc), pgop->priv->fd);
 	g_free (pgop->priv);
 	pgop->priv = NULL;

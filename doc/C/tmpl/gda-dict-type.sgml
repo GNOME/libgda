@@ -35,11 +35,6 @@ It implements the #GdaXmlStorage interface.
 </para>
 
 
-<!-- ##### ARG GdaDictType:prop ##### -->
-<para>
-
-</para>
-
 <!-- ##### FUNCTION gda_dict_type_new ##### -->
 <para>
 

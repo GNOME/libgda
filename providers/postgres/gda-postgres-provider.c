@@ -1420,15 +1420,26 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 				for (col = 0; col < ncols; col++) {
 					if (PQftype (pg_existing_blobs, col) == 26 /*OIDOID*/) {
 						gchar *blobid = PQgetvalue (pg_existing_blobs, row, col);
-						if (atoi (blobid) != InvalidOid)
-							lo_unlink (pconn, atoi (blobid));
+						if (atoi (blobid) != InvalidOid) {
+							/* add a savepoint to prevent a blob unlink 
+							   failure from rendering the transaction unuseable */
+							gda_connection_add_savepoint (cnc, 
+										      "__gda_blob_read_svp", 
+										      NULL);
+							if (lo_unlink (pconn, atoi (blobid)) !=  1)
+								gda_connection_rollback_savepoint (cnc, 
+								    "__gda_blob_read_svp", NULL);
+							else
+								gda_connection_delete_savepoint (cnc, 
+								    "__gda_blob_read_svp", NULL);	
+						}
 					}
 					else
 						ncols = col;
 				}
 			}
+			PQclear (pg_existing_blobs);
 		}
-		PQclear (pg_existing_blobs);
 	}
 
 	return retval;

@@ -32,6 +32,7 @@
 #include <locale.h>
 #endif
 #include <libpq/libpq-fs.h>
+#include <libgda/gda-connection-private.h>
 
 GdaConnectionEventCode
 gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)
@@ -92,12 +93,10 @@ gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res)
 	trans = gda_connection_get_transaction_status (cnc);
 	if (trans) {
 		if ((PQtransactionStatus (pconn) == PQTRANS_INERROR) &&
-		    (trans->state != GDA_TRANSACTION_STATUS_STATE_FAILED)) {
-			trans->state = GDA_TRANSACTION_STATUS_STATE_FAILED;
-			g_signal_emit_by_name (cnc, "transaction_status_changed");
-		}
+		    (trans->state != GDA_TRANSACTION_STATUS_STATE_FAILED))
+			gda_connection_internal_change_transaction_state (cnc,
+									  GDA_TRANSACTION_STATUS_STATE_FAILED);
 	}
-
 	return error;
 }
 

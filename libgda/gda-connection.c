@@ -1791,3 +1791,22 @@ gda_connection_internal_treat_sql (GdaConnection *cnc, const gchar *sql, GdaConn
 	if (!done)
 		gda_connection_internal_sql_executed (cnc, sql, error);
 }
+
+void
+gda_connection_internal_change_transaction_state (GdaConnection *cnc,
+						  GdaTransactionStatusState newstate)
+{
+	g_return_if_fail (cnc->priv->trans_status);
+
+	if (cnc->priv->trans_status->state == newstate)
+		return;
+
+	cnc->priv->trans_status->state = newstate;
+#ifdef GDA_DEBUG_signal
+	g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[TRANSACTION_STATUS_CHANGED], 0);
+#ifdef GDA_DEBUG_signal
+	g_print ("<< 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
+#endif
+}
