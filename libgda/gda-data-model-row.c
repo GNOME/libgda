@@ -344,8 +344,9 @@ column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelR
 		GType vtype;
 
 		value = gda_data_model_row_get_value_at (GDA_DATA_MODEL (model), col, i);
-		vtype = G_VALUE_TYPE ((GValue *) value);
-		if ((vtype != GDA_TYPE_NULL) && (vtype != new)) {
+		if (value)
+			vtype = G_VALUE_TYPE ((GValue *) value);
+		if (value && (vtype != GDA_TYPE_NULL) && (vtype != new)) {
 			nb_warnings ++;
 			if (nb_warnings < max_warnings) {
 				if (nb_warnings == max_warnings)

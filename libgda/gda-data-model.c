@@ -1604,8 +1604,10 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean
 			return FALSE;
 		}
 		if (param) {
-			if (! g_value_type_transformable (gda_parameter_get_g_type (param), 
-							  gda_column_get_g_type (column))) {
+			if ((gda_column_get_g_type (column) != G_TYPE_INVALID) &&
+			    (gda_parameter_get_g_type (param) != G_TYPE_INVALID) &&
+			    !g_value_type_transformable (gda_parameter_get_g_type (param), 
+							 gda_column_get_g_type (column))) {
 				g_set_error (error, 0, 0,
 					     _("Destination column %d has a gda type (%s) incompatible with "
 					       "source column %d type (%s)"), i,
@@ -1632,8 +1634,9 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean
 
 		column = gda_data_model_describe_column (to, i);
 		if (plist->data) {
-			if (gda_parameter_get_g_type (GDA_PARAMETER (plist->data)) != 
-			    gda_column_get_g_type (column)) {
+			if ((gda_parameter_get_g_type (GDA_PARAMETER (plist->data)) != 
+			     gda_column_get_g_type (column)) &&
+			    (gda_column_get_g_type (column) != G_TYPE_INVALID)) {
 				GValue *newval;
 				
 				newval = g_new0 (GValue, 1);
@@ -1700,15 +1703,15 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from, gboolean
 		}
 
 		if (retval) {
+			if (to_row >= to_nb_rows)
+				/* we have finished modifying the existng rows */
+				to_row = -1;
+
 			if (to_row >= 0) {
 				if (!gda_data_model_set_values (to, to_row, values, error))
 					retval = FALSE;
-				else {
+				else 
 					to_row ++;
-					if (to_row >= to_nb_rows)
-						/* we have finished modifying the existng rows */
-						to_row = -1;
-				}
 			}
 			else {
 				if (gda_data_model_append_values (to, values, error) < 0) 

@@ -1417,6 +1417,34 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 }
 #endif
 
+/**
+ * gda_parameter_get_alphanum_name
+ * @param: a #GdaParameter object
+ *
+ * Get a new string containing a "clean" version of @param's name: chars which
+ * are not among [0-9A-Za-z] are replaced with '_'.
+ *
+ * Returns: a new string
+ */
+gchar *
+gda_parameter_get_alphanum_name (GdaParameter *param)
+{
+	gchar *ret, *ptr;
+	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
+
+	ptr = gda_object_get_name (GDA_OBJECT (param));
+	if (ptr)
+		ret = g_strdup (ptr);
+	else
+		ret = NULL;
+
+	for (ptr = ret; ptr && *ptr; ptr++)
+		if (! (((*ptr >= '0') || (*ptr <= '9')) ||
+		       ((*ptr >= 'A') || (*ptr <= 'Z')) ||
+		       ((*ptr >= 'a') || (*ptr <= 'z')))) 
+			*ptr = '_';
+	return ret;	
+}
 
 /* 
  * GdaReferer interface implementation

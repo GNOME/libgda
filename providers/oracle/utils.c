@@ -143,8 +143,6 @@ oracle_sqltype_to_g_type (const ub2 sqltype)
 	case SQLT_AVC:
 	case SQLT_LAB:
 	case SQLT_VST:
-	case SQLT_CFILEE:
-	case SQLT_CLOB:
 		return G_TYPE_STRING;
 	case SQLT_NUM:
 		return GDA_TYPE_NUMERIC;
@@ -160,6 +158,8 @@ oracle_sqltype_to_g_type (const ub2 sqltype)
 	case SQLT_LVB:
 	case SQLT_BLOB:
 	case SQLT_BFILEE:
+	case SQLT_CFILEE:
+	case SQLT_CLOB:
 		return GDA_TYPE_BLOB;
 	case SQLT_DAT:
 	case SQLT_ODT:
@@ -320,13 +320,8 @@ GdaOracleValue *
 gda_value_to_oracle_value (const GValue *value)
 {
 	GdaOracleValue *ora_value;
-	gchar *val_str;
 	OCIDate *oci_date;
 	GType type;
-
-	val_str = gda_value_stringify ((GValue *) value);
-	if (!val_str)
-		return NULL;
 
 	ora_value = g_new0 (GdaOracleValue, 1);
 
@@ -345,6 +340,11 @@ gda_value_to_oracle_value (const GValue *value)
 		 (type == G_TYPE_FLOAT) ||
 		 (type == GDA_TYPE_SHORT) ||
 		 (type == G_TYPE_CHAR)) {
+		gchar *val_str;
+		val_str = gda_value_stringify ((GValue *) value);
+		if (!val_str)
+			return NULL;
+		
 		ora_value->sql_type = SQLT_NUM;
 		ora_value->value = (void *) val_str;
 		ora_value->defined_size = strlen (val_str);
@@ -377,14 +377,32 @@ gda_value_to_oracle_value (const GValue *value)
 		ora_value->defined_size = sizeof (OCIDate);
 		ora_value->value = oci_date;
 	}
+	else if (type == GDA_TYPE_BLOB) {
+		GdaBinary *bin;
+
+		bin = (GdaBinary *) gda_value_get_blob ((GValue *) value);
+		if (bin) {
+			ora_value->sql_type = SQLT_LNG;
+			ora_value->value = bin->data;
+			ora_value->defined_size = bin->binary_length;
+		}
+		else {
+			ora_value->sql_type = SQLT_CHR;
+			ora_value->value = g_strdup ("");
+			ora_value->defined_size = 0;
+		}
+	}
 	else {
+		gchar *val_str;
+		val_str = gda_value_stringify ((GValue *) value);
+		if (!val_str)
+			return NULL;
+
 		ora_value->sql_type = SQLT_CHR;
-		ora_value->value = g_malloc0 (strlen (val_str));
 		ora_value->value = val_str;
 		ora_value->defined_size = strlen (val_str);
 	}
 
-	/*g_free (val_str);*/
 	return ora_value;
 }
 
@@ -403,7 +421,6 @@ gda_oracle_set_value (GValue *value,
 	ub1 min;
 	ub1 sec;
 	GType type;
-
 	gchar *string_buffer, *tmp;
 
 	if (-1 == (ora_value->indicator)) {
@@ -495,12 +512,38 @@ gda_oracle_set_value (GValue *value,
 	else if (type == GDA_TYPE_BLOB) {
 		GdaBlob *blob;
 		GdaBlobOp *op;
+		OCILobLocator *lobloc;
+		GdaOracleConnectionData *priv_data;
+		gint result;
+
+		/* REM: we need to make a "copy" of the lob locator to give to the GdaOracleblobOp object */
+		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
+		if (!priv_data) {
+			gda_connection_add_event_string (cnc, _("Invalid Oracle handle"));
+			gda_value_set_null (value);
+			return;
+		}
+
+		result = OCIDescriptorAlloc ((dvoid *) priv_data->henv, (dvoid **) &lobloc, 
+					     (ub4) gda_oracle_blob_type (ora_value->sql_type), (size_t) 0, (dvoid **) 0);
+		if (gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+					     _("Could not allocate Lob locator"))) {
+			gda_value_set_null (value);
+			return;
+		}
+
+		result = OCILobAssign ((dvoid *) priv_data->henv, (dvoid *) priv_data->herr, ora_value->value, &lobloc);
+		if (gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+					     _("Could not copy Lob locator"))) {
+			gda_value_set_null (value);
+			return;
+		}
+
 		blob = g_new0 (GdaBlob, 1);
-		op = gda_oracle_blob_op_new (cnc);
+		op = gda_oracle_blob_op_new (cnc, lobloc);
 		gda_blob_set_op (blob, op);
 		g_object_unref (op);
 
-		/* FIXME: make a "copy" of @ora_value->value (which is a OCILobLocator* (?)) into ops->lobl */
 		gda_value_take_blob (value, blob);
 	}
 	else

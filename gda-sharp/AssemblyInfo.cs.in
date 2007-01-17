@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly:AssemblyVersion("@GDA_MAJOR_VERSION@.@GDA_MINOR_VERSION@")]
+[assembly:AssemblyVersion("@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@")]
 
 

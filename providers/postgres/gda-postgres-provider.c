@@ -1316,6 +1316,7 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 			event = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 			gda_connection_event_set_description (event, error && error->message ? 
 							      error->message : _("No detail"));
+			gda_connection_add_event (cnc, event);
 			g_error_free (error);
 		}
 

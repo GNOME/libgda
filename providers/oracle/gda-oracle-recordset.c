@@ -34,15 +34,15 @@
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ROW
 
 struct _GdaOracleRecordsetPrivate {
-	GdaConnection *cnc;
+	GdaConnection           *cnc;
 	GdaOracleConnectionData *cdata;
 
-	GList *ora_values;
-	GPtrArray *rows;
-	OCIStmt *hstmt;
+	GList                   *ora_values;
+	GPtrArray               *rows;
+	OCIStmt                 *hstmt;
 
-	gint ncolumns;
-	gint nrows;
+	gint                     ncolumns;
+	gint                     nrows;
 };
 
 
@@ -65,7 +65,7 @@ define_columns (GdaOracleRecordsetPrivate *priv, GArray *col_size_array)
 	gint result;
 	ub2 fake_type;
 
-	for (i = 0; i < priv->ncolumns; i += 1) {
+	for (i = 0; i < priv->ncolumns; i ++) {
 		GdaOracleValue *ora_value = g_new0 (GdaOracleValue, 1);
 
 		result = OCIParamGet (priv->hstmt,
@@ -113,6 +113,7 @@ define_columns (GdaOracleRecordsetPrivate *priv, GArray *col_size_array)
                         break;
                 }
 
+		ora_value->g_type = oracle_sqltype_to_g_type (ora_value->sql_type);
 		if (col_size_array && (i < col_size_array->len)) {
 			ub2 size;
 			
@@ -120,20 +121,34 @@ define_columns (GdaOracleRecordsetPrivate *priv, GArray *col_size_array)
 			if (size > 0)
 				ora_value->defined_size = size;
 		}
-		if (ora_value->defined_size == 0) 
+		if (ora_value->g_type == GDA_TYPE_BLOB) {
+			/* allocate a Lob locator */
+			OCILobLocator *lob;
+
+			result = OCIDescriptorAlloc ((dvoid *) priv->cdata->henv, (dvoid **) &lob, 
+						     (ub4) gda_oracle_blob_type (ora_value->sql_type), (size_t) 0, (dvoid **) 0);
+			if (gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+						     _("Could not allocate Lob locator")))
+				return NULL;
+			ora_value->value = lob;
+			ora_value->defined_size = 0;
+		}
+		else if (ora_value->defined_size == 0)
 			ora_value->value = NULL;
-		else
-			ora_value->value = g_malloc0 (ora_value->defined_size+1);
+		else {
+			ora_value->defined_size++;
+			ora_value->value = g_malloc0 (ora_value->defined_size);
+		}
+
 		ora_value->hdef = (OCIDefine *) 0;
 		ora_value->indicator = 0;
-		ora_value->g_type = oracle_sqltype_to_g_type (ora_value->sql_type);
 		result = OCIDefineByPos ((OCIStmt *) priv->hstmt,
 					 (OCIDefine **) &(ora_value->hdef),
 					 (OCIError *) priv->cdata->herr,
 					 (ub4) i + 1,
 					 ora_value->value,
-					 ora_value->value ? ora_value->defined_size+1 : 0,
-					 (ub2) fake_type, /* check that this is SQLT_BLOB or SQLT_CLOB */
+					 ora_value->defined_size,
+					 (ub2) fake_type,
 					 (dvoid *) &(ora_value->indicator),
 					 (ub2 *) 0,
 					 (ub2 *) 0, 
@@ -290,17 +305,15 @@ gda_oracle_recordset_get_n_rows (GdaDataModelRow *model)
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;
 	gint result = OCI_SUCCESS;
-	gint nrows;
+	gint nrows = -1;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (model), 0);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
 	priv_data = recset->priv;
 
-	nrows = priv_data->nrows;
-
-	if (nrows >= 0) 
-		return nrows;
+	if (priv_data->nrows >= 0) 
+		return priv_data->nrows;
 
 	while (result == OCI_SUCCESS) {
 		nrows += 1;
@@ -313,18 +326,17 @@ gda_oracle_recordset_get_n_rows (GdaDataModelRow *model)
 
 	/* reset the result set to the beginning */
 	result = OCIStmtExecute (priv_data->cdata->hservice,
-				priv_data->hstmt,
-				priv_data->cdata->herr,
-				(ub4) ((OCI_STMT_SELECT == priv_data->cdata->stmt_type) ? 0 : 1),
-				(ub4) 0,
-				(CONST OCISnapshot *) NULL,
-				(OCISnapshot *) NULL,
-				OCI_DEFAULT);
+				 priv_data->hstmt,
+				 priv_data->cdata->herr,
+				 (ub4) 0,
+				 (ub4) 0,
+				 (CONST OCISnapshot *) NULL,
+				 (OCISnapshot *) NULL,
+				 OCI_DEFAULT);
 	
 	if (gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, 
-				     OCI_HTYPE_ERROR, "Could not execute Oracle statement")) {
+				     OCI_HTYPE_ERROR, "Could not execute Oracle statement")) 
 		return 0;
-	}
 
 	return nrows;
 }
@@ -357,10 +369,10 @@ fetch_row (GdaOracleRecordset *recset, gint rownum)
 	row = gda_row_new (GDA_DATA_MODEL (recset), priv->ncolumns);
 
 	result = OCIStmtFetch ((OCIStmt *) priv->hstmt,
-				(OCIError *) priv->cdata->herr,
-				(ub4) 1,
-				(ub2) OCI_FETCH_NEXT,
-				(ub4) OCI_DEFAULT); 
+			       (OCIError *) priv->cdata->herr,
+			       (ub4) 1,
+			       (ub2) OCI_FETCH_NEXT,
+			       (ub4) OCI_DEFAULT); 
 	if (result == OCI_NO_DATA) 
 		return NULL;
 
@@ -368,10 +380,8 @@ fetch_row (GdaOracleRecordset *recset, gint rownum)
 				     _("Could not fetch a row"))) 
 		return NULL;
 
-
 	i = 0;
-	for (node = g_list_first (priv->ora_values); node != NULL; 
-	     node = g_list_next (node)) {
+	for (node = priv->ora_values; node;  node = node->next) {
 		GdaOracleValue *ora_value = (GdaOracleValue *) node->data;
 		GValue *value = gda_row_get_value (row, i);
 		gda_oracle_set_value (value, ora_value, priv->cnc);
@@ -582,7 +592,10 @@ gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 static void 
 gda_oracle_free_values (GdaOracleValue *ora_value)
 {
-	g_free (ora_value->value);
+	if (ora_value->g_type == GDA_TYPE_BLOB) 
+		OCIDescriptorFree((dvoid *) ora_value->value, (ub4) gda_oracle_blob_type (ora_value->sql_type));
+	else
+		g_free (ora_value->value);
 	OCIDescriptorFree ((dvoid *) ora_value->pard, OCI_DTYPE_PARAM);
 	g_free (ora_value);
 }

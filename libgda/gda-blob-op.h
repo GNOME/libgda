@@ -44,17 +44,19 @@ struct _GdaBlobOpClass {
 	GObjectClass parent_class;
 
 	/* Virtual methods */
-	glong  (* get_length) (GdaBlobOp *op);
-	glong  (* read)       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
-	glong  (* write)      (GdaBlobOp *op, GdaBlob *blob, glong offset);
+	glong    (* get_length) (GdaBlobOp *op);
+	glong    (* read)       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
+	glong    (* write)      (GdaBlobOp *op, GdaBlob *blob, glong offset);
+	gboolean (* write_all)  (GdaBlobOp *op, GdaBlob *blob);
 };
 
 GType    gda_blob_op_get_type  (void);
 
 glong    gda_blob_op_get_length (GdaBlobOp *op);
 glong    gda_blob_op_read       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
-void     gda_blob_op_read_all   (GdaBlobOp *op, GdaBlob *blob);
+gboolean gda_blob_op_read_all   (GdaBlobOp *op, GdaBlob *blob);
 glong    gda_blob_op_write      (GdaBlobOp *op, GdaBlob *blob, glong offset);
+gboolean gda_blob_op_write_all  (GdaBlobOp *op, GdaBlob *blob);
 
 G_END_DECLS
 

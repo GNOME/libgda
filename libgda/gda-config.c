@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -56,8 +56,6 @@ typedef struct {
 	gchar *name;
 	gchar *type;
 	gchar *value;
-	/* gchar *mtime; */
-	/* gchar *muser; */
 } GdaConfigEntry;
 
 typedef struct {
@@ -75,6 +73,10 @@ static GdaConfigClient *config_client = NULL;
 static gboolean         can_modif_global_conf; /* TRUE if the current user can modify the system wide config file */
 static gboolean         lock_write_notify = FALSE;
 static void             do_notify (const gchar *path);
+
+/* if @dsn_list_only_in_mem is TRUE, then the DSN list is not written to any file, but
+ * is just stored in memory, in @dsn_list_contents */
+static gboolean  dsn_list_only_in_mem = FALSE;
 
 /*
  * FAM delcarations and static variables
@@ -270,6 +272,26 @@ get_config_client ()
 		gchar *full_file = NULL;
 		gchar *user_config = NULL;
 		gboolean has_user_config = FALSE;
+		gchar *memonly;
+		
+		
+		config_client = g_new0 (GdaConfigClient, 1);
+		xmlKeepBlanksDefault(0);
+
+		/* check if DSN list should only be stored in memory */
+		memonly = getenv ("GDA_DSN_LIST_IN_MEMORY");
+		if (memonly) {
+			gsize length;
+			gchar *init_contents;
+			dsn_list_only_in_mem = TRUE;
+
+			g_print ("** DSN list will remain in memory and will be lost at the end of the session **\n");
+			if (*memonly && g_file_get_contents (memonly, &init_contents, &length, NULL)) {
+				config_client->user = gda_config_parse_config_file (init_contents, length);
+				g_free (init_contents);
+			}
+			return config_client;
+		}
 
 		has_user_config = g_get_home_dir () ? TRUE : FALSE;
 		if (has_user_config)
@@ -337,9 +359,6 @@ get_config_client ()
 			
 		}
 #endif
-		
-		config_client = g_new0 (GdaConfigClient, 1);
-		xmlKeepBlanksDefault(0);
 
 		/*
 		 * load system wide config
@@ -704,6 +723,10 @@ write_config_file ()
 	gchar *user_config;
 
 	if (lock_write_notify)
+		return;
+
+	if (dsn_list_only_in_mem)
+		/* nothing to do */
 		return;
 
 	/* user specific data sources */

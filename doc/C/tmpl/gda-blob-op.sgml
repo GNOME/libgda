@@ -52,6 +52,7 @@ operations to read and write data in a BLOB.
 
 @op: 
 @blob: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_blob_op_write ##### -->
@@ -62,6 +63,16 @@ operations to read and write data in a BLOB.
 @op: 
 @blob: 
 @offset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_blob_op_write_all ##### -->
+<para>
+
+</para>
+
+@op: 
+@blob: 
 @Returns: 
 
 

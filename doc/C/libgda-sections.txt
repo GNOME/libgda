@@ -778,6 +778,7 @@ gda_blob_op_get_length
 gda_blob_op_read
 gda_blob_op_read_all
 gda_blob_op_write
+gda_blob_op_write_all
 <SUBSECTION Standard>
 GDA_IS_BLOB_OP
 GDA_IS_BLOB_OP_CLASS

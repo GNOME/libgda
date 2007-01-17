@@ -1412,7 +1412,6 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 
 	/* specific rendering of parameters, where actual value is not used */
 	if (field->priv->is_parameter && (options & (GDA_RENDERER_PARAMS_AS_COLON | GDA_RENDERER_PARAMS_AS_DOLLAR))) {
-		gint i;
 		GdaParameter *param_source;
 
 		g_return_val_if_fail (out_params_used, NULL);
@@ -1434,11 +1433,16 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 			if (!g_slist_find (*out_params_used, param_source))
 				*out_params_used = g_slist_append (*out_params_used, param_source);
 			
-			i = g_slist_index (*out_params_used, param_source) + 1;
-			if (options & GDA_RENDERER_PARAMS_AS_COLON)
-				str = g_strdup_printf (":%d", i);
-			else
+			if (options & GDA_RENDERER_PARAMS_AS_COLON) {
+				gchar *name = gda_parameter_get_alphanum_name (param_source);
+				str = g_strdup_printf (":%s", name);
+				g_free (name);
+			}
+			else {
+				gint i;
+				i = g_slist_index (*out_params_used, param_source) + 1;	
 				str = g_strdup_printf ("$%d", i);
+			}
 			return str;
 		}
 		else {

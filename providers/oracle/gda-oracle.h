@@ -49,6 +49,9 @@
 	 ? NULL : gda_oracle_handle_error(result, cnc, priv_data,       \
 					  type, msg, __FILE__, __LINE__))
     
+#define gda_oracle_blob_type(sqltype) \
+	(((sqltype == SQLT_BFILEE) || (sqltype == SQLT_CFILEE)) ? OCI_DTYPE_FILE : OCI_DTYPE_LOB)
+
 G_BEGIN_DECLS
 
 /*

@@ -35,6 +35,7 @@ void                   gda_parameter_replace_param_users     (GdaParameter *para
 GdaParameter          *gda_parameter_list_find_param_for_user (GdaParameterList *paramlist, 
 							       GdaObject *user);
 
+gchar                 *gda_parameter_get_alphanum_name       (GdaParameter *param);
 
 G_END_DECLS
 

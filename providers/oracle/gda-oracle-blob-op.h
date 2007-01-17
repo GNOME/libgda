@@ -25,6 +25,7 @@
 
 #include <libgda/gda-value.h>
 #include <libgda/gda-blob-op.h>
+#include <oci.h>
 
 G_BEGIN_DECLS
 
@@ -48,7 +49,7 @@ struct _GdaOracleBlobOpClass {
 };
 
 GType         gda_oracle_blob_op_get_type     (void);
-GdaBlobOp    *gda_oracle_blob_op_new          (GdaConnection *cnc);
+GdaBlobOp    *gda_oracle_blob_op_new          (GdaConnection *cnc, OCILobLocator *lobloc);
 
 G_END_DECLS
 

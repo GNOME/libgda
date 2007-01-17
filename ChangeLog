@@ -1,3 +1,23 @@
+2007-01-17  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-config.c: if GDA_DSN_LIST_IN_MEMORY env. variable is
+	specified, then the DSN list modifications won't be written in any file (and
+	the initial DSN list is loaded from the filename contained in that env. variable)
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-model-row.c: bug fixes
+	* libgda/gda-parameter.c:
+	* libgda/gda-parameter-util.h: added a gda_parameter_get_alphanum_name() to 
+	get a version of a GdaParameter's name where all non [0-9A-Za-z] chars are 
+	replaced with '_'
+	* libgda/gda-query-field-value.c: can now render parameters in SQL with the
+	:param_name syntax (used by Oracle)
+	* libgda/gda-blob-op.[hc]: added gda_blob_op_write_all() to write a complete
+	BLOB at once
+	* providers/oracle/: improved BLOB handling
+	* gda-sharp/AssemblyInfo.cs.in: corrected variable name to
+	GDA_ABI_*_VERSION
+	
 2007-01-17  Esteban Sanchez  <esteban@steve-0.com
 
 	* providers/mysql/gda-mysql-provider.c: Use length instead of using

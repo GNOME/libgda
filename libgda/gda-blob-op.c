@@ -136,17 +136,21 @@ gda_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
  * @blob: a #GdaBlob to read data to
  *
  * Reads the whole contents of the blob manipulated by @op into @blob
+ *
+ * Returns: TRUE if @blob->data contains the whole BLOB manipulated by @op
  */
-void
+gboolean
 gda_blob_op_read_all (GdaBlobOp *op, GdaBlob *blob)
 {
 	glong len;
-	g_return_if_fail (GDA_IS_BLOB_OP (op));
-	g_return_if_fail (blob);
+	g_return_val_if_fail (GDA_IS_BLOB_OP (op), FALSE);
+	g_return_val_if_fail (blob, FALSE);
 
 	len = gda_blob_op_get_length (blob->op);
 	if (len != ((GdaBinary *)blob)->binary_length)
-		gda_blob_op_read (blob->op, blob, 0, len);
+		return (gda_blob_op_read (blob->op, blob, 0, len) < 0) ? FALSE : TRUE;
+	else
+		return TRUE;
 }
 
 /**
@@ -169,4 +173,25 @@ gda_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		return CLASS (op)->write (op, blob, offset);
 	else
 		return -1;
+}
+
+/**
+ * gda_blob_op_write_all
+ * @op: a #GdaBlobOp
+ * @blob: a #GdaBlob which contains the data to write
+ *
+ * Writes the whole contents of @blob into the blob manipulated by @op. If necessary the resulting
+ * blob is truncated from its previous length.
+ *
+ * Returns: TRUE on success
+ */
+gboolean
+gda_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
+{
+	g_return_val_if_fail (GDA_IS_BLOB_OP (op), FALSE);
+
+	if (CLASS (op)->write_all != NULL)
+		return CLASS (op)->write_all (op, blob);
+	else
+		return FALSE;
 }

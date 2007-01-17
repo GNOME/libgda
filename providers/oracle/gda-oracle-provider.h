@@ -52,7 +52,6 @@ typedef struct {
 	OCIServer *hserver;
 	OCISvcCtx *hservice;
 	OCISession *hsession;
-	sword stmt_type;
         gchar *schema; /* the same as the username which opened the connection */
 } GdaOracleConnectionData;
 
