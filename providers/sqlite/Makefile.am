@@ -1,6 +1,6 @@
 SUBDIRS = sqlite-src
 
-providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
+providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-sqlite.la
 
 AM_CPPFLAGS = \

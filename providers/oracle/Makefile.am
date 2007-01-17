@@ -22,7 +22,7 @@
 # Boston, MA 02111-1307, USA.
 #
 
-providerdir=$(libdir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/providers
+providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-oracle.la
 
 AM_CPPFLAGS = \

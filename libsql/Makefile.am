@@ -25,7 +25,7 @@ libgdasql_3_0_la_SOURCES = \
 	sql_display.c \
 	sql_tree.c \
 	sql_tree.h
-libgdasqlincdir = $(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libsql
+libgdasqlincdir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libsql
 libgdasqlinc_HEADERS = sql_parser.h
 libgdasql_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
 libgdasql_3_0_la_LIBADD = $(LIBGDA_LIBS)

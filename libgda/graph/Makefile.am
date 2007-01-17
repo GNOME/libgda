@@ -11,7 +11,7 @@ libgda_graph_headers = \
 	gda-graph-query.h \
 	gda-dict-reg-graphs.h
 
-libgda_graphincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda/graph
+libgda_graphincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/graph
 libgda_graphinclude_HEADERS=$(libgda_graph_headers)
 
 libgda_graph_3_0_la_SOURCES = \

@@ -26,7 +26,7 @@ parser.c: parser.y
 lexer.c: lexer.l parser.c
 	$(LEX) -olexer.c -Ptran $<
 
-libsqltransactionincdir = $(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libsql
+libsqltransactionincdir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libsql
 
 sql_parser_test_SOURCES=sql_parser_test.c
 sql_parser_test_DEPENDENCIES = libgda_sql_transaction-3.0.la

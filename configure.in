@@ -7,10 +7,15 @@ AC_PREREQ(2.59)
 AC_CONFIG_SRCDIR(libgda/libgda.h)
 AM_INIT_AUTOMAKE(1.8 -Wall check-news no-define dist-bzip2)
 
-AC_SUBST(GDA_MAJOR_VERSION, major)
-AC_SUBST(GDA_MINOR_VERSION, minor)
-AC_SUBST(GDA_MICRO_VERSION, micro)
 AC_SUBST(GDA_VERSION, major.minor.micro)
+
+# ABI version:
+# Careful. Changing these will break ABI, because it is used for the library name and header install path:
+# This allows us to do a 3.2 version that is ABI-compatible with 3.0, but with API additions.
+AC_SUBST(GDA_ABI_MAJOR_VERSION, 3)
+AC_SUBST(GDA_ABI_MINOR_VERSION, 0)
+#AC_SUBST(GDA_MICRO_VERSION, micro)
+
 
 m4_undefine([major])
 m4_undefine([minor])

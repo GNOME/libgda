@@ -13,7 +13,7 @@ libgda_handlers_headers = \
 	gda-handler-time.h \
 	gda-handler-type.h
 
-libgda_handlersincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda/handlers
+libgda_handlersincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/handlers
 libgda_handlersinclude_HEADERS=$(libgda_handlers_headers)
 
 libgda_handlers_3_0_la_SOURCES = \

@@ -1,3 +1,33 @@
+2007-01-17  Murray Cumming  <murrayc@murrayc.com>
+
+	* configure.in:
+	* libgda-3.0.pc.in:
+	* libgda/Makefile.am:
+	* libgda/graph/Makefile.am:
+	* libgda/handlers/Makefile.am:
+	* libgda/sql-delimiter/Makefile.am:
+	* libgda/sql-transaction/Makefile.am:
+	* libsql/Makefile.am:
+	* providers/bdb/Makefile.am:
+	* providers/firebird/Makefile.am:
+	* providers/freetds/Makefile.am:
+	* providers/ibmdb2/Makefile.am:
+	* providers/ldap/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/msql/Makefile.am:
+	* providers/mysql/Makefile.am:
+	* providers/odbc/Makefile.am:
+	* providers/oracle/Makefile.am:
+	* providers/postgres/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/sybase/Makefile.am:
+	* providers/xbase/Makefile.am:
+	* report/libgda-report/Makefile.am: 
+	Rename GDA_*_VERSION to 
+	GDA_ABI_*_VERSION, and do not use the tarball release version to 
+	calculate it. This removes the risk of us breaking ABI with a 3.2 version that 
+	is meant to just add API.
+
 2007-01-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-connection-private.h:

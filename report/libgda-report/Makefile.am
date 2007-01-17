@@ -47,6 +47,6 @@ libgda_report_3_0_la_SOURCES =	\
 libgda_report_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) -no-undefined
 libgda_report_3_0_la_LIBADD = $(LIBGDA_LIBS) $(top_builddir)/libgda/libgda-3.0.la
 
-gdareportincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda-report
+gdareportincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda-report
 gdareportinclude_HEADERS=$(gda_report_headers)
 

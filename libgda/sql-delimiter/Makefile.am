@@ -17,7 +17,7 @@ lexer.c: lexer.l parser.c
 libgda_sql_delimiter_headers = \
         gda-sql-delimiter.h 
 
-libgda_sql_delimiterincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/sql-delimiter
+libgda_sql_delimiterincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/sql-delimiter
 libgda_sql_delimiterinclude_HEADERS=$(libgda_sql_delimiter_headers)
 
 libgda_sql_delimiter_3_0_la_SOURCES = \
