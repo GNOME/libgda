@@ -1,3 +1,8 @@
+2007-01-17  Esteban Sanchez  <esteban@steve-0.com
+
+	* providers/mysql/gda-mysql-provider.c: Use length instead of using
+	strlen() with constant strings.
+
 2007-01-17  Murray Cumming  <murrayc@murrayc.com>
 
 	* configure.in:

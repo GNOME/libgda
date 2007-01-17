@@ -890,7 +890,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 	}
 	else {
 		/* start the transaction */
-		rc = mysql_real_query (mysql, "BEGIN", strlen ("BEGIN"));
+		rc = mysql_real_query (mysql, "BEGIN", 5);
 		if (rc != 0) {
 			event = gda_mysql_make_error (mysql);
 			gda_connection_add_event (cnc, event);
@@ -926,7 +926,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = mysql_real_query (mysql, "COMMIT", strlen ("COMMIT"));
+	rc = mysql_real_query (mysql, "COMMIT", 6);
 	if (rc != 0) {
 		event = gda_mysql_make_error (mysql);
 		gda_connection_add_event (cnc, event);
@@ -961,7 +961,7 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = mysql_real_query (mysql, "ROLLBACK", strlen ("ROLLBACK"));
+	rc = mysql_real_query (mysql, "ROLLBACK", 8);
 	if (rc != 0) {
 		event = gda_mysql_make_error (mysql);
 		gda_connection_add_event (cnc, event);
