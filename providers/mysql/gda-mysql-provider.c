@@ -2299,7 +2299,7 @@ gda_mysql_provider_get_data_handler (GdaServerProvider *provider,
         else if (type == GDA_TYPE_BINARY) {
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
-			dh = gda_handler_bin_new_with_prov (provider, cnc);
+			dh = gda_handler_bin_new ();
 			if (dh) {
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
 				g_object_unref (dh);

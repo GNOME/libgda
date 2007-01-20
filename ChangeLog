@@ -1,3 +1,10 @@
+2007-01-20  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: removed unnecessary libxslt dependency, and set minimum GLib version to 2.8.0
+	as G_TYPE_DATE is required and is not in 2.6.0
+	* providers/sqlite/sqlite_specs_dsn.xml.in: changed internal order of items
+	* providers/mysql/gda-mysql-provider.c: minor correction
+
 2007-01-17  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-config.c: if GDA_DSN_LIST_IN_MEMORY env. variable is

@@ -22,8 +22,7 @@ m4_undefine([minor])
 m4_undefine([micro])
 
 dnl required versions of other tools.
-m4_define([req_ver_glib],	[2.6.0])
-m4_define([req_ver_libxslt],	[1.0.9])
+m4_define([req_ver_glib],	[2.8.0])
 
 #
 # Making releases:
@@ -80,7 +79,6 @@ PKG_CHECK_MODULES(LIBGDA, [
 	gthread-2.0	>= req_ver_glib
 	gmodule-2.0	>= req_ver_glib
 	libxml-2.0
-	libxslt		>= req_ver_libxslt
 ])
 AC_SUBST(LIBGDA_CFLAGS)
 AC_SUBST(LIBGDA_LIBS)
