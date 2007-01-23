@@ -1,3 +1,52 @@
+libgda 2.99.3, 2007-01-23
+
+ - Build fixes:
+   - With gamin/fam. (Murray Cumming)
+   - removed unnecessary libxslt dependency. (Vivien Malerba)
+   - gda-sharp binding fixes. (Vivien Malerba)
+   - Fixed many compiler warnings. (Murray Cumming)
+   - Replace use of deprecated sys_errlist() with strerror().
+     (Joseph Sacco, Bug #353729)
+   - Win32 build fixes. (yselkowitz, Bug #314732)
+   - Darwin (MacOS X) build fixes. (Min Sik Kim, Bug #382933)
+ - GdaConfig: Handle the GDA_DSN_LIST_IN_MEMORY environment variable.
+   When defined, initial DSN list will be loaded from the filename specified 
+   in that environment variable, and the DSN list modifications will not be 
+   written to a file. (Vivien Malerba)
+ - GdaQueryFieldValue: can now render parameters in SQL with the :param_name 
+   syntax, as used by Oracle. (Vivien Malerba)
+ - GdaBlobOp: New object, for improved blob handling. (Vivien Malerba)
+ - GdaQuarkList: gda_quark_list_add_from_string(): 
+   Prevent a crash when the connection string has a final ; character.
+   (Andrea Zagli, Bug #317831)
+ - GdaQuery:
+   - Allow use of derived types, for language bindings. (Armin Burgmeier)
+   - Avoid memory corruption. (Chris Shoemaker, Bug #341061)
+ - GdaQueryFieldField: The field_name property is now readable. (Vivien Malerba)
+ - GdaServerProvider:
+   - Added the escape_string() and unescape_string() virtual methods. (Vivien Malerba)
+   - Removed unimplemented gda_server_provider_create_blob() and 
+     gda_server_provider_fetch_blob_by_id() functions.  (Murray Cumming)
+ - Removed unused "prop" properties. (Murray Cumming)
+ - Spelling and grammar corrections. (Clytie Siddall, bug #352122)
+
+ - Providers:
+   - FreeTDS: Build fixes. (Leonardo Boshell)
+   - MySQL:
+     - Slight speed optimization. (Esteban Sanchez)
+     - Fixed a bug with FK reporting in the CONSTRAINTS schema report.
+       Added the "bit" data type as a synonym to "tinyint"
+       removed GDA_TYPE_BLOB reference as MySQL does not support blobs.
+       (Vivien Malerba)
+   - Oracle: Major improvments, including blob handling. (Vivien Malerba)
+   - Postgres
+     - Fix failure of current transaction when trying to delete a 
+     nonexisting blob Oid
+     - Improved GdaBinary handling.
+     (Vivien Malerba)
+   - Sqlite: Update Sqlite sources to 3.3.10.
+   - BDB and ODBC: Correct a cast (Hans de Goede, bug #366694)
+
 libgda 2.99.2, 2006-12-22
 -------------------------
 

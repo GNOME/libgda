@@ -1,3 +1,5 @@
+2.99.3:
+
 2007-01-23  Murray Cumming  <murrayc@murrayc.com>
 
 	* po/POTFILES.in: Attempted to update this, but intoolize-update says that the files do not 
