@@ -1,5 +1,10 @@
 2007-01-23  Murray Cumming  <murrayc@murrayc.com>
 
+	* po/POTFILES.in: Attempted to update this, but intoolize-update says that the files do not 
+	exist, during distcheck.
+
+2007-01-23  Murray Cumming  <murrayc@murrayc.com>
+
 	* doc/C/Makefile.am: Add limitations.sgml to EXTRA_DIST, to partly fix the distcheck.
 	But I'm still getting intltool-update errors from POTFILES.in about files that it says 
 	do not exists, but which really do seem to exist.
