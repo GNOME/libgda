@@ -1,5 +1,11 @@
 2007-01-23  Murray Cumming  <murrayc@murrayc.com>
 
+	* doc/C/Makefile.am: Add limitations.sgml to EXTRA_DIST, to partly fix the distcheck.
+	But I'm still getting intltool-update errors from POTFILES.in about files that it says 
+	do not exists, but which really do seem to exist.
+
+2007-01-23  Murray Cumming  <murrayc@murrayc.com>
+
 	* configure.in: Removed check-news from the AM_INIT_AUTOMAKE() call, 
 	because this makes it impossible to test distcheck without actually changing NEWS, 
 	so distcheck is often broken. At the moment I get this error, for instance:

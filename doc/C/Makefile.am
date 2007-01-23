@@ -51,7 +51,7 @@ FIXXREF_OPTIONS=
 include $(top_srcdir)/gtk-doc.make
 
 # Other files to distribute
-EXTRA_DIST += examples/full_example.c installation.xml migration.xml query.xml query-fields.xml \
+EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml query.xml query-fields.xml \
 	server-operation.xml gettingstarted.xml \
 	query01.svg query02.svg query03.svg query04.svg query05.svg query06.svg DataModels.svg
 
