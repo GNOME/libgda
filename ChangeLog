@@ -1,5 +1,20 @@
 2007-01-23  Murray Cumming  <murrayc@murrayc.com>
 
+	* configure.in: Removed check-news from the AM_INIT_AUTOMAKE() call, 
+	because this makes it impossible to test distcheck without actually changing NEWS, 
+	so distcheck is often broken. At the moment I get this error, for instance:
+
+	cd ../../../doc/C/html && gtkdoc-mkhtml libgda ../libgda-docs.sgml
+	warning: failed to load external entity "../limitations.xml"
+	../libgda-docs.sgml:408: parser error : Failure to process entity limitations
+	    &limitations;
+                 ^
+	../libgda-docs.sgml:408: parser error : Entity 'limitations' not defined
+	    &limitations;
+
+
+2007-01-23  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-query-field-agg.c: (gda_query_field_agg_get_arg): Rename from 
 	gda_query_field_agg_get_args(), to avoid an undefined symbol.
 
