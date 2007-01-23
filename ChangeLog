@@ -1,5 +1,10 @@
 2007-01-23  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-query-field-agg.c: (gda_query_field_agg_get_arg): Rename from 
+	gda_query_field_agg_get_args(), to avoid an undefined symbol.
+
+2007-01-23  Murray Cumming  <murrayc@murrayc.com>
+
 	* configure.in: Require gamin (fam) 0.1.8, because 0.1.7 has an incorrect pkg-config .pc file.
 	This worked before because something else put <prefix>/include in our CFLAGS. But something 
 	has changed and this was breaking the build. Maybe it was the removal of the 

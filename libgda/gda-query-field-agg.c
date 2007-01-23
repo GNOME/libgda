@@ -595,7 +595,7 @@ gda_query_field_agg_set_arg (GdaQueryFieldAgg *agg, GdaQueryField *arg)
  * Returns: the #GnomeDbQField argument
  */
 GdaQueryField *
-gda_query_field_agg_get_args (GdaQueryFieldAgg *agg)
+gda_query_field_agg_get_arg (GdaQueryFieldAgg *agg)
 {
 	g_return_val_if_fail (agg && GDA_IS_QUERY_FIELD_AGG (agg), NULL);
 	g_return_val_if_fail (agg->priv, NULL);
