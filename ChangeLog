@@ -1,3 +1,12 @@
+2007-01-23  Murray Cumming  <murrayc@murrayc.com>
+
+	* configure.in: Require gamin (fam) 0.1.8, because 0.1.7 has an incorrect pkg-config .pc file.
+	This worked before because something else put <prefix>/include in our CFLAGS. But something 
+	has changed and this was breaking the build. Maybe it was the removal of the 
+	libxslt dependency.
+	* libgda/Makefile.am: Actually use FAM_CFLAGS, instead of just hoping that something 
+	else puts <prefix>/include in the CFLAGS.
+
 2007-01-20  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in: removed unnecessary libxslt dependency, and set minimum GLib version to 2.8.0
