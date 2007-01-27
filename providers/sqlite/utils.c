@@ -26,26 +26,72 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gda-sqlite.h"
+#ifndef HAVE_SQLITE
 #include "sqliteInt.h"
+#endif
+#include <libgda/gda-connection-private.h>
+#include <libgda/gda-parameter-list.h>
+#include "gda-sqlite-recordset.h"
 
 void
 gda_sqlite_update_types_hash (SQLITEcnc *scnc)
 {
-	GHashTable *types = scnc->types;
+	GHashTable *types;
 
+	types = scnc->types;
 	if (!types) {
 		types = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL); /* key= type name, value= gda type */
 		scnc->types = types;
 	}
 
+	g_hash_table_insert (types, g_strdup ("integer"), GINT_TO_POINTER (G_TYPE_INT));
+	g_hash_table_insert (types, g_strdup ("real"), GINT_TO_POINTER (G_TYPE_DOUBLE));
+	g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (G_TYPE_STRING));
+	g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BINARY));
+
+#ifdef HAVE_SQLITE
+	SQLITEresult *sres;
+	gint status;
+	int rc;
+        gboolean end = FALSE;
+
+	sres = g_new0 (SQLITEresult, 1);
+	status = sqlite3_prepare (scnc->connection, "PRAGMA table_types_list;", -1, &(sres->stmt), NULL);
+	if (status != SQLITE_OK) 
+		return;
+
+	while (!end) {
+                rc = sqlite3_step (sres->stmt);
+                switch (rc) {
+                case  SQLITE_ROW: {
+			const gchar *typname, *aff;
+			typname = sqlite3_column_text (sres->stmt, 2);
+			aff = sqlite3_column_text (sres->stmt, 3);
+			if (typname && !g_hash_table_lookup (types, typname)) {
+				GType type = G_TYPE_STRING;
+				if (aff) {
+					if (*aff == 'i')
+						type = G_TYPE_INT;
+					else if (*aff == 'r')
+						type = G_TYPE_DOUBLE;
+				}
+				g_hash_table_insert (types, g_strdup (typname), GINT_TO_POINTER (type));
+			}
+			break;
+		}
+		case SQLITE_DONE:
+                        end = TRUE;
+                        break;
+		default:
+			break;
+		}
+	}
+	gda_sqlite_free_result (sres);
+#else
 	if (SQLITE_VERSION_NUMBER >= 3000000) {
 		Db *db;
 		gint i;
 
-		g_hash_table_insert (types, g_strdup ("integer"), GINT_TO_POINTER (G_TYPE_INT));
-		g_hash_table_insert (types, g_strdup ("real"), GINT_TO_POINTER (G_TYPE_DOUBLE));
-		g_hash_table_insert (types, g_strdup ("string"), GINT_TO_POINTER (G_TYPE_STRING));
-		g_hash_table_insert (types, g_strdup ("blob"), GINT_TO_POINTER (GDA_TYPE_BINARY));
 
 		for (i = OMIT_TEMPDB; i < scnc->connection->nDb; i++) {
 			Hash *tab_hash;
@@ -86,6 +132,7 @@ gda_sqlite_update_types_hash (SQLITEcnc *scnc)
 			}
 		}
 	}
+#endif
 }
 
 void

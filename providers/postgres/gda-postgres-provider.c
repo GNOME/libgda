@@ -1376,11 +1376,19 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 					param_lengths [index] = bin->binary_length;
 					param_formats [index] = 1; /* binary format */
 				}
+				else if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP) ||
+					 (type == GDA_TYPE_TIME)) {
+					GdaHandlerTime *timdh;
+
+					timdh = gda_server_provider_get_data_handler_gtype (provider, cnc, type);
+					g_assert (timdh);
+					param_values [index] = gda_handler_time_get_no_locale_str_from_value (timdh,
+													      value);
+				}
 				else {
 					GdaDataHandler *dh;
 					
-					dh = gda_server_provider_get_data_handler_gtype (provider, cnc, 
-											 G_VALUE_TYPE (value));
+					dh = gda_server_provider_get_data_handler_gtype (provider, cnc, type);
 					if (dh) 
 						param_values [index] = gda_data_handler_get_str_from_value (dh, value);
 					else
@@ -3030,6 +3038,8 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider,
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
 			dh = gda_handler_time_new ();
+			gda_handler_time_set_sql_spec   ((GdaHandlerTime *) dh, G_DATE_YEAR,
+							 G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);

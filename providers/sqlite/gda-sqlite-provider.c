@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
 #include <libgda/gda-data-model-array.h>
@@ -34,7 +35,9 @@
 #include "gda-sqlite-provider.h"
 #include "gda-sqlite-recordset.h"
 #include "gda-sqlite-ddl.h"
+#ifndef HAVE_SQLITE
 #include "sqliteInt.h"
+#endif
 #include <libgda/handlers/gda-handler-numerical.h>
 #include "gda-sqlite-handler-bin.h"
 #include <libgda/handlers/gda-handler-boolean.h>
@@ -356,17 +359,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 		}
 	}
 
-	if (0) {
-		/* show all databases in this handle */
-		Db *db;
-		gint i;
-
-		for (i=0; i < scnc->connection->nDb; i++) {
-			db = &(scnc->connection->aDb[i]);
-			g_print ("/// %s\n", db->zName);
-		}
-	}
-
 	return TRUE;
 }
 
@@ -429,7 +421,7 @@ sql_split (const gchar *sql)
 
 	return str_array;
 }
-  
+
 static GList *
 process_sql_commands (GList *reclist, GdaConnection *cnc,
 		      const gchar *sql, GdaCommandOptions options)
@@ -551,6 +543,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 
 	return reclist;
 }
+
 
 static const gchar *
 gda_sqlite_provider_get_server_version (GdaServerProvider *provider,
@@ -1177,7 +1170,11 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	/* FIXME */
 
 	/* use the SQLite PRAGMA for table information command */
+#ifdef HAVE_SQLITE
+	sql = g_strdup_printf ("PRAGMA table_info_long('%s');", tblname);
+#else
 	sql = g_strdup_printf ("PRAGMA table_info('%s');", tblname);
+#endif
 	reclist = process_sql_commands (NULL, cnc, sql, 0);
 	g_free (sql);
 	if (reclist) 
@@ -1283,6 +1280,11 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 
 		/* extra attributes */
 		nvalue = NULL;
+#ifdef HAVE_SQLITE
+		value = gda_row_get_value (row, 6);
+		if (value && gda_value_isa ((GValue *) value, G_TYPE_INT) && g_value_get_int ((GValue *) value))
+			g_value_set_string (nvalue = gda_value_new (G_TYPE_STRING), "AUTO_INCREMENT");
+#else
 		if (SQLITE_VERSION_NUMBER >= 3000000) {
 			Table *table;
 				
@@ -1295,6 +1297,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 			if ((table->iPKey == i) && table->autoInc)
 				g_value_set_string (nvalue = gda_value_new (G_TYPE_STRING), "AUTO_INCREMENT");
 		}
+#endif
 
 		if (!nvalue)
 			nvalue = gda_value_new_null ();
@@ -1306,7 +1309,6 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	g_list_foreach (list, (GFunc) add_g_list_row, recset);
 	g_list_free (list);
 		
-
 	g_object_unref (pragmamodel);
 	g_object_unref (selmodel);
 
@@ -1398,7 +1400,6 @@ get_types (GdaConnection *cnc, GdaParameterList *params)
 		gda_connection_add_event_string (cnc, _("Invalid SQLITE handle"));
 		return NULL;
 	}
-	g_assert (! scnc->connection->init.busy);
 
 	/* create the recordset */
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new 
@@ -1447,6 +1448,100 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 		g_assert (gda_server_provider_init_schema_model (GDA_DATA_MODEL (recset), GDA_CONNECTION_SCHEMA_PROCEDURES));
 	}
 
+#ifdef HAVE_SQLITE
+	GdaDataModel *pragmamodel = NULL;
+	GList *reclist;
+	int i, nrows;
+	GList *list = NULL;
+
+	reclist = process_sql_commands (NULL, cnc, "PRAGMA proc_list;", 0);
+	if (reclist) 
+		pragmamodel = GDA_DATA_MODEL (reclist->data);
+	g_list_free (reclist);
+	if (!pragmamodel) {
+		gda_connection_add_event_string (cnc, _("Can't execute PRAGMA proc_list"));
+		return NULL;
+	}
+	
+	nrows = gda_data_model_get_n_rows (pragmamodel);
+	for (i = 0; i < nrows; i++) {
+		GdaRow *row;
+		GList *rowlist = NULL;
+		GValue *value, *pvalue;
+		gint nbargs;
+
+		row = gda_data_model_row_get_row (GDA_DATA_MODEL_ROW (pragmamodel), i, NULL);
+		g_assert (row);
+		pvalue = gda_row_get_value (row, 1);
+		if ((pvalue && (g_value_get_int (pvalue) != 0) && aggs) ||
+		    ((g_value_get_int (pvalue) == 0) && !aggs)) {
+			gchar *str;
+
+			/* Proc name */
+			pvalue = gda_row_get_value (row, 0);
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), g_value_get_string (pvalue));
+			rowlist = g_list_append (rowlist, value);
+
+			/* Proc_Id */
+			if (! aggs)
+				str = g_strdup_printf ("p%d", i);
+			else
+				str = g_strdup_printf ("a%d", i);
+			g_value_take_string (value = gda_value_new (G_TYPE_STRING), str);
+			rowlist = g_list_append (rowlist, value);
+
+			/* Owner */
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "system");
+			rowlist = g_list_append (rowlist, value);
+
+			/* Comments */ 
+			rowlist = g_list_append (rowlist, gda_value_new_null());
+
+			/* Out type */ 
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "string");
+			rowlist = g_list_append (rowlist, value);
+
+			if (! aggs) {
+				/* Number of args */
+				pvalue = gda_row_get_value (row, 2);
+				nbargs = g_value_get_int (pvalue);
+				g_value_set_int (value = gda_value_new (G_TYPE_INT), nbargs);
+				rowlist = g_list_append (rowlist, value);
+			}
+
+			/* In types */
+			if (! aggs) {
+				if (nbargs > 0) {
+					GString *string;
+					gint j;
+					
+					string = g_string_new ("");
+					for (j = 0; j < nbargs; j++) {
+						if (j > 0)
+							g_string_append_c (string, ',');
+						g_string_append_c (string, '-');
+					}
+					g_value_take_string (value = gda_value_new (G_TYPE_STRING), string->str);
+					g_string_free (string, FALSE);
+				}
+				else
+					g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
+			}
+			else
+				g_value_set_string (value = gda_value_new (G_TYPE_STRING), "");
+			rowlist = g_list_append (rowlist, value);
+
+			/* Definition */
+			rowlist = g_list_append (rowlist, gda_value_new_null());
+			
+			list = g_list_append (list, rowlist);
+		}
+	}
+
+	g_object_unref (pragmamodel);
+	g_list_foreach (list, (GFunc) add_g_list_row, recset);
+	g_list_free (list);
+#else
 	if (SQLITE_VERSION_NUMBER >= 3000000) {
 		Hash *func_hash;
 		HashElem *func_elem;
@@ -1530,6 +1625,7 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 		g_list_foreach (list, (GFunc) add_g_list_row, recset);
 		g_list_free (list);
 	}
+#endif
 
 	return GDA_DATA_MODEL (recset);
 }

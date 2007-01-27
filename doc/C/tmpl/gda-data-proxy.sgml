@@ -50,6 +50,25 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 </para>
 
 
+<!-- ##### SIGNAL GdaDataProxy::post-changes-applied ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+@arg1: 
+@arg2: 
+
+<!-- ##### SIGNAL GdaDataProxy::pre-changes-applied ##### -->
+<para>
+
+</para>
+
+@gdadataproxy: the object which received the signal.
+@arg1: 
+@arg2: 
+@Returns: 
+
 <!-- ##### SIGNAL GdaDataProxy::row-delete-changed ##### -->
 <para>
 
@@ -95,6 +114,8 @@ Proxy to hold modifications for any #GdaDataModel, and provides the #GdaDataMode
 @row_delete_changed: 
 @sample_size_changed: 
 @sample_changed: 
+@pre_changes_applied: 
+@post_changes_applied: 
 
 <!-- ##### STRUCT GdaDataProxyPrivate ##### -->
 <para>

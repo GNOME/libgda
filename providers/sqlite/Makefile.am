@@ -1,4 +1,13 @@
-SUBDIRS = sqlite-src
+if HAVE_SQLITE
+SUBDIRS=
+sqlitelibs= $(SQLITE_LIBS)
+sqliteinc= $(SQLITE_CFLAGS)
+else
+SUBDIRS= sqlite-src
+sqlitelibs= $(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la
+sqliteinc= -I$(top_srcdir)/providers/sqlite/sqlite-src \
+	-I$(top_builddir)/providers/sqlite/sqlite-src
+endif
 
 providerdir=$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers
 provider_LTLIBRARIES = libgda-sqlite.la
@@ -7,9 +16,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	-I$(top_srcdir)/providers/sqlite/sqlite-src \
-	-I$(top_builddir)/providers/sqlite/sqlite-src \
 	$(SQLITE_CFLAGS) \
+	$(sqliteinc) \
 	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
 
 libgda_sqlite_la_SOURCES = \
@@ -29,7 +37,7 @@ libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED
 libgda_sqlite_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
-	$(top_builddir)/providers/sqlite/sqlite-src/libsqlite.la \
+	$(sqlitelibs) \
 	$(LIBGDA_LIBS)
 
 xmldir   = $(datadir)/libgda-3.0

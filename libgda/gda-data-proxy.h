@@ -1,6 +1,6 @@
 /* gda-data-proxy.h
  *
- * Copyright (C) 2005 - 2006 Vivien Malerba
+ * Copyright (C) 2005 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -39,7 +39,8 @@ extern GQuark gda_data_proxy_error_quark (void);
 #define GDA_DATA_PROXY_ERROR gda_data_proxy_error_quark ()
 
 typedef enum {
-	GDA_DATA_PROXY_COMMIT_ERROR
+	GDA_DATA_PROXY_COMMIT_ERROR,
+	GDA_DATA_PROXY_COMMIT_CANCELLED
 } GdaDataProxyError;
 
 /* struct for the object's data */
@@ -55,9 +56,13 @@ struct _GdaDataProxyClass
 {
 	GdaObjectClass          parent_class;
 
-	void                 (* row_delete_changed)  (GdaDataProxy *proxy, gint row, gboolean to_be_deleted);
-	void                 (* sample_size_changed) (GdaDataProxy *proxy, gint sample_size);
-	void                 (* sample_changed)      (GdaDataProxy *proxy, gint sample_start, gint sample_end);
+	void                 (* row_delete_changed)   (GdaDataProxy *proxy, gint row, gboolean to_be_deleted);
+
+	void                 (* sample_size_changed)  (GdaDataProxy *proxy, gint sample_size);
+	void                 (* sample_changed)       (GdaDataProxy *proxy, gint sample_start, gint sample_end);
+
+	gboolean             (* pre_changes_applied)  (GdaDataProxy *proxy, gint row, gint proxied_row);
+	void                 (* post_changes_applied) (GdaDataProxy *proxy, gint row, gint proxied_row);
 };
 
 GType             gda_data_proxy_get_type                 (void);

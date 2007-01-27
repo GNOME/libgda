@@ -22,7 +22,11 @@
 
 #include "gda-data-model-import.h"
 #include <unistd.h>
-#include <sys/mman.h>
+#ifndef _WIN32
+  #include <sys/mman.h>
+#else
+  #include <windows.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -315,14 +319,19 @@ gda_data_model_import_dispose (GObject *object)
 
 		/* data access mem free */
 		if (model->priv->is_mapped) {
+			if (model->priv->src.mapped.start) {
+#ifndef _WIN32
+				munmap (model->priv->src.mapped.start, model->priv->src.mapped.length);
+#else
+				UnmapViewOfFile (model->priv->src.mapped.start);
+#endif
+				model->priv->src.mapped.start = NULL;
+			}
+
 			g_free (model->priv->src.mapped.filename);
 			if (model->priv->src.mapped.fd >= 0) {
 				close (model->priv->src.mapped.fd);
 				model->priv->src.mapped.fd = -1;
-			}
-			if (model->priv->src.mapped.start) {
-				munmap (model->priv->src.mapped.start, model->priv->src.mapped.length);
-				model->priv->src.mapped.start = NULL;
 			}
 		}
 		else {
@@ -490,6 +499,7 @@ gda_data_model_import_set_property (GObject *object,
 					return;
 				}
 				model->priv->src.mapped.length = _stat.st_size;
+#ifndef _WIN32
 				model->priv->src.mapped.start = mmap (NULL, model->priv->src.mapped.length,
 								      PROT_READ, MAP_PRIVATE, 
 								      model->priv->src.mapped.fd, 0);
@@ -499,6 +509,22 @@ gda_data_model_import_set_property (GObject *object,
 					model->priv->src.mapped.start = NULL;
 					return;
 				}
+#else
+				HANDLE view = CreateFileMapping((HANDLE)model->priv->src.mapped.fd, 
+								NULL, PAGE_READONLY|SEC_COMMIT, 0,0 , NULL);
+				if (!view) {
+					/* error */
+					add_error (model, sys_errlist [errno]);
+					return;
+				}
+				model->priv->src.mapped.start = MapViewOfFile(view, FILE_MAP_READ, 0, 0, 
+									      model->priv->src.mapped.length);
+				if (!model->priv->src.mapped.start) {
+					/* error */
+					add_error (model, sys_errlist [errno]);
+					return;
+				}
+#endif
 				model->priv->data_start = model->priv->src.mapped.start;
 				model->priv->data_length = model->priv->src.mapped.length;
 			}

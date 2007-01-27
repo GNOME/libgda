@@ -1,5 +1,5 @@
 /* GDA SQLite provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -22,15 +22,22 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_sqlite_h__)
-#  define __gda_sqlite_h__
+#ifndef __GDA_SQLITE_H__
+#define __GDA_SQLITE_H__
 
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
 #include <libgda/gda-value.h>
-#include "sqlite-src/sqlite3.h"
+#include <libgda/gda-connection.h>
 
-#define GDA_SQLITE_PROVIDER_ID          "GDA SQLite provider"
+#ifdef HAVE_SQLITE
+#include <sqlite3.h>
+#else
+#include "sqlite-src/sqlite3.h"
+#endif
+
+#define GDA_SQLITE_PROVIDER_ID    "GDA SQLite provider"
+#define OBJECT_DATA_SQLITE_HANDLE "GDA_Sqlite_SqliteHandle"
 
 typedef struct {
 	sqlite3_stmt *stmt;

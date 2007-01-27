@@ -1,3 +1,18 @@
+2007-01-27  Vivien Malerba <malerba@gnome-db.org>
+	
+	* configure.in:
+	* providers/sqlite/gda-sqlite.h:
+	* providers/sqlite/utils.c:
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/sqlite/gda-sqlite-provider.h:
+	* providers/sqlite/Makefile.am: prepared the SQLite provider to use new PRAGMA directives
+	in SQLite when they are available, to avoid having to use the internal interface anymore
+	* providers/sqlite/sqlite-src: updated to 3.3.12
+	* libgda/gda-query.c: minor bug fixed
+	* providers/postgres/gda-postgres-provider.c: minor bug fixed
+	* libgda/gda-data-model-import.c: applied patch from Brecht Sanders to add WIN32
+	support
+
 2007-01-27  Murray Cumming  <murrayc@murrayc.com>
 
 	* configure.in: Check for gamin >= 0.1.8, not > 0.1.8.

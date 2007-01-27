@@ -947,6 +947,23 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 
 	cnc->priv->events_list = g_list_append (cnc->priv->events_list, event);
 
+#ifdef GDA_DEBUG
+	gchar *str = "???";
+	switch (gda_connection_event_get_event_type (event)) {
+	case GDA_CONNECTION_EVENT_NOTICE:
+		str = "NOTICE";
+		break;
+	case GDA_CONNECTION_EVENT_WARNING:
+		str = "WARNING";
+		break;
+	case GDA_CONNECTION_EVENT_ERROR:
+		str = "ERROR";
+		break;
+	default:
+		break;
+	}
+	g_print ("EVENT> %s: %s (on cnx %p)\n", str, gda_connection_event_get_description (event), cnc);
+#endif
 	if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR)
 		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, event);
 }

@@ -1,6 +1,6 @@
 /* gda-handler-time.h
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -58,6 +58,7 @@ GdaDataHandler *gda_handler_time_new_no_locale (void);
 void            gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec,
 						GDateDMY third, gchar separator, gboolean twodigits_years);
 
+gchar          *gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue *value);
 G_END_DECLS
 
 #endif

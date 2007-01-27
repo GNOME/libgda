@@ -3185,41 +3185,45 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 			}
 			else {
 				/* compare with target_alias.ref_field */
-				GdaQueryTarget *target = gda_query_field_field_get_target (GDA_QUERY_FIELD_FIELD (list->data));
-				str = g_utf8_strdown (split[1], -1);
-				if (!strcmp (gda_query_target_get_alias (target), split[0]) &&
-				    (!strcmp (ref_name, str) ||
-				     !strcmp (ref_name, split[1]))) {
-					if (field)
-						err = TRUE;
-					else
-						field = GDA_QUERY_FIELD (list->data);
-				}
-				
-				/* compare with target_ref_entity.ref_field */
-				if (!field) {
-					gchar *str2 = g_utf8_strdown (split[0], -1);
-					GdaEntity *tmpent = gda_query_target_get_represented_entity (target);
-					const gchar *entstr;
-					
-					if (tmpent)
-						entstr = gda_object_get_name (GDA_OBJECT (tmpent));
-					else
-						entstr = gda_query_target_get_represented_table_name (target);
+				GdaQueryTarget *target;
 
-					if (!err && !field &&
-					    (!strcmp (entstr, str2) ||
-					     !strcmp (entstr, split[0])) &&
+				target = gda_query_field_field_get_target (GDA_QUERY_FIELD_FIELD (list->data));
+				if (target) {
+					str = g_utf8_strdown (split[1], -1);
+					if (!strcmp (gda_query_target_get_alias (target), split[0]) &&
 					    (!strcmp (ref_name, str) ||
-					     !strcmp (ref_name, split[1]) )) {
+					     !strcmp (ref_name, split[1]))) {
 						if (field)
 							err = TRUE;
 						else
 							field = GDA_QUERY_FIELD (list->data);
 					}
-					g_free (str2);
+					
+					/* compare with target_ref_entity.ref_field */
+					if (!field) {
+						gchar *str2 = g_utf8_strdown (split[0], -1);
+						GdaEntity *tmpent = gda_query_target_get_represented_entity (target);
+						const gchar *entstr;
+						
+						if (tmpent)
+							entstr = gda_object_get_name (GDA_OBJECT (tmpent));
+						else
+							entstr = gda_query_target_get_represented_table_name (target);
+						
+						if (!err && !field &&
+						    (!strcmp (entstr, str2) ||
+						     !strcmp (entstr, split[0])) &&
+						    (!strcmp (ref_name, str) ||
+						     !strcmp (ref_name, split[1]) )) {
+							if (field)
+								err = TRUE;
+							else
+								field = GDA_QUERY_FIELD (list->data);
+						}
+						g_free (str2);
+					}
+					g_free (str);
 				}
-				g_free (str);
 			}
 			g_strfreev (split);
 		}
@@ -3251,7 +3255,7 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 				
 				/* compare with target_ref_entity.ref_field */
 				if (!err && !field &&
-				    !strcmp (gda_object_get_name (GDA_OBJECT (gda_query_target_get_represented_entity (target))), split[0]) &&
+				    !strcmp (gda_query_target_get_represented_table_name (target), split[0]) &&
 				    !strcmp ("*", split[1])) {
 					if (field)
 						err = TRUE;

@@ -33,7 +33,6 @@
 #define GDA_IS_SQLITE_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_SQLITE_PROVIDER))
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
-#define OBJECT_DATA_SQLITE_HANDLE "GDA_Sqlite_SqliteHandle"
 
 typedef struct _GdaSqliteProvider      GdaSqliteProvider;
 typedef struct _GdaSqliteProviderClass GdaSqliteProviderClass;

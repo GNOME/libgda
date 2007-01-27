@@ -876,6 +876,32 @@ fi
 
 AM_CONDITIONAL(LDAP, test x$ldapdir != x)
 
+dnl test for system-installed SQLite
+dnl note: while SQLite does not have extra PRAGMA directives,
+dnl embedded SQLite version will continue to be used
+SQLITE_MODULES="sqlite3 >= 3.3"
+PKG_CHECK_MODULES(SQLITE, $SQLITE_MODULES, have_sqlite=yes, have_sqlite=no)
+if test x"$have_sqlite" = "xyes"
+then
+        realvers=`sqlite3 -version` 
+        microvers=`sqlite3 -version | cut -d '.' -f 3`
+        AC_MSG_CHECKING(for sqlite version)
+        if test $microvers -lt 100
+        then
+                AC_MSG_RESULT(Version $realvers of SQLite does not implement required pragmas, using embedded SQLite)
+                have_sqlite=no
+        else
+                AC_MSG_RESULT(Version $realvers)
+                SQLITE_CFLAGS="$SQLITE_CFLAGS -DHAVE_SQLITE"
+                AC_SUBST(SQLITE_CFLAGS)
+                AC_SUBST(SQLITE_LIBS)
+                SQLITE_VERS=$realvers
+                AC_SUBST(SQLITE_VERS)
+        fi
+fi
+AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
+
+
 dnl ******************************
 dnl Check for readline/history/popt
 dnl ******************************
@@ -1087,7 +1113,7 @@ echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
 echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
-echo "      SQLite = yes (embedded in libgda)"
+echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
 echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
 echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"

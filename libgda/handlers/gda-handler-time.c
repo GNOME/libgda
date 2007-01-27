@@ -1,6 +1,6 @@
 /* gda-handler-time.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -63,6 +63,8 @@ typedef struct _LocaleSetting {
 	gint            current_offset; /* 1900, 2000, etc... */
 	gchar           separator;	
 } LocaleSetting;
+
+static gchar *render_date_locale (const GDate *date, LocaleSetting *locale);
 
 struct  _GdaHandlerTimePriv {
 	gchar          *detailled_descr;
@@ -370,8 +372,80 @@ handler_compute_locale (GdaHandlerTime *hdl)
 	}
 }
 
+/**
+ * gda_handler_time_get_no_locale_str_from_value
+ * @hdl: a #GdaHandlerTime object
+ * @value: a GValue value
+ *
+ * Retunrs: a new string representing @value without taking the current
+ * locele into account
+ */
+gchar *
+gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue *value)
+{
+	gchar *retval = NULL, *str;
+	GType type;
+
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (hdl), NULL);
+	g_return_val_if_fail (hdl->priv, NULL);
+	type = G_VALUE_TYPE (value);
+
+	if (type == G_TYPE_DATE) {
+		const GDate *date;
+
+		date = (GDate *) g_value_get_boxed (value);
+		str = render_date_locale (date, hdl->priv->sql_locale);
+		if (!str)
+			retval = g_strdup ("NULL");
+		else 
+			retval = str;
+	}
+	else if (type == GDA_TYPE_TIME) {
+		const GdaTime *tim;
+		
+		tim = gda_value_get_time ((GValue *) value);
+		retval = g_strdup_printf ("'%02d:%02d:%02d'",
+					  tim->hour,
+					  tim->minute,
+					  tim->second);
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		const GdaTimestamp *gdats;
+		GDate *vdate;
+
+		gdats = gda_value_get_timestamp ((GValue *) value);
+		vdate = g_date_new_dmy (gdats->day, gdats->month, gdats->year);
+		str = render_date_locale (vdate, hdl->priv->sql_locale);
+		g_date_free (vdate);
+
+		if (str) {
+			GString *string;
+			string = g_string_new ("");
+			g_string_append_printf (string, "%02u:%02u:%02u",
+						gdats->hour,
+						gdats->minute,
+						gdats->second);
+			if (gdats->fraction != 0)
+				g_string_append_printf (string, ".%lu", gdats->fraction);
+			
+			if (gdats->timezone != GDA_TIMEZONE_INVALID)
+				g_string_append_printf (string, "%+02d", 
+							(int) gdats->timezone / 3600);
+			
+			retval = g_strdup_printf ("%s %s", str, string->str);
+			g_free (str);
+			g_string_free (string, TRUE);
+		}
+		else
+			retval = g_strdup ("NULL");	
+	}
+	else
+		g_assert_not_reached ();
+
+	return retval;
+}
+
 /* Interface implementation */
-static gchar *render_date_locale (const GDate *date, LocaleSetting *locale);
 
 /* REM: SQL date format is always returned using the MM-DD-YYY format, it's up to the
  * provider to be correctly set up to accept this format.

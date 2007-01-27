@@ -20,8 +20,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_data_model_query_h__)
-#  define __gda_data_model_query_h__
+#ifndef __GDA_DATA_MODEL_QUERY_H__
+#define __GDA_DATA_MODEL_QUERY_H__
 
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-object.h>

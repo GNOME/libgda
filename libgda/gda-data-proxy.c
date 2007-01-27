@@ -1,6 +1,6 @@
 /* gda-data-proxy.c
  *
- * Copyright (C) 2005 - 2006 Vivien Malerba
+ * Copyright (C) 2005 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -89,10 +89,12 @@ enum
         ROW_DELETE_CHANGED,
 	SAMPLE_SIZE_CHANGED,
 	SAMPLE_CHANGED,
+	PRE_CHANGES_APPLIED,
+	POST_CHANGES_APPLIED,
         LAST_SIGNAL
 };
 
-static gint gda_data_proxy_signals[LAST_SIGNAL] = { 0, 0, 0 };
+static gint gda_data_proxy_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
 
 
 /* properties */
@@ -237,7 +239,6 @@ find_row_modif_for_proxy_row (GdaDataProxy *proxy, gint proxy_row)
 	return rm;
 }
 
-/* Not used:
 static gint
 find_proxy_row_for_row_modif (GdaDataProxy *proxy, RowModif *rm)
 {
@@ -251,7 +252,7 @@ find_proxy_row_for_row_modif (GdaDataProxy *proxy, RowModif *rm)
 			(proxy->priv->add_null_entry ? 1 : 0);
 	}
 }
-*/
+
 
 /*
  * Free a RowModif structure
@@ -360,6 +361,20 @@ gda_data_proxy_get_type (void)
 	return type;
 }
 
+static gboolean
+pre_changes_accumulator (GSignalInvocationHint *ihint,
+			 GValue *return_accu,
+			 const GValue *handler_return,
+			 gpointer data)
+{
+        gboolean thisvalue;
+
+        thisvalue = g_value_get_boolean (handler_return);
+        g_value_set_boolean (return_accu, thisvalue);
+
+        return thisvalue; /* stop signal if 'thisvalue' is FALSE */
+}
+
 static void
 gda_data_proxy_class_init (GdaDataProxyClass *class)
 {
@@ -389,10 +404,26 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
                               G_STRUCT_OFFSET (GdaDataProxyClass, sample_changed),
                               NULL, NULL,
 			      gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
+	gda_data_proxy_signals [PRE_CHANGES_APPLIED] =
+		g_signal_new ("pre_changes_applied",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataProxyClass, pre_changes_applied),
+                              pre_changes_accumulator, NULL,
+                              gda_marshal_BOOLEAN__INT_INT, G_TYPE_BOOLEAN, 2, G_TYPE_INT, G_TYPE_INT);
+	gda_data_proxy_signals [POST_CHANGES_APPLIED] =
+		g_signal_new ("post_changes_applied",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaDataProxyClass, post_changes_applied),
+                              NULL, NULL,
+			      gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
 	
 	class->row_delete_changed = NULL;
 	class->sample_size_changed = NULL;
 	class->sample_changed = NULL;
+	class->pre_changes_applied = NULL;
+	class->post_changes_applied = NULL;
 
 	/* virtual functions */
 #ifdef GDA_DEBUG
@@ -1429,6 +1460,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 	gboolean err = FALSE;
 	gboolean freedone = FALSE;
 	gboolean ignore_proxied_changes;
+	gboolean mod_ok;
 
 	if (!rm)
 		return TRUE;
@@ -1446,6 +1478,17 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 	ignore_proxied_changes = proxy->priv->ignore_proxied_changes;
 	proxy->priv->ignore_proxied_changes = TRUE;
 
+	/* validate the changes to this row */
+        g_signal_emit (G_OBJECT (proxy),
+                       gda_data_proxy_signals[PRE_CHANGES_APPLIED],
+                       0, find_proxy_row_for_row_modif (proxy, rm), rm->model_row, &mod_ok);
+	if (!mod_ok) {
+		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_COMMIT_CANCELLED,
+			     _("Modifications cancelled"));
+		return FALSE;
+	}
+
+	/* apply the changes */
 	if (rm->to_be_deleted) {
 		/* delete the row */
 		g_assert (rm->model_row >= 0);
@@ -1555,12 +1598,19 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 			}
 		}
 	}
+
+	if (!err) {
+		/* signal row actually changed */
+		g_signal_emit (G_OBJECT (proxy),
+			       gda_data_proxy_signals[POST_CHANGES_APPLIED],
+			       0, find_proxy_row_for_row_modif (proxy, rm), rm->model_row);
 	
-	if (!err && !freedone) {
-		/* get rid of the commited change, where rm->model_row >= 0 */
-		proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
-		g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
-		row_modifs_free (rm);
+		if (!freedone) {
+			/* get rid of the commited change, where rm->model_row >= 0 */
+			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
+			g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
+			row_modifs_free (rm);
+		}
 	}
 
 	proxy->priv->ignore_proxied_changes = ignore_proxied_changes;

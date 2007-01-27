@@ -113,6 +113,22 @@
     <test sql="SELECT c.id, c.name, s.name, l.shortcut FROM salesrep s LEFT JOIN customers c, locations l" parsed="1" rendered="SELECT c.id, c.name, s.name, l.shortcut FROM salesrep AS s LEFT JOIN customers AS c, locations AS l"/>
   </test_group>
 
+  <test_group descr="Bug 156384 – libsql fails to build on join statements">
+    <test sql="SELECT defaultpay.*, branch.name, department.name,
+                                transaction.name, employee_payrate.name
+                                FROM
+                                defaultpay LEFT JOIN employee_payrate ON
+                                (defaultpay.payrateid = employee_payrate.id),
+                                branch, department, transaction, employee
+                                WHERE defaultpay.branchid = branch.id
+                                AND defaultpay.departmentid = department.id
+                                AND defaultpay.transactionid = transaction.id
+                                AND defaultpay.employeeid = employee.id"/>
+    <test sql="select a from b join d as wibble on b.e = d.f where wibble.a = 5"/>
+    <test sql="select a from b (join d as wibble on b.e = d.f) where wibble.a = 5" parsed="0"/>
+    <test sql="select a from b join d as wibble on (b.e = d.f) where wibble.a = 5"/>
+  </test_group>
+
   <test_group descr="Joins with missing references">
     <test sql="SELECT c.id, l.shortcut FROM unknown c JOIN locations l" parsed="1" rendered="SELECT c.id, l.shortcut FROM unknown AS c INNER JOIN locations AS l"/>
     <test sql="SELECT c.id, l.shortcut FROM locations l JOIN unknown c" parsed="1" rendered="SELECT c.id, l.shortcut FROM locations AS l INNER JOIN unknown AS c"/>
