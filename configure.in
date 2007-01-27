@@ -116,7 +116,7 @@ dnl ******************************
 FAM_LIBS=
 FAM_CFLAGS=
 FAM_MISSING_WARNING="Libgda depends on FAM to provide notification when configuration files are changed, without FAM support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes"
-PKG_CHECK_MODULES(GAMIN, gamin > 0.1.8, have_fam=yes, have_fam=no)
+PKG_CHECK_MODULES(GAMIN, gamin >= 0.1.8, have_fam=yes, have_fam=no)
 if test x"$have_fam" = "xyes"
 then
         FAM_CFLAGS="$GAMIN_CFLAGS"
