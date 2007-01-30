@@ -125,7 +125,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @Returns: 
 
 
@@ -134,7 +134,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @strid: 
 
 
@@ -143,7 +143,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @name: 
 
 
@@ -152,7 +152,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @descr: 
 
 
@@ -161,7 +161,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @owner: 
 
 
@@ -170,7 +170,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @Returns: 
 
 
@@ -179,7 +179,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @Returns: 
 
 
@@ -188,7 +188,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @Returns: 
 
 
@@ -197,7 +197,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @Returns: 
 
 
@@ -206,7 +206,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 
 
 <!-- ##### FUNCTION gda_object_destroy_check ##### -->
@@ -214,7 +214,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 
 
 <!-- ##### FUNCTION gda_object_connect_destroy ##### -->
@@ -222,7 +222,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @callback: 
 @data: 
 @Returns: 
@@ -233,7 +233,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 
 
 <!-- ##### FUNCTION gda_object_unblock_changed ##### -->
@@ -241,7 +241,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 
 
 <!-- ##### FUNCTION gda_object_dump ##### -->
@@ -249,7 +249,7 @@ This class also introduces common attributes that can be exploited by the classe
 
 </para>
 
-@object: 
+@gdaobj: 
 @offset: 
 
 

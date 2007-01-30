@@ -112,7 +112,7 @@ possible to make that registration automatic for any new GdaDict object using th
 
 </para>
 
-@Param1: 
+@func: 
 
 
 <!-- ##### FUNCTION gda_dict_register_object_type ##### -->

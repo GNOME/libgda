@@ -250,7 +250,7 @@ children condition and 'leaf' conditions, where there are only operands.
 
 </para>
 
-@condition: 
+@cond: 
 @Returns: 
 
 

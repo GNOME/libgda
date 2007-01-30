@@ -305,7 +305,7 @@ Management of connections to data sources
 
 </para>
 
-@srv: 
+@cnc: 
 @username: 
 @Returns: 
 
@@ -324,7 +324,7 @@ Management of connections to data sources
 
 </para>
 
-@srv: 
+@cnc: 
 @password: 
 @Returns: 
 
@@ -344,7 +344,7 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@error: 
+@event: 
 
 
 <!-- ##### FUNCTION gda_connection_add_event_string ##### -->

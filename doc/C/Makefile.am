@@ -3,7 +3,7 @@
 AUTOMAKE_OPTIONS = 1.6
 
 # The name of the module.
-DOC_MODULE=libgda
+DOC_MODULE=libgda-3.0
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
@@ -37,7 +37,7 @@ GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.0.la \
         $(LIBGDA_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--sgml-mode --output-format=xml
+MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="lexer.c"
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files = fdl-appendix.sgml 

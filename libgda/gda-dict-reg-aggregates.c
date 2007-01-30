@@ -477,7 +477,7 @@ gda_aggregates_get_by_name_arg_in_list (GdaDict *dict, GSList *aggregates, const
 }
 
 /**
- * gda_dict_get_aggregate_by_dbms_id
+ * gda_aggregates_get_by_dbms_id
  * @dict: a #GdaDict object
  * @dbms_id: 
  *

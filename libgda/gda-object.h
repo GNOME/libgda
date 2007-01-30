@@ -64,28 +64,28 @@ struct _GdaObjectClass
 };
 
 GType        gda_object_get_type        (void);
-GdaDict     *gda_object_get_dict        (GdaObject *object);
+GdaDict     *gda_object_get_dict        (GdaObject *gdaobj);
 
-void         gda_object_set_id          (GdaObject *object, const gchar *strid);
-void         gda_object_set_name        (GdaObject *object, const gchar *name);
-void         gda_object_set_description (GdaObject *object, const gchar *descr);
-void         gda_object_set_owner       (GdaObject *object, const gchar *owner);
+void         gda_object_set_id          (GdaObject *gdaobj, const gchar *strid);
+void         gda_object_set_name        (GdaObject *gdaobj, const gchar *name);
+void         gda_object_set_description (GdaObject *gdaobj, const gchar *descr);
+void         gda_object_set_owner       (GdaObject *gdaobj, const gchar *owner);
 
-const gchar *gda_object_get_id          (GdaObject *object);
-const gchar *gda_object_get_name        (GdaObject *object);
-const gchar *gda_object_get_description (GdaObject *object);
-const gchar *gda_object_get_owner       (GdaObject *object);
+const gchar *gda_object_get_id          (GdaObject *gdaobj);
+const gchar *gda_object_get_name        (GdaObject *gdaobj);
+const gchar *gda_object_get_description (GdaObject *gdaobj);
+const gchar *gda_object_get_owner       (GdaObject *gdaobj);
 
-void         gda_object_destroy         (GdaObject *object); /* force the object to completely clean itself */
-void         gda_object_destroy_check   (GdaObject *object); 
-gulong       gda_object_connect_destroy (gpointer object, GCallback callback, gpointer data);
+void         gda_object_destroy         (GdaObject *gdaobj); /* force the object to completely clean itself */
+void         gda_object_destroy_check   (GdaObject *gdaobj);
+gulong       gda_object_connect_destroy (gpointer gdaobj, GCallback callback, gpointer data);
 
 void         gda_object_signal_emit_changed         (GdaObject *object);
-void         gda_object_block_changed   (GdaObject *object);
-void         gda_object_unblock_changed (GdaObject *object);
+void         gda_object_block_changed   (GdaObject *gdaobj);
+void         gda_object_unblock_changed (GdaObject *gdaobj);
 
 #ifdef GDA_DEBUG
-void         gda_object_dump            (GdaObject *object, guint offset); /* dump contents on stdout */
+void         gda_object_dump            (GdaObject *gdaobj, guint offset); /* dump contents on stdout */
 #endif
 
 G_END_DECLS

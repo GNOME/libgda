@@ -1,18 +1,24 @@
 if BUILD_CONFIG_TOOL
-CONFIG_TOOL=gda-config-tool
-man_MANS = gda-config-tool.1 \
-           gda-config.5
+CONFIG_TOOL=gda-config-tool-3.0
+man_MANS = gda-config-tool-3.0.1 \
+           gda-config-3.0.5
 else
 CONFIG_TOOL=
 endif
 
 if BUILD_RUN_TOOL
-RUN_TOOL=gda-run
+RUN_TOOL=gda-run-3.0
 else
 RUN_TOOL=
 endif
 
-bin_PROGRAMS = $(RUN_TOOL) $(CONFIG_TOOL) gda-diagnose gda-list-config gda-inspect-dict-file gda-author-dict-file
+bin_PROGRAMS = \
+	$(RUN_TOOL) \
+	$(CONFIG_TOOL) \
+	gda-diagnose-3.0 \
+	gda-list-config-3.0 \
+	gda-inspect-dict-file-3.0 \
+	gda-author-dict-file-3.0
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -20,16 +26,16 @@ AM_CPPFLAGS = \
 	-I. \
 	$(LIBGDA_CFLAGS)
 
-gda_run_SOURCES = gda-run.c
-gda_run_LDADD = \
+gda_run_3_0_SOURCES = gda-run.c
+gda_run_3_0_LDADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(top_builddir)/libgda/graph/libgda_graph-3.0.la \
         $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
         $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
 	$(LIBGDA_LIBS)
 
-gda_config_tool_SOURCES = gda-config-tool.c
-gda_config_tool_LDADD = \
+gda_config_tool_3_0_SOURCES = gda-config-tool.c
+gda_config_tool_3_0_LDADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(top_builddir)/libgda/graph/libgda_graph-3.0.la \
 	$(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
@@ -39,46 +45,46 @@ gda_config_tool_LDADD = \
 	$(POPT_LIB) \
 	$(LIBGDA_LIBS)
 
-gda_diagnose_SOURCES = \
+gda_diagnose_3_0_SOURCES = \
         html.h \
         html.c \
         gda-diagnose.c
 
-gda_diagnose_LDADD = \
+gda_diagnose_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
         $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
         $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
         $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
-gda_inspect_dict_file_SOURCES = \
+gda_inspect_dict_file_3_0_SOURCES = \
         gda-inspect-dict-file.c
 
-gda_inspect_dict_file_LDADD = \
+gda_inspect_dict_file_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
         $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
         $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
         $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
-gda_author_dict_file_SOURCES = \
+gda_author_dict_file_3_0_SOURCES = \
         gda-author-dict-file.c
 
-gda_author_dict_file_LDADD = \
+gda_author_dict_file_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
         $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
         $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
         $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
-gda_list_config_SOURCES = \
+gda_list_config_3_0_SOURCES = \
         gda-list-config.c
 
-gda_list_config_LDADD = \
+gda_list_config_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
         $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
         $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
         $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
-EXTRA_DIST = gda-config-tool.1 gda-config.5
+EXTRA_DIST = $(man_MANS)

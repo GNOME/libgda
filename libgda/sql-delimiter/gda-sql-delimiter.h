@@ -26,9 +26,9 @@
 #define YY_NO_UNISTD_H
 
 
-typedef struct GdaDelimiterStatement        GdaDelimiterStatement;
-typedef struct GdaDelimiterExpr             GdaDelimiterExpr;
-typedef struct GdaDelimiterParamSpec        GdaDelimiterParamSpec;
+typedef struct _GdaDelimiterStatement       GdaDelimiterStatement;
+typedef struct _GdaDelimiterExpr            GdaDelimiterExpr;
+typedef struct _GdaDelimiterParamSpec       GdaDelimiterParamSpec;
 
 /*
  * Type of parsed SQL
@@ -50,7 +50,7 @@ GdaDelimiterStatementType;
 /*
  * Structure to hold a SQL statement
  */
-struct GdaDelimiterStatement
+struct _GdaDelimiterStatement
 {
 	GdaDelimiterStatementType  type;
 	GList                     *expr_list;   /* list of GdaDelimiterExpr structures */
@@ -60,7 +60,7 @@ struct GdaDelimiterStatement
 /*
  * Structure to hold a single statement
  */
-struct GdaDelimiterExpr
+struct _GdaDelimiterExpr
 {
 	GList         *pspec_list; /* list of GdaDelimiterParamSpec structures */
 	gchar         *sql_text;
@@ -82,7 +82,7 @@ typedef enum
 /*
  * Structure to hold one parameter specification
  */
-struct GdaDelimiterParamSpec
+struct _GdaDelimiterParamSpec
 {
 	GdaDelimiterParamSpecType  type;
 	char                      *content;

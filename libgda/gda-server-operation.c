@@ -1513,8 +1513,6 @@ gda_server_operation_get_node_path_portion (GdaServerOperation *op, const gchar 
  * gda_server_operation_get_sequence_item_names
  * @op: a #GdaServerOperation object
  * @path: a complete path to a sequence node (starting with "/")
- * @size: a place to store the current number of elements in the sequence, or %NULL
- * @name: a place to store the name of the sequence (don't free it), or %NULL
  *
  * Fetch the contents of a sequence. @path can describe either a sequence (for example "/SEQNAME") or an item in a sequence
  * (for example "/SEQNAME/3")

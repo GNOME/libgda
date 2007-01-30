@@ -592,7 +592,7 @@ It implements the #GdaEntity, #GdaXmlStorage, #GdaReferer and #GdaRenderer inter
 </para>
 
 @query: 
-@sql_naming: 
+@sql_name: 
 @Returns: 
 
 

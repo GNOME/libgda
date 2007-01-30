@@ -225,8 +225,7 @@ gda_data_model_iter_init (GdaDataModelIter *iter)
 
 /**
  * gda_data_model_iter_new
- * @query: a #GdaQuery in which the new object will be
- * @type: the GDA type for the value
+ * @model: Model used to create the #GdaDataModelIter
  *
  * Creates a new GdaDataModelIter object which represents a value or a parameter.
  *

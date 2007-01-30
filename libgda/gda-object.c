@@ -671,9 +671,11 @@ gda_object_destroy_check (GdaObject *gdaobj)
 /**
  * gda_object_connect_destroy
  * @gdaobj: a #GdaObject object
+ * @callback:
+ * @data:
  * 
- * Connects the "destoy" signal of the @gdaobj object but first cheks that @gdaobj
- * exists and has not yet been destroyed.
+ * Connects the "destroy" signal of the @gdaobj object but first cheks that
+ * @gdaobj exists and has not yet been destroyed.
  *
  * Returns: the handler id of the signal
  */

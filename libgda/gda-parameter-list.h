@@ -58,8 +58,11 @@ typedef enum {
 
 
 /**
- * For each #GdaParameter object in the #GdaParameterList object, there is a #GdaParameterListNode structure
- * which sums up all the information for each parameter
+ * GdaParameterListNode:
+ *
+ * For each #GdaParameter object in the #GdaParameterList object, there is a
+ * #GdaParameterListNode structure which sums up all the information for
+ * each parameter.
  */
 struct _GdaParameterListNode {
 	GdaParameter   *param;         /* Can't be NULL */
@@ -69,9 +72,12 @@ struct _GdaParameterListNode {
 };
 
 /**
- * The #GdaParameterListGroup is another view of the parameters list contained in the #GdaParameterList object:
- * there is one such structure for each _independant_ parameter (parameters which are constrained by the same
- * data model all appear in the same #GdaParameterListGroup structure)
+ * GdaParameterListGroup:
+ *
+ * The #GdaParameterListGroup is another view of the parameters list
+ * contained in the #GdaParameterList object: there is one such structure
+ * for each _independant_ parameter (parameters which are constrained by the
+ * same data model all appear in the same #GdaParameterListGroup structure).
  */
 struct _GdaParameterListGroup {
 	GSList                 *nodes;        /* list of GdaParameterListNode, at least one entry */
@@ -79,8 +85,10 @@ struct _GdaParameterListGroup {
 };
 
 /**
- * There is a #GdaParameterListSource structure for each #GdaDataModel which constrains at least on parameter
- * in the #GdaParameterList object
+ * GdaParameterListSource:
+ *
+ * There is a #GdaParameterListSource structure for each #GdaDataModel which
+ * constrains at least on parameter in the #GdaParameterList object.
  */
 struct _GdaParameterListSource {
 	GdaDataModel   *data_model;   /* Can't be NULL */
@@ -130,7 +138,7 @@ GdaParameterList       *gda_parameter_list_new_from_spec_string     (GdaDict *di
 GdaParameterList       *gda_parameter_list_new_from_spec_node       (GdaDict *dict, xmlNodePtr xml_spec, GError **error);
 gchar                  *gda_parameter_list_get_spec                 (GdaParameterList *paramlist);
 
-guint                   gda_parameter_list_get_length               (GdaParameterList *plist);
+guint                   gda_parameter_list_get_length               (GdaParameterList *paramlist);
 
 
 void                    gda_parameter_list_add_param                (GdaParameterList *paramlist, GdaParameter *param);

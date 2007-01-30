@@ -3,7 +3,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS)
 
-bin_PROGRAMS = gda-test-connection
+bin_PROGRAMS = gda-test-connection-3.0
 noinst_PROGRAMS = gda-test-sql gda-test-models gda-test-server-operation gda-test-model-query gda-test-blob
 
 gda_test_sql_SOURCES = \
@@ -30,10 +30,10 @@ gda_test_models_LDADD = \
         $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
-gda_test_connection_SOURCES = \
+gda_test_connection_3_0_SOURCES = \
         gda-test-connection.c
 
-gda_test_connection_LDADD = \
+gda_test_connection_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
         $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
         $(top_builddir)/libgda/graph/libgda_graph-3.0.la \

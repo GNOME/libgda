@@ -143,11 +143,11 @@ const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 gboolean             gda_connection_set_dsn              (GdaConnection *cnc, const gchar *datasource);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
 const gchar         *gda_connection_get_username         (GdaConnection *cnc);
-gboolean             gda_connection_set_username         (GdaConnection *srv, const gchar *username);
+gboolean             gda_connection_set_username         (GdaConnection *cnc, const gchar *username);
 const gchar         *gda_connection_get_password         (GdaConnection *cnc);
-gboolean             gda_connection_set_password         (GdaConnection *srv, const gchar *password);
+gboolean             gda_connection_set_password         (GdaConnection *cnc, const gchar *password);
 
-void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *error);
+void                 gda_connection_add_event            (GdaConnection *cnc, GdaConnectionEvent *event);
 GdaConnectionEvent  *gda_connection_add_event_string     (GdaConnection *cnc, const gchar *str, ...);
 void                 gda_connection_add_events_list      (GdaConnection *cnc, GList *events_list);
 void                 gda_connection_clear_events_list    (GdaConnection *cnc);

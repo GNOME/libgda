@@ -17,3 +17,888 @@ gda-enum-types
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### FUNCTION gda_client_event_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_CLIENT_EVENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_client_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_CLIENT_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_sorting_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_SORTING ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_command_options_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_COMMAND_OPTIONS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_command_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_COMMAND_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_connection_event_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_CONNECTION_EVENT_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_connection_event_code_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_CONNECTION_EVENT_CODE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_connection_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_CONNECTION_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_connection_options_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_CONNECTION_OPTIONS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_connection_feature_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_CONNECTION_FEATURE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_connection_schema_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_CONNECTION_SCHEMA ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_model_access_flags_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_ACCESS_FLAGS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_model_hint_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_HINT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_model_io_format_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_IO_FORMAT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_model_iter_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_ITER_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_model_query_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_QUERY_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_model_query_options_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_QUERY_OPTIONS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_proxy_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DATA_PROXY_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_aggregate_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_AGGREGATE_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_constraint_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_CONSTRAINT_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_constraint_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_CONSTRAINT_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_constraint_fk_action_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_CONSTRAINT_FK_ACTION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_database_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_DATABASE_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_field_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_FIELD_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_field_attribute_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_FIELD_ATTRIBUTE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_function_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_FUNCTION_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_table_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_TABLE_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dict_type_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_DICT_TYPE_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_transaction_isolation_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_TRANSACTION_ISOLATION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_value_attribute_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_VALUE_ATTRIBUTE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_graph_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_GRAPH_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_field_state_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_FIELD_STATE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_object_ref_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_OBJECT_REF_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_object_ref_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_OBJECT_REF_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_parameter_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_PARAMETER_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_parameter_list_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_PARAMETER_LIST_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_parameter_list_param_hint_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_PARAMETER_LIST_PARAM_HINT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_condition_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_CONDITION_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_condition_operator_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_CONDITION_OPERATOR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_condition_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_CONDITION_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_field_agg_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_FIELD_AGG_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_field_all_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_FIELD_ALL_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_field_field_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_FIELD_FIELD_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_field_func_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_FIELD_FUNC_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_field_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_FIELD_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_field_value_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_FIELD_VALUE_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_join_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_JOIN_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_join_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_JOIN_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_query_target_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_QUERY_TARGET_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_renderer_options_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_RENDERER_OPTIONS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_server_operation_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_SERVER_OPERATION_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_server_operation_node_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_SERVER_OPERATION_NODE_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_server_operation_node_status_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_SERVER_OPERATION_NODE_STATUS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_transaction_status_event_type_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_TRANSACTION_STATUS_EVENT_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_transaction_status_state_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_TRANSACTION_STATUS_STATE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_general_error_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GDA_TYPE_GENERAL_ERROR ##### -->
+<para>
+
+</para>
+
+
+

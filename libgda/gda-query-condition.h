@@ -112,7 +112,7 @@ void                  gda_query_condition_leaf_set_operator      (GdaQueryCondit
 								  GdaQueryConditionOperator op, GdaQueryField *field);
 GdaQueryField        *gda_query_condition_leaf_get_operator      (GdaQueryCondition *condition, GdaQueryConditionOperator op);
 
-GSList               *gda_query_condition_get_ref_objects_all    (GdaQueryCondition *condition);
+GSList               *gda_query_condition_get_ref_objects_all    (GdaQueryCondition *cond);
 
 gboolean              gda_query_condition_represents_join        (GdaQueryCondition *condition,
 								  GdaQueryTarget **target1, GdaQueryTarget **target2,

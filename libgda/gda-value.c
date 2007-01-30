@@ -261,12 +261,12 @@ gda_binary_get_type (void)
 
 /**
  * gda_binary_copy
- * @src: source to get a copy from.
+ * @boxed: source to get a copy from.
  *
  * Creates a new #GdaBinary structure from an existing one.
 
  * Returns: a newly allocated #GdaBinary which contains a copy of
- * information in @src.
+ * information in @boxed.
  */
 gpointer
 gda_binary_copy (gpointer boxed)
@@ -357,12 +357,12 @@ gda_blob_get_type (void)
 
 /**
  * gda_blob_copy
- * @src: source to get a copy from.
+ * @boxed: source to get a copy from.
  *
  * Creates a new #GdaBlob structure from an existing one.
 
  * Returns: a newly allocated #GdaBlob which contains a copy of
- * information in @src.
+ * information in @boxed.
  */
 gpointer
 gda_blob_copy (gpointer boxed)
@@ -689,12 +689,12 @@ gda_numeric_get_type (void)
 
 /**
  * gda_numeric_copy
- * @src: source to get a copy from.
+ * @boxed: source to get a copy from.
  *
  * Creates a new #GdaNumeric structure from an existing one.
 
  * Returns: a newly allocated #GdaNumeric which contains a copy of
- * information in @src.
+ * information in @boxed.
  */
 
 gpointer

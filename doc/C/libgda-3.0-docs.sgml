@@ -29,6 +29,11 @@
 <!ENTITY GDADATAMODEL    "<link linkend='GdaDataModel'>GdaDataModel</link>">
 <!ENTITY GDADATAMODELARRAY "<link linkend='GdaDataModelArray'>GdaDataModelArray</link>">
 <!ENTITY GDADATAMODELHASH "<link linkend='GdaDataModelHash'>GdaDataModelHash</link>">
+<!ENTITY gda-author-dict-file "<command>gda-author-dict-file-3.0</command>">
+<!ENTITY gda-diagnose "<command>gda-diagnose-3.0</command>">
+<!ENTITY gda-inspect-dict-file "<command>gda-inspect-dict-file-3.0</command>">
+<!ENTITY gda-list-config "<command>gda-list-config-3.0</command>">
+<!ENTITY gda-test-connection "<command>gda-test-connection-3.0</command>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c">
 <!ENTITY install SYSTEM "installation.xml">
 <!ENTITY examples SYSTEM "gettingstarted.xml">
@@ -130,7 +135,7 @@
 
 <book id="index">
   <bookinfo>
-    <title>GNOME Data Access manual</title>
+    <title>GNOME Data Access 3.0 manual</title>
     <authorgroup>
       <author>
         <firstname>Michael</firstname>
@@ -197,7 +202,7 @@
     </authorgroup>
     <date>1999 February</date>
     <copyright>
-      <year>1999 - 2006</year>
+      <year>1999 - 2007</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
@@ -638,15 +643,15 @@
     </chapter>
 
     <chapter id="libgda-tools-list-config">
-      <title>gda-list-config</title>
+      <title>&gda-list-config;</title>
       <para>
-	The gda-list-config tool simply lists all the declared data sources, and all the installed
+	The &gda-list-config; tool simply lists all the declared data sources, and all the installed
 	providers, giving some other usefull information as well for each.
       </para>
     </chapter>
 
     <chapter id="libgda-tools-test-connection">
-      <title>gda-test-connection</title>
+      <title>&gda-test-connection;</title>
       <para>
 	This tool is a 'ping' like tool to test connectivity to databases. Connections can either
 	be declared as DSN, or described in the command line.
@@ -654,9 +659,9 @@
     </chapter>
 
     <chapter id="libgda-tools-diagnose">
-      <title>gda-diagnose</title>
+      <title>&gda-diagnose;</title>
       <para>
-	The gda-diagnose tool is a quite exhaustive and verbose testing program which output 
+	The &gda-diagnose; tool is a quite exhaustive and verbose testing program which output 
 	several HTML files
 	in a specified directory (DIAGNOSE_OUTPUT by default). It can either test a single data source
 	or all the data sources if none is specified. Running this tool can be time consuming...
@@ -675,9 +680,9 @@
     </chapter>
 
     <chapter id="libgda-tools-author-dict">
-      <title>gda-author-dict-file</title>
+      <title>&gda-author-dict-file;</title>
       <para>
-	The gda-author-dict-file tool allows to create a XML dictionary file which can be loaded into a 
+	The &gda-author-dict-file; tool allows to create a XML dictionary file which can be loaded into a 
 	#GdaDict object, specifying a data source to use. Specifically it does (depending on command line
 	options):
 	<itemizedlist>
@@ -693,9 +698,9 @@
     </chapter>
 
     <chapter id="libgda-tools-inspect-dict">
-      <title>gda-inspect-dict-file</title>
+      <title>&gda-inspect-dict-file;</title>
       <para>
-	The gda-inspect-dict-file tool tests an existing XML dictionary file and (depending on command line
+	The &gda-inspect-dict-file; tool tests an existing XML dictionary file and (depending on command line
 	options):
 	<itemizedlist>
 	  <listitem>

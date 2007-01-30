@@ -154,7 +154,7 @@ gint               gda_query_get_order_by_field     (GdaQuery *query, GdaQueryFi
 GdaQueryField     *gda_query_add_field_from_sql     (GdaQuery *query, const gchar *field, GError **error);
 
 GSList            *gda_query_get_all_fields         (GdaQuery *query);
-GdaQueryField     *gda_query_get_field_by_sql_naming        (GdaQuery *query, const gchar *sql_naming);
+GdaQueryField     *gda_query_get_field_by_sql_naming        (GdaQuery *query, const gchar *sql_name);
 GdaQueryField     *gda_query_get_field_by_param_name        (GdaQuery *query, const gchar *param_name);
 GdaQueryField     *gda_query_get_field_by_ref_field         (GdaQuery *query, GdaQueryTarget *target, 
 							     GdaEntityField *ref_field, 

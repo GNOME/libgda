@@ -369,10 +369,9 @@ gda_row_new_from_list (GdaDataModel *model, const GList *values)
  * @row: a #GdaRow.
  * @model: a #GdaDataModel this row belongs to, or %NULL if the row is outside any data model
  *
- * Set the #GdaDataModel the given #GdaRow belongs to. Note that calling this method should be reserved
- * to GdaDataModel implementations and should therefore not be called by the user.
- *
- * Returns: a #GdaDataModel.
+ * Set the #GdaDataModel the given #GdaRow belongs to. Note that calling
+ * this method should be reserved to GdaDataModel implementations and should
+ * therefore not be called by the user.
  */
 void
 gda_row_set_model (GdaRow *row, GdaDataModel *model)

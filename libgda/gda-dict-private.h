@@ -88,7 +88,7 @@ struct _GdaDictRegisterStruct {
 };
 
 typedef                GdaDictRegisterStruct *(*GdaDictRegFunc) (void);
-void                   gda_dict_class_always_register            (GdaDictRegFunc);
+void                   gda_dict_class_always_register            (GdaDictRegFunc func);
 void                   gda_dict_register_object_type             (GdaDict *dict, GdaDictRegisterStruct *reg);
 GdaDictRegisterStruct *gda_dict_get_object_type_registration     (GdaDict *dict, GType type);
 

@@ -176,11 +176,11 @@
     <title>Compiling with the library</title>
     <para>
       To compile you will need to set the C flags and to link the library, so we recommend
-      to use the <emphasis>pkg-config</emphasis> command.
+      to use the <command>pkg-config</command> command.
     </para>
     <programlisting>
-      <systemitem class="prompt">$</systemitem> <userinput> gcc -c full_example.c `pkg-config --cflags libgda`</userinput>
-      <systemitem class="prompt">$</systemitem> <userinput> gcc -o full_example `pkg-config --libs libgda` full_example.o</userinput>
+<systemitem class="prompt">$</systemitem> <userinput> gcc -c full_example.c `pkg-config --cflags libgda-3.0`</userinput>
+<systemitem class="prompt">$</systemitem> <userinput> gcc -o full_example `pkg-config --libs libgda-3.0` full_example.o</userinput>
     </programlisting>
     <para>
       Doing this will add to the C compiler command line all needed header files

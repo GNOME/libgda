@@ -470,7 +470,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 /**
  * gda_data_model_get_value_at_col_name
  * @model: a #GdaDataModel object.
- * @col_name: a valid column name.
+ * @column_name: a valid column name.
  * @row: a valid row number.
  *
  * Retrieves the data stored in the given position (identified by
@@ -1783,9 +1783,8 @@ gda_data_model_import_from_string (GdaDataModel *model,
 /**
  * gda_data_model_import_from_file
  * @model: a #GdaDataModel
- * @file: the filename to export to
- * @cols: an array containing which columns of @model will be exported, or %NULL for all columns
- * @nb_cols: the number of columns in @cols
+ * @file: the filename to import from
+ * @cols_trans: a #GHashTable for columns translating, or %NULL
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
  *

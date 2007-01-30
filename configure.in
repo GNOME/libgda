@@ -988,7 +988,7 @@ AC_SUBST(GTK_SHARP_LIBS)
 dnl
 dnl where to install DTD files
 dnl
-LIBGDA_DTDDIR=${datadir}/${PACKAGE}/dtd
+LIBGDA_DTDDIR=${datadir}/libgda-3.0/dtd
 AC_SUBST(LIBGDA_DTDDIR)
 
 

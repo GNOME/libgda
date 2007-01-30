@@ -169,7 +169,6 @@ gda_query_object_set_int_id (GdaQueryObject *qobj, guint id)
 /**
  * gda_query_object_get_int_id 
  * @qobj:
- * @id:
  *
  * Get the integer ID of @qobj
  *

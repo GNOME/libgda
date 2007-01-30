@@ -233,7 +233,6 @@ gda_query_target_init (GdaQueryTarget *target)
  * gda_query_target_new
  * @query: a #GdaQuery object
  * @table: the name of the table to reference
- * @as: optional alias
  *
  * Creates a new #GdaQueryTarget object, specifying the name of the table to reference.
  *

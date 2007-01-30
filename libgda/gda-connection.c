@@ -425,7 +425,7 @@ gda_connection_new (GdaClient *client,
 
 /**
  * gda_connection_open
- * @conn: a #GdaConnection object
+ * @cnc: a #GdaConnection object
  * @error: a place to store errors, or %NULL
  *
  * Tries to open the connection.
@@ -731,8 +731,8 @@ gda_connection_get_database (GdaConnection *cnc)
 
 /**
  * gda_connection_set_dsn
- * @srv: a #GdaConnection object
- * @dsn: a gda datasource
+ * @cnc: a #GdaConnection object
+ * @datasource: a gda datasource
  *
  * Sets the data source of the connection. If the connection is already opened,
  * then no action is performed at all and FALSE is returned.

@@ -505,10 +505,9 @@ static void proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *pr
 
 /**
  * gda_data_proxy_new
- * @dict: a #GdaDict object
- * @type: the #GdaDictType requested
+ * @model: Data model to be proxied
  *
- * Creates a new proxy of type @type
+ * Creates a new proxy for @model
  *
  * Returns: a new #GdaDataProxy object
  */
@@ -1362,8 +1361,8 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 /**
  * gda_data_proxy_cancel_row_changes
  * @proxy: a #GdaDataProxy object
+ * @proxy_row: the row to cancel changes
  * @col: the column to cancel changes, or less than 0 to cancel any change on the @row row
- * @row: the row to cancel changes
  *
  * Resets data at the corresponding row and column.
  */

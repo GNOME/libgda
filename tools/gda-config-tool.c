@@ -1476,6 +1476,8 @@ int
 main (int argc, char *argv [])
 {
 	options (argc, (const char **) argv);
+	gda_init ("Gda configuration manager", PACKAGE_VERSION, argc, argv);
+
 	if (cmdArgs.actions == ACTION_NONE) {
 		g_print ("Using configuration file from %s\n", cmdArgs.config_file);
 		initialize_readline ();

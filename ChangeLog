@@ -1,3 +1,44 @@
+2007-01-29  Leonardo Boshell  <lb@kmc.com.co>
+
+	* configure.in: Install DTD files under libgda-3.0/dtd as opposed to
+	libgda/dtd to avoid file collisions with libgda-1.2, as per bug #401179.
+	* doc/C/installation.xml:
+	* doc/C/Makefile.am: Use -3.0 suffix for the installation directory.
+	Pass --ignore-files to gtkdoc-mkdb to avoid gtk-doc errors.
+	* doc/C/libgda-docs.sgml: Updated copyright years.
+	* doc/C/tmpl/gda-connection.sgml:
+	* doc/C/tmpl/gda-dict-extend.sgml:
+	* doc/C/tmpl/gda-enum-types.sgml:
+	* doc/C/tmpl/gda-object.sgml:
+	* doc/C/tmpl/gda-parameter-list.sgml:
+	* doc/C/tmpl/gda-query-condition.sgml:
+	* doc/C/tmpl/gda-query.sgml: Updates from fixing gtk-doc warnings.
+	* libgda/gda-connection.c:
+	* libgda/gda-connection.h:
+	* libgda/gda-data-model-iter.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-dict-private.h:
+	* libgda/gda-dict-reg-aggregates.c:
+	* libgda/gda-object.c:
+	* libgda/gda-object.h:
+	* libgda/gda-parameter-list.h:
+	* libgda/gda-query-condition.h:
+	* libgda/gda-query-object.c:
+	* libgda/gda-query-target.c:
+	* libgda/gda-query.h:
+	* libgda/gda-row.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-value.c:
+	* libgda/sql-delimiter/gda-sql-delimiter.h: Fixed gtk-doc warnings.
+	* report/testing/Makefile.am:
+	* testing/Makefile.am:
+	* tools/Makefile.am:
+	* tools/gda-config-tool.1:
+	* tools/gda-config.5: Use -3.0 suffix.
+	* tools/gda-config-tool.c: (main): Call gda_init() to fix runtime
+	warnings due to gda_paramlist_dtd not being initialized.
+
 2007-01-27  Vivien Malerba <malerba@gnome-db.org>
 	
 	* configure.in:
