@@ -1,3 +1,18 @@
+2007-01-31  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda-3.0.pc.in: removed libxslt as a requirement
+	* libgda/gda-data-proxy.c: corrected a bug which prevented any modification to be
+	applied to the proxied data model
+	* libgda/gda-data-proxy.[hc]: added gda_data_proxy_get_n_modified_rows()
+	* libgda/gda-data-model-query.c: added a "use_transaction" property to allow the object
+	to start a transaction before running the modification SQL queries and to end it afterwards (so all 
+	the modifications are atomic). 
+	NOTE1: Beware however to avoid using that feature on several 
+	GdaDataModelQuery at the same time if data is being modified at the same time because 
+	transactions are shared and this can lead to data losses.
+	NOTE2: it's not a problem if a global transaction is started beforehand (not by the 
+	GdaDataModelQuery object itself).
+
 2007-01-29  Leonardo Boshell  <lb@kmc.com.co>
 
 	* configure.in: Install DTD files under libgda-3.0/dtd as opposed to

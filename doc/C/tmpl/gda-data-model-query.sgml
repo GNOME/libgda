@@ -45,6 +45,11 @@ one provided th the #GdaDict object to which the query relates.
 
 </para>
 
+<!-- ##### ARG GdaDataModelQuery:use-transaction ##### -->
+<para>
+
+</para>
+
 <!-- ##### STRUCT GdaDataModelQueryClass ##### -->
 <para>
 

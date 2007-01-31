@@ -375,6 +375,12 @@ pre_changes_accumulator (GSignalInvocationHint *ihint,
         return thisvalue; /* stop signal if 'thisvalue' is FALSE */
 }
 
+static gboolean
+m_pre_changes_applied (GdaDataProxy *proxy, gint row, gint proxied_row)
+{
+        return TRUE; /* defaults allows changes */
+}
+
 static void
 gda_data_proxy_class_init (GdaDataProxyClass *class)
 {
@@ -422,7 +428,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 	class->row_delete_changed = NULL;
 	class->sample_size_changed = NULL;
 	class->sample_changed = NULL;
-	class->pre_changes_applied = NULL;
+	class->pre_changes_applied = m_pre_changes_applied;
 	class->post_changes_applied = NULL;
 
 	/* virtual functions */
@@ -1676,6 +1682,24 @@ gda_data_proxy_get_n_new_rows (GdaDataProxy *proxy)
         g_return_val_if_fail (proxy->priv, 0);
 
         return g_slist_length (proxy->priv->new_rows);
+}
+
+/**
+ * gda_data_proxy_get_n_modified_rows
+ * @proxy: a #GdaDataProxy object
+ *
+ * Get the number of rows which have been modified in the proxy (the sum of rows existing in
+ * the proxied data model which have been modified, and new rows).
+ *
+ * Returns: the number of modified rows
+ */
+gint
+gda_data_proxy_get_n_modified_rows (GdaDataProxy *proxy)
+{
+	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), 0);
+        g_return_val_if_fail (proxy->priv, 0);
+
+        return g_slist_length (proxy->priv->all_modifs);
 }
 
 #ifdef GDA_DEBUG

@@ -88,6 +88,7 @@ gint              gda_data_proxy_find_row_from_values     (GdaDataProxy *proxy, 
 gboolean          gda_data_proxy_row_has_changed          (GdaDataProxy *proxy, gint proxy_row);
 gboolean          gda_data_proxy_has_changed              (GdaDataProxy *proxy);
 gint              gda_data_proxy_get_n_new_rows           (GdaDataProxy *proxy);
+gint              gda_data_proxy_get_n_modified_rows      (GdaDataProxy *proxy);
 
 gboolean          gda_data_proxy_apply_row_changes        (GdaDataProxy *proxy, gint proxy_row, GError **error);
 void              gda_data_proxy_cancel_row_changes       (GdaDataProxy *proxy, gint proxy_row, gint col);

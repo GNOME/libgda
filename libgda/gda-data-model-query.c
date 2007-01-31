@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2005 - 2006 The GNOME Foundation.
+ * Copyright (C) 2005 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -49,9 +49,16 @@ struct _GdaDataModelQueryPrivate {
 	GdaDataModel     *data;
 	GError           *refresh_error; /* if @data is NULL, then can contain the error */
 
-	gboolean          defer_refresh;
-	gboolean          refresh_pending;
+	gboolean          multiple_updates;
+	gboolean          needs_refresh;
 	GSList           *columns;
+
+	gboolean          transaction_allowed;
+	gboolean          transaction_started; /* true if we have started a transaction here */
+	gboolean          transaction_needs_commit;
+	guint             svp_id;   /* counter for savepoints */
+	gchar            *svp_name; /* non NULL if we have created a savepoint here */
+	/* note: transaction_started and svp_name are mutually exclusive */
 };
 
 /* properties */
@@ -61,7 +68,8 @@ enum
         PROP_SEL_QUERY,
 	PROP_INS_QUERY,
 	PROP_UPD_QUERY,
-	PROP_DEL_QUERY
+	PROP_DEL_QUERY,
+	PROP_USE_TRANSACTION
 };
 
 enum 
@@ -112,6 +120,9 @@ static void                 gda_data_model_query_send_hint       (GdaDataModel *
 static void create_columns (GdaDataModelQuery *model);
 static void to_be_destroyed_query_cb (GdaQuery *query, GdaDataModelQuery *model);
 static void param_changed_cb (GdaParameterList *paramlist, GdaParameter *param, GdaDataModelQuery *model);
+
+static void opt_start_transaction_or_svp (GdaDataModelQuery *selmodel);
+static void opt_end_transaction_or_svp (GdaDataModelQuery *selmodel);
 
 #ifdef GDA_DEBUG
 static void gda_data_model_query_dump (GdaDataModelQuery *select, guint offset);
@@ -199,6 +210,12 @@ gda_data_model_query_class_init (GdaDataModelQueryClass *klass)
 							       "DELETE Query to be executed to remove data",
                                                                GDA_TYPE_QUERY,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+	
+	g_object_class_install_property (object_class, PROP_USE_TRANSACTION,
+                                         g_param_spec_boolean ("use_transaction", "Use transaction", 
+							       "Run modification queries within a transaction",
+                                                               FALSE,
+							       G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
 
 	/* virtual functions */
 	object_class->dispose = gda_data_model_query_dispose;
@@ -248,8 +265,14 @@ gda_data_model_query_init (GdaDataModelQuery *model, GdaDataModelQueryClass *kla
 	model->priv->columns = NULL;
 
 	/* model refreshing is performed as soon as any modification is done */
-	model->priv->defer_refresh = FALSE;
-	model->priv->refresh_pending = FALSE;
+	model->priv->multiple_updates = FALSE;
+	model->priv->needs_refresh = FALSE;
+
+	model->priv->transaction_allowed = FALSE;
+	model->priv->transaction_started = FALSE;
+	model->priv->transaction_needs_commit = FALSE;
+	model->priv->svp_id = 0;
+	model->priv->svp_name = NULL;
 }
 
 static void
@@ -262,6 +285,10 @@ gda_data_model_query_dispose (GObject *object)
 	/* free memory */
 	if (model->priv) {
 		gint i;
+
+		if (model->priv->transaction_started || model->priv->svp_name)
+			opt_end_transaction_or_svp (model);
+
 		if (model->priv->columns) {
 			g_slist_foreach (model->priv->columns, (GFunc) g_object_unref, NULL);
 			g_slist_free (model->priv->columns);
@@ -474,6 +501,9 @@ gda_data_model_query_set_property (GObject *object,
 				}
 			}
 			break;
+		case PROP_USE_TRANSACTION:
+			model->priv->transaction_allowed = g_value_get_boolean (value);
+			break;
 		default:
 			g_assert_not_reached ();
 			break;
@@ -498,6 +528,9 @@ gda_data_model_query_get_property (GObject *object,
 		case PROP_UPD_QUERY:
 		case PROP_DEL_QUERY:
 			g_value_set_object (value, G_OBJECT (model->priv->queries[qindex]));
+			break;
+		case PROP_USE_TRANSACTION:
+			g_value_set_boolean (value, model->priv->transaction_allowed);
 			break;
 		default:
 			g_assert_not_reached ();
@@ -1038,26 +1071,88 @@ gda_data_model_query_create_iter (GdaDataModel *model)
 	return iter;
 }
 
+static gchar *try_add_savepoint (GdaDataModelQuery *selmodel);
+static void   try_remove_savepoint (GdaDataModelQuery *selmodel, const gchar *svp_name);
+
+static gchar *
+try_add_savepoint (GdaDataModelQuery *selmodel)
+{
+	GdaConnection *cnc;
+	gchar *svp_name = NULL;
+	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (selmodel->priv->queries[SEL_QUERY])));
+	if (cnc && gda_connection_supports_feature (cnc, GDA_CONNECTION_FEATURE_SAVEPOINTS)) {
+		gchar *name;
+		
+		name = g_strdup_printf ("_gda_data_model_query_svp_%p_%d", selmodel, selmodel->priv->svp_id++);
+		if (gda_connection_add_savepoint (cnc, name, NULL))
+			svp_name = name;
+		else
+			g_free (name);
+	}
+	return svp_name;
+}
+
+static void
+try_remove_savepoint (GdaDataModelQuery *selmodel, const gchar *svp_name)
+{
+	GdaConnection *cnc;
+
+	if (!svp_name)
+		return;
+	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (selmodel->priv->queries[SEL_QUERY])));
+	if (cnc && gda_connection_supports_feature (cnc, GDA_CONNECTION_FEATURE_SAVEPOINTS_REMOVE))
+		gda_connection_delete_savepoint (cnc, svp_name, NULL);
+}
+
 static gboolean
 run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 {
-	gboolean retval = FALSE;
+	gboolean modif_done = FALSE;
 	GdaParameterList *plist;
+	gchar *svp_name = NULL;
+
+	/* try to add a savepoint if we are not doing multiple updates */
+	if (!selmodel->priv->multiple_updates)
+		svp_name = try_add_savepoint (selmodel);
+
 	plist = (GdaParameterList *) gda_query_execute (selmodel->priv->queries[query_type], 
 							selmodel->priv->params [query_type], TRUE, error);
 	if (plist) {
-		retval = TRUE;
+		modif_done = TRUE;
 		g_object_unref (plist);
 	}
 
-	if (retval && !selmodel->priv->defer_refresh)
-		/* do a refresh */
+	if (modif_done) {
+		/* modif query executed without error */
+		if (!selmodel->priv->multiple_updates)
+			gda_data_model_query_refresh (selmodel, NULL);
+		else 
+			selmodel->priv->needs_refresh = TRUE;
+	}
+	else {
+		/* modif query did not execute correctly */
+		if (!selmodel->priv->multiple_updates)
+			/* nothing to do */;
+		else
+			selmodel->priv->transaction_needs_commit = FALSE;
+	}
+
+	/* try to remove the savepoint added above */
+	if (svp_name) {
+		try_remove_savepoint (selmodel, svp_name);
+		g_free (svp_name);
+	}
+
+#ifdef REMOVE
+	if (modif_done && !selmodel->priv->multiple_updates)
+		/* modifications were successfull => refresh needed */
 		gda_data_model_query_refresh (selmodel, NULL);
 	else
 		/* the refresh is delayed */
-		selmodel->priv->refresh_pending = TRUE;
+		selmodel->priv->needs_refresh = TRUE;
+#endif
 
-	return retval;
+	return modif_done;
 }
 
 static gboolean
@@ -1287,6 +1382,96 @@ gda_data_model_query_remove_row (GdaDataModel *model, gint row, GError **error)
 }
 
 static void
+opt_start_transaction_or_svp (GdaDataModelQuery *selmodel)
+{
+	GdaConnection *cnc;
+
+	/* if the data model is not allowed to start transactions, then nothing to do */
+	if (!selmodel->priv->transaction_allowed)
+		return;
+
+	/* if we already have started a transaction, or added a savepoint, then nothing to do */
+	if (selmodel->priv->transaction_started ||
+	    selmodel->priv->svp_name)
+		return;
+
+	/* re-init internal status */
+	selmodel->priv->transaction_needs_commit = FALSE;
+
+	/* start a transaction is no transaction has yet been started */
+	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (selmodel->priv->queries[SEL_QUERY])));
+	if (cnc && gda_connection_supports_feature (cnc, GDA_CONNECTION_FEATURE_TRANSACTIONS)) {
+		GdaTransactionStatus *tstat;
+		
+		tstat = gda_connection_get_transaction_status (cnc);
+		if (tstat) {
+			/* a transaction already exists, try to use a savepoint */
+			if (gda_connection_supports_feature (cnc, GDA_CONNECTION_FEATURE_SAVEPOINTS)) {
+				gchar *name;
+				
+				name = g_strdup_printf ("_gda_data_model_query_svp_%p_%d", selmodel, selmodel->priv->svp_id++);
+				if (gda_connection_add_savepoint (cnc, name, NULL))
+					selmodel->priv->svp_name = name;
+				else
+					g_free (name);
+			}
+		}
+		else 
+			/* start a transaction */
+			selmodel->priv->transaction_started = gda_connection_begin_transaction (cnc, NULL,
+							      GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL);
+	}
+
+	/* init internal status */
+	selmodel->priv->transaction_needs_commit = TRUE;
+
+	if (selmodel->priv->transaction_started)
+		g_print ("GdaDataModelQuery %p: started transaction\n", selmodel);
+	if (selmodel->priv->svp_name)
+		g_print ("GdaDataModelQuery %p: added savepoint %s\n", selmodel, selmodel->priv->svp_name);
+}
+
+static void
+opt_end_transaction_or_svp (GdaDataModelQuery *selmodel)
+{
+	GdaConnection *cnc;
+
+	if (!selmodel->priv->transaction_started && !selmodel->priv->svp_name)
+		return;
+
+	g_print ("GdaDataModelQuery %p (END1): %s\n", selmodel, selmodel->priv->needs_refresh ? "needs refresh" : "no refresh");
+	cnc = gda_dict_get_connection (gda_object_get_dict (GDA_OBJECT (selmodel->priv->queries[SEL_QUERY])));
+	if (selmodel->priv->transaction_started) {
+		g_assert (!selmodel->priv->svp_name);
+		if (selmodel->priv->transaction_needs_commit) {
+			/* try to commit transaction */
+			if (!gda_connection_commit_transaction (cnc, NULL, NULL))
+				selmodel->priv->needs_refresh = TRUE;
+		}
+		else {
+			/* rollback transaction */
+			selmodel->priv->needs_refresh = gda_connection_rollback_transaction (cnc, NULL, NULL) ? FALSE : TRUE;
+		}
+		selmodel->priv->transaction_started = FALSE;
+	}
+	else {
+		if (!selmodel->priv->transaction_needs_commit) {
+			selmodel->priv->needs_refresh = gda_connection_rollback_savepoint (cnc, selmodel->priv->svp_name, NULL) ?
+				FALSE : TRUE;
+		}
+		else
+			if (gda_connection_supports_feature (cnc, GDA_CONNECTION_FEATURE_SAVEPOINTS_REMOVE))
+				if (!gda_connection_delete_savepoint (cnc, selmodel->priv->svp_name, NULL))
+					selmodel->priv->needs_refresh = TRUE;
+		g_free (selmodel->priv->svp_name);
+		selmodel->priv->svp_name = NULL;
+	}
+	g_print ("GdaDataModelQuery %p (END2): %s\n", selmodel, selmodel->priv->needs_refresh ? "needs refresh" : "no refresh");
+}
+
+
+
+static void
 gda_data_model_query_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value)
 {
 	GdaDataModelQuery *selmodel;
@@ -1297,12 +1482,16 @@ gda_data_model_query_send_hint (GdaDataModel *model, GdaDataModelHint hint, cons
 	if (hint == GDA_DATA_MODEL_HINT_REFRESH)
 		gda_data_model_query_refresh (selmodel, NULL);
 	else {
-		if (hint == GDA_DATA_MODEL_HINT_START_BATCH_UPDATE)
-			selmodel->priv->defer_refresh = TRUE;
+		if (hint == GDA_DATA_MODEL_HINT_START_BATCH_UPDATE) {
+			opt_start_transaction_or_svp (selmodel);
+			selmodel->priv->multiple_updates = TRUE;
+		}
 		else {
 			if (hint == GDA_DATA_MODEL_HINT_END_BATCH_UPDATE) {
-				selmodel->priv->defer_refresh = FALSE;
-				if (selmodel->priv->refresh_pending)
+				selmodel->priv->multiple_updates = FALSE;
+				opt_end_transaction_or_svp (selmodel);
+					
+				if (selmodel->priv->needs_refresh)
 					gda_data_model_query_refresh (selmodel, NULL);
 			}
 		}
