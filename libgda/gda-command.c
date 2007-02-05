@@ -47,7 +47,7 @@ gda_command_get_type (void)
  * calling #gda_command_free.
  *
  * If there are conflicting options, this will set @options to
- * #GDA_COMMAND_OPTION_DEFAULT.
+ * #GDA_COMMAND_DEFAULT_OPTION.
  *
  * Returns: a newly allocated #GdaCommand.
  */

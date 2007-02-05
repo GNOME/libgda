@@ -1,3 +1,8 @@
+2007-02-05  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-command.c: Correct typo in the gda_command_new() documentation.
+	Bug #129633 from Jon Willeke.
+
 2007-01-09  Murray Cumming  <murrayc@murrayc.com>
 
 	Released 1.2.4.
