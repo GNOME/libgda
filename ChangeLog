@@ -1,3 +1,15 @@
+2007-02-05  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-config.c:
+	* libgda/gda-data-model-import.c:
+	* libgda/gda-data-model-query.c:
+	* libgda/gda-data-proxy.c:
+	* libgda/gda-query.c: Renamed _modif_ to _modify_ in variable and function names, to 
+	make the code clearer.
+	* libgda/gda-query.h: Renamed gda_query_is_modif_query() to gda_query_is_modify_query(), 
+	because modif is not a familiar abbreviation. modification would be nicer but is perhaps 
+	a bit too long.
+
 2007-01-31  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda-3.0.pc.in: removed libxslt as a requirement

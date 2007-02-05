@@ -653,7 +653,7 @@ gda_data_model_import_get_property (GObject *object,
 /**
  * gda_data_model_import_new_file
  * @filename: the file to import data from
- * @random_access: TRUE if a random acces will be required
+ * @random_access: TRUE if random access will be required
  * @options: list of options for the export
  *
  * Creates a new #GdaDataModel object which contains the data stored within the @filename file.

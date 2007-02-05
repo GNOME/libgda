@@ -1303,7 +1303,7 @@ gda_query_is_delete_query (GdaQuery *query)
 }
 
 /**
- * gda_query_is_modif_query
+ * gda_query_is_modify_query
  * @query: a # GdaQuery object
  *
  * Tells if @query is a modification query (a simple UPDATE, DELETE, INSERT).; pure SQL
@@ -1312,7 +1312,7 @@ gda_query_is_delete_query (GdaQuery *query)
  * Returns: TRUE if @query is a modification query
  */
 gboolean
-gda_query_is_modif_query (GdaQuery *query)
+gda_query_is_modify_query (GdaQuery *query)
 {
 	g_return_val_if_fail (query && GDA_IS_QUERY (query), FALSE);
 	g_return_val_if_fail (query->priv, FALSE);

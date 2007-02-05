@@ -107,7 +107,7 @@ gboolean           gda_query_is_select_query        (GdaQuery *query);
 gboolean           gda_query_is_insert_query        (GdaQuery *query);
 gboolean           gda_query_is_update_query        (GdaQuery *query);
 gboolean           gda_query_is_delete_query        (GdaQuery *query);
-gboolean           gda_query_is_modif_query         (GdaQuery *query);
+gboolean           gda_query_is_modify_query         (GdaQuery *query);
 gboolean           gda_query_is_well_formed         (GdaQuery *query, GdaParameterList *context, GError **error);
 GdaQuery          *gda_query_get_parent_query       (GdaQuery *query);
 

@@ -107,13 +107,13 @@ enum
 
 /*
  * Structure to hold the status and all the modifications made to a single
- * row. It is not possible to have ((model_row < 0) && !modif_values)
+ * row. It is not possible to have ((model_row < 0) && !modify_values)
  */
 typedef struct
 {
 	gint           model_row;    /* row index in the GdaDataModel, -1 if new row */
 	gboolean       to_be_deleted;/* TRUE if row is to be deleted */
-	GSList        *modif_values; /* list of RowValue structures */
+	GSList        *modify_values; /* list of RowValue structures */
 	GValue       **orig_values;  /* array of the original GValues, indexed on the column numbers */
 	gint           orig_values_size;
 } RowModif;
@@ -155,7 +155,7 @@ struct _GdaDataProxyPrivate
 
 	GSList            *all_modifs; /* list of RowModif structures, for memory management */
 	GSList            *new_rows;   /* list of RowModif, no data allocated in this list */
-	GHashTable        *modif_rows;  /* key = model_row number, value = RowModif, NOT for new rows */
+	GHashTable        *modify_rows;  /* key = model_row number, value = RowModif, NOT for new rows */
 
 	gboolean           ignore_proxied_changes;
 	gboolean           proxy_has_changed;
@@ -220,14 +220,14 @@ proxy_row_to_model_row (GdaDataProxy *proxy, gint row)
 }
 
 static RowModif *
-find_row_modif_for_proxy_row (GdaDataProxy *proxy, gint proxy_row)
+find_row_modify_for_proxy_row (GdaDataProxy *proxy, gint proxy_row)
 {
 	RowModif *rm = NULL;
 	gint model_row;
 
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
 	if (model_row >= 0)
-		rm = g_hash_table_lookup (proxy->priv->modif_rows, GINT_TO_POINTER (model_row));
+		rm = g_hash_table_lookup (proxy->priv->modify_rows, GINT_TO_POINTER (model_row));
 	else {
 		gint offset = proxy->priv->current_nb_rows + 
 			(proxy->priv->add_null_entry ? 1 : 0);
@@ -265,14 +265,14 @@ row_modifs_free (RowModif *rm)
 	GSList *list;
 	gint i;
 		
-	list = rm->modif_values;
+	list = rm->modify_values;
 	while (list) {
 		if (ROW_VALUE (list->data)->value)
 			gda_value_free (ROW_VALUE (list->data)->value);
 		g_free (list->data);
 		list = g_slist_next (list);
 	}
-	g_slist_free (rm->modif_values);
+	g_slist_free (rm->modify_values);
 	
 	if (rm->orig_values) {
 		for (i=0; i < rm->orig_values_size; i++) {
@@ -296,7 +296,7 @@ row_modifs_new (GdaDataProxy *proxy, gint proxy_row)
 	RowModif *rm;
 	
 #ifdef GDA_DEBUG
-	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
+	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 	if (rm) 
 		g_warning ("%s(): RowModif already exists for that proxy_row", __FUNCTION__);
 #endif
@@ -488,7 +488,7 @@ static void
 gda_data_proxy_init (GdaDataProxy *proxy)
 {
 	proxy->priv = g_new0 (GdaDataProxyPrivate, 1);
-	proxy->priv->modif_rows = g_hash_table_new (NULL, NULL);
+	proxy->priv->modify_rows = g_hash_table_new (NULL, NULL);
 	proxy->priv->notify_changes = TRUE;
 	proxy->priv->ignore_proxied_changes = FALSE;
 	proxy->priv->proxy_has_changed = FALSE;
@@ -579,10 +579,10 @@ gda_data_proxy_dispose (GObject *object)
 			proxy->priv->columns_attrs = NULL;
 		}
 		
-		if (proxy->priv->modif_rows) {
+		if (proxy->priv->modify_rows) {
 			gda_data_proxy_cancel_all_changes (proxy);
-			g_hash_table_destroy (proxy->priv->modif_rows);
-			proxy->priv->modif_rows = NULL;
+			g_hash_table_destroy (proxy->priv->modify_rows);
+			proxy->priv->modify_rows = NULL;
 		}
 	}
 
@@ -728,7 +728,7 @@ proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 		gint model_row = ROW_MODIF (proxy->priv->all_modifs->data)->model_row;
 		row_modifs_free (ROW_MODIF (proxy->priv->all_modifs->data));
 		if (model_row >= 0)
-			g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (model_row));
+			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (model_row));
 		proxy->priv->all_modifs = g_slist_delete_link (proxy->priv->all_modifs, proxy->priv->all_modifs);
 	}
 	if (proxy->priv->new_rows) {/* new rows removing (no memory de-allocation here, though) */
@@ -833,7 +833,7 @@ find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValu
 	gint model_row;
 
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
-	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
+	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 
 	if (!rm) {
 		/* create a new RowModif */
@@ -841,14 +841,14 @@ find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValu
 		rm = row_modifs_new (proxy, proxy_row);
 		rm->model_row = model_row;
 		if (model_row >= 0)
-			g_hash_table_insert (proxy->priv->modif_rows, GINT_TO_POINTER (model_row), rm);
+			g_hash_table_insert (proxy->priv->modify_rows, GINT_TO_POINTER (model_row), rm);
 		proxy->priv->all_modifs = g_slist_prepend (proxy->priv->all_modifs, rm);
 	}
 	else {
 		/* there are already some modifications to the row, try to catch the RowValue if available */
 		GSList *list;
 		
-		list = rm->modif_values;
+		list = rm->modify_values;
 		while (list && !rv) {
 			if (ROW_VALUE (list->data)->model_column == col)
 				rv = ROW_VALUE (list->data);
@@ -932,14 +932,14 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 			flags |= GDA_VALUE_ATTR_UNUSED;
 	}
 
-	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
+	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 	if (rm) {
-		if (rm->modif_values) {
+		if (rm->modify_values) {
 			/* there are some modifications to the row */
 			GSList *list;
 			RowValue *rv = NULL;
 			
-			list = rm->modif_values;
+			list = rm->modify_values;
 			while (list && !rv) {
 				if (ROW_VALUE (list->data)->model_column == model_column)
 					rv = ROW_VALUE (list->data);
@@ -1017,7 +1017,7 @@ gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint
 				else
 					flags &= ~GDA_VALUE_ATTR_HAS_VALUE_ORIG;
 				
-				rm->modif_values = g_slist_prepend (rm->modif_values, rv);	
+				rm->modify_values = g_slist_prepend (rm->modify_values, rv);	
 			}
 			else {
 				flags = g_value_get_uint (rv->attributes);
@@ -1082,7 +1082,7 @@ gda_data_proxy_delete (GdaDataProxy *proxy, gint proxy_row)
 	g_return_if_fail (proxy_row >= 0);
 
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
-	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
+	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 	if (rm) {
 		if (! rm->to_be_deleted) {
 			if (rm->model_row < 0) {
@@ -1104,7 +1104,7 @@ gda_data_proxy_delete (GdaDataProxy *proxy, gint proxy_row)
 		/* the row is an existing row in the data model, create a new RowModif */
 		rm = row_modifs_new (proxy, proxy_row);
 		rm->model_row = model_row;
-		g_hash_table_insert (proxy->priv->modif_rows, GINT_TO_POINTER (model_row), rm);
+		g_hash_table_insert (proxy->priv->modify_rows, GINT_TO_POINTER (model_row), rm);
 		proxy->priv->all_modifs = g_slist_prepend (proxy->priv->all_modifs, rm);
 		rm->to_be_deleted = TRUE;
 		do_signal = TRUE;
@@ -1137,14 +1137,14 @@ gda_data_proxy_undelete (GdaDataProxy *proxy, gint proxy_row)
 	g_return_if_fail (proxy_row >= 0);
 
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
-	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
+	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 	if (rm) {
 		rm->to_be_deleted = FALSE;
-		if (!rm->modif_values) {
+		if (!rm->modify_values) {
 			/* get rid of that RowModif */
 			do_signal= TRUE;
 			
-			g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (model_row));
+			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (model_row));
 			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 			row_modifs_free (rm);
 		}
@@ -1178,7 +1178,7 @@ gda_data_proxy_row_is_deleted (GdaDataProxy *proxy, gint proxy_row)
 	g_return_val_if_fail (proxy->priv, FALSE);
 	g_return_val_if_fail (proxy_row >= 0, FALSE);
 
-	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
+	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 	return rm && rm->to_be_deleted ? TRUE : FALSE;
 }
 
@@ -1201,7 +1201,7 @@ gda_data_proxy_row_is_inserted (GdaDataProxy *proxy, gint proxy_row)
 	g_return_val_if_fail (proxy->priv, FALSE);
 	g_return_val_if_fail (proxy_row >= 0, FALSE);
 
-	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
+	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 	if (rm && (rm->model_row < 0))
 		return TRUE;
 	else
@@ -1334,7 +1334,7 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 		rv->model_column = col;
 		rv->attributes = gda_value_new (G_TYPE_UINT);
 		rv->value = NULL;
-		rm->modif_values = g_slist_prepend (rm->modif_values, rv);	
+		rm->modify_values = g_slist_prepend (rm->modify_values, rv);	
 		
 		column = gda_data_model_describe_column (proxy->priv->model, col);
 		def = gda_column_get_default_value (column);
@@ -1383,26 +1383,26 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 	    (col < 0)) {
 		RowModif *rm;
 
-		rm = find_row_modif_for_proxy_row (proxy, proxy_row);
-		if (rm && rm->modif_values) {
+		rm = find_row_modify_for_proxy_row (proxy, proxy_row);
+		if (rm && rm->modify_values) {
 			/* there are some modifications to the row */
 			GSList *list;
 			RowValue *rv = NULL;
 			
-			list = rm->modif_values;
+			list = rm->modify_values;
 			while (list && (!rv || (col < 0))) {
 				if ((col < 0) || (ROW_VALUE (list->data)->model_column == col)) {
 					rv = ROW_VALUE (list->data);
 
 					/* remove this RowValue from the RowList */
-					rm->modif_values = g_slist_remove (rm->modif_values, rv);
-					if (!rm->modif_values && !rm->to_be_deleted) {
+					rm->modify_values = g_slist_remove (rm->modify_values, rv);
+					if (!rm->modify_values && !rm->to_be_deleted) {
 						/* remove this RowList as well */
 						proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 						if (rm->model_row < 0) 
 							proxy->priv->new_rows = g_slist_remove (proxy->priv->new_rows, rm);
 						else
-							g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
+							g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
 						row_modifs_free (rm);
 						rm = NULL;
 						
@@ -1414,7 +1414,7 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 							gda_data_model_row_updated ((GdaDataModel *) proxy, proxy_row);
 					}
 					if (rm)
-						list = rm->modif_values;
+						list = rm->modify_values;
 					else
 						list = NULL;
 				}
@@ -1451,7 +1451,7 @@ gda_data_proxy_apply_row_changes (GdaDataProxy *proxy, gint proxy_row, GError **
 	gda_object_dump (proxy, 5);
 #endif
 
-	return commit_row_modif (proxy, find_row_modif_for_proxy_row (proxy, proxy_row), error);
+	return commit_row_modif (proxy, find_row_modify_for_proxy_row (proxy, proxy_row), error);
 }
 
 /*
@@ -1510,14 +1510,14 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 			GValue *newvalue;
 			GValue **free_val;
 			
-			g_assert (rm->modif_values);
+			g_assert (rm->modify_values);
 			g_assert (rm->orig_values);
 			free_val = g_new0 (GValue *, proxy->priv->model_nb_cols);
 			for (i=0; i < rm->orig_values_size; i++) {
 				newvalue_found = FALSE;
 				newvalue = NULL;
 				
-				list = rm->modif_values;
+				list = rm->modify_values;
 				while (list && !newvalue_found) {
 					if (ROW_VALUE (list->data)->model_column == i) {
 						newvalue_found = TRUE;
@@ -1556,12 +1556,12 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 			GValue *newvalue;
 			GValue **free_val;
 			
-			g_assert (rm->modif_values);
+			g_assert (rm->modify_values);
 			free_val = g_new0 (GValue *, proxy->priv->model_nb_cols);
 			for (i = 0; i < proxy->priv->model_nb_cols; i++) {
 				newvalue = NULL;
 				
-				list = rm->modif_values;
+				list = rm->modify_values;
 				while (list && !newvalue) {
 					if (ROW_VALUE (list->data)->model_column == i) {
 						if (g_value_get_uint (ROW_VALUE (list->data)->attributes) &
@@ -1613,7 +1613,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 		if (!freedone) {
 			/* get rid of the commited change, where rm->model_row >= 0 */
 			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
-			g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
+			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
 			row_modifs_free (rm);
 		}
 	}
@@ -1662,8 +1662,8 @@ gda_data_proxy_row_has_changed (GdaDataProxy *proxy, gint proxy_row)
 	g_return_val_if_fail (proxy->priv, FALSE);
 	g_return_val_if_fail (proxy_row >= 0, FALSE);
 
-	rm = find_row_modif_for_proxy_row (proxy, proxy_row);
-	return rm && (rm->modif_values || rm->to_be_deleted) ? TRUE : FALSE;
+	rm = find_row_modify_for_proxy_row (proxy, proxy_row);
+	return rm && (rm->modify_values || rm->to_be_deleted) ? TRUE : FALSE;
 }
 
 /**
@@ -2097,7 +2097,7 @@ gda_data_proxy_cancel_all_changes (GdaDataProxy *proxy)
 		
 		row_modifs_free (ROW_MODIF (proxy->priv->all_modifs->data));
 		if (model_row >= 0)
-			g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (model_row));
+			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (model_row));
 		proxy->priv->all_modifs = g_slist_delete_link (proxy->priv->all_modifs, proxy->priv->all_modifs);
 		
 		if (model_row >= 0) {
@@ -2219,13 +2219,13 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row)
 		gint model_col = column % proxy->priv->model_nb_cols;
 		gboolean value_has_modifs = FALSE;
 
-		rm = find_row_modif_for_proxy_row (proxy, proxy_row);
-		if (rm && rm->modif_values) {
+		rm = find_row_modify_for_proxy_row (proxy, proxy_row);
+		if (rm && rm->modify_values) {
 			/* there are some modifications to the row, see if there are some for the column */
 			GSList *list;
 			RowValue *rv = NULL;
 					
-			list = rm->modif_values;
+			list = rm->modify_values;
 			while (list && !rv) {
 				if (ROW_VALUE (list->data)->model_column == model_col)
 					rv = ROW_VALUE (list->data);
@@ -2257,7 +2257,7 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row)
 		RowModif *rm;
 		gint model_col = column % proxy->priv->model_nb_cols;
 
-		rm = find_row_modif_for_proxy_row (proxy, proxy_row);
+		rm = find_row_modify_for_proxy_row (proxy, proxy_row);
 		if (rm) {
 			if (rm->orig_values)
 				retval = rm->orig_values [model_col];
@@ -2392,7 +2392,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			if (rm->orig_values && (col < rm->orig_values_size) && 
 			    ! gda_value_compare_ext ((GValue *) value, rm->orig_values [col])) {
 				/* remove the RowValue */
-				rm->modif_values = g_slist_remove (rm->modif_values, rv);
+				rm->modify_values = g_slist_remove (rm->modify_values, rv);
 				g_free (rv);
 				rv = NULL;
 			}
@@ -2431,7 +2431,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			else
 				flags &= ~GDA_VALUE_ATTR_HAS_VALUE_ORIG;
 			g_value_set_uint (rv->attributes, flags);
-			rm->modif_values = g_slist_prepend (rm->modif_values, rv);
+			rm->modify_values = g_slist_prepend (rm->modify_values, rv);
 		}
 		
 		if (rv) {
@@ -2441,10 +2441,10 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			g_value_set_uint (rv->attributes, flags);
 		}
 
-		if (!rm->to_be_deleted && !rm->modif_values && (rm->model_row >= 0)) {
+		if (!rm->to_be_deleted && !rm->modify_values && (rm->model_row >= 0)) {
 			/* remove that RowModif, it's useless */
 			/* g_print ("Removing RM\n"); */
-			g_hash_table_remove (proxy->priv->modif_rows, GINT_TO_POINTER (rm->model_row));
+			g_hash_table_remove (proxy->priv->modify_rows, GINT_TO_POINTER (rm->model_row));
 			proxy->priv->all_modifs = g_slist_remove (proxy->priv->all_modifs, rm);
 			row_modifs_free (rm);
 		}

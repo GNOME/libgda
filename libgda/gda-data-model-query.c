@@ -1105,9 +1105,9 @@ try_remove_savepoint (GdaDataModelQuery *selmodel, const gchar *svp_name)
 }
 
 static gboolean
-run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
+run_modify_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 {
-	gboolean modif_done = FALSE;
+	gboolean modify_done = FALSE;
 	GdaParameterList *plist;
 	gchar *svp_name = NULL;
 
@@ -1118,11 +1118,11 @@ run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 	plist = (GdaParameterList *) gda_query_execute (selmodel->priv->queries[query_type], 
 							selmodel->priv->params [query_type], TRUE, error);
 	if (plist) {
-		modif_done = TRUE;
+		modify_done = TRUE;
 		g_object_unref (plist);
 	}
 
-	if (modif_done) {
+	if (modify_done) {
 		/* modif query executed without error */
 		if (!selmodel->priv->multiple_updates)
 			gda_data_model_query_refresh (selmodel, NULL);
@@ -1144,7 +1144,7 @@ run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 	}
 
 #ifdef REMOVE
-	if (modif_done && !selmodel->priv->multiple_updates)
+	if (modify_done && !selmodel->priv->multiple_updates)
 		/* modifications were successfull => refresh needed */
 		gda_data_model_query_refresh (selmodel, NULL);
 	else
@@ -1152,7 +1152,7 @@ run_modif_query (GdaDataModelQuery *selmodel, gint query_type, GError **error)
 		selmodel->priv->needs_refresh = TRUE;
 #endif
 
-	return modif_done;
+	return modify_done;
 }
 
 static gboolean
@@ -1200,7 +1200,7 @@ gda_data_model_query_set_value_at (GdaDataModel *model, gint col, gint row, cons
 	}
 
 	/* render the SQL and run it */
-	return run_modif_query (selmodel, UPD_QUERY, error);
+	return run_modify_query (selmodel, UPD_QUERY, error);
 }
 
 static gboolean
@@ -1250,7 +1250,7 @@ gda_data_model_query_set_values (GdaDataModel *model, gint row, GList *values, G
 	}
 
 	/* render the SQL and run it */
-	return run_modif_query (selmodel, UPD_QUERY, error);
+	return run_modify_query (selmodel, UPD_QUERY, error);
 }
 
 static gint
@@ -1293,7 +1293,7 @@ gda_data_model_query_append_values (GdaDataModel *model, const GList *values, GE
 	}
 
 	/* render the SQL and run it */
-	retval = run_modif_query (selmodel, INS_QUERY, error);
+	retval = run_modify_query (selmodel, INS_QUERY, error);
 
 	if (retval)
 		return 0;
@@ -1336,7 +1336,7 @@ gda_data_model_query_append_row (GdaDataModel *model, GError **error)
 	}
 
 	/* render the SQL and run it */
-	retval = run_modif_query (selmodel, INS_QUERY, error);
+	retval = run_modify_query (selmodel, INS_QUERY, error);
 
 	if (retval)
 		return 0;
@@ -1378,7 +1378,7 @@ gda_data_model_query_remove_row (GdaDataModel *model, gint row, GError **error)
 	}
 
 	/* render the SQL and run it */
-	return run_modif_query (selmodel, DEL_QUERY, error);
+	return run_modify_query (selmodel, DEL_QUERY, error);
 }
 
 static void
@@ -1502,12 +1502,12 @@ gda_data_model_query_send_hint (GdaDataModel *model, GdaDataModelHint hint, cons
  * Computation of INSERT, DELETE and UPDATE queries
  */
 
-static GdaQueryTarget *auto_compute_assert_modif_target (GdaDataModelQuery *model, const gchar *target, GError **error);
-static GSList   *auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *modif_target, 
+static GdaQueryTarget *auto_compute_assert_modify_target (GdaDataModelQuery *model, const gchar *target, GError **error);
+static GSList   *auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *modify_target, 
 						      gboolean use_all_if_no_pk, GError **error);
-static GSList   *auto_compute_make_mod_query_fields (GdaDataModelQuery *model, GdaQueryTarget *modif_target,
+static GSList   *auto_compute_make_mod_query_fields (GdaDataModelQuery *model, GdaQueryTarget *modify_target,
 						     GError **error);
-static void      auto_compute_add_mod_fields_to_query (GdaDataModelQuery *model, GdaQueryTarget *modif_target,
+static void      auto_compute_add_mod_fields_to_query (GdaDataModelQuery *model, GdaQueryTarget *modify_target,
 						       GSList *mod_query_fields, GdaQuery *query);
 static void      auto_compute_add_where_cond_to_query (GdaDataModelQuery *model, GSList *mod_query_fields, 
 						       GdaQuery *query);
@@ -1535,7 +1535,7 @@ gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, con
 	GSList *cond_query_fields; /* list of GdaQueryField objects to be used in WHERE condition */
 	GSList *mod_query_fields;  /* list of GdaQueryField objects to be modified in INSERT and UPDATE */
 	GdaQuery *query;
-	GdaQueryTarget *modif_target;
+	GdaQueryTarget *modify_target;
 
 	if (!model->priv->queries[SEL_QUERY]) {
 		g_set_error (error, GDA_DATA_MODEL_QUERY_ERROR,
@@ -1551,18 +1551,18 @@ gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, con
 		return FALSE;
 	}
 
-	modif_target = auto_compute_assert_modif_target (model, target, error);
-	if (! modif_target)
+	modify_target = auto_compute_assert_modify_target (model, target, error);
+	if (! modify_target)
 		return FALSE;
 
 	/* make lists of fields used to create INSERT, DELETE and UPDATE queries */
-	cond_query_fields = auto_compute_make_cond_query_fields (model, modif_target, 
+	cond_query_fields = auto_compute_make_cond_query_fields (model, modify_target, 
 								 options & GDA_DATA_MODEL_QUERY_OPTION_USE_ALL_FIELDS_IF_NO_PK,
 								 error);
 	if (!cond_query_fields)
 		return FALSE;
 
-	mod_query_fields = auto_compute_make_mod_query_fields (model, modif_target, error);
+	mod_query_fields = auto_compute_make_mod_query_fields (model, modify_target, error);
 	if (!mod_query_fields) {
 		g_slist_free (cond_query_fields);
 		return FALSE;
@@ -1571,7 +1571,7 @@ gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, con
 	/* compute UPDATE query */
 	query = gda_query_new (gda_object_get_dict (GDA_OBJECT (model->priv->queries[SEL_QUERY])));
 	gda_query_set_query_type (query, GDA_QUERY_TYPE_UPDATE);
-	auto_compute_add_mod_fields_to_query (model, modif_target, mod_query_fields, query);
+	auto_compute_add_mod_fields_to_query (model, modify_target, mod_query_fields, query);
 	auto_compute_add_where_cond_to_query (model, cond_query_fields, query);
 	g_object_set (G_OBJECT (model), "update_query", query, NULL);
 	g_object_unref (query);
@@ -1579,7 +1579,7 @@ gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, con
 	/* compute INSERT query */
 	query = gda_query_new (gda_object_get_dict (GDA_OBJECT (model->priv->queries[SEL_QUERY])));
 	gda_query_set_query_type (query, GDA_QUERY_TYPE_INSERT);
-	auto_compute_add_mod_fields_to_query (model, modif_target, mod_query_fields, query);
+	auto_compute_add_mod_fields_to_query (model, modify_target, mod_query_fields, query);
 	g_object_set (G_OBJECT (model), "insert_query", query, NULL);
 	g_object_unref (query);
 
@@ -1590,7 +1590,7 @@ gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, con
 		GdaQueryTarget *target;
 		GdaDictTable *mod_table;
 		
-		mod_table = GDA_DICT_TABLE (gda_query_target_get_represented_entity (modif_target));
+		mod_table = GDA_DICT_TABLE (gda_query_target_get_represented_entity (modify_target));
 		target = gda_query_target_new (query, gda_object_get_name (GDA_OBJECT (mod_table)));
 		gda_query_add_target (query, target, NULL);
 		g_object_unref (target);
@@ -1606,16 +1606,16 @@ gda_data_model_query_compute_modification_queries (GdaDataModelQuery *model, con
 }
 
 static GdaQueryTarget *
-auto_compute_assert_modif_target (GdaDataModelQuery *model, const gchar *target, GError **error)
+auto_compute_assert_modify_target (GdaDataModelQuery *model, const gchar *target, GError **error)
 {
 	/* 
-	 * ensure that model->priv->modif_target is not NULL and represents a dict table 
+	 * ensure that model->priv->modify_target is not NULL and represents a dict table 
 	 */
-	GdaQueryTarget *modif_target;
+	GdaQueryTarget *modify_target;
 
 	if (target && *target) {
-		modif_target = gda_query_get_target_by_alias (model->priv->queries[SEL_QUERY], target);
-		if (!modif_target) {
+		modify_target = gda_query_get_target_by_alias (model->priv->queries[SEL_QUERY], target);
+		if (!modify_target) {
 			g_set_error (error, GDA_DATA_MODEL_QUERY_ERROR,
 				     GDA_DATA_MODEL_QUERY_COMPUTE_MODIF_QUERIES_ERROR,
 				     _("Could not identify target table '%s' to modify in SELECT query"), target);
@@ -1624,7 +1624,7 @@ auto_compute_assert_modif_target (GdaDataModelQuery *model, const gchar *target,
 		else {
 			GdaEntity *ent;
 			
-			ent = gda_query_target_get_represented_entity (modif_target);
+			ent = gda_query_target_get_represented_entity (modify_target);
 			if (!GDA_IS_DICT_TABLE (ent)) {
 				g_set_error (error, GDA_DATA_MODEL_QUERY_ERROR,
 					     GDA_DATA_MODEL_QUERY_COMPUTE_MODIF_QUERIES_ERROR,
@@ -1661,16 +1661,16 @@ auto_compute_assert_modif_target (GdaDataModelQuery *model, const gchar *target,
 			return FALSE;
 		}
 		
-		modif_target = GDA_QUERY_TARGET (table_targets->data);
+		modify_target = GDA_QUERY_TARGET (table_targets->data);
 		g_slist_free (table_targets);
 		g_slist_free (targets);
 	}
 	
-	return modif_target;
+	return modify_target;
 }
 
 static GSList *
-auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *modif_target, 
+auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *modify_target, 
 				     gboolean use_all_if_no_pk, GError **error)
 {
 	/*
@@ -1681,7 +1681,7 @@ auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *m
 	GSList *cond_query_fields = NULL;
 	gboolean error_is_set = FALSE;
 		
-	mod_table = GDA_DICT_TABLE (gda_query_target_get_represented_entity (modif_target));
+	mod_table = GDA_DICT_TABLE (gda_query_target_get_represented_entity (modify_target));
 	pk_constraint = gda_dict_table_get_pk_constraint (mod_table);
 	if (pk_constraint) {
 		/* use fields is Pk */
@@ -1691,7 +1691,7 @@ auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *m
 		gboolean found;
 		cond_dict_fields = gda_dict_constraint_pkey_get_fields (pk_constraint);
 		target_fields = gda_query_get_fields_by_target (model->priv->queries[SEL_QUERY],
-								modif_target, TRUE);
+								modify_target, TRUE);
 
 		/* convert list of GdaQueryField objects (target_fields) 
 		 * to list of GdaDictFieldField objects (query_fields) */
@@ -1735,7 +1735,7 @@ auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *m
 		if (use_all_if_no_pk) {
 			/* use ALL the present fields to make a WHERE condition */
 			cond_query_fields = gda_query_get_fields_by_target (model->priv->queries[SEL_QUERY],
-									    modif_target, TRUE);
+									    modify_target, TRUE);
 		}
 		else {
 			if (!error_is_set) {
@@ -1751,16 +1751,16 @@ auto_compute_make_cond_query_fields (GdaDataModelQuery *model, GdaQueryTarget *m
 }
 
 static GSList *
-auto_compute_make_mod_query_fields (GdaDataModelQuery *model, GdaQueryTarget *modif_target, GError **error)
+auto_compute_make_mod_query_fields (GdaDataModelQuery *model, GdaQueryTarget *modify_target, GError **error)
 {
 	GSList *mod_query_fields = NULL;
 	GSList *mod_dict_fields = NULL;
 	GSList *target_fields, *list;
 	gboolean duplicate = FALSE;
 
-	/* make sure there are no duplicates in the fields referenced by modif_target */
+	/* make sure there are no duplicates in the fields referenced by modify_target */
 	target_fields = gda_query_get_fields_by_target (model->priv->queries[SEL_QUERY],
-							modif_target, TRUE);
+							modify_target, TRUE);
 	for (list = target_fields; list && !duplicate; list = list->next) {
 		GdaQueryFieldField *qfield = (GdaQueryFieldField *) (list->data);
 		GdaEntityField *efield;
@@ -1776,7 +1776,7 @@ auto_compute_make_mod_query_fields (GdaDataModelQuery *model, GdaQueryTarget *mo
 			GdaDictTable *mod_table;
 			duplicate = TRUE;
 
-			mod_table = GDA_DICT_TABLE (gda_query_target_get_represented_entity (modif_target));
+			mod_table = GDA_DICT_TABLE (gda_query_target_get_represented_entity (modify_target));
 			g_set_error (error, GDA_DATA_MODEL_QUERY_ERROR,
 				     GDA_DATA_MODEL_QUERY_COMPUTE_MODIF_QUERIES_ERROR,
 				     _("Field '%s.%s' appears more than once in SELECT query"),
@@ -1797,14 +1797,14 @@ auto_compute_make_mod_query_fields (GdaDataModelQuery *model, GdaQueryTarget *mo
 }
 
 static void
-auto_compute_add_mod_fields_to_query (GdaDataModelQuery *model, GdaQueryTarget *modif_target, 
+auto_compute_add_mod_fields_to_query (GdaDataModelQuery *model, GdaQueryTarget *modify_target, 
 				      GSList *mod_query_fields, GdaQuery *query)
 {
 	GdaQueryTarget *target;
 	GdaDictTable *mod_table;
 	GSList *list;
 
-	mod_table = GDA_DICT_TABLE (gda_query_target_get_represented_entity (modif_target));
+	mod_table = GDA_DICT_TABLE (gda_query_target_get_represented_entity (modify_target));
 	target = gda_query_target_new (query, gda_object_get_name (GDA_OBJECT (mod_table)));
 	gda_query_add_target (query, target, NULL);
 	g_object_unref (target);

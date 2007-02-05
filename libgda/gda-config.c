@@ -70,7 +70,7 @@ typedef struct {
 } GdaConfigClient;
 
 static GdaConfigClient *config_client = NULL;
-static gboolean         can_modif_global_conf; /* TRUE if the current user can modify the system wide config file */
+static gboolean         can_modify_global_conf; /* TRUE if the current user can modify the system wide config file */
 static gboolean         lock_write_notify = FALSE;
 static void             do_notify (const gchar *path);
 
@@ -303,14 +303,14 @@ get_config_client ()
 
 			file = fopen (LIBGDA_GLOBAL_CONFIG_FILE, "a");
 			if (file) {
-				can_modif_global_conf = TRUE;
+				can_modify_global_conf = TRUE;
 #ifdef GDA_DEBUG_NO
 				g_print ("Can write system wide config file\n");
 #endif
 				fclose (file);
 			}
 			else {
-				can_modif_global_conf = FALSE;
+				can_modify_global_conf = FALSE;
 #ifdef GDA_DEBUG_NO
 				g_print ("Cannot write system wide config file\n");
 #endif			
@@ -763,7 +763,7 @@ write_config_file ()
 	xmlFreeDoc (doc);
 
 	/* system wide data sources */
-	if (can_modif_global_conf) {
+	if (can_modify_global_conf) {
 		doc = xmlNewDoc ((xmlChar*)"1.0");
 		g_return_if_fail (doc != NULL);
 		root = xmlNewDocNode (doc, NULL, (xmlChar*)"libgda-config", NULL);
@@ -928,7 +928,7 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 	entry = gda_config_search_entry (cfg_client->user, path, "string");
 	if (!entry) {
 		entry = gda_config_search_entry (cfg_client->global, path, "string");
-		if (entry && !can_modif_global_conf)
+		if (entry && !can_modify_global_conf)
 			return FALSE;
 	}
 	if (entry == NULL){
@@ -982,7 +982,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 	entry = gda_config_search_entry (cfg_client->user, path, "long");
 	if (!entry) {
 		entry = gda_config_search_entry (cfg_client->global, path, "long");
-		if (entry && !can_modif_global_conf)
+		if (entry && !can_modify_global_conf)
 			return FALSE;
 	}
 	if (entry == NULL){
@@ -1037,7 +1037,7 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 	entry = gda_config_search_entry (cfg_client->user, path, "float");
 	if (!entry) {
 		entry = gda_config_search_entry (cfg_client->global, path, "float");
-		if (entry && !can_modif_global_conf)
+		if (entry && !can_modify_global_conf)
 			return FALSE;
 	}
 	if (entry == NULL){
@@ -1093,7 +1093,7 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 	entry = gda_config_search_entry (cfg_client->user, path, "bool");
 	if (!entry) {
 		entry = gda_config_search_entry (cfg_client->global, path, "bool");
-		if (entry && !can_modif_global_conf)
+		if (entry && !can_modify_global_conf)
 			return FALSE;
 	}
 	if (entry == NULL){
@@ -1981,7 +1981,7 @@ gboolean
 gda_config_can_modify_global_config (void)
 {
 	get_config_client ();
-	return can_modif_global_conf;
+	return can_modify_global_conf;
 }
 
 /**
@@ -2016,7 +2016,7 @@ gda_config_save_data_source (const gchar *name,
 	g_return_val_if_fail (name != NULL, FALSE);
 	g_return_val_if_fail (provider != NULL, FALSE);
 
-	if (is_global && !can_modif_global_conf)
+	if (is_global && !can_modify_global_conf)
 		return FALSE;
 
 	/* delay write and nofity */
