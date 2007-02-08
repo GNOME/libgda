@@ -793,7 +793,12 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 		/* allocate bound data */
 		bound_data[c] = (gchar *) malloc (MDB_BIND_SIZE);
 		bound_data[c][0] = '\0';
-		mdb_sql_bind_column (mdb_SQL, c + 1, bound_data[c]);
+
+		/* Note that older versions of MDB don't have the 4th len_ptr parameter.
+		 * Please submit a patch with a suitable #ifdef if you need this to build with the older version.
+		 */
+                int len = 0; /* Maybe we should actually do something with this output parameter. */
+		mdb_sql_bind_column (mdb_SQL, c + 1, bound_data[c], &len);
 		
 		/* set description for the field */
 		fa = gda_data_model_describe_column (model, c);

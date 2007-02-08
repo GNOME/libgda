@@ -1,5 +1,12 @@
 2007-02-08  Murray Cumming  <murrayc@murrayc.com>
 
+	* providers/mdb/gda-mdb-provider.c: (gda_mdb_provider_execute_sql): Provide an extra 
+	int* output parameter to mdb_sql_bind_column(), though we do not do anything with it yet.
+	This fixes the build, at least with the mdbtools 0.5.99.0.6 version in my Ubuntu Edgy, 
+	which I guess is fairly recent.
+
+2007-02-08  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-data-handler.c: (gda_data_handler_get_type): Make GObject a prerequisite, so 
 	instances of this interface can be used as object properties in libgnomedb.
 	Actually, I wonder how an interface could be implemented without GObject.
