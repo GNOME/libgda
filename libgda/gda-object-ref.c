@@ -443,27 +443,39 @@ gda_object_ref_get_property (GObject *object,
 static GType
 handled_object_type (GType type)
 {
-	GType retval = 0;
+	/* Check whether the type is one of these types, 
+	 * or derived from these types.
+	 * TODO: Isn't there a glib macro for checking this without using the for loop?
+         */
+	for(; type != G_TYPE_OBJECT; type = g_type_parent(type))
+	{
+		/* type conversion */
+		if ((type == GDA_TYPE_QUERY_FIELD_ALL) ||
+		    (type == GDA_TYPE_QUERY_FIELD_FIELD) ||
+		    (type == GDA_TYPE_QUERY_FIELD_VALUE) ||
+		    (type == GDA_TYPE_QUERY_FIELD_FUNC))
+			return GDA_TYPE_QUERY_FIELD;
+	}
 
-	/* types accepted AS IS */
-	if ((type == GDA_TYPE_DICT_TABLE) ||
-	    (type == GDA_TYPE_DICT_FIELD) ||
-	    (type == GDA_TYPE_QUERY) ||
-	    (type == GDA_TYPE_QUERY_TARGET) ||
-	    (type == GDA_TYPE_ENTITY_FIELD) ||
-	    (type == GDA_TYPE_DICT_FUNCTION) ||
-	    (type == GDA_TYPE_DICT_AGGREGATE) ||
-	    (type == GDA_TYPE_QUERY_FIELD))
-		retval = type;
+	/* Check whether the type is one of these types, 
+	 * or derived from these types.
+	 * TODO: Isn't there a glib macro for checking this without using the for loop?
+         */
+	for(; type != G_TYPE_OBJECT; type = g_type_parent(type))
+	{
+		/* types accepted AS IS */
+		if ((type == GDA_TYPE_DICT_TABLE) ||
+		    (type == GDA_TYPE_DICT_FIELD) ||
+		    (type == GDA_TYPE_QUERY) ||
+		    (type == GDA_TYPE_QUERY_TARGET) ||
+		    (type == GDA_TYPE_ENTITY_FIELD) ||
+		    (type == GDA_TYPE_DICT_FUNCTION) ||
+		    (type == GDA_TYPE_DICT_AGGREGATE) ||
+		    (type == GDA_TYPE_QUERY_FIELD))
+			return type;
+	}
 
-	/* type conversion */
-	if ((type == GDA_TYPE_QUERY_FIELD_ALL) ||
-	    (type == GDA_TYPE_QUERY_FIELD_FIELD) ||
-	    (type == GDA_TYPE_QUERY_FIELD_VALUE) ||
-	    (type == GDA_TYPE_QUERY_FIELD_FUNC))
-		retval = GDA_TYPE_QUERY_FIELD;
-
-	return retval;
+	return 0;
 }
 
 /**
