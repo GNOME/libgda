@@ -32,6 +32,7 @@ typedef enum {
 
 /* status of a value */
 typedef enum  {
+	GDA_VALUE_ATTR_NONE           = 0,
         GDA_VALUE_ATTR_IS_NULL        = 1 << 0,
         GDA_VALUE_ATTR_CAN_BE_NULL    = 1 << 1,
         GDA_VALUE_ATTR_IS_DEFAULT     = 1 << 2,
