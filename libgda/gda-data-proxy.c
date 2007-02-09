@@ -910,7 +910,7 @@ gda_data_proxy_get_values (GdaDataProxy *proxy, gint proxy_row, gint *cols_index
  *
  * Returns: the attribute
  */
-guint
+GdaValueAttribute
 gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint col)
 {
 	gint model_row;
