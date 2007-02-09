@@ -80,7 +80,7 @@ gboolean        gda_dict_field_is_pkey_alone     (GdaDictField *field);
 gboolean        gda_dict_field_is_fkey_part      (GdaDictField *field);
 gboolean        gda_dict_field_is_fkey_alone     (GdaDictField *field);
 
-void            gda_dict_field_set_attributes    (GdaDictField *field, guint attributes);
+void            gda_dict_field_set_attributes    (GdaDictField *field, GdaDictFieldAttribute attributes);
 guint           gda_dict_field_get_attributes    (GdaDictField *field);
 
 G_END_DECLS

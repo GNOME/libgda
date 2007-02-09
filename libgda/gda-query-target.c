@@ -64,7 +64,7 @@ static void        gda_query_target_replace_refs        (GdaReferer *iface, GHas
 /* Renderer interface */
 static void        gda_query_target_renderer_init   (GdaRendererIface *iface);
 static gchar      *gda_query_target_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
-						     GSList **out_params_used, guint options, GError **error);
+						     GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar      *gda_query_target_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Alias interface */
@@ -876,7 +876,7 @@ gda_query_target_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **
 
 static gchar *
 gda_query_target_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
-				GSList **out_params_used, guint options, GError **error)
+				GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	gchar *str;
 	GString *string = NULL;

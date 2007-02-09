@@ -67,7 +67,7 @@ static gboolean    gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlN
 /* Renderer interface */
 static void            gda_query_condition_renderer_init      (GdaRendererIface *iface);
 static gchar          *gda_query_condition_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
-							    GSList **out_params_used, guint options, GError **error);
+							    GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar          *gda_query_condition_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Referer interface */
@@ -1528,7 +1528,7 @@ gda_query_condition_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError
 
 static gchar *
 gda_query_condition_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
-				   GSList **out_params_used, guint options, GError **error)
+				   GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
         gchar *retval = NULL, *str;
 	GString *string;

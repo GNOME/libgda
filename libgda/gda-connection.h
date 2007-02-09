@@ -75,6 +75,7 @@ struct _GdaConnectionClass {
 };
 
 typedef enum {
+        GDA_CONNECTION_OPTIONS_NONE = 0,
 	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
 	GDA_CONNECTION_OPTIONS_DONT_SHARE = 2 << 0
 } GdaConnectionOptions;
@@ -124,7 +125,7 @@ GdaConnection       *gda_connection_new                 (GdaClient *client,
 							 const gchar *dsn,
 							 const gchar *username,
 							 const gchar *password,
-							 guint options);
+							 GdaConnectionOptions options);
 gboolean             gda_connection_open                 (GdaConnection *cnc, GError **error);
 void                 gda_connection_close                (GdaConnection *cnc);
 void                 gda_connection_close_no_warning     (GdaConnection *cnc);
@@ -135,7 +136,7 @@ GdaClient           *gda_connection_get_client           (GdaConnection *cnc);
 const gchar         *gda_connection_get_provider         (GdaConnection *cnc);
 GdaServerProvider   *gda_connection_get_provider_obj     (GdaConnection *cnc);
 GdaServerProviderInfo *gda_connection_get_infos          (GdaConnection *cnc);
-guint                gda_connection_get_options          (GdaConnection *cnc);
+GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
 
 const gchar         *gda_connection_get_server_version   (GdaConnection *cnc);
 const gchar         *gda_connection_get_database         (GdaConnection *cnc);

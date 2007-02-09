@@ -1,3 +1,49 @@
+2007-02-09  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-connection.c: (gda_connection_class_init),
+	(gda_connection_set_property), (gda_connection_get_property),
+	(gda_connection_new):
+	* libgda/gda-connection.h: Use GdaConnectionOptions instead of guint 
+	for the options function parameters, and use g_param_spec_flags instead of 
+	g_param_spec_uint for the property.
+	Added GDA_CONNECTION_OPTIONS_NONE to the GdaConnectionOptions enum, because 
+	the property was already using 0 as a default value, which had no corresponding enum 
+	value.
+	* libgda/gda-dict-field.c:
+	* libgda/gda-dict-field.h: Use GdaDictFieldAttribute instead of guint for the 
+	attributes parameter of gda_dict_field_set_attributes().
+	* libgda/gda-query-condition.c:
+	(gda_query_condition_render_as_sql):
+	* libgda/gda-query-field-agg.c:
+	(gda_query_field_agg_render_as_sql):
+	* libgda/gda-query-field-all.c:
+	(gda_query_field_all_render_as_sql):
+	* libgda/gda-query-field-field.c:
+	(gda_query_field_field_render_as_sql):
+	* libgda/gda-query-field-func.c:
+	(gda_query_field_func_render_as_sql):
+	* libgda/gda-query-field-value.c:
+	(gda_query_field_value_render_as_sql):
+	* libgda/gda-query-target.c: (gda_query_target_render_as_sql):
+	* libgda/gda-query.c: (gda_query_render_as_sql),
+	(render_sql_select), (render_join_condition), (render_sql_insert),
+	(render_sql_update), (render_sql_delete), (render_sql_union),
+	(render_sql_intersect), (render_sql_except),
+	(render_sql_non_parsed_with_params):
+	* libgda/gda-renderer.c: (gda_renderer_render_as_sql):
+	* libgda/gda-renderer.h:
+	Use GdaRendererOptions instead of guint for the options parameter to the render_as_sql() vfunc.
+
+	* libgda/gda-parameter.c: (gda_parameter_get_alphanum_name): Fix a const warning, which 
+	actually showed that we were changing internal memory by accident, instead of the 
+	return string.
+	* libgda/gda-server-provider-extra.c:
+	(gda_server_provider_select_query_has_blobs): Fix a const warning, though I 
+	took the easy way and did an extra g_strdup() to do this.
+	* libgda/gda-value.c: (gda_value_new_binary), (gda_value_new_blob):
+	* libgda/gda-value.h: Make the data parameters const, to make it clearer that the data 
+	will be copied, and to fix some warnings elsewhere.
+
 2007-02-03  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/gda-object-ref.c: Changed handled_object_type to also accept

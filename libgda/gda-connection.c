@@ -39,13 +39,14 @@
 #include <string.h>
 #include <libgda/sql-transaction/gda-sql-transaction-parser.h>
 #include <libgda/sql-transaction/gda-sql-transaction-tree.h> /* For gda_sql_transaction_destroy(). */
+#include <libgda/gda-enum-types.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
 struct _GdaConnectionPrivate {
 	GdaClient            *client;
 	GdaServerProvider    *provider_obj;
-	guint                 options;
+	GdaConnectionOptions options; /* ORed flags */
 	gchar                *dsn;
 	gchar                *cnc_string;
 	gchar                *provider;
@@ -186,8 +187,8 @@ gda_connection_class_init (GdaConnectionClass *klass)
                                                               NULL, NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
         g_object_class_install_property (object_class, PROP_OPTIONS,
-                                         g_param_spec_uint ("options", _("Options (connection sharing)"),
-							    NULL, 0, G_MAXUINT, 0,
+                                         g_param_spec_flags ("options", _("Options (connection sharing)"),
+							    NULL, GDA_TYPE_CONNECTION_OPTIONS, GDA_CONNECTION_OPTIONS_NONE,
 							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
 	object_class->dispose = gda_connection_dispose;
@@ -341,7 +342,7 @@ gda_connection_set_property (GObject *object,
 			gda_connection_set_password (cnc, g_value_get_string (value));
                         break;
                 case PROP_OPTIONS:
-			cnc->priv->options = g_value_get_uint (value);
+			cnc->priv->options = g_value_get_flags (value);
 			break;
                 }
         }	
@@ -377,7 +378,7 @@ gda_connection_get_property (GObject *object,
 			g_value_set_string (value, cnc->priv->password);
                         break;
                 case PROP_OPTIONS:
-			g_value_set_uint (value, cnc->priv->options);
+			g_value_set_flags (value, cnc->priv->options);
 			break;
                 }
         }	
@@ -408,7 +409,7 @@ gda_connection_new (GdaClient *client,
 		    const gchar *dsn,
 		    const gchar *username,
 		    const gchar *password,
-		    guint options)
+		    GdaConnectionOptions options)
 {
 	GdaConnection *cnc;
 
@@ -651,7 +652,7 @@ gda_connection_get_client (GdaConnection *cnc)
  *
  * Returns: the connection options.
  */
-guint
+GdaConnectionOptions
 gda_connection_get_options (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);

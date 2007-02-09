@@ -78,7 +78,7 @@ gda_renderer_iface_init (gpointer g_class)
  */
 gchar *
 gda_renderer_render_as_sql (GdaRenderer *iface, GdaParameterList *context, GSList **out_params_used,
-			    guint options, GError **error)
+			    GdaRendererOptions options, GError **error)
 {
 	g_return_val_if_fail (iface && GDA_IS_RENDERER (iface), NULL);
 

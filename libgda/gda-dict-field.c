@@ -93,7 +93,7 @@ struct _GdaDictFieldPrivate
 	gint             length;     /* -1 if not applicable */
 	gint             scale;      /* 0 if not applicable */
 	GValue          *default_val;/* NULL if no default value */
-	guint            extra_attrs;/* OR'ed value of GdaDictFieldAttribute */
+	GdaDictFieldAttribute extra_attrs;/* OR'ed value of GdaDictFieldAttribute */
 	gchar           *plugin;
 };
 
@@ -731,7 +731,7 @@ gda_dict_field_is_fkey_alone (GdaDictField *field)
  * values in #GdaDictFieldAttribute.
  */
 void
-gda_dict_field_set_attributes (GdaDictField *field, guint attributes)
+gda_dict_field_set_attributes (GdaDictField *field, GdaDictFieldAttribute attributes)
 {
 	g_return_if_fail (field && GDA_IS_DICT_FIELD (field));
 	g_return_if_fail (field->priv);
@@ -1036,13 +1036,14 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 
 static gchar *
 gda_dict_field_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
-			      GSList **out_params_used, guint options, GError **error)
+			      GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	gchar *str = NULL;
 
 	g_return_val_if_fail (iface && GDA_IS_DICT_FIELD (iface), NULL);
 	g_return_val_if_fail (GDA_DICT_FIELD (iface)->priv, NULL);
 	
+        /* TODO: */
 	TO_IMPLEMENT;
 	return str;
 }

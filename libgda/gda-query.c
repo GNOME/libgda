@@ -103,7 +103,7 @@ static void        gda_query_replace_refs        (GdaReferer *iface, GHashTable 
 /* Renderer interface */
 static void        gda_query_renderer_init   (GdaRendererIface *iface);
 static gchar      *gda_query_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
-					      GSList **out_params_used, guint options, GError **error);
+					      GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar      *gda_query_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 static gboolean    gda_query_is_valid        (GdaRenderer *iface, GdaParameterList *context, GError **error);
 
@@ -4533,21 +4533,21 @@ convert_str_to_query_type (const gchar *str)
  */
 
 static gchar *render_sql_select (GdaQuery *query, GdaParameterList *context, 
-				 GSList **out_params_used, guint options, GError **error);
+				 GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar *render_sql_insert (GdaQuery *query, GdaParameterList *context, 
-				 GSList **out_params_used, guint options, GError **error);
+				 GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar *render_sql_update (GdaQuery *query, GdaParameterList *context, 
-				 GSList **out_params_used, guint options, GError **error);
+				 GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar *render_sql_delete (GdaQuery *query, GdaParameterList *context, 
-				 GSList **out_params_used, guint options, GError **error);
+				 GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar *render_sql_union (GdaQuery *query, GdaParameterList *context, 
-				GSList **out_params_used, guint options, GError **error);
+				GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar *render_sql_intersect (GdaQuery *query, GdaParameterList *context, 
-				    GSList **out_params_used, guint options, GError **error);
+				    GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar *render_sql_except (GdaQuery *query, GdaParameterList *context, 
-				 GSList **out_params_used, guint options, GError **error);
+				 GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar *render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, 
-						 GSList **out_params_used, guint options, GError **error);
+						 GSList **out_params_used, GdaRendererOptions options, GError **error);
 
 static gboolean assert_coherence_all_params_present (GdaQuery *query, GdaParameterList *context, GError **error);
 static gboolean assert_coherence_entities_same_fields (GdaEntity *ent1, GdaEntity *ent2);
@@ -4600,7 +4600,7 @@ gda_query_is_well_formed (GdaQuery *query, GdaParameterList *context, GError **e
 
 static gchar *
 gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
-			 GSList **out_params_used, guint options, GError **error)
+			 GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GdaQuery *query;
 	gchar *sql = NULL;
@@ -5020,9 +5020,9 @@ typedef struct {
 #define JOIN_RENDER_NODE(x) ((JoinRenderNode *) x)
 
 static gchar *render_join_condition (GdaQueryJoin *join, GdaParameterList *context, 
-				     GSList **out_params_used, guint options, GError **error, GSList *fk_constraints);
+				     GSList **out_params_used, GdaRendererOptions options, GError **error, GSList *fk_constraints);
 static gchar *
-render_sql_select (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
+render_sql_select (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GString *sql;
 	gchar *retval, *str;
@@ -5322,7 +5322,7 @@ render_sql_select (GdaQuery *query, GdaParameterList *context, GSList **out_para
 
 static gchar *
 render_join_condition (GdaQueryJoin *join, GdaParameterList *context, GSList **out_params_used, 
-		       guint options, GError **error, GSList *fk_constraints)
+		       GdaRendererOptions options, GError **error, GSList *fk_constraints)
 {
 	GString *string;
 	gchar *retval = NULL;
@@ -5420,7 +5420,7 @@ render_join_condition (GdaQueryJoin *join, GdaParameterList *context, GSList **o
 
 
 static gchar *
-render_sql_insert (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
+render_sql_insert (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GString *sql;
 	gchar *retval;
@@ -5594,7 +5594,7 @@ render_sql_insert (GdaQuery *query, GdaParameterList *context, GSList **out_para
 }
 
 static gchar *
-render_sql_update (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
+render_sql_update (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GString *sql;
 	gchar *retval;
@@ -5695,7 +5695,7 @@ render_sql_update (GdaQuery *query, GdaParameterList *context, GSList **out_para
 }
 
 static gchar *
-render_sql_delete (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
+render_sql_delete (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GString *sql;
 	gchar *retval;
@@ -5735,7 +5735,7 @@ render_sql_delete (GdaQuery *query, GdaParameterList *context, GSList **out_para
 }
 
 static gchar *
-render_sql_union (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
+render_sql_union (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GString *sql;
 	gchar *retval, *str;
@@ -5772,7 +5772,7 @@ render_sql_union (GdaQuery *query, GdaParameterList *context, GSList **out_param
 }
 
 static gchar *
-render_sql_intersect (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
+render_sql_intersect (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GString *sql;
 	gchar *retval, *str;
@@ -5809,7 +5809,7 @@ render_sql_intersect (GdaQuery *query, GdaParameterList *context, GSList **out_p
 }
 
 static gchar *
-render_sql_except (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
+render_sql_except (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GString *sql;
 	gchar *retval, *str;
@@ -5846,7 +5846,7 @@ render_sql_except (GdaQuery *query, GdaParameterList *context, GSList **out_para
 }
 
 static gchar *
-render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, guint options, GError **error)
+render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	GString *string;
 	gchar *retval;

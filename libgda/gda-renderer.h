@@ -50,7 +50,7 @@ struct _GdaRendererIface
 
 	/* virtual table */
 	gchar      *(* render_as_sql)   (GdaRenderer *iface, GdaParameterList *context, GSList **out_params_used, 
-					 guint options, GError **error); 
+					 GdaRendererOptions options, GError **error); 
 	gchar      *(* render_as_str)   (GdaRenderer *iface, GdaParameterList *context);
 	gboolean    (* is_valid)        (GdaRenderer *iface, GdaParameterList *context, GError **error);
 };
@@ -58,7 +58,7 @@ struct _GdaRendererIface
 GType           gda_renderer_get_type        (void) G_GNUC_CONST;
 
 gchar          *gda_renderer_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, GSList **out_params_used,
-					      guint options, GError **error);
+					      GdaRendererOptions options, GError **error);
 gchar          *gda_renderer_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 gboolean        gda_renderer_is_valid        (GdaRenderer *iface, GdaParameterList *context, GError **error);
 

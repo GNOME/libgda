@@ -1429,10 +1429,10 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 gchar *
 gda_parameter_get_alphanum_name (GdaParameter *param)
 {
-	gchar *ret, *ptr;
 	g_return_val_if_fail (GDA_IS_PARAMETER (param), NULL);
 
-	ptr = gda_object_get_name (GDA_OBJECT (param));
+	const gchar* ptr = gda_object_get_name (GDA_OBJECT (param));
+	gchar* ret = NULL;
 	if (ptr)
 		ret = g_strdup (ptr);
 	else
@@ -1442,7 +1442,7 @@ gda_parameter_get_alphanum_name (GdaParameter *param)
 		if (! (((*ptr >= '0') || (*ptr <= '9')) ||
 		       ((*ptr >= 'A') || (*ptr <= 'Z')) ||
 		       ((*ptr >= 'a') || (*ptr <= 'z')))) 
-			*ptr = '_';
+			*ret = '_';
 	return ret;	
 }
 

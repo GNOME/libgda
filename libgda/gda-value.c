@@ -1044,12 +1044,15 @@ gda_value_new (GType type)
  * Returns: the newly created #GValue.
  */
 GValue *
-gda_value_new_binary (guchar *val, glong size)
+gda_value_new_binary (const guchar *val, glong size)
 {
 	GValue *value;
 	GdaBinary binary;
 
-        binary.data = val;
+	/* We use the const on the function parameter to make this clearer, 
+	 * but it would be awkward to keep the const in the struct.
+         */
+        binary.data = (guchar*)val;
         binary.binary_length = size;
 
         value = g_new0 (GValue, 1);
@@ -1068,14 +1071,18 @@ gda_value_new_binary (guchar *val, glong size)
  * Returns: the newly created #GValue.
  */
 GValue *
-gda_value_new_blob (guchar *val, glong size)
+gda_value_new_blob (const guchar *val, glong size)
 {
 	GValue *value;
 	GdaBlob blob;
 	GdaBinary *bin;
 
 	bin = (GdaBinary*)(&blob);
-        bin->data = val;
+
+        /* We use the const on the function parameter to make this clearer, 
+	 * but it would be awkward to keep the const in the struct.
+         */
+        bin->data = (guchar*)val;
         bin->binary_length = size;
 	blob.op = NULL;
 

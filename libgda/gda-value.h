@@ -108,8 +108,8 @@ typedef GList GdaValueList;
 
 GValue                           *gda_value_new (GType type);
 
-GValue                           *gda_value_new_binary (guchar *val, glong size);
-GValue                           *gda_value_new_blob (guchar *val, glong size);
+GValue                           *gda_value_new_binary (const guchar *val, glong size);
+GValue                           *gda_value_new_blob (const guchar *val, glong size);
 GValue                           *gda_value_new_timestamp_from_timet (time_t val);
 
 GValue                           *gda_value_new_from_string (const gchar *as_string, GType type);

@@ -1045,22 +1045,24 @@ gda_server_provider_select_query_has_blobs (GdaConnection *cnc, GdaQuery *query,
 					for (names = vis_names; names && !has_blobs; names = names->next) {
 						for (list = fields; list && !has_blobs; list = list->next) {
 							if (GDA_IS_QUERY_FIELD_FIELD (list->data)) {
-								gchar *fname;
-								GdaObject *fobj;
+								gchar *fname = NULL;
+								GdaObject *fobj = NULL;
 
 								g_object_get (G_OBJECT (list->data), 
 									      "field", &fobj, NULL);
 								if (fobj) {
-									fname = gda_object_get_name (fobj);
+									fname = g_strdup (gda_object_get_name (fobj));
 									g_object_unref (fobj);
 								}
-								else
+								else {
 									g_object_get (G_OBJECT (list->data), 
 										      "field_name", &fname, NULL);
+								}
+
 								if (!strcmp (fname, (gchar *) (names->data)))
 									has_blobs = TRUE;
-								if (!fobj)
-									g_free (fname);
+								
+								g_free (fname);
 							}
 							else if (GDA_IS_QUERY_FIELD_ALL (list->data))
 								has_blobs = TRUE;

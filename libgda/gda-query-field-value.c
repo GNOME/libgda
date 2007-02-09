@@ -67,7 +67,7 @@ static GdaDictType       *gda_query_field_value_get_data_type   (GdaEntityField 
 /* Renderer interface */
 static void            gda_query_field_value_renderer_init      (GdaRendererIface *iface);
 static gchar          *gda_query_field_value_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
-							      GSList **out_params_used, guint options, GError **error);
+							      GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar          *gda_query_field_value_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 /* Referer interface */
@@ -1397,7 +1397,7 @@ gda_query_field_value_render_find_value (GdaQueryFieldValue *field, GdaParameter
 
 static gchar *
 gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *context, 
-				     GSList **out_params_used, guint options, GError **error)
+				     GSList **out_params_used, GdaRendererOptions options, GError **error)
 {
 	gchar *str = NULL;
 	GdaQueryFieldValue *field;
