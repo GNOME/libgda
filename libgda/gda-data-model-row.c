@@ -74,8 +74,8 @@ static gint                 gda_data_model_row_get_n_rows      (GdaDataModel *mo
 static gint                 gda_data_model_row_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_row_describe_column (GdaDataModel *model, gint col);
 static const GValue      *gda_data_model_row_get_value_at    (GdaDataModel *model, gint col, gint row);
-static guint                gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row);
-static guint                gda_data_model_row_get_access_flags(GdaDataModel *model);
+static GdaValueAttribute    gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row);
+static GdaDataModelAccessFlags gda_data_model_row_get_access_flags(GdaDataModel *model);
 
 static gboolean             gda_data_model_row_set_value_at    (GdaDataModel *model, gint col, gint row, 
 								 const GValue *value, GError **error);
@@ -397,11 +397,11 @@ gda_data_model_row_get_value_at (GdaDataModel *model, gint col, gint row)
 	return CLASS (model)->get_value_at (GDA_DATA_MODEL_ROW (model), col, row);
 }
 
-static guint
+static GdaValueAttribute
 gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
 	const GValue *gdavalue;
-	guint flags = 0;
+	GdaValueAttribute flags = 0;
 	GdaColumn *column;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), 0);
@@ -424,10 +424,10 @@ gda_data_model_row_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	return flags;
 }
 
-static guint
+static GdaDataModelAccessFlags
 gda_data_model_row_get_access_flags (GdaDataModel *model)
 {
-	guint flags = GDA_DATA_MODEL_ACCESS_RANDOM | 
+	GdaDataModelAccessFlags flags = GDA_DATA_MODEL_ACCESS_RANDOM | 
 		GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD |
 		GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);

@@ -33,7 +33,7 @@
 
 struct _GdaDataAccessWrapperPrivate {
 	GdaDataModel     *model;
-	guint             model_access_flags;
+	GdaDataModelAccessFlags model_access_flags;
 
 	GdaDataModelIter *iter;    /* iterator on @model, NULL if @model already is random access */
 	gint              iter_row;/* current row of @iter, starting at 0 when created */
@@ -71,9 +71,9 @@ static void                 gda_data_access_wrapper_data_model_init (GdaDataMode
 static gint                 gda_data_access_wrapper_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_access_wrapper_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col);
-static guint                gda_data_access_wrapper_get_access_flags(GdaDataModel *model);
+static GdaDataModelAccessFlags gda_data_access_wrapper_get_access_flags(GdaDataModel *model);
 static const GValue      *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row);
-static guint                gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row);
+static GdaValueAttribute    gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row);
 #ifdef GDA_DEBUG
 static void gda_data_access_wrapper_dump (GdaDataAccessWrapper *model, guint offset);
 #endif
@@ -436,7 +436,7 @@ gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col)
 		return NULL;
 }
 
-static guint
+static GdaDataModelAccessFlags
 gda_data_access_wrapper_get_access_flags (GdaDataModel *model)
 {
 	GdaDataAccessWrapper *imodel;
@@ -563,10 +563,10 @@ iter_end_of_data_cb (GdaDataModelIter *iter, GdaDataAccessWrapper *model)
 	model->priv->end_of_data = TRUE;
 }
 
-static guint
+static GdaValueAttribute
 gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
-	guint flags = 0;
+	GdaValueAttribute flags = 0;
 	GdaDataAccessWrapper *imodel;
 
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);

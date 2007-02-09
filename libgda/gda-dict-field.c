@@ -63,7 +63,7 @@ static GdaDictType    *gda_dict_field_get_data_type   (GdaEntityField *iface);
 /* Renderer interface */
 static void            gda_dict_field_renderer_init   (GdaRendererIface *iface);
 static gchar          *gda_dict_field_render_as_sql   (GdaRenderer *iface, GdaParameterList *context, 
-						       GSList **out_params_used, guint options, GError **error);
+						       GSList **out_params_used, GdaRendererOptions options, GError **error);
 static gchar          *gda_dict_field_render_as_str   (GdaRenderer *iface, GdaParameterList *context);
 
 #ifdef GDA_DEBUG

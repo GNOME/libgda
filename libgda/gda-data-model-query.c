@@ -100,9 +100,9 @@ static void                 gda_data_model_query_data_model_init (GdaDataModelCl
 static gint                 gda_data_model_query_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_query_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_query_describe_column (GdaDataModel *model, gint col);
-static guint                gda_data_model_query_get_access_flags(GdaDataModel *model);
+static GdaDataModelAccessFlags gda_data_model_query_get_access_flags(GdaDataModel *model);
 static const GValue        *gda_data_model_query_get_value_at    (GdaDataModel *model, gint col, gint row);
-static guint                gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row);
+static GdaValueAttribute    gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row);
 
 static GdaDataModelIter    *gda_data_model_query_create_iter     (GdaDataModel *model);
 
@@ -905,11 +905,11 @@ gda_data_model_query_describe_column (GdaDataModel *model, gint col)
 		return NULL;
 }
 
-static guint
+static GdaDataModelAccessFlags
 gda_data_model_query_get_access_flags (GdaDataModel *model)
 {
 	GdaDataModelQuery *selmodel;
-	guint flags = GDA_DATA_MODEL_ACCESS_RANDOM;
+	GdaDataModelAccessFlags flags = GDA_DATA_MODEL_ACCESS_RANDOM;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_QUERY (model), 0);
 	selmodel = GDA_DATA_MODEL_QUERY (model);
@@ -987,10 +987,10 @@ gda_data_model_query_get_value_at (GdaDataModel *model, gint col, gint row)
 		return NULL;
 }
 
-static guint
+static GdaValueAttribute
 gda_data_model_query_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
-	guint flags = 0;
+	GdaValueAttribute flags = 0;
 	GdaDataModelQuery *selmodel;
 	GdaParameter *p_used = NULL;
 

@@ -31,6 +31,7 @@
 #include <libgda/gda-decl.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-value.h>
+#include <libgda/gda-enums.h>
 
 G_BEGIN_DECLS
 
@@ -77,10 +78,10 @@ struct _GdaDataModelClass {
 	gint                 (* i_get_n_columns)    (GdaDataModel *model);
 
 	GdaColumn           *(* i_describe_column)  (GdaDataModel *model, gint col);
-	guint                (* i_get_access_flags) (GdaDataModel *model);
+	GdaDataModelAccessFlags (* i_get_access_flags) (GdaDataModel *model);
 
 	const GValue        *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row);
-	guint                (* i_get_attributes_at)(GdaDataModel *model, gint col, gint row);
+	GdaValueAttribute    (* i_get_attributes_at)(GdaDataModel *model, gint col, gint row);
 	GdaDataModelIter    *(* i_create_iter)      (GdaDataModel *model);
 	gboolean             (* i_iter_at_row)      (GdaDataModel *model, GdaDataModelIter *iter, gint row);
 	gboolean             (* i_iter_next)        (GdaDataModel *model, GdaDataModelIter *iter); 
@@ -108,7 +109,7 @@ struct _GdaDataModelClass {
 GType               gda_data_model_get_type               (void);
 
 gboolean            gda_data_model_is_updatable           (GdaDataModel *model);
-guint               gda_data_model_get_access_flags       (GdaDataModel *model);
+GdaDataModelAccessFlags gda_data_model_get_access_flags       (GdaDataModel *model);
 
 gint                gda_data_model_get_n_rows             (GdaDataModel *model);
 gint                gda_data_model_get_n_columns          (GdaDataModel *model);
@@ -121,7 +122,7 @@ void                gda_data_model_set_column_title       (GdaDataModel *model, 
 const GValue       *gda_data_model_get_value_at           (GdaDataModel *model, gint col, gint row);
 const GValue       *gda_data_model_get_value_at_col_name  (GdaDataModel *model, 
 							   const gchar *column_name, gint row);
-guint               gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
+GdaValueAttribute   gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
 void                gda_data_model_freeze                 (GdaDataModel *model);
 void                gda_data_model_thaw                   (GdaDataModel *model);

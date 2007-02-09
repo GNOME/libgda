@@ -1,5 +1,34 @@
 2007-02-09  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-data-access-wrapper.c:
+	(gda_data_access_wrapper_get_attributes_at):
+	* libgda/gda-data-model-import.c:
+	(gda_data_model_import_get_access_flags),
+	(gda_data_model_import_get_attributes_at):
+	* libgda/gda-data-model-query.c:
+	(gda_data_model_query_get_access_flags),
+	(gda_data_model_query_get_attributes_at):
+	* libgda/gda-data-model-row.c:
+	(gda_data_model_row_get_attributes_at),
+	(gda_data_model_row_get_access_flags):
+	* libgda/gda-data-model.c: (gda_data_model_is_updatable),
+	(gda_data_model_get_access_flags), (set_param_attributes),
+	(real_gda_data_model_dump_as_string):
+	* libgda/gda-data-model.h:
+	* libgda/gda-data-proxy.c: (gda_data_proxy_set_property),
+	(gda_data_proxy_get_value_attributes),
+	(gda_data_proxy_alter_value_attributes), (gda_data_proxy_append),
+	(commit_row_modif), (gda_data_proxy_set_value_at):
+	* libgda/gda-data-proxy.h:
+	* libgda/gda-dict-field.c:
+	* libgda/gda-dict-field.h:
+	* libgda/gda-util.c: (gda_utility_table_field_attrs_stringify):
+	* libgda/gda-util.h:
+	Use GdaDataModelAccessFlags and GdaValueAttribute for function and vfunc 
+	parameters instead of guint.
+
+2007-02-09  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-enums.h: Added GDA_VALUE_ATTR_NONE to the GdaValueAttribute enum, because 0 
 	is already used as a default value for properties in libgnomedb, and there was no 
 	corresponding enum value. 
@@ -31,7 +60,7 @@
 	* libgda/gda-query-field-value.c:
 	(gda_query_field_value_render_as_sql):
 	* libgda/gda-query-target.c: (gda_query_target_render_as_sql):
-	* libgda/gda-query.c: (gda_query_render_as_sql),
+	* libgda/gda-query.c: (gda_query_render_as_sql): 
 	(render_sql_select), (render_join_condition), (render_sql_insert),
 	(render_sql_update), (render_sql_delete), (render_sql_union),
 	(render_sql_intersect), (render_sql_except),

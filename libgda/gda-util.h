@@ -56,7 +56,7 @@ gboolean  gda_file_save (const gchar *filename, const gchar *buffer, gint len);
  * utilities dealing with storing and retreiving GdaDictField's attributes
  * which is a list of comma separated keywords
  */
-gchar *gda_utility_table_field_attrs_stringify (guint attributes);
+gchar *gda_utility_table_field_attrs_stringify (GdaValueAttribute attributes);
 guint  gda_utility_table_field_attrs_parse     (const gchar *str);
 
 /*

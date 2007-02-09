@@ -55,11 +55,11 @@ static gint                 gda_data_proxy_get_n_rows      (GdaDataModel *model)
 static gint                 gda_data_proxy_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_proxy_describe_column (GdaDataModel *model, gint col);
 static const GValue        *gda_data_proxy_get_value_at    (GdaDataModel *model, gint col, gint row);
-static guint                gda_data_proxy_get_attributes_at (GdaDataModel *model, gint col, gint row);
+static GdaValueAttribute    gda_data_proxy_get_attributes_at (GdaDataModel *model, gint col, gint row);
 static GdaDataModelIter    *gda_data_proxy_create_iter     (GdaDataModel *model);
 
 
-static guint                gda_data_proxy_get_access_flags(GdaDataModel *model);
+static GdaDataModelAccessFlags gda_data_proxy_get_access_flags(GdaDataModel *model);
 
 static gboolean             gda_data_proxy_set_value_at    (GdaDataModel *model, gint col, gint row, 
 							    const GValue *value, GError **error);
@@ -650,7 +650,7 @@ gda_data_proxy_set_property (GObject *object,
 			proxy->priv->columns_attrs = g_new0 (GValue *, proxy->priv->model_nb_cols);
 			for (col = 0; col < proxy->priv->model_nb_cols; col++) {
 				GdaColumn *column;
-				guint flags = GDA_VALUE_ATTR_IS_UNCHANGED;
+				GdaValueAttribute flags = GDA_VALUE_ATTR_IS_UNCHANGED;
 				
 				column = gda_data_model_describe_column (model, col);
 				if (gda_column_get_allow_null (column))
@@ -658,7 +658,7 @@ gda_data_proxy_set_property (GObject *object,
 				if (gda_column_get_default_value (column))
 					flags |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 				proxy->priv->columns_attrs[col] = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT);
-				g_value_set_uint (proxy->priv->columns_attrs[col], flags);
+				g_value_set_flags (proxy->priv->columns_attrs[col], flags);
 			}
 			
 			g_signal_connect (G_OBJECT (model), "changed",
@@ -916,7 +916,7 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 	gint model_row;
 	RowModif *rm;
 	gboolean value_has_modifs = FALSE;
-	guint flags = 0;
+	GdaValueAttribute flags = 0;
 	gint model_column;
 
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), 0);
@@ -947,7 +947,7 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 			}
 			if (rv) {
 				value_has_modifs = TRUE;
-				flags |= g_value_get_uint (rv->attributes);
+				flags |= g_value_get_flags (rv->attributes);
 				if (rv->value && !gda_value_is_null (rv->value))
 					flags &= ~GDA_VALUE_ATTR_IS_NULL;
 				else
@@ -980,7 +980,7 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
  * flags (other flags are ignored).
  */
 void
-gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint col, guint alter_flags)
+gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint col, GdaValueAttribute alter_flags)
 {
 	gint model_col;
 
@@ -1000,7 +1000,7 @@ gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint
 		g_assert (rm);
 		
 		if (alter_flags & GDA_VALUE_ATTR_IS_DEFAULT) {
-			guint flags;
+			GdaValueAttribute flags = 0;
 			if (!rv) {
 				/* create a new RowValue */
 				/*g_print ("New RV\n");*/
@@ -1008,7 +1008,7 @@ gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint
 				rv->row_modif = rm;
 				rv->model_column = model_col;
 				rv->attributes = gda_value_copy (proxy->priv->columns_attrs [col]);
-				flags = g_value_get_uint (rv->attributes);
+				flags = g_value_get_flags (rv->attributes);
 							
 				rv->value = NULL;
 				flags &= ~GDA_VALUE_ATTR_IS_UNCHANGED;
@@ -1020,14 +1020,14 @@ gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint
 				rm->modify_values = g_slist_prepend (rm->modify_values, rv);	
 			}
 			else {
-				flags = g_value_get_uint (rv->attributes);
+				flags = g_value_get_flags (rv->attributes);
 				if (rv->value) {
 					gda_value_free (rv->value);
 					rv->value = NULL;
 				}
 			}
 			flags |= GDA_VALUE_ATTR_IS_DEFAULT;
-			g_value_set_uint (rv->attributes, flags);
+			g_value_set_flags (rv->attributes, flags);
 
 			if (proxy->priv->notify_changes)
 				gda_data_model_row_updated ((GdaDataModel *) proxy, proxy_row);
@@ -1325,7 +1325,7 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 		GdaColumn *column;
 		const GValue *def;
 		RowValue *rv;
-		guint flags = 0;
+		GdaValueAttribute flags = 0;
 		
 		/* create a new RowValue */
 		/*g_print ("New RV\n");*/
@@ -1344,7 +1344,7 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 				rv->value = gda_value_copy (def);
 		}
 		if (gda_column_get_allow_null (column)) {
-			guint attributes;
+			GdaValueAttribute attributes;
 			
 			attributes = gda_data_model_get_attributes_at (proxy->priv->model, col, -1);;
 			if (attributes & GDA_VALUE_ATTR_CAN_BE_NULL)
@@ -1354,7 +1354,7 @@ gda_data_proxy_append (GdaDataProxy *proxy)
 		if (gda_column_get_auto_increment (column))
 			flags |= (GDA_VALUE_ATTR_IS_DEFAULT | GDA_VALUE_ATTR_CAN_BE_DEFAULT);
 
-		g_value_set_uint (rv->attributes, flags);
+		g_value_set_flags (rv->attributes, flags);
 	}
 
 	/* signal row insertion */
@@ -1521,7 +1521,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 				while (list && !newvalue_found) {
 					if (ROW_VALUE (list->data)->model_column == i) {
 						newvalue_found = TRUE;
-						if (g_value_get_uint (ROW_VALUE (list->data)->attributes) &
+						if (g_value_get_flags (ROW_VALUE (list->data)->attributes) &
 						    GDA_VALUE_ATTR_IS_DEFAULT)
 							newvalue = NULL;
 						else {
@@ -1564,7 +1564,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 				list = rm->modify_values;
 				while (list && !newvalue) {
 					if (ROW_VALUE (list->data)->model_column == i) {
-						if (g_value_get_uint (ROW_VALUE (list->data)->attributes) &
+						if (g_value_get_flags (ROW_VALUE (list->data)->attributes) &
 						    GDA_VALUE_ATTR_IS_DEFAULT)
 							newvalue = NULL;
 						else {
@@ -2278,7 +2278,7 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row)
 	return NULL;
 }
 
-static guint
+static GdaValueAttribute
 gda_data_proxy_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (model), FALSE);
@@ -2325,7 +2325,7 @@ gda_data_proxy_create_iter (GdaDataModel *model)
 	return iter;
 }
 
-static guint
+static GdaDataModelAccessFlags
 gda_data_proxy_get_access_flags (GdaDataModel *model)
 {
 	GdaDataProxy *proxy;
@@ -2345,7 +2345,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 {
 	gint row;
 	GdaDataProxy *proxy;
-	guint att;
+	GdaValueAttribute att = 0;
 
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (model), FALSE);
 	proxy = GDA_DATA_PROXY (model);
@@ -2398,7 +2398,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			}
 			else {
 				/* simply alter the RowValue */
-				guint flags = g_value_get_uint (rv->attributes);
+				GdaValueAttribute flags = g_value_get_flags (rv->attributes);
 				
 				if (value && !gda_value_is_null ((GValue *) value)) {
 					flags &= ~GDA_VALUE_ATTR_IS_NULL;
@@ -2406,19 +2406,19 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 				}
 				else
 					flags |= GDA_VALUE_ATTR_IS_NULL;
-				g_value_set_uint (rv->attributes, flags);
+				g_value_set_flags (rv->attributes, flags);
 			}
 		}
 		else {
 			/* create a new RowValue */
 			/*g_print ("New RV\n");*/
-			guint flags;
+			GdaValueAttribute flags = 0;
 
 			rv = g_new0 (RowValue, 1);
 			rv->row_modif = rm;
 			rv->model_column = col;
 			rv->attributes = gda_value_copy (proxy->priv->columns_attrs [col]);
-			flags = g_value_get_uint (rv->attributes);
+			flags = g_value_get_flags (rv->attributes);
 
 			if (value && !gda_value_is_null ((GValue*) value)) {
 				rv->value = gda_value_copy ((GValue*) value);
@@ -2430,15 +2430,15 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 				flags |= GDA_VALUE_ATTR_HAS_VALUE_ORIG;
 			else
 				flags &= ~GDA_VALUE_ATTR_HAS_VALUE_ORIG;
-			g_value_set_uint (rv->attributes, flags);
+			g_value_set_flags (rv->attributes, flags);
 			rm->modify_values = g_slist_prepend (rm->modify_values, rv);
 		}
 		
 		if (rv) {
-			guint flags = g_value_get_uint (rv->attributes);
+			GdaValueAttribute flags = g_value_get_flags (rv->attributes);
 			flags &= ~GDA_VALUE_ATTR_IS_UNCHANGED;
 			flags &= ~GDA_VALUE_ATTR_IS_DEFAULT;
-			g_value_set_uint (rv->attributes, flags);
+			g_value_set_flags (rv->attributes, flags);
 		}
 
 		if (!rm->to_be_deleted && !rm->modify_values && (rm->model_row >= 0)) {

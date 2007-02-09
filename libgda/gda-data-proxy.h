@@ -25,6 +25,7 @@
 #include "gda-decl.h"
 #include <libgda/gda-object.h>
 #include <libgda/gda-value.h>
+#include <libgda/gda-enums.h>
 
 
 G_BEGIN_DECLS
@@ -75,7 +76,7 @@ gboolean          gda_data_proxy_is_read_only             (GdaDataProxy *proxy);
 GSList           *gda_data_proxy_get_values               (GdaDataProxy *proxy, gint proxy_row, 
 						           gint *cols_index, gint n_cols);
 guint             gda_data_proxy_get_value_attributes     (GdaDataProxy *proxy, gint proxy_row, gint col);
-void              gda_data_proxy_alter_value_attributes   (GdaDataProxy *proxy, gint proxy_row, gint col, guint alter_flags);
+void              gda_data_proxy_alter_value_attributes   (GdaDataProxy *proxy, gint proxy_row, gint col, GdaValueAttribute alter_flags);
 gint              gda_data_proxy_get_proxied_model_row    (GdaDataProxy *proxy, gint proxy_row);
 
 void              gda_data_proxy_delete                   (GdaDataProxy *proxy, gint proxy_row);

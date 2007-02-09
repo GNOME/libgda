@@ -269,7 +269,7 @@ gda_data_model_thaw (GdaDataModel *model)
 gboolean
 gda_data_model_is_updatable (GdaDataModel *model)
 {
-	guint flags;
+	GdaDataModelAccessFlags flags;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	flags = gda_data_model_get_access_flags (model);
@@ -284,12 +284,12 @@ gda_data_model_is_updatable (GdaDataModel *model)
  *
  * Returns: an ORed value of #GdaDataModelAccessFlags flags
  */
-guint
+GdaDataModelAccessFlags
 gda_data_model_get_access_flags (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_access_flags) {
-		guint flags = (GDA_DATA_MODEL_GET_CLASS (model)->i_get_access_flags) (model);
+		GdaDataModelAccessFlags flags = (GDA_DATA_MODEL_GET_CLASS (model)->i_get_access_flags) (model);
 		if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 			flags |= GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD | GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
 		return flags;
@@ -509,7 +509,7 @@ gda_data_model_get_value_at_col_name (GdaDataModel *model,
  *
  * Returns: the attributes as an ORed value of #GdaValueAttribute
  */
-guint
+GdaValueAttribute
 gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
@@ -621,7 +621,7 @@ gda_data_model_move_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gi
 		return gda_data_model_move_iter_at_row_default (model, iter, row);
 }
 
-static void set_param_attributes (GdaParameter *param, guint flags);
+static void set_param_attributes (GdaParameter *param, GdaValueAttribute flags);
 
 gboolean
 gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row)
@@ -669,7 +669,7 @@ gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *
 }
 
 static void
-set_param_attributes (GdaParameter *param, guint flags)
+set_param_attributes (GdaParameter *param, GdaValueAttribute flags)
 {
 	if (!gda_parameter_get_default_value (param))
 		gda_parameter_set_exists_default_value (param, 
@@ -1934,7 +1934,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				}
 			}
 			else {
-				guint attrs;
+				GdaValueAttribute attrs;
 				attrs = gda_data_model_get_attributes_at (model, i, j);
 				str = g_strdup_printf ("%u", attrs);
 				cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
@@ -1981,7 +1981,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 					str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
 				}
 				else {
-					guint attrs;
+					GdaValueAttribute attrs;
 					attrs = gda_data_model_get_attributes_at (model, i, j);
 					str = g_strdup_printf ("%u", attrs);
 				}

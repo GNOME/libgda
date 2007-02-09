@@ -281,7 +281,7 @@ gda_file_save (const gchar *filename, const gchar *buffer, gint len)
  * gda_utility_table_field_attrs_stringify
  */
 gchar *
-gda_utility_table_field_attrs_stringify (guint attributes)
+gda_utility_table_field_attrs_stringify (GdaValueAttribute attributes)
 {
 	if (attributes & FIELD_AUTO_INCREMENT)
 		return g_strdup ("AUTO_INCREMENT");
