@@ -447,13 +447,14 @@ handled_object_type (GType type)
 	 * or derived from these types.
 	 * TODO: Isn't there a glib macro for checking this without using the for loop?
          */
-	for(; type != G_TYPE_OBJECT; type = g_type_parent(type))
+        GType type_to_check = type;
+	for(; type_to_check != G_TYPE_OBJECT; type_to_check = g_type_parent(type_to_check))
 	{
 		/* type conversion */
-		if ((type == GDA_TYPE_QUERY_FIELD_ALL) ||
-		    (type == GDA_TYPE_QUERY_FIELD_FIELD) ||
-		    (type == GDA_TYPE_QUERY_FIELD_VALUE) ||
-		    (type == GDA_TYPE_QUERY_FIELD_FUNC))
+		if ((type_to_check == GDA_TYPE_QUERY_FIELD_ALL) ||
+		    (type_to_check == GDA_TYPE_QUERY_FIELD_FIELD) ||
+		    (type_to_check == GDA_TYPE_QUERY_FIELD_VALUE) ||
+		    (type_to_check == GDA_TYPE_QUERY_FIELD_FUNC))
 			return GDA_TYPE_QUERY_FIELD;
 	}
 
@@ -461,18 +462,19 @@ handled_object_type (GType type)
 	 * or derived from these types.
 	 * TODO: Isn't there a glib macro for checking this without using the for loop?
          */
-	for(; type != G_TYPE_OBJECT; type = g_type_parent(type))
+        type_to_check = type;
+	for(; type_to_check != G_TYPE_OBJECT; type_to_check = g_type_parent(type_to_check))
 	{
 		/* types accepted AS IS */
-		if ((type == GDA_TYPE_DICT_TABLE) ||
-		    (type == GDA_TYPE_DICT_FIELD) ||
-		    (type == GDA_TYPE_QUERY) ||
-		    (type == GDA_TYPE_QUERY_TARGET) ||
-		    (type == GDA_TYPE_ENTITY_FIELD) ||
-		    (type == GDA_TYPE_DICT_FUNCTION) ||
-		    (type == GDA_TYPE_DICT_AGGREGATE) ||
-		    (type == GDA_TYPE_QUERY_FIELD))
-			return type;
+		if ((type_to_check == GDA_TYPE_DICT_TABLE) ||
+		    (type_to_check == GDA_TYPE_DICT_FIELD) ||
+		    (type_to_check == GDA_TYPE_QUERY) ||
+		    (type_to_check == GDA_TYPE_QUERY_TARGET) ||
+		    (type_to_check == GDA_TYPE_ENTITY_FIELD) ||
+		    (type_to_check == GDA_TYPE_DICT_FUNCTION) ||
+		    (type_to_check == GDA_TYPE_DICT_AGGREGATE) ||
+		    (type_to_check == GDA_TYPE_QUERY_FIELD))
+			return type_to_check;
 	}
 
 	return 0;

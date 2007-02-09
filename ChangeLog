@@ -1,5 +1,11 @@
 2007-02-09  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-object-ref.c: (handled_object_type): Correct this to stop a 
+	runtime crash in the demo. The first check was changing the starting type checked 
+	by the second check.
+
+2007-02-09  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-client.c: (gda_client_class_init):
 	* libgda/gda-column.c: (gda_column_class_init):
 	* libgda/gda-dict-database.c: (gda_dict_database_class_init):
