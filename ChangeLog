@@ -1,5 +1,10 @@
 2007-02-09  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-data-proxy.h: gda_data_proxy_get_value_attributes(): 
+	Use GdaValueAttribute instead of guint for the return type.
+
+2007-02-09  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-data-access-wrapper.c:
 	(gda_data_access_wrapper_get_attributes_at):
 	* libgda/gda-data-model-import.c:
