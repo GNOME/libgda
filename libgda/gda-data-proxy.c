@@ -31,6 +31,7 @@
 #include "gda-util.h"
 #include "gda-marshal.h"
 #include "gda-data-access-wrapper.h"
+#include "gda-enum-types.h"
 
 /* 
  * Main static functions 
@@ -657,7 +658,7 @@ gda_data_proxy_set_property (GObject *object,
 					flags |= GDA_VALUE_ATTR_CAN_BE_NULL;
 				if (gda_column_get_default_value (column))
 					flags |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
-				proxy->priv->columns_attrs[col] = g_value_init (g_new0 (GValue, 1), G_TYPE_UINT);
+				proxy->priv->columns_attrs[col] = g_value_init (g_new0 (GValue, 1), GDA_TYPE_VALUE_ATTRIBUTE);
 				g_value_set_flags (proxy->priv->columns_attrs[col], flags);
 			}
 			
