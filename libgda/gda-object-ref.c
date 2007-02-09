@@ -443,6 +443,9 @@ gda_object_ref_get_property (GObject *object,
 static GType
 handled_object_type (GType type)
 {
+	if(type == 0)
+		return type;
+
 	/* Check whether the type is one of these types, 
 	 * or derived from these types.
 	 * TODO: Isn't there a glib macro for checking this without using the for loop?
@@ -450,6 +453,9 @@ handled_object_type (GType type)
         GType type_to_check = type;
 	for(; type_to_check != G_TYPE_OBJECT; type_to_check = g_type_parent(type_to_check))
 	{
+		if(type_to_check == 0)
+			break;
+ 
 		/* type conversion */
 		if ((type_to_check == GDA_TYPE_QUERY_FIELD_ALL) ||
 		    (type_to_check == GDA_TYPE_QUERY_FIELD_FIELD) ||
@@ -465,6 +471,9 @@ handled_object_type (GType type)
         type_to_check = type;
 	for(; type_to_check != G_TYPE_OBJECT; type_to_check = g_type_parent(type_to_check))
 	{
+		if(type_to_check == 0)
+			break;
+
 		/* types accepted AS IS */
 		if ((type_to_check == GDA_TYPE_DICT_TABLE) ||
 		    (type_to_check == GDA_TYPE_DICT_FIELD) ||

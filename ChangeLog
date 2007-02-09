@@ -1,5 +1,11 @@
 2007-02-09  Murray Cumming  <murrayc@murrayc.com>
 
+	* libgda/gda-object-ref.c: (handled_object_type): Check for NULL when checking the 
+	parent type, as can happen with interface types, which have no parent. This fixes a 
+	hang when showing forms.
+
+2007-02-09  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/gda-data-proxy.c: (gda_data_proxy_set_property): Initialize the GValue 
 	properly to prevent a runtime error when we use g_value_set_flags() on it.
 
