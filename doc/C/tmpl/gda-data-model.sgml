@@ -52,6 +52,13 @@ As a side note there are also data models which wrap other data models such as:
 </para>
 
 
+<!-- ##### SIGNAL GdaDataModel::reset ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+
 <!-- ##### SIGNAL GdaDataModel::row-inserted ##### -->
 <para>
 

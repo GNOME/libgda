@@ -26,7 +26,7 @@ char *string_buf_ptr;
 %x STRING
 %x TEXTUAL
 
-CHAR [^ \t\n\r\'\";/]+
+CHAR [^ \t\n\r\'\";:\*/]+
 
 %%
 

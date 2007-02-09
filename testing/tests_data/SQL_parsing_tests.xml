@@ -370,6 +370,20 @@
     <test sql="DELETE FROM orders o WHERE o.id=## /*name:&quot;_0&quot; type:&quot;gint&quot;*/" parsed="1" rendered="DELETE FROM orders WHERE id=## /* type:&quot;gint&quot; name:&quot;_0&quot; */"/>
   </test_group>
 
+  <!-- MISC -->
+  <output_file name="MISC_result.html" descr="MISC queries testing"/>
+  <test_group descr="Misc">
+    <test sql="SELECT id_param, case substr (type_param, 1, 1) WHEN 'A' THEN 'A' else 'N' END, lib_param, desc_param, 
+      valeur_a, valeur_n
+      FROM parametre_exploitation WHERE id_config = ## /*name:'id_config' type:'gint'*/ ORDER BY id_param"/>
+    <test sql="SELECT id_param, case substr (type_param, 1, 1) WHEN 'A' THEN 'A' else 'N' END, lib_param, desc_param, 
+      valeur_a, valeur_n
+      FROM parametre_exploitation WHERE id_config = ## /*name:'id_config' type:gint*/ ORDER BY id_param"/>
+    <test sql="SELECT id_param, case substr (type_param, 1, 1) WHEN 'A' THEN 'A' else 'N' END, lib_param, desc_param, 
+      valeur_a, valeur_n
+      FROM parametre_exploitation WHERE id_config = ## /*name:id_config type:gint*/ ORDER BY id_param"/>
+  </test_group>
+
 
   <!-- Non SQL -->
   <!--<dictionary name="DICT_Sales_postgres.xml"/>-->

@@ -1,6 +1,6 @@
 /* 
  * GDA common library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -50,6 +50,7 @@ enum {
 	ROW_INSERTED,
 	ROW_UPDATED,
 	ROW_REMOVED,
+	RESET,
 	LAST_SIGNAL
 };
 
@@ -109,6 +110,14 @@ gda_data_model_class_init (gpointer g_class)
 				      NULL, NULL,
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
+		gda_data_model_signals[RESET] =
+			g_signal_new ("reset",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelClass, reset),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
 
 		initialized = TRUE;
 	}
@@ -220,6 +229,23 @@ gda_data_model_row_removed (GdaDataModel *model, gint row)
 
 		gda_data_model_signal_emit_changed (model);
 	}
+}
+
+/**
+ * gda_data_model_reset
+ * @model: a #GdaDataModel object.
+ *
+ * Emits the 'reset' and 'changed' signal on @model.
+ */
+void
+gda_data_model_reset (GdaDataModel *model)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	g_signal_emit (G_OBJECT (model),
+		       gda_data_model_signals[RESET], 0);
+
+	gda_data_model_signal_emit_changed (model);
 }
 
 /**

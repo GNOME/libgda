@@ -1,6 +1,6 @@
 /* gda-data-model-iter.c
  *
- * Copyright (C) 2005 - 2006 Vivien Malerba
+ * Copyright (C) 2005 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -724,14 +724,16 @@ gda_data_model_iter_dump (GdaDataModelIter *iter, guint offset)
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (iter));
 	dict = gda_object_get_dict (GDA_OBJECT (iter));
-	
+       
         /* string for the offset */
         str = g_new0 (gchar, offset+1);
 	memset (str, ' ', offset);
 
         /* dump */
         if (iter->priv) {
-		g_print ("Iter %p\n", iter);
+		GdaObjectClass *plist_class;
+		plist_class = g_type_class_peek (GDA_TYPE_PARAMETER_LIST);
+		(plist_class->dump) ((GdaObject *) iter, offset);
 	}
         else
                 g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, iter);

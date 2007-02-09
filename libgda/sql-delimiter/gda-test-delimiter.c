@@ -4,7 +4,7 @@
 static void test_string (const gchar *str);
 int 
 main (int argc, char **argv) {
-	test_string ("SELECT ## /*type:\"int4\"*/ i=10");
+	test_string ("SELECT ## /* type:\"int4\" */ i=10");
 	test_string ("SELECT 'string with a ;' i=10; INSERT hello;");
 	test_string ("UPDATE contacts SET name_first = 'Murray;' WHERE contact_id = 0");
 	test_string ("select bar from jcw.foo where qux <> ';'");
@@ -36,6 +36,13 @@ main (int argc, char **argv) {
 
 	test_string ("SELECT schema.table.field || ##/*name:\"Postfix\" type:\"varchar\"*/");	
 	test_string ("SELECT schema.table.field || ##/*name:'Postfix' type:'varchar'*/");
+	test_string ("SELECT id_param, case substr (type_param, 1, 1) WHEN 'A' THEN 'A' else 'N' END, lib_param, desc_param," 
+      "valeur_a, valeur_n "
+      "FROM parametre_exploitation WHERE id_config = ## /*name:'id_config' type:gint*/ ORDER BY id_param");
+	test_string ("UPDATE parametre_exploitation set "
+      "valeur_a = (CASE ## /* name:'-1' type:gchararray */ WHEN 'A' THEN ## /* name:'+4' type:gchararray nullok:true */ ELSE NULL END), "
+      "valeur_n = (CASE ## /* name:'-1' type:gchararray */ WHEN 'N' THEN ## /* name:'+5' type:gint nullok:true */ ELSE NULL END)::integer "
+      "WHERE id_param = ## /* name:'-0' type:gchararray */ AND id_config = ## /* name:id_config type:gint */");
 
 	return 0;
 }

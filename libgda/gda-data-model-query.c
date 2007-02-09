@@ -59,6 +59,8 @@ struct _GdaDataModelQueryPrivate {
 	guint             svp_id;   /* counter for savepoints */
 	gchar            *svp_name; /* non NULL if we have created a savepoint here */
 	/* note: transaction_started and svp_name are mutually exclusive */
+
+	gboolean          emit_reset;
 };
 
 /* properties */
@@ -273,6 +275,8 @@ gda_data_model_query_init (GdaDataModelQuery *model, GdaDataModelQueryClass *kla
 	model->priv->transaction_needs_commit = FALSE;
 	model->priv->svp_id = 0;
 	model->priv->svp_name = NULL;
+
+	model->priv->emit_reset = FALSE;
 }
 
 static void
@@ -473,6 +477,8 @@ gda_data_model_query_set_property (GObject *object,
 									    gda_column_get_default_value (col))
 										gda_parameter_set_exists_default_value
 										 ((GdaParameter *)(params->data), TRUE);
+									gda_object_set_id (GDA_OBJECT (param),
+											   gda_column_get_name (col));
 								}
 							}
 							else {
@@ -809,25 +815,25 @@ gda_data_model_query_get_n_columns (GdaDataModel *model)
 static void
 create_columns (GdaDataModelQuery *model)
 {
+	GSList *fields;
+
 	if (model->priv->columns)
 		return;
 	if (! model->priv->queries[SEL_QUERY])
 		return;
 
-	gda_referer_activate (GDA_REFERER (model->priv->queries[SEL_QUERY]));	
-	if (gda_referer_is_active (GDA_REFERER (model->priv->queries[SEL_QUERY]))) {
-		GSList *fields, *list;
+	gda_referer_activate (GDA_REFERER (model->priv->queries[SEL_QUERY]));
+	fields = gda_entity_get_fields (GDA_ENTITY (model->priv->queries[SEL_QUERY]));
+	if (gda_referer_is_active (GDA_REFERER (model->priv->queries[SEL_QUERY])) && fields) {
+		GSList *list;
 		gboolean allok = TRUE;
-
-		fields = gda_entity_get_fields (GDA_ENTITY (model->priv->queries[SEL_QUERY]));
-		list = fields;
-		while (list && allok) {
+		
+		for (list = fields; list && allok; list = list->next) {
 			if (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (list->data)) == G_TYPE_INVALID) {
 				allok = FALSE;
 				g_warning (_("Can't determine the GType for field '%s', please fill a bug report"), 
 					   gda_object_get_name (GDA_OBJECT (list->data)));
 			}
-			list = g_slist_next (list);
 		}
 		if (! allok) 
 			return;
@@ -880,10 +886,16 @@ create_columns (GdaDataModelQuery *model)
 				model->priv->columns = g_slist_append (model->priv->columns, col);
 			}
 		}
-		else
-			g_warning (_("Can't compute the list of columns because the "
-				   "SELECT query is not active (you can use a dictionary to correct this) "
-				   "and the model does not contain any data"));
+		else {
+			/* Can't compute the list of columns because the SELECT query is not active and the model does not contain any data;
+			 * next time we emit a "reset" signal */
+			model->priv->emit_reset = TRUE;
+		}
+	}
+
+	if (model->priv->columns && model->priv->emit_reset) {
+		model->priv->emit_reset = FALSE;
+		gda_data_model_reset (GDA_DATA_MODEL (model));
 	}
 }
 

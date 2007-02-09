@@ -61,6 +61,7 @@ struct _GdaObjectClass
 
 	/* class attributes */
 	gboolean      id_unique_enforced; /* TRUE if a unique string ID must be enforced for that class */
+	gboolean      name_as_initial_id; /* TRUE if the name of the object must be copied as the ID if ID is NULL */
 };
 
 GType        gda_object_get_type        (void);

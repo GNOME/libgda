@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 2006 The GNOME Foundation.
+ * Copyright (C) 2006 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -33,6 +33,7 @@ void     gda_data_model_signal_emit_changed             (GdaDataModel *model);
 void     gda_data_model_row_inserted        (GdaDataModel *model, gint row);
 void     gda_data_model_row_updated         (GdaDataModel *model, gint row);
 void     gda_data_model_row_removed         (GdaDataModel *model, gint row);
+void     gda_data_model_reset               (GdaDataModel *model);
 
 gboolean gda_data_model_move_iter_at_row_default (GdaDataModel *model, GdaDataModelIter *iter, gint row);
 gboolean gda_data_model_move_iter_next_default   (GdaDataModel *model, GdaDataModelIter *iter);

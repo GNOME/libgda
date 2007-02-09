@@ -229,9 +229,10 @@ gda_parameter_class_init (GdaParameterClass *class)
                                          g_param_spec_int ("restrict_column", NULL, NULL,
 							   0, G_MAXINT, 0,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	/* class attributes */
+
 	/* class attributes */
 	GDA_OBJECT_CLASS (class)->id_unique_enforced = FALSE;
+	GDA_OBJECT_CLASS (class)->name_as_initial_id = TRUE;
 }
 
 static void
@@ -1367,7 +1368,8 @@ gda_parameter_dump (GdaParameter *parameter, guint offset)
 		gchar *strval;
 
 		strval = gda_value_stringify ((GValue *) gda_parameter_get_value (parameter));
-		g_print ("%s" D_COL_H1 "GdaParameter %p (%s), type=%s, %s, value=%s\n" D_COL_NOR, str, parameter,
+		g_print ("%s" D_COL_H1 "GdaParameter %p (%s/%s), type=%s, %s, value=%s\n" D_COL_NOR, str, parameter,
+			 gda_object_get_id (GDA_OBJECT (parameter)), 
 			 gda_object_get_name (GDA_OBJECT (parameter)), 
 			 gda_g_type_to_string (parameter->priv->g_type),
 			 gda_parameter_is_valid (parameter) ? "VALID" : "INVALID",

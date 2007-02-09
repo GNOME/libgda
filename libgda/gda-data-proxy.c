@@ -425,7 +425,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
                               G_STRUCT_OFFSET (GdaDataProxyClass, post_changes_applied),
                               NULL, NULL,
 			      gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
-	
+
 	class->row_delete_changed = NULL;
 	class->sample_size_changed = NULL;
 	class->sample_changed = NULL;
@@ -447,8 +447,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 	g_object_class_install_property (object_class, PROP_MODEL,
 					 g_param_spec_object ("model", _("Data model"), NULL,
                                                                GDA_TYPE_DATA_MODEL,
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
-								G_PARAM_CONSTRUCT_ONLY)));
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT)));
 	g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
 					 g_param_spec_boolean ("prepend_null_entry", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -509,6 +508,8 @@ static gboolean idle_add_model_rows (GdaDataProxy *proxy);
 
 
 static void proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy);
+static void proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy);
+
 
 /**
  * gda_data_proxy_new
@@ -522,14 +523,11 @@ GObject *
 gda_data_proxy_new (GdaDataModel *model)
 {
 	GObject *obj;
-	GdaDataProxy *proxy;
 
 	g_return_val_if_fail (model && GDA_IS_DATA_MODEL (model), NULL);
 
 	obj = g_object_new (GDA_TYPE_DATA_PROXY, "dict", gda_object_get_dict (GDA_OBJECT (model)), 
 			    "model", model, NULL);
-
-	proxy = GDA_DATA_PROXY (obj);
 
 	return obj;
 }
@@ -538,6 +536,49 @@ static void
 destroyed_object_cb (GdaObject *obj, GdaDataProxy *proxy)
 {
 	gda_object_destroy (GDA_OBJECT (proxy));
+}
+
+static void
+clean_proxy (GdaDataProxy *proxy)
+{
+	if (proxy->priv->idle_add_event_source) {
+		g_idle_remove_by_data (proxy);
+		proxy->priv->idle_add_event_source = 0;
+	}
+	
+	if (proxy->priv->columns) {
+		gint i;
+		for (i = 0; i < 2 * proxy->priv->model_nb_cols; i++)
+			g_object_unref (G_OBJECT (proxy->priv->columns[i]));
+		g_free (proxy->priv->columns);
+		proxy->priv->columns = NULL;
+	}
+	
+	if (proxy->priv->model) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
+						      G_CALLBACK (proxied_model_data_changed_cb), proxy);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
+						      G_CALLBACK (proxied_model_reset_cb), proxy);
+
+		g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
+						      G_CALLBACK (destroyed_object_cb), proxy);
+		g_object_unref (proxy->priv->model);
+		proxy->priv->model = NULL;
+	}
+	
+	if (proxy->priv->columns_attrs) {
+		gint i;
+		for (i = 0; i < proxy->priv->model_nb_cols; i++)
+			gda_value_free ((GValue *)(proxy->priv->columns_attrs[i]));
+		g_free (proxy->priv->columns_attrs);
+		proxy->priv->columns_attrs = NULL;
+	}
+	
+	if (proxy->priv->modify_rows) {
+		gda_data_proxy_cancel_all_changes (proxy);
+		g_hash_table_destroy (proxy->priv->modify_rows);
+		proxy->priv->modify_rows = NULL;
+	}
 }
 
 static void
@@ -551,40 +592,7 @@ gda_data_proxy_dispose (GObject *object)
 	proxy = GDA_DATA_PROXY (object);
 	if (proxy->priv) {
 		gda_object_destroy_check (GDA_OBJECT (object));
-
-		if (proxy->priv->idle_add_event_source) {
-			g_idle_remove_by_data (proxy);
-			proxy->priv->idle_add_event_source = 0;
-		}
-
-		if (proxy->priv->columns) {
-			gint i;
-			for (i = 0; i < 2 * proxy->priv->model_nb_cols; i++)
-				g_object_unref (G_OBJECT (proxy->priv->columns[i]));
-			g_free (proxy->priv->columns);
-			proxy->priv->columns = NULL;
-		}
-
-		if (proxy->priv->model) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (proxy->priv->model),
-							      G_CALLBACK (destroyed_object_cb), proxy);
-			g_object_unref (proxy->priv->model);
-			proxy->priv->model = NULL;
-		}
-
-		if (proxy->priv->columns_attrs) {
-			gint i;
-			for (i = 0; i < proxy->priv->model_nb_cols; i++)
-				gda_value_free ((GValue *)(proxy->priv->columns_attrs[i]));
-			g_free (proxy->priv->columns_attrs);
-			proxy->priv->columns_attrs = NULL;
-		}
-		
-		if (proxy->priv->modify_rows) {
-			gda_data_proxy_cancel_all_changes (proxy);
-			g_hash_table_destroy (proxy->priv->modify_rows);
-			proxy->priv->modify_rows = NULL;
-		}
+		clean_proxy (proxy);
 	}
 
 	/* parent class */
@@ -664,6 +672,8 @@ gda_data_proxy_set_property (GObject *object,
 			
 			g_signal_connect (G_OBJECT (model), "changed",
 					  G_CALLBACK (proxied_model_data_changed_cb), proxy);
+			g_signal_connect (G_OBJECT (model), "reset",
+					  G_CALLBACK (proxied_model_reset_cb), proxy);
 			
 			adjust_displayed_chunck (proxy);
 			break;
@@ -712,6 +722,7 @@ static void
 proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 {
 	gint nb_new_rows = 0;
+	gint nb_cols;
 	if (proxy->priv->ignore_proxied_changes) {
 		proxy->priv->proxy_has_changed = TRUE;
 		return;
@@ -738,19 +749,31 @@ proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 		proxy->priv->new_rows = NULL;
 	}
 
-	/* take into account the new dimensions of the proxied data model */
-	if (proxy->priv->model_nb_cols != gda_data_model_get_n_columns (model)) {
-		proxy->priv->model_nb_cols = gda_data_model_get_n_columns (model);
-		
-		/* FIXME: reset all proxy's attributes linked to proxy->priv->model_nb_cols */
-		TO_IMPLEMENT;
-
-		/* WILL break as implementation is missing */
-		g_assert_not_reached ();
+	nb_cols = gda_data_model_get_n_columns (model);
+	if (proxy->priv->model_nb_cols != nb_cols) {
+		/* take into account the new dimensions of the proxied data model => perform a re-init of the object */
+		proxied_model_reset_cb (model, proxy);
 	}
+	else {
+		proxy->priv->deferred_nb_rows += nb_new_rows;
+		adjust_displayed_chunck (proxy);
+	}
+}
 
-	proxy->priv->deferred_nb_rows += nb_new_rows;
-	adjust_displayed_chunck (proxy);
+/* 
+ * called when the proxied model emits a "reset" signal
+ */
+static void
+proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy)
+{
+	gboolean add_null_entry = proxy->priv->add_null_entry;
+	
+	g_object_ref (G_OBJECT (model));
+	clean_proxy (proxy);
+	gda_data_proxy_init (proxy);
+	g_object_set (G_OBJECT (proxy), "model", model, "prepend_null_entry", add_null_entry, NULL);
+	g_object_unref (G_OBJECT (model));
+	gda_data_model_reset (GDA_DATA_MODEL (proxy));
 }
 
 /**

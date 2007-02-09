@@ -1,3 +1,30 @@
+2007-02-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in:
+	* libgda-3.0.pc.in: add -DGDA_DEBUG if necessary to allow easy creation of GdaObject
+	derived objects outside the libgda's sources
+	* configure.in:
+	* tests/*: added unit tests for delimiters testing, to be run using
+	the "make check" command (if the "check" library (http://check.sourceforge.net/) is 
+	not installed then warnings will appear instead of a test failure
+	count)
+	* libgda/gda-parameter.c:
+	* libgda/gda-object.[ch]: added the option for GdaObject sub-classes to copy the 
+	"name" property to the "id" one if the "id" is not set (used by the GdaParameter object)
+	* libgda/gda-parameter.c:
+	* libgda/gda-parameter-list.c:
+	* libgda/gda-data-model-iter.c: corrected the gda_object_dump() method
+	* libgda/sql-delimiter/lexex.l: it is now legal to write "## /* type:gint */" when
+	only "## /* type:'gint' */" was recognized before.
+	* libgda/gda-data-model-query.c: correctly detect when it's not possible to get information
+	about columns
+	* libgda/gda-data-model.[ch]: added a "reset" signal emitted when the data model has completely
+	changed (the number of columns and types of columns and of course the whole data may have changed)
+	* libgda/gda-data-model-extra.h: added gda_data_model_reset() to make the model emit the "reset"
+	signal
+	* libgda/gda-data-proxy.[ch]: added a "re_init_done" signal emitted when the proxied data
+	model's number of columns changes
+
 2007-02-09  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-object-ref.c: (handled_object_type): Check for NULL when checking the 

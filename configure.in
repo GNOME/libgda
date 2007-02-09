@@ -1029,13 +1029,30 @@ AC_SUBST(XBASE_LIBS)
 AC_SUBST(XBASE_CFLAGS)
 
 dnl
+dnl Check if the "check" testing unit is found (http://check.sourceforge.net/)
+dnl
+Check_MODULES="check"
+PKG_CHECK_MODULES(CHECK, $Check_MODULES, have_check=yes, have_check=no)
+AM_CONDITIONAL(HAVE_CHECK, test x"$have_check" = "xyes")
+if test x"$have_check" = "xyes"
+then
+	CHECK_CFLAGS="$CHECK_CFLAGS -DHAVE_CHECK"
+fi
+AC_SUBST(CHECK_CFLAGS)
+AC_SUBST(CHECK_LIBS)
+
+dnl
 dnl Check if lib should be build with the debug mode
 dnl
 AC_ARG_ENABLE(debug,
         [  --enable-debug          debug [default=no]],
-        use_debug="Yes";
-        AC_DEFINE(GDA_DEBUG), use_debug="No")
+        use_debug="Yes", use_debug="No")
 
+if test "x$use_debug" = "xYes"; then
+	AC_DEFINE(GDA_DEBUG)
+	GDA_DEBUG_FLAGS=-DGDA_DEBUG
+	AC_SUBST(GDA_DEBUG_FLAGS)
+fi
 
 dnl Disable rebuild of glib-mkenum -generated source code:
 AC_ARG_ENABLE(rebuilds, [  --disable-rebuilds      disable all source autogeneration rules],,enable_rebuilds=yes)
@@ -1091,6 +1108,7 @@ gda-sharp/gda-sharp.dll.config
 gda-sharp/gda-sharp-3.0.pc
 gda-sharp/AssemblyInfo.cs
 testing/Makefile
+tests/Makefile
 doc/Makefile
 doc/C/Makefile
 data/Makefile

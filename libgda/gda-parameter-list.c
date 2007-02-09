@@ -1759,8 +1759,8 @@ gda_parameter_list_dump (GdaParameterList *paramlist, guint offset)
         if (paramlist->priv) {
 		GError *error = NULL;
 		GSList *list;
-                g_print ("%s" D_COL_H1 "GdaParameterList" D_COL_NOR " %p (id=%s)",
-                         str, paramlist, gda_object_get_id (GDA_OBJECT (paramlist)));
+                g_print ("%s" D_COL_H1 "%s" D_COL_NOR " %p (id=%s)",
+                         str, G_OBJECT_TYPE_NAME (paramlist), paramlist, gda_object_get_id (GDA_OBJECT (paramlist)));
 		if (! gda_parameter_list_is_coherent (paramlist, &error)) {
 			g_print (" " D_COL_ERR "not coherent: " D_COL_NOR "%s", error->message);
 			g_error_free (error);

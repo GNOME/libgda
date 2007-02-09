@@ -13,6 +13,7 @@ SUBDIRS = \
 	report \
 	tools \
 	$(GDA_SHARP_DIRECTORY) \
+	tests \
 	testing \
 	data \
 	doc

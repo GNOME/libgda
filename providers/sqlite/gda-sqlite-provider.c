@@ -1384,7 +1384,7 @@ get_types_foreach (gchar *key, gpointer value, GdaDataModelArray *recset)
 {
 	if (strcmp (key, "integer") &&
 	    strcmp (key, "real") &&
-	    strcmp (key, "string") && 
+	    strcmp (key, "text") && 
 	    strcmp (key, "blob"))
 		add_type_row (recset, key, "system", NULL, GPOINTER_TO_INT (value));
 }
@@ -1409,7 +1409,7 @@ get_types (GdaConnection *cnc, GdaParameterList *params)
 	/* basic data types */
 	add_type_row (recset, "integer", "system", "Signed integer, stored in 1, 2, 3, 4, 6, or 8 bytes depending on the magnitude of the value", G_TYPE_INT);
 	add_type_row (recset, "real", "system", "Floating point value, stored as an 8-byte IEEE floating point number", G_TYPE_DOUBLE);
-	add_type_row (recset, "string", "system", "Text string, stored using the database encoding", G_TYPE_STRING);
+	add_type_row (recset, "text", "system", "Text string, stored using the database encoding", G_TYPE_STRING);
 	add_type_row (recset, "blob", "system", "Blob of data, stored exactly as it was input", GDA_TYPE_BINARY);
 
 
@@ -1498,7 +1498,7 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 			rowlist = g_list_append (rowlist, gda_value_new_null());
 
 			/* Out type */ 
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "string");
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "text");
 			rowlist = g_list_append (rowlist, value);
 
 			if (! aggs) {
@@ -1583,7 +1583,7 @@ get_procs (GdaConnection *cnc, GdaParameterList *params, gboolean aggs)
 			rowlist = g_list_append (rowlist, gda_value_new_null());
 			
 			/* Out type */ 
-			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "string");
+			g_value_set_string (value = gda_value_new (G_TYPE_STRING), "text");
 			rowlist = g_list_append (rowlist, value);
 
 			if (! is_agg) {
@@ -2006,5 +2006,5 @@ gda_sqlite_provider_get_default_dbms_type (GdaServerProvider *provider,
 	    (type == G_TYPE_FLOAT))
 		return "real";
 	
-	return "string";
+	return "text";
 }

@@ -189,6 +189,7 @@ gda_object_class_init (GdaObjectClass * class)
 
 	/* class attributes */
 	class->id_unique_enforced = TRUE;
+	class->name_as_initial_id = FALSE;
 
 	/* Properties */
 	object_class->set_property = gda_object_set_property;
@@ -433,6 +434,13 @@ gda_object_set_name (GdaObject *gdaobj, const gchar *name)
 		else
 			changed = TRUE;
 		gdaobj->priv->name = g_strdup (name);
+
+		GdaObjectClass *real_class;
+		real_class = (GdaObjectClass *) G_OBJECT_GET_CLASS (gdaobj);
+		if (real_class->name_as_initial_id) {
+			if (!gdaobj->priv->id_string)
+				gda_object_set_id (gdaobj, name);
+		}
 	}
 
 	if (changed) {

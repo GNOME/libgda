@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2005 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -101,9 +101,10 @@ struct _GdaDataModelClass {
 	void                 (* i_send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
 
 	/* signals */
-	void                 (* row_inserted)    (GdaDataModel *model, gint row);
-	void                 (* row_updated)     (GdaDataModel *model, gint row);
-	void                 (* row_removed)     (GdaDataModel *model, gint row);
+	void                 (* row_inserted)       (GdaDataModel *model, gint row);
+	void                 (* row_updated)        (GdaDataModel *model, gint row);
+	void                 (* row_removed)        (GdaDataModel *model, gint row);
+	void                 (* reset)              (GdaDataModel *model);
 };
 
 GType               gda_data_model_get_type               (void);
