@@ -85,18 +85,18 @@ gda_row_class_init (GdaRowClass *klass)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaRowClass, value_changed),
 			      NULL, NULL,
-			      gda_marshal_VOID__INT_POINTER_POINTER,
+			      gda_marshal_VOID__INT_BOXED_BOXED,
 			      G_TYPE_NONE,
-			      3, G_TYPE_INT, G_TYPE_POINTER, G_TYPE_POINTER);
+			      3, G_TYPE_INT, G_TYPE_VALUE, G_TYPE_VALUE);
 	gda_row_signals[VALUE_TO_CHANGE] =
 		g_signal_new ("value_to_change",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaRowClass, value_to_change),
 			      NULL, NULL,
-			      gda_marshal_VOID__INT_POINTER_POINTER,
+			      gda_marshal_VOID__INT_BOXED_BOXED,
 			      G_TYPE_BOOLEAN,
-			      3, G_TYPE_INT, G_TYPE_POINTER, G_TYPE_POINTER);
+			      3, G_TYPE_INT, G_TYPE_VALUE, G_TYPE_VALUE);
 
 	object_class->finalize = gda_row_finalize;
 	object_class->dispose = gda_row_dispose;

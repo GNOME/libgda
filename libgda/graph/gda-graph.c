@@ -155,24 +155,24 @@ gda_graph_class_init (GdaGraphClass * class)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaGraphClass, item_added),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_GRAPH_ITEM);
 	gda_graph_signals[ITEM_DROPPED] =
 		g_signal_new ("item_dropped",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaGraphClass, item_dropped),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_GRAPH_ITEM);
 	gda_graph_signals[ITEM_MOVED] =
 		g_signal_new ("item_moved",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaGraphClass, item_moved),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_GRAPH_ITEM);
 	
 	class->item_added = NULL;
 	class->item_dropped = NULL;

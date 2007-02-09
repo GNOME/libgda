@@ -310,72 +310,74 @@ gda_query_class_init (GdaQueryClass * klass)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, target_added),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY_TARGET);
 	gda_query_signals[TARGET_REMOVED] =
 		g_signal_new ("target_removed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, target_removed),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY_TARGET);
 	gda_query_signals[TARGET_UPDATED] =
 		g_signal_new ("target_updated",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, target_updated),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY_TARGET);
+
 	gda_query_signals[JOIN_ADDED] =
 		g_signal_new ("join_added",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, join_added),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY_JOIN);
 	gda_query_signals[JOIN_REMOVED] =
 		g_signal_new ("join_removed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, join_removed),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY_JOIN);
 	gda_query_signals[JOIN_UPDATED] =
 		g_signal_new ("join_updated",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, join_updated),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY_JOIN);
+
 	gda_query_signals[SUB_QUERY_ADDED] =
 		g_signal_new ("sub_query_added",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, sub_query_added),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY);
 	gda_query_signals[SUB_QUERY_REMOVED] =
 		g_signal_new ("sub_query_removed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, sub_query_removed),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY);
 	gda_query_signals[SUB_QUERY_UPDATED] =
 		g_signal_new ("sub_query_updated",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaQueryClass, sub_query_updated),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_QUERY);
 
 	klass->type_changed = m_changed_cb;
 	klass->condition_changed = m_changed_cb;

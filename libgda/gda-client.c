@@ -33,6 +33,7 @@
 #include "gda-dict.h"
 #include "gda-parameter-list.h"
 #include "gda-value.h"
+#include "gda-enum-types.h"
 
 typedef struct {
 	GModule              *handle;
@@ -183,8 +184,8 @@ gda_client_class_init (GdaClientClass *klass)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaClientClass, event_notification),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER_INT_POINTER,
-			      G_TYPE_NONE, 3, G_TYPE_POINTER, G_TYPE_INT, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT_ENUM_OBJECT,
+			      G_TYPE_NONE, 3, GDA_TYPE_CONNECTION, GDA_TYPE_CLIENT_EVENT, GDA_TYPE_PARAMETER_LIST);
 
 	object_class->finalize = gda_client_finalize;
 }

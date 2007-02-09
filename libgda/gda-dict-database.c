@@ -189,72 +189,75 @@ gda_dict_database_class_init (GdaDictDatabaseClass * class)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, table_added),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_TABLE);
 	gda_dict_database_signals[TABLE_REMOVED] =
                 g_signal_new ("table_removed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, table_removed),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_TABLE);
 	gda_dict_database_signals[TABLE_UPDATED] =
                 g_signal_new ("table_updated",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, table_updated),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_TABLE);
+
         gda_dict_database_signals[FIELD_ADDED] =
                 g_signal_new ("field_added",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, field_added),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_FIELD);
         gda_dict_database_signals[FIELD_REMOVED] =
                 g_signal_new ("field_removed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, field_removed),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_FIELD);
         gda_dict_database_signals[FIELD_UPDATED] =
                 g_signal_new ("field_updated",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, field_updated),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_FIELD);
+
         gda_dict_database_signals[CONSTRAINT_ADDED] =
                 g_signal_new ("constraint_added",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, constraint_added),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_CONSTRAINT);
         gda_dict_database_signals[CONSTRAINT_REMOVED] =
                 g_signal_new ("constraint_removed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, constraint_removed),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_CONSTRAINT);
         gda_dict_database_signals[CONSTRAINT_UPDATED] =
                 g_signal_new ("constraint_updated",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, constraint_updated),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER,
-                              G_TYPE_NONE, 1, G_TYPE_POINTER);
+                              gda_marshal_VOID__OBJECT,
+                              G_TYPE_NONE, 1, GDA_TYPE_DICT_CONSTRAINT);
+
 	gda_dict_database_signals[DATA_UPDATE_STARTED] =
                 g_signal_new ("data_update_started",
                               G_TYPE_FROM_CLASS (object_class),
@@ -269,8 +272,8 @@ gda_dict_database_class_init (GdaDictDatabaseClass * class)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictDatabaseClass, update_progress),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER_UINT_UINT,
-                              G_TYPE_NONE, 3, G_TYPE_POINTER, G_TYPE_UINT, G_TYPE_UINT);
+                              gda_marshal_VOID__STRING_UINT_UINT,
+                              G_TYPE_NONE, 3, G_TYPE_STRING, G_TYPE_UINT, G_TYPE_UINT);
 	gda_dict_database_signals[DATA_UPDATE_FINISHED] =
                 g_signal_new ("data_update_finished",
                               G_TYPE_FROM_CLASS (object_class),

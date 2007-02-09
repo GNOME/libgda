@@ -20,6 +20,7 @@
 
 #include "gda-entity.h"
 #include <libgda/gda-object.h>
+#include <libgda/gda-entity-field.h>
 #include "gda-parameter-list.h"
 #include "gda-marshal.h"
 
@@ -75,24 +76,24 @@ gda_entity_iface_init (gpointer g_class)
 				      G_SIGNAL_RUN_FIRST,
 				      G_STRUCT_OFFSET (GdaEntityIface, field_added),
 				      NULL, NULL,
-				      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-				      1, G_TYPE_POINTER);
+				      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+				      1, GDA_TYPE_ENTITY_FIELD);
 		gda_entity_signals[FIELD_REMOVED] =
 			g_signal_new ("field_removed",
 				      GDA_TYPE_ENTITY,
 				      G_SIGNAL_RUN_FIRST,
 				      G_STRUCT_OFFSET (GdaEntityIface, field_removed),
 				      NULL, NULL,
-				      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-				      1, G_TYPE_POINTER);
+				      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+				      1, GDA_TYPE_ENTITY_FIELD);
 		gda_entity_signals[FIELD_UPDATED] =
 			g_signal_new ("field_updated",
 				      GDA_TYPE_ENTITY,
 				      G_SIGNAL_RUN_FIRST,
 				      G_STRUCT_OFFSET (GdaEntityIface, field_updated),
 				      NULL, NULL,
-				      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-				      1, G_TYPE_POINTER);
+				      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+				      1, GDA_TYPE_ENTITY_FIELD);
 		gda_entity_signals[FIELDS_ORDER_CHANGED] =
 			g_signal_new ("fields_order_changed",
 				      GDA_TYPE_ENTITY,

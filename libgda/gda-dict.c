@@ -163,24 +163,24 @@ gda_dict_class_init (GdaDictClass * class)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaDictClass, object_added),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_OBJECT);
 	gda_dict_signals[OBJECT_REMOVED] =
 		g_signal_new ("object_removed",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaDictClass, object_removed),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_OBJECT);
 	gda_dict_signals[OBJECT_UPDATED] =
 		g_signal_new ("object_updated",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaDictClass, object_updated),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_OBJECT);
 
 	gda_dict_signals[OBJECT_ACT_CHANGED] =
 		g_signal_new ("object_act_changed",
@@ -188,8 +188,8 @@ gda_dict_class_init (GdaDictClass * class)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaDictClass, object_act_changed),
 			      NULL, NULL,
-			      gda_marshal_VOID__POINTER, G_TYPE_NONE,
-			      1, G_TYPE_POINTER);
+			      gda_marshal_VOID__OBJECT, G_TYPE_NONE,
+			      1, GDA_TYPE_OBJECT);
 
         gda_dict_signals[DATA_UPDATE_STARTED] =
                 g_signal_new ("data_update_started",
@@ -205,8 +205,8 @@ gda_dict_class_init (GdaDictClass * class)
                               G_SIGNAL_RUN_FIRST,
                               G_STRUCT_OFFSET (GdaDictClass, update_progress),
                               NULL, NULL,
-                              gda_marshal_VOID__POINTER_UINT_UINT,
-                              G_TYPE_NONE, 3, G_TYPE_POINTER, G_TYPE_UINT, G_TYPE_UINT);
+                              gda_marshal_VOID__OBJECT_UINT_UINT,
+                              G_TYPE_NONE, 3, GDA_TYPE_OBJECT, G_TYPE_UINT, G_TYPE_UINT);
         gda_dict_signals[DATA_UPDATE_FINISHED] =
                 g_signal_new ("data_update_finished",
                               G_TYPE_FROM_CLASS (object_class),

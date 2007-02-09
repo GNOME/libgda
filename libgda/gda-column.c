@@ -112,7 +112,7 @@ gda_column_class_init (GdaColumnClass *klass)
 			      NULL, NULL,
 			      gda_marshal_VOID__INT_INT,
 			      G_TYPE_NONE,
-			      2, G_TYPE_INT, G_TYPE_INT);
+			      2, G_TYPE_GTYPE, G_TYPE_GTYPE);
 
 	/* properties */
         object_class->set_property = gda_column_set_property;

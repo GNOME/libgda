@@ -142,7 +142,7 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 			      G_STRUCT_OFFSET (GdaParameterListClass, param_changed),
 			      NULL, NULL,
 			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
-			      G_TYPE_OBJECT);
+			      GDA_TYPE_PARAMETER);
 	gda_parameter_list_signals[PARAM_PLUGIN_CHANGED] =
 		g_signal_new ("param_plugin_changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -150,7 +150,7 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 			      G_STRUCT_OFFSET (GdaParameterListClass, param_plugin_changed),
 			      NULL, NULL,
 			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
-			      G_TYPE_OBJECT);
+			      GDA_TYPE_PARAMETER);
 	gda_parameter_list_signals[PARAM_ATTR_CHANGED] =
 		g_signal_new ("param_attr_changed",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -158,7 +158,7 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 			      G_STRUCT_OFFSET (GdaParameterListClass, param_attr_changed),
 			      NULL, NULL,
 			      gda_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
-			      G_TYPE_OBJECT);
+			      GDA_TYPE_PARAMETER);
 	gda_parameter_list_signals[PUBLIC_DATA_CHANGED] =
 		g_signal_new ("public_data_changed",
 			      G_TYPE_FROM_CLASS (object_class),
