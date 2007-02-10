@@ -748,7 +748,7 @@ gda_dict_field_set_attributes (GdaDictField *field, GdaDictFieldAttribute attrib
  *
  * Returns: the new attributes value
  */
-guint
+GdaDictFieldAttribute
 gda_dict_field_get_attributes (GdaDictField *field)
 {
 	g_return_val_if_fail (field && GDA_IS_DICT_FIELD (field), 0);
