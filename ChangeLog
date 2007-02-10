@@ -1,3 +1,10 @@
+2007-02-10  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-query.c: Replaced some explicit type checks to
+	GDA_TYPE_QUERY_FIELD_FIELD and GDA_TYPE_QUERY_FIELD_ALL by
+	GDA_IS_QUERY_FIELD_FIELD respectively GDA_IS_QUERY_FIELD_ALL to allow
+	derived types to be a value provider for GdaQueryFieldField.
+
 2007-02-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* configure.in:

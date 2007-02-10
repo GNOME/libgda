@@ -4864,7 +4864,7 @@ assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, 
 		list = query->priv->fields;
 		while (list && retval) {
 			if (gda_query_field_is_visible (GDA_QUERY_FIELD (list->data))) {
-				if (G_OBJECT_TYPE (list->data) != GDA_TYPE_QUERY_FIELD_FIELD) {
+				if (!GDA_IS_QUERY_FIELD_FIELD (list->data)) {
 					g_set_error (error,
 						     GDA_QUERY_ERROR,
 						     GDA_QUERY_RENDER_ERROR,
@@ -4908,8 +4908,8 @@ assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, 
 					GdaObject *value_prov;
 					g_object_get (G_OBJECT (list->data), "value_provider", &value_prov, NULL);
 					if (value_prov && 
-					    ((G_OBJECT_TYPE (value_prov) == GDA_TYPE_QUERY_FIELD_FIELD) ||
-					     (G_OBJECT_TYPE (value_prov) == GDA_TYPE_QUERY_FIELD_ALL))) {
+					    (GDA_IS_QUERY_FIELD_FIELD (value_prov) ||
+					    (GDA_IS_QUERY_FIELD_ALL (value_prov)))) {
 						g_set_error (error,
 							     GDA_QUERY_ERROR,
 							     GDA_QUERY_RENDER_ERROR,
@@ -4959,7 +4959,7 @@ assert_coherence_data_modify_query (GdaQuery *query, GdaParameterList *context, 
 				GdaObject *value_prov;
 				g_object_get (G_OBJECT (list->data), "value_provider", &value_prov, NULL);
 				if (value_prov && 
-				    (G_OBJECT_TYPE (value_prov) == GDA_TYPE_QUERY_FIELD_ALL)) {
+				    (GDA_IS_QUERY_FIELD_ALL (value_prov))) {
 					g_set_error (error,
 						     GDA_QUERY_ERROR,
 						     GDA_QUERY_RENDER_ERROR,
