@@ -22,7 +22,7 @@
 
 #include "gda-data-model-import.h"
 #include <unistd.h>
-#ifndef _WIN32
+#ifndef G_OS_WIN32
   #include <sys/mman.h>
 #else
   #include <windows.h>
@@ -320,7 +320,7 @@ gda_data_model_import_dispose (GObject *object)
 		/* data access mem free */
 		if (model->priv->is_mapped) {
 			if (model->priv->src.mapped.start) {
-#ifndef _WIN32
+#ifndef G_OS_WIN32
 				munmap (model->priv->src.mapped.start, model->priv->src.mapped.length);
 #else
 				UnmapViewOfFile (model->priv->src.mapped.start);
@@ -499,7 +499,7 @@ gda_data_model_import_set_property (GObject *object,
 					return;
 				}
 				model->priv->src.mapped.length = _stat.st_size;
-#ifndef _WIN32
+#ifndef G_OS_WIN32
 				model->priv->src.mapped.start = mmap (NULL, model->priv->src.mapped.length,
 								      PROT_READ, MAP_PRIVATE, 
 								      model->priv->src.mapped.fd, 0);

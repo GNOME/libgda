@@ -1,3 +1,9 @@
+2007-02-11  Brecht Sanders <brecht@edustria.be>
+
+	* libgda/gda-data-model-import.c: (gda_data_model_import_dispose),
+	(gda_data_model_import_set_property): Check for the G_OS_WIN32 #define 
+	instead of _WIN32. This is apparently more reliable/correct.
+
 2007-02-10  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-dict-field.c:
