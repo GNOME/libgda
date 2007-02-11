@@ -62,6 +62,9 @@ static void changed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 static void restrict_changed_param_cb (GdaParameter *param, GdaParameterList *dataset);
 static void notify_param_cb (GdaParameter *param, GParamSpec *pspec, GdaParameterList *dataset);
 
+static void compute_public_data (GdaParameterList *paramlist);
+static void gda_parameter_list_real_add_param (GdaParameterList *paramlist, GdaParameter *param);
+
 #ifdef GDA_DEBUG
 static void gda_parameter_list_dump                     (GdaParameterList *paramlist, guint offset);
 #endif
@@ -79,6 +82,13 @@ enum
 	LAST_SIGNAL
 };
 
+/* properties */
+enum
+{
+	PROP_0,
+	PROP_PARAMS
+};
+
 static gint gda_parameter_list_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
 
 
@@ -92,7 +102,50 @@ struct _GdaParameterListPrivate
 	GHashTable *param_repl;                /* key = parameter, value = parameter used instead because of similarity */
 };
 
+static void 
+gda_parameter_list_set_property (GObject *object,
+			 guint param_id,
+			 const GValue *value,
+			 GParamSpec *pspec)
+{
+	GdaParameterList* paramlist;
 
+	paramlist = GDA_PARAMETER_LIST (object);
+
+	switch (param_id) {
+		case PROP_PARAMS: 
+		{
+			/* add the parameters */
+			GSList* params = (GSList*) g_value_get_pointer(value);
+			while (params) {
+				gda_parameter_list_real_add_param (paramlist, GDA_PARAMETER (params->data));
+				params = g_slist_next (params);
+			}
+			compute_public_data (paramlist);	
+			break;
+		}
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
+	}
+}
+
+static void
+gda_parameter_list_get_property (GObject *object,
+			 guint param_id,
+			 GValue *value,
+			 GParamSpec *pspec)
+{
+	GdaParameterList* paramlist;
+
+	paramlist = GDA_PARAMETER_LIST (object);
+
+	switch (param_id) {
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
+	}
+}
 
 /* module error */
 GQuark gda_parameter_list_error_quark (void)
@@ -172,6 +225,14 @@ gda_parameter_list_class_init (GdaParameterListClass *class)
 	class->param_attr_changed = NULL;
 	class->public_data_changed = NULL;
 
+  /* Properties */
+	object_class->set_property = gda_parameter_list_set_property;
+	object_class->get_property = gda_parameter_list_get_property;
+	g_object_class_install_property (object_class, PROP_PARAMS,
+					 g_param_spec_pointer ("params", "GSList of GdaParameters", 
+							       "Parameters the list should contain", (
+								G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
+  
 	object_class->dispose = gda_parameter_list_dispose;
 	object_class->finalize = gda_parameter_list_finalize;
 
@@ -201,8 +262,28 @@ gda_parameter_list_init (GdaParameterList *paramlist)
 	paramlist->priv->param_repl = g_hash_table_new (NULL, NULL);
 }
 
-static void compute_public_data (GdaParameterList *paramlist);
-static void gda_parameter_list_real_add_param (GdaParameterList *paramlist, GdaParameter *param);
+/**
+ * _gda_parameter_list_get_dict
+ * @params: a list of #GdaParameter objects
+ *
+ * FIXME: Helper method for wrappers
+ * Returns: a GdaDict object
+ */
+
+GdaDict* _gda_parameter_list_get_dict(GSList *params)
+{
+	GdaDict *dict = NULL;
+	/* get a valid GdaDict object */
+	while (params) {
+		if (!dict)
+			dict = gda_object_get_dict (GDA_OBJECT (params->data));
+		else
+			if (dict != gda_object_get_dict (GDA_OBJECT (params->data)))
+				g_warning ("Several parameters don't relate to the same GdaDict object");
+		params = g_slist_next (params);
+	}
+  return dict;
+}
 
 /**
  * gda_parameter_list_new
@@ -220,31 +301,11 @@ gda_parameter_list_new (GSList *params)
 {
 	GObject *obj;
 	GdaParameterList *paramlist;
-	GSList *list;
-	GdaDict *dict = NULL;
 
-	/* get a valid GdaDict object */
-	list = params;
-	while (list) {
-		if (!dict)
-			dict = gda_object_get_dict (GDA_OBJECT (list->data));
-		else
-			if (dict != gda_object_get_dict (GDA_OBJECT (list->data)))
-				g_warning ("Several parameters don't relate to the same GdaDict object");
-
-		list = g_slist_next (list);
-	}
-
-	obj = g_object_new (GDA_TYPE_PARAMETER_LIST, "dict", dict, NULL);
-        paramlist = GDA_PARAMETER_LIST (obj);
-
-	/* add the parameters */
-	while (params) {
-		gda_parameter_list_real_add_param (paramlist, GDA_PARAMETER (params->data));
-		params = g_slist_next (params);
-	}
-	compute_public_data (paramlist);
-
+	obj = g_object_new (GDA_TYPE_PARAMETER_LIST, "dict", _gda_parameter_list_get_dict(params), 
+											"params", params, NULL);
+  paramlist = GDA_PARAMETER_LIST (obj);
+	
 	return paramlist;
 }
 

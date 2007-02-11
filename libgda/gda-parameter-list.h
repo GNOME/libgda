@@ -168,6 +168,8 @@ void                    gda_parameter_list_set_param_default_alias  (GdaParamete
 								     GdaParameter *param, GdaParameter *alias);
 const GValue           *gda_parameter_list_get_param_default_value  (GdaParameterList *paramlist, GdaParameter *param);
 
+GdaDict* _gda_parameter_list_get_dict(GSList *params);
+
 G_END_DECLS
 
 #endif

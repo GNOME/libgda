@@ -1,3 +1,13 @@
+2007-02-12  Johannes Schmid <johannes.schmid@openismus.com>
+
+	* libgda/gda-parameter-list.c: (gda_parameter_list_set_property),
+	(gda_parameter_list_get_property), (gda_parameter_list_class_init),
+	(_gda_parameter_list_get_dict), (gda_parameter_list_new):
+	* libgda/gda-parameter-list.h:
+	
+	Added a new construct property "params" to gda-parameter-list to allow wrapping with
+	C++ and added a new private method to be able to do some initialisation.
+
 2007-02-11  Brecht Sanders <brecht@edustria.be>
 
 	* libgda/gda-data-model-import.c: (gda_data_model_import_dispose),
