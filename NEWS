@@ -1,3 +1,10 @@
+libgda 2.99.5, 2007-02-12
+
+ - Correct a linker error when using the (recently renamed to) 
+   gda_query_field_value_get_is_parameter() function.
+   I'm doing a quick extra release because I imagine that the effects of using 
+   an implicitly-declared function could be odd.
+ 
 libgda 2.99.4, 2007-02-12
 
  - GdaQuery: Renamed gda_query_is_modif_query() to gda_query_is_modify_query().

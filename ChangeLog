@@ -1,3 +1,5 @@
+2.99.5:
+
 2007-02-12  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-graphviz.c: (render_qf_value_label):
