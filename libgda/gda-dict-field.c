@@ -58,7 +58,8 @@ static gboolean    gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePt
 /* GdaEntityField interface */
 static void           gda_dict_field_field_init       (GdaEntityFieldIface *iface);
 static GdaEntity      *gda_dict_field_get_entity      (GdaEntityField *iface);
-static GdaDictType    *gda_dict_field_get_data_type   (GdaEntityField *iface);
+static GdaDictType    *gda_dict_field_get_dict_type   (GdaEntityField *iface);
+static void           gda_dict_field_set_dict_type   (GdaEntityField *iface, GdaDictType *type);
 
 /* Renderer interface */
 static void            gda_dict_field_renderer_init   (GdaRendererIface *iface);
@@ -81,14 +82,15 @@ enum
 {
 	PROP_0,
 	PROP_DB_TABLE,
-	PROP_PLUGIN
+	PROP_PLUGIN,
+	PROP_DICT_TYPE
 };
 
 
 /* private structure */
 struct _GdaDictFieldPrivate
 {
-	GdaDictType     *data_type;
+	GdaDictType     *dict_type;
 	GdaDictTable    *table;
 	gint             length;     /* -1 if not applicable */
 	gint             scale;      /* 0 if not applicable */
@@ -164,7 +166,8 @@ static void
 gda_dict_field_field_init (GdaEntityFieldIface *iface)
 {
 	iface->get_entity = gda_dict_field_get_entity;
-	iface->get_data_type = gda_dict_field_get_data_type;
+	iface->get_dict_type = gda_dict_field_get_dict_type;
+	iface->set_dict_type = gda_dict_field_set_dict_type;
 }
 
 static void
@@ -207,7 +210,7 @@ gda_dict_field_init (GdaDictField * gda_dict_field)
 {
 	gda_dict_field->priv = g_new0 (GdaDictFieldPrivate, 1);
 	gda_dict_field->priv->table = NULL;
-	gda_dict_field->priv->data_type = NULL;
+	gda_dict_field->priv->dict_type = NULL;
 	gda_dict_field->priv->length = -1;
 	gda_dict_field->priv->scale = 0;
 	gda_dict_field->priv->extra_attrs = 0;
@@ -238,7 +241,7 @@ gda_dict_field_new (GdaDict *dict, GdaDictType *type)
 	gda_dict_field = GDA_DICT_FIELD (obj);
 
 	if (type)
-		gda_dict_field_set_dict_type (gda_dict_field, type);
+		gda_dict_field_set_dict_type (GDA_ENTITY_FIELD(gda_dict_field), type);
 	
 	return obj;
 }
@@ -266,11 +269,11 @@ gda_dict_field_dispose (GObject *object)
 							      G_CALLBACK (destroyed_object_cb), gda_dict_field);
 			gda_dict_field->priv->table = NULL;
 		}
-		if (gda_dict_field->priv->data_type) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (gda_dict_field->priv->data_type),
+		if (gda_dict_field->priv->dict_type) {
+			g_signal_handlers_disconnect_by_func (G_OBJECT (gda_dict_field->priv->dict_type),
 							      G_CALLBACK (destroyed_object_cb), gda_dict_field);
-			g_object_unref (gda_dict_field->priv->data_type);
-			gda_dict_field->priv->data_type = NULL;
+			g_object_unref (gda_dict_field->priv->dict_type);
+			gda_dict_field->priv->dict_type = NULL;
 		}
 	}
 
@@ -480,32 +483,6 @@ gda_dict_field_get_constraints (GdaDictField *field)
 	return retval;
 }
 
-/**
-* gda_dict_field_set_dict_type
-* @field: a #GdaDictField  object
-* @type: a #GdaDictType object
-*
-* Sets the data type of the field
-*/
-void
-gda_dict_field_set_dict_type (GdaDictField *field, GdaDictType *type)
-{
-	g_return_if_fail (field && GDA_IS_DICT_FIELD (field));
-	g_return_if_fail (field->priv);
-	g_return_if_fail (type && GDA_IS_DICT_TYPE (type));
-
-	if (field->priv->data_type != type) {
-		if (field->priv->data_type)
-			g_signal_handlers_disconnect_by_func (G_OBJECT (field->priv->data_type),
-							      G_CALLBACK (destroyed_object_cb), field);
-		field->priv->data_type = type;
-		g_object_ref (type);
-		gda_object_connect_destroy (type, G_CALLBACK (destroyed_object_cb), field);
-		
-		/* signal the modification */
-		gda_object_signal_emit_changed (GDA_OBJECT (field));
-	}
-}
 
 
 /**
@@ -796,12 +773,36 @@ gda_dict_field_get_entity (GdaEntityField *iface)
 }
 
 static GdaDictType *
-gda_dict_field_get_data_type (GdaEntityField *iface)
+gda_dict_field_get_dict_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_DICT_FIELD (iface), NULL);
 	g_return_val_if_fail (GDA_DICT_FIELD (iface)->priv, NULL);
 
-	return GDA_DICT_FIELD (iface)->priv->data_type;
+	return GDA_DICT_FIELD (iface)->priv->dict_type;
+}
+
+static void
+gda_dict_field_set_dict_type (GdaEntityField *iface, GdaDictType *type)
+{
+	GdaDictField *field;
+	
+	field = GDA_DICT_FIELD (iface);
+	
+	g_return_if_fail (field && GDA_IS_DICT_FIELD (field));
+	g_return_if_fail (field->priv);
+	g_return_if_fail (type && GDA_IS_DICT_TYPE (type));
+
+	if (field->priv->dict_type != type) {
+		if (field->priv->dict_type)
+			g_signal_handlers_disconnect_by_func (G_OBJECT (field->priv->dict_type),
+							      G_CALLBACK (destroyed_object_cb), field);
+		field->priv->dict_type = type;
+		g_object_ref (type);
+		gda_object_connect_destroy (type, G_CALLBACK (destroyed_object_cb), field);
+		
+		/* signal the modification */
+		gda_object_signal_emit_changed (GDA_OBJECT (field));
+	}
 }
 
 /* 
@@ -845,7 +846,7 @@ gda_dict_field_save_to_xml (GdaXmlStorage *iface, GError **error)
 	if (gda_object_get_owner (GDA_OBJECT (field)))
 		xmlSetProp(node, (xmlChar*)"owner", (xmlChar*)gda_object_get_owner (GDA_OBJECT (field)));
 	xmlSetProp(node, (xmlChar*)"descr", (xmlChar*)gda_object_get_description (GDA_OBJECT (field)));
-	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (field->priv->data_type));
+	str = gda_xml_storage_get_xml_id (GDA_XML_STORAGE (field->priv->dict_type));
 	xmlSetProp(node, (xmlChar*)"type", (xmlChar*)str);
 	g_free (str);
 	str = g_strdup_printf ("%d", field->priv->length);
@@ -926,7 +927,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 		if ((*prop == 'D') && prop+1 && (*(prop+1) == 'T')) {
 			GdaDictType *dt = gda_dict_get_dict_type_by_xml_id (dict, prop);
 			if (dt) 
-				gda_dict_field_set_dict_type (field, dt);
+				gda_dict_field_set_dict_type (GDA_ENTITY_FIELD(field), dt);
 			else {
 				/* create a new custom data type */
 				gchar *tmp, *tmp2;
@@ -948,7 +949,7 @@ gda_dict_field_load_from_xml (GdaXmlStorage *iface, xmlNodePtr node, GError **er
 				gda_object_set_description (GDA_OBJECT (dt), tmp2);
 				g_free (tmp2);
 				gda_dict_declare_object (dict, GDA_OBJECT(dt));
-				gda_dict_field_set_dict_type (field, dt);
+				gda_dict_field_set_dict_type (GDA_ENTITY_FIELD (field), dt);
 				g_object_unref (dt);
 			}
 			type = TRUE;

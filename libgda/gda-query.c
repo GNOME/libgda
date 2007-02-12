@@ -1446,7 +1446,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 					/* create the #GdaQueryFieldValue fields */
 					field = GDA_QUERY_FIELD (gda_query_field_value_new (query, gtype));
 					if (dtype)
-						gda_query_field_value_set_dict_type (GDA_QUERY_FIELD_VALUE (field), dtype);
+						gda_entity_field_set_dict_type (GDA_ENTITY_FIELD (field), dtype);
 					gda_query_field_set_internal (field, TRUE);
 					gda_query_field_set_visible (field, FALSE);
 					gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (field));

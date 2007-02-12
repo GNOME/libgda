@@ -1,3 +1,14 @@
+2007-02-12 Daniel Espinosa <esodan@gmail.com>
+
+    	* libgda/gda-query-field-value.c: Added the is_parameter property to GdaQueryFieldValue Object,
+    	API change: gda_query_field_is_parameter to gda_query_field_get_is_parameter
+    	* libgda/gda-entity-field.c: 
+    	* libgda/gda-query-field-*:
+    	Changed virtual reference from (*get_data_type) to (*get_dict_type)
+    	* libgda/gda-query-field-value: Deleted a duplicated method gda_query_field_value_get_data_type and
+    	gda_query_field_value_get_g_type, becouse this object implements GdaEntityField interface
+    	* gda-sharp: API updates, added missing reference to libraries
+
 2007-02-12  Johannes Schmid <johannes.schmid@openismus.com>
 
 	* libgda/gda-parameter-list.c: (gda_parameter_list_set_property),

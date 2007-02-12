@@ -742,7 +742,7 @@ gda_server_provider_blob_list_for_update (GdaConnection *cnc, GdaQuery *query, G
 		
 		g_object_get (G_OBJECT (list->data), "value_provider", &fvalue, NULL);
 		if (GDA_IS_QUERY_FIELD_VALUE (fvalue)) {
-			if (gda_query_field_value_get_g_type (fvalue) == GDA_TYPE_BLOB)
+			if (gda_entity_field_get_g_type (GDA_ENTITY_FIELD (fvalue)) == GDA_TYPE_BLOB)
 				blob_value_prov_fields = g_slist_append (blob_value_prov_fields, list->data);
 		}
 		g_object_unref (fvalue);

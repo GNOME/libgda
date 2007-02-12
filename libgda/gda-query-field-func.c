@@ -58,7 +58,7 @@ static gboolean    gda_query_field_func_load_from_xml (GdaXmlStorage *iface, xml
 /* Field interface */
 static void              gda_query_field_func_field_init      (GdaEntityFieldIface *iface);
 static GdaEntity         *gda_query_field_func_get_entity      (GdaEntityField *iface);
-static GdaDictType *gda_query_field_func_get_data_type   (GdaEntityField *iface);
+static GdaDictType *gda_query_field_func_get_dict_type   (GdaEntityField *iface);
 
 /* Renderer interface */
 static void            gda_query_field_func_renderer_init   (GdaRendererIface *iface);
@@ -184,7 +184,7 @@ static void
 gda_query_field_func_field_init (GdaEntityFieldIface *iface)
 {
 	iface->get_entity = gda_query_field_func_get_entity;
-	iface->get_data_type = gda_query_field_func_get_data_type;
+	iface->get_dict_type = gda_query_field_func_get_dict_type;
 }
 
 static void
@@ -713,7 +713,7 @@ gda_query_field_func_get_entity (GdaEntityField *iface)
 }
 
 static GdaDictType *
-gda_query_field_func_get_data_type (GdaEntityField *iface)
+gda_query_field_func_get_dict_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_FUNC (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_FIELD_FUNC (iface)->priv, NULL);

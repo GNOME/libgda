@@ -61,8 +61,9 @@ static gboolean    gda_query_field_value_load_from_xml (GdaXmlStorage *iface, xm
 /* Field interface */
 static void               gda_query_field_value_field_init      (GdaEntityFieldIface *iface);
 static GdaEntity         *gda_query_field_value_get_entity      (GdaEntityField *iface);
-static GType              gda_query_field_value_get_ig_type    (GdaEntityField *iface);
-static GdaDictType       *gda_query_field_value_get_data_type   (GdaEntityField *iface);
+static GType              gda_query_field_value_get_g_type      (GdaEntityField *iface);
+static GdaDictType       *gda_query_field_value_get_dict_type   (GdaEntityField *iface);
+static void               gda_query_field_value_set_dict_type   (GdaEntityField *iface, GdaDictType *type);
 
 /* Renderer interface */
 static void            gda_query_field_value_renderer_init      (GdaRendererIface *iface);
@@ -104,7 +105,8 @@ enum
 	PROP_GDA_TYPE,
 	PROP_RESTRICT_MODEL,
         PROP_RESTRICT_COLUMN,
-	PROP_ENTRY_PLUGIN
+	PROP_ENTRY_PLUGIN,
+	PROP_IS_PARAMETER
 };
 
 
@@ -201,8 +203,8 @@ static void
 gda_query_field_value_field_init (GdaEntityFieldIface *iface)
 {
 	iface->get_entity = gda_query_field_value_get_entity;
-	iface->get_g_type = gda_query_field_value_get_ig_type;
-	iface->get_data_type = gda_query_field_value_get_data_type;
+	iface->get_g_type = gda_query_field_value_get_g_type;
+	iface->get_dict_type = gda_query_field_value_get_dict_type;
 }
 
 static void
@@ -255,6 +257,9 @@ gda_query_field_value_class_init (GdaQueryFieldValueClass * class)
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_ENTRY_PLUGIN,
                                          g_param_spec_string ("entry_plugin", NULL, NULL, NULL,
+                                                              (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+    g_object_class_install_property (object_class, PROP_IS_PARAMETER,
+                                         g_param_spec_boolean ("is_parameter", NULL, NULL, FALSE,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	/* virtual functions */
 #ifdef GDA_DEBUG
@@ -480,7 +485,7 @@ gda_query_field_value_copy (GdaQueryField *orig)
 	obj = (GObject *) nqf;
 
 	if (qf->priv->dict_type)
-		gda_query_field_value_set_dict_type (nqf, qf->priv->dict_type);
+		gda_query_field_value_set_dict_type (GDA_ENTITY_FIELD(nqf), qf->priv->dict_type);
 
 	if (qf->priv->value)
 		nqf->priv->value = gda_value_copy (qf->priv->value);
@@ -624,22 +629,6 @@ gda_query_field_value_get_default_value (GdaQueryFieldValue *field)
 	return field->priv->default_value;
 }
 
-/**
- * gda_query_field_value_get_g_type
- * @field: a #GdaQueryFieldValue object
- *
- * Get the GDA type of value stored within @field
- *
- * Returns: the type
- */
-GType
-gda_query_field_value_get_g_type (GdaQueryFieldValue *field)
-{
-	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), G_TYPE_INVALID);
-	g_return_val_if_fail (field->priv, G_TYPE_INVALID);
-
-	return field->priv->g_type;
-}
 
 /**
  * gda_query_field_value_set_is_parameter
@@ -844,63 +833,8 @@ destroyed_restrict_cb (GdaObject *obj, GdaQueryFieldValue *field)
 }
 
 
-/**
- * gda_query_field_value_set_dict_type
- * @field: a #GdaQueryFieldValue object
- * @type: a #GdaDictType object, or %NULL
- *
- * Set the #GdaDictType type of @field
- */
-void
-gda_query_field_value_set_dict_type (GdaQueryFieldValue *field, GdaDictType *type)
-{
-	g_return_if_fail (GDA_IS_QUERY_FIELD_VALUE (field));
-	g_return_if_fail (field->priv);
-	if (type)
-		g_return_if_fail (GDA_IS_DICT_TYPE (type));
 
-	if (type == field->priv->dict_type)
-		return;
 
-	/* get rid of the old data type */
-	if (field->priv->dict_type) {
-		g_signal_handlers_disconnect_by_func (field->priv->dict_type,
-						      G_CALLBACK (destroyed_type_cb), field);
-		field->priv->dict_type = NULL;
-	}
-	
-	if (type) {
-		/* setting the new data type */
-		field->priv->dict_type = type;
-		gda_object_connect_destroy (type,
-					    G_CALLBACK (destroyed_type_cb), field);
-		
-		if (field->priv->g_type != gda_dict_type_get_g_type (type)) {
-			g_warning ("GdaQueryFieldValue: setting to GDA type incompatible dict type");
-			field->priv->g_type = gda_dict_type_get_g_type (type);
-		}
-	}
-
-	/* signal a change */
-	gda_object_signal_emit_changed (GDA_OBJECT (field));
-}
-
-/**
- * gda_query_field_value_get_dict_type
- * @field: a #GdaQueryFieldValue object
- *
- * Get the #GdaDictType type of @field
- *
- * Returns: the #GdaDictType type
- */
-GdaDictType *
-gda_query_field_value_get_dict_type (GdaQueryFieldValue *field)
-{
-	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), NULL);
-	g_return_val_if_fail (field->priv, NULL);
-
-	return field->priv->dict_type;
-}
 
 /**
  * gda_query_field_value_get_parameter_index
@@ -1009,7 +943,7 @@ gda_query_field_value_get_entity (GdaEntityField *iface)
 }
 
 static GType
-gda_query_field_value_get_ig_type (GdaEntityField *iface)
+gda_query_field_value_get_g_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), G_TYPE_INVALID);
 	g_return_val_if_fail (GDA_QUERY_FIELD_VALUE (iface)->priv, G_TYPE_INVALID);
@@ -1018,13 +952,52 @@ gda_query_field_value_get_ig_type (GdaEntityField *iface)
 }
 
 static GdaDictType *
-gda_query_field_value_get_data_type (GdaEntityField *iface)
+gda_query_field_value_get_dict_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_QUERY_FIELD_VALUE (iface), NULL);
 	g_return_val_if_fail (GDA_QUERY_FIELD_VALUE (iface)->priv, NULL);
 
 	return GDA_QUERY_FIELD_VALUE (iface)->priv->dict_type;
 }
+
+static void
+gda_query_field_value_set_dict_type (GdaEntityField *iface, GdaDictType *type)
+{
+	GdaQueryFieldValue *field;
+	
+	field = GDA_QUERY_FIELD_VALUE (iface);
+	
+	g_return_if_fail (GDA_IS_QUERY_FIELD_VALUE (field));
+	g_return_if_fail (field->priv);
+	if (type)
+		g_return_if_fail (GDA_IS_DICT_TYPE (type));
+
+	if (type == field->priv->dict_type)
+		return;
+
+	/* get rid of the old data type */
+	if (field->priv->dict_type) {
+		g_signal_handlers_disconnect_by_func (field->priv->dict_type,
+						      G_CALLBACK (destroyed_type_cb), field);
+		field->priv->dict_type = NULL;
+	}
+	
+	if (type) {
+		/* setting the new data type */
+		field->priv->dict_type = type;
+		gda_object_connect_destroy (type,
+					    G_CALLBACK (destroyed_type_cb), field);
+		
+		if (field->priv->g_type != gda_dict_type_get_g_type (type)) {
+			g_warning ("GdaQueryFieldValue: setting to GDA type incompatible dict type");
+			field->priv->g_type = gda_dict_type_get_g_type (type);
+		}
+	}
+
+	/* signal a change */
+	gda_object_signal_emit_changed (GDA_OBJECT (field));
+}
+
 
 /* 
  * GdaXmlStorage interface implementation

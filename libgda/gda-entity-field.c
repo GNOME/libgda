@@ -84,7 +84,7 @@ gda_entity_field_get_entity (GdaEntityField *iface)
  * gda_entity_field_get_dict_type
  * @iface: an object which implements the #GdaEntityField interface
  *
- * Get the data type of the object implementing the #GdaEntityField interface
+ * Get the dict type of the object implementing the #GdaEntityField interface
  *
  * Returns: the corresponding #GdaDictType
  */
@@ -93,8 +93,26 @@ gda_entity_field_get_dict_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_ENTITY_FIELD (iface), NULL);
 
-	if (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_data_type)
-		return (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_data_type) (iface);
+	if (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_dict_type)
+		return (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_dict_type) (iface);
+	
+	return NULL;
+}
+
+/**
+ * gda_entity_field_set_dict_type
+ * @iface: an object which implements the #GdaEntityField interface
+ * @type: a GdaDictType to set to.
+ *
+ * Set the dict type of the object implementing the #GdaEntityField interface
+ */
+void
+gda_entity_field_set_dict_type (GdaEntityField *iface, GdaDictType *type)
+{
+	g_return_val_if_fail (iface && GDA_IS_ENTITY_FIELD (iface), NULL);
+
+	if (GDA_ENTITY_FIELD_GET_IFACE (iface)->set_dict_type)
+		return (GDA_ENTITY_FIELD_GET_IFACE (iface)->set_dict_type) (iface, type);
 	
 	return NULL;
 }
@@ -112,9 +130,9 @@ gda_entity_field_get_g_type (GdaEntityField *iface)
 {
 	g_return_val_if_fail (iface && GDA_IS_ENTITY_FIELD (iface), G_TYPE_INVALID);
 
-	if (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_data_type) {
+	if (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_dict_type) {
 		GdaDictType *type;	
-		type = (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_data_type) (iface);
+		type = (GDA_ENTITY_FIELD_GET_IFACE (iface)->get_dict_type) (iface);
 
 		if (type)
 			return gda_dict_type_get_g_type (type);

@@ -1664,7 +1664,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	 */
 	qfield = (GdaEntityField *) gda_query_field_value_new (query, gdatype);
 	if (real_type)
-		gda_query_field_value_set_dict_type (GDA_QUERY_FIELD_VALUE (qfield), real_type);
+		gda_entity_field_set_dict_type (GDA_ENTITY_FIELD (qfield), real_type);
 	if (unspecvalue) 
 		/* value MUST BE a parameter */
 		gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (qfield), TRUE);

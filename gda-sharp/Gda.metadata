@@ -3,10 +3,13 @@
   <attr path="/api/namespace/class[@name='Main']" name="hidden">1</attr>
   <attr path="/api/namespace/class[@cname='GType_']" name="hidden">1</attr>
   <attr path="/api/namespace/class[@name='Value']" name="hidden">1</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/method[@name='Foreach']/*/*[@name='func']" name="scope">call</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='BeginUpdate']" name="name">BeganUpdate</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='CancelUpdate']" name="name">CanceledUpdate</attr>
-  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='CommitUpdate']" name="name">CommittedUpdate</attr>
+  <attr path="/api/namespace/interface[@cname='GdaDataModel']" name="name">IGdaDataModel</attr>
+  <attr path="/api/namespace/interface[@cname='GdaEntity']" name="name">IEntity</attr>
+  <attr path="/api/namespace/interface[@cname='GdaXmlStorage']" name="name">IXmlStorage</attr>
+  <attr path="/api/namespace/interface[@cname='GdaDataHandler']" name="name">IDataHandler</attr>
+  <attr path="/api/namespace/interface[@cname='GdaEntityField']" name="name">IEntityField</attr>
+  <attr path="/api/namespace/interface[@cname='GdaReferer']" name="name">IReferer</attr>
+  <attr path="/api/namespace/interface[@cname='GdaRenderer']" name="name">IRenderer</attr>
   <attr path="/api/namespace/object[@cname='GdaDataModelArray']/method[@name='SetNColumns']" name="new_flag">1</attr>
   <attr path="/api/namespace/object[@cname='GdaDataModelHash']/method[@name='SetNColumns']" name="new_flag">1</attr>
   <attr path="/api/namespace/object[@cname='GdaQueryFieldValue']/method[@name='IsParameter']" name="name">GetIsParameter</attr>
@@ -18,5 +21,24 @@
   <attr path="/api/namespace/object[@cname='GdaDictType']/method[@name='SetGType']" name="name">SetValueType</attr>
   <attr path="/api/namespace/object[@cname='GdaDictType']/method[@name='GetGType']" name="name">GetValueType</attr>
   <attr path="/api/namespace/struct[@cname='GdaServerProviderHandlerInfo']/field[@name='GType']" name="name">ValueType</attr>
+  <attr path="/api/namespace/object[@cname='GdaDictTable']/method[@name='IsView']" name="name">GetIsView</attr>
+  <add-node path="/api/namespace/object[@cname='GdaDictTable']/implements"><interface cname="GdaEntity" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQuery']/implements"><interface cname="GdaXmlStorage" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQuery']/implements"><interface cname="GdaRenderer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryCondition']/implements"><interface cname="GdaRenderer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryTarget']/implements"><interface cname="GdaReferer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryJoin']/implements"><interface cname="GdaReferer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldValue']/implements"><interface cname="GdaEntityField" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldValue']/implements"><interface cname="GdaReferer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldFunc']/implements"><interface cname="GdaEntityField" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldFunc']/implements"><interface cname="GdaReferer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldField']/implements"><interface cname="GdaEntityField" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldField']/implements"><interface cname="GdaReferer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldAll']/implements"><interface cname="GdaEntityField" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldAll']/implements"><interface cname="GdaReferer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldAgg']/implements"><interface cname="GdaEntityField" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaQueryFieldAgg']/implements"><interface cname="GdaReferer" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaDictField']/implements"><interface cname="GdaEntityField" /></add-node>
+  <add-node path="/api/namespace/object[@cname='GdaDictReferer']/implements"><interface cname="GdaReferer" /></add-node>
 </metadata>
 
