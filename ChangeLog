@@ -1,6 +1,12 @@
+2007-02-12 Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-query-field-value.c:
+	(gda_query_field_value_get_is_parameter): Rename the function here, instead of just 
+	renaming it in the header file, to fix the linker error when trying to use this function.
+
 2.99.4:
 
-2007-02-12  Murray Cumming,  <murrayc@murrayc.com>
+2007-02-12  Murray Cumming  <murrayc@murrayc.com>
 
 	* INSTALL: Added this file to svn.
 	* Makefile.am: Always mention gda-sharp in SUBDIRS so that its contents can be included in 

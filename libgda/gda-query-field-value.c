@@ -656,7 +656,7 @@ gda_query_field_value_set_is_parameter (GdaQueryFieldValue *field, gboolean is_p
  * Returns: TRUE if @field can be considered as a parameter
  */
 gboolean
-gda_query_field_value_is_parameter (GdaQueryFieldValue *field)
+gda_query_field_value_get_is_parameter (GdaQueryFieldValue *field)
 {
 	g_return_val_if_fail (GDA_IS_QUERY_FIELD_VALUE (field), FALSE);
 	g_return_val_if_fail (field->priv, FALSE);
