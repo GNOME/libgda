@@ -1,3 +1,50 @@
+libgda 2.99.4, 2007-02-12
+
+ - GdaQuery: Renamed gda_query_is_modif_query() to gda_query_is_modify_query().
+   (Murray Cumming)
+ - GdaQueryFieldValue: Added the is_parameter property 
+   (Daniel Espinosa)
+ - GdaEntityField: Renamed get_data_type() vfunc to get_dict_type().
+   (Daniel Espinosa)
+ - GdaQueryField: Renamed get_data_type() vfunc to get_dict_type().
+   (Daniel Espinosa)
+ - GdaObject: Added the option for GdaObject sub-classes to copy the 
+   "name" property to the "id" one if the "id" is not set (used by the GdaParameter object)
+   (Vivien Malerba)
+ - GdaDataModelQuery:
+   - Correctly detect when it's not possible to get information about columns.
+   - Added a "use_transaction" property to allow the object to start a transaction before 
+     running the modification SQL queries and to end it afterwards (so all the modifications are atomic). 
+   (Vivien Malerba)
+ - GdaDataModel: Added "reset" signal, emitted when the data model has completely changed.
+   (Vivien Malerba)
+ - GdaDataProxy:
+   - Added "re_init_done" signal, emitted when the proxied data model's number of columns changes.
+   - Corrected a bug which prevented any modification to be applied to the proxied data model.
+   - Added gda_data_proxy_get_n_modified_rows().
+   (Vivien Malerba)
+ - Improvements to _new() functions for language bindings, such as C++:
+   GdaParameterList,  (Johannes Schmid, Openismus)
+ - Make type checks more flexible, allowing use of derived GTypes by 
+   language bindings: (Armin Burgmeier, Openismus)
+ - Use enum types instead of guint or gulong for flags, matching the 
+   conventions used in GTK+, and making the API clearer: GdaQuery, GdaObjectRef
+   (Murray Cumming, Openismus)
+ - Use specific types for property and signal parameter registrations, and use specific signal marshallers.
+   This should be more robust, and is needed by language bindings.
+   (Murray Cumming)
+ - Correct all remaining installation location conflicts with libgda 1.2.
+   (Leonardo Boshell)
+ - Correct the check for the gamin version.
+   (Leonardo Boshell)
+ - gda-sharp (mono bindings) updated.
+   (Daniel Espinosa)
+ - Added tests. (Vivien Malerb)
+ - Win32 build improvements. (Brecht Sanders)
+ - MDB provider: Attempt to fix the build for more recent versions of the MDB API.
+   (Murray Cumming)
+
+
 libgda 2.99.3, 2007-01-23
 
  - Build fixes:
