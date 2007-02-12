@@ -800,7 +800,7 @@ render_qf_value_label (GdaGraphviz *graph, GdaQueryFieldValue *field)
 		g_string_append (retval, " |I");
 	else
 		g_string_append (retval, " |-");
-	if (gda_query_field_value_is_parameter (field))
+	if (gda_query_field_value_get_is_parameter (field))
 		g_string_append (retval, " |P}}");
 	else
 		g_string_append (retval, " |-}}");

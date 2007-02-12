@@ -648,7 +648,7 @@ gda_query_field_value_set_is_parameter (GdaQueryFieldValue *field, gboolean is_p
 
 
 /**
- * gda_query_field_value_is_parameter
+ * gda_query_field_value_get_is_parameter
  * @field: a #GdaQueryFieldValue object
  *
  * Tells if @field can be considered as a parameter
@@ -858,7 +858,7 @@ gda_query_field_value_get_parameter_index (GdaQueryFieldValue *field)
 	g_object_get (G_OBJECT (query), "really_all_fields", &fields, NULL);
 	for (list = fields; list; list = list->next) {
 		if (GDA_IS_QUERY_FIELD_VALUE (list->data) && 
-		    gda_query_field_value_is_parameter (GDA_QUERY_FIELD_VALUE (list->data)))
+		    gda_query_field_value_get_is_parameter (GDA_QUERY_FIELD_VALUE (list->data)))
 			index++;
 		if (list->data == (gpointer) field)
 			break;

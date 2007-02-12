@@ -3134,7 +3134,7 @@ gda_query_get_field_by_param_name (GdaQuery *query, const gchar *param_name)
 
 	for (qf = NULL, allfields = query->priv->fields; allfields && !qf; allfields = allfields->next) {
 		qf = GDA_QUERY_FIELD (allfields->data);
-		if (!GDA_IS_QUERY_FIELD_VALUE (qf) || !gda_query_field_value_is_parameter ((GdaQueryFieldValue*) qf))
+		if (!GDA_IS_QUERY_FIELD_VALUE (qf) || !gda_query_field_value_get_is_parameter ((GdaQueryFieldValue*) qf))
 			qf = NULL;
 		else {
 			if (strcmp (gda_object_get_name (GDA_OBJECT (qf)), param_name))

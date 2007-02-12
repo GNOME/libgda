@@ -1,3 +1,12 @@
+2007-02-12  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-graphviz.c: (render_qf_value_label):
+	* libgda/gda-query-field-value.c:
+	(gda_query_field_value_get_parameter_index):
+	* libgda/gda-query-parsing.c: (parsed_create_value_query_field):
+	* libgda/gda-query.c: (gda_query_get_field_by_param_name):
+	Correct the name of gda_query_field_value_get_is_parameter() when used here too.
+
 2007-02-12 Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-query-field-value.c:

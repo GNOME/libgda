@@ -1707,7 +1707,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		}		
 		list = g_list_next (list);
 	}
-	if (! gda_query_field_value_is_parameter (GDA_QUERY_FIELD_VALUE (qfield)))
+	if (! gda_query_field_value_get_is_parameter (GDA_QUERY_FIELD_VALUE (qfield)))
 		gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (qfield), isparam);
 
 	if (new_field)
