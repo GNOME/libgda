@@ -32,7 +32,7 @@ libgda 2.99.4, 2007-02-12
    (Murray Cumming, Openismus)
  - Use specific types for property and signal parameter registrations, and use specific signal marshallers.
    This should be more robust, and is needed by language bindings.
-   (Murray Cumming)
+   (Murray Cumming, Openismus)
  - Correct all remaining installation location conflicts with libgda 1.2.
    (Leonardo Boshell)
  - Correct the check for the gamin version.
