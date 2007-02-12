@@ -1,3 +1,12 @@
+2007-02-12  Murray Cumming,  <murrayc@murrayc.com>
+
+	* INSTALL: Added this file to svn.
+	* Makefile.am: Always mention gda-sharp in SUBDIRS so that its contents can be included in 
+	the dist.
+	* gda-sharp/Makefile.am: Move the if conditional here from Makefile.am, but always dist the 
+	sources, so they always appear in tarballs even if the person making the tarball does not have 
+	mono.
+
 2007-02-12 Daniel Espinosa <esodan@gmail.com>
 
     	* libgda/gda-query-field-value.c: Added the is_parameter property to GdaQueryFieldValue Object,

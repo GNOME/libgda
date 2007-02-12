@@ -9,6 +9,8 @@ ASSEMBLY = $(ASSEMBLY_NAME).dll
 sources = Application.cs
 build_sources = $(addprefix $(srcdir)/, $(sources)) AssemblyInfo.cs 
 
+if BUILD_GDA_SHARP
+
 customs = 
 
 CLEANFILES = gda-sharp.dll generated-stamp generated/*.cs $(API)
@@ -34,6 +36,8 @@ gda-sharp.dll: $(build_sources) generated-stamp
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gda-sharp-3.0.pc
+
+endif
 
 EXTRA_DIST =			\
 	$(GAPI_SOURCE)		\

@@ -36,6 +36,11 @@ to tell from which query field the values will be taken).
 
 </para>
 
+<!-- ##### ARG GdaQueryFieldValue:is-parameter ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG GdaQueryFieldValue:query ##### -->
 <para>
 
@@ -97,15 +102,6 @@ to tell from which query field the values will be taken).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_query_field_value_get_g_type ##### -->
-<para>
-
-</para>
-
-@field: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_query_field_value_set_is_parameter ##### -->
 <para>
 
@@ -113,15 +109,6 @@ to tell from which query field the values will be taken).
 
 @field: 
 @is_param: 
-
-
-<!-- ##### FUNCTION gda_query_field_value_is_parameter ##### -->
-<para>
-
-</para>
-
-@field: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_query_field_value_get_parameter_index ##### -->
@@ -170,24 +157,6 @@ to tell from which query field the values will be taken).
 @model: 
 @col: 
 @error: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_query_field_value_set_dict_type ##### -->
-<para>
-
-</para>
-
-@field: 
-@type: 
-
-
-<!-- ##### FUNCTION gda_query_field_value_get_dict_type ##### -->
-<para>
-
-</para>
-
-@field: 
 @Returns: 
 
 

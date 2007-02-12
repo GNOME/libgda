@@ -82,6 +82,11 @@ gda_query_get_parameter_list()).
 
 @gdaparameterlist: the object which received the signal.
 
+<!-- ##### ARG GdaParameterList:params ##### -->
+<para>
+
+</para>
+
 <!-- ##### ENUM GdaParameterListParamHint ##### -->
 <para>
 

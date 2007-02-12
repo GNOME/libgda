@@ -1,9 +1,5 @@
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 
-if BUILD_GDA_SHARP
-GDA_SHARP_DIRECTORY=gda-sharp
-endif
-
 SUBDIRS = \
 	po \
 	win32 \
@@ -12,7 +8,7 @@ SUBDIRS = \
 	providers \
 	report \
 	tools \
-	$(GDA_SHARP_DIRECTORY) \
+	gda-sharp \
 	tests \
 	testing \
 	data \

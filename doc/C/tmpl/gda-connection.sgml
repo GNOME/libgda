@@ -113,6 +113,7 @@ Management of connections to data sources
 
 </para>
 
+@GDA_CONNECTION_OPTIONS_NONE: 
 @GDA_CONNECTION_OPTIONS_READ_ONLY: 
 @GDA_CONNECTION_OPTIONS_DONT_SHARE: 
 
