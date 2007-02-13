@@ -1,3 +1,8 @@
+2007-02-13  Daniel Nylander <po@danielnylander.se>
+
+	* sv.po: Updated Swedish translation.
+	* POTFILES.in: Added missing files.
+
 2007-01-03  David Lodge <dave@cirt.net>
 
 	* en_GB.po: Updated English (British) translation
