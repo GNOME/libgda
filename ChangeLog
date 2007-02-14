@@ -1,3 +1,8 @@
+2007-02-14  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-dict-database.h: Changed type of msg parameter in
+	update_progress signal handler from gchar * to const gchar *.
+
 2.99.5:
 
 2007-02-12  Murray Cumming  <murrayc@murrayc.com>

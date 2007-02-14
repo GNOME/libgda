@@ -74,7 +74,7 @@ struct _GdaDictDatabaseClass
 	void   (*constraint_updated)        (GdaDictDatabase *obj, GdaDictConstraint *cstr);
 	
 	void   (*data_update_started)       (GdaDictDatabase *obj);
-	void   (*update_progress)           (GdaDictDatabase *obj, gchar * msg, guint now, guint total);
+	void   (*update_progress)           (GdaDictDatabase *obj, const gchar * msg, guint now, guint total);
 	void   (*data_update_finished)      (GdaDictDatabase *obj);
 
 	gpointer reserved1;
