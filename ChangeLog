@@ -1,3 +1,11 @@
+2007-02-15  Leonardo Boshell  <lb@kmc.com.co>
+
+	* gda-sharp/Gda.metadata:
+	* gda-sharp/gda-api.raw: Updated the .raw file due to recent API
+	changes, and fixed a conflict in the name resolution of the "reset"
+	signal with the _reset() function in GdaDataModel. Fixes the compilation
+	of the C# bindings as described on bug #407064.
+
 2007-02-15  Murray Cumming  <murrayc@murrayc.com>
 
 	* doc/C/libgda-3.0-docs.sgml:

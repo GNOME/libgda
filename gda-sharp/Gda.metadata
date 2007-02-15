@@ -4,6 +4,7 @@
   <attr path="/api/namespace/class[@cname='GType_']" name="hidden">1</attr>
   <attr path="/api/namespace/class[@name='Value']" name="hidden">1</attr>
   <attr path="/api/namespace/interface[@cname='GdaDataModel']" name="name">IGdaDataModel</attr>
+  <attr path="/api/namespace/interface[@cname='GdaDataModel']/signal[@name='Reset']" name="name">DataReset</attr>
   <attr path="/api/namespace/interface[@cname='GdaEntity']" name="name">IEntity</attr>
   <attr path="/api/namespace/interface[@cname='GdaXmlStorage']" name="name">IXmlStorage</attr>
   <attr path="/api/namespace/interface[@cname='GdaDataHandler']" name="name">IDataHandler</attr>
