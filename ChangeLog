@@ -1,3 +1,17 @@
+2007-02-15  Murray Cumming  <murrayc@murrayc.com>
+
+	* doc/C/libgda-3.0-docs.sgml:
+	* libgda/gda-connection.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-dict-field.c:
+	* libgda/gda-init.c:
+	* libgda/gda-server-provider-extra.c:
+	* providers/oracle/gda-oracle-provider.c: (process_oci_statement):
+	* providers/postgres/gda-postgres-provider.c:
+	(split_and_execute_update_query): Use affect* instead of impact* in 
+	documentation, when referring to rows affected by commands, 
+	because that is more normal English in this context.
+
 2007-02-14  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/gda-dict-database.h: Changed type of msg parameter in

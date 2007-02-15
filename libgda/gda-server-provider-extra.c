@@ -907,8 +907,8 @@ gda_server_provider_blob_list_for_delete (GdaConnection *cnc, GdaQuery *query, G
 /**
  * gda_server_provider_split_update_query
  *
- * When an update query will impact N>1 rows, it can be refined into a new update query which can be executed N times wich
- * will impact one row at a time. This is usefull for providers implementations when dealing with BLOBs where updating
+ * When an update query will affect N>1 rows, it can be refined into a new update query which can be executed N times wich
+ * will affect one row at a time. This is usefull for providers implementations when dealing with BLOBs where updating
  * rows with a blob can be done only one row at a time.
  *
  * After execution, @out_select contains a new GdaQuery, or %NULL if it is not possible to create the update query.

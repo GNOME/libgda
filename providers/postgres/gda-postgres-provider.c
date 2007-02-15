@@ -1180,7 +1180,7 @@ split_and_execute_update_query (GdaServerProvider *provider, GdaConnection *cnc,
 		/* add params to @params to allow the execution of the nquery query with 
 		 * parameters from pg_existing_blobs */
 		GdaParameterList *iter_params;
-		gint impacted_rows = 0;
+		gint affected_rows = 0;
 		GSList *list;
 		gboolean allok = TRUE;
 			
@@ -1227,7 +1227,7 @@ split_and_execute_update_query (GdaServerProvider *provider, GdaConnection *cnc,
 				g_assert (GDA_IS_PARAMETER_LIST (ret));
 				param = gda_parameter_list_find_param (ret, "IMPACTED_ROWS");
 				if (param) 
-					impacted_rows += g_value_get_int (gda_parameter_get_value (param));
+					affected_rows += g_value_get_int (gda_parameter_get_value (param));
 				g_object_unref (ret);
 			}
 			else
@@ -1235,7 +1235,7 @@ split_and_execute_update_query (GdaServerProvider *provider, GdaConnection *cnc,
 		}
 		if (allok) 
 			ret = gda_parameter_list_new_inline (gda_object_get_dict (GDA_OBJECT (nquery)),
-							     "IMPACTED_ROWS", G_TYPE_INT, impacted_rows, NULL);
+							     "IMPACTED_ROWS", G_TYPE_INT, affected_rows, NULL);
 		else
 			ret = NULL;
 		g_object_unref (nquery);

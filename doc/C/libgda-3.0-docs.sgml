@@ -308,7 +308,7 @@
           <listitem>
             <para>Run any SQL query against an opened connection; any SQL query can be extended to define query parameters
 	      using an easy to understand notation. If the SQL query was a SELECT statement, then an array of data is
-	      returned (as a <classname>GdaDataModel</classname> object), and otherwise the number of rows impacted
+	      returned (as a <classname>GdaDataModel</classname> object), and otherwise the number of rows affected
 	      by the query is returned. For very large data sets, it is possible to specify that the returned array
 	      of data should be based on a cursor to avoid loading it into memory (this feature is not currently
 	      implemented in any provider, though).</para>

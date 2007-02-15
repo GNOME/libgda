@@ -1010,6 +1010,8 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	return error;
 }
 
+/** TODO: This actually frees the input GList. That's very very unusual. murrayc.
+
 /**
  * gda_connection_add_events_list
  * @cnc: a #GdaConnection object.
@@ -1255,10 +1257,10 @@ gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
  * @params: parameter list for the command
  * @error: a place to store an error, or %NULL
  *
- * Executes a selection command on the given connection.
+ * Executes a non-selection command on the given connection.
  *
- * This function returns the number of rows impacted by the execution of @cmd, or -1
- * if an error occurred, or -2 if the provider does not return the number of rows impacted.
+ * This function returns the number of rows affected by the execution of @cmd, or -1
+ * if an error occurred, or -2 if the provider does not return the number of rows affected.
  *
  * Note that no check is made regarding the actual number of statements in @cmd or if it really contains a non SELECT
  * statement. This function is just a convenience function around the gda_connection_execute_command()
@@ -1267,7 +1269,7 @@ gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
  * See the documentation of the gda_connection_execute_command() for information
  * about the @params list of parameters.
  *
- * Returns: the number of rows impacted (&gt;=0) or -1 or -2 
+ * Returns: the number of rows affected (&gt;=0) or -1 or -2 
  */
 gint
 gda_connection_execute_non_select_command (GdaConnection *cnc, GdaCommand *cmd,

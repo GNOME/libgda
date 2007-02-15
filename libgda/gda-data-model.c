@@ -371,7 +371,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * about the given column in the data model.
  *
  * WARNING: the returned #GdaColumn object belongs to the @model model and
- * and should not be destroyed; any modification will impact the whole data model.
+ * and should not be destroyed; any modification will affect the whole data model.
  *
  * Returns: the description of the column.
  */

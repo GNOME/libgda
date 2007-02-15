@@ -671,7 +671,7 @@ process_oci_statement (OCIStmt *stmthp, const gchar *sql, GdaConnection *cnc, GA
 	}
 
 	if (stmt_type != OCI_STMT_SELECT) { 
-		/* get the number of impacted rows */
+		/* get the number of affected rows */
 		int nrows;
 
 		result = OCIAttrGet (stmthp, OCI_HTYPE_STMT,
@@ -686,7 +686,7 @@ process_oci_statement (OCIStmt *stmthp, const gchar *sql, GdaConnection *cnc, GA
 				     (dvoid *) &nrows, NULL,
 				     OCI_ATTR_ROW_COUNT, priv_data->herr);
 		if (gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
-					     _("Could not get the number of impacted rows"))) {
+					     _("Could not get the number of affected rows"))) {
 			OCIHandleFree ((dvoid *) stmthp, OCI_HTYPE_STMT);
 			return NULL;
 		}

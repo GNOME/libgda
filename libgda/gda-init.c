@@ -259,7 +259,7 @@ gda_execute_select_command (GdaConnection *cnn, const gchar *sql, GError **error
  *
  * This is a convenient function to execute a SQL command over the opened connection.
  *
- * Returns: the number of rows impacted or -1.
+ * Returns: the number of rows affected or -1.
  */
 gint
 gda_execute_sql_command (GdaConnection *cnn, const gchar *sql, GError **error)

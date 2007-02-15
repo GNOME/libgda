@@ -456,7 +456,7 @@ gda_dict_field_get_scale (GdaDictField *field)
  * gda_dict_field_get_constraints
  * @field: a #GdaDictField  object
  *
- * Get all the constraints which impact the given field. Constraints are of several type:
+ * Get all the constraints which affect the given field. Constraints are of several type:
  * NOT NULL, primary key, foreign key, check constrains
  *
  * Returns: a new list of #GdaDictConstraint objects
