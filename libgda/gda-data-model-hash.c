@@ -166,6 +166,52 @@ gda_data_model_hash_append_row (GdaDataModelRow *model, GdaRow *row, GError **er
 }
 
 static gboolean
+gda_data_model_hash_update_row (GdaDataModelRow *model, GdaRow *row, GError **error)
+{
+	gint rownum;
+	gint cols;
+	GdaRow *cur_row;
+	GdaRow *new_row;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
+
+	cols = gda_row_get_length (row);
+	if (cols != GDA_DATA_MODEL_HASH (model)->priv->number_of_columns) {
+		g_set_error (error, 0, GDA_DATA_MODEL_VALUES_LIST_ERROR,
+			     _("Wrong number of values in values list"));
+		return FALSE;
+	}
+
+	rownum = gda_row_get_number ((GdaRow *) row);
+	cur_row = gda_data_model_hash_get_row(model, rownum, error);
+
+	/* The row should already be present */
+	g_return_val_if_fail(cur_row != NULL, FALSE);
+
+	if (cur_row == row)
+	{
+		gda_data_model_row_updated (GDA_DATA_MODEL (model),
+		                            gda_row_get_number (row));
+		return TRUE;
+	}
+	else
+	{
+		new_row = gda_row_copy (row);
+
+		/* This overwrites the existing row */
+		g_hash_table_insert (GDA_DATA_MODEL_HASH (model)->priv->rows,
+		                     GINT_TO_POINTER(rownum),
+		                     new_row);
+
+		gda_data_model_row_updated (GDA_DATA_MODEL (model),
+		                            gda_row_get_number (new_row));
+	
+		return TRUE;
+	}
+}
+
+static gboolean
 gda_data_model_hash_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
 {
 	gint i, cols, rownum;
@@ -247,7 +293,7 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	model_class->is_updatable = gda_data_model_hash_is_updatable;
 	model_class->append_values = gda_data_model_hash_append_values;
 	model_class->append_row = gda_data_model_hash_append_row;
-	model_class->update_row = NULL;
+	model_class->update_row = gda_data_model_hash_update_row;
 	model_class->remove_row = gda_data_model_hash_remove_row;
 
 	g_object_class_install_property (object_class,

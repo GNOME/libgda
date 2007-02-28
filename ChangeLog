@@ -1,3 +1,8 @@
+2007-02-24  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-data-model-hash.c: Implemented
+	gda_data_model_hash_update_row().
+
 2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
 
 	* configure.in:
