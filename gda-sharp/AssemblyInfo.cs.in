@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly:AssemblyVersion("@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@")]
-
-
+[assembly:AssemblyVersion("@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@.0.0")]
+[assembly:AssemblyDelaySign(false)]
+[assembly:AssemblyKeyFile("gda-sharp.snk")]

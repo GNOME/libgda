@@ -1,15 +1,34 @@
 2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
 
+	* Makefile.am
+	* configure.in
+	* gda-sharp/Application.cs
+	* gda-sharp/AssemblyInfo.cs.in
+	* gda-sharp/Makefile.am
+	* gda-sharp/doc/Makefile.am
+	* gda-sharp/doc/gda-sharp-docs.source
+	* gda-sharp/gda-sharp-3.0.pc.in
+	* gda-sharp/gda-sharp.dll.config.in:
+	Correct library name for DllImport calls.
+	Depends only on glib-sharp-2.0, not gtk-sharp.
+	Modify gda-sharp build system to install in the GAC.
+	Build and install monodoc documentation.
+	Patch in bug #390609
+
+2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
+
 	* win32/dummy.la: Was imported into CVS empty, causing several compaints from
 	Win32 users.  Fixed.
 	* win32/libgda_graph-3.0.def
 	* win32/libgda_handlers-3.0.def: Updated to 2.99.5 API.
+	Patch in bug #314732
 
 2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
 
 	* providers/mdb/gda-mdb-provider.c:
 	(gda_mdb_provider_get_data_handler): use gda_handler_bin_new() 
 	instead of gda_handler_bin_new_with_prov(), which is no longer available.
+	Patch in bug #411811
 
 2007-02-15  Murray Cumming  <murrayc@murrayc.com>
 

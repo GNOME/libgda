@@ -942,9 +942,9 @@ then
 	MONO_REQUIRED_VERSION=1.0
 	PKG_CHECK_MODULES(MONO_DEPENDENCY, mono >= $MONO_REQUIRED_VERSION, build_gda_sharp=true, build_gda_sharp=false)
 	if test "$build_gda_sharp" = "true"; then
-	   PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp-2.0 >= 2.3.90, :, build_gda_sharp=false)
+	   PKG_CHECK_MODULES(GLIB_SHARP, glib-sharp-2.0 >= 2.3.90, :, build_gda_sharp=false)
 	   PKG_CHECK_MODULES(GAPI, gapi-2.0 >= 2.3.90, :, build_gda_sharp=false)
-	   fi
+	fi	
 fi
 
 AM_CONDITIONAL(BUILD_GDA_SHARP, test "$build_gda_sharp" = "true")
@@ -954,6 +954,20 @@ if test "$build_gda_sharp" = "true"; then
 	AC_PATH_PROG(GAPI_PARSER, gapi2-parser, no)
 	AC_PATH_PROG(GAPI_FIXUP, gapi2-fixup, no)
 	AC_PATH_PROG(GAPI_CODEGEN, gapi2-codegen, no)
+	AC_PATH_PROG(GACUTIL, gacutil, no)
+	AC_PATH_PROG(MDASSEMBLER, mdassembler, no)
+	AC_PATH_PROG(MONODOCER, monodocer, no)
+
+	GACUTIL_FLAGS='/package gda-sharp-3.0 /gacdir $(DESTDIR)$(prefix)/lib'
+	GENERATED_SOURCES='generated/*.cs'
+
+	if test "x$MONODOCER" = "xno" -o "x$MDASSEMBLER" = "xno"; then
+	  enable_monodoc=no
+	  doc_sources_dir=
+	else
+	  enable_monodoc=yes
+	  doc_sources_dir="`pkg-config --variable=sourcesdir monodoc`"
+	fi
 
 	case `uname -s` in
 	  Darwin)
@@ -978,11 +992,20 @@ fi
 AC_SUBST(MONO)
 AC_SUBST(MCS)
 AC_SUBST(GAPI)
+AC_SUBST(GAPI_PARSER)
+AC_SUBST(GAPI_FIXUP)
+AC_SUBST(GAPI_CODEGEN)
+AC_SUBST(GACUTIL)
+AC_SUBST(GACUTIL_FLAGS)
+AC_SUBST(GENERATED_SOURCES)
+AC_SUBST(MDASSEMBLER)
+AC_SUBST(MONODOCER)
 AC_SUBST(LIB_PREFIX)
 AC_SUBST(LIB_SONAME)
 AC_SUBST(LIB_SUFFIX)
-AC_SUBST(GTK_SHARP_CFLAGS)
-AC_SUBST(GTK_SHARP_LIBS)
+AC_SUBST(GLIB_SHARP_CFLAGS)
+AC_SUBST(GLIB_SHARP_LIBS)
+AM_CONDITIONAL(ENABLE_MONODOC, test "x$enable_monodoc" = "xyes")
 
 
 dnl
@@ -1107,6 +1130,7 @@ gda-sharp/Makefile
 gda-sharp/gda-sharp.dll.config
 gda-sharp/gda-sharp-3.0.pc
 gda-sharp/AssemblyInfo.cs
+gda-sharp/doc/Makefile
 testing/Makefile
 tests/Makefile
 doc/Makefile

@@ -29,7 +29,7 @@ namespace Gda
 	{
 		private const string VERSION = "0.10";
 
-		[DllImport("gda-3")]
+		[DllImport("gda-3.0")]
 		static extern void gda_init (IntPtr app_id, IntPtr version, int nargs, IntPtr args);
 
 		public static void Init ()
@@ -46,7 +46,7 @@ namespace Gda
 			GLib.Marshaller.Free (native_version);
 		}
 
-		[DllImport("gda-3")]
+		[DllImport("gda-3.0")]
 		static extern void gda_init (IntPtr app_id, IntPtr version, ref int argc, ref IntPtr argv);
 		
 		public static void Init (ref string [] args)
@@ -72,7 +72,7 @@ namespace Gda
 				args = argv.GetArgs (argc);
 		}
 
-		[DllImport("gda-3")]
+		[DllImport("gda-3.0")]
 		static extern void gda_main_run (IntPtr init_func, IntPtr user_data);
 
 		public static void Run ()
@@ -80,7 +80,7 @@ namespace Gda
 			gda_main_run (IntPtr.Zero, IntPtr.Zero);
 		}
 
-		[DllImport("gda-3")]
+		[DllImport("gda-3.0")]
 		static extern void gda_main_quit ();
 
 		public static void Quit ()

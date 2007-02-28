@@ -16,6 +16,7 @@ SUBDIRS = \
 
 EXTRA_DIST = \
 	COPYING \
+	gda-sharp.snk \
 	libgda.spec \
 	intltool-extract.in \
 	intltool-merge.in \
