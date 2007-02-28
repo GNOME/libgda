@@ -16,3 +16,8 @@ EXPORTS
 	gda_graph_query_get_type
 	gda_graph_query_new
 	gda_graph_query_sync_targets
+	gda_graphs_declare_serial
+	gda_graphs_get_graph_for_object
+	gda_graphs_get_register
+	gda_graphs_get_serial
+	gda_graphs_get_with_type

@@ -1,5 +1,12 @@
 2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
 
+	* win32/dummy.la: Was imported into CVS empty, causing several compaints from
+	Win32 users.  Fixed.
+	* win32/libgda_graph-3.0.def
+	* win32/libgda_handlers-3.0.def: Updated to 2.99.5 API.
+
+2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
+
 	* providers/mdb/gda-mdb-provider.c:
 	(gda_mdb_provider_get_data_handler): use gda_handler_bin_new() 
 	instead of gda_handler_bin_new_with_prov(), which is no longer available.

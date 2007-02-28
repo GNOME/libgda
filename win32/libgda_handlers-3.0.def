@@ -1,15 +1,17 @@
 EXPORTS
 	gda_handler_bin_get_type
 	gda_handler_bin_new
-	gda_handler_bin_new_with_prov
 	gda_handler_boolean_get_type
 	gda_handler_boolean_new
 	gda_handler_numerical_get_type
 	gda_handler_numerical_new
 	gda_handler_string_get_type
 	gda_handler_string_new
+	gda_handler_string_new_with_provider
+	gda_handler_time_get_no_locale_str_from_value
 	gda_handler_time_get_type
 	gda_handler_time_new
 	gda_handler_time_new_no_locale
+	gda_handler_time_set_sql_spec
 	gda_handler_type_get_type
 	gda_handler_type_new
