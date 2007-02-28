@@ -1,3 +1,9 @@
+2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
+
+	* providers/mdb/gda-mdb-provider.c:
+	(gda_mdb_provider_get_data_handler): use gda_handler_bin_new() 
+	instead of gda_handler_bin_new_with_prov(), which is no longer available.
+
 2007-02-15  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-data-proxy.c: (gda_data_proxy_append): Initialize the GValue as 

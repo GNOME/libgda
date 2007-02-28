@@ -876,7 +876,7 @@ gda_mdb_provider_get_data_handler (GdaServerProvider *provider,
 		 (type == GDA_TYPE_BLOB)) {
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
 		if (!dh) {
-			dh = gda_handler_bin_new_with_prov (provider, cnc);
+			dh = gda_handler_bin_new ();
 			if (dh) {
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
 				gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
