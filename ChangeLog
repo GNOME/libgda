@@ -1,5 +1,40 @@
 2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
 
+	* configure.in:
+	* providers/bdb/Makefile.am:
+	* providers/bdb/libgda-bdb-3.0.pc.in:
+	* providers/firebird/Makefile.am:
+	* providers/firebird/libgda-firebird-3.0.pc.in:
+	* providers/freetds/Makefile.am:
+	* providers/freetds/libgda-freetds-3.0.pc.in:
+	* providers/ibmdb2/Makefile.am:
+	* providers/ibmdb2/libgda-ibmdb2-3.0.pc.in:
+	* providers/ldap/Makefile.am:
+	* providers/ldap/libgda-ldap-3.0.pc.in:
+	* providers/mdb/Makefile.am:
+	* providers/mdb/libgda-mdb-3.0.pc.in:
+	* providers/msql/Makefile.am:
+	* providers/msql/libgda-msql-3.0.pc.in:
+	* providers/mysql/Makefile.am:
+	* providers/mysql/libgda-mysql-3.0.pc.in:
+	* providers/odbc/Makefile.am:
+	* providers/odbc/libgda-odbc-3.0.pc.in:
+	* providers/oracle/Makefile.am:
+	* providers/oracle/libgda-oracle-3.0.pc.in:
+	* providers/postgres/Makefile.am:
+	* providers/postgres/libgda-postgres-3.0.pc.in:
+	* providers/sqlite/Makefile.am:
+	* providers/sqlite/libgda-sqlite-3.0.pc.in:
+	* providers/sybase/Makefile.am:
+	* providers/sybase/libgda-sybase-3.0.pc.in:
+	* providers/xbase/Makefile.am:
+	* providers/xbase/libgda-xbase-3.0.pc.in:
+	Added .pc files for the providers so that applications can check for the presence of 
+	specific providers at configure time.
+	Patch in bug #353404
+
+2007-02-28  yselkowitz  <yselkowitz@users.sourceforge.net>
+
 	* Makefile.am
 	* configure.in
 	* gda-sharp/Application.cs

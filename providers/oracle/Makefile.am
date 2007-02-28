@@ -59,5 +59,8 @@ xml_in_files =	oracle_specs_dsn.xml.in \
 
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
-EXTRA_DIST = $(xml_in_files)
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libgda-oracle-3.0.pc
+
+EXTRA_DIST = $(xml_in_files) libgda-oracle-3.0.pc.in
 DISTCLEANFILES = $(xml_DATA)

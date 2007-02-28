@@ -1,0 +1,9 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libgda-oracle-3.0
+Description: GDA (GNOME Data Access) Oracle provider
+Requires: libgda-3.0
+Version: @VERSION@
