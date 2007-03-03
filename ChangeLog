@@ -1,3 +1,9 @@
+2007-03-03  Murray Cumming  <murrayc@murrayc-desktop>
+
+	* Added the gda-sharp.snk file from bug #390609, 
+	which is needed for the gda-sharp bindings. I have no 
+	idea what this binary file is, however.
+
 2007-03-02  Murray Cumming  <murrayc@murrayc-desktop>
 
 	* gda-sharp/doc/Makefile.am:
