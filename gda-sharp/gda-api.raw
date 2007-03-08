@@ -3023,7 +3023,7 @@
         <return-type type="void" />
         <parameters>
           <parameter type="GdaDictDatabase*" name="obj" />
-          <parameter type="gchar*" name="msg" />
+          <parameter type="const-gchar*" name="msg" />
           <parameter type="guint" name="now" />
           <parameter type="guint" name="total" />
         </parameters>

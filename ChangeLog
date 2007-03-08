@@ -1,3 +1,12 @@
+
+2007-03-08   Daniel Espinosa  <esodan@gmail.com>>
+
+	* configure.in: Require mono 1.2 if building the gda-sharp 
+	bindings.
+	* gda-sharp/gda-api.raw: Updated to latest version of the 
+	API.
+	Patch in bug #390609.
+
 2007-03-03  Murray Cumming  <murrayc@murrayc-desktop>
 
 	* Added the gda-sharp.snk file from bug #390609, 
