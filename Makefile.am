@@ -8,7 +8,6 @@ SUBDIRS = \
 	providers \
 	report \
 	tools \
-	gda-sharp \
 	tests \
 	testing \
 	data \
@@ -16,7 +15,6 @@ SUBDIRS = \
 
 EXTRA_DIST = \
 	COPYING \
-	gda-sharp.snk \
 	libgda.spec \
 	intltool-extract.in \
 	intltool-merge.in \
@@ -27,8 +25,6 @@ pkgconfigdir=$(libdir)/pkgconfig
 pkgconfig_DATA = libgda-3.0.pc
 
 all-local: libgda.spec
-
-EXTRA_DIST = gda-sharp.snk
 
 CLEANFILES = intltool-extract intltool-merge intltool-update
 

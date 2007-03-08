@@ -1,4 +1,0 @@
-<configuration>
-  <dllmap dll="gda-3.0" target="@LIB_PREFIX@gda-3.0@LIB_SONAME@3@LIB_SUFFIX@"/>
-  <dllmap dll="gda_handlers-3.0" target="@LIB_PREFIX@gda_handlers-3.0@LIB_SONAME@3@LIB_SUFFIX@"/>
-</configuration>

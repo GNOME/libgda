@@ -1,5 +1,24 @@
 2007-03-08  Murray Cumming  <murrayc@murrayc.com>
 
+	* Makefile.am:
+	* configure.in:
+	* gda-sharp/.cvsignore:
+	* gda-sharp/Application.cs:
+	* gda-sharp/AssemblyInfo.cs.in:
+	* gda-sharp/Gda.metadata:
+	* gda-sharp/Makefile.am:
+	* gda-sharp/doc/Makefile.am:
+	* gda-sharp/doc/gda-sharp-docs.source:
+	* gda-sharp/gda-api.raw:
+	* gda-sharp/gda-sharp-3.0.pc.in:
+	* gda-sharp/gda-sharp.dll.config.in:
+	* gda-sharp/gda-sources.xml: Removed the gda-sharp language bindings.
+	Please revive them as a separate module from the 
+	libgda_3_0_before_removing_gda_sharp tag if you would like to maintain 
+	them.
+
+2007-03-08  Murray Cumming  <murrayc@murrayc.com>
+
 	* Makefile.am: Add gda-sharp.snk to EXTRA_DIST as suggested in 
 	bug #390609.
 

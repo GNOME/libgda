@@ -929,83 +929,10 @@ AM_CONDITIONAL(BUILD_RUN_TOOL, test ! "x$POPT_LIB" = "x")
 AC_SUBST(BUILD_CONFIG_TOOL)
 AC_SUBST(BUILD_RUN_TOOL)
 
-dnl ******************************
-dnl Check for Mono/C#
-dnl ******************************
-AC_ARG_ENABLE(csharp,
-              [AC_HELP_STRING([--enable-csharp],
-                              [Build CSharp bindings [default=yes]])],,
-              [enable_csharp="yes"])
-build_gda_sharp=false
-if test "x$enable_csharp" = "xyes"
-then
-	MONO_REQUIRED_VERSION=1.2.2
-	PKG_CHECK_MODULES(MONO_DEPENDENCY, mono >= $MONO_REQUIRED_VERSION, build_gda_sharp=true, build_gda_sharp=false)
-	if test "$build_gda_sharp" = "true"; then
-	   PKG_CHECK_MODULES(GLIB_SHARP, glib-sharp-2.0 >= 2.3.90, :, build_gda_sharp=false)
-	   PKG_CHECK_MODULES(GAPI, gapi-2.0 >= 2.3.90, :, build_gda_sharp=false)
-	fi	
-fi
 
-AM_CONDITIONAL(BUILD_GDA_SHARP, test "$build_gda_sharp" = "true")
-if test "$build_gda_sharp" = "true"; then
-	AC_PATH_PROG(MONO, mono, no)
-	AC_PATH_PROG(MCS, mcs, no)
-	AC_PATH_PROG(GAPI_PARSER, gapi2-parser, no)
-	AC_PATH_PROG(GAPI_FIXUP, gapi2-fixup, no)
-	AC_PATH_PROG(GAPI_CODEGEN, gapi2-codegen, no)
-	AC_PATH_PROG(GACUTIL, gacutil, no)
-	AC_PATH_PROG(MDASSEMBLER, mdassembler, no)
-	AC_PATH_PROG(MONODOCER, monodocer, no)
-
-	GACUTIL_FLAGS='/package gda-sharp-3.0 /gacdir $(DESTDIR)$(prefix)/lib'
-	GENERATED_SOURCES='generated/*.cs'
-
-	if test "x$MONODOCER" = "xno" -o "x$MDASSEMBLER" = "xno"; then
-	  enable_monodoc=no
-	  doc_sources_dir=
-	else
-	  enable_monodoc=yes
-	  doc_sources_dir="`pkg-config --variable=sourcesdir monodoc`"
-	fi
-
-	case `uname -s` in
-	  Darwin)
-		LIB_PREFIX=lib
-		LIB_SONAME=.
-		LIB_SUFFIX=.dylib
-		;;
-	  CYGWIN*)
-		LIB_PREFIX=cyg
-		LIB_SONAME=-
-		LIB_SUFFIX=.dll
-		;;
-	  *)
-		LIB_PREFIX=lib
-		LIB_SONAME=.so.
-		LIB_SUFFIX=
-		;;
-	esac
-else
-	AC_MSG_NOTICE("Not building gda-sharp")
-fi
-AC_SUBST(MONO)
-AC_SUBST(MCS)
-AC_SUBST(GAPI)
-AC_SUBST(GAPI_PARSER)
-AC_SUBST(GAPI_FIXUP)
-AC_SUBST(GAPI_CODEGEN)
-AC_SUBST(GACUTIL)
-AC_SUBST(GACUTIL_FLAGS)
-AC_SUBST(GENERATED_SOURCES)
-AC_SUBST(MDASSEMBLER)
-AC_SUBST(MONODOCER)
 AC_SUBST(LIB_PREFIX)
 AC_SUBST(LIB_SONAME)
 AC_SUBST(LIB_SUFFIX)
-AC_SUBST(GLIB_SHARP_CFLAGS)
-AC_SUBST(GLIB_SHARP_LIBS)
-AM_CONDITIONAL(ENABLE_MONODOC, test "x$enable_monodoc" = "xyes")
 
 
 dnl
@@ -1140,11 +1067,6 @@ report/gda-report.dtd
 report/libgda-report/Makefile
 report/testing/Makefile
 tools/Makefile
-gda-sharp/Makefile
-gda-sharp/gda-sharp.dll.config
-gda-sharp/gda-sharp-3.0.pc
-gda-sharp/AssemblyInfo.cs
-gda-sharp/doc/Makefile
 testing/Makefile
 tests/Makefile
 doc/Makefile
@@ -1157,7 +1079,6 @@ dnl Print configuration summary
 echo ""
 echo " Configuration summary"
 echo "   Installation prefix = $prefix"
-echo "   C# bindings = `if test $build_gda_sharp = true; then echo yes; else echo no; fi`"
 echo "   Providers:"
 echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"
 echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
@@ -1174,3 +1095,4 @@ echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`
 echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
 echo ""
+
