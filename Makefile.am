@@ -28,5 +28,7 @@ pkgconfig_DATA = libgda-3.0.pc
 
 all-local: libgda.spec
 
+EXTRA_DIST = gda-sharp.snk
+
 CLEANFILES = intltool-extract intltool-merge intltool-update
 

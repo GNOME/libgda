@@ -1,3 +1,7 @@
+2007-03-08  Murray Cumming  <murrayc@murrayc.com>
+
+	* Makefile.am: Add gda-sharp.snk to EXTRA_DIST as suggested in 
+	bug #390609.
 
 2007-03-08   Daniel Espinosa  <esodan@gmail.com>>
 
