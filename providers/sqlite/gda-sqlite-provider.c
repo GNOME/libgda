@@ -1186,7 +1186,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	}
 
 	/* run the "SELECT * from table" to fetch information */
-	sql = g_strdup_printf ("SELECT * FROM %s LIMIT 1", tblname);
+	sql = g_strdup_printf ("SELECT * FROM \"%s\" LIMIT 1", tblname);
         reclist = process_sql_commands (NULL, cnc, sql, 0);
         g_free (sql);
 	if (reclist) 

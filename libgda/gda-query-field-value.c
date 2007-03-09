@@ -1486,17 +1486,27 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 				*out_params_used = g_slist_append (*out_params_used, param_source);
 		}
 		else {
-			if (field->priv->is_null_allowed)
-				str = g_strdup ("##");
+			if (field->priv->default_value) {
+				GdaDataHandler *dh;
+					
+				dh = gda_dict_get_handler (dict, field->priv->g_type);
+				if (dh)
+					str = gda_data_handler_get_sql_from_value (dh, 
+										   field->priv->default_value);
+			}
 			else {
-				if (context) {
-					g_set_error (error,
-						     GDA_QUERY_FIELD_VALUE_ERROR,
-						     GDA_QUERY_FIELD_VALUE_RENDER_ERROR,
-						     _("No specified value"));
-				}
-				else
+				if (field->priv->is_null_allowed)
 					str = g_strdup ("##");
+				else {
+					if (context) {
+						g_set_error (error,
+							     GDA_QUERY_FIELD_VALUE_ERROR,
+							     GDA_QUERY_FIELD_VALUE_RENDER_ERROR,
+							     _("No specified value"));
+					}
+					else
+						str = g_strdup ("##");
+				}
 			}
 		}
 		

@@ -363,11 +363,11 @@ gda_parameter_list_new_inline (GdaDict *dict, ...)
 		else if (type == GDA_TYPE_SHORT)
 			gda_value_set_short (value, va_arg (ap, int));
 		else if (type == GDA_TYPE_USHORT)
-			gda_value_set_ushort (value, va_arg (ap, uint));
+			gda_value_set_ushort (value, va_arg (ap, guint));
 		else if (type == G_TYPE_CHAR)
 			g_value_set_char (value, va_arg (ap, int));
 		else if (type == G_TYPE_UCHAR)
-			g_value_set_uchar (value, va_arg (ap, uint));
+			g_value_set_uchar (value, va_arg (ap, guint));
 		else if (type == G_TYPE_FLOAT)
 			g_value_set_float (value, va_arg (ap, double));
 		else if (type == G_TYPE_DOUBLE)

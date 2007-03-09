@@ -71,3 +71,13 @@ Default handler for time, date and timestamp
 @twodigits_years: 
 
 
+<!-- ##### FUNCTION gda_handler_time_get_format ##### -->
+<para>
+
+</para>
+
+@dh: 
+@type: 
+@Returns: 
+
+

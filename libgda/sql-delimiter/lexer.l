@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include <glib.h>
+#include <glib/gi18n-lib.h>
 
 #include "gda-sql-delimiter.h"
 
@@ -25,57 +26,75 @@ char *string_buf_ptr;
 %option caseless
 %x STRING
 %x TEXTUAL
-
-CHAR [^ \t\n\r\'\";:\*/]+
+%x PSPEC
+%x PSTRING
+%x PTEXTUAL
 
 %%
 
-		BEGIN(INITIAL);
+;		{return L_SC;}
+[ ]*##           {return L_UNSPECVAL;}
+[ ]*\/\*            {BEGIN(PSPEC); return L_LSBRACKET;}
 
-";"		{return L_SC;}
-
-"/*"             {return L_LSBRACKET;}
-"*/"             {return L_RSBRACKET;}
-
-"name:"         {return L_PNAME;}
-"descr:"        {return L_PDESCR;}
-"type:"         {return L_PTYPE;}
-"isparam:"      {return L_PISPARAM;}
-"nullok:"       {return L_PNULLOK;}
-"##"            {return L_UNSPECVAL;}
-
-{CHAR}	 	{gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_WORD;}
-[ \t\n\r]	{;}
+<PSPEC>"*/"             {BEGIN(INITIAL); return L_RSBRACKET;}
+<PSPEC>"name:"        	{return L_PNAME;}
+<PSPEC>"descr:"       	{return L_PDESCR;}
+<PSPEC>"type:"        	{return L_PTYPE;}
+<PSPEC>"isparam:"     	{return L_PISPARAM;}
+<PSPEC>"nullok:"      	{return L_PNULLOK;}
+<PSPEC>[a-zA-Z0-9_\-\+]+    {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_WORD;}
+<PSPEC>[ \t\n\r]        {;}
+<PSPEC>\'		{string_buf_ptr = string_buf; BEGIN(PSTRING);}
+<PSPEC>\"		{string_buf_ptr = string_buf; BEGIN(PTEXTUAL);}
 
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}
-<STRING>\\'     {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
+<STRING,PSTRING>\\' {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
 <STRING>\'	{BEGIN(INITIAL);
 		 *string_buf_ptr = '\0';
 		 gda_delimiterlval.str = g_strdup_printf ("'%s'", string_buf);
 		 return L_STRING;
 		}
-<STRING>\\n	{*string_buf_ptr++='\n';}
-<STRING>\\t	{*string_buf_ptr++='\t';}
-<STRING>\\r	{*string_buf_ptr++='\r';}
-<STRING>\\b	{*string_buf_ptr++='\b';}
-<STRING>\\f	{*string_buf_ptr++='\f';}
-<STRING>\\(.|\n) {*string_buf_ptr++=gda_delimitertext[0]; *string_buf_ptr++=gda_delimitertext[1];}
-<STRING>.	{*string_buf_ptr++=gda_delimitertext[0];}
+<PSTRING>\'     {BEGIN(PSPEC);
+                 *string_buf_ptr = '\0';
+                 gda_delimiterlval.str = g_strdup_printf ("'%s'", string_buf);
+                 return L_STRING;
+                }
+<STRING,PSTRING>\\n	{*string_buf_ptr++='\n';}
+<STRING,PSTRING>\\t	{*string_buf_ptr++='\t';}
+<STRING,PSTRING>\\r	{*string_buf_ptr++='\r';}
+<STRING,PSTRING>\\b	{*string_buf_ptr++='\b';}
+<STRING,PSTRING>\\f	{*string_buf_ptr++='\f';}
+<STRING,PSTRING>\\(.|\n) {*string_buf_ptr++=gda_delimitertext[0]; *string_buf_ptr++=gda_delimitertext[1];}
+<STRING,PSTRING>.	{*string_buf_ptr++=gda_delimitertext[0];}
+<STRING,PSTRING><<EOF>> {
+         		gda_delimitererror (_("unterminated string"));
+         		yyterminate();
+         		}
 
 \"		{string_buf_ptr = string_buf; BEGIN(TEXTUAL);}
-<TEXTUAL>\"              {BEGIN(INITIAL);
+<TEXTUAL>\"     {BEGIN(INITIAL);
                  *string_buf_ptr = '\0';
                  gda_delimiterlval.str = g_strdup (string_buf);
                  return L_TEXTUAL;
                 }
-<TEXTUAL>\\n     {*string_buf_ptr++='\n';}
-<TEXTUAL>\\t     {*string_buf_ptr++='\t';}
-<TEXTUAL>\\r     {*string_buf_ptr++='\r';}
-<TEXTUAL>\\b     {*string_buf_ptr++='\b';}
-<TEXTUAL>\\f     {*string_buf_ptr++='\f';}
-<TEXTUAL>\\(.|\n) {*string_buf_ptr++=gda_delimitertext[0]; *string_buf_ptr++=gda_delimitertext[1];}
-<TEXTUAL>.       {*string_buf_ptr++=gda_delimitertext[0];}
+<PTEXTUAL>\"    {BEGIN(PSPEC);
+                 *string_buf_ptr = '\0';
+                 gda_delimiterlval.str = g_strdup (string_buf);
+                 return L_TEXTUAL;
+                }
+<TEXTUAL,PTEXTUAL>\\n     {*string_buf_ptr++='\n';}
+<TEXTUAL,PTEXTUAL>\\t     {*string_buf_ptr++='\t';}
+<TEXTUAL,PTEXTUAL>\\r     {*string_buf_ptr++='\r';}
+<TEXTUAL,PTEXTUAL>\\b     {*string_buf_ptr++='\b';}
+<TEXTUAL,PTEXTUAL>\\f     {*string_buf_ptr++='\f';}
+<TEXTUAL,PTEXTUAL>\\(.|\n) {*string_buf_ptr++=gda_delimitertext[0]; *string_buf_ptr++=gda_delimitertext[1];}
+<TEXTUAL,PTEXTUAL>.       {*string_buf_ptr++=gda_delimitertext[0];}
+<TEXTUAL,PTEXTUAL><<EOF>> {
+			gda_delimitererror (_("unterminated textual expression"));
+                        yyterminate();
+                        }
 
-.		 {;}
+\\n		{gda_delimiterlval.str = g_strdup ("\n"); return L_CHAR;}
+.               {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_CHAR;}
 
 %%

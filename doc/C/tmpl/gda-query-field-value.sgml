@@ -111,6 +111,15 @@ to tell from which query field the values will be taken).
 @is_param: 
 
 
+<!-- ##### FUNCTION gda_query_field_value_get_is_parameter ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_query_field_value_get_parameter_index ##### -->
 <para>
 

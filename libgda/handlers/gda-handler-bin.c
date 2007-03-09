@@ -114,7 +114,7 @@ gda_handler_bin_init (GdaHandlerBin * hdl)
 	hdl->priv = g_new0 (GdaHandlerBinPriv, 1);
 	hdl->priv->detailled_descr = _("Binary handler");
 	hdl->priv->nb_g_types = 2;
-	hdl->priv->valid_g_types = g_new0 (GType, 1);
+	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
 	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
 	hdl->priv->valid_g_types[1] = GDA_TYPE_BLOB;
 

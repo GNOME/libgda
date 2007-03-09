@@ -1,3 +1,48 @@
+2007-03-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* tests/check_delimiter.c: checks for the correct number of statements recognized
+	* tests/all_sql_tests.xml:
+	* tests/params_sql.xml:
+	* tests/prov_sql.xml:
+	* tests/select_sql.xml:
+	* tests/app_sql.xml:
+	* tests/basic_sql.xml:
+	* tests/dict_pg.xml:
+	* tests/check_delimiter.c: added more test cases and groupped them into one single index
+	file (all_sql_tests.xml)
+	* tests/check_gdaquery.c: test for GdaQuery parsing SQL
+	* libgda/gda-dict.c: replaced GDA_TYPE_OBJECT with G_TYPE_STRING for the
+	1st argument of the "update_progress" signal
+	* libgda/gda-query.c: corrected empty query ("") handling
+	* libgda/gda-parameter-list.c: replaced "uint" with "guint" for the W32 platform, see
+	http://mail.gnome.org/archives/gnome-db-list/2007-January/msg00038.html
+	* libsql/sql_parser.c: include the <glib/gi18n-lib.h> file to define _(), 
+	improved the SQL parser to detect non terminated strings
+	* libsql/lexer.l: use LEX states for the parameters definition, report non parsed
+	characters
+	* libgda/sql-delimiter/parser.y: 
+	* libgda/sql-delimiter/gda-delimiter-tree.c:
+	* libgda/sql-delimiter/gda-sql-delimiter.c:
+	* libgda/sql-delimiter/gda-test-delimiter.c:
+	* libgda/sql-delimiter/lexer.l:
+	* libgda/sql-delimiter/gda-sql-delimiter.h: vastly improved the SQL delimiter which now
+	don't change spacings in the rendered SQL and detect default values for parameters (for
+	example "SELECT 1.23 /* name:myparam */" detects a parameter named "myparam" with a
+	default value of 1.23), detect non terminated strings
+	* libgda/gda-query-parsing.c: set the GdaQueryFieldValue's default value correctly when
+	there is a parameter in the SQL
+	* libgda/gda-query-field-value.c: correctly render SQL when there is a default value
+	* libgda/gda-query.c: correctly take into account default values for parameters when
+	a query is defined from SQL
+	* libgda/handlers/gda-handler-bin.c: fix memory allocation problem
+	* libgda/gda-column.c: removed usage of G_TYPE_GTYPE
+	* libgda/gda-data-model.c: removed check on uninitialized value
+	* libgda/handlers/gda-handler-time.[ch]: added gda_handler_time_get_format()
+	* providers/sqlite/sqlite-src/: up to Sqlite 3.3.13
+	* libgda/gda-value.c: corrected a gda_value_compare() bug which returned wrong
+	results in some limit number comparisons
+	* fixed the svn:ignore property of some directories
+
 2007-03-08  Pema Geyleg <pema.geyleg@gmail.com>
 
 	* configure.in: Added 'dz' to ALL_LINGUAS

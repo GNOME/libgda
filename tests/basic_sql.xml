@@ -1,106 +1,207 @@
 <?xml version="1.0"?>
 <unit>
-  <test name="param1">
-    <sql parsed="1">SELECT ## /*type:"int4"*/ i=10</sql>
+  <test name="param_type_1">
+    <sql expected="D">SELECT ## /* type:int4 */ i=10</sql>
+    <render_as>SELECT ## /* type:"int4" */ i=10</render_as>
+    <render_as>SELECT ## /* type:"gint" */ i=10</render_as>
     <params>
       <param type="int4"/>
+    </params>
+  </test>
+
+  <test name="param_type_2">
+    <sql expected="D">SELECT ## /* type:"int4" */ i=10</sql>
+    <render_as>SELECT ## /* type:"gint" */ i=10</render_as>
+    <params>
+      <param type="int4"/>
+    </params>
+  </test>
+
+  <test name="param_type_3">
+    <sql expected="D">SELECT ## /*type:'int4'*/ i=10</sql>
+    <render_as>SELECT ## /* type:"int4" */ i=10</render_as>
+    <render_as>SELECT ## /* type:"gint" */ i=10</render_as>
+    <params>
+      <param type="int4"/>
+    </params>
+  </test>
+
+<test name="param_name_1">
+    <sql expected="D">SELECT ## /* name:+12 */ i=10</sql>
+    <render_as>SELECT ## /* name:"+12" */ i=10</render_as>
+    <params>
+      <param name="+12"/>
+    </params>
+  </test>
+
+  <test name="param_name_2">
+    <sql expected="D">SELECT ## /* name:"+12" */ i=10</sql>
+    <params>
+      <param name="+12"/>
+    </params>
+  </test>
+
+  <test name="param_name_3">
+    <sql expected="D">SELECT ## /*name:'+12'*/ i=10</sql>
+    <render_as>SELECT ## /* name:"+12" */ i=10</render_as>
+    <params>
+      <param name="+12"/>
+    </params>
+  </test>
+
+<test name="param_name_4">
+    <sql expected="D">SELECT ## /* name:-10 */ i=10</sql>
+    <render_as>SELECT ## /* name:"-10" */ i=10</render_as>
+    <params>
+      <param name="-10"/>
+    </params>
+  </test>
+
+  <test name="param_name_5">
+    <sql expected="D">SELECT ## /* name:"-10" */ i=10</sql>
+    <params>
+      <param name="-10"/>
+    </params>
+  </test>
+
+  <test name="param_name_6">
+    <sql expected="D">SELECT ## /*name:'-10'*/ i=10</sql>
+    <render_as>SELECT ## /* name:"-10" */ i=10</render_as>
+    <params>
+      <param name="-10"/>
+    </params>
+  </test>
+
+  <test name="param_descr_1">
+    <sql expected="D">SELECT ## /* descr:ADescription */ i=10</sql>
+    <render_as>SELECT ## /* descr:"ADescription" */ i=10</render_as>
+    <params>
+      <param descr="ADescription"/>
+    </params>
+  </test>
+
+  <test name="param_descr_2">
+    <sql expected="D">SELECT ## /* descr:"A description" */ i=10</sql>
+    <params>
+      <param descr="A description"/>
+    </params>
+  </test>
+
+  <test name="param_descr_3">
+    <sql expected="D">SELECT ## /*descr:'A description'*/ i=10</sql>
+    <render_as>SELECT ## /* descr:"A description" */ i=10</render_as>
+    <params>
+      <param descr="A description"/>
     </params>
   </test>
 
   <test name="param2">
-    <sql parsed="1">SELECT 1234 /*type:"int4"*/ i=10</sql>
-    <render_as>SELECT 1234/*type:"int4"*/ i=10</render_as>
+    <sql expected="D">SELECT 1234 /*type:"int4"*/ i=10</sql>
+    <render_as>SELECT 1234 /* type:"int4" */ i=10</render_as>
+    <render_as>SELECT 1234 /* type:"gint" */ i=10</render_as>
     <params>
-      <param type="int4"/>
+      <param type="int4" default="1234" default_type="gint"/>
     </params>
   </test>
 
   <test name="string1">
-    <sql parsed="1">SELECT 'string with a ;' i=10; INSERT hello;</sql>
-    <render_as>SELECT 'string with a ;' i=10 ; INSERT hello</render_as>
+    <sql expected="D" n_stmts="2">SELECT 'string with a ;' i=10; INSERT hello;</sql>
+    <render_as>SELECT 'string with a ;' i=10; INSERT hello</render_as>
   </test>
 
   <test name="string2">
-    <sql parsed="1">UPDATE contacts SET name_first = 'Murray;' WHERE contact_id = 0</sql>
+    <sql expected="S">UPDATE contacts SET name_first = 'Murray;' WHERE contact_id = 0</sql>
+    <render_as>UPDATE contacts SET name_first='Murray;' WHERE contact_id=0</render_as>
   </test>
 
   <test name="string3">
-    <sql parsed="1">select bar from jcw.foo where qux &lt;&gt; ';'</sql>
+    <sql expected="D">select bar from jcw.foo where qux &lt;&gt; ';'</sql>
   </test>
 
   <test name="string4">
-    <sql parsed="1">select bar from jcw.foo where \qux &lt;&gt; ';'</sql>
+    <sql expected="D">select bar from jcw.foo where \qux &lt;&gt; ';'</sql>
   </test>
 
   <test name="string5">
-    <sql parsed="1">select bar from jcw.foo where ; qux &lt;&gt; '\;'</sql>
+    <sql expected="D" n_stmts="2">select bar from jcw.foo where ; qux &lt;&gt; '\;'</sql>
   </test>
 
   <test name="string6">
-    <sql parsed="1">select bar from jcw.foo where ; update qux &lt;&gt; '\;'</sql>
+    <sql expected="D" n_stmts="2">select bar from jcw.foo where ; update qux &lt;&gt; '\;'</sql>
   </test>
 
   <test name="string7">
-    <sql parsed="1">select bar from jcw.foo where \; qux &lt;&gt; 'String\;'</sql>
+    <sql expected="D" n_stmts="2">select bar from jcw.foo where \; qux &lt;&gt; 'String\;'</sql>
     <render_as>select bar from jcw.foo where \ ; qux &lt;&gt; 'String\;'</render_as>
   </test>
 
   <test name="string8">
-    <sql parsed="1"></sql>
+    <sql expected="D" n_stmts="0"></sql>
   </test>
 
   <test name="string9">
-    <sql parsed="1">;</sql>
+    <sql expected="D" n_stmts="0">;</sql>
   </test>
 
   <test name="string10">
-    <sql parsed="1">Select field AS "my field" , 'sdfjk', func (sdlkfj + slkdjf) - sdlkf</sql>
+    <sql expected="D">Select field AS "my field" , 'sdfjk', func (sdlkfj + slkdjf) - sdlkf</sql>
     <render_as>Select field AS "my field" , 'sdfjk' , func (sdlkfj + slkdjf) - sdlkf</render_as>
   </test>
 
   <test name="string11">
-    <sql parsed="1">update kmj, sdfjk, ##/*name:"tit;i"*/ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</sql>
-    <render_as>update kmj, sdfjk, ## /*name:"tit;i"*/ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</render_as>
+    <sql expected="D" n_stmts="2">update kmj, sdfjk, ##/*name:"tit;i"*/ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</sql>
+    <render_as>update kmj, sdfjk, ## /* name:"tit;i" */ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</render_as>
     <params>
       <param name="tit;i"/>
     </params>
   </test>
 
   <test name="string12">
-    <sql parsed="1">delete kmj, sdfjk /*name:"tit'i"*/ sdlkfj slkdjf sdlkf</sql>
-    <render_as>delete kmj, sdfjk/*name:"tit'i"*/ sdlkfj slkdjf sdlkf</render_as>
+    <sql expected="D">delete kmj, sdfjk /*name:"tit'i"*/ sdlkfj slkdjf sdlkf</sql>
+    <render_as>delete kmj, sdfjk /* name:"tit'i" */ sdlkfj slkdjf sdlkf</render_as>
     <params>
-      <param name="tit'i"/>
+      <param name="tit'i" default="sdfjk" default_type="gchararray"/>
     </params>
   </test>
 
   <test name="string13">
-    <sql parsed="1">insert kmj, 'sdfjk /*name:"t'iti"*/' sdlkfj slkdjf sdlkf</sql>
+    <sql expected="">insert kmj, 'sdfjk /*name:"t'iti"*/' sdlkfj slkdjf sdlkf</sql>
   </test>
 
-  <test name="test_pg">
-    <sql parsed="1">SELECT p.proname, p.oid, u.usename, pg_catalog.obj_description(p.oid),typo.typname,CASE p.proargtypes[0] WHEN 'pg_catalog."any"'::pg_catalog.regtype THEN CAST('-' AS pg_catalog.text) ELSE typi.typname END,NULL FROM pg_catalog.pg_proc p, pg_catalog.pg_user u, pg_catalog.pg_namespace n, pg_catalog.pg_type typi, pg_catalog.pg_type typo WHERE u.usesysid=p.proowner AND n.oid = p.pronamespace AND p.prorettype = typo.oid AND (typo.oid NOT IN (22, 24, 27, 28, 29, 30, 210, 705, 1790, 2202, 2203, 2204, 2205, 2206, 2249, 2275, 2276, 2277, 2278, 2279, 2280, 2281, 2282, 2283) OR typo.oid='2276') AND p.proargtypes[0] = typi.oid AND (typi.oid NOT IN (22, 24, 27, 28, 29, 30, 210, 705, 1790, 2202, 2203, 2204, 2205, 2206, 2249, 2275, 2276, 2277, 2278, 2279, 2280, 2281, 2282, 2283) OR typi.oid='2276') AND p.proisagg AND pg_catalog.pg_function_is_visible(p.oid) ORDER BY 2</sql>
-    <render_as>SELECT p.proname, p.oid, u.usename, pg_catalog.obj_description(p.oid),typo.typname,CASE p.proargtypes[0] WHEN 'pg_catalog."any"' ::pg_catalog.regtype THEN CAST( '-' AS pg_catalog.text) ELSE typi.typname END,NULL FROM pg_catalog.pg_proc p, pg_catalog.pg_user u, pg_catalog.pg_namespace n, pg_catalog.pg_type typi, pg_catalog.pg_type typo WHERE u.usesysid=p.proowner AND n.oid = p.pronamespace AND p.prorettype = typo.oid AND (typo.oid NOT IN (22, 24, 27, 28, 29, 30, 210, 705, 1790, 2202, 2203, 2204, 2205, 2206, 2249, 2275, 2276, 2277, 2278, 2279, 2280, 2281, 2282, 2283) OR typo.oid= '2276' ) AND p.proargtypes[0] = typi.oid AND (typi.oid NOT IN (22, 24, 27, 28, 29, 30, 210, 705, 1790, 2202, 2203, 2204, 2205, 2206, 2249, 2275, 2276, 2277, 2278, 2279, 2280, 2281, 2282, 2283) OR typi.oid= '2276' ) AND p.proisagg AND pg_catalog.pg_function_is_visible(p.oid) ORDER BY 2</render_as>
-  </test>  
+  <test name="string14">
+    <sql expected="D">SELECT kmj, "sdfjk /*name:"titi"*/" sdlkfj slkdjf sdlkf</sql>
+    <render_as>SELECT kmj, "sdfjk /*name:" titi "*/" sdlkfj slkdjf sdlkf</render_as>
+  </test>
 
-  <test>
-    <sql parsed="1">INSERT INTO products (ref, category, name, price, wh_stored) VALUES (##/*name:'+0' type:gchararray*/,  ##/*name:'+1' type:gint*/, ##/*name:'+2' type:gchararray*/, 31.4159, .1234 /*name:'+4' type:gfloat*/</sql>
-    <render_as>INSERT INTO products (ref, category, name, price, wh_stored) VALUES (##/*name:"+0" type:"gchararray"*/ , ## /*name:"+1" type:"gint"*/ , ## /*name:"+2" type:"gchararray"*/ , 31.4159, .1234/*name:"+4" type:"gfloat"*/</render_as>
+  <test name="string15">
+    <sql expected="D">SELECT schema.table.field || ##/*name:"Postfix" type:"varchar"*/</sql>
+    <render_as>SELECT schema.table.field || ## /* name:"Postfix" type:"varchar" */</render_as>
+    <render_as>SELECT schema.table.field || ## /* type:"gchararray" name:"Postfix" */</render_as>
     <params>
-      <param name="+0" type="gchararray"/>
-      <param name="+1" type="gint"/>
-      <param name="+2" type="gchararray"/>
-      <param name="+4" type="gfloat" default=".1234"/>
+      <param name="Postfix" type="varchar"/>
     </params>
   </test>
-  <test name="test2">
-    <sql parsed="1">INSERT INTO products (ref, category, name, price, wh_stored) VALUES (##/*name:'+0' type:gchararray*/,  ##/*name:'+1' type:gint*/, ##/*name:'+2' type:gchararray*/, 31.4159, .1234 /*name:'+4' type:gfloat*/</sql>
-    <render_as>INSERT INTO products (ref, category, name, price, wh_stored) VALUES (##/*name:"+0" type:"gchararray"*/ , ## /*name:"+1" type:"gint"*/ , ## /*name:"+2" type:"gchararray"*/ , 31.4159, .1234/*name:"+4" type:"gfloat"*/</render_as>
+
+  <test name="string16">
+    <sql expected="D" n_stmts="2">SELECT afield; UPDATE a firld</sql>
+    <render_as>SELECT afield ; UPDATE a firld</render_as>
+  </test>
+
+  <test name="string17">
+    <sql expected="D">SELECTR id FROM table WHERE id = 1234.5 /* name:id type:gfloat */</sql>
+    <render_as>SELECTR id FROM table WHERE id = 1234.5 /* name:"id" type:"gfloat" */</render_as>
+    <render_as>SELECTR id FROM table WHERE id = 1234.500000 /* type:"gfloat" name:"id" */</render_as>
     <params>
-      <param name="+0" type="gchararray"/>
-      <param name="+1" type="gint"/>
-      <param name="+2" type="gchararray"/>
-      <param name="+4" type="gfloat"/>
+      <param name="id" type="gfloat" default="1234.5"/>
+    </params>
+  </test>
+
+  <test name="string17.1">
+    <sql expected="D">SELECTR id FROM table WHERE id = 1234.5 /* name:id type:gfloat */ more text</sql>
+    <render_as>SELECTR id FROM table WHERE id = 1234.5 /* name:"id" type:"gfloat" */ more text</render_as>
+    <render_as>SELECTR id FROM table WHERE id = 1234.500000 /* type:"gfloat" name:"id" */ more text</render_as>
+    <params>
+      <param name="id" type="gfloat" default="1234.5"/>
     </params>
   </test>
 </unit>

@@ -68,7 +68,7 @@ void              gda_query_field_value_set_default_value   (GdaQueryFieldValue 
 const GValue     *gda_query_field_value_get_default_value   (GdaQueryFieldValue *field);
 
 void              gda_query_field_value_set_is_parameter    (GdaQueryFieldValue *field, gboolean is_param);
-gboolean          gda_query_field_value_get_is_parameter        (GdaQueryFieldValue *field);
+gboolean          gda_query_field_value_get_is_parameter    (GdaQueryFieldValue *field);
 gint              gda_query_field_value_get_parameter_index (GdaQueryFieldValue *field);
 void              gda_query_field_value_set_not_null        (GdaQueryFieldValue *field, gboolean not_null);
 gboolean          gda_query_field_value_get_not_null        (GdaQueryFieldValue *field);

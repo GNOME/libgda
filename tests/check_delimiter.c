@@ -9,49 +9,71 @@
 #define fail_unless(x,y) if (!(x)) g_warning (y)
 #endif
 
+#define CHECK_EXTRA_INFO
+
 #include "test-util.h"
 #include "../libgda/sql-delimiter/gda-sql-delimiter.h"
 
-GArray *basic_tests;
+TestSuite *current_ts;
 
 static void test_sql_statement (SqlTest *test, gint test_index);
 
-#define TEST_FILENAME (PATH_TO_TEST_XML "/basic_sql.xml") 
+#define TEST_FILENAME "/all_sql_tests.xml"
 
 #ifdef HAVE_CHECK
 /*
  * The Check library is available
  */
-START_TEST (basic_test_delimiter)
+START_TEST (do_test)
 {
-	test_sql_statement (g_array_index (basic_tests, SqlTest*, _i), _i);
+	gint index = _i - ((_i >> 16) << 16);
+	GArray *unit_tests = g_array_index (current_ts->unit_tests, GArray *, (_i >> 16));
+	
+	test_sql_statement (g_array_index (unit_tests, SqlTest*, index), index);
 }
 END_TEST
 
 Suite *
-delimiter_suite (void)
+make_suite (TestSuite *ts)
 {
-	basic_tests = sql_tests_load_from_file (TEST_FILENAME);
+	TCase *tc_core;
+	Suite *s;
+	gint i;
+	
+	current_ts = ts;
+	s = suite_create (ts->name);
+	for (i = 0; i < ts->unit_files->len; i++) {
+		GArray *unit_tests = g_array_index (ts->unit_tests, GArray *, i);
+		gint min, max;
 
-	Suite *s = suite_create ("Gda Delimiter");
-
-	/* Core test case */
-	TCase *tc_core = tcase_create ("Basic");
-	tcase_add_loop_test (tc_core, basic_test_delimiter, 0, basic_tests->len);
-	suite_add_tcase (s, tc_core);
+		min = i << 16;
+		max = min + unit_tests->len;
+		tc_core = tcase_create (g_array_index (ts->unit_files, gchar *, i));
+		tcase_add_loop_test (tc_core, do_test, min, max);
+		suite_add_tcase (s, tc_core);
+	}
 	
 	return s;
 }
 
 int
-main (void)
+main (int argc, char **argv)
 {
-	int number_failed;
-	Suite *s = delimiter_suite ();
-	SRunner *sr = srunner_create (s);
-	srunner_run_all (sr, CK_NORMAL);
-	number_failed = srunner_ntests_failed (sr);
-	srunner_free (sr);
+	GSList *suites, *list;
+	int number_failed = 0;
+
+	gda_init ("check-delimiter", PACKAGE_VERSION, argc, argv);
+	suites = test_suite_load_from_file (TEST_FILENAME);
+	for (list = suites; list; list = list->next) {
+		TestSuite *ts = (TestSuite *)(list->data);
+		Suite *s = make_suite (ts);
+		SRunner *sr = srunner_create (s);
+		
+		srunner_run_all (sr, CK_NORMAL);
+		number_failed += srunner_ntests_failed (sr);
+		srunner_free (sr);
+	}
+	
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 #else
@@ -59,12 +81,22 @@ main (void)
  * The Check library is not available
  */
 int
-main (void)
+main (int argc, char **argv)
 {
+	GSList *suites, *list;
 	gint i;
-	basic_tests = sql_tests_load_from_file (TEST_FILENAME);
-	for (i = 0; i < basic_tests->len; i++)
-		test_sql_statement (g_array_index (basic_tests, SqlTest*, i), i);
+
+	gda_init ("check-delimiter", PACKAGE_VERSION, argc, argv);
+	suites = test_suite_load_from_file (PATH_TO_TEST_XML);
+	for (list = suites; list; list = list->next) {
+		TestSuite *ts = (TestSuite *)(list->data);
+		for (i = 0; i < ts->unit_files->len; i++) {
+			gint j;
+			GArray *unit_tests = g_array_index (ts->unit_tests, GArray *, i);
+			for (j = 0; j < unit_tests->len; j++)
+				test_sql_statement (g_array_index (unit_tests, SqlTest*, j), j);
+		}
+	}
 	return EXIT_SUCCESS;
 }
 #endif
@@ -94,13 +126,29 @@ test_sql_statement (SqlTest *test, gint test_index)
 		tname = g_strdup_printf ("(Sql n.%d)", test_index);
 
 	statements = gda_delimiter_parse_with_error (test->sql_to_test, &error);
-	if (test->parsed && !statements) {
+#ifdef CHECK_SHOW_ALL_ERRORS
+	if (!statements && error)
+		g_print ("PARSE ERROR %s=>%s\n", tname, error->message ? error->message: "No detail");
+#endif
+	if (g_list_length (statements) != (test->delim_parsed ? test->n_statements : 0)) {
+		gchar *str;
+
+		str = g_strdup_printf ("Recognized %d statements when %d are expected %s", 
+				       g_list_length (statements), test->delim_parsed ? test->n_statements : 0, tname);
+		fail (str);
+	}
+
+	if (test->delim_parsed && !statements && error) {
 		gchar *str;
 
 		str = g_strdup_printf ("Cannot parse SQL %s", tname);
+#ifdef CHECK_EXTRA_INFO
+		if (!statements && error)
+			g_print ("PARSE ERROR %s=>%s\n", tname, error->message ? error->message: "No detail");
+#endif
 		fail (str);
 	}
-	else if (!test->parsed && statements) {
+	else if (!test->delim_parsed && statements) {
 		gchar *str;
 
 		str = g_strdup_printf ("Should not parse SQL %s", tname);
@@ -163,7 +211,7 @@ test_sql_statement (SqlTest *test, gint test_index)
 				}
 				/* compare param's NULLOK */
 				attr = get_param_attr_from_pspec_list ((GList *)(params->data), GDA_DELIMITER_PARAM_NULLOK);
-				abool = attr && ((*attr == 't') || (*attr == 'T')) ? TRUE : FALSE;
+				abool = !attr || (attr && ((*attr == 't') || (*attr == 'T'))) ? TRUE : FALSE;
 				if (param->nullok && !abool) {
 					str = g_strdup_printf ("Parameter '%s' should have NULLOK %s", pname, tname);
 					fail (str);
@@ -183,6 +231,26 @@ test_sql_statement (SqlTest *test, gint test_index)
 					str = g_strdup_printf ("Parameter '%s' should not have ISPARAM %s", pname, tname);
 					fail (str);
 				}
+				/* compare default values */
+				attr = get_param_attr_from_pspec_list ((GList *)(params->data), GDA_DELIMITER_PARAM_DEFAULT);
+				if (attr && !param->default_string) {
+					str = g_strdup_printf ("Parameter '%s' should not have a default value %s", 
+							       pname, tname);
+					fail (str);
+				}
+				else if (param->default_string && !attr) {
+					str = g_strdup_printf ("Parameter '%s' should have a default value of '%s' %s", 
+							       pname, param->default_string, tname);
+					fail (str);
+				}
+				else if (attr) {
+					if (strcmp (attr, param->default_string)) {
+						str = g_strdup_printf ("Expecting default value '%s' for parameter '%s', "
+								       "got '%s' %s",
+								       param->default_string, pname, attr, tname);
+						fail (str);
+					}
+				}
 				sql_param_free (param);
 			}
 		}
@@ -200,9 +268,9 @@ test_sql_statement (SqlTest *test, gint test_index)
 		else {
 			/* test rendering */
 			str = gda_delimiter_to_string (concat);
-			if (strcmp (test->sql_rendered ? test->sql_rendered : test->sql_to_test, str)) {
+			if (!sql_test_rendering_is_correct (test, str)) {
 				gchar *str2;
-#ifndef HAVE_CHECK
+#ifdef CHECK_EXTRA_INFO
 				g_print ("Rendered %s as: %s\n", tname, str);
 #endif
 				str2 = g_strdup_printf ("Wrong rendering %s", tname);

@@ -16,16 +16,13 @@
 
 #include <stdio.h>
 #include <glib.h>
+#include <glib/gi18n-lib.h>
 #include <strings.h>
 #include <string.h>
 
 #include "sql_parser.h"
 #include "sql_tree.h"
 #include "mem.h"
-
-#ifndef _
-#define _(x) (x)
-#endif
 
 extern char *sqltext;
 extern void sql_switch_to_buffer(void *buffer);
@@ -34,8 +31,9 @@ extern void sql_delete_buffer (void *buffer);
 
 void sqlerror(const char *error);
 
-sql_statement *sql_result;
-GError **sql_error;
+sql_statement  *sql_result;
+GError        **sql_error;
+static gboolean error_forced;
 
 int sqlparse(void);
 
@@ -64,6 +62,7 @@ sqlerror(const char *string)
 		}
 	else
 		fprintf(stderr, "SQL Parser error: %s near `%s'\n", string, sqltext);
+	error_forced = TRUE;
 }
 
 static int
@@ -392,10 +391,11 @@ sql_parse_with_error(const char *sqlquery, GError ** error)
 		}
 
 	sql_error = error;
+	error_forced = FALSE;
 	buffer = sql_scan_string (sqlquery);
 	sql_switch_to_buffer (buffer);
 
-	if (sqlparse() == 0)
+	if ((sqlparse() == 0) && !error_forced)
 		{
 			sql_result->full_query = memsql_strdup(sqlquery);
 			sql_delete_buffer (buffer);
@@ -406,6 +406,7 @@ sql_parse_with_error(const char *sqlquery, GError ** error)
 			if (!error)
 				fprintf (stderr, "Error on SQL statement: %s\n", sqlquery);
 			sql_delete_buffer (buffer);
+			error_forced = FALSE;
 			return NULL;
 		}
 }

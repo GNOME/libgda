@@ -172,9 +172,15 @@ gda_handler_type_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (value) {
-		const gchar *str;
-		str = gda_g_type_to_string (g_value_get_ulong (value));
-		retval = g_strdup_printf ("'%s'", str);
+		GTypeQuery tq;
+		g_type_query (g_value_get_ulong (value), &tq);
+		if (tq.type != 0) {
+			const gchar *str;
+			str = gda_g_type_to_string (g_value_get_ulong (value));
+			retval = g_strdup_printf ("'%s'", str);
+		}
+		else
+			retval = g_strdup (NULL);	
 	}
 	else
 		retval = g_strdup (NULL);
@@ -192,8 +198,15 @@ gda_handler_type_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 	hdl = GDA_HANDLER_TYPE (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
-	if (value) 
-		retval = g_strdup (gda_g_type_to_string (g_value_get_ulong (value)));
+	if (value) {
+		GTypeQuery tq;
+       
+		g_type_query (g_value_get_ulong (value), &tq);
+		if (tq.type != 0)
+			retval = g_strdup (gda_g_type_to_string (g_value_get_ulong (value)));
+		else
+			retval = g_strdup (NULL); /* FIXME: return NULL instead because of the error? */
+	}
 	else
 		retval = g_strdup (NULL);
 

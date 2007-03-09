@@ -78,7 +78,7 @@ struct _GdaDictClass
 	void    (*object_act_changed)   (GdaDict *dict, GdaObject *obj);
 
         void    (*data_update_started)  (GdaDict *dict);
-        void    (*update_progress)      (GdaDict *dict, gchar * msg, guint now, guint total);
+        void    (*update_progress)      (GdaDict *dict, gchar *msg, guint now, guint total);
         void    (*data_update_finished) (GdaDict *dict);
 
 	/* signal that a change in the whole dictionary has occurred */

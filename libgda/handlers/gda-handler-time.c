@@ -358,7 +358,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
 				break;
 			}
 		}
-		g_print ("GdaHandlerTime\n");
+		g_print ("GdaHandlerTime %p\n", hdl);
 		g_print ("\tlocale order = %s %s %s, separator = %c\n", 
 			 strings[0], strings[1], strings[2], hdl->priv->str_locale->separator);
 		if (hdl->priv->str_locale->twodigit_years)
@@ -443,6 +443,59 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *hdl, const GValue
 		g_assert_not_reached ();
 
 	return retval;
+}
+
+/**
+ * gda_handler_time_get_format
+ * @hdl: a #GdaHandlerTime object
+ * @type: the type of data being handled
+ *
+ * Get a string representing the locale-dependant way to enter a date/time/datetime, using
+ * a syntax suitable for the #GnomeDbFormatEntry widget
+ *
+ * Returns: a new string
+ */
+gchar *
+gda_handler_time_get_format (GdaHandlerTime *hdl, GType type)
+{
+	gchar *str;
+	GString *string;
+	gint i;
+
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (hdl), NULL);
+	g_return_val_if_fail (hdl->priv, NULL);
+
+	string = g_string_new ("");
+	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP)) {
+		for (i=0; i<3; i++) {
+			if (i > 0)
+				g_string_append_c (string, hdl->priv->str_locale->separator);
+			switch (hdl->priv->str_locale->dmy_order[i]) {
+			case G_DATE_DAY:
+			case G_DATE_MONTH:
+				g_string_append (string, "00");
+				break;
+			case G_DATE_YEAR:
+				if (hdl->priv->str_locale->twodigit_years)
+					g_string_append (string, "00");
+				else
+					g_string_append (string, "0000");
+				break;
+			default:
+				g_assert_not_reached ();
+				break;
+			}
+		}
+	}
+	if (type == GDA_TYPE_TIMESTAMP)
+		g_string_append_c (string, ' ');
+
+	if ((type == GDA_TYPE_TIME) || (type == GDA_TYPE_TIMESTAMP)) 
+		g_string_append (string, "00:00:00");
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
 }
 
 /* Interface implementation */

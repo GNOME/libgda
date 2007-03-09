@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include <glib.h>
+#include <glib/gi18n-lib.h>
 
 #include "sql_parser.h"
 
@@ -26,6 +27,10 @@ char *string_buf_ptr;
 %option caseless
 %x STRING
 %x TEXTUAL
+%x PSPEC
+%x PSTRING      
+%x PTEXTUAL
+
 %%
 "select"	{return L_SELECT;}
 "insert"	{return L_INSERT;}
@@ -88,43 +93,72 @@ char *string_buf_ptr;
 [a-zA-Z0-9_]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
 [ \t\n\r]	{;}
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}
-<STRING>\\'     {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
-<STRING>\'		{BEGIN(INITIAL);
+<STRING,PSTRING>\\' {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
+<STRING>\'	{BEGIN(INITIAL);
 		 *string_buf_ptr = '\0';
-		 sqllval.str = memsql_strappend_free (memsql_strdup ("'"), memsql_strappend_free (memsql_strdup (string_buf), memsql_strdup ("'")));
+		 sqllval.str = memsql_strappend_free (memsql_strdup ("'"), 
+				memsql_strappend_free (memsql_strdup (string_buf), memsql_strdup ("'")));
 		 return L_STRING;
 		}
-<STRING>\\n	{*string_buf_ptr++='\n';}
-<STRING>\\t	{*string_buf_ptr++='\t';}
-<STRING>\\r	{*string_buf_ptr++='\r';}
-<STRING>\\b	{*string_buf_ptr++='\b';}
-<STRING>\\f	{*string_buf_ptr++='\f';}
-<STRING>\\(.|\n)	{*string_buf_ptr++=sqltext[0];}
-<STRING>.	{*string_buf_ptr++=sqltext[0];}
+<PSTRING>\'     {BEGIN(PSPEC);
+                 *string_buf_ptr = '\0';
+                 sqllval.str = memsql_strappend_free (memsql_strdup ("'"), 
+                                memsql_strappend_free (memsql_strdup (string_buf), memsql_strdup ("'")));
+                 return L_STRING;
+                }
+<STRING,PSTRING>\\n	{*string_buf_ptr++='\n';}
+<STRING,PSTRING>\\t	{*string_buf_ptr++='\t';}
+<STRING,PSTRING>\\r	{*string_buf_ptr++='\r';}
+<STRING,PSTRING>\\b	{*string_buf_ptr++='\b';}
+<STRING,PSTRING>\\f	{*string_buf_ptr++='\f';}
+<STRING,PSTRING>\\(.|\n) {*string_buf_ptr++=sqltext[0];}
+<STRING,PSTRING>.	{*string_buf_ptr++=sqltext[0];}
+<STRING,PSTRING><<EOF>> {
+                        sqlerror (_("unterminated string"));
+                        yyterminate();
+                        }
 
-"/*"		{return L_LSBRACKET;}
-"*/"            {return L_RSBRACKET;}
-
-"name:"		{return L_PNAME;}
-"descr:"        {return L_PDESCR;}
-"type:"		{return L_PTYPE;}
-"isparam:"	{return L_PISPARAM;}
-"nullok:"       {return L_PNULLOK;}
-"##"            {return L_UNSPECVAL;}
+"##"            	{return L_UNSPECVAL;}
+"/*"			{BEGIN(PSPEC); return L_LSBRACKET;}
+<PSPEC>"*/"             {BEGIN(INITIAL); return L_RSBRACKET;}
+<PSPEC>"name:"		{return L_PNAME;}
+<PSPEC>"descr:"         {return L_PDESCR;}
+<PSPEC>"type:"		{return L_PTYPE;}
+<PSPEC>"isparam:"	{return L_PISPARAM;}
+<PSPEC>"nullok:"        {return L_PNULLOK;}
+<PSPEC>[a-zA-Z0-9_\-\+]+ {sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
+<PSPEC>[ \t\n\r]        {;}
+<PSPEC>\'               {string_buf_ptr = string_buf; BEGIN(PSTRING);}
+<PSPEC>\"               {string_buf_ptr = string_buf; BEGIN(PTEXTUAL);}
 
 \"		{string_buf_ptr = string_buf; BEGIN(TEXTUAL);}
-<TEXTUAL>\"              {BEGIN(INITIAL);
+<TEXTUAL>\"     {BEGIN(INITIAL);
                  *string_buf_ptr = '\0';
                  sqllval.str = memsql_strdup (string_buf);
                  return L_TEXTUAL;
                 }
-<TEXTUAL>\\n     {*string_buf_ptr++='\n';}
-<TEXTUAL>\\t     {*string_buf_ptr++='\t';}
-<TEXTUAL>\\r     {*string_buf_ptr++='\r';}
-<TEXTUAL>\\b     {*string_buf_ptr++='\b';}
-<TEXTUAL>\\f     {*string_buf_ptr++='\f';}
-<TEXTUAL>\\(.|\n)        {*string_buf_ptr++=sqltext[0];}
-<TEXTUAL>.       {*string_buf_ptr++=sqltext[0];}
+<PTEXTUAL>\"    {BEGIN(PSPEC);
+                 *string_buf_ptr = '\0';
+                 sqllval.str = memsql_strdup (string_buf);
+                 return L_TEXTUAL;
+                }
+<TEXTUAL,PTEXTUAL>\\n     {*string_buf_ptr++='\n';}
+<TEXTUAL,PTEXTUAL>\\t     {*string_buf_ptr++='\t';}
+<TEXTUAL,PTEXTUAL>\\r     {*string_buf_ptr++='\r';}
+<TEXTUAL,PTEXTUAL>\\b     {*string_buf_ptr++='\b';}
+<TEXTUAL,PTEXTUAL>\\f     {*string_buf_ptr++='\f';}
+<TEXTUAL,PTEXTUAL>\\(.|\n)        {*string_buf_ptr++=sqltext[0];}
+<TEXTUAL,PTEXTUAL>.       {*string_buf_ptr++=sqltext[0];}
+<TEXTUAL,PTEXTUAL><<EOF>> {
+                        sqlerror (_("unterminated textual expression"));
+                        yyterminate();
+                        }
 
-.		 {;}
+;		{;}
+.		 {gchar *str;
+		  str = g_strdup_printf (_("Unknown char '%s'"), sqltext);
+		  sqlerror (str);
+		  g_free (str);
+		  yyterminate();
+		 }
 %%

@@ -1762,11 +1762,13 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	if (value1 == value2)
 		return 0;
 
-	else if (type == G_TYPE_INT64)
-		return g_value_get_int64 (value1) - g_value_get_int64 (value2);
+	else if (type == G_TYPE_INT64) 
+		return (g_value_get_int64 (value1) > g_value_get_int64 (value2)) ? 1 : 
+			((g_value_get_int64 (value1) == g_value_get_int64 (value2)) ? 0 : -1);
 		
 	else if (type == G_TYPE_UINT64)
-		return g_value_get_uint64 (value1) - g_value_get_uint64 (value2);
+		return (g_value_get_uint64 (value1) > g_value_get_uint64 (value2)) ? 1 : 
+			((g_value_get_uint64 (value1) == g_value_get_uint64 (value2)) ? 0 : -1);
 
 	else if (type == GDA_TYPE_BINARY) {
 		const GdaBinary *binary1 = gda_value_get_binary (value1);
@@ -1834,7 +1836,8 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	}
 
 	else if (type == G_TYPE_INT)
-		return g_value_get_int (value1) - g_value_get_int (value2);
+		return (g_value_get_int (value1) > g_value_get_int (value2)) ? 1 : 
+			((g_value_get_int (value1) == g_value_get_int (value2)) ? 0 : -1);
 
 	else if (type == GDA_TYPE_LIST) {
 		retval = 0;
@@ -1871,19 +1874,24 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	}
 
 	else if (type == G_TYPE_FLOAT)
-		return (gint) g_value_get_float (value1) - g_value_get_float (value2);
+		return (g_value_get_float (value1) > g_value_get_float (value2)) ? 1 : 
+			((g_value_get_float (value1) == g_value_get_float (value2)) ? 0 : -1);
 
 	else if (type == GDA_TYPE_SHORT)
-		return gda_value_get_short (value1) - gda_value_get_short (value2);
+		return (gda_value_get_short (value1) > gda_value_get_short (value2)) ? 1 : 
+			((gda_value_get_short (value1) == gda_value_get_short (value2)) ? 0 : -1);
 
 	else if (type == G_TYPE_ULONG)
-		return g_value_get_ulong (value1) - g_value_get_ulong (value2);
+		return (g_value_get_ulong (value1) > g_value_get_ulong (value2)) ? 1 : 
+			((g_value_get_ulong (value1) == g_value_get_ulong (value2)) ? 0 : -1);
 
 	else if (type == G_TYPE_LONG)
-		return g_value_get_long (value1) - g_value_get_long (value2);
+		return (g_value_get_long (value1) > g_value_get_long (value2)) ? 1 : 
+			((g_value_get_long (value1) == g_value_get_long (value2)) ? 0 : -1);
 	
 	else if (type == GDA_TYPE_USHORT)
-		return gda_value_get_ushort (value1) - gda_value_get_ushort (value2);
+		return (gda_value_get_ushort (value1) > gda_value_get_ushort (value2)) ? 1 : 
+			((gda_value_get_ushort (value1) == gda_value_get_ushort (value2)) ? 0 : -1);
 	
 	else if (type == G_TYPE_STRING)	{
 		const gchar *str1, *str2;
@@ -1915,12 +1923,17 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 			       sizeof (GdaTimestamp));
 	
 	else if (type == G_TYPE_CHAR)
-		return g_value_get_char (value1) - g_value_get_char (value2);
+		return (g_value_get_char (value1) > g_value_get_char (value2)) ? 1 : 
+			((g_value_get_char (value1) == g_value_get_char (value2)) ? 0 : -1);
 
 	else if (type == G_TYPE_UCHAR)
-		return g_value_get_uchar (value1) - g_value_get_uchar (value2);
+		return (g_value_get_uchar (value1) > g_value_get_uchar (value2)) ? 1 : 
+			((g_value_get_uchar (value1) == g_value_get_uchar (value2)) ? 0 : -1);
 
 	else if (type == G_TYPE_UINT)
+		return (g_value_get_uint (value1) > g_value_get_uint (value2)) ? 1 : 
+			((g_value_get_uint (value1) == g_value_get_uint (value2)) ? 0 : -1);
+
 		return g_value_get_uint (value1) - g_value_get_uint(value2);
 
 

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<unit>
+  <test name="p1">
+    <sql expected="S">INSERT INTO products (ref, category, name, price, wh_stored) VALUES (##/*name:'+0' type:gchararray*/,  ##/*name:'+1' type:gint*/, ##/*name:'+2' type:gchararray*/, 31.4159, .1234 /*name:'+4' type:gfloat*/)</sql>
+    <render_as>INSERT INTO products (ref, category, name, price, wh_stored) VALUES ( ## /* name:"+0" type:"gchararray" */, ## /* name:"+1" type:"gint" */, ## /* name:"+2" type:"gchararray" */, 31.4159, .1234 /* name:"+4" type:"gfloat" */)</render_as>
+    <render_as>INSERT INTO products (ref, category, name, price, wh_stored) VALUES (## /* type:"gchararray" name:"+0" */, ## /* type:"gint" name:"+1" */, ## /* type:"gchararray" name:"+2" */, 31.4159, 0.123400 /* type:"gfloat" name:"+4" */)</render_as>
+    <params>
+      <param name="+0" type="gchararray"/>
+      <param name="+1" type="gint"/>
+      <param name="+2" type="gchararray"/>
+      <param name="+4" type="gfloat" default=".1234"/>
+    </params>
+  </test>
+
+  <test name="p2">
+    <sql expected="D">DELETE CASE field1 FROM order_contents WHERE order_id = ## /*name:'oid' type:'gint'*/ AND product_ref = ## /*name:'-0' type:gint*/ AND quantity = ## /*name:'-2' type:gint*/ AND discount = ## /*name:'-3' type:gfloat*/</sql>
+    <render_as>DELETE CASE field1 FROM order_contents WHERE order_id = ## /* name:"oid" type:"gint" */ AND product_ref = ## /* name:"-0" type:"gint" */ AND quantity = ## /* name:"-2" type:"gint" */ AND discount = ## /* name:"-3" type:"gfloat" */</render_as>
+    <render_as>DELETE CASE field1 FROM order_contents WHERE order_id = ## /* type:"gint" name:"oid" */ AND product_ref = ## /* type:"gint" name:"-0" */ AND quantity = ## /* type:"gint" name:"-2" */ AND discount = ## /* type:"gfloat" name:"-3" */</render_as>
+    <params>
+      <param name="oid" type="gint"/>
+      <param name="-0" type="gint"/>
+      <param name="-2" type="gint"/>
+      <param name="-3" type="gfloat"/>
+    </params>
+  </test>
+
+  <test name="p3">
+    <sql expected="A">DELETE FROM order_contents WHERE order_id = ## /*name:"oid" type:"gint"*/ AND product_ref = ## /*name:"-0" type:"gint"*/ AND quantity = ## /*name:"-2" type:"gint"*/ AND discount = ## /*name:"-3" type:"gfloat"*/</sql>
+    <render_as>DELETE FROM order_contents WHERE order_id = ## /* name:"oid" type:"gint" */ AND product_ref = ## /* name:"-0" type:"gint" */ AND quantity = ## /* name:"-2" type:"gint" */ AND discount = ## /* name:"-3" type:"gfloat" */</render_as>
+    <render_as>DELETE FROM order_contents WHERE order_id=## /* type:"gint" name:"oid" */ AND product_ref=## /* type:"gint" name:"-0" */ AND quantity=## /* type:"gint" name:"-2" */ AND discount=## /* type:"gfloat" name:"-3" */</render_as>
+    <params>
+      <param name="oid" type="gint"/>
+      <param name="-0" type="gint"/>
+      <param name="-2" type="gint"/>
+      <param name="-3" type="gfloat"/>
+    </params>
+  </test>
+
+  <test name="p4">
+    <sql expected="A">UPDATE order_contents SET product_ref = ## /*name:'+0' type:'gint'*/, quantity = ## /*name:'+2' type:'gint'*/, discount = ## /*name:'+3' type:'gfloat'*/ WHERE order_id = ## /*name:'oid' type:'gint'*/ AND product_ref = ## /*name:'-0' type:'gint'*/ AND quantity = ## /*name:'-2' type:'gint'*/ AND discount = ## /*name:'-3' type:'gfloat'*/</sql>
+    <render_as>UPDATE order_contents SET product_ref = ## /* name:"+0" type:"gint" */, quantity = ## /* name:"+2" type:"gint" */, discount = ## /* name:"+3" type:"gfloat" */ WHERE order_id = ## /* name:"oid" type:"gint" */ AND product_ref = ## /* name:"-0" type:"gint" */ AND quantity = ## /* name:"-2" type:"gint" */ AND discount = ## /* name:"-3" type:"gfloat" */</render_as>
+    <render_as>UPDATE order_contents SET product_ref=## /* type:"gint" name:"+0" */, quantity=## /* type:"gint" name:"+2" */, discount=## /* type:"gfloat" name:"+3" */ WHERE order_id=## /* type:"gint" name:"oid" */ AND product_ref=## /* type:"gint" name:"-0" */ AND quantity=## /* type:"gint" name:"-2" */ AND discount=## /* type:"gfloat" name:"-3" */</render_as>
+    <params>
+      <param name="+0" type="gint"/>
+      <param name="+2" type="gint"/>
+      <param name="+3" type="gfloat"/>
+      <param name="oid" type="gint"/>
+      <param name="-0" type="gint"/>
+      <param name="-2" type="gint"/>
+      <param name="-3" type="gfloat"/>
+    </params>
+  </test>
+</unit>

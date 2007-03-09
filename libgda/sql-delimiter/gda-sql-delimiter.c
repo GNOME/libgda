@@ -20,15 +20,12 @@
 
 #include <stdio.h>
 #include <glib.h>
+#include <glib/gi18n-lib.h>
 #include <strings.h>
 #include <string.h>
 
 #include "gda-sql-delimiter.h"
 #include "gda-delimiter-tree.h"
-
-#ifndef _
-#define _(x) (x)
-#endif
 
 extern char *gda_delimitertext;
 extern int gda_delimiterdebug;
@@ -38,9 +35,10 @@ extern void gda_delimiter_delete_buffer (void *buffer);
 
 void gda_delimitererror (char *error);
 
-GdaDelimiterStatement *last_sql_result;
-GList                 *all_sql_results;
-GError **gda_sql_error;
+GdaDelimiterStatement  *last_sql_result;
+GList                  *all_sql_results;
+GError                **gda_sql_error;
+static gboolean         error_forced;
 
 int gda_delimiterparse (void);
 
@@ -58,11 +56,13 @@ gda_delimitererror (char *string)
 	if (gda_sql_error) {
 		if (!strcmp (string, "parse error"))
 			g_set_error (gda_sql_error, 0, 0, _("Parse error near `%s'"), gda_delimitertext);
-		if (!strcmp (string, "syntax error"))
+		else if (!strcmp (string, "syntax error"))
 			g_set_error (gda_sql_error, 0, 0, _("Syntax error near `%s'"), gda_delimitertext);
+		else g_set_error (gda_sql_error, 0, 0, string);
 	}
 	else
 		fprintf (stderr, "SQL Parser error: %s near `%s'\n", string, gda_delimitertext);
+	error_forced = TRUE;
 }
 
 
@@ -145,6 +145,7 @@ gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
 	gda_delimiterdebug = 0; /* parser debug active or not */
 	last_sql_result = NULL;
 	all_sql_results = NULL;
+	error_forced = FALSE;
 	if (!sqlquery) {
 		if (error)
 			g_set_error (error, 0, 0, _("Empty query to parse"));
@@ -154,11 +155,12 @@ gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
 	gda_sql_error = error;
 	buffer = gda_delimiter_scan_string (sqlquery);
 	gda_delimiter_switch_to_buffer (buffer);
-	if (gda_delimiterparse ()) {
+	if (gda_delimiterparse () || error_forced) {
 		g_list_foreach (all_sql_results, (GFunc) sql_destroy_statement, NULL);
 		g_list_free (all_sql_results);
 		all_sql_results = NULL;
 		last_sql_result = NULL;
+		error_forced = FALSE;
 	}
 	else {
 		GList *list;
@@ -377,8 +379,6 @@ gda_delimiter_to_string_real (GdaDelimiterStatement *statement, gboolean sep)
 	list = statement->expr_list;
 	while (list) {
 		tmp = sql_to_string_expr ((GdaDelimiterExpr *)(list->data), sep);
-		if ((list != statement->expr_list) && !sep)
-			g_string_append_c (string, ' ');
 		g_string_append (string, tmp);
 		g_free (tmp);
 
@@ -393,8 +393,6 @@ gda_delimiter_to_string_real (GdaDelimiterStatement *statement, gboolean sep)
 			list = statement->params_specs;
 			while (list) {
 				tmp = sql_to_string_pspec_list ((GList *)(list->data), sep);
-				if ((list != statement->params_specs) && !sep)
-					g_string_append_c (string, ' ');
 				g_string_append (string, "## ");
 				g_string_append (string, tmp);
 				g_free (tmp);
@@ -415,22 +413,31 @@ sql_to_string_expr (GdaDelimiterExpr *expr, gboolean sep)
 	GString *string;
 	gchar *tmp;
 
+	gboolean addnl = FALSE;
 	string = g_string_new ("");
 	if (expr->sql_text) {
-		if (sep)
-			tmp = g_strdup_printf ("\t%s\n", expr->sql_text);
-		else
-			tmp = g_strdup_printf ("%s", expr->sql_text);
-		g_string_append (string, tmp);
-		g_free (tmp);
+		if (sep) {
+			tmp = g_strdup_printf ("\t%s", expr->sql_text);
+			addnl = TRUE;
+			g_string_append (string, tmp);
+			g_free (tmp);
+		}
+		else {
+			if (expr->pspec_list)
+				g_string_append_c (string, ' ');
+			g_string_append (string, expr->sql_text);
+		}
 	}
 	if (expr->pspec_list) {
+		addnl = FALSE;
 		tmp = sql_to_string_pspec_list (expr->pspec_list, sep);
 		if (! expr->sql_text)
-			g_string_append (string, "## ");
+			g_string_append (string, " ##");
 		g_string_append (string, tmp);
 		g_free (tmp);
 	}
+	if (addnl)
+		g_string_append_c (string, '\n');
 
 	tmp = string->str;
 	g_string_free (string, FALSE);
@@ -449,12 +456,12 @@ sql_to_string_pspec_list (GList *pspecs, gboolean sep)
 	list = pspecs;
 	if (sep)
 		g_string_append_c (string, '\t');
-	g_string_append (string, "/*");
+	g_string_append (string, " /*");
 	while (list) {
 		GdaDelimiterParamSpec *pspec = (GdaDelimiterParamSpec *)(list->data);
 
-		if (list != pspecs)
-			g_string_append (string, " ");
+		if (pspec->type != GDA_DELIMITER_PARAM_DEFAULT)
+			g_string_append_c (string, ' ');
 
 		switch (pspec->type) {
 		case GDA_DELIMITER_PARAM_NAME:
@@ -472,13 +479,16 @@ sql_to_string_pspec_list (GList *pspecs, gboolean sep)
 		case GDA_DELIMITER_PARAM_NULLOK:
 			g_string_append_printf (string, "nullok:\"%s\"", pspec->content);
 			break;
+		case GDA_DELIMITER_PARAM_DEFAULT:
+			/* don't print anything */
+			break;
 		default:
 			g_string_append_printf (string, ":?? =\"%s\"", pspec->content);
 			break;
 		}
 		list = g_list_next (list);
 	}
-	g_string_append (string, "*/");
+	g_string_append (string, " */");
 	if (sep)
 		g_string_append_c (string, '\n');
 

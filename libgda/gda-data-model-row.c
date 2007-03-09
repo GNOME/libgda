@@ -533,7 +533,6 @@ gda_data_model_row_append_row (GdaDataModel *model, GError **error)
 	gint retval = -1;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), -1);
-	g_return_val_if_fail (row != NULL, -1);
 	g_return_val_if_fail (CLASS (model)->append_row != NULL, -1);
 
 	if (((GdaDataModelRow *)model)->priv->read_only) {

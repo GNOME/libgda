@@ -75,7 +75,7 @@ GList           *list;
 GdaDelimiterParamSpec     *ps;
 }
 
-%token L_WORD
+%token L_WORD L_CHAR L_SPC
 %token L_STRING L_TEXTUAL
 
 %token L_LSBRACKET L_RSBRACKET
@@ -85,7 +85,7 @@ GdaDelimiterParamSpec     *ps;
 %token L_SC 
 
 %type <v> expr statement
-%type <str> L_WORD L_STRING L_TEXTUAL L_SC
+%type <str> L_WORD L_CHAR L_STRING L_TEXTUAL L_SC chunck
 %type <list> param_spec param_spec_list expr_list statements
 %type <ps> param_spec_item
 
@@ -94,6 +94,8 @@ GdaDelimiterParamSpec     *ps;
 statements: statement		     {last_sql_result = $1; $$ = all_sql_results = g_list_append (NULL, $1);}
 	| statement L_SC	     {last_sql_result = $1; $$ = all_sql_results = g_list_append (NULL, $1);}
 	| statement L_SC statements  {last_sql_result = $1; $$ = all_sql_results = g_list_prepend ($3, $1);}
+	| L_SC			     {last_sql_result = NULL; $$ = all_sql_results;}
+	|			     {last_sql_result = NULL; $$ = all_sql_results;}
 	;
 
 statement: expr_list		     {$$ = gda_delimiter_statement_build (GDA_DELIMITER_UNKNOWN, $1);}
@@ -106,11 +108,18 @@ expr_list: expr           {$$ = g_list_prepend (NULL, $1);}
 
 expr: L_TEXTUAL                   {$$ = gda_delimiter_expr_build (g_strdup_printf ("\"%s\"", $1), NULL); g_free ($1);}
         | L_STRING                {$$ = gda_delimiter_expr_build ($1, NULL);}
-        | L_WORD                 {$$ = gda_delimiter_expr_build ($1, NULL);}
+        | L_WORD                  {$$ = gda_delimiter_expr_build ($1, NULL);}
         | L_UNSPECVAL param_spec  {$$ = gda_delimiter_expr_build (NULL, $2);}
 	| L_WORD param_spec	  {$$ = gda_delimiter_expr_build ($1, $2);}
 	| L_STRING param_spec     {$$ = gda_delimiter_expr_build ($1, $2);}
+	| L_TEXTUAL param_spec	  {$$ = gda_delimiter_expr_build (g_strdup_printf ("\"%s\"", $1), $2); g_free ($1);}
+	| chunck		  {$$ = gda_delimiter_expr_build ($1, NULL);}
+	| chunck param_spec	  {$$ = gda_delimiter_expr_build ($1, $2);}
         ;
+
+chunck: L_CHAR			  {$$ = $1;}
+	| chunck L_CHAR		  {$$ = g_strdup_printf ("%s%s", $1, $2); g_free ($1); g_free ($2);}
+	;
 
 param_spec: L_LSBRACKET param_spec_list L_RSBRACKET {$$ = $2;}
 	;

@@ -1,6 +1,6 @@
 /* gda-dict.c
  *
- * Copyright (C) 2003 - 2006 Vivien Malerba
+ * Copyright (C) 2003 - 2007 Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -206,7 +206,7 @@ gda_dict_class_init (GdaDictClass * class)
                               G_STRUCT_OFFSET (GdaDictClass, update_progress),
                               NULL, NULL,
                               gda_marshal_VOID__OBJECT_UINT_UINT,
-                              G_TYPE_NONE, 3, GDA_TYPE_OBJECT, G_TYPE_UINT, G_TYPE_UINT);
+                              G_TYPE_NONE, 3, G_TYPE_STRING, G_TYPE_UINT, G_TYPE_UINT);
         gda_dict_signals[DATA_UPDATE_FINISHED] =
                 g_signal_new ("data_update_finished",
                               G_TYPE_FROM_CLASS (object_class),
@@ -1105,6 +1105,10 @@ dsn_changed_cb (GdaConnection *cnc, GdaDict *dict)
  * 
  * Sets the associated connection to @dict. This connection is then used when the dictionary
  * synchronises itself, and when manipulating data (the gda_dict_get_handler() method).
+ * Sets the associated connection to dict. This connection is then used when the dictionary 
+ * is synchronised (using the gda_dict_update_dbms_meta_data() method), when manipulating 
+ * data (using the gda_dict_get_handler() method) and when executing #GdaQuery queries
+ * (using the gda_query_execute() method)
  */
 void
 gda_dict_set_connection (GdaDict *dict, GdaConnection *cnc)

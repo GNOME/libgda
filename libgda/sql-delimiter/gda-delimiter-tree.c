@@ -19,6 +19,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 #include "gda-sql-delimiter.h"
@@ -63,8 +64,59 @@ gda_delimiter_statement_build (GdaDelimiterStatementType type, GList *expr_list)
 	/* make a list of the para specs */
 	list = expr_list;
 	while (list) {
-		if (((GdaDelimiterExpr *)(list->data))->pspec_list)
-			pspecs = g_list_append (pspecs, ((GdaDelimiterExpr *)(list->data))->pspec_list);
+		GdaDelimiterExpr *expr = (GdaDelimiterExpr *)(list->data);
+		if (expr->pspec_list) {
+			if (expr->sql_text) {
+				GdaDelimiterParamSpec *default_spec;
+				gchar *ptr = NULL;
+				gint len;
+
+				/* add a new GDA_DELIMITER_PARAM_DEFAULT GdaDelimiterParamSpec 
+				 * to the list of spec items */
+				default_spec = g_new0 (GdaDelimiterParamSpec, 1);
+				default_spec->type = GDA_DELIMITER_PARAM_DEFAULT;
+				default_spec->content = g_strdup (expr->sql_text);
+				if ((*default_spec->content != '\'') && (*default_spec->content != '"')) {
+					len = strlen (default_spec->content);
+					for (ptr = default_spec->content + (len - 1); ptr > default_spec->content; ptr--) {
+						if ((*ptr == ' ') || (*ptr == '\t') || (*ptr == '\n') || (*ptr == '\r'))
+							*ptr = 0;
+						else
+							break;
+					}
+					for (; ptr > default_spec->content; ptr--) {
+						if ((*ptr == ' ') || (*ptr == '\t') || (*ptr == '\n') || (*ptr == '\r')) {
+							memmove (default_spec->content, ptr+1, 
+								 len - (ptr - default_spec->content));
+							break;
+						}
+					}
+				}
+				expr->pspec_list = g_list_prepend (expr->pspec_list, default_spec);
+
+				if (ptr) {
+					/* remove the default value from the expr->sql_text, and create a new
+					 * GdaDelimiterExpr structure to hold that part only */
+					GdaDelimiterExpr *nexpr;
+					nexpr = gda_delimiter_expr_build (expr->sql_text, NULL);
+					retval->expr_list = g_list_insert_before (retval->expr_list, 
+										   list, nexpr);
+					expr->sql_text = g_strdup (default_spec->content);
+					len = ptr - default_spec->content;
+					for (ptr = nexpr->sql_text + len ; ptr > nexpr->sql_text; ptr--) {
+						if ((*ptr == ' ') || (*ptr == '\t') || (*ptr == '\n') || 
+						    (*ptr == '\r'))
+							*ptr = 0;
+						else
+							break;
+					}
+					/*g_print ("TRUNCATED expr to #%s#\n", nexpr->sql_text);*/
+				}
+				/*g_print ("Added DEFAULT spec with: #%s#\n", default_spec->content);*/
+
+			}
+			pspecs = g_list_append (pspecs, expr->pspec_list);
+		}
 		list = g_list_next (list);
 	}
 	retval->params_specs = pspecs;

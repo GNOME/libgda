@@ -28,7 +28,7 @@ static GOptionEntry entries[] = {
 };
 
 static void
-update_progress_cb (GdaDict *dict, gchar * msg, guint now, guint total)
+update_progress_cb (GdaDict *dict, gchar *msg, guint now, guint total, gpointer data)
 {
 	static gboolean first = TRUE;
 	if (msg) {

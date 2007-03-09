@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<suites>
+  <suite name="Broken SQL tests">
+    <unit file="basic_sql.xml"/>
+    <unit file="prov_sql.xml"/>
+    <unit file="app_sql.xml"/>
+  </suite>
+
+  <suite name="Parameters tests">
+    <unit file="params_sql.xml"/>
+  </suite>
+
+  <suite name="Broken SQL tests with dictionary" dict="dict_pg.xml">
+    <unit file="basic_sql.xml"/>
+    <unit file="prov_sql.xml"/>
+    <unit file="app_sql.xml"/>
+  </suite>
+
+  <suite name="Parameters tests with dictionary" dict="dict_pg.xml">
+    <unit file="params_sql.xml"/>
+  </suite>
+</suites>

@@ -1360,8 +1360,6 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 		gda_delimiter_destroy (query->priv->sql_exprs);
 		query->priv->sql_exprs = NULL;
 	}
-	if (!sql || !(*sql))
-		return;
 
 	/* start internal transaction */
 	query->priv->internal_transaction ++;
@@ -1420,8 +1418,10 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 			stm = gda_delimiter_concat_list (stm_list);
 			gda_delimiter_free_list (stm_list);
 
-			/*g_print ("DELIMITED: %s\n", sql);
-			  gda_delimiter_display (stm);*/
+			/*
+			g_print ("DELIMITED: %s\n", sql);
+			gda_delimiter_display (stm);
+			*/
 			params = stm->params_specs;
 			while (params && allok) {
 				GdaDictType *dtype = NULL;
@@ -1479,6 +1479,29 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 							break;
 						case GDA_DELIMITER_PARAM_TYPE:
 							break;
+						case GDA_DELIMITER_PARAM_DEFAULT: {
+							GValue *defval = NULL;
+							GdaDataHandler *dh;
+
+							dh = gda_dict_get_handler (dict, gtype);
+							if (dh) 
+								defval = gda_data_handler_get_value_from_sql (dh,
+									 ps->content, gtype);
+							if (!defval) {
+								dh = gda_dict_get_handler (dict, G_TYPE_STRING);
+								defval = gda_data_handler_get_value_from_sql (dh,
+									 ps->content, G_TYPE_STRING);
+								if (!defval)
+									defval = gda_data_handler_get_value_from_str (
+										 dh, ps->content, G_TYPE_STRING);
+							}
+							gda_query_field_value_set_default_value (GDA_QUERY_FIELD_VALUE (field), 
+												 defval);
+							gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (field), 
+											 defval);
+							gda_value_free (defval);
+							break;
+						}
 						}
 						pspecs = g_list_next (pspecs);
 					}
@@ -1491,7 +1514,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 			if (allok) 
 				query->priv->sql_exprs = stm;
 			else {
-				/*g_warning ("Not allok");*/
+				/*g_warning ("No valid type specified for parameter");*/
 				gda_delimiter_destroy (stm);
 				gda_query_clean (query);
 				gda_query_set_query_type (query, GDA_QUERY_TYPE_NON_PARSED_SQL);
@@ -4652,7 +4675,7 @@ gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context,
 		}
 		break;
 	case GDA_QUERY_TYPE_NON_PARSED_SQL:
-		if (query->priv->sql && *(query->priv->sql)) {
+		if (query->priv->sql) {
 			if (query->priv->sql_exprs && query->priv->sql_exprs->params_specs &&
 			    assert_coherence_all_params_present (query, context, NULL))
 				sql = render_sql_non_parsed_with_params (query, context, out_params_used, options, error);
@@ -4663,7 +4686,7 @@ gda_query_render_as_sql (GdaRenderer *iface, GdaParameterList *context,
 			g_set_error (error,
 				     GDA_QUERY_ERROR,
 				     GDA_QUERY_RENDER_ERROR,
-				     _("Query without any SQL code"));
+				     _("Empty query"));
 		break;
 	default:
 		g_assert_not_reached ();
@@ -5863,12 +5886,10 @@ render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, G
 	while (list) {
 		GdaDelimiterExpr *expr = GDA_DELIMITER_SQL_EXPR (list->data);
 
-		if (list != query->priv->sql_exprs->expr_list)
-			g_string_append (string, " ");
+		/*if (list != query->priv->sql_exprs->expr_list)
+		  g_string_append (string, " ");*/
 
-		if (expr->sql_text)
-			g_string_append (string, expr->sql_text);
-		else {
+		if (expr->pspec_list) {
 			GdaQueryFieldValue *found = NULL;
 			GSList *fields;
 			gchar *str = NULL;
@@ -5888,9 +5909,15 @@ render_sql_non_parsed_with_params (GdaQuery *query, GdaParameterList *context, G
 				g_string_free (string, TRUE);
 				return NULL;
 			}
+			if (list != query->priv->sql_exprs->expr_list)
+				g_string_append_c (string, ' ');
 			g_string_append (string, str);
 			g_free (str);
 		}
+		else
+			if (expr->sql_text) 
+				g_string_append (string, expr->sql_text);
+
 		list = g_list_next (list);
 	}
 

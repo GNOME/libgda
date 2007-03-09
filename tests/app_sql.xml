@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<unit>
+  <test name="string25">
+    <sql expected="D">SELECT id_param, case substr (type_param, 1, 1) WHEN 'A' THEN 'A' else 'N' END, lib_param, desc_param, valeur_a, valeur_n FROM parametre_exploitation WHERE id_config = ## /*name:'id_config' type:gint*/ ORDER BY id_param</sql>
+    <render_as>SELECT id_param, case substr (type_param, 1, 1) WHEN 'A' THEN 'A' else 'N' END, lib_param, desc_param, valeur_a, valeur_n FROM parametre_exploitation WHERE id_config = ## /* name:"id_config" type:"gint" */ ORDER BY id_param</render_as>
+    <render_as>SELECT id_param, case substr (type_param, 1, 1) WHEN 'A' THEN 'A' else 'N' END, lib_param, desc_param, valeur_a, valeur_n FROM parametre_exploitation WHERE id_config = ## /* type:"gint" name:"id_config" */ ORDER BY id_param</render_as>
+    <params>
+      <param name="id_config" type="gint"/>
+    </params>
+  </test>
+
+  <test name="string26">
+    <sql expected="D">UPDATE parametre_exploitation set valeur_a = (CASE ## /* name:'-1' type:gchararray */ WHEN 'A' THEN ## /* name:'+4' type:gchararray nullok:false */ ELSE NULL END), valeur_n = (CASE ## /* name:'-1' type:gchararray */ WHEN 'N' THEN ## /* name:'+5' type:gint nullok:false */ ELSE NULL END)::integer WHERE id_param = ## /* name:'-0' type:gchararray */ AND id_config = ## /* name:id_config type:gint */</sql>
+    <render_as>UPDATE parametre_exploitation set valeur_a = (CASE ## /* name:"-1" type:"gchararray" */ WHEN 'A' THEN ## /* name:"+4" type:"gchararray" nullok:"false" */ ELSE NULL END), valeur_n = (CASE ## /* name:"-1" type:"gchararray" */ WHEN 'N' THEN ## /* name:"+5" type:"gint" nullok:"false" */ ELSE NULL END)::integer WHERE id_param = ## /* name:"-0" type:"gchararray" */ AND id_config = ## /* name:"id_config" type:"gint" */</render_as>
+    <render_as>UPDATE parametre_exploitation set valeur_a = (CASE ## /* type:"gchararray" name:"-1" */ WHEN 'A' THEN ## /* type:"gchararray" name:"+4" */ ELSE NULL END), valeur_n = (CASE ## /* type:"gchararray" name:"-1" */ WHEN 'N' THEN ## /* type:"gint" name:"+5" */ ELSE NULL END)::integer WHERE id_param = ## /* type:"gchararray" name:"-0" */ AND id_config = ## /* type:"gint" name:"id_config" */</render_as>
+    <params>
+      <param name="-1" type="gchararray"/>
+      <param name="+4" type="gchararray" nullok="0"/>
+      <param name="-1" type="gchararray"/>
+      <param name="+5" type="gint" nullok="0"/>
+      <param name="-0" type="gchararray"/>
+      <param name="id_config" type="gint"/>
+    </params>
+  </test>
+
+  <test name="test1">
+    <sql expected="A">INSERT INTO products (ref, name, price, wh_stored) VALUES (##/*name:'+0' type:gchararray*/,  ##/*name:'+2' type:gchararray*/, 31.4159, .1234 /*name:'+4' type:gfloat*/)</sql>
+    <render_as>INSERT INTO products (ref, name, price, wh_stored) VALUES ( ## /* name:"+0" type:"gchararray" */, ## /* name:"+2" type:"gchararray" */, 31.4159, .1234 /* name:"+4" type:"gfloat" */)</render_as>
+    <render_as>INSERT INTO products (ref, name, price, wh_stored) VALUES (## /* type:"gchararray" name:"+0" */, ## /* type:"gchararray" name:"+2" */, 31.4159, 0.123400 /* type:"gfloat" name:"+4" */)</render_as>
+    <params>
+      <param name="+0" type="gchararray"/>
+      <param name="+2" type="gchararray"/>
+      <param name="+4" type="gfloat" default=".1234"/>
+    </params>
+  </test>
+  <test name="test2">
+    <sql expected="A">INSERT INTO products (ref, name, price, wh_stored) VALUES (##/*name:'+0' type:gchararray*/,  ##/*name:'+2' type:gchararray*/, 31.4159, .1234 /*name:'+4' type:gfloat*/)</sql>
+    <render_as>INSERT INTO products (ref, name, price, wh_stored) VALUES ( ## /* name:"+0" type:"gchararray" */, ## /* name:"+2" type:"gchararray" */, 31.4159, .1234 /* name:"+4" type:"gfloat" */)</render_as>
+    <render_as>INSERT INTO products (ref, name, price, wh_stored) VALUES (## /* type:"gchararray" name:"+0" */, ## /* type:"gchararray" name:"+2" */, 31.4159, 0.123400 /* type:"gfloat" name:"+4" */)</render_as>
+    <params>
+      <param name="+0" type="gchararray"/>
+      <param name="+2" type="gchararray"/>
+      <param name="+4" type="gfloat" default=".1234"/>
+    </params>
+  </test>
+  <test name="bug407908">
+    <sql expected="S">SELECT t1.* FROM lots AS t1</sql>
+    <render_as>SELECT t1.* FROM lots AS t1 </render_as>
+  </test>
+</unit>

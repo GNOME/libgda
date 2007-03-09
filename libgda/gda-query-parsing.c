@@ -1670,6 +1670,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (qfield), TRUE);
 	else {
 		/* gdaval can't be NULL here */
+		gda_query_field_value_set_default_value (GDA_QUERY_FIELD_VALUE (qfield), gdaval);
 		gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (qfield), gdaval);
 		gda_value_free (gdaval);
 		gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (qfield), FALSE);
