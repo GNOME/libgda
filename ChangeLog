@@ -1,3 +1,10 @@
+2007-03-09  Murray Cumming  <murrayc@murrayc.com>
+
+	* tests/Makefile.am:
+	* tests/check_delimiter.c: Distribute the test XML file and define the path 
+	to the test XML file in the Makefile, so it works when srcdir!=distdir, 
+	as during distcheck.
+
 2007-03-08  Murray Cumming  <murrayc@murrayc.com>
 
 	* Makefile.am:

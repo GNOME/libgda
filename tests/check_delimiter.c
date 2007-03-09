@@ -16,6 +16,8 @@ GArray *basic_tests;
 
 static void test_sql_statement (SqlTest *test, gint test_index);
 
+#define TEST_FILENAME (PATH_TO_TEST_XML "/basic_sql.xml") 
+
 #ifdef HAVE_CHECK
 /*
  * The Check library is available
@@ -29,7 +31,7 @@ END_TEST
 Suite *
 delimiter_suite (void)
 {
-	basic_tests = sql_tests_load_from_file ("basic_sql.xml");
+	basic_tests = sql_tests_load_from_file (TEST_FILENAME);
 
 	Suite *s = suite_create ("Gda Delimiter");
 
@@ -60,7 +62,7 @@ int
 main (void)
 {
 	gint i;
-	basic_tests = sql_tests_load_from_file ("basic_sql.xml");
+	basic_tests = sql_tests_load_from_file (TEST_FILENAME);
 	for (i = 0; i < basic_tests->len; i++)
 		test_sql_statement (g_array_index (basic_tests, SqlTest*, i), i);
 	return EXIT_SUCCESS;

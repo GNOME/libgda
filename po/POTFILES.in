@@ -142,7 +142,6 @@ providers/sybase/gda-sybase-provider.c
 providers/sybase/gda-sybase-recordset.c
 providers/sybase/gda-sybase-types.c
 providers/sybase/libmain.c
-providers/sybase/main.c
 providers/sybase/sybase_specs_dsn.xml.in
 providers/sybase/utils.c
 providers/xbase/gda-xbase-provider.c
