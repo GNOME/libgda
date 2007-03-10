@@ -71,7 +71,10 @@ gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_sqlite_recordset_finalize;
-	model_class->get_n_rows = gda_sqlite_recordset_get_n_rows;
+
+	/* Use the implementation of the base class to allow to change
+	 * the number of rows. */
+	/*model_class->get_n_rows = gda_sqlite_recordset_get_n_rows;*/
 }
 
 static void
