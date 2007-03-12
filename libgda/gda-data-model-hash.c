@@ -507,11 +507,15 @@ gda_data_model_hash_clear (GdaDataModelHash *model)
 		model->priv->row_map = NULL;
 	}
 
-	/* number of entries in data model is 0 because we just cleared it */
-	model->priv->number_of_hash_table_rows = 0;
+	/* get number of entries in data model */
+	model->priv->number_of_hash_table_rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (model));
 
 	/* create row mapping array */
 	model->priv->row_map = g_array_new (FALSE, FALSE, sizeof (gint));
+
+        /* Initialize row mapping array */
+        for (i = 0; i < model->priv->number_of_hash_table_rows; i++)
+                g_array_append_val (model->priv->row_map, i);
 
 	/* FIXME: signal changes */
 }

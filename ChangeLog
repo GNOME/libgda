@@ -1,18 +1,3 @@
-2007-02-28  Armin Burgmeier  <armin@openismus.com>
-
-	* libgda/gda-data-proxy.c: Always call adjust_displayed_chunck() at
-	the end of commit_row_modif() to make sure that modified rows are
-	signalled correctly.
-
-	* providers/sqlite/gda-sqlite-recordset.c: Use inherited
-	implementation of get_n_rows() to allow adding/removing rows.
-
-	* libgda/gda-data-model-hash.c: 
-	(gda_data_model_hash_clear): Set number of rows always to zero instead
-	of calling get_n_rows with a non-existant row mapping array. Also
-	remove initialization of row mapping array at the end of the function
-	because the hash table is empty at the end of the call anyway.
-
 2007-03-09  Vivien Malerba <malerba@gnome-db.org>
 
 	* tests/check_delimiter.c: checks for the correct number of statements recognized

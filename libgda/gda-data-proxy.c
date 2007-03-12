@@ -1645,8 +1645,8 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, GError **error)
 	proxy->priv->ignore_proxied_changes = ignore_proxied_changes;
 	if (proxy->priv->proxy_has_changed) 
 		proxied_model_data_changed_cb (proxy->priv->model, proxy);
-
-	adjust_displayed_chunck (proxy);
+	else
+		adjust_displayed_chunck (proxy);
 
 	return !err;
 }
