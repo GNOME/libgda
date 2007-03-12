@@ -21,8 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_data_model_row_h__)
-#  define __gda_data_model_row_h__
+#ifndef __GDA_DATA_MODEL_ROW_H__
+#define __GDA_DATA_MODEL_ROW_H__
 
 #include <libgda/gda-object.h>
 #include <libgda/gda-command.h>
@@ -42,7 +42,7 @@ typedef struct _GdaDataModelRowClass   GdaDataModelRowClass;
 typedef struct _GdaDataModelRowPrivate GdaDataModelRowPrivate;
 
 struct _GdaDataModelRow {
-	GdaObject                object;
+	GdaObject               object;
 	GdaDataModelRowPrivate *priv;
 };
 

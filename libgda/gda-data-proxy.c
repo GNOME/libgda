@@ -650,9 +650,6 @@ gda_data_proxy_set_property (GObject *object,
 			g_object_ref (model);
 			gda_object_connect_destroy (GDA_OBJECT (model), G_CALLBACK (destroyed_object_cb), object);
 			
-			/* if (gda_data_model_get_status (model) & GDA_DATA_MODEL_NEEDS_INIT_REFRESH)  */
-			/* gda_data_model_refresh (model, NULL); */
-			
 			proxy->priv->model_nb_cols = gda_data_model_get_n_columns (model);
 			
 			/* column attributes */
@@ -723,6 +720,7 @@ proxied_model_data_changed_cb (GdaDataModel *model, GdaDataProxy *proxy)
 {
 	gint nb_new_rows = 0;
 	gint nb_cols;
+
 	if (proxy->priv->ignore_proxied_changes) {
 		proxy->priv->proxy_has_changed = TRUE;
 		return;
@@ -2085,6 +2083,8 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 	proxy->priv->ignore_proxied_changes = FALSE;
 
 	gda_data_model_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_END_BATCH_UPDATE, NULL);
+	if (proxy->priv->proxy_has_changed) 
+		adjust_displayed_chunck (proxy);
 
 	return allok;
 }

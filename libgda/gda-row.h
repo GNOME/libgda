@@ -22,8 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_row_h__)
-#  define __gda_row_h__
+#ifndef __GDA_ROW_H__
+#define __GDA_ROW_H__
 
 #include <glib-object.h>
 #include <libgda/gda-column.h>
