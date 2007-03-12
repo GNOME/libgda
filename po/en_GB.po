@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-17 00:05+0000\n"
-"PO-Revision-Date: 2007-02-17 00:05-0000\n"
+"POT-Creation-Date: 2007-03-12 22:28+0000\n"
+"PO-Revision-Date: 2007-03-12 22:28-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English/GB <en@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -202,7 +202,8 @@ msgstr "Column out %d of range 0 - %d"
 
 #: ../libgda/gda-data-model-array.c:145
 #: ../libgda/gda-data-model-hash.c:141
-#: ../libgda/gda-data-model-hash.c:212
+#: ../libgda/gda-data-model-hash.c:182
+#: ../libgda/gda-data-model-hash.c:258
 msgid "Wrong number of values in values list"
 msgstr "Wrong number of values in values list"
 
@@ -498,7 +499,7 @@ msgstr "Data model"
 msgid "GdaDataProxy cant' handle non random access data models"
 msgstr "GdaDataProxy cant' handle non random access data models"
 
-#: ../libgda/gda-data-proxy.c:1516
+#: ../libgda/gda-data-proxy.c:1514
 msgid "Modifications cancelled"
 msgstr "Modifications cancelled"
 
@@ -579,7 +580,7 @@ msgid "XML Tag below <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
 msgstr "XML Tag below <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
 
 #: ../libgda/gda-dict-database.c:859
-#: ../libgda/gda-dict.c:1227
+#: ../libgda/gda-dict.c:1231
 msgid "Update already started!"
 msgstr "Update already started!"
 
@@ -596,7 +597,7 @@ msgid "Connection is not opened!"
 msgstr "Connection is not opened!"
 
 #: ../libgda/gda-dict-database.c:905
-#: ../libgda/gda-dict.c:1307
+#: ../libgda/gda-dict.c:1311
 msgid "Update stopped!"
 msgstr "Update stopped!"
 
@@ -745,69 +746,69 @@ msgstr "Error writing XML file %s"
 msgid "Can't allocate memory for XML structure."
 msgstr "Can't allocate memory for XML structure."
 
-#: ../libgda/gda-dict.c:1213
+#: ../libgda/gda-dict.c:1217
 msgid "No connection associated to the dictionary"
 msgstr "No connection associated to the dictionary"
 
-#: ../libgda/gda-dict.c:1220
+#: ../libgda/gda-dict.c:1224
 msgid "Connection is closed"
 msgstr "Connection is closed"
 
-#: ../libgda/gda-dict.c:1387
+#: ../libgda/gda-dict.c:1391
 #, c-format
 msgid "Error creating directory %s"
 msgstr "Error creating directory %s"
 
-#: ../libgda/gda-dict.c:1639
+#: ../libgda/gda-dict.c:1643
 #, c-format
 msgid "Cannot register object type %s a second time"
 msgstr "Cannot register object type %s a second time"
 
-#: ../libgda/gda-dict.c:1643
+#: ../libgda/gda-dict.c:1647
 #, c-format
 msgid "Cannot register object type %s: no XML group tag specified"
 msgstr "Cannot register object type %s: no XML group tag specified"
 
-#: ../libgda/gda-dict.c:1710
+#: ../libgda/gda-dict.c:1714
 #, c-format
 msgid "Trying to declare an object when object class %s is not registered in the dictionary"
 msgstr "Trying to declare an object when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1803
+#: ../libgda/gda-dict.c:1807
 #, c-format
 msgid "Trying to make an object assumed when object class %s is not registered in the dictionary"
 msgstr "Trying to make an object assumed when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1818
+#: ../libgda/gda-dict.c:1822
 msgid "Trying to assume an object when object class is not registered in the dictionary"
 msgstr "Trying to assume an object when object class is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1883
+#: ../libgda/gda-dict.c:1887
 #, c-format
 msgid "Trying to make an object unassumed when object class %s is not registered in the dictionary"
 msgstr "Trying to make an object unassumed when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1938
+#: ../libgda/gda-dict.c:1942
 #, c-format
 msgid "Trying to make if an object is assumed when object class %s is not registered in the dictionary"
 msgstr "Trying to make if an object is assumed when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:1967
+#: ../libgda/gda-dict.c:1971
 #, c-format
 msgid "Trying to get a list of objects when object class %s is not registered in the dictionary"
 msgstr "Trying to get a list of objects when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:2001
+#: ../libgda/gda-dict.c:2005
 #, c-format
 msgid "Trying to get an object by name when object class %s is not registered in the dictionary"
 msgstr "Trying to get an object by name when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:2045
+#: ../libgda/gda-dict.c:2049
 #, c-format
 msgid "Trying to get an object by its XML Id when object class %s is not registered in the dictionary"
 msgstr "Trying to get an object by its XML Id when object class %s is not registered in the dictionary"
 
-#: ../libgda/gda-dict.c:2053
+#: ../libgda/gda-dict.c:2057
 msgid "Trying to get an object from its XML Id when object class does not implement GdaXmlStorage"
 msgstr "Trying to get an object from its XML Id when object class does not implement GdaXmlStorage"
 
@@ -1096,7 +1097,7 @@ msgstr "Could not find GdaParameter in context for value field '%s'"
 msgid "Invalid parameter '%s' (value: %s)"
 msgstr "Invalid parameter '%s' (value: %s)"
 
-#: ../libgda/gda-query-field-value.c:1496
+#: ../libgda/gda-query-field-value.c:1505
 msgid "No specified value"
 msgstr "No specified value"
 
@@ -1255,7 +1256,7 @@ msgstr "Could not convert data from %s to %s for DBMS type %s, forget about the 
 msgid "Value '%s' can't be converted to a known type"
 msgstr "Value '%s' can't be converted to a known type"
 
-#: ../libgda/gda-query-parsing.c:1819
+#: ../libgda/gda-query-parsing.c:1820
 msgid "Can't set aggregate or function's arguments"
 msgstr "Can't set aggregate or function's arguments"
 
@@ -1324,32 +1325,32 @@ msgstr "Select (exception)"
 msgid "SQL text"
 msgstr "SQL text"
 
-#: ../libgda/gda-query.c:1405
+#: ../libgda/gda-query.c:1403
 #, c-format
 msgid "Error during query parsing (%s)"
 msgstr "Error during query parsing (%s)"
 
-#: ../libgda/gda-query.c:1918
+#: ../libgda/gda-query.c:1941
 msgid "The query represented by a target must be a sub-query of the current query"
 msgstr "The query represented by a target must be a sub-query of the current query"
 
-#: ../libgda/gda-query.c:1933
+#: ../libgda/gda-query.c:1956
 msgid "Queries which update data can only have one target"
 msgstr "Queries which update data can only have one target"
 
-#: ../libgda/gda-query.c:1943
+#: ../libgda/gda-query.c:1966
 msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr "Aggregation queries may only have sub-queries, not targets."
 
-#: ../libgda/gda-query.c:2768
+#: ../libgda/gda-query.c:2791
 msgid "No connection associated to query's dictionary"
 msgstr "No connection associated to query's dictionary"
 
-#: ../libgda/gda-query.c:2773
+#: ../libgda/gda-query.c:2796
 msgid "Connection associated to query's dictionary is closed"
 msgstr "Connection associated to query's dictionary is closed"
 
-#: ../libgda/gda-query.c:2975
+#: ../libgda/gda-query.c:2998
 #: ../testing/gda-test-model-query.c:143
 #: ../testing/gda-test-model-query.c:170
 #: ../testing/gda-test-models.c:152
@@ -1372,125 +1373,125 @@ msgstr "Connection associated to query's dictionary is closed"
 msgid "Unknown error"
 msgstr "Unknown error"
 
-#: ../libgda/gda-query.c:3509
+#: ../libgda/gda-query.c:3532
 msgid "While adding to a GdaQuery: Blobs are not supported by the connection's provider and may be rendered incorrectly"
 msgstr "While adding to a GdaQuery: Blobs are not supported by the connection's provider and may be rendered incorrectly"
 
-#: ../libgda/gda-query.c:3515
+#: ../libgda/gda-query.c:3538
 #, c-format
 msgid "While adding to a GdaQuery: field type '%s' is not supported by the connection's provider and may be rendered incorrectly"
 msgstr "While adding to a GdaQuery: field type '%s' is not supported by the connection's provider and may be rendered incorrectly"
 
-#: ../libgda/gda-query.c:4170
+#: ../libgda/gda-query.c:4193
 msgid "XML Tag is not <gda_query>"
 msgstr "XML Tag is not <gda_query>"
 
-#: ../libgda/gda-query.c:4186
+#: ../libgda/gda-query.c:4209
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "XML ID for a query should be QUxxx where xxx is a number"
 
-#: ../libgda/gda-query.c:4241
+#: ../libgda/gda-query.c:4264
 msgid "First query of <gda_model_query> must be a SELECT query"
 msgstr "First query of <gda_model_query> must be a SELECT query"
 
-#: ../libgda/gda-query.c:4333
+#: ../libgda/gda-query.c:4356
 msgid "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 msgstr "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 
-#: ../libgda/gda-query.c:4357
+#: ../libgda/gda-query.c:4380
 #, c-format
 msgid "Can't find field '%s'"
 msgstr "Can't find field '%s'"
 
-#: ../libgda/gda-query.c:4476
+#: ../libgda/gda-query.c:4499
 msgid "Problem loading <gda_query>"
 msgstr "Problem loading <gda_query>"
 
-#: ../libgda/gda-query.c:4649
+#: ../libgda/gda-query.c:4672
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "More than two sub-queries for an EXCEPT query"
 
-#: ../libgda/gda-query.c:4666
-msgid "Query without any SQL code"
-msgstr "Query without any SQL code"
+#: ../libgda/gda-query.c:4689
+msgid "Empty query"
+msgstr "Empty query"
 
-#: ../libgda/gda-query.c:4721
+#: ../libgda/gda-query.c:4744
 #, c-format
 msgid "Invalid parameter '%s'"
 msgstr "Invalid parameter '%s'"
 
-#: ../libgda/gda-query.c:4727
+#: ../libgda/gda-query.c:4750
 msgid "Missing parameters"
 msgstr "Missing parameters"
 
-#: ../libgda/gda-query.c:4801
+#: ../libgda/gda-query.c:4824
 #, c-format
 msgid "Query %s is not a selection query"
 msgstr "Query %s is not a selection query"
 
-#: ../libgda/gda-query.c:4833
+#: ../libgda/gda-query.c:4856
 msgid "No target defined to apply modifications"
 msgstr "No target defined to apply modifications"
 
-#: ../libgda/gda-query.c:4841
+#: ../libgda/gda-query.c:4864
 msgid "More than one target defined to apply modifications"
 msgstr "More than one target defined to apply modifications"
 
-#: ../libgda/gda-query.c:4852
+#: ../libgda/gda-query.c:4875
 #, c-format
 msgid "Entity %s is not writable"
 msgstr "Entity %s is not writable"
 
-#: ../libgda/gda-query.c:4871
+#: ../libgda/gda-query.c:4894
 msgid "Modification query field has incompatible type"
 msgstr "Modification query field has incompatible type"
 
-#: ../libgda/gda-query.c:4890
+#: ../libgda/gda-query.c:4913
 msgid "An insertion query can only have one sub-query"
 msgstr "An insertion query can only have one sub-query"
 
-#: ../libgda/gda-query.c:4898
+#: ../libgda/gda-query.c:4921
 msgid "Insertion query fields incompatible with sub-query's fields"
 msgstr "Insertion query fields incompatible with sub-query's fields"
 
-#: ../libgda/gda-query.c:4916
+#: ../libgda/gda-query.c:4939
 msgid "Insertion query field has incompatible value assignment"
 msgstr "Insertion query field has incompatible value assignment"
 
-#: ../libgda/gda-query.c:4931
+#: ../libgda/gda-query.c:4954
 msgid "Insertion query can't have any conditions"
 msgstr "Insertion query can't have any conditions"
 
-#: ../libgda/gda-query.c:4946
+#: ../libgda/gda-query.c:4969
 msgid "Deletion query can't have any visible field"
 msgstr "Deletion query can't have any visible field"
 
-#: ../libgda/gda-query.c:4966
+#: ../libgda/gda-query.c:4989
 msgid "Update query field has incompatible value assignment"
 msgstr "Update query field has incompatible value assignment"
 
-#: ../libgda/gda-query.c:4995
+#: ../libgda/gda-query.c:5018
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "An aggregate type (UNION, etc) of query can't have any targets"
 
-#: ../libgda/gda-query.c:5003
+#: ../libgda/gda-query.c:5026
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "An aggregate type (UNION, etc) of query can't have any conditions"
 
-#: ../libgda/gda-query.c:5515
+#: ../libgda/gda-query.c:5538
 msgid "Can't correctly print the list of columns to use."
 msgstr "Can't correctly print the list of columns to use."
 
-#: ../libgda/gda-query.c:5665
+#: ../libgda/gda-query.c:5688
 msgid "Missing values"
 msgstr "Missing values"
 
-#: ../libgda/gda-query.c:5915
+#: ../libgda/gda-query.c:5942
 #, c-format
 msgid "Query '%s'"
 msgstr "Query '%s'"
 
-#: ../libgda/gda-query.c:5917
+#: ../libgda/gda-query.c:5944
 msgid "Unnamed Query"
 msgstr "Unnamed Query"
 
@@ -1986,23 +1987,23 @@ msgstr "InternalType"
 msgid "Gda type representation"
 msgstr "Gda type representation"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:60
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:58
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:53
-#: ../libsql/sql_parser.c:61
+#: ../libsql/sql_parser.c:59
 #, c-format
 msgid "Parse error near `%s'"
 msgstr "Parse error near `%s'"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:62
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:60
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:56
-#: ../libsql/sql_parser.c:63
+#: ../libsql/sql_parser.c:61
 #, c-format
 msgid "Syntax error near `%s'"
 msgstr "Syntax error near `%s'"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:150
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:151
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:85
-#: ../libsql/sql_parser.c:387
+#: ../libsql/sql_parser.c:386
 msgid "Empty query to parse"
 msgstr "Empty query to parse"
 
@@ -4581,10 +4582,6 @@ msgstr "data conversion failed for type %d"
 msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "GDA provider for sybase databases (using OpenClient)"
 
-#: ../providers/sybase/main.c:52
-msgid "Could not initiate Sybase component factory"
-msgstr "Could not initiate Sybase component factory"
-
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:6
 msgid "Enable Sybase operative mode"
 msgstr "Enable Sybase operative mode"
@@ -5300,6 +5297,10 @@ msgstr "Data source's parameters (Name / Type / Description):\n"
 msgid "None provided"
 msgstr "None provided"
 
+#~ msgid "Query without any SQL code"
+#~ msgstr "Query without any SQL code"
+#~ msgid "Could not initiate Sybase component factory"
+#~ msgstr "Could not initiate Sybase component factory"
 #~ msgid ""
 #~ "Can't compute the list of columns because the SELECT query is not active "
 #~ "(you can use a dictionary to correct this) and the model does not contain "
@@ -5546,14 +5547,4 @@ msgstr "None provided"
 #~ msgstr "\tStarting transaction..."
 #~ msgid "\tFinishing transaction..."
 #~ msgstr "\tFinishing transaction..."
-#~ msgid "\tRolling back transaction..."
-#~ msgstr "\tRolling back transaction..."
-#~ msgid "Testing GDA client API"
-#~ msgstr "Testing GDA client API"
-#~ msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-#~ msgstr "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-#~ msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-#~ msgstr "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-#~ msgid "\tgda_params ="
-#~ msgstr "\tgda_params ="
 
