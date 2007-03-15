@@ -1,3 +1,10 @@
+2007-03-15  yselkowitz  <yselkowitz@users.sourceforge.net>
+
+	* configure.in: Add AM_PROG_CC_C_O to avoid a warning.
+	* libgda/sql-delimiter/Makefile.am: Modify rules to fix the vpath 
+	build.
+	Patches in bug #418116.
+
 2007-03-15  Vivien Malerba <malerba@gnome-db.org>
 
 	Applied patch from Yaakov (Cygwin Ports) and Gustavo R. Montesino:

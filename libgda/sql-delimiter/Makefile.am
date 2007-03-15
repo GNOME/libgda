@@ -9,10 +9,10 @@ AM_CPPFLAGS = \
         $(LIBGDA_CFLAGS) 
 
 parser.c: parser.y
-	$(YACC) -v -d -o parser.c -p gda_delimiter parser.y
+	$(YACC) -v -d -o $@ -p gda_delimiter $<
 
 lexer.c: lexer.l parser.c
-	$(LEX) -olexer.c -Pgda_delimiter lexer.l
+	$(LEX) -o $@ -Pgda_delimiter $<
 
 libgda_sql_delimiter_headers = \
         gda-sql-delimiter.h 
