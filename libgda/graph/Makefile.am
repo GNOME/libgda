@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libgda_graph-3.0.la
+noinst_LTLIBRARIES = libgda_graph-3.0.la
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) -I$(srcdir)/.. \
@@ -20,6 +20,3 @@ libgda_graph_3_0_la_SOURCES = \
         gda-graph-item.c \
         gda-graph-query.c \
 	gda-dict-reg-graphs.c
-
-libgda_graph_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
-libgda_graph_3_0_la_LIBADD = ../libgda-3.0.la $(LIBGDA_LIBS)

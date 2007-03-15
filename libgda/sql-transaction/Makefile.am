@@ -5,7 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS)
 
-lib_LTLIBRARIES = libgda_sql_transaction-3.0.la
+noinst_LTLIBRARIES = libgda_sql_transaction-3.0.la
 noinst_PROGRAMS = sql_parser_test
 
 libgda_sql_transaction_3_0_la_SOURCES = \
@@ -16,9 +16,6 @@ libgda_sql_transaction_3_0_la_SOURCES = \
 	gda-sql-transaction-parser.h \
 	gda-sql-transaction-tree.c \
 	gda-sql-transaction-tree.h
-
-libgda_sql_transaction_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
-libgda_sql_transaction_3_0_la_LIBADD = $(LIBGDA_LIBS)
 
 parser.c: parser.y
 	$(YACC) -v -d -o parser.c -p tran $<

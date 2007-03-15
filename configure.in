@@ -1025,7 +1025,6 @@ Makefile
 libgda.spec
 libgda-3.0.pc
 po/Makefile.in
-win32/Makefile
 libsql/Makefile
 libgda/Makefile
 libgda/handlers/Makefile

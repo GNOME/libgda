@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libgda_sql_delimiter-3.0.la
+noinst_LTLIBRARIES = libgda_sql_delimiter-3.0.la
 noinst_PROGRAMS = gda-test-delimiter
 
 SUBDIRS = 
@@ -28,9 +28,6 @@ libgda_sql_delimiter_3_0_la_SOURCES = \
         gda-sql-delimiter.c \
 	gda-delimiter-tree.h \
         gda-delimiter-tree.c
-
-libgda_sql_delimiter_3_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) $(NO_UNDEFINED)
-libgda_sql_delimiter_3_0_la_LIBADD = $(LIBGDA_LIBS)
 
 EXTRA_DIST=parser.y lexer.l
 

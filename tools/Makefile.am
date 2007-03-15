@@ -29,17 +29,11 @@ AM_CPPFLAGS = \
 gda_run_3_0_SOURCES = gda-run.c
 gda_run_3_0_LDADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
-	$(top_builddir)/libgda/graph/libgda_graph-3.0.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
 	$(LIBGDA_LIBS)
 
 gda_config_tool_3_0_SOURCES = gda-config-tool.c
 gda_config_tool_3_0_LDADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
-	$(top_builddir)/libgda/graph/libgda_graph-3.0.la \
-	$(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
-	$(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
 	$(READLINE_LIB) \
 	$(HISTORY_LIB) \
 	$(POPT_LIB) \
@@ -52,9 +46,6 @@ gda_diagnose_3_0_SOURCES = \
 
 gda_diagnose_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
 gda_inspect_dict_file_3_0_SOURCES = \
@@ -62,9 +53,6 @@ gda_inspect_dict_file_3_0_SOURCES = \
 
 gda_inspect_dict_file_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
 gda_author_dict_file_3_0_SOURCES = \
@@ -72,9 +60,6 @@ gda_author_dict_file_3_0_SOURCES = \
 
 gda_author_dict_file_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
 gda_list_config_3_0_SOURCES = \
@@ -82,9 +67,6 @@ gda_list_config_3_0_SOURCES = \
 
 gda_list_config_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
-        $(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
         $(LIBGDA_LIBS)
 
 EXTRA_DIST = $(man_MANS)

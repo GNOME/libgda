@@ -1,3 +1,36 @@
+2007-03-15  Vivien Malerba <malerba@gnome-db.org>
+
+	Applied patch from Yaakov (Cygwin Ports) and Gustavo R. Montesino:
+
+	* Makefile.am
+	* configure.in
+	* doc/C/Makefile.am
+	* libgda-3.0.pc.in
+	* libgda/Makefile.am
+	* libgda/graph/Makefile.am
+	* libgda/handlers/Makefile.am
+	* libgda/sql-delimiter/Makefile.am
+	* libgda/sql-transaction/Makefile.am
+	* providers/freetds/Makefile.am
+	* providers/mdb/Makefile.am
+	* providers/mysql/Makefile.am
+	* providers/postgres/Makefile.am
+	* providers/sqlite/Makefile.am
+	* report/testing/Makefile.am
+	* testing/Makefile.am
+	* tests/Makefile.am
+	* tools/Makefile.am:
+	Change libgda sublibs to convenience libs and merge them into
+	libgda-3.0.la.
+	Fixes compilation with -Wl,--as-needed or -Wl,-z,defs and obsoletes
+	the Win32
+	bootstrapping; see bug 349548 and others.
+
+	* win32/Makefile.am
+	* win32/dummy.la
+	* win32/libgda_graph-3.0.def
+	* win32/libgda_handlers-3.0.def: Removed.
+
 2007-03-12  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-proxy.c: corrected a bug leading to a non refreshed

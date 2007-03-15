@@ -30,11 +30,7 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
         -I$(top_builddir) \
         $(LIBGDA_CFLAGS) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
-GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.0.la \
-	$(top_builddir)/libgda/handlers/libgda_handlers-3.0.la \
-        $(top_builddir)/libgda/graph/libgda_graph-3.0.la \
-        $(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
-        $(LIBGDA_LIBS)
+GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-3.0.la $(LIBGDA_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb
 MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="lexer.c"

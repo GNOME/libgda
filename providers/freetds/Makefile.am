@@ -25,7 +25,6 @@ libgda_freetds_la_SOURCES = \
 
 libgda_freetds_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_freetds_la_LIBADD = \
-	$(top_builddir)/libgda/sql-delimiter/libgda_sql_delimiter-3.0.la \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(LIBGDA_LIBS) \
 	$(FREETDS_LIBS)
