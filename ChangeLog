@@ -1,3 +1,13 @@
+2007-03-16  yselkowitz  <yselkowitz@users.sourceforge.net>
+
+	* acconfig.h:
+	* configure.in:
+	* providers/mdb/gda-mdb-provider.c:
+	(gda_mdb_provider_open_connection), (gda_mdb_provider_execute_sql):
+	Added configure tests to allow us to ifdef around changes in the MDB 
+	API. Hopefully this will not happen often.
+	Bug #412122.
+
 2007-03-15  yselkowitz  <yselkowitz@users.sourceforge.net>
 
 	* configure.in: Add AM_PROG_CC_C_O to avoid a warning.

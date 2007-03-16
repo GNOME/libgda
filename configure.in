@@ -833,6 +833,46 @@ then
 		MDB_CFLAGS=-I${mdbdir}/include
 		MDB_LIBS="-L${mdbdir}/lib -lmdb -lmdbsql"
 		AC_DEFINE(HAVE_MDB, 1, [Have MDB])
+
+		save_CFLAGS="$CFLAGS"
+		CFLAGS="$CFLAGS $LIBGDA_CFLAGS"
+
+		AC_MSG_CHECKING([whether mdb_open takes one or two arguments])
+
+		AC_COMPILE_IFELSE([[
+#include <mdbtools.h>
+int main() {
+    const char *filename;
+	mdb_open(filename, MDB_WRITABLE);
+	return 0;
+}
+]], mdb_open_args=two, mdb_open_args=one)
+
+		AC_MSG_RESULT($mdb_open_args)
+		if test "$mdb_open_args" = "two"; then
+			AC_DEFINE(MDB_WITH_WRITE_SUPPORT, 1, [define if mdb_open accepts MDB_WRITABLE])
+		fi
+
+		AC_MSG_CHECKING([whether mdb_sql_bind_column takes three or four arguments])
+
+		AC_COMPILE_IFELSE([[
+#include <mdbsql.h>
+int main() {
+	extern MdbSQL *mdb_SQL;
+	int c;
+	char *bound_data[256];
+	int len;
+	mdb_sql_bind_column(mdb_SQL, c, bound_data[c], &len);
+	return 0;
+}
+]], mdb_sql_bind_column_args=four, mdb_sql_bind_column_args=three)
+
+		AC_MSG_RESULT($mdb_sql_bind_column_args)
+		if test "$mdb_sql_bind_column_args" = "four"; then
+			AC_DEFINE(MDB_SQL_BIND_COLUMN_FOUR_ARGS, 1, [define if mdb_sql_bind_column accepts four args])
+		fi
+
+		CFLAGS="$save_CFLAGS"
 	fi
 fi
 

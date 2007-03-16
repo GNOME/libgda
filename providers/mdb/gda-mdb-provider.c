@@ -231,7 +231,11 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 	mdb_cnc = g_new0 (GdaMdbConnection, 1);
 	mdb_cnc->cnc = cnc;
 	mdb_cnc->server_version = NULL;
+#ifdef MDB_WITH_WRITE_SUPPORT
 	mdb_cnc->mdb = mdb_open (filename, MDB_WRITABLE);
+#else
+	mdb_cnc->mdb = mdb_open (filename);
+#endif
 	if (!mdb_cnc->mdb) {
 		gda_connection_add_event_string (cnc, _("Could not open file %s"), filename);
 		g_free (mdb_cnc);
@@ -794,11 +798,12 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 		bound_data[c] = (gchar *) malloc (MDB_BIND_SIZE);
 		bound_data[c][0] = '\0';
 
-		/* Note that older versions of MDB don't have the 4th len_ptr parameter.
-		 * Please submit a patch with a suitable #ifdef if you need this to build with the older version.
-		 */
-                int len = 0; /* Maybe we should actually do something with this output parameter. */
+#ifdef MDB_SQL_BIND_COLUMN_FOUR_ARGS
+		int len = 0; /* Maybe we should actually do something with this output parameter. */
 		mdb_sql_bind_column (mdb_SQL, c + 1, bound_data[c], &len);
+#else
+		mdb_sql_bind_column (mdb_SQL, c + 1, bound_data[c]);
+#endif
 		
 		/* set description for the field */
 		fa = gda_data_model_describe_column (model, c);
