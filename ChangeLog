@@ -1,3 +1,14 @@
+2007-03-19  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/sql-delimiter/Makefile.am: applied patch from
+	Mark Johnson <mrj001@shaw.ca> to correct a compiling problem
+	* providers/ldap/gda-ldap-recordset.c:
+	* providers/oracle/gda-oracle-recordset.c:
+	* providers/msql/gda-msql-recordset.c: disabled adding values
+	to GdaDataModel returned when executing a SELECT command, to 
+	avoid calling the non-existant gda_data_model_get_command_text()
+	for bug #411811
+
 2007-03-16  yselkowitz  <yselkowitz@users.sourceforge.net>
 
 	* acconfig.h:

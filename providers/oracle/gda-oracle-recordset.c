@@ -465,7 +465,8 @@ gda_oracle_recordset_is_updatable (GdaDataModelRow *model)
 
 	g_object_get (G_OBJECT (model), "command_type", &cmd_type, NULL);
 
-	return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;
+	return FALSE;
+	/*return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;*/
 }
 
 static GdaRow *
@@ -584,7 +585,7 @@ gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 	model_class->get_row = gda_oracle_recordset_get_row;
 	model_class->get_value_at = gda_oracle_recordset_get_value_at;
 	model_class->is_updatable = gda_oracle_recordset_is_updatable;
-	model_class->append_values = gda_oracle_recordset_append_values;
+	model_class->append_values = /*gda_oracle_recordset_append_values*/ NULL;
 	model_class->remove_row = gda_oracle_recordset_remove_row;
 	model_class->update_row = gda_oracle_recordset_update_row;
 }

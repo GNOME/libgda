@@ -180,7 +180,8 @@ gda_msql_recordset_is_updatable(GdaDataModelRow *model)
 	if (!GDA_IS_MSQL_RECORDSET(rs)) return FALSE;
 
 	g_object_get (G_OBJECT (model), "command_type", &cmd_type, NULL);
-	return (cmd_type==GDA_COMMAND_TYPE_TABLE) ? TRUE : FALSE;
+	return FALSE;
+	/*return (cmd_type==GDA_COMMAND_TYPE_TABLE) ? TRUE : FALSE;*/
 }
 
 static GdaRow *
@@ -273,7 +274,7 @@ gda_msql_recordset_class_init (GdaMsqlRecordsetClass *cl)
 	mdl_class->get_row = gda_msql_recordset_get_row;
 	mdl_class->get_value_at = gda_msql_recordset_get_value_at;
 	mdl_class->is_updatable = gda_msql_recordset_is_updatable;
-	mdl_class->append_values = gda_msql_recordset_append_values;
+	mdl_class->append_values = /*gda_msql_recordset_append_values*/ NULL;
 	mdl_class->remove_row = gda_msql_recordset_remove_row;
 	mdl_class->update_row = gda_msql_recordset_update_row;
 }

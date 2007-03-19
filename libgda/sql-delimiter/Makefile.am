@@ -12,7 +12,7 @@ parser.c: parser.y
 	$(YACC) -v -d -o $@ -p gda_delimiter $<
 
 lexer.c: lexer.l parser.c
-	$(LEX) -o $@ -Pgda_delimiter $<
+	$(LEX) -o$@ -Pgda_delimiter $<
 
 libgda_sql_delimiter_headers = \
         gda-sql-delimiter.h 
