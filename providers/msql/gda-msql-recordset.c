@@ -184,6 +184,8 @@ gda_msql_recordset_is_updatable(GdaDataModelRow *model)
 	/*return (cmd_type==GDA_COMMAND_TYPE_TABLE) ? TRUE : FALSE;*/
 }
 
+/* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811: */
+#if 0
 static GdaRow *
 gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values, GError **error) 
 {
@@ -248,6 +250,7 @@ gda_msql_recordset_append_values(GdaDataModelRow *model,const GList *values, GEr
 	g_ptr_array_add(rs->rows,row);
 	return (GdaRow *) row;
 }
+#endif
 
 static gboolean 
 gda_msql_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error) 
@@ -274,7 +277,10 @@ gda_msql_recordset_class_init (GdaMsqlRecordsetClass *cl)
 	mdl_class->get_row = gda_msql_recordset_get_row;
 	mdl_class->get_value_at = gda_msql_recordset_get_value_at;
 	mdl_class->is_updatable = gda_msql_recordset_is_updatable;
-	mdl_class->append_values = /*gda_msql_recordset_append_values*/ NULL;
+
+        /* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811: */
+	mdl_class->append_values = /* gda_msql_recordset_append_values */ NULL;
+
 	mdl_class->remove_row = gda_msql_recordset_remove_row;
 	mdl_class->update_row = gda_msql_recordset_update_row;
 }

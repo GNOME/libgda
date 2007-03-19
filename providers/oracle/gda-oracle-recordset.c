@@ -469,6 +469,8 @@ gda_oracle_recordset_is_updatable (GdaDataModelRow *model)
 	/*return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;*/
 }
 
+/* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811: */
+#if 0
 static GdaRow *
 gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values, GError **error)
 {
@@ -546,6 +548,7 @@ gda_oracle_recordset_append_values (GdaDataModelRow *model, const GList *values,
 
 	return row;
 }
+#endif
 
 static gboolean
 gda_oracle_recordset_remove_row (GdaDataModelRow *model, GdaRow *row, GError **error)
@@ -585,7 +588,10 @@ gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 	model_class->get_row = gda_oracle_recordset_get_row;
 	model_class->get_value_at = gda_oracle_recordset_get_value_at;
 	model_class->is_updatable = gda_oracle_recordset_is_updatable;
-	model_class->append_values = /*gda_oracle_recordset_append_values*/ NULL;
+
+        /* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811: */
+	model_class->append_values = /* gda_oracle_recordset_append_values */ NULL;
+
 	model_class->remove_row = gda_oracle_recordset_remove_row;
 	model_class->update_row = gda_oracle_recordset_update_row;
 }

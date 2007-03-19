@@ -262,6 +262,8 @@ gda_ldap_recordset_is_updatable (GdaDataModelRow *model)
 	/*return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;*/
 }
 
+/* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811: */
+#if 0
 static const GdaRow *
 gda_ldap_recordset_append_values (GdaDataModelRow *model, const GList *values)
 {
@@ -343,6 +345,7 @@ gda_ldap_recordset_append_values (GdaDataModelRow *model, const GList *values)
 
 	return (const GdaRow *) row;
 }
+#endif
 
 static gboolean
 gda_ldap_recordset_remove_row (GdaDataModelRow *model, const GdaRow *row)
@@ -370,7 +373,10 @@ gda_ldap_recordset_class_init (GdaLdapRecordsetClass *klass)
 	model_class->get_row = gda_ldap_recordset_get_row;
 	model_class->get_value_at = gda_ldap_recordset_get_value_at;
 	model_class->is_updatable = gda_ldap_recordset_is_updatable;
-	model_class->append_values = /*gda_ldap_recordset_append_values*/ NULL;
+
+        /* Not implemented. See bug http://bugzilla.gnome.org/show_bug.cgi?id=411811: */
+	model_class->append_values = /* gda_ldap_recordset_append_values */ NULL;
+
 	model_class->remove_row = gda_ldap_recordset_remove_row;
 	model_class->update_row = gda_ldap_recordset_update_row;
 }
