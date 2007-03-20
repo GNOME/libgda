@@ -1,3 +1,9 @@
+2007-03-20  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model.h:
+	* libgda/gda-server-provider.h: added reserved places
+	for future extensions without breaking ABI
+
 2007-03-19  Murray Cumming  <murrayc@murrayc-desktop>
 
 	* libgda/gda-data-model-private.h:

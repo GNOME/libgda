@@ -191,11 +191,12 @@ struct _GdaServerProviderClass {
 							GdaConnection *cnc,
 							const gchar *name, GError **error);
 
-	/* blobs */
+	/* future extensions */
 	gpointer                   reserved1; /* is_reserved_word() ? */
 	gpointer                   reserved2; /* ping_or_reconnect() ? */
-	gpointer                   reserved3;
+	gpointer                   reserved3; /* execute () ? */
 	gpointer                   reserved4;
+	gpointer                   reserved5;
 };
 
 GType                  gda_server_provider_get_type (void);

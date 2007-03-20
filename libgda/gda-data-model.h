@@ -99,12 +99,20 @@ struct _GdaDataModelClass {
 	void                 (* i_set_notify)       (GdaDataModel *model, gboolean do_notify_changes);
 	gboolean             (* i_get_notify)       (GdaDataModel *model);
 	void                 (* i_send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
+	gpointer                reserved1;
+	gpointer                reserved2;
+	gpointer                reserved3;
+	gpointer                reserved4;
 
 	/* signals */
 	void                 (* row_inserted)       (GdaDataModel *model, gint row);
 	void                 (* row_updated)        (GdaDataModel *model, gint row);
 	void                 (* row_removed)        (GdaDataModel *model, gint row);
 	void                 (* reset)              (GdaDataModel *model);
+	gpointer                sig_reserved1;
+	gpointer                sig_reserved2;
+	gpointer                sig_reserved3;
+	gpointer                sig_reserved4;
 };
 
 GType               gda_data_model_get_type               (void);
