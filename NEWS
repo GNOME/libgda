@@ -1,3 +1,25 @@
+libgda 2.99.6, 2007-03-23
+
+ - Merged several libraries into one for efficiency and because of inter-dependencies (yselkowitz, 
+   Gustavo R. Montesino, Christopher Taylor)
+ - More explicit API function names (Murray Cumming)
+ - Applications can now check installed DBMS providers (yselkowitz)
+ - C# bindings removed from the libgda's module (Murray Cumming)
+ - Added regression tests for SQL parsing and delimiting (Vivien Malerba)
+ - Reworked SQL delimiter and made the SQL parser report non parsed characters (Vivien Malerba)
+ - Embedded SQLite is now 3.3.13 (Vivien Malerba)
+ - Added configure tests to work around changes in the MDB API (yselkowitz)
+ - Improved WIN32 building for Cygwin and MinGW (yselkowitz, Gustavo R. Montesino, Christopher Taylor)
+ - Bug fixes: #407064, #411811, #314732, #390609, #353404, #411984, #349548, #412122, #411811
+   (Leonardo Boshell, yselkowitz, Armin Burgmeier, Daniel Espinosa, Murray Cumming, Christopher Taylor,
+   Vivien Malerba)
+ - Lots of minor bug fixes
+ - Translations:
+	- new dz translation (Pema Geyleg)
+	- sv (Daniel Nylander)
+	- en_GB (David Lodge)
+	- it (Marco Ciampa)
+
 libgda 2.99.5, 2007-02-12
 
  - Correct a linker error when using the (recently renamed to) 
