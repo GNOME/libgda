@@ -1,3 +1,10 @@
+2007-03-26  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/gda-value.c: Removed a line that unconditionally returned
+	with calling g_value_get_uint() if the type of the values to compare
+	was not known. The warning that should actually be displayed in that
+	case was therefore never triggered.
+
 2007-03-26  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-query.h: added a GDA_QUERY_PARAM_TYPE_ERROR type of error

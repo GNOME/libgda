@@ -1934,8 +1934,6 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		return (g_value_get_uint (value1) > g_value_get_uint (value2)) ? 1 : 
 			((g_value_get_uint (value1) == g_value_get_uint (value2)) ? 0 : -1);
 
-		return g_value_get_uint (value1) - g_value_get_uint(value2);
-
 
 	g_warning ("%s() cannot handle values of type %s", __FUNCTION__, g_type_name (G_VALUE_TYPE (value1)));
 
