@@ -56,6 +56,11 @@ to tell from which query field the values will be taken).
 
 </para>
 
+<!-- ##### ARG GdaQueryFieldValue:string-type ##### -->
+<para>
+
+</para>
+
 <!-- ##### FUNCTION gda_query_field_value_new ##### -->
 <para>
 

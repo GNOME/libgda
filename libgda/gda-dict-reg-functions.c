@@ -569,7 +569,9 @@ gda_functions_get_by_name (GdaDict *dict, const gchar *funcname)
 	g_return_val_if_fail (funcname && *funcname, NULL);
 
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_FUNCTION);
-	g_assert (reg);
+	if (!reg)
+		/* functions not handled in the dictionary */
+		return NULL;
 
 	if (LC_NAMES (dict))
 		cmpstr = g_utf8_strdown (funcname, -1);

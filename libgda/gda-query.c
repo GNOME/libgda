@@ -736,6 +736,8 @@ gda_query_dispose (GObject *object)
 	parent_class->dispose (object);
 }
 
+static void cond_weak_ref_notify (GdaQuery *query, GdaQueryCondition *cond);
+
 /* completely cleans the query's contents */
 static void
 gda_query_clean (GdaQuery *gda_query)
@@ -790,14 +792,12 @@ gda_query_clean (GdaQuery *gda_query)
 	gda_query->priv->serial_field = 1;
 	gda_query->priv->serial_cond = 1;
 
-	/* internal coherence test */
-#ifdef GDA_DEBUG
+	/* clean priv->all_conds */
 	if (gda_query->priv->all_conds) {
-		g_print ("Query incoherence error!!!\n");
-		gda_object_dump (GDA_OBJECT (gda_query), 0);
+		while (gda_query->priv->all_conds)
+			cond_weak_ref_notify (gda_query, 
+					      GDA_QUERY_CONDITION (gda_query->priv->all_conds->data));
 	}
-#endif
-	g_assert (!gda_query->priv->all_conds);
 
 	if (!gda_query->priv->internal_transaction)
 		gda_object_signal_emit_changed (GDA_OBJECT (gda_query));
@@ -871,9 +871,6 @@ gda_query_get_property (GObject *object,
 		}	
 	}
 }
-
-static void cond_weak_ref_notify (GdaQuery *query, GdaQueryCondition *cond);
-
 
 /**
  * gda_query_declare_condition
@@ -1412,7 +1409,6 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 		stm_list = gda_delimiter_parse_with_error (sql, &local_error);
 		if (stm_list) {
 			GList *params;
-			gboolean allok = TRUE;
 			GdaDict *dict = gda_object_get_dict (GDA_OBJECT (query));
 
 			stm = gda_delimiter_concat_list (stm_list);
@@ -1423,7 +1419,7 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 			gda_delimiter_display (stm);
 			*/
 			params = stm->params_specs;
-			while (params && allok) {
+			while (params) {
 				GdaDictType *dtype = NULL;
 				GType gtype = G_TYPE_INVALID;
 				GList *pspecs = (GList *)(params->data);
@@ -1440,85 +1436,83 @@ gda_query_set_sql_text (GdaQuery *query, const gchar *sql, GError **error)
 					pspecs = g_list_next (pspecs);
 				}
 				
-				if (gtype != G_TYPE_INVALID) {
-					GdaQueryField *field;
-
-					/* create the #GdaQueryFieldValue fields */
-					field = GDA_QUERY_FIELD (gda_query_field_value_new (query, gtype));
-					if (dtype)
-						gda_entity_field_set_dict_type (GDA_ENTITY_FIELD (field), dtype);
-					gda_query_field_set_internal (field, TRUE);
-					gda_query_field_set_visible (field, FALSE);
-					gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (field));
-					g_object_set_data (G_OBJECT (field), "pspeclist", params->data);
-					g_object_unref (field);
-					
-					gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (field), TRUE);
-
-					pspecs = (GList *) (params->data);
-					while (pspecs) {
-						GdaDelimiterParamSpec *ps = GDA_DELIMITER_PARAM_SPEC (pspecs->data);
-						switch (ps->type) {
-						case GDA_DELIMITER_PARAM_NAME:
-							gda_object_set_name (GDA_OBJECT (field), ps->content);
-							break;
-						case GDA_DELIMITER_PARAM_DESCR:
-							gda_object_set_description (GDA_OBJECT (field), ps->content);
-							break;
-						case GDA_DELIMITER_PARAM_NULLOK:
-							gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (field),
-										  (*(ps->content) == 'f') ||
-										  (*(ps->content) == 'F') ? 
-										  TRUE : FALSE);
-							break;
-						case GDA_DELIMITER_PARAM_ISPARAM:
-							gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (field), 
-										      (*(ps->content) == 'f') || 
-										      (*(ps->content) == 'F') ? 
-										      FALSE : TRUE);
-							break;
-						case GDA_DELIMITER_PARAM_TYPE:
-							break;
-						case GDA_DELIMITER_PARAM_DEFAULT: {
-							GValue *defval = NULL;
-							GdaDataHandler *dh;
-
-							dh = gda_dict_get_handler (dict, gtype);
-							if (dh) 
-								defval = gda_data_handler_get_value_from_sql (dh,
-									 ps->content, gtype);
-							if (!defval) {
-								dh = gda_dict_get_handler (dict, G_TYPE_STRING);
-								defval = gda_data_handler_get_value_from_sql (dh,
-									 ps->content, G_TYPE_STRING);
-								if (!defval)
-									defval = gda_data_handler_get_value_from_str (
-										 dh, ps->content, G_TYPE_STRING);
-							}
-							gda_query_field_value_set_default_value (GDA_QUERY_FIELD_VALUE (field), 
-												 defval);
-							gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (field), 
-											 defval);
-							gda_value_free (defval);
-							break;
-						}
-						}
-						pspecs = g_list_next (pspecs);
-					}
+				if (gtype == G_TYPE_INVALID) {
+					if (error && !(*error))
+						g_set_error (error, GDA_QUERY_ERROR, 
+							     GDA_QUERY_PARAM_TYPE_ERROR,
+							     _("No valid type specified for parameter, using gchararray"));
+					gtype = G_TYPE_STRING;
 				}
-				else
-					allok = FALSE;
+
+				GdaQueryField *field;
+				
+				/* create the #GdaQueryFieldValue fields */
+				field = GDA_QUERY_FIELD (gda_query_field_value_new (query, gtype));
+				if (dtype)
+					gda_entity_field_set_dict_type (GDA_ENTITY_FIELD (field), dtype);
+				gda_query_field_set_internal (field, TRUE);
+				gda_query_field_set_visible (field, FALSE);
+				gda_entity_add_field (GDA_ENTITY (query), GDA_ENTITY_FIELD (field));
+				g_object_set_data (G_OBJECT (field), "pspeclist", params->data);
+				g_object_unref (field);
+				
+				gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (field), TRUE);
+				
+				pspecs = (GList *) (params->data);
+				while (pspecs) {
+					GdaDelimiterParamSpec *ps = GDA_DELIMITER_PARAM_SPEC (pspecs->data);
+					switch (ps->type) {
+					case GDA_DELIMITER_PARAM_NAME:
+						gda_object_set_name (GDA_OBJECT (field), ps->content);
+						break;
+					case GDA_DELIMITER_PARAM_DESCR:
+						gda_object_set_description (GDA_OBJECT (field), ps->content);
+						break;
+					case GDA_DELIMITER_PARAM_NULLOK:
+						gda_query_field_value_set_not_null (GDA_QUERY_FIELD_VALUE (field),
+										    (*(ps->content) == 'f') ||
+										    (*(ps->content) == 'F') ? 
+										    TRUE : FALSE);
+						break;
+					case GDA_DELIMITER_PARAM_ISPARAM:
+						gda_query_field_value_set_is_parameter (GDA_QUERY_FIELD_VALUE (field), 
+											(*(ps->content) == 'f') || 
+											(*(ps->content) == 'F') ? 
+											FALSE : TRUE);
+						break;
+					case GDA_DELIMITER_PARAM_TYPE:
+						g_object_set (G_OBJECT (field), "string_type", ps->content, NULL);
+						break;
+					case GDA_DELIMITER_PARAM_DEFAULT: {
+						GValue *defval = NULL;
+						GdaDataHandler *dh;
+						
+						dh = gda_dict_get_handler (dict, gtype);
+						if (dh) 
+							defval = gda_data_handler_get_value_from_sql (dh,
+												      ps->content, gtype);
+						if (!defval) {
+							dh = gda_dict_get_handler (dict, G_TYPE_STRING);
+							defval = gda_data_handler_get_value_from_sql (dh,
+												      ps->content, G_TYPE_STRING);
+							if (!defval)
+								defval = gda_data_handler_get_value_from_str (
+													      dh, ps->content, G_TYPE_STRING);
+						}
+						gda_query_field_value_set_default_value (GDA_QUERY_FIELD_VALUE (field), 
+											 defval);
+						gda_query_field_value_set_value (GDA_QUERY_FIELD_VALUE (field), 
+										 defval);
+						gda_value_free (defval);
+						break;
+					}
+					}
+					pspecs = g_list_next (pspecs);
+				}
 				params = g_list_next (params);
 			}
 
-			if (allok) 
-				query->priv->sql_exprs = stm;
-			else {
-				/*g_warning ("No valid type specified for parameter");*/
-				gda_delimiter_destroy (stm);
-				gda_query_clean (query);
-				gda_query_set_query_type (query, GDA_QUERY_TYPE_NON_PARSED_SQL);
-			}
+			query->priv->sql_exprs = stm;
 		}
 		else {
 			/*g_warning ("NOT DELIMITED: %s (ERR: %s)", sql, 

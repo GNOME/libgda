@@ -103,6 +103,7 @@ enum
 	PROP_0,
 	PROP_QUERY,
 	PROP_GDA_TYPE,
+	PROP_SPEC_TYPE,
 	PROP_RESTRICT_MODEL,
         PROP_RESTRICT_COLUMN,
 	PROP_ENTRY_PLUGIN,
@@ -116,6 +117,7 @@ struct _GdaQueryFieldValuePrivate
 	GdaQuery              *query;
 	GType                  g_type;
 	GdaDictType           *dict_type;
+	gchar                 *spec_type;
 
 	GValue                *value;        /* MUST either be NULL, or of type GDA_VALUE_NULL or 'type' */
 	GValue                *default_value;/* CAN either be NULL, or of any type */
@@ -247,6 +249,10 @@ gda_query_field_value_class_init (GdaQueryFieldValueClass * class)
                                          g_param_spec_ulong ("g_type", "Gda data type", NULL,
 							   0, G_MAXULONG, GDA_TYPE_NULL,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_SPEC_TYPE,
+                                         g_param_spec_string ("string_type", NULL, NULL, NULL,
+                                                              (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+
 	g_object_class_install_property (object_class, PROP_RESTRICT_MODEL,
                                          g_param_spec_object ("restrict_model", NULL, NULL,
                                                                GDA_TYPE_DATA_MODEL,
@@ -277,6 +283,7 @@ gda_query_field_value_init (GdaQueryFieldValue *gda_query_field_value)
 	gda_query_field_value->priv = g_new0 (GdaQueryFieldValuePrivate, 1);
 	gda_query_field_value->priv->query = NULL;
 	gda_query_field_value->priv->g_type = G_TYPE_INVALID;
+	gda_query_field_value->priv->spec_type = NULL;
 	gda_query_field_value->priv->dict_type = NULL;
 	gda_query_field_value->priv->value = NULL;
 	gda_query_field_value->priv->default_value = NULL;
@@ -374,8 +381,8 @@ gda_query_field_value_finalize (GObject   * object)
 
 	field = GDA_QUERY_FIELD_VALUE (object);
 	if (field->priv) {
-		if (field->priv->plugin)
-			g_free (field->priv->plugin);
+		g_free (field->priv->spec_type);
+		g_free (field->priv->plugin);
 
 		g_free (field->priv);
 		field->priv = NULL;
@@ -421,6 +428,14 @@ gda_query_field_value_set_property (GObject *object,
 		case PROP_GDA_TYPE:
 			field->priv->g_type = g_value_get_ulong (value);
 			break;
+		case PROP_SPEC_TYPE:
+			if (field->priv->spec_type) {
+				g_free (field->priv->spec_type);
+				field->priv->spec_type = NULL;
+			}
+			if (g_value_get_string (value))
+				field->priv->spec_type = g_strdup (g_value_get_string (value));
+			break;
 		case PROP_RESTRICT_MODEL: {
 			GdaDataModel* ptr = GDA_DATA_MODEL (g_value_get_object (value));
 			g_return_if_fail (gda_query_field_value_restrict (field, 
@@ -459,6 +474,9 @@ gda_query_field_value_get_property (GObject *object,
 			break;
 		case PROP_GDA_TYPE:
 			g_value_set_ulong (value, field->priv->g_type);
+			break;
+		case PROP_SPEC_TYPE:
+			g_value_set_string (value, field->priv->spec_type);
 			break;
 		case PROP_RESTRICT_MODEL:
 			g_value_set_object (value, G_OBJECT (field->priv->restrict_model));
@@ -1545,9 +1563,13 @@ gda_query_field_value_render_as_sql (GdaRenderer *iface, GdaParameterList *conte
 		if (field->priv->dict_type)
 			g_string_append_printf (extra, "type:\"%s\"", 
 						gda_object_get_name (GDA_OBJECT (field->priv->dict_type)));
-		else
-			/* print g_type instead */
-			g_string_append_printf (extra, "type:\"%s\"", gda_g_type_to_string (field->priv->g_type));
+		else {
+			if (field->priv->spec_type)
+				g_string_append_printf (extra, "type:\"%s\"", field->priv->spec_type);
+			else
+				g_string_append_printf (extra, "type:\"%s\"", 
+							gda_g_type_to_string (field->priv->g_type));
+		}
 
 		tmpstr = gda_object_get_name (GDA_OBJECT (field));
 		if (tmpstr && *tmpstr) {

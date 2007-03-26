@@ -131,7 +131,8 @@ aggregates_get_objects (GdaDict *dict)
 	GdaDictRegisterStruct *reg;
 
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_DICT_AGGREGATE);
-	g_assert (reg);
+	if (!reg)
+		return NULL;
 
 	if (reg->assumed_objects)
 		return g_slist_copy (reg->assumed_objects);

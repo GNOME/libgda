@@ -3,7 +3,6 @@
   <test name="param_type_1">
     <sql expected="D">SELECT ## /* type:int4 */ i=10</sql>
     <render_as>SELECT ## /* type:"int4" */ i=10</render_as>
-    <render_as>SELECT ## /* type:"gint" */ i=10</render_as>
     <params>
       <param type="int4"/>
     </params>
@@ -11,7 +10,6 @@
 
   <test name="param_type_2">
     <sql expected="D">SELECT ## /* type:"int4" */ i=10</sql>
-    <render_as>SELECT ## /* type:"gint" */ i=10</render_as>
     <params>
       <param type="int4"/>
     </params>
@@ -20,7 +18,6 @@
   <test name="param_type_3">
     <sql expected="D">SELECT ## /*type:'int4'*/ i=10</sql>
     <render_as>SELECT ## /* type:"int4" */ i=10</render_as>
-    <render_as>SELECT ## /* type:"gint" */ i=10</render_as>
     <params>
       <param type="int4"/>
     </params>
@@ -28,7 +25,8 @@
 
 <test name="param_name_1">
     <sql expected="D">SELECT ## /* name:+12 */ i=10</sql>
-    <render_as>SELECT ## /* name:"+12" */ i=10</render_as>
+    <render_as when_gda="FALSE">SELECT ## /* name:"+12" */ i=10</render_as>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" name:"+12" */ i=10</render_as>
     <params>
       <param name="+12"/>
     </params>
@@ -36,6 +34,8 @@
 
   <test name="param_name_2">
     <sql expected="D">SELECT ## /* name:"+12" */ i=10</sql>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" name:"+12" */ i=10</render_as>
+    <render_as when_gda="FALSE">SELECT ## /* name:"+12" */ i=10</render_as>
     <params>
       <param name="+12"/>
     </params>
@@ -43,7 +43,8 @@
 
   <test name="param_name_3">
     <sql expected="D">SELECT ## /*name:'+12'*/ i=10</sql>
-    <render_as>SELECT ## /* name:"+12" */ i=10</render_as>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" name:"+12" */ i=10</render_as>
+    <render_as when_gda="FALSE">SELECT ## /* name:"+12" */ i=10</render_as>
     <params>
       <param name="+12"/>
     </params>
@@ -51,7 +52,8 @@
 
 <test name="param_name_4">
     <sql expected="D">SELECT ## /* name:-10 */ i=10</sql>
-    <render_as>SELECT ## /* name:"-10" */ i=10</render_as>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" name:"-10" */ i=10</render_as>
+    <render_as when_gda="FALSE">SELECT ## /* name:"-10" */ i=10</render_as>
     <params>
       <param name="-10"/>
     </params>
@@ -59,6 +61,7 @@
 
   <test name="param_name_5">
     <sql expected="D">SELECT ## /* name:"-10" */ i=10</sql>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" name:"-10" */ i=10</render_as>
     <params>
       <param name="-10"/>
     </params>
@@ -66,7 +69,8 @@
 
   <test name="param_name_6">
     <sql expected="D">SELECT ## /*name:'-10'*/ i=10</sql>
-    <render_as>SELECT ## /* name:"-10" */ i=10</render_as>
+    <render_as when_gda="FALSE">SELECT ## /* name:"-10" */ i=10</render_as>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" name:"-10" */ i=10</render_as>
     <params>
       <param name="-10"/>
     </params>
@@ -74,7 +78,8 @@
 
   <test name="param_descr_1">
     <sql expected="D">SELECT ## /* descr:ADescription */ i=10</sql>
-    <render_as>SELECT ## /* descr:"ADescription" */ i=10</render_as>
+    <render_as when_gda="FALSE">SELECT ## /* descr:"ADescription" */ i=10</render_as>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" descr:"ADescription" */ i=10</render_as>
     <params>
       <param descr="ADescription"/>
     </params>
@@ -82,6 +87,7 @@
 
   <test name="param_descr_2">
     <sql expected="D">SELECT ## /* descr:"A description" */ i=10</sql>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" descr:"A description" */ i=10</render_as>
     <params>
       <param descr="A description"/>
     </params>
@@ -89,7 +95,8 @@
 
   <test name="param_descr_3">
     <sql expected="D">SELECT ## /*descr:'A description'*/ i=10</sql>
-    <render_as>SELECT ## /* descr:"A description" */ i=10</render_as>
+    <render_as when_gda="FALSE">SELECT ## /* descr:"A description" */ i=10</render_as>
+    <render_as when_gda="TRUE">SELECT ## /* type:"gchararray" descr:"A description" */ i=10</render_as>
     <params>
       <param descr="A description"/>
     </params>
@@ -97,10 +104,26 @@
 
   <test name="param2">
     <sql expected="D">SELECT 1234 /*type:"int4"*/ i=10</sql>
-    <render_as>SELECT 1234 /* type:"int4" */ i=10</render_as>
-    <render_as>SELECT 1234 /* type:"gint" */ i=10</render_as>
+    <render_as when_gda="FALSE">SELECT 1234 /* type:"int4" */ i=10</render_as>
+    <render_as when_gda="TRUE">SELECT '1234' /* type:"int4" */ i=10</render_as>
     <params>
       <param type="int4" default="1234" default_type="gint"/>
+    </params>
+  </test>
+
+  <test name="param2_1">
+    <sql expected="D">SELECT 1234 /* type:"int4" */, i=10</sql>
+    <render_as when_dict="TRUE">SELECT 1234 /* type:"int4" */, i=10</render_as>
+    <render_as when_dict="FALSE">SELECT '1234' /* type:"int4" */, i=10</render_as>
+    <params>
+      <param type="int4" default="1234" default_type="gint"/>
+    </params>
+  </test>
+
+  <test name="param2_2">
+    <sql expected="D">SELECT 1234 /* type:"gint" */, i=10</sql>
+    <params>
+      <param type="gint" default="1234" default_type="gint"/>
     </params>
   </test>
 
@@ -150,7 +173,8 @@
 
   <test name="string11">
     <sql expected="D" n_stmts="2">update kmj, sdfjk, ##/*name:"tit;i"*/ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</sql>
-    <render_as>update kmj, sdfjk, ## /* name:"tit;i" */ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</render_as>
+    <render_as when_gda="FALSE">update kmj, sdfjk, ## /* name:"tit;i" */ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</render_as>
+    <render_as when_gda="TRUE">update kmj, sdfjk, ## /* type:"gchararray" name:"tit;i" */ '+ ##/*name:"tot;o"*/,' ; COMMIT sdlkfj</render_as>
     <params>
       <param name="tit;i"/>
     </params>
@@ -158,7 +182,8 @@
 
   <test name="string12">
     <sql expected="D">delete kmj, sdfjk /*name:"tit'i"*/ sdlkfj slkdjf sdlkf</sql>
-    <render_as>delete kmj, sdfjk /* name:"tit'i" */ sdlkfj slkdjf sdlkf</render_as>
+    <render_as when_gda="FALSE">delete kmj, sdfjk /* name:"tit'i" */ sdlkfj slkdjf sdlkf</render_as>
+    <render_as when_gda="TRUE">delete kmj, 'sdfjk' /* type:"gchararray" name:"tit'i" */ sdlkfj slkdjf sdlkf</render_as>
     <params>
       <param name="tit'i" default="sdfjk" default_type="gchararray"/>
     </params>
@@ -175,8 +200,8 @@
 
   <test name="string15">
     <sql expected="D">SELECT schema.table.field || ##/*name:"Postfix" type:"varchar"*/</sql>
-    <render_as>SELECT schema.table.field || ## /* name:"Postfix" type:"varchar" */</render_as>
-    <render_as>SELECT schema.table.field || ## /* type:"gchararray" name:"Postfix" */</render_as>
+    <render_as when_gda="FALSE">SELECT schema.table.field || ## /* name:"Postfix" type:"varchar" */</render_as>
+    <render_as when_gda="TRUE">SELECT schema.table.field || ## /* type:"varchar" name:"Postfix" */</render_as>
     <params>
       <param name="Postfix" type="varchar"/>
     </params>
@@ -189,8 +214,8 @@
 
   <test name="string17">
     <sql expected="D">SELECTR id FROM table WHERE id = 1234.5 /* name:id type:gfloat */</sql>
-    <render_as>SELECTR id FROM table WHERE id = 1234.5 /* name:"id" type:"gfloat" */</render_as>
-    <render_as>SELECTR id FROM table WHERE id = 1234.500000 /* type:"gfloat" name:"id" */</render_as>
+    <render_as when_gda="FALSE">SELECTR id FROM table WHERE id = 1234.5 /* name:"id" type:"gfloat" */</render_as>
+    <render_as when_gda="TRUE">SELECTR id FROM table WHERE id = 1234.500000 /* type:"gfloat" name:"id" */</render_as>
     <params>
       <param name="id" type="gfloat" default="1234.5"/>
     </params>
@@ -198,8 +223,8 @@
 
   <test name="string17.1">
     <sql expected="D">SELECTR id FROM table WHERE id = 1234.5 /* name:id type:gfloat */ more text</sql>
-    <render_as>SELECTR id FROM table WHERE id = 1234.5 /* name:"id" type:"gfloat" */ more text</render_as>
-    <render_as>SELECTR id FROM table WHERE id = 1234.500000 /* type:"gfloat" name:"id" */ more text</render_as>
+    <render_as when_gda="FALSE">SELECTR id FROM table WHERE id = 1234.5 /* name:"id" type:"gfloat" */ more text</render_as>
+    <render_as when_gda="TRUE">SELECTR id FROM table WHERE id = 1234.500000 /* type:"gfloat" name:"id" */ more text</render_as>
     <params>
       <param name="id" type="gfloat" default="1234.5"/>
     </params>

@@ -87,7 +87,7 @@ main (int argc, char **argv)
 	gint i;
 
 	gda_init ("check-delimiter", PACKAGE_VERSION, argc, argv);
-	suites = test_suite_load_from_file (PATH_TO_TEST_XML);
+	suites = test_suite_load_from_file (TEST_FILENAME);
 	for (list = suites; list; list = list->next) {
 		TestSuite *ts = (TestSuite *)(list->data);
 		for (i = 0; i < ts->unit_files->len; i++) {

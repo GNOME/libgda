@@ -32,44 +32,77 @@ test_suite_load_from_file (const gchar *xml_file)
 
         for (subnode = node->children; subnode; subnode = subnode->next) {
 		if (!strcmp ((gchar*)subnode->name, "suite")) {
-			TestSuite *suite = g_new0 (TestSuite, 1);
+			TestSuite *suite1 = g_new0 (TestSuite, 1); /* without dict */
+			TestSuite *suite2 = NULL; /* with dict if one is specified */
 			xmlChar *prop;
 			xmlNodePtr snode;
 
-			suites = g_slist_append (suites, suite);
-			prop = xmlGetProp (subnode, "name");
-			if (prop) {
-				suite->name = g_strdup (prop);
-				xmlFree (prop);
-			}
-			else
-				g_error ("File '%s' contains an unnamed test suite", abs_xml_file);
+			suites = g_slist_append (suites, suite1);
 
 			prop = xmlGetProp (subnode, "dict");
 			if (prop) {
 				GError *error = NULL;
 				gchar *file;
-				suite->dict = gda_dict_new ();
+				GdaDict *dict = NULL;
+
+				dict = gda_dict_new ();
 				file = g_build_filename (CHECK_XML_FILES, "tests", prop, NULL);
-				if (!gda_dict_load_xml_file (suite->dict, file, &error))
+				if (!gda_dict_load_xml_file (dict, file, &error)) {
 					g_error ("Could not load dictionary file '%s': %s", prop,
 						 error ? error->message : "No detail");
+					g_object_unref (dict);
+					dict = NULL;
+				}
 				g_free (file);
 				xmlFree (prop);
+
+				if (dict) {
+					suite2 = g_new0 (TestSuite, 1);
+					suites = g_slist_append (suites, suite2);
+					suite2->dict = dict;
+				}
 			}
+
+			prop = xmlGetProp (subnode, "name");
+			if (prop) {
+				suite1->name = g_strdup_printf ("%s (no dictionary)", prop);
+				if (suite2)
+					suite2->name = g_strdup_printf ("%s (with dictionary)", prop);
+				xmlFree (prop);
+			}
+			else
+				g_error ("File '%s' contains an unnamed test suite", abs_xml_file);
 			
-			suite->unit_files = g_array_new (FALSE, FALSE, sizeof (gchar *));
-			suite->unit_tests = g_array_new (FALSE, FALSE, sizeof (GArray *));
+			suite1->unit_files = g_array_new (FALSE, FALSE, sizeof (gchar *));
+			suite1->unit_tests = g_array_new (FALSE, FALSE, sizeof (GArray *));
+			if (suite2) {
+				suite2->unit_files = g_array_new (FALSE, FALSE, sizeof (gchar *));
+				suite2->unit_tests = g_array_new (FALSE, FALSE, sizeof (GArray *));
+			}
 			for (snode = subnode->children; snode; snode = snode->next) {
 				if (!strcmp ((gchar*)snode->name, "unit")) {
 					prop = xmlGetProp (snode, "file");
 					if (prop) {
 						gchar *str = g_strdup (prop);
-						g_array_append_val (suite->unit_files, str);
+						g_array_append_val (suite1->unit_files, str);
+						if (suite2) {
+							str = g_strdup (prop);
+							g_array_append_val (suite2->unit_files, str);
+						}
 
 						GArray *tests;
+						gint i;
 						tests = sql_tests_load_from_file (str);
-						g_array_append_val (suite->unit_tests, tests);
+						for (i = 0; i < tests->len; i++)
+							g_array_index (tests, SqlTest *, i)->suite = suite1;
+						g_array_append_val (suite1->unit_tests, tests);
+
+						if (suite2) {
+							tests = sql_tests_load_from_file (str);
+							for (i = 0; i < tests->len; i++)
+								g_array_index (tests, SqlTest *, i)->suite = suite2;
+							g_array_append_val (suite2->unit_tests, tests);
+						}
 
 						xmlFree (prop);
 					}
@@ -175,11 +208,52 @@ load_test_from_xml_node (xmlNodePtr node)
 		else if (!strcmp ((gchar*)subnode->name, "render_as")) {
 			prop = xmlNodeGetContent (subnode);
 			if (prop) {
-				gchar *str;
+				SqlRendering *ren;
+				SqlRenderingAttr attr = 0;
+				xmlChar *p2;
+
+				p2 = xmlGetProp (subnode, "when_dict");
+				if (p2) {
+					if ((*p2 == 't') || (*p2 == 'T') || (*p2 == '1'))
+						attr = TEST_RENDERING_WHEN_DICT;
+					else
+						attr = TEST_RENDERING_WHEN_NO_DICT;
+					xmlFree (p2);
+				}
+				else
+					attr = TEST_RENDERING_WHEN_ANY_DICT;
+
+				p2 = xmlGetProp (subnode, "when_status");
+				if (p2) {
+					if (*p2 == 'D')
+						attr |= TEST_RENDERING_SQL_DELIMITER;
+					else if (*p2 == 'P')
+						attr |= TEST_RENDERING_SQL_PARSER;
+					else if (*p2 == 'A')
+						attr |= TEST_RENDERING_SQL_ACTIVE;
+						
+					xmlFree (p2);
+				}
+				else
+					attr |= TEST_RENDERING_SQL_ANY;
+
+				p2 = xmlGetProp (subnode, "when_query");
+				if (p2) {
+					if ((*p2 == 't') || (*p2 == 'T') || (*p2 == '1'))
+						attr |= TEST_RENDERING_GDA_QUERY;
+					else
+						attr |= TEST_RENDERING_GDA_DELIMITER;
+						
+					xmlFree (p2);
+				}
+				else
+					attr |= TEST_RENDERING_GDA_ANY;
+
 				if (!test->renderings)
-					test->renderings = g_array_new (FALSE, FALSE, sizeof (gchar*));
-				str = g_strdup (prop);
-				g_array_append_val (test->renderings, str);
+					test->renderings = g_array_new (FALSE, FALSE, sizeof (SqlRendering*));
+
+				ren = sql_test_rendering_new (attr, prop);
+				g_array_append_val (test->renderings, ren);
 				xmlFree (prop);
 			}
 		}
@@ -291,9 +365,41 @@ sql_test_rendering_is_correct (SqlTest *test, const gchar *sql)
 		retval = TRUE;
 
 	for (i = 0; !retval && (i < (test->renderings ? test->renderings->len : 0)); i++) {
-		if (!strcmp (g_array_index (test->renderings, gchar *, i), sql))
-			retval = TRUE;
+		SqlRendering *ren;
+		ren = g_array_index (test->renderings, SqlRendering *, i);
+		if (((ren->attrs & TEST_RENDERING_WHEN_DICT) && test->suite->dict) ||
+		    ((ren->attrs & TEST_RENDERING_WHEN_NO_DICT) && !test->suite->dict) ||
+		    ((ren->attrs & TEST_RENDERING_WHEN_ANY_DICT) == TEST_RENDERING_WHEN_ANY_DICT)) {
+			if (((ren->attrs & TEST_RENDERING_SQL_DELIMITER) && test->delim_parsed) ||
+			    ((ren->attrs & TEST_RENDERING_SQL_PARSER) && test->sql_parsed) ||
+			    ((ren->attrs & TEST_RENDERING_SQL_ACTIVE) && test->sql_active) ||
+			    ((ren->attrs & TEST_RENDERING_SQL_ANY) == TEST_RENDERING_SQL_ANY)) {
+				if (((ren->attrs & TEST_RENDERING_GDA_QUERY) && (test->sql_parsed || test->sql_active)) ||
+				    ((ren->attrs & TEST_RENDERING_GDA_DELIMITER) && !(test->sql_parsed || test->sql_active)) ||
+				    ((ren->attrs & TEST_RENDERING_GDA_ANY) == TEST_RENDERING_GDA_ANY))
+					if (!strcmp (ren->sql, sql))
+						retval = TRUE;
+			}
+		}
 	}
 
 	return retval;
+}
+
+SqlRendering *
+sql_test_rendering_new (SqlRenderingAttr attrs, const gchar *sql)
+{
+	SqlRendering *ren;
+
+	ren = g_new (SqlRendering, 1);
+	ren->attrs = attrs;
+	ren->sql = g_strdup (sql);
+	return ren;
+}
+
+void
+sql_test_rendering_free (SqlRendering *ren)
+{
+	g_free (ren->sql);
+	g_free (ren);
 }

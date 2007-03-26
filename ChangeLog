@@ -1,3 +1,30 @@
+2007-03-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-query.h: added a GDA_QUERY_PARAM_TYPE_ERROR type of error
+	* libgda/gda-query.c: default the data type to G_TYPE_STRING when a parameter's type
+	is unknown and when type of query is GDA_QUERY_TYPE_NON_PARSED_SQL
+	* libgda/gda-query.c: don't crash when @priv->all_conds is not NULL as expected
+	because this can happen in case the user kept some reference on some GdaQueryCondition
+	object
+	* libgda/gda-query-field-value.c: added a new "string_type" property used when
+	rendering SQL to render type as it was specified
+	* libgda/gda-query-parsing.c: better determination of data type for values
+	* libgda/gda-query-parsing.c: avoid GdaQueryCondition object reference leak
+	* libgda/gda-query-parsing.c: default the data type to G_TYPE_STRING when a parameter's type
+	is unknown instead of refusing to parse the query
+	* libgda/gda-dict-reg-functions.c: don't crash if the dictionary does not handle
+	functions
+	* libgda/gda-dict-reg-aggregates.c: don't crash if the dictionary does not handle
+	aggregates
+	* tests/check_delimiter.c: don't fail to build tests when the "check" library is 
+	not installed 
+	* tests/*: added new test cases and added some flexibility in the way to test
+	SQL rendering
+	* tests/test-util.c: try to run all tests both without any dictionary, and with one
+	if a dictionary file is specified
+	* providers/sqlite/gda-sqlite-provider.c: now use the recommended sqlite3_prepare_v2 SQlite API,
+	and improved notices contents
+
 2.99.6: 3.0 RC1
 
 2007-03-20  Vivien Malerba <malerba@gnome-db.org>

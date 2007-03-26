@@ -25,4 +25,6 @@ EXTRA_DIST = all_sql_tests.xml \
 	params_sql.xml \
 	prov_sql.xml \
 	select_sql.xml \
-	dict_pg.xml
+	dict_pg.xml \
+	bug_param_sql.xml \
+	bug_param_sql_dict.xml

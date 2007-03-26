@@ -1,22 +1,17 @@
 <?xml version="1.0"?>
 <suites>
-  <suite name="Broken SQL tests">
+  <suite name="Broken SQL tests" dict="dict_pg.xml">
     <unit file="basic_sql.xml"/>
     <unit file="prov_sql.xml"/>
     <unit file="app_sql.xml"/>
   </suite>
 
-  <suite name="Parameters tests">
+  <suite name="Parameters tests" dict="dict_pg.xml">
     <unit file="params_sql.xml"/>
   </suite>
 
-  <suite name="Broken SQL tests with dictionary" dict="dict_pg.xml">
-    <unit file="basic_sql.xml"/>
-    <unit file="prov_sql.xml"/>
-    <unit file="app_sql.xml"/>
+  <suite name="Bug - Prepared statements with libgda" dict="bug_param_sql_dict.xml">
+    <unit file="bug_param_sql.xml"/>
   </suite>
 
-  <suite name="Parameters tests with dictionary" dict="dict_pg.xml">
-    <unit file="params_sql.xml"/>
-  </suite>
 </suites>

@@ -124,7 +124,7 @@ static const gchar* gda_sqlite_provider_get_default_dbms_type (GdaServerProvider
 static GObjectClass *parent_class = NULL;
 
 typedef struct {
-        gchar        *col_name;
+        gchar *col_name;
         GType  data_type;
 } GdaSqliteColData;
 
@@ -324,6 +324,8 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
+	/* use extended result codes */
+	sqlite3_extended_result_codes (scnc->connection, 1);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, scnc);
 
 	/* set SQLite library options */
@@ -452,7 +454,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			copy = g_strdup (arr[n]);
 			sres = g_new0 (SQLITEresult, 1);
 
-			status = sqlite3_prepare (scnc->connection, arr [n], -1, &(sres->stmt), &left);
+			status = sqlite3_prepare_v2 (scnc->connection, arr [n], -1, &(sres->stmt), &left);
 			if (left && (*left != 0))
 				g_warning ("SQlite SQL: %s (REMAIN:%s)\n", arr [n], left);
 
@@ -480,11 +482,16 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					status = sqlite3_step (sres->stmt);
 					changes = sqlite3_changes (scnc->connection);
 					if (status != SQLITE_DONE) {
-						error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
-						gda_connection_event_set_description (error, sqlite3_errmsg (scnc->connection));
-						gda_connection_add_event (cnc, error);
-						reclist = g_list_append (reclist, NULL);
-						allok = FALSE;
+						if (sqlite3_errcode (scnc->connection) != SQLITE_OK) {
+							/* FIXME: the call to sqlite3_reset() should not be necessary */
+							sqlite3_reset (sres->stmt);
+							error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
+							gda_connection_event_set_description (error, 
+											      sqlite3_errmsg (scnc->connection));
+							gda_connection_add_event (cnc, error);
+							reclist = g_list_append (reclist, NULL);
+							allok = FALSE;
+						}
 					}
 					else {
 						/* don't return a data model */
@@ -498,7 +505,8 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 
 					/* generate a notice about changes */
 					if (allok) {
-						event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+						str = NULL;
+						
 						ptr = tststr;
 						while (*ptr && (*ptr != ' ') && (*ptr != '\t') &&
 						       (*ptr != '\n'))
@@ -513,14 +521,27 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 								str = g_strdup_printf ("%s %lld %d", tmp, 
 										       sqlite3_last_insert_rowid (scnc->connection),
 										       changes);
-							else
-								str = g_strdup_printf ("%s %d", tmp, changes);
+							else {
+								if (!strncmp (tmp, "DELETE", 6))
+									str = g_strdup_printf ("%s %d", tmp, changes);
+								else {
+									if (*tmp) {
+										if (changes > 0)
+											str = g_strdup_printf ("%s %d", tmp, 
+													       changes);
+										else
+											str = g_strdup (tmp);
+									}
+								}
+							}
 						}
 						
-						
-						gda_connection_event_set_description (event, str);
-						g_free (str);
-						gda_connection_add_event (cnc, event);
+						if (str) {
+							event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
+							gda_connection_event_set_description (event, str);
+							g_free (str);
+							gda_connection_add_event (cnc, event);
+						}
 					}
 				}
 			} 

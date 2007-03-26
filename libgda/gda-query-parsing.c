@@ -1512,6 +1512,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	GType gdatype = G_TYPE_INVALID;
 	gboolean unspecvalue = FALSE;
 	gboolean isparam;
+	const gchar *string_type = NULL;
 
 	dict = gda_object_get_dict (GDA_OBJECT (query));
 	cnc = gda_dict_get_connection (dict);
@@ -1528,6 +1529,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	list = param_specs;
 	while (list && !real_type) {
 		if (((param_spec*) list->data)->type == PARAM_type) {
+			string_type = ((param_spec*) list->data)->content;
 			/* try to find a DBMS data type */
 			real_type = gda_dict_get_dict_type_by_name (dict, 
 								    ((param_spec*) list->data)->content);
@@ -1535,12 +1537,16 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 				/* try a generic GDA type then */
 				gdatype = gda_g_type_from_string (((param_spec*) list->data)->content);
 				if (gdatype == G_TYPE_INVALID) {
-					g_set_error (error,
-						     GDA_QUERY_ERROR,
-						     GDA_QUERY_SQL_ANALYSE_ERROR,
-						     _("Unknown data type '%s'"), 
-						     ((param_spec*) list->data)->content);
-					return NULL;
+					if (error && !*error)
+						g_set_error (error,
+							     GDA_QUERY_ERROR,
+							     GDA_QUERY_SQL_ANALYSE_ERROR,
+							     _("Unknown data type '%s', using G_TYPE_STRING"), 
+							     ((param_spec*) list->data)->content);
+					else
+						g_warning (_("Unknown data type '%s', using G_TYPE_STRING"), 
+							   ((param_spec*) list->data)->content);
+					gdatype = G_TYPE_STRING;
 				}
 			}
 		}
@@ -1549,11 +1555,14 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	}
 
 	if (!real_type && (gdatype == G_TYPE_INVALID) && unspecvalue) {
-		g_set_error (error,
-			     GDA_QUERY_ERROR,
-			     GDA_QUERY_SQL_ANALYSE_ERROR,
-			     _("Data type must be specified when no default value is provided"));
-		return NULL;
+		if (error && !*error)
+			g_set_error (error,
+				     GDA_QUERY_ERROR,
+				     GDA_QUERY_SQL_ANALYSE_ERROR,
+				     _("Data type must be specified when no default value is provided, using G_TYPE_STRING"));
+		else
+			g_warning (_("Data type must be specified when no default value is provided, using G_TYPE_STRING"));
+		gdatype = G_TYPE_STRING;
 	}
 
 	if (!real_type && (gdatype == G_TYPE_INVALID)) {
@@ -1572,7 +1581,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 				   don't have a value in the first place */
 				return NULL;
 		}
-		else {
+		if (gdatype == G_TYPE_INVALID) {
 			/* no provider, try default data handlers to find a suitable type */
 			gint i;
 			GdaDataHandler *dh;
@@ -1651,10 +1660,13 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 		if (dh)
 			gdaval = gda_data_handler_get_value_from_sql (dh, value, gdatype);
 		if (! gdaval) {
-			g_set_error (error,
-				     GDA_QUERY_ERROR,
-				     GDA_QUERY_SQL_ANALYSE_ERROR,
-				     _("Value '%s' can't be converted to a known type"), value);
+			if (error && !*error)
+				g_set_error (error,
+					     GDA_QUERY_ERROR,
+					     GDA_QUERY_SQL_ANALYSE_ERROR,
+					     _("Value '%s' can't be converted to a known type"), value);
+			else
+				g_warning (_("Value '%s' can't be converted to a known type"), value);
 			return NULL;
 		}
 	}
@@ -1663,6 +1675,7 @@ parsed_create_value_query_field (GdaQuery *query, gboolean add_to_query, ParseDa
 	 * Actual GdaEntityField creation
 	 */
 	qfield = (GdaEntityField *) gda_query_field_value_new (query, gdatype);
+	g_object_set (G_OBJECT (qfield), "string_type", string_type, NULL);
 	if (real_type)
 		gda_entity_field_set_dict_type (GDA_ENTITY_FIELD (qfield), real_type);
 	if (unspecvalue) 
@@ -1886,9 +1899,9 @@ parsed_create_complex_condition (GdaQuery *query, ParseData *pdata, sql_where *w
 					g_object_unref (G_OBJECT (cond));
 					cond = NULL;
 				}
-				g_object_unref (G_OBJECT (tmpcond));
 				g_object_unref (G_OBJECT (tmpcond2));
 			}
+			g_object_unref (G_OBJECT (tmpcond));
 		}
 		break;
 	}

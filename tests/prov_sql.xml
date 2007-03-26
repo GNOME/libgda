@@ -8,7 +8,6 @@
   <test name="string18">
     <sql expected="D">abcedf hdqsjh qkjhd qjkhdq ## /*type:"integer"*/</sql>
     <render_as>abcedf hdqsjh qkjhd qjkhdq ## /* type:"integer" */</render_as>
-    <render_as>abcedf hdqsjh qkjhd qjkhdq ## /* type:"gint" */</render_as>
     <params>
       <param type="integer"/>
     </params>
@@ -26,8 +25,8 @@
 
   <test name="string21">
     <sql expected="D">&amp; SELECT 1.2 /*type:'gfloat' name:p1*/ , ## /*type:'int4'*/;</sql>
-    <render_as>&amp; SELECT 1.2 /* type:"gfloat" name:"p1" */ , ## /* type:"int4" */</render_as>
-    <render_as>&amp; SELECT 1.200000 /* type:"gfloat" name:"p1" */ , ## /* type:"gint" */</render_as>
+    <render_as when_gda="FALSE">&amp; SELECT 1.2 /* type:"gfloat" name:"p1" */ , ## /* type:"int4" */</render_as>
+    <render_as when_gda="TRUE">&amp; SELECT 1.200000 /* type:"gfloat" name:"p1" */ , ## /* type:"int4" */</render_as>
     <params>
       <param name="p1" type="gfloat" default="1.2"/>
       <param type="int4"/>
@@ -46,8 +45,8 @@
 
   <test name="string23">
     <sql expected="D">SELECT schema.table.field || ##/*name:"Postfix" type:"varchar"*/</sql>
-    <render_as>SELECT schema.table.field || ## /* name:"Postfix" type:"varchar" */</render_as>
-    <render_as>SELECT schema.table.field || ## /* type:"gchararray" name:"Postfix" */</render_as>
+    <render_as when_gda="FALSE">SELECT schema.table.field || ## /* name:"Postfix" type:"varchar" */</render_as>
+    <render_as when_gda="TRUE">SELECT schema.table.field || ## /* type:"varchar" name:"Postfix" */</render_as>
     <params>
       <param name="Postfix" type="varchar"/>
     </params>
@@ -55,8 +54,8 @@
 
   <test name="string24">
     <sql expected="D">SELECT schema.table.field || ##/*name:'Postfix' type:'varchar'*/</sql>
-    <render_as>SELECT schema.table.field || ## /* name:"Postfix" type:"varchar" */</render_as>
-    <render_as>SELECT schema.table.field || ## /* type:"gchararray" name:"Postfix" */</render_as>
+    <render_as when_gda="FALSE">SELECT schema.table.field || ## /* name:"Postfix" type:"varchar" */</render_as>
+    <render_as when_gda="TRUE">SELECT schema.table.field || ## /* type:"varchar" name:"Postfix" */</render_as>
     <params>
       <param name="Postfix" type="varchar"/>
     </params>
