@@ -12,6 +12,8 @@ main (int argc, char **argv) {
 
 	test_string ("SELECT * FROM \"MYTABLE\"");
 	test_string ("INSERT INTO products (ref, category, name, price, wh_stored) VALUES (##/*name:'+0' type:gchararray*/,  ##/*name:'+1' type:gint*/, ##/*name:'+2' type:gchararray*/, 31.4159, .1234 /*name:'+4' type:gfloat*/)");
+	test_string ("insert kmj, 'sdfjk /*name:\"t'iti\"*/' sdlkfj slkdjf sdlkf");
+	test_string ("CREATE OR REPLACE FUNCTION increment(i integer) RETURNS integer AS $$ BEGIN RETURN i + 1; END; $$ LANGUAGE plpgsql;");
 
 	return 0;
 }

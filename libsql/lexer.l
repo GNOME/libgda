@@ -115,6 +115,7 @@ static char *string_buf_ptr;
 <STRING,PSTRING>.	{*string_buf_ptr++=sqltext[0];}
 <STRING,PSTRING><<EOF>> {
                         sqlerror (_("unterminated string"));
+			BEGIN(INITIAL);
                         yyterminate();
                         }
 
@@ -151,6 +152,7 @@ static char *string_buf_ptr;
 <TEXTUAL,PTEXTUAL>.       {*string_buf_ptr++=sqltext[0];}
 <TEXTUAL,PTEXTUAL><<EOF>> {
                         sqlerror (_("unterminated textual expression"));
+			BEGIN(INITIAL);
                         yyterminate();
                         }
 

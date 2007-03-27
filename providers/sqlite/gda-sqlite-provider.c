@@ -483,7 +483,6 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 					changes = sqlite3_changes (scnc->connection);
 					if (status != SQLITE_DONE) {
 						if (sqlite3_errcode (scnc->connection) != SQLITE_OK) {
-							/* FIXME: the call to sqlite3_reset() should not be necessary */
 							sqlite3_reset (sres->stmt);
 							error = gda_connection_event_new (GDA_CONNECTION_EVENT_ERROR);
 							gda_connection_event_set_description (error, 

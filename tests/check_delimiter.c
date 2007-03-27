@@ -282,4 +282,7 @@ test_sql_statement (SqlTest *test, gint test_index)
 		gda_delimiter_destroy (concat);
 		gda_delimiter_free_list (statements);
 	}
+
+	if (error)
+		g_error_free (error);
 }

@@ -1,3 +1,11 @@
+2007-03-27  Vivien Malerba <malerba@gnome-db.org>
+
+	* libsql/lexer.l:
+	* libgda/sql-delimiter/lexer.l: return to the INITIAL state for the next call
+	if there has been an EOF while in a string or textual expression
+	* providers/sqlite/gda-sqlite-provider.c: remove comment, see
+	http://www.mail-archive.com/sqlite-users%40sqlite.org/msg23418.html
+
 2007-03-27  Baris Cicek  <baris@teamforce.name.tr>
 
 	* libgda/tools/gda-config-tool.c: Moved from popt to GOption for 

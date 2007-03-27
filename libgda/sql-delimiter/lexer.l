@@ -68,6 +68,7 @@ static char *string_buf_ptr;
 <STRING,PSTRING>.	{*string_buf_ptr++=gda_delimitertext[0];}
 <STRING,PSTRING><<EOF>> {
          		gda_delimitererror (_("unterminated string"));
+			BEGIN(INITIAL);
          		yyterminate();
          		}
 
@@ -91,6 +92,7 @@ static char *string_buf_ptr;
 <TEXTUAL,PTEXTUAL>.       {*string_buf_ptr++=gda_delimitertext[0];}
 <TEXTUAL,PTEXTUAL><<EOF>> {
 			gda_delimitererror (_("unterminated textual expression"));
+			BEGIN(INITIAL);
                         yyterminate();
                         }
 
