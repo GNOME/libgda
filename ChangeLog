@@ -1,3 +1,12 @@
+2007-03-27  Baris Cicek  <baris@teamforce.name.tr>
+
+	* libgda/tools/gda-config-tool.c: Moved from popt to GOption for 
+	the sake of GNOME Goals. Bug #420306
+	* libgda/tools/gda-run.c: Removed #include <popt.h>, its never used
+	anyways. 
+	* libgda/configure.in:
+	* libgda/tools/Makefile.am: Removed dependecy and test for popt. 
+
 2007-03-27  Carsten Clark  <tantumquantum@gmail.com>
 
 	* POTFILES.in: Added missing files.

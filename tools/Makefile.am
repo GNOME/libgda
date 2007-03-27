@@ -6,11 +6,7 @@ else
 CONFIG_TOOL=
 endif
 
-if BUILD_RUN_TOOL
 RUN_TOOL=gda-run-3.0
-else
-RUN_TOOL=
-endif
 
 bin_PROGRAMS = \
 	$(RUN_TOOL) \
@@ -36,7 +32,6 @@ gda_config_tool_3_0_LDADD = \
 	$(top_builddir)/libgda/libgda-3.0.la \
 	$(READLINE_LIB) \
 	$(HISTORY_LIB) \
-	$(POPT_LIB) \
 	$(LIBGDA_LIBS)
 
 gda_diagnose_3_0_SOURCES = \

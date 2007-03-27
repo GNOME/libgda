@@ -943,9 +943,9 @@ fi
 AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
 
 
-dnl ******************************
-dnl Check for readline/history/popt
-dnl ******************************
+dnl **************************
+dnl Check for readline/history
+dnl **************************
 AC_CHECK_LIB(readline,readline, READLINE_LIB='-lreadline -lcurses', , -lcurses)
 AM_CONDITIONAL(READLINE_LIB, test ! "x$READLINE_LIB" = "x")
 AC_SUBST(READLINE_LIB)
@@ -954,21 +954,14 @@ AC_CHECK_LIB(history,add_history,HISTORY_LIB=-lhistory)
 AM_CONDITIONAL(HISTORY_LIB, test ! "x$HISTORY_LIB" = "x")
 AC_SUBST(HISTORY_LIB)
 
-AC_CHECK_LIB(popt,poptGetContext,POPT_LIB=-lpopt)
-AM_CONDITIONAL(POPT_LIB, test ! "x$POPT_LIB" = "x")
-AC_SUBST(POPT_LIB)
-
-AC_CHECK_HEADERS([popt.h readline/readline.h readline/history.h],,
+AC_CHECK_HEADERS([readline/readline.h readline/history.h],,
 		CONFIG_TOOL_HEADERS="wrong" && \
 		echo Not building gda-config-tool)
 AM_CONDITIONAL(BUILD_CONFIG_TOOL, 
 		(test ! "x$CONFIG_TOOL_HEADERS" = "xwrong" -a \
 		      ! "x$READLINE_LIB" = "x" -a \
-		      ! "x$HISTORY_LIB" = "x" -a \
-		      ! "x$POPT_LIB" = "x")) 
-AM_CONDITIONAL(BUILD_RUN_TOOL, test ! "x$POPT_LIB" = "x")
+		      ! "x$HISTORY_LIB" = "x" ))
 AC_SUBST(BUILD_CONFIG_TOOL)
-AC_SUBST(BUILD_RUN_TOOL)
 
 
 AC_SUBST(LIB_PREFIX)

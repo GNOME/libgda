@@ -20,7 +20,6 @@
  */
 
 #include <libgda/libgda.h>
-#include <popt.h>
 
 static void
 usage (void)

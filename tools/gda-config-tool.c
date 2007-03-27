@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <popt.h>
 #include <libgda/libgda.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
@@ -54,6 +53,9 @@ typedef struct {
 	mode_function function;
 } cmd;
 
+/* GOption callback prototypes */
+static gboolean list_providers (const gchar *option_name, const gchar *value, gpointer data, GError **error);
+static gboolean list_datasources (const gchar *option_name, const gchar *value, gpointer data, GError **error);
 /*
  * Static variables
  */
@@ -65,8 +67,6 @@ static const gchar *prompt_config = "config> ";
 enum {
 	ACTION_NONE = 0,
 	ACTION_FILE = 1,
-	ACTION_LIST_PROVIDERS = 1 << 1,
-	ACTION_LIST_DATASOURCES = 1 << 2
 };
 
 typedef struct {
@@ -404,7 +404,7 @@ static gboolean
 config_load_file (const gchar *file)
 {
 	gchar *file_contents;
-	gint len;
+	gsize len;
 
 	if (g_file_get_contents (file, &file_contents, &len, NULL)){
 		config_data = parse_config_file (file_contents, len);
@@ -1189,94 +1189,99 @@ initialize_readline ()
  */
 
 static void 
-options (int argc, const char **argv)
+options (gint argc, const gchar **argv)
 {
-	poptContext context;
+
+	GOptionContext *context;
+	GError *error = NULL;
 	
-	static const struct poptOption options[] = {
+	static const GOptionEntry options[] = {
 		{
 			"config-file", 
 			'c', 
-			POPT_ARG_STRING, 
+			0,
+			G_OPTION_ARG_FILENAME, 
 			&cmdArgs.config_file, 
-			0, 
 			"File to load the configuration from.",
 			"filename"
 		},
 		{
 			"list-providers",
 			'l',
-			POPT_ARG_VAL | POPT_ARGFLAG_OR,
-			&cmdArgs.actions,
-			ACTION_LIST_PROVIDERS,
-			"Lists installed providers"
+			G_OPTION_FLAG_NO_ARG,
+			G_OPTION_ARG_CALLBACK,
+			list_providers,
+			"Lists installed providers",
+			NULL
 		},
 		{
 			"list-datasources",
 			'L',
-			POPT_ARG_VAL | POPT_ARGFLAG_OR,
-			&cmdArgs.actions,
-			ACTION_LIST_DATASOURCES,
-			"Lists configured datasources"
+			G_OPTION_FLAG_NO_ARG,
+			G_OPTION_ARG_CALLBACK,
+			list_datasources,
+			"Lists configured datasources",
+			NULL
 		},
 		{
 			"name",
 			'n',
-			POPT_ARG_STRING,
-			&cmdArgs.name,
 			0,
-			"User-assigned name for this connection."
+			G_OPTION_ARG_STRING,
+			&cmdArgs.name,
+			"User-assigned name for this connection.",
+			"STRING"
 		},
 		{
 			"user",
 			'u',
-			POPT_ARG_STRING,
-			&cmdArgs.user,
 			0,
-			"User name to pass to the provider."
+			G_OPTION_ARG_STRING,
+			&cmdArgs.user,
+			"User name to pass to the provider.",
+			"STRING"
 		},
 		{
 			"password",
 			'p',
-			POPT_ARG_STRING,
-			&cmdArgs.password,
 			0,
+			G_OPTION_ARG_STRING,
+			&cmdArgs.password,
 			"Password for the given user to connect to the DB "
-			"backend."
+			"backend.",
+			"STRING"
 		},
 		{
 			"provider",
 			'P',
-			POPT_ARG_STRING,
-			&cmdArgs.provider,
 			0,
-			"Provider name."
+			G_OPTION_ARG_STRING,
+			&cmdArgs.provider,
+			"Provider name.",
+			"STRING"
 		},
 		{
 			"DSN",
 			'd',
-			POPT_ARG_STRING,
-			&cmdArgs.dsn,
 			0,
+			G_OPTION_ARG_STRING,
+			&cmdArgs.dsn,
 			"Semi-colon separated string with name=value options "
-			"to pass to the GDA provider."
+			"to pass to the GDA provider.",
+			"STRING"
 		},
-		POPT_AUTOHELP
-		{NULL, '\0', 0, NULL, 0}
+		{ NULL }
 	};
 
-	context = poptGetContext (NULL, argc, argv, options, 0);
-	if (!context)
-		return;
-
-	if (poptGetNextOpt (context) < -1 || poptGetArg (context) != NULL){
-		g_print ("-Error: Incorrect argument in command line.\n");
-		poptPrintHelp (context, stderr, 0);
-		poptFreeContext (context);
+	context = g_option_context_new ("");
+	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
+	g_option_context_parse (context, &argc, (gchar ***) &argv, &error);
+	if (error != NULL) {
+		g_print ("-Error: %s\n", error->message);
+		g_error_free (error);
 		exit (1);
 	}
-
-	poptFreeContext (context);
+	g_option_context_free (context);
 
 	if (!cmdArgs.name && (cmdArgs.user || 
 			      cmdArgs.dsn  || 
@@ -1288,7 +1293,7 @@ options (int argc, const char **argv)
 
 	if (cmdArgs.name != NULL) {
 		if (cmdArgs.actions != ACTION_NONE) {
-			g_print ("-Error: cannot use -n in this context.\n");
+			g_print ("-Error: Cannot use -n in this context.\n");
 			exit (1);
 		}
 		cmdArgs.actions |= ACTION_FILE;
@@ -1388,7 +1393,7 @@ add_param_name_to_string (gpointer data, gpointer user_data)
 	g_free (tmp);
 }
 
-static void
+static gboolean
 display_provider (gpointer data, gpointer user_data)
 {
 	GdaProviderInfo *info = data;
@@ -1411,8 +1416,11 @@ display_provider (gpointer data, gpointer user_data)
 	g_print ("---\n");
 }
 
-static void
-list_providers ()
+static gboolean
+list_providers (const gchar *option_name,
+                const gchar *value,
+                gpointer data,
+                GError **error)
 {
 	GList *providers;
 	
@@ -1427,7 +1435,8 @@ list_providers ()
 	}
 	
 	g_print ("---Providers list---\n");
-	g_list_foreach (providers, display_provider, NULL);
+	g_list_foreach (providers, (GFunc) display_provider, NULL);
+	exit (0);
 }
 
 static void
@@ -1449,8 +1458,11 @@ display_datasource (gpointer data, gpointer user_data)
 	g_print ("---\n");
 }
 
-static void
-list_datasources ()
+static gboolean
+list_datasources (const gchar *option_name,
+                  const gchar *value,
+                  gpointer data,
+                  GError **error)
 {
 	GList *datasources;
 
@@ -1467,15 +1479,16 @@ list_datasources ()
 	g_print("---Datasources list---\n");
 	g_list_foreach (datasources, display_datasource, NULL);
 	gda_config_free_data_source_list (datasources);
+	exit (0);
 }
 
 /*
  * main
  */
 int
-main (int argc, char *argv [])
+main (gint argc, gchar **argv)
 {
-	options (argc, (const char **) argv);
+	options (argc, (const gchar **) argv);
 	gda_init ("Gda configuration manager", PACKAGE_VERSION, argc, argv);
 
 	if (cmdArgs.actions == ACTION_NONE) {
@@ -1483,12 +1496,6 @@ main (int argc, char *argv [])
 		initialize_readline ();
 		mode_gda ();
 	} else {
-		if ((cmdArgs.actions & ACTION_LIST_PROVIDERS) != 0)
-			list_providers ();
-
-		if ((cmdArgs.actions & ACTION_LIST_DATASOURCES) != 0)
-			list_datasources ();
-
 		if ((cmdArgs.actions & ACTION_FILE) != 0)
 			batch_options ();
 
