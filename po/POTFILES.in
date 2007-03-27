@@ -49,7 +49,12 @@ libgda/handlers/gda-handler-string.c
 libgda/handlers/gda-handler-time.c
 libgda/handlers/gda-handler-type.c
 libgda/sql-delimiter/gda-sql-delimiter.c
+libgda/sql-delimiter/lexer.c
+libgda/sql-delimiter/parser.c
+libgda/sql-transaction/parser.c
 libgda/sql-transaction/gda-sql-transaction-parser.c
+libsql/lexer.c
+libsql/parser.c
 libsql/sql_parser.c
 providers/bdb/bdb_specs_dsn.xml.in
 providers/bdb/gda-bdb-provider.c

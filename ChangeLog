@@ -1,3 +1,13 @@
+2007-03-27  Carsten Clark  <tantumquantum@gmail.com>
+
+	* POTFILES.in: Added missing files.
+	Bug #421986
+
+	* libgda/sql-delimiter/lexer.l:
+	* libgda/sql-transaction/lexer.l:
+	* libsql/lexer.l: Make char*s static, to avoid linker errors on MacOS X.
+	Bug #421986
+
 2007-03-26  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/gda-value.c: Removed a line that unconditionally returned

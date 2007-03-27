@@ -16,8 +16,8 @@
 
 /* Remove this warning, because it breaks the build with -Werror: #warning "strings are limited to 1024 characters" */
 #define MAX_STR_CONST 1024
-char string_buf[MAX_STR_CONST];
-char *string_buf_ptr;
+static char string_buf[MAX_STR_CONST];
+static char *string_buf_ptr;
 %}
 
 %option noyywrap
