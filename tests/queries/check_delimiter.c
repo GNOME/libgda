@@ -12,7 +12,7 @@
 #define CHECK_EXTRA_INFO
 
 #include "test-util.h"
-#include "../libgda/sql-delimiter/gda-sql-delimiter.h"
+#include <libgda/sql-delimiter/gda-sql-delimiter.h>
 
 TestSuite *current_ts;
 

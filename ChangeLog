@@ -1,3 +1,10 @@
+2007-03-28  Vivien Malerba <malerba@gnome-db.org>
+
+	* tests/queries/*: moved all files in tests/ to tests/queries
+	* tests/providers/*: new providers' tests
+	* configure.in: adapted to the new tests/ directory layout
+	* doc/C/server-operation.xml: improved doc.
+
 2007-03-27  Vivien Malerba <malerba@gnome-db.org>
 
 	* libsql/lexer.l:

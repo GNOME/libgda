@@ -1102,6 +1102,8 @@ report/testing/Makefile
 tools/Makefile
 testing/Makefile
 tests/Makefile
+tests/queries/Makefile
+tests/providers/Makefile
 doc/Makefile
 doc/C/Makefile
 data/Makefile

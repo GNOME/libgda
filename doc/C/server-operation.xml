@@ -139,6 +139,36 @@
 	      </tbody>
 	    </tgroup>
 	  </table>
+	  Note also that if creating a database requires an access to a server, then the access parameters to that server
+	  will all be in the "/SERVER_CNX_P" PARAMLIST, as shown:
+	  <table frame="all">
+            <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+              <thead>
+		<row>
+                  <entry>Path</entry>
+                  <entry>Type</entry>
+                  <entry>Description</entry>
+		</row>
+              </thead>
+              <tbody>
+		<row>
+                  <entry>/SERVER_CNX_P</entry>
+                  <entry>PARAMLIST</entry>
+                  <entry>Parameters to connect to a server</entry>
+		</row>
+		<row>
+                  <entry>/SERVER_CNX_P/HOST</entry>
+                  <entry>PARAM</entry>
+                  <entry>Name of the server (string)</entry>
+		</row>
+                <row>
+                  <entry>/SERVER_CNX_P/PORT</entry>
+                  <entry>PARAM</entry>
+                  <entry>Port number on the server (gint)</entry>
+                </row>
+	      </tbody>
+	    </tgroup>
+	  </table>
 	</para>
       </listitem>
 
@@ -170,6 +200,8 @@
 	      </tbody>
 	    </tgroup>
 	  </table>
+	  Note also that if creating a database requires an access to a server, then the access parameters to that server
+	  will all be in the "/SERVER_CNX_P" PARAMLIST, as for the GDA_SERVER_OPERATION_CREATE_DB operation.
 	</para>
       </listitem>
 

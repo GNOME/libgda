@@ -11,7 +11,7 @@ test_suite_load_from_file (const gchar *xml_file)
         xmlNodePtr node, subnode;
 	gchar *abs_xml_file;
 
-	abs_xml_file = g_build_filename (CHECK_XML_FILES, "tests", xml_file, NULL);
+	abs_xml_file = g_build_filename (CHECK_XML_FILES, "tests", "queries", xml_file, NULL);
 
         if (! g_file_test (abs_xml_file, G_FILE_TEST_EXISTS)) {
                 g_print ("File '%s' does not exist\n", abs_xml_file);
@@ -46,7 +46,7 @@ test_suite_load_from_file (const gchar *xml_file)
 				GdaDict *dict = NULL;
 
 				dict = gda_dict_new ();
-				file = g_build_filename (CHECK_XML_FILES, "tests", prop, NULL);
+				file = g_build_filename (CHECK_XML_FILES, "tests", "queries", prop, NULL);
 				if (!gda_dict_load_xml_file (dict, file, &error)) {
 					g_error ("Could not load dictionary file '%s': %s", prop,
 						 error ? error->message : "No detail");
@@ -126,7 +126,7 @@ sql_tests_load_from_file (const gchar *xml_file)
 	GArray *array;
 	gchar *abs_xml_file;
 
-	abs_xml_file = g_build_filename (CHECK_XML_FILES, "tests", xml_file, NULL);
+	abs_xml_file = g_build_filename (CHECK_XML_FILES, "tests", "queries", xml_file, NULL);
 
         if (! g_file_test (abs_xml_file, G_FILE_TEST_EXISTS)) {
                 g_print ("File '%s' does not exist\n", abs_xml_file);

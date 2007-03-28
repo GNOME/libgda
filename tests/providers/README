@@ -1,0 +1,39 @@
+USAGE
+-----
+
+Run "make check" in this directory to test database providers.
+
+To be tested, each provider needs to be compiled in these sources, and some environment
+variables need to be set for each provider. If no variable is set, then the corresponding
+provider will not be actually tested and the test will report a success.
+
+For each provider, the environment variables to set are:
+- If the <provider_name>_DBCREATE_PARAMS (such as for example SQLITE_DBCREATE_PARAMS or 
+  POSTGRESQL_DBCREATE_PARAMS) is set, then the test will attempt to create a database
+  named "gda_check_db" before actually running the test (and will fail if it can't be created).
+  That variable must be a string composed of key=value pairs separated by a semi-colon (";")
+  The keys and their meanings are specific to each provider and are listed in the
+  providers/<provider_name>/<provider_name>_specs_create_db.xml.in file in the section "SERVER_CNX_P"
+
+- If the <provider_name>_CNC_PARAMS (such as for example SQLITE_CNC_PARAMS or 
+  POSTGRESQL_CNC_PARAMS) is set, then those parameters will be used to open the connection to
+  an existing database. __BEWARE__: in this case some data in the database _will_ be modified/destroyed
+  so don't use it on a database with "real" data. The contents of this variable has a similar layout
+  as the <provider_name>_DBCREATE_PARAMS variable, the keys are listed in the
+  providers/<provider_name>/<provider_name>_specs_dsn.xml.in file. Notice that parameters which are
+  already named in the <provider_name>_DBCREATE_PARAMS variable (if set) will be overriden by the
+  values in that variable, so it's useless to repeat them there.
+
+- The <provider_name>_USER and <provider_name>_PASS variables (which are optional) respectively 
+  enable a username and a password to be specified
+
+If the database was created during the test, then it will also be destroyed at the end of the
+test.
+
+EXAMPLES
+--------
+
+Here are some examples of the environment variables for the various providers:
+
+POSTGRESQL_DBCREATE_PARAMS "HOST=localhost;PORT=5432"
+SQLITE_DBCREATE_PARAMS "DB_DIR=/home/me/libgda/tests/providers"
