@@ -15,6 +15,10 @@ For each provider, the environment variables to set are:
   The keys and their meanings are specific to each provider and are listed in the
   providers/<provider_name>/<provider_name>_specs_create_db.xml.in file in the section "SERVER_CNX_P"
 
+- If the <provider_name>_DONT_REMOVE_DB (such as for example SQLITE_DONT_REMOVE_DB) environment
+  variable is set, and if a test database was created for the test, then that database is not 
+  destroyed when the tests for the specified provider ends
+
 - If the <provider_name>_CNC_PARAMS (such as for example SQLITE_CNC_PARAMS or 
   POSTGRESQL_CNC_PARAMS) is set, then those parameters will be used to open the connection to
   an existing database. __BEWARE__: in this case some data in the database _will_ be modified/destroyed
@@ -35,5 +39,6 @@ EXAMPLES
 
 Here are some examples of the environment variables for the various providers:
 
+MYSQL_DBCREATE_PARAMS "HOST=localhost"
 POSTGRESQL_DBCREATE_PARAMS "HOST=localhost;PORT=5432"
 SQLITE_DBCREATE_PARAMS "DB_DIR=/home/me/libgda/tests/providers"

@@ -50,7 +50,7 @@ prov_test_common_setup ()
 	number_failed = srunner_ntests_failed (sr);
 	srunner_free (sr);
 #else
-	cnc = prov_test_setup_connection (pinfo, &params_provided);
+	cnc = prov_test_setup_connection (pinfo, &params_provided, &db_created);
 	if (params_provided)
 		fail_if (!cnc, "Could not setup connection");
 #endif
@@ -91,6 +91,7 @@ int
 prov_test_common_clean ()
 {
 	int number_failed = 0;
+
 #ifdef HAVE_CHECK
 	Suite *s = clean_suite ();
 	SRunner *sr = srunner_create (s);
@@ -99,7 +100,8 @@ prov_test_common_clean ()
 	number_failed = srunner_ntests_failed (sr);
 	srunner_free (sr);
 #else
-	prov_test_clean_connection (cnc, db_created);
+	if (!prov_test_clean_connection (cnc, db_created))
+		number_failed++;
 #endif
 
 	return number_failed;	
@@ -122,7 +124,7 @@ END_TEST
 Suite *
 create_tables_sql_suite (void)
 {
-	Suite *s = suite_create ("Clean");
+	Suite *s = suite_create ("Create tables");
 	
 	/* Core test case */
 	TCase *tc_core = tcase_create ("Create tables from SQL");
@@ -146,7 +148,67 @@ prov_test_common_create_tables_sql ()
 	number_failed = srunner_ntests_failed (sr);
 	srunner_free (sr);
 #else
-	prov_test_create_tables_sql (cnc);
+	if (!prov_test_create_tables_sql (cnc))
+		number_failed++;
+#endif
+
+	return number_failed;	
+}
+
+/*
+ *
+ * SHECK_SCHEMAS
+ *
+ */
+#ifdef HAVE_CHECK
+START_TEST (check_table_schemas)
+{
+	if (!prov_test_check_table_schema (cnc, "actor"))
+		fail ("Reported schemas failed for table 'actor'");
+	if (!prov_test_check_table_schema (cnc, "language"))
+		fail ("Reported schemas failed for table 'language'");
+	if (!prov_test_check_table_schema (cnc, "film"))
+		fail ("Reported schemas failed for table 'film'");
+	if (!prov_test_check_table_schema (cnc, "film_actor"))
+		fail ("Reported schemas failed for table 'film_actor'");
+}
+END_TEST
+
+Suite *
+check_schemas_suite (void)
+{
+	Suite *s = suite_create ("Check reported schemas");
+	
+	/* Core test case */
+	TCase *tc_core = tcase_create ("Check tables schemas");
+	tcase_set_timeout (tc_core, 10);
+	tcase_add_test (tc_core, check_table_schemas);
+	suite_add_tcase (s, tc_core);
+	
+	return s;
+}
+#endif
+
+int
+prov_test_common_check_schemas ()
+{
+	int number_failed = 0;
+#ifdef HAVE_CHECK
+	Suite *s = check_schemas_suite ();
+	SRunner *sr = srunner_create (s);
+	
+	srunner_run_all (sr, CK_NORMAL);
+	number_failed = srunner_ntests_failed (sr);
+	srunner_free (sr);
+#else
+	if (!prov_test_check_table_schema (cnc, "actor"))
+		number_failed++;
+	if (!prov_test_check_table_schema (cnc, "language"))
+		number_failed++;
+	if (!prov_test_check_table_schema (cnc, "film"))
+		number_failed++;
+	if (!prov_test_check_table_schema (cnc, "film_actor"))
+		number_failed++;
 #endif
 
 	return number_failed;	

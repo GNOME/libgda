@@ -1,11 +1,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "prov-test-util.h"
+#include <libgda/gda-server-provider-extra.h>
 
 #define CHECK_EXTRA_INFO
 /*#undef CHECK_EXTRA_INFO*/
 
 #define DB_NAME "gda_check_db"
+GdaDict *dict = NULL;
+
 
 /*
  *
@@ -44,6 +47,20 @@ cnc_quark_foreach_func (gchar *name, gchar *value, Data1 *data)
 	}
 }
 
+static gchar *
+prov_name_upcase (const gchar *prov_name)
+{
+	gchar *str, *ptr;
+
+	str = g_ascii_strup (prov_name, -1);
+	for (ptr = str; *ptr; ptr++) {
+		if (! g_ascii_isalnum (*ptr))
+			*ptr = '_';
+	}
+
+	return str;
+}
+
 GdaConnection *
 prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provided, gboolean *db_created)
 {
@@ -60,7 +77,7 @@ prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provide
 
 	client = gda_client_new ();
 
-	upname = g_ascii_strup (prov_info->id, -1);
+	upname = prov_name_upcase (prov_info->id);
 	str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
 	db_params = getenv (str);
 	g_free (str);
@@ -171,21 +188,27 @@ prov_test_clean_connection (GdaConnection *cnc, gboolean destroy_db)
 	GdaClient *client;
 	gchar *prov_id;
 	gboolean retval = TRUE;
+	gchar *str, *upname;
 
 	client = gda_connection_get_client (cnc);
 	prov_id = g_strdup (gda_connection_get_provider (cnc));
 	gda_connection_close (cnc);
 	g_object_unref (cnc);
 
+	upname = prov_name_upcase (prov_id);
+	str = g_strdup_printf ("%s_DONT_REMOVE_DB", upname);
+	if (getenv (str))
+		destroy_db = FALSE;
+	g_free (str);
+
 	if (destroy_db) {
 		GdaServerOperation *op;
 		GError *error = NULL;
-
-		gchar *str, *upname;
+		
 		const gchar *db_params;
 		GdaQuarkList *db_quark_list = NULL;
 
-		upname = g_ascii_strup (prov_id, -1);
+		
 		str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
 		db_params = getenv (str);
 		g_free (str);
@@ -206,6 +229,7 @@ prov_test_clean_connection (GdaConnection *cnc, gboolean destroy_db)
 			retval = FALSE;
 		}
 	}
+	g_free (upname);
 
 	g_free (prov_id);
 
@@ -262,4 +286,108 @@ prov_test_create_tables_sql (GdaConnection *cnc)
 	g_free (filename);
 
 	return retval;
+}
+
+
+/*
+ * 
+ * Check a table's schema
+ *
+ */
+gboolean
+prov_test_check_table_schema (GdaConnection *cnc, const gchar *table)
+{
+	if (!cnc || !gda_connection_is_opened (cnc)) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Connection is closed!");
+#endif
+		return FALSE;
+	}
+
+	if (!dict)
+		dict = gda_dict_new ();
+
+	GdaServerProvider *prov;
+	GdaDataModel *schema_m, *compare_m;
+	GError *error = NULL;
+	GdaParameterList *plist;
+	gchar *str;
+
+	prov = gda_connection_get_provider_obj (cnc);
+	plist = gda_parameter_list_new_inline (dict, "name", G_TYPE_STRING, table, NULL);
+	schema_m = gda_server_provider_get_schema (prov, cnc, GDA_CONNECTION_SCHEMA_FIELDS, plist, &error);
+	g_object_unref (plist);
+	if (!schema_m) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Could not get FIELDS schema for table '%s': %s", table,
+			   error && error->message ? error->message : "No detail");
+#endif
+		return FALSE;
+	}
+
+	str = g_strdup_printf ("FIELDS_SCHEMA_%s_%s.xml", gda_connection_get_provider (cnc), table);
+	if (0) {
+		/* export schema model to a file, to create first version of the files, not to be used in actual checks */
+		plist = gda_parameter_list_new_inline (dict, "OVERWRITE", G_TYPE_BOOLEAN, TRUE, NULL);
+		if (! (gda_data_model_export_to_file (schema_m, GDA_DATA_MODEL_IO_DATA_ARRAY_XML, str, 
+						      NULL, 0, NULL, 0, plist, &error))) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Could not export schema to file '%s': %s", str,
+				   error && error->message ? error->message : "No detail");
+#endif
+			return FALSE;
+		}
+		g_object_unref (plist);
+	}
+	else {
+		/* test schema validity */
+		if (!gda_server_provider_test_schema_model (schema_m, GDA_CONNECTION_SCHEMA_FIELDS, &error)) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Reported schema does not conform to GDA's requirements: %s", 
+				   error && error->message ? error->message : "No detail");
+#endif
+			return FALSE;
+		}
+
+		/* compare schema with what's expected */
+		gchar *file = g_build_filename (CHECK_SQL_FILES, "tests", "providers", str, NULL);
+		compare_m = gda_data_model_import_new_file (file, TRUE, NULL);
+		if (!compare_m) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Could not load the expected schema file '%s': %s", file,
+				   error && error->message ? error->message : "No detail");
+#endif
+			return FALSE;
+		}
+		g_free (file);
+		g_assert (gda_server_provider_test_schema_model (compare_m, GDA_CONNECTION_SCHEMA_FIELDS, NULL));
+
+		gint ncols, nrows, row, col;
+		ncols = gda_data_model_get_n_columns (schema_m);
+		nrows = gda_data_model_get_n_rows (schema_m);
+		for (row = 0; row < nrows; row++) {
+			for (col = 0; col < ncols; col++) {
+				if (col == 8)
+					continue; /* ignore default value column */
+				if (gda_value_compare_ext (gda_data_model_get_value_at (schema_m, col, row),
+							   gda_data_model_get_value_at (compare_m, col, row))) {
+#ifdef CHECK_EXTRA_INFO
+					g_warning ("Reported schema error line %d, col %d: expected '%s' and got '%s'",
+						   row, col, 
+						   gda_value_stringify (gda_data_model_get_value_at (compare_m, col, row)),
+						   gda_value_stringify (gda_data_model_get_value_at (schema_m, col, row)));
+#endif
+
+					return FALSE;
+				}
+			}
+		}
+
+		g_object_unref (compare_m);
+	}
+	g_free (str);
+
+	gda_data_model_dump (schema_m, stdout);
+	g_object_unref (schema_m);
+	return TRUE;
 }

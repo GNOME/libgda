@@ -654,9 +654,23 @@ gda_data_model_import_get_property (GObject *object,
  * gda_data_model_import_new_file
  * @filename: the file to import data from
  * @random_access: TRUE if random access will be required
- * @options: list of options for the export
+ * @options: list of importing options
  *
  * Creates a new #GdaDataModel object which contains the data stored within the @filename file.
+ *
+ * The options are the following ones:
+ * <itemizedlist>
+ *   <listitem><para>For the CSV format:
+ *      <itemizedlist>
+ *         <listitem><para>ENCODING (string): specifies the encoding of the data in the file</para></listitem>
+ *         <listitem><para>SEPARATOR (string): specifies the CSV separator</para></listitem>
+ *         <listitem><para>ESCAPE_CHAR (string): specifies the character used to "escape"</para></listitem>
+ *         <listitem><para>TITLE_AS_FIRST_LINE (boolean): consider that the first line of the file contains columns' titles</para></listitem>
+ *         <listitem><para>DBMS_TYPE_&lt;column number&gt; (string): specifies the type of value expected in column &lt;column number&gt;</para></listitem>
+ *      </itemizedlist>
+ *   </para></listitem>
+ *   <listitem><para>Other formats: no option</para></listitem>
+ * </itemizedlist>
  *
  * Returns: a pointer to the newly created #GdaDataModel.
  */
@@ -679,6 +693,8 @@ gda_data_model_import_new_file   (const gchar *filename, gboolean random_access,
 /**
  * gda_data_model_import_new_mem
  * @data: a string containng the data to import
+ * @random_access: TRUE if random access will be required
+ * @options: list of importing options, see gda_data_model_import_new_file() for more information
  *
  * Creates a new #GdaDataModel object which contains the data stored in the @data string. 
  *
@@ -1549,48 +1565,66 @@ xml_fetch_next_row (GdaDataModelImport *model)
 		if (!columns) 
 			add_error (model, _("Row has too many values (which are ignored)"));
 		else {
-			ret = xmlTextReaderRead (reader);
-			if (ret > 0) {
-				GValue *value;
-				GdaColumn *column;
+			gboolean value_is_null = FALSE;
+			xmlChar *isnull;
 
-				if (this_lang)
-					column = last_column;
-				else {
-					column = (GdaColumn *) columns->data;
-					last_column = column;
-					columns = g_slist_next (columns);
-				}
-				if (xmlTextReaderNodeType (reader) == XML_TEXT_NODE) {
+			isnull = xmlTextReaderGetAttribute (reader, (xmlChar*)"isnull");
+			if (isnull) {
+				if ((*isnull == 't') || (*isnull == 'T'))
+					value_is_null = TRUE;
+				xmlFree (isnull);
+			}
+
+			if (value_is_null) 
+				values = g_slist_prepend (values, gda_value_new_null ());
+			else {
+				ret = xmlTextReaderRead (reader);
+				if (ret > 0) {
+					GValue *value;
+					GdaColumn *column;
 					GType gtype;
-					const xmlChar *xmlstr;
-
-					gtype = gda_column_get_g_type (column);
-					xmlstr = xmlTextReaderConstValue (reader);
-					/* g_print ("Convert #%s# to %s\n", (gchar *) xmlstr, gda_g_type_to_string (gtype)); */
-					value = gda_value_new_from_string ((gchar *) xmlstr, gtype);
-					if (!value) {
-						gchar *str;
-						
-						str = g_strdup_printf (_("Could not convert '%s' to a value of type %s"), 
-								       (gchar *) xmlstr, gda_g_type_to_string (gtype));
-						add_error (model, str);
-						g_free (str);
-						value = gda_value_new_null ();
+					
+					if (this_lang)
+						column = last_column;
+					else {
+						column = (GdaColumn *) columns->data;
+						last_column = column;
+						columns = g_slist_next (columns);
 					}
+					
+					gtype = gda_column_get_g_type (column);
+					if (xmlTextReaderNodeType (reader) == XML_TEXT_NODE) {
+						const xmlChar *xmlstr;
+						
+						xmlstr = xmlTextReaderConstValue (reader);
+						/* g_print ("Convert #%s# to %s\n", (gchar *) xmlstr, gda_g_type_to_string (gtype)); */
+						value = gda_value_new_from_string ((gchar *) xmlstr, gtype);
+						if (!value) {
+							gchar *str;
+							
+							str = g_strdup_printf (_("Could not convert '%s' to a value of type %s"), 
+									       (gchar *) xmlstr, gda_g_type_to_string (gtype));
+							add_error (model, str);
+							g_free (str);
+							value = gda_value_new_null ();
+						}
+					}
+					else {
+						if (value_is_null)
+							value = gda_value_new_null ();
+						else
+							value = gda_value_new_from_string ("", gtype);
+					}
+					
+					if (this_lang) {
+						/* replace the last value (which did not have any "lang" attribute */
+						gda_value_free ((GValue *) values->data);
+						values->data = value;
+						xmlFree (this_lang);
+					}
+					else 
+						values = g_slist_prepend (values, value);
 				}
-				else 
-					/* no contents => this is a NULL value */
-					value = gda_value_new_null ();
-
-				if (this_lang) {
-					/* replace the last value (which did not have any "lang" attribute */
-					gda_value_free ((GValue *) values->data);
-					values->data = value;
-					xmlFree (this_lang);
-				}
-				else 
-					values = g_slist_prepend (values, value);
 			}
 		}
 		ret = xml_fetch_next_xml_node (reader);
@@ -1599,6 +1633,13 @@ xml_fetch_next_row (GdaDataModelImport *model)
 
 	if (values)
 		model->priv->cursor_values = g_slist_reverse (values);
+#ifdef GDA_DEBUG_NO
+	GSList *l;
+	
+	g_print ("======== GdaDataModelImport => next XML row ========\n");
+	for (l = model->priv->cursor_values; l; l = l->next) 
+		g_print ("# %s\n", gda_value_stringify ((GValue*)(l->data)));
+#endif
 
 	if (ret <= 0) {
 		/* destroy the reader, nothing to read anymore */

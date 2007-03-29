@@ -16,6 +16,7 @@
 
 int prov_test_common_setup ();
 int prov_test_common_create_tables_sql ();
+int prov_test_common_check_schemas ();
 int prov_test_common_clean ();
 
 #endif

@@ -15,5 +15,6 @@
 GdaConnection *prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provided, gboolean *db_created);
 gboolean       prov_test_clean_connection (GdaConnection *cnc, gboolean destroy_db);
 gboolean       prov_test_create_tables_sql (GdaConnection *cnc);
+gboolean       prov_test_check_table_schema (GdaConnection *cnc, const gchar *table);
 
 #endif
