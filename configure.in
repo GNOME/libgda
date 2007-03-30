@@ -1103,6 +1103,7 @@ tools/Makefile
 testing/Makefile
 tests/Makefile
 tests/queries/Makefile
+tests/data-models/Makefile
 tests/providers/Makefile
 doc/Makefile
 doc/C/Makefile

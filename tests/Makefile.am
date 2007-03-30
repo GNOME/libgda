@@ -1,2 +1,2 @@
-SUBDIRS = queries providers
+SUBDIRS = queries data-models providers
 

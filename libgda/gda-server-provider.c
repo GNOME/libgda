@@ -89,7 +89,6 @@ gda_server_provider_init (GdaServerProvider *provider,
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
 
 	provider->priv = g_new0 (GdaServerProviderPrivate, 1);
-	provider->priv->connections = NULL;
 	provider->priv->data_handlers = g_hash_table_new_full ((GHashFunc) gda_server_provider_handler_info_hash_func,
 							       (GEqualFunc) gda_server_provider_handler_info_equal_func,
 							       (GDestroyNotify) gda_server_provider_handler_info_free,
@@ -105,7 +104,6 @@ gda_server_provider_finalize (GObject *object)
 
 	/* free memory */
 	if (provider->priv) {
-		g_list_free (provider->priv->connections);
 		g_hash_table_destroy (provider->priv->data_handlers);
 		
 		g_free (provider->priv);
@@ -233,15 +231,6 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	retcode = CLASS (provider)->open_connection (provider, cnc, params, username, password);
-	if (retcode) {
-		provider->priv->connections = g_list_append (
-			provider->priv->connections, cnc);
-	}
-	else {
-		/* unref the object if we've got no connections */
-		if (!provider->priv->connections)
-			g_object_unref (G_OBJECT (provider));
-	}
 
 	return retcode;
 }
@@ -266,10 +255,6 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnection
 		retcode = CLASS (provider)->close_connection (provider, cnc);
 	else
 		retcode = TRUE;
-
-	provider->priv->connections = g_list_remove (provider->priv->connections, cnc);
-	if (!provider->priv->connections)
-		g_object_unref (G_OBJECT (provider));
 
 	return retcode;
 }

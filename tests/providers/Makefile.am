@@ -165,4 +165,20 @@ check_ldap_LDADD = @CHECK_LIBS@ \
 EXTRA_DIST = \
 	README \
 	PostgreSQL_create_tables.sql \
-	SQLite_create_tables.sql
+	SQLite_create_tables.sql \
+	MySQL_create_tables.sql \
+	FIELDS_SCHEMA_MySQL_actor.xml \
+	FIELDS_SCHEMA_MySQL_film_actor.xml \
+	FIELDS_SCHEMA_MySQL_film.xml \
+	FIELDS_SCHEMA_MySQL_language.xml \
+	FIELDS_SCHEMA_PostgreSQL_actor.xml \
+	FIELDS_SCHEMA_PostgreSQL_film_actor.xml \
+	FIELDS_SCHEMA_PostgreSQL_film.xml \
+	FIELDS_SCHEMA_PostgreSQL_language.xml \
+	FIELDS_SCHEMA_SQLite_actor.xml \
+	FIELDS_SCHEMA_SQLite_film_actor.xml \
+	FIELDS_SCHEMA_SQLite_film.xml \
+	FIELDS_SCHEMA_SQLite_language.xml \
+	TYPES_SCHEMA_MySQL.xml \
+	TYPES_SCHEMA_PostgreSQL.xml \
+	TYPES_SCHEMA_SQLite.xml

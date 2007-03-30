@@ -675,7 +675,6 @@ gda_connection_get_provider_obj (GdaConnection *cnc)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 
-	g_assert (cnc->priv->provider_obj);
 	return cnc->priv->provider_obj;
 }
 
@@ -691,6 +690,8 @@ gda_connection_get_infos (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
+	if (!cnc->priv->provider_obj)
+		return NULL;
 
 	return gda_server_provider_get_info (cnc->priv->provider_obj, cnc);
 }
@@ -708,6 +709,8 @@ gda_connection_get_server_version (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
+	if (!cnc->priv->provider_obj)
+		return NULL;
 
 	return gda_server_provider_get_server_version (cnc->priv->provider_obj, cnc);
 }
@@ -726,6 +729,8 @@ gda_connection_get_database (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
+	if (!cnc->priv->provider_obj)
+		return NULL;
 
 	return gda_server_provider_get_database (cnc->priv->provider_obj, cnc);
 }
@@ -1010,7 +1015,7 @@ gda_connection_add_event_string (GdaConnection *cnc, const gchar *str, ...)
 	return error;
 }
 
-/** TODO: This actually frees the input GList. That's very very unusual. murrayc.
+/** TODO: This actually frees the input GList. That's very very unusual. murrayc. */
 
 /**
  * gda_connection_add_events_list
@@ -1081,6 +1086,8 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
+	if (!cnc->priv->provider_obj)
+		return FALSE;
 
 	return gda_server_provider_change_database (cnc->priv->provider_obj, cnc, name);
 }
@@ -1128,6 +1135,7 @@ gda_connection_execute_command (GdaConnection *cnc, GdaCommand *cmd,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
+	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 
 	/* clean any previous connection events */
 	gda_connection_clear_events_list (cnc);
@@ -1178,6 +1186,7 @@ gda_connection_get_last_insert_id (GdaConnection *cnc, GdaDataModel *recset)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv, NULL);
+	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 
 	return gda_server_provider_get_last_insert_id (cnc->priv->provider_obj, cnc, recset);
 }
@@ -1343,6 +1352,7 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTran
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
 	retval = gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, name, level, error);
 	if (retval)
@@ -1370,6 +1380,7 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
 	retval = gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, name, error);
 	if (retval)
@@ -1398,6 +1409,7 @@ gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *name, GErr
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
 	retval = gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, name, error);
 	if (retval)
@@ -1421,6 +1433,7 @@ gda_connection_add_savepoint (GdaConnection *cnc, const gchar *name, GError **er
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 	
 	return gda_server_provider_add_savepoint (cnc->priv->provider_obj, cnc, name, error);
 }
@@ -1440,7 +1453,8 @@ gda_connection_rollback_savepoint (GdaConnection *cnc, const gchar *name, GError
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
-	
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);	
+
 	return gda_server_provider_rollback_savepoint (cnc->priv->provider_obj, cnc, name, error);
 }
 
@@ -1459,7 +1473,8 @@ gda_connection_delete_savepoint (GdaConnection *cnc, const gchar *name, GError *
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
-	
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
+
 	return gda_server_provider_delete_savepoint (cnc->priv->provider_obj, cnc, name, error);
 }
 
@@ -1497,6 +1512,7 @@ gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature featur
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
 	return gda_server_provider_supports_feature (cnc->priv->provider_obj, cnc, feature);
 }
@@ -1530,6 +1546,8 @@ gda_connection_get_schema (GdaConnection *cnc,
 			   GError **error)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
+
 	return gda_server_provider_get_schema (cnc->priv->provider_obj, cnc, schema, params, error);
 }
 
@@ -1567,6 +1585,7 @@ gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv, FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);
+	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
 	/* execute the command on the provider */
 	return gda_server_provider_value_to_sql_string (cnc->priv->provider_obj, cnc, from);

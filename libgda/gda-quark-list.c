@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * Authors:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -108,13 +108,11 @@ gda_quark_list_new_from_string (const gchar *string)
  * Removes all strings in the given #GdaQuarkList.
  */
 void
-gda_quark_list_clear(GdaQuarkList *qlist)
+gda_quark_list_clear (GdaQuarkList *qlist)
 {
 	g_return_if_fail (qlist != NULL);
 	
-	g_hash_table_foreach_remove (qlist->hash_table,
-				     (GHRFunc) free_hash_pair,
-				     g_free);
+	g_hash_table_foreach_remove (qlist->hash_table, (GHRFunc) free_hash_pair, NULL);
 }
 
 /**
@@ -128,7 +126,7 @@ gda_quark_list_free (GdaQuarkList *qlist)
 {
 	g_return_if_fail (qlist != NULL);
 
-	gda_quark_list_clear(qlist);
+	gda_quark_list_clear (qlist);
 	g_hash_table_destroy (qlist->hash_table);
 
 	g_free (qlist);

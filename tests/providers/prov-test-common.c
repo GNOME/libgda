@@ -174,6 +174,13 @@ START_TEST (check_table_schemas)
 }
 END_TEST
 
+START_TEST (check_types_schemas)
+{
+	if (!prov_test_check_types_schema (cnc))
+		fail ("Reported schemas failed for types");
+}
+END_TEST
+
 Suite *
 check_schemas_suite (void)
 {
@@ -183,6 +190,7 @@ check_schemas_suite (void)
 	TCase *tc_core = tcase_create ("Check tables schemas");
 	tcase_set_timeout (tc_core, 10);
 	tcase_add_test (tc_core, check_table_schemas);
+	tcase_add_test (tc_core, check_types_schemas);
 	suite_add_tcase (s, tc_core);
 	
 	return s;
@@ -208,6 +216,8 @@ prov_test_common_check_schemas ()
 	if (!prov_test_check_table_schema (cnc, "film"))
 		number_failed++;
 	if (!prov_test_check_table_schema (cnc, "film_actor"))
+		number_failed++;
+	if (!prov_test_check_types_schema (cnc))
 		number_failed++;
 #endif
 

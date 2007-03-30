@@ -1,3 +1,18 @@
+2007-03-30  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-server-provider.c:
+	* libgda/gda-server-provider-private.h: removed the list of connections
+	using the specified GdaServerProvider object as it was useless and the 
+	self-unreferencing of the providers if there was no opened connection left
+	lead to memory corruption
+	* libgda/gda-connection.c: added more assertions tests to avoid crashes
+	* libgda/gda-quark-list.c: don't pass g_free as data pointer if it's not used
+	* tests/providers/prov-test-util.c: make it possible to close and re-open a
+	connection after some tests because tests are run in sub-processes
+	* tests/providers/*: now test TYPES schema
+	* tests/data-models/: new tests for GdaDataModel implementations (only
+	a start at the moment)
+
 2007-03-29  Vivien Malerba <malerba@gnome-db.org>
 
 	* tests/providers/*: improved providers tests (now tests DB creation, SQL execution

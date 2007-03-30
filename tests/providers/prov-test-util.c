@@ -9,6 +9,101 @@
 #define DB_NAME "gda_check_db"
 GdaDict *dict = NULL;
 
+/*
+ * Data model content's check
+ */
+static gboolean
+compare_data_model_with_expected (GdaDataModel *model, const gchar *expected_file)
+{
+	GdaDataModel *compare_m;
+	GSList *errors;
+	gboolean retval = TRUE;
+
+	/* load file into data model */
+	compare_m = gda_data_model_import_new_file (expected_file, TRUE, NULL);
+	if ((errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (compare_m)))) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Could not load the expected schema file '%s': ", expected_file);
+		for (; errors; errors = errors->next) 
+			g_print ("\t%s\n", 
+				 ((GError *)(errors->data))->message ? ((GError *)(errors->data))->message : "No detail");
+#endif
+		g_object_unref (compare_m);
+		return FALSE;
+	}
+
+	g_print ("========= Expected Data model =========\n");
+	gda_data_model_dump (compare_m, stdout);
+	
+	/* compare number of rows and columns */
+	gint ncols, nrows, row, col;
+	ncols = gda_data_model_get_n_columns (model);
+	nrows = gda_data_model_get_n_rows (model);
+
+	if (ncols != gda_data_model_get_n_columns (compare_m)) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Data model has wrong number of columns: expected %d and got %d",
+			   gda_data_model_get_n_columns (compare_m), ncols);
+#endif
+		g_object_unref (compare_m);
+		return FALSE;
+	}
+
+	/* compare columns' types */
+	for (col = 0; col < ncols; col++) {
+		GdaColumn *m_col, *e_col;
+
+		m_col = gda_data_model_describe_column (model, col);
+		e_col = gda_data_model_describe_column (compare_m, col);
+		if (gda_column_get_g_type (m_col) != gda_column_get_g_type (e_col)) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Data model has wrong column type for column %d: expected %s and got %s",
+				   col, g_type_name (gda_column_get_g_type (e_col)),
+				   g_type_name (gda_column_get_g_type (m_col)));
+#endif
+			g_object_unref (compare_m);
+			return FALSE;
+		}
+	}
+	
+	/* compare contents */
+	for (row = 0; row < nrows; row++) {
+		for (col = 0; col < ncols; col++) {
+			if (gda_value_compare_ext (gda_data_model_get_value_at (model, col, row),
+						   gda_data_model_get_value_at (compare_m, col, row))) {
+#ifdef CHECK_EXTRA_INFO
+				g_warning ("Reported schema error line %d, col %d: expected '%s' and got '%s'",
+					   row, col, 
+					   gda_value_stringify (gda_data_model_get_value_at (compare_m, col, row)),
+					   gda_value_stringify (gda_data_model_get_value_at (model, col, row)));
+#endif
+				retval = FALSE;
+			}
+		}
+	}
+	
+	/* FIXME: test that there are no left row in compare_m */
+	g_object_unref (compare_m);
+
+	return retval;
+}
+
+/*
+ * Close and re-open @cnc
+ */
+static gboolean
+prov_test_reopen_connection (GdaConnection *cnc, GError **error)
+{
+	gda_connection_close (cnc);
+	if (!gda_connection_open (cnc, error)) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Could not re-open connection: %s",
+			   error && *error && (*error)->message ? (*error)->message : "No detail");
+#endif
+		return FALSE;
+	}
+	return TRUE;
+}
 
 /*
  *
@@ -288,7 +383,6 @@ prov_test_create_tables_sql (GdaConnection *cnc)
 	return retval;
 }
 
-
 /*
  * 
  * Check a table's schema
@@ -308,10 +402,13 @@ prov_test_check_table_schema (GdaConnection *cnc, const gchar *table)
 		dict = gda_dict_new ();
 
 	GdaServerProvider *prov;
-	GdaDataModel *schema_m, *compare_m;
+	GdaDataModel *schema_m;
 	GError *error = NULL;
 	GdaParameterList *plist;
 	gchar *str;
+	
+	if (!prov_test_reopen_connection (cnc, &error))
+		return FALSE;
 
 	prov = gda_connection_get_provider_obj (cnc);
 	plist = gda_parameter_list_new_inline (dict, "name", G_TYPE_STRING, table, NULL);
@@ -351,43 +448,86 @@ prov_test_check_table_schema (GdaConnection *cnc, const gchar *table)
 
 		/* compare schema with what's expected */
 		gchar *file = g_build_filename (CHECK_SQL_FILES, "tests", "providers", str, NULL);
-		compare_m = gda_data_model_import_new_file (file, TRUE, NULL);
-		if (!compare_m) {
+		if (!compare_data_model_with_expected (schema_m, file))
+			return FALSE;
+		g_free (file);
+	}
+	g_free (str);
+
+	/*gda_data_model_dump (schema_m, stdout);*/
+	g_object_unref (schema_m);
+	return TRUE;
+}
+
+/*
+ * 
+ * Check data types' schema
+ *
+ */
+gboolean
+prov_test_check_types_schema (GdaConnection *cnc)
+{
+if (!cnc || !gda_connection_is_opened (cnc)) {
 #ifdef CHECK_EXTRA_INFO
-			g_warning ("Could not load the expected schema file '%s': %s", file,
+		g_warning ("Connection is closed!");
+#endif
+		return FALSE;
+	}
+
+	GdaServerProvider *prov;
+	GdaDataModel *schema_m;
+	GError *error = NULL;
+	gchar *str;
+	
+	if (!prov_test_reopen_connection (cnc, &error))
+		return FALSE;
+
+	prov = gda_connection_get_provider_obj (cnc);
+	schema_m = gda_server_provider_get_schema (prov, cnc, GDA_CONNECTION_SCHEMA_TYPES, NULL, &error);
+	if (!schema_m) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Could not get the TYPES schema: %s",
+			   error && error->message ? error->message : "No detail");
+#endif
+		return FALSE;
+	}
+
+	g_print ("========= Reported Data model =========\n");
+	gda_data_model_dump (schema_m, stdout);
+
+	str = g_strdup_printf ("TYPES_SCHEMA_%s.xml", gda_connection_get_provider (cnc));
+	if (0) {
+		/* export schema model to a file, to create first version of the files, not to be used in actual checks */
+		GdaParameterList *plist;
+		plist = gda_parameter_list_new_inline (dict, "OVERWRITE", G_TYPE_BOOLEAN, TRUE, NULL);
+		if (! (gda_data_model_export_to_file (schema_m, GDA_DATA_MODEL_IO_DATA_ARRAY_XML, str, 
+						      NULL, 0, NULL, 0, plist, &error))) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Could not export schema to file '%s': %s", str,
 				   error && error->message ? error->message : "No detail");
 #endif
 			return FALSE;
 		}
-		g_free (file);
-		g_assert (gda_server_provider_test_schema_model (compare_m, GDA_CONNECTION_SCHEMA_FIELDS, NULL));
-
-		gint ncols, nrows, row, col;
-		ncols = gda_data_model_get_n_columns (schema_m);
-		nrows = gda_data_model_get_n_rows (schema_m);
-		for (row = 0; row < nrows; row++) {
-			for (col = 0; col < ncols; col++) {
-				if (col == 8)
-					continue; /* ignore default value column */
-				if (gda_value_compare_ext (gda_data_model_get_value_at (schema_m, col, row),
-							   gda_data_model_get_value_at (compare_m, col, row))) {
+		g_object_unref (plist);
+	}
+	else {
+		/* test schema validity */
+		if (!gda_server_provider_test_schema_model (schema_m, GDA_CONNECTION_SCHEMA_TYPES, &error)) {
 #ifdef CHECK_EXTRA_INFO
-					g_warning ("Reported schema error line %d, col %d: expected '%s' and got '%s'",
-						   row, col, 
-						   gda_value_stringify (gda_data_model_get_value_at (compare_m, col, row)),
-						   gda_value_stringify (gda_data_model_get_value_at (schema_m, col, row)));
+			g_warning ("Reported schema does not conform to GDA's requirements: %s", 
+				   error && error->message ? error->message : "No detail");
 #endif
-
-					return FALSE;
-				}
-			}
+			return FALSE;
 		}
 
-		g_object_unref (compare_m);
+		/* compare schema with what's expected */
+		gchar *file = g_build_filename (CHECK_SQL_FILES, "tests", "providers", str, NULL);
+		if (!compare_data_model_with_expected (schema_m, file))
+			return FALSE;
+		g_free (file);
 	}
 	g_free (str);
 
-	gda_data_model_dump (schema_m, stdout);
 	g_object_unref (schema_m);
 	return TRUE;
 }
