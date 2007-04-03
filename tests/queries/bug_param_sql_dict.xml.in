@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE gda_dict SYSTEM "libgda-dict.dtd">
+<!DOCTYPE gda_dict SYSTEM "@top_srcdir@/libgda/libgda-dict.dtd">
 <gda_dict>
   <gda_dict_types>
     <gda_dict_type id="DTREFURQ" name="DATE" owner="system" descr="" nparam="-1" gdatype="gchararray"/>

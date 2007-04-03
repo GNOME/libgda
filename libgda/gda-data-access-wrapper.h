@@ -40,7 +40,7 @@ typedef struct _GdaDataAccessWrapperPrivate GdaDataAccessWrapperPrivate;
 
 struct _GdaDataAccessWrapper {
 	GdaObject                      object;
-	GdaDataAccessWrapperPrivate *priv;
+	GdaDataAccessWrapperPrivate   *priv;
 };
 
 struct _GdaDataAccessWrapperClass {

@@ -1343,7 +1343,11 @@ init_xml_import (GdaDataModelImport *model)
 		
 		prop = (gchar*)xmlGetProp (node, (xmlChar*)"id");
 		if (prop) {
-			gda_object_set_id (GDA_OBJECT (model), prop);
+			/* use prop+2 only if prop is like "DA%d", otherwise don't set object's ID */
+			if ((prop[0] == 'D') && (prop[1] == 'A'))
+				gda_object_set_id (GDA_OBJECT (model), prop+2);
+			else
+				gda_object_set_id (GDA_OBJECT (model), NULL);
 			xmlFree (prop);
 		}
 		prop = (gchar*)xmlGetProp (node, (xmlChar*)"name");
@@ -1575,8 +1579,10 @@ xml_fetch_next_row (GdaDataModelImport *model)
 				xmlFree (isnull);
 			}
 
-			if (value_is_null) 
+			if (value_is_null) {
 				values = g_slist_prepend (values, gda_value_new_null ());
+				ret = -1;
+			}
 			else {
 				ret = xmlTextReaderRead (reader);
 				if (ret > 0) {
@@ -1584,6 +1590,7 @@ xml_fetch_next_row (GdaDataModelImport *model)
 					GdaColumn *column;
 					GType gtype;
 					
+					ret = -1;
 					if (this_lang)
 						column = last_column;
 					else {
@@ -1593,12 +1600,16 @@ xml_fetch_next_row (GdaDataModelImport *model)
 					}
 					
 					gtype = gda_column_get_g_type (column);
+					/*g_print ("TYPE: %s\n", xmlTextReaderConstName (reader));*/
 					if (xmlTextReaderNodeType (reader) == XML_TEXT_NODE) {
 						const xmlChar *xmlstr;
 						
 						xmlstr = xmlTextReaderConstValue (reader);
-						/* g_print ("Convert #%s# to %s\n", (gchar *) xmlstr, gda_g_type_to_string (gtype)); */
 						value = gda_value_new_from_string ((gchar *) xmlstr, gtype);
+						/*g_print ("Convert #%s# (type:%s) => %s (type:%s)\n", (gchar *) xmlstr, 
+							 gda_g_type_to_string (gtype), 
+							 gda_value_stringify (value), 
+							 value ? gda_g_type_to_string (G_VALUE_TYPE (value)) : "no type");*/
 						if (!value) {
 							gchar *str;
 							
@@ -1610,6 +1621,9 @@ xml_fetch_next_row (GdaDataModelImport *model)
 						}
 					}
 					else {
+						if (xmlTextReaderNodeType (reader) == XML_ELEMENT_NODE)
+							ret = 1; /* don't read another node in the next loop, 
+								    use the current one */
 						if (value_is_null)
 							value = gda_value_new_null ();
 						else
@@ -1627,7 +1641,8 @@ xml_fetch_next_row (GdaDataModelImport *model)
 				}
 			}
 		}
-		ret = xml_fetch_next_xml_node (reader);
+		if (ret < 0) /* read another node ? */
+			ret = xml_fetch_next_xml_node (reader);
 		name = (ret > 0) ? xmlTextReaderConstName (reader) : NULL;
 	}
 
@@ -1635,10 +1650,14 @@ xml_fetch_next_row (GdaDataModelImport *model)
 		model->priv->cursor_values = g_slist_reverse (values);
 #ifdef GDA_DEBUG_NO
 	GSList *l;
+	gint c;
 	
 	g_print ("======== GdaDataModelImport => next XML row ========\n");
-	for (l = model->priv->cursor_values; l; l = l->next) 
-		g_print ("# %s\n", gda_value_stringify ((GValue*)(l->data)));
+	for (c = 0, l = model->priv->cursor_values; l; l = l->next, c++) {
+		GValue *val = (GValue*)(l->data);
+		g_print ("#%d %s (type:%s)\n", c, gda_value_stringify (val),
+			 val ? g_type_name (G_VALUE_TYPE (val)) : "no type");
+	}
 #endif
 
 	if (ret <= 0) {
@@ -1756,8 +1775,11 @@ init_node_import (GdaDataModelImport *model)
 	model->priv->random_access_model = ramodel;
 	str = (gchar*)xmlGetProp (node, (xmlChar*)"id");
 	if (str) {
-		/* FIXME: use str+2 only if str is like "DA%d", otherwise simply use str */
-		gda_object_set_id (GDA_OBJECT (model), str+2);
+		/* use str+2 only if str is like "DA%d", otherwise don't set object's ID */
+		if ((str[0] == 'D') && (str[1] == 'A'))
+			gda_object_set_id (GDA_OBJECT (model), str+2);
+		else
+			gda_object_set_id (GDA_OBJECT (model), NULL);
 		xmlFree (str);
 	}
 	str = (gchar*)xmlGetProp (node, (xmlChar*)"name");

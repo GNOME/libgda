@@ -1,2 +1,276 @@
 <?xml version="1.0"?>
-<gda_array id="EXPORT" name="Exported Data"><gda_array_field id="EXPORT:FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/><gda_array_field id="EXPORT:FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/><gda_array_field id="EXPORT:FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/><gda_array_field id="EXPORT:FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/><gda_array_field id="EXPORT:FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/><gda_array_data><gda_array_row><gda_value>abstime</gda_value><gda_value>vmalerba</gda_value><gda_value>absolute, limited-range date and time (Unix system time)</gda_value><gda_value>24</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>aclitem</gda_value><gda_value>vmalerba</gda_value><gda_value>access control list</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>bit</gda_value><gda_value>vmalerba</gda_value><gda_value>fixed-length bit string</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>bool</gda_value><gda_value>vmalerba</gda_value><gda_value>boolean, 'true'/'false'</gda_value><gda_value>20</gda_value><gda_value>boolean</gda_value></gda_array_row><gda_array_row><gda_value>box</gda_value><gda_value>vmalerba</gda_value><gda_value>geometric box '(lower left,upper right)'</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>bpchar</gda_value><gda_value>vmalerba</gda_value><gda_value>char(length), blank-padded string, fixed storage length</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>bytea</gda_value><gda_value>vmalerba</gda_value><gda_value>variable-length string, binary values escaped</gda_value><gda_value>165281968</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>char</gda_value><gda_value>vmalerba</gda_value><gda_value>single character</gda_value><gda_value>64</gda_value><gda_value>character</gda_value></gda_array_row><gda_array_row><gda_value>cidr</gda_value><gda_value>vmalerba</gda_value><gda_value>network IP address/netmask, network address</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>circle</gda_value><gda_value>vmalerba</gda_value><gda_value>geometric circle '(center,radius)'</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>date</gda_value><gda_value>vmalerba</gda_value><gda_value>ANSI SQL date</gda_value><gda_value>165281840</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>float4</gda_value><gda_value>vmalerba</gda_value><gda_value>single-precision floating point number, 4-byte storage</gda_value><gda_value>56</gda_value><gda_value>real</gda_value></gda_array_row><gda_array_row><gda_value>float8</gda_value><gda_value>vmalerba</gda_value><gda_value>double-precision floating point number, 8-byte storage</gda_value><gda_value>60</gda_value><gda_value>double precision</gda_value></gda_array_row><gda_array_row><gda_value>inet</gda_value><gda_value>vmalerba</gda_value><gda_value>IP address/netmask, host address, netmask optional</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>int2</gda_value><gda_value>vmalerba</gda_value><gda_value>-32 thousand to 32 thousand, 2-byte storage</gda_value><gda_value>165280056</gda_value><gda_value>smallint</gda_value></gda_array_row><gda_array_row><gda_value>int4</gda_value><gda_value>vmalerba</gda_value><gda_value>-2 billion to 2 billion integer, 4-byte storage</gda_value><gda_value>24</gda_value><gda_value>int,integer</gda_value></gda_array_row><gda_array_row><gda_value>int8</gda_value><gda_value>vmalerba</gda_value><gda_value>~18 digit integer, 8-byte storage</gda_value><gda_value>40</gda_value><gda_value>bigint</gda_value></gda_array_row><gda_array_row><gda_value>interval</gda_value><gda_value>vmalerba</gda_value><gda_value>@ &lt;number&gt; &lt;units&gt;, time interval</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>line</gda_value><gda_value>vmalerba</gda_value><gda_value>geometric line (not implemented)'</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>lseg</gda_value><gda_value>vmalerba</gda_value><gda_value>geometric line segment '(pt1,pt2)'</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>macaddr</gda_value><gda_value>vmalerba</gda_value><gda_value>XX:XX:XX:XX:XX:XX, MAC address</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>money</gda_value><gda_value>vmalerba</gda_value><gda_value>monetary amounts, $d,ddd.cc</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>name</gda_value><gda_value>vmalerba</gda_value><gda_value>63-character type for storing system identifiers</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>numeric</gda_value><gda_value>vmalerba</gda_value><gda_value>numeric(precision, decimal), arbitrary precision number</gda_value><gda_value>165280144</gda_value><gda_value>decimal</gda_value></gda_array_row><gda_array_row><gda_value>oid</gda_value><gda_value>vmalerba</gda_value><gda_value>object identifier(oid), maximum 4 billion</gda_value><gda_value>165277888</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>path</gda_value><gda_value>vmalerba</gda_value><gda_value>geometric path '(pt1,...)'</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>point</gda_value><gda_value>vmalerba</gda_value><gda_value>geometric point '(x, y)'</gda_value><gda_value>165282112</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>polygon</gda_value><gda_value>vmalerba</gda_value><gda_value>geometric polygon '(pt1,...)'</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>reltime</gda_value><gda_value>vmalerba</gda_value><gda_value>relative, limited-range time interval (Unix delta time)</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>text</gda_value><gda_value>vmalerba</gda_value><gda_value>variable-length string, no limit specified</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>time</gda_value><gda_value>vmalerba</gda_value><gda_value>hh:mm:ss, ANSI SQL time</gda_value><gda_value>165279712</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>timestamp</gda_value><gda_value>vmalerba</gda_value><gda_value>date and time</gda_value><gda_value>165284552</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>timestamptz</gda_value><gda_value>vmalerba</gda_value><gda_value>date and time with time zone</gda_value><gda_value>165284552</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>timetz</gda_value><gda_value>vmalerba</gda_value><gda_value>hh:mm:ss, ANSI SQL time</gda_value><gda_value>165279712</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>tinterval</gda_value><gda_value>vmalerba</gda_value><gda_value>(abstime,abstime), time interval</gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row><gda_array_row><gda_value>varbit</gda_value><gda_value>vmalerba</gda_value><gda_value>variable-length bit string</gda_value><gda_value>64</gda_value><gda_value>bit varying</gda_value></gda_array_row><gda_array_row><gda_value>varchar</gda_value><gda_value>vmalerba</gda_value><gda_value>varchar(length), non-blank-padded string, variable storage length</gda_value><gda_value>64</gda_value><gda_value>character varying</gda_value></gda_array_row><gda_array_row><gda_value>year</gda_value><gda_value>vmalerba</gda_value><gda_value></gda_value><gda_value>64</gda_value><gda_value isnull="t"/></gda_array_row></gda_array_data></gda_array>
+<gda_array id="EXPORT" name="Exported Data">
+  <gda_array_field id="EXPORT:FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>abstime</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>absolute, limited-range date and time (Unix system time)</gda_value>
+      <gda_value>24</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>aclitem</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>access control list</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>bit</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>fixed-length bit string</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>bool</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>boolean, 'true'/'false'</gda_value>
+      <gda_value>20</gda_value>
+      <gda_value>boolean</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>box</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>geometric box '(lower left,upper right)'</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>bpchar</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>char(length), blank-padded string, fixed storage length</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>bytea</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>variable-length string, binary values escaped</gda_value>
+      <gda_value>137842864</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>char</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>single character</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value>character</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>cidr</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>network IP address/netmask, network address</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>circle</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>geometric circle '(center,radius)'</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>date</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>ANSI SQL date</gda_value>
+      <gda_value>137842736</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>float4</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>single-precision floating point number, 4-byte storage</gda_value>
+      <gda_value>56</gda_value>
+      <gda_value>real</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>float8</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>double-precision floating point number, 8-byte storage</gda_value>
+      <gda_value>60</gda_value>
+      <gda_value>double precision</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>inet</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>IP address/netmask, host address, netmask optional</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>int2</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>-32 thousand to 32 thousand, 2-byte storage</gda_value>
+      <gda_value>137840952</gda_value>
+      <gda_value>smallint</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>int4</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>-2 billion to 2 billion integer, 4-byte storage</gda_value>
+      <gda_value>24</gda_value>
+      <gda_value>int,integer</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>int8</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>~18 digit integer, 8-byte storage</gda_value>
+      <gda_value>40</gda_value>
+      <gda_value>bigint</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>interval</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>@ &lt;number&gt; &lt;units&gt;, time interval</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>line</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>geometric line (not implemented)'</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>lseg</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>geometric line segment '(pt1,pt2)'</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>macaddr</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>XX:XX:XX:XX:XX:XX, MAC address</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>money</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>monetary amounts, $d,ddd.cc</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>name</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>63-character type for storing system identifiers</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>numeric</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>numeric(precision, decimal), arbitrary precision number</gda_value>
+      <gda_value>137841040</gda_value>
+      <gda_value>decimal</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>oid</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>object identifier(oid), maximum 4 billion</gda_value>
+      <gda_value>137838784</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>path</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>geometric path '(pt1,...)'</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>point</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>geometric point '(x, y)'</gda_value>
+      <gda_value>137843008</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>polygon</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>geometric polygon '(pt1,...)'</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>reltime</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>relative, limited-range time interval (Unix delta time)</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>text</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>variable-length string, no limit specified</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>time</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>hh:mm:ss, ANSI SQL time</gda_value>
+      <gda_value>137840608</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>timestamp</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>date and time</gda_value>
+      <gda_value>137845448</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>timestamptz</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>date and time with time zone</gda_value>
+      <gda_value>137845448</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>timetz</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>hh:mm:ss, ANSI SQL time</gda_value>
+      <gda_value>137840608</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>tinterval</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>(abstime,abstime), time interval</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>varbit</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>variable-length bit string</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value>bit varying</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>varchar</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value>varchar(length), non-blank-padded string, variable storage length</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value>character varying</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>year</gda_value>
+      <gda_value>vmalerba</gda_value>
+      <gda_value/>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>

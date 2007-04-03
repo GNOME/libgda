@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 2006 The GNOME Foundation.
+ * Copyright (C) 2006 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Vivien Malerba <malerba@gnome-db.org>
@@ -80,6 +80,8 @@ static void gda_data_access_wrapper_dump (GdaDataAccessWrapper *model, guint off
 
 static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *model);
 static void iter_end_of_data_cb (GdaDataModelIter *iter, GdaDataAccessWrapper *model);
+
+static GdaRow *create_new_row (GdaDataAccessWrapper *model);
 
 static GObjectClass *parent_class = NULL;
 
@@ -401,6 +403,11 @@ gda_data_access_wrapper_get_n_rows (GdaDataModel *model)
 		/* imodel->priv->mode is a random access model, use it */
 		return gda_data_model_get_n_rows (imodel->priv->model);
 	else {
+		/* go at the end */
+		while (!imodel->priv->end_of_data) {
+			if (! gda_data_model_iter_move_next (imodel->priv->iter)) 
+				break;
+		}
 		if (imodel->priv->end_of_data)
 			return imodel->priv->last_row +1;
 		else
@@ -498,7 +505,7 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row)
 			g_assert (imodel->priv->iter);
 			if (imodel->priv->iter_row < 0) {
 				if (gda_data_model_iter_move_next (imodel->priv->iter)) {
-					gda_row = create_new_row (imodel);
+					gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
 					if (row == imodel->priv->iter_row)
 						return gda_row_get_value (gda_row, col);
 				}
@@ -511,17 +518,17 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row)
 				if (row > imodel->priv->iter_row) {
 					/* need to move forward */
 					while ((imodel->priv->iter_row < row) && 
-					       gda_data_model_iter_move_next (imodel->priv->iter)) ;
+					       gda_data_model_iter_move_next (imodel->priv->iter));
 				}
 				else {
 					/* need to move backwards */
+					g_assert (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD);
 					while ((imodel->priv->iter_row > row) && 
 					       gda_data_model_iter_move_prev (imodel->priv->iter)) ;
 				}
 			}
 
-			if (row == imodel->priv->iter_row) 
-				gda_row = create_new_row (imodel);
+			gda_row = g_hash_table_lookup (imodel->priv->rows, GINT_TO_POINTER (row));
 
 			if (gda_row)
 				return gda_row_get_value (gda_row, col);

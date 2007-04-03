@@ -46,7 +46,7 @@ test_suite_load_from_file (const gchar *xml_file)
 				GdaDict *dict = NULL;
 
 				dict = gda_dict_new ();
-				file = g_build_filename (CHECK_XML_FILES, "tests", "queries", prop, NULL);
+				file = g_build_filename (CHECK_DICT_FILES, "tests", "queries", prop, NULL);
 				if (!gda_dict_load_xml_file (dict, file, &error)) {
 					g_error ("Could not load dictionary file '%s': %s", prop,
 						 error ? error->message : "No detail");

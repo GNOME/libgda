@@ -1103,6 +1103,8 @@ tools/Makefile
 testing/Makefile
 tests/Makefile
 tests/queries/Makefile
+tests/queries/dict_pg.xml
+tests/queries/bug_param_sql_dict.xml
 tests/data-models/Makefile
 tests/providers/Makefile
 doc/Makefile

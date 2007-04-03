@@ -1069,7 +1069,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		xml_doc = xmlNewDoc ((xmlChar*)"1.0");
 		xmlDocSetRootElement (xml_doc, xml_node);
 		
-		xmlDocDumpMemory (xml_doc, &xml_contents, &size);
+		xmlDocDumpFormatMemory (xml_doc, &xml_contents, &size, 1);
 		xmlFreeDoc (xml_doc);
 		
 		xml = g_strdup ((gchar*)xml_contents);

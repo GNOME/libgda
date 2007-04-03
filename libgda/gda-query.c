@@ -3274,6 +3274,7 @@ gda_query_get_field_by_sql_naming_fields (GdaQuery *query, const gchar *sql_name
 				
 				/* compare with target_ref_entity.ref_field */
 				if (!err && !field &&
+				    gda_query_target_get_represented_table_name (target) &&
 				    !strcmp (gda_query_target_get_represented_table_name (target), split[0]) &&
 				    !strcmp ("*", split[1])) {
 					if (field)

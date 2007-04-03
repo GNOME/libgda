@@ -194,10 +194,23 @@ set_from_string (GValue *value, const gchar *as_string)
 		else
 			g_date_free (gdate);
 	}
-	else if (type == GDA_TYPE_NULL)
+	else if (type == GDA_TYPE_NULL) {
 		gda_value_set_null (value);
-	else if (type == G_TYPE_ULONG)
-		g_value_set_ulong (value, gda_g_type_from_string (as_string));
+		retval = TRUE;
+	}
+	else if (type == G_TYPE_ULONG) {
+		if (gda_g_type_from_string (as_string) != 0) 
+			g_value_set_ulong (value, gda_g_type_from_string (as_string));
+		else {
+			gulong ulvalue;
+
+			ulvalue = strtoul (as_string, endptr, 10);
+			if (*as_string!=0 && **endptr==0) {
+				g_value_set_ulong (value, ulvalue);
+				retval = TRUE;
+			}
+		}
+	}
 
 	return retval;
 }
@@ -1940,6 +1953,9 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	return 0;
 }
 
+#define _value_is_null(x) (!(x) || (G_VALUE_TYPE (x) == GDA_TYPE_NULL) || \
+			   ((G_VALUE_TYPE (x) == G_TYPE_STRING) && !g_value_get_string (x)))
+
 /**
  * gda_value_compare_ext
  * @value1: a #GValue to compare.
@@ -1957,16 +1973,16 @@ gda_value_compare_ext (const GValue *value1, const GValue *value2)
 	if (value1 == value2)
 		return 0;
 
-	if (!value1 || (G_VALUE_TYPE (value1) == GDA_TYPE_NULL)) {
+	if (_value_is_null (value1)) {
 		/* value1 represents a NULL value */
-		if (! value2 || (G_VALUE_TYPE (value2) == GDA_TYPE_NULL))
+		if (_value_is_null (value2))
 			return 0;
 		else
 			return 1;
 	}
 	else {
 		/* value1 does not represents a NULL value */
-		if (! value2 || (G_VALUE_TYPE (value2) == GDA_TYPE_NULL))
+		if (_value_is_null (value2))
 			return -1;
 		else
 			return gda_value_compare (value1, value2);

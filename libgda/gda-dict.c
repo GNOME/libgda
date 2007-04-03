@@ -925,7 +925,6 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 {
 	gboolean retval = TRUE;
 	xmlDocPtr doc;
-#define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
 
 	g_return_val_if_fail (dict && GDA_IS_DICT (dict), FALSE);
 	g_return_val_if_fail (dict->priv, FALSE);
@@ -935,7 +934,7 @@ gda_dict_save_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 		xmlNodePtr topnode, node;
 
 		/* DTD insertion */
-                xmlCreateIntSubset(doc, (xmlChar*)"gda_dict", NULL, (xmlChar*)"libgda-dict.dtd"/*LIBGDA_DICT_DTD_FILE*/);
+                xmlCreateIntSubset(doc, (xmlChar*)"gda_dict", NULL, (xmlChar*)"libgda-dict.dtd");
 
 		/* Top node */
 		topnode = xmlNewDocNode (doc, NULL, (xmlChar*)"gda_dict", NULL);

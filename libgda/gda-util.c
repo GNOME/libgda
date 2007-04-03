@@ -652,9 +652,9 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  */
 void
 gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent, 
-				     const gint *cols, gint nb_cols, 
-				     const gint *rows, gint nb_rows,
-				     gboolean use_col_ids)
+					 const gint *cols, gint nb_cols, 
+					 const gint *rows, gint nb_rows,
+					 gboolean use_col_ids)
 {
 	gint nrows, i;
 	gint *rcols, rnb_cols;
@@ -702,24 +702,35 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 			row = xmlNewChild (data, NULL,  (xmlChar*)"gda_array_row", NULL);
 			for (c = 0; c < rnb_cols; c++) {
 				GValue *value;
-				gchar *str;
+				gchar *str = NULL;
+				gboolean isnull = FALSE;
 
 				value = (GValue *) gda_data_model_get_value_at (model, rcols [c], rows ? rows [r] : r);
-				if (!value || gda_value_is_null ((GValue *) value))
-					str = NULL;
+				if (!value || gda_value_is_null ((GValue *) value)) 
+					isnull = TRUE;
 				else {
 					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");
+					else if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
+						if (!g_value_get_string (value))
+							isnull = TRUE;
+						else
+							str = gda_value_stringify (value);	
+					}
 					else
 						str = gda_value_stringify (value);
 				}
-				if (!use_col_ids) 
-					field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", (xmlChar*)str);
+				if (!use_col_ids) {
+					if (! str || (str && (*str == 0)))
+						field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", NULL);
+					else
+						field = xmlNewChild (row, NULL,  (xmlChar*)"gda_value", (xmlChar*)str);
+				}
 				else {
 					field = xmlNewChild (row, NULL,  (xmlChar*)"gda_array_value", (xmlChar*)str);
 					xmlSetProp(field, (xmlChar*)"colid",  (xmlChar*)col_ids [c]);
 				}
-				if (!str)
+				if (isnull)
 					xmlSetProp(field,  (xmlChar*)"isnull", (xmlChar*)"t");
 
 				g_free (str);

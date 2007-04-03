@@ -1,3 +1,30 @@
+2007-04-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-access-wrapper.c: gda_data_model_get_n_rows() now returns the correct
+	number of rows in the data model, instead of -1 when the wrapped data model has not yet been
+	"analysed" up to its end (and when it can't be accessed in a random way)
+	* libgda/gda-value.c: corrected set_from_string() when requested type is G_TYPE_ULONG and
+	when a number was passed as string because we don't yet use G_TYPE_GTYPE which requires 
+	Glib >+ 2.10
+	* libgda/gda-value.c: gda_value_compare_ext() now considers that a G_TYPE_STRING value
+	holding a NULL string is similar to a NULL value or to a GDA_TYPE_NULL value
+	* tests/data-models/check_model_import.c: improved test
+	* tests/providers/*: improved test
+	* libgda/gda-data-model.c: specifically format output XML files in a human readable way
+	* libgda/gda-util.c: better handling of NULL values (see note about the libgda/gda-value.c
+	file above)
+	* libgda/gda-data-model-import.c: another correction in the war the XML reader is used, and
+	fixed data model ID naming 
+	* providers/mysql/gda-mysql-provider.c: corrected a bug where the same column would be reported
+	several times in the TABLE_FIELDS schema
+	* libgda/gda-dict.c: code cleanup
+	* configure.in:
+	* tests/queries/dict_pg.xml.in: generate the dict_pg.xml and bug_param_sql_dict.xml files at 
+	configure to set the path to the DTD to allow "make distcheck" to work
+	* tests/queries/Makefile.am: s/top_srcddir/top_srcdir/, corrections to allow "make distcheck" 
+	to work
+	* libgda/gda-query.c: don't use strcmp() when one of the arguments is NULL (bug #410200)
+	
 2007-04-03  Murray Cumming  <murrayc@murrayc.com>
 
 	* COPYING:

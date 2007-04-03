@@ -1,6 +1,6 @@
 
 /* GDA MySQL provider
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -1632,12 +1632,16 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 					   "c.COLUMN_DEFAULT, c.EXTRA, "
 					   "u.REFERENCED_TABLE_NAME, u.REFERENCED_COLUMN_NAME "
 					   "FROM INFORMATION_SCHEMA.COLUMNS c "
-					   "LEFT OUTER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE u "
+					   "LEFT OUTER JOIN "
+					   "(SELECT sub.TABLE_SCHEMA, sub.COLUMN_NAME, sub.TABLE_NAME, "
+					   "sub.REFERENCED_TABLE_NAME, sub.REFERENCED_COLUMN_NAME "
+					   "FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE sub where sub.TABLE_NAME='%s' "
+					   "AND sub.REFERENCED_TABLE_NAME IS NOT NULL) u "
 					   "ON (c.TABLE_NAME = u.TABLE_NAME AND c.TABLE_SCHEMA = u.TABLE_SCHEMA "
 					   "AND c.COLUMN_NAME = u.COLUMN_NAME) "
-					   " WHERE c.TABLE_NAME = '%s' AND c.TABLE_SCHEMA = DATABASE() "
-					   "ORDER BY c.ORDINAL_POSITION;",
-					   table_name);
+					   "WHERE c.TABLE_NAME = '%s' AND c.TABLE_SCHEMA = DATABASE() "
+					   "ORDER BY c.ORDINAL_POSITION",
+					   table_name, table_name);
 	}
 
 	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
