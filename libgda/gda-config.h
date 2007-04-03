@@ -118,6 +118,7 @@ struct _GdaDataSourceInfo {
 #define GDA_TYPE_DATA_SOURCE_INFO (gda_data_source_info_get_type ())
 
 GType              gda_data_source_info_get_type    (void);
+GdaDataSourceInfo *gda_data_source_info_new         ();
 GdaDataSourceInfo *gda_data_source_info_copy        (GdaDataSourceInfo *src);
 gboolean           gda_data_source_info_equal       (GdaDataSourceInfo *info1, GdaDataSourceInfo *info2);
 GdaDataSourceInfo *gda_config_find_data_source      (const gchar *name);
