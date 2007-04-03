@@ -1,5 +1,15 @@
 2007-04-03  Murray Cumming  <murrayc@murrayc.com>
 
+	* COPYING:
+	* README: Clarify that the library and providers are under LGPL. It is just the 
+	executables that are under GPL.
+	* providers/postgres/gda-postgres-handler-bin.c:
+	* providers/postgres/gda-postgres-handler-bin.h:
+	* providers/sqlite/gda-sqlite-handler-bin.c:
+	* providers/sqlite/gda-sqlite-handler-bin.h: Correct inconsistent license headers.
+
+2007-04-03  Murray Cumming  <murrayc@murrayc.com>
+
 	* libgda/: Some of the headers mistakenly mentioned GPL instead of LGPL. 
 	LGPL is obviously intended, as specified in the README, so I made these consistent.
 
