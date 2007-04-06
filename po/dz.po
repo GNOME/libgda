@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-05 03:34+0000\n"
-"PO-Revision-Date: 2007-03-09 03:59+0530\n"
-"Last-Translator: yangka <yanang_ka@hotmail.com>\n"
+"POT-Creation-Date: 2007-03-27 03:48+0100\n"
+"PO-Revision-Date: 2007-04-06 00:05+0530\n"
+"Last-Translator: translator <pemai_jurmey@hotmail.com>\n"
 "Language-Team: dzongkha <pgeyleg@dit.gov.bt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -96,7 +96,7 @@ msgstr "འགྲེལ་བཤད།"
 #: ../libgda/gda-server-provider-extra.c:184
 #: ../providers/firebird/gda-firebird-provider.c:733
 #: ../providers/ldap/gda-ldap-provider.c:336
-#: ../providers/mdb/gda-mdb-provider.c:449
+#: ../providers/mdb/gda-mdb-provider.c:453
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
 #: ../providers/odbc/gda-odbc-provider.c:792
@@ -502,7 +502,7 @@ msgstr "གནས་སྡུད་དཔེ།"
 msgid "GdaDataProxy cant' handle non random access data models"
 msgstr "ཇི་ཌི་ཨེ་གནས་སྡུད་པོ་རོསི་གིསགང་འབྱུང་མེན་མི་འཛུལ་སྤྱོད་འབད་ནི་གནས་སྡུད་དཔེ་ཚུ་ལེགས་སྐྱོང་འབད་མི་ཚུགས།"
 
-#: ../libgda/gda-data-proxy.c:1516
+#: ../libgda/gda-data-proxy.c:1514
 msgid "Modifications cancelled"
 msgstr "ལེགས་བཅོས་འབད་ནི་ལུ་ཆ་མེད་གཏང་ཡོདཔ།"
 
@@ -583,7 +583,7 @@ msgid "XML Tag below <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
 msgstr "ཨེགསི་ཨེམ་ཨེལ་ངོ་རྟགས་འོག་ལུ་ <GDA_DICT_CONSTRAINTS> is not <GDA_DICT_CONSTRAINT>"
 
 #: ../libgda/gda-dict-database.c:859
-#: ../libgda/gda-dict.c:1227
+#: ../libgda/gda-dict.c:1231
 msgid "Update already started!"
 msgstr "དུས་མཐུན་བཟོ་ནི་ཧེ་མ་ལས་འགོ་བཙུགས་ཡོདཔ!"
 
@@ -600,7 +600,7 @@ msgid "Connection is not opened!"
 msgstr "མཐུད་ལམ་ཁ་ཕྱེ་མེདཔ!"
 
 #: ../libgda/gda-dict-database.c:905
-#: ../libgda/gda-dict.c:1307
+#: ../libgda/gda-dict.c:1311
 msgid "Update stopped!"
 msgstr "དུས་མཐུན་བཟོ་ནི་བཀག་ཡོདཔ!"
 
@@ -657,11 +657,11 @@ msgstr "དོན་ལུ་དགོས་མཁོ་ཡོད་པའི་
 msgid "Aggregates analysis"
 msgstr "སྤྱི་བསྡོམས་དཔྱད་ཞིབ།"
 
-#: ../libgda/gda-dict-reg-aggregates.c:170
+#: ../libgda/gda-dict-reg-aggregates.c:171
 msgid "Can't get list of aggregates"
 msgstr "སྤྱི་བསྡོམས་ཀྱི་ཐོ་ཡིག་ཐོབ་མི་ཚུགས།"
 
-#: ../libgda/gda-dict-reg-aggregates.c:184
+#: ../libgda/gda-dict-reg-aggregates.c:185
 msgid "Schema for list of aggregates is wrong"
 msgstr "སྤྱི་བསྡོམས་ཚུ་གི་ཐོ་ཡིག་དོན་ལུ་ལས་འཆར་འདི་ཕྱི་འགྱུར།"
 
@@ -749,69 +749,69 @@ msgstr "ཨེགསི་ཨེམ་ཨེལ་ཡིག་སྣོད་འ
 msgid "Can't allocate memory for XML structure."
 msgstr "ཨེགསི་ཨེམ་ཨེལ་གཞི་བཀོད་དོན་ལུ་དྲན་ཚད་སྤྲོད་མི་ཚུགས།"
 
-#: ../libgda/gda-dict.c:1213
+#: ../libgda/gda-dict.c:1217
 msgid "No connection associated to the dictionary"
 msgstr "སྣོད་ཐོ་ལུ་མཐུད་ལམ་འབྲེལ་བ་ཡོདཔ་མེད།"
 
-#: ../libgda/gda-dict.c:1220
+#: ../libgda/gda-dict.c:1224
 msgid "Connection is closed"
 msgstr "མཐུད་ལམ་འདི་ཁ་བསྡམས་ཡོདཔ།"
 
-#: ../libgda/gda-dict.c:1387
+#: ../libgda/gda-dict.c:1391
 #, c-format
 msgid "Error creating directory %s"
 msgstr "སྣོད་ཐོ་གསར་བསྐྲུན་འབད་ནི་འཛོལ་བ་ %s"
 
-#: ../libgda/gda-dict.c:1639
+#: ../libgda/gda-dict.c:1643
 #, c-format
 msgid "Cannot register object type %s a second time"
 msgstr "དངོས་པོ་དབྱེ་བ་ %s ཚར་གཉིས་ཐོ་འགོད་འབད་མི་ཚུགས།"
 
-#: ../libgda/gda-dict.c:1643
+#: ../libgda/gda-dict.c:1647
 #, c-format
 msgid "Cannot register object type %s: no XML group tag specified"
 msgstr "དངོས་པོ་དབྱེ་བ་ཐོ་འགོད་འབད་མ་ཚུགསཔ་ %s: ཨེགསི་ཨེམ་ཨེལ་སདེ་ཚན་ངོ་རྟགས་གསལ་བཀོད་འབད་མེདཔ།"
 
-#: ../libgda/gda-dict.c:1710
+#: ../libgda/gda-dict.c:1714
 #, c-format
 msgid "Trying to declare an object when object class %s is not registered in the dictionary"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་སྣོད་ཐོ་ནང་ཐོ་འགོད་འབད་མེད་པའི་སྐབས %s དངོས་པོ་ཅིག་གསལ་བསྒྲགས་འབད་ནི་འབད་རྩོལ་བསྐྱེད་དོ།"
 
-#: ../libgda/gda-dict.c:1803
+#: ../libgda/gda-dict.c:1807
 #, c-format
 msgid "Trying to make an object assumed when object class %s is not registered in the dictionary"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་སྣོད་ཐོ་ནང་ཐོ་འགོད་འབད་མེད་པའི་སྐབས་ %s དངོས་པོ་ཚོད་དཔག་ཡོད་མི་ཅིག་བཟོ་ནི་འབད་རྩོལ་བསྐྱེད་དོ།"
 
-#: ../libgda/gda-dict.c:1818
+#: ../libgda/gda-dict.c:1822
 msgid "Trying to assume an object when object class is not registered in the dictionary"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་སྣོད་ཐོ་ནང་ཐོ་འགོད་འབད་མེད་པའི་སྐབས་དངོས་པོ་ཅིག་ཚོད་དཔག་ནི་ལུ་འབད་རྩོལ་བསྐྱེད་དོ།"
 
-#: ../libgda/gda-dict.c:1883
+#: ../libgda/gda-dict.c:1887
 #, c-format
 msgid "Trying to make an object unassumed when object class %s is not registered in the dictionary"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་སྣོད་ཐོ་ནང་ཐོ་འགོད་འབད་མེད་པའི་སྐབས་ %s དངོས་པོ་ཚོད་དཔག་ཡོད་མི་ཅིག་བཟོ་ནི་ལུ་འབད་རྩོལ་བསྐྱེད་དོ།"
 
-#: ../libgda/gda-dict.c:1938
+#: ../libgda/gda-dict.c:1942
 #, c-format
 msgid "Trying to make if an object is assumed when object class %s is not registered in the dictionary"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་སྣོད་ཐོ་ནང་ཐོ་འགོད་འབད་མེད་པའི་སྐབས་ %s དངོས་པོ་ཅིག་ཚོད་དཔག་ཡོད་པ་ཅིན་བཟོ་ནི་འབད་རྩོལ་བསྐྱེད་དོ།"
 
-#: ../libgda/gda-dict.c:1967
+#: ../libgda/gda-dict.c:1971
 #, c-format
 msgid "Trying to get a list of objects when object class %s is not registered in the dictionary"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་སྣོད་ཐོ་ནང་ཐོ་འགོད་འབད་མེད་པའི་སྐབས་ %s དངོས་པོ་ཚུ་གི་ཐོ་ཡིག་ཅིག་ལེན་ནི་འབད་རྩོལ་བསྐྱེད་དོ།"
 
-#: ../libgda/gda-dict.c:2001
+#: ../libgda/gda-dict.c:2005
 #, c-format
 msgid "Trying to get an object by name when object class %s is not registered in the dictionary"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་སྣོད་ཐོ་ནང་ཐོ་འགོད་འབད་མེད་པའི་སྐབས་ %s མིང་གིས་དངོས་པོ་ཅིག་ལེན་ནི་འབད་རྩོལ་བསྐྱེད་དོ།"
 
-#: ../libgda/gda-dict.c:2045
+#: ../libgda/gda-dict.c:2049
 #, c-format
 msgid "Trying to get an object by its XML Id when object class %s is not registered in the dictionary"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་སྣོད་ཐོ་ནང་ཐོ་འགོད་འབད་མེད་པའི་སྐབས་ %s འདིའི་ཨེགསི་ཨེམ་ཨེལ་ ཨའི་ཌི་ གིས་དངོས་པོ་ཅིག་ལེན་ནི་འབད་རྩོལ་བསྐྱེད་དོ།"
 
-#: ../libgda/gda-dict.c:2053
+#: ../libgda/gda-dict.c:2057
 msgid "Trying to get an object from its XML Id when object class does not implement GdaXmlStorage"
 msgstr "དངོས་པོ་དབྱེ་རིགས་འདི་ལུ་ཇི་ཌི་ཨེ་ཨེགསི་ཨེམ་ཨེལ་བསག་མཛོད་བསྟར་སྤྱོད་མ་འབད་བའི་སྐབས་འདིའི་ཨེགསི་ཨེམ་ཨེལ་ ཨའི་ཌི་ལས་དངོས་པོ་ཅིག་ལེན་ནི་འབད་རྩོལ་བསྐྱེད་དོ།"
 
@@ -970,7 +970,7 @@ msgstr "ཨེགསི་ཨེམ་ཨེལ་ངོ་རྟགས་མེ
 #: ../libgda/gda-query-field-all.c:635
 #: ../libgda/gda-query-field-field.c:949
 #: ../libgda/gda-query-field-func.c:825
-#: ../libgda/gda-query-field-value.c:1128
+#: ../libgda/gda-query-field-value.c:1146
 msgid "XML ID for a query field should be QUxxx:QFyyy where xxx and yyy are numbers"
 msgstr "ཨེགསི་ཨེགསི་ཨེསི་དང་ཝའི་ཝའི་ཝའི་དེ་ཚུ་ཨང་ཨིན་མི་ ཨེགསི་ཨེམ་ཨེལ་ ཨའི་ཌི་ འདྲི་དཔྱད་ས་སྒོ་ཅིག་གི་དོན་ལུ་ ཀིའུ་ཨེཕ་ཝའི་ཝའི་ཝའི་དགོཔ་ཨིན།"
 
@@ -1049,58 +1049,58 @@ msgstr "ལས་འགན་ག་དེ་སྦེ་ལྷག་སྟོན
 msgid "Non-activated function"
 msgstr "ཤུགས་ལྡན་མེན་པའི་ལས་འགན།"
 
-#: ../libgda/gda-query-field-value.c:1076
+#: ../libgda/gda-query-field-value.c:1094
 msgid "GdaDataModelQuery data model restricting GdaQueryFieldValue is not saved in the dictionary"
 msgstr "ཇི་ཌི་ཨུ་འདྲི་དཔྱད་ས་སྒོ་གནས་གོང་བཀག་དམ་འབད་མི་ཇི་ཌི་ཨེ་གནས་སྡུད་དཔེ་འདྲི་དཔྱད་གནས་སྡུད་དཔེ་འདི་སྣོད་ཐོ་ནང་སྲུངས་བཞག་མེདཔ།"
 
-#: ../libgda/gda-query-field-value.c:1115
+#: ../libgda/gda-query-field-value.c:1133
 msgid "XML Tag is not <gda_query_fval>"
 msgstr "ཨེགསི་ཨེམ་ཨེལ་ངོ་རྟགས་མེནམ <gda_query_fval>"
 
-#: ../libgda/gda-query-field-value.c:1188
+#: ../libgda/gda-query-field-value.c:1206
 #, c-format
 msgid "Can't interpret '%s' as a value"
 msgstr "གནས་གོང་བཟུམ་སྦེ་ '%s' ཁ་བསྒྱུར་འབད་མི་ཚུགས།"
 
-#: ../libgda/gda-query-field-value.c:1253
+#: ../libgda/gda-query-field-value.c:1271
 #, c-format
 msgid "Query's param sources has no data model at position %d"
 msgstr "འདྲིད་དཔྱད་ཀྱི་ཚད་བཟུང་འབྱུང་ཁུངས་དེ་ལུ་གནས་ས་ལུ་གནས་སྡུད་དཔེ་མེད། %d"
 
-#: ../libgda/gda-query-field-value.c:1260
+#: ../libgda/gda-query-field-value.c:1278
 msgid "'restrict' attribute has a wrong format"
 msgstr "'restrict' ཁྱད་ཆོས་ལུ་རྩ་སྒྲིག་ཕྱི་འགྱུར་ཅིག་ཨིན།"
 
-#: ../libgda/gda-query-field-value.c:1271
+#: ../libgda/gda-query-field-value.c:1289
 #, c-format
 msgid "Feature not yet implemented, see %s(), line %d"
 msgstr "ཁྱད་རྣམ་ད་ལྟོ་ཚུན་ཚོད་བསྟར་སྤྱོད་འབད་མེདཔ་ གྱལ་ནང་ %s(), བལྟ་ %d"
 
-#: ../libgda/gda-query-field-value.c:1297
+#: ../libgda/gda-query-field-value.c:1315
 msgid "Missing required g_type for <gda_query_fval>"
 msgstr "དོན་ལུ་དགོས་མཁོ་ཡོད་པའི་ཇི་དབྱེ་བ་བརླག་སྟོར་ཞུགས་ཡོདཔ(_t) <gda_query_fval>"
 
-#: ../libgda/gda-query-field-value.c:1307
+#: ../libgda/gda-query-field-value.c:1325
 #, c-format
 msgid "Value field '%s' does not have a value!"
 msgstr "གནས་གོང་ས་སྒོ་ལུ་ '%s' གནས་གོང་ཅིག་མེད!"
 
-#: ../libgda/gda-query-field-value.c:1401
-#: ../libgda/gda-query-field-value.c:1467
+#: ../libgda/gda-query-field-value.c:1419
+#: ../libgda/gda-query-field-value.c:1485
 msgid "Default value requested"
 msgstr "སྔོན་སྒྲིག་གནས་གོང་ཞུ་བ་འབད་ཡོདཔ།"
 
-#: ../libgda/gda-query-field-value.c:1425
+#: ../libgda/gda-query-field-value.c:1443
 #, c-format
 msgid "Could not find GdaParameter in context for value field '%s'"
 msgstr "གནས་གོང་ས་སྒོ་དོན་ལུ་སྐབས་དོན་ནང་ཇི་ཌི་ཨེ་ཚད་བཟུང་འཚོལ་མ་ཐོབ་ '%s'"
 
-#: ../libgda/gda-query-field-value.c:1443
+#: ../libgda/gda-query-field-value.c:1461
 #, c-format
 msgid "Invalid parameter '%s' (value: %s)"
 msgstr "ནུས་མེད་ཚད་བཟུང་ '%s' (value: %s)"
 
-#: ../libgda/gda-query-field-value.c:1496
+#: ../libgda/gda-query-field-value.c:1523
 msgid "No specified value"
 msgstr "གསལ་བཀོད་འབད་ཡོད་མི་གནས་གོང་མེདཔ།"
 
@@ -1240,26 +1240,29 @@ msgstr "ངེས་མེད་ས་སྒོ '%s'"
 msgid "Ambiguous field '*'"
 msgstr "ངེས་མེད་ས་སྒོ '*'"
 
-#: ../libgda/gda-query-parsing.c:1541
+#: ../libgda/gda-query-parsing.c:1544
+#: ../libgda/gda-query-parsing.c:1547
 #, c-format
-msgid "Unknown data type '%s'"
-msgstr "མ་ཤེས་པའི་གནས་སྡུད་དབྱེ་བ '%s'"
+msgid "Unknown data type '%s', using G_TYPE_STRING"
+msgstr "མ་ཤེས་པའི་གནས་སྡུད་དབྱེ་བ '%s' G_TYPE_STRING ལག་ལེན་འཐབ་ཐོག་ལས་ "
 
-#: ../libgda/gda-query-parsing.c:1555
-msgid "Data type must be specified when no default value is provided"
-msgstr "སྔོན་སྒྲིག་གནས་གོང་འདི་བྱིན་མེད་པའི་སྐབས་གནས་སྡུད་དབྱེ་བ་འདི་གསལ་བཀོད་འབད་དགོཔ་ཨིན།"
+#: ../libgda/gda-query-parsing.c:1562
+#: ../libgda/gda-query-parsing.c:1564
+msgid "Data type must be specified when no default value is provided, using G_TYPE_STRING"
+msgstr "གནད་སྡུད་འདི་ G_TYPE_STRING ལག་ལེན་འཐབ་པའི་སྒོ་ལས་ སྔོན་སྒྲིག་བེ་ལུ་མ་བྱིན་པའི་སྐབས་ལས་ གསལ་བཀོད་འབད་དགོ"
 
-#: ../libgda/gda-query-parsing.c:1634
+#: ../libgda/gda-query-parsing.c:1643
 #, c-format
 msgid "Could not convert data from %s to %s for DBMS type %s, forget about the DBMS type"
 msgstr "ལས་ %s ལུ་ %s ཌི་བི་ཨེམ་ཨེསི་དབྱེ་བ་དོན་ལུ་གནས་སྡུད་གཞུ་བསྒྱུར་འབད་མ་ཚུགས %s, ཌི་བི་ཨེམ་ཨེསི་དབྱེ་བ་འདིའི་སྐོར་ལས་ཕར་རང་བཞག"
 
-#: ../libgda/gda-query-parsing.c:1657
+#: ../libgda/gda-query-parsing.c:1667
+#: ../libgda/gda-query-parsing.c:1669
 #, c-format
 msgid "Value '%s' can't be converted to a known type"
 msgstr "གནས་གོང་ '%s' འདི་ཤེས་པའི་དབྱེ་བ་ཅིག་ལུ་གཞི་བསྒྱུར་འབད་མི་ཚུགས།"
 
-#: ../libgda/gda-query-parsing.c:1819
+#: ../libgda/gda-query-parsing.c:1833
 msgid "Can't set aggregate or function's arguments"
 msgstr "སྤྱི་བསྡོམས་ཡང་ན་ལས་འགན་གྱི་སྒྲུབ་རྟགས་ཚུ་གཞི་སྒྲིག་འབད་མི་ཚུགས།"
 
@@ -1292,68 +1295,72 @@ msgstr "ནོཌི་ལས་གནས་སྡུད་ <gda_query_target> �
 msgid "Don't know how to render target"
 msgstr "དམིགས་གཏད་ག་དེ་ལྷག་སྟོན་འབད་ནི་ཨིན་ན་མ་ཤེས།"
 
-#: ../libgda/gda-query.c:964
+#: ../libgda/gda-query.c:961
 msgid "Can't modify the structure of a non-parsed SQL query"
 msgstr "ཨེསི་ཀིའུ་ཨེལ་འདྲི་དཔྱད་མིང་དཔྱད་མེན་མི་གི་གཞི་བཀོད་འདི་ལེགས་བཅོས་འབད་མི་ཚུགས།"
 
-#: ../libgda/gda-query.c:1182
+#: ../libgda/gda-query.c:1179
 msgid "Select"
 msgstr "སེལ་འཐུ།"
 
-#: ../libgda/gda-query.c:1184
+#: ../libgda/gda-query.c:1181
 msgid "Insert"
 msgstr "བཙུགས།"
 
-#: ../libgda/gda-query.c:1186
+#: ../libgda/gda-query.c:1183
 msgid "Update"
 msgstr "དུས་མཐུན་བཟོ་ནི།"
 
-#: ../libgda/gda-query.c:1188
+#: ../libgda/gda-query.c:1185
 msgid "Delete"
 msgstr "བཏོན་གཏང་།"
 
-#: ../libgda/gda-query.c:1190
+#: ../libgda/gda-query.c:1187
 msgid "Select (union)"
 msgstr "སེལ་འཐུ་(འདུས་ཚོགས)"
 
-#: ../libgda/gda-query.c:1192
+#: ../libgda/gda-query.c:1189
 msgid "Select (intersection)"
 msgstr "སེལ་འཐུ་(ཕན་ཚུན་འབྲེལ་བ།)"
 
-#: ../libgda/gda-query.c:1194
+#: ../libgda/gda-query.c:1191
 msgid "Select (exception)"
 msgstr "སེལ་འཐུ་ (དམིགས་བསལ་)"
 
-#: ../libgda/gda-query.c:1196
+#: ../libgda/gda-query.c:1193
 msgid "SQL text"
 msgstr "ཨེསི་ཀིའུ་ཚིག་ཡིག"
 
-#: ../libgda/gda-query.c:1405
+#: ../libgda/gda-query.c:1400
 #, c-format
 msgid "Error during query parsing (%s)"
 msgstr "འདྲ་དཔྱད་མིང་དཔྱད་འབད་ནི་སྐབས་འཛོལ་བ་ (%s)"
 
-#: ../libgda/gda-query.c:1918
+#: ../libgda/gda-query.c:1443
+msgid "No valid type specified for parameter, using gchararray"
+msgstr "ཚད་བཟུང་གི་དོན་ལུ་ gchararray ལག་ལེན་འཐབ་པའི་ཐོག་ལུ་ ནུས་ལྡན་དབྱེ་བ་གསལ་བཀོད་མ་འབད་བས་"
+
+#: ../libgda/gda-query.c:1935
 msgid "The query represented by a target must be a sub-query of the current query"
 msgstr "དམིགས་གཏད་ཅིག་གིས་ཁྱད་ཚབ་འབད་ཡོད་མི་འདྲི་དཔྱད་འདི་ད་ལྟོའི་འདྲི་དཔྱད་ཀྱི་འདྲི་དཔྱད་འོགམ་ཅིག་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-query.c:1933
+#: ../libgda/gda-query.c:1950
 msgid "Queries which update data can only have one target"
 msgstr "གནས་སྡུད་དུས་མཐུན་བཟོ་མི་འདྲི་དཔྱད་ཚུ་ལུ་རྐྱངམ་ཅིག་དམིགས་གཏད་གཅིག་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-query.c:1943
+#: ../libgda/gda-query.c:1960
 msgid "Aggregation queries may only have sub-queries, not targets."
 msgstr "སྤྱི་བསྡོམས་འདྲི་དཔྱད་ཚུ་ལུ་དམིགས་གཏད་ཚུ་མེད་པར་འདྲི་དཔྱད་འོག་མ་ཚུ་རྐྱངམ་ཅིག་ཡོདཔ་འོང་།"
 
-#: ../libgda/gda-query.c:2768
+#: ../libgda/gda-query.c:2785
 msgid "No connection associated to query's dictionary"
 msgstr "འདྲི་དཔྱད་སྣོད་ཐོ་ལུ་འབྲེལ་བ་ཡོད་པའི་མཐུད་ལམ་མེད།"
 
-#: ../libgda/gda-query.c:2773
+#: ../libgda/gda-query.c:2790
 msgid "Connection associated to query's dictionary is closed"
 msgstr "མཐུད་ལམ་འབྲེལ་བ་ཡོད་མི་འདྲི་དཔྱད་ཀྱི་སྣོད་ཐོ་འདི་ཁ་བསྡམས་ཡོདཔ།"
 
-#: ../libgda/gda-query.c:2975
+#: ../libgda/gda-query.c:2992
 #: ../testing/gda-test-model-query.c:143
 #: ../testing/gda-test-model-query.c:170
 #: ../testing/gda-test-models.c:152
@@ -1376,125 +1383,125 @@ msgstr "མཐུད་ལམ་འབྲེལ་བ་ཡོད་མི་འ
 msgid "Unknown error"
 msgstr "འཛོལ་བ་མ་ཤེསཔ།"
 
-#: ../libgda/gda-query.c:3509
+#: ../libgda/gda-query.c:3526
 msgid "While adding to a GdaQuery: Blobs are not supported by the connection's provider and may be rendered incorrectly"
 msgstr "ཇི་ཌི་ཨེ་འདྲི་དཔྱད་ཅིག་ལུ་ཁ་སྐོང་འབད་བའི་སྐབས་ ཐིགས་པ་ཚུ་མཐུད་ལམ་གྱི་སྤེལ་མི་གིས་རྒྱབ་སྐྱོར་མ་འབད་བར་ཡོདཔ་དང་ཡང་ན་བདེན་མེད་སྦེ་ལྷག་སྟོན་འབད་ཡོདཔ་འོང་།"
 
-#: ../libgda/gda-query.c:3515
+#: ../libgda/gda-query.c:3532
 #, c-format
 msgid "While adding to a GdaQuery: field type '%s' is not supported by the connection's provider and may be rendered incorrectly"
 msgstr "ཇི་ཌི་ཨེ་འདྲི་དཔྱད་ཅིག་ཁ་སྐོང་འབད་བའི་སྐབས་ ས་སྒོ་དབྱེ་བ་འདི་ '%s' མཐུད་ལམ་སྤེལ་མི་གིས་རྒྱབ་སྐྱོར་མ་འབད་བར་ཡོདཔ་དང་ཡང་ན་བེདན་མེད་སྦེ་ལྷག་སྟོན་འབད་ཡོདཔ་འོང་།"
 
-#: ../libgda/gda-query.c:4170
+#: ../libgda/gda-query.c:4187
 msgid "XML Tag is not <gda_query>"
 msgstr "ཨེགསི་ཨེམ་ཨེལ་ངོ་རྟགས་མེདཔ <gda_query>"
 
-#: ../libgda/gda-query.c:4186
+#: ../libgda/gda-query.c:4203
 msgid "XML ID for a query should be QUxxx where xxx is a number"
 msgstr "ཨེགསི་ཨེགསི་ཨེགསི་གི་ཨང་ཅིག་ཡོད་ས་གི་ འདྲི་དཔྱད་ཅིག་གི་དོན་ལུ་ཨེགསི་ཨེམ་ཨེལ་ ཨའི་ཌི་འདི་ ཀིའུ་ཡུ་ཨེགསི་ཨེགསི་ཨེགསི་ཡོད་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-query.c:4241
+#: ../libgda/gda-query.c:4258
 msgid "First query of <gda_model_query> must be a SELECT query"
 msgstr "གི་འདྲི་དཔྱད་དང་པམ་འདི་ <gda_model_query> སེལ་འཐུ་འདྲི་དཔྱད་ཅིག་དགོཔ་ཨིན།"
 
-#: ../libgda/gda-query.c:4333
+#: ../libgda/gda-query.c:4350
 msgid "Missing both attributes 'entity_ref' and 'table_name' from <gda_query_target>"
 msgstr "ལས་ 'entity_ref' དང་ 'table_name' ཁྱད་ཆོས་གཉིས་ཆ་རང་བརླག་སྟོར་ཞུགས་ཡོདཔ <gda_query_target>"
 
-#: ../libgda/gda-query.c:4357
+#: ../libgda/gda-query.c:4374
 #, c-format
 msgid "Can't find field '%s'"
 msgstr "ས་སྒོ་འཚོལ་མི་ཚུགས '%s'"
 
-#: ../libgda/gda-query.c:4476
+#: ../libgda/gda-query.c:4493
 msgid "Problem loading <gda_query>"
 msgstr "དཀའ་ངལ་མངོན་གསལ་འབད་དོ <gda_query>"
 
-#: ../libgda/gda-query.c:4649
+#: ../libgda/gda-query.c:4666
 msgid "More than two sub-queries for an EXCEPT query"
 msgstr "དམིགས་བསལ་འདྲི་དཔྱད་ཅིག་གི་དོན་ལུ་འདྲི་དཔྱད་འོག་མ་གཉིས་ལས་མངམ།"
 
-#: ../libgda/gda-query.c:4666
-msgid "Query without any SQL code"
-msgstr "ཨེསི་ཀིའུ་ཨེལ་ཨང་རྟགས་གང་རུང་མེདཔ་སྦེ་འདྲི་དཔྱད།"
+#: ../libgda/gda-query.c:4683
+msgid "Empty query"
+msgstr "འདྲི་དཔྱད་སྟོངམ་"
 
-#: ../libgda/gda-query.c:4721
+#: ../libgda/gda-query.c:4738
 #, c-format
 msgid "Invalid parameter '%s'"
 msgstr "ནུས་མེད་ཚཐ་བཟུང་ '%s'"
 
-#: ../libgda/gda-query.c:4727
+#: ../libgda/gda-query.c:4744
 msgid "Missing parameters"
 msgstr "ཚད་བཟུང་ཚུ་བརླག་སྟོར་ཞུགས་ཡོདཔ།"
 
-#: ../libgda/gda-query.c:4801
+#: ../libgda/gda-query.c:4818
 #, c-format
 msgid "Query %s is not a selection query"
 msgstr "འདྲི་དཔྱད་ %s འདི་སེལ་འཐུ་འདྲི་དཔྱད་ཅིག་མེན།"
 
-#: ../libgda/gda-query.c:4833
+#: ../libgda/gda-query.c:4850
 msgid "No target defined to apply modifications"
 msgstr "ལེགས་བཅོས་འབད་ནི་ཚུ་འཇུག་སྤྱོད་འབད་ནི་ལུ་དམིགས་གཏད་ངེས་འཛིན་འབད་མེད།"
 
-#: ../libgda/gda-query.c:4841
+#: ../libgda/gda-query.c:4858
 msgid "More than one target defined to apply modifications"
 msgstr "ལེགས་བཅོས་འབད་ནི་ཚུ་འཇུག་སྤྱོད་འབད་ནི་ལུ་དམིགས་གཏད་ངེས་འཛིན་གཅིག་ལས་མངམ་ཡོདཔ།"
 
-#: ../libgda/gda-query.c:4852
+#: ../libgda/gda-query.c:4869
 #, c-format
 msgid "Entity %s is not writable"
 msgstr "ཐོ་འགོད་ %s འདི་འབྲི་བཏུབ་མི་མེན།"
 
-#: ../libgda/gda-query.c:4871
+#: ../libgda/gda-query.c:4888
 msgid "Modification query field has incompatible type"
 msgstr "ལེགས་བཅོས་འདྲི་དཔྱད་ས་སྒོ་ལུ་མཐུན་འགྱུར་མེད་པའི་དབྱེ་བ་ཡོད།"
 
-#: ../libgda/gda-query.c:4890
+#: ../libgda/gda-query.c:4907
 msgid "An insertion query can only have one sub-query"
 msgstr "འདྲི་དཔྱད་བཙུགས་ནི་ཅིག་ལུ་འདྲི་དཔྱད་འོག་མ་གཅིག་རྐྱངམ་ཅིག་ཡོད།"
 
-#: ../libgda/gda-query.c:4898
+#: ../libgda/gda-query.c:4915
 msgid "Insertion query fields incompatible with sub-query's fields"
 msgstr "འདྲི་དཔྱད་བཙུགས་ནི་ས་སྒོ་ཚུ་འདྲི་དཔྱད་འོགམ་གི་ས་སྒོ་ཚུ་དང་གཅིག་ཁར་མཐུན་འགྱུར་མེདཔ་ཨིན།"
 
-#: ../libgda/gda-query.c:4916
+#: ../libgda/gda-query.c:4933
 msgid "Insertion query field has incompatible value assignment"
 msgstr "འདྲི་དཔྱད་བཙུགས་ནི་ས་སྒོ་ལུ་མཐུན་འགྱུར་མེད་པའི་གནས་གོང་ལས་འགུལ་ཡོདཔ་ཨིན།"
 
-#: ../libgda/gda-query.c:4931
+#: ../libgda/gda-query.c:4948
 msgid "Insertion query can't have any conditions"
 msgstr "འདྲི་དཔྱད་བཙུགས་ནི་ལུ་གནས་སྟངས་ཚུ་གང་རུང་མེད།"
 
-#: ../libgda/gda-query.c:4946
+#: ../libgda/gda-query.c:4963
 msgid "Deletion query can't have any visible field"
 msgstr "བཏོན་གཏང་འདྲི་དཔྱད་ལུ་མཐོང་ཚུགས་པའི་ས་སྒོ་གང་རུང་མེད།"
 
-#: ../libgda/gda-query.c:4966
+#: ../libgda/gda-query.c:4983
 msgid "Update query field has incompatible value assignment"
 msgstr "དུས་མཐུན་བཟོ་ནི་འདྲི་དཔྱད་ས་སྒོ་ལུ་མཐུན་འགྱུར་མེད་པའི་གནས་གོང་ལས་འགུལ་ཡོདཔ་ཨིན།"
 
-#: ../libgda/gda-query.c:4995
+#: ../libgda/gda-query.c:5012
 msgid "An aggregate type (UNION, etc) of query can't have any targets"
 msgstr "འདྲི་དཔྱད་ཀྱི་སྤྱི་བསྡོམས་དབྱེ་བ་ཅིག་(འདུས་ཚོགས་ ལ་སོགས་པ་)ལུ་དམིགས་གཏད་ཚུ་གང་རུང་མེད།"
 
-#: ../libgda/gda-query.c:5003
+#: ../libgda/gda-query.c:5020
 msgid "An aggregate type (UNION, etc) of query can't have any conditions"
 msgstr "འདྲི་དཔྱད་ཀྱི་སྤྱི་བསྡོམས་དབྱེ་བ་ཅིག་ལུ་(འདུས་ཚོགས་ལ་སོགས་པ་)གནས་སྟངས་ཚུ་གང་རུང་མི་འོང་།"
 
-#: ../libgda/gda-query.c:5515
+#: ../libgda/gda-query.c:5532
 msgid "Can't correctly print the list of columns to use."
 msgstr "ལག་ལེན་འཐབ་ནི་ཀེར་ཐིག་ཚུ་གི་ཐོ་ཡིག་འདི་ངེས་བདེན་སྦེ་དཔར་བསྐྲུན་འབད་མ་བཏུབ།"
 
-#: ../libgda/gda-query.c:5665
+#: ../libgda/gda-query.c:5682
 msgid "Missing values"
 msgstr "གནས་གོང་ཚུ་བརླག་སྟོར་ཞུགས་ཡོདཔ།"
 
-#: ../libgda/gda-query.c:5915
+#: ../libgda/gda-query.c:5936
 #, c-format
 msgid "Query '%s'"
 msgstr "འདྲི་དཔྱད་ '%s'"
 
-#: ../libgda/gda-query.c:5917
+#: ../libgda/gda-query.c:5938
 msgid "Unnamed Query"
 msgstr "མིང་མ་བཏགས་མི་འདྲི་དཔྱད།"
 
@@ -1990,23 +1997,23 @@ msgstr "ནང་འཁོད་དབྱེ་བ།"
 msgid "Gda type representation"
 msgstr "ཇི་ཌི་ཨེ་དབྱེ་བ་ཁྱད་ཚབ།"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:60
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:58
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:53
-#: ../libsql/sql_parser.c:61
+#: ../libsql/sql_parser.c:59
 #, c-format
 msgid "Parse error near `%s'"
 msgstr "མིང་དཔྱད་འབད་ནི་འཛོལ་བ་ཉེ་འདབས་ `%s'"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:62
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:60
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:56
-#: ../libsql/sql_parser.c:63
+#: ../libsql/sql_parser.c:61
 #, c-format
 msgid "Syntax error near `%s'"
 msgstr "ཚིག་སྦྱོར་འཛོལ་བ་སྦོ་ལོག་ཁར `%s'"
 
-#: ../libgda/sql-delimiter/gda-sql-delimiter.c:150
+#: ../libgda/sql-delimiter/gda-sql-delimiter.c:151
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:85
-#: ../libsql/sql_parser.c:387
+#: ../libsql/sql_parser.c:386
 msgid "Empty query to parse"
 msgstr "མིང་དཔྱད་འབད་ནི་ལུ་འདྲི་དཔྱད་སྟོངམ།"
 
@@ -2464,23 +2471,23 @@ msgstr "ནུས་མེད་ ཨེལ་ཌི་ཨེ་པི་ ལེ�
 msgid "Row number out of range"
 msgstr "ཁྱབ་ཚད་ཀྱི་གྲལ་ཐིག་ཨང་ཕྱི་ཁ།"
 
-#: ../providers/ldap/gda-ldap-recordset.c:283
-#: ../providers/msql/gda-msql-recordset.c:203
+#: ../providers/ldap/gda-ldap-recordset.c:286
+#: ../providers/msql/gda-msql-recordset.c:206
 #: ../providers/mysql/gda-mysql-recordset.c:431
-#: ../providers/oracle/gda-oracle-recordset.c:491
+#: ../providers/oracle/gda-oracle-recordset.c:494
 #: ../providers/postgres/gda-postgres-recordset.c:240
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "ཀེར་ཐིག་ཚུ་གི་ནུས་མེད་ཨང་ཅིག་དང་གཅིག་ཁར་གྲལ་ཐིག་ཅིག་བཙུགས་ནི་དཔའ་བཅམ།"
 
-#: ../providers/ldap/gda-ldap-recordset.c:298
-#: ../providers/msql/gda-msql-recordset.c:215
-#: ../providers/oracle/gda-oracle-recordset.c:506
+#: ../providers/ldap/gda-ldap-recordset.c:301
+#: ../providers/msql/gda-msql-recordset.c:218
+#: ../providers/oracle/gda-oracle-recordset.c:509
 msgid "Could not retrieve column's information"
 msgstr "ཀེར་ཐིག་གི་བརྡ་དོན་རྒྱབ་ལོག་མ་ཚུགས།"
 
-#: ../providers/ldap/gda-ldap-recordset.c:316
-#: ../providers/msql/gda-msql-recordset.c:230
-#: ../providers/oracle/gda-oracle-recordset.c:524
+#: ../providers/ldap/gda-ldap-recordset.c:319
+#: ../providers/msql/gda-msql-recordset.c:233
+#: ../providers/oracle/gda-oracle-recordset.c:527
 msgid "Could not retrieve column's value"
 msgstr "ཀེར་ཐིག་གི་གནས་གོང་རྒྱབ་ལོག་མ་ཚུགས།"
 
@@ -2525,82 +2532,82 @@ msgstr "ཨོལ་ཌི་ཨེ་པི་སྣོད་ཐོ་དོན
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr "མཐུད་ལམ་ཡིག་རྒྱུན་ནང་གནས་སྡུད་གཞི་རྟེན་ ཡིག་སྣོད་མིང་ཅིག་གསལ་བཀོད་འབད་དགོཔ་ཨིན།"
 
-#: ../providers/mdb/gda-mdb-provider.c:236
+#: ../providers/mdb/gda-mdb-provider.c:240
 #: ../providers/xbase/gda-xbase-provider.c:226
 #, c-format
 msgid "Could not open file %s"
 msgstr "ཡིག་སྣོད་ཁ་ཕྱེ་མ་ཚུགས %s"
 
-#: ../providers/mdb/gda-mdb-provider.c:260
-#: ../providers/mdb/gda-mdb-provider.c:290
-#: ../providers/mdb/gda-mdb-provider.c:312
-#: ../providers/mdb/gda-mdb-provider.c:346
-#: ../providers/mdb/gda-mdb-provider.c:716
-#: ../providers/mdb/gda-mdb-provider.c:753
+#: ../providers/mdb/gda-mdb-provider.c:264
+#: ../providers/mdb/gda-mdb-provider.c:294
+#: ../providers/mdb/gda-mdb-provider.c:316
+#: ../providers/mdb/gda-mdb-provider.c:350
+#: ../providers/mdb/gda-mdb-provider.c:720
+#: ../providers/mdb/gda-mdb-provider.c:757
 msgid "Invalid MDB handle"
 msgstr "ནུས་མེད་ཨེམ་ཌི་བི་ལེགས་སྐྱོང་པ།"
 
-#: ../providers/mdb/gda-mdb-provider.c:684
+#: ../providers/mdb/gda-mdb-provider.c:688
 msgid "Boolean type"
 msgstr "བུ་ལིན་དབྱེ་བ།"
 
-#: ../providers/mdb/gda-mdb-provider.c:685
+#: ../providers/mdb/gda-mdb-provider.c:689
 msgid "1-byte integers"
 msgstr "ཧྲིལ་ཨང་བཱའིཊི་ -༡"
 
-#: ../providers/mdb/gda-mdb-provider.c:686
+#: ../providers/mdb/gda-mdb-provider.c:690
 msgid "32-bit integers"
 msgstr "ཧྲིལ་ཨང་ བཱའིཊི་-༣༢"
 
-#: ../providers/mdb/gda-mdb-provider.c:687
+#: ../providers/mdb/gda-mdb-provider.c:691
 msgid "64-bit integers"
 msgstr "ཧྲིལ་ཨང་ བིཊི་-༦༤"
 
-#: ../providers/mdb/gda-mdb-provider.c:688
+#: ../providers/mdb/gda-mdb-provider.c:692
 msgid "Money amounts"
 msgstr "དངུལ་བསྡོམས་ཚུ།"
 
-#: ../providers/mdb/gda-mdb-provider.c:689
+#: ../providers/mdb/gda-mdb-provider.c:693
 msgid "Single precision values"
 msgstr "གནས་གོང་རྐྱང་པ་ཀྲིག་ཀྲི་ཚུ།"
 
-#: ../providers/mdb/gda-mdb-provider.c:690
+#: ../providers/mdb/gda-mdb-provider.c:694
 msgid "Double precision values"
 msgstr "གནས་གོང་གཉིས་ལྡན་ཀྲིག་ཀྲི་ཚུ།"
 
-#: ../providers/mdb/gda-mdb-provider.c:691
+#: ../providers/mdb/gda-mdb-provider.c:695
 msgid "Date/time value"
 msgstr "ཚོས་གྲངས/དུས་ཚོད་གནས་གོང་།"
 
-#: ../providers/mdb/gda-mdb-provider.c:692
+#: ../providers/mdb/gda-mdb-provider.c:696
 msgid "Character strings"
 msgstr "ཡིག་འབྲུའི་ཡིག་རྒྱུན་ཚུ།"
 
-#: ../providers/mdb/gda-mdb-provider.c:693
+#: ../providers/mdb/gda-mdb-provider.c:697
 msgid "OLE object"
 msgstr "ཨོ་ཨེལ་ཨི་དོས་པོ།"
 
-#: ../providers/mdb/gda-mdb-provider.c:694
+#: ../providers/mdb/gda-mdb-provider.c:698
 msgid "Variable length character strings"
 msgstr "འགྱུར་ཅན་རིང་ཚད་ཡིག་འབྲུ་ཡིག་རྒྱུན་ཚུ།"
 
-#: ../providers/mdb/gda-mdb-provider.c:695
+#: ../providers/mdb/gda-mdb-provider.c:699
 msgid "Replication ID"
 msgstr "ངོ་འདྲ་ཨའི་ཌི།"
 
-#: ../providers/mdb/gda-mdb-provider.c:696
+#: ../providers/mdb/gda-mdb-provider.c:700
 msgid "Numeric"
 msgstr "ཨང་གྲངས་ཀྱི།"
 
 #. end unsafe
-#: ../providers/mdb/gda-mdb-provider.c:764
+#: ../providers/mdb/gda-mdb-provider.c:768
 #, c-format
 msgid "Could not parse '%s' command"
 msgstr "བརྡ་བཀོད་ '%s' མིང་དཔྱད་འབད་མ་ཚུགས།"
 
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
-#: ../providers/mdb/gda-mdb-provider.c:771
+#: ../providers/mdb/gda-mdb-provider.c:775
 #, c-format
 msgid "Got no result for '%s' command"
 msgstr "བརྡ་བཀོད་དོན་ལུ་ '%s' འགྲུབ་འབྲས་ཐོབ་མ་ཚུགསཔ།"
@@ -2633,7 +2640,7 @@ msgstr "ཨེམ་ཨེསི་ཀིའུ་ཨེལ་གནས་སྡ
 #: ../providers/msql/gda-msql-provider.c:322
 #: ../providers/msql/gda-msql-provider.c:535
 #: ../providers/msql/gda-msql-recordset.c:51
-#: ../providers/msql/gda-msql-recordset.c:341
+#: ../providers/msql/gda-msql-recordset.c:348
 msgid "Invalid mSQL handle"
 msgstr "ནུས་མེད་ཨེམ་ཨེསི་ཀིའུ་ཨེལ་ལེགས་སྐྱོང་པ།"
 
@@ -2715,8 +2722,8 @@ msgstr "ནུས་མེད་མའི་ཨེསི་ཀིའུ་ཨེ
 #: ../providers/oracle/gda-oracle-provider.c:904
 #: ../providers/postgres/gda-postgres-provider.c:869
 #: ../providers/postgres/gda-postgres-provider.c:894
-#: ../providers/sqlite/gda-sqlite-provider.c:633
-#: ../providers/sqlite/gda-sqlite-provider.c:658
+#: ../providers/sqlite/gda-sqlite-provider.c:654
+#: ../providers/sqlite/gda-sqlite-provider.c:679
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "སི་པེཀ་ཡིག་སྣོད་བརླག་སྟོར་ཞུགས་ཡོདཔ '%s'"
@@ -2728,7 +2735,7 @@ msgstr "སི་པེཀ་ཡིག་སྣོད་བརླག་སྟོ
 #: ../providers/oracle/gda-oracle-provider.c:1189
 #: ../providers/oracle/gda-oracle-provider.c:1251
 #: ../providers/postgres/gda-postgres-provider.c:1511
-#: ../providers/sqlite/gda-sqlite-provider.c:864
+#: ../providers/sqlite/gda-sqlite-provider.c:885
 msgid "Transactions are not supported in read-only mode"
 msgstr "ལྷག་ནི་རྐྱངམ་ཐབས་ལམ་ནང་སྤྲོད་ལེན་ཚུ་རྒྱབ་སྐྱོར་འབད་མེདཔ།"
 
@@ -3657,7 +3664,7 @@ msgstr "ཨོ་ཌི་བི་སི་མཐུད་ལམ་ཡིག་
 #: ../providers/oracle/gda-oracle-provider.c:1386
 #: ../providers/oracle/gda-oracle-recordset.c:196
 #: ../providers/oracle/gda-oracle-recordset.c:413
-#: ../providers/oracle/gda-oracle-recordset.c:615
+#: ../providers/oracle/gda-oracle-recordset.c:622
 #: ../providers/oracle/utils.c:522
 msgid "Invalid Oracle handle"
 msgstr "ནུས་མེད་ཨོ་རེ་ཀཱེལ་ལེགས་སྐྱོང་པ།"
@@ -4284,44 +4291,44 @@ msgstr "མཐུད་ལམ་ཡིག་རྒྱུན་རྩ་སྒྲ
 msgid "The DB_DIR part of the connection string must point to a valid directory"
 msgstr "མཐུད་ལམ་ཡིག་རྒྱུན་གྱི་ ཌི་བི་་ ཌི་ཨའི་ཨར་ ཡན་ལག་འདི་ནུས་ཅན་སྣོད་ཐོ་ཅིག་ལུ་དཔག་དགོཔ་ཨིན།"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:331
+#: ../providers/sqlite/gda-sqlite-provider.c:333
 msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "འགྲུབ་འབྲས་ཀཱལ་བེཀསི་ཨེསི་ཀིའུ་ཨེལ་ཨའི་ཊི་ཨི་གདམ་ཁ་སྟོངམ་བཏོན་མི་ཚུགས།(_r)(_c)"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:379
-#: ../providers/sqlite/gda-sqlite-provider.c:573
-#: ../providers/sqlite/gda-sqlite-provider.c:940
-#: ../providers/sqlite/gda-sqlite-provider.c:1343
+#: ../providers/sqlite/gda-sqlite-provider.c:381
+#: ../providers/sqlite/gda-sqlite-provider.c:594
+#: ../providers/sqlite/gda-sqlite-provider.c:961
+#: ../providers/sqlite/gda-sqlite-provider.c:1364
 msgid "Invalid SQLite handle"
 msgstr "ནུས་མེད་ཨེསི་ཀིའུ་ཨེལ་ཨའི་ཊི་ཨི་ལེགས་སྐྱོང་པ།"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:434
-#: ../providers/sqlite/gda-sqlite-provider.c:1158
-#: ../providers/sqlite/gda-sqlite-provider.c:1400
-#: ../providers/sqlite/gda-sqlite-provider.c:1436
-#: ../providers/sqlite/gda-sqlite-provider.c:1653
+#: ../providers/sqlite/gda-sqlite-provider.c:436
+#: ../providers/sqlite/gda-sqlite-provider.c:1179
+#: ../providers/sqlite/gda-sqlite-provider.c:1421
+#: ../providers/sqlite/gda-sqlite-provider.c:1457
+#: ../providers/sqlite/gda-sqlite-provider.c:1674
 msgid "Invalid SQLITE handle"
 msgstr "ནུས་མེད་ཨེསི་ཀིའུ་ཨེལ་ཨའི་ཊི་ཨི་ལེགས་སྐྱོང་པ།"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:591
+#: ../providers/sqlite/gda-sqlite-provider.c:612
 msgid "Only one database per connection is allowed"
 msgstr "མཐུད་ལམ་རེ་རེ་གནས་སྡུད་གཞི་རྟེན་གཅིག་རྐྱངམ་ཅིག་འབད་བཅུགཔ་ཨིན།"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1184
-#: ../providers/sqlite/gda-sqlite-provider.c:1683
+#: ../providers/sqlite/gda-sqlite-provider.c:1205
+#: ../providers/sqlite/gda-sqlite-provider.c:1704
 msgid "Can't execute PRAGMA table_info()"
 msgstr "པི་ཨར་ཨེ་ཇི་ཨེམ་ཨེ་ཐིག་ཁྲམ་བརྡ་དོན་()ལག་ལེན་འཐབ་མི་ཚུགས།(_i)"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1293
+#: ../providers/sqlite/gda-sqlite-provider.c:1314
 #, c-format
 msgid "Can't find table %s"
 msgstr "ཐིག་ཁྲམ་འཚོལ་མི་ཚུགས %s"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1462
+#: ../providers/sqlite/gda-sqlite-provider.c:1483
 msgid "Can't execute PRAGMA proc_list"
 msgstr "པི་ཨར་ཨེ་ཇི་ཨེམ་ཨེ་ལས་སྦྱོར་ཐོ་ཡིག་ལག་ལེན་འཐབ་མི་ཚུགས།"
 
-#: ../providers/sqlite/gda-sqlite-provider.c:1754
+#: ../providers/sqlite/gda-sqlite-provider.c:1775
 msgid "Can't execute PRAGMA foreign_key_list()"
 msgstr "པི་ཨར་ཨེ་ཇི་ཨེམ་ཨེ་ཕྱི་རྒྱལ་ལྡེ་མིག་ཐོ་ཡིག་ལག་ལེན་འཐབ་མི་ཚུགས།()(_k)(_l)"
 
@@ -4584,10 +4591,6 @@ msgstr "དབྱེ་བ་དོན་ལུ་གནས་སྡུད་ག
 #: ../providers/sybase/libmain.c:41
 msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "ཨེསི་ཝའི་གཞི་རྟེན་གནས་སྡུད་གཞི་རྟེན་ཚུ་གི་དོན་ལུ་ཇི་ཌི་ཨེ་སྤེལ་མི(ཨོ་པཱན་ཞབས་ཏོག་སྤྱོད་མི་ལག་ལེན་འཐབ་དེ)"
-
-#: ../providers/sybase/main.c:52
-msgid "Could not initiate Sybase component factory"
-msgstr "ཨེསི་ཝའི་གཞི་རྟེན་ཆ་ཤས་འཕྲུང་ཁང་འགོ་འབྱེད་འབད་མ་ཚུགས།"
 
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:6
 msgid "Enable Sybase operative mode"
@@ -5303,4 +5306,9 @@ msgstr "གནས་སྡུད་འབྱུང་ཁུངས་ཀྱི་
 #: ../tools/gda-list-config.c:121
 msgid "None provided"
 msgstr "ག་གིས་ཡང་བྱིན་མེདཔ།"
+
+#~ msgid "Query without any SQL code"
+#~ msgstr "ཨེསི་ཀིའུ་ཨེལ་ཨང་རྟགས་གང་རུང་མེདཔ་སྦེ་འདྲི་དཔྱད།"
+#~ msgid "Could not initiate Sybase component factory"
+#~ msgstr "ཨེསི་ཝའི་གཞི་རྟེན་ཆ་ཤས་འཕྲུང་ཁང་འགོ་འབྱེད་འབད་མ་ཚུགས།"
 
