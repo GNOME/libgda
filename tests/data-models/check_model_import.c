@@ -111,13 +111,21 @@ main (int argc, char **argv)
 	}
 	g_free (dirname);
 
-	while ((name = g_dir_read_name (dir))) {
-		if (g_str_has_suffix (name, ".xml")) {
-			g_print ("Tested: %s\n", name);
-			if (!do_test_load_file (name))
+	if (argc == 2) {
+		if (g_str_has_suffix (argv[1], ".xml")) {
+			g_print ("Tested: %s\n", argv[1]);
+			if (!do_test_load_file (argv[1]))
 				number_failed ++;
 		}
 	}
+	else 
+		while ((name = g_dir_read_name (dir))) {
+			if (g_str_has_suffix (name, ".xml")) {
+				g_print ("Tested: %s\n", name);
+				if (!do_test_load_file (name))
+					number_failed ++;
+			}
+		}
 	g_dir_close (dir);
 
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -151,6 +159,7 @@ do_test_load_file (const gchar *filename)
 	g_assert (g_file_get_contents (file, &contents, NULL, NULL));
 	if (strcmp (export, contents)) {
 #ifdef CHECK_EXTRA_INFO
+		g_print ("========== Imported data model ==========\n");
 		gda_data_model_dump (import, stdout);
 
 		g_warning ("Model exported as string differs from loaded data model:");

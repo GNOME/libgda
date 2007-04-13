@@ -238,7 +238,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 				     const gchar *username,
 				     const gchar *password)
 {
-	gchar *filename = NULL, *tmp;
+	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
 	gint errmsg;
 	SQLITEcnc *scnc;
@@ -253,49 +253,49 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	dbname = gda_quark_list_find (params, "DB_NAME");
 
 	if (!dirname || !dbname) {
-		const gchar *str;
+                const gchar *str;
 
-		str = gda_quark_list_find (params, "URI");
-		if (!str) {
-			gda_connection_add_event_string (cnc,
-							 _("The connection string must contain DB_DIR and DB_NAME values"));
-			return FALSE;
-		}
-		else {
-			gint len = strlen (str);
+                str = gda_quark_list_find (params, "URI");
+                if (!str) {
+                        gda_connection_add_event_string (cnc,
+                                                         _("The connection string must contain DB_DIR and DB_NAME values"));
+                        return FALSE;
+                }
+                else {
+                        gint len = strlen (str);
+			gint elen = strlen (FILE_EXTENSION);
 
-			if ((len > 4) && (str[len-1] == 'b') && (str[len-2] == 'd') && (str[len-3] == '.')) {
-				gchar *ptr;
+			if (g_str_has_suffix (str, FILE_EXTENSION)) {
+                                gchar *ptr;
 
-				dup = strdup (str);
-				dup [len-3] = 0;
-				ptr = dup + (len - 4);
-				while ((ptr >= dup) && (*ptr != '/'))
-					ptr--;
-				dbname = ptr;
-				if (*ptr == '/')
-					dbname ++;
+                                dup = strdup (str);
+                                dup [len-elen] = 0;
+                                for (ptr = dup + (len - elen - 1); (ptr >= dup) && (*ptr != G_DIR_SEPARATOR); ptr--);
+                                dbname = ptr;
+                                if (*ptr == G_DIR_SEPARATOR)
+                                        dbname ++;
 
-				if ((*ptr == '/') && (ptr > dup)) {
-					dirname = dup;
-					while ((ptr >= dup) && (*ptr != '/'))
-						ptr--;
-					*ptr = 0;
-				}
-			}
-			if (!dbname || !dirname) {
-				gda_connection_add_event_string (cnc,
-								 _("The connection string format has changed: replace URI with "
-								   "DB_DIR (the path to the database file) and DB_NAME "
-								   "(the database file without the '.db' at the end)."));
-				return FALSE;
-			}
-			else 
-				g_warning (_("The connection string format has changed: replace URI with "
-					     "DB_DIR (the path to the database file) and DB_NAME "
-					     "(the database file without the '.db' at the end)."));
-		}
-	}
+                                if ((*ptr == G_DIR_SEPARATOR) && (ptr > dup)) {
+                                        dirname = dup;
+                                        while ((ptr >= dup) && (*ptr != G_DIR_SEPARATOR))
+                                                ptr--;
+                                        *ptr = 0;
+                                }
+                        }
+                        if (!dbname || !dirname) {
+                                gda_connection_add_event_string (cnc,
+                                                                 _("The connection string format has changed: replace URI with "
+                                                                   "DB_DIR (the path to the database file) and DB_NAME "
+                                                                   "(the database file without the '%s' at the end)."), FILE_EXTENSION);
+				g_free (dup);
+                                return FALSE;
+                        }
+                        else
+                                g_warning (_("The connection string format has changed: replace URI with "
+                                             "DB_DIR (the path to the database file) and DB_NAME "
+                                             "(the database file without the '%s' at the end)."), FILE_EXTENSION);
+                }
+        }	
 
 	if (!g_file_test (dirname, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)) {
 		gda_connection_add_event_string (cnc,
@@ -305,10 +305,18 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
-	filename = g_build_filename (dirname, tmp, NULL);
+	/* try first without the file extension */
+	filename = g_build_filename (dirname, dbname, NULL);
+	if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
+		gchar *tmp;
+		g_free (filename);
+		tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+		filename = g_build_filename (dirname, tmp, NULL);
+		g_free (tmp);
+		
+	}
 	g_free (dup);
-	g_free (tmp);
+
 	scnc = g_new0 (SQLITEcnc, 1);
 
 	errmsg = sqlite3_open (filename, &scnc->connection);
@@ -646,10 +654,10 @@ gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection
         file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
         str = g_strdup_printf ("sqlite_specs_%s.xml", file);
         g_free (file);
-        file = g_build_filename (LIBGDA_DATA_DIR, str, NULL);
+        file = gda_server_provider_find_file (provider, LIBGDA_DATA_DIR, str);
         g_free (str);
 
-        if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+        if (! file) {
                 g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
                 return NULL;
         }
@@ -671,10 +679,10 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
         file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
         str = g_strdup_printf ("sqlite_specs_%s.xml", file);
         g_free (file);
-        file = g_build_filename (LIBGDA_DATA_DIR, str, NULL);
+        file = gda_server_provider_find_file (provider, LIBGDA_DATA_DIR, str);
         g_free (str);
 
-        if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+        if (! file) {
                 g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
                 return NULL;
         }

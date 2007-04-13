@@ -583,13 +583,16 @@ gda_server_operation_set_property (GObject *object,
 				xmlDoValidityCheckingDefaultValue = 1;
 				
 				/* replace the DTD with ours */
-				old_dtd = doc->intSubset;
-				doc->intSubset = gda_server_op_dtd;
+				if (gda_server_op_dtd) {
+					old_dtd = doc->intSubset;
+					doc->intSubset = gda_server_op_dtd;
+				}
 
-				if (! xmlValidateDocument (validc, doc)) {
+				if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
 					gchar *str;
 					
-					doc->intSubset = old_dtd;
+					if (gda_server_op_dtd)
+						doc->intSubset = old_dtd;
 					xmlFreeDoc (doc);
 					g_free (validc);
 					str = g_object_get_data (G_OBJECT (op), "xmlerror");
@@ -609,7 +612,8 @@ gda_server_operation_set_property (GObject *object,
 				
 				xmlDoValidityCheckingDefaultValue = xmlcheck;
 				g_free (validc);
-				doc->intSubset = old_dtd;
+				if (gda_server_op_dtd)
+					doc->intSubset = old_dtd;
 				op->priv->xml_spec_doc = doc;
 			}
 			else {

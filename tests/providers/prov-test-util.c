@@ -210,7 +210,7 @@ prov_test_setup_connection (GdaProviderInfo *prov_info, gboolean *params_provide
 	cnc_params = getenv (str);
 	g_free (str);
 	if (cnc_params) 
-		cnc_quark_list = gda_quark_list_new_from_string (db_params);
+		cnc_quark_list = gda_quark_list_new_from_string (cnc_params);
 	
 	if (db_quark_list || cnc_quark_list) {
 		Data1 data;

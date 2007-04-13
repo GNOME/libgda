@@ -39,6 +39,7 @@
 
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
 
+#define FILE_EXTENSION ".mdb"
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 #define OBJECT_DATA_MDB_HANDLE "GDA_Mdb_MdbHandle"
@@ -212,7 +213,10 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 				  const gchar *username,
 				  const gchar *password)
 {
-	const gchar *filename;
+	gchar *filename = NULL, *tmp;
+	const gchar *dirname = NULL, *dbname = NULL;
+	gchar *dup = NULL;
+
 	GdaMdbConnection *mdb_cnc;
 	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
 
@@ -220,13 +224,65 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* look for parameters */
-	filename = gda_quark_list_find (params, "FILENAME");
-	if (!filename) {
-		gda_connection_add_event_string (
-			cnc,
-			_("A database FILENAME must be specified in the connection_string"));
-		return FALSE;
-	}
+	dirname = gda_quark_list_find (params, "DB_DIR");
+	dbname = gda_quark_list_find (params, "DB_NAME");
+	
+	if (!dirname || !dbname) {
+                const gchar *str;
+
+                str = gda_quark_list_find (params, "FILENAME");
+                if (!str) {
+                        gda_connection_add_event_string (cnc,
+                                                         _("The connection string must contain DB_DIR and DB_NAME values"));
+                        return FALSE;
+                }
+                else {
+                        gint len = strlen (str);
+			gint elen = strlen (FILE_EXTENSION);
+
+			if (g_str_has_suffix (str, FILE_EXTENSION)) {
+                                gchar *ptr;
+
+                                dup = strdup (str);
+                                dup [len-elen] = 0;
+                                for (ptr = dup + (len - elen - 1); (ptr >= dup) && (*ptr != G_DIR_SEPARATOR); ptr--);
+                                dbname = ptr;
+                                if (*ptr == G_DIR_SEPARATOR)
+                                        dbname ++;
+
+                                if ((*ptr == G_DIR_SEPARATOR) && (ptr > dup)) {
+                                        dirname = dup;
+                                        while ((ptr >= dup) && (*ptr != G_DIR_SEPARATOR))
+                                                ptr--;
+                                        *ptr = 0;
+                                }
+                        }
+                        if (!dbname || !dirname) {
+                                gda_connection_add_event_string (cnc,
+                                                                 _("The connection string format has changed: replace FILENAME with "
+                                                                   "DB_DIR (the path to the database file) and DB_NAME "
+                                                                   "(the database file without the '%s' at the end)."), FILE_EXTENSION);
+				g_free (dup);
+                                return FALSE;
+                        }
+                        else
+                                g_warning (_("The connection string format has changed: replace FILENAME with "
+                                             "DB_DIR (the path to the database file) and DB_NAME "
+                                             "(the database file without the '%s' at the end)."), FILE_EXTENSION);
+                }
+        }
+
+	if (!g_file_test (dirname, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)) {
+                gda_connection_add_event_string (cnc,
+                                                 _("The DB_DIR part of the connection string must point "
+                                                   "to a valid directory"));
+                return FALSE;
+        }
+
+	tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+        filename = g_build_filename (dirname, tmp, NULL);
+	g_free (dup);
+	g_free (tmp);
 
 	mdb_cnc = g_new0 (GdaMdbConnection, 1);
 	mdb_cnc->cnc = cnc;

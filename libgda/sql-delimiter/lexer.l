@@ -15,10 +15,8 @@
 
 #include "parser.h"
 
-/* Remove this warning, because it breaks the build with -Werror: #warning "strings are limited to 2048 characters" */
-#define MAX_STR_CONST 2048
-static char string_buf[MAX_STR_CONST];
-static char *string_buf_ptr;
+static GString *gstring;
+
 %}
 
 %option noyywrap
@@ -44,52 +42,56 @@ static char *string_buf_ptr;
 <PSPEC>"nullok:"      	{return L_PNULLOK;}
 <PSPEC>[a-zA-Z0-9_\-\+]+    {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_WORD;}
 <PSPEC>[ \t\n\r]        {;}
-<PSPEC>\'		{string_buf_ptr = string_buf; BEGIN(PSTRING);}
-<PSPEC>\"		{string_buf_ptr = string_buf; BEGIN(PTEXTUAL);}
+<PSPEC>\'		{gstring = g_string_new (""); BEGIN(PSTRING);}
+<PSPEC>\"		{gstring = g_string_new (""); BEGIN(PTEXTUAL);}
 
-\'		{string_buf_ptr = string_buf; BEGIN(STRING);}
-<STRING,PSTRING>\\' {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
+\'		{gstring = g_string_new (""); BEGIN(STRING);}
+<STRING,PSTRING>\\' {g_string_append (gstring, "\\'");}
 <STRING>\'	{BEGIN(INITIAL);
-		 *string_buf_ptr = '\0';
-		 gda_delimiterlval.str = g_strdup_printf ("'%s'", string_buf);
+		 g_string_prepend_c (gstring, '\'');
+		 g_string_append_c (gstring, '\'');
+		 gda_delimiterlval.str = gstring->str;
+		 g_string_free (gstring, FALSE);
 		 return L_STRING;
 		}
 <PSTRING>\'     {BEGIN(PSPEC);
-                 *string_buf_ptr = '\0';
-                 gda_delimiterlval.str = g_strdup_printf ("'%s'", string_buf);
+		 g_string_prepend_c (gstring, '\'');
+                 g_string_append_c (gstring, '\'');
+                 gda_delimiterlval.str = gstring->str;
+		 g_string_free (gstring, FALSE);
                  return L_STRING;
                 }
-<STRING,PSTRING>\\n	{*string_buf_ptr++='\n';}
-<STRING,PSTRING>\\t	{*string_buf_ptr++='\t';}
-<STRING,PSTRING>\\r	{*string_buf_ptr++='\r';}
-<STRING,PSTRING>\\b	{*string_buf_ptr++='\b';}
-<STRING,PSTRING>\\f	{*string_buf_ptr++='\f';}
-<STRING,PSTRING>\\(.|\n) {*string_buf_ptr++=gda_delimitertext[0]; *string_buf_ptr++=gda_delimitertext[1];}
-<STRING,PSTRING>.	{*string_buf_ptr++=gda_delimitertext[0];}
+<STRING,PSTRING>\\n	{g_string_append_c (gstring, '\n');}
+<STRING,PSTRING>\\t	{g_string_append_c (gstring, '\t');}
+<STRING,PSTRING>\\r	{g_string_append_c (gstring, '\r');}
+<STRING,PSTRING>\\b	{g_string_append_c (gstring, '\b');}
+<STRING,PSTRING>\\f	{g_string_append_c (gstring, '\f');}
+<STRING,PSTRING>\\(.|\n) {g_string_append_c (gstring, gda_delimitertext[0]); g_string_append_c (gstring, gda_delimitertext[1]);}
+<STRING,PSTRING>.	{g_string_append_c (gstring, gda_delimitertext[0]);}
 <STRING,PSTRING><<EOF>> {
          		gda_delimitererror (_("unterminated string"));
 			BEGIN(INITIAL);
          		yyterminate();
          		}
 
-\"		{string_buf_ptr = string_buf; BEGIN(TEXTUAL);}
+\"		{gstring = g_string_new (""); BEGIN(TEXTUAL);}
 <TEXTUAL>\"     {BEGIN(INITIAL);
-                 *string_buf_ptr = '\0';
-                 gda_delimiterlval.str = g_strdup (string_buf);
+		 gda_delimiterlval.str = gstring->str;
+		 g_string_free (gstring, FALSE);
                  return L_TEXTUAL;
                 }
 <PTEXTUAL>\"    {BEGIN(PSPEC);
-                 *string_buf_ptr = '\0';
-                 gda_delimiterlval.str = g_strdup (string_buf);
+		 gda_delimiterlval.str = gstring->str;
+                 g_string_free (gstring, FALSE);
                  return L_TEXTUAL;
                 }
-<TEXTUAL,PTEXTUAL>\\n     {*string_buf_ptr++='\n';}
-<TEXTUAL,PTEXTUAL>\\t     {*string_buf_ptr++='\t';}
-<TEXTUAL,PTEXTUAL>\\r     {*string_buf_ptr++='\r';}
-<TEXTUAL,PTEXTUAL>\\b     {*string_buf_ptr++='\b';}
-<TEXTUAL,PTEXTUAL>\\f     {*string_buf_ptr++='\f';}
-<TEXTUAL,PTEXTUAL>\\(.|\n) {*string_buf_ptr++=gda_delimitertext[0]; *string_buf_ptr++=gda_delimitertext[1];}
-<TEXTUAL,PTEXTUAL>.       {*string_buf_ptr++=gda_delimitertext[0];}
+<TEXTUAL,PTEXTUAL>\\n     {g_string_append_c (gstring, '\n');}
+<TEXTUAL,PTEXTUAL>\\t     {g_string_append_c (gstring, '\t');}
+<TEXTUAL,PTEXTUAL>\\r     {g_string_append_c (gstring, '\r');}
+<TEXTUAL,PTEXTUAL>\\b     {g_string_append_c (gstring, '\b');}
+<TEXTUAL,PTEXTUAL>\\f     {g_string_append_c (gstring, '\f');}
+<TEXTUAL,PTEXTUAL>\\(.|\n) {g_string_append_c (gstring, gda_delimitertext[0]); g_string_append_c (gstring, gda_delimitertext[1]);}
+<TEXTUAL,PTEXTUAL>.       {g_string_append_c (gstring, gda_delimitertext[0]);}
 <TEXTUAL,PTEXTUAL><<EOF>> {
 			gda_delimitererror (_("unterminated textual expression"));
 			BEGIN(INITIAL);

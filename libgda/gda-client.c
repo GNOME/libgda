@@ -286,6 +286,7 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 {
 	LoadedProvider *prv = NULL;
 	GdaProviderInfo *prv_info;
+	void (*plugin_init) (const gchar *);
 
 	prv_info = gda_config_get_provider_by_name (provider);
 	if (!prv_info) {
@@ -307,6 +308,15 @@ find_or_load_provider (GdaClient *client, const gchar *provider)
 	
 	g_module_make_resident (prv->handle);
 	
+	/* initialize plugin if supported */
+	if (g_module_symbol (prv->handle, "plugin_init", (gpointer) &plugin_init)) {
+		gchar *dirname;
+
+		dirname = g_path_get_dirname (prv_info->location);
+		plugin_init (dirname);
+		g_free (dirname);
+	}
+
 	g_module_symbol (prv->handle, "plugin_get_name",
 			 (gpointer) &prv->plugin_get_name);
 	g_module_symbol (prv->handle, "plugin_get_description",

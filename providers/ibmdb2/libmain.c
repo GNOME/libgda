@@ -1,5 +1,5 @@
 /* GDA IBMDB2 Provider
- * Copyright (C) 2002 - 2006 The GNOME Foundation
+ * Copyright (C) 2002 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Holger Thon <holger.thon@gnome-db.org>
@@ -22,11 +22,20 @@
 
 #include <glib/gi18n-lib.h>
 #include "gda-ibmdb2-provider.h"
+#include <libgda/gda-server-provider-extra.h>
 
+static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
+
+void
+plugin_init (const gchar *real_path)
+{
+        if (real_path)
+                module_path = g_strdup (real_path);
+}
 
 const gchar *
 plugin_get_name (void)
@@ -43,18 +52,15 @@ plugin_get_description (void)
 gchar *
 plugin_get_dsn_spec (void)
 {
-	gchar *specs, *file;
-	gsize len;
-
-	file = g_build_filename (LIBGDA_DATA_DIR, "ibmdb2_specs_dsn.xml", NULL);
-	if (g_file_get_contents (file, &specs, &len, NULL)) 
-		return specs;
-	else
-		return NULL;
+	return gda_server_provider_load_file_contents (module_path, "ibmdb2_specs_dsn.xml");
 }
 
 GdaServerProvider *
 plugin_create_provider (void)
 {
-	return gda_ibmdb2_provider_new ();
+	GdaServerProvider *prov;
+
+        prov = gda_ibmdb2_provider_new ();
+        g_object_set_data (prov, "GDA_PROVIDER_DIR", module_path);
+        return prov;
 }

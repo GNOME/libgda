@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<gda_array id="EXPORT" name="Exported Data">
+  <gda_array_field id="EXPORT:FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>boolean</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Boolean type</gda_value>
+      <gda_value>20</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>byte</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>1-byte integers</gda_value>
+      <gda_value>12</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>integer</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>32-bit integers</gda_value>
+      <gda_value>24</gda_value>
+      <gda_value>int</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>long integer</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>64-bit integers</gda_value>
+      <gda_value>40</gda_value>
+      <gda_value>longint</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>currency</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Money amounts</gda_value>
+      <gda_value>60</gda_value>
+      <gda_value>money</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>single</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Single precision values</gda_value>
+      <gda_value>56</gda_value>
+      <gda_value>float</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>double</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Double precision values</gda_value>
+      <gda_value>60</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>datetime</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Date/time value</gda_value>
+      <gda_value>139397832</gda_value>
+      <gda_value>dateTime (short)</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>text</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Character strings</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ole</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>OLE object</gda_value>
+      <gda_value>139395248</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>memo</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Variable length character strings</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value>memo/hyperlink,hyperlink</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>repid</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Replication ID</gda_value>
+      <gda_value>139395248</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>numeric</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value>Numeric</gda_value>
+      <gda_value>139393424</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>

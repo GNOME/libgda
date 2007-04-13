@@ -1571,12 +1571,21 @@ xml_fetch_next_row (GdaDataModelImport *model)
 		else {
 			gboolean value_is_null = FALSE;
 			xmlChar *isnull;
+			GdaColumn *column;
 
 			isnull = xmlTextReaderGetAttribute (reader, (xmlChar*)"isnull");
 			if (isnull) {
 				if ((*isnull == 't') || (*isnull == 'T'))
 					value_is_null = TRUE;
 				xmlFree (isnull);
+			}
+			
+			if (this_lang)
+				column = last_column;
+			else {
+				column = (GdaColumn *) columns->data;
+				last_column = column;
+				columns = g_slist_next (columns);
 			}
 
 			if (value_is_null) {
@@ -1587,17 +1596,9 @@ xml_fetch_next_row (GdaDataModelImport *model)
 				ret = xmlTextReaderRead (reader);
 				if (ret > 0) {
 					GValue *value;
-					GdaColumn *column;
 					GType gtype;
 					
 					ret = -1;
-					if (this_lang)
-						column = last_column;
-					else {
-						column = (GdaColumn *) columns->data;
-						last_column = column;
-						columns = g_slist_next (columns);
-					}
 					
 					gtype = gda_column_get_g_type (column);
 					/*g_print ("TYPE: %s\n", xmlTextReaderConstName (reader));*/

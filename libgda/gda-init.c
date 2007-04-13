@@ -100,21 +100,21 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	if (gda_dict_dtd)
 		gda_dict_dtd->name = xmlStrdup((xmlChar*) "gda_dict");
 	else
-		g_warning (_("Could not parse " LIBGDA_DICT_DTD_FILE ": "
+		g_message (_("Could not parse " LIBGDA_DICT_DTD_FILE ": "
 			     "XML dictionaries validation will not be performed (some weird errors may occur)"));
 #define LIBGDA_PARAMLIST_DTD_FILE DTDINSTALLDIR"/libgda-paramlist.dtd"
 	gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_PARAMLIST_DTD_FILE);
 	if (gda_paramlist_dtd)
 		gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
 	else
-		g_warning (_("Could not parse " LIBGDA_PARAMLIST_DTD_FILE ": "
+		g_message (_("Could not parse " LIBGDA_PARAMLIST_DTD_FILE ": "
 			     "XML data import validation will not be performed (some weird errors may occur)"));
 #define LIBGDA_ARRAY_DTD_FILE DTDINSTALLDIR"/libgda-array.dtd"
 	gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_ARRAY_DTD_FILE);
 	if (gda_array_dtd)
 		gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
 	else
-		g_warning (_("Could not parse " LIBGDA_ARRAY_DTD_FILE ": "
+		g_message (_("Could not parse " LIBGDA_ARRAY_DTD_FILE ": "
 			     "XML data import validation will not be performed (some weird errors may occur)"));
 
 #define LIBGDA_SERVER_OP_DTD_FILE DTDINSTALLDIR"/libgda-server-operation.dtd"
@@ -122,7 +122,7 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	if (gda_server_op_dtd)
 		gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
 	else
-		g_warning (_("Could not parse " LIBGDA_SERVER_OP_DTD_FILE ": "
+		g_message (_("Could not parse " LIBGDA_SERVER_OP_DTD_FILE ": "
 			     "Validation for XML files for server operations will not be performed (some weird errors may occur)"));
 
 	initialized = TRUE;

@@ -1079,3 +1079,58 @@ gda_server_provider_select_query_has_blobs (GdaConnection *cnc, GdaQuery *query,
 
 	return has_blobs;
 }
+
+/*
+ * finds the location of a @filename
+ */
+gchar *
+gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename)
+{
+	gchar *file;
+	const gchar *dirname;
+
+	dirname = g_object_get_data (G_OBJECT (prov), "GDA_PROVIDER_DIR");
+	if (dirname)
+		file = g_build_filename (dirname, filename, NULL);
+	else
+		file = g_build_filename (inst_dir, filename, NULL);
+	if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+		g_free (file);
+		file = NULL;
+		if (dirname) {
+			/* look in the parent dir, to handle the case where the lib is in a .libs dir */
+			file = g_build_filename (dirname, "..", filename, NULL);
+			if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+				g_free (file);
+				file = NULL;
+			}
+		}
+	}
+
+	return file;
+}
+
+/*
+ * Loads and returns the contents of @filename.
+ * @filename is searched in several places
+ */
+gchar *
+gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *filename)
+{
+	gchar *contents, *file;
+	const gchar *dirname;
+
+	file = g_build_filename (inst_dir, filename, NULL);
+
+	if (!g_file_get_contents (file, &contents, NULL, NULL)) {
+		/* look in the parent dir, to handle the case where the lib is in a .libs dir */
+		g_free (file);
+		if (dirname) {
+			file = g_build_filename (inst_dir, "..", filename, NULL);
+			g_file_get_contents (file, &contents, NULL, NULL);
+		}
+	}
+	g_free (file);
+
+	return contents;
+}

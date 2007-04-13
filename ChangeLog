@@ -1,3 +1,47 @@
+2007-04-13  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-init.c: show a message and not a warning when the DTD files cannot be found
+	* libgda/gda-config.c: now use the GDA_PROVIDERS_ROOT_DIR env. variable to be
+	able to load providers before installing libgda (for testing purposes)
+	* libgda/gda-dict.c:
+	* libgda/gda-parameter-list.c:
+	* libgda/gda-server-operation.c: perform DTD validation only if the DTD file has been
+	found, and use the DTD specified in the XML if specified
+	* libgda/gda-server-provider-extra.[ch]: added new helper functions for providers' 
+	implementations
+	* libgda/gda-data-model-import.c: corrected a bug where column types were not correctly used
+	* providers/ldap/libmain.c:
+	* providers/sybase/libmain.c:
+	* providers/firebird/libmain.c:
+	* providers/bdb/libmain.c:
+	* providers/freetds/libmain.c:
+	* providers/ibmdb2/libmain.c:
+	* providers/sqlite/libmain.c:
+	* providers/xbase/libmain.c:
+	* providers/mdb/libmain.c:
+	* providers/oracle/libmain.c:
+	* providers/oracle/gda-oracle-provider.c:
+	* providers/mysql/libmain.c:
+	* providers/msql/libmain.c:
+	* providers/odbc/libmain.c:
+	* providers/sqlite/libmain.c:
+	* providers/sqlite/gda-sqlite-provider.c:	
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/postgres/libmain.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* tests/providers/check_*.c: allow testing to take place before installation
+	* po/POTFILES.in:
+	* providers/msql/libmain.c: renamed gda-msql-libmain.c to libmain.c
+	* providers/mdb/mdb_specs_dsn.xml.in:
+	* providers/mdb/gda-mdb-provider.c: use DB_DIR and DB_NAME parameters instead of
+	the FILENAME parameter
+	* providers/sqlite/sqlite_specs_dsn.xml.in: improved description
+	* providers/sqlite/gda-sqlite-provider.c: improved code readability, and also try to use
+	the database file as specified by the DB_NAME parameter without the ".db" extension
+	* libsql/lexer.l:
+	* libgda/sql-delimiter/lexer.l: don't limit the size of strings and textual expressions
+	to 2048 bytes (use a GString instead), for bug #427605
+
 2007-04-03  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-access-wrapper.c: gda_data_model_get_n_rows() now returns the correct

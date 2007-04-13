@@ -14,7 +14,7 @@ libgda_msql_la_SOURCES = \
 	gda-msql-recordset.c \
 	gda-msql-recordset.h \
 	gda-msql.h \
-	gda-msql-libmain.c \
+	libmain.c \
 	gda-msql-utils.c
 libgda_msql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_msql_la_LIBADD = \

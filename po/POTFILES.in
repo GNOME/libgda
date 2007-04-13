@@ -82,7 +82,7 @@ providers/mdb/gda-mdb-provider.c
 providers/mdb/gda-mdb-table.c
 providers/mdb/libmain.c
 providers/mdb/mdb_specs_dsn.xml.in
-providers/msql/gda-msql-libmain.c
+providers/msql/libmain.c
 providers/msql/gda-msql-provider.c
 providers/msql/gda-msql-recordset.c
 providers/msql/msql_specs_dsn.xml.in

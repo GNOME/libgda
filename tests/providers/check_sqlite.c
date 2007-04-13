@@ -15,6 +15,7 @@ main (int argc, char **argv)
 
 	gda_init ("check-providers", PACKAGE_VERSION, argc, argv);
 
+	setenv ("GDA_PROVIDERS_ROOT_DIR", GDA_PROVIDERS_ROOT_DIR, 0);
 	pinfo = gda_config_get_provider_by_name (PROVIDER);
 	if (!pinfo) {
 		g_warning ("Could not find provider information for %s", PROVIDER);

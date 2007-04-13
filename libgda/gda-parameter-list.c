@@ -462,11 +462,14 @@ gda_parameter_list_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, G
                 xmlDoValidityCheckingDefaultValue = 1;
 
                 /* replace the DTD with ours */
-		old_dtd = doc->intSubset;
-                doc->intSubset = gda_paramlist_dtd;
+		if (gda_paramlist_dtd) {
+			old_dtd = doc->intSubset;
+			doc->intSubset = gda_paramlist_dtd;
+		}
 
-                if (! xmlValidateDocument (validc, doc)) {
-			doc->intSubset = old_dtd;
+                if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
+			if (gda_paramlist_dtd)
+				doc->intSubset = old_dtd;
                         xmlFreeDoc (doc);
                         g_free (validc);
 			
@@ -486,7 +489,8 @@ gda_parameter_list_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, G
                         xmlDoValidityCheckingDefaultValue = xmlcheck;
                         return NULL;
                 }
-		doc->intSubset = old_dtd;
+		if (gda_paramlist_dtd)
+			doc->intSubset = old_dtd;
                 xmlDoValidityCheckingDefaultValue = xmlcheck;
                 g_free (validc);
         }

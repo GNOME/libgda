@@ -862,10 +862,10 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 	file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
 	str = g_strdup_printf ("postgres_specs_%s.xml", file);
 	g_free (file);
-	file = g_build_filename (LIBGDA_DATA_DIR, str, NULL);
+	file = gda_server_provider_find_file (provider, LIBGDA_DATA_DIR, str);
 	g_free (str);
 
-	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+	if (! file) {
 		g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
 		return NULL;
 	}
@@ -887,10 +887,10 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 	file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
 	str = g_strdup_printf ("postgres_specs_%s.xml", file);
 	g_free (file);
-	file = g_build_filename (LIBGDA_DATA_DIR, str, NULL);
+	file = gda_server_provider_find_file (provider, LIBGDA_DATA_DIR, str);
 	g_free (str);
 
-	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+	if (! file) {
 		g_set_error (error, 0, 0, _("Missing spec. file '%s'"), file);
 		return NULL;
 	}

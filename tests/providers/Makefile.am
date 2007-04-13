@@ -2,7 +2,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	-DCHECK_SQL_FILES=\""$(top_srcdir)"\"
+	-DCHECK_SQL_FILES=\""$(top_srcdir)"\" \
+	-DGDA_PROVIDERS_ROOT_DIR=\""$(top_builddir)/providers"\"
 
 check_PROGRAMS = check_sqlite
 TESTS = check_sqlite
@@ -164,9 +165,14 @@ check_ldap_LDADD = @CHECK_LIBS@ \
 
 EXTRA_DIST = \
 	README \
+	gda_check_db.mdb \
 	PostgreSQL_create_tables.sql \
 	SQLite_create_tables.sql \
 	MySQL_create_tables.sql \
+        FIELDS_SCHEMA_Mdb_actor.xml \
+        FIELDS_SCHEMA_Mdb_film_actor.xml \
+        FIELDS_SCHEMA_Mdb_film.xml \
+        FIELDS_SCHEMA_Mdb_language.xml \
 	FIELDS_SCHEMA_MySQL_actor.xml \
 	FIELDS_SCHEMA_MySQL_film_actor.xml \
 	FIELDS_SCHEMA_MySQL_film.xml \
@@ -179,6 +185,7 @@ EXTRA_DIST = \
 	FIELDS_SCHEMA_SQLite_film_actor.xml \
 	FIELDS_SCHEMA_SQLite_film.xml \
 	FIELDS_SCHEMA_SQLite_language.xml \
+	TYPES_SCHEMA_Mdb.xml \
 	TYPES_SCHEMA_MySQL.xml \
 	TYPES_SCHEMA_PostgreSQL.xml \
-	TYPES_SCHEMA_SQLite.xml
+	TYPES_SCHEMA_SQLite.xml 

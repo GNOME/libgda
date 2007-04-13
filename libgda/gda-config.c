@@ -1429,6 +1429,129 @@ gda_config_free_list (GList *list)
 	g_list_free (list);
 }
 
+static GList *
+load_providers_from_dir (const gchar *dirname, gboolean recurs)
+{
+	GDir *dir;
+	GError *err = NULL;
+	const gchar *name;
+	GList *list = NULL;
+	
+	/* read the plugin directory */
+#ifdef GDA_DEBUG_NO
+	g_print ("Loading providers in %s\n", dirname);
+#endif
+	dir = g_dir_open (dirname, 0, &err);
+	if (err) {
+		gda_log_error (err->message);
+		g_error_free (err);
+		return NULL;
+	}
+	
+	while ((name = g_dir_read_name (dir))) {
+		GdaProviderInfo *info;
+		GModule *handle;
+		gchar *path;
+		gchar *ext;
+		void (*plugin_init) (const gchar *);
+		const gchar * (* plugin_get_name) (void);
+		const gchar * (* plugin_get_description) (void);
+		gchar * (* plugin_get_dsn_spec) (void);
+			
+		if (recurs) {
+			gchar *cname;
+			cname = g_build_filename (dirname, name, NULL);
+			if (g_file_test (cname, G_FILE_TEST_IS_DIR)) {
+				GList *nlist;
+				nlist = load_providers_from_dir (cname, TRUE);
+				if (nlist)
+					list = g_list_concat (list, nlist);
+			}
+			g_free (cname);
+		}
+
+		ext = g_strrstr (name, ".");
+		if (!ext)
+			continue;
+		if (strcmp (ext + 1, G_MODULE_SUFFIX))
+			continue;
+			
+		path = g_build_path (G_DIR_SEPARATOR_S, dirname,
+				     name, NULL);
+		handle = g_module_open (path, G_MODULE_BIND_LAZY);
+		if (!handle) {
+			g_warning (_("Error: %s"), g_module_error ());
+			g_free (path);
+			continue;
+		}
+			
+		if (g_module_symbol (handle, "plugin_init",
+				     (gpointer *) &plugin_init))
+			plugin_init (dirname);
+
+		g_module_symbol (handle, "plugin_get_name",
+				 (gpointer *) &plugin_get_name);
+		g_module_symbol (handle, "plugin_get_description",
+				 (gpointer *) &plugin_get_description);
+		g_module_symbol (handle, "plugin_get_dsn_spec",
+				 (gpointer *) &plugin_get_dsn_spec);
+			
+		info = g_new0 (GdaProviderInfo, 1);
+		info->location = path;
+			
+		if (plugin_get_name != NULL)
+			info->id = g_strdup (plugin_get_name ());
+		else
+			info->id = g_strdup (name);
+			
+		if (plugin_get_description != NULL)
+			info->description = g_strdup (plugin_get_description ());
+		else
+			info->description = NULL;
+			
+		info->dsn_spec = NULL;
+		info->gda_params = NULL;
+
+		if (plugin_get_dsn_spec) {
+			GError *error = NULL;
+				
+			info->dsn_spec = plugin_get_dsn_spec ();
+			if (info->dsn_spec) {
+				info->gda_params = gda_parameter_list_new_from_spec_string (NULL, info->dsn_spec, &error);
+				if (!info->gda_params) {
+					g_warning ("Invalid format for provider '%s' DSN spec : %s",
+						   info->id,
+						   error ? error->message : "Unknown error");
+					if (error)
+						g_error_free (error);
+				}
+			}
+			else {
+				/* there may be traces of the provider installed but some parts are missing,
+				   forget about that provider... */
+				gda_provider_info_free (info);
+				info = NULL;
+			}
+		}
+		else 
+			g_warning ("Provider '%s' does not provide a DSN spec", info->id);
+			
+		if (info) {
+			list = g_list_append (list, info);
+#ifdef GDA_DEBUG_NO
+			g_print ("Loaded '%s' provider\n", info->id);
+#endif
+		}
+			
+		g_module_close (handle);
+	}
+		
+	/* free memory */
+	g_dir_close (dir);
+
+	return list;
+}
+
 /**
  * gda_config_get_provider_list
  *
@@ -1444,100 +1567,13 @@ gda_config_get_provider_list (void)
 	static GList *prov_list = NULL;
 
 	if (!prov_list) {
-		GDir *dir;
-		GError *err = NULL;
-		const gchar *name;
-		GList *list = NULL;
+		const gchar *from_dir;
 
-		/* read the plugin directory */
-		dir = g_dir_open (LIBGDA_PLUGINDIR, 0, &err);
-		if (err) {
-			gda_log_error (err->message);
-			g_error_free (err);
-			return NULL;
-		}
-		
-		while ((name = g_dir_read_name (dir))) {
-			GdaProviderInfo *info;
-			GModule *handle;
-			gchar *path;
-			gchar *ext;
-			const gchar * (* plugin_get_name) (void);
-			const gchar * (* plugin_get_description) (void);
-			gchar * (* plugin_get_dsn_spec) (void);
-			
-			ext = g_strrstr (name, ".");
-			if (!ext)
-				continue;
-			if (strcmp (ext + 1, G_MODULE_SUFFIX))
-				continue;
-			
-			path = g_build_path (G_DIR_SEPARATOR_S, LIBGDA_PLUGINDIR,
-					     name, NULL);
-			handle = g_module_open (path, G_MODULE_BIND_LAZY);
-			if (!handle) {
-				g_warning (_("Error: %s"), g_module_error ());
-				g_free (path);
-				continue;
-			}
-			
-			g_module_symbol (handle, "plugin_get_name",
-					 (gpointer *) &plugin_get_name);
-			g_module_symbol (handle, "plugin_get_description",
-					 (gpointer *) &plugin_get_description);
-			g_module_symbol (handle, "plugin_get_dsn_spec",
-					 (gpointer *) &plugin_get_dsn_spec);
-			
-			info = g_new0 (GdaProviderInfo, 1);
-			info->location = path;
-			
-			if (plugin_get_name != NULL)
-				info->id = g_strdup (plugin_get_name ());
-			else
-				info->id = g_strdup (name);
-			
-			if (plugin_get_description != NULL)
-				info->description = g_strdup (plugin_get_description ());
-			else
-				info->description = NULL;
-			
-			info->dsn_spec = NULL;
-			info->gda_params = NULL;
-
-			if (plugin_get_dsn_spec) {
-				GError *error = NULL;
-				
-				info->dsn_spec = plugin_get_dsn_spec ();
-				if (info->dsn_spec) {
-					info->gda_params = gda_parameter_list_new_from_spec_string (NULL, info->dsn_spec, &error);
-					if (!info->gda_params) {
-						g_warning ("Invalid format for provider '%s' DSN spec : %s",
-							   info->id,
-							   error ? error->message : "Unknown error");
-						if (error)
-							g_error_free (error);
-					}
-				}
-				else {
-					/* there may be traces of the provider installed but some parts are missing,
-					 forget about that provider... */
-					gda_provider_info_free (info);
-					info = NULL;
-				}
-			}
-			else 
-				g_warning ("Provider '%s' does not provide a DSN spec", info->id);
-			
-			if (info)
-				list = g_list_append (list, info);
-			
-			g_module_close (handle);
-		}
-		
-		/* free memory */
-		g_dir_close (dir);
-
-		prov_list = list;
+		from_dir = getenv ("GDA_PROVIDERS_ROOT_DIR");
+		if (from_dir)
+			prov_list = load_providers_from_dir (from_dir, TRUE);
+		else
+			prov_list = load_providers_from_dir (LIBGDA_PLUGINDIR, FALSE);
 	}
 
 	return prov_list;

@@ -728,9 +728,11 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 		xmlcheck = xmlDoValidityCheckingDefaultValue;
 		xmlDoValidityCheckingDefaultValue = 1;
 
-		/* replace the DTD with ours */
-		old_dtd = doc->intSubset;
-		doc->intSubset = gda_dict_dtd;
+		/* replace the DTD with ours if necessary */
+		if (gda_dict_dtd) {
+			old_dtd = doc->intSubset;
+			doc->intSubset = gda_dict_dtd;
+		}
 
 		if (! xmlValidateDocument (validc, doc)) {
 			gchar *str;
@@ -876,7 +878,8 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 
 		subnode = subnode->next;
 	}
-	doc->intSubset = old_dtd;
+	if (gda_dict_dtd)
+		doc->intSubset = old_dtd;
 	xmlFreeDoc (doc);
 
 	return TRUE;

@@ -1,5 +1,5 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Rodrigo Moya <rodrigo@gnome-db.org>
@@ -23,11 +23,20 @@
 
 #include <glib/gi18n-lib.h>
 #include "gda-firebird-provider.h"
+#include <libgda/gda-server-provider-extra.h>
 
+static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
+
+void
+plugin_init (const gchar *real_path)
+{
+        if (real_path)
+                module_path = g_strdup (real_path);
+}
 
 const gchar *
 plugin_get_name (void)
@@ -44,18 +53,15 @@ plugin_get_description (void)
 gchar *
 plugin_get_dsn_spec (void)
 {
-	gchar *specs, *file;
-	gsize len;
-
-	file = g_build_filename (LIBGDA_DATA_DIR, "firebird_specs_dsn.xml", NULL);
-	if (g_file_get_contents (file, &specs, &len, NULL)) 
-		return specs;
-	else
-		return NULL;
+	return gda_server_provider_load_file_contents (module_path, "firebird_specs_dsn.xml");
 }
 
 GdaServerProvider *
 plugin_create_provider (void)
 {
-	return gda_firebird_provider_new ();
+	GdaServerProvider *prov;
+
+        prov = gda_firebird_provider_new ();
+        g_object_set_data (prov, "GDA_PROVIDER_DIR", module_path);
+        return prov;
 }
