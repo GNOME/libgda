@@ -17,7 +17,7 @@
       <gda_value>blob</gda_value>
       <gda_value/>
       <gda_value>Binary blob (up to 65535 bytes)</gda_value>
-      <gda_value>156184752</gda_value>
+      <gda_value>139894960</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -45,21 +45,21 @@
       <gda_value>date</gda_value>
       <gda_value/>
       <gda_value>Date</gda_value>
-      <gda_value>156184624</gda_value>
+      <gda_value>139894832</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>datetime</gda_value>
       <gda_value/>
       <gda_value>Date and time</gda_value>
-      <gda_value>156187336</gda_value>
+      <gda_value>139897544</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>decimal</gda_value>
       <gda_value/>
       <gda_value>Decimal number</gda_value>
-      <gda_value>156182928</gda_value>
+      <gda_value>139893136</gda_value>
       <gda_value>dec,numeric,fixed</gda_value>
     </gda_array_row>
     <gda_array_row>
@@ -129,14 +129,14 @@
       <gda_value>longblob</gda_value>
       <gda_value/>
       <gda_value>Long blob (up to 4Gb)</gda_value>
-      <gda_value>156184752</gda_value>
+      <gda_value>139894960</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>longtext</gda_value>
       <gda_value/>
       <gda_value>Long text (up to 4Gb characters)</gda_value>
-      <gda_value>156184752</gda_value>
+      <gda_value>139894960</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -157,14 +157,14 @@
       <gda_value>mediumblob</gda_value>
       <gda_value/>
       <gda_value>Medium blob (up to 16777215 bytes)</gda_value>
-      <gda_value>156184752</gda_value>
+      <gda_value>139894960</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>mediumtext</gda_value>
       <gda_value/>
       <gda_value>Medium text (up to 16777215 characters)</gda_value>
-      <gda_value>156184752</gda_value>
+      <gda_value>139894960</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -178,21 +178,21 @@
       <gda_value>smallint</gda_value>
       <gda_value/>
       <gda_value>Small integer, range is -32768 to 32767</gda_value>
-      <gda_value>156182840</gda_value>
+      <gda_value>139893048</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>smallint unsigned</gda_value>
       <gda_value/>
       <gda_value>Small unsigned integer, range is 0 to 65535</gda_value>
-      <gda_value>156183184</gda_value>
+      <gda_value>139893392</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>text</gda_value>
       <gda_value/>
       <gda_value>Text (up to 65535 characters)</gda_value>
-      <gda_value>156184752</gda_value>
+      <gda_value>139894960</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -213,28 +213,28 @@
       <gda_value>tinyblob</gda_value>
       <gda_value/>
       <gda_value>Tiny blob (up to 255 bytes)</gda_value>
-      <gda_value>156184752</gda_value>
+      <gda_value>139894960</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>tinytext</gda_value>
       <gda_value/>
       <gda_value>Tiny text (up to 255 characters)</gda_value>
-      <gda_value>156184752</gda_value>
+      <gda_value>139894960</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>time</gda_value>
       <gda_value/>
       <gda_value>Time</gda_value>
-      <gda_value>156182496</gda_value>
+      <gda_value>139892704</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>timestamp</gda_value>
       <gda_value/>
       <gda_value>Time stamp</gda_value>
-      <gda_value>156187336</gda_value>
+      <gda_value>139897544</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>

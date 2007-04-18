@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<gda_array id="EXPORT" name="Exported Data">
+  <gda_array_field id="EXPORT:FI0" name="Type" title="Type" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI1" name="Owner" title="Owner" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI2" name="Comments" title="Comments" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI3" name="GDA type" title="GDA type" gdatype="gulong" nullok="TRUE"/>
+  <gda_array_field id="EXPORT:FI4" name="Synonyms" title="Synonyms" gdatype="gchararray" nullok="TRUE"/>
+  <gda_array_data>
+    <gda_array_row>
+      <gda_value>BFILE</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Pointer to binary file on disk</gda_value>
+      <gda_value>134553792</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>BLOB</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Binary Large Object</gda_value>
+      <gda_value>134553792</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>CHAR</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Fixed length character data of length size bytes. This should be used for fixed length data. Such as codes A100, B102...</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value>CHARACTER</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>NCHAR</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Fixed length national character set data of length size bytes. This should be used for fixed length data. Such as codes A100, B102...</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>CLOB</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Character Large Object</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>NCLOB</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>National Character Large Object</gda_value>
+      <gda_value>134553792</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>DATE</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Valid date range</gda_value>
+      <gda_value>134557744</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>NUMBER</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Number having precision p and scale s.</gda_value>
+      <gda_value>134556048</gda_value>
+      <gda_value>INTEGER,SMALLINT,INT,DEC,DECIMAL,NUMERIC,DOUBLE PRECISION,FLOAT,REAL</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>LONG</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Character data of variable length (A bigger version the VARCHAR2 datatype)</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>LONG RAW</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Raw binary data of variable length. (not intrepreted by PL/SQL)</gda_value>
+      <gda_value>134553792</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>RAW</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Raw binary data of length size bytes (size must be specified)</gda_value>
+      <gda_value>134553792</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>ROWID</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Hexadecimal string representing the unique address of a row in its table (primarily for values returned by the ROWID pseudocolumn.)</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>UROWID</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Hex string representing the logical address of a row of an index-organized table</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>TIMESTAMP</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>the number of digits in the fractional part of the SECOND datetime field</gda_value>
+      <gda_value>134560456</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>VARCHAR2</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Variable length character string having maximum length size bytes (size must be specified)</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value>VARCHAR,STRING</gda_value>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>NVARCHAR2</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>Variable length national character set string having maximum length size bytes (size must be specified)</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>XMLType</gda_value>
+      <gda_value>SYS</gda_value>
+      <gda_value>XML data)</gda_value>
+      <gda_value>64</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+  </gda_array_data>
+</gda_array>

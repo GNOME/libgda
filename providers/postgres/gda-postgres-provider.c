@@ -726,6 +726,7 @@ compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql,
 			if (status == PGRES_COMMAND_OK) {
 				gchar *str;
 				GdaConnectionEvent *event;
+				GdaPostgresConnectionData *priv_data;
 				
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
 				str = g_strdup (PQcmdStatus (pg_res));
@@ -736,6 +737,12 @@ compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql,
 										      "IMPACTED_ROWS", G_TYPE_INT, 
 										      atoi (PQcmdTuples (pg_res)),
 										      NULL);
+				priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+				if (!priv_data && (PQoidValue (pg_res) != InvalidOid))
+					priv_data->last_insert_id = PQoidValue (pg_res);
+				else
+					priv_data->last_insert_id = 0;
+
 				PQclear (pg_res);
 			}
 			else if (status == PGRES_TUPLES_OK) {
@@ -1380,7 +1387,7 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 					 (type == GDA_TYPE_TIME)) {
 					GdaHandlerTime *timdh;
 
-					timdh = gda_server_provider_get_data_handler_gtype (provider, cnc, type);
+					timdh = GDA_HANDLER_TIME (gda_server_provider_get_data_handler_gtype (provider, cnc, type));
 					g_assert (timdh);
 					param_values [index] = gda_handler_time_get_no_locale_str_from_value (timdh,
 													      value);
@@ -1466,7 +1473,6 @@ gda_postgres_provider_get_last_insert_id (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!priv_data) {
@@ -1474,15 +1480,23 @@ gda_postgres_provider_get_last_insert_id (GdaServerProvider *provider,
 		return NULL;
 	}
 
-	/* get the PQresult from the recordset */
-	pgres = gda_postgres_recordset_get_pgresult (GDA_POSTGRES_RECORDSET (recset));
-	if (pgres) {
-		oid = PQoidValue (pgres);
-		if (oid != InvalidOid)
-			return g_strdup_printf ("%d", oid);
+	if (recset) {
+		g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
+		/* get the PQresult from the recordset */
+		pgres = gda_postgres_recordset_get_pgresult (GDA_POSTGRES_RECORDSET (recset));
+		if (pgres) {
+			oid = PQoidValue (pgres);
+			if (oid != InvalidOid)
+				return g_strdup_printf ("%d", oid);
+		}
+		return NULL;
 	}
 
-	return NULL;
+	/* get the last inserted OID kept */
+	if (priv_data->last_insert_id)
+		return g_strdup_printf ("%d", priv_data->last_insert_id);
+	else
+		return NULL;
 }
 
 static gboolean 

@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -21,8 +21,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_postgres_provider_h__)
-#  define __gda_postgres_provider_h__
+#ifndef __GDA_POSTGRES_PROVIDER_H__
+#define __GDA_POSTGRES_PROVIDER_H__
 
 #include <libgda/gda-server-provider.h>
 #include <libpq-fe.h>
@@ -52,7 +52,7 @@ struct _GdaPostgresProviderClass {
 typedef struct {
 	gchar              *name;
 	Oid                 oid;
-	GType        type;
+	GType               type;
 	gchar              *comments;
 	gchar              *owner;
 } GdaPostgresTypeOid;
@@ -71,6 +71,9 @@ typedef struct {
 	gchar              *avoid_types;
 	gchar              *avoid_types_oids;
 	gchar              *any_type_oid; /* oid for the 'any' data type, used to fetch aggregates and functions */
+
+	/* OID of the last inserted tuple */
+	Oid                 last_insert_id;
 } GdaPostgresConnectionData;
 
 /* NOTE ABOUT THE POSTGRES VERSIONS:

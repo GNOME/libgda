@@ -104,12 +104,7 @@ static GString *gstring;
 		 g_string_free (gstring, TRUE);
                  return L_STRING;
                 }
-<STRING,PSTRING>\\n	{g_string_append_c (gstring, '\n');}
-<STRING,PSTRING>\\t	{g_string_append_c (gstring, '\t');}
-<STRING,PSTRING>\\r	{g_string_append_c (gstring, '\r');}
-<STRING,PSTRING>\\b	{g_string_append_c (gstring, '\b');}
-<STRING,PSTRING>\\f	{g_string_append_c (gstring, '\f');}
-<STRING,PSTRING>\\(.|\n) {g_string_append_c (gstring, sqltext[0]);}
+<STRING,PSTRING>\n     	{g_string_append_c (gstring, '\n');}
 <STRING,PSTRING>.	{g_string_append_c (gstring, sqltext[0]);}
 <STRING,PSTRING><<EOF>> {
                         sqlerror (_("unterminated string"));
@@ -141,12 +136,6 @@ static GString *gstring;
 		 g_string_free (gstring, TRUE);
                  return L_TEXTUAL;
                 }
-<TEXTUAL,PTEXTUAL>\\n     {g_string_append_c (gstring, '\n');}
-<TEXTUAL,PTEXTUAL>\\t     {g_string_append_c (gstring, '\t');}
-<TEXTUAL,PTEXTUAL>\\r     {g_string_append_c (gstring, '\r');}
-<TEXTUAL,PTEXTUAL>\\b     {g_string_append_c (gstring, '\b');}
-<TEXTUAL,PTEXTUAL>\\f     {g_string_append_c (gstring, '\f');}
-<TEXTUAL,PTEXTUAL>\\(.|\n)        {g_string_append_c (gstring, sqltext[0]);}
 <TEXTUAL,PTEXTUAL>.       {g_string_append_c (gstring, sqltext[0]);}
 <TEXTUAL,PTEXTUAL><<EOF>> {
                         sqlerror (_("unterminated textual expression"));

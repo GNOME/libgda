@@ -52,7 +52,7 @@
       <gda_value>bytea</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>variable-length string, binary values escaped</gda_value>
-      <gda_value>137842864</gda_value>
+      <gda_value>164376752</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -80,7 +80,7 @@
       <gda_value>date</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>ANSI SQL date</gda_value>
-      <gda_value>137842736</gda_value>
+      <gda_value>164376624</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -108,7 +108,7 @@
       <gda_value>int2</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>-32 thousand to 32 thousand, 2-byte storage</gda_value>
-      <gda_value>137840952</gda_value>
+      <gda_value>164374840</gda_value>
       <gda_value>smallint</gda_value>
     </gda_array_row>
     <gda_array_row>
@@ -171,14 +171,14 @@
       <gda_value>numeric</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>numeric(precision, decimal), arbitrary precision number</gda_value>
-      <gda_value>137841040</gda_value>
+      <gda_value>164374928</gda_value>
       <gda_value>decimal</gda_value>
     </gda_array_row>
     <gda_array_row>
       <gda_value>oid</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>object identifier(oid), maximum 4 billion</gda_value>
-      <gda_value>137838784</gda_value>
+      <gda_value>164372672</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -192,7 +192,7 @@
       <gda_value>point</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>geometric point '(x, y)'</gda_value>
-      <gda_value>137843008</gda_value>
+      <gda_value>164376896</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -220,28 +220,28 @@
       <gda_value>time</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>hh:mm:ss, ANSI SQL time</gda_value>
-      <gda_value>137840608</gda_value>
+      <gda_value>164374496</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>timestamp</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>date and time</gda_value>
-      <gda_value>137845448</gda_value>
+      <gda_value>164379336</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>timestamptz</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>date and time with time zone</gda_value>
-      <gda_value>137845448</gda_value>
+      <gda_value>164379336</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>timetz</gda_value>
       <gda_value>vmalerba</gda_value>
       <gda_value>hh:mm:ss, ANSI SQL time</gda_value>
-      <gda_value>137840608</gda_value>
+      <gda_value>164374496</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>

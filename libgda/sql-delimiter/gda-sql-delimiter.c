@@ -45,6 +45,7 @@ int gda_delimiterparse (void);
 static void sql_destroy_expr (GdaDelimiterExpr *expr);
 static void sql_destroy_param_spec (GdaDelimiterParamSpec *pspec);
 
+
 /**
  * sqlerror:
  * 
@@ -142,6 +143,7 @@ gda_delimiter_parse_with_error (const char *sqlquery, GError ** error)
 {
 	void *buffer;
 
+	gda_delimiter_lex_reset ();
 	gda_delimiterdebug = 0; /* parser debug active or not */
 	last_sql_result = NULL;
 	all_sql_results = NULL;

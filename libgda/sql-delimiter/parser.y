@@ -65,6 +65,8 @@ remove_quotes (gchar *str)
 
 extern GList                        *all_sql_results; /* list of GdaDelimiterStatement */
 extern GdaDelimiterStatement *last_sql_result; /* last GdaDelimiterStatement identified */
+gboolean is_first_token;
+
 #define YYDEBUG 1
 %}
 
@@ -98,7 +100,7 @@ statements: statement		     {last_sql_result = $1; $$ = all_sql_results = g_list
 	|			     {last_sql_result = NULL; $$ = all_sql_results;}
 	;
 
-statement: expr_list		     {$$ = gda_delimiter_statement_build (GDA_DELIMITER_UNKNOWN, $1);}
+statement: expr_list		     {$$ = gda_delimiter_statement_build (GDA_DELIMITER_UNKNOWN, $1); gda_delimiter_lex_reset ();}
 	;
 
 expr_list: expr           {$$ = g_list_prepend (NULL, $1);}

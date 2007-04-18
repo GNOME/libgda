@@ -52,7 +52,7 @@ plugin_get_description (void)
 gchar *
 plugin_get_dsn_spec (void)
 {
-	return gda_server_provider_load_file_contents (module_path, "msql_specs_dsn.xml");
+	return gda_server_provider_load_file_contents (module_path, LIBGDA_DATA_DIR, "msql_specs_dsn.xml");
 }
 
 GdaServerProvider *

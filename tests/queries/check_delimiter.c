@@ -132,9 +132,20 @@ test_sql_statement (SqlTest *test, gint test_index)
 #endif
 	if (g_list_length (statements) != (test->delim_parsed ? test->n_statements : 0)) {
 		gchar *str;
+		gint nexp = test->delim_parsed ? test->n_statements : 0;
 
-		str = g_strdup_printf ("Recognized %d statements when %d are expected %s", 
-				       g_list_length (statements), test->delim_parsed ? test->n_statements : 0, tname);
+		str = g_strdup_printf ("Recognized %d statements when %d %s expected %s", 
+				       g_list_length (statements), nexp, 
+				       nexp <= 1 ? "is" : "are",
+				       tname);
+#ifdef CHECK_SHOW_ALL_ERRORS
+		GList *list;
+		for (list = statements; list; list = list->next) {
+			GdaDelimiterStatement *statement = (GdaDelimiterStatement *) list->data;
+			g_print ("#### STATEMENT:\n");
+			gda_delimiter_display (statement);
+		}
+#endif
 		fail (str);
 	}
 

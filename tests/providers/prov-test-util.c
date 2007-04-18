@@ -7,7 +7,7 @@
 /*#undef CHECK_EXTRA_INFO*/
 
 #define DB_NAME "gda_check_db"
-#define CREATE_FILES 0
+#define CREATE_FILES 1
 GdaDict *dict = NULL;
 
 /*

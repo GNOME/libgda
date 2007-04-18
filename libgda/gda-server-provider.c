@@ -708,6 +708,10 @@ gda_server_provider_execute_query (GdaServerProvider *provider,
  * A connection must be specified, and, optionally, a result set. If not NULL,
  * the provider should try to get the last insert ID for the given result set.
  *
+ * Beware however that the interpretation and usage of this value depends on the
+ * DBMS type being used, see the <link linkend="limitations">limitations</link> 
+ * of each DBMS for more information.
+ *
  * Returns: a string representing the ID of the last inserted row, or NULL
  * if an error occurred or no row has been inserted. It is the caller's
  * reponsibility to free the returned string.

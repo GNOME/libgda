@@ -831,6 +831,12 @@ gda_mysql_provider_get_last_insert_id (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
+	if (recset) {
+		g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
+		TO_IMPLEMENT;
+		return NULL;
+	}
+
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
 		gda_connection_add_event_string (cnc, _("Invalid MYSQL handle"));

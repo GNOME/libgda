@@ -3,6 +3,9 @@
   <suite name="Broken SQL tests" dict="dict_pg.xml">
     <unit file="basic_sql.xml"/>
     <unit file="prov_sql.xml"/>
+  </suite>
+
+  <suite name="Real life SQL tests" dict="dict_pg.xml">
     <unit file="app_sql.xml"/>
   </suite>
 

@@ -68,7 +68,7 @@ gboolean       gda_server_provider_split_update_query       (GdaConnection *cnc,
 gboolean       gda_server_provider_select_query_has_blobs   (GdaConnection *cnc, GdaQuery *query, GError **error);
 
 gchar         *gda_server_provider_find_file                (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename);
-gchar         *gda_server_provider_load_file_contents       (const gchar *inst_dir, const gchar *filename);
+gchar         *gda_server_provider_load_file_contents       (const gchar *inst_dir, const gchar *data_dir, const gchar *filename);
 
 G_END_DECLS
 

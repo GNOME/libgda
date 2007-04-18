@@ -1115,18 +1115,20 @@ gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, c
  * @filename is searched in several places
  */
 gchar *
-gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *filename)
+gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data_dir, const gchar *filename)
 {
 	gchar *contents, *file;
-	const gchar *dirname;
 
 	file = g_build_filename (inst_dir, filename, NULL);
 
 	if (!g_file_get_contents (file, &contents, NULL, NULL)) {
-		/* look in the parent dir, to handle the case where the lib is in a .libs dir */
+		/* look in @data_dir */
 		g_free (file);
-		if (dirname) {
-			file = g_build_filename (inst_dir, "..", filename, NULL);
+		file = g_build_filename (inst_dir, "..", filename, NULL);
+		if (!g_file_get_contents (file, &contents, NULL, NULL) && data_dir) {
+			/* look in the parent dir, to handle the case where the lib is in a .libs dir */
+			g_free (file);
+			file = g_build_filename (data_dir, filename, NULL);
 			g_file_get_contents (file, &contents, NULL, NULL);
 		}
 	}

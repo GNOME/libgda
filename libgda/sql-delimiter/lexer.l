@@ -16,6 +16,20 @@
 #include "parser.h"
 
 static GString *gstring;
+static gint gda_delimiter_bloc_level;
+static gboolean is_start = TRUE;
+static gboolean ignore_next = FALSE;
+static gchar *string_delim;
+static gboolean can_use_is = TRUE;
+
+void 
+gda_delimiter_lex_reset ()
+{
+	is_start = TRUE;
+	ignore_next = FALSE;
+	gda_delimiter_bloc_level = 0;
+	can_use_is = TRUE;
+}
 
 %}
 
@@ -30,10 +44,28 @@ static GString *gstring;
 
 %%
 
-;		{return L_SC;}
-[ ]*##           {return L_UNSPECVAL;}
-[ ]*\/\*            {BEGIN(PSPEC); return L_LSBRACKET;}
-
+;			{if ((gda_delimiter_bloc_level == 0) && !ignore_next) {
+				is_start = TRUE; 
+				return L_SC;
+			 } 
+			 REJECT;
+			}
+[ ]*##           	{return L_UNSPECVAL;}
+[ ]*\/\*            	{BEGIN(PSPEC); return L_LSBRACKET;}
+"declare"		{if (!is_start && (gda_delimiter_bloc_level == 0)) ignore_next = TRUE; REJECT;}
+is[ \t]+not[ \t]+null	{can_use_is = FALSE; REJECT;}
+is[ \t]+null   		{can_use_is = FALSE; REJECT;}
+"is"			{if (!is_start && (gda_delimiter_bloc_level == 0) && can_use_is) ignore_next = TRUE; can_use_is = TRUE; REJECT;}
+"begin"			{ignore_next = FALSE; 
+			 if (!is_start)
+				gda_delimiter_bloc_level ++; 
+			 REJECT;
+			}
+"end;"			{if (gda_delimiter_bloc_level > 0)
+				gda_delimiter_bloc_level --;
+			 REJECT;
+			}
+--.*$			{/* Eat the comments up to the EOL */;}
 <PSPEC>"*/"             {BEGIN(INITIAL); return L_RSBRACKET;}
 <PSPEC>"name:"        	{return L_PNAME;}
 <PSPEC>"descr:"       	{return L_PDESCR;}
@@ -45,15 +77,34 @@ static GString *gstring;
 <PSPEC>\'		{gstring = g_string_new (""); BEGIN(PSTRING);}
 <PSPEC>\"		{gstring = g_string_new (""); BEGIN(PTEXTUAL);}
 
-\'		{gstring = g_string_new (""); BEGIN(STRING);}
-<STRING,PSTRING>\\' {g_string_append (gstring, "\\'");}
-<STRING>\'	{BEGIN(INITIAL);
-		 g_string_prepend_c (gstring, '\'');
-		 g_string_append_c (gstring, '\'');
-		 gda_delimiterlval.str = gstring->str;
-		 g_string_free (gstring, FALSE);
-		 return L_STRING;
-		}
+\$[a-zA-Z0-9_\-]*\$	{string_delim = g_strdup (gda_delimitertext); gstring = g_string_new (""); BEGIN(STRING);}
+\'			{gstring = g_string_new (""); BEGIN(STRING);}
+<STRING,PSTRING>\\' 	{if (string_delim)
+                                REJECT;
+			 g_string_append (gstring, "\\'");
+			}
+<STRING>\'		{
+			 if (string_delim)
+				REJECT;
+			 BEGIN(INITIAL);
+		 	 g_string_prepend_c (gstring, '\'');
+		 	 g_string_append_c (gstring, '\'');
+		 	 gda_delimiterlval.str = gstring->str;
+		 	 g_string_free (gstring, FALSE);
+		  	 return L_STRING;
+			}
+<STRING>\$[a-zA-Z0-9_\-]*\$ {
+			 if (!string_delim || strcmp (string_delim, gda_delimitertext))
+				REJECT;
+			 BEGIN(INITIAL);
+                         g_string_prepend (gstring, string_delim);
+                         g_string_append (gstring, string_delim);
+                         gda_delimiterlval.str = gstring->str;
+                         g_string_free (gstring, FALSE);
+			 g_free (string_delim);
+			 string_delim = NULL;
+                         return L_STRING;
+			}
 <PSTRING>\'     {BEGIN(PSPEC);
 		 g_string_prepend_c (gstring, '\'');
                  g_string_append_c (gstring, '\'');
@@ -61,12 +112,7 @@ static GString *gstring;
 		 g_string_free (gstring, FALSE);
                  return L_STRING;
                 }
-<STRING,PSTRING>\\n	{g_string_append_c (gstring, '\n');}
-<STRING,PSTRING>\\t	{g_string_append_c (gstring, '\t');}
-<STRING,PSTRING>\\r	{g_string_append_c (gstring, '\r');}
-<STRING,PSTRING>\\b	{g_string_append_c (gstring, '\b');}
-<STRING,PSTRING>\\f	{g_string_append_c (gstring, '\f');}
-<STRING,PSTRING>\\(.|\n) {g_string_append_c (gstring, gda_delimitertext[0]); g_string_append_c (gstring, gda_delimitertext[1]);}
+<STRING,PSTRING>\n	{g_string_append_c (gstring, '\n');}
 <STRING,PSTRING>.	{g_string_append_c (gstring, gda_delimitertext[0]);}
 <STRING,PSTRING><<EOF>> {
          		gda_delimitererror (_("unterminated string"));
@@ -85,20 +131,17 @@ static GString *gstring;
                  g_string_free (gstring, FALSE);
                  return L_TEXTUAL;
                 }
-<TEXTUAL,PTEXTUAL>\\n     {g_string_append_c (gstring, '\n');}
-<TEXTUAL,PTEXTUAL>\\t     {g_string_append_c (gstring, '\t');}
-<TEXTUAL,PTEXTUAL>\\r     {g_string_append_c (gstring, '\r');}
-<TEXTUAL,PTEXTUAL>\\b     {g_string_append_c (gstring, '\b');}
-<TEXTUAL,PTEXTUAL>\\f     {g_string_append_c (gstring, '\f');}
-<TEXTUAL,PTEXTUAL>\\(.|\n) {g_string_append_c (gstring, gda_delimitertext[0]); g_string_append_c (gstring, gda_delimitertext[1]);}
-<TEXTUAL,PTEXTUAL>.       {g_string_append_c (gstring, gda_delimitertext[0]);}
+<TEXTUAL,PTEXTUAL>\n     {g_string_append_c (gstring, '\n');}
+<TEXTUAL,PTEXTUAL>.      {g_string_append_c (gstring, gda_delimitertext[0]);}
 <TEXTUAL,PTEXTUAL><<EOF>> {
 			gda_delimitererror (_("unterminated textual expression"));
 			BEGIN(INITIAL);
                         yyterminate();
                         }
 
-\\n		{gda_delimiterlval.str = g_strdup ("\n"); return L_CHAR;}
-.               {gda_delimiterlval.str = g_strdup (gda_delimitertext); return L_CHAR;}
+\n		{gda_delimiterlval.str = g_strdup ("\n"); return L_CHAR;}
+\t           	{gda_delimiterlval.str = g_strdup ("\t"); return L_CHAR;}
+" "		{gda_delimiterlval.str = g_strdup (" "); return L_CHAR;}
+.               {gda_delimiterlval.str = g_strdup (gda_delimitertext); is_start = FALSE; return L_CHAR;}
 
 %%

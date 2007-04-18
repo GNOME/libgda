@@ -85,6 +85,10 @@ static GList *gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 						   GdaCommand *cmd,
 						   GdaParameterList *params);
 
+static gchar *gda_sqlite_provider_get_last_insert_id (GdaServerProvider *provider,
+                                                        GdaConnection *cnc,
+                                                        GdaDataModel *recset);
+
 static gboolean gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 						       GdaConnection *cnc,
 						       const gchar *name, GdaTransactionIsolation level,
@@ -164,7 +168,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 
 	provider_class->execute_command = gda_sqlite_provider_execute_command;
 	provider_class->execute_query = NULL;
-	provider_class->get_last_insert_id = NULL;
+	provider_class->get_last_insert_id = gda_sqlite_provider_get_last_insert_id;
 
 	provider_class->begin_transaction = gda_sqlite_provider_begin_transaction;
 	provider_class->commit_transaction = gda_sqlite_provider_commit_transaction;
@@ -874,6 +878,37 @@ gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 
 	return reclist;
 }
+
+static gchar *
+gda_sqlite_provider_get_last_insert_id (GdaServerProvider *provider,
+					GdaConnection *cnc,
+					GdaDataModel *recset)
+{
+	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
+	SQLITEcnc *scnc;
+	long long int rowid;
+
+        g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), NULL);
+        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+        scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
+        if (!scnc) {
+                gda_connection_add_event_string (cnc, _("Invalid SQLite handle"));
+                return NULL;
+        }
+
+ 	if (recset) {
+		g_return_val_if_fail (GDA_IS_SQLITE_RECORDSET (recset), NULL);
+		TO_IMPLEMENT;
+		return NULL;
+	}
+	rowid = sqlite3_last_insert_rowid (scnc->connection);
+	if (rowid != 0)
+		return g_strdup_printf ("%lld", rowid);
+	else
+		return NULL;
+}
+
 
 static gboolean
 gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,

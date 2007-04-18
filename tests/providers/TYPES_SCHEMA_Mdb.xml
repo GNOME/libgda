@@ -59,7 +59,7 @@
       <gda_value>datetime</gda_value>
       <gda_value isnull="t"/>
       <gda_value>Date/time value</gda_value>
-      <gda_value>139397832</gda_value>
+      <gda_value>141216456</gda_value>
       <gda_value>dateTime (short)</gda_value>
     </gda_array_row>
     <gda_array_row>
@@ -73,7 +73,7 @@
       <gda_value>ole</gda_value>
       <gda_value isnull="t"/>
       <gda_value>OLE object</gda_value>
-      <gda_value>139395248</gda_value>
+      <gda_value>141213872</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -87,14 +87,14 @@
       <gda_value>repid</gda_value>
       <gda_value isnull="t"/>
       <gda_value>Replication ID</gda_value>
-      <gda_value>139395248</gda_value>
+      <gda_value>141213872</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>numeric</gda_value>
       <gda_value isnull="t"/>
       <gda_value>Numeric</gda_value>
-      <gda_value>139393424</gda_value>
+      <gda_value>141212048</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
   </gda_array_data>

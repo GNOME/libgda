@@ -229,4 +229,8 @@
       <param name="id" type="gfloat" default="1234.5"/>
     </params>
   </test>
+
+  <test name="string18">
+    <sql expected="D" n_stmts="2">SELECTR id FROM table WHERE id is null; SELECTR id FROM table WHERE id is not null</sql>
+  </test>
 </unit>

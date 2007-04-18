@@ -52,7 +52,7 @@ plugin_get_description (void)
 gchar *
 plugin_get_dsn_spec (void)
 {
-	return gda_server_provider_load_file_contents (module_path, "oracle_specs_dsn.xml");
+	return gda_server_provider_load_file_contents (module_path, LIBGDA_DATA_DIR, "oracle_specs_dsn.xml");
 }
 
 GdaServerProvider *

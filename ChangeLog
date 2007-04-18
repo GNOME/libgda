@@ -1,3 +1,45 @@
+2007-04-18  Vivien Malerba <malerba@gnome-db.org>
+
+	* configure.in: set version to 3.0.0 for release
+	* libgda/sql-delimiter/parser.y:
+	* libgda/sql-delimiter/lexer.l:
+	* libgda/sql-delimiter/gda-sql-delimiter.h:
+	* libgda/sql-delimiter/gda-sql-delimiter.c:
+	* libgda/sql-delimiter/gda-test-delimiter.c: the delimiter now works correctly when using
+	BEGIN ... END blocks with ";" in the middle, when using PostgreSQL dollar quoting notation
+	for strings and removes comments
+	* libgda/sql-delimiter/lexer.l:
+	* libsql/lexer.l: don't replace "\n", "\t", etc by their char '\n', '\t', etc in strings
+	or textuals
+	* tests/queries/check_delimiter.c:
+	* tests/queries/basic_sql.xml:
+	* tests/queries/all_sql_tests.xml:
+	* tests/queries/app_sql.xml: improved test error reporting, and added a lot of complex
+	SQL test cases
+	* providers/sqlite/gda-sqlite-provider.c: implemented the get_last_insert_id() virtual
+	method
+	* libgda/gda-connection.c:
+	* libgda/gda-server-provider.c: doc. update for the get_last_insert_id() functions
+	* providers/postgres/gda-postgres-provider.[ch]: corrected a bug in 
+	gda_postgres_provider_get_last_insert_id() where the call would fail if the recset 
+	argument was NULL
+	* providers/ldap/libmain.c:
+	* providers/firebird/libmain.c:
+	* providers/sybase/libmain.c:
+	* providers/bdb/libmain.c:
+	* providers/freetds/libmain.c:
+	* providers/ibmdb2/libmain.c:
+	* providers/sqlite/libmain.c:
+	* providers/mdb/libmain.c:
+	* providers/xbase/libmain.c:
+	* providers/mysql/libmain.c:
+	* providers/oracle/libmain.c:
+	* providers/postgres/libmain.c:
+	* providers/odbc/libmain.c:
+	* providers/msql/libmain.c: corrected a bug which prevented providers to be found
+	when using the library
+	* doc/C/limitations.xml: added some more information about providers' limitations
+
 2007-04-13  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-init.c: show a message and not a warning when the DTD files cannot be found

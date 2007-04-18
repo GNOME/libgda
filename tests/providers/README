@@ -45,3 +45,5 @@ SQLITE_DBCREATE_PARAMS "DB_DIR=/home/me/libgda/tests/providers"
 
 The MDB provider does not allow database creation, so use the gda_check_db.mdb file in this directory
 MS_ACCESS_CNC_PARAMS "DB_DIR=/home/me/libgda/tests/providers;DB_NAME=gda_check_db"
+
+ORACLE_CNC_PARAMS TNSNAME=//127.0.0.1
