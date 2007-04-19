@@ -339,6 +339,9 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	/* use extended result codes */
 	sqlite3_extended_result_codes (scnc->connection, 1);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, scnc);
+	
+	/* allow a busy timeout of 500 ms */
+	sqlite3_busy_timeout (scnc->connection, 500);
 
 	/* set SQLite library options */
 	if (!gda_sqlite_provider_single_command (sqlite_prv, cnc, "PRAGMA empty_result_callbacks = ON"))

@@ -7,11 +7,13 @@
 extern GdaProviderInfo *pinfo;
 extern GdaConnection   *cnc;
 extern gboolean         params_provided;
+extern gboolean         fork_tests;
 
 int
 main (int argc, char **argv)
 {
 	int number_failed = 0;
+	fork_tests = FALSE;
 
 	gda_init ("check-providers", PACKAGE_VERSION, argc, argv);
 

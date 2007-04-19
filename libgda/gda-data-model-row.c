@@ -431,9 +431,9 @@ gda_data_model_row_get_access_flags (GdaDataModel *model)
 		GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD |
 		GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ROW (model), FALSE);
-	g_return_val_if_fail (CLASS (model)->is_updatable != NULL, FALSE);
 
 	if (! ((GdaDataModelRow *)model)->priv->read_only &&
+	    CLASS (model)->is_updatable &&
 	    CLASS (model)->is_updatable (GDA_DATA_MODEL_ROW (model)))
 		flags |= GDA_DATA_MODEL_ACCESS_WRITE;
 	

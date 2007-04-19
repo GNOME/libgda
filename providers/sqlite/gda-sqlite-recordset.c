@@ -263,7 +263,10 @@ gda_sqlite_recordset_fill (GdaSqliteRecordset *model, GdaConnection *cnc, SQLITE
 		gda_column_set_unique_key (column, FALSE);
 		gda_column_set_allow_null (column, TRUE);
 		gda_column_set_auto_increment (column, FALSE);
-	}	
+	}
+
+	/* set to read only mode */
+	g_object_set (G_OBJECT (model), "read_only", TRUE, NULL);
 }
 
 /*

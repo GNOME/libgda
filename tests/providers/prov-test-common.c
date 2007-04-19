@@ -7,7 +7,7 @@ GdaProviderInfo *pinfo;
 GdaConnection   *cnc;
 gboolean         params_provided;
 gboolean         db_created;
-
+gboolean         fork_tests = TRUE;
 
 /*
  *
@@ -96,6 +96,8 @@ prov_test_common_clean ()
 	Suite *s = clean_suite ();
 	SRunner *sr = srunner_create (s);
 	
+	if (!fork_tests)
+		srunner_set_fork_status (sr, CK_NOFORK);
 	srunner_run_all (sr, CK_NORMAL);
 	number_failed = srunner_ntests_failed (sr);
 	srunner_free (sr);
@@ -144,6 +146,8 @@ prov_test_common_create_tables_sql ()
 	Suite *s = create_tables_sql_suite ();
 	SRunner *sr = srunner_create (s);
 	
+	if (!fork_tests)
+		srunner_set_fork_status (sr, CK_NOFORK);
 	srunner_run_all (sr, CK_NORMAL);
 	number_failed = srunner_ntests_failed (sr);
 	srunner_free (sr);
@@ -204,7 +208,9 @@ prov_test_common_check_schemas ()
 #ifdef HAVE_CHECK
 	Suite *s = check_schemas_suite ();
 	SRunner *sr = srunner_create (s);
-	
+
+	if (!fork_tests)
+		srunner_set_fork_status (sr, CK_NOFORK);
 	srunner_run_all (sr, CK_NORMAL);
 	number_failed = srunner_ntests_failed (sr);
 	srunner_free (sr);
