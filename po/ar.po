@@ -1,48 +1,46 @@
-# Arabic translations for PACKAGE package.
-# Copyright (C) 2006 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2006.
-#
+# Arabic translations for THIS package.
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as THIS package.
+# Automatically generated, 2007.
+# Djihed Afifi <djihed@gmail.com>, 2007
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda\n"
+"Project-Id-Version: Arabic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-27 03:48+0100\n"
-"PO-Revision-Date: 2006-11-17 22:28+0100\n"
+"PO-Revision-Date: 2007-04-14 18:49+0100\n"
 "Last-Translator: Djihed Afifi <djihed@gmail.com>\n"
-"Language-Team: Arabic <doc@arabeyes.org>\n"
+"Language-Team: Arabeyes <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n == 0 ? 0 : n == 1 ? 1 : n == 2 ? 2 : n >= "
-"3 && n <= 10 ? 3 : n >= 11 && n <= 99 ? 4 : 5;\n"
-"X-Poedit-Language: Arabic\n"
 
 #: ../libgda/gda-client.c:293
-#, c-format
+#, fuzzy, c-format
 msgid "Could not find provider %s in the current setup"
-msgstr ""
+msgstr "غير قادر على إيجاد المُفَوَّضْ %s في أكتيف دايركتوري"
 
 #: ../libgda/gda-client.c:321
-#, c-format
+#, fuzzy, c-format
 msgid "Provider %s does not implement entry function"
-msgstr ""
+msgstr "لا يمكن الطباعة من خلال الطابعة %s لأنها لا تحتمل بوستسكريبت"
 
 #: ../libgda/gda-client.c:330
+#, fuzzy
 msgid "Could not create GdaServerProvider object from plugin"
-msgstr ""
+msgstr "لا يمكن انشاء ملف خرْج لـGStreamer"
 
 #: ../libgda/gda-client.c:419 ../libgda/gda-client.c:421
 #: ../libgda/gda-client.c:611 ../libgda/gda-connection.c:456
 #: ../libgda/gda-connection.c:458
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
-msgstr "بيانات فاسدة في قاعدة بيانات مصدر الاعدادات"
+msgstr "المفتاح %s غير موجود في الإعدادات"
 
 #: ../libgda/gda-client.c:453 ../libgda/gda-client.c:550
-#, c-format
+#, fuzzy, c-format
 msgid "Datasource configuration error: could not find provider '%s'"
-msgstr ""
+msgstr "لا يمكن تحميل الإعدادات"
 
 #: ../libgda/gda-client.c:457 ../libgda/gda-client.c:459
 #: ../libgda/gda-client.c:554 ../libgda/gda-client.c:556
@@ -62,7 +60,7 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-config.c:1479
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
 msgstr "خطأ: %s"
 
@@ -70,10 +68,9 @@ msgstr "خطأ: %s"
 #: ../libgda/gda-server-provider-extra.c:137
 #, fuzzy
 msgid "Id"
-msgstr "الهوية"
+msgstr "عاطل"
 
 #: ../libgda/gda-config.c:1620 ../tools/gda-diagnose.c:304
-#, fuzzy
 msgid "Location"
 msgstr "الموقع"
 
@@ -87,7 +84,7 @@ msgstr "الموقع"
 #: ../tools/gda-diagnose.c:314
 #, fuzzy
 msgid "Description"
-msgstr "الوصف"
+msgstr "ال_وصف"
 
 #: ../libgda/gda-config.c:1921 ../libgda/gda-server-provider-extra.c:184
 #: ../providers/firebird/gda-firebird-provider.c:733
@@ -103,31 +100,31 @@ msgstr "الوصف"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 #, fuzzy
 msgid "Name"
-msgstr "اسم"
+msgstr "الإ_سم"
 
 #: ../libgda/gda-config.c:1922
+#, fuzzy
 msgid "Provider"
-msgstr ""
+msgstr "توفّر"
 
 #: ../libgda/gda-config.c:1923
 #, fuzzy
 msgid "Connection string"
-msgstr "سلسلة البحث"
+msgstr "فقد الاتصال "
 
 #: ../libgda/gda-config.c:1925
 #, fuzzy
 msgid "Username"
-msgstr "إسم المستخدم"
+msgstr "اسم المستخدم"
 
 #: ../libgda/gda-config.c:1926
-#, fuzzy
 msgid "Global"
 msgstr "شامل"
 
 #: ../libgda/gda-connection.c:167
 #, fuzzy
 msgid "GdaClient to use"
-msgstr "قاعدة البيانات المستعملة"
+msgstr "خيارات العميل"
 
 #: ../libgda/gda-connection.c:171
 #, fuzzy
@@ -137,36 +134,37 @@ msgstr "قاعدة البيانات المستعملة"
 #: ../libgda/gda-connection.c:174
 #, fuzzy
 msgid "Connection string to use"
-msgstr "ال_اسم المستخدم للاتصال:"
+msgstr "يجري الإتصال بـ: %s"
 
 #: ../libgda/gda-connection.c:177
 #, fuzzy
 msgid "Provider to use"
-msgstr "قاعدة البيانات المستعملة"
+msgstr "توفّر"
 
 #: ../libgda/gda-connection.c:182
 #, fuzzy
 msgid "Username to use"
-msgstr "قاعدة البيانات المستعملة"
+msgstr "اسم المستخدم: "
 
 #: ../libgda/gda-connection.c:186
 #, fuzzy
 msgid "Password to use"
-msgstr "قاعدة البيانات المستعملة"
+msgstr "نص كلمة السر"
 
 #: ../libgda/gda-connection.c:190
 #, fuzzy
 msgid "Options (connection sharing)"
-msgstr "<b>إعدادات مشاركة ويندوز</b>"
+msgstr "لا تتَّصل عند بدء التَّشغيل"
 
 #: ../libgda/gda-connection.c:467 ../libgda/gda-connection.c:469
+#, fuzzy
 msgid "No DSN or connection string specified"
-msgstr ""
+msgstr "لم يحدّد أي مُستلِم"
 
 #: ../libgda/gda-connection.c:476 ../libgda/gda-connection.c:478
 #, fuzzy
 msgid "No provider specified"
-msgstr "لم يحدّد عنوان"
+msgstr "لم يحدّد أي مُوقِّع"
 
 #: ../libgda/gda-connection.c:1635
 msgid ""
@@ -199,21 +197,22 @@ msgstr ""
 #: ../libgda/gda-data-access-wrapper.c:484
 #, fuzzy, c-format
 msgid "Column %d out of range 0 - %d"
-msgstr "قيمة خارج المجال.\n"
+msgstr "قيمة خارج المدى.\n"
 
 #: ../libgda/gda-data-model-array.c:83 ../libgda/gda-data-model-array.c:104
-#, fuzzy, c-format
+#, c-format
 msgid "Row %d out of range 0 - %d"
-msgstr "قيمة خارج المجال.\n"
+msgstr ""
 
 #: ../libgda/gda-data-model-array.c:99
+#, fuzzy
 msgid "No row in data model"
-msgstr ""
+msgstr "لا يوجد معلومات عن رقم الإصدارة"
 
 #: ../libgda/gda-data-model-array.c:110 ../libgda/gda-data-model-hash.c:115
 #, fuzzy, c-format
 msgid "Column out %d of range 0 - %d"
-msgstr "قيمة خارج المجال.\n"
+msgstr "قيمة خارج المدى.\n"
 
 #: ../libgda/gda-data-model-array.c:145 ../libgda/gda-data-model-hash.c:141
 #: ../libgda/gda-data-model-hash.c:182 ../libgda/gda-data-model-hash.c:258
@@ -222,23 +221,24 @@ msgid "Wrong number of values in values list"
 msgstr "تلقي عدد العناصر في مفتاح قائمة."
 
 #: ../libgda/gda-data-model-array.c:205 ../libgda/gda-data-model-array.c:233
+#, fuzzy
 msgid "Row not found in data model"
-msgstr ""
+msgstr "الجسم غير موجود في المخزن"
 
 #: ../libgda/gda-data-model-filter-sql.c:360
 #, fuzzy, c-format
 msgid "Could not parse SQL string '%s'"
-msgstr "لم يمكن اعراب السلسلة \"%s\" كلوحة ألوان\n"
+msgstr "تعذّر تحليل عنوان URL `%s'"
 
 #: ../libgda/gda-data-model-filter-sql.c:364
-#, fuzzy, c-format
+#, c-format
 msgid "SQL command is not a SELECT (is '%s'"
-msgstr "أمر المُطْلِق غير محدد."
+msgstr ""
 
 #: ../libgda/gda-data-model-hash.c:98
-#, c-format
+#, fuzzy, c-format
 msgid "Row %d not found in data model"
-msgstr ""
+msgstr "المفتاح %s غير موجود في الإعدادات"
 
 #: ../libgda/gda-data-model-import.c:425
 #, c-format
@@ -260,20 +260,20 @@ msgid "The '%s' parameter must hold a gda type value, ignored."
 msgstr ""
 
 #: ../libgda/gda-data-model-import.c:967
-#, c-format
+#, fuzzy, c-format
 msgid "Character conversion at line %d, error: %s"
-msgstr ""
+msgstr "ترميز محارف المصدر المرتبط."
 
 #: ../libgda/gda-data-model-import.c:970
 #, fuzzy
 msgid "no detail"
-msgstr "لا تاريخ"
+msgstr "بدون تفاصيل"
 
 #: ../libgda/gda-data-model-import.c:1162
 #: ../libgda/gda-data-model-import.c:1575
-#, c-format
+#, fuzzy, c-format
 msgid "Could not convert '%s' to a value of type %s"
-msgstr ""
+msgstr "تعذّر الإتّصال بخادم POP على %s"
 
 #: ../libgda/gda-data-model-import.c:1178
 #, c-format
@@ -282,8 +282,9 @@ msgstr ""
 
 #. error
 #: ../libgda/gda-data-model-import.c:1301
+#, fuzzy
 msgid "Failed to read node in XML file"
-msgstr ""
+msgstr "خطأ في إعراب ملف XML"
 
 #: ../libgda/gda-data-model-import.c:1320
 #, c-format
@@ -292,8 +293,9 @@ msgstr ""
 
 #: ../libgda/gda-data-model-import.c:1369
 #: ../libgda/gda-data-model-import.c:1660
+#, fuzzy
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
-msgstr ""
+msgstr "لا صفة \"filter\" محددة على <template> في '%s'"
 
 #: ../libgda/gda-data-model-import.c:1416
 msgid "Expected <gda_array_field> in <gda_array>"
@@ -309,8 +311,9 @@ msgid "Expected <gda_array_data> in <gda_array>"
 msgstr ""
 
 #: ../libgda/gda-data-model-import.c:1471
+#, fuzzy
 msgid "Can't read the contents of the <gda_array_data> node"
-msgstr ""
+msgstr "غير حالة وضع كامل الشاشة"
 
 #: ../libgda/gda-data-model-import.c:1526
 #, c-format
@@ -322,9 +325,9 @@ msgid "Row has too many values (which are ignored)"
 msgstr ""
 
 #: ../libgda/gda-data-model-import.c:1629
-#, c-format
+#, fuzzy, c-format
 msgid "Expected <gda_array> node but got <%s>"
-msgstr ""
+msgstr "ترقبت عددا صحيحا تلقيت %s"
 
 #: ../libgda/gda-data-model-import.c:1707
 msgid "No <gda_array_field> specified in <gda_array>"
@@ -338,7 +341,7 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:1318
 #, fuzzy
 msgid "No detail"
-msgstr "لا تاريخ"
+msgstr "بدون تفاصيل"
 
 #: ../libgda/gda-data-model-import.c:1942
 #, c-format
@@ -365,14 +368,13 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-data-model-query.c:672
-#, fuzzy
 msgid "Query is not a SELECT query"
-msgstr "لا أستطيع اختيار ملف"
+msgstr ""
 
 #: ../libgda/gda-data-model-query.c:745
 #, fuzzy
 msgid "Wrong type of query"
-msgstr "<li> له نوع خاطىء %s"
+msgstr "نوع التّنبيه"
 
 #: ../libgda/gda-data-model-query.c:834
 #, c-format
@@ -394,7 +396,7 @@ msgstr ""
 #: ../libgda/gda-data-model-query.c:1555
 #, fuzzy
 msgid "No SELECT query specified"
-msgstr "لم يحدّد عنوان"
+msgstr "لم يحدّد أي مُوقِّع"
 
 #: ../libgda/gda-data-model-query.c:1562
 msgid "SELECT query references objects not described in dictionary"
@@ -434,7 +436,7 @@ msgstr ""
 #: ../libgda/gda-data-model-row.c:488
 #, fuzzy
 msgid "Too many values in list"
-msgstr "عدد المستخدمين كبير جدا لعرضه هنا..."
+msgstr "وصلات كثيرة جدا"
 
 #: ../libgda/gda-data-model.c:1062
 msgid "The 'NAME' parameter must hold a string value, ignored."
@@ -451,7 +453,7 @@ msgstr ""
 #: ../libgda/gda-data-model.c:1185
 #, fuzzy, c-format
 msgid "File '%s' already exists"
-msgstr "الملف موجود مسبّقا."
+msgstr "الملف '%s'  موجود."
 
 #: ../libgda/gda-data-model.c:1191
 #, fuzzy, c-format
@@ -461,7 +463,7 @@ msgstr "لا يمكن حفظ الملف %s."
 #: ../libgda/gda-data-model.c:1296
 #, fuzzy
 msgid "Exported Data"
-msgstr "البيانات الشخصية"
+msgstr "هيئة التصدير"
 
 #: ../libgda/gda-data-model.c:1427
 #, c-format
@@ -473,21 +475,19 @@ msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 
 #: ../libgda/gda-data-model.c:1475 ../testing/gda-test-models.c:555
-#, c-format
+#, fuzzy, c-format
 msgid "Cannot interpret string as a valid %s value"
-msgstr ""
+msgstr "لا يمكن وضع السيمة كقيمة\n"
 
 #: ../libgda/gda-data-model.c:1539
-#, c-format
+#, fuzzy, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
-msgstr ""
+msgstr "ترقبت زوجا تلقيت %s"
 
 #: ../libgda/gda-data-model.c:1598
 #, fuzzy
 msgid "Could not get an iterator for source data model"
-msgstr ""
-"لم يمكن جلب تذكرة كرْبِروس:\n"
-"%s"
+msgstr "تعذّر توليد بيانات التّوقيع: %s"
 
 #: ../libgda/gda-data-model.c:1614
 #, c-format
@@ -520,20 +520,21 @@ msgstr ""
 #: ../libgda/gda-data-proxy.c:448
 #, fuzzy
 msgid "Data model"
-msgstr "<b>نسق اللغة:</b>"
+msgstr "نمط الإعادة"
 
 #: ../libgda/gda-data-proxy.c:646
 msgid "GdaDataProxy cant' handle non random access data models"
 msgstr ""
 
 #: ../libgda/gda-data-proxy.c:1514
+#, fuzzy
 msgid "Modifications cancelled"
-msgstr ""
+msgstr "أُلغِيَ الإتّصال"
 
 #: ../libgda/gda-data-proxy.c:2301
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown GdaDataProxy column: %d"
-msgstr "حُرِّر جدول مجهول %d"
+msgstr ""
 
 #: ../libgda/gda-data-proxy.c:2480
 #, c-format
@@ -543,16 +544,16 @@ msgstr ""
 #: ../libgda/gda-data-proxy.c:2517
 #, fuzzy, c-format
 msgid "Value type mismatch %s instead of %s"
-msgstr "خاضية ملغات، إستعمل shadow_type عوضا عنها"
+msgstr "كان للوح الألوان مُدخلٌ واحد بدلاً من %d\n"
 
 #: ../libgda/gda-dict-aggregate.c:386
 msgid "XML Tag is not <gda_dict_aggregate>"
 msgstr ""
 
 #: ../libgda/gda-dict-aggregate.c:436
-#, c-format
+#, fuzzy, c-format
 msgid "Can't find data type for aggregate '%s'"
-msgstr ""
+msgstr "لا يمكن العثور على شهادة لـ '%s'"
 
 #: ../libgda/gda-dict-aggregate.c:448
 #, c-format
@@ -571,7 +572,7 @@ msgstr ""
 #: ../libgda/gda-dict-constraint.c:1201
 #, fuzzy
 msgid "Constraint cannot be activated!"
-msgstr "لا يمكن فتح الحوض `%s' : %s"
+msgstr "يمكن تفعيل زر التحول"
 
 #: ../libgda/gda-dict-constraint.c:1283
 msgid "XML Tag is not <gda_dict_constraint>"
@@ -584,7 +585,7 @@ msgstr ""
 #: ../libgda/gda-dict-constraint.c:1432
 #, fuzzy, c-format
 msgid "Referenced table (%s) not found"
-msgstr "خطأ: مستخدم غير موجود"
+msgstr "%s: الملف %s غير موجود"
 
 #: ../libgda/gda-dict-constraint.c:1440
 #, c-format
@@ -594,7 +595,7 @@ msgstr ""
 #: ../libgda/gda-dict-database.c:546
 #, fuzzy
 msgid "Database already contains data"
-msgstr "يحوي الملف بيانات فاسدة."
+msgstr "لا يحتوي ملف الصورة '%s' على بيانات"
 
 #: ../libgda/gda-dict-database.c:553
 msgid "XML Tag is not <gda_dict_database>"
@@ -611,7 +612,7 @@ msgstr ""
 #: ../libgda/gda-dict-database.c:859 ../libgda/gda-dict.c:1231
 #, fuzzy
 msgid "Update already started!"
-msgstr "بدأت لعبة جديدة"
+msgstr "حدّث حالة المستجيب"
 
 #: ../libgda/gda-dict-database.c:867 ../libgda/gda-dict-database.c:1057
 #: ../libgda/gda-dict-table.c:549
@@ -623,26 +624,27 @@ msgstr "لا اتّصال بخادم القاموس على '%s:%d'"
 #: ../libgda/gda-dict-table.c:555
 #, fuzzy
 msgid "Connection is not opened!"
-msgstr "%s لم يمكن فتحه"
+msgstr "_سرعة الاتصال:"
 
 #: ../libgda/gda-dict-database.c:905 ../libgda/gda-dict.c:1311
 #, fuzzy
 msgid "Update stopped!"
-msgstr "اوقفت العمليّة"
+msgstr "أوقِفت العمليّة"
 
 #: ../libgda/gda-dict-database.c:946
+#, fuzzy
 msgid "Schema for list of tables is wrong"
-msgstr ""
+msgstr "تاريخ البدء خاطئ"
 
 #: ../libgda/gda-dict-database.c:1077
 #, fuzzy
 msgid "Can't get list of tables"
-msgstr "لا يمكن تلقي اسم المستخدم"
+msgstr "فشلت في الحصول على قائمة دفاتر العناوين"
 
 #: ../libgda/gda-dict-database.c:1090
 #, fuzzy
 msgid "Can't get list of views"
-msgstr "لا يمكن تلقي اسم المستخدم"
+msgstr "فشلت في الحصول على قائمة دفاتر العناوين"
 
 #: ../libgda/gda-dict-field.c:902
 msgid "XML Tag is not <gda_dict_field>"
@@ -656,12 +658,12 @@ msgstr ""
 #: ../libgda/gda-dict-field.c:987
 #, fuzzy, c-format
 msgid "Unknown GDA data type '%s'"
-msgstr "مؤشّر لبيانات خارجيّة مجهولة (فئة \"%s\")"
+msgstr "نوع عمليّة مجهول %u"
 
 #: ../libgda/gda-dict-field.c:1001
-#, c-format
+#, fuzzy, c-format
 msgid "Could not find a data handler for data type '%s'"
-msgstr ""
+msgstr "لا يمكن فتح الملف %s."
 
 #: ../libgda/gda-dict-field.c:1028
 msgid "Missing required attributes for <gda_dict_field>"
@@ -681,13 +683,14 @@ msgid "Missing required attributes for <gda_dict_function>"
 msgstr ""
 
 #: ../libgda/gda-dict-reg-aggregates.c:47
+#, fuzzy
 msgid "Aggregates analysis"
-msgstr ""
+msgstr "تجمع دالات"
 
 #: ../libgda/gda-dict-reg-aggregates.c:171
 #, fuzzy
 msgid "Can't get list of aggregates"
-msgstr "لا يمكن تلقي اسم المستخدم"
+msgstr "فشلت في الحصول على قائمة دفاتر العناوين"
 
 #: ../libgda/gda-dict-reg-aggregates.c:185
 msgid "Schema for list of aggregates is wrong"
@@ -696,38 +699,40 @@ msgstr ""
 #: ../libgda/gda-dict-reg-functions.c:47
 #, fuzzy
 msgid "Functions analysis"
-msgstr "تعديل الوظائف"
+msgstr "دالة جيب"
 
 #: ../libgda/gda-dict-reg-functions.c:170
 #, fuzzy
 msgid "Can't get list of functions"
-msgstr "لا يمكن تلقي اسم المستخدم"
+msgstr "فشلت في الحصول على قائمة دفاتر العناوين"
 
 #: ../libgda/gda-dict-reg-functions.c:185
 msgid "Schema for list of functions is wrong"
 msgstr ""
 
 #: ../libgda/gda-dict-reg-types.c:63
-#, fuzzy
 msgid "Data types analysis"
-msgstr "كل الفئات المدعومة"
+msgstr ""
 
 #: ../libgda/gda-dict-reg-types.c:262
+#, fuzzy
 msgid "Can't get list of data types"
-msgstr ""
+msgstr "فشلت في الحصول على قائمة دفاتر العناوين"
 
 #: ../libgda/gda-dict-reg-types.c:273
+#, fuzzy
 msgid "Schema for list of data types is wrong"
-msgstr ""
+msgstr "تاريخ البدء خاطئ"
 
 #: ../libgda/gda-dict-table.c:599 ../libgda/gda-dict-table.c:611
+#, fuzzy
 msgid "Schema for list of fields is wrong"
-msgstr ""
+msgstr "زمن البدء خاطئ"
 
 #: ../libgda/gda-dict-table.c:679
 #, fuzzy, c-format
 msgid "Can't find data type %s"
-msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+msgstr "لا يمكن ايجاد المشغل %s"
 
 #: ../libgda/gda-dict-table.c:1221
 msgid "XML Tag is not <gda_dict_table>"
@@ -744,7 +749,7 @@ msgstr ""
 #: ../libgda/gda-dict-type.c:364
 #, fuzzy, c-format
 msgid "Unknown GType '%s'"
-msgstr "NAT غير معروف"
+msgstr "نوع مجهول"
 
 #: ../libgda/gda-dict-type.c:396
 msgid "Missing required attributes for <gda_dict_type>"
@@ -753,12 +758,12 @@ msgstr ""
 #: ../libgda/gda-dict.c:238
 #, fuzzy
 msgid "DSN of the connection to use"
-msgstr "ال_اسم المستخدم للاتصال:"
+msgstr "فقدت الاتّصال بـ %s"
 
 #: ../libgda/gda-dict.c:241
 #, fuzzy
 msgid "Username for the connection to use"
-msgstr "ال_اسم المستخدم للاتصال:"
+msgstr "اسم لمجموعة العمليات."
 
 #: ../libgda/gda-dict.c:868
 #, c-format
@@ -773,21 +778,24 @@ msgstr ""
 #: ../libgda/gda-dict.c:1038 ../testing/html.c:131 ../tools/html.c:131
 #, fuzzy, c-format
 msgid "Error writing XML file %s"
-msgstr "خطأ كتابة ملف الجلسة '%s': %s\n"
+msgstr ""
+"خطأ كتابة الملف '%s':\n"
+"%s"
 
 #: ../libgda/gda-dict.c:1049
+#, fuzzy
 msgid "Can't allocate memory for XML structure."
-msgstr ""
+msgstr "لا يمكن توزيع ذاكرة لبنية IOBuffer"
 
 #: ../libgda/gda-dict.c:1217
 #, fuzzy
 msgid "No connection associated to the dictionary"
-msgstr "لا اتّصال بخادم القاموس على '%s:%d'"
+msgstr "فشل الاتصال بخادم القواميس %s:%d"
 
 #: ../libgda/gda-dict.c:1224
 #, fuzzy
 msgid "Connection is closed"
-msgstr "موسع·مغلق·للبيكسبف"
+msgstr "فقد الاتصال "
 
 #: ../libgda/gda-dict.c:1391
 #, fuzzy, c-format
@@ -877,7 +885,7 @@ msgstr ""
 #: ../libgda/gda-init.c:125
 #, fuzzy
 msgid "Could not parse "
-msgstr "لم يمكن اعراب: %s"
+msgstr "تعذّر تحليل: %s"
 
 #: ../libgda/gda-init.c:103
 msgid ""
@@ -898,8 +906,9 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-object.c:306
+#, fuzzy
 msgid "LibGda must be initialized before any usage."
-msgstr ""
+msgstr "لا يمكن تشغيل مدير التفضيلات."
 
 #: ../libgda/gda-parameter-list.c:498
 #, c-format
@@ -909,17 +918,17 @@ msgstr ""
 #: ../libgda/gda-parameter-list.c:554
 #, fuzzy, c-format
 msgid "Missing node <parameters>: '%s'"
-msgstr "تجاهل عقدة XML `%s': %s"
+msgstr "معامل %s مفقود"
 
 #: ../libgda/gda-parameter-list.c:645 ../libgda/gda-server-operation.c:856
-#, c-format
+#, fuzzy, c-format
 msgid "Can't find a data type for parameter '%s'"
-msgstr ""
+msgstr "لا يمكن العثور على شهادة لـ '%s'"
 
 #: ../libgda/gda-parameter-list.c:1254
-#, c-format
+#, fuzzy, c-format
 msgid "Could not add parameter of type %s with value '%s'"
-msgstr ""
+msgstr "تعذّر إعادة تسمية الشعار ذي الإسم '%s'."
 
 #: ../libgda/gda-parameter-list.c:1342
 #, c-format
@@ -931,9 +940,8 @@ msgid "GdaParameterListNode has a NULL param attribute"
 msgstr ""
 
 #: ../libgda/gda-parameter-list.c:1366
-#, fuzzy
 msgid "Missing GdaParameterListSource"
-msgstr "معلوملت غير موجودة"
+msgstr ""
 
 #: ../libgda/gda-parameter-list.c:1371
 msgid ""
@@ -941,9 +949,9 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-parameter-list.c:1378
-#, fuzzy, c-format
+#, c-format
 msgid "GdaDataModel %p does not have a column %d"
-msgstr "لا ينتهي بـ"
+msgstr ""
 
 #: ../libgda/gda-parameter-list.c:1384
 #, c-format
@@ -970,17 +978,17 @@ msgstr ""
 #: ../libgda/gda-query-condition.c:371
 #, fuzzy, c-format
 msgid "No join condition found in '%s'"
-msgstr "لا توجد صور في الأرشيف %s"
+msgstr "لايوجد تعريف لـ '%s'"
 
 #: ../libgda/gda-query-condition.c:377 ../libgda/gda-query-field.c:294
 #, fuzzy, c-format
 msgid "Error parsing '%s'"
-msgstr "خطأ أثناء ترجمة المصفات: %s: %s"
+msgstr "خطأ أثناء تحليل الخيار %s"
 
 #: ../libgda/gda-query-condition.c:795
 #, fuzzy
 msgid "Conditions hierarchy error"
-msgstr "حدث خطأ خلال فتح %s."
+msgstr "مركب شرطي"
 
 #: ../libgda/gda-query-condition.c:804
 msgid "A NOT node can only have one child"
@@ -1005,7 +1013,7 @@ msgstr ""
 #: ../libgda/gda-query-condition.c:1549
 #, fuzzy
 msgid "Condition is not active"
-msgstr "الواجهة %s ليست نشطة"
+msgstr "الإعدادات غير سليمة"
 
 #: ../libgda/gda-query-condition.c:1563
 msgid "Condition operator 'NOT' must have one argument"
@@ -1014,7 +1022,7 @@ msgstr ""
 #: ../libgda/gda-query-condition.c:1573
 #, fuzzy
 msgid "Condition must have at least one argument"
-msgstr "يجب أن يكون لك شريط واحد على الأقل."
+msgstr "يجب أن يكون لك دائما شريط واحد على الأقل."
 
 #: ../libgda/gda-query-condition.c:1594
 msgid "Condition must have two arguments"
@@ -1047,22 +1055,22 @@ msgstr ""
 #: ../libgda/gda-query-field-agg.c:905 ../libgda/gda-query-field-func.c:985
 #, fuzzy, c-format
 msgid "Can't find referenced field '%s'"
-msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+msgstr "لا يمكن العثور على شهادة لـ '%s'"
 
 #: ../libgda/gda-query-field-agg.c:913
 #, fuzzy, c-format
 msgid "Aggregate '%s' has no argument"
-msgstr "ليس للمضيف عنوان"
+msgstr "الخاصية '%s' ليس لها قيمة"
 
 #: ../libgda/gda-query-field-agg.c:925
 #, fuzzy, c-format
 msgid "Can't find aggregate '%s'"
-msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+msgstr "لا يمكن ايجاد المشغل %s"
 
 #: ../libgda/gda-query-field-agg.c:984
 #, fuzzy
 msgid "Non-activated aggregate"
-msgstr "مفتاح غير قياسي"
+msgstr "شغّل نسبة التّغير"
 
 #: ../libgda/gda-query-field-all.c:622
 msgid "XML Tag is not <gda_query_fall>"
@@ -1075,12 +1083,11 @@ msgstr ""
 #: ../libgda/gda-query-field-all.c:711
 #, fuzzy, c-format
 msgid "Can't find target '%s'"
-msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+msgstr "لا يمكن ايجاد المشغل %s"
 
 #: ../libgda/gda-query-field-all.c:735
-#, fuzzy
 msgid "Non-activated field"
-msgstr "أي حقل يحوي"
+msgstr ""
 
 #: ../libgda/gda-query-field-field.c:936
 msgid "XML Tag is not <gda_query_ffield>"
@@ -1110,7 +1117,7 @@ msgstr ""
 #: ../libgda/gda-query-field-func.c:1053
 #, fuzzy
 msgid "Non-activated function"
-msgstr "استدعاء التابع ملغى"
+msgstr "لا توجد اتصالات نشطة!"
 
 #: ../libgda/gda-query-field-value.c:1094
 msgid ""
@@ -1125,7 +1132,7 @@ msgstr ""
 #: ../libgda/gda-query-field-value.c:1206
 #, fuzzy, c-format
 msgid "Can't interpret '%s' as a value"
-msgstr "لا يمكن وضع السيمة كقيمة\n"
+msgstr "الخاصية '%s' ليس لها قيمة"
 
 #: ../libgda/gda-query-field-value.c:1271
 #, c-format
@@ -1148,7 +1155,7 @@ msgstr ""
 #: ../libgda/gda-query-field-value.c:1325
 #, fuzzy, c-format
 msgid "Value field '%s' does not have a value!"
-msgstr "لا ينتهي بـ"
+msgstr "يبدو أن الملف '%s' ليس صورة سليمة."
 
 #: ../libgda/gda-query-field-value.c:1419
 #: ../libgda/gda-query-field-value.c:1485
@@ -1157,19 +1164,19 @@ msgid "Default value requested"
 msgstr "القيمة الإفتراضية: %s\n"
 
 #: ../libgda/gda-query-field-value.c:1443
-#, c-format
+#, fuzzy, c-format
 msgid "Could not find GdaParameter in context for value field '%s'"
-msgstr ""
+msgstr "لا يوجد أيقونة باسم \"%s\" لطور الطرفيّة \"%s\"\n"
 
 #: ../libgda/gda-query-field-value.c:1461
 #, fuzzy, c-format
 msgid "Invalid parameter '%s' (value: %s)"
-msgstr "قيمة VGA غير صالحة"
+msgstr "المتغيرات المدخلة خاطئة"
 
 #: ../libgda/gda-query-field-value.c:1523
 #, fuzzy
 msgid "No specified value"
-msgstr "(لا قيمة ضبطت)"
+msgstr "غير محدّد"
 
 #: ../libgda/gda-query-field.c:164
 msgid "Missing 'target' attribute in <gda_query_fall>"
@@ -1185,9 +1192,9 @@ msgid "More than one field to parse in '%s'"
 msgstr ""
 
 #: ../libgda/gda-query-field.c:288
-#, c-format
+#, fuzzy, c-format
 msgid "No field to parse in '%s'"
-msgstr ""
+msgstr "تعذّر تحليل عنوان URL `%s'"
 
 #: ../libgda/gda-query-join.c:914 ../libgda/gda-query-parsing.c:879
 msgid "Join condition must be between two entities"
@@ -1207,8 +1214,9 @@ msgid "Problem loading <gda_query_join>"
 msgstr ""
 
 #: ../libgda/gda-query-parsing.c:377
+#, fuzzy
 msgid "Invalid ORDER BY clause"
-msgstr ""
+msgstr "قيمة تاريخ غير صالحة"
 
 #: ../libgda/gda-query-parsing.c:389
 #, c-format
@@ -1224,8 +1232,9 @@ msgid "UPDATE target field is not an entity's field"
 msgstr ""
 
 #: ../libgda/gda-query-parsing.c:486
+#, fuzzy
 msgid "Missing target fields to update"
-msgstr ""
+msgstr "معامل %s مفقود"
 
 #: ../libgda/gda-query-parsing.c:551
 msgid "Missing INSERT target entity"
@@ -1252,8 +1261,9 @@ msgid "Missing DELETE target entity"
 msgstr ""
 
 #: ../libgda/gda-query-parsing.c:862
+#, fuzzy
 msgid "Internal error: can't find target"
-msgstr ""
+msgstr "خطأ داخلي: UID ذات تهيئة غير سليمة: %s"
 
 #: ../libgda/gda-query-parsing.c:926
 msgid "Ambiguous join: multiple possible foreign key constraints"
@@ -1270,47 +1280,46 @@ msgstr ""
 #: ../libgda/gda-query-parsing.c:1263
 #, fuzzy, c-format
 msgid "Invalid field name: %s"
-msgstr "اسم صورة غير صحيح: \"%s\"."
+msgstr "اسم ملف غير سليم: %s"
 
 #: ../libgda/gda-query-parsing.c:1303
 #, fuzzy
 msgid "Invalid empty field name"
-msgstr "الطّول الأقصى لإسم الحقل"
+msgstr "اسم ملف غير صالح"
 
 #: ../libgda/gda-query-parsing.c:1308
 #, fuzzy, c-format
 msgid "Invalid field name '%s'"
-msgstr "اسم صورة غير صحيح: \"%s\"."
+msgstr "اسم ملف غير سليم: %s"
 
 #: ../libgda/gda-query-parsing.c:1329
 #, fuzzy, c-format
 msgid "Non-declared target '%s'"
-msgstr "عرض هدف الشاشة"
+msgstr "لا سيمة مخزنة عند '%s'\n"
 
 #: ../libgda/gda-query-parsing.c:1347
 #, fuzzy, c-format
 msgid "Invalid field '%s.%s'"
-msgstr "حقل ال_قيمة"
+msgstr "مجلد غير صالح: `%s'"
 
 #: ../libgda/gda-query-parsing.c:1386
 #, fuzzy, c-format
 msgid "Non declared target '%s'"
-msgstr "عرض هدف الشاشة"
+msgstr "لا سيمة مخزنة عند '%s'\n"
 
 #: ../libgda/gda-query-parsing.c:1418
-#, fuzzy, c-format
+#, c-format
 msgid "Ambiguous field '%s'"
-msgstr "حقل ال_قيمة"
+msgstr ""
 
 #: ../libgda/gda-query-parsing.c:1453
-#, fuzzy
 msgid "Ambiguous field '*'"
-msgstr "حقل ال_قيمة"
+msgstr ""
 
 #: ../libgda/gda-query-parsing.c:1544 ../libgda/gda-query-parsing.c:1547
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown data type '%s', using G_TYPE_STRING"
-msgstr "نوع بيانات غير صحيح"
+msgstr ""
 
 #: ../libgda/gda-query-parsing.c:1562 ../libgda/gda-query-parsing.c:1564
 msgid ""
@@ -1326,9 +1335,9 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-query-parsing.c:1667 ../libgda/gda-query-parsing.c:1669
-#, c-format
+#, fuzzy, c-format
 msgid "Value '%s' can't be converted to a known type"
-msgstr ""
+msgstr "لا يمكن تفسير القيمة '%s' كعدد."
 
 #: ../libgda/gda-query-parsing.c:1833
 msgid "Can't set aggregate or function's arguments"
@@ -1337,15 +1346,16 @@ msgstr ""
 #: ../libgda/gda-query-target.c:599 ../libgda/gda-query-target.c:607
 #, fuzzy
 msgid "No name"
-msgstr "لا يوجد اسم"
+msgstr "لا إطارات"
 
 #: ../libgda/gda-query-target.c:758
 msgid "Can't get XML ID of target's referenced entity"
 msgstr ""
 
 #: ../libgda/gda-query-target.c:770
+#, fuzzy
 msgid "Can't get the name of target's referenced table"
-msgstr ""
+msgstr "تغيير اسم هذا المجلد"
 
 #: ../libgda/gda-query-target.c:797
 msgid "XML Tag is not <gda_query_target>"
@@ -1369,49 +1379,46 @@ msgid "Can't modify the structure of a non-parsed SQL query"
 msgstr ""
 
 #: ../libgda/gda-query.c:1179
-#, fuzzy
 msgid "Select"
-msgstr "انتقاء"
+msgstr "انتقِ"
 
 #: ../libgda/gda-query.c:1181
-#, fuzzy
 msgid "Insert"
 msgstr "أدرج"
 
 #: ../libgda/gda-query.c:1183
 #, fuzzy
 msgid "Update"
-msgstr "تحديث"
+msgstr "_حدّث"
 
 #: ../libgda/gda-query.c:1185
-#, fuzzy
 msgid "Delete"
-msgstr "حذف"
+msgstr "حدف"
 
 #: ../libgda/gda-query.c:1187
 #, fuzzy
 msgid "Select (union)"
-msgstr "إنتقاء ملف"
+msgstr "أختر أيقونة..."
 
 #: ../libgda/gda-query.c:1189
 #, fuzzy
 msgid "Select (intersection)"
-msgstr "إنتقاء ملف"
+msgstr "حذف المنتقى"
 
 #: ../libgda/gda-query.c:1191
 #, fuzzy
 msgid "Select (exception)"
-msgstr "إرجاع إستثناء: %s"
+msgstr "انتقي خيارات أكثر"
 
 #: ../libgda/gda-query.c:1193
 #, fuzzy
 msgid "SQL text"
-msgstr "نص العلامة."
+msgstr "اظهار نص"
 
 #: ../libgda/gda-query.c:1400
 #, fuzzy, c-format
 msgid "Error during query parsing (%s)"
-msgstr "خطأ أثناء إعراب أمر البحث."
+msgstr "خطأ أثناء التحويل: %s"
 
 #: ../libgda/gda-query.c:1443
 msgid "No valid type specified for parameter, using gchararray"
@@ -1433,11 +1440,12 @@ msgstr ""
 #: ../libgda/gda-query.c:2785
 #, fuzzy
 msgid "No connection associated to query's dictionary"
-msgstr "لا اتّصال بخادم القاموس على '%s:%d'"
+msgstr "فشل الاتصال بخادم القواميس %s:%d"
 
 #: ../libgda/gda-query.c:2790
+#, fuzzy
 msgid "Connection associated to query's dictionary is closed"
-msgstr ""
+msgstr "فشل الاتصال بخادم القواميس %s:%d"
 
 #: ../libgda/gda-query.c:2992 ../testing/gda-test-model-query.c:143
 #: ../testing/gda-test-model-query.c:170 ../testing/gda-test-models.c:152
@@ -1451,7 +1459,7 @@ msgstr ""
 #: ../tools/gda-author-dict-file.c:249 ../tools/gda-diagnose.c:616
 #, fuzzy
 msgid "Unknown error"
-msgstr "خطأ مجهول"
+msgstr "خطأ مجهول."
 
 #: ../libgda/gda-query.c:3526
 msgid ""
@@ -1486,12 +1494,12 @@ msgstr ""
 #: ../libgda/gda-query.c:4374
 #, fuzzy, c-format
 msgid "Can't find field '%s'"
-msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+msgstr "لا يمكن ايجاد المشغل %s"
 
 #: ../libgda/gda-query.c:4493
 #, fuzzy
 msgid "Problem loading <gda_query>"
-msgstr "واجه الشريط مشكلة أثناء تحميل \"%s\"."
+msgstr "فشل تحميل المشروع"
 
 #: ../libgda/gda-query.c:4666
 msgid "More than two sub-queries for an EXCEPT query"
@@ -1500,26 +1508,27 @@ msgstr ""
 #: ../libgda/gda-query.c:4683
 #, fuzzy
 msgid "Empty query"
-msgstr "تعبير الاستعلام لالتقييم"
+msgstr "صفحة فارغة"
 
 #: ../libgda/gda-query.c:4738
 #, fuzzy, c-format
 msgid "Invalid parameter '%s'"
-msgstr "عوامل التنفيذ"
+msgstr "المتغيرات المدخلة خاطئة"
 
 #: ../libgda/gda-query.c:4744
 #, fuzzy
 msgid "Missing parameters"
-msgstr "باراميترات غير صالحة"
+msgstr "الحرف الناقص"
 
 #: ../libgda/gda-query.c:4818
 #, fuzzy, c-format
 msgid "Query %s is not a selection query"
-msgstr "“%s” لا يجيب"
+msgstr "جذر المخزن %s ليس دليلاً اعتياديّاً"
 
 #: ../libgda/gda-query.c:4850
+#, fuzzy
 msgid "No target defined to apply modifications"
-msgstr ""
+msgstr "رتّب قائمة الملفات بحسب تاريخ التعديل"
 
 #: ../libgda/gda-query.c:4858
 msgid "More than one target defined to apply modifications"
@@ -1573,22 +1582,22 @@ msgstr ""
 #: ../libgda/gda-query.c:5682
 #, fuzzy
 msgid "Missing values"
-msgstr "<b>القيم النسبيّة</b>"
+msgstr "ملفات مفقودة"
 
 #: ../libgda/gda-query.c:5936
 #, fuzzy, c-format
 msgid "Query '%s'"
-msgstr "بحث"
+msgstr "استعلم"
 
 #: ../libgda/gda-query.c:5938
 #, fuzzy
 msgid "Unnamed Query"
-msgstr "أرسل الإستفسار"
+msgstr "(حاجز غير مسمى)"
 
 #: ../libgda/gda-server-operation.c:567
 #, fuzzy, c-format
 msgid "GdaServerOperation: could not find file '%s'"
-msgstr "لا يوجد ملف البكسمب '%s'\n"
+msgstr "الملقم البعيد فشل فى ايجاد الملف %s\n"
 
 #: ../libgda/gda-server-operation.c:597
 #, c-format
@@ -1603,9 +1612,9 @@ msgid "GdaServerOperation: file '%s' does not conform to DTD"
 msgstr ""
 
 #: ../libgda/gda-server-operation.c:616
-#, fuzzy, c-format
+#, c-format
 msgid "GdaServerOperation: could not load file '%s'"
-msgstr "لم أتمكن من تحميل ملف glade"
+msgstr ""
 
 #: ../libgda/gda-server-operation.c:772
 #, c-format
@@ -1615,21 +1624,21 @@ msgstr ""
 #: ../libgda/gda-server-operation.c:857
 #, fuzzy
 msgid "unnamed"
-msgstr "غير مسمّى"
+msgstr "مسمى"
 
 #: ../libgda/gda-server-operation.c:1095
 msgid "Non handled GdaServerOperationType, please report error"
 msgstr ""
 
 #: ../libgda/gda-server-operation.c:1265
-#, c-format
+#, fuzzy, c-format
 msgid "Expected tag <serv_op_data>, got <%s>"
-msgstr ""
+msgstr "ترقبت عدد عشريا تلقيت %s"
 
 #: ../libgda/gda-server-operation.c:1279
-#, c-format
+#, fuzzy, c-format
 msgid "Expected tag <op_data>, got <%s>"
-msgstr ""
+msgstr "ترقبت عدد عشريا تلقيت %s"
 
 #: ../libgda/gda-server-operation.c:1310 ../libgda/gda-server-operation.c:1921
 msgid ""
@@ -1638,18 +1647,19 @@ msgstr ""
 
 #: ../libgda/gda-server-operation.c:1323 ../libgda/gda-server-operation.c:1342
 #: ../libgda/gda-server-operation.c:1930 ../libgda/gda-server-operation.c:1982
-#, c-format
+#, fuzzy, c-format
 msgid "Could not set parameter '%s' to value '%s'"
-msgstr ""
+msgstr "تعذّر إعادة تسمية '%s' إلى %s: %ss"
 
 #: ../libgda/gda-server-operation.c:1364
+#, fuzzy
 msgid "Missing attribute named 'path'"
-msgstr ""
+msgstr "اسم الملف مفقود."
 
 #: ../libgda/gda-server-operation.c:2041
 #, fuzzy, c-format
 msgid "Missing required value for '%s'"
-msgstr "خطأ تلقي قيمة لـ '%s': %s"
+msgstr "الملف المطلوب مفقود"
 
 #: ../libgda/gda-server-operation.c:2052
 #, c-format
@@ -1659,7 +1669,7 @@ msgstr ""
 #: ../libgda/gda-server-provider-extra.c:92
 #, fuzzy
 msgid "Aggregate"
-msgstr "تجمع دالات"
+msgstr "مبشرة"
 
 #: ../libgda/gda-server-provider-extra.c:94
 #: ../libgda/gda-server-provider-extra.c:138
@@ -1679,7 +1689,6 @@ msgstr "تجمع دالات"
 #: ../providers/ldap/gda-ldap-provider.c:337
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:36
 #: ../providers/sybase/gda-sybase-provider.c:1102
-#, fuzzy
 msgid "Owner"
 msgstr "المالك"
 
@@ -1697,12 +1706,14 @@ msgid "Comments"
 msgstr "_تعليقات:"
 
 #: ../libgda/gda-server-provider-extra.c:96
+#, fuzzy
 msgid "OutType"
-msgstr ""
+msgstr "أنواع"
 
 #: ../libgda/gda-server-provider-extra.c:97
+#, fuzzy
 msgid "InType"
-msgstr ""
+msgstr "أنواع"
 
 #: ../libgda/gda-server-provider-extra.c:98
 #: ../libgda/gda-server-provider-extra.c:143
@@ -1712,11 +1723,10 @@ msgstr ""
 #: ../libgda/gda-server-provider-extra.c:187
 #, fuzzy
 msgid "Definition"
-msgstr "وصف التعريف"
+msgstr "تعريفات"
 
 #: ../libgda/gda-server-provider-extra.c:102
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:827
-#, fuzzy
 msgid "Database"
 msgstr "قاعدة بيانات"
 
@@ -1759,7 +1769,7 @@ msgstr "نوع البيانات"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:35
 #, fuzzy
 msgid "Size"
-msgstr "الحجم"
+msgstr "الحجم:"
 
 #. list of fields
 #: ../libgda/gda-server-provider-extra.c:109
@@ -1772,25 +1782,25 @@ msgstr "الحجم"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:33
 #, fuzzy
 msgid "Scale"
-msgstr "القياس"
+msgstr "_حجّم"
 
 #: ../libgda/gda-server-provider-extra.c:110
 #: ../providers/firebird/gda-firebird-provider.c:617
 #, fuzzy
 msgid "Not null?"
-msgstr "غير صحيح"
+msgstr "كوتولّا"
 
 #: ../libgda/gda-server-provider-extra.c:111
 #: ../providers/firebird/gda-firebird-provider.c:618
 #, fuzzy
 msgid "Primary key?"
-msgstr "اتفاق على المفتاح"
+msgstr "أوّلي"
 
 #: ../libgda/gda-server-provider-extra.c:112
 #: ../providers/firebird/gda-firebird-provider.c:619
 #, fuzzy
 msgid "Unique index?"
-msgstr "الفهرس النهائي"
+msgstr "هويّة فريدة"
 
 #: ../libgda/gda-server-provider-extra.c:113
 #: ../providers/firebird/gda-firebird-provider.c:620
@@ -1802,7 +1812,7 @@ msgstr "الفهرس النهائي"
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:2
 #, fuzzy
 msgid "References"
-msgstr "خ_يارات"
+msgstr "تفضيلات"
 
 #. list of fields
 #: ../libgda/gda-server-provider-extra.c:114
@@ -1814,12 +1824,12 @@ msgstr "خ_يارات"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:21
 #, fuzzy
 msgid "Default value"
-msgstr "القيمة الإفتراضية: %s\n"
+msgstr "حدة الصوت الإفتراضية"
 
 #: ../libgda/gda-server-provider-extra.c:115
 #, fuzzy
 msgid "Extra attributes"
-msgstr "اعرض الخواص"
+msgstr "وصف"
 
 #: ../libgda/gda-server-provider-extra.c:119
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:881
@@ -1827,20 +1837,17 @@ msgstr "اعرض الخواص"
 #: ../providers/oracle/oracle_specs_drop_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:3
-#, fuzzy
 msgid "Index"
 msgstr "فهرس"
 
 #: ../libgda/gda-server-provider-extra.c:123
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:912
-#, fuzzy
 msgid "Language"
-msgstr "لغة"
+msgstr "اللغة"
 
 #: ../libgda/gda-server-provider-extra.c:127
-#, fuzzy
 msgid "Namespace"
-msgstr "المجال المجرّد"
+msgstr "مجال أسماء المجلّدات"
 
 #: ../libgda/gda-server-provider-extra.c:131
 #: ../libgda/gda-server-provider-extra.c:154
@@ -1859,7 +1866,6 @@ msgstr "المجال المجرّد"
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
-#, fuzzy
 msgid "Table"
 msgstr "جدول"
 
@@ -1871,29 +1877,31 @@ msgstr "<b>متتالية</b>"
 
 #: ../libgda/gda-server-provider-extra.c:136
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:910
+#, fuzzy
 msgid "Procedure"
-msgstr ""
+msgstr "%d إجراء"
 
 #: ../libgda/gda-server-provider-extra.c:140
 #: ../providers/firebird/gda-firebird-provider.c:737
 #, fuzzy
 msgid "Return type"
-msgstr "نوع التّنبيه"
+msgstr "نوع الغشاوة"
 
 #: ../libgda/gda-server-provider-extra.c:141
+#, fuzzy
 msgid "Nb args"
-msgstr ""
+msgstr "لا طبقات"
 
 #: ../libgda/gda-server-provider-extra.c:142
 #: ../providers/firebird/gda-firebird-provider.c:738
 #, fuzzy
 msgid "Args types"
-msgstr "الأنواع الأساسية"
+msgstr "فئة العنوان"
 
 #: ../libgda/gda-server-provider-extra.c:161
 #, fuzzy
 msgid "Trigger"
-msgstr "الإجراء/المحفّز"
+msgstr "مقطوعة اذاعية"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: ../libgda/gda-server-provider-extra.c:165
@@ -1906,7 +1914,7 @@ msgstr "الإجراء/المحفّز"
 #: ../providers/sybase/gda-sybase-provider.c:1100 ../tools/gda-diagnose.c:315
 #, fuzzy
 msgid "Type"
-msgstr "النّوع"
+msgstr "أنواع"
 
 #: ../libgda/gda-server-provider-extra.c:168
 #: ../providers/firebird/gda-firebird-provider.c:249
@@ -1914,19 +1922,19 @@ msgstr "النّوع"
 #: ../providers/sybase/gda-sybase-provider.c:1106
 #, fuzzy
 msgid "GDA type"
-msgstr "نوع التّنبيه"
+msgstr "نوع اللعبة"
 
 #: ../libgda/gda-server-provider-extra.c:169
+#, fuzzy
 msgid "Synonyms"
-msgstr ""
+msgstr "مجهول"
 
 #: ../libgda/gda-server-provider-extra.c:173
 #, fuzzy
 msgid "User"
-msgstr "مستخدم"
+msgstr "الم_ستخدم"
 
 #: ../libgda/gda-server-provider-extra.c:177
-#, fuzzy
 msgid "View"
 msgstr "عرض"
 
@@ -1936,7 +1944,7 @@ msgstr "عرض"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
 #, fuzzy
 msgid "Fields"
-msgstr "_حقول الشهادة"
+msgstr "الحقل"
 
 #: ../libgda/gda-server-provider-extra.c:188
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:15
@@ -1945,13 +1953,13 @@ msgstr "_حقول الشهادة"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:33
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:6
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:12
-#, fuzzy
 msgid "Options"
 msgstr "خيارات"
 
 #: ../libgda/gda-server-provider-extra.c:304
+#, fuzzy
 msgid "Data model for schema has a wrong number of columns"
-msgstr ""
+msgstr "لم افهم `%s' (عدد عناصر مغلوط)"
 
 #: ../libgda/gda-server-provider-extra.c:316
 #, c-format
@@ -1998,12 +2006,12 @@ msgstr ""
 #: ../libgda/gda-util.c:244
 #, fuzzy, c-format
 msgid "Error while reading %s: %s"
-msgstr "خطأ في قراءة الملف '%s': %s"
+msgstr "فشل في قراءة %s: %s"
 
 #: ../libgda/gda-util.c:270
 #, fuzzy, c-format
 msgid "Could not create file %s"
-msgstr "لم يمكن إنشاء ملف الإقفال لـ %s: %s"
+msgstr "تعذّر إنشاء الأنبوب: %s"
 
 #: ../libgda/gda-util.c:811
 #, c-format
@@ -2041,109 +2049,118 @@ msgstr ""
 #: ../libgda/handlers/gda-handler-bin.c:115
 #, fuzzy
 msgid "Binary handler"
-msgstr "معالج الوحدات"
+msgstr "عدد ثنائي"
 
 #: ../libgda/handlers/gda-handler-bin.c:121
+#, fuzzy
 msgid "InternalBin"
-msgstr ""
+msgstr "عالمي"
 
 #: ../libgda/handlers/gda-handler-bin.c:122
 #, fuzzy
 msgid "Binary representation"
-msgstr "أظهر الملفات ال_ثنائية"
+msgstr "تعريف الأمكنة"
 
 #: ../libgda/handlers/gda-handler-boolean.c:116
 #, fuzzy
 msgid "Boolean values handler"
-msgstr "handler عنوان غير صالح"
+msgstr "قيمة منطقية"
 
 #: ../libgda/handlers/gda-handler-boolean.c:121
+#, fuzzy
 msgid "InternalBoolean"
-msgstr ""
+msgstr "الحشو الداخلي"
 
 #: ../libgda/handlers/gda-handler-boolean.c:122
 #, fuzzy
 msgid "Boolean representation"
-msgstr "قيمة منطقية"
+msgstr "دور التقديم"
 
 #: ../libgda/handlers/gda-handler-numerical.c:130
+#, fuzzy
 msgid "InternalNumerical"
-msgstr ""
+msgstr "اسم داخلي"
 
 #: ../libgda/handlers/gda-handler-numerical.c:131
+#, fuzzy
 msgid "Numerical representation"
-msgstr ""
+msgstr "تعريف الأمكنة"
 
 #: ../libgda/handlers/gda-handler-string.c:120
 #, fuzzy
 msgid "Strings handler"
-msgstr "معالج الوحدات"
+msgstr "يجري خزن المجلّد"
 
 #: ../libgda/handlers/gda-handler-string.c:125
+#, fuzzy
 msgid "InternalString"
-msgstr ""
+msgstr "عالمي"
 
 #: ../libgda/handlers/gda-handler-string.c:126
+#, fuzzy
 msgid "Strings representation"
-msgstr ""
+msgstr "تعريف الأمكنة"
 
 #: ../libgda/handlers/gda-handler-time.c:142
 #, fuzzy
 msgid "Time and Date handler"
-msgstr "تاريخ ولحظة التغيير"
+msgstr "الوقت و التّاريخ"
 
 #: ../libgda/handlers/gda-handler-time.c:166
+#, fuzzy
 msgid "InternalTime"
-msgstr ""
+msgstr "إطار داخلي"
 
 #: ../libgda/handlers/gda-handler-time.c:167
 #, fuzzy
 msgid "Time, Date and TimeStamp representation"
-msgstr "أد_خل التاريخ و الوقت..."
+msgstr "تعريف الأمكنة"
 
 #: ../libgda/handlers/gda-handler-type.c:114
 #, fuzzy
 msgid "Gda type handler"
-msgstr "handler عنوان غير صالح"
+msgstr "معالجة سيئة للملفّ"
 
 #: ../libgda/handlers/gda-handler-type.c:119
+#, fuzzy
 msgid "InternalType"
-msgstr ""
+msgstr "إطار داخلي"
 
 #: ../libgda/handlers/gda-handler-type.c:120
 #, fuzzy
 msgid "Gda type representation"
-msgstr "نوع جهاز الخرج"
+msgstr "تعريف الأمكنة"
 
 #: ../libgda/sql-delimiter/gda-sql-delimiter.c:58
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:53
 #: ../libsql/sql_parser.c:59
 #, fuzzy, c-format
 msgid "Parse error near `%s'"
-msgstr "المراسلون القريبون مني"
+msgstr "خطأ تحليل"
 
 #: ../libgda/sql-delimiter/gda-sql-delimiter.c:60
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:56
 #: ../libsql/sql_parser.c:61
 #, fuzzy, c-format
 msgid "Syntax error near `%s'"
-msgstr "خطأ صياغي، أمر غير معروف"
+msgstr "خطأ صياغي في السطر"
 
 #: ../libgda/sql-delimiter/gda-sql-delimiter.c:151
 #: ../libgda/sql-transaction/gda-sql-transaction-parser.c:85
 #: ../libsql/sql_parser.c:386
 #, fuzzy
 msgid "Empty query to parse"
-msgstr "تعبير الاستعلام لالتقييم"
+msgstr "تفريغ طبقة النص"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:1
+#, fuzzy
 msgid "Berkeley DB database file to be used"
-msgstr ""
+msgstr "قاعدة البيانات التي ستستخدم افتراضيا"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:2
 #, fuzzy
 msgid "Database file"
-msgstr "إنتقاء ملف"
+msgstr "قاعدة بيانات"
 
 #. DSN parameters
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:3
@@ -2163,7 +2180,7 @@ msgstr "إنتقاء ملف"
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:1
 #, fuzzy
 msgid "Database name"
-msgstr "اسم الموصول"
+msgstr "قاعدة بيانات"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:4
 msgid "Name of the database in the database file to be used"
@@ -2174,7 +2191,6 @@ msgid "The FILE parameter is not defined in the connection string."
 msgstr ""
 
 #: ../providers/bdb/gda-bdb-provider.c:190
-#, fuzzy
 msgid "-"
 msgstr "-"
 
@@ -2183,30 +2199,29 @@ msgstr "-"
 #: ../providers/bdb/gda-bdb-provider.c:297
 #, fuzzy
 msgid "Invalid BDB handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/bdb/gda-bdb-recordset.c:113
 #: ../providers/mysql/gda-mysql-recordset.c:314
 #, fuzzy, c-format
 msgid "Row number out of range 0 - %d"
-msgstr "الرمز خارج حدود UTF-8"
+msgstr "قيمة خارج المدى.\n"
 
 #: ../providers/bdb/gda-bdb-recordset.c:175
 #: ../providers/mysql/gda-mysql-recordset.c:373
 #: ../providers/postgres/gda-postgres-recordset.c:568
 #, fuzzy
 msgid "Column number out of range"
-msgstr "الرمز خارج حدود UTF-8"
+msgstr "قيمة خارج المدى.\n"
 
 #: ../providers/bdb/gda-bdb-recordset.c:255
 #, fuzzy
 msgid "Database is empty"
-msgstr "المستند فارغ."
+msgstr "خادم قاعدة بيانات"
 
 #: ../providers/bdb/libmain.c:41
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+msgstr ""
 
 #: ../providers/bdb/utils.c:36
 #: ../providers/freetds/gda-freetds-provider.c:1170
@@ -2230,34 +2245,31 @@ msgstr "غير موجود"
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:1
 #, fuzzy
 msgid "Character Set"
-msgstr "مجموعة رموز مجهولة: %s"
+msgstr "ال_محرف:"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Character set to be used during the connection"
-msgstr "ال_اسم المستخدم للاتصال:"
+msgstr ""
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:4
-#, fuzzy
 msgid "Page Size"
 msgstr "حجم الصفحة"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:5
 #, fuzzy
 msgid "Page size to use on the database"
-msgstr "انقر مرتان على قاعدة البيانات المستخدمة"
+msgstr "القطعة التي ستستخدم كشارة العنصر"
 
 #. FIXME: pre-set values for the SQL_DIALECT values with human readable values
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:7
-#, fuzzy
 msgid "SQL Dialect"
-msgstr "عبارات SQL"
+msgstr ""
 
 #. FIXME: pre-set values for the SQL_DIALECT values with human readable values
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:9
 #, fuzzy
 msgid "SQL dialect to use during the connection"
-msgstr "ال_اسم المستخدم للاتصال:"
+msgstr "لوحة الألوان التي ستستخدم في منتقي الألوان"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:10
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:21
@@ -2268,7 +2280,7 @@ msgstr "ال_اسم المستخدم للاتصال:"
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:14
 #, fuzzy
 msgid "The name of a database to connect to"
-msgstr "اتصال بالموقع الغير موثوق؟"
+msgstr "اسم خادم القاموس الذي سيتّصل به"
 
 #: ../providers/firebird/gda-firebird-provider.c:630
 #: ../providers/firebird/gda-firebird-provider.c:637
@@ -2285,17 +2297,15 @@ msgstr ""
 #. 6th the argument type
 #: ../providers/firebird/gda-firebird-provider.c:708
 #: ../providers/firebird/gda-firebird-provider.c:711
-#, fuzzy
 msgid "UNKNOWN"
 msgstr "مجهول"
 
 #: ../providers/firebird/gda-firebird-provider.c:734
 #, fuzzy
 msgid "ID"
-msgstr "الهوية"
+msgstr "PID"
 
 #: ../providers/firebird/gda-firebird-provider.c:739
-#, fuzzy
 msgid "SQL"
 msgstr "SQL"
 
@@ -2312,43 +2322,41 @@ msgstr "SQL"
 #: ../providers/firebird/gda-firebird-recordset.c:888
 #, fuzzy
 msgid "Invalid Firebird handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/firebird/gda-firebird-provider.c:861
 #, fuzzy
 msgid "No database specified"
-msgstr "لم يحدّد عنوان"
+msgstr "غير محدّد"
 
 #: ../providers/firebird/gda-firebird-provider.c:1242
 #: ../providers/firebird/gda-firebird-provider.c:1280
 #, fuzzy
 msgid "Invalid transaction handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "وظيفة غير سليمة"
 
 #: ../providers/firebird/gda-firebird-recordset.c:341
 #: ../providers/firebird/gda-firebird-recordset.c:382
 #, fuzzy
 msgid "Statement already prepared."
-msgstr "الشهادة موجودة مسبقا."
+msgstr "المستند مفتوح مسبقا"
 
 #: ../providers/firebird/gda-firebird-recordset.c:345
 #, fuzzy
 msgid "Transaction not initialized."
-msgstr "تعذّر العثور على '%s'"
+msgstr "فشلت المعاملة"
 
 #: ../providers/firebird/gda-firebird-recordset.c:456
 msgid "Firebird's ARRAY datatype not supported yet!\n"
 msgstr ""
 
 #: ../providers/firebird/gda-firebird-recordset.c:570
-#, fuzzy
 msgid "Unknown Firebird's field value!\n"
-msgstr "قيمة مجهولة \"%s\" للتّوصيف \"%s\" على العنصر <%s>"
+msgstr ""
 
 #: ../providers/firebird/libmain.c:41
-#, fuzzy
 msgid "Provider for Firebird databases"
-msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+msgstr ""
 
 #. Connection parameters
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:2
@@ -2359,7 +2367,6 @@ msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:2
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Database server"
 msgstr "خادم قاعدة بيانات"
 
@@ -2367,7 +2374,7 @@ msgstr "خادم قاعدة بيانات"
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:3
 #, fuzzy
 msgid "Database server IP address"
-msgstr "تعديل تفضيلات خادم قاعدة بياناتك للأقراص المدمجة"
+msgstr "خادم قاعدة بيانات"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
@@ -2376,25 +2383,23 @@ msgstr "تعديل تفضيلات خادم قاعدة بياناتك للأقر�
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:4
 #, fuzzy
 msgid "Database server port"
-msgstr "قاعدة بيانات الأقراص المدمجة"
+msgstr "خادم قاعدة بيانات"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:5
 #, fuzzy
 msgid "Dump Configuration File"
-msgstr ""
-"ملف الإعدادات هو:\n"
-"    %s\n"
+msgstr "ملفّات الإعدادات"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:6
 #, fuzzy
 msgid "Dump File"
-msgstr "إنتقاء ملف"
+msgstr "إستيراد ملف"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:7
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:5
 #, fuzzy
 msgid "Enable Sybase"
-msgstr "مكّن ال_تّسجيل"
+msgstr "فعّل ESD"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:8
 #: ../providers/ibmdb2/ibmdb2_specs_dsn.xml.in.h:2
@@ -2404,20 +2409,21 @@ msgstr "مكّن ال_تّسجيل"
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:7
 #, fuzzy
 msgid "Extra connection options"
-msgstr "خيارات اضافية لـ Xnest"
+msgstr "فقدت الاتّصال بـ %s"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:9
+#, fuzzy
 msgid "File for TDS protocol dumps"
-msgstr ""
+msgstr "مكن برتكول SHHالقديم "
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:10
+#, fuzzy
 msgid "File for TDS protocol dumps configuration"
-msgstr ""
+msgstr "فشل تصدير الإعدادات"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:11
-#, fuzzy
 msgid "FreeTDS Config File"
-msgstr "حفظ الملف كـ"
+msgstr ""
 
 #. Connection parameters
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:12
@@ -2425,18 +2431,20 @@ msgstr "حفظ الملف كـ"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:14
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:8
+#, fuzzy
 msgid "Host on which the database server is running"
-msgstr ""
+msgstr "منفذ:المضيف الذي يعمل عليه خادم الصوت الذي سيستخدم"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:13
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:9
+#, fuzzy
 msgid "IP address of the host on which the database server is running"
-msgstr ""
+msgstr "منفذ:المضيف الذي يعمل عليه خادم الصوت الذي سيستخدم"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:14
 #, fuzzy
 msgid "Location of the FreeTDS config file"
-msgstr "ترتيب قائمة الملفات بحسب الموقع"
+msgstr "سجّل إجراءات المرشِّح على ملف السّجل المحدّد."
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:16
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:8
@@ -2449,25 +2457,27 @@ msgstr "ترتيب قائمة الملفات بحسب الموقع"
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:13
 #, fuzzy
 msgid "Port"
-msgstr "المَنْفذ"
+msgstr "منفد:"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:17
 #, fuzzy
 msgid "TDS Major Version"
-msgstr "اطبع إصدارة GDM"
+msgstr "نسخة الخادم"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:18
 #, fuzzy
 msgid "TDS Minor Version"
-msgstr "اطبع إصدارة GDM"
+msgstr "نسخة الخادم"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:19
+#, fuzzy
 msgid "TDS protocol major version"
-msgstr ""
+msgstr "%dاصدار البرتكول %d\n"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:20
+#, fuzzy
 msgid "TDS protocol minor version"
-msgstr ""
+msgstr "%dاصدار البرتكول %d\n"
 
 #: ../providers/freetds/gda-freetds-provider.c:198
 msgid ""
@@ -2478,22 +2488,24 @@ msgstr ""
 #: ../providers/freetds/gda-freetds-provider.c:211
 #, fuzzy
 msgid "Error creating message container."
-msgstr "خطأ إنشاء أنبوب الإشارة."
+msgstr "خطأ أثناء إنشاء مجلد جديد."
 
 #: ../providers/freetds/gda-freetds-provider.c:218
 #, fuzzy
 msgid "Error creating error container."
-msgstr "خطأ عند إنشاء الدليل '%s' :  %s "
+msgstr "خطأ أثناء إنشاء مجلد جديد."
 
 #: ../providers/freetds/gda-freetds-provider.c:263
 #: ../providers/freetds/gda-freetds-provider.c:265
+#, fuzzy
 msgid "Allocating tds context failed."
-msgstr ""
+msgstr "تغيير الاختصار فشل"
 
 #: ../providers/freetds/gda-freetds-provider.c:280
 #: ../providers/freetds/gda-freetds-provider.c:282
+#, fuzzy
 msgid "Allocating tds socket failed."
-msgstr ""
+msgstr "فشل تحميل %s."
 
 #. gda_freetds_free_connection_data (tds_cnc);
 #: ../providers/freetds/gda-freetds-provider.c:288
@@ -2502,13 +2514,13 @@ msgstr ""
 #: ../providers/freetds/gda-freetds-provider.c:299
 #, fuzzy
 msgid "Establishing connection failed."
-msgstr "فشل تسجيل %s إلى %s"
+msgstr "فشل اتصال VPN"
 
 #: ../providers/freetds/gda-freetds-provider.c:313
 #: ../providers/freetds/gda-freetds-provider.c:314
 #, fuzzy
 msgid "Failed getting connection info."
-msgstr "تعذر الحصول على معلومات حزمة المفاتيح"
+msgstr "تعذر الحصول على معلومات حلقة المفاتيح."
 
 #: ../providers/freetds/gda-freetds-provider.c:833
 #: ../providers/freetds/gda-freetds-provider.c:834
@@ -2522,8 +2534,9 @@ msgstr ""
 
 #: ../providers/freetds/gda-freetds-provider.c:861
 #: ../providers/freetds/gda-freetds-provider.c:862
+#, fuzzy
 msgid "Unexpected return in execute_cmd()."
-msgstr ""
+msgstr "خطأ غير متوقع في waitpid() (%s)"
 
 #: ../providers/freetds/gda-freetds-provider.c:1141
 #, c-format
@@ -2535,7 +2548,7 @@ msgstr ""
 #: ../providers/freetds/gda-freetds-recordset.c:381
 #, fuzzy
 msgid "Error processing result rows.\n"
-msgstr "تم أيقاف الإجراء المطلوب: خطأ في المعالجة"
+msgstr "خطأ أثناء قراءة الإعدادات: %s\n"
 
 #: ../providers/freetds/gda-freetds-recordset.c:392
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
@@ -2544,7 +2557,7 @@ msgstr ""
 #: ../providers/freetds/gda-freetds-recordset.c:402
 #, fuzzy
 msgid "Error processing results.\n"
-msgstr "_حفظ النتائج كـ..."
+msgstr "خطأ أثناء قراءة الإعدادات: %s\n"
 
 #: ../providers/freetds/gda-freetds-recordset.c:409
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
@@ -2558,12 +2571,12 @@ msgstr ""
 #: ../providers/postgres/utils.c:83 ../providers/sybase/utils.c:535
 #, fuzzy
 msgid "NO DESCRIPTION"
-msgstr "لا وصف"
+msgstr "وصف"
 
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:240
 #, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "%s: لم يمكن ضبط البيئة لـ %s. إلغاء"
+msgstr "لا يمكن توزيع ذاكرة للترويسة"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -2575,12 +2588,12 @@ msgstr ""
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:630
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:738
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:813
+#, fuzzy
 msgid "Invalid IBM DB2 handle"
-msgstr ""
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:791 ../tools/gda-diagnose.c:375
 #: ../tools/gda-diagnose.c:456
-#, fuzzy
 msgid "Function"
 msgstr "الوظيفة"
 
@@ -2589,32 +2602,32 @@ msgstr "الوظيفة"
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:1052
 #, fuzzy
 msgid "SQL Definition"
-msgstr "وصف التعريف"
+msgstr "التعريف الأ_خير"
 
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:968
 #: ../providers/oracle/gda-oracle-provider.c:2042
+#, fuzzy
 msgid "Triggers"
-msgstr ""
+msgstr "مقطوعة اذاعية"
 
 #: ../providers/ibmdb2/gda-ibmdb2-provider.c:1024
 #, fuzzy
 msgid "Users"
-msgstr "مستخدمون"
+msgstr "المستخدمون:"
 
 #: ../providers/ibmdb2/gda-ibmdb2-types.c:151
 #, fuzzy
 msgid "[BLOB unsupported]"
-msgstr "منصّة غير مدعومة"
+msgstr "غير مدعوم"
 
 #: ../providers/ibmdb2/gda-ibmdb2-types.c:154
 #, fuzzy
 msgid "[Unsupported data]"
-msgstr "البيانات الشخصية"
+msgstr "تهيئة غير مدعومة"
 
 #: ../providers/ibmdb2/libmain.c:40
-#, fuzzy
 msgid "Provider for IBMDB2 databases"
-msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+msgstr ""
 
 #: ../providers/ldap/gda-ldap-provider.c:266
 #: ../providers/ldap/gda-ldap-provider.c:522
@@ -2622,7 +2635,7 @@ msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
 #: ../providers/ldap/gda-ldap-recordset.c:177
 #, fuzzy
 msgid "Invalid LDAP handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/ldap/gda-ldap-recordset.c:70
 #: ../providers/mysql/gda-mysql-recordset.c:245
@@ -2631,76 +2644,75 @@ msgstr "معالجة سيئة للملفّ"
 #: ../providers/postgres/gda-postgres-recordset.c:562
 #, fuzzy
 msgid "Row number out of range"
-msgstr "الرمز خارج حدود UTF-8"
+msgstr "قيمة خارج المدى.\n"
 
 #: ../providers/ldap/gda-ldap-recordset.c:286
 #: ../providers/msql/gda-msql-recordset.c:206
 #: ../providers/mysql/gda-mysql-recordset.c:431
 #: ../providers/oracle/gda-oracle-recordset.c:494
 #: ../providers/postgres/gda-postgres-recordset.c:240
+#, fuzzy
 msgid "Attempt to insert a row with an invalid number of columns"
-msgstr ""
+msgstr "ملف XPM له عدد غير صحيح من الألوان"
 
 #: ../providers/ldap/gda-ldap-recordset.c:301
 #: ../providers/msql/gda-msql-recordset.c:218
 #: ../providers/oracle/gda-oracle-recordset.c:509
 #, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "لم أستطع تلقي معلومات عن الملف"
+msgstr "لا يمكن تلقي معلومات عن الملف"
 
 #: ../providers/ldap/gda-ldap-recordset.c:319
 #: ../providers/msql/gda-msql-recordset.c:233
 #: ../providers/oracle/gda-oracle-recordset.c:527
 #, fuzzy
 msgid "Could not retrieve column's value"
-msgstr ""
-"لم يمكن تزمين القيمة. كان الخطأ:\n"
-"%s"
+msgstr "لا يمكن تلقي معلومات عن الملف"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 #, fuzzy
 msgid "Authentication Method"
-msgstr "طريقة NAT"
+msgstr "فشل التّوثيق"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
 #, fuzzy
 msgid "Authentication method to use when connecting"
-msgstr "طريقة NAT"
+msgstr "توثق من الاتصلات لخادم البروكسي"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:3
 #, fuzzy
 msgid "Bind Domain"
-msgstr " النّطاق:"
+msgstr "النطاق"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
 #: ../providers/msql/msql_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Host Name"
-msgstr "اسم المستضيف:"
+msgstr "أسم المضيف"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
 #, fuzzy
 msgid "Host name of the LDAP server"
-msgstr "النّفاذ إلى خادم LDAP كشخص مجهول"
+msgstr "اسم أو عنوان IP لخادم PPTP"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 #, fuzzy
 msgid "LDAP Flags"
-msgstr "شارات البريمجات"
+msgstr "شارات Popt"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:7
+#, fuzzy
 msgid "LDAP bind domain to use for authentication"
-msgstr ""
+msgstr "استخدم ال_نطاق للتوثّق"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:9
 #, fuzzy
 msgid "Port to use when connecting to the LDAP server"
-msgstr "النّفاذ إلى خادم LDAP كشخص مجهول"
+msgstr "إنشيء اتّصالٍ دائم بهذا الخادم"
 
 #: ../providers/ldap/libmain.c:43
 #, fuzzy
 msgid "Provider for LDAP directory"
-msgstr "هيكل الدلائل للملفات"
+msgstr " للدليل"
 
 #: ../providers/mdb/gda-mdb-provider.c:227
 msgid "A database FILENAME must be specified in the connection_string"
@@ -2710,7 +2722,7 @@ msgstr ""
 #: ../providers/xbase/gda-xbase-provider.c:226
 #, fuzzy, c-format
 msgid "Could not open file %s"
-msgstr "لم يمكن فتح الملف %s: %s"
+msgstr "لم يمكن فتح ملف"
 
 #: ../providers/mdb/gda-mdb-provider.c:264
 #: ../providers/mdb/gda-mdb-provider.c:294
@@ -2720,17 +2732,17 @@ msgstr "لم يمكن فتح الملف %s: %s"
 #: ../providers/mdb/gda-mdb-provider.c:757
 #, fuzzy
 msgid "Invalid MDB handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/mdb/gda-mdb-provider.c:688
 #, fuzzy
 msgid "Boolean type"
-msgstr "نوع التّنبيه"
+msgstr "قيمة منطقية"
 
 #: ../providers/mdb/gda-mdb-provider.c:689
 #, fuzzy
 msgid "1-byte integers"
-msgstr "%s (%llu بايت)"
+msgstr "صحيح"
 
 #: ../providers/mdb/gda-mdb-provider.c:690
 #, fuzzy
@@ -2740,36 +2752,37 @@ msgstr "رقم صحيح موجب بسعة 32 بت"
 #: ../providers/mdb/gda-mdb-provider.c:691
 #, fuzzy
 msgid "64-bit integers"
-msgstr "عدد صحيح بقيمة 16 بت غير موقع"
+msgstr "صحيح"
 
 #: ../providers/mdb/gda-mdb-provider.c:692
+#, fuzzy
 msgid "Money amounts"
-msgstr ""
+msgstr "مقدار الحافة"
 
 #: ../providers/mdb/gda-mdb-provider.c:693
 #, fuzzy
 msgid "Single precision values"
-msgstr "ترقّب اللاعب القيم"
+msgstr "فشل في استرجاع الملفات"
 
 #: ../providers/mdb/gda-mdb-provider.c:694
 #, fuzzy
 msgid "Double precision values"
-msgstr "ترقّب اللاعب القيم"
+msgstr "تعبير الاستعلام ليُقيَّم"
 
 #: ../providers/mdb/gda-mdb-provider.c:695
 #, fuzzy
 msgid "Date/time value"
-msgstr "إدراج التاريخ/الوقت"
+msgstr "التّاريخ/الوقت"
 
 #: ../providers/mdb/gda-mdb-provider.c:696
 #, fuzzy
 msgid "Character strings"
-msgstr "تشفيرة الرموز"
+msgstr "ترميزات المحارف"
 
 #: ../providers/mdb/gda-mdb-provider.c:697
 #, fuzzy
 msgid "OLE object"
-msgstr "مميّز الجسم (%s)"
+msgstr "جسم"
 
 #: ../providers/mdb/gda-mdb-provider.c:698
 msgid "Variable length character strings"
@@ -2778,10 +2791,9 @@ msgstr ""
 #: ../providers/mdb/gda-mdb-provider.c:699
 #, fuzzy
 msgid "Replication ID"
-msgstr "هوية البوّاب:"
+msgstr "العلاقة"
 
 #: ../providers/mdb/gda-mdb-provider.c:700
-#, fuzzy
 msgid "Numeric"
 msgstr "رقمي"
 
@@ -2789,19 +2801,19 @@ msgstr "رقمي"
 #: ../providers/mdb/gda-mdb-provider.c:768
 #, fuzzy, c-format
 msgid "Could not parse '%s' command"
-msgstr "يم يمكن إعراب سطر الأوامر '%s':·%s"
+msgstr "تعذّر تشغيل الأمر"
 
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: ../providers/mdb/gda-mdb-provider.c:775
 #, fuzzy, c-format
 msgid "Got no result for '%s' command"
-msgstr "صفات النتائج غير محددة لـ %s"
+msgstr "لا يمكن انتقاء المجلّد `%s': أمر رديء"
 
 #: ../providers/mdb/gda-mdb-table.c:50
 #, fuzzy, c-format
 msgid "Table %s not found"
-msgstr "لم يعثر على المستخدم"
+msgstr "%s: الملف %s غير موجود"
 
 #: ../providers/mdb/libmain.c:42
 msgid "Provider for Microsoft Access files"
@@ -2809,14 +2821,14 @@ msgstr ""
 
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:3
-#, fuzzy
 msgid "File Name"
-msgstr "إسم الملف:"
+msgstr "إسم الملف"
 
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:2
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:4
+#, fuzzy
 msgid "Full path to the file containing the database"
-msgstr ""
+msgstr "المنفذ الذي يشغل الخادم قاعدة البيانات عليه"
 
 #: ../providers/msql/gda-msql-libmain.c:40
 msgid "Provider for Hughes Technologies mSQL databases"
@@ -2830,12 +2842,12 @@ msgstr ""
 #: ../providers/msql/gda-msql-recordset.c:348
 #, fuzzy
 msgid "Invalid mSQL handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/msql/gda-msql-recordset.c:58
 #, fuzzy
 msgid "Row number out of bounds"
-msgstr "%s: أولوية زائدة عن الحد، تم تغييرها إلى %d"
+msgstr "عدد النطاقات"
 
 #: ../providers/msql/msql_specs_dsn.xml.in.h:3
 msgid ""
@@ -2867,8 +2879,9 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-ddl.c:323
 #: ../providers/postgres/gda-postgres-ddl.c:357
 #: ../providers/sqlite/gda-sqlite-ddl.c:198
+#, fuzzy
 msgid "Table to create must have at least one row"
-msgstr ""
+msgstr "لم يمكن انشاء مستمع للوحة المفاتيح \n"
 
 #: ../providers/mysql/gda-mysql-provider.c:255
 msgid ""
@@ -2899,7 +2912,7 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-recordset.c:702
 #, fuzzy
 msgid "Invalid MySQL handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/mysql/gda-mysql-provider.c:430
 #: ../providers/mysql/gda-mysql-provider.c:553
@@ -2911,7 +2924,7 @@ msgstr "معالجة سيئة للملفّ"
 #: ../providers/mysql/gda-mysql-provider.c:2242
 #, fuzzy
 msgid "Invalid MYSQL handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/mysql/gda-mysql-provider.c:628
 #: ../providers/mysql/gda-mysql-provider.c:653
@@ -2923,7 +2936,7 @@ msgstr "معالجة سيئة للملفّ"
 #: ../providers/sqlite/gda-sqlite-provider.c:679
 #, fuzzy, c-format
 msgid "Missing spec. file '%s'"
-msgstr "الملف المطلوب غير موجود"
+msgstr "ملفات مفقودة"
 
 #: ../providers/mysql/gda-mysql-provider.c:865
 #: ../providers/mysql/gda-mysql-provider.c:925
@@ -2933,14 +2946,16 @@ msgstr "الملف المطلوب غير موجود"
 #: ../providers/oracle/gda-oracle-provider.c:1251
 #: ../providers/postgres/gda-postgres-provider.c:1511
 #: ../providers/sqlite/gda-sqlite-provider.c:885
+#, fuzzy
 msgid "Transactions are not supported in read-only mode"
-msgstr ""
+msgstr "صفحات الكتيّبل غير مدعومة في هذا الإصدار."
 
 #: ../providers/mysql/gda-mysql-recordset.c:424
 #: ../providers/mysql/gda-mysql-recordset.c:561
 #: ../providers/mysql/gda-mysql-recordset.c:563
+#, fuzzy
 msgid "Table name could not be guessed"
-msgstr ""
+msgstr "تعذر حفظ الصورة."
 
 #: ../providers/mysql/gda-mysql-recordset.c:446
 #: ../providers/mysql/gda-mysql-recordset.c:452
@@ -2966,21 +2981,24 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-recordset.c:638
 #: ../providers/mysql/gda-mysql-recordset.c:640
 #: ../providers/postgres/gda-postgres-recordset.c:365
+#, fuzzy
 msgid "Model doesn't have at least one unique key."
-msgstr ""
+msgstr "يجب أن يكون لك دائما شريط واحد على الأقل."
 
 #: ../providers/mysql/gda-mysql-recordset.c:668
 #: ../providers/mysql/gda-mysql-recordset.c:670
+#, fuzzy
 msgid "Can not remove row from data model"
-msgstr ""
+msgstr "اضبط عقدة الجذر من النموذج"
 
 #: ../providers/mysql/gda-mysql-recordset.c:721
 #: ../providers/mysql/gda-mysql-recordset.c:723
 #: ../providers/postgres/gda-postgres-recordset.c:233
 #: ../providers/postgres/gda-postgres-recordset.c:333
 #: ../providers/postgres/gda-postgres-recordset.c:431
+#, fuzzy
 msgid "Table name could not be guessed."
-msgstr ""
+msgstr "تعذر حفظ الصورة."
 
 #: ../providers/mysql/gda-mysql-recordset.c:796
 #: ../providers/mysql/gda-mysql-recordset.c:798
@@ -2993,28 +3011,28 @@ msgid "Model does not have any non-unique values to update."
 msgstr ""
 
 #: ../providers/mysql/libmain.c:42
-#, fuzzy
 msgid "Provider for MySQL databases"
-msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+msgstr ""
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:1
 #, fuzzy
 msgid "Add the column after the specified column"
-msgstr "تعليم كمراجع بعد المهلة المحدّدة"
+msgstr "تعين العمود للعمود الموسع"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:2
+#, fuzzy
 msgid "Add the column as the first column of the table"
-msgstr ""
+msgstr "عدد الأعمدة في الجدول"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:3
 #, fuzzy
 msgid "After column"
-msgstr "عمود لاحق"
+msgstr "عمود النص"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:4
 #, fuzzy
 msgid "As first column"
-msgstr "عمود لون الخلفيّة"
+msgstr "أعمدة القوائم"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:5
@@ -3022,7 +3040,7 @@ msgstr "عمود لون الخلفيّة"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
 #, fuzzy
 msgid "Auto increment"
-msgstr "زيادة درجية"
+msgstr "أزِح آلياً"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:6
@@ -3033,7 +3051,7 @@ msgstr "زيادة درجية"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
 #, fuzzy
 msgid "Check"
-msgstr "تثبت من تهجيئ الكلمات"
+msgstr "ا_فحص"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:7
@@ -3044,7 +3062,7 @@ msgstr "تثبت من تهجيئ الكلمات"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
 #, fuzzy
 msgid "Check constraint"
-msgstr "تثبت من تهجيئ الكلمات"
+msgstr "فحص سلامة"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:8
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:1
@@ -3053,14 +3071,14 @@ msgstr "تثبت من تهجيئ الكلمات"
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:3
 #, fuzzy
 msgid "Column's description"
-msgstr "الوصف الميسر لعمود الجدول"
+msgstr "تعذّر وضع وصف."
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:9
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:30
 #, fuzzy
 msgid "Comment"
-msgstr "ملاحظة"
+msgstr "ال_تعليق:"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
@@ -3071,7 +3089,7 @@ msgstr "ملاحظة"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:19
 #, fuzzy
 msgid "Default"
-msgstr "الافتراضي"
+msgstr "الإفتراضيّات"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:14
@@ -3082,7 +3100,7 @@ msgstr "الافتراضي"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
 #, fuzzy
 msgid "Not NULL"
-msgstr "غير صحيح"
+msgstr "غير مُستخدَم"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:15
@@ -3092,7 +3110,7 @@ msgstr "غير صحيح"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:31
 #, fuzzy
 msgid "Primary key"
-msgstr "اتفاق على المفتاح"
+msgstr "أوّلي"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:19
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:146
@@ -3104,7 +3122,7 @@ msgstr "اتفاق على المفتاح"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:39
 #, fuzzy
 msgid "Table's name"
-msgstr "اسم الموصول"
+msgstr "خط جدول"
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:20
@@ -3115,20 +3133,20 @@ msgstr "اسم الموصول"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
 #, fuzzy
 msgid "Unique"
-msgstr "الهويّة الفريدة للمُصدر"
+msgstr "هويّة فريدة"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:1
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:2
 #, fuzzy
 msgid "7bit Swedish"
-msgstr "ا-ص|سويدي (فنلندا)"
+msgstr "ا-ص|سويدي"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:2
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:3
 #, fuzzy
 msgid "ARMSCII-8 Armenian"
-msgstr "أرمني (ARMSCII-8)"
+msgstr "ا-ص|أرمني"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:3
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:1
@@ -3136,7 +3154,7 @@ msgstr "أرمني (ARMSCII-8)"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:2
 #, fuzzy
 msgid "Administrator login"
-msgstr "شاشة الدخول:"
+msgstr "إداري"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:2
@@ -3144,19 +3162,18 @@ msgstr "شاشة الدخول:"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:3
 #, fuzzy
 msgid "Administrator password"
-msgstr "جودة كلمة السر:"
+msgstr "إداري"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:5
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:14
 #, fuzzy
 msgid "Big5 Traditional Chinese"
-msgstr "صيني تقليدي (Big5-HKSCS)"
+msgstr "صيني تقليدي"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:6
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
-#, fuzzy
 msgid "Binary pseudo charset"
-msgstr "شبه الأنواع للمنتقي "
+msgstr ""
 
 #. DSN parameters
 #. other table options
@@ -3164,20 +3181,22 @@ msgstr "شبه الأنواع للمنتقي "
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:18
 #, fuzzy
 msgid "Character set"
-msgstr "مجموعة رموز مجهولة: %s"
+msgstr "ال_محرف:"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:4
+#, fuzzy
 msgid "Character set encoding to use in the new database"
-msgstr ""
+msgstr "ترميز محارف المصدر المرتبط."
 
 #. DSN parameters
 #. other table options
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:12
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
+#, fuzzy
 msgid "Collation"
-msgstr ""
+msgstr "مجموعة"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:14
@@ -3193,13 +3212,13 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:36
 #, fuzzy
 msgid "DEC West European"
-msgstr "وسط أوروبا (MacCE)"
+msgstr "غرب أوروبي"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
 #, fuzzy
 msgid "DOS Central European"
-msgstr "وسط أوروبا (MacCE)"
+msgstr "وسط أوروبي  (_MacCE)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:19
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:38
@@ -3210,13 +3229,13 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
 #, fuzzy
 msgid "DOS Russian"
-msgstr "الإتّحاد الروسي"
+msgstr "روسيا"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:21
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:40
 #, fuzzy
 msgid "DOS West European"
-msgstr "وسط أوروبا (MacCE)"
+msgstr "غرب أوروبي"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
@@ -3227,19 +3246,19 @@ msgstr "وسط أوروبا (MacCE)"
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:4
 #, fuzzy
 msgid "Database's description"
-msgstr "الوصف يحتوي على"
+msgstr "حسب الوصف"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:29
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
 #, fuzzy
 msgid "EUC-JP Japanese"
-msgstr "ياباني (EUC-JP)"
+msgstr "ض-ي|ياباني"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:54
 #, fuzzy
 msgid "EUC-KR Korean"
-msgstr "كوري (EUC-KR)"
+msgstr "ض-ي|كوري"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:31
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
@@ -3251,73 +3270,70 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:72
 #, fuzzy
 msgid "GB2312 Simplified Chinese"
-msgstr "صيني مبسط (GBK)"
+msgstr "صيني مبسّط"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:33
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:73
 #, fuzzy
 msgid "GBK Simplified Chinese"
-msgstr "صيني مبسط (GBK)"
+msgstr "صيني مبسّط"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:74
 #, fuzzy
 msgid "GEOSTD8 Georgian"
-msgstr "جورجي (GEOSTD8)"
+msgstr "جورجي"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:35
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
 #, fuzzy
 msgid "HP West European"
-msgstr "وسط أوروبا (MacCE)"
+msgstr "غرب أوروبي"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:79
 #, fuzzy
 msgid "ISO 8859-1 West European"
-msgstr "جنوب اوروبا (ISO-8859-3)"
+msgstr "غرب أوروبي"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:39
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:80
 #, fuzzy
 msgid "ISO 8859-13 Baltic"
-msgstr "بلطيقي (ISO-8859-13)"
+msgstr "ISO-8859-1"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:81
 #, fuzzy
 msgid "ISO 8859-2 Central European"
-msgstr "أوروبا الوسطى (ISO-8859-2)"
+msgstr "وسط أوروبي  (_MacCE)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:41
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:82
 #, fuzzy
 msgid "ISO 8859-7 Greek"
-msgstr "يوناني (ISO-8859-7)"
+msgstr "ISO-8859-1"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
-#, fuzzy
 msgid "ISO 8859-8 Hebrew"
-msgstr "عبري مرئي (ISO-8859-8)"
+msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:43
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:84
-#, fuzzy
 msgid "ISO 8859-9 Turkish"
-msgstr "تركي (ISO-8859-9)"
+msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
-#, fuzzy
 msgid "KOI8-R Relcom Russian"
-msgstr "تصميم الجورجية الروسية"
+msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:45
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:92
 #, fuzzy
 msgid "KOI8-U Ukrainian"
-msgstr "سيريالي / اوكراني (KOI8-U)"
+msgstr "ا-ص|اكراني"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
@@ -3330,13 +3346,13 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:93
 #, fuzzy
 msgid "Mac Central European"
-msgstr "وسط أوروبا (MacCE)"
+msgstr "وسط أوروبي  (_MacCE)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:94
 #, fuzzy
 msgid "Mac West European"
-msgstr "وسط أوروبا (MacCE)"
+msgstr "غرب أوروبي"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
@@ -3345,7 +3361,7 @@ msgstr "وسط أوروبا (MacCE)"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:29
 #, fuzzy
 msgid "Only if it does not yet exist"
-msgstr "_اضافة فقط اذا كان اجد"
+msgstr "الملف غير موجود."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:19
@@ -3355,13 +3371,13 @@ msgstr "_اضافة فقط اذا كان اجد"
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:8
 #, fuzzy
 msgid "Require SSL"
-msgstr "SSL غير متوفّر"
+msgstr "تتطلّب"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:53
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:132
 #, fuzzy
 msgid "SJIS for Windows Japanese"
-msgstr "ياباني"
+msgstr "لا يوجد نافذة مفتوحة"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
@@ -3369,19 +3385,18 @@ msgstr "ياباني"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:36
 #, fuzzy
 msgid "Server access parameters"
-msgstr "تعذّر الوصول إلى سلّة المهملات."
+msgstr "اضبط الأصوات ومتغيراتها"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:55
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:136
 #, fuzzy
 msgid "Shift-JIS Japanese"
-msgstr "ياباني (Shift_JIS)"
+msgstr "ض-ي|ياباني"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
-#, fuzzy
 msgid "TIS620 Thai"
-msgstr "التالندية الكدمانية"
+msgstr ""
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:58
@@ -3391,77 +3406,77 @@ msgstr "التالندية الكدمانية"
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:10
 #, fuzzy
 msgid "The name of a database to create"
-msgstr "لم يمكن فتح المقبس"
+msgstr "قاعدة البيانات التي ستستخدم افتراضيا"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:59
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:150
 #, fuzzy
 msgid "UCS-2 Unicode"
-msgstr " (يونيكود غير صحيح)"
+msgstr "يونيكود"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:60
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:23
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:9
 #, fuzzy
 msgid "UNIX Socket"
-msgstr "السوكت المحلّية"
+msgstr "مصدر IP"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:61
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:151
-#, fuzzy
 msgid "US ASCII"
-msgstr "انجليزي (US-ASCII)"
+msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:152
 #, fuzzy
 msgid "UTF-8 Unicode"
-msgstr "يونيكود (يو تي اف-8)"
+msgstr "يونيكود"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:63
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:10
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:12
+#, fuzzy
 msgid "Whether or not to use SSL to establish the connection"
-msgstr ""
+msgstr "استعمال أو عدم استعمال صور متحركة."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
 #, fuzzy
 msgid "Windows Arabic"
-msgstr "عربي (Windows-1256)"
+msgstr "النوافذ"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:65
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:158
 #, fuzzy
 msgid "Windows Baltic"
-msgstr "بلطيقي (Windows-1257)"
+msgstr "النوافذ"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:159
 #, fuzzy
 msgid "Windows Central European"
-msgstr "وسط أوروباط (Windows-1250)"
+msgstr "وسط أوروبي"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:67
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:160
 #, fuzzy
 msgid "Windows Cyrillic"
-msgstr "سيريالي (Windows-1251)"
+msgstr "روسية سريالية"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:6
 #, fuzzy
 msgid "Index description"
-msgstr "الوصف يحتوي على"
+msgstr "لا يوجد وصف"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:2
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 #, fuzzy
 msgid "Index name"
-msgstr "اسم الموصول"
+msgstr "فهرسة الصورة"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:3
 msgid "Index type (depending on table storage engine)"
@@ -3471,8 +3486,9 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
+#, fuzzy
 msgid "Indexed field or expression"
-msgstr ""
+msgstr "تحويل لون مفهرس"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
@@ -3480,11 +3496,10 @@ msgstr ""
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
 #, fuzzy
 msgid "Indexed field(s)"
-msgstr "حقل ال_قيمة"
+msgstr "لون مفهرس"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
-#, fuzzy
 msgid "Length"
 msgstr "المدة"
 
@@ -3492,7 +3507,7 @@ msgstr "المدة"
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
 #, fuzzy
 msgid "Method"
-msgstr "<b>ال_طريقة:</b>"
+msgstr "ال_طريقة:"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:12
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:3
@@ -3500,14 +3515,14 @@ msgstr "<b>ال_طريقة:</b>"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
 #, fuzzy
 msgid "On table"
-msgstr "جسم الجدول"
+msgstr "جدول"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:16
 #, fuzzy
 msgid "Sort type"
-msgstr "نوع التّنبيه"
+msgstr "نوع التّرتيب"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:16
@@ -3521,53 +3536,56 @@ msgid "An approximation of the average row length for your table"
 msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
-#, fuzzy
 msgid "Archive"
-msgstr "_محفوظة:"
+msgstr "محفوظات"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:10
 #, fuzzy
 msgid "Auto increment value"
-msgstr "قيمة التكبير المحلي"
+msgstr "القيمة الحالية"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:12
 #, fuzzy
 msgid "Average row length"
-msgstr "تجاوز طول المسار"
+msgstr "طول القص"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:13
+#, fuzzy
 msgid "Berkeley DB"
-msgstr ""
+msgstr "بكلي"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:16
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:1
+#, fuzzy
 msgid "Cascade"
-msgstr ""
+msgstr "كاسكاد لكس"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:24
 #, fuzzy
 msgid "Checksum"
-msgstr "%s: خطأ في checksum"
+msgstr "ا_فحص"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:25
 msgid "Clustered, fault-tolerant, memory-based"
 msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:28
+#, fuzzy
 msgid "Comma Separated Value (CSV)"
-msgstr ""
+msgstr "تنسيق القيم المفصولة بفاصلة (.csv)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 #, fuzzy
 msgid "Compact"
-msgstr "_نسق مُتَضَام"
+msgstr "معرِفة"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:32
+#, fuzzy
 msgid "Compressed"
-msgstr ""
+msgstr "مضغوط"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:34
@@ -3585,33 +3603,34 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:42
 #, fuzzy
 msgid "Data directory"
-msgstr "دليل المستخدمين"
+msgstr "ليس دليلا"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:50
 #, fuzzy
 msgid "Delay key write"
-msgstr "لا يمكن الكتابة على %s: %s"
+msgstr "عرض المفتاح"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
 #, fuzzy
 msgid "Don't pack keys"
-msgstr "_سرد المفاتيح الحديثة"
+msgstr "تعذّر تحميل الملفات"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:52
+#, fuzzy
 msgid "Dynamic"
-msgstr ""
+msgstr "Dynamic WEP"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:56
 #, fuzzy
 msgid "Engine"
-msgstr "دافعة ال_محرّك:"
+msgstr "تسعة"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #, fuzzy
 msgid "Example"
-msgstr "مثال: *.o; *.bak"
+msgstr "عينة"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:59
@@ -3619,34 +3638,32 @@ msgid "FIRST, LAST or NO: only with MERGE engine"
 msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:60
+#, fuzzy
 msgid "Federated"
-msgstr ""
+msgstr "مفوّض"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:62
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
-#, fuzzy
 msgid "Field"
 msgstr "الحقل"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:68
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
-#, fuzzy
 msgid "Fields in the foreign key"
-msgstr "البحث في أ_سماء المفاتيح أيضاً"
+msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:69
-#, fuzzy
 msgid "Fixed"
-msgstr "_عرض ثابت:"
+msgstr "ثابت"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
 #, fuzzy
 msgid "Foreign key"
-msgstr "اتفاق على المفتاح"
+msgstr "خريطة مفاتيح فرنسية"
 
 #. other table constraints
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:76
@@ -3661,49 +3678,49 @@ msgid "ISAM"
 msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:85
-#, fuzzy
 msgid "In Memory (MEMORY/HEAP)"
-msgstr "ذاكرة غير كافية"
+msgstr ""
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
 #, fuzzy
 msgid "Index directory"
-msgstr "دليل المستخدمين"
+msgstr "فهرِس مجلّدي المنزلي"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:88
+#, fuzzy
 msgid "InnoDB"
-msgstr ""
+msgstr "معلومات"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:90
 #, fuzzy
 msgid "Insert method"
-msgstr "طريقة NAT"
+msgstr "أدخل صورة"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:95
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 #, fuzzy
 msgid "Match full"
-msgstr "كامل الشاشة"
+msgstr "طابِق الكلّ"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:96
 #, fuzzy
 msgid "Match partial"
-msgstr "ضباب جزئي"
+msgstr "طابِق الكلّ"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:97
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
 #, fuzzy
 msgid "Match simple"
-msgstr "مطابقة التّعبير النّظامي"
+msgstr "طابق الحالة"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:99
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
 #, fuzzy
 msgid "Match type"
-msgstr "نوع التّنبيه"
+msgstr "نوع التحزيم"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:101
@@ -3715,28 +3732,29 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
 #, fuzzy
 msgid "Max rows"
-msgstr "سطور مجموعة الإطارات"
+msgstr "سطور"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:104
+#, fuzzy
 msgid "Merge"
-msgstr ""
+msgstr "ميرينجو"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
 #, fuzzy
 msgid "Min rows"
-msgstr "سطور مجموعة الإطارات"
+msgstr "النوافذ"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
 #, fuzzy
 msgid "MyISAM (default)"
-msgstr "إفتراض الحروف"
+msgstr "(الافتراضي)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:109
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
 #, fuzzy
 msgid "No action"
-msgstr "لا عمل إفتراضي مربوط"
+msgstr "لا تحديد"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:113
@@ -3750,7 +3768,7 @@ msgstr "عمل GOK للحذف"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 #, fuzzy
 msgid "On update action"
-msgstr "تراجع عن العمل الأخير"
+msgstr "تراجع عن الاجراء الأخير"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:117
 msgid "Only pack long CHAR/VARCHAR columns"
@@ -3760,49 +3778,49 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:119
 #, fuzzy
 msgid "Pack keys"
-msgstr "<b>مفاتيح التحول</b>"
+msgstr "أماكن"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:121
 #, fuzzy
 msgid "Password"
-msgstr "كلمة السّر"
+msgstr "كلمات السر"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:124
 #, fuzzy
 msgid "Redundant"
-msgstr "جسم فائض"
+msgstr "كائن فائض"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:126
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #, fuzzy
 msgid "Referenced field"
-msgstr "حقل ال_قيمة"
+msgstr "التسمية المرجع"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:128
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
 #, fuzzy
 msgid "Referenced table"
-msgstr "جسم الجدول"
+msgstr "التسمية المرجع"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:129
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+#, fuzzy
 msgid "Restrict"
-msgstr ""
+msgstr "NAT محدد"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:131
 #, fuzzy
 msgid "Row format"
-msgstr "تنسيق الفيديو"
+msgstr "تهيئة الساعات"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
-#, fuzzy
 msgid "Set to NULL"
-msgstr "كلمة السّر مضبوطة لـى:"
+msgstr ""
 
 #. list of fields
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
@@ -3815,25 +3833,26 @@ msgstr "عنوان أعمدة الجدول"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:142
 #, fuzzy
 msgid "Table's comment"
-msgstr "التّعليق يحتوي على"
+msgstr "أمر حاسوب المكتب"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:38
 #, fuzzy
 msgid "Table's description"
-msgstr "الوصف الميسر لعمود الجدول"
+msgstr "حسب الوصف"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
+#, fuzzy
 msgid "Table's engine (or type)"
-msgstr ""
+msgstr "أدخل جدول"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:148
 #, fuzzy
 msgid "Table's options"
-msgstr "جدول خيارات Popt"
+msgstr "خيارات التجريب"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:9
@@ -3841,12 +3860,13 @@ msgstr "جدول خيارات Popt"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
 #, fuzzy
 msgid "Temporary table"
-msgstr "جسم الجدول"
+msgstr "حجم مؤقت"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:154
+#, fuzzy
 msgid "Union"
-msgstr ""
+msgstr "يونيكود"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:162
@@ -3862,7 +3882,7 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:17
 #, fuzzy
 msgid "Only if existing"
-msgstr "_اضافة فقط اذا كان اجد"
+msgstr "أوبرا - موجود"
 
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:2
 #: ../providers/oracle/oracle_specs_drop_index.xml.in.h:3
@@ -3870,7 +3890,7 @@ msgstr "_اضافة فقط اذا كان اجد"
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:4
 #, fuzzy
 msgid "Index to delete"
-msgstr "فشل مسح \"%s\": %s"
+msgstr "تعذر حذف %1!"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:1
@@ -3892,7 +3912,7 @@ msgstr ""
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:2
 #, fuzzy
 msgid "If exists"
-msgstr "الملف موجود"
+msgstr "موجود"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:6
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
@@ -3906,7 +3926,7 @@ msgstr ""
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:4
 #, fuzzy
 msgid "Table to delete"
-msgstr "فشل مسح \"%s\": %s"
+msgstr "احذف الجدول"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
 #: ../providers/oracle/oracle_specs_drop_index.xml.in.h:5
@@ -3915,33 +3935,33 @@ msgstr "فشل مسح \"%s\": %s"
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:6
 #, fuzzy
 msgid "What to do with references"
-msgstr "ما الذي سيفعل بالعناوين المتغيّرة"
+msgstr "تفضيلات قائمة النوافذ"
 
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #, fuzzy
 msgid "New name"
-msgstr "اسم دليل جديد"
+msgstr "لعبة جديدة"
 
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:2
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:2
 #, fuzzy
 msgid "New table name"
-msgstr "اسم دليل جديد"
+msgstr "اسم ملف جديد"
 
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:4
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:4
 #, fuzzy
 msgid "Table to rename"
-msgstr "إعادة تسمية المجلّد \"%s\" إلى:"
+msgstr "عنوان سطر الجدول"
 
 #: ../providers/odbc/gda-odbc-provider.c:205
 #, fuzzy
 msgid "Unable to SQLAllocEnv()..."
-msgstr "لا يمكن تحميل·'%s':·%s"
+msgstr "تعذّر التحميل"
 
 #: ../providers/odbc/gda-odbc-provider.c:476
 #: ../providers/odbc/gda-odbc-provider.c:496
@@ -3951,7 +3971,7 @@ msgstr "لا يمكن تحميل·'%s':·%s"
 #: ../providers/odbc/gda-odbc-provider.c:618
 #, fuzzy
 msgid "Invalid Odbc handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/odbc/libmain.c:43
 msgid "Provider for ODBC data sources"
@@ -3960,12 +3980,12 @@ msgstr ""
 #: ../providers/odbc/odbc_specs_dsn.xml.in.h:1
 #, fuzzy
 msgid "Connection String"
-msgstr "سلسلة البحث"
+msgstr "فقد الاتصال "
 
 #: ../providers/odbc/odbc_specs_dsn.xml.in.h:2
 #, fuzzy
 msgid "ODBC connection string"
-msgstr "سلسلة هندسة غير سليمة \"%s\"\n"
+msgstr "فقد الاتصال "
 
 #: ../providers/oracle/gda-oracle-blob-op.c:108
 #: ../providers/oracle/gda-oracle-provider.c:526
@@ -3984,104 +4004,114 @@ msgstr "سلسلة هندسة غير سليمة \"%s\"\n"
 #: ../providers/oracle/utils.c:522
 #, fuzzy
 msgid "Invalid Oracle handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:172
 #: ../providers/oracle/gda-oracle-blob-op.c:208
 #, fuzzy
 msgid "Could not get the length of LOB object"
-msgstr ""
-"لم يمكن جلب تذكرة كرْبِروس:\n"
-"%s"
+msgstr "لم يمكن قراءة جدول المحتويات"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:220
 #, fuzzy
 msgid "Could not read from LOB object"
-msgstr "لم يمكن إعراب مستند XML %s المشوه"
+msgstr "لم يمكن قراءة المستند"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:257
 #, fuzzy
 msgid "Could not write to LOB object"
-msgstr "لم يمكن إعراب مستند XML %s المشوه"
+msgstr "لم يمكن تحديث الكائن"
 
 #: ../providers/oracle/gda-oracle-blob-op.c:290
 #, fuzzy
 msgid "Could not truncate LOB object"
-msgstr "لم يمكن إعراب مستند XML %s المشوه"
+msgstr "لم يمكن تحديث الكائن"
 
 #: ../providers/oracle/gda-oracle-provider.c:254
 #, fuzzy
 msgid "No TNS name supplied"
-msgstr "لم يحدَّد إسم مجلّد."
+msgstr "لم يحدد أسم مضيف"
 
 #: ../providers/oracle/gda-oracle-provider.c:269
 #, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "لم يمكن تشغيل بونوبو"
+msgstr "لم يمكن تهيئة بونوبو!\n"
 
 #: ../providers/oracle/gda-oracle-provider.c:280
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "لم يمكن تشغيل واجهة مستخدم بونوبو"
+msgstr "لم يمكن تشغيل المكتبات النظامية السليمة."
 
 #: ../providers/oracle/gda-oracle-provider.c:291
+#, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr ""
+msgstr "لم يمكن إنشاء مصنع خدمة تبليغ التنبيهات"
 
 #: ../providers/oracle/gda-oracle-provider.c:301
+#, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr ""
+msgstr "لا يمكن توزيع ذاكرة للترويسة"
 
 #: ../providers/oracle/gda-oracle-provider.c:313
+#, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr ""
+msgstr "غير قادر على تحديد موقع الخادم {0}."
 
 #: ../providers/oracle/gda-oracle-provider.c:326
+#, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr ""
+msgstr "لم يمكن الاتصال بمدير الجلسات"
 
 #: ../providers/oracle/gda-oracle-provider.c:355
 #, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "لم يمكن الإتّصال بنادل البروكسي"
+msgstr "غير قادر على التوثيق مع الخادم"
 
 #: ../providers/oracle/gda-oracle-provider.c:371
+#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr ""
+msgstr "لم يمكن حفظ الملف %s باستعمال ترميز المحارف %s."
 
 #: ../providers/oracle/gda-oracle-provider.c:387
+#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr ""
+msgstr "لم يمكن تحليل إسم الواجهة من '%s'"
 
 #: ../providers/oracle/gda-oracle-provider.c:403
+#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr ""
+msgstr "غير قادر على تغيير كلمة السر."
 
 #: ../providers/oracle/gda-oracle-provider.c:418
 #, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "%s: لم يمكن قراءة هوية الجلسة"
+msgstr "لا يمكن فتح الملف %s."
 
 #: ../providers/oracle/gda-oracle-provider.c:436
+#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr ""
+msgstr "غير قادر على إرسال مذكرة بالإلغاء للمُفَوَّضْ"
 
 #: ../providers/oracle/gda-oracle-provider.c:568
+#, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr ""
+msgstr "لم يمكن فتح القناة المحددة."
 
 #: ../providers/oracle/gda-oracle-provider.c:579
+#, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr ""
+msgstr "لم يمكن قراءة جدول المحتويات"
 
 #: ../providers/oracle/gda-oracle-provider.c:611
+#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr ""
+msgstr "تعذّر العثور على التقويم"
 
 #: ../providers/oracle/gda-oracle-provider.c:644
 #: ../providers/oracle/gda-oracle-provider.c:681
+#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr ""
+msgstr "لم أجد منتقى لحذفِه."
 
 #: ../providers/oracle/gda-oracle-provider.c:651
 msgid "Could not set the Oracle statement pre-fetch row count"
@@ -4091,148 +4121,160 @@ msgstr ""
 #: ../providers/oracle/gda-oracle-provider.c:712
 #, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "تعذّر تنفيذ %s: لم يرسل البريد."
+msgstr "تعذّر تنفيذ %s: لم يُرْسَل البريد."
 
 #: ../providers/oracle/gda-oracle-provider.c:689
 #, fuzzy
 msgid "Could not get the number of affected rows"
-msgstr ""
-"لم يمكن جلب تذكرة كرْبِروس:\n"
-"%s"
+msgstr "غير قادر على تعيين مالك الجهاز."
 
 #: ../providers/oracle/gda-oracle-provider.c:705
 #: ../providers/oracle/gda-oracle-provider.c:1185
 #: ../providers/oracle/gda-oracle-provider.c:1247
 #, fuzzy
 msgid "Could not get the attached transaction from the service context"
-msgstr "لم أستطع تلقي معلومات عن الملف '%s': %s"
+msgstr "لم يمكن إنشاء مصنع خدمة تبليغ التنبيهات"
 
 #: ../providers/oracle/gda-oracle-provider.c:733
+#, fuzzy
 msgid "Could not get the number of columns in the result set"
-msgstr ""
+msgstr "عدد الأعمدة في الجدول"
 
 #: ../providers/oracle/gda-oracle-provider.c:750
+#, fuzzy
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "تعذّر توليد بيانات التّشفير: %s"
 
 #: ../providers/oracle/gda-oracle-provider.c:762
+#, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr ""
+msgstr "غير قادر على تعيين مالك الجهاز."
 
 #: ../providers/oracle/gda-oracle-provider.c:1104
+#, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr ""
+msgstr "لا يمكن انشاء المجلّد المرسل اليه: %s."
 
 #: ../providers/oracle/gda-oracle-provider.c:1116
+#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr ""
+msgstr "لم يمكن الاتصال بمدير الجلسات"
 
 #: ../providers/oracle/gda-oracle-provider.c:1130
+#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr ""
+msgstr "تعذّر إضافة هذه العملية للقائمة."
 
 #: ../providers/oracle/gda-oracle-provider.c:1141
 #, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "لم أستطع بدء قناة الحالة: %s"
+msgstr "لم يمكن القيام بالعملية"
 
 #: ../providers/oracle/gda-oracle-provider.c:1198
+#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr ""
+msgstr "لم يمكن القيام بالعملية"
 
 #: ../providers/oracle/gda-oracle-provider.c:1209
 #: ../providers/oracle/gda-oracle-provider.c:1271
 #, fuzzy
 msgid "Could not de-attach the transaction to the service context"
-msgstr "لم يمكن الإتّصال بنادل البروكسي"
+msgstr "غير قادر على تعيين مالك الجهاز."
 
 #: ../providers/oracle/gda-oracle-provider.c:1260
+#, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr ""
+msgstr "الغ العملية الأخيرة"
 
 #: ../providers/oracle/gda-oracle-provider.c:1985
-#, c-format
+#, fuzzy, c-format
 msgid "Can't convert model for fields schema: %s"
-msgstr ""
+msgstr "لا يمكن الكتابة على الملف `%s': %s"
 
 #: ../providers/oracle/gda-oracle-provider.c:2030
+#, fuzzy
 msgid "Indexes"
-msgstr ""
+msgstr "مفهرس"
 
 #: ../providers/oracle/gda-oracle-provider.c:2033
+#, fuzzy
 msgid "Procedures"
-msgstr ""
+msgstr "العمليّات"
 
 #: ../providers/oracle/gda-oracle-provider.c:2036
+#, fuzzy
 msgid "Sequences"
-msgstr ""
+msgstr "<b>متتالية</b>"
 
 #: ../providers/oracle/gda-oracle-recordset.c:77
 #, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr ""
-"لم يمكن جلب تذكرة كرْبِروس:\n"
-"%s"
+msgstr "لم يمكن ايجاد النوع من \"%s\""
 
 #: ../providers/oracle/gda-oracle-recordset.c:87
+#, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr ""
+msgstr "لايمكن إيجاد مدة الملف: %s"
 
 #: ../providers/oracle/gda-oracle-recordset.c:100
+#, fuzzy
 msgid "Could not get the parameter data type"
-msgstr ""
+msgstr "تعذّر الحصول على بيانات الطقس"
 
 #: ../providers/oracle/gda-oracle-recordset.c:131
 #: ../providers/oracle/utils.c:530
 #, fuzzy
 msgid "Could not allocate Lob locator"
-msgstr "لم يمكن الاتّصال باستخدام الأمر \"%s\": %s"
+msgstr "لم يمكن تحديد ذاكرة للواجهة"
 
 #: ../providers/oracle/gda-oracle-recordset.c:157
 #, fuzzy
 msgid "Could not define by position"
-msgstr "لا يمكن تلقي موقع القطعة الحالي"
+msgstr "تعذّر العثور على التّطبيق"
 
 #: ../providers/oracle/gda-oracle-recordset.c:202
 #: ../providers/postgres/gda-postgres-recordset.c:689
 #, fuzzy
 msgid "Column out of range"
-msgstr "قيمة خارج المجال.\n"
+msgstr "قيمة خارج المدى.\n"
 
 #: ../providers/oracle/gda-oracle-recordset.c:214
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "لم أستطع تلقي معلومات عن الملف '%s': %s"
+msgstr "لا يمكن تلقي موقع المقطوعة الحالية"
 
 #: ../providers/oracle/gda-oracle-recordset.c:224
+#, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr ""
+msgstr "لم يمكن ايجاد النوع من \"%s\""
 
 #: ../providers/oracle/gda-oracle-recordset.c:242
+#, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr ""
+msgstr "لم أجد منتقى لحذفِه."
 
 #: ../providers/oracle/gda-oracle-recordset.c:254
+#, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr ""
+msgstr "لم يمكن ايجاد النوع من \"%s\""
 
 #: ../providers/oracle/gda-oracle-recordset.c:266
 msgid "Could not get the Oracle column nullable attribute"
 msgstr ""
 
 #: ../providers/oracle/gda-oracle-recordset.c:278
+#, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr ""
+msgstr "لايمكن إيجاد مدة الملف: %s"
 
 #: ../providers/oracle/gda-oracle-recordset.c:380
 #, fuzzy
 msgid "Could not fetch a row"
-msgstr "تعذّر تشغيل التّطبيق"
+msgstr "غير قادر على طرد iPod"
 
 #: ../providers/oracle/libmain.c:40
-#, fuzzy
 msgid "Provider for Oracle databases"
-msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+msgstr ""
 
 #: ../providers/oracle/oracle_specs_drop_index.xml.in.h:1
 msgid ""
@@ -4246,8 +4288,9 @@ msgid ""
 msgstr ""
 
 #: ../providers/oracle/oracle_specs_drop_table.xml.in.h:3
+#, fuzzy
 msgid "Release the space associated with the table. (PURGE)"
-msgstr ""
+msgstr "يقرأ صفات الحرف الحالي."
 
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:1
 msgid "Name of the TNS configuration to use when connecting"
@@ -4256,12 +4299,12 @@ msgstr ""
 #: ../providers/oracle/oracle_specs_dsn.xml.in.h:2
 #, fuzzy
 msgid "TNS Name"
-msgstr "اسم الموصول"
+msgstr "اسم الأغنية"
 
 #: ../providers/oracle/utils.c:537
 #, fuzzy
 msgid "Could not copy Lob locator"
-msgstr "لم يمكن إعراب مستند XML %s المشوه"
+msgstr "لم يمكن فتح المكان '%s'"
 
 #: ../providers/postgres/gda-postgres-blob-op.c:109
 #: ../providers/postgres/gda-postgres-handler-bin.c:196
@@ -4277,12 +4320,11 @@ msgstr "لم يمكن إعراب مستند XML %s المشوه"
 #: ../providers/postgres/gda-postgres-recordset.c:683
 #, fuzzy
 msgid "Invalid PostgreSQL handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:117
-#, fuzzy
 msgid "Postgresql binary handler"
-msgstr "معالج الوحدات"
+msgstr ""
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:123
 msgid "PostgresqlBin"
@@ -4291,15 +4333,17 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-handler-bin.c:124
 #, fuzzy
 msgid "PostgreSQL binary representation"
-msgstr "أظهر الملفات ال_ثنائية"
+msgstr "تعريف الأمكنة"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:219
+#, fuzzy
 msgid "Insufficient memory to convert binary buffer to string"
-msgstr ""
+msgstr "ذاكرة غير كافية لحفظ الصورة في الذاكرة الوسيطة"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:282
+#, fuzzy
 msgid "Insufficient memory to convert string to binary buffer"
-msgstr ""
+msgstr "ذاكرة غير كافية لحفظ الصورة في الذاكرة الوسيطة"
 
 #: ../providers/postgres/gda-postgres-provider.c:1102
 msgid "Could not create a SELECT query to fetch existing BLOB values"
@@ -4308,7 +4352,7 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:1124
 #, fuzzy, c-format
 msgid "Missing parameter for '%s'"
-msgstr "باراميترات غير صالحة"
+msgstr "معامل %s مفقود"
 
 #: ../providers/postgres/gda-postgres-provider.c:1142
 #, c-format
@@ -4320,8 +4364,9 @@ msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-provider.c:1523
+#, fuzzy
 msgid "Transactions are not supported in repeatable read isolation level"
-msgstr ""
+msgstr "صفحات الكتيّبل غير مدعومة في هذا الإصدار."
 
 #: ../providers/postgres/gda-postgres-recordset.c:490
 msgid "Model doesn't have at least one non-modified unique key."
@@ -4332,14 +4377,13 @@ msgid "Model doesn't have any non-unique values to update."
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-recordset.c:803
-#, c-format
+#, fuzzy, c-format
 msgid "Tuples:\"%s\""
-msgstr ""
+msgstr "النوع: %s\n"
 
 #: ../providers/postgres/libmain.c:42
-#, fuzzy
 msgid "Provider for PostgreSQL databases"
-msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
 msgid "Don't add the column to descendants of the table"
@@ -4348,19 +4392,19 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:9
 #, fuzzy
 msgid "Ignore descendants"
-msgstr "تج_اهل الحالة"
+msgstr "خَلَف"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:1
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:1
 #, fuzzy
 msgid "ASCII"
-msgstr "انجليزي (US-ASCII)"
+msgstr "SCSI"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:4
 #, fuzzy
 msgid "Chinese EUC"
-msgstr "صيني تقليدي (EUC-TW)"
+msgstr "صّينيّ"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:10
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:9
@@ -4371,7 +4415,6 @@ msgid ""
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:12
-#, fuzzy
 msgid "Encoding"
 msgstr "التشفيرة"
 
@@ -4459,19 +4502,18 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:28
 #, fuzzy
 msgid "Japanese EUC"
-msgstr "ياباني (EUC-JP)"
+msgstr "ياباني (_EUC-JP)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:29
-#, fuzzy
 msgid "KOI8-R(U)"
-msgstr "سيريالي (KOI8-R)"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:32
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:30
 #, fuzzy
 msgid "Korean EUC"
-msgstr "كوري (EUC-KR)"
+msgstr "كوري (_UHC)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:31
@@ -4486,144 +4528,148 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:12
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
+#, fuzzy
 msgid "Tablespace"
-msgstr ""
+msgstr "مجال أسماء المجلّدات"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:42
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:38
 #, fuzzy
 msgid "Taiwan EUC"
-msgstr "ا-ص|الصين (تايوان)"
+msgstr "تايوان"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
-#, fuzzy
 msgid "Template"
 msgstr "قالب"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:46
+#, fuzzy
 msgid "The name of the database user who will own the new database"
-msgstr ""
+msgstr "اسم الأيقونة الظاهرة على العنصر"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:47
+#, fuzzy
 msgid ""
 "The name of the tablespace that will be associated with the new database"
-msgstr ""
+msgstr "الإسم الذي سيظهر للمستخدم."
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:48
+#, fuzzy
 msgid "The name of the template from which to create the new database"
-msgstr ""
+msgstr "اسم الأيقونة الظاهرة على العنصر"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:49
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:41
-#, fuzzy
 msgid "Unicode (UTF-8)"
-msgstr "يونيكود (يو تي أف 8)"
+msgstr "يونيكود (UTF-8)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:50
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:42
+#, fuzzy
 msgid "Whether to require SSL or not when connecting"
-msgstr ""
+msgstr "ما إذا يتم سبات, توقيف أو فعل لا شيء عند عدم النشاط"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:51
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:43
 #, fuzzy
 msgid "Windows CP1250"
-msgstr "نوافذ قافزة"
+msgstr "النوافذ"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:52
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:44
 #, fuzzy
 msgid "Windows CP1251"
-msgstr "نوافذ قافزة"
+msgstr "النوافذ"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:53
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:45
-#, fuzzy
 msgid "Windows CP1256 (Arabic)"
-msgstr "عربي (Windows-1256)"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:54
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:46
 #, fuzzy
 msgid "Windows CP866"
-msgstr "نوافذ قافزة"
+msgstr "النوافذ"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:55
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:47
 #, fuzzy
 msgid "Windows CP874 (Thai)"
-msgstr "بلطيقي (Windows-1257)"
+msgstr "مشاركة ويندوز"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:1
+#, fuzzy
 msgid "Constraint expression for a partial index"
-msgstr ""
+msgstr "تعبير الإحداثيّات فارغ أو لم يفهم"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
+#, fuzzy
 msgid "Predicate"
-msgstr ""
+msgstr "خاص"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
 #, fuzzy
 msgid "Copy default expressions"
-msgstr "عرض الفيديو الافتراضي"
+msgstr "فعل العمل الإفتراضي"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 #, fuzzy
 msgid "Copy defaults"
-msgstr "نسخ ال_كل"
+msgstr "ممكن الافتراض"
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+#, fuzzy
 msgid "Deferrable"
-msgstr ""
+msgstr "قابل للحذف"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:16
 msgid "Deferrable initially deferred"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
-#, fuzzy
 msgid "Deferrable initially immediate"
-msgstr "فيما إذا سيفعل الحذف الفوري"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
+#, fuzzy
 msgid "Inheritance"
-msgstr ""
+msgstr "موروث"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
 #, fuzzy
 msgid "Keep coupled"
-msgstr "إبقاء الاستبانة"
+msgstr "الحفاظ على طبقة النتوءات"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
 #, fuzzy
 msgid "Not deferrable"
-msgstr "غير صحيح"
+msgstr "لا إحالة"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:47
 #, fuzzy
 msgid "Parent table"
-msgstr "جسم الجدول"
+msgstr "جدول شجرة"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
 #, fuzzy
 msgid "Parent table(s)"
-msgstr "جسم الجدول"
+msgstr "المحلّية الحالي (%s)"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
 #, fuzzy
 msgid "Set to default"
-msgstr "الإ_فتراضي: \"أهلا بك في %n\""
+msgstr "اضبط كا_فتراضي"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
-#, fuzzy
 msgid "Use INHERIT instead of LIKE"
-msgstr "ا_ستخدم وحدات النظام المتري عوض النظام الانكليزي"
+msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
 #, fuzzy
 msgid "With OIDs"
-msgstr "الفتح بـاستخدام"
+msgstr "مع %s"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:1
 msgid "Automatically drop objects that depend on the column (CASCADE)"
@@ -4634,37 +4680,39 @@ msgid "Refuse to drop the column if any objects depend on it (RESTRICT)"
 msgstr ""
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
+#, fuzzy
 msgid "What to do with references on the column to delete"
-msgstr ""
+msgstr "ما الذي سيفعل بالطرفيّة عند خروج الأمر الإبن"
 
 #. DSN parameters
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
 #, fuzzy
 msgid "The name of a database to drop"
-msgstr "الزّر للإسقاط."
+msgstr "قاعدة البيانات التي ستستخدم افتراضيا"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
 #, fuzzy
 msgid "Search Path"
-msgstr "مسار الجهاز"
+msgstr "اختر مساراً"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:10
+#, fuzzy
 msgid "Search path among database's schemas"
-msgstr ""
+msgstr "اختر ملف قاعدة بيانات mork"
 
 #: ../providers/sqlite/gda-sqlite-handler-bin.c:115
-#, fuzzy
 msgid "SQlite binary handler"
-msgstr "معالج الوحدات"
+msgstr ""
 
 #: ../providers/sqlite/gda-sqlite-handler-bin.c:120
+#, fuzzy
 msgid "SqliteBin"
-msgstr ""
+msgstr "خط الادخال"
 
 #: ../providers/sqlite/gda-sqlite-handler-bin.c:121
 #, fuzzy
 msgid "SQlite binary representation"
-msgstr "أظهر الملفات ال_ثنائية"
+msgstr "تعريف الأمكنة"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:261
 msgid "The connection string must contain DB_DIR and DB_NAME values"
@@ -4693,7 +4741,7 @@ msgstr ""
 #: ../providers/sqlite/gda-sqlite-provider.c:1364
 #, fuzzy
 msgid "Invalid SQLite handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:436
 #: ../providers/sqlite/gda-sqlite-provider.c:1179
@@ -4702,7 +4750,7 @@ msgstr "معالجة سيئة للملفّ"
 #: ../providers/sqlite/gda-sqlite-provider.c:1674
 #, fuzzy
 msgid "Invalid SQLITE handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:612
 msgid "Only one database per connection is allowed"
@@ -4716,11 +4764,12 @@ msgstr ""
 #: ../providers/sqlite/gda-sqlite-provider.c:1314
 #, fuzzy, c-format
 msgid "Can't find table %s"
-msgstr "%s: لم أجد مستخدم GDM '%s'.إلغاء!"
+msgstr "لا يمكن ايجاد المشغل %s"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1483
+#, fuzzy
 msgid "Can't execute PRAGMA proc_list"
-msgstr ""
+msgstr "تعذّر تنفيذ برنامج:"
 
 #: ../providers/sqlite/gda-sqlite-provider.c:1775
 msgid "Can't execute PRAGMA foreign_key_list()"
@@ -4729,7 +4778,7 @@ msgstr ""
 #: ../providers/sqlite/libmain.c:42
 #, fuzzy
 msgid "Provider for SQLite databases"
-msgstr "لا مُقدّم متوفّر للبرتوكول `%s'"
+msgstr "موفّر الجسم"
 
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:6
 msgid "Default value, mandatory if column is NOT NULL"
@@ -4740,15 +4789,15 @@ msgstr ""
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:2
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:1
-#, fuzzy
 msgid "Directory"
 msgstr "دليل"
 
 #. DSN parameters
 #: ../providers/sqlite/sqlite_specs_create_db.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:8
+#, fuzzy
 msgid "Directory where the database file will be"
-msgstr ""
+msgstr "الدليل الذي بِه السِمة"
 
 #. Index fields
 #. list of fields
@@ -4763,15 +4812,15 @@ msgstr ""
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:10
 #, fuzzy
 msgid "Compare method"
-msgstr "طريقة NAT"
+msgstr "طريقة الألوان"
 
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:5
+#, fuzzy
 msgid "Create index only if it does not yet exist"
-msgstr ""
+msgstr "المستند غير موجود."
 
 #. list of fields
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:12
-#, fuzzy
 msgid "Conflict"
 msgstr "تضارب"
 
@@ -4785,13 +4834,14 @@ msgid "Drop index only if it exists"
 msgstr ""
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:3
+#, fuzzy
 msgid "Directory where the database file is stored"
-msgstr ""
+msgstr "الدليل الذي بِه السِمة"
 
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
 #, fuzzy
 msgid "The name of a database to use"
-msgstr "لم يمكن فتح المقبس"
+msgstr "قاعدة البيانات التي ستستخدم افتراضيا"
 
 #: ../providers/sybase/gda-sybase-provider.c:306
 msgid "Out of memory. Allocating connection structure failed."
@@ -4800,7 +4850,7 @@ msgstr ""
 #: ../providers/sybase/gda-sybase-provider.c:351
 #, fuzzy, c-format
 msgid "Locale set to '%s'."
-msgstr "كلمة السّر مضبوطة لـى:"
+msgstr "أُرسِل جرس إلى %s."
 
 #: ../providers/sybase/gda-sybase-provider.c:641
 msgid ""
@@ -4809,19 +4859,19 @@ msgid ""
 msgstr ""
 
 #: ../providers/sybase/gda-sybase-provider.c:655
-#, c-format
+#, fuzzy, c-format
 msgid "Failed allocating a command structure in %s()"
-msgstr ""
+msgstr "لا يمكن توزيع تركيب مُخطط الألوان"
 
 #: ../providers/sybase/gda-sybase-provider.c:669
 #, fuzzy
 msgid "Could not prepare command structure."
-msgstr "لم يمكن الاتّصال باستخدام الأمر \"%s\": %s"
+msgstr "تعذّر تشغيل الأمر '%s'"
 
 #: ../providers/sybase/gda-sybase-provider.c:679
 #, fuzzy
 msgid "Sending sql-command failed."
-msgstr "فشل تشغيل الأمر"
+msgstr "فشل إرسال الملف"
 
 #: ../providers/sybase/gda-sybase-provider.c:706
 #: ../providers/sybase/gda-sybase-provider.c:726
@@ -4834,29 +4884,29 @@ msgstr ""
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: ../providers/sybase/gda-sybase-provider.c:712
-#, fuzzy
 msgid "CS_STATUS_RESULT!"
-msgstr "فشل"
-
-#: ../providers/sybase/gda-sybase-provider.c:736
-msgid "Hit unsupported result type"
 msgstr ""
 
+#: ../providers/sybase/gda-sybase-provider.c:736
+#, fuzzy
+msgid "Hit unsupported result type"
+msgstr "نوع أيقونة غير مدعوم"
+
 #: ../providers/sybase/gda-sybase-provider.c:764
+#, fuzzy
 msgid ""
 "An error occurred when attempting to test if there is a server message for "
 "resultset"
-msgstr ""
+msgstr "حدث خطأ عند فتح دليل في مدير الملفات"
 
 #: ../providers/sybase/gda-sybase-provider.c:796
 #, fuzzy, c-format
 msgid "%s returned %s"
-msgstr "أرجع الاستعلام الاستثناء %s\n"
+msgstr "%s و %s"
 
 #: ../providers/sybase/gda-sybase-provider.c:824
-#, fuzzy
 msgid "Failed dropping command structure."
-msgstr "فشل تشغيل الأمر"
+msgstr ""
 
 #: ../providers/sybase/gda-sybase-provider.c:854
 #, c-format
@@ -4866,40 +4916,44 @@ msgstr ""
 #: ../providers/sybase/gda-sybase-provider.c:862
 #, fuzzy
 msgid "Could not allocate command structure."
-msgstr "لم يمكن الاتّصال باستخدام الأمر \"%s\": %s"
+msgstr "لا يمكن توزيع تركيب مُخطط الألوان"
 
 #: ../providers/sybase/gda-sybase-provider.c:871
-#, c-format
+#, fuzzy, c-format
 msgid "Could not prepare command structure with %s."
-msgstr ""
+msgstr "يم يمكن تحليل سطر الأوامر '%s': %s"
 
 #: ../providers/sybase/gda-sybase-provider.c:881
 #, fuzzy
 msgid "Sending command failed."
-msgstr "فشل أمر IMAP: %s"
+msgstr "فشل أمر RSET "
 
 #: ../providers/sybase/gda-sybase-provider.c:906
 #: ../providers/sybase/gda-sybase-provider.c:923
 #: ../providers/sybase/gda-sybase-provider.c:934
 #, fuzzy, c-format
 msgid "%s: %s failed"
-msgstr "فشل"
+msgstr "فشل الاختبار %d"
 
 #: ../providers/sybase/gda-sybase-provider.c:978
+#, fuzzy
 msgid "could not allocate cmd structure to find current database."
-msgstr ""
+msgstr "لا يمكن توزيع ذاكرة لبيانات السطر"
 
 #: ../providers/sybase/gda-sybase-provider.c:989
+#, fuzzy
 msgid "could not execute command to get current database."
-msgstr ""
+msgstr "لم يمكن تنفيذ الأمر"
 
 #: ../providers/sybase/gda-sybase-provider.c:997
+#, fuzzy
 msgid "could not send command to get current database."
-msgstr ""
+msgstr "تعذّر إضافة التّطبيق لقاعدة بيانات التّطبيقات"
 
 #: ../providers/sybase/gda-sybase-provider.c:1020
+#, fuzzy
 msgid "could not bind variable to get current database."
-msgstr ""
+msgstr "تعذّر إضافة التّطبيق لقاعدة بيانات التّطبيقات"
 
 #: ../providers/sybase/gda-sybase-provider.c:1033
 #: ../providers/sybase/gda-sybase-provider.c:1048
@@ -4917,54 +4971,55 @@ msgstr ""
 #: ../providers/sybase/gda-sybase-recordset.c:307
 #, fuzzy
 msgid "ct_cancel() failed."
-msgstr "فشل تسجيل %s إلى %s"
+msgstr "فشل الحفظ."
 
 #: ../providers/sybase/gda-sybase-recordset.c:320
-#, fuzzy, c-format
+#, c-format
 msgid "%s failed while processing a row result."
-msgstr "ق ٪ بينما لم التوالي نتيجة المعالجه."
+msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:328
-#, fuzzy, c-format
+#, c-format
 msgid "%s returned <= 0 columns."
-msgstr "عدد الأعمدة:"
+msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:348
 #: ../providers/sybase/gda-sybase-recordset.c:538
+#, fuzzy
 msgid "Could not allocate structure for column metainformation."
-msgstr ""
+msgstr "لم يمكن تحديد ذاكرة للواجهة"
 
 #: ../providers/sybase/gda-sybase-recordset.c:352
 #: ../providers/sybase/gda-sybase-recordset.c:542
-#, c-format
+#, fuzzy, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr ""
+msgstr "لم أجد منتقى لحذفِه."
 
 #: ../providers/sybase/gda-sybase-recordset.c:371
 #: ../providers/sybase/gda-sybase-recordset.c:392
 #, fuzzy, c-format
 msgid "Could not run %s on column %d"
-msgstr "لم يمكن عرض حوار التشغيل"
+msgstr "تعذّر تشغيل الأمر"
 
 #: ../providers/sybase/gda-sybase-recordset.c:380
-#, c-format
+#, fuzzy, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr ""
+msgstr "لا يمكن توزيع ذاكرة لبيانات السطر"
 
 #: ../providers/sybase/gda-sybase-recordset.c:409
-#, c-format
+#, fuzzy, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr ""
+msgstr "لم يمكن تشغيل العملية الفرعية: %s. "
 
 #: ../providers/sybase/gda-sybase-recordset.c:425
 #, fuzzy, c-format
 msgid "%s failed on row %d"
-msgstr "فشل عند الرّسالة %d"
+msgstr "عثر على ملفٍّ واحد"
 
 #: ../providers/sybase/gda-sybase-recordset.c:452
-#, fuzzy, c-format
+#, c-format
 msgid "%s terminated with unexpected return code."
-msgstr "المائة او انهائها مع العائدين القانون."
+msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:497
 msgid ""
@@ -4977,9 +5032,10 @@ msgid "attempting to make recordset and msg count != 1 !"
 msgstr ""
 
 #: ../providers/sybase/gda-sybase-recordset.c:520
+#, fuzzy
 msgid ""
 "An error occurred when attempting to retrieve a server message for recordset"
-msgstr ""
+msgstr "حدث خطأ عند إعادة تسمية دليل أو ملف"
 
 #: ../providers/sybase/gda-sybase-recordset.c:578
 #: ../providers/sybase/utils.c:409
@@ -4992,14 +5048,14 @@ msgid "Attempt setting a nonnullable field to null."
 msgstr ""
 
 #: ../providers/sybase/gda-sybase-types.c:268
-#, fuzzy, c-format
+#, c-format
 msgid "cslib cannot convert type %d"
-msgstr "لم يمكن تحويل fallback '%s' الى مجموعة المحارف '%s'"
+msgstr ""
 
 #: ../providers/sybase/gda-sybase-types.c:283
-#, fuzzy, c-format
+#, c-format
 msgid "data conversion failed for type %d"
-msgstr "فشل التحويل الرمزي ل \"%s\""
+msgstr ""
 
 #: ../providers/sybase/libmain.c:41
 msgid "GDA provider for sybase databases (using OpenClient)"
@@ -5008,12 +5064,12 @@ msgstr ""
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:6
 #, fuzzy
 msgid "Enable Sybase operative mode"
-msgstr "تغعيل/تعطيل نسق النّابض"
+msgstr "_فعِّل وضع التجوّل"
 
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:10
 #, fuzzy
 msgid "Locale"
-msgstr "التشفيرة الحالية (%s)"
+msgstr "اللغات"
 
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:11
 #, fuzzy
@@ -5021,9 +5077,8 @@ msgid "Locale to use during the connection"
 msgstr "ال_اسم المستخدم للاتصال:"
 
 #: ../providers/sybase/utils.c:48
-#, fuzzy
 msgid "Call: csmsg callback"
-msgstr "وضع المكالمة الواردة"
+msgstr ""
 
 #: ../providers/sybase/utils.c:53
 #, c-format
@@ -5036,14 +5091,11 @@ msgstr ""
 #: ../providers/sybase/utils.c:60
 #, fuzzy, c-format
 msgid "OS error: %s"
-msgstr ""
-"خطأ GConf:\n"
-"  %s"
+msgstr "خطأ CORBA : %s"
 
 #: ../providers/sybase/utils.c:70
-#, fuzzy
 msgid "Call: Client callback."
-msgstr "شهادة عميل SSL"
+msgstr ""
 
 #: ../providers/sybase/utils.c:75
 #, c-format
@@ -5054,9 +5106,8 @@ msgid ""
 msgstr ""
 
 #: ../providers/sybase/utils.c:90
-#, fuzzy
 msgid "Call: server callback"
-msgstr "مسح نادل STUN"
+msgstr ""
 
 #: ../providers/sybase/utils.c:95
 #, c-format
@@ -5068,12 +5119,12 @@ msgstr ""
 #: ../providers/sybase/utils.c:100
 #, fuzzy, c-format
 msgid "\tServer name: %s\n"
-msgstr "اسم الموصول"
+msgstr "إ_سم الخادم:"
 
 #: ../providers/sybase/utils.c:103
 #, fuzzy, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "اسم الموصول"
+msgstr "اسم المجموعة:  %s"
 
 #: ../providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
@@ -5084,20 +5135,19 @@ msgid "Failed when attempting to retrieve the amount of client messages"
 msgstr ""
 
 #: ../providers/sybase/utils.c:221 ../providers/sybase/utils.c:460
+#, fuzzy
 msgid "An error occurred when attempting to retrieve a client message"
-msgstr ""
+msgstr "حدث خطأ عند فتح دليل في مدير الملفات"
 
 #: ../providers/sybase/utils.c:231
 #, fuzzy
 msgid "OS_Error:("
-msgstr ""
-"خطأ GConf:\n"
-"  %s"
+msgstr "خطأ"
 
 #: ../providers/sybase/utils.c:233
 #, fuzzy
 msgid ") Message: "
-msgstr "رسالة"
+msgstr "الرسالة:"
 
 #: ../providers/sybase/utils.c:245
 #, c-format
@@ -5115,51 +5165,50 @@ msgid "Failed when attempting to retrieve the amount of server messages"
 msgstr ""
 
 #: ../providers/sybase/utils.c:331
+#, fuzzy
 msgid "An error occurred when attempting to retrieve a server message"
-msgstr ""
+msgstr "حدث خطأ عند فتح دليل في مدير الملفات"
 
 #: ../providers/sybase/utils.c:343
-#, fuzzy
 msgid "Server:"
-msgstr "ال_خادم:"
+msgstr "الخادم:"
 
 #: ../providers/sybase/utils.c:347
 #, fuzzy
 msgid "Stored Procedure:"
-msgstr "مكّن إجراء الت_شغيل السريع"
+msgstr "%d إجراء"
 
 #: ../providers/sybase/utils.c:351
-#, fuzzy
 msgid "Number"
 msgstr "الرقم"
 
 #: ../providers/sybase/utils.c:354 ../providers/sybase/utils.c:471
+#, fuzzy
 msgid "Severity"
-msgstr ""
+msgstr "أمن"
 
 #: ../providers/sybase/utils.c:357
-#, fuzzy
 msgid "State"
 msgstr "الحالة"
 
 #: ../providers/sybase/utils.c:360
-#, fuzzy
 msgid "Line"
-msgstr "لف السّطور"
+msgstr "خط"
 
 #: ../providers/sybase/utils.c:473
 #, fuzzy
 msgid "Layer"
-msgstr "طبقة"
+msgstr "الطبقات"
 
 #: ../providers/sybase/utils.c:475
+#, fuzzy
 msgid "Origin"
-msgstr ""
+msgstr "ستريغينو"
 
 #: ../providers/sybase/utils.c:477
 #, fuzzy
 msgid "Message Number"
-msgstr "رقم ال_حساب:"
+msgstr "مؤلّف الرّسائل"
 
 #: ../providers/sybase/utils.c:499
 msgid "call to ct_diag failed when attempting to clear the client messages"
@@ -5181,7 +5230,7 @@ msgstr ""
 #: ../providers/xbase/gda-xbase-provider.c:341
 #, fuzzy
 msgid "Invalid Xbase handle"
-msgstr "معالجة سيئة للملفّ"
+msgstr "handler عنوان غير صالح"
 
 #: ../providers/xbase/libmain.c:40
 msgid "Provider for xBase (dBase, FoxPro, etc) files"
@@ -5190,22 +5239,22 @@ msgstr ""
 #: ../providers/xbase/xbase_specs_dsn.xml.in.h:2
 #, fuzzy
 msgid "Directory containing the xBase files"
-msgstr "هيكل الدلائل للملفات"
+msgstr "المجلد الذي يحتوي على الملحقات المثبتة من قبل النظام"
 
 #: ../report/libgda-report/gda-report-document.c:179
 #, fuzzy
 msgid "Could not parse XML document"
-msgstr "لم يمكن إعراب مستند XML %s المشوه"
+msgstr "لم يمكن قراءة المستند"
 
 #: ../report/libgda-report/gda-report-document.c:189
 #, fuzzy
 msgid "XML document is not valid"
-msgstr "الموقع المدخل ليس سليماً."
+msgstr "NULL iid غير سليم"
 
 #: ../report/libgda-report/gda-report-document.c:221
 #, fuzzy, c-format
 msgid "Could not get file from %s"
-msgstr "لم أستطع تلقي معلومات عن الملف '%s': %s"
+msgstr "لم يمكن ايجاد النوع من \"%s\""
 
 #: ../report/libgda-report/gda-report-item-detail.c:160
 #: ../report/libgda-report/gda-report-item-pagefooter.c:171
@@ -5213,9 +5262,9 @@ msgstr "لم أستطع تلقي معلومات عن الملف '%s': %s"
 #: ../report/libgda-report/gda-report-item-report.c:155
 #: ../report/libgda-report/gda-report-item-reportfooter.c:172
 #: ../report/libgda-report/gda-report-item-reportheader.c:171
-#, c-format
+#, fuzzy, c-format
 msgid "An element with ID %s already exists in the report"
-msgstr ""
+msgstr "\"%s\" موجود مسبقاً في الدليل"
 
 #: ../report/libgda-report/gda-report-item-detail.c:185
 #: ../report/libgda-report/gda-report-item-pagefooter.c:196
@@ -5223,9 +5272,9 @@ msgstr ""
 #: ../report/libgda-report/gda-report-item-report.c:711
 #: ../report/libgda-report/gda-report-item-reportfooter.c:197
 #: ../report/libgda-report/gda-report-item-reportheader.c:196
-#, c-format
+#, fuzzy, c-format
 msgid "Item with ID %s is not a label"
-msgstr ""
+msgstr "عنصر بتسمية"
 
 #: ../report/libgda-report/gda-report-item-detail.c:214
 #: ../report/libgda-report/gda-report-item-pagefooter.c:224
@@ -5238,28 +5287,29 @@ msgid "Item with ID %s is not a repfield"
 msgstr ""
 
 #: ../report/libgda-report/gda-report-item.c:276
+#, fuzzy
 msgid "Error setting parent -> child relation"
-msgstr ""
+msgstr "خطأ (%s) عند تحويل البيانات من الابن، تخلي."
 
 #: ../report/libgda-report/gda-report-item.c:375
-#, c-format
+#, fuzzy, c-format
 msgid "Error setting value %s to attribute %s of item %s"
-msgstr ""
+msgstr "خطأ ضبط قيمة لـ `%s': %s"
 
 #: ../report/libgda-report/gda-report-valid.c:130
 #, fuzzy, c-format
 msgid "could not get DTD from %s"
-msgstr "لم يمكن قراءة التّحيّة من %s: %s"
+msgstr "لم يمكن ايجاد النوع من \"%s\""
 
 #: ../report/libgda-report/gda-report-valid.c:231
 #, fuzzy, c-format
 msgid "Error validating element %s"
-msgstr "عنصر جذري ل HTML"
+msgstr "خطأ عند تحميل السِمة: %s\n"
 
 #: ../report/libgda-report/gda-report-valid.c:269
 #, fuzzy, c-format
 msgid "No declaration for attribute %s of element %s\n"
-msgstr "لا صفة \"اسم\" على العنصر <%s>"
+msgstr "لا صفة \"لون\" على العنصر <%s>"
 
 #: ../report/libgda-report/gda-report-valid.c:283
 #, c-format
@@ -5271,36 +5321,37 @@ msgstr ""
 #: ../tools/gda-author-dict-file.c:148
 #, fuzzy, c-format
 msgid "DSN '%s' is not declared"
-msgstr "“%s” لا يجيب"
+msgstr "%s ليس ملفّاً اعتياديّا"
 
 #: ../testing/gda-test-blob.c:78 ../testing/gda-test-connection.c:69
 #: ../testing/gda-test-server-operation.c:80
 #: ../tools/gda-author-dict-file.c:155 ../tools/gda-diagnose.c:1357
-#, c-format
+#, fuzzy, c-format
 msgid "Can't open connection to DSN %s: %s\n"
-msgstr ""
+msgstr "فشل فتح إتصال مع الناقل: %s\n"
 
 #: ../testing/gda-test-blob.c:91 ../testing/gda-test-connection.c:81
 #: ../testing/gda-test-server-operation.c:92
 #: ../tools/gda-author-dict-file.c:167
 #, fuzzy, c-format
 msgid "Can't open specified connection: %s\n"
-msgstr "لا يمكن فتح الملف"
+msgstr "التعذر فى تكوين اتصال بالبيانات%s\n"
 
 #: ../testing/gda-test-blob.c:97 ../testing/gda-test-connection.c:87
 #, fuzzy
 msgid "Connection successfully opened!\n"
-msgstr "تم فتح جهاز الفيديو %s، القناة %d بنجاح"
+msgstr "اكتملت كل العمليات بنجاح"
 
 #: ../testing/gda-test-model-query.c:87
+#, fuzzy
 msgid "List of tests"
-msgstr ""
+msgstr "قائمة بالحسابات"
 
 #: ../testing/gda-test-model-query.c:97 ../testing/gda-test-models.c:101
 #: ../testing/gda-test-sql.c:97 ../tools/gda-diagnose.c:117
 #, fuzzy, c-format
 msgid "Generated @ %s"
-msgstr "محتوى مولّد"
+msgstr "تم توليد لغز"
 
 #: ../testing/gda-test-model-query.c:142 ../testing/gda-test-model-query.c:169
 #: ../testing/gda-test-models.c:151 ../testing/gda-test-models.c:178
@@ -5308,7 +5359,7 @@ msgstr "محتوى مولّد"
 #: ../tools/gda-author-dict-file.c:248
 #, fuzzy, c-format
 msgid "Can't write dictionary to file %s: %s\n"
-msgstr "تعذّر الكتابة في ملف BMP "
+msgstr "لا يمكن الكتابة على الملف `%s': %s"
 
 #: ../testing/gda-test-model-query.c:155 ../testing/gda-test-models.c:164
 #: ../testing/gda-test-sql.c:156 ../tools/gda-inspect-dict-file.c:64
@@ -5316,12 +5367,13 @@ msgstr "تعذّر الكتابة في ملف BMP "
 msgid ""
 "Error loading dictionary file '%s':\n"
 "%s\n"
-msgstr "خطأ أثناء قراءة ملف البريد: %s"
+msgstr "خطأ أثناء فتح الملف '%s': %s"
 
 #: ../testing/gda-test-model-query.c:156 ../testing/gda-test-models.c:165
 #: ../testing/gda-test-sql.c:157 ../tools/gda-inspect-dict-file.c:65
+#, fuzzy
 msgid "Unspecified"
-msgstr ""
+msgstr "خطأ غير محدد"
 
 #: ../testing/gda-test-model-query.c:182 ../testing/gda-test-model-query.c:196
 #: ../testing/gda-test-models.c:191 ../testing/gda-test-models.c:205
@@ -5334,9 +5386,8 @@ msgid ""
 msgstr "لا يمكن تشغيل الأمر  '%s': %s."
 
 #: ../testing/gda-test-model-query.c:282 ../testing/gda-test-sql.c:286
-#, fuzzy
 msgid "SQL tested"
-msgstr "عبارات SQL"
+msgstr ""
 
 #: ../testing/gda-test-model-query.c:285
 msgid "UPDATE query"
@@ -5351,18 +5402,19 @@ msgid "DELETE query"
 msgstr ""
 
 #: ../testing/gda-test-models.c:89 ../testing/gda-test-sql.c:87
+#, fuzzy
 msgid "List of SQL parsing tests"
-msgstr ""
+msgstr "قائمة الملاحظات المثبتة."
 
 #: ../testing/gda-test-models.c:385
 #, fuzzy
 msgid "Missing 'file' attribute"
-msgstr "الملف المطلوب غير موجود"
+msgstr "اسم الملف مفقود."
 
 #: ../testing/gda-test-models.c:658
 #, fuzzy
 msgid "GdaDataModel required for this action"
-msgstr "\"افعل هذا الحدث دوما\" تفعيل-تعطيل للتشغيل الآلي"
+msgstr "النسبة لهذه العملية"
 
 #: ../testing/gda-test-models.c:696
 #, fuzzy, c-format
@@ -5387,59 +5439,57 @@ msgstr ""
 #: ../testing/gda-test-sql.c:289
 #, fuzzy
 msgid "Action"
-msgstr "حدث"
+msgstr "أفعال"
 
 #: ../testing/gda-test-sql.c:291
 #, fuzzy
 msgid "Query Name"
-msgstr "اسم الموصول"
+msgstr "اسم المفتاح"
 
 #: ../testing/gda-test-sql.c:293
 #, fuzzy
 msgid "Query Status"
-msgstr "ضبط الحالة"
+msgstr "اضبط الحالة"
 
 #: ../testing/gda-test-sql.c:295
 #, fuzzy
 msgid "Rendered SQL"
-msgstr "عبارات SQL"
+msgstr "توسيط"
 
 #: ../testing/gda-test-sql.c:362
 #, fuzzy
 msgid "non-parsed"
-msgstr "غير مشارك"
+msgstr "غير مضغوط"
 
 #: ../testing/gda-test-sql.c:364
-#, fuzzy
 msgid "Active"
 msgstr "نشط"
 
 #: ../testing/gda-test-sql.c:364
-#, fuzzy
 msgid "Inactive"
 msgstr "غير نشط"
 
 #: ../testing/gda-test-sql.c:387
 #, fuzzy
 msgid "Parsing"
-msgstr "خطأ أثناء ترجمة المصفات: %s: %s"
+msgstr "يجري التحضير"
 
 #: ../testing/gda-test-sql.c:427
+#, fuzzy
 msgid "Copied"
-msgstr ""
+msgstr "نُسَ_خ:"
 
 #. toc
 #: ../testing/html.c:113 ../tools/html.c:113
 #, fuzzy
 msgid "Table of contents"
-msgstr "جدول المحتويات"
+msgstr "المساعدة - جدول المحتويات"
 
 #: ../testing/html.c:293 ../tools/gda-diagnose.c:380
 #: ../tools/gda-diagnose.c:384 ../tools/gda-diagnose.c:388
 #: ../tools/gda-diagnose.c:392 ../tools/gda-diagnose.c:463
 #: ../tools/gda-diagnose.c:469 ../tools/gda-diagnose.c:480
 #: ../tools/gda-diagnose.c:508 ../tools/gda-diagnose.c:545 ../tools/html.c:293
-#, fuzzy
 msgid "Yes"
 msgstr "نعم"
 
@@ -5448,7 +5498,6 @@ msgstr "نعم"
 #: ../tools/gda-diagnose.c:392 ../tools/gda-diagnose.c:463
 #: ../tools/gda-diagnose.c:469 ../tools/gda-diagnose.c:480
 #: ../tools/gda-diagnose.c:508 ../tools/gda-diagnose.c:545 ../tools/html.c:293
-#, fuzzy
 msgid "No"
 msgstr "لا"
 
@@ -5459,45 +5508,45 @@ msgstr ""
 #: ../tools/gda-author-dict-file.c:251
 #, fuzzy, c-format
 msgid "Dictionary file written to %s\n"
-msgstr "_تصدير علامات المواقع إلى ملف"
+msgstr "مصدر القاموس الذي سيستعمل"
 
 #: ../tools/gda-diagnose.c:174
 #, fuzzy
 msgid "Data sources"
-msgstr "البيانات الشخصية"
+msgstr "المصادر الافتراضية"
 
 #: ../tools/gda-diagnose.c:175
 msgid "List of data sources from the config files (user and system wide)"
 msgstr ""
 
 #: ../tools/gda-diagnose.c:236
+#, fuzzy
 msgid "Providers"
-msgstr ""
+msgstr "توفّر"
 
 #: ../tools/gda-diagnose.c:237
 #, fuzzy
 msgid "Installed providers"
-msgstr "الخط %s غير مثبت."
+msgstr "ركِّب المجلد المشترك"
 
 #: ../tools/gda-diagnose.c:292
 #, fuzzy, c-format
 msgid "Provider '%s' details"
-msgstr "اظهار التفاصيل"
+msgstr "انخفاض التفاصيل الجانبية"
 
 #: ../tools/gda-diagnose.c:301
 #, fuzzy
 msgid "Provider's information"
-msgstr "بيانات سيّئة"
+msgstr "معلومات الطاقة"
 
 #: ../tools/gda-diagnose.c:310
-#, fuzzy
 msgid "Data source's parameters:"
-msgstr "عنوان مصدر POP"
+msgstr ""
 
 #: ../tools/gda-diagnose.c:313
 #, fuzzy
 msgid "Parameter name"
-msgstr "اسم الموصول"
+msgstr "اسم النموذج"
 
 #: ../tools/gda-diagnose.c:332
 msgid "Data source's parameters: none provided"
@@ -5506,7 +5555,7 @@ msgstr ""
 #: ../tools/gda-diagnose.c:339
 #, fuzzy
 msgid "Detailed data source's parameters"
-msgstr "بيانات فاسدة في قاعدة بيانات مصدر الاعدادات"
+msgstr "اضبط الأصوات ومتغيراتها"
 
 #: ../tools/gda-diagnose.c:343
 msgid "Detailed data source's parameters: none provided"
@@ -5515,12 +5564,12 @@ msgstr ""
 #: ../tools/gda-diagnose.c:372
 #, fuzzy
 msgid "Plugin's entry functions"
-msgstr "وظائف تنقيب البيانات"
+msgstr "دالّات بيرل"
 
 #: ../tools/gda-diagnose.c:376 ../tools/gda-diagnose.c:457
 #, fuzzy
 msgid "Present?"
-msgstr "اعرض الخواص"
+msgstr "أب"
 
 #.
 #. * Virtual functions
@@ -5532,67 +5581,69 @@ msgstr ""
 #: ../tools/gda-diagnose.c:458
 #, fuzzy
 msgid "Result"
-msgstr "نتيجة الاختبار"
+msgstr "النتائج"
 
 #: ../tools/gda-diagnose.c:458
+#, fuzzy
 msgid "Result without any connection"
-msgstr ""
+msgstr "إتّصال شبكي"
 
 #: ../tools/gda-diagnose.c:555
+#, fuzzy
 msgid "Schemas reporting"
-msgstr ""
+msgstr "خيارات المخطط"
 
 #: ../tools/gda-diagnose.c:557
+#, fuzzy
 msgid "Schemas not reported by this provider"
-msgstr ""
+msgstr "التّوقيع غير مدعوم من قبل هذه الشّيفرة"
 
 #: ../tools/gda-diagnose.c:614
 #, fuzzy, c-format
 msgid "Schema Error: %s"
-msgstr "خطأ ضبط السيمة لـ `%s': %s"
+msgstr "خطأ في النظام: %s"
 
 #: ../tools/gda-diagnose.c:649
 #, fuzzy, c-format
 msgid "Fields for '%s'"
-msgstr "ل_لّغة:"
+msgstr "فشل تشعيب (%s)"
 
 #: ../tools/gda-diagnose.c:658
 #, fuzzy
 msgid "No field returned"
-msgstr "أرجع الاستعلام الاستثناء %s\n"
+msgstr "لم يتم العثور على ملفات"
 
 #: ../tools/gda-diagnose.c:665 ../tools/gda-diagnose.c:708
 #: ../tools/gda-diagnose.c:721
-#, fuzzy
 msgid "Error"
 msgstr "خطأ"
 
 #: ../tools/gda-diagnose.c:694
 #, fuzzy, c-format
 msgid "Constraints for '%s'"
-msgstr "ل_لّغة:"
+msgstr "إدخال غير مقبول لـ %s"
 
 #: ../tools/gda-diagnose.c:703
 #, fuzzy
 msgid "No constraint"
-msgstr "لا تاريخ"
+msgstr "لا مراسَلين"
 
 #: ../tools/gda-diagnose.c:717
 #, fuzzy
 msgid "Nothing to return"
-msgstr "ارجع لتسجيل الدخول السابق"
+msgstr "لا يوجد شئ للقضاء عليه."
 
 #.
 #. * Data types testing
 #.
 #: ../tools/gda-diagnose.c:733
-#, fuzzy
 msgid "Data types handling"
-msgstr "كل الفئات المدعومة"
+msgstr ""
 
 #: ../tools/gda-diagnose.c:735
+#, fuzzy
 msgid "This provider does not support data handlers"
-msgstr ""
+msgstr "لا يدعم هذا الخادم معلومات مخطّط LDAPv3."
 
 #: ../tools/gda-diagnose.c:765
 msgid ""
@@ -5601,127 +5652,122 @@ msgid ""
 msgstr ""
 
 #: ../tools/gda-diagnose.c:775
-#, fuzzy
 msgid "Data handlers test"
-msgstr "إختبار طباعة المراسَل"
+msgstr ""
 
 #: ../tools/gda-diagnose.c:776
 msgid "get_sql_from_value() and get_str_from_value()"
 msgstr ""
 
 #: ../tools/gda-diagnose.c:784
-#, fuzzy
 msgid "get_value_from_sql()"
-msgstr "فشل تلقي القيمة: %s."
+msgstr ""
 
 #: ../tools/gda-diagnose.c:791
-#, fuzzy
 msgid "get_value_from_str()"
-msgstr "فشل تلقي القيمة: %s."
+msgstr ""
 
 #: ../tools/gda-diagnose.c:1196
 #, fuzzy, c-format
 msgid "%s (init value)"
-msgstr "قيمة التحجيم"
+msgstr "حدد القيمة الأولية"
 
 #: ../tools/gda-diagnose.c:1334
-#, fuzzy, c-format
+#, c-format
 msgid "Datasource '%s' details"
-msgstr "اظهار التفاصيل"
+msgstr ""
 
 #: ../tools/gda-diagnose.c:1343
 #, fuzzy
 msgid "Datasource's information"
-msgstr "بيانات سيّئة"
+msgstr "معلومات المهمّة"
 
 #: ../tools/gda-diagnose.c:1354
 #, fuzzy
 msgid "Can't open connection."
-msgstr "%s: لا يمكن فتح fifo!"
+msgstr "تعذر فتح الموقع"
 
 #: ../tools/gda-inspect-dict-file.c:47
 #, fuzzy, c-format
 msgid "Usage: %s <Dictionary XML file>\n"
-msgstr "خطأ في إعراب ملف XML"
+msgstr "طريقة الاستخدام: %s ملف الخط\n"
 
 #: ../tools/gda-inspect-dict-file.c:53
-#, c-format
+#, fuzzy, c-format
 msgid "File '%s' does not exist or can't be read!\n"
-msgstr ""
+msgstr "الملف غير موجود أو لا يمكن تحميله"
 
 #: ../tools/gda-inspect-dict-file.c:58
 #, fuzzy, c-format
 msgid "File '%s' is a directory!\n"
-msgstr "ملف فارغ"
+msgstr "%s دليل"
 
 #: ../tools/gda-inspect-dict-file.c:84
 #, fuzzy, c-format
 msgid ""
 "Error saving dictionary to file '%s':\n"
 "%s\n"
-msgstr "فشلت الكتابة إلى ملف الصورة: %s"
+msgstr "خطأ عند غلق ملف الجلسة '%s': %s\n"
 
 #: ../tools/gda-inspect-dict-file.c:141
 msgid "List of queries in this file:\n"
 msgstr ""
 
 #: ../tools/gda-inspect-dict-file.c:143
+#, fuzzy
 msgid "There is no query in this file.\n"
-msgstr ""
+msgstr "لا يوجد لغزاً حالياًَ."
 
 #: ../tools/gda-inspect-dict-file.c:151
-#, fuzzy, c-format
+#, c-format
 msgid "########### Query \"%s\" ###########\n"
-msgstr "بحث"
+msgstr ""
 
 #: ../tools/gda-inspect-dict-file.c:155
-#, fuzzy
 msgid "## SQL:\n"
-msgstr "SQL"
+msgstr ""
 
 #: ../tools/gda-inspect-dict-file.c:161
 #, fuzzy, c-format
 msgid "SQL ERROR: %s\n"
-msgstr ""
-"خطأ GConf:\n"
-"  %s"
+msgstr "خطأ: %s"
 
 #: ../tools/gda-inspect-dict-file.c:166
 #, fuzzy
 msgid "## information:\n"
-msgstr "معلومات %s"
+msgstr "بيانات سيّئة"
 
 #: ../tools/gda-inspect-dict-file.c:183
 #, fuzzy, c-format
 msgid "Query_%02d"
-msgstr "(%d:%02d:%d متبقيّة)"
+msgstr "استعلم"
 
 #: ../tools/gda-inspect-dict-file.c:188
 #, fuzzy, c-format
 msgid ""
 "Could not write graph to '%s' (%s)\n"
 "\n"
-msgstr "لم يمكن إعادة تسمية المجلّد %s إلى %s: %s"
+msgstr "لم يمكن الكتابة في '%s': %s"
 
 #: ../tools/gda-inspect-dict-file.c:193
-#, fuzzy, c-format
+#, c-format
 msgid "Written graph to '%s'\n"
-msgstr "ا_ستعادة الحالة الأصلية"
+msgstr ""
 
 #: ../tools/gda-list-config.c:102
-#, c-format
+#, fuzzy, c-format
 msgid "Provider: %s\n"
-msgstr ""
+msgstr "توفّر"
 
 #: ../tools/gda-list-config.c:103
 #, fuzzy, c-format
 msgid "Description: %s\n"
-msgstr "الوصف:"
+msgstr "الوصف:  %s"
 
 #: ../tools/gda-list-config.c:104
 #, fuzzy, c-format
 msgid "Location: %s\n"
-msgstr "الموقع"
+msgstr "الموقع: %s"
 
 #: ../tools/gda-list-config.c:105
 msgid "Data source's parameters (Name / Type / Description):\n"
@@ -5730,36 +5776,5 @@ msgstr ""
 #: ../tools/gda-list-config.c:121
 #, fuzzy
 msgid "None provided"
-msgstr "<small><i>لا شيء</i></small>"
+msgstr "لم يُعطى إسم ملف."
 
-#, fuzzy
-#~ msgid "Could not initiate Sybase component factory"
-#~ msgstr "لم يمكن تشغيل واجهة مستخدم بونوبو"
-
-#, fuzzy
-#~ msgid "Blob already open"
-#~ msgstr "افتح عنصر التاريخ %s"
-
-#, fuzzy
-#~ msgid "Blob is closed"
-#~ msgstr "موسع·مغلق·للبيكسبف"
-
-#, fuzzy
-#~ msgid "Can't read a closed Blob"
-#~ msgstr "لا يمكن قراءة أية لوحة مفاتيح!"
-
-#, fuzzy
-#~ msgid "Error getting blob segment."
-#~ msgstr "خطأ عند تلقّي المشهد الكتابي"
-
-#, fuzzy
-#~ msgid "Unable to close blob."
-#~ msgstr "فشل غلق الملف `%s': %s"
-
-#, fuzzy
-#~ msgid "Unable to start transaction"
-#~ msgstr "اختر خادم X للتشغيل"
-
-#, fuzzy
-#~ msgid "Views"
-#~ msgstr "المشاهد"
