@@ -1086,23 +1086,27 @@ gda_server_provider_select_query_has_blobs (GdaConnection *cnc, GdaQuery *query,
 gchar *
 gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename)
 {
-	gchar *file;
+	gchar *file = NULL;
 	const gchar *dirname;
 
 	dirname = g_object_get_data (G_OBJECT (prov), "GDA_PROVIDER_DIR");
 	if (dirname)
 		file = g_build_filename (dirname, filename, NULL);
-	else
-		file = g_build_filename (inst_dir, filename, NULL);
-	if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+
+	if (!file ||
+	    (file && !g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR))) {
 		g_free (file);
-		file = NULL;
-		if (dirname) {
-			/* look in the parent dir, to handle the case where the lib is in a .libs dir */
-			file = g_build_filename (dirname, "..", filename, NULL);
-			if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
-				g_free (file);
-				file = NULL;
+		file = g_build_filename (inst_dir, filename, NULL);
+		if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+			g_free (file);
+			file = NULL;
+			if (dirname) {
+				/* look in the parent dir, to handle the case where the lib is in a .libs dir */
+				file = g_build_filename (dirname, "..", filename, NULL);
+				if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+					g_free (file);
+					file = NULL;
+				}
 			}
 		}
 	}

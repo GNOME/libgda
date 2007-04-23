@@ -946,6 +946,9 @@ END;
 $$ LANGUAGE plpgsql</render_as>
   </test>
   <test name="Function usage">
+    <sql expected="D">SELECT * FROM cs_parse_url()</sql>
+  </test>
+  <test name="Function usage">
     <sql expected="D">SELECT * FROM cs_parse_url('http://foobar.com/query.cgi?baz')</sql>
   </test>
   <test name="Porting from Oracle 4">

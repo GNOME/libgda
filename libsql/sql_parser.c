@@ -1104,6 +1104,7 @@ sql_statement_append_tablejoin(sql_statement * statement, char *lefttable,
 	table = memsql_calloc(sizeof(sql_table));
 	table->type = SQL_simple;
 	table->d.simple = memsql_strdup(righttable);
+	table->join_cond = NULL;
 
 	leftf = memsql_calloc(sizeof(sql_field));
 	rightf = memsql_calloc(sizeof(sql_field));

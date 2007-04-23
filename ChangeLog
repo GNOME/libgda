@@ -1,3 +1,10 @@
+2007-04-23  Vivien Malerba <malerba@gnome-db.org>
+
+	* libsql/mem.c:
+	* libsql/sql_tree.c:
+	* libsql/sql_parser.c: corrected non initialized memory bugs
+	* libgda/gda-server-provider-extra.c: look for files in the correct install dir
+
 2007-04-19  Vivien Malerba <malerba@gnome-db.org>
 
 	* tests/providers/prov-test-common.c:

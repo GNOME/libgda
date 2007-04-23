@@ -102,6 +102,7 @@ memsql_alloc_raw (const char *funcname, int linenum, const char *file, int count
 		return NULL;
 	}
 
+	memset (pre, 0, real_size);
 	strncpy (pre->name, funcname, 63);
 	pre->name[63] = '\0';
 	strncpy (pre->file, file, 31);

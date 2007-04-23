@@ -197,6 +197,8 @@ sql_table_build_function (char * funcname, GList * funcarglist)
 	item->type = SQL_tablefunction;
 	item->d.function.funcname = funcname;
 	item->d.function.funcarglist = funcarglist;
+	item->join_type = SQL_cross_join;
+	item->join_cond = NULL;
 
 	return item;
 
