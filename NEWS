@@ -1,3 +1,26 @@
+libgda 3.0.0, 2007-04-20
+
+ - misc. bug fixes (Armin Burgmeier, Vivien Malerba)
+ - bug fixes in the SQL delimiter to handle comments, BEGIN and END blocks and PostgreSQL's
+   dollar quoting (Vivien Malerba)
+ - more unit tests (Vivien Malerba)
+ - removed dependecy and test for popt (Baris Cicek)
+ - fixed SQLite provider's error reporting, and implemented the get_last_insert_id() virtuel
+   method (Vivien Malerba)
+ - fixed MySQL's provider error where the same column would be reported several times in 
+   the TABLE_FIELDS schema (Vivien Malerba)
+ - fixed a misbehaviour in the data model import of XML files (Vivien Malerba)
+ - docs improvements
+ - removed ambiguities in the source files: mention LGPL everywhere in the library, and
+   GPL for the executables (Murray Cumming)
+ - allow dictionary XML file to specify its own DTD file (Vivien Malerba)
+ - Bug fixes: #421986, #421986, #420306, #410200, #427605, #407908, #417249 (Carsten Clark, Baris Cicek, 
+   Vivien Malerba
+ - Translations:
+	- dz (Pema Geyleg)
+	- lt (Gintautas Miliauskas)
+	- ar (Djihed Afifi)
+ 
 libgda 2.99.6, 2007-03-23
 
  - Merged several libraries into one for efficiency and because of inter-dependencies (yselkowitz, 
