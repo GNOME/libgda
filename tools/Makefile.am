@@ -1,7 +1,9 @@
+CONFIG_MAN_PAGES = \
+	gda-config-tool-3.0.1 \
+	gda-config-3.0.5
+
 if BUILD_CONFIG_TOOL
-CONFIG_TOOL=gda-config-tool-3.0
-man_MANS = gda-config-tool-3.0.1 \
-           gda-config-3.0.5
+CONFIG_TOOL = gda-config-tool-3.0
 else
 CONFIG_TOOL=
 endif
@@ -64,4 +66,4 @@ gda_list_config_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
         $(LIBGDA_LIBS)
 
-EXTRA_DIST = $(man_MANS)
+EXTRA_DIST = $(CONFIG_MAN_PAGES)
