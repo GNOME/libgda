@@ -1,3 +1,8 @@
+2007-04-26  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/Makefile.am: minor correction for bug #432798 (due to too much
+	cleanup)
+
 2007-04-24  Vivien Malerba <malerba@gnome-db.org>
 
 	* tools/Makefile.am: applied a patch by Leonardo Boshell to fix

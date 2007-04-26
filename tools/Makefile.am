@@ -4,8 +4,10 @@ CONFIG_MAN_PAGES = \
 
 if BUILD_CONFIG_TOOL
 CONFIG_TOOL = gda-config-tool-3.0
+man_MANS = $(CONFIG_MAN_PAGES)
 else
 CONFIG_TOOL=
+man_MANS =
 endif
 
 RUN_TOOL=gda-run-3.0
