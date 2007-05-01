@@ -91,6 +91,7 @@ static GString *gstring;
 [a-zA-Z0-9_]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
 [ \t\n\r]	{;}
 \'		{gstring = g_string_new (""); BEGIN(STRING);}
+<STRING,PSTRING>\\\\ {g_string_append (gstring, "\\\\");}
 <STRING,PSTRING>\\' {g_string_append (gstring, "\\'");}
 <STRING>\'	{BEGIN(INITIAL);
 		 sqllval.str = memsql_strappend_free (memsql_strdup ("'"), 

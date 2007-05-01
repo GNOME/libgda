@@ -27,6 +27,7 @@
 #include <string.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-parameter-list.h>
 #include "gda-odbc.h"
 #include "gda-odbc-provider.h"
 

@@ -4,6 +4,10 @@
 static void test_string (const gchar *str);
 int 
 main (int argc, char **argv) {
+	test_string ("SELECT 'foobar\\\\';");
+        return 0;
+	test_string ("SELECT \"foobar\\\\\";");
+	return 0;
 	test_string ("CREATE OR REPLACE PROCEDURE cs_create_job(v_job_id IN INTEGER) IS\n"
 "    a_running_job_count INTEGER;\n"
 "    PRAGMA AUTONOMOUS_TRANSACTION;\n"

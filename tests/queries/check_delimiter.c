@@ -128,7 +128,7 @@ test_sql_statement (SqlTest *test, gint test_index)
 	statements = gda_delimiter_parse_with_error (test->sql_to_test, &error);
 #ifdef CHECK_SHOW_ALL_ERRORS
 	if (!statements && error)
-		g_print ("PARSE ERROR %s=>%s\n", tname, error->message ? error->message: "No detail");
+		g_print ("PARSE ERROR %s=>%s\nSQL was:%s\n", tname, error->message ? error->message: "No detail", test->sql_to_test);
 #endif
 	if (g_list_length (statements) != (test->delim_parsed ? test->n_statements : 0)) {
 		gchar *str;

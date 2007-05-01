@@ -233,4 +233,12 @@
   <test name="string18">
     <sql expected="D" n_stmts="2">SELECTR id FROM table WHERE id is null; SELECTR id FROM table WHERE id is not null</sql>
   </test>
+ 
+  <test name="for bug 433687-1">
+    <sql expected="A">SELECT 'foobar\\'</sql>
+  </test>
+
+  <test name="for bug 433687-2">
+    <sql expected="D">SELECT "foobar\\"</sql>
+  </test>
 </unit>
