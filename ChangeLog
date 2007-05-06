@@ -1,3 +1,10 @@
+2007-05-06  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/sqlite-src/Makefile.am: changes due to the new type of distributed source of
+	SQLite
+	* providers/sqlite/sqlite-src/sqliteInt.h: generated file
+	* providers/sqlite/sqlite-src/sqlite3.[ch]: now at version 3.3.17
+
 2007-04-29  Murray Cumming  <murrayc@murrayc.com>
 
 	* configure.in: Require inltool 0.35.5 (when building from svn, 

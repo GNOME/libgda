@@ -1,3 +1,4 @@
+/************** Begin file sqliteInt.h ***************************************/
 /*
 ** 2001 September 15
 **
@@ -16,11 +17,8 @@
 #ifndef _SQLITEINT_H_
 #define _SQLITEINT_H_
 
-/*
-** Extra interface definitions for those who need them
-*/
-#ifdef SQLITE_EXTRA
-# include "sqliteExtra.h"
+#if defined(SQLITE_TCL) || defined(TCLSH)
+# include <tcl.h>
 #endif
 
 /*
@@ -57,9 +55,279 @@
 # define _LARGEFILE_SOURCE 1
 #endif
 
-#include "sqlite3.h"
-#include "hash.h"
-#include "parse.h"
+/************** Include hash.h in the middle of sqliteInt.h ******************/
+/************** Begin file hash.h ********************************************/
+/*
+** 2001 September 22
+**
+** The author disclaims copyright to this source code.  In place of
+** a legal notice, here is a blessing:
+**
+**    May you do good and not evil.
+**    May you find forgiveness for yourself and forgive others.
+**    May you share freely, never taking more than you give.
+**
+*************************************************************************
+** This is the header file for the generic hash-table implemenation
+** used in SQLite.
+**
+** $Id$
+*/
+#ifndef _SQLITE_HASH_H_
+#define _SQLITE_HASH_H_
+
+/* Forward declarations of structures. */
+typedef struct Hash Hash;
+typedef struct HashElem HashElem;
+
+/* A complete hash table is an instance of the following structure.
+** The internals of this structure are intended to be opaque -- client
+** code should not attempt to access or modify the fields of this structure
+** directly.  Change this structure only by using the routines below.
+** However, many of the "procedures" and "functions" for modifying and
+** accessing this structure are really macros, so we can't really make
+** this structure opaque.
+*/
+struct Hash {
+  char keyClass;          /* SQLITE_HASH_INT, _POINTER, _STRING, _BINARY */
+  char copyKey;           /* True if copy of key made on insert */
+  int count;              /* Number of entries in this table */
+  HashElem *first;        /* The first element of the array */
+  void *(*xMalloc)(int);  /* malloc() function to use */
+  void (*xFree)(void *);  /* free() function to use */
+  int htsize;             /* Number of buckets in the hash table */
+  struct _ht {            /* the hash table */
+    int count;               /* Number of entries with this hash */
+    HashElem *chain;         /* Pointer to first entry with this hash */
+  } *ht;
+};
+
+/* Each element in the hash table is an instance of the following 
+** structure.  All elements are stored on a single doubly-linked list.
+**
+** Again, this structure is intended to be opaque, but it can't really
+** be opaque because it is used by macros.
+*/
+struct HashElem {
+  HashElem *next, *prev;   /* Next and previous elements in the table */
+  void *data;              /* Data associated with this element */
+  void *pKey; int nKey;    /* Key associated with this element */
+};
+
+/*
+** There are 4 different modes of operation for a hash table:
+**
+**   SQLITE_HASH_INT         nKey is used as the key and pKey is ignored.
+**
+**   SQLITE_HASH_POINTER     pKey is used as the key and nKey is ignored.
+**
+**   SQLITE_HASH_STRING      pKey points to a string that is nKey bytes long
+**                           (including the null-terminator, if any).  Case
+**                           is ignored in comparisons.
+**
+**   SQLITE_HASH_BINARY      pKey points to binary data nKey bytes long. 
+**                           memcmp() is used to compare keys.
+**
+** A copy of the key is made for SQLITE_HASH_STRING and SQLITE_HASH_BINARY
+** if the copyKey parameter to HashInit is 1.  
+*/
+/* #define SQLITE_HASH_INT       1 // NOT USED */
+/* #define SQLITE_HASH_POINTER   2 // NOT USED */
+#define SQLITE_HASH_STRING    3
+#define SQLITE_HASH_BINARY    4
+
+/*
+** Access routines.  To delete, insert a NULL pointer.
+*/
+void sqlite3HashInit(Hash*, int keytype, int copyKey);
+void *sqlite3HashInsert(Hash*, const void *pKey, int nKey, void *pData);
+void *sqlite3HashFind(const Hash*, const void *pKey, int nKey);
+void sqlite3HashClear(Hash*);
+
+/*
+** Macros for looping over all elements of a hash table.  The idiom is
+** like this:
+**
+**   Hash h;
+**   HashElem *p;
+**   ...
+**   for(p=sqliteHashFirst(&h); p; p=sqliteHashNext(p)){
+**     SomeStructure *pData = sqliteHashData(p);
+**     // do something with pData
+**   }
+*/
+#define sqliteHashFirst(H)  ((H)->first)
+#define sqliteHashNext(E)   ((E)->next)
+#define sqliteHashData(E)   ((E)->data)
+#define sqliteHashKey(E)    ((E)->pKey)
+#define sqliteHashKeysize(E) ((E)->nKey)
+
+/*
+** Number of entries in a hash table
+*/
+#define sqliteHashCount(H)  ((H)->count)
+
+#endif /* _SQLITE_HASH_H_ */
+
+/************** End of hash.h ************************************************/
+/************** Continuing where we left off in sqliteInt.h ******************/
+/************** Include parse.h in the middle of sqliteInt.h *****************/
+/************** Begin file parse.h *******************************************/
+#define TK_SEMI                            1
+#define TK_EXPLAIN                         2
+#define TK_QUERY                           3
+#define TK_PLAN                            4
+#define TK_BEGIN                           5
+#define TK_TRANSACTION                     6
+#define TK_DEFERRED                        7
+#define TK_IMMEDIATE                       8
+#define TK_EXCLUSIVE                       9
+#define TK_COMMIT                         10
+#define TK_END                            11
+#define TK_ROLLBACK                       12
+#define TK_CREATE                         13
+#define TK_TABLE                          14
+#define TK_IF                             15
+#define TK_NOT                            16
+#define TK_EXISTS                         17
+#define TK_TEMP                           18
+#define TK_LP                             19
+#define TK_RP                             20
+#define TK_AS                             21
+#define TK_COMMA                          22
+#define TK_ID                             23
+#define TK_ABORT                          24
+#define TK_AFTER                          25
+#define TK_ANALYZE                        26
+#define TK_ASC                            27
+#define TK_ATTACH                         28
+#define TK_BEFORE                         29
+#define TK_CASCADE                        30
+#define TK_CAST                           31
+#define TK_CONFLICT                       32
+#define TK_DATABASE                       33
+#define TK_DESC                           34
+#define TK_DETACH                         35
+#define TK_EACH                           36
+#define TK_FAIL                           37
+#define TK_FOR                            38
+#define TK_IGNORE                         39
+#define TK_INITIALLY                      40
+#define TK_INSTEAD                        41
+#define TK_LIKE_KW                        42
+#define TK_MATCH                          43
+#define TK_KEY                            44
+#define TK_OF                             45
+#define TK_OFFSET                         46
+#define TK_PRAGMA                         47
+#define TK_RAISE                          48
+#define TK_REPLACE                        49
+#define TK_RESTRICT                       50
+#define TK_ROW                            51
+#define TK_TRIGGER                        52
+#define TK_VACUUM                         53
+#define TK_VIEW                           54
+#define TK_VIRTUAL                        55
+#define TK_REINDEX                        56
+#define TK_RENAME                         57
+#define TK_CTIME_KW                       58
+#define TK_ANY                            59
+#define TK_OR                             60
+#define TK_AND                            61
+#define TK_IS                             62
+#define TK_BETWEEN                        63
+#define TK_IN                             64
+#define TK_ISNULL                         65
+#define TK_NOTNULL                        66
+#define TK_NE                             67
+#define TK_EQ                             68
+#define TK_GT                             69
+#define TK_LE                             70
+#define TK_LT                             71
+#define TK_GE                             72
+#define TK_ESCAPE                         73
+#define TK_BITAND                         74
+#define TK_BITOR                          75
+#define TK_LSHIFT                         76
+#define TK_RSHIFT                         77
+#define TK_PLUS                           78
+#define TK_MINUS                          79
+#define TK_STAR                           80
+#define TK_SLASH                          81
+#define TK_REM                            82
+#define TK_CONCAT                         83
+#define TK_COLLATE                        84
+#define TK_UMINUS                         85
+#define TK_UPLUS                          86
+#define TK_BITNOT                         87
+#define TK_STRING                         88
+#define TK_JOIN_KW                        89
+#define TK_CONSTRAINT                     90
+#define TK_DEFAULT                        91
+#define TK_NULL                           92
+#define TK_PRIMARY                        93
+#define TK_UNIQUE                         94
+#define TK_CHECK                          95
+#define TK_REFERENCES                     96
+#define TK_AUTOINCR                       97
+#define TK_ON                             98
+#define TK_DELETE                         99
+#define TK_UPDATE                         100
+#define TK_INSERT                         101
+#define TK_SET                            102
+#define TK_DEFERRABLE                     103
+#define TK_FOREIGN                        104
+#define TK_DROP                           105
+#define TK_UNION                          106
+#define TK_ALL                            107
+#define TK_EXCEPT                         108
+#define TK_INTERSECT                      109
+#define TK_SELECT                         110
+#define TK_DISTINCT                       111
+#define TK_DOT                            112
+#define TK_FROM                           113
+#define TK_JOIN                           114
+#define TK_USING                          115
+#define TK_ORDER                          116
+#define TK_BY                             117
+#define TK_GROUP                          118
+#define TK_HAVING                         119
+#define TK_LIMIT                          120
+#define TK_WHERE                          121
+#define TK_INTO                           122
+#define TK_VALUES                         123
+#define TK_INTEGER                        124
+#define TK_FLOAT                          125
+#define TK_BLOB                           126
+#define TK_REGISTER                       127
+#define TK_VARIABLE                       128
+#define TK_CASE                           129
+#define TK_WHEN                           130
+#define TK_THEN                           131
+#define TK_ELSE                           132
+#define TK_INDEX                          133
+#define TK_ALTER                          134
+#define TK_TO                             135
+#define TK_ADD                            136
+#define TK_COLUMNKW                       137
+#define TK_TO_TEXT                        138
+#define TK_TO_BLOB                        139
+#define TK_TO_NUMERIC                     140
+#define TK_TO_INT                         141
+#define TK_TO_REAL                        142
+#define TK_END_OF_FILE                    143
+#define TK_ILLEGAL                        144
+#define TK_SPACE                          145
+#define TK_UNCLOSED_STRING                146
+#define TK_COMMENT                        147
+#define TK_FUNCTION                       148
+#define TK_COLUMN                         149
+#define TK_AGG_FUNCTION                   150
+#define TK_AGG_COLUMN                     151
+#define TK_CONST_FUNC                     152
+
+/************** End of parse.h ***********************************************/
+/************** Continuing where we left off in sqliteInt.h ******************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -215,8 +483,15 @@ typedef UINT8_TYPE i8;             /* 1-byte signed integer */
 ** evaluated at runtime.
 */
 extern const int sqlite3one;
-#define SQLITE_BIGENDIAN    (*(char *)(&sqlite3one)==0)
-#define SQLITE_LITTLEENDIAN (*(char *)(&sqlite3one)==1)
+#if defined(i386) || defined(__i386__) || defined(_M_IX86)
+# define SQLITE_BIGENDIAN    0
+# define SQLITE_LITTLEENDIAN 1
+# define SQLITE_UTF16NATIVE  SQLITE_UTF16LE
+#else
+# define SQLITE_BIGENDIAN    (*(char *)(&sqlite3one)==0)
+# define SQLITE_LITTLEENDIAN (*(char *)(&sqlite3one)==1)
+# define SQLITE_UTF16NATIVE (SQLITE_BIGENDIAN?SQLITE_UTF16BE:SQLITE_UTF16LE)
+#endif
 
 /*
 ** An instance of the following structure is used to store the busy-handler
@@ -238,9 +513,631 @@ struct BusyHandler {
 ** Defer sourcing vdbe.h and btree.h until after the "u8" and 
 ** "BusyHandler typedefs.
 */
-#include "vdbe.h"
-#include "btree.h"
-#include "pager.h"
+/************** Include vdbe.h in the middle of sqliteInt.h ******************/
+/************** Begin file vdbe.h ********************************************/
+/*
+** 2001 September 15
+**
+** The author disclaims copyright to this source code.  In place of
+** a legal notice, here is a blessing:
+**
+**    May you do good and not evil.
+**    May you find forgiveness for yourself and forgive others.
+**    May you share freely, never taking more than you give.
+**
+*************************************************************************
+** Header file for the Virtual DataBase Engine (VDBE)
+**
+** This header defines the interface to the virtual database engine
+** or VDBE.  The VDBE implements an abstract machine that runs a
+** simple program to access and modify the underlying database.
+**
+** $Id$
+*/
+#ifndef _SQLITE_VDBE_H_
+#define _SQLITE_VDBE_H_
+
+/*
+** A single VDBE is an opaque structure named "Vdbe".  Only routines
+** in the source file sqliteVdbe.c are allowed to see the insides
+** of this structure.
+*/
+typedef struct Vdbe Vdbe;
+
+/*
+** A single instruction of the virtual machine has an opcode
+** and as many as three operands.  The instruction is recorded
+** as an instance of the following structure:
+*/
+struct VdbeOp {
+  u8 opcode;          /* What operation to perform */
+  int p1;             /* First operand */
+  int p2;             /* Second parameter (often the jump destination) */
+  char *p3;           /* Third parameter */
+  int p3type;         /* One of the P3_xxx constants defined below */
+#ifdef VDBE_PROFILE
+  int cnt;            /* Number of times this instruction was executed */
+  long long cycles;   /* Total time spend executing this instruction */
+#endif
+};
+typedef struct VdbeOp VdbeOp;
+
+/*
+** A smaller version of VdbeOp used for the VdbeAddOpList() function because
+** it takes up less space.
+*/
+struct VdbeOpList {
+  u8 opcode;          /* What operation to perform */
+  signed char p1;     /* First operand */
+  short int p2;       /* Second parameter (often the jump destination) */
+  char *p3;           /* Third parameter */
+};
+typedef struct VdbeOpList VdbeOpList;
+
+/*
+** Allowed values of VdbeOp.p3type
+*/
+#define P3_NOTUSED    0   /* The P3 parameter is not used */
+#define P3_DYNAMIC  (-1)  /* Pointer to a string obtained from sqliteMalloc() */
+#define P3_STATIC   (-2)  /* Pointer to a static string */
+#define P3_COLLSEQ  (-4)  /* P3 is a pointer to a CollSeq structure */
+#define P3_FUNCDEF  (-5)  /* P3 is a pointer to a FuncDef structure */
+#define P3_KEYINFO  (-6)  /* P3 is a pointer to a KeyInfo structure */
+#define P3_VDBEFUNC (-7)  /* P3 is a pointer to a VdbeFunc structure */
+#define P3_MEM      (-8)  /* P3 is a pointer to a Mem*    structure */
+#define P3_TRANSIENT (-9) /* P3 is a pointer to a transient string */
+#define P3_VTAB     (-10) /* P3 is a pointer to an sqlite3_vtab structure */
+#define P3_MPRINTF  (-11) /* P3 is a string obtained from sqlite3_mprintf() */
+
+/* When adding a P3 argument using P3_KEYINFO, a copy of the KeyInfo structure
+** is made.  That copy is freed when the Vdbe is finalized.  But if the
+** argument is P3_KEYINFO_HANDOFF, the passed in pointer is used.  It still
+** gets freed when the Vdbe is finalized so it still should be obtained
+** from a single sqliteMalloc().  But no copy is made and the calling
+** function should *not* try to free the KeyInfo.
+*/
+#define P3_KEYINFO_HANDOFF (-9)
+
+/*
+** The Vdbe.aColName array contains 5n Mem structures, where n is the 
+** number of columns of data returned by the statement.
+*/
+#define COLNAME_NAME     0
+#define COLNAME_DECLTYPE 1
+#define COLNAME_DATABASE 2
+#define COLNAME_TABLE    3
+#define COLNAME_COLUMN   4
+#define COLNAME_N        5      /* Number of COLNAME_xxx symbols */
+
+/*
+** The following macro converts a relative address in the p2 field
+** of a VdbeOp structure into a negative number so that 
+** sqlite3VdbeAddOpList() knows that the address is relative.  Calling
+** the macro again restores the address.
+*/
+#define ADDR(X)  (-1-(X))
+
+/*
+** The makefile scans the vdbe.c source file and creates the "opcodes.h"
+** header file that defines a number for each opcode used by the VDBE.
+*/
+/************** Include opcodes.h in the middle of vdbe.h ********************/
+/************** Begin file opcodes.h *****************************************/
+/* Automatically generated.  Do not edit */
+/* See the mkopcodeh.awk script for details */
+#define OP_MemLoad                              1
+#define OP_VNext                                2
+#define OP_HexBlob                            126   /* same as TK_BLOB     */
+#define OP_Column                               3
+#define OP_SetCookie                            4
+#define OP_IfMemPos                             5
+#define OP_Real                               125   /* same as TK_FLOAT    */
+#define OP_Sequence                             6
+#define OP_MoveGt                               7
+#define OP_Ge                                  72   /* same as TK_GE       */
+#define OP_RowKey                               8
+#define OP_Eq                                  68   /* same as TK_EQ       */
+#define OP_OpenWrite                            9
+#define OP_NotNull                             66   /* same as TK_NOTNULL  */
+#define OP_If                                  10
+#define OP_ToInt                              141   /* same as TK_TO_INT   */
+#define OP_String8                             88   /* same as TK_STRING   */
+#define OP_Pop                                 11
+#define OP_VRowid                              12
+#define OP_CollSeq                             13
+#define OP_OpenRead                            14
+#define OP_Expire                              15
+#define OP_AutoCommit                          17
+#define OP_Gt                                  69   /* same as TK_GT       */
+#define OP_IntegrityCk                         18
+#define OP_Sort                                19
+#define OP_Function                            20
+#define OP_And                                 61   /* same as TK_AND      */
+#define OP_Subtract                            79   /* same as TK_MINUS    */
+#define OP_Noop                                21
+#define OP_Return                              22
+#define OP_Remainder                           82   /* same as TK_REM      */
+#define OP_NewRowid                            23
+#define OP_Multiply                            80   /* same as TK_STAR     */
+#define OP_IfMemNeg                            24
+#define OP_Variable                            25
+#define OP_String                              26
+#define OP_RealAffinity                        27
+#define OP_ParseSchema                         28
+#define OP_VOpen                               29
+#define OP_Close                               30
+#define OP_CreateIndex                         31
+#define OP_IsUnique                            32
+#define OP_NotFound                            33
+#define OP_Int64                               34
+#define OP_MustBeInt                           35
+#define OP_Halt                                36
+#define OP_Rowid                               37
+#define OP_IdxLT                               38
+#define OP_AddImm                              39
+#define OP_Statement                           40
+#define OP_RowData                             41
+#define OP_MemMax                              42
+#define OP_Push                                43
+#define OP_Or                                  60   /* same as TK_OR       */
+#define OP_NotExists                           44
+#define OP_MemIncr                             45
+#define OP_Gosub                               46
+#define OP_Divide                              81   /* same as TK_SLASH    */
+#define OP_Integer                             47
+#define OP_ToNumeric                          140   /* same as TK_TO_NUMERIC*/
+#define OP_MemInt                              48
+#define OP_Prev                                49
+#define OP_Concat                              83   /* same as TK_CONCAT   */
+#define OP_BitAnd                              74   /* same as TK_BITAND   */
+#define OP_VColumn                             50
+#define OP_CreateTable                         51
+#define OP_Last                                52
+#define OP_IsNull                              65   /* same as TK_ISNULL   */
+#define OP_IdxRowid                            53
+#define OP_MakeIdxRec                          54
+#define OP_ShiftRight                          77   /* same as TK_RSHIFT   */
+#define OP_ResetCount                          55
+#define OP_FifoWrite                           56
+#define OP_Callback                            57
+#define OP_ContextPush                         58
+#define OP_DropTrigger                         59
+#define OP_DropIndex                           62
+#define OP_IdxGE                               63
+#define OP_IdxDelete                           64
+#define OP_Vacuum                              73
+#define OP_MoveLe                              84
+#define OP_IfNot                               86
+#define OP_DropTable                           89
+#define OP_MakeRecord                          90
+#define OP_ToBlob                             139   /* same as TK_TO_BLOB  */
+#define OP_Delete                              91
+#define OP_AggFinal                            92
+#define OP_ShiftLeft                           76   /* same as TK_LSHIFT   */
+#define OP_Dup                                 93
+#define OP_Goto                                94
+#define OP_TableLock                           95
+#define OP_FifoRead                            96
+#define OP_Clear                               97
+#define OP_IdxGT                               98
+#define OP_MoveLt                              99
+#define OP_Le                                  70   /* same as TK_LE       */
+#define OP_VerifyCookie                       100
+#define OP_AggStep                            101
+#define OP_Pull                               102
+#define OP_ToText                             138   /* same as TK_TO_TEXT  */
+#define OP_Not                                 16   /* same as TK_NOT      */
+#define OP_ToReal                             142   /* same as TK_TO_REAL  */
+#define OP_SetNumColumns                      103
+#define OP_AbsValue                           104
+#define OP_Transaction                        105
+#define OP_VFilter                            106
+#define OP_Negative                            85   /* same as TK_UMINUS   */
+#define OP_Ne                                  67   /* same as TK_NE       */
+#define OP_VDestroy                           107
+#define OP_ContextPop                         108
+#define OP_BitOr                               75   /* same as TK_BITOR    */
+#define OP_Next                               109
+#define OP_IdxInsert                          110
+#define OP_Distinct                           111
+#define OP_Lt                                  71   /* same as TK_LT       */
+#define OP_Insert                             112
+#define OP_Destroy                            113
+#define OP_ReadCookie                         114
+#define OP_ForceInt                           115
+#define OP_LoadAnalysis                       116
+#define OP_Explain                            117
+#define OP_IfMemZero                          118
+#define OP_OpenPseudo                         119
+#define OP_OpenEphemeral                      120
+#define OP_Null                               121
+#define OP_Blob                               122
+#define OP_Add                                 78   /* same as TK_PLUS     */
+#define OP_MemStore                           123
+#define OP_Rewind                             124
+#define OP_MoveGe                             127
+#define OP_VBegin                             128
+#define OP_VUpdate                            129
+#define OP_BitNot                              87   /* same as TK_BITNOT   */
+#define OP_VCreate                            130
+#define OP_MemMove                            131
+#define OP_MemNull                            132
+#define OP_Found                              133
+#define OP_NullRow                            134
+
+/* The following opcode values are never used */
+#define OP_NotUsed_135                        135
+#define OP_NotUsed_136                        136
+#define OP_NotUsed_137                        137
+
+/* Opcodes that are guaranteed to never push a value onto the stack
+** contain a 1 their corresponding position of the following mask
+** set.  See the opcodeNoPush() function in vdbeaux.c  */
+#define NOPUSH_MASK_0 0xeeb4
+#define NOPUSH_MASK_1 0x796b
+#define NOPUSH_MASK_2 0x7ddb
+#define NOPUSH_MASK_3 0xff92
+#define NOPUSH_MASK_4 0xffff
+#define NOPUSH_MASK_5 0xdaf7
+#define NOPUSH_MASK_6 0xfefe
+#define NOPUSH_MASK_7 0x99d9
+#define NOPUSH_MASK_8 0x7c67
+#define NOPUSH_MASK_9 0x0000
+
+/************** End of opcodes.h *********************************************/
+/************** Continuing where we left off in vdbe.h ***********************/
+
+/*
+** Prototypes for the VDBE interface.  See comments on the implementation
+** for a description of what each of these routines does.
+*/
+Vdbe *sqlite3VdbeCreate(sqlite3*);
+void sqlite3VdbeCreateCallback(Vdbe*, int*);
+int sqlite3VdbeAddOp(Vdbe*,int,int,int);
+int sqlite3VdbeOp3(Vdbe*,int,int,int,const char *zP3,int);
+int sqlite3VdbeAddOpList(Vdbe*, int nOp, VdbeOpList const *aOp);
+void sqlite3VdbeChangeP1(Vdbe*, int addr, int P1);
+void sqlite3VdbeChangeP2(Vdbe*, int addr, int P2);
+void sqlite3VdbeJumpHere(Vdbe*, int addr);
+void sqlite3VdbeChangeToNoop(Vdbe*, int addr, int N);
+void sqlite3VdbeChangeP3(Vdbe*, int addr, const char *zP1, int N);
+VdbeOp *sqlite3VdbeGetOp(Vdbe*, int);
+int sqlite3VdbeMakeLabel(Vdbe*);
+void sqlite3VdbeDelete(Vdbe*);
+void sqlite3VdbeMakeReady(Vdbe*,int,int,int,int);
+int sqlite3VdbeFinalize(Vdbe*);
+void sqlite3VdbeResolveLabel(Vdbe*, int);
+int sqlite3VdbeCurrentAddr(Vdbe*);
+void sqlite3VdbeTrace(Vdbe*,FILE*);
+void sqlite3VdbeResetStepResult(Vdbe*);
+int sqlite3VdbeReset(Vdbe*);
+int sqliteVdbeSetVariables(Vdbe*,int,const char**);
+void sqlite3VdbeSetNumCols(Vdbe*,int);
+int sqlite3VdbeSetColName(Vdbe*, int, int, const char *, int);
+void sqlite3VdbeCountChanges(Vdbe*);
+sqlite3 *sqlite3VdbeDb(Vdbe*);
+void sqlite3VdbeSetSql(Vdbe*, const char *z, int n);
+const char *sqlite3VdbeGetSql(Vdbe*);
+void sqlite3VdbeSwap(Vdbe*,Vdbe*);
+
+#ifndef NDEBUG
+  void sqlite3VdbeComment(Vdbe*, const char*, ...);
+# define VdbeComment(X)  sqlite3VdbeComment X
+#else
+# define VdbeComment(X)
+#endif
+
+#endif
+
+/************** End of vdbe.h ************************************************/
+/************** Continuing where we left off in sqliteInt.h ******************/
+/************** Include btree.h in the middle of sqliteInt.h *****************/
+/************** Begin file btree.h *******************************************/
+/*
+** 2001 September 15
+**
+** The author disclaims copyright to this source code.  In place of
+** a legal notice, here is a blessing:
+**
+**    May you do good and not evil.
+**    May you find forgiveness for yourself and forgive others.
+**    May you share freely, never taking more than you give.
+**
+*************************************************************************
+** This header file defines the interface that the sqlite B-Tree file
+** subsystem.  See comments in the source code for a detailed description
+** of what each interface routine does.
+**
+** @(#) $Id$
+*/
+#ifndef _BTREE_H_
+#define _BTREE_H_
+
+/* TODO: This definition is just included so other modules compile. It
+** needs to be revisited.
+*/
+#define SQLITE_N_BTREE_META 10
+
+/*
+** If defined as non-zero, auto-vacuum is enabled by default. Otherwise
+** it must be turned on for each database using "PRAGMA auto_vacuum = 1".
+*/
+#ifndef SQLITE_DEFAULT_AUTOVACUUM
+  #define SQLITE_DEFAULT_AUTOVACUUM 0
+#endif
+
+/*
+** Forward declarations of structure
+*/
+typedef struct Btree Btree;
+typedef struct BtCursor BtCursor;
+typedef struct BtShared BtShared;
+
+
+int sqlite3BtreeOpen(
+  const char *zFilename,   /* Name of database file to open */
+  sqlite3 *db,             /* Associated database connection */
+  Btree **,                /* Return open Btree* here */
+  int flags                /* Flags */
+);
+
+/* The flags parameter to sqlite3BtreeOpen can be the bitwise or of the
+** following values.
+**
+** NOTE:  These values must match the corresponding PAGER_ values in
+** pager.h.
+*/
+#define BTREE_OMIT_JOURNAL  1  /* Do not use journal.  No argument */
+#define BTREE_NO_READLOCK   2  /* Omit readlocks on readonly files */
+#define BTREE_MEMORY        4  /* In-memory DB.  No argument */
+
+int sqlite3BtreeClose(Btree*);
+int sqlite3BtreeSetBusyHandler(Btree*,BusyHandler*);
+int sqlite3BtreeSetCacheSize(Btree*,int);
+int sqlite3BtreeSetSafetyLevel(Btree*,int,int);
+int sqlite3BtreeSyncDisabled(Btree*);
+int sqlite3BtreeSetPageSize(Btree*,int,int);
+int sqlite3BtreeGetPageSize(Btree*);
+int sqlite3BtreeGetReserve(Btree*);
+int sqlite3BtreeSetAutoVacuum(Btree *, int);
+int sqlite3BtreeGetAutoVacuum(Btree *);
+int sqlite3BtreeBeginTrans(Btree*,int);
+int sqlite3BtreeCommitPhaseOne(Btree*, const char *zMaster);
+int sqlite3BtreeCommitPhaseTwo(Btree*);
+int sqlite3BtreeCommit(Btree*);
+int sqlite3BtreeRollback(Btree*);
+int sqlite3BtreeBeginStmt(Btree*);
+int sqlite3BtreeCommitStmt(Btree*);
+int sqlite3BtreeRollbackStmt(Btree*);
+int sqlite3BtreeCreateTable(Btree*, int*, int flags);
+int sqlite3BtreeIsInTrans(Btree*);
+int sqlite3BtreeIsInStmt(Btree*);
+int sqlite3BtreeIsInReadTrans(Btree*);
+void *sqlite3BtreeSchema(Btree *, int, void(*)(void *));
+int sqlite3BtreeSchemaLocked(Btree *);
+int sqlite3BtreeLockTable(Btree *, int, u8);
+
+const char *sqlite3BtreeGetFilename(Btree *);
+const char *sqlite3BtreeGetDirname(Btree *);
+const char *sqlite3BtreeGetJournalname(Btree *);
+int sqlite3BtreeCopyFile(Btree *, Btree *);
+
+/* The flags parameter to sqlite3BtreeCreateTable can be the bitwise OR
+** of the following flags:
+*/
+#define BTREE_INTKEY     1    /* Table has only 64-bit signed integer keys */
+#define BTREE_ZERODATA   2    /* Table has keys only - no data */
+#define BTREE_LEAFDATA   4    /* Data stored in leaves only.  Implies INTKEY */
+
+int sqlite3BtreeDropTable(Btree*, int, int*);
+int sqlite3BtreeClearTable(Btree*, int);
+int sqlite3BtreeGetMeta(Btree*, int idx, u32 *pValue);
+int sqlite3BtreeUpdateMeta(Btree*, int idx, u32 value);
+
+int sqlite3BtreeCursor(
+  Btree*,                              /* BTree containing table to open */
+  int iTable,                          /* Index of root page */
+  int wrFlag,                          /* 1 for writing.  0 for read-only */
+  int(*)(void*,int,const void*,int,const void*),  /* Key comparison function */
+  void*,                               /* First argument to compare function */
+  BtCursor **ppCursor                  /* Returned cursor */
+);
+
+void sqlite3BtreeSetCompare(
+  BtCursor *,
+  int(*)(void*,int,const void*,int,const void*),
+  void*
+);
+
+int sqlite3BtreeCloseCursor(BtCursor*);
+int sqlite3BtreeMoveto(BtCursor*,const void *pKey,i64 nKey,int bias,int *pRes);
+int sqlite3BtreeDelete(BtCursor*);
+int sqlite3BtreeInsert(BtCursor*, const void *pKey, i64 nKey,
+                                  const void *pData, int nData, int bias);
+int sqlite3BtreeFirst(BtCursor*, int *pRes);
+int sqlite3BtreeLast(BtCursor*, int *pRes);
+int sqlite3BtreeNext(BtCursor*, int *pRes);
+int sqlite3BtreeEof(BtCursor*);
+int sqlite3BtreeFlags(BtCursor*);
+int sqlite3BtreePrevious(BtCursor*, int *pRes);
+int sqlite3BtreeKeySize(BtCursor*, i64 *pSize);
+int sqlite3BtreeKey(BtCursor*, u32 offset, u32 amt, void*);
+const void *sqlite3BtreeKeyFetch(BtCursor*, int *pAmt);
+const void *sqlite3BtreeDataFetch(BtCursor*, int *pAmt);
+int sqlite3BtreeDataSize(BtCursor*, u32 *pSize);
+int sqlite3BtreeData(BtCursor*, u32 offset, u32 amt, void*);
+
+char *sqlite3BtreeIntegrityCheck(Btree*, int *aRoot, int nRoot, int, int*);
+struct Pager *sqlite3BtreePager(Btree*);
+
+
+#ifdef SQLITE_TEST
+int sqlite3BtreeCursorInfo(BtCursor*, int*, int);
+void sqlite3BtreeCursorList(Btree*);
+#endif
+
+#ifdef SQLITE_DEBUG
+int sqlite3BtreePageDump(Btree*, int, int recursive);
+#else
+#define sqlite3BtreePageDump(X,Y,Z) SQLITE_OK
+#endif
+
+#endif /* _BTREE_H_ */
+
+/************** End of btree.h ***********************************************/
+/************** Continuing where we left off in sqliteInt.h ******************/
+/************** Include pager.h in the middle of sqliteInt.h *****************/
+/************** Begin file pager.h *******************************************/
+/*
+** 2001 September 15
+**
+** The author disclaims copyright to this source code.  In place of
+** a legal notice, here is a blessing:
+**
+**    May you do good and not evil.
+**    May you find forgiveness for yourself and forgive others.
+**    May you share freely, never taking more than you give.
+**
+*************************************************************************
+** This header file defines the interface that the sqlite page cache
+** subsystem.  The page cache subsystem reads and writes a file a page
+** at a time and provides a journal for rollback.
+**
+** @(#) $Id$
+*/
+
+#ifndef _PAGER_H_
+#define _PAGER_H_
+
+/*
+** The default size of a database page.
+*/
+#ifndef SQLITE_DEFAULT_PAGE_SIZE
+# define SQLITE_DEFAULT_PAGE_SIZE 1024
+#endif
+
+/* Maximum page size.  The upper bound on this value is 32768.  This a limit
+** imposed by necessity of storing the value in a 2-byte unsigned integer
+** and the fact that the page size must be a power of 2.
+**
+** This value is used to initialize certain arrays on the stack at
+** various places in the code.  On embedded machines where stack space
+** is limited and the flexibility of having large pages is not needed,
+** it makes good sense to reduce the maximum page size to something more
+** reasonable, like 1024.
+*/
+#ifndef SQLITE_MAX_PAGE_SIZE
+# define SQLITE_MAX_PAGE_SIZE 32768
+#endif
+
+/*
+** Maximum number of pages in one database.
+*/
+#define SQLITE_MAX_PAGE 1073741823
+
+/*
+** The type used to represent a page number.  The first page in a file
+** is called page 1.  0 is used to represent "not a page".
+*/
+typedef unsigned int Pgno;
+
+/*
+** Each open file is managed by a separate instance of the "Pager" structure.
+*/
+typedef struct Pager Pager;
+
+/*
+** Handle type for pages.
+*/
+typedef struct PgHdr DbPage;
+
+/*
+** Allowed values for the flags parameter to sqlite3PagerOpen().
+**
+** NOTE: This values must match the corresponding BTREE_ values in btree.h.
+*/
+#define PAGER_OMIT_JOURNAL  0x0001    /* Do not use a rollback journal */
+#define PAGER_NO_READLOCK   0x0002    /* Omit readlocks on readonly files */
+
+/*
+** Valid values for the second argument to sqlite3PagerLockingMode().
+*/
+#define PAGER_LOCKINGMODE_QUERY      -1
+#define PAGER_LOCKINGMODE_NORMAL      0
+#define PAGER_LOCKINGMODE_EXCLUSIVE   1
+
+/*
+** See source code comments for a detailed description of the following
+** routines:
+*/
+int sqlite3PagerOpen(Pager **ppPager, const char *zFilename,
+                     int nExtra, int flags);
+void sqlite3PagerSetBusyhandler(Pager*, BusyHandler *pBusyHandler);
+void sqlite3PagerSetDestructor(Pager*, void(*)(DbPage*,int));
+void sqlite3PagerSetReiniter(Pager*, void(*)(DbPage*,int));
+int sqlite3PagerSetPagesize(Pager*, int);
+int sqlite3PagerReadFileheader(Pager*, int, unsigned char*);
+void sqlite3PagerSetCachesize(Pager*, int);
+int sqlite3PagerClose(Pager *pPager);
+int sqlite3PagerAcquire(Pager *pPager, Pgno pgno, DbPage **ppPage, int clrFlag);
+#define sqlite3PagerGet(A,B,C) sqlite3PagerAcquire(A,B,C,0)
+DbPage *sqlite3PagerLookup(Pager *pPager, Pgno pgno);
+int sqlite3PagerRef(DbPage*);
+int sqlite3PagerUnref(DbPage*);
+Pgno sqlite3PagerPagenumber(DbPage*);
+int sqlite3PagerWrite(DbPage*);
+int sqlite3PagerIswriteable(DbPage*);
+int sqlite3PagerOverwrite(Pager *pPager, Pgno pgno, void*);
+int sqlite3PagerPagecount(Pager*);
+int sqlite3PagerTruncate(Pager*,Pgno);
+int sqlite3PagerBegin(DbPage*, int exFlag);
+int sqlite3PagerCommitPhaseOne(Pager*,const char *zMaster, Pgno);
+int sqlite3PagerCommitPhaseTwo(Pager*);
+int sqlite3PagerRollback(Pager*);
+int sqlite3PagerIsreadonly(Pager*);
+int sqlite3PagerStmtBegin(Pager*);
+int sqlite3PagerStmtCommit(Pager*);
+int sqlite3PagerStmtRollback(Pager*);
+void sqlite3PagerDontRollback(DbPage*);
+void sqlite3PagerDontWrite(DbPage*);
+int sqlite3PagerRefcount(Pager*);
+int *sqlite3PagerStats(Pager*);
+void sqlite3PagerSetSafetyLevel(Pager*,int,int);
+const char *sqlite3PagerFilename(Pager*);
+const char *sqlite3PagerDirname(Pager*);
+const char *sqlite3PagerJournalname(Pager*);
+int sqlite3PagerNosync(Pager*);
+int sqlite3PagerRename(Pager*, const char *zNewName);
+void sqlite3PagerSetCodec(Pager*,void*(*)(void*,void*,Pgno,int),void*);
+int sqlite3PagerMovepage(Pager*,DbPage*,Pgno);
+int sqlite3PagerReset(Pager*);
+int sqlite3PagerReleaseMemory(int);
+
+void *sqlite3PagerGetData(DbPage *); 
+void *sqlite3PagerGetExtra(DbPage *); 
+int sqlite3PagerLockingMode(Pager *, int);
+
+#if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
+int sqlite3PagerLockstate(Pager*);
+#endif
+
+#ifdef SQLITE_TEST
+void sqlite3PagerRefdump(Pager*);
+int pager3_refinfo_enable;
+#endif
+
+#ifdef SQLITE_TEST
+void disable_simulated_io_errors(void);
+void enable_simulated_io_errors(void);
+#else
+# define disable_simulated_io_errors()
+# define enable_simulated_io_errors()
+#endif
+
+#endif /* _PAGER_H_ */
+
+/************** End of pager.h ***********************************************/
+/************** Continuing where we left off in sqliteInt.h ******************/
 
 #ifdef SQLITE_MEMDEBUG
 /*
@@ -377,6 +1274,14 @@ struct Db {
 
 /*
 ** An instance of the following structure stores a database schema.
+**
+** If there are no virtual tables configured in this schema, the
+** Schema.db variable is set to NULL. After the first virtual table
+** has been added, it is set to point to the database connection 
+** used to create the connection. Once a virtual table has been
+** added to the Schema structure and the Schema.db variable populated, 
+** only that database connection may use the Schema to prepare 
+** statements.
 */
 struct Schema {
   int schema_cookie;   /* Database schema version number for this file */
@@ -389,6 +1294,9 @@ struct Schema {
   u8 enc;              /* Text encoding used by this database */
   u16 flags;           /* Flags associated with this schema */
   int cache_size;      /* Number of pages to use in the cache */
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+  sqlite3 *db;         /* "Owner" connection. See comment above */
+#endif
 };
 
 /*
@@ -414,7 +1322,6 @@ struct Schema {
 #define DB_UnresetViews    0x0002  /* Some views have defined column names */
 #define DB_Empty           0x0004  /* The file is empty (length 0 bytes) */
 
-#define SQLITE_UTF16NATIVE (SQLITE_BIGENDIAN?SQLITE_UTF16BE:SQLITE_UTF16LE)
 
 /*
 ** Each database is an instance of the following structure.
@@ -510,6 +1417,7 @@ struct sqlite3 {
 #ifdef SQLITE_SSE
   sqlite3_stmt *pFetch;         /* Used by SSE to fetch stored statements */
 #endif
+  u8 dfltLockMode;              /* Default locking-mode for attached dbs */
 };
 
 /*
@@ -544,6 +1452,8 @@ struct sqlite3 {
 #define SQLITE_LegacyFileFmt  0x00008000  /* Create new databases in format 1 */
 #define SQLITE_FullFSync      0x00010000  /* Use full fsync on the backend */
 #define SQLITE_LoadExtension  0x00020000  /* Enable load_extension */
+
+#define SQLITE_RecoveryMode   0x00040000  /* Ignore schema errors */
 
 /*
 ** Possible values for the sqlite.magic field.
@@ -922,6 +1832,7 @@ struct AggInfo {
   ExprList *pGroupBy;     /* The group by clause */
   int nSortingColumn;     /* Number of columns in the sorting index */
   struct AggInfo_col {    /* For each column used in source tables */
+    Table *pTab;             /* Source table */
     int iTable;              /* Cursor number of the source table */
     int iColumn;             /* Column number within the source table */
     int iSorterColumn;       /* Column number in the sorting index */
@@ -1159,12 +2070,16 @@ struct WhereLevel {
   int iTabCur;          /* The VDBE cursor used to access the table */
   int iIdxCur;          /* The VDBE cursor used to acesss pIdx */
   int brk;              /* Jump here to break out of the loop */
+  int nxt;              /* Jump here to start the next IN combination */
   int cont;             /* Jump here to continue with the next loop cycle */
   int top;              /* First instruction of interior of the loop */
   int op, p1, p2;       /* Opcode used to terminate the loop */
   int nEq;              /* Number of == or IN constraints on this loop */
   int nIn;              /* Number of IN operators constraining this loop */
-  int *aInLoop;         /* Loop terminators for IN operators */
+  struct InLoop {
+    int iCur;              /* The VDBE cursor used by this IN operator */
+    int topAddr;           /* Top of the IN loop */
+  } *aInLoop;           /* Information about each nested IN operator */
   sqlite3_index_info *pBestIdx;  /* Index information for this level */
 
   /* The following field is really not part of the current level.  But
@@ -1255,6 +2170,7 @@ struct Select {
   u8 isAgg;              /* True if this is an aggregate query */
   u8 usesEphm;           /* True if uses an OpenEphemeral opcode */
   u8 disallowOrderBy;    /* Do not allow an ORDER BY to be attached if TRUE */
+  char affinity;         /* MakeRecord with this affinity for SRT_Set */
   SrcList *pSrc;         /* The FROM clause */
   Expr *pWhere;          /* The WHERE clause */
   ExprList *pGroupBy;    /* The GROUP BY clause */
@@ -1371,6 +2287,7 @@ struct AuthContext {
 #define OPFLAG_NCHANGE   1    /* Set to update db->nChange */
 #define OPFLAG_LASTROWID 2    /* Set to update db->lastRowid */
 #define OPFLAG_ISUPDATE  4    /* This OP_Insert is an sql UPDATE */
+#define OPFLAG_APPEND    8    /* This is likely to be an append */
 
 /*
  * Each trigger present in the database schema is stored as an instance of
@@ -1395,7 +2312,6 @@ struct Trigger {
   Expr *pWhen;            /* The WHEN clause of the expresion (may be NULL) */
   IdList *pColumns;       /* If this is an UPDATE OF <column-list> trigger,
                              the <column-list> is stored here */
-  int foreach;            /* One of TK_ROW or TK_STATEMENT */
   Token nameToken;        /* Token containing zName. Use during parsing only */
   Schema *pSchema;        /* Schema containing the trigger */
   Schema *pTabSchema;     /* Schema containing the table */
@@ -1566,7 +2482,7 @@ void *sqlite3Realloc(void*,int);
 char *sqlite3StrDup(const char*);
 char *sqlite3StrNDup(const char*, int);
 # define sqlite3CheckMemory(a,b)
-void sqlite3ReallocOrFree(void**,int);
+void *sqlite3ReallocOrFree(void*,int);
 void sqlite3FreeX(void*);
 void *sqlite3MallocX(int);
 int sqlite3AllocSize(void *);
@@ -1598,7 +2514,6 @@ int sqlite3InitCallback(void*, int, char**, char**);
 void sqlite3Pragma(Parse*,Token*,Token*,Token*,int);
 void sqlite3ResetInternalSchema(sqlite3*, int);
 void sqlite3BeginParse(Parse*,int);
-void sqlite3RollbackInternalChanges(sqlite3*);
 void sqlite3CommitInternalChanges(sqlite3*);
 Table *sqlite3ResultSetOfSelect(Parse*,char*,Select*);
 void sqlite3OpenMasterTable(Parse *, int);
@@ -1621,9 +2536,9 @@ void sqlite3CreateView(Parse*,Token*,Token*,Token*,Select*,int,int);
 #endif
 
 void sqlite3DropTable(Parse*, SrcList*, int, int);
-void sqlite3DeleteTable(sqlite3*, Table*);
+void sqlite3DeleteTable(Table*);
 void sqlite3Insert(Parse*, SrcList*, ExprList*, Select*, IdList*, int);
-int sqlite3ArrayAllocate(void**,int,int);
+void *sqlite3ArrayAllocate(void*,int,int,int*,int*,int*);
 IdList *sqlite3IdListAppend(IdList*, Token*);
 int sqlite3IdListIndex(IdList*,const char*);
 SrcList *sqlite3SrcListAppend(SrcList*, Token*, Token*);
@@ -1650,6 +2565,7 @@ void sqlite3DeleteFrom(Parse*, SrcList*, Expr*);
 void sqlite3Update(Parse*, SrcList*, ExprList*, Expr*, int);
 WhereInfo *sqlite3WhereBegin(Parse*, SrcList*, Expr*, ExprList**);
 void sqlite3WhereEnd(WhereInfo*);
+void sqlite3ExprCodeGetColumn(Vdbe*, Table*, int, int);
 void sqlite3ExprCode(Parse*, Expr*);
 void sqlite3ExprCodeAndCache(Parse*, Expr*);
 int sqlite3ExprCodeExprList(Parse*, ExprList*);
@@ -1686,7 +2602,7 @@ void sqlite3GenerateRowDelete(sqlite3*, Vdbe*, Table*, int, int);
 void sqlite3GenerateRowIndexDelete(Vdbe*, Table*, int, char*);
 void sqlite3GenerateIndexKey(Vdbe*, Index*, int);
 void sqlite3GenerateConstraintChecks(Parse*,Table*,int,char*,int,int,int,int);
-void sqlite3CompleteInsertion(Parse*, Table*, int, char*, int, int, int);
+void sqlite3CompleteInsertion(Parse*, Table*, int, char*, int, int, int, int);
 void sqlite3OpenTableAndIndices(Parse*, Table*, int, int);
 void sqlite3BeginWriteOperation(Parse*, int, int);
 Expr *sqlite3ExprDup(Expr*);
@@ -1705,7 +2621,7 @@ void sqlite3ChangeCookie(sqlite3*, Vdbe*, int);
 
 #ifndef SQLITE_OMIT_TRIGGER
   void sqlite3BeginTrigger(Parse*, Token*,Token*,int,int,IdList*,SrcList*,
-                           int,Expr*,int, int);
+                           Expr*,int, int);
   void sqlite3FinishTrigger(Parse*, TriggerStep*, Token*);
   void sqlite3DropTrigger(Parse*, SrcList*, int);
   void sqlite3DropTriggerPtr(Parse*, Trigger*);
@@ -1878,7 +2794,7 @@ int sqlite3OpenTempDatabase(Parse *);
    int sqlite3VtabCommit(sqlite3 *db);
 #endif
 void sqlite3VtabLock(sqlite3_vtab*);
-void sqlite3VtabUnlock(sqlite3_vtab*);
+void sqlite3VtabUnlock(sqlite3*, sqlite3_vtab*);
 void sqlite3VtabBeginParse(Parse*, Token*, Token*, Token*);
 void sqlite3VtabFinishParse(Parse*, Token*);
 void sqlite3VtabArgInit(Parse*);
@@ -1895,4 +2811,20 @@ int sqlite3Reprepare(Vdbe*);
 #include "sseInt.h"
 #endif
 
+/*
+** If the SQLITE_ENABLE IOTRACE exists then the global variable
+** sqlite3_io_trace is a pointer to a printf-like routine used to
+** print I/O tracing messages. 
+*/
+#ifdef SQLITE_ENABLE_IOTRACE
+# define IOTRACE(A)  if( sqlite3_io_trace ){ sqlite3_io_trace A; }
+  void sqlite3VdbeIOTraceSql(Vdbe*);
+#else
+# define IOTRACE(A)
+# define sqlite3VdbeIOTraceSql(X)
 #endif
+extern void (*sqlite3_io_trace)(const char*,...);
+
+#endif
+
+/************** End of sqliteInt.h *******************************************/
