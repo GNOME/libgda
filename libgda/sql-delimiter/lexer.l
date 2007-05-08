@@ -79,6 +79,10 @@ is[ \t]+null   		{can_use_is = FALSE; REJECT;}
 
 \$[a-zA-Z0-9_\-]*\$	{string_delim = g_strdup (gda_delimitertext); gstring = g_string_new (""); BEGIN(STRING);}
 \'			{gstring = g_string_new (""); BEGIN(STRING);}
+<STRING,PSTRING>\\\\ 	{if (string_delim) /* so that \\' does not go into the \' state */
+                                REJECT;
+			 g_string_append (gstring, "\\\\");
+			}
 <STRING,PSTRING>\\' 	{if (string_delim)
                                 REJECT;
 			 g_string_append (gstring, "\\'");

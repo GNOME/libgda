@@ -1,3 +1,10 @@
+2007-05-08  Armin Burgmeier  <armin@openismus.com>
+
+	* libgda/sql-delimiter/lexer.l: Add special rule for '\\' so that \\'
+	is correctly recognized as string delimiter.
+
+	* libsql/lexer.l: Applied the same change here. Bug #433687.
+
 2007-05-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/sqlite-src/Makefile.am: changes due to the new type of distributed source of
