@@ -1,3 +1,11 @@
+libgda 3.0.1, 2007-05-10
+
+ - Bug fixes: #433687, #434464, #432798, #432798
+ (Armin Burgmeier, Gustavo R. Montesino, Leonardo Boshell, Vivien Malerba)
+ - Translations:
+	- ar (Djihed Afifi)
+
+
 libgda 3.0.0, 2007-04-20
 
  - misc. bug fixes (Armin Burgmeier, Vivien Malerba)
