@@ -1,3 +1,22 @@
+2007-05-14  Vivien Malerba <malerba@gnome-db.org>
+
+	 * configure.in: set to version 3.1.1
+	 * libgda/graph/gda-graph-item.c: minor object dump display correction
+	 * libgda/graph/gda-graph-query.c: if the dictionary does not handle
+	 GdaGraph objects, then make it handle them instead of crashing
+
+2007-05-14  Vivien Malerba <malerba@gnome-db.org>
+
+	Propagated from the "release-3-0-branch" branch
+	* libgda/gda-value.c: remove warnings in gda_value_stringify() for invalid dates
+	* libgda/gda-client.c: correctly implement connection sharing
+	* libgda/gda-client.c: correctly emit the "event_notification" signal when a connection is opened, 
+	bug #316698
+	* libgda/gda-column.c: memory leak correction
+	* providers/sqlite/gda-sqlite-provider.c: force SQLite to re-read the database structure
+	in case it has been modified by another connection since the last time an SQL statement
+	was executed
+	
 2007-05-08  Armin Burgmeier  <armin@openismus.com>
 
 	* libgda/sql-delimiter/lexer.l: Add special rule for '\\' so that \\'

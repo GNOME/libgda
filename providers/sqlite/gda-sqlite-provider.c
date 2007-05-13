@@ -125,6 +125,9 @@ static const gchar* gda_sqlite_provider_get_default_dbms_type (GdaServerProvider
 							       GdaConnection *cnc,
 							       GType type);
 
+static GList *process_sql_commands (GList *reclist, GdaConnection *cnc,
+				    const gchar *sql, GdaCommandOptions options);
+
 static GObjectClass *parent_class = NULL;
 
 typedef struct {
@@ -450,6 +453,17 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	if (!scnc) {
 		gda_connection_add_event_string (cnc, _("Invalid SQLITE handle"));
 		return NULL;
+	}
+
+	/* HACK: force SQLite to reparse the schema and thus discover new tables if necessary */
+	{
+		gint status;
+		sqlite3_stmt *stmt = NULL;
+		status = sqlite3_prepare_v2 (scnc->connection, sql, -1, &stmt, NULL);
+		if (status == SQLITE_OK)
+			sqlite3_step (stmt);
+		if (stmt)
+			sqlite3_finalize (stmt);
 	}
 
 	/* parse SQL string, which can contain several commands, separated by ';' */

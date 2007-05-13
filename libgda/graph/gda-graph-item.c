@@ -379,12 +379,12 @@ gda_graph_item_dump (GdaGraphItem *item, guint offset)
         /* dump */
         if (item->priv) {
 		GdaObject *base = gda_object_ref_get_ref_object (item->priv->ref_object);
-		g_print ("%s" D_COL_H1 "GdaGraphItem" D_COL_NOR " for %p at (%.3f, %.3f) ", str, base,
+		g_print ("%s" D_COL_H1 "GdaGraphItem" D_COL_NOR " for %p at (%.3f, %.3f)\n", str, base,
 			 item->priv->x, item->priv->y);
 		
 	}
         else
-                g_print ("%s" D_COL_ERR "Using finalized object %p" D_COL_NOR, str, item);
+                g_print ("%s" D_COL_ERR "Using finalized object %p\n" D_COL_NOR, str, item);
 }
 #endif
 

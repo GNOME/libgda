@@ -56,7 +56,7 @@ gda_sqlite_update_types_hash (SQLITEcnc *scnc)
         gboolean end = FALSE;
 
 	sres = g_new0 (SQLITEresult, 1);
-	status = sqlite3_prepare (scnc->connection, "PRAGMA table_types_list;", -1, &(sres->stmt), NULL);
+	status = sqlite3_prepare_v2 (scnc->connection, "PRAGMA table_types_list;", -1, &(sres->stmt), NULL);
 	if (status != SQLITE_OK) 
 		return;
 

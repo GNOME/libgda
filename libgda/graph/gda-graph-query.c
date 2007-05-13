@@ -1,6 +1,6 @@
 /* gda-graph-query.c
  *
- * Copyright (C) 2004 - 2005 Vivien Malerba
+ * Copyright (C) 2004 - 2007 Vivien Malerba
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,6 +25,7 @@
 #include <libgda/gda-query.h>
 #include <libgda/gda-query-target.h>
 #include <libgda/graph/gda-dict-reg-graphs.h>
+#include <glib/gi18n-lib.h>
 
 /* 
  * Main static functions 
@@ -116,6 +117,11 @@ gda_graph_query_new (GdaQuery *query)
 	dict = gda_object_get_dict (GDA_OBJECT (query));
 
 	reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_GRAPH);
+	if (!reg) {
+		g_warning (_("The dictionary use by this GdaQuery does not support graphs, this support is now added"));
+		gda_dict_register_object_type (dict, gda_graphs_get_register ());
+		reg = gda_dict_get_object_type_registration (dict, GDA_TYPE_GRAPH);
+	}
 	g_assert (reg);
 
 	obj = g_object_new (GDA_TYPE_GRAPH_QUERY, "dict", dict, NULL);
@@ -129,7 +135,7 @@ gda_graph_query_new (GdaQuery *query)
 	gda_dict_declare_object_as (dict, (GdaObject *) graph, GDA_TYPE_GRAPH);
 	g_object_set (obj, "graph_type", GDA_GRAPH_QUERY_JOINS, "ref_object", query, NULL);
 
-	/* REM: we don't need to catch @query's nullification because #GdaGraph already does it. */
+	/* REM: we don't need to catch @query's destruction because #GdaGraph already does it. */
 	graph->priv->query = query;
 
 	gda_graph_query_initialize (graph);

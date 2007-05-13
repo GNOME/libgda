@@ -1736,10 +1736,18 @@ gda_value_stringify (const GValue *value)
 			if (type == G_TYPE_DATE) {
 				GDate *date;
 				date = (GDate *) g_value_get_boxed (value);
-				return g_strdup_printf ("%04u-%02u-%02u",
-							g_date_get_year (date),
-							g_date_get_month (date),
-							g_date_get_day (date));
+				if (date) {
+					if (g_date_valid (date))
+						return g_strdup_printf ("%04u-%02u-%02u",
+									g_date_get_year (date),
+									g_date_get_month (date),
+									g_date_get_day (date));
+					else
+						return g_strdup_printf ("%04u-%02u-%02u",
+									date->year, date->month, date->day);
+				}
+				else
+					return g_strdup ("0000-00-00");
 			}
 			else
 				return g_strdup ("");

@@ -1,5 +1,5 @@
 m4_define(major, 3)
-m4_define(minor, 0)
+m4_define(minor, 1)
 m4_define(micro, 1)
 
 AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)

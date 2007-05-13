@@ -161,6 +161,14 @@ gda_column_finalize (GObject *object)
 		if (column->priv->default_value) 
 			gda_value_free (column->priv->default_value);
 	
+		g_free (column->priv->table);
+		g_free (column->priv->id);
+		g_free (column->priv->name);
+		g_free (column->priv->table);
+		g_free (column->priv->title);
+		g_free (column->priv->caption);
+		g_free (column->priv->references);
+
 		g_free (column->priv);
 		column->priv = NULL;
 	}
