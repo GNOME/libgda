@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -56,7 +56,6 @@ static void gda_client_init       (GdaClient *client, GdaClientClass *klass);
 static void gda_client_finalize   (GObject *object);
 
 static void cnc_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client);
-static void cnc_destroyed_cb (GdaConnection *cnc, GdaClient *client);
 
 enum {
 	EVENT_NOTIFICATION,
@@ -116,18 +115,6 @@ cnc_error_cb (GdaConnection *cnc, GdaConnectionEvent *error, GdaClient *client)
 
 	/* notify error */
 	gda_client_notify_error_event (client, cnc, error);
-}
-
-static void
-cnc_destroyed_cb (GdaConnection *cnc, GdaClient *client)
-{
-	g_assert (g_list_find (client->priv->connections, cnc));
-	g_signal_handlers_disconnect_by_func (G_OBJECT (cnc), 
-					      G_CALLBACK (cnc_destroyed_cb), client);
-	g_signal_handlers_disconnect_by_func (G_OBJECT (cnc), 
-					      G_CALLBACK (cnc_error_cb), client);
-	client->priv->connections = g_list_remove (client->priv->connections, cnc);
-	g_object_unref (cnc);
 }
 
 typedef struct {
@@ -212,12 +199,13 @@ static void
 gda_client_finalize (GObject *object)
 {
 	GdaClient *client = (GdaClient *) object;
+	GList *list;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
 	/* free memory */
-	while (client->priv->connections)
-		cnc_destroyed_cb (GDA_CONNECTION (client->priv->connections->data), client);
+	for (list = client->priv->connections; list; list = list->next)
+		g_object_unref (GDA_CONNECTION (list->data));
 
 	g_hash_table_foreach (client->priv->providers, (GHFunc) remove_weak_ref, client);
 	g_hash_table_foreach (client->priv->providers, (GHFunc) free_hash_provider, NULL);
@@ -373,9 +361,6 @@ gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
 	g_object_ref (cnc);
 
 	/* signals */
-	g_signal_connect (G_OBJECT (cnc), "destroyed",
-			  G_CALLBACK (cnc_destroyed_cb), client);
-
 	g_signal_connect (G_OBJECT (cnc), "error",
 			  G_CALLBACK (cnc_error_cb), client);
 }
@@ -405,9 +390,10 @@ gda_client_declare_connection (GdaClient *client, GdaConnection *cnc)
  *  <listitem>the USERNAME= and PASSWORD= parts of the connection string in the DSN definition</listitem>
  * </itemizedlist>
  *
+ * If a new #GdaConnection is created, then the caller will hold a reference on it, and if a #GdaConnection
+ * already existing is used, then the reference count of that object will be increased by one.
  *
- * Returns: the opened connection if successful, %NULL if there is
- * an error.
+ * Returns: the opened connection if successful, %NULL if there was an error.
  */
 GdaConnection *
 gda_client_open_connection (GdaClient *client,
@@ -437,9 +423,12 @@ gda_client_open_connection (GdaClient *client,
 		cnc = gda_client_find_connection (client, dsn, username, password);
 		if (cnc &&
 		    ! (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
-			g_object_ref (G_OBJECT (cnc));
-			gda_client_notify_connection_opened_event (client, cnc);
+			if (!gda_connection_open (cnc, error)) 
+				cnc = NULL;
+			else
+				g_object_ref (G_OBJECT (cnc));
 			gda_data_source_info_free (dsn_info);
+
 			return cnc;
 		}
 	}
@@ -471,6 +460,9 @@ gda_client_open_connection (GdaClient *client,
 
 	/* free memory */
 	gda_data_source_info_free (dsn_info);
+
+	if (cnc) 
+		gda_client_declare_connection (client, cnc);
 
 	return cnc;
 }
@@ -678,10 +670,8 @@ gda_client_notify_event (GdaClient *client,
 {
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
-	if (!cnc || g_list_find (client->priv->connections, cnc)) {
-		g_signal_emit (G_OBJECT (client), gda_client_signals[EVENT_NOTIFICATION], 0,
-			       cnc, event, params);
-	}
+	g_signal_emit (G_OBJECT (client), gda_client_signals[EVENT_NOTIFICATION], 0,
+		       cnc, event, params);
 }
 
 /**

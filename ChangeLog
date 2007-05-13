@@ -1,3 +1,14 @@
+2007-05-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-value.c: remove warnings in gda_value_stringify() for invalid dates
+	* libgda/gda-client.c: correctly implement connection sharing
+	* libgda/gda-client.c: correctly emit the "event_notification" signal when a connection is opened, 
+	bug #316698
+	* libgda/gda-column.c: memory leak correction
+	* providers/sqlite/gda-sqlite-provider.c: force SQLite to re-read the database structure
+	in case it has been modified by another connection since the last time an SQL statement
+	was executed
+	
 Released 3.0.1
 
 2007-05-01  Vivien Malerba <malerba@gnome-db.org>
