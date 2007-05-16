@@ -459,7 +459,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	{
 		gint status;
 		sqlite3_stmt *stmt = NULL;
-		status = sqlite3_prepare_v2 (scnc->connection, sql, -1, &stmt, NULL);
+		status = sqlite3_prepare_v2 (scnc->connection, "SELECT 1 FROM sqlite_master LIMIT 1", -1, &stmt, NULL);
 		if (status == SQLITE_OK)
 			sqlite3_step (stmt);
 		if (stmt)

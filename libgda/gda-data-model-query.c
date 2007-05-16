@@ -381,7 +381,7 @@ param_name_to_int (const gchar *pname, gint *result, gboolean *old_val)
 static void
 check_param_type (GdaParameter *param, GType type)
 {
-	if (type !=  gda_parameter_get_g_type (param)) {
+	if ((type != 0) && (type !=  gda_parameter_get_g_type (param))) {
 		g_warning (_("Type of parameter '%s' is '%s' when it should be '%s', GdaDataModelQuery object will now work correctly"),
 			   gda_object_get_name (GDA_OBJECT (param)), 
 			   g_type_name (gda_parameter_get_g_type (param)),
@@ -427,12 +427,9 @@ gda_data_model_query_set_property (GObject *object,
 					GSList *targets, *tlist;
 
 					targets = gda_query_get_targets (model->priv->queries[qindex]);
-					tlist = targets;
-					while (tlist) {
+					for (tlist = targets; tlist; tlist = tlist->next)
 						g_slist_free (gda_query_expand_all_field (model->priv->queries[qindex],
 											  GDA_QUERY_TARGET (tlist->data)));
-						tlist = g_slist_next (tlist);
-					}
 					g_slist_free (targets);
 
 					g_signal_connect (model->priv->queries[qindex], "changed",
