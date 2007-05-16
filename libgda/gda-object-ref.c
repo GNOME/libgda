@@ -102,6 +102,7 @@ struct _GdaObjectRefPrivate
 	gchar                 *obj_name; /* real name of the object as returned by gda_object_get_name() */
 	gboolean               block_signals;
 	GdaObject             *helper_ref; /* a GdaQuery (for target resolution) or a GdaObjectRef (for a field resolution) */
+	gboolean               ref_losing;
 };
 
 
@@ -200,6 +201,7 @@ gda_object_ref_init (GdaObjectRef * ref)
 	ref->priv->obj_name = NULL;
 	ref->priv->block_signals = FALSE;
 	ref->priv->helper_ref = NULL;
+	ref->priv->ref_losing = FALSE;
 }
 
 
@@ -314,6 +316,8 @@ destroyed_object_cb (GObject *obj, GdaObjectRef *ref)
 		g_object_unref (ref->priv->ref_object);
 
 	ref->priv->ref_object = NULL;
+	ref->priv->ref_losing = TRUE;
+	g_object_ref (ref);
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'REF_LOST' from %s\n", __FUNCTION__);
 #endif
@@ -321,6 +325,9 @@ destroyed_object_cb (GObject *obj, GdaObjectRef *ref)
 #ifdef GDA_DEBUG_signal
 	g_print ("<< 'REF_LOST' from %s\n", __FUNCTION__);
 #endif
+	ref->priv->ref_object = NULL;
+	ref->priv->ref_losing = FALSE;
+	g_object_unref (ref);
 }
 
 static void
@@ -996,22 +1003,30 @@ gda_object_ref_activate (GdaObjectRef *ref)
 
 	/* Object treatment */
 	if (obj) {
-		if (ref->priv->increase_ref_object)
-			g_object_ref (obj);
-
-		gda_object_connect_destroy (obj, G_CALLBACK (destroyed_object_cb), ref);
-		ref->priv->ref_object = obj;
-
-		g_free (ref->priv->obj_name);
-		ref->priv->obj_name = g_strdup (gda_object_get_name (obj));
-
+		if (!ref->priv->ref_losing) {
+			if (ref->priv->increase_ref_object)
+				g_object_ref (obj);
+			
+			gda_object_connect_destroy (obj, G_CALLBACK (destroyed_object_cb), ref);
+			ref->priv->ref_object = obj;
+			
+			g_free (ref->priv->obj_name);
+			ref->priv->obj_name = g_strdup (gda_object_get_name (obj));
+			
 #ifdef GDA_DEBUG_signal
-		g_print (">> 'REF_FOUND' from %s\n", __FUNCTION__);
+			g_print (">> 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
-		g_signal_emit (G_OBJECT (ref), gda_object_ref_signals[REF_FOUND], 0);
+			g_signal_emit (G_OBJECT (ref), gda_object_ref_signals[REF_FOUND], 0);
 #ifdef GDA_DEBUG_signal
-		g_print ("<< 'REF_FOUND' from %s\n", __FUNCTION__);
+			g_print ("<< 'REF_FOUND' from %s\n", __FUNCTION__);
 #endif
+		}
+		else {
+			/* this is temporary, to satisfy the users of @ref which still need
+			 * to know what object is referenced when @ref is in fact losing its
+			 * referenced object */
+			ref->priv->ref_object = obj;
+		}
 	}
 
 	return ref->priv->ref_object ? TRUE : FALSE;
@@ -1021,7 +1036,7 @@ gda_object_ref_activate (GdaObjectRef *ref)
  * gda_object_ref_deactivate
  * @ref: a #GdaObjectRef object
  *
- * Desctivates the object (loses the reference to the object)
+ * Desctivates the object (loses the reference to the referenced object)
  */
 void
 gda_object_ref_deactivate (GdaObjectRef *ref)
@@ -1041,7 +1056,8 @@ gda_object_ref_deactivate (GdaObjectRef *ref)
 		g_object_unref (ref->priv->ref_object);
 
 	ref->priv->ref_object = NULL;
-
+	ref->priv->ref_losing = TRUE;
+	g_object_ref (ref);
 	if (! ref->priv->block_signals) {
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'REF_LOST' from %s\n", __FUNCTION__);
@@ -1051,6 +1067,9 @@ gda_object_ref_deactivate (GdaObjectRef *ref)
 		g_print ("<< 'REF_LOST' from %s\n", __FUNCTION__);
 #endif
 	}
+	ref->priv->ref_object = NULL;
+	ref->priv->ref_losing = FALSE;
+	g_object_unref (ref);
 }
 
 /**

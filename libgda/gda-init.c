@@ -22,6 +22,9 @@
 #include <libgda/libgda.h>
 #include <glib/gi18n-lib.h>
 
+#include <libgda/gda-dict-private.h>
+#include <libgda/graph/gda-dict-reg-graphs.h>
+
 static GMainLoop *main_loop = NULL;
 
 /* global variables */
@@ -94,6 +97,7 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 
 	/* create a default dictionary */
 	default_dict = gda_dict_new ();
+	gda_dict_register_object_type (default_dict, gda_graphs_get_register ());
 
 #define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
 	gda_dict_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_DICT_DTD_FILE);

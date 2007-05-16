@@ -1,3 +1,15 @@
+2007-05-17  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-object-ref.c: when losing the reference to the referenced object, correctly
+	respond to users still wanting to know which was the referenced object
+	* libgda/gda-init.c: make the default dictionary handle graph objects
+	* providers/sqlite/gda-sqlite-provider.c: correct which statement is executed to force 
+	SQLite to re-read the database structure
+	* libgda/gda-data-model-query.c: avoid showing a warning about
+	modification query's param type if expected type is unknown
+	* libgda/gda-query.c: display a warning when expanding a table.* field
+	into a list of fields when the dictionary is not up to date
+
 2007-05-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-value.c: remove warnings in gda_value_stringify() for invalid dates

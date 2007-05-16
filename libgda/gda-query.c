@@ -5979,10 +5979,16 @@ gda_query_expand_all_field (GdaQuery *query, GdaQueryTarget *target)
 			
 			t = gda_query_field_all_get_target (GDA_QUERY_FIELD_ALL (list->data));
 			if (!target || (t == target)) {
-				GSList *entfields, *list2;
+				GSList *entfields = NULL, *list2;
 				GdaEntityField *newfield;
+				GdaEntity *repr_entity;
 
-				entfields = gda_entity_get_fields (gda_query_target_get_represented_entity (t));
+				repr_entity = gda_query_target_get_represented_entity (t);
+				if (repr_entity)
+					entfields = gda_entity_get_fields (repr_entity);
+				else 
+					g_warning (_("Could expand '%s.*' into a list of fields"), 
+						   gda_query_target_get_represented_table_name (t));
 				list2 = entfields;
 				while (list2) {
 					newfield = (GdaEntityField *) g_object_new (GDA_TYPE_QUERY_FIELD_FIELD, 
