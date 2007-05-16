@@ -1,5 +1,10 @@
 2007-05-17  Vivien Malerba <malerba@gnome-db.org>
 
+	* samples/table_copy.c: new example showing how to copy data from one
+	table to the other.
+
+2007-05-17  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda/gda-object-ref.c: when losing the reference to the referenced object, correctly
 	respond to users still wanting to know which was the referenced object
 	* libgda/gda-init.c: make the default dictionary handle graph objects
