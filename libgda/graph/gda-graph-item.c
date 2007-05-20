@@ -398,6 +398,7 @@ gda_graph_item_save_to_xml (GdaXmlStorage *iface, GError **error)
 	GdaGraphItem *item;
         gchar *str;
 	GdaObject *base;
+	gchar *sign;
 
         g_return_val_if_fail (iface && GDA_IS_GRAPH_ITEM (iface), NULL);
         g_return_val_if_fail (GDA_GRAPH_ITEM (iface)->priv, NULL);
@@ -414,11 +415,25 @@ gda_graph_item_save_to_xml (GdaXmlStorage *iface, GError **error)
 		g_free (str);
 	}
 	
-	str = g_strdup_printf ("%d.%03d", (int) item->priv->x, (int) ((item->priv->x - (int) item->priv->x) * 1000.));
+	/* X */
+	sign = "";
+	if (item->priv->x < 0) {
+		sign = "-";
+		item->priv->x = -item->priv->x;
+	}
+	str = g_strdup_printf ("%s%d.%03d", sign, (int) item->priv->x, 
+			       (int) ((item->priv->x - (int) item->priv->x) * 1000.));
 	xmlSetProp(node, (xmlChar*)"xpos", (xmlChar*)str);
 	g_free (str);
 
-	str = g_strdup_printf ("%d.%03d", (int) item->priv->y, (int) ((item->priv->y - (int) item->priv->y) * 1000.));
+	/* Y */
+	sign = "";
+	if (item->priv->y < 0) {
+		sign = "-";
+		item->priv->y = -item->priv->y;
+	}
+	str = g_strdup_printf ("%s%d.%03d", sign, (int) item->priv->y, 
+			       (int) ((item->priv->y - (int) item->priv->y) * 1000.));
 	xmlSetProp(node, (xmlChar*)"ypos", (xmlChar*)str);
 	g_free (str);
 
@@ -433,6 +448,12 @@ static gdouble
 parse_float (const gchar *str)
 {
 	gdouble retval = 0.;
+	gboolean is_negative = FALSE;
+
+	if (*str && *str == '-') {
+		is_negative = TRUE;
+		str++;
+	}
 
 	while (*str && g_ascii_isdigit (*str)) {
 		retval = retval * 10 + (*str - '0');
@@ -451,7 +472,7 @@ parse_float (const gchar *str)
 		retval += tmp / divider;
 	}
 
-	return retval;
+	return is_negative ? -retval : retval;
 }
 
 static gboolean

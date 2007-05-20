@@ -1,3 +1,12 @@
+2007-05-21  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/sqlite/gda-sqlite-provider.c: fixed the NOT NULL reported attibute for table's fields
+	* data/sales_test.db: complexified a bit the sample database
+	* libgda/graph/gda-graph-item.c: fixed saving and loading to and from XML when coordinates
+	are negative
+	* libgda/gda-dict.c: avoid string comparison when string is NULL to
+	avoid crash
+
 2007-05-17  Vivien Malerba <malerba@gnome-db.org>
 
 	* samples/table_copy.c: new example showing how to copy data from one

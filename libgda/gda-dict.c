@@ -1988,7 +1988,7 @@ gda_dict_get_objects (GdaDict *dict, GType type)
  * gda_dict_get_object_by_name
  * @dict: a #GdaDict object
  * @type: a #Gtype type of object
- * @name: 
+ * @name: the requested name
  *
  * Tries to find an object from its name, among the objects managed by @dict of type @type.
  *
@@ -2014,9 +2014,10 @@ gda_dict_get_object_by_name (GdaDict *dict, GType type, const gchar *name)
 		GSList *list;
 		GdaObject *obj = NULL;
 
-		list = reg->assumed_objects;
-		for (; list && !obj; list = list->next) {
-			if (!strcmp (gda_object_get_name (list->data), name))
+		for (list = reg->assumed_objects; list && !obj; list = list->next) {
+			const gchar *objname = gda_object_get_name (list->data);
+			if ((objname && name && !strcmp (objname, name)) ||
+			    (!objname && !name))
 				obj = (GdaObject*) list->data;
 		}
 		return obj;
