@@ -1323,7 +1323,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 		else {
 			value = gda_row_get_value (row, 3);
 			g_value_set_boolean (nvalue = gda_value_new (G_TYPE_BOOLEAN), 
-					     g_value_get_int ((GValue *) value) ? FALSE : TRUE);
+					     g_value_get_int ((GValue *) value) ? TRUE : FALSE);
 		}
 		rowlist = g_list_append (rowlist, nvalue);
 
