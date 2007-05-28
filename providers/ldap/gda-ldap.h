@@ -32,6 +32,8 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-value.h>
 #include "gda-ldap-provider.h"
+/* TODO: we use the old API.  We should update this to the new API. */
+#define LDAP_DEPRECATED 1
 #include <ldap.h>
 #include <ldap_schema.h>
 

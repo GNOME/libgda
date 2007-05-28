@@ -1,3 +1,11 @@
+2007-05-28  Hans de Goede <j.w.r.degoede@hhs.nl>
+
+	* providers/ldap/gda-ldap.h:
+	Define LDAP_DEPRECATED to fix missing prototype warnings. At least
+	2 of tese warnings were fatal bugs on 64 bit platforms (because the compiler 
+	then assumes the function returns an int == 32 bit, where as in reality it 
+	returns a pointer == 64 bit).
+
 2007-05-21  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/sqlite/gda-sqlite-provider.c: fixed the NOT NULL reported attibute for table's fields
