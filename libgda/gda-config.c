@@ -414,7 +414,7 @@ get_config_client ()
 "<?xml version=\"1.0\"?>\n" \
 "<libgda-config>\n" \
 "    <section path=\"/apps/libgda/Datasources/SalesTest\">\n" \
-"        <entry name=\"DSN\" type=\"string\" value=\"URI=%s/sales_test.db\"/>\n" \
+"        <entry name=\"DSN\" type=\"string\" value=\"DB_DIR=%s;DB_NAME=sales_test\"/>\n" \
 "        <entry name=\"Description\" type=\"string\" value=\"Test database for a sales department\"/>\n" \
 "        <entry name=\"Password\" type=\"string\" value=\"\"/>\n" \
 "        <entry name=\"Provider\" type=\"string\" value=\"SQLite\"/>\n" \

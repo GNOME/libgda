@@ -18,7 +18,8 @@ bin_PROGRAMS = \
 	gda-diagnose-3.0 \
 	gda-list-config-3.0 \
 	gda-inspect-dict-file-3.0 \
-	gda-author-dict-file-3.0
+	gda-author-dict-file-3.0 \
+	gda-sql-3.0
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -67,5 +68,18 @@ gda_list_config_3_0_SOURCES = \
 gda_list_config_3_0_LDADD = \
         $(top_builddir)/libgda/libgda-3.0.la \
         $(LIBGDA_LIBS)
+
+gda_sql_3_0_SOURCES = \
+        gda-sql.c \
+	tools-input.h \
+	tools-input.c \
+	command-exec.h \
+	command-exec.c
+
+gda_sql_3_0_LDADD = \
+        $(top_builddir)/libgda/libgda-3.0.la \
+        $(LIBGDA_LIBS) \
+	$(READLINE_LIB) \
+        $(HISTORY_LIB)
 
 EXTRA_DIST = $(CONFIG_MAN_PAGES)
