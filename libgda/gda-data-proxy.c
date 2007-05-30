@@ -104,6 +104,7 @@ enum
 	PROP_0,
 	PROP_MODEL,
 	PROP_ADD_NULL_ENTRY,
+	PROP_DEFER_SYNC
 };
 
 /*
@@ -166,6 +167,7 @@ struct _GdaDataProxyPrivate
 
 	gboolean           add_null_entry; /* artificially add a NULL entry at the beginning of the tree model */
 
+	gboolean           defer_sync;
 	guint              idle_add_event_source; /* !=0 when data rows are being added */
 
 	/* chunking: ONLY accounting for @model's rows, not the new rows */
@@ -451,6 +453,9 @@ gda_data_proxy_class_init (GdaDataProxyClass *class)
 	g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
 					 g_param_spec_boolean ("prepend_null_entry", NULL, NULL, FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_DEFER_SYNC,
+					 g_param_spec_boolean ("defer_sync", NULL, NULL, TRUE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
 
 static void
@@ -494,6 +499,7 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 	proxy->priv->proxy_has_changed = FALSE;
 
 	proxy->priv->add_null_entry = FALSE;
+	proxy->priv->defer_sync = TRUE;
 	proxy->priv->idle_add_event_source = 0;
 
 	proxy->priv->sample_first_row = 0;
@@ -684,6 +690,14 @@ gda_data_proxy_set_property (GObject *object,
 					gda_data_model_row_removed ((GdaDataModel *) proxy, 0);
 			}
 			break;
+		case PROP_DEFER_SYNC:
+			proxy->priv->defer_sync = g_value_get_boolean (value);
+			if (!proxy->priv->defer_sync && proxy->priv->idle_add_event_source) {
+				g_idle_remove_by_data (proxy);
+				proxy->priv->idle_add_event_source = 0;
+				while (idle_add_model_rows (proxy)) ;
+			}
+			break;
 		}
 	}
 }
@@ -701,6 +715,9 @@ gda_data_proxy_get_property (GObject *object,
 		switch (param_id) {
 		case PROP_ADD_NULL_ENTRY:
 			g_value_set_boolean (value, proxy->priv->add_null_entry);
+			break;
+		case PROP_DEFER_SYNC:
+			g_value_set_boolean (value, proxy->priv->defer_sync);
 			break;
 		}
 	}
@@ -1260,6 +1277,7 @@ gda_data_proxy_find_row_from_values (GdaDataProxy *proxy, GSList *values,
 	 */
 	if (proxy->priv->idle_add_event_source) {
 		g_idle_remove_by_data (proxy);
+		proxy->priv->idle_add_event_source = 0;
 		while (idle_add_model_rows (proxy)) ;
 	}
 
@@ -1974,6 +1992,12 @@ adjust_displayed_chunck (GdaDataProxy *proxy)
 	 * emitted */
 	gda_object_unblock_changed (GDA_OBJECT (proxy));
 	gda_data_model_signal_emit_changed ((GdaDataModel *) proxy);
+
+	if (!proxy->priv->defer_sync && proxy->priv->idle_add_event_source) {
+		g_idle_remove_by_data (proxy);
+		proxy->priv->idle_add_event_source = 0;
+		while (idle_add_model_rows (proxy)) ;
+	}
 
 #ifdef GDA_DEBUG_NO
 	g_print ("//GdaDataProxy adjusted sample: %d<->%d (=%d / %d rows, %s)\n", proxy->priv->sample_first_row, 

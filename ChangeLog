@@ -1,3 +1,21 @@
+2007-05-31  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-proxy.c: added a "defer_sync" property to control if the synchronization
+	between GdaDataProxy object and proxied model should be immediate of defered into an 
+	idle loop (the latter being the default)
+	* tools/Makefile.am:
+	* tools/gda-run.c: removed useless program
+	* tools/tools-input.[ch]: make readline handle process signals
+	* tools/command-exec.c:
+	* tools/gda-sql.c: 
+	  - added new internal commands (\q, \cd, \copyright, \e, \r, \p, \g, \w, \w_dict, 
+	    \r_dict, \dq)
+	  - handle correctly the SIGINT signal,
+	  - correctly behave when stdin and/or stdout are streams and not attached to a terminal,
+	  - output large results as several pages using a pager, 
+	  - output can be sent to a file or to a piped program (using the "|prog" syntax)
+	  - history can be saved to a file
+
 2007-05-28  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-config.c: change URL to DB_DIR and DB_NAME in the SalesTest example

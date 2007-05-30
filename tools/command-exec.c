@@ -22,6 +22,7 @@
 #include "command-exec.h"
 #include <glib/gi18n-lib.h>
 #include <string.h>
+#include "tools-input.h"
 #ifdef HAVE_READLINE_HISTORY_H
 #include <readline/history.h>
 #endif
@@ -133,6 +134,20 @@ commands_compare_group (GdaInternalCommand *a, GdaInternalCommand *b)
 	}
 }
 
+/* default function to split arguments */
+static gchar **
+default_gda_internal_commandargs_func (const gchar *string)
+{
+	gchar **array, **ptr;
+
+	array = g_strsplit (string, " ", -1);
+	for (ptr = array; *ptr; ptr++)
+		g_strchug (*ptr);
+
+	return array;
+}
+
+
 /*
  * gda_internal_command_execute
  *
@@ -185,7 +200,7 @@ gda_internal_command_execute (GdaInternalCommandsList *commands_list,
 	if (command->arguments_delimiter_func)
 		args = command->arguments_delimiter_func (command_str);
 	else
-		args = g_strsplit (command_str, " ", -1);
+		args = default_gda_internal_commandargs_func (command_str);
 	res = command->command_func (cnc, dict, (const gchar **) &(args[1]), 
 				     error, command->user_data);
 	
@@ -246,20 +261,31 @@ gda_internal_command_history (GdaConnection *cnc, GdaDict *dict, const gchar **a
 
 	GString *string;
 #ifdef HAVE_READLINE_HISTORY_H
-	HIST_ENTRY **hist_array = history_list ();
-	string = g_string_new ("");
-	if (hist_array) {
-		HIST_ENTRY *current;
-		gint index;
-		for (index = 0, current = *hist_array; current; index++, current = hist_array [index]) {
-			g_string_append (string, current->line);
-			g_string_append_c (string, '\n');
+	if (args[0]) {
+		if (!save_history (args[0], error)) {
+			g_free (res);
+			res = NULL;
 		}
+		else
+			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	}
+	else {
+		HIST_ENTRY **hist_array = history_list ();
+		string = g_string_new ("");
+		if (hist_array) {
+			HIST_ENTRY *current;
+			gint index;
+			for (index = 0, current = *hist_array; current; index++, current = hist_array [index]) {
+				g_string_append (string, current->line);
+				g_string_append_c (string, '\n');
+			}
+		}
+		res->u.txt = string;
 	}
 #else
 	string = g_string_new (_("History is not supported"));
-#endif
 	res->u.txt = string;
+#endif
 	
 	return res;
 }
@@ -302,13 +328,14 @@ gda_internal_command_list_tables_views (GdaConnection *cnc, GdaDict *dict, const
 	GdaInternalCommandResult *res;
 	GdaDictDatabase* db = gda_dict_get_database (dict);
 
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-
 	GSList *tables, *list;
 	GdaDataModel *model;
 	GValue *value;
 	gint row;
+	const gchar *tname = NULL;
+
+	if (args[0] && *args[0]) 
+		tname = args[0];
 	
 	model = gda_data_model_array_new_with_g_types (4,
 						       G_TYPE_STRING,
@@ -321,26 +348,116 @@ gda_internal_command_list_tables_views (GdaConnection *cnc, GdaDict *dict, const
 	gda_data_model_set_column_title (model, 3, _("Description"));
 	tables = gda_dict_database_get_tables (db);
 	for (list = tables; list; list = list->next) {
+		const gchar *cstr;
 		GdaDictTable *table = GDA_DICT_TABLE (list->data);
-		row = gda_data_model_append_row (model, NULL);
 		
-		value = gda_value_new_from_string (gda_object_get_name (GDA_OBJECT (table)), G_TYPE_STRING);
+		cstr = gda_object_get_name (GDA_OBJECT (table));
+		if (tname && strcmp (tname, cstr))
+			continue;
+
+		row = gda_data_model_append_row (model, NULL);
+		value = gda_value_new_from_string (cstr, G_TYPE_STRING);
 		gda_data_model_set_value_at (model, 0, row, value, NULL);
 		gda_value_free (value);
 		
-		value = gda_value_new_from_string (gda_dict_table_is_view (table) ? _("View") : _("Table"), G_TYPE_STRING);
+		value = gda_value_new_from_string (gda_dict_table_is_view (table) ? _("View") : 
+						   _("Table"), G_TYPE_STRING);
 		gda_data_model_set_value_at (model, 1, row, value, NULL);
 		gda_value_free (value);
 		
-		value = gda_value_new_from_string (gda_object_get_owner (GDA_OBJECT (table)), G_TYPE_STRING);
+		value = gda_value_new_from_string (gda_object_get_owner (GDA_OBJECT (table)), 
+						   G_TYPE_STRING);
 		gda_data_model_set_value_at (model, 2, row, value, NULL);
 		gda_value_free (value);
 		
-		value = gda_value_new_from_string (gda_object_get_description (GDA_OBJECT (table)), G_TYPE_STRING);
+		value = gda_value_new_from_string (gda_object_get_description (GDA_OBJECT (table)),
+						   G_TYPE_STRING);
 		gda_data_model_set_value_at (model, 3, row, value, NULL);
 		gda_value_free (value);			
 	}
+	
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
 	res->u.model = model;
+
+	return res;
+}
+
+GdaInternalCommandResult *
+gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict, 
+				   const gchar **args,
+				   GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+
+	GSList *queries, *list;
+	GdaDataModel *model;
+	GValue *value;
+	gint row;
+	const gchar *qname = NULL;
+
+	if (args[0] && *args[0])
+		qname = args[0];
+
+	if (qname) {
+		GdaQuery *query = NULL;
+		queries = gda_dict_get_queries (dict);
+		for (list = queries; list; list = list->next) {
+			const gchar *cstr;			
+			cstr = gda_object_get_name (GDA_OBJECT (list->data));
+			if (cstr && !strcmp (cstr, qname)) {
+				query = GDA_QUERY (list->data);
+				break;
+			}
+		}
+		g_slist_free (queries);
+		if (query) {
+			gchar *str;
+			GString *string = g_string_new ("");
+			str = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL,
+							  GDA_RENDERER_EXTRA_PRETTY_SQL, NULL);
+			g_string_append_printf (string, _("%s\n"), str);
+			g_free (str);
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+			res->u.txt = string;
+		}
+		else
+			g_set_error (error, 0, 0,
+				     _("Could not find query named '%s'"), qname);
+	}
+	else {
+		model = gda_data_model_array_new_with_g_types (3,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING,
+							       G_TYPE_STRING);
+		gda_data_model_set_column_title (model, 0, _("Name"));
+		gda_data_model_set_column_title (model, 1, _("Type"));
+		gda_data_model_set_column_title (model, 2, _("Description"));
+		queries = gda_dict_get_queries (dict);
+		for (list = queries; list; list = list->next) {
+			GdaQuery *query = GDA_QUERY (list->data);
+			const gchar *cstr;
+			row = gda_data_model_append_row (model, NULL);
+			
+			cstr = gda_object_get_name (GDA_OBJECT (query));
+			value = gda_value_new_from_string (cstr ? cstr : "", G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 0, row, value, NULL);
+			gda_value_free (value);
+			
+			value = gda_value_new_from_string (gda_query_get_query_type_string (query), G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 1, row, value, NULL);
+			gda_value_free (value);
+			
+			cstr = gda_object_get_description (GDA_OBJECT (query));
+			value = gda_value_new_from_string (cstr ? cstr : "", G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 2, row, value, NULL);
+			gda_value_free (value);
+		}
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		res->u.model = model;
+	}
 
 	return res;
 }

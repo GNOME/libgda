@@ -24,6 +24,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
 
 #ifdef HAVE_READLINE_READLINE_H
 #include <readline/readline.h>
@@ -48,17 +50,22 @@ input_from_console (const gchar *prompt)
 #ifdef HAVE_READLINE_READLINE_H
 	char *read;
 
-	read = readline (prompt);
-	if (read) {
-		gchar *str = g_strdup (read);
-		free (read);
-		add_to_history (str);
-		return str;
+	if (isatty (fileno (stdout))) {
+		read = readline (prompt);
+		if (read) {
+			gchar *str = g_strdup (read);
+			free (read);
+			add_to_history (str);
+			return str;
+		}
+		else
+			return NULL;
 	}
 	else
-		return NULL;
+		return input_from_stream (stdin);
 #else
-	g_print ("%s", prompt);
+	if (isatty (fileno (stdout)))
+		g_print ("%s", prompt);
 	return input_from_stream (stdin);
 #endif
 }
@@ -87,6 +94,51 @@ input_from_stream  (FILE *stream)
 }
 
 /**
+ * init_input
+ *
+ * Loads the contents of the history file, if supported
+ */
+void
+init_input ()
+{
+#ifdef HAVE_READLINE_READLINE_H	
+	rl_set_signals ();
+#endif
+}
+
+/*
+ * input_get_size
+ *
+ * Get the size of the input term, if possible, otherwise returns -1
+ */
+void
+input_get_size (gint *width, gint *height)
+{
+	int tty = fileno (stdin);
+	int cols = -1, rows = -1;
+
+#ifdef TIOCGWINSZ
+	struct winsize window_size;
+	if (ioctl (tty, TIOCGWINSZ, &window_size) == 0)	{
+		cols = (int) window_size.ws_col;
+		rows = (int) window_size.ws_row;
+	}
+
+	if (cols <= 1)
+		cols = -1;
+	if (rows <= 0)
+		rows = -1;
+#endif 
+
+	if (width)
+		*width = cols;
+	if (height)
+		*height = rows;
+
+	/*g_print ("Screen: %dx%d\n", cols, rows);*/
+}
+
+/**
  * init_history
  *
  * Loads the contents of the history file, if supported
@@ -94,6 +146,7 @@ input_from_stream  (FILE *stream)
 void
 init_history ()
 {
+	rl_set_signals ();
 #ifdef HAVE_READLINE_HISTORY_H
 	
 	if (history_init_done)
@@ -136,17 +189,24 @@ add_to_history (const gchar *txt)
 /**
  * save_history
  */
-void
-save_history ()
+gboolean
+save_history (const gchar *file, GError **error)
 {
 #ifdef HAVE_READLINE_HISTORY_H
 	int res;
 	if (!history_init_done || !history_file)
 		return;
-	res = append_history (1, history_file);
+	res = append_history (1, file ? file : history_file);
 	if (res == ENOENT)
-		res = write_history (history_file);
+		res = write_history (file ? file : history_file);
+	if (res != 0) {
+		g_set_error (error, 0, 0,
+			     _("Could not save history file to '%s': %s"), 
+			     file ? file : history_file, strerror (errno));
+		return FALSE;
+	}
 	/*if (res == 0)
 	  history_truncate_file (history_file, 500);*/
 #endif
+	return TRUE;
 }

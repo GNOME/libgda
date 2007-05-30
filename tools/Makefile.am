@@ -10,10 +10,8 @@ CONFIG_TOOL=
 man_MANS =
 endif
 
-RUN_TOOL=gda-run-3.0
 
 bin_PROGRAMS = \
-	$(RUN_TOOL) \
 	$(CONFIG_TOOL) \
 	gda-diagnose-3.0 \
 	gda-list-config-3.0 \
@@ -26,11 +24,6 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I. \
 	$(LIBGDA_CFLAGS)
-
-gda_run_3_0_SOURCES = gda-run.c
-gda_run_3_0_LDADD = \
-	$(top_builddir)/libgda/libgda-3.0.la \
-	$(LIBGDA_LIBS)
 
 gda_config_tool_3_0_SOURCES = gda-config-tool.c
 gda_config_tool_3_0_LDADD = \

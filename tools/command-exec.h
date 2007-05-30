@@ -35,6 +35,7 @@ typedef enum {
 	GDA_INTERNAL_COMMAND_RESULT_PLIST,
 	GDA_INTERNAL_COMMAND_RESULT_TXT,
 	GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT,
+	GDA_INTERNAL_COMMAND_RESULT_EXIT
 } GdaInternalCommandResultType;
 
 typedef struct {
@@ -86,7 +87,7 @@ void                      gda_internal_command_exec_result_free (GdaInternalComm
 /* Available commands */
 GdaInternalCommandResult *gda_internal_command_help (GdaConnection *cnc, GdaDict *dict, 
 						     const gchar **args,
-						     GError **error,GdaInternalCommandsList *clist);
+						     GError **error, GdaInternalCommandsList *clist);
 GdaInternalCommandResult *gda_internal_command_history (GdaConnection *cnc, GdaDict *dict, 
 							const gchar **args,
 							GError **error, gpointer data);
@@ -99,5 +100,8 @@ GdaInternalCommandResult *gda_internal_command_dict_save (GdaConnection *cnc, Gd
 GdaInternalCommandResult *gda_internal_command_list_tables_views (GdaConnection *cnc, GdaDict *dict, 
 								  const gchar **args,
 								  GError **error, gpointer data);
+GdaInternalCommandResult *gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict, 
+							     const gchar **args,
+							     GError **error, gpointer data);
 
 #endif
