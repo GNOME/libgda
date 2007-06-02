@@ -1881,15 +1881,42 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	return real_gda_data_model_dump_as_string (model, FALSE);
 }
 
+static void
+string_get_dimensions (const gchar *string, gint *width, gint *rows)
+{
+	const gchar *ptr;
+	gint w = 0, h = 0, maxw = 0;
+	for (ptr = string; *ptr; ptr = g_utf8_next_char (ptr)) {
+		if (*ptr == '\n') {
+			h++;
+			maxw = MAX (maxw, w);
+			w = 0;
+		}
+		else
+			w++;
+	}
+	maxw = MAX (maxw, w);
+
+	if (width)
+		*width = maxw;
+	if (rows)
+		*rows = h;
+}
+
 static gchar *
 real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes)
 {
+#define MULTI_LINE_NO_SEPARATOR
+
 	GString *string;
 	gchar *offstr, *str;
 	gint n_cols, n_rows;
 	gint *cols_size;
 	gboolean *cols_is_num;
 	gchar *sep_col  = " | ";
+#ifdef MULTI_LINE_NO_SEPARATOR
+	gchar *sep_col_e  = "   ";
+#endif
 	gchar *sep_row  = "-+-";
 	gchar sep_fill = '-';
 	gint i, j;
@@ -1955,15 +1982,19 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				value = gda_data_model_get_value_at (model, i, j);
 				str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
 				if (str) {
-					cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
+					gint w;
+					string_get_dimensions (str, &w, NULL);
+					cols_size [i] = MAX (cols_size [i], w);
 					g_free (str);
 				}
 			}
 			else {
 				GdaValueAttribute attrs;
+				gint w;
 				attrs = gda_data_model_get_attributes_at (model, i, j);
 				str = g_strdup_printf ("%u", attrs);
-				cols_size [i] = MAX (cols_size [i], g_utf8_strlen (str, -1));
+				string_get_dimensions (str, &w, NULL);
+				cols_size [i] = MAX (cols_size [i], w);
 				g_free (str);
 			}
 		}
@@ -2001,6 +2032,11 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	/* ... and data */
 	if (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM) {
 		for (j = 0; j < n_rows; j++) {
+			/* determine height for each column in that row */
+			gint *cols_height = g_new (gint, n_cols);
+			gchar ***cols_str = g_new (gchar **, n_cols);
+			gint k, kmax = 0;
+
 			for (i = 0; i < n_cols; i++) {
 				if (!dump_attributes) {
 					value = gda_data_model_get_value_at (model, i, j);
@@ -2011,24 +2047,78 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 					attrs = gda_data_model_get_attributes_at (model, i, j);
 					str = g_strdup_printf ("%u", attrs);
 				}
-				if (i != 0)
-					g_string_append_printf (string, "%s", sep_col);
-				if (cols_is_num [i])
-					g_string_append_printf (string, "%*s", cols_size [i], str);
-				else {
-					gint j, max;
-					if (str) {
-						g_string_append_printf (string, "%s", str);
-						max = cols_size [i] - g_utf8_strlen (str, -1);
-					}
-					else
-						max = cols_size [i];
-					for (j = 0; j < max; j++)
-						g_string_append_c (string, ' ');
-				}
+				cols_str [i] = g_strsplit (str, "\n", -1);
 				g_free (str);
+				cols_height [i] = g_strv_length (cols_str [i]);
+				kmax = MAX (kmax, cols_height [i]);
 			}
-			g_string_append_c (string, '\n');
+
+			for (k = 0; k < kmax; k++) {
+				for (i = 0; i < n_cols; i++) {
+					gboolean align_center = FALSE;
+					if (i != 0) {
+#ifdef MULTI_LINE_NO_SEPARATOR
+						if (k != 0)
+							g_string_append_printf (string, "%s", sep_col_e);
+						else
+#endif
+							g_string_append_printf (string, "%s", sep_col);
+					}
+					if (k < cols_height [i]) 
+						str = (cols_str[i])[k];
+					else {
+#ifdef MULTI_LINE_NO_SEPARATOR
+						str = "";
+#else
+						if (cols_height [i] == 0)
+							str = "";
+						else
+							str = ".";
+						align_center = TRUE;
+#endif
+					}
+					
+					if (cols_is_num [i])
+						g_string_append_printf (string, "%*s", cols_size [i], str);
+					else {
+						gint j, max;
+						if (str) 
+							max = cols_size [i] - g_utf8_strlen (str, -1);
+						else
+							max = cols_size [i];
+
+						if (!align_center) {
+							g_string_append_printf (string, "%s", str);
+							for (j = 0; j < max; j++)
+								g_string_append_c (string, ' ');
+						}
+						else {
+							for (j = 0; j < max / 2; j++)
+								g_string_append_c (string, ' ');
+							g_string_append_printf (string, "%s", str);
+							for ( j+= g_utf8_strlen (str, -1); j < cols_size [i]; j++)
+								g_string_append_c (string, ' ');
+						}
+						/*
+						gint j, max;
+						if (str) {
+							g_string_append_printf (string, "%s", str);
+							max = cols_size [i] - g_utf8_strlen (str, -1);
+						}
+						else
+							max = cols_size [i];
+						for (j = 0; j < max; j++)
+							g_string_append_c (string, ' ');
+						*/
+					}
+				}
+				g_string_append_c (string, '\n');
+			}
+
+			g_free (cols_height);
+			for (i = 0; i < n_cols; i++) 
+				g_strfreev (cols_str [i]);
+			g_free (cols_str);
 		}
 	}
 	else 

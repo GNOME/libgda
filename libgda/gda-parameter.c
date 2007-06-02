@@ -703,7 +703,7 @@ gda_parameter_get_value_str (GdaParameter *param)
 	g_return_val_if_fail (param->priv, NULL);
 
 	current_val = gda_parameter_get_value (param);
-	if (!current_val)
+	if (!current_val || gda_value_is_null (current_val))
 		return NULL;
 	else {
 		GdaDict *dict;

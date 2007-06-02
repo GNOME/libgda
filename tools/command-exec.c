@@ -85,6 +85,10 @@ find_command (GdaInternalCommandsList *commands_list, const gchar *command_str, 
 			command = NULL;
 	}
 
+	/* FIXME */
+	if (command_complete)
+		*command_complete = TRUE;
+
 	return command;
 }
 
@@ -179,6 +183,7 @@ gda_internal_command_execute (GdaInternalCommandsList *commands_list,
 	args = g_strsplit (command_str, " ", 2);
 	command = find_command (commands_list, args[0], &command_complete);
 	g_strfreev (args);
+	args = NULL;
 	if (!command) {
 		g_set_error (error, 0, 0,
 			     _("Unknown internal command"));
@@ -205,7 +210,8 @@ gda_internal_command_execute (GdaInternalCommandsList *commands_list,
 				     error, command->user_data);
 	
  cleanup:
-	g_strfreev (args);
+	if (args)
+		g_strfreev (args);
 
 	return res;
 }
@@ -395,9 +401,17 @@ gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict,
 	GValue *value;
 	gint row;
 	const gchar *qname = NULL;
+	gboolean with_sql_def = FALSE;
 
-	if (args[0] && *args[0])
-		qname = args[0];
+	if (args[0] && *args[0]) {
+		if (!strcmp (args[0], "+"))
+			with_sql_def = TRUE;
+		else {
+			qname = args[0];
+			if (args[1] && (*args[1] == '+'))
+				with_sql_def = TRUE;
+		}
+	}
 
 	if (qname) {
 		GdaQuery *query = NULL;
@@ -415,7 +429,8 @@ gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict,
 			gchar *str;
 			GString *string = g_string_new ("");
 			str = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL,
-							  GDA_RENDERER_EXTRA_PRETTY_SQL, NULL);
+							  GDA_RENDERER_EXTRA_PRETTY_SQL | GDA_RENDERER_PARAMS_AS_DETAILED,
+							  NULL);
 			g_string_append_printf (string, _("%s\n"), str);
 			g_free (str);
 			res = g_new0 (GdaInternalCommandResult, 1);
@@ -427,13 +442,25 @@ gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict,
 				     _("Could not find query named '%s'"), qname);
 	}
 	else {
-		model = gda_data_model_array_new_with_g_types (3,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING,
-							       G_TYPE_STRING);
+		if (with_sql_def)
+			model = gda_data_model_array_new_with_g_types (5,
+								       G_TYPE_STRING,
+								       G_TYPE_STRING,
+								       G_TYPE_STRING,
+								       G_TYPE_STRING,
+								       G_TYPE_STRING);
+		else
+			model = gda_data_model_array_new_with_g_types (4,
+								       G_TYPE_STRING,
+								       G_TYPE_STRING,
+								       G_TYPE_STRING,
+								       G_TYPE_STRING);
 		gda_data_model_set_column_title (model, 0, _("Name"));
 		gda_data_model_set_column_title (model, 1, _("Type"));
 		gda_data_model_set_column_title (model, 2, _("Description"));
+		gda_data_model_set_column_title (model, 3, _("Parameters"));
+		if (with_sql_def)
+			gda_data_model_set_column_title (model, 4, _("SQL"));
 		queries = gda_dict_get_queries (dict);
 		for (list = queries; list; list = list->next) {
 			GdaQuery *query = GDA_QUERY (list->data);
@@ -453,7 +480,40 @@ gda_internal_command_list_queries (GdaConnection *cnc, GdaDict *dict,
 			value = gda_value_new_from_string (cstr ? cstr : "", G_TYPE_STRING);
 			gda_data_model_set_value_at (model, 2, row, value, NULL);
 			gda_value_free (value);
+
+			GdaParameterList *plist;
+			plist = gda_query_get_parameter_list (query);
+			if (plist && plist->parameters) {
+				GSList *params;
+				GString *string = g_string_new ("");
+				/* fill parameters with some defined parameters */
+				for (params = plist->parameters; params; params = params->next) {
+					GdaParameter *param = GDA_PARAMETER (params->data);
+					if (params != plist->parameters)
+						g_string_append_c (string, '\n');
+					g_string_append_printf (string, "%s (%s)", gda_object_get_name (GDA_OBJECT (param)),
+								g_type_name (gda_parameter_get_g_type (param)));
+				}
+				value = gda_value_new_from_string (string->str, G_TYPE_STRING);
+				g_string_free (string, TRUE);
+			}
+			else
+				value = gda_value_new_from_string ("", G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 3, row, value, NULL);
+			gda_value_free (value);
+			if (plist)
+				g_object_unref (plist);
+			if (with_sql_def) {
+				gchar *str;
+				str = gda_renderer_render_as_sql (GDA_RENDERER (query), NULL, NULL,
+								  GDA_RENDERER_EXTRA_PRETTY_SQL | GDA_RENDERER_PARAMS_AS_DETAILED,
+								  NULL);
+				value = gda_value_new_from_string (str, G_TYPE_STRING);
+				gda_data_model_set_value_at (model, 4, row, value, NULL);
+				gda_value_free (value);
+			}
 		}
+
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
 		res->u.model = model;

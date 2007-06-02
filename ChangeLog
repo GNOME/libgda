@@ -1,3 +1,16 @@
+2007-06-03  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-client.c: fixed gda_client_find_connection() where the first existing
+	connection was always returned regardless of the requested DSN
+	* libgda/gda-parameter.c: make gda_parameter_get_value_str() return NULL if
+	parameter's value is NULL
+	* libgda/gda-data-model.c: correctly display multiline strings in any column when using
+	gda_data_model_dump_as_string()
+	* tools/gda-sql.c: 
+	* tools/command-exec.c:
+	  - added commands (\set, \unset, \H)
+	  - correclty set dictionary after each connection change
+
 2007-05-31  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-proxy.c: added a "defer_sync" property to control if the synchronization
