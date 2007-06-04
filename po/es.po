@@ -1,3 +1,4 @@
+# translation of libgda.HEAD.es.po to Spanish
 # traducción de libgda al Español
 # Copyright © 2002-2003, 2006, 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
@@ -16,7 +17,7 @@ msgstr ""
 "Project-Id-Version: libgda.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-03-27 03:48+0100\n"
-"PO-Revision-Date: 2007-05-06 13:39+0200\n"
+"PO-Revision-Date: 2007-06-04 15:47+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -452,7 +453,9 @@ msgstr "Datos exportados"
 #: ../libgda/gda-data-model.c:1427
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
-msgstr "Se esperaba la etiqueta <gda_value> o <gda_array_value>, se obtuvo <%s>, ignorando"
+msgstr ""
+"Se esperaba la etiqueta <gda_value> o <gda_array_value>, se obtuvo <%s>, "
+"ignorando"
 
 #: ../libgda/gda-data-model.c:1458 ../testing/gda-test-models.c:537
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
@@ -480,7 +483,7 @@ msgid "Inexistent column in source data model: %d"
 msgstr "Columna inexistente en el modelo de datos origen: %d"
 
 #: ../libgda/gda-data-model.c:1628
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
 "data model"
@@ -621,9 +624,8 @@ msgid "Can't get list of tables"
 msgstr "No se pudo obtener la lista de tablas"
 
 #: ../libgda/gda-dict-database.c:1090
-#, fuzzy
 msgid "Can't get list of views"
-msgstr "No se pudo obtener la lista de tablas"
+msgstr "No se pudo obtener la lista de vistas"
 
 #: ../libgda/gda-dict-field.c:902
 msgid "XML Tag is not <gda_dict_field>"
@@ -662,9 +664,8 @@ msgid "Missing required attributes for <gda_dict_function>"
 msgstr "Faltan atributos requeridos por <gda_dict_function>"
 
 #: ../libgda/gda-dict-reg-aggregates.c:47
-#, fuzzy
 msgid "Aggregates analysis"
-msgstr "Agregado"
+msgstr "Añade un análisis"
 
 #: ../libgda/gda-dict-reg-aggregates.c:171
 msgid "Can't get list of aggregates"
@@ -675,9 +676,8 @@ msgid "Schema for list of aggregates is wrong"
 msgstr "El esquema para la lista de agregados es erróneo"
 
 #: ../libgda/gda-dict-reg-functions.c:47
-#, fuzzy
 msgid "Functions analysis"
-msgstr "Función"
+msgstr "Aálisis de funciones"
 
 #: ../libgda/gda-dict-reg-functions.c:170
 msgid "Can't get list of functions"
@@ -688,9 +688,8 @@ msgid "Schema for list of functions is wrong"
 msgstr "El esquema para la lista de funciones es erróneo"
 
 #: ../libgda/gda-dict-reg-types.c:63
-#, fuzzy
 msgid "Data types analysis"
-msgstr "Manejo de tipos de datos"
+msgstr "Análisis de los tipos de datos"
 
 #: ../libgda/gda-dict-reg-types.c:262
 msgid "Can't get list of data types"
@@ -722,9 +721,9 @@ msgid "XML Tag is not <gda_dict_type>"
 msgstr "La etiqueta XML no es <gda_dict_type>"
 
 #: ../libgda/gda-dict-type.c:364
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown GType '%s'"
-msgstr "Tipo de dato desconocido «%s»"
+msgstr "Tipo de GType desconocido «%s»"
 
 #: ../libgda/gda-dict-type.c:396
 msgid "Missing required attributes for <gda_dict_type>"
@@ -1119,9 +1118,8 @@ msgid "Feature not yet implemented, see %s(), line %d"
 msgstr ""
 
 #: ../libgda/gda-query-field-value.c:1315
-#, fuzzy
 msgid "Missing required g_type for <gda_query_fval>"
-msgstr "Falta gda_type requerido por <gda_query_fval>"
+msgstr "Falta g_type requerido por <gda_query_fval>"
 
 #: ../libgda/gda-query-field-value.c:1325
 #, c-format
@@ -1130,14 +1128,13 @@ msgstr "El campo del valor «%s» no tiene un valor."
 
 #: ../libgda/gda-query-field-value.c:1419
 #: ../libgda/gda-query-field-value.c:1485
-#, fuzzy
 msgid "Default value requested"
-msgstr "Valor predeterminado"
+msgstr "Se requiere un valor predeterminado"
 
 #: ../libgda/gda-query-field-value.c:1443
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find GdaParameter in context for value field '%s'"
-msgstr "No se ha podido establecer el parámetro «%s» al valor «%s»"
+msgstr "No se ha podido encontrar el GdaParameter en el contexto para el valor del campo «%s»"
 
 #: ../libgda/gda-query-field-value.c:1461
 #, c-format
@@ -1283,25 +1280,22 @@ msgid "Ambiguous field '*'"
 msgstr "Campo ambiguo '*'"
 
 #: ../libgda/gda-query-parsing.c:1544 ../libgda/gda-query-parsing.c:1547
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown data type '%s', using G_TYPE_STRING"
-msgstr "Tipo de dato desconocido «%s»"
+msgstr "Tipo de dato desconocido «%s», se usará G_TYPE_STRING"
 
 #: ../libgda/gda-query-parsing.c:1562 ../libgda/gda-query-parsing.c:1564
-#, fuzzy
 msgid ""
 "Data type must be specified when no default value is provided, using "
 "G_TYPE_STRING"
-msgstr ""
-"El tipo de datos debe especificarse cuando no se proporciona ningún valor "
-"predeterminado"
+msgstr "El tipo de datos se debe especificar cuando no se proporciona ningún valor predeterminado, se usará G_TYPE_STRING"
 
 #: ../libgda/gda-query-parsing.c:1643
 #, c-format
 msgid ""
 "Could not convert data from %s to %s for DBMS type %s, forget about the DBMS "
 "type"
-msgstr ""
+msgstr "No se pudo convertir los datos de %s a %s para DBMS tipo %s, olvídese sobre el tipo DBMS"
 
 #: ../libgda/gda-query-parsing.c:1667 ../libgda/gda-query-parsing.c:1669
 #, c-format
@@ -1470,9 +1464,8 @@ msgid "More than two sub-queries for an EXCEPT query"
 msgstr "Más de dos sub-consultas para una consulta EXCEPT"
 
 #: ../libgda/gda-query.c:4683
-#, fuzzy
 msgid "Empty query"
-msgstr "Consulta vacía para analizar"
+msgstr "Consulta vacía"
 
 #: ../libgda/gda-query.c:4738
 #, c-format
@@ -2166,9 +2159,8 @@ msgid "Character Set"
 msgstr "Conjunto de caracteres"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:2
-#, fuzzy
 msgid "Character set to be used during the connection"
-msgstr "Conjunto de caracteres usado en la conexión"
+msgstr "Conjunto de caracteres a usar durante la conexión"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:4
 msgid "Page Size"
@@ -2185,9 +2177,8 @@ msgstr "Dialecto SQL"
 
 #. FIXME: pre-set values for the SQL_DIALECT values with human readable values
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:9
-#, fuzzy
 msgid "SQL dialect to use during the connection"
-msgstr "Dialecto SQL usado en la conexión"
+msgstr "Dialecto SQL a usar durante la conexión"
 
 #: ../providers/firebird/firebird_specs_dsn.xml.in.h:10
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:21
@@ -2285,7 +2276,6 @@ msgstr "Servidor de base de datos"
 
 #: ../providers/freetds/freetds_specs_dsn.xml.in.h:3
 #: ../providers/sybase/sybase_specs_dsn.xml.in.h:3
-#, fuzzy
 msgid "Database server IP address"
 msgstr "Dirección IP del servidor de base de datos"
 
