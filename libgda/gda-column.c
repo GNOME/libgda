@@ -164,7 +164,6 @@ gda_column_finalize (GObject *object)
 		g_free (column->priv->table);
 		g_free (column->priv->id);
 		g_free (column->priv->name);
-		g_free (column->priv->table);
 		g_free (column->priv->title);
 		g_free (column->priv->caption);
 		g_free (column->priv->references);
