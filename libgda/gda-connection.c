@@ -1244,9 +1244,12 @@ gda_connection_execute_select_command (GdaConnection *cnc, GdaCommand *cmd,
 
 		event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
 		if (nb > 1)
-			str = g_strdup_printf ("(%d rows)", nb);
+			str = g_strdup_printf (_("(%d rows)"), nb);
+		else if (nb >= 0)
+			str = g_strdup_printf (_("(%d row)"), nb);
 		else
-			str = g_strdup_printf ("(%d row)", nb);
+			str = g_strdup_printf (_("(unknown number of rows)"), nb);
+			
 		gda_connection_event_set_description (event, str);
 		g_free (str);
 		gda_connection_add_event (cnc, event);

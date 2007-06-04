@@ -371,13 +371,19 @@ gda_internal_command_list_tables_views (GdaConnection *cnc, GdaDict *dict, const
 		gda_data_model_set_value_at (model, 1, row, value, NULL);
 		gda_value_free (value);
 		
-		value = gda_value_new_from_string (gda_object_get_owner (GDA_OBJECT (table)), 
-						   G_TYPE_STRING);
+		cstr = gda_object_get_owner (GDA_OBJECT (table));
+		if (cstr)
+			value = gda_value_new_from_string (cstr, G_TYPE_STRING);
+		else
+			value = gda_value_new_null ();
 		gda_data_model_set_value_at (model, 2, row, value, NULL);
 		gda_value_free (value);
 		
-		value = gda_value_new_from_string (gda_object_get_description (GDA_OBJECT (table)),
-						   G_TYPE_STRING);
+		cstr = gda_object_get_description (GDA_OBJECT (table));
+		if (cstr)
+			value = gda_value_new_from_string (cstr, G_TYPE_STRING);
+		else
+			value = gda_value_new_null ();		
 		gda_data_model_set_value_at (model, 3, row, value, NULL);
 		gda_value_free (value);			
 	}
