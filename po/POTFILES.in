@@ -41,6 +41,7 @@ libgda/gda-server-provider.c
 libgda/gda-util.c
 libgda/graph/gda-dict-reg-graphs.c
 libgda/graph/gda-graph-item.c
+libgda/graph/gda-graph-query.c
 libgda/graph/gda-graph.c
 libgda/handlers/gda-handler-bin.c
 libgda/handlers/gda-handler-boolean.c
@@ -112,6 +113,7 @@ providers/oracle/oracle_specs_drop_table.xml.in
 providers/oracle/oracle_specs_dsn.xml.in
 providers/oracle/utils.c
 providers/postgres/gda-postgres-blob-op.c
+providers/postgres/gda-postgres-cursor-recordset.c
 providers/postgres/gda-postgres-ddl.c
 providers/postgres/gda-postgres-handler-bin.c
 providers/postgres/gda-postgres-provider.c
@@ -132,8 +134,7 @@ providers/sqlite/gda-sqlite-ddl.c
 providers/sqlite/gda-sqlite-handler-bin.c
 providers/sqlite/gda-sqlite-provider.c
 providers/sqlite/libmain.c
-providers/sqlite/sqlite-src/os_common.h
-providers/sqlite/sqlite-src/vdbe.c
+providers/sqlite/sqlite-src/sqlite3.c
 providers/sqlite/sqlite_specs_add_column.xml.in
 providers/sqlite/sqlite_specs_create_db.xml.in
 providers/sqlite/sqlite_specs_create_index.xml.in
@@ -168,8 +169,11 @@ testing/gda-test-models.c
 testing/gda-test-server-operation.c
 testing/gda-test-sql.c
 testing/html.c
+tools/command-exec.c
 tools/gda-author-dict-file.c
 tools/gda-diagnose.c
 tools/gda-inspect-dict-file.c
 tools/gda-list-config.c
+tools/gda-sql.c
 tools/html.c
+tools/tools-input.c

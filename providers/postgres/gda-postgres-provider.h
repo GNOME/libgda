@@ -74,6 +74,10 @@ typedef struct {
 
 	/* OID of the last inserted tuple */
 	Oid                 last_insert_id;
+
+	/* Cursor usage */
+	gboolean            use_cursor;
+	gint                chunck_size;
 } GdaPostgresConnectionData;
 
 /* NOTE ABOUT THE POSTGRES VERSIONS:

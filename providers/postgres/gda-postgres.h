@@ -29,8 +29,9 @@
 #include <libgda/gda-server-provider.h>
 #include "gda-postgres-provider.h"
 #include "gda-postgres-recordset.h"
+#include "gda-postgres-cursor-recordset.h"
 
-#define GDA_POSTGRES_PROVIDER_ID          "GDA PostgreSQL provider"
+#define GDA_POSTGRES_PROVIDER_ID "GDA PostgreSQL provider"
 
 G_BEGIN_DECLS
 
@@ -57,6 +58,15 @@ GType gda_postgres_type_name_to_gda (GHashTable *h_table,
 const gchar *gda_data_type_to_string (GType type);
 gchar *gda_postgres_value_to_sql_string (GValue *value);
 gboolean gda_postgres_check_transaction_started (GdaConnection *cnc);
+
+/*
+ * For recordset implementations
+ */
+void gda_postgres_recordset_describe_column (GdaDataModel *model, GdaConnection *cnc, PGresult *pg_res, 
+					     GdaPostgresTypeOid *type_data, gint ntypes, const gchar *table_name,
+					     gint col);
+gchar *gda_postgres_guess_table_name (GdaConnection *cnc, PGresult *pg_res);
+GType *gda_postgres_get_column_types (PGresult *pg_res, GdaPostgresTypeOid *type_data, gint ntypes);
 G_END_DECLS
 
 #endif

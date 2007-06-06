@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 #include <libgda/gda-parameter-list.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
@@ -711,7 +712,7 @@ gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 }
 
 static GdaObject *
-compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql, PGresult *pg_res)
+compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql, PGresult *pg_res, const gchar *cursor_name)
 {
 	GdaConnectionEvent *error = NULL;
 	GdaObject *retval = NULL;
@@ -719,14 +720,18 @@ compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql,
 	if (pg_res == NULL) 
 		error = gda_postgres_make_error (cnc, pconn, NULL);
 	else {
-		gint status = PQresultStatus (pg_res);
+		GdaPostgresConnectionData *priv_data;
+		gint status;
+
+		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);		
+		status = PQresultStatus (pg_res);
+		
 		if (status == PGRES_EMPTY_QUERY ||
 		    status == PGRES_TUPLES_OK ||
 		    status == PGRES_COMMAND_OK) {
-			if (status == PGRES_COMMAND_OK) {
+			if ((status == PGRES_COMMAND_OK) && !cursor_name) {
 				gchar *str;
 				GdaConnectionEvent *event;
-				GdaPostgresConnectionData *priv_data;
 				
 				event = gda_connection_event_new (GDA_CONNECTION_EVENT_NOTICE);
 				str = g_strdup (PQcmdStatus (pg_res));
@@ -737,25 +742,30 @@ compute_retval_from_pg_res (GdaConnection *cnc, PGconn *pconn, const gchar *sql,
 										      "IMPACTED_ROWS", G_TYPE_INT, 
 										      atoi (PQcmdTuples (pg_res)),
 										      NULL);
-				priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
-				if (!priv_data && (PQoidValue (pg_res) != InvalidOid))
+				
+				if ((PQoidValue (pg_res) != InvalidOid))
 					priv_data->last_insert_id = PQoidValue (pg_res);
 				else
 					priv_data->last_insert_id = 0;
 
 				PQclear (pg_res);
 			}
-			else if (status == PGRES_TUPLES_OK) {
+			else if ((status == PGRES_TUPLES_OK)  ||
+				 ((status == PGRES_COMMAND_OK) && cursor_name)) {
 				GdaDataModel *recset;
-				recset = gda_postgres_recordset_new (cnc, pg_res);
+
+				if (cursor_name) {
+					recset = gda_postgres_cursor_recordset_new (cnc, cursor_name, 
+										    priv_data->chunck_size);
+					PQclear (pg_res);
+				}
+				else
+					recset = gda_postgres_recordset_new (cnc, pg_res);
+
 				if (GDA_IS_DATA_MODEL (recset)) {
-					gint i;
 					g_object_set (G_OBJECT (recset), 
 						      "command_text", sql,
 						      "command_type", GDA_COMMAND_TYPE_SQL, NULL);
-					for (i = PQnfields (pg_res) - 1; i >= 0; i--)
-						gda_data_model_set_column_title (recset, i, 
-										 PQfname (pg_res, i));
 					
 					retval = (GdaObject *) recset;
 				}
@@ -799,9 +809,24 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 		while (arr[n] && allok) {
 			PGresult *pg_res;
 			GdaObject *obj;
+			gchar *cursor_name = NULL;
 
-			pg_res = PQexec (pconn, arr[n]);
-			obj = compute_retval_from_pg_res (cnc, pconn, arr[n], pg_res); 
+			if (priv_data->use_cursor && !strncasecmp (arr[n], "SELECT", 6)) {
+				gchar *str;
+				struct timeval stm;
+				static guint index = 0;
+
+				gettimeofday (&stm, NULL);				
+				cursor_name = g_strdup_printf ("gda_%d_%d_%d", stm.tv_sec, stm.tv_usec, index++);
+				str = g_strdup_printf ("DECLARE %s SCROLL CURSOR WITH HOLD FOR %s", 
+						       cursor_name, arr[n]);
+				pg_res = PQexec (pconn, str);
+				g_free (str);
+			}
+			else 
+				pg_res = PQexec (pconn, arr[n]);
+			obj = compute_retval_from_pg_res (cnc, pconn, arr[n], pg_res, cursor_name);
+			g_free (cursor_name);
 			reclist = g_list_append (reclist, obj);
 			if (!obj && !(options & GDA_COMMAND_OPTION_IGNORE_ERRORS))
 				allok = FALSE;
@@ -1067,10 +1092,52 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 	gchar *str;
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 	GdaCommandOptions options;
+	gboolean prev_use_cursor;
+	gint prev_chunck_size;
+	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_event_string (cnc, _("Invalid PostgreSQL handle"));
+		return NULL;
+	}
+
+	/* save previous settings */
+	prev_use_cursor = priv_data->use_cursor;
+	prev_chunck_size = priv_data->chunck_size;
+
+	if (params) {
+		GdaParameter *param;
+		param = gda_parameter_list_find_param (params, "ITER_MODEL_ONLY");
+		if (param) {
+			const GValue *value;
+
+			value = gda_parameter_get_value (param);
+			if (value) {
+				if (G_VALUE_TYPE (value) != G_TYPE_BOOLEAN)
+					g_warning (_("Parameter ITER_MODEL_ONLY should be a boolean, not a '%s'"),
+						   g_type_name (G_VALUE_TYPE (value)));
+				else
+					priv_data->use_cursor = g_value_get_boolean (value);
+			}
+
+			param = gda_parameter_list_find_param (params, "ITER_CHUNCK_SIZE");
+			if (param) {
+				value = gda_parameter_get_value (param);
+				if (value) {
+					if (G_VALUE_TYPE (value) != G_TYPE_INT)
+						g_warning (_("Parameter ITER_CHUNCK_SIZE should be a gint, not a '%s'"),
+							   g_type_name (G_VALUE_TYPE (value)));
+					else
+						priv_data->chunck_size = g_value_get_int (value);
+				}
+			}
+		}
+	}
 
 	options = gda_command_get_options (cmd);
 	switch (gda_command_get_command_type (cmd)) {
@@ -1086,6 +1153,10 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 	default:
 		break;
 	}
+
+	/* restore previous settings */
+	priv_data->use_cursor = prev_use_cursor;
+	priv_data->chunck_size = prev_chunck_size;
 
 	return reclist;
 }
@@ -1424,7 +1495,7 @@ gda_postgres_provider_execute_query (GdaServerProvider *provider,
 	g_strfreev (param_values);
 	g_free (param_lengths);
 	g_free (param_formats);
-	retval = compute_retval_from_pg_res (cnc, pconn, pseudo_sql, pg_res);
+	retval = compute_retval_from_pg_res (cnc, pconn, pseudo_sql, pg_res, NULL);
 
 	if (retval) {
 		if (pg_existing_blobs) {

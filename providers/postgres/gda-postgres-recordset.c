@@ -1,5 +1,5 @@
 /* GDA Postgres provider
- * Copyright (C) 1998 - 2005 The GNOME Foundation
+ * Copyright (C) 1998 - 2007 The GNOME Foundation
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -38,16 +38,14 @@
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_HASH
 
 struct _GdaPostgresRecordsetPrivate {
-	PGresult *pg_res;
 	GdaConnection *cnc;
-	GType *column_types;
-	gchar *table_name;
-	gint ncolumns;
-	gint nrows;
+	PGresult      *pg_res;
 
-	gint ntypes;
-	GdaPostgresTypeOid *type_data;
-	GHashTable *h_table;
+	GType         *column_types;
+	gint           ncolumns;
+	gint           nrows;
+
+	gchar         *table_name;
 };
 
 static void gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass);
@@ -56,7 +54,6 @@ static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset,
 static void gda_postgres_recordset_finalize   (GObject *object);
 
 static const GValue *gda_postgres_recordset_get_value_at    (GdaDataModelRow *model, gint col, gint row);
-static void gda_postgres_recordset_describe_column    (GdaDataModelRow *model, gint col);
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModelRow *model);
 static GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModelRow *model, gint rownum, GError **error);
 static gboolean gda_postgres_recordset_append_row	      (GdaDataModelRow *model, GdaRow *row, GError **error);
@@ -118,21 +115,6 @@ gda_postgres_recordset_finalize (GObject * object)
 	parent_class->finalize (object);
 }
 
-static GType *
-get_column_types (GdaPostgresRecordsetPrivate *priv)
-{
-	gint i;
-	GType *types;
-
-	types = g_new (GType, priv->ncolumns);
-	for (i = 0; i < priv->ncolumns; i++)
-		types [i] = gda_postgres_type_oid_to_gda (priv->type_data,
-							  priv->ntypes, 
-							  PQftype (priv->pg_res, i));
-
-	return types;
-}
-
 static GdaRow *
 get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum, GError **error)
 {
@@ -150,7 +132,7 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum, GE
 		thevalue = PQgetvalue (priv->pg_res, rownum, i);
 		length = PQgetlength (priv->pg_res, rownum, i);
 		ftype = priv->column_types [i];
-		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, rownum, i);
+		isNull = thevalue && *thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, rownum, i);
 		value = (GValue *) gda_row_get_value (row, i);
 		gda_postgres_set_value (priv->cnc, value, ftype, thevalue, isNull, length);
 	}
@@ -575,160 +557,6 @@ gda_postgres_recordset_get_value_at (GdaDataModelRow *model, gint col, gint row)
 	return gda_row_get_value (row_list, col);
 }
 
-/* Try to guess the table name involved in the given data model. 
- * It can fail on complicated queries, where several tables are
- * involved in the same time.
- */
-static gchar *guess_table_name (GdaPostgresRecordset *recset)
-{
-	GdaPostgresConnectionData *cnc_priv_data;
-	PGresult *pg_res, *pg_name_res;
-	PGconn *pg_conn;
-	gchar *table_name = NULL;
-	
-   
-   	/* This code should be changed to use libsql, its proberly faster
-	 * in long run to store a parsed sql statement and then
-	 * just grab the tablename from that. */
-	pg_res = recset->priv->pg_res;
-	cnc_priv_data = g_object_get_data (G_OBJECT (recset->priv->cnc),
-					   OBJECT_DATA_POSTGRES_HANDLE);
-	pg_conn = cnc_priv_data->pconn;
-
-	if (PQnfields (pg_res) > 0) {
-		gchar *query = g_strdup_printf ("SELECT c.relname FROM pg_catalog.pg_class c WHERE c.relkind = 'r' AND c.relnatts = '%d'", PQnfields (pg_res));
-		gint i;
-		for (i = 0; i < PQnfields (pg_res); i++) {
-			const gchar *column_name = PQfname (pg_res, i);
-			gchar *cond = g_strdup_printf (" AND '%s' IN (SELECT a.attname FROM pg_catalog.pg_attribute a WHERE a.attrelid = c.oid)", column_name);
-			gchar *tmp_query = NULL;
-
-			tmp_query = g_strconcat (query, cond, NULL);
-			g_free (query);
-			g_free (cond);
-			query = tmp_query;
-		}
-		pg_name_res = PQexec (pg_conn, query);
-		if (pg_name_res != NULL) {
-			if (PQntuples (pg_name_res) == 1)
-				table_name = g_strdup (PQgetvalue (pg_name_res, 0, 0));
-			PQclear (pg_name_res);
-		}
-		g_free (query);
-	}
-	return table_name;
-}
-
-/* Checks if the given column number of the given data model
- * has the given constraint.
- *
- * contype may be one of the following:
- *    'f': foreign key
- *    'p': primary key
- *    'u': unique key
- *    etc...
- */
-static gboolean check_constraint (const GdaDataModelRow *model,
-				  const gchar *table_name,
-				  const gint col,
-				  const gchar contype)
-{
-	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
-	GdaPostgresRecordsetPrivate *priv_data;
-	GdaPostgresConnectionData *cnc_priv_data;
-	PGresult *pg_res, *pg_con_res;
-	gchar *column_name;
-	gchar *query;
-	gboolean state = FALSE;
-
-	g_return_val_if_fail (table_name != NULL, FALSE);
-	
-	priv_data = recset->priv;
-	pg_res = priv_data->pg_res;
-	cnc_priv_data = g_object_get_data (G_OBJECT (priv_data->cnc),
-					   OBJECT_DATA_POSTGRES_HANDLE);
-
-	column_name = PQfname (pg_res, col);
-	if (column_name != NULL) {
-		query = g_strdup_printf ("SELECT 1 FROM pg_catalog.pg_class c, pg_catalog.pg_constraint c2, pg_catalog.pg_attribute a WHERE c.relname = '%s' AND c.oid = c2.conrelid and a.attrelid = c.oid and c2.contype = '%c' and c2.conkey[1] = a.attnum and a.attname = '%s'", table_name, contype, column_name);
-		pg_con_res = PQexec (cnc_priv_data->pconn, query);
-		if (pg_con_res != NULL) {
-			state = PQntuples (pg_con_res) == 1;
-			PQclear (pg_con_res);
-		}
-		g_free (query);
-	}
-
-	return state;
-}
-
-static void
-gda_postgres_recordset_describe_column (GdaDataModelRow *model, gint col)
-{
-	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
-	GdaPostgresRecordsetPrivate *priv_data;
-	PGresult *pg_res;
-	GType ftype;
-	gint scale;
-	GdaColumn *field_attrs;
-	gboolean ispk = FALSE, isuk = FALSE;
-
-	g_return_if_fail (GDA_IS_POSTGRES_RECORDSET (recset));
-	g_return_if_fail (recset->priv != NULL);
-
-	priv_data = recset->priv;
-	pg_res = priv_data->pg_res;
-	if (!pg_res) {
-		gda_connection_add_event_string (priv_data->cnc,
-						_("Invalid PostgreSQL handle"));
-		return;
-	}
-
-	if (col >= priv_data->ncolumns) {
-		gda_connection_add_event_string (priv_data->cnc,
-						_("Column out of range"));
-		return;
-	}
-
-	field_attrs = gda_data_model_describe_column (GDA_DATA_MODEL (model), col);
-	gda_column_set_name (field_attrs, PQfname (pg_res, col));
-
-	ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
-					      priv_data->ntypes, 
-					      PQftype (pg_res, col));
-
-	scale = (ftype == G_TYPE_DOUBLE) ? DBL_DIG :
-		(ftype == G_TYPE_FLOAT) ? FLT_DIG : 0;
-
-	gda_column_set_scale (field_attrs, scale);
-	gda_column_set_g_type (field_attrs, ftype);
-
-	/* PQfsize() == -1 => variable length */
-	gda_column_set_defined_size (field_attrs,
-					       PQfsize (pg_res, col));
-					       
-	gda_column_set_references (field_attrs, "");
-
-	gda_column_set_table (field_attrs,
-					priv_data->table_name);
-
-	if (priv_data->table_name) {
-		ispk = check_constraint (model,
-					 priv_data->table_name,
-					 col, 
-					 'p');
-	
-		isuk = check_constraint (model, 
-					 priv_data->table_name,
-					 col, 
-					 'u');
-	}
-	
-	gda_column_set_primary_key (field_attrs, ispk);
-	gda_column_set_unique_key (field_attrs, isuk);
-	/* FIXME: set_allow_null? */
-}
-
 static gint
 gda_postgres_recordset_get_n_rows (GdaDataModelRow *model)
 {
@@ -790,9 +618,6 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	model = g_object_new (GDA_TYPE_POSTGRES_RECORDSET, NULL);
 	model->priv->pg_res = pg_res;
 	model->priv->cnc = cnc;
-	model->priv->ntypes = cnc_priv_data->ntypes;
-	model->priv->type_data = cnc_priv_data->type_data;
-	model->priv->h_table = cnc_priv_data->h_table;
 	model->priv->ncolumns = PQnfields (pg_res);
 	cmd_tuples = PQcmdTuples (pg_res);
 	if (cmd_tuples == NULL || *cmd_tuples == '\0')
@@ -803,14 +628,19 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 			g_warning (_("Tuples:\"%s\""), cmd_tuples);
 		
 	}
-	model->priv->column_types = get_column_types (model->priv);
+	model->priv->column_types = gda_postgres_get_column_types (pg_res, 
+								   cnc_priv_data->type_data, 
+								   cnc_priv_data->ntypes);
 	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
 					   model->priv->ncolumns);
-	model->priv->table_name = guess_table_name (model);
+	model->priv->table_name = gda_postgres_guess_table_name (cnc, pg_res);
 
 	/* set GdaColumn attributes */
 	for (i = 0; i < model->priv->ncolumns; i++)
-		gda_postgres_recordset_describe_column (GDA_DATA_MODEL_ROW (model), i);
+		gda_postgres_recordset_describe_column (GDA_DATA_MODEL (model), cnc, pg_res, 
+							cnc_priv_data->type_data, 
+							cnc_priv_data->ntypes,
+							model->priv->table_name, i);
 
 	return GDA_DATA_MODEL (model);
 }

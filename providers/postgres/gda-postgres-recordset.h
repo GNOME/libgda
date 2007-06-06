@@ -1,5 +1,5 @@
 /* GDA DB Postgres provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2002 The GNOME Foundation
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -23,8 +23,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_postgres_recordset_h__)
-#  define __gda_postgres_recordset_h__
+#ifndef __GDA_POSTGRES_RECORDSET_H__
+#define __GDA_POSTGRES_RECORDSET_H__
 
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-value.h>

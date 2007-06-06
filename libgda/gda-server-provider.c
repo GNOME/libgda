@@ -614,6 +614,9 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
  *   <listitem><para>%NULL is in the list if the correcponding statement could not be executed</para></listitem>
  * </itemizedlist>
  *
+ * See the documentation of the gda_connection_execute_command() for information
+ * about the @params list of parameters.
+ *
  * For every executed statement, a #GdaDataModel, a #GdaParameterList or %NULL will be appended to the returned list.
  * The returned list may contain fewer items than the @cmd command contained statements depending on the
  * options of @command (see gda_command_set_options()).

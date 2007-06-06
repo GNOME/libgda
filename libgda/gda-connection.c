@@ -1120,6 +1120,11 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
  * <itemizedlist>
  *   <listitem><para>a "ITER_MODEL_ONLY" parameter of type #G_TYPE_BOOLEAN which, if set to TRUE
  *             will preferably return a data model which can be accessed only using an iterator.</para></listitem>
+ *   <listitem><para>a "ITER_CHUNCK_SIZE" parameter of type #G_TYPE_INT which specifies, if "ITER_MODEL_ONLY"
+ *             is set to TRUE, how many rows are fetched (and cached) from the database everytime the iterator needs
+ *             to access a row for which the data must be fetched from the database. For the providers which support this
+ *             setting this parameter to a value greater than one will increase mamory usage but reduce the time spent
+ *             to transfer data from the database.</para></listitem>
  * </itemizedlist>
  *
  * Returns: a list of #GdaDataModel and #GdaParameterList or %NULL, as returned by the underlying

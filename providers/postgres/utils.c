@@ -212,7 +212,7 @@ gda_postgres_set_value (GdaConnection *cnc,
 			gboolean isNull,
 			gint length)
 {
-	if (isNull){
+	if (isNull) {
 		gda_value_set_null (value);
 		return;
 	}
@@ -356,4 +356,143 @@ gda_postgres_check_transaction_started (GdaConnection *cnc)
 		return FALSE;
 	else
 		return TRUE;
+}
+
+/* Checks if the given column number of the given data model
+ * has the given constraint.
+ *
+ * contype may be one of the following:
+ *    'f': foreign key
+ *    'p': primary key
+ *    'u': unique key
+ *    etc...
+ */
+static gboolean 
+check_constraint (GdaConnection *cnc,
+		  PGresult *pg_res,
+		  const gchar *table_name,
+		  const gint col,
+		  const gchar contype)
+{
+        GdaPostgresConnectionData *cnc_priv_data;
+        PGresult *pg_con_res;
+        gchar *column_name;
+        gchar *query;
+        gboolean state = FALSE;
+
+        g_return_val_if_fail (table_name != NULL, FALSE);
+
+        cnc_priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+
+        column_name = PQfname (pg_res, col);
+        if (column_name != NULL) {
+                query = g_strdup_printf ("SELECT 1 FROM pg_catalog.pg_class c, pg_catalog.pg_constraint c2, pg_catalog.pg_attribute a WHERE c.relname = '%s' AND c.oid = c2.conrelid and a.attrelid = c.oid and c2.contype = '%c' and c2.conkey[1] = a.attnum and a.attname = '%s'", table_name, contype, column_name);
+                pg_con_res = PQexec (cnc_priv_data->pconn, query);
+                if (pg_con_res != NULL) {
+                        state = PQntuples (pg_con_res) == 1;
+                        PQclear (pg_con_res);
+                }
+                g_free (query);
+        }
+
+        return state;
+}
+
+
+void 
+gda_postgres_recordset_describe_column (GdaDataModel *model, GdaConnection *cnc, PGresult *pg_res, 
+					GdaPostgresTypeOid *type_data, gint ntypes, const gchar *table_name,
+					gint col)
+{
+        GType ftype;
+        gint scale;
+        GdaColumn *field_attrs;
+        gboolean ispk = FALSE, isuk = FALSE;
+
+        g_return_if_fail (pg_res != NULL);
+
+        field_attrs = gda_data_model_describe_column (model, col);
+        gda_column_set_name (field_attrs, PQfname (pg_res, col));
+        gda_column_set_title (field_attrs, PQfname (pg_res, col));
+
+        ftype = gda_postgres_type_oid_to_gda (type_data, ntypes, PQftype (pg_res, col));
+
+        scale = (ftype == G_TYPE_DOUBLE) ? DBL_DIG :
+                (ftype == G_TYPE_FLOAT) ? FLT_DIG : 0;
+
+        gda_column_set_scale (field_attrs, scale);
+        gda_column_set_g_type (field_attrs, ftype);
+
+        /* PQfsize() == -1 => variable length */
+        gda_column_set_defined_size (field_attrs, PQfsize (pg_res, col));
+
+        gda_column_set_references (field_attrs, "");
+
+        gda_column_set_table (field_attrs, table_name);
+
+        if (table_name) {
+                ispk = check_constraint (cnc, pg_res, table_name,  col, 'P');
+                isuk = check_constraint (cnc, pg_res, table_name,  col, 'u');
+        }
+	
+        gda_column_set_primary_key (field_attrs, ispk);
+        gda_column_set_unique_key (field_attrs, isuk);
+        /* FIXME: set_allow_null? */
+}
+
+/* Try to guess the table name involved in the given data model. 
+ * It can fail on complicated queries, where several tables are
+ * involved in the same time.
+ */
+gchar *
+gda_postgres_guess_table_name (GdaConnection *cnc, PGresult *pg_res)
+{
+	GdaPostgresConnectionData *cnc_priv_data;
+	PGresult *pg_name_res;
+	PGconn *pg_conn;
+	gchar *table_name = NULL;
+	
+   
+   	/* This code should be changed to use libsql, its proberly faster
+	 * in long run to store a parsed sql statement and then
+	 * just grab the tablename from that. */
+	cnc_priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	pg_conn = cnc_priv_data->pconn;
+
+	if (PQnfields (pg_res) > 0) {
+		gchar *query = g_strdup_printf ("SELECT c.relname FROM pg_catalog.pg_class c WHERE c.relkind = 'r' AND c.relnatts = '%d'", PQnfields (pg_res));
+		gint i;
+		for (i = 0; i < PQnfields (pg_res); i++) {
+			const gchar *column_name = PQfname (pg_res, i);
+			gchar *cond = g_strdup_printf (" AND '%s' IN (SELECT a.attname FROM pg_catalog.pg_attribute a WHERE a.attrelid = c.oid)", column_name);
+			gchar *tmp_query = NULL;
+
+			tmp_query = g_strconcat (query, cond, NULL);
+			g_free (query);
+			g_free (cond);
+			query = tmp_query;
+		}
+		pg_name_res = PQexec (pg_conn, query);
+		if (pg_name_res != NULL) {
+			if (PQntuples (pg_name_res) == 1)
+				table_name = g_strdup (PQgetvalue (pg_name_res, 0, 0));
+			PQclear (pg_name_res);
+		}
+		g_free (query);
+	}
+	return table_name;
+}
+
+GType *
+gda_postgres_get_column_types (PGresult *pg_res, GdaPostgresTypeOid *type_data, gint ntypes)
+{
+	gint ncolumns, i;
+	GType *types;
+	
+	ncolumns = PQnfields (pg_res);
+	types = g_new (GType, ncolumns);
+	for (i = 0; i < ncolumns; i++)
+		types [i] = gda_postgres_type_oid_to_gda (type_data, ntypes, PQftype (pg_res, i));
+
+	return types;
 }

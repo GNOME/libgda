@@ -11,6 +11,8 @@ AM_CPPFLAGS = \
 libgda_postgres_la_SOURCES = \
 	gda-postgres-blob-op.c \
 	gda-postgres-blob-op.h \
+	gda-postgres-cursor-recordset.c \
+	gda-postgres-cursor-recordset.h \
 	gda-postgres-ddl.c \
 	gda-postgres-ddl.h \
 	gda-postgres-handler-bin.c \
