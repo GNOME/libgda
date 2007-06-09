@@ -2435,12 +2435,6 @@ gda_postgres_index_type (gint colnum, GList *idx_list, IdxType type)
 	return FALSE;
 }
 
-#ifdef LIBGDA_WIN32
-/* this is a ming thing.. */
-#define strtok_r(a,b,c) strtok(a,b)
-
-#endif
-
 /* Converts a single dimension array in the form of '{AA,BB,CC}' to a list of
  * strings (here ->"AA"->"BB"->"CC) which must be freed by the caller
  */

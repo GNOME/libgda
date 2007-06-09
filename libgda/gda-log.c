@@ -19,11 +19,11 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#ifndef LIBGDA_WIN32
+#include <glib.h>
+#ifndef G_OS_WIN32
 #include <syslog.h>
 #endif
 #include <time.h>
-#include <glib.h>
 #include <glib/gmem.h>
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
@@ -48,7 +48,7 @@ gda_log_enable (void)
 {
 	log_enabled = TRUE;
 	if (!log_opened) {
-#ifndef LIBGDA_WIN32	
+#ifndef G_OS_WIN32	
 		openlog (g_get_prgname (), LOG_CONS | LOG_NOWAIT | LOG_PID, LOG_USER);
 #endif		
 		log_opened = TRUE;
@@ -65,7 +65,7 @@ gda_log_disable (void)
 {
 	log_enabled = FALSE;
 	if (log_opened) {
-#ifndef LIBGDA_WIN32		
+#ifndef G_OS_WIN32		
 		closelog ();
 #endif
 		log_opened = FALSE;
@@ -108,7 +108,7 @@ gda_log_message (const gchar *format, ...)
 	va_start (args, format);
 	msg = g_strdup_vprintf (format, args);
 	va_end (args);
-#ifdef LIBGDA_WIN32
+#ifdef G_OS_WIN32
 	g_log ("Gda", G_LOG_LEVEL_INFO, "%s", msg);
 #else
 	syslog (LOG_USER | LOG_INFO, "%s", msg);
@@ -141,7 +141,7 @@ gda_log_error (const gchar * format, ...)
 	va_start (args, format);
 	msg = g_strdup_vprintf (format, args);
 	va_end (args);
-#ifdef LIBGDA_WIN32
+#ifdef G_OS_WIN32
 	g_log ("Gda", G_LOG_LEVEL_ERROR, "%s", msg);
 #else
 	syslog (LOG_USER | LOG_ERR, "%s", msg);

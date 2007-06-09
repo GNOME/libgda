@@ -137,7 +137,7 @@ test_and_destroy_dict (TestConfig *config)
 		gboolean err = FALSE;
 		
 		dictfile = g_build_filename (g_get_tmp_dir (), "gda_sql_testXXXXXX", NULL);
-		mkstemp (dictfile);
+		g_mkstemp (dictfile);
 
 		if (!gda_dict_save_xml_file (config->dict, dictfile, &error)) {
 			g_warning (_("Can't write dictionary to file %s: %s\n"), dictfile,
@@ -164,7 +164,7 @@ test_and_destroy_dict (TestConfig *config)
 				gchar *dictfile2;
 
 				dictfile2 = g_build_filename (g_get_tmp_dir (), "gda_sql_testXXXXXX", NULL);
-				mkstemp (dictfile2);
+				g_mkstemp (dictfile2);
 
 				if (!gda_dict_save_xml_file (loaded_dict, dictfile2, &error)) {
 					g_warning (_("Can't write dictionary to file %s: %s\n"), dictfile,

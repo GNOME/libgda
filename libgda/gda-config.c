@@ -42,7 +42,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #endif
-#ifdef LIBGDA_WIN32
+#ifdef G_OS_WIN32
 #include <io.h>
 #endif
 
@@ -396,7 +396,7 @@ get_config_client ()
 
 				dirpath = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_DIR);
 				if (!g_file_test (dirpath, G_FILE_TEST_IS_DIR)){
-#ifdef LIBGDA_WIN32
+#ifdef G_OS_WIN32
 					if (mkdir (dirpath))
 #else
 					if (mkdir (dirpath, 0700))

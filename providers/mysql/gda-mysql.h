@@ -22,8 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mysql_h__)
-#  define __gda_mysql_h__
+#ifndef __GDA_MYSQL_H__
+#define __GDA_MYSQL_H__
 
 #include <glib/gmacros.h>
 #include <libgda/gda-connection.h>
@@ -31,6 +31,11 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-value.h>
 #include "gda-mysql-provider.h"
+
+#ifdef G_OS_WIN32
+#include <windows.h>
+#endif
+
 #include <mysql.h>
 #include <mysql_com.h>
 

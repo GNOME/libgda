@@ -1,3 +1,16 @@
+2007-06-09  Vivien Malerba <malerba@gnome-db.org>
+
+	* tools/gda-sql.c:
+	* tools/gda-inspect-dict-file.c:
+	* tools/tools-input.c:
+	* testing/gda-test-sql.c:
+	* testing/gda-test-model-query.c:
+	* providers/mysql/gda-mysql.h:
+	* providers/postgres/gda-postgres-provider.c:
+	* libgda/gda-config.c:
+	* libgda/gda-log.c:
+	* libgda/gda-decl.h: MinGW build fixes
+	
 2007-06-06  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/postgres/gda-postgres-cursor-recordset.[ch]: a new GdaDataModel which

@@ -21,6 +21,8 @@
 #ifndef __GLOBAL_DECL_H_
 #define __GLOBAL_DECL_H_
 
+#include <glib.h>
+
 typedef struct _GdaObject GdaObject;
 typedef struct _GdaObjectClass GdaObjectClass;
 typedef struct _GdaObjectPrivate GdaObjectPrivate;
@@ -186,6 +188,13 @@ typedef struct _GdaGraphQueryPrivate GdaGraphQueryPrivate;
 typedef struct _GdaGraphItem GdaGraphItem;
 typedef struct _GdaGraphItemClass GdaGraphItemClass;
 typedef struct _GdaGraphItemPrivate GdaGraphItemPrivate;
+
+/*
+ * Win32 adaptations
+ */
+#ifdef G_OS_WIN32
+#define strtok_r(s,d,p) strtok(s,d)
+#endif 
 
 /*
  * Various macros

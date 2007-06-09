@@ -25,7 +25,9 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
+#ifndef G_OS_WIN32
 #include <sys/ioctl.h>
+#endif
 
 #ifdef HAVE_READLINE_READLINE_H
 #include <readline/readline.h>
@@ -146,8 +148,8 @@ input_get_size (gint *width, gint *height)
 void
 init_history ()
 {
-	rl_set_signals ();
 #ifdef HAVE_READLINE_HISTORY_H
+	rl_set_signals ();
 	
 	if (history_init_done)
 		return;

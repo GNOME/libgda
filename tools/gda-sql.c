@@ -29,12 +29,13 @@
 #include <glib/gstdio.h>
 #include "tools-input.h"
 #include "command-exec.h"
-#include <signal.h>
 #include <unistd.h>
-#include <termio.h>
-#include <termios.h>
-#include <pwd.h>
 #include <sys/types.h>
+
+#ifndef G_OS_WIN32
+#include <signal.h>
+#include <pwd.h>
+#endif
 
 /* options */
 gchar *pass = NULL;
@@ -69,7 +70,9 @@ static GOptionEntry entries[] = {
 };
 
 /* interruption handling */
+#ifndef G_OS_WIN32
 struct sigaction old_sigint_handler; 
+#endif
 static void sigint_handler (int sig_num);
 static void setup_sigint_handler (void);
 typedef enum {
@@ -385,17 +388,21 @@ main (int argc, char *argv[])
 /*
  * SIGINT handling
  */
+
 static void 
 setup_sigint_handler (void) 
 {
+#ifndef G_OS_WIN32
 	struct sigaction sac;
 	memset (&sac, 0, sizeof (sac));
 	sigemptyset (&sac.sa_mask);
 	sac.sa_handler = sigint_handler;
 	sac.sa_flags = SA_RESTART;
 	sigaction (SIGINT, &sac, &old_sigint_handler);
+#endif
 }
 
+#ifndef G_OS_WIN32
 static void
 sigint_handler (int sig_num)
 {
@@ -416,7 +423,7 @@ sigint_handler (int sig_num)
 	if (old_sigint_handler.sa_handler)
 		old_sigint_handler.sa_handler (sig_num);
 }
-
+#endif
 
 /*
  * read_a_line
@@ -580,7 +587,9 @@ set_output_file (MainData *data, const gchar *file, GError **error)
 	if (data->output_stream) {
 		if (data->output_is_pipe) {
 			pclose (data->output_stream);
+#ifndef G_OS_WIN32
 			signal (SIGPIPE, SIG_DFL);
+#endif
 		}
 		else
 			fclose (data->output_stream);
@@ -616,7 +625,9 @@ set_output_file (MainData *data, const gchar *file, GError **error)
 				g_free (copy);
 				return FALSE;
 			}
+#ifndef G_OS_WIN32
 			signal (SIGPIPE, SIG_IGN);
+#endif
 			data->output_is_pipe = TRUE;
 		}
 		g_free (copy);
@@ -753,78 +764,38 @@ output_data_model (MainData *data, GdaDataModel *model)
 	input_get_size (&cols, &rows);
 
 	if (isatty (fileno (to_stream))) {
-		if (0) {
-			/* split output into several chuncks */
-			gint start, chunck;
-			GdaDataProxy *proxy = (GdaDataProxy*) gda_data_proxy_new (model);
-			
-			/* set new terminal mode */
-			int tty = fileno (stdin);
-			struct termios old_termios, new_termios;
-			ioctl (tty, TCGETS, &old_termios);
-			new_termios=old_termios;
-			new_termios.c_lflag &= ~ECHO; /* echo off */
-			new_termios.c_lflag &= ~ISIG; /* don't generate SIGNAL */
-			new_termios.c_lflag &= ~ICANON; /* one char at a time*/
-			ioctl (tty,TCSETS, &new_termios); 
-			
-			/* display chuncks */
-			chunck = rows - 3;
-			g_object_set (G_OBJECT (proxy), "defer_sync", FALSE, NULL);
-			gda_data_proxy_set_sample_size (proxy, chunck);
-			for (start = 0; (start < model_rows); start += chunck) {
-				if (start != 0)
-					g_fprintf (to_stream, "\n");
-				gda_data_proxy_set_sample_start (proxy, start);
-				str = gda_data_model_dump_as_string (GDA_DATA_MODEL (proxy));
-				g_fprintf (to_stream, "%s", str);
-				g_free (str);
-				if (start + chunck < model_rows) {
-					char c;
-					g_fprintf (to_stream, "<more>");
-					fflush (to_stream);
-					
-					read (tty, &c, 1);
-					
-					if ((c == 'q') || (c == 0x03)) { /* CTRL-C */
-						g_fprintf (to_stream, "\n");
-						break;
-					}
-				}
-			}
-			/* restore previous terminal mode */
-			ioctl (tty, TCSETS, &old_termios);
+		/* use pager */
+		FILE *pipe;
+		const char *pager;
+		
+		pager = getenv ("PAGER");
+		if (!pager)
+			pager = "more";
+		pipe = popen (pager, "w");
+#ifndef G_OS_WIN32
+		signal (SIGPIPE, SIG_IGN);
+#endif
+		switch (data->output_format) {
+		case OUTPUT_FORMAT_DEFAULT:
+			str = gda_data_model_dump_as_string (model);
+			break;
+		case OUTPUT_FORMAT_XML:
+			str = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
+							       NULL, 0,
+							       NULL, 0, NULL);
+			break;
+		case OUTPUT_FORMAT_HTML:
+		default:
+			str = g_strdup ("");
+			TO_IMPLEMENT;
+			break;
 		}
-		else {
-			/* use pager */
-			FILE *pipe;
-			const char *pager;
-
-			pager = getenv ("PAGER");
-                        if (!pager)
-				pager = "more";
-			pipe = popen (pager, "w");
-			signal (SIGPIPE, SIG_IGN);
-			switch (data->output_format) {
-			case OUTPUT_FORMAT_DEFAULT:
-				str = gda_data_model_dump_as_string (model);
-				break;
-			case OUTPUT_FORMAT_XML:
-				str = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
-								       NULL, 0,
-								       NULL, 0, NULL);
-				break;
-			case OUTPUT_FORMAT_HTML:
-			default:
-				str = g_strdup ("");
-				TO_IMPLEMENT;
-				break;
-			}
-			g_fprintf (pipe, "%s", str);
-			g_free (str);
-			pclose (pipe);
-			signal(SIGPIPE, SIG_DFL);
-		}
+		g_fprintf (pipe, "%s", str);
+		g_free (str);
+		pclose (pipe);
+#ifndef G_OS_WIN32
+		signal(SIGPIPE, SIG_DFL);
+#endif
 	}
 	else {
 		switch (data->output_format) {
@@ -1612,13 +1583,13 @@ extra_command_edit_buffer (GdaConnection *cnc, GdaDict *dict,
 		}
 	}
 #ifdef G_OS_WIN32
-	command = g_strdup_printf ("%s\"%s\" \"%s\"%s", SYSTEMQUOTE, editor_name, filename, SYSTEMQUOTE);
-#else
 #ifndef __CYGWIN__
 #define SYSTEMQUOTE "\""
 #else
 #define SYSTEMQUOTE ""
 #endif
+	command = g_strdup_printf ("%s\"%s\" \"%s\"%s", SYSTEMQUOTE, editor_name, filename, SYSTEMQUOTE);
+#else
 	command = g_strdup_printf ("exec %s '%s'", editor_name, filename);
 #endif
 

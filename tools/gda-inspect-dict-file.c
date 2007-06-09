@@ -79,7 +79,7 @@ main (int argc, char **argv)
 		dirname = g_path_get_dirname (filename);
 		tmpfile = g_build_filename (dirname, ".temp", NULL);
 		g_free (dirname);
-		mkstemp (tmpfile);
+		g_mkstemp (tmpfile);
 		if (!gda_dict_save_xml_file (dict, tmpfile, &error)) {
 			g_print (_("Error saving dictionary to file '%s':\n%s\n"), tmpfile, error->message);
 			g_error_free (error);
