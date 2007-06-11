@@ -50,6 +50,7 @@
 
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
 #include <libgda/gda-connection-private.h>
+#include <libgda/binreloc/gda-binreloc.h>
 
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
@@ -890,11 +891,15 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 	gchar *file;
 	GdaServerOperation *op;
 	gchar *str;
+	gchar *dir;
 	
 	file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
 	str = g_strdup_printf ("postgres_specs_%s.xml", file);
 	g_free (file);
-	file = gda_server_provider_find_file (provider, LIBGDA_DATA_DIR, str);
+
+	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
+	file = gda_server_provider_find_file (provider, dir, str);
+	g_free (dir);
 	g_free (str);
 
 	if (! file) {
@@ -915,11 +920,15 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 	gchar *sql = NULL;
 	gchar *file;
 	gchar *str;
-	
+	gchar *dir;
+
 	file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
 	str = g_strdup_printf ("postgres_specs_%s.xml", file);
 	g_free (file);
-	file = gda_server_provider_find_file (provider, LIBGDA_DATA_DIR, str);
+
+	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
+	file = gda_server_provider_find_file (provider, dir, str);
+	g_free (dir);
 	g_free (str);
 
 	if (! file) {

@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	$(SYBASE_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(LIBGDA_CFLAGS)
 
 libgda_sybase_la_SOURCES = \
 	gda-sybase-provider.c \

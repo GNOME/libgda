@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(XBASE_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(XBASE_CFLAGS)
 
 libgda_xbase_la_SOURCES = \
 	gda-xbase-database.cpp \

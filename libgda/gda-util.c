@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -40,6 +40,8 @@
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
+
+#include <libgda/binreloc/gda-binreloc.h>
 
 /**
  * gda_g_type_to_string

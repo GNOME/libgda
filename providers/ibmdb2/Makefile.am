@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	$(IBMDB2_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	$(LIBGDA_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(LIBGDA_CFLAGS)
 
 libgda_ibmdb2_la_SOURCES = \
 	gda-ibmdb2-provider.c \

@@ -6,8 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	-I. \
 	$(LIBGDA_CFLAGS) \
-	$(LDAP_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(LDAP_CFLAGS)
 
 libgda_ldap_la_SOURCES = \
 	gda-ldap-provider.c \

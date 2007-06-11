@@ -1,17 +1,12 @@
 lib_LTLIBRARIES = libgda-3.0.la
 
-SUBDIRS = sql-delimiter sql-transaction graph handlers
+SUBDIRS = sql-delimiter sql-transaction graph handlers binreloc
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(FAM_CFLAGS) \
-	-DLIBGDA_PLUGINDIR=\""$(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/providers"\" \
-	-DLIBGDA_LOCALEDIR=\""$(datadir)/locale"\" \
-	-DLIBGDA_GLOBAL_CONFIG_FILE=\""$(sysconfdir)/libgda-3.0/config"\" \
-	-DLIBGDA_GLOBAL_CONFIG_DIR=\""$(sysconfdir)/libgda-3.0"\" \
-	-DDTDINSTALLDIR=\""$(LIBGDA_DTDDIR)"\"
+	$(FAM_CFLAGS)
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
@@ -216,6 +211,7 @@ libgda_3_0_la_LIBADD = sql-transaction/libgda_sql_transaction-3.0.la \
 	sql-delimiter/libgda_sql_delimiter-3.0.la \
 	graph/libgda_graph-3.0.la \
 	handlers/libgda_handlers-3.0.la \
+	binreloc/libgda_binreloc-3.0.la \
 	$(top_builddir)/libsql/libgdasql-3.0.la \
 	$(LIBGDA_LIBS) $(FAM_LIBS)
 

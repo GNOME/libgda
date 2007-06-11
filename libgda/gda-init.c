@@ -24,6 +24,7 @@
 
 #include <libgda/gda-dict-private.h>
 #include <libgda/graph/gda-dict-reg-graphs.h>
+#include <libgda/binreloc/gda-binreloc.h>
 
 static GMainLoop *main_loop = NULL;
 
@@ -49,13 +50,16 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 {
 	static gboolean initialized = FALSE;
 	GType type;
+	gchar *file;
 
 	if (initialized) {
 		gda_log_error (_("Attempt to re-initialize GDA library. ignored."));
 		return;
 	}
 
-	bindtextdomain (GETTEXT_PACKAGE, LIBGDA_LOCALEDIR);
+	file = gda_gbr_get_file_path (GDA_LOCALE_DIR, NULL);
+	bindtextdomain (GETTEXT_PACKAGE, file);
+	g_free (file);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
 	/* Threading support if possible */
@@ -95,39 +99,56 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	type = GDA_TYPE_TIMESTAMP;
 	g_assert (type);
 
+	/* binreloc */
+	gda_gbr_init ();
+
 	/* create a default dictionary */
 	default_dict = gda_dict_new ();
 	gda_dict_register_object_type (default_dict, gda_graphs_get_register ());
 
-#define LIBGDA_DICT_DTD_FILE DTDINSTALLDIR"/libgda-dict.dtd"
-	gda_dict_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_DICT_DTD_FILE);
+	/* dictionary DTD */
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-dict.dtd", NULL);
+	gda_dict_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 	if (gda_dict_dtd)
 		gda_dict_dtd->name = xmlStrdup((xmlChar*) "gda_dict");
 	else
-		g_message (_("Could not parse " LIBGDA_DICT_DTD_FILE ": "
-			     "XML dictionaries validation will not be performed (some weird errors may occur)"));
-#define LIBGDA_PARAMLIST_DTD_FILE DTDINSTALLDIR"/libgda-paramlist.dtd"
-	gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_PARAMLIST_DTD_FILE);
+		g_message (_("Could not parse '%s': "
+			     "XML dictionaries validation will not be performed (some weird errors may occur)"),
+			   file);
+	g_free (file);
+
+	/* paramlit DTD */
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-paramlist.dtd", NULL);
+	gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 	if (gda_paramlist_dtd)
 		gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
 	else
-		g_message (_("Could not parse " LIBGDA_PARAMLIST_DTD_FILE ": "
-			     "XML data import validation will not be performed (some weird errors may occur)"));
-#define LIBGDA_ARRAY_DTD_FILE DTDINSTALLDIR"/libgda-array.dtd"
-	gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_ARRAY_DTD_FILE);
+		g_message (_("Could not parse '%s': "
+			     "XML data import validation will not be performed (some weird errors may occur)"),
+			   file);
+	g_free (file);
+
+	/* array DTD */
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-array.dtd", NULL);
+	gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 	if (gda_array_dtd)
 		gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
 	else
-		g_message (_("Could not parse " LIBGDA_ARRAY_DTD_FILE ": "
-			     "XML data import validation will not be performed (some weird errors may occur)"));
+		g_message (_("Could not parse '%s': "
+			     "XML data import validation will not be performed (some weird errors may occur)"),
+			   file);
+	g_free (file);
 
-#define LIBGDA_SERVER_OP_DTD_FILE DTDINSTALLDIR"/libgda-server-operation.dtd"
-	gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)LIBGDA_SERVER_OP_DTD_FILE);
+	/* server operation DTD */
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-server-operation.dtd", NULL);
+	gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 	if (gda_server_op_dtd)
 		gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
 	else
-		g_message (_("Could not parse " LIBGDA_SERVER_OP_DTD_FILE ": "
-			     "Validation for XML files for server operations will not be performed (some weird errors may occur)"));
+		g_message (_("Could not parse '%s': "
+			     "Validation for XML files for server operations will not be performed (some weird errors may occur)"),
+			   file);
+	g_free (file);
 
 	initialized = TRUE;
 }

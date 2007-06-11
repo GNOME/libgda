@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(BDB_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(BDB_CFLAGS)
 
 libgda_bdb_la_SOURCES = \
 	gda-bdb-provider.c \

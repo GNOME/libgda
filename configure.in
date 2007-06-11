@@ -15,7 +15,8 @@ AC_SUBST(GDA_VERSION, major.minor.micro)
 AC_SUBST(GDA_ABI_MAJOR_VERSION, 3)
 AC_SUBST(GDA_ABI_MINOR_VERSION, 0)
 #AC_SUBST(GDA_MICRO_VERSION, micro)
-
+LIBGDA_ABI_VERSION=$GDA_ABI_MAJOR_VERSION.$GDA_ABI_MINOR_VERSION
+LIBGDA_ABI_NAME="\\\"libgda-$LIBGDA_ABI_VERSION\\\""
 
 m4_undefine([major])
 m4_undefine([minor])
@@ -81,6 +82,7 @@ PKG_CHECK_MODULES(LIBGDA, [
 	gmodule-2.0	>= req_ver_glib
 	libxml-2.0
 ])
+LIBGDA_CFLAGS="$LIBGDA_CFLAGS -DLIBGDA_ABI_NAME=$LIBGDA_ABI_NAME"
 AC_SUBST(LIBGDA_CFLAGS)
 AC_SUBST(LIBGDA_LIBS)
 
@@ -104,6 +106,7 @@ case "$host" in
     platform_win32=no
     NO_UNDEFINED=''
     SOPREFIX='lib'
+    AM_BINRELOC
     ;;
 esac
 AC_MSG_RESULT([$platform_win32])
@@ -1061,6 +1064,7 @@ libgda-3.0.pc
 po/Makefile.in
 libsql/Makefile
 libgda/Makefile
+libgda/binreloc/Makefile
 libgda/handlers/Makefile
 libgda/sql-delimiter/Makefile
 libgda/sql-transaction/Makefile
@@ -1117,7 +1121,7 @@ dnl Print configuration summary
 echo ""
 echo " Configuration summary"
 echo "   Installation prefix = $prefix"
-echo "   Providers:"
+echo "   Compiled providers:"
 echo "      Berkeley DB = `if test x$bdbdir != x; then echo yes; else echo no; fi`"
 echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
@@ -1132,5 +1136,9 @@ echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system 
 echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
 echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 echo "      LDAP = `if test x$ldapdir != x; then echo yes; else echo no; fi`"
+if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
+then
+       echo "   Binreloc support is disabled: Libgda will not be relocatable. To enable binreloc support re-run with --enable-binreloc (see http://autopackage.org/docs/binreloc for more information)"
+fi
 echo ""
 

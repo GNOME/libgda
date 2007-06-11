@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2006 The GNOME Foundation.
+ * Copyright (C) 1998 - 2007 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -21,8 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_util_h__)
-#  define __gda_util_h__
+#ifndef __GDA_UTIL_H__
+#define __GDA_UTIL_H__
 
 #include <glib/ghash.h>
 #include <glib/glist.h>
@@ -75,7 +75,6 @@ void     gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePt
 void     gda_utility_parameter_load_attributes (GdaParameter *param, xmlNodePtr node, GSList *sources);
 GdaDictType *gda_utility_find_or_create_data_type (GdaDict *dict, GdaServerProvider *prov, GdaConnection *cnc, 
 					       const gchar *dbms_type, const gchar *g_type, gboolean *created);
-
 
 G_END_DECLS
 

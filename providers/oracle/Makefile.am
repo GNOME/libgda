@@ -29,8 +29,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(ORACLE_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(ORACLE_CFLAGS)
 
 libgda_oracle_la_SOURCES = \
 	gda-oracle-blob-op.c \

@@ -47,6 +47,7 @@
 
 #include <libgda/sql-delimiter/gda-sql-delimiter.h>
 #include <libgda/gda-connection-private.h>
+#include <libgda/binreloc/gda-binreloc.h>
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
@@ -617,11 +618,15 @@ gda_mysql_provider_create_operation (GdaServerProvider *provider, GdaConnection 
 	gchar *file;
 	GdaServerOperation *op;
 	gchar *str;
+	gchar *dir;
 	
 	file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
 	str = g_strdup_printf ("mysql_specs_%s.xml", file);
 	g_free (file);
-	file = gda_server_provider_find_file (provider, LIBGDA_DATA_DIR, str);
+
+	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
+	file = gda_server_provider_find_file (provider, dir, str);
+	g_free (dir);
 	g_free (str);
 
 	if (! file) {
@@ -642,11 +647,15 @@ gda_mysql_provider_render_operation (GdaServerProvider *provider, GdaConnection 
 	gchar *sql = NULL;
 	gchar *file;
 	gchar *str;
-	
+	gchar *dir;
+
 	file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
 	str = g_strdup_printf ("mysql_specs_%s.xml", file);
 	g_free (file);
-	file = gda_server_provider_find_file (provider, LIBGDA_DATA_DIR, str);
+
+	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
+	file = gda_server_provider_find_file (provider, dir, str);
+	g_free (dir);
 	g_free (str);
 
 	if (! file) {

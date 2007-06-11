@@ -32,6 +32,7 @@
 #include <libgda/gda-parameter-list.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
+#include <libgda/binreloc/gda-binreloc.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <sys/stat.h>
@@ -47,7 +48,11 @@
 #endif
 
 #define GDA_CONFIG_SECTION_DATASOURCES "/apps/libgda/Datasources"
+#ifdef G_OS_WIN32
+#define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S "libgda_conf"
+#else
 #define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
+#endif
 #define LIBGDA_USER_CONFIG_FILE LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S "config"
 
 /* FIXME: many functions are not thread safe! */
@@ -273,8 +278,8 @@ get_config_client ()
 		gchar *user_config = NULL;
 		gboolean has_user_config = FALSE;
 		gchar *memonly;
-		
-		
+		gchar *fname;
+				
 		config_client = g_new0 (GdaConfigClient, 1);
 		xmlKeepBlanksDefault(0);
 
@@ -293,15 +298,17 @@ get_config_client ()
 			return config_client;
 		}
 
+		/* global config file name */
+		fname = gda_gbr_get_file_path (GDA_ETC_DIR, LIBGDA_ABI_NAME, "config", NULL);
+
 		has_user_config = g_get_home_dir () ? TRUE : FALSE;
 		if (has_user_config)
-			user_config = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_FILE);
+			user_config = g_strdup_printf ("%s%s", g_get_home_dir (), LIBGDA_USER_CONFIG_FILE); /* VMA */
 
 		{
 			/* compute system wide rights */
 			FILE *file;
-
-			file = fopen (LIBGDA_GLOBAL_CONFIG_FILE, "a");
+			file = fopen (fname, "a");
 			if (file) {
 				can_modify_global_conf = TRUE;
 #ifdef GDA_DEBUG_NO
@@ -339,11 +346,10 @@ get_config_client ()
 							       fam_callback, NULL);
 				
 				fam_conf_global = g_new0 (FAMRequest, 1);
-				res = FAMMonitorFile (fam_connection, LIBGDA_GLOBAL_CONFIG_FILE, fam_conf_global, 
+				res = FAMMonitorFile (fam_connection, fname, fam_conf_global, 
 						      GINT_TO_POINTER (TRUE));
 #ifdef GDA_DEBUG_NO
-				g_print ("Monitoring changes on file %s: %s\n", 
-					 LIBGDA_GLOBAL_CONFIG_FILE, res ? "ERROR" : "Ok");
+				g_print ("Monitoring changes on file %s: %s\n", fname, res ? "ERROR" : "Ok");
 #endif
 				
 				if (has_user_config) {
@@ -363,8 +369,7 @@ get_config_client ()
 		/*
 		 * load system wide config
 		 */
-		if (g_file_get_contents (LIBGDA_GLOBAL_CONFIG_FILE, &full_file,
-					 &len, NULL)){
+		if (g_file_get_contents (fname, &full_file, &len, NULL)){
 			GList *list;
 			config_client->global = gda_config_parse_config_file (full_file, len);
 			g_free (full_file);
@@ -377,9 +382,11 @@ get_config_client ()
 			}
 		}
 
-		if (! has_user_config) 
+		if (! has_user_config) {
 			/* this can occur on win98, and maybe other win32 platforms */
+			g_free (fname);
 			return config_client;
+		}
 
 		/*
 		 * load user specific config
@@ -421,7 +428,7 @@ get_config_client ()
 "        <entry name=\"Username\" type=\"string\" value=\"\"/>\n" \
 "    </section>\n" \
 "</libgda-config>\n"
-					str = g_build_filename (LIBGDA_GLOBAL_CONFIG_DIR, DB_FILE, NULL);
+					str = gda_gbr_get_file_path (GDA_ETC_DIR, LIBGDA_ABI_NAME, DB_FILE, NULL);
 					if (g_file_get_contents (str, &full_file, &len, NULL)) {
 						gboolean allok = TRUE;
 						FILE *db;
@@ -459,6 +466,7 @@ get_config_client ()
 				g_warning ("Config file is not readable.");
 		}
 		g_free (user_config);
+		g_free (fname);
 #ifdef GDA_DEBUG_NO
 		dump_config_client ();
 #endif
@@ -784,12 +792,17 @@ write_config_file ()
 		}
 		
 #ifdef HAVE_FAM
-	fam_lock_notify ();
+		fam_lock_notify ();
 #endif
-		if (xmlSaveFormatFile (LIBGDA_GLOBAL_CONFIG_FILE, doc, TRUE) == -1)
+		/* global config file name */
+		gchar *fname;
+		fname = gda_gbr_get_file_path (GDA_ETC_DIR, LIBGDA_ABI_NAME, "config", NULL);
+
+		if (xmlSaveFormatFile (fname, doc, TRUE) == -1)
 			g_warning ("Error saving config data to '%s'", user_config);
+		g_free (fname);
 #ifdef HAVE_FAM
-	fam_unlock_notify ();
+		fam_unlock_notify ();
 #endif
 		xmlFreeDoc (doc);
 	}
@@ -1572,8 +1585,12 @@ gda_config_get_provider_list (void)
 		from_dir = getenv ("GDA_PROVIDERS_ROOT_DIR");
 		if (from_dir)
 			prov_list = load_providers_from_dir (from_dir, TRUE);
-		else
-			prov_list = load_providers_from_dir (LIBGDA_PLUGINDIR, FALSE);
+		else {
+			gchar *str;
+			str = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "providers", NULL);
+			prov_list = load_providers_from_dir (str, FALSE);
+			g_free (str);
+		}
 	}
 
 	return prov_list;

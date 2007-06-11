@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(FREETDS_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(FREETDS_CFLAGS)
 
 libgda_freetds_la_SOURCES = \
 	gda-freetds-defs.h \

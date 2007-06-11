@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(MSQL_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(MSQL_CFLAGS)
 
 libgda_msql_la_SOURCES = \
 	gda-msql-provider.c \

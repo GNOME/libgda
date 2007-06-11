@@ -1,0 +1,125 @@
+/* GDA common library
+ * Copyright (C) 2007 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *      Vivien Malerba <malerba@gnome-db.org>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include "gda-binreloc.h"
+/* include source file as mentionned in gbr_init_lib()'s doc */
+#include "binreloc.c"
+
+/**
+ * gda_gbr_init
+ */
+void
+gda_gbr_init (void)
+{
+#ifdef G_OS_WIN32
+#else
+	_gda_gbr_init_lib (NULL);
+#endif
+}
+
+/*
+ * gda_gbr_get_file_path
+ */
+gchar *
+gda_gbr_get_file_path (GdaPrefixDir where, ...)
+{
+	gchar *prefix;
+	gchar *tmp, *file_part;
+	va_list ap;
+	gchar **parts;
+	gint size, i;
+	const gchar *prefix_dir_name;
+
+	switch (where) {
+	default:
+	case GDA_NO_DIR:
+		prefix_dir_name = NULL;
+		break;
+	case GDA_BIN_DIR:
+		prefix_dir_name = "bin";
+		break;
+	case GDA_SBIN_DIR:
+		prefix_dir_name = "sbin";
+		break;
+	case GDA_DATA_DIR:
+		prefix_dir_name = "share";
+		break;
+	case GDA_LOCALE_DIR:
+		prefix_dir_name = "share" G_DIR_SEPARATOR_S "locale";
+		break;
+	case GDA_LIB_DIR:
+		prefix_dir_name = "lib";		
+		break;
+	case GDA_LIBEXEC_DIR:
+		prefix_dir_name = "libexec";
+		break;
+	case GDA_ETC_DIR:
+		prefix_dir_name = "etc";
+		break;
+	}
+
+#ifdef GDA_DEBUG_NO
+	g_print ("%s ()\n", __FUNCTION__);
+#endif
+	/* prefix part */
+#ifdef G_OS_WIN32
+	prefix = g_win32_get_package_installation_directory (GETTEXT_PACKAGE, NULL);
+#else
+	prefix = _gda_gbr_find_prefix (LIBGDAPREFIX);
+#endif
+	if (!prefix || !*prefix)
+		return NULL;
+       
+	/* filename part */
+	size = 10;
+	parts = g_new0 (gchar *, size);
+	va_start (ap, where);
+	for (i = 0, tmp = va_arg (ap, gchar *); tmp; tmp = va_arg (ap, gchar *)) {
+		if (i == size - 1) {
+			size += 10;
+			parts = g_renew (gchar *, parts, size);
+		}
+		parts[i] = g_strdup (tmp);
+#ifdef GDA_DEBUG_NO
+		g_print ("\t+ %s\n", tmp);
+#endif
+		i++;
+	}
+	parts[i] = NULL;
+	va_end (ap);
+
+	file_part = g_build_filenamev (parts);
+	g_strfreev (parts);
+
+	/* result */
+	if (prefix_dir_name)
+		tmp = g_build_filename (prefix, prefix_dir_name, file_part, NULL);
+	else
+		tmp = g_build_filename (prefix, file_part, NULL);
+	g_free (prefix);
+	g_free (file_part);
+#ifdef GDA_DEBUG_NO
+	g_print ("\t=> %s\n", tmp);
+#endif
+
+	return tmp;
+}

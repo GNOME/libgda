@@ -23,6 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include "gda-msql-provider.h"
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/binreloc/gda-binreloc.h>
 
 static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
@@ -52,7 +53,12 @@ plugin_get_description (void)
 gchar *
 plugin_get_dsn_spec (void)
 {
-	return gda_server_provider_load_file_contents (module_path, LIBGDA_DATA_DIR, "msql_specs_dsn.xml");
+	gchar *ret, *dir;
+
+	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
+	ret = gda_server_provider_load_file_contents (module_path, dir, "msql_specs_dsn.xml");
+	g_free (dir);
+	return ret;
 }
 
 GdaServerProvider *

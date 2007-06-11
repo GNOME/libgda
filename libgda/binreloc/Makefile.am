@@ -1,0 +1,14 @@
+## Process this file with automake to produce Makefile.in
+
+AM_CPPFLAGS = \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
+	$(LIBGDA_CFLAGS) \
+	$(BINRELOC_CFLAGS) \
+	-DLIBGDAPREFIX=\""$(prefix)"\"
+
+noinst_LTLIBRARIES = libgda_binreloc-3.0.la
+
+libgda_binreloc_3_0_la_SOURCES = \
+	gda-binreloc.c \
+	gda-binreloc.h 

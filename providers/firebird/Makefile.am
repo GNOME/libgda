@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(FIREBIRD_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(FIREBIRD_CFLAGS)
 
 libgda_firebird_la_SOURCES = \
 	gda-firebird-provider.c \

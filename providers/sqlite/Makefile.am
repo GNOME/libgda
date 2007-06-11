@@ -17,8 +17,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(SQLITE_CFLAGS) \
-	$(sqliteinc) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(sqliteinc) 
 
 libgda_sqlite_la_SOURCES = \
 	gda-sqlite-ddl.c \

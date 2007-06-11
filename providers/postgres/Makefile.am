@@ -5,8 +5,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
-	$(POSTGRES_CFLAGS) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-3.0"\"
+	$(POSTGRES_CFLAGS) 
 
 libgda_postgres_la_SOURCES = \
 	gda-postgres-blob-op.c \
