@@ -1,5 +1,16 @@
 2007-06-12  Vivien Malerba <malerba@gnome-db.org>
 
+	* libgda/gda-log.c: set log level to G_LOG_LEVEL_DEBUG to avoid application
+	crash on Windows
+	* libgda/gda-config.c: set the per-user directory for libgda to '.libgda'
+	* libgda/gda-init.c: load the DTD files in the correct order
+	* libgda/gda-parameter-list.c:
+	* libgda/gda-server-operation.c:
+	* libgda/gda-dict.c: don't try to validate XML documents againts the DTD on
+	Windows as it does not work
+
+2007-06-12  Vivien Malerba <malerba@gnome-db.org>
+
 	* providers/ldap/Makefile.am:
 	* providers/ldap/libmain.c:
 	* providers/firebird/Makefile.am:

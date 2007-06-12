@@ -587,7 +587,7 @@ gda_server_operation_set_property (GObject *object,
 					old_dtd = doc->intSubset;
 					doc->intSubset = gda_server_op_dtd;
 				}
-
+#ifndef G_OS_WIN32
 				if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
 					gchar *str;
 					
@@ -609,6 +609,7 @@ gda_server_operation_set_property (GObject *object,
 					xmlDoValidityCheckingDefaultValue = xmlcheck;
 					return;
 				}
+#endif
 				
 				xmlDoValidityCheckingDefaultValue = xmlcheck;
 				g_free (validc);

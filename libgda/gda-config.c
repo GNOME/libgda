@@ -49,7 +49,7 @@
 
 #define GDA_CONFIG_SECTION_DATASOURCES "/apps/libgda/Datasources"
 #ifdef G_OS_WIN32
-#define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S "libgda_conf"
+#define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
 #else
 #define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
 #endif

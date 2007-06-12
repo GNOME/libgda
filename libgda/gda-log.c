@@ -142,7 +142,7 @@ gda_log_error (const gchar * format, ...)
 	msg = g_strdup_vprintf (format, args);
 	va_end (args);
 #ifdef G_OS_WIN32
-	g_log ("Gda", G_LOG_LEVEL_ERROR, "%s", msg);
+	g_log ("Gda", G_LOG_LEVEL_DEBUG, "%s", msg);
 #else
 	syslog (LOG_USER | LOG_ERR, "%s", msg);
 #endif

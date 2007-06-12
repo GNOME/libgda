@@ -117,22 +117,22 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 			   file);
 	g_free (file);
 
-	/* paramlit DTD */
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-paramlist.dtd", NULL);
-	gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-	if (gda_paramlist_dtd)
-		gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
+	/* array DTD */
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-array.dtd", NULL);
+	gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+	if (gda_array_dtd)
+		gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
 	else
 		g_message (_("Could not parse '%s': "
 			     "XML data import validation will not be performed (some weird errors may occur)"),
 			   file);
 	g_free (file);
 
-	/* array DTD */
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-array.dtd", NULL);
-	gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-	if (gda_array_dtd)
-		gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
+	/* paramlist DTD */
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-paramlist.dtd", NULL);
+	gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+	if (gda_paramlist_dtd)
+		gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
 	else
 		g_message (_("Could not parse '%s': "
 			     "XML data import validation will not be performed (some weird errors may occur)"),

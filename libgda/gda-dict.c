@@ -734,6 +734,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 			doc->intSubset = gda_dict_dtd;
 		}
 
+#ifndef G_OS_WIN32
 		if (! xmlValidateDocument (validc, doc)) {
 			gchar *str;
 
@@ -757,6 +758,7 @@ gda_dict_load_xml_file (GdaDict *dict, const gchar *xmlfile, GError **error)
 			xmlDoValidityCheckingDefaultValue = xmlcheck;
 			return FALSE;
 		}
+#endif
 		xmlDoValidityCheckingDefaultValue = xmlcheck;
 		g_free (validc);
 	}

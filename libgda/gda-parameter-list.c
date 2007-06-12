@@ -467,6 +467,7 @@ gda_parameter_list_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, G
 			doc->intSubset = gda_paramlist_dtd;
 		}
 
+#ifndef G_OS_WIN32
                 if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
 			if (gda_paramlist_dtd)
 				doc->intSubset = old_dtd;
@@ -489,6 +490,7 @@ gda_parameter_list_new_from_spec_string (GdaDict *dict, const gchar *xml_spec, G
                         xmlDoValidityCheckingDefaultValue = xmlcheck;
                         return NULL;
                 }
+#endif
 		if (gda_paramlist_dtd)
 			doc->intSubset = old_dtd;
                 xmlDoValidityCheckingDefaultValue = xmlcheck;
